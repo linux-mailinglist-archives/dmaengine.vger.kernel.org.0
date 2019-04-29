@@ -2,530 +2,167 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB647DB86
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Apr 2019 07:32:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13A31DBF4
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Apr 2019 08:28:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfD2FcL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 29 Apr 2019 01:32:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44776 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725468AbfD2FcL (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 29 Apr 2019 01:32:11 -0400
-Received: from localhost (unknown [171.76.113.243])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DCB821473;
-        Mon, 29 Apr 2019 05:32:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556515929;
-        bh=R7yH6SCc2CdS819L2jITRdSb1HXfUxdjdXlqVBUtlGk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TEi4Q2ZS8heyrnZg0UuRD9dV4snqtWJyavXuT15OE0+SwGz4fgEKthIH71p/GTEa9
-         uAhU6T3i4Ikp7OrnZ6uK5vE0/jo7t3zttmW4YYaPWoBcIlmxFcLzo4JplqFQA19gHt
-         TmprPVEUAr+tp94oEAkGORX/SjenW7CbaG3F4FSA=
-Date:   Mon, 29 Apr 2019 11:02:03 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peng Ma <peng.ma@nxp.com>
-Cc:     dan.j.williams@intel.com, leoyang.li@nxp.com,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [V3 2/2] dmaengine: fsl-dpaa2-qdma: Add NXP dpaa2 qDMA
- controller driver for Layerscape SoCs
-Message-ID: <20190429053203.GF3845@vkoul-mobl.Dlink>
-References: <20190409072212.15860-1-peng.ma@nxp.com>
- <20190409072212.15860-2-peng.ma@nxp.com>
+        id S1727329AbfD2G2n (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 29 Apr 2019 02:28:43 -0400
+Received: from mail-eopbgr70070.outbound.protection.outlook.com ([40.107.7.70]:7139
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726979AbfD2G2n (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 29 Apr 2019 02:28:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=68LcGwaIvJGB5LrKe5RllociMnU7b9y6VRR6RPMjPV8=;
+ b=N/4VbZQIjOhHk4ENevVBXCAeg18n04N5MyZbXANWxU43wdnFSVKfzAknYrWo3el4PJ+heT+o+HEXaY0XzxXdrKyF8pbbC+6mGt8VCNtW7EjxcAK6SgDt/LeYYMQ7NIKTPkmoziLxGETh4wzsUI1eU20wHFrgYSgcQ9U8G1HNBA8=
+Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.159) by
+ VI1PR04MB4781.eurprd04.prod.outlook.com (20.177.48.214) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1835.15; Mon, 29 Apr 2019 06:28:37 +0000
+Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
+ ([fe80::940a:dc67:926:e5df]) by VI1PR04MB4431.eurprd04.prod.outlook.com
+ ([fe80::940a:dc67:926:e5df%6]) with mapi id 15.20.1835.018; Mon, 29 Apr 2019
+ 06:28:37 +0000
+From:   Peng Ma <peng.ma@nxp.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        Leo Li <leoyang.li@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCH] dmaengine: fsl-qdma: fixed the
+ source/destination descriptior format
+Thread-Topic: [EXT] Re: [PATCH] dmaengine: fsl-qdma: fixed the
+ source/destination descriptior format
+Thread-Index: AQHU9o1fbPmX+1SRm0awFND3hnhkWKZOX3eAgAJ8d8CAAcw0AIAAFAqg
+Date:   Mon, 29 Apr 2019 06:28:37 +0000
+Message-ID: <VI1PR04MB44317BD4C6B36925C18BEC43ED390@VI1PR04MB4431.eurprd04.prod.outlook.com>
+References: <20190419084629.41742-1-peng.ma@nxp.com>
+ <20190426115047.GW28103@vkoul-mobl>
+ <VI1PR04MB4431E13D34650C2EE3D25861ED380@VI1PR04MB4431.eurprd04.prod.outlook.com>
+ <20190429051554.GD3845@vkoul-mobl.Dlink>
+In-Reply-To: <20190429051554.GD3845@vkoul-mobl.Dlink>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.ma@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a1599eeb-c121-4ed7-245c-08d6cc6be998
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4781;
+x-ms-traffictypediagnostic: VI1PR04MB4781:
+x-microsoft-antispam-prvs: <VI1PR04MB4781044E36E448145B7DD6ABED390@VI1PR04MB4781.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0022134A87
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(396003)(136003)(39860400002)(13464003)(189003)(199004)(229853002)(53936002)(81166006)(81156014)(9686003)(55016002)(93886005)(6436002)(6916009)(8676002)(6246003)(73956011)(66946007)(66476007)(66556008)(66446008)(64756008)(66066001)(4326008)(86362001)(25786009)(2906002)(8936002)(76116006)(71200400001)(71190400001)(74316002)(478600001)(3846002)(6116002)(54906003)(446003)(11346002)(52536014)(97736004)(305945005)(5660300002)(14454004)(7736002)(99286004)(7696005)(102836004)(68736007)(256004)(186003)(44832011)(6506007)(476003)(486006)(76176011)(26005)(316002)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4781;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: XgoEaH4kNRrv6v6NUjR3+xsysBudgDUnXer5VVVvInyzlBruI2W08j19+vywXXmD5y35chjTHxuGZX9xLHD2SXJX1nn3Nne0IkGh33n8vD1aaRt0pm+rYaPPulfK0yBgrc9nHGedRIWtIp6IDLHMco8U2k1mVYwRo2Q4KOw4yDG5Xq4YqOHb/Ay6fum7Dns/7jmp5JD9JEcQnrXqOo0wExKNCsJEiz/ZwqZmHeLzptsEboa4r5Ec0mGcGsfOc0rAYiAF5VUGlzyvPJOpvrwRQW923uXYjFEw5u5w4AcIe3dKsJSCeZ6XibimJf+KupA1p20CQyGA2QV9thJyKEe4VWsXWlBgRZY+j1R0HOZc7Ug8IQ5/P/J74oWvzGBsXTDmbkyWVU8RNTbg/0kvysCwUgoMZP0QDnO5nwSArbYL17k=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190409072212.15860-2-peng.ma@nxp.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1599eeb-c121-4ed7-245c-08d6cc6be998
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2019 06:28:37.0791
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4781
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 09-04-19, 15:22, Peng Ma wrote:
-> DPPA2(Data Path Acceleration Architecture 2) qDMA
-> The qDMA supports channel virtualization by allowing DMA jobs to be enqueued
-> into different frame queues. Core can initiate a DMA transaction by preparing
-> a frame descriptor(FD) for each DMA job and enqueuing this job to a frame queue.
-> through a hardware portal. The qDMA prefetches DMA jobs from the frame queues.
-> It then schedules and dispatches to internal DMA hardware engines, which
-> generate read and write requests. Both qDMA source data and destination data can
-> be either contiguous or non-contiguous using one or more scatter/gather tables.
-> The qDMA supports global bandwidth flow control where all DMA transactions are
-> stalled if the bandwidth threshold has been reached. Also supported are
-> transaction based read throttling.
-> 
-> Add NXP dppa2 qDMA to support some of Layerscape SoCs.
-> such as: LS1088A, LS208xA, LX2, etc.
-> 
-> Signed-off-by: Peng Ma <peng.ma@nxp.com>
-> ---
-> changed for v3:
-> 	- Add depends on arm64 for dpaa2 qdma driver 
-> 	- The dpaa2_io_service_[de]register functions have a new parameter
-> 	So update all calls to some functions
-> 
->  drivers/dma/Kconfig                     |    2 +
->  drivers/dma/Makefile                    |    1 +
->  drivers/dma/fsl-dpaa2-qdma/Kconfig      |    9 +
->  drivers/dma/fsl-dpaa2-qdma/Makefile     |    3 +
->  drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c |  782 +++++++++++++++++++++++++++++++
->  drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.h |  152 ++++++
->  6 files changed, 949 insertions(+), 0 deletions(-)
->  create mode 100644 drivers/dma/fsl-dpaa2-qdma/Kconfig
->  create mode 100644 drivers/dma/fsl-dpaa2-qdma/Makefile
->  create mode 100644 drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
->  create mode 100644 drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.h
-> 
-> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> index eaf78f4..08aae01 100644
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -671,6 +671,8 @@ source "drivers/dma/sh/Kconfig"
->  
->  source "drivers/dma/ti/Kconfig"
->  
-> +source "drivers/dma/fsl-dpaa2-qdma/Kconfig"
-> +
->  # clients
->  comment "DMA Clients"
->  	depends on DMA_ENGINE
-> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-> index 6126e1c..2499ed8 100644
-> --- a/drivers/dma/Makefile
-> +++ b/drivers/dma/Makefile
-> @@ -75,6 +75,7 @@ obj-$(CONFIG_UNIPHIER_MDMAC) += uniphier-mdmac.o
->  obj-$(CONFIG_XGENE_DMA) += xgene-dma.o
->  obj-$(CONFIG_ZX_DMA) += zx_dma.o
->  obj-$(CONFIG_ST_FDMA) += st_fdma.o
-> +obj-$(CONFIG_FSL_DPAA2_QDMA) += fsl-dpaa2-qdma/
->  
->  obj-y += mediatek/
->  obj-y += qcom/
-> diff --git a/drivers/dma/fsl-dpaa2-qdma/Kconfig b/drivers/dma/fsl-dpaa2-qdma/Kconfig
-> new file mode 100644
-> index 0000000..258ed6b
-> --- /dev/null
-> +++ b/drivers/dma/fsl-dpaa2-qdma/Kconfig
-> @@ -0,0 +1,9 @@
-> +menuconfig FSL_DPAA2_QDMA
-> +	tristate "NXP DPAA2 QDMA"
-> +	depends on ARM64
-> +	depends on FSL_MC_BUS && FSL_MC_DPIO
-> +	select DMA_ENGINE
-> +	select DMA_VIRTUAL_CHANNELS
-> +	help
-> +	  NXP Data Path Acceleration Architecture 2 QDMA driver,
-> +	  using the NXP MC bus driver.
-> diff --git a/drivers/dma/fsl-dpaa2-qdma/Makefile b/drivers/dma/fsl-dpaa2-qdma/Makefile
-> new file mode 100644
-> index 0000000..c1d0226
-> --- /dev/null
-> +++ b/drivers/dma/fsl-dpaa2-qdma/Makefile
-> @@ -0,0 +1,3 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Makefile for the NXP DPAA2 qDMA controllers
-> +obj-$(CONFIG_FSL_DPAA2_QDMA) += dpaa2-qdma.o dpdmai.o
-> diff --git a/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c b/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
-> new file mode 100644
-> index 0000000..0cdde0f
-> --- /dev/null
-> +++ b/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
-> @@ -0,0 +1,782 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright 2014-2018 NXP
-> +
-> +/*
-> + * Author: Changming Huang <jerry.huang@nxp.com>
-> + *
-> + * Driver for the NXP QDMA engine with QMan mode.
-> + * Channel virtualization is supported through enqueuing of DMA jobs to,
-> + * or dequeuing DMA jobs from different work queues with QMan portal.
-> + * This module can be found on NXP LS2 SoCs.
-> + *
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/dmapool.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/iommu.h>
-> +#include <linux/sys_soc.h>
-> +#include <linux/fsl/mc.h>
-> +#include <soc/fsl/dpaa2-io.h>
-> +
-> +#include "../virt-dma.h"
-> +#include "dpdmai_cmd.h"
-> +#include "dpdmai.h"
-> +#include "dpaa2-qdma.h"
-> +
-> +static bool smmu_disable = true;
-> +
-> +static struct dpaa2_qdma_chan *to_dpaa2_qdma_chan(struct dma_chan *chan)
-> +{
-> +	return container_of(chan, struct dpaa2_qdma_chan, vchan.chan);
-> +}
-> +
-> +static struct dpaa2_qdma_comp *to_fsl_qdma_comp(struct virt_dma_desc *vd)
-> +{
-> +	return container_of(vd, struct dpaa2_qdma_comp, vdesc);
-> +}
-> +
-> +static int dpaa2_qdma_alloc_chan_resources(struct dma_chan *chan)
-> +{
-> +	struct dpaa2_qdma_chan *dpaa2_chan = to_dpaa2_qdma_chan(chan);
-> +	struct dpaa2_qdma_engine *dpaa2_qdma = dpaa2_chan->qdma;
-> +	struct device *dev = &dpaa2_qdma->priv->dpdmai_dev->dev;
-> +
-> +	dpaa2_chan->fd_pool = dma_pool_create("fd_pool", dev,
-> +					      FD_POOL_SIZE, 32, 0);
-> +	if (!dpaa2_chan->fd_pool)
-> +		return -ENOMEM;
-> +
-> +	return dpaa2_qdma->desc_allocated++;
-> +}
-> +
-> +static void dpaa2_qdma_free_chan_resources(struct dma_chan *chan)
-> +{
-> +	struct dpaa2_qdma_chan *dpaa2_chan = to_dpaa2_qdma_chan(chan);
-> +	struct dpaa2_qdma_engine *dpaa2_qdma = dpaa2_chan->qdma;
-> +	unsigned long flags;
-> +
-> +	LIST_HEAD(head);
-> +
-> +	spin_lock_irqsave(&dpaa2_chan->vchan.lock, flags);
-> +	vchan_get_all_descriptors(&dpaa2_chan->vchan, &head);
-> +	spin_unlock_irqrestore(&dpaa2_chan->vchan.lock, flags);
-> +
-> +	vchan_dma_desc_free_list(&dpaa2_chan->vchan, &head);
-> +
-> +	dpaa2_dpdmai_free_comp(dpaa2_chan, &dpaa2_chan->comp_used);
-> +	dpaa2_dpdmai_free_comp(dpaa2_chan, &dpaa2_chan->comp_free);
-> +
-> +	dma_pool_destroy(dpaa2_chan->fd_pool);
-> +	dpaa2_qdma->desc_allocated--;
-> +}
-> +
-> +/*
-> + * Request a command descriptor for enqueue.
-> + */
-> +static struct dpaa2_qdma_comp *
-> +dpaa2_qdma_request_desc(struct dpaa2_qdma_chan *dpaa2_chan)
-> +{
-> +	struct dpaa2_qdma_comp *comp_temp = NULL;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&dpaa2_chan->queue_lock, flags);
-> +	if (list_empty(&dpaa2_chan->comp_free)) {
-> +		spin_unlock_irqrestore(&dpaa2_chan->queue_lock, flags);
-> +		comp_temp = kzalloc(sizeof(*comp_temp), GFP_KERNEL);
-
-GFP_NOWAIT?
-
-> +		if (!comp_temp)
-> +			goto err;
-> +		comp_temp->fd_virt_addr =
-> +			dma_pool_alloc(dpaa2_chan->fd_pool, GFP_NOWAIT,
-> +				       &comp_temp->fd_bus_addr);
-> +		if (!comp_temp->fd_virt_addr)
-
-err handling seems incorrect, you dont clean up, caller doesnt check
-return!
-
-> +			goto err;
-> +
-> +		comp_temp->fl_virt_addr =
-> +			(void *)((struct dpaa2_fd *)
-> +				comp_temp->fd_virt_addr + 1);
-
-casts and pointer math, what could go wrong!! This doesnt smell right!
-
-> +		comp_temp->fl_bus_addr = comp_temp->fd_bus_addr +
-> +					sizeof(struct dpaa2_fd);
-
-why not use fl_virt_addr and get the bus_address?
-
-> +		comp_temp->desc_virt_addr =
-> +			(void *)((struct dpaa2_fl_entry *)
-> +				comp_temp->fl_virt_addr + 3);
-> +		comp_temp->desc_bus_addr = comp_temp->fl_bus_addr +
-> +				sizeof(struct dpaa2_fl_entry) * 3;
-
-pointer math in the two calls doesnt match and as I said doesnt look
-good...
-
-> +
-> +		comp_temp->qchan = dpaa2_chan;
-> +		return comp_temp;
-> +	}
-> +	comp_temp = list_first_entry(&dpaa2_chan->comp_free,
-> +				     struct dpaa2_qdma_comp, list);
-> +	list_del(&comp_temp->list);
-> +	spin_unlock_irqrestore(&dpaa2_chan->queue_lock, flags);
-> +
-> +	comp_temp->qchan = dpaa2_chan;
-> +err:
-> +	return comp_temp;
-> +}
-> +
-> +static void
-> +dpaa2_qdma_populate_fd(u32 format, struct dpaa2_qdma_comp *dpaa2_comp)
-> +{
-> +	struct dpaa2_fd *fd;
-> +
-> +	fd = (struct dpaa2_fd *)dpaa2_comp->fd_virt_addr;
-
-whats with the casts! you seem to like them! You are casting away from
-void!
-
-> +	memset(fd, 0, sizeof(struct dpaa2_fd));
-> +
-> +	/* fd populated */
-> +	dpaa2_fd_set_addr(fd, dpaa2_comp->fl_bus_addr);
-> +	/* Bypass memory translation, Frame list format, short length disable */
-> +	/* we need to disable BMT if fsl-mc use iova addr */
-> +	if (smmu_disable)
-> +		dpaa2_fd_set_bpid(fd, QMAN_FD_BMT_ENABLE);
-> +	dpaa2_fd_set_format(fd, QMAN_FD_FMT_ENABLE | QMAN_FD_SL_DISABLE);
-> +
-> +	dpaa2_fd_set_frc(fd, format | QDMA_SER_CTX);
-> +}
-> +
-> +/* first frame list for descriptor buffer */
-> +static void
-> +dpaa2_qdma_populate_first_framel(struct dpaa2_fl_entry *f_list,
-> +				 struct dpaa2_qdma_comp *dpaa2_comp,
-> +				 bool wrt_changed)
-> +{
-> +	struct dpaa2_qdma_sd_d *sdd;
-> +
-> +	sdd = (struct dpaa2_qdma_sd_d *)dpaa2_comp->desc_virt_addr;
-
-again
-
-> +	memset(sdd, 0, 2 * (sizeof(*sdd)));
-> +
-> +	/* source descriptor CMD */
-> +	sdd->cmd = cpu_to_le32(QDMA_SD_CMD_RDTTYPE_COHERENT);
-> +	sdd++;
-> +
-> +	/* dest descriptor CMD */
-> +	if (wrt_changed)
-> +		sdd->cmd = cpu_to_le32(LX2160_QDMA_DD_CMD_WRTTYPE_COHERENT);
-> +	else
-> +		sdd->cmd = cpu_to_le32(QDMA_DD_CMD_WRTTYPE_COHERENT);
-> +
-> +	memset(f_list, 0, sizeof(struct dpaa2_fl_entry));
-> +
-> +	/* first frame list to source descriptor */
-> +	dpaa2_fl_set_addr(f_list, dpaa2_comp->desc_bus_addr);
-> +	dpaa2_fl_set_len(f_list, 0x20);
-> +	dpaa2_fl_set_format(f_list, QDMA_FL_FMT_SBF | QDMA_FL_SL_LONG);
-> +
-> +	/* bypass memory translation */
-> +	if (smmu_disable)
-> +		f_list->bpid = cpu_to_le16(QDMA_FL_BMT_ENABLE);
-> +}
-> +
-> +/* source and destination frame list */
-> +static void
-> +dpaa2_qdma_populate_frames(struct dpaa2_fl_entry *f_list,
-> +			   dma_addr_t dst, dma_addr_t src,
-> +			   size_t len, uint8_t fmt)
-> +{
-> +	/* source frame list to source buffer */
-> +	memset(f_list, 0, sizeof(struct dpaa2_fl_entry));
-> +
-> +	dpaa2_fl_set_addr(f_list, src);
-> +	dpaa2_fl_set_len(f_list, len);
-> +
-> +	/* single buffer frame or scatter gather frame */
-> +	dpaa2_fl_set_format(f_list, (fmt | QDMA_FL_SL_LONG));
-> +
-> +	/* bypass memory translation */
-> +	if (smmu_disable)
-> +		f_list->bpid = cpu_to_le16(QDMA_FL_BMT_ENABLE);
-> +
-> +	f_list++;
-> +
-> +	/* destination frame list to destination buffer */
-> +	memset(f_list, 0, sizeof(struct dpaa2_fl_entry));
-> +
-> +	dpaa2_fl_set_addr(f_list, dst);
-> +	dpaa2_fl_set_len(f_list, len);
-> +	dpaa2_fl_set_format(f_list, (fmt | QDMA_FL_SL_LONG));
-> +	/* single buffer frame or scatter gather frame */
-> +	dpaa2_fl_set_final(f_list, QDMA_FL_F);
-> +	/* bypass memory translation */
-> +	if (smmu_disable)
-> +		f_list->bpid = cpu_to_le16(QDMA_FL_BMT_ENABLE);
-> +}
-> +
-> +static struct dma_async_tx_descriptor
-> +*dpaa2_qdma_prep_memcpy(struct dma_chan *chan, dma_addr_t dst,
-> +			dma_addr_t src, size_t len, ulong flags)
-> +{
-> +	struct dpaa2_qdma_chan *dpaa2_chan = to_dpaa2_qdma_chan(chan);
-> +	struct dpaa2_qdma_engine *dpaa2_qdma;
-> +	struct dpaa2_qdma_comp *dpaa2_comp;
-> +	struct dpaa2_fl_entry *f_list;
-> +	bool wrt_changed;
-> +	u32 format;
-> +
-> +	dpaa2_qdma = dpaa2_chan->qdma;
-> +	dpaa2_comp = dpaa2_qdma_request_desc(dpaa2_chan);
-> +	wrt_changed = (bool)dpaa2_qdma->qdma_wrtype_fixup;
-> +
-> +#ifdef LONG_FORMAT
-
- compile flag and define, so else part is dead code??
-
-> +	format = QDMA_FD_LONG_FORMAT;
-> +#else
-> +	format = QDMA_FD_SHORT_FORMAT;
-> +#endif
-> +	/* populate Frame descriptor */
-> +	dpaa2_qdma_populate_fd(format, dpaa2_comp);
-> +
-> +	f_list = (struct dpaa2_fl_entry *)dpaa2_comp->fl_virt_addr;
-> +
-> +#ifdef LONG_FORMAT
-> +	/* first frame list for descriptor buffer (logn format) */
-> +	dpaa2_qdma_populate_first_framel(f_list, dpaa2_comp, wrt_changed);
-> +
-> +	f_list++;
-> +#endif
-> +
-> +	dpaa2_qdma_populate_frames(f_list, dst, src, len, QDMA_FL_FMT_SBF);
-> +
-> +	return vchan_tx_prep(&dpaa2_chan->vchan, &dpaa2_comp->vdesc, flags);
-> +}
-> +
-> +static enum
-> +dma_status dpaa2_qdma_tx_status(struct dma_chan *chan,
-> +				dma_cookie_t cookie,
-> +				struct dma_tx_state *txstate)
-> +{
-> +	return dma_cookie_status(chan, cookie, txstate);
-> +}
-> +
-> +static void dpaa2_qdma_issue_pending(struct dma_chan *chan)
-> +{
-> +	struct dpaa2_qdma_chan *dpaa2_chan = to_dpaa2_qdma_chan(chan);
-> +	struct dpaa2_qdma_engine *dpaa2_qdma = dpaa2_chan->qdma;
-> +	struct dpaa2_qdma_priv *priv = dpaa2_qdma->priv;
-> +	struct dpaa2_qdma_comp *dpaa2_comp;
-> +	struct virt_dma_desc *vdesc;
-> +	struct dpaa2_fd *fd;
-> +	unsigned long flags;
-> +	int err;
-> +
-> +	spin_lock_irqsave(&dpaa2_chan->queue_lock, flags);
-> +	spin_lock(&dpaa2_chan->vchan.lock);
-> +	if (vchan_issue_pending(&dpaa2_chan->vchan)) {
-> +		vdesc = vchan_next_desc(&dpaa2_chan->vchan);
-> +		if (!vdesc)
-> +			goto err_enqueue;
-> +		dpaa2_comp = to_fsl_qdma_comp(vdesc);
-> +
-> +		fd = (struct dpaa2_fd *)dpaa2_comp->fd_virt_addr;
-> +
-> +		list_del(&vdesc->node);
-> +		list_add_tail(&dpaa2_comp->list, &dpaa2_chan->comp_used);
-
-what does this list do?
-
-> +
-> +		/* TOBO: priority hard-coded to zero */
-
-You mean TODO?
-
-> +		err = dpaa2_io_service_enqueue_fq(NULL,
-> +				priv->tx_queue_attr[0].fqid, fd);
-> +		if (err) {
-> +			list_del(&dpaa2_comp->list);
-> +			list_add_tail(&dpaa2_comp->list,
-> +				      &dpaa2_chan->comp_free);
-> +		}
-> +	}
-> +err_enqueue:
-> +	spin_unlock(&dpaa2_chan->vchan.lock);
-> +	spin_unlock_irqrestore(&dpaa2_chan->queue_lock, flags);
-> +}
-> +
-> +static int __cold dpaa2_qdma_setup(struct fsl_mc_device *ls_dev)
-> +{
-> +	struct dpaa2_qdma_priv_per_prio *ppriv;
-> +	struct device *dev = &ls_dev->dev;
-> +	struct dpaa2_qdma_priv *priv;
-> +	u8 prio_def = DPDMAI_PRIO_NUM;
-> +	int err;
-> +	int i;
-> +
-> +	priv = dev_get_drvdata(dev);
-> +
-> +	priv->dev = dev;
-> +	priv->dpqdma_id = ls_dev->obj_desc.id;
-> +
-> +	/*Get the handle for the DPDMAI this interface is associate with */
-
-Please run checkpatch, it should have told you that you need space after
-comment marker /* foo...
-
-> +	err = dpdmai_open(priv->mc_io, 0, priv->dpqdma_id, &ls_dev->mc_handle);
-> +	if (err) {
-> +		dev_err(dev, "dpdmai_open() failed\n");
-> +		return err;
-> +	}
-> +	dev_info(dev, "Opened dpdmai object successfully\n");
-> +
-> +	err = dpdmai_get_attributes(priv->mc_io, 0, ls_dev->mc_handle,
-> +				    &priv->dpdmai_attr);
-> +	if (err) {
-> +		dev_err(dev, "dpdmai_get_attributes() failed\n");
-> +		return err;
-
-so you dont close what you opened in dpdmai_open() Please give a serious
-thought and testing to this driver
-
-> +	}
-> +
-> +	if (priv->dpdmai_attr.version.major > DPDMAI_VER_MAJOR) {
-> +		dev_err(dev, "DPDMAI major version mismatch\n"
-> +			     "Found %u.%u, supported version is %u.%u\n",
-> +				priv->dpdmai_attr.version.major,
-> +				priv->dpdmai_attr.version.minor,
-> +				DPDMAI_VER_MAJOR, DPDMAI_VER_MINOR);
-> +	}
-> +
-> +	if (priv->dpdmai_attr.version.minor > DPDMAI_VER_MINOR) {
-> +		dev_err(dev, "DPDMAI minor version mismatch\n"
-> +			     "Found %u.%u, supported version is %u.%u\n",
-> +				priv->dpdmai_attr.version.major,
-> +				priv->dpdmai_attr.version.minor,
-> +				DPDMAI_VER_MAJOR, DPDMAI_VER_MINOR);
-
-what is the implication of these error, why not bail out on these?
-
-> +	}
-> +
-> +	priv->num_pairs = min(priv->dpdmai_attr.num_of_priorities, prio_def);
-> +	ppriv = kcalloc(priv->num_pairs, sizeof(*ppriv), GFP_KERNEL);
-
-what is the context of the fn, sleepy, atomic?
-
-> +	if (!ppriv) {
-> +		dev_err(dev, "kzalloc for ppriv failed\n");
-
-this need not be logged, core will do so
-
-> +		return -1;
-
-really -1??
-
-I think this driver needs more work, please fix these issues in the
-comments above and also see in rest of the code
-
--- 
-~Vinod
+DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IFZpbm9kIEtvdWwgPHZrb3Vs
+QGtlcm5lbC5vcmc+DQo+U2VudDogMjAxOeW5tDTmnIgyOeaXpSAxMzoxNg0KPlRvOiBQZW5nIE1h
+IDxwZW5nLm1hQG54cC5jb20+DQo+Q2M6IGRhbi5qLndpbGxpYW1zQGludGVsLmNvbTsgTGVvIExp
+IDxsZW95YW5nLmxpQG54cC5jb20+Ow0KPmRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
+LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj5TdWJqZWN0OiBSZTogW0VYVF0gUmU6IFtQQVRDSF0g
+ZG1hZW5naW5lOiBmc2wtcWRtYTogZml4ZWQgdGhlDQo+c291cmNlL2Rlc3RpbmF0aW9uIGRlc2Ny
+aXB0aW9yIGZvcm1hdA0KPg0KPkNhdXRpb246IEVYVCBFbWFpbA0KPg0KPk9uIDI4LTA0LTE5LCAw
+MjowMCwgUGVuZyBNYSB3cm90ZToNCj4+IEhpIFZpbm9kLA0KPj4NCj4+IFRoYW5rcyB5b3VyIGNv
+bW1lbnRzLg0KPj4gUGxlYXNlIHNlZSBteSBjb21tZW50cyBpbmxpbmUuDQo+Pg0KPj4gQmVzdCBS
+ZWdhcmRzLA0KPj4gUGVuZw0KPj4NCj4+ID4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPj4g
+PkZyb206IFZpbm9kIEtvdWwgPHZrb3VsQGtlcm5lbC5vcmc+DQo+PiA+U2VudDogMjAxOeW5tDTm
+nIgyNuaXpSAxOTo1MQ0KPj4gPlRvOiBQZW5nIE1hIDxwZW5nLm1hQG54cC5jb20+DQo+PiA+Q2M6
+IGRhbi5qLndpbGxpYW1zQGludGVsLmNvbTsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+Ow0K
+Pj4gPmRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmcNCj4+ID5TdWJqZWN0OiBbRVhUXSBSZTogW1BBVENIXSBkbWFlbmdpbmU6IGZzbC1xZG1hOiBm
+aXhlZCB0aGUNCj4+ID5zb3VyY2UvZGVzdGluYXRpb24gZGVzY3JpcHRpb3IgZm9ybWF0DQo+PiA+
+DQo+PiA+Q2F1dGlvbjogRVhUIEVtYWlsDQo+PiA+DQo+PiA+T24gMTktMDQtMTksIDA4OjQ2LCBQ
+ZW5nIE1hIHdyb3RlOg0KPj4gPj4gQ01EIG9mIFNvdXJjZS9EZXN0aW5hdGlvbiBkZXNjcmlwdGlv
+ciBmb3JtYXQgc2hvdWxkIGJlIGxvd2VyIG9mDQo+PiA+DQo+PiA+cy9kZXNjcmlwdGlvci9kZXNj
+cmlwdG9yDQo+PiA+DQo+PiBbUGVuZyBNYV0gR290IGl0Lg0KPj4gPj4gc3RydWN0IGZzbF9xZG1h
+X2VuZ2luZSBudW1iZXIgZGF0YSBhZGRyZXNzLg0KPj4gPj4NCj4+ID4+IFNpZ25lZC1vZmYtYnk6
+IFBlbmcgTWEgPHBlbmcubWFAbnhwLmNvbT4NCj4+ID4+IC0tLQ0KPj4gPj4gIGRyaXZlcnMvZG1h
+L2ZzbC1xZG1hLmMgfCAgIDI5ICsrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tDQo+PiA+PiAg
+MSBmaWxlcyBjaGFuZ2VkLCAxOCBpbnNlcnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkNCj4+ID4+
+DQo+PiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9kbWEvZnNsLXFkbWEuYyBiL2RyaXZlcnMvZG1h
+L2ZzbC1xZG1hLmMgaW5kZXgNCj4+ID4+IGFhMWQwYWUuLjU0Mjc2NWEgMTAwNjQ0DQo+PiA+PiAt
+LS0gYS9kcml2ZXJzL2RtYS9mc2wtcWRtYS5jDQo+PiA+PiArKysgYi9kcml2ZXJzL2RtYS9mc2wt
+cWRtYS5jDQo+PiA+PiBAQCAtMTEzLDYgKzExMyw3IEBADQo+PiA+PiAgLyogRmllbGQgZGVmaW5p
+dGlvbiBmb3IgRGVzY3JpcHRvciBvZmZzZXQgKi8NCj4+ID4+ICAjZGVmaW5lIFFETUFfQ0NERl9T
+VEFUVVMgICAgICAgICAgICAgMjANCj4+ID4+ICAjZGVmaW5lIFFETUFfQ0NERl9PRkZTRVQgICAg
+ICAgICAgICAgMjANCj4+ID4+ICsjZGVmaW5lIFFETUFfU0RERl9DTUQoeCkgICAgICAgICAgICAg
+KCgodTY0KSh4KSkgPDwgMzIpDQo+PiA+Pg0KPj4gPj4gIC8qIEZpZWxkIGRlZmluaXRpb24gZm9y
+IHNhZmUgbG9vcCBjb3VudCovDQo+PiA+PiAgI2RlZmluZSBGU0xfUURNQV9IQUxUX0NPVU5UICAg
+ICAgICAgIDE1MDANCj4+ID4+IEBAIC0yMTQsNiArMjE1LDEyIEBAIHN0cnVjdCBmc2xfcWRtYV9l
+bmdpbmUgew0KPj4gPj4NCj4+ID4+ICB9Ow0KPj4gPj4NCj4+ID4+ICtzdGF0aWMgaW5saW5lIHZv
+aWQNCj4+ID4+ICtxZG1hX3NkZGZfc2V0X2NtZChzdHJ1Y3QgZnNsX3FkbWFfZm9ybWF0ICpzZGRm
+LCB1MzIgdmFsKSB7DQo+PiA+PiArICAgICBzZGRmLT5kYXRhID0gUURNQV9TRERGX0NNRCh2YWwp
+OyB9DQo+PiA+PiArDQo+PiA+PiAgc3RhdGljIGlubGluZSB1NjQNCj4+ID4+ICBxZG1hX2NjZGZf
+YWRkcl9nZXQ2NChjb25zdCBzdHJ1Y3QgZnNsX3FkbWFfZm9ybWF0ICpjY2RmKSAgeyBAQA0KPj4g
+Pi0zNDEsNg0KPj4gPj4gKzM0OCw3IEBAIHN0YXRpYyB2b2lkIGZzbF9xZG1hX2ZyZWVfY2hhbl9y
+ZXNvdXJjZXMoc3RydWN0IGRtYV9jaGFuDQo+PiA+PiAqY2hhbikgIHN0YXRpYyB2b2lkIGZzbF9x
+ZG1hX2NvbXBfZmlsbF9tZW1jcHkoc3RydWN0IGZzbF9xZG1hX2NvbXANCj4+ID4qZnNsX2NvbXAs
+DQo+PiA+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkbWFfYWRkcl90IGRz
+dCwNCj5kbWFfYWRkcl90DQo+PiA+c3JjLA0KPj4gPj4gdTMyIGxlbikgIHsNCj4+ID4+ICsgICAg
+IHUzMiBjbWQ7DQo+PiA+PiAgICAgICBzdHJ1Y3QgZnNsX3FkbWFfZm9ybWF0ICpzZGYsICpkZGY7
+DQo+PiA+PiAgICAgICBzdHJ1Y3QgZnNsX3FkbWFfZm9ybWF0ICpjY2RmLCAqY3NnZl9kZXNjLCAq
+Y3NnZl9zcmMsDQo+PiA+PiAqY3NnZl9kZXN0Ow0KPj4gPj4NCj4+ID4+IEBAIC0zNTMsNiArMzYx
+LDcgQEAgc3RhdGljIHZvaWQgZnNsX3FkbWFfY29tcF9maWxsX21lbWNweShzdHJ1Y3QNCj4+ID4+
+IGZzbF9xZG1hX2NvbXAgKmZzbF9jb21wLA0KPj4gPj4NCj4+ID4+ICAgICAgIG1lbXNldChmc2xf
+Y29tcC0+dmlydF9hZGRyLCAwLA0KPj4gPkZTTF9RRE1BX0NPTU1BTkRfQlVGRkVSX1NJWkUpOw0K
+Pj4gPj4gICAgICAgbWVtc2V0KGZzbF9jb21wLT5kZXNjX3ZpcnRfYWRkciwgMCwNCj4+ID4+IEZT
+TF9RRE1BX0RFU0NSSVBUT1JfQlVGRkVSX1NJWkUpOw0KPj4gPj4gKw0KPj4gPj4gICAgICAgLyog
+SGVhZCBDb21tYW5kIERlc2NyaXB0b3IoRnJhbWUgRGVzY3JpcHRvcikgKi8NCj4+ID4+ICAgICAg
+IHFkbWFfZGVzY19hZGRyX3NldDY0KGNjZGYsIGZzbF9jb21wLT5idXNfYWRkciArIDE2KTsNCj4+
+ID4+ICAgICAgIHFkbWFfY2NkZl9zZXRfZm9ybWF0KGNjZGYsIHFkbWFfY2NkZl9nZXRfb2Zmc2V0
+KGNjZGYpKTsgQEANCj4+ID4+IC0zNjksMTQgKzM3OCwxNCBAQCBzdGF0aWMgdm9pZCBmc2xfcWRt
+YV9jb21wX2ZpbGxfbWVtY3B5KHN0cnVjdA0KPj4gPmZzbF9xZG1hX2NvbXAgKmZzbF9jb21wLA0K
+Pj4gPj4gICAgICAgLyogVGhpcyBlbnRyeSBpcyB0aGUgbGFzdCBlbnRyeS4gKi8NCj4+ID4+ICAg
+ICAgIHFkbWFfY3NnZl9zZXRfZihjc2dmX2Rlc3QsIGxlbik7DQo+PiA+PiAgICAgICAvKiBEZXNj
+cmlwdG9yIEJ1ZmZlciAqLw0KPj4gPj4gLSAgICAgc2RmLT5kYXRhID0NCj4+ID4+IC0gICAgICAg
+ICAgICAgY3B1X3RvX2xlNjQoRlNMX1FETUFfQ01EX1JXVFRZUEUgPDwNCj4+ID4+IC0gICAgICAg
+ICAgICAgICAgICAgICAgICAgRlNMX1FETUFfQ01EX1JXVFRZUEVfT0ZGU0VUKTsNCj4+ID4+IC0g
+ICAgIGRkZi0+ZGF0YSA9DQo+PiA+PiAtICAgICAgICAgICAgIGNwdV90b19sZTY0KEZTTF9RRE1B
+X0NNRF9SV1RUWVBFIDw8DQo+PiA+PiAtICAgICAgICAgICAgICAgICAgICAgICAgIEZTTF9RRE1B
+X0NNRF9SV1RUWVBFX09GRlNFVCk7DQo+PiA+PiAtICAgICBkZGYtPmRhdGEgfD0NCj4+ID4+IC0g
+ICAgICAgICAgICAgY3B1X3RvX2xlNjQoRlNMX1FETUFfQ01EX0xXQyA8PA0KPj4gPkZTTF9RRE1B
+X0NNRF9MV0NfT0ZGU0VUKTsNCj4+ID4+ICsgICAgIGNtZCA9IGNwdV90b19sZTMyKEZTTF9RRE1B
+X0NNRF9SV1RUWVBFIDw8DQo+PiA+PiArICAgICAgICAgICAgICAgICAgICAgICBGU0xfUURNQV9D
+TURfUldUVFlQRV9PRkZTRVQpOw0KPj4gPj4gKyAgICAgcWRtYV9zZGRmX3NldF9jbWQoc2RmLCBj
+bWQpOw0KPj4gPj4gKw0KPj4gPj4gKyAgICAgY21kID0gY3B1X3RvX2xlMzIoRlNMX1FETUFfQ01E
+X1JXVFRZUEUgPDwNCj4+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgIEZTTF9RRE1BX0NNRF9S
+V1RUWVBFX09GRlNFVCk7DQo+PiA+PiArICAgICBjbWQgfD0gY3B1X3RvX2xlMzIoRlNMX1FETUFf
+Q01EX0xXQyA8PA0KPj4gPkZTTF9RRE1BX0NNRF9MV0NfT0ZGU0VUKTsNCj4+ID4+ICsgICAgIHFk
+bWFfc2RkZl9zZXRfY21kKGRkZiwgY21kKTsNCj4+ID4+ICB9DQo+PiA+Pg0KPj4gPj4gIC8qDQo+
+PiA+PiBAQCAtNzAxLDEwICs3MTAsOCBAQCBzdGF0aWMgaXJxcmV0dXJuX3QgZnNsX3FkbWFfZXJy
+b3JfaGFuZGxlcihpbnQNCj4+ID4+IGlycSwgdm9pZCAqZGV2X2lkKQ0KPj4gPj4NCj4+ID4+ICAg
+ICAgIGludHIgPSBxZG1hX3JlYWRsKGZzbF9xZG1hLCBzdGF0dXMgKyBGU0xfUURNQV9ERURSKTsN
+Cj4+ID4+DQo+PiA+PiAtICAgICBpZiAoaW50cikgew0KPj4gPj4gKyAgICAgaWYgKGludHIpDQo+
+PiA+PiAgICAgICAgICAgICAgIGRldl9lcnIoZnNsX3FkbWEtPmRtYV9kZXYuZGV2LCAiRE1BIHRy
+YW5zYWN0aW9uDQo+PiA+ZXJyb3IhXG4iKTsNCj4+ID4+IC0gICAgICAgICAgICAgcmV0dXJuIElS
+UV9OT05FOw0KPj4gPj4gLSAgICAgfQ0KPj4gPg0KPj4gPnRoaXMgc2VlbXMgdW5yZWxhdGVkIGNh
+biB5b3UgZXhwbGFpbj8NCj4+ID4NCj4+IFtQZW5nIE1hXSBUaGlzIGlzIGFuIGFkZGVkIGltcHJv
+dmVtZW50LiBXaGVuIGFuIGVycm9yIG9jY3VycyB3ZSBzaG91bGQNCj5jbGVhbiB0aGUgZXJyb3Ig
+cmVnIHRoZW4gdG8gcmV0dXJuLg0KPj4gSSBmb3Jnb3QgdG8gZXhwbGFpbiBpdCBvbiBjb21tZW50
+cy4gU2hvdWxkIEkgYWRkIHRoaXMgY2hhbmdlZCB0byB0aGUNCj5jb21tZW50cz8NCj4NCj5ZZXMg
+YW5kIHlvdSBzaG91bGQgbWFrZSBpdCBhIHNlcGFyYXRlIHBhdGNoLiBBIHBhdGNoIHNob3VsZCBk
+byBvbmx5IDEgdGhpbmchDQo+DQpbUGVuZyBNYV0gT0ssIEdvdCBpdCwgdGhhbmtzLg0KQmVzdCBS
+ZWdhcmRzLA0KUGVuZw0KPi0tDQo+flZpbm9kDQo=

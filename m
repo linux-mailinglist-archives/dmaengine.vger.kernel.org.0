@@ -2,89 +2,95 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 34131E303
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Apr 2019 14:48:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 726FAE438
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Apr 2019 16:05:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbfD2Msa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 29 Apr 2019 08:48:30 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41002 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727956AbfD2Ms3 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 29 Apr 2019 08:48:29 -0400
-Received: by mail-oi1-f194.google.com with SMTP id v23so7984707oif.8;
-        Mon, 29 Apr 2019 05:48:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=og27ttBtjgJ9jOWpsX9tE4/VFPoPVEaauxxZKhLh4wA=;
-        b=YCcyb68g0HbnPS6KqhPv1iQoUsdN6C77xSAlm73E1yODNV+UBW35DilpWWx/EtAneh
-         5gwo3fBoFmNETpiNRIlClBH/uT4bc6F6xHRHV7HZtuf/5NOQYIfKsBE2jcJK/CRtG96s
-         UQ3oCC2vc7i/E5MtnQZtWqBVTObh0Gx7nSkPUAR/+3Em9wDKQajeQxDz3DREQqpoAhJi
-         OOWBGaBl0wViTT0/QCEvjPvxk76j5PvTVZAG8ulMWvDMpANPTe94SR5gb0RJfRQRxPo4
-         Lkmz4+O/p8TZqi1gQalN6RgteLdQDDidfxY4TdKtlpOuub4qOjStW0q+sVp3Lr4CIQqU
-         mSbQ==
-X-Gm-Message-State: APjAAAVBqtiFBJr639FjSHXcWf9emfwwvNPjk/upa8L2strbv4+1vjL4
-        t5/NowxT3ky8/Ixxpxt7aw==
-X-Google-Smtp-Source: APXvYqwKkbM8iUDWYjwi3FrVr9CbooaBbkgXDxXE3TLfLAeQGcrA39ywmAR8rFYO2DOBT72rVzWKCg==
-X-Received: by 2002:aca:be89:: with SMTP id o131mr15557106oif.138.1556542108407;
-        Mon, 29 Apr 2019 05:48:28 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c3sm7872781otr.57.2019.04.29.05.48.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Apr 2019 05:48:27 -0700 (PDT)
-Date:   Mon, 29 Apr 2019 07:48:27 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Long Cheng <long.cheng@mediatek.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org, srv_heupstream@mediatek.com,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        YT Shen <yt.shen@mediatek.com>,
-        Zhenbao Liu <zhenbao.liu@mediatek.com>,
-        Long Cheng <long.cheng@mediatek.com>
-Subject: Re: [PATCH 3/4] dt-bindings: dma: uart: rename binding
-Message-ID: <20190429124827.GA13816@bogus>
-References: <1556336193-15198-1-git-send-email-long.cheng@mediatek.com>
- <1556336193-15198-4-git-send-email-long.cheng@mediatek.com>
+        id S1728252AbfD2OFp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 29 Apr 2019 10:05:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55532 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728239AbfD2OFp (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 29 Apr 2019 10:05:45 -0400
+Received: from localhost (unknown [171.76.113.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F7F421655;
+        Mon, 29 Apr 2019 14:05:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556546744;
+        bh=qVipqbpF74NslrIJAp2+g2vf/JWQWFLexrajOnRDUME=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=p3+1k8xq616yFT7vtr8zz46qwCOa5a6V/y261xa0fS2qnBYuLYJyKsbAYmM7hLitL
+         fjn8DDIuZaH2gGmzjcNxTjXKiK/x1c4nBCPY41rJshPGlL3B1JbdGz1J2YH18KI2J1
+         vZrKmC68zix+9Akq8rvNGJvMTflpDK+LzAw7mcRU=
+Date:   Mon, 29 Apr 2019 19:35:37 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>, eric.long@unisoc.com,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Mark Brown <broonie@kernel.org>, dmaengine@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/7] dmaengine: sprd: Add device validation to support
+ multiple controllers
+Message-ID: <20190429140537.GN3845@vkoul-mobl.Dlink>
+References: <cover.1555330115.git.baolin.wang@linaro.org>
+ <d77dca51a14087873627d735a17adcfde5517398.1555330115.git.baolin.wang@linaro.org>
+ <20190429115723.GK3845@vkoul-mobl.Dlink>
+ <CAMz4kuLf4wgr4Js3xH1aQVc4c2XK1Oq2TnsUq=NSowQUq5ZN5g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1556336193-15198-4-git-send-email-long.cheng@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMz4kuLf4wgr4Js3xH1aQVc4c2XK1Oq2TnsUq=NSowQUq5ZN5g@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sat, 27 Apr 2019 11:36:32 +0800, Long Cheng wrote:
-> The filename matches mtk-uart-apdma.c.
-> So using "mtk-uart-apdma.txt" should be better.
-> And add some property.
+On 29-04-19, 20:20, Baolin Wang wrote:
+> On Mon, 29 Apr 2019 at 19:57, Vinod Koul <vkoul@kernel.org> wrote:
+> >
+> > On 15-04-19, 20:14, Baolin Wang wrote:
+> > > From: Eric Long <eric.long@unisoc.com>
+> > >
+> > > Since we can support multiple DMA engine controllers, we should add
+> > > device validation in filter function to check if the correct controller
+> > > to be requested.
+> > >
+> > > Signed-off-by: Eric Long <eric.long@unisoc.com>
+> > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > > ---
+> > >  drivers/dma/sprd-dma.c |    5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > >
+> > > diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+> > > index 0f92e60..9f99d4b 100644
+> > > --- a/drivers/dma/sprd-dma.c
+> > > +++ b/drivers/dma/sprd-dma.c
+> > > @@ -1020,8 +1020,13 @@ static void sprd_dma_free_desc(struct virt_dma_desc *vd)
+> > >  static bool sprd_dma_filter_fn(struct dma_chan *chan, void *param)
+> > >  {
+> > >       struct sprd_dma_chn *schan = to_sprd_dma_chan(chan);
+> > > +     struct of_phandle_args *dma_spec =
+> > > +             container_of(param, struct of_phandle_args, args[0]);
+> > >       u32 slave_id = *(u32 *)param;
+> > >
+> > > +     if (chan->device->dev->of_node != dma_spec->np)
+> >
+> > Are you not using of_dma_find_controller() that does this, so this would
+> > be useless!
 > 
-> Signed-off-by: Long Cheng <long.cheng@mediatek.com>
-> ---
->  .../devicetree/bindings/dma/8250_mtk_dma.txt       |   33 ------------
->  .../devicetree/bindings/dma/mtk-uart-apdma.txt     |   55 ++++++++++++++++++++
->  2 files changed, 55 insertions(+), 33 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/dma/8250_mtk_dma.txt
->  create mode 100644 Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
-> 
+> Yes, we can use of_dma_find_controller(), but that will be a little
+> complicated than current solution. Since we need introduce one
+> structure to save the node to validate in the filter function like
+> below, which seems make things complicated. But if you still like to
+> use of_dma_find_controller(), I can change to use it in next version.
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Sorry I should have clarified more..
 
-If a tag was not added on purpose, please state why and what changed.
+of_dma_find_controller() is called by xlate, so you already run this
+check, so why use this :)
+
+-- 
+~Vinod

@@ -2,167 +2,82 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 13A31DBF4
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Apr 2019 08:28:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05BE3E166
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Apr 2019 13:36:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfD2G2n (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 29 Apr 2019 02:28:43 -0400
-Received: from mail-eopbgr70070.outbound.protection.outlook.com ([40.107.7.70]:7139
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726979AbfD2G2n (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 29 Apr 2019 02:28:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=68LcGwaIvJGB5LrKe5RllociMnU7b9y6VRR6RPMjPV8=;
- b=N/4VbZQIjOhHk4ENevVBXCAeg18n04N5MyZbXANWxU43wdnFSVKfzAknYrWo3el4PJ+heT+o+HEXaY0XzxXdrKyF8pbbC+6mGt8VCNtW7EjxcAK6SgDt/LeYYMQ7NIKTPkmoziLxGETh4wzsUI1eU20wHFrgYSgcQ9U8G1HNBA8=
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.159) by
- VI1PR04MB4781.eurprd04.prod.outlook.com (20.177.48.214) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.15; Mon, 29 Apr 2019 06:28:37 +0000
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::940a:dc67:926:e5df]) by VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::940a:dc67:926:e5df%6]) with mapi id 15.20.1835.018; Mon, 29 Apr 2019
- 06:28:37 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH] dmaengine: fsl-qdma: fixed the
- source/destination descriptior format
-Thread-Topic: [EXT] Re: [PATCH] dmaengine: fsl-qdma: fixed the
- source/destination descriptior format
-Thread-Index: AQHU9o1fbPmX+1SRm0awFND3hnhkWKZOX3eAgAJ8d8CAAcw0AIAAFAqg
-Date:   Mon, 29 Apr 2019 06:28:37 +0000
-Message-ID: <VI1PR04MB44317BD4C6B36925C18BEC43ED390@VI1PR04MB4431.eurprd04.prod.outlook.com>
-References: <20190419084629.41742-1-peng.ma@nxp.com>
- <20190426115047.GW28103@vkoul-mobl>
- <VI1PR04MB4431E13D34650C2EE3D25861ED380@VI1PR04MB4431.eurprd04.prod.outlook.com>
- <20190429051554.GD3845@vkoul-mobl.Dlink>
-In-Reply-To: <20190429051554.GD3845@vkoul-mobl.Dlink>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a1599eeb-c121-4ed7-245c-08d6cc6be998
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4781;
-x-ms-traffictypediagnostic: VI1PR04MB4781:
-x-microsoft-antispam-prvs: <VI1PR04MB4781044E36E448145B7DD6ABED390@VI1PR04MB4781.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0022134A87
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(396003)(136003)(39860400002)(13464003)(189003)(199004)(229853002)(53936002)(81166006)(81156014)(9686003)(55016002)(93886005)(6436002)(6916009)(8676002)(6246003)(73956011)(66946007)(66476007)(66556008)(66446008)(64756008)(66066001)(4326008)(86362001)(25786009)(2906002)(8936002)(76116006)(71200400001)(71190400001)(74316002)(478600001)(3846002)(6116002)(54906003)(446003)(11346002)(52536014)(97736004)(305945005)(5660300002)(14454004)(7736002)(99286004)(7696005)(102836004)(68736007)(256004)(186003)(44832011)(6506007)(476003)(486006)(76176011)(26005)(316002)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4781;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: XgoEaH4kNRrv6v6NUjR3+xsysBudgDUnXer5VVVvInyzlBruI2W08j19+vywXXmD5y35chjTHxuGZX9xLHD2SXJX1nn3Nne0IkGh33n8vD1aaRt0pm+rYaPPulfK0yBgrc9nHGedRIWtIp6IDLHMco8U2k1mVYwRo2Q4KOw4yDG5Xq4YqOHb/Ay6fum7Dns/7jmp5JD9JEcQnrXqOo0wExKNCsJEiz/ZwqZmHeLzptsEboa4r5Ec0mGcGsfOc0rAYiAF5VUGlzyvPJOpvrwRQW923uXYjFEw5u5w4AcIe3dKsJSCeZ6XibimJf+KupA1p20CQyGA2QV9thJyKEe4VWsXWlBgRZY+j1R0HOZc7Ug8IQ5/P/J74oWvzGBsXTDmbkyWVU8RNTbg/0kvysCwUgoMZP0QDnO5nwSArbYL17k=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1728016AbfD2LgI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 29 Apr 2019 07:36:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43518 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727986AbfD2LgH (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 29 Apr 2019 07:36:07 -0400
+Received: from localhost (unknown [171.76.113.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B69482075E;
+        Mon, 29 Apr 2019 11:36:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556537766;
+        bh=xrb4idnEqTxEw7YKrCpZyBX26GxTnwHkDH99g213PQY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VEW+K+47fN2uG7Z1EKCt2g8fTb1RQbfUPM6mxN3KWl5FiTdqryFkRGMrfXCZje2El
+         EeJIuGirmR+BnFAi+o/wbYHW29KWlDOoHDWrqRXlEFFUwVN8kKX/1JWTGcAJMeT3Y5
+         bvzr+DdI92iexlvpfVvTrkptqj5Xg8GNxGNLIudI=
+Date:   Mon, 29 Apr 2019 17:05:55 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     dan.j.williams@intel.com, eric.long@unisoc.com,
+        orsonzhai@gmail.com, zhang.lyra@gmail.com, broonie@kernel.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/7] dmaengine: sprd: Fix the possible crash when getting
+ engine status
+Message-ID: <20190429113555.GI3845@vkoul-mobl.Dlink>
+References: <cover.1555330115.git.baolin.wang@linaro.org>
+ <2eecd528e85377f03e6fbc5e7d6544b9c9f59cb1.1555330115.git.baolin.wang@linaro.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1599eeb-c121-4ed7-245c-08d6cc6be998
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Apr 2019 06:28:37.0791
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4781
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2eecd528e85377f03e6fbc5e7d6544b9c9f59cb1.1555330115.git.baolin.wang@linaro.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IFZpbm9kIEtvdWwgPHZrb3Vs
-QGtlcm5lbC5vcmc+DQo+U2VudDogMjAxOeW5tDTmnIgyOeaXpSAxMzoxNg0KPlRvOiBQZW5nIE1h
-IDxwZW5nLm1hQG54cC5jb20+DQo+Q2M6IGRhbi5qLndpbGxpYW1zQGludGVsLmNvbTsgTGVvIExp
-IDxsZW95YW5nLmxpQG54cC5jb20+Ow0KPmRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
-LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj5TdWJqZWN0OiBSZTogW0VYVF0gUmU6IFtQQVRDSF0g
-ZG1hZW5naW5lOiBmc2wtcWRtYTogZml4ZWQgdGhlDQo+c291cmNlL2Rlc3RpbmF0aW9uIGRlc2Ny
-aXB0aW9yIGZvcm1hdA0KPg0KPkNhdXRpb246IEVYVCBFbWFpbA0KPg0KPk9uIDI4LTA0LTE5LCAw
-MjowMCwgUGVuZyBNYSB3cm90ZToNCj4+IEhpIFZpbm9kLA0KPj4NCj4+IFRoYW5rcyB5b3VyIGNv
-bW1lbnRzLg0KPj4gUGxlYXNlIHNlZSBteSBjb21tZW50cyBpbmxpbmUuDQo+Pg0KPj4gQmVzdCBS
-ZWdhcmRzLA0KPj4gUGVuZw0KPj4NCj4+ID4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPj4g
-PkZyb206IFZpbm9kIEtvdWwgPHZrb3VsQGtlcm5lbC5vcmc+DQo+PiA+U2VudDogMjAxOeW5tDTm
-nIgyNuaXpSAxOTo1MQ0KPj4gPlRvOiBQZW5nIE1hIDxwZW5nLm1hQG54cC5jb20+DQo+PiA+Q2M6
-IGRhbi5qLndpbGxpYW1zQGludGVsLmNvbTsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+Ow0K
-Pj4gPmRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmcNCj4+ID5TdWJqZWN0OiBbRVhUXSBSZTogW1BBVENIXSBkbWFlbmdpbmU6IGZzbC1xZG1hOiBm
-aXhlZCB0aGUNCj4+ID5zb3VyY2UvZGVzdGluYXRpb24gZGVzY3JpcHRpb3IgZm9ybWF0DQo+PiA+
-DQo+PiA+Q2F1dGlvbjogRVhUIEVtYWlsDQo+PiA+DQo+PiA+T24gMTktMDQtMTksIDA4OjQ2LCBQ
-ZW5nIE1hIHdyb3RlOg0KPj4gPj4gQ01EIG9mIFNvdXJjZS9EZXN0aW5hdGlvbiBkZXNjcmlwdGlv
-ciBmb3JtYXQgc2hvdWxkIGJlIGxvd2VyIG9mDQo+PiA+DQo+PiA+cy9kZXNjcmlwdGlvci9kZXNj
-cmlwdG9yDQo+PiA+DQo+PiBbUGVuZyBNYV0gR290IGl0Lg0KPj4gPj4gc3RydWN0IGZzbF9xZG1h
-X2VuZ2luZSBudW1iZXIgZGF0YSBhZGRyZXNzLg0KPj4gPj4NCj4+ID4+IFNpZ25lZC1vZmYtYnk6
-IFBlbmcgTWEgPHBlbmcubWFAbnhwLmNvbT4NCj4+ID4+IC0tLQ0KPj4gPj4gIGRyaXZlcnMvZG1h
-L2ZzbC1xZG1hLmMgfCAgIDI5ICsrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tDQo+PiA+PiAg
-MSBmaWxlcyBjaGFuZ2VkLCAxOCBpbnNlcnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkNCj4+ID4+
-DQo+PiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9kbWEvZnNsLXFkbWEuYyBiL2RyaXZlcnMvZG1h
-L2ZzbC1xZG1hLmMgaW5kZXgNCj4+ID4+IGFhMWQwYWUuLjU0Mjc2NWEgMTAwNjQ0DQo+PiA+PiAt
-LS0gYS9kcml2ZXJzL2RtYS9mc2wtcWRtYS5jDQo+PiA+PiArKysgYi9kcml2ZXJzL2RtYS9mc2wt
-cWRtYS5jDQo+PiA+PiBAQCAtMTEzLDYgKzExMyw3IEBADQo+PiA+PiAgLyogRmllbGQgZGVmaW5p
-dGlvbiBmb3IgRGVzY3JpcHRvciBvZmZzZXQgKi8NCj4+ID4+ICAjZGVmaW5lIFFETUFfQ0NERl9T
-VEFUVVMgICAgICAgICAgICAgMjANCj4+ID4+ICAjZGVmaW5lIFFETUFfQ0NERl9PRkZTRVQgICAg
-ICAgICAgICAgMjANCj4+ID4+ICsjZGVmaW5lIFFETUFfU0RERl9DTUQoeCkgICAgICAgICAgICAg
-KCgodTY0KSh4KSkgPDwgMzIpDQo+PiA+Pg0KPj4gPj4gIC8qIEZpZWxkIGRlZmluaXRpb24gZm9y
-IHNhZmUgbG9vcCBjb3VudCovDQo+PiA+PiAgI2RlZmluZSBGU0xfUURNQV9IQUxUX0NPVU5UICAg
-ICAgICAgIDE1MDANCj4+ID4+IEBAIC0yMTQsNiArMjE1LDEyIEBAIHN0cnVjdCBmc2xfcWRtYV9l
-bmdpbmUgew0KPj4gPj4NCj4+ID4+ICB9Ow0KPj4gPj4NCj4+ID4+ICtzdGF0aWMgaW5saW5lIHZv
-aWQNCj4+ID4+ICtxZG1hX3NkZGZfc2V0X2NtZChzdHJ1Y3QgZnNsX3FkbWFfZm9ybWF0ICpzZGRm
-LCB1MzIgdmFsKSB7DQo+PiA+PiArICAgICBzZGRmLT5kYXRhID0gUURNQV9TRERGX0NNRCh2YWwp
-OyB9DQo+PiA+PiArDQo+PiA+PiAgc3RhdGljIGlubGluZSB1NjQNCj4+ID4+ICBxZG1hX2NjZGZf
-YWRkcl9nZXQ2NChjb25zdCBzdHJ1Y3QgZnNsX3FkbWFfZm9ybWF0ICpjY2RmKSAgeyBAQA0KPj4g
-Pi0zNDEsNg0KPj4gPj4gKzM0OCw3IEBAIHN0YXRpYyB2b2lkIGZzbF9xZG1hX2ZyZWVfY2hhbl9y
-ZXNvdXJjZXMoc3RydWN0IGRtYV9jaGFuDQo+PiA+PiAqY2hhbikgIHN0YXRpYyB2b2lkIGZzbF9x
-ZG1hX2NvbXBfZmlsbF9tZW1jcHkoc3RydWN0IGZzbF9xZG1hX2NvbXANCj4+ID4qZnNsX2NvbXAs
-DQo+PiA+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkbWFfYWRkcl90IGRz
-dCwNCj5kbWFfYWRkcl90DQo+PiA+c3JjLA0KPj4gPj4gdTMyIGxlbikgIHsNCj4+ID4+ICsgICAg
-IHUzMiBjbWQ7DQo+PiA+PiAgICAgICBzdHJ1Y3QgZnNsX3FkbWFfZm9ybWF0ICpzZGYsICpkZGY7
-DQo+PiA+PiAgICAgICBzdHJ1Y3QgZnNsX3FkbWFfZm9ybWF0ICpjY2RmLCAqY3NnZl9kZXNjLCAq
-Y3NnZl9zcmMsDQo+PiA+PiAqY3NnZl9kZXN0Ow0KPj4gPj4NCj4+ID4+IEBAIC0zNTMsNiArMzYx
-LDcgQEAgc3RhdGljIHZvaWQgZnNsX3FkbWFfY29tcF9maWxsX21lbWNweShzdHJ1Y3QNCj4+ID4+
-IGZzbF9xZG1hX2NvbXAgKmZzbF9jb21wLA0KPj4gPj4NCj4+ID4+ICAgICAgIG1lbXNldChmc2xf
-Y29tcC0+dmlydF9hZGRyLCAwLA0KPj4gPkZTTF9RRE1BX0NPTU1BTkRfQlVGRkVSX1NJWkUpOw0K
-Pj4gPj4gICAgICAgbWVtc2V0KGZzbF9jb21wLT5kZXNjX3ZpcnRfYWRkciwgMCwNCj4+ID4+IEZT
-TF9RRE1BX0RFU0NSSVBUT1JfQlVGRkVSX1NJWkUpOw0KPj4gPj4gKw0KPj4gPj4gICAgICAgLyog
-SGVhZCBDb21tYW5kIERlc2NyaXB0b3IoRnJhbWUgRGVzY3JpcHRvcikgKi8NCj4+ID4+ICAgICAg
-IHFkbWFfZGVzY19hZGRyX3NldDY0KGNjZGYsIGZzbF9jb21wLT5idXNfYWRkciArIDE2KTsNCj4+
-ID4+ICAgICAgIHFkbWFfY2NkZl9zZXRfZm9ybWF0KGNjZGYsIHFkbWFfY2NkZl9nZXRfb2Zmc2V0
-KGNjZGYpKTsgQEANCj4+ID4+IC0zNjksMTQgKzM3OCwxNCBAQCBzdGF0aWMgdm9pZCBmc2xfcWRt
-YV9jb21wX2ZpbGxfbWVtY3B5KHN0cnVjdA0KPj4gPmZzbF9xZG1hX2NvbXAgKmZzbF9jb21wLA0K
-Pj4gPj4gICAgICAgLyogVGhpcyBlbnRyeSBpcyB0aGUgbGFzdCBlbnRyeS4gKi8NCj4+ID4+ICAg
-ICAgIHFkbWFfY3NnZl9zZXRfZihjc2dmX2Rlc3QsIGxlbik7DQo+PiA+PiAgICAgICAvKiBEZXNj
-cmlwdG9yIEJ1ZmZlciAqLw0KPj4gPj4gLSAgICAgc2RmLT5kYXRhID0NCj4+ID4+IC0gICAgICAg
-ICAgICAgY3B1X3RvX2xlNjQoRlNMX1FETUFfQ01EX1JXVFRZUEUgPDwNCj4+ID4+IC0gICAgICAg
-ICAgICAgICAgICAgICAgICAgRlNMX1FETUFfQ01EX1JXVFRZUEVfT0ZGU0VUKTsNCj4+ID4+IC0g
-ICAgIGRkZi0+ZGF0YSA9DQo+PiA+PiAtICAgICAgICAgICAgIGNwdV90b19sZTY0KEZTTF9RRE1B
-X0NNRF9SV1RUWVBFIDw8DQo+PiA+PiAtICAgICAgICAgICAgICAgICAgICAgICAgIEZTTF9RRE1B
-X0NNRF9SV1RUWVBFX09GRlNFVCk7DQo+PiA+PiAtICAgICBkZGYtPmRhdGEgfD0NCj4+ID4+IC0g
-ICAgICAgICAgICAgY3B1X3RvX2xlNjQoRlNMX1FETUFfQ01EX0xXQyA8PA0KPj4gPkZTTF9RRE1B
-X0NNRF9MV0NfT0ZGU0VUKTsNCj4+ID4+ICsgICAgIGNtZCA9IGNwdV90b19sZTMyKEZTTF9RRE1B
-X0NNRF9SV1RUWVBFIDw8DQo+PiA+PiArICAgICAgICAgICAgICAgICAgICAgICBGU0xfUURNQV9D
-TURfUldUVFlQRV9PRkZTRVQpOw0KPj4gPj4gKyAgICAgcWRtYV9zZGRmX3NldF9jbWQoc2RmLCBj
-bWQpOw0KPj4gPj4gKw0KPj4gPj4gKyAgICAgY21kID0gY3B1X3RvX2xlMzIoRlNMX1FETUFfQ01E
-X1JXVFRZUEUgPDwNCj4+ID4+ICsgICAgICAgICAgICAgICAgICAgICAgIEZTTF9RRE1BX0NNRF9S
-V1RUWVBFX09GRlNFVCk7DQo+PiA+PiArICAgICBjbWQgfD0gY3B1X3RvX2xlMzIoRlNMX1FETUFf
-Q01EX0xXQyA8PA0KPj4gPkZTTF9RRE1BX0NNRF9MV0NfT0ZGU0VUKTsNCj4+ID4+ICsgICAgIHFk
-bWFfc2RkZl9zZXRfY21kKGRkZiwgY21kKTsNCj4+ID4+ICB9DQo+PiA+Pg0KPj4gPj4gIC8qDQo+
-PiA+PiBAQCAtNzAxLDEwICs3MTAsOCBAQCBzdGF0aWMgaXJxcmV0dXJuX3QgZnNsX3FkbWFfZXJy
-b3JfaGFuZGxlcihpbnQNCj4+ID4+IGlycSwgdm9pZCAqZGV2X2lkKQ0KPj4gPj4NCj4+ID4+ICAg
-ICAgIGludHIgPSBxZG1hX3JlYWRsKGZzbF9xZG1hLCBzdGF0dXMgKyBGU0xfUURNQV9ERURSKTsN
-Cj4+ID4+DQo+PiA+PiAtICAgICBpZiAoaW50cikgew0KPj4gPj4gKyAgICAgaWYgKGludHIpDQo+
-PiA+PiAgICAgICAgICAgICAgIGRldl9lcnIoZnNsX3FkbWEtPmRtYV9kZXYuZGV2LCAiRE1BIHRy
-YW5zYWN0aW9uDQo+PiA+ZXJyb3IhXG4iKTsNCj4+ID4+IC0gICAgICAgICAgICAgcmV0dXJuIElS
-UV9OT05FOw0KPj4gPj4gLSAgICAgfQ0KPj4gPg0KPj4gPnRoaXMgc2VlbXMgdW5yZWxhdGVkIGNh
-biB5b3UgZXhwbGFpbj8NCj4+ID4NCj4+IFtQZW5nIE1hXSBUaGlzIGlzIGFuIGFkZGVkIGltcHJv
-dmVtZW50LiBXaGVuIGFuIGVycm9yIG9jY3VycyB3ZSBzaG91bGQNCj5jbGVhbiB0aGUgZXJyb3Ig
-cmVnIHRoZW4gdG8gcmV0dXJuLg0KPj4gSSBmb3Jnb3QgdG8gZXhwbGFpbiBpdCBvbiBjb21tZW50
-cy4gU2hvdWxkIEkgYWRkIHRoaXMgY2hhbmdlZCB0byB0aGUNCj5jb21tZW50cz8NCj4NCj5ZZXMg
-YW5kIHlvdSBzaG91bGQgbWFrZSBpdCBhIHNlcGFyYXRlIHBhdGNoLiBBIHBhdGNoIHNob3VsZCBk
-byBvbmx5IDEgdGhpbmchDQo+DQpbUGVuZyBNYV0gT0ssIEdvdCBpdCwgdGhhbmtzLg0KQmVzdCBS
-ZWdhcmRzLA0KUGVuZw0KPi0tDQo+flZpbm9kDQo=
+On 15-04-19, 20:14, Baolin Wang wrote:
+> We will get a NULL virtual descriptor by vchan_find_desc() when the descriptor
+> has been submitted, that will crash the kernel when getting the engine status.
+
+No that is wrong, status is for descriptor and not engine!
+
+> In this case, since the descriptor has been submitted, which means the pointer
+> 'schan->cur_desc' will point to the current descriptor, then we can use
+> 'schan->cur_desc' to get the engine status to avoid this issue.
+
+Nope, since the descriptor is completed, you return with residue as 0
+and DMA_COMPLETE status!
+
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+>  drivers/dma/sprd-dma.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+> index 48431e2..e29342a 100644
+> --- a/drivers/dma/sprd-dma.c
+> +++ b/drivers/dma/sprd-dma.c
+> @@ -625,7 +625,7 @@ static enum dma_status sprd_dma_tx_status(struct dma_chan *chan,
+>  		else
+>  			pos = 0;
+>  	} else if (schan->cur_desc && schan->cur_desc->vd.tx.cookie == cookie) {
+> -		struct sprd_dma_desc *sdesc = to_sprd_dma_desc(vd);
+> +		struct sprd_dma_desc *sdesc = schan->cur_desc;
+>  
+>  		if (sdesc->dir == DMA_DEV_TO_MEM)
+>  			pos = sprd_dma_get_dst_addr(schan);
+> -- 
+> 1.7.9.5
+
+-- 
+~Vinod

@@ -2,143 +2,99 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 55F5DF245
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Apr 2019 10:53:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C1DEF59F
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Apr 2019 13:30:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfD3Ixp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 30 Apr 2019 04:53:45 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42614 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbfD3Ixp (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 Apr 2019 04:53:45 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k9so7593986oig.9
-        for <dmaengine@vger.kernel.org>; Tue, 30 Apr 2019 01:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A8/NEuA9marorl0ixlh/3shrh19pr40I3KqHuo9ZWlE=;
-        b=OAe1zycT9lDlKZVighchQ6eYIy0XmGyjFcKMqUYoeryriWN1KoF3rGGIXMpOm1MOSW
-         wgUx0cDHR3zb0tvqC9URlP1WM45RF6izTv/+uwYLDj99eI5wPP8y+aaAyVKzmFAjqAlC
-         feJmhPrZF31W8VYorttnQ6+BZVtwXGTJempUyobcpGMhYT7H22ZWlravqZqnJYUbV5zc
-         ktSOYP9QtbDUpUQn5egp/kHSOzXG5SISQnQgsDJ8VlWbvz3pltax2xuK7zNlJFAiI1NR
-         SVJrMACuAzxXNHg+e6TGZ7trsDl8ZQ+C7oJzDbnHWL+BKCgvV+oYmcq8ZJEaqWV8fZ27
-         IcdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A8/NEuA9marorl0ixlh/3shrh19pr40I3KqHuo9ZWlE=;
-        b=WOaUaEEQpe/5u4YH2udR2bbaOp8X6pkNmUEd8Wd/YIyuwaX9oSgxr0GnpiUufgw0tL
-         +1akBHfExYviSsQ3fdkvsVaBcLrUyv0PcSZBg5o7Jr2tJu9NgIJ+MVDTp5TejOYTiG1n
-         R3YjkVqOOnq/R+6DCUd82StquvcpzuHafX8ae6alWEz8ATBouUWtykY4dCSZkWeUh/UM
-         8+iX0sc300KRebL9hx9LnYg2Dc/lffFEuNFgywo/22z/CPsOtASIwwNJN0UDAeayhAyi
-         3yer1lBBtZBbKCbo+52acBAgzXUpSfuSXQDaGfKX7Tj7sIfXT0wNaPuEG/gfDFrvdnyU
-         s9/w==
-X-Gm-Message-State: APjAAAVVRypkxZXRVoWSE7iyg0yX+fmMLfI6mnnNDb79b76C7bJ54ZpZ
-        RL5vfPx5I+FWBpwLaO8StQxytejn7sxnSgi9+OpyYg==
-X-Google-Smtp-Source: APXvYqwtAPgDAo5ewm/8SWWaA1+o4UOZZmMGy268pyU4RTnAt8OUNfnqJVpWboYxwh48ndcMExsT4WmicraSu+Dg5hg=
-X-Received: by 2002:aca:ba0b:: with SMTP id k11mr2230922oif.57.1556614424087;
- Tue, 30 Apr 2019 01:53:44 -0700 (PDT)
+        id S1727554AbfD3Lak (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 30 Apr 2019 07:30:40 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:15611 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbfD3Lak (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 Apr 2019 07:30:40 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cc831c10000>; Tue, 30 Apr 2019 04:30:09 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 30 Apr 2019 04:30:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 30 Apr 2019 04:30:39 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Apr
+ 2019 11:30:38 +0000
+Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Apr
+ 2019 11:30:38 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 30 Apr 2019 11:30:38 +0000
+Received: from linux.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cc831dc0003>; Tue, 30 Apr 2019 04:30:38 -0700
+From:   Sameer Pujar <spujar@nvidia.com>
+To:     <vkoul@kernel.org>, <dan.j.williams@intel.com>, <tiwai@suse.com>
+CC:     <jonathanh@nvidia.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Sameer Pujar <spujar@nvidia.com>
+Subject: [PATCH] [RFC] dmaengine: add fifo_size member
+Date:   Tue, 30 Apr 2019 17:00:28 +0530
+Message-ID: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <cover.1555330115.git.baolin.wang@linaro.org> <d77dca51a14087873627d735a17adcfde5517398.1555330115.git.baolin.wang@linaro.org>
- <20190429115723.GK3845@vkoul-mobl.Dlink> <CAMz4kuLf4wgr4Js3xH1aQVc4c2XK1Oq2TnsUq=NSowQUq5ZN5g@mail.gmail.com>
- <20190429140537.GN3845@vkoul-mobl.Dlink> <CAMz4ku+ctQrcR+6t1ouakeG3dbgL3qR8fz-Hft4s9FnxtFL1ng@mail.gmail.com>
- <20190430082954.GQ3845@vkoul-mobl.Dlink> <CAMz4kuKV3J+aw9sic=QOhmcnr+H_pZ-pmq4pRbLX1R+XAR=phA@mail.gmail.com>
-In-Reply-To: <CAMz4kuKV3J+aw9sic=QOhmcnr+H_pZ-pmq4pRbLX1R+XAR=phA@mail.gmail.com>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Tue, 30 Apr 2019 16:53:32 +0800
-Message-ID: <CAMz4kuLFyckFdzVgL9FH0xW8036OoAbyjHqfOAVhibPyNssPDA@mail.gmail.com>
-Subject: Re: [PATCH 4/7] dmaengine: sprd: Add device validation to support
- multiple controllers
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>, eric.long@unisoc.com,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Mark Brown <broonie@kernel.org>, dmaengine@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1556623809; bh=AH+q4xpuhOjvbuUu+/2uIx5A6NBKPe1QLxkPOVg1H7g=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:Content-Type;
+        b=EkDUb7qA27dFZrFmJITvZIkKP9+U7Zf2yP0qu14TcCUS8apyFLBShJ42wst5bN7C2
+         RGTut2NU6SczZwm6DP5TDswAOXF/VFb+4WAFQXdWqofziwlRNsJfVXbsJKUHEQka0x
+         K07H4Ue4ZJfImQc6KKe/y3LXLxzhT5Bw9AgGxrT8YYtHPwmDalNx/XV7d448Ff1hCe
+         YIMExb31Z1MFQUeSlz/Zyj4aBeocylldTZOwNr0wdve/ec6ZuilyPqNaijZqx0UQ97
+         0q0QMEB9X9o5azZ9qcXLkyoPmqNMATZcZ30SLMQMSyxhuZvxmEuWfRECB5wcT3ZkY0
+         l5WmtAYwesiEw==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vinod,
+During the DMA transfers from memory to I/O, it was observed that transfers
+were inconsistent and resulted in glitches for audio playback. It happened
+because fifo size on DMA did not match with slave channel configuration.
 
-On Tue, 30 Apr 2019 at 16:34, Baolin Wang <baolin.wang@linaro.org> wrote:
->
-> On Tue, 30 Apr 2019 at 16:30, Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > On 30-04-19, 13:30, Baolin Wang wrote:
-> > > On Mon, 29 Apr 2019 at 22:05, Vinod Koul <vkoul@kernel.org> wrote:
-> > > >
-> > > > On 29-04-19, 20:20, Baolin Wang wrote:
-> > > > > On Mon, 29 Apr 2019 at 19:57, Vinod Koul <vkoul@kernel.org> wrote:
-> > > > > >
-> > > > > > On 15-04-19, 20:14, Baolin Wang wrote:
-> > > > > > > From: Eric Long <eric.long@unisoc.com>
-> > > > > > >
-> > > > > > > Since we can support multiple DMA engine controllers, we should add
-> > > > > > > device validation in filter function to check if the correct controller
-> > > > > > > to be requested.
-> > > > > > >
-> > > > > > > Signed-off-by: Eric Long <eric.long@unisoc.com>
-> > > > > > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> > > > > > > ---
-> > > > > > >  drivers/dma/sprd-dma.c |    5 +++++
-> > > > > > >  1 file changed, 5 insertions(+)
-> > > > > > >
-> > > > > > > diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-> > > > > > > index 0f92e60..9f99d4b 100644
-> > > > > > > --- a/drivers/dma/sprd-dma.c
-> > > > > > > +++ b/drivers/dma/sprd-dma.c
-> > > > > > > @@ -1020,8 +1020,13 @@ static void sprd_dma_free_desc(struct virt_dma_desc *vd)
-> > > > > > >  static bool sprd_dma_filter_fn(struct dma_chan *chan, void *param)
-> > > > > > >  {
-> > > > > > >       struct sprd_dma_chn *schan = to_sprd_dma_chan(chan);
-> > > > > > > +     struct of_phandle_args *dma_spec =
-> > > > > > > +             container_of(param, struct of_phandle_args, args[0]);
-> > > > > > >       u32 slave_id = *(u32 *)param;
-> > > > > > >
-> > > > > > > +     if (chan->device->dev->of_node != dma_spec->np)
-> > > > > >
-> > > > > > Are you not using of_dma_find_controller() that does this, so this would
-> > > > > > be useless!
-> > > > >
-> > > > > Yes, we can use of_dma_find_controller(), but that will be a little
-> > > > > complicated than current solution. Since we need introduce one
-> > > > > structure to save the node to validate in the filter function like
-> > > > > below, which seems make things complicated. But if you still like to
-> > > > > use of_dma_find_controller(), I can change to use it in next version.
-> > > >
-> > > > Sorry I should have clarified more..
-> > > >
-> > > > of_dma_find_controller() is called by xlate, so you already run this
-> > > > check, so why use this :)
-> > >
-> > > The of_dma_find_controller() can save the requested device node into
-> > > dma_spec, and in the of_dma_simple_xlate() function, it will call
-> > > dma_request_channel() to request one channel, but it did not validate
-> > > the device node to find the corresponding dma device in
-> > > dma_request_channel(). So we should in our filter function to validate
-> > > the device node with the device node specified by the dma_spec. Hope I
-> > > make things clear.
-> >
-> > But dma_request_channel() calls of_dma_request_slave_channel() which
-> > invokes of_dma_find_controller() why is it broken for you if that is the
-> > case..
->
-> No,the calling process should be:
-> dma_request_slave_channel()
-> --->dma_request_chan()--->of_dma_request_slave_channel()---->of_dma_simple_xlate()
-> ----> dma_request_channel().
->
+currently 'dma_slave_config' structure does not have a field for fifo size.
+Hence the platform pcm driver cannot pass the fifo size as a slave_config.
+Note that 'snd_dmaengine_dai_dma_data' structure has fifo_size field which
+cannot be used to pass the size info. This patch introduces fifo_size field
+and the same can be populated on slave side. Users can set required size
+for slave peripheral (multiple channels can be independently running with
+different fifo sizes) and the corresponding sizes are programmed through
+dma_slave_config on DMA side.
 
-You can check other drivers, they also will save the device node to
-validate in their filter function.
-For example the imx-sdma driver:
-https://elixir.bootlin.com/linux/v5.1-rc6/source/drivers/dma/imx-sdma.c#L1931
+Request for feedback/suggestions.
 
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+---
+ include/linux/dmaengine.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index d49ec5c..9ec198b 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -351,6 +351,8 @@ enum dma_slave_buswidth {
+  * @slave_id: Slave requester id. Only valid for slave channels. The dma
+  * slave peripheral will have unique id as dma requester which need to be
+  * pass as slave config.
++ * @fifo_size: Fifo size value. The dma slave peripheral can configure required
++ * fifo size and the same needs to be passed as slave config.
+  *
+  * This struct is passed in as configuration data to a DMA engine
+  * in order to set up a certain channel for DMA transport at runtime.
+@@ -376,6 +378,7 @@ struct dma_slave_config {
+ 	u32 dst_port_window_size;
+ 	bool device_fc;
+ 	unsigned int slave_id;
++	u32 fifo_size;
+ };
+ 
+ /**
 -- 
-Baolin Wang
-Best Regards
+2.7.4
+

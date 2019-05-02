@@ -2,95 +2,98 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DA44911303
-	for <lists+dmaengine@lfdr.de>; Thu,  2 May 2019 08:04:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EE99113A2
+	for <lists+dmaengine@lfdr.de>; Thu,  2 May 2019 09:00:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbfEBGE5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 2 May 2019 02:04:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbfEBGE4 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 2 May 2019 02:04:56 -0400
-Received: from localhost (unknown [171.76.113.243])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 271722081C;
-        Thu,  2 May 2019 06:04:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556777096;
-        bh=AIbpzp/IDy0CStv4gzV133Vm7XU8kRQPpGQnibvVotw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fKBQrLQySLJTXow2/VlS55JsED+AA0f7bOfytCZHFjpB+81Mrp4W4PZmQ5VzKz3iv
-         5lUhRZuxmmkQLE5ZmC1Jz0SofYDFJXS1CNrFtJ0TI42F3IWztOWnBn9f2RTzEWsfNS
-         JVKk8WAxc3/+TYCgRAseNK1G9HYnaO9nFse2+Mzw=
-Date:   Thu, 2 May 2019 11:34:46 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     dan.j.williams@intel.com, tiwai@suse.com, jonathanh@nvidia.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-Message-ID: <20190502060446.GI3845@vkoul-mobl.Dlink>
-References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+        id S1725795AbfEBG77 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 2 May 2019 02:59:59 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:47647 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbfEBG74 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 2 May 2019 02:59:56 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hM5gz-0008TR-Au; Thu, 02 May 2019 08:59:41 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hM5gx-0007lH-EQ; Thu, 02 May 2019 08:59:39 +0200
+Date:   Thu, 2 May 2019 08:59:39 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Robin Gong <yibin.gong@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc:     "broonie@kernel.org" <broonie@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "plyatov@gmail.com" <plyatov@gmail.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: [PATCH v2 08/15] dt-bindings: spi: imx: add i.mx6ul to state
+ errata fixed
+Message-ID: <20190502065939.nyejomrsowhy6xox@pengutronix.de>
+References: <1556265512-9130-1-git-send-email-yibin.gong@nxp.com>
+ <1556265512-9130-9-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1556265512-9130-9-git-send-email-yibin.gong@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 30-04-19, 17:00, Sameer Pujar wrote:
-> During the DMA transfers from memory to I/O, it was observed that transfers
-> were inconsistent and resulted in glitches for audio playback. It happened
-> because fifo size on DMA did not match with slave channel configuration.
+On Fri, Apr 26, 2019 at 08:05:51AM +0000, Robin Gong wrote:
+> ERR009165 fixed from i.mx6ul, add it to show the errata fixed.
 > 
-> currently 'dma_slave_config' structure does not have a field for fifo size.
-> Hence the platform pcm driver cannot pass the fifo size as a slave_config.
-> Note that 'snd_dmaengine_dai_dma_data' structure has fifo_size field which
-> cannot be used to pass the size info. This patch introduces fifo_size field
-> and the same can be populated on slave side. Users can set required size
-> for slave peripheral (multiple channels can be independently running with
-> different fifo sizes) and the corresponding sizes are programmed through
-> dma_slave_config on DMA side.
-
-FIFO size is a hardware property not sure why you would want an
-interface to program that?
-
-On mismatch, I guess you need to take care of src/dst_maxburst..
-
-> 
-> Request for feedback/suggestions.
-> 
-> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 > ---
->  include/linux/dmaengine.h | 3 +++
->  1 file changed, 3 insertions(+)
+>  Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index d49ec5c..9ec198b 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -351,6 +351,8 @@ enum dma_slave_buswidth {
->   * @slave_id: Slave requester id. Only valid for slave channels. The dma
->   * slave peripheral will have unique id as dma requester which need to be
->   * pass as slave config.
-> + * @fifo_size: Fifo size value. The dma slave peripheral can configure required
-> + * fifo size and the same needs to be passed as slave config.
->   *
->   * This struct is passed in as configuration data to a DMA engine
->   * in order to set up a certain channel for DMA transport at runtime.
-> @@ -376,6 +378,7 @@ struct dma_slave_config {
->  	u32 dst_port_window_size;
->  	bool device_fc;
->  	unsigned int slave_id;
-> +	u32 fifo_size;
->  };
->  
->  /**
-> -- 
-> 2.7.4
+> diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> index 2d32641..32c4263d 100644
+> --- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> +++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> @@ -10,6 +10,8 @@ Required properties:
+>    - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
+>    - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
+>    - "fsl,imx53-ecspi" for SPI compatible with the one integrated on i.MX53 and later Soc
+> +  - "fsl,imx6ul-ecspi" ERR009165 fixed on i.MX6UL and later Soc
+> +    (https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf)
+
+I wouldn't mention this errata in the binding documentation. Just state
+that fsl,imx6ul-ecspi is designed to be used on i.MX6UL. And that it
+might also be used on later SoCs as a "fallback compatible" is a detail
+that is so common that I would expect it not being worth mentioning. So
+for me it would also be OK to drop "fsl,imx53-ecspi" from the list as
+this is only used like:
+
+	compatible = "fsl,imx53-ecspi", "fsl,imx51-ecspi";
+
+(But note that I have no authority here.)
+
+Best regards
+Uwe
 
 -- 
-~Vinod
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |

@@ -2,81 +2,139 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 84A3010DBD
-	for <lists+dmaengine@lfdr.de>; Wed,  1 May 2019 22:07:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3616112E9
+	for <lists+dmaengine@lfdr.de>; Thu,  2 May 2019 08:02:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbfEAUHk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 1 May 2019 16:07:40 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45757 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfEAUHk (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 1 May 2019 16:07:40 -0400
-Received: by mail-ot1-f66.google.com with SMTP id a10so46252otl.12;
-        Wed, 01 May 2019 13:07:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NUkhtg7+aAgAyNuqnNTM6hyqkyEfScztnaS0eIaqMl8=;
-        b=nGhZD3vcEm4+Y5ikstUNCafu3GGS5fvCWec1Zm/F2O66w/1IrH/E/C9719h74O7Mia
-         c2uz+0TTew78I5rslspiYOL4syH0MZIL4b1Iw9B3ogHM43oALKa+HAJ6rI3/Bmbe1xWG
-         E59ArvuawsOMjhBNVAwztl1VAINYvFW6LElXyzYMd9Zeq6vpY/pQg7L5pqti3BhOT/Y3
-         k35LN98irytBrKzVf+7snkGRosDyJsVe6++Hd9BLDgODzm22IqfVj+vIMAgUh0P7hYiU
-         hQqANjj1A75fBQ7ZVUt7bdGEQCrcIN7+sbHI1oqYGnyyY1Xhx13xZ6NWB2G98vdCHwih
-         gJYQ==
-X-Gm-Message-State: APjAAAXpwTXmEMoG8lVh3TjBQQELY36ZuEW5QbwXcT47J22HGnggJDon
-        ZHphjfx9M5Ghpb81VNgqNg==
-X-Google-Smtp-Source: APXvYqwpI0PmHtqAfOIdYfsq6gfME3D3Ho7yZc3qgpejZuF1tY3yA/iZe13vbv8FxOQSIIRylDQavw==
-X-Received: by 2002:a05:6830:2059:: with SMTP id f25mr2244063otp.81.1556741259493;
-        Wed, 01 May 2019 13:07:39 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s202sm5566028oih.42.2019.05.01.13.07.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 01 May 2019 13:07:38 -0700 (PDT)
-Date:   Wed, 1 May 2019 15:07:38 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     "broonie@kernel.org" <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH v2 10/15] dt-bindings: dma: imx-sdma: add i.mx6ul/6sx
-  compatible name
-Message-ID: <20190501200738.GA7100@bogus>
-References: <1556265512-9130-1-git-send-email-yibin.gong@nxp.com>
- <1556265512-9130-11-git-send-email-yibin.gong@nxp.com>
+        id S1725772AbfEBGB7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 2 May 2019 02:01:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726350AbfEBGB6 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 2 May 2019 02:01:58 -0400
+Received: from localhost (unknown [171.76.113.243])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D73D92081C;
+        Thu,  2 May 2019 06:01:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1556776917;
+        bh=xmjxao6gRvI0En8WAcAajp9T9eQuqoeRuLndvm8vViw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=boIvWZkbucoiyvNMWxqclmo/Fs0qts4OTUKYY+8APJoiVzsa5XrYJhW7hfk4oebkF
+         CdHHpvwXRn3s1XDD/aq29tRuySJU1R8oxQf0SpdnehnAyYdjEtg1UwEg1UlXHf1Shv
+         x1KZseE93lglj3m7oCALHkd1hlsTskBQE91BZRiI=
+Date:   Thu, 2 May 2019 11:31:48 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>, eric.long@unisoc.com,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Mark Brown <broonie@kernel.org>, dmaengine@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/7] dmaengine: sprd: Add device validation to support
+ multiple controllers
+Message-ID: <20190502060148.GH3845@vkoul-mobl.Dlink>
+References: <cover.1555330115.git.baolin.wang@linaro.org>
+ <d77dca51a14087873627d735a17adcfde5517398.1555330115.git.baolin.wang@linaro.org>
+ <20190429115723.GK3845@vkoul-mobl.Dlink>
+ <CAMz4kuLf4wgr4Js3xH1aQVc4c2XK1Oq2TnsUq=NSowQUq5ZN5g@mail.gmail.com>
+ <20190429140537.GN3845@vkoul-mobl.Dlink>
+ <CAMz4ku+ctQrcR+6t1ouakeG3dbgL3qR8fz-Hft4s9FnxtFL1ng@mail.gmail.com>
+ <20190430082954.GQ3845@vkoul-mobl.Dlink>
+ <CAMz4kuKV3J+aw9sic=QOhmcnr+H_pZ-pmq4pRbLX1R+XAR=phA@mail.gmail.com>
+ <CAMz4kuLFyckFdzVgL9FH0xW8036OoAbyjHqfOAVhibPyNssPDA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1556265512-9130-11-git-send-email-yibin.gong@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMz4kuLFyckFdzVgL9FH0xW8036OoAbyjHqfOAVhibPyNssPDA@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, 26 Apr 2019 08:06:03 +0000, Robin Gong wrote:
-> Add i.mx6ul and i.mx6sx compatible name.
+On 30-04-19, 16:53, Baolin Wang wrote:
+> Hi Vinod,
 > 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> ---
->  Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+> On Tue, 30 Apr 2019 at 16:34, Baolin Wang <baolin.wang@linaro.org> wrote:
+> >
+> > On Tue, 30 Apr 2019 at 16:30, Vinod Koul <vkoul@kernel.org> wrote:
+> > >
+> > > On 30-04-19, 13:30, Baolin Wang wrote:
+> > > > On Mon, 29 Apr 2019 at 22:05, Vinod Koul <vkoul@kernel.org> wrote:
+> > > > >
+> > > > > On 29-04-19, 20:20, Baolin Wang wrote:
+> > > > > > On Mon, 29 Apr 2019 at 19:57, Vinod Koul <vkoul@kernel.org> wrote:
+> > > > > > >
+> > > > > > > On 15-04-19, 20:14, Baolin Wang wrote:
+> > > > > > > > From: Eric Long <eric.long@unisoc.com>
+> > > > > > > >
+> > > > > > > > Since we can support multiple DMA engine controllers, we should add
+> > > > > > > > device validation in filter function to check if the correct controller
+> > > > > > > > to be requested.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Eric Long <eric.long@unisoc.com>
+> > > > > > > > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > > > > > > > ---
+> > > > > > > >  drivers/dma/sprd-dma.c |    5 +++++
+> > > > > > > >  1 file changed, 5 insertions(+)
+> > > > > > > >
+> > > > > > > > diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+> > > > > > > > index 0f92e60..9f99d4b 100644
+> > > > > > > > --- a/drivers/dma/sprd-dma.c
+> > > > > > > > +++ b/drivers/dma/sprd-dma.c
+> > > > > > > > @@ -1020,8 +1020,13 @@ static void sprd_dma_free_desc(struct virt_dma_desc *vd)
+> > > > > > > >  static bool sprd_dma_filter_fn(struct dma_chan *chan, void *param)
+> > > > > > > >  {
+> > > > > > > >       struct sprd_dma_chn *schan = to_sprd_dma_chan(chan);
+> > > > > > > > +     struct of_phandle_args *dma_spec =
+> > > > > > > > +             container_of(param, struct of_phandle_args, args[0]);
+> > > > > > > >       u32 slave_id = *(u32 *)param;
+> > > > > > > >
+> > > > > > > > +     if (chan->device->dev->of_node != dma_spec->np)
+> > > > > > >
+> > > > > > > Are you not using of_dma_find_controller() that does this, so this would
+> > > > > > > be useless!
+> > > > > >
+> > > > > > Yes, we can use of_dma_find_controller(), but that will be a little
+> > > > > > complicated than current solution. Since we need introduce one
+> > > > > > structure to save the node to validate in the filter function like
+> > > > > > below, which seems make things complicated. But if you still like to
+> > > > > > use of_dma_find_controller(), I can change to use it in next version.
+> > > > >
+> > > > > Sorry I should have clarified more..
+> > > > >
+> > > > > of_dma_find_controller() is called by xlate, so you already run this
+> > > > > check, so why use this :)
+> > > >
+> > > > The of_dma_find_controller() can save the requested device node into
+> > > > dma_spec, and in the of_dma_simple_xlate() function, it will call
+> > > > dma_request_channel() to request one channel, but it did not validate
+> > > > the device node to find the corresponding dma device in
+> > > > dma_request_channel(). So we should in our filter function to validate
+> > > > the device node with the device node specified by the dma_spec. Hope I
+> > > > make things clear.
+> > >
+> > > But dma_request_channel() calls of_dma_request_slave_channel() which
+> > > invokes of_dma_find_controller() why is it broken for you if that is the
+> > > case..
+> >
+> > No,the calling process should be:
+> > dma_request_slave_channel()
+> > --->dma_request_chan()--->of_dma_request_slave_channel()---->of_dma_simple_xlate()
+> > ----> dma_request_channel().
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The thing is that this is a generic issue, so fix should be in the core
+and not in the driver. Agree in you case of_dma_find_controller() is not
+invoked, so we should fix that in core
+
+> 
+> You can check other drivers, they also will save the device node to
+> validate in their filter function.
+> For example the imx-sdma driver:
+> https://elixir.bootlin.com/linux/v5.1-rc6/source/drivers/dma/imx-sdma.c#L1931
+
+Exactly, more the reason this should be in core :)
+
+-- 
+~Vinod

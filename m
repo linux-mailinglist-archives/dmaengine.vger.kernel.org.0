@@ -2,137 +2,96 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 319A011A55
-	for <lists+dmaengine@lfdr.de>; Thu,  2 May 2019 15:36:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44D7912EDC
+	for <lists+dmaengine@lfdr.de>; Fri,  3 May 2019 15:15:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbfEBNgS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 2 May 2019 09:36:18 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:19016 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfEBNgS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 2 May 2019 09:36:18 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ccaf24b0000>; Thu, 02 May 2019 06:36:12 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 02 May 2019 06:36:15 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 02 May 2019 06:36:15 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 May
- 2019 13:36:12 +0000
-Subject: Re: [PATCH 0/6] Add support for Tegra186/Tegra194 and generic fixes
-To:     Sameer Pujar <spujar@nvidia.com>, <vkoul@kernel.org>,
-        <dan.j.williams@intel.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>
-CC:     <thierry.reding@gmail.com>, <ldewangan@nvidia.com>,
-        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <f8486dab-f95b-a4b1-36f2-89b98086d0cb@nvidia.com>
-Date:   Thu, 2 May 2019 14:36:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1727228AbfECNPY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 3 May 2019 09:15:24 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:52788 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbfECNPY (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 3 May 2019 09:15:24 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43DEPat139648;
+        Fri, 3 May 2019 13:15:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
+ bh=d49XUlWUS/ecewkjLcZmEWaD2tXdj0+kyjA873JE4hM=;
+ b=4G2lnSaLD8X4wRYJ38dijgjZLueSpdU7LYYdGThu52pqBD75fahhJi6c7x7h0b7ksA32
+ EWl8O6Jy1wQJdu30G0LHmT5Y3eNw3sgIWqyNJ8CNx1hyk5A1myTHu6G5xOf3B6AHYPkz
+ j++flV1QRQAmdu1ZPjyJxyKm72oU8iOu2hXTM1z55OH5Uv2uNAEs7vAdbnVev9/Qx3EE
+ OhhGvM1F9K1mL3nbIYAMZwXBXhFAKnvZPlH54MPgTh1drUV2c7LiGJ0+sywVjJN2CAnI
+ cN7RfTTYZrnB50SlMBXys7fBN/ucP3OutpglWCVbaU6E565X8heMH40l17MjOUKZcOAW Sw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 2s6xhypmwk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 May 2019 13:15:18 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43DDkfT181036;
+        Fri, 3 May 2019 13:15:17 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2s7p8aaxgg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 03 May 2019 13:15:17 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x43DFF1V006149;
+        Fri, 3 May 2019 13:15:15 GMT
+Received: from mwanda (/196.104.111.181)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 03 May 2019 06:15:14 -0700
+Date:   Fri, 3 May 2019 16:15:07 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Barry Song <21cnbao@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] dmaengine: at_xdmac: remove a stray bottom half unlock
+Message-ID: <20190503131507.GA1236@mwanda>
 MIME-Version: 1.0
-In-Reply-To: <1556801717-31507-1-git-send-email-spujar@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1556804172; bh=zQW3UmrtuFX0g5vUoqAHKLUOOl8w+C8rfhpSmD8+zhk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=pyqAnV2poqrhI/+V/m5PoRRYO9zOVdkIGqBjd7mJZpBUz5Hwq3qv3oAwA0bO+Resk
-         YXQEzi/3XX626Ghcf9jMnbCqEC4FNnphYu2UvtuOZLEbYUarQU/1JVhEKgUDVG47Nw
-         ABnf6z1ke3aaRJ6Tpt1/SMHiv7gxcS1af/K2a2QxZjZmgO8lOc3sFE8ToBH5Rnsc+h
-         ytBMnAimMS08Ulji4WreVCeyYIvn/jheqYfYiZmNyxRK+l6NKOGuDJgHanv0Q7D/ii
-         ZmZtd4ySIRI1PvCBJez2hROmoo+0qMbcnQnJ2sWgvepEYMqZ+u3WhAi8K2dreBYJTA
-         Y5hnrQ/EDE3ww==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905030083
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905030083
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+We switched this code from spin_lock_bh() to vanilla spin_lock() but
+there was one stray spin_unlock_bh() that was overlooked.  This
+patch converts it to spin_unlock() as well.
 
-On 02/05/2019 13:55, Sameer Pujar wrote:
-> Audio DMA(ADMA) interface is a gateway in the AHUB for facilitating DMA
-> transfers between memory and all of its clients. Currently the driver
-> supports Tegra210 based platforms. This series adds support for Tegra186
-> and Tegra194 based platforms and fixes few functional issues.
-> 
-> Patches in the series are classified into three categories,
->   1. Add support for Tegra186 and Tegra194
->   2. Add DMA pause/resume feature
->   3. Fixes common to differernt Tegra generations
-> 
-> Below change log describes the patches in detail.
-> 
-> Change log:
-> =====================================
-> v1
-> ----
-> The series can be classified into 3 categories,
->   1. Add support for Tegra186 and Tegra194
->      [Patch 1/6] dmaengine: tegra210-adma: prepare for supporting newer
->      Tegra chips
->        * The support was there only for Tegra210
->        * This is a preparation for adding support for newer Tegra chips
->        * chip_data is enhanced to support differences between Tegra210 and
->          Tegra186/Tegra194
->      [Patch 2/6] Documentation: DT: Add compatibility binding for Tegra186
->        * New compatibility string is required for driver to work for
->          Tegra186 and Tegra194. Hence new compatibility is introduced.
->        * Tegra194 can use the same compatibility as Tegra186
->      [Patch 3/6] dmaengine: tegra210-adma: add support for Tegra186/
->      Tegra194
->        * Populates chip specific information for Tegra186
->        * There is a difference in the way ADMA CH_CONFIG registers are
->          encoded for Tegra210 and Tegra186. Added helper fucntions to
->          support different versions of burst size configuration
-> 
->   2. Add DMA pause/resume feature
->      [Patch 4/6] dmaengine: tegra210-adma: add pause/resume support
->        * Adds support for ADMA pause/resume, otherwise audio loss was seen
->          during continuous pause/resume of audio playback.
-> 
->   3. Fixes common to differernt Tegra generations
->      [Patch 5/6] dmaengine: tegra210-dma: free dma controller in remove()
->        * Fixes kernel panic observed during driver reload. DMA controller
->          needs to be freed when driver is unloaded
->      [Patch 6/6] dmaengine: tegra210-adma: restore channel status
->        * Fixes resume across system suspend. If the channel state is not
->          restored, the transfers won't resume from the state from where it
->          was left during suspend entry. In this case, audio playback did
->          not resume properly once system exited from low power state.
-> 
-> ===============================
-> Sameer Pujar (6):
->   dmaengine: tegra210-adma: prepare for supporting newer Tegra chips
->   Documentation: DT: Add compatibility binding for Tegra186
->   dmaengine: tegra210-adma: add support for Tegra186/Tegra194
->   dmaengine: tegra210-adma: add pause/resume support
->   dmaengine: tegra210-dma: free dma controller in remove()
->   dmaengine: tegra210-adma: restore channel status
-> 
->  .../bindings/dma/nvidia,tegra210-adma.txt     |   4 +-
->  drivers/dma/tegra210-adma.c                   | 232 +++++++++++++++++----
->  2 files changed, 193 insertions(+), 43 deletions(-)
-> 
+Fixes: d8570d018f69 ("dmaengine: at_xdmac: move spin_lock_bh to spin_lock in tasklet")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/dma/at_xdmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks!
-
-For the series ...
-
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-
-Cheers
-Jon
-
+diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+index 06cbe54e4c30..e4ae2ee46d3f 100644
+--- a/drivers/dma/at_xdmac.c
++++ b/drivers/dma/at_xdmac.c
+@@ -1655,7 +1655,7 @@ static void at_xdmac_tasklet(unsigned long data)
+ 		dev_vdbg(chan2dev(&atchan->chan), "%s: desc 0x%p\n", __func__, desc);
+ 		if (!desc->active_xfer) {
+ 			dev_err(chan2dev(&atchan->chan), "Xfer not active: exiting");
+-			spin_unlock_bh(&atchan->lock);
++			spin_unlock(&atchan->lock);
+ 			return;
+ 		}
+ 
 -- 
-nvpublic
+2.18.0
+

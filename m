@@ -2,63 +2,172 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3245B133B4
-	for <lists+dmaengine@lfdr.de>; Fri,  3 May 2019 20:45:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEE80133E0
+	for <lists+dmaengine@lfdr.de>; Fri,  3 May 2019 21:07:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbfECSp3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 3 May 2019 14:45:29 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:40861 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbfECSp3 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 3 May 2019 14:45:29 -0400
-Received: by mail-yw1-f66.google.com with SMTP id 18so264118ywe.7
-        for <dmaengine@vger.kernel.org>; Fri, 03 May 2019 11:45:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=sWGN2WJxONN1aQoY3Dkw/+36c1LIAgACtpCuKu6Hzbk=;
-        b=Pxa2CgsT/pTsgzvBB/ypPYnoHB9dgGOZ5FDYEd2dA5+fCsUN/0ZP89z1QwSgpvby6S
-         9PwJ3btVKbq86KnrZn+S+1H2BVi03WaqPb9jxHBzqUuLaoe9nwrxcMj+E8cMMVCzvJvT
-         vPc+W3LOET/qyAiu/0bHNOX1JagXDuFJjzULl+Eyq7bUbPbUxAslZUfKr58cKy9Vv38/
-         QgZNrne+hE9Ov9zhG6/9djhCJMAB8ylCpmxzYAyfS0O0bLCKCzy8hg2cESHQR87qPNY9
-         DMwXEJPnahr6QIJsXx1iGkHWDE+jsAoR2m2gUEsv26sNaxU1RiMfTB28sruy43Y008NC
-         4a8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=sWGN2WJxONN1aQoY3Dkw/+36c1LIAgACtpCuKu6Hzbk=;
-        b=D+Ks32BZHjl0pn2gkIWVfoVzsPnf+SWhLsIrvc6dAyKnxQF6cc1syH4Lr2yHYl0x01
-         Y+Pg3MuUvSW+O9C5dIS3hYvOiskKW5Z/RHaTmhpOiXsacd7DXUDwGI9o/1PKREe7w4ze
-         0w5BYF5gyImRSN76XYhAQYY9e7X0TBNnEvWmM6p5rvxdR3m64TaucksZoBkXO+pa1RIC
-         WpFDSmrx7n8ZJep9TF4xU+jGrbF1bd7IuKDntlB+bWlci+sGo2fE3JYgACKHKnNvZmq0
-         IkRo/OU/0ZwDbaXxJ8WjeeNw/2q7m6fbYS2DkD7805nT3AJayryA3BMvSfqYZSgTFHwR
-         clqQ==
-X-Gm-Message-State: APjAAAWIDhtR6HuyX0NRnQ64xTK391eTKsnJ6ZL4uaQIW1+3LXGfJmfE
-        U21jHLuMRBLnNuMlIzV3CHTqWGfW9ga2MOUb7hs=
-X-Google-Smtp-Source: APXvYqw6z8SRZDMMh6ff4SZQzcyoAnt78zyudI9ipZfhRoDnK5p2YDQT85pvDlaZ4AlVbS8KTFOOFcloyyLTNxp7q4A=
-X-Received: by 2002:a25:502:: with SMTP id 2mr8288085ybf.266.1556909129086;
- Fri, 03 May 2019 11:45:29 -0700 (PDT)
+        id S1726993AbfECTHm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 3 May 2019 15:07:42 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:60288 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbfECTHl (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 3 May 2019 15:07:41 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x43J7Xcc110358;
+        Fri, 3 May 2019 14:07:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1556910453;
+        bh=pYv6PEbbvUQ4QwW2nRLlz/8c0qEeR+Fe/OgZ13lvx2A=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=fPiDCoIN1R4UFVQ/5AlFFA+C9j5DIR3CpAV5TlaLCthE8K5ImPqRPjXyO4fOqsiWC
+         T7lE1Z4XI5TD5lP+bYcG81iDmuF9G1jmy/1cRtNwwTltf8o9tctM1m6aOh9/yMeniG
+         yXkuK+nTd91QrvOtzv7KzudIB+dqMmAo8KsFFDxE=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x43J7XbQ044522
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 3 May 2019 14:07:33 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 3 May
+ 2019 14:07:32 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 3 May 2019 14:07:31 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x43J7UXi101169;
+        Fri, 3 May 2019 14:07:30 -0500
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
+        <jonathanh@nvidia.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+ <20190502060446.GI3845@vkoul-mobl.Dlink>
+ <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
+ <20190502122506.GP3845@vkoul-mobl.Dlink>
+ <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <076bd6cc-aff2-693e-2c68-837d0d552df1@ti.com>
+Date:   Fri, 3 May 2019 22:10:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Received: by 2002:a25:8b8c:0:0:0:0:0 with HTTP; Fri, 3 May 2019 11:45:28 -0700 (PDT)
-Reply-To: wong.shiu@accountant.com
-From:   Wong Shiu <paulsonlandon67@gmail.com>
-Date:   Fri, 3 May 2019 21:45:28 +0300
-Message-ID: <CAG=LLRVTi-X7JxpSE4eA9WjLoarvoTW_cPHGX3rajWxPaRyc8w@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
---=20
-Sch=C3=B6nen Tag,
 
-  Ich bin Herr Wong Shiu, pers=C3=B6nlicher Berater von Late
-Multimillionaire Javer .D. Gunter, ich habe einen Gesch=C3=A4ftsabschluss
-im Wert von Millionen, den ich gerne mit Ihnen besprechen m=C3=B6chte
-  E-Mail: wong.shiu@accountant.com Bei Interesse
+
+On 5/2/19 4:29 PM, Sameer Pujar wrote:
+> 
+> On 5/2/2019 5:55 PM, Vinod Koul wrote:
+>> On 02-05-19, 16:23, Sameer Pujar wrote:
+>>> On 5/2/2019 11:34 AM, Vinod Koul wrote:
+>>>> On 30-04-19, 17:00, Sameer Pujar wrote:
+>>>>> During the DMA transfers from memory to I/O, it was observed that
+>>>>> transfers
+>>>>> were inconsistent and resulted in glitches for audio playback. It
+>>>>> happened
+>>>>> because fifo size on DMA did not match with slave channel
+>>>>> configuration.
+>>>>>
+>>>>> currently 'dma_slave_config' structure does not have a field for
+>>>>> fifo size.
+>>>>> Hence the platform pcm driver cannot pass the fifo size as a
+>>>>> slave_config.
+>>>>> Note that 'snd_dmaengine_dai_dma_data' structure has fifo_size
+>>>>> field which
+>>>>> cannot be used to pass the size info. This patch introduces
+>>>>> fifo_size field
+>>>>> and the same can be populated on slave side. Users can set required
+>>>>> size
+>>>>> for slave peripheral (multiple channels can be independently
+>>>>> running with
+>>>>> different fifo sizes) and the corresponding sizes are programmed
+>>>>> through
+>>>>> dma_slave_config on DMA side.
+>>>> FIFO size is a hardware property not sure why you would want an
+>>>> interface to program that?
+>>>>
+>>>> On mismatch, I guess you need to take care of src/dst_maxburst..
+>>> Yes, FIFO size is a HW property. But it is SW configurable(atleast in my
+>>> case) on
+>>> slave side and can be set to different sizes. The src/dst_maxburst is
+>> Are you sure, have you talked to HW folks on that? IIUC you are
+>> programming the data to be used in FIFO not the FIFO length!
+> Yes, I mentioned about FIFO length.
+> 
+> 1. MAX FIFO size is fixed in HW. But there is a way to limit the usage
+> per channel
+>    in multiples of 64 bytes.
+> 2. Having a separate member would give independent control over MAX
+> BURST SIZE and
+>    FIFO SIZE.
+
+Why would the DMA care about the FIFO size of a peripheral?
+All it should be concerned that how many bytes it should transfer per
+DMA request from the peripheral.
+It is the task of the peripheral driver to choose the maxburst to match
+with the peripheral's configuration and the peripheral configuration
+should not allow maxburst to overflow (or underflow) the peripheral FIFO.
+
+>>
+>>> programmed
+>>> for specific values, I think this depends on few factors related to
+>>> bandwidth
+>>> needs of client, DMA needs of the system etc.,
+>> Precisely
+>>
+>>> In such cases how does DMA know the actual FIFO depth of slave
+>>> peripheral?
+>> Why should DMA know? Its job is to push/pull data as configured by
+>> peripheral driver. The peripheral driver knows and configures DMA
+>> accordingly.
+> I am not sure if there is any HW logic that mandates DMA to know the size
+> of configured FIFO depth on slave side. I will speak to HW folks and
+> would update here.
+>>  
+>>>>> Request for feedback/suggestions.
+>>>>>
+>>>>> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+>>>>> ---
+>>>>>    include/linux/dmaengine.h | 3 +++
+>>>>>    1 file changed, 3 insertions(+)
+>>>>>
+>>>>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+>>>>> index d49ec5c..9ec198b 100644
+>>>>> --- a/include/linux/dmaengine.h
+>>>>> +++ b/include/linux/dmaengine.h
+>>>>> @@ -351,6 +351,8 @@ enum dma_slave_buswidth {
+>>>>>     * @slave_id: Slave requester id. Only valid for slave channels.
+>>>>> The dma
+>>>>>     * slave peripheral will have unique id as dma requester which
+>>>>> need to be
+>>>>>     * pass as slave config.
+>>>>> + * @fifo_size: Fifo size value. The dma slave peripheral can
+>>>>> configure required
+>>>>> + * fifo size and the same needs to be passed as slave config.
+>>>>>     *
+>>>>>     * This struct is passed in as configuration data to a DMA engine
+>>>>>     * in order to set up a certain channel for DMA transport at
+>>>>> runtime.
+>>>>> @@ -376,6 +378,7 @@ struct dma_slave_config {
+>>>>>        u32 dst_port_window_size;
+>>>>>        bool device_fc;
+>>>>>        unsigned int slave_id;
+>>>>> +    u32 fifo_size;
+>>>>>    };
+>>>>>    /**
+>>>>> -- 
+>>>>> 2.7.4
+
+- Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

@@ -2,96 +2,63 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 44D7912EDC
-	for <lists+dmaengine@lfdr.de>; Fri,  3 May 2019 15:15:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3245B133B4
+	for <lists+dmaengine@lfdr.de>; Fri,  3 May 2019 20:45:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbfECNPY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 3 May 2019 09:15:24 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:52788 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbfECNPY (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 3 May 2019 09:15:24 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43DEPat139648;
-        Fri, 3 May 2019 13:15:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
- bh=d49XUlWUS/ecewkjLcZmEWaD2tXdj0+kyjA873JE4hM=;
- b=4G2lnSaLD8X4wRYJ38dijgjZLueSpdU7LYYdGThu52pqBD75fahhJi6c7x7h0b7ksA32
- EWl8O6Jy1wQJdu30G0LHmT5Y3eNw3sgIWqyNJ8CNx1hyk5A1myTHu6G5xOf3B6AHYPkz
- j++flV1QRQAmdu1ZPjyJxyKm72oU8iOu2hXTM1z55OH5Uv2uNAEs7vAdbnVev9/Qx3EE
- OhhGvM1F9K1mL3nbIYAMZwXBXhFAKnvZPlH54MPgTh1drUV2c7LiGJ0+sywVjJN2CAnI
- cN7RfTTYZrnB50SlMBXys7fBN/ucP3OutpglWCVbaU6E565X8heMH40l17MjOUKZcOAW Sw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 2s6xhypmwk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 May 2019 13:15:18 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x43DDkfT181036;
-        Fri, 3 May 2019 13:15:17 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2s7p8aaxgg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 03 May 2019 13:15:17 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x43DFF1V006149;
-        Fri, 3 May 2019 13:15:15 GMT
-Received: from mwanda (/196.104.111.181)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 03 May 2019 06:15:14 -0700
-Date:   Fri, 3 May 2019 16:15:07 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Barry Song <21cnbao@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] dmaengine: at_xdmac: remove a stray bottom half unlock
-Message-ID: <20190503131507.GA1236@mwanda>
+        id S1726549AbfECSp3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 3 May 2019 14:45:29 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:40861 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfECSp3 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 3 May 2019 14:45:29 -0400
+Received: by mail-yw1-f66.google.com with SMTP id 18so264118ywe.7
+        for <dmaengine@vger.kernel.org>; Fri, 03 May 2019 11:45:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=sWGN2WJxONN1aQoY3Dkw/+36c1LIAgACtpCuKu6Hzbk=;
+        b=Pxa2CgsT/pTsgzvBB/ypPYnoHB9dgGOZ5FDYEd2dA5+fCsUN/0ZP89z1QwSgpvby6S
+         9PwJ3btVKbq86KnrZn+S+1H2BVi03WaqPb9jxHBzqUuLaoe9nwrxcMj+E8cMMVCzvJvT
+         vPc+W3LOET/qyAiu/0bHNOX1JagXDuFJjzULl+Eyq7bUbPbUxAslZUfKr58cKy9Vv38/
+         QgZNrne+hE9Ov9zhG6/9djhCJMAB8ylCpmxzYAyfS0O0bLCKCzy8hg2cESHQR87qPNY9
+         DMwXEJPnahr6QIJsXx1iGkHWDE+jsAoR2m2gUEsv26sNaxU1RiMfTB28sruy43Y008NC
+         4a8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=sWGN2WJxONN1aQoY3Dkw/+36c1LIAgACtpCuKu6Hzbk=;
+        b=D+Ks32BZHjl0pn2gkIWVfoVzsPnf+SWhLsIrvc6dAyKnxQF6cc1syH4Lr2yHYl0x01
+         Y+Pg3MuUvSW+O9C5dIS3hYvOiskKW5Z/RHaTmhpOiXsacd7DXUDwGI9o/1PKREe7w4ze
+         0w5BYF5gyImRSN76XYhAQYY9e7X0TBNnEvWmM6p5rvxdR3m64TaucksZoBkXO+pa1RIC
+         WpFDSmrx7n8ZJep9TF4xU+jGrbF1bd7IuKDntlB+bWlci+sGo2fE3JYgACKHKnNvZmq0
+         IkRo/OU/0ZwDbaXxJ8WjeeNw/2q7m6fbYS2DkD7805nT3AJayryA3BMvSfqYZSgTFHwR
+         clqQ==
+X-Gm-Message-State: APjAAAWIDhtR6HuyX0NRnQ64xTK391eTKsnJ6ZL4uaQIW1+3LXGfJmfE
+        U21jHLuMRBLnNuMlIzV3CHTqWGfW9ga2MOUb7hs=
+X-Google-Smtp-Source: APXvYqw6z8SRZDMMh6ff4SZQzcyoAnt78zyudI9ipZfhRoDnK5p2YDQT85pvDlaZ4AlVbS8KTFOOFcloyyLTNxp7q4A=
+X-Received: by 2002:a25:502:: with SMTP id 2mr8288085ybf.266.1556909129086;
+ Fri, 03 May 2019 11:45:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905030083
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9245 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905030083
+Received: by 2002:a25:8b8c:0:0:0:0:0 with HTTP; Fri, 3 May 2019 11:45:28 -0700 (PDT)
+Reply-To: wong.shiu@accountant.com
+From:   Wong Shiu <paulsonlandon67@gmail.com>
+Date:   Fri, 3 May 2019 21:45:28 +0300
+Message-ID: <CAG=LLRVTi-X7JxpSE4eA9WjLoarvoTW_cPHGX3rajWxPaRyc8w@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-We switched this code from spin_lock_bh() to vanilla spin_lock() but
-there was one stray spin_unlock_bh() that was overlooked.  This
-patch converts it to spin_unlock() as well.
+--=20
+Sch=C3=B6nen Tag,
 
-Fixes: d8570d018f69 ("dmaengine: at_xdmac: move spin_lock_bh to spin_lock in tasklet")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/dma/at_xdmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index 06cbe54e4c30..e4ae2ee46d3f 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -1655,7 +1655,7 @@ static void at_xdmac_tasklet(unsigned long data)
- 		dev_vdbg(chan2dev(&atchan->chan), "%s: desc 0x%p\n", __func__, desc);
- 		if (!desc->active_xfer) {
- 			dev_err(chan2dev(&atchan->chan), "Xfer not active: exiting");
--			spin_unlock_bh(&atchan->lock);
-+			spin_unlock(&atchan->lock);
- 			return;
- 		}
- 
--- 
-2.18.0
-
+  Ich bin Herr Wong Shiu, pers=C3=B6nlicher Berater von Late
+Multimillionaire Javer .D. Gunter, ich habe einen Gesch=C3=A4ftsabschluss
+im Wert von Millionen, den ich gerne mit Ihnen besprechen m=C3=B6chte
+  E-Mail: wong.shiu@accountant.com Bei Interesse

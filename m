@@ -2,58 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 25B28138A3
-	for <lists+dmaengine@lfdr.de>; Sat,  4 May 2019 12:18:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3B75138AA
+	for <lists+dmaengine@lfdr.de>; Sat,  4 May 2019 12:21:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfEDKSd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 4 May 2019 06:18:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60778 "EHLO mail.kernel.org"
+        id S1726217AbfEDKVO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 4 May 2019 06:21:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726552AbfEDKSd (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sat, 4 May 2019 06:18:33 -0400
+        id S1726208AbfEDKVO (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sat, 4 May 2019 06:21:14 -0400
 Received: from localhost (unknown [171.76.113.243])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1AA820675;
-        Sat,  4 May 2019 10:18:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 718F420675;
+        Sat,  4 May 2019 10:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1556965112;
-        bh=0KX1gqAHG/+QLBLSshORNJlXTvHn1YJoWjdUaaUXvWU=;
+        s=default; t=1556965273;
+        bh=rQTWEeZZ9og7kvu5nLySRWym5zK+gidejdVifNmQJmc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V7MzHWZNDZgm9Qh0JTdXx83GNTV+vjuf5t+CEJmYUyB+049URk8X24UDMWBiveHHI
-         B1qe5jekaRdx6wevSc1acu360Q5izS7RtypuWWvGc674fxWNPCImo9tMHZFYnCLH04
-         sr8PPDfM4fZ6K0QEZAIXpqUCYGnmwxZelkgXFr50=
-Date:   Sat, 4 May 2019 15:48:23 +0530
+        b=T5PsgJllpDgabG60xxfaFbbCrFtJkz55oU0/QPZxaqCOGx/FwcEo2Rgg1ZiOfk6OW
+         WE8NYGRJ6ZYGDjE9RMMSIH85y1T0FxfdpcXLtpRILVRoT1vPV1ptpoaxxZnDeA3gmy
+         R4/M9+gdaMDLQdjHw5dicOxmFiP9+CPeckPLfIK8=
+Date:   Sat, 4 May 2019 15:51:01 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v2] dmaengine: stm32-dma: fix residue calculation in
- stm32-dma
-Message-ID: <20190504101823.GX3845@vkoul-mobl.Dlink>
-References: <1556789322-7232-1-git-send-email-arnaud.pouliquen@st.com>
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH 1/2] dmaengine: fsl-edma: Fix typo in Vybrid name
+Message-ID: <20190504102101.GY3845@vkoul-mobl.Dlink>
+References: <20190504095225.23883-1-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1556789322-7232-1-git-send-email-arnaud.pouliquen@st.com>
+In-Reply-To: <20190504095225.23883-1-krzk@kernel.org>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 02-05-19, 11:28, Arnaud Pouliquen wrote:
-> In double buffer mode, during residue calculation, the DMA can
-> automatically switch to the next transfer. Indeed the CT bit that
-> gives position in the double buffer can has been updated by the
-> hardware, during calculation.
-> In this case the SxNDTR register value can not be trusted.
-> If a transition is detected we consider that the DMA has switched to
-> the beginning of next sg.
+On 04-05-19, 11:52, Krzysztof Kozlowski wrote:
+> Fix typo in comment for Vybrid SoC family.
 
-Applied, thanks
+Applied both in the series and ignore the (3rd?) usb patch! thanks
 
 -- 
 ~Vinod

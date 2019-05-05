@@ -2,149 +2,285 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B35513E86
-	for <lists+dmaengine@lfdr.de>; Sun,  5 May 2019 10:55:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97EBF13FC9
+	for <lists+dmaengine@lfdr.de>; Sun,  5 May 2019 15:39:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbfEEIzo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 5 May 2019 04:55:44 -0400
-Received: from mail-eopbgr150052.outbound.protection.outlook.com ([40.107.15.52]:25422
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726359AbfEEIzo (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sun, 5 May 2019 04:55:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Gtw9rkS4XkmSK27kW0TiDuGbcg6kX7qePi8cV4olgic=;
- b=pxGvWvx2P4O71jBVMmyzklk2+rreT/XiDNes2zVyNh1T4OOR+7pCA34mMEoXXceDpBZu6VoJfZN3S6t3UwIhFCzaxh6R9lrTiX33NSU+5vponkMvFdZUaTMgcGNhdl51tgNbXO6b4Re2ykEMToUXKsf19pt3JDTykagAz7RPGaE=
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
- VI1PR04MB4350.eurprd04.prod.outlook.com (52.134.122.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.11; Sun, 5 May 2019 08:55:38 +0000
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5d07:911b:18e1:1525]) by VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5d07:911b:18e1:1525%4]) with mapi id 15.20.1856.012; Sun, 5 May 2019
- 08:55:38 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "broonie@kernel.org" <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: RE: [EXT] Re: [PATCH v2 08/15] dt-bindings: spi: imx: add i.mx6ul to
- state errata fixed
-Thread-Topic: [EXT] Re: [PATCH v2 08/15] dt-bindings: spi: imx: add i.mx6ul to
- state errata fixed
-Thread-Index: AQHU/AbdFQmcRuAKXkaLI1VIJjs4JKZWut6AgAV7GBA=
-Date:   Sun, 5 May 2019 08:55:38 +0000
-Message-ID: <VI1PR04MB45436CE1F6856137F586C94389370@VI1PR04MB4543.eurprd04.prod.outlook.com>
-References: <1556265512-9130-1-git-send-email-yibin.gong@nxp.com>
- <1556265512-9130-9-git-send-email-yibin.gong@nxp.com>
- <20190501200711.GA31231@bogus>
-In-Reply-To: <20190501200711.GA31231@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9c654712-0d58-4ea7-d6e5-08d6d13771dd
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4350;
-x-ms-traffictypediagnostic: VI1PR04MB4350:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VI1PR04MB435007B2BBF58D3B67C27A8189370@VI1PR04MB4350.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:291;
-x-forefront-prvs: 00286C0CA6
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(376002)(39860400002)(136003)(396003)(199004)(189003)(71190400001)(71200400001)(25786009)(5660300002)(86362001)(6436002)(3846002)(7696005)(76176011)(99286004)(316002)(14444005)(26005)(256004)(186003)(8936002)(54906003)(6116002)(446003)(11346002)(8676002)(45080400002)(478600001)(81156014)(6506007)(102836004)(81166006)(14454004)(66066001)(476003)(486006)(68736007)(229853002)(2906002)(33656002)(6916009)(52536014)(4326008)(305945005)(9686003)(7736002)(7416002)(6246003)(74316002)(53936002)(6306002)(66556008)(64756008)(66446008)(66476007)(66946007)(73956011)(55016002)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4350;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: BShK2GJlGnquBxCC/1dsZeujCYySQfrCvAoJ8l6/bRpFDA3GK9yjSG8RakpZS/pa7YWFm+n+dXL4R+iVmW5kBJv/0PnSkdlidMOAFMztlTZoWpG6372P5u5T5hj/ksFyyzTR8JG4O7d2zDF8NEgFdPD3wc3Bs6xSnwGnobwOk5V88/S//hXZSdqBa4TmWzv0Pwb5YU4Z3t5zMqGVGMVFP3H9JjhG3uqoSE0Lqqxxazka0myJV4giNT9o3ImDwmsSB9/HTGLaMELhrEZchLHibO1cy7+dUzOrEmfXysUQJNudmnRDw5AlVZwnC1ZJw21KjCWD+8Ow6cZT3GhdCFT09L/i2NjowSp0oCpKwnpA/ieaVRMiBGi5zaaH2almmgza5t49mQrNkIHZp610FZ1hTgcDxsEGT8VybruW0HFRvF8=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1727891AbfEENjt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 5 May 2019 09:39:49 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:37326 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfEENjt (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 5 May 2019 09:39:49 -0400
+Received: by mail-it1-f194.google.com with SMTP id r85so16143454itc.2;
+        Sun, 05 May 2019 06:39:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=my3CSpaG+RIjFLu6AGMT/Gf6hCTEG4E32HO0YjpZBJA=;
+        b=F57lAOeKRicZuWnLZ5NO+0hL+F0rT8yqqduQat+twwN5kdHq3NASv+3t+FFf5fCjAy
+         AMqDleT/M+FMIntid8gwyk/S3H5w9o2qxcNLOwafN5aAh7qCj/uuK/nKuL3T9COfqsIj
+         CZRuxC0so4sOQrGuaU8iVSME++YjqD+qWiJ7tSg85Lfip9/NYPqrZ4iEDtwDkTuHqRof
+         6N4ZG0EN5FO7wClGqHLf1fhv2kBon5T2CRxW9PdtbLGbjERif3aTRALGtnwbMCFdfCx9
+         jUqJLJvYrLooYYQ1hgEt4SluLS9xlFmdaC2xKitA+Ts17kuNqx0vIODFjKNPCYBuggig
+         HvQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=my3CSpaG+RIjFLu6AGMT/Gf6hCTEG4E32HO0YjpZBJA=;
+        b=oP5azT2ef13tfV5b74rFcMiIOrduQ7dWLDtU3FeJmVZCKEO6rOsjaQvlEA1S5zI34z
+         /Lv7+ROgtG0lZgJfAMepXOcBp9+UtlVO+KzfEBTiEwjMtsTj6foeEzjHf0MJYHp/IMGT
+         YFcseFYCK3sYqb7ZAko/RDd6OcPIvaL3Dc1HKK0Xnw7nIFaWmo2xzYj0sxWlE1BClSyw
+         xGRsH7ei6a7bHYei9Ic1pGJyMe8ELO4Skxvy09CrrfAbliLRVF/OFMzSDXpgSeZ2fucU
+         /zzFNrTmQhD5ijjnM0FhEkmKcpXM/Xf8IzkryHLcR3A38/wkjyW2oDGZEK4wO3StiE5U
+         w1LQ==
+X-Gm-Message-State: APjAAAV7W17qayIIOZhu2EnPj7nykrpuQXuDAJ7ZQLmhFG/ag8838AKe
+        K5FjLnIvF32EzDUdg04qZSC/38si
+X-Google-Smtp-Source: APXvYqyqPWwtBkgNzP2QXlgKeSJT7Wu74lgkLgqiu3tzOnJoEd5uX19nbXC9WMCxsv6TDvhGRluDoQ==
+X-Received: by 2002:a02:a890:: with SMTP id l16mr2853199jam.137.1557063587796;
+        Sun, 05 May 2019 06:39:47 -0700 (PDT)
+Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
+        by smtp.googlemail.com with ESMTPSA id v187sm8959811ita.0.2019.05.05.06.39.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 05 May 2019 06:39:47 -0700 (PDT)
+Subject: Re: [PATCH] dma: tegra: add accurate reporting of dma state
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Ben Dooks <ben.dooks@codethink.co.uk>,
+        linux-kernel@lists.codethink.co.uk
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190424162348.23692-1-ben.dooks@codethink.co.uk>
+ <dbe7c256-c7ad-a172-9e63-9251bec6f182@gmail.com>
+ <b10126c5-227b-af9d-8774-7c9cf8f43908@codethink.co.uk>
+ <6631ad02-0e3c-d768-8c23-fd1f091402df@gmail.com>
+Message-ID: <6cceabe0-ecfa-e241-a937-5a7c9761820a@gmail.com>
+Date:   Sun, 5 May 2019 16:39:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c654712-0d58-4ea7-d6e5-08d6d13771dd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 May 2019 08:55:38.2283
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4350
+In-Reply-To: <6631ad02-0e3c-d768-8c23-fd1f091402df@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-> On Fri, Apr 26, 2019 at 08:05:51AM +0000, Robin Gong wrote:
-> > ERR009165 fixed from i.mx6ul, add it to show the errata fixed.
-> >
-> > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> > ---
-> >  Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> > b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> > index 2d32641..32c4263d 100644
-> > --- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> > +++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> > @@ -10,6 +10,8 @@ Required properties:
-> >    - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.M=
-X35
-> >    - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.=
-MX51
-> >    - "fsl,imx53-ecspi" for SPI compatible with the one integrated on
-> > i.MX53 and later Soc
-> > +  - "fsl,imx6ul-ecspi" ERR009165 fixed on i.MX6UL and later Soc
-> > +
-> > + (https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2F=
-w
-> > +
-> ww.nxp.com%2Fdocs%2Fen%2Ferrata%2FIMX6DQCE.pdf&amp;data=3D02%7C01
-> %7Cyi
-> > +
-> bin.gong%40nxp.com%7C1eb9b302759b4af6fbe408d6ce709b8b%7C686ea1d
-> 3bc2b
-> > +
-> 4c6fa92cd99c5c301635%7C0%7C1%7C636923380371230101&amp;sdata=3D%
-> 2BxM9fN
-> > + 6aEFkNlY5KU9qNiqqFMuDEfqGNrzADDiPO9gQ%3D&amp;reserved=3D0)
->=20
-> What about other i.MX6 chips?
-I only state in the cover letter of this patch set, for i.mx6q/dl/sl/sx sti=
-ll need this
-errata which is fixed i.mx chips after i.mx6ul including i.mx6ull,i.mx8m,i.=
-mx8mm.
-I'll double confirm again and describe it clearly in commit log in v3.
->=20
-> Seems like this is missing some fallbacks. The binding doc should make it=
- clear
-> what are all valid combinations of compatible strings.
-In another Uwe's comment, I'm thinking move such errata information into sp=
-i
-driver level which makes binding doc clear. What do you think?
->=20
-> >    - "fsl,imx8mq-ecspi" for SPI compatible with the one integrated on
-> > i.MX8M
-> >  - reg : Offset and length of the register set for the device
-> >  - interrupts : Should contain CSPI/eCSPI interrupt
-> > --
-> > 2.7.4
-> >
+04.05.2019 19:06, Dmitry Osipenko пишет:
+> 01.05.2019 11:58, Ben Dooks пишет:
+>> On 24/04/2019 19:17, Dmitry Osipenko wrote:
+>>> 24.04.2019 19:23, Ben Dooks пишет:
+>>>> The tx_status callback does not report the state of the transfer
+>>>> beyond complete segments. This causes problems with users such as
+>>>> ALSA when applications want to know accurately how much data has
+>>>> been moved.
+>>>>
+>>>> This patch addes a function tegra_dma_update_residual() to query
+>>>> the hardware and modify the residual information accordinly. It
+>>>> takes into account any hardware issues when trying to read the
+>>>> state, such as delays between finishing a buffer and signalling
+>>>> the interrupt.
+>>>>
+>>>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>
+>>> Hello Ben,
+>>>
+>>> Thank you very much for keeping it up. I have couple comments, please
+>>> see them below.
+>>>
+>>>> Cc: Dmitry Osipenko <digetx@gmail.com>
+>>>> Cc: Laxman Dewangan <ldewangan@nvidia.com> (supporter:TEGRA DMA DRIVERS)
+>>>> Cc: Jon Hunter <jonathanh@nvidia.com> (supporter:TEGRA DMA DRIVERS)
+>>>> Cc: Vinod Koul <vkoul@kernel.org> (maintainer:DMA GENERIC OFFLOAD
+>>>> ENGINE SUBSYSTEM)
+>>>> Cc: Dan Williams <dan.j.williams@intel.com> (reviewer:ASYNCHRONOUS
+>>>> TRANSFERS/TRANSFORMS (IOAT) API)
+>>>> Cc: Thierry Reding <thierry.reding@gmail.com> (supporter:TEGRA
+>>>> ARCHITECTURE SUPPORT)
+>>>> Cc: dmaengine@vger.kernel.org (open list:DMA GENERIC OFFLOAD ENGINE
+>>>> SUBSYSTEM)
+>>>> Cc: linux-tegra@vger.kernel.org (open list:TEGRA ARCHITECTURE SUPPORT)
+>>>> Cc: linux-kernel@vger.kernel.org (open list)
+>>>> ---
+>>>>   drivers/dma/tegra20-apb-dma.c | 92 ++++++++++++++++++++++++++++++++---
+>>>>   1 file changed, 86 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/drivers/dma/tegra20-apb-dma.c
+>>>> b/drivers/dma/tegra20-apb-dma.c
+>>>> index cf462b1abc0b..544e7273e741 100644
+>>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>>> @@ -808,6 +808,90 @@ static int tegra_dma_terminate_all(struct
+>>>> dma_chan *dc)
+>>>>       return 0;
+>>>>   }
+>>>>   +static unsigned int tegra_dma_update_residual(struct
+>>>> tegra_dma_channel *tdc,
+>>>> +                          struct tegra_dma_sg_req *sg_req,
+>>>> +                          struct tegra_dma_desc *dma_desc,
+>>>> +                          unsigned int residual)
+>>>> +{
+>>>> +    unsigned long status = 0x0;
+>>>> +    unsigned long wcount;
+>>>> +    unsigned long ahbptr;
+>>>> +    unsigned long tmp = 0x0;
+>>>> +    unsigned int result;
+>>>
+>>> You could pre-assign ahbptr=0xffffffff and result=residual here, then
+>>> you could remove all the duplicated assigns below.
+>>
+>> ok, ta.
+>>
+>>>> +    int retries = TEGRA_APBDMA_BURST_COMPLETE_TIME * 10;
+>>>> +    int done;
+>>>> +
+>>>> +    /* if we're not the current request, then don't alter the
+>>>> residual */
+>>>> +    if (sg_req != list_first_entry(&tdc->pending_sg_req,
+>>>> +                       struct tegra_dma_sg_req, node)) {
+>>>> +        result = residual;
+>>>> +        ahbptr = 0xffffffff;
+>>>> +        goto done;
+>>>> +    }
+>>>> +
+>>>> +    /* loop until we have a reliable result for residual */
+>>>> +    do {
+>>>> +        ahbptr = tdc_read(tdc, TEGRA_APBDMA_CHAN_AHBPTR);
+>>>> +        status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>>>> +        tmp =  tdc_read(tdc, 0x08);    /* total count for debug */
+>>>
+>>> The "tmp" variable isn't used anywhere in the code, please remove it.
+>>
+>> must have been left over.
+>>
+>>>> +
+>>>> +        /* check status, if channel isn't busy then skip */
+>>>> +        if (!(status & TEGRA_APBDMA_STATUS_BUSY)) {
+>>>> +            result = residual;
+>>>> +            break;
+>>>> +        }
+>>>
+>>> This doesn't look correct because TRM says "Busy bit gets set as soon
+>>> as a channel is enabled and gets cleared after transfer completes",
+>>> hence a cleared BUSY bit means that all transfers are completed and
+>>> result=residual is incorrect here. Given that there is a check for EOC
+>>> bit being set below, this hunk should be removed.
+>>
+>> I'll check notes, but see below.
+>>
+>>>> +
+>>>> +        /* if we've got an interrupt pending on the channel, don't
+>>>> +         * try and deal with the residue as the hardware has likely
+>>>> +         * moved on to the next buffer. return all data moved.
+>>>> +         */
+>>>> +        if (status & TEGRA_APBDMA_STATUS_ISE_EOC) {
+>>>> +            result = residual - sg_req->req_len;
+>>>> +            break;
+>>>> +        }
+>>>> +
+>>>> +        if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>> +            wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>>>> +        else
+>>>> +            wcount = status;
+>>>> +
+>>>> +        /* If the request is at the full point, then there is a
+>>>> +         * chance that we have read the status register in the
+>>>> +         * middle of the hardware reloading the next buffer.
+>>>> +         *
+>>>> +         * The sequence seems to be at the end of the buffer, to
+>>>> +         * load the new word count before raising the EOC flag (or
+>>>> +         * changing the ping-pong flag which could have also been
+>>>> +         * used to determine a new buffer). This  means there is a
+>>>> +         * small window where we cannot determine zero-done for the
+>>>> +         * current buffer, or moved to next buffer.
+>>>> +         *
+>>>> +         * If done shows 0, then retry the load, as it may hit the
+>>>> +         * above hardware race. We will either get a new value which
+>>>> +         * is from the first buffer, or we get an EOC (new buffer)
+>>>> +         * or both a new value and an EOC...
+>>>> +         */
+>>>> +        done = get_current_xferred_count(tdc, sg_req, wcount);
+>>>> +        if (done != 0) {
+>>>> +            result = residual - done;
+>>>> +            break;
+>>>> +        }
+>>>> +
+>>>> +        ndelay(100);
+>>>
+>>> Please use udelay(1) because there is no ndelay on arm32 and
+>>> ndelay(100) is getting rounded up to 1usec. AFAIK, arm64 doesn't have
+>>> reliable ndelay on Tegra either because timer rate changes with the
+>>> CPU frequency scaling.
+>>
+>> I'll check, but last time it was implemented. This seems a backwards step.
+>>
+>>> Secondly done=0 isn't a error case, technically this could be the case
+>>> when tegra_dma_update_residual() is invoked just after starting the
+>>> transfer. Hence I think this do-while loop and timeout checking aren't
+>>> needed at all since done=0 is a perfectly valid case.
+>>
+>> this is not checking for an error, it's checking for a possible
+>> inaccurate reading.
+> 
+> If you'll change reading order of the status / words registers like I
+> suggested, then there won't be a case for the inaccuracy.
+> 
+> The EOC bit should be set atomically once transfer is finished, you
+> can't get wrapped around words count and EOC bit not being set.
+> 
+> For oneshot transfer that runs with interrupt being disabled, the words
+> counter will stop at 0 and the unset BUSY bit will indicate that the
+> transfer is completed.
+> 
+>>>
+>>> Altogether seems the tegra_dma_update_residual() could be reduced to:
+>>>
+>>> static unsigned int tegra_dma_update_residual(struct tegra_dma_channel
+>>> *tdc,
+>>>                           struct tegra_dma_sg_req *sg_req,
+>>>                           struct tegra_dma_desc *dma_desc,
+>>>                           unsigned int residual) 
+>>> {
+>>>     unsigned long status, wcount;
+>>>
+>>>     if (list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>>>         return residual;
+>>>
+>>>     if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>         wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>>>
+>>>     status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>>>
+>>>     if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>         wcount = status;
+>>>
+>>>     if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>>>         return residual - sg_req->req_len;
+>>>
+>>>     return residual - get_current_xferred_count(tdc, sg_req, wcount);
+>>> }
+>>
+>> I'm not sure if that will work all the time. It took days of testing to
+>> get reliable error data for the cases we're looking for here.
+> 
+> Could you please tell exactly what those cases are. I don't see when the
+> simplified variant could fail, but maybe I already forgot some extra
+> details about how APB DMA works.
+> 
+> I tested the variant I'm suggesting (with the fixed typos and added
+> check for the BUSY bit) and it works absolutely fine, audio stuttering
+> issue is fixed, everything else works too. Please consider to use it for
+> the next version of the patch if there are no objections.
+> 
+
+Actually the BUSY bit checking shouldn't be needed. I think it's a bug
+in the driver that it may not enable EOC interrupt and will send a patch
+to fix it.

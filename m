@@ -2,228 +2,78 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 37F83145CF
-	for <lists+dmaengine@lfdr.de>; Mon,  6 May 2019 10:12:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4605414737
+	for <lists+dmaengine@lfdr.de>; Mon,  6 May 2019 11:11:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbfEFIMo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 6 May 2019 04:12:44 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:38354 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725836AbfEFIMn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 May 2019 04:12:43 -0400
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id CCB24C01BF;
-        Mon,  6 May 2019 08:12:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1557130365; bh=dPPjfzGqv/uFUtydSQB1B4pLJAWClrrJ/HLW7ilQ0y0=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=iKCN7Oc65C7B763ceLJySsVl8U7YthcO4jwyo+qpltewC2K3xfKG6YzdLByH0aLvB
-         r4dZZHWujnoiW1BNtiULtFwi/xPBWGV3q21KfTVj30PNWUL9v3zu8P22uvvoS8wShO
-         Hd1cIViq6vD9jduoTlF1H7KzhX7zmvIL0DRKxI9vPC+VP8eqrNvzWzx3Bvnn7+xPE9
-         69NDxRFxvVje50l3GNU0TFve5NeN4vNSeqcyWcM6xyEUYDphiWrb0h/09EILkq0Hr8
-         Uizs4kjqW7CzjOlO9jIHYv1uabREbBeZVwAPY3STEXRMqjZegK1AzZAnAxun5kJjPn
-         jr/Vwvy0h2/fQ==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id CD21CA0071;
-        Mon,  6 May 2019 08:12:40 +0000 (UTC)
-Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 6 May 2019 01:12:40 -0700
-Received: from DE02WEMBXA.internal.synopsys.com ([fe80::a014:7216:77d:d55c])
- by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Mon,
- 6 May 2019 10:12:38 +0200
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-CC:     Vinod Koul <vkoul@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: RE: [RFC v6 0/6] dmaengine: Add Synopsys eDMA IP driver (version 0)
-Thread-Topic: [RFC v6 0/6] dmaengine: Add Synopsys eDMA IP driver (version 0)
-Thread-Index: AQHU+gKiKVtA/qkDGEaWF789HSoeyKZd0r6g
-Date:   Mon, 6 May 2019 08:12:37 +0000
-Message-ID: <305100E33629484CBB767107E4246BBB0A237EC4@de02wembxa.internal.synopsys.com>
-References: <cover.1556043127.git.gustavo.pimentel@synopsys.com>
-In-Reply-To: <cover.1556043127.git.gustavo.pimentel@synopsys.com>
-Accept-Language: pt-PT, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
- =?utf-8?B?bk5jWjNWemRHRjJiMXhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
- =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
- =?utf-8?B?Y2JYTm5MV0kwTVRsaVlUVXlMVFptWkRZdE1URmxPUzA1T0Rnd0xXWTRPVFJq?=
- =?utf-8?B?TWpjek9EQTBNbHhoYldVdGRHVnpkRnhpTkRFNVltRTFOQzAyWm1RMkxURXha?=
- =?utf-8?B?VGt0T1RnNE1DMW1PRGswWXpJM016Z3dOREppYjJSNUxuUjRkQ0lnYzNvOUlq?=
- =?utf-8?B?TTBNRFVpSUhROUlqRXpNakF4TmpBek9UVTFOamswTkRZM01DSWdhRDBpYkhn?=
- =?utf-8?B?MmRXbERaazQ0UlM5YWJWZG9OMnhYVFUxcE5VcEtWemxaUFNJZ2FXUTlJaUln?=
- =?utf-8?B?WW13OUlqQWlJR0p2UFNJeElpQmphVDBpWTBGQlFVRkZVa2hWTVZKVFVsVkdU?=
- =?utf-8?B?a05uVlVGQlFsRktRVUZCWlVVelNqSTBkMUJXUVdVdmRVdGhNV0ZUT1VFNU55?=
- =?utf-8?B?czBjSEpXY0V3d1JEQlBRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVaEJRVUZCUTJ0RFFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVWQlFWRkJRa0ZCUVVGR2RHSkNjSGRCUVVGQlFVRkJRVUZCUVVGQlFVRktO?=
- =?utf-8?B?RUZCUVVKdFFVZHJRV0puUW1oQlJ6UkJXWGRDYkVGR09FRmpRVUp6UVVkRlFX?=
- =?utf-8?B?Sm5RblZCUjJ0QlltZENia0ZHT0VGa2QwSm9RVWhSUVZwUlFubEJSekJCV1ZG?=
- =?utf-8?B?Q2VVRkhjMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUlVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?blFVRkJRVUZCYm1kQlFVRkhXVUZpZDBJeFFVYzBRVnBCUW5sQlNHdEJXSGRD?=
- =?utf-8?B?ZDBGSFJVRmpaMEl3UVVjMFFWcFJRbmxCU0UxQldIZENia0ZIV1VGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFWRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkRRVUZCUVVGQlEyVkJRVUZCV21kQ2RrRklWVUZpWjBKclFV?=
- =?utf-8?B?aEpRV1ZSUW1aQlNFRkJXVkZDZVVGSVVVRmlaMEpzUVVoSlFXTjNRbVpCU0Ux?=
- =?utf-8?B?QldWRkNkRUZJVFVGa1VVSjFRVWRqUVZoM1FtcEJSemhCWW1kQ2JVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUpCUVVGQlFVRkJRVUZCU1VGQlFVRkJRVW8wUVVGQlFtMUJSemhC?=
- =?utf-8?B?WkZGQ2RVRkhVVUZqWjBJMVFVWTRRV05CUW1oQlNFbEJaRUZDZFVGSFZVRmpa?=
- =?utf-8?B?MEo2UVVZNFFXTjNRbWhCUnpCQlkzZENNVUZITkVGYWQwSm1RVWhKUVZwUlFu?=
- =?utf-8?B?cEJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVGQlFXZEJRVUZCUVVGdVow?=
- =?utf-8?B?RkJRVWRaUVdKM1FqRkJSelJCV2tGQ2VVRklhMEZZZDBKM1FVZEZRV05uUWpC?=
- =?utf-8?B?QlJ6UkJXbEZDZVVGSVRVRllkMEo2UVVjd1FXRlJRbXBCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJVVUZCUVVGQlFVRkJRVU5C?=
- =?utf-8?B?UVVGQlFVRkRaVUZCUVVGYVowSjJRVWhWUVdKblFtdEJTRWxCWlZGQ1prRklR?=
- =?utf-8?B?VUZaVVVKNVFVaFJRV0puUW14QlNFbEJZM2RDWmtGSVRVRmtRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUWtGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGSlFVRkJRVUZCU2pSQlFVRkNiVUZIT0VGa1VVSjFRVWRSUVdO?=
- =?utf-8?B?blFqVkJSamhCWTBGQ2FFRklTVUZrUVVKMVFVZFZRV05uUW5wQlJqaEJaRUZD?=
- =?utf-8?B?ZWtGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVVkJRVUZCUVVGQlFVRkJaMEZCUVVGQlFXNW5RVUZCUjFsQlluZENN?=
- =?utf-8?B?VUZITkVGYVFVSjVRVWhyUVZoM1FuZEJSMFZCWTJkQ01FRkhORUZhVVVKNVFV?=
- =?utf-8?B?aE5RVmgzUWpGQlJ6QkJXWGRCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZSUVVGQlFVRkJRVUZCUTBGQlFVRkJRVU5sUVVG?=
- =?utf-8?B?QlFWcDNRakJCU0UxQldIZENkMEZJU1VGaWQwSnJRVWhWUVZsM1FqQkJSamhC?=
- =?utf-8?B?WkVGQ2VVRkhSVUZoVVVKMVFVZHJRV0puUW01QlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQ1FVRkJRVUZCUVVGQlFVbEJR?=
- =?utf-8?B?VUZCUVVGS05FRkJRVUo2UVVkRlFXSkJRbXhCU0UxQldIZENhRUZIVFVGWmQw?=
- =?utf-8?B?SjJRVWhWUVdKblFqQkJSamhCWTBGQ2MwRkhSVUZpWjBGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJSVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZuUVVGQlFVRkJibWRCUVVGSVRVRlpVVUp6UVVkVlFXTjNRbVpC?=
- =?utf-8?B?U0VWQlpGRkNka0ZJVVVGYVVVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVZGQlFVRkJRVUZCUVVGRFFVRkJRVUZCUTJWQlFVRkJZM2RDZFVGSVFV?=
- =?utf-8?B?RmpkMEptUVVkM1FXRlJRbXBCUjFWQlltZENla0ZIVlVGWWQwSXdRVWRWUVdO?=
- =?utf-8?B?blFuUkJSamhCVFZGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVSkJRVUZCUVVGQlFVRkJTVUZCUVVGQlFVbzBRVUZC?=
- =?utf-8?B?UW5wQlJ6UkJZMEZDZWtGR09FRmlRVUp3UVVkTlFWcFJRblZCU0UxQldsRkNa?=
- =?utf-8?B?a0ZJVVVGYVVVSjVRVWN3UVZoM1FucEJTRkZCWkZGQ2EwRkhWVUZpWjBJd1FV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdkQlFV?=
- =?utf-8?B?RkJRVUZ1WjBGQlFVaFpRVnAzUW1aQlIzTkJXbEZDTlVGSVkwRmlkMEo1UVVk?=
- =?utf-8?B?UlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJRVUZC?=
- =?utf-8?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
-x-originating-ip: [10.107.25.131]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        id S1726016AbfEFJLf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 6 May 2019 05:11:35 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:39326 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbfEFJLf (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 6 May 2019 05:11:35 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 595F0200057;
+        Mon,  6 May 2019 11:11:33 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7263D20010B;
+        Mon,  6 May 2019 11:11:28 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 26265402A3;
+        Mon,  6 May 2019 17:11:22 +0800 (SGT)
+From:   Peng Ma <peng.ma@nxp.com>
+To:     vkoul@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
+        mark.rutland@arm.com, leoyang.li@nxp.com
+Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Peng Ma <peng.ma@nxp.com>
+Subject: [PATCH 1/4] arm64: dts: fsl: ls1028a: Add qDMA node
+Date:   Mon,  6 May 2019 09:03:41 +0000
+Message-Id: <20190506090344.37784-1-peng.ma@nxp.com>
+X-Mailer: git-send-email 2.14.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-SGkgYWxsLA0KDQpBbiBnZW50bGUgcmVtaW5kZXIuLi4NCg0KVGhhbmtzLg0KDQpPbiBUdWUsIEFw
-ciAyMywgMjAxOSBhdCAxOTozMDo3LCBHdXN0YXZvIFBpbWVudGVsIA0KPGd1c3Rhdm8ucGltZW50
-ZWxAc3lub3BzeXMuY29tPiB3cm90ZToNCg0KPiBBZGQgU3lub3BzeXMgZURNQSBJUCBkcml2ZXIg
-KHZlcnNpb24gMCBhbmQgZm9yIEVQIHNpZGUgb25seSkgdG8gTGludXgNCj4ga2VybmVsLiBUaGlz
-IElQIGlzIGdlbmVyYWxseSBkaXN0cmlidXRlZCB3aXRoIFN5bm9wc3lzIFBDSWUgRW5kUG9pbnQg
-SVANCj4gKGRlcGVuZHMgb2YgdGhlIHVzZSBhbmQgbGljZW5zaW5nIGFncmVlbWVudCksIHdoaWNo
-IHN1cHBvcnRzOg0KPiAgLSBsZWdhY3kgYW5kIHVucm9sbCBtb2Rlcw0KPiAgLSAxNiBpbmRlcGVu
-ZGVudCBhbmQgY29uY3VycmVudCBjaGFubmVscyAoOCB3cml0ZSArIDggcmVhZCkNCj4gIC0gc3Vw
-cG9ydHMgbGlua2VkIGxpc3QgKHNjYXR0ZXItZ2F0aGVyKSB0cmFuc2Zlcg0KPiAgLSBlYWNoIGxp
-bmtlZCBsaXN0IGRlc2NyaXB0b3IgY2FuIHRyYW5zZmVyIGZyb20gMSBieXRlIHRvIDQgR2J5dGVz
-DQo+ICAtIHN1cHBvcnRzIGN5Y2xpYyB0cmFuc2Zlcg0KPiAgLSBQQ0llIEVuZFBvaW50IGdsdWUt
-bG9naWMNCj4gDQo+IFRoaXMgcGF0Y2ggc2VyaWVzIGNvbnRhaW5zOg0KPiAgLSBlRE1BIGNvcmUg
-KyBlRE1BIGNvcmUgdjAgZHJpdmVyIChpbXBsZW1lbnRzIHRoZSBpbnRlcmZhY2Ugd2l0aA0KPiAg
-RE1BZW5naW5lIGNvbnRyb2xsZXIgQVBJcyBhbmQgaW50ZXJmYWNlcyB3aXRoIGVETUEgSFcgYmxv
-Y2spDQo+ICAtIGVETUEgUENJZSBnbHVlLWxvZ2ljIHJlZmVyZW5jZSBkcml2ZXIgKGF0dGFjaGVz
-IHRvIFN5bm9wc3lzIEVQIGFuZA0KPiAgcHJvdmlkZXMgbWVtb3J5IGFjY2VzcyB0byBlRE1BIGNv
-cmUgZHJpdmVyKQ0KPiANCj4gR3VzdGF2byBQaW1lbnRlbCAoNik6DQo+ICAgZG1hZW5naW5lOiBB
-ZGQgU3lub3BzeXMgZURNQSBJUCBjb3JlIGRyaXZlcg0KPiAgIGRtYWVuZ2luZTogQWRkIFN5bm9w
-c3lzIGVETUEgSVAgdmVyc2lvbiAwIHN1cHBvcnQNCj4gICBkbWFlbmdpbmU6IEFkZCBTeW5vcHN5
-cyBlRE1BIElQIHZlcnNpb24gMCBkZWJ1Z2ZzIHN1cHBvcnQNCj4gICBQQ0k6IEFkZCBTeW5vcHN5
-cyBlbmRwb2ludCBFRERBIERldmljZSBJRA0KPiAgIGRtYWVuZ2luZTogQWRkIFN5bm9wc3lzIGVE
-TUEgSVAgUENJZSBnbHVlLWxvZ2ljDQo+ICAgTUFJTlRBSU5FUlM6IEFkZCBTeW5vcHN5cyBlRE1B
-IElQIGRyaXZlciBtYWludGFpbmVyDQo+IA0KPiAgTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICB8ICAgNyArDQo+ICBkcml2ZXJzL2RtYS9LY29uZmlnICAgICAgICAgICAg
-ICAgICAgICAgIHwgICAyICsNCj4gIGRyaXZlcnMvZG1hL01ha2VmaWxlICAgICAgICAgICAgICAg
-ICAgICAgfCAgIDEgKw0KPiAgZHJpdmVycy9kbWEvZHctZWRtYS9LY29uZmlnICAgICAgICAgICAg
-ICB8ICAxOCArDQo+ICBkcml2ZXJzL2RtYS9kdy1lZG1hL01ha2VmaWxlICAgICAgICAgICAgIHwg
-ICA3ICsNCj4gIGRyaXZlcnMvZG1hL2R3LWVkbWEvZHctZWRtYS1jb3JlLmMgICAgICAgfCA5MjAg
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAgZHJpdmVycy9kbWEvZHctZWRtYS9k
-dy1lZG1hLWNvcmUuaCAgICAgICB8IDE2NSArKysrKysNCj4gIGRyaXZlcnMvZG1hL2R3LWVkbWEv
-ZHctZWRtYS1wY2llLmMgICAgICAgfCAyMjkgKysrKysrKysNCj4gIGRyaXZlcnMvZG1hL2R3LWVk
-bWEvZHctZWRtYS12MC1jb3JlLmMgICAgfCAzNDggKysrKysrKysrKysrDQo+ICBkcml2ZXJzL2Rt
-YS9kdy1lZG1hL2R3LWVkbWEtdjAtY29yZS5oICAgIHwgIDI4ICsNCj4gIGRyaXZlcnMvZG1hL2R3
-LWVkbWEvZHctZWRtYS12MC1kZWJ1Z2ZzLmMgfCAzNjEgKysrKysrKysrKysrDQo+ICBkcml2ZXJz
-L2RtYS9kdy1lZG1hL2R3LWVkbWEtdjAtZGVidWdmcy5oIHwgIDI4ICsNCj4gIGRyaXZlcnMvZG1h
-L2R3LWVkbWEvZHctZWRtYS12MC1yZWdzLmggICAgfCAxNTggKysrKysrDQo+ICBkcml2ZXJzL21p
-c2MvcGNpX2VuZHBvaW50X3Rlc3QuYyAgICAgICAgIHwgICAyICstDQo+ICBpbmNsdWRlL2xpbnV4
-L2RtYS9lZG1hLmggICAgICAgICAgICAgICAgIHwgIDQ3ICsrDQo+ICBpbmNsdWRlL2xpbnV4L3Bj
-aV9pZHMuaCAgICAgICAgICAgICAgICAgIHwgICAxICsNCj4gIDE2IGZpbGVzIGNoYW5nZWQsIDIz
-MjEgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
-aXZlcnMvZG1hL2R3LWVkbWEvS2NvbmZpZw0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
-ZG1hL2R3LWVkbWEvTWFrZWZpbGUNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2RtYS9k
-dy1lZG1hL2R3LWVkbWEtY29yZS5jDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9kbWEv
-ZHctZWRtYS9kdy1lZG1hLWNvcmUuaA0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZG1h
-L2R3LWVkbWEvZHctZWRtYS1wY2llLmMNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2Rt
-YS9kdy1lZG1hL2R3LWVkbWEtdjAtY29yZS5jDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9kbWEvZHctZWRtYS9kdy1lZG1hLXYwLWNvcmUuaA0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
-aXZlcnMvZG1hL2R3LWVkbWEvZHctZWRtYS12MC1kZWJ1Z2ZzLmMNCj4gIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBkcml2ZXJzL2RtYS9kdy1lZG1hL2R3LWVkbWEtdjAtZGVidWdmcy5oDQo+ICBjcmVhdGUg
-bW9kZSAxMDA2NDQgZHJpdmVycy9kbWEvZHctZWRtYS9kdy1lZG1hLXYwLXJlZ3MuaA0KPiAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvZG1hL2VkbWEuaA0KPiANCj4gU2lnbmVkLW9m
-Zi1ieTogR3VzdGF2byBQaW1lbnRlbCA8Z3VzdGF2by5waW1lbnRlbEBzeW5vcHN5cy5jb20+DQo+
-IENjOiBWaW5vZCBLb3VsIDx2a291bEBrZXJuZWwub3JnPg0KPiBDYzogQW5keSBTaGV2Y2hlbmtv
-IDxhbmRyaXkuc2hldmNoZW5rb0BsaW51eC5pbnRlbC5jb20+DQo+IENjOiBSdXNzZWxsIEtpbmcg
-PHJtaytrZXJuZWxAYXJtbGludXgub3JnLnVrPg0KPiBDYzogTG9yZW56byBQaWVyYWxpc2kgPGxv
-cmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+IENjOiBCam9ybiBIZWxnYWFzIDxiaGVsZ2Fhc0Bn
-b29nbGUuY29tPg0KPiBDYzogS2lzaG9uIFZpamF5IEFicmFoYW0gSSA8a2lzaG9uQHRpLmNvbT4N
-Cj4gQ2M6IEpvYW8gUGludG8gPGpwaW50b0BzeW5vcHN5cy5jb20+DQo+IC0tIA0KPiAyLjcuNA0K
-DQoNCg==
+Add the qDMA device tree nodes for LS1028A devices
+
+Signed-off-by: Peng Ma <peng.ma@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   20 ++++++++++++++++++++
+ 1 files changed, 20 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 2896bbc..8116fb3 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -336,6 +336,26 @@
+ 				     <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
++		qdma: dma-controller@8380000 {
++			compatible = "fsl,ls1028a-qdma", "fsl,ls1021a-qdma";
++			reg = <0x0 0x8380000 0x0 0x1000>, /* Controller regs */
++			      <0x0 0x8390000 0x0 0x10000>, /* Status regs */
++			      <0x0 0x83a0000 0x0 0x40000>; /* Block regs */
++			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 251 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 252 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 253 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 254 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "qdma-error", "qdma-queue0",
++				"qdma-queue1", "qdma-queue2", "qdma-queue3";
++			dma-channels = <8>;
++			block-number = <1>;
++			block-offset = <0x10000>;
++			fsl,dma-queues = <2>;
++			status-sizes = <64>;
++			queue-sizes = <64 64>;
++		};
++
+ 		pcie@1f0000000 { /* Integrated Endpoint Root Complex */
+ 			compatible = "pci-host-ecam-generic";
+ 			reg = <0x01 0xf0000000 0x0 0x100000>;
+-- 
+1.7.1
+

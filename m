@@ -2,48 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2948F15D1E
-	for <lists+dmaengine@lfdr.de>; Tue,  7 May 2019 08:10:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7C1015D21
+	for <lists+dmaengine@lfdr.de>; Tue,  7 May 2019 08:10:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbfEGGKS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 7 May 2019 02:10:18 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43688 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbfEGGKR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 May 2019 02:10:17 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t22so7715823pgi.10
-        for <dmaengine@vger.kernel.org>; Mon, 06 May 2019 23:10:17 -0700 (PDT)
+        id S1726556AbfEGGKX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 7 May 2019 02:10:23 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46527 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbfEGGKW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 May 2019 02:10:22 -0400
+Received: by mail-pg1-f194.google.com with SMTP id t187so3605587pgb.13
+        for <dmaengine@vger.kernel.org>; Mon, 06 May 2019 23:10:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=fegqHJdxTxrNP4emVZDAfoflYxMDA5HIYSCVsGvvNyk=;
-        b=gpuzGeOzJL+S9gtU42ApMv5X8chVRN0hkaUIvi7zD8VoJwnOqdqmXq7dtEBURIpA7j
-         G/9Ev+cBM6PV3Go/z0mD8a8YNo5qNaDn0y4C4vJmag/YvzNjrhKByuxYlaoJr0TbQ5eo
-         2nfWjzDy/wFJLus92xSxL6b1c35GEBUadXry11rD/4luRTR0OTnpL1BvwojJFoJbTZ3q
-         qWa5bLbGM9gj9Fx9aaKvHXZ3P3VInHnxnX37d6LK/Ysm/eB1ph8aMLSOBxn6e7x3Zz1j
-         uw+pixeKEBnvOiks2g0sUhhj+flFxFWtez0II53gaB23VlKlK7kIVnWRfR8jUkae/ejN
-         WMYg==
+        bh=zZVeFg3ilWn9d8BrQHwI8nm6+PjT4Uc8w1q60Oaxq8U=;
+        b=rPaqrwn1dFRkPgVFFCucjoHDO9tCwtxHdMU6tMSwe80W34i8kOmUplfqdBpDJW71dL
+         HM7rhYYCe2OGnSSmfVroNtvEdyr6r7JIRywbildJSl0RVF6A1wLs6aWvKzSZ2PgnRXUr
+         cCHXZ+OvTXZRbab/VqQs16S4bcCDRdFSdBLLkKHfQ2NssH3PQGzdeVU7HlXwxk6EchIq
+         dOsBethnRBXf/G73slckz7OKvoPkhfOznt28Mc5bFa9lCakZNCytQ77xEb/RWjolQr8b
+         0SziRR+oL/8Spt70qUhBz+G15DXEaE9/MAvB/8OqYQXH9eRx9Nm1j2FxuRpLUtg1ymrJ
+         HD0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=fegqHJdxTxrNP4emVZDAfoflYxMDA5HIYSCVsGvvNyk=;
-        b=Sm08tcqjTwYpVvHKWJe/4H5wisW1XR4h9LDzgOGchr4W/UDq+uX+ZROaOzFx3D73Ah
-         xlFMtLohXwdUxktc/+py/vuDOHgaZQDdE/8SuioK9iYUxRSDuSjw3fyDVKNvqTWleMCK
-         rhLp4iyk0Y5fS6NGs+ZE1UeYK5/fSOAKFmsPvYpOTVB6UkecGSXafk1xh6Rbm5zP8GI5
-         I6IYnN7wG9dFokbLgplz5vao+PBM+YXo48Rid74OB2XHIJakMrfIcpEE+w7WqAMsOlT8
-         Q3/nKL1gF7tbrqeDm4xR4+/gp9orSNdvrFRCSIv/63f2+pS4/72kTXmS7eWdHkCc4Yte
-         bCPg==
-X-Gm-Message-State: APjAAAW0tjp/7zJ9zrrngo8tVu7NebRLEJPWkOwec1VZG2CMrJ+qmnCW
-        3NoDHcexQdpv+8eWzuK+uf7nzw==
-X-Google-Smtp-Source: APXvYqzTNghUUH/vAVAHLtApBnwfwTv9iOi8rSX6GEZxoSO4Ljp5Aibele+BPHXO5ocKnwntiyTY2w==
-X-Received: by 2002:a65:5184:: with SMTP id h4mr37881601pgq.109.1557209417270;
-        Mon, 06 May 2019 23:10:17 -0700 (PDT)
+        bh=zZVeFg3ilWn9d8BrQHwI8nm6+PjT4Uc8w1q60Oaxq8U=;
+        b=VvESgPea6Az/5CUWObevSjWzANFYP/7T91pNpTRSwLtIAsN3Z7KCja3YAXWA6SmQFB
+         lzJWDr4P9Cef9ARV32GeUq512Kt4SWqqNcE+CFyEBzP+QvC4w4mdX/Wdl7i3AwZlWUtz
+         GJ4OVbS51Fv9IBNJMpelQAvp4405bvXinamKwIEeItjoZC8gy4TXQ5WLbmPtPOX3h5xd
+         BltbBxZ+rICZGCJiaR+45ONWWaOYT1bkBB8hZ9tjoTfgkXmNIY8DvLdcJghd4axj6F8V
+         osSvQOUlhmV9Fzw7+8qKz3XW0VL0i0DMIzIN55zxK/Ff4mSGT2eyGj833wvCrWejuXgg
+         XIDQ==
+X-Gm-Message-State: APjAAAW7JNCi98n9AqjvfvTUfS2y5LV6gGk6G02+zFc+GrrBnWEWVJlK
+        8v1DBzV58T3OqfUpAo4EVLAmuQ==
+X-Google-Smtp-Source: APXvYqx2qWlTeHpIBatZZRSy2fiI3ZlapPkg6bNITXkF5AhanuTKXxUc3Xf9Hd7av0sMdlgfjtY7BA==
+X-Received: by 2002:a65:62c4:: with SMTP id m4mr37228778pgv.308.1557209422442;
+        Mon, 06 May 2019 23:10:22 -0700 (PDT)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.102])
-        by smtp.gmail.com with ESMTPSA id e184sm30786325pfc.102.2019.05.06.23.10.12
+        by smtp.gmail.com with ESMTPSA id e184sm30786325pfc.102.2019.05.06.23.10.17
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 06 May 2019 23:10:16 -0700 (PDT)
+        Mon, 06 May 2019 23:10:21 -0700 (PDT)
 From:   Baolin Wang <baolin.wang@linaro.org>
 To:     dan.j.williams@intel.com, vkoul@kernel.org
 Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
@@ -54,9 +54,9 @@ Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
         vincent.guittot@linaro.org, baolin.wang@linaro.org,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 2/8] soc: tegra: fuse: Change to the correct __dma_request_channel() prototype
-Date:   Tue,  7 May 2019 14:09:39 +0800
-Message-Id: <1ddb1abe8722154dd546d265d5c4536480a24a87.1557206859.git.baolin.wang@linaro.org>
+Subject: [PATCH 3/8] dmaengine: imx-sdma: Let the core do the device node validation
+Date:   Tue,  7 May 2019 14:09:40 +0800
+Message-Id: <60acb5443a9bc18789bd86d6722f4726bf372fbc.1557206859.git.baolin.wang@linaro.org>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <cover.1557206859.git.baolin.wang@linaro.org>
 References: <cover.1557206859.git.baolin.wang@linaro.org>
@@ -67,27 +67,59 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Since we've introduced one device node parameter for __dma_request_channel(),
-thus change to the correct function prototype.
+Let the DMA engine core do the device node validation instead of drivers.
 
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- drivers/soc/tegra/fuse/fuse-tegra20.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/imx-sdma.c                |    9 ++-------
+ include/linux/platform_data/dma-imx.h |    1 -
+ 2 files changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/soc/tegra/fuse/fuse-tegra20.c b/drivers/soc/tegra/fuse/fuse-tegra20.c
-index 49ff017..e2571b6 100644
---- a/drivers/soc/tegra/fuse/fuse-tegra20.c
-+++ b/drivers/soc/tegra/fuse/fuse-tegra20.c
-@@ -110,7 +110,7 @@ static int tegra20_fuse_probe(struct tegra_fuse *fuse)
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_SLAVE, mask);
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 5f3c137..1a11118 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -1921,16 +1921,11 @@ static int sdma_init(struct sdma_engine *sdma)
+ static bool sdma_filter_fn(struct dma_chan *chan, void *fn_param)
+ {
+ 	struct sdma_channel *sdmac = to_sdma_chan(chan);
+-	struct sdma_engine *sdma = sdmac->sdma;
+ 	struct imx_dma_data *data = fn_param;
  
--	fuse->apbdma.chan = __dma_request_channel(&mask, dma_filter, NULL);
-+	fuse->apbdma.chan = __dma_request_channel(&mask, dma_filter, NULL, NULL);
- 	if (!fuse->apbdma.chan)
- 		return -EPROBE_DEFER;
+ 	if (!imx_dma_is_general_purpose(chan))
+ 		return false;
  
+-	/* return false if it's not the right device */
+-	if (sdma->dev->of_node != data->of_node)
+-		return false;
+-
+ 	sdmac->data = *data;
+ 	chan->private = &sdmac->data;
+ 
+@@ -1958,9 +1953,9 @@ static struct dma_chan *sdma_xlate(struct of_phandle_args *dma_spec,
+ 	 * be set to sdmac->event_id1.
+ 	 */
+ 	data.dma_request2 = 0;
+-	data.of_node = ofdma->of_node;
+ 
+-	return dma_request_channel(mask, sdma_filter_fn, &data);
++	return __dma_request_channel(&mask, sdma_filter_fn, &data,
++				     ofdma->of_node);
+ }
+ 
+ static int sdma_probe(struct platform_device *pdev)
+diff --git a/include/linux/platform_data/dma-imx.h b/include/linux/platform_data/dma-imx.h
+index 9daea8d..7d964e7 100644
+--- a/include/linux/platform_data/dma-imx.h
++++ b/include/linux/platform_data/dma-imx.h
+@@ -55,7 +55,6 @@ struct imx_dma_data {
+ 	int dma_request2; /* secondary DMA request line */
+ 	enum sdma_peripheral_type peripheral_type;
+ 	int priority;
+-	struct device_node *of_node;
+ };
+ 
+ static inline int imx_dma_is_ipu(struct dma_chan *chan)
 -- 
 1.7.9.5
 

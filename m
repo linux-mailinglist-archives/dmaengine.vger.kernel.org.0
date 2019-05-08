@@ -2,112 +2,100 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49AE91756A
-	for <lists+dmaengine@lfdr.de>; Wed,  8 May 2019 11:47:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DF1317983
+	for <lists+dmaengine@lfdr.de>; Wed,  8 May 2019 14:37:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbfEHJro (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 8 May 2019 05:47:44 -0400
-Received: from mail-eopbgr150050.outbound.protection.outlook.com ([40.107.15.50]:42753
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726634AbfEHJro (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 8 May 2019 05:47:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MYKSw8E3S3YAcBWxSFu4j7WStB3i2e/0mj4lpwSvJ58=;
- b=RDKS6WCpPv13kq+kVmnYdXH3VrZ5+IQMYhXC2A59w5WrA5dzlXMTOa0rI1DouXMNz3zwxpTGjTUijLRTMgDk20hN/TYSb8lbuAZS2viyxsUzXspKd+HRtzCfzjXU9FjmR7CY/LKORWtkZRaa/fq1cawVbaKYr/AsQav0sQtV5Iw=
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
- VI1PR04MB4462.eurprd04.prod.outlook.com (20.177.53.94) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.11; Wed, 8 May 2019 09:47:38 +0000
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5d07:911b:18e1:1525]) by VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::5d07:911b:18e1:1525%4]) with mapi id 15.20.1856.012; Wed, 8 May 2019
- 09:47:38 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "broonie@kernel.org" <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: RE: [EXT] Re: [PATCH v3 10/14] dt-bindings: dma: imx-sdma: add
- i.mx6ul/6sx  compatible name
-Thread-Topic: [EXT] Re: [PATCH v3 10/14] dt-bindings: dma: imx-sdma: add
- i.mx6ul/6sx  compatible name
-Thread-Index: AQHVBPXDrkhn+7eeekK+EpnqoHxjf6Zg+QNg
-Date:   Wed, 8 May 2019 09:47:38 +0000
-Message-ID: <VI1PR04MB45434F10FA0AC88AFE2DB09489320@VI1PR04MB4543.eurprd04.prod.outlook.com>
-References: <1557249513-4903-1-git-send-email-yibin.gong@nxp.com>
- <1557249513-4903-11-git-send-email-yibin.gong@nxp.com>
- <20190507165601.GA17194@bogus>
-In-Reply-To: <20190507165601.GA17194@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bc0548f4-333e-4519-fe07-08d6d39a34f4
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4462;
-x-ms-traffictypediagnostic: VI1PR04MB4462:
-x-microsoft-antispam-prvs: <VI1PR04MB446223DD4B9BE9D881B73A7089320@VI1PR04MB4462.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0031A0FFAF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(39860400002)(396003)(376002)(366004)(189003)(199004)(8676002)(81156014)(81166006)(53936002)(71190400001)(4326008)(76176011)(102836004)(66066001)(8936002)(7696005)(6506007)(5660300002)(446003)(256004)(11346002)(478600001)(476003)(25786009)(6916009)(14454004)(486006)(6116002)(4744005)(3846002)(305945005)(66946007)(73956011)(76116006)(66476007)(7416002)(9686003)(71200400001)(54906003)(68736007)(86362001)(33656002)(2906002)(26005)(186003)(99286004)(229853002)(66556008)(6436002)(52536014)(64756008)(74316002)(66446008)(7736002)(6246003)(316002)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4462;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: +Yl8u/xWF8nmY5CuTOD0yrKFVHCLe7vxfUCGAyUOGsf7dq9JERyXEW3j1sNgFd47DfPRADxiG3i+vCaha6weSAI+wsXp4Ok4XNR/WjZlrPUj87wQr3s8sH+0xLg6nRENpb2bCh0SwVo6DXImMpIMYJHYjXAkpgGHOEKUnv1lc5caD1vhNGnol3GzQteqbxv48IfgxzjBebinFO8De5yrcsgFp58KzAW2vLdBCuQwA1CgGgY06zJrEXw//E94ZcL17iyxfK2MlaQbFQZYbj1y0K+m6frfZ3fk1u7FUXiYxpfwz85C9BYj8oRn3NlLRxVVqS6Bb7lWiFJAVqmqzIKFg/vjJu/3OoiiN5HE7gYPzBE5MqPHn+tVA+E2Mq32ZAHHxOQ1LR9hKPI5cCJqqHfh9vqYD9Fy17XDrOPPWLSuZ3M=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1727575AbfEHMhT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 8 May 2019 08:37:19 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44097 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726600AbfEHMhT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 8 May 2019 08:37:19 -0400
+Received: by mail-lf1-f67.google.com with SMTP id n134so12590422lfn.11;
+        Wed, 08 May 2019 05:37:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=v7au5CCe/tAVeWfzeYAbhgqBsx7YkJZIcyvifTQduLU=;
+        b=Ug84rc6uRecC9IhQA2zooKkTs0rIUlxauvTqkH+dlX9dxpCxyx5rBCNGf2CLSmnwk5
+         Fyt6rYUqydF1K1DNTu8ltn/T68y/fvkHOx0davtUcDSz9trOYZdNGm9RXPZpJTz/VR/G
+         uzZbRUnQzTenqOxXqfHEr5e2Oiz9VONPUYv0hGb+8aZl5nvysk06ARZy0iPbTZe30GjS
+         r0RgihlqPzsCdlMUKOxcAhHDwCCU8CabSh7YHlTpxXruWDcqHJq02PVSM0fR59d/d35u
+         K4YiNi7/eKrogkhmIQ01nGZ6b8i9/1UmEzeXbbgDVomk9eOgOzrjg5nDn4zr5gGdFUv0
+         5Eug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=v7au5CCe/tAVeWfzeYAbhgqBsx7YkJZIcyvifTQduLU=;
+        b=t3ZDtQKPbtQaJ2y6NFf1bT4ceJ2U99jn0r/PsOngQBU6AEHO03PfOCIuIVl8UZOt1S
+         Ha2Y3U6utHy+oi2WJTlBvGgn1L8Ibtii0L+XZwTrT2XQTFH+1o4CHC1GRIipPEn5aUDo
+         NSSlXlTexMi7ekMOMedP/CiEpjjvWe1oZ1x1xnrDDks23V7JuSVvkoBrC0Jp7QE8Oq3g
+         1d8TUDuwf8q4xd91tTiWIW0zyUxw8nGIy2Edf/TVJRe4XKeWXwLD2+45AzQInW7qRL07
+         EwIOIisDIbCw6E5qB8jaIlhY8gkx2YgPGMtRa5k0g47f1P6mH+lmk0lxSvsJNoc2QLd6
+         iWVA==
+X-Gm-Message-State: APjAAAXIuCd9LYKvArdpQT5c/M7Xq0w+IdDBlstjxvt2zJ/09TutLmql
+        FeqtzWVKYeP3N0ylU5xd6LiIMXOv
+X-Google-Smtp-Source: APXvYqzaQoM2ZOXGyH8zy4/azzZrir3MBRJu2rAdTrgWh8SPV96vqARK/cGoOxkCRZPDEuF9X6N9KQ==
+X-Received: by 2002:ac2:4148:: with SMTP id c8mr17889881lfi.2.1557319036956;
+        Wed, 08 May 2019 05:37:16 -0700 (PDT)
+Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
+        by smtp.googlemail.com with ESMTPSA id d23sm3675396ljj.38.2019.05.08.05.37.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 May 2019 05:37:15 -0700 (PDT)
+Subject: Re: [PATCH v1] dmaengine: tegra-apb: Handle DMA_PREP_INTERRUPT flag
+ properly
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190505181235.14798-1-digetx@gmail.com>
+ <287d7e67-1572-b4f2-d4bb-b1f02f534d47@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <cbe8352c-c1c7-12a7-c658-82e7ffee0be8@gmail.com>
+Date:   Wed, 8 May 2019 15:37:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc0548f4-333e-4519-fe07-08d6d39a34f4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2019 09:47:38.5528
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4462
+In-Reply-To: <287d7e67-1572-b4f2-d4bb-b1f02f534d47@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-> On Wed, 8 May 2019 09:16:38 +0000, Rob Herring wrote:
-> On Tue, 7 May 2019 09:16:38 +0000, Robin Gong wrote:
-> > Add i.mx6ul and i.mx6sx compatible name.
-> >
-> > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> > ---
-> >  Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
->=20
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
-Sorry, no tags and no comments get from V2 for this patch. Just resend the =
-whole
-patch set for v3 since other comments addressed from other patch.=20
->=20
-> If a tag was not added on purpose, please state why and what changed.
+08.05.2019 12:24, Jon Hunter пишет:
+> 
+> On 05/05/2019 19:12, Dmitry Osipenko wrote:
+>> The DMA_PREP_INTERRUPT flag means that descriptor's callback should be
+>> invoked upon transfer completion and that's it. For some reason driver
+>> completely disables the hardware interrupt handling, leaving channel in
+>> unusable state if transfer is issued with the flag being unset. Note
+>> that there are no occurrences in the relevant drivers that do not set
+>> the flag, hence this patch doesn't fix any actual bug and merely fixes
+>> potential problem.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> 
+> From having a look at this, I am guessing that we have never really
+> tested the case where DMA_PREP_INTERRUPT flag is not set because as you
+> mentioned it does not look like this will work at all!
+> 
+> Is there are use-case you are looking at where you don't set the
+> DMA_PREP_INTERRUPT flag?
+
+No. I just noticed it while was checking whether we really need to
+handle the BUSY bit state for the Ben's "accurate reporting" patch.
+
+> If not I am wondering if we should even bother supporting this and warn
+> if it is not set. AFAICT it does not appear to be mandatory, but maybe
+> Vinod can comment more on this.
+
+The warning message will be also okay if it's not mandatory.

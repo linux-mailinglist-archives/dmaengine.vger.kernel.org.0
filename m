@@ -2,103 +2,81 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 68D6518A1D
-	for <lists+dmaengine@lfdr.de>; Thu,  9 May 2019 14:55:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35F2418DE4
+	for <lists+dmaengine@lfdr.de>; Thu,  9 May 2019 18:21:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbfEIMzd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 9 May 2019 08:55:33 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:51754 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726438AbfEIMzd (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 May 2019 08:55:33 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id 1E50225BE06;
-        Thu,  9 May 2019 22:55:31 +1000 (AEST)
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id 22BA49403F2; Thu,  9 May 2019 14:55:29 +0200 (CEST)
-Date:   Thu, 9 May 2019 14:55:29 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        HIROYUKI YOKOYAMA <hiroyuki.yokoyama.vx@renesas.com>
-Subject: Re: [PATCH] dmaengine: rcar-dmac: Update copyright information
-Message-ID: <20190509125528.d7eryp5iv45yn2mp@verge.net.au>
-References: <20190410182657.23034-1-niklas.soderlund+renesas@ragnatech.se>
- <20190411084937.y5m6vzcwtkqqun7s@verge.net.au>
- <20190411151756.GC30887@bigcity.dyn.berto.se>
- <CAMuHMdXLM0hkUva4AukBpYy+=mRQ_tWT4XCGb=ZGbuT5nYMzjA@mail.gmail.com>
- <OSBPR01MB1733615712FC0F8271580D8BD83D0@OSBPR01MB1733.jpnprd01.prod.outlook.com>
- <20190426115343.GY28103@vkoul-mobl>
+        id S1726779AbfEIQUv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 9 May 2019 12:20:51 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38645 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726644AbfEIQUu (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 May 2019 12:20:50 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 14so2544971ljj.5
+        for <dmaengine@vger.kernel.org>; Thu, 09 May 2019 09:20:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oh41XTRfQ2hEQxbfWj77USA9ai+rN4+FYJEIHIYPQ50=;
+        b=MSCEu1Aud2SLjXb7CPRb2JObZCwCz2T2wncAxxSLqNI+P3ZJnyYzj3LXqosy/DW9ck
+         SZAQhMPo16TiwBKKf8okUSLDX/Hm1n91JYrYGiEZhydTMGNp2nlrnfV+i9+JTn+W72TY
+         n2/8ImX3xbYgn3emRAen2SATySzPT9lGy8gfQpElm2W5WEr9+Vbz/XSAWCwzeZYxH8sS
+         cNPRQtqo1FoCHuklAaWddmLT/arNK7bm5lZIumHgs8BbIm8OzQ6yzCx6OQilBBKlTzZ2
+         mEWlYiT9255k2hQkp2z6eP0Aos4XHGjRffm85Y8fUaqZDkhdiHDVPIgeMHptgj5JfERK
+         nAUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=oh41XTRfQ2hEQxbfWj77USA9ai+rN4+FYJEIHIYPQ50=;
+        b=iojagYnlgYV+LcS0rSCU9reLIy7LgC71q6jnHPQKF+XtjMCN5tOk2ICjr7FJEaJNpX
+         UBPf0LiVh3+Ghdoxw4G3ZxsUNn97iZZ0RuqPZ4VvN4nEetpcsE6zaie0B2HrXhQob/1+
+         iofFddTGhqUrz8jwWJ8F/qVvtO4dCVSq3K/4fvgyFvcShqv3vn7lyGWLAo9OduEfY1JE
+         csl2usb28fSsXPhLlZfYhll2QzSFBNrnNuLd8B0DF6+gLQhSzNoYDIBx2W+O9JFLO1oR
+         SoEiOKupnznfwRDeB1+zXpQBGqTj9d+bvnT00urATVm6DYVVl5nK5YB7YjLF2iLFpHKH
+         JYMA==
+X-Gm-Message-State: APjAAAUjpJO6xMsSnmWK1y7x8J0EisqAZRghaVRDnmrUcTM814Wu/Beg
+        hC/CrwRQsfmCKaC+W86W6mbgsg==
+X-Google-Smtp-Source: APXvYqxGSg/jkWz4uW+fNqpxwMK3znRd6PASiue1jnbHzmriv4EAToS24KtCkbili18pFdfHiv+CWQ==
+X-Received: by 2002:a2e:888d:: with SMTP id k13mr2879671lji.18.1557418848703;
+        Thu, 09 May 2019 09:20:48 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([31.173.83.188])
+        by smtp.gmail.com with ESMTPSA id d1sm426826ljc.89.2019.05.09.09.20.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 09:20:47 -0700 (PDT)
+Subject: Re: [PATCH] dmaengine: sudmac: remove unused driver
+To:     Simon Horman <horms+renesas@verge.net.au>,
+        Vinod Koul <vinod.koul@intel.com>
+Cc:     dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+References: <20190509125211.324-1-horms+renesas@verge.net.au>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <522c16db-be05-524b-70cf-eb0dcc3c53bb@cogentembedded.com>
+Date:   Thu, 9 May 2019 19:20:46 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
+In-Reply-To: <20190509125211.324-1-horms+renesas@verge.net.au>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190426115343.GY28103@vkoul-mobl>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 05:23:43PM +0530, Vinod Koul wrote:
-> On 25-04-19, 03:52, Yoshihiro Shimoda wrote:
-> > Hi Geert-san,
-> > 
-> > > From: Geert Uytterhoeven, Sent: Wednesday, April 24, 2019 9:22 PM
-> > > 
-> > > Hi Niklas, Shimoda-san,
-> > > 
-> > > On Thu, Apr 11, 2019 at 5:18 PM Niklas Söderlund
-> > > <niklas.soderlund@ragnatech.se> wrote:
-> > > > On 2019-04-11 10:49:37 +0200, Simon Horman wrote:
-> > > > > On Wed, Apr 10, 2019 at 08:26:57PM +0200, Niklas Söderlund wrote:
-> > > > > Not strictly related, but is it appropriate to:
-> > > > >
-> > > > > 1. Move this driver and drivers/dma/sh/usb-dmac.c to drivers/dma/renesas/
-> > > 
-> > > That may make sense...
-> > > 
-> > > > > 2. Remove drivers/dma/sh/sudmac.c which appears unused
-> > > >
-> > > > I let someone with a better grasp of history answer this one. From my
-> > > > side removing drivers which are unused seems like a good idea :-)
-> > > 
-> > > There seem to be some (half-baked?) interaction between sudmac.c and
-> > > drivers/usb/gadget/udc/r8a66597-udc.c and drivers/usb/renesas_usbhs/fifo.c.
-> > > These don't seem to be used at all on Renesas ARM platforms, but
-> > > CONFIG_USB_R8A66597_HCD is enabled in shmobile_defconfig and
-> > > multi_v7_defconfig?
-> > > 
-> > > Shimoda-san: can you please enlighten us?
-> > > Thanks!
-> > 
-> > Sure.
-> > 
-> > - SH4A / sh7757 has SUDMAC. (any other Renesas ARM platforms don't have it).
-> >  # sh7757 is not public product though...
-> > - At first, I added this SUDMAC support into r8a66597-udc.
-> > - But, our direction is changed by some reason. So, we use renesas_usbhs driver anyway.
-> > - The renesas_usbhs supports dmaengine, so I added dma/sh/sudmac driver.
-> > - However, for some reasons (maybe I'm busy for other projects?),
-> >   I didn't add using the sudmac support into arch/sh/kernel/cpu/sh4a/setup-sh7757.c.
-> > - So, no one uses both r8a66597-udc and sudmac now.
-> > 
-> > From 2013 (added the sudmac driver) to now, since no one integrated the sudmac for sh7757,
-> > I think we can remove the driver.
-> 
-> And where is the removal patch :)
+On 05/09/2019 03:52 PM, Simon Horman wrote:
 
-Sorry for the delay, I have just posted
+> SUDMAC driver was introduced in v3.10 but was never integrated for use
+> by any platform. As it unused remove it.
 
-[PATCH] dmaengine: sudmac: remove unused driver
+   "It's unused" perhaps? :-)
 
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+[...]
 
-Shimoda-san, can we go further and also:
-
-1. Remove the r8a66597-udc driver, which also seems unused
-2. Remove (minimal) sudmac integration from usbhs ?
+MBR, Sergei

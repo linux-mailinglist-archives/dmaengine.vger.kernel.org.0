@@ -2,92 +2,134 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 997E61B192
-	for <lists+dmaengine@lfdr.de>; Mon, 13 May 2019 09:57:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AB1D1B2E4
+	for <lists+dmaengine@lfdr.de>; Mon, 13 May 2019 11:32:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbfEMH5K (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 13 May 2019 03:57:10 -0400
-Received: from mail-eopbgr1410139.outbound.protection.outlook.com ([40.107.141.139]:40573
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727914AbfEMH5K (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 13 May 2019 03:57:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector1-renesas-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZCubA7wcxUXNDADIJ7ouIewx9sQQyGE+5bjOBZHeyOA=;
- b=R5HI3sIFxxvqcJqLn83WMVq5kUH7nwxZvdAr66eUaGIHdZrXb0kAyM/ols1eILpXDMSvgI5gTi9MxQJJKA1hhoulZXYi+pZQo0NfHpcopY3kCARhIaBMfKTvMxMXwZ5warzNVMC+vGMn/GaCVD0tPsXyDi/B4UiX9xmcMimjeYc=
-Received: from OSBPR01MB3174.jpnprd01.prod.outlook.com (20.176.240.146) by
- OSBPR01MB3333.jpnprd01.prod.outlook.com (20.178.5.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.22; Mon, 13 May 2019 07:57:07 +0000
-Received: from OSBPR01MB3174.jpnprd01.prod.outlook.com
- ([fe80::f873:6332:738d:7213]) by OSBPR01MB3174.jpnprd01.prod.outlook.com
- ([fe80::f873:6332:738d:7213%3]) with mapi id 15.20.1878.024; Mon, 13 May 2019
- 07:57:07 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Simon Horman <horms+renesas@verge.net.au>,
-        Vinod Koul <vinod.koul@intel.com>
-CC:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>
-Subject: RE: [PATCH] dmaengine: sudmac: remove unused driver
-Thread-Topic: [PATCH] dmaengine: sudmac: remove unused driver
-Thread-Index: AQHVBmYUs4O0Dq2sV0yGUFPTpg0f96ZoterA
-Date:   Mon, 13 May 2019 07:57:07 +0000
-Message-ID: <OSBPR01MB3174C44D415A0748033AD2A1D80F0@OSBPR01MB3174.jpnprd01.prod.outlook.com>
-References: <20190509125211.324-1-horms+renesas@verge.net.au>
-In-Reply-To: <20190509125211.324-1-horms+renesas@verge.net.au>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [118.238.235.108]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ffe73c73-bd87-456e-2f19-08d6d7789898
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:OSBPR01MB3333;
-x-ms-traffictypediagnostic: OSBPR01MB3333:
-x-microsoft-antispam-prvs: <OSBPR01MB33330839A649E03D03A7E6E6D80F0@OSBPR01MB3333.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0036736630
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(376002)(366004)(136003)(396003)(346002)(199004)(189003)(86362001)(478600001)(186003)(74316002)(6436002)(5660300002)(476003)(26005)(486006)(81166006)(6116002)(99286004)(14454004)(81156014)(76116006)(256004)(3846002)(4744005)(33656002)(53936002)(6246003)(4326008)(25786009)(8676002)(71190400001)(71200400001)(8936002)(66946007)(7736002)(316002)(73956011)(102836004)(305945005)(2906002)(7696005)(66066001)(110136005)(54906003)(11346002)(6506007)(55016002)(68736007)(9686003)(76176011)(64756008)(66446008)(229853002)(66556008)(66476007)(446003)(52536014);DIR:OUT;SFP:1102;SCL:1;SRVR:OSBPR01MB3333;H:OSBPR01MB3174.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: tpKX9O9u7VkzdQ/cTrL/GC9TgeL1AzaTa41fRzewN5l0MrkgPPVPUOFldSAQvsyKSMX/hpAb0OzMaV2AC8GrdmcFT1QaokBGnqt/worOmOz1AzcB/ZgbzYqL4wuOb6UUXOiF69/XQbEXpGRxKUJdYrfvbJL6BfyhnuVdN/+47WqJg9J+puxikXlEgUHq/nMoyTLzMYjYSCGbJGJXr6gd4awpqHNFcbL3KbCm9Dr6ekVZzhw0toffy6WuAU7jrKMXvbYZZqy4nl4rDhGDx1yHGLC7RZ053zn9TajX33qZrrJavM34i4/umfd+71w2cPylwYhmaUqXXZ0A3/b6Vdl5s9t7SbzOy+XPvcXmYQPxA6o+GwVg7+pCegLCn0Mo9ye1VNTeSeY8Jn/rK/jU3lMlEmnlKRcjuB7+GRUhGujeZWo=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ffe73c73-bd87-456e-2f19-08d6d7789898
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 07:57:07.3912
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB3333
+        id S1728446AbfEMJbx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 13 May 2019 05:31:53 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57233 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728417AbfEMJbx (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 13 May 2019 05:31:53 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1hQ7J3-0007BB-G5; Mon, 13 May 2019 11:31:37 +0200
+Message-ID: <1557739890.3997.1.camel@pengutronix.de>
+Subject: Re: [PATCH v3 00/14] add ecspi ERR009165 for i.mx6/7 soc family
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Robin Gong <yibin.gong@nxp.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "plyatov@gmail.com" <plyatov@gmail.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Mon, 13 May 2019 11:31:30 +0200
+In-Reply-To: <1557249513-4903-1-git-send-email-yibin.gong@nxp.com>
+References: <1557249513-4903-1-git-send-email-yibin.gong@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Simon-san,
+Hi Robin,
 
-> From: Simon Horman, Sent: Thursday, May 9, 2019 9:52 PM
->=20
-> SUDMAC driver was introduced in v3.10 but was never integrated for use
-> by any platform. As it unused remove it.
->=20
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Am Dienstag, den 07.05.2019, 09:15 +0000 schrieb Robin Gong:
+>   There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
+> transfer to be send twice in DMA mode. Please get more information from:
+> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
+> new sdma ram script which works in XCH  mode as PIO inside sdma instead
+> of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
+> exist on all legacy i.mx6/7 soc family before i.mx6ul.
+> NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
+> 6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
+> still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
+> for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
+> or not.
+>   The first two reverted patches should be the same issue, though, it
+> seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
+> have the chance to test this patch set if could fix their issues.
+>   Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
+> on i.mx8mm because the event id is zero.
+> 
+> PS:
+>   Please get sdma firmware from below linux-firmware and copy it to your
+> local rootfs /lib/firmware/imx/sdma.
+> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/imx/sdma
 
-Thank you for the patch!
+This series is unfit for merging, as long as it depends on a SDMA RAM
+script that is known to break serial DMA. When can we expect to get a
+firmware version with the broken serial script removed out into the
+public?
 
-Acked-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Regards,
+Lucas
 
-Best regards,
-Yoshihiro Shimoda
-
+> v2:
+>   1. add commit log for reverted patches.
+>   2. add comment for 'ecspi_fixed' in sdma driver.
+>   3. add 'fsl,imx6sll-ecspi' compatible instead of 'fsl,imx6ul-ecspi'
+>      rather than remove.
+> v3:
+>   1. confirm with design team make sure ERR009165 fixed on i.mx6ul/i.mx6ull
+>   /i.mx6sll, not fixed on i.mx8m/8mm and other i.mx6/7 legacy chips.
+>   Correct dts related dts patch in v2.
+>   2. clean eratta information in binding doc and new 'tx_glitch_fixed' flag
+>   in spi-imx driver to state ERR009165 fixed or not.
+>   3. Enlarge burst size to fifo size for tx since tx_wml set to 0 in the
+>   errata workaroud, thus improve performance as possible.
+> 
+> Robin Gong (14):
+>   Revert "ARM: dts: imx6q: Use correct SDMA script for SPI5 core"
+>   Revert "ARM: dts: imx6: Use correct SDMA script for SPI cores"
+>   Revert "dmaengine: imx-sdma: refine to load context only once"
+>   dmaengine: imx-sdma: remove dupilicated sdma_load_context
+>   dmaengine: imx-sdma: add mcu_2_ecspi script
+>   spi: imx: fix ERR009165
+>   spi: imx: remove ERR009165 workaround on i.mx6ul
+>   dt-bindings: spi: imx: add new i.mx6ul compatible name
+>   dmaengine: imx-sdma: remove ERR009165 on i.mx6ul
+>   dt-bindings: dma: imx-sdma: add i.mx6ul/6sx compatible name
+>   dmaengine: imx-sdma: fix ecspi1 rx dma not work on i.mx8mm
+>   ARM: dts: imx6ul: add dma support on ecspi
+>   ARM: dts: imx6sll: correct sdma compatible
+>   arm64: defconfig: Enable SDMA on i.mx8mq/8mm
+> 
+>  .../devicetree/bindings/dma/fsl-imx-sdma.txt       |  2 +
+>  .../devicetree/bindings/spi/fsl-imx-cspi.txt       |  1 +
+>  arch/arm/boot/dts/imx6q.dtsi                       |  2 +-
+>  arch/arm/boot/dts/imx6qdl.dtsi                     |  8 +--
+>  arch/arm/boot/dts/imx6sll.dtsi                     |  2 +-
+>  arch/arm/boot/dts/imx6ul.dtsi                      |  8 +++
+>  arch/arm64/configs/defconfig                       |  3 +
+>  drivers/dma/imx-sdma.c                             | 78 ++++++++++++++++------
+>  drivers/spi/spi-imx.c                              | 61 ++++++++++++++---
+>  include/linux/platform_data/dma-imx-sdma.h         |  1 +
+>  10 files changed, 132 insertions(+), 34 deletions(-)
+> 
+> -- 
+> 2.7.4
+> 

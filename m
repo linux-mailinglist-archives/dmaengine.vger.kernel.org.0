@@ -2,140 +2,221 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 460D020C9F
-	for <lists+dmaengine@lfdr.de>; Thu, 16 May 2019 18:11:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66B0D214AF
+	for <lists+dmaengine@lfdr.de>; Fri, 17 May 2019 09:42:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfEPQL2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 May 2019 12:11:28 -0400
-Received: from mga11.intel.com ([192.55.52.93]:53958 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726553AbfEPQL2 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 16 May 2019 12:11:28 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 May 2019 09:11:28 -0700
-X-ExtLoop1: 1
-Received: from djiang5-desk3.ch.intel.com ([143.182.137.59])
-  by fmsmga001.fm.intel.com with ESMTP; 16 May 2019 09:11:27 -0700
-Subject: Re: [PATCH] dmaengine: ioatdma: fix unprotected timer deletion
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, dan.j.williams@intel.com,
-        fan.du@intel.com
-References: <155744504539.8006.16459393524018173816.stgit@djiang5-desk3.ch.intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.jiang@intel.com; prefer-encrypt=mutual; keydata=
- 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
- o6nmKbYpUAltQObU2w==
-Message-ID: <f80ae09d-82f3-e395-f797-afd79381ce36@intel.com>
-Date:   Thu, 16 May 2019 09:11:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <155744504539.8006.16459393524018173816.stgit@djiang5-desk3.ch.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        id S1728323AbfEQHmC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 17 May 2019 03:42:02 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:36787 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727822AbfEQHmC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 May 2019 03:42:02 -0400
+X-UUID: b26fe20a10dd4b4f9982c0151debd977-20190517
+X-UUID: b26fe20a10dd4b4f9982c0151debd977-20190517
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <long.cheng@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1147280947; Fri, 17 May 2019 15:36:44 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs03n1.mediatek.inc
+ (172.21.101.181) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 17 May
+ 2019 15:36:43 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 17 May 2019 15:36:42 +0800
+Message-ID: <1558078602.14150.27.camel@mhfsdcap03>
+Subject: Re: [PATCH 4/4] serial: 8250-mtk: modify uart DMA rx
+From:   Long Cheng <long.cheng@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+CC:     Vinod Koul <vkoul@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Ryder Lee" <ryder.lee@mediatek.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        "linux-arm Mailing List" <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        YT Shen <yt.shen@mediatek.com>,
+        Zhenbao Liu <zhenbao.liu@mediatek.com>
+Date:   Fri, 17 May 2019 15:36:42 +0800
+In-Reply-To: <CANMq1KDTyu48joV6uMksGBMz9EmjFH9SEpGAm93YCZ40jxgBpQ@mail.gmail.com>
+References: <1556336193-15198-1-git-send-email-long.cheng@mediatek.com>
+         <1556336193-15198-5-git-send-email-long.cheng@mediatek.com>
+         <CANMq1KDTyu48joV6uMksGBMz9EmjFH9SEpGAm93YCZ40jxgBpQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MTK:  N
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On Wed, 2019-05-15 at 21:48 +0800, Nicolas Boichat wrote:
+> On Sat, Apr 27, 2019 at 11:36 AM Long Cheng <long.cheng@mediatek.com> wrote:
+> >
+> > Modify uart rx and complete for DMA.
+> 
+> I don't know much about the DMA framework, but can you please explain
+> why you are making the changes in this CL? I see that you are dropping
+> dma_sync_single_for_device calls, for example, why?
+> 
+
+the rx buffer is create by 'dma_alloc_coherent'. in the function, the
+buffer is uncache. We don't need to sync between CPU and DMA. So I
+remove it.
+
+> >
+> > Signed-off-by: Long Cheng <long.cheng@mediatek.com>
+> > ---
+> >  drivers/tty/serial/8250/8250_mtk.c |   53 ++++++++++++++++--------------------
+> >  1 file changed, 23 insertions(+), 30 deletions(-)
+> >
+> > diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
+> > index c1fdbc0..04081a6 100644
+> > --- a/drivers/tty/serial/8250/8250_mtk.c
+> > +++ b/drivers/tty/serial/8250/8250_mtk.c
+> > @@ -30,7 +30,6 @@
+> >  #define MTK_UART_DMA_EN_TX     0x2
+> >  #define MTK_UART_DMA_EN_RX     0x5
+> >
+> > -#define MTK_UART_TX_SIZE       UART_XMIT_SIZE
+> >  #define MTK_UART_RX_SIZE       0x8000
+> >  #define MTK_UART_TX_TRIGGER    1
+> >  #define MTK_UART_RX_TRIGGER    MTK_UART_RX_SIZE
+> > @@ -64,28 +63,30 @@ static void mtk8250_dma_rx_complete(void *param)
+> >         struct mtk8250_data *data = up->port.private_data;
+> >         struct tty_port *tty_port = &up->port.state->port;
+> >         struct dma_tx_state state;
+> > +       int copied, cnt, tmp;
+> >         unsigned char *ptr;
+> > -       int copied;
+> >
+> > -       dma_sync_single_for_cpu(dma->rxchan->device->dev, dma->rx_addr,
+> > -                               dma->rx_size, DMA_FROM_DEVICE);
+> > +       if (data->rx_status == DMA_RX_SHUTDOWN)
+> > +               return;
+> >
+> >         dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
+> > +       cnt = dma->rx_size - state.residue;
+> > +       tmp = cnt;
+> 
+> I ponder, maybe we should rename cnt to left? (like, how many bytes
+> are left to transfer, in total) Or maybe "total"
+> Then maybe rename tmp to cnt.
+> 
+like better.
+
+> >
+> > -       if (data->rx_status == DMA_RX_SHUTDOWN)
+> > -               return;
+> > +       if ((data->rx_pos + cnt) > dma->rx_size)
+> > +               tmp = dma->rx_size - data->rx_pos;
+> 
+> Maybe replace this and the line above:
+> tmp = max_t(int, cnt, dma->rx_size - data->rx_pos);
+> 
+Yes. It's better.
+
+> >
+> > -       if ((data->rx_pos + state.residue) <= dma->rx_size) {
+> > -               ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
+> > -               copied = tty_insert_flip_string(tty_port, ptr, state.residue);
+> > -       } else {
+> > -               ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
+> > -               copied = tty_insert_flip_string(tty_port, ptr,
+> > -                                               dma->rx_size - data->rx_pos);
+> > +       ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
+> > +       copied = tty_insert_flip_string(tty_port, ptr, tmp);
+> > +       data->rx_pos += tmp;
+> > +
+> > +       if (cnt > tmp) {
+> >                 ptr = (unsigned char *)(dma->rx_buf);
+> > -               copied += tty_insert_flip_string(tty_port, ptr,
+> > -                               data->rx_pos + state.residue - dma->rx_size);
+> > +               tmp = cnt - tmp;
+> > +               copied += tty_insert_flip_string(tty_port, ptr, tmp);
+> > +               data->rx_pos = tmp;
+> >         }
+> > +
+> >         up->port.icount.rx += copied;
+> >
+> >         tty_flip_buffer_push(tty_port);
+> > @@ -96,9 +97,7 @@ static void mtk8250_dma_rx_complete(void *param)
+> >  static void mtk8250_rx_dma(struct uart_8250_port *up)
+> >  {
+> >         struct uart_8250_dma *dma = up->dma;
+> > -       struct mtk8250_data *data = up->port.private_data;
+> >         struct dma_async_tx_descriptor  *desc;
+> > -       struct dma_tx_state      state;
+> >
+> >         desc = dmaengine_prep_slave_single(dma->rxchan, dma->rx_addr,
+> >                                            dma->rx_size, DMA_DEV_TO_MEM,
+> > @@ -113,12 +112,6 @@ static void mtk8250_rx_dma(struct uart_8250_port *up)
+> >
+> >         dma->rx_cookie = dmaengine_submit(desc);
+> >
+> > -       dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
+> > -       data->rx_pos = state.residue;
+> > -
+> > -       dma_sync_single_for_device(dma->rxchan->device->dev, dma->rx_addr,
+> > -                                  dma->rx_size, DMA_FROM_DEVICE);
+> > -
+> >         dma_async_issue_pending(dma->rxchan);
+> >  }
+> >
+> > @@ -131,13 +124,13 @@ static void mtk8250_dma_enable(struct uart_8250_port *up)
+> >         if (data->rx_status != DMA_RX_START)
+> >                 return;
+> >
+> > -       dma->rxconf.direction           = DMA_DEV_TO_MEM;
+> > -       dma->rxconf.src_addr_width      = dma->rx_size / 1024;
+> > -       dma->rxconf.src_addr            = dma->rx_addr;
+> > +       dma->rxconf.direction                           = DMA_DEV_TO_MEM;
+> > +       dma->rxconf.src_port_window_size        = dma->rx_size;
+> > +       dma->rxconf.src_addr                            = dma->rx_addr;
+> >
+> > -       dma->txconf.direction           = DMA_MEM_TO_DEV;
+> > -       dma->txconf.dst_addr_width      = MTK_UART_TX_SIZE / 1024;
+> > -       dma->txconf.dst_addr            = dma->tx_addr;
+> > +       dma->txconf.direction                           = DMA_MEM_TO_DEV;
+> > +       dma->txconf.dst_port_window_size        = UART_XMIT_SIZE;
+> > +       dma->txconf.dst_addr                            = dma->tx_addr;
+> >
+> >         serial_out(up, UART_FCR, UART_FCR_ENABLE_FIFO | UART_FCR_CLEAR_RCVR |
+> >                 UART_FCR_CLEAR_XMIT);
+> > @@ -217,7 +210,7 @@ static void mtk8250_shutdown(struct uart_port *port)
+> >          * Mediatek UARTs use an extra highspeed register (UART_MTK_HIGHS)
+> >          *
+> >          * We need to recalcualte the quot register, as the claculation depends
+> > -        * on the vaule in the highspeed register.
+> > +        * on the value in the highspeed register.
+> 
+> Since you're doing some cosmetic changes here, you might as well fix
+> recalcualte => recalculate and claculation => calculation on the line
+> above.
+> 
+
+I see.
+
+> But technically, this should belong in another patch...
+> 
+> >          *
+> >          * Some baudrates are not supported by the chip, so we use the next
+> >          * lower rate supported and update termios c_flag.
+> > --
+> > 1.7.9.5
+> >
 
 
-On 5/9/19 4:37 PM, Dave Jiang wrote:
-> When ioat_free_chan_resources() gets called, ioat_stop() is called without
-> chan->cleanup_lock. ioat_stop modifies IOAT_RUN bit.  It needs to be
-> protected by cleanup_lock. Also, in the __cleanup() path, if IOAT_RUN is
-> cleared, we should not touch the timer again. We observed that the timer
-> routine was run after timer was deleted.
-> 
-> Fixes: 3372de5813e ("dmaengine: ioatdma: removal of dma_v3.c and relevant ioat3
-> references")
-> 
-> Reported-by: Fan Du <fan.du@intel.com>
-> Tested-by: Fan Du <fan.du@intel.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-
-Vinod, can you hold off on this please? There may be more changes. Thanks.
-
-> ---
->  drivers/dma/ioat/dma.c |   16 +++++++++-------
->  1 file changed, 9 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-> index f373a139e0c3..78598ba5c73b 100644
-> --- a/drivers/dma/ioat/dma.c
-> +++ b/drivers/dma/ioat/dma.c
-> @@ -138,11 +138,14 @@ void ioat_stop(struct ioatdma_chan *ioat_chan)
->  	struct pci_dev *pdev = ioat_dma->pdev;
->  	int chan_id = chan_num(ioat_chan);
->  	struct msix_entry *msix;
-> +	unsigned long flags;
->  
-> -	/* 1/ stop irq from firing tasklets
-> -	 * 2/ stop the tasklet from re-arming irqs
-> -	 */
-> +	spin_lock_irqsave(&ioat_chan->cleanup_lock, flags);
->  	clear_bit(IOAT_RUN, &ioat_chan->state);
-> +	spin_unlock_irqrestore(&ioat_chan->cleanup_lock, flags);
-> +
-> +	/* flush inflight timers */
-> +	del_timer_sync(&ioat_chan->timer);
->  
->  	/* flush inflight interrupts */
->  	switch (ioat_dma->irq_mode) {
-> @@ -158,9 +161,6 @@ void ioat_stop(struct ioatdma_chan *ioat_chan)
->  		break;
->  	}
->  
-> -	/* flush inflight timers */
-> -	del_timer_sync(&ioat_chan->timer);
-> -
->  	/* flush inflight tasklet runs */
->  	tasklet_kill(&ioat_chan->cleanup_task);
->  
-> @@ -652,7 +652,9 @@ static void __cleanup(struct ioatdma_chan *ioat_chan, dma_addr_t phys_complete)
->  	if (active - i == 0) {
->  		dev_dbg(to_dev(ioat_chan), "%s: cancel completion timeout\n",
->  			__func__);
-> -		mod_timer(&ioat_chan->timer, jiffies + IDLE_TIMEOUT);
-> +
-> +		if (test_bit(IOAT_RUN, &ioat_chan->state))
-> +			mod_timer(&ioat_chan->timer, jiffies + IDLE_TIMEOUT);
->  	}
->  
->  	/* microsecond delay by sysfs variable  per pending descriptor */
-> 

@@ -2,161 +2,228 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DEF9F21693
-	for <lists+dmaengine@lfdr.de>; Fri, 17 May 2019 11:55:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F1FD23252
+	for <lists+dmaengine@lfdr.de>; Mon, 20 May 2019 13:28:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbfEQJzH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 17 May 2019 05:55:07 -0400
-Received: from mail-eopbgr10069.outbound.protection.outlook.com ([40.107.1.69]:50309
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727309AbfEQJzG (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 17 May 2019 05:55:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cBtKDo4K3fjrrQQDnUN4wLSnnBckF45qEfyMsdqOG9k=;
- b=pJax3FNOvuifM+bNbyl6gibRL4MNZQyrzPZtmYWuOodONbF6c15vCj/C3Jw/F1bdwnJVbOEX8gXoJ/z1iA3JVYXrdY4SjnhvJR1IyBwtDVTAVL9K+kwmY2N27Gsi0H1E6JTqXuNf1C8g1di3U0TcjBWf3SyX0k1mmKMySIIXqak=
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com (20.177.55.90) by
- VI1PR04MB4847.eurprd04.prod.outlook.com (20.177.49.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Fri, 17 May 2019 09:54:57 +0000
-Received: from VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::d85b:d2:194c:2b94]) by VI1PR04MB4543.eurprd04.prod.outlook.com
- ([fe80::d85b:d2:194c:2b94%4]) with mapi id 15.20.1900.010; Fri, 17 May 2019
- 09:54:57 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [EXT] Re: [PATCH v3 00/14] add ecspi ERR009165 for i.mx6/7 soc
- family
-Thread-Topic: [EXT] Re: [PATCH v3 00/14] add ecspi ERR009165 for i.mx6/7 soc
- family
-Thread-Index: AQHVBLVtTlA9AoCGPEiNrQoWVi6lD6Zo098AgAbXFQA=
-Date:   Fri, 17 May 2019 09:54:55 +0000
-Message-ID: <1558115932.2569.7.camel@nxp.com>
-References: <1557249513-4903-1-git-send-email-yibin.gong@nxp.com>
-         <1557739890.3997.1.camel@pengutronix.de>
-In-Reply-To: <1557739890.3997.1.camel@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6c0498e1-5acd-46ad-29ee-08d6daadb81d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4847;
-x-ms-traffictypediagnostic: VI1PR04MB4847:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VI1PR04MB484716448C0BA1AAE97DA13E890B0@VI1PR04MB4847.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2399;
-x-forefront-prvs: 0040126723
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(366004)(396003)(376002)(39860400002)(189003)(199004)(66946007)(110136005)(478600001)(73956011)(8936002)(6486002)(6116002)(2906002)(66556008)(66476007)(64756008)(54906003)(45080400002)(229853002)(7416002)(3846002)(6512007)(50226002)(66066001)(2201001)(5660300002)(71190400001)(71200400001)(2501003)(6436002)(966005)(86362001)(6306002)(14454004)(66446008)(7736002)(36756003)(91956017)(446003)(2616005)(11346002)(14444005)(102836004)(6506007)(476003)(99286004)(186003)(305945005)(26005)(81156014)(81166006)(76116006)(486006)(103116003)(256004)(53546011)(8676002)(4326008)(53936002)(6246003)(316002)(76176011)(68736007)(25786009)(99106002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4847;H:VI1PR04MB4543.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: uuOjGTHZb/ROCHg9oi5P5qEzwxJpBFcD/lBugn8qc0A6A7g/O0iSrrw4q2eGh/cJveV6FskPiV0+kTGZs1WTY9JOWGlzRtAcZHpF1o+RxYBFPYRb+75Q2eNxAOSUsltD2Crz+UPrbHzA5SOHNAopv5kmGuD1djeRIXZJzqogeKD4A1+VD5e5vk5n+GBFFw7jj7XepecAVkjz3HfqaVHrty/sGcBRSy8xNr4ELYmBjOlKDEedCwNe0oe62rcudc4URDV3jCsnRoscCm+kRLeDMHz4bYSjFRSra982W2SwUgHpnQNzQK50/bdPPONQ34DLyK2KR392XXMjp2D5GxWajc2OZxJdUlWU5WKMxzD98goTL8a9Ubt8tX5e5ufz18nFzhr16ZhEWReAoB53FXgqg5mt+cQzwOoFGPJ+pdDvoU0=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EF094952BA67E6458AFB211805B746ED@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1730727AbfETL1S (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 20 May 2019 07:27:18 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36037 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732739AbfETL1S (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 20 May 2019 07:27:18 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c3so12634947otr.3
+        for <dmaengine@vger.kernel.org>; Mon, 20 May 2019 04:27:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=gl8p5HmOo32Wp14Ae+7sQEvfQ5n8x/dx1BGblxAS4NQ=;
+        b=Ob+eKPlKwvth41kOkgX0/b4zhZuzFd3xCf9C8qpbfdaEV63qMDTzNlWuZ191mu/0QC
+         sXR9dVXgxekqaUIa5tecP71HYOpBo0rMXEZS8zVqR1opZsH3umfL3WKIhIQ44Tk1hm64
+         yMsFlCevWabXt1FzEwAE0sV1mR8dKPD3uSZar7L0bSEiRc/CuY/peLwPPXln0oqRnjrM
+         g41JDd18L0VKlA2MBFVSjd8qWpVT4gsTQEsHw7fGTCUCKo3ehimEgNqUnbKhf1xqOaCv
+         GqAXWwqtmC+1uOBXbU0BkV6T1b1fYa+slsHYdBsqUTzemPDVfte3mG/6iR0uRSRyDopf
+         H/qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gl8p5HmOo32Wp14Ae+7sQEvfQ5n8x/dx1BGblxAS4NQ=;
+        b=PUCVCkXyQEU29YoJVJ+EoG7DqBp24lB9CqQJjTyVpTIEoLu4fLLemOGtdsF0p3MKWJ
+         GWMX70G9ARToXuEifPYu4g4J6sS2jPR15TPiPOK0whpV0pj3eT8YbOqdWCITrb3QEI7g
+         vqnO1RahS58Fvx55Po5d8uwt/M15Oo7z5DN4oqzyRVtl66NIRjKUOSwtlptqIDD0n5IS
+         RwKwT8tLWzskFMQU+nQVR8QZZVlwXhpoS/Z9UJaEn/Twcn8gJLujWm5P2cC4spuf2urk
+         fAJJTQOAygEvBFfusGK0HeLnnHU+P3zYrvGq6b9L3Db9HL83WmhGK+Oa81CYWoyDBxCM
+         yavg==
+X-Gm-Message-State: APjAAAUJLZjA3SiGyx1KckNLmIo19cS5GMuoGaKHNJdgFWnL09ljQByV
+        4TP80ueQROkYQifxF7JT6AojUmA9wSTavJ5t9j1T1g==
+X-Google-Smtp-Source: APXvYqzvRh9+1kmrlhsy7vDYW7hNBG9CEz1jiGKfO/pK4VIQ2LnHcrcRjy0ekFbQeSvJmbUMT47w0xBoC9irHouqomY=
+X-Received: by 2002:a9d:61ca:: with SMTP id h10mr15718082otk.247.1558351636806;
+ Mon, 20 May 2019 04:27:16 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c0498e1-5acd-46ad-29ee-08d6daadb81d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 09:54:57.1209
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4847
+References: <cover.1557206859.git.baolin.wang@linaro.org> <17a22052fdb759ae6129e30f9bd8862f23a03ad9.1557206859.git.baolin.wang@linaro.org>
+ <42b84cfe-3281-7f4e-03cc-6ca126e16191@ti.com>
+In-Reply-To: <42b84cfe-3281-7f4e-03cc-6ca126e16191@ti.com>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Mon, 20 May 2019 19:27:04 +0800
+Message-ID: <CAMz4kuLokUGVXQaRt5aOBJOUQjsrPK74WGsif6Y1F7zwMvDXfA@mail.gmail.com>
+Subject: Re: [PATCH 1/8] dmaengine: Add matching device node validation in __dma_request_channel()
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
+        Shawn Guo <shawnguo@kernel.org>, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        Zubair.Kakakhel@imgtec.com,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        jroedel@suse.de, Vincent Guittot <vincent.guittot@linaro.org>,
+        dmaengine@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-T24gMjAxOS0wNS0xMyBhdCAwOTozMSArMDAwMCwgTHVjYXMgU3RhY2ggd3JvdGU6DQo+IFBTOg0K
-PiA+IMKgIFBsZWFzZSBnZXQgc2RtYSBmaXJtd2FyZSBmcm9tIGJlbG93IGxpbnV4LWZpcm13YXJl
-IGFuZCBjb3B5IGl0IHRvDQo+ID4geW91cg0KPiA+IGxvY2FsIHJvb3RmcyAvbGliL2Zpcm13YXJl
-L2lteC9zZG1hLg0KPiA+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9v
-ay5jb20vP3VybD1odHRwcyUzQSUyRiUyRmcNCj4gPiBpdC5rZXJuZWwub3JnJTJGcHViJTJGc2Nt
-JTJGbGludXglMkZrZXJuZWwlMkZnaXQlMkZmaXJtd2FyZSUyRmxpbnV4DQo+ID4gLWZpcm13YXJl
-LmdpdCUyRnRyZWUlMkZpbXglMkZzZG1hJmFtcDtkYXRhPTAyJTdDMDElN0N5aWJpbi5nb25nJTQw
-bg0KPiA+IHhwLmNvbSU3QzU3ZWIzMGMwM2M5MzQ1ZTJjMjdlMDhkNmQ3ODVjY2EzJTdDNjg2ZWEx
-ZDNiYzJiNGM2ZmE5MmNkOTkNCj4gPiBjNWMzMDE2MzUlN0MwJTdDMCU3QzYzNjkzMzM2Njk5NTY5
-MjQzMCZhbXA7c2RhdGE9d0xLYTJxd2tJTWxOJTJCZWVEDQo+ID4gNExPR0UlMkZ0SUZ6dkdLWHlJ
-aG9aNEZla3I0dkklM0QmYW1wO3Jlc2VydmVkPTANCj4gVGhpcyBzZXJpZXMgaXMgdW5maXQgZm9y
-IG1lcmdpbmcsIGFzIGxvbmcgYXMgaXQgZGVwZW5kcyBvbiBhIFNETUEgUkFNDQo+IHNjcmlwdCB0
-aGF0IGlzIGtub3duIHRvIGJyZWFrIHNlcmlhbCBETUEuIFdoZW4gY2FuIHdlIGV4cGVjdCB0byBn
-ZXQgYQ0KPiBmaXJtd2FyZSB2ZXJzaW9uIHdpdGggdGhlIGJyb2tlbiBzZXJpYWwgc2NyaXB0IHJl
-bW92ZWQgb3V0IGludG8gdGhlDQo+IHB1YmxpYz8NCkhpIEx1Y2FzLA0KwqAgSSB3YW50IHRvIHNl
-bnQgYW5vdGhlciBwYXRjaCBmb3IgZml4aW5nIFVBUlQgZmFpbHVyZSBvbiByYW0gc2NyaXB0DQps
-YXRlciBhZnRlciB0aGlzIGVjc3BpIHBhdGNoIHNldCBhY2NlcHRlZC4gQnV0IG5vdyBJJ20gc3Rp
-bGwgd2FpdGluZw0KZm9yIGFjayBmcm9tIFZpbm9kIHdobyBpcyBvd25lciBvZiBkbWFlbmdpbmUu
-DQo+IA0KPiBSZWdhcmRzLA0KPiBMdWNhcw0KPiANCj4gPiANCj4gPiB2MjoNCj4gPiDCoCAxLiBh
-ZGQgY29tbWl0IGxvZyBmb3IgcmV2ZXJ0ZWQgcGF0Y2hlcy4NCj4gPiDCoCAyLiBhZGQgY29tbWVu
-dCBmb3IgJ2Vjc3BpX2ZpeGVkJyBpbiBzZG1hIGRyaXZlci4NCj4gPiDCoCAzLiBhZGQgJ2ZzbCxp
-bXg2c2xsLWVjc3BpJyBjb21wYXRpYmxlIGluc3RlYWQgb2YgJ2ZzbCxpbXg2dWwtDQo+ID4gZWNz
-cGknDQo+ID4gwqDCoMKgwqDCoHJhdGhlciB0aGFuIHJlbW92ZS4NCj4gPiB2MzoNCj4gPiDCoCAx
-LiBjb25maXJtIHdpdGggZGVzaWduIHRlYW0gbWFrZSBzdXJlIEVSUjAwOTE2NSBmaXhlZCBvbg0K
-PiA+IGkubXg2dWwvaS5teDZ1bGwNCj4gPiDCoCAvaS5teDZzbGwsIG5vdCBmaXhlZCBvbiBpLm14
-OG0vOG1tIGFuZCBvdGhlciBpLm14Ni83IGxlZ2FjeQ0KPiA+IGNoaXBzLg0KPiA+IMKgIENvcnJl
-Y3QgZHRzIHJlbGF0ZWQgZHRzIHBhdGNoIGluIHYyLg0KPiA+IMKgIDIuIGNsZWFuIGVyYXR0YSBp
-bmZvcm1hdGlvbiBpbiBiaW5kaW5nIGRvYyBhbmQgbmV3DQo+ID4gJ3R4X2dsaXRjaF9maXhlZCcg
-ZmxhZw0KPiA+IMKgIGluIHNwaS1pbXggZHJpdmVyIHRvIHN0YXRlIEVSUjAwOTE2NSBmaXhlZCBv
-ciBub3QuDQo+ID4gwqAgMy4gRW5sYXJnZSBidXJzdCBzaXplIHRvIGZpZm8gc2l6ZSBmb3IgdHgg
-c2luY2UgdHhfd21sIHNldCB0byAwDQo+ID4gaW4gdGhlDQo+ID4gwqAgZXJyYXRhIHdvcmthcm91
-ZCwgdGh1cyBpbXByb3ZlIHBlcmZvcm1hbmNlIGFzIHBvc3NpYmxlLg0KPiA+IA0KPiA+IFJvYmlu
-IEdvbmcgKDE0KToNCj4gPiDCoCBSZXZlcnQgIkFSTTogZHRzOiBpbXg2cTogVXNlIGNvcnJlY3Qg
-U0RNQSBzY3JpcHQgZm9yIFNQSTUgY29yZSINCj4gPiDCoCBSZXZlcnQgIkFSTTogZHRzOiBpbXg2
-OiBVc2UgY29ycmVjdCBTRE1BIHNjcmlwdCBmb3IgU1BJIGNvcmVzIg0KPiA+IMKgIFJldmVydCAi
-ZG1hZW5naW5lOiBpbXgtc2RtYTogcmVmaW5lIHRvIGxvYWQgY29udGV4dCBvbmx5IG9uY2UiDQo+
-ID4gwqAgZG1hZW5naW5lOiBpbXgtc2RtYTogcmVtb3ZlIGR1cGlsaWNhdGVkIHNkbWFfbG9hZF9j
-b250ZXh0DQo+ID4gwqAgZG1hZW5naW5lOiBpbXgtc2RtYTogYWRkIG1jdV8yX2Vjc3BpIHNjcmlw
-dA0KPiA+IMKgIHNwaTogaW14OiBmaXggRVJSMDA5MTY1DQo+ID4gwqAgc3BpOiBpbXg6IHJlbW92
-ZSBFUlIwMDkxNjUgd29ya2Fyb3VuZCBvbiBpLm14NnVsDQo+ID4gwqAgZHQtYmluZGluZ3M6IHNw
-aTogaW14OiBhZGQgbmV3IGkubXg2dWwgY29tcGF0aWJsZSBuYW1lDQo+ID4gwqAgZG1hZW5naW5l
-OiBpbXgtc2RtYTogcmVtb3ZlIEVSUjAwOTE2NSBvbiBpLm14NnVsDQo+ID4gwqAgZHQtYmluZGlu
-Z3M6IGRtYTogaW14LXNkbWE6IGFkZCBpLm14NnVsLzZzeCBjb21wYXRpYmxlIG5hbWUNCj4gPiDC
-oCBkbWFlbmdpbmU6IGlteC1zZG1hOiBmaXggZWNzcGkxIHJ4IGRtYSBub3Qgd29yayBvbiBpLm14
-OG1tDQo+ID4gwqAgQVJNOiBkdHM6IGlteDZ1bDogYWRkIGRtYSBzdXBwb3J0IG9uIGVjc3BpDQo+
-ID4gwqAgQVJNOiBkdHM6IGlteDZzbGw6IGNvcnJlY3Qgc2RtYSBjb21wYXRpYmxlDQo+ID4gwqAg
-YXJtNjQ6IGRlZmNvbmZpZzogRW5hYmxlIFNETUEgb24gaS5teDhtcS84bW0NCj4gPiANCj4gPiDC
-oC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9mc2wtaW14LXNkbWEudHh0wqDCoMKgwqDCoMKg
-wqB8wqDCoDIgKw0KPiA+IMKgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL2ZzbC1pbXgtY3Nw
-aS50eHTCoMKgwqDCoMKgwqDCoHzCoMKgMSArDQo+ID4gwqBhcmNoL2FybS9ib290L2R0cy9pbXg2
-cS5kdHNpwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHzCoMKg
-MiArLQ0KPiA+IMKgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC5kdHNpwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfMKgwqA4ICstLQ0KPiA+IMKgYXJjaC9hcm0vYm9v
-dC9kdHMvaW14NnNsbC5kdHNpwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgfMKgwqAyICstDQo+ID4gwqBhcmNoL2FybS9ib290L2R0cy9pbXg2dWwuZHRzacKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfMKgwqA4ICsrKw0KPiA+IMKgYXJj
-aC9hcm02NC9jb25maWdzL2RlZmNvbmZpZ8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqB8wqDCoDMgKw0KPiA+IMKgZHJpdmVycy9kbWEvaW14LXNkbWEuY8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB8IDc4
-DQo+ID4gKysrKysrKysrKysrKysrKy0tLS0tLQ0KPiA+IMKgZHJpdmVycy9zcGkvc3BpLWlteC5j
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgfCA2MQ0KPiA+ICsrKysrKysrKysrKysrLS0tDQo+ID4gwqBpbmNsdWRlL2xpbnV4L3BsYXRm
-b3JtX2RhdGEvZG1hLWlteC1zZG1hLmjCoMKgwqDCoMKgwqDCoMKgwqB8wqDCoDEgKw0KPiA+IMKg
-MTAgZmlsZXMgY2hhbmdlZCwgMTMyIGluc2VydGlvbnMoKyksIDM0IGRlbGV0aW9ucygtKQ0KPiA+
-IA0KPiA+IC0tDQo+ID4gMi43LjQNCj4gPiA=
+On Tue, 7 May 2019 at 16:37, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>
+> Hi,
+>
+> On 07/05/2019 9.09, Baolin Wang wrote:
+> > When user try to request one DMA channel by __dma_request_channel(), it=
+ won't
+> > validate if it is the correct DMA device to request, that will lead eac=
+h DMA
+> > engine driver to validate the correct device node in their filter funct=
+ion
+> > if it is necessary.
+> >
+> > Thus we can add the matching device node validation in the DMA engine c=
+ore,
+> > to remove all of device node validation in the drivers.
+>
+> I have picked this patch to my TI UDMA series and with
+> __dma_request_channel() it works as expected - picking the channel from
+> the correct DMA device.
+>
+> Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+
+Thanks Peter.
+
+>
+> >
+> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > ---
+> >  drivers/dma/dmaengine.c   |   10 ++++++++--
+> >  drivers/dma/of-dma.c      |    4 ++--
+> >  include/linux/dmaengine.h |   12 ++++++++----
+> >  3 files changed, 18 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> > index 3a11b10..610080c 100644
+> > --- a/drivers/dma/dmaengine.c
+> > +++ b/drivers/dma/dmaengine.c
+> > @@ -641,11 +641,13 @@ struct dma_chan *dma_get_any_slave_channel(struct=
+ dma_device *device)
+> >   * @mask: capabilities that the channel must satisfy
+> >   * @fn: optional callback to disposition available channels
+> >   * @fn_param: opaque parameter to pass to dma_filter_fn
+> > + * @np: device node to look for DMA channels
+> >   *
+> >   * Returns pointer to appropriate DMA channel on success or NULL.
+> >   */
+> >  struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
+> > -                                    dma_filter_fn fn, void *fn_param)
+> > +                                    dma_filter_fn fn, void *fn_param,
+> > +                                    struct device_node *np)
+> >  {
+> >       struct dma_device *device, *_d;
+> >       struct dma_chan *chan =3D NULL;
+> > @@ -653,6 +655,10 @@ struct dma_chan *__dma_request_channel(const dma_c=
+ap_mask_t *mask,
+> >       /* Find a channel */
+> >       mutex_lock(&dma_list_mutex);
+> >       list_for_each_entry_safe(device, _d, &dma_device_list, global_nod=
+e) {
+> > +             /* Finds a DMA controller with matching device node */
+> > +             if (np && device->dev->of_node && np !=3D device->dev->of=
+_node)
+> > +                     continue;
+> > +
+> >               chan =3D find_candidate(device, mask, fn, fn_param);
+> >               if (!IS_ERR(chan))
+> >                       break;
+> > @@ -769,7 +775,7 @@ struct dma_chan *dma_request_chan_by_mask(const dma=
+_cap_mask_t *mask)
+> >       if (!mask)
+> >               return ERR_PTR(-ENODEV);
+> >
+> > -     chan =3D __dma_request_channel(mask, NULL, NULL);
+> > +     chan =3D __dma_request_channel(mask, NULL, NULL, NULL);
+> >       if (!chan) {
+> >               mutex_lock(&dma_list_mutex);
+> >               if (list_empty(&dma_device_list))
+> > diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+> > index 91fd395..6b43d04 100644
+> > --- a/drivers/dma/of-dma.c
+> > +++ b/drivers/dma/of-dma.c
+> > @@ -316,8 +316,8 @@ struct dma_chan *of_dma_simple_xlate(struct of_phan=
+dle_args *dma_spec,
+> >       if (count !=3D 1)
+> >               return NULL;
+> >
+> > -     return dma_request_channel(info->dma_cap, info->filter_fn,
+> > -                     &dma_spec->args[0]);
+> > +     return __dma_request_channel(&info->dma_cap, info->filter_fn,
+> > +                                  &dma_spec->args[0], dma_spec->np);
+> >  }
+> >  EXPORT_SYMBOL_GPL(of_dma_simple_xlate);
+> >
+> > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> > index d49ec5c..504085b 100644
+> > --- a/include/linux/dmaengine.h
+> > +++ b/include/linux/dmaengine.h
+> > @@ -1314,7 +1314,8 @@ static inline enum dma_status dma_async_is_comple=
+te(dma_cookie_t cookie,
+> >  enum dma_status dma_wait_for_async_tx(struct dma_async_tx_descriptor *=
+tx);
+> >  void dma_issue_pending_all(void);
+> >  struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
+> > -                                     dma_filter_fn fn, void *fn_param)=
+;
+> > +                                    dma_filter_fn fn, void *fn_param,
+> > +                                    struct device_node *np);
+> >  struct dma_chan *dma_request_slave_channel(struct device *dev, const c=
+har *name);
+> >
+> >  struct dma_chan *dma_request_chan(struct device *dev, const char *name=
+);
+> > @@ -1339,7 +1340,9 @@ static inline void dma_issue_pending_all(void)
+> >  {
+> >  }
+> >  static inline struct dma_chan *__dma_request_channel(const dma_cap_mas=
+k_t *mask,
+> > -                                           dma_filter_fn fn, void *fn_=
+param)
+> > +                                                  dma_filter_fn fn,
+> > +                                                  void *fn_param,
+> > +                                                  struct device_node *=
+np)
+> >  {
+> >       return NULL;
+> >  }
+> > @@ -1411,7 +1414,8 @@ static inline int dmaengine_desc_free(struct dma_=
+async_tx_descriptor *desc)
+> >  void dma_run_dependencies(struct dma_async_tx_descriptor *tx);
+> >  struct dma_chan *dma_get_slave_channel(struct dma_chan *chan);
+> >  struct dma_chan *dma_get_any_slave_channel(struct dma_device *device);
+> > -#define dma_request_channel(mask, x, y) __dma_request_channel(&(mask),=
+ x, y)
+> > +#define dma_request_channel(mask, x, y) \
+> > +     __dma_request_channel(&(mask), x, y, NULL)
+> >  #define dma_request_slave_channel_compat(mask, x, y, dev, name) \
+> >       __dma_request_slave_channel_compat(&(mask), x, y, dev, name)
+> >
+> > @@ -1429,6 +1433,6 @@ static inline int dmaengine_desc_free(struct dma_=
+async_tx_descriptor *desc)
+> >       if (!fn || !fn_param)
+> >               return NULL;
+> >
+> > -     return __dma_request_channel(mask, fn, fn_param);
+> > +     return __dma_request_channel(mask, fn, fn_param, NULL);
+> >  }
+> >  #endif /* DMAENGINE_H */
+> >
+>
+> - P=C3=A9ter
+>
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+
+
+--=20
+Baolin Wang
+Best Regards

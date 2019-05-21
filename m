@@ -2,123 +2,187 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E215324C78
-	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2019 12:13:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7532D24A32
+	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2019 10:23:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbfEUKN7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 21 May 2019 06:13:59 -0400
-Received: from mail-eopbgr800085.outbound.protection.outlook.com ([40.107.80.85]:53152
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        id S1726316AbfEUIXk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 21 May 2019 04:23:40 -0400
+Received: from mail-eopbgr680054.outbound.protection.outlook.com ([40.107.68.54]:45470
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726138AbfEUKN6 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 21 May 2019 06:13:58 -0400
+        id S1726138AbfEUIXk (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 21 May 2019 04:23:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LvIevJpH8phmcZff4nQVBQOYXNFYuiFPWf5LjqxLTsg=;
- b=OPvQLG3hrvkLnWsWOCgLgeQdKFssiS8NOMVmS1VM5shikYZHZGQvHAB4EPVlKCm5C6iEALOMQvgk/OQ57I18ODluqscPJk78Uy4X3Fh+nBwPSTqcxWpKn3fpHpYdC2qioNj8Pnvrc4hIfQog54mJqBa+I0DuRwHRKko3nLrwRSU=
-Received: from BN6PR03CA0093.namprd03.prod.outlook.com (2603:10b6:405:6f::31)
- by DM2PR03MB557.namprd03.prod.outlook.com (2a01:111:e400:241b::24) with
+ bh=raxVxpshZcEGe+GI7X+DGrfYDIFMwzV3JvtAFbzmU64=;
+ b=j2L/cBgPmyx1OJP3C9a3mhthpwlAELyViAaXOfYXCywXuqoD2g9lcO5eckru3Qreb4/vm2LVv6GDnjf4JG4EaXcq/qr7spV0gAqxowO67dP2JwVoKPERblxBQfVKloWf87FUNfEG7aQj+tivPx3XMEgDdZdoLXD1+qP+wrsxyQg=
+Received: from CY4PR03CA0102.namprd03.prod.outlook.com (2603:10b6:910:4d::43)
+ by SN2PR03MB2269.namprd03.prod.outlook.com (2603:10b6:804:d::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1900.17; Tue, 21 May
- 2019 10:13:56 +0000
-Received: from SN1NAM02FT018.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::200) by BN6PR03CA0093.outlook.office365.com
- (2603:10b6:405:6f::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1900.18 via Frontend
- Transport; Tue, 21 May 2019 10:13:55 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1900.16; Tue, 21 May
+ 2019 08:23:37 +0000
+Received: from BL2NAM02FT048.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::206) by CY4PR03CA0102.outlook.office365.com
+ (2603:10b6:910:4d::43) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1900.16 via Frontend
+ Transport; Tue, 21 May 2019 08:23:36 +0000
 Authentication-Results: spf=pass (sender IP is 137.71.25.55)
- smtp.mailfrom=analog.com; metafoo.de; dkim=none (message not signed)
- header.d=none;metafoo.de; dmarc=bestguesspass action=none
+ smtp.mailfrom=analog.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
  header.from=analog.com;
 Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
  137.71.25.55 as permitted sender) receiver=protection.outlook.com;
  client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
 Received: from nwd2mta1.analog.com (137.71.25.55) by
- SN1NAM02FT018.mail.protection.outlook.com (10.152.72.122) with Microsoft SMTP
+ BL2NAM02FT048.mail.protection.outlook.com (10.152.76.109) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1900.16
- via Frontend Transport; Tue, 21 May 2019 10:13:55 +0000
+ via Frontend Transport; Tue, 21 May 2019 08:23:36 +0000
 Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x4LADshH004887
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x4L8Nak8021500
         (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Tue, 21 May 2019 03:13:54 -0700
-Received: from NWD2MBX7.ad.analog.com ([fe80::190e:f9c1:9a22:9663]) by
- NWD2HUBCAS7.ad.analog.com ([fe80::595b:ced1:cc03:539d%12]) with mapi id
- 14.03.0415.000; Tue, 21 May 2019 06:13:54 -0400
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "vkoul@kernel.org" <vkoul@kernel.org>
-CC:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>
-Subject: Re: [PATCH 1/2] dmaengine: axi-dmac: Discover length alignment
- requirement
-Thread-Topic: [PATCH 1/2] dmaengine: axi-dmac: Discover length alignment
- requirement
-Thread-Index: AQHVD7O9rDImV13Iu0q4u2mKgqNjYaZ1n2+A
-Date:   Tue, 21 May 2019 10:13:53 +0000
-Message-ID: <0eeb8b8ca54e7268a905abd72785dde51d254498.camel@analog.com>
-References: <20190521112331.32424-1-alexandru.ardelean@analog.com>
-         <20190521090042.GC15118@vkoul-mobl>
-In-Reply-To: <20190521090042.GC15118@vkoul-mobl>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.50.1.244]
-x-adiroutedonprem: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <80F59EAFFD3DB34496AA62F203FA4FF6@analog.com>
-Content-Transfer-Encoding: base64
+        Tue, 21 May 2019 01:23:36 -0700
+Received: from saturn.analog.com (10.50.1.244) by NWD2HUBCAS7.ad.analog.com
+ (10.64.69.107) with Microsoft SMTP Server id 14.3.408.0; Tue, 21 May 2019
+ 04:23:35 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <dmaengine@vger.kernel.org>
+CC:     Lars-Peter Clausen <lars@metafoo.de>
+Subject: [PATCH 1/2] dmaengine: axi-dmac: Discover length alignment requirement
+Date:   Tue, 21 May 2019 14:23:30 +0300
+Message-ID: <20190521112331.32424-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(136003)(396003)(376002)(346002)(2980300002)(199004)(189003)(186003)(54906003)(246002)(50466002)(106002)(1730700003)(8936002)(47776003)(8676002)(70206006)(36756003)(70586007)(7636002)(76176011)(2486003)(7696005)(336012)(23676004)(316002)(6916009)(2351001)(2501003)(7736002)(118296001)(26005)(14444005)(4326008)(126002)(6246003)(5660300002)(53546011)(426003)(86362001)(14454004)(11346002)(486006)(436003)(476003)(5640700003)(102836004)(2906002)(229853002)(478600001)(305945005)(3846002)(6116002)(2616005)(446003)(356004);DIR:OUT;SFP:1101;SCL:1;SRVR:DM2PR03MB557;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(136003)(346002)(376002)(396003)(2980300002)(43544003)(199004)(189003)(336012)(186003)(77096007)(1076003)(26005)(50466002)(48376002)(70586007)(6666004)(356004)(8676002)(70206006)(5660300002)(6916009)(53416004)(2616005)(486006)(8936002)(476003)(7636002)(44832011)(86362001)(126002)(305945005)(50226002)(2351001)(478600001)(2906002)(47776003)(7696005)(51416003)(16586007)(316002)(106002)(246002)(426003)(4326008)(36756003)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:SN2PR03MB2269;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e0c3a19c-2ab7-4f54-3302-08d6ddd50835
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4709054)(2017052603328)(7193020);SRVR:DM2PR03MB557;
-X-MS-TrafficTypeDiagnostic: DM2PR03MB557:
-X-Microsoft-Antispam-PRVS: <DM2PR03MB5571731A12263C3AEF7C4EBF9070@DM2PR03MB557.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Office365-Filtering-Correlation-Id: 3892e988-0cea-419b-2721-08d6ddc59f19
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4709054)(2017052603328);SRVR:SN2PR03MB2269;
+X-MS-TrafficTypeDiagnostic: SN2PR03MB2269:
+X-Microsoft-Antispam-PRVS: <SN2PR03MB226989957651E6E5FC1C71C7F9070@SN2PR03MB2269.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
 X-Forefront-PRVS: 0044C17179
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: 2t6gv1oFCRqOru3l/eVTB9nZVcA45gUknw5A7uOlGq1CJVoTJyqkvMkR9FBL2ZW+HFuP98wInDAVvmPEEmil19Tx2fIOIqhEtpvHEXsSCyVr8YbOPyPYlXH7FVpH6/2rRhpu2CFtto2gjomH+bTDD9lAG+tlDgns/pQkVU5gonhyAXXa6aXp+uEyKE+IJ1ZqAORApq3Xr4VHcBmI9qTXiDHaWHhwzs2rSa6Wi2cq8fWJdPoLVtOiQMRg+CcVdycI4Bpv2sxrOUDEBf+vvysgbY0CRiPXi8Mk8RPxQIjT9YhjrqDWGZ3PtaAbtt3c1pOWjdkvFoiFcIz1nlMTUfJoq/NZYwpWO3CMoL7pqYGVzCcSlsbo9orx59XD7f9jq8ozkhKeUHK6kqrTZabvYVCp8tOBqi6QJCEfkcGO1VbSWH4=
+X-Microsoft-Antispam-Message-Info: nhw74J9eOhpvjbhse7Syv0cssVWtbaOpwpW9hhMFgAl0yA1RWSdNgZDJn5NdA8Wq64hYGxhCzJq6GkaPcTKpVwd4JWID65DdFKFo/lTBv4H02iFBkDdEN7opD8EZNLFS9JoLTtRr642HDsiVCiws18325/5QKke1XjvJxQqHEaAtWs5umLwcGzyerzO+R6WsHPTZvVmIRO1dzlhGfrC518KRef0j2tD0c7CVa1o2o0D4E3B+npxKWdap4oU2BJ5gtZhZhosdTEnn7SEHcPhsrUGYMBjXMY5RtSW6NL4ltULKTkAAt27bigcNpVSIFuFNLqS1fyWbhZjZeSXIhjOvHISuJb1XkfjWYwoIM9BKvAPQYrUlRvPQjdJWFzNMlIVA0o3ur9ZHYGCtvCGZM89C3iBvToGc/cDVlMgL1JC0nd0=
 X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2019 10:13:55.2698
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2019 08:23:36.6094
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e0c3a19c-2ab7-4f54-3302-08d6ddd50835
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3892e988-0cea-419b-2721-08d6ddc59f19
 X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM2PR03MB557
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN2PR03MB2269
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA1LTIxIGF0IDE0OjMwICswNTMwLCBWaW5vZCBLb3VsIHdyb3RlOg0KPiBb
-RXh0ZXJuYWxdDQo+IA0KPiANCj4gT24gMjEtMDUtMTksIDE0OjIzLCBBbGV4YW5kcnUgQXJkZWxl
-YW4gd3JvdGU6DQo+ID4gRnJvbTogTGFycy1QZXRlciBDbGF1c2VuIDxsYXJzQG1ldGFmb28uZGU+
-DQo+ID4gDQo+ID4gU3RhcnRpbmcgd2l0aCB2ZXJzaW9uIDQuMS5hIHRoZSBBWEktRE1BQyBpcyBj
-YXBhYmxlIG9mIHJlcG9ydGluZyB0aGUNCj4gPiByZXF1aXJlZCBsZW5ndGggYWxpZ25tZW50Lg0K
-PiA+IA0KPiA+IFRoZSBMU0JzIHRoYXQgYXJlIHJlcXVpcmVkIHRvIGJlIHNldCBmb3IgYWxpZ25t
-ZW50IHdpbGwgYWx3YXlzIHJlYWQgYmFjayBhcw0KPiA+IHNldCBmcm9tIHRoZSB0cmFuc2ZlciBs
-ZW5ndGggcmVnaXN0ZXIuIEl0IGlzIG5vdCBwb3NzaWJsZSB0byBjbGVhciB0aGVtIGJ5DQo+ID4g
-d3JpdGluZyBhIDAuIFRoaXMgbWVhbnMgdGhlIGRyaXZlciBjYW4gZGlzY292ZXIgdGhlIGxlbmd0
-aCBhbGlnbm1lbnQNCj4gPiByZXF1aXJlbWVudCBieSB3cml0aW5nIDAgdG8gdGhhdCByZWdpc3Rl
-ciBhbmQgcmVhZGluZyBiYWNrIHRoZSB2YWx1ZS4NCj4gPiANCj4gPiBTaW5jZSB0aGUgRE1BIHdp
-bGwgc3VwcG9ydCBsZW5ndGggYWxpZ25tZW50IHJlcXVpcmVtZW50cyB0aGF0IGFyZSBkaWZmZXJl
-bnQNCj4gPiBmcm9tIHRoZSBhZGRyZXNzIGFsaWdubWVudCByZXF1aXJlbWVudCB0cmFjayBib3Ro
-IG9mIHRoZW0gaW5kZXBlbmRlbnRseS4NCj4gPiANCj4gPiBGb3Igb2xkZXIgdmVyc2lvbnMgb2Yg
-dGhlIHBlcmlwaGVyYWwgYXNzdW1lIHRoYXQgdGhlIGxlbmd0aCBhbGlnbm1lbnQNCj4gPiByZXF1
-aXJlbWVudCBpcyBlcXVhbCB0byB0aGUgYWRkcmVzcyBhbGlnbm1lbnQgcmVxdWlyZW1lbnQuDQo+
-ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogTGFycy1QZXRlciBDbGF1c2VuIDxsYXJzQG1ldGFmb28u
-ZGU+DQo+IA0KPiBZb3UgbmVlZCB0byBzaWduIG9mZiB0aGUgcGF0Y2ggYmVmb3JlIHNlbmRpbmcu
-IFBsZWFzZSByZXJlYWQgRG9jdW1lbnRhdGlvbi9wcm9jZXNzL3N1Ym1pdHRpbmctcGF0Y2hlcy5y
-c3QNCg0KQWNrLg0KDQpTb3JyeSBmb3IgZm9yZ2V0dGluZyB0aGlzIG9uZS4NCg0KPiANCj4gPiAg
-ICAgICBheGlfZG1hY193cml0ZShkbWFjLCBBWElfRE1BQ19SRUdfRkxBR1MsIEFYSV9ETUFDX0ZM
-QUdfQ1lDTElDKTsNCj4gPiAgICAgICBpZiAoYXhpX2RtYWNfcmVhZChkbWFjLCBBWElfRE1BQ19S
-RUdfRkxBR1MpID09IEFYSV9ETUFDX0ZMQUdfQ1lDTElDKQ0KPiA+IEBAIC02NzAsNiArNjc2LDEz
-IEBAIHN0YXRpYyBpbnQgYXhpX2RtYWNfZGV0ZWN0X2NhcHMoc3RydWN0IGF4aV9kbWFjICpkbWFj
-KQ0KPiA+ICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9ERVY7DQo+ID4gICAgICAgfQ0KPiA+IA0K
-PiA+ICsgICAgIGlmICgodmVyc2lvbiAmIDB4ZmYwMCkgPj0gMHgwMTAwKSB7DQo+IA0KPiBtYWdp
-YyBudW1iZXJzIHlhYXkNCg0KR29vZCBwb2ludC4NCldpbGwgZml4Lg0KDQo+IA0KPiAtLQ0KPiB+
-Vmlub2QNCg==
+From: Lars-Peter Clausen <lars@metafoo.de>
+
+Starting with version 4.1.a the AXI-DMAC is capable of reporting the
+required length alignment.
+
+The LSBs that are required to be set for alignment will always read back as
+set from the transfer length register. It is not possible to clear them by
+writing a 0. This means the driver can discover the length alignment
+requirement by writing 0 to that register and reading back the value.
+
+Since the DMA will support length alignment requirements that are different
+from the address alignment requirement track both of them independently.
+
+For older versions of the peripheral assume that the length alignment
+requirement is equal to the address alignment requirement.
+
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+---
+ drivers/dma/dma-axi-dmac.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+index 0984ae6eb155..edd81ceeeb33 100644
+--- a/drivers/dma/dma-axi-dmac.c
++++ b/drivers/dma/dma-axi-dmac.c
+@@ -44,6 +44,8 @@
+  * there is no address than can or needs to be configured for the device side.
+  */
+ 
++#define AXI_DMAC_REG_VERSION		0x00
++
+ #define AXI_DMAC_REG_IRQ_MASK		0x80
+ #define AXI_DMAC_REG_IRQ_PENDING	0x84
+ #define AXI_DMAC_REG_IRQ_SOURCE		0x88
+@@ -110,7 +112,8 @@ struct axi_dmac_chan {
+ 	unsigned int dest_type;
+ 
+ 	unsigned int max_length;
+-	unsigned int align_mask;
++	unsigned int address_align_mask;
++	unsigned int length_align_mask;
+ 
+ 	bool hw_cyclic;
+ 	bool hw_2d;
+@@ -169,14 +172,14 @@ static bool axi_dmac_check_len(struct axi_dmac_chan *chan, unsigned int len)
+ {
+ 	if (len == 0)
+ 		return false;
+-	if ((len & chan->align_mask) != 0) /* Not aligned */
++	if ((len & chan->length_align_mask) != 0) /* Not aligned */
+ 		return false;
+ 	return true;
+ }
+ 
+ static bool axi_dmac_check_addr(struct axi_dmac_chan *chan, dma_addr_t addr)
+ {
+-	if ((addr & chan->align_mask) != 0) /* Not aligned */
++	if ((addr & chan->address_align_mask) != 0) /* Not aligned */
+ 		return false;
+ 	return true;
+ }
+@@ -394,7 +397,7 @@ static struct axi_dmac_sg *axi_dmac_fill_linear_sg(struct axi_dmac_chan *chan,
+ 	num_segments = DIV_ROUND_UP(period_len, chan->max_length);
+ 	segment_size = DIV_ROUND_UP(period_len, num_segments);
+ 	/* Take care of alignment */
+-	segment_size = ((segment_size - 1) | chan->align_mask) + 1;
++	segment_size = ((segment_size - 1) | chan->length_align_mask) + 1;
+ 
+ 	for (i = 0; i < num_periods; i++) {
+ 		len = period_len;
+@@ -623,7 +626,7 @@ static int axi_dmac_parse_chan_dt(struct device_node *of_chan,
+ 		return ret;
+ 	chan->dest_width = val / 8;
+ 
+-	chan->align_mask = max(chan->dest_width, chan->src_width) - 1;
++	chan->address_align_mask = max(chan->dest_width, chan->src_width) - 1;
+ 
+ 	if (axi_dmac_dest_is_mem(chan) && axi_dmac_src_is_mem(chan))
+ 		chan->direction = DMA_MEM_TO_MEM;
+@@ -640,6 +643,9 @@ static int axi_dmac_parse_chan_dt(struct device_node *of_chan,
+ static int axi_dmac_detect_caps(struct axi_dmac *dmac)
+ {
+ 	struct axi_dmac_chan *chan = &dmac->chan;
++	unsigned int version;
++
++	version = axi_dmac_read(dmac, AXI_DMAC_REG_VERSION);
+ 
+ 	axi_dmac_write(dmac, AXI_DMAC_REG_FLAGS, AXI_DMAC_FLAG_CYCLIC);
+ 	if (axi_dmac_read(dmac, AXI_DMAC_REG_FLAGS) == AXI_DMAC_FLAG_CYCLIC)
+@@ -670,6 +676,13 @@ static int axi_dmac_detect_caps(struct axi_dmac *dmac)
+ 		return -ENODEV;
+ 	}
+ 
++	if ((version & 0xff00) >= 0x0100) {
++		axi_dmac_write(dmac, AXI_DMAC_REG_X_LENGTH, 0x00);
++		chan->length_align_mask = axi_dmac_read(dmac, AXI_DMAC_REG_X_LENGTH);
++	} else {
++		chan->length_align_mask = chan->address_align_mask;
++	}
++
+ 	return 0;
+ }
+ 
+-- 
+2.17.1
+

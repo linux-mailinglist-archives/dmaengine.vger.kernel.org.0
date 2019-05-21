@@ -2,94 +2,152 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F06C247D2
-	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2019 08:12:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 689C1247E6
+	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2019 08:16:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725835AbfEUGMl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 21 May 2019 02:12:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49188 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725798AbfEUGMl (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 21 May 2019 02:12:41 -0400
-Received: from localhost (unknown [106.201.107.13])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDFC920863;
-        Tue, 21 May 2019 06:12:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558419160;
-        bh=4VC9bKP9QU7iVDFMtdo9WoMzmY1tJYqXCWxT9T/NUpY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lJzLTxcVnQlcC8g5MlkXWsEtukxQJremgG+7zcGYuVRwfHSSl/CjVbwp62oapFxjZ
-         RB3v+k7IXX6G0ix1zRMQJ2OvmqFFR1LCVcZnUWQFvAHionw5nVJu6KU8/EW2X/ujcW
-         XyM9/dqc3r3hrt7uRZc5BRuGjG8gjJF0yevCkmSg=
-Date:   Tue, 21 May 2019 11:42:36 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     "robh@kernel.org" <robh@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+        id S1726252AbfEUGQK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 21 May 2019 02:16:10 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47702 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725885AbfEUGQK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 21 May 2019 02:16:10 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4L6Fxjl001707;
+        Tue, 21 May 2019 01:15:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1558419359;
+        bh=BOlHodlIMYLCPqU3G35mi/bOn4BFg+tVJAITFyiE5m8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nZPL69h8s6y0ddhR/IbOVZ3IErJ86Zy4vfk7PFQn6L/VfX7sXYqFo8J35bmQotYVu
+         MOpVBYmx2l2DaKh62mcpTYKvsRu8oQaT0pdo2jmdcJaRQXxgbuZF7RkCEAoXI9N87W
+         GHyr4arkkL9Dc5leRzaWr5RPXkFvJMC/dPkEvN0E=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4L6Fxst101552
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 21 May 2019 01:15:59 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 21
+ May 2019 01:15:58 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 21 May 2019 01:15:58 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4L6FuUi073060;
+        Tue, 21 May 2019 01:15:57 -0500
+Subject: Re: [PATCH] dmaengine: ti: edma: Enable support for polled (memcpy)
+ completion
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: Re: Re: [PATCH v3 11/14] dmaengine: imx-sdma: fix ecspi1 rx dma
- not work on i.mx8mm
-Message-ID: <20190521061236.GA15118@vkoul-mobl>
-References: <VI1PR04MB4543DEEC702531ED69616B8C89070@VI1PR04MB4543.eurprd04.prod.outlook.com>
+        <linux-omap@vger.kernel.org>
+References: <20190514080909.10306-1-peter.ujfalusi@ti.com>
+ <20190521050430.GS15118@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <ce1a2e96-bc4b-3998-0c36-362867907177@ti.com>
+Date:   Tue, 21 May 2019 09:16:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20190521050430.GS15118@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <VI1PR04MB4543DEEC702531ED69616B8C89070@VI1PR04MB4543.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 21-05-19, 05:41, Robin Gong wrote:
-> > -----Original Message-----
-> > From: Vinod Koul <vkoul@kernel.org>
-> > Sent: 2019年5月21日 13:13
-> > 
-> > On 21-05-19, 04:58, Robin Gong wrote:
-> > > > -----Original Message-----
-> > > > From: Vinod Koul <vkoul@kernel.org>
-> > > > Sent: 2019年5月21日 12:18
-> > > >
-> > > > On 07-05-19, 09:16, Robin Gong wrote:
-> > > > > Because the number of ecspi1 rx event on i.mx8mm is 0, the
-> > > > > condition check ignore such special case without dma channel
-> > > > > enabled, which caused
-> > > > > ecspi1 rx works failed. Actually, no need to check event_id0,
-> > > > > checking
-> > > > > event_id1 is enough for DEV_2_DEV case because it's so lucky that
-> > > > > event_id1 never be 0.
-> > > >
-> > > > Well is that by chance or design that event_id1 will be never 0?
-> > > >
-> > > That's by chance. DEV_2_DEV is just for Audio case and non-zero for
-> > event_id1 on current i.MX family.
-> > 
-> > Then it wont be fgood to rely on chance :)
-> Yes, I knew that. May I create another independent patch for event_id1 since that's potential issue is not related with this ecspi patch set?
 
-Sure a patch should change one thing but I think it should come before
-this one. The log for this should be fixed up as well
 
--- 
-~Vinod
+On 21/05/2019 8.04, Vinod Koul wrote:
+> On 14-05-19, 11:09, Peter Ujfalusi wrote:
+>> When a DMA client driver decides that it is not providing callback for
+>> completion of a transfer (and/or does not set the DMA_PREP_INTERRUPT) but
+>> it will poll the status of the transfer (in case of short memcpy for
+>> example) we will not get interrupt for the completion of the transfer and
+>> will not mark the transaction as done.
+>>
+>> Check the event registers (ER and EER) and if the channel is inactive then
+>> return wioth DMA_COMPLETE to let the client know that the transfer is
+>         ^^^^^
+> Typo
+
+Ok
+
+> 
+>> completed.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>>  drivers/dma/ti/edma.c | 23 ++++++++++++++++++++---
+>>  1 file changed, 20 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+>> index ceabdea40ae0..7501445af069 100644
+>> --- a/drivers/dma/ti/edma.c
+>> +++ b/drivers/dma/ti/edma.c
+>> @@ -1211,8 +1211,9 @@ static struct dma_async_tx_descriptor *edma_prep_dma_memcpy(
+>>  
+>>  	edesc->pset[0].param.opt |= ITCCHEN;
+>>  	if (nslots == 1) {
+>> -		/* Enable transfer complete interrupt */
+>> -		edesc->pset[0].param.opt |= TCINTEN;
+>> +		/* Enable transfer complete interrupt if requested */
+>> +		if (tx_flags & DMA_PREP_INTERRUPT)
+>> +			edesc->pset[0].param.opt |= TCINTEN;
+>>  	} else {
+>>  		/* Enable transfer complete chaining for the first slot */
+>>  		edesc->pset[0].param.opt |= TCCHEN;
+>> @@ -1239,7 +1240,9 @@ static struct dma_async_tx_descriptor *edma_prep_dma_memcpy(
+>>  		}
+>>  
+>>  		edesc->pset[1].param.opt |= ITCCHEN;
+>> -		edesc->pset[1].param.opt |= TCINTEN;
+>> +		/* Enable transfer complete interrupt if requested */
+>> +		if (tx_flags & DMA_PREP_INTERRUPT)
+>> +			edesc->pset[1].param.opt |= TCINTEN;
+>>  	}
+>>  
+>>  	return vchan_tx_prep(&echan->vchan, &edesc->vdesc, tx_flags);
+>> @@ -1801,6 +1804,20 @@ static enum dma_status edma_tx_status(struct dma_chan *chan,
+>>  	unsigned long flags;
+>>  
+>>  	ret = dma_cookie_status(chan, cookie, txstate);
+>> +
+>> +	if (ret != DMA_COMPLETE && echan->edesc && !echan->edesc->cyclic) {
+>> +		struct edma_cc *ecc = echan->ecc;
+>> +		int channel = EDMA_CHAN_SLOT(echan->ch_num);
+>> +		int j = (channel >> 5);
+>> +		unsigned int mask = BIT(channel & 0x1f);
+> 
+> GENMASK or define a macro instead of a magic number?
+
+So it is better to change the other places first from where I have just
+copied this.
+
+> 
+>> +		unsigned int sh_er = edma_shadow0_read_array(ecc, SH_ER, j);
+>> +		unsigned int sh_eer = edma_shadow0_read_array(ecc, SH_EER, j);
+>> +
+>> +		/* The channel is no longer active */
+>> +		if (!(sh_er & mask) && !(sh_eer & mask))
+>> +			ret = DMA_COMPLETE;
+>> +	}
+>> +
+>>  	if (ret == DMA_COMPLETE || !txstate)
+>>  		return ret;
+>>  
+>> -- 
+>> Peter
+>>
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

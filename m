@@ -2,70 +2,90 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A12B2248DC
-	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2019 09:21:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68F9724991
+	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2019 09:59:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbfEUHVg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 21 May 2019 03:21:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47648 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbfEUHVg (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 21 May 2019 03:21:36 -0400
-Received: from localhost (unknown [106.201.107.13])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EECE2173C;
-        Tue, 21 May 2019 07:21:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558423296;
-        bh=Ag74ndH2WI93u1W3o4FuC7Tdt8eh+FlOGnYZ8HXxSqY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jtfJgFsnCfrk08DHKSZaSoF8nvpXV6gOR3UMEHGjadaKpA5+aL9BL9ttSPdmq+ISd
-         cBa25RUENQH7JR53M9V2yPmuxQIpv800uA8khRiYOo9JOhykuwy04XmlGH84QI6v32
-         VtiICNIRb5ptnpk7YJZI++SYntOLaq22uQGkziEw=
-Date:   Tue, 21 May 2019 12:51:31 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: ti: edma: Enable support for polled (memcpy)
- completion
-Message-ID: <20190521072131.GB15118@vkoul-mobl>
-References: <20190514080909.10306-1-peter.ujfalusi@ti.com>
- <20190521050430.GS15118@vkoul-mobl>
- <ce1a2e96-bc4b-3998-0c36-362867907177@ti.com>
+        id S1726006AbfEUH7i (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 21 May 2019 03:59:38 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59518 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbfEUH7i (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 21 May 2019 03:59:38 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4L7xXqj072922;
+        Tue, 21 May 2019 02:59:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1558425573;
+        bh=IzWT3e6xVFbiZmSHFjmPBCCwZEObs0gFBMkK0Qxp8bg=;
+        h=From:To:CC:Subject:Date;
+        b=onyOFoYd6iT3zbfUFrP1jChuvkmOzb97Db8+o2dfG3+pdNkb8jHonbpEOYD/98gld
+         ivbuzODleKw4Yhuj+epqWIS3u2uD5zqVAw8bdZ67wshrYaLduB02Hr20a/+5nAneUS
+         AwGMIZAwmsAK1329HQVpIOXBSCS5lhVfi8YL7rBs=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4L7xWYj051369
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 21 May 2019 02:59:33 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 21
+ May 2019 02:59:32 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 21 May 2019 02:59:32 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4L7xUjx078442;
+        Tue, 21 May 2019 02:59:30 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-omap@vger.kernel.org>
+Subject: [PATCH v2 0/2] dmaengine: ti: edma: Polled completion support
+Date:   Tue, 21 May 2019 10:59:43 +0300
+Message-ID: <20190521075945.14085-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ce1a2e96-bc4b-3998-0c36-362867907177@ti.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 21-05-19, 09:16, Peter Ujfalusi wrote:
-> On 21/05/2019 8.04, Vinod Koul wrote:
-> > On 14-05-19, 11:09, Peter Ujfalusi wrote:
+Hi,
 
-> >>  	return vchan_tx_prep(&echan->vchan, &edesc->vdesc, tx_flags);
-> >> @@ -1801,6 +1804,20 @@ static enum dma_status edma_tx_status(struct dma_chan *chan,
-> >>  	unsigned long flags;
-> >>  
-> >>  	ret = dma_cookie_status(chan, cookie, txstate);
-> >> +
-> >> +	if (ret != DMA_COMPLETE && echan->edesc && !echan->edesc->cyclic) {
-> >> +		struct edma_cc *ecc = echan->ecc;
-> >> +		int channel = EDMA_CHAN_SLOT(echan->ch_num);
-> >> +		int j = (channel >> 5);
-> >> +		unsigned int mask = BIT(channel & 0x1f);
-> > 
-> > GENMASK or define a macro instead of a magic number?
-> 
-> So it is better to change the other places first from where I have just
-> copied this.
+Changes since v1:
+- Cleanup patch for the array register handling
+- typo fixed in patch2 commit message
 
-That would be nice as well :)
+The code around the array register access was pretty confusing for the first
+look, so clean them up first then use the cleaner way in the polled handling.
+
+When a DMA client driver decides that it is not providing callback for
+completion of a transfer (and/or does not set the DMA_PREP_INTERRUPT) but
+it will poll the status of the transfer (in case of short memcpy for
+example) we will not get interrupt for the completion of the transfer and
+will not mark the transaction as done.
+
+Check the event registers (ER and EER) and if the channel is inactive then
+return wioth DMA_COMPLETE to let the client know that the transfer is
+completed.
+
+Regards,
+Peter
+---
+Peter Ujfalusi (2):
+  dmaengine: ti: edma: Clean up the 2x32bit array register accesses
+  dmaengine: ti: edma: Enable support for polled (memcpy) completion
+
+ drivers/dma/ti/edma.c | 129 ++++++++++++++++++++++++++----------------
+ 1 file changed, 81 insertions(+), 48 deletions(-)
 
 -- 
-~Vinod
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+

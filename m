@@ -2,59 +2,133 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD1BD246E0
-	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2019 06:30:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB594246E9
+	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2019 06:34:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725768AbfEUEaO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 21 May 2019 00:30:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41984 "EHLO mail.kernel.org"
+        id S1725804AbfEUEeo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 21 May 2019 00:34:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725308AbfEUEaN (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 21 May 2019 00:30:13 -0400
+        id S1725793AbfEUEeo (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 21 May 2019 00:34:44 -0400
 Received: from localhost (unknown [106.201.107.13])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B9BE21743;
-        Tue, 21 May 2019 04:30:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A5712173E;
+        Tue, 21 May 2019 04:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558413013;
-        bh=NvgrzL9IzQcSGcTQMFaifUuVeEcbwClCUo/89xh6gjU=;
+        s=default; t=1558413283;
+        bh=FyMfJVTBNMLoW1/4K1izPZGoiFCIGoNjbcj57tYlg70=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VN82rvt4UcoNg4FeKa4lwNJbvxwZptyIv5eLhtWOHf0bNW8djto1wYrfTA7UYEY3W
-         hzhevuGUthWwppLEJ7YPeWqNR1ozHSQ9OnBSShsetrnl3Gz+z/xKeGV2Ky8M9g7nPm
-         NYcvAosWCVyrwLpVEnSi/c1w8EMNyDPFPL1VRqCQ=
-Date:   Tue, 21 May 2019 10:00:09 +0530
+        b=Dj4bvWTjTtgdEulQyjYthsUxg86jGVS5KBLTR1djqTJeXjMErVUynDKx+fLhWR5qA
+         CO/d8w7o57Z82DXG/fBqmSk8QB33FY23HSMkJUq79JhvADaJttpqov+P39AolOj1Rf
+         H4/TZEjvSJSihncHn742uoitLWZ0kumcdU7K1a0M=
+Date:   Tue, 21 May 2019 10:04:38 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Dan Williams <dan.j.williams@intel.com>, od@zcrc.me,
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     dan.j.williams@intel.com, leoyang.li@nxp.com,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: jz4780: Fix transfers being ACKed too soon
-Message-ID: <20190521043009.GK15118@vkoul-mobl>
-References: <20190504213757.6693-1-paul@crapouillou.net>
+Subject: Re: [V2 1/2] dmaengine: fsl-qdma: fixed the source/destination
+ descriptor format
+Message-ID: <20190521043438.GL15118@vkoul-mobl>
+References: <20190506022111.31751-1-peng.ma@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190504213757.6693-1-paul@crapouillou.net>
+In-Reply-To: <20190506022111.31751-1-peng.ma@nxp.com>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 04-05-19, 23:37, Paul Cercueil wrote:
-> When a multi-descriptor DMA transfer is in progress, the "IRQ pending"
-> flag will apparently be set for that channel as soon as the last
-> descriptor loads, way before the IRQ actually happens. This behaviour
-> has been observed on the JZ4725B, but maybe other SoCs are affected.
+On 06-05-19, 10:21, Peng Ma wrote:
+> CMD of Source/Destination descriptor format should be lower of
+> struct fsl_qdma_engine number data address.
 > 
-> In the case where another DMA transfer is running into completion on a
-> separate channel, the IRQ handler would then run the completion handler
-> for our previous channel even if the transfer didn't actually finish.
+> Signed-off-by: Peng Ma <peng.ma@nxp.com>
+> ---
+> changed for V2:
+> 	- Fix descriptor spelling
 > 
-> Fix this by checking in the completion handler that we're indeed done;
-> if not the interrupted DMA transfer will simply be resumed.
+>  drivers/dma/fsl-qdma.c |   25 +++++++++++++++++--------
+>  1 files changed, 17 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
+> index aa1d0ae..2e8b46b 100644
+> --- a/drivers/dma/fsl-qdma.c
+> +++ b/drivers/dma/fsl-qdma.c
+> @@ -113,6 +113,7 @@
+>  /* Field definition for Descriptor offset */
+>  #define QDMA_CCDF_STATUS		20
+>  #define QDMA_CCDF_OFFSET		20
+> +#define QDMA_SDDF_CMD(x)		(((u64)(x)) << 32)
+>  
+>  /* Field definition for safe loop count*/
+>  #define FSL_QDMA_HALT_COUNT		1500
+> @@ -214,6 +215,12 @@ struct fsl_qdma_engine {
+>  
+>  };
+>  
+> +static inline void
+> +qdma_sddf_set_cmd(struct fsl_qdma_format *sddf, u32 val)
+> +{
+> +	sddf->data = QDMA_SDDF_CMD(val);
+> +}
 
-Applied, thanks
+Do you really need this helper which calls another macro!
+
+> +
+>  static inline u64
+>  qdma_ccdf_addr_get64(const struct fsl_qdma_format *ccdf)
+>  {
+> @@ -341,6 +348,7 @@ static void fsl_qdma_free_chan_resources(struct dma_chan *chan)
+>  static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
+>  				      dma_addr_t dst, dma_addr_t src, u32 len)
+>  {
+> +	u32 cmd;
+>  	struct fsl_qdma_format *sdf, *ddf;
+>  	struct fsl_qdma_format *ccdf, *csgf_desc, *csgf_src, *csgf_dest;
+>  
+> @@ -353,6 +361,7 @@ static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
+>  
+>  	memset(fsl_comp->virt_addr, 0, FSL_QDMA_COMMAND_BUFFER_SIZE);
+>  	memset(fsl_comp->desc_virt_addr, 0, FSL_QDMA_DESCRIPTOR_BUFFER_SIZE);
+> +
+
+why did you add a blank line in this 'fix', it does not belong here!
+
+>  	/* Head Command Descriptor(Frame Descriptor) */
+>  	qdma_desc_addr_set64(ccdf, fsl_comp->bus_addr + 16);
+>  	qdma_ccdf_set_format(ccdf, qdma_ccdf_get_offset(ccdf));
+> @@ -369,14 +378,14 @@ static void fsl_qdma_comp_fill_memcpy(struct fsl_qdma_comp *fsl_comp,
+>  	/* This entry is the last entry. */
+>  	qdma_csgf_set_f(csgf_dest, len);
+>  	/* Descriptor Buffer */
+> -	sdf->data =
+> -		cpu_to_le64(FSL_QDMA_CMD_RWTTYPE <<
+> -			    FSL_QDMA_CMD_RWTTYPE_OFFSET);
+> -	ddf->data =
+> -		cpu_to_le64(FSL_QDMA_CMD_RWTTYPE <<
+> -			    FSL_QDMA_CMD_RWTTYPE_OFFSET);
+> -	ddf->data |=
+> -		cpu_to_le64(FSL_QDMA_CMD_LWC << FSL_QDMA_CMD_LWC_OFFSET);
+> +	cmd = cpu_to_le32(FSL_QDMA_CMD_RWTTYPE <<
+> +			  FSL_QDMA_CMD_RWTTYPE_OFFSET);
+> +	qdma_sddf_set_cmd(sdf, cmd);
+
+why not do sddf->data = QDMA_SDDF_CMD(cmd);
+
+> +
+> +	cmd = cpu_to_le32(FSL_QDMA_CMD_RWTTYPE <<
+> +			  FSL_QDMA_CMD_RWTTYPE_OFFSET);
+> +	cmd |= cpu_to_le32(FSL_QDMA_CMD_LWC << FSL_QDMA_CMD_LWC_OFFSET);
+> +	qdma_sddf_set_cmd(ddf, cmd);
+>  }
+>  
+>  /*
+> -- 
+> 1.7.1
 
 -- 
 ~Vinod

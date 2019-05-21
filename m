@@ -2,75 +2,93 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7207024B0C
-	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2019 11:01:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2BF924BC4
+	for <lists+dmaengine@lfdr.de>; Tue, 21 May 2019 11:36:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbfEUJBE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 21 May 2019 05:01:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51468 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726006AbfEUJBE (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 21 May 2019 05:01:04 -0400
-Received: from localhost (unknown [106.201.107.13])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66C6221019;
-        Tue, 21 May 2019 09:00:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558429264;
-        bh=3WQ0Qjttg5VAmos9LBjKq/caqxMX7CCBc0pIQwDIa3M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j6XjRkDA8HwcQjDysaXvldnG0t3LshJl9qYt0zhHq4I8e6hCpvn7DaVL5XJj+0MDH
-         vA+6a7uUK+Q6LCD+o7ovLmjaJRo/4p1xFwfCzVd0m0RCdhGoWAF9BOkxv81LKUAf6r
-         kzo1sCcCKUueRy92LSPjzlO2NFyVA9IvGsIg8f34=
-Date:   Tue, 21 May 2019 14:30:42 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     dmaengine@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH 1/2] dmaengine: axi-dmac: Discover length alignment
- requirement
-Message-ID: <20190521090042.GC15118@vkoul-mobl>
-References: <20190521112331.32424-1-alexandru.ardelean@analog.com>
+        id S1726448AbfEUJgj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 21 May 2019 05:36:39 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:52228 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbfEUJgj (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 21 May 2019 05:36:39 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4L9aYQR117162;
+        Tue, 21 May 2019 04:36:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1558431394;
+        bh=vFAhDSNNkXEYynswuT8sjkQA9F9wkTULaULTfnghYnI=;
+        h=From:To:CC:Subject:Date;
+        b=g2mrfx9GLTDl6SeaAJprj5Kn7TNakloLF7MnVDGBomOQXuQcX8d4TE/5MOqNsxy79
+         L2L6xAz4yjbksPFwWTrH+dSzT9/qxW7lXU138p2Ej5e6jt7Itfyg5d8cmIOjk/7M1q
+         Wl0+zuEvXOAOjiVQHk2SwMd2U6dDIspptG8IFX3s=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4L9aYru016816
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 21 May 2019 04:36:34 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 21
+ May 2019 04:36:32 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 21 May 2019 04:36:32 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4L9aUgZ018934;
+        Tue, 21 May 2019 04:36:31 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-omap@vger.kernel.org>
+Subject: [PATCH v3 0/2] dmaengine: ti: edma: Polled completion support
+Date:   Tue, 21 May 2019 12:36:44 +0300
+Message-ID: <20190521093646.21836-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190521112331.32424-1-alexandru.ardelean@analog.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 21-05-19, 14:23, Alexandru Ardelean wrote:
-> From: Lars-Peter Clausen <lars@metafoo.de>
-> 
-> Starting with version 4.1.a the AXI-DMAC is capable of reporting the
-> required length alignment.
-> 
-> The LSBs that are required to be set for alignment will always read back as
-> set from the transfer length register. It is not possible to clear them by
-> writing a 0. This means the driver can discover the length alignment
-> requirement by writing 0 to that register and reading back the value.
-> 
-> Since the DMA will support length alignment requirements that are different
-> from the address alignment requirement track both of them independently.
-> 
-> For older versions of the peripheral assume that the length alignment
-> requirement is equal to the address alignment requirement.
-> 
-> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Hi,
 
-You need to sign off the patch before sending. Please reread Documentation/process/submitting-patches.rst
+Changes since v2:
+- Fix typo in the comment for patch 0
 
->  	axi_dmac_write(dmac, AXI_DMAC_REG_FLAGS, AXI_DMAC_FLAG_CYCLIC);
->  	if (axi_dmac_read(dmac, AXI_DMAC_REG_FLAGS) == AXI_DMAC_FLAG_CYCLIC)
-> @@ -670,6 +676,13 @@ static int axi_dmac_detect_caps(struct axi_dmac *dmac)
->  		return -ENODEV;
->  	}
->  
-> +	if ((version & 0xff00) >= 0x0100) {
+Changes since v1:
+- Cleanup patch for the array register handling
+- typo fixed in patch2 commit message
 
-magic numbers yaay
+The code around the array register access was pretty confusing for the first
+look, so clean them up first then use the cleaner way in the polled handling.
+
+When a DMA client driver decides that it is not providing callback for
+completion of a transfer (and/or does not set the DMA_PREP_INTERRUPT) but
+it will poll the status of the transfer (in case of short memcpy for
+example) we will not get interrupt for the completion of the transfer and
+will not mark the transaction as done.
+
+Check the event registers (ER and EER) and if the channel is inactive then
+return wioth DMA_COMPLETE to let the client know that the transfer is
+completed.
+
+Regards,
+Peter
+---
+Peter Ujfalusi (2):
+  dmaengine: ti: edma: Clean up the 2x32bit array register accesses
+  dmaengine: ti: edma: Enable support for polled (memcpy) completion
+
+ drivers/dma/ti/edma.c | 129 ++++++++++++++++++++++++++----------------
+ 1 file changed, 81 insertions(+), 48 deletions(-)
 
 -- 
-~Vinod
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+

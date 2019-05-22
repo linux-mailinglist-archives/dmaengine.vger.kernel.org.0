@@ -2,85 +2,103 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F195426523
-	for <lists+dmaengine@lfdr.de>; Wed, 22 May 2019 15:51:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B842626686
+	for <lists+dmaengine@lfdr.de>; Wed, 22 May 2019 17:04:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729172AbfEVNvb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 22 May 2019 09:51:31 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34344 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbfEVNva (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 May 2019 09:51:30 -0400
-Received: by mail-ot1-f65.google.com with SMTP id l17so2138838otq.1;
-        Wed, 22 May 2019 06:51:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WNC2JYWG7tWES9f64iNfx+WaqJ4vmOCp/0J1TeLz0p4=;
-        b=qvDEVPVqzuWN4+F1oBQDNBoUDdISpYKkJKEo2Cs6N45xy8S1Qpgw5EubdZDx2rAj6L
-         UErOCz8Oqxz5cnCMHZ0dtTO2laJzV+/lgvrymruRQ8MHh2sMklXJ0GuST0uUh1m+NSc/
-         uC0xWDV4Vr4ZggrxRWDE8JR31c04MeE65QiIC1vsQCQW2ZSP5ALRzQ4U8A/Kw7kdZvt/
-         GkDUmPxTCqJLm7VzhCH5FOYixAwKYtLS/dq0MWLq+jOyVG0+qOI/9IJxt2ehj6Wmp6As
-         0l+CggYmYmHtb+12+uL+zVm8Gz2DkkeOCg/aGZM4inOjHxeIcgKFAUzKRGW8KuU2sLqz
-         9f1w==
-X-Gm-Message-State: APjAAAX8TUFhDNgH6qjeyogUqQq5iBDzhAwUAieSbYJkiowI77w0tuAX
-        BcLFsp4pbtVJzdALtQjYug==
-X-Google-Smtp-Source: APXvYqyruJO4hpb5ERYDyy8YFYJg7Z8ngUs0aEUiTimEwLTJsVuVZ4S1t245qpR8qtmb7mfA8CLAFA==
-X-Received: by 2002:a05:6830:11ce:: with SMTP id v14mr23382616otq.184.1558533089709;
-        Wed, 22 May 2019 06:51:29 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e8sm4849679otk.13.2019.05.22.06.51.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 22 May 2019 06:51:29 -0700 (PDT)
-Date:   Wed, 22 May 2019 08:51:28 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     "robh@kernel.org" <robh@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH v4 10/14] dma: imx-sdma: add i.mx6ul/6sx compatible name
-Message-ID: <20190522135128.GA24987@bogus>
-References: <1558548188-1155-1-git-send-email-yibin.gong@nxp.com>
- <1558548188-1155-11-git-send-email-yibin.gong@nxp.com>
+        id S1729615AbfEVPEK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 22 May 2019 11:04:10 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:40802 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728674AbfEVPEK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 May 2019 11:04:10 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6471EC0C7C;
+        Wed, 22 May 2019 15:03:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1558537436; bh=tJ5U5V5ukKoh37DG0nUj49vWOPDvxzuXMRZdBJAy5Lw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=b6Hh4aRYoU3do7kP8CvRl41mtMen3Dib3DQyjdapUbauUXajx5+wy9iHcFtOy/OiR
+         pQa2yGRG3AjW4eP99liENZwRoB6aqRQCxwZaFEY3H9DHP5lRMIY31mMi2W+c96UDLJ
+         5J+qqJ1AxZ8CG5zJX/WShJ9S8Bg+b7auN1VuilitpWE90KOuQeq3GMX3Y5Y9Pz5xgD
+         uRC0GRZ9tOSZeQUFjPZ7zsawHvJrgKb8VVQmdrwhcCl/GILjW5+9mEsAPuHAMcC46k
+         SIBd0e7EWTly8/0bOCxWg8EGgxNNASx44rPpvsJ5Wt3BISh3gukjMvIOl3XcpvVQjZ
+         KJ78rvZjYEK4A==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 838EFA0093;
+        Wed, 22 May 2019 15:04:09 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id 7F6003F057;
+        Wed, 22 May 2019 17:04:08 +0200 (CEST)
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     linux-pci@vger.kernel.org, dmaengine@vger.kernel.org
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Subject: [PATCH 0/6] dmaengine: Add Synopsys eDMA IP driver (version 0)
+Date:   Wed, 22 May 2019 17:03:59 +0200
+Message-Id: <cover.1558536991.git.gustavo.pimentel@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558548188-1155-11-git-send-email-yibin.gong@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, 22 May 2019 10:00:38 +0000, Robin Gong wrote:
-> Add i.mx6ul and i.mx6sx compatible name in binding doc.
-> 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> ---
->  Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+Add Synopsys eDMA IP driver (version 0 and for EP side only) to Linux
+kernel. This IP is generally distributed with Synopsys PCIe EndPoint IP
+(depends of the use and licensing agreement), which supports:
+ - legacy and unroll modes
+ - 16 independent and concurrent channels (8 write + 8 read)
+ - supports linked list (scatter-gather) transfer
+ - each linked list descriptor can transfer from 1 byte to 4 Gbytes
+ - supports cyclic transfer
+ - PCIe EndPoint glue-logic
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+This patch series contains:
+ - eDMA core + eDMA core v0 driver (implements the interface with
+ DMAengine controller APIs and interfaces with eDMA HW block)
+ - eDMA PCIe glue-logic reference driver (attaches to Synopsys EP and
+ provides memory access to eDMA core driver)
 
-If a tag was not added on purpose, please state why and what changed.
+Gustavo Pimentel (6):
+  dmaengine: Add Synopsys eDMA IP core driver
+  dmaengine: Add Synopsys eDMA IP version 0 support
+  dmaengine: Add Synopsys eDMA IP version 0 debugfs support
+  PCI: Add Synopsys endpoint EDDA Device ID
+  dmaengine: Add Synopsys eDMA IP PCIe glue-logic
+  MAINTAINERS: Add Synopsys eDMA IP driver maintainer
+
+ MAINTAINERS                              |   7 +
+ drivers/dma/Kconfig                      |   2 +
+ drivers/dma/Makefile                     |   1 +
+ drivers/dma/dw-edma/Kconfig              |  18 +
+ drivers/dma/dw-edma/Makefile             |   7 +
+ drivers/dma/dw-edma/dw-edma-core.c       | 937 +++++++++++++++++++++++++++++++
+ drivers/dma/dw-edma/dw-edma-core.h       | 165 ++++++
+ drivers/dma/dw-edma/dw-edma-pcie.c       | 229 ++++++++
+ drivers/dma/dw-edma/dw-edma-v0-core.c    | 354 ++++++++++++
+ drivers/dma/dw-edma/dw-edma-v0-core.h    |  28 +
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 310 ++++++++++
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.h |  27 +
+ drivers/dma/dw-edma/dw-edma-v0-regs.h    | 158 ++++++
+ drivers/misc/pci_endpoint_test.c         |   2 +-
+ include/linux/dma/edma.h                 |  47 ++
+ include/linux/pci_ids.h                  |   1 +
+ 16 files changed, 2292 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/dma/dw-edma/Kconfig
+ create mode 100644 drivers/dma/dw-edma/Makefile
+ create mode 100644 drivers/dma/dw-edma/dw-edma-core.c
+ create mode 100644 drivers/dma/dw-edma/dw-edma-core.h
+ create mode 100644 drivers/dma/dw-edma/dw-edma-pcie.c
+ create mode 100644 drivers/dma/dw-edma/dw-edma-v0-core.c
+ create mode 100644 drivers/dma/dw-edma/dw-edma-v0-core.h
+ create mode 100644 drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+ create mode 100644 drivers/dma/dw-edma/dw-edma-v0-debugfs.h
+ create mode 100644 drivers/dma/dw-edma/dw-edma-v0-regs.h
+ create mode 100644 include/linux/dma/edma.h
+
+-- 
+2.7.4
+

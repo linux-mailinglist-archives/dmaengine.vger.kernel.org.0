@@ -2,72 +2,111 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91CDC27588
-	for <lists+dmaengine@lfdr.de>; Thu, 23 May 2019 07:35:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7C9D27712
+	for <lists+dmaengine@lfdr.de>; Thu, 23 May 2019 09:35:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726237AbfEWFfH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 23 May 2019 01:35:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725786AbfEWFfH (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 23 May 2019 01:35:07 -0400
-Received: from localhost (unknown [122.167.116.27])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA71820881;
-        Thu, 23 May 2019 05:34:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558589706;
-        bh=axoFYG+Ewq4P5tKjbxbISXb6YfmQNDHpVw2dJGFc954=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bOWOSmD2i59EAn8qv2c2koqfOlVadTTmuQ4MnCpL4LVwqUJNOReOP/tQ7pGRtxI7F
-         IOeCTIR+iMN671PifxwpfqUjP1b0Y2hCPJ3pomtULk+wIg5iVrg0aZQp14P3S5rtkI
-         c6QbUl8TLEViprRBJ4rQR9wFq2uG6gATwE95NuJg=
-Date:   Thu, 23 May 2019 11:04:33 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     "robh@kernel.org" <robh@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "plyatov@gmail.com" <plyatov@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
+        id S1730039AbfEWHfY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 23 May 2019 03:35:24 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:15999 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727232AbfEWHfX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 23 May 2019 03:35:23 -0400
+X-UUID: 864bf361aa5b4a52b11e6e1b6f7e7682-20190523
+X-UUID: 864bf361aa5b4a52b11e6e1b6f7e7682-20190523
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <long.cheng@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 802912487; Thu, 23 May 2019 15:35:14 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 23 May 2019 15:35:12 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 23 May 2019 15:35:11 +0800
+From:   Long Cheng <long.cheng@mediatek.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH v4 11/14] dmaengine: imx-sdma: fix ecspi1 rx dma not work
- on i.mx8mm
-Message-ID: <20190523053433.GU15118@vkoul-mobl>
-References: <1558548188-1155-1-git-send-email-yibin.gong@nxp.com>
- <1558548188-1155-12-git-send-email-yibin.gong@nxp.com>
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        YT Shen <yt.shen@mediatek.com>,
+        Zhenbao Liu <zhenbao.liu@mediatek.com>,
+        Long Cheng <long.cheng@mediatek.com>
+Subject: [PATCH v13 0/2] add uart DMA function 
+Date:   Thu, 23 May 2019 15:35:07 +0800
+Message-ID: <1558596909-14084-1-git-send-email-long.cheng@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558548188-1155-12-git-send-email-yibin.gong@nxp.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
+X-MTK:  N
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 22-05-19, 10:00, Robin Gong wrote:
-> Because the number of ecspi1 rx event on i.mx8mm is 0, the condition
-> check ignore such special case without dma channel enabled, which caused
-> ecspi1 rx works failed. Actually, no need to check event_id0/event_id1
-> and replace checking 'event_id1' with 'DMA_DEV_TO_DEV', so that configure
-> event_id1 only in case DEV_TO_DEV.
+In Mediatek SOCs, the uart can support DMA function.
+Base on DMA engine formwork, we add the DMA code to support uart. And put the code under drivers/dma/mediatek.
 
-Acked-by: Vinod Koul <vkoul@kernel.org>
+This series contains document bindings, Kconfig to control the function enable or not,
+device tree including interrupt and dma device node, the code of UART DMA
+
+Changes compared to v12
+-rename parameters
+-remove direction
+Changes compared to v11
+-modify TX/RX
+-pause function by software
+Changes compared to v10
+-modify DMA tx status function
+-modify 8250_mtk for DMA rx
+-add notes to binding Document.
+Changes compared to v9
+-rename dt-bindings file
+-remove direction from device_config
+-simplified code
+Changes compared to v8
+-revise missing items
+Changes compared to v7:
+-modify apdma uart tx
+Changes compared to v6:
+-Correct spelling
+Changes compared to v5:
+-move 'requst irqs' to alloc channel
+-remove tasklet.
+Changes compared to v4:
+-modify Kconfig depends on.
+Changes compared to v3:
+-fix CONFIG_PM, will cause build fail
+Changes compared to v2:
+-remove unimportant parameters
+-instead of cookie, use APIs of virtual channel.
+-use of_dma_xlate_by_chan_id.
+Changes compared to v1:
+-mian revised file, 8250_mtk_dma.c
+--parameters renamed for standard
+--remove atomic operation
+
+Long Cheng (2):
+  arm: dts: mt2712: add uart APDMA to device tree
+  serial: 8250-mtk: modify uart DMA rx
+
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi |   51 +++++++++++++++++++++++++++++
+ drivers/tty/serial/8250/8250_mtk.c        |   49 +++++++++++----------------
+ 2 files changed, 71 insertions(+), 29 deletions(-)
 
 -- 
-~Vinod
+1.7.9.5
+

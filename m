@@ -2,92 +2,93 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE1232A572
-	for <lists+dmaengine@lfdr.de>; Sat, 25 May 2019 18:38:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A46A72A8F2
+	for <lists+dmaengine@lfdr.de>; Sun, 26 May 2019 09:14:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727373AbfEYQio (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 25 May 2019 12:38:44 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52591 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727331AbfEYQif (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 25 May 2019 12:38:35 -0400
-Received: by mail-wm1-f66.google.com with SMTP id y3so12234473wmm.2;
-        Sat, 25 May 2019 09:38:33 -0700 (PDT)
+        id S1727233AbfEZHOH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 26 May 2019 03:14:07 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34881 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726348AbfEZHOH (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 26 May 2019 03:14:07 -0400
+Received: by mail-pf1-f193.google.com with SMTP id d126so5553246pfd.2;
+        Sun, 26 May 2019 00:14:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kX1q8iX0X4303ErWm6lM+rRst5YhXcgIu4cEhOJHl1c=;
-        b=krobs59/49UbKhHuTP/YivClJTfexdgqOLwxGxG7GrdN9zj5Hh1sdevqbbAozFjouY
-         O4tDua3cJoczqnfx+35v9XOguSH+4JB3LU21g3tBp+yKNIYc5N8I16BaEhhCF7+UOYEH
-         s5HYSKrpiLu1F4z/iG6smjT4555gc0q/CjaFgZTUNtpscNq9F5ukZVO/ItzEegqm32IB
-         LnacyjXEnqjnfhSnTHfUUQAJ03tzRslVmMSjIP39LIu3H6An/RqerVO1P2PzqmMqrsc6
-         x7SRuIDscb7NVByOKxyYEUtHae6KNIe3w4KAbnRkHHE6A1sOsG6ARUnntOOGqAb6uq17
-         zuZw==
+        h=from:to:cc:subject:date:message-id;
+        bh=gpKp1Ji3NbYE6dlIioVp6OmCdvPteX1H1EwDeUiYnRo=;
+        b=SlQO+gvKGyFVekP53VsMEkLrnYKIXnPeCfyVJpCc6L5giIU+OyiuvYGxLKys+i4eEg
+         x4Bxv0XjnhN+IX32qe7Y6ElOmFVk5JLdxHDQghLROUfhfkS/yI7y9AsqY8dDjZTmx9Qd
+         xQq6iB6wwJHfMzKKMnLuHIqOGcQm72DQLSdgSd8p2BRMGx11qnpAKZACoV3zQish1JUA
+         LHrdhVNgk2vQzJ78O0MaTc2cM+d8KmN9D06jyp3OatZm4LGXzYiLtYWkToQNPYiS/QdZ
+         HJroVs+UoCH+9+RMl3xE/lALsZKw7lFYjaYgbdr4apzaQv8q/VQyLTftAW25QN3sZjdX
+         a30w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kX1q8iX0X4303ErWm6lM+rRst5YhXcgIu4cEhOJHl1c=;
-        b=QzhfDvC3xEvW5RaUP/qn/SBGj3KSScgjvlI7igjq3STuqQxKdo8G3rHjwDa+H92ZAt
-         5TVRt+m4AD1gp9LTZn/N6Wi4v8TVC0iT3u3XXvHp1/W7NWf7e4sVIm+ym0P0NYMtlYzu
-         IUcX/hysuDtCkUfnpjtFZnaJ1U8wZU22ROVUKOoKRH04Bgv6QEb3LtOiArkmzBeb26mR
-         F5qbuZbgnVEyxCE8hM3Ij3EM3PHdeZveSx+GgK4WEf5AicZ+ZBmxM0yf+LCcSyGyAzvZ
-         15j/Ng5VzY1MQIv3xDjfzYLUsOGqvCv/N6D6YjAnqRZv1iHXEcvKmcAByI0SGl5O5sBu
-         MozA==
-X-Gm-Message-State: APjAAAXqLSwrSqIQCWvavi9gwHevYPV84m1eH6TsLRnlXopaq5F8QpOo
-        tSPyi9euZTfOGaZAPolwvkg=
-X-Google-Smtp-Source: APXvYqwH0lslbsXMD9wwixNplf75D7OjGQDY/HX6QdZZ6L6hQd2DzjzpVOz6N15Sq3zf0VrRJfVI9g==
-X-Received: by 2002:a7b:cb48:: with SMTP id v8mr20897671wmj.108.1558802313160;
-        Sat, 25 May 2019 09:38:33 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id f65sm9306498wmg.45.2019.05.25.09.38.32
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gpKp1Ji3NbYE6dlIioVp6OmCdvPteX1H1EwDeUiYnRo=;
+        b=oLZOJ9FPuAewNATYEEk0nfpNRP3WVCvctkkOyYZ1TC/xb2teyA6/2AV5U1citD45Mf
+         /0jwOOA22Gtm0zvtCGRzTesVe0RiOhuRKpOCgklRjTWLpOHCEeyoVs/HTuVycUsdd9NX
+         0M2fp7X2G4HhfT/FH3+ekfaCMxCkNjpqSzf8swcXYVQbJwCrB6y9AW6Bs5JN6jBtV7WE
+         EHOSFWe9qK6fZYElbUQUh3CRWl/inVGkyHTzAcyqAjxDi5beCgVk640A9wyuYQa4My5L
+         NGXMSfWZix/DXLYb3qVUmPHBK8nRXcWzFDacCL1bI1YuyH7+deDbt78RXq1plyVpaX7/
+         YSEw==
+X-Gm-Message-State: APjAAAWbPbcMDOou2b5MDTTL1177QiSQCXfvc7GCZwyuvn7L4HRYIhhv
+        Y+n0fpG7ngY/LfYmxt51AlEP6n4X
+X-Google-Smtp-Source: APXvYqwTC0FptfX7CPxxhryj2laivRpDqWwH7V8fygp/VEbP5GYpQPJX1vkSLqIrM2RDP7oYdhrGsA==
+X-Received: by 2002:aa7:8e46:: with SMTP id d6mr98123175pfr.91.1558854846680;
+        Sun, 26 May 2019 00:14:06 -0700 (PDT)
+Received: from localhost ([43.224.245.181])
+        by smtp.gmail.com with ESMTPSA id 4sm11313421pfj.111.2019.05.26.00.14.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 25 May 2019 09:38:32 -0700 (PDT)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        Sun, 26 May 2019 00:14:06 -0700 (PDT)
+From:   Weitao Hou <houweitaoo@gmail.com>
+To:     vkoul@kernel.org, dan.j.williams@intel.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
+Cc:     dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 7/7] arm64: defconfig: enable Allwinner DMA drivers
-Date:   Sat, 25 May 2019 18:38:19 +0200
-Message-Id: <20190525163819.21055-8-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190525163819.21055-1-peron.clem@gmail.com>
-References: <20190525163819.21055-1-peron.clem@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Weitao Hou <houweitaoo@gmail.com>
+Subject: [PATCH] dmaengine: use to_platform_device()
+Date:   Sun, 26 May 2019 15:13:24 +0800
+Message-Id: <20190526071324.15307-1-houweitaoo@gmail.com>
+X-Mailer: git-send-email 2.18.0
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Allwinner sun6i DMA drivers is used on A64 and H6 boards.
+Use to_platform_device() instead of open-coding it.
 
-Enable it as a module.
-
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
+Signed-off-by: Weitao Hou <houweitaoo@gmail.com>
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/stm32-dmamux.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 4d583514258c..b535f0f412cc 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -614,6 +614,7 @@ CONFIG_RTC_DRV_IMX_SC=m
- CONFIG_RTC_DRV_XGENE=y
- CONFIG_DMADEVICES=y
- CONFIG_DMA_BCM2835=m
-+CONFIG_DMA_SUN6I=m
- CONFIG_K3_DMA=y
- CONFIG_MV_XOR=y
- CONFIG_MV_XOR_V2=y
+diff --git a/drivers/dma/stm32-dmamux.c b/drivers/dma/stm32-dmamux.c
+index a67119199c45..63af24d4c834 100644
+--- a/drivers/dma/stm32-dmamux.c
++++ b/drivers/dma/stm32-dmamux.c
+@@ -306,8 +306,7 @@ static int stm32_dmamux_probe(struct platform_device *pdev)
+ #ifdef CONFIG_PM
+ static int stm32_dmamux_runtime_suspend(struct device *dev)
+ {
+-	struct platform_device *pdev =
+-		container_of(dev, struct platform_device, dev);
++	struct platform_device *pdev = to_platform_device(dev);
+ 	struct stm32_dmamux_data *stm32_dmamux = platform_get_drvdata(pdev);
+ 
+ 	clk_disable_unprepare(stm32_dmamux->clk);
+@@ -317,8 +316,7 @@ static int stm32_dmamux_runtime_suspend(struct device *dev)
+ 
+ static int stm32_dmamux_runtime_resume(struct device *dev)
+ {
+-	struct platform_device *pdev =
+-		container_of(dev, struct platform_device, dev);
++	struct platform_device *pdev = to_platform_device(dev);
+ 	struct stm32_dmamux_data *stm32_dmamux = platform_get_drvdata(pdev);
+ 	int ret;
+ 
 -- 
-2.20.1
+2.18.0
 

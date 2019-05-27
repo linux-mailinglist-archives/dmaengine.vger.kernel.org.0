@@ -2,71 +2,123 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DB6D2B666
-	for <lists+dmaengine@lfdr.de>; Mon, 27 May 2019 15:27:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 937152BB50
+	for <lists+dmaengine@lfdr.de>; Mon, 27 May 2019 22:16:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbfE0N1p (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 27 May 2019 09:27:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34176 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726264AbfE0N1p (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 27 May 2019 09:27:45 -0400
-Received: from localhost (unknown [171.61.91.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED6842075E;
-        Mon, 27 May 2019 13:27:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558963664;
-        bh=5LGQZbcDiGADtRy7nX7CzuVlxf33jXUOVsnEJ3zPY0c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uUXx9qkdl3PVY7xkVd58jgCJb3Lp8OiMlxFqQAZ1sXvFApYBGITyi/UALTTG1JNUy
-         b4OWejyk5gOFmczJsWLyvzX/xMHkG9aA+Gs4E2Yyer9SEsRVyYUwwjJhI9jtNeZVmJ
-         yENXghH6AMpxYO/JJtw0k+PYaBdMKfJNOOojTcVI=
-Date:   Mon, 27 May 2019 18:57:39 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Weitao Hou <houweitaoo@gmail.com>
-Cc:     dan.j.williams@intel.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, dmaengine@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: use to_platform_device()
-Message-ID: <20190527132739.GJ15118@vkoul-mobl>
-References: <20190526071324.15307-1-houweitaoo@gmail.com>
- <20190527064303.GG15118@vkoul-mobl>
- <CAK98mP9teTxZn9mMZ_yXSmC7h8gimgN14kX=GT0Q43O58zC-rw@mail.gmail.com>
+        id S1727309AbfE0UPH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 27 May 2019 16:15:07 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41797 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbfE0UPH (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 27 May 2019 16:15:07 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c2so2681321wrm.8;
+        Mon, 27 May 2019 13:15:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RXahGaBrkqUKt9hjO+RHzxhaODt54utR6Qk5vi9eCaQ=;
+        b=owUyFwlXphbnCdPceA7pSRSRDBr3F1cc+EYPPm79e3Mf5qHXv14oDJt46X6NAUyIRR
+         G8rIbeApWCEHEMmhlRx3sXskvz5BaS8egS4Oe3eTA7Ys+yuNij75fEoMQUizaMmwhxBD
+         t8vJk+fQL+MCUNgL065d067WNqHgghWlYg2ur8Q/sOYgpDjMMkPOTouS7+pZphyN091F
+         AEsIEBlrTAAuj60d8VMJv1XBSDROb2vq/4aMIo8KqsQ1aVp92V7++kk+PL/L39FQJifY
+         hgTsxXS33KvZVSk33Hw64di1otY89d/aw5+eSOpGEVTZFs4aQbB2d+qHXBUr9wnla9jo
+         sP5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RXahGaBrkqUKt9hjO+RHzxhaODt54utR6Qk5vi9eCaQ=;
+        b=rHbJRNzilttVTAwCdxzQvoE1BTcBFascxyrKJUdTofPyn0HC/QZqY3v7Df34HNAmQv
+         pZlvePpFHgJ3/NBofq7GBeumMAUnrNOUGpfYoikqlM6yuEJZ6LHmg3OdoBUx621hcImg
+         Uqk4a0uKoJ+SOcieDDIaEqOARV3wJRkRTijkQTGE+zNHikaRksQosuCiMfcai2yJM3VY
+         2qRzA0rC3njxSJxIoaKdGJkpStG2vhjJdKMpPZ/m/ceVk9ybsTgv4MqL7PXG1HXratYU
+         kgFJg3L4+f0fZDzlUDcTuWKLgKl/vIR8AQQZUiizzjnDFtGtsx0hyESdOLPbtMEIviii
+         wyvw==
+X-Gm-Message-State: APjAAAWeKWXwvVGr/22l6PcR8sz75OWGiC86zRiq16GMtvI4UUXbQhD7
+        r9zepb5aeCEoWKa0/yhq+f8=
+X-Google-Smtp-Source: APXvYqxEJpHEqBC0rATeo4Jp5k5kbxhG9dMgCDzdVg4d/5zHBKkoNf1NUwOJp8BMU3gPMRXlDfRdQg==
+X-Received: by 2002:a5d:5701:: with SMTP id a1mr75764699wrv.52.1558988105323;
+        Mon, 27 May 2019 13:15:05 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id i27sm347146wmb.16.2019.05.27.13.15.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 27 May 2019 13:15:04 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v3 0/7] Allwinner H6 DMA support
+Date:   Mon, 27 May 2019 22:14:52 +0200
+Message-Id: <20190527201459.20130-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK98mP9teTxZn9mMZ_yXSmC7h8gimgN14kX=GT0Q43O58zC-rw@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Weitao,
+Hi,
 
-On 27-05-19, 21:10, Weitao Hou wrote:
-> Hi,Vinod
->     Need I add the stm32 driver tag and resend v2 patch?
+This series has been first proposed by Jernej Skrabec[1].
+As this series is mandatory for SPDIF/I2S support and because he is
+busy on Cedrus stuff. I asked him to make the minor change requested
+and repost it.
+Authorship remains to him.
 
-Please do not top post!
+I have tested this series with SPDIF driver and added a patch to enable
+DMA_SUN6I_CONFIG for arm64.
 
-As below says, the patch is applied and I corrected the tag and added
-stm32 while applying, so no change or v2 required.
+Original Post:
+"
+DMA engine engine on H6 almost the same as on older SoCs. The biggest
+difference is that it has slightly rearranged bits in registers and
+it needs additional clock, probably due to iommu.
 
-> Vinod Koul <vkoul@kernel.org> 于2019年5月27日周一 下午2:43写道：
-> 
-> > On 26-05-19, 15:13, Weitao Hou wrote:
-> > > Use to_platform_device() instead of open-coding it.
-> >
-> > Applied after adding stm32 driver tag, thanks
-> >
-> > --
-> > ~Vinod
-> >
+These patches were tested with I2S connected to HDMI. I2S needs
+additional patches which will be sent later.
+
+Please take a look.
+
+Best regards,
+Jernej
+"
+
+Thanks,
+Clément
+
+Changes since v2:
+ - Drop the change of "dma-request" default value
+
+Changes since v1:
+ - Enable DMA_SUN6I in arm64 defconfig
+ - Change mbus_clk to has_mbus_clk
+ - Collect Rob H. reviewed-by
+
+Clément Péron (1):
+  arm64: defconfig: enable Allwinner DMA drivers
+
+Jernej Skrabec (6):
+  dt-bindings: arm64: allwinner: h6: Add binding for DMA controller
+  dmaengine: sun6i: Add a quirk for additional mbus clock
+  dmaengine: sun6i: Add a quirk for setting DRQ fields
+  dmaengine: sun6i: Add a quirk for setting mode fields
+  dmaengine: sun6i: Add support for H6 DMA
+  arm64: dts: allwinner: h6: Add DMA node
+
+ .../devicetree/bindings/dma/sun6i-dma.txt     |   9 +-
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  12 ++
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/dma/sun6i-dma.c                       | 147 +++++++++++++-----
+ 4 files changed, 132 insertions(+), 37 deletions(-)
 
 -- 
-~Vinod
+2.20.1
+

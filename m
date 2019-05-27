@@ -2,48 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D177F2BB49
+	by mail.lfdr.de (Postfix) with ESMTP id 5BC2E2BB48
 	for <lists+dmaengine@lfdr.de>; Mon, 27 May 2019 22:15:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfE0UPK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 27 May 2019 16:15:10 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36019 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbfE0UPK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 27 May 2019 16:15:10 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v22so541393wml.1;
-        Mon, 27 May 2019 13:15:08 -0700 (PDT)
+        id S1727394AbfE0UPN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 27 May 2019 16:15:13 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54117 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727351AbfE0UPM (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 27 May 2019 16:15:12 -0400
+Received: by mail-wm1-f67.google.com with SMTP id d17so538594wmb.3;
+        Mon, 27 May 2019 13:15:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pQgSnfiOxm9+C2oUtvzxOg9ar7+568ZBuQBswlwkWls=;
-        b=UB67cg6dM2MYwdlgtwUEZNRNdFd0VssZcedutE7UD7ABLUFax7Of1ifqS7Ip1Sks/0
-         4syjuOAkx+BkGoh/P/1Y2IRqsjUecVbrl/T5WjVeOlPvTMrY5UjNwGc8QbJI0GXWCc6I
-         eJPL8VCWLxJ/pKipq87k0fdwYEzHhGXgXjZBkvCuNw/6I062OIW1qeqq9tPXzKnqHjIu
-         EAJ/rPKqCUrDE1FxBTIAGzrGjZspnA6PLewZCTT6avIqAdo/uSAF+osYqnc5L66PKYif
-         K4MbE1EPFCh+8lQXLL7HTq6adUYOUHh09YBcW7oxNgjEoBXygmxoS0EmER64vHFLgINx
-         IlEA==
+        bh=9BvgB0y69e26fHuK5bMjd373fveSMgBcyqBpevwu2Pk=;
+        b=g7yV4C4nR6jQkrnEHUzuhHEu7MT37q6Xug90j9dqaWfqLU72K0V5akejaTtrohvODs
+         i1YLTlXtl4ygVsJLKh0Z4AwH0bb6zHXLkizvPOJPKW8vQk/unhEnEAig6uYekUX0ReXd
+         itzr1R5v8raKj+pq0kzpcGpLXXpXlhjdDEKi8JYBZyuVVElultbZv1MkMtt4rDqJSOvz
+         iFeVHYiYDW+MWgxgBFbJozyT3tN9RRwnxxvdsYwxNhvFYIJOdn9Do9t6hxFD4mmq0k1Y
+         QjPbTcPN1HxB3u4mEtdbnzL+lKLTxOWbQWAv5biCxQ1wOzU6k8KAadbfnx8sp9m2pUG8
+         XZ8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pQgSnfiOxm9+C2oUtvzxOg9ar7+568ZBuQBswlwkWls=;
-        b=K66632UxYTCbiZ3JE2fZYeypllTKwBGhTc88SF9Ms1IL527QiR/QEgtoA0ii8dk2UR
-         m/M7VCJdjn8JYEOApq6vExkvWxCi7QxNAToYabv76Gh3VoSxFiSLdeUu0l8fMY5eTt62
-         KRPHM3BTJovfgivHIxMvscbEiedkWf1HD05740QIXm++J5eVa2dRXTz+xX1A3fhTvhxc
-         Wgm4CzI7pH2PGZ/29XtXfHp7wJcnfQdHiLaI9FQ6k64AeUcqaCNX7+3R1u/+iT9wPpjW
-         zZmOCPfN41AFj2M9Hc5JiVhaZjHzQOh7yGJColx/hZaPlkrT9nhfdPRd1EqcDvO/DWrh
-         WAgQ==
-X-Gm-Message-State: APjAAAUB+tmM82xlDpFRuyU21JDiRkUogNuObSwb+YP2tguQDw6t+QDh
-        YnGN9iLNPX4VgJ0jkgf7t6w=
-X-Google-Smtp-Source: APXvYqwzoDGTbBLXVJJLJz1FkLrv/MispS3RxPXrKHrKQ6B5jtJQcZJY6Suy9gAU9yI3a7QJbJypIA==
-X-Received: by 2002:a1c:2889:: with SMTP id o131mr498095wmo.101.1558988107636;
-        Mon, 27 May 2019 13:15:07 -0700 (PDT)
+        bh=9BvgB0y69e26fHuK5bMjd373fveSMgBcyqBpevwu2Pk=;
+        b=uTIJucwFPfP7kbgBw5wB4/33s60B0p1gPEXXmLsr+MJZIusyN6850VsiKsWYe7jniB
+         hPq+WG9hpLU/pFeEm4xlTtvxxjTWx8TbX9KRCvl/4qfx2UjTcZQSlnGouYpEUeGGOowU
+         cbuaJu2i8J62uoDMktZmJsKXBLQliV76FTsY42qjauPHg0gSfmgl+X7olLxiP7iaE3nU
+         ylTq+ebZonmOLSjUmi3cH82RsOw3cN6teBKBsA+oEjST2p6pcGJULMD0pnpwn0jSV5Ds
+         w4xbnp33IeLt2UH6VwVgMjVAQr5gPoD07J9zHnwY8x9tOBQbshmMx5pXFNtMd2QZyLvJ
+         kHNg==
+X-Gm-Message-State: APjAAAXy0/HWWVL0m/wbqxjp3F9+XWecYoOCih44uOterGRPUc/1UVHm
+        3RRNd/z6YpErb+uTSmjNTSk=
+X-Google-Smtp-Source: APXvYqwWj1Jne/AvrBhR+KYfQenhvePNq7fRvDkUq38f7DeaAfwNu0S0CcBVsfFDjhwyc8kzHN3/pw==
+X-Received: by 2002:a1c:c5cf:: with SMTP id v198mr503790wmf.84.1558988109293;
+        Mon, 27 May 2019 13:15:09 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id i27sm347146wmb.16.2019.05.27.13.15.06
+        by smtp.gmail.com with ESMTPSA id i27sm347146wmb.16.2019.05.27.13.15.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 27 May 2019 13:15:06 -0700 (PDT)
+        Mon, 27 May 2019 13:15:08 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -54,9 +54,9 @@ Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v3 2/7] dmaengine: sun6i: Add a quirk for additional mbus clock
-Date:   Mon, 27 May 2019 22:14:54 +0200
-Message-Id: <20190527201459.20130-3-peron.clem@gmail.com>
+Subject: [PATCH v3 3/7] dmaengine: sun6i: Add a quirk for setting DRQ fields
+Date:   Mon, 27 May 2019 22:14:55 +0200
+Message-Id: <20190527201459.20130-4-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190527201459.20130-1-peron.clem@gmail.com>
 References: <20190527201459.20130-1-peron.clem@gmail.com>
@@ -70,89 +70,183 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-H6 DMA controller needs additional mbus clock to be enabled.
+H6 DMA has more than 32 possible DRQs. That means that current maximum
+of 31 DRQs is not enough anymore.
 
-Add a quirk for it and handle it accordingly.
+Add a quirk which will set source and destination DRQ number.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- drivers/dma/sun6i-dma.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ drivers/dma/sun6i-dma.c | 48 ++++++++++++++++++++++++-----------------
+ 1 file changed, 28 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-index 0cd13f17fc11..7d9606997251 100644
+index 7d9606997251..f725b93fd21a 100644
 --- a/drivers/dma/sun6i-dma.c
 +++ b/drivers/dma/sun6i-dma.c
-@@ -129,6 +129,7 @@ struct sun6i_dma_config {
+@@ -68,15 +68,15 @@
+ #define DMA_CHAN_LLI_ADDR	0x08
+ 
+ #define DMA_CHAN_CUR_CFG	0x0c
+-#define DMA_CHAN_MAX_DRQ		0x1f
+-#define DMA_CHAN_CFG_SRC_DRQ(x)		((x) & DMA_CHAN_MAX_DRQ)
++#define DMA_CHAN_MAX_DRQ_A31		0x1f
++#define DMA_CHAN_CFG_SRC_DRQ_A31(x)	((x) & DMA_CHAN_MAX_DRQ_A31)
+ #define DMA_CHAN_CFG_SRC_IO_MODE	BIT(5)
+ #define DMA_CHAN_CFG_SRC_LINEAR_MODE	(0 << 5)
+ #define DMA_CHAN_CFG_SRC_BURST_A31(x)	(((x) & 0x3) << 7)
+ #define DMA_CHAN_CFG_SRC_BURST_H3(x)	(((x) & 0x3) << 6)
+ #define DMA_CHAN_CFG_SRC_WIDTH(x)	(((x) & 0x3) << 9)
+ 
+-#define DMA_CHAN_CFG_DST_DRQ(x)		(DMA_CHAN_CFG_SRC_DRQ(x) << 16)
++#define DMA_CHAN_CFG_DST_DRQ_A31(x)	(DMA_CHAN_CFG_SRC_DRQ_A31(x) << 16)
+ #define DMA_CHAN_CFG_DST_IO_MODE	(DMA_CHAN_CFG_SRC_IO_MODE << 16)
+ #define DMA_CHAN_CFG_DST_LINEAR_MODE	(DMA_CHAN_CFG_SRC_LINEAR_MODE << 16)
+ #define DMA_CHAN_CFG_DST_BURST_A31(x)	(DMA_CHAN_CFG_SRC_BURST_A31(x) << 16)
+@@ -125,6 +125,7 @@ struct sun6i_dma_config {
+ 	 */
+ 	void (*clock_autogate_enable)(struct sun6i_dma_dev *);
+ 	void (*set_burst_length)(u32 *p_cfg, s8 src_burst, s8 dst_burst);
++	void (*set_drq)(u32 *p_cfg, s8 src_drq, s8 dst_drq);
+ 	u32 src_burst_lengths;
  	u32 dst_burst_lengths;
  	u32 src_addr_widths;
- 	u32 dst_addr_widths;
-+	bool has_mbus_clk;
- };
+@@ -311,6 +312,12 @@ static void sun6i_set_burst_length_h3(u32 *p_cfg, s8 src_burst, s8 dst_burst)
+ 		  DMA_CHAN_CFG_DST_BURST_H3(dst_burst);
+ }
  
- /*
-@@ -182,6 +183,7 @@ struct sun6i_dma_dev {
- 	struct dma_device	slave;
- 	void __iomem		*base;
- 	struct clk		*clk;
-+	struct clk		*clk_mbus;
- 	int			irq;
- 	spinlock_t		lock;
- 	struct reset_control	*rstc;
-@@ -1208,6 +1210,14 @@ static int sun6i_dma_probe(struct platform_device *pdev)
- 		return PTR_ERR(sdc->clk);
- 	}
- 
-+	if (sdc->cfg->has_mbus_clk) {
-+		sdc->clk_mbus = devm_clk_get(&pdev->dev, "mbus");
-+		if (IS_ERR(sdc->clk_mbus)) {
-+			dev_err(&pdev->dev, "No mbus clock specified\n");
-+			return PTR_ERR(sdc->clk_mbus);
-+		}
-+	}
++static void sun6i_set_drq_a31(u32 *p_cfg, s8 src_drq, s8 dst_drq)
++{
++	*p_cfg |= DMA_CHAN_CFG_SRC_DRQ_A31(src_drq) |
++		  DMA_CHAN_CFG_DST_DRQ_A31(dst_drq);
++}
 +
- 	sdc->rstc = devm_reset_control_get(&pdev->dev, NULL);
- 	if (IS_ERR(sdc->rstc)) {
- 		dev_err(&pdev->dev, "No reset controller specified\n");
-@@ -1312,11 +1322,19 @@ static int sun6i_dma_probe(struct platform_device *pdev)
- 		goto err_reset_assert;
+ static size_t sun6i_get_chan_size(struct sun6i_pchan *pchan)
+ {
+ 	struct sun6i_desc *txd = pchan->desc;
+@@ -634,14 +641,13 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_dma_memcpy(
+ 
+ 	burst = convert_burst(8);
+ 	width = convert_buswidth(DMA_SLAVE_BUSWIDTH_4_BYTES);
+-	v_lli->cfg = DMA_CHAN_CFG_SRC_DRQ(DRQ_SDRAM) |
+-		DMA_CHAN_CFG_DST_DRQ(DRQ_SDRAM) |
+-		DMA_CHAN_CFG_DST_LINEAR_MODE |
++	v_lli->cfg = DMA_CHAN_CFG_DST_LINEAR_MODE |
+ 		DMA_CHAN_CFG_SRC_LINEAR_MODE |
+ 		DMA_CHAN_CFG_SRC_WIDTH(width) |
+ 		DMA_CHAN_CFG_DST_WIDTH(width);
+ 
+ 	sdev->cfg->set_burst_length(&v_lli->cfg, burst, burst);
++	sdev->cfg->set_drq(&v_lli->cfg, DRQ_SDRAM, DRQ_SDRAM);
+ 
+ 	sun6i_dma_lli_add(NULL, v_lli, p_lli, txd);
+ 
+@@ -695,9 +701,8 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_slave_sg(
+ 			v_lli->dst = sconfig->dst_addr;
+ 			v_lli->cfg = lli_cfg |
+ 				DMA_CHAN_CFG_DST_IO_MODE |
+-				DMA_CHAN_CFG_SRC_LINEAR_MODE |
+-				DMA_CHAN_CFG_SRC_DRQ(DRQ_SDRAM) |
+-				DMA_CHAN_CFG_DST_DRQ(vchan->port);
++				DMA_CHAN_CFG_SRC_LINEAR_MODE;
++			sdev->cfg->set_drq(&v_lli->cfg, DRQ_SDRAM, vchan->port);
+ 
+ 			dev_dbg(chan2dev(chan),
+ 				"%s; chan: %d, dest: %pad, src: %pad, len: %u. flags: 0x%08lx\n",
+@@ -710,9 +715,8 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_slave_sg(
+ 			v_lli->dst = sg_dma_address(sg);
+ 			v_lli->cfg = lli_cfg |
+ 				DMA_CHAN_CFG_DST_LINEAR_MODE |
+-				DMA_CHAN_CFG_SRC_IO_MODE |
+-				DMA_CHAN_CFG_DST_DRQ(DRQ_SDRAM) |
+-				DMA_CHAN_CFG_SRC_DRQ(vchan->port);
++				DMA_CHAN_CFG_SRC_IO_MODE;
++			sdev->cfg->set_drq(&v_lli->cfg, vchan->port, DRQ_SDRAM);
+ 
+ 			dev_dbg(chan2dev(chan),
+ 				"%s; chan: %d, dest: %pad, src: %pad, len: %u. flags: 0x%08lx\n",
+@@ -780,17 +784,15 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_dma_cyclic(
+ 			v_lli->dst = sconfig->dst_addr;
+ 			v_lli->cfg = lli_cfg |
+ 				DMA_CHAN_CFG_DST_IO_MODE |
+-				DMA_CHAN_CFG_SRC_LINEAR_MODE |
+-				DMA_CHAN_CFG_SRC_DRQ(DRQ_SDRAM) |
+-				DMA_CHAN_CFG_DST_DRQ(vchan->port);
++				DMA_CHAN_CFG_SRC_LINEAR_MODE;
++			sdev->cfg->set_drq(&v_lli->cfg, DRQ_SDRAM, vchan->port);
+ 		} else {
+ 			v_lli->src = sconfig->src_addr;
+ 			v_lli->dst = buf_addr + period_len * i;
+ 			v_lli->cfg = lli_cfg |
+ 				DMA_CHAN_CFG_DST_LINEAR_MODE |
+-				DMA_CHAN_CFG_SRC_IO_MODE |
+-				DMA_CHAN_CFG_DST_DRQ(DRQ_SDRAM) |
+-				DMA_CHAN_CFG_SRC_DRQ(vchan->port);
++				DMA_CHAN_CFG_SRC_IO_MODE;
++			sdev->cfg->set_drq(&v_lli->cfg, vchan->port, DRQ_SDRAM);
+ 		}
+ 
+ 		prev = sun6i_dma_lli_add(prev, v_lli, p_lli, txd);
+@@ -1055,6 +1057,7 @@ static struct sun6i_dma_config sun6i_a31_dma_cfg = {
+ 	.nr_max_requests = 30,
+ 	.nr_max_vchans   = 53,
+ 	.set_burst_length = sun6i_set_burst_length_a31,
++	.set_drq          = sun6i_set_drq_a31,
+ 	.src_burst_lengths = BIT(1) | BIT(8),
+ 	.dst_burst_lengths = BIT(1) | BIT(8),
+ 	.src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+@@ -1076,6 +1079,7 @@ static struct sun6i_dma_config sun8i_a23_dma_cfg = {
+ 	.nr_max_vchans   = 37,
+ 	.clock_autogate_enable = sun6i_enable_clock_autogate_a23,
+ 	.set_burst_length = sun6i_set_burst_length_a31,
++	.set_drq          = sun6i_set_drq_a31,
+ 	.src_burst_lengths = BIT(1) | BIT(8),
+ 	.dst_burst_lengths = BIT(1) | BIT(8),
+ 	.src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+@@ -1092,6 +1096,7 @@ static struct sun6i_dma_config sun8i_a83t_dma_cfg = {
+ 	.nr_max_vchans   = 39,
+ 	.clock_autogate_enable = sun6i_enable_clock_autogate_a23,
+ 	.set_burst_length = sun6i_set_burst_length_a31,
++	.set_drq          = sun6i_set_drq_a31,
+ 	.src_burst_lengths = BIT(1) | BIT(8),
+ 	.dst_burst_lengths = BIT(1) | BIT(8),
+ 	.src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+@@ -1115,6 +1120,7 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg = {
+ 	.nr_max_vchans   = 34,
+ 	.clock_autogate_enable = sun6i_enable_clock_autogate_h3,
+ 	.set_burst_length = sun6i_set_burst_length_h3,
++	.set_drq          = sun6i_set_drq_a31,
+ 	.src_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
+ 	.dst_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
+ 	.src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+@@ -1134,6 +1140,7 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg = {
+ static struct sun6i_dma_config sun50i_a64_dma_cfg = {
+ 	.clock_autogate_enable = sun6i_enable_clock_autogate_h3,
+ 	.set_burst_length = sun6i_set_burst_length_h3,
++	.set_drq          = sun6i_set_drq_a31,
+ 	.src_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
+ 	.dst_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
+ 	.src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+@@ -1157,6 +1164,7 @@ static struct sun6i_dma_config sun8i_v3s_dma_cfg = {
+ 	.nr_max_vchans   = 24,
+ 	.clock_autogate_enable = sun6i_enable_clock_autogate_a23,
+ 	.set_burst_length = sun6i_set_burst_length_a31,
++	.set_drq          = sun6i_set_drq_a31,
+ 	.src_burst_lengths = BIT(1) | BIT(8),
+ 	.dst_burst_lengths = BIT(1) | BIT(8),
+ 	.src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
+@@ -1272,8 +1280,8 @@ static int sun6i_dma_probe(struct platform_device *pdev)
+ 	ret = of_property_read_u32(np, "dma-requests", &sdc->max_request);
+ 	if (ret && !sdc->max_request) {
+ 		dev_info(&pdev->dev, "Missing dma-requests, using %u.\n",
+-			 DMA_CHAN_MAX_DRQ);
+-		sdc->max_request = DMA_CHAN_MAX_DRQ;
++			 DMA_CHAN_MAX_DRQ_A31);
++		sdc->max_request = DMA_CHAN_MAX_DRQ_A31;
  	}
  
-+	if (sdc->cfg->has_mbus_clk) {
-+		ret = clk_prepare_enable(sdc->clk_mbus);
-+		if (ret) {
-+			dev_err(&pdev->dev, "Couldn't enable mbus clock\n");
-+			goto err_clk_disable;
-+		}
-+	}
-+
- 	ret = devm_request_irq(&pdev->dev, sdc->irq, sun6i_dma_interrupt, 0,
- 			       dev_name(&pdev->dev), sdc);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Cannot request IRQ\n");
--		goto err_clk_disable;
-+		goto err_mbus_clk_disable;
- 	}
- 
- 	ret = dma_async_device_register(&sdc->slave);
-@@ -1341,6 +1359,8 @@ static int sun6i_dma_probe(struct platform_device *pdev)
- 	dma_async_device_unregister(&sdc->slave);
- err_irq_disable:
- 	sun6i_kill_tasklet(sdc);
-+err_mbus_clk_disable:
-+	clk_disable_unprepare(sdc->clk_mbus);
- err_clk_disable:
- 	clk_disable_unprepare(sdc->clk);
- err_reset_assert:
-@@ -1359,6 +1379,7 @@ static int sun6i_dma_remove(struct platform_device *pdev)
- 
- 	sun6i_kill_tasklet(sdc);
- 
-+	clk_disable_unprepare(sdc->clk_mbus);
- 	clk_disable_unprepare(sdc->clk);
- 	reset_control_assert(sdc->rstc);
- 
+ 	/*
 -- 
 2.20.1
 

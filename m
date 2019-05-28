@@ -2,124 +2,89 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E9D12C3A0
-	for <lists+dmaengine@lfdr.de>; Tue, 28 May 2019 11:55:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29A1D2C527
+	for <lists+dmaengine@lfdr.de>; Tue, 28 May 2019 13:10:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbfE1Jzo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 28 May 2019 05:55:44 -0400
-Received: from smtprelay0113.hostedemail.com ([216.40.44.113]:33841 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726203AbfE1Jzn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 May 2019 05:55:43 -0400
-X-Greylist: delayed 528 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 May 2019 05:55:43 EDT
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave02.hostedemail.com (Postfix) with ESMTP id AAA261803BAD8
-        for <dmaengine@vger.kernel.org>; Tue, 28 May 2019 09:46:56 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 2FF991803EF1F;
-        Tue, 28 May 2019 09:46:55 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 10,1,0,,d41d8cd98f00b204,joe@perches.com,:::::::::::,RULES_HIT:16:41:355:379:599:800:960:966:973:988:989:1042:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1542:1593:1594:1605:1711:1730:1747:1777:1792:2196:2199:2376:2393:2538:2553:2559:2562:2693:2734:2828:2904:2911:3138:3139:3140:3141:3142:3622:3865:3866:3867:3868:3870:3871:3872:3873:3874:4250:4321:4385:4425:5007:6117:6119:7576:7809:7882:7903:9010:9040:9149:9367:10004:10400:10450:10455:10848:11658:11914:12043:12555:12740:12760:12895:13095:13255:13439:14181:14345:14346:14347:14659:14721:19904:19999:21067:21080:21433:21627:30012:30014:30029:30030:30054:30056:30063:30064:30067:30070:30090:30091,0,RBL:23.242.196.136:@perches.com:.lbl8.mailshell.net-62.14.0.180 64.201.201.201,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:fn,MSBL:0,DNSBL:neutral,Custom_rules:0:0:0,LFtime:27,LUA_SUMMARY:none
-X-HE-Tag: mist72_7673f0578614e
-X-Filterd-Recvd-Size: 4027
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 28 May 2019 09:46:53 +0000 (UTC)
-Message-ID: <7bad367da73e07dca74941f80ed998590c6f14fb.camel@perches.com>
-Subject: Re: [EXT] Re: [V3 1/2] dmaengine: fsl-dpaa2-qdma: Add the
- DPDMAI(Data Path DMA Interface) support
-From:   Joe Perches <joe@perches.com>
-To:     Peng Ma <peng.ma@nxp.com>, Vinod Koul <vkoul@kernel.org>
-Cc:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Date:   Tue, 28 May 2019 02:46:52 -0700
-In-Reply-To: <VI1PR04MB44314E4B35FA0C7E850CD512ED1E0@VI1PR04MB4431.eurprd04.prod.outlook.com>
-References: <20190409072212.15860-1-peng.ma@nxp.com>
-         <20190426124550.GE28103@vkoul-mobl>
-         <VI1PR04MB44314E4B35FA0C7E850CD512ED1E0@VI1PR04MB4431.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726418AbfE1LKb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 28 May 2019 07:10:31 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:36235 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbfE1LKb (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 May 2019 07:10:31 -0400
+X-Originating-IP: 90.89.68.76
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id E67F8E0004;
+        Tue, 28 May 2019 11:10:24 +0000 (UTC)
+Date:   Tue, 28 May 2019 13:10:24 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/7] Allwinner H6 DMA support
+Message-ID: <20190528111024.gj25jh5vstizze74@flea>
+References: <20190527201459.20130-1-peron.clem@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="z7ek7mx2fjvua3lu"
+Content-Disposition: inline
+In-Reply-To: <20190527201459.20130-1-peron.clem@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, 2019-05-28 at 04:47 +0000, Peng Ma wrote:
-> -----Original Message-----
-> > From: Vinod Koul <vkoul@kernel.org>
-[]
-> > > diff --git a/drivers/dma/fsl-dpaa2-qdma/dpdmai.h
-> > > b/drivers/dma/fsl-dpaa2-qdma/dpdmai.h
-> > > new file mode 100644
-> > > index 0000000..c8a7b7f
-> > > --- /dev/null
-> > > +++ b/drivers/dma/fsl-dpaa2-qdma/dpdmai.h
-> > > @@ -0,0 +1,524 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > +/* Copyright 2014-2018 NXP */
-> > > +
-> > > +/*
-> > > + * Redistribution and use in source and binary forms, with or without
-> > > + * modification, are permitted provided that the following conditions are
-> > met:
-> > > + * * Redistributions of source code must retain the above copyright
-> > > + * notice, this list of conditions and the following disclaimer.
-> > > + * * Redistributions in binary form must reproduce the above
-> > > +copyright
-> > > + * notice, this list of conditions and the following disclaimer in
-> > > +the
-> > > + * documentation and/or other materials provided with the distribution.
-> > > + * * Neither the name of the above-listed copyright holders nor the
-> > > + * names of any contributors may be used to endorse or promote
-> > > +products
-> > > + * derived from this software without specific prior written permission.
-> > > + *
-> > > + *
-> > > + * ALTERNATIVELY, this software may be distributed under the terms of
-> > > +the
-> > > + * GNU General Public License ("GPL") as published by the Free
-> > > +Software
-> > > + * Foundation, either version 2 of that License or (at your option)
-> > > +any
-> > > + * later version.
-> > > + *
-> > > + * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
-> > CONTRIBUTORS "AS IS"
-> > > + * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-> > LIMITED
-> > > +TO, THE
-> > > + * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-> > PARTICULAR
-> > > +PURPOSE
-> > > + * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR
-> > > +CONTRIBUTORS BE
-> > > + * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
-> > > +OR
-> > > + * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-> > PROCUREMENT
-> > > +OF
-> > > + * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-> > > +BUSINESS
-> > > + * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-> > > +WHETHER IN
-> > > + * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-> > > +OTHERWISE)
-> > > + * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-> > > +ADVISED OF THE
-> > > + * POSSIBILITY OF SUCH DAMAGE.
-> > > + */
-> > 
-> > we have SiPDX tag, why do you need ths here!
-> > 
-> [Peng Ma] It is my mistake. I will fixe it.
 
-Please have your company review which licenses you are
-intending to use as the SPDX tag does not match the
-licenses shown in the text.
+--z7ek7mx2fjvua3lu
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, May 27, 2019 at 10:14:52PM +0200, Cl=E9ment P=E9ron wrote:
+> Hi,
+>
+> This series has been first proposed by Jernej Skrabec[1].
+> As this series is mandatory for SPDIF/I2S support and because he is
+> busy on Cedrus stuff. I asked him to make the minor change requested
+> and repost it.
+> Authorship remains to him.
+>
+> I have tested this series with SPDIF driver and added a patch to enable
+> DMA_SUN6I_CONFIG for arm64.
+>
+> Original Post:
+> "
+> DMA engine engine on H6 almost the same as on older SoCs. The biggest
+> difference is that it has slightly rearranged bits in registers and
+> it needs additional clock, probably due to iommu.
+>
+> These patches were tested with I2S connected to HDMI. I2S needs
+> additional patches which will be sent later.
 
+For the whole series,
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--z7ek7mx2fjvua3lu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXO0XIAAKCRDj7w1vZxhR
+xVR3AP9YbutRsxD9Y3rwfBC3bguX4JoBWqgLPRSKHszeGDW36QEA+LVEhKb99jvN
+catOGhDyeFdJdmT6r7eRLjjtMuPzCg8=
+=pe/c
+-----END PGP SIGNATURE-----
+
+--z7ek7mx2fjvua3lu--

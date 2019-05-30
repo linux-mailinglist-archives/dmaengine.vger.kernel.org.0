@@ -2,181 +2,118 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E6822F97D
-	for <lists+dmaengine@lfdr.de>; Thu, 30 May 2019 11:34:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADDA02FB5D
+	for <lists+dmaengine@lfdr.de>; Thu, 30 May 2019 14:01:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727308AbfE3JeZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 30 May 2019 05:34:25 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:6637 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726454AbfE3JeZ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 May 2019 05:34:25 -0400
-X-UUID: f5d7923273f442588693eb1f7c57bba2-20190530
-X-UUID: f5d7923273f442588693eb1f7c57bba2-20190530
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
-        (envelope-from <long.cheng@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 189638788; Thu, 30 May 2019 17:34:21 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs08n2.mediatek.inc
- (172.21.101.56) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 30 May
- 2019 17:34:17 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 30 May 2019 17:34:16 +0800
-Message-ID: <1559208856.14150.35.camel@mhfsdcap03>
-Subject: Re: [PATCH 2/2] serial: 8250-mtk: modify uart DMA rx
-From:   Long Cheng <long.cheng@mediatek.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Vinod Koul <vkoul@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Ryder Lee" <ryder.lee@mediatek.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        "Nicolas Boichat" <drinkcat@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        YT Shen <yt.shen@mediatek.com>,
-        Zhenbao Liu <zhenbao.liu@mediatek.com>,
-        Long Cheng <Long.cheng@mediatek.com>,
-        "Changqi Hu" <changqi.hu@mediatek.com>
-Date:   Thu, 30 May 2019 17:34:16 +0800
-In-Reply-To: <1558596909-14084-3-git-send-email-long.cheng@mediatek.com>
-References: <1558596909-14084-1-git-send-email-long.cheng@mediatek.com>
-         <1558596909-14084-3-git-send-email-long.cheng@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        id S1726997AbfE3MBl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 30 May 2019 08:01:41 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:16744 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727222AbfE3MBl (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 May 2019 08:01:41 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cefc6230000>; Thu, 30 May 2019 05:01:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 30 May 2019 05:01:39 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 30 May 2019 05:01:39 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 May
+ 2019 12:01:37 +0000
+Subject: Re: [PATCH v1] dmaengine: tegra-apb: Error out if DMA_PREP_INTERRUPT
+ flag is unset
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190529214355.15339-1-digetx@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <9b0e0d20-6386-a38a-1347-4264d249cb44@nvidia.com>
+Date:   Thu, 30 May 2019 13:01:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: B27139AB2F1BB9957CAE9332638E0C210155CD5265085DED026FD2DB4FE943502000:8
-X-MTK:  N
+In-Reply-To: <20190529214355.15339-1-digetx@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559217699; bh=reDR5M2JTDqXTNW7rZr6EEAnF0APcRZ8+YH4GK7K9dE=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=BliolhNRG2WTgLrf6H0GFf5HF31eruBgAHOZAX6toRT8oUBUTYu6t2Fn4HDHfFdJL
+         LfX4YVRxf9P8LarsHlwQS9BL9vEySKTUE81LAW36e3f7UXT/OFEoLN8tZa5Pkte1VX
+         svKBviaEQYzKQ7Q0QhVCnq8raycDlnkbj4OHBgwAFarfVJGU/UJcpulXgboES0XU9G
+         Yl0YwdNCoe23LPh20wdwQjwLTfpCOavYH5HQAFo0uZja1cGhBEX944JHQnaR8yl2WS
+         esnhAbT8t+EU6qnFfzkMhcNiHJ7DzU8SYuGbRGvAjF9NS7brdhMYGcK+Q2ZX9qs/Pn
+         6kYWF83dcrYhg==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, 2019-05-23 at 15:35 +0800, Long Cheng wrote:
 
-
-Hi Greg,
-
-Just a gentle ping!
-
-thanks.
-
-> Modify uart rx and complete for DMA
+On 29/05/2019 22:43, Dmitry Osipenko wrote:
+> Apparently driver was never tested with DMA_PREP_INTERRUPT flag being
+> unset since it completely disables interrupt handling instead of skipping
+> the callbacks invocations, hence putting channel into unusable state.
 > 
-> Signed-off-by: Long Cheng <long.cheng@mediatek.com>
+> The flag is always set by all of kernel drivers that use APB DMA, so let's
+> error out in otherwise case for consistency. It won't be difficult to
+> support that case properly if ever will be needed.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  drivers/tty/serial/8250/8250_mtk.c |   49 +++++++++++++++---------------------
->  1 file changed, 20 insertions(+), 29 deletions(-)
+>  drivers/dma/tegra20-apb-dma.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-> index 417c7c8..f470ded 100644
-> --- a/drivers/tty/serial/8250/8250_mtk.c
-> +++ b/drivers/tty/serial/8250/8250_mtk.c
-> @@ -47,7 +47,6 @@
->  #define MTK_UART_DMA_EN_RX	0x5
->  
->  #define MTK_UART_ESCAPE_CHAR	0x77	/* Escape char added under sw fc */
-> -#define MTK_UART_TX_SIZE	UART_XMIT_SIZE
->  #define MTK_UART_RX_SIZE	0x8000
->  #define MTK_UART_TX_TRIGGER	1
->  #define MTK_UART_RX_TRIGGER	MTK_UART_RX_SIZE
-> @@ -89,28 +88,30 @@ static void mtk8250_dma_rx_complete(void *param)
->  	struct mtk8250_data *data = up->port.private_data;
->  	struct tty_port *tty_port = &up->port.state->port;
->  	struct dma_tx_state state;
-> +	int copied, total, cnt;
->  	unsigned char *ptr;
-> -	int copied;
->  
-> -	dma_sync_single_for_cpu(dma->rxchan->device->dev, dma->rx_addr,
-> -				dma->rx_size, DMA_FROM_DEVICE);
-> +	if (data->rx_status == DMA_RX_SHUTDOWN)
-> +		return;
->  
->  	dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
-> +	total = dma->rx_size - state.residue;
-> +	cnt = total;
->  
-> -	if (data->rx_status == DMA_RX_SHUTDOWN)
-> -		return;
-> +	if ((data->rx_pos + cnt) > dma->rx_size)
-> +		cnt = dma->rx_size - data->rx_pos;
->  
-> -	if ((data->rx_pos + state.residue) <= dma->rx_size) {
-> -		ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
-> -		copied = tty_insert_flip_string(tty_port, ptr, state.residue);
-> -	} else {
-> -		ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
-> -		copied = tty_insert_flip_string(tty_port, ptr,
-> -						dma->rx_size - data->rx_pos);
-> +	ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
-> +	copied = tty_insert_flip_string(tty_port, ptr, cnt);
-> +	data->rx_pos += cnt;
-> +
-> +	if (total > cnt) {
->  		ptr = (unsigned char *)(dma->rx_buf);
-> -		copied += tty_insert_flip_string(tty_port, ptr,
-> -				data->rx_pos + state.residue - dma->rx_size);
-> +		cnt = total - cnt;
-> +		copied += tty_insert_flip_string(tty_port, ptr, cnt);
-> +		data->rx_pos = cnt;
+> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+> index cf462b1abc0b..2c84a660ba36 100644
+> --- a/drivers/dma/tegra20-apb-dma.c
+> +++ b/drivers/dma/tegra20-apb-dma.c
+> @@ -988,8 +988,12 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+>  		csr |= tdc->slave_id << TEGRA_APBDMA_CSR_REQ_SEL_SHIFT;
 >  	}
-> +
->  	up->port.icount.rx += copied;
 >  
->  	tty_flip_buffer_push(tty_port);
-> @@ -121,9 +122,7 @@ static void mtk8250_dma_rx_complete(void *param)
->  static void mtk8250_rx_dma(struct uart_8250_port *up)
->  {
->  	struct uart_8250_dma *dma = up->dma;
-> -	struct mtk8250_data *data = up->port.private_data;
->  	struct dma_async_tx_descriptor	*desc;
-> -	struct dma_tx_state	 state;
+> -	if (flags & DMA_PREP_INTERRUPT)
+> +	if (flags & DMA_PREP_INTERRUPT) {
+>  		csr |= TEGRA_APBDMA_CSR_IE_EOC;
+> +	} else {
+> +		WARN_ON_ONCE(1);
+> +		return NULL;
+> +	}
 >  
->  	desc = dmaengine_prep_slave_single(dma->rxchan, dma->rx_addr,
->  					   dma->rx_size, DMA_DEV_TO_MEM,
-> @@ -138,12 +137,6 @@ static void mtk8250_rx_dma(struct uart_8250_port *up)
+>  	apb_seq |= TEGRA_APBDMA_APBSEQ_WRAP_WORD_1;
 >  
->  	dma->rx_cookie = dmaengine_submit(desc);
+> @@ -1131,8 +1135,12 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
+>  		csr |= tdc->slave_id << TEGRA_APBDMA_CSR_REQ_SEL_SHIFT;
+>  	}
 >  
-> -	dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
-> -	data->rx_pos = state.residue;
-> -
-> -	dma_sync_single_for_device(dma->rxchan->device->dev, dma->rx_addr,
-> -				   dma->rx_size, DMA_FROM_DEVICE);
-> -
->  	dma_async_issue_pending(dma->rxchan);
->  }
+> -	if (flags & DMA_PREP_INTERRUPT)
+> +	if (flags & DMA_PREP_INTERRUPT) {
+>  		csr |= TEGRA_APBDMA_CSR_IE_EOC;
+> +	} else {
+> +		WARN_ON_ONCE(1);
+> +		return NULL;
+> +	}
 >  
-> @@ -156,13 +149,11 @@ static void mtk8250_dma_enable(struct uart_8250_port *up)
->  	if (data->rx_status != DMA_RX_START)
->  		return;
->  
-> -	dma->rxconf.direction		= DMA_DEV_TO_MEM;
-> -	dma->rxconf.src_addr_width	= dma->rx_size / 1024;
-> -	dma->rxconf.src_addr		= dma->rx_addr;
-> +	dma->rxconf.src_port_window_size	= dma->rx_size;
-> +	dma->rxconf.src_addr				= dma->rx_addr;
->  
-> -	dma->txconf.direction		= DMA_MEM_TO_DEV;
-> -	dma->txconf.dst_addr_width	= MTK_UART_TX_SIZE / 1024;
-> -	dma->txconf.dst_addr		= dma->tx_addr;
-> +	dma->txconf.dst_port_window_size	= UART_XMIT_SIZE;
-> +	dma->txconf.dst_addr				= dma->tx_addr;
->  
->  	serial_out(up, UART_FCR, UART_FCR_ENABLE_FIFO | UART_FCR_CLEAR_RCVR |
->  		UART_FCR_CLEAR_XMIT);
+>  	apb_seq |= TEGRA_APBDMA_APBSEQ_WRAP_WORD_1;
 
+Looks good to me.
 
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+
+Cheers
+Jon
+
+-- 
+nvpublic

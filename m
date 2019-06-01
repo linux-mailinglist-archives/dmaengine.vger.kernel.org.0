@@ -2,182 +2,175 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B2090308FF
-	for <lists+dmaengine@lfdr.de>; Fri, 31 May 2019 08:54:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40A6F31D3E
+	for <lists+dmaengine@lfdr.de>; Sat,  1 Jun 2019 15:28:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbfEaGyi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 31 May 2019 02:54:38 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:57592 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfEaGyi (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 31 May 2019 02:54:38 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4V6sXeg039281;
-        Fri, 31 May 2019 01:54:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559285673;
-        bh=wRQp2M54tUhuWEPyCQSMut5DjcC3GG72jXA6pfR+P9w=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=Ur6ceeWyVDSqmAlF9OjCgPy+WDRnnJdTMGvSpzvtIsrRNNJbRUjbIc+3aZ2zsZQsE
-         BS6rXo9CkSol3NgY3pp2t2TttOs61+PG+GIdYsi5nyxot1d5Oq2rdMcEdd3WHxudzU
-         h6tfH54OASo67fmjWcbTOY6Z5QAg2FjsOpCcsA4k=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4V6sXM4052280
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 31 May 2019 01:54:33 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 31
- May 2019 01:54:33 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 31 May 2019 01:54:33 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4V6sWBT084231;
-        Fri, 31 May 2019 01:54:32 -0500
-Subject: Re: [PATCH] dmaengine: dmatest: Add support for completion polling
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <andriy.shevchenko@linux.intel.com>
-References: <20190529083724.18182-1-peter.ujfalusi@ti.com>
-Message-ID: <4f327f4a-9e3d-c9d2-fe48-14e492b07417@ti.com>
-Date:   Fri, 31 May 2019 09:54:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1729981AbfFAN1f (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 1 Jun 2019 09:27:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729971AbfFAN1e (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sat, 1 Jun 2019 09:27:34 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55E3C2682F;
+        Sat,  1 Jun 2019 13:27:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559395653;
+        bh=r/7vLAlkRTjytkbN+7T/W1FSg0HRxAQTCVp6B0goSd8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=p30agdJsj5BWsqGhEQF1UidwlB0Qxi4NWZVnV7bNwp3vD4U5M8fn28M8swa5RCfCO
+         e39whttQc7mCoc3puxtsMuEcw53gsy/QpjxQn9OQ4lnNfvLyCGdEjaNn2rCHLqOn5J
+         xlYpYzaBQ/f7m+PNTztiVDEfRObKMYvXLQTyRb0Y=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 52/56] dmaengine: idma64: Use actual device for DMA transfers
+Date:   Sat,  1 Jun 2019 09:25:56 -0400
+Message-Id: <20190601132600.27427-52-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190601132600.27427-1-sashal@kernel.org>
+References: <20190601132600.27427-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190529083724.18182-1-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On 29/05/2019 11.37, Peter Ujfalusi wrote:
-> With the polled parameter the DMA drivers can be tested if they can work
-> correctly when no completion is requested (no DMA_PREP_INTERRUPT and no
-> callback is provided).
-> 
-> If polled mode is selected then use dma_sync_wait() to execute the test
-> iteration instead of relying on the completion callback.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  drivers/dma/dmatest.c | 35 ++++++++++++++++++++++++++++-------
->  1 file changed, 28 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-> index b96814a7dceb..088086d041e9 100644
-> --- a/drivers/dma/dmatest.c
-> +++ b/drivers/dma/dmatest.c
-> @@ -75,6 +75,10 @@ static bool norandom;
->  module_param(norandom, bool, 0644);
->  MODULE_PARM_DESC(norandom, "Disable random offset setup (default: random)");
->  
-> +static bool polled;
-> +module_param(polled, bool, S_IRUGO | S_IWUSR);
-> +MODULE_PARM_DESC(polled, "Use polling for completion instead of interrupts");
-> +
->  static bool verbose;
->  module_param(verbose, bool, S_IRUGO | S_IWUSR);
->  MODULE_PARM_DESC(verbose, "Enable \"success\" result messages (default: off)");
-> @@ -113,6 +117,7 @@ struct dmatest_params {
->  	bool		norandom;
->  	int		alignment;
->  	unsigned int	transfer_size;
-> +	bool		polled;
->  };
->  
->  /**
-> @@ -654,7 +659,10 @@ static int dmatest_func(void *data)
->  	/*
->  	 * src and dst buffers are freed by ourselves below
->  	 */
-> -	flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-> +	if (params->polled)
-> +		flags = DMA_CTRL_ACK;
-> +	else
-> +		flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
->  
->  	ktime = ktime_get();
->  	while (!kthread_should_stop()
-> @@ -783,8 +791,10 @@ static int dmatest_func(void *data)
->  		}
->  
->  		done->done = false;
-> -		tx->callback = dmatest_callback;
-> -		tx->callback_param = done;
-> +		if (!params->polled) {
-> +			tx->callback = dmatest_callback;
-> +			tx->callback_param = done;
-> +		}
->  		cookie = tx->tx_submit(tx);
->  
->  		if (dma_submit_error(cookie)) {
-> @@ -793,12 +803,22 @@ static int dmatest_func(void *data)
->  			msleep(100);
->  			goto error_unmap_continue;
->  		}
-> -		dma_async_issue_pending(chan);
->  
-> -		wait_event_freezable_timeout(thread->done_wait, done->done,
-> -					     msecs_to_jiffies(params->timeout));
-> +		if (params->polled) {
-> +			status = dma_sync_wait(chan, cookie);
-> +			dmaengine_terminate_sync(chan);
-> +			if (status == DMA_COMPLETE)
-> +				done->done = true;
+[ Upstream commit 5ba846b1ee0792f5a596b9b0b86d6e8cdebfab06 ]
 
-I think the main question is how polling for completion should be
-handled when client does not request for completion interrupt, thus we
-will have no callback in the DMA driver when the transfer is completed.
+Intel IOMMU, when enabled, tries to find the domain of the device,
+assuming it's a PCI one, during DMA operations, such as mapping or
+unmapping. Since we are splitting the actual PCI device to couple of
+children via MFD framework (see drivers/mfd/intel-lpss.c for details),
+the DMA device appears to be a platform one, and thus not an actual one
+that performs DMA. In a such situation IOMMU can't find or allocate
+a proper domain for its operations. As a result, all DMA operations are
+failed.
 
-If DMA_PREP_INTERRUPT is set for the tx_descriptor then the polling will
-wait until the DMA driver internally receives the interrupt that the
-transfer is done and sets the cookie to completed state.
+In order to fix this, supply parent of the platform device
+to the DMA engine framework and fix filter functions accordingly.
 
-However if DMA_PREP_INTERRUPT is not set, the DMA driver will not get
-notification from the HW that is the transfer is done, the only way to
-know is to check the tx_status and based on the residue (if it is 0 then
-it is done) decide what to tell the client.
+We may rely on the fact that parent is a real PCI device, because no
+other configuration is present in the wild.
 
-Should the client call dmaengine_terminate_* after the polling returned
-unconditionally to free up the descriptor?
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Mark Brown <broonie@kernel.org>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org> [for tty parts]
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/dma/idma64.c              | 6 ++++--
+ drivers/dma/idma64.h              | 2 ++
+ drivers/spi/spi-pxa2xx.c          | 7 +------
+ drivers/tty/serial/8250/8250_dw.c | 4 ++--
+ 4 files changed, 9 insertions(+), 10 deletions(-)
 
-Or client should only call dmaengine_terminate_* in case the polling
-returned with !DMA_COMPLETE and the DMA driver must clean things up
-before returning if the transfer is completed (residue == 0)?
+diff --git a/drivers/dma/idma64.c b/drivers/dma/idma64.c
+index 7d56b47e4fcfd..25e25b64bc89d 100644
+--- a/drivers/dma/idma64.c
++++ b/drivers/dma/idma64.c
+@@ -594,7 +594,7 @@ static int idma64_probe(struct idma64_chip *chip)
+ 	idma64->dma.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+ 	idma64->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+ 
+-	idma64->dma.dev = chip->dev;
++	idma64->dma.dev = chip->sysdev;
+ 
+ 	ret = dma_async_device_register(&idma64->dma);
+ 	if (ret)
+@@ -632,6 +632,7 @@ static int idma64_platform_probe(struct platform_device *pdev)
+ {
+ 	struct idma64_chip *chip;
+ 	struct device *dev = &pdev->dev;
++	struct device *sysdev = dev->parent;
+ 	struct resource *mem;
+ 	int ret;
+ 
+@@ -648,11 +649,12 @@ static int idma64_platform_probe(struct platform_device *pdev)
+ 	if (IS_ERR(chip->regs))
+ 		return PTR_ERR(chip->regs);
+ 
+-	ret = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
++	ret = dma_coerce_mask_and_coherent(sysdev, DMA_BIT_MASK(64));
+ 	if (ret)
+ 		return ret;
+ 
+ 	chip->dev = dev;
++	chip->sysdev = sysdev;
+ 
+ 	ret = idma64_probe(chip);
+ 	if (ret)
+diff --git a/drivers/dma/idma64.h b/drivers/dma/idma64.h
+index f6aeff0af8a52..e40c69bd1fb52 100644
+--- a/drivers/dma/idma64.h
++++ b/drivers/dma/idma64.h
+@@ -215,12 +215,14 @@ static inline void idma64_writel(struct idma64 *idma64, int offset, u32 value)
+ /**
+  * struct idma64_chip - representation of iDMA 64-bit controller hardware
+  * @dev:		struct device of the DMA controller
++ * @sysdev:		struct device of the physical device that does DMA
+  * @irq:		irq line
+  * @regs:		memory mapped I/O space
+  * @idma64:		struct idma64 that is filed by idma64_probe()
+  */
+ struct idma64_chip {
+ 	struct device	*dev;
++	struct device	*sysdev;
+ 	int		irq;
+ 	void __iomem	*regs;
+ 	struct idma64	*idma64;
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index 3cac73e4c3e4a..29c0c135fa6f9 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1367,12 +1367,7 @@ static const struct pci_device_id pxa2xx_spi_pci_compound_match[] = {
+ 
+ static bool pxa2xx_spi_idma_filter(struct dma_chan *chan, void *param)
+ {
+-	struct device *dev = param;
+-
+-	if (dev != chan->device->dev->parent)
+-		return false;
+-
+-	return true;
++	return param == chan->device->dev;
+ }
+ 
+ static struct pxa2xx_spi_master *
+diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
+index a30d68c4b6897..039837db65fcc 100644
+--- a/drivers/tty/serial/8250/8250_dw.c
++++ b/drivers/tty/serial/8250/8250_dw.c
+@@ -258,7 +258,7 @@ static bool dw8250_fallback_dma_filter(struct dma_chan *chan, void *param)
+ 
+ static bool dw8250_idma_filter(struct dma_chan *chan, void *param)
+ {
+-	return param == chan->device->dev->parent;
++	return param == chan->device->dev;
+ }
+ 
+ static void dw8250_quirks(struct uart_port *p, struct dw8250_data *data)
+@@ -290,7 +290,7 @@ static void dw8250_quirks(struct uart_port *p, struct dw8250_data *data)
+ 		data->uart_16550_compatible = true;
+ 	}
+ 
+-	/* Platforms with iDMA */
++	/* Platforms with iDMA 64-bit */
+ 	if (platform_get_resource_byname(to_platform_device(p->dev),
+ 					 IORESOURCE_MEM, "lpss_priv")) {
+ 		p->set_termios = dw8250_set_termios;
+-- 
+2.20.1
 
-> +		} else {
-> +			dma_async_issue_pending(chan);
-> +
-> +			wait_event_freezable_timeout(thread->done_wait,
-> +					done->done,
-> +					msecs_to_jiffies(params->timeout));
->  
-> -		status = dma_async_is_tx_complete(chan, cookie, NULL, NULL);
-> +			status = dma_async_is_tx_complete(chan, cookie, NULL,
-> +							  NULL);
-> +		}
->  
->  		if (!done->done) {
->  			result("test timed out", total_tests, src->off, dst->off,
-> @@ -1068,6 +1088,7 @@ static void add_threaded_test(struct dmatest_info *info)
->  	params->norandom = norandom;
->  	params->alignment = alignment;
->  	params->transfer_size = transfer_size;
-> +	params->polled = polled;
->  
->  	request_channels(info, DMA_MEMCPY);
->  	request_channels(info, DMA_MEMSET);
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

@@ -2,81 +2,142 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E9E493464C
-	for <lists+dmaengine@lfdr.de>; Tue,  4 Jun 2019 14:10:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFAD634661
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Jun 2019 14:17:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbfFDMKl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 4 Jun 2019 08:10:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40368 "EHLO mail.kernel.org"
+        id S1726994AbfFDMRd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 4 Jun 2019 08:17:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726847AbfFDMKl (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 4 Jun 2019 08:10:41 -0400
+        id S1727358AbfFDMRd (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 4 Jun 2019 08:17:33 -0400
 Received: from localhost (unknown [117.99.94.117])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 328D124A02;
-        Tue,  4 Jun 2019 12:10:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80684244BD;
+        Tue,  4 Jun 2019 12:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559650240;
-        bh=bx10crper5s5AYw/kBlidhtOiBbuZXbSa+8Uxao2YZU=;
+        s=default; t=1559650652;
+        bh=bxcstRLwU2OCrbdzc+Fn7SYXXr3erA6vCBguUl4JiOA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=afx9V+aIVbqwBiSR3kTsnxskJZ0D90hjgaW18j81v/vZ4eO0q+t2nn+PZULSBPNY8
-         uG54BzSzpIvaKaQLY2ld2MzeMbjT4O+JwmcVfJW56c3YEZVkuvsczGGlkG+BwVFgKO
-         7YimuA7USP+Hp1SruKbCgzO8FFSIY0WZD+je0MrE=
-Date:   Tue, 4 Jun 2019 17:37:33 +0530
+        b=JSYcVN/j7CL89lKu4Tu8gOiZB0I0mEyU0UEyj4t4sZvDxTHvxr+v4PyDhv0qZDBXC
+         1FkCBlmyGwnunWIQvBS0Oc/+F70Ob3hLItc5b9/aYsgUo3DFHKLbk50OzshVStSTUM
+         VSAG9SSHyqzyN9gy86ya6PVtaQe5ZvytefP5C51c=
+Date:   Tue, 4 Jun 2019 17:44:24 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Peng Ma <peng.ma@nxp.com>
-Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [V3 2/2] dmaengine: fsl-qdma: Add improvement
-Message-ID: <20190604120733.GV15118@vkoul-mobl>
-References: <20190522032103.13713-1-peng.ma@nxp.com>
- <20190522032103.13713-2-peng.ma@nxp.com>
+To:     Dinh Nguyen <dinguyen@kernel.org>
+Cc:     dmaengine@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] dmagengine: pl330: add code to get reset property
+Message-ID: <20190604121424.GW15118@vkoul-mobl>
+References: <20190524002847.30961-1-dinguyen@kernel.org>
+ <20190524002847.30961-2-dinguyen@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190522032103.13713-2-peng.ma@nxp.com>
+In-Reply-To: <20190524002847.30961-2-dinguyen@kernel.org>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 22-05-19, 03:21, Peng Ma wrote:
-> When an error occurs we should clean the error register then to return
-
-The patch title is supposed to tell us about the change. "Add
-improvement: is a very generic term!
-
-I have change title to "Continue to clear register on error" and applied
-
+On 23-05-19, 19:28, Dinh Nguyen wrote:
+> The DMA controller on some SoCs can be held in reset, and thus requires
+> the reset signal(s) to deasserted. Most SoCs will have just one reset
+> signal, but there are others, i.e. Arria10/Stratix10 will have an
+> additional reset signal, referred to as the OCP.
 > 
-> Signed-off-by: Peng Ma <peng.ma@nxp.com>
+> Add code to get the reset property from the device tree for deassert and
+> assert.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 > ---
-> changed for V3:
-> 	- no changed.
+>  drivers/dma/pl330.c | 38 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
 > 
->  drivers/dma/fsl-qdma.c |    4 +---
->  1 files changed, 1 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
-> index da8fdf5..8e341c0 100644
-> --- a/drivers/dma/fsl-qdma.c
-> +++ b/drivers/dma/fsl-qdma.c
-> @@ -703,10 +703,8 @@ static irqreturn_t fsl_qdma_error_handler(int irq, void *dev_id)
+> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+> index 6e6837214210..6018c43e785d 100644
+> --- a/drivers/dma/pl330.c
+> +++ b/drivers/dma/pl330.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/err.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/bug.h>
+> +#include <linux/reset.h>
 >  
->  	intr = qdma_readl(fsl_qdma, status + FSL_QDMA_DEDR);
+>  #include "dmaengine.h"
+>  #define PL330_MAX_CHAN		8
+> @@ -500,6 +501,9 @@ struct pl330_dmac {
+>  	unsigned int num_peripherals;
+>  	struct dma_pl330_chan *peripherals; /* keep at end */
+>  	int quirks;
+> +
+> +	struct reset_control	*rstc;
+> +	struct reset_control	*rstc_ocp;
+>  };
 >  
-> -	if (intr) {
-> +	if (intr)
->  		dev_err(fsl_qdma->dma_dev.dev, "DMA transaction error!\n");
-> -		return IRQ_NONE;
-> -	}
+>  static struct pl330_of_quirks {
+> @@ -3028,6 +3032,30 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
 >  
->  	qdma_writel(fsl_qdma, FSL_QDMA_DEDR_CLEAR, status + FSL_QDMA_DEDR);
->  	return IRQ_HANDLED;
+>  	amba_set_drvdata(adev, pl330);
+>  
+> +	pl330->rstc = devm_reset_control_get_optional(&adev->dev, "dma");
+> +	if (IS_ERR(pl330->rstc)) {
+> +		dev_err(&adev->dev, "No reset controller specified.\n");
+
+Wasnt this optional??
+
+> +		return PTR_ERR(pl330->rstc);
+> +	} else {
+> +		ret = reset_control_deassert(pl330->rstc);
+> +		if (ret) {
+> +			dev_err(&adev->dev, "Couldn't deassert the device from reset!\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	pl330->rstc_ocp = devm_reset_control_get_optional(&adev->dev, "dma-ocp");
+> +	if (IS_ERR(pl330->rstc_ocp)) {
+> +		dev_err(&adev->dev, "No reset controller specified.\n");
+> +		return PTR_ERR(pl330->rstc_ocp);
+> +	} else {
+> +		ret = reset_control_deassert(pl330->rstc_ocp);
+> +		if (ret) {
+> +			dev_err(&adev->dev, "Couldn't deassert the device from OCP reset!\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	for (i = 0; i < AMBA_NR_IRQS; i++) {
+>  		irq = adev->irq[i];
+>  		if (irq) {
+> @@ -3168,6 +3196,11 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+>  probe_err2:
+>  	pl330_del(pl330);
+>  
+> +	if (pl330->rstc_ocp)
+> +		reset_control_assert(pl330->rstc_ocp);
+> +
+> +	if (pl330->rstc)
+> +		reset_control_assert(pl330->rstc);
+>  	return ret;
+>  }
+>  
+> @@ -3206,6 +3239,11 @@ static int pl330_remove(struct amba_device *adev)
+>  
+>  	pl330_del(pl330);
+>  
+> +	if (pl330->rstc_ocp)
+> +		reset_control_assert(pl330->rstc_ocp);
+> +
+> +	if (pl330->rstc)
+> +		reset_control_assert(pl330->rstc);
+>  	return 0;
+>  }
+>  
 > -- 
-> 1.7.1
+> 2.20.0
 
 -- 
 ~Vinod

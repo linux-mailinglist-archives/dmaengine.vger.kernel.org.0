@@ -2,78 +2,103 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B6A03473D
-	for <lists+dmaengine@lfdr.de>; Tue,  4 Jun 2019 14:48:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E600A348A4
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Jun 2019 15:29:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbfFDMsf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 4 Jun 2019 08:48:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55240 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726994AbfFDMsf (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 4 Jun 2019 08:48:35 -0400
-Received: from localhost (unknown [117.99.94.117])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727519AbfFDN3c (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 4 Jun 2019 09:29:32 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:53124 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727470AbfFDN3b (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Jun 2019 09:29:31 -0400
+Received: from mailhost.synopsys.com (unknown [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6303A2499E;
-        Tue,  4 Jun 2019 12:48:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559652515;
-        bh=8KWzU9bIvXCC37RanxpEhq9LZPTGbh7hPuzTjcqHB8E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B+2Q0Hcayic6UOdY9Jmsi3LIbjIM5UmxNQ2iYsqTOG9NZ6Sxff+kfQzrx8/Rg2Ku6
-         s0N0VhEdmydgEHrbyULBtatyqbg4EqwSH1vmv8jZCrU3sLeo/1N1IFEDC9XAzpS5kQ
-         pRGeCDyoU7UsSdDmPIcvgRMv0h6Ey04AqWLp+eVI=
-Date:   Tue, 4 Jun 2019 18:15:27 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com
-Subject: Re: [PATCH] dmaengine: dmatest: Add support for completion polling
-Message-ID: <20190604124527.GG15118@vkoul-mobl>
-References: <20190529083724.18182-1-peter.ujfalusi@ti.com>
- <4f327f4a-9e3d-c9d2-fe48-14e492b07417@ti.com>
- <793f9f48-0609-4aa5-2688-bf30525e229c@ti.com>
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id E8AA0C1E9B;
+        Tue,  4 Jun 2019 13:29:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1559654981; bh=tJ5U5V5ukKoh37DG0nUj49vWOPDvxzuXMRZdBJAy5Lw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Af8cLjj9mV9A0c0VDl9mdEMudOGWMGPlHTJzNT4v3LVGv3gU9Eeu2xQcrkSsBy+W/
+         nOU0hdOhvvXZ/3KF3GVywh/7XVE8rLfqjuBF0QSDdeImfmQ/tKvIhDnpV5z5MCQKIE
+         GTFxyVNgCr9GYe+p0dXysNXTRhu5N6kD6MrgNzykgeQzZLFUhi2hkbrWbSbRk3cgU7
+         aB0ePY405tzUY5MWSh4Ar5jDTzC+rja+4Ssw4LCtBa2Q+HuBFQMH4KbWpdZF+7kw/P
+         +TyYf6f9xmDUXuvhEO4zO1zb2LwxL1Tt1i+Aht/rqwALaa/46J1SbsVVNY2rd68fgj
+         qo5ASBryUHOPw==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 326F2A0234;
+        Tue,  4 Jun 2019 13:29:28 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id D609D3FAC7;
+        Tue,  4 Jun 2019 15:29:28 +0200 (CEST)
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     linux-pci@vger.kernel.org, dmaengine@vger.kernel.org
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Subject: [PATCH v2 0/6] dmaengine: Add Synopsys eDMA IP driver (version 0)
+Date:   Tue,  4 Jun 2019 15:29:21 +0200
+Message-Id: <cover.1559654565.git.gustavo.pimentel@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <793f9f48-0609-4aa5-2688-bf30525e229c@ti.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 03-06-19, 10:05, Peter Ujfalusi wrote:
+Add Synopsys eDMA IP driver (version 0 and for EP side only) to Linux
+kernel. This IP is generally distributed with Synopsys PCIe EndPoint IP
+(depends of the use and licensing agreement), which supports:
+ - legacy and unroll modes
+ - 16 independent and concurrent channels (8 write + 8 read)
+ - supports linked list (scatter-gather) transfer
+ - each linked list descriptor can transfer from 1 byte to 4 Gbytes
+ - supports cyclic transfer
+ - PCIe EndPoint glue-logic
 
-> > I think the main question is how polling for completion should be
-> > handled when client does not request for completion interrupt, thus we
-> > will have no callback in the DMA driver when the transfer is completed.
-> > 
-> > If DMA_PREP_INTERRUPT is set for the tx_descriptor then the polling will
-> > wait until the DMA driver internally receives the interrupt that the
-> > transfer is done and sets the cookie to completed state.
-> > 
-> > However if DMA_PREP_INTERRUPT is not set, the DMA driver will not get
-> > notification from the HW that is the transfer is done, the only way to
-> > know is to check the tx_status and based on the residue (if it is 0 then
-> > it is done) decide what to tell the client.
-> > 
-> > Should the client call dmaengine_terminate_* after the polling returned
-> > unconditionally to free up the descriptor?
-> 
-> This is how omap-dma is handling the polled memcpy support.
+This patch series contains:
+ - eDMA core + eDMA core v0 driver (implements the interface with
+ DMAengine controller APIs and interfaces with eDMA HW block)
+ - eDMA PCIe glue-logic reference driver (attaches to Synopsys EP and
+ provides memory access to eDMA core driver)
 
-Yes that is a good question. Even if the client does not set
-DMA_PREP_INTERRUPT would there be no interrupt generated by controller
-on txn completion? If not how will next txn be submitted to the
-hardware.
+Gustavo Pimentel (6):
+  dmaengine: Add Synopsys eDMA IP core driver
+  dmaengine: Add Synopsys eDMA IP version 0 support
+  dmaengine: Add Synopsys eDMA IP version 0 debugfs support
+  PCI: Add Synopsys endpoint EDDA Device ID
+  dmaengine: Add Synopsys eDMA IP PCIe glue-logic
+  MAINTAINERS: Add Synopsys eDMA IP driver maintainer
 
-I think we should view DMA_PREP_INTERRUPT from client pov, but
-controller cannot get away with disabling interrupts IMO.
-
-Assuming I had enough caffeine before I thought process, then client would
-poll descriptor status using cookie and should free up once the cookie
-is freed, makes sense?
+ MAINTAINERS                              |   7 +
+ drivers/dma/Kconfig                      |   2 +
+ drivers/dma/Makefile                     |   1 +
+ drivers/dma/dw-edma/Kconfig              |  18 +
+ drivers/dma/dw-edma/Makefile             |   7 +
+ drivers/dma/dw-edma/dw-edma-core.c       | 937 +++++++++++++++++++++++++++++++
+ drivers/dma/dw-edma/dw-edma-core.h       | 165 ++++++
+ drivers/dma/dw-edma/dw-edma-pcie.c       | 229 ++++++++
+ drivers/dma/dw-edma/dw-edma-v0-core.c    | 354 ++++++++++++
+ drivers/dma/dw-edma/dw-edma-v0-core.h    |  28 +
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 310 ++++++++++
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.h |  27 +
+ drivers/dma/dw-edma/dw-edma-v0-regs.h    | 158 ++++++
+ drivers/misc/pci_endpoint_test.c         |   2 +-
+ include/linux/dma/edma.h                 |  47 ++
+ include/linux/pci_ids.h                  |   1 +
+ 16 files changed, 2292 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/dma/dw-edma/Kconfig
+ create mode 100644 drivers/dma/dw-edma/Makefile
+ create mode 100644 drivers/dma/dw-edma/dw-edma-core.c
+ create mode 100644 drivers/dma/dw-edma/dw-edma-core.h
+ create mode 100644 drivers/dma/dw-edma/dw-edma-pcie.c
+ create mode 100644 drivers/dma/dw-edma/dw-edma-v0-core.c
+ create mode 100644 drivers/dma/dw-edma/dw-edma-v0-core.h
+ create mode 100644 drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+ create mode 100644 drivers/dma/dw-edma/dw-edma-v0-debugfs.h
+ create mode 100644 drivers/dma/dw-edma/dw-edma-v0-regs.h
+ create mode 100644 include/linux/dma/edma.h
 
 -- 
-~Vinod
+2.7.4
+

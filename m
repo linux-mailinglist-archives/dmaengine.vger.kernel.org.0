@@ -2,124 +2,144 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B637D348F2
-	for <lists+dmaengine@lfdr.de>; Tue,  4 Jun 2019 15:35:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E612D34A39
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Jun 2019 16:21:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbfFDNfa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 4 Jun 2019 09:35:30 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:37506 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727348AbfFDNf3 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Jun 2019 09:35:29 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x54DZQj0096702;
-        Tue, 4 Jun 2019 08:35:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559655326;
-        bh=I1f1/nc3GTK/87eQxsgEh380nkUJssWDCrGg4XMrrM4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=w/TKMaHXarZvMAncPLLwTs5X4M0xd7I22gHdNu8Rz3KbfF5Hz/L1OP+yvRcJUkx91
-         jVROi5rOhcYFb3LTXrJ5c7O9nt6kWLtStvyo4xefevpIfz89Y8WsCGNCOgZX1QRCJK
-         DBFZK//OGFT/llpxX7v2zJOrjW/qju++doIB7Kio=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x54DZQl8029514
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Jun 2019 08:35:26 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 4 Jun
- 2019 08:35:25 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 4 Jun 2019 08:35:25 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x54DZO6W024117;
-        Tue, 4 Jun 2019 08:35:24 -0500
-Subject: Re: [PATCH] dmaengine: dmatest: Add support for completion polling
+        id S1727838AbfFDOVO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 4 Jun 2019 10:21:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33854 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727169AbfFDOVN (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 4 Jun 2019 10:21:13 -0400
+Received: from [192.168.1.13] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2915A2473C;
+        Tue,  4 Jun 2019 14:21:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559658072;
+        bh=k6KGD+Nz2j6e89QjMGA81mOPcxDgaj9o0GUoQHFfdfs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Jm0iF2zGHHlUMgMpCdUp7i7seFJqXn5RjMuFjHoLGJZHm7jad3yI+3dZJB9dkGYGa
+         +TAUKAZK2doC2vrsygYEtLAqG1jnVj+Ae0gd9Iv4ceVAWREj2zHLJmma6NZMTKSdSe
+         kT4A6B+7L86EnuS1q9sSk0b/Y/84jVqK9BQu35jU=
+Subject: Re: [PATCH 2/2] dmagengine: pl330: add code to get reset property
 To:     Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <andriy.shevchenko@linux.intel.com>
-References: <20190529083724.18182-1-peter.ujfalusi@ti.com>
- <4f327f4a-9e3d-c9d2-fe48-14e492b07417@ti.com>
- <793f9f48-0609-4aa5-2688-bf30525e229c@ti.com>
- <20190604124527.GG15118@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <0e909b8a-8296-7c6a-058a-3fc780d66195@ti.com>
-Date:   Tue, 4 Jun 2019 16:35:51 +0300
+Cc:     dmaengine@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org
+References: <20190524002847.30961-1-dinguyen@kernel.org>
+ <20190524002847.30961-2-dinguyen@kernel.org>
+ <20190604121424.GW15118@vkoul-mobl>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <1dd97825-f6a2-7a1b-33ef-e28e00cc8506@kernel.org>
+Date:   Tue, 4 Jun 2019 09:21:11 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190604124527.GG15118@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190604121424.GW15118@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi Vinod,
 
-
-On 04/06/2019 15.45, Vinod Koul wrote:
-> On 03-06-19, 10:05, Peter Ujfalusi wrote:
-> 
->>> I think the main question is how polling for completion should be
->>> handled when client does not request for completion interrupt, thus we
->>> will have no callback in the DMA driver when the transfer is completed.
->>>
->>> If DMA_PREP_INTERRUPT is set for the tx_descriptor then the polling will
->>> wait until the DMA driver internally receives the interrupt that the
->>> transfer is done and sets the cookie to completed state.
->>>
->>> However if DMA_PREP_INTERRUPT is not set, the DMA driver will not get
->>> notification from the HW that is the transfer is done, the only way to
->>> know is to check the tx_status and based on the residue (if it is 0 then
->>> it is done) decide what to tell the client.
->>>
->>> Should the client call dmaengine_terminate_* after the polling returned
->>> unconditionally to free up the descriptor?
+On 6/4/19 7:14 AM, Vinod Koul wrote:
+> On 23-05-19, 19:28, Dinh Nguyen wrote:
+>> The DMA controller on some SoCs can be held in reset, and thus requires
+>> the reset signal(s) to deasserted. Most SoCs will have just one reset
+>> signal, but there are others, i.e. Arria10/Stratix10 will have an
+>> additional reset signal, referred to as the OCP.
 >>
->> This is how omap-dma is handling the polled memcpy support.
+>> Add code to get the reset property from the device tree for deassert and
+>> assert.
+>>
+>> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+>> ---
+>>  drivers/dma/pl330.c | 38 ++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 38 insertions(+)
+>>
+>> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+>> index 6e6837214210..6018c43e785d 100644
+>> --- a/drivers/dma/pl330.c
+>> +++ b/drivers/dma/pl330.c
+>> @@ -29,6 +29,7 @@
+>>  #include <linux/err.h>
+>>  #include <linux/pm_runtime.h>
+>>  #include <linux/bug.h>
+>> +#include <linux/reset.h>
+>>  
+>>  #include "dmaengine.h"
+>>  #define PL330_MAX_CHAN		8
+>> @@ -500,6 +501,9 @@ struct pl330_dmac {
+>>  	unsigned int num_peripherals;
+>>  	struct dma_pl330_chan *peripherals; /* keep at end */
+>>  	int quirks;
+>> +
+>> +	struct reset_control	*rstc;
+>> +	struct reset_control	*rstc_ocp;
+>>  };
+>>  
+>>  static struct pl330_of_quirks {
+>> @@ -3028,6 +3032,30 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+>>  
+>>  	amba_set_drvdata(adev, pl330);
+>>  
+>> +	pl330->rstc = devm_reset_control_get_optional(&adev->dev, "dma");
+>> +	if (IS_ERR(pl330->rstc)) {
+>> +		dev_err(&adev->dev, "No reset controller specified.\n");
 > 
-> Yes that is a good question. Even if the client does not set
-> DMA_PREP_INTERRUPT would there be no interrupt generated by controller
-> on txn completion? If not how will next txn be submitted to the
-> hardware.
-> 
-> I think we should view DMA_PREP_INTERRUPT from client pov, but
-> controller cannot get away with disabling interrupts IMO.
+> Wasnt this optional??
 
-What happens if client is issuing a DMA memcpy (short one) while
-interrupts are disabled?
+Yes, this is optional. The call devm_reset_control_get_optional() will
+just return NULL if the reset property is not there, but an error
+pointer if something really went wrong. Thus, I'm using IS_ERR() for the
+error checking.
 
-The user for this is:
-drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
-
-commit: f5b9930b85dc6319fd6bcc259e447eff62fc691c
-
-The interrupt based completion is not going to work in some cases, the
-DMA driver should obey that the missing DMA_PREP_INTERRUPT really
-implies that interrupts can not be used.
-
-> Assuming I had enough caffeine before I thought process, then client would
-> poll descriptor status using cookie and should free up once the cookie
-> is freed, makes sense?
-
-OK, so clients are expected to call dmaengine_terminate_*
-unconditionally after the transfer is completed, right?
-
-If we use interrupts then the handler would anyway free up the
-descriptor, so terminating should not do any harm, if we can not have
-interrupts then terminate will clear up the completed descriptor
-proactively.
-
-In any case I have updated the EDMA patch to do the same thing in case
-of polling w/o interrupts as it would do in the completion irq handler,
-and similar approach prepared for omap-dma as well.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Dinh

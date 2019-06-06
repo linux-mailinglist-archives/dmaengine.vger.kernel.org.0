@@ -2,33 +2,57 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CFC3379BD
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Jun 2019 18:32:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBFB8379F2
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Jun 2019 18:44:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfFFQcn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 6 Jun 2019 12:32:43 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:17548 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbfFFQcm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Jun 2019 12:32:42 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf940290002>; Thu, 06 Jun 2019 09:32:41 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 06 Jun 2019 09:32:41 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 06 Jun 2019 09:32:41 -0700
-Received: from [10.21.132.143] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
- 2019 16:32:39 +0000
+        id S1726922AbfFFQor (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 6 Jun 2019 12:44:47 -0400
+Received: from mail-io1-f49.google.com ([209.85.166.49]:37243 "EHLO
+        mail-io1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726744AbfFFQoq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Jun 2019 12:44:46 -0400
+Received: by mail-io1-f49.google.com with SMTP id e5so732769iok.4;
+        Thu, 06 Jun 2019 09:44:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NBsMfRuKTrjUWRbWIua1fvZvKysXDdRrLhHLJlMCHME=;
+        b=rBk2vwzme22eGy5imGJ247qFBWoJ2gbU50Z7FWsuQ0q4oaeHHYONAUgT6DnLDG1wm0
+         oYPOfSTQv42gC65LEmlkkBCbpaX/M28gMmBmywM8CtrRa0xNbnV5NEd8n+8RhFg5gDxk
+         Nz0ik41bbd8/bLyoH5BiyqHziN2cmIGz1o/oejb9i73pFK9JvOWRZMOxcZPB8Z3UHQSJ
+         A47IF4D9+KY/k5tXGgm6qyvDj4CP31xSYc0le7S31MEEsUqEZe8NbxbGIDHSn0/4jIH2
+         WiTs5ErFEpCzFvsMTZEcPgPukKfm9UUcU7m5P2RaX6Iz4gaUa6KRzJtBl0wun2OvqTGg
+         +HLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NBsMfRuKTrjUWRbWIua1fvZvKysXDdRrLhHLJlMCHME=;
+        b=VN2s55ujDiwhuvsG6fhW8ieBnE5sF9Dms2MCL90udmB5M7cFhcTCvVmc+P6a3UNsS9
+         37A4WagMrBnsW+af3FXaUpuYuJGu7kg+/DZarroRIAuL3IepGBNP41KIZpWMczAQ3uVE
+         5H+dvv9kFFKc7TJ22kDDJtbHOC61pTIPbv/SE25+LK8vT4VlfT+qfhC4PCh7kMxGAVZ8
+         FzVcvgNAkCs6dJe4U/g+zPZYmGyGC3jf4xTmLO+Ydda6rrmackaiyTn5jknkA0YMoks2
+         BnqWhpYfJCGSLt63C26t6DcDDPJXl84zrhGAFT+cmc4ZaPqocz5qnFrYI4GoSAOTVyFF
+         XdGw==
+X-Gm-Message-State: APjAAAXVkUS1V9vg+fnG4McJwswLDILqMaqraXcMijRUa5y2Vyyr04VH
+        R/oBCt/Tw78jgcheNaULQmTSkh8J
+X-Google-Smtp-Source: APXvYqx5n0J7ZI5aH/LEu5//p8quuu+03srrJFZqrx+sJYVBD+cGktH3UYlzbj3zMeuBqUfr6Og2kQ==
+X-Received: by 2002:a5e:8704:: with SMTP id y4mr28492011ioj.135.1559839485574;
+        Thu, 06 Jun 2019 09:44:45 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.35.141])
+        by smtp.googlemail.com with ESMTPSA id 143sm1156389itw.9.2019.06.06.09.44.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Jun 2019 09:44:45 -0700 (PDT)
 Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-To:     Dmitry Osipenko <digetx@gmail.com>,
+To:     Jon Hunter <jonathanh@nvidia.com>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
-        <mkumard@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>
+Cc:     dan.j.williams@intel.com, tiwai@suse.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sharadg@nvidia.com, rlokhande@nvidia.com, dramesh@nvidia.com,
+        mkumard@nvidia.com, linux-tegra <linux-tegra@vger.kernel.org>
 References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
  <20190502060446.GI3845@vkoul-mobl.Dlink>
  <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
@@ -48,70 +72,57 @@ References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
  <deae510a-f6ae-6a51-2875-a7463cac9169@gmail.com>
  <ac9a965d-0166-3d80-5ac4-ae841d7ae726@nvidia.com>
  <50e1f9ed-1ea0-38f6-1a77-febd6a3a0848@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <4b098fb6-1a5b-1100-ae16-978a887c9535@nvidia.com>
-Date:   Thu, 6 Jun 2019 17:32:37 +0100
+ <4b098fb6-1a5b-1100-ae16-978a887c9535@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e6741e07-be0c-d16b-36d7-77a3288f0500@gmail.com>
+Date:   Thu, 6 Jun 2019 19:44:41 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <50e1f9ed-1ea0-38f6-1a77-febd6a3a0848@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <4b098fb6-1a5b-1100-ae16-978a887c9535@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559838761; bh=k8u67P195ByQ7NwcJoTWbUMcfVgkrN8EE1wBTc4lo2Q=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=bcTBAfzNv7bqbRwB6bN21BDIGn8RjgA/UQZsXULBJ1EfkcaiOJvxj/hkXbRLyqAnm
-         JRcmH7ROBIyqb1/32m03N3zKHyuE9xfbuoJdho52dOJ9Ic0PvVpr9CZTd+xGoTB8le
-         aU3QrutiN7vjLgRJ+BfEgaHrmH4ORIoCBF/BArqIwBC2RqIPfdbB6Np07bDwSS47N/
-         rtyiTigJGXJgXuE/xvn5cpuXhokNpk5+8ftoYNSdXTxnd6wBO6WFWFqqHy1NiGfw0d
-         M/JYZOwrZ5QMJaamn3Zrdo9rKOdiZXWJABDTX8NDF2rwMmvcx6b8dz07DsbzQPkXDN
-         NK2+k2D5O6cXw==
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-On 06/06/2019 16:18, Dmitry Osipenko wrote:
-
-...
-
->>> If I understood everything correctly, the FIFO buffer is shared among
->>> all of the ADMA clients and hence it should be up to the ADMA driver to
->>> manage the quotas of the clients. So if there is only one client that
->>> uses ADMA at a time, then this client will get a whole FIFO buffer, but
->>> once another client starts to use ADMA, then the ADMA driver will have
->>> to reconfigure hardware to split the quotas.
+06.06.2019 19:32, Jon Hunter пишет:
+> 
+> On 06/06/2019 16:18, Dmitry Osipenko wrote:
+> 
+> ...
+> 
+>>>> If I understood everything correctly, the FIFO buffer is shared among
+>>>> all of the ADMA clients and hence it should be up to the ADMA driver to
+>>>> manage the quotas of the clients. So if there is only one client that
+>>>> uses ADMA at a time, then this client will get a whole FIFO buffer, but
+>>>> once another client starts to use ADMA, then the ADMA driver will have
+>>>> to reconfigure hardware to split the quotas.
+>>>
+>>> The FIFO quotas are managed by the ADMAIF driver (does not exist in
+>>> mainline currently but we are working to upstream this) because it is
+>>> this device that owns and needs to configure the FIFOs. So it is really
+>>> a means to pass the information from the ADMAIF to the ADMA.
 >>
->> The FIFO quotas are managed by the ADMAIF driver (does not exist in
->> mainline currently but we are working to upstream this) because it is
->> this device that owns and needs to configure the FIFOs. So it is really
->> a means to pass the information from the ADMAIF to the ADMA.
+>> So you'd want to reserve a larger FIFO for an audio channel that has a
+>> higher audio rate since it will perform reads more often. You could also
+>> prioritize one channel over the others, like in a case of audio call for
+>> example.
+>>
+>> Is the shared buffer smaller than may be needed by clients in a worst
+>> case scenario? If you could split the quotas statically such that each
+>> client won't ever starve, then seems there is no much need in the
+>> dynamic configuration.
 > 
-> So you'd want to reserve a larger FIFO for an audio channel that has a
-> higher audio rate since it will perform reads more often. You could also
-> prioritize one channel over the others, like in a case of audio call for
-> example.
-> 
-> Is the shared buffer smaller than may be needed by clients in a worst
-> case scenario? If you could split the quotas statically such that each
-> client won't ever starve, then seems there is no much need in the
-> dynamic configuration.
+> Actually, this is still very much relevant for the static case. Even if
+> we defined a static configuration of the FIFO mapping in the ADMAIF
+> driver we still need to pass this information to the ADMA. I don't
+> really like the idea of having it statically defined in two different
+> drivers.
 
-Actually, this is still very much relevant for the static case. Even if
-we defined a static configuration of the FIFO mapping in the ADMAIF
-driver we still need to pass this information to the ADMA. I don't
-really like the idea of having it statically defined in two different
-drivers.
+Ah, so you need to apply the same configuration in two places. Correct?
 
-Jon
-
--- 
-nvpublic
+Are ADMAIF and ADMA really two different hardware blocks? Or you
+artificially decoupled the ADMA driver?

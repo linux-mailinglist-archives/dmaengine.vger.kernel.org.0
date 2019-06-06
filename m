@@ -2,169 +2,208 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A395E36054
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Jun 2019 17:31:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5D4F36A8C
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Jun 2019 05:49:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbfFEPbp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 5 Jun 2019 11:31:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726829AbfFEPbo (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 5 Jun 2019 11:31:44 -0400
-Received: from [192.168.1.31] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FBA520693;
-        Wed,  5 Jun 2019 15:31:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559748703;
-        bh=dtocFJggJ4WvufOlMJlL/RsOOsd6BkC+t7/9mKATkWk=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=EuyhSUeG9/7FqrfVtpLtOS3rcYET1jXkNUQXrRAwvie1nYSfAjOfQHSvDzsaJ7DlI
-         tlXDegBEnjDz/h1Xqr+M6xLdBxTFrqJZ70sOu5UQjN002EM0F546WX9GLuRC7b8q1n
-         IXqzLR74Q5GpA82dT7gpqHygiMNSB1E+uewqiV4E=
-Subject: Re: [PATCH 2/2] dmagengine: pl330: add code to get reset property
-From:   Dinh Nguyen <dinguyen@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <20190524002847.30961-1-dinguyen@kernel.org>
- <20190524002847.30961-2-dinguyen@kernel.org>
- <20190604121424.GW15118@vkoul-mobl>
- <1dd97825-f6a2-7a1b-33ef-e28e00cc8506@kernel.org>
- <CAMuHMdV+_DzS+LD720BeAn05RzYGO9rS51-ucicP=8D0wz9Psg@mail.gmail.com>
- <00841780-ad68-ba8d-bdf0-d3f78fa42c98@kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <55cc6016-f297-539d-df08-777903b79005@kernel.org>
-Date:   Wed, 5 Jun 2019 10:31:41 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        id S1726454AbfFFDtY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 5 Jun 2019 23:49:24 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:7954 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbfFFDtX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Jun 2019 23:49:23 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf88d330000>; Wed, 05 Jun 2019 20:49:07 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 05 Jun 2019 20:49:21 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 05 Jun 2019 20:49:21 -0700
+Received: from [10.25.74.60] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
+ 2019 03:49:16 +0000
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
+        <jonathanh@nvidia.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
+        <rlokhande@nvidia.com>, <dramesh@nvidia.com>, <mkumard@nvidia.com>
+References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+ <20190502060446.GI3845@vkoul-mobl.Dlink>
+ <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
+ <20190502122506.GP3845@vkoul-mobl.Dlink>
+ <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+ <20190504102304.GZ3845@vkoul-mobl.Dlink>
+ <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
+ <20190506155046.GH3845@vkoul-mobl.Dlink>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
+Date:   Thu, 6 Jun 2019 09:19:12 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <00841780-ad68-ba8d-bdf0-d3f78fa42c98@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190506155046.GH3845@vkoul-mobl.Dlink>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559792947; bh=uXh40GWGn50UX9UW6R+vmfVqkConjIwsgIO17SfK1Fs=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=TMdGaINXduoVerYnzznBFGxOCJf1RgQ5MyjzvInlabRrzUk5hD6z1weTvRtUApki/
+         VO1U0EFWnLUrYZ+cy6B/hCJ0ISajG9ciHKKg6MF4mOYfXViFjRuDBAQ6PZm1tjaJ3T
+         UdiXlYlnh3GSjG3aHOt4IUWNl7SoZ7eNzbzXKM9KjjhZ8MFuNhMDIg5cCOpoQi1yPU
+         MVaK9d9uRW3dbC5kiUpXsURtecyfuTZrPeJpmlf3dwOYUuq2yQrqxYfdjEsQqKjXH2
+         ahv69UfGthE1Gl1XdpM1yJrUZMsPERAy/jGfIlXOpPi0Ubs3ujm6iXFZhRD4kjRbK6
+         vdvccYWcDBkeA==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Geert,
+Sorry for late reply.
+[Resending the reply since delivery failed for few recipients]
 
-On 6/5/19 9:41 AM, Dinh Nguyen wrote:
-> Hi Geert,
-> 
-> On 6/4/19 11:31 AM, Geert Uytterhoeven wrote:
->> Hi Dinh,
->>
->> On Tue, Jun 4, 2019 at 4:21 PM Dinh Nguyen <dinguyen@kernel.org> wrote:
->>> On 6/4/19 7:14 AM, Vinod Koul wrote:
->>>> On 23-05-19, 19:28, Dinh Nguyen wrote:
->>>>> The DMA controller on some SoCs can be held in reset, and thus requires
->>>>> the reset signal(s) to deasserted. Most SoCs will have just one reset
->>>>> signal, but there are others, i.e. Arria10/Stratix10 will have an
->>>>> additional reset signal, referred to as the OCP.
->>>>>
->>>>> Add code to get the reset property from the device tree for deassert and
->>>>> assert.
->>>>>
->>>>> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
->>>>> ---
->>>>>  drivers/dma/pl330.c | 38 ++++++++++++++++++++++++++++++++++++++
->>>>>  1 file changed, 38 insertions(+)
->>>>>
->>>>> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
->>>>> index 6e6837214210..6018c43e785d 100644
->>>>> --- a/drivers/dma/pl330.c
->>>>> +++ b/drivers/dma/pl330.c
->>>>> @@ -29,6 +29,7 @@
->>>>>  #include <linux/err.h>
->>>>>  #include <linux/pm_runtime.h>
->>>>>  #include <linux/bug.h>
->>>>> +#include <linux/reset.h>
->>>>>
->>>>>  #include "dmaengine.h"
->>>>>  #define PL330_MAX_CHAN              8
->>>>> @@ -500,6 +501,9 @@ struct pl330_dmac {
->>>>>      unsigned int num_peripherals;
->>>>>      struct dma_pl330_chan *peripherals; /* keep at end */
->>>>>      int quirks;
->>>>> +
->>>>> +    struct reset_control    *rstc;
->>>>> +    struct reset_control    *rstc_ocp;
->>>>>  };
->>>>>
->>>>>  static struct pl330_of_quirks {
->>>>> @@ -3028,6 +3032,30 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
->>>>>
->>>>>      amba_set_drvdata(adev, pl330);
->>>>>
->>>>> +    pl330->rstc = devm_reset_control_get_optional(&adev->dev, "dma");
->>>>> +    if (IS_ERR(pl330->rstc)) {
->>>>> +            dev_err(&adev->dev, "No reset controller specified.\n");
+On 5/6/2019 9:20 PM, Vinod Koul wrote:
+> On 06-05-19, 18:34, Sameer Pujar wrote:
+>> On 5/4/2019 3:53 PM, Vinod Koul wrote:
+>>> On 02-05-19, 18:59, Sameer Pujar wrote:
+>>>> On 5/2/2019 5:55 PM, Vinod Koul wrote:
+>>>>> On 02-05-19, 16:23, Sameer Pujar wrote:
+>>>>>> On 5/2/2019 11:34 AM, Vinod Koul wrote:
+>>>>>>> On 30-04-19, 17:00, Sameer Pujar wrote:
+>>>>>>>> During the DMA transfers from memory to I/O, it was observed that =
+transfers
+>>>>>>>> were inconsistent and resulted in glitches for audio playback. It =
+happened
+>>>>>>>> because fifo size on DMA did not match with slave channel configur=
+ation.
+>>>>>>>>
+>>>>>>>> currently 'dma_slave_config' structure does not have a field for f=
+ifo size.
+>>>>>>>> Hence the platform pcm driver cannot pass the fifo size as a slave=
+_config.
+>>>>>>>> Note that 'snd_dmaengine_dai_dma_data' structure has fifo_size fie=
+ld which
+>>>>>>>> cannot be used to pass the size info. This patch introduces fifo_s=
+ize field
+>>>>>>>> and the same can be populated on slave side. Users can set require=
+d size
+>>>>>>>> for slave peripheral (multiple channels can be independently runni=
+ng with
+>>>>>>>> different fifo sizes) and the corresponding sizes are programmed t=
+hrough
+>>>>>>>> dma_slave_config on DMA side.
+>>>>>>> FIFO size is a hardware property not sure why you would want an
+>>>>>>> interface to program that?
+>>>>>>>
+>>>>>>> On mismatch, I guess you need to take care of src/dst_maxburst..
+>>>>>> Yes, FIFO size is a HW property. But it is SW configurable(atleast i=
+n my
+>>>>>> case) on
+>>>>>> slave side and can be set to different sizes. The src/dst_maxburst i=
+s
+>>>>> Are you sure, have you talked to HW folks on that? IIUC you are
+>>>>> programming the data to be used in FIFO not the FIFO length!
+>>>> Yes, I mentioned about FIFO length.
 >>>>
->>>> Wasnt this optional??
->>>
->>> Yes, this is optional. The call devm_reset_control_get_optional() will
->>> just return NULL if the reset property is not there, but an error
->>> pointer if something really went wrong. Thus, I'm using IS_ERR() for the
->>> error checking.
->>
->> So the error message is incorrect, as this is a real error condition?
->>
-> 
-> Yes, you're right! Will correct in V2.
+>>>> 1. MAX FIFO size is fixed in HW. But there is a way to limit the usage=
+ per
+>>>> channel
+>>>>   =C2=A0=C2=A0 in multiples of 64 bytes.
+>>>> 2. Having a separate member would give independent control over MAX BU=
+RST
+>>>> SIZE and
+>>>>   =C2=A0=C2=A0 FIFO SIZE.
+>>>>>> programmed
+>>>>>> for specific values, I think this depends on few factors related to
+>>>>>> bandwidth
+>>>>>> needs of client, DMA needs of the system etc.,
+>>>>> Precisely
+>>>>>
+>>>>>> In such cases how does DMA know the actual FIFO depth of slave perip=
+heral?
+>>>>> Why should DMA know? Its job is to push/pull data as configured by
+>>>>> peripheral driver. The peripheral driver knows and configures DMA
+>>>>> accordingly.
+>>>> I am not sure if there is any HW logic that mandates DMA to know the s=
+ize
+>>>> of configured FIFO depth on slave side. I will speak to HW folks and
+>>>> would update here.
+>>> I still do not comprehend why dma would care about slave side
+>>> configuration. In the absence of patch which uses this I am not sure
+>>> what you are trying to do...
+>> I am using DMA HW in cyclic mode for data transfers to Audio sub-system.
+>> In such cases flow control on DMA transfers is essential, since I/O is
+> right and people use burst size for precisely that!
+>
+>> consuming/producing the data at slower rate. The DMA tranfer is enabled/
+>> disabled during start/stop of audio playback/capture sessions through AL=
+SA
+>> callbacks and DMA runs in cyclic mode. Hence DMA is the one which is doi=
+ng
+>> flow control and it is necessary for it to know the peripheral FIFO dept=
+h
+>> to avoid overruns/underruns.
+> not really, knowing that doesnt help anyway you have described! DMA
+> pushes/pulls data and that is controlled by burst configured by slave
+> (so it know what to expect and porgrams things accordingly)
+>
+> you are really going other way around about the whole picture. FWIW that
+> is how *other* folks do audio with dmaengine!
+I discussed this internally with HW folks and below is the reason why=20
+DMA needs
+to know FIFO size.
 
-Looking at this again, I think the error message is correct. The
-optional call will return NULL if the resets property is not specified,
-and will return an error pointer if the reset propert is specified, but
-the pointer to the reset controller is not found.
+- FIFOs reside in peripheral device(ADMAIF), which is the ADMA interface=20
+to the audio sub-system.
+- ADMAIF has multiple channels and share FIFO buffer for individual=20
+operations. There is a provision
+ =C2=A0 to allocate specific fifo size for each individual ADMAIF channel=20
+from the shared buffer.
+- Tegra Audio DMA(ADMA) architecture is different from the usual DMA=20
+engines, which you described earlier.
+- The flow control logic is placed inside ADMA. Slave peripheral=20
+device(ADMAIF) signals ADMA whenever a
+ =C2=A0 read or write happens on the FIFO(per WORD basis). Please note that=
+=20
+the signaling is per channel. There is
+ =C2=A0 no other signaling present from ADMAIF to ADMA.
+- ADMA keeps a counter related to above signaling. Whenever a sufficient=20
+space is available, it initiates a transfer.
+ =C2=A0 But the question is, how does it know when to transfer. This is the=
+=20
+reason, why ADMA has to be aware of FIFO
+ =C2=A0 depth of ADMAIF channel. Depending on the counters and FIFO depth, =
+it=20
+knows exactly when a free space is available
+ =C2=A0 in the context of a specific channel. On ADMA, FIFO_SIZE is just a=
+=20
+value which should match to actual FIFO_DEPTH/SIZE
+ =C2=A0 of ADMAIF channel.
+- Now consider two cases based on above logic,
+ =C2=A0 * Case 1: when DMA_FIFO_SIZE > SLAVE_FIFO_SIZE
+ =C2=A0=C2=A0=C2=A0 In this case, ADMA thinks that there is enough space av=
+ailable for=20
+transfer, when actually the FIFO data
+ =C2=A0=C2=A0=C2=A0 on slave is not consumed yet. It would result in OVERRU=
+N.
+ =C2=A0 * Case 2: when DMA_FIFO_SIZE < SLAVE_FIFO_SIZE
+ =C2=A0=C2=A0=C2=A0 This is case where ADMA won=E2=80=99t transfer, even th=
+ough sufficient=20
+space is available, resulting in UNDERRUN.
+- The guideline is to program, DMA_FIFO_SIZE(on ADMA side) =3D=20
+SLAVE_FIFO_SIZE(on ADMAIF side) and hence we need a
+ =C2=A0 way to communicate fifo size info to ADMA.
 
-So I think the error message is correct.
-
-Dinh
+Thanks,
+Sameer.
+>> Also please note that, peripheral device has multiple channels and share
+>> a fixed MAX FIFO buffer. But SW can program different FIFO sizes for
+>> individual channels.
+> yeah peripheral driver, yes. DMA driver nope!
+>

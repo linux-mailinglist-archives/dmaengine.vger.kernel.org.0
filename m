@@ -2,219 +2,132 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E14636BF5
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Jun 2019 08:01:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 201BF36C0F
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Jun 2019 08:11:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725947AbfFFGBA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 6 Jun 2019 02:01:00 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:60148 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfFFGA7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Jun 2019 02:00:59 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5660oXb078820;
-        Thu, 6 Jun 2019 01:00:50 -0500
+        id S1725769AbfFFGLO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 6 Jun 2019 02:11:14 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59232 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfFFGLO (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Jun 2019 02:11:14 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x565xpkC056377;
+        Thu, 6 Jun 2019 00:59:51 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559800850;
-        bh=FSREGiRABJFq74W4rr6M51W3Yk2CPzgfEKsFWNPJA9I=;
+        s=ti-com-17Q1; t=1559800791;
+        bh=9heKrnOXHvL95qTzCc29Ui6sssSZQTwyI7UPhTtnmz8=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=B7C/+eYQR/5L3PIF9wwHURouG6GdJIeqKkPllBB4+j4CrEAShfaS6oxx2iecVfiR8
-         3xNMh39kzPDq256uL/Vt07rZ27zV7Cf/p94LYqQWInBOi1DR8svnJizB/KNYv/AGqV
-         7910peb5NTsaW9IxuikgQ5cAWSX/gF2LRyTfnd64=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5660ont032539
+        b=nGwMH4vi2KH+EkExCBhtEZXxcR1u7izGwf+DXV2ql0k+SZkaRc+d6OEQ38jV43deK
+         WusNDzHBInEHR2ru6z34YfZYyzyVYpNPD59M/5KhSXWfeE+Rzqg+Yl/oHHliMiEKNp
+         BUCT+vFFahFtWzIUn4lKAOt0WgHpCDaFiq84AaRk=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x565xpcr083934
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 6 Jun 2019 01:00:50 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 6 Jun 2019 00:59:51 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 6 Jun
- 2019 01:00:50 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 00:59:50 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 6 Jun 2019 01:00:50 -0500
-Received: from [172.24.190.117] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5660gQS102302;
-        Thu, 6 Jun 2019 01:00:44 -0500
-Subject: Re: [PATCH 01/16] firmware: ti_sci: Add resource management APIs for
- ringacc, psi-l and udma
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
-        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <t-kristo@ti.com>, <tony@atomide.com>
-References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
- <20190506123456.6777-2-peter.ujfalusi@ti.com>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <f2056b18-3f65-b7ae-90ba-5ebf9ac425bc@ti.com>
-Date:   Thu, 6 Jun 2019 11:30:09 +0530
+ Frontend Transport; Thu, 6 Jun 2019 00:59:49 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x565xlWC073686;
+        Thu, 6 Jun 2019 00:59:47 -0500
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
+        <jonathanh@nvidia.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
+        <rlokhande@nvidia.com>, <dramesh@nvidia.com>, <mkumard@nvidia.com>
+References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+ <20190502060446.GI3845@vkoul-mobl.Dlink>
+ <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
+ <20190502122506.GP3845@vkoul-mobl.Dlink>
+ <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+ <20190504102304.GZ3845@vkoul-mobl.Dlink>
+ <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
+ <20190506155046.GH3845@vkoul-mobl.Dlink>
+ <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
+Date:   Thu, 6 Jun 2019 09:00:15 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190506123456.6777-2-peter.ujfalusi@ti.com>
+In-Reply-To: <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Peter,
+Hi Sameer,
 
-On 06/05/19 6:04 PM, Peter Ujfalusi wrote:
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-
-Patch has the following checkpatch warnings and checks which can be fixed:
-
-WARNING: Missing commit description - Add an appropriate one
-
-CHECK: Lines should not end with a '('
-#262: FILE: drivers/firmware/ti_sci.c:2286:
-+static int ti_sci_cmd_rm_udmap_tx_ch_cfg(
-
-CHECK: Lines should not end with a '('
-#323: FILE: drivers/firmware/ti_sci.c:2347:
-+static int ti_sci_cmd_rm_udmap_rx_ch_cfg(
-
-CHECK: Lines should not end with a '('
-#383: FILE: drivers/firmware/ti_sci.c:2407:
-+static int ti_sci_cmd_rm_udmap_rx_flow_cfg1(
-
-CHECK: Lines should not end with a '('
-#1414: FILE: include/linux/soc/ti/ti_sci_protocol.h:455:
-+	int (*rx_flow_cfg)(
-
-total: 0 errors, 2 warnings, 4 checks, 1399 lines checked
-
-
-
-> ---
->  drivers/firmware/ti_sci.c              | 439 +++++++++++++++
->  drivers/firmware/ti_sci.h              | 704 +++++++++++++++++++++++++
->  include/linux/soc/ti/ti_sci_protocol.h | 216 ++++++++
->  3 files changed, 1359 insertions(+)
+On 06/06/2019 6.49, Sameer Pujar wrote:
+> Sorry for late reply.
+> [Resending the reply since delivery failed for few recipients]
+> I discussed this internally with HW folks and below is the reason why
+> DMA needs
+> to know FIFO size.
 > 
-> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-> index 64d895b80bc3..af3ebcdeab18 100644
-> --- a/drivers/firmware/ti_sci.c
-> +++ b/drivers/firmware/ti_sci.c
+> - FIFOs reside in peripheral device(ADMAIF), which is the ADMA interface
+> to the audio sub-system.
+> - ADMAIF has multiple channels and share FIFO buffer for individual
+> operations. There is a provision
+>   to allocate specific fifo size for each individual ADMAIF channel from
+> the shared buffer.
+> - Tegra Audio DMA(ADMA) architecture is different from the usual DMA
+> engines, which you described earlier.
 
-[..snip.]
+It is not really different than what other DMAs are doing.
 
-> +}
-> +
-> +static int ti_sci_cmd_rm_psil_pair(const struct ti_sci_handle *handle,
-> +				   u32 nav_id, u32 src_thread, u32 dst_thread)
-> +{
+> - The flow control logic is placed inside ADMA. Slave peripheral
+> device(ADMAIF) signals ADMA whenever a
+>   read or write happens on the FIFO(per WORD basis). Please note that
+> the signaling is per channel. There is
+>   no other signaling present from ADMAIF to ADMA.
+> - ADMA keeps a counter related to above signaling. Whenever a sufficient
+> space is available, it initiates a transfer.
+>   But the question is, how does it know when to transfer. This is the
+> reason, why ADMA has to be aware of FIFO
+>   depth of ADMAIF channel. Depending on the counters and FIFO depth, it
+> knows exactly when a free space is available
+>   in the context of a specific channel. On ADMA, FIFO_SIZE is just a
+> value which should match to actual FIFO_DEPTH/SIZE
+>   of ADMAIF channel.
+> - Now consider two cases based on above logic,
+>   * Case 1: when DMA_FIFO_SIZE > SLAVE_FIFO_SIZE
+>     In this case, ADMA thinks that there is enough space available for
+> transfer, when actually the FIFO data
+>     on slave is not consumed yet. It would result in OVERRUN.
+>   * Case 2: when DMA_FIFO_SIZE < SLAVE_FIFO_SIZE
+>     This is case where ADMA won’t transfer, even though sufficient space
+> is available, resulting in UNDERRUN.
+> - The guideline is to program, DMA_FIFO_SIZE(on ADMA side) =
+> SLAVE_FIFO_SIZE(on ADMAIF side) and hence we need a
+>   way to communicate fifo size info to ADMA.
 
-All the psil ops doesn't have the  kernel-doc function comments. Just be
-consistent with other functions :)
+The src_maxburst / dst_maxburst is exactly for this reason. To
+communicate how much data should be transferred per DMA request to/from
+peripheral.
 
+In TI land we have now 3 DMA engines servicing McASP. McASP has FIFO
+which is dynamically configured (you can see the AFIFO of McASP as a
+small DMA: on McASP side it services the peripheral, on the other side
+it interacts with the given system DMA used by the SoC - EDMA, sDMA or
+UDMAP). All DMAs needs a bit different configuration, but the AFIFO
+depth on the McASP side is coming in via the src/dst_maxburst and the
+drivers just need to interpret it correctly.
 
-> +	struct ti_sci_msg_hdr *resp;
-> +	struct ti_sci_msg_psil_pair *req;
-> +	struct ti_sci_xfer *xfer;
-> +	struct ti_sci_info *info;
-> +	struct device *dev;
-> +	int ret = 0;
-> +
-> +	if (IS_ERR(handle))
-> +		return PTR_ERR(handle);
-> +	if (!handle)
-> +		return -EINVAL;
-> +
-> +	info = handle_to_ti_sci_info(handle);
-> +	dev = info->dev;
-> +
-> +	xfer = ti_sci_get_one_xfer(info, TI_SCI_MSG_RM_PSIL_PAIR,
-> +				   TI_SCI_FLAG_REQ_ACK_ON_PROCESSED,
-> +				   sizeof(*req), sizeof(*resp));
-> +	if (IS_ERR(xfer)) {
-> +		ret = PTR_ERR(xfer);
-> +		dev_err(dev, "RM_PSIL:Message reconfig failed(%d)\n", ret);
-> +		return ret;
-> +	}
-> +	req = (struct ti_sci_msg_psil_pair *)xfer->xfer_buf;
-> +	req->nav_id = nav_id;
-> +	req->src_thread = src_thread;
-> +	req->dst_thread = dst_thread;
-> +
-> +	ret = ti_sci_do_xfer(info, xfer);
-> +	if (ret) {
-> +		dev_err(dev, "RM_PSIL:Mbox send fail %d\n", ret);
-> +		goto fail;
-> +	}
-> +
-> +	resp = (struct ti_sci_msg_hdr *)xfer->xfer_buf;
-> +	ret = ti_sci_is_response_ack(resp) ? 0 : -EINVAL;
-> +
-> +fail:
-> +	ti_sci_put_one_xfer(&info->minfo, xfer);
-> +
-> +	return ret;
-> +}
-> +
+It does sounds like that FIFO_SIZE == src/dst_maxburst in your case as well.
 
-[..snip..]
+- Péter
 
-> + */
-> +struct ti_sci_msg_rm_ring_cfg_req {
-> +	struct ti_sci_msg_hdr hdr;
-> +	u32 valid_params;
-> +	u16 nav_id;
-> +	u16 index;
-> +	u32 addr_lo;
-> +	u32 addr_hi;
-> +	u32 count;
-> +	u8 mode;
-> +	u8 size;
-> +	u8 order_id;
-> +} __packed;
-> +
-> +/**
-> + * struct ti_sci_msg_rm_ring_cfg_resp - Response to configuring a ring.
-> + *
-> + * @hdr:	Generic Header
-> + */
-> +struct ti_sci_msg_rm_ring_cfg_resp {
-> +	struct ti_sci_msg_hdr hdr;
-> +} __packed;
-
-If it is a generic ACK, NACK response, just use the header directly.
-
-[..snip..]
-
-> + */
-> +struct ti_sci_msg_rm_udmap_rx_ch_cfg_req {
-> +	struct ti_sci_msg_hdr hdr;
-> +	u32 valid_params;
-> +	u16 nav_id;
-> +	u16 index;
-> +	u16 rx_fetch_size;
-> +	u16 rxcq_qnum;
-> +	u8 rx_priority;
-> +	u8 rx_qos;
-> +	u8 rx_orderid;
-> +	u8 rx_sched_priority;
-> +	u16 flowid_start;
-> +	u16 flowid_cnt;
-> +	u8 rx_pause_on_err;
-> +	u8 rx_atype;
-> +	u8 rx_chan_type;
-> +	u8 rx_ignore_short;
-> +	u8 rx_ignore_long;
-> +	u8 rx_burst_size;
-> +
-
-extra line?
-
-> +} __packed;
-> +
-> +/**
-
-
-Thanks and regards,
-Lokesh
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

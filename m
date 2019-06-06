@@ -2,178 +2,163 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7337D371FC
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Jun 2019 12:46:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B6F637209
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Jun 2019 12:49:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfFFKqD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 6 Jun 2019 06:46:03 -0400
-Received: from mail-eopbgr810074.outbound.protection.outlook.com ([40.107.81.74]:52096
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726959AbfFFKqC (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 6 Jun 2019 06:46:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qg1R0I6reR9dplWRbPP7GkSQrygmHnJ38V+4yz7MpKU=;
- b=0bBcRNN7nw6OMCcb6b2YKN173OZqnkuBoElrTh4Xy0ZYfAJXHqTpQGymbghzWrHoyeImtx8QSOSz6eH8IASpe+i633Q7BQ6nejRyWtLbi9F8Eh5tA04h9WShrW/7ysC7KBGyf0CzQDJWkJT4vt9qGpClxMIatU+dqr5k570dI5g=
-Received: from CY4PR03CA0016.namprd03.prod.outlook.com (2603:10b6:903:33::26)
- by DM5PR03MB3130.namprd03.prod.outlook.com (2603:10b6:4:3c::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.14; Thu, 6 Jun
- 2019 10:46:00 +0000
-Received: from SN1NAM02FT023.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::207) by CY4PR03CA0016.outlook.office365.com
- (2603:10b6:903:33::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1965.14 via Frontend
- Transport; Thu, 6 Jun 2019 10:46:00 +0000
-Authentication-Results: spf=pass (sender IP is 137.71.25.57)
- smtp.mailfrom=analog.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=analog.com;
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- SN1NAM02FT023.mail.protection.outlook.com (10.152.72.156) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1965.12
- via Frontend Transport; Thu, 6 Jun 2019 10:45:59 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x56AjxcI013758
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK)
-        for <dmaengine@vger.kernel.org>; Thu, 6 Jun 2019 03:45:59 -0700
-Received: from saturn.ad.analog.com (10.48.65.129) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Thu, 6 Jun 2019 06:45:59 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <dmaengine@vger.kernel.org>
-CC:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 4/4] dmaengine: axi-dmac: add regmap support
-Date:   Thu, 6 Jun 2019 13:45:50 +0300
-Message-ID: <20190606104550.32336-4-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190606104550.32336-1-alexandru.ardelean@analog.com>
-References: <20190606104550.32336-1-alexandru.ardelean@analog.com>
+        id S1726581AbfFFKtX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 6 Jun 2019 06:49:23 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:18957 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725784AbfFFKtX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Jun 2019 06:49:23 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cf8efb00000>; Thu, 06 Jun 2019 03:49:20 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Jun 2019 03:49:20 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Jun 2019 03:49:20 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
+ 2019 10:49:18 +0000
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <mkumard@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+ <20190502060446.GI3845@vkoul-mobl.Dlink>
+ <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
+ <20190502122506.GP3845@vkoul-mobl.Dlink>
+ <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+ <20190504102304.GZ3845@vkoul-mobl.Dlink>
+ <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
+ <20190506155046.GH3845@vkoul-mobl.Dlink>
+ <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
+ <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
+ <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
+ <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
+ <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
+Date:   Thu, 6 Jun 2019 11:49:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(396003)(136003)(39850400004)(376002)(2980300002)(199004)(189003)(107886003)(106002)(50466002)(1076003)(305945005)(7636002)(2906002)(4326008)(246002)(50226002)(6306002)(8676002)(8936002)(356004)(6666004)(48376002)(316002)(2870700001)(5660300002)(6916009)(336012)(426003)(51416003)(7696005)(966005)(478600001)(14444005)(36756003)(2351001)(77096007)(486006)(186003)(446003)(11346002)(126002)(26005)(47776003)(86362001)(76176011)(70206006)(2616005)(70586007)(476003)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR03MB3130;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 21a27c51-291d-4e91-e811-08d6ea6c29db
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:DM5PR03MB3130;
-X-MS-TrafficTypeDiagnostic: DM5PR03MB3130:
-X-MS-Exchange-PUrlCount: 1
-X-Microsoft-Antispam-PRVS: <DM5PR03MB31302705136A94A6475762AAF9170@DM5PR03MB3130.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 00603B7EEF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: C2TyvMEd7aFqHuOmnBdkahyTyI8+Xu8vfhPRCwpGrN85/W+qhcMHsil0Bs6L4KcNystF7gtdgW33Euovatty7ts/1ceQcMpNHiRlheSNt9hs4ZfKGNexdX52e/GFFP1Mhnwr2gI19e0AtHSZItip39mgyMN/NzcZTyb4LoGR2RHmwrYfomIQvf/Hkb7lLekKZZdwOT91N188pDUu6RxjrW9RG8g0EQUErDSkRp38m7nnOjGP5agphDq6a8S4pJF/Xlz/4cW+vg9SeUrNv/D2TOOyh3ypTirlyohyIXYTXUpIYxFpcG6J3bRa2XIoqxIrjaGYQoxxuqo3FGI8XkFwfNa73YjshDPM1jie9ES/YedAl/9XIae6sTm6282ak2wyXa0WA4ZWF1MI/zCsQDINC2fBE29bsfBdRmgKUCM+QaU=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2019 10:45:59.6917
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21a27c51-291d-4e91-e811-08d6ea6c29db
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR03MB3130
+In-Reply-To: <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1559818160; bh=WzzhEJK2De3f43eCu/BsQHMI4/xvHgWD7ruox2mfSOg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=k57U96xj4MeWVr4uU7VFDpQyr5ZsS+4muuzcTIAQ1QtIWGfjypzQHPUBi3Fv92EcI
+         LzBIVxGr0iSFMR09zDaT/+vfJQmf7fObPdj0cJpoPZAKdwiH3TkFu5zVaK3gGbVUQd
+         yL/LH5aNtSW0Fqds4Nwcr7gRJVk9J195aBM4yzyAfIdG3+h1T9a6bhmwbgdgM+fSEr
+         5KyHDYOlYrhWwdCtrzJEQhrAgIjNIw5Yx6Nk/cIs0qfQ7F8DD2r3UPsBHtW+LXGiUL
+         HJXIn3J8Fw6s1AHDxhXX+64j+tOhQkuU4aBxqgmYj+O1BSlvNaC6sGgDc9E9rOqlPV
+         CvTDb6pOlE5PQ==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The registers for AXI DMAC are detailed at:
-  https://wiki.analog.com/resources/fpga/docs/axi_dmac#register_map
 
-This change adds regmap support for these registers, in case some wants to
-have a more direct access to them via this interface.
+On 06/06/2019 11:22, Peter Ujfalusi wrote:
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/dma/Kconfig        |  1 +
- drivers/dma/dma-axi-dmac.c | 41 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 42 insertions(+)
+...
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index eaf78f4e07ce..ae631c6e8bc5 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -102,6 +102,7 @@ config AXI_DMAC
- 	depends on MICROBLAZE || NIOS2 || ARCH_ZYNQ || ARCH_ZYNQMP || ARCH_SOCFPGA || COMPILE_TEST
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
-+	select REGMAP_MMIO
- 	help
- 	  Enable support for the Analog Devices AXI-DMAC peripheral. This DMA
- 	  controller is often used in Analog Device's reference designs for FPGA
-diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-index 3b418d545c7a..a35b76f08dfa 100644
---- a/drivers/dma/dma-axi-dmac.c
-+++ b/drivers/dma/dma-axi-dmac.c
-@@ -19,6 +19,7 @@
- #include <linux/of.h>
- #include <linux/of_dma.h>
- #include <linux/platform_device.h>
-+#include <linux/regmap.h>
- #include <linux/slab.h>
- #include <linux/fpga/adi-axi-common.h>
- 
-@@ -679,6 +680,44 @@ static void axi_dmac_desc_free(struct virt_dma_desc *vdesc)
- 	kfree(container_of(vdesc, struct axi_dmac_desc, vdesc));
- }
- 
-+static bool axi_dmac_regmap_rdwr(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+	case AXI_DMAC_REG_IRQ_MASK:
-+	case AXI_DMAC_REG_IRQ_SOURCE:
-+	case AXI_DMAC_REG_IRQ_PENDING:
-+	case AXI_DMAC_REG_CTRL:
-+	case AXI_DMAC_REG_TRANSFER_ID:
-+	case AXI_DMAC_REG_START_TRANSFER:
-+	case AXI_DMAC_REG_FLAGS:
-+	case AXI_DMAC_REG_DEST_ADDRESS:
-+	case AXI_DMAC_REG_SRC_ADDRESS:
-+	case AXI_DMAC_REG_X_LENGTH:
-+	case AXI_DMAC_REG_Y_LENGTH:
-+	case AXI_DMAC_REG_DEST_STRIDE:
-+	case AXI_DMAC_REG_SRC_STRIDE:
-+	case AXI_DMAC_REG_TRANSFER_DONE:
-+	case AXI_DMAC_REG_ACTIVE_TRANSFER_ID :
-+	case AXI_DMAC_REG_STATUS:
-+	case AXI_DMAC_REG_CURRENT_SRC_ADDR:
-+	case AXI_DMAC_REG_CURRENT_DEST_ADDR:
-+	case AXI_DMAC_REG_PARTIAL_XFER_LEN:
-+	case AXI_DMAC_REG_PARTIAL_XFER_ID:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static const struct regmap_config axi_dmac_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+	.max_register = AXI_DMAC_REG_PARTIAL_XFER_ID,
-+	.readable_reg = axi_dmac_regmap_rdwr,
-+	.writeable_reg = axi_dmac_regmap_rdwr,
-+};
-+
- /*
-  * The configuration stored in the devicetree matches the configuration
-  * parameters of the peripheral instance and allows the driver to know which
-@@ -883,6 +922,8 @@ static int axi_dmac_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, dmac);
- 
-+	devm_regmap_init_mmio(&pdev->dev, dmac->base, &axi_dmac_regmap_config);
-+
- 	return 0;
- 
- err_unregister_of:
+>>>> It does sounds like that FIFO_SIZE == src/dst_maxburst in your case as
+>>>> well.
+>>> Not exactly equal.
+>>> ADMA burst_size can range from 1(WORD) to 16(WORDS)
+>>> FIFO_SIZE can be adjusted from 16(WORDS) to 1024(WORDS) [can vary in
+>>> multiples of 16]
+>>
+>> So I think that the key thing to highlight here, is that the as Sameer
+>> highlighted above for the Tegra ADMA there are two values that need to
+>> be programmed; the DMA client FIFO size and the max burst size. The ADMA
+>> has register fields for both of these.
+> 
+> How does the ADMA uses the 'client FIFO size' and 'max burst size'
+> values and what is the relation of these values to the peripheral side
+> (ADMAIF)?
+
+Per Sameer's previous comment, the FIFO size is used by the ADMA to
+determine how much space is available in the FIFO. I assume the burst
+size just limits how much data is transferred per transaction.
+
+>> As you can see from the above the FIFO size can be much greater than the
+>> burst size and so ideally both of these values would be passed to the DMA.
+>>
+>> We could get by with just passing the FIFO size (as the max burst size)
+>> and then have the DMA driver set the max burst size depending on this,
+>> but this does feel quite correct for this DMA. Hence, ideally, we would
+>> like to pass both.
+>>
+>> We are also open to other ideas.
+> 
+> I can not find public documentation (I think they are walled off by
+> registration), but correct me if I'm wrong:
+
+No unfortunately, you are not wrong here :-(
+
+> ADMAIF - peripheral side
+>  - kind of a small DMA for audio preipheral(s)?
+
+Yes this is the interface to the APE (audio processing engine) and data
+sent to the ADMAIF is then sent across a crossbar to one of many
+devices/interfaces (I2S, DMIC, etc). Basically a large mux that is user
+configurable depending on the use-case.
+
+>  - Variable FIFO size
+
+Yes.
+
+>  - sends DMA request to ADMA per words
+
+From Sameer's notes it says the ADMAIF send a signal to the ADMA per
+word, yes.
+
+> ADMA - system DMA
+>  - receives the DMA requests from ADMAIF
+>  - counts the requests
+>  - based on some threshold of the counter it will send/read from ADMAIF?
+>   - maxburst number of words probably?
+
+Sounds about right to me.
+
+> ADMA needs to know the ADMAIF's FIFO size because, it is the one who is
+> managing that FIFO from the outside, making sure that it does not over
+> or underrun?
+
+Yes.
+
+> And it is the one who sets the pace (in effect the DMA burst size - how
+> many bytes the DMA jumps between refills) of refills to the ADMAIF's FIFO?
+
+Yes.
+
+So currently, if you look at the ADMA driver
+(drivers/dma/tegra210-adma.c) you will see we use the src/dst_maxburst
+for the burst, but the FIFO size is hard-coded (see the
+TEGRA210_FIFO_CTRL_DEFAULT and TEGRA186_FIFO_CTRL_DEFAULT definitions).
+Ideally, we should not hard-code this but pass it.
+
+Given that there are no current users of the ADMA upstream, we could
+change the usage of the src/dst_maxburst, but being able to set the FIFO
+size as well would be ideal.
+
+Cheers
+Jon
+
 -- 
-2.20.1
-
+nvpublic

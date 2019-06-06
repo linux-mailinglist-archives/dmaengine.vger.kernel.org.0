@@ -2,185 +2,139 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7204A3717D
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Jun 2019 12:21:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BD60371FA
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Jun 2019 12:46:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfFFKVq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 6 Jun 2019 06:21:46 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:37692 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727469AbfFFKVq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Jun 2019 06:21:46 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x56ALcRA125801;
-        Thu, 6 Jun 2019 05:21:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1559816498;
-        bh=1x+gSBPFfyrVYhSU5AsOgKF2OaPXUOvGBBRT9+Ix9To=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=eG1gJbBZ1j92N0drtKBmLkis6wa5jdD3C3zeF2LudOk+795/t6lF7+RBaCBgOiaM+
-         Nnr83FDsFJRPT6zxRgwOr5jrIZmKb57y9wC/f9rV10NhoGVG7jdjOEDxPNlAibui0m
-         47CoH+P9WRUVPUvkBX8iG5qsXJoni5TP2BAWC7Do=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x56ALc79085945
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 6 Jun 2019 05:21:38 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 6 Jun
- 2019 05:21:37 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 6 Jun 2019 05:21:37 -0500
-Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x56ALZqB072566;
-        Thu, 6 Jun 2019 05:21:35 -0500
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
-        <mkumard@nvidia.com>
-References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
- <20190502060446.GI3845@vkoul-mobl.Dlink>
- <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
- <20190502122506.GP3845@vkoul-mobl.Dlink>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
- <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
- <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
-Date:   Thu, 6 Jun 2019 13:22:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1726631AbfFFKqA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 6 Jun 2019 06:46:00 -0400
+Received: from mail-eopbgr770078.outbound.protection.outlook.com ([40.107.77.78]:6870
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725784AbfFFKp7 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 6 Jun 2019 06:45:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6vELktsUt8Uw9NdeLG962mWqPWJ1+nXFdSGI9Q2LR+s=;
+ b=puwaV2LEvjF8pkJ5mLgTJoV3F1qpcafYySfeMut3bUHOVYL+OjU9qLSoez/LOjmy5RMX1HN8UyV5ar1rSi6QxmhxjZfYgN2SByL1wETZKzLfWTykGKFh4czNEigWITiiVEB7ljeswyl6H9xjJXHi4HFmmXaW0cyhHg6Ys/bMzGI=
+Received: from CY4PR03CA0011.namprd03.prod.outlook.com (2603:10b6:903:33::21)
+ by SN2PR03MB2270.namprd03.prod.outlook.com (2603:10b6:804:f::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.14; Thu, 6 Jun
+ 2019 10:45:57 +0000
+Received: from CY1NAM02FT007.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::205) by CY4PR03CA0011.outlook.office365.com
+ (2603:10b6:903:33::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.13 via Frontend
+ Transport; Thu, 6 Jun 2019 10:45:57 +0000
+Authentication-Results: spf=pass (sender IP is 137.71.25.57)
+ smtp.mailfrom=analog.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=analog.com;
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ CY1NAM02FT007.mail.protection.outlook.com (10.152.75.5) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1965.12
+ via Frontend Transport; Thu, 6 Jun 2019 10:45:56 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x56AjuCm013749
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK)
+        for <dmaengine@vger.kernel.org>; Thu, 6 Jun 2019 03:45:56 -0700
+Received: from saturn.ad.analog.com (10.48.65.129) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Thu, 6 Jun 2019 06:45:56 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <dmaengine@vger.kernel.org>
+CC:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH 1/4] dmaengine: virt-dma: store result on dma descriptor
+Date:   Thu, 6 Jun 2019 13:45:47 +0300
+Message-ID: <20190606104550.32336-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(39860400002)(136003)(2980300002)(199004)(189003)(106002)(8936002)(316002)(8676002)(36756003)(77096007)(26005)(1076003)(246002)(50466002)(50226002)(126002)(14444005)(356004)(6666004)(48376002)(47776003)(6916009)(7696005)(51416003)(2906002)(336012)(7636002)(5660300002)(2870700001)(4326008)(426003)(186003)(486006)(2351001)(2616005)(476003)(44832011)(70586007)(70206006)(305945005)(478600001)(86362001)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN2PR03MB2270;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ffa8fe2b-3b61-477f-f181-08d6ea6c283b
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:SN2PR03MB2270;
+X-MS-TrafficTypeDiagnostic: SN2PR03MB2270:
+X-Microsoft-Antispam-PRVS: <SN2PR03MB22701A5D94345A5BDDA965CDF9170@SN2PR03MB2270.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
+X-Forefront-PRVS: 00603B7EEF
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: soyju2eB+O6zh8S8lWonEMhlWqA5YEYo15Nqp8QggkSJO3IPwMplCzCswidlrZ0uKzKSpPDZJQKS/CH7Q/sEdfTpkdnCAVDL9jZAlaCoxmMUkHJDINcoDPLQvLDrckI98Y7ULWc/Jyp8AZvPbFdYmFzEPd5ZeGWsNWI4GgyjlT95yNAgv/kBXOLwwaMocqvgDmdiHeNK2xn6T0ExpyxDasH8/elV51hYAgCWY2Wj3OfGV85pqPIDiYHWEhunoahjKSwcIS2DZadvlI4t7Kqz7lw934RuPjrq9sjxDEq+jkmAfLA07dgf/6+0LkxlHlADbf8z/tTMWGmEvkTTIZhF6/Mf1Da9VXGMWL/ZPIExKuan1hk2uc9ANMM8vffAWy1bvr2usgdMEBNtyKSnkj0r64S4nC5JvmkAfub393oyt1A=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2019 10:45:56.9026
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ffa8fe2b-3b61-477f-f181-08d6ea6c283b
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN2PR03MB2270
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Jon, Sameer,
+This allows each virtual channel to store information about each transfer
+that completed, i.e. which transfer succeeded (or which failed) and if
+there was any residue data on each (completed) transfer.
 
-On 06/06/2019 10.14, Jon Hunter wrote:
-> 
-> On 06/06/2019 07:41, Sameer Pujar wrote:
->>
->> On 6/6/2019 11:30 AM, Peter Ujfalusi wrote:
->>> Hi Sameer,
->>>
->>> On 06/06/2019 6.49, Sameer Pujar wrote:
->>>> Sorry for late reply.
->>>> [Resending the reply since delivery failed for few recipients]
->>>> I discussed this internally with HW folks and below is the reason why
->>>> DMA needs
->>>> to know FIFO size.
->>>>
->>>> - FIFOs reside in peripheral device(ADMAIF), which is the ADMA interface
->>>> to the audio sub-system.
->>>> - ADMAIF has multiple channels and share FIFO buffer for individual
->>>> operations. There is a provision
->>>>    to allocate specific fifo size for each individual ADMAIF channel
->>>> from
->>>> the shared buffer.
->>>> - Tegra Audio DMA(ADMA) architecture is different from the usual DMA
->>>> engines, which you described earlier.
->>> It is not really different than what other DMAs are doing.
->>>
->>>> - The flow control logic is placed inside ADMA. Slave peripheral
->>>> device(ADMAIF) signals ADMA whenever a
->>>>    read or write happens on the FIFO(per WORD basis). Please note that
->>>> the signaling is per channel. There is
->>>>    no other signaling present from ADMAIF to ADMA.
->>>> - ADMA keeps a counter related to above signaling. Whenever a sufficient
->>>> space is available, it initiates a transfer.
->>>>    But the question is, how does it know when to transfer. This is the
->>>> reason, why ADMA has to be aware of FIFO
->>>>    depth of ADMAIF channel. Depending on the counters and FIFO depth, it
->>>> knows exactly when a free space is available
->>>>    in the context of a specific channel. On ADMA, FIFO_SIZE is just a
->>>> value which should match to actual FIFO_DEPTH/SIZE
->>>>    of ADMAIF channel.
->>>> - Now consider two cases based on above logic,
->>>>    * Case 1: when DMA_FIFO_SIZE > SLAVE_FIFO_SIZE
->>>>      In this case, ADMA thinks that there is enough space available for
->>>> transfer, when actually the FIFO data
->>>>      on slave is not consumed yet. It would result in OVERRUN.
->>>>    * Case 2: when DMA_FIFO_SIZE < SLAVE_FIFO_SIZE
->>>>      This is case where ADMA won’t transfer, even though sufficient
->>>> space
->>>> is available, resulting in UNDERRUN.
->>>> - The guideline is to program, DMA_FIFO_SIZE(on ADMA side) =
->>>> SLAVE_FIFO_SIZE(on ADMAIF side) and hence we need a
->>>>    way to communicate fifo size info to ADMA.
->>> The src_maxburst / dst_maxburst is exactly for this reason. To
->>> communicate how much data should be transferred per DMA request to/from
->>> peripheral.
->>>
->>> In TI land we have now 3 DMA engines servicing McASP. McASP has FIFO
->>> which is dynamically configured (you can see the AFIFO of McASP as a
->>> small DMA: on McASP side it services the peripheral, on the other side
->>> it interacts with the given system DMA used by the SoC - EDMA, sDMA or
->>> UDMAP). All DMAs needs a bit different configuration, but the AFIFO
->>> depth on the McASP side is coming in via the src/dst_maxburst and the
->>> drivers just need to interpret it correctly.
->>>
->>> It does sounds like that FIFO_SIZE == src/dst_maxburst in your case as
->>> well.
->> Not exactly equal.
->> ADMA burst_size can range from 1(WORD) to 16(WORDS)
->> FIFO_SIZE can be adjusted from 16(WORDS) to 1024(WORDS) [can vary in
->> multiples of 16]
-> 
-> So I think that the key thing to highlight here, is that the as Sameer
-> highlighted above for the Tegra ADMA there are two values that need to
-> be programmed; the DMA client FIFO size and the max burst size. The ADMA
-> has register fields for both of these.
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/dma/virt-dma.c | 4 ++--
+ drivers/dma/virt-dma.h | 4 ++++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-How does the ADMA uses the 'client FIFO size' and 'max burst size'
-values and what is the relation of these values to the peripheral side
-(ADMAIF)?
+diff --git a/drivers/dma/virt-dma.c b/drivers/dma/virt-dma.c
+index 88ad8ed2a8d6..bf560a20c8a8 100644
+--- a/drivers/dma/virt-dma.c
++++ b/drivers/dma/virt-dma.c
+@@ -101,7 +101,7 @@ static void vchan_complete(unsigned long arg)
+ 	}
+ 	spin_unlock_irq(&vc->lock);
+ 
+-	dmaengine_desc_callback_invoke(&cb, NULL);
++	dmaengine_desc_callback_invoke(&cb, &vd->tx_result);
+ 
+ 	list_for_each_entry_safe(vd, _vd, &head, node) {
+ 		dmaengine_desc_get_callback(&vd->tx, &cb);
+@@ -109,7 +109,7 @@ static void vchan_complete(unsigned long arg)
+ 		list_del(&vd->node);
+ 		vchan_vdesc_fini(vd);
+ 
+-		dmaengine_desc_callback_invoke(&cb, NULL);
++		dmaengine_desc_callback_invoke(&cb, &vd->tx_result);
+ 	}
+ }
+ 
+diff --git a/drivers/dma/virt-dma.h b/drivers/dma/virt-dma.h
+index b09b75ab0751..eb767c583b7e 100644
+--- a/drivers/dma/virt-dma.h
++++ b/drivers/dma/virt-dma.h
+@@ -17,6 +17,7 @@
+ 
+ struct virt_dma_desc {
+ 	struct dma_async_tx_descriptor tx;
++	struct dmaengine_result tx_result;
+ 	/* protected by vc.lock */
+ 	struct list_head node;
+ };
+@@ -65,6 +66,9 @@ static inline struct dma_async_tx_descriptor *vchan_tx_prep(struct virt_dma_chan
+ 	vd->tx.tx_submit = vchan_tx_submit;
+ 	vd->tx.desc_free = vchan_tx_desc_free;
+ 
++	vd->tx_result.result = DMA_TRANS_NOERROR;
++	vd->tx_result.residue = 0;
++
+ 	spin_lock_irqsave(&vc->lock, flags);
+ 	list_add_tail(&vd->node, &vc->desc_allocated);
+ 	spin_unlock_irqrestore(&vc->lock, flags);
+-- 
+2.20.1
 
-> As you can see from the above the FIFO size can be much greater than the
-> burst size and so ideally both of these values would be passed to the DMA.
-> 
-> We could get by with just passing the FIFO size (as the max burst size)
-> and then have the DMA driver set the max burst size depending on this,
-> but this does feel quite correct for this DMA. Hence, ideally, we would
-> like to pass both.
-> 
-> We are also open to other ideas.
-
-I can not find public documentation (I think they are walled off by
-registration), but correct me if I'm wrong:
-ADMAIF - peripheral side
- - kind of a small DMA for audio preipheral(s)?
- - Variable FIFO size
- - sends DMA request to ADMA per words
-ADMA - system DMA
- - receives the DMA requests from ADMAIF
- - counts the requests
- - based on some threshold of the counter it will send/read from ADMAIF?
-  - maxburst number of words probably?
-
-ADMA needs to know the ADMAIF's FIFO size because, it is the one who is
-managing that FIFO from the outside, making sure that it does not over
-or underrun?
-And it is the one who sets the pace (in effect the DMA burst size - how
-many bytes the DMA jumps between refills) of refills to the ADMAIF's FIFO?
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

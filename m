@@ -2,163 +2,112 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B6F637209
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Jun 2019 12:49:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48B463721F
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Jun 2019 12:53:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbfFFKtX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 6 Jun 2019 06:49:23 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:18957 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725784AbfFFKtX (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Jun 2019 06:49:23 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cf8efb00000>; Thu, 06 Jun 2019 03:49:20 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 06 Jun 2019 03:49:20 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 06 Jun 2019 03:49:20 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Jun
- 2019 10:49:18 +0000
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
-        <mkumard@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
- <20190502060446.GI3845@vkoul-mobl.Dlink>
- <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
- <20190502122506.GP3845@vkoul-mobl.Dlink>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
- <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
- <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
- <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
-Date:   Thu, 6 Jun 2019 11:49:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1726738AbfFFKxw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 6 Jun 2019 06:53:52 -0400
+Received: from mail-eopbgr820074.outbound.protection.outlook.com ([40.107.82.74]:64404
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726818AbfFFKxw (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 6 Jun 2019 06:53:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l77Rja3NVTr1FASFf4N4OECgTfkCHz7c77vasZ9/Eo8=;
+ b=Pnjkm7nhv0tqJIvZdjKngmhWFeXorKlY3mPcjIC05UwWXUJG/JHe+JSCAKqA9Xm+On/bGyW4TBGkLgpm1Mcp/7oWUiPZgRh2Pw63isCx1+ID3/76oQTOynCMYhWNAP0WRBweS+BjT0ysdDhc/+U8oTfnArpPfivVkEZ14+aPlUU=
+Received: from DM3PR03CA0023.namprd03.prod.outlook.com (2603:10b6:0:50::33) by
+ CY4PR03MB3128.namprd03.prod.outlook.com (2603:10b6:910:53::29) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.12; Thu, 6 Jun 2019 10:53:49 +0000
+Received: from BL2NAM02FT028.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::204) by DM3PR03CA0023.outlook.office365.com
+ (2603:10b6:0:50::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1943.21 via Frontend
+ Transport; Thu, 6 Jun 2019 10:53:49 +0000
+Authentication-Results: spf=pass (sender IP is 137.71.25.55)
+ smtp.mailfrom=analog.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=analog.com;
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ BL2NAM02FT028.mail.protection.outlook.com (10.152.77.165) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1965.12
+ via Frontend Transport; Thu, 6 Jun 2019 10:53:49 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x56ArnlB022967
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK)
+        for <dmaengine@vger.kernel.org>; Thu, 6 Jun 2019 03:53:49 -0700
+Received: from saturn.ad.analog.com (10.48.65.129) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Thu, 6 Jun 2019 06:53:48 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <dmaengine@vger.kernel.org>
+CC:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] dmaengine: axi-dmac: update license header
+Date:   Thu, 6 Jun 2019 13:53:44 +0300
+Message-ID: <20190606105344.3405-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1559818160; bh=WzzhEJK2De3f43eCu/BsQHMI4/xvHgWD7ruox2mfSOg=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=k57U96xj4MeWVr4uU7VFDpQyr5ZsS+4muuzcTIAQ1QtIWGfjypzQHPUBi3Fv92EcI
-         LzBIVxGr0iSFMR09zDaT/+vfJQmf7fObPdj0cJpoPZAKdwiH3TkFu5zVaK3gGbVUQd
-         yL/LH5aNtSW0Fqds4Nwcr7gRJVk9J195aBM4yzyAfIdG3+h1T9a6bhmwbgdgM+fSEr
-         5KyHDYOlYrhWwdCtrzJEQhrAgIjNIw5Yx6Nk/cIs0qfQ7F8DD2r3UPsBHtW+LXGiUL
-         HJXIn3J8Fw6s1AHDxhXX+64j+tOhQkuU4aBxqgmYj+O1BSlvNaC6sGgDc9E9rOqlPV
-         CvTDb6pOlE5PQ==
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(136003)(396003)(376002)(39850400004)(2980300002)(199004)(189003)(2870700001)(36756003)(106002)(246002)(8676002)(2351001)(478600001)(126002)(476003)(2616005)(486006)(44832011)(316002)(426003)(336012)(6916009)(26005)(77096007)(1076003)(186003)(4744005)(50226002)(8936002)(51416003)(7696005)(4326008)(47776003)(86362001)(305945005)(6666004)(356004)(5660300002)(107886003)(70586007)(70206006)(48376002)(7636002)(50466002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR03MB3128;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 889809d6-bd4a-44db-16d5-08d6ea6d41c1
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:CY4PR03MB3128;
+X-MS-TrafficTypeDiagnostic: CY4PR03MB3128:
+X-Microsoft-Antispam-PRVS: <CY4PR03MB3128F955501A9655F39A160BF9170@CY4PR03MB3128.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 00603B7EEF
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: TkVpP7aYpjrgnnR+TagK+VjvWWqsT1KgMQ0KYLCuUN6ZHVrvm9r1z4x1x/hNFU2lSGJ1iFFV7Ut+ve6dVBhuHWwhIQ20jQ8YJ/aZlaaswtH/f53IoH7uo0IKzRJt2rLCsjlpXQVD0wPqWUiWMgcObwrSCiv7G6MxuWFaWkCznGgQUL/9AMTgeifzk7bQKhHwI0Nb9roK4tQlpZmQoJIkZCp1332JTUR9IhbmjS0zrKH63JSWeoAwldX9WlflvSVnGwuXF/KDnj5MpCWNyQGklajIZgpGpJamB4bSidQCZJTi5p+XP5Xqq3g5XTY00fwHxHyEIsv3DVIieMVQx4VEkv0WadEEnA4g57tDLMt9vlxU1BRgPDFkoDvRcXar8hKd2QKW+sqA09Z4wPdBrI7uRKJD2BGs2axIe86L0oNUcX8=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2019 10:53:49.4061
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 889809d6-bd4a-44db-16d5-08d6ea6d41c1
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR03MB3128
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+The change replaces the old license information in the comment header with
+the new SPDX license specifier.
+As well as bumping the year range from 2013-2015 to 2013-2019.
 
-On 06/06/2019 11:22, Peter Ujfalusi wrote:
+The latter also reflects recent changes that were added to the driver.
 
-...
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/dma/dma-axi-dmac.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
->>>> It does sounds like that FIFO_SIZE == src/dst_maxburst in your case as
->>>> well.
->>> Not exactly equal.
->>> ADMA burst_size can range from 1(WORD) to 16(WORDS)
->>> FIFO_SIZE can be adjusted from 16(WORDS) to 1024(WORDS) [can vary in
->>> multiples of 16]
->>
->> So I think that the key thing to highlight here, is that the as Sameer
->> highlighted above for the Tegra ADMA there are two values that need to
->> be programmed; the DMA client FIFO size and the max burst size. The ADMA
->> has register fields for both of these.
-> 
-> How does the ADMA uses the 'client FIFO size' and 'max burst size'
-> values and what is the relation of these values to the peripheral side
-> (ADMAIF)?
-
-Per Sameer's previous comment, the FIFO size is used by the ADMA to
-determine how much space is available in the FIFO. I assume the burst
-size just limits how much data is transferred per transaction.
-
->> As you can see from the above the FIFO size can be much greater than the
->> burst size and so ideally both of these values would be passed to the DMA.
->>
->> We could get by with just passing the FIFO size (as the max burst size)
->> and then have the DMA driver set the max burst size depending on this,
->> but this does feel quite correct for this DMA. Hence, ideally, we would
->> like to pass both.
->>
->> We are also open to other ideas.
-> 
-> I can not find public documentation (I think they are walled off by
-> registration), but correct me if I'm wrong:
-
-No unfortunately, you are not wrong here :-(
-
-> ADMAIF - peripheral side
->  - kind of a small DMA for audio preipheral(s)?
-
-Yes this is the interface to the APE (audio processing engine) and data
-sent to the ADMAIF is then sent across a crossbar to one of many
-devices/interfaces (I2S, DMIC, etc). Basically a large mux that is user
-configurable depending on the use-case.
-
->  - Variable FIFO size
-
-Yes.
-
->  - sends DMA request to ADMA per words
-
-From Sameer's notes it says the ADMAIF send a signal to the ADMA per
-word, yes.
-
-> ADMA - system DMA
->  - receives the DMA requests from ADMAIF
->  - counts the requests
->  - based on some threshold of the counter it will send/read from ADMAIF?
->   - maxburst number of words probably?
-
-Sounds about right to me.
-
-> ADMA needs to know the ADMAIF's FIFO size because, it is the one who is
-> managing that FIFO from the outside, making sure that it does not over
-> or underrun?
-
-Yes.
-
-> And it is the one who sets the pace (in effect the DMA burst size - how
-> many bytes the DMA jumps between refills) of refills to the ADMAIF's FIFO?
-
-Yes.
-
-So currently, if you look at the ADMA driver
-(drivers/dma/tegra210-adma.c) you will see we use the src/dst_maxburst
-for the burst, but the FIFO size is hard-coded (see the
-TEGRA210_FIFO_CTRL_DEFAULT and TEGRA186_FIFO_CTRL_DEFAULT definitions).
-Ideally, we should not hard-code this but pass it.
-
-Given that there are no current users of the ADMA upstream, we could
-change the usage of the src/dst_maxburst, but being able to set the FIFO
-size as well would be ideal.
-
-Cheers
-Jon
-
+diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+index a35b76f08dfa..5c81b798cadb 100644
+--- a/drivers/dma/dma-axi-dmac.c
++++ b/drivers/dma/dma-axi-dmac.c
+@@ -1,10 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Driver for the Analog Devices AXI-DMAC core
+  *
+- * Copyright 2013-2015 Analog Devices Inc.
++ * Copyright 2013-2019 Analog Devices Inc.
+  *  Author: Lars-Peter Clausen <lars@metafoo.de>
+- *
+- * Licensed under the GPL-2.
+  */
+ 
+ #include <linux/clk.h>
 -- 
-nvpublic
+2.20.1
+

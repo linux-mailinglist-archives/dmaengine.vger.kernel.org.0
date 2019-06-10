@@ -2,106 +2,177 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2057D3B00F
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Jun 2019 09:57:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48C6D3B01F
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Jun 2019 09:59:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388273AbfFJH5g (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 10 Jun 2019 03:57:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39454 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388109AbfFJH5f (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 10 Jun 2019 03:57:35 -0400
-Received: from localhost (unknown [122.178.227.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7206120859;
-        Mon, 10 Jun 2019 07:57:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560153455;
-        bh=0J5cz45KXdQEbC0zP9NDZ6yJHvqD3V+zR61spu7qeCg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aNmT+sq6h4g+GUszEkq0f7ULAAPg8TMdX+o7uMtCkkOHxR+2c17Jlkh/ieYVwB5/d
-         lFk6rRtWpg6OYkmoXBK+TnaHzF4BeeLKtiT1KS5d+GMAjULZMa7u4Nir4c9lSL4x2f
-         qV+4ummAhbKbok5tLKME4d8egrLfzuBKTqd8E7yU=
-Date:   Mon, 10 Jun 2019 13:24:27 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH/RFC] dmaengine: Create symlinks from DMA channels to
- slaves
-Message-ID: <20190610075427.GP9160@vkoul-mobl.Dlink>
-References: <20190607113835.15376-1-geert+renesas@glider.be>
+        id S2388249AbfFJH72 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 10 Jun 2019 03:59:28 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:4982 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387781AbfFJH71 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 10 Jun 2019 03:59:27 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cfe0dde0000>; Mon, 10 Jun 2019 00:59:26 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 10 Jun 2019 00:59:25 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 10 Jun 2019 00:59:25 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Jun
+ 2019 07:59:22 +0000
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Sameer Pujar <spujar@nvidia.com>, Vinod Koul <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <mkumard@nvidia.com>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+ <20190502122506.GP3845@vkoul-mobl.Dlink>
+ <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+ <20190504102304.GZ3845@vkoul-mobl.Dlink>
+ <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
+ <20190506155046.GH3845@vkoul-mobl.Dlink>
+ <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
+ <ed95f03a-bbe7-ad62-f2e1-9bfe22ec733a@ti.com>
+ <4cab47d0-41c3-5a87-48e1-d7f085c2e091@nvidia.com>
+ <8a5b84db-c00b-fff4-543f-69d90c245660@nvidia.com>
+ <3f836a10-eaf3-f59b-7170-6fe937cf2e43@ti.com>
+ <a36302fc-3173-070b-5c97-7d2c55d5e2cc@nvidia.com>
+ <a08bec36-b375-6520-eff4-3d847ddfe07d@ti.com>
+ <4593f37c-5e89-8559-4e80-99dbfe4235de@nvidia.com>
+ <d0db90e3-3d05-dfba-8768-28511d9ee3ac@ti.com>
+ <5208a50a-9ca0-8f24-9ad0-d7503ec53f1c@nvidia.com>
+ <ba845a19-5dfb-a891-719f-43821b2dd412@nvidia.com>
+ <e67a2d7c-5bd1-93ad-fe75-afcab38bc17c@ti.com>
+ <a65f2b07-4a3a-7f83-e21f-8b374844a4b9@nvidia.com>
+ <56aa6f45-cfd8-7f1e-9392-628ceb58093f@ti.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <d11e3e5e-e99e-868f-a2e5-7e1f82a02e0f@nvidia.com>
+Date:   Mon, 10 Jun 2019 08:59:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190607113835.15376-1-geert+renesas@glider.be>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <56aa6f45-cfd8-7f1e-9392-628ceb58093f@ti.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560153566; bh=JcATbT2l7rEBL58Wu0smiooiH2B1lY4Spxl1zeqk/aw=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=FVvmuguvwlhcn8Cq++i3XakmXucxFPX17+1d1IRnD/96IYpte5Xh++bIY1ocbD0st
+         IoTu/ZtQf2Dh8zQySP0CNTl4ulU/YDFLsNYKK0p9iEj157I8SxEVnzU0MLzXBdKnjF
+         x59PwXh3Nl2y5PQyebs/DZjrEY3+EIl3fX4Uq14RWvLFZFgdKk8IEYprx+AttHlY5f
+         tWybs5s4Fil9NOnkEUbfR/Wzjgs/AgTwiutTktKo2IhamRC4D/KVnqBSYse6wSgB5g
+         VJG3CywhmM2R5ZSvqjkOCgWZXdtVb/HyOddXf1cI3XyfH1pnn8nMlXHyFvCZG86lL1
+         TiVb+ohxqR05Q==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 07-06-19, 13:38, Geert Uytterhoeven wrote:
-> Currently it is not easy to find out which DMA channels are in use, and
-> by which slave devices.
+
+On 07/06/2019 14:35, Peter Ujfalusi wrote:
 > 
-> Fix this by creating in sysfs a "slave" symlink from the DMA channel to
-> the actual slave device when a channel is requested, and removing it
-> again when the channel is released.
 > 
-> For now this is limited to DT and ACPI.
+> On 07/06/2019 15.58, Jon Hunter wrote:
+>>> Imho if you can explain it without using 'HACK' in the sentences it
+>>> might be OK, but it does not feel right.
+>>
+>> I don't perceive this as a hack. Although from looking at the
+>> description of the src/dst_maxburst these are burst size with regard to
+>> the device, so maybe it is a stretch.
+>>
+>>> However since your ADMA and ADMIF is highly coupled and it does needs
+>>> special maxburst information (burst and allocated FIFO depth) I would
+>>> rather use src_maxburst/dst_maxburst alone for DEV_TO_MEM/MEM_TO_DEV:
+>>>
+>>> ADMA_BURST_SIZE(maxburst)	((maxburst) & 0xff)
+>>> ADMA_FIFO_SIZE(maxburst)	(((maxburst) >> 8) & 0xffffff)
+>>>
+>>> So lower 1 byte is the burst value you want from ADMA
+>>> the other 3 bytes are the allocated FIFO size for the given ADMAIF channel.
+>>>
+>>> Sure, you need a header for this to make sure there is no
+>>> misunderstanding between the two sides.
+>>
+>> I don't like this because as I mentioned to Dmitry, the ADMA can perform
+>> memory-to-memory transfers where such encoding would not be applicable.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Questions:
->   1. Do you think this is useful?
-
-Yes for me at least :)
-
->   2. Should backlinks (e.g. "dma:<name>") be created from the slave
->      device to the DMA channel?
->      This requires storing the name in struct dma_chan, for later
->      symlink removal.
-
-that would certainly be more helpful
-
->   3. Should this be extended to other ways of requesting channels?
->      In many cases, no device pointer is available, so a device pointer
->      parameter has to be added to all DMA channel request APIs that
->      don't have it yet.
-
-I think that would need to be done.
-
-> ---
->  drivers/dma/dmaengine.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> mem2mem does not really use dma_slave_config, it is for used by
+> is_slave_direction() == true type of transfers.
 > 
-> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-> index 03ac4b96117cd8db..c11476f76fc96bcf 100644
-> --- a/drivers/dma/dmaengine.c
-> +++ b/drivers/dma/dmaengine.c
-> @@ -706,6 +706,10 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
->  
->  	if (chan) {
->  		/* Valid channel found or requester needs to be deferred */
-> +		if (!IS_ERR(chan) &&
-> +		     sysfs_create_link(&chan->dev->device.kobj, &dev->kobj,
-> +				       "slave"))
-> +			dev_err(dev, "Cannot create DMA slave symlink\n");
->  		if (!IS_ERR(chan) || PTR_ERR(chan) == -EPROBE_DEFER)
->  			return chan;
->  	}
-> @@ -786,6 +790,7 @@ void dma_release_channel(struct dma_chan *chan)
->  	/* drop PRIVATE cap enabled by __dma_request_channel() */
->  	if (--chan->device->privatecnt == 0)
->  		dma_cap_clear(DMA_PRIVATE, chan->device->cap_mask);
-> +	sysfs_remove_link(&chan->dev->device.kobj, "slave");
->  	mutex_unlock(&dma_list_mutex);
->  }
->  EXPORT_SYMBOL_GPL(dma_release_channel);
-> -- 
-> 2.17.1
+> But true, if you use ADMA against anything other than ADMAIF then this
+> might be not right for non cyclic transfers.
+> 
+>> That does not align with the description in the
+>> include/linux/dmaengine.h either.
+> 
+> True.
+> 
+>>> Or pass the allocated FIFO size via maxburst and then the ADMA driver
+>>> will pick a 'good/safe' burst value for it.
+>>>
+>>> Or new member, but do you need two of them for src/dst? Probably
+>>> fifo_depth is better word for it, or allocated_fifo_depth.
+>>
+>> Right, so looking at the struct dma_slave_config we have ...
+>>
+>> u32 src_maxburst;
+>> u32 dst_maxburst;
+>> u32 src_port_window_size;
+>> u32 dst_port_window_size;
+>>
+>> Now if we could make these window sizes a union like the following this
+>> could work ...
+>>
+>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+>> index 8fcdee1c0cf9..851251263527 100644
+>> --- a/include/linux/dmaengine.h
+>> +++ b/include/linux/dmaengine.h
+>> @@ -360,8 +360,14 @@ struct dma_slave_config {
+>>         enum dma_slave_buswidth dst_addr_width;
+>>         u32 src_maxburst;
+>>         u32 dst_maxburst;
+>> -       u32 src_port_window_size;
+>> -       u32 dst_port_window_size;
+>> +       union {
+>> +               u32 port_window_size;
+>> +               u32 port_fifo_size;
+>> +       } src;
+>> +       union {
+>> +               u32 port_window_size;
+>> +               u32 port_fifo_size;
+>> +       } dst;
+> 
+> What if in the future someone will have a setup where they would need both?
+
+I think if you look at the description for the port_window_size you will
+see that this is not applicable for FIFOs and so these would be mutually
+exclusive AFAICT. However, if there was an even weirder DMA out there in
+the future it could always be patched :-)
+
+> So not sure. Your problems are coming from a split DMA setup where the
+> two are highly coupled, but sits in a different place and need to be
+> configured as one device.
+> 
+> I think xilinx_dma is facing with similar issues and they have a custom
+> API to set parameters which does not fit or is peripheral specific:
+> include/linux/dma/xilinx_dma.h
+> 
+> Not sure if that is an acceptable solution.
+
+I am not a fan of that but it could work.
+
+Cheers
+Jon
 
 -- 
-~Vinod
+nvpublic

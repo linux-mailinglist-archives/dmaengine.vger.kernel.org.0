@@ -2,122 +2,62 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 20B093AF4F
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Jun 2019 09:07:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD4673AFD9
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Jun 2019 09:45:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387614AbfFJHHq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 10 Jun 2019 03:07:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41590 "EHLO mail.kernel.org"
+        id S2388247AbfFJHpz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 10 Jun 2019 03:45:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387714AbfFJHHp (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 10 Jun 2019 03:07:45 -0400
-Received: from localhost (unknown [122.182.223.237])
+        id S2387781AbfFJHpy (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 10 Jun 2019 03:45:54 -0400
+Received: from localhost (unknown [122.178.227.46])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84BFB206BB;
-        Mon, 10 Jun 2019 07:07:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D6C620859;
+        Mon, 10 Jun 2019 07:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560150464;
-        bh=qa1R+Z6o4NQ9iIJ4PtCjuYsKgDnCR0PP6qq+ZamlHxk=;
+        s=default; t=1560152754;
+        bh=ENaV0hH+t6dBvquoHYccnSfqO4CQH7u4IkveLe6qZzM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iFrJxfgZp4Z3jnCimPIY0JLjLiojA1wNivT4SlZdEVA4FbUj0ypGyThVBlMFcU5yb
-         ySIbXBXCr+junb4c8ZImpi7h4oiruBDi3Qy2E2Mv/7ZmyFhk/vqtgcL732PtMdsaP/
-         lNjbV26tgt9bwX7Kh6Hs5RIao7aG1YPnY/FazHRg=
-Date:   Mon, 10 Jun 2019 12:34:35 +0530
+        b=Ff8vzlj0sGdqchlj/ZcmdtKkv94kfs1E7RptUp7cFN5X074GV6fliy9+tFCtS5uA6
+         R6dIV28R/XdvcvnN9sRoBBtwS6V2yRgi2GLm/EaQcXC721U55GCxvvyTtRZpz+dj61
+         o4dZE+9QbQYVzGO60bvF4IKXj0Cg0lhLcKVfSeFc=
+Date:   Mon, 10 Jun 2019 13:12:45 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com
-Subject: Re: [PATCH] dmaengine: dmatest: Add support for completion polling
-Message-ID: <20190610070435.GL9160@vkoul-mobl.Dlink>
-References: <20190529083724.18182-1-peter.ujfalusi@ti.com>
- <4f327f4a-9e3d-c9d2-fe48-14e492b07417@ti.com>
- <793f9f48-0609-4aa5-2688-bf30525e229c@ti.com>
- <20190604124527.GG15118@vkoul-mobl>
- <0e909b8a-8296-7c6a-058a-3fc780d66195@ti.com>
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     linux-pci@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] dmaengine: Add Synopsys eDMA IP driver (version 0)
+Message-ID: <20190610074245.GM9160@vkoul-mobl.Dlink>
+References: <cover.1559654565.git.gustavo.pimentel@synopsys.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0e909b8a-8296-7c6a-058a-3fc780d66195@ti.com>
+In-Reply-To: <cover.1559654565.git.gustavo.pimentel@synopsys.com>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 04-06-19, 16:35, Peter Ujfalusi wrote:
+On 04-06-19, 15:29, Gustavo Pimentel wrote:
+> Add Synopsys eDMA IP driver (version 0 and for EP side only) to Linux
+> kernel. This IP is generally distributed with Synopsys PCIe EndPoint IP
+> (depends of the use and licensing agreement), which supports:
+>  - legacy and unroll modes
+>  - 16 independent and concurrent channels (8 write + 8 read)
+>  - supports linked list (scatter-gather) transfer
+>  - each linked list descriptor can transfer from 1 byte to 4 Gbytes
+>  - supports cyclic transfer
+>  - PCIe EndPoint glue-logic
 > 
-> 
-> On 04/06/2019 15.45, Vinod Koul wrote:
-> > On 03-06-19, 10:05, Peter Ujfalusi wrote:
-> > 
-> >>> I think the main question is how polling for completion should be
-> >>> handled when client does not request for completion interrupt, thus we
-> >>> will have no callback in the DMA driver when the transfer is completed.
-> >>>
-> >>> If DMA_PREP_INTERRUPT is set for the tx_descriptor then the polling will
-> >>> wait until the DMA driver internally receives the interrupt that the
-> >>> transfer is done and sets the cookie to completed state.
-> >>>
-> >>> However if DMA_PREP_INTERRUPT is not set, the DMA driver will not get
-> >>> notification from the HW that is the transfer is done, the only way to
-> >>> know is to check the tx_status and based on the residue (if it is 0 then
-> >>> it is done) decide what to tell the client.
-> >>>
-> >>> Should the client call dmaengine_terminate_* after the polling returned
-> >>> unconditionally to free up the descriptor?
-> >>
-> >> This is how omap-dma is handling the polled memcpy support.
-> > 
-> > Yes that is a good question. Even if the client does not set
-> > DMA_PREP_INTERRUPT would there be no interrupt generated by controller
-> > on txn completion? If not how will next txn be submitted to the
-> > hardware.
-> > 
-> > I think we should view DMA_PREP_INTERRUPT from client pov, but
-> > controller cannot get away with disabling interrupts IMO.
-> 
-> What happens if client is issuing a DMA memcpy (short one) while
-> interrupts are disabled?
-> 
-> The user for this is:
-> drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
-> 
-> commit: f5b9930b85dc6319fd6bcc259e447eff62fc691c
-> 
-> The interrupt based completion is not going to work in some cases, the
-> DMA driver should obey that the missing DMA_PREP_INTERRUPT really
-> implies that interrupts can not be used.
+> This patch series contains:
+>  - eDMA core + eDMA core v0 driver (implements the interface with
+>  DMAengine controller APIs and interfaces with eDMA HW block)
+>  - eDMA PCIe glue-logic reference driver (attaches to Synopsys EP and
+>  provides memory access to eDMA core driver)
 
-well yes but how do we *assume* completion and issue subsequent txns?
-Does driver create a task and poll?
-
-> 
-> > Assuming I had enough caffeine before I thought process, then client would
-> > poll descriptor status using cookie and should free up once the cookie
-> > is freed, makes sense?
-> 
-> OK, so clients are expected to call dmaengine_terminate_*
-> unconditionally after the transfer is completed, right?
-
-How do you know/detect transfer is completed?
-> 
-> If we use interrupts then the handler would anyway free up the
-> descriptor, so terminating should not do any harm, if we can not have
-> interrupts then terminate will clear up the completed descriptor
-> proactively.
-
-yes terminate part is fine.
-
-> In any case I have updated the EDMA patch to do the same thing in case
-> of polling w/o interrupts as it would do in the completion irq handler,
-> and similar approach prepared for omap-dma as well.
-> 
-> - Péter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Applied all, thanks
 
 -- 
 ~Vinod

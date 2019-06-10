@@ -2,24 +2,24 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 473183B066
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Jun 2019 10:17:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA6AF3B054
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Jun 2019 10:16:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388518AbfFJIQn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 10 Jun 2019 04:16:43 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:37446 "EHLO inva020.nxp.com"
+        id S2388527AbfFJIQo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 10 Jun 2019 04:16:44 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:37858 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388499AbfFJIQm (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:16:42 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6C3FE1A07CA;
-        Mon, 10 Jun 2019 10:16:40 +0200 (CEST)
+        id S2388516AbfFJIQo (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 10 Jun 2019 04:16:44 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2D868200737;
+        Mon, 10 Jun 2019 10:16:42 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6A3ED1A07CF;
-        Mon, 10 Jun 2019 10:16:32 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2C0B320072F;
+        Mon, 10 Jun 2019 10:16:34 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C699640324;
-        Mon, 10 Jun 2019 16:16:22 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 81CE9402C0;
+        Mon, 10 Jun 2019 16:16:24 +0800 (SGT)
 From:   yibin.gong@nxp.com
 To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, broonie@kernel.org,
@@ -29,9 +29,9 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
 Cc:     linux-spi@vger.kernel.org, linux-imx@nxp.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v5 12/15] ARM: dts: imx6ul: add dma support on ecspi
-Date:   Mon, 10 Jun 2019 16:17:50 +0800
-Message-Id: <20190610081753.11422-13-yibin.gong@nxp.com>
+Subject: [PATCH v5 13/15] ARM: dts: imx6sll: correct sdma compatible
+Date:   Mon, 10 Jun 2019 16:17:51 +0800
+Message-Id: <20190610081753.11422-14-yibin.gong@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190610081753.11422-1-yibin.gong@nxp.com>
 References: <20190610081753.11422-1-yibin.gong@nxp.com>
@@ -43,53 +43,27 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Robin Gong <yibin.gong@nxp.com>
 
-Add dma support on ecspi.
+Correct sdma compatible since ecspi errata ERR009165 has been fixed
+on i.mx6sll as i.mx6ul.
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 ---
- arch/arm/boot/dts/imx6ul.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/imx6sll.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index fc388b8..4a34316 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -227,6 +227,8 @@
- 					clocks = <&clks IMX6UL_CLK_ECSPI1>,
- 						 <&clks IMX6UL_CLK_ECSPI1>;
- 					clock-names = "ipg", "per";
-+					dmas = <&sdma 3 7 1>, <&sdma 4 7 2>;
-+					dma-names = "rx", "tx";
- 					status = "disabled";
- 				};
+diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
+index 1b4899f..d810e10 100644
+--- a/arch/arm/boot/dts/imx6sll.dtsi
++++ b/arch/arm/boot/dts/imx6sll.dtsi
+@@ -619,7 +619,7 @@
+ 			};
  
-@@ -239,6 +241,8 @@
- 					clocks = <&clks IMX6UL_CLK_ECSPI2>,
- 						 <&clks IMX6UL_CLK_ECSPI2>;
- 					clock-names = "ipg", "per";
-+					dmas = <&sdma 5 7 1>, <&sdma 6 7 2>;
-+					dma-names = "rx", "tx";
- 					status = "disabled";
- 				};
- 
-@@ -251,6 +255,8 @@
- 					clocks = <&clks IMX6UL_CLK_ECSPI3>,
- 						 <&clks IMX6UL_CLK_ECSPI3>;
- 					clock-names = "ipg", "per";
-+					dmas = <&sdma 7 7 1>, <&sdma 8 7 2>;
-+					dma-names = "rx", "tx";
- 					status = "disabled";
- 				};
- 
-@@ -263,6 +269,8 @@
- 					clocks = <&clks IMX6UL_CLK_ECSPI4>,
- 						 <&clks IMX6UL_CLK_ECSPI4>;
- 					clock-names = "ipg", "per";
-+					dmas = <&sdma 9 7 1>, <&sdma 10 7 2>;
-+					dma-names = "rx", "tx";
- 					status = "disabled";
- 				};
- 
+ 			sdma: dma-controller@20ec000 {
+-				compatible = "fsl,imx6sll-sdma", "fsl,imx35-sdma";
++				compatible = "fsl,imx6sll-sdma", "fsl,imx6ul-sdma";
+ 				reg = <0x020ec000 0x4000>;
+ 				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SLL_CLK_IPG>,
 -- 
 2.7.4
 

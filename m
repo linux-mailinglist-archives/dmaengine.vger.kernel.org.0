@@ -2,24 +2,24 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 103243B06A
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Jun 2019 10:17:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 473183B066
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Jun 2019 10:17:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388498AbfFJIQk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 10 Jun 2019 04:16:40 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:37768 "EHLO inva021.nxp.com"
+        id S2388518AbfFJIQn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 10 Jun 2019 04:16:43 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:37446 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388480AbfFJIQk (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 10 Jun 2019 04:16:40 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AFB9A200737;
-        Mon, 10 Jun 2019 10:16:38 +0200 (CEST)
+        id S2388499AbfFJIQm (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 10 Jun 2019 04:16:42 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6C3FE1A07CA;
+        Mon, 10 Jun 2019 10:16:40 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id ADBB7200733;
-        Mon, 10 Jun 2019 10:16:30 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6A3ED1A07CF;
+        Mon, 10 Jun 2019 10:16:32 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 174EC402FB;
-        Mon, 10 Jun 2019 16:16:21 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C699640324;
+        Mon, 10 Jun 2019 16:16:22 +0800 (SGT)
 From:   yibin.gong@nxp.com
 To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, broonie@kernel.org,
@@ -29,9 +29,9 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
 Cc:     linux-spi@vger.kernel.org, linux-imx@nxp.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v5 11/15] dmaengine: imx-sdma: fix ecspi1 rx dma not work on i.mx8mm
-Date:   Mon, 10 Jun 2019 16:17:49 +0800
-Message-Id: <20190610081753.11422-12-yibin.gong@nxp.com>
+Subject: [PATCH v5 12/15] ARM: dts: imx6ul: add dma support on ecspi
+Date:   Mon, 10 Jun 2019 16:17:50 +0800
+Message-Id: <20190610081753.11422-13-yibin.gong@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190610081753.11422-1-yibin.gong@nxp.com>
 References: <20190610081753.11422-1-yibin.gong@nxp.com>
@@ -43,62 +43,53 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Robin Gong <yibin.gong@nxp.com>
 
-Because the number of ecspi1 rx event on i.mx8mm is 0, the condition
-check ignore such special case without dma channel enabled, which caused
-ecspi1 rx works failed. Actually, no need to check event_id0/event_id1
-and replace checking 'event_id1' with 'DMA_DEV_TO_DEV', so that configure
-event_id1 only in case DEV_TO_DEV.
+Add dma support on ecspi.
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/dma/imx-sdma.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/imx6ul.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 525ca89..f7c150d 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1202,7 +1202,7 @@ static int sdma_config_channel(struct dma_chan *chan)
- 	if ((sdmac->peripheral_type != IMX_DMATYPE_MEMORY) &&
- 			(sdmac->peripheral_type != IMX_DMATYPE_DSP)) {
- 		/* Handle multiple event channels differently */
--		if (sdmac->event_id1) {
-+		if (sdmac->direction == DMA_DEV_TO_DEV) {
- 			if (sdmac->peripheral_type == IMX_DMATYPE_ASRC_SP ||
- 			    sdmac->peripheral_type == IMX_DMATYPE_ASRC)
- 				sdma_set_watermarklevel_for_p2p(sdmac);
-@@ -1370,9 +1370,9 @@ static void sdma_free_chan_resources(struct dma_chan *chan)
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index fc388b8..4a34316 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -227,6 +227,8 @@
+ 					clocks = <&clks IMX6UL_CLK_ECSPI1>,
+ 						 <&clks IMX6UL_CLK_ECSPI1>;
+ 					clock-names = "ipg", "per";
++					dmas = <&sdma 3 7 1>, <&sdma 4 7 2>;
++					dma-names = "rx", "tx";
+ 					status = "disabled";
+ 				};
  
- 	sdma_channel_synchronize(chan);
+@@ -239,6 +241,8 @@
+ 					clocks = <&clks IMX6UL_CLK_ECSPI2>,
+ 						 <&clks IMX6UL_CLK_ECSPI2>;
+ 					clock-names = "ipg", "per";
++					dmas = <&sdma 5 7 1>, <&sdma 6 7 2>;
++					dma-names = "rx", "tx";
+ 					status = "disabled";
+ 				};
  
--	if (sdmac->event_id0)
--		sdma_event_disable(sdmac, sdmac->event_id0);
--	if (sdmac->event_id1)
-+	sdma_event_disable(sdmac, sdmac->event_id0);
-+
-+	if (sdmac->direction == DMA_DEV_TO_DEV)
- 		sdma_event_disable(sdmac, sdmac->event_id1);
+@@ -251,6 +255,8 @@
+ 					clocks = <&clks IMX6UL_CLK_ECSPI3>,
+ 						 <&clks IMX6UL_CLK_ECSPI3>;
+ 					clock-names = "ipg", "per";
++					dmas = <&sdma 7 7 1>, <&sdma 8 7 2>;
++					dma-names = "rx", "tx";
+ 					status = "disabled";
+ 				};
  
- 	sdmac->event_id0 = 0;
-@@ -1670,13 +1670,11 @@ static int sdma_config(struct dma_chan *chan,
- 	memcpy(&sdmac->slave_config, dmaengine_cfg, sizeof(*dmaengine_cfg));
+@@ -263,6 +269,8 @@
+ 					clocks = <&clks IMX6UL_CLK_ECSPI4>,
+ 						 <&clks IMX6UL_CLK_ECSPI4>;
+ 					clock-names = "ipg", "per";
++					dmas = <&sdma 9 7 1>, <&sdma 10 7 2>;
++					dma-names = "rx", "tx";
+ 					status = "disabled";
+ 				};
  
- 	/* Set ENBLn earlier to make sure dma request triggered after that */
--	if (sdmac->event_id0) {
--		if (sdmac->event_id0 >= sdmac->sdma->drvdata->num_events)
--			return -EINVAL;
--		sdma_event_enable(sdmac, sdmac->event_id0);
--	}
-+	if (sdmac->event_id0 >= sdmac->sdma->drvdata->num_events)
-+		return -EINVAL;
-+	sdma_event_enable(sdmac, sdmac->event_id0);
- 
--	if (sdmac->event_id1) {
-+	if (sdmac->direction == DMA_DEV_TO_DEV) {
- 		if (sdmac->event_id1 >= sdmac->sdma->drvdata->num_events)
- 			return -EINVAL;
- 		sdma_event_enable(sdmac, sdmac->event_id1);
 -- 
 2.7.4
 

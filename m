@@ -2,134 +2,133 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E33B3B3C8
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Jun 2019 13:11:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D51853B589
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Jun 2019 14:59:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389094AbfFJLLg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 10 Jun 2019 07:11:36 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:44692 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388848AbfFJLLf (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 10 Jun 2019 07:11:35 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5ABBV29100306;
-        Mon, 10 Jun 2019 06:11:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560165091;
-        bh=B51ZvcAM9+Asulzy4hrbXlCctlUQOGbhN8igWASkei0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=cjPSbIFmvrlknLBiiN3Lur+Em763KtbcF7sLf4ONpGTHaAxpWiDCOFc42kBl8ldwB
-         wK0ivxbE6Dr6yrB6vXgFzoiqpAq8TrjWam7yXHnsj5XkhvujLx/MgdEoqA8Lnn8Fcm
-         RRYVtkCmOGQckPWoHUNNA2gzDF71o8Jawa2QAfKQ=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5ABBVkg105893
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Jun 2019 06:11:31 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 10
- Jun 2019 06:11:30 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 10 Jun 2019 06:11:30 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5ABBTXb066787;
-        Mon, 10 Jun 2019 06:11:29 -0500
-Subject: Re: [PATCH] dmaengine: dmatest: Add support for completion polling
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <andriy.shevchenko@linux.intel.com>
-References: <20190529083724.18182-1-peter.ujfalusi@ti.com>
- <4f327f4a-9e3d-c9d2-fe48-14e492b07417@ti.com>
- <793f9f48-0609-4aa5-2688-bf30525e229c@ti.com>
- <20190604124527.GG15118@vkoul-mobl>
- <0e909b8a-8296-7c6a-058a-3fc780d66195@ti.com>
- <20190610070435.GL9160@vkoul-mobl.Dlink>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <01766659-4b81-cf58-8b00-458b6272c7ef@ti.com>
-Date:   Mon, 10 Jun 2019 14:12:00 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S2389859AbfFJM6q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 10 Jun 2019 08:58:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389309AbfFJM6p (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 10 Jun 2019 08:58:45 -0400
+Received: from localhost (unknown [122.167.93.80])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E91820859;
+        Mon, 10 Jun 2019 12:58:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560171524;
+        bh=ori1GFesj1z5JPxLlfpKYaJLocajgiy9syaphmuaIwM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GnWLKFhA5w0ZZr8qk8930e1Mxl1MClV2NU90ZUGw1xN1H1olHZ1Zuds0d/1CcT0sU
+         uKoklkGofDHQKG9rXaEggUhFaLjU90713fBXOcPyevwLPc7pgNOq0FiDDJJzPeRsiS
+         38x557aSB/KmmgqA1uJHj15FMIsdHkMZoIhKlDt8=
+Date:   Mon, 10 Jun 2019 18:25:34 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     yibin.gong@nxp.com
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, broonie@kernel.org,
+        festevam@gmail.com, dan.j.williams@intel.com,
+        u.kleine-koenig@pengutronix.de, catalin.marinas@arm.com,
+        l.stach@pengutronix.de, will.deacon@arm.com,
+        linux-spi@vger.kernel.org, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 15/15] dmaengine: imx-sdma: add uart rom script
+Message-ID: <20190610125534.GQ9160@vkoul-mobl.Dlink>
+References: <20190610081753.11422-1-yibin.gong@nxp.com>
+ <20190610081753.11422-16-yibin.gong@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190610070435.GL9160@vkoul-mobl.Dlink>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610081753.11422-16-yibin.gong@nxp.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 10/06/2019 10.04, Vinod Koul wrote:
->>> I think we should view DMA_PREP_INTERRUPT from client pov, but
->>> controller cannot get away with disabling interrupts IMO.
->>
->> What happens if client is issuing a DMA memcpy (short one) while
->> interrupts are disabled?
->>
->> The user for this is:
->> drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
->>
->> commit: f5b9930b85dc6319fd6bcc259e447eff62fc691c
->>
->> The interrupt based completion is not going to work in some cases, the
->> DMA driver should obey that the missing DMA_PREP_INTERRUPT really
->> implies that interrupts can not be used.
+On 10-06-19, 16:17, yibin.gong@nxp.com wrote:
+> From: Robin Gong <yibin.gong@nxp.com>
 > 
-> well yes but how do we *assume* completion and issue subsequent txns?
-> Does driver create a task and poll?
-
-The client driver will poll on tx_status, like using dma_sync_wait().
-The DMA driver is expected to check if the transfer is completed by
-other means than relying on the interrupt for transfer completion.
-
->>
->>> Assuming I had enough caffeine before I thought process, then client would
->>> poll descriptor status using cookie and should free up once the cookie
->>> is freed, makes sense?
->>
->> OK, so clients are expected to call dmaengine_terminate_*
->> unconditionally after the transfer is completed, right?
+> For the compatibility of NXP internal legacy kernel before 4.19 which
+> is based on uart ram script and upstreaming kernel based on uart rom
+> script, add both uart ram/rom script in latest sdma firmware. By default
+> uart rom script used.
+> Besides, add two multi-fifo scripts for SAI/PDM on i.mx8m/8mm and add
+> back qspi script miss for v4(i.mx7d/8m/8mm family, but v3 is for i.mx6).
 > 
-> How do you know/detect transfer is completed?
-
-This is a bit tricky and depends on the DMA hardware.
-For sDMA (omap-dma) we already do this by checking the channel status.
-The channel will be switched to idle if the transfer is completed.
-
-EDMA on the other hand does not provide straight forward way to check if
-the transfer is completed w/o interrupts, however we can see it if the
-CC loaded the closing dummy paRAM slot (address is 0).
-
-If I want to enable this for UDMAP then I would check the return ring if
-I got back the descriptor or not.
-
->> If we use interrupts then the handler would anyway free up the
->> descriptor, so terminating should not do any harm, if we can not have
->> interrupts then terminate will clear up the completed descriptor
->> proactively.
+> rom script:
+> 	uart_2_mcu_addr
+> 	uartsh_2_mcu_addr /* through spba bus */
+> ram script:
+> 	uart_2_mcu_ram_addr
+> 	uartsh_2_mcu_ram_addr /* through spba bus */
 > 
-> yes terminate part is fine.
+> Please get latest sdma firmware from the below and put them into the path
+> (/lib/firmware/imx/sdma/):
+> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
+> /tree/imx/sdma
 
-OK, so I don't need to change this patch for dmatest, right?
+How does this work with folks have older firmware?
 
-I'll prepare the EDMA patch and an update for omap-dma as well.
-
->> In any case I have updated the EDMA patch to do the same thing in case
->> of polling w/o interrupts as it would do in the completion irq handler,
->> and similar approach prepared for omap-dma as well.
->>
->> - Péter
->>
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 > 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> ---
+>  drivers/dma/imx-sdma.c                     |  4 ++--
+>  include/linux/platform_data/dma-imx-sdma.h | 10 ++++++++--
+>  2 files changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index f7c150d..deea9aa 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -1733,8 +1733,8 @@ static void sdma_issue_pending(struct dma_chan *chan)
+>  
+>  #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	34
+>  #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2	38
+> -#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	41
+> -#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	42
+> +#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	45
+> +#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	46
+>  
+>  static void sdma_add_scripts(struct sdma_engine *sdma,
+>  		const struct sdma_script_start_addrs *addr)
+> diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
+> index f794fee..e12d2e8 100644
+> --- a/include/linux/platform_data/dma-imx-sdma.h
+> +++ b/include/linux/platform_data/dma-imx-sdma.h
+> @@ -20,12 +20,12 @@ struct sdma_script_start_addrs {
+>  	s32 per_2_firi_addr;
+>  	s32 mcu_2_firi_addr;
+>  	s32 uart_2_per_addr;
+> -	s32 uart_2_mcu_addr;
+> +	s32 uart_2_mcu_ram_addr;
+>  	s32 per_2_app_addr;
+>  	s32 mcu_2_app_addr;
+>  	s32 per_2_per_addr;
+>  	s32 uartsh_2_per_addr;
+> -	s32 uartsh_2_mcu_addr;
+> +	s32 uartsh_2_mcu_ram_addr;
+>  	s32 per_2_shp_addr;
+>  	s32 mcu_2_shp_addr;
+>  	s32 ata_2_mcu_addr;
+> @@ -52,7 +52,13 @@ struct sdma_script_start_addrs {
+>  	s32 zcanfd_2_mcu_addr;
+>  	s32 zqspi_2_mcu_addr;
+>  	s32 mcu_2_ecspi_addr;
+> +	s32 mcu_2_sai_addr;
+> +	s32 sai_2_mcu_addr;
+> +	s32 uart_2_mcu_addr;
+> +	s32 uartsh_2_mcu_addr;
+>  	/* End of v3 array */
+> +	s32 mcu_2_zqspi_addr;
+> +	/* End of v4 array */
+>  };
+>  
+>  /**
+> -- 
+> 2.7.4
 
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-- 
+~Vinod

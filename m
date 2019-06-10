@@ -2,104 +2,122 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27ADB3ABD6
-	for <lists+dmaengine@lfdr.de>; Sun,  9 Jun 2019 22:42:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20B093AF4F
+	for <lists+dmaengine@lfdr.de>; Mon, 10 Jun 2019 09:07:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbfFIUmn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 9 Jun 2019 16:42:43 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:41131 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfFIUmn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 9 Jun 2019 16:42:43 -0400
-Received: by mail-yw1-f68.google.com with SMTP id y185so2979766ywy.8;
-        Sun, 09 Jun 2019 13:42:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dHOuiC6jFhECkmRndI+3xRNUfQfecXP3FcFTB3ajICg=;
-        b=mbFFD5EGsJnRs+WtuLfzRnsU7i83wTtVB8J5XF2rATaAIYVOgMz7F+JEZGNaHzUvfF
-         u5YmOGLpbDkZeGXy6PutvA2NYPJD/76V68n75vw7IvryLqcXA8t6Mum9qFVRgLYgc+w3
-         LfNNl6FRGbUzWpheasOWOowkbIvUWj3rKdMMZCdaKgHyzy+gIePTpGCuIoO8hd5/ho6F
-         k+1i6cRy3eRvVKwhxiZZBmKsbDy6P0T5DlgkhIRp1GyhhxiQfy86M5t5Q9TnmQ4OJ8RB
-         Ri2q95+a8BTeg3xz7IUwzBSXkLmM5ZZlb925gAjT8bg95v1qfPUsKXkWrsG1PwBMOVps
-         8s5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dHOuiC6jFhECkmRndI+3xRNUfQfecXP3FcFTB3ajICg=;
-        b=ZGWWTcfbhv2mj55vsa3Tj4MYcfMs9CRef/IzgI6PgNR4qC6YSrY+3T7DhVrZ4Xeg95
-         4jNdb8eKBkMArmzazY4prEs1RMfGG5THSopksg4Le5tfWAG8S/mrCNMSc/ajnGQE/tPm
-         1Aai0JhXG6XuZOIh9Qjf5ZGtMdADJD5bYOpxKA70sM8YHyWIcjelU0VhU6uxKw/Pgf6o
-         gLpom67QrKVCWu+rNty/bmBHQruYwW2j+orwUDJgVU8WjFbBDfxBgr3rbq/QSbKxywsx
-         n0UI8XQSo2DEKkYRbG/ADqipuWfjx+UNIALtxhLNy/eCCLU4keWWvLfpgslTuOxOi6+0
-         aaGw==
-X-Gm-Message-State: APjAAAXcQnwWjTAaIsjUbjWD5bIVeIsBue+yFUwVnjn6dVZ0jyG+iIXR
-        flJ0J+ETV/syj9gCDRI/q700b07U8ZVaA1E9Ksc=
-X-Google-Smtp-Source: APXvYqythVEaeiFW8xnZx3alFf6puC+4RKU77X/tV3b27TEXcp0Dskr/eyS/U9ZI1M0PKDZN+WyHQVOaeJi7ultK2nw=
-X-Received: by 2002:a0d:edc3:: with SMTP id w186mr13821844ywe.306.1560112962176;
- Sun, 09 Jun 2019 13:42:42 -0700 (PDT)
+        id S2387614AbfFJHHq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 10 Jun 2019 03:07:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387714AbfFJHHp (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 10 Jun 2019 03:07:45 -0400
+Received: from localhost (unknown [122.182.223.237])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84BFB206BB;
+        Mon, 10 Jun 2019 07:07:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560150464;
+        bh=qa1R+Z6o4NQ9iIJ4PtCjuYsKgDnCR0PP6qq+ZamlHxk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iFrJxfgZp4Z3jnCimPIY0JLjLiojA1wNivT4SlZdEVA4FbUj0ypGyThVBlMFcU5yb
+         ySIbXBXCr+junb4c8ZImpi7h4oiruBDi3Qy2E2Mv/7ZmyFhk/vqtgcL732PtMdsaP/
+         lNjbV26tgt9bwX7Kh6Hs5RIao7aG1YPnY/FazHRg=
+Date:   Mon, 10 Jun 2019 12:34:35 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        andriy.shevchenko@linux.intel.com
+Subject: Re: [PATCH] dmaengine: dmatest: Add support for completion polling
+Message-ID: <20190610070435.GL9160@vkoul-mobl.Dlink>
+References: <20190529083724.18182-1-peter.ujfalusi@ti.com>
+ <4f327f4a-9e3d-c9d2-fe48-14e492b07417@ti.com>
+ <793f9f48-0609-4aa5-2688-bf30525e229c@ti.com>
+ <20190604124527.GG15118@vkoul-mobl>
+ <0e909b8a-8296-7c6a-058a-3fc780d66195@ti.com>
 MIME-Version: 1.0
-References: <20190527201459.20130-1-peron.clem@gmail.com> <20190528111024.gj25jh5vstizze74@flea>
-In-Reply-To: <20190528111024.gj25jh5vstizze74@flea>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Sun, 9 Jun 2019 22:42:31 +0200
-Message-ID: <CAJiuCcebCkdkR9tDOUOEO+Rs-VuSUVLtDpqw3pWUX8o8aPtMsw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/7] Allwinner H6 DMA support
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0e909b8a-8296-7c6a-058a-3fc780d66195@ti.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Maxime,
+On 04-06-19, 16:35, Peter Ujfalusi wrote:
+> 
+> 
+> On 04/06/2019 15.45, Vinod Koul wrote:
+> > On 03-06-19, 10:05, Peter Ujfalusi wrote:
+> > 
+> >>> I think the main question is how polling for completion should be
+> >>> handled when client does not request for completion interrupt, thus we
+> >>> will have no callback in the DMA driver when the transfer is completed.
+> >>>
+> >>> If DMA_PREP_INTERRUPT is set for the tx_descriptor then the polling will
+> >>> wait until the DMA driver internally receives the interrupt that the
+> >>> transfer is done and sets the cookie to completed state.
+> >>>
+> >>> However if DMA_PREP_INTERRUPT is not set, the DMA driver will not get
+> >>> notification from the HW that is the transfer is done, the only way to
+> >>> know is to check the tx_status and based on the residue (if it is 0 then
+> >>> it is done) decide what to tell the client.
+> >>>
+> >>> Should the client call dmaengine_terminate_* after the polling returned
+> >>> unconditionally to free up the descriptor?
+> >>
+> >> This is how omap-dma is handling the polled memcpy support.
+> > 
+> > Yes that is a good question. Even if the client does not set
+> > DMA_PREP_INTERRUPT would there be no interrupt generated by controller
+> > on txn completion? If not how will next txn be submitted to the
+> > hardware.
+> > 
+> > I think we should view DMA_PREP_INTERRUPT from client pov, but
+> > controller cannot get away with disabling interrupts IMO.
+> 
+> What happens if client is issuing a DMA memcpy (short one) while
+> interrupts are disabled?
+> 
+> The user for this is:
+> drivers/gpu/drm/omapdrm/omap_dmm_tiler.c
+> 
+> commit: f5b9930b85dc6319fd6bcc259e447eff62fc691c
+> 
+> The interrupt based completion is not going to work in some cases, the
+> DMA driver should obey that the missing DMA_PREP_INTERRUPT really
+> implies that interrupts can not be used.
 
-On Tue, 28 May 2019 at 13:10, Maxime Ripard <maxime.ripard@bootlin.com> wro=
-te:
->
-> On Mon, May 27, 2019 at 10:14:52PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Hi,
-> >
-> > This series has been first proposed by Jernej Skrabec[1].
-> > As this series is mandatory for SPDIF/I2S support and because he is
-> > busy on Cedrus stuff. I asked him to make the minor change requested
-> > and repost it.
-> > Authorship remains to him.
-> >
-> > I have tested this series with SPDIF driver and added a patch to enable
-> > DMA_SUN6I_CONFIG for arm64.
-> >
-> > Original Post:
-> > "
-> > DMA engine engine on H6 almost the same as on older SoCs. The biggest
-> > difference is that it has slightly rearranged bits in registers and
-> > it needs additional clock, probably due to iommu.
-> >
-> > These patches were tested with I2S connected to HDMI. I2S needs
-> > additional patches which will be sent later.
->
-> For the whole series,
-> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+well yes but how do we *assume* completion and issue subsequent txns?
+Does driver create a task and poll?
 
-Thanks, Is it ok to pick patch 5/6/7 to sunxi tree ?
+> 
+> > Assuming I had enough caffeine before I thought process, then client would
+> > poll descriptor status using cookie and should free up once the cookie
+> > is freed, makes sense?
+> 
+> OK, so clients are expected to call dmaengine_terminate_*
+> unconditionally after the transfer is completed, right?
 
-Regards,
-Cl=C3=A9ment
+How do you know/detect transfer is completed?
+> 
+> If we use interrupts then the handler would anyway free up the
+> descriptor, so terminating should not do any harm, if we can not have
+> interrupts then terminate will clear up the completed descriptor
+> proactively.
 
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+yes terminate part is fine.
+
+> In any case I have updated the EDMA patch to do the same thing in case
+> of polling w/o interrupts as it would do in the completion irq handler,
+> and similar approach prepared for omap-dma as well.
+> 
+> - Péter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+-- 
+~Vinod

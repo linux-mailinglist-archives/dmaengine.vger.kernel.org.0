@@ -2,100 +2,110 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E1253D454
-	for <lists+dmaengine@lfdr.de>; Tue, 11 Jun 2019 19:36:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5EBA4170A
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Jun 2019 23:41:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406172AbfFKRgX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 11 Jun 2019 13:36:23 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:49648 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405785AbfFKRgX (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Jun 2019 13:36:23 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5BHaGOi016378;
-        Tue, 11 Jun 2019 12:36:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560274576;
-        bh=+9areqRVfrK1YDO1ErJT+yPadNyrrPz0UtT91OB9eco=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=uz6bEiYTEu+wbM4h0gy9oYVe067KIitfHz1K21YKP7kcGcMa5c7VPBuloz/j0mH43
-         7Uvw48L8Q+qOYREeZ2ljw3nKKvyeFAonqhSIhbuHYb1wTSkwaW0GO79+Vnswwx9b9Z
-         0Y8adOBK6D+g0AlLq7S5RFjLvyXdcyvBUmfka+24=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5BHaGet064775
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 11 Jun 2019 12:36:16 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 11
- Jun 2019 12:36:16 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 11 Jun 2019 12:36:16 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5BHaDYh090017;
-        Tue, 11 Jun 2019 12:36:13 -0500
-Subject: Re: [PATCH v1.1] firmware: ti_sci: Add resource management APIs for
- ringacc, psi-l and udma
-To:     Lokesh Vutla <lokeshvutla@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
-        <nm@ti.com>, <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>,
-        <tony@atomide.com>
-References: <20190506123456.6777-2-peter.ujfalusi@ti.com>
- <20190610091856.25502-1-peter.ujfalusi@ti.com>
- <636f599a-cefa-ce70-d0ae-b5244edf14b2@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <2a755211-afd9-070c-954c-f6f2d931455b@ti.com>
-Date:   Tue, 11 Jun 2019 20:36:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S2404800AbfFKVlH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 11 Jun 2019 17:41:07 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45813 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404005AbfFKVlG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Jun 2019 17:41:06 -0400
+Received: by mail-lj1-f193.google.com with SMTP id m23so13111476lje.12;
+        Tue, 11 Jun 2019 14:41:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3ii1oya7iM4Av9Rw52ktXKCBjEV+f23dDHXfRcuKC7U=;
+        b=tDpq1FPh+8DoAEFemXdFgNmDrzuVv7HGs7bDdX0R9e3N1l3s9MVEGOQ5pryKvmwcbc
+         OUT9v/DYKJ4pSzu/37eK6FUyNNXM3gCClZFQnjYRNVjKWbBM5O7Ek7i7xrKjBz7cGwjt
+         RN+1YHuMwvnWKElb5PrcetXueToyb+Vu/Nfmy7BVXshrF77WMUJ6q8jrSY6PjiwoH/bL
+         HUUQDm8NYRZEofJrRjX7eK99zGFmbUFj1qAP0zcpM0wDC++KxbneuxugHM8AZ6kEO6HC
+         Qrkx+g3DrsHDMivJ3D6yuAE9+7qkSVAbK4Q5ACEJwtRmKD0pYMXYKo7LLe0DMdAxZdEt
+         37pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3ii1oya7iM4Av9Rw52ktXKCBjEV+f23dDHXfRcuKC7U=;
+        b=PoDlVWBV3d2q6D0HMPuFFYsdwxakK6lGkuCbPvFThyGYwdUXBMMu6KOjG7zz6pkHFK
+         e6R10C1y6Al0PmvUXEZb8/NnjReMItM3uS8cRjVYIEXtaLxwYNllrwwUHxhSHHOQ5dKm
+         EfWVgJvSi9sG1bZL/S5R+x2FIhDCuesq97F6uRkMIDt/qPKrJ94gj/xVNmsZnsAssvUt
+         SQfbrfz9Tn1tCXbVkNS3zBQaQrXlPhR1FbK4eKDxG2Vcbz39HpFnP6j43IZSDeW+qg70
+         q+LiKaBWYmoJNicJBUxXWpznLmIC1EfwXvXvyST9/rDUUj6Q4QPnF+2ALmK4+bfDusvg
+         jVdA==
+X-Gm-Message-State: APjAAAU+ddTPkxhn63XLY15SbTdU+ggZQleSjgK9AIlZMBBrYakFAw3o
+        dSZlLzlHDdU8vyrEmt/hVN7XkwSI1iMn1A==
+X-Google-Smtp-Source: APXvYqwpbdaBbT64OJKC3t9fsLS0BFJ1owt5dbrSWV35mRrRMwtNVEd1E9+KBDaYKDDjJry0MrJTJQ==
+X-Received: by 2002:a2e:751c:: with SMTP id q28mr16897532ljc.178.1560289264111;
+        Tue, 11 Jun 2019 14:41:04 -0700 (PDT)
+Received: from localhost.localdomain (80-248-250-227.cust.suomicom.net. [80.248.250.227])
+        by smtp.gmail.com with ESMTPSA id o187sm2695914lfa.88.2019.06.11.14.41.02
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 11 Jun 2019 14:41:03 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v4] arm64: dts: allwinner: h6: Add DMA node
+Date:   Tue, 11 Jun 2019 23:40:55 +0200
+Message-Id: <20190611214055.25613-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <636f599a-cefa-ce70-d0ae-b5244edf14b2@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 10/06/2019 12:41, Lokesh Vutla wrote:
-> 
-> 
-> On 10/06/19 2:48 PM, Peter Ujfalusi wrote:
->> Configuration of NAVSS resource, like rings, UDMAP channels, flows
->> and PSI-L thread management need to be done via TISCI.
->>
->> Add the needed structures and functions for NAVSS resource configuration of
->> the following:
->> Rings from Ring Accelerator
->> PSI-L thread management
->> UDMAP tchan, rchan and rflow configuration.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> 
-> Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
-> 
-> Thanks and regards,
-> Lokesh
-> 
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-Thanks, queuing this single patch up for 5.3.
+H6 has DMA controller which supports 16 channels.
 
-Vinod, I am setting up an immutable branch if you need to pick this 
-patch up; basically if you are planning to merge the dma support for 
-5.3. Available as a tag here (I'll send a pull-req out for this in a bit):
+Add a node for it.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/kristo/linux 
-tags/ti-sci-for-5.3
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
 
-It is based on top of clock driver pull-request due to dependencies.
+Changes since v3:
+ - Rebase on top of sunxi/for-next
+ - Sort by physical address
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index b9a7dc8d2a40..7628a7c83096 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -203,6 +203,18 @@
+ 			#reset-cells = <1>;
+ 		};
+ 
++		dma: dma-controller@3002000 {
++			compatible = "allwinner,sun50i-h6-dma";
++			reg = <0x03002000 0x1000>;
++			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_DMA>, <&ccu CLK_MBUS_DMA>;
++			clock-names = "bus", "mbus";
++			dma-channels = <16>;
++			dma-requests = <46>;
++			resets = <&ccu RST_BUS_DMA>;
++			#dma-cells = <1>;
++		};
++
+ 		sid: sid@3006000 {
+ 			compatible = "allwinner,sun50i-h6-sid";
+ 			reg = <0x03006000 0x400>;
+-- 
+2.20.1
+

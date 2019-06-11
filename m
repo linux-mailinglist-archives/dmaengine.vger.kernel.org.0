@@ -2,91 +2,65 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A0C03CD23
-	for <lists+dmaengine@lfdr.de>; Tue, 11 Jun 2019 15:40:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6ACC03D0E8
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Jun 2019 17:34:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403960AbfFKNkn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 11 Jun 2019 09:40:43 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:42676 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403885AbfFKNkn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Jun 2019 09:40:43 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5BDedh9101256;
-        Tue, 11 Jun 2019 08:40:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560260439;
-        bh=4LDOhMWM3skVbJlqD3cbqlNxDxWPIjK5XVVEplMzWfg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=VGrbuIlaGQ5RGRGOdPq3UtJyNlGtCEHcSo2pcYQ9g/Ld6b69EikxxtMxoqyteWg/0
-         KHnP7BU65VU9L3CCRvP4U05sZXKryWTXvgg5jT4sSlfeCxBOtifNmdVr9UO31tZFqa
-         OmH1HORUqvncXIeGeO3p/WW9EbeWs5gB+6kOipkk=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5BDedqk008512
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 11 Jun 2019 08:40:39 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 11
- Jun 2019 08:40:38 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 11 Jun 2019 08:40:38 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5BDeawQ084603;
-        Tue, 11 Jun 2019 08:40:37 -0500
-Subject: Re: [PATCH] dmaengine: dmatest: Add support for completion polling
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <andriy.shevchenko@linux.intel.com>
-References: <20190529083724.18182-1-peter.ujfalusi@ti.com>
- <4f327f4a-9e3d-c9d2-fe48-14e492b07417@ti.com>
- <793f9f48-0609-4aa5-2688-bf30525e229c@ti.com>
- <20190604124527.GG15118@vkoul-mobl>
- <0e909b8a-8296-7c6a-058a-3fc780d66195@ti.com>
- <20190610070435.GL9160@vkoul-mobl.Dlink>
- <01766659-4b81-cf58-8b00-458b6272c7ef@ti.com>
- <20190611044738.GT9160@vkoul-mobl.Dlink>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <33c33189-1c76-fe01-5d03-6bdd877c5e4b@ti.com>
-Date:   Tue, 11 Jun 2019 16:41:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S2404995AbfFKPeu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 11 Jun 2019 11:34:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59842 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404969AbfFKPeu (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 11 Jun 2019 11:34:50 -0400
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C20CA2080A;
+        Tue, 11 Jun 2019 15:34:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560267289;
+        bh=IwaEn04OTTO9wzCXVfHrjtCqw+4I+XDn1SqlUlas02c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=z1J7ffmQqBUkHYGOlgPKiWhAk969NDA9LsZxPCiAM4wFUo1ZfE/HgpI/PT8vmU4EV
+         vTOwXThkYF8ep0E9Ep/yuwUD4VLqpn8AHf6SomGfsDppKns2Hb385EL7x/y+PzTqHC
+         TtKrEbH6IXB1N4XIIrtzoNA7a8WJ6AYFbOIV0jtc=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     dmaengine@vger.kernel.org
+Cc:     dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        vkoul@kernel.org, geert@linux-m68k.org, devicetree@vger.kernel.org
+Subject: [PATCHv2 1/2] dt-bindings: pl330: document the optional resets property
+Date:   Tue, 11 Jun 2019 10:34:32 -0500
+Message-Id: <20190611153433.22129-1-dinguyen@kernel.org>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <20190611044738.GT9160@vkoul-mobl.Dlink>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 11/06/2019 7.47, Vinod Koul wrote:
-> On 10-06-19, 14:12, Peter Ujfalusi wrote:
->>> How do you know/detect transfer is completed?
->>
->> This is a bit tricky and depends on the DMA hardware.
->> For sDMA (omap-dma) we already do this by checking the channel status.
->> The channel will be switched to idle if the transfer is completed.
-> 
-> Well we are talking about DMA and doing this kind of things doesn't make
-> sense to me. Why not do memcpy/pio instead. DMA is designed to finish
-> txn fast and move to next one, if we cannot do that, I would say lets
-> not use dmaengine in those cases! Keeping dmaengine idle is not really
-> good design.
+Add the optional resets property the pl330 dma node.
 
-The dra7 case is a special one: we have one errata (i878) for which the
-workaround is to use something else than MCU to access DMM registers,
-otherwise bus/system lockup can happen. The only feasible non MCU access
-is to use DMA memcpy to read/write registers.
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+---
+v2: no change
+---
+ Documentation/devicetree/bindings/dma/arm-pl330.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-I've also encountered user who want to swap CPU memcpy with DMA based
-one as it tends to lower the CPU load and it is faster.
+diff --git a/Documentation/devicetree/bindings/dma/arm-pl330.txt b/Documentation/devicetree/bindings/dma/arm-pl330.txt
+index db7e2260f9c5..2c7fd1941abb 100644
+--- a/Documentation/devicetree/bindings/dma/arm-pl330.txt
++++ b/Documentation/devicetree/bindings/dma/arm-pl330.txt
+@@ -16,6 +16,9 @@ Optional properties:
+   - dma-channels: contains the total number of DMA channels supported by the DMAC
+   - dma-requests: contains the total number of DMA requests supported by the DMAC
+   - arm,pl330-broken-no-flushp: quirk for avoiding to execute DMAFLUSHP
++  - resets: contains an entry for each entry in reset-names.
++	    See ../reset/reset.txt for details.
++  - reset-names: must contain at least "dma", and optional is "dma-ocp".
+ 
+ Example:
+ 
+-- 
+2.20.0
 
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

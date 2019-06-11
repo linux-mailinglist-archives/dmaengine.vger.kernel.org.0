@@ -2,68 +2,100 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EB81F3D427
-	for <lists+dmaengine@lfdr.de>; Tue, 11 Jun 2019 19:30:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E1253D454
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Jun 2019 19:36:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406251AbfFKRa0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 11 Jun 2019 13:30:26 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60314 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406168AbfFKRaZ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Jun 2019 13:30:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KVff8ujhhzIM9/Rf41ny12vawiOo83leAxlWlDnKaf4=; b=gyOasmZ/F0HZECqkoy5+GjAOi
-        Y0tHGeatESToTSog6M1o7FlSA+etDaEl8Y/ryWxRH3/nOwMDyu4jQFcx94wtl/+qmLQubmh6E7jUj
-        Y+WsXaN2i9nj+qb2TxDnN+kVYuOO4NJhaiCebBhaQwCGWp5WiVdw+YQ8V9SW90ysKKClQpnZLYvFN
-        6WgAS30R0rDquuPWKDA1bKgpok9Q09iJlnKlNUR6cGmjK0yGslUs8petRsW1+h5FeRfIKv1C991do
-        fh8nlAm2btMa6MYhCFEfQn2eC5IzeYcVGxB/Ez+TpF7c0MQfjgkGVwk+p85/q8GOf0aLtnEjJiFtH
-        rMya4LiRw==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hakbG-00089n-Li; Tue, 11 Jun 2019 17:30:22 +0000
-Subject: Re: linux-next: Tree for Jun 11 (drivers/dma/dw-edma/)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-References: <20190611192432.1d8f11b2@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ea7fcec3-6a3e-1e02-53aa-f536f784e2c0@infradead.org>
-Date:   Tue, 11 Jun 2019 10:30:22 -0700
+        id S2406172AbfFKRgX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 11 Jun 2019 13:36:23 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49648 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405785AbfFKRgX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Jun 2019 13:36:23 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5BHaGOi016378;
+        Tue, 11 Jun 2019 12:36:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560274576;
+        bh=+9areqRVfrK1YDO1ErJT+yPadNyrrPz0UtT91OB9eco=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=uz6bEiYTEu+wbM4h0gy9oYVe067KIitfHz1K21YKP7kcGcMa5c7VPBuloz/j0mH43
+         7Uvw48L8Q+qOYREeZ2ljw3nKKvyeFAonqhSIhbuHYb1wTSkwaW0GO79+Vnswwx9b9Z
+         0Y8adOBK6D+g0AlLq7S5RFjLvyXdcyvBUmfka+24=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5BHaGet064775
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 11 Jun 2019 12:36:16 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 11
+ Jun 2019 12:36:16 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 11 Jun 2019 12:36:16 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5BHaDYh090017;
+        Tue, 11 Jun 2019 12:36:13 -0500
+Subject: Re: [PATCH v1.1] firmware: ti_sci: Add resource management APIs for
+ ringacc, psi-l and udma
+To:     Lokesh Vutla <lokeshvutla@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
+        <nm@ti.com>, <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>,
+        <tony@atomide.com>
+References: <20190506123456.6777-2-peter.ujfalusi@ti.com>
+ <20190610091856.25502-1-peter.ujfalusi@ti.com>
+ <636f599a-cefa-ce70-d0ae-b5244edf14b2@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <2a755211-afd9-070c-954c-f6f2d931455b@ti.com>
+Date:   Tue, 11 Jun 2019 20:36:12 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190611192432.1d8f11b2@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <636f599a-cefa-ce70-d0ae-b5244edf14b2@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 6/11/19 2:24 AM, Stephen Rothwell wrote:
-> Hi all,
+On 10/06/2019 12:41, Lokesh Vutla wrote:
 > 
-> Changes since 20190607:
+> 
+> On 10/06/19 2:48 PM, Peter Ujfalusi wrote:
+>> Configuration of NAVSS resource, like rings, UDMAP channels, flows
+>> and PSI-L thread management need to be done via TISCI.
+>>
+>> Add the needed structures and functions for NAVSS resource configuration of
+>> the following:
+>> Rings from Ring Accelerator
+>> PSI-L thread management
+>> UDMAP tchan, rchan and rflow configuration.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> 
+> Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+> 
+> Thanks and regards,
+> Lokesh
 > 
 
-on x86_64 or i386:
+Thanks, queuing this single patch up for 5.3.
 
-when CONFIG_PCI is not set/enabled:
+Vinod, I am setting up an immutable branch if you need to pick this 
+patch up; basically if you are planning to merge the dma support for 
+5.3. Available as a tag here (I'll send a pull-req out for this in a bit):
 
-../drivers/dma/dw-edma/dw-edma-core.c: In function ‘dw_edma_irq_request’:
-../drivers/dma/dw-edma/dw-edma-core.c:784:3: error: implicit declaration of function ‘pci_irq_vector’ [-Werror=implicit-function-declaration]
-   err = request_irq(pci_irq_vector(to_pci_dev(dev), 0),
-   ^
+   git://git.kernel.org/pub/scm/linux/kernel/git/kristo/linux 
+tags/ti-sci-for-5.3
 
+It is based on top of clock driver pull-request due to dependencies.
 
-
--- 
-~Randy
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

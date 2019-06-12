@@ -2,61 +2,70 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 56F054203D
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Jun 2019 11:06:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 610F34259A
+	for <lists+dmaengine@lfdr.de>; Wed, 12 Jun 2019 14:27:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391039AbfFLJGM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 12 Jun 2019 05:06:12 -0400
-Received: from mga12.intel.com ([192.55.52.136]:45733 "EHLO mga12.intel.com"
+        id S1731127AbfFLM0F (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 12 Jun 2019 08:26:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390115AbfFLJGL (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 12 Jun 2019 05:06:11 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jun 2019 02:06:11 -0700
-X-ExtLoop1: 1
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by fmsmga007.fm.intel.com with ESMTP; 12 Jun 2019 02:06:10 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hazCs-00071U-Ag; Wed, 12 Jun 2019 12:06:10 +0300
-Date:   Wed, 12 Jun 2019 12:06:10 +0300
-From:   "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-To:     "Kwong, Jonathan" <jon.kwong@intel.com>
-Cc:     dmaengine@vger.kernel.org
-Subject: Re: dmatest
-Message-ID: <20190612090610.GY9224@smile.fi.intel.com>
-References: <EF270728DE298848811674C591B01D3D62FB5515@FMSMSX108.amr.corp.intel.com>
+        id S1727079AbfFLM0E (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 12 Jun 2019 08:26:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D643320874;
+        Wed, 12 Jun 2019 12:26:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560342364;
+        bh=wczNPXZLnL6HqwLpJn7GMVKqkvkHn0jl5FDY27UAjhM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TaQ4iIgSMv5QJ1vtTO6Khgkel68PYje41aBD13uzeGtSPL9kAgE8UjQf4MuDURTSI
+         Sgr8ByFCBOO1ky8TACxeKu2ivnxMxC13BXUHR58e2h7O9ZRwYydABgxjuat4Kgikkn
+         31Uj3A1SixVnl/Jku9XJLG4MtsplSrOSX/BzWMgs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     dan.j.williams@intel.com, vkoul@kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/6] dma: amba-pl08x: no need to cast away call to debugfs_create_file()
+Date:   Wed, 12 Jun 2019 14:25:52 +0200
+Message-Id: <20190612122557.24158-1-gregkh@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <EF270728DE298848811674C591B01D3D62FB5515@FMSMSX108.amr.corp.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-+Cc: DMA engine *public* mailing list, be careful with details
+No need to check the return value of debugfs_create_file(), so no need
+to provide a fake "cast away" of the return value either.
 
-On Tue, Jun 11, 2019 at 10:50:12PM +0000, Kwong, Jonathan wrote:
-> Is there some equivalent of dmatest, that handles Mem to MMIO, and MMIO to Mem, please ?
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/dma/amba-pl08x.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-It would be nice to have, though it is tough to achieve since each hardware
-requires quite different way to be programmed, besides the fact of DMA req and
-DMA ack wires to be connected between DMA engine and hardware in question.
-Raw transfer to some MMIO doesn't make any sense and may even be harmful.
-
-Thus, the driver of actual DMA user *is* the test suite at the same time. We
-usually are using SPI to test DMA functionality because it's easy to setup and
-there are plenty of tools to test transfers in loopback mode.
-
+diff --git a/drivers/dma/amba-pl08x.c b/drivers/dma/amba-pl08x.c
+index 464725dcad00..9adc7a2fa3d3 100644
+--- a/drivers/dma/amba-pl08x.c
++++ b/drivers/dma/amba-pl08x.c
+@@ -2508,9 +2508,8 @@ DEFINE_SHOW_ATTRIBUTE(pl08x_debugfs);
+ static void init_pl08x_debugfs(struct pl08x_driver_data *pl08x)
+ {
+ 	/* Expose a simple debugfs interface to view all clocks */
+-	(void) debugfs_create_file(dev_name(&pl08x->adev->dev),
+-			S_IFREG | S_IRUGO, NULL, pl08x,
+-			&pl08x_debugfs_fops);
++	debugfs_create_file(dev_name(&pl08x->adev->dev), S_IFREG | S_IRUGO,
++			    NULL, pl08x, &pl08x_debugfs_fops);
+ }
+ 
+ #else
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.22.0
 

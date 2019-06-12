@@ -2,78 +2,77 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FF6642626
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Jun 2019 14:43:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E415439AD
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Jun 2019 17:16:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408386AbfFLMnI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 12 Jun 2019 08:43:08 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41076 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2408385AbfFLMnI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Jun 2019 08:43:08 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 136so11967580lfa.8
-        for <dmaengine@vger.kernel.org>; Wed, 12 Jun 2019 05:43:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V6vkS5UR633RrFItkYoPggOLkHWdZUqhLnRcNcB2XtY=;
-        b=DWxwBLkLxa7JT3I+1DgXWyreCPEz8X0Ha8jOv9NGq44hFVhu69D4kduMd/7uGxdh2B
-         cIWRCPCq9jJl98wMSvk7YGohrJKFaa4PjW4Fvp5KM5MDKt+1PdvXIPoI1h4fZ95dVbD5
-         TaGctVbxlPdhfCs4/YfxV6Yh9vakovpMQRAO+ShReg9Ik42y2oFyjfGBQwD8ecB8Mx9e
-         KsV3DGPXKQnRi3XO26tvGXvahStPbVMpkwSPPBVvPQeeQqaFZ4WA11sLI2Sgc4bbOkal
-         7zKsFLYwaJ1Odl/F1Puf5twxvAEC0IhjHtX4SrQulhoxhfrJpiA1XP+ZGVCT+3bexZAM
-         SnOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V6vkS5UR633RrFItkYoPggOLkHWdZUqhLnRcNcB2XtY=;
-        b=AveMpOE7hjrlfuyNEq1O1/7zVoedPEZyUJMydd3uxk6d/2X/0t1xbpC3W2EsgudhVL
-         VTsaiyxUlpKqbnZIigaNqEvaYgrdk17ptZxNP4h+KvJz5erTy/Os7uJScmGVcGy6xFpj
-         0n8RHVsA1toXQ7OxXBxSsxP85ON5hRCeerJsEHdVLtoimv4uvNnRsC4eUl0+x526hUC0
-         cvfJZ8hJSQ/SNZ8sh6B2foc1vjrUyDCMmtOb0A8HCJCFs4smwfbgfy7gJl35k0GM986C
-         CtU6Snd47CAizY2Gszpfz94MYsMDKO4xopF3RV02Bc89/wXMNFTKaNrMkaPXK3DUpWBS
-         oJ+g==
-X-Gm-Message-State: APjAAAVkbWVUl0XIAwQZ8DjMtVdDQDwRy94f9IQ/TQifkipEcBKxIYZO
-        KNFegCJf70aRvdCw3dWCXIz2NirgJYKYrzX8ctNHqA==
-X-Google-Smtp-Source: APXvYqzdmDZbWcjzXKF4+qJgAd8KclcnVSdd+i4vFNoSgCTrLDHUk6WwujykW+79sxKgM6urEsZlcpEXfTd0l81tX9Q=
-X-Received: by 2002:ac2:50c4:: with SMTP id h4mr28043288lfm.61.1560343386199;
- Wed, 12 Jun 2019 05:43:06 -0700 (PDT)
+        id S1732379AbfFMPP0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 13 Jun 2019 11:15:26 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:49193 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732225AbfFMNZp (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 13 Jun 2019 09:25:45 -0400
+X-Originating-IP: 90.88.159.246
+Received: from localhost (aaubervilliers-681-1-40-246.w90-88.abo.wanadoo.fr [90.88.159.246])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 22B9A4000D;
+        Thu, 13 Jun 2019 13:25:35 +0000 (UTC)
+Date:   Wed, 12 Jun 2019 15:26:15 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH v4] arm64: dts: allwinner: h6: Add DMA node
+Message-ID: <20190612132615.roglo6p7oanjniao@flea>
+References: <20190611214055.25613-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-References: <20190612122557.24158-1-gregkh@linuxfoundation.org> <20190612122557.24158-3-gregkh@linuxfoundation.org>
-In-Reply-To: <20190612122557.24158-3-gregkh@linuxfoundation.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 12 Jun 2019 14:42:54 +0200
-Message-ID: <CACRpkdYC0DJkasyLawUvLWuM4_hE7OWLxaXwwus11Ga8-2+Fdg@mail.gmail.com>
-Subject: Re: [PATCH 3/6] dma: coh901318: no need to cast away call to debugfs_create_file()
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        dmaengine@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wifg27wmr2vtryhw"
+Content-Disposition: inline
+In-Reply-To: <20190611214055.25613-1-peron.clem@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 2:26 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
 
-> No need to check the return value of debugfs_create_file(), so no need
-> to provide a fake "cast away" of the return value either.
+--wifg27wmr2vtryhw
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jun 11, 2019 at 11:40:55PM +0200, Cl=E9ment P=E9ron wrote:
+> From: Jernej Skrabec <jernej.skrabec@siol.net>
 >
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: dmaengine@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> H6 has DMA controller which supports 16 channels.
+>
+> Add a node for it.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Applied, thanks!
+Maxime
 
-Yours,
-Linus Walleij
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--wifg27wmr2vtryhw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXQD9dwAKCRDj7w1vZxhR
+xTPPAQDwqeaWzIXvVqScIX0NTUe7WK7fmLzHPVpab8IJpa5dGwD/f3YtkUYQPqTG
+coeXk9Fx3YFFviAuHQZtPs7OUKhl5ws=
+=sK8n
+-----END PGP SIGNATURE-----
+
+--wifg27wmr2vtryhw--

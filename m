@@ -2,144 +2,116 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DA77245B1A
-	for <lists+dmaengine@lfdr.de>; Fri, 14 Jun 2019 13:06:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FFA245DFC
+	for <lists+dmaengine@lfdr.de>; Fri, 14 Jun 2019 15:21:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbfFNLGI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 14 Jun 2019 07:06:08 -0400
-Received: from mga01.intel.com ([192.55.52.88]:19905 "EHLO mga01.intel.com"
+        id S1727737AbfFNNVM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 14 Jun 2019 09:21:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727153AbfFNLGI (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 14 Jun 2019 07:06:08 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 04:06:07 -0700
-X-ExtLoop1: 1
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 14 Jun 2019 04:06:05 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id EACF6110C; Fri, 14 Jun 2019 14:06:04 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Viresh Kumar <vireshk@kernel.org>, dmaengine@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] dmaengine: dw: Distinguish ->remove() between DW and iDMA 32-bit
-Date:   Fri, 14 Jun 2019 14:06:04 +0300
-Message-Id: <20190614110604.25375-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        id S1727696AbfFNNVM (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:21:12 -0400
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F5F121537;
+        Fri, 14 Jun 2019 13:21:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560518470;
+        bh=zSqDfvTWi/91oRnFPmD+sDE1OD8meYbhenxAA0rkJpQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=R/OivYycKXCrR4qbnGPXhaeUCc8L4u/YFYrA52THSyhzc7IZ/wON5glZJ4BYkkz28
+         cM5y1K7zmj5znbVPQ+rM+TGktxk5HKIq8cBKMnjEirB7nBD5wAU2x7Zo2fEayOuA1b
+         9uyJnkaPsk0m63CXpFrWN38NQwOUSd8J1wr282ZI=
+Received: by mail-qt1-f181.google.com with SMTP id a15so2372779qtn.7;
+        Fri, 14 Jun 2019 06:21:10 -0700 (PDT)
+X-Gm-Message-State: APjAAAWmQDFpaIyIbrVi3zBueyUJigPC0jRCM0qSLAg+bMtNqajvFrQ+
+        TOOBSy+JbXcLrg6VJoYjF4Tb7ZSgN944/fNT0w==
+X-Google-Smtp-Source: APXvYqwPY5Ii8d7b9MpE2fLLzqMQruglLqs18oegyUlcZ2uGTJsB4Rwfi7XLE6zjZcAEozwYHNHmqcKgnXfo9XquaAc=
+X-Received: by 2002:aed:3f10:: with SMTP id p16mr15589221qtf.110.1560518469746;
+ Fri, 14 Jun 2019 06:21:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190506123456.6777-1-peter.ujfalusi@ti.com> <20190506123456.6777-10-peter.ujfalusi@ti.com>
+ <20190613181626.GA7039@bogus> <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
+In-Reply-To: <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 14 Jun 2019 07:20:57 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com>
+Message-ID: <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com>
+Subject: Re: [PATCH 09/16] dt-bindings: dma: ti: Add document for K3 UDMA
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-In the same way as done for ->probe(), call ->remove() based on
-the type of the hardware.
+On Thu, Jun 13, 2019 at 2:33 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>
+> Rob,
+>
+> On 13/06/2019 21.16, Rob Herring wrote:
+> >> +Remote PSI-L endpoint
+> >> +
+> >> +Required properties:
+> >> +--------------------
+> >> +- ti,psil-base:             PSI-L thread ID base of the endpoint
+> >> +
+> >> +Within the PSI-L endpoint node thread configuration subnodes must present with:
+> >> +ti,psil-configX naming convention, where X is the thread ID offset.
+> >
+> > Don't use vendor prefixes on node names.
+>
+> OK.
+>
+> >> +
+> >> +Configuration node Required properties:
+> >> +--------------------
+> >> +- linux,udma-mode:  Channel mode, can be:
+> >> +                    - UDMA_PKT_MODE: for Packet mode channels (peripherals)
+> >> +                    - UDMA_TR_MODE: for Third-Party mode
+> >
+> > This is hardly a common linux thing. What determines the value here.
+>
+> Unfortunately it is.
 
-While it works now due to equivalency of the two removal functions,
-it might be changed in the future.
+No, it's a feature of your h/w and in no way is something linux
+defined which is the point of 'linux' prefix.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/dma/dw/pci.c | 28 ++++++++++++++++++++--------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+> Each channel can be configured to Packet or TR mode. For some
+> peripherals it is true that they only support packet mode, these are the
+> newer PSI-L native peripherals.
+> For these channels a udma-mode property would be correct.
+>
+> But we have legacy peripherals as well and they are serviced by PDMA
+> (which is a native peripheral designed to talk to the given legacy IP).
+> We can use either packet or TR mode in UDMAP to talk to PDMAs, it is in
+> most cases clear what to use, but for example for audio (McASP) channels
+> Linux is using TR channel because we need cyclic DMA while for example
+> RTOS is using Packet mode as it fits their needs better.
+>
+> Here I need to prefix the udma-mode with linux as the mode is used by
+> Linux, but other OS might opt to use different channel mode.
 
-diff --git a/drivers/dma/dw/pci.c b/drivers/dma/dw/pci.c
-index e79a75db0852..6aa1355ded6c 100644
---- a/drivers/dma/dw/pci.c
-+++ b/drivers/dma/dw/pci.c
-@@ -15,10 +15,13 @@
- struct dw_dma_pci_data {
- 	const struct dw_dma_platform_data *pdata;
- 	int (*probe)(struct dw_dma_chip *chip);
-+	int (*remove)(struct dw_dma_chip *chip);
-+	struct dw_dma_chip *chip;
- };
- 
- static const struct dw_dma_pci_data dw_pci_data = {
- 	.probe = dw_dma_probe,
-+	.remove = dw_dma_remove,
- };
- 
- static const struct dw_dma_platform_data idma32_pdata = {
-@@ -34,11 +37,13 @@ static const struct dw_dma_platform_data idma32_pdata = {
- static const struct dw_dma_pci_data idma32_pci_data = {
- 	.pdata = &idma32_pdata,
- 	.probe = idma32_dma_probe,
-+	.remove = idma32_dma_remove,
- };
- 
- static int dw_pci_probe(struct pci_dev *pdev, const struct pci_device_id *pid)
- {
--	const struct dw_dma_pci_data *data = (void *)pid->driver_data;
-+	const struct dw_dma_pci_data *drv_data = (void *)pid->driver_data;
-+	struct dw_dma_pci_data *data;
- 	struct dw_dma_chip *chip;
- 	int ret;
- 
-@@ -63,6 +68,10 @@ static int dw_pci_probe(struct pci_dev *pdev, const struct pci_device_id *pid)
- 	if (ret)
- 		return ret;
- 
-+	data = devm_kmemdup(&pdev->dev, drv_data, sizeof(*drv_data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
- 	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
- 	if (!chip)
- 		return -ENOMEM;
-@@ -73,21 +82,24 @@ static int dw_pci_probe(struct pci_dev *pdev, const struct pci_device_id *pid)
- 	chip->irq = pdev->irq;
- 	chip->pdata = data->pdata;
- 
-+	data->chip = chip;
-+
- 	ret = data->probe(chip);
- 	if (ret)
- 		return ret;
- 
--	pci_set_drvdata(pdev, chip);
-+	pci_set_drvdata(pdev, data);
- 
- 	return 0;
- }
- 
- static void dw_pci_remove(struct pci_dev *pdev)
- {
--	struct dw_dma_chip *chip = pci_get_drvdata(pdev);
-+	struct dw_dma_pci_data *data = pci_get_drvdata(pdev);
-+	struct dw_dma_chip *chip = data->chip;
- 	int ret;
- 
--	ret = dw_dma_remove(chip);
-+	ret = data->remove(chip);
- 	if (ret)
- 		dev_warn(&pdev->dev, "can't remove device properly: %d\n", ret);
- }
-@@ -96,16 +108,16 @@ static void dw_pci_remove(struct pci_dev *pdev)
- 
- static int dw_pci_suspend_late(struct device *dev)
- {
--	struct pci_dev *pci = to_pci_dev(dev);
--	struct dw_dma_chip *chip = pci_get_drvdata(pci);
-+	struct dw_dma_pci_data *data = dev_get_drvdata(dev);
-+	struct dw_dma_chip *chip = data->chip;
- 
- 	return do_dw_dma_disable(chip);
- };
- 
- static int dw_pci_resume_early(struct device *dev)
- {
--	struct pci_dev *pci = to_pci_dev(dev);
--	struct dw_dma_chip *chip = pci_get_drvdata(pci);
-+	struct dw_dma_pci_data *data = dev_get_drvdata(dev);
-+	struct dw_dma_chip *chip = data->chip;
- 
- 	return do_dw_dma_enable(chip);
- };
--- 
-2.20.1
+So you'd need <os>,udma-mode? That doesn't work... If the setting is
+per OS, then it belongs in the OS because the same dtb should work
+across OS's.
 
+> The reason why this needs to be in the DT is that when the channel is
+> requested we need to configure the mode and it can not be swapped
+> runtime easily between Packet and TR mode.
+
+So when the client makes the channel request, why doesn't it specify the mode?
+
+Rob

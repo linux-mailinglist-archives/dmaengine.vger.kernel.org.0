@@ -2,154 +2,107 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 42D66464AC
-	for <lists+dmaengine@lfdr.de>; Fri, 14 Jun 2019 18:44:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52E9346728
+	for <lists+dmaengine@lfdr.de>; Fri, 14 Jun 2019 20:09:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbfFNQoN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 14 Jun 2019 12:44:13 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39379 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725859AbfFNQoM (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 14 Jun 2019 12:44:12 -0400
-Received: by mail-lf1-f68.google.com with SMTP id p24so2179111lfo.6;
-        Fri, 14 Jun 2019 09:44:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=m9lLYU7jn518ojnFF4nYlS29/w9slDIZ2Qw8HKCiVkg=;
-        b=dJCVqaYTv0Ezro7ql3iIqLgyKhuUvBpEh1thMHwh5XM7Jpe5oSbJp+g5Tmv6RIfn35
-         ndwv2cYqQSWd1cZRp0l8px8y2O9OGXU80ro9JxbQBwEbmwPyx5tueqQcjOKeuAc03yYd
-         8KVPG9MvvpsNSEH7xr/TagGHkiJnCu7+vAQUk9ZBv5XZZ1xa2YwHRnFg5goqC7Tr7Ir+
-         gKx4D83LbUHPY2OlUM1CxbJiq/EkH3q0mwlkUp4cYg/A/1IFyCi/50IHVGYOyKrYNG+s
-         8CwI4ahPhUHbnfl/bVWCzokJWSNGpaIc1PO9bI8U4V1xkFkn9+05U0UEYuGpAgK56AZP
-         pbdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=m9lLYU7jn518ojnFF4nYlS29/w9slDIZ2Qw8HKCiVkg=;
-        b=pvhIJqh4bwDBYZZmCq94YNgUpfSftgIuHd7QeE3z/hlWxeFIe+XFuvu2hfiH8/B8QK
-         HZnoi6xaKAVbU3CUVayNobExjxxYIHUy+nfJOrIEgoIYSjSnnc6dy6GQKXgFdai1+6cT
-         tjaRgyElsRpySCL+J+SA1O/Z2rgYKlEWn0pWkA8jlldG7r271PAhlE6PDNkgymqtjDzL
-         s+rYmIoFYyRgHm/dE00U0ms45zRFzNDU2CtM9a4k2ZjFuVxn56YzPRnDpiDoM7MCe9k3
-         V7B11t9SoFbdGSAoMsCPyxidceXjXYOtboGmuv2ZfoT2eHJtaAK9ngFRC/SiQC2OslO1
-         eXpQ==
-X-Gm-Message-State: APjAAAXEeNbXBus5j2mC/SYIzqfjijaKMsUlsgChEw/N3sZoBj7k1yg2
-        NI61ho86vwSPndT8DMavocPmjQEQ
-X-Google-Smtp-Source: APXvYqyPAYvifKzpZ0d8kYngJqpcsskzy85z/YO/mz0OJmLmJbvLifzSPv2ay5136cNm6ILxJV71OA==
-X-Received: by 2002:ac2:528e:: with SMTP id q14mr20186797lfm.17.1560530648985;
-        Fri, 14 Jun 2019 09:44:08 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id f10sm676257ljk.95.2019.06.14.09.44.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 09:44:08 -0700 (PDT)
-Subject: Re: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue
- granularity
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190613210849.10382-1-digetx@gmail.com>
- <5fbe4374-cc9a-8212-017e-05f4dee64443@nvidia.com>
- <7ab96aa5-0be2-dc01-d187-eb718093eb99@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <840fcf60-8e24-ff44-a816-ef63a5f18652@gmail.com>
-Date:   Fri, 14 Jun 2019 19:44:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1725868AbfFNSJ1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 14 Jun 2019 14:09:27 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:34081 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfFNSJ1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 14 Jun 2019 14:09:27 -0400
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mol@pengutronix.de>)
+        id 1hbqdY-00054m-Sl; Fri, 14 Jun 2019 20:09:16 +0200
+Received: from mol by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mol@pengutronix.de>)
+        id 1hbqdV-0004US-KX; Fri, 14 Jun 2019 20:09:13 +0200
+Date:   Fri, 14 Jun 2019 20:09:13 +0200
+From:   Michael Olbrich <m.olbrich@pengutronix.de>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Vinod <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, dmaengine@vger.kernel.org,
+        Sascha Hauer <kernel@pengutronix.de>
+Subject: Re: [PATCH v1] dmaengine: imx-sdma: remove BD_INTR for channel0
+Message-ID: <20190614180913.d66bbjrnw3gxt663@pengutronix.de>
+Mail-Followup-To: Sven Van Asbroeck <thesven73@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>, Robin Gong <yibin.gong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>, Vinod <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+        dmaengine@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>
+References: <20190614083959.37944-1-yibin.gong@nxp.com>
+ <CAOMZO5Do+BsZEX43w283yWed8fQVtTC+zAvoktPLTj4c_f798w@mail.gmail.com>
+ <CAGngYiUWy5FM-zsT55-yY=kahLObZGYw=zU0F9Tzp9T2S3G6LA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <7ab96aa5-0be2-dc01-d187-eb718093eb99@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGngYiUWy5FM-zsT55-yY=kahLObZGYw=zU0F9Tzp9T2S3G6LA@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 19:38:35 up 27 days, 23:56, 60 users,  load average: 0.02, 0.08,
+ 0.08
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: mol@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-14.06.2019 18:24, Jon Hunter пишет:
+On Fri, Jun 14, 2019 at 09:25:51AM -0400, Sven Van Asbroeck wrote:
+> On Fri, Jun 14, 2019 at 6:49 AM Fabio Estevam <festevam@gmail.com> wrote:
+> >
+> > According to the original report from Sven the issue started to happen
+> > on 5.0, so it would be good to add a Fixes tag and Cc stable so that
+> > this fix could be backported to 5.0/5.1 stable trees.
 > 
-> On 14/06/2019 16:21, Jon Hunter wrote:
->>
->> On 13/06/2019 22:08, Dmitry Osipenko wrote:
->>> Tegra's APB DMA engine updates words counter after each transferred burst
->>> of data, hence it can report transfer's residual with more fidelity which
->>> may be required in cases like audio playback. In particular this fixes
->>> audio stuttering during playback in a chromiuim web browser. The patch is
->>> based on the original work that was made by Ben Dooks [1]. It was tested
->>> on Tegra20 and Tegra30 devices.
->>>
->>> [1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
->>>
->>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++-------
->>>  1 file changed, 28 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->>> index 79e9593815f1..c5af8f703548 100644
->>> --- a/drivers/dma/tegra20-apb-dma.c
->>> +++ b/drivers/dma/tegra20-apb-dma.c
->>> @@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
->>>  	return 0;
->>>  }
->>>  
->>> +static unsigned int tegra_dma_update_residual(struct tegra_dma_channel *tdc,
->>> +					      struct tegra_dma_sg_req *sg_req,
->>> +					      struct tegra_dma_desc *dma_desc,
->>> +					      unsigned int residual)
->>> +{
->>> +	unsigned long status, wcount = 0;
->>> +
->>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
->>> +		return residual;
->>> +
->>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
->>> +		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
->>> +
->>> +	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
->>> +
->>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
->>> +		wcount = status;
->>> +
->>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
->>> +		return residual - sg_req->req_len;
->>> +
->>> +	return residual - get_current_xferred_count(tdc, sg_req, wcount);
->>> +}
->>> +
->>>  static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
->>>  	dma_cookie_t cookie, struct dma_tx_state *txstate)
->>>  {
->>>  	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
->>> +	struct tegra_dma_sg_req *sg_req = NULL;
->>>  	struct tegra_dma_desc *dma_desc;
->>> -	struct tegra_dma_sg_req *sg_req;
->>>  	enum dma_status ret;
->>>  	unsigned long flags;
->>>  	unsigned int residual;
->>> @@ -838,6 +862,8 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
->>>  		residual = dma_desc->bytes_requested -
->>>  			   (dma_desc->bytes_transferred %
->>>  			    dma_desc->bytes_requested);
->>> +		residual = tegra_dma_update_residual(tdc, sg_req, dma_desc,
->>> +						     residual);
->>
->> I had a quick look at this, I am not sure that we want to call
->> tegra_dma_update_residual() here for cases where the dma_desc is on the
->> free_dma_desc list. In fact, couldn't this be simplified a bit for case
->> where the dma_desc is on the free list? In that case I believe that the
->> residual should always be 0.
+> Good catch !
 > 
-> Actually, no, it could be non-zero in the case the transfer is aborted.
+> However, the issue is highly timing-dependent. It will come and go depending
+> on the kernel version, devicetree and defconfig. If it works for me on
+> 4.19, that
+> doesn't mean the bug is gone on 4.19.
+> 
+> Looking at the commit history, I think the commit below possibly introduced the
+> issue. Until this commit, sdma_run_channel() would wait on the interrupt
+> before proceeding. It has been there since 4.8:
+> 
+> Fixes: 1d069bfa3c78 ("dmaengine: imx-sdma: ack channel 0 IRQ in the
+> interrupt handler")
 
-Looks like everything should be fine as-is.
+I think this is correct. Starting with this commit, the interrupt status fr
+channel 0 is no longer cleared in sdma_run_channel0() and
+sdma_int_handler() is always called for channel 0.
+During firmware loading the interrupts are enabled again just before the
+clocks are disabled. The interrupt is pending at this moment so on a single
+core system I think this will always work as expected. If the firmware
+loading and the interrupt handler run on different cores then this is racy.
+Maybe something else changed to make this more likely?
 
-BTW, it's a bit hard to believe that there is any real benefit from the
-free_dma_desc list at all, maybe worth to just remove it?
+With this new change sdma_int_handler() is no longer called for channel 0
+right, so you should also remove the special handling there.
+
+Michael
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |

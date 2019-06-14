@@ -2,116 +2,88 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FFA245DFC
-	for <lists+dmaengine@lfdr.de>; Fri, 14 Jun 2019 15:21:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9394645E14
+	for <lists+dmaengine@lfdr.de>; Fri, 14 Jun 2019 15:26:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbfFNNVM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 14 Jun 2019 09:21:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727696AbfFNNVM (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:21:12 -0400
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F5F121537;
-        Fri, 14 Jun 2019 13:21:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560518470;
-        bh=zSqDfvTWi/91oRnFPmD+sDE1OD8meYbhenxAA0rkJpQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=R/OivYycKXCrR4qbnGPXhaeUCc8L4u/YFYrA52THSyhzc7IZ/wON5glZJ4BYkkz28
-         cM5y1K7zmj5znbVPQ+rM+TGktxk5HKIq8cBKMnjEirB7nBD5wAU2x7Zo2fEayOuA1b
-         9uyJnkaPsk0m63CXpFrWN38NQwOUSd8J1wr282ZI=
-Received: by mail-qt1-f181.google.com with SMTP id a15so2372779qtn.7;
-        Fri, 14 Jun 2019 06:21:10 -0700 (PDT)
-X-Gm-Message-State: APjAAAWmQDFpaIyIbrVi3zBueyUJigPC0jRCM0qSLAg+bMtNqajvFrQ+
-        TOOBSy+JbXcLrg6VJoYjF4Tb7ZSgN944/fNT0w==
-X-Google-Smtp-Source: APXvYqwPY5Ii8d7b9MpE2fLLzqMQruglLqs18oegyUlcZ2uGTJsB4Rwfi7XLE6zjZcAEozwYHNHmqcKgnXfo9XquaAc=
-X-Received: by 2002:aed:3f10:: with SMTP id p16mr15589221qtf.110.1560518469746;
- Fri, 14 Jun 2019 06:21:09 -0700 (PDT)
+        id S1727766AbfFNN0D (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 14 Jun 2019 09:26:03 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41790 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727737AbfFNN0D (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 14 Jun 2019 09:26:03 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 107so2602827otj.8
+        for <dmaengine@vger.kernel.org>; Fri, 14 Jun 2019 06:26:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q0OJmGrN/dUckm8xh8/mUqwvTl2m3MsC/Nix3u2EbOo=;
+        b=qnmZOrT55WICaHNRVQwbPhpDLhQ9v0a+iHtcCyaMhVpCyoneH9oAOuBKoqF9Jhg5Y7
+         fiMHHhBY5xT45QppZFNTXizLTM28cqcVtay4I/KmcB9PBLkZ+3UISDtysaQpGJAUvD8p
+         FaXdCcyrG6eT2aYg9tfbalMYtjbqJO6ymYuutbIQSMpIZKD0DJqly6nfy0IEaOrsFA3s
+         NgsQ40wco1ktUihHcmvXrLk3Mo7Stsqtcde9pZsHaqQA6xnQkosZhas2AFvQcbJi1Dv7
+         qqxHhuKPtLo4A92pO77eJ27C09s8xT+N2ETINcJ9D2TOdn5BVdmhElSPO+TsokZM19EW
+         cUXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q0OJmGrN/dUckm8xh8/mUqwvTl2m3MsC/Nix3u2EbOo=;
+        b=HbgVoM3kV7WDDCIOHAtUCIFpoBONiSfjSvHHH4KA8NqPmV/wVLDBDWYR7BvZjRTERZ
+         +iMpvk1ZQd//Bxjospn+jqCYLx29K8uIRXahYlCvttHJn9/7mr3L36wi5mqN7TEhwkep
+         v3SUZiJaF9V7Le1tmX4rHuX0Qs1GDK0VZLH0s4WtDa/s+6mUYQVE3UTi8ycBHLe/zffO
+         iiXHoaqMnkaUAeIz0rTVLw2EyRas1yJCI4rTKnVa/nVs13bsaPNs/nTu70zdnGK4gZnx
+         1Dk0a5UomUWJ6POIgPX6ROG/ZDQ4zRPcPFgsRTN4MPacfMJPnNud6paRQGq9w+CABd8h
+         aBIQ==
+X-Gm-Message-State: APjAAAWiQC3JnEIkqRHApQ0Y4gygNbfZ3B68nM+mUALALGSF/RuWu3tP
+        fRPouFIJ/bNPmLzeRZBD7dmpquW/miNBaKW7otM=
+X-Google-Smtp-Source: APXvYqzZ4yTzZxukuh4ByGQZgpQG6EO0dCIycVqbuDQkexw5XYN6RtEOuxvysNlyk3gw1XEj2+hMGs7NwNxta8Ox7+Q=
+X-Received: by 2002:a05:6830:16:: with SMTP id c22mr12549596otp.116.1560518762637;
+ Fri, 14 Jun 2019 06:26:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190506123456.6777-1-peter.ujfalusi@ti.com> <20190506123456.6777-10-peter.ujfalusi@ti.com>
- <20190613181626.GA7039@bogus> <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
-In-Reply-To: <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 14 Jun 2019 07:20:57 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com>
-Message-ID: <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com>
-Subject: Re: [PATCH 09/16] dt-bindings: dma: ti: Add document for K3 UDMA
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
+References: <20190614083959.37944-1-yibin.gong@nxp.com> <CAOMZO5Do+BsZEX43w283yWed8fQVtTC+zAvoktPLTj4c_f798w@mail.gmail.com>
+In-Reply-To: <CAOMZO5Do+BsZEX43w283yWed8fQVtTC+zAvoktPLTj4c_f798w@mail.gmail.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Fri, 14 Jun 2019 09:25:51 -0400
+Message-ID: <CAGngYiUWy5FM-zsT55-yY=kahLObZGYw=zU0F9Tzp9T2S3G6LA@mail.gmail.com>
+Subject: Re: [PATCH v1] dmaengine: imx-sdma: remove BD_INTR for channel0
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Robin Gong <yibin.gong@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Vinod <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
         "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
+        <linux-arm-kernel@lists.infradead.org>, dmaengine@vger.kernel.org,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Michael Olbrich <m.olbrich@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 2:33 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+On Fri, Jun 14, 2019 at 6:49 AM Fabio Estevam <festevam@gmail.com> wrote:
 >
-> Rob,
->
-> On 13/06/2019 21.16, Rob Herring wrote:
-> >> +Remote PSI-L endpoint
-> >> +
-> >> +Required properties:
-> >> +--------------------
-> >> +- ti,psil-base:             PSI-L thread ID base of the endpoint
-> >> +
-> >> +Within the PSI-L endpoint node thread configuration subnodes must present with:
-> >> +ti,psil-configX naming convention, where X is the thread ID offset.
-> >
-> > Don't use vendor prefixes on node names.
->
-> OK.
->
-> >> +
-> >> +Configuration node Required properties:
-> >> +--------------------
-> >> +- linux,udma-mode:  Channel mode, can be:
-> >> +                    - UDMA_PKT_MODE: for Packet mode channels (peripherals)
-> >> +                    - UDMA_TR_MODE: for Third-Party mode
-> >
-> > This is hardly a common linux thing. What determines the value here.
->
-> Unfortunately it is.
+> According to the original report from Sven the issue started to happen
+> on 5.0, so it would be good to add a Fixes tag and Cc stable so that
+> this fix could be backported to 5.0/5.1 stable trees.
 
-No, it's a feature of your h/w and in no way is something linux
-defined which is the point of 'linux' prefix.
+Good catch !
 
-> Each channel can be configured to Packet or TR mode. For some
-> peripherals it is true that they only support packet mode, these are the
-> newer PSI-L native peripherals.
-> For these channels a udma-mode property would be correct.
->
-> But we have legacy peripherals as well and they are serviced by PDMA
-> (which is a native peripheral designed to talk to the given legacy IP).
-> We can use either packet or TR mode in UDMAP to talk to PDMAs, it is in
-> most cases clear what to use, but for example for audio (McASP) channels
-> Linux is using TR channel because we need cyclic DMA while for example
-> RTOS is using Packet mode as it fits their needs better.
->
-> Here I need to prefix the udma-mode with linux as the mode is used by
-> Linux, but other OS might opt to use different channel mode.
+However, the issue is highly timing-dependent. It will come and go depending
+on the kernel version, devicetree and defconfig. If it works for me on
+4.19, that
+doesn't mean the bug is gone on 4.19.
 
-So you'd need <os>,udma-mode? That doesn't work... If the setting is
-per OS, then it belongs in the OS because the same dtb should work
-across OS's.
+Looking at the commit history, I think the commit below possibly introduced the
+issue. Until this commit, sdma_run_channel() would wait on the interrupt
+before proceeding. It has been there since 4.8:
 
-> The reason why this needs to be in the DT is that when the channel is
-> requested we need to configure the mode and it can not be swapped
-> runtime easily between Packet and TR mode.
+Fixes: 1d069bfa3c78 ("dmaengine: imx-sdma: ack channel 0 IRQ in the
+interrupt handler")
 
-So when the client makes the channel request, why doesn't it specify the mode?
+But my knowledge of imx-sdma is non-existent, so I invite the more knowledgeable
+people in this thread to take a look at this commit.
 
-Rob
+[Adding Michael Olbrich to the thread]

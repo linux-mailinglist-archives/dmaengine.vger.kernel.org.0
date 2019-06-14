@@ -2,39 +2,38 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 64BD346AFB
-	for <lists+dmaengine@lfdr.de>; Fri, 14 Jun 2019 22:39:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D00CF469E7
+	for <lists+dmaengine@lfdr.de>; Fri, 14 Jun 2019 22:36:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbfFNU2y (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 14 Jun 2019 16:28:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50544 "EHLO mail.kernel.org"
+        id S1727179AbfFNUgF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 14 Jun 2019 16:36:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726419AbfFNU2y (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:28:54 -0400
+        id S1727177AbfFNU3t (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:29:49 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 993F02184C;
-        Fri, 14 Jun 2019 20:28:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DEEE21848;
+        Fri, 14 Jun 2019 20:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544131;
-        bh=JH2Y3LOs44/U6E/fzy9F/QsnMjzWNWykjTN6GkdRAXo=;
+        s=default; t=1560544188;
+        bh=1XWVcna6ibM0e624qpjkh6BRvMNG84hwCnjcEQh/zcg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JV6ohBqCr7nkk5eWfOkx3VPdf9Lwzn1jk23R1jmzF303dFLr4wVPaC2QEzaMF5VVX
-         tXWdCHuHbYoK1l7Obm2xzGCGTLzjEwGas75jTtASHfbQPDZ9p5Y4iu1t7VKdyG4Iie
-         OAOANKlmXS/KpqHhR1zD4WExirFeiQgk6feY1rj4=
+        b=LcG0ULtSlJS2kIxIiZPHuKHmsykL78+DEWpejEbQMm+r+xXJWXAOs0wHeAJRN29Q4
+         PYgkIWS4RK0zcPc1ZdVvh+g7hy4tloZuZR1e0tznP2BAM669kZBadvn/rIJvJAkClS
+         krnBxsClz360GxuRBtgWUy6xECTsjjlBq0D3dx30=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Long <eric.long@unisoc.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
+Cc:     Colin Ian King <colin.king@canonical.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
         dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 10/59] dmaengine: sprd: Fix the right place to configure 2-stage transfer
-Date:   Fri, 14 Jun 2019 16:27:54 -0400
-Message-Id: <20190614202843.26941-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 02/39] dmaengine: dw-axi-dmac: fix null dereference when pointer first is null
+Date:   Fri, 14 Jun 2019 16:29:07 -0400
+Message-Id: <20190614202946.27385-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
-References: <20190614202843.26941-1-sashal@kernel.org>
+In-Reply-To: <20190614202946.27385-1-sashal@kernel.org>
+References: <20190614202946.27385-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,52 +43,39 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Eric Long <eric.long@unisoc.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit c434e377dad1dec05cad1870ce21bc539e1e024f ]
+[ Upstream commit 0788611c9a0925c607de536b2449de5ed98ef8df ]
 
-Move the 2-stage configuration before configuring the link-list mode,
-since we will use some 2-stage configuration to fill the link-list
-configuration.
+In the unlikely event that axi_desc_get returns a null desc in the
+very first iteration of the while-loop the error exit path ends
+up calling axi_desc_put on a null pointer 'first' and this causes
+a null pointer dereference.  Fix this by adding a null check on
+pointer 'first' before calling axi_desc_put.
 
-Signed-off-by: Eric Long <eric.long@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Addresses-Coverity: ("Explicit null dereference")
+Fixes: 1fe20f1b8454 ("dmaengine: Introduce DW AXI DMAC driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/sprd-dma.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index a01c23246632..01abed5cde49 100644
---- a/drivers/dma/sprd-dma.c
-+++ b/drivers/dma/sprd-dma.c
-@@ -911,6 +911,12 @@ sprd_dma_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
- 		schan->linklist.virt_addr = 0;
- 	}
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+index c4eb55e3011c..c05ef7f1d7b6 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+@@ -512,7 +512,8 @@ dma_chan_prep_dma_memcpy(struct dma_chan *dchan, dma_addr_t dst_adr,
+ 	return vchan_tx_prep(&chan->vc, &first->vd, flags);
  
-+	/* Set channel mode and trigger mode for 2-stage transfer */
-+	schan->chn_mode =
-+		(flags >> SPRD_DMA_CHN_MODE_SHIFT) & SPRD_DMA_CHN_MODE_MASK;
-+	schan->trg_mode =
-+		(flags >> SPRD_DMA_TRG_MODE_SHIFT) & SPRD_DMA_TRG_MODE_MASK;
-+
- 	sdesc = kzalloc(sizeof(*sdesc), GFP_NOWAIT);
- 	if (!sdesc)
- 		return NULL;
-@@ -944,12 +950,6 @@ sprd_dma_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
- 		}
- 	}
+ err_desc_get:
+-	axi_desc_put(first);
++	if (first)
++		axi_desc_put(first);
+ 	return NULL;
+ }
  
--	/* Set channel mode and trigger mode for 2-stage transfer */
--	schan->chn_mode =
--		(flags >> SPRD_DMA_CHN_MODE_SHIFT) & SPRD_DMA_CHN_MODE_MASK;
--	schan->trg_mode =
--		(flags >> SPRD_DMA_TRG_MODE_SHIFT) & SPRD_DMA_TRG_MODE_MASK;
--
- 	ret = sprd_dma_fill_desc(chan, &sdesc->chn_hw, 0, 0, src, dst, len,
- 				 dir, flags, slave_cfg);
- 	if (ret) {
 -- 
 2.20.1
 

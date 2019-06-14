@@ -2,157 +2,114 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 312F745EA0
-	for <lists+dmaengine@lfdr.de>; Fri, 14 Jun 2019 15:43:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C61946084
+	for <lists+dmaengine@lfdr.de>; Fri, 14 Jun 2019 16:20:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbfFNNmy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 14 Jun 2019 09:42:54 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35216 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728033AbfFNNmx (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 14 Jun 2019 09:42:53 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5EDgjcU015726;
-        Fri, 14 Jun 2019 08:42:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560519765;
-        bh=JTrKAS5DxBlxyr/RUcG7xCZZCkjwEovfo2qd+cpbq7o=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=HEpkw3CrAA6B+lRcszpV93/Y16UTfxTK16V1R8rSpRtlNuPfp4MuPbeje6tJaOzv5
-         fLdJFQ9otRoony+Lme3E13MenSQy4LEqEfVsXt7mou3/cYyqI1RR0wYBEpi47ZEC48
-         vJVGouhBNOuc0lWGVRF9c2Y/XVhzbzCnR+kY2Cn8=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5EDgjTi018675
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 14 Jun 2019 08:42:45 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 14
- Jun 2019 08:42:45 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 14 Jun 2019 08:42:45 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5EDggeV100780;
-        Fri, 14 Jun 2019 08:42:43 -0500
-Subject: Re: [PATCH 09/16] dt-bindings: dma: ti: Add document for K3 UDMA
-To:     Rob Herring <robh@kernel.org>
-CC:     Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
-References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
- <20190506123456.6777-10-peter.ujfalusi@ti.com> <20190613181626.GA7039@bogus>
- <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
- <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <e811d674-b79f-4da8-c632-c7a90844b6c5@ti.com>
-Date:   Fri, 14 Jun 2019 16:43:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1728641AbfFNOUZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 14 Jun 2019 10:20:25 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54614 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728251AbfFNOUS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 14 Jun 2019 10:20:18 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g135so2551610wme.4
+        for <dmaengine@vger.kernel.org>; Fri, 14 Jun 2019 07:20:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ty57fS8FEMMkyXkp+DBY1O/OWs9quJnipD1xbuIqd/0=;
+        b=jEyWyusNNcy/zIbSz97DCVXFWo6liOcR3UroHiqapt1gsw21z6NUzdxOP/hmEgFDBX
+         t1czRS7WpYV+PhrzE3HFYeek6Du6wzUsF1/pN008841LWOFHasdvj6d+dFsDXf+hlrJU
+         owQrDqnNU5/CublkS+8W0dU/rjeHgad6VMBxd8pnSRMEdPRJTt1X2bt1uaQJXAL1e/5q
+         U/gmBDF5avTuXoNJUV7zOCQIGoZGpk0ulZIOp7Et4rU7grQ325ujdHK3kP5Y7lhQvg5X
+         KWcolpqX/LJTn4nS4d4FeoGz8lrZ3u9tUQ3Ld6Z6/atadBGm/XGdJH91UL7cE7YTfnk/
+         qBtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ty57fS8FEMMkyXkp+DBY1O/OWs9quJnipD1xbuIqd/0=;
+        b=LI4CYYaKkcHr0jFMfnhOtdB12lmwqtaJCWGo6MnCMtf0EeJ3JFnC1MZzToB6J6sgUF
+         /8/M3+f8t8l+lMXfxGlCzJb/YaJNZVbBuTEAiYLvIKJblJ3UlmsEjAy5vT2xd28vUEP9
+         BSfFicGv+23KyTb+xv7HLsLta/P1yZmLzF45syH8XVz650t+nlH65gHKxCddy8PfleU7
+         Z8VI8Cq+P54rRWfLD2jqLV8S4LJuhF+LJSKQoAqY17IQ7QzBGP6M5W4DU8ofXcFGn3ys
+         Qiaww5wilMz2MC/R8rdKbygoRiNahENgshDWdt8tiPDtcqx5zWGmUc1kPigzG+/AALku
+         viZw==
+X-Gm-Message-State: APjAAAX2xS+K+9RwjRGVIuYappGZ/JQZ0Z0ZrFnHI3ZCmr/dRBxBZXPa
+        xxVPFcRohZt45cXHydnV7yRUVw==
+X-Google-Smtp-Source: APXvYqxpNPUsDaAEg7ZHJS2hvOSurHBke9twjY/3loroMi7xipncRW4bBwmksKoG12q4fxRVq1yzYQ==
+X-Received: by 2002:a1c:b1d5:: with SMTP id a204mr118305wmf.101.1560522016576;
+        Fri, 14 Jun 2019 07:20:16 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id j7sm3990080wru.54.2019.06.14.07.20.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 07:20:15 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, sricharan@codeaurora.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH] dmaengine: qcom-bam: fix circular buffer handling
+Date:   Fri, 14 Jun 2019 15:20:12 +0100
+Message-Id: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+For some reason arguments to most of the circular buffers
+macros are used in reverse, tail is used for head and vice versa.
 
-On 14/06/2019 16.20, Rob Herring wrote:
-> On Thu, Jun 13, 2019 at 2:33 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>
->> Rob,
->>
->> On 13/06/2019 21.16, Rob Herring wrote:
->>>> +Remote PSI-L endpoint
->>>> +
->>>> +Required properties:
->>>> +--------------------
->>>> +- ti,psil-base:             PSI-L thread ID base of the endpoint
->>>> +
->>>> +Within the PSI-L endpoint node thread configuration subnodes must present with:
->>>> +ti,psil-configX naming convention, where X is the thread ID offset.
->>>
->>> Don't use vendor prefixes on node names.
->>
->> OK.
->>
->>>> +
->>>> +Configuration node Required properties:
->>>> +--------------------
->>>> +- linux,udma-mode:  Channel mode, can be:
->>>> +                    - UDMA_PKT_MODE: for Packet mode channels (peripherals)
->>>> +                    - UDMA_TR_MODE: for Third-Party mode
->>>
->>> This is hardly a common linux thing. What determines the value here.
->>
->> Unfortunately it is.
-> 
-> No, it's a feature of your h/w and in no way is something linux
-> defined which is the point of 'linux' prefix.
+This leads to bam thinking that there is an extra descriptor at the
+end and leading to retransmitting descriptor which was not scheduled
+by any driver. This happens after MAX_DESCRIPTORS (4096) are scheduled
+and done, so most of the drivers would not notice this, unless they are
+heavily using bam dma. Originally found this issue while testing
+SoundWire over SlimBus on DB845c which uses DMA very heavily for
+read/writes.
 
-The channel can be either Packet or TR mode. The HW is really flexible
-on this (and on other things as well).
-It just happens that Linux need to use specific channels in a specific mode.
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ drivers/dma/qcom/bam_dma.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-Would it help if we assume that all channels are used in Packet mode,
-but we have linux,tr-mode bool to indicate that the given channel in
-Linux need to be used in TR mode.
+diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+index cb860cb53c27..43d7b0a9713a 100644
+--- a/drivers/dma/qcom/bam_dma.c
++++ b/drivers/dma/qcom/bam_dma.c
+@@ -350,8 +350,8 @@ static const struct reg_offset_data bam_v1_7_reg_info[] = {
+ #define BAM_DESC_FIFO_SIZE	SZ_32K
+ #define MAX_DESCRIPTORS (BAM_DESC_FIFO_SIZE / sizeof(struct bam_desc_hw) - 1)
+ #define BAM_FIFO_SIZE	(SZ_32K - 8)
+-#define IS_BUSY(chan)	(CIRC_SPACE(bchan->tail, bchan->head,\
+-			 MAX_DESCRIPTORS + 1) == 0)
++#define IS_BUSY(chan)	(CIRC_SPACE(bchan->head, bchan->tail,\
++			 MAX_DESCRIPTORS) == 0)
+ 
+ struct bam_chan {
+ 	struct virt_dma_chan vc;
+@@ -806,7 +806,7 @@ static u32 process_channel_irqs(struct bam_device *bdev)
+ 		offset /= sizeof(struct bam_desc_hw);
+ 
+ 		/* Number of bytes available to read */
+-		avail = CIRC_CNT(offset, bchan->head, MAX_DESCRIPTORS + 1);
++		avail = CIRC_CNT(bchan->head, offset, MAX_DESCRIPTORS);
+ 
+ 		list_for_each_entry_safe(async_desc, tmp,
+ 					 &bchan->desc_list, desc_node) {
+@@ -997,8 +997,7 @@ static void bam_start_dma(struct bam_chan *bchan)
+ 			bam_apply_new_config(bchan, async_desc->dir);
+ 
+ 		desc = async_desc->curr_desc;
+-		avail = CIRC_SPACE(bchan->tail, bchan->head,
+-				   MAX_DESCRIPTORS + 1);
++		avail = CIRC_SPACE(bchan->head, bchan->tail, MAX_DESCRIPTORS);
+ 
+ 		if (async_desc->num_desc > avail)
+ 			async_desc->xfer_len = avail;
+-- 
+2.21.0
 
->> Each channel can be configured to Packet or TR mode. For some
->> peripherals it is true that they only support packet mode, these are the
->> newer PSI-L native peripherals.
->> For these channels a udma-mode property would be correct.
->>
->> But we have legacy peripherals as well and they are serviced by PDMA
->> (which is a native peripheral designed to talk to the given legacy IP).
->> We can use either packet or TR mode in UDMAP to talk to PDMAs, it is in
->> most cases clear what to use, but for example for audio (McASP) channels
->> Linux is using TR channel because we need cyclic DMA while for example
->> RTOS is using Packet mode as it fits their needs better.
->>
->> Here I need to prefix the udma-mode with linux as the mode is used by
->> Linux, but other OS might opt to use different channel mode.
-> 
-> So you'd need <os>,udma-mode? That doesn't work... If the setting is
-> per OS, then it belongs in the OS because the same dtb should work
-> across OS's.
-
-So I should have a table for the thread IDs in the DMA driver and mark
-channels as TR or Packet in there for Linux use?
-Or just an array which would mark the non packet PSI-L thread IDs?
-
-I still prefer to have this coming via DT as a Linux parameter as other
-OS is free to ignore the linux,udma-mode, but as I said there are
-certain channels which must be used in Linux in certain mode while
-others in different mode.
-
->> The reason why this needs to be in the DT is that when the channel is
->> requested we need to configure the mode and it can not be swapped
->> runtime easily between Packet and TR mode.
-> 
-> So when the client makes the channel request, why doesn't it specify the mode?
-
-This is UDMAP internal information on what type of Descriptors the
-channel will expect and how it is going to dispatch the work.
-
-Packet and TR mode at the end does the same thing, but in a completely
-different way.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

@@ -2,147 +2,171 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FF2347F6D
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Jun 2019 12:15:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E839148010
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Jun 2019 12:57:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbfFQKPO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 17 Jun 2019 06:15:14 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:50131 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbfFQKPN (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 17 Jun 2019 06:15:13 -0400
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mol@pengutronix.de>)
-        id 1hcofP-0005vG-6c; Mon, 17 Jun 2019 12:15:11 +0200
-Received: from mol by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mol@pengutronix.de>)
-        id 1hcofM-0005lC-MF; Mon, 17 Jun 2019 12:15:08 +0200
-Date:   Mon, 17 Jun 2019 12:15:08 +0200
-From:   "m.olbrich@pengutronix.de" <m.olbrich@pengutronix.de>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     "thesven73@gmail.com" <thesven73@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v1] dmaengine: imx-sdma: remove BD_INTR for channel0
-Message-ID: <20190617101508.47jk72yrtplxpgzs@pengutronix.de>
-Mail-Followup-To: Robin Gong <yibin.gong@nxp.com>,
-        "thesven73@gmail.com" <thesven73@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-References: <20190614083959.37944-1-yibin.gong@nxp.com>
- <CAOMZO5Do+BsZEX43w283yWed8fQVtTC+zAvoktPLTj4c_f798w@mail.gmail.com>
- <CAGngYiUWy5FM-zsT55-yY=kahLObZGYw=zU0F9Tzp9T2S3G6LA@mail.gmail.com>
- <20190614180913.d66bbjrnw3gxt663@pengutronix.de>
- <1560766686.30149.36.camel@nxp.com>
+        id S1727059AbfFQK52 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 17 Jun 2019 06:57:28 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:7206 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726174AbfFQK52 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 17 Jun 2019 06:57:28 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0772150000>; Mon, 17 Jun 2019 03:57:25 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 17 Jun 2019 03:57:25 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 17 Jun 2019 03:57:25 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 17 Jun
+ 2019 10:57:23 +0000
+Subject: Re: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190613210849.10382-1-digetx@gmail.com>
+ <5fbe4374-cc9a-8212-017e-05f4dee64443@nvidia.com>
+ <7ab96aa5-0be2-dc01-d187-eb718093eb99@nvidia.com>
+ <840fcf60-8e24-ff44-a816-ef63a5f18652@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <d34c100d-e82a-bb00-22c6-c5f2f6cdb03a@nvidia.com>
+Date:   Mon, 17 Jun 2019 11:57:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1560766686.30149.36.camel@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 12:14:57 up 30 days, 16:33, 85 users,  load average: 0.05, 0.19,
- 0.22
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: mol@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+In-Reply-To: <840fcf60-8e24-ff44-a816-ef63a5f18652@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560769045; bh=ezUnyuKGHlbPhYjLZf5Spom5VDavEjqfyB+JBE4bVJU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=gWIH3E3+v+rzCFyiimf1UtBRbcTKw21IjQoX8qYax0Wf6gBrBTLcmUWsqLkh6/UFy
+         XnEHI+bHpHAWxiEQNNpyC3s8qwK0gRHLZUsw+p43zIRlE5esrVIhmBEHrK6ha5IEO5
+         SwoCWHmt1WDwQGta6Gn11HgPQMDQbwSlDy2VKK0qBuoQU7JZVGPR3iOa1BbQc2Emml
+         RagrWT3XGNyE3x6cgN4POnafe8qguNKYs1BkRdtZ44LxUr5t2jWlFmsegBnDB3SiVF
+         rqyarHsvzvafNb0sOCafZNxoGJVRvFVbaC9NGqQxAlQVVcID3JLhI4YES9cU6AJn8v
+         orsF7W/+m6vuw==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 02:14:34AM +0000, Robin Gong wrote:
-> On 2019-06-14 at 18:09 +0000, Michael Olbrich wrote:
-> > On Fri, Jun 14, 2019 at 09:25:51AM -0400, Sven Van Asbroeck wrote:
-> > > 
-> > > On Fri, Jun 14, 2019 at 6:49 AM Fabio Estevam <festevam@gmail.com>
-> > > wrote:
-> > > > 
-> > > > 
-> > > > According to the original report from Sven the issue started to
-> > > > happen
-> > > > on 5.0, so it would be good to add a Fixes tag and Cc stable so
-> > > > that
-> > > > this fix could be backported to 5.0/5.1 stable trees.
-> > > Good catch !
-> > > 
-> > > However, the issue is highly timing-dependent. It will come and go
-> > > depending
-> > > on the kernel version, devicetree and defconfig. If it works for me
-> > > on
-> > > 4.19, that
-> > > doesn't mean the bug is gone on 4.19.
-> > > 
-> > > Looking at the commit history, I think the commit below possibly
-> > > introduced the
-> > > issue. Until this commit, sdma_run_channel() would wait on the
-> > > interrupt
-> > > before proceeding. It has been there since 4.8:
-> > > 
-> > > Fixes: 1d069bfa3c78 ("dmaengine: imx-sdma: ack channel 0 IRQ in the
-> > > interrupt handler")
-> > I think this is correct. Starting with this commit, the interrupt
-> > status fr
-> > channel 0 is no longer cleared in sdma_run_channel0() and
-> > sdma_int_handler() is always called for channel 0.
-> > During firmware loading the interrupts are enabled again just before
-> > the
-> > clocks are disabled. The interrupt is pending at this moment so on a
-> > single
-> > core system I think this will always work as expected. If the
-> > firmware
-> > loading and the interrupt handler run on different cores then this is
-> > racy.
-> > Maybe something else changed to make this more likely?
-> > 
-> > With this new change sdma_int_handler() is no longer called for
-> > channel 0
-> > right, so you should also remove the special handling there.
-> What's 'special handling' should be removed here? Do you mean put below
-> pieces of your patch back?
->  static int sdma_load_script(struct sdma_engine *sdma, void *buf, int
-> size,
-> @@ -727,9 +720,9 @@ static irqreturn_t sdma_int_handler(int irq, void
-> *dev_id)
->         unsigned long stat;
->  
->         stat = readl_relaxed(sdma->regs + SDMA_H_INTR);
-> -       /* not interested in channel 0 interrupts */
-> -       stat &= ~1;
->         writel_relaxed(stat, sdma->regs + SDMA_H_INTR);
-> +       /* channel 0 is special and not handled here, see
-> run_channel0() */
-> +       stat &= ~1;
 
-I think the "stat &= ~1;" can be removed completely. This bit should never
-be set, now that the interrupt for channel 0 is disabled.
+On 14/06/2019 17:44, Dmitry Osipenko wrote:
+> 14.06.2019 18:24, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>> On 14/06/2019 16:21, Jon Hunter wrote:
+>>>
+>>> On 13/06/2019 22:08, Dmitry Osipenko wrote:
+>>>> Tegra's APB DMA engine updates words counter after each transferred bu=
+rst
+>>>> of data, hence it can report transfer's residual with more fidelity wh=
+ich
+>>>> may be required in cases like audio playback. In particular this fixes
+>>>> audio stuttering during playback in a chromiuim web browser. The patch=
+ is
+>>>> based on the original work that was made by Ben Dooks [1]. It was test=
+ed
+>>>> on Tegra20 and Tegra30 devices.
+>>>>
+>>>> [1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@code=
+think.co.uk/
+>>>>
+>>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++------=
+-
+>>>>  1 file changed, 28 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-d=
+ma.c
+>>>> index 79e9593815f1..c5af8f703548 100644
+>>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>>> @@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_ch=
+an *dc)
+>>>>  	return 0;
+>>>>  }
+>>>> =20
+>>>> +static unsigned int tegra_dma_update_residual(struct tegra_dma_channe=
+l *tdc,
+>>>> +					      struct tegra_dma_sg_req *sg_req,
+>>>> +					      struct tegra_dma_desc *dma_desc,
+>>>> +					      unsigned int residual)
+>>>> +{
+>>>> +	unsigned long status, wcount =3D 0;
+>>>> +
+>>>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>>>> +		return residual;
+>>>> +
+>>>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>> +		wcount =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>>>> +
+>>>> +	status =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>>>> +
+>>>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>> +		wcount =3D status;
+>>>> +
+>>>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>>>> +		return residual - sg_req->req_len;
+>>>> +
+>>>> +	return residual - get_current_xferred_count(tdc, sg_req, wcount);
+>>>> +}
+>>>> +
+>>>>  static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+>>>>  	dma_cookie_t cookie, struct dma_tx_state *txstate)
+>>>>  {
+>>>>  	struct tegra_dma_channel *tdc =3D to_tegra_dma_chan(dc);
+>>>> +	struct tegra_dma_sg_req *sg_req =3D NULL;
+>>>>  	struct tegra_dma_desc *dma_desc;
+>>>> -	struct tegra_dma_sg_req *sg_req;
+>>>>  	enum dma_status ret;
+>>>>  	unsigned long flags;
+>>>>  	unsigned int residual;
+>>>> @@ -838,6 +862,8 @@ static enum dma_status tegra_dma_tx_status(struct =
+dma_chan *dc,
+>>>>  		residual =3D dma_desc->bytes_requested -
+>>>>  			   (dma_desc->bytes_transferred %
+>>>>  			    dma_desc->bytes_requested);
+>>>> +		residual =3D tegra_dma_update_residual(tdc, sg_req, dma_desc,
+>>>> +						     residual);
+>>>
+>>> I had a quick look at this, I am not sure that we want to call
+>>> tegra_dma_update_residual() here for cases where the dma_desc is on the
+>>> free_dma_desc list. In fact, couldn't this be simplified a bit for case
+>>> where the dma_desc is on the free list? In that case I believe that the
+>>> residual should always be 0.
+>>
+>> Actually, no, it could be non-zero in the case the transfer is aborted.
+>=20
+> Looks like everything should be fine as-is.
 
-Michael
+I am still not sure we want to call this for the case where dma_desc is
+on the free list.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> BTW, it's a bit hard to believe that there is any real benefit from the
+> free_dma_desc list at all, maybe worth to just remove it?
+
+I think you need to elaborate a bit more here. I am not a massive fan of
+this driver, but I am also not in the mood for changing unless there is
+a good reason.
+
+Cheers
+Jon
+
+--=20
+nvpublic

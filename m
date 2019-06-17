@@ -2,266 +2,100 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 18092483BC
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Jun 2019 15:19:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8217483E9
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Jun 2019 15:27:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725983AbfFQNTt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 17 Jun 2019 09:19:49 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:49813 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbfFQNTt (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 17 Jun 2019 09:19:49 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mdf3x-1iBeCA3czx-00ZiHD; Mon, 17 Jun 2019 15:19:23 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Joao Pinto <jpinto@synopsys.com>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: dw-edma: fix __iomem type confusion
-Date:   Mon, 17 Jun 2019 15:18:43 +0200
-Message-Id: <20190617131918.2518727-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        id S1726065AbfFQN14 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 17 Jun 2019 09:27:56 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38241 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfFQN1z (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 17 Jun 2019 09:27:55 -0400
+Received: by mail-ot1-f66.google.com with SMTP id d17so9263306oth.5
+        for <dmaengine@vger.kernel.org>; Mon, 17 Jun 2019 06:27:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mJsPsjYAC+D3Ahla1gO6b++R1ySTexA3DFmiKdVNKWo=;
+        b=MXkyJQB9PxauZ8mD4qfnd9cMinYSX8UgPaJCqpc2N6NWAP8Do6zPFB0IrVa9ktAWIt
+         aouaZblOwdUXxA3WA+jdAygJITWcfOAl98fr/H4EDsSZVD/ROYlXL+cWBa9mKzk4vHci
+         NKcp7yaAptskxYFgzG59xEIBPx95gfoDuMpqNfLSYJp2jQydPMrrR6H/tsNRBR3muEl5
+         iXWL5M5mwD6Rasyt+fAqcbY/Rpm84bJgDFT+ouTQVvwPCALeItlRvcf9MJ1NYAwL+VeR
+         CCoUD2skfkr3YCSTpRB14BPWTTGRtD6fgC3f+/onHzdO37eawrr8zaYsbJRF46MZCO6q
+         ktYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mJsPsjYAC+D3Ahla1gO6b++R1ySTexA3DFmiKdVNKWo=;
+        b=HGzc+GwOg3UUlgo+FXTXPYRGi9WvoYmuMiWLTvPaEDxPVSg0q2DxL9Bm7wwyKq64mG
+         I5Y+kow2l8EfPHTgSgAn8VR5FoeSQLevHjHSMFrneOEfFpUyddIAFyVM9XmUKOj52C2g
+         U3LBrV85WseLhMX02/lz9l6XEuBHiRPlJZntGbPJSPb9lNYWOcr8ZKwn2qByPo941BkO
+         yacpqZbzB76Sr2JJN0BcV2GJf5zGfrb+IQMYhwGA/NWc5pG1RNTwQT8m2oxXnm5M8CEx
+         viDXP++GYEelknxyL5Y1tmNPBmX2zdu8wPHM6cc8mDNe2N7v2nrko6pikJHnxEDiXBWg
+         8AWg==
+X-Gm-Message-State: APjAAAWRhdf/v0TmOrHN+YoExXh55BfWEOnB5jhlzy+4JMuZ9o4rwHw9
+        aTHnaEMEF+TYh1lZad2KP2cPhil1ti12z+wiIQw=
+X-Google-Smtp-Source: APXvYqyhiqkq9CGaDNxwiD6SQeF+F81INxi2lxJi8huCiuSNrRrpuYkOSzLBr6YGnAzUR8mMAtP8t+7zjxH9w00HMOQ=
+X-Received: by 2002:a9d:7650:: with SMTP id o16mr38379346otl.0.1560778073731;
+ Mon, 17 Jun 2019 06:27:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:IJ2cWiplBAEydoX2Yb9hQnFL2P7ah7TKeoq1ZZi7L2xaKR8Odcu
- Bm+yhHmN7ihZ7UBIKGNeUi/emcpzj+lx+t8ahndzHW2U9HzEVQF71LPio13NXYG0eX0HCP9
- Jl84HR+inURxpLIVwOj5r5j3yUHJxIRUBdCmiwuGx7X81RQtOOuWJGiV0P2TiL6SU8DiZjM
- +QnvtGm4l2suAXU2NZwog==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:v6MR+sdO3jI=:qd7jYXKTBWDmTSyhKRxl/E
- jxzoSIq/dXj68hWIbhedWT25QPFR7WnzxZV2KuedwcT3brgy7ArrrdUUYC9ruhAnqZnY6XxdJ
- MqvsqmyAcro4LE976+kcwi2Pvgn/kc79wuBwiC05L6a8tQWTuazcvpUZvri9TH1yf83bkFwwv
- 4Eoiz/fUxNAH6tQ4mF98s8bzFl3O1GgxHepSxs8lBLmjAHZLoyLos8y2+PDA9TzVRNych2bCO
- 6E0q3l3o+oghDJ9DiK7UEjAp2owts0SI1F50KpefSH85EjdhERYzDBN5lJmn4OsZPyFGea5Qm
- tNsokGBGM12wQIa2JxErKVOw1SehQx3PYbqiozYwzaK+UXMhPPza8c9lXhRZWUXrOwnCzeHvf
- 49k/G0CtMZZiAwB7iQk/7fcTTfBMubIcbLBtYkwUMOp6wphrx2OP3rc62jRQzSfdgc6apHF5D
- yvb4kH8kwCwtsjKpeJkv8b4d6VrwWMpI/u8HCLwisu7u//hZZMXHhzVTu/Zvu6sIzGw2K9cKW
- xHd/rQ+lq6s1mFJi01PNjfkvnzqgPdM5KrCRzuY0c4+d0XH5QffSjVnGAN90d3e2VHc8EGRh4
- SUuUx+GCfsxpuYvTJP95Q91NB/CDXGf2vegyW3cvZarlSjj1aOxe9mFgq8HcKoa7EDG0RzWLM
- nxUV/Fdt31n/hbfam3DhpWrhQW0OwfW58XII2MsCnBcHMGwP6CpER6D05MleG8HGlGgnow5ci
- Q0h4FQpVokDTZ5XXaizBPvdM4JdHZ/IZtkSXFQ==
+References: <20190614083959.37944-1-yibin.gong@nxp.com> <CAOMZO5Do+BsZEX43w283yWed8fQVtTC+zAvoktPLTj4c_f798w@mail.gmail.com>
+ <CAGngYiUWy5FM-zsT55-yY=kahLObZGYw=zU0F9Tzp9T2S3G6LA@mail.gmail.com> <1560765934.30149.26.camel@nxp.com>
+In-Reply-To: <1560765934.30149.26.camel@nxp.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Mon, 17 Jun 2019 09:27:42 -0400
+Message-ID: <CAGngYiU_kxRXbk1vSzV+hBZ=SQdxe2h7TXj3dbK6Q=YyXcDr0g@mail.gmail.com>
+Subject: Re: [PATCH v1] dmaengine: imx-sdma: remove BD_INTR for channel0
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "m.olbrich@pengutronix.de" <m.olbrich@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The new driver mixes up dma_addr_t and __iomem pointers, which results
-in warnings on some 32-bit architectures, like:
+Hello Robin,
 
-drivers/dma/dw-edma/dw-edma-v0-core.c: In function '__dw_regs':
-drivers/dma/dw-edma/dw-edma-v0-core.c:28:9: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
-  return (struct dw_edma_v0_regs __iomem *)dw->rg_region.vaddr;
+On Sun, Jun 16, 2019 at 10:02 PM Robin Gong <yibin.gong@nxp.com> wrote:
+>
+> The default imx defconfig and dts should be ok, because firmware load
+> is delayed after rootfs mounted where firmware located in and before
+> that, some driver which use sdma such as spi/uart/audio may have
+> already enable sdma clock which means channel0 interrupt could be
+> cleared immediately without interrupt storm. That's why I can't
+> reproduce your issue at first, but catch it once I sync with your
+> directly firmware load defconfig. So seems not very must to CC stable
+> tree?
 
-Make it use __iomem pointers consistently here, and avoid using dma_addr_t
-for __iomem tokens altogether.
+As far as I know, the bug/crash does not happen if you're loading the
+sdma firmware from a filesystem. So the vast majority of users would
+never see the crash.
 
-A small complication here is the debugfs code, which passes an __iomem
-token as the private data for debugfs files, requiring the use of
-extra __force.
+I agree that this is not a high-priority bugfix. But it's worthwhile for the
+stable trees to have it.
 
-Fixes: 7e4b8a4fbe2c ("dmaengine: Add Synopsys eDMA IP version 0 support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/dma/dw-edma/dw-edma-core.h       |  2 +-
- drivers/dma/dw-edma/dw-edma-pcie.c       | 18 ++++++++--------
- drivers/dma/dw-edma/dw-edma-v0-core.c    | 10 ++++-----
- drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 27 ++++++++++++------------
- 4 files changed, 29 insertions(+), 28 deletions(-)
+> Yes, but Michael's patch is the right direction, at least it fix RT
+> case and meaningless channel0 interrupt storm coming before clearing
+> channel0 interrupt status in sdma_run_channel0(). Now, this patch could
+> fix its minor side-effect.
 
-diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-index b6cc90cbc9dc..d03a6ad263bd 100644
---- a/drivers/dma/dw-edma/dw-edma-core.h
-+++ b/drivers/dma/dw-edma/dw-edma-core.h
-@@ -50,7 +50,7 @@ struct dw_edma_burst {
- 
- struct dw_edma_region {
- 	phys_addr_t			paddr;
--	dma_addr_t			vaddr;
-+	void __iomem *			vaddr;
- 	size_t				sz;
- };
- 
-diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-index 4c96e1c948f2..dc85f55e1bb8 100644
---- a/drivers/dma/dw-edma/dw-edma-pcie.c
-+++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-@@ -130,19 +130,19 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 	chip->id = pdev->devfn;
- 	chip->irq = pdev->irq;
- 
--	dw->rg_region.vaddr = (dma_addr_t)pcim_iomap_table(pdev)[pdata->rg_bar];
-+	dw->rg_region.vaddr = pcim_iomap_table(pdev)[pdata->rg_bar];
- 	dw->rg_region.vaddr += pdata->rg_off;
- 	dw->rg_region.paddr = pdev->resource[pdata->rg_bar].start;
- 	dw->rg_region.paddr += pdata->rg_off;
- 	dw->rg_region.sz = pdata->rg_sz;
- 
--	dw->ll_region.vaddr = (dma_addr_t)pcim_iomap_table(pdev)[pdata->ll_bar];
-+	dw->ll_region.vaddr = pcim_iomap_table(pdev)[pdata->ll_bar];
- 	dw->ll_region.vaddr += pdata->ll_off;
- 	dw->ll_region.paddr = pdev->resource[pdata->ll_bar].start;
- 	dw->ll_region.paddr += pdata->ll_off;
- 	dw->ll_region.sz = pdata->ll_sz;
- 
--	dw->dt_region.vaddr = (dma_addr_t)pcim_iomap_table(pdev)[pdata->dt_bar];
-+	dw->dt_region.vaddr = pcim_iomap_table(pdev)[pdata->dt_bar];
- 	dw->dt_region.vaddr += pdata->dt_off;
- 	dw->dt_region.paddr = pdev->resource[pdata->dt_bar].start;
- 	dw->dt_region.paddr += pdata->dt_off;
-@@ -158,17 +158,17 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 	pci_dbg(pdev, "Mode:\t%s\n",
- 		dw->mode == EDMA_MODE_LEGACY ? "Legacy" : "Unroll");
- 
--	pci_dbg(pdev, "Registers:\tBAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%pa, p=%pa)\n",
-+	pci_dbg(pdev, "Registers:\tBAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
- 		pdata->rg_bar, pdata->rg_off, pdata->rg_sz,
--		&dw->rg_region.vaddr, &dw->rg_region.paddr);
-+		dw->rg_region.vaddr, &dw->rg_region.paddr);
- 
--	pci_dbg(pdev, "L. List:\tBAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%pa, p=%pa)\n",
-+	pci_dbg(pdev, "L. List:\tBAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
- 		pdata->ll_bar, pdata->ll_off, pdata->ll_sz,
--		&dw->ll_region.vaddr, &dw->ll_region.paddr);
-+		dw->ll_region.vaddr, &dw->ll_region.paddr);
- 
--	pci_dbg(pdev, "Data:\tBAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%pa, p=%pa)\n",
-+	pci_dbg(pdev, "Data:\tBAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
- 		pdata->dt_bar, pdata->dt_off, pdata->dt_sz,
--		&dw->dt_region.vaddr, &dw->dt_region.paddr);
-+		dw->dt_region.vaddr, &dw->dt_region.paddr);
- 
- 	pci_dbg(pdev, "Nr. IRQs:\t%u\n", dw->nr_irqs);
- 
-diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
-index 8cafd51ff9ec..d670ebcc37b3 100644
---- a/drivers/dma/dw-edma/dw-edma-v0-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
-@@ -25,7 +25,7 @@ enum dw_edma_control {
- 
- static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
- {
--	return (struct dw_edma_v0_regs __iomem *)dw->rg_region.vaddr;
-+	return dw->rg_region.vaddr;
- }
- 
- #define SET(dw, name, value)				\
-@@ -192,13 +192,13 @@ u32 dw_edma_v0_core_status_abort_int(struct dw_edma *dw, enum dw_edma_dir dir)
- static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
- {
- 	struct dw_edma_burst *child;
--	struct dw_edma_v0_lli *lli;
--	struct dw_edma_v0_llp *llp;
-+	struct dw_edma_v0_lli __iomem *lli;
-+	struct dw_edma_v0_llp __iomem *llp;
- 	u32 control = 0, i = 0;
- 	uintptr_t sar, dar, addr;
- 	int j;
- 
--	lli = (struct dw_edma_v0_lli *)chunk->ll_region.vaddr;
-+	lli = chunk->ll_region.vaddr;
- 
- 	if (chunk->cb)
- 		control = DW_EDMA_V0_CB;
-@@ -224,7 +224,7 @@ static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
- 		i++;
- 	}
- 
--	llp = (struct dw_edma_v0_llp *)&lli[i];
-+	llp = (void __iomem *)&lli[i];
- 	control = DW_EDMA_V0_LLP | DW_EDMA_V0_TCB;
- 	if (!chunk->cb)
- 		control |= DW_EDMA_V0_CB;
-diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-index 5728b6fe938c..42739508c0d8 100644
---- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-+++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-@@ -14,7 +14,7 @@
- #include "dw-edma-core.h"
- 
- #define REGS_ADDR(name) \
--	((dma_addr_t *)&regs->name)
-+	((void __force *)&regs->name)
- #define REGISTER(name) \
- 	{ #name, REGS_ADDR(name) }
- 
-@@ -40,11 +40,11 @@
- 
- static struct dentry				*base_dir;
- static struct dw_edma				*dw;
--static struct dw_edma_v0_regs			*regs;
-+static struct dw_edma_v0_regs			__iomem *regs;
- 
- static struct {
--	void					*start;
--	void					*end;
-+	void					__iomem *start;
-+	void					__iomem *end;
- } lim[2][EDMA_V0_MAX_NR_CH];
- 
- struct debugfs_entries {
-@@ -54,22 +54,23 @@ struct debugfs_entries {
- 
- static int dw_edma_debugfs_u32_get(void *data, u64 *val)
- {
-+	void __iomem *reg = (void __force __iomem *)data;
- 	if (dw->mode == EDMA_MODE_LEGACY &&
--	    data >= (void *)&regs->type.legacy.ch) {
--		void *ptr = (void *)&regs->type.legacy.ch;
-+	    reg >= (void __iomem *)&regs->type.legacy.ch) {
-+		void __iomem *ptr = &regs->type.legacy.ch;
- 		u32 viewport_sel = 0;
- 		unsigned long flags;
- 		u16 ch;
- 
- 		for (ch = 0; ch < dw->wr_ch_cnt; ch++)
--			if (lim[0][ch].start >= data && data < lim[0][ch].end) {
--				ptr += (data - lim[0][ch].start);
-+			if (lim[0][ch].start >= reg && reg < lim[0][ch].end) {
-+				ptr += (reg - lim[0][ch].start);
- 				goto legacy_sel_wr;
- 			}
- 
- 		for (ch = 0; ch < dw->rd_ch_cnt; ch++)
--			if (lim[1][ch].start >= data && data < lim[1][ch].end) {
--				ptr += (data - lim[1][ch].start);
-+			if (lim[1][ch].start >= reg && reg < lim[1][ch].end) {
-+				ptr += (reg - lim[1][ch].start);
- 				goto legacy_sel_rd;
- 			}
- 
-@@ -86,7 +87,7 @@ static int dw_edma_debugfs_u32_get(void *data, u64 *val)
- 
- 		raw_spin_unlock_irqrestore(&dw->lock, flags);
- 	} else {
--		*val = readl(data);
-+		*val = readl(reg);
- 	}
- 
- 	return 0;
-@@ -105,7 +106,7 @@ static void dw_edma_debugfs_create_x32(const struct debugfs_entries entries[],
- 	}
- }
- 
--static void dw_edma_debugfs_regs_ch(struct dw_edma_v0_ch_regs *regs,
-+static void dw_edma_debugfs_regs_ch(struct dw_edma_v0_ch_regs __iomem *regs,
- 				    struct dentry *dir)
- {
- 	int nr_entries;
-@@ -288,7 +289,7 @@ void dw_edma_v0_debugfs_on(struct dw_edma_chip *chip)
- 	if (!dw)
- 		return;
- 
--	regs = (struct dw_edma_v0_regs *)dw->rg_region.vaddr;
-+	regs = dw->rg_region.vaddr;
- 	if (!regs)
- 		return;
- 
--- 
-2.20.0
+I'm not suggesting that we should revert or change Michael's patch. Just
+that it would be good for the v2 patch to contain:
 
+Fixes: 1d069bfa3c78 ("dmaengine: imx-sdma: ack channel 0 IRQ in the
+interrupt handler")
+
+This should allow stable maintainers to pull in your patch if and only if
+their release already contains 1d069bfa3c78.

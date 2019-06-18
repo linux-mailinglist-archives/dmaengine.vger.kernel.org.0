@@ -2,49 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FA7F4A6D8
-	for <lists+dmaengine@lfdr.de>; Tue, 18 Jun 2019 18:27:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E38D54A788
+	for <lists+dmaengine@lfdr.de>; Tue, 18 Jun 2019 18:50:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729491AbfFRQ15 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 18 Jun 2019 12:27:57 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:56778 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729295AbfFRQ15 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Jun 2019 12:27:57 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0E56C6028D; Tue, 18 Jun 2019 16:27:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560875276;
-        bh=AZGWFNkJxbGoXKKAkuxIYIe9MRoN3IT0Racj+5YQtMI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=QSmzxcCLou2m8qnIksmWjuepW2C7BCTNiW75mvNWBrHRmttDyr3aFQ1T5yyEuJQ6K
-         joROgUtcscmgAhk5lP6gUL/6IZZ2b9VhfBdp7X6s/cLCY4RoEgjKT3jpon85VTXsdF
-         U88nXf+z4KNrw8wB/Zdc1A5/mAs9lQQ/xnAcKwjs=
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        pdx-caf-mail.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        DKIM_INVALID,DKIM_SIGNED,SPF_NONE autolearn=no autolearn_force=no
-        version=3.4.0
-Received: from [192.168.1.5] (unknown [122.164.143.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sricharan@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7F220602BC;
-        Tue, 18 Jun 2019 16:27:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560875275;
-        bh=AZGWFNkJxbGoXKKAkuxIYIe9MRoN3IT0Racj+5YQtMI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=NDg+fW5EB2QgBv/KAQ4L5YoyOcCI/KP0uNrDznsvlpPaepCMo+H3dyqeK9wKTIp9s
-         Gqj6v0qEGQZNkcUPb4tJTbRMndmC1vtTvujQRiyc+55REkPu8v9IYs+iG55nx8zW2X
-         ELuYbvW6D4ck6bv+3+YkCsgt9plraM5Gis3Ble5E=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7F220602BC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+        id S1730005AbfFRQuJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 18 Jun 2019 12:50:09 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38482 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729859AbfFRQuJ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Jun 2019 12:50:09 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d18so279697wrs.5
+        for <dmaengine@vger.kernel.org>; Tue, 18 Jun 2019 09:50:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KSk4moREDVQrfaFvvaG4JNEpQO7UXRGLSRSH/qJ+Hf8=;
+        b=OYFrrnNYl9Boz+yv/ZqqkPtI+ZZCBmg3QVTr6t3T7Tujvs9N+iWArZa1sXtsu63+mK
+         yF1DPTBjzZTRCzoD6Ng5l8CBQ/jVwvhnuKdcCOfiAlVISTjPT2aid54erklkFX368Obz
+         E/86CpYRNLVyC7leuks6PBrNF/rrcZgs36GhhxRhcJHEmsnJKmBmjwbZnlP20WMd7dmn
+         vduei46eD42DJo5XxEPTdNvHtFvcYuLtRx54fnXx9a856TaMQhBtweQT7f9JW4mjvcip
+         mW9QIxEKmzROPOIzXTzmbVy2yQ2kVHktkRihmDSf8GUtbJ8gn9bA8zF/+aUnA15U2Uhs
+         OLWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KSk4moREDVQrfaFvvaG4JNEpQO7UXRGLSRSH/qJ+Hf8=;
+        b=pQKWasvsHuIx/fQzCIgWfFQvMQC75aQggSoLPVomPfZesegrtJhH6JUt8D1hL5x/c/
+         qk93UjL9tV9bEedn5D6ifkfQfELhZeLEHdImHINo9lZE19TPhBYmfg4VpMgARCwfepbu
+         He7al5s+1H2eWpIFsg68svcqtlpuxQkqlr1AzGfJs7FnKNAKiye/HvL8NWUuZWvEeB/F
+         gejUNMW6SATPiqIfl3YxAKFFcYRCdpDBvCxEiRU63gI+CAqKrpplW0GecW5TGCoget1K
+         9DW78bwWJ3HaO/zFBV+hAAatW8o/LX++YqTFc/UN71MCT9TeAZfNuW+jaaxZHJ4BfsSW
+         +DuA==
+X-Gm-Message-State: APjAAAWWyAj6XS7lyUw9zJDwFTPGvzP+HNiCc3WpHH+ee23NXpNmqVkK
+        3V6Q7rz/M28Tn+y/UJuzDBMDhQ==
+X-Google-Smtp-Source: APXvYqz02pp7jrNPiLtRBNsaULwRQxJ/0Ckr/N049AUpbNenDnGGjDoaGajTn9C+jKdSxnVaUXHD7Q==
+X-Received: by 2002:adf:e6c6:: with SMTP id y6mr20234263wrm.191.1560876607432;
+        Tue, 18 Jun 2019 09:50:07 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id l8sm41152736wrg.40.2019.06.18.09.50.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 09:50:06 -0700 (PDT)
 Subject: Re: [PATCH] dmaengine: qcom-bam: fix circular buffer handling
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        vkoul@kernel.org
+To:     Sricharan R <sricharan@codeaurora.org>, vkoul@kernel.org
 Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org
 References: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
@@ -52,16 +54,17 @@ References: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
  <d84af3ad-5ba4-0f24-fd30-2fa20cf85658@linaro.org>
  <2d370a33-fa16-45ca-cf82-9d775349f806@codeaurora.org>
  <544851f6-58b8-2506-01ce-5c4d1f93fb3c@linaro.org>
-From:   Sricharan R <sricharan@codeaurora.org>
-Message-ID: <a50066ac-be85-6706-e7f3-f1069fd0dd0b@codeaurora.org>
-Date:   Tue, 18 Jun 2019 21:57:49 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ <a50066ac-be85-6706-e7f3-f1069fd0dd0b@codeaurora.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <31574ef2-d675-bb36-08d1-18b756ebd29e@linaro.org>
+Date:   Tue, 18 Jun 2019 17:50:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <544851f6-58b8-2506-01ce-5c4d1f93fb3c@linaro.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <a50066ac-be85-6706-e7f3-f1069fd0dd0b@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
@@ -69,21 +72,21 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 
 
-On 6/18/2019 8:42 PM, Srinivas Kandagatla wrote:
-> 
-> 
-> On 18/06/2019 15:56, Sricharan R wrote:
->>    So MAX_DESCRIPTORS is used in driver for masking head/tail pointers.
->>    That's why we have to pass MAX_DESCRIPTORS + 1 so that it works
->>    when the Macros does a size - 1
-> Isn't that incorrect to do that, pretending to have more descriptors than we actually have?
-> 
+On 18/06/2019 17:27, Sricharan R wrote:
+>   The Macro's expect that buffer size is power of 2. So we are infact passing the actual correct
+>   size ( MAX_DESCRIPTORS + 1 = 4096)
+This will make the circular buffer macros happy but question is that do 
+we actually have that many descriptor buffers?
 
- The Macro's expect that buffer size is power of 2. So we are infact passing the actual correct
- size ( MAX_DESCRIPTORS + 1 = 4096)
+This is what is in the driver:
 
-Regards,
- Sricharan
+#define BAM_DESC_FIFO_SIZE	SZ_32K
+#define MAX_DESCRIPTORS (BAM_DESC_FIFO_SIZE / sizeof(struct bam_desc_hw) 
+- 1)
+#define BAM_FIFO_SIZE	(SZ_32K - 8)
 
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Wouldn't having MAX_DESCRIPTORS + 1 = 4096  lead to overflow the actual 
+descriptor memory size of (SZ_32K - 8) ?
+
+--srini
+

@@ -2,79 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8566D4A4DB
-	for <lists+dmaengine@lfdr.de>; Tue, 18 Jun 2019 17:12:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 434CB4A608
+	for <lists+dmaengine@lfdr.de>; Tue, 18 Jun 2019 18:00:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729249AbfFRPMI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 18 Jun 2019 11:12:08 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37457 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729242AbfFRPME (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Jun 2019 11:12:04 -0400
-Received: by mail-wr1-f67.google.com with SMTP id v14so14413018wrr.4
-        for <dmaengine@vger.kernel.org>; Tue, 18 Jun 2019 08:12:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XMfa9NJpDXh8dDL9yFLkdc/RmjSvoaHVSjRiYPgy7AU=;
-        b=RzFJ/8d2DQVpdpSN66TgWH5FYsc9Os+fcsszwdEdRiHoXMgA1PIV3bLurXKkC7Yfm2
-         WouFAm13XKYXcw2na3YdFMwyVTomRiE8GcJt7T0UkpCALOrQqSInLzUwFkKfsM2JiAKW
-         axUHeuXw1lVc5yE9i0Nno/wdZI8oyrbEgvtmwDzTRYtZcIp30ff4W0yvUt2j7xoA/gTZ
-         wyC+bN6bQhAd750oPFey+eCSuBBvM3yTCzeAeBlUC83k4E7dzSdV5lcDYAFUBwa1CSOt
-         KlTXHV8Lm/JLy7emfb3OUwFyo8Y3WlHJhQTy+jrci8gAf78nCdsOuN2ZG2JIv2gv7chT
-         pr/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XMfa9NJpDXh8dDL9yFLkdc/RmjSvoaHVSjRiYPgy7AU=;
-        b=nGITAt+tJ8XsE2bd1a3bTCs01JS5rk+ecm0gpYMATu7CKQDOAX98vlRDI3+Bj6HkIo
-         PnKVL6Xaeyj3afCnSd4Zt/WGAnAAmY0orCu2uIwN+ZvKEms8+coTf9QvdeC0w0sFz7/p
-         Og9h6rzlcf+iNv99qSKv7bhlT5ydwe6nkD6JSImMk8AuiX0RNQoEWGou3YIoS6BH5q8j
-         aPnXlozOTb+XLWYgDWfJTRRX2XFPRD0t4QVeoiOIy5wXGYlewZeGUmd1qg+GSAYoSN+G
-         Qal9Ow3w1cDBEn+/OdGRgWgkfMY0d48lHGjEXqpuU54442f2FEV0hEBvQxscTdbLAdMJ
-         EYGQ==
-X-Gm-Message-State: APjAAAXJ2y50gPwOnI2wKqPPkHR5py5QohQhowQgUTDj+8MnB4/occ3H
-        8cqoB4fmEML4faT8XpRqdqf9Cg+jGr4B2g==
-X-Google-Smtp-Source: APXvYqyrqTtNMWynSOgiXHoVZjhnncDqEEw1XV2KrhXPMaVDno3t7MXb5Vtc1ZRd/MUwl+UmMXGINA==
-X-Received: by 2002:a5d:488b:: with SMTP id g11mr5139572wrq.72.1560870722429;
-        Tue, 18 Jun 2019 08:12:02 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id x83sm2964625wmb.42.2019.06.18.08.12.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 08:12:01 -0700 (PDT)
-Subject: Re: [PATCH] dmaengine: qcom-bam: fix circular buffer handling
-To:     Sricharan R <sricharan@codeaurora.org>, vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-References: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
- <f4522b78-b406-954c-57b7-923e6ab31f96@codeaurora.org>
- <d84af3ad-5ba4-0f24-fd30-2fa20cf85658@linaro.org>
- <2d370a33-fa16-45ca-cf82-9d775349f806@codeaurora.org>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <544851f6-58b8-2506-01ce-5c4d1f93fb3c@linaro.org>
-Date:   Tue, 18 Jun 2019 16:12:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1729247AbfFRQAd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 18 Jun 2019 12:00:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729209AbfFRQAd (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 18 Jun 2019 12:00:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D449D20873;
+        Tue, 18 Jun 2019 16:00:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560873632;
+        bh=aeNXodnXi36O/klAfsttiGYiQgAFv2Vf36sQFe+u0eY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=m5LIVr9M8OZSuB1bXNMzm+jfJiRw9O4tPWEMbbNrZUDDtLUCDyA1WhBgwHSoPtb40
+         PWcRmjVnAMHMv3AbtlL9s2QwunuNGqfJwSDkfL4RLbq9GA61UJuycuNv/91401cTb1
+         e020iCK0MRTinfdSnEbcS0MjrszGsZbbyN89UQZA=
+Date:   Tue, 18 Jun 2019 18:00:29 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] dma: amba-pl08x: no need to cast away call to
+ debugfs_create_file()
+Message-ID: <20190618160029.GA22218@kroah.com>
+References: <20190612122557.24158-1-gregkh@linuxfoundation.org>
+ <20190614054613.GB2962@vkoul-mobl>
 MIME-Version: 1.0
-In-Reply-To: <2d370a33-fa16-45ca-cf82-9d775349f806@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614054613.GB2962@vkoul-mobl>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On Fri, Jun 14, 2019 at 11:16:13AM +0530, Vinod Koul wrote:
+> On 12-06-19, 14:25, Greg Kroah-Hartman wrote:
+> > No need to check the return value of debugfs_create_file(), so no need
+> > to provide a fake "cast away" of the return value either.
+> 
+> Applied all after fixing the subsystem tag (dmaengine), thanks
 
+Oops, messed that up, sorry.  Thanks for applying them!
 
-On 18/06/2019 15:56, Sricharan R wrote:
->    So MAX_DESCRIPTORS is used in driver for masking head/tail pointers.
->    That's why we have to pass MAX_DESCRIPTORS + 1 so that it works
->    when the Macros does a size - 1
-Isn't that incorrect to do that, pretending to have more descriptors 
-than we actually have?
-
---srini
+greg k-h

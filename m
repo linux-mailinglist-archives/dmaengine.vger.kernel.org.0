@@ -2,162 +2,152 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C2C34A209
-	for <lists+dmaengine@lfdr.de>; Tue, 18 Jun 2019 15:24:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A1154A46D
+	for <lists+dmaengine@lfdr.de>; Tue, 18 Jun 2019 16:49:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbfFRNYt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 18 Jun 2019 09:24:49 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:34174 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfFRNYt (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Jun 2019 09:24:49 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5IDOh9E096783;
-        Tue, 18 Jun 2019 08:24:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560864283;
-        bh=fEiVVUNxKUTV5pmE+DhrGRrNcaajXtj3g4DtOVkNe0M=;
-        h=From:To:CC:Subject:Date;
-        b=QlI1GmFLreu8eCjET3RN0CrEx0VSThOz75oIzfCTr1zBTqYix4JHb1h5GJL5Hzmmm
-         K2xN9p2g+k0/rd9zSzGlT7N7Kk0jq9+s7NAJdT38K5Vz1DB+sq0xnPWrpaJPcro3Ux
-         K/1Sqs+gqOhwD74eliSDF2Wlm5/7ssPnG9W/xnEU=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5IDOhbu024943
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 18 Jun 2019 08:24:43 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 18
- Jun 2019 08:23:42 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 18 Jun 2019 08:23:42 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5IDNeIC121888;
-        Tue, 18 Jun 2019 08:23:40 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-omap@vger.kernel.org>
-Subject: [PATCH] dmaengine: ti: omap-dma: Improved memcpy polling support
-Date:   Tue, 18 Jun 2019 16:24:16 +0300
-Message-ID: <20190618132416.26874-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.22.0
+        id S1729102AbfFROtx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 18 Jun 2019 10:49:53 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52395 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729337AbfFROtx (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Jun 2019 10:49:53 -0400
+Received: by mail-wm1-f65.google.com with SMTP id s3so3640741wms.2
+        for <dmaengine@vger.kernel.org>; Tue, 18 Jun 2019 07:49:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Bw9Az1sDvYftv6OoenbcNn/WFNLrPeZPeUya6SiZhJE=;
+        b=udv6A62ft/6+VkDzxa/PEOUwv3/ZITu7g/8w9iRR9ReSzG9lypxa62Pi4r9SN/Hhll
+         FxiwNMpXKfogjWbeqkzE2jV1lTTjRsI5u2Ncn8o1StwJg3GwNsiQ0HTrn5K0u/7RXh8S
+         e1Q4tcAQsalTh9bGi3YD4OfZYOGVt+uw3PnER43NYbFCThzlpqmKHcTqPQw3ZVPe9tWG
+         PH1NVJSU5xUCVBCrz1s0Olr29daX709FTtmsAxJ+DWL2f1e3r2fWhIlvai+QmhWcokqz
+         +sesl3yqFuJNNFqf70VfLr0azantLnGN1l0EabSUQ1F3+PVqxu2f2zGH9FeOGs9C6sdr
+         aP+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Bw9Az1sDvYftv6OoenbcNn/WFNLrPeZPeUya6SiZhJE=;
+        b=h3J9bESZw2z8hnyoakBOLZiix00vZzzHudNPXz97uR8MJoBF4y+84CP2kwevXOz6gC
+         j1EO576qOMP+Itbztqr60dE+m58CYGAfWAQGjO7D8V1cHDEfFtFeNbTpDXV34eWM7Wnt
+         tTzk/PLNbqp9tYVsbaELikgEsxQn/cSYlnwXBjXHx5CxhdaB5ZLUt4YBstQO2Xso5Xaw
+         TtAkkVuWnpayzVhhlBn6aMyJBYmAm7TT/j95RsElgw/pQPtU3aYL9pGVNhIDxrpjIrgV
+         BZooriQEvus9WoI2tLUFuY4rAbhFqgqHlmxTyWQmoPr6xdFHMeBKYG2XZchzWIWyEMdI
+         9HOQ==
+X-Gm-Message-State: APjAAAVAu1lrLFEI3hXTW0Q4wICPtwJLLMzQzxzrW/cEc5I7Qh5o3SN0
+        x4m1O7DDbdTJQ5M9rQoLWqX3WA==
+X-Google-Smtp-Source: APXvYqy81kOsWTfc3qI9cyUFMvjSdlsf4pF4JIm5L+OGMDjbnEgEg9Dfd3m/D9WpbJsDGd8xvzXW1Q==
+X-Received: by 2002:a7b:c74a:: with SMTP id w10mr3834115wmk.99.1560869390770;
+        Tue, 18 Jun 2019 07:49:50 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id j189sm3881237wmb.48.2019.06.18.07.49.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 07:49:50 -0700 (PDT)
+Subject: Re: [PATCH] dmaengine: qcom-bam: fix circular buffer handling
+To:     Sricharan R <sricharan@codeaurora.org>, vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
+ <f4522b78-b406-954c-57b7-923e6ab31f96@codeaurora.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <ab29c08b-d509-a275-f208-ace1041a27af@linaro.org>
+Date:   Tue, 18 Jun 2019 15:49:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <f4522b78-b406-954c-57b7-923e6ab31f96@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-When a DMA client driver does not set the DMA_PREP_INTERRUPT because it
-does not want to use interrupts for DMA completion or because it can not
-rely on DMA interrupts due to executing the memcpy when interrupts are
-disabled it will poll the status of the transfer.
+Hi Sricharan,
 
-If the interrupts are enabled then the cookie will be set completed in the
-interrupt handler so only check in HW completion when the polling is really
-needed.
+On 18/06/2019 08:13, Sricharan R wrote:
+> Hi Srini,
+> 
+> On 6/14/2019 7:50 PM, Srinivas Kandagatla wrote:
+>> For some reason arguments to most of the circular buffers
+>> macros are used in reverse, tail is used for head and vice versa.
+>>
+>> This leads to bam thinking that there is an extra descriptor at the
+>> end and leading to retransmitting descriptor which was not scheduled
+>> by any driver. This happens after MAX_DESCRIPTORS (4096) are scheduled
+>> and done, so most of the drivers would not notice this, unless they are
+>> heavily using bam dma. Originally found this issue while testing
+>> SoundWire over SlimBus on DB845c which uses DMA very heavily for
+>> read/writes.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>   drivers/dma/qcom/bam_dma.c | 9 ++++-----
+>>   1 file changed, 4 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+>> index cb860cb53c27..43d7b0a9713a 100644
+>> --- a/drivers/dma/qcom/bam_dma.c
+>> +++ b/drivers/dma/qcom/bam_dma.c
+>> @@ -350,8 +350,8 @@ static const struct reg_offset_data bam_v1_7_reg_info[] = {
+>>   #define BAM_DESC_FIFO_SIZE	SZ_32K
+>>   #define MAX_DESCRIPTORS (BAM_DESC_FIFO_SIZE / sizeof(struct bam_desc_hw) - 1)
+>>   #define BAM_FIFO_SIZE	(SZ_32K - 8)
+>> -#define IS_BUSY(chan)	(CIRC_SPACE(bchan->tail, bchan->head,\
+>> -			 MAX_DESCRIPTORS + 1) == 0)
+>> +#define IS_BUSY(chan)	(CIRC_SPACE(bchan->head, bchan->tail,\
+>> +			 MAX_DESCRIPTORS) == 0)
+>>   
+>>   struct bam_chan {
+>>   	struct virt_dma_chan vc;
+>> @@ -806,7 +806,7 @@ static u32 process_channel_irqs(struct bam_device *bdev)
+>>   		offset /= sizeof(struct bam_desc_hw);
+>>   
+>>   		/* Number of bytes available to read */
+>> -		avail = CIRC_CNT(offset, bchan->head, MAX_DESCRIPTORS + 1);
+>> +		avail = CIRC_CNT(bchan->head, offset, MAX_DESCRIPTORS);
+>>
+>   one question, so MAX_DESCRIPTORS is already a mask,
+>      #define MAX_DESCRIPTORS (BAM_DESC_FIFO_SIZE / sizeof(struct bam_desc_hw) - 1)
+> 
+>   CIRC_CNT/SPACE macros also does a size - 1, so would it not be a problem if we
+>   just pass MAX_DESCRIPTORS ?
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
-Hi,
+Thanks for looking at this,
+TBH, usage of CIRC_* macros is only valid for power-of-2 buffers,
+In bam case MAX_DESCRIPTORS is 4095.
+Am really not sure why 8 bytes have been removed from fifo data buffer size.
+So basically usage of these macros is incorrect in bam case, this need 
+to be fixed properly.
 
-This patch fine-tunes the omap-dma polled memcpy support to be inline with how
-the EDMA driver is handling it.
+Do you agree?
 
-The polled completion can be tested by applying:
-https://patchwork.kernel.org/patch/10966499/
+Vinod, can you hold off with this patch, I will try to find some time 
+this week to cook up a better patch removing the usage of these macros.
 
-and run the dmatest with polled = 1 on boards where sDMA is used.
 
-Or boot up any dra7 family device with display enabled. The workaround for DMM
-errata i878 uses polled DMA memcpy.
 
-Regards,
-Peter
+thanks,
+srini
 
- drivers/dma/ti/omap-dma.c | 37 ++++++++++++++++++++++++-------------
- 1 file changed, 24 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index 5ba7d8485026..75d8f7e13c8d 100644
---- a/drivers/dma/ti/omap-dma.c
-+++ b/drivers/dma/ti/omap-dma.c
-@@ -94,6 +94,7 @@ struct omap_desc {
- 	bool using_ll;
- 	enum dma_transfer_direction dir;
- 	dma_addr_t dev_addr;
-+	bool polled;
- 
- 	int32_t fi;		/* for OMAP_DMA_SYNC_PACKET / double indexing */
- 	int16_t ei;		/* for double indexing */
-@@ -834,20 +835,10 @@ static enum dma_status omap_dma_tx_status(struct dma_chan *chan,
- 
- 	ret = dma_cookie_status(chan, cookie, txstate);
- 
--	if (!c->paused && c->running) {
--		uint32_t ccr = omap_dma_chan_read(c, CCR);
--		/*
--		 * The channel is no longer active, set the return value
--		 * accordingly
--		 */
--		if (!(ccr & CCR_ENABLE))
--			ret = DMA_COMPLETE;
--	}
--
-+	spin_lock_irqsave(&c->vc.lock, flags);
- 	if (ret == DMA_COMPLETE || !txstate)
--		return ret;
-+		goto out;
- 
--	spin_lock_irqsave(&c->vc.lock, flags);
- 	vd = vchan_find_desc(&c->vc, cookie);
- 	if (vd) {
- 		txstate->residue = omap_dma_desc_size(to_omap_dma_desc(&vd->tx));
-@@ -868,6 +859,23 @@ static enum dma_status omap_dma_tx_status(struct dma_chan *chan,
- 	}
- 	if (ret == DMA_IN_PROGRESS && c->paused)
- 		ret = DMA_PAUSED;
-+
-+out:
-+	if (ret == DMA_IN_PROGRESS && c->running && c->desc &&
-+	    c->desc->polled && c->desc->vd.tx.cookie == cookie) {
-+		uint32_t ccr = omap_dma_chan_read(c, CCR);
-+		/*
-+		 * The channel is no longer active, set the return value
-+		 * accordingly
-+		 */
-+		if (!(ccr & CCR_ENABLE)) {
-+			struct omap_desc *d = c->desc;
-+			ret = DMA_COMPLETE;
-+			omap_dma_start_desc(c);
-+			vchan_cookie_complete(&d->vd);
-+		}
-+	}
-+
- 	spin_unlock_irqrestore(&c->vc.lock, flags);
- 
- 	return ret;
-@@ -1233,7 +1241,10 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_memcpy(
- 	d->ccr = c->ccr;
- 	d->ccr |= CCR_DST_AMODE_POSTINC | CCR_SRC_AMODE_POSTINC;
- 
--	d->cicr = CICR_DROP_IE | CICR_FRAME_IE;
-+	if (tx_flags & DMA_PREP_INTERRUPT)
-+		d->cicr |= CICR_FRAME_IE;
-+	else
-+		d->polled = true;
- 
- 	d->csdp = data_type;
- 
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+> 
+> Regards,
+>   Sricharan
+>    
+>>   		list_for_each_entry_safe(async_desc, tmp,
+>>   					 &bchan->desc_list, desc_node) {
+>> @@ -997,8 +997,7 @@ static void bam_start_dma(struct bam_chan *bchan)
+>>   			bam_apply_new_config(bchan, async_desc->dir);
+>>   
+>>   		desc = async_desc->curr_desc;
+>> -		avail = CIRC_SPACE(bchan->tail, bchan->head,
+>> -				   MAX_DESCRIPTORS + 1);
+>> +		avail = CIRC_SPACE(bchan->head, bchan->tail, MAX_DESCRIPTORS);
+>>   
+>>   		if (async_desc->num_desc > avail)
+>>   			async_desc->xfer_len = avail;
+>>
+> 

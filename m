@@ -2,89 +2,107 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 95C5A4A1CF
-	for <lists+dmaengine@lfdr.de>; Tue, 18 Jun 2019 15:14:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4430D4A1FD
+	for <lists+dmaengine@lfdr.de>; Tue, 18 Jun 2019 15:21:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726037AbfFRNOS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 18 Jun 2019 09:14:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37796 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbfFRNOS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:14:18 -0400
-Received: from dragon (li1322-146.members.linode.com [45.79.223.146])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3168E2070B;
-        Tue, 18 Jun 2019 13:14:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560863657;
-        bh=/l30FOU0AryVpc5HW+1cx+d4B+hv8HqciAB/OIoARr4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=M7aWkd2lU4lW1/75YEvMN623tYFX4RQhAA/Nr/6vUzS0Oz0yixi/ufY9+mub+PaYf
-         e8yxEXUh9NWL3J6PghN/BvQgrRHILFT5L+grP6f1m1gwrUR3Ugd9gCcc1KR246ihis
-         oqgfX8ShPxP+oPUa3p4VgBgnxmOGDfuOxDzvRvYM=
-Date:   Tue, 18 Jun 2019 21:13:20 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Peng Ma <peng.ma@nxp.com>
-Cc:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        leoyang.li@nxp.com, dan.j.williams@intel.com,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/4] arm64: dts: fsl: ls1028a: Add eDMA node
-Message-ID: <20190618131319.GC1959@dragon>
-References: <20190506090344.37784-1-peng.ma@nxp.com>
- <20190506090344.37784-2-peng.ma@nxp.com>
+        id S1729291AbfFRNVb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 18 Jun 2019 09:21:31 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:34022 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729285AbfFRNVb (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Jun 2019 09:21:31 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5IDLEIC000444;
+        Tue, 18 Jun 2019 08:21:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560864074;
+        bh=WtkFs1CYQDfDygNNCGi17BiapjOqf3PWLziDa0PnWu0=;
+        h=From:To:CC:Subject:Date;
+        b=GeSOjSveNLsoxDohP8XZcFdOL1zhmR68M6T3Ub2aOGvNvZ+foQ6sKuJZ3nJBZWKqE
+         /APuQXgEb/u2DRSNuClg2qOKer4LSVPeglQpKJWcpzGDSj1vnDdnnED9+gJKbBvLUx
+         uPhYpIAfYy/P5tm5Z2ZsG/DNoljbXfZI0CPV2L8E=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5IDLEgR072988
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 18 Jun 2019 08:21:14 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 18
+ Jun 2019 08:21:13 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 18 Jun 2019 08:21:13 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5IDLBKj026006;
+        Tue, 18 Jun 2019 08:21:12 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-omap@vger.kernel.org>
+Subject: [PATCH v4 0/3] dmaengine: ti: edma: Polled completion support
+Date:   Tue, 18 Jun 2019 16:21:45 +0300
+Message-ID: <20190618132148.26468-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190506090344.37784-2-peng.ma@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, May 06, 2019 at 09:03:42AM +0000, Peng Ma wrote:
-> Add the eDMA device tree nodes for LS1028A devices
-> 
-> Signed-off-by: Peng Ma <peng.ma@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   15 +++++++++++++++
->  1 files changed, 15 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index 8116fb3..71b87cb 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -235,6 +235,21 @@
->  			status = "disabled";
->  		};
->  
-> +		edma0: edma@22c0000 {
-> +			#dma-cells = <2>;
-> +			compatible = "fsl,vf610-edma";
-> +			reg = <0x0 0x22c0000 0x0 0x10000>,
-> +			      <0x0 0x22d0000 0x0 0x10000>,
-> +			      <0x0 0x22e0000 0x0 0x10000>;
-> +			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "edma-tx", "edma-err";
-> +			dma-channels = <32>;
-> +			clock-names = "dmamux0", "dmamux1";
-> +			clocks = <&clockgen 4 1>,
-> +				 <&clockgen 4 1>;
-> +		};
-> +
+Hi,
 
-The edma@22c0000 node had already been added by commit below:
+Change since v3:
+- fix DMA pointer tracking for memcpy
+- completion polling is only done when it is asked by not providing
+  DMA_PREP_INTERRUPT for memcpy
 
-  f54f7be5c5ac ("arm64: dts: ls1028a: Add Audio DT nodes")
+Changes since v2:
+- Fix typo in the comment for patch 0
 
-Shawn
+Changes since v1:
+- Cleanup patch for the array register handling
+- typo fixed in patch2 commit message
 
->  		gpio1: gpio@2300000 {
->  			compatible = "fsl,qoriq-gpio";
->  			reg = <0x0 0x2300000 0x0 0x10000>;
-> -- 
-> 1.7.1
-> 
+The code around the array register access was pretty confusing for the first
+look, so clean them up first then use the cleaner way in the polled handling.
+
+When a DMA client driver does not set the DMA_PREP_INTERRUPT because it
+does not want to use interrupts for DMA completion or because it can not
+rely on DMA interrupts due to executing the memcpy when interrupts are
+disabled it will poll the status of the transfer.
+
+Since we can not tell from any EDMA register that the transfer is
+completed, we can only know that the paRAM set has been sent to TPTC for
+processing we need to check the residue of the transfer, if it is 0 then
+the transfer is completed.
+
+The polled completion can bve tested by applying:
+https://patchwork.kernel.org/patch/10966499/
+
+Enabling the memcpy for EDMA and run the dmatest with polled = 1.
+
+Or, enable the EDMA memcpy support and boot up any dra7 family device with
+display enabled. The workaround for DMM errata i878 uses polled DMA memcpy.
+
+Regards,
+Peter
+---
+Peter Ujfalusi (3):
+  dmaengine: ti: edma: Clean up the 2x32bit array register accesses
+  dmaengine: ti: edma: Correct the residue calculation (fix for memcpy)
+  dmaengine: ti: edma: Support for polled (memcpy) completion
+
+ drivers/dma/ti/edma.c | 174 ++++++++++++++++++++++++++++--------------
+ 1 file changed, 117 insertions(+), 57 deletions(-)
+
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+

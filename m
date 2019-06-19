@@ -2,206 +2,170 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 459704BA8E
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Jun 2019 15:52:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA0F24BAAC
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Jun 2019 16:04:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726047AbfFSNws (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 19 Jun 2019 09:52:48 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33485 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfFSNwr (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 19 Jun 2019 09:52:47 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h10so3389012ljg.0;
-        Wed, 19 Jun 2019 06:52:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DFctamkDGs1zT54jgQyZrp5pqG/m8G/kk3RAHHlgQf0=;
-        b=AfBwy2Bct/54LvC5feVV9dI8qd9jT01l0vtWnH5vhKchdEEL7JkTD5zZnS+LayzDnp
-         8wa4O5UIa11k0jcN5pws0beXaF59Dm5+AD50t5+of8v4KR7rYfPR61sRKxP0b+IQcZiH
-         UpHOeSflykjih0JgWv7WFG3K511Yoe/DlVg/goLZvuKwEv1uOpk87zWUgJYXe3s4cNff
-         yyjaNEoeZGDXtfNXDIwKWmW5Lqi2G7GNjwk8DWSUwksrQcHA1H/LUsMa5hgKLgcP4Cu9
-         FMyqJMmHtAkdvGWyvXQHZNL4nqRVuxH0VPY1aSXjLFFqnyO6Z+r3gN/sxwyUFi2tI5KC
-         fuxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DFctamkDGs1zT54jgQyZrp5pqG/m8G/kk3RAHHlgQf0=;
-        b=BPes5f3WbIPTg0Ooohpuk7op4XDHNOnoBxLiWv1ysEhHAr8YqUMXkphSMsOJrga70d
-         BqGhdguTn56o1UYDnnzz7kKJeXvmCHTIPehnU7wthRk0eKMMrleR4VPb/683VP+MGoNa
-         6qbIfcCIZHCPglK7xjNZcS2rwFtKmDXX5TClcBa4k4JDW1z0FxjhJdCqET/DLnsBthY3
-         8cP3TFnAaxOmAM/vZFkWRPqVjeNbR5hRP7pxloXEP59UBylS5O3S+6NHfcQ17PjoMo3E
-         MlQqHmlnoTO5q0HDWWQuD5Uwsf8BIDn5iv0Q2PdjlDfLeQLQdf8WoQFSrFfG4y8+oaZ7
-         kFjw==
-X-Gm-Message-State: APjAAAUH2WtfGiLnY6esf02ZcygXXxoBNb6ua6evlY4HMPFv6Z7x7Tlj
-        FQ7vOWeTbzTMjX3wcPb5rpD0Z7Oo
-X-Google-Smtp-Source: APXvYqwaCmL4vUPhKCtG13nXluc/+jnN+v5YVrq/Lal0xZjYADIFu3+6KUxLKTIhOK6ksZtknbROcQ==
-X-Received: by 2002:a2e:8847:: with SMTP id z7mr4147836ljj.51.1560952363921;
-        Wed, 19 Jun 2019 06:52:43 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id l15sm3464173ljh.0.2019.06.19.06.52.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 06:52:42 -0700 (PDT)
-Subject: Re: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue
- granularity
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190613210849.10382-1-digetx@gmail.com>
- <f2290604-12f4-019b-47e7-4e4e29a433d4@codethink.co.uk>
- <7354d471-95e1-ffcd-db65-578e9aa425ac@gmail.com>
- <1db9bac2-957d-3c0a-948a-429bc59f1b72@nvidia.com>
- <c8bccb6e-27f8-d6c8-cfdb-10ab5ae98b26@gmail.com>
- <49d087fe-a634-4a53-1caa-58a0e52ef1ba@nvidia.com>
- <73d5cdb7-0462-944a-1f9a-3dc02f179385@gmail.com>
- <c7e4d99a-f02f-e7a2-a4c2-81496ee54d24@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <1de7d185-54c3-be83-cb37-4f2fd009253f@gmail.com>
-Date:   Wed, 19 Jun 2019 16:52:42 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        id S1726143AbfFSOEl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 19 Jun 2019 10:04:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726047AbfFSOEl (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 19 Jun 2019 10:04:41 -0400
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9C3421783;
+        Wed, 19 Jun 2019 14:04:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560953080;
+        bh=97TXVH65mMfV5w2HMYzAftt020yRE8J8woo9idTWyrg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GQZtA9m+aghgtLbTJCTLcGQ2xOJmpH9TSP6kwXyqDJH8/KylAnsD4ksi6rh2PBElb
+         G4NgmXmOXpadOPgNMQVx3mLhNE/5Dpvjtrq6LHqg9kkEJeCRQ6KMdKoBryc+XUcEyi
+         XYNUrXyBXJ5191ROp35tXbR3dWhCMEJkziIBE9mU=
+Received: by mail-qk1-f179.google.com with SMTP id g18so10973899qkl.3;
+        Wed, 19 Jun 2019 07:04:39 -0700 (PDT)
+X-Gm-Message-State: APjAAAWrMpW4SlPmlOOBuklVyNRu5S+xi+twFI52+yqbbrqFfZwSmfIS
+        YEGn1MnFOBCHzNea8ewuxcUz/1vG2598ZAdOhw==
+X-Google-Smtp-Source: APXvYqwi/+mIBYNi4WCbUWLHb/9h3vhdYu6+esugFSfRU1ol2StHjeOdJMtIkOrVHWDAo5UnQj67m17DYpcF1eu6pDg=
+X-Received: by 2002:a05:620a:5b1:: with SMTP id q17mr33634246qkq.174.1560953079014;
+ Wed, 19 Jun 2019 07:04:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <c7e4d99a-f02f-e7a2-a4c2-81496ee54d24@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190506123456.6777-1-peter.ujfalusi@ti.com> <20190506123456.6777-10-peter.ujfalusi@ti.com>
+ <20190613181626.GA7039@bogus> <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
+ <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com> <e811d674-b79f-4da8-c632-c7a90844b6c5@ti.com>
+In-Reply-To: <e811d674-b79f-4da8-c632-c7a90844b6c5@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 19 Jun 2019 08:04:26 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJTWNKTB1D2wNysonzasgL9awLLvr1HdOckUnQbpgsDQw@mail.gmail.com>
+Message-ID: <CAL_JsqJTWNKTB1D2wNysonzasgL9awLLvr1HdOckUnQbpgsDQw@mail.gmail.com>
+Subject: Re: [PATCH 09/16] dt-bindings: dma: ti: Add document for K3 UDMA
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-19.06.2019 15:22, Jon Hunter пишет:
-> 
-> On 19/06/2019 12:10, Dmitry Osipenko wrote:
->> 19.06.2019 13:55, Jon Hunter пишет:
->>>
->>> On 19/06/2019 11:27, Dmitry Osipenko wrote:
->>>> 19.06.2019 13:04, Jon Hunter пишет:
->>>>>
->>>>> On 19/06/2019 00:27, Dmitry Osipenko wrote:
->>>>>> 19.06.2019 1:22, Ben Dooks пишет:
->>>>>>> On 13/06/2019 22:08, Dmitry Osipenko wrote:
->>>>>>>> Tegra's APB DMA engine updates words counter after each transferred burst
->>>>>>>> of data, hence it can report transfer's residual with more fidelity which
->>>>>>>> may be required in cases like audio playback. In particular this fixes
->>>>>>>> audio stuttering during playback in a chromiuim web browser. The patch is
->>>>>>>> based on the original work that was made by Ben Dooks [1]. It was tested
->>>>>>>> on Tegra20 and Tegra30 devices.
->>>>>>>>
->>>>>>>> [1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
->>>>>>>>
->>>>>>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
->>>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>>>>>> ---
->>>>>>>>   drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++-------
->>>>>>>>   1 file changed, 28 insertions(+), 7 deletions(-)
->>>>>>>>
->>>>>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->>>>>>>> index 79e9593815f1..c5af8f703548 100644
->>>>>>>> --- a/drivers/dma/tegra20-apb-dma.c
->>>>>>>> +++ b/drivers/dma/tegra20-apb-dma.c
->>>>>>>> @@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
->>>>>>>>       return 0;
->>>>>>>>   }
->>>>>>>>   +static unsigned int tegra_dma_update_residual(struct tegra_dma_channel *tdc,
->>>>>>>> +                          struct tegra_dma_sg_req *sg_req,
->>>>>>>> +                          struct tegra_dma_desc *dma_desc,
->>>>>>>> +                          unsigned int residual)
->>>>>>>> +{
->>>>>>>> +    unsigned long status, wcount = 0;
->>>>>>>> +
->>>>>>>> +    if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
->>>>>>>> +        return residual;
->>>>>>>> +
->>>>>>>> +    if (tdc->tdma->chip_data->support_separate_wcount_reg)
->>>>>>>> +        wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
->>>>>>>> +
->>>>>>>> +    status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
->>>>>>>> +
->>>>>>>> +    if (!tdc->tdma->chip_data->support_separate_wcount_reg)
->>>>>>>> +        wcount = status;
->>>>>>>> +
->>>>>>>> +    if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
->>>>>>>> +        return residual - sg_req->req_len;
->>>>>>>> +
->>>>>>>> +    return residual - get_current_xferred_count(tdc, sg_req, wcount);
->>>>>>>> +}
->>>>>>>
->>>>>>> I am unfortunately nowhere near my notes, so can't completely
->>>>>>> review this. I think the complexity of my patch series is due
->>>>>>> to an issue with the count being updated before the EOC IRQ
->>>>>>> is actually flagged (and most definetly before it gets to the
->>>>>>> CPU IRQ handler).
->>>>>>>
->>>>>>> The test system I was using, which i've not really got any
->>>>>>> access to at the moment would show these internal inconsistent
->>>>>>> states every few hours, however it was moving 48kHz 8ch 16bit
->>>>>>> TDM data.
->>>>>>>
->>>>>>> Thanks for looking into this, I am not sure if I am going to
->>>>>>> get any time to look into this within the next couple of
->>>>>>> months.
->>>>>>
->>>>>> I'll try to add some debug checks to try to catch the case where count is updated before EOC
->>>>>> is set. Thank you very much for the clarification of the problem. So far I haven't spotted
->>>>>> anything going wrong.
->>>>>>
->>>>>> Jon / Laxman, are you aware about the possibility to get such inconsistency of words count
->>>>>> vs EOC? Assuming the cyclic transfer mode.
->>>>>
->>>>> I can't say that I am. However, for the case of cyclic transfer, given
->>>>> that the next transfer is always programmed into the registers before
->>>>> the last one completes, I could see that by the time the interrupt is
->>>>> serviced that the DMA has moved on to the next transfer (which I assume
->>>>> would reset the count).
->>>>>
->>>>> Interestingly, our downstream kernel implemented a change to avoid the
->>>>> count appearing to move backwards. I am curious if this also works,
->>>>> which would be a lot simpler that what Ben has implemented and may
->>>>> mitigate that race condition that Ben is describing.
->>>>>
->>>>> Cheers
->>>>> Jon
->>>>>
->>>>> [0]
->>>>> https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
->>>>>
->>>>
->>>> The downstream patch doesn't check for EOC and has no comments about it, so it's hard to
->>>> tell if it's intentional. Secondly, looks like the downstream patch is mucked up because it
->>>> doesn't check whether the dma_desc is *the active* transfer and not a pending!
->>>
->>> I agree that it should check to see if it is active. I assume that what
->>> this patch is doing is not updating the dma position if it appears to
->>> have gone backwards, implying we have moved on to the next buffer. Yes
->>> this is still probably not as accurate as Ben's implementation because
->>> most likely we have finished that transfer and this patch would report
->>> that it is not quite finished.
->>>
->>> If Ben's patch works for you then why not go with this?
->>
->> Because I'm doubtful that it is really the case and not something else. It will be very odd
->> if hardware updates words count and sets EOC asynchronously, I'd call it as a faulty design
->> and thus a bug that need to worked around in software if that's really happening.
-> 
-> I don't see it that way. Probably as soon as the EOC happens, if there
-> is another transfer queued up, the next transfer will start and count
-> gets reset. So if you happen to asynchronously read the count at the
-> very end of the transfer, then it is possible you are doing so at the
-> same time that the EOC occurs but before the ISR has been triggered.
+On Fri, Jun 14, 2019 at 7:42 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrot=
+e:
+>
+>
+> On 14/06/2019 16.20, Rob Herring wrote:
+> > On Thu, Jun 13, 2019 at 2:33 PM Peter Ujfalusi <peter.ujfalusi@ti.com> =
+wrote:
+> >>
+> >> Rob,
+> >>
+> >> On 13/06/2019 21.16, Rob Herring wrote:
+> >>>> +Remote PSI-L endpoint
+> >>>> +
+> >>>> +Required properties:
+> >>>> +--------------------
+> >>>> +- ti,psil-base:             PSI-L thread ID base of the endpoint
+> >>>> +
+> >>>> +Within the PSI-L endpoint node thread configuration subnodes must p=
+resent with:
+> >>>> +ti,psil-configX naming convention, where X is the thread ID offset.
+> >>>
+> >>> Don't use vendor prefixes on node names.
+> >>
+> >> OK.
+> >>
+> >>>> +
+> >>>> +Configuration node Required properties:
+> >>>> +--------------------
+> >>>> +- linux,udma-mode:  Channel mode, can be:
+> >>>> +                    - UDMA_PKT_MODE: for Packet mode channels (peri=
+pherals)
+> >>>> +                    - UDMA_TR_MODE: for Third-Party mode
+> >>>
+> >>> This is hardly a common linux thing. What determines the value here.
+> >>
+> >> Unfortunately it is.
+> >
+> > No, it's a feature of your h/w and in no way is something linux
+> > defined which is the point of 'linux' prefix.
+>
+> The channel can be either Packet or TR mode. The HW is really flexible
+> on this (and on other things as well).
+> It just happens that Linux need to use specific channels in a specific mo=
+de.
+>
+> Would it help if we assume that all channels are used in Packet mode,
+> but we have linux,tr-mode bool to indicate that the given channel in
+> Linux need to be used in TR mode.
 
-In our case we can't read out EOC status and words count asynchronously because the
-interrupt status and words count are within the same hardware register on pre-T114 and on
-T114+ we're reading words count register and only then the status register. ISR has nothing
-to do with it, if you're taking about tegra_dma_isr.
+Your use of 'linux' prefix is wrong. Stop using it.
 
-Ben claims that the words count may get updated in hardware before EOC bit is set in the
-status register.
+> >> Each channel can be configured to Packet or TR mode. For some
+> >> peripherals it is true that they only support packet mode, these are t=
+he
+> >> newer PSI-L native peripherals.
+> >> For these channels a udma-mode property would be correct.
+> >>
+> >> But we have legacy peripherals as well and they are serviced by PDMA
+> >> (which is a native peripheral designed to talk to the given legacy IP)=
+.
+> >> We can use either packet or TR mode in UDMAP to talk to PDMAs, it is i=
+n
+> >> most cases clear what to use, but for example for audio (McASP) channe=
+ls
+> >> Linux is using TR channel because we need cyclic DMA while for example
+> >> RTOS is using Packet mode as it fits their needs better.
+> >>
+> >> Here I need to prefix the udma-mode with linux as the mode is used by
+> >> Linux, but other OS might opt to use different channel mode.
+> >
+> > So you'd need <os>,udma-mode? That doesn't work... If the setting is
+> > per OS, then it belongs in the OS because the same dtb should work
+> > across OS's.
+>
+> So I should have a table for the thread IDs in the DMA driver and mark
+> channels as TR or Packet in there for Linux use?
 
+Perhaps. I haven't heard any reasons why you need this in DT. If Linux
+is dictating the modes, then sounds like it should be in Linux.
+
+But really, I don't fully understand what you are doing here to tell
+you what to do beyond using 'linux' prefix is wrong.
+
+> Or just an array which would mark the non packet PSI-L thread IDs?
+>
+> I still prefer to have this coming via DT as a Linux parameter as other
+> OS is free to ignore the linux,udma-mode, but as I said there are
+> certain channels which must be used in Linux in certain mode while
+> others in different mode.
+
+A DT client is free to ignore any DT property. You don't need a client
+prefix for that.
+
+> >> The reason why this needs to be in the DT is that when the channel is
+> >> requested we need to configure the mode and it can not be swapped
+> >> runtime easily between Packet and TR mode.
+> >
+> > So when the client makes the channel request, why doesn't it specify th=
+e mode?
+>
+> This is UDMAP internal information on what type of Descriptors the
+> channel will expect and how it is going to dispatch the work.
+>
+> Packet and TR mode at the end does the same thing, but in a completely
+> different way.
+>
+> - P=C3=A9ter
+>
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

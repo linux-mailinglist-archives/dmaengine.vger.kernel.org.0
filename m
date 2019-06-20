@@ -2,172 +2,116 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A8134C99A
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2019 10:38:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D94E4C9B0
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2019 10:47:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725925AbfFTIi5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 20 Jun 2019 04:38:57 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:4459 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfFTIi5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 Jun 2019 04:38:57 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0b46200000>; Thu, 20 Jun 2019 01:38:56 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 20 Jun 2019 01:38:55 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 20 Jun 2019 01:38:55 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Jun
- 2019 08:38:53 +0000
-Subject: Re: [PATCH v2] dmaengine: tegra-apb: Support per-burst residue
- granularity
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190618115035.29250-1-digetx@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <8f48fcba-df7c-a313-2f84-0fa896e4ccec@nvidia.com>
-Date:   Thu, 20 Jun 2019 09:38:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1725925AbfFTIrS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 20 Jun 2019 04:47:18 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38082 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfFTIrS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 Jun 2019 04:47:18 -0400
+Received: by mail-wm1-f65.google.com with SMTP id s15so2243582wmj.3;
+        Thu, 20 Jun 2019 01:47:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5GCO7ZYT99Ki0xYemo3RK6CqmnGlA3SPqu9SbbMTgRw=;
+        b=P8UG6MFbkhkh5xnDC+Ul1XG0D8BKw5yVSO9gsFv1JDfEpJMcgtbDig6UrF1b9tgD9r
+         2n/BvJeD3d0WT4tuE6zFc+CoSTVjNeHfIhdnVy6E+u8dTChJeGVSOl1cuEqvnSaSxBxg
+         2ONnhNPGFczZ+PUarDxcQZOEEq9egFmGwFFTZN3ofWBheFKfWrDM1+pVP3jjxryS9xKD
+         dtrI0YBJEH5mdwtPQjkieMbrYBcQMR0bGkeWDPc6WDT13UMtbLhU1I5gQiV28SCX9yOW
+         9P1uk5ts7ohVSQ7yeFndxL3bG2OsuI00R2AtQT7cacv7+3sBhvUJZes428wXseb7ccsD
+         LSaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5GCO7ZYT99Ki0xYemo3RK6CqmnGlA3SPqu9SbbMTgRw=;
+        b=oJe/yLL+Qbl2WdVc+uP58ToHSLezqTYbZ7vIaLMrA1q3HjOPvBJl/OdONDkt+Rat2D
+         m2l0pL3qBJJYFfJXoM+NzFpPNzsnE2TPX7Kxp0bvq5mwvLGrlttHjb/Tp1L+7PdQZi1z
+         wNSeq/QY/dZX3UBFXMHLq4mMpSZrktUtfQIA+FZAYqtlD0VM3b0+hoetJHpOf4qMx5ZS
+         orBDfBzeb7Sx0r77MQLaBqfXtK3SVlD//3mYsON5EBksLiY7zbk7ZJQcGXhNFwayDtZl
+         K3ViV1Wt2QIiSum7lncD7CQkNNp5+bWbOEgWptuLd69TRT1uBrlTiJfmZd6ftigO10Ho
+         sFqg==
+X-Gm-Message-State: APjAAAW1a1crHXL/iqyF3Wj8w/271H72PVOXrUo6kQd4sm6AO6puax7u
+        kzuKx14w711DRT+5CK5wtjiROVTd9nQ=
+X-Google-Smtp-Source: APXvYqzxxE2sWgW5TbpKSVdzCsEc3j3wGfepWqXrrWfTSjvPS6O57iuuAtzSDZC1pjX4/YhKNoNoPg==
+X-Received: by 2002:a1c:4041:: with SMTP id n62mr1875231wma.100.1561020435315;
+        Thu, 20 Jun 2019 01:47:15 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id y6sm4534133wmd.16.2019.06.20.01.47.14
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 01:47:14 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 10:47:13 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-tegra@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>
+Subject: Re: [PATCH] dmaengine: tegra210-adma: Don't program FIFO threshold
+Message-ID: <20190620084713.GA26689@ulmo>
+References: <20190620075424.14795-1-jonathanh@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20190618115035.29250-1-digetx@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561019936; bh=nQvnNwEb/0AS1u5wJ+D2+BiSKwyKhWqsMSEAYqzh9+U=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=lxsxiE9HLYXwpTyKW6c4pa7jfnu0cvdAHB6oruIxyrfLx/XlCxnsCF28w0IWc2OYk
-         jyLQpncsUWbcqwVbfA46/jvshwaq//6tkEo7foWL8MLmWEyqDlwxpXmmGuicrJ0GcT
-         RKn6s3AJIK9Z8WLA/PADKhUvN9JvUiFV3IVLOuNN+WAicor4EfbuR+XWUW5cYjECmB
-         bafYo4iYjRI9iAr+cZ6rmW3PSvqrvgFWV/I8NF8DqFw2mS8XIkZTqal+dU6XSC4ViV
-         cL7a+ITD+++IldKTVneKMdkSIKtRiRtc3zSdBAqflRzasGaMfdAbmgDkrKLPobFawg
-         Ot95NTTCs3LZg==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
+Content-Disposition: inline
+In-Reply-To: <20190620075424.14795-1-jonathanh@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On 18/06/2019 12:50, Dmitry Osipenko wrote:
-> Tegra's APB DMA engine updates words counter after each transferred burst
-> of data, hence it can report transfer's residual with more fidelity which
-> may be required in cases like audio playback. In particular this fixes
-> audio stuttering during playback in a chromiuim web browser. The patch is
-> based on the original work that was made by Ben Dooks. It was tested on
-> Tegra20 and Tegra30 devices.
-> 
-> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
-> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+--a8Wt8u1KmwUX3Y2C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jun 20, 2019 at 08:54:24AM +0100, Jon Hunter wrote:
+> From: Jonathan Hunter <jonathanh@nvidia.com>
+>=20
+> The Tegra210 ADMA supports two modes for transferring data to a FIFO
+> which are ...
+>=20
+> 1. Transfer data to/from the FIFO as soon as a single burst can be
+>    transferred.
+> 2. Transfer data to/from the FIFO based upon FIFO thresholds, where
+>    the FIFO threshold is specified in terms on multiple bursts.
+>=20
+> Currently, the ADMA driver programs the FIFO threshold values in the
+> FIFO_CTRL register, but never enables the transfer mode that uses
+> these threshold values. Given that these have never been used so far,
+> simplify the ADMA driver by removing the programming of these threshold
+> values.
+>=20
+> Signed-off-by: Jonathan Hunter <jonathanh@nvidia.com>
 > ---
-> 
-> Changelog:
-> 
-> v2:  Addressed review comments made by Jon Hunter to v1. We won't try
->      to get words count if dma_desc is on free list as it will result
->      in a NULL dereference because this case wasn't handled properly.
-> 
->      The residual value is now updated properly, avoiding potential
->      integer overflow by adding the "bytes" to the "bytes_transferred"
->      instead of the subtraction.
-> 
->  drivers/dma/tegra20-apb-dma.c | 33 ++++++++++++++++++++++++++-------
->  1 file changed, 26 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-> index 79e9593815f1..fed18bc46479 100644
-> --- a/drivers/dma/tegra20-apb-dma.c
-> +++ b/drivers/dma/tegra20-apb-dma.c
-> @@ -797,6 +797,28 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
->  	return 0;
->  }
->  
-> +static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
-> +					       struct tegra_dma_sg_req *sg_req)
-> +{
-> +	unsigned long status, wcount = 0;
-> +
-> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
-> +		return 0;
-> +
-> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
-> +		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
-> +
-> +	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
-> +
-> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
-> +		wcount = status;
-> +
-> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
-> +		return sg_req->req_len;
-> +
-> +	return get_current_xferred_count(tdc, sg_req, wcount);
-> +}
-> +
->  static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
->  	dma_cookie_t cookie, struct dma_tx_state *txstate)
->  {
-> @@ -806,6 +828,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
->  	enum dma_status ret;
->  	unsigned long flags;
->  	unsigned int residual;
-> +	unsigned int bytes = 0;
->  
->  	ret = dma_cookie_status(dc, cookie, txstate);
->  	if (ret == DMA_COMPLETE)
-> @@ -825,6 +848,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
->  	list_for_each_entry(sg_req, &tdc->pending_sg_req, node) {
->  		dma_desc = sg_req->dma_desc;
->  		if (dma_desc->txd.cookie == cookie) {
-> +			bytes = tegra_dma_sg_bytes_xferred(tdc, sg_req);
->  			ret = dma_desc->dma_status;
->  			goto found;
->  		}
-> @@ -836,7 +860,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
->  found:
->  	if (dma_desc && txstate) {
->  		residual = dma_desc->bytes_requested -
-> -			   (dma_desc->bytes_transferred %
-> +			   ((dma_desc->bytes_transferred + bytes) %
->  			    dma_desc->bytes_requested);
->  		dma_set_residue(txstate, residual);
->  	}
-> @@ -1441,12 +1465,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
->  		BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
->  		BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
->  	tdma->dma_dev.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
-> -	/*
-> -	 * XXX The hardware appears to support
-> -	 * DMA_RESIDUE_GRANULARITY_BURST-level reporting, but it's
-> -	 * only used by this driver during tegra_dma_terminate_all()
-> -	 */
-> -	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
-> +	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
->  	tdma->dma_dev.device_config = tegra_dma_slave_config;
->  	tdma->dma_dev.device_terminate_all = tegra_dma_terminate_all;
->  	tdma->dma_dev.device_tx_status = tegra_dma_tx_status;
-> 
+>  drivers/dma/tegra210-adma.c | 12 ++----------
+>  1 file changed, 2 insertions(+), 10 deletions(-)
 
-Looks good to me. Thanks for fixing!
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+--a8Wt8u1KmwUX3Y2C
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Cheers
-Jon
+-----BEGIN PGP SIGNATURE-----
 
--- 
-nvpublic
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0LSAwACgkQ3SOs138+
+s6FiOhAAu0+Kphi5/85mxAbW9vW4ealuleXGpCh6n/u6+yEX23t2UBjioPLCsr8F
+wfq+mVEfaM3mr7Ew7T6Gq9T0CdNTGvj1Ou/9vUMbHYpgaOgA7ut6jVywG6YP13Jd
+vmjmBmxiFRn2Cs0jFTIwyTOyBMZv5fccj1xQnMd6t8H5L8b3qkAvFwL0vxyjIdDe
+L3ZMRbcEwfF58pHzW6YuiLCuBGJbfUTmwaoDQ5lQ6wYJ3QoJCjWeEGHm8olOB6wB
+8HeFyL6So6wNw+XL4qZKYa4DsLqCZa8B5vK+HueJPKyD6LPBLFEimv17/AN5HB0R
+fsFNumbmESGJD9+mJdMRjed3UeDAA/BXOIJz1DYTzOmTAR9jwUu0qQX8MRBHwpMS
+fFf2COh2/Eaf2Sek8jaRk6RYX9SloCI1dUdN2HBc6KDRKGmNx/oHWuVLfXYMaeeY
+STw9qtnWf2VeOEl7GLlzfIhjtoyWuqQbISom0mV6ok8a64QOTyxwVGe4JBIZdzz6
+S3+2koUNvyeU2EjylFsloY2SH6Eu4Gnlv0eoAj+cAukQRYEPsVyNE7tZbsJXcjll
+PUEeLc44bXdLqUBsr7QunwTLa1dpVFiWfluXQlWpxdPmTV0ozL6fwPs+WO88dvbm
+EKGrvcYmYORUbvHCb5tiK0SsTcYrJQVtRXwNv+KqZGHGQxbrj4g=
+=ukxb
+-----END PGP SIGNATURE-----
+
+--a8Wt8u1KmwUX3Y2C--

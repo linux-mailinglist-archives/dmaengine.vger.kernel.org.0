@@ -2,116 +2,174 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D94E4C9B0
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2019 10:47:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 195514CB5B
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Jun 2019 11:55:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725925AbfFTIrS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 20 Jun 2019 04:47:18 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38082 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfFTIrS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 Jun 2019 04:47:18 -0400
-Received: by mail-wm1-f65.google.com with SMTP id s15so2243582wmj.3;
-        Thu, 20 Jun 2019 01:47:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5GCO7ZYT99Ki0xYemo3RK6CqmnGlA3SPqu9SbbMTgRw=;
-        b=P8UG6MFbkhkh5xnDC+Ul1XG0D8BKw5yVSO9gsFv1JDfEpJMcgtbDig6UrF1b9tgD9r
-         2n/BvJeD3d0WT4tuE6zFc+CoSTVjNeHfIhdnVy6E+u8dTChJeGVSOl1cuEqvnSaSxBxg
-         2ONnhNPGFczZ+PUarDxcQZOEEq9egFmGwFFTZN3ofWBheFKfWrDM1+pVP3jjxryS9xKD
-         dtrI0YBJEH5mdwtPQjkieMbrYBcQMR0bGkeWDPc6WDT13UMtbLhU1I5gQiV28SCX9yOW
-         9P1uk5ts7ohVSQ7yeFndxL3bG2OsuI00R2AtQT7cacv7+3sBhvUJZes428wXseb7ccsD
-         LSaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5GCO7ZYT99Ki0xYemo3RK6CqmnGlA3SPqu9SbbMTgRw=;
-        b=oJe/yLL+Qbl2WdVc+uP58ToHSLezqTYbZ7vIaLMrA1q3HjOPvBJl/OdONDkt+Rat2D
-         m2l0pL3qBJJYFfJXoM+NzFpPNzsnE2TPX7Kxp0bvq5mwvLGrlttHjb/Tp1L+7PdQZi1z
-         wNSeq/QY/dZX3UBFXMHLq4mMpSZrktUtfQIA+FZAYqtlD0VM3b0+hoetJHpOf4qMx5ZS
-         orBDfBzeb7Sx0r77MQLaBqfXtK3SVlD//3mYsON5EBksLiY7zbk7ZJQcGXhNFwayDtZl
-         K3ViV1Wt2QIiSum7lncD7CQkNNp5+bWbOEgWptuLd69TRT1uBrlTiJfmZd6ftigO10Ho
-         sFqg==
-X-Gm-Message-State: APjAAAW1a1crHXL/iqyF3Wj8w/271H72PVOXrUo6kQd4sm6AO6puax7u
-        kzuKx14w711DRT+5CK5wtjiROVTd9nQ=
-X-Google-Smtp-Source: APXvYqzxxE2sWgW5TbpKSVdzCsEc3j3wGfepWqXrrWfTSjvPS6O57iuuAtzSDZC1pjX4/YhKNoNoPg==
-X-Received: by 2002:a1c:4041:: with SMTP id n62mr1875231wma.100.1561020435315;
-        Thu, 20 Jun 2019 01:47:15 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id y6sm4534133wmd.16.2019.06.20.01.47.14
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 01:47:14 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 10:47:13 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-tegra@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>
-Subject: Re: [PATCH] dmaengine: tegra210-adma: Don't program FIFO threshold
-Message-ID: <20190620084713.GA26689@ulmo>
-References: <20190620075424.14795-1-jonathanh@nvidia.com>
+        id S1730196AbfFTJz5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 20 Jun 2019 05:55:57 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:42956 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbfFTJz5 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 Jun 2019 05:55:57 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5K9tfj3111742;
+        Thu, 20 Jun 2019 04:55:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561024541;
+        bh=gMzqG6E9O4i2YfBt81xekJ8pv03pPdWDJCxTqsWo7G0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=NQ1so63dygklF44KpEHQFiJ65zCl0/AG3QG3xL6D2Q80yRU4yN1Xr7yF7OXemcQ/g
+         L/6fgj0DcUkGXq9jDqzNfvHqmJLecmfbVOYF2e0EhgDKIlQ/N3PvauhHr48h0H6+Um
+         6Erh7jeFw3aOiugZPDZqfCMIL+NMlwhgpUM63Nuk=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5K9tfcN086307
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 20 Jun 2019 04:55:41 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 20
+ Jun 2019 04:55:41 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 20 Jun 2019 04:55:41 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5K9tciC018188;
+        Thu, 20 Jun 2019 04:55:38 -0500
+Subject: Re: [PATCH 09/16] dt-bindings: dma: ti: Add document for K3 UDMA
+To:     Rob Herring <robh@kernel.org>
+CC:     Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
+References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
+ <20190506123456.6777-10-peter.ujfalusi@ti.com> <20190613181626.GA7039@bogus>
+ <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
+ <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com>
+ <e811d674-b79f-4da8-c632-c7a90844b6c5@ti.com>
+ <CAL_JsqJTWNKTB1D2wNysonzasgL9awLLvr1HdOckUnQbpgsDQw@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <f7bb4e82-95ea-a043-e2b1-f429b16642ba@ti.com>
+Date:   Thu, 20 Jun 2019 12:56:16 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
-Content-Disposition: inline
-In-Reply-To: <20190620075424.14795-1-jonathanh@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAL_JsqJTWNKTB1D2wNysonzasgL9awLLvr1HdOckUnQbpgsDQw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
---a8Wt8u1KmwUX3Y2C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 20, 2019 at 08:54:24AM +0100, Jon Hunter wrote:
-> From: Jonathan Hunter <jonathanh@nvidia.com>
->=20
-> The Tegra210 ADMA supports two modes for transferring data to a FIFO
-> which are ...
->=20
-> 1. Transfer data to/from the FIFO as soon as a single burst can be
->    transferred.
-> 2. Transfer data to/from the FIFO based upon FIFO thresholds, where
->    the FIFO threshold is specified in terms on multiple bursts.
->=20
-> Currently, the ADMA driver programs the FIFO threshold values in the
-> FIFO_CTRL register, but never enables the transfer mode that uses
-> these threshold values. Given that these have never been used so far,
-> simplify the ADMA driver by removing the programming of these threshold
-> values.
->=20
-> Signed-off-by: Jonathan Hunter <jonathanh@nvidia.com>
-> ---
->  drivers/dma/tegra210-adma.c | 12 ++----------
->  1 file changed, 2 insertions(+), 10 deletions(-)
+On 19/06/2019 17.04, Rob Herring wrote:
+> On Fri, Jun 14, 2019 at 7:42 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>>
+>>
+>> On 14/06/2019 16.20, Rob Herring wrote:
+>>> On Thu, Jun 13, 2019 at 2:33 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>>>>
+>>>> Rob,
+>>>>
+>>>> On 13/06/2019 21.16, Rob Herring wrote:
+>>>>>> +Remote PSI-L endpoint
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +--------------------
+>>>>>> +- ti,psil-base:             PSI-L thread ID base of the endpoint
+>>>>>> +
+>>>>>> +Within the PSI-L endpoint node thread configuration subnodes must present with:
+>>>>>> +ti,psil-configX naming convention, where X is the thread ID offset.
+>>>>>
+>>>>> Don't use vendor prefixes on node names.
+>>>>
+>>>> OK.
+>>>>
+>>>>>> +
+>>>>>> +Configuration node Required properties:
+>>>>>> +--------------------
+>>>>>> +- linux,udma-mode:  Channel mode, can be:
+>>>>>> +                    - UDMA_PKT_MODE: for Packet mode channels (peripherals)
+>>>>>> +                    - UDMA_TR_MODE: for Third-Party mode
+>>>>>
+>>>>> This is hardly a common linux thing. What determines the value here.
+>>>>
+>>>> Unfortunately it is.
+>>>
+>>> No, it's a feature of your h/w and in no way is something linux
+>>> defined which is the point of 'linux' prefix.
+>>
+>> The channel can be either Packet or TR mode. The HW is really flexible
+>> on this (and on other things as well).
+>> It just happens that Linux need to use specific channels in a specific mode.
+>>
+>> Would it help if we assume that all channels are used in Packet mode,
+>> but we have linux,tr-mode bool to indicate that the given channel in
+>> Linux need to be used in TR mode.
+> 
+> Your use of 'linux' prefix is wrong. Stop using it.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+OK, I can not argue with that.
+I'll have 'tr-mode' bool to indicate that the channel should be
+configured in TR mode for the given thread.
 
---a8Wt8u1KmwUX3Y2C
-Content-Type: application/pgp-signature; name="signature.asc"
+>>>> Each channel can be configured to Packet or TR mode. For some
+>>>> peripherals it is true that they only support packet mode, these are the
+>>>> newer PSI-L native peripherals.
+>>>> For these channels a udma-mode property would be correct.
+>>>>
+>>>> But we have legacy peripherals as well and they are serviced by PDMA
+>>>> (which is a native peripheral designed to talk to the given legacy IP).
+>>>> We can use either packet or TR mode in UDMAP to talk to PDMAs, it is in
+>>>> most cases clear what to use, but for example for audio (McASP) channels
+>>>> Linux is using TR channel because we need cyclic DMA while for example
+>>>> RTOS is using Packet mode as it fits their needs better.
+>>>>
+>>>> Here I need to prefix the udma-mode with linux as the mode is used by
+>>>> Linux, but other OS might opt to use different channel mode.
+>>>
+>>> So you'd need <os>,udma-mode? That doesn't work... If the setting is
+>>> per OS, then it belongs in the OS because the same dtb should work
+>>> across OS's.
+>>
+>> So I should have a table for the thread IDs in the DMA driver and mark
+>> channels as TR or Packet in there for Linux use?
+> 
+> Perhaps. I haven't heard any reasons why you need this in DT. If Linux
+> is dictating the modes, then sounds like it should be in Linux.
+> 
+> But really, I don't fully understand what you are doing here to tell
+> you what to do beyond using 'linux' prefix is wrong.
 
------BEGIN PGP SIGNATURE-----
+We have certain peripherals (McASP/UART/McSPI/etc) which is serviced by
+PDMAs to be compatible with the data movement architecture implemented
+within NAVSS.
+Unlike native peripherals, like networking we can configure the UDMAP
+channel to either Packet or TR mode. There are differences between the
+two modes, but the job can be done in both modes.
+In Linux we use TR mode for audio channels as it provides the needed
+functionality we need (efficient cyclic mode, can disable interrupts).
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0LSAwACgkQ3SOs138+
-s6FiOhAAu0+Kphi5/85mxAbW9vW4ealuleXGpCh6n/u6+yEX23t2UBjioPLCsr8F
-wfq+mVEfaM3mr7Ew7T6Gq9T0CdNTGvj1Ou/9vUMbHYpgaOgA7ut6jVywG6YP13Jd
-vmjmBmxiFRn2Cs0jFTIwyTOyBMZv5fccj1xQnMd6t8H5L8b3qkAvFwL0vxyjIdDe
-L3ZMRbcEwfF58pHzW6YuiLCuBGJbfUTmwaoDQ5lQ6wYJ3QoJCjWeEGHm8olOB6wB
-8HeFyL6So6wNw+XL4qZKYa4DsLqCZa8B5vK+HueJPKyD6LPBLFEimv17/AN5HB0R
-fsFNumbmESGJD9+mJdMRjed3UeDAA/BXOIJz1DYTzOmTAR9jwUu0qQX8MRBHwpMS
-fFf2COh2/Eaf2Sek8jaRk6RYX9SloCI1dUdN2HBc6KDRKGmNx/oHWuVLfXYMaeeY
-STw9qtnWf2VeOEl7GLlzfIhjtoyWuqQbISom0mV6ok8a64QOTyxwVGe4JBIZdzz6
-S3+2koUNvyeU2EjylFsloY2SH6Eu4Gnlv0eoAj+cAukQRYEPsVyNE7tZbsJXcjll
-PUEeLc44bXdLqUBsr7QunwTLa1dpVFiWfluXQlWpxdPmTV0ozL6fwPs+WO88dvbm
-EKGrvcYmYORUbvHCb5tiK0SsTcYrJQVtRXwNv+KqZGHGQxbrj4g=
-=ukxb
------END PGP SIGNATURE-----
+There is no information from the HW on how a given thread is best used
+and other OSs can opt for not optimal use.
 
---a8Wt8u1KmwUX3Y2C--
+But the majority of threads are better served in Packet mode, so adding
+a bool flag to the thread configuration to indicate that TR mode is the
+advised mode for it is perfectly fine.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

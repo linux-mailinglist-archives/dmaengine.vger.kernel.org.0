@@ -2,216 +2,68 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F3C84E26A
-	for <lists+dmaengine@lfdr.de>; Fri, 21 Jun 2019 10:56:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 694044E27D
+	for <lists+dmaengine@lfdr.de>; Fri, 21 Jun 2019 11:01:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbfFUI4U (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 21 Jun 2019 04:56:20 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:55798 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726055AbfFUI4U (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 21 Jun 2019 04:56:20 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost1.synopsys.com [10.12.135.161])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C4D26C0D8B;
-        Fri, 21 Jun 2019 08:56:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1561107379; bh=y4jFMX9zXKoUY/cJikS8dHzXC920sQk+dwBtcC7I73s=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=KFMSqtY8gffwYE8mvfTn+UqOuhR9rm9X+84J+FVFzs5bZ0udgiM3Vpq3vnleZvPi0
-         M1Y0COVZ80TNMZxsuUTuCe7sFO/ttzBuUhIUJF0KyDB9aq6miH6ospO95s/W6/Sleb
-         OyEi0VVPtjvf2Onxa23h0ngnQBHsOJGAjv2wSMhRu+h1WcIB8Tb6jqxL0YG/Lx9T4F
-         KkBRqr+2Mi0gTneT1Khvcv7xFL2z+/m2hKRS+8Fky4XIV2RF375nvo2wgsR7P79VKm
-         lDyfJimPihefrdleacT9U5LY5OHaJxsVKAZgTrZFofvAmE8gCUVMvnMAPSC+Kur9H+
-         5s3vGDG+fi8tA==
-Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id B3E16A008B;
-        Fri, 21 Jun 2019 08:56:19 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- us01wehtc1.internal.synopsys.com (10.12.239.231) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 21 Jun 2019 01:56:19 -0700
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 21 Jun 2019 01:56:19 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y4jFMX9zXKoUY/cJikS8dHzXC920sQk+dwBtcC7I73s=;
- b=H/7YTtkUS5UkuJAlFcMDhCyXR/TY+qwTv6pr9CzzyjnoIeDni67PvdBtI4rZYpqMlFO3njedwFpJNAUjKEsEp+KEJxmyM07BGYYezqI1DwMIxIvxjvF1AEmkChaw5wZQfTf7fArsLxdnfTuC2SzPXhR4AQxKH9QkRnmSbjlZ9sQ=
-Received: from DM6PR12MB4010.namprd12.prod.outlook.com (10.255.175.83) by
- DM6PR12MB3306.namprd12.prod.outlook.com (20.179.106.94) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Fri, 21 Jun 2019 08:56:17 +0000
-Received: from DM6PR12MB4010.namprd12.prod.outlook.com
- ([fe80::bdd6:53d6:a062:dc8c]) by DM6PR12MB4010.namprd12.prod.outlook.com
- ([fe80::bdd6:53d6:a062:dc8c%6]) with mapi id 15.20.1987.014; Fri, 21 Jun 2019
- 08:56:17 +0000
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-CC:     Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vkoul@kernel.org>,
+        id S1726229AbfFUJBX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 21 Jun 2019 05:01:23 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:40784 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfFUJBW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 21 Jun 2019 05:01:22 -0400
+Received: by mail-qt1-f195.google.com with SMTP id a15so6150365qtn.7;
+        Fri, 21 Jun 2019 02:01:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4HzRDcacmGtqmGfE244Fy6uOAK8PIsDaZn0yNCgG68w=;
+        b=WC4ldDEqh98+jAK2BHEm6qqEMG9dtnaGvDu3ntwspsgB00CmgLUBlCt7EDfZd2KOMy
+         ap8r+bTKn2gTmbE5DVHCYrIIZCAkxSvZz8wcj28ckx/Xj35J0u8KcqSmAPnCMnjX+EH4
+         6eDgOJZJ58IpRi8JKwcXX81iA1ZvLQKPmoqZBYo697zFqkHZmSOvi2yISRyz0f5iZDfT
+         ts1wzluzC77gTqvHrNNY80yLsaW+11DwID26tNFBOEcrFOFe1Rbu4udL/dxmgoCrAG56
+         1Uhv96QUXp15dlQG+7w78hS3LnSucMLMVznZSFKExvKF8mVxsO4G3XOIq/btiADuX6+Q
+         DfIg==
+X-Gm-Message-State: APjAAAUj8xhDtmMArrAMdIJKN82uVEBzoyfuVhhy3qo0RYPVDG0VWgM3
+        YdWty6fteiMjYnl3s/S/QtJvvsRZdLqCi6VAIb8=
+X-Google-Smtp-Source: APXvYqz2Q7BuEoztoQTk2y/k79111s2N2dTh7un3E/p/9yKUTVgU6nYSZUxZoOhohB0/YOF1w6kvgu0HzqpoPMsRoUY=
+X-Received: by 2002:aed:33a4:: with SMTP id v33mr81342975qtd.18.1561107681874;
+ Fri, 21 Jun 2019 02:01:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190617131918.2518727-1-arnd@arndb.de> <DM6PR12MB401058325016417472CD5717DAE70@DM6PR12MB4010.namprd12.prod.outlook.com>
+In-Reply-To: <DM6PR12MB401058325016417472CD5717DAE70@DM6PR12MB4010.namprd12.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 21 Jun 2019 11:01:01 +0200
+Message-ID: <CAK8P3a1qhj_YYTo8aKgbdufjMFXfa3WNdqY6m=222fFxOcQaZg@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: dw-edma: fix __iomem type confusion
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Russell King <rmk+kernel@armlinux.org.uk>,
         Joao Pinto <Joao.Pinto@synopsys.com>,
         "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] dmaengine: dw-edma: fix endianess confusion
-Thread-Topic: [PATCH] dmaengine: dw-edma: fix endianess confusion
-Thread-Index: AQHVJQ89RjU0Q02eek2npY11LTCshKalytvggAAH+4CAAAD2wA==
-Date:   Fri, 21 Jun 2019 08:56:17 +0000
-Message-ID: <DM6PR12MB4010CB716D017141D1BE5545DAE70@DM6PR12MB4010.namprd12.prod.outlook.com>
-References: <20190617131820.2470686-1-arnd@arndb.de>
- <DM6PR12MB40101798EDD46EF4B8E0E0E1DAE70@DM6PR12MB4010.namprd12.prod.outlook.com>
- <CAHp75Vf_1QT1ozhw=bsLwOERSg501DFK2U9OMQ4y95GN+VayEQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vf_1QT1ozhw=bsLwOERSg501DFK2U9OMQ4y95GN+VayEQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
- =?utf-8?B?bk5jWjNWemRHRjJiMXhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
- =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
- =?utf-8?B?Y2JYTm5MVFpqWXpReFl6STBMVGswTURJdE1URmxPUzA1T0RnMUxXWTRPVFJq?=
- =?utf-8?B?TWpjek9EQTBNbHhoYldVdGRHVnpkRncyWTJNME1XTXlOaTA1TkRBeUxURXha?=
- =?utf-8?B?VGt0T1RnNE5TMW1PRGswWXpJM016Z3dOREppYjJSNUxuUjRkQ0lnYzNvOUlq?=
- =?utf-8?B?WXpOeUlnZEQwaU1UTXlNRFUxT0RBNU56VTNNek0yTXpFNElpQm9QU0owZG1O?=
- =?utf-8?B?UmNYbEpibVo2T0ZGeU5YaDJXa1YyZVVwck0wNDFNbk05SWlCcFpEMGlJaUJp?=
- =?utf-8?B?YkQwaU1DSWdZbTg5SWpFaUlHTnBQU0pqUVVGQlFVVlNTRlV4VWxOU1ZVWk9R?=
- =?utf-8?B?MmRWUVVGQ1VVcEJRVVFyTUdoM2RrUjVhbFpCWTA1S1VWQkZhU3R3Y0hCM01H?=
- =?utf-8?B?eEJPRk5NTm0xdGEwOUJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlNFRkJRVUZEYTBOQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UlVGQlVVRkNRVUZCUVVaMFlrSndkMEZCUVVGQlFVRkJRVUZCUVVGQlFVbzBR?=
- =?utf-8?B?VUZCUW0xQlIydEJZbWRDYUVGSE5FRlpkMEpzUVVZNFFXTkJRbk5CUjBWQllt?=
- =?utf-8?B?ZENkVUZIYTBGaVowSnVRVVk0UVdSM1FtaEJTRkZCV2xGQ2VVRkhNRUZaVVVK?=
- =?utf-8?B?NVFVZHpRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdk?=
- =?utf-8?B?QlFVRkJRVUZ1WjBGQlFVZFpRV0ozUWpGQlJ6UkJXa0ZDZVVGSWEwRllkMEoz?=
- =?utf-8?B?UVVkRlFXTm5RakJCUnpSQldsRkNlVUZJVFVGWWQwSnVRVWRaUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVTkJRVUZCUVVGRFpVRkJRVUZhWjBKMlFVaFZRV0puUW10QlNF?=
- =?utf-8?B?bEJaVkZDWmtGSVFVRlpVVUo1UVVoUlFXSm5RbXhCU0VsQlkzZENaa0ZJVFVG?=
- =?utf-8?B?WlVVSjBRVWhOUVdSUlFuVkJSMk5CV0hkQ2FrRkhPRUZpWjBKdFFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRa0ZCUVVGQlFVRkJRVUZKUVVGQlFVRkJTalJCUVVGQ2JVRkhPRUZr?=
- =?utf-8?B?VVVKMVFVZFJRV05uUWpWQlJqaEJZMEZDYUVGSVNVRmtRVUoxUVVkVlFXTm5R?=
- =?utf-8?B?bnBCUmpoQlkzZENhRUZITUVGamQwSXhRVWMwUVZwM1FtWkJTRWxCV2xGQ2Vr?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVWQlFVRkJRVUZCUVVGQlowRkJRVUZCUVc1blFV?=
- =?utf-8?B?RkJSMWxCWW5kQ01VRkhORUZhUVVKNVFVaHJRVmgzUW5kQlIwVkJZMmRDTUVG?=
- =?utf-8?B?SE5FRmFVVUo1UVVoTlFWaDNRbnBCUnpCQllWRkNha0ZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRlJRVUZCUVVGQlFVRkJRMEZC?=
- =?utf-8?B?UVVGQlFVTmxRVUZCUVZwblFuWkJTRlZCWW1kQ2EwRklTVUZsVVVKbVFVaEJR?=
- =?utf-8?B?VmxSUW5sQlNGRkJZbWRDYkVGSVNVRmpkMEptUVVoTlFXUkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZDUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVsQlFVRkJRVUZLTkVGQlFVSnRRVWM0UVdSUlFuVkJSMUZCWTJk?=
- =?utf-8?B?Q05VRkdPRUZqUVVKb1FVaEpRV1JCUW5WQlIxVkJZMmRDZWtGR09FRmtRVUo2?=
- =?utf-8?B?UVVjd1FWbDNRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlJVRkJRVUZCUVVGQlFVRm5RVUZCUVVGQmJtZEJRVUZIV1VGaWQwSXhR?=
- =?utf-8?B?VWMwUVZwQlFubEJTR3RCV0hkQ2QwRkhSVUZqWjBJd1FVYzBRVnBSUW5sQlNF?=
- =?utf-8?B?MUJXSGRDTVVGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVkZCUVVGQlFVRkJRVUZEUVVGQlFVRkJRMlZCUVVG?=
- =?utf-8?B?QlduZENNRUZJVFVGWWQwSjNRVWhKUVdKM1FtdEJTRlZCV1hkQ01FRkdPRUZr?=
- =?utf-8?B?UVVKNVFVZEZRV0ZSUW5WQlIydEJZbWRDYmtGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVKQlFVRkJRVUZCUVVGQlNVRkJR?=
- =?utf-8?B?VUZCUVVvMFFVRkJRbnBCUjBWQllrRkNiRUZJVFVGWWQwSm9RVWROUVZsM1Fu?=
- =?utf-8?B?WkJTRlZCWW1kQ01FRkdPRUZqUVVKelFVZEZRV0puUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkZRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRV2RCUVVGQlFVRnVaMEZCUVVoTlFWbFJRbk5CUjFWQlkzZENaa0ZJ?=
- =?utf-8?B?UlVGa1VVSjJRVWhSUVZwUlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCVVVGQlFVRkJRVUZCUVVOQlFVRkJRVUZEWlVGQlFVRmpkMEoxUVVoQlFX?=
- =?utf-8?B?TjNRbVpCUjNkQllWRkNha0ZIVlVGaVowSjZRVWRWUVZoM1FqQkJSMVZCWTJk?=
- =?utf-8?B?Q2RFRkdPRUZOVVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFrRkJRVUZCUVVGQlFVRkpRVUZCUVVGQlNqUkJRVUZD?=
- =?utf-8?B?ZWtGSE5FRmpRVUo2UVVZNFFXSkJRbkJCUjAxQldsRkNkVUZJVFVGYVVVSm1R?=
- =?utf-8?B?VWhSUVZwUlFubEJSekJCV0hkQ2VrRklVVUZrVVVKclFVZFZRV0puUWpCQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVVZCUVVGQlFVRkJRVUZCWjBGQlFV?=
- =?utf-8?B?RkJRVzVuUVVGQlNGbEJXbmRDWmtGSGMwRmFVVUkxUVVoalFXSjNRbmxCUjFG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGUlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlEwRkJRVUZCUVVFOUlpOCtQQzl0WlhSaFBnPT0=?=
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=gustavo@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cf9efb4d-8097-4f5f-81f5-08d6f62652ac
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR12MB3306;
-x-ms-traffictypediagnostic: DM6PR12MB3306:
-x-microsoft-antispam-prvs: <DM6PR12MB3306BF3C3949D541AA0234B4DAE70@DM6PR12MB3306.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2201;
-x-forefront-prvs: 0075CB064E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(39860400002)(396003)(366004)(376002)(199004)(189003)(76176011)(6636002)(7696005)(26005)(102836004)(186003)(53546011)(6506007)(2906002)(99286004)(53936002)(476003)(55016002)(9686003)(486006)(6246003)(446003)(11346002)(478600001)(68736007)(33656002)(25786009)(66066001)(256004)(71190400001)(4326008)(71200400001)(3846002)(5660300002)(6116002)(8936002)(52536014)(14454004)(4744005)(8676002)(81166006)(81156014)(6436002)(316002)(66946007)(305945005)(66476007)(66556008)(64756008)(66446008)(7736002)(76116006)(73956011)(229853002)(86362001)(110136005)(54906003)(74316002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR12MB3306;H:DM6PR12MB4010.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wzHZPBnsK7l/V/bgooRlIpz+DhatCi06BwQ1rEqOLVEiN7nTTuhzs/+tjA76J52itCzaesdO81rf0n8+NgYEqN2Fov+WJ+CfqiIZTxT5nPB1nUGScecmtN/109E1cRhmFtW6pKclaEPgmUMhh6dLONw0LMiqIxUF71pkbA0yWzd2H8rw8lQCXj2aJMd7IlDJlSjUsnivKLGySwnKc8VW113xuK3QDhJt762Wz4l2lg6d0i7T6aSKGSbj50/1yOiSmI0aOpx6T8VNWx/cNfIBfFtI67+SwMA9A/zfV786MedNseV4WHTMFNXNyMfb8qqysZ/nQMF2dSQvwuHRQrFMnhzU9QR7rxD3viYoOi2yD9S5xTTVH+45/4mZwCzok45fhzQjg4KWePyzEm3wuI272iA4h9r9uvWuoLhT2cuxmVE=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf9efb4d-8097-4f5f-81f5-08d6f62652ac
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jun 2019 08:56:17.4531
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gustavo@synopsys.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3306
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-T24gRnJpLCBKdW4gMjEsIDIwMTkgYXQgOTo1MToxMywgQW5keSBTaGV2Y2hlbmtvIA0KPGFuZHku
-c2hldmNoZW5rb0BnbWFpbC5jb20+IHdyb3RlOg0KDQo+IE9uIEZyaSwgSnVuIDIxLCAyMDE5IGF0
-IDExOjQzIEFNIEd1c3Rhdm8gUGltZW50ZWwNCj4gPEd1c3Rhdm8uUGltZW50ZWxAc3lub3BzeXMu
-Y29tPiB3cm90ZToNCj4gPg0KPiA+IEhpLA0KPiA+DQo+ID4gT24gTW9uLCBKdW4gMTcsIDIwMTkg
-YXQgMTQ6MTc6NDcsIEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+IHdyb3RlOg0KPiA+DQo+
-ID4gPiBXaGVuIGJ1aWxkaW5nIHdpdGggJ21ha2UgQz0xJywgc3BhcnNlIHJlcG9ydHMgYW4gZW5k
-aWFuZXNzIGJ1ZzoNCj4gPg0KPiA+IEkgZGlkbid0IGtub3cgdGhhdCBvcHRpb24uDQo+IA0KPiBB
-bmQgQ0Y9Ii1EX19DSEVDS19FTkRJQU5fXyIgaXMgdXNlZnVsLg0KDQpDb29sLCBJIHdpbGwgYWRk
-IGl0IHRvIG15IHBlcnNvbmFsIG5vdGVzLg0KVGhhbmtzLg0KDQo+IA0KPiANCj4gLS0gDQo+IFdp
-dGggQmVzdCBSZWdhcmRzLA0KPiBBbmR5IFNoZXZjaGVua28NCg0KDQo=
+On Fri, Jun 21, 2019 at 10:53 AM Gustavo Pimentel
+<Gustavo.Pimentel@synopsys.com> wrote:
+
+> >
+> >  static struct dentry                         *base_dir;
+> >  static struct dw_edma                                *dw;
+> > -static struct dw_edma_v0_regs                        *regs;
+> > +static struct dw_edma_v0_regs                        __iomem *regs;
+>
+> Shouldn't the __iomem be next to dw_edma_v0_regs instead of the variable
+> name? I saw other drivers putting the __iomem next to the variable type,
+> therefore I assume it's the typical coding style.
+
+Yes, that seems more common indeed. Do you want to fix up
+both patches yourself when you apply them or should I send a new version?
+
+         Arnd

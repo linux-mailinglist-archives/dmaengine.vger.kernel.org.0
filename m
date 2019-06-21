@@ -2,40 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 694044E27D
-	for <lists+dmaengine@lfdr.de>; Fri, 21 Jun 2019 11:01:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7B5D4E2A1
+	for <lists+dmaengine@lfdr.de>; Fri, 21 Jun 2019 11:05:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbfFUJBX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 21 Jun 2019 05:01:23 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40784 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbfFUJBW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 21 Jun 2019 05:01:22 -0400
-Received: by mail-qt1-f195.google.com with SMTP id a15so6150365qtn.7;
-        Fri, 21 Jun 2019 02:01:22 -0700 (PDT)
+        id S1726210AbfFUJFc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 21 Jun 2019 05:05:32 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36236 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbfFUJFb (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 21 Jun 2019 05:05:31 -0400
+Received: by mail-qt1-f196.google.com with SMTP id p15so6180380qtl.3;
+        Fri, 21 Jun 2019 02:05:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4HzRDcacmGtqmGfE244Fy6uOAK8PIsDaZn0yNCgG68w=;
-        b=WC4ldDEqh98+jAK2BHEm6qqEMG9dtnaGvDu3ntwspsgB00CmgLUBlCt7EDfZd2KOMy
-         ap8r+bTKn2gTmbE5DVHCYrIIZCAkxSvZz8wcj28ckx/Xj35J0u8KcqSmAPnCMnjX+EH4
-         6eDgOJZJ58IpRi8JKwcXX81iA1ZvLQKPmoqZBYo697zFqkHZmSOvi2yISRyz0f5iZDfT
-         ts1wzluzC77gTqvHrNNY80yLsaW+11DwID26tNFBOEcrFOFe1Rbu4udL/dxmgoCrAG56
-         1Uhv96QUXp15dlQG+7w78hS3LnSucMLMVznZSFKExvKF8mVxsO4G3XOIq/btiADuX6+Q
-         DfIg==
-X-Gm-Message-State: APjAAAUj8xhDtmMArrAMdIJKN82uVEBzoyfuVhhy3qo0RYPVDG0VWgM3
-        YdWty6fteiMjYnl3s/S/QtJvvsRZdLqCi6VAIb8=
-X-Google-Smtp-Source: APXvYqz2Q7BuEoztoQTk2y/k79111s2N2dTh7un3E/p/9yKUTVgU6nYSZUxZoOhohB0/YOF1w6kvgu0HzqpoPMsRoUY=
-X-Received: by 2002:aed:33a4:: with SMTP id v33mr81342975qtd.18.1561107681874;
- Fri, 21 Jun 2019 02:01:21 -0700 (PDT)
+        bh=Rkv6dR4XChzJp8kYVDvffLCfz79gLMFodiv/FkuPCHo=;
+        b=ccVbStD9tyO3+C1twcHrXk0egE6qV2DMij8IdX96NNcaZcILA96aqPrYXjugNJSh5O
+         ovEBYhv35cfGEV34rcWO08eor7iAKVKkrg2Er74B3jCzrTMckz/bx2YHmX1HUpwLPYfJ
+         eIy2+ZBzHhMGsvIJ6qY9oyFUyLYgUixJcSiV/j8b/J8o7xMEoB1iRvXmcqb/bgH8LXNZ
+         JWvvyHI5CoCKO5eI9xezyBeVxz5actzXVpUJJMED2ERdh9eLXs5sYVGxTa3kw2YnmNaP
+         O2VteMpejKWwhQTRumbmYwHXDbdRpJBa0NcNHsFqYOgGOIxidGX6LaD9zrM+jKS+huku
+         pBhA==
+X-Gm-Message-State: APjAAAWyHirpTmzAORzvm26fB1iv9+uOJESG3oSweWXETV+seiwMFm3e
+        PeXtdHUm1UqsJkHqTacBCykJ3YtCH8BA51whsaE=
+X-Google-Smtp-Source: APXvYqz8oB8js3MFpU1LemL9NrKFA9/41AtXa205Aml2EuvOo6htfjU6IQxIIqjYmg1tvCkFvW13HUVFLknycA1Gfps=
+X-Received: by 2002:aed:33a4:: with SMTP id v33mr81359991qtd.18.1561107930740;
+ Fri, 21 Jun 2019 02:05:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190617131918.2518727-1-arnd@arndb.de> <DM6PR12MB401058325016417472CD5717DAE70@DM6PR12MB4010.namprd12.prod.outlook.com>
-In-Reply-To: <DM6PR12MB401058325016417472CD5717DAE70@DM6PR12MB4010.namprd12.prod.outlook.com>
+References: <20190617131733.2429469-1-arnd@arndb.de> <DM6PR12MB401006CA0446C71E36786E75DAE70@DM6PR12MB4010.namprd12.prod.outlook.com>
+In-Reply-To: <DM6PR12MB401006CA0446C71E36786E75DAE70@DM6PR12MB4010.namprd12.prod.outlook.com>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 21 Jun 2019 11:01:01 +0200
-Message-ID: <CAK8P3a1qhj_YYTo8aKgbdufjMFXfa3WNdqY6m=222fFxOcQaZg@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: dw-edma: fix __iomem type confusion
+Date:   Fri, 21 Jun 2019 11:05:11 +0200
+Message-ID: <CAK8P3a3TE2hu=gjyf5gVj3HufVacFSoc4WjOVpgP3bz0LBbGKQ@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: dw-edma: fix unnecessary stack usage
 To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
 Cc:     Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
@@ -50,20 +50,26 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Jun 21, 2019 at 10:53 AM Gustavo Pimentel
+On Fri, Jun 21, 2019 at 10:21 AM Gustavo Pimentel
 <Gustavo.Pimentel@synopsys.com> wrote:
 
-> >
-> >  static struct dentry                         *base_dir;
-> >  static struct dw_edma                                *dw;
-> > -static struct dw_edma_v0_regs                        *regs;
-> > +static struct dw_edma_v0_regs                        __iomem *regs;
+> On Mon, Jun 17, 2019 at 14:16:45, Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> Shouldn't the __iomem be next to dw_edma_v0_regs instead of the variable
-> name? I saw other drivers putting the __iomem next to the variable type,
-> therefore I assume it's the typical coding style.
+> > Putting large constant data on the stack causes unnecessary overhead
+> > and stack usage:
+> >
+> > drivers/dma/dw-edma/dw-edma-v0-debugfs.c:285:6: error: stack frame size of 1376 bytes in function 'dw_edma_v0_debugfs_on' [-Werror,-Wframe-larger-than=]
+>
+> I had that warning at the beginning of the development, that's why I
+> divided the debugfs entries into several subfunctions. Perhaps my
+> configuration has configured a bigger stack frame size than your
+> configuration.
 
-Yes, that seems more common indeed. Do you want to fix up
-both patches yourself when you apply them or should I send a new version?
+I suspect the problem is CONFIG_GCC_PLUGIN_STRUCTLEAK_VERBOSE,
+which is a farily new configuration option that has the unintended side-effect
+of sometimes preventing the compiler combining local variables from functions
+inlined into the caller. Adding 'noinline_for_stack' to the sub-functions would
+have also prevented this, but I think just not having the strings on the
+stack is better anyway.
 
-         Arnd
+        Arnd

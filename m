@@ -2,88 +2,108 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF86750B29
-	for <lists+dmaengine@lfdr.de>; Mon, 24 Jun 2019 14:54:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 128C350C61
+	for <lists+dmaengine@lfdr.de>; Mon, 24 Jun 2019 15:50:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbfFXMyV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 24 Jun 2019 08:54:21 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41589 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbfFXMyU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Jun 2019 08:54:20 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 205so3709497ljj.8;
-        Mon, 24 Jun 2019 05:54:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M1JNblMWL1UJydhDaOs1aVCdSHO2vHTNXrcJ9XfhOto=;
-        b=AF5vIQ5Hupi4FNbYV2kGV4xOfPM3ulb1rRfQmWbQr5Ro3xoofZZge6mAwUVep7f04h
-         /9FnvWP2O/GiGuxuwAZJhBpJA5eCAYuWnE6JM1h9Mydqpx3uq2jO4H2Q/EhATGLw99rr
-         /evcrL2KspOCo2UH1DdmLLcq+cxtf/djSMri+5kZ8VQBwzLSkNSq+xeKjTyqOZdiXfxc
-         r7o3AvgfaaVBwj1Ewen5q35C2XNx35g5Z0w02AsEl4AKF3ApiuaxkR3CZP6OicvK6W0d
-         2mJj38Ma8R9/lqAYOF7uVILk7S17rUzrizWUxPtSHJeoO9fFXPVN2JW2YOEjFiRE9GIJ
-         q9gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M1JNblMWL1UJydhDaOs1aVCdSHO2vHTNXrcJ9XfhOto=;
-        b=k0Ckf6fhWCxjwQ+yHPQU2IWPoRn23kYbXVpDM0PNI8oxff0DH8OTk0HTTXAxdS2MMG
-         wZ+u3KtOOocM7l/HVJxOu1CA+HtGd0VY12+1wui9dJOe4i14jsIDifwhtp6zpW3REegv
-         XKSwEf1L1sedJTmO6wGpRB+iPhfE9jDgFp5RK5NivK7Utu8gQLJi1xqjuy46YJ0vLhxW
-         oKhWFn/IBqtuCuQojsCzg4O8qN+QVfr8LfIswf90nwQQ2ctYuzX8GEbFBVgv6GpNC2ux
-         c47Wds28JMkuIwcxgdQXnC1tL9cJfVAMdFlvzjFJ4MCYili3GfBP0Nmf5sqQMxW9ufBN
-         +rXw==
-X-Gm-Message-State: APjAAAUkZbs0mtGWAoHUwPLbiKn+Uex1WofVWeNI856X1z4/buXpfDZs
-        R0mDUDbRljIx1CESGTj3yKO0yRNR7rJkM8/clVg=
-X-Google-Smtp-Source: APXvYqx12fSqGEeTpRklsnlLBWi1B3OZsYNSLqkKkR4XEAv5A7APelVbsgnk/wQ5UP1qlBs2AcU4EovI5OPGe+uwOqM=
-X-Received: by 2002:a2e:7d03:: with SMTP id y3mr34782350ljc.240.1561380858632;
- Mon, 24 Jun 2019 05:54:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190621082306.34415-1-yibin.gong@nxp.com>
-In-Reply-To: <20190621082306.34415-1-yibin.gong@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 24 Jun 2019 09:54:40 -0300
-Message-ID: <CAOMZO5B+uXF=1WTPsA-9LrmtTF0Q0s7Fipwtd1nkWSgr3ec25w@mail.gmail.com>
-Subject: Re: [PATCH v2] dmaengine: imx-sdma: remove BD_INTR for channel0
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Vinod <vkoul@kernel.org>,
+        id S1730189AbfFXNuT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 24 Jun 2019 09:50:19 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:33108 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731346AbfFXNuS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Jun 2019 09:50:18 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ODnJLY183689;
+        Mon, 24 Jun 2019 13:49:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
+ bh=VzFjbN80m/KS7QJTT9HnF1kNBWl2jZh8kiE34VZK/n4=;
+ b=g7iSod1xfT4Y1f3EQiqikJ5APoIwdZgrvbUIeZ/WUPAvUGkrX0RGSPoV0jr0hO6fT+H3
+ jM+r361lrlCwyjvbLGtgFb2cHZQh5BBp/HX3TXvRKfVln+7FkFkLUGDiQ0aO6LFPfRvm
+ S9zz7lAy2JwnUmOeJ2z6uAV7qZ1jO3smkNmY8q+RH+hoU48x4vRJHWgpT6PiI4rVo5ny
+ goae6/kfhNjpIxxRIqCQVX5fi3BCA3pLEuW0eYxlR44hI/0xpHtAA1Ep+HNY/2yIhll3
+ 236nQFfWIrzJj/Rr2d6IvOWOvLQaEwgn4+/pwPNTZ2Y7OWzE4AkM3VKG+m604biE25mk /Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2t9brsxjd6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 13:49:51 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ODnMWU113398;
+        Mon, 24 Jun 2019 13:49:51 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2tat7bn74c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Jun 2019 13:49:51 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5ODnltl013483;
+        Mon, 24 Jun 2019 13:49:48 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Jun 2019 06:49:47 -0700
+Date:   Mon, 24 Jun 2019 16:49:40 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>,
+        Paul Cercueil <paul@crapouillou.net>
+Cc:     Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        Michael Olbrich <m.olbrich@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        stable <stable@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, dmaengine@vger.kernel.org,
-        Sascha Hauer <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+        dmaengine@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] dmaengine: jz4780: Fix an endian bug in IRQ handler
+Message-ID: <20190624134940.GC1754@mwanda>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=923
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906240113
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=974 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906240113
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Robin,
+The "pending" variable was a u32 but we cast it to an unsigned long
+pointer when we do the for_each_set_bit() loop.  The problem is that on
+big endian 64bit systems that results in an out of bounds read.
 
-On Fri, Jun 21, 2019 at 5:21 AM <yibin.gong@nxp.com> wrote:
->
-> From: Robin Gong <yibin.gong@nxp.com>
->
-> It is possible for an irq triggered by channel0 to be received later
-> after clks are disabled once firmware loaded during sdma probe. If
-> that happens then clearing them by writing to SDMA_H_INTR won't work
-> and the kernel will hang processing infinite interrupts. Actually,
-> don't need interrupt triggered on channel0 since it's pollling
-> SDMA_H_STATSTOP to know channel0 done rather than interrupt in
-> current code, just clear BD_INTR to disable channel0 interrupt to
-> avoid the above case.
-> This issue was brought by commit 1d069bfa3c78 ("dmaengine: imx-sdma:
-> ack channel 0 IRQ in the interrupt handler") which didn't take care
-> the above case.
->
-> Fixes: 1d069bfa3c78 ("dmaengine: imx-sdma: ack channel 0 IRQ in the interrupt handler")
-> Cc: stable@vger.kernel.org #5.0+
+Fixes: 4e4106f5e942 ("dmaengine: jz4780: Fix transfers being ACKed too soon")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+I don't know if this driver is ever used on a big endian 64 bit system,
+but the fix is pretty easy and it silences a static checker warning.
 
-This 5.0 notation does not look correct, as 1d069bfa3c78 was introduced in 4.10.
+Not tested.
+
+ drivers/dma/dma-jz4780.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index 77260a6f5178..dfd10fe3c9b3 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -717,12 +717,13 @@ static irqreturn_t jz4780_dma_irq_handler(int irq, void *data)
+ {
+ 	struct jz4780_dma_dev *jzdma = data;
+ 	unsigned int nb_channels = jzdma->soc_data->nb_channels;
+-	uint32_t pending, dmac;
++	unsigned long pending;
++	uint32_t dmac;
+ 	int i;
+ 
+ 	pending = jz4780_dma_ctrl_readl(jzdma, JZ_DMA_REG_DIRQP);
+ 
+-	for_each_set_bit(i, (unsigned long *)&pending, nb_channels) {
++	for_each_set_bit(i, &pending, nb_channels) {
+ 		if (jz4780_dma_chan_irq(jzdma, &jzdma->chan[i]))
+ 			pending &= ~BIT(i);
+ 	}
+-- 
+2.20.1
+

@@ -2,136 +2,88 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A9AE050B25
-	for <lists+dmaengine@lfdr.de>; Mon, 24 Jun 2019 14:52:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF86750B29
+	for <lists+dmaengine@lfdr.de>; Mon, 24 Jun 2019 14:54:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbfFXMwi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 24 Jun 2019 08:52:38 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37065 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbfFXMwi (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Jun 2019 08:52:38 -0400
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1hfOSW-0005Os-2s; Mon, 24 Jun 2019 14:52:32 +0200
-Message-ID: <1561380750.2587.5.camel@pengutronix.de>
-Subject: Re: [BUG] imx-sdma: readl_relaxed_poll_timeout_atomic() conversion
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Michael Olbrich <m.olbrich@pengutronix.de>,
-        Vinod Koul <vinod.koul@intel.com>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
-Date:   Mon, 24 Jun 2019 14:52:30 +0200
-In-Reply-To: <20190624121533.3sd6mmxjfktllp2j@shell.armlinux.org.uk>
-References: <20190622165318.bgyun52hssqmdv4n@shell.armlinux.org.uk>
-         <20190622181029.iy72xkz3xcomwjtl@pengutronix.de>
-         <20190622184237.ld7xwc5kk7sbghae@shell.armlinux.org.uk>
-         <1561378450.2587.3.camel@pengutronix.de>
-         <20190624121533.3sd6mmxjfktllp2j@shell.armlinux.org.uk>
+        id S1728400AbfFXMyV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 24 Jun 2019 08:54:21 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41589 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726740AbfFXMyU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Jun 2019 08:54:20 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 205so3709497ljj.8;
+        Mon, 24 Jun 2019 05:54:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M1JNblMWL1UJydhDaOs1aVCdSHO2vHTNXrcJ9XfhOto=;
+        b=AF5vIQ5Hupi4FNbYV2kGV4xOfPM3ulb1rRfQmWbQr5Ro3xoofZZge6mAwUVep7f04h
+         /9FnvWP2O/GiGuxuwAZJhBpJA5eCAYuWnE6JM1h9Mydqpx3uq2jO4H2Q/EhATGLw99rr
+         /evcrL2KspOCo2UH1DdmLLcq+cxtf/djSMri+5kZ8VQBwzLSkNSq+xeKjTyqOZdiXfxc
+         r7o3AvgfaaVBwj1Ewen5q35C2XNx35g5Z0w02AsEl4AKF3ApiuaxkR3CZP6OicvK6W0d
+         2mJj38Ma8R9/lqAYOF7uVILk7S17rUzrizWUxPtSHJeoO9fFXPVN2JW2YOEjFiRE9GIJ
+         q9gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M1JNblMWL1UJydhDaOs1aVCdSHO2vHTNXrcJ9XfhOto=;
+        b=k0Ckf6fhWCxjwQ+yHPQU2IWPoRn23kYbXVpDM0PNI8oxff0DH8OTk0HTTXAxdS2MMG
+         wZ+u3KtOOocM7l/HVJxOu1CA+HtGd0VY12+1wui9dJOe4i14jsIDifwhtp6zpW3REegv
+         XKSwEf1L1sedJTmO6wGpRB+iPhfE9jDgFp5RK5NivK7Utu8gQLJi1xqjuy46YJ0vLhxW
+         oKhWFn/IBqtuCuQojsCzg4O8qN+QVfr8LfIswf90nwQQ2ctYuzX8GEbFBVgv6GpNC2ux
+         c47Wds28JMkuIwcxgdQXnC1tL9cJfVAMdFlvzjFJ4MCYili3GfBP0Nmf5sqQMxW9ufBN
+         +rXw==
+X-Gm-Message-State: APjAAAUkZbs0mtGWAoHUwPLbiKn+Uex1WofVWeNI856X1z4/buXpfDZs
+        R0mDUDbRljIx1CESGTj3yKO0yRNR7rJkM8/clVg=
+X-Google-Smtp-Source: APXvYqx12fSqGEeTpRklsnlLBWi1B3OZsYNSLqkKkR4XEAv5A7APelVbsgnk/wQ5UP1qlBs2AcU4EovI5OPGe+uwOqM=
+X-Received: by 2002:a2e:7d03:: with SMTP id y3mr34782350ljc.240.1561380858632;
+ Mon, 24 Jun 2019 05:54:18 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190621082306.34415-1-yibin.gong@nxp.com>
+In-Reply-To: <20190621082306.34415-1-yibin.gong@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 24 Jun 2019 09:54:40 -0300
+Message-ID: <CAOMZO5B+uXF=1WTPsA-9LrmtTF0Q0s7Fipwtd1nkWSgr3ec25w@mail.gmail.com>
+Subject: Re: [PATCH v2] dmaengine: imx-sdma: remove BD_INTR for channel0
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Vinod <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sven Van Asbroeck <thesven73@gmail.com>,
+        Michael Olbrich <m.olbrich@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        stable <stable@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, dmaengine@vger.kernel.org,
+        Sascha Hauer <kernel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Am Montag, den 24.06.2019, 13:15 +0100 schrieb Russell King - ARM Linux admin:
-> On Mon, Jun 24, 2019 at 02:14:10PM +0200, Lucas Stach wrote:
-> > Hi Russell,
-> > 
-> > Am Samstag, den 22.06.2019, 19:42 +0100 schrieb Russell King - ARM Linux admin:
-> > > On Sat, Jun 22, 2019 at 08:10:29PM +0200, Michael Olbrich wrote:
-> > > > On Sat, Jun 22, 2019 at 05:53:18PM +0100, Russell King - ARM Linux admin wrote:
-> > > > > Old code:
-> > > > > 
-> > > > > -       while (!(ret = readl_relaxed(sdma->regs + SDMA_H_INTR) & 1)) {
-> > > > > -               if (timeout-- <= 0)
-> > > > > -                       break;
-> > > > > -               udelay(1);
-> > > > > -       }
-> > > > > 
-> > > > > So, while bit 0 is _clear_ the loop continues to poll.
-> > > > > 
-> > > > > 
-> > > > > New code:
-> > > > > 
-> > > > > +       ret = readl_relaxed_poll_timeout_atomic(sdma->regs + SDMA_H_STATSTOP,
-> > > > > +                                               reg, !(reg & 1), 1, 500);
-> > > > > 
-> > > > > Doesn't really tell us what the termination condition is (because of
-> > > > > the obfuscation taking away the details), but if we dig into the
-> > > > > macro maze:
-> > > > > 
-> > > > > #define readl_relaxed_poll_timeout_atomic(addr, val, cond, delay_us, timeout_us) \
-> > > > >         readx_poll_timeout_atomic(readl_relaxed, addr, val, cond, delay_us, timeout_us)
-> > > > > 
-> > > > > #define readx_poll_timeout_atomic(op, addr, val, cond, delay_us, timeout_us) \
-> > > > > ({ \
-> > > > >         u64 __timeout_us = (timeout_us); \
-> > > > >         unsigned long __delay_us = (delay_us); \
-> > > > >         ktime_t __timeout = ktime_add_us(ktime_get(), __timeout_us); \
-> > > > >         for (;;) { \
-> > > > >                 (val) = op(addr); \
-> > > > >                 if (cond) \
-> > > > >                         break; \
-> > > > > 
-> > > > > "cond" is passed in to here unmodified, so this becomes:
-> > > > > 
-> > > > > 	for (;;) {
-> > > > > > > > > > > > > > > > 		reg = readl_relaxed(sdma->regs + SDMA_H_STATSTOP);
-> > > > > > > > > > > > > > > > 		if (!(reg & 1))
-> > > > > > > > 			break;
-> > > > > 
-> > > > > So, if bit 0 of this register is clear, we terminate the loop.
-> > > > > 
-> > > > > Seems to me like this is a great illustration why using a helper
-> > > > > _introduces_ bugs, because it hides the detail about what the exit
-> > > > > condition for the embedded loop actually is, and leads to this kind
-> > > > > of error.
-> > > > > 
-> > > > > In any case, the conversion is obviously incorrect.
-> > > > > 
-> > > > > I occasionally see the "Timeout waiting for CH0 ready" error during
-> > > > > boot on a cbi4, which, given the above, means that we did end up
-> > > > > seeing bit 1 set (so according to the old code, we waited
-> > > > > successfully.)
-> > > > 
-> > > > The old code was polling SDMA_H_INTR so it waited for the bit to be set.
-> > > > The new code (as documented in the commit message) polls SDMA_H_STATSTOP
-> > > > instead.
-> > > > I believe this register is called SDMAARM_STOP_STAT in the reference
-> > > > manual. And the documentation states: "Reading this register yields the
-> > > > current state of the HE[i] bits".
-> > > > And from the documentation of the SDMA "DONE" instruction:
-> > > > "Clear HE bit for the current channel, send an interrupt to the Arm
-> > > > platform for the current channel and reschedule."
-> > > > 
-> > > > My interpretation of this is, that waiting for the bit in SDMA_H_STATSTOP
-> > > > to become zero has the same effect as waiting for the bit in SDMA_H_INTR to
-> > > > be set. Or am I missing something?
-> > > 
-> > > So, why do all my iMX6 platforms now randomly spit out:
-> > > 
-> > > "imx-sdma 20ec000.sdma: Timeout waiting for CH0 ready"
-> > 
-> > This is due to a DT misconfiguration which was uncovered with a recent
-> > driver change (25aaa75df1e6 dmaengine: imx-sdma: add clock ratio 1:1
-> > check) and fixed with (941acd566b18 dmaengine: imx-sdma: Only check
-> > ratio on parts that support 1:1). Please switch to a recent stable
-> > kernel, 5.1.5 has the fix included.
-> 
-> Please point to the fix, thanks.
+Hi Robin,
 
-As I stated above the fix is 941acd566b18 (dmaengine: imx-sdma: Only
-check ratio on parts that support 1:1), which is 40aab1990f71 in the
-5.1.y stable branch.
+On Fri, Jun 21, 2019 at 5:21 AM <yibin.gong@nxp.com> wrote:
+>
+> From: Robin Gong <yibin.gong@nxp.com>
+>
+> It is possible for an irq triggered by channel0 to be received later
+> after clks are disabled once firmware loaded during sdma probe. If
+> that happens then clearing them by writing to SDMA_H_INTR won't work
+> and the kernel will hang processing infinite interrupts. Actually,
+> don't need interrupt triggered on channel0 since it's pollling
+> SDMA_H_STATSTOP to know channel0 done rather than interrupt in
+> current code, just clear BD_INTR to disable channel0 interrupt to
+> avoid the above case.
+> This issue was brought by commit 1d069bfa3c78 ("dmaengine: imx-sdma:
+> ack channel 0 IRQ in the interrupt handler") which didn't take care
+> the above case.
+>
+> Fixes: 1d069bfa3c78 ("dmaengine: imx-sdma: ack channel 0 IRQ in the interrupt handler")
+> Cc: stable@vger.kernel.org #5.0+
 
-Regards,
-Lucas
+This 5.0 notation does not look correct, as 1d069bfa3c78 was introduced in 4.10.

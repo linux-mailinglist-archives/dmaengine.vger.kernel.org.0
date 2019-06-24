@@ -2,103 +2,127 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC7ED50A7E
-	for <lists+dmaengine@lfdr.de>; Mon, 24 Jun 2019 14:14:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF58650A80
+	for <lists+dmaengine@lfdr.de>; Mon, 24 Jun 2019 14:14:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbfFXMOI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 24 Jun 2019 08:14:08 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:56542 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727236AbfFXMOI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Jun 2019 08:14:08 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OC8heL098312;
-        Mon, 24 Jun 2019 12:14:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
- bh=2pncpQID3zd065oG9MJs6z2tLkTOWSaRkvK4wBC6qHs=;
- b=zJ0AQPvp+ZiUygbQyelbk8yr/wF2R7YrhEu/bhUizvCboProUCfoDQByIURAzEsWegay
- nmyc+WV69irJthf8qadpwK+n7Ofd3SetpgeTF8a3F34VWaYCONxdMCEqwxDIqA6IPN9Z
- P8bUIai4Tzit4ZYxVkZ42Nzrr4tJwOm8WIh5k0bOlNfcN2v7tw7tcgecQh+zL16/CkUO
- Hkc6vvSjX6CPd9krfeDHpwMwNQebvYSbFQfoxQfGrX6QVQj+KMjXwOsZkAXlE+c1Wyw2
- h0GUOHXE9/8RcEFAvxAnstilTJ6idgCIaK/uzQb6xWubFEgpBDUg6kpUYSIfkNrfdFpy aw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2t9brsx28u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 12:14:05 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5OCCebh011132;
-        Mon, 24 Jun 2019 12:14:04 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2t9p6tj490-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 12:14:04 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5OCE30u003396;
-        Mon, 24 Jun 2019 12:14:03 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Jun 2019 05:14:02 -0700
-Date:   Mon, 24 Jun 2019 15:13:57 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     dragos.bogdan@analog.com
-Cc:     dmaengine@vger.kernel.org
-Subject: [bug report] dmaengine: axi-dmac: Add support for interleaved cyclic
- transfers
-Message-ID: <20190624121357.GA29335@mwanda>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=515
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906240101
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=560 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906240101
+        id S1728372AbfFXMOY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 24 Jun 2019 08:14:24 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:56579 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727236AbfFXMOX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Jun 2019 08:14:23 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1hfNrQ-0000Tu-6o; Mon, 24 Jun 2019 14:14:12 +0200
+Message-ID: <1561378450.2587.3.camel@pengutronix.de>
+Subject: Re: [BUG] imx-sdma: readl_relaxed_poll_timeout_atomic() conversion
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Michael Olbrich <m.olbrich@pengutronix.de>
+Cc:     Vinod Koul <vinod.koul@intel.com>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
+Date:   Mon, 24 Jun 2019 14:14:10 +0200
+In-Reply-To: <20190622184237.ld7xwc5kk7sbghae@shell.armlinux.org.uk>
+References: <20190622165318.bgyun52hssqmdv4n@shell.armlinux.org.uk>
+         <20190622181029.iy72xkz3xcomwjtl@pengutronix.de>
+         <20190622184237.ld7xwc5kk7sbghae@shell.armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello Dragos Bogdan,
+Hi Russell,
 
-The patch 8add6cce9848: "dmaengine: axi-dmac: Add support for
-interleaved cyclic transfers" from May 16, 2019, leads to the
-following static checker warning:
+Am Samstag, den 22.06.2019, 19:42 +0100 schrieb Russell King - ARM Linux admin:
+> On Sat, Jun 22, 2019 at 08:10:29PM +0200, Michael Olbrich wrote:
+> > On Sat, Jun 22, 2019 at 05:53:18PM +0100, Russell King - ARM Linux admin wrote:
+> > > Old code:
+> > > 
+> > > -       while (!(ret = readl_relaxed(sdma->regs + SDMA_H_INTR) & 1)) {
+> > > -               if (timeout-- <= 0)
+> > > -                       break;
+> > > -               udelay(1);
+> > > -       }
+> > > 
+> > > So, while bit 0 is _clear_ the loop continues to poll.
+> > > 
+> > > 
+> > > New code:
+> > > 
+> > > +       ret = readl_relaxed_poll_timeout_atomic(sdma->regs + SDMA_H_STATSTOP,
+> > > +                                               reg, !(reg & 1), 1, 500);
+> > > 
+> > > Doesn't really tell us what the termination condition is (because of
+> > > the obfuscation taking away the details), but if we dig into the
+> > > macro maze:
+> > > 
+> > > #define readl_relaxed_poll_timeout_atomic(addr, val, cond, delay_us, timeout_us) \
+> > >         readx_poll_timeout_atomic(readl_relaxed, addr, val, cond, delay_us, timeout_us)
+> > > 
+> > > #define readx_poll_timeout_atomic(op, addr, val, cond, delay_us, timeout_us) \
+> > > ({ \
+> > >         u64 __timeout_us = (timeout_us); \
+> > >         unsigned long __delay_us = (delay_us); \
+> > >         ktime_t __timeout = ktime_add_us(ktime_get(), __timeout_us); \
+> > >         for (;;) { \
+> > >                 (val) = op(addr); \
+> > >                 if (cond) \
+> > >                         break; \
+> > > 
+> > > "cond" is passed in to here unmodified, so this becomes:
+> > > 
+> > > 	for (;;) {
+> > > > > > 		reg = readl_relaxed(sdma->regs + SDMA_H_STATSTOP);
+> > > > > > 		if (!(reg & 1))
+> > > > > > 			break;
+> > > 
+> > > So, if bit 0 of this register is clear, we terminate the loop.
+> > > 
+> > > Seems to me like this is a great illustration why using a helper
+> > > _introduces_ bugs, because it hides the detail about what the exit
+> > > condition for the embedded loop actually is, and leads to this kind
+> > > of error.
+> > > 
+> > > In any case, the conversion is obviously incorrect.
+> > > 
+> > > I occasionally see the "Timeout waiting for CH0 ready" error during
+> > > boot on a cbi4, which, given the above, means that we did end up
+> > > seeing bit 1 set (so according to the old code, we waited
+> > > successfully.)
+> > 
+> > The old code was polling SDMA_H_INTR so it waited for the bit to be set.
+> > The new code (as documented in the commit message) polls SDMA_H_STATSTOP
+> > instead.
+> > I believe this register is called SDMAARM_STOP_STAT in the reference
+> > manual. And the documentation states: "Reading this register yields the
+> > current state of the HE[i] bits".
+> > And from the documentation of the SDMA "DONE" instruction:
+> > "Clear HE bit for the current channel, send an interrupt to the Arm
+> > platform for the current channel and reschedule."
+> > 
+> > My interpretation of this is, that waiting for the bit in SDMA_H_STATSTOP
+> > to become zero has the same effect as waiting for the bit in SDMA_H_INTR to
+> > be set. Or am I missing something?
+> 
+> So, why do all my iMX6 platforms now randomly spit out:
+> 
+> "imx-sdma 20ec000.sdma: Timeout waiting for CH0 ready"
 
-	drivers/dma/dma-axi-dmac.c:666 axi_dmac_prep_interleaved()
-	warn: bit shifter 'DMA_CYCLIC' used for logical '&'
+This is due to a DT misconfiguration which was uncovered with a recent
+driver change (25aaa75df1e6 dmaengine: imx-sdma: add clock ratio 1:1
+check) and fixed with (941acd566b18 dmaengine: imx-sdma: Only check
+ratio on parts that support 1:1). Please switch to a recent stable
+kernel, 5.1.5 has the fix included.
 
-drivers/dma/dma-axi-dmac.c
-   658          if (chan->hw_2d) {
-   659                  desc->sg[0].x_len = xt->sgl[0].size;
-   660                  desc->sg[0].y_len = xt->numf;
-   661          } else {
-   662                  desc->sg[0].x_len = xt->sgl[0].size * xt->numf;
-   663                  desc->sg[0].y_len = 1;
-   664          }
-   665  
-   666          if (flags & DMA_CYCLIC)
-   667                  desc->cyclic = true;
+Regards,
+Lucas
 
-This won't work.  I think you have to use dma_has_cap() or test_bit() or
-something.  Or you could do:
-
-	if (flags & (1 << DMA_CYCLIC)) {
-
-DMA_CYCLIC is 0xb so this will return true for a bunch of stuff when it
-shouldn't.
-
-   668  
-   669          return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
-   670  }
-
-
-regards,
-dan carpenter

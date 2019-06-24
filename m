@@ -2,171 +2,149 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A32C650D40
-	for <lists+dmaengine@lfdr.de>; Mon, 24 Jun 2019 16:07:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F212518F6
+	for <lists+dmaengine@lfdr.de>; Mon, 24 Jun 2019 18:49:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727375AbfFXOHh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 24 Jun 2019 10:07:37 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41677 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbfFXOHh (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Jun 2019 10:07:37 -0400
-Received: by mail-io1-f67.google.com with SMTP id w25so1782245ioc.8;
-        Mon, 24 Jun 2019 07:07:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=03apFXZ4DhKsed7tdajOvwJKFsSf8Y4I5P3qFLjRkKo=;
-        b=I2Fo6XRAMMVOjvK9E4plBFmE6GbrgJNAzyqNah9iq40Vff1Sw1lpbcprdLQnGMx0eX
-         xlzZChXLaTQXOyI22/oiBXxsGauWHWJoqH9029TFw6qyRQcnIRC/gDVZYqeTZVO/9/ny
-         x/vHEcTt1jha1w58oRB6H9f2iJX0p/tSvZo5TIOk5x4NFIjQAn+nA1vNlrqf1DP3asNE
-         lAnhxpsOMxb1xsuRRPUjobmfukOlvQ1DETmQUIXj8Sq8l4vGUCHzAtmp75+gaGegyo1X
-         84V+T86qp0e3GuFTf6Z+v8yV8zgTzDwqZoLeNq0BOmMlLyJjTw/MySnlGVfPhXpYa1qj
-         YLXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=03apFXZ4DhKsed7tdajOvwJKFsSf8Y4I5P3qFLjRkKo=;
-        b=KQeZB8J3ZZZcd5DjoJ+rByBfgZLJVlVVIpzPl5JP1/vbkTYPOwYH4dAJnkJXEYy+Ne
-         I7Y5LgzmFXYu+HuIJ0yq6UY/eNWQLCm9ur3b31hyx49dlyZykp6YMCf6AEUh/SFkms75
-         29p4uHf4xknaYRtnYZSo7o+7qny/Vu3EMaC60mFCFvgzCSE0jy4rW4Dgk6fk1ZJhKyTs
-         gOIJISSQCSbsCwP3//wuEtE/0nruX0vJ2k37w89+55PVhQQN/92YZttejohSO+cY8nuO
-         EiJuNXzsRvri6G9V5EIj3eOKmq2TZUdh88fBI8qryu/328GB8k1k277MeGNXzxH2G5kp
-         UwUg==
-X-Gm-Message-State: APjAAAVY09PJkSwMbJdJFoWoR+9rGZ4cubPwBFQFB6VVZuwbrz1AHWCC
-        mTQzqA87lB9AMeLHupYfEuS+Q3i3
-X-Google-Smtp-Source: APXvYqyyScY1CjudlFtny0U4SJFuFhECkaYbbnN7rZimu7Yub+mmjUoXj+OQyw0DAdw//wlggWdGLA==
-X-Received: by 2002:a5d:9703:: with SMTP id h3mr21151624iol.152.1561385256497;
-        Mon, 24 Jun 2019 07:07:36 -0700 (PDT)
-Received: from svens-asus.arcx.com ([184.94.50.30])
-        by smtp.gmail.com with ESMTPSA id d17sm13210813iom.28.2019.06.24.07.07.35
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 24 Jun 2019 07:07:35 -0700 (PDT)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: imx-sdma: fix use-after-free on probe error path
-Date:   Mon, 24 Jun 2019 10:07:31 -0400
-Message-Id: <20190624140731.24080-1-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        id S1727970AbfFXQtJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 24 Jun 2019 12:49:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44236 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727715AbfFXQtJ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 24 Jun 2019 12:49:09 -0400
+Received: from localhost (unknown [106.201.35.23])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D8D1204EC;
+        Mon, 24 Jun 2019 16:49:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561394947;
+        bh=/NHJfqWeCqb+Lp1/50yhyIeXAOct+MNKza0IWDRx7mQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rnTD54Rb4s3lVxiO5SzU0ZulEwZcIBpuL1tTEC9wRmVu13q+75fb2w+vR4dIo/U5s
+         V0MZwRq0JJrXn2EQr0NG+C7+dEIAQSA67UxQBP2GdwiIEQRLCbrISQsgGu3tbJOniy
+         ql3Oen9IgZxiIULiGacGWLru4UV9HKaSrt+1zurI=
+Date:   Mon, 24 Jun 2019 22:15:56 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     dan.j.williams@intel.com, leoyang.li@nxp.com,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [V4 2/2] dmaengine: fsl-dpaa2-qdma: Add NXP dpaa2 qDMA
+ controller driver for Layerscape SoCs
+Message-ID: <20190624164556.GD2962@vkoul-mobl>
+References: <20190613101341.21169-1-peng.ma@nxp.com>
+ <20190613101341.21169-2-peng.ma@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613101341.21169-2-peng.ma@nxp.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-If probe() fails anywhere beyond the point where
-sdma_get_firmware() is called, then a kernel oops may occur.
+On 13-06-19, 10:13, Peng Ma wrote:
+> DPPA2(Data Path Acceleration Architecture 2) qDMA
+> supports channel virtualization by allowing DMA
 
-Problematic sequence of events:
-1. probe() calls sdma_get_firmware(), which schedules the
-   firmware callback to run when firmware becomes available,
-   using the sdma instance structure as the context
-2. probe() encounters an error, which deallocates the
-   sdma instance structure
-3. firmware becomes available, firmware callback is
-   called with deallocated sdma instance structure
-4. use after free - kernel oops !
+typo virtualization
 
-Solution: only attempt to load firmware when we're certain
-that probe() will succeed. This guarantees that the firmware
-callback's context will remain valid.
+> jobs to be enqueued into different frame queues.
+> Core can initiate a DMA transaction by preparing a frame
+> descriptor(FD) for each DMA job and enqueuing this job to
+> a frame queue. through a hardware portal. The qDMA
+              ^^^
+why this full stop?
 
-Note that the remove() path is unaffected by this issue: the
-firmware loader will increment the driver module's use count,
-ensuring that the module cannot be unloaded while the
-firmware callback is pending or running.
+> +static struct dpaa2_qdma_comp *
+> +dpaa2_qdma_request_desc(struct dpaa2_qdma_chan *dpaa2_chan)
+> +{
+> +	struct dpaa2_qdma_comp *comp_temp = NULL;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&dpaa2_chan->queue_lock, flags);
+> +	if (list_empty(&dpaa2_chan->comp_free)) {
+> +		spin_unlock_irqrestore(&dpaa2_chan->queue_lock, flags);
+> +		comp_temp = kzalloc(sizeof(*comp_temp), GFP_NOWAIT);
+> +		if (!comp_temp)
+> +			goto err;
+> +		comp_temp->fd_virt_addr =
+> +			dma_pool_alloc(dpaa2_chan->fd_pool, GFP_NOWAIT,
+> +				       &comp_temp->fd_bus_addr);
+> +		if (!comp_temp->fd_virt_addr)
+> +			goto err_comp;
+> +
+> +		comp_temp->fl_virt_addr =
+> +			dma_pool_alloc(dpaa2_chan->fl_pool, GFP_NOWAIT,
+> +				       &comp_temp->fl_bus_addr);
+> +		if (!comp_temp->fl_virt_addr)
+> +			goto err_fd_virt;
+> +
+> +		comp_temp->desc_virt_addr =
+> +			dma_pool_alloc(dpaa2_chan->sdd_pool, GFP_NOWAIT,
+> +				       &comp_temp->desc_bus_addr);
+> +		if (!comp_temp->desc_virt_addr)
+> +			goto err_fl_virt;
+> +
+> +		comp_temp->qchan = dpaa2_chan;
+> +		return comp_temp;
+> +	}
+> +
+> +	comp_temp = list_first_entry(&dpaa2_chan->comp_free,
+> +				     struct dpaa2_qdma_comp, list);
+> +	list_del(&comp_temp->list);
+> +	spin_unlock_irqrestore(&dpaa2_chan->queue_lock, flags);
+> +
+> +	comp_temp->qchan = dpaa2_chan;
+> +
+> +	return comp_temp;
+> +
+> +err_fl_virt:
 
-To: Robin Gong <yibin.gong@nxp.com>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: dmaengine@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
----
- drivers/dma/imx-sdma.c | 48 ++++++++++++++++++++++++------------------
- 1 file changed, 27 insertions(+), 21 deletions(-)
+no err logs? how will you know what went wrong?
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 99d9f431ae2c..3f0f41d16e1c 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -2096,27 +2096,6 @@ static int sdma_probe(struct platform_device *pdev)
- 	if (pdata && pdata->script_addrs)
- 		sdma_add_scripts(sdma, pdata->script_addrs);
- 
--	if (pdata) {
--		ret = sdma_get_firmware(sdma, pdata->fw_name);
--		if (ret)
--			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
--	} else {
--		/*
--		 * Because that device tree does not encode ROM script address,
--		 * the RAM script in firmware is mandatory for device tree
--		 * probe, otherwise it fails.
--		 */
--		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
--					      &fw_name);
--		if (ret)
--			dev_warn(&pdev->dev, "failed to get firmware name\n");
--		else {
--			ret = sdma_get_firmware(sdma, fw_name);
--			if (ret)
--				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
--		}
--	}
--
- 	sdma->dma_device.dev = &pdev->dev;
- 
- 	sdma->dma_device.device_alloc_chan_resources = sdma_alloc_chan_resources;
-@@ -2161,6 +2140,33 @@ static int sdma_probe(struct platform_device *pdev)
- 		of_node_put(spba_bus);
- 	}
- 
-+	/*
-+	 * Kick off firmware loading as the very last step:
-+	 * attempt to load firmware only if we're not on the error path, because
-+	 * the firmware callback requires a fully functional and allocated sdma
-+	 * instance.
-+	 */
-+	if (pdata) {
-+		ret = sdma_get_firmware(sdma, pdata->fw_name);
-+		if (ret)
-+			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
-+	} else {
-+		/*
-+		 * Because that device tree does not encode ROM script address,
-+		 * the RAM script in firmware is mandatory for device tree
-+		 * probe, otherwise it fails.
-+		 */
-+		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
-+					      &fw_name);
-+		if (ret)
-+			dev_warn(&pdev->dev, "failed to get firmware name\n");
-+		else {
-+			ret = sdma_get_firmware(sdma, fw_name);
-+			if (ret)
-+				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
-+		}
-+	}
-+
- 	return 0;
- 
- err_register:
+> +static enum
+> +dma_status dpaa2_qdma_tx_status(struct dma_chan *chan,
+> +				dma_cookie_t cookie,
+> +				struct dma_tx_state *txstate)
+> +{
+> +	return dma_cookie_status(chan, cookie, txstate);
+
+why not set dma_cookie_status as this callback?
+
+> +static int __cold dpaa2_qdma_setup(struct fsl_mc_device *ls_dev)
+> +{
+> +	struct dpaa2_qdma_priv_per_prio *ppriv;
+> +	struct device *dev = &ls_dev->dev;
+> +	struct dpaa2_qdma_priv *priv;
+> +	u8 prio_def = DPDMAI_PRIO_NUM;
+> +	int err = -EINVAL;
+> +	int i;
+> +
+> +	priv = dev_get_drvdata(dev);
+> +
+> +	priv->dev = dev;
+> +	priv->dpqdma_id = ls_dev->obj_desc.id;
+> +
+> +	/* Get the handle for the DPDMAI this interface is associate with */
+> +	err = dpdmai_open(priv->mc_io, 0, priv->dpqdma_id, &ls_dev->mc_handle);
+> +	if (err) {
+> +		dev_err(dev, "dpdmai_open() failed\n");
+> +		return err;
+> +	}
+> +	dev_info(dev, "Opened dpdmai object successfully\n");
+
+this is noise in kernel, consider debug level
+
+> +static int __cold dpaa2_dpdmai_bind(struct dpaa2_qdma_priv *priv)
+> +{
+> +	int err;
+> +	int i, num;
+> +	struct device *dev = priv->dev;
+> +	struct dpaa2_qdma_priv_per_prio *ppriv;
+> +	struct dpdmai_rx_queue_cfg rx_queue_cfg;
+> +	struct fsl_mc_device *ls_dev = to_fsl_mc_device(dev);
+
+the order is reverse than used in other fn, please stick to one style!
 -- 
-2.17.1
-
+~Vinod

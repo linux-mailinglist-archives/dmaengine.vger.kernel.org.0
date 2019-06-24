@@ -2,108 +2,171 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 128C350C61
-	for <lists+dmaengine@lfdr.de>; Mon, 24 Jun 2019 15:50:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A32C650D40
+	for <lists+dmaengine@lfdr.de>; Mon, 24 Jun 2019 16:07:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730189AbfFXNuT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 24 Jun 2019 09:50:19 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33108 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731346AbfFXNuS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Jun 2019 09:50:18 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ODnJLY183689;
-        Mon, 24 Jun 2019 13:49:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
- bh=VzFjbN80m/KS7QJTT9HnF1kNBWl2jZh8kiE34VZK/n4=;
- b=g7iSod1xfT4Y1f3EQiqikJ5APoIwdZgrvbUIeZ/WUPAvUGkrX0RGSPoV0jr0hO6fT+H3
- jM+r361lrlCwyjvbLGtgFb2cHZQh5BBp/HX3TXvRKfVln+7FkFkLUGDiQ0aO6LFPfRvm
- S9zz7lAy2JwnUmOeJ2z6uAV7qZ1jO3smkNmY8q+RH+hoU48x4vRJHWgpT6PiI4rVo5ny
- goae6/kfhNjpIxxRIqCQVX5fi3BCA3pLEuW0eYxlR44hI/0xpHtAA1Ep+HNY/2yIhll3
- 236nQFfWIrzJj/Rr2d6IvOWOvLQaEwgn4+/pwPNTZ2Y7OWzE4AkM3VKG+m604biE25mk /Q== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2t9brsxjd6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 13:49:51 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ODnMWU113398;
-        Mon, 24 Jun 2019 13:49:51 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2tat7bn74c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Jun 2019 13:49:51 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5ODnltl013483;
-        Mon, 24 Jun 2019 13:49:48 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Jun 2019 06:49:47 -0700
-Date:   Mon, 24 Jun 2019 16:49:40 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>,
-        Paul Cercueil <paul@crapouillou.net>
+        id S1727375AbfFXOHh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 24 Jun 2019 10:07:37 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41677 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbfFXOHh (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Jun 2019 10:07:37 -0400
+Received: by mail-io1-f67.google.com with SMTP id w25so1782245ioc.8;
+        Mon, 24 Jun 2019 07:07:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=03apFXZ4DhKsed7tdajOvwJKFsSf8Y4I5P3qFLjRkKo=;
+        b=I2Fo6XRAMMVOjvK9E4plBFmE6GbrgJNAzyqNah9iq40Vff1Sw1lpbcprdLQnGMx0eX
+         xlzZChXLaTQXOyI22/oiBXxsGauWHWJoqH9029TFw6qyRQcnIRC/gDVZYqeTZVO/9/ny
+         x/vHEcTt1jha1w58oRB6H9f2iJX0p/tSvZo5TIOk5x4NFIjQAn+nA1vNlrqf1DP3asNE
+         lAnhxpsOMxb1xsuRRPUjobmfukOlvQ1DETmQUIXj8Sq8l4vGUCHzAtmp75+gaGegyo1X
+         84V+T86qp0e3GuFTf6Z+v8yV8zgTzDwqZoLeNq0BOmMlLyJjTw/MySnlGVfPhXpYa1qj
+         YLXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=03apFXZ4DhKsed7tdajOvwJKFsSf8Y4I5P3qFLjRkKo=;
+        b=KQeZB8J3ZZZcd5DjoJ+rByBfgZLJVlVVIpzPl5JP1/vbkTYPOwYH4dAJnkJXEYy+Ne
+         I7Y5LgzmFXYu+HuIJ0yq6UY/eNWQLCm9ur3b31hyx49dlyZykp6YMCf6AEUh/SFkms75
+         29p4uHf4xknaYRtnYZSo7o+7qny/Vu3EMaC60mFCFvgzCSE0jy4rW4Dgk6fk1ZJhKyTs
+         gOIJISSQCSbsCwP3//wuEtE/0nruX0vJ2k37w89+55PVhQQN/92YZttejohSO+cY8nuO
+         EiJuNXzsRvri6G9V5EIj3eOKmq2TZUdh88fBI8qryu/328GB8k1k277MeGNXzxH2G5kp
+         UwUg==
+X-Gm-Message-State: APjAAAVY09PJkSwMbJdJFoWoR+9rGZ4cubPwBFQFB6VVZuwbrz1AHWCC
+        mTQzqA87lB9AMeLHupYfEuS+Q3i3
+X-Google-Smtp-Source: APXvYqyyScY1CjudlFtny0U4SJFuFhECkaYbbnN7rZimu7Yub+mmjUoXj+OQyw0DAdw//wlggWdGLA==
+X-Received: by 2002:a5d:9703:: with SMTP id h3mr21151624iol.152.1561385256497;
+        Mon, 24 Jun 2019 07:07:36 -0700 (PDT)
+Received: from svens-asus.arcx.com ([184.94.50.30])
+        by smtp.gmail.com with ESMTPSA id d17sm13210813iom.28.2019.06.24.07.07.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 24 Jun 2019 07:07:35 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Robin Gong <yibin.gong@nxp.com>
 Cc:     Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] dmaengine: jz4780: Fix an endian bug in IRQ handler
-Message-ID: <20190624134940.GC1754@mwanda>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=923
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906240113
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9297 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=974 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906240113
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: imx-sdma: fix use-after-free on probe error path
+Date:   Mon, 24 Jun 2019 10:07:31 -0400
+Message-Id: <20190624140731.24080-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The "pending" variable was a u32 but we cast it to an unsigned long
-pointer when we do the for_each_set_bit() loop.  The problem is that on
-big endian 64bit systems that results in an out of bounds read.
+If probe() fails anywhere beyond the point where
+sdma_get_firmware() is called, then a kernel oops may occur.
 
-Fixes: 4e4106f5e942 ("dmaengine: jz4780: Fix transfers being ACKed too soon")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Problematic sequence of events:
+1. probe() calls sdma_get_firmware(), which schedules the
+   firmware callback to run when firmware becomes available,
+   using the sdma instance structure as the context
+2. probe() encounters an error, which deallocates the
+   sdma instance structure
+3. firmware becomes available, firmware callback is
+   called with deallocated sdma instance structure
+4. use after free - kernel oops !
+
+Solution: only attempt to load firmware when we're certain
+that probe() will succeed. This guarantees that the firmware
+callback's context will remain valid.
+
+Note that the remove() path is unaffected by this issue: the
+firmware loader will increment the driver module's use count,
+ensuring that the module cannot be unloaded while the
+firmware callback is pending or running.
+
+To: Robin Gong <yibin.gong@nxp.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: dmaengine@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 ---
-I don't know if this driver is ever used on a big endian 64 bit system,
-but the fix is pretty easy and it silences a static checker warning.
+ drivers/dma/imx-sdma.c | 48 ++++++++++++++++++++++++------------------
+ 1 file changed, 27 insertions(+), 21 deletions(-)
 
-Not tested.
-
- drivers/dma/dma-jz4780.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 77260a6f5178..dfd10fe3c9b3 100644
---- a/drivers/dma/dma-jz4780.c
-+++ b/drivers/dma/dma-jz4780.c
-@@ -717,12 +717,13 @@ static irqreturn_t jz4780_dma_irq_handler(int irq, void *data)
- {
- 	struct jz4780_dma_dev *jzdma = data;
- 	unsigned int nb_channels = jzdma->soc_data->nb_channels;
--	uint32_t pending, dmac;
-+	unsigned long pending;
-+	uint32_t dmac;
- 	int i;
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 99d9f431ae2c..3f0f41d16e1c 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -2096,27 +2096,6 @@ static int sdma_probe(struct platform_device *pdev)
+ 	if (pdata && pdata->script_addrs)
+ 		sdma_add_scripts(sdma, pdata->script_addrs);
  
- 	pending = jz4780_dma_ctrl_readl(jzdma, JZ_DMA_REG_DIRQP);
+-	if (pdata) {
+-		ret = sdma_get_firmware(sdma, pdata->fw_name);
+-		if (ret)
+-			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
+-	} else {
+-		/*
+-		 * Because that device tree does not encode ROM script address,
+-		 * the RAM script in firmware is mandatory for device tree
+-		 * probe, otherwise it fails.
+-		 */
+-		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
+-					      &fw_name);
+-		if (ret)
+-			dev_warn(&pdev->dev, "failed to get firmware name\n");
+-		else {
+-			ret = sdma_get_firmware(sdma, fw_name);
+-			if (ret)
+-				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
+-		}
+-	}
+-
+ 	sdma->dma_device.dev = &pdev->dev;
  
--	for_each_set_bit(i, (unsigned long *)&pending, nb_channels) {
-+	for_each_set_bit(i, &pending, nb_channels) {
- 		if (jz4780_dma_chan_irq(jzdma, &jzdma->chan[i]))
- 			pending &= ~BIT(i);
+ 	sdma->dma_device.device_alloc_chan_resources = sdma_alloc_chan_resources;
+@@ -2161,6 +2140,33 @@ static int sdma_probe(struct platform_device *pdev)
+ 		of_node_put(spba_bus);
  	}
+ 
++	/*
++	 * Kick off firmware loading as the very last step:
++	 * attempt to load firmware only if we're not on the error path, because
++	 * the firmware callback requires a fully functional and allocated sdma
++	 * instance.
++	 */
++	if (pdata) {
++		ret = sdma_get_firmware(sdma, pdata->fw_name);
++		if (ret)
++			dev_warn(&pdev->dev, "failed to get firmware from platform data\n");
++	} else {
++		/*
++		 * Because that device tree does not encode ROM script address,
++		 * the RAM script in firmware is mandatory for device tree
++		 * probe, otherwise it fails.
++		 */
++		ret = of_property_read_string(np, "fsl,sdma-ram-script-name",
++					      &fw_name);
++		if (ret)
++			dev_warn(&pdev->dev, "failed to get firmware name\n");
++		else {
++			ret = sdma_get_firmware(sdma, fw_name);
++			if (ret)
++				dev_warn(&pdev->dev, "failed to get firmware from device tree\n");
++		}
++	}
++
+ 	return 0;
+ 
+ err_register:
 -- 
-2.20.1
+2.17.1
 

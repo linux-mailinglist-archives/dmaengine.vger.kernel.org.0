@@ -2,85 +2,83 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4782E50AC1
-	for <lists+dmaengine@lfdr.de>; Mon, 24 Jun 2019 14:35:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6B2350AD2
+	for <lists+dmaengine@lfdr.de>; Mon, 24 Jun 2019 14:38:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730283AbfFXMfr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 24 Jun 2019 08:35:47 -0400
-Received: from michel.telenet-ops.be ([195.130.137.88]:38754 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730296AbfFXMfr (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Jun 2019 08:35:47 -0400
+        id S1726453AbfFXMi2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 24 Jun 2019 08:38:28 -0400
+Received: from andre.telenet-ops.be ([195.130.132.53]:56744 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728051AbfFXMi1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Jun 2019 08:38:27 -0400
 Received: from ramsan ([84.194.111.163])
-        by michel.telenet-ops.be with bizsmtp
-        id Ucbi2000P3XaVaC06cbiuc; Mon, 24 Jun 2019 14:35:45 +0200
+        by andre.telenet-ops.be with bizsmtp
+        id UceQ2000M3XaVaC01ceQZz; Mon, 24 Jun 2019 14:38:25 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hfOCE-0003jz-Fq; Mon, 24 Jun 2019 14:35:42 +0200
+        id 1hfOEq-0003kT-Gn; Mon, 24 Jun 2019 14:38:24 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hfOCE-0005NY-En; Mon, 24 Jun 2019 14:35:42 +0200
+        id 1hfOEq-0005SP-Fh; Mon, 24 Jun 2019 14:38:24 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Vinod Koul <vkoul@kernel.org>,
+To:     Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Wolfram Sang <wsa+renesas@sang-engineering.com>,
         linux-serial@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         dmaengine@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/2] serial: sh-sci: Terminate TX DMA during buffer flushing
-Date:   Mon, 24 Jun 2019 14:35:40 +0200
-Message-Id: <20190624123540.20629-3-geert+renesas@glider.be>
+Subject: [PATCH] dmaengine: rcar-dmac: Reject zero-length slave DMA requests
+Date:   Mon, 24 Jun 2019 14:38:18 +0200
+Message-Id: <20190624123818.20919-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190624123540.20629-1-geert+renesas@glider.be>
-References: <20190624123540.20629-1-geert+renesas@glider.be>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-While the .flush_buffer() callback clears sci_port.tx_dma_len since
-commit 1cf4a7efdc71cab8 ("serial: sh-sci: Fix race condition causing
-garbage during shutdown"), it does not terminate a transmit DMA
-operation that may be in progress.
+While the .device_prep_slave_sg() callback rejects empty scatterlists,
+it still accepts single-entry scatterlists with a zero-length segment.
+These may happen if a driver calls dmaengine_prep_slave_single() with a
+zero len parameter.  The corresponding DMA request will never complete,
+leading to messages like:
 
-Fix this by terminating any pending DMA operations, and resetting the
-corresponding cookie.
+    rcar-dmac e7300000.dma-controller: Channel Address Error happen
 
+and DMA timeouts.
+
+Although requesting a zero-length DMA request is a driver bug, rejecting
+it early eases debugging.  Note that the .device_prep_dma_memcpy()
+callback already rejects requests to copy zero bytes.
+
+Reported-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Analyzed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/tty/serial/sh-sci.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+See "[PATCH 0/2] serial: sh-sci: Fix .flush_buffer() issues"
+(https://lore.kernel.org/linux-renesas-soc/20190624123540.20629-1-geert+renesas@glider.be/)
+for the driver fix.
 
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index d4504daff99263f5..d18c680aa64b3427 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -1656,11 +1656,18 @@ static void sci_free_dma(struct uart_port *port)
+ drivers/dma/sh/rcar-dmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
+index 67df54ac329400b7..9c41a4e425759fcc 100644
+--- a/drivers/dma/sh/rcar-dmac.c
++++ b/drivers/dma/sh/rcar-dmac.c
+@@ -1165,7 +1165,7 @@ rcar_dmac_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 	struct rcar_dmac_chan *rchan = to_rcar_dmac_chan(chan);
  
- static void sci_flush_buffer(struct uart_port *port)
- {
-+	struct sci_port *s = to_sci_port(port);
-+
- 	/*
- 	 * In uart_flush_buffer(), the xmit circular buffer has just been
--	 * cleared, so we have to reset tx_dma_len accordingly.
-+	 * cleared, so we have to reset tx_dma_len accordingly, and stop any
-+	 * pending transfers
- 	 */
--	to_sci_port(port)->tx_dma_len = 0;
-+	s->tx_dma_len = 0;
-+	if (s->chan_tx) {
-+		dmaengine_terminate_async(s->chan_tx);
-+		s->cookie_tx = -EINVAL;
-+	}
- }
- #else /* !CONFIG_SERIAL_SH_SCI_DMA */
- static inline void sci_request_dma(struct uart_port *port)
+ 	/* Someone calling slave DMA on a generic channel? */
+-	if (rchan->mid_rid < 0 || !sg_len) {
++	if (rchan->mid_rid < 0 || !sg_len || !sg_dma_len(sgl)) {
+ 		dev_warn(chan->device->dev,
+ 			 "%s: bad parameter: len=%d, id=%d\n",
+ 			 __func__, sg_len, rchan->mid_rid);
 -- 
 2.17.1
 

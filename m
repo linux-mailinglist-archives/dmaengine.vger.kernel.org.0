@@ -2,91 +2,84 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 539E852850
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Jun 2019 11:42:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A9A4553B1
+	for <lists+dmaengine@lfdr.de>; Tue, 25 Jun 2019 17:46:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbfFYJmA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 25 Jun 2019 05:42:00 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:35244 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731690AbfFYJl7 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 25 Jun 2019 05:41:59 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 52BB61A0774;
-        Tue, 25 Jun 2019 11:41:57 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 380371A0789;
-        Tue, 25 Jun 2019 11:41:50 +0200 (CEST)
-Received: from mega.ap.freescale.net (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id F10464031E;
-        Tue, 25 Jun 2019 17:41:37 +0800 (SGT)
-From:   yibin.gong@nxp.com
-To:     robh@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, mark.rutland@arm.com, vkoul@kernel.org,
-        dan.j.williams@intel.com, angelo@sysam.it
-Cc:     linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH v5 6/6] ARM: dts: imx7ulp: add edma device node
-Date:   Tue, 25 Jun 2019 17:43:24 +0800
-Message-Id: <20190625094324.19196-7-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190625094324.19196-1-yibin.gong@nxp.com>
-References: <20190625094324.19196-1-yibin.gong@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1731241AbfFYPqI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 25 Jun 2019 11:46:08 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44487 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727572AbfFYPqI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Jun 2019 11:46:08 -0400
+Received: by mail-lf1-f65.google.com with SMTP id r15so12950443lfm.11;
+        Tue, 25 Jun 2019 08:46:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5HkYvt7vqYcoplSqjUO7R3ulPIH/lqglCxToVLLxHq0=;
+        b=qXtq11GckrDcJCHDDEgthhpG8mHYmTpXpzctewOXeUwZmzUo0b5ZeAtMwVAfPHhIPT
+         3RhfwsBrNQETw2uzvpCbSc8dG/ITMshgLL9OzsWB5XOnH1VuBhB1eJF709b3TLytZa66
+         iPZ6oUBRjQ47hp3xXYtwKt8NpfCcGF3sPAHVG6KRSOSsrYYx/5qUxulw8KdpvUSSNZ6j
+         wxuwby4vZz9pG3VaHAkPbhhkzSoLLFtCq/7AA0gftSopUeZpN5J3cYWU7xqUlQBj2TsE
+         sWo6eQY/SLn3t/XWBGW9SmsuLqBCzeFuVIqOzL9A+qq68NVNOowGczMSJrmpmUYAm2p8
+         RLHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5HkYvt7vqYcoplSqjUO7R3ulPIH/lqglCxToVLLxHq0=;
+        b=RImzWAmk85hJDcS1JoVRUHJZsED/dm/ANwRrs0ZmC3wQwRNkrX5kzi+3zNSW+Ym3fY
+         2TabmsQABekY508UA6/WlZACtnDjHsVfgnYlyh7JlPI+kQAdqlfM2aCcPACQfUM4NCO3
+         lPBWYfIjaRZbrBEzPePaddb+n1JpZKuwhxTJ8uGy0N5kWY4Nj1krJcwTcyEQZbWqxlqL
+         6gm8sXToCbozozXxsUuNDrcBxt2+IytEF6Uepm5HoDURNqhmy973Dx2+heZ8MeQvzB4N
+         QDfE/DVUjiP3w2b+lSEZBb/1BFmutYJDFt3RfsoVnTMlsQhv9injIw25YmUvbno9sb0y
+         t+Ew==
+X-Gm-Message-State: APjAAAUvHn6RMLmycI9CtS0Y+fw8se2C4p1BFcyj/0CY2lTpAJ9++X+A
+        qPx+7ArbDpYx6lz/lMfImfP7hIYHc0LD3WOJ4UA=
+X-Google-Smtp-Source: APXvYqzVkv3ISEpy81fk9GqWVELv6LncGBQA618cty6rXyn6Ym+TyTksnqIcZ4ZJkwyOgbRhI2GPWbZy/JzI4c4/Nq0=
+X-Received: by 2002:ac2:5a5e:: with SMTP id r30mr16968201lfn.12.1561477566289;
+ Tue, 25 Jun 2019 08:46:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190621082306.34415-1-yibin.gong@nxp.com> <CAOMZO5B+uXF=1WTPsA-9LrmtTF0Q0s7Fipwtd1nkWSgr3ec25w@mail.gmail.com>
+ <VE1PR04MB6638D58DED0D7092D8FCE93589E30@VE1PR04MB6638.eurprd04.prod.outlook.com>
+In-Reply-To: <VE1PR04MB6638D58DED0D7092D8FCE93589E30@VE1PR04MB6638.eurprd04.prod.outlook.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 25 Jun 2019 12:45:54 -0300
+Message-ID: <CAOMZO5AUnDJ_Wz3sWFDv4hZ-vAwO4_ioTW=5FUNDwFS7zBRJOg@mail.gmail.com>
+Subject: Re: [PATCH v2] dmaengine: imx-sdma: remove BD_INTR for channel0
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Vinod <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sven Van Asbroeck <thesven73@gmail.com>,
+        Michael Olbrich <m.olbrich@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        stable <stable@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Robin Gong <yibin.gong@nxp.com>
+Hi Robin,
 
-Add edma device node in dts.
+On Tue, Jun 25, 2019 at 4:36 AM Robin Gong <yibin.gong@nxp.com> wrote:
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
----
- arch/arm/boot/dts/imx7ulp.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+> Yes, although Sven only met this issue after v4.19, this potential issue should be there.
+> But 1d069bfa3c78 seems merged from v4.7 instead?
 
-diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
-index dc5bc32..97496cf 100644
---- a/arch/arm/boot/dts/imx7ulp.dtsi
-+++ b/arch/arm/boot/dts/imx7ulp.dtsi
-@@ -123,6 +123,34 @@
- 			};
- 		};
- 
-+		edma1: dma-controller@40080000 {
-+			#dma-cells = <2>;
-+			compatible = "fsl,imx7ulp-edma";
-+			reg = <0x40080000 0x2000>,
-+				<0x40210000 0x1000>;
-+			dma-channels = <32>;
-+			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-names = "dma", "dmamux0";
-+			clocks = <&pcc2 IMX7ULP_CLK_DMA1>,
-+				 <&pcc2 IMX7ULP_CLK_DMA_MUX1>;
-+		};
-+
- 		lpuart4: serial@402d0000 {
- 			compatible = "fsl,imx7ulp-lpuart";
- 			reg = <0x402d0000 0x1000>;
--- 
-2.7.4
+Yes, you could simply do:
 
+Fixes: 1d069bfa3c78 ("dmaengine: imx-sdma: ack channel 0 IRQ in the
+interrupt handler")
+Cc: stable@vger.kernel.org
+
+And it will get applied to all relevant stable trees.
+
+Thanks

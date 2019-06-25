@@ -2,199 +2,638 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F1CD52603
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Jun 2019 10:06:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 899EA52661
+	for <lists+dmaengine@lfdr.de>; Tue, 25 Jun 2019 10:21:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729794AbfFYIGE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 25 Jun 2019 04:06:04 -0400
-Received: from mail-eopbgr40057.outbound.protection.outlook.com ([40.107.4.57]:11637
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727853AbfFYIGD (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 25 Jun 2019 04:06:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+2LUMeCQ+J9dr+fINbQsTEmlTXqTkl7cFZWGDiKW1Qc=;
- b=JsQ+f4/qo07JHz7Yu0naN9QNBjbjfNBeNV0b5PLfx47pU5+iupBeJftKuQQ9WOkSyq3l9lCKwDbrK3CQfRaRV/8VPZZSeL3jc/SBiDaqO6nTyVk29zmLsi7Cs+f8/p5W8va0v4K8XwWmUn9bWj4jv6PQwUiTsuTrEoGrvXQH3tc=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.235.81) by
- VE1PR04MB6381.eurprd04.prod.outlook.com (20.179.232.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Tue, 25 Jun 2019 08:05:58 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::a4a8:729f:e664:fa8]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::a4a8:729f:e664:fa8%2]) with mapi id 15.20.2008.014; Tue, 25 Jun 2019
- 08:05:58 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH v5 00/15] add ecspi ERR009165 for i.mx6/7 soc family
-Thread-Topic: [PATCH v5 00/15] add ecspi ERR009165 for i.mx6/7 soc family
-Thread-Index: AQHVH2TJLciVMMA/RkWvOa+lK6Q+X6amYm4AgAOi/oCAAg2asA==
-Date:   Tue, 25 Jun 2019 08:05:58 +0000
-Message-ID: <VE1PR04MB6638F8B75E96F4A04BBC4CEE89E30@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <20190610081753.11422-1-yibin.gong@nxp.com>
- <1561135476.7537.5.camel@nxp.com> <20190624001643.GB3800@dragon>
-In-Reply-To: <20190624001643.GB3800@dragon>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 01069c00-9654-4b15-38d1-08d6f943f4bb
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6381;
-x-ms-traffictypediagnostic: VE1PR04MB6381:
-x-microsoft-antispam-prvs: <VE1PR04MB638138669A14A8A0569AB9A689E30@VE1PR04MB6381.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0079056367
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(39860400002)(136003)(346002)(366004)(189003)(199004)(13464003)(33656002)(6436002)(25786009)(55016002)(9686003)(305945005)(53936002)(6116002)(3846002)(54906003)(6306002)(4326008)(316002)(486006)(478600001)(446003)(71200400001)(229853002)(71190400001)(476003)(68736007)(66446008)(64756008)(81156014)(76176011)(53546011)(256004)(7696005)(66476007)(66066001)(66946007)(5660300002)(73956011)(11346002)(81166006)(76116006)(99286004)(8676002)(6506007)(14444005)(7736002)(74316002)(66556008)(8936002)(52536014)(14454004)(26005)(186003)(86362001)(6916009)(6246003)(2906002)(102836004)(966005)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6381;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1vL9o+BkucvazL8NzhxzHOoZl5w3tqbe3J8k3O1J/OS30CliOzhbQgkAWn4VovW5hYAYLkpCo7nMEhe3mtPrX4YodmO77r9Q+ReAy407lThDwgqbC85hOgYuLsAcf7coJaf95ABCa+oSzTIGr6yfD5+qYfbBMS/sFEXxcQ+bzKVyqKjpRBwwUAuHtPq9dPRlsSurZGu5084f/ilsA1NUntzv4qArK05k2ymmFlpxrgCbf/4A8OSaETNnKB3A82Yo65XJYvA93RzJtTKiIeynigf00zMM7TLdeJOqfWZQZ79y97eOgyIAtyiXoB80+5ADGq39C/mGel25xKZ0ggGTieADxC2whVtpNaHq46NcMfl/8b/46VHKvOvVkZr05e4I2Gc0tCm5zC5HLrq+aFNQShLr+ClTIb1ZXa8TB+hmJr0=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 01069c00-9654-4b15-38d1-08d6f943f4bb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2019 08:05:58.2370
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yibin.gong@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6381
+        id S1728130AbfFYIVb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 25 Jun 2019 04:21:31 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:40316 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726663AbfFYIVb (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 25 Jun 2019 04:21:31 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1C4F31A0F40;
+        Tue, 25 Jun 2019 10:21:28 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2E9031A0F3D;
+        Tue, 25 Jun 2019 10:21:24 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id F30DC4030C;
+        Tue, 25 Jun 2019 16:21:19 +0800 (SGT)
+From:   Peng Ma <peng.ma@nxp.com>
+To:     vkoul@kernel.org
+Cc:     dan.j.williams@intel.com, leoyang.li@nxp.com,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        Peng Ma <peng.ma@nxp.com>
+Subject: [V5 1/2] dmaengine: fsl-dpaa2-qdma: Add the DPDMAI(Data Path DMA Interface) support
+Date:   Tue, 25 Jun 2019 08:12:18 +0000
+Message-Id: <20190625081219.7526-1-peng.ma@nxp.com>
+X-Mailer: git-send-email 2.14.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-VGhhbmtzIFNoYXduLiBJZiBubyBjb21tZW50IGhlcmUsIEkgdGhpbmsgeW91IGNhbiBtZXJnZSBk
-dHMgcGF0Y2ggZmlyc3RseSBpbiB5b3VyIHRyZWUgc2luY2UNCnRob3NlIGR0cyBwYXRjaGVzIGFy
-ZSBoYXJtbGVzcywgTWFyayBhbmQgVmlub2Qgd291bGQgbWVyZ2UgU1BJL0RNQSBwYXRjaGVzIGlu
-dG8NCnRoZWlyIHRyZWVzPyBIb3BlIGlteC9zcGkvZG1hZW5naW4gdHJlZXMgY291bGQgbWVyZ2Ug
-aW50byB0aGUgc2FtZSByYyBvbiBsaW51eC1uZXh0LCBvdGhlcndpc2UNClNQSSBmdW5jdGlvbiBt
-YXliZSBicm9rZW4uDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFNoYXdu
-IEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gU2VudDogMjAxOeW5tDbmnIgyNOaXpSA4OjE3
-DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjUgMDAvMTVdIGFkZCBlY3NwaSBFUlIwMDkxNjUgZm9y
-IGkubXg2Lzcgc29jIGZhbWlseQ0KPiANCj4gT24gRnJpLCBKdW4gMjEsIDIwMTkgYXQgMDg6NDI6
-NDhBTSArMDAwMCwgUm9iaW4gR29uZyB3cm90ZToNCj4gPiBIZWxsbyBTaGF3bi9XaWxsLA0KPiA+
-IMKgIERvIHlvdSBoYXZlIGNvbW1lbnRzIGZvciB0aGlzIFY1IHBhdGNoIHNldD8gSSBnb3QgdGFn
-cyBmcm9tIE1hcmssDQo+ID4gVmlub2QgYW5kIFJvYi4NCj4gDQo+IEknbSBmaW5lIHdpdGggdGhl
-IERUUyBjaGFuZ2UsIGJ1dCBub3Qgc3VyZSBob3cgdGhlIHNlcmllcyBzaG91bGQgYmUgbWVyZ2Vk
-Lg0KPiANCj4gU2hhd24NCj4gDQo+ID4NCj4gPiBPbiAyMDE5LTA2LTEwIGF0IDA4OjE3ICswMDAw
-LCB5aWJpbi5nb25nQG54cC5jb20gd3JvdGU6DQo+ID4gPiBGcm9tOiBSb2JpbiBHb25nIDx5aWJp
-bi5nb25nQG54cC5jb20+DQo+ID4gPg0KPiA+ID4gwqAgVGhlcmUgaXMgZWNzcGkgRVJSMDA5MTY1
-IG9uIGkubXg2Lzcgc29jIGZhbWlseSwgd2hpY2ggY2F1c2UgRklGTw0KPiA+ID4gdHJhbnNmZXIg
-dG8gYmUgc2VuZCB0d2ljZSBpbiBETUEgbW9kZS4gUGxlYXNlIGdldCBtb3JlIGluZm9ybWF0aW9u
-DQo+ID4gPiBmcm9tOg0KPiA+ID4gaHR0cHM6Ly93d3cNCj4gPiA+IC5ueHAuY29tJTJGZG9jcyUy
-RmVuJTJGZXJyYXRhJTJGSU1YNkRRQ0UucGRmJmFtcDtkYXRhPTAyJTdDMDENCj4gJTdDeWliaQ0K
-PiA+ID4gbg0KPiA+ID4gLmdvbmclNDBueHAuY29tJTdDNjdkM2U3OGZlNWVmNDQyOGIzYWYwOGQ2
-ZWQ3YmViNzQlN0M2ODZlYTFkDQo+IDNiYzJiNGM2DQo+ID4gPiBmDQo+ID4gPg0KPiBhOTJjZDk5
-YzVjMzAxNjM1JTdDMCU3QzElN0M2MzY5NTc1MTM4MTQ5NzA0MTImYW1wO3NkYXRhPSUyRjlzDQo+
-IGJyREVtSXANCj4gPiA+IHUgT2F6Y0lBVnBJckVMWk1Fak85NCUyQmplbjd3T09sVnNWayUzRCZh
-bXA7cmVzZXJ2ZWQ9MC4gVGhlDQo+ID4gPiB3b3JrYXJvdW5kIGlzIGFkZGluZyBuZXcgc2RtYSBy
-YW0gc2NyaXB0IHdoaWNoIHdvcmtzIGluIFhDSMKgwqBtb2RlIGFzDQo+ID4gPiBQSU8gaW5zaWRl
-IHNkbWEgaW5zdGVhZCBvZiBTTUMgbW9kZSwgbWVhbndoaWxlLCAnVFhfVEhSRVNIT0xEJw0KPiA+
-ID4gc2hvdWxkIGJlIDAuIFRoZSBpc3N1ZSBzaG91bGQgYmUgZXhpc3Qgb24gYWxsIGxlZ2FjeSBp
-Lm14Ni83IHNvYw0KPiA+ID4gZmFtaWx5IGJlZm9yZSBpLm14NnVsLg0KPiA+ID4gwqAgTlhQIGZp
-eCB0aGlzIGRlc2lnbiBpc3N1ZSBmcm9tIGkubXg2dWwsIHNvIG5ld2VyIGNoaXBzIGluY2x1ZGlu
-Zw0KPiA+ID4gaS5teDZ1bC8gNnVsbC82c2xsIGRvIG5vdCBuZWVkIHRoaXMgd29ya2Fyb3VkIGFu
-eW1vcmUuIEFsbCBvdGhlcg0KPiA+ID4gaS5teDYvNy84IGNoaXBzIHN0aWxsIG5lZWQgdGhpcyB3
-b3JrYXJvdWQuIFRoaXMgcGF0Y2ggc2V0IGFkZCBuZXcNCj4gPiA+ICdmc2wsaW14NnVsLWVjc3Bp
-Jw0KPiA+ID4gZm9yIGVjc3BpIGRyaXZlciBhbmQgJ2Vjc3BpX2ZpeGVkJyBpbiBzZG1hIGRyaXZl
-ciB0byBjaG9vc2UgaWYgbmVlZA0KPiA+ID4gZXJyYXRhIG9yIG5vdC4NCj4gPiA+IMKgIFRoZSBm
-aXJzdCB0d28gcmV2ZXJ0ZWQgcGF0Y2hlcyBzaG91bGQgYmUgdGhlIHNhbWUgaXNzdWUsIHRob3Vn
-aCwNCj4gPiA+IGl0IHNlZW1zICdmaXhlZCcgYnkgY2hhbmdpbmcgdG8gb3RoZXIgc2hwIHNjcmlw
-dC4gSG9wZSBTZWFuIG9yDQo+ID4gPiBTYXNjaGEgY291bGQgaGF2ZSB0aGUgY2hhbmNlIHRvIHRl
-c3QgdGhpcyBwYXRjaCBzZXQgaWYgY291bGQgZml4DQo+ID4gPiB0aGVpciBpc3N1ZXMuDQo+ID4g
-PiDCoCBCZXNpZGVzLCBlbmFibGUgc2RtYSBzdXBwb3J0IGZvciBpLm14OG1tLzhtcSBhbmQgZml4
-IGVjc3BpMSBub3QNCj4gPiA+IHdvcmsgb24gaS5teDhtbSBiZWNhdXNlIHRoZSBldmVudCBpZCBp
-cyB6ZXJvLg0KPiA+ID4NCj4gPiA+IFBTOg0KPiA+ID4gwqDCoMKgUGxlYXNlIGdldCBzZG1hIGZp
-cm13YXJlIGZyb20gYmVsb3cgbGludXgtZmlybXdhcmUgYW5kIGNvcHkgaXQgdG8NCj4gPiA+IHlv
-dXIgbG9jYWwgcm9vdGZzIC9saWIvZmlybXdhcmUvaW14L3NkbWEuDQo+ID4gPiBodHRwczovL2dp
-dA0KPiA+ID4gLmtlcm5lbC5vcmclMkZwdWIlMkZzY20lMkZsaW51eCUyRmtlcm5lbCUyRmdpdCUy
-RmZpcm13YXJlJTJGbGludXgtDQo+ID4gPg0KPiBmaXJtd2FyZS5naXQlMkZ0cmVlJTJGaW14JTJG
-c2RtYSZhbXA7ZGF0YT0wMiU3QzAxJTdDeWliaW4uZ29uZyU0MA0KPiBueHAuDQo+ID4gPg0KPiBj
-b20lN0M2N2QzZTc4ZmU1ZWY0NDI4YjNhZjA4ZDZlZDdiZWI3NCU3QzY4NmVhMWQzYmMyYjRjNmZh
-OTJjZDkNCj4gOWM1YzMNCj4gPiA+IDANCj4gPiA+DQo+IDE2MzUlN0MwJTdDMSU3QzYzNjk1NzUx
-MzgxNDk3MDQxMiZhbXA7c2RhdGE9eFhIQldwU2FTTG1Nb3NiDQo+ICUyRmFqT0FpWA0KPiA+ID4g
-bg0KPiA+ID4gbmt4YVlWNkhDdDI1T096Z1JMYkklM0QmYW1wO3Jlc2VydmVkPTANCj4gPiA+DQo+
-ID4gPiB2MjoNCj4gPiA+IMKgIDEuQWRkIGNvbW1pdCBsb2cgZm9yIHJldmVydGVkIHBhdGNoZXMu
-DQo+ID4gPiDCoCAyLkFkZCBjb21tZW50IGZvciAnZWNzcGlfZml4ZWQnIGluIHNkbWEgZHJpdmVy
-Lg0KPiA+ID4gwqAgMy5BZGQgJ2ZzbCxpbXg2c2xsLWVjc3BpJyBjb21wYXRpYmxlIGluc3RlYWQg
-b2YgJ2ZzbCxpbXg2dWwtZWNzcGknDQo+ID4gPiDCoMKgwqDCoHJhdGhlciB0aGFuIHJlbW92ZS4N
-Cj4gPiA+IHYzOg0KPiA+ID4gwqAgMS5Db25maXJtIHdpdGggZGVzaWduIHRlYW0gbWFrZSBzdXJl
-IEVSUjAwOTE2NSBmaXhlZCBvbg0KPiA+ID4gaS5teDZ1bC9pLm14NnVsbA0KPiA+ID4gwqDCoMKg
-wqAvaS5teDZzbGwsIG5vdCBmaXhlZCBvbiBpLm14OG0vOG1tIGFuZCBvdGhlciBpLm14Ni83IGxl
-Z2FjeQ0KPiA+ID4gY2hpcHMuDQo+ID4gPiDCoMKgwqDCoENvcnJlY3QgZHRzIHJlbGF0ZWQgZHRz
-IHBhdGNoIGluIHYyLg0KPiA+ID4gwqAgMi5DbGVhbiBlcmF0dGEgaW5mb3JtYXRpb24gaW4gYmlu
-ZGluZyBkb2MgYW5kIG5ldyAndHhfZ2xpdGNoX2ZpeGVkJw0KPiA+ID4gZmxhZw0KPiA+ID4gwqDC
-oMKgwqBpbiBzcGktaW14IGRyaXZlciB0byBzdGF0ZSBFUlIwMDkxNjUgZml4ZWQgb3Igbm90Lg0K
-PiA+ID4gwqAgMy5FbmxhcmdlIGJ1cnN0IHNpemUgdG8gZmlmbyBzaXplIGZvciB0eCBzaW5jZSB0
-eF93bWwgc2V0IHRvIDAgaW4NCj4gPiA+IHRoZQ0KPiA+ID4gwqDCoMKgwqBlcnJhdGEgd29ya2Fy
-b3VkLCB0aHVzIGltcHJvdmUgcGVyZm9ybWFuY2UgYXMgcG9zc2libGUuDQo+ID4gPiB2NDoNCj4g
-PiA+IMKgIDEuYWRkIEFjayB0YWcgZnJvbSBNYXJrIGFuZCBWaW5vZA0KPiA+ID4gwqAgMi4gcmVt
-b3ZlIGNoZWNraW5nICdldmVudF9pZDEnIHplcm8gYXMgJ2V2ZW50X2lkMCcuDQo+ID4gPiB2NToN
-Cj4gPiA+IMKgIDEuQWRkIGFub3RoZXIgcGF0Y2ggZm9yIGNvbXBhdGlibGUgd2l0aCB0aGUgY3Vy
-cmVudCB1YXJ0IGRyaXZlcg0KPiA+ID4gd2hpY2gNCj4gPiA+IMKgwqDCoMKgdXNpbmcgcm9tIHNj
-cmlwdCwgc28gYm90aCB1YXJ0IHJhbSBzY3JpcHQgYW5kIHJvbSBzY3JpcHQNCj4gPiA+IHN1cHBv
-cnRlZA0KPiA+ID4gwqDCoMKgwqBpbiBsYXRlc3QgZmlybXdhcmUsIGJ5IGRlZmF1bHQgdWFydCBy
-b20gc2NyaXB0IHVzZWQuIFVBUlQgZHJpdmVyDQo+ID4gPiDCoMKgwqDCoHdpbGwgYmUgYnJva2Vu
-IHdpdGhvdXQgdGhpcyBwYXRjaC4gTGF0ZXN0IHNkbWEgZmlybXdhcmUgaGFzIGJlZW4NCj4gPiA+
-IMKgwqDCoMKgYWxyZWFkeSB1cGRhdGVkIGluIGxpbnV4LWZpcm13YXJlLg0KPiA+ID4NCj4gPiA+
-IFJvYmluIEdvbmcgKDE1KToNCj4gPiA+IMKgIFJldmVydCAiQVJNOiBkdHM6IGlteDZxOiBVc2Ug
-Y29ycmVjdCBTRE1BIHNjcmlwdCBmb3IgU1BJNSBjb3JlIg0KPiA+ID4gwqAgUmV2ZXJ0ICJBUk06
-IGR0czogaW14NjogVXNlIGNvcnJlY3QgU0RNQSBzY3JpcHQgZm9yIFNQSSBjb3JlcyINCj4gPiA+
-IMKgIFJldmVydCAiZG1hZW5naW5lOiBpbXgtc2RtYTogcmVmaW5lIHRvIGxvYWQgY29udGV4dCBv
-bmx5IG9uY2UiDQo+ID4gPiDCoCBkbWFlbmdpbmU6IGlteC1zZG1hOiByZW1vdmUgZHVwaWxpY2F0
-ZWQgc2RtYV9sb2FkX2NvbnRleHQNCj4gPiA+IMKgIGRtYWVuZ2luZTogaW14LXNkbWE6IGFkZCBt
-Y3VfMl9lY3NwaSBzY3JpcHQNCj4gPiA+IMKgIHNwaTogaW14OiBmaXggRVJSMDA5MTY1DQo+ID4g
-PiDCoCBzcGk6IGlteDogcmVtb3ZlIEVSUjAwOTE2NSB3b3JrYXJvdW5kIG9uIGkubXg2dWwNCj4g
-PiA+IMKgIHNwaTogaW14OiBhZGQgbmV3IGkubXg2dWwgY29tcGF0aWJsZSBuYW1lIGluIGJpbmRp
-bmcgZG9jDQo+ID4gPiDCoCBkbWFlbmdpbmU6IGlteC1zZG1hOiByZW1vdmUgRVJSMDA5MTY1IG9u
-IGkubXg2dWwNCj4gPiA+IMKgIGRtYTogaW14LXNkbWE6IGFkZCBpLm14NnVsLzZzeCBjb21wYXRp
-YmxlIG5hbWUNCj4gPiA+IMKgIGRtYWVuZ2luZTogaW14LXNkbWE6IGZpeCBlY3NwaTEgcnggZG1h
-IG5vdCB3b3JrIG9uIGkubXg4bW0NCj4gPiA+IMKgIEFSTTogZHRzOiBpbXg2dWw6IGFkZCBkbWEg
-c3VwcG9ydCBvbiBlY3NwaQ0KPiA+ID4gwqAgQVJNOiBkdHM6IGlteDZzbGw6IGNvcnJlY3Qgc2Rt
-YSBjb21wYXRpYmxlDQo+ID4gPiDCoCBhcm02NDogZGVmY29uZmlnOiBFbmFibGUgU0RNQSBvbiBp
-Lm14OG1xLzhtbQ0KPiA+ID4gwqAgZG1hZW5naW5lOiBpbXgtc2RtYTogYWRkIHVhcnQgcm9tIHNj
-cmlwdA0KPiA+ID4NCj4gPiA+IMKgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL2ZzbC1pbXgt
-c2RtYS50eHTCoMKgwqDCoMKgwqDCoHzCoMKgMiArDQo+ID4gPiDCoC4uLi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3NwaS9mc2wtaW14LWNzcGkudHh0wqDCoMKgwqDCoMKgwqB8wqDCoDEgKw0KPiA+ID4g
-wqBhcmNoL2FybS9ib290L2R0cy9pbXg2cS5kdHNpwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoHzCoMKgMiArLQ0KPiA+ID4gwqBhcmNoL2FybS9ib290L2R0cy9p
-bXg2cWRsLmR0c2nCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB8wqDC
-oDggKy0NCj4gPiA+IMKgYXJjaC9hcm0vYm9vdC9kdHMvaW14NnNsbC5kdHNpwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfMKgwqAyICstDQo+ID4gPiDCoGFyY2gvYXJt
-L2Jvb3QvZHRzL2lteDZ1bC5kdHNpwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqB8wqDCoDggKysNCj4gPiA+IMKgYXJjaC9hcm02NC9jb25maWdzL2RlZmNvbmZpZ8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB8wqDCoDMgKw0KPiA+
-ID4gwqBkcml2ZXJzL2RtYS9pbXgtc2RtYS5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHwgODgNCj4gPiA+ICsrKysrKysrKysrKysrKyst
-LS0tLS0NCj4gPiA+IMKgZHJpdmVycy9zcGkvc3BpLWlteC5jwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfCA2MQ0KPiA+ID4gKysrKysr
-KysrKysrLS0tDQo+ID4gPiDCoGluY2x1ZGUvbGludXgvcGxhdGZvcm1fZGF0YS9kbWEtaW14LXNk
-bWEuaMKgwqDCoMKgwqDCoMKgwqDCoHwgMTEgKystDQo+ID4gPiDCoDEwIGZpbGVzIGNoYW5nZWQs
-IDE0NSBpbnNlcnRpb25zKCspLCA0MSBkZWxldGlvbnMoLSkNCj4gPiA+DQo=
+The MC(Management Complex) exports the DPDMAI(Data Path DMA Interface)
+object as an interface to operate the DPAA2(Data Path Acceleration
+Architecture 2) qDMA Engine. The DPDMAI enables sending frame-based
+requests to qDMA and receiving back confirmation response on transaction
+completion, utilizing the DPAA2 QBMan(Queue Manager and Buffer Manager
+hardware) infrastructure. DPDMAI object provides up to two priorities for
+processing qDMA requests.
+The following list summarizes the DPDMAI main features and capabilities:
+	1. Supports up to two scheduling priorities for processing
+	service requests.
+	- Each DPDMAI transmit queue is mapped to one of two service
+	priorities, allowing further prioritization in hardware between
+	requests from different DPDMAI objects.
+	2. Supports up to two receive queues for incoming transaction
+	completion confirmations.
+	- Each DPDMAI receive queue is mapped to one of two receive
+	priorities, allowing further prioritization between other
+	interfaces when associating the DPDMAI receive queues to DPIO
+	or DPCON(Data Path Concentrator) objects.
+	3. Supports different scheduling options for processing received
+	packets:
+	- Queues can be configured either in 'parked' mode (default),
+	or attached to a DPIO object, or attached to DPCON object.
+	4. Allows interaction with one or more DPIO objects for
+	dequeueing/enqueueing frame descriptors(FD) and for
+	acquiring/releasing buffers.
+	5. Supports enable, disable, and reset operations.
+
+Add dpdmai to support some platforms with dpaa2 qdma engine.
+
+Signed-off-by: Peng Ma <peng.ma@nxp.com>
+---
+changed for v5:
+	- Clean up the format.
+	- Delete some useless struct and macro.
+	- Fix spell.
+	- Move the description of function from header to C file.
+
+ drivers/dma/fsl-dpaa2-qdma/dpdmai.c |  366 +++++++++++++++++++++++++++++++++++
+ drivers/dma/fsl-dpaa2-qdma/dpdmai.h |  177 +++++++++++++++++
+ 2 files changed, 543 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/dma/fsl-dpaa2-qdma/dpdmai.c
+ create mode 100644 drivers/dma/fsl-dpaa2-qdma/dpdmai.h
+
+diff --git a/drivers/dma/fsl-dpaa2-qdma/dpdmai.c b/drivers/dma/fsl-dpaa2-qdma/dpdmai.c
+new file mode 100644
+index 0000000..fbc2b2f
+--- /dev/null
++++ b/drivers/dma/fsl-dpaa2-qdma/dpdmai.c
+@@ -0,0 +1,366 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright 2019 NXP
++
++#include <linux/types.h>
++#include <linux/io.h>
++#include <linux/fsl/mc.h>
++#include "dpdmai.h"
++
++struct dpdmai_rsp_get_attributes {
++	__le32 id;
++	u8 num_of_priorities;
++	u8 pad0[3];
++	__le16 major;
++	__le16 minor;
++};
++
++struct dpdmai_cmd_queue {
++	__le32 dest_id;
++	u8 priority;
++	u8 queue;
++	u8 dest_type;
++	u8 pad;
++	__le64 user_ctx;
++	union {
++		__le32 options;
++		__le32 fqid;
++	};
++};
++
++struct dpdmai_rsp_get_tx_queue {
++	__le64 pad;
++	__le32 fqid;
++};
++
++#define MC_CMD_OP(_cmd, _param, _offset, _width, _type, _arg) \
++	((_cmd).params[_param] |= mc_enc((_offset), (_width), _arg))
++
++/* cmd, param, offset, width, type, arg_name */
++#define DPDMAI_CMD_CREATE(_cmd, _cfg) \
++do { \
++	typeof(_cmd) (cmd) = (_cmd); \
++	typeof(_cfg) (cfg) = (_cfg); \
++	MC_CMD_OP(cmd, 0, 8,  8,  u8,  (cfg)->priorities[0]);\
++	MC_CMD_OP(cmd, 0, 16, 8,  u8,  (cfg)->priorities[1]);\
++} while (0)
++
++static inline u64 mc_enc(int lsoffset, int width, u64 val)
++{
++	return (val & MAKE_UMASK64(width)) << lsoffset;
++}
++
++/**
++ * dpdmai_open() - Open a control session for the specified object
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @dpdmai_id:	DPDMAI unique ID
++ * @token:	Returned token; use in subsequent API calls
++ *
++ * This function can be used to open a control session for an
++ * already created object; an object may have been declared in
++ * the DPL or by calling the dpdmai_create() function.
++ * This function returns a unique authentication token,
++ * associated with the specific object ID and the specific MC
++ * portal; this token must be used in all subsequent commands for
++ * this specific object.
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_open(struct fsl_mc_io *mc_io, u32 cmd_flags,
++		int dpdmai_id, u16 *token)
++{
++	struct fsl_mc_command cmd = { 0 };
++	__le64 *cmd_dpdmai_id;
++	int err;
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_OPEN,
++					  cmd_flags, 0);
++
++	cmd_dpdmai_id = cmd.params;
++	*cmd_dpdmai_id = cpu_to_le32(dpdmai_id);
++
++	/* send command to mc*/
++	err = mc_send_command(mc_io, &cmd);
++	if (err)
++		return err;
++
++	/* retrieve response parameters */
++	*token = mc_cmd_hdr_read_token(&cmd);
++
++	return 0;
++}
++
++/**
++ * dpdmai_close() - Close the control session of the object
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @token:	Token of DPDMAI object
++ *
++ * After this function is called, no further operations are
++ * allowed on the object without opening a new control session.
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_close(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
++{
++	struct fsl_mc_command cmd = { 0 };
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_CLOSE,
++					  cmd_flags, token);
++
++	/* send command to mc*/
++	return mc_send_command(mc_io, &cmd);
++}
++
++/**
++ * dpdmai_create() - Create the DPDMAI object
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @cfg:	Configuration structure
++ * @token:	Returned token; use in subsequent API calls
++ *
++ * Create the DPDMAI object, allocate required resources and
++ * perform required initialization.
++ *
++ * The object can be created either by declaring it in the
++ * DPL file, or by calling this function.
++ *
++ * This function returns a unique authentication token,
++ * associated with the specific object ID and the specific MC
++ * portal; this token must be used in all subsequent calls to
++ * this specific object. For objects that are created using the
++ * DPL file, call dpdmai_open() function to get an authentication
++ * token first.
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_create(struct fsl_mc_io *mc_io, u32 cmd_flags,
++		  const struct dpdmai_cfg *cfg, u16 *token)
++{
++	struct fsl_mc_command cmd = { 0 };
++	int err;
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_CREATE,
++					  cmd_flags, 0);
++	DPDMAI_CMD_CREATE(cmd, cfg);
++
++	/* send command to mc*/
++	err = mc_send_command(mc_io, &cmd);
++	if (err)
++		return err;
++
++	/* retrieve response parameters */
++	*token = mc_cmd_hdr_read_token(&cmd);
++
++	return 0;
++}
++
++/**
++ * dpdmai_enable() - Enable the DPDMAI, allow sending and receiving frames.
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @token:	Token of DPDMAI object
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_enable(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
++{
++	struct fsl_mc_command cmd = { 0 };
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_ENABLE,
++					  cmd_flags, token);
++
++	/* send command to mc*/
++	return mc_send_command(mc_io, &cmd);
++}
++
++/**
++ * dpdmai_disable() - Disable the DPDMAI, stop sending and receiving frames.
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @token:	Token of DPDMAI object
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_disable(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
++{
++	struct fsl_mc_command cmd = { 0 };
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_DISABLE,
++					  cmd_flags, token);
++
++	/* send command to mc*/
++	return mc_send_command(mc_io, &cmd);
++}
++
++/**
++ * dpdmai_reset() - Reset the DPDMAI, returns the object to initial state.
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @token:	Token of DPDMAI object
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_reset(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
++{
++	struct fsl_mc_command cmd = { 0 };
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_RESET,
++					  cmd_flags, token);
++
++	/* send command to mc*/
++	return mc_send_command(mc_io, &cmd);
++}
++
++/**
++ * dpdmai_get_attributes() - Retrieve DPDMAI attributes.
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @token:	Token of DPDMAI object
++ * @attr:	Returned object's attributes
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_get_attributes(struct fsl_mc_io *mc_io, u32 cmd_flags,
++			  u16 token, struct dpdmai_attr *attr)
++{
++	struct dpdmai_rsp_get_attributes *rsp_params;
++	struct fsl_mc_command cmd = { 0 };
++	int err;
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_GET_ATTR,
++					  cmd_flags, token);
++
++	/* send command to mc*/
++	err = mc_send_command(mc_io, &cmd);
++	if (err)
++		return err;
++
++	/* retrieve response parameters */
++	rsp_params = (struct dpdmai_rsp_get_attributes *)cmd.params;
++	attr->id = le32_to_cpu(rsp_params->id);
++	attr->version.major = le16_to_cpu(rsp_params->major);
++	attr->version.minor = le16_to_cpu(rsp_params->minor);
++	attr->num_of_priorities = rsp_params->num_of_priorities;
++
++	return 0;
++}
++
++/**
++ * dpdmai_set_rx_queue() - Set Rx queue configuration
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @token:	Token of DPDMAI object
++ * @priority:	Select the queue relative to number of
++ *		priorities configured at DPDMAI creation
++ * @cfg:	Rx queue configuration
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_set_rx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token,
++			u8 priority, const struct dpdmai_rx_queue_cfg *cfg)
++{
++	struct dpdmai_cmd_queue *cmd_params;
++	struct fsl_mc_command cmd = { 0 };
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_SET_RX_QUEUE,
++					  cmd_flags, token);
++
++	cmd_params = (struct dpdmai_cmd_queue *)cmd.params;
++	cmd_params->dest_id = cpu_to_le32(cfg->dest_cfg.dest_id);
++	cmd_params->priority = cfg->dest_cfg.priority;
++	cmd_params->queue = priority;
++	cmd_params->dest_type = cfg->dest_cfg.dest_type;
++	cmd_params->user_ctx = cpu_to_le64(cfg->user_ctx);
++	cmd_params->options = cpu_to_le32(cfg->options);
++
++	/* send command to mc*/
++	return mc_send_command(mc_io, &cmd);
++}
++
++/**
++ * dpdmai_get_rx_queue() - Retrieve Rx queue attributes.
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @token:	Token of DPDMAI object
++ * @priority:	Select the queue relative to number of
++ *				priorities configured at DPDMAI creation
++ * @attr:	Returned Rx queue attributes
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_get_rx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token,
++			u8 priority, struct dpdmai_rx_queue_attr *attr)
++{
++	struct dpdmai_cmd_queue *cmd_params;
++	struct fsl_mc_command cmd = { 0 };
++	int err;
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_GET_RX_QUEUE,
++					  cmd_flags, token);
++
++	cmd_params = (struct dpdmai_cmd_queue *)cmd.params;
++	cmd_params->queue = priority;
++
++	/* send command to mc*/
++	err = mc_send_command(mc_io, &cmd);
++	if (err)
++		return err;
++
++	/* retrieve response parameters */
++	attr->dest_cfg.dest_id = le32_to_cpu(cmd_params->dest_id);
++	attr->dest_cfg.priority = cmd_params->priority;
++	attr->dest_cfg.dest_type = cmd_params->dest_type;
++	attr->user_ctx = le64_to_cpu(cmd_params->user_ctx);
++	attr->fqid = le32_to_cpu(cmd_params->fqid);
++
++	return 0;
++}
++
++/**
++ * dpdmai_get_tx_queue() - Retrieve Tx queue attributes.
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @token:	Token of DPDMAI object
++ * @priority:	Select the queue relative to number of
++ *			priorities configured at DPDMAI creation
++ * @fqid:	Returned Tx queue
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_get_tx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags,
++			u16 token, u8 priority, u32 *fqid)
++{
++	struct dpdmai_rsp_get_tx_queue *rsp_params;
++	struct dpdmai_cmd_queue *cmd_params;
++	struct fsl_mc_command cmd = { 0 };
++	int err;
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_GET_TX_QUEUE,
++					  cmd_flags, token);
++
++	cmd_params = (struct dpdmai_cmd_queue *)cmd.params;
++	cmd_params->queue = priority;
++
++	/* send command to mc*/
++	err = mc_send_command(mc_io, &cmd);
++	if (err)
++		return err;
++
++	/* retrieve response parameters */
++
++	rsp_params = (struct dpdmai_rsp_get_tx_queue *)cmd.params;
++	*fqid = le32_to_cpu(rsp_params->fqid);
++
++	return 0;
++}
+diff --git a/drivers/dma/fsl-dpaa2-qdma/dpdmai.h b/drivers/dma/fsl-dpaa2-qdma/dpdmai.h
+new file mode 100644
+index 0000000..6d78509
+--- /dev/null
++++ b/drivers/dma/fsl-dpaa2-qdma/dpdmai.h
+@@ -0,0 +1,177 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright 2019 NXP */
++
++#ifndef __FSL_DPDMAI_H
++#define __FSL_DPDMAI_H
++
++/* DPDMAI Version */
++#define DPDMAI_VER_MAJOR	2
++#define DPDMAI_VER_MINOR	2
++
++#define DPDMAI_CMD_BASE_VERSION	0
++#define DPDMAI_CMD_ID_OFFSET	4
++
++#define DPDMAI_CMDID_FORMAT(x)	(((x) << DPDMAI_CMD_ID_OFFSET) | \
++				DPDMAI_CMD_BASE_VERSION)
++
++/* Command IDs */
++#define DPDMAI_CMDID_CLOSE		DPDMAI_CMDID_FORMAT(0x800)
++#define DPDMAI_CMDID_OPEN               DPDMAI_CMDID_FORMAT(0x80E)
++#define DPDMAI_CMDID_CREATE             DPDMAI_CMDID_FORMAT(0x90E)
++
++#define DPDMAI_CMDID_ENABLE             DPDMAI_CMDID_FORMAT(0x002)
++#define DPDMAI_CMDID_DISABLE            DPDMAI_CMDID_FORMAT(0x003)
++#define DPDMAI_CMDID_GET_ATTR           DPDMAI_CMDID_FORMAT(0x004)
++#define DPDMAI_CMDID_RESET              DPDMAI_CMDID_FORMAT(0x005)
++#define DPDMAI_CMDID_IS_ENABLED         DPDMAI_CMDID_FORMAT(0x006)
++
++#define DPDMAI_CMDID_SET_IRQ            DPDMAI_CMDID_FORMAT(0x010)
++#define DPDMAI_CMDID_GET_IRQ            DPDMAI_CMDID_FORMAT(0x011)
++#define DPDMAI_CMDID_SET_IRQ_ENABLE     DPDMAI_CMDID_FORMAT(0x012)
++#define DPDMAI_CMDID_GET_IRQ_ENABLE     DPDMAI_CMDID_FORMAT(0x013)
++#define DPDMAI_CMDID_SET_IRQ_MASK       DPDMAI_CMDID_FORMAT(0x014)
++#define DPDMAI_CMDID_GET_IRQ_MASK       DPDMAI_CMDID_FORMAT(0x015)
++#define DPDMAI_CMDID_GET_IRQ_STATUS     DPDMAI_CMDID_FORMAT(0x016)
++#define DPDMAI_CMDID_CLEAR_IRQ_STATUS	DPDMAI_CMDID_FORMAT(0x017)
++
++#define DPDMAI_CMDID_SET_RX_QUEUE	DPDMAI_CMDID_FORMAT(0x1A0)
++#define DPDMAI_CMDID_GET_RX_QUEUE       DPDMAI_CMDID_FORMAT(0x1A1)
++#define DPDMAI_CMDID_GET_TX_QUEUE       DPDMAI_CMDID_FORMAT(0x1A2)
++
++#define MC_CMD_HDR_TOKEN_O 32  /* Token field offset */
++#define MC_CMD_HDR_TOKEN_S 16  /* Token field size */
++
++#define MAKE_UMASK64(_width) \
++	((u64)((_width) < 64 ? ((u64)1 << (_width)) - 1 : (u64)-1))
++
++/* Data Path DMA Interface API
++ * Contains initialization APIs and runtime control APIs for DPDMAI
++ */
++
++/**
++ * Maximum number of Tx/Rx priorities per DPDMAI object
++ */
++#define DPDMAI_PRIO_NUM		2
++
++/* DPDMAI queue modification options */
++
++/**
++ * Select to modify the user's context associated with the queue
++ */
++#define DPDMAI_QUEUE_OPT_USER_CTX	0x1
++
++/**
++ * Select to modify the queue's destination
++ */
++#define DPDMAI_QUEUE_OPT_DEST		0x2
++
++/**
++ * struct dpdmai_cfg - Structure representing DPDMAI configuration
++ * @priorities: Priorities for the DMA hardware processing; valid priorities are
++ *	configured with values 1-8; the entry following last valid entry
++ *	should be configured with 0
++ */
++struct dpdmai_cfg {
++	u8 priorities[DPDMAI_PRIO_NUM];
++};
++
++/**
++ * struct dpdmai_attr - Structure representing DPDMAI attributes
++ * @id: DPDMAI object ID
++ * @version: DPDMAI version
++ * @num_of_priorities: number of priorities
++ */
++struct dpdmai_attr {
++	int	id;
++	/**
++	 * struct version - DPDMAI version
++	 * @major: DPDMAI major version
++	 * @minor: DPDMAI minor version
++	 */
++	struct {
++		u16 major;
++		u16 minor;
++	} version;
++	u8 num_of_priorities;
++};
++
++/**
++ * enum dpdmai_dest - DPDMAI destination types
++ * @DPDMAI_DEST_NONE: Unassigned destination; The queue is set in parked mode
++ *	and does not generate FQDAN notifications; user is expected to dequeue
++ *	from the queue based on polling or other user-defined method
++ * @DPDMAI_DEST_DPIO: The queue is set in schedule mode and generates FQDAN
++ *	notifications to the specified DPIO; user is expected to dequeue
++ *	from the queue only after notification is received
++ * @DPDMAI_DEST_DPCON: The queue is set in schedule mode and does not generate
++ *	FQDAN notifications, but is connected to the specified DPCON object;
++ *	user is expected to dequeue from the DPCON channel
++ */
++enum dpdmai_dest {
++	DPDMAI_DEST_NONE = 0,
++	DPDMAI_DEST_DPIO = 1,
++	DPDMAI_DEST_DPCON = 2
++};
++
++/**
++ * struct dpdmai_dest_cfg - Structure representing DPDMAI destination parameters
++ * @dest_type: Destination type
++ * @dest_id: Either DPIO ID or DPCON ID, depending on the destination type
++ * @priority: Priority selection within the DPIO or DPCON channel; valid values
++ *	are 0-1 or 0-7, depending on the number of priorities in that
++ *	channel; not relevant for 'DPDMAI_DEST_NONE' option
++ */
++struct dpdmai_dest_cfg {
++	enum dpdmai_dest dest_type;
++	int dest_id;
++	u8 priority;
++};
++
++/**
++ * struct dpdmai_rx_queue_cfg - DPDMAI RX queue configuration
++ * @options: Flags representing the suggested modifications to the queue;
++ *	Use any combination of 'DPDMAI_QUEUE_OPT_<X>' flags
++ * @user_ctx: User context value provided in the frame descriptor of each
++ *	dequeued frame;
++ *	valid only if 'DPDMAI_QUEUE_OPT_USER_CTX' is contained in 'options'
++ * @dest_cfg: Queue destination parameters;
++ *	valid only if 'DPDMAI_QUEUE_OPT_DEST' is contained in 'options'
++ */
++struct dpdmai_rx_queue_cfg {
++	struct dpdmai_dest_cfg dest_cfg;
++	u32 options;
++	u64 user_ctx;
++
++};
++
++/**
++ * struct dpdmai_rx_queue_attr - Structure representing attributes of Rx queues
++ * @user_ctx:  User context value provided in the frame descriptor of each
++ *	 dequeued frame
++ * @dest_cfg: Queue destination configuration
++ * @fqid: Virtual FQID value to be used for dequeue operations
++ */
++struct dpdmai_rx_queue_attr {
++	struct dpdmai_dest_cfg	dest_cfg;
++	u64 user_ctx;
++	u32 fqid;
++};
++
++int dpdmai_open(struct fsl_mc_io *mc_io, u32 cmd_flags,
++		int dpdmai_id, u16 *token);
++int dpdmai_close(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token);
++int dpdmai_create(struct fsl_mc_io *mc_io, u32 cmd_flags,
++		  const struct dpdmai_cfg *cfg, u16 *token);
++int dpdmai_enable(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token);
++int dpdmai_disable(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token);
++int dpdmai_reset(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token);
++int dpdmai_get_attributes(struct fsl_mc_io *mc_io, u32 cmd_flags,
++			  u16 token, struct dpdmai_attr	*attr);
++int dpdmai_set_rx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token,
++			u8 priority, const struct dpdmai_rx_queue_cfg *cfg);
++int dpdmai_get_rx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token,
++			u8 priority, struct dpdmai_rx_queue_attr *attr);
++int dpdmai_get_tx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags,
++			u16 token, u8 priority, u32 *fqid);
++
++#endif /* __FSL_DPDMAI_H */
+-- 
+1.7.1
+

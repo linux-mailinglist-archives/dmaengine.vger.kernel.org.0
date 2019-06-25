@@ -2,154 +2,118 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FD1B51ABB
-	for <lists+dmaengine@lfdr.de>; Mon, 24 Jun 2019 20:35:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A499520CB
+	for <lists+dmaengine@lfdr.de>; Tue, 25 Jun 2019 04:57:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbfFXSfE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 24 Jun 2019 14:35:04 -0400
-Received: from mail-eopbgr720053.outbound.protection.outlook.com ([40.107.72.53]:24415
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726378AbfFXSfE (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 24 Jun 2019 14:35:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rj0bzWf6+MqDUIlV4j65618yeg8AuS9uKU1xg74asGY=;
- b=LKeDx3yUBqL/xCge91iXKV47RuhIVINBSJ6xdv4Zn7bL1bRBy2r5IEpzKq5xf5sPlE9MiO4L5qo8JP6/WMwTyyfzK2zvj2n8r0EXsAqYbEZMxvdG+/RwmS+GTbeUTnKuVJ44ko6QPzL3dCHYjQeM+D5bYNdHuW7S5f1VCJYPV4I=
-Received: from DM5PR12MB1449.namprd12.prod.outlook.com (10.172.40.14) by
- DM5PR12MB1417.namprd12.prod.outlook.com (10.168.236.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.16; Mon, 24 Jun 2019 18:35:02 +0000
-Received: from DM5PR12MB1449.namprd12.prod.outlook.com
- ([fe80::180c:ff0c:37e6:a482]) by DM5PR12MB1449.namprd12.prod.outlook.com
- ([fe80::180c:ff0c:37e6:a482%10]) with mapi id 15.20.2008.014; Mon, 24 Jun
- 2019 18:35:01 +0000
-From:   "Hook, Gary" <Gary.Hook@amd.com>
-To:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: [PATCH] Documentation: dmaengine: clean up description of dmatest
- usage
-Thread-Topic: [PATCH] Documentation: dmaengine: clean up description of
- dmatest usage
-Thread-Index: AQHVKruIc2Kes2M1zUyEVecbjL+xhw==
-Date:   Mon, 24 Jun 2019 18:35:01 +0000
-Message-ID: <156140130017.28986.2649022716558702933.stgit@taos>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN6PR04CA0014.namprd04.prod.outlook.com
- (2603:10b6:805:3e::27) To DM5PR12MB1449.namprd12.prod.outlook.com
- (2603:10b6:4:10::14)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Gary.Hook@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.78.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 07fced30-17e7-4aeb-0205-08d6f8d2ab0e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB1417;
-x-ms-traffictypediagnostic: DM5PR12MB1417:
-x-microsoft-antispam-prvs: <DM5PR12MB1417B15D4494F7ADCCA0C91BFDE00@DM5PR12MB1417.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 007814487B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(7916004)(346002)(136003)(396003)(376002)(39860400002)(366004)(199004)(189003)(14444005)(71200400001)(26005)(110136005)(102836004)(2906002)(6436002)(33716001)(52116002)(103116003)(316002)(6506007)(386003)(478600001)(66066001)(6486002)(3846002)(53936002)(7736002)(305945005)(14454004)(72206003)(81166006)(8676002)(9686003)(6512007)(8936002)(81156014)(2501003)(25786009)(256004)(66946007)(68736007)(186003)(99286004)(486006)(6116002)(66446008)(66556008)(64756008)(73956011)(476003)(66476007)(5660300002)(71190400001)(2201001)(86362001)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1417;H:DM5PR12MB1449.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: NUpuVrYt0hfSsKRIizNKyGhiJKOP0Z4i9OgA+ncLdLCppKlwEjCOoGuQ83RPkWBMC+KU/eGLQBZ+6veUTIRHbLZoo//ZrSHZav87kv2yYpyvRACu3cC4LmaVfLPAFhimYG+gsZUxzE5jBh4R7iiFEJGL+Uq9YMLG7i8O1uB1iuEKrSqX6vXZU8g0Yzd56QGrtDUvAh0Jc3fiSlkanZs/lwtNnl+imjD2SVCWDLvX6vTueJNfWfzGwrEW6YWnr8Lr9df6o0H5Bj7DklIPiFoePBbOq/oOVuNljiVTA19H5gpqCEcRexTVsGZExzcnZ+IPedadSz7cPICx8QHTBe5VPlseqAMZ7pi93zBAQ64wjhXleSbQraf2nN25wwMSQt0bo7wP+KIcVYthbgsuCFwMGxxbSsBXr3KYogJrDFfYfKA=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <A877A8A46A07AA4F8828F839A97E0538@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1730451AbfFYC5p (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 24 Jun 2019 22:57:45 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:7385 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729697AbfFYC5p (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Jun 2019 22:57:45 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d118da80000>; Mon, 24 Jun 2019 19:57:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 24 Jun 2019 19:57:44 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 24 Jun 2019 19:57:44 -0700
+Received: from [10.24.70.239] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 25 Jun
+ 2019 02:57:32 +0000
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
+        <jonathanh@nvidia.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
+        <rlokhande@nvidia.com>, <dramesh@nvidia.com>, <mkumard@nvidia.com>
+References: <20190502122506.GP3845@vkoul-mobl.Dlink>
+ <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+ <20190504102304.GZ3845@vkoul-mobl.Dlink>
+ <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
+ <20190506155046.GH3845@vkoul-mobl.Dlink>
+ <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
+ <20190613044352.GC9160@vkoul-mobl.Dlink>
+ <09929edf-ddec-b70e-965e-cbc9ba4ffe6a@nvidia.com>
+ <20190618043308.GJ2962@vkoul-mobl>
+ <23474b74-3c26-3083-be21-4de7731a0e95@nvidia.com>
+ <20190624062609.GV2962@vkoul-mobl>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
+Date:   Tue, 25 Jun 2019 08:27:21 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 07fced30-17e7-4aeb-0205-08d6f8d2ab0e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jun 2019 18:35:01.8968
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ghook@amd.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1417
+In-Reply-To: <20190624062609.GV2962@vkoul-mobl>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1561431464; bh=xP3JA1D905ACqmkL7EENVTky9EKv/D4sESxy0rNMrm0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=TJXtb1kFMcDT0637MfairfavEY08XPVvepis7DEdDNmS++WdG2v8gLrIjtv5bbDmJ
+         ooAo2eFTBmbhsGYxGfMHPTWieoL1lNJim8DBHGEmSqnJoomi2k85UzLAXm/SiZAa31
+         Pj8tqbbDKp97v00DDWhUQI+UL6y8PPbwhsx8A4FdwCBS0NGl9mYNjtRoN+hqc0xLqu
+         hBCmnIlq/OwuLXlk20z3155HJw2rVeYaR1NP/fiZje6KPjY5zZRYFVmS7y+akoeIfx
+         JRGZXwI6n9SsRRIjfiDRLH2F50laHQy89kyAcDAImbDGfQp9u6iF/Zbb2WJE75MYKU
+         80+ROc/qQR/cQ==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Fix the formatting of the multi-channel test usage example. Call out
-the note about parameter ordering and add detail on the settings of
-parameters for the new version of dmatest.
 
-Fixes: f80f9988a26d7 ("dmaengine: Documentation: Add documentation for mult=
-i chan testing")
-
-Signed-off-by: Gary R Hook <gary.hook@amd.com>
----
- Documentation/driver-api/dmaengine/dmatest.rst |   21 +++++++++++++-------=
--
- 1 file changed, 13 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/driver-api/dmaengine/dmatest.rst b/Documentation=
-/driver-api/dmaengine/dmatest.rst
-index e78d070bb468..ee268d445d38 100644
---- a/Documentation/driver-api/dmaengine/dmatest.rst
-+++ b/Documentation/driver-api/dmaengine/dmatest.rst
-@@ -44,7 +44,8 @@ Example of usage::
-=20
-     dmatest.timeout=3D2000 dmatest.iterations=3D1 dmatest.channel=3Ddma0ch=
-an0 dmatest.run=3D1
-=20
--Example of multi-channel test usage:
-+Example of multi-channel test usage (new in the 5.0 kernel)::
-+
-     % modprobe dmatest
-     % echo 2000 > /sys/module/dmatest/parameters/timeout
-     % echo 1 > /sys/module/dmatest/parameters/iterations
-@@ -53,15 +54,18 @@ Example of multi-channel test usage:
-     % echo dma0chan2 > /sys/module/dmatest/parameters/channel
-     % echo 1 > /sys/module/dmatest/parameters/run
-=20
--Note: the channel parameter should always be the last parameter set prior =
-to
--running the test (setting run=3D1), this is because upon setting the chann=
-el
--parameter, that specific channel is requested using the dmaengine and a th=
-read
--is created with the existing parameters. This thread is set as pending
--and will be executed once run is set to 1. Any parameters set after the th=
-read
--is created are not applied.
-+.. note::
-+  For all tests, starting in the 5.0 kernel, either single- or multi-chann=
-el,
-+  the channel parameter(s) must be set after all other parameters. It is a=
-t
-+  that time that the existing parameter values are acquired for use by the
-+  thread(s). All other parameters are shared. Therefore, if changes are ma=
-de
-+  to any of the other parameters, and an additional channel specified, the
-+  (shared) parameters used for all threads will use the new values.
-+  After the channels are specified, each thread is set as pending. All thr=
-eads
-+  begin execution when the run parameter is set to 1.
-=20
- .. hint::
--  available channel list could be extracted by running the following comma=
-nd::
-+  A list of available channels can be found by running the following comma=
-nd::
-=20
-     % ls -1 /sys/class/dma/
-=20
-@@ -204,6 +208,7 @@ Releasing Channels
- Channels can be freed by setting run to 0.
-=20
- Example::
-+
-     % echo dma0chan1 > /sys/module/dmatest/parameters/channel
-     dmatest: Added 1 threads using dma0chan1
-     % cat /sys/class/dma/dma0chan1/in_use
-
+On 6/24/2019 11:56 AM, Vinod Koul wrote:
+> On 20-06-19, 15:59, Sameer Pujar wrote:
+>
+>>>>> So can you explain me what is the difference here that the peripheral
+>>>>> cannot configure and use burst size with passing fifo depth?
+>>>> Say for example FIFO_THRESHOLD is programmed as 16 WORDS, BURST_SIZE as 8
+>>>> WORDS.
+>>>> ADMAIF does not push data to AHUB(operation [2]) till threshold of 16 WORDS
+>>>> is
+>>>> reached in ADMAIF FIFO. Hence 2 burst transfers are needed to reach the
+>>>> threshold.
+>>>> As mentioned earlier, threshold here is to just indicate when data transfer
+>>>> can happen
+>>>> to AHUB modules.
+>>> So we have ADMA and AHUB and peripheral. You are talking to AHUB and that
+>>> is _not_ peripheral and if I have guess right the fifo depth is for AHUB
+>>> right?
+>> Yes the communication is between ADMA and AHUB. ADMAIF is the interface
+>> between
+>> ADMA and AHUB. ADMA channel sending data to AHUB pairs with ADMAIF TX
+>> channel.
+>> Similary ADMA channel receiving data from AHUB pairs with ADMAIF RX channel.
+>> FIFO DEPTH we are talking is about each ADMAIF TX/RX channel and it is
+>> configurable.
+>> DMA transfers happen to/from ADMAIF FIFOs and whenever data(per WORD) is
+>> popped/pushed
+>> out of ADMAIF to/from AHUB, asseration is made to ADMA. ADMA keeps counters
+>> based on
+>> these assertions. By knowing FIFO DEPTH and these counters, ADMA knows when
+>> to wait or
+>> when to transfer data.
+> Where does ADMAIF driver reside in kernel, who configures it for normal
+> dma txns..?
+Not yet, we are in the process of upstreaming ADMAIF driver.
+To describe briefly, audio subsystem is using ALSA SoC(ASoC) layer. 
+ADMAIF is
+registered as platform driver and exports DMA functionality. It 
+registers PCM
+devices for each Rx/Tx ADMAIF channel. During PCM playback/capture 
+operations,
+ALSA callbacks configure DMA channel using API dmaengine_slave_config().
+RFC patch proposed, is to help populate FIFO_SIZE value as well during above
+call, since ADMA requires it.
+>
+> Also it wold have helped the long discussion if that part was made clear
+> rather than talking about peripheral all this time :(
+Thought it was clear, though should have avoided using 'peripheral' in the
+discussions. Sorry for the confusion.

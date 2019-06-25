@@ -2,66 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A9A4553B1
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Jun 2019 17:46:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B70DC559A2
+	for <lists+dmaengine@lfdr.de>; Tue, 25 Jun 2019 23:05:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731241AbfFYPqI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 25 Jun 2019 11:46:08 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44487 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727572AbfFYPqI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Jun 2019 11:46:08 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r15so12950443lfm.11;
-        Tue, 25 Jun 2019 08:46:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5HkYvt7vqYcoplSqjUO7R3ulPIH/lqglCxToVLLxHq0=;
-        b=qXtq11GckrDcJCHDDEgthhpG8mHYmTpXpzctewOXeUwZmzUo0b5ZeAtMwVAfPHhIPT
-         3RhfwsBrNQETw2uzvpCbSc8dG/ITMshgLL9OzsWB5XOnH1VuBhB1eJF709b3TLytZa66
-         iPZ6oUBRjQ47hp3xXYtwKt8NpfCcGF3sPAHVG6KRSOSsrYYx/5qUxulw8KdpvUSSNZ6j
-         wxuwby4vZz9pG3VaHAkPbhhkzSoLLFtCq/7AA0gftSopUeZpN5J3cYWU7xqUlQBj2TsE
-         sWo6eQY/SLn3t/XWBGW9SmsuLqBCzeFuVIqOzL9A+qq68NVNOowGczMSJrmpmUYAm2p8
-         RLHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5HkYvt7vqYcoplSqjUO7R3ulPIH/lqglCxToVLLxHq0=;
-        b=RImzWAmk85hJDcS1JoVRUHJZsED/dm/ANwRrs0ZmC3wQwRNkrX5kzi+3zNSW+Ym3fY
-         2TabmsQABekY508UA6/WlZACtnDjHsVfgnYlyh7JlPI+kQAdqlfM2aCcPACQfUM4NCO3
-         lPBWYfIjaRZbrBEzPePaddb+n1JpZKuwhxTJ8uGy0N5kWY4Nj1krJcwTcyEQZbWqxlqL
-         6gm8sXToCbozozXxsUuNDrcBxt2+IytEF6Uepm5HoDURNqhmy973Dx2+heZ8MeQvzB4N
-         QDfE/DVUjiP3w2b+lSEZBb/1BFmutYJDFt3RfsoVnTMlsQhv9injIw25YmUvbno9sb0y
-         t+Ew==
-X-Gm-Message-State: APjAAAUvHn6RMLmycI9CtS0Y+fw8se2C4p1BFcyj/0CY2lTpAJ9++X+A
-        qPx+7ArbDpYx6lz/lMfImfP7hIYHc0LD3WOJ4UA=
-X-Google-Smtp-Source: APXvYqzVkv3ISEpy81fk9GqWVELv6LncGBQA618cty6rXyn6Ym+TyTksnqIcZ4ZJkwyOgbRhI2GPWbZy/JzI4c4/Nq0=
-X-Received: by 2002:ac2:5a5e:: with SMTP id r30mr16968201lfn.12.1561477566289;
- Tue, 25 Jun 2019 08:46:06 -0700 (PDT)
+        id S1726223AbfFYVFY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 25 Jun 2019 17:05:24 -0400
+Received: from static.187.34.201.195.clients.your-server.de ([195.201.34.187]:39560
+        "EHLO sysam.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725290AbfFYVFX (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 25 Jun 2019 17:05:23 -0400
+X-Greylist: delayed 542 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Jun 2019 17:05:22 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by sysam.it (Postfix) with ESMTP id 522653FE8F;
+        Tue, 25 Jun 2019 22:56:19 +0200 (CEST)
+Received: from sysam.it ([127.0.0.1])
+        by localhost (mail.sysam.it [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id RZOjAEBv86Q3; Tue, 25 Jun 2019 22:56:19 +0200 (CEST)
+Received: from jerusalem (host105-54-dynamic.182-80-r.retail.telecomitalia.it [80.182.54.105])
+        by sysam.it (Postfix) with ESMTPSA id 6B6373FE8A;
+        Tue, 25 Jun 2019 22:56:18 +0200 (CEST)
+Date:   Tue, 25 Jun 2019 22:56:17 +0200
+From:   Angelo Dureghello <angelo@sysam.it>
+To:     yibin.gong@nxp.com
+Cc:     robh@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, mark.rutland@arm.com, vkoul@kernel.org,
+        dan.j.williams@intel.com, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v5 0/6] add edma2 for i.mx7ulp
+Message-ID: <20190625205617.GA24968@jerusalem>
+References: <20190625094324.19196-1-yibin.gong@nxp.com>
 MIME-Version: 1.0
-References: <20190621082306.34415-1-yibin.gong@nxp.com> <CAOMZO5B+uXF=1WTPsA-9LrmtTF0Q0s7Fipwtd1nkWSgr3ec25w@mail.gmail.com>
- <VE1PR04MB6638D58DED0D7092D8FCE93589E30@VE1PR04MB6638.eurprd04.prod.outlook.com>
-In-Reply-To: <VE1PR04MB6638D58DED0D7092D8FCE93589E30@VE1PR04MB6638.eurprd04.prod.outlook.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 25 Jun 2019 12:45:54 -0300
-Message-ID: <CAOMZO5AUnDJ_Wz3sWFDv4hZ-vAwO4_ioTW=5FUNDwFS7zBRJOg@mail.gmail.com>
-Subject: Re: [PATCH v2] dmaengine: imx-sdma: remove BD_INTR for channel0
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Vinod <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        Michael Olbrich <m.olbrich@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        stable <stable@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190625094324.19196-1-yibin.gong@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
@@ -69,17 +45,66 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 Hi Robin,
 
-On Tue, Jun 25, 2019 at 4:36 AM Robin Gong <yibin.gong@nxp.com> wrote:
+On Tue, Jun 25, 2019 at 05:43:18PM +0800, yibin.gong@nxp.com wrote:
+> From: Robin Gong <yibin.gong@nxp.com>
+> 
+> This patch set add new version of edma for i.mx7ulp, the main changes
+> are as belows:
+>  1. only one dmamux.
+>  2. another clock dma_clk except dmamux clk.
+>  3. 16 independent interrupts instead of only one interrupt for
+>     all channels
+> For the first change, need modify fsl-edma-common.c and mcf-edma,
+> so create the first two patches to prepare without any function impact.
+> 
+> For the third change, need request single irq for every channel with
+> the legacy handler. But actually 2 dma channels share one interrupt(16
+> channel interrupts, but 32 channels.),ch0/ch16,ch1/ch17... For now, just
+> simply request irq without IRQF_SHARED flag, since 16 channels are enough
+> on i.mx7ulp whose M4 domain own some peripherals.
+> 
+> change from v1:
+>   1. check .data of 'of_device_id' in probe instead of compatible name.
+> 
+> change from v2:
+>   1. move the difference between edma and edma2 into driver data so that
+>      no need version checking in fsl-edma.c.
+> 
+> change from v3:
+>   1. remove duplicated 'version' and 'dmamux_nr' in 'struct fsl_edma_engine'
+>      since they are included in drvdata already.
+>   2. downgrade print log level.
+>   3. address some minor indent issues raised by Vinod.
+> 
+> change from v4:
+>   1. correct typo.
+> 
+> Robin Gong (6):
+>   dmaengine: fsl-edma: add drvdata for fsl-edma
+>   dmaengine: fsl-edma-common: move dmamux register to another single
+>     function
+>   dmaengine: fsl-edma-common: version check for v2 instead
+>   dt-bindings: dma: fsl-edma: add new i.mx7ulp-edma
+>   dmaengine: fsl-edma: add i.mx7ulp edma2 version support
+>   ARM: dts: imx7ulp: add edma device node
+> 
+>  Documentation/devicetree/bindings/dma/fsl-edma.txt |  44 ++++++++-
+>  arch/arm/boot/dts/imx7ulp.dtsi                     |  28 ++++++
+>  drivers/dma/fsl-edma-common.c                      |  83 ++++++++++------
+>  drivers/dma/fsl-edma-common.h                      |  14 ++-
+>  drivers/dma/fsl-edma.c                             | 109 ++++++++++++++++++---
+>  drivers/dma/mcf-edma.c                             |  11 ++-
+>  6 files changed, 239 insertions(+), 50 deletions(-)
+> 
 
-> Yes, although Sven only met this issue after v4.19, this potential issue should be there.
-> But 1d069bfa3c78 seems merged from v4.7 instead?
+I tested the patch-set on ColdFire mcf5441x (stmark2 board), all works fine.
 
-Yes, you could simply do:
+Tested-by: Angelo Dureghello <angelo@sysam.it>
 
-Fixes: 1d069bfa3c78 ("dmaengine: imx-sdma: ack channel 0 IRQ in the
-interrupt handler")
-Cc: stable@vger.kernel.org
 
-And it will get applied to all relevant stable trees.
+Regards,
+Angelo
 
-Thanks
+> -- 
+> 2.7.4
+> 

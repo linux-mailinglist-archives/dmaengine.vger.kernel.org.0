@@ -2,59 +2,58 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ADA658881
-	for <lists+dmaengine@lfdr.de>; Thu, 27 Jun 2019 19:35:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4602758883
+	for <lists+dmaengine@lfdr.de>; Thu, 27 Jun 2019 19:36:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfF0Rfn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 27 Jun 2019 13:35:43 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44858 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726542AbfF0Rfn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 27 Jun 2019 13:35:43 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t7so1660019plr.11;
-        Thu, 27 Jun 2019 10:35:43 -0700 (PDT)
+        id S1726659AbfF0Rfw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 27 Jun 2019 13:35:52 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33041 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726542AbfF0Rfv (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 27 Jun 2019 13:35:51 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x15so1590411pfq.0;
+        Thu, 27 Jun 2019 10:35:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=swE2uPeKQhZkn33ToHN0/DGisXtpeV3c7xG1CSkw2+k=;
-        b=Miy6dVwuphqr0+9kYCyN1mdCjUPNegKo3U/+jmoyKUClmFp7MPluirtH8Z+Nw+RKBN
-         3eXqH5NvFlFjeLHWjlhaTdvYVEk28pRatoMtSHwEN0fG3I7pIxLan/nZ+xXIygT9qB2i
-         SsYL3BUCqVLpX3Y0c0pBJ6wW60QbBFvwq1uK+kS0PFokK64IRKEo2bo8XgxTxyrLEPoF
-         BLsDUjEoVc8s4x6BXDSp0zqnSZjPZbwdDVeZwEfv/Apa97ih8qy2cnu8zqI56FBKe+NY
-         04RfHsEwz8iH0uzJUsuyugOC54n4B2Zp4bELVfl2HkNF9KychUb+JnOpPcIhUGSyFcpR
-         PKfg==
+        bh=01KFyhJUV3RoNriqLf5yZvf+oiqWf/wBU4j/uLg4Xuc=;
+        b=uBVdbE3Jhxyv437CFJJGnINzZBdXk56Qp/pNpZfZPaOVfVl+sZMXIyYzWjz8o0VFnJ
+         T+JSipaAlS39HZMZj0VHrh5JLWeYKWebAhdklZafCZzcg8OnY3Ev3gx3zHCi1p9pmUYW
+         Lf1rupKSulkylrYR17QzTHWsFDKqc2zLyd8zaAcCT7NurEi89oquIGSkmr/cGCKN6D1m
+         8r4MqtBJmIQ7xPm6zn+kW2YGk2ElBGUveuQ3AZWvEmJmINhu4x2v4BEi7lJKh3BVPwGg
+         2olzaHXAxVT9n3DBpWU8gxoD1qZPQVbZM/sDKnRTzXt+hoVP+po5g+GYJ2q1+hdki7r3
+         P70Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=swE2uPeKQhZkn33ToHN0/DGisXtpeV3c7xG1CSkw2+k=;
-        b=mO88xnwKIRSXWRyMGttQs0G7nWqUefacy/pKM7TD42LJqDJEGKacwPNdHHqzuBZKKj
-         HLav0z5NU+6iJRrhGMthDWgB8SRxiLgYe5r6s7A0XlIOqShX8ndIKpR3YSR9Mel1Em4W
-         zMHpe2dLxDIVoTJq0QEzuBxyw7PqA5BpI6lZ0nmrmTnPwp6kJeJmclxxccPINh9woco/
-         4nD/U8540rLWJ7zzvOwrLIsyrvXFEgHAdbg6BqF5HhuvYmcJGI04hRIKPv2YrobcdJTN
-         XF6Lxd0gi8ykW8i0MD5Jt7ZIG4XN9VPrFIGFA6LIky+rZJyinDIf6CBPbAoTObe2HHiD
-         9Jow==
-X-Gm-Message-State: APjAAAUi3PjZ+yuGwJSh/+DxQwKZak+yd4NgneJLdLn3Kkxb+20mZB5/
-        3jlkZuxUkmdI6l2dKOBgnf4=
-X-Google-Smtp-Source: APXvYqw4m8q2FPtXEiZooJ1RVdH5A46FRMsZhFAfyz6Kp2srD4Txv/gFtWJs5K+G/1ZWXnU6AHUaDA==
-X-Received: by 2002:a17:902:d88e:: with SMTP id b14mr5839060plz.153.1561656943033;
-        Thu, 27 Jun 2019 10:35:43 -0700 (PDT)
+        bh=01KFyhJUV3RoNriqLf5yZvf+oiqWf/wBU4j/uLg4Xuc=;
+        b=avtPmgt36j/jua3Y6oAM+Jg6LJZidjpZXWuMFJk2ZYpMGkxhDq+T1HXB0sILvOZOE6
+         xtL6mLN4IeVJ3CwuXv2w9Kb9MGITxZvYU5DI8zHdaUREqxuAPbobmw+wlf1Fjj6mQLcq
+         Nwg4fIeAXqWpeWNIzX1tnHVT0Rp4qQS3lTS9fajPi+93ft+SJMG4hNh0LedYN8Ua0MLf
+         tJ5RhvWp1JdyrbkScesfEtvKzxCtLKvRxxeImxd+VeKS7VP5s4KlOr7tdlQJ4ZGUO5py
+         dbkjADn1zmlx7C7+iBN9qX12I2wHQI5b8OamVtIvarKNtZoh7uEULyaDrqbzLIzOfYJH
+         +YPQ==
+X-Gm-Message-State: APjAAAWQH3nNT6dih0BCxVrOJWrk3dLYCF2nVBI2ZVmlcUiWpDbOIMOh
+        j2bL5SRvjIRjUb5LG9Q4m5wQcJzXqJTkKw==
+X-Google-Smtp-Source: APXvYqx+SNOeQczFkdaeBwmZhm/+mJTRZpohDTl9JOaOaz6UQcducOrh5q7I2LNI6Zl46a6QPO1zNg==
+X-Received: by 2002:a63:c34c:: with SMTP id e12mr4711054pgd.195.1561656951061;
+        Thu, 27 Jun 2019 10:35:51 -0700 (PDT)
 Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id t11sm3479203pgb.33.2019.06.27.10.35.40
+        by smtp.googlemail.com with ESMTPSA id p68sm4011548pfb.80.2019.06.27.10.35.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 10:35:42 -0700 (PDT)
+        Thu, 27 Jun 2019 10:35:50 -0700 (PDT)
 From:   Fuqian Huang <huangfq.daxian@gmail.com>
 Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
+        Sinan Kaya <okaya@kernel.org>, Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Vinod Koul <vkoul@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 12/87] dma: imx-sdma: Remove call to memset after dma_alloc_coherent
-Date:   Fri, 28 Jun 2019 01:35:35 +0800
-Message-Id: <20190627173536.2457-1-huangfq.daxian@gmail.com>
+Subject: [PATCH 13/87] qcom: hidma_ll: Remove call to memset after dmam_alloc_coherent
+Date:   Fri, 28 Jun 2019 01:35:44 +0800
+Message-Id: <20190627173544.2509-1-huangfq.daxian@gmail.com>
 X-Mailer: git-send-email 2.11.0
 To:     unlisted-recipients:; (no To-header on input)
 Sender: dmaengine-owner@vger.kernel.org
@@ -64,29 +63,34 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
     In commit af7ddd8a627c
 ("Merge tag 'dma-mapping-4.21' of git://git.infradead.org/users/hch/dma-mapping"),
-    dma_alloc_coherent has already zeroed the memory.
+    dmam_alloc_coherent has already zeroed the memory.
     So memset is not needed.
 
 Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
- drivers/dma/imx-sdma.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/dma/qcom/hidma_ll.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 99d9f431ae2c..54d86359bdf8 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1886,10 +1886,6 @@ static int sdma_init(struct sdma_engine *sdma)
- 	sdma->context_phys = ccb_phys +
- 		MAX_DMA_CHANNELS * sizeof (struct sdma_channel_control);
+diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
+index 5bf8b145c427..bb4471e84e48 100644
+--- a/drivers/dma/qcom/hidma_ll.c
++++ b/drivers/dma/qcom/hidma_ll.c
+@@ -749,7 +749,6 @@ struct hidma_lldev *hidma_ll_init(struct device *dev, u32 nr_tres,
+ 	if (!lldev->tre_ring)
+ 		return NULL;
  
--	/* Zero-out the CCB structures array just allocated */
--	memset(sdma->channel_control, 0,
--			MAX_DMA_CHANNELS * sizeof (struct sdma_channel_control));
--
- 	/* disable all channels */
- 	for (i = 0; i < sdma->drvdata->num_events; i++)
- 		writel_relaxed(0, sdma->regs + chnenbl_ofs(sdma, i));
+-	memset(lldev->tre_ring, 0, (HIDMA_TRE_SIZE + 1) * nr_tres);
+ 	lldev->tre_ring_size = HIDMA_TRE_SIZE * nr_tres;
+ 	lldev->nr_tres = nr_tres;
+ 
+@@ -769,7 +768,6 @@ struct hidma_lldev *hidma_ll_init(struct device *dev, u32 nr_tres,
+ 	if (!lldev->evre_ring)
+ 		return NULL;
+ 
+-	memset(lldev->evre_ring, 0, (HIDMA_EVRE_SIZE + 1) * nr_tres);
+ 	lldev->evre_ring_size = HIDMA_EVRE_SIZE * nr_tres;
+ 
+ 	/* the EVRE ring has to be EVRE_SIZE aligned */
 -- 
 2.11.0
 

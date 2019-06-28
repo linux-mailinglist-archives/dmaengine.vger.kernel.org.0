@@ -2,226 +2,114 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5083658B19
-	for <lists+dmaengine@lfdr.de>; Thu, 27 Jun 2019 21:49:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 144B959182
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Jun 2019 04:47:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfF0Tto (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 27 Jun 2019 15:49:44 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37777 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbfF0Ttn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 27 Jun 2019 15:49:43 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y57so3832161qtk.4;
-        Thu, 27 Jun 2019 12:49:42 -0700 (PDT)
+        id S1727070AbfF1Cqx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 27 Jun 2019 22:46:53 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40935 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbfF1Cqx (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 27 Jun 2019 22:46:53 -0400
+Received: by mail-pl1-f193.google.com with SMTP id a93so2360256pla.7;
+        Thu, 27 Jun 2019 19:46:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MenPiCw1B2pHCHuETRVoHlHg8uoJRec68bX3QIhKK+0=;
-        b=b2tZYxcOSVDOSlx9s9Y0fD5ZZq5G7Sx+TNB/9r7SSwO0TQ0t/E7iQjuw3D8GIbciOx
-         Phckim+CZ+rZUEZj7olsxP6BHD1NMuLhLdfVjq/a8fWVQhVu2tyNN7QAKYy1pvLrDhLp
-         F8Dr8cD8CQvU5UqHz1WStBvvx4pPwPWiO7+LlNnrkFMl/4VSw17mvIoqdwUoNMk5xOJU
-         RQAc500HLM9D6jpX2EsiGV/iEOnyAaUw4S8WvlhHD73f0ivCFmjin2D3u72fKozikZbV
-         PHVnzAGoSoPIO31CQBLkhgYqIBUz/LGznxdHhpsplrnVjqE+4uaVfwRR3Wd6Ux4AqF2S
-         FzTA==
+        h=from:to:cc:subject:date:message-id;
+        bh=04GljEtl2h3DmnTzFw9yoiLkqcADLLyfQ+DeoECtL/g=;
+        b=DfYRJv3o9Bcrqrgqw90Ljs1hZlo0ut9UVtzdSkOf+R1UrqOE5qgOpWli4VXM0vexVS
+         kcLQdIIY41qtuPt77bpfXCCz78DVSEt8nHQLWrbGGHdvoUJiz0AHcKv0zey3ymekMWQW
+         3ZYA8ry/J/fEnLyaQxY/BCrVNKg3WvLn+S+OzgWsXccwFp47WifaGx+EJq/hvLPyjB5T
+         MReyTie+sBqblJjpj/MiGCu3GI5I5tLhd2JdRgoeCaOJaKr2J4U4bH/SxUo06oabCEJW
+         tSJtSMgB5G+PcmJykIpGyPCl2lY/vlSPJFcP9+0kFoqBvtyZKe04tgqrO4PjH2qf54hN
+         q8Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MenPiCw1B2pHCHuETRVoHlHg8uoJRec68bX3QIhKK+0=;
-        b=cEpDlpIuFtLAxTBANpyEjjL/h+atVhiUAaxzgpqL1JfZzmSaahCcdsIoKKV685FMgK
-         riESmPw2szPpT1nuJSNWMFUeqlh+uK6MOBp9Mq6tCxHrTzEgG51H8Rs26AZZzObR3vXA
-         WrNaRwrz9xrQiapt7pRSgSK9k5u2YOtId3vAOIPVDr6txU6E13O3IeU+4xKKP9cWQGBw
-         3luoVZAqa5b2fHNwr/RW5T67eNrKiHyysvLHPe72c2TfGCTlunZHiJToYV5nSJkyejF2
-         vCI74xkn2GarH1z5AK1w2PdmKXORSeM3uo2DlnSEN3FFukKcXsBP8BktRn4As3DpP04g
-         R1PQ==
-X-Gm-Message-State: APjAAAVZ+7Svaq4quzcojP6pguv0Va9TGoVbTJTnqlpEwYgCcm0Lj1CZ
-        hac+a/kqufDtq6E/xoaIRsM=
-X-Google-Smtp-Source: APXvYqzoaYDifvYkRLn3drVCGVXffLrEFo0MNdR3u9o8JcopLUZzCYdZSGJ3h+zSAqEg7E9jfkOKwg==
-X-Received: by 2002:a0c:b998:: with SMTP id v24mr4881682qvf.132.1561664982305;
-        Thu, 27 Jun 2019 12:49:42 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id k55sm37681qtf.68.2019.06.27.12.49.39
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=04GljEtl2h3DmnTzFw9yoiLkqcADLLyfQ+DeoECtL/g=;
+        b=V/wIPX6CW+2PXvu9P1h6h893H9ZSX+9n07VADXMMIUCql8qeJbAD8Qk1U5MnIxt8o3
+         IjhGSona3m5xDfVpymk5fvWX2b+8pIxBGJMA+5C4aCfByd9w4nrVpS/Yn8ea1nVXykI2
+         3LYHWPl+PzsQs9HfvsmM8pmmZbLkzdb4byfwTMXgWXsLhKghSyPgUtc10jQFOCJuihNT
+         WNbhnhLZ+qnXdRIwhr1PjFSe9Xu79+4xm1IPZbz5fFfBl2jsc6LoDkmAFyUGdhLb9p45
+         bi7lVFKtMme4DSDCjZEH+vam3UKl6rmNpXcUf4qKreoo7LY4K6oR48lqD+67J5wRpV9Q
+         WLFw==
+X-Gm-Message-State: APjAAAUkRJpPaoZOk1WieYSC9dDz91lxnttPkBj+HB/rxH0c7HPuBXXG
+        qFh33YfBe2S+foEQdu6lth0=
+X-Google-Smtp-Source: APXvYqwZWLNOSYNebra3h7VxqKFQWWgskOaNU9GLrmfb1nSa3+umdvA8TKyiTag+IOKEC5NcyTD2Fg==
+X-Received: by 2002:a17:902:9a42:: with SMTP id x2mr8693861plv.106.1561690012576;
+        Thu, 27 Jun 2019 19:46:52 -0700 (PDT)
+Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.googlemail.com with ESMTPSA id j15sm450696pfr.146.2019.06.27.19.46.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 12:49:41 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] dmaengine: tegra-apb: Support per-burst residue granularity
-Date:   Thu, 27 Jun 2019 22:47:28 +0300
-Message-Id: <20190627194728.8948-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 27 Jun 2019 19:46:52 -0700 (PDT)
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sinan Kaya <okaya@kernel.org>, Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: [PATCH v2 06/27] dma: remove memset after dma_alloc_coherent/dmam_alloc_coherent
+Date:   Fri, 28 Jun 2019 10:46:42 +0800
+Message-Id: <20190628024642.15089-1-huangfq.daxian@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Tegra's APB DMA engine updates words counter after each transferred burst
-of data, hence it can report transfer's residual with more fidelity which
-may be required in cases like audio playback. In particular this fixes
-audio stuttering during playback in a chromium web browser. The patch is
-based on the original work that was made by Ben Dooks and a patch from
-downstream kernel. It was tested on Tegra20 and Tegra30 devices.
+In commit af7ddd8a627c
+("Merge tag 'dma-mapping-4.21' of git://git.infradead.org/users/hch/dma-mapping"),
+dma_alloc_coherent/dmam_alloc_coherent has already zeroed the memory.
+So memset is not needed.
 
-Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
-Link: https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
-Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
 ---
+ drivers/dma/imx-sdma.c      | 4 ----
+ drivers/dma/qcom/hidma_ll.c | 2 --
+ 2 files changed, 6 deletions(-)
 
-Changelog:
-
-v3:  Added workaround for a hardware design shortcoming that results
-     in a words counter wraparound before end-of-transfer bit is set
-     in a cyclic mode.
-
-v2:  Addressed review comments made by Jon Hunter to v1. We won't try
-     to get words count if dma_desc is on free list as it will result
-     in a NULL dereference because this case wasn't handled properly.
-
-     The residual value is now updated properly, avoiding potential
-     integer overflow by adding the "bytes" to the "bytes_transferred"
-     instead of the subtraction.
-
- drivers/dma/tegra20-apb-dma.c | 69 +++++++++++++++++++++++++++++++----
- 1 file changed, 62 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index 79e9593815f1..71473eda28ee 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
- 	bool				last_sg;
- 	struct list_head		node;
- 	struct tegra_dma_desc		*dma_desc;
-+	unsigned int			words_xferred;
- };
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 99d9f431ae2c..54d86359bdf8 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -1886,10 +1886,6 @@ static int sdma_init(struct sdma_engine *sdma)
+ 	sdma->context_phys = ccb_phys +
+ 		MAX_DMA_CHANNELS * sizeof (struct sdma_channel_control);
  
- /*
-@@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct tegra_dma_channel *tdc,
- 	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
- 				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
- 	nsg_req->configured = true;
-+	nsg_req->words_xferred = 0;
+-	/* Zero-out the CCB structures array just allocated */
+-	memset(sdma->channel_control, 0,
+-			MAX_DMA_CHANNELS * sizeof (struct sdma_channel_control));
+-
+ 	/* disable all channels */
+ 	for (i = 0; i < sdma->drvdata->num_events; i++)
+ 		writel_relaxed(0, sdma->regs + chnenbl_ofs(sdma, i));
+diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
+index 5bf8b145c427..bb4471e84e48 100644
+--- a/drivers/dma/qcom/hidma_ll.c
++++ b/drivers/dma/qcom/hidma_ll.c
+@@ -749,7 +749,6 @@ struct hidma_lldev *hidma_ll_init(struct device *dev, u32 nr_tres,
+ 	if (!lldev->tre_ring)
+ 		return NULL;
  
- 	tegra_dma_resume(tdc);
- }
-@@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma_channel *tdc)
- 					typeof(*sg_req), node);
- 	tegra_dma_start(tdc, sg_req);
- 	sg_req->configured = true;
-+	sg_req->words_xferred = 0;
- 	tdc->busy = true;
- }
+-	memset(lldev->tre_ring, 0, (HIDMA_TRE_SIZE + 1) * nr_tres);
+ 	lldev->tre_ring_size = HIDMA_TRE_SIZE * nr_tres;
+ 	lldev->nr_tres = nr_tres;
  
-@@ -797,6 +800,61 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
- 	return 0;
- }
+@@ -769,7 +768,6 @@ struct hidma_lldev *hidma_ll_init(struct device *dev, u32 nr_tres,
+ 	if (!lldev->evre_ring)
+ 		return NULL;
  
-+static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
-+					       struct tegra_dma_sg_req *sg_req)
-+{
-+	unsigned long status, wcount = 0;
-+
-+	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
-+		return 0;
-+
-+	if (tdc->tdma->chip_data->support_separate_wcount_reg)
-+		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
-+
-+	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
-+
-+	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
-+		wcount = status;
-+
-+	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
-+		return sg_req->req_len;
-+
-+	wcount = get_current_xferred_count(tdc, sg_req, wcount);
-+
-+	if (!wcount) {
-+		/*
-+		 * If wcount wasn't ever polled for this SG before, then
-+		 * simply assume that transfer hasn't started yet.
-+		 *
-+		 * Otherwise it's the end of the transfer.
-+		 *
-+		 * The alternative would be to poll the status register
-+		 * until EOC bit is set or wcount goes UP. That's so
-+		 * because EOC bit is getting set only after the last
-+		 * burst's completion and counter is less than the actual
-+		 * transfer size by 4 bytes. The counter value wraps around
-+		 * in a cyclic mode before EOC is set(!), so we can't easily
-+		 * distinguish start of transfer from its end.
-+		 */
-+		if (sg_req->words_xferred)
-+			wcount = sg_req->req_len - 4;
-+
-+	} else if (wcount < sg_req->words_xferred) {
-+		/*
-+		 * This case shall not ever happen because EOC bit
-+		 * must be set once next cyclic transfer is started.
-+		 * Assume that hardware is malfunctioning or there is
-+		 * a software bug.
-+		 */
-+		wcount = sg_req->req_len - 4;
-+		WARN_ON_ONCE(1);
-+	} else {
-+		sg_req->words_xferred = wcount;
-+	}
-+
-+	return wcount;
-+}
-+
- static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
- 	dma_cookie_t cookie, struct dma_tx_state *txstate)
- {
-@@ -806,6 +864,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
- 	enum dma_status ret;
- 	unsigned long flags;
- 	unsigned int residual;
-+	unsigned int bytes = 0;
+-	memset(lldev->evre_ring, 0, (HIDMA_EVRE_SIZE + 1) * nr_tres);
+ 	lldev->evre_ring_size = HIDMA_EVRE_SIZE * nr_tres;
  
- 	ret = dma_cookie_status(dc, cookie, txstate);
- 	if (ret == DMA_COMPLETE)
-@@ -825,6 +884,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
- 	list_for_each_entry(sg_req, &tdc->pending_sg_req, node) {
- 		dma_desc = sg_req->dma_desc;
- 		if (dma_desc->txd.cookie == cookie) {
-+			bytes = tegra_dma_sg_bytes_xferred(tdc, sg_req);
- 			ret = dma_desc->dma_status;
- 			goto found;
- 		}
-@@ -836,7 +896,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
- found:
- 	if (dma_desc && txstate) {
- 		residual = dma_desc->bytes_requested -
--			   (dma_desc->bytes_transferred %
-+			   ((dma_desc->bytes_transferred + bytes) %
- 			    dma_desc->bytes_requested);
- 		dma_set_residue(txstate, residual);
- 	}
-@@ -1441,12 +1501,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 		BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
- 		BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
- 	tdma->dma_dev.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
--	/*
--	 * XXX The hardware appears to support
--	 * DMA_RESIDUE_GRANULARITY_BURST-level reporting, but it's
--	 * only used by this driver during tegra_dma_terminate_all()
--	 */
--	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
-+	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
- 	tdma->dma_dev.device_config = tegra_dma_slave_config;
- 	tdma->dma_dev.device_terminate_all = tegra_dma_terminate_all;
- 	tdma->dma_dev.device_tx_status = tegra_dma_tx_status;
+ 	/* the EVRE ring has to be EVRE_SIZE aligned */
 -- 
-2.22.0
+2.11.0
 

@@ -2,114 +2,160 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 144B959182
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Jun 2019 04:47:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 957B75996B
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Jun 2019 13:51:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfF1Cqx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 27 Jun 2019 22:46:53 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40935 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbfF1Cqx (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 27 Jun 2019 22:46:53 -0400
-Received: by mail-pl1-f193.google.com with SMTP id a93so2360256pla.7;
-        Thu, 27 Jun 2019 19:46:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=04GljEtl2h3DmnTzFw9yoiLkqcADLLyfQ+DeoECtL/g=;
-        b=DfYRJv3o9Bcrqrgqw90Ljs1hZlo0ut9UVtzdSkOf+R1UrqOE5qgOpWli4VXM0vexVS
-         kcLQdIIY41qtuPt77bpfXCCz78DVSEt8nHQLWrbGGHdvoUJiz0AHcKv0zey3ymekMWQW
-         3ZYA8ry/J/fEnLyaQxY/BCrVNKg3WvLn+S+OzgWsXccwFp47WifaGx+EJq/hvLPyjB5T
-         MReyTie+sBqblJjpj/MiGCu3GI5I5tLhd2JdRgoeCaOJaKr2J4U4bH/SxUo06oabCEJW
-         tSJtSMgB5G+PcmJykIpGyPCl2lY/vlSPJFcP9+0kFoqBvtyZKe04tgqrO4PjH2qf54hN
-         q8Xg==
+        id S1726564AbfF1Lvj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 28 Jun 2019 07:51:39 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:47064 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbfF1Lvj (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Jun 2019 07:51:39 -0400
+Received: by mail-ot1-f66.google.com with SMTP id z23so5635912ote.13;
+        Fri, 28 Jun 2019 04:51:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=04GljEtl2h3DmnTzFw9yoiLkqcADLLyfQ+DeoECtL/g=;
-        b=V/wIPX6CW+2PXvu9P1h6h893H9ZSX+9n07VADXMMIUCql8qeJbAD8Qk1U5MnIxt8o3
-         IjhGSona3m5xDfVpymk5fvWX2b+8pIxBGJMA+5C4aCfByd9w4nrVpS/Yn8ea1nVXykI2
-         3LYHWPl+PzsQs9HfvsmM8pmmZbLkzdb4byfwTMXgWXsLhKghSyPgUtc10jQFOCJuihNT
-         WNbhnhLZ+qnXdRIwhr1PjFSe9Xu79+4xm1IPZbz5fFfBl2jsc6LoDkmAFyUGdhLb9p45
-         bi7lVFKtMme4DSDCjZEH+vam3UKl6rmNpXcUf4qKreoo7LY4K6oR48lqD+67J5wRpV9Q
-         WLFw==
-X-Gm-Message-State: APjAAAUkRJpPaoZOk1WieYSC9dDz91lxnttPkBj+HB/rxH0c7HPuBXXG
-        qFh33YfBe2S+foEQdu6lth0=
-X-Google-Smtp-Source: APXvYqwZWLNOSYNebra3h7VxqKFQWWgskOaNU9GLrmfb1nSa3+umdvA8TKyiTag+IOKEC5NcyTD2Fg==
-X-Received: by 2002:a17:902:9a42:: with SMTP id x2mr8693861plv.106.1561690012576;
-        Thu, 27 Jun 2019 19:46:52 -0700 (PDT)
-Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id j15sm450696pfr.146.2019.06.27.19.46.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 19:46:52 -0700 (PDT)
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K8l4MtGQkJM9EGnhldzQahBFzyBF13zgVztQH0T3zG8=;
+        b=En1XTpCJ8Tva6I6cqpz5cjcjW8cWwfQ1YuofpA9ZmUtgP6gEIIhBWjwLg203BNxSlc
+         CfflUV1OTxpSD2+ubya/bOj9Aga1UdqmAXmAJ9GecBDYPqcATEETcJGfl+B/G1K6hr6W
+         gKhxyDqd+9TR+UJpZ6QCEmStOUbEhHXhoTLGDb84Ryf9P3/cKrlSmLKZXGtnXIeYnmow
+         kf/Fkf02eqyVOyMdI7mO8Jx3fR9OwVUQxwsKSxhmzTQqEr7YgHPQ2v+/nDmfvo2/7ssc
+         To6/IQoUIzFUNySdKbCm9T51z+d6RLQmXmY/+CggXqS0EwUjc0Jdbg1mf2kbx+XpLGKI
+         daig==
+X-Gm-Message-State: APjAAAUJl24Zpil33akM+qLBxt0x51Zf4F7a8QATiEiYUq0mCdDgI08a
+        JLrftfLqwkZ6kJArbBa5UiQ6X9+d1s4fIuxnU+8=
+X-Google-Smtp-Source: APXvYqzdFuGSxoSUOdpGgJD/2b8tbD8y18L4dvgELocB/59oKsEp1AZwISkSvtI+PPQw9bPShX7p10Fke5Dzrbp60OY=
+X-Received: by 2002:a05:6830:210f:: with SMTP id i15mr7712294otc.250.1561722697415;
+ Fri, 28 Jun 2019 04:51:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190624123540.20629-1-geert+renesas@glider.be> <20190626173434.GA24702@x230>
+In-Reply-To: <20190626173434.GA24702@x230>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 28 Jun 2019 13:51:25 +0200
+Message-ID: <CAMuHMdWuk7CkfcUSX=706f8b6YMFio7iwZg32+uXsyOKL68fuQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] serial: sh-sci: Fix .flush_buffer() issues
+To:     Eugeniu Rosca <roscaeugeniu@gmail.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sinan Kaya <okaya@kernel.org>, Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH v2 06/27] dma: remove memset after dma_alloc_coherent/dmam_alloc_coherent
-Date:   Fri, 28 Jun 2019 10:46:42 +0800
-Message-Id: <20190628024642.15089-1-huangfq.daxian@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        dmaengine@vger.kernel.org,
+        "George G . Davis" <george_davis@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-In commit af7ddd8a627c
-("Merge tag 'dma-mapping-4.21' of git://git.infradead.org/users/hch/dma-mapping"),
-dma_alloc_coherent/dmam_alloc_coherent has already zeroed the memory.
-So memset is not needed.
+Hi Eugeniu,
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
----
- drivers/dma/imx-sdma.c      | 4 ----
- drivers/dma/qcom/hidma_ll.c | 2 --
- 2 files changed, 6 deletions(-)
+On Wed, Jun 26, 2019 at 7:34 PM Eugeniu Rosca <roscaeugeniu@gmail.com> wrote:
+> On Mon, Jun 24, 2019 at 02:35:38PM +0200, Geert Uytterhoeven wrote:
+> > This patch series attempts to fix the issues Eugeniu Rosca reported
+> > seeing, where .flush_buffer() interfered with transmit DMA operation[*].
+> >
+> > There's a third patch "dmaengine: rcar-dmac: Reject zero-length slave
+> > DMA requests", which is related to the issue, but further independent,
+> > hence submitted separately.
+> >
+> > Eugeniu: does this fix the issues you were seeing?
+>
+> Many thanks for both sh-sci and the rcar-dmac patches.
+> The fixes are very much appreciated.
+>
+> > Geert Uytterhoeven (2):
+> >   serial: sh-sci: Fix TX DMA buffer flushing and workqueue races
+> >   serial: sh-sci: Terminate TX DMA during buffer flushing
+> >
+> >  drivers/tty/serial/sh-sci.c | 33 ++++++++++++++++++++++++---------
+> >  1 file changed, 24 insertions(+), 9 deletions(-)
+>
+> I reserved some time to get a feeling about how the patches behave on
+> a real system (H3-ES2.0-ULCB-KF-M06), so here come my observations.
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 99d9f431ae2c..54d86359bdf8 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1886,10 +1886,6 @@ static int sdma_init(struct sdma_engine *sdma)
- 	sdma->context_phys = ccb_phys +
- 		MAX_DMA_CHANNELS * sizeof (struct sdma_channel_control);
- 
--	/* Zero-out the CCB structures array just allocated */
--	memset(sdma->channel_control, 0,
--			MAX_DMA_CHANNELS * sizeof (struct sdma_channel_control));
--
- 	/* disable all channels */
- 	for (i = 0; i < sdma->drvdata->num_events; i++)
- 		writel_relaxed(0, sdma->regs + chnenbl_ofs(sdma, i));
-diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
-index 5bf8b145c427..bb4471e84e48 100644
---- a/drivers/dma/qcom/hidma_ll.c
-+++ b/drivers/dma/qcom/hidma_ll.c
-@@ -749,7 +749,6 @@ struct hidma_lldev *hidma_ll_init(struct device *dev, u32 nr_tres,
- 	if (!lldev->tre_ring)
- 		return NULL;
- 
--	memset(lldev->tre_ring, 0, (HIDMA_TRE_SIZE + 1) * nr_tres);
- 	lldev->tre_ring_size = HIDMA_TRE_SIZE * nr_tres;
- 	lldev->nr_tres = nr_tres;
- 
-@@ -769,7 +768,6 @@ struct hidma_lldev *hidma_ll_init(struct device *dev, u32 nr_tres,
- 	if (!lldev->evre_ring)
- 		return NULL;
- 
--	memset(lldev->evre_ring, 0, (HIDMA_EVRE_SIZE + 1) * nr_tres);
- 	lldev->evre_ring_size = HIDMA_EVRE_SIZE * nr_tres;
- 
- 	/* the EVRE ring has to be EVRE_SIZE aligned */
+Thanks for your extensive testing!
+
+> First of all, the issue I have originally reported in [0] is only
+> reproducible in absence of [4]. So, one of my questions would be how
+> do you yourself see the relationship between [1-3] and [4]?
+
+I consider them independent.
+Just applying [4] would fix the issue for the console only, while the
+race condition can still be triggered on other serial ports.
+
+> That said, all my testing assumes:
+>  - Vanilla tip v5.2-rc6-15-g249155c20f9b with [4] reverted.
+>  - DEBUG is undefined in {sh-sci.c,rcar-dmac.c}, since I've noticed
+>    new issues arising in the debug build, which are unrelated to [0].
+>
+> Below is the summary of my findings:
+>
+>  Version         IS [0]       Is console       Error message when
+> (vanilla+X)    reproduced?  usable after [0]   [0] is reproduced
+>                              is reproduced?
+>  ------------------------------------------------------------
+>  -[4]             Yes           No                [5]
+>  -[4]+[1]         Yes           No                -
+>  -[4]+[2]         Yes           Yes               [5]
+>  -[4]+[3]         Yes           Yes               [6]
+>  -[4]+[1]+[2]     No            -                 -
+>  -[4]+[1]+[2]+[3] No            -                 -
+>  pure vanilla     No            -                 -
+>
+> This looks a little too verbose, but I thought it might be interesting.
+
+Thanks, it's very helpful to provide these results.
+
+> The story which I see is that [1] does not fix [0] alone, but it seems
+> to depend on [2]. Furthermore, if cherry picked alone, [1] makes the
+> matters somewhat worse in the sense that it hides the error [5].
+
+OK.
+
+> My only question is whether [1-3] are supposed to replace [4] or they
+> are supposed to happily coexist. Since I don't see [0] being reproduced
+
+They are meant to coexist.
+
+> with [1-3], I personally prefer to re-enable DMA on SCIF (when the
+> latter is used as console) so that more features and code paths are
+> exercised to increase test coverage.
+
+If a serial port is used as a console, the port is used for both DMA
+(normal use) and PIO (serial console output).  The latter can have a
+negative impact on the former, aggravating existing bugs, or triggering
+more races, even in the hardware.  So I think it's better to be more
+cautious and keep DMA disabled for the console.
+
+> [0] https://lore.kernel.org/lkml/20190504004258.23574-3-erosca@de.adit-jv.com/
+> [1] https://patchwork.kernel.org/patch/11012983/
+>     ("serial: sh-sci: Fix TX DMA buffer flushing and workqueue races")
+> [2] https://patchwork.kernel.org/patch/11012987/
+>     ("serial: sh-sci: Terminate TX DMA during buffer flushing")
+> [3] https://patchwork.kernel.org/patch/11012991/
+>     ("dmaengine: rcar-dmac: Reject zero-length slave DMA requests")
+> [4] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=099506cbbc79c0
+>     ("serial: sh-sci: disable DMA for uart_console")
+>
+> [5] rcar-dmac e7300000.dma-controller: Channel Address Error
+> [6] rcar-dmac e7300000.dma-controller: rcar_dmac_prep_slave_sg: bad parameter: len=1, id=19
+>     sh-sci e6e88000.serial: Failed preparing Tx DMA descriptor
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.11.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds

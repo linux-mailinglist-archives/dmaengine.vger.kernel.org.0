@@ -2,110 +2,99 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5495C59C00
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Jun 2019 14:53:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7F2C59C21
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Jun 2019 14:55:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfF1Mx2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 28 Jun 2019 08:53:28 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:36307 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbfF1Mx1 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Jun 2019 08:53:27 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 498A23C00D1;
-        Fri, 28 Jun 2019 14:53:25 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 6m3R6_z5fLkn; Fri, 28 Jun 2019 14:53:19 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 90EF33C00C6;
-        Fri, 28 Jun 2019 14:53:19 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 28 Jun
- 2019 14:53:19 +0200
-Date:   Fri, 28 Jun 2019 14:53:19 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        id S1726614AbfF1Mzh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 28 Jun 2019 08:55:37 -0400
+Received: from sauhun.de ([88.99.104.3]:50692 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726590AbfF1Mzh (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 28 Jun 2019 08:55:37 -0400
+Received: from localhost (p54B332FA.dip0.t-ipconnect.de [84.179.50.250])
+        by pokefinder.org (Postfix) with ESMTPSA id 029B82C35BF;
+        Fri, 28 Jun 2019 14:55:34 +0200 (CEST)
+Date:   Fri, 28 Jun 2019 14:55:34 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        <linux-serial@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH 1/2] serial: sh-sci: Fix TX DMA buffer flushing and
- workqueue races
-Message-ID: <20190628125319.GB10962@vmlxhi-102.adit-jv.com>
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        dmaengine@vger.kernel.org,
+        "George G . Davis" <george_davis@mentor.com>
+Subject: Re: [PATCH 0/2] serial: sh-sci: Fix .flush_buffer() issues
+Message-ID: <20190628125534.GB1458@ninjato>
 References: <20190624123540.20629-1-geert+renesas@glider.be>
- <20190624123540.20629-2-geert+renesas@glider.be>
+ <20190626173434.GA24702@x230>
+ <CAMuHMdWuk7CkfcUSX=706f8b6YMFio7iwZg32+uXsyOKL68fuQ@mail.gmail.com>
+ <20190628123907.GA10962@vmlxhi-102.adit-jv.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="aM3YZ0Iwxop3KEKx"
 Content-Disposition: inline
-In-Reply-To: <20190624123540.20629-2-geert+renesas@glider.be>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.72.93.184]
+In-Reply-To: <20190628123907.GA10962@vmlxhi-102.adit-jv.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Geert,
 
-One bikeshedding below.
+--aM3YZ0Iwxop3KEKx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 24, 2019 at 02:35:39PM +0200, Geert Uytterhoeven wrote:
-[..]
-> diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-> index abc705716aa094fd..d4504daff99263f5 100644
-> --- a/drivers/tty/serial/sh-sci.c
-> +++ b/drivers/tty/serial/sh-sci.c
-> @@ -1398,6 +1398,7 @@ static void sci_dma_tx_work_fn(struct work_struct *work)
->  	struct circ_buf *xmit = &port->state->xmit;
->  	unsigned long flags;
->  	dma_addr_t buf;
-> +	int head, tail;
->  
->  	/*
->  	 * DMA is idle now.
-> @@ -1407,16 +1408,23 @@ static void sci_dma_tx_work_fn(struct work_struct *work)
->  	 * consistent xmit buffer state.
->  	 */
->  	spin_lock_irq(&port->lock);
-> -	buf = s->tx_dma_addr + (xmit->tail & (UART_XMIT_SIZE - 1));
-> +	head = xmit->head;
-> +	tail = xmit->tail;
-> +	buf = s->tx_dma_addr + (tail & (UART_XMIT_SIZE - 1));
->  	s->tx_dma_len = min_t(unsigned int,
-> -		CIRC_CNT(xmit->head, xmit->tail, UART_XMIT_SIZE),
-> -		CIRC_CNT_TO_END(xmit->head, xmit->tail, UART_XMIT_SIZE));
-> -	spin_unlock_irq(&port->lock);
-> +		CIRC_CNT(head, tail, UART_XMIT_SIZE),
-> +		CIRC_CNT_TO_END(head, tail, UART_XMIT_SIZE));
-> +	if (!s->tx_dma_len) {
-> +		/* Transmit buffer has been flushed */
-> +		spin_unlock_irq(&port->lock);
-> +		return;
 
-Since we can now return before using the result stored in 'buf', we
-could relocate the 'buf' calculation next to the return statement, just
-before calling dmaengine_prep_slave_single(), as micro-optimization.
+> > If a serial port is used as a console, the port is used for both DMA
+> > (normal use) and PIO (serial console output).  The latter can have a
+> > negative impact on the former, aggravating existing bugs, or triggering
+> > more races, even in the hardware.  So I think it's better to be more
+> > cautious and keep DMA disabled for the console.
+>=20
+> Thanks for the extensive and comprehensible replies.
+> No more questions from my end.
+> Looking forward to picking the patches from vanilla/stable trees.
 
-> +	}
->  
->  	desc = dmaengine_prep_slave_single(chan, buf, s->tx_dma_len,
->  					   DMA_MEM_TO_DEV,
->  					   DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+If you could formally add such a tag:
 
-Otherwise:
+Tested-by: <your email>
 
-Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+(maybe also Acked-by: or Reviewed-by:, dunno if you think it is
+apropriate)
 
--- 
-Best Regards,
-Eugeniu.
+to the patches, this would be much appreciated and will usually speed up
+the patches getting applied.
+
+Thanks for your help!
+
+
+--aM3YZ0Iwxop3KEKx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0WDkIACgkQFA3kzBSg
+KbYwxg//eqNbjfZIVe+MKaB8at3n680u6qn8/woFxTmDLiJjpMQiL3tDRrwf4mCY
+7KbrgGM6dRiQZzCu70YpUWBIu2WnKk6fyHasi6gAaEtWEh9CEXFxhdtsuek8g3oi
+bHlINoU6WJi2ntoW2HyW2o9f9jEJ8yM6imwQFOxnh73kdzwP36Iv2umMNnE6Xv1D
+z31sHgI/0eA3TddHAZ6vMLT1S3/YaogSLY8GQRlEEGap4vEvHD5V6Od6mgWgJuHj
+s3bXnM9XCOjrjkHDJRE6r6CZQBd36fYl8B0tF7qbdwjxbM43LDSAbYLJGOof5sdB
+Z3/5Mi7vBekBRG3X5FRbhHhb+mE5IWXoXALWv/ZjVPz5kgZ9zEoqE4qZxOqwCpGQ
+tnZoAcycOsAmpX1AIQq0iw1KnHtLwfSDuBwi9CiKv6OL/FoBQu0m3F8I/fdSpNyF
+rodpn4MTfTa8ybHTDKhJAd5vRNyV8ullhDotUkv+VIJ/4dw+fzlrV1SUmlEd4VJu
+1L2mWxU9hvAOV8DB5z719D5l5GbDG/adUh5KHVZGM0DdtCPcHX718FZufW61oqmA
+bR/yzqYn56nsIyWg125Su+YdWPQLtitjJqYPNc5oNOTMJOeexpZzqBzaYoQMJfLJ
+zZJOGCmzekY7l95fpEOEyMB2ysO4X7Xp+zpZsYzQ0IeDOJBRtBc=
+=BrYw
+-----END PGP SIGNATURE-----
+
+--aM3YZ0Iwxop3KEKx--

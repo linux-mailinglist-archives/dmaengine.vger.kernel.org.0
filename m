@@ -2,170 +2,93 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EBEF5A0D9
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Jun 2019 18:29:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86ECC5A990
+	for <lists+dmaengine@lfdr.de>; Sat, 29 Jun 2019 10:21:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbfF1Q3x (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 28 Jun 2019 12:29:53 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:35405 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbfF1Q3x (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Jun 2019 12:29:53 -0400
-Received: from svr-orw-mbx-01.mgc.mentorg.com ([147.34.90.201])
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hgtkH-0001pV-KB from George_Davis@mentor.com ; Fri, 28 Jun 2019 09:29:05 -0700
-Received: from localhost (147.34.91.1) by svr-orw-mbx-01.mgc.mentorg.com
- (147.34.90.201) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Fri, 28 Jun
- 2019 09:29:03 -0700
-Date:   Fri, 28 Jun 2019 12:29:02 -0400
-From:   "George G. Davis" <george_davis@mentor.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Vinod Koul <vkoul@kernel.org>,
+        id S1726775AbfF2IVo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 29 Jun 2019 04:21:44 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37776 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbfF2IVo (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 29 Jun 2019 04:21:44 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 19so4132966pfa.4;
+        Sat, 29 Jun 2019 01:21:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HB5G4BCyKAU7NWh04NXHQUYQWJo7mRMg3f1DS79X9is=;
+        b=U+sD4Tg2i5EmnQ+E96oYuHmFfjRIZFhu+ImSjldFv+pp7bnarxQt4kZTlckg4DVX+M
+         5BwiyO9vyxW50aW05AoE/XIReZ9UkFMhsaXqrral2F+wzcVqDlYG9Mvy5WHbXw3EVJDh
+         O+MEOuUIm8CeKDhIpzNb9pUSquazzH3bdV8LKIxTfBVuq8knnPvwv2H4AHzKPX2lgP4s
+         trkpZ1ybjg/Y1kuSq/ywv3KuZTsKx+BT4RNyIxMJxKYktCp2UZVQyYwlHdkJpOF55bVO
+         qgTm4y/L71e3PxcXX0+KKUtPt/aEITyjaj+U13dkDaAkNQB52CqYfAurITZQgPSEwS/+
+         iYYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HB5G4BCyKAU7NWh04NXHQUYQWJo7mRMg3f1DS79X9is=;
+        b=GvsMbNdKXv/hGaCFh45x2DeiIZnhv2PDkV7YHMYejqqkTNRIO43fmufrSVx/p10P53
+         FiREzKoZj7HgDFVShF0+e6Wws8v0ElPcP+a7yRr+QeeYTSkrO7iSS+3rvhLNTof4YiTw
+         0fhwF7Poazp/HUnmU4+4U3Ul072Z1hOdEhTRcAxP4jgpnCI6wPVBC5C8SLltcgVRvbAw
+         BuNxxj3EVlkY7Wf1OKOwJKdcc4xYKfN0VaSjwRfut2aiYpFgZABhLvIPl1XupMIdBnYt
+         1e6Sx8zUCPxYAglPPT86rRJMVnuMOLmx2FRWZ99ZtOzjXczk7bUUh/eUaMsxSMZ9wxCS
+         33ag==
+X-Gm-Message-State: APjAAAVPlu3TTwLg1uysEYc4/0JOYuUiYDvoPvCAFwke20yt3ai8QChK
+        rDZRRF+e376RsKmBBRzt0XvvJKYacYU=
+X-Google-Smtp-Source: APXvYqxe+pfvA2fNml3PD0CjRgo9z23VagyA/eh1M1nZFUM5QLw9+cWEf3nEyzTfGxa1nZKlTrc+TA==
+X-Received: by 2002:a17:90a:228b:: with SMTP id s11mr17710124pjc.23.1561796503508;
+        Sat, 29 Jun 2019 01:21:43 -0700 (PDT)
+Received: from localhost.localdomain ([219.91.196.157])
+        by smtp.googlemail.com with ESMTPSA id 27sm3834610pgt.6.2019.06.29.01.21.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 29 Jun 2019 01:21:42 -0700 (PDT)
+From:   Raag Jadav <raagjadav@gmail.com>
+To:     dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: Re: [PATCH 0/2] serial: sh-sci: Fix .flush_buffer() issues
-Message-ID: <20190628162902.GA1343@mam-gdavis-lt>
-References: <20190624123540.20629-1-geert+renesas@glider.be>
- <20190626173434.GA24702@x230>
- <CAMuHMdWuk7CkfcUSX=706f8b6YMFio7iwZg32+uXsyOKL68fuQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWuk7CkfcUSX=706f8b6YMFio7iwZg32+uXsyOKL68fuQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: SVR-ORW-MBX-09.mgc.mentorg.com (147.34.90.209) To
- svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Raag Jadav <raagjadav@gmail.com>
+Subject: [PATCH] dmaengine: at_xdmac: check for non-empty xfers_list before invoking callback
+Date:   Sat, 29 Jun 2019 13:50:48 +0530
+Message-Id: <1561796448-3321-1-git-send-email-raagjadav@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello All,
+tx descriptor retrieved from an empty xfers_list may not have valid
+pointers to the callback functions.
+Avoid calling dmaengine_desc_get_callback_invoke if xfers_list is empty.
 
-On Fri, Jun 28, 2019 at 01:51:25PM +0200, Geert Uytterhoeven wrote:
-> Hi Eugeniu,
-> 
-> On Wed, Jun 26, 2019 at 7:34 PM Eugeniu Rosca <roscaeugeniu@gmail.com> wrote:
-> > On Mon, Jun 24, 2019 at 02:35:38PM +0200, Geert Uytterhoeven wrote:
-> > > This patch series attempts to fix the issues Eugeniu Rosca reported
-> > > seeing, where .flush_buffer() interfered with transmit DMA operation[*].
-> > >
-> > > There's a third patch "dmaengine: rcar-dmac: Reject zero-length slave
-> > > DMA requests", which is related to the issue, but further independent,
-> > > hence submitted separately.
-> > >
-> > > Eugeniu: does this fix the issues you were seeing?
-> >
-> > Many thanks for both sh-sci and the rcar-dmac patches.
-> > The fixes are very much appreciated.
-> >
-> > > Geert Uytterhoeven (2):
-> > >   serial: sh-sci: Fix TX DMA buffer flushing and workqueue races
-> > >   serial: sh-sci: Terminate TX DMA during buffer flushing
-> > >
-> > >  drivers/tty/serial/sh-sci.c | 33 ++++++++++++++++++++++++---------
-> > >  1 file changed, 24 insertions(+), 9 deletions(-)
-> >
-> > I reserved some time to get a feeling about how the patches behave on
-> > a real system (H3-ES2.0-ULCB-KF-M06), so here come my observations.
-> 
-> Thanks for your extensive testing!
-> 
-> > First of all, the issue I have originally reported in [0] is only
-> > reproducible in absence of [4]. So, one of my questions would be how
-> > do you yourself see the relationship between [1-3] and [4]?
-> 
-> I consider them independent.
-> Just applying [4] would fix the issue for the console only, while the
-> race condition can still be triggered on other serial ports.
-> 
-> > That said, all my testing assumes:
-> >  - Vanilla tip v5.2-rc6-15-g249155c20f9b with [4] reverted.
-> >  - DEBUG is undefined in {sh-sci.c,rcar-dmac.c}, since I've noticed
-> >    new issues arising in the debug build, which are unrelated to [0].
-> >
-> > Below is the summary of my findings:
-> >
-> >  Version         IS [0]       Is console       Error message when
-> > (vanilla+X)    reproduced?  usable after [0]   [0] is reproduced
-> >                              is reproduced?
-> >  ------------------------------------------------------------
-> >  -[4]             Yes           No                [5]
-> >  -[4]+[1]         Yes           No                -
-> >  -[4]+[2]         Yes           Yes               [5]
-> >  -[4]+[3]         Yes           Yes               [6]
-> >  -[4]+[1]+[2]     No            -                 -
-> >  -[4]+[1]+[2]+[3] No            -                 -
-> >  pure vanilla     No            -                 -
-> >
-> > This looks a little too verbose, but I thought it might be interesting.
-> 
-> Thanks, it's very helpful to provide these results.
-> 
-> > The story which I see is that [1] does not fix [0] alone, but it seems
-> > to depend on [2]. Furthermore, if cherry picked alone, [1] makes the
-> > matters somewhat worse in the sense that it hides the error [5].
-> 
-> OK.
-> 
-> > My only question is whether [1-3] are supposed to replace [4] or they
-> > are supposed to happily coexist. Since I don't see [0] being reproduced
-> 
-> They are meant to coexist.
-> 
-> > with [1-3], I personally prefer to re-enable DMA on SCIF (when the
-> > latter is used as console) so that more features and code paths are
-> > exercised to increase test coverage.
-> 
-> If a serial port is used as a console, the port is used for both DMA
-> (normal use) and PIO (serial console output).  The latter can have a
-> negative impact on the former, aggravating existing bugs, or triggering
-> more races, even in the hardware.  So I think it's better to be more
-> cautious and keep DMA disabled for the console.
+Signed-off-by: Raag Jadav <raagjadav@gmail.com>
+---
+ drivers/dma/at_xdmac.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-Agreed.
-
-Just a note for the record that [4] was the easiest way to resolve the
-reported problem [0] but an alternative solution would be to implement DMA
-support for ttySC console ports which will be non-trivial to implement and test
-due to the potential for deadlocks in console write critical paths where
-various locks are held with interrupts disabled. I see only one tty serial
-driver which implements console DMA support, drivers/tty/serial/mpsc.c,
-and perhaps there is a good reason why there are no other examples?
-
-> > [0] https://lore.kernel.org/lkml/20190504004258.23574-3-erosca@de.adit-jv.com/
-> > [1] https://patchwork.kernel.org/patch/11012983/
-> >     ("serial: sh-sci: Fix TX DMA buffer flushing and workqueue races")
-> > [2] https://patchwork.kernel.org/patch/11012987/
-> >     ("serial: sh-sci: Terminate TX DMA during buffer flushing")
-> > [3] https://patchwork.kernel.org/patch/11012991/
-> >     ("dmaengine: rcar-dmac: Reject zero-length slave DMA requests")
-> > [4] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=099506cbbc79c0
-> >     ("serial: sh-sci: disable DMA for uart_console")
-> >
-> > [5] rcar-dmac e7300000.dma-controller: Channel Address Error
-> > [6] rcar-dmac e7300000.dma-controller: rcar_dmac_prep_slave_sg: bad parameter: len=1, id=19
-> >     sh-sci e6e88000.serial: Failed preparing Tx DMA descriptor
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-
+diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+index 627ef3e..b58ac72 100644
+--- a/drivers/dma/at_xdmac.c
++++ b/drivers/dma/at_xdmac.c
+@@ -1568,11 +1568,14 @@ static void at_xdmac_handle_cyclic(struct at_xdmac_chan *atchan)
+ 	struct at_xdmac_desc		*desc;
+ 	struct dma_async_tx_descriptor	*txd;
+ 
+-	desc = list_first_entry(&atchan->xfers_list, struct at_xdmac_desc, xfer_node);
+-	txd = &desc->tx_dma_desc;
++	if (!list_empty(&atchan->xfers_list)) {
++		desc = list_first_entry(&atchan->xfers_list,
++					struct at_xdmac_desc, xfer_node);
++		txd = &desc->tx_dma_desc;
+ 
+-	if (txd->flags & DMA_PREP_INTERRUPT)
+-		dmaengine_desc_get_callback_invoke(txd, NULL);
++		if (txd->flags & DMA_PREP_INTERRUPT)
++			dmaengine_desc_get_callback_invoke(txd, NULL);
++	}
+ }
+ 
+ static void at_xdmac_handle_error(struct at_xdmac_chan *atchan)
 -- 
-Regards,
-George
+2.7.4
+

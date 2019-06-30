@@ -2,93 +2,116 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 86ECC5A990
-	for <lists+dmaengine@lfdr.de>; Sat, 29 Jun 2019 10:21:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D2765B242
+	for <lists+dmaengine@lfdr.de>; Mon,  1 Jul 2019 00:53:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbfF2IVo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 29 Jun 2019 04:21:44 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37776 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726766AbfF2IVo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 29 Jun 2019 04:21:44 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 19so4132966pfa.4;
-        Sat, 29 Jun 2019 01:21:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=HB5G4BCyKAU7NWh04NXHQUYQWJo7mRMg3f1DS79X9is=;
-        b=U+sD4Tg2i5EmnQ+E96oYuHmFfjRIZFhu+ImSjldFv+pp7bnarxQt4kZTlckg4DVX+M
-         5BwiyO9vyxW50aW05AoE/XIReZ9UkFMhsaXqrral2F+wzcVqDlYG9Mvy5WHbXw3EVJDh
-         O+MEOuUIm8CeKDhIpzNb9pUSquazzH3bdV8LKIxTfBVuq8knnPvwv2H4AHzKPX2lgP4s
-         trkpZ1ybjg/Y1kuSq/ywv3KuZTsKx+BT4RNyIxMJxKYktCp2UZVQyYwlHdkJpOF55bVO
-         qgTm4y/L71e3PxcXX0+KKUtPt/aEITyjaj+U13dkDaAkNQB52CqYfAurITZQgPSEwS/+
-         iYYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=HB5G4BCyKAU7NWh04NXHQUYQWJo7mRMg3f1DS79X9is=;
-        b=GvsMbNdKXv/hGaCFh45x2DeiIZnhv2PDkV7YHMYejqqkTNRIO43fmufrSVx/p10P53
-         FiREzKoZj7HgDFVShF0+e6Wws8v0ElPcP+a7yRr+QeeYTSkrO7iSS+3rvhLNTof4YiTw
-         0fhwF7Poazp/HUnmU4+4U3Ul072Z1hOdEhTRcAxP4jgpnCI6wPVBC5C8SLltcgVRvbAw
-         BuNxxj3EVlkY7Wf1OKOwJKdcc4xYKfN0VaSjwRfut2aiYpFgZABhLvIPl1XupMIdBnYt
-         1e6Sx8zUCPxYAglPPT86rRJMVnuMOLmx2FRWZ99ZtOzjXczk7bUUh/eUaMsxSMZ9wxCS
-         33ag==
-X-Gm-Message-State: APjAAAVPlu3TTwLg1uysEYc4/0JOYuUiYDvoPvCAFwke20yt3ai8QChK
-        rDZRRF+e376RsKmBBRzt0XvvJKYacYU=
-X-Google-Smtp-Source: APXvYqxe+pfvA2fNml3PD0CjRgo9z23VagyA/eh1M1nZFUM5QLw9+cWEf3nEyzTfGxa1nZKlTrc+TA==
-X-Received: by 2002:a17:90a:228b:: with SMTP id s11mr17710124pjc.23.1561796503508;
-        Sat, 29 Jun 2019 01:21:43 -0700 (PDT)
-Received: from localhost.localdomain ([219.91.196.157])
-        by smtp.googlemail.com with ESMTPSA id 27sm3834610pgt.6.2019.06.29.01.21.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 29 Jun 2019 01:21:42 -0700 (PDT)
-From:   Raag Jadav <raagjadav@gmail.com>
-To:     dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Raag Jadav <raagjadav@gmail.com>
-Subject: [PATCH] dmaengine: at_xdmac: check for non-empty xfers_list before invoking callback
-Date:   Sat, 29 Jun 2019 13:50:48 +0530
-Message-Id: <1561796448-3321-1-git-send-email-raagjadav@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        id S1727172AbfF3WxA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 30 Jun 2019 18:53:00 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:34098 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727167AbfF3WxA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 30 Jun 2019 18:53:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1561935178; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=KvIG/VfrTUfK/8wMArtIEsLKTaGU5+E6+X/a55rpgZU=;
+        b=yaQQsx/e37FXjMLCckjNTuIDcxCfdKLkM2xc5dPSDTn6lM2VRUjbriHATJNNLSC1IPEHHH
+        ry1R4vGjXOhHRXMoCxYdUTrkM1pb2aCfhPJD0OV1F+604+wF54Xyeezzw1tbHXA1w4JpPC
+        g0KYI+9BYjyQLDiSDzolRA2bkLG89zc=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Paul Burton <paul.burton@mips.com>, od@zcrc.me,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] dmaengine: dma-jz4780: Break descriptor chains on JZ4740
+Date:   Mon,  1 Jul 2019 00:52:49 +0200
+Message-Id: <20190630225249.27369-1-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-tx descriptor retrieved from an empty xfers_list may not have valid
-pointers to the callback functions.
-Avoid calling dmaengine_desc_get_callback_invoke if xfers_list is empty.
+The current driver works perfectly fine on every generation of the
+JZ47xx SoCs, except on the JZ4740.
 
-Signed-off-by: Raag Jadav <raagjadav@gmail.com>
+There, when hardware descriptors are chained together (with the LINK
+bit set), the next descriptor isn't automatically fetched as it should -
+instead, an interrupt is raised, even if the TIE bit (Transfer Interrupt
+Enable) bit is cleared. When it happens, the DMA transfer seems to be
+stopped (it doesn't chain), and it's uncertain how many bytes have
+actually been transferred.
+
+Until somebody smarter than me can figure out how to make chained
+descriptors work on the JZ4740, we now disable chained descriptors on
+that particular SoC.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/dma/at_xdmac.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/dma/dma-jz4780.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index 627ef3e..b58ac72 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -1568,11 +1568,14 @@ static void at_xdmac_handle_cyclic(struct at_xdmac_chan *atchan)
- 	struct at_xdmac_desc		*desc;
- 	struct dma_async_tx_descriptor	*txd;
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index 263bee76ef0d..aae83389cc10 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -92,6 +92,7 @@
+ #define JZ_SOC_DATA_PROGRAMMABLE_DMA	BIT(1)
+ #define JZ_SOC_DATA_PER_CHAN_PM		BIT(2)
+ #define JZ_SOC_DATA_NO_DCKES_DCKEC	BIT(3)
++#define JZ_SOC_DATA_BREAK_LINKS		BIT(4)
  
--	desc = list_first_entry(&atchan->xfers_list, struct at_xdmac_desc, xfer_node);
--	txd = &desc->tx_dma_desc;
-+	if (!list_empty(&atchan->xfers_list)) {
-+		desc = list_first_entry(&atchan->xfers_list,
-+					struct at_xdmac_desc, xfer_node);
-+		txd = &desc->tx_dma_desc;
+ /**
+  * struct jz4780_dma_hwdesc - descriptor structure read by the DMA controller.
+@@ -356,6 +357,7 @@ static struct dma_async_tx_descriptor *jz4780_dma_prep_slave_sg(
+ 	void *context)
+ {
+ 	struct jz4780_dma_chan *jzchan = to_jz4780_dma_chan(chan);
++	struct jz4780_dma_dev *jzdma = jz4780_dma_chan_parent(jzchan);
+ 	struct jz4780_dma_desc *desc;
+ 	unsigned int i;
+ 	int err;
+@@ -376,7 +378,8 @@ static struct dma_async_tx_descriptor *jz4780_dma_prep_slave_sg(
  
--	if (txd->flags & DMA_PREP_INTERRUPT)
--		dmaengine_desc_get_callback_invoke(txd, NULL);
-+		if (txd->flags & DMA_PREP_INTERRUPT)
-+			dmaengine_desc_get_callback_invoke(txd, NULL);
-+	}
- }
+ 		desc->desc[i].dcm |= JZ_DMA_DCM_TIE;
  
- static void at_xdmac_handle_error(struct at_xdmac_chan *atchan)
+-		if (i != (sg_len - 1)) {
++		if (i != (sg_len - 1) &&
++		    !(jzdma->soc_data->flags & JZ_SOC_DATA_BREAK_LINKS)) {
+ 			/* Automatically proceeed to the next descriptor. */
+ 			desc->desc[i].dcm |= JZ_DMA_DCM_LINK;
+ 
+@@ -665,6 +668,7 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
+ static bool jz4780_dma_chan_irq(struct jz4780_dma_dev *jzdma,
+ 				struct jz4780_dma_chan *jzchan)
+ {
++	struct jz4780_dma_desc *desc = jzchan->desc;
+ 	uint32_t dcs;
+ 	bool ack = true;
+ 
+@@ -692,8 +696,10 @@ static bool jz4780_dma_chan_irq(struct jz4780_dma_dev *jzdma,
+ 
+ 				jz4780_dma_begin(jzchan);
+ 			} else if (dcs & JZ_DMA_DCS_TT) {
+-				vchan_cookie_complete(&jzchan->desc->vdesc);
+-				jzchan->desc = NULL;
++				if (jzchan->curr_hwdesc + 1 == desc->count) {
++					vchan_cookie_complete(&desc->vdesc);
++					jzchan->desc = NULL;
++				}
+ 
+ 				jz4780_dma_begin(jzchan);
+ 			} else {
+@@ -994,6 +1000,7 @@ static int jz4780_dma_remove(struct platform_device *pdev)
+ static const struct jz4780_dma_soc_data jz4740_dma_soc_data = {
+ 	.nb_channels = 6,
+ 	.transfer_ord_max = 5,
++	.flags = JZ_SOC_DATA_BREAK_LINKS,
+ };
+ 
+ static const struct jz4780_dma_soc_data jz4725b_dma_soc_data = {
 -- 
-2.7.4
+2.21.0.593.g511ec345e18
 

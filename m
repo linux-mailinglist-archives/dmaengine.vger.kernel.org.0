@@ -2,109 +2,101 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0990E5B63C
-	for <lists+dmaengine@lfdr.de>; Mon,  1 Jul 2019 10:02:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1C955CC98
+	for <lists+dmaengine@lfdr.de>; Tue,  2 Jul 2019 11:25:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfGAICO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 1 Jul 2019 04:02:14 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:24024 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfGAICO (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 1 Jul 2019 04:02:14 -0400
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.63,438,1557212400"; 
-   d="scan'208";a="41012022"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Jul 2019 01:02:13 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.87.71) by
- chn-vm-ex03.mchp-main.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 1 Jul 2019 01:02:10 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Mon, 1 Jul 2019 01:02:09 -0700
-Date:   Mon, 1 Jul 2019 10:00:51 +0200
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Raag Jadav <raagjadav@gmail.com>
-CC:     <dmaengine@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dmaengine: at_xdmac: check for non-empty xfers_list
- before invoking callback
-Message-ID: <20190701080050.np5krtatlifnvtq5@M43218.corp.atmel.com>
-Mail-Followup-To: Raag Jadav <raagjadav@gmail.com>,
-        dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1561796448-3321-1-git-send-email-raagjadav@gmail.com>
+        id S1727190AbfGBJZW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 2 Jul 2019 05:25:22 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43396 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbfGBJZV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 2 Jul 2019 05:25:21 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 16so16094767ljv.10;
+        Tue, 02 Jul 2019 02:25:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=e+ERxpd73DxC4MxlVJMnS2JsEkTIzOmmsxfHhHYhUvE=;
+        b=kyfd/lNbUDSD4OtSsZRiiSWp/BtuSHOAbUzan0lLdCe6ywHkVdn5JaTskxFiB43DJ2
+         zAh1aAGyBrc2tIQ/JTwvbqzvHnL1k+zoakSLCW6i2CEYknA01zhe2CDEalZ07ofRwqFu
+         N2q5kHhNLVB7DmdLYI4qOId/kdBCBk4s4+erxGKgc62sfbP6W0i4QIIzmvepdd+ddXWN
+         BLWxAIpLW28uq1ozZWPIk8ZLoMSZNhjtflhwHDvPrk5lx9MEb3xCWlZzitvw7m07abJM
+         mODKrGcXOqKDKa6abZusAPJ9/G1OWAOZRd9d41+yOC0hqlIU1y6bBAhUG10YjSXP/KEw
+         SX4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=e+ERxpd73DxC4MxlVJMnS2JsEkTIzOmmsxfHhHYhUvE=;
+        b=OEX3REdF6h0gsqtvOrDQViiFXByk60YndetgWQcKZYzawzGgKt8NuUiqk1RfaBYCvU
+         DRXBAn4Rsy5+VgHKl8/RyhHatdaxj75vY1YGAbdhQN62m1EtPzQ7Lc3AYCKEwA+kLWFG
+         WZ+PNNnAqpwUhVgyx+SDtzM2GDDl/zxaSx7Fofhq24H8evqRaEj8AMQVGKhKMS5a8DqN
+         AFBziYa4sO0eH2llFw79e52itaXWVe7A5x9x3PIiRYZIsnoCJxFDc1bTSf3rmVwxLfNq
+         D9ZO2gt1ZC0IGJanyK8sICuvPheRcFlD9jFk8pYKXza60w/xVj/L+fTWC5MNbYTrDf3A
+         5GMQ==
+X-Gm-Message-State: APjAAAXzgxLLVhMl0OLi0hbURIts0qB0QjWSsWHDJF2GDGdyAh377goi
+        n67sda/1oYZJgRWhw9XI/dScLElk
+X-Google-Smtp-Source: APXvYqwaRUH+28spPqlheHxdwf0YCYCv9jTAwmBQawPJVNxOAaS3SGM+VwjAPjeAo3eGKhK8cqldLg==
+X-Received: by 2002:a2e:81c4:: with SMTP id s4mr16580310ljg.182.1562059518979;
+        Tue, 02 Jul 2019 02:25:18 -0700 (PDT)
+Received: from [192.168.2.145] (ppp79-139-233-208.pppoe.spdop.ru. [79.139.233.208])
+        by smtp.googlemail.com with ESMTPSA id y4sm1374885lfc.56.2019.07.02.02.25.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 02:25:18 -0700 (PDT)
+Subject: Re: [PATCH v3] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190627194728.8948-1-digetx@gmail.com>
+Message-ID: <8b4fbdb5-c6fa-6481-4894-6c2c77c23195@gmail.com>
+Date:   Tue, 2 Jul 2019 12:25:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1561796448-3321-1-git-send-email-raagjadav@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190627194728.8948-1-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sat, Jun 29, 2019 at 01:50:48PM +0530, Raag Jadav wrote:
+27.06.2019 22:47, Dmitry Osipenko пишет:
+> Tegra's APB DMA engine updates words counter after each transferred burst
+> of data, hence it can report transfer's residual with more fidelity which
+> may be required in cases like audio playback. In particular this fixes
+> audio stuttering during playback in a chromium web browser. The patch is
+> based on the original work that was made by Ben Dooks and a patch from
+> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
 > 
-> tx descriptor retrieved from an empty xfers_list may not have valid
-> pointers to the callback functions.
-> Avoid calling dmaengine_desc_get_callback_invoke if xfers_list is empty.
-> 
-> Signed-off-by: Raag Jadav <raagjadav@gmail.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-
-Thanks
-
+> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
+> Link: https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
+> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  drivers/dma/at_xdmac.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-> index 627ef3e..b58ac72 100644
-> --- a/drivers/dma/at_xdmac.c
-> +++ b/drivers/dma/at_xdmac.c
-> @@ -1568,11 +1568,14 @@ static void at_xdmac_handle_cyclic(struct at_xdmac_chan *atchan)
->  	struct at_xdmac_desc		*desc;
->  	struct dma_async_tx_descriptor	*txd;
->  
-> -	desc = list_first_entry(&atchan->xfers_list, struct at_xdmac_desc, xfer_node);
-> -	txd = &desc->tx_dma_desc;
-> +	if (!list_empty(&atchan->xfers_list)) {
-> +		desc = list_first_entry(&atchan->xfers_list,
-> +					struct at_xdmac_desc, xfer_node);
-> +		txd = &desc->tx_dma_desc;
->  
-> -	if (txd->flags & DMA_PREP_INTERRUPT)
-> -		dmaengine_desc_get_callback_invoke(txd, NULL);
-> +		if (txd->flags & DMA_PREP_INTERRUPT)
-> +			dmaengine_desc_get_callback_invoke(txd, NULL);
-> +	}
->  }
->  
->  static void at_xdmac_handle_error(struct at_xdmac_chan *atchan)
-> -- 
-> 2.7.4
+> Changelog:
 > 
+> v3:  Added workaround for a hardware design shortcoming that results
+>      in a words counter wraparound before end-of-transfer bit is set
+>      in a cyclic mode.
 > 
+> v2:  Addressed review comments made by Jon Hunter to v1. We won't try
+>      to get words count if dma_desc is on free list as it will result
+>      in a NULL dereference because this case wasn't handled properly.
+> 
+>      The residual value is now updated properly, avoiding potential
+>      integer overflow by adding the "bytes" to the "bytes_transferred"
+>      instead of the subtraction.
+
+Is there still any chance to get this into 5.3? Will be very nice! Jon / Vinod ?
+

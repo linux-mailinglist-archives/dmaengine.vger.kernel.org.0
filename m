@@ -2,100 +2,244 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DDD575D22F
-	for <lists+dmaengine@lfdr.de>; Tue,  2 Jul 2019 16:56:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F383D5D2CE
+	for <lists+dmaengine@lfdr.de>; Tue,  2 Jul 2019 17:27:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726150AbfGBO4G (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 2 Jul 2019 10:56:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45392 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725981AbfGBO4G (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 2 Jul 2019 10:56:06 -0400
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B2EB21848
-        for <dmaengine@vger.kernel.org>; Tue,  2 Jul 2019 14:56:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562079365;
-        bh=Ia0o2q7ZnHa93WlCfPd3K651NhPC/AsEF9x5Wn0U0Nk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=z874ANHcvdEh6zBTASkB+WECo5mOcXlzWy9YMedAuXikRyyG34Y3punJ15Tg/Rx2i
-         lQfYsL3b459aj7j5pKoFFilkFzqseRxhXTHk/9Op4YPDbTBbskmF5sSoea1jI7Q3+C
-         t6Vip9R7u+yFoSAzLByHntQOQUl2n5Y6tiE70iKo=
-Received: by mail-lf1-f42.google.com with SMTP id d11so11636089lfb.4
-        for <dmaengine@vger.kernel.org>; Tue, 02 Jul 2019 07:56:05 -0700 (PDT)
-X-Gm-Message-State: APjAAAWjxaop08CxgI+F3a9veOZWnU+6KYS9v58Fcc9S8NEmaYYcVScH
-        HZYt7QUQDzCta956z09xKxOsPbwjIgDV51ohMq0=
-X-Google-Smtp-Source: APXvYqwRmy3M7/jSq6LfZnbcC10FAjrKWsa6DsReA2AfojWzgwq93gvFyQcPlUmAke0V2bjya3P6kjzlMule73XN4D0=
-X-Received: by 2002:a19:4f50:: with SMTP id a16mr13230646lfk.24.1562079363525;
- Tue, 02 Jul 2019 07:56:03 -0700 (PDT)
+        id S1726457AbfGBP1L (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 2 Jul 2019 11:27:11 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:5855 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbfGBP1K (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 2 Jul 2019 11:27:10 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d1b77cc0000>; Tue, 02 Jul 2019 08:27:08 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 02 Jul 2019 08:27:09 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 02 Jul 2019 08:27:09 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 2 Jul
+ 2019 15:27:07 +0000
+Subject: Re: [PATCH v3] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190627194728.8948-1-digetx@gmail.com>
+ <dab25158-272c-a18f-a858-433f7f9000e0@nvidia.com>
+ <3a5403fe-b81f-993c-e7c0-407387e001d9@gmail.com>
+ <b50045f9-7d8f-d91a-8629-625bcd7057bc@nvidia.com>
+ <ed84cc7d-08de-dbd7-40e2-bc84c5debe1a@gmail.com>
+ <e7199039-c4e5-304d-3d60-58ecd6648771@nvidia.com>
+ <bed3994a-d0d3-8d3b-4388-092d79b71540@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <019762ad-79e0-50ad-76f2-86bc3e107caa@nvidia.com>
+Date:   Tue, 2 Jul 2019 16:27:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190702143012.9472-1-festevam@gmail.com>
-In-Reply-To: <20190702143012.9472-1-festevam@gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Tue, 2 Jul 2019 16:55:52 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPc5jsfcPB9_-qMNZBAKMqU0TdpScmv-Md3455grAN8NiA@mail.gmail.com>
-Message-ID: <CAJKOXPc5jsfcPB9_-qMNZBAKMqU0TdpScmv-Md3455grAN8NiA@mail.gmail.com>
-Subject: Re: [PATCH] Revert "dmaengine: fsl-edma: support little endian for
- edma driver"
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     vkoul@kernel.org, peng.ma@nxp.com, dmaengine@vger.kernel.org,
-        cphealy@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <bed3994a-d0d3-8d3b-4388-092d79b71540@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562081228; bh=x5gkT3yANst93Zh4OqckcOeEpw+YeX95j1KUBqZLmoM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=CdWC7kb7YRb6Vs+WhhEGYzIsJoJa/3TC6VycDDj36pGQoyQI1VctmEQ0Wh8RgnI65
+         d+3uVx5iyMTuSwXujD+Bh7juy3UT40zicWPH6foo6+qC3H6DCfF0K6nSx7OuQB61D8
+         tnt5nj/BuZwgj7RzNjP5rXAgCNR8In+EZZccGV9W53LjnRjwEtP1tjUX/PfC/3OTsn
+         8RIx6ZADuu7+zcxOpECWucdtPOoMgREi4xDpQGWc16D67E9pzDK/g3R1d1uS2X2Mjp
+         9hc17mxcAamMOI8jzsszNgsZ+8WJOERV9BtsyETrlkMsSUuzQ7+2t361+b+WllYCcy
+         2y9qrA881UV8w==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, 2 Jul 2019 at 16:30, Fabio Estevam <festevam@gmail.com> wrote:
->
-> This reverts commit 002905eca5bedab08bafd9e325bbbb41670c7712.
->
-> Commit 002905eca5be ("dmaengine: fsl-edma: support little endian for edma
-> driver") incorrectly assumed that there was not little endian support
-> in the driver.
->
-> This causes hangs on Vybrid, so revert it so that Vybrid systems
-> could boot again.
->
-> Reported-by: Krzysztof Koz=C5=82owski <k.kozlowski.k@gmail.com>
 
-Thanks for the credits, just minor fixup (I used wrong email):
-Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
+On 02/07/2019 15:41, Dmitry Osipenko wrote:
+> 02.07.2019 16:41, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>> On 02/07/2019 14:22, Dmitry Osipenko wrote:
+>>> 02.07.2019 15:54, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>
+>>>> On 02/07/2019 12:37, Dmitry Osipenko wrote:
+>>>>> 02.07.2019 14:20, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>>
+>>>>>> On 27/06/2019 20:47, Dmitry Osipenko wrote:
+>>>>>>> Tegra's APB DMA engine updates words counter after each transferred=
+ burst
+>>>>>>> of data, hence it can report transfer's residual with more fidelity=
+ which
+>>>>>>> may be required in cases like audio playback. In particular this fi=
+xes
+>>>>>>> audio stuttering during playback in a chromium web browser. The pat=
+ch is
+>>>>>>> based on the original work that was made by Ben Dooks and a patch f=
+rom
+>>>>>>> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
+>>>>>>>
+>>>>>>> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks=
+@codethink.co.uk/
+>>>>>>> Link: https://nv-tegra.nvidia.com/gitweb/?p=3Dlinux-4.4.git;a=3Dcom=
+mit;h=3Dc7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
+>>>>>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>>> ---
+>>>>>>>
+>>>>>>> Changelog:
+>>>>>>>
+>>>>>>> v3:  Added workaround for a hardware design shortcoming that result=
+s
+>>>>>>>      in a words counter wraparound before end-of-transfer bit is se=
+t
+>>>>>>>      in a cyclic mode.
+>>>>>>>
+>>>>>>> v2:  Addressed review comments made by Jon Hunter to v1. We won't t=
+ry
+>>>>>>>      to get words count if dma_desc is on free list as it will resu=
+lt
+>>>>>>>      in a NULL dereference because this case wasn't handled properl=
+y.
+>>>>>>>
+>>>>>>>      The residual value is now updated properly, avoiding potential
+>>>>>>>      integer overflow by adding the "bytes" to the "bytes_transferr=
+ed"
+>>>>>>>      instead of the subtraction.
+>>>>>>>
+>>>>>>>  drivers/dma/tegra20-apb-dma.c | 69 +++++++++++++++++++++++++++++++=
+----
+>>>>>>>  1 file changed, 62 insertions(+), 7 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-ap=
+b-dma.c
+>>>>>>> index 79e9593815f1..71473eda28ee 100644
+>>>>>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>>>>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>>>>>> @@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
+>>>>>>>  	bool				last_sg;
+>>>>>>>  	struct list_head		node;
+>>>>>>>  	struct tegra_dma_desc		*dma_desc;
+>>>>>>> +	unsigned int			words_xferred;
+>>>>>>>  };
+>>>>>>> =20
+>>>>>>>  /*
+>>>>>>> @@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct=
+ tegra_dma_channel *tdc,
+>>>>>>>  	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
+>>>>>>>  				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
+>>>>>>>  	nsg_req->configured =3D true;
+>>>>>>> +	nsg_req->words_xferred =3D 0;
+>>>>>>> =20
+>>>>>>>  	tegra_dma_resume(tdc);
+>>>>>>>  }
+>>>>>>> @@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma=
+_channel *tdc)
+>>>>>>>  					typeof(*sg_req), node);
+>>>>>>>  	tegra_dma_start(tdc, sg_req);
+>>>>>>>  	sg_req->configured =3D true;
+>>>>>>> +	sg_req->words_xferred =3D 0;
+>>>>>>>  	tdc->busy =3D true;
+>>>>>>>  }
+>>>>>>> =20
+>>>>>>> @@ -797,6 +800,61 @@ static int tegra_dma_terminate_all(struct dma_=
+chan *dc)
+>>>>>>>  	return 0;
+>>>>>>>  }
+>>>>>>> =20
+>>>>>>> +static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_ch=
+annel *tdc,
+>>>>>>> +					       struct tegra_dma_sg_req *sg_req)
+>>>>>>> +{
+>>>>>>> +	unsigned long status, wcount =3D 0;
+>>>>>>> +
+>>>>>>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>>>>>>> +		return 0;
+>>>>>>> +
+>>>>>>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>>>>> +		wcount =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>>>>>>> +
+>>>>>>> +	status =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>>>>>>> +
+>>>>>>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>>>>> +		wcount =3D status;
+>>>>>>> +
+>>>>>>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>>>>>>> +		return sg_req->req_len;
+>>>>>>> +
+>>>>>>> +	wcount =3D get_current_xferred_count(tdc, sg_req, wcount);
+>>>>>>> +
+>>>>>>> +	if (!wcount) {
+>>>>>>> +		/*
+>>>>>>> +		 * If wcount wasn't ever polled for this SG before, then
+>>>>>>> +		 * simply assume that transfer hasn't started yet.
+>>>>>>> +		 *
+>>>>>>> +		 * Otherwise it's the end of the transfer.
+>>>>>>> +		 *
+>>>>>>> +		 * The alternative would be to poll the status register
+>>>>>>> +		 * until EOC bit is set or wcount goes UP. That's so
+>>>>>>> +		 * because EOC bit is getting set only after the last
+>>>>>>> +		 * burst's completion and counter is less than the actual
+>>>>>>> +		 * transfer size by 4 bytes. The counter value wraps around
+>>>>>>> +		 * in a cyclic mode before EOC is set(!), so we can't easily
+>>>>>>> +		 * distinguish start of transfer from its end.
+>>>>>>> +		 */
+>>>>>>> +		if (sg_req->words_xferred)
+>>>>>>> +			wcount =3D sg_req->req_len - 4;
+>>>>>>> +
+>>>>>>> +	} else if (wcount < sg_req->words_xferred) {
+>>>>>>> +		/*
+>>>>>>> +		 * This case shall not ever happen because EOC bit
+>>>>>>> +		 * must be set once next cyclic transfer is started.
+>>>>>>
+>>>>>> I am not sure I follow this and why this condition cannot happen for
+>>>>>> cyclic transfers. What about non-cyclic transfers?
+>>>>>
+>>>>> It cannot happen because the EOC bit will be set in that case. The co=
+unter wraps
+>>>>> around when the transfer of a last burst happens, EOC bit is guarante=
+ed to be set
+>>>>> after completion of the last burst. That's my observation after a tho=
+rough testing,
+>>>>> it will be very odd if EOC setting happened completely asynchronously=
+.
+>>>>
+>>>> I see how you know that the EOC is set. Anyway, you check if the EOC i=
+s
+>>>> set before and if so return sg_req->req_len prior to this test.
+>>>>
+>>>> Maybe I am missing something, but what happens if we are mid block whe=
+n
+>>>> dmaengine_tx_status() is called? That happen asynchronously right?
+>>>
+>>>
+>>> Do you mean asynchronously in regards to the ISR? Or something else?
+>>
+>> In the sense that the client can call dmaengine_tx_status() at anytime
+>> to check the status of a transfer.
+>=20
+> Should be alright, I think this patch covers all of possible cases:
+>=20
+> 1) Start of transfer, when wcount=3D0.
+> 2) Middle of transfer, when wcount!=3D0.
+> 3) End of transfer, when wcount=3D0.
+> 4) End of transfer, when wcount!=3D0 and EOC is set.
 
-Also:
-Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
+I think I see my problem I read 'wcount < sg_req->req_len' and NOT
+'wcount < sg_req->words_xferred'. So yes this should be fine.
 
-Best regards,
-Krzysztof
+Jon
 
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
-> ---
->  drivers/dma/fsl-edma-common.c | 5 -----
->  1 file changed, 5 deletions(-)
->
-> diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.=
-c
-> index 6bf238e19d91..680b2a00a953 100644
-> --- a/drivers/dma/fsl-edma-common.c
-> +++ b/drivers/dma/fsl-edma-common.c
-> @@ -83,14 +83,9 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
->         u32 ch =3D fsl_chan->vchan.chan.chan_id;
->         void __iomem *muxaddr;
->         unsigned int chans_per_mux, ch_off;
-> -       int endian_diff[4] =3D {3, 1, -1, -3};
->
->         chans_per_mux =3D fsl_chan->edma->n_chans / DMAMUX_NR;
->         ch_off =3D fsl_chan->vchan.chan.chan_id % chans_per_mux;
-> -
-> -       if (!fsl_chan->edma->big_endian)
-> -               ch_off +=3D endian_diff[ch_off % 4];
-> -
->         muxaddr =3D fsl_chan->edma->muxbase[ch / chans_per_mux];
->         slot =3D EDMAMUX_CHCFG_SOURCE(slot);
->
-> --
-> 2.17.1
->
+--=20
+nvpublic

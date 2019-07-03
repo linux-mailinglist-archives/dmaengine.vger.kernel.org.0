@@ -2,67 +2,84 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC0965DF3F
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Jul 2019 10:02:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E0185E7EC
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Jul 2019 17:34:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfGCIB5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 3 Jul 2019 04:01:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726670AbfGCIB5 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 3 Jul 2019 04:01:57 -0400
-Received: from localhost (unknown [122.167.76.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726686AbfGCPee (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 3 Jul 2019 11:34:34 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:35786 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbfGCPed (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 3 Jul 2019 11:34:33 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 90FFA3C04C1;
+        Wed,  3 Jul 2019 17:34:30 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 5YTeFtRDEy6a; Wed,  3 Jul 2019 17:34:25 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C812D21897;
-        Wed,  3 Jul 2019 08:01:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562140916;
-        bh=ThdOqIlE3tUWkIZCcSvGSfnftygpU4mdRMsrGkRB824=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GYWQ75vkqGkJRXZ6dih6ItEgb92wHdF8ZCCOyuF3axygjOhqHqmTIb2jAg4FJQyMO
-         MrWvaEwr1wH1x6qy3E1kg8mRdmo6Z75vwTE4+AMN4bcaxafhH/uYvWc70hiwxTZnlX
-         O8X88LouQrPToBR47ovMX8nPVzJBtNteMfpzquKY=
-Date:   Wed, 3 Jul 2019 13:28:48 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     yibin.gong@nxp.com
-Cc:     robh@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, mark.rutland@arm.com, dan.j.williams@intel.com,
-        angelo@sysam.it, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: Re: [PATCH v5 0/6] add edma2 for i.mx7ulp
-Message-ID: <20190703075848.GR2911@vkoul-mobl>
-References: <20190625094324.19196-1-yibin.gong@nxp.com>
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 0C94E3C001F;
+        Wed,  3 Jul 2019 17:34:25 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 3 Jul 2019
+ 17:34:24 +0200
+Date:   Wed, 3 Jul 2019 17:34:21 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: Re: [PATCH] dmaengine: rcar-dmac: Reject zero-length slave DMA
+ requests
+Message-ID: <20190703150724.GA11105@vmlxhi-102.adit-jv.com>
+References: <20190624123818.20919-1-geert+renesas@glider.be>
+ <20190626181459.GA31913@x230>
+ <CAMuHMdUpPEdz3aDXo90XQ7b-jP2ErxwqLKgmEFUhhuB-oBzrDA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190625094324.19196-1-yibin.gong@nxp.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <CAMuHMdUpPEdz3aDXo90XQ7b-jP2ErxwqLKgmEFUhhuB-oBzrDA@mail.gmail.com>
+User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
+X-Originating-IP: [10.72.93.184]
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 25-06-19, 17:43, yibin.gong@nxp.com wrote:
-> From: Robin Gong <yibin.gong@nxp.com>
-> 
-> This patch set add new version of edma for i.mx7ulp, the main changes
-> are as belows:
->  1. only one dmamux.
->  2. another clock dma_clk except dmamux clk.
->  3. 16 independent interrupts instead of only one interrupt for
->     all channels
-> For the first change, need modify fsl-edma-common.c and mcf-edma,
-> so create the first two patches to prepare without any function impact.
-> 
-> For the third change, need request single irq for every channel with
-> the legacy handler. But actually 2 dma channels share one interrupt(16
-> channel interrupts, but 32 channels.),ch0/ch16,ch1/ch17... For now, just
-> simply request irq without IRQF_SHARED flag, since 16 channels are enough
-> on i.mx7ulp whose M4 domain own some peripherals.
+Hi Geert,
 
-Applied patches 1-5, thanks
+On Fri, Jun 28, 2019 at 02:10:01PM +0200, Geert Uytterhoeven wrote:
+> On Wed, Jun 26, 2019 at 8:15 PM Eugeniu Rosca <roscaeugeniu@gmail.com> wrote:
+[..]
+> I'm not such a big fan of WARN()...
+[..]
+> > rcar-dmac e7300000.dma-controller: rcar_dmac_prep_slave_sg: bad parameter: len=1, id=19
+> 
+> Which would be followed by
+> 
+>     sh-sci e6e88000.serial: Failed preparing Tx DMA descriptor
+> 
+> pointing to the sh-sci driver, right?
+> 
+> The id=19 points to channel 0x13, i.e. SCIF2, according to
+> arch/arm64/boot/dts/renesas/r8a7795.dtsi.
+
+Thank you for the detailed rationale. Much appreciated.
+
+FTR, the patch landed in vkoul/slave-dma.git, as commit
+https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/slave-dma.git/commit/?h=next&id=78efb76ab4dfb8f
+("dmaengine: rcar-dmac: Reject zero-length slave DMA requests")
+
 -- 
-~Vinod
+Best Regards,
+Eugeniu.

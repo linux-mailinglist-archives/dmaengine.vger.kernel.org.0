@@ -2,198 +2,219 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FFE65F123
-	for <lists+dmaengine@lfdr.de>; Thu,  4 Jul 2019 04:10:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 097155F347
+	for <lists+dmaengine@lfdr.de>; Thu,  4 Jul 2019 09:10:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfGDCK0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 3 Jul 2019 22:10:26 -0400
-Received: from mail-eopbgr00063.outbound.protection.outlook.com ([40.107.0.63]:59199
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726736AbfGDCK0 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 3 Jul 2019 22:10:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eZoCYlSd3vfoWAgCwIx4TdpbuPMVV1vhnJ5m8XIq8e8=;
- b=h5aOzW9f7wulc45RqJtaSR9yWp2u1n9IwCH4uxfuTjDTUrC0wGT2GyO1touupWaVViaXnNwx9EtMNRfTI5RP7gxrHenhtfr/FxC8/ldrYmk4fStyI4fk8iLPrJ5J1c+FNIJvpvkvuBC7QZ8KfrRfI/VEP+DAmpEQU6Q/EbMs/Q4=
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.159) by
- VI1PR04MB5776.eurprd04.prod.outlook.com (20.178.127.206) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2052.18; Thu, 4 Jul 2019 02:10:21 +0000
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::e8aa:b70a:82ad:9309]) by VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::e8aa:b70a:82ad:9309%7]) with mapi id 15.20.2032.019; Thu, 4 Jul 2019
- 02:10:21 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     =?utf-8?B?S3J6eXN6dG9mIEtvesWCb3dza2k=?= <k.kozlowski.k@gmail.com>,
+        id S1725945AbfGDHKP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 4 Jul 2019 03:10:15 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:8082 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbfGDHKO (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 4 Jul 2019 03:10:14 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d1da6530000>; Thu, 04 Jul 2019 00:10:11 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 04 Jul 2019 00:10:12 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 04 Jul 2019 00:10:12 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 4 Jul
+ 2019 07:10:10 +0000
+Subject: Re: [PATCH v4] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Fabio Estevam <fabio.estevam@nxp.com>, Leo Li <leoyang.li@nxp.com>,
-        Andy Tang <andy.tang@nxp.com>
-Subject: RE: [EXT] [BUG BISECT] Net boot fails on VF50 after "dmaengine:
- fsl-edma: support little endian for edma driver"
-Thread-Topic: [EXT] [BUG BISECT] Net boot fails on VF50 after "dmaengine:
- fsl-edma: support little endian for edma driver"
-Thread-Index: AQHVMM97bioibA225kez47O1R7Lss6a5tHCw
-Date:   Thu, 4 Jul 2019 02:10:20 +0000
-Message-ID: <VI1PR04MB44316904F765E93CC1DFA0EDEDFA0@VI1PR04MB4431.eurprd04.prod.outlook.com>
-References: <CAJKOXPfx6HeJgTu9TiusGACyt+uXVSmnpibO0m-qzCvFQNGK7g@mail.gmail.com>
-In-Reply-To: <CAJKOXPfx6HeJgTu9TiusGACyt+uXVSmnpibO0m-qzCvFQNGK7g@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 644388bf-44d0-453a-9d12-08d70024c471
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(49563074)(7193020);SRVR:VI1PR04MB5776;
-x-ms-traffictypediagnostic: VI1PR04MB5776:
-x-microsoft-antispam-prvs: <VI1PR04MB57764B799F704ADCFD583456EDFA0@VI1PR04MB5776.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2512;
-x-forefront-prvs: 0088C92887
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(346002)(376002)(39860400002)(136003)(13464003)(199004)(189003)(14454004)(55016002)(9686003)(229853002)(44832011)(99286004)(52536014)(26005)(53936002)(66066001)(6436002)(102836004)(476003)(76176011)(11346002)(478600001)(7696005)(71200400001)(446003)(6506007)(71190400001)(68736007)(486006)(5660300002)(74316002)(2201001)(86362001)(110136005)(99936001)(54906003)(3846002)(6116002)(316002)(2501003)(7736002)(8676002)(256004)(186003)(305945005)(5024004)(73956011)(2906002)(6246003)(66946007)(64756008)(66556008)(66616009)(66476007)(66446008)(76116006)(81166006)(81156014)(8936002)(25786009)(33656002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5776;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 89fCyHOgVyg2ILSu30w8ecHjEEkpC4lpx7IwHSqVYT7BG8zzbi3N7danA9Xicjl9gSQUjdhK7nYYuW5MRnxDzSMhk9gQxue+s4lKr1Vg1sII0NrSlFcqfkkRUlfMOHCe+C4YSPN6dXt/N/gtA5jVytnrQrZXwEK4sICw0kH7fu3pg5c20r+paVjIwMbJEiNkNE9kr0EkXTSDS8uyhzC7dMTQk4ojJN6xOgUsHkjpTrm1y44jZArVzUFiE9n0MvVYePtJ/6eLgP/F/dRS5Cj9gTmqm48j7+9q1NS2eWATg4qKwEESNXjO2XMg/6nfvDVcgVCdFNqfulAyEF9e3QdoJWQiVRnxz4vEnDHwH9pSXtYd9DuugKp9j9N31/qGY+VAyS+BLfGzop/m9rXgpAXvjS4IX6rR4L+UWtc4Pe047zw=
-Content-Type: multipart/mixed;
-        boundary="_002_VI1PR04MB44316904F765E93CC1DFA0EDEDFA0VI1PR04MB4431eurp_"
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190703012836.16568-1-digetx@gmail.com>
+ <b0a0b110-61c8-ae8b-22a0-3311f70b428a@nvidia.com>
+ <b1f4d7c3-636e-947f-ac76-fc639ac7fee4@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <55d402ad-6cb9-9e91-a8a4-b89d37674f4d@nvidia.com>
+Date:   Thu, 4 Jul 2019 08:10:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 644388bf-44d0-453a-9d12-08d70024c471
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jul 2019 02:10:20.8808
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: peng.ma@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5776
+In-Reply-To: <b1f4d7c3-636e-947f-ac76-fc639ac7fee4@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562224211; bh=HFvEppzQiuf+Rpk94O6Fz5EJJgEXcRKXyHp2FnphP64=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=hdpGHilltHnCm5394tMblEnGAxo0kfVO4SdPbbMTTGJRkzmDSB4Ch0l9AVjvW4Ijg
+         zz0pI5l24pC/TgIYE9GzHRger/ObTf6wHSCL6T7m/7q7terFcYSs8W6nuIUP13Tcwe
+         mUr+VgFARpPJkZ4YCFdaXUv9w09KUQZoLQgyceo3u98CusRQaCdfkRK8U5V9ZpRXrf
+         WwJqq31mzeaKl7T0DD28eH0GOXoI/0KiYzkma79ncoqEKBds28dkW3Lc/KKxqYXQQH
+         3loJQJzlraY4H7116nB/zoyW2LZ03YgChWgycN4U1OEUGxMHTktCL3Fb7asRZP/Zx5
+         nHtSQA4izfMZA==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
---_002_VI1PR04MB44316904F765E93CC1DFA0EDEDFA0VI1PR04MB4431eurp_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 
-SGkgS3J6eXN6dG9mLA0KDQpJIGFtIHNvcnJ5LCBJdCBpcyBteSBtaXN0YWtlIHRvIGZvcmdldCBh
-Ym91dCBWRjUwIHVzZWQgRURNQSBJUCB3aXRoIGxpdHRsZSBlbmRpYW4uDQpUaGUgUmVnaXN0ZXIo
-Q0hDRkcwIC0gQ0hDRkcxNSkgb2Ygb3VyIHBsYXRmb3JtIGRlc2lnbmVkIGFzIGZvbGxvd3M6DQoq
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLSoNCnwgICAgIE9mZnNldCAgIHwgQmlnIGVuZGlhbiBSZWdp
-c3RlcnwgTGl0dGxlIGVuZGlhbiBSZWdpc3RlcnwNCnwtLS0tLS0tLS0tLS0tLS0tLS0tLS18LS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS18LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS18DQp8
-ICAgICAweDAgICAgIHwgICAgIENIQ0ZHMCAgICB8ICAgICBDSENGRzMgICAgICB8DQp8LS0tLS0t
-LS0tLS0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tfA0KfCAgICAgMHgxICAgICB8ICAgICBDSENGRzEgICAgfCAgICAgQ0hD
-RkcyICAgICAgfA0KfC0tLS0tLS0tLS0tLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLXwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLXwNCnwgICAgIDB4MiAgICAgfCAgICAg
-Q0hDRkcyICAgIHwgICAgIENIQ0ZHMSAgICAgIHwNCnwtLS0tLS0tLS0tLS0tLS0tLS0tLS18LS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS18LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS18DQp8
-ICAgICAweDMgICAgIHwgICAgIENIQ0ZHMyAgICB8ICAgICBDSENGRzAgICAgICB8DQp8LS0tLS0t
-LS0tLS0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tfA0KfCAgICAgLi4uICAgICAgfCAgICAgICAgLi4uLi4uICAgICB8ICAg
-ICAgICAgLi4uLi4uICAgICAgfA0KfC0tLS0tLS0tLS0tLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLXwNCnwgICAgIDB4QyAg
-ICAgfCAgICAgQ0hDRkcxMiAgIHwgICAgIENIQ0ZHMTUgICAgIHwNCnwtLS0tLS0tLS0tLS0tLS0t
-LS0tLS18LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS18LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS18DQp8ICAgICAweEQgICAgIHwgICAgIENIQ0ZHMTMgICB8ICAgICBDSENGRzE0ICAgICB8
-DQp8LS0tLS0tLS0tLS0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tfC0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tfA0KfCAgICAgMHhFICAgICB8ICAgICBDSENGRzE0ICAg
-fCAgICAgQ0hDRkcxMyAgICAgfA0KfC0tLS0tLS0tLS0tLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLXwNCnwgICAgIDB4RiAg
-ICAgfCAgICAgQ0hDRkcxNSAgIHwgICAgIENIQ0ZHMTIgICAgIHwNCiotLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tKg0KDQpTbyB3ZSBuZWVkIHRoaXMgcGF0Y2gsIEkgbWFrZSBzb21lIGNoYW5nZXMsUGxl
-YXNlIGhlbHAgbWUgdG8gdGVzdCBhdHRhdGNobWVudCBvbiBWRjUwIGJvYXJkLA0KVGhhbmtzLg0K
-DQpCZXN0IFJlZ2FyZHMsDQpQZW5nDQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9t
-OiBLcnp5c3p0b2YgS296xYJvd3NraSA8ay5rb3psb3dza2kua0BnbWFpbC5jb20+DQo+U2VudDog
-MjAxOeW5tDfmnIgy5pelIDIwOjEzDQo+VG86IFBlbmcgTWEgPHBlbmcubWFAbnhwLmNvbT47IFZp
-bm9kIEtvdWwgPHZrb3VsQGtlcm5lbC5vcmc+Ow0KPmRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmc7
-IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj5TdWJqZWN0OiBbRVhUXSBbQlVHIEJJU0VD
-VF0gTmV0IGJvb3QgZmFpbHMgb24gVkY1MCBhZnRlciAiZG1hZW5naW5lOg0KPmZzbC1lZG1hOiBz
-dXBwb3J0IGxpdHRsZSBlbmRpYW4gZm9yIGVkbWEgZHJpdmVyIg0KPg0KPkNhdXRpb246IEVYVCBF
-bWFpbA0KPg0KPkhpLA0KPg0KPkJpc2VjdCBwb2ludGVkIGNvbW1pdDoNCj5jb21taXQgMDAyOTA1
-ZWNhNWJlZGFiMDhiYWZkOWUzMjViYmJiNDE2NzBjNzcxMg0KPkF1dGhvcjogUGVuZyBNYSA8cGVu
-Zy5tYUBueHAuY29tPg0KPkRhdGU6ICAgVGh1IEp1biAxMyAxMDoyNzowOCAyMDE5ICswMDAwDQo+
-ICAgIGRtYWVuZ2luZTogZnNsLWVkbWE6IHN1cHBvcnQgbGl0dGxlIGVuZGlhbiBmb3IgZWRtYSBk
-cml2ZXINCj4NCj5hcyBhIHJlYXNvbiBvZiBORlN2NCByb290IGJvb3QgZmFpbHVyZXMuIFRvcmFk
-ZXggQ29saWJyaSBWRjUwIChDb3J0ZXgNCj5BNSkgb24gVG9yYWRleCBJcmlzIGJvYXJkLg0KPg0K
-PlRoZSB1c2VyLXNwYWNlIHN0YXJ0cyBidXQgaGFuZ3MgLSBhIGxvdCBvZiBtZXNzYWdlcyBhcmUg
-bWlzc2luZyBvciBzZXJpb3VzbHkNCj5kZWxheWVkLg0KPg0KPlBsZWFzZSByZXZlcnQgdGhlIHBh
-dGNoIG9mIGZpeCBpdC4gSWYgbmVlZGVkIEkgY2FuIHByb3ZpZGUgbW9yZSBkZXRhaWxzIGFib3V0
-IHRlc3QNCj5zeXN0ZW0gLSBsZXQgbWUga25vdy4NCj4NCj5GdWxsIGxvZyBhdHRhY2hlZC4NCj4N
-Cj5CZXN0IHJlZ2FyZHMsDQo+S3J6eXN6dG9mDQo=
+On 03/07/2019 18:00, Dmitry Osipenko wrote:
+> 03.07.2019 19:37, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>> On 03/07/2019 02:28, Dmitry Osipenko wrote:
+>>> Tegra's APB DMA engine updates words counter after each transferred bur=
+st
+>>> of data, hence it can report transfer's residual with more fidelity whi=
+ch
+>>> may be required in cases like audio playback. In particular this fixes
+>>> audio stuttering during playback in a chromium web browser. The patch i=
+s
+>>> based on the original work that was made by Ben Dooks and a patch from
+>>> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
+>>>
+>>> Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@cod=
+ethink.co.uk/
+>>> Link: https://nv-tegra.nvidia.com/gitweb/?p=3Dlinux-4.4.git;a=3Dcommit;=
+h=3Dc7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
+>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>> ---
+>>>
+>>> Changelog:
+>>>
+>>> v4: The words_xferred is now also reset on a new iteration of a cyclic
+>>>     transfer by ISR, so that dmaengine_tx_status() won't produce a
+>>>     misleading warning splat on TX status re-checking after a cycle
+>>>     completion when cyclic transfer consists of a single SG.
+>>>
+>>> v3: Added workaround for a hardware design shortcoming that results
+>>>     in a words counter wraparound before end-of-transfer bit is set
+>>>     in a cyclic mode.
+>>>
+>>> v2: Addressed review comments made by Jon Hunter to v1. We won't try
+>>>     to get words count if dma_desc is on free list as it will result
+>>>     in a NULL dereference because this case wasn't handled properly.
+>>>
+>>>     The residual value is now updated properly, avoiding potential
+>>>     integer overflow by adding the "bytes" to the "bytes_transferred"
+>>>     instead of the subtraction.
+>>>
+>>>  drivers/dma/tegra20-apb-dma.c | 72 +++++++++++++++++++++++++++++++----
+>>>  1 file changed, 65 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dm=
+a.c
+>>> index 79e9593815f1..148d136191d7 100644
+>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>> @@ -152,6 +152,7 @@ struct tegra_dma_sg_req {
+>>>  	bool				last_sg;
+>>>  	struct list_head		node;
+>>>  	struct tegra_dma_desc		*dma_desc;
+>>> +	unsigned int			words_xferred;
+>>>  };
+>>> =20
+>>>  /*
+>>> @@ -496,6 +497,7 @@ static void tegra_dma_configure_for_next(struct teg=
+ra_dma_channel *tdc,
+>>>  	tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
+>>>  				nsg_req->ch_regs.csr | TEGRA_APBDMA_CSR_ENB);
+>>>  	nsg_req->configured =3D true;
+>>> +	nsg_req->words_xferred =3D 0;
+>>> =20
+>>>  	tegra_dma_resume(tdc);
+>>>  }
+>>> @@ -511,6 +513,7 @@ static void tdc_start_head_req(struct tegra_dma_cha=
+nnel *tdc)
+>>>  					typeof(*sg_req), node);
+>>>  	tegra_dma_start(tdc, sg_req);
+>>>  	sg_req->configured =3D true;
+>>> +	sg_req->words_xferred =3D 0;
+>>>  	tdc->busy =3D true;
+>>>  }
+>>> =20
+>>> @@ -638,6 +641,8 @@ static void handle_cont_sngl_cycle_dma_done(struct =
+tegra_dma_channel *tdc,
+>>>  		list_add_tail(&dma_desc->cb_node, &tdc->cb_desc);
+>>>  	dma_desc->cb_count++;
+>>> =20
+>>> +	sgreq->words_xferred =3D 0;
+>>> +
+>>>  	/* If not last req then put at end of pending list */
+>>>  	if (!list_is_last(&sgreq->node, &tdc->pending_sg_req)) {
+>>>  		list_move_tail(&sgreq->node, &tdc->pending_sg_req);
+>>> @@ -797,6 +802,62 @@ static int tegra_dma_terminate_all(struct dma_chan=
+ *dc)
+>>>  	return 0;
+>>>  }
+>>> =20
+>>> +static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channe=
+l *tdc,
+>>> +					       struct tegra_dma_sg_req *sg_req)
+>>> +{
+>>> +	unsigned long status, wcount =3D 0;
+>>> +
+>>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>>> +		return 0;
+>>> +
+>>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>>> +		wcount =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>>> +
+>>> +	status =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>>> +
+>>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>>> +		wcount =3D status;
+>>> +
+>>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>>> +		return sg_req->req_len;
+>>> +
+>>> +	wcount =3D get_current_xferred_count(tdc, sg_req, wcount);
+>>> +
+>>> +	if (!wcount) {
+>>> +		/*
+>>> +		 * If wcount wasn't ever polled for this SG before, then
+>>> +		 * simply assume that transfer hasn't started yet.
+>>> +		 *
+>>> +		 * Otherwise it's the end of the transfer.
+>>> +		 *
+>>> +		 * The alternative would be to poll the status register
+>>> +		 * until EOC bit is set or wcount goes UP. That's so
+>>> +		 * because EOC bit is getting set only after the last
+>>> +		 * burst's completion and counter is less than the actual
+>>> +		 * transfer size by 4 bytes. The counter value wraps around
+>>> +		 * in a cyclic mode before EOC is set(!), so we can't easily
+>>> +		 * distinguish start of transfer from its end.
+>>> +		 */
+>>> +		if (sg_req->words_xferred)
+>>> +			wcount =3D sg_req->req_len - 4;
+>>> +
+>>> +	} else if (wcount < sg_req->words_xferred) {
+>>> +		/*
+>>> +		 * This case shall not ever happen because EOC bit
+>>> +		 * must be set once next cyclic transfer is started.
+>>
+>> Should this still be cyclic here?
+>=20
+> Do you mean the "comment" by "here"?
+>=20
+> It will be absolutely terrible if this case happens for oneshot transfer,=
+ assume
+> kernel/hardware is on fire.
 
---_002_VI1PR04MB44316904F765E93CC1DFA0EDEDFA0VI1PR04MB4431eurp_
-Content-Type: application/octet-stream;
-	name="0001-dmaengine-fsl-edma-support-little-endian-for-edma-dr.patch"
-Content-Description:
- 0001-dmaengine-fsl-edma-support-little-endian-for-edma-dr.patch
-Content-Disposition: attachment;
-	filename="0001-dmaengine-fsl-edma-support-little-endian-for-edma-dr.patch";
-	size=3060; creation-date="Thu, 04 Jul 2019 02:09:33 GMT";
-	modification-date="Thu, 04 Jul 2019 02:09:33 GMT"
-Content-Transfer-Encoding: base64
+Or more likely a SW bug :-)
 
-RnJvbSA5NTAzMWQzZTAwYTA3YmJmZTFjOTg3ZjI4YTRiNDY4MjQzNzk5YWM2IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBQZW5nIE1hIDxwZW5nLm1hQG54cC5jb20+CkRhdGU6IFRodSwg
-MTMgSnVuIDIwMTkgMTA6Mjc6MDggKzAwMDAKU3ViamVjdDogW1BBVENIXSBkbWFlbmdpbmU6IGZz
-bC1lZG1hOiBzdXBwb3J0IGxpdHRsZSBlbmRpYW4gZm9yIGVkbWEgZHJpdmVyCgpPdXIgcGxhdGZv
-cm1zIHdpdGggYmVsb3cgcmVnaXN0ZXJzKENIQ0ZHMCAtIENIQ0ZHMTUpIG9mIGVETUEKKi0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKgp8
-ICAgICBPZmZzZXQgICB8IEJpZyBlbmRpYW4gUmVnaXN0ZXJ8IExpdHRsZSBlbmRpYW4gUmVnaXN0
-ZXJ8CnwtLS0tLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLXwKfCAgICAgMHgwICAgICAgfCAgICAgICAgQ0hDRkcwICAgICAgfCAgICAgICAgICAg
-Q0hDRkczICAgICAgfAp8LS0tLS0tLS0tLS0tLS18LS0tLS0tLS0tLS0tLS0tLS0tLS18LS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS18CnwgICAgIDB4MSAgICAgIHwgICAgICAgIENIQ0ZHMSAgICAgIHwg
-ICAgICAgICAgIENIQ0ZHMiAgICAgIHwKfC0tLS0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLS0tLS0t
-LS0tfC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tfAp8ICAgICAweDIgICAgICB8ICAgICAgICBDSENG
-RzIgICAgICB8ICAgICAgICAgICBDSENGRzEgICAgICB8CnwtLS0tLS0tLS0tLS0tLXwtLS0tLS0t
-LS0tLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLXwKfCAgICAgMHgzICAgICAgfCAg
-ICAgICAgQ0hDRkczICAgICAgfCAgICAgICAgICAgQ0hDRkcwICAgICAgfAp8LS0tLS0tLS0tLS0t
-LS18LS0tLS0tLS0tLS0tLS0tLS0tLS18LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS18CnwgICAgIC4u
-LiAgICAgIHwgICAgICAgIC4uLi4uLiAgICAgIHwgICAgICAgICAgIC4uLi4uLiAgICAgIHwKfC0t
-LS0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-fAp8ICAgICAweEMgICAgICB8ICAgICAgICBDSENGRzEyICAgICB8ICAgICAgICAgICBDSENGRzE1
-ICAgICB8CnwtLS0tLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0tLS0tLS0tLXwtLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLXwKfCAgICAgMHhEICAgICAgfCAgICAgICAgQ0hDRkcxMyAgICAgfCAgICAgICAg
-ICAgQ0hDRkcxNCAgICAgfAp8LS0tLS0tLS0tLS0tLS18LS0tLS0tLS0tLS0tLS0tLS0tLS18LS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS18CnwgICAgIDB4RSAgICAgIHwgICAgICAgIENIQ0ZHMTQgICAg
-IHwgICAgICAgICAgIENIQ0ZHMTMgICAgIHwKfC0tLS0tLS0tLS0tLS0tfC0tLS0tLS0tLS0tLS0t
-LS0tLS0tfC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tfAp8ICAgICAweEYgICAgICB8ICAgICAgICBD
-SENGRzE1ICAgICB8ICAgICAgICAgICBDSENGRzEyICAgICB8CiotLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSoKCkN1cnJlbnQgZURNQSBk
-cml2ZXIgZG9lcyBub3Qgc3VwcG9ydCBMaXR0bGUgZW5kaWFuLCBzbyB0aGlzCnBhdGNoIGlzIHRv
-IGltcHJvdmUgZWRtYSBkcml2ZXIgdG8gc3VwcG9ydCBsaXR0bGUgZW5kaWFuLgoKU2lnbmVkLW9m
-Zi1ieTogUGVuZyBNYSA8cGVuZy5tYUBueHAuY29tPgpTaWduZWQtb2ZmLWJ5OiBWaW5vZCBLb3Vs
-IDx2a291bEBrZXJuZWwub3JnPgotLS0KIGRyaXZlcnMvZG1hL2ZzbC1lZG1hLWNvbW1vbi5jIHwg
-ICAxMiArKysrKysrKysrKysKIDEgZmlsZXMgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgMCBk
-ZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2RtYS9mc2wtZWRtYS1jb21tb24uYyBi
-L2RyaXZlcnMvZG1hL2ZzbC1lZG1hLWNvbW1vbi5jCmluZGV4IDY4MGIyYTAuLmYzMGMyMDMgMTAw
-NjQ0Ci0tLSBhL2RyaXZlcnMvZG1hL2ZzbC1lZG1hLWNvbW1vbi5jCisrKyBiL2RyaXZlcnMvZG1h
-L2ZzbC1lZG1hLWNvbW1vbi5jCkBAIC03LDYgKzcsNyBAQAogI2luY2x1ZGUgPGxpbnV4L21vZHVs
-ZS5oPgogI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4KICNpbmNsdWRlIDxsaW51eC9kbWEtbWFwcGlu
-Zy5oPgorI2luY2x1ZGUgPGxpbnV4L3N5c19zb2MuaD4KIAogI2luY2x1ZGUgImZzbC1lZG1hLWNv
-bW1vbi5oIgogCkBAIC00Miw2ICs0MywxMSBAQAogCiAjZGVmaW5lIEVETUFfVENECQkweDEwMDAK
-IAorc3RydWN0IHNvY19kZXZpY2VfYXR0cmlidXRlIHNvY19maXh1cF90dW5pbmdbXSA9IHsKKwl7
-IC5mYW1pbHkgPSAiUW9ySVEgTFMxMDI4QSJ9LAorCXsgfSwKK307CisKIHN0YXRpYyB2b2lkIGZz
-bF9lZG1hX2VuYWJsZV9yZXF1ZXN0KHN0cnVjdCBmc2xfZWRtYV9jaGFuICpmc2xfY2hhbikKIHsK
-IAlzdHJ1Y3QgZWRtYV9yZWdzICpyZWdzID0gJmZzbF9jaGFuLT5lZG1hLT5yZWdzOwpAQCAtODMs
-OSArODksMTUgQEAgdm9pZCBmc2xfZWRtYV9jaGFuX211eChzdHJ1Y3QgZnNsX2VkbWFfY2hhbiAq
-ZnNsX2NoYW4sCiAJdTMyIGNoID0gZnNsX2NoYW4tPnZjaGFuLmNoYW4uY2hhbl9pZDsKIAl2b2lk
-IF9faW9tZW0gKm11eGFkZHI7CiAJdW5zaWduZWQgaW50IGNoYW5zX3Blcl9tdXgsIGNoX29mZjsK
-KwlpbnQgZW5kaWFuX2RpZmZbNF0gPSB7MywgMSwgLTEsIC0zfTsKIAogCWNoYW5zX3Blcl9tdXgg
-PSBmc2xfY2hhbi0+ZWRtYS0+bl9jaGFucyAvIERNQU1VWF9OUjsKIAljaF9vZmYgPSBmc2xfY2hh
-bi0+dmNoYW4uY2hhbi5jaGFuX2lkICUgY2hhbnNfcGVyX211eDsKKworCWlmICghZnNsX2NoYW4t
-PmVkbWEtPmJpZ19lbmRpYW4gJiYKKwkgICAgc29jX2RldmljZV9tYXRjaChzb2NfZml4dXBfdHVu
-aW5nKSkKKwkJY2hfb2ZmICs9IGVuZGlhbl9kaWZmW2NoX29mZiAlIDRdOworCiAJbXV4YWRkciA9
-IGZzbF9jaGFuLT5lZG1hLT5tdXhiYXNlW2NoIC8gY2hhbnNfcGVyX211eF07CiAJc2xvdCA9IEVE
-TUFNVVhfQ0hDRkdfU09VUkNFKHNsb3QpOwogCi0tIAoxLjcuMQoK
+Yes should never happen for either sg or cyclic, but there is no mention
+of sg transfers. Maybe the sg case is more obvious but in general this
+case should never happen for any transfer.
 
---_002_VI1PR04MB44316904F765E93CC1DFA0EDEDFA0VI1PR04MB4431eurp_--
+Jon
+
+--=20
+nvpublic

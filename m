@@ -2,97 +2,158 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F2B18600F0
-	for <lists+dmaengine@lfdr.de>; Fri,  5 Jul 2019 08:15:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0606600F7
+	for <lists+dmaengine@lfdr.de>; Fri,  5 Jul 2019 08:20:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbfGEGPm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 5 Jul 2019 02:15:42 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:15854 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfGEGPm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 5 Jul 2019 02:15:42 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d1eeb0c0001>; Thu, 04 Jul 2019 23:15:40 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 04 Jul 2019 23:15:41 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 04 Jul 2019 23:15:41 -0700
-Received: from [10.24.44.191] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 5 Jul
- 2019 06:15:38 +0000
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-From:   Sameer Pujar <spujar@nvidia.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
-        <jonathanh@nvidia.com>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
-        <rlokhande@nvidia.com>, <dramesh@nvidia.com>, <mkumard@nvidia.com>
-References: <20190502122506.GP3845@vkoul-mobl.Dlink>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <20190613044352.GC9160@vkoul-mobl.Dlink>
- <09929edf-ddec-b70e-965e-cbc9ba4ffe6a@nvidia.com>
- <20190618043308.GJ2962@vkoul-mobl>
- <23474b74-3c26-3083-be21-4de7731a0e95@nvidia.com>
- <20190624062609.GV2962@vkoul-mobl>
- <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
-Message-ID: <75be49ac-8461-0798-b673-431ec527d74f@nvidia.com>
-Date:   Fri, 5 Jul 2019 11:45:34 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1727263AbfGEGUf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 5 Jul 2019 02:20:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35752 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727702AbfGEGUf (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 5 Jul 2019 02:20:35 -0400
+Received: from localhost (unknown [122.167.76.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35436218A4;
+        Fri,  5 Jul 2019 06:20:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1562307634;
+        bh=DIUX77w8sRwnwNuafe4OdZKSUe7g9Mr+grIEjaDuID4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ODWmce1FMUhZAak0sVROZZmgaXIn/Ar9YylrqoPlQzlobp7Ux+rJLVsNJM10uiURc
+         FeaJ7wHFRrWKYUledq/zOgjBorN6vzTzgL6c98GZsW3UrDpu8Z73FFzA65QlCAZen5
+         ENa6tK7nO5btUSKVT7jltReFhRy5+udN/fxAafLY=
+Date:   Fri, 5 Jul 2019 11:47:14 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] dmaengine: ti: edma: Support for polled (memcpy)
+ completion
+Message-ID: <20190705061714.GU2911@vkoul-mobl>
+References: <20190618132148.26468-1-peter.ujfalusi@ti.com>
+ <20190618132148.26468-4-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1562307340; bh=uupu10u8U57FrqvgnS4PO2oXDfDg79qXfQJzeJWeUjM=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=C6iECg2xIEcGku37Aprky92wsyMNCnrvzB4XXD73mKb4/wEV0/RLmdnuvV1nSAmGb
-         KfhE49bRt2BMdPre2zp2hEJbq/rxbh+kgcnI9vRa49X7AnOx+PkNTR/Q7ofVstaW17
-         zSN1D28FI6nGEKP256VtAE34mjlPhIpq48X4S3V5bO19Bq1gy1okqLz4sFWe8Pa4OI
-         b8hdF25CdmSGotUFYqczOJD1hXOt1GoSm53m/0LuQuvTEDEhWfpisvR66TRN8sHAFe
-         jslOOqO8ZwjLRvwHUoRRNpxsNuCW6npm/qDsWMTfoD6bcZD75RIs4SqoUgHaAHI7Nz
-         260yfyE6U1wBw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190618132148.26468-4-peter.ujfalusi@ti.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vinod,
+On 18-06-19, 16:21, Peter Ujfalusi wrote:
+> When a DMA client driver does not set the DMA_PREP_INTERRUPT because it
+> does not want to use interrupts for DMA completion or because it can not
+> rely on DMA interrupts due to executing the memcpy when interrupts are
+> disabled it will poll the status of the transfer.
+> 
+> Since we can not tell from any EDMA register that the transfer is
+> completed, we can only know that the paRAM set has been sent to TPTC for
+> processing we need to check the residue of the transfer, if it is 0 then
+> the transfer is completed.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  drivers/dma/ti/edma.c | 37 +++++++++++++++++++++++++++++++++----
+>  1 file changed, 33 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+> index 48b155cab822..87d7fdaa204b 100644
+> --- a/drivers/dma/ti/edma.c
+> +++ b/drivers/dma/ti/edma.c
+> @@ -171,6 +171,7 @@ struct edma_desc {
+>  	struct list_head		node;
+>  	enum dma_transfer_direction	direction;
+>  	int				cyclic;
+> +	bool				polled;
+>  	int				absync;
+>  	int				pset_nr;
+>  	struct edma_chan		*echan;
+> @@ -1240,8 +1241,9 @@ static struct dma_async_tx_descriptor *edma_prep_dma_memcpy(
+>  
+>  	edesc->pset[0].param.opt |= ITCCHEN;
+>  	if (nslots == 1) {
+> -		/* Enable transfer complete interrupt */
+> -		edesc->pset[0].param.opt |= TCINTEN;
+> +		/* Enable transfer complete interrupt if requested */
+> +		if (tx_flags & DMA_PREP_INTERRUPT)
+> +			edesc->pset[0].param.opt |= TCINTEN;
+>  	} else {
+>  		/* Enable transfer complete chaining for the first slot */
+>  		edesc->pset[0].param.opt |= TCCHEN;
+> @@ -1268,9 +1270,14 @@ static struct dma_async_tx_descriptor *edma_prep_dma_memcpy(
+>  		}
+>  
+>  		edesc->pset[1].param.opt |= ITCCHEN;
+> -		edesc->pset[1].param.opt |= TCINTEN;
+> +		/* Enable transfer complete interrupt if requested */
+> +		if (tx_flags & DMA_PREP_INTERRUPT)
+> +			edesc->pset[1].param.opt |= TCINTEN;
+>  	}
+>  
+> +	if (!(tx_flags & DMA_PREP_INTERRUPT))
+> +		edesc->polled = true;
+> +
+>  	return vchan_tx_prep(&echan->vchan, &edesc->vdesc, tx_flags);
+>  }
+>  
+> @@ -1840,18 +1847,40 @@ static enum dma_status edma_tx_status(struct dma_chan *chan,
+>  {
+>  	struct edma_chan *echan = to_edma_chan(chan);
+>  	struct virt_dma_desc *vdesc;
+> +	struct dma_tx_state txstate_tmp;
+>  	enum dma_status ret;
+>  	unsigned long flags;
+>  
+>  	ret = dma_cookie_status(chan, cookie, txstate);
+> -	if (ret == DMA_COMPLETE || !txstate)
+> +
+> +	/* Provide a dummy dma_tx_state for completion checking */
+> +	if (ret != DMA_COMPLETE && !txstate)
+> +		txstate = &txstate_tmp;
+> +
+> +	if (ret == DMA_COMPLETE)
+>  		return ret;
 
-What are your final thoughts regarding this?
+why not do:
 
-Thanks,
-Sameer.
+        if (ret == DMA_COMPLETE)
+                return ret;
 
->> Where does ADMAIF driver reside in kernel, who configures it for normal
->> dma txns..?
-> Not yet, we are in the process of upstreaming ADMAIF driver.
-> To describe briefly, audio subsystem is using ALSA SoC(ASoC) layer. 
-> ADMAIF is
-> registered as platform driver and exports DMA functionality. It 
-> registers PCM
-> devices for each Rx/Tx ADMAIF channel. During PCM playback/capture 
-> operations,
-> ALSA callbacks configure DMA channel using API dmaengine_slave_config().
-> RFC patch proposed, is to help populate FIFO_SIZE value as well during 
-> above
-> call, since ADMA requires it.
->>
->> Also it wold have helped the long discussion if that part was made clear
->> rather than talking about peripheral all this time :(
-> Thought it was clear, though should have avoided using 'peripheral' in 
-> the
-> discussions. Sorry for the confusion.
+        if (!txstate)
+                txstate = &txstate_tmp;
 
+> +	txstate->residue = 0;
+>  	spin_lock_irqsave(&echan->vchan.lock, flags);
+>  	if (echan->edesc && echan->edesc->vdesc.tx.cookie == cookie)
+>  		txstate->residue = edma_residue(echan->edesc);
+>  	else if ((vdesc = vchan_find_desc(&echan->vchan, cookie)))
+>  		txstate->residue = to_edma_desc(&vdesc->tx)->residue;
+> +
+> +	/*
+> +	 * Mark the cookie completed if the residue is 0 for non cyclic
+> +	 * transfers
+> +	 */
+> +	if (ret != DMA_COMPLETE && !txstate->residue &&
+> +	    echan->edesc && echan->edesc->polled &&
+> +	    echan->edesc->vdesc.tx.cookie == cookie) {
+> +		edma_stop(echan);
+> +		vchan_cookie_complete(&echan->edesc->vdesc);
+> +		echan->edesc = NULL;
+> +		edma_execute(echan);
+> +		ret = DMA_COMPLETE;
+> +	}
+> +
+>  	spin_unlock_irqrestore(&echan->vchan.lock, flags);
+>  
+>  	return ret;
+> -- 
+> Peter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+-- 
+~Vinod

@@ -2,54 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 895336126A
-	for <lists+dmaengine@lfdr.de>; Sat,  6 Jul 2019 19:40:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22A6B615A7
+	for <lists+dmaengine@lfdr.de>; Sun,  7 Jul 2019 19:22:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727147AbfGFRkH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 6 Jul 2019 13:40:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39130 "EHLO mail.kernel.org"
+        id S1727085AbfGGRWZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 7 Jul 2019 13:22:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727130AbfGFRkH (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sat, 6 Jul 2019 13:40:07 -0400
-Subject: Re: [GIT PULL] dmaengine fixes for 5.2
+        id S1726375AbfGGRWZ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 7 Jul 2019 13:22:25 -0400
+Received: from localhost (unknown [49.207.58.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 123B62082F;
+        Sun,  7 Jul 2019 17:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562434806;
-        bh=DDGJyMOZp6RA66h0wOjZeXelwe+hP66LdsWVhq9eM/E=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=cR7DBsuIdEFT4W9eEvBrvyqTojKvslfsdidcKkXVrRKufxGr+tC5efq5DFd8tBnFB
-         39MBXrvPN3dkxqRwF3qPRR0MuKP9rMMQleN4zF5vqNZth1ECddY3dYjWmwBL+Rbjxk
-         6/Nums1JE2fUy98m41UPce9J6ccUUQ1ILFowmE6w=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190706143142.GG2911@vkoul-mobl>
-References: <20190706143142.GG2911@vkoul-mobl>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190706143142.GG2911@vkoul-mobl>
-X-PR-Tracked-Remote: git://git.infradead.org/users/vkoul/slave-dma.git
- tags/dmaengine-fix-5.2
-X-PR-Tracked-Commit-Id: f6034225442c4a87906d36e975fd9e99a8f95487
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2692982b0800c6f6446e9edd4743239666e69f2e
-Message-Id: <156243480674.9000.918287204310707655.pr-tracker-bot@kernel.org>
-Date:   Sat, 06 Jul 2019 17:40:06 +0000
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        s=default; t=1562520144;
+        bh=2s2gE1E50GfJ/EeGP73+waB27rAFwSqJTvo/pyPbyTs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=p8xhwKgCQQTlYyEcvQ9jYHJsRv0Z+cre4Dl/vakph1j//935NcoNxWlgYm9an0aBI
+         tm8lVCX129aYQ1F7gtpxXixVR8/7M1hOdTo8Rd8T68DdyqUjfLMmNJoRRRYfkIRwdr
+         hatgmaikvSFZLBe+cNlfc+FPBrhwAvaXzdjvaH4g=
+Date:   Sun, 7 Jul 2019 22:47:01 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Raag Jadav <raagjadav@gmail.com>
+Cc:     dmaengine@vger.kernel.org,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: at_xdmac: check for non-empty xfers_list
+ before invoking callback
+Message-ID: <20190707171701.GI2911@vkoul-mobl>
+References: <1561796448-3321-1-git-send-email-raagjadav@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1561796448-3321-1-git-send-email-raagjadav@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The pull request you sent on Sat, 6 Jul 2019 20:01:42 +0530:
+On 29-06-19, 13:50, Raag Jadav wrote:
+> tx descriptor retrieved from an empty xfers_list may not have valid
+> pointers to the callback functions.
+> Avoid calling dmaengine_desc_get_callback_invoke if xfers_list is empty.
 
-> git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.2
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2692982b0800c6f6446e9edd4743239666e69f2e
-
-Thank you!
+Applied, thanks
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+~Vinod

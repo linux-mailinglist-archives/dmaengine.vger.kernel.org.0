@@ -2,174 +2,99 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A073B619D0
-	for <lists+dmaengine@lfdr.de>; Mon,  8 Jul 2019 06:20:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFBB861A2A
+	for <lists+dmaengine@lfdr.de>; Mon,  8 Jul 2019 06:54:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725977AbfGHEUw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 8 Jul 2019 00:20:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725889AbfGHEUw (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 8 Jul 2019 00:20:52 -0400
-Received: from localhost (unknown [49.207.58.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F84420659;
-        Mon,  8 Jul 2019 04:20:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562559652;
-        bh=3wZD58tp9mnWfaLtCngO7bIDdHwZX+UzA+iianPh1Oc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T0hseX16jvVjtegeR6Rdz8wsWyEs7Dza6o9rVzqdlGvZqyeb/rTQiBLIjuHC6iMcK
-         X7/Xsg0FIfQgBNV98CuAv/BAmfeSoT+6cs5c1/LL6KS95CXLVnTgqk6vZ4mIcYeN4P
-         4EmvoOgBZEiTZSRlVZprQk3LzVDMiLGDLDPSBpHU=
-Date:   Mon, 8 Jul 2019 09:47:28 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     dma <dmaengine@vger.kernel.org>,
+        id S1727313AbfGHEyZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 8 Jul 2019 00:54:25 -0400
+Received: from mail-eopbgr130075.outbound.protection.outlook.com ([40.107.13.75]:57409
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727312AbfGHEyY (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 8 Jul 2019 00:54:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7HT+3hK9QoquQwfLDQ4V6QD6rdTPaulURFr4zoRup6I=;
+ b=HdBubdb6K4ZXJqTI1RfJwlwMI/9ekLRbGUygIA0YnBZP1dxvcs9WoSwmjFdIbyGkZmPOzxdGGXORobORXWrWCo/rR5VTJqAUUirZwF3gZkdALK6CclmDnp19l9TiQ8Bl3gNqZ2FZlSV5D0cRF4sC9U4Gf8Y4/vxco5mj9sZd52o=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.235.81) by
+ VE1PR04MB6637.eurprd04.prod.outlook.com (20.179.235.80) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.17; Mon, 8 Jul 2019 04:54:20 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::a4a8:729f:e664:fa8]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::a4a8:729f:e664:fa8%2]) with mapi id 15.20.2052.020; Mon, 8 Jul 2019
+ 04:54:20 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     dma <dmaengine@vger.kernel.org>,
         Stephen Rothwell <sfr@canb.auug.org.au>,
         John Garry <john.garry@huawei.com>,
         Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
         Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Angelo Dureghello <angelo@sysam.it>
-Subject: Re: linux-next: build failure after merge of the slave-dma tree
-Message-ID: <20190708041728.GK2911@vkoul-mobl>
+Subject: RE: linux-next: build failure after merge of the slave-dma tree
+Thread-Topic: linux-next: build failure after merge of the slave-dma tree
+Thread-Index: AQHVMjqAoCw3ift/eE+RdAWMvGtRgabAD+XYgAATwQCAAAjO8A==
+Date:   Mon, 8 Jul 2019 04:54:20 +0000
+Message-ID: <VE1PR04MB66380EEE86E385AF332A580089F60@VE1PR04MB6638.eurprd04.prod.outlook.com>
 References: <20190704173108.0646eef8@canb.auug.org.au>
  <VE1PR04MB6638080C43EC68EFF9F7B38A89F60@VE1PR04MB6638.eurprd04.prod.outlook.com>
  <58c9b815-9bfc-449c-6017-c6da582dffc5@linaro.org>
+ <20190708041728.GK2911@vkoul-mobl>
+In-Reply-To: <20190708041728.GK2911@vkoul-mobl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a9f75f1e-ce21-44f4-bf08-08d703605714
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6637;
+x-ms-traffictypediagnostic: VE1PR04MB6637:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <VE1PR04MB66375254498F76933C06DE5489F60@VE1PR04MB6637.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1247;
+x-forefront-prvs: 00922518D8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(376002)(136003)(39860400002)(366004)(199004)(189003)(3846002)(486006)(316002)(25786009)(54906003)(476003)(33656002)(6116002)(229853002)(5660300002)(446003)(11346002)(4326008)(102836004)(26005)(186003)(6916009)(76176011)(7696005)(53546011)(6506007)(99286004)(71200400001)(66946007)(8936002)(2906002)(68736007)(66066001)(81166006)(66476007)(66556008)(64756008)(66446008)(52536014)(7736002)(86362001)(76116006)(73956011)(71190400001)(45080400002)(74316002)(6436002)(81156014)(256004)(6306002)(4744005)(14454004)(8676002)(305945005)(9686003)(478600001)(966005)(53936002)(6246003)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6637;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: qUtsmb73MVrCPjx2Q6tFxE8aEDqxKDAPn4gfAY888E9YnDVershOEquRtzsUTbV7IVYiI8KQYu7WX9fBJnVRPYnR3Z8YkkQG1EVQmlPNQ4BHoffxTr6vhReDszv159mtmXY7QGScwPtsnPxm1z3tAIUU6FC0p0WFHYaOpwj64WRvELeeQ7lHWQNT0jiZExumsZ3dJ21f388d5mKFsMZUmIaaYcqUnx/JSlBzqQPFgThoFfWv6BpKvYvy1Ce15FtDWqKTgOwS3pa+/wafKahd5X6ot1QuOsto6mkMsx6ZVFTDxhnz7tukT4yOXUNL6+zG43/qjzmd3yU09wGq4ZNSXs2Yg7pyX23yRqAGV09W7siCqy06gcSXHW6hMUR3D07e5fCNNZ45AZnefZwjJuD2KX00niScFYrwjGSzIZnRp8w=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <58c9b815-9bfc-449c-6017-c6da582dffc5@linaro.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9f75f1e-ce21-44f4-bf08-08d703605714
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jul 2019 04:54:20.8026
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yibin.gong@nxp.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6637
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 08-07-19, 11:06, zhangfei wrote:
-> Hi, Robin
-> 
-> On 2019/7/8 上午9:22, Robin Gong wrote:
-> > Hi Stephen,
-> > 	That's caused by 'of_irq_count' NOT export to global symbol, and I'm curious why it has been
-> > here for so long since Zhangfei found it in 2015. https://patchwork.kernel.org/patch/7404681/
-> > Hi Rob,
-> > 	Is there something I miss so that Zhangfei's patch not accepted finally?
-> > 
-> > 
-> 
-> I remembered Rob suggested us not using of_irq_count and use
-> platform_get_irq etc.
-> https://lkml.org/lkml/2015/11/18/466
-
-The explanation looks sane to me, so it makes sense to revert the commit
-for now. Reverted now
-
--- >8 --
-
-From 5c274ca4cfb22a455e880f61536b1894fa29fd17 Mon Sep 17 00:00:00 2001
-From: Vinod Koul <vkoul@kernel.org>
-Date: Mon, 8 Jul 2019 09:42:55 +0530
-Subject: [PATCH] dmaengine: Revert "dmaengine: fsl-edma: add i.mx7ulp edma2
- version support"
-
-This reverts commit 7144afd025b2 ("dmaengine: fsl-edma: add i.mx7ulp
-edma2 version support") as this fails to build with module option due to
-usage of of_irq_count() which is not an exported symbol as kernel
-drivers are *not* expected to use it (rightly so).
-
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/dma/fsl-edma-common.c | 18 +---------
- drivers/dma/fsl-edma-common.h |  4 ---
- drivers/dma/fsl-edma.c        | 66 -----------------------------------
- 3 files changed, 1 insertion(+), 87 deletions(-)
-
-diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index 6d6d8a4e8e38..44d92c34dec3 100644
---- a/drivers/dma/fsl-edma-common.c
-+++ b/drivers/dma/fsl-edma-common.c
-@@ -90,19 +90,6 @@ static void mux_configure8(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
- 	iowrite8(val8, addr + off);
- }
- 
--void mux_configure32(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
--		     u32 off, u32 slot, bool enable)
--{
--	u32 val;
--
--	if (enable)
--		val = EDMAMUX_CHCFG_ENBL << 24 | slot;
--	else
--		val = EDMAMUX_CHCFG_DIS;
--
--	iowrite32(val, addr + off * 4);
--}
--
- void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
- 			unsigned int slot, bool enable)
- {
-@@ -116,10 +103,7 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
- 	muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
- 	slot = EDMAMUX_CHCFG_SOURCE(slot);
- 
--	if (fsl_chan->edma->drvdata->version == v3)
--		mux_configure32(fsl_chan, muxaddr, ch_off, slot, enable);
--	else
--		mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
-+	mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
- }
- EXPORT_SYMBOL_GPL(fsl_edma_chan_mux);
- 
-diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
-index 5eaa2902ed39..4e175560292c 100644
---- a/drivers/dma/fsl-edma-common.h
-+++ b/drivers/dma/fsl-edma-common.h
-@@ -125,7 +125,6 @@ struct fsl_edma_chan {
- 	dma_addr_t			dma_dev_addr;
- 	u32				dma_dev_size;
- 	enum dma_data_direction		dma_dir;
--	char				chan_name[16];
- };
- 
- struct fsl_edma_desc {
-@@ -140,13 +139,11 @@ struct fsl_edma_desc {
- enum edma_version {
- 	v1, /* 32ch, Vybrid, mpc57x, etc */
- 	v2, /* 64ch Coldfire */
--	v3, /* 32ch, i.mx7ulp */
- };
- 
- struct fsl_edma_drvdata {
- 	enum edma_version	version;
- 	u32			dmamuxs;
--	bool			has_dmaclk;
- 	int			(*setup_irq)(struct platform_device *pdev,
- 					     struct fsl_edma_engine *fsl_edma);
- };
-@@ -156,7 +153,6 @@ struct fsl_edma_engine {
- 	void __iomem		*membase;
- 	void __iomem		*muxbase[DMAMUX_NR];
- 	struct clk		*muxclk[DMAMUX_NR];
--	struct clk		*dmaclk;
- 	struct mutex		fsl_edma_mutex;
- 	const struct fsl_edma_drvdata *drvdata;
- 	u32			n_chans;
-diff --git a/drivers/dma/fsl-edma.c b/drivers/dma/fsl-edma.c
-index 50fe196b0c73..e616425acd5f 100644
---- a/drivers/dma/fsl-edma.c
-+++ b/drivers/dma/fsl-edma.c
-@@ -166,50 +166,6 @@ fsl_edma_irq_init(struct platform_device *pdev, struct fsl_edma_engine *fsl_edma
- 	return 0;
- }
- 
--static int
--fsl_edma2_irq_init(struct platform_device *pdev,
--		   struct fsl_edma_engine *fsl_edma)
--{
-
--- 
-~Vinod
+T24gMjAxOS83LzggMTI6MTcgVmlub2QgS291bCA8dmtvdWxAa2VybmVsLm9yZz4gd3JvdGU6DQo+
+IE9uIDA4LTA3LTE5LCAxMTowNiwgemhhbmdmZWkgd3JvdGU6DQo+ID4gSGksIFJvYmluDQo+ID4N
+Cj4gPiBPbiAyMDE5LzcvOCDkuIrljYg5OjIyLCBSb2JpbiBHb25nIHdyb3RlOg0KPiA+ID4gSGkg
+U3RlcGhlbiwNCj4gPiA+IAlUaGF0J3MgY2F1c2VkIGJ5ICdvZl9pcnFfY291bnQnIE5PVCBleHBv
+cnQgdG8gZ2xvYmFsIHN5bWJvbCwgYW5kDQo+ID4gPiBJJ20gY3VyaW91cyB3aHkgaXQgaGFzIGJl
+ZW4gaGVyZSBmb3Igc28gbG9uZyBzaW5jZSBaaGFuZ2ZlaSBmb3VuZCBpdA0KPiA+ID4gaW4gMjAx
+NS4NCj4gPiBJIHJlbWVtYmVyZWQgUm9iIHN1Z2dlc3RlZCB1cyBub3QgdXNpbmcgb2ZfaXJxX2Nv
+dW50IGFuZCB1c2UNCj4gPiBwbGF0Zm9ybV9nZXRfaXJxIGV0Yy4NCj4gPiBodHRwczovL2V1cjAx
+LnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZsa21s
+DQo+ID4gLm9yZyUyRmxrbWwlMkYyMDE1JTJGMTElMkYxOCUyRjQ2NiZhbXA7ZGF0YT0wMiU3QzAx
+JTdDeWliaW4uZ28NCj4gbmclNDBueHANCj4gPiAuY29tJTdDYjZkODRhNjk3NmQ3NDU3ZGMzNDQw
+OGQ3MDM1YmFhZjUlN0M2ODZlYTFkM2JjMmI0YzZmYTkyDQo+IGNkOTljNWMzMA0KPiA+DQo+IDE2
+MzUlN0MwJTdDMCU3QzYzNjk4MTU2NDU1NzE0MzUzNyZhbXA7c2RhdGE9akVnRm5CM1lOa1Z0c2ln
+ZmJONg0KPiBYR0pvamxiDQo+ID4gSkF5T2k4a2lHZDVKSEpFY00lM0QmYW1wO3Jlc2VydmVkPTAN
+Cj4gDQo+IFRoZSBleHBsYW5hdGlvbiBsb29rcyBzYW5lIHRvIG1lLCBzbyBpdCBtYWtlcyBzZW5z
+ZSB0byByZXZlcnQgdGhlIGNvbW1pdCBmb3INCj4gbm93LiBSZXZlcnRlZCBub3cNCk9rLCBJIHdp
+bGwgc2VuZCB2NiB3aXRoIHRoZSBmaXguDQo=

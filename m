@@ -2,101 +2,140 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B728763BE8
-	for <lists+dmaengine@lfdr.de>; Tue,  9 Jul 2019 21:28:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 250D563FCF
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Jul 2019 06:12:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfGIT2D (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 9 Jul 2019 15:28:03 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42932 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbfGIT2D (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 9 Jul 2019 15:28:03 -0400
-Received: by mail-lj1-f195.google.com with SMTP id t28so20678661lje.9
-        for <dmaengine@vger.kernel.org>; Tue, 09 Jul 2019 12:28:01 -0700 (PDT)
+        id S1725871AbfGJEMP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 10 Jul 2019 00:12:15 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37317 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfGJEMP (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 10 Jul 2019 00:12:15 -0400
+Received: by mail-io1-f66.google.com with SMTP id q22so1775379iog.4;
+        Tue, 09 Jul 2019 21:12:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jTMRQzTd2NAnqgiomIAA7+pDC1dbYmFpkxB/bf6Q4tM=;
-        b=EYrtokQhnehr0WcObqpbJeY4e2nB9fRRTmznqmWADY5QLwarOLh9ftLlJoWuDbj9Ws
-         LKlV2E0mrFvWSV5mfasr+HW1IUsQyjfPgofJwMETkEUeeMOyWuSmWPWisu5vtWN9idGP
-         iE4dfOXxNRYePbaDKrVABpd0sY3E+x0wicoVTYViorHOrNfljzjbewh71v7GdlHJjGfF
-         XBZ1OWzLSfe+uQP4VKVVSqrMQKO5g/9xnKJtPJs7SjwscxAMcEZJqiqet+KX/Nn2W2Ju
-         ERuKU8w+aaUdG0Pli0BVCAV+o6aMX8dcdZsTbvMuKLhsrkTyXUfSBFl/GyzVtaO+LNxk
-         EDKg==
+        bh=2Mtj1V+09V4lY2C/WpTtWjJWOvRdHsrfxKP5HUgF3Mw=;
+        b=Er83EjvRJBQgeZLZLNGHJ/CIJ3vFfD2b44UXb9NJhum0QdBtKCUFxG0HoR3ONVkgQr
+         o0xtIwaDaN0tSl+1OGHaci0d6tKYunpmoPln67v2glTbuS5CSUdXTa8xze14By08wGhJ
+         bnFbwyg1k2PhbXe0djOJmsDtY3LdvNtwjKTrbPiHCZrB+/GEsN5F2cseK/B+iQPFWgp4
+         8aC8paqLYpkbbfpBuPq3IgyZDy0jlhnYJrWVc/4I9/jUAFt8B/TF67q3NMTifsw9cR0k
+         edGv+eaK5sywQoqE1FsB2w1F+jWKQPgaYi8IzrYgBQF21mb60gjkzmvG2hcoMO1gVhLq
+         T2Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jTMRQzTd2NAnqgiomIAA7+pDC1dbYmFpkxB/bf6Q4tM=;
-        b=T64NXQXqxD0NW9VHaV19Zkv3S6O+gs7DuPkIetDWQjFApw15ZbVD9GZmSiMagMCy/g
-         u7jLOXkWfbS2XkzVT5TBvPFIkPWviM9vp3kVoIOU78nbJ1QF3oLmWhhkW5irAnODCKq+
-         kugfyy3TD1RP/saC+s00IrEIi8ofIZVbXA8vg6eN+1ajJZ1NzsqHhZSC3+qNxVyoc4+d
-         djthqgXji4TEvRToz6mpAqbQkFRlF7FbvOI5LJPwvcNQYyKX+6jCotcl9sLpW2esTDZu
-         shNSktNqxdeUHQ2qpv8+nWHcuv7tL8+nEo0ENQbpaFueLMfNLJ7Aa+0Et/MBQZ4aZwEp
-         sCTw==
-X-Gm-Message-State: APjAAAVM/7pW/MEBtc5dvkoah4AtYQYJfc0cdfyEJ/w9gGQQ7jfVykJf
-        KV6uGvPX41k2Yj0sR1OjwCJ1M+ip/EbGFzZMnshwjA==
-X-Google-Smtp-Source: APXvYqwM9kzkFtX3di4fu6k88dButQR4p9Lc7mMJUSG+58pifQxeL7fqmYaJSuErAlCvKbsWOEDiIXfK1HjZ4SeqrtU=
-X-Received: by 2002:a2e:3008:: with SMTP id w8mr15177510ljw.13.1562700480420;
- Tue, 09 Jul 2019 12:28:00 -0700 (PDT)
+        bh=2Mtj1V+09V4lY2C/WpTtWjJWOvRdHsrfxKP5HUgF3Mw=;
+        b=YfZWWWiYHYSfH6GCkZYIxl2X72F5nYqi8y9IQuPCBTwbru/NczvY5S0uu9LFdPdgDe
+         Up36MFa/JTE4f9R6vAyS0ytyJab60ahv1a24NeJaQoROuI5pSi3DxUUC4ihng3Jpfatd
+         WGNZTPU07NMA2KPQxdMbC9la7M2meTMubcWRpcwJVG7lRLxrT6qIYplbuLpq2edxqeZK
+         4i7/B3XSGDAlK6TWCQmAYiBcn1lIij85W+zByLvZjFfpW/dTdyiXjqOSPXRA0TyBB9Rn
+         R8NmlWN0Grjq3W01+OGGX8NWfhbGna8D6Lperv3KW7OWJdEcoOnQVy/HyKTW1ouUMLXb
+         1JLw==
+X-Gm-Message-State: APjAAAW+RHvRi+sE68ksciB+SzShV4PXXTbDIhKm7EtlLd+3CnUb/D/0
+        hk8F5HYdrI6FHvLe69L5dAJuMJNPqu15UAc+4kA=
+X-Google-Smtp-Source: APXvYqyrY3pgnVJVoKBZLLrB+4OJFeIjwcN5V+rh111wh3J7yNqwK0JY5nwgq4JIQX+Ci9Ss4o59aShURyDdZ3NjNHU=
+X-Received: by 2002:a5d:8c81:: with SMTP id g1mr30451959ion.239.1562731934157;
+ Tue, 09 Jul 2019 21:12:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAOReqxhxHiJ-4UYC-j4Quuuy5YP9ywohe_JwiLpCxqCvP-7ypg@mail.gmail.com>
- <20190709131401.GA9224@smile.fi.intel.com> <20190709132943.GB9224@smile.fi.intel.com>
- <20190709133448.GC9224@smile.fi.intel.com> <20190709133847.GD9224@smile.fi.intel.com>
-In-Reply-To: <20190709133847.GD9224@smile.fi.intel.com>
-From:   Curtis Malainey <cujomalainey@google.com>
-Date:   Tue, 9 Jul 2019 12:27:49 -0700
-Message-ID: <CAOReqxgnbDJsEcv7vdX3w44rzB=B69sHj95E8yBZ8DnZq0=63Q@mail.gmail.com>
-Subject: Re: DW-DMA: Probe failures on broadwell
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Ross Zwisler <zwisler@google.com>,
-        Fletcher Woodruff <fletcherw@google.com>,
-        dmaengine@vger.kernel.org,
-        ALSA development <alsa-devel@alsa-project.org>,
-        Pierre-louis Bossart <pierre-louis.bossart@intel.com>,
-        Liam Girdwood <liam.r.girdwood@intel.com>
+References: <20190613005109.1867-1-jassisinghbrar@gmail.com>
+ <20190613005237.1996-1-jassisinghbrar@gmail.com> <20190709143437.GA30850@bogus>
+In-Reply-To: <20190709143437.GA30850@bogus>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Tue, 9 Jul 2019 23:12:03 -0500
+Message-ID: <CABb+yY3OsAh3xgX8_vvA7A7mU+FkEj__BQs9CxMvf=eYxRYXyw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: milbeaut-m10v-hdmac: Add Socionext
+ Milbeaut HDMAC bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     dmaengine@vger.kernel.org,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        vkoul@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        orito.takao@socionext.com,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        kasai.kazuhiro@socionext.com,
+        Jassi Brar <jaswinder.singh@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Andy,
-
-Thanks for the information, we are running a 4.14 kernel so we don't
-have the idma32 driver, I will see if I can backport it and report
-back if the fix works.
-
-Thanks.
-
-On Tue, Jul 9, 2019 at 6:38 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Tue, Jul 9, 2019 at 9:34 AM Rob Herring <robh@kernel.org> wrote:
 >
-> On Tue, Jul 09, 2019 at 04:34:48PM +0300, Andy Shevchenko wrote:
-> > On Tue, Jul 09, 2019 at 04:29:43PM +0300, Andy Shevchenko wrote:
-> > > On Tue, Jul 09, 2019 at 04:14:01PM +0300, Andy Shevchenko wrote:
-> > > > On Mon, Jul 08, 2019 at 01:50:07PM -0700, Curtis Malainey wrote:
-> > >
-> > > > So, the correct fix is to provide a platform data, like it's done in
-> > > > drivers/dma/dw/pci.c::idma32_pdata, in the sst-firmware.c::dw_probe(), and call
-> > > > idma32_dma_probe() with idma32_dma_remove() respectively on removal stage.
-> > > >
-> > > > (It will require latest patches to be applied, which are material for v5.x)
-> > >
-> > > Below completely untested patch to try
+> On Wed, Jun 12, 2019 at 07:52:37PM -0500, jassisinghbrar@gmail.com wrote:
+> > From: Jassi Brar <jaswinder.singh@linaro.org>
 > >
-> > Also, it might require to set proper request lines (currently it uses 0 AFAICS).
-> > Something like it's done in drivers/spi/spi-pxa2xx-pci.c for Intel Merrifield.
+> > Document the devicetree bindings for Socionext Milbeaut HDMAC
+> > controller. Controller has upto 8 floating channels, that need
+> > a predefined slave-id to work from a set of slaves.
+> >
+> > Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> > ---
+> >  .../bindings/dma/milbeaut-m10v-hdmac.txt           | 54 +++++++++++++++++++
+> >  1 file changed, 54 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
+> > new file mode 100644
+> > index 000000000000..a104fcb9e73d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
+> > @@ -0,0 +1,51 @@
+> > +* Milbeaut AHB DMA Controller
+> > +
+> > +Milbeaut AHB DMA controller has transfer capability bellow.
+> > + - memory to memory transfer
+> > + - device to memory transfer
+> > + - memory to device transfer
+> > +
+> > +Required property:
+> > +- compatible:       Should be  "socionext,milbeaut-m10v-hdmac"
+> > +- reg:              Should contain DMA registers location and length.
+> > +- interrupts:       Should contain all of the per-channel DMA interrupts.
 >
-> And SST_DSP_DMA_MAX_BURST seems encoded while it's should be simple number,
-> like 8 (bytes). Also SPI PXA is an example to look into.
+> How many?
 >
-> I doubt it has been validated with upstream driver (I know about some internal
-> drivers, hacked version of dw one, you may find sources somewhere in public).
+Each channel has an IRQ line. And the number of channels is
+configurable. So instead of having some explicit property like
+'dma-channels', we infer that from the number of irqs registered.
+
+> > +- #dma-cells:       Should be 1. Specify the ID of the slave.
+> > +- clocks:           Phandle to the clock used by the HDMAC module.
+> > +
+> > +
+> > +Example:
+> > +
+> > +     hdmac1: hdmac@1e110000 {
 >
-> --
-> With Best Regards,
-> Andy Shevchenko
+> dma-controller@...
 >
+OK
+
+> > +             compatible = "socionext,milbeaut-m10v-hdmac";
+> > +             reg = <0x1e110000 0x10000>;
+> > +             interrupts = <0 132 4>,
+> > +                          <0 133 4>,
+> > +                          <0 134 4>,
+> > +                          <0 135 4>,
+> > +                          <0 136 4>,
+> > +                          <0 137 4>,
+> > +                          <0 138 4>,
+> > +                          <0 139 4>;
+> > +             #dma-cells = <1>;
+> > +             clocks = <&dummy_clk>;
+> > +     };
+> > +
+> > +* DMA client
+> > +
+> > +Clients have to specify the DMA requests with phandles in a list.
 >
+> Nothing specific to this binding here and the client side is already
+> documented, so drop this section.
+>
+OK.
+
+Thanks

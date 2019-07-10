@@ -2,140 +2,109 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 250D563FCF
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Jul 2019 06:12:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0945E643A8
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Jul 2019 10:38:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725871AbfGJEMP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 10 Jul 2019 00:12:15 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37317 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfGJEMP (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 10 Jul 2019 00:12:15 -0400
-Received: by mail-io1-f66.google.com with SMTP id q22so1775379iog.4;
-        Tue, 09 Jul 2019 21:12:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2Mtj1V+09V4lY2C/WpTtWjJWOvRdHsrfxKP5HUgF3Mw=;
-        b=Er83EjvRJBQgeZLZLNGHJ/CIJ3vFfD2b44UXb9NJhum0QdBtKCUFxG0HoR3ONVkgQr
-         o0xtIwaDaN0tSl+1OGHaci0d6tKYunpmoPln67v2glTbuS5CSUdXTa8xze14By08wGhJ
-         bnFbwyg1k2PhbXe0djOJmsDtY3LdvNtwjKTrbPiHCZrB+/GEsN5F2cseK/B+iQPFWgp4
-         8aC8paqLYpkbbfpBuPq3IgyZDy0jlhnYJrWVc/4I9/jUAFt8B/TF67q3NMTifsw9cR0k
-         edGv+eaK5sywQoqE1FsB2w1F+jWKQPgaYi8IzrYgBQF21mb60gjkzmvG2hcoMO1gVhLq
-         T2Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2Mtj1V+09V4lY2C/WpTtWjJWOvRdHsrfxKP5HUgF3Mw=;
-        b=YfZWWWiYHYSfH6GCkZYIxl2X72F5nYqi8y9IQuPCBTwbru/NczvY5S0uu9LFdPdgDe
-         Up36MFa/JTE4f9R6vAyS0ytyJab60ahv1a24NeJaQoROuI5pSi3DxUUC4ihng3Jpfatd
-         WGNZTPU07NMA2KPQxdMbC9la7M2meTMubcWRpcwJVG7lRLxrT6qIYplbuLpq2edxqeZK
-         4i7/B3XSGDAlK6TWCQmAYiBcn1lIij85W+zByLvZjFfpW/dTdyiXjqOSPXRA0TyBB9Rn
-         R8NmlWN0Grjq3W01+OGGX8NWfhbGna8D6Lperv3KW7OWJdEcoOnQVy/HyKTW1ouUMLXb
-         1JLw==
-X-Gm-Message-State: APjAAAW+RHvRi+sE68ksciB+SzShV4PXXTbDIhKm7EtlLd+3CnUb/D/0
-        hk8F5HYdrI6FHvLe69L5dAJuMJNPqu15UAc+4kA=
-X-Google-Smtp-Source: APXvYqyrY3pgnVJVoKBZLLrB+4OJFeIjwcN5V+rh111wh3J7yNqwK0JY5nwgq4JIQX+Ci9Ss4o59aShURyDdZ3NjNHU=
-X-Received: by 2002:a5d:8c81:: with SMTP id g1mr30451959ion.239.1562731934157;
- Tue, 09 Jul 2019 21:12:14 -0700 (PDT)
+        id S1727326AbfGJIim (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 10 Jul 2019 04:38:42 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:9701 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727142AbfGJIim (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 10 Jul 2019 04:38:42 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d25a4100000>; Wed, 10 Jul 2019 01:38:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 10 Jul 2019 01:38:41 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 10 Jul 2019 01:38:41 -0700
+Received: from [10.26.11.158] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 10 Jul
+ 2019 08:38:39 +0000
+Subject: Re: [PATCH] dmaengine: tegra210-adma: Fix unused function warnings
+To:     YueHaibing <yuehaibing@huawei.com>, <ldewangan@nvidia.com>,
+        <vkoul@kernel.org>, <dan.j.williams@intel.com>,
+        <thierry.reding@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>
+References: <20190709083258.57112-1-yuehaibing@huawei.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <5cda4486-d875-4f66-c7f9-0ed11e35d44c@nvidia.com>
+Date:   Wed, 10 Jul 2019 09:38:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190613005109.1867-1-jassisinghbrar@gmail.com>
- <20190613005237.1996-1-jassisinghbrar@gmail.com> <20190709143437.GA30850@bogus>
-In-Reply-To: <20190709143437.GA30850@bogus>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Tue, 9 Jul 2019 23:12:03 -0500
-Message-ID: <CABb+yY3OsAh3xgX8_vvA7A7mU+FkEj__BQs9CxMvf=eYxRYXyw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: milbeaut-m10v-hdmac: Add Socionext
- Milbeaut HDMAC bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     dmaengine@vger.kernel.org,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        vkoul@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        orito.takao@socionext.com,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        kasai.kazuhiro@socionext.com,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190709083258.57112-1-yuehaibing@huawei.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562747920; bh=1FBvMektmbZBOzVKmJaAz9QLeVX25uyKcUKzcf9Hdc0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=T9Pms+Zrm7JkZZNSCGxO4a298/jArN10Cp+rQr/lxgrDM70EAU2KYkR93A75VFXt+
+         jkpj0A2Wi4y87LlBNCvQhpvkGAd00yzdVgoVZOODKI30WznCPPTAfIuog2S3rdQaA1
+         ynXq3sE1v0nDpuBTPN1iAB0ll8oZtrDULou9vNS5Z/Xu2v/ffM80aLF+OAz3GUd8vt
+         m8mmYL4ZnfZvgbJxQ/CZJBAD4TfjZlHMuEzX2UdYdT740Jb4GPpPgl9REDRRURXhj/
+         EiSTaumDmU19T8kN2qFDMFn39Km2YtALrYTwYWu6qBNsB2jzmTB2RpbhMeykYWsIW/
+         KNJbEG5qKWldw==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Jul 9, 2019 at 9:34 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Jun 12, 2019 at 07:52:37PM -0500, jassisinghbrar@gmail.com wrote:
-> > From: Jassi Brar <jaswinder.singh@linaro.org>
-> >
-> > Document the devicetree bindings for Socionext Milbeaut HDMAC
-> > controller. Controller has upto 8 floating channels, that need
-> > a predefined slave-id to work from a set of slaves.
-> >
-> > Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-> > ---
-> >  .../bindings/dma/milbeaut-m10v-hdmac.txt           | 54 +++++++++++++++++++
-> >  1 file changed, 54 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-> > new file mode 100644
-> > index 000000000000..a104fcb9e73d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-> > @@ -0,0 +1,51 @@
-> > +* Milbeaut AHB DMA Controller
-> > +
-> > +Milbeaut AHB DMA controller has transfer capability bellow.
-> > + - memory to memory transfer
-> > + - device to memory transfer
-> > + - memory to device transfer
-> > +
-> > +Required property:
-> > +- compatible:       Should be  "socionext,milbeaut-m10v-hdmac"
-> > +- reg:              Should contain DMA registers location and length.
-> > +- interrupts:       Should contain all of the per-channel DMA interrupts.
->
-> How many?
->
-Each channel has an IRQ line. And the number of channels is
-configurable. So instead of having some explicit property like
-'dma-channels', we infer that from the number of irqs registered.
 
-> > +- #dma-cells:       Should be 1. Specify the ID of the slave.
-> > +- clocks:           Phandle to the clock used by the HDMAC module.
-> > +
-> > +
-> > +Example:
-> > +
-> > +     hdmac1: hdmac@1e110000 {
->
-> dma-controller@...
->
-OK
+On 09/07/2019 09:32, YueHaibing wrote:
+> If CONFIG_PM is not set, build warnings:
+> 
+> drivers/dma/tegra210-adma.c:747:12: warning: tegra_adma_runtime_resume defined but not used [-Wunused-function]
+>  static int tegra_adma_runtime_resume(struct device *dev)
+> drivers/dma/tegra210-adma.c:715:12: warning: tegra_adma_runtime_suspend defined but not used [-Wunused-function]
+>  static int tegra_adma_runtime_suspend(struct device *dev)
+> 
+> Mark the two function as __maybe_unused.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/dma/tegra210-adma.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+> index 2805853..b33cf6e 100644
+> --- a/drivers/dma/tegra210-adma.c
+> +++ b/drivers/dma/tegra210-adma.c
+> @@ -712,7 +712,7 @@ static struct dma_chan *tegra_dma_of_xlate(struct of_phandle_args *dma_spec,
+>  	return chan;
+>  }
+>  
+> -static int tegra_adma_runtime_suspend(struct device *dev)
+> +static int __maybe_unused tegra_adma_runtime_suspend(struct device *dev)
+>  {
+>  	struct tegra_adma *tdma = dev_get_drvdata(dev);
+>  	struct tegra_adma_chan_regs *ch_reg;
+> @@ -744,7 +744,7 @@ static int tegra_adma_runtime_suspend(struct device *dev)
+>  	return 0;
+>  }
+>  
+> -static int tegra_adma_runtime_resume(struct device *dev)
+> +static int __maybe_unused tegra_adma_runtime_resume(struct device *dev)
+>  {
+>  	struct tegra_adma *tdma = dev_get_drvdata(dev);
+>  	struct tegra_adma_chan_regs *ch_reg;
+> 
 
-> > +             compatible = "socionext,milbeaut-m10v-hdmac";
-> > +             reg = <0x1e110000 0x10000>;
-> > +             interrupts = <0 132 4>,
-> > +                          <0 133 4>,
-> > +                          <0 134 4>,
-> > +                          <0 135 4>,
-> > +                          <0 136 4>,
-> > +                          <0 137 4>,
-> > +                          <0 138 4>,
-> > +                          <0 139 4>;
-> > +             #dma-cells = <1>;
-> > +             clocks = <&dummy_clk>;
-> > +     };
-> > +
-> > +* DMA client
-> > +
-> > +Clients have to specify the DMA requests with phandles in a list.
->
-> Nothing specific to this binding here and the client side is already
-> documented, so drop this section.
->
-OK.
+Thanks!
 
-Thanks
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+
+Cheers
+Jon
+
+-- 
+nvpublic

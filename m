@@ -2,39 +2,39 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 305666493B
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Jul 2019 17:05:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87AF464902
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Jul 2019 17:05:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbfGJPFO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 10 Jul 2019 11:05:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34872 "EHLO mail.kernel.org"
+        id S1728137AbfGJPDT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 10 Jul 2019 11:03:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728041AbfGJPDA (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 10 Jul 2019 11:03:00 -0400
+        id S1728134AbfGJPDS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 10 Jul 2019 11:03:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79F7721670;
-        Wed, 10 Jul 2019 15:02:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3DDE21537;
+        Wed, 10 Jul 2019 15:03:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562770979;
-        bh=6v2KnrN/8g6j+vJ72klcfoDIBUrweL16I3EP4h11WIk=;
+        s=default; t=1562770997;
+        bh=93onSUUCrqRnvzJub5vKUqbhxMY7kljRhX7JDQeMEcU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GIjb++7M2O4WO56dooEya+2QTQzlasvJmI7Qz07kBHJ0uQf1NjGNuq02knos8RkYg
-         T17bUL9ZNjcWLKzi6U1MPKCpcpoLfYba07QqE96xHXXhuzz90GB2IBEcr60BXZQhYs
-         JgOrddjVoHWsJdkdrX0HTgMiTSOf4QB9OfRRnYmA=
+        b=rsm80q4XmfMOZSNv8C2dA8LIOJzW3ss6IBGtK+5WF7ZNotMvaeKODQenRDwarfU2W
+         DgKWnQIyTYkDxWElI8N3yqmRy0saxE3sugMnl1hdqQ9HWzVkt4LndcUttgryw2dJuE
+         do4eaucBcl4I3G3GWRJ9bZIsV06qP7LbkYNyawGM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
         Sven Van Asbroeck <TheSven73@gmail.com>,
         Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>,
         Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 11/11] dmaengine: imx-sdma: fix use-after-free on probe error path
-Date:   Wed, 10 Jul 2019 11:02:38 -0400
-Message-Id: <20190710150240.6984-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 9/9] dmaengine: imx-sdma: fix use-after-free on probe error path
+Date:   Wed, 10 Jul 2019 11:02:59 -0400
+Message-Id: <20190710150301.7129-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190710150240.6984-1-sashal@kernel.org>
-References: <20190710150240.6984-1-sashal@kernel.org>
+In-Reply-To: <20190710150301.7129-1-sashal@kernel.org>
+References: <20190710150301.7129-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -80,10 +80,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 27 insertions(+), 21 deletions(-)
 
 diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 99d9f431ae2c..ba72fcfbebfe 100644
+index cb1b44d78a1f..357147c00f93 100644
 --- a/drivers/dma/imx-sdma.c
 +++ b/drivers/dma/imx-sdma.c
-@@ -2096,27 +2096,6 @@ static int sdma_probe(struct platform_device *pdev)
+@@ -2039,27 +2039,6 @@ static int sdma_probe(struct platform_device *pdev)
  	if (pdata && pdata->script_addrs)
  		sdma_add_scripts(sdma, pdata->script_addrs);
  
@@ -111,7 +111,7 @@ index 99d9f431ae2c..ba72fcfbebfe 100644
  	sdma->dma_device.dev = &pdev->dev;
  
  	sdma->dma_device.device_alloc_chan_resources = sdma_alloc_chan_resources;
-@@ -2161,6 +2140,33 @@ static int sdma_probe(struct platform_device *pdev)
+@@ -2103,6 +2082,33 @@ static int sdma_probe(struct platform_device *pdev)
  		of_node_put(spba_bus);
  	}
  

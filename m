@@ -2,98 +2,322 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E8ADE6506D
-	for <lists+dmaengine@lfdr.de>; Thu, 11 Jul 2019 05:10:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E92F7653E2
+	for <lists+dmaengine@lfdr.de>; Thu, 11 Jul 2019 11:34:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbfGKDKk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 10 Jul 2019 23:10:40 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43110 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbfGKDKj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 10 Jul 2019 23:10:39 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i189so2024324pfg.10;
-        Wed, 10 Jul 2019 20:10:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=zpbomds83eKGH676yLKqCCW5MqIqLtjKcYpM/+tbDr0=;
-        b=IJnWvONwVnZGohDdhtjmhBKs9vfW197GtuREVR7T+OLN0Qp6yJht+eJ5QIC2ynArly
-         4rbUKfUx1QqzxUxsk6PNS+SLoMIMJggtxcktut1Nm39FiAIWWHwhxAeO1QegLEIxs88i
-         bU5W1lasXrtkfyfvHX0wjIriVm6/4MtFGNZ3GogUhrvmN0NRBUeosbTFAJSev6oMmdls
-         0X3tTh5WaPJbRk9qRxcRl7cOq5Ez3m270vpobef+QsMchsZAiaSK/tfty/H2kYz7evZ6
-         5+4Uz4hE1OrPmAZjqlNbUCncwXbhSK5p981Rt1TUrlcPuREr+btHXswEpEqWgnxN0kH6
-         6qPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=zpbomds83eKGH676yLKqCCW5MqIqLtjKcYpM/+tbDr0=;
-        b=Womn7hT+yA18ZnblRjV5uwKrv6GbwZe+/wgwn834H91zm+9gWck9UlLvz+5iV/NjZF
-         k/BXz50yvhhODTSYiXZEsoOqUH9egv9ktI9CXPJC87IUR6nGI1Glv/hy3bCTjEeIHVjh
-         GIMpbB8gm/vlxW5LZNdjcbHMQA52QJJ3qUQkX2VxxnAL0KwPkXYA85FwgzWx/6dewJ2A
-         0QiS8Z6MGbIy0L8euL+ccUgn4zJgfCQL6CsDa7lb6G/Bmw9iG2Ub9EfhJqwpa5t613Xg
-         hA9QijhHRcXegJsJduWRKjSzqRK+Mku7VVrlrtdZeniOqWUtab66ftM8nF1G72uktb+w
-         BMEw==
-X-Gm-Message-State: APjAAAXpkfE5tLnU4iUs1jLA6LP3Sv3S1Tg6eJgpx9Ajt+uRsjmT8xQG
-        4PjuDCTDCAxYHAvk8mSIqmOaFTQKotc=
-X-Google-Smtp-Source: APXvYqxJMOOX5pzW2SkgB5Jw0yk7MWvd1qsQJTyPiyIkjGwvQIKyRH12UMBGRnVXyYu7FXXirtNRRw==
-X-Received: by 2002:a17:90a:2343:: with SMTP id f61mr2084162pje.130.1562814638642;
-        Wed, 10 Jul 2019 20:10:38 -0700 (PDT)
-Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id l124sm3710309pgl.54.2019.07.10.20.10.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jul 2019 20:10:38 -0700 (PDT)
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH 2/2] dmaengine: pl330: use the same attriobutes when freeing pl330->mcode_cpu
-Date:   Thu, 11 Jul 2019 11:10:31 +0800
-Message-Id: <20190711031031.23558-1-huangfq.daxian@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+        id S1727595AbfGKJeb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 11 Jul 2019 05:34:31 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:54103 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfGKJeb (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 11 Jul 2019 05:34:31 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 4BE8E1C002D;
+        Thu, 11 Jul 2019 09:34:21 +0000 (UTC)
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/3] dt-bindings: dma: Add YAML schemas for the generic DMA bindings
+Date:   Thu, 11 Jul 2019 11:21:56 +0200
+Message-Id: <20190711092158.14678-1-maxime.ripard@bootlin.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-In function dmac_alloc_recources(), pl330->mcode_cpu is allocated using
-dma_alloc_attrs() but freed with dma_free_coherent().
-Use the correct dma_free_attrs() function to free pl330->mcode_cpu.
+The DMA controllers and consumers have a bunch of generic properties that
+are needed in a device tree. Add a YAML schemas for those.
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- drivers/dma/pl330.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/dma/dma-consumer.yaml |  60 +++++++++
+ .../bindings/dma/dma-controller.yaml          |  79 ++++++++++++
+ Documentation/devicetree/bindings/dma/dma.txt | 114 +-----------------
+ 3 files changed, 140 insertions(+), 113 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/dma-consumer.yaml
+ create mode 100644 Documentation/devicetree/bindings/dma/dma-controller.yaml
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index 56f9fabc99c4..d9c6ae0732c6 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -1918,9 +1918,10 @@ static int dmac_alloc_resources(struct pl330_dmac *pl330)
- 	if (ret) {
- 		dev_err(pl330->ddma.dev, "%s:%d Can't to create channels for DMAC!\n",
- 			__func__, __LINE__);
--		dma_free_coherent(pl330->ddma.dev,
-+		dma_free_attrs(pl330->ddma.dev,
- 				chans * pl330->mcbufsz,
--				pl330->mcode_cpu, pl330->mcode_bus);
-+				pl330->mcode_cpu, pl330->mcode_bus,
-+				DMA_ATTR_PRIVILEGED);
- 		return ret;
- 	}
- 
-@@ -1999,9 +2000,9 @@ static void pl330_del(struct pl330_dmac *pl330)
- 	/* Free DMAC resources */
- 	dmac_free_threads(pl330);
- 
--	dma_free_coherent(pl330->ddma.dev,
-+	dma_free_attrs(pl330->ddma.dev,
- 		pl330->pcfg.num_chan * pl330->mcbufsz, pl330->mcode_cpu,
--		pl330->mcode_bus);
-+		pl330->mcode_bus, DMA_ATTR_PRIVILEGED);
- }
- 
- /* forward declaration */
+diff --git a/Documentation/devicetree/bindings/dma/dma-consumer.yaml b/Documentation/devicetree/bindings/dma/dma-consumer.yaml
+new file mode 100644
+index 000000000000..2f6315863ad1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/dma-consumer.yaml
+@@ -0,0 +1,60 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/dma-consumer.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: DMA Consumer Generic Binding
++
++maintainers:
++  - Vinod Koul <vkoul@kernel.org>
++
++select: true
++
++properties:
++  dmas:
++    description:
++      List of one or more DMA specifiers, each consisting of
++          - A phandle pointing to DMA controller node
++          - A number of integer cells, as determined by the
++            \#dma-cells property in the node referenced by phandle
++            containing DMA controller specific information. This
++            typically contains a DMA request line number or a
++            channel number, but can contain any data that is
++            required for configuring a channel.
++
++  dma-names:
++    description:
++      Contains one identifier string for each DMA specifier in the
++      dmas property. The specific strings that can be used are defined
++      in the binding of the DMA client device.  Multiple DMA
++      specifiers can be used to represent alternatives and in this
++      case the dma-names for those DMA specifiers must be identical
++      (see examples).
++
++dependencies:
++  dma-names: [ dmas ]
++
++examples:
++  - |
++    /* A device with one DMA read channel, one DMA write channel */
++    i2c1: i2c@1 {
++         /* ... */
++         dmas = <&dma 2>, 	/* read channel */
++                <&dma 3>;	/* write channel */
++        dma-names = "rx", "tx";
++        /* ... */
++    };
++
++  - |
++    /* A single read-write channel with three alternative DMA controllers */
++    dmas = <&dma1 5>, <&dma2 7>, <&dma3 2>;
++    dma-names = "rx-tx", "rx-tx", "rx-tx";
++
++  - |
++    /* A device with three channels, one of which has two alternatives */
++    dmas = <&dma1 2>,		/* read channel */
++           <&dma1 3>,		/* write channel */
++           <&dma2 0>,		/* error read */
++           <&dma3 0>;		/* alternative error read */
++    dma-names = "rx", "tx", "error", "error";
+diff --git a/Documentation/devicetree/bindings/dma/dma-controller.yaml b/Documentation/devicetree/bindings/dma/dma-controller.yaml
+new file mode 100644
+index 000000000000..17c650131b78
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/dma-controller.yaml
+@@ -0,0 +1,79 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/dma-controller.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: DMA Controller Generic Binding
++
++maintainers:
++  - Vinod Koul <vkoul@kernel.org>
++
++description:
++  Generic binding to provide a way for a driver using DMA Engine to
++  retrieve the DMA request or channel information that goes from a
++  hardware device to a DMA controller.
++
++properties:
++  $nodename:
++    pattern: "^dma-controller(@.*)?$"
++
++  "#dma-cells":
++    # minimum: 1
++    description:
++      Used to provide DMA controller specific information.
++
++  dma-channel-masks:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description:
++      Bitmask of available DMA channels in ascending order that are
++      not reserved by firmware and are available to the
++      kernel. i.e. first channel corresponds to LSB.
++
++  dma-channels:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description:
++      Number of DMA channels supported by the controller.
++
++  dma-masters:
++    $ref: /schemas/types.yaml#definitions/phandle-array
++    description:
++      DMA routers are transparent IP blocks used to route DMA request
++      lines from devices to the DMA controller. Some SoCs (like TI
++      DRA7x) have more peripherals integrated with DMA requests than
++      what the DMA controller can handle directly.
++
++      In such a case, dma-masters is an array of phandle to the DMA
++      controllers the router can direct the signal to.
++
++  dma-requests:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description:
++      Number of DMA request signals supported by the controller.
++
++examples:
++  - |
++    dma: dma@48000000 {
++        compatible = "ti,omap-sdma";
++        reg = <0x48000000 0x1000>;
++        interrupts = <0 12 0x4
++                      0 13 0x4
++                      0 14 0x4
++                      0 15 0x4>;
++        #dma-cells = <1>;
++        dma-channels = <32>;
++        dma-requests = <127>;
++        dma-channel-mask = <0xfffe>;
++    };
++
++  - |
++    sdma_xbar: dma-router@4a002b78 {
++        compatible = "ti,dra7-dma-crossbar";
++        reg = <0x4a002b78 0xfc>;
++        #dma-cells = <1>;
++        dma-requests = <205>;
++        ti,dma-safe-map = <0>;
++        dma-masters = <&sdma>;
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
+index eeb4e4d1771e..90a67a016a48 100644
+--- a/Documentation/devicetree/bindings/dma/dma.txt
++++ b/Documentation/devicetree/bindings/dma/dma.txt
+@@ -1,113 +1 @@
+-* Generic DMA Controller and DMA request bindings
+-
+-Generic binding to provide a way for a driver using DMA Engine to retrieve the
+-DMA request or channel information that goes from a hardware device to a DMA
+-controller.
+-
+-
+-* DMA controller
+-
+-Required property:
+-- #dma-cells: 		Must be at least 1. Used to provide DMA controller
+-			specific information. See DMA client binding below for
+-			more details.
+-
+-Optional properties:
+-- dma-channels: 	Number of DMA channels supported by the controller.
+-- dma-requests: 	Number of DMA request signals supported by the
+-			controller.
+-- dma-channel-mask:	Bitmask of available DMA channels in ascending order
+-			that are not reserved by firmware and are available to
+-			the kernel. i.e. first channel corresponds to LSB.
+-
+-Example:
+-
+-	dma: dma@48000000 {
+-		compatible = "ti,omap-sdma";
+-		reg = <0x48000000 0x1000>;
+-		interrupts = <0 12 0x4
+-			      0 13 0x4
+-			      0 14 0x4
+-			      0 15 0x4>;
+-		#dma-cells = <1>;
+-		dma-channels = <32>;
+-		dma-requests = <127>;
+-		dma-channel-mask = <0xfffe>
+-	};
+-
+-* DMA router
+-
+-DMA routers are transparent IP blocks used to route DMA request lines from
+-devices to the DMA controller. Some SoCs (like TI DRA7x) have more peripherals
+-integrated with DMA requests than what the DMA controller can handle directly.
+-
+-Required property:
+-- dma-masters:		phandle of the DMA controller or list of phandles for
+-			the DMA controllers the router can direct the signal to.
+-- #dma-cells: 		Must be at least 1. Used to provide DMA router specific
+-			information. See DMA client binding below for more
+-			details.
+-
+-Optional properties:
+-- dma-requests: 	Number of incoming request lines the router can handle.
+-- In the node pointed by the dma-masters:
+-	- dma-requests:	The router driver might need to look for this in order
+-			to configure the routing.
+-
+-Example:
+-	sdma_xbar: dma-router@4a002b78 {
+-		compatible = "ti,dra7-dma-crossbar";
+-		reg = <0x4a002b78 0xfc>;
+-		#dma-cells = <1>;
+-		dma-requests = <205>;
+-		ti,dma-safe-map = <0>;
+-		dma-masters = <&sdma>;
+-	};
+-
+-* DMA client
+-
+-Client drivers should specify the DMA property using a phandle to the controller
+-followed by DMA controller specific data.
+-
+-Required property:
+-- dmas:			List of one or more DMA specifiers, each consisting of
+-			- A phandle pointing to DMA controller node
+-			- A number of integer cells, as determined by the
+-			  #dma-cells property in the node referenced by phandle
+-			  containing DMA controller specific information. This
+-			  typically contains a DMA request line number or a
+-			  channel number, but can contain any data that is
+-			  required for configuring a channel.
+-- dma-names: 		Contains one identifier string for each DMA specifier in
+-			the dmas property. The specific strings that can be used
+-			are defined in the binding of the DMA client device.
+-			Multiple DMA specifiers can be used to represent
+-			alternatives and in this case the dma-names for those
+-			DMA specifiers must be identical (see examples).
+-
+-Examples:
+-
+-1. A device with one DMA read channel, one DMA write channel:
+-
+-	i2c1: i2c@1 {
+-		...
+-		dmas = <&dma 2		/* read channel */
+-			&dma 3>;	/* write channel */
+-		dma-names = "rx", "tx";
+-		...
+-	};
+-
+-2. A single read-write channel with three alternative DMA controllers:
+-
+-	dmas = <&dma1 5
+-		&dma2 7
+-		&dma3 2>;
+-	dma-names = "rx-tx", "rx-tx", "rx-tx";
+-
+-3. A device with three channels, one of which has two alternatives:
+-
+-	dmas = <&dma1 2			/* read channel */
+-		&dma1 3			/* write channel */
+-		&dma2 0			/* error read */
+-		&dma3 0>;		/* alternative error read */
+-	dma-names = "rx", "tx", "error", "error";
++This file has been moved to dma-controller.yaml.
 -- 
-2.11.0
+2.21.0
 

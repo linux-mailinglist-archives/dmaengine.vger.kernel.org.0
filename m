@@ -2,70 +2,84 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D48D66FA8
-	for <lists+dmaengine@lfdr.de>; Fri, 12 Jul 2019 15:09:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81A2C6746B
+	for <lists+dmaengine@lfdr.de>; Fri, 12 Jul 2019 19:39:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfGLNJQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 12 Jul 2019 09:09:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57628 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727157AbfGLNJQ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:09:16 -0400
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF126216B7;
-        Fri, 12 Jul 2019 13:09:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562936955;
-        bh=W6YIjaFSzzjtMDBKWJodMGbfMMX0VBoh4+APVLIt+SA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vUVTFwqC/zGAaW1/n5WXHjBkKD5Ypuvc083w2flxQ9TarX9sAG9ByX+2dIPw1VnBQ
-         /YYcR5XF85+qqJPxwWh9K7AmlV/l9CLUb3ty/1nToUwE0YKacb3+faHzp4yrfjm+yu
-         HU5arit/ux127/xK/l9dqc7i4fVFk64VHicdMbxY=
-Received: by mail-qk1-f181.google.com with SMTP id d79so6278170qke.11;
-        Fri, 12 Jul 2019 06:09:14 -0700 (PDT)
-X-Gm-Message-State: APjAAAWdF1OuTrpILhsv1LzlregNF6q2n/h4SWk4ZIYmEVq+NwJpsZY2
-        ASu1pcKFHEkkSUIgAzddKf+nUc53OhCWWHCZdA==
-X-Google-Smtp-Source: APXvYqwjdoQwR8x8UTFOyyGiPA50uzJD5f6PGF0aB6Ty2QtFOm2DGDacJSD7J67xZOfZmZOUg59B3SH4VdFNnGwzYkM=
-X-Received: by 2002:a37:a010:: with SMTP id j16mr6412048qke.152.1562936954182;
- Fri, 12 Jul 2019 06:09:14 -0700 (PDT)
+        id S1726977AbfGLRjR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 12 Jul 2019 13:39:17 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54760 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbfGLRjQ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 Jul 2019 13:39:16 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p74so9630970wme.4;
+        Fri, 12 Jul 2019 10:39:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HVK6msgsGJnoGkWkZSEGcmqkYH7ZezIUmPb0VYKKhC8=;
+        b=YDMKme+uIxGp66/wwY/EplhFxPQr/t4DYX0MgTS1iwGFTUYTuH9IPIIscAa4Y49DFn
+         xs0xsYa9MiPtOazvV5Vm55mtSLN1n1uXfZHOm251IXGXvrFDVmjrrF703hHkppChUuCb
+         ut47oyWLOt2h14yHSXbvy8TzgciLeMaX/Bnk/LbXupP4A1wNo9Gc77v3R8ezvmBGCyNA
+         QRs2Ga7xhLQAMb0e5YdR51V5U1HoRMh8sI1cFbBCCrPq/lWBVZOWLNaqBaXme1cycf6j
+         9hlY0J6oNMqbZGRrV647Did2RmJ6mfaWNK5eag+9rq5OkBQN6EHm/2fA0ZiOnmCv9o2X
+         BjdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HVK6msgsGJnoGkWkZSEGcmqkYH7ZezIUmPb0VYKKhC8=;
+        b=cTQlAR0YPHmzO+uTjQ8xfZiv1YJRTgCd3m+gpLckYtjumh8g5SHrgmXXGbnGNXYh9I
+         n2386aXAp2NdRBK5eQDeF4JVYsqA0N5secXqUnhy1yJCwLsx5m5H03i3G+Of8trdewu9
+         l8kYHTWtgfYMaqXvG0pJQ7HeKVUxLZq+yFq/l19so64ZU3E48o1WuOAd1Oou8a+XNb2D
+         e1LKNp7IdVrhUbKRp/LOLvbYPxYtYmsp4T8/8wvaw6oN+2aVBS5QCUdF7Uxweiwplu+f
+         EGYJpLuq/mMR7t9FWItlR+QFbf2wyFz+8rOz8/p8W7HJghkYQc7Dy3oURAQhis5tpwOS
+         H5DA==
+X-Gm-Message-State: APjAAAXGAI5NZsIFZe7EpDjFqKxrjd/Kyyp33cqlJrDw7LfAhfmWVB2R
+        2JwZgMgtg9IFnIiZGiyFciw=
+X-Google-Smtp-Source: APXvYqyI3efZEXBVC3rLAHfRJtLgBtlDWsCsQ2i98qK4Rh68IgPXHBx/4Z1VX0O6Ypffde530ZrROw==
+X-Received: by 2002:a1c:6a0e:: with SMTP id f14mr11253843wmc.154.1562953154626;
+        Fri, 12 Jul 2019 10:39:14 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id c3sm9887021wrx.19.2019.07.12.10.39.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 12 Jul 2019 10:39:13 -0700 (PDT)
+Date:   Fri, 12 Jul 2019 10:39:12 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] dma: ste_dma40: fix unneeded variable warning
+Message-ID: <20190712173912.GA127917@archlinux-threadripper>
+References: <20190712091357.744515-1-arnd@arndb.de>
 MIME-Version: 1.0
-References: <20190711092158.14678-1-maxime.ripard@bootlin.com> <20190711092158.14678-2-maxime.ripard@bootlin.com>
-In-Reply-To: <20190711092158.14678-2-maxime.ripard@bootlin.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 12 Jul 2019 07:09:02 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLJkoudu3mw9wVuN1RM-VPGSWj+Vv6L=C=N-DtW_vOAdA@mail.gmail.com>
-Message-ID: <CAL_JsqLJkoudu3mw9wVuN1RM-VPGSWj+Vv6L=C=N-DtW_vOAdA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: dma: Convert Allwinner A10 DMA to a schema
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712091357.744515-1-arnd@arndb.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 3:36 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> The older Allwinner SoCs have a DMA controller supported in Linux, with a
-> matching Device Tree binding.
->
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for that controller over to a YAML schemas.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  .../bindings/dma/allwinner,sun4i-a10-dma.yaml | 55 +++++++++++++++++++
->  .../devicetree/bindings/dma/sun4i-dma.txt     | 45 ---------------
->  2 files changed, 55 insertions(+), 45 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/allwinner,sun4i-a10-dma.yaml
->  delete mode 100644 Documentation/devicetree/bindings/dma/sun4i-dma.txt
+On Fri, Jul 12, 2019 at 11:13:30AM +0200, Arnd Bergmann wrote:
+> clang-9 points out that there are two variables that depending on the
+> configuration may only be used in an ARRAY_SIZE() expression but not
+> referenced:
+> 
+> drivers/dma/ste_dma40.c:145:12: error: variable 'd40_backup_regs' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
+> static u32 d40_backup_regs[] = {
+>            ^
+> drivers/dma/ste_dma40.c:214:12: error: variable 'd40_backup_regs_chan' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
+> static u32 d40_backup_regs_chan[] = {
+> 
+> Mark these __maybe_unused to shut up the warning.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Might be worth mentioning that this warning will only appear when
+CONFIG_PM is unset (they are both used in d40_save_restore_registers).
+
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>

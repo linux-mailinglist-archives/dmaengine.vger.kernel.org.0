@@ -2,56 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CDA867610
-	for <lists+dmaengine@lfdr.de>; Fri, 12 Jul 2019 23:02:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91D8367618
+	for <lists+dmaengine@lfdr.de>; Fri, 12 Jul 2019 23:06:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbfGLVCQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 12 Jul 2019 17:02:16 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:60888 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbfGLVCQ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 Jul 2019 17:02:16 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6CL22jW058997;
-        Fri, 12 Jul 2019 16:02:02 -0500
+        id S1727928AbfGLVGf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 12 Jul 2019 17:06:35 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54358 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbfGLVGf (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 Jul 2019 17:06:35 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6CL6NNE129824;
+        Fri, 12 Jul 2019 16:06:23 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1562965322;
-        bh=coaQynstDqA5HGnoz6Wom66HS4fobTvO2GZTeSoACMM=;
+        s=ti-com-17Q1; t=1562965583;
+        bh=W99H1Ru9wy0hhIBtgr5eFPbCZ+/whDnA2TJ0ggOlI0w=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Ig42kFf8tlOkVjHazoZ8sTZbCcIGBlfhM5Bmp/TBps7/4hxzvDP6Pis5eyATGhC3u
-         5MU4E/LfOCRRNqku1GlthgklNRLp3OgImfvFAsy9q4KwF7zFNJHreOCh4ZTfCxyDY9
-         cOflcveCEpSTthHmoBDzUX7OhDy4UlvhOQ5bTyqE=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6CL22pk016056
+        b=lN77X5t+VVpf2ir2+4isbS9oJi3dsjLuR7V+EaxJoP8T5HPz0+VY1q3rd1nScdC7y
+         V0M7cSaj3Bm6bGLn5wZPh35cWlkRwHx0fV2QtI07qZn7fo8JX53czWisuFYCJ08hDv
+         /Qy1isTb+uzpVs91sAH0asgzm15DowfT8dKC8Qzs=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6CL6NHH055638
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 12 Jul 2019 16:02:02 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 12 Jul 2019 16:06:23 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 12
- Jul 2019 16:02:02 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ Jul 2019 16:06:22 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 12 Jul 2019 16:02:02 -0500
+ Frontend Transport; Fri, 12 Jul 2019 16:06:22 -0500
 Received: from [10.250.145.87] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6CL20Ke100886;
-        Fri, 12 Jul 2019 16:02:00 -0500
-Subject: Re: [PATCH v4 3/3] dmaengine: ti: edma: Support for polled (memcpy)
- completion
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6CL6Kiw098592;
+        Fri, 12 Jul 2019 16:06:21 -0500
+Subject: Re: [PATCH] dmaengine: ti: omap-dma: Improved memcpy polling support
 To:     Vinod Koul <vkoul@kernel.org>
 CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-omap@vger.kernel.org>
-References: <20190618132148.26468-1-peter.ujfalusi@ti.com>
- <20190618132148.26468-4-peter.ujfalusi@ti.com>
- <20190705061714.GU2911@vkoul-mobl>
+References: <20190618132416.26874-1-peter.ujfalusi@ti.com>
+ <20190705062334.GV2911@vkoul-mobl>
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <d695a2fa-61d4-e312-11d9-b501b6bc18a7@ti.com>
-Date:   Sat, 13 Jul 2019 00:05:43 +0300
+Message-ID: <b180a077-a2c7-9f1e-cf0b-5bdf986a78fc@ti.com>
+Date:   Sat, 13 Jul 2019 00:10:04 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190705061714.GU2911@vkoul-mobl>
+In-Reply-To: <20190705062334.GV2911@vkoul-mobl>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -63,60 +61,121 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 
 
-On 5.7.2019 9.17, Vinod Koul wrote:
->> @@ -1840,18 +1847,40 @@ static enum dma_status edma_tx_status(struct dma_chan *chan,
->>  {
->>  	struct edma_chan *echan = to_edma_chan(chan);
->>  	struct virt_dma_desc *vdesc;
->> +	struct dma_tx_state txstate_tmp;
->>  	enum dma_status ret;
->>  	unsigned long flags;
+On 5.7.2019 9.23, Vinod Koul wrote:
+> On 18-06-19, 16:24, Peter Ujfalusi wrote:
+>> When a DMA client driver does not set the DMA_PREP_INTERRUPT because it
+>> does not want to use interrupts for DMA completion or because it can not
+>> rely on DMA interrupts due to executing the memcpy when interrupts are
+>> disabled it will poll the status of the transfer.
+>>
+>> If the interrupts are enabled then the cookie will be set completed in the
+>> interrupt handler so only check in HW completion when the polling is really
+>> needed.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>> Hi,
+>>
+>> This patch fine-tunes the omap-dma polled memcpy support to be inline with how
+>> the EDMA driver is handling it.
+>>
+>> The polled completion can be tested by applying:
+>> https://patchwork.kernel.org/patch/10966499/
+>>
+>> and run the dmatest with polled = 1 on boards where sDMA is used.
+>>
+>> Or boot up any dra7 family device with display enabled. The workaround for DMM
+>> errata i878 uses polled DMA memcpy.
+>>
+>> Regards,
+>> Peter
+>>
+>>  drivers/dma/ti/omap-dma.c | 37 ++++++++++++++++++++++++-------------
+>>  1 file changed, 24 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+>> index 5ba7d8485026..75d8f7e13c8d 100644
+>> --- a/drivers/dma/ti/omap-dma.c
+>> +++ b/drivers/dma/ti/omap-dma.c
+>> @@ -94,6 +94,7 @@ struct omap_desc {
+>>  	bool using_ll;
+>>  	enum dma_transfer_direction dir;
+>>  	dma_addr_t dev_addr;
+>> +	bool polled;
+>>  
+>>  	int32_t fi;		/* for OMAP_DMA_SYNC_PACKET / double indexing */
+>>  	int16_t ei;		/* for double indexing */
+>> @@ -834,20 +835,10 @@ static enum dma_status omap_dma_tx_status(struct dma_chan *chan,
 >>  
 >>  	ret = dma_cookie_status(chan, cookie, txstate);
->> -	if (ret == DMA_COMPLETE || !txstate)
+>>  
+>> -	if (!c->paused && c->running) {
+>> -		uint32_t ccr = omap_dma_chan_read(c, CCR);
+>> -		/*
+>> -		 * The channel is no longer active, set the return value
+>> -		 * accordingly
+>> -		 */
+>> -		if (!(ccr & CCR_ENABLE))
+>> -			ret = DMA_COMPLETE;
+>> -	}
+>> -
+>> +	spin_lock_irqsave(&c->vc.lock, flags);
+>>  	if (ret == DMA_COMPLETE || !txstate)
+>> -		return ret;
+>> +		goto out;
+>>  
+>> -	spin_lock_irqsave(&c->vc.lock, flags);
+>>  	vd = vchan_find_desc(&c->vc, cookie);
+>>  	if (vd) {
+>>  		txstate->residue = omap_dma_desc_size(to_omap_dma_desc(&vd->tx));
+>> @@ -868,6 +859,23 @@ static enum dma_status omap_dma_tx_status(struct dma_chan *chan,
+>>  	}
+>>  	if (ret == DMA_IN_PROGRESS && c->paused)
+>>  		ret = DMA_PAUSED;
 >> +
->> +	/* Provide a dummy dma_tx_state for completion checking */
->> +	if (ret != DMA_COMPLETE && !txstate)
->> +		txstate = &txstate_tmp;
->> +
->> +	if (ret == DMA_COMPLETE)
->>  		return ret;
+>> +out:
+>> +	if (ret == DMA_IN_PROGRESS && c->running && c->desc &&
+>> +	    c->desc->polled && c->desc->vd.tx.cookie == cookie) {
 > 
-> why not do:
+> heh, that makes quite a read!
 > 
->         if (ret == DMA_COMPLETE)
->                 return ret;
+> checking DMA_IN_PROGRESS should not make sense, as we should bail out at
+> the start if it is completed
 > 
->         if (!txstate)
->                 txstate = &txstate_tmp;
->
+> I think other can be optimzed to make it a better read!
 
-Indeed it is much cleaner this way. Will send an updated series next week.
+True, a simple re-ordering should make it easier to read or to split
+them up as two if() checks. I'll try to figure out something to simplify it.
 
->> +	txstate->residue = 0;
->>  	spin_lock_irqsave(&echan->vchan.lock, flags);
->>  	if (echan->edesc && echan->edesc->vdesc.tx.cookie == cookie)
->>  		txstate->residue = edma_residue(echan->edesc);
->>  	else if ((vdesc = vchan_find_desc(&echan->vchan, cookie)))
->>  		txstate->residue = to_edma_desc(&vdesc->tx)->residue;
->> +
->> +	/*
->> +	 * Mark the cookie completed if the residue is 0 for non cyclic
->> +	 * transfers
->> +	 */
->> +	if (ret != DMA_COMPLETE && !txstate->residue &&
->> +	    echan->edesc && echan->edesc->polled &&
->> +	    echan->edesc->vdesc.tx.cookie == cookie) {
->> +		edma_stop(echan);
->> +		vchan_cookie_complete(&echan->edesc->vdesc);
->> +		echan->edesc = NULL;
->> +		edma_execute(echan);
->> +		ret = DMA_COMPLETE;
+> 
+>> +		uint32_t ccr = omap_dma_chan_read(c, CCR);
+>> +		/*
+>> +		 * The channel is no longer active, set the return value
+>> +		 * accordingly
+>> +		 */
+>> +		if (!(ccr & CCR_ENABLE)) {
+>> +			struct omap_desc *d = c->desc;
+>> +			ret = DMA_COMPLETE;
+>> +			omap_dma_start_desc(c);
+>> +			vchan_cookie_complete(&d->vd);
+>> +		}
 >> +	}
 >> +
->>  	spin_unlock_irqrestore(&echan->vchan.lock, flags);
+>>  	spin_unlock_irqrestore(&c->vc.lock, flags);
 >>  
 >>  	return ret;
+>> @@ -1233,7 +1241,10 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_memcpy(
+>>  	d->ccr = c->ccr;
+>>  	d->ccr |= CCR_DST_AMODE_POSTINC | CCR_SRC_AMODE_POSTINC;
+>>  
+>> -	d->cicr = CICR_DROP_IE | CICR_FRAME_IE;
+>> +	if (tx_flags & DMA_PREP_INTERRUPT)
+>> +		d->cicr |= CICR_FRAME_IE;
+>> +	else
+>> +		d->polled = true;
+>>  
+>>  	d->csdp = data_type;
+>>  
 >> -- 
 >> Peter
 >>

@@ -2,54 +2,61 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91D8367618
-	for <lists+dmaengine@lfdr.de>; Fri, 12 Jul 2019 23:06:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 744666762B
+	for <lists+dmaengine@lfdr.de>; Fri, 12 Jul 2019 23:24:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbfGLVGf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 12 Jul 2019 17:06:35 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54358 "EHLO
+        id S1728026AbfGLVYU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 12 Jul 2019 17:24:20 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56034 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbfGLVGf (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 Jul 2019 17:06:35 -0400
+        with ESMTP id S1727967AbfGLVYU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 Jul 2019 17:24:20 -0400
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6CL6NNE129824;
-        Fri, 12 Jul 2019 16:06:23 -0500
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6CLO3cs002593;
+        Fri, 12 Jul 2019 16:24:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1562965583;
-        bh=W99H1Ru9wy0hhIBtgr5eFPbCZ+/whDnA2TJ0ggOlI0w=;
+        s=ti-com-17Q1; t=1562966643;
+        bh=GfAJsBGH2xX/GO8Wv9K0wODdgZXrpSTs4Vm46bwoB+0=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lN77X5t+VVpf2ir2+4isbS9oJi3dsjLuR7V+EaxJoP8T5HPz0+VY1q3rd1nScdC7y
-         V0M7cSaj3Bm6bGLn5wZPh35cWlkRwHx0fV2QtI07qZn7fo8JX53czWisuFYCJ08hDv
-         /Qy1isTb+uzpVs91sAH0asgzm15DowfT8dKC8Qzs=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6CL6NHH055638
+        b=AZWMUvjK8oppEegu5FFwVAs2fPLmSxA+TvqMbmgBG+dzDX0Qm6Ok8tfpKstTN1Qf5
+         ye4dNKI/7+24yxMbv2Xvq1wK60S1KSFDbKiH8GjNN4OYrcPZjhhU5DLlgZfNgm3rPQ
+         ktVU1nd40I/gh2dIouvJU1nUJNAf8Y8xu05IwZ1k=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6CLO37j075610
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 12 Jul 2019 16:06:23 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 12 Jul 2019 16:24:03 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 12
- Jul 2019 16:06:22 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ Jul 2019 16:24:02 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 12 Jul 2019 16:06:22 -0500
+ Frontend Transport; Fri, 12 Jul 2019 16:24:02 -0500
 Received: from [10.250.145.87] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6CL6Kiw098592;
-        Fri, 12 Jul 2019 16:06:21 -0500
-Subject: Re: [PATCH] dmaengine: ti: omap-dma: Improved memcpy polling support
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-omap@vger.kernel.org>
-References: <20190618132416.26874-1-peter.ujfalusi@ti.com>
- <20190705062334.GV2911@vkoul-mobl>
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6CLNxjA001463;
+        Fri, 12 Jul 2019 16:23:59 -0500
+Subject: Re: [PATCH 1/3] dt-bindings: dma: Add YAML schemas for the generic
+ DMA bindings
+To:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Jon Hunter <jonathanh@nvidia.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, <devicetree@vger.kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190711092158.14678-1-maxime.ripard@bootlin.com>
+ <CAL_JsqLh8QEwa-3v9-Vs=e55k3GyyvwsNVxmdBMWMD_VxqKMyA@mail.gmail.com>
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <b180a077-a2c7-9f1e-cf0b-5bdf986a78fc@ti.com>
-Date:   Sat, 13 Jul 2019 00:10:04 +0300
+Message-ID: <28a776e2-52fa-60e9-a7d9-8caeec78f1d1@ti.com>
+Date:   Sat, 13 Jul 2019 00:27:42 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190705062334.GV2911@vkoul-mobl>
+In-Reply-To: <CAL_JsqLh8QEwa-3v9-Vs=e55k3GyyvwsNVxmdBMWMD_VxqKMyA@mail.gmail.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -61,127 +68,318 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 
 
-On 5.7.2019 9.23, Vinod Koul wrote:
-> On 18-06-19, 16:24, Peter Ujfalusi wrote:
->> When a DMA client driver does not set the DMA_PREP_INTERRUPT because it
->> does not want to use interrupts for DMA completion or because it can not
->> rely on DMA interrupts due to executing the memcpy when interrupts are
->> disabled it will poll the status of the transfer.
+On 11.7.2019 20.33, Rob Herring wrote:
+> On Thu, Jul 11, 2019 at 3:34 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >>
->> If the interrupts are enabled then the cookie will be set completed in the
->> interrupt handler so only check in HW completion when the polling is really
->> needed.
+>> The DMA controllers and consumers have a bunch of generic properties that
+>> are needed in a device tree. Add a YAML schemas for those.
 >>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 >> ---
->> Hi,
+>>  .../devicetree/bindings/dma/dma-consumer.yaml |  60 +++++++++
+> 
+> This already exists in the dt-schema/schemas/dma/dma.yaml though not
+> the descriptions because that needs relicensing.
+> 
+> Looks like we need NVidia's (Jon H) and TI's (Peter U) permission.
+
+If I'm not mistaken the new license is GPL-2.0, if so I don't see any
+issue, but I'll ask our legal to be sure.
+
+And one comment for the change.
+
+> 
+>>  .../bindings/dma/dma-controller.yaml          |  79 ++++++++++++
+>>  Documentation/devicetree/bindings/dma/dma.txt | 114 +-----------------
+>>  3 files changed, 140 insertions(+), 113 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/dma/dma-consumer.yaml
+>>  create mode 100644 Documentation/devicetree/bindings/dma/dma-controller.yaml
 >>
->> This patch fine-tunes the omap-dma polled memcpy support to be inline with how
->> the EDMA driver is handling it.
->>
->> The polled completion can be tested by applying:
->> https://patchwork.kernel.org/patch/10966499/
->>
->> and run the dmatest with polled = 1 on boards where sDMA is used.
->>
->> Or boot up any dra7 family device with display enabled. The workaround for DMM
->> errata i878 uses polled DMA memcpy.
->>
->> Regards,
->> Peter
->>
->>  drivers/dma/ti/omap-dma.c | 37 ++++++++++++++++++++++++-------------
->>  1 file changed, 24 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
->> index 5ba7d8485026..75d8f7e13c8d 100644
->> --- a/drivers/dma/ti/omap-dma.c
->> +++ b/drivers/dma/ti/omap-dma.c
->> @@ -94,6 +94,7 @@ struct omap_desc {
->>  	bool using_ll;
->>  	enum dma_transfer_direction dir;
->>  	dma_addr_t dev_addr;
->> +	bool polled;
->>  
->>  	int32_t fi;		/* for OMAP_DMA_SYNC_PACKET / double indexing */
->>  	int16_t ei;		/* for double indexing */
->> @@ -834,20 +835,10 @@ static enum dma_status omap_dma_tx_status(struct dma_chan *chan,
->>  
->>  	ret = dma_cookie_status(chan, cookie, txstate);
->>  
->> -	if (!c->paused && c->running) {
->> -		uint32_t ccr = omap_dma_chan_read(c, CCR);
->> -		/*
->> -		 * The channel is no longer active, set the return value
->> -		 * accordingly
->> -		 */
->> -		if (!(ccr & CCR_ENABLE))
->> -			ret = DMA_COMPLETE;
->> -	}
+>> diff --git a/Documentation/devicetree/bindings/dma/dma-consumer.yaml b/Documentation/devicetree/bindings/dma/dma-consumer.yaml
+>> new file mode 100644
+>> index 000000000000..2f6315863ad1
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dma/dma-consumer.yaml
+>> @@ -0,0 +1,60 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/dma/dma-consumer.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: DMA Consumer Generic Binding
+>> +
+>> +maintainers:
+>> +  - Vinod Koul <vkoul@kernel.org>
+>> +
+>> +select: true
+>> +
+>> +properties:
+>> +  dmas:
+>> +    description:
+>> +      List of one or more DMA specifiers, each consisting of
+>> +          - A phandle pointing to DMA controller node
+>> +          - A number of integer cells, as determined by the
+>> +            \#dma-cells property in the node referenced by phandle
+>> +            containing DMA controller specific information. This
+>> +            typically contains a DMA request line number or a
+>> +            channel number, but can contain any data that is
+>> +            required for configuring a channel.
+>> +
+>> +  dma-names:
+>> +    description:
+>> +      Contains one identifier string for each DMA specifier in the
+>> +      dmas property. The specific strings that can be used are defined
+>> +      in the binding of the DMA client device.  Multiple DMA
+>> +      specifiers can be used to represent alternatives and in this
+>> +      case the dma-names for those DMA specifiers must be identical
+>> +      (see examples).
+>> +
+>> +dependencies:
+>> +  dma-names: [ dmas ]
+>> +
+>> +examples:
+>> +  - |
+>> +    /* A device with one DMA read channel, one DMA write channel */
+>> +    i2c1: i2c@1 {
+>> +         /* ... */
+>> +         dmas = <&dma 2>,      /* read channel */
+>> +                <&dma 3>;      /* write channel */
+>> +        dma-names = "rx", "tx";
+>> +        /* ... */
+>> +    };
+>> +
+>> +  - |
+>> +    /* A single read-write channel with three alternative DMA controllers */
+>> +    dmas = <&dma1 5>, <&dma2 7>, <&dma3 2>;
+>> +    dma-names = "rx-tx", "rx-tx", "rx-tx";
+>> +
+>> +  - |
+>> +    /* A device with three channels, one of which has two alternatives */
+>> +    dmas = <&dma1 2>,          /* read channel */
+>> +           <&dma1 3>,          /* write channel */
+>> +           <&dma2 0>,          /* error read */
+>> +           <&dma3 0>;          /* alternative error read */
+>> +    dma-names = "rx", "tx", "error", "error";
+>> diff --git a/Documentation/devicetree/bindings/dma/dma-controller.yaml b/Documentation/devicetree/bindings/dma/dma-controller.yaml
+>> new file mode 100644
+>> index 000000000000..17c650131b78
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dma/dma-controller.yaml
+>> @@ -0,0 +1,79 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/dma/dma-controller.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: DMA Controller Generic Binding
+>> +
+>> +maintainers:
+>> +  - Vinod Koul <vkoul@kernel.org>
+>> +
+>> +description:
+>> +  Generic binding to provide a way for a driver using DMA Engine to
+>> +  retrieve the DMA request or channel information that goes from a
+>> +  hardware device to a DMA controller.
+>> +
+>> +properties:
+>> +  $nodename:
+>> +    pattern: "^dma-controller(@.*)?$"
+>> +
+>> +  "#dma-cells":
+>> +    # minimum: 1
+>> +    description:
+>> +      Used to provide DMA controller specific information.
+>> +
+>> +  dma-channel-masks:
+>> +    $ref: /schemas/types.yaml#definitions/uint32
+>> +    description:
+>> +      Bitmask of available DMA channels in ascending order that are
+>> +      not reserved by firmware and are available to the
+>> +      kernel. i.e. first channel corresponds to LSB.
+>> +
+>> +  dma-channels:
+>> +    $ref: /schemas/types.yaml#definitions/uint32
+>> +    description:
+>> +      Number of DMA channels supported by the controller.
+>> +
+>> +  dma-masters:
+>> +    $ref: /schemas/types.yaml#definitions/phandle-array
+>> +    description:
+>> +      DMA routers are transparent IP blocks used to route DMA request
+>> +      lines from devices to the DMA controller. Some SoCs (like TI
+>> +      DRA7x) have more peripherals integrated with DMA requests than
+>> +      what the DMA controller can handle directly.
+>> +
+>> +      In such a case, dma-masters is an array of phandle to the DMA
+>> +      controllers the router can direct the signal to.
+
+It is no longer clear what is needed and what is optional anymore and if
+I would need to look up how a DMA router node should look like I will be
+in trouble, iow if I need to figure out how to describe an SoC with DMA
+controller and DMA event router.
+
+>> +
+>> +  dma-requests:
+>> +    $ref: /schemas/types.yaml#definitions/uint32
+>> +    description:
+>> +      Number of DMA request signals supported by the controller.
+>> +
+>> +examples:
+>> +  - |
+>> +    dma: dma@48000000 {
+> 
+> dma-controller@...
+> 
+> This is a case where I'd like some check that the schema is actually
+> applied to the schema's example.
+> 
+>> +        compatible = "ti,omap-sdma";
+>> +        reg = <0x48000000 0x1000>;
+>> +        interrupts = <0 12 0x4
+>> +                      0 13 0x4
+>> +                      0 14 0x4
+>> +                      0 15 0x4>;
+>> +        #dma-cells = <1>;
+>> +        dma-channels = <32>;
+>> +        dma-requests = <127>;
+>> +        dma-channel-mask = <0xfffe>;
+>> +    };
+>> +
+>> +  - |
+>> +    sdma_xbar: dma-router@4a002b78 {
+>> +        compatible = "ti,dra7-dma-crossbar";
+>> +        reg = <0x4a002b78 0xfc>;
+>> +        #dma-cells = <1>;
+>> +        dma-requests = <205>;
+>> +        ti,dma-safe-map = <0>;
+>> +        dma-masters = <&sdma>;
+>> +    };
+>> +
+>> +...
+>> diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
+>> index eeb4e4d1771e..90a67a016a48 100644
+>> --- a/Documentation/devicetree/bindings/dma/dma.txt
+>> +++ b/Documentation/devicetree/bindings/dma/dma.txt
+>> @@ -1,113 +1 @@
+>> -* Generic DMA Controller and DMA request bindings
 >> -
->> +	spin_lock_irqsave(&c->vc.lock, flags);
->>  	if (ret == DMA_COMPLETE || !txstate)
->> -		return ret;
->> +		goto out;
->>  
->> -	spin_lock_irqsave(&c->vc.lock, flags);
->>  	vd = vchan_find_desc(&c->vc, cookie);
->>  	if (vd) {
->>  		txstate->residue = omap_dma_desc_size(to_omap_dma_desc(&vd->tx));
->> @@ -868,6 +859,23 @@ static enum dma_status omap_dma_tx_status(struct dma_chan *chan,
->>  	}
->>  	if (ret == DMA_IN_PROGRESS && c->paused)
->>  		ret = DMA_PAUSED;
->> +
->> +out:
->> +	if (ret == DMA_IN_PROGRESS && c->running && c->desc &&
->> +	    c->desc->polled && c->desc->vd.tx.cookie == cookie) {
-> 
-> heh, that makes quite a read!
-> 
-> checking DMA_IN_PROGRESS should not make sense, as we should bail out at
-> the start if it is completed
-> 
-> I think other can be optimzed to make it a better read!
-
-True, a simple re-ordering should make it easier to read or to split
-them up as two if() checks. I'll try to figure out something to simplify it.
-
-> 
->> +		uint32_t ccr = omap_dma_chan_read(c, CCR);
->> +		/*
->> +		 * The channel is no longer active, set the return value
->> +		 * accordingly
->> +		 */
->> +		if (!(ccr & CCR_ENABLE)) {
->> +			struct omap_desc *d = c->desc;
->> +			ret = DMA_COMPLETE;
->> +			omap_dma_start_desc(c);
->> +			vchan_cookie_complete(&d->vd);
->> +		}
->> +	}
->> +
->>  	spin_unlock_irqrestore(&c->vc.lock, flags);
->>  
->>  	return ret;
->> @@ -1233,7 +1241,10 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_memcpy(
->>  	d->ccr = c->ccr;
->>  	d->ccr |= CCR_DST_AMODE_POSTINC | CCR_SRC_AMODE_POSTINC;
->>  
->> -	d->cicr = CICR_DROP_IE | CICR_FRAME_IE;
->> +	if (tx_flags & DMA_PREP_INTERRUPT)
->> +		d->cicr |= CICR_FRAME_IE;
->> +	else
->> +		d->polled = true;
->>  
->>  	d->csdp = data_type;
->>  
->> -- 
->> Peter
+>> -Generic binding to provide a way for a driver using DMA Engine to retrieve the
+>> -DMA request or channel information that goes from a hardware device to a DMA
+>> -controller.
+>> -
+>> -
+>> -* DMA controller
+>> -
+>> -Required property:
+>> -- #dma-cells:          Must be at least 1. Used to provide DMA controller
+>> -                       specific information. See DMA client binding below for
+>> -                       more details.
+>> -
+>> -Optional properties:
+>> -- dma-channels:        Number of DMA channels supported by the controller.
+>> -- dma-requests:        Number of DMA request signals supported by the
+>> -                       controller.
+>> -- dma-channel-mask:    Bitmask of available DMA channels in ascending order
+>> -                       that are not reserved by firmware and are available to
+>> -                       the kernel. i.e. first channel corresponds to LSB.
+>> -
+>> -Example:
+>> -
+>> -       dma: dma@48000000 {
+>> -               compatible = "ti,omap-sdma";
+>> -               reg = <0x48000000 0x1000>;
+>> -               interrupts = <0 12 0x4
+>> -                             0 13 0x4
+>> -                             0 14 0x4
+>> -                             0 15 0x4>;
+>> -               #dma-cells = <1>;
+>> -               dma-channels = <32>;
+>> -               dma-requests = <127>;
+>> -               dma-channel-mask = <0xfffe>
+>> -       };
+>> -
+>> -* DMA router
+>> -
+>> -DMA routers are transparent IP blocks used to route DMA request lines from
+>> -devices to the DMA controller. Some SoCs (like TI DRA7x) have more peripherals
+>> -integrated with DMA requests than what the DMA controller can handle directly.
+>> -
+>> -Required property:
+>> -- dma-masters:         phandle of the DMA controller or list of phandles for
+>> -                       the DMA controllers the router can direct the signal to.
+>> -- #dma-cells:          Must be at least 1. Used to provide DMA router specific
+>> -                       information. See DMA client binding below for more
+>> -                       details.
+>> -
+>> -Optional properties:
+>> -- dma-requests:        Number of incoming request lines the router can handle.
+>> -- In the node pointed by the dma-masters:
+>> -       - dma-requests: The router driver might need to look for this in order
+>> -                       to configure the routing.
+>> -
+>> -Example:
+>> -       sdma_xbar: dma-router@4a002b78 {
+>> -               compatible = "ti,dra7-dma-crossbar";
+>> -               reg = <0x4a002b78 0xfc>;
+>> -               #dma-cells = <1>;
+>> -               dma-requests = <205>;
+>> -               ti,dma-safe-map = <0>;
+>> -               dma-masters = <&sdma>;
+>> -       };
+>> -
+>> -* DMA client
+>> -
+>> -Client drivers should specify the DMA property using a phandle to the controller
+>> -followed by DMA controller specific data.
+>> -
+>> -Required property:
+>> -- dmas:                        List of one or more DMA specifiers, each consisting of
+>> -                       - A phandle pointing to DMA controller node
+>> -                       - A number of integer cells, as determined by the
+>> -                         #dma-cells property in the node referenced by phandle
+>> -                         containing DMA controller specific information. This
+>> -                         typically contains a DMA request line number or a
+>> -                         channel number, but can contain any data that is
+>> -                         required for configuring a channel.
+>> -- dma-names:           Contains one identifier string for each DMA specifier in
+>> -                       the dmas property. The specific strings that can be used
+>> -                       are defined in the binding of the DMA client device.
+>> -                       Multiple DMA specifiers can be used to represent
+>> -                       alternatives and in this case the dma-names for those
+>> -                       DMA specifiers must be identical (see examples).
+>> -
+>> -Examples:
+>> -
+>> -1. A device with one DMA read channel, one DMA write channel:
+>> -
+>> -       i2c1: i2c@1 {
+>> -               ...
+>> -               dmas = <&dma 2          /* read channel */
+>> -                       &dma 3>;        /* write channel */
+>> -               dma-names = "rx", "tx";
+>> -               ...
+>> -       };
+>> -
+>> -2. A single read-write channel with three alternative DMA controllers:
+>> -
+>> -       dmas = <&dma1 5
+>> -               &dma2 7
+>> -               &dma3 2>;
+>> -       dma-names = "rx-tx", "rx-tx", "rx-tx";
+>> -
+>> -3. A device with three channels, one of which has two alternatives:
+>> -
+>> -       dmas = <&dma1 2                 /* read channel */
+>> -               &dma1 3                 /* write channel */
+>> -               &dma2 0                 /* error read */
+>> -               &dma3 0>;               /* alternative error read */
+>> -       dma-names = "rx", "tx", "error", "error";
+>> +This file has been moved to dma-controller.yaml.
+>> --
+>> 2.21.0
 >>
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
 
 -- 
 Peter

@@ -2,91 +2,127 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 491FE669BE
-	for <lists+dmaengine@lfdr.de>; Fri, 12 Jul 2019 11:14:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91B3366B5E
+	for <lists+dmaengine@lfdr.de>; Fri, 12 Jul 2019 13:10:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbfGLJOK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 12 Jul 2019 05:14:10 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:40649 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbfGLJOK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 Jul 2019 05:14:10 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N1fei-1iRkwp00C0-0123fC; Fri, 12 Jul 2019 11:13:59 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH] dma: ste_dma40: fix unneeded variable warning
-Date:   Fri, 12 Jul 2019 11:13:30 +0200
-Message-Id: <20190712091357.744515-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        id S1726196AbfGLLKl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 12 Jul 2019 07:10:41 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:16905 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfGLLKl (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 Jul 2019 07:10:41 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d286aae0001>; Fri, 12 Jul 2019 04:10:38 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 12 Jul 2019 04:10:40 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 12 Jul 2019 04:10:40 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 12 Jul
+ 2019 11:10:39 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 12 Jul 2019 11:10:39 +0000
+Received: from audio.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d286aae0002>; Fri, 12 Jul 2019 04:10:39 -0700
+From:   Sameer Pujar <spujar@nvidia.com>
+To:     <vkoul@kernel.org>, <jonathanh@nvidia.com>, <ldewangan@nvidia.com>
+CC:     <thierry.reding@gmail.com>, <dmaengine@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, Sameer Pujar <spujar@nvidia.com>
+Subject: [PATCH v2] dmaengine: tegra210-adma: fix transfer failure
+Date:   Fri, 12 Jul 2019 16:40:30 +0530
+Message-ID: <1562929830-29344-1-git-send-email-spujar@nvidia.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:IqYlz58Jar5GCfS+BZKg5bdqodHpJJt/MRJG83qdyqbt2wfk7ay
- jgv77Bskqmv+zThYp5kQxBEEFUeJK/7TEWSZWua867UbUso4FFhHQKnxPAM/k8dUhftd1aX
- y7qCx5kTs23ZNbzvo1LLw0T8py9EL/oY97aciP7U+nRyTwDquP+Q3p4UaA05YRQuw1y8Kge
- hBQ0KI5XLuPXrw1icvKAQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6sMZM3JYPV8=:jyJYAUc8zscanrU6pozE1G
- AX+FwJn88+Pr8mfWbhlSKByrpoMhzgLZCQYLOWr0kfZzOWog3drPLTiCLB1w80P7ooJSYjYs4
- Q/r+AzrbR6rxiU165D24jzF8eRXYFFa40MctPdcGfVURNTGf1UMWxg5z5AXM4KfegjpbJTY5+
- OPIF6md7cG9OA/ysWXOFLV1PQsndISFclli8Sl967GgvqSp9Znh+94EUaNHeWvEXLKEN0kygR
- CAgixXrKg/apAFlYh7wViBwKEy1Laxfds4HLQH8R52roaRnOqTUV51JUubf26QH78X/NsrtLB
- XNjW1HlYcf41tdHVnDj3QZDycjtEbdVA7qnfVDzi5WQATtIg32WC8WNSCobXgKXKdZrSugMF1
- zzozNu/5LLK83os0EscPV+OYd29crmsV7myk/5kpZ79nONHb5eakWYLhGbmTXkJg2eFfdr9nu
- KRgmTtmChv5BscbncoZF/SZq11klmYDmzaxmNhumLqO03tMj3PVPQlfcbTbh5EVb4+srb24rl
- BKWrKgkoB868mZGy1L7Yc98QnjbkjxQx0GEQjeH+208gc/qogGi/yqNTex07RNhSu1akZL+r2
- 0kjgrM0lkGEFH7qj6uo500ZqYWnmX/LDbgSvOPOv6ghorjrW2HgdIzvFjDVFanpRB/993IYe1
- LJZcifHQGymfvYOAKR0IUYyeuoqXMqd5rWrB9EbHJrBLR6Dkf39jFwIVPxynKNbnOnSnpl5z1
- rJG1dNpLPukoJm1tg3QKCmoTAKqZ0a2X5H1/PA==
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1562929838; bh=Bpqg9THc564UW6jjpjAHE0A0InKGoedygKCtxONKZcs=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:Content-Type;
+        b=eGt/lEK4ZiNSFr3+bBHWDszzCsqjqSQOqjI8cZnUZtSOXysZKzpFj5TBoaaTDYhIb
+         r9Es5jpJS0aK9wN0Tsu9ZHR7SEmuJob8WhC9oBOZf40OR0dBgPU9zm5PXHkmvjvC4L
+         b6uUfUeprEkuyIr125i+VTE7fPOiNWBEQaGhCyQ03ejxFd6l+XijouYHXHWBAZLFJd
+         dxivpdCPnhlHDxcLgVv/Nc1Ithl5K6InIWk1rVo6jt1cFlCfj1xAYSgAUz5KAgzykk
+         KCuSV7Htjn3cI6snTvbg+wWSgfzXoJj8JWmc3F4EBEZ/QYlT1l61JbzlrHC+0rQdJR
+         eX5OYALgjMZfA==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-clang-9 points out that there are two variables that depending on the
-configuration may only be used in an ARRAY_SIZE() expression but not
-referenced:
+From Tegra186 onwards OUTSTANDING_REQUESTS field is added in channel
+configuration register(bits 7:4) which defines the maximum number of reads
+from the source and writes to the destination that may be outstanding at
+any given point of time. This field must be programmed with a value
+between 1 and 8. A value of 0 will prevent any transfers from happening.
 
-drivers/dma/ste_dma40.c:145:12: error: variable 'd40_backup_regs' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
-static u32 d40_backup_regs[] = {
-           ^
-drivers/dma/ste_dma40.c:214:12: error: variable 'd40_backup_regs_chan' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
-static u32 d40_backup_regs_chan[] = {
+Thus added 'ch_pending_req' member in chip data structure and the same is
+populated with maximum allowed pending requests. Since the field is not
+applicable to Tegra210, mentioned bit fields are unused and hence the
+member is initialized with 0. For Tegra186, by default program this field
+with the maximum permitted value of 8.
 
-Mark these __maybe_unused to shut up the warning.
+Fixes: 433de642a76c ("dmaengine: tegra210-adma: add support for Tegra186/Tegra194")
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
 ---
- drivers/dma/ste_dma40.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/tegra210-adma.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
-index 89d710899010..de8bfd9a76e9 100644
---- a/drivers/dma/ste_dma40.c
-+++ b/drivers/dma/ste_dma40.c
-@@ -142,7 +142,7 @@ enum d40_events {
-  * when the DMA hw is powered off.
-  * TODO: Add save/restore of D40_DREG_GCC on dma40 v3 or later, if that works.
-  */
--static u32 d40_backup_regs[] = {
-+static __maybe_unused u32 d40_backup_regs[] = {
- 	D40_DREG_LCPA,
- 	D40_DREG_LCLA,
- 	D40_DREG_PRMSE,
-@@ -211,7 +211,7 @@ static u32 d40_backup_regs_v4b[] = {
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index 2805853..5ab4e3a9 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -74,6 +74,8 @@
+ 				    TEGRA186_ADMA_CH_FIFO_CTRL_TXSIZE(3)    | \
+ 				    TEGRA186_ADMA_CH_FIFO_CTRL_RXSIZE(3))
  
- #define BACKUP_REGS_SZ_V4B ARRAY_SIZE(d40_backup_regs_v4b)
++#define TEGRA186_DMA_MAX_PENDING_REQS			8
++
+ #define ADMA_CH_REG_FIELD_VAL(val, mask, shift)	(((val) & mask) << shift)
  
--static u32 d40_backup_regs_chan[] = {
-+static __maybe_unused u32 d40_backup_regs_chan[] = {
- 	D40_CHAN_REG_SSCFG,
- 	D40_CHAN_REG_SSELT,
- 	D40_CHAN_REG_SSPTR,
+ struct tegra_adma;
+@@ -85,6 +87,7 @@ struct tegra_adma;
+  * @ch_req_tx_shift: Register offset for AHUB transmit channel select.
+  * @ch_req_rx_shift: Register offset for AHUB receive channel select.
+  * @ch_base_offset: Register offset of DMA channel registers.
++ * @ch_pending_req: Outstaning DMA requests for a channel.
+  * @ch_fifo_ctrl: Default value for channel FIFO CTRL register.
+  * @ch_req_mask: Mask for Tx or Rx channel select.
+  * @ch_req_max: Maximum number of Tx or Rx channels available.
+@@ -98,6 +101,7 @@ struct tegra_adma_chip_data {
+ 	unsigned int ch_req_tx_shift;
+ 	unsigned int ch_req_rx_shift;
+ 	unsigned int ch_base_offset;
++	unsigned int ch_pending_req;
+ 	unsigned int ch_fifo_ctrl;
+ 	unsigned int ch_req_mask;
+ 	unsigned int ch_req_max;
+@@ -602,6 +606,7 @@ static int tegra_adma_set_xfer_params(struct tegra_adma_chan *tdc,
+ 			 ADMA_CH_CTRL_FLOWCTRL_EN;
+ 	ch_regs->config |= cdata->adma_get_burst_config(burst_size);
+ 	ch_regs->config |= ADMA_CH_CONFIG_WEIGHT_FOR_WRR(1);
++	ch_regs->config |= cdata->ch_pending_req;
+ 	ch_regs->fifo_ctrl = cdata->ch_fifo_ctrl;
+ 	ch_regs->tc = desc->period_len & ADMA_CH_TC_COUNT_MASK;
+ 
+@@ -786,6 +791,7 @@ static const struct tegra_adma_chip_data tegra210_chip_data = {
+ 	.ch_req_tx_shift	= 28,
+ 	.ch_req_rx_shift	= 24,
+ 	.ch_base_offset		= 0,
++	.ch_pending_req		= 0,
+ 	.ch_fifo_ctrl		= TEGRA210_FIFO_CTRL_DEFAULT,
+ 	.ch_req_mask		= 0xf,
+ 	.ch_req_max		= 10,
+@@ -800,6 +806,7 @@ static const struct tegra_adma_chip_data tegra186_chip_data = {
+ 	.ch_req_tx_shift	= 27,
+ 	.ch_req_rx_shift	= 22,
+ 	.ch_base_offset		= 0x10000,
++	.ch_pending_req		= (TEGRA186_DMA_MAX_PENDING_REQS << 4),
+ 	.ch_fifo_ctrl		= TEGRA186_FIFO_CTRL_DEFAULT,
+ 	.ch_req_mask		= 0x1f,
+ 	.ch_req_max		= 20,
 -- 
-2.20.0
+2.7.4
 

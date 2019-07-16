@@ -2,105 +2,93 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BA2A56AB6F
-	for <lists+dmaengine@lfdr.de>; Tue, 16 Jul 2019 17:10:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46CFC6AD83
+	for <lists+dmaengine@lfdr.de>; Tue, 16 Jul 2019 19:16:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728817AbfGPPKT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 16 Jul 2019 11:10:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38654 "EHLO mail.kernel.org"
+        id S1728563AbfGPRPq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 16 Jul 2019 13:15:46 -0400
+Received: from mout.gmx.net ([212.227.17.22]:58993 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728384AbfGPPKS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 16 Jul 2019 11:10:18 -0400
-Received: from [10.84.150.84] (unknown [167.220.148.84])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D79052173B;
-        Tue, 16 Jul 2019 15:10:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563289817;
-        bh=qsVYG/AAKfZqvM/AL48HHkboJVYj6AAMTA3FfuN1840=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=cA0qN5tFZBu+I0MkNLY1rdU6KqOdCmjmgBZqfB3AYRCy+6Cx+1bm4YhjQvkbyzmvD
-         HunhvZyLo8l2aLhfLvSgNC/rgeU95ST08kkJkAJB5nUfQk3aTdvW70dMweVgXFYDcf
-         TC4WiUmbxp4t1zcUxnICgEl+WIfag5taN+tPq2p8=
-Subject: Re: [PATCH v3 04/24] dmaengine: qcom_hidma: Remove call to memset
- after dmam_alloc_coherent
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>
-References: <20190715031723.6375-1-huangfq.daxian@gmail.com>
- <72c45b14-f0c0-9d1c-0953-eea70ce513a0@kernel.org>
- <CABXRUiQXweOLRTpdyhx9xT_B1VBmoSoNm=_+Qr4prmz7u1QRFA@mail.gmail.com>
- <245ffd79-316c-e985-d1da-2ccea6d29636@kernel.org>
- <9ea5f97f-5963-5836-6ab2-dc30628c6820@arm.com>
-From:   Sinan Kaya <okaya@kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=okaya@kernel.org; keydata=
- mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
- uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
- 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
- 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
- V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
- AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
- ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
- AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
- 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
- Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
- ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
- qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
- AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
- eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
- 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
- 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
- gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
- CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
- gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
- e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
- 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
- 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
- L+s0nPaNMKwv/Xhhm6Y=
-Message-ID: <ee011ef9-fe02-8fea-b34d-cb7628abac19@kernel.org>
-Date:   Tue, 16 Jul 2019 11:10:15 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <9ea5f97f-5963-5836-6ab2-dc30628c6820@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1728124AbfGPRPq (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 16 Jul 2019 13:15:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1563297326;
+        bh=xNnIsDbgppK8wwBxMiTHNVXBTk1p7qOB7xrYiRrkhh8=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=KNCcMt0aSPEnh4pHQd2d/g8bY1FjoStxyLmGXY4SvcHPr+hNjHJCtcLzXJdiLS8cF
+         XOaJZi94FLTj1UemEQpbVMZ+pi4mNg9Gb1AufLZT6wTX2zE6MxqOc5bD55uaBu9NbU
+         tQlBkzckz6VfCMfaSa9OqwijFCW0QNHwglsF13JQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([37.4.249.111]) by mail.gmx.com
+ (mrgmx101 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 0LjeWC-1iKa0M2SHA-00beDU; Tue, 16 Jul 2019 19:15:26 +0200
+From:   Stefan Wahren <wahrenst@gmx.net>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Eric Anholt <eric@anholt.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH] dmaengine: bcm2835: Print error in case setting DMA mask fails
+Date:   Tue, 16 Jul 2019 19:15:18 +0200
+Message-Id: <1563297318-4900-1-git-send-email-wahrenst@gmx.net>
+X-Mailer: git-send-email 2.7.4
+X-Provags-ID: V03:K1:fL6HCOJkHLSo99rnhKGJNd1g6cKxvMfFqhtxr/p3c3HgN4FbiMX
+ Wd+iGmFRA82C/GbBmGYre5PwcjOUmaKjXDc8ZWNsF/A7W1PH+FnsKoOmKXaRdjvdaMVmKI8
+ QI4dygNsLqkUfJpAkNJxp1VGu2xA7D8cbsEUT606ucvC1itqkIXxUB35N4dXKNr769undih
+ HhwgLvqsdizhvrzvUIkFw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:RYe9OtUzWrs=:bzoH7sjXqBy9ZGQ84yGcuZ
+ rlvNEi25ozg7Cdp5Pl1LNI8c3BPeSyTRpx3sIbVHlQfHp3FCFoBecxlIW9ERUA0uzTC3AaRjj
+ 4Dh2A1zxvQEtEK8snBnMZZLdMU5f8fWG+8Iptm4dxUG+P0uClP1dTjEop47R0AZ8ebvBJ7BWw
+ l73NGF4qXJ1sgl/1CEzgnzMIxn4l1l3GXTveFRSqJoiHTdSKqAaXfWrKiqYV03505vK2yyBC1
+ yb7gFVxCOSY+fT9CCTZ7frKBwwalCZ8a5X/RISJGOmkemObiewAF9aRpbwqbIeRUV/p7maJrh
+ 7DXdI59dtL793Wlo1JbDcXiZGKgF02rdrc1nInJqaeb0zIWPclYyqMN9Hjnyncl6aDFHltMO1
+ XjrULSwyzCd3y0SeqmuSk5rwYzWB3G17ginu0kxkc1oWIJUqwcPX/LR+XIYOSah6j4ZHeObdd
+ hOrHG80gIjrPKyfFX2BwI69/rof0fbIuhHaclSG28rTtZ6WXDUfVmE7z5tZh/Pzrn16LfuY+M
+ AMoKNg5/xQcYW8UCyUTdHpCWdSq0yoI1grQNCBXfcVF9iMs3TjC7F4LathXC7SKsWaWlpqksn
+ fxmsQlu5OEStq0DoZnkyxCCdIS+URsKKlCtNRGGR/bQ3s2bMJFn9vgflHXzQ9RkciAk3Ucpcf
+ Tds7TRdTodL6e/xp+EE4WzypnsKK5tqxj4XmWRcRVJsVJAxSnICeWtDEOzFAzVdrEicu51B+B
+ /NDwQmlkW10icr7FsI5OlYC4H39QRUCgOcxzcgi8K9xtAAUKLGxGoxi8s9St5e5btECxM5e//
+ ErVOwTiU0crHrFbxqqjK63IsXcrOS03nz9KiMs9jqxrYICiIKrqUOPUw0PH5DdjdUVpR+poMd
+ LfCvGqNLhmkWUokEJ8PVLU/AKGy5wEL8CJ/FPXKcxZBSpA+rGwa3MtoZX51tU8r6kLbg4FTTJ
+ QEmEfbbTFo+QTEBQmJ8dUP2U61QpoL/q7R09/9E0Ps3uvHlCdfWcYRlGb68JDF/ydyCbxepJP
+ q+e2QIwBd6AUBhYJW75HTur0GuMR46lt3vApoJXoNlqn4LM4zITzHE53p/EESa/C0z3p9lzE7
+ KrfHJusRvBwRWM=
+Content-Transfer-Encoding: quoted-printable
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 7/16/2019 7:35 AM, Robin Murphy wrote:
-> On 15/07/2019 16:17, Sinan Kaya wrote:
->> On 7/15/2019 1:43 AM, Fuqian Huang wrote:
->>> Should I rewrite the commit log? Just mention that dma_alloc_coherent
->>> has already
->>> zeroed the memory and not to reference the commit?
->>
->> I'd like to hear from Robin Murphy that arm smmu driver follows this as
->> well.
-> 
-> I'd be lying if I said it did.
-> 
-> ...but only because that's never been part of the SMMU driver's
-> responsibility either way. The iommu-dma layer however, and thus the
-> respective arm64 iommu_dma_ops, has always zeroed allocations right from
-> its inception.
-> 
-> 518a2f1925c3 was just cleaning up the last of the stragglers which
-> *weren't* already clearing buffers anyway, such that we could formalise
-> that behaviour into the API.
+During enabling of the RPi 4, we found out that the driver doesn't provide
+a helpful error message in case setting DMA mask fails. So add one.
 
-Thanks for confirming the behavior for arm64 arch.
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+=2D--
+ drivers/dma/bcm2835-dma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Acked-by: Sinan Kaya <okaya@kernel.org>
+diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
+index 8101ff2f..970f654 100644
+=2D-- a/drivers/dma/bcm2835-dma.c
++++ b/drivers/dma/bcm2835-dma.c
+@@ -871,8 +871,10 @@ static int bcm2835_dma_probe(struct platform_device *=
+pdev)
+ 		pdev->dev.dma_mask =3D &pdev->dev.coherent_dma_mask;
+
+ 	rc =3D dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+-	if (rc)
++	if (rc) {
++		dev_err(&pdev->dev, "Unable to set DMA mask\n");
+ 		return rc;
++	}
+
+ 	od =3D devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
+ 	if (!od)
+=2D-
+2.7.4
 

@@ -2,59 +2,81 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D2026B6EA
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Jul 2019 08:48:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 979476BFCB
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Jul 2019 18:44:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbfGQGsS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 17 Jul 2019 02:48:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58286 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725892AbfGQGsS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 17 Jul 2019 02:48:18 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 324A42173B;
-        Wed, 17 Jul 2019 06:48:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563346097;
-        bh=8TSSlUu25GjlJzJHNZqy/p5YiZiWAHnMkii3qUW77U4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D0LpctmEwrX5bVBj5X7YXhz67Pxjo1xVya1Hf9znqpNoxiieBGTu5Y2WbceKpJUEd
-         TKYZIIp1j+bC4beGFn+jeJoS7H0C/8XkjhCNEccoOKibeYPTddnITwtrR6yhP/cG8x
-         LSS+8R7QWlz2u3K7HKNK+29Pdw25isOSbybb6omU=
-Date:   Wed, 17 Jul 2019 14:48:02 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     yibin.gong@nxp.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, broonie@kernel.org, festevam@gmail.com,
-        vkoul@kernel.org, dan.j.williams@intel.com,
-        u.kleine-koenig@pengutronix.de, catalin.marinas@arm.com,
-        l.stach@pengutronix.de, will.deacon@arm.com,
-        linux-spi@vger.kernel.org, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 14/15]  arm64: defconfig: Enable SDMA on i.mx8mq/8mm
-Message-ID: <20190717064800.GC3738@dragon>
-References: <20190610081753.11422-1-yibin.gong@nxp.com>
- <20190610081753.11422-15-yibin.gong@nxp.com>
+        id S1727714AbfGQQok (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 17 Jul 2019 12:44:40 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34144 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfGQQok (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 17 Jul 2019 12:44:40 -0400
+Received: by mail-lf1-f65.google.com with SMTP id b29so9765623lfq.1
+        for <dmaengine@vger.kernel.org>; Wed, 17 Jul 2019 09:44:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yk4XP9CZ1kslTNlitSHU1MG+UFO4IaHTa/axM5q+rdo=;
+        b=F2vezRmfQSUXDCV1cPzbOl2mzviZagTPoHiu/ODYdsVpUBhK9w9YTNxRiMunEfJhbe
+         3mqlmRvWWVWE6Wv2vMgJ/3fBXkb3weOGO4vSXqe1TpskMrzWhuzEuBnbHN2a2Hq7gQ+N
+         E0BypQok1qcNIHv9hOwhsaElTu9JZ9Rqp2IpbKSGBiLu7ZE4GXKoNRauH2aKK/ljCC5z
+         monU+OXeYlqNMgfB3NMS8HM2UQQH3Q12XmDlf9eAzdg0CjaNheV90gHdKVequ8iaodmB
+         iPe07LMAM179eQNaYMQKSFAIGnaQEVwfW9GcMigIERJVLEFsmYpeY5n5M4g2gsHVL8c2
+         047g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yk4XP9CZ1kslTNlitSHU1MG+UFO4IaHTa/axM5q+rdo=;
+        b=WhKn9URVyWU51YI9SJn83ryX3WZtct1l2meeTCUVmBVhpAhkJSsxRaJvIX0qPfNSsv
+         3HKicr8npJq+TbwoHUtSPT0fOIpnSAlw2YDVaXIgZhsjmlp0O1NPWInnwbb0iFV1nA6X
+         DyV6EnrNm8mWhfcGXKTfcRnjK42Q7Rslk30nk9c69gilGxwFBQeVHuxi8ag8Jy0JXaT1
+         U2VJ/C3QN8o2+uBMJcc9R4V+HVJM7/1EHnqopyMivkSFHWxYfrXp6y2augTcbrlngb2z
+         6Oq9jgbmQtsz3+V9e2REQzPz4JoZtuwachShUWlVs6EzyMkfFzvwoM3wPnS8g8FReOo5
+         BqAA==
+X-Gm-Message-State: APjAAAVPgJjJCD9CV6TPqaX4HilzIxWLG/517T8Vvxf+Slwd80VWfGOn
+        qupBPLdmQR6E5xkyp3tc8lA0N2pA0OrRwfMnaKGfXg==
+X-Google-Smtp-Source: APXvYqwQLMvsudJ95j/wcOmtZU/P9Yg5GgR6Iscd/wl6FHMGs+YoknUb+sFGT6wakjO1DBNIm8fyfNl1xZoU/iz67ug=
+X-Received: by 2002:ac2:5c42:: with SMTP id s2mr7368803lfp.61.1563381877741;
+ Wed, 17 Jul 2019 09:44:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190610081753.11422-15-yibin.gong@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20190712091357.744515-1-arnd@arndb.de>
+In-Reply-To: <20190712091357.744515-1-arnd@arndb.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 17 Jul 2019 18:44:26 +0200
+Message-ID: <CACRpkdaKNk3eE5cfh8fKQ341PhDxOCRqVz8Cay5to_ZZ3t_7Vg@mail.gmail.com>
+Subject: Re: [PATCH] dma: ste_dma40: fix unneeded variable warning
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        dmaengine@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 04:17:52PM +0800, yibin.gong@nxp.com wrote:
-> From: Robin Gong <yibin.gong@nxp.com>
-> 
-> Enable SDMA support on i.mx8mq/8mm chips, including enabling
-> CONFIG_FW_LOADER_USER_HELPER/CONFIG_FW_LOADER_USER_HELPER_FALLBACK
-> for firmware loaded by udev.
-> 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+On Fri, Jul 12, 2019 at 11:14 AM Arnd Bergmann <arnd@arndb.de> wrote:
 
-Applied, thanks.
+> clang-9 points out that there are two variables that depending on the
+> configuration may only be used in an ARRAY_SIZE() expression but not
+> referenced:
+>
+> drivers/dma/ste_dma40.c:145:12: error: variable 'd40_backup_regs' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
+> static u32 d40_backup_regs[] = {
+>            ^
+> drivers/dma/ste_dma40.c:214:12: error: variable 'd40_backup_regs_chan' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
+> static u32 d40_backup_regs_chan[] = {
+>
+> Mark these __maybe_unused to shut up the warning.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+Seems like a reasonable fix:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij

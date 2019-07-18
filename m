@@ -2,54 +2,55 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 760666C031
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Jul 2019 19:15:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B5E46C50A
+	for <lists+dmaengine@lfdr.de>; Thu, 18 Jul 2019 04:49:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387726AbfGQRPT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 17 Jul 2019 13:15:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42264 "EHLO mail.kernel.org"
+        id S1729812AbfGRCtd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 17 Jul 2019 22:49:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387720AbfGQRPT (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 17 Jul 2019 13:15:19 -0400
-Subject: Re: [GIT PULL] dmaengine updates for v5.3-rc1
+        id S1728079AbfGRCtd (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 17 Jul 2019 22:49:33 -0400
+Received: from X250 (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B76E5205F4;
+        Thu, 18 Jul 2019 02:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563383718;
-        bh=g+qn77hPeIxnuaI1kjpl4LDt4j0trpyKZzrxMwLgJ5A=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=KT8j6XOVxcsNd0gbYmwI7ObNQlRMN8Y0Zk/lcGcXr0oBD+jsgnJz0hEVITOwiY5ht
-         7FMJtpGtpDMSvDWwTcQFoPctTmmxh8OLX257eGXzR2tOM6vtaiDpDjuF190EsK8kP5
-         tHl/3vsZ3TU6RWXBZ++oEEwwZ6xw7qV5P+xgDhYk=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190716093657.GD12733@vkoul-mobl.Dlink>
-References: <20190716093657.GD12733@vkoul-mobl.Dlink>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190716093657.GD12733@vkoul-mobl.Dlink>
-X-PR-Tracked-Remote: git://git.infradead.org/users/vkoul/slave-dma.git
- tags/dmaengine-5.3-rc1
-X-PR-Tracked-Commit-Id: 5c274ca4cfb22a455e880f61536b1894fa29fd17
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 47ebe00b684c2bc183a766bc33c8b5943bc0df85
-Message-Id: <156338371889.30487.9555344021679795718.pr-tracker-bot@kernel.org>
-Date:   Wed, 17 Jul 2019 17:15:18 +0000
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        s=default; t=1563418172;
+        bh=jdNPPY/nagQO4z4SbeSxOZ2+EDMQori7e6umb/X7wII=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2scJcYPaWEnC8O4BuYyROLVOluc2QUVDfFyzDltCMUOGU1YaYhJXRkUz6OdZ/MFIh
+         tseMR2zXmwtg2wmQ+eP+MnVB1t+R6+CHVD+Og6kauZA4tWLC1cBk5JnS1SBMfQ5hsT
+         V6tnMol1y6TXf44Mb9hc2xH6I9DoPfIRwsPgefFU=
+Date:   Thu, 18 Jul 2019 10:49:21 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     yibin.gong@nxp.com
+Cc:     robh@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        mark.rutland@arm.com, vkoul@kernel.org, dan.j.williams@intel.com,
+        angelo@sysam.it, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v5 6/6] ARM: dts: imx7ulp: add edma device node
+Message-ID: <20190718024920.GC11324@X250>
+References: <20190625094324.19196-1-yibin.gong@nxp.com>
+ <20190625094324.19196-7-yibin.gong@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190625094324.19196-7-yibin.gong@nxp.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The pull request you sent on Tue, 16 Jul 2019 15:06:57 +0530:
+On Tue, Jun 25, 2019 at 05:43:24PM +0800, yibin.gong@nxp.com wrote:
+> From: Robin Gong <yibin.gong@nxp.com>
+> 
+> Add edma device node in dts.
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 
-> git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-5.3-rc1
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/47ebe00b684c2bc183a766bc33c8b5943bc0df85
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Applied, thanks.

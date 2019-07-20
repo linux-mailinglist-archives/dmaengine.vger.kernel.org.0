@@ -2,20 +2,20 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 333B96EE9B
-	for <lists+dmaengine@lfdr.de>; Sat, 20 Jul 2019 11:26:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1481D6EE9D
+	for <lists+dmaengine@lfdr.de>; Sat, 20 Jul 2019 11:26:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfGTJ0M (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 20 Jul 2019 05:26:12 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:36277 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbfGTJ0M (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 20 Jul 2019 05:26:12 -0400
+        id S1727320AbfGTJ0O (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 20 Jul 2019 05:26:14 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:46901 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbfGTJ0O (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 20 Jul 2019 05:26:14 -0400
 X-Originating-IP: 91.163.65.175
 Received: from localhost (91-163-65-175.subs.proxad.net [91.163.65.175])
         (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id B0BF2C0006;
-        Sat, 20 Jul 2019 09:26:09 +0000 (UTC)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id F32A5E000C;
+        Sat, 20 Jul 2019 09:26:10 +0000 (UTC)
 From:   Maxime Ripard <maxime.ripard@bootlin.com>
 To:     Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -25,11 +25,14 @@ Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
         Chen-Yu Tsai <wens@csie.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         linux-arm-kernel@lists.infradead.org,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v3 1/3] dt-bindings: dma: Add YAML schemas for the generic DMA bindings
-Date:   Sat, 20 Jul 2019 11:26:05 +0200
-Message-Id: <20190720092607.31095-1-maxime.ripard@bootlin.com>
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 2/3] dt-bindings: dma: Convert Allwinner A10 DMA to a schema
+Date:   Sat, 20 Jul 2019 11:26:06 +0200
+Message-Id: <20190720092607.31095-2-maxime.ripard@bootlin.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190720092607.31095-1-maxime.ripard@bootlin.com>
+References: <20190720092607.31095-1-maxime.ripard@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
@@ -37,300 +40,133 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The DMA controllers and consumers have a bunch of generic properties that
-are needed in a device tree. Add a YAML schemas for those.
+The older Allwinner SoCs have a DMA controller supported in Linux, with a
+matching Device Tree binding.
 
+Now that we have the DT validation in place, let's convert the device tree
+bindings for that controller over to a YAML schemas.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-
 ---
+ .../bindings/dma/allwinner,sun4i-a10-dma.yaml | 55 +++++++++++++++++++
+ .../devicetree/bindings/dma/sun4i-dma.txt     | 45 ---------------
+ 2 files changed, 55 insertions(+), 45 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/allwinner,sun4i-a10-dma.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/sun4i-dma.txt
 
-Changes from v2:
-  - Added a select statement.
-
-Changes from v1:
-  - Dropped the dma consumer schemas
-  - Fixed the node name of the examples
-  - Enhanced a bit the description for dma-requests in case of a router
-  - Split the bindings in two to handle the router and controller case
-    separately
-  - Made #dma-cells required
----
- .../devicetree/bindings/dma/dma-common.yaml   |  45 +++++++
- .../bindings/dma/dma-controller.yaml          |  35 ++++++
- .../devicetree/bindings/dma/dma-router.yaml   |  50 ++++++++
- Documentation/devicetree/bindings/dma/dma.txt | 114 +-----------------
- 4 files changed, 131 insertions(+), 113 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/dma-common.yaml
- create mode 100644 Documentation/devicetree/bindings/dma/dma-controller.yaml
- create mode 100644 Documentation/devicetree/bindings/dma/dma-router.yaml
-
-diff --git a/Documentation/devicetree/bindings/dma/dma-common.yaml b/Documentation/devicetree/bindings/dma/dma-common.yaml
+diff --git a/Documentation/devicetree/bindings/dma/allwinner,sun4i-a10-dma.yaml b/Documentation/devicetree/bindings/dma/allwinner,sun4i-a10-dma.yaml
 new file mode 100644
-index 000000000000..0141af047820
+index 000000000000..15abc0f9429f
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/dma-common.yaml
-@@ -0,0 +1,45 @@
++++ b/Documentation/devicetree/bindings/dma/allwinner,sun4i-a10-dma.yaml
+@@ -0,0 +1,55 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/dma/dma-common.yaml#
++$id: http://devicetree.org/schemas/dma/allwinner,sun4i-a10-dma.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: DMA Engine Generic Binding
++title: Allwinner A10 DMA Controller Device Tree Bindings
 +
 +maintainers:
-+  - Vinod Koul <vkoul@kernel.org>
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <maxime.ripard@bootlin.com>
 +
-+description:
-+  Generic binding to provide a way for a driver using DMA Engine to
-+  retrieve the DMA request or channel information that goes from a
-+  hardware device to a DMA controller.
-+
-+select: false
++allOf:
++  - $ref: "dma-controller.yaml#"
 +
 +properties:
 +  "#dma-cells":
-+    minimum: 1
-+    # Should be enough
-+    maximum: 255
++    const: 2
 +    description:
-+      Used to provide DMA controller specific information.
++      The first cell is either 0 or 1, the former to use the normal
++      DMA, 1 for dedicated DMA. The second cell is the request line
++      number.
 +
-+  dma-channel-masks:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description:
-+      Bitmask of available DMA channels in ascending order that are
-+      not reserved by firmware and are available to the
-+      kernel. i.e. first channel corresponds to LSB.
++  compatible:
++    const: allwinner,sun4i-a10-dma
 +
-+  dma-channels:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description:
-+      Number of DMA channels supported by the controller.
++  reg:
++    maxItems: 1
 +
-+  dma-requests:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description:
-+      Number of DMA request signals supported by the controller.
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
 +
 +required:
 +  - "#dma-cells"
-diff --git a/Documentation/devicetree/bindings/dma/dma-controller.yaml b/Documentation/devicetree/bindings/dma/dma-controller.yaml
-new file mode 100644
-index 000000000000..c39f6de76670
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/dma-controller.yaml
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/dma-controller.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++  - compatible
++  - reg
++  - interrupts
++  - clocks
 +
-+title: DMA Controller Generic Binding
-+
-+maintainers:
-+  - Vinod Koul <vkoul@kernel.org>
-+
-+allOf:
-+  - $ref: "dma-common.yaml#"
-+
-+# Everything else is described in the common file
-+properties:
-+  $nodename:
-+    pattern: "^dma-controller(@.*)?$"
++additionalProperties: false
 +
 +examples:
 +  - |
-+    dma: dma-controller@48000000 {
-+        compatible = "ti,omap-sdma";
-+        reg = <0x48000000 0x1000>;
-+        interrupts = <0 12 0x4
-+                      0 13 0x4
-+                      0 14 0x4
-+                      0 15 0x4>;
-+        #dma-cells = <1>;
-+        dma-channels = <32>;
-+        dma-requests = <127>;
-+        dma-channel-mask = <0xfffe>;
++    dma: dma-controller@1c02000 {
++        compatible = "allwinner,sun4i-a10-dma";
++        reg = <0x01c02000 0x1000>;
++        interrupts = <27>;
++        clocks = <&ahb_gates 6>;
++        #dma-cells = <2>;
 +    };
 +
 +...
-diff --git a/Documentation/devicetree/bindings/dma/dma-router.yaml b/Documentation/devicetree/bindings/dma/dma-router.yaml
-new file mode 100644
-index 000000000000..5b5f07393135
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/dma-router.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/dma-router.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: DMA Router Generic Binding
-+
-+maintainers:
-+  - Vinod Koul <vkoul@kernel.org>
-+
-+allOf:
-+  - $ref: "dma-common.yaml#"
-+
-+description:
-+  DMA routers are transparent IP blocks used to route DMA request
-+  lines from devices to the DMA controller. Some SoCs (like TI DRA7x)
-+  have more peripherals integrated with DMA requests than what the DMA
-+  controller can handle directly.
-+
-+properties:
-+  $nodename:
-+    pattern: "^dma-router(@.*)?$"
-+
-+  dma-masters:
-+    $ref: /schemas/types.yaml#definitions/phandle-array
-+    description:
-+      Array of phandles to the DMA controllers the router can direct
-+      the signal to.
-+
-+  dma-requests:
-+    description:
-+      Number of incoming request lines the router can handle.
-+
-+required:
-+  - "#dma-cells"
-+  - dma-masters
-+
-+examples:
-+  - |
-+    sdma_xbar: dma-router@4a002b78 {
-+        compatible = "ti,dra7-dma-crossbar";
-+        reg = <0x4a002b78 0xfc>;
-+        #dma-cells = <1>;
-+        dma-requests = <205>;
-+        ti,dma-safe-map = <0>;
-+        dma-masters = <&sdma>;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
-index eeb4e4d1771e..90a67a016a48 100644
---- a/Documentation/devicetree/bindings/dma/dma.txt
-+++ b/Documentation/devicetree/bindings/dma/dma.txt
-@@ -1,113 +1 @@
--* Generic DMA Controller and DMA request bindings
+diff --git a/Documentation/devicetree/bindings/dma/sun4i-dma.txt b/Documentation/devicetree/bindings/dma/sun4i-dma.txt
+deleted file mode 100644
+index 8ad556aca70b..000000000000
+--- a/Documentation/devicetree/bindings/dma/sun4i-dma.txt
++++ /dev/null
+@@ -1,45 +0,0 @@
+-Allwinner A10 DMA Controller
 -
--Generic binding to provide a way for a driver using DMA Engine to retrieve the
--DMA request or channel information that goes from a hardware device to a DMA
--controller.
+-This driver follows the generic DMA bindings defined in dma.txt.
 -
+-Required properties:
 -
--* DMA controller
--
--Required property:
--- #dma-cells: 		Must be at least 1. Used to provide DMA controller
--			specific information. See DMA client binding below for
--			more details.
--
--Optional properties:
--- dma-channels: 	Number of DMA channels supported by the controller.
--- dma-requests: 	Number of DMA request signals supported by the
--			controller.
--- dma-channel-mask:	Bitmask of available DMA channels in ascending order
--			that are not reserved by firmware and are available to
--			the kernel. i.e. first channel corresponds to LSB.
+-- compatible:	Must be "allwinner,sun4i-a10-dma"
+-- reg:		Should contain the registers base address and length
+-- interrupts:	Should contain a reference to the interrupt used by this device
+-- clocks:	Should contain a reference to the parent AHB clock
+-- #dma-cells :	Should be 2, first cell denoting normal or dedicated dma,
+-		second cell holding the request line number.
 -
 -Example:
--
--	dma: dma@48000000 {
--		compatible = "ti,omap-sdma";
--		reg = <0x48000000 0x1000>;
--		interrupts = <0 12 0x4
--			      0 13 0x4
--			      0 14 0x4
--			      0 15 0x4>;
--		#dma-cells = <1>;
--		dma-channels = <32>;
--		dma-requests = <127>;
--		dma-channel-mask = <0xfffe>
+-	dma: dma-controller@1c02000 {
+-		compatible = "allwinner,sun4i-a10-dma";
+-		reg = <0x01c02000 0x1000>;
+-		interrupts = <27>;
+-		clocks = <&ahb_gates 6>;
+-		#dma-cells = <2>;
 -	};
 -
--* DMA router
+-Clients:
 -
--DMA routers are transparent IP blocks used to route DMA request lines from
--devices to the DMA controller. Some SoCs (like TI DRA7x) have more peripherals
--integrated with DMA requests than what the DMA controller can handle directly.
+-DMA clients connected to the Allwinner A10 DMA controller must use the
+-format described in the dma.txt file, using a three-cell specifier for
+-each channel: a phandle plus two integer cells.
+-The three cells in order are:
 -
--Required property:
--- dma-masters:		phandle of the DMA controller or list of phandles for
--			the DMA controllers the router can direct the signal to.
--- #dma-cells: 		Must be at least 1. Used to provide DMA router specific
--			information. See DMA client binding below for more
--			details.
--
--Optional properties:
--- dma-requests: 	Number of incoming request lines the router can handle.
--- In the node pointed by the dma-masters:
--	- dma-requests:	The router driver might need to look for this in order
--			to configure the routing.
+-1. A phandle pointing to the DMA controller.
+-2. Whether it is using normal (0) or dedicated (1) channels
+-3. The port ID as specified in the datasheet
 -
 -Example:
--	sdma_xbar: dma-router@4a002b78 {
--		compatible = "ti,dra7-dma-crossbar";
--		reg = <0x4a002b78 0xfc>;
--		#dma-cells = <1>;
--		dma-requests = <205>;
--		ti,dma-safe-map = <0>;
--		dma-masters = <&sdma>;
--	};
--
--* DMA client
--
--Client drivers should specify the DMA property using a phandle to the controller
--followed by DMA controller specific data.
--
--Required property:
--- dmas:			List of one or more DMA specifiers, each consisting of
--			- A phandle pointing to DMA controller node
--			- A number of integer cells, as determined by the
--			  #dma-cells property in the node referenced by phandle
--			  containing DMA controller specific information. This
--			  typically contains a DMA request line number or a
--			  channel number, but can contain any data that is
--			  required for configuring a channel.
--- dma-names: 		Contains one identifier string for each DMA specifier in
--			the dmas property. The specific strings that can be used
--			are defined in the binding of the DMA client device.
--			Multiple DMA specifiers can be used to represent
--			alternatives and in this case the dma-names for those
--			DMA specifiers must be identical (see examples).
--
--Examples:
--
--1. A device with one DMA read channel, one DMA write channel:
--
--	i2c1: i2c@1 {
--		...
--		dmas = <&dma 2		/* read channel */
--			&dma 3>;	/* write channel */
+-	spi2: spi@1c17000 {
+-		compatible = "allwinner,sun4i-a10-spi";
+-		reg = <0x01c17000 0x1000>;
+-		interrupts = <0 12 4>;
+-		clocks = <&ahb_gates 22>, <&spi2_clk>;
+-		clock-names = "ahb", "mod";
+-		dmas = <&dma 1 29>, <&dma 1 28>;
 -		dma-names = "rx", "tx";
--		...
+-		#address-cells = <1>;
+-		#size-cells = <0>;
 -	};
--
--2. A single read-write channel with three alternative DMA controllers:
--
--	dmas = <&dma1 5
--		&dma2 7
--		&dma3 2>;
--	dma-names = "rx-tx", "rx-tx", "rx-tx";
--
--3. A device with three channels, one of which has two alternatives:
--
--	dmas = <&dma1 2			/* read channel */
--		&dma1 3			/* write channel */
--		&dma2 0			/* error read */
--		&dma3 0>;		/* alternative error read */
--	dma-names = "rx", "tx", "error", "error";
-+This file has been moved to dma-controller.yaml.
 -- 
 2.21.0
 

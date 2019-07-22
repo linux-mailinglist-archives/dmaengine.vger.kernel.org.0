@@ -2,47 +2,49 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A63C6FB18
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jul 2019 10:17:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DFE66FB1A
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Jul 2019 10:17:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728120AbfGVIRS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 22 Jul 2019 04:17:18 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:58353 "EHLO
+        id S1728171AbfGVIRa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 22 Jul 2019 04:17:30 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:33887 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727507AbfGVIRS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 22 Jul 2019 04:17:18 -0400
+        with ESMTP id S1727507AbfGVIRa (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 22 Jul 2019 04:17:30 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N0WwO-1iapR13BiO-00wRIY; Mon, 22 Jul 2019 10:17:07 +0200
+ 1Md6dH-1iP5RM2jn1-00aFLR; Mon, 22 Jul 2019 10:17:19 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Dan Williams <dan.j.williams@intel.com>,
         linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: [PATCH 1/2] [RESEND] dmaengine: omap-dma: make omap_dma_filter_fn private
-Date:   Mon, 22 Jul 2019 10:16:44 +0200
-Message-Id: <20190722081705.2084961-1-arnd@arndb.de>
+Subject: [PATCH 2/2] [RESEND] dmaengine: edma: make edma_filter_fn private
+Date:   Mon, 22 Jul 2019 10:16:45 +0200
+Message-Id: <20190722081705.2084961-2-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190722081705.2084961-1-arnd@arndb.de>
+References: <20190722081705.2084961-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:LKbwgWIj99FT91eh3WOwgz3gfMVv38yDY9pLODrS9xdzX3TdFjV
- sFyqqjXOs2vi7MeJORJiXvPYE0nqYIIMrSQg+DpC+H487tn0ovRPidXyNIjBl3gbBa/2Qt9
- GlYqd/ES7eUpSkYyKi1Wzyxh2uC2cRirVml1x018NBxF2jDP1iyy+PW6GKXsVTyZeFJ2CYr
- fYJ0X6D8vRlMD9YdCf/PQ==
+X-Provags-ID: V03:K1:Dnr5n+ZItdHytTchgOkzFl+KTT+XSHwDwbPeg+P7EMEMi4HQWHS
+ NtjJDJQK5Nl0CZMrhaENiYUQ6y/NdV5X1Ki2oAhiwkHDdr9kQVU6956cR9tw7Bbk0QIvOsr
+ EU4KMoXlP7kD6k0sdJE6VfeTesAXOdaY8TmS0qKTmj4LD11rDUjIKKUbUXwTwR/DtfD8eSm
+ t0aouriRLQKQkYLtStXwA==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OV4ZnAdg0O0=:m7QYF8tm2fgfGSeNLShlKm
- f8+Fr36c1zaf1fVJO0OGKEXPqdY2xAnHCKMvC39HLGQ8KbGj5pBKn9bRZT7CQKjaidSFPw8h8
- oAsLPq/3OayiF2JDUvc7tI1YL6e0D4aKcT1X8qwQi3Ny9rRsjn8QpljjS1/deKcvlcWZPuiK/
- Fcp3CqoFZxGFiCWQ2tbEd5iukje6r0hg9ulo4MHZXPEl9Dwmcy2BdOHQ9Zd+1pUkwF47T2D4E
- HelDflpgbXqD5vNRKyQleEX3TvIt5HNG4f2DXyQuMZO5Ma9K+Rikh+pMfBHAB0SNZN5JONzzz
- EIIyHhgcx45nWsEnhYsRJ5+/qMC0MdyDgI1YQMlYA/qo95Bu+xJJ8nsEo+cN5JmLGEFcI/xRm
- 1pkTQ1yEhExyTFWaypb0QGJBxAoKJ1NER5AjUI0QoWAKCQYrAHjuobOHV7Q+ny15q2+phA56G
- aXvG/ysBO9bJRnBOQX2xzRrMJmaaX73VU4C7Kf05RwKXAF5DvUKYotGNdqEt+voGEKllleijA
- 8Hljb7zaf1FJGZ9Cb4QK+1NXRqn29OdzT/4/oyETH0KJqqogU4hldbgvW0khaTgMXTk3Q/omG
- ezCodrRF4Nu32XOE9BZPPXwTv3zE/9kZZiGzdKSFE/k6RknIiPaDgbvbLPmQ8/qCQxE8ApBat
- I2HA7QGvIZrWUoVlDQHE6H9Nd+vRJR9mjxq/W20aTYWIkjdg/JO2PudG6OGpSxxvXxdWSjxKa
- RGo4ctJZap340ayVbfWPCRRrf2YHYT8P5hfDlw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:c/l2lO7keco=:m9a6Mm+tfPiM4ACkSiJbuX
+ ASYKmmC//imkpregzHbJz+IgnbO8+7qZcXDz7QvHhy5gvOUcz8ZKANfcAFVobYV+R2Dm5XCqU
+ noEeq+0ccMUGc6/np3/94r3S+hV8+zDGCxC6UlOckq8hH94jvMQVZZypj4yJceP1u8GkfBoRn
+ dsVtu6uTllWxXRxVzMeG4FzxcW44Gnc9Pcwm6snFpIJB5YqNLqNv21/L6kt/2GcLl2uhOvp1E
+ 1mmDqSf95ADz3lM4wgnHuwXbGhvo2RwrsAP/HJBO/wtGBA4r2Ihr7YNgt9cl94ZTWWZOFiI5H
+ DMLGBV9uHo8Ne8uRjqS0oJQtePX1hxEgVIxT0st/aHixUZf8QHIZN2Zd1Svw57ndBNtNtGJye
+ ZPQnxgTruse15JTdOoWowqHUajDRhmNOW3FkvRs/TkApCSSSQCyIPwwk+FuEmpTXjjluGL6BJ
+ q9uWuUOv61irCz8TMjhR7RbcjbXfjANrIfa7Te8hp6PPHh6TV3DddUanokK2zhjbZ5HEFuMcP
+ xlI5dFonS+aYvSX/pJhg5mrONIwNzU4OGKQbsmOoFLks1VS4vMgVCzTBnRo4bm0nkDuNfk38N
+ uPDXiWc67hZQuXVUBE2F4dmrcG6dPw/DMdBIQ1Ywg9l8351TBk/bDs/sGdZjqkddtFN8iyW2o
+ wbsxVFBfUBjlbL8dLGQWdeajGtAELWp2Oq+sHjGsu4JAL3lYscmXvck1qdSWfTkXWtN/QivMv
+ 9yCD9UWv9ibycEN4lec+BXuZ01qzXCsvJl+yNA==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
@@ -53,79 +55,78 @@ can be made private to the dmaengine driver itself, and the
 header file removed.
 
 Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/lkml/20190307151646.1016966-1-arnd@arndb.de/
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-Sent originally in March, but had some dependency problems
-back then, please apply these now.
----
- drivers/dma/ti/omap-dma.c      |  3 ++-
- include/linux/omap-dma.h       |  2 --
- include/linux/omap-dmaengine.h | 21 ---------------------
- 3 files changed, 2 insertions(+), 24 deletions(-)
- delete mode 100644 include/linux/omap-dmaengine.h
+ drivers/dma/ti/edma.c |  5 +++--
+ include/linux/edma.h  | 29 -----------------------------
+ 2 files changed, 3 insertions(+), 31 deletions(-)
+ delete mode 100644 include/linux/edma.h
 
-diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index ba2489d4ea24..49da402a1927 100644
---- a/drivers/dma/ti/omap-dma.c
-+++ b/drivers/dma/ti/omap-dma.c
-@@ -202,6 +202,7 @@ static const unsigned es_bytes[] = {
- 	[CSDP_DATA_TYPE_32] = 4,
- };
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index ceabdea40ae0..f2549ee3fb49 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -15,7 +15,6 @@
  
-+static bool omap_dma_filter_fn(struct dma_chan *chan, void *param);
- static struct of_dma_filter_info omap_dma_info = {
- 	.filter_fn = omap_dma_filter_fn,
- };
-@@ -1637,7 +1638,7 @@ static struct platform_driver omap_dma_driver = {
+ #include <linux/dmaengine.h>
+ #include <linux/dma-mapping.h>
+-#include <linux/edma.h>
+ #include <linux/err.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+@@ -2185,6 +2184,8 @@ static struct dma_chan *of_edma_xlate(struct of_phandle_args *dma_spec,
+ }
+ #endif
+ 
++static bool edma_filter_fn(struct dma_chan *chan, void *param);
++
+ static int edma_probe(struct platform_device *pdev)
+ {
+ 	struct edma_soc_info	*info = pdev->dev.platform_data;
+@@ -2524,7 +2525,7 @@ static struct platform_driver edma_tptc_driver = {
  	},
  };
  
--bool omap_dma_filter_fn(struct dma_chan *chan, void *param)
-+static bool omap_dma_filter_fn(struct dma_chan *chan, void *param)
+-bool edma_filter_fn(struct dma_chan *chan, void *param)
++static bool edma_filter_fn(struct dma_chan *chan, void *param)
  {
- 	if (chan->device->dev->driver == &omap_dma_driver.driver) {
- 		struct omap_dmadev *od = to_omap_dma_dev(chan->device);
-diff --git a/include/linux/omap-dma.h b/include/linux/omap-dma.h
-index 840ce551e773..ba3cfbb52312 100644
---- a/include/linux/omap-dma.h
-+++ b/include/linux/omap-dma.h
-@@ -1,8 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #ifndef __LINUX_OMAP_DMA_H
- #define __LINUX_OMAP_DMA_H
--#include <linux/omap-dmaengine.h>
--
- /*
-  *  Legacy OMAP DMA handling defines and functions
-  *
-diff --git a/include/linux/omap-dmaengine.h b/include/linux/omap-dmaengine.h
+ 	bool match = false;
+ 
+diff --git a/include/linux/edma.h b/include/linux/edma.h
 deleted file mode 100644
-index 8e6906c72e90..000000000000
---- a/include/linux/omap-dmaengine.h
+index a1307e7827e8..000000000000
+--- a/include/linux/edma.h
 +++ /dev/null
-@@ -1,21 +0,0 @@
+@@ -1,29 +0,0 @@
 -/*
-- * OMAP DMA Engine support
+- * TI EDMA DMA engine driver
 - *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
+- * Copyright 2012 Texas Instruments
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation version 2.
+- *
+- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+- * kind, whether express or implied; without even the implied warranty
+- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
 - */
--#ifndef __LINUX_OMAP_DMAENGINE_H
--#define __LINUX_OMAP_DMAENGINE_H
+-#ifndef __LINUX_EDMA_H
+-#define __LINUX_EDMA_H
 -
 -struct dma_chan;
 -
--#if defined(CONFIG_DMA_OMAP) || (defined(CONFIG_DMA_OMAP_MODULE) && defined(MODULE))
--bool omap_dma_filter_fn(struct dma_chan *, void *);
+-#if defined(CONFIG_TI_EDMA) || defined(CONFIG_TI_EDMA_MODULE)
+-bool edma_filter_fn(struct dma_chan *, void *);
 -#else
--static inline bool omap_dma_filter_fn(struct dma_chan *c, void *d)
+-static inline bool edma_filter_fn(struct dma_chan *chan, void *param)
 -{
 -	return false;
 -}
 -#endif
--#endif /* __LINUX_OMAP_DMAENGINE_H */
+-
+-#endif
 -- 
 2.20.0
 

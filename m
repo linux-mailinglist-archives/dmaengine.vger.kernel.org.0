@@ -2,149 +2,84 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CF4C6FE77
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jul 2019 13:08:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8B286FFFA
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Jul 2019 14:45:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbfGVLIe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 22 Jul 2019 07:08:34 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35980 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727123AbfGVLId (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 22 Jul 2019 07:08:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=fkbDO6SEZODxro/YexMPjOtDygrKCoiW6Vz/vfK/gRc=; b=XSeB4nIV5SujmhyYiB9z6cvZY2
-        GwCy2JZBbFsbYvMzD9Ls4+snegPYv5NF7wBPyOrHxESxAoq0phoWXKnFHjVifW6Tib21ueCQYLtsK
-        b8eWoUZ8YquaXzITEwal3sg4uhbb/p8EKNqTceIVrG1auGwYtoz21TiSE+Tyz7Fgg0QQlHoFwGzKY
-        9MQqr2Sxxad/780QIVcv1Nn4USFxdd3/sp40YDVFj9Q5Wo3ojzZ9J2uuXrinur0XoZabBhUKPZBod
-        4ipxDqoeq0ljVOD6OwzgETGIpuK2HB3F7+fUlsBChBuw+Xy2gl2Mh0DKUgeUk2QJvMIiGH0d/f1gQ
-        8J5Kon/A==;
-Received: from 177.157.124.3.dynamic.adsl.gvt.net.br ([177.157.124.3] helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hpWAh-000254-B2; Mon, 22 Jul 2019 11:07:59 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hpWAa-00041b-Ct; Mon, 22 Jul 2019 08:07:52 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Vinod Koul <vkoul@kernel.org>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-doc@vger.kernel.org,
-        dmaengine@vger.kernel.org, alsa-devel@alsa-project.org,
-        netdev@vger.kernel.org
-Subject: [PATCH 15/22] docs: index.rst: don't use genindex for pdf output
-Date:   Mon, 22 Jul 2019 08:07:42 -0300
-Message-Id: <45d57666e5738a0b85e948b0e94151fe1b1f9274.1563792334.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1563792333.git.mchehab+samsung@kernel.org>
-References: <cover.1563792333.git.mchehab+samsung@kernel.org>
+        id S1727510AbfGVMp1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 22 Jul 2019 08:45:27 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:57701 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728298AbfGVMp1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 22 Jul 2019 08:45:27 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MTRAS-1hzSlf0CgG-00TlMc; Mon, 22 Jul 2019 14:45:03 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Joao Pinto <jpinto@synopsys.com>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] [v2] dmaengine: dw-edma: fix unnecessary stack usage
+Date:   Mon, 22 Jul 2019 14:44:43 +0200
+Message-Id: <20190722124457.1093886-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+X-Provags-ID: V03:K1:YYatoRsXSnmJhuS9zQ32arIsHlbbR5TwQvO540Kwug1HsFi8yk3
+ Kt52+hk3Bnc9QwDzzrM0zJ2Xf/TbeFMIaneIxkPz1aAJNiOIPNd0eRa0sxEPiP+XHO5kRHg
+ m8DfUJ22fnSE1lSn5KnTavkhtkdXhIOdFPxc4FvDgo5p2/U3ynruupU01STAhoEKwvjkUu/
+ aOLbyfKc9JHFrOoAtahUA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Xf7VlFbttRk=:P5pqY5XIS0AguTxoatrB85
+ 6/Dv4kEp/zrxSBGkDC/zCEYr6cIX110dt4M/PUeWZQy6+FeTT3x/AKFEgKWyp6ndpQnCzhNuP
+ H9rf8Y684jHk5sEhgtAM3DZ/lMd2BpCPoLw9D/P/d1XWAt+iQCWxHjLUYSQgsjNaPeN7Tyaw7
+ 5mb4qSCU8e40YszKrlxxiD3ntWflUj1Cv+q8FU7W1AXhoaQ4AxuhvbbPYO44PO937PFKbuidR
+ 1F47QvQqCAhn83EXGcQGa5EmYyu31pWbtI5+wPH7aoGA6nbbpJvQzyrm5+WO1r4jouJ7MoNSa
+ JoPxppQZBmP7+wFPNWdoRPvpvsz6YfjZknEUaTlbQDY9bLPuWwvTvYmvHYWaBH9UnBXpjo2b0
+ RwTkRRr4nrgC7ZuGYlxTdmuRpJUG10ErU2Mwnw06qLB6BzlcAZeP18UlQ8dtUOlbdvdY9fCKr
+ T7deGhGJ31Mb4iwx7B7qGBndvbvdZW7LIgsIbceYp4YYDXl/F7ACL3ONniD0ASWpBjP9DHdYR
+ 7pzQ2OOApGUu5xI7UmPJFvE6tKa1cN92IR+zfeEKRlLY9ddFhsk0H3GKh8ZKhIeb+49SdXlTL
+ /Bm0/yZZd/L7RzNYSdZCkqXnyDJJwuDql8xgR7FS2SR10muMoOOtZaHw3H8fZwzDiGxES2pu8
+ 4jRqEK0Hu59ASnTVESHRmh8AuMkMBaIRx/78qfwl6eoAsS4OvpxZnUggXLKs4tuwriLAWd3TA
+ oKZK5SY4Gecik5cjHfrU01E2q/zWqheZqoOVug==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The genindex logic is meant to be used only for html output, as
-pdf build has its own way to generate indexes.
+Putting large constant data on the stack causes unnecessary overhead
+and stack usage:
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+drivers/dma/dw-edma/dw-edma-v0-debugfs.c:285:6: error: stack frame size of 1376 bytes in function 'dw_edma_v0_debugfs_on' [-Werror,-Wframe-larger-than=]
+
+Mark the variable 'static const' in order for the compiler to move it
+into the .rodata section where it does no such harm.
+
+Fixes: 305aebeff879 ("dmaengine: Add Synopsys eDMA IP version 0 debugfs support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- Documentation/core-api/index.rst                  | 2 +-
- Documentation/driver-api/dmaengine/index.rst      | 2 +-
- Documentation/driver-api/soundwire/index.rst      | 2 +-
- Documentation/networking/device_drivers/index.rst | 2 +-
- Documentation/networking/index.rst                | 2 +-
- Documentation/sound/index.rst                     | 2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+v2: unchanged
+---
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/index.rst
-index dfd8fad1e1ec..fa16a0538dcb 100644
---- a/Documentation/core-api/index.rst
-+++ b/Documentation/core-api/index.rst
-@@ -49,7 +49,7 @@ Interfaces for kernel debugging
-    debug-objects
-    tracepoint
+diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+index 3226f528cc11..5728b6fe938c 100644
+--- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
++++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+@@ -48,7 +48,7 @@ static struct {
+ } lim[2][EDMA_V0_MAX_NR_CH];
  
--.. only::  subproject
-+.. only:: subproject and html
+ struct debugfs_entries {
+-	char					name[24];
++	const char				*name;
+ 	dma_addr_t				*reg;
+ };
  
-    Indices
-    =======
-diff --git a/Documentation/driver-api/dmaengine/index.rst b/Documentation/driver-api/dmaengine/index.rst
-index 3026fa975937..b9df904d0a79 100644
---- a/Documentation/driver-api/dmaengine/index.rst
-+++ b/Documentation/driver-api/dmaengine/index.rst
-@@ -47,7 +47,7 @@ This book adds some notes about PXA DMA
- 
-    pxa_dma
- 
--.. only::  subproject
-+.. only::  subproject and html
- 
-    Indices
-    =======
-diff --git a/Documentation/driver-api/soundwire/index.rst b/Documentation/driver-api/soundwire/index.rst
-index 6db026028f27..234911a0db99 100644
---- a/Documentation/driver-api/soundwire/index.rst
-+++ b/Documentation/driver-api/soundwire/index.rst
-@@ -10,7 +10,7 @@ SoundWire Documentation
-    error_handling
-    locking
- 
--.. only::  subproject
-+.. only::  subproject and html
- 
-    Indices
-    =======
-diff --git a/Documentation/networking/device_drivers/index.rst b/Documentation/networking/device_drivers/index.rst
-index 2b7fefe72351..f724b7c69b9e 100644
---- a/Documentation/networking/device_drivers/index.rst
-+++ b/Documentation/networking/device_drivers/index.rst
-@@ -24,7 +24,7 @@ Contents:
-    google/gve
-    mellanox/mlx5
- 
--.. only::  subproject
-+.. only::  subproject and html
- 
-    Indices
-    =======
-diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index a46fca264bee..6739066acadb 100644
---- a/Documentation/networking/index.rst
-+++ b/Documentation/networking/index.rst
-@@ -31,7 +31,7 @@ Contents:
-    tls
-    tls-offload
- 
--.. only::  subproject
-+.. only::  subproject and html
- 
-    Indices
-    =======
-diff --git a/Documentation/sound/index.rst b/Documentation/sound/index.rst
-index 47b89f014e69..4d7d42acf6df 100644
---- a/Documentation/sound/index.rst
-+++ b/Documentation/sound/index.rst
-@@ -12,7 +12,7 @@ Linux Sound Subsystem Documentation
-    hd-audio/index
-    cards/index
- 
--.. only::  subproject
-+.. only::  subproject and html
- 
-    Indices
-    =======
 -- 
-2.21.0
+2.20.0
 

@@ -2,85 +2,62 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 33DAD701B5
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jul 2019 15:50:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E069701F2
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Jul 2019 16:12:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729834AbfGVNuy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 22 Jul 2019 09:50:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41316 "EHLO mail.kernel.org"
+        id S1729396AbfGVOMA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 22 Jul 2019 10:12:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727805AbfGVNuy (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 22 Jul 2019 09:50:54 -0400
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729099AbfGVOL7 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 22 Jul 2019 10:11:59 -0400
+Received: from localhost (unknown [223.226.98.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27FCC21BF6;
-        Mon, 22 Jul 2019 13:50:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20CBE21911;
+        Mon, 22 Jul 2019 14:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563803453;
-        bh=hDcfTcAyKk/cAZbs70RcptCtShegPKeJ1uI1eY8FuPA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xMKjxarVo4A+BUbOI3rs05QqlUUfVfZZp9djm0P0PirgBrwD2cRKtqA2jbIgBCzSz
-         i8joprx8AW5LlTSAFSnQHlr6uZ056LPEL8R1t6AJdCbYw+Y74+3nzPBn1+pGPloaST
-         aHfg48KjDgWi/mhFckIEPe8wL7XzF9mKxJZPRgPU=
-Received: by mail-qt1-f170.google.com with SMTP id y26so38565742qto.4;
-        Mon, 22 Jul 2019 06:50:53 -0700 (PDT)
-X-Gm-Message-State: APjAAAXtAAqEeZAtuGhYNdk5sBRVHNq9SwQAYTjrjiw0RFC9mba6tdrd
-        vPcO1sGxCgjsvW9eA04nBrba58gpZXisVNMzEA==
-X-Google-Smtp-Source: APXvYqwflr7eEPfqc65hiWx8dqu/FZ0+6ATGFTjcgLb/3+BvCbBiSuD7MOb4l57MYbVJ9vrYKKqkbj/a1UxlqwUjTPM=
-X-Received: by 2002:ac8:3908:: with SMTP id s8mr4648619qtb.224.1563803452314;
- Mon, 22 Jul 2019 06:50:52 -0700 (PDT)
+        s=default; t=1563804718;
+        bh=IbeXHeJbySyvfqVcju7hicw04qkG80Ca8h5G2wqBpSQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UFPdOql2C0fn/K/Av7RktKgvsNh+u3oyc0tTSvghX6cRwwjyYGEPcS6/ID3f8avSR
+         huwCSxYz/Kcov+l/2gIqKfMe92LuBI9WrcvxYCeIIs2Rk966wiASpenKtSH/PoV8sn
+         VLwBmU7f8CeJpO3noMdaXZQU9BxafbGNxowHFBXY=
+Date:   Mon, 22 Jul 2019 19:40:45 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: Re: [PATCH 1/2] [RESEND] dmaengine: omap-dma: make
+ omap_dma_filter_fn private
+Message-ID: <20190722141045.GS12733@vkoul-mobl.Dlink>
+References: <20190722081705.2084961-1-arnd@arndb.de>
+ <CAK8P3a39YBEueSGo-DpVOH3nE88T7DyarcoT29XZ13onCRP1Aw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190720092607.31095-1-maxime.ripard@bootlin.com>
-In-Reply-To: <20190720092607.31095-1-maxime.ripard@bootlin.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 22 Jul 2019 07:50:40 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL2dxZMpwP08xMjwdkv5kdeZGrTYwdHuvqAcY-nBuZ+fA@mail.gmail.com>
-Message-ID: <CAL_JsqL2dxZMpwP08xMjwdkv5kdeZGrTYwdHuvqAcY-nBuZ+fA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: dma: Add YAML schemas for the generic
- DMA bindings
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a39YBEueSGo-DpVOH3nE88T7DyarcoT29XZ13onCRP1Aw@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sat, Jul 20, 2019 at 3:26 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> The DMA controllers and consumers have a bunch of generic properties that
-> are needed in a device tree. Add a YAML schemas for those.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->
-> ---
->
-> Changes from v2:
->   - Added a select statement.
->
-> Changes from v1:
->   - Dropped the dma consumer schemas
->   - Fixed the node name of the examples
->   - Enhanced a bit the description for dma-requests in case of a router
->   - Split the bindings in two to handle the router and controller case
->     separately
->   - Made #dma-cells required
-> ---
->  .../devicetree/bindings/dma/dma-common.yaml   |  45 +++++++
->  .../bindings/dma/dma-controller.yaml          |  35 ++++++
->  .../devicetree/bindings/dma/dma-router.yaml   |  50 ++++++++
->  Documentation/devicetree/bindings/dma/dma.txt | 114 +-----------------
->  4 files changed, 131 insertions(+), 113 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/dma-common.yaml
->  create mode 100644 Documentation/devicetree/bindings/dma/dma-controller.yaml
->  create mode 100644 Documentation/devicetree/bindings/dma/dma-router.yaml
+On 22-07-19, 10:31, Arnd Bergmann wrote:
+> On Mon, Jul 22, 2019 at 10:17 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > +++ /dev/null
+> > @@ -1,21 +0,0 @@
+> > -/*
+> > - * OMAP DMA Engine support
+> > - *
+> 
+> 
+> I noticed this causes a trivial merge conflict (the file change but still
+> needs to get removed), let me know if you need me to resend the patch.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+thats okay, it was trivial to fix, updated now
+
+-- 
+~Vinod

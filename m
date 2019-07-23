@@ -2,137 +2,221 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8041A7119F
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Jul 2019 08:11:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E148714E6
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jul 2019 11:19:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbfGWGLb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 23 Jul 2019 02:11:31 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:12296 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbfGWGLb (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 23 Jul 2019 02:11:31 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d36a5110001>; Mon, 22 Jul 2019 23:11:29 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 22 Jul 2019 23:11:28 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 22 Jul 2019 23:11:28 -0700
-Received: from [10.25.75.182] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jul
- 2019 06:11:26 +0000
-Subject: Re: [PATCH v2] dmaengine: tegra210-adma: fix transfer failure
-To:     <vkoul@kernel.org>, <jonathanh@nvidia.com>, <ldewangan@nvidia.com>
-CC:     <thierry.reding@gmail.com>, <dmaengine@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>
-References: <1562929830-29344-1-git-send-email-spujar@nvidia.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <da482fff-a2dd-9bcd-5b77-d8a4bad4db1a@nvidia.com>
-Date:   Tue, 23 Jul 2019 11:41:23 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <1562929830-29344-1-git-send-email-spujar@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1563862289; bh=p67+je5WaiJR8ZrTJLiSSUn6hkZB6LRtboDmV0oKkZM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=KatHQzdgXDIVyX5KiYHo5zO9xzAXIbzPFXQUmvOznaOPyslH1/ftspupX7iFQEzGi
-         l08yY+5ekhMzIGuM2PzOFkgc5/OQGo7Eo2Iqf0Z9hYfgAwSPcd0tybYg6cA8uZiTkp
-         a/OyHXmQbwY61zBgYv32gYfghXyvdkJjM30cn8iGbP+xiq7fgb/ByZ89kk9wLpncPk
-         vbz8Mpx2A228PDt9PAlBd7POYutoowl5T1JjGQzCYswKfoS0DVnVe/a7KxrItC1Sfg
-         yGl0hnPurahrmTIy+BqgRwM/ISsnwbtIT4lrGOlZZwQ0+JyKTiDirnNI2L9Ex0e30K
-         vqzcvKhX9tzYQ==
+        id S1726853AbfGWJTo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 23 Jul 2019 05:19:44 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:57436 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbfGWJTo (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 23 Jul 2019 05:19:44 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id CD23620034E;
+        Tue, 23 Jul 2019 11:19:41 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 97256200307;
+        Tue, 23 Jul 2019 11:19:38 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 92891402FC;
+        Tue, 23 Jul 2019 17:19:34 +0800 (SGT)
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     vkoul@kernel.org, dan.j.williams@intel.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com
+Subject: [RESEND PATCH v6] dmaengine: fsl-edma: add i.mx7ulp edma2 version support
+Date:   Tue, 23 Jul 2019 16:57:42 +0800
+Message-Id: <1563872262-18376-1-git-send-email-yibin.gong@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Reviewers,
+Add edma2 for i.mx7ulp by version v3, since v2 has already
+been used by mcf-edma.
+The big changes based on v1 are belows:
+1. only one dmamux.
+2. another clock dma_clk except dmamux clk.
+3. 16 independent interrupts instead of only one interrupt for
+all channels.
 
-Please review.
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+---
+Change from v5(https://lkml.org/lkml/2019/6/25/444):
+Fix below build issue, replace platform_irq_count() instead
+of of_irq_count():
+https://lkml.org/lkml/2019/7/8/5
 
-Thanks,
-Sameer.
+ drivers/dma/fsl-edma-common.c | 18 +++++++++++-
+ drivers/dma/fsl-edma-common.h |  4 +++
+ drivers/dma/fsl-edma.c        | 66 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 87 insertions(+), 1 deletion(-)
 
-On 7/12/2019 4:40 PM, Sameer Pujar wrote:
->  From Tegra186 onwards OUTSTANDING_REQUESTS field is added in channel
-> configuration register(bits 7:4) which defines the maximum number of reads
-> from the source and writes to the destination that may be outstanding at
-> any given point of time. This field must be programmed with a value
-> between 1 and 8. A value of 0 will prevent any transfers from happening.
->
-> Thus added 'ch_pending_req' member in chip data structure and the same is
-> populated with maximum allowed pending requests. Since the field is not
-> applicable to Tegra210, mentioned bit fields are unused and hence the
-> member is initialized with 0. For Tegra186, by default program this field
-> with the maximum permitted value of 8.
->
-> Fixes: 433de642a76c ("dmaengine: tegra210-adma: add support for Tegra186/Tegra194")
->
-> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-> ---
->   drivers/dma/tegra210-adma.c | 7 +++++++
->   1 file changed, 7 insertions(+)
->
-> diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-> index 2805853..5ab4e3a9 100644
-> --- a/drivers/dma/tegra210-adma.c
-> +++ b/drivers/dma/tegra210-adma.c
-> @@ -74,6 +74,8 @@
->   				    TEGRA186_ADMA_CH_FIFO_CTRL_TXSIZE(3)    | \
->   				    TEGRA186_ADMA_CH_FIFO_CTRL_RXSIZE(3))
->   
-> +#define TEGRA186_DMA_MAX_PENDING_REQS			8
-> +
->   #define ADMA_CH_REG_FIELD_VAL(val, mask, shift)	(((val) & mask) << shift)
->   
->   struct tegra_adma;
-> @@ -85,6 +87,7 @@ struct tegra_adma;
->    * @ch_req_tx_shift: Register offset for AHUB transmit channel select.
->    * @ch_req_rx_shift: Register offset for AHUB receive channel select.
->    * @ch_base_offset: Register offset of DMA channel registers.
-> + * @ch_pending_req: Outstaning DMA requests for a channel.
->    * @ch_fifo_ctrl: Default value for channel FIFO CTRL register.
->    * @ch_req_mask: Mask for Tx or Rx channel select.
->    * @ch_req_max: Maximum number of Tx or Rx channels available.
-> @@ -98,6 +101,7 @@ struct tegra_adma_chip_data {
->   	unsigned int ch_req_tx_shift;
->   	unsigned int ch_req_rx_shift;
->   	unsigned int ch_base_offset;
-> +	unsigned int ch_pending_req;
->   	unsigned int ch_fifo_ctrl;
->   	unsigned int ch_req_mask;
->   	unsigned int ch_req_max;
-> @@ -602,6 +606,7 @@ static int tegra_adma_set_xfer_params(struct tegra_adma_chan *tdc,
->   			 ADMA_CH_CTRL_FLOWCTRL_EN;
->   	ch_regs->config |= cdata->adma_get_burst_config(burst_size);
->   	ch_regs->config |= ADMA_CH_CONFIG_WEIGHT_FOR_WRR(1);
-> +	ch_regs->config |= cdata->ch_pending_req;
->   	ch_regs->fifo_ctrl = cdata->ch_fifo_ctrl;
->   	ch_regs->tc = desc->period_len & ADMA_CH_TC_COUNT_MASK;
->   
-> @@ -786,6 +791,7 @@ static const struct tegra_adma_chip_data tegra210_chip_data = {
->   	.ch_req_tx_shift	= 28,
->   	.ch_req_rx_shift	= 24,
->   	.ch_base_offset		= 0,
-> +	.ch_pending_req		= 0,
->   	.ch_fifo_ctrl		= TEGRA210_FIFO_CTRL_DEFAULT,
->   	.ch_req_mask		= 0xf,
->   	.ch_req_max		= 10,
-> @@ -800,6 +806,7 @@ static const struct tegra_adma_chip_data tegra186_chip_data = {
->   	.ch_req_tx_shift	= 27,
->   	.ch_req_rx_shift	= 22,
->   	.ch_base_offset		= 0x10000,
-> +	.ch_pending_req		= (TEGRA186_DMA_MAX_PENDING_REQS << 4),
->   	.ch_fifo_ctrl		= TEGRA186_FIFO_CTRL_DEFAULT,
->   	.ch_req_mask		= 0x1f,
->   	.ch_req_max		= 20,
+diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+index 26952f5..26c7e0f 100644
+--- a/drivers/dma/fsl-edma-common.c
++++ b/drivers/dma/fsl-edma-common.c
+@@ -90,6 +90,19 @@ static void mux_configure8(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
+ 	iowrite8(val8, addr + off);
+ }
+ 
++void mux_configure32(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
++		     u32 off, u32 slot, bool enable)
++{
++	u32 val;
++
++	if (enable)
++		val = EDMAMUX_CHCFG_ENBL << 24 | slot;
++	else
++		val = EDMAMUX_CHCFG_DIS;
++
++	iowrite32(val, addr + off * 4);
++}
++
+ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
+ 			unsigned int slot, bool enable)
+ {
+@@ -108,7 +121,10 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
+ 	muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
+ 	slot = EDMAMUX_CHCFG_SOURCE(slot);
+ 
+-	mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
++	if (fsl_chan->edma->drvdata->version == v3)
++		mux_configure32(fsl_chan, muxaddr, ch_off, slot, enable);
++	else
++		mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
+ }
+ EXPORT_SYMBOL_GPL(fsl_edma_chan_mux);
+ 
+diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
+index 4e17556..5eaa290 100644
+--- a/drivers/dma/fsl-edma-common.h
++++ b/drivers/dma/fsl-edma-common.h
+@@ -125,6 +125,7 @@ struct fsl_edma_chan {
+ 	dma_addr_t			dma_dev_addr;
+ 	u32				dma_dev_size;
+ 	enum dma_data_direction		dma_dir;
++	char				chan_name[16];
+ };
+ 
+ struct fsl_edma_desc {
+@@ -139,11 +140,13 @@ struct fsl_edma_desc {
+ enum edma_version {
+ 	v1, /* 32ch, Vybrid, mpc57x, etc */
+ 	v2, /* 64ch Coldfire */
++	v3, /* 32ch, i.mx7ulp */
+ };
+ 
+ struct fsl_edma_drvdata {
+ 	enum edma_version	version;
+ 	u32			dmamuxs;
++	bool			has_dmaclk;
+ 	int			(*setup_irq)(struct platform_device *pdev,
+ 					     struct fsl_edma_engine *fsl_edma);
+ };
+@@ -153,6 +156,7 @@ struct fsl_edma_engine {
+ 	void __iomem		*membase;
+ 	void __iomem		*muxbase[DMAMUX_NR];
+ 	struct clk		*muxclk[DMAMUX_NR];
++	struct clk		*dmaclk;
+ 	struct mutex		fsl_edma_mutex;
+ 	const struct fsl_edma_drvdata *drvdata;
+ 	u32			n_chans;
+diff --git a/drivers/dma/fsl-edma.c b/drivers/dma/fsl-edma.c
+index fcbad6a..54cbdfd 100644
+--- a/drivers/dma/fsl-edma.c
++++ b/drivers/dma/fsl-edma.c
+@@ -162,6 +162,50 @@ fsl_edma_irq_init(struct platform_device *pdev, struct fsl_edma_engine *fsl_edma
+ 	return 0;
+ }
+ 
++static int
++fsl_edma2_irq_init(struct platform_device *pdev,
++		   struct fsl_edma_engine *fsl_edma)
++{
++	struct device_node *np = pdev->dev.of_node;
++	int i, ret, irq;
++	int count;
++
++	count = platform_irq_count(pdev);
++	dev_dbg(&pdev->dev, "%s Found %d interrupts\r\n", __func__, count);
++	if (count <= 2) {
++		dev_err(&pdev->dev, "Interrupts in DTS not correct.\n");
++		return -EINVAL;
++	}
++	/*
++	 * 16 channel independent interrupts + 1 error interrupt on i.mx7ulp.
++	 * 2 channel share one interrupt, for example, ch0/ch16, ch1/ch17...
++	 * For now, just simply request irq without IRQF_SHARED flag, since 16
++	 * channels are enough on i.mx7ulp whose M4 domain own some peripherals.
++	 */
++	for (i = 0; i < count; i++) {
++		irq = platform_get_irq(pdev, i);
++		if (irq < 0)
++			return -ENXIO;
++
++		sprintf(fsl_edma->chans[i].chan_name, "eDMA2-CH%02d", i);
++
++		/* The last IRQ is for eDMA err */
++		if (i == count - 1)
++			ret = devm_request_irq(&pdev->dev, irq,
++						fsl_edma_err_handler,
++						0, "eDMA2-ERR", fsl_edma);
++		else
++			ret = devm_request_irq(&pdev->dev, irq,
++						fsl_edma_tx_handler, 0,
++						fsl_edma->chans[i].chan_name,
++						fsl_edma);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
+ static void fsl_edma_irq_exit(
+ 		struct platform_device *pdev, struct fsl_edma_engine *fsl_edma)
+ {
+@@ -187,8 +231,16 @@ static struct fsl_edma_drvdata vf610_data = {
+ 	.setup_irq = fsl_edma_irq_init,
+ };
+ 
++static struct fsl_edma_drvdata imx7ulp_data = {
++	.version = v3,
++	.dmamuxs = 1,
++	.has_dmaclk = true,
++	.setup_irq = fsl_edma2_irq_init,
++};
++
+ static const struct of_device_id fsl_edma_dt_ids[] = {
+ 	{ .compatible = "fsl,vf610-edma", .data = &vf610_data},
++	{ .compatible = "fsl,imx7ulp-edma", .data = &imx7ulp_data},
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, fsl_edma_dt_ids);
+@@ -236,6 +288,20 @@ static int fsl_edma_probe(struct platform_device *pdev)
+ 	fsl_edma_setup_regs(fsl_edma);
+ 	regs = &fsl_edma->regs;
+ 
++	if (drvdata->has_dmaclk) {
++		fsl_edma->dmaclk = devm_clk_get(&pdev->dev, "dma");
++		if (IS_ERR(fsl_edma->dmaclk)) {
++			dev_err(&pdev->dev, "Missing DMA block clock.\n");
++			return PTR_ERR(fsl_edma->dmaclk);
++		}
++
++		ret = clk_prepare_enable(fsl_edma->dmaclk);
++		if (ret) {
++			dev_err(&pdev->dev, "DMA clk block failed.\n");
++			return ret;
++		}
++	}
++
+ 	for (i = 0; i < fsl_edma->drvdata->dmamuxs; i++) {
+ 		char clkname[32];
+ 
+-- 
+2.7.4
+

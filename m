@@ -2,223 +2,143 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C51272925
-	for <lists+dmaengine@lfdr.de>; Wed, 24 Jul 2019 09:43:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D70B472977
+	for <lists+dmaengine@lfdr.de>; Wed, 24 Jul 2019 10:05:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725878AbfGXHnA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 24 Jul 2019 03:43:00 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:42942 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbfGXHnA (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 24 Jul 2019 03:43:00 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F41C9200034;
-        Wed, 24 Jul 2019 09:42:56 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BCA42200032;
-        Wed, 24 Jul 2019 09:42:53 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B695D402D3;
-        Wed, 24 Jul 2019 15:42:49 +0800 (SGT)
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     vkoul@kernel.org, dan.j.williams@intel.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com
-Subject: [RESEND PATCH v7] dmaengine: fsl-edma: add i.mx7ulp edma2 version support
-Date:   Wed, 24 Jul 2019 15:20:34 +0800
-Message-Id: <1563952834-7731-1-git-send-email-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725826AbfGXIFP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 24 Jul 2019 04:05:15 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45281 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfGXIFO (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 Jul 2019 04:05:14 -0400
+Received: by mail-pg1-f194.google.com with SMTP id o13so20794338pgp.12;
+        Wed, 24 Jul 2019 01:05:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=I7CYszDrvy+reFYnb37zWErTiK7A3kRJaQqiQHkXdvQ=;
+        b=XopkYn+C0zdVHgIkt66lfuYlcHVZEh0RvR2nPl7T7enil4q+4ukS6QPBJHMdwUe+at
+         pVb11v30KjJTIhYhNFrnjzTG2t0YB5MBVUe0t9meobxy3Ox49svLqeoueqXv2q+jSy5w
+         KsVEtk9flhxdsRWKQnnky5PxzUGpBTc0aWUhw6IX2+X7uFbURDFl3y9KcOKimWHV9/t6
+         fpCjaGfM+MTjyl/oLgL7J9Okz7wcoQXVTukQTZZzE/K2It+44ctH9ZCWssR3UqzyLIZk
+         9HS35r1WFqgZImkD6e1kz/jSZP8OAyYR8nY3xxow8A+3qxh27k7Em3kWdMt0oNzNU865
+         +mlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=I7CYszDrvy+reFYnb37zWErTiK7A3kRJaQqiQHkXdvQ=;
+        b=eEzP9XifyV0aMFC2UMp0AOy8sQ1evjJQ8pYzeP351vz7u+ZQA6nhaiOSlJj1E6C4zQ
+         oPHTQEczz1Ktd1a3KgGYm0wvR+c6lZn/YXaShqcdtpQwI3xR2ZKD0vvtyajQy9OoNbAF
+         gKoywSTc8Hq/Oyxk08cJ1ozqk7Kx/SsmqLV21H6xNl4UteXv0N/7Fdpsk/kUk+dpEgd2
+         ljIvF5Ia6TNwFdtzyG2SZN2yOglmR6nzTJUn8byWEzvREFspAGA1uUDSibHBtvdjmlMB
+         uI66NH/8Tip369CIdqH8RK0I3EA1FVaqUhZqxRo9jicR1SNClpInVKBx7j6vZFi7UlZJ
+         iupg==
+X-Gm-Message-State: APjAAAV9YC5Pe3WM4SkSeafb1aXvC84OKoINMrYcZyQmyaRHOJb8nT67
+        FYfhuT8oC/JIr3WCYyE1FFYfk+bm
+X-Google-Smtp-Source: APXvYqzmDqmkC2d9/oClG6/UabpxPCen8k1387I2VEn/V7tCAoDJaKvuQbWQ9sWihPJv2dQ/R/pRnA==
+X-Received: by 2002:a63:c70d:: with SMTP id n13mr79304761pgg.171.1563955513909;
+        Wed, 24 Jul 2019 01:05:13 -0700 (PDT)
+Received: from [10.0.2.15] ([110.227.69.93])
+        by smtp.gmail.com with ESMTPSA id v126sm2211091pgb.23.2019.07.24.01.05.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 24 Jul 2019 01:05:13 -0700 (PDT)
+Subject: Re: [PATCH] dma: qcom: hidma_mgmt: Add of_node_put() before goto
+To:     Robin Murphy <robin.murphy@arm.com>, okaya@kernel.org,
+        agross@kernel.org, vkoul@kernel.org, dan.j.williams@intel.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org
+References: <20190723103543.7888-1-nishkadg.linux@gmail.com>
+ <b5b76ef6-c5f3-bab0-e981-cd47c7264959@arm.com>
+From:   Nishka Dasgupta <nishkadg.linux@gmail.com>
+Message-ID: <6ef666c3-a155-130d-24bc-8c04b3485d44@gmail.com>
+Date:   Wed, 24 Jul 2019 13:35:08 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <b5b76ef6-c5f3-bab0-e981-cd47c7264959@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add edma2 for i.mx7ulp by version v3, since v2 has already
-been used by mcf-edma.
-The big changes based on v1 are belows:
-1. only one dmamux.
-2. another clock dma_clk except dmamux clk.
-3. 16 independent interrupts instead of only one interrupt for
-all channels.
+On 23/07/19 5:32 PM, Robin Murphy wrote:
+> On 23/07/2019 11:35, Nishka Dasgupta wrote:
+>> Each iteration of for_each_available_child_of_node puts the previous
+>> node, but in the case of a goto from the middle of the loop, there is
+>> no put, thus causing a memory leak. Add an of_node_put before the
+>> goto in 4 places.
+> 
+> Why not just add it once at the "out" label itself? (Consider the 
+> conditions for the loop terminating naturally)
 
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
----
-Change from v6:
-Rebase latest linux-next, please ignore v6 sent yesterday.
+If the loop terminates naturally then, as far as I understand, child 
+will be put by the loop itself; then an extra of_node_put() under the 
+out label would put the child node even though it has already been put. 
+If I'm understanding this correctly (and I might not be) is it okay to 
+decrement refcount more times that it is incremented?
 
-Change from v5(https://lkml.org/lkml/2019/6/25/444):
-Fix below build issue, replace platform_irq_count() instead
-of of_irq_count():
-https://lkml.org/lkml/2019/7/8/5
+> And if you're cleaning up the refcounting here anyway then I'd also note 
+> that the reference held by the loop iterator makes the extra get/put 
+> inside that loop entirely redundant. It's always worth taking a look at 
+> the wider context rather than just blindly focusing on what a given 
+> script picks up - it's fairly rare that a piece of code has one obvious 
+> issue but is otherwise perfect.
 
- drivers/dma/fsl-edma-common.c | 18 +++++++++++-
- drivers/dma/fsl-edma-common.h |  4 +++
- drivers/dma/fsl-edma.c        | 65 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 86 insertions(+), 1 deletion(-)
+Thank  you for pointing this out; I've added it in v2.
 
-diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index 44d92c3..6d6d8a4 100644
---- a/drivers/dma/fsl-edma-common.c
-+++ b/drivers/dma/fsl-edma-common.c
-@@ -90,6 +90,19 @@ static void mux_configure8(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
- 	iowrite8(val8, addr + off);
- }
- 
-+void mux_configure32(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
-+		     u32 off, u32 slot, bool enable)
-+{
-+	u32 val;
-+
-+	if (enable)
-+		val = EDMAMUX_CHCFG_ENBL << 24 | slot;
-+	else
-+		val = EDMAMUX_CHCFG_DIS;
-+
-+	iowrite32(val, addr + off * 4);
-+}
-+
- void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
- 			unsigned int slot, bool enable)
- {
-@@ -103,7 +116,10 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
- 	muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
- 	slot = EDMAMUX_CHCFG_SOURCE(slot);
- 
--	mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
-+	if (fsl_chan->edma->drvdata->version == v3)
-+		mux_configure32(fsl_chan, muxaddr, ch_off, slot, enable);
-+	else
-+		mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
- }
- EXPORT_SYMBOL_GPL(fsl_edma_chan_mux);
- 
-diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
-index 4e17556..5eaa290 100644
---- a/drivers/dma/fsl-edma-common.h
-+++ b/drivers/dma/fsl-edma-common.h
-@@ -125,6 +125,7 @@ struct fsl_edma_chan {
- 	dma_addr_t			dma_dev_addr;
- 	u32				dma_dev_size;
- 	enum dma_data_direction		dma_dir;
-+	char				chan_name[16];
- };
- 
- struct fsl_edma_desc {
-@@ -139,11 +140,13 @@ struct fsl_edma_desc {
- enum edma_version {
- 	v1, /* 32ch, Vybrid, mpc57x, etc */
- 	v2, /* 64ch Coldfire */
-+	v3, /* 32ch, i.mx7ulp */
- };
- 
- struct fsl_edma_drvdata {
- 	enum edma_version	version;
- 	u32			dmamuxs;
-+	bool			has_dmaclk;
- 	int			(*setup_irq)(struct platform_device *pdev,
- 					     struct fsl_edma_engine *fsl_edma);
- };
-@@ -153,6 +156,7 @@ struct fsl_edma_engine {
- 	void __iomem		*membase;
- 	void __iomem		*muxbase[DMAMUX_NR];
- 	struct clk		*muxclk[DMAMUX_NR];
-+	struct clk		*dmaclk;
- 	struct mutex		fsl_edma_mutex;
- 	const struct fsl_edma_drvdata *drvdata;
- 	u32			n_chans;
-diff --git a/drivers/dma/fsl-edma.c b/drivers/dma/fsl-edma.c
-index fcbad6a..7cc2653 100644
---- a/drivers/dma/fsl-edma.c
-+++ b/drivers/dma/fsl-edma.c
-@@ -162,6 +162,49 @@ fsl_edma_irq_init(struct platform_device *pdev, struct fsl_edma_engine *fsl_edma
- 	return 0;
- }
- 
-+static int
-+fsl_edma2_irq_init(struct platform_device *pdev,
-+		   struct fsl_edma_engine *fsl_edma)
-+{
-+	int i, ret, irq;
-+	int count;
-+
-+	count = platform_irq_count(pdev);
-+	dev_dbg(&pdev->dev, "%s Found %d interrupts\r\n", __func__, count);
-+	if (count <= 2) {
-+		dev_err(&pdev->dev, "Interrupts in DTS not correct.\n");
-+		return -EINVAL;
-+	}
-+	/*
-+	 * 16 channel independent interrupts + 1 error interrupt on i.mx7ulp.
-+	 * 2 channel share one interrupt, for example, ch0/ch16, ch1/ch17...
-+	 * For now, just simply request irq without IRQF_SHARED flag, since 16
-+	 * channels are enough on i.mx7ulp whose M4 domain own some peripherals.
-+	 */
-+	for (i = 0; i < count; i++) {
-+		irq = platform_get_irq(pdev, i);
-+		if (irq < 0)
-+			return -ENXIO;
-+
-+		sprintf(fsl_edma->chans[i].chan_name, "eDMA2-CH%02d", i);
-+
-+		/* The last IRQ is for eDMA err */
-+		if (i == count - 1)
-+			ret = devm_request_irq(&pdev->dev, irq,
-+						fsl_edma_err_handler,
-+						0, "eDMA2-ERR", fsl_edma);
-+		else
-+			ret = devm_request_irq(&pdev->dev, irq,
-+						fsl_edma_tx_handler, 0,
-+						fsl_edma->chans[i].chan_name,
-+						fsl_edma);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static void fsl_edma_irq_exit(
- 		struct platform_device *pdev, struct fsl_edma_engine *fsl_edma)
- {
-@@ -187,8 +230,16 @@ static struct fsl_edma_drvdata vf610_data = {
- 	.setup_irq = fsl_edma_irq_init,
- };
- 
-+static struct fsl_edma_drvdata imx7ulp_data = {
-+	.version = v3,
-+	.dmamuxs = 1,
-+	.has_dmaclk = true,
-+	.setup_irq = fsl_edma2_irq_init,
-+};
-+
- static const struct of_device_id fsl_edma_dt_ids[] = {
- 	{ .compatible = "fsl,vf610-edma", .data = &vf610_data},
-+	{ .compatible = "fsl,imx7ulp-edma", .data = &imx7ulp_data},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, fsl_edma_dt_ids);
-@@ -236,6 +287,20 @@ static int fsl_edma_probe(struct platform_device *pdev)
- 	fsl_edma_setup_regs(fsl_edma);
- 	regs = &fsl_edma->regs;
- 
-+	if (drvdata->has_dmaclk) {
-+		fsl_edma->dmaclk = devm_clk_get(&pdev->dev, "dma");
-+		if (IS_ERR(fsl_edma->dmaclk)) {
-+			dev_err(&pdev->dev, "Missing DMA block clock.\n");
-+			return PTR_ERR(fsl_edma->dmaclk);
-+		}
-+
-+		ret = clk_prepare_enable(fsl_edma->dmaclk);
-+		if (ret) {
-+			dev_err(&pdev->dev, "DMA clk block failed.\n");
-+			return ret;
-+		}
-+	}
-+
- 	for (i = 0; i < fsl_edma->drvdata->dmamuxs; i++) {
- 		char clkname[32];
- 
--- 
-2.7.4
+Thanking you,
+Nishka
+> Robin.
+> 
+>> Issue found with Coccinelle.
+>>
+>> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+>> ---
+>>   drivers/dma/qcom/hidma_mgmt.c | 13 ++++++++++---
+>>   1 file changed, 10 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/dma/qcom/hidma_mgmt.c 
+>> b/drivers/dma/qcom/hidma_mgmt.c
+>> index 3022d66e7a33..209adc6ceabe 100644
+>> --- a/drivers/dma/qcom/hidma_mgmt.c
+>> +++ b/drivers/dma/qcom/hidma_mgmt.c
+>> @@ -362,16 +362,22 @@ static int __init 
+>> hidma_mgmt_of_populate_channels(struct device_node *np)
+>>           struct platform_device *new_pdev;
+>>           ret = of_address_to_resource(child, 0, &res[0]);
+>> -        if (!ret)
+>> +        if (!ret) {
+>> +            of_node_put(child);
+>>               goto out;
+>> +        }
+>>           ret = of_address_to_resource(child, 1, &res[1]);
+>> -        if (!ret)
+>> +        if (!ret) {
+>> +            of_node_put(child);
+>>               goto out;
+>> +        }
+>>           ret = of_irq_to_resource(child, 0, &res[2]);
+>> -        if (ret <= 0)
+>> +        if (ret <= 0) {
+>> +            of_node_put(child);
+>>               goto out;
+>> +        }
+>>           memset(&pdevinfo, 0, sizeof(pdevinfo));
+>>           pdevinfo.fwnode = &child->fwnode;
+>> @@ -386,6 +392,7 @@ static int __init 
+>> hidma_mgmt_of_populate_channels(struct device_node *np)
+>>           new_pdev = platform_device_register_full(&pdevinfo);
+>>           if (IS_ERR(new_pdev)) {
+>>               ret = PTR_ERR(new_pdev);
+>> +            of_node_put(child);
+>>               goto out;
+>>           }
+>>           of_node_get(child);
+>>
 

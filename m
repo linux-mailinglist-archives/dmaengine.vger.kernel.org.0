@@ -2,24 +2,24 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C62C75A21
-	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2019 00:03:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8190075A31
+	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2019 00:04:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfGYWDT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 25 Jul 2019 18:03:19 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:47458 "EHLO
+        id S1726915AbfGYWD2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 25 Jul 2019 18:03:28 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:47502 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbfGYWDS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 25 Jul 2019 18:03:18 -0400
+        with ESMTP id S1726723AbfGYWD2 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 25 Jul 2019 18:03:28 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1564092196; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1564092204; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=xjhvAVEZIjFEVMBlMZWhI8GmuRW0A32U8FIR5XEBYDI=;
-        b=HRAQkiSA0giwdSJYdyLl5NIa18ENRlOTaQCKOFckOM/FkhmC8Vn6W1t3P3kpOX+DB9A2bv
-        bz4wE1oZrO89uu4FGw8jvoQ2Y7fKsOEam9I5G8uinXqHAE2OvWKFYav8p8ZzrkmWfMnHYF
-        JoFhi7klBbR4C6W9NiN7fI2B1d80A38=
+        bh=mwMxC1Wci8fxBDvB23nDC2ziCk7gqjZLbYmWcux8KIc=;
+        b=A1G1hU99lTdat4gN7GacQ9deIGHeOKqSNd525yDKki47TSj32JWZcBP2vNY1k1tIH/e7wg
+        rFfATtqyoqPTd8T7VEevdGxzBmScpF0sRmJKL4gEWwvuq8vvxueH75JPSvcosXzRbp5k2b
+        FEOth7BVSAmBK5T4ptDdlQVVW+jWdKI=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paul.burton@mips.com>,
@@ -43,9 +43,9 @@ Cc:     od@zcrc.me, devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
         Paul Cercueil <paul@crapouillou.net>,
         Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH 05/11] video/fbdev: Drop JZ4740 driver
-Date:   Thu, 25 Jul 2019 18:02:09 -0400
-Message-Id: <20190725220215.460-6-paul@crapouillou.net>
+Subject: [PATCH 06/11] dma: Drop JZ4740 driver
+Date:   Thu, 25 Jul 2019 18:02:10 -0400
+Message-Id: <20190725220215.460-7-paul@crapouillou.net>
 In-Reply-To: <20190725220215.460-1-paul@crapouillou.net>
 References: <20190725220215.460-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -55,745 +55,676 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The JZ4740 fbdev driver has been replaced with the ingenic-drm driver.
+The newer and better JZ4780 driver is now used to provide DMA
+functionality on the JZ4740.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Tested-by: Artur Rojek <contact@artur-rojek.eu>
 ---
- drivers/video/fbdev/Kconfig     |   9 -
- drivers/video/fbdev/Makefile    |   1 -
- drivers/video/fbdev/jz4740_fb.c | 690 --------------------------------
- 3 files changed, 700 deletions(-)
- delete mode 100644 drivers/video/fbdev/jz4740_fb.c
+ drivers/dma/Kconfig      |   6 -
+ drivers/dma/Makefile     |   1 -
+ drivers/dma/dma-jz4740.c | 623 ---------------------------------------
+ 3 files changed, 630 deletions(-)
+ delete mode 100644 drivers/dma/dma-jz4740.c
 
-diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
-index 6b2de93bd302..6fce711f42c5 100644
---- a/drivers/video/fbdev/Kconfig
-+++ b/drivers/video/fbdev/Kconfig
-@@ -2211,15 +2211,6 @@ config FB_BROADSHEET
- 	  and could also have been called by other names when coupled with
- 	  a bridge adapter.
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 03fa0c58cef3..7dd9831b4e6e 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -137,12 +137,6 @@ config DMA_BCM2835
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
  
--config FB_JZ4740
--	tristate "JZ4740 LCD framebuffer support"
--	depends on FB && MACH_JZ4740
--	select FB_SYS_FILLRECT
--	select FB_SYS_COPYAREA
--	select FB_SYS_IMAGEBLIT
--	help
--	  Framebuffer support for the JZ4740 SoC.
+-config DMA_JZ4740
+-	tristate "JZ4740 DMA support"
+-	depends on MACH_JZ4740 || COMPILE_TEST
+-	select DMA_ENGINE
+-	select DMA_VIRTUAL_CHANNELS
 -
- config FB_PUV3_UNIGFX
- 	tristate "PKUnity v3 Unigfx framebuffer support"
- 	depends on FB && UNICORE32 && ARCH_PUV3
-diff --git a/drivers/video/fbdev/Makefile b/drivers/video/fbdev/Makefile
-index 7dc4861a93e6..49502d6256cb 100644
---- a/drivers/video/fbdev/Makefile
-+++ b/drivers/video/fbdev/Makefile
-@@ -117,7 +117,6 @@ obj-$(CONFIG_XEN_FBDEV_FRONTEND)  += xen-fbfront.o
- obj-$(CONFIG_FB_CARMINE)          += carminefb.o
- obj-$(CONFIG_FB_MB862XX)	  += mb862xx/
- obj-$(CONFIG_FB_NUC900)           += nuc900fb.o
--obj-$(CONFIG_FB_JZ4740)		  += jz4740_fb.o
- obj-$(CONFIG_FB_PUV3_UNIGFX)      += fb-puv3.o
- obj-$(CONFIG_FB_HYPERV)		  += hyperv_fb.o
- obj-$(CONFIG_FB_OPENCORES)	  += ocfb.o
-diff --git a/drivers/video/fbdev/jz4740_fb.c b/drivers/video/fbdev/jz4740_fb.c
+ config DMA_JZ4780
+ 	tristate "JZ4780 DMA support"
+ 	depends on MIPS || COMPILE_TEST
+diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+index 5bddf6f8790f..f5ce8665e944 100644
+--- a/drivers/dma/Makefile
++++ b/drivers/dma/Makefile
+@@ -22,7 +22,6 @@ obj-$(CONFIG_AXI_DMAC) += dma-axi-dmac.o
+ obj-$(CONFIG_BCM_SBA_RAID) += bcm-sba-raid.o
+ obj-$(CONFIG_COH901318) += coh901318.o coh901318_lli.o
+ obj-$(CONFIG_DMA_BCM2835) += bcm2835-dma.o
+-obj-$(CONFIG_DMA_JZ4740) += dma-jz4740.o
+ obj-$(CONFIG_DMA_JZ4780) += dma-jz4780.o
+ obj-$(CONFIG_DMA_SA11X0) += sa11x0-dma.o
+ obj-$(CONFIG_DMA_SUN4I) += sun4i-dma.o
+diff --git a/drivers/dma/dma-jz4740.c b/drivers/dma/dma-jz4740.c
 deleted file mode 100644
-index 0b6fa25f6924..000000000000
---- a/drivers/video/fbdev/jz4740_fb.c
+index 39c676c47082..000000000000
+--- a/drivers/dma/dma-jz4740.c
 +++ /dev/null
-@@ -1,690 +0,0 @@
+@@ -1,623 +0,0 @@
 -// SPDX-License-Identifier: GPL-2.0-or-later
 -/*
-- *  Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
-- *	JZ4740 SoC LCD framebuffer driver
+- *  Copyright (C) 2013, Lars-Peter Clausen <lars@metafoo.de>
+- *  JZ4740 DMAC support
 - */
 -
--#include <linux/kernel.h>
--#include <linux/module.h>
--#include <linux/mutex.h>
--#include <linux/platform_device.h>
--#include <linux/pinctrl/consumer.h>
--
--#include <linux/clk.h>
--#include <linux/delay.h>
--
--#include <linux/console.h>
--#include <linux/fb.h>
--
+-#include <linux/dmaengine.h>
 -#include <linux/dma-mapping.h>
+-#include <linux/err.h>
+-#include <linux/init.h>
+-#include <linux/list.h>
+-#include <linux/module.h>
+-#include <linux/platform_device.h>
+-#include <linux/slab.h>
+-#include <linux/spinlock.h>
+-#include <linux/irq.h>
+-#include <linux/clk.h>
 -
--#include <asm/mach-jz4740/jz4740_fb.h>
+-#include "virt-dma.h"
 -
--#define JZ_REG_LCD_CFG		0x00
--#define JZ_REG_LCD_VSYNC	0x04
--#define JZ_REG_LCD_HSYNC	0x08
--#define JZ_REG_LCD_VAT		0x0C
--#define JZ_REG_LCD_DAH		0x10
--#define JZ_REG_LCD_DAV		0x14
--#define JZ_REG_LCD_PS		0x18
--#define JZ_REG_LCD_CLS		0x1C
--#define JZ_REG_LCD_SPL		0x20
--#define JZ_REG_LCD_REV		0x24
--#define JZ_REG_LCD_CTRL		0x30
--#define JZ_REG_LCD_STATE	0x34
--#define JZ_REG_LCD_IID		0x38
--#define JZ_REG_LCD_DA0		0x40
--#define JZ_REG_LCD_SA0		0x44
--#define JZ_REG_LCD_FID0		0x48
--#define JZ_REG_LCD_CMD0		0x4C
--#define JZ_REG_LCD_DA1		0x50
--#define JZ_REG_LCD_SA1		0x54
--#define JZ_REG_LCD_FID1		0x58
--#define JZ_REG_LCD_CMD1		0x5C
+-#define JZ_DMA_NR_CHANS 6
 -
--#define JZ_LCD_CFG_SLCD			BIT(31)
--#define JZ_LCD_CFG_PS_DISABLE		BIT(23)
--#define JZ_LCD_CFG_CLS_DISABLE		BIT(22)
--#define JZ_LCD_CFG_SPL_DISABLE		BIT(21)
--#define JZ_LCD_CFG_REV_DISABLE		BIT(20)
--#define JZ_LCD_CFG_HSYNCM		BIT(19)
--#define JZ_LCD_CFG_PCLKM		BIT(18)
--#define JZ_LCD_CFG_INV			BIT(17)
--#define JZ_LCD_CFG_SYNC_DIR		BIT(16)
--#define JZ_LCD_CFG_PS_POLARITY		BIT(15)
--#define JZ_LCD_CFG_CLS_POLARITY		BIT(14)
--#define JZ_LCD_CFG_SPL_POLARITY		BIT(13)
--#define JZ_LCD_CFG_REV_POLARITY		BIT(12)
--#define JZ_LCD_CFG_HSYNC_ACTIVE_LOW	BIT(11)
--#define JZ_LCD_CFG_PCLK_FALLING_EDGE	BIT(10)
--#define JZ_LCD_CFG_DE_ACTIVE_LOW	BIT(9)
--#define JZ_LCD_CFG_VSYNC_ACTIVE_LOW	BIT(8)
--#define JZ_LCD_CFG_18_BIT		BIT(7)
--#define JZ_LCD_CFG_PDW			(BIT(5) | BIT(4))
--#define JZ_LCD_CFG_MODE_MASK 0xf
+-#define JZ_REG_DMA_SRC_ADDR(x)		(0x00 + (x) * 0x20)
+-#define JZ_REG_DMA_DST_ADDR(x)		(0x04 + (x) * 0x20)
+-#define JZ_REG_DMA_TRANSFER_COUNT(x)	(0x08 + (x) * 0x20)
+-#define JZ_REG_DMA_REQ_TYPE(x)		(0x0C + (x) * 0x20)
+-#define JZ_REG_DMA_STATUS_CTRL(x)	(0x10 + (x) * 0x20)
+-#define JZ_REG_DMA_CMD(x)		(0x14 + (x) * 0x20)
+-#define JZ_REG_DMA_DESC_ADDR(x)		(0x18 + (x) * 0x20)
 -
--#define JZ_LCD_CTRL_BURST_4		(0x0 << 28)
--#define JZ_LCD_CTRL_BURST_8		(0x1 << 28)
--#define JZ_LCD_CTRL_BURST_16		(0x2 << 28)
--#define JZ_LCD_CTRL_RGB555		BIT(27)
--#define JZ_LCD_CTRL_OFUP		BIT(26)
--#define JZ_LCD_CTRL_FRC_GRAYSCALE_16	(0x0 << 24)
--#define JZ_LCD_CTRL_FRC_GRAYSCALE_4	(0x1 << 24)
--#define JZ_LCD_CTRL_FRC_GRAYSCALE_2	(0x2 << 24)
--#define JZ_LCD_CTRL_PDD_MASK		(0xff << 16)
--#define JZ_LCD_CTRL_EOF_IRQ		BIT(13)
--#define JZ_LCD_CTRL_SOF_IRQ		BIT(12)
--#define JZ_LCD_CTRL_OFU_IRQ		BIT(11)
--#define JZ_LCD_CTRL_IFU0_IRQ		BIT(10)
--#define JZ_LCD_CTRL_IFU1_IRQ		BIT(9)
--#define JZ_LCD_CTRL_DD_IRQ		BIT(8)
--#define JZ_LCD_CTRL_QDD_IRQ		BIT(7)
--#define JZ_LCD_CTRL_REVERSE_ENDIAN	BIT(6)
--#define JZ_LCD_CTRL_LSB_FISRT		BIT(5)
--#define JZ_LCD_CTRL_DISABLE		BIT(4)
--#define JZ_LCD_CTRL_ENABLE		BIT(3)
--#define JZ_LCD_CTRL_BPP_1		0x0
--#define JZ_LCD_CTRL_BPP_2		0x1
--#define JZ_LCD_CTRL_BPP_4		0x2
--#define JZ_LCD_CTRL_BPP_8		0x3
--#define JZ_LCD_CTRL_BPP_15_16		0x4
--#define JZ_LCD_CTRL_BPP_18_24		0x5
+-#define JZ_REG_DMA_CTRL			0x300
+-#define JZ_REG_DMA_IRQ			0x304
+-#define JZ_REG_DMA_DOORBELL		0x308
+-#define JZ_REG_DMA_DOORBELL_SET		0x30C
 -
--#define JZ_LCD_CMD_SOF_IRQ BIT(31)
--#define JZ_LCD_CMD_EOF_IRQ BIT(30)
--#define JZ_LCD_CMD_ENABLE_PAL BIT(28)
+-#define JZ_DMA_STATUS_CTRL_NO_DESC		BIT(31)
+-#define JZ_DMA_STATUS_CTRL_DESC_INV		BIT(6)
+-#define JZ_DMA_STATUS_CTRL_ADDR_ERR		BIT(4)
+-#define JZ_DMA_STATUS_CTRL_TRANSFER_DONE	BIT(3)
+-#define JZ_DMA_STATUS_CTRL_HALT			BIT(2)
+-#define JZ_DMA_STATUS_CTRL_COUNT_TERMINATE	BIT(1)
+-#define JZ_DMA_STATUS_CTRL_ENABLE		BIT(0)
 -
--#define JZ_LCD_SYNC_MASK 0x3ff
+-#define JZ_DMA_CMD_SRC_INC			BIT(23)
+-#define JZ_DMA_CMD_DST_INC			BIT(22)
+-#define JZ_DMA_CMD_RDIL_MASK			(0xf << 16)
+-#define JZ_DMA_CMD_SRC_WIDTH_MASK		(0x3 << 14)
+-#define JZ_DMA_CMD_DST_WIDTH_MASK		(0x3 << 12)
+-#define JZ_DMA_CMD_INTERVAL_LENGTH_MASK		(0x7 << 8)
+-#define JZ_DMA_CMD_BLOCK_MODE			BIT(7)
+-#define JZ_DMA_CMD_DESC_VALID			BIT(4)
+-#define JZ_DMA_CMD_DESC_VALID_MODE		BIT(3)
+-#define JZ_DMA_CMD_VALID_IRQ_ENABLE		BIT(2)
+-#define JZ_DMA_CMD_TRANSFER_IRQ_ENABLE		BIT(1)
+-#define JZ_DMA_CMD_LINK_ENABLE			BIT(0)
 -
--#define JZ_LCD_STATE_DISABLED BIT(0)
+-#define JZ_DMA_CMD_FLAGS_OFFSET 22
+-#define JZ_DMA_CMD_RDIL_OFFSET 16
+-#define JZ_DMA_CMD_SRC_WIDTH_OFFSET 14
+-#define JZ_DMA_CMD_DST_WIDTH_OFFSET 12
+-#define JZ_DMA_CMD_TRANSFER_SIZE_OFFSET 8
+-#define JZ_DMA_CMD_MODE_OFFSET 7
 -
--struct jzfb_framedesc {
--	uint32_t next;
--	uint32_t addr;
--	uint32_t id;
--	uint32_t cmd;
--} __packed;
+-#define JZ_DMA_CTRL_PRIORITY_MASK		(0x3 << 8)
+-#define JZ_DMA_CTRL_HALT			BIT(3)
+-#define JZ_DMA_CTRL_ADDRESS_ERROR		BIT(2)
+-#define JZ_DMA_CTRL_ENABLE			BIT(0)
 -
--struct jzfb {
--	struct fb_info *fb;
--	struct platform_device *pdev;
+-enum jz4740_dma_width {
+-	JZ4740_DMA_WIDTH_32BIT	= 0,
+-	JZ4740_DMA_WIDTH_8BIT	= 1,
+-	JZ4740_DMA_WIDTH_16BIT	= 2,
+-};
+-
+-enum jz4740_dma_transfer_size {
+-	JZ4740_DMA_TRANSFER_SIZE_4BYTE	= 0,
+-	JZ4740_DMA_TRANSFER_SIZE_1BYTE	= 1,
+-	JZ4740_DMA_TRANSFER_SIZE_2BYTE	= 2,
+-	JZ4740_DMA_TRANSFER_SIZE_16BYTE = 3,
+-	JZ4740_DMA_TRANSFER_SIZE_32BYTE = 4,
+-};
+-
+-enum jz4740_dma_flags {
+-	JZ4740_DMA_SRC_AUTOINC = 0x2,
+-	JZ4740_DMA_DST_AUTOINC = 0x1,
+-};
+-
+-enum jz4740_dma_mode {
+-	JZ4740_DMA_MODE_SINGLE	= 0,
+-	JZ4740_DMA_MODE_BLOCK	= 1,
+-};
+-
+-struct jz4740_dma_sg {
+-	dma_addr_t addr;
+-	unsigned int len;
+-};
+-
+-struct jz4740_dma_desc {
+-	struct virt_dma_desc vdesc;
+-
+-	enum dma_transfer_direction direction;
+-	bool cyclic;
+-
+-	unsigned int num_sgs;
+-	struct jz4740_dma_sg sg[];
+-};
+-
+-struct jz4740_dmaengine_chan {
+-	struct virt_dma_chan vchan;
+-	unsigned int id;
+-	struct dma_slave_config config;
+-
+-	dma_addr_t fifo_addr;
+-	unsigned int transfer_shift;
+-
+-	struct jz4740_dma_desc *desc;
+-	unsigned int next_sg;
+-};
+-
+-struct jz4740_dma_dev {
+-	struct dma_device ddev;
 -	void __iomem *base;
--	struct resource *mem;
--	struct jz4740_fb_platform_data *pdata;
+-	struct clk *clk;
 -
--	size_t vidmem_size;
--	void *vidmem;
--	dma_addr_t vidmem_phys;
--	struct jzfb_framedesc *framedesc;
--	dma_addr_t framedesc_phys;
--
--	struct clk *ldclk;
--	struct clk *lpclk;
--
--	unsigned is_enabled:1;
--	struct mutex lock;
--
--	uint32_t pseudo_palette[16];
+-	struct jz4740_dmaengine_chan chan[JZ_DMA_NR_CHANS];
 -};
 -
--static const struct fb_fix_screeninfo jzfb_fix = {
--	.id		= "JZ4740 FB",
--	.type		= FB_TYPE_PACKED_PIXELS,
--	.visual		= FB_VISUAL_TRUECOLOR,
--	.xpanstep	= 0,
--	.ypanstep	= 0,
--	.ywrapstep	= 0,
--	.accel		= FB_ACCEL_NONE,
--};
--
--/* Based on CNVT_TOHW macro from skeletonfb.c */
--static inline uint32_t jzfb_convert_color_to_hw(unsigned val,
--	struct fb_bitfield *bf)
+-static struct jz4740_dma_dev *jz4740_dma_chan_get_dev(
+-	struct jz4740_dmaengine_chan *chan)
 -{
--	return (((val << bf->length) + 0x7FFF - val) >> 16) << bf->offset;
+-	return container_of(chan->vchan.chan.device, struct jz4740_dma_dev,
+-		ddev);
 -}
 -
--static int jzfb_setcolreg(unsigned regno, unsigned red, unsigned green,
--			unsigned blue, unsigned transp, struct fb_info *fb)
+-static struct jz4740_dmaengine_chan *to_jz4740_dma_chan(struct dma_chan *c)
 -{
--	uint32_t color;
+-	return container_of(c, struct jz4740_dmaengine_chan, vchan.chan);
+-}
 -
--	if (regno >= 16)
+-static struct jz4740_dma_desc *to_jz4740_dma_desc(struct virt_dma_desc *vdesc)
+-{
+-	return container_of(vdesc, struct jz4740_dma_desc, vdesc);
+-}
+-
+-static inline uint32_t jz4740_dma_read(struct jz4740_dma_dev *dmadev,
+-	unsigned int reg)
+-{
+-	return readl(dmadev->base + reg);
+-}
+-
+-static inline void jz4740_dma_write(struct jz4740_dma_dev *dmadev,
+-	unsigned reg, uint32_t val)
+-{
+-	writel(val, dmadev->base + reg);
+-}
+-
+-static inline void jz4740_dma_write_mask(struct jz4740_dma_dev *dmadev,
+-	unsigned int reg, uint32_t val, uint32_t mask)
+-{
+-	uint32_t tmp;
+-
+-	tmp = jz4740_dma_read(dmadev, reg);
+-	tmp &= ~mask;
+-	tmp |= val;
+-	jz4740_dma_write(dmadev, reg, tmp);
+-}
+-
+-static struct jz4740_dma_desc *jz4740_dma_alloc_desc(unsigned int num_sgs)
+-{
+-	return kzalloc(sizeof(struct jz4740_dma_desc) +
+-		sizeof(struct jz4740_dma_sg) * num_sgs, GFP_ATOMIC);
+-}
+-
+-static enum jz4740_dma_width jz4740_dma_width(enum dma_slave_buswidth width)
+-{
+-	switch (width) {
+-	case DMA_SLAVE_BUSWIDTH_1_BYTE:
+-		return JZ4740_DMA_WIDTH_8BIT;
+-	case DMA_SLAVE_BUSWIDTH_2_BYTES:
+-		return JZ4740_DMA_WIDTH_16BIT;
+-	case DMA_SLAVE_BUSWIDTH_4_BYTES:
+-		return JZ4740_DMA_WIDTH_32BIT;
+-	default:
+-		return JZ4740_DMA_WIDTH_32BIT;
+-	}
+-}
+-
+-static enum jz4740_dma_transfer_size jz4740_dma_maxburst(u32 maxburst)
+-{
+-	if (maxburst <= 1)
+-		return JZ4740_DMA_TRANSFER_SIZE_1BYTE;
+-	else if (maxburst <= 3)
+-		return JZ4740_DMA_TRANSFER_SIZE_2BYTE;
+-	else if (maxburst <= 15)
+-		return JZ4740_DMA_TRANSFER_SIZE_4BYTE;
+-	else if (maxburst <= 31)
+-		return JZ4740_DMA_TRANSFER_SIZE_16BYTE;
+-
+-	return JZ4740_DMA_TRANSFER_SIZE_32BYTE;
+-}
+-
+-static int jz4740_dma_slave_config_write(struct dma_chan *c,
+-				   struct dma_slave_config *config,
+-				   enum dma_transfer_direction direction)
+-{
+-	struct jz4740_dmaengine_chan *chan = to_jz4740_dma_chan(c);
+-	struct jz4740_dma_dev *dmadev = jz4740_dma_chan_get_dev(chan);
+-	enum jz4740_dma_width src_width;
+-	enum jz4740_dma_width dst_width;
+-	enum jz4740_dma_transfer_size transfer_size;
+-	enum jz4740_dma_flags flags;
+-	uint32_t cmd;
+-
+-	switch (direction) {
+-	case DMA_MEM_TO_DEV:
+-		flags = JZ4740_DMA_SRC_AUTOINC;
+-		transfer_size = jz4740_dma_maxburst(config->dst_maxburst);
+-		chan->fifo_addr = config->dst_addr;
+-		break;
+-	case DMA_DEV_TO_MEM:
+-		flags = JZ4740_DMA_DST_AUTOINC;
+-		transfer_size = jz4740_dma_maxburst(config->src_maxburst);
+-		chan->fifo_addr = config->src_addr;
+-		break;
+-	default:
 -		return -EINVAL;
+-	}
 -
--	color = jzfb_convert_color_to_hw(red, &fb->var.red);
--	color |= jzfb_convert_color_to_hw(green, &fb->var.green);
--	color |= jzfb_convert_color_to_hw(blue, &fb->var.blue);
--	color |= jzfb_convert_color_to_hw(transp, &fb->var.transp);
+-	src_width = jz4740_dma_width(config->src_addr_width);
+-	dst_width = jz4740_dma_width(config->dst_addr_width);
 -
--	((uint32_t *)(fb->pseudo_palette))[regno] = color;
+-	switch (transfer_size) {
+-	case JZ4740_DMA_TRANSFER_SIZE_2BYTE:
+-		chan->transfer_shift = 1;
+-		break;
+-	case JZ4740_DMA_TRANSFER_SIZE_4BYTE:
+-		chan->transfer_shift = 2;
+-		break;
+-	case JZ4740_DMA_TRANSFER_SIZE_16BYTE:
+-		chan->transfer_shift = 4;
+-		break;
+-	case JZ4740_DMA_TRANSFER_SIZE_32BYTE:
+-		chan->transfer_shift = 5;
+-		break;
+-	default:
+-		chan->transfer_shift = 0;
+-		break;
+-	}
+-
+-	cmd = flags << JZ_DMA_CMD_FLAGS_OFFSET;
+-	cmd |= src_width << JZ_DMA_CMD_SRC_WIDTH_OFFSET;
+-	cmd |= dst_width << JZ_DMA_CMD_DST_WIDTH_OFFSET;
+-	cmd |= transfer_size << JZ_DMA_CMD_TRANSFER_SIZE_OFFSET;
+-	cmd |= JZ4740_DMA_MODE_SINGLE << JZ_DMA_CMD_MODE_OFFSET;
+-	cmd |= JZ_DMA_CMD_TRANSFER_IRQ_ENABLE;
+-
+-	jz4740_dma_write(dmadev, JZ_REG_DMA_CMD(chan->id), cmd);
+-	jz4740_dma_write(dmadev, JZ_REG_DMA_STATUS_CTRL(chan->id), 0);
+-	jz4740_dma_write(dmadev, JZ_REG_DMA_REQ_TYPE(chan->id),
+-		config->slave_id);
 -
 -	return 0;
 -}
 -
--static int jzfb_get_controller_bpp(struct jzfb *jzfb)
+-static int jz4740_dma_slave_config(struct dma_chan *c,
+-				   struct dma_slave_config *config)
 -{
--	switch (jzfb->pdata->bpp) {
--	case 18:
--	case 24:
--		return 32;
--	case 15:
--		return 16;
--	default:
--		return jzfb->pdata->bpp;
--	}
+-	struct jz4740_dmaengine_chan *chan = to_jz4740_dma_chan(c);
+-
+-	memcpy(&chan->config, config, sizeof(*config));
+-	return 0;
 -}
 -
--static struct fb_videomode *jzfb_get_mode(struct jzfb *jzfb,
--	struct fb_var_screeninfo *var)
+-static int jz4740_dma_terminate_all(struct dma_chan *c)
 -{
--	size_t i;
--	struct fb_videomode *mode = jzfb->pdata->modes;
+-	struct jz4740_dmaengine_chan *chan = to_jz4740_dma_chan(c);
+-	struct jz4740_dma_dev *dmadev = jz4740_dma_chan_get_dev(chan);
+-	unsigned long flags;
+-	LIST_HEAD(head);
 -
--	for (i = 0; i < jzfb->pdata->num_modes; ++i, ++mode) {
--		if (mode->xres == var->xres && mode->yres == var->yres)
--			return mode;
--	}
+-	spin_lock_irqsave(&chan->vchan.lock, flags);
+-	jz4740_dma_write_mask(dmadev, JZ_REG_DMA_STATUS_CTRL(chan->id), 0,
+-			JZ_DMA_STATUS_CTRL_ENABLE);
+-	chan->desc = NULL;
+-	vchan_get_all_descriptors(&chan->vchan, &head);
+-	spin_unlock_irqrestore(&chan->vchan.lock, flags);
 -
--	return NULL;
--}
--
--static int jzfb_check_var(struct fb_var_screeninfo *var, struct fb_info *fb)
--{
--	struct jzfb *jzfb = fb->par;
--	struct fb_videomode *mode;
--
--	if (var->bits_per_pixel != jzfb_get_controller_bpp(jzfb) &&
--		var->bits_per_pixel != jzfb->pdata->bpp)
--		return -EINVAL;
--
--	mode = jzfb_get_mode(jzfb, var);
--	if (mode == NULL)
--		return -EINVAL;
--
--	fb_videomode_to_var(var, mode);
--
--	switch (jzfb->pdata->bpp) {
--	case 8:
--		break;
--	case 15:
--		var->red.offset = 10;
--		var->red.length = 5;
--		var->green.offset = 6;
--		var->green.length = 5;
--		var->blue.offset = 0;
--		var->blue.length = 5;
--		break;
--	case 16:
--		var->red.offset = 11;
--		var->red.length = 5;
--		var->green.offset = 5;
--		var->green.length = 6;
--		var->blue.offset = 0;
--		var->blue.length = 5;
--		break;
--	case 18:
--		var->red.offset = 16;
--		var->red.length = 6;
--		var->green.offset = 8;
--		var->green.length = 6;
--		var->blue.offset = 0;
--		var->blue.length = 6;
--		var->bits_per_pixel = 32;
--		break;
--	case 32:
--	case 24:
--		var->transp.offset = 24;
--		var->transp.length = 8;
--		var->red.offset = 16;
--		var->red.length = 8;
--		var->green.offset = 8;
--		var->green.length = 8;
--		var->blue.offset = 0;
--		var->blue.length = 8;
--		var->bits_per_pixel = 32;
--		break;
--	default:
--		break;
--	}
+-	vchan_dma_desc_free_list(&chan->vchan, &head);
 -
 -	return 0;
 -}
 -
--static int jzfb_set_par(struct fb_info *info)
+-static int jz4740_dma_start_transfer(struct jz4740_dmaengine_chan *chan)
 -{
--	struct jzfb *jzfb = info->par;
--	struct jz4740_fb_platform_data *pdata = jzfb->pdata;
--	struct fb_var_screeninfo *var = &info->var;
--	struct fb_videomode *mode;
--	uint16_t hds, vds;
--	uint16_t hde, vde;
--	uint16_t ht, vt;
--	uint32_t ctrl;
--	uint32_t cfg;
--	unsigned long rate;
+-	struct jz4740_dma_dev *dmadev = jz4740_dma_chan_get_dev(chan);
+-	dma_addr_t src_addr, dst_addr;
+-	struct virt_dma_desc *vdesc;
+-	struct jz4740_dma_sg *sg;
 -
--	mode = jzfb_get_mode(jzfb, var);
--	if (mode == NULL)
--		return -EINVAL;
+-	jz4740_dma_write_mask(dmadev, JZ_REG_DMA_STATUS_CTRL(chan->id), 0,
+-			JZ_DMA_STATUS_CTRL_ENABLE);
 -
--	if (mode == info->mode)
--		return 0;
--
--	info->mode = mode;
--
--	hds = mode->hsync_len + mode->left_margin;
--	hde = hds + mode->xres;
--	ht = hde + mode->right_margin;
--
--	vds = mode->vsync_len + mode->upper_margin;
--	vde = vds + mode->yres;
--	vt = vde + mode->lower_margin;
--
--	ctrl = JZ_LCD_CTRL_OFUP | JZ_LCD_CTRL_BURST_16;
--
--	switch (pdata->bpp) {
--	case 1:
--		ctrl |= JZ_LCD_CTRL_BPP_1;
--		break;
--	case 2:
--		ctrl |= JZ_LCD_CTRL_BPP_2;
--		break;
--	case 4:
--		ctrl |= JZ_LCD_CTRL_BPP_4;
--		break;
--	case 8:
--		ctrl |= JZ_LCD_CTRL_BPP_8;
--	break;
--	case 15:
--		ctrl |= JZ_LCD_CTRL_RGB555; /* Falltrough */
--	case 16:
--		ctrl |= JZ_LCD_CTRL_BPP_15_16;
--		break;
--	case 18:
--	case 24:
--	case 32:
--		ctrl |= JZ_LCD_CTRL_BPP_18_24;
--		break;
--	default:
--		break;
+-	if (!chan->desc) {
+-		vdesc = vchan_next_desc(&chan->vchan);
+-		if (!vdesc)
+-			return 0;
+-		chan->desc = to_jz4740_dma_desc(vdesc);
+-		chan->next_sg = 0;
 -	}
 -
--	cfg = pdata->lcd_type & 0xf;
+-	if (chan->next_sg == chan->desc->num_sgs)
+-		chan->next_sg = 0;
 -
--	if (!(mode->sync & FB_SYNC_HOR_HIGH_ACT))
--		cfg |= JZ_LCD_CFG_HSYNC_ACTIVE_LOW;
+-	sg = &chan->desc->sg[chan->next_sg];
 -
--	if (!(mode->sync & FB_SYNC_VERT_HIGH_ACT))
--		cfg |= JZ_LCD_CFG_VSYNC_ACTIVE_LOW;
--
--	if (pdata->pixclk_falling_edge)
--		cfg |= JZ_LCD_CFG_PCLK_FALLING_EDGE;
--
--	if (pdata->date_enable_active_low)
--		cfg |= JZ_LCD_CFG_DE_ACTIVE_LOW;
--
--	if (pdata->lcd_type == JZ_LCD_TYPE_GENERIC_18_BIT)
--		cfg |= JZ_LCD_CFG_18_BIT;
--
--	if (mode->pixclock) {
--		rate = PICOS2KHZ(mode->pixclock) * 1000;
--		mode->refresh = rate / vt / ht;
+-	if (chan->desc->direction == DMA_MEM_TO_DEV) {
+-		src_addr = sg->addr;
+-		dst_addr = chan->fifo_addr;
 -	} else {
--		if (pdata->lcd_type == JZ_LCD_TYPE_8BIT_SERIAL)
--			rate = mode->refresh * (vt + 2 * mode->xres) * ht;
--		else
--			rate = mode->refresh * vt * ht;
--
--		mode->pixclock = KHZ2PICOS(rate / 1000);
+-		src_addr = chan->fifo_addr;
+-		dst_addr = sg->addr;
 -	}
+-	jz4740_dma_write(dmadev, JZ_REG_DMA_SRC_ADDR(chan->id), src_addr);
+-	jz4740_dma_write(dmadev, JZ_REG_DMA_DST_ADDR(chan->id), dst_addr);
+-	jz4740_dma_write(dmadev, JZ_REG_DMA_TRANSFER_COUNT(chan->id),
+-			sg->len >> chan->transfer_shift);
 -
--	mutex_lock(&jzfb->lock);
--	if (!jzfb->is_enabled)
--		clk_enable(jzfb->ldclk);
--	else
--		ctrl |= JZ_LCD_CTRL_ENABLE;
+-	chan->next_sg++;
 -
--	switch (pdata->lcd_type) {
--	case JZ_LCD_TYPE_SPECIAL_TFT_1:
--	case JZ_LCD_TYPE_SPECIAL_TFT_2:
--	case JZ_LCD_TYPE_SPECIAL_TFT_3:
--		writel(pdata->special_tft_config.spl, jzfb->base + JZ_REG_LCD_SPL);
--		writel(pdata->special_tft_config.cls, jzfb->base + JZ_REG_LCD_CLS);
--		writel(pdata->special_tft_config.ps, jzfb->base + JZ_REG_LCD_PS);
--		writel(pdata->special_tft_config.ps, jzfb->base + JZ_REG_LCD_REV);
--		break;
--	default:
--		cfg |= JZ_LCD_CFG_PS_DISABLE;
--		cfg |= JZ_LCD_CFG_CLS_DISABLE;
--		cfg |= JZ_LCD_CFG_SPL_DISABLE;
--		cfg |= JZ_LCD_CFG_REV_DISABLE;
--		break;
--	}
+-	jz4740_dma_write_mask(dmadev, JZ_REG_DMA_STATUS_CTRL(chan->id),
+-			JZ_DMA_STATUS_CTRL_NO_DESC | JZ_DMA_STATUS_CTRL_ENABLE,
+-			JZ_DMA_STATUS_CTRL_HALT | JZ_DMA_STATUS_CTRL_NO_DESC |
+-			JZ_DMA_STATUS_CTRL_ENABLE);
 -
--	writel(mode->hsync_len, jzfb->base + JZ_REG_LCD_HSYNC);
--	writel(mode->vsync_len, jzfb->base + JZ_REG_LCD_VSYNC);
--
--	writel((ht << 16) | vt, jzfb->base + JZ_REG_LCD_VAT);
--
--	writel((hds << 16) | hde, jzfb->base + JZ_REG_LCD_DAH);
--	writel((vds << 16) | vde, jzfb->base + JZ_REG_LCD_DAV);
--
--	writel(cfg, jzfb->base + JZ_REG_LCD_CFG);
--
--	writel(ctrl, jzfb->base + JZ_REG_LCD_CTRL);
--
--	if (!jzfb->is_enabled)
--		clk_disable_unprepare(jzfb->ldclk);
--
--	mutex_unlock(&jzfb->lock);
--
--	clk_set_rate(jzfb->lpclk, rate);
--	clk_set_rate(jzfb->ldclk, rate * 3);
+-	jz4740_dma_write_mask(dmadev, JZ_REG_DMA_CTRL,
+-			JZ_DMA_CTRL_ENABLE,
+-			JZ_DMA_CTRL_HALT | JZ_DMA_CTRL_ENABLE);
 -
 -	return 0;
 -}
 -
--static void jzfb_enable(struct jzfb *jzfb)
+-static void jz4740_dma_chan_irq(struct jz4740_dmaengine_chan *chan)
 -{
--	uint32_t ctrl;
--
--	clk_prepare_enable(jzfb->ldclk);
--
--	pinctrl_pm_select_default_state(&jzfb->pdev->dev);
--
--	writel(0, jzfb->base + JZ_REG_LCD_STATE);
--
--	writel(jzfb->framedesc->next, jzfb->base + JZ_REG_LCD_DA0);
--
--	ctrl = readl(jzfb->base + JZ_REG_LCD_CTRL);
--	ctrl |= JZ_LCD_CTRL_ENABLE;
--	ctrl &= ~JZ_LCD_CTRL_DISABLE;
--	writel(ctrl, jzfb->base + JZ_REG_LCD_CTRL);
--}
--
--static void jzfb_disable(struct jzfb *jzfb)
--{
--	uint32_t ctrl;
--
--	ctrl = readl(jzfb->base + JZ_REG_LCD_CTRL);
--	ctrl |= JZ_LCD_CTRL_DISABLE;
--	writel(ctrl, jzfb->base + JZ_REG_LCD_CTRL);
--	do {
--		ctrl = readl(jzfb->base + JZ_REG_LCD_STATE);
--	} while (!(ctrl & JZ_LCD_STATE_DISABLED));
--
--	pinctrl_pm_select_sleep_state(&jzfb->pdev->dev);
--
--	clk_disable_unprepare(jzfb->ldclk);
--}
--
--static int jzfb_blank(int blank_mode, struct fb_info *info)
--{
--	struct jzfb *jzfb = info->par;
--
--	switch (blank_mode) {
--	case FB_BLANK_UNBLANK:
--		mutex_lock(&jzfb->lock);
--		if (jzfb->is_enabled) {
--			mutex_unlock(&jzfb->lock);
--			return 0;
+-	spin_lock(&chan->vchan.lock);
+-	if (chan->desc) {
+-		if (chan->desc->cyclic) {
+-			vchan_cyclic_callback(&chan->desc->vdesc);
+-		} else {
+-			if (chan->next_sg == chan->desc->num_sgs) {
+-				list_del(&chan->desc->vdesc.node);
+-				vchan_cookie_complete(&chan->desc->vdesc);
+-				chan->desc = NULL;
+-			}
 -		}
+-	}
+-	jz4740_dma_start_transfer(chan);
+-	spin_unlock(&chan->vchan.lock);
+-}
 -
--		jzfb_enable(jzfb);
--		jzfb->is_enabled = 1;
+-static irqreturn_t jz4740_dma_irq(int irq, void *devid)
+-{
+-	struct jz4740_dma_dev *dmadev = devid;
+-	uint32_t irq_status;
+-	unsigned int i;
 -
--		mutex_unlock(&jzfb->lock);
--		break;
--	default:
--		mutex_lock(&jzfb->lock);
--		if (!jzfb->is_enabled) {
--			mutex_unlock(&jzfb->lock);
--			return 0;
+-	irq_status = readl(dmadev->base + JZ_REG_DMA_IRQ);
+-
+-	for (i = 0; i < 6; ++i) {
+-		if (irq_status & (1 << i)) {
+-			jz4740_dma_write_mask(dmadev,
+-				JZ_REG_DMA_STATUS_CTRL(i), 0,
+-				JZ_DMA_STATUS_CTRL_ENABLE |
+-				JZ_DMA_STATUS_CTRL_TRANSFER_DONE);
+-
+-			jz4740_dma_chan_irq(&dmadev->chan[i]);
 -		}
--
--		jzfb_disable(jzfb);
--		jzfb->is_enabled = 0;
--
--		mutex_unlock(&jzfb->lock);
--		break;
 -	}
 -
--	return 0;
+-	return IRQ_HANDLED;
 -}
 -
--static int jzfb_alloc_devmem(struct jzfb *jzfb)
+-static void jz4740_dma_issue_pending(struct dma_chan *c)
 -{
--	int max_videosize = 0;
--	struct fb_videomode *mode = jzfb->pdata->modes;
--	int i;
+-	struct jz4740_dmaengine_chan *chan = to_jz4740_dma_chan(c);
+-	unsigned long flags;
 -
--	for (i = 0; i < jzfb->pdata->num_modes; ++mode, ++i) {
--		if (max_videosize < mode->xres * mode->yres)
--			max_videosize = mode->xres * mode->yres;
+-	spin_lock_irqsave(&chan->vchan.lock, flags);
+-	if (vchan_issue_pending(&chan->vchan) && !chan->desc)
+-		jz4740_dma_start_transfer(chan);
+-	spin_unlock_irqrestore(&chan->vchan.lock, flags);
+-}
+-
+-static struct dma_async_tx_descriptor *jz4740_dma_prep_slave_sg(
+-	struct dma_chan *c, struct scatterlist *sgl,
+-	unsigned int sg_len, enum dma_transfer_direction direction,
+-	unsigned long flags, void *context)
+-{
+-	struct jz4740_dmaengine_chan *chan = to_jz4740_dma_chan(c);
+-	struct jz4740_dma_desc *desc;
+-	struct scatterlist *sg;
+-	unsigned int i;
+-
+-	desc = jz4740_dma_alloc_desc(sg_len);
+-	if (!desc)
+-		return NULL;
+-
+-	for_each_sg(sgl, sg, sg_len, i) {
+-		desc->sg[i].addr = sg_dma_address(sg);
+-		desc->sg[i].len = sg_dma_len(sg);
 -	}
 -
--	max_videosize *= jzfb_get_controller_bpp(jzfb) >> 3;
+-	desc->num_sgs = sg_len;
+-	desc->direction = direction;
+-	desc->cyclic = false;
 -
--	jzfb->framedesc = dma_alloc_coherent(&jzfb->pdev->dev,
--					sizeof(*jzfb->framedesc),
--					&jzfb->framedesc_phys, GFP_KERNEL);
+-	jz4740_dma_slave_config_write(c, &chan->config, direction);
 -
--	if (!jzfb->framedesc)
--		return -ENOMEM;
--
--	jzfb->vidmem_size = PAGE_ALIGN(max_videosize);
--	jzfb->vidmem = dma_alloc_coherent(&jzfb->pdev->dev,
--					jzfb->vidmem_size,
--					&jzfb->vidmem_phys, GFP_KERNEL);
--
--	if (!jzfb->vidmem)
--		goto err_free_framedesc;
--
--	jzfb->framedesc->next = jzfb->framedesc_phys;
--	jzfb->framedesc->addr = jzfb->vidmem_phys;
--	jzfb->framedesc->id = 0xdeafbead;
--	jzfb->framedesc->cmd = 0;
--	jzfb->framedesc->cmd |= max_videosize / 4;
--
--	return 0;
--
--err_free_framedesc:
--	dma_free_coherent(&jzfb->pdev->dev, sizeof(*jzfb->framedesc),
--				jzfb->framedesc, jzfb->framedesc_phys);
--	return -ENOMEM;
+-	return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
 -}
 -
--static void jzfb_free_devmem(struct jzfb *jzfb)
+-static struct dma_async_tx_descriptor *jz4740_dma_prep_dma_cyclic(
+-	struct dma_chan *c, dma_addr_t buf_addr, size_t buf_len,
+-	size_t period_len, enum dma_transfer_direction direction,
+-	unsigned long flags)
 -{
--	dma_free_coherent(&jzfb->pdev->dev, jzfb->vidmem_size,
--				jzfb->vidmem, jzfb->vidmem_phys);
--	dma_free_coherent(&jzfb->pdev->dev, sizeof(*jzfb->framedesc),
--				jzfb->framedesc, jzfb->framedesc_phys);
+-	struct jz4740_dmaengine_chan *chan = to_jz4740_dma_chan(c);
+-	struct jz4740_dma_desc *desc;
+-	unsigned int num_periods, i;
+-
+-	if (buf_len % period_len)
+-		return NULL;
+-
+-	num_periods = buf_len / period_len;
+-
+-	desc = jz4740_dma_alloc_desc(num_periods);
+-	if (!desc)
+-		return NULL;
+-
+-	for (i = 0; i < num_periods; i++) {
+-		desc->sg[i].addr = buf_addr;
+-		desc->sg[i].len = period_len;
+-		buf_addr += period_len;
+-	}
+-
+-	desc->num_sgs = num_periods;
+-	desc->direction = direction;
+-	desc->cyclic = true;
+-
+-	jz4740_dma_slave_config_write(c, &chan->config, direction);
+-
+-	return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
 -}
 -
--static struct  fb_ops jzfb_ops = {
--	.owner = THIS_MODULE,
--	.fb_check_var = jzfb_check_var,
--	.fb_set_par = jzfb_set_par,
--	.fb_blank = jzfb_blank,
--	.fb_fillrect	= sys_fillrect,
--	.fb_copyarea	= sys_copyarea,
--	.fb_imageblit	= sys_imageblit,
--	.fb_setcolreg = jzfb_setcolreg,
--};
--
--static int jzfb_probe(struct platform_device *pdev)
+-static size_t jz4740_dma_desc_residue(struct jz4740_dmaengine_chan *chan,
+-	struct jz4740_dma_desc *desc, unsigned int next_sg)
 -{
+-	struct jz4740_dma_dev *dmadev = jz4740_dma_chan_get_dev(chan);
+-	unsigned int residue, count;
+-	unsigned int i;
+-
+-	residue = 0;
+-
+-	for (i = next_sg; i < desc->num_sgs; i++)
+-		residue += desc->sg[i].len;
+-
+-	if (next_sg != 0) {
+-		count = jz4740_dma_read(dmadev,
+-			JZ_REG_DMA_TRANSFER_COUNT(chan->id));
+-		residue += count << chan->transfer_shift;
+-	}
+-
+-	return residue;
+-}
+-
+-static enum dma_status jz4740_dma_tx_status(struct dma_chan *c,
+-	dma_cookie_t cookie, struct dma_tx_state *state)
+-{
+-	struct jz4740_dmaengine_chan *chan = to_jz4740_dma_chan(c);
+-	struct virt_dma_desc *vdesc;
+-	enum dma_status status;
+-	unsigned long flags;
+-
+-	status = dma_cookie_status(c, cookie, state);
+-	if (status == DMA_COMPLETE || !state)
+-		return status;
+-
+-	spin_lock_irqsave(&chan->vchan.lock, flags);
+-	vdesc = vchan_find_desc(&chan->vchan, cookie);
+-	if (cookie == chan->desc->vdesc.tx.cookie) {
+-		state->residue = jz4740_dma_desc_residue(chan, chan->desc,
+-				chan->next_sg);
+-	} else if (vdesc) {
+-		state->residue = jz4740_dma_desc_residue(chan,
+-				to_jz4740_dma_desc(vdesc), 0);
+-	} else {
+-		state->residue = 0;
+-	}
+-	spin_unlock_irqrestore(&chan->vchan.lock, flags);
+-
+-	return status;
+-}
+-
+-static void jz4740_dma_free_chan_resources(struct dma_chan *c)
+-{
+-	vchan_free_chan_resources(to_virt_chan(c));
+-}
+-
+-static void jz4740_dma_desc_free(struct virt_dma_desc *vdesc)
+-{
+-	kfree(container_of(vdesc, struct jz4740_dma_desc, vdesc));
+-}
+-
+-#define JZ4740_DMA_BUSWIDTHS (BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) | \
+-	BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | BIT(DMA_SLAVE_BUSWIDTH_4_BYTES))
+-
+-static int jz4740_dma_probe(struct platform_device *pdev)
+-{
+-	struct jz4740_dmaengine_chan *chan;
+-	struct jz4740_dma_dev *dmadev;
+-	struct dma_device *dd;
+-	unsigned int i;
+-	struct resource *res;
 -	int ret;
--	struct jzfb *jzfb;
--	struct fb_info *fb;
--	struct jz4740_fb_platform_data *pdata = pdev->dev.platform_data;
--	struct resource *mem;
+-	int irq;
 -
--	if (!pdata) {
--		dev_err(&pdev->dev, "Missing platform data\n");
--		return -ENXIO;
+-	dmadev = devm_kzalloc(&pdev->dev, sizeof(*dmadev), GFP_KERNEL);
+-	if (!dmadev)
+-		return -EINVAL;
+-
+-	dd = &dmadev->ddev;
+-
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	dmadev->base = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(dmadev->base))
+-		return PTR_ERR(dmadev->base);
+-
+-	dmadev->clk = clk_get(&pdev->dev, "dma");
+-	if (IS_ERR(dmadev->clk))
+-		return PTR_ERR(dmadev->clk);
+-
+-	clk_prepare_enable(dmadev->clk);
+-
+-	dma_cap_set(DMA_SLAVE, dd->cap_mask);
+-	dma_cap_set(DMA_CYCLIC, dd->cap_mask);
+-	dd->device_free_chan_resources = jz4740_dma_free_chan_resources;
+-	dd->device_tx_status = jz4740_dma_tx_status;
+-	dd->device_issue_pending = jz4740_dma_issue_pending;
+-	dd->device_prep_slave_sg = jz4740_dma_prep_slave_sg;
+-	dd->device_prep_dma_cyclic = jz4740_dma_prep_dma_cyclic;
+-	dd->device_config = jz4740_dma_slave_config;
+-	dd->device_terminate_all = jz4740_dma_terminate_all;
+-	dd->src_addr_widths = JZ4740_DMA_BUSWIDTHS;
+-	dd->dst_addr_widths = JZ4740_DMA_BUSWIDTHS;
+-	dd->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+-	dd->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+-	dd->dev = &pdev->dev;
+-	INIT_LIST_HEAD(&dd->channels);
+-
+-	for (i = 0; i < JZ_DMA_NR_CHANS; i++) {
+-		chan = &dmadev->chan[i];
+-		chan->id = i;
+-		chan->vchan.desc_free = jz4740_dma_desc_free;
+-		vchan_init(&chan->vchan, dd);
 -	}
 -
--	fb = framebuffer_alloc(sizeof(struct jzfb), &pdev->dev);
--	if (!fb)
--		return -ENOMEM;
+-	ret = dma_async_device_register(dd);
+-	if (ret)
+-		goto err_clk;
 -
--	fb->fbops = &jzfb_ops;
--	fb->flags = FBINFO_DEFAULT;
+-	irq = platform_get_irq(pdev, 0);
+-	ret = request_irq(irq, jz4740_dma_irq, 0, dev_name(&pdev->dev), dmadev);
+-	if (ret)
+-		goto err_unregister;
 -
--	jzfb = fb->par;
--	jzfb->pdev = pdev;
--	jzfb->pdata = pdata;
--
--	jzfb->ldclk = devm_clk_get(&pdev->dev, "lcd");
--	if (IS_ERR(jzfb->ldclk)) {
--		ret = PTR_ERR(jzfb->ldclk);
--		dev_err(&pdev->dev, "Failed to get lcd clock: %d\n", ret);
--		goto err_framebuffer_release;
--	}
--
--	jzfb->lpclk = devm_clk_get(&pdev->dev, "lcd_pclk");
--	if (IS_ERR(jzfb->lpclk)) {
--		ret = PTR_ERR(jzfb->lpclk);
--		dev_err(&pdev->dev, "Failed to get lcd pixel clock: %d\n", ret);
--		goto err_framebuffer_release;
--	}
--
--	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	jzfb->base = devm_ioremap_resource(&pdev->dev, mem);
--	if (IS_ERR(jzfb->base)) {
--		ret = PTR_ERR(jzfb->base);
--		goto err_framebuffer_release;
--	}
--
--	platform_set_drvdata(pdev, jzfb);
--
--	mutex_init(&jzfb->lock);
--
--	fb_videomode_to_modelist(pdata->modes, pdata->num_modes,
--				 &fb->modelist);
--	fb_videomode_to_var(&fb->var, pdata->modes);
--	fb->var.bits_per_pixel = pdata->bpp;
--	jzfb_check_var(&fb->var, fb);
--
--	ret = jzfb_alloc_devmem(jzfb);
--	if (ret) {
--		dev_err(&pdev->dev, "Failed to allocate video memory\n");
--		goto err_framebuffer_release;
--	}
--
--	fb->fix = jzfb_fix;
--	fb->fix.line_length = fb->var.bits_per_pixel * fb->var.xres / 8;
--	fb->fix.mmio_start = mem->start;
--	fb->fix.mmio_len = resource_size(mem);
--	fb->fix.smem_start = jzfb->vidmem_phys;
--	fb->fix.smem_len =  fb->fix.line_length * fb->var.yres;
--	fb->screen_base = jzfb->vidmem;
--	fb->pseudo_palette = jzfb->pseudo_palette;
--
--	fb_alloc_cmap(&fb->cmap, 256, 0);
--
--	clk_prepare_enable(jzfb->ldclk);
--	jzfb->is_enabled = 1;
--
--	writel(jzfb->framedesc->next, jzfb->base + JZ_REG_LCD_DA0);
--
--	fb->mode = NULL;
--	jzfb_set_par(fb);
--
--	ret = register_framebuffer(fb);
--	if (ret) {
--		dev_err(&pdev->dev, "Failed to register framebuffer: %d\n", ret);
--		goto err_free_devmem;
--	}
--
--	jzfb->fb = fb;
+-	platform_set_drvdata(pdev, dmadev);
 -
 -	return 0;
 -
--err_free_devmem:
--	fb_dealloc_cmap(&fb->cmap);
--	jzfb_free_devmem(jzfb);
--err_framebuffer_release:
--	framebuffer_release(fb);
+-err_unregister:
+-	dma_async_device_unregister(dd);
+-err_clk:
+-	clk_disable_unprepare(dmadev->clk);
 -	return ret;
 -}
 -
--static int jzfb_remove(struct platform_device *pdev)
+-static void jz4740_cleanup_vchan(struct dma_device *dmadev)
 -{
--	struct jzfb *jzfb = platform_get_drvdata(pdev);
+-	struct jz4740_dmaengine_chan *chan, *_chan;
 -
--	jzfb_blank(FB_BLANK_POWERDOWN, jzfb->fb);
+-	list_for_each_entry_safe(chan, _chan,
+-				&dmadev->channels, vchan.chan.device_node) {
+-		list_del(&chan->vchan.chan.device_node);
+-		tasklet_kill(&chan->vchan.task);
+-	}
+-}
 -
--	fb_dealloc_cmap(&jzfb->fb->cmap);
--	jzfb_free_devmem(jzfb);
 -
--	framebuffer_release(jzfb->fb);
+-static int jz4740_dma_remove(struct platform_device *pdev)
+-{
+-	struct jz4740_dma_dev *dmadev = platform_get_drvdata(pdev);
+-	int irq = platform_get_irq(pdev, 0);
+-
+-	free_irq(irq, dmadev);
+-
+-	jz4740_cleanup_vchan(&dmadev->ddev);
+-	dma_async_device_unregister(&dmadev->ddev);
+-	clk_disable_unprepare(dmadev->clk);
 -
 -	return 0;
 -}
 -
--#ifdef CONFIG_PM
--
--static int jzfb_suspend(struct device *dev)
--{
--	struct jzfb *jzfb = dev_get_drvdata(dev);
--
--	console_lock();
--	fb_set_suspend(jzfb->fb, 1);
--	console_unlock();
--
--	mutex_lock(&jzfb->lock);
--	if (jzfb->is_enabled)
--		jzfb_disable(jzfb);
--	mutex_unlock(&jzfb->lock);
--
--	return 0;
--}
--
--static int jzfb_resume(struct device *dev)
--{
--	struct jzfb *jzfb = dev_get_drvdata(dev);
--	clk_prepare_enable(jzfb->ldclk);
--
--	mutex_lock(&jzfb->lock);
--	if (jzfb->is_enabled)
--		jzfb_enable(jzfb);
--	mutex_unlock(&jzfb->lock);
--
--	console_lock();
--	fb_set_suspend(jzfb->fb, 0);
--	console_unlock();
--
--	return 0;
--}
--
--static const struct dev_pm_ops jzfb_pm_ops = {
--	.suspend	= jzfb_suspend,
--	.resume		= jzfb_resume,
--	.poweroff	= jzfb_suspend,
--	.restore	= jzfb_resume,
--};
--
--#define JZFB_PM_OPS (&jzfb_pm_ops)
--
--#else
--#define JZFB_PM_OPS NULL
--#endif
--
--static struct platform_driver jzfb_driver = {
--	.probe = jzfb_probe,
--	.remove = jzfb_remove,
+-static struct platform_driver jz4740_dma_driver = {
+-	.probe = jz4740_dma_probe,
+-	.remove = jz4740_dma_remove,
 -	.driver = {
--		.name = "jz4740-fb",
--		.pm = JZFB_PM_OPS,
+-		.name = "jz4740-dma",
 -	},
 -};
--module_platform_driver(jzfb_driver);
+-module_platform_driver(jz4740_dma_driver);
 -
--MODULE_LICENSE("GPL");
 -MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
--MODULE_DESCRIPTION("JZ4740 SoC LCD framebuffer driver");
--MODULE_ALIAS("platform:jz4740-fb");
+-MODULE_DESCRIPTION("JZ4740 DMA driver");
+-MODULE_LICENSE("GPL v2");
 -- 
 2.21.0.593.g511ec345e18
 

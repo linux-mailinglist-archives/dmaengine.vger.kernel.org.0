@@ -2,154 +2,85 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B106C74FB1
-	for <lists+dmaengine@lfdr.de>; Thu, 25 Jul 2019 15:39:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6879274FE5
+	for <lists+dmaengine@lfdr.de>; Thu, 25 Jul 2019 15:44:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389363AbfGYNjD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 25 Jul 2019 09:39:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387959AbfGYNjC (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:39:02 -0400
-Received: from localhost (unknown [106.200.241.217])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CAAA2238C;
-        Thu, 25 Jul 2019 13:39:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564061941;
-        bh=GNnRLDXagjW24uJjaZ+NEZpnlhAqk6UFVb6NIhulu8I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rXj010Fl0AHCZLs0iIYnzBuO54f2B51sWeruKH8aY5fRC17oXxueIGxOyFSHjUhpC
-         tXTU2wyNx3FHOOqAMpCYMO0oX1X9FpRfkzWusLcxCb3v8ckoNxft9V/rpoT9GlsjCz
-         bAU7oHic/n3Cgbi9l8Ivc+fTApDA/O7SxAwxD0n8=
-Date:   Thu, 25 Jul 2019 19:07:48 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] dmaengine: ti: omap-dma: Improved memcpy polling
- support
-Message-ID: <20190725133748.GX12733@vkoul-mobl.Dlink>
-References: <20190716082459.1222-1-peter.ujfalusi@ti.com>
- <20190716082459.1222-3-peter.ujfalusi@ti.com>
+        id S2390185AbfGYNoM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 25 Jul 2019 09:44:12 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35916 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389989AbfGYNoL (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 25 Jul 2019 09:44:11 -0400
+Received: by mail-lj1-f194.google.com with SMTP id i21so48079657ljj.3;
+        Thu, 25 Jul 2019 06:44:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Zzq0V46zGQJFFxV1hhNVXna2f5OC8OivFBS02+sNjMg=;
+        b=hSfaFMHLP3bpAZsdajQOfeEOf7tn9zZJSdN4l+ZCJ54jTkum1N8UB14d18rCvmuYMZ
+         JxuWirUK64kwTMKQZxpw2NYnEi6V/DW6ytMNFgw+WuGM57/2XW8gSP9Ufai7cpX/yjjV
+         IJatlpnlumVglK5tqgUl9IqN/y+KuP+4AjiRvGeVeb6zG4PZcofItZ/f9DxTPCXL5Uts
+         2dvGBuAI/+6hI5WtUPehu6e5LqmQuDqwH7vOMpXsxFLfK1vmVt97YuEPcGbMbXYHGdN9
+         so62rqOWM/nnu7uKzTEUCEAgh/MVkp1l9mhR61YIQgh7uTPfmGJ9TM//52IgxnccGWi5
+         J6/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Zzq0V46zGQJFFxV1hhNVXna2f5OC8OivFBS02+sNjMg=;
+        b=oir4mWSp8Mhabup7tSw0sFLsey1W75cxr2QgEytQIofB7y+q2oFsf2qAcJzHeMketR
+         Ihtchyg8fCThmz3X2caQYC0SyhuadNfq2zug3Lrcxt+kclXomuSuK3g2rh95tNm3DdQT
+         OjmFyyf56KvZh7foX+EIWsrYZe/655DMrl4Mb4J+xSUU5qXUpspCI2QaXhFCkWJo69I+
+         P57XVC0rfFpYDrSF1v5iv6XLj78FitaBwmgHczI1RyCPol3Xfvc0Fu9YXH24Fu77DoPK
+         7cMPyTT0WCsIAahkKq6Ej81rDs6L/NlZSru+RJh2fTpXb5qwySNBxZkLgC453IYoaDn6
+         bStA==
+X-Gm-Message-State: APjAAAWc3pxiuPu0VKREuLNKT06bOsAN7fWhOKF6JkMv2hLueSGpxTFA
+        ASRbif73/BGvOvcAO5EJd83wjW1h
+X-Google-Smtp-Source: APXvYqwJ+a86s+heHkK1HhGkllZIWeVy1ebTHF8Rvfu8Mx8SskthUAKh5juapodrki0bdDPCSESguw==
+X-Received: by 2002:a2e:a311:: with SMTP id l17mr44793518lje.214.1564062249353;
+        Thu, 25 Jul 2019 06:44:09 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-220-99.pppoe.mtu-net.ru. [91.78.220.99])
+        by smtp.googlemail.com with ESMTPSA id r5sm7554901lfn.89.2019.07.25.06.44.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 06:44:08 -0700 (PDT)
+Subject: Re: [PATCH v5] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190705150519.18171-1-digetx@gmail.com>
+ <20190725102613.GT12733@vkoul-mobl.Dlink>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e8dc55b5-586c-02a5-ec30-67bf39c87dda@gmail.com>
+Date:   Thu, 25 Jul 2019 16:44:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190716082459.1222-3-peter.ujfalusi@ti.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190725102613.GT12733@vkoul-mobl.Dlink>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 16-07-19, 11:24, Peter Ujfalusi wrote:
-> When a DMA client driver does not set the DMA_PREP_INTERRUPT because it
-> does not want to use interrupts for DMA completion or because it can not
-> rely on DMA interrupts due to executing the memcpy when interrupts are
-> disabled it will poll the status of the transfer.
+25.07.2019 13:26, Vinod Koul пишет:
+> On 05-07-19, 18:05, Dmitry Osipenko wrote:
+>> Tegra's APB DMA engine updates words counter after each transferred burst
+>> of data, hence it can report transfer's residual with more fidelity which
+>> may be required in cases like audio playback. In particular this fixes
+>> audio stuttering during playback in a chromium web browser. The patch is
+>> based on the original work that was made by Ben Dooks and a patch from
+>> downstream kernel. It was tested on Tegra20 and Tegra30 devices.
 > 
-> If the interrupts are enabled then the cookie will be set completed in the
-> interrupt handler so only check in HW completion when the polling is really
-> needed.
+> Applied, thanks
 > 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  drivers/dma/ti/omap-dma.c | 44 +++++++++++++++++++++++++--------------
->  1 file changed, 28 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-> index 029c0bd550d5..966d8f0323b5 100644
-> --- a/drivers/dma/ti/omap-dma.c
-> +++ b/drivers/dma/ti/omap-dma.c
-> @@ -91,6 +91,7 @@ struct omap_desc {
->  	bool using_ll;
->  	enum dma_transfer_direction dir;
->  	dma_addr_t dev_addr;
-> +	bool polled;
->  
->  	int32_t fi;		/* for OMAP_DMA_SYNC_PACKET / double indexing */
->  	int16_t ei;		/* for double indexing */
-> @@ -815,26 +816,20 @@ static enum dma_status omap_dma_tx_status(struct dma_chan *chan,
->  	struct virt_dma_desc *vd;
->  	enum dma_status ret;
->  	unsigned long flags;
-> +	struct omap_desc *d = NULL;
->  
->  	ret = dma_cookie_status(chan, cookie, txstate);
-> -
-> -	if (!c->paused && c->running) {
-> -		uint32_t ccr = omap_dma_chan_read(c, CCR);
-> -		/*
-> -		 * The channel is no longer active, set the return value
-> -		 * accordingly
-> -		 */
-> -		if (!(ccr & CCR_ENABLE))
-> -			ret = DMA_COMPLETE;
-> -	}
-> -
-> -	if (ret == DMA_COMPLETE || !txstate)
-> +	if (ret == DMA_COMPLETE)
 
-why do you want to continue for txstate being null?
-Also it would lead to NULL ptr deref for txstate
-
->  		return ret;
->  
->  	spin_lock_irqsave(&c->vc.lock, flags);
-> +	if (c->desc && c->desc->vd.tx.cookie == cookie)
-> +		d = c->desc;
-> +
-> +	if (!txstate)
-> +		goto out;
->  
-> -	if (c->desc && c->desc->vd.tx.cookie == cookie) {
-> -		struct omap_desc *d = c->desc;
-> +	if (d) {
->  		dma_addr_t pos;
->  
->  		if (d->dir == DMA_MEM_TO_DEV)
-> @@ -851,8 +846,22 @@ static enum dma_status omap_dma_tx_status(struct dma_chan *chan,
->  		txstate->residue = 0;
->  	}
->  
-> -	if (ret == DMA_IN_PROGRESS && c->paused)
-> +out:
-> +	if (ret == DMA_IN_PROGRESS && c->paused) {
->  		ret = DMA_PAUSED;
-> +	} else if (d && d->polled && c->running) {
-> +		uint32_t ccr = omap_dma_chan_read(c, CCR);
-> +		/*
-> +		 * The channel is no longer active, set the return value
-> +		 * accordingly and mark it as completed
-> +		 */
-> +		if (!(ccr & CCR_ENABLE)) {
-> +			struct omap_desc *d = c->desc;
-> +			ret = DMA_COMPLETE;
-> +			omap_dma_start_desc(c);
-> +			vchan_cookie_complete(&d->vd);
-> +		}
-> +	}
->  
->  	spin_unlock_irqrestore(&c->vc.lock, flags);
->  
-> @@ -1180,7 +1189,10 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_memcpy(
->  	d->ccr = c->ccr;
->  	d->ccr |= CCR_DST_AMODE_POSTINC | CCR_SRC_AMODE_POSTINC;
->  
-> -	d->cicr = CICR_DROP_IE | CICR_FRAME_IE;
-> +	if (tx_flags & DMA_PREP_INTERRUPT)
-> +		d->cicr |= CICR_FRAME_IE;
-> +	else
-> +		d->polled = true;
->  
->  	d->csdp = data_type;
->  
-> -- 
-> Peter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
--- 
-~Vinod
+Thanks!

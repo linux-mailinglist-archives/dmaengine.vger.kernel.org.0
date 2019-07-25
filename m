@@ -2,24 +2,24 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2013775A38
-	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2019 00:04:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D72775A41
+	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2019 00:04:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbfGYWDg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 25 Jul 2019 18:03:36 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:47572 "EHLO
+        id S1726822AbfGYWD4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 25 Jul 2019 18:03:56 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:47668 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbfGYWDf (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 25 Jul 2019 18:03:35 -0400
+        with ESMTP id S1726761AbfGYWDz (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 25 Jul 2019 18:03:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1564092213; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1564092232; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=LoJwb2YRwVVG1E+P5Na8ZaIv1qhfmSpN/lRmTil5iU8=;
-        b=lDgIJ/SZVMs0cGICdu3BVH9dCmTiy8zBSbPA/XqifCbIBRNvzpcG7fzZ5EbzQi5mVAxmvI
-        fLfp8K3ay3Ju1PGClbq18Gxdq3dVbJcebSH4q9bdwkGX1uQqvhv/mVXtyiHs2a8zI1MwMd
-        y6lEXPAmtlnsEwGHXa/EibhKiZQYg6A=
+        bh=kG6c+dBRiU4IJzRctsHNtNGVstZsDkLBqJmKFpZWVI0=;
+        b=xcMZ3vr4Og+UnYIZ1sEBJx/H1fnovdEY/lRPE0PuLHULu7DSMdgpUbpVjOouSrigzrK+Kx
+        Lfhj0/gWQTmEIHn3jhBz2kis/+ZQjpgPFdA+4jvTSAII8sJgXAXHQ88ufYRZVW8mxJLHUd
+        UCkCwPvRq++kaQ5o1OwNHNV+iBy3504=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paul.burton@mips.com>,
@@ -43,9 +43,9 @@ Cc:     od@zcrc.me, devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
         Paul Cercueil <paul@crapouillou.net>,
         Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH 07/11] mtd: rawnand: Drop obsolete JZ4740 NAND driver
-Date:   Thu, 25 Jul 2019 18:02:11 -0400
-Message-Id: <20190725220215.460-8-paul@crapouillou.net>
+Subject: [PATCH 08/11] power/supply: Drop obsolete JZ4740 driver
+Date:   Thu, 25 Jul 2019 18:02:12 -0400
+Message-Id: <20190725220215.460-9-paul@crapouillou.net>
 In-Reply-To: <20190725220215.460-1-paul@crapouillou.net>
 References: <20190725220215.460-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -55,585 +55,478 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-It has been replaced with the newer Ingenic NAND driver.
+It has been replaced with the more mature ingenic-battery driver.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Tested-by: Artur Rojek <contact@artur-rojek.eu>
 ---
- drivers/mtd/nand/raw/ingenic/Kconfig       |   7 -
- drivers/mtd/nand/raw/ingenic/Makefile      |   1 -
- drivers/mtd/nand/raw/ingenic/jz4740_nand.c | 536 ---------------------
- 3 files changed, 544 deletions(-)
- delete mode 100644 drivers/mtd/nand/raw/ingenic/jz4740_nand.c
+ drivers/power/supply/Kconfig          |  11 -
+ drivers/power/supply/Makefile         |   1 -
+ drivers/power/supply/jz4740-battery.c | 421 --------------------------
+ 3 files changed, 433 deletions(-)
+ delete mode 100644 drivers/power/supply/jz4740-battery.c
 
-diff --git a/drivers/mtd/nand/raw/ingenic/Kconfig b/drivers/mtd/nand/raw/ingenic/Kconfig
-index 66b7cffdb0c2..e30feb56b650 100644
---- a/drivers/mtd/nand/raw/ingenic/Kconfig
-+++ b/drivers/mtd/nand/raw/ingenic/Kconfig
-@@ -1,11 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
--config MTD_NAND_JZ4740
--	tristate "JZ4740 NAND controller"
--	depends on MACH_JZ4740 || COMPILE_TEST
--	depends on HAS_IOMEM
--	help
--	  Enables support for NAND Flash on JZ4740 SoC based boards.
--
- config MTD_NAND_JZ4780
- 	tristate "JZ4780 NAND controller"
- 	depends on JZ4780_NEMC
-diff --git a/drivers/mtd/nand/raw/ingenic/Makefile b/drivers/mtd/nand/raw/ingenic/Makefile
-index b63d36889263..4c53f5e759c3 100644
---- a/drivers/mtd/nand/raw/ingenic/Makefile
-+++ b/drivers/mtd/nand/raw/ingenic/Makefile
-@@ -1,5 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
--obj-$(CONFIG_MTD_NAND_JZ4740) += jz4740_nand.o
- obj-$(CONFIG_MTD_NAND_JZ4780) += ingenic_nand.o
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index 5d91b5160b41..6ba602ed7979 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -417,17 +417,6 @@ config CHARGER_PCF50633
+ 	help
+ 	 Say Y to include support for NXP PCF50633 Main Battery Charger.
  
- ingenic_nand-y += ingenic_nand_drv.o
-diff --git a/drivers/mtd/nand/raw/ingenic/jz4740_nand.c b/drivers/mtd/nand/raw/ingenic/jz4740_nand.c
+-config BATTERY_JZ4740
+-	tristate "Ingenic JZ4740 battery"
+-	depends on MACH_JZ4740
+-	depends on MFD_JZ4740_ADC
+-	help
+-	  Say Y to enable support for the battery on Ingenic JZ4740 based
+-	  boards.
+-
+-	  This driver can be build as a module. If so, the module will be
+-	  called jz4740-battery.
+-
+ config BATTERY_RX51
+ 	tristate "Nokia RX-51 (N900) battery driver"
+ 	depends on TWL4030_MADC
+diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
+index 96c2b74b36bf..6c7da920ea83 100644
+--- a/drivers/power/supply/Makefile
++++ b/drivers/power/supply/Makefile
+@@ -58,7 +58,6 @@ obj-$(CONFIG_BATTERY_S3C_ADC)	+= s3c_adc_battery.o
+ obj-$(CONFIG_BATTERY_TWL4030_MADC)	+= twl4030_madc_battery.o
+ obj-$(CONFIG_CHARGER_88PM860X)	+= 88pm860x_charger.o
+ obj-$(CONFIG_CHARGER_PCF50633)	+= pcf50633-charger.o
+-obj-$(CONFIG_BATTERY_JZ4740)	+= jz4740-battery.o
+ obj-$(CONFIG_BATTERY_RX51)	+= rx51_battery.o
+ obj-$(CONFIG_AB8500_BM)		+= ab8500_bmdata.o ab8500_charger.o ab8500_fg.o ab8500_btemp.o abx500_chargalg.o pm2301_charger.o
+ obj-$(CONFIG_CHARGER_CPCAP)	+= cpcap-charger.o
+diff --git a/drivers/power/supply/jz4740-battery.c b/drivers/power/supply/jz4740-battery.c
 deleted file mode 100644
-index acdf674fcc87..000000000000
---- a/drivers/mtd/nand/raw/ingenic/jz4740_nand.c
+index 6366bd61ea9f..000000000000
+--- a/drivers/power/supply/jz4740-battery.c
 +++ /dev/null
-@@ -1,536 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
+@@ -1,421 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
 -/*
-- *  Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
-- *  JZ4740 SoC NAND controller driver
+- * Battery measurement code for Ingenic JZ SOC.
+- *
+- * Copyright (C) 2009 Jiejing Zhang <kzjeef@gmail.com>
+- * Copyright (C) 2010, Lars-Peter Clausen <lars@metafoo.de>
+- *
+- * based on tosa_battery.c
+- *
+- * Copyright (C) 2008 Marek Vasut <marek.vasut@gmail.com>
 - */
 -
--#include <linux/io.h>
--#include <linux/ioport.h>
+-#include <linux/interrupt.h>
 -#include <linux/kernel.h>
 -#include <linux/module.h>
 -#include <linux/platform_device.h>
 -#include <linux/slab.h>
+-#include <linux/io.h>
 -
--#include <linux/mtd/mtd.h>
--#include <linux/mtd/rawnand.h>
--#include <linux/mtd/partitions.h>
+-#include <linux/delay.h>
+-#include <linux/err.h>
+-#include <linux/gpio.h>
+-#include <linux/mfd/core.h>
+-#include <linux/power_supply.h>
 -
--#include <linux/gpio/consumer.h>
+-#include <linux/power/jz4740-battery.h>
+-#include <linux/jz4740-adc.h>
 -
--#include <linux/platform_data/jz4740/jz4740_nand.h>
+-struct jz_battery {
+-	struct jz_battery_platform_data *pdata;
+-	struct platform_device *pdev;
 -
--#define JZ_REG_NAND_CTRL	0x50
--#define JZ_REG_NAND_ECC_CTRL	0x100
--#define JZ_REG_NAND_DATA	0x104
--#define JZ_REG_NAND_PAR0	0x108
--#define JZ_REG_NAND_PAR1	0x10C
--#define JZ_REG_NAND_PAR2	0x110
--#define JZ_REG_NAND_IRQ_STAT	0x114
--#define JZ_REG_NAND_IRQ_CTRL	0x118
--#define JZ_REG_NAND_ERR(x)	(0x11C + ((x) << 2))
--
--#define JZ_NAND_ECC_CTRL_PAR_READY	BIT(4)
--#define JZ_NAND_ECC_CTRL_ENCODING	BIT(3)
--#define JZ_NAND_ECC_CTRL_RS		BIT(2)
--#define JZ_NAND_ECC_CTRL_RESET		BIT(1)
--#define JZ_NAND_ECC_CTRL_ENABLE		BIT(0)
--
--#define JZ_NAND_STATUS_ERR_COUNT	(BIT(31) | BIT(30) | BIT(29))
--#define JZ_NAND_STATUS_PAD_FINISH	BIT(4)
--#define JZ_NAND_STATUS_DEC_FINISH	BIT(3)
--#define JZ_NAND_STATUS_ENC_FINISH	BIT(2)
--#define JZ_NAND_STATUS_UNCOR_ERROR	BIT(1)
--#define JZ_NAND_STATUS_ERROR		BIT(0)
--
--#define JZ_NAND_CTRL_ENABLE_CHIP(x) BIT((x) << 1)
--#define JZ_NAND_CTRL_ASSERT_CHIP(x) BIT(((x) << 1) + 1)
--#define JZ_NAND_CTRL_ASSERT_CHIP_MASK 0xaa
--
--#define JZ_NAND_MEM_CMD_OFFSET 0x08000
--#define JZ_NAND_MEM_ADDR_OFFSET 0x10000
--
--struct jz_nand {
--	struct nand_chip chip;
 -	void __iomem *base;
--	struct resource *mem;
 -
--	unsigned char banks[JZ_NAND_NUM_BANKS];
--	void __iomem *bank_base[JZ_NAND_NUM_BANKS];
--	struct resource *bank_mem[JZ_NAND_NUM_BANKS];
+-	int irq;
+-	int charge_irq;
 -
--	int selected_bank;
+-	const struct mfd_cell *cell;
 -
--	struct gpio_desc *busy_gpio;
--	bool is_reading;
+-	int status;
+-	long voltage;
+-
+-	struct completion read_completion;
+-
+-	struct power_supply *battery;
+-	struct power_supply_desc battery_desc;
+-	struct delayed_work work;
+-
+-	struct mutex lock;
 -};
 -
--static inline struct jz_nand *mtd_to_jz_nand(struct mtd_info *mtd)
+-static inline struct jz_battery *psy_to_jz_battery(struct power_supply *psy)
 -{
--	return container_of(mtd_to_nand(mtd), struct jz_nand, chip);
+-	return power_supply_get_drvdata(psy);
 -}
 -
--static void jz_nand_select_chip(struct nand_chip *chip, int chipnr)
+-static irqreturn_t jz_battery_irq_handler(int irq, void *devid)
 -{
--	struct jz_nand *nand = mtd_to_jz_nand(nand_to_mtd(chip));
--	uint32_t ctrl;
--	int banknr;
+-	struct jz_battery *battery = devid;
 -
--	ctrl = readl(nand->base + JZ_REG_NAND_CTRL);
--	ctrl &= ~JZ_NAND_CTRL_ASSERT_CHIP_MASK;
--
--	if (chipnr == -1) {
--		banknr = -1;
--	} else {
--		banknr = nand->banks[chipnr] - 1;
--		chip->legacy.IO_ADDR_R = nand->bank_base[banknr];
--		chip->legacy.IO_ADDR_W = nand->bank_base[banknr];
--	}
--	writel(ctrl, nand->base + JZ_REG_NAND_CTRL);
--
--	nand->selected_bank = banknr;
+-	complete(&battery->read_completion);
+-	return IRQ_HANDLED;
 -}
 -
--static void jz_nand_cmd_ctrl(struct nand_chip *chip, int dat,
--			     unsigned int ctrl)
+-static long jz_battery_read_voltage(struct jz_battery *battery)
 -{
--	struct jz_nand *nand = mtd_to_jz_nand(nand_to_mtd(chip));
--	uint32_t reg;
--	void __iomem *bank_base = nand->bank_base[nand->selected_bank];
+-	long t;
+-	unsigned long val;
+-	long voltage;
 -
--	BUG_ON(nand->selected_bank < 0);
+-	mutex_lock(&battery->lock);
 -
--	if (ctrl & NAND_CTRL_CHANGE) {
--		BUG_ON((ctrl & NAND_ALE) && (ctrl & NAND_CLE));
--		if (ctrl & NAND_ALE)
--			bank_base += JZ_NAND_MEM_ADDR_OFFSET;
--		else if (ctrl & NAND_CLE)
--			bank_base += JZ_NAND_MEM_CMD_OFFSET;
--		chip->legacy.IO_ADDR_W = bank_base;
+-	reinit_completion(&battery->read_completion);
 -
--		reg = readl(nand->base + JZ_REG_NAND_CTRL);
--		if (ctrl & NAND_NCE)
--			reg |= JZ_NAND_CTRL_ASSERT_CHIP(nand->selected_bank);
+-	enable_irq(battery->irq);
+-	battery->cell->enable(battery->pdev);
+-
+-	t = wait_for_completion_interruptible_timeout(&battery->read_completion,
+-		HZ);
+-
+-	if (t > 0) {
+-		val = readw(battery->base) & 0xfff;
+-
+-		if (battery->pdata->info.voltage_max_design <= 2500000)
+-			val = (val * 78125UL) >> 7UL;
 -		else
--			reg &= ~JZ_NAND_CTRL_ASSERT_CHIP(nand->selected_bank);
--		writel(reg, nand->base + JZ_REG_NAND_CTRL);
+-			val = ((val * 924375UL) >> 9UL) + 33000;
+-		voltage = (long)val;
+-	} else {
+-		voltage = t ? t : -ETIMEDOUT;
 -	}
--	if (dat != NAND_CMD_NONE)
--		writeb(dat, chip->legacy.IO_ADDR_W);
+-
+-	battery->cell->disable(battery->pdev);
+-	disable_irq(battery->irq);
+-
+-	mutex_unlock(&battery->lock);
+-
+-	return voltage;
 -}
 -
--static int jz_nand_dev_ready(struct nand_chip *chip)
+-static int jz_battery_get_capacity(struct power_supply *psy)
 -{
--	struct jz_nand *nand = mtd_to_jz_nand(nand_to_mtd(chip));
--	return gpiod_get_value_cansleep(nand->busy_gpio);
+-	struct jz_battery *jz_battery = psy_to_jz_battery(psy);
+-	struct power_supply_info *info = &jz_battery->pdata->info;
+-	long voltage;
+-	int ret;
+-	int voltage_span;
+-
+-	voltage = jz_battery_read_voltage(jz_battery);
+-
+-	if (voltage < 0)
+-		return voltage;
+-
+-	voltage_span = info->voltage_max_design - info->voltage_min_design;
+-	ret = ((voltage - info->voltage_min_design) * 100) / voltage_span;
+-
+-	if (ret > 100)
+-		ret = 100;
+-	else if (ret < 0)
+-		ret = 0;
+-
+-	return ret;
 -}
 -
--static void jz_nand_hwctl(struct nand_chip *chip, int mode)
+-static int jz_battery_get_property(struct power_supply *psy,
+-	enum power_supply_property psp, union power_supply_propval *val)
 -{
--	struct jz_nand *nand = mtd_to_jz_nand(nand_to_mtd(chip));
--	uint32_t reg;
+-	struct jz_battery *jz_battery = psy_to_jz_battery(psy);
+-	struct power_supply_info *info = &jz_battery->pdata->info;
+-	long voltage;
 -
--	writel(0, nand->base + JZ_REG_NAND_IRQ_STAT);
--	reg = readl(nand->base + JZ_REG_NAND_ECC_CTRL);
--
--	reg |= JZ_NAND_ECC_CTRL_RESET;
--	reg |= JZ_NAND_ECC_CTRL_ENABLE;
--	reg |= JZ_NAND_ECC_CTRL_RS;
--
--	switch (mode) {
--	case NAND_ECC_READ:
--		reg &= ~JZ_NAND_ECC_CTRL_ENCODING;
--		nand->is_reading = true;
+-	switch (psp) {
+-	case POWER_SUPPLY_PROP_STATUS:
+-		val->intval = jz_battery->status;
 -		break;
--	case NAND_ECC_WRITE:
--		reg |= JZ_NAND_ECC_CTRL_ENCODING;
--		nand->is_reading = false;
+-	case POWER_SUPPLY_PROP_TECHNOLOGY:
+-		val->intval = jz_battery->pdata->info.technology;
+-		break;
+-	case POWER_SUPPLY_PROP_HEALTH:
+-		voltage = jz_battery_read_voltage(jz_battery);
+-		if (voltage < info->voltage_min_design)
+-			val->intval = POWER_SUPPLY_HEALTH_DEAD;
+-		else
+-			val->intval = POWER_SUPPLY_HEALTH_GOOD;
+-		break;
+-	case POWER_SUPPLY_PROP_CAPACITY:
+-		val->intval = jz_battery_get_capacity(psy);
+-		break;
+-	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
+-		val->intval = jz_battery_read_voltage(jz_battery);
+-		if (val->intval < 0)
+-			return val->intval;
+-		break;
+-	case POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN:
+-		val->intval = info->voltage_max_design;
+-		break;
+-	case POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN:
+-		val->intval = info->voltage_min_design;
+-		break;
+-	case POWER_SUPPLY_PROP_PRESENT:
+-		val->intval = 1;
 -		break;
 -	default:
--		break;
+-		return -EINVAL;
 -	}
--
--	writel(reg, nand->base + JZ_REG_NAND_ECC_CTRL);
--}
--
--static int jz_nand_calculate_ecc_rs(struct nand_chip *chip, const uint8_t *dat,
--				    uint8_t *ecc_code)
--{
--	struct jz_nand *nand = mtd_to_jz_nand(nand_to_mtd(chip));
--	uint32_t reg, status;
--	int i;
--	unsigned int timeout = 1000;
--	static uint8_t empty_block_ecc[] = {0xcd, 0x9d, 0x90, 0x58, 0xf4,
--						0x8b, 0xff, 0xb7, 0x6f};
--
--	if (nand->is_reading)
--		return 0;
--
--	do {
--		status = readl(nand->base + JZ_REG_NAND_IRQ_STAT);
--	} while (!(status & JZ_NAND_STATUS_ENC_FINISH) && --timeout);
--
--	if (timeout == 0)
--	    return -1;
--
--	reg = readl(nand->base + JZ_REG_NAND_ECC_CTRL);
--	reg &= ~JZ_NAND_ECC_CTRL_ENABLE;
--	writel(reg, nand->base + JZ_REG_NAND_ECC_CTRL);
--
--	for (i = 0; i < 9; ++i)
--		ecc_code[i] = readb(nand->base + JZ_REG_NAND_PAR0 + i);
--
--	/* If the written data is completly 0xff, we also want to write 0xff as
--	 * ecc, otherwise we will get in trouble when doing subpage writes. */
--	if (memcmp(ecc_code, empty_block_ecc, 9) == 0)
--		memset(ecc_code, 0xff, 9);
--
 -	return 0;
 -}
 -
--static void jz_nand_correct_data(uint8_t *dat, int index, int mask)
+-static void jz_battery_external_power_changed(struct power_supply *psy)
 -{
--	int offset = index & 0x7;
--	uint16_t data;
+-	struct jz_battery *jz_battery = psy_to_jz_battery(psy);
 -
--	index += (index >> 3);
--
--	data = dat[index];
--	data |= dat[index+1] << 8;
--
--	mask ^= (data >> offset) & 0x1ff;
--	data &= ~(0x1ff << offset);
--	data |= (mask << offset);
--
--	dat[index] = data & 0xff;
--	dat[index+1] = (data >> 8) & 0xff;
+-	mod_delayed_work(system_wq, &jz_battery->work, 0);
 -}
 -
--static int jz_nand_correct_ecc_rs(struct nand_chip *chip, uint8_t *dat,
--				  uint8_t *read_ecc, uint8_t *calc_ecc)
+-static irqreturn_t jz_battery_charge_irq(int irq, void *data)
 -{
--	struct jz_nand *nand = mtd_to_jz_nand(nand_to_mtd(chip));
--	int i, error_count, index;
--	uint32_t reg, status, error;
--	unsigned int timeout = 1000;
+-	struct jz_battery *jz_battery = data;
 -
--	for (i = 0; i < 9; ++i)
--		writeb(read_ecc[i], nand->base + JZ_REG_NAND_PAR0 + i);
+-	mod_delayed_work(system_wq, &jz_battery->work, 0);
 -
--	reg = readl(nand->base + JZ_REG_NAND_ECC_CTRL);
--	reg |= JZ_NAND_ECC_CTRL_PAR_READY;
--	writel(reg, nand->base + JZ_REG_NAND_ECC_CTRL);
+-	return IRQ_HANDLED;
+-}
 -
--	do {
--		status = readl(nand->base + JZ_REG_NAND_IRQ_STAT);
--	} while (!(status & JZ_NAND_STATUS_DEC_FINISH) && --timeout);
+-static void jz_battery_update(struct jz_battery *jz_battery)
+-{
+-	int status;
+-	long voltage;
+-	bool has_changed = false;
+-	int is_charging;
 -
--	if (timeout == 0)
--		return -ETIMEDOUT;
+-	if (gpio_is_valid(jz_battery->pdata->gpio_charge)) {
+-		is_charging = gpio_get_value(jz_battery->pdata->gpio_charge);
+-		is_charging ^= jz_battery->pdata->gpio_charge_active_low;
+-		if (is_charging)
+-			status = POWER_SUPPLY_STATUS_CHARGING;
+-		else
+-			status = POWER_SUPPLY_STATUS_NOT_CHARGING;
 -
--	reg = readl(nand->base + JZ_REG_NAND_ECC_CTRL);
--	reg &= ~JZ_NAND_ECC_CTRL_ENABLE;
--	writel(reg, nand->base + JZ_REG_NAND_ECC_CTRL);
--
--	if (status & JZ_NAND_STATUS_ERROR) {
--		if (status & JZ_NAND_STATUS_UNCOR_ERROR)
--			return -EBADMSG;
--
--		error_count = (status & JZ_NAND_STATUS_ERR_COUNT) >> 29;
--
--		for (i = 0; i < error_count; ++i) {
--			error = readl(nand->base + JZ_REG_NAND_ERR(i));
--			index = ((error >> 16) & 0x1ff) - 1;
--			if (index >= 0 && index < 512)
--				jz_nand_correct_data(dat, index, error & 0x1ff);
+-		if (status != jz_battery->status) {
+-			jz_battery->status = status;
+-			has_changed = true;
 -		}
--
--		return error_count;
 -	}
 -
--	return 0;
--}
--
--static int jz_nand_ioremap_resource(struct platform_device *pdev,
--	const char *name, struct resource **res, void __iomem **base)
--{
--	int ret;
--
--	*res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
--	if (!*res) {
--		dev_err(&pdev->dev, "Failed to get platform %s memory\n", name);
--		ret = -ENXIO;
--		goto err;
+-	voltage = jz_battery_read_voltage(jz_battery);
+-	if (voltage >= 0 && abs(voltage - jz_battery->voltage) > 50000) {
+-		jz_battery->voltage = voltage;
+-		has_changed = true;
 -	}
 -
--	*res = request_mem_region((*res)->start, resource_size(*res),
--				pdev->name);
--	if (!*res) {
--		dev_err(&pdev->dev, "Failed to request %s memory region\n", name);
--		ret = -EBUSY;
--		goto err;
--	}
--
--	*base = ioremap((*res)->start, resource_size(*res));
--	if (!*base) {
--		dev_err(&pdev->dev, "Failed to ioremap %s memory region\n", name);
--		ret = -EBUSY;
--		goto err_release_mem;
--	}
--
--	return 0;
--
--err_release_mem:
--	release_mem_region((*res)->start, resource_size(*res));
--err:
--	*res = NULL;
--	*base = NULL;
--	return ret;
+-	if (has_changed)
+-		power_supply_changed(jz_battery->battery);
 -}
 -
--static inline void jz_nand_iounmap_resource(struct resource *res,
--					    void __iomem *base)
--{
--	iounmap(base);
--	release_mem_region(res->start, resource_size(res));
--}
--
--static int jz_nand_detect_bank(struct platform_device *pdev,
--			       struct jz_nand *nand, unsigned char bank,
--			       size_t chipnr, uint8_t *nand_maf_id,
--			       uint8_t *nand_dev_id)
--{
--	int ret;
--	char res_name[6];
--	uint32_t ctrl;
--	struct nand_chip *chip = &nand->chip;
--	struct mtd_info *mtd = nand_to_mtd(chip);
--	struct nand_memory_organization *memorg;
--	u8 id[2];
--
--	memorg = nanddev_get_memorg(&chip->base);
--
--	/* Request I/O resource. */
--	sprintf(res_name, "bank%d", bank);
--	ret = jz_nand_ioremap_resource(pdev, res_name,
--					&nand->bank_mem[bank - 1],
--					&nand->bank_base[bank - 1]);
--	if (ret)
--		return ret;
--
--	/* Enable chip in bank. */
--	ctrl = readl(nand->base + JZ_REG_NAND_CTRL);
--	ctrl |= JZ_NAND_CTRL_ENABLE_CHIP(bank - 1);
--	writel(ctrl, nand->base + JZ_REG_NAND_CTRL);
--
--	if (chipnr == 0) {
--		/* Detect first chip. */
--		ret = nand_scan(chip, 1);
--		if (ret)
--			goto notfound_id;
--
--		/* Retrieve the IDs from the first chip. */
--		nand_select_target(chip, 0);
--		nand_reset_op(chip);
--		nand_readid_op(chip, 0, id, sizeof(id));
--		*nand_maf_id = id[0];
--		*nand_dev_id = id[1];
--	} else {
--		/* Detect additional chip. */
--		nand_select_target(chip, chipnr);
--		nand_reset_op(chip);
--		nand_readid_op(chip, 0, id, sizeof(id));
--		if (*nand_maf_id != id[0] || *nand_dev_id != id[1]) {
--			ret = -ENODEV;
--			goto notfound_id;
--		}
--
--		/* Update size of the MTD. */
--		memorg->ntargets++;
--		mtd->size += nanddev_target_size(&chip->base);
--	}
--
--	dev_info(&pdev->dev, "Found chip %zu on bank %i\n", chipnr, bank);
--	return 0;
--
--notfound_id:
--	dev_info(&pdev->dev, "No chip found on bank %i\n", bank);
--	ctrl &= ~(JZ_NAND_CTRL_ENABLE_CHIP(bank - 1));
--	writel(ctrl, nand->base + JZ_REG_NAND_CTRL);
--	jz_nand_iounmap_resource(nand->bank_mem[bank - 1],
--				 nand->bank_base[bank - 1]);
--	return ret;
--}
--
--static int jz_nand_attach_chip(struct nand_chip *chip)
--{
--	struct mtd_info *mtd = nand_to_mtd(chip);
--	struct device *dev = mtd->dev.parent;
--	struct jz_nand_platform_data *pdata = dev_get_platdata(dev);
--	struct platform_device *pdev = to_platform_device(dev);
--
--	if (pdata && pdata->ident_callback)
--		pdata->ident_callback(pdev, mtd, &pdata->partitions,
--				      &pdata->num_partitions);
--
--	return 0;
--}
--
--static const struct nand_controller_ops jz_nand_controller_ops = {
--	.attach_chip = jz_nand_attach_chip,
+-static enum power_supply_property jz_battery_properties[] = {
+-	POWER_SUPPLY_PROP_STATUS,
+-	POWER_SUPPLY_PROP_TECHNOLOGY,
+-	POWER_SUPPLY_PROP_HEALTH,
+-	POWER_SUPPLY_PROP_CAPACITY,
+-	POWER_SUPPLY_PROP_VOLTAGE_NOW,
+-	POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN,
+-	POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
+-	POWER_SUPPLY_PROP_PRESENT,
 -};
 -
--static int jz_nand_probe(struct platform_device *pdev)
+-static void jz_battery_work(struct work_struct *work)
 -{
--	int ret;
--	struct jz_nand *nand;
--	struct nand_chip *chip;
--	struct mtd_info *mtd;
--	struct jz_nand_platform_data *pdata = dev_get_platdata(&pdev->dev);
--	size_t chipnr, bank_idx;
--	uint8_t nand_maf_id = 0, nand_dev_id = 0;
+-	/* Too small interval will increase system workload */
+-	const int interval = HZ * 30;
+-	struct jz_battery *jz_battery = container_of(work, struct jz_battery,
+-					    work.work);
 -
--	nand = kzalloc(sizeof(*nand), GFP_KERNEL);
--	if (!nand)
+-	jz_battery_update(jz_battery);
+-	schedule_delayed_work(&jz_battery->work, interval);
+-}
+-
+-static int jz_battery_probe(struct platform_device *pdev)
+-{
+-	int ret = 0;
+-	struct jz_battery_platform_data *pdata = pdev->dev.parent->platform_data;
+-	struct power_supply_config psy_cfg = {};
+-	struct jz_battery *jz_battery;
+-	struct power_supply_desc *battery_desc;
+-	struct resource *mem;
+-
+-	if (!pdata) {
+-		dev_err(&pdev->dev, "No platform_data supplied\n");
+-		return -ENXIO;
+-	}
+-
+-	jz_battery = devm_kzalloc(&pdev->dev, sizeof(*jz_battery), GFP_KERNEL);
+-	if (!jz_battery) {
+-		dev_err(&pdev->dev, "Failed to allocate driver structure\n");
 -		return -ENOMEM;
--
--	ret = jz_nand_ioremap_resource(pdev, "mmio", &nand->mem, &nand->base);
--	if (ret)
--		goto err_free;
--
--	nand->busy_gpio = devm_gpiod_get_optional(&pdev->dev, "busy", GPIOD_IN);
--	if (IS_ERR(nand->busy_gpio)) {
--		ret = PTR_ERR(nand->busy_gpio);
--		dev_err(&pdev->dev, "Failed to request busy gpio %d\n",
--		    ret);
--		goto err_iounmap_mmio;
 -	}
 -
--	chip		= &nand->chip;
--	mtd		= nand_to_mtd(chip);
--	mtd->dev.parent = &pdev->dev;
--	mtd->name	= "jz4740-nand";
+-	jz_battery->cell = mfd_get_cell(pdev);
 -
--	chip->ecc.hwctl		= jz_nand_hwctl;
--	chip->ecc.calculate	= jz_nand_calculate_ecc_rs;
--	chip->ecc.correct	= jz_nand_correct_ecc_rs;
--	chip->ecc.mode		= NAND_ECC_HW_OOB_FIRST;
--	chip->ecc.size		= 512;
--	chip->ecc.bytes		= 9;
--	chip->ecc.strength	= 4;
--	chip->ecc.options	= NAND_ECC_GENERIC_ERASED_CHECK;
--
--	chip->legacy.chip_delay = 50;
--	chip->legacy.cmd_ctrl = jz_nand_cmd_ctrl;
--	chip->legacy.select_chip = jz_nand_select_chip;
--	chip->legacy.dummy_controller.ops = &jz_nand_controller_ops;
--
--	if (nand->busy_gpio)
--		chip->legacy.dev_ready = jz_nand_dev_ready;
--
--	platform_set_drvdata(pdev, nand);
--
--	/* We are going to autodetect NAND chips in the banks specified in the
--	 * platform data. Although nand_scan_ident() can detect multiple chips,
--	 * it requires those chips to be numbered consecuitively, which is not
--	 * always the case for external memory banks. And a fixed chip-to-bank
--	 * mapping is not practical either, since for example Dingoo units
--	 * produced at different times have NAND chips in different banks.
--	 */
--	chipnr = 0;
--	for (bank_idx = 0; bank_idx < JZ_NAND_NUM_BANKS; bank_idx++) {
--		unsigned char bank;
--
--		/* If there is no platform data, look for NAND in bank 1,
--		 * which is the most likely bank since it is the only one
--		 * that can be booted from.
--		 */
--		bank = pdata ? pdata->banks[bank_idx] : bank_idx ^ 1;
--		if (bank == 0)
--			break;
--		if (bank > JZ_NAND_NUM_BANKS) {
--			dev_warn(&pdev->dev,
--				"Skipping non-existing bank: %d\n", bank);
--			continue;
--		}
--		/* The detection routine will directly or indirectly call
--		 * jz_nand_select_chip(), so nand->banks has to contain the
--		 * bank we're checking.
--		 */
--		nand->banks[chipnr] = bank;
--		if (jz_nand_detect_bank(pdev, nand, bank, chipnr,
--					&nand_maf_id, &nand_dev_id) == 0)
--			chipnr++;
--		else
--			nand->banks[chipnr] = 0;
--	}
--	if (chipnr == 0) {
--		dev_err(&pdev->dev, "No NAND chips found\n");
--		goto err_iounmap_mmio;
+-	jz_battery->irq = platform_get_irq(pdev, 0);
+-	if (jz_battery->irq < 0) {
+-		dev_err(&pdev->dev, "Failed to get platform irq: %d\n", ret);
+-		return jz_battery->irq;
 -	}
 -
--	ret = mtd_device_register(mtd, pdata ? pdata->partitions : NULL,
--				  pdata ? pdata->num_partitions : 0);
+-	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 -
+-	jz_battery->base = devm_ioremap_resource(&pdev->dev, mem);
+-	if (IS_ERR(jz_battery->base))
+-		return PTR_ERR(jz_battery->base);
+-
+-	battery_desc = &jz_battery->battery_desc;
+-	battery_desc->name = pdata->info.name;
+-	battery_desc->type = POWER_SUPPLY_TYPE_BATTERY;
+-	battery_desc->properties	= jz_battery_properties;
+-	battery_desc->num_properties	= ARRAY_SIZE(jz_battery_properties);
+-	battery_desc->get_property	= jz_battery_get_property;
+-	battery_desc->external_power_changed =
+-					jz_battery_external_power_changed;
+-	battery_desc->use_for_apm	= 1;
+-
+-	psy_cfg.drv_data = jz_battery;
+-
+-	jz_battery->pdata = pdata;
+-	jz_battery->pdev = pdev;
+-
+-	init_completion(&jz_battery->read_completion);
+-	mutex_init(&jz_battery->lock);
+-
+-	INIT_DELAYED_WORK(&jz_battery->work, jz_battery_work);
+-
+-	ret = request_irq(jz_battery->irq, jz_battery_irq_handler, 0, pdev->name,
+-			jz_battery);
 -	if (ret) {
--		dev_err(&pdev->dev, "Failed to add mtd device\n");
--		goto err_cleanup_nand;
+-		dev_err(&pdev->dev, "Failed to request irq %d\n", ret);
+-		return ret;
+-	}
+-	disable_irq(jz_battery->irq);
+-
+-	if (gpio_is_valid(pdata->gpio_charge)) {
+-		ret = gpio_request(pdata->gpio_charge, dev_name(&pdev->dev));
+-		if (ret) {
+-			dev_err(&pdev->dev, "charger state gpio request failed.\n");
+-			goto err_free_irq;
+-		}
+-		ret = gpio_direction_input(pdata->gpio_charge);
+-		if (ret) {
+-			dev_err(&pdev->dev, "charger state gpio set direction failed.\n");
+-			goto err_free_gpio;
+-		}
+-
+-		jz_battery->charge_irq = gpio_to_irq(pdata->gpio_charge);
+-
+-		if (jz_battery->charge_irq >= 0) {
+-			ret = request_irq(jz_battery->charge_irq,
+-				    jz_battery_charge_irq,
+-				    IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+-				    dev_name(&pdev->dev), jz_battery);
+-			if (ret) {
+-				dev_err(&pdev->dev, "Failed to request charge irq: %d\n", ret);
+-				goto err_free_gpio;
+-			}
+-		}
+-	} else {
+-		jz_battery->charge_irq = -1;
 -	}
 -
--	dev_info(&pdev->dev, "Successfully registered JZ4740 NAND driver\n");
+-	if (jz_battery->pdata->info.voltage_max_design <= 2500000)
+-		jz4740_adc_set_config(pdev->dev.parent, JZ_ADC_CONFIG_BAT_MB,
+-			JZ_ADC_CONFIG_BAT_MB);
+-	else
+-		jz4740_adc_set_config(pdev->dev.parent, JZ_ADC_CONFIG_BAT_MB, 0);
+-
+-	jz_battery->battery = power_supply_register(&pdev->dev, battery_desc,
+-							&psy_cfg);
+-	if (IS_ERR(jz_battery->battery)) {
+-		dev_err(&pdev->dev, "power supply battery register failed.\n");
+-		ret = PTR_ERR(jz_battery->battery);
+-		goto err_free_charge_irq;
+-	}
+-
+-	platform_set_drvdata(pdev, jz_battery);
+-	schedule_delayed_work(&jz_battery->work, 0);
 -
 -	return 0;
 -
--err_cleanup_nand:
--	nand_cleanup(chip);
--	while (chipnr--) {
--		unsigned char bank = nand->banks[chipnr];
--		jz_nand_iounmap_resource(nand->bank_mem[bank - 1],
--					 nand->bank_base[bank - 1]);
--	}
--	writel(0, nand->base + JZ_REG_NAND_CTRL);
--err_iounmap_mmio:
--	jz_nand_iounmap_resource(nand->mem, nand->base);
--err_free:
--	kfree(nand);
+-err_free_charge_irq:
+-	if (jz_battery->charge_irq >= 0)
+-		free_irq(jz_battery->charge_irq, jz_battery);
+-err_free_gpio:
+-	if (gpio_is_valid(pdata->gpio_charge))
+-		gpio_free(jz_battery->pdata->gpio_charge);
+-err_free_irq:
+-	free_irq(jz_battery->irq, jz_battery);
 -	return ret;
 -}
 -
--static int jz_nand_remove(struct platform_device *pdev)
+-static int jz_battery_remove(struct platform_device *pdev)
 -{
--	struct jz_nand *nand = platform_get_drvdata(pdev);
--	size_t i;
+-	struct jz_battery *jz_battery = platform_get_drvdata(pdev);
 -
--	nand_release(&nand->chip);
+-	cancel_delayed_work_sync(&jz_battery->work);
 -
--	/* Deassert and disable all chips */
--	writel(0, nand->base + JZ_REG_NAND_CTRL);
--
--	for (i = 0; i < JZ_NAND_NUM_BANKS; ++i) {
--		unsigned char bank = nand->banks[i];
--		if (bank != 0) {
--			jz_nand_iounmap_resource(nand->bank_mem[bank - 1],
--						 nand->bank_base[bank - 1]);
--		}
+-	if (gpio_is_valid(jz_battery->pdata->gpio_charge)) {
+-		if (jz_battery->charge_irq >= 0)
+-			free_irq(jz_battery->charge_irq, jz_battery);
+-		gpio_free(jz_battery->pdata->gpio_charge);
 -	}
 -
--	jz_nand_iounmap_resource(nand->mem, nand->base);
+-	power_supply_unregister(jz_battery->battery);
 -
--	kfree(nand);
+-	free_irq(jz_battery->irq, jz_battery);
 -
 -	return 0;
 -}
 -
--static struct platform_driver jz_nand_driver = {
--	.probe = jz_nand_probe,
--	.remove = jz_nand_remove,
+-#ifdef CONFIG_PM
+-static int jz_battery_suspend(struct device *dev)
+-{
+-	struct jz_battery *jz_battery = dev_get_drvdata(dev);
+-
+-	cancel_delayed_work_sync(&jz_battery->work);
+-	jz_battery->status = POWER_SUPPLY_STATUS_UNKNOWN;
+-
+-	return 0;
+-}
+-
+-static int jz_battery_resume(struct device *dev)
+-{
+-	struct jz_battery *jz_battery = dev_get_drvdata(dev);
+-
+-	schedule_delayed_work(&jz_battery->work, 0);
+-
+-	return 0;
+-}
+-
+-static const struct dev_pm_ops jz_battery_pm_ops = {
+-	.suspend	= jz_battery_suspend,
+-	.resume		= jz_battery_resume,
+-};
+-
+-#define JZ_BATTERY_PM_OPS (&jz_battery_pm_ops)
+-#else
+-#define JZ_BATTERY_PM_OPS NULL
+-#endif
+-
+-static struct platform_driver jz_battery_driver = {
+-	.probe		= jz_battery_probe,
+-	.remove		= jz_battery_remove,
 -	.driver = {
--		.name = "jz4740-nand",
+-		.name = "jz4740-battery",
+-		.pm = JZ_BATTERY_PM_OPS,
 -	},
 -};
 -
--module_platform_driver(jz_nand_driver);
+-module_platform_driver(jz_battery_driver);
 -
+-MODULE_ALIAS("platform:jz4740-battery");
 -MODULE_LICENSE("GPL");
 -MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
--MODULE_DESCRIPTION("NAND controller driver for JZ4740 SoC");
--MODULE_ALIAS("platform:jz4740-nand");
+-MODULE_DESCRIPTION("JZ4740 SoC battery driver");
 -- 
 2.21.0.593.g511ec345e18
 

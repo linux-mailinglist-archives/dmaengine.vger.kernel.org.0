@@ -2,24 +2,24 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8190075A31
-	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2019 00:04:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2013775A38
+	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2019 00:04:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfGYWD2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 25 Jul 2019 18:03:28 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:47502 "EHLO
+        id S1727136AbfGYWDg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 25 Jul 2019 18:03:36 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:47572 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbfGYWD2 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 25 Jul 2019 18:03:28 -0400
+        with ESMTP id S1726723AbfGYWDf (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 25 Jul 2019 18:03:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1564092204; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1564092213; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=mwMxC1Wci8fxBDvB23nDC2ziCk7gqjZLbYmWcux8KIc=;
-        b=A1G1hU99lTdat4gN7GacQ9deIGHeOKqSNd525yDKki47TSj32JWZcBP2vNY1k1tIH/e7wg
-        rFfATtqyoqPTd8T7VEevdGxzBmScpF0sRmJKL4gEWwvuq8vvxueH75JPSvcosXzRbp5k2b
-        FEOth7BVSAmBK5T4ptDdlQVVW+jWdKI=
+        bh=LoJwb2YRwVVG1E+P5Na8ZaIv1qhfmSpN/lRmTil5iU8=;
+        b=lDgIJ/SZVMs0cGICdu3BVH9dCmTiy8zBSbPA/XqifCbIBRNvzpcG7fzZ5EbzQi5mVAxmvI
+        fLfp8K3ay3Ju1PGClbq18Gxdq3dVbJcebSH4q9bdwkGX1uQqvhv/mVXtyiHs2a8zI1MwMd
+        y6lEXPAmtlnsEwGHXa/EibhKiZQYg6A=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paul.burton@mips.com>,
@@ -43,9 +43,9 @@ Cc:     od@zcrc.me, devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
         Paul Cercueil <paul@crapouillou.net>,
         Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH 06/11] dma: Drop JZ4740 driver
-Date:   Thu, 25 Jul 2019 18:02:10 -0400
-Message-Id: <20190725220215.460-7-paul@crapouillou.net>
+Subject: [PATCH 07/11] mtd: rawnand: Drop obsolete JZ4740 NAND driver
+Date:   Thu, 25 Jul 2019 18:02:11 -0400
+Message-Id: <20190725220215.460-8-paul@crapouillou.net>
 In-Reply-To: <20190725220215.460-1-paul@crapouillou.net>
 References: <20190725220215.460-1-paul@crapouillou.net>
 MIME-Version: 1.0
@@ -55,676 +55,585 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The newer and better JZ4780 driver is now used to provide DMA
-functionality on the JZ4740.
+It has been replaced with the newer Ingenic NAND driver.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 Tested-by: Artur Rojek <contact@artur-rojek.eu>
 ---
- drivers/dma/Kconfig      |   6 -
- drivers/dma/Makefile     |   1 -
- drivers/dma/dma-jz4740.c | 623 ---------------------------------------
- 3 files changed, 630 deletions(-)
- delete mode 100644 drivers/dma/dma-jz4740.c
+ drivers/mtd/nand/raw/ingenic/Kconfig       |   7 -
+ drivers/mtd/nand/raw/ingenic/Makefile      |   1 -
+ drivers/mtd/nand/raw/ingenic/jz4740_nand.c | 536 ---------------------
+ 3 files changed, 544 deletions(-)
+ delete mode 100644 drivers/mtd/nand/raw/ingenic/jz4740_nand.c
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 03fa0c58cef3..7dd9831b4e6e 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -137,12 +137,6 @@ config DMA_BCM2835
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 
--config DMA_JZ4740
--	tristate "JZ4740 DMA support"
+diff --git a/drivers/mtd/nand/raw/ingenic/Kconfig b/drivers/mtd/nand/raw/ingenic/Kconfig
+index 66b7cffdb0c2..e30feb56b650 100644
+--- a/drivers/mtd/nand/raw/ingenic/Kconfig
++++ b/drivers/mtd/nand/raw/ingenic/Kconfig
+@@ -1,11 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-config MTD_NAND_JZ4740
+-	tristate "JZ4740 NAND controller"
 -	depends on MACH_JZ4740 || COMPILE_TEST
--	select DMA_ENGINE
--	select DMA_VIRTUAL_CHANNELS
+-	depends on HAS_IOMEM
+-	help
+-	  Enables support for NAND Flash on JZ4740 SoC based boards.
 -
- config DMA_JZ4780
- 	tristate "JZ4780 DMA support"
- 	depends on MIPS || COMPILE_TEST
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index 5bddf6f8790f..f5ce8665e944 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -22,7 +22,6 @@ obj-$(CONFIG_AXI_DMAC) += dma-axi-dmac.o
- obj-$(CONFIG_BCM_SBA_RAID) += bcm-sba-raid.o
- obj-$(CONFIG_COH901318) += coh901318.o coh901318_lli.o
- obj-$(CONFIG_DMA_BCM2835) += bcm2835-dma.o
--obj-$(CONFIG_DMA_JZ4740) += dma-jz4740.o
- obj-$(CONFIG_DMA_JZ4780) += dma-jz4780.o
- obj-$(CONFIG_DMA_SA11X0) += sa11x0-dma.o
- obj-$(CONFIG_DMA_SUN4I) += sun4i-dma.o
-diff --git a/drivers/dma/dma-jz4740.c b/drivers/dma/dma-jz4740.c
+ config MTD_NAND_JZ4780
+ 	tristate "JZ4780 NAND controller"
+ 	depends on JZ4780_NEMC
+diff --git a/drivers/mtd/nand/raw/ingenic/Makefile b/drivers/mtd/nand/raw/ingenic/Makefile
+index b63d36889263..4c53f5e759c3 100644
+--- a/drivers/mtd/nand/raw/ingenic/Makefile
++++ b/drivers/mtd/nand/raw/ingenic/Makefile
+@@ -1,5 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-obj-$(CONFIG_MTD_NAND_JZ4740) += jz4740_nand.o
+ obj-$(CONFIG_MTD_NAND_JZ4780) += ingenic_nand.o
+ 
+ ingenic_nand-y += ingenic_nand_drv.o
+diff --git a/drivers/mtd/nand/raw/ingenic/jz4740_nand.c b/drivers/mtd/nand/raw/ingenic/jz4740_nand.c
 deleted file mode 100644
-index 39c676c47082..000000000000
---- a/drivers/dma/dma-jz4740.c
+index acdf674fcc87..000000000000
+--- a/drivers/mtd/nand/raw/ingenic/jz4740_nand.c
 +++ /dev/null
-@@ -1,623 +0,0 @@
+@@ -1,536 +0,0 @@
 -// SPDX-License-Identifier: GPL-2.0-or-later
 -/*
-- *  Copyright (C) 2013, Lars-Peter Clausen <lars@metafoo.de>
-- *  JZ4740 DMAC support
+- *  Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
+- *  JZ4740 SoC NAND controller driver
 - */
 -
--#include <linux/dmaengine.h>
--#include <linux/dma-mapping.h>
--#include <linux/err.h>
--#include <linux/init.h>
--#include <linux/list.h>
+-#include <linux/io.h>
+-#include <linux/ioport.h>
+-#include <linux/kernel.h>
 -#include <linux/module.h>
 -#include <linux/platform_device.h>
 -#include <linux/slab.h>
--#include <linux/spinlock.h>
--#include <linux/irq.h>
--#include <linux/clk.h>
 -
--#include "virt-dma.h"
+-#include <linux/mtd/mtd.h>
+-#include <linux/mtd/rawnand.h>
+-#include <linux/mtd/partitions.h>
 -
--#define JZ_DMA_NR_CHANS 6
+-#include <linux/gpio/consumer.h>
 -
--#define JZ_REG_DMA_SRC_ADDR(x)		(0x00 + (x) * 0x20)
--#define JZ_REG_DMA_DST_ADDR(x)		(0x04 + (x) * 0x20)
--#define JZ_REG_DMA_TRANSFER_COUNT(x)	(0x08 + (x) * 0x20)
--#define JZ_REG_DMA_REQ_TYPE(x)		(0x0C + (x) * 0x20)
--#define JZ_REG_DMA_STATUS_CTRL(x)	(0x10 + (x) * 0x20)
--#define JZ_REG_DMA_CMD(x)		(0x14 + (x) * 0x20)
--#define JZ_REG_DMA_DESC_ADDR(x)		(0x18 + (x) * 0x20)
+-#include <linux/platform_data/jz4740/jz4740_nand.h>
 -
--#define JZ_REG_DMA_CTRL			0x300
--#define JZ_REG_DMA_IRQ			0x304
--#define JZ_REG_DMA_DOORBELL		0x308
--#define JZ_REG_DMA_DOORBELL_SET		0x30C
+-#define JZ_REG_NAND_CTRL	0x50
+-#define JZ_REG_NAND_ECC_CTRL	0x100
+-#define JZ_REG_NAND_DATA	0x104
+-#define JZ_REG_NAND_PAR0	0x108
+-#define JZ_REG_NAND_PAR1	0x10C
+-#define JZ_REG_NAND_PAR2	0x110
+-#define JZ_REG_NAND_IRQ_STAT	0x114
+-#define JZ_REG_NAND_IRQ_CTRL	0x118
+-#define JZ_REG_NAND_ERR(x)	(0x11C + ((x) << 2))
 -
--#define JZ_DMA_STATUS_CTRL_NO_DESC		BIT(31)
--#define JZ_DMA_STATUS_CTRL_DESC_INV		BIT(6)
--#define JZ_DMA_STATUS_CTRL_ADDR_ERR		BIT(4)
--#define JZ_DMA_STATUS_CTRL_TRANSFER_DONE	BIT(3)
--#define JZ_DMA_STATUS_CTRL_HALT			BIT(2)
--#define JZ_DMA_STATUS_CTRL_COUNT_TERMINATE	BIT(1)
--#define JZ_DMA_STATUS_CTRL_ENABLE		BIT(0)
+-#define JZ_NAND_ECC_CTRL_PAR_READY	BIT(4)
+-#define JZ_NAND_ECC_CTRL_ENCODING	BIT(3)
+-#define JZ_NAND_ECC_CTRL_RS		BIT(2)
+-#define JZ_NAND_ECC_CTRL_RESET		BIT(1)
+-#define JZ_NAND_ECC_CTRL_ENABLE		BIT(0)
 -
--#define JZ_DMA_CMD_SRC_INC			BIT(23)
--#define JZ_DMA_CMD_DST_INC			BIT(22)
--#define JZ_DMA_CMD_RDIL_MASK			(0xf << 16)
--#define JZ_DMA_CMD_SRC_WIDTH_MASK		(0x3 << 14)
--#define JZ_DMA_CMD_DST_WIDTH_MASK		(0x3 << 12)
--#define JZ_DMA_CMD_INTERVAL_LENGTH_MASK		(0x7 << 8)
--#define JZ_DMA_CMD_BLOCK_MODE			BIT(7)
--#define JZ_DMA_CMD_DESC_VALID			BIT(4)
--#define JZ_DMA_CMD_DESC_VALID_MODE		BIT(3)
--#define JZ_DMA_CMD_VALID_IRQ_ENABLE		BIT(2)
--#define JZ_DMA_CMD_TRANSFER_IRQ_ENABLE		BIT(1)
--#define JZ_DMA_CMD_LINK_ENABLE			BIT(0)
+-#define JZ_NAND_STATUS_ERR_COUNT	(BIT(31) | BIT(30) | BIT(29))
+-#define JZ_NAND_STATUS_PAD_FINISH	BIT(4)
+-#define JZ_NAND_STATUS_DEC_FINISH	BIT(3)
+-#define JZ_NAND_STATUS_ENC_FINISH	BIT(2)
+-#define JZ_NAND_STATUS_UNCOR_ERROR	BIT(1)
+-#define JZ_NAND_STATUS_ERROR		BIT(0)
 -
--#define JZ_DMA_CMD_FLAGS_OFFSET 22
--#define JZ_DMA_CMD_RDIL_OFFSET 16
--#define JZ_DMA_CMD_SRC_WIDTH_OFFSET 14
--#define JZ_DMA_CMD_DST_WIDTH_OFFSET 12
--#define JZ_DMA_CMD_TRANSFER_SIZE_OFFSET 8
--#define JZ_DMA_CMD_MODE_OFFSET 7
+-#define JZ_NAND_CTRL_ENABLE_CHIP(x) BIT((x) << 1)
+-#define JZ_NAND_CTRL_ASSERT_CHIP(x) BIT(((x) << 1) + 1)
+-#define JZ_NAND_CTRL_ASSERT_CHIP_MASK 0xaa
 -
--#define JZ_DMA_CTRL_PRIORITY_MASK		(0x3 << 8)
--#define JZ_DMA_CTRL_HALT			BIT(3)
--#define JZ_DMA_CTRL_ADDRESS_ERROR		BIT(2)
--#define JZ_DMA_CTRL_ENABLE			BIT(0)
+-#define JZ_NAND_MEM_CMD_OFFSET 0x08000
+-#define JZ_NAND_MEM_ADDR_OFFSET 0x10000
 -
--enum jz4740_dma_width {
--	JZ4740_DMA_WIDTH_32BIT	= 0,
--	JZ4740_DMA_WIDTH_8BIT	= 1,
--	JZ4740_DMA_WIDTH_16BIT	= 2,
--};
--
--enum jz4740_dma_transfer_size {
--	JZ4740_DMA_TRANSFER_SIZE_4BYTE	= 0,
--	JZ4740_DMA_TRANSFER_SIZE_1BYTE	= 1,
--	JZ4740_DMA_TRANSFER_SIZE_2BYTE	= 2,
--	JZ4740_DMA_TRANSFER_SIZE_16BYTE = 3,
--	JZ4740_DMA_TRANSFER_SIZE_32BYTE = 4,
--};
--
--enum jz4740_dma_flags {
--	JZ4740_DMA_SRC_AUTOINC = 0x2,
--	JZ4740_DMA_DST_AUTOINC = 0x1,
--};
--
--enum jz4740_dma_mode {
--	JZ4740_DMA_MODE_SINGLE	= 0,
--	JZ4740_DMA_MODE_BLOCK	= 1,
--};
--
--struct jz4740_dma_sg {
--	dma_addr_t addr;
--	unsigned int len;
--};
--
--struct jz4740_dma_desc {
--	struct virt_dma_desc vdesc;
--
--	enum dma_transfer_direction direction;
--	bool cyclic;
--
--	unsigned int num_sgs;
--	struct jz4740_dma_sg sg[];
--};
--
--struct jz4740_dmaengine_chan {
--	struct virt_dma_chan vchan;
--	unsigned int id;
--	struct dma_slave_config config;
--
--	dma_addr_t fifo_addr;
--	unsigned int transfer_shift;
--
--	struct jz4740_dma_desc *desc;
--	unsigned int next_sg;
--};
--
--struct jz4740_dma_dev {
--	struct dma_device ddev;
+-struct jz_nand {
+-	struct nand_chip chip;
 -	void __iomem *base;
--	struct clk *clk;
+-	struct resource *mem;
 -
--	struct jz4740_dmaengine_chan chan[JZ_DMA_NR_CHANS];
+-	unsigned char banks[JZ_NAND_NUM_BANKS];
+-	void __iomem *bank_base[JZ_NAND_NUM_BANKS];
+-	struct resource *bank_mem[JZ_NAND_NUM_BANKS];
+-
+-	int selected_bank;
+-
+-	struct gpio_desc *busy_gpio;
+-	bool is_reading;
 -};
 -
--static struct jz4740_dma_dev *jz4740_dma_chan_get_dev(
--	struct jz4740_dmaengine_chan *chan)
+-static inline struct jz_nand *mtd_to_jz_nand(struct mtd_info *mtd)
 -{
--	return container_of(chan->vchan.chan.device, struct jz4740_dma_dev,
--		ddev);
+-	return container_of(mtd_to_nand(mtd), struct jz_nand, chip);
 -}
 -
--static struct jz4740_dmaengine_chan *to_jz4740_dma_chan(struct dma_chan *c)
+-static void jz_nand_select_chip(struct nand_chip *chip, int chipnr)
 -{
--	return container_of(c, struct jz4740_dmaengine_chan, vchan.chan);
--}
+-	struct jz_nand *nand = mtd_to_jz_nand(nand_to_mtd(chip));
+-	uint32_t ctrl;
+-	int banknr;
 -
--static struct jz4740_dma_desc *to_jz4740_dma_desc(struct virt_dma_desc *vdesc)
--{
--	return container_of(vdesc, struct jz4740_dma_desc, vdesc);
--}
+-	ctrl = readl(nand->base + JZ_REG_NAND_CTRL);
+-	ctrl &= ~JZ_NAND_CTRL_ASSERT_CHIP_MASK;
 -
--static inline uint32_t jz4740_dma_read(struct jz4740_dma_dev *dmadev,
--	unsigned int reg)
--{
--	return readl(dmadev->base + reg);
--}
--
--static inline void jz4740_dma_write(struct jz4740_dma_dev *dmadev,
--	unsigned reg, uint32_t val)
--{
--	writel(val, dmadev->base + reg);
--}
--
--static inline void jz4740_dma_write_mask(struct jz4740_dma_dev *dmadev,
--	unsigned int reg, uint32_t val, uint32_t mask)
--{
--	uint32_t tmp;
--
--	tmp = jz4740_dma_read(dmadev, reg);
--	tmp &= ~mask;
--	tmp |= val;
--	jz4740_dma_write(dmadev, reg, tmp);
--}
--
--static struct jz4740_dma_desc *jz4740_dma_alloc_desc(unsigned int num_sgs)
--{
--	return kzalloc(sizeof(struct jz4740_dma_desc) +
--		sizeof(struct jz4740_dma_sg) * num_sgs, GFP_ATOMIC);
--}
--
--static enum jz4740_dma_width jz4740_dma_width(enum dma_slave_buswidth width)
--{
--	switch (width) {
--	case DMA_SLAVE_BUSWIDTH_1_BYTE:
--		return JZ4740_DMA_WIDTH_8BIT;
--	case DMA_SLAVE_BUSWIDTH_2_BYTES:
--		return JZ4740_DMA_WIDTH_16BIT;
--	case DMA_SLAVE_BUSWIDTH_4_BYTES:
--		return JZ4740_DMA_WIDTH_32BIT;
--	default:
--		return JZ4740_DMA_WIDTH_32BIT;
--	}
--}
--
--static enum jz4740_dma_transfer_size jz4740_dma_maxburst(u32 maxburst)
--{
--	if (maxburst <= 1)
--		return JZ4740_DMA_TRANSFER_SIZE_1BYTE;
--	else if (maxburst <= 3)
--		return JZ4740_DMA_TRANSFER_SIZE_2BYTE;
--	else if (maxburst <= 15)
--		return JZ4740_DMA_TRANSFER_SIZE_4BYTE;
--	else if (maxburst <= 31)
--		return JZ4740_DMA_TRANSFER_SIZE_16BYTE;
--
--	return JZ4740_DMA_TRANSFER_SIZE_32BYTE;
--}
--
--static int jz4740_dma_slave_config_write(struct dma_chan *c,
--				   struct dma_slave_config *config,
--				   enum dma_transfer_direction direction)
--{
--	struct jz4740_dmaengine_chan *chan = to_jz4740_dma_chan(c);
--	struct jz4740_dma_dev *dmadev = jz4740_dma_chan_get_dev(chan);
--	enum jz4740_dma_width src_width;
--	enum jz4740_dma_width dst_width;
--	enum jz4740_dma_transfer_size transfer_size;
--	enum jz4740_dma_flags flags;
--	uint32_t cmd;
--
--	switch (direction) {
--	case DMA_MEM_TO_DEV:
--		flags = JZ4740_DMA_SRC_AUTOINC;
--		transfer_size = jz4740_dma_maxburst(config->dst_maxburst);
--		chan->fifo_addr = config->dst_addr;
--		break;
--	case DMA_DEV_TO_MEM:
--		flags = JZ4740_DMA_DST_AUTOINC;
--		transfer_size = jz4740_dma_maxburst(config->src_maxburst);
--		chan->fifo_addr = config->src_addr;
--		break;
--	default:
--		return -EINVAL;
--	}
--
--	src_width = jz4740_dma_width(config->src_addr_width);
--	dst_width = jz4740_dma_width(config->dst_addr_width);
--
--	switch (transfer_size) {
--	case JZ4740_DMA_TRANSFER_SIZE_2BYTE:
--		chan->transfer_shift = 1;
--		break;
--	case JZ4740_DMA_TRANSFER_SIZE_4BYTE:
--		chan->transfer_shift = 2;
--		break;
--	case JZ4740_DMA_TRANSFER_SIZE_16BYTE:
--		chan->transfer_shift = 4;
--		break;
--	case JZ4740_DMA_TRANSFER_SIZE_32BYTE:
--		chan->transfer_shift = 5;
--		break;
--	default:
--		chan->transfer_shift = 0;
--		break;
--	}
--
--	cmd = flags << JZ_DMA_CMD_FLAGS_OFFSET;
--	cmd |= src_width << JZ_DMA_CMD_SRC_WIDTH_OFFSET;
--	cmd |= dst_width << JZ_DMA_CMD_DST_WIDTH_OFFSET;
--	cmd |= transfer_size << JZ_DMA_CMD_TRANSFER_SIZE_OFFSET;
--	cmd |= JZ4740_DMA_MODE_SINGLE << JZ_DMA_CMD_MODE_OFFSET;
--	cmd |= JZ_DMA_CMD_TRANSFER_IRQ_ENABLE;
--
--	jz4740_dma_write(dmadev, JZ_REG_DMA_CMD(chan->id), cmd);
--	jz4740_dma_write(dmadev, JZ_REG_DMA_STATUS_CTRL(chan->id), 0);
--	jz4740_dma_write(dmadev, JZ_REG_DMA_REQ_TYPE(chan->id),
--		config->slave_id);
--
--	return 0;
--}
--
--static int jz4740_dma_slave_config(struct dma_chan *c,
--				   struct dma_slave_config *config)
--{
--	struct jz4740_dmaengine_chan *chan = to_jz4740_dma_chan(c);
--
--	memcpy(&chan->config, config, sizeof(*config));
--	return 0;
--}
--
--static int jz4740_dma_terminate_all(struct dma_chan *c)
--{
--	struct jz4740_dmaengine_chan *chan = to_jz4740_dma_chan(c);
--	struct jz4740_dma_dev *dmadev = jz4740_dma_chan_get_dev(chan);
--	unsigned long flags;
--	LIST_HEAD(head);
--
--	spin_lock_irqsave(&chan->vchan.lock, flags);
--	jz4740_dma_write_mask(dmadev, JZ_REG_DMA_STATUS_CTRL(chan->id), 0,
--			JZ_DMA_STATUS_CTRL_ENABLE);
--	chan->desc = NULL;
--	vchan_get_all_descriptors(&chan->vchan, &head);
--	spin_unlock_irqrestore(&chan->vchan.lock, flags);
--
--	vchan_dma_desc_free_list(&chan->vchan, &head);
--
--	return 0;
--}
--
--static int jz4740_dma_start_transfer(struct jz4740_dmaengine_chan *chan)
--{
--	struct jz4740_dma_dev *dmadev = jz4740_dma_chan_get_dev(chan);
--	dma_addr_t src_addr, dst_addr;
--	struct virt_dma_desc *vdesc;
--	struct jz4740_dma_sg *sg;
--
--	jz4740_dma_write_mask(dmadev, JZ_REG_DMA_STATUS_CTRL(chan->id), 0,
--			JZ_DMA_STATUS_CTRL_ENABLE);
--
--	if (!chan->desc) {
--		vdesc = vchan_next_desc(&chan->vchan);
--		if (!vdesc)
--			return 0;
--		chan->desc = to_jz4740_dma_desc(vdesc);
--		chan->next_sg = 0;
--	}
--
--	if (chan->next_sg == chan->desc->num_sgs)
--		chan->next_sg = 0;
--
--	sg = &chan->desc->sg[chan->next_sg];
--
--	if (chan->desc->direction == DMA_MEM_TO_DEV) {
--		src_addr = sg->addr;
--		dst_addr = chan->fifo_addr;
+-	if (chipnr == -1) {
+-		banknr = -1;
 -	} else {
--		src_addr = chan->fifo_addr;
--		dst_addr = sg->addr;
+-		banknr = nand->banks[chipnr] - 1;
+-		chip->legacy.IO_ADDR_R = nand->bank_base[banknr];
+-		chip->legacy.IO_ADDR_W = nand->bank_base[banknr];
 -	}
--	jz4740_dma_write(dmadev, JZ_REG_DMA_SRC_ADDR(chan->id), src_addr);
--	jz4740_dma_write(dmadev, JZ_REG_DMA_DST_ADDR(chan->id), dst_addr);
--	jz4740_dma_write(dmadev, JZ_REG_DMA_TRANSFER_COUNT(chan->id),
--			sg->len >> chan->transfer_shift);
+-	writel(ctrl, nand->base + JZ_REG_NAND_CTRL);
 -
--	chan->next_sg++;
+-	nand->selected_bank = banknr;
+-}
 -
--	jz4740_dma_write_mask(dmadev, JZ_REG_DMA_STATUS_CTRL(chan->id),
--			JZ_DMA_STATUS_CTRL_NO_DESC | JZ_DMA_STATUS_CTRL_ENABLE,
--			JZ_DMA_STATUS_CTRL_HALT | JZ_DMA_STATUS_CTRL_NO_DESC |
--			JZ_DMA_STATUS_CTRL_ENABLE);
+-static void jz_nand_cmd_ctrl(struct nand_chip *chip, int dat,
+-			     unsigned int ctrl)
+-{
+-	struct jz_nand *nand = mtd_to_jz_nand(nand_to_mtd(chip));
+-	uint32_t reg;
+-	void __iomem *bank_base = nand->bank_base[nand->selected_bank];
 -
--	jz4740_dma_write_mask(dmadev, JZ_REG_DMA_CTRL,
--			JZ_DMA_CTRL_ENABLE,
--			JZ_DMA_CTRL_HALT | JZ_DMA_CTRL_ENABLE);
+-	BUG_ON(nand->selected_bank < 0);
+-
+-	if (ctrl & NAND_CTRL_CHANGE) {
+-		BUG_ON((ctrl & NAND_ALE) && (ctrl & NAND_CLE));
+-		if (ctrl & NAND_ALE)
+-			bank_base += JZ_NAND_MEM_ADDR_OFFSET;
+-		else if (ctrl & NAND_CLE)
+-			bank_base += JZ_NAND_MEM_CMD_OFFSET;
+-		chip->legacy.IO_ADDR_W = bank_base;
+-
+-		reg = readl(nand->base + JZ_REG_NAND_CTRL);
+-		if (ctrl & NAND_NCE)
+-			reg |= JZ_NAND_CTRL_ASSERT_CHIP(nand->selected_bank);
+-		else
+-			reg &= ~JZ_NAND_CTRL_ASSERT_CHIP(nand->selected_bank);
+-		writel(reg, nand->base + JZ_REG_NAND_CTRL);
+-	}
+-	if (dat != NAND_CMD_NONE)
+-		writeb(dat, chip->legacy.IO_ADDR_W);
+-}
+-
+-static int jz_nand_dev_ready(struct nand_chip *chip)
+-{
+-	struct jz_nand *nand = mtd_to_jz_nand(nand_to_mtd(chip));
+-	return gpiod_get_value_cansleep(nand->busy_gpio);
+-}
+-
+-static void jz_nand_hwctl(struct nand_chip *chip, int mode)
+-{
+-	struct jz_nand *nand = mtd_to_jz_nand(nand_to_mtd(chip));
+-	uint32_t reg;
+-
+-	writel(0, nand->base + JZ_REG_NAND_IRQ_STAT);
+-	reg = readl(nand->base + JZ_REG_NAND_ECC_CTRL);
+-
+-	reg |= JZ_NAND_ECC_CTRL_RESET;
+-	reg |= JZ_NAND_ECC_CTRL_ENABLE;
+-	reg |= JZ_NAND_ECC_CTRL_RS;
+-
+-	switch (mode) {
+-	case NAND_ECC_READ:
+-		reg &= ~JZ_NAND_ECC_CTRL_ENCODING;
+-		nand->is_reading = true;
+-		break;
+-	case NAND_ECC_WRITE:
+-		reg |= JZ_NAND_ECC_CTRL_ENCODING;
+-		nand->is_reading = false;
+-		break;
+-	default:
+-		break;
+-	}
+-
+-	writel(reg, nand->base + JZ_REG_NAND_ECC_CTRL);
+-}
+-
+-static int jz_nand_calculate_ecc_rs(struct nand_chip *chip, const uint8_t *dat,
+-				    uint8_t *ecc_code)
+-{
+-	struct jz_nand *nand = mtd_to_jz_nand(nand_to_mtd(chip));
+-	uint32_t reg, status;
+-	int i;
+-	unsigned int timeout = 1000;
+-	static uint8_t empty_block_ecc[] = {0xcd, 0x9d, 0x90, 0x58, 0xf4,
+-						0x8b, 0xff, 0xb7, 0x6f};
+-
+-	if (nand->is_reading)
+-		return 0;
+-
+-	do {
+-		status = readl(nand->base + JZ_REG_NAND_IRQ_STAT);
+-	} while (!(status & JZ_NAND_STATUS_ENC_FINISH) && --timeout);
+-
+-	if (timeout == 0)
+-	    return -1;
+-
+-	reg = readl(nand->base + JZ_REG_NAND_ECC_CTRL);
+-	reg &= ~JZ_NAND_ECC_CTRL_ENABLE;
+-	writel(reg, nand->base + JZ_REG_NAND_ECC_CTRL);
+-
+-	for (i = 0; i < 9; ++i)
+-		ecc_code[i] = readb(nand->base + JZ_REG_NAND_PAR0 + i);
+-
+-	/* If the written data is completly 0xff, we also want to write 0xff as
+-	 * ecc, otherwise we will get in trouble when doing subpage writes. */
+-	if (memcmp(ecc_code, empty_block_ecc, 9) == 0)
+-		memset(ecc_code, 0xff, 9);
 -
 -	return 0;
 -}
 -
--static void jz4740_dma_chan_irq(struct jz4740_dmaengine_chan *chan)
+-static void jz_nand_correct_data(uint8_t *dat, int index, int mask)
 -{
--	spin_lock(&chan->vchan.lock);
--	if (chan->desc) {
--		if (chan->desc->cyclic) {
--			vchan_cyclic_callback(&chan->desc->vdesc);
--		} else {
--			if (chan->next_sg == chan->desc->num_sgs) {
--				list_del(&chan->desc->vdesc.node);
--				vchan_cookie_complete(&chan->desc->vdesc);
--				chan->desc = NULL;
--			}
+-	int offset = index & 0x7;
+-	uint16_t data;
+-
+-	index += (index >> 3);
+-
+-	data = dat[index];
+-	data |= dat[index+1] << 8;
+-
+-	mask ^= (data >> offset) & 0x1ff;
+-	data &= ~(0x1ff << offset);
+-	data |= (mask << offset);
+-
+-	dat[index] = data & 0xff;
+-	dat[index+1] = (data >> 8) & 0xff;
+-}
+-
+-static int jz_nand_correct_ecc_rs(struct nand_chip *chip, uint8_t *dat,
+-				  uint8_t *read_ecc, uint8_t *calc_ecc)
+-{
+-	struct jz_nand *nand = mtd_to_jz_nand(nand_to_mtd(chip));
+-	int i, error_count, index;
+-	uint32_t reg, status, error;
+-	unsigned int timeout = 1000;
+-
+-	for (i = 0; i < 9; ++i)
+-		writeb(read_ecc[i], nand->base + JZ_REG_NAND_PAR0 + i);
+-
+-	reg = readl(nand->base + JZ_REG_NAND_ECC_CTRL);
+-	reg |= JZ_NAND_ECC_CTRL_PAR_READY;
+-	writel(reg, nand->base + JZ_REG_NAND_ECC_CTRL);
+-
+-	do {
+-		status = readl(nand->base + JZ_REG_NAND_IRQ_STAT);
+-	} while (!(status & JZ_NAND_STATUS_DEC_FINISH) && --timeout);
+-
+-	if (timeout == 0)
+-		return -ETIMEDOUT;
+-
+-	reg = readl(nand->base + JZ_REG_NAND_ECC_CTRL);
+-	reg &= ~JZ_NAND_ECC_CTRL_ENABLE;
+-	writel(reg, nand->base + JZ_REG_NAND_ECC_CTRL);
+-
+-	if (status & JZ_NAND_STATUS_ERROR) {
+-		if (status & JZ_NAND_STATUS_UNCOR_ERROR)
+-			return -EBADMSG;
+-
+-		error_count = (status & JZ_NAND_STATUS_ERR_COUNT) >> 29;
+-
+-		for (i = 0; i < error_count; ++i) {
+-			error = readl(nand->base + JZ_REG_NAND_ERR(i));
+-			index = ((error >> 16) & 0x1ff) - 1;
+-			if (index >= 0 && index < 512)
+-				jz_nand_correct_data(dat, index, error & 0x1ff);
 -		}
--	}
--	jz4740_dma_start_transfer(chan);
--	spin_unlock(&chan->vchan.lock);
--}
 -
--static irqreturn_t jz4740_dma_irq(int irq, void *devid)
--{
--	struct jz4740_dma_dev *dmadev = devid;
--	uint32_t irq_status;
--	unsigned int i;
--
--	irq_status = readl(dmadev->base + JZ_REG_DMA_IRQ);
--
--	for (i = 0; i < 6; ++i) {
--		if (irq_status & (1 << i)) {
--			jz4740_dma_write_mask(dmadev,
--				JZ_REG_DMA_STATUS_CTRL(i), 0,
--				JZ_DMA_STATUS_CTRL_ENABLE |
--				JZ_DMA_STATUS_CTRL_TRANSFER_DONE);
--
--			jz4740_dma_chan_irq(&dmadev->chan[i]);
--		}
+-		return error_count;
 -	}
 -
--	return IRQ_HANDLED;
+-	return 0;
 -}
 -
--static void jz4740_dma_issue_pending(struct dma_chan *c)
+-static int jz_nand_ioremap_resource(struct platform_device *pdev,
+-	const char *name, struct resource **res, void __iomem **base)
 -{
--	struct jz4740_dmaengine_chan *chan = to_jz4740_dma_chan(c);
--	unsigned long flags;
--
--	spin_lock_irqsave(&chan->vchan.lock, flags);
--	if (vchan_issue_pending(&chan->vchan) && !chan->desc)
--		jz4740_dma_start_transfer(chan);
--	spin_unlock_irqrestore(&chan->vchan.lock, flags);
--}
--
--static struct dma_async_tx_descriptor *jz4740_dma_prep_slave_sg(
--	struct dma_chan *c, struct scatterlist *sgl,
--	unsigned int sg_len, enum dma_transfer_direction direction,
--	unsigned long flags, void *context)
--{
--	struct jz4740_dmaengine_chan *chan = to_jz4740_dma_chan(c);
--	struct jz4740_dma_desc *desc;
--	struct scatterlist *sg;
--	unsigned int i;
--
--	desc = jz4740_dma_alloc_desc(sg_len);
--	if (!desc)
--		return NULL;
--
--	for_each_sg(sgl, sg, sg_len, i) {
--		desc->sg[i].addr = sg_dma_address(sg);
--		desc->sg[i].len = sg_dma_len(sg);
--	}
--
--	desc->num_sgs = sg_len;
--	desc->direction = direction;
--	desc->cyclic = false;
--
--	jz4740_dma_slave_config_write(c, &chan->config, direction);
--
--	return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
--}
--
--static struct dma_async_tx_descriptor *jz4740_dma_prep_dma_cyclic(
--	struct dma_chan *c, dma_addr_t buf_addr, size_t buf_len,
--	size_t period_len, enum dma_transfer_direction direction,
--	unsigned long flags)
--{
--	struct jz4740_dmaengine_chan *chan = to_jz4740_dma_chan(c);
--	struct jz4740_dma_desc *desc;
--	unsigned int num_periods, i;
--
--	if (buf_len % period_len)
--		return NULL;
--
--	num_periods = buf_len / period_len;
--
--	desc = jz4740_dma_alloc_desc(num_periods);
--	if (!desc)
--		return NULL;
--
--	for (i = 0; i < num_periods; i++) {
--		desc->sg[i].addr = buf_addr;
--		desc->sg[i].len = period_len;
--		buf_addr += period_len;
--	}
--
--	desc->num_sgs = num_periods;
--	desc->direction = direction;
--	desc->cyclic = true;
--
--	jz4740_dma_slave_config_write(c, &chan->config, direction);
--
--	return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
--}
--
--static size_t jz4740_dma_desc_residue(struct jz4740_dmaengine_chan *chan,
--	struct jz4740_dma_desc *desc, unsigned int next_sg)
--{
--	struct jz4740_dma_dev *dmadev = jz4740_dma_chan_get_dev(chan);
--	unsigned int residue, count;
--	unsigned int i;
--
--	residue = 0;
--
--	for (i = next_sg; i < desc->num_sgs; i++)
--		residue += desc->sg[i].len;
--
--	if (next_sg != 0) {
--		count = jz4740_dma_read(dmadev,
--			JZ_REG_DMA_TRANSFER_COUNT(chan->id));
--		residue += count << chan->transfer_shift;
--	}
--
--	return residue;
--}
--
--static enum dma_status jz4740_dma_tx_status(struct dma_chan *c,
--	dma_cookie_t cookie, struct dma_tx_state *state)
--{
--	struct jz4740_dmaengine_chan *chan = to_jz4740_dma_chan(c);
--	struct virt_dma_desc *vdesc;
--	enum dma_status status;
--	unsigned long flags;
--
--	status = dma_cookie_status(c, cookie, state);
--	if (status == DMA_COMPLETE || !state)
--		return status;
--
--	spin_lock_irqsave(&chan->vchan.lock, flags);
--	vdesc = vchan_find_desc(&chan->vchan, cookie);
--	if (cookie == chan->desc->vdesc.tx.cookie) {
--		state->residue = jz4740_dma_desc_residue(chan, chan->desc,
--				chan->next_sg);
--	} else if (vdesc) {
--		state->residue = jz4740_dma_desc_residue(chan,
--				to_jz4740_dma_desc(vdesc), 0);
--	} else {
--		state->residue = 0;
--	}
--	spin_unlock_irqrestore(&chan->vchan.lock, flags);
--
--	return status;
--}
--
--static void jz4740_dma_free_chan_resources(struct dma_chan *c)
--{
--	vchan_free_chan_resources(to_virt_chan(c));
--}
--
--static void jz4740_dma_desc_free(struct virt_dma_desc *vdesc)
--{
--	kfree(container_of(vdesc, struct jz4740_dma_desc, vdesc));
--}
--
--#define JZ4740_DMA_BUSWIDTHS (BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) | \
--	BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | BIT(DMA_SLAVE_BUSWIDTH_4_BYTES))
--
--static int jz4740_dma_probe(struct platform_device *pdev)
--{
--	struct jz4740_dmaengine_chan *chan;
--	struct jz4740_dma_dev *dmadev;
--	struct dma_device *dd;
--	unsigned int i;
--	struct resource *res;
 -	int ret;
--	int irq;
 -
--	dmadev = devm_kzalloc(&pdev->dev, sizeof(*dmadev), GFP_KERNEL);
--	if (!dmadev)
--		return -EINVAL;
--
--	dd = &dmadev->ddev;
--
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	dmadev->base = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(dmadev->base))
--		return PTR_ERR(dmadev->base);
--
--	dmadev->clk = clk_get(&pdev->dev, "dma");
--	if (IS_ERR(dmadev->clk))
--		return PTR_ERR(dmadev->clk);
--
--	clk_prepare_enable(dmadev->clk);
--
--	dma_cap_set(DMA_SLAVE, dd->cap_mask);
--	dma_cap_set(DMA_CYCLIC, dd->cap_mask);
--	dd->device_free_chan_resources = jz4740_dma_free_chan_resources;
--	dd->device_tx_status = jz4740_dma_tx_status;
--	dd->device_issue_pending = jz4740_dma_issue_pending;
--	dd->device_prep_slave_sg = jz4740_dma_prep_slave_sg;
--	dd->device_prep_dma_cyclic = jz4740_dma_prep_dma_cyclic;
--	dd->device_config = jz4740_dma_slave_config;
--	dd->device_terminate_all = jz4740_dma_terminate_all;
--	dd->src_addr_widths = JZ4740_DMA_BUSWIDTHS;
--	dd->dst_addr_widths = JZ4740_DMA_BUSWIDTHS;
--	dd->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
--	dd->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
--	dd->dev = &pdev->dev;
--	INIT_LIST_HEAD(&dd->channels);
--
--	for (i = 0; i < JZ_DMA_NR_CHANS; i++) {
--		chan = &dmadev->chan[i];
--		chan->id = i;
--		chan->vchan.desc_free = jz4740_dma_desc_free;
--		vchan_init(&chan->vchan, dd);
+-	*res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
+-	if (!*res) {
+-		dev_err(&pdev->dev, "Failed to get platform %s memory\n", name);
+-		ret = -ENXIO;
+-		goto err;
 -	}
 -
--	ret = dma_async_device_register(dd);
--	if (ret)
--		goto err_clk;
+-	*res = request_mem_region((*res)->start, resource_size(*res),
+-				pdev->name);
+-	if (!*res) {
+-		dev_err(&pdev->dev, "Failed to request %s memory region\n", name);
+-		ret = -EBUSY;
+-		goto err;
+-	}
 -
--	irq = platform_get_irq(pdev, 0);
--	ret = request_irq(irq, jz4740_dma_irq, 0, dev_name(&pdev->dev), dmadev);
--	if (ret)
--		goto err_unregister;
--
--	platform_set_drvdata(pdev, dmadev);
+-	*base = ioremap((*res)->start, resource_size(*res));
+-	if (!*base) {
+-		dev_err(&pdev->dev, "Failed to ioremap %s memory region\n", name);
+-		ret = -EBUSY;
+-		goto err_release_mem;
+-	}
 -
 -	return 0;
 -
--err_unregister:
--	dma_async_device_unregister(dd);
--err_clk:
--	clk_disable_unprepare(dmadev->clk);
+-err_release_mem:
+-	release_mem_region((*res)->start, resource_size(*res));
+-err:
+-	*res = NULL;
+-	*base = NULL;
 -	return ret;
 -}
 -
--static void jz4740_cleanup_vchan(struct dma_device *dmadev)
+-static inline void jz_nand_iounmap_resource(struct resource *res,
+-					    void __iomem *base)
 -{
--	struct jz4740_dmaengine_chan *chan, *_chan;
--
--	list_for_each_entry_safe(chan, _chan,
--				&dmadev->channels, vchan.chan.device_node) {
--		list_del(&chan->vchan.chan.device_node);
--		tasklet_kill(&chan->vchan.task);
--	}
+-	iounmap(base);
+-	release_mem_region(res->start, resource_size(res));
 -}
 -
--
--static int jz4740_dma_remove(struct platform_device *pdev)
+-static int jz_nand_detect_bank(struct platform_device *pdev,
+-			       struct jz_nand *nand, unsigned char bank,
+-			       size_t chipnr, uint8_t *nand_maf_id,
+-			       uint8_t *nand_dev_id)
 -{
--	struct jz4740_dma_dev *dmadev = platform_get_drvdata(pdev);
--	int irq = platform_get_irq(pdev, 0);
+-	int ret;
+-	char res_name[6];
+-	uint32_t ctrl;
+-	struct nand_chip *chip = &nand->chip;
+-	struct mtd_info *mtd = nand_to_mtd(chip);
+-	struct nand_memory_organization *memorg;
+-	u8 id[2];
 -
--	free_irq(irq, dmadev);
+-	memorg = nanddev_get_memorg(&chip->base);
 -
--	jz4740_cleanup_vchan(&dmadev->ddev);
--	dma_async_device_unregister(&dmadev->ddev);
--	clk_disable_unprepare(dmadev->clk);
+-	/* Request I/O resource. */
+-	sprintf(res_name, "bank%d", bank);
+-	ret = jz_nand_ioremap_resource(pdev, res_name,
+-					&nand->bank_mem[bank - 1],
+-					&nand->bank_base[bank - 1]);
+-	if (ret)
+-		return ret;
+-
+-	/* Enable chip in bank. */
+-	ctrl = readl(nand->base + JZ_REG_NAND_CTRL);
+-	ctrl |= JZ_NAND_CTRL_ENABLE_CHIP(bank - 1);
+-	writel(ctrl, nand->base + JZ_REG_NAND_CTRL);
+-
+-	if (chipnr == 0) {
+-		/* Detect first chip. */
+-		ret = nand_scan(chip, 1);
+-		if (ret)
+-			goto notfound_id;
+-
+-		/* Retrieve the IDs from the first chip. */
+-		nand_select_target(chip, 0);
+-		nand_reset_op(chip);
+-		nand_readid_op(chip, 0, id, sizeof(id));
+-		*nand_maf_id = id[0];
+-		*nand_dev_id = id[1];
+-	} else {
+-		/* Detect additional chip. */
+-		nand_select_target(chip, chipnr);
+-		nand_reset_op(chip);
+-		nand_readid_op(chip, 0, id, sizeof(id));
+-		if (*nand_maf_id != id[0] || *nand_dev_id != id[1]) {
+-			ret = -ENODEV;
+-			goto notfound_id;
+-		}
+-
+-		/* Update size of the MTD. */
+-		memorg->ntargets++;
+-		mtd->size += nanddev_target_size(&chip->base);
+-	}
+-
+-	dev_info(&pdev->dev, "Found chip %zu on bank %i\n", chipnr, bank);
+-	return 0;
+-
+-notfound_id:
+-	dev_info(&pdev->dev, "No chip found on bank %i\n", bank);
+-	ctrl &= ~(JZ_NAND_CTRL_ENABLE_CHIP(bank - 1));
+-	writel(ctrl, nand->base + JZ_REG_NAND_CTRL);
+-	jz_nand_iounmap_resource(nand->bank_mem[bank - 1],
+-				 nand->bank_base[bank - 1]);
+-	return ret;
+-}
+-
+-static int jz_nand_attach_chip(struct nand_chip *chip)
+-{
+-	struct mtd_info *mtd = nand_to_mtd(chip);
+-	struct device *dev = mtd->dev.parent;
+-	struct jz_nand_platform_data *pdata = dev_get_platdata(dev);
+-	struct platform_device *pdev = to_platform_device(dev);
+-
+-	if (pdata && pdata->ident_callback)
+-		pdata->ident_callback(pdev, mtd, &pdata->partitions,
+-				      &pdata->num_partitions);
 -
 -	return 0;
 -}
 -
--static struct platform_driver jz4740_dma_driver = {
--	.probe = jz4740_dma_probe,
--	.remove = jz4740_dma_remove,
+-static const struct nand_controller_ops jz_nand_controller_ops = {
+-	.attach_chip = jz_nand_attach_chip,
+-};
+-
+-static int jz_nand_probe(struct platform_device *pdev)
+-{
+-	int ret;
+-	struct jz_nand *nand;
+-	struct nand_chip *chip;
+-	struct mtd_info *mtd;
+-	struct jz_nand_platform_data *pdata = dev_get_platdata(&pdev->dev);
+-	size_t chipnr, bank_idx;
+-	uint8_t nand_maf_id = 0, nand_dev_id = 0;
+-
+-	nand = kzalloc(sizeof(*nand), GFP_KERNEL);
+-	if (!nand)
+-		return -ENOMEM;
+-
+-	ret = jz_nand_ioremap_resource(pdev, "mmio", &nand->mem, &nand->base);
+-	if (ret)
+-		goto err_free;
+-
+-	nand->busy_gpio = devm_gpiod_get_optional(&pdev->dev, "busy", GPIOD_IN);
+-	if (IS_ERR(nand->busy_gpio)) {
+-		ret = PTR_ERR(nand->busy_gpio);
+-		dev_err(&pdev->dev, "Failed to request busy gpio %d\n",
+-		    ret);
+-		goto err_iounmap_mmio;
+-	}
+-
+-	chip		= &nand->chip;
+-	mtd		= nand_to_mtd(chip);
+-	mtd->dev.parent = &pdev->dev;
+-	mtd->name	= "jz4740-nand";
+-
+-	chip->ecc.hwctl		= jz_nand_hwctl;
+-	chip->ecc.calculate	= jz_nand_calculate_ecc_rs;
+-	chip->ecc.correct	= jz_nand_correct_ecc_rs;
+-	chip->ecc.mode		= NAND_ECC_HW_OOB_FIRST;
+-	chip->ecc.size		= 512;
+-	chip->ecc.bytes		= 9;
+-	chip->ecc.strength	= 4;
+-	chip->ecc.options	= NAND_ECC_GENERIC_ERASED_CHECK;
+-
+-	chip->legacy.chip_delay = 50;
+-	chip->legacy.cmd_ctrl = jz_nand_cmd_ctrl;
+-	chip->legacy.select_chip = jz_nand_select_chip;
+-	chip->legacy.dummy_controller.ops = &jz_nand_controller_ops;
+-
+-	if (nand->busy_gpio)
+-		chip->legacy.dev_ready = jz_nand_dev_ready;
+-
+-	platform_set_drvdata(pdev, nand);
+-
+-	/* We are going to autodetect NAND chips in the banks specified in the
+-	 * platform data. Although nand_scan_ident() can detect multiple chips,
+-	 * it requires those chips to be numbered consecuitively, which is not
+-	 * always the case for external memory banks. And a fixed chip-to-bank
+-	 * mapping is not practical either, since for example Dingoo units
+-	 * produced at different times have NAND chips in different banks.
+-	 */
+-	chipnr = 0;
+-	for (bank_idx = 0; bank_idx < JZ_NAND_NUM_BANKS; bank_idx++) {
+-		unsigned char bank;
+-
+-		/* If there is no platform data, look for NAND in bank 1,
+-		 * which is the most likely bank since it is the only one
+-		 * that can be booted from.
+-		 */
+-		bank = pdata ? pdata->banks[bank_idx] : bank_idx ^ 1;
+-		if (bank == 0)
+-			break;
+-		if (bank > JZ_NAND_NUM_BANKS) {
+-			dev_warn(&pdev->dev,
+-				"Skipping non-existing bank: %d\n", bank);
+-			continue;
+-		}
+-		/* The detection routine will directly or indirectly call
+-		 * jz_nand_select_chip(), so nand->banks has to contain the
+-		 * bank we're checking.
+-		 */
+-		nand->banks[chipnr] = bank;
+-		if (jz_nand_detect_bank(pdev, nand, bank, chipnr,
+-					&nand_maf_id, &nand_dev_id) == 0)
+-			chipnr++;
+-		else
+-			nand->banks[chipnr] = 0;
+-	}
+-	if (chipnr == 0) {
+-		dev_err(&pdev->dev, "No NAND chips found\n");
+-		goto err_iounmap_mmio;
+-	}
+-
+-	ret = mtd_device_register(mtd, pdata ? pdata->partitions : NULL,
+-				  pdata ? pdata->num_partitions : 0);
+-
+-	if (ret) {
+-		dev_err(&pdev->dev, "Failed to add mtd device\n");
+-		goto err_cleanup_nand;
+-	}
+-
+-	dev_info(&pdev->dev, "Successfully registered JZ4740 NAND driver\n");
+-
+-	return 0;
+-
+-err_cleanup_nand:
+-	nand_cleanup(chip);
+-	while (chipnr--) {
+-		unsigned char bank = nand->banks[chipnr];
+-		jz_nand_iounmap_resource(nand->bank_mem[bank - 1],
+-					 nand->bank_base[bank - 1]);
+-	}
+-	writel(0, nand->base + JZ_REG_NAND_CTRL);
+-err_iounmap_mmio:
+-	jz_nand_iounmap_resource(nand->mem, nand->base);
+-err_free:
+-	kfree(nand);
+-	return ret;
+-}
+-
+-static int jz_nand_remove(struct platform_device *pdev)
+-{
+-	struct jz_nand *nand = platform_get_drvdata(pdev);
+-	size_t i;
+-
+-	nand_release(&nand->chip);
+-
+-	/* Deassert and disable all chips */
+-	writel(0, nand->base + JZ_REG_NAND_CTRL);
+-
+-	for (i = 0; i < JZ_NAND_NUM_BANKS; ++i) {
+-		unsigned char bank = nand->banks[i];
+-		if (bank != 0) {
+-			jz_nand_iounmap_resource(nand->bank_mem[bank - 1],
+-						 nand->bank_base[bank - 1]);
+-		}
+-	}
+-
+-	jz_nand_iounmap_resource(nand->mem, nand->base);
+-
+-	kfree(nand);
+-
+-	return 0;
+-}
+-
+-static struct platform_driver jz_nand_driver = {
+-	.probe = jz_nand_probe,
+-	.remove = jz_nand_remove,
 -	.driver = {
--		.name = "jz4740-dma",
+-		.name = "jz4740-nand",
 -	},
 -};
--module_platform_driver(jz4740_dma_driver);
 -
+-module_platform_driver(jz_nand_driver);
+-
+-MODULE_LICENSE("GPL");
 -MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
--MODULE_DESCRIPTION("JZ4740 DMA driver");
--MODULE_LICENSE("GPL v2");
+-MODULE_DESCRIPTION("NAND controller driver for JZ4740 SoC");
+-MODULE_ALIAS("platform:jz4740-nand");
 -- 
 2.21.0.593.g511ec345e18
 

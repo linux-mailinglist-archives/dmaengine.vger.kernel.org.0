@@ -2,520 +2,274 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BC7F75A51
-	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2019 00:05:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3DFA75A71
+	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2019 00:16:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbfGYWEU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 25 Jul 2019 18:04:20 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:47876 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbfGYWEU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 25 Jul 2019 18:04:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1564092257; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=T4oRILrMqt0pKYBhUUbdSFvuh/4sYT7CLAXQEyFIORY=;
-        b=FzaJ66oDIb5UXuMpiEZ23ElSSgQoTUXOS/xI74gkg2Dlq4cB5LU+Mp8VonDvi8UG9bkJzd
-        kFbNisvb8A0QbrgPmCnE1tbuX0N1j7UM7FSAnbO1AoR3SOmv2/pLx+YJmJx59bjNAnJL2F
-        1FcUQbNOTp6h8xHsUURg9FbM/1+XzJA=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Ralf Baechle <ralf@linux-mips.org>,
+        id S1726751AbfGYWQ4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 25 Jul 2019 18:16:56 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:32894 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbfGYWQz (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 25 Jul 2019 18:16:55 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c14so23866603plo.0;
+        Thu, 25 Jul 2019 15:16:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=f+t6jbc1e2fwX6vAlkrzuMXuLiicaUEhNVvQHHY1xA0=;
+        b=tBxt6As/HYsgjOazvloK9O0Mjop6Bn56B5HpXHSoqdI5WVRldDkFUpbbjL4TopoZd2
+         J7vYPmE/m4aVBfZE48gzykZH2pLoAk/ENWS8OsjZL5gyAcIWf8nMAkci8B/raK29BWFO
+         KIDyd+zcF3jL6kQ4DqoI8CLwuCWFnpLEyoQ+wSyHr2322Q940asEEMMtPIRQWBf3NA5t
+         vy386+OJGM44cNKMiWm5wKAzU3beuPa1wWQ16i4RAA3464n6OjLqHnJ9EooueRxK3ARL
+         j24WiDLZH/M2wWET5e+S7Sl2S5dFOBOX6VnaGI6RVLNjfHZelJxZkuRmG+E0Wx/w36dm
+         yf1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=f+t6jbc1e2fwX6vAlkrzuMXuLiicaUEhNVvQHHY1xA0=;
+        b=GSKpG3VQB19uuImb+2Zi15kMU6y32OUMxOrQds0F4V3QBfVzgOFozpCOK76pwpo6DU
+         0Z6e63E3uvZRPGp0DYsaQiaJ7LoFfC5kVGjHgJSep77SQO200m2YFQEQ+ug3P4RIn8xa
+         NBpdHmbkNaBphXArXjRx8iHB/QdSmUmyKx5lguREmcZfPNc6AAZOBdC/+s4fDUprObQt
+         GxXVmO9CSeHIRmqEpIBJFZqNh/fwIa+lF2k4+FucKkdIHcATfKBsOJyNOk/uwXM9IN5l
+         tcVGI9NbFMN7+dW24rq8LvZyk0YV/l1igUMyKM4kaDbeuyRercS656o8pBCxp7OY5N6T
+         7+ZA==
+X-Gm-Message-State: APjAAAWQJSKFDuUD5GC9kDzUCRu/wVUZeKx7Y2YhcrSn5foum/OhVrkd
+        WNjsWP5R5HOqR3mq6i42I2k=
+X-Google-Smtp-Source: APXvYqy5sOalZc7jCdn8Z9ZMzKMzw/2OyExZAds1bLvX/QRXsNnz9PyIEHHW8gjFX8wSRsOEm/5AsQ==
+X-Received: by 2002:a17:902:d917:: with SMTP id c23mr93058293plz.248.1564093014781;
+        Thu, 25 Jul 2019 15:16:54 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g8sm49495815pgk.1.2019.07.25.15.16.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 25 Jul 2019 15:16:53 -0700 (PDT)
+Date:   Thu, 25 Jul 2019 15:16:52 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paul.burton@mips.com>,
         James Hogan <jhogan@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Vinod Koul <vkoul@kernel.org>,
         Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
         Lee Jones <lee.jones@linaro.org>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
         Richard Weinberger <richard@nod.at>,
         Sebastian Reichel <sre@kernel.org>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     od@zcrc.me, devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, od@zcrc.me,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
         linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-hwmon@vger.kernel.org, linux-mtd@lists.infradead.org,
         linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        Paul Cercueil <paul@crapouillou.net>,
         Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH 11/11] MIPS: jz4740: Drop dead code
-Date:   Thu, 25 Jul 2019 18:02:15 -0400
-Message-Id: <20190725220215.460-12-paul@crapouillou.net>
-In-Reply-To: <20190725220215.460-1-paul@crapouillou.net>
+Subject: Re: [PATCH 09/11] hwmon: Drop obsolete JZ4740 driver
+Message-ID: <20190725221652.GA31672@roeck-us.net>
 References: <20190725220215.460-1-paul@crapouillou.net>
+ <20190725220215.460-10-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725220215.460-10-paul@crapouillou.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Remove all the source files that are not used anywhere anymore.
+On Thu, Jul 25, 2019 at 06:02:13PM -0400, Paul Cercueil wrote:
+> The JZ4740 boards now use the iio-hwmon driver.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Tested-by: Artur Rojek <contact@artur-rojek.eu>
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Artur Rojek <contact@artur-rojek.eu>
----
- arch/mips/include/asm/mach-jz4740/gpio.h      |  15 --
- arch/mips/include/asm/mach-jz4740/jz4740_fb.h |  58 ----
- .../mips/include/asm/mach-jz4740/jz4740_mmc.h |  12 -
- arch/mips/include/asm/mach-jz4740/platform.h  |  26 --
- arch/mips/jz4740/Makefile                     |   3 +-
- arch/mips/jz4740/platform.c                   | 250 ------------------
- arch/mips/jz4740/prom.c                       |   5 -
- arch/mips/jz4740/setup.c                      |   3 +-
- 8 files changed, 2 insertions(+), 370 deletions(-)
- delete mode 100644 arch/mips/include/asm/mach-jz4740/gpio.h
- delete mode 100644 arch/mips/include/asm/mach-jz4740/jz4740_fb.h
- delete mode 100644 arch/mips/include/asm/mach-jz4740/jz4740_mmc.h
- delete mode 100644 arch/mips/include/asm/mach-jz4740/platform.h
- delete mode 100644 arch/mips/jz4740/platform.c
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 
-diff --git a/arch/mips/include/asm/mach-jz4740/gpio.h b/arch/mips/include/asm/mach-jz4740/gpio.h
-deleted file mode 100644
-index 2092a3597734..000000000000
---- a/arch/mips/include/asm/mach-jz4740/gpio.h
-+++ /dev/null
-@@ -1,15 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- *  Copyright (C) 2009, Lars-Peter Clausen <lars@metafoo.de>
-- *  JZ4740 GPIO pin definitions
-- */
--
--#ifndef _JZ_GPIO_H
--#define _JZ_GPIO_H
--
--#define JZ_GPIO_PORTA(x) ((x) + 32 * 0)
--#define JZ_GPIO_PORTB(x) ((x) + 32 * 1)
--#define JZ_GPIO_PORTC(x) ((x) + 32 * 2)
--#define JZ_GPIO_PORTD(x) ((x) + 32 * 3)
--
--#endif
-diff --git a/arch/mips/include/asm/mach-jz4740/jz4740_fb.h b/arch/mips/include/asm/mach-jz4740/jz4740_fb.h
-deleted file mode 100644
-index e84a48f73285..000000000000
---- a/arch/mips/include/asm/mach-jz4740/jz4740_fb.h
-+++ /dev/null
-@@ -1,58 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- *  Copyright (C) 2009, Lars-Peter Clausen <lars@metafoo.de>
-- */
--
--#ifndef __ASM_MACH_JZ4740_JZ4740_FB_H__
--#define __ASM_MACH_JZ4740_JZ4740_FB_H__
--
--#include <linux/fb.h>
--
--enum jz4740_fb_lcd_type {
--	JZ_LCD_TYPE_GENERIC_16_BIT = 0,
--	JZ_LCD_TYPE_GENERIC_18_BIT = 0 | (1 << 4),
--	JZ_LCD_TYPE_SPECIAL_TFT_1 = 1,
--	JZ_LCD_TYPE_SPECIAL_TFT_2 = 2,
--	JZ_LCD_TYPE_SPECIAL_TFT_3 = 3,
--	JZ_LCD_TYPE_NON_INTERLACED_CCIR656 = 5,
--	JZ_LCD_TYPE_INTERLACED_CCIR656 = 7,
--	JZ_LCD_TYPE_SINGLE_COLOR_STN = 8,
--	JZ_LCD_TYPE_SINGLE_MONOCHROME_STN = 9,
--	JZ_LCD_TYPE_DUAL_COLOR_STN = 10,
--	JZ_LCD_TYPE_DUAL_MONOCHROME_STN = 11,
--	JZ_LCD_TYPE_8BIT_SERIAL = 12,
--};
--
--#define JZ4740_FB_SPECIAL_TFT_CONFIG(start, stop) (((start) << 16) | (stop))
--
--/*
--* width: width of the lcd display in mm
--* height: height of the lcd display in mm
--* num_modes: size of modes
--* modes: list of valid video modes
--* bpp: bits per pixel for the lcd
--* lcd_type: lcd type
--*/
--
--struct jz4740_fb_platform_data {
--	unsigned int width;
--	unsigned int height;
--
--	size_t num_modes;
--	struct fb_videomode *modes;
--
--	unsigned int bpp;
--	enum jz4740_fb_lcd_type lcd_type;
--
--	struct {
--		uint32_t spl;
--		uint32_t cls;
--		uint32_t ps;
--		uint32_t rev;
--	} special_tft_config;
--
--	unsigned pixclk_falling_edge:1;
--	unsigned date_enable_active_low:1;
--};
--
--#endif
-diff --git a/arch/mips/include/asm/mach-jz4740/jz4740_mmc.h b/arch/mips/include/asm/mach-jz4740/jz4740_mmc.h
-deleted file mode 100644
-index 9a7de47c7c79..000000000000
---- a/arch/mips/include/asm/mach-jz4740/jz4740_mmc.h
-+++ /dev/null
-@@ -1,12 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __LINUX_MMC_JZ4740_MMC
--#define __LINUX_MMC_JZ4740_MMC
--
--struct jz4740_mmc_platform_data {
--	unsigned card_detect_active_low:1;
--	unsigned read_only_active_low:1;
--
--	unsigned data_1bit:1;
--};
--
--#endif
-diff --git a/arch/mips/include/asm/mach-jz4740/platform.h b/arch/mips/include/asm/mach-jz4740/platform.h
-deleted file mode 100644
-index 241270d3ea14..000000000000
---- a/arch/mips/include/asm/mach-jz4740/platform.h
-+++ /dev/null
-@@ -1,26 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- *  Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
-- *  JZ4740 platform device definitions
-- */
--
--
--#ifndef __JZ4740_PLATFORM_H
--#define __JZ4740_PLATFORM_H
--
--#include <linux/platform_device.h>
--
--extern struct platform_device jz4740_udc_device;
--extern struct platform_device jz4740_udc_xceiv_device;
--extern struct platform_device jz4740_mmc_device;
--extern struct platform_device jz4740_i2c_device;
--extern struct platform_device jz4740_nand_device;
--extern struct platform_device jz4740_framebuffer_device;
--extern struct platform_device jz4740_i2s_device;
--extern struct platform_device jz4740_pcm_device;
--extern struct platform_device jz4740_codec_device;
--extern struct platform_device jz4740_adc_device;
--extern struct platform_device jz4740_pwm_device;
--extern struct platform_device jz4740_dma_device;
--
--#endif
-diff --git a/arch/mips/jz4740/Makefile b/arch/mips/jz4740/Makefile
-index 390c82adc00c..6de14c0deb4e 100644
---- a/arch/mips/jz4740/Makefile
-+++ b/arch/mips/jz4740/Makefile
-@@ -5,8 +5,7 @@
- 
- # Object file lists.
- 
--obj-y += prom.o time.o reset.o setup.o \
--	platform.o timer.o
-+obj-y += prom.o time.o reset.o setup.o timer.o
- 
- CFLAGS_setup.o = -I$(src)/../../../scripts/dtc/libfdt
- 
-diff --git a/arch/mips/jz4740/platform.c b/arch/mips/jz4740/platform.c
-deleted file mode 100644
-index c74c99f5951d..000000000000
---- a/arch/mips/jz4740/platform.c
-+++ /dev/null
-@@ -1,250 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- *  Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
-- *  JZ4740 platform devices
-- */
--
--#include <linux/clk.h>
--#include <linux/device.h>
--#include <linux/kernel.h>
--#include <linux/platform_device.h>
--#include <linux/resource.h>
--
--#include <linux/dma-mapping.h>
--
--#include <linux/usb/musb.h>
--
--#include <asm/mach-jz4740/platform.h>
--#include <asm/mach-jz4740/base.h>
--#include <asm/mach-jz4740/irq.h>
--
--#include <linux/serial_core.h>
--#include <linux/serial_8250.h>
--
--/* USB Device Controller */
--struct platform_device jz4740_udc_xceiv_device = {
--	.name = "usb_phy_generic",
--	.id   = 0,
--};
--
--static struct resource jz4740_udc_resources[] = {
--	[0] = {
--		.start = JZ4740_UDC_BASE_ADDR,
--		.end   = JZ4740_UDC_BASE_ADDR + 0x10000 - 1,
--		.flags = IORESOURCE_MEM,
--	},
--	[1] = {
--		.start = JZ4740_IRQ_UDC,
--		.end   = JZ4740_IRQ_UDC,
--		.flags = IORESOURCE_IRQ,
--		.name  = "mc",
--	},
--};
--
--struct platform_device jz4740_udc_device = {
--	.name = "musb-jz4740",
--	.id   = -1,
--	.dev  = {
--		.dma_mask          = &jz4740_udc_device.dev.coherent_dma_mask,
--		.coherent_dma_mask = DMA_BIT_MASK(32),
--	},
--	.num_resources = ARRAY_SIZE(jz4740_udc_resources),
--	.resource      = jz4740_udc_resources,
--};
--
--/* MMC/SD controller */
--static struct resource jz4740_mmc_resources[] = {
--	{
--		.start	= JZ4740_MSC_BASE_ADDR,
--		.end	= JZ4740_MSC_BASE_ADDR + 0x1000 - 1,
--		.flags	= IORESOURCE_MEM,
--	},
--	{
--		.start	= JZ4740_IRQ_MSC,
--		.end	= JZ4740_IRQ_MSC,
--		.flags	= IORESOURCE_IRQ,
--	}
--};
--
--struct platform_device jz4740_mmc_device = {
--	.name		= "jz4740-mmc",
--	.id		= 0,
--	.dev = {
--		.dma_mask = &jz4740_mmc_device.dev.coherent_dma_mask,
--		.coherent_dma_mask = DMA_BIT_MASK(32),
--	},
--	.num_resources	= ARRAY_SIZE(jz4740_mmc_resources),
--	.resource	= jz4740_mmc_resources,
--};
--
--/* I2C controller */
--static struct resource jz4740_i2c_resources[] = {
--	{
--		.start	= JZ4740_I2C_BASE_ADDR,
--		.end	= JZ4740_I2C_BASE_ADDR + 0x1000 - 1,
--		.flags	= IORESOURCE_MEM,
--	},
--	{
--		.start	= JZ4740_IRQ_I2C,
--		.end	= JZ4740_IRQ_I2C,
--		.flags	= IORESOURCE_IRQ,
--	}
--};
--
--struct platform_device jz4740_i2c_device = {
--	.name		= "jz4740-i2c",
--	.id		= 0,
--	.num_resources	= ARRAY_SIZE(jz4740_i2c_resources),
--	.resource	= jz4740_i2c_resources,
--};
--
--/* NAND controller */
--static struct resource jz4740_nand_resources[] = {
--	{
--		.name	= "mmio",
--		.start	= JZ4740_EMC_BASE_ADDR,
--		.end	= JZ4740_EMC_BASE_ADDR + 0x1000 - 1,
--		.flags	= IORESOURCE_MEM,
--	},
--	{
--		.name	= "bank1",
--		.start	= 0x18000000,
--		.end	= 0x180C0000 - 1,
--		.flags = IORESOURCE_MEM,
--	},
--	{
--		.name	= "bank2",
--		.start	= 0x14000000,
--		.end	= 0x140C0000 - 1,
--		.flags = IORESOURCE_MEM,
--	},
--	{
--		.name	= "bank3",
--		.start	= 0x0C000000,
--		.end	= 0x0C0C0000 - 1,
--		.flags = IORESOURCE_MEM,
--	},
--	{
--		.name	= "bank4",
--		.start	= 0x08000000,
--		.end	= 0x080C0000 - 1,
--		.flags = IORESOURCE_MEM,
--	},
--};
--
--struct platform_device jz4740_nand_device = {
--	.name = "jz4740-nand",
--	.num_resources = ARRAY_SIZE(jz4740_nand_resources),
--	.resource = jz4740_nand_resources,
--};
--
--/* LCD controller */
--static struct resource jz4740_framebuffer_resources[] = {
--	{
--		.start	= JZ4740_LCD_BASE_ADDR,
--		.end	= JZ4740_LCD_BASE_ADDR + 0x1000 - 1,
--		.flags	= IORESOURCE_MEM,
--	},
--};
--
--struct platform_device jz4740_framebuffer_device = {
--	.name		= "jz4740-fb",
--	.id		= -1,
--	.num_resources	= ARRAY_SIZE(jz4740_framebuffer_resources),
--	.resource	= jz4740_framebuffer_resources,
--	.dev = {
--		.dma_mask = &jz4740_framebuffer_device.dev.coherent_dma_mask,
--		.coherent_dma_mask = DMA_BIT_MASK(32),
--	},
--};
--
--/* I2S controller */
--static struct resource jz4740_i2s_resources[] = {
--	{
--		.start	= JZ4740_AIC_BASE_ADDR,
--		.end	= JZ4740_AIC_BASE_ADDR + 0x38 - 1,
--		.flags	= IORESOURCE_MEM,
--	},
--};
--
--struct platform_device jz4740_i2s_device = {
--	.name		= "jz4740-i2s",
--	.id		= -1,
--	.num_resources	= ARRAY_SIZE(jz4740_i2s_resources),
--	.resource	= jz4740_i2s_resources,
--};
--
--/* PCM */
--struct platform_device jz4740_pcm_device = {
--	.name		= "jz4740-pcm-audio",
--	.id		= -1,
--};
--
--/* Codec */
--static struct resource jz4740_codec_resources[] = {
--	{
--		.start	= JZ4740_AIC_BASE_ADDR + 0x80,
--		.end	= JZ4740_AIC_BASE_ADDR + 0x88 - 1,
--		.flags	= IORESOURCE_MEM,
--	},
--};
--
--struct platform_device jz4740_codec_device = {
--	.name		= "jz4740-codec",
--	.id		= -1,
--	.num_resources	= ARRAY_SIZE(jz4740_codec_resources),
--	.resource	= jz4740_codec_resources,
--};
--
--/* ADC controller */
--static struct resource jz4740_adc_resources[] = {
--	{
--		.start	= JZ4740_SADC_BASE_ADDR,
--		.end	= JZ4740_SADC_BASE_ADDR + 0x30,
--		.flags	= IORESOURCE_MEM,
--	},
--	{
--		.start	= JZ4740_IRQ_SADC,
--		.end	= JZ4740_IRQ_SADC,
--		.flags	= IORESOURCE_IRQ,
--	},
--	{
--		.start	= JZ4740_IRQ_ADC_BASE,
--		.end	= JZ4740_IRQ_ADC_BASE,
--		.flags	= IORESOURCE_IRQ,
--	},
--};
--
--struct platform_device jz4740_adc_device = {
--	.name		= "jz4740-adc",
--	.id		= -1,
--	.num_resources	= ARRAY_SIZE(jz4740_adc_resources),
--	.resource	= jz4740_adc_resources,
--};
--
--/* PWM */
--struct platform_device jz4740_pwm_device = {
--	.name = "jz4740-pwm",
--	.id   = -1,
--};
--
--/* DMA */
--static struct resource jz4740_dma_resources[] = {
--	{
--		.start	= JZ4740_DMAC_BASE_ADDR,
--		.end	= JZ4740_DMAC_BASE_ADDR + 0x400 - 1,
--		.flags	= IORESOURCE_MEM,
--	},
--	{
--		.start	= JZ4740_IRQ_DMAC,
--		.end	= JZ4740_IRQ_DMAC,
--		.flags	= IORESOURCE_IRQ,
--	},
--};
--
--struct platform_device jz4740_dma_device = {
--	.name		= "jz4740-dma",
--	.id		= -1,
--	.num_resources	= ARRAY_SIZE(jz4740_dma_resources),
--	.resource	= jz4740_dma_resources,
--};
-diff --git a/arch/mips/jz4740/prom.c b/arch/mips/jz4740/prom.c
-index 88f33af4403b..ff4555c3fb15 100644
---- a/arch/mips/jz4740/prom.c
-+++ b/arch/mips/jz4740/prom.c
-@@ -4,15 +4,10 @@
-  *  JZ4740 SoC prom code
-  */
- 
--#include <linux/kernel.h>
- #include <linux/init.h>
--#include <linux/string.h>
--
--#include <linux/serial_reg.h>
- 
- #include <asm/bootinfo.h>
- #include <asm/fw/fw.h>
--#include <asm/mach-jz4740/base.h>
- 
- void __init prom_init(void)
- {
-diff --git a/arch/mips/jz4740/setup.c b/arch/mips/jz4740/setup.c
-index 4264eaf030c3..73ed2724d4c7 100644
---- a/arch/mips/jz4740/setup.c
-+++ b/arch/mips/jz4740/setup.c
-@@ -15,10 +15,9 @@
- #include <asm/bootinfo.h>
- #include <asm/prom.h>
- 
--#include <asm/mach-jz4740/base.h>
--
- #include "reset.h"
- 
-+#define JZ4740_EMC_BASE_ADDR 0x13010000
- 
- #define JZ4740_EMC_SDRAM_CTRL 0x80
- 
--- 
-2.21.0.593.g511ec345e18
-
+> ---
+>  drivers/hwmon/Kconfig        |  10 ---
+>  drivers/hwmon/Makefile       |   1 -
+>  drivers/hwmon/jz4740-hwmon.c | 135 -----------------------------------
+>  3 files changed, 146 deletions(-)
+>  delete mode 100644 drivers/hwmon/jz4740-hwmon.c
+> 
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index 650dd71f9724..2199ac1d0ba7 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -660,16 +660,6 @@ config SENSORS_IT87
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called it87.
+>  
+> -config SENSORS_JZ4740
+> -	tristate "Ingenic JZ4740 SoC ADC driver"
+> -	depends on MACH_JZ4740 && MFD_JZ4740_ADC
+> -	help
+> -	  If you say yes here you get support for reading adc values from the ADCIN
+> -	  pin on Ingenic JZ4740 SoC based boards.
+> -
+> -	  This driver can also be built as a module. If so, the module will be
+> -	  called jz4740-hwmon.
+> -
+>  config SENSORS_JC42
+>  	tristate "JEDEC JC42.4 compliant memory module temperature sensors"
+>  	depends on I2C
+> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> index 8db472ea04f0..1e82e912a5c4 100644
+> --- a/drivers/hwmon/Makefile
+> +++ b/drivers/hwmon/Makefile
+> @@ -85,7 +85,6 @@ obj-$(CONFIG_SENSORS_INA2XX)	+= ina2xx.o
+>  obj-$(CONFIG_SENSORS_INA3221)	+= ina3221.o
+>  obj-$(CONFIG_SENSORS_IT87)	+= it87.o
+>  obj-$(CONFIG_SENSORS_JC42)	+= jc42.o
+> -obj-$(CONFIG_SENSORS_JZ4740)	+= jz4740-hwmon.o
+>  obj-$(CONFIG_SENSORS_K8TEMP)	+= k8temp.o
+>  obj-$(CONFIG_SENSORS_K10TEMP)	+= k10temp.o
+>  obj-$(CONFIG_SENSORS_LINEAGE)	+= lineage-pem.o
+> diff --git a/drivers/hwmon/jz4740-hwmon.c b/drivers/hwmon/jz4740-hwmon.c
+> deleted file mode 100644
+> index bec5befd1d8b..000000000000
+> --- a/drivers/hwmon/jz4740-hwmon.c
+> +++ /dev/null
+> @@ -1,135 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0-or-later
+> -/*
+> - * Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
+> - * JZ4740 SoC HWMON driver
+> - */
+> -
+> -#include <linux/err.h>
+> -#include <linux/interrupt.h>
+> -#include <linux/kernel.h>
+> -#include <linux/module.h>
+> -#include <linux/mutex.h>
+> -#include <linux/platform_device.h>
+> -#include <linux/slab.h>
+> -#include <linux/io.h>
+> -
+> -#include <linux/completion.h>
+> -#include <linux/mfd/core.h>
+> -
+> -#include <linux/hwmon.h>
+> -
+> -struct jz4740_hwmon {
+> -	void __iomem *base;
+> -	int irq;
+> -	const struct mfd_cell *cell;
+> -	struct platform_device *pdev;
+> -	struct completion read_completion;
+> -	struct mutex lock;
+> -};
+> -
+> -static irqreturn_t jz4740_hwmon_irq(int irq, void *data)
+> -{
+> -	struct jz4740_hwmon *hwmon = data;
+> -
+> -	complete(&hwmon->read_completion);
+> -	return IRQ_HANDLED;
+> -}
+> -
+> -static ssize_t in0_input_show(struct device *dev,
+> -			      struct device_attribute *dev_attr, char *buf)
+> -{
+> -	struct jz4740_hwmon *hwmon = dev_get_drvdata(dev);
+> -	struct platform_device *pdev = hwmon->pdev;
+> -	struct completion *completion = &hwmon->read_completion;
+> -	long t;
+> -	unsigned long val;
+> -	int ret;
+> -
+> -	mutex_lock(&hwmon->lock);
+> -
+> -	reinit_completion(completion);
+> -
+> -	enable_irq(hwmon->irq);
+> -	hwmon->cell->enable(pdev);
+> -
+> -	t = wait_for_completion_interruptible_timeout(completion, HZ);
+> -
+> -	if (t > 0) {
+> -		val = readw(hwmon->base) & 0xfff;
+> -		val = (val * 3300) >> 12;
+> -		ret = sprintf(buf, "%lu\n", val);
+> -	} else {
+> -		ret = t ? t : -ETIMEDOUT;
+> -	}
+> -
+> -	hwmon->cell->disable(pdev);
+> -	disable_irq(hwmon->irq);
+> -
+> -	mutex_unlock(&hwmon->lock);
+> -
+> -	return ret;
+> -}
+> -
+> -static DEVICE_ATTR_RO(in0_input);
+> -
+> -static struct attribute *jz4740_attrs[] = {
+> -	&dev_attr_in0_input.attr,
+> -	NULL
+> -};
+> -
+> -ATTRIBUTE_GROUPS(jz4740);
+> -
+> -static int jz4740_hwmon_probe(struct platform_device *pdev)
+> -{
+> -	int ret;
+> -	struct device *dev = &pdev->dev;
+> -	struct jz4740_hwmon *hwmon;
+> -	struct device *hwmon_dev;
+> -
+> -	hwmon = devm_kzalloc(dev, sizeof(*hwmon), GFP_KERNEL);
+> -	if (!hwmon)
+> -		return -ENOMEM;
+> -
+> -	hwmon->cell = mfd_get_cell(pdev);
+> -
+> -	hwmon->irq = platform_get_irq(pdev, 0);
+> -	if (hwmon->irq < 0) {
+> -		dev_err(&pdev->dev, "Failed to get platform irq: %d\n",
+> -			hwmon->irq);
+> -		return hwmon->irq;
+> -	}
+> -
+> -	hwmon->base = devm_platform_ioremap_resource(pdev, 0);
+> -	if (IS_ERR(hwmon->base))
+> -		return PTR_ERR(hwmon->base);
+> -
+> -	hwmon->pdev = pdev;
+> -	init_completion(&hwmon->read_completion);
+> -	mutex_init(&hwmon->lock);
+> -
+> -	ret = devm_request_irq(dev, hwmon->irq, jz4740_hwmon_irq, 0,
+> -			       pdev->name, hwmon);
+> -	if (ret) {
+> -		dev_err(&pdev->dev, "Failed to request irq: %d\n", ret);
+> -		return ret;
+> -	}
+> -	disable_irq(hwmon->irq);
+> -
+> -	hwmon_dev = devm_hwmon_device_register_with_groups(dev, "jz4740", hwmon,
+> -							   jz4740_groups);
+> -	return PTR_ERR_OR_ZERO(hwmon_dev);
+> -}
+> -
+> -static struct platform_driver jz4740_hwmon_driver = {
+> -	.probe	= jz4740_hwmon_probe,
+> -	.driver = {
+> -		.name = "jz4740-hwmon",
+> -	},
+> -};
+> -
+> -module_platform_driver(jz4740_hwmon_driver);
+> -
+> -MODULE_DESCRIPTION("JZ4740 SoC HWMON driver");
+> -MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
+> -MODULE_LICENSE("GPL");
+> -MODULE_ALIAS("platform:jz4740-hwmon");
+> -- 
+> 2.21.0.593.g511ec345e18
+> 

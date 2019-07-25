@@ -2,141 +2,185 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BBC3A75007
-	for <lists+dmaengine@lfdr.de>; Thu, 25 Jul 2019 15:47:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93C897508E
+	for <lists+dmaengine@lfdr.de>; Thu, 25 Jul 2019 16:07:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390543AbfGYNrt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 25 Jul 2019 09:47:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50296 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390490AbfGYNrs (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:47:48 -0400
-Received: from localhost (unknown [106.200.241.217])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BD0E22BEF;
-        Thu, 25 Jul 2019 13:47:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564062467;
-        bh=vIsBkngdNVkk79IOWc97o+7rTHMW1VY2qcEwi6u4ejk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QlwSoQ4eBmeD6vqPPIWMZLggxL95X67fhSga8hWPeXYPuyGisldaZAKntupUi1bFN
-         BA3nSoEyReGZ+Wf+Sm17zgQd0OSzInZyxfFbJAIRRt3Der8mrEgzh0r5cEEOEHRYoN
-         CwKPEBZgBozBc461uj9OszR68eCMftY8nxZj4O0E=
-Date:   Thu, 25 Jul 2019 19:16:33 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH v5 2/3] dmaengine: ti: edma: Correct the residue
- calculation (fix for memcpy)
-Message-ID: <20190725134633.GZ12733@vkoul-mobl.Dlink>
-References: <20190716082655.1620-1-peter.ujfalusi@ti.com>
- <20190716082655.1620-3-peter.ujfalusi@ti.com>
+        id S1726645AbfGYOHQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 25 Jul 2019 10:07:16 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:57854 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbfGYOHQ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 25 Jul 2019 10:07:16 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6PE75p4076998;
+        Thu, 25 Jul 2019 09:07:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1564063625;
+        bh=xTCyFL18QoJz/yKwkuGtxisb1zU+8DWUFzU/mhQoyE4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=kh6qCVT5hxaYFJON1weN5or59OFUwE7NCa/KduHaUzTI7EhbWwoGI47fVBvUThwNq
+         NZOnFgv2XLk7veJIns2vw6M6YnAG1UrT2GNUKhA6r7VORepkdSL2Qrz/NcNkKNWK4s
+         U170M0FOALjxdWNzP16uCBa3EtkiH8/xMc91wqog=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6PE75g8076586
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 25 Jul 2019 09:07:05 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 25
+ Jul 2019 09:07:05 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 25 Jul 2019 09:07:05 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6PE727U029938;
+        Thu, 25 Jul 2019 09:07:03 -0500
+Subject: Re: [PATCH v2 2/2] dmaengine: ti: omap-dma: Improved memcpy polling
+ support
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-omap@vger.kernel.org>
+References: <20190716082459.1222-1-peter.ujfalusi@ti.com>
+ <20190716082459.1222-3-peter.ujfalusi@ti.com>
+ <20190725133748.GX12733@vkoul-mobl.Dlink>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <59794775-95e6-04c3-2660-9344c89df9a1@ti.com>
+Date:   Thu, 25 Jul 2019 17:07:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190716082655.1620-3-peter.ujfalusi@ti.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190725133748.GX12733@vkoul-mobl.Dlink>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 16-07-19, 11:26, Peter Ujfalusi wrote:
-> For memcpy we never stored the start address of the transfer for the pset
-> which rendered the memcpy residue calculation completely broken.
-> 
-> In the edma_residue() function we also need to to some correction for the
-> calculations:
-> Instead waiting for all EDMA channels to be idle (in a busy system it can
-> take few iteration to hit a point when all queues are idle) wait for the
-> event pending on the given channel (SH_ER for hw synchronized channels,
-> SH_ESR for manually triggered channels).
-> 
-> If the position returned by EMDA is 0 it imiplies that the last paRAM set
 
-s/imiplies/implies
 
-> has been consumed and we are at the closing dummy set, thus we can conclude
-> that the transfer is completed and we can return 0 as residue.
+On 25/07/2019 16.37, Vinod Koul wrote:
+> On 16-07-19, 11:24, Peter Ujfalusi wrote:
+>> When a DMA client driver does not set the DMA_PREP_INTERRUPT because it
+>> does not want to use interrupts for DMA completion or because it can not
+>> rely on DMA interrupts due to executing the memcpy when interrupts are
+>> disabled it will poll the status of the transfer.
+>>
+>> If the interrupts are enabled then the cookie will be set completed in the
+>> interrupt handler so only check in HW completion when the polling is really
+>> needed.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>>  drivers/dma/ti/omap-dma.c | 44 +++++++++++++++++++++++++--------------
+>>  1 file changed, 28 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+>> index 029c0bd550d5..966d8f0323b5 100644
+>> --- a/drivers/dma/ti/omap-dma.c
+>> +++ b/drivers/dma/ti/omap-dma.c
+>> @@ -91,6 +91,7 @@ struct omap_desc {
+>>  	bool using_ll;
+>>  	enum dma_transfer_direction dir;
+>>  	dma_addr_t dev_addr;
+>> +	bool polled;
+>>  
+>>  	int32_t fi;		/* for OMAP_DMA_SYNC_PACKET / double indexing */
+>>  	int16_t ei;		/* for double indexing */
+>> @@ -815,26 +816,20 @@ static enum dma_status omap_dma_tx_status(struct dma_chan *chan,
+>>  	struct virt_dma_desc *vd;
+>>  	enum dma_status ret;
+>>  	unsigned long flags;
+>> +	struct omap_desc *d = NULL;
+>>  
+>>  	ret = dma_cookie_status(chan, cookie, txstate);
+>> -
+>> -	if (!c->paused && c->running) {
+>> -		uint32_t ccr = omap_dma_chan_read(c, CCR);
+>> -		/*
+>> -		 * The channel is no longer active, set the return value
+>> -		 * accordingly
+>> -		 */
+>> -		if (!(ccr & CCR_ENABLE))
+>> -			ret = DMA_COMPLETE;
+>> -	}
+>> -
+>> -	if (ret == DMA_COMPLETE || !txstate)
+>> +	if (ret == DMA_COMPLETE)
 > 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  drivers/dma/ti/edma.c | 31 +++++++++++++++++++++++--------
->  1 file changed, 23 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-> index a39f817b3888..5b8cbd6d7610 100644
-> --- a/drivers/dma/ti/edma.c
-> +++ b/drivers/dma/ti/edma.c
-> @@ -1026,6 +1026,7 @@ static int edma_config_pset(struct dma_chan *chan, struct edma_pset *epset,
->  		src_cidx = cidx;
->  		dst_bidx = acnt;
->  		dst_cidx = cidx;
-> +		epset->addr = src_addr;
->  	} else {
->  		dev_err(dev, "%s: direction not implemented yet\n", __func__);
->  		return -EINVAL;
-> @@ -1736,7 +1737,11 @@ static u32 edma_residue(struct edma_desc *edesc)
->  	int loop_count = EDMA_MAX_TR_WAIT_LOOPS;
->  	struct edma_chan *echan = edesc->echan;
->  	struct edma_pset *pset = edesc->pset;
-> -	dma_addr_t done, pos;
-> +	dma_addr_t done, pos, pos_old;
-> +	int channel = EDMA_CHAN_SLOT(echan->ch_num);
-> +	int idx = EDMA_REG_ARRAY_INDEX(channel);
-> +	int ch_bit = EDMA_CHANNEL_BIT(channel);
-> +	int event_reg;
->  	int i;
->  
->  	/*
-> @@ -1749,16 +1754,20 @@ static u32 edma_residue(struct edma_desc *edesc)
->  	 * "pos" may represent a transfer request that is still being
->  	 * processed by the EDMACC or EDMATC. We will busy wait until
->  	 * any one of the situations occurs:
-> -	 *   1. the DMA hardware is idle
-> -	 *   2. a new transfer request is setup
-> +	 *   1. while and event is pending for the channel
-> +	 *   2. a position updated
->  	 *   3. we hit the loop limit
->  	 */
-> -	while (edma_read(echan->ecc, EDMA_CCSTAT) & EDMA_CCSTAT_ACTV) {
-> -		/* check if a new transfer request is setup */
-> -		if (edma_get_position(echan->ecc,
-> -				      echan->slot[0], dst) != pos) {
-> +	if (is_slave_direction(edesc->direction))
-> +		event_reg = SH_ER;
-> +	else
-> +		event_reg = SH_ESR;
-> +
-> +	pos_old = pos;
-> +	while (edma_shadow0_read_array(echan->ecc, event_reg, idx) & ch_bit) {
-> +		pos = edma_get_position(echan->ecc, echan->slot[0], dst);
-> +		if (pos != pos_old)
->  			break;
-> -		}
->  
->  		if (!--loop_count) {
->  			dev_dbg_ratelimited(echan->vchan.chan.device->dev,
-> @@ -1783,6 +1792,12 @@ static u32 edma_residue(struct edma_desc *edesc)
->  		return edesc->residue_stat;
->  	}
->  
-> +	/*
-> +	 * If the position is 0, then EDMA loaded the closing dummy slot, the
-> +	 * transfer is completed
-> +	 */
-> +	if (!pos)
-> +		return 0;
->  	/*
->  	 * For SG operation we catch up with the last processed
->  	 * status.
-> -- 
-> Peter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> why do you want to continue for txstate being null?
 
--- 
-~Vinod
+The caller could opt to not provide txstate and I still need to check if
+the non completed transfer is actually done by the HW or not.
+
+> Also it would lead to NULL ptr deref for txstate
+
+There is a !txstate check to avoid that.
+
+> 
+>>  		return ret;
+>>  
+>>  	spin_lock_irqsave(&c->vc.lock, flags);
+>> +	if (c->desc && c->desc->vd.tx.cookie == cookie)
+>> +		d = c->desc;
+>> +
+>> +	if (!txstate)
+>> +		goto out;
+>>  
+>> -	if (c->desc && c->desc->vd.tx.cookie == cookie) {
+>> -		struct omap_desc *d = c->desc;
+>> +	if (d) {
+>>  		dma_addr_t pos;
+>>  
+>>  		if (d->dir == DMA_MEM_TO_DEV)
+>> @@ -851,8 +846,22 @@ static enum dma_status omap_dma_tx_status(struct dma_chan *chan,
+>>  		txstate->residue = 0;
+>>  	}
+>>  
+>> -	if (ret == DMA_IN_PROGRESS && c->paused)
+>> +out:
+>> +	if (ret == DMA_IN_PROGRESS && c->paused) {
+>>  		ret = DMA_PAUSED;
+>> +	} else if (d && d->polled && c->running) {
+>> +		uint32_t ccr = omap_dma_chan_read(c, CCR);
+>> +		/*
+>> +		 * The channel is no longer active, set the return value
+>> +		 * accordingly and mark it as completed
+>> +		 */
+>> +		if (!(ccr & CCR_ENABLE)) {
+>> +			struct omap_desc *d = c->desc;
+>> +			ret = DMA_COMPLETE;
+>> +			omap_dma_start_desc(c);
+>> +			vchan_cookie_complete(&d->vd);
+>> +		}
+>> +	}
+>>  
+>>  	spin_unlock_irqrestore(&c->vc.lock, flags);
+>>  
+>> @@ -1180,7 +1189,10 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_memcpy(
+>>  	d->ccr = c->ccr;
+>>  	d->ccr |= CCR_DST_AMODE_POSTINC | CCR_SRC_AMODE_POSTINC;
+>>  
+>> -	d->cicr = CICR_DROP_IE | CICR_FRAME_IE;
+>> +	if (tx_flags & DMA_PREP_INTERRUPT)
+>> +		d->cicr |= CICR_FRAME_IE;
+>> +	else
+>> +		d->polled = true;
+>>  
+>>  	d->csdp = data_type;
+>>  
+>> -- 
+>> Peter
+>>
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

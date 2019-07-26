@@ -2,128 +2,98 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0979575BEB
-	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2019 02:10:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B244763F9
+	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2019 13:00:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfGZAKK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 25 Jul 2019 20:10:10 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:37318 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbfGZAKK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 25 Jul 2019 20:10:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1564099806; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gFaFrhEeyihyNbT3NtUBxEN4a+tGXeK6Vj+6otZDbtA=;
-        b=EjeAwp0Z/Iz3JRj9xNi/OYWvP2qoXOXLR2kbAZQ7FDIMPuZOSiF0qc+SgEr+9qWUDz7njx
-        9fSJSmwLBKrpzZNSM2vLDDU9dSKZqz4/qtlXGm6qm9sWN7tSWyprI05k88rU07mM/u+DSu
-        bZeGz0/dkH6Ou3QGiuwrGDsK3pWy2rI=
-Date:   Thu, 25 Jul 2019 20:09:41 -0400
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 02/11] MIPS: qi_lb60: Migrate to devicetree
-To:     Paul Burton <paul.burton@mips.com>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sebastian Reichel <sre@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, od@zcrc.me,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        Artur Rojek <contact@artur-rojek.eu>
-Message-Id: <1564099781.1699.0@crapouillou.net>
-In-Reply-To: <20190725234735.h7qmtt26qpkjw3n6@pburton-laptop>
-References: <20190725220215.460-1-paul@crapouillou.net>
-        <20190725220215.460-3-paul@crapouillou.net>
-        <20190725234735.h7qmtt26qpkjw3n6@pburton-laptop>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        id S1726023AbfGZLAE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 26 Jul 2019 07:00:04 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42844 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfGZLAE (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 26 Jul 2019 07:00:04 -0400
+Received: by mail-pl1-f196.google.com with SMTP id ay6so24673271plb.9;
+        Fri, 26 Jul 2019 04:00:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=GZk1YBh8K1nF7b/BG0aJDKLlYWK7vgDFFQWFrUTZFzA=;
+        b=c6gTe21NfZlHeMmzBg1Z75RsvgsPNWl9dWqZyeki1vTtEStPyxBnNCiGiMBiDP0xWu
+         KjxYYQyZujbishNMkirEBOjr/FJ5NObejW3xu/FLWt72aMHSXN38DE0AK7Nj3ywn0sc2
+         M7QupNSZVxzNUTBnTqKgXWZwfPGyFqHqCW++ZTZ+IuayQ3byxx7dzA8MnDFrlBSNGVpx
+         ICtTcxqWNXy/0k9pv7mJXiTB7mYuqtlEQTplUuJTiCYjB831EiXxGrucawDOa3KiA6fB
+         pyEEQYPipeh3XJ7JCFuJepY8vv9Ru8Tq2Bq08Ana1vSiy8lVwTzyguTF1zpk2NH5Rwkn
+         V6oQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GZk1YBh8K1nF7b/BG0aJDKLlYWK7vgDFFQWFrUTZFzA=;
+        b=Z1VhsZC04UPeOzYPb+DUCBDOazcpFDbjDWC2+qVIF69ZqO/ojhtZaK52HHQT0Dk411
+         uRXdYtzNgKS9Ko3eQHYjNC1OPy3GCvn8yW2h3u6Xhq3yQD729k1bUnxTWND/9spHgKhU
+         M9DuhkvZ296Q3wQlhhgVNhwWgqu0TOAnv/iNHdRp4D3PlQuSdRkMsELh96wpl3AXHzac
+         XNHi0AcBNgXU/FUT04IKCl5NBtDTplWGLn9FHTKqdXdLMVMsbq18vZ/kgIlte+AArBB+
+         cOhTExHyMOjsRV6Em9idxiDQ308v6BRAmO4x9X4UP3irqU3tw3S58AsmEUXV5WOOMNT3
+         kSag==
+X-Gm-Message-State: APjAAAUOtrB7lu6Bn9qcINpR3tKpL0+Cop7xju5+vJY+JPPcgH1afuLH
+        N//e/7xRLcyp1Nbyqfqqsj0=
+X-Google-Smtp-Source: APXvYqztCs7PmCw0xLyCRDhnZ13GR6eat7Pm3QNuFtZtK9/gtnOOCYbuMTEOukIOh01EGkwcc9cl/g==
+X-Received: by 2002:a17:902:9a85:: with SMTP id w5mr95803057plp.221.1564138803975;
+        Fri, 26 Jul 2019 04:00:03 -0700 (PDT)
+Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.googlemail.com with ESMTPSA id t10sm51967367pjr.13.2019.07.26.04.00.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Jul 2019 04:00:03 -0700 (PDT)
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Fuqian Huang <huangfq.daxian@gmail.com>
+Subject: [PATCH] dmaengine: pl330: use the same attributes when freeing pl330->mcode_cpu
+Date:   Fri, 26 Jul 2019 18:59:47 +0800
+Message-Id: <20190726105947.25342-1-huangfq.daxian@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+In function dmac_alloc_resources(), pl330->mcode_cpu is allocated using
+dma_alloc_attrs() but freed with dma_free_coherent().
+Use the correct dma_free_attrs() function to free pl330->mcode_cpu.
 
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+---
+ drivers/dma/pl330.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-Le jeu. 25 juil. 2019 =E0 19:47, Paul Burton <paul.burton@mips.com> a=20
-=E9crit :
-> Hi Paul,
->=20
-> On Thu, Jul 25, 2019 at 06:02:06PM -0400, Paul Cercueil wrote:
->>  Move all the platform data to devicetree.
->=20
-> Nice! :)
->=20
->>  The only bit dropped is the PWM beeper, which requires the PWM=20
->> driver
->>  to be updated. I figured it's okay to remove it here since it's=20
->> really
->>  a non-critical device, and it'll be re-introduced soon enough.
->=20
-> OK, I can see that being a price worth paying. Though it's possible to
-> include the binding at least for that in this series I'd be even
-> happier. Actually I see we already have
->=20
->   Documentation/devicetree/bindings/pwm/ingenic,jz47xx-pwm.txt
->=20
-> in mainline - what needs to change with it?
-
-The PWM driver will be updated to use the TCU clocks and the regmap=20
-provided
-by the TCU driver. The PWM node will be a sub-node of the TCU one.
-
-Additionally, there is this[1] ongoing discussion about PWM which makes
-me uneasy about how to write the binding. So I'd rather not rush it,
-because once the devicetree is written, it's ABI.
-
-[1]: https://lkml.org/lkml/2019/5/22/607
-
-
->>  +	spi {
->>  +		compatible =3D "spi-gpio";
->>  +		#address-cells =3D <1>;
->>  +		#size-cells =3D <0>;
->>  +
->>  +		sck-gpios =3D <&gpc 23 GPIO_ACTIVE_HIGH>;
->>  +		mosi-gpios =3D <&gpc 22 GPIO_ACTIVE_HIGH>;
->>  +		cs-gpios =3D <&gpc 21 GPIO_ACTIVE_LOW>;
->>  +		num-chipselects =3D <1>;
->>  +
->>  +		spi@0 {
->>  +			compatible =3D "ili8960";
->=20
-> Should this be "ilitek,ili8960"?
->=20
-> Is there a binding & driver for this submitted somewhere? If not then=20
-> do
-> we need this at all? It doesn't look like the existing platform data
-> would actually lead to a driver being loaded so I'm wondering if we=20
-> can
-> just drop this until such a driver (or at least a documented DT=20
-> binding)
-> exists.
-
-I can drop it. There is no driver for it, and I'm not even sure the LB60
-has a ILI8960 in the first place.
-
-
-> Thanks,
->     Paul
-
-=
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index 1163af2ba4a3..6cce9ef61b29 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -1922,9 +1922,10 @@ static int dmac_alloc_resources(struct pl330_dmac *pl330)
+ 	if (ret) {
+ 		dev_err(pl330->ddma.dev, "%s:%d Can't to create channels for DMAC!\n",
+ 			__func__, __LINE__);
+-		dma_free_coherent(pl330->ddma.dev,
++		dma_free_attrs(pl330->ddma.dev,
+ 				chans * pl330->mcbufsz,
+-				pl330->mcode_cpu, pl330->mcode_bus);
++				pl330->mcode_cpu, pl330->mcode_bus,
++				DMA_ATTR_PRIVILEGED);
+ 		return ret;
+ 	}
+ 
+@@ -2003,9 +2004,9 @@ static void pl330_del(struct pl330_dmac *pl330)
+ 	/* Free DMAC resources */
+ 	dmac_free_threads(pl330);
+ 
+-	dma_free_coherent(pl330->ddma.dev,
++	dma_free_attrs(pl330->ddma.dev,
+ 		pl330->pcfg.num_chan * pl330->mcbufsz, pl330->mcode_cpu,
+-		pl330->mcode_bus);
++		pl330->mcode_bus, DMA_ATTR_PRIVILEGED);
+ }
+ 
+ /* forward declaration */
+-- 
+2.11.0
 

@@ -2,39 +2,39 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27EFE767C5
-	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2019 15:40:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DEC87681E
+	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2019 15:42:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbfGZNj4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 26 Jul 2019 09:39:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45786 "EHLO mail.kernel.org"
+        id S2387915AbfGZNmT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 26 Jul 2019 09:42:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727336AbfGZNjz (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:39:55 -0400
+        id S2387904AbfGZNmS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:42:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 928C222BF5;
-        Fri, 26 Jul 2019 13:39:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A72D22CC0;
+        Fri, 26 Jul 2019 13:42:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148395;
-        bh=WlgqJ2mMnBB9/OWIiyXcImKmI4a4+nQG6JXuqaoxSRY=;
+        s=default; t=1564148537;
+        bh=BE60MTfJWxzfbe2tQ2Ymw2igQvnnLord2g0WlKjagOM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=en8bKg71fCL2otUnbd17Ix7fcy1TCPgu521VMGICCvHCfAFjbggz1TvbqN8jfS8Dg
-         MjkDSpE31lYivcDa6mXuuGgALy1w0uuJUsdK4ouGbvBRRbil/mPFJzwh2Fo9FUkMed
-         SgyhmChoMXZRFr01AsrKs0jNxvWziLzimHBbLH7g=
+        b=M7xMCSvk3meAUMcjLVe7PECuiajh73B8Sn/6jy72d30eOule6y/jf7R5THwxWfFxp
+         ajQkEonmtzozqBRWwE9EdWwL/9/9PRyTqx00AQc5wxGyCRmjQiqMQNG6XLwjn/jUo3
+         sWk0lwnnH6HrwSdGfjka6Je347OiDU1tKtjCWDO8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Dmitry Osipenko <digetx@gmail.com>,
         Jon Hunter <jonathanh@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
         dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 11/85] dmaengine: tegra-apb: Error out if DMA_PREP_INTERRUPT flag is unset
-Date:   Fri, 26 Jul 2019 09:38:21 -0400
-Message-Id: <20190726133936.11177-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 06/47] dmaengine: tegra-apb: Error out if DMA_PREP_INTERRUPT flag is unset
+Date:   Fri, 26 Jul 2019 09:41:29 -0400
+Message-Id: <20190726134210.12156-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190726133936.11177-1-sashal@kernel.org>
-References: <20190726133936.11177-1-sashal@kernel.org>
+In-Reply-To: <20190726134210.12156-1-sashal@kernel.org>
+References: <20190726134210.12156-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -65,10 +65,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index ef317c90fbe1..79e9593815f1 100644
+index 8219ab88a507..fb23993430d3 100644
 --- a/drivers/dma/tegra20-apb-dma.c
 +++ b/drivers/dma/tegra20-apb-dma.c
-@@ -977,8 +977,12 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+@@ -981,8 +981,12 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
  		csr |= tdc->slave_id << TEGRA_APBDMA_CSR_REQ_SEL_SHIFT;
  	}
  
@@ -82,7 +82,7 @@ index ef317c90fbe1..79e9593815f1 100644
  
  	apb_seq |= TEGRA_APBDMA_APBSEQ_WRAP_WORD_1;
  
-@@ -1120,8 +1124,12 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
+@@ -1124,8 +1128,12 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
  		csr |= tdc->slave_id << TEGRA_APBDMA_CSR_REQ_SEL_SHIFT;
  	}
  

@@ -2,98 +2,97 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B244763F9
-	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2019 13:00:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F62D764A9
+	for <lists+dmaengine@lfdr.de>; Fri, 26 Jul 2019 13:34:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726023AbfGZLAE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 26 Jul 2019 07:00:04 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42844 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfGZLAE (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 26 Jul 2019 07:00:04 -0400
-Received: by mail-pl1-f196.google.com with SMTP id ay6so24673271plb.9;
-        Fri, 26 Jul 2019 04:00:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=GZk1YBh8K1nF7b/BG0aJDKLlYWK7vgDFFQWFrUTZFzA=;
-        b=c6gTe21NfZlHeMmzBg1Z75RsvgsPNWl9dWqZyeki1vTtEStPyxBnNCiGiMBiDP0xWu
-         KjxYYQyZujbishNMkirEBOjr/FJ5NObejW3xu/FLWt72aMHSXN38DE0AK7Nj3ywn0sc2
-         M7QupNSZVxzNUTBnTqKgXWZwfPGyFqHqCW++ZTZ+IuayQ3byxx7dzA8MnDFrlBSNGVpx
-         ICtTcxqWNXy/0k9pv7mJXiTB7mYuqtlEQTplUuJTiCYjB831EiXxGrucawDOa3KiA6fB
-         pyEEQYPipeh3XJ7JCFuJepY8vv9Ru8Tq2Bq08Ana1vSiy8lVwTzyguTF1zpk2NH5Rwkn
-         V6oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GZk1YBh8K1nF7b/BG0aJDKLlYWK7vgDFFQWFrUTZFzA=;
-        b=Z1VhsZC04UPeOzYPb+DUCBDOazcpFDbjDWC2+qVIF69ZqO/ojhtZaK52HHQT0Dk411
-         uRXdYtzNgKS9Ko3eQHYjNC1OPy3GCvn8yW2h3u6Xhq3yQD729k1bUnxTWND/9spHgKhU
-         M9DuhkvZ296Q3wQlhhgVNhwWgqu0TOAnv/iNHdRp4D3PlQuSdRkMsELh96wpl3AXHzac
-         XNHi0AcBNgXU/FUT04IKCl5NBtDTplWGLn9FHTKqdXdLMVMsbq18vZ/kgIlte+AArBB+
-         cOhTExHyMOjsRV6Em9idxiDQ308v6BRAmO4x9X4UP3irqU3tw3S58AsmEUXV5WOOMNT3
-         kSag==
-X-Gm-Message-State: APjAAAUOtrB7lu6Bn9qcINpR3tKpL0+Cop7xju5+vJY+JPPcgH1afuLH
-        N//e/7xRLcyp1Nbyqfqqsj0=
-X-Google-Smtp-Source: APXvYqztCs7PmCw0xLyCRDhnZ13GR6eat7Pm3QNuFtZtK9/gtnOOCYbuMTEOukIOh01EGkwcc9cl/g==
-X-Received: by 2002:a17:902:9a85:: with SMTP id w5mr95803057plp.221.1564138803975;
-        Fri, 26 Jul 2019 04:00:03 -0700 (PDT)
-Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.googlemail.com with ESMTPSA id t10sm51967367pjr.13.2019.07.26.04.00.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jul 2019 04:00:03 -0700 (PDT)
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Fuqian Huang <huangfq.daxian@gmail.com>
-Subject: [PATCH] dmaengine: pl330: use the same attributes when freeing pl330->mcode_cpu
-Date:   Fri, 26 Jul 2019 18:59:47 +0800
-Message-Id: <20190726105947.25342-1-huangfq.daxian@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+        id S1726238AbfGZLeB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 26 Jul 2019 07:34:01 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56194 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbfGZLeB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 26 Jul 2019 07:34:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5Gf3w/MVbMZMYK8bIC4gRWxvIqP0knReDLN6eNPEqKM=; b=xDuN5S0H1Z90uPzdw6R64amMy
+        gnMBiADJuFYD7QblFkqSVwB6tn/WF7BGvvo30k/J0aPMmA1HEiUnpoQWAzka7PaHDQ4Joyhpn28yE
+        EF2CUDXHQO0sCka8C6a7kNpPIaO1hAAThEsGBgsnR0u9wX9Txm8yC32A/rlHacR2+gL5o=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hqyTc-0001Mp-Sb; Fri, 26 Jul 2019 11:33:32 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 2EC622742B63; Fri, 26 Jul 2019 12:33:32 +0100 (BST)
+Date:   Fri, 26 Jul 2019 12:33:32 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sebastian Reichel <sre@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>, od@zcrc.me,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH 04/11] ASoC: jz4740: Drop lb60 board code
+Message-ID: <20190726113332.GD4902@sirena.org.uk>
+References: <20190725220215.460-1-paul@crapouillou.net>
+ <20190725220215.460-5-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="P+33d92oIH25kiaB"
+Content-Disposition: inline
+In-Reply-To: <20190725220215.460-5-paul@crapouillou.net>
+X-Cookie: List at least two alternate dates.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-In function dmac_alloc_resources(), pl330->mcode_cpu is allocated using
-dma_alloc_attrs() but freed with dma_free_coherent().
-Use the correct dma_free_attrs() function to free pl330->mcode_cpu.
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
----
- drivers/dma/pl330.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+--P+33d92oIH25kiaB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index 1163af2ba4a3..6cce9ef61b29 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -1922,9 +1922,10 @@ static int dmac_alloc_resources(struct pl330_dmac *pl330)
- 	if (ret) {
- 		dev_err(pl330->ddma.dev, "%s:%d Can't to create channels for DMAC!\n",
- 			__func__, __LINE__);
--		dma_free_coherent(pl330->ddma.dev,
-+		dma_free_attrs(pl330->ddma.dev,
- 				chans * pl330->mcbufsz,
--				pl330->mcode_cpu, pl330->mcode_bus);
-+				pl330->mcode_cpu, pl330->mcode_bus,
-+				DMA_ATTR_PRIVILEGED);
- 		return ret;
- 	}
- 
-@@ -2003,9 +2004,9 @@ static void pl330_del(struct pl330_dmac *pl330)
- 	/* Free DMAC resources */
- 	dmac_free_threads(pl330);
- 
--	dma_free_coherent(pl330->ddma.dev,
-+	dma_free_attrs(pl330->ddma.dev,
- 		pl330->pcfg.num_chan * pl330->mcbufsz, pl330->mcode_cpu,
--		pl330->mcode_bus);
-+		pl330->mcode_bus, DMA_ATTR_PRIVILEGED);
- }
- 
- /* forward declaration */
--- 
-2.11.0
+On Thu, Jul 25, 2019 at 06:02:08PM -0400, Paul Cercueil wrote:
+> The board now uses the simple-audio-card driver.
+>=20
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Tested-by: Artur Rojek <contact@artur-rojek.eu>
 
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--P+33d92oIH25kiaB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl065QsACgkQJNaLcl1U
+h9AE2wf7BtVnDND6hd0UergsxXl5U3RJXvpiGgm/0yVLxuFEWPiM0EFqLGMWqoxE
+3l20EeSRpPmuyPH/GyBi4VYbtfk/QkickfZgmRTnK53CZURHGm15Dr9Prj6WJ5Vp
+H8QHogCOvGkoZGZh0E7Upp1Ofw05EC/ZStES9Ptw0TRNRENeP6SIRNDZJSBp7A5/
+TpEw+fvcu9R2andSKgKYEsZJhppM9oSRB6H4XRNM1Zxu6FTNfkmMG0ycTRjwJPvz
+ZXt6d0bq7TrYHkNajY1Wk1JwfM/wPlcW3xATpeBcp6RgazsL+i2T3fe2J541EGzJ
+KSs0o9NZufIfr1QaVv4L9HrMAsSE0A==
+=jJYl
+-----END PGP SIGNATURE-----
+
+--P+33d92oIH25kiaB--

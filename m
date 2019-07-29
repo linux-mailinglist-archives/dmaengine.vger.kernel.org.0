@@ -2,68 +2,91 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 41ECC783D9
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Jul 2019 06:14:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53248784D8
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Jul 2019 08:11:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725934AbfG2EOR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 29 Jul 2019 00:14:17 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:40654 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbfG2EOR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 29 Jul 2019 00:14:17 -0400
-Received: by mail-qt1-f196.google.com with SMTP id a15so58336994qtn.7
-        for <dmaengine@vger.kernel.org>; Sun, 28 Jul 2019 21:14:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=22OmDu+kDs1NQe2O9QSNx1tMYqIBMd9Q0PxV1hGyBeo=;
-        b=oRuXrvN5y2AWJfGerxxy8nTFUKumXufEbn0uBMBu+VIZqL0XV3yD5h/3w/MsG3/Xca
-         jMR5f53dImiXgcFaLCezaAmBokyhwA4levLb+cVvIag82BjlKtC++auxdtVDKKU7YIjG
-         fseGYThNoCbsaVo9FEFIRfP6EB2owJMrgScPc6gjSE0RuE33lloMQQAtI3AtxqLB/sZj
-         K5XhjMWN80IiG7XOTLUaypFMbTOfx0yiw/DTGd0q0Lfx2vTMHzIpVopP42xPGYdx080a
-         IjQmDMzZ8w3SH0JUCk06HoTsTlrf5FYGL3fzyEysKG5h4d2jgDtoXs3EwS8v0IlKPhU8
-         3UEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=22OmDu+kDs1NQe2O9QSNx1tMYqIBMd9Q0PxV1hGyBeo=;
-        b=JHZjoAVY9gas7O7aGIRZse8PR2dz9agSKlCBXJ8oN2edKbgoQwf6Jp1sj5pHa+z8Y/
-         Kk/9/RpX9QzzvxLc8vAASdG4cW1LFK2niARoyyza9Iax2mJaoJdVqGG26MhXbdOY6t+y
-         vhzXCENrp0rmtNmYNQpGEWALI4BP5rw9q1DH+3MmxVaWanjFk+h76ods7VQ5ay0FsN+i
-         Y58gfAN7QYiqp4g/cvEI0RA6Pj5nAmShKw65v6Rxr3BFYYE3h9anULTUOOhqZEyjtmUU
-         7SEJ9hLZ4Qhx5l7XJkdo+J7+Egc7X96Te29CHvajRrfHCd15MA92k0MTzxac5A5ciAsG
-         3vtQ==
-X-Gm-Message-State: APjAAAXA3iY5EdkAuvxHd1LMth4uv5kBI4juV7CeVlL+X08slKEpd+pH
-        7WT+meIcR6Uw6JpHaQJPwM+R2TY+5qBr8QZJnx0=
-X-Google-Smtp-Source: APXvYqxpr4Dcmq3OS3W9fZNEoXXkWuqs0A0fSOdfBptAZCAZg7YKaYskT1CHRc3PI21cfwYIbvOTUPF8ZSV2SCEkCgo=
-X-Received: by 2002:ac8:6898:: with SMTP id m24mr75341313qtq.362.1564373656479;
- Sun, 28 Jul 2019 21:14:16 -0700 (PDT)
+        id S1726300AbfG2GLZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 29 Jul 2019 02:11:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725934AbfG2GLZ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 29 Jul 2019 02:11:25 -0400
+Received: from localhost (unknown [122.178.221.187])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEBB8204FD;
+        Mon, 29 Jul 2019 06:11:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564380684;
+        bh=nMKUNWZ9yoS62/Zd9AxV9+IUb4TvSPx7bEbfZkPkxOA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gpfJbMluyoxSsI8ETGPCvW/rNJLyFllQggJeLqu9lmBhW+0TuiqxwIjFjWj5P6Ugz
+         GXdIrfZUyIRbjCXABBbeztbRQToVhI7Mi162rijjxYuSqYzlhmGvjQuSfJmvcHerCJ
+         MZZnAO/EG7QMJNzBSHpF9a2wQCLWkHM/gstRhCn0=
+Date:   Mon, 29 Jul 2019 11:40:10 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>, dan.j.williams@intel.com,
+        tiwai@suse.com, jonathanh@nvidia.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
+        rlokhande@nvidia.com, dramesh@nvidia.com, mkumard@nvidia.com
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+Message-ID: <20190729061010.GC12733@vkoul-mobl.Dlink>
+References: <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
+ <20190613044352.GC9160@vkoul-mobl.Dlink>
+ <09929edf-ddec-b70e-965e-cbc9ba4ffe6a@nvidia.com>
+ <20190618043308.GJ2962@vkoul-mobl>
+ <23474b74-3c26-3083-be21-4de7731a0e95@nvidia.com>
+ <20190624062609.GV2962@vkoul-mobl>
+ <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
+ <75be49ac-8461-0798-b673-431ec527d74f@nvidia.com>
+ <20190719050459.GM12733@vkoul-mobl.Dlink>
+ <3e7f795d-56fb-6a71-b844-2fc2b85e099e@nvidia.com>
 MIME-Version: 1.0
-Received: by 2002:ac8:19e3:0:0:0:0:0 with HTTP; Sun, 28 Jul 2019 21:14:16
- -0700 (PDT)
-Reply-To: linelink008@gmail.com
-From:   AZIM HASHIM PREMJI <paulwadefund01@gmail.com>
-Date:   Sun, 28 Jul 2019 21:14:16 -0700
-Message-ID: <CACtUuZdtbzM8rOgVP0RyV=cj=1DzRKWjd25Qi_Yi9=5EBSkQfw@mail.gmail.com>
-Subject: =?UTF-8?Q?HERZLICHEN_GL=C3=9CCKWUNSCH_=E2=82=AC_1=2C000=2E000=2C00_wurde_an_Si?=
-        =?UTF-8?Q?e_gespendet?=
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3e7f795d-56fb-6a71-b844-2fc2b85e099e@nvidia.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Ich bin Azim Hashim Premji, ein indischer Wirtschaftsmagnat, Investor
-und Philanthrop.
-Ich bin der Vorsitzende von Wipro Limited. Ich habe 25 Prozent meines
-pers=C3=B6nlichen Verm=C3=B6gens verschenkt
-f=C3=BCr die Wohlfahrt. Und ich habe zugesagt, den Rest von 25% dieses Jahr
-2019 an zu vergeben
-Privatpersonen .. Ich habe mich entschieden, Ihnen =E2=82=AC1.000.000,00 zu
-spenden. Wenn du bist
-Interesse an meiner Spende, kontaktieren Sie mich f=C3=BCr weitere Informat=
-ionen.
+On 23-07-19, 11:24, Sameer Pujar wrote:
+> 
+> On 7/19/2019 10:34 AM, Vinod Koul wrote:
+> > On 05-07-19, 11:45, Sameer Pujar wrote:
+> > > Hi Vinod,
+> > > 
+> > > What are your final thoughts regarding this?
+> > Hi sameer,
+> > 
+> > Sorry for the delay in replying
+> > 
+> > On this, I am inclined to think that dma driver should not be involved.
+> > The ADMAIF needs this configuration and we should take the path of
+> > dma_router for this piece and add features like this to it
+> 
+> Hi Vinod,
+> 
+> The configuration is needed by both ADMA and ADMAIF. The size is
+> configurable
+> on ADMAIF side. ADMA needs to know this info and program accordingly.
+
+Well I would say client decides the settings for both DMA, DMAIF and
+sets the peripheral accordingly as well, so client communicates the two
+sets of info to two set of drivers
+
+> Not sure if dma_router can help to achieve this.
+> 
+> I checked on dma_router. It would have been useful when a configuration
+> exported
+> via ADMA, had to be applied to ADMAIF. Please correct me if I am wrong here.
+
+router was added for such a senario, if you feel that it doesn't serve
+your purpose, feel free to send up update for it, if that is the case.
+
+Thanks
+
+-- 
+~Vinod

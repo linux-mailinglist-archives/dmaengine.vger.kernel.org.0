@@ -2,51 +2,110 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A903278593
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Jul 2019 08:56:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE06C78642
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Jul 2019 09:22:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfG2G44 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 29 Jul 2019 02:56:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36172 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726822AbfG2G44 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 29 Jul 2019 02:56:56 -0400
-Received: from localhost (unknown [122.178.221.187])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAC4F20644;
-        Mon, 29 Jul 2019 06:56:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564383415;
-        bh=rGJ85mz88QVmDCPNKDHcH6k8oz7KHUKpQy5h6NPTsl4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ow5gVlPy3aS5R/DqQ+abR1UfGSm6WuySTKCh5JoHEm0Yqww+F6rhPFmqh+A62NeJP
-         YpawhH1q6/Vs1ZbvFbjPo8Gmeaq9EIlAaOE4U0kWVh2uP8iIJ//BM2Lp2vFz7SNThy
-         km3v8xvOs/QOwp5486H+CNKIn0chK/90Tnfc/MrY=
-Date:   Mon, 29 Jul 2019 12:25:43 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     dmaengine@vger.kernel.org,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v1 1/2] dmaengine: stm32-dmamux: Switch to use
- device_property_count_u32()
-Message-ID: <20190729065543.GJ12733@vkoul-mobl.Dlink>
-References: <20190723190757.67351-1-andriy.shevchenko@linux.intel.com>
+        id S1726896AbfG2HWx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 29 Jul 2019 03:22:53 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50364 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfG2HWx (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 29 Jul 2019 03:22:53 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6T7Mid4063082;
+        Mon, 29 Jul 2019 02:22:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1564384964;
+        bh=VnQ9Nv//8xBx58kK6E2oPeg3dqXVx2pbyRIDI1AqKV0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=GHyl86mBC2VOEWrDJKZkxDR2RrIawERskz2V5queRcjgloAIm1wWHczwzPRL1reDC
+         7aPpWUn69EWnCv7lWs4LXwHzL2v6REaFcaCoRCO5a9iuiap8ziSIAfCixAMKwgcVpo
+         GDZuFQkX/12xFADUXD/65ZCZouz7KEUbIfiEuWuU=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6T7Min0120738
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 29 Jul 2019 02:22:44 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 29
+ Jul 2019 02:22:43 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 29 Jul 2019 02:22:43 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6T7Mdo1056158;
+        Mon, 29 Jul 2019 02:22:40 -0500
+Subject: Re: [PATCH v5 0/3] dmaengine: ti: edma: Polled completion support
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-omap@vger.kernel.org>
+References: <20190716082655.1620-1-peter.ujfalusi@ti.com>
+ <20190729064209.GF12733@vkoul-mobl.Dlink>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <f051dd12-911b-2b13-1908-7f0e1bd4b695@ti.com>
+Date:   Mon, 29 Jul 2019 10:22:42 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190723190757.67351-1-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190729064209.GF12733@vkoul-mobl.Dlink>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 23-07-19, 22:07, Andy Shevchenko wrote:
-> Use use device_property_count_u32() directly, that makes code neater.
+Vinod,
 
-Applied both, thanks
+On 29/07/2019 9.42, Vinod Koul wrote:
+> On 16-07-19, 11:26, Peter Ujfalusi wrote:
+>> Hi,
+>>
+>> Changes since v4:
+>> - Split the DMA_COMPLETE and !txstate check as Vinod suggested
+>>
+>> Change since v3:
+>> - fix DMA pointer tracking for memcpy
+>> - completion polling is only done when it is asked by not providing
+>>   DMA_PREP_INTERRUPT for memcpy
+>>
+>> Changes since v2:
+>> - Fix typo in the comment for patch 0
+>>
+>> Changes since v1:
+>> - Cleanup patch for the array register handling
+>> - typo fixed in patch2 commit message
+>>
+>> The code around the array register access was pretty confusing for the first
+>> look, so clean them up first then use the cleaner way in the polled handling.
+>>
+>> When a DMA client driver does not set the DMA_PREP_INTERRUPT because it
+>> does not want to use interrupts for DMA completion or because it can not
+>> rely on DMA interrupts due to executing the memcpy when interrupts are
+>> disabled it will poll the status of the transfer.
+>>
+>> Since we can not tell from any EDMA register that the transfer is
+>> completed, we can only know that the paRAM set has been sent to TPTC for
+>> processing we need to check the residue of the transfer, if it is 0 then
+>> the transfer is completed.
+>>
+>> The polled completion can bve tested by applying:
+>> https://patchwork.kernel.org/patch/10966499/
+>>
+>> Enabling the memcpy for EDMA and run the dmatest with polled = 1.
+>>
+>> Or, enable the EDMA memcpy support and boot up any dra7 family device with
+>> display enabled. The workaround for DMM errata i878 uses polled DMA memcpy.
+> 
+> Applied, thanks. Fixed typo in 2nd patch while at it
 
--- 
-~Vinod
+Thank you! I was about to send v6 with the fixed typo.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

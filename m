@@ -2,91 +2,121 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 53248784D8
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Jul 2019 08:11:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E7CE784DD
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Jul 2019 08:17:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbfG2GLZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 29 Jul 2019 02:11:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44282 "EHLO mail.kernel.org"
+        id S1726508AbfG2GRs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 29 Jul 2019 02:17:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbfG2GLZ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 29 Jul 2019 02:11:25 -0400
+        id S1725934AbfG2GRs (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 29 Jul 2019 02:17:48 -0400
 Received: from localhost (unknown [122.178.221.187])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEBB8204FD;
-        Mon, 29 Jul 2019 06:11:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34E9A20578;
+        Mon, 29 Jul 2019 06:17:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564380684;
-        bh=nMKUNWZ9yoS62/Zd9AxV9+IUb4TvSPx7bEbfZkPkxOA=;
+        s=default; t=1564381067;
+        bh=SzvnrYeZ/XVMFTRV94yVm4GxaXQLhbrOmoBn0kkt5WA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gpfJbMluyoxSsI8ETGPCvW/rNJLyFllQggJeLqu9lmBhW+0TuiqxwIjFjWj5P6Ugz
-         GXdIrfZUyIRbjCXABBbeztbRQToVhI7Mi162rijjxYuSqYzlhmGvjQuSfJmvcHerCJ
-         MZZnAO/EG7QMJNzBSHpF9a2wQCLWkHM/gstRhCn0=
-Date:   Mon, 29 Jul 2019 11:40:10 +0530
+        b=NEJHkhIRe3vLDfy4/gTgsVp62iujdtY5y67s5hPGe2OzXzQbgUR7lpQhcgd61inXL
+         qUStUbcCTjjyD5EYIU/1BUbc0pIGXDfSeWzoPAzHZt5aibsI/EZkl02fqyKzLIX4yc
+         mM32MaHU+ycs/lyOjtTIft+tIE84XRl5cNhHYaE8=
+Date:   Mon, 29 Jul 2019 11:46:34 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>, dan.j.williams@intel.com,
-        tiwai@suse.com, jonathanh@nvidia.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
-        rlokhande@nvidia.com, dramesh@nvidia.com, mkumard@nvidia.com
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-Message-ID: <20190729061010.GC12733@vkoul-mobl.Dlink>
-References: <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <20190613044352.GC9160@vkoul-mobl.Dlink>
- <09929edf-ddec-b70e-965e-cbc9ba4ffe6a@nvidia.com>
- <20190618043308.GJ2962@vkoul-mobl>
- <23474b74-3c26-3083-be21-4de7731a0e95@nvidia.com>
- <20190624062609.GV2962@vkoul-mobl>
- <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
- <75be49ac-8461-0798-b673-431ec527d74f@nvidia.com>
- <20190719050459.GM12733@vkoul-mobl.Dlink>
- <3e7f795d-56fb-6a71-b844-2fc2b85e099e@nvidia.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] dmaengine: ti: omap-dma: Improved memcpy polling
+ support
+Message-ID: <20190729061634.GD12733@vkoul-mobl.Dlink>
+References: <20190716082459.1222-1-peter.ujfalusi@ti.com>
+ <20190716082459.1222-3-peter.ujfalusi@ti.com>
+ <20190725133748.GX12733@vkoul-mobl.Dlink>
+ <59794775-95e6-04c3-2660-9344c89df9a1@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3e7f795d-56fb-6a71-b844-2fc2b85e099e@nvidia.com>
+In-Reply-To: <59794775-95e6-04c3-2660-9344c89df9a1@ti.com>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 23-07-19, 11:24, Sameer Pujar wrote:
+On 25-07-19, 17:07, Peter Ujfalusi wrote:
 > 
-> On 7/19/2019 10:34 AM, Vinod Koul wrote:
-> > On 05-07-19, 11:45, Sameer Pujar wrote:
-> > > Hi Vinod,
-> > > 
-> > > What are your final thoughts regarding this?
-> > Hi sameer,
+> 
+> On 25/07/2019 16.37, Vinod Koul wrote:
+> > On 16-07-19, 11:24, Peter Ujfalusi wrote:
+> >> When a DMA client driver does not set the DMA_PREP_INTERRUPT because it
+> >> does not want to use interrupts for DMA completion or because it can not
+> >> rely on DMA interrupts due to executing the memcpy when interrupts are
+> >> disabled it will poll the status of the transfer.
+> >>
+> >> If the interrupts are enabled then the cookie will be set completed in the
+> >> interrupt handler so only check in HW completion when the polling is really
+> >> needed.
+> >>
+> >> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> >> ---
+> >>  drivers/dma/ti/omap-dma.c | 44 +++++++++++++++++++++++++--------------
+> >>  1 file changed, 28 insertions(+), 16 deletions(-)
+> >>
+> >> diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+> >> index 029c0bd550d5..966d8f0323b5 100644
+> >> --- a/drivers/dma/ti/omap-dma.c
+> >> +++ b/drivers/dma/ti/omap-dma.c
+> >> @@ -91,6 +91,7 @@ struct omap_desc {
+> >>  	bool using_ll;
+> >>  	enum dma_transfer_direction dir;
+> >>  	dma_addr_t dev_addr;
+> >> +	bool polled;
+> >>  
+> >>  	int32_t fi;		/* for OMAP_DMA_SYNC_PACKET / double indexing */
+> >>  	int16_t ei;		/* for double indexing */
+> >> @@ -815,26 +816,20 @@ static enum dma_status omap_dma_tx_status(struct dma_chan *chan,
+> >>  	struct virt_dma_desc *vd;
+> >>  	enum dma_status ret;
+> >>  	unsigned long flags;
+> >> +	struct omap_desc *d = NULL;
+> >>  
+> >>  	ret = dma_cookie_status(chan, cookie, txstate);
+> >> -
+> >> -	if (!c->paused && c->running) {
+> >> -		uint32_t ccr = omap_dma_chan_read(c, CCR);
+> >> -		/*
+> >> -		 * The channel is no longer active, set the return value
+> >> -		 * accordingly
+> >> -		 */
+> >> -		if (!(ccr & CCR_ENABLE))
+> >> -			ret = DMA_COMPLETE;
+> >> -	}
+> >> -
+> >> -	if (ret == DMA_COMPLETE || !txstate)
+> >> +	if (ret == DMA_COMPLETE)
 > > 
-> > Sorry for the delay in replying
+> > why do you want to continue for txstate being null?
+> 
+> The caller could opt to not provide txstate and I still need to check if
+> the non completed transfer is actually done by the HW or not.
+> 
+> > Also it would lead to NULL ptr deref for txstate
+> 
+> There is a !txstate check to avoid that.
+> 
 > > 
-> > On this, I am inclined to think that dma driver should not be involved.
-> > The ADMAIF needs this configuration and we should take the path of
-> > dma_router for this piece and add features like this to it
-> 
-> Hi Vinod,
-> 
-> The configuration is needed by both ADMA and ADMAIF. The size is
-> configurable
-> on ADMAIF side. ADMA needs to know this info and program accordingly.
+> >>  		return ret;
+> >>  
+> >>  	spin_lock_irqsave(&c->vc.lock, flags);
+> >> +	if (c->desc && c->desc->vd.tx.cookie == cookie)
+> >> +		d = c->desc;
+> >> +
+> >> +	if (!txstate)
+> >> +		goto out;
 
-Well I would say client decides the settings for both DMA, DMAIF and
-sets the peripheral accordingly as well, so client communicates the two
-sets of info to two set of drivers
-
-> Not sure if dma_router can help to achieve this.
-> 
-> I checked on dma_router. It would have been useful when a configuration
-> exported
-> via ADMA, had to be applied to ADMAIF. Please correct me if I am wrong here.
-
-router was added for such a senario, if you feel that it doesn't serve
-your purpose, feel free to send up update for it, if that is the case.
-
-Thanks
+Oops missed that, let me check again and do the needful
 
 -- 
 ~Vinod

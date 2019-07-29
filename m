@@ -2,64 +2,85 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B5718784FE
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Jul 2019 08:36:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 398DD78520
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Jul 2019 08:43:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbfG2Gg3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 29 Jul 2019 02:36:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52840 "EHLO mail.kernel.org"
+        id S1726800AbfG2GnX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 29 Jul 2019 02:43:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbfG2Gg2 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 29 Jul 2019 02:36:28 -0400
+        id S1726088AbfG2GnW (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 29 Jul 2019 02:43:22 -0400
 Received: from localhost (unknown [122.178.221.187])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CF1E2070B;
-        Mon, 29 Jul 2019 06:36:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07343206BA;
+        Mon, 29 Jul 2019 06:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564382188;
-        bh=jbM48Eg7Yx5V9z4igLzOpQybV0ra5WLa7K3ccfFGuMY=;
+        s=default; t=1564382601;
+        bh=QmVZiVCVVdyuIOIXyrtNlQQDQrcJfU7dMvyEUty+IPs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pH0ozCVJa4iWQkH3dXM5D+1GzWT3ECrY+N3AZwQtUZOKB71Oie7Tb3N3q1Gn9TZxX
-         Bhbi4DmxJCaNEpEhvC3z+qqFjyBah+/NUeQIAeLpr9Hoa/xOZmCuMY5j+IhPaxUn9J
-         ZvgY0OvpfKIfxSD2EsCEivoIQD5X0D6/tRSNln2c=
-Date:   Mon, 29 Jul 2019 12:05:15 +0530
+        b=bXmWlhMvHD6xcN7+Lm31x5rEuncHMBalyOq4wY58j5IQwnZlqAxmMNk07LDjFW0rW
+         9PtitSv8mvAKbxYNAy+sRyyKM9BBl69xaBafwpwMD/GMF22lL2DJnwJh0KFCPVZFEW
+         GL9ohHYcA81k0qzR9AA+p4+J8pfKH/mziknK4m2k=
+Date:   Mon, 29 Jul 2019 12:12:09 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
 Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] dmaengine: ti: omap-dma: Improved polling support
-Message-ID: <20190729063515.GE12733@vkoul-mobl.Dlink>
-References: <20190716082459.1222-1-peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v5 0/3] dmaengine: ti: edma: Polled completion support
+Message-ID: <20190729064209.GF12733@vkoul-mobl.Dlink>
+References: <20190716082655.1620-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190716082459.1222-1-peter.ujfalusi@ti.com>
+In-Reply-To: <20190716082655.1620-1-peter.ujfalusi@ti.com>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 16-07-19, 11:24, Peter Ujfalusi wrote:
+On 16-07-19, 11:26, Peter Ujfalusi wrote:
 > Hi,
 > 
-> changes since v1:
-> - New preparation cleanup patch
-> - Simplified code for the main patch to be easier to read
+> Changes since v4:
+> - Split the DMA_COMPLETE and !txstate check as Vinod suggested
 > 
-> This series fine-tunes the omap-dma polled memcpy support to be inline with how
-> the EDMA driver is handling it.
+> Change since v3:
+> - fix DMA pointer tracking for memcpy
+> - completion polling is only done when it is asked by not providing
+>   DMA_PREP_INTERRUPT for memcpy
 > 
-> The polled completion can be tested by applying:
+> Changes since v2:
+> - Fix typo in the comment for patch 0
+> 
+> Changes since v1:
+> - Cleanup patch for the array register handling
+> - typo fixed in patch2 commit message
+> 
+> The code around the array register access was pretty confusing for the first
+> look, so clean them up first then use the cleaner way in the polled handling.
+> 
+> When a DMA client driver does not set the DMA_PREP_INTERRUPT because it
+> does not want to use interrupts for DMA completion or because it can not
+> rely on DMA interrupts due to executing the memcpy when interrupts are
+> disabled it will poll the status of the transfer.
+> 
+> Since we can not tell from any EDMA register that the transfer is
+> completed, we can only know that the paRAM set has been sent to TPTC for
+> processing we need to check the residue of the transfer, if it is 0 then
+> the transfer is completed.
+> 
+> The polled completion can bve tested by applying:
 > https://patchwork.kernel.org/patch/10966499/
 > 
-> and run the dmatest with polled = 1 on boards where sDMA is used.
+> Enabling the memcpy for EDMA and run the dmatest with polled = 1.
 > 
-> Or boot up any dra7 family device with display enabled. The workaround for DMM
-> errata i878 uses polled DMA memcpy.
+> Or, enable the EDMA memcpy support and boot up any dra7 family device with
+> display enabled. The workaround for DMM errata i878 uses polled DMA memcpy.
 
-Applied, thanks
+Applied, thanks. Fixed typo in 2nd patch while at it
 
 -- 
 ~Vinod

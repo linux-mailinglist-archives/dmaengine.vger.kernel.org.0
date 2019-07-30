@@ -2,48 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E95267A954
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Jul 2019 15:20:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B2F57A956
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Jul 2019 15:20:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730588AbfG3NUN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 30 Jul 2019 09:20:13 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56702 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbfG3NUM (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 Jul 2019 09:20:12 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6UDK4j7109814;
-        Tue, 30 Jul 2019 08:20:04 -0500
+        id S1730717AbfG3NUU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 30 Jul 2019 09:20:20 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:52186 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727514AbfG3NUU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 Jul 2019 09:20:20 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6UDKEUS033907;
+        Tue, 30 Jul 2019 08:20:14 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1564492804;
-        bh=A1hY1j0EjSsyhP7lVvn6SAE68U3tIYMeRYSABLOghr8=;
+        s=ti-com-17Q1; t=1564492814;
+        bh=GidekszOWXOz65DaNrv6Onij2HIr4p8/rU9ABITd7Tw=;
         h=From:To:CC:Subject:Date;
-        b=hGmfUxdC91ECqh6zxCyML4ArKTwg2uJVxg0mQ87yKOpe7YOHb2nuHCw36KuTIHkLI
-         TZ86a32tEWIp2Yyc9C6vPBLB/5zu0PaFOWlWQP+NrIH4iImehfs/ssZ/gQhCvJqfNn
-         VvGcHxE3T/v1oIxvA4a5oxQq3RygXCrI1WzUyifg=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6UDK48A000583
+        b=VICm1HNiA02wiFecChDGeVxDnuTH7Jza8utcA1nE0fkS/wzFj51wCaNzQL87sqzVq
+         RgLr53SPBfubmfLEVRvfSXaOwbDQd8KtnBa0nO4tjHi4/H3P3SSm83oAjeyEPbTUMZ
+         mW9Wj66dg69cL2IQceyX4jC6BG8Lmnp2IcKqDSn0=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6UDKDaj077063
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Jul 2019 08:20:04 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 30 Jul 2019 08:20:13 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
- Jul 2019 08:20:04 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ Jul 2019 08:20:13 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 30 Jul 2019 08:20:04 -0500
+ Frontend Transport; Tue, 30 Jul 2019 08:20:13 -0500
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6UDK2Bt055518;
-        Tue, 30 Jul 2019 08:20:02 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6UDKBgk056060;
+        Tue, 30 Jul 2019 08:20:11 -0500
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>
 CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-omap@vger.kernel.org>
-Subject: [PATCH] dmaengine: ti: edma: Remove 'Assignment in if condition'
-Date:   Tue, 30 Jul 2019 16:20:06 +0300
-Message-ID: <20190730132006.2790-1-peter.ujfalusi@ti.com>
+Subject: [PATCH] dmaengine: ti: omap-dma: Remove 'Assignment in if condition'
+Date:   Tue, 30 Jul 2019 16:20:15 +0300
+Message-ID: <20190730132015.2863-1-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -59,44 +59,39 @@ checkpatch does give en ERROR for this arrangement.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/dma/ti/edma.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/dma/ti/omap-dma.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-index fe468e2f7e67..6f2d6c592663 100644
---- a/drivers/dma/ti/edma.c
-+++ b/drivers/dma/ti/edma.c
-@@ -1832,7 +1832,6 @@ static enum dma_status edma_tx_status(struct dma_chan *chan,
- 				      struct dma_tx_state *txstate)
+diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+index a4a63425dc0b..3b57b68df896 100644
+--- a/drivers/dma/ti/omap-dma.c
++++ b/drivers/dma/ti/omap-dma.c
+@@ -814,7 +814,6 @@ static enum dma_status omap_dma_tx_status(struct dma_chan *chan,
+ 	dma_cookie_t cookie, struct dma_tx_state *txstate)
  {
- 	struct edma_chan *echan = to_edma_chan(chan);
--	struct virt_dma_desc *vdesc;
- 	struct dma_tx_state txstate_tmp;
+ 	struct omap_chan *c = to_omap_dma_chan(chan);
+-	struct virt_dma_desc *vd;
  	enum dma_status ret;
  	unsigned long flags;
-@@ -1846,12 +1845,18 @@ static enum dma_status edma_tx_status(struct dma_chan *chan,
- 	if (!txstate)
- 		txstate = &txstate_tmp;
+ 	struct omap_desc *d = NULL;
+@@ -841,10 +840,14 @@ static enum dma_status omap_dma_tx_status(struct dma_chan *chan,
+ 			pos = 0;
  
--	txstate->residue = 0;
- 	spin_lock_irqsave(&echan->vchan.lock, flags);
--	if (echan->edesc && echan->edesc->vdesc.tx.cookie == cookie)
-+	if (echan->edesc && echan->edesc->vdesc.tx.cookie == cookie) {
- 		txstate->residue = edma_residue(echan->edesc);
--	else if ((vdesc = vchan_find_desc(&echan->vchan, cookie)))
--		txstate->residue = to_edma_desc(&vdesc->tx)->residue;
-+	} else {
-+		struct virt_dma_desc *vdesc = vchan_find_desc(&echan->vchan,
-+							      cookie);
+ 		txstate->residue = omap_dma_desc_size_pos(d, pos);
+-	} else if ((vd = vchan_find_desc(&c->vc, cookie))) {
+-		txstate->residue = omap_dma_desc_size(to_omap_dma_desc(&vd->tx));
+ 	} else {
+-		txstate->residue = 0;
++		struct virt_dma_desc *vd = vchan_find_desc(&c->vc, cookie);
 +
-+		if (vdesc)
-+			txstate->residue = to_edma_desc(&vdesc->tx)->residue;
++		if (vd)
++			txstate->residue = omap_dma_desc_size(
++						to_omap_dma_desc(&vd->tx));
 +		else
 +			txstate->residue = 0;
-+	}
+ 	}
  
- 	/*
- 	 * Mark the cookie completed if the residue is 0 for non cyclic
+ out:
 -- 
 Peter
 

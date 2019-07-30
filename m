@@ -2,81 +2,112 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B9097A958
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Jul 2019 15:20:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23D1E7AE95
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Jul 2019 18:58:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbfG3NUc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 30 Jul 2019 09:20:32 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56734 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727409AbfG3NUc (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 Jul 2019 09:20:32 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6UDKRib110036;
-        Tue, 30 Jul 2019 08:20:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1564492827;
-        bh=udC4eB7/7djyKfo+FEyGPgDOqsWoiwYjF6+4BMQvCno=;
-        h=From:To:CC:Subject:Date;
-        b=fFmBjHr0CSc8kKbP+Uj3HUkwn9NBfq+fto3YHooYhd3kb/+Wy2/y6qRJCp0D7z3Fw
-         PlnpyGgoZrvStEJa25oIhqIYv/Vfp8bJ+lF7iXL8Yk8gxKFPLdWXZKtlHJYDoZa1Pq
-         tycdWXlrCM/TSXroPWHZ7SGOwJ5Vg52Og/kfXeuA=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6UDKRmQ083638
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Jul 2019 08:20:27 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 30
- Jul 2019 08:20:26 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 30 Jul 2019 08:20:26 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6UDKPO6056322;
-        Tue, 30 Jul 2019 08:20:25 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-omap@vger.kernel.org>
-Subject: [PATCH] dmaengine: ti: omap-dma: Remove variable override in omap_dma_tx_status()
-Date:   Tue, 30 Jul 2019 16:20:29 +0300
-Message-ID: <20190730132029.2971-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.22.0
+        id S1730127AbfG3Q6e (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 30 Jul 2019 12:58:34 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35568 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730100AbfG3Q6d (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 Jul 2019 12:58:33 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u14so30175927pfn.2
+        for <dmaengine@vger.kernel.org>; Tue, 30 Jul 2019 09:58:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=kNH9892mMSdbgyYPq04/DOS1+jjJ5DNNUuFxNaUc4lA=;
+        b=Rkz2n/Z4fx/N0ovqStcb1ANvDKtxcDrtxVH5xiavqxMZ1id3tmJKj9s3v/0i79OK1q
+         oslYjKScx1QzaiiFKAhy912qj3Jku9gLgZoi51x/zngQxhCvSItaR+EwuJ1BxjG44yqC
+         3r5vhAlvt9FrFziJLdNbUMqNe+fKrl8yEPIAQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=kNH9892mMSdbgyYPq04/DOS1+jjJ5DNNUuFxNaUc4lA=;
+        b=fnTn1sgNkD46KKRK9TGFhJGRs//Ao/DtcaIO5itiJOPWb87DuPj4HP6q53h2PrzyFS
+         y/tv6A6EBiLqLFeh4AG0WKZwHMe4KBElFkCECZ+nDnI1ykCQEE9WL2LGGJSMtW2L/VCx
+         G5Thq7rOrpnwykWMgWb4O2KNnrWJJrTvlXYZnPuDzo7I7CrCmIiWmGCTb9noENMKEqUa
+         PFA9C18BapZRKyFrlEgDfuYp1YBJUby1T52M1VXL31ywUqcOgu2aF3vJUdq6bLYRSxce
+         GvMDb7AJtxLl+MN38fTeSSR65/Qq5bFInXnn+8qVB5VdnxF9s+Zw3fZaXacMv9Lyc0am
+         c7Kg==
+X-Gm-Message-State: APjAAAWb4v4Kk0cCFErbG788DUxar+nIWo2YHbJIiJaLAe4iprS1KyCa
+        RoHhTpXE2Nh5vs6KNo8BImMkng==
+X-Google-Smtp-Source: APXvYqxlkNe5qlW5oU8NKyA6zXOWROGHVUAwS/f3z/hvi4mf0dRFgYBwSNr9otMt3pnou4o4biWeGQ==
+X-Received: by 2002:a17:90a:33c4:: with SMTP id n62mr121088686pjb.28.1564505912808;
+        Tue, 30 Jul 2019 09:58:32 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y22sm76514188pfo.39.2019.07.30.09.58.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Jul 2019 09:58:31 -0700 (PDT)
+Date:   Tue, 30 Jul 2019 09:58:31 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: imx-dma: Mark expected switch fall-through
+Message-ID: <201907300958.5F8CC90AD1@keescook>
+References: <20190729225221.GA24269@embeddedor>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20190729225221.GA24269@embeddedor>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-There is no need to fetch local omap_desc since the desc we have is the
-correct one already when we need to check the channel status.
+On Mon, Jul 29, 2019 at 05:52:21PM -0500, Gustavo A. R. Silva wrote:
+> Mark switch cases where we are expecting to fall through.
+> 
+> This patch fixes the following warning (Building: arm):
+> 
+> drivers/dma/imx-dma.c: In function ‘imxdma_xfer_desc’:
+> drivers/dma/imx-dma.c:542:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    if (slot == IMX_DMA_2D_SLOT_A) {
+>       ^
+> drivers/dma/imx-dma.c:559:2: note: here
+>   case IMXDMA_DESC_MEMCPY:
+>   ^~~~
+> 
+> Notice that, in this particular case, the code comment is
+> modified in accordance with what GCC is expecting to find.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/dma/ti/omap-dma.c | 1 -
- 1 file changed, 1 deletion(-)
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index 3b57b68df896..9f359ec3386d 100644
---- a/drivers/dma/ti/omap-dma.c
-+++ b/drivers/dma/ti/omap-dma.c
-@@ -860,7 +860,6 @@ static enum dma_status omap_dma_tx_status(struct dma_chan *chan,
- 		 * accordingly and mark it as completed
- 		 */
- 		if (!(ccr & CCR_ENABLE)) {
--			struct omap_desc *d = c->desc;
- 			ret = DMA_COMPLETE;
- 			omap_dma_start_desc(c);
- 			vchan_cookie_complete(&d->vd);
+-Kees
+
+> ---
+>  drivers/dma/imx-dma.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/dma/imx-dma.c b/drivers/dma/imx-dma.c
+> index 00a089e24150..5c0fb3134825 100644
+> --- a/drivers/dma/imx-dma.c
+> +++ b/drivers/dma/imx-dma.c
+> @@ -556,6 +556,7 @@ static int imxdma_xfer_desc(struct imxdma_desc *d)
+>  		 * We fall-through here intentionally, since a 2D transfer is
+>  		 * similar to MEMCPY just adding the 2D slot configuration.
+>  		 */
+> +		/* Fall through */
+>  	case IMXDMA_DESC_MEMCPY:
+>  		imx_dmav1_writel(imxdma, d->src, DMA_SAR(imxdmac->channel));
+>  		imx_dmav1_writel(imxdma, d->dest, DMA_DAR(imxdmac->channel));
+> -- 
+> 2.22.0
+> 
+
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Kees Cook

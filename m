@@ -2,113 +2,112 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F30F79CE7
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Jul 2019 01:38:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E7A87A122
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Jul 2019 08:14:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbfG2Xiq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 29 Jul 2019 19:38:46 -0400
-Received: from gateway36.websitewelcome.com ([50.116.125.2]:48370 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727533AbfG2Xiq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 29 Jul 2019 19:38:46 -0400
-X-Greylist: delayed 1501 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Jul 2019 19:38:46 EDT
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 9AB05400C88C5
-        for <dmaengine@vger.kernel.org>; Mon, 29 Jul 2019 17:16:29 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id sEVDh1w7w2qH7sEVDh4IBR; Mon, 29 Jul 2019 17:52:23 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=RGM1QOf7Ifka8Lzj21bKpD9jnLg3f9Vd1ITqzxm/VOU=; b=gV9r2PvwJ6rxIRIgwFC2X2SCdZ
-        g7/+BkFcoDz0V9uUOGllyxNtsuluzDThOjYowlhrij65SbkzuX75rigaZDRftzgUiV0o1DPAYUTGb
-        oZrWQybdnVtt/4v1P7Rusa2Q1rTb/30pyx4ExZe2xPRlFQfh/Y/2E8OKwJ448mqa7mUmWwvnwFoLk
-        N5zW03DPfInXg5UpRiUBT5MpkOyVO3BLu5XNZ3fi7uz5wu8vIArdm+DT4elWgYkmikAC/wbkQTP8V
-        a8cEFs8pUOoQmOwXYBaP2ZQsuJWBuIdHKwgY3BlCb8Ix150TlM+sOJanfZFuzXIQNbiBWAQIpRLcT
-        wumxlobw==;
-Received: from [187.192.11.120] (port=60908 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hsEVB-002HF4-S4; Mon, 29 Jul 2019 17:52:22 -0500
-Date:   Mon, 29 Jul 2019 17:52:21 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] dmaengine: imx-dma: Mark expected switch fall-through
-Message-ID: <20190729225221.GA24269@embeddedor>
+        id S1728055AbfG3GO3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 30 Jul 2019 02:14:29 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:39371 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726358AbfG3GO2 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 Jul 2019 02:14:28 -0400
+Received: from [IPv6:2001:983:e9a7:1:3159:f139:4aff:7185] ([IPv6:2001:983:e9a7:1:3159:f139:4aff:7185])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id sLOthABgJqTdhsLOuhkX2E; Tue, 30 Jul 2019 08:14:26 +0200
+To:     dmaengine@vger.kernel.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Subject: [PATCH] omap-dma/omap_vout_vrfb: fix off-by-one fi value
+Message-ID: <8f4e529f-9c20-b2e3-7e60-35e2d72d5242@xs4all.nl>
+Date:   Tue, 30 Jul 2019 08:14:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hsEVB-002HF4-S4
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:60908
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 52
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfBiehGZxUXRrX/9yQdHb8S0LSkiPKOIQDPydebvc6iTI0ybK3RlgDnJXm8SrgqPjSHwR6bhUhYIUev52CgoSI9ka4bNFH0spHCEmPfZrLkSm3YpFlptL
+ 74R3jvJmdpNxkAvFCXQfIXJVLYghYm64BCnarJQUUBf3rrG+tFt1O3HRO0c3ZvPigzhRBYaTat9GyAISDnxbfSoK6ILdz59euVvphINR80Z/3zpxQabcpWUX
+ irCMwU2KyE2HhkUqJbuH3LdzG1GmGe0pjjfGI7cxeJ0lgqxxsxrkAV5OZNi2kSa2KP6m/foG/g0h7Ua1/+JtDidTjpPoTtDikJLHR63VXrICeuOIarKhu/TW
+ VyrMa1wuuYMSTCUAEDl28/N7Z2iUq5C5wUX6PoZeeTV02Idy40rGdkaIpEp0rUzuv3/9MJgZj1qVuuk6aF4EisAWq9ZDLdGahVJZ7lUgJtQtIsQ8kHg=
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through.
+The OMAP 4 TRM specifies that when using double-index addressing
+the address increases by the ES plus the EI value minus 1 within
+a frame. When a full frame is transferred, the address increases
+by the ES plus the frame index (FI) value minus 1.
 
-This patch fixes the following warning (Building: arm):
+The omap-dma code didn't account for the 'minus 1' in the FI register.
+To get correct addressing, add 1 to the src_icg value.
 
-drivers/dma/imx-dma.c: In function ‘imxdma_xfer_desc’:
-drivers/dma/imx-dma.c:542:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   if (slot == IMX_DMA_2D_SLOT_A) {
-      ^
-drivers/dma/imx-dma.c:559:2: note: here
-  case IMXDMA_DESC_MEMCPY:
-  ^~~~
+This was found when testing a hacked version of the media m2m-deinterlace.c
+driver on a Pandaboard.
 
-Notice that, in this particular case, the code comment is
-modified in accordance with what GCC is expecting to find.
+The only other source that uses this feature is omap_vout_vrfb.c,
+and that adds a + 1 when setting the dst_icg. This is a workaround
+for the broken omap-dma.c behavior. So remove the workaround at the
+same time that we fix omap-dma.c.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+I tested the omap_vout driver with a Beagle XM board to check that
+the '+ 1' in omap_vout_vrfb.c was indeed a workaround for the omap-dma
+bug.
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 ---
- drivers/dma/imx-dma.c | 1 +
- 1 file changed, 1 insertion(+)
+It makes sense that this patch goes in through the dmaengine subsystem
+(Mauro, can you Ack this patch?), but if preferred it can also go in
+through the media subsystem if we get an Ack.
 
-diff --git a/drivers/dma/imx-dma.c b/drivers/dma/imx-dma.c
-index 00a089e24150..5c0fb3134825 100644
---- a/drivers/dma/imx-dma.c
-+++ b/drivers/dma/imx-dma.c
-@@ -556,6 +556,7 @@ static int imxdma_xfer_desc(struct imxdma_desc *d)
- 		 * We fall-through here intentionally, since a 2D transfer is
- 		 * similar to MEMCPY just adding the 2D slot configuration.
- 		 */
-+		/* Fall through */
- 	case IMXDMA_DESC_MEMCPY:
- 		imx_dmav1_writel(imxdma, d->src, DMA_SAR(imxdmac->channel));
- 		imx_dmav1_writel(imxdma, d->dest, DMA_DAR(imxdmac->channel));
+Regards,
+
+	Hans
+---
+ drivers/dma/ti/omap-dma.c                    | 4 ++--
+ drivers/media/platform/omap/omap_vout_vrfb.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+index ba2489d4ea24..ba27802efcd0 100644
+--- a/drivers/dma/ti/omap-dma.c
++++ b/drivers/dma/ti/omap-dma.c
+@@ -1234,7 +1234,7 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_interleaved(
+ 	if (src_icg) {
+ 		d->ccr |= CCR_SRC_AMODE_DBLIDX;
+ 		d->ei = 1;
+-		d->fi = src_icg;
++		d->fi = src_icg + 1;
+ 	} else if (xt->src_inc) {
+ 		d->ccr |= CCR_SRC_AMODE_POSTINC;
+ 		d->fi = 0;
+@@ -1249,7 +1249,7 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_interleaved(
+ 	if (dst_icg) {
+ 		d->ccr |= CCR_DST_AMODE_DBLIDX;
+ 		sg->ei = 1;
+-		sg->fi = dst_icg;
++		sg->fi = dst_icg + 1;
+ 	} else if (xt->dst_inc) {
+ 		d->ccr |= CCR_DST_AMODE_POSTINC;
+ 		sg->fi = 0;
+diff --git a/drivers/media/platform/omap/omap_vout_vrfb.c b/drivers/media/platform/omap/omap_vout_vrfb.c
+index 29e3f5da59c1..729b1bf9395f 100644
+--- a/drivers/media/platform/omap/omap_vout_vrfb.c
++++ b/drivers/media/platform/omap/omap_vout_vrfb.c
+@@ -254,7 +254,7 @@ int omap_vout_prepare_vrfb(struct omap_vout_device *vout,
+
+ 	pixsize = vout->bpp * vout->vrfb_bpp;
+ 	dst_icg = ((MAX_PIXELS_PER_LINE * pixsize) -
+-		  (vout->pix.width * vout->bpp)) + 1;
++		  (vout->pix.width * vout->bpp));
+
+ 	xt->src_start = vout->buf_phy_addr[vb->i];
+ 	xt->dst_start = vout->vrfb_context[vb->i].paddr[0];
 -- 
-2.22.0
+2.20.1
 

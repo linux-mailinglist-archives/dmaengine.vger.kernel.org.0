@@ -2,51 +2,66 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E8EDD7BCED
-	for <lists+dmaengine@lfdr.de>; Wed, 31 Jul 2019 11:24:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B2557BD9A
+	for <lists+dmaengine@lfdr.de>; Wed, 31 Jul 2019 11:46:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfGaJYD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 31 Jul 2019 05:24:03 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:47014 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727077AbfGaJYC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 31 Jul 2019 05:24:02 -0400
-Received: from pendragon.ideasonboard.com (unknown [38.98.37.141])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 43683CC;
-        Wed, 31 Jul 2019 11:23:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1564565040;
-        bh=R4+D8Bv1LT6NbP2s6ws7vr5lit4CpkZpXssqYzhspKw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ajyehgZYiZWuP/8crRvsuak4dbEKgsCno+fJZWrLMwq9jwe2RIfC7jw073dtTafk9
-         /C4lWxBUY61rbOiB+dSPebWWrms6yZqTT1uqv5SnREXDPIyCW2728UykdbXOEIiMJx
-         iQCsgwMhRdMmsPAKcP28FuAAdYlYIhbOeaefGbe4=
-Date:   Wed, 31 Jul 2019 12:23:47 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     dmaengine@vger.kernel.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
+        id S1725871AbfGaJql (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 31 Jul 2019 05:46:41 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:43978 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbfGaJql (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 31 Jul 2019 05:46:41 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x6V9kbUA096452;
+        Wed, 31 Jul 2019 04:46:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1564566397;
+        bh=wAzgrHP9yAIV9nHZ+M9AcajXEtzIx7V60+cmUe7oPHc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=A8+O5tU8FlSEnuZ6U2IbdaVPAhVrGUXil63PpbjgrXtl0IMrYpz/qaRYGACnYbnBE
+         55Vl+Yzj2rAPmOY/Q6B8qLFHT/q5t23kor1qRNUa30wZcOSgCX49Zj1+OVTizClynF
+         gwBsoCl+duqljLCQgGf8JkuM930XTRaygUzef/OA=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x6V9kbOF124551
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 31 Jul 2019 04:46:37 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 31
+ Jul 2019 04:46:37 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 31 Jul 2019 04:46:37 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x6V9kW10012208;
+        Wed, 31 Jul 2019 04:46:34 -0500
 Subject: Re: [PATCH] omap-dma/omap_vout_vrfb: fix off-by-one fi value
-Message-ID: <20190731092347.GD5080@pendragon.ideasonboard.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <dmaengine@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+CC:     Vinod Koul <vkoul@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
 References: <8f4e529f-9c20-b2e3-7e60-35e2d72d5242@xs4all.nl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <0ee2c9c3-ea23-ed38-6d98-be35e78fb383@ti.com>
+Date:   Wed, 31 Jul 2019 12:46:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 In-Reply-To: <8f4e529f-9c20-b2e3-7e60-35e2d72d5242@xs4all.nl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Hans,
+Hans,
 
-Thank you for the patch.
-
-On Tue, Jul 30, 2019 at 08:14:19AM +0200, Hans Verkuil wrote:
+On 30/07/2019 9.14, Hans Verkuil wrote:
 > The OMAP 4 TRM specifies that when using double-index addressing
 > the address increases by the ES plus the EI value minus 1 within
 > a frame. When a full frame is transferred, the address increases
@@ -66,6 +81,13 @@ On Tue, Jul 30, 2019 at 08:14:19AM +0200, Hans Verkuil wrote:
 > I tested the omap_vout driver with a Beagle XM board to check that
 > the '+ 1' in omap_vout_vrfb.c was indeed a workaround for the omap-dma
 > bug.
+
+Thanks for catching it. I have implemented the interleaved support based
+on the omap_vout_vrfb driver's behavior and hence I have missed the + 1
+in the omap-dma.
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+
 > 
 > Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 > ---
@@ -113,17 +135,12 @@ On Tue, Jul 30, 2019 at 08:14:19AM +0200, Hans Verkuil wrote:
 >  	dst_icg = ((MAX_PIXELS_PER_LINE * pixsize) -
 > -		  (vout->pix.width * vout->bpp)) + 1;
 > +		  (vout->pix.width * vout->bpp));
-
-You can remove the outer parentheses. Apart from that the patch looks OK
-to me, it matches the documentation.
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
 > 
 >  	xt->src_start = vout->buf_phy_addr[vb->i];
 >  	xt->dst_start = vout->vrfb_context[vb->i].paddr[0];
+> 
 
--- 
-Regards,
+- Péter
 
-Laurent Pinchart
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

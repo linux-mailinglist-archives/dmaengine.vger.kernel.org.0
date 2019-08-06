@@ -2,33 +2,33 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6324882EDD
-	for <lists+dmaengine@lfdr.de>; Tue,  6 Aug 2019 11:41:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40FF282EE3
+	for <lists+dmaengine@lfdr.de>; Tue,  6 Aug 2019 11:41:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732262AbfHFJk6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 6 Aug 2019 05:40:58 -0400
-Received: from mga11.intel.com ([192.55.52.93]:24449 "EHLO mga11.intel.com"
+        id S1732546AbfHFJlB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 6 Aug 2019 05:41:01 -0400
+Received: from mga06.intel.com ([134.134.136.31]:57969 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732443AbfHFJk6 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 6 Aug 2019 05:40:58 -0400
+        id S1732492AbfHFJlB (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 6 Aug 2019 05:41:01 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 02:40:57 -0700
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Aug 2019 02:41:00 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,353,1559545200"; 
-   d="scan'208";a="181928724"
+   d="scan'208";a="176584849"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 06 Aug 2019 02:40:54 -0700
+  by orsmga003.jf.intel.com with ESMTP; 06 Aug 2019 02:40:58 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id AF9152E1; Tue,  6 Aug 2019 12:40:55 +0300 (EEST)
+        id BBB7F39A; Tue,  6 Aug 2019 12:40:55 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
         Viresh Kumar <vireshk@kernel.org>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 05/12] dmaengine: dw: Export struct dw_dma_chip_pdata for wider use
-Date:   Tue,  6 Aug 2019 12:40:47 +0300
-Message-Id: <20190806094054.64871-5-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 06/12] dmaengine: dw: platform: Use struct dw_dma_chip_pdata
+Date:   Tue,  6 Aug 2019 12:40:48 +0300
+Message-Id: <20190806094054.64871-6-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190806094054.64871-1-andriy.shevchenko@linux.intel.com>
 References: <20190806094054.64871-1-andriy.shevchenko@linux.intel.com>
@@ -39,166 +39,136 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-We are expecting some devices can be enumerated either as PCI or ACPI.
-Nevertheless, they will share same information, thus, provide a generic
-struct dw_dma_chip_pdata for all glue drivers.
+Now, when we have a generic structure for the chip and platform data,
+use it in the platform glue driver.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/dma/dw/internal.h | 28 ++++++++++++++++++
- drivers/dma/dw/pci.c      | 60 +++++++++++----------------------------
- 2 files changed, 44 insertions(+), 44 deletions(-)
+ drivers/dma/dw/platform.c | 42 +++++++++++++++++++++++++++++----------
+ 1 file changed, 31 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/dma/dw/internal.h b/drivers/dma/dw/internal.h
-index 1dd7a4e6dd23..df5c84e2a4fd 100644
---- a/drivers/dma/dw/internal.h
-+++ b/drivers/dma/dw/internal.h
-@@ -23,4 +23,32 @@ int do_dw_dma_enable(struct dw_dma_chip *chip);
+diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
+index 382dfd9e9600..234abbd6359a 100644
+--- a/drivers/dma/dw/platform.c
++++ b/drivers/dma/dw/platform.c
+@@ -168,12 +168,22 @@ dw_dma_parse_dt(struct platform_device *pdev)
  
- extern bool dw_dma_filter(struct dma_chan *chan, void *param);
- 
-+struct dw_dma_chip_pdata {
-+	const struct dw_dma_platform_data *pdata;
-+	int (*probe)(struct dw_dma_chip *chip);
-+	int (*remove)(struct dw_dma_chip *chip);
-+	struct dw_dma_chip *chip;
-+};
-+
-+static __maybe_unused const struct dw_dma_chip_pdata dw_dma_chip_pdata = {
-+	.probe = dw_dma_probe,
-+	.remove = dw_dma_remove,
-+};
-+
-+static const struct dw_dma_platform_data idma32_pdata = {
-+	.nr_channels = 8,
-+	.chan_allocation_order = CHAN_ALLOCATION_ASCENDING,
-+	.chan_priority = CHAN_PRIORITY_ASCENDING,
-+	.block_size = 131071,
-+	.nr_masters = 1,
-+	.data_width = {4},
-+	.multi_block = {1, 1, 1, 1, 1, 1, 1, 1},
-+};
-+
-+static __maybe_unused const struct dw_dma_chip_pdata idma32_chip_pdata = {
-+	.pdata = &idma32_pdata,
-+	.probe = idma32_dma_probe,
-+	.remove = idma32_dma_remove,
-+};
-+
- #endif /* _DMA_DW_INTERNAL_H */
-diff --git a/drivers/dma/dw/pci.c b/drivers/dma/dw/pci.c
-index 8de87b15a988..084ce3b70710 100644
---- a/drivers/dma/dw/pci.c
-+++ b/drivers/dma/dw/pci.c
-@@ -12,38 +12,10 @@
- 
- #include "internal.h"
- 
--struct dw_dma_pci_data {
--	const struct dw_dma_platform_data *pdata;
--	int (*probe)(struct dw_dma_chip *chip);
--	int (*remove)(struct dw_dma_chip *chip);
--	struct dw_dma_chip *chip;
--};
--
--static const struct dw_dma_pci_data dw_pci_data = {
--	.probe = dw_dma_probe,
--	.remove = dw_dma_remove,
--};
--
--static const struct dw_dma_platform_data idma32_pdata = {
--	.nr_channels = 8,
--	.chan_allocation_order = CHAN_ALLOCATION_ASCENDING,
--	.chan_priority = CHAN_PRIORITY_ASCENDING,
--	.block_size = 131071,
--	.nr_masters = 1,
--	.data_width = {4},
--	.multi_block = {1, 1, 1, 1, 1, 1, 1, 1},
--};
--
--static const struct dw_dma_pci_data idma32_pci_data = {
--	.pdata = &idma32_pdata,
--	.probe = idma32_dma_probe,
--	.remove = idma32_dma_remove,
--};
--
- static int dw_pci_probe(struct pci_dev *pdev, const struct pci_device_id *pid)
+ static int dw_probe(struct platform_device *pdev)
  {
--	const struct dw_dma_pci_data *drv_data = (void *)pid->driver_data;
--	struct dw_dma_pci_data *data;
-+	const struct dw_dma_chip_pdata *drv_data = (void *)pid->driver_data;
++	const struct dw_dma_chip_pdata *match;
 +	struct dw_dma_chip_pdata *data;
  	struct dw_dma_chip *chip;
- 	int ret;
+ 	struct device *dev = &pdev->dev;
+ 	struct resource *mem;
+ 	const struct dw_dma_platform_data *pdata;
+ 	int err;
  
-@@ -95,7 +67,7 @@ static int dw_pci_probe(struct pci_dev *pdev, const struct pci_device_id *pid)
++	match = device_get_match_data(dev);
++	if (!match)
++		return -ENODEV;
++
++	data = devm_kmemdup(&pdev->dev, match, sizeof(*match), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
+ 	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
+ 	if (!chip)
+ 		return -ENOMEM;
+@@ -199,6 +209,8 @@ static int dw_probe(struct platform_device *pdev)
+ 	chip->id = pdev->id;
+ 	chip->pdata = pdata;
  
- static void dw_pci_remove(struct pci_dev *pdev)
++	data->chip = chip;
++
+ 	chip->clk = devm_clk_get(chip->dev, "hclk");
+ 	if (IS_ERR(chip->clk))
+ 		return PTR_ERR(chip->clk);
+@@ -208,11 +220,11 @@ static int dw_probe(struct platform_device *pdev)
+ 
+ 	pm_runtime_enable(&pdev->dev);
+ 
+-	err = dw_dma_probe(chip);
++	err = data->probe(chip);
+ 	if (err)
+ 		goto err_dw_dma_probe;
+ 
+-	platform_set_drvdata(pdev, chip);
++	platform_set_drvdata(pdev, data);
+ 
+ 	if (pdev->dev.of_node) {
+ 		err = of_dma_controller_register(pdev->dev.of_node,
+@@ -235,12 +247,17 @@ static int dw_probe(struct platform_device *pdev)
+ 
+ static int dw_remove(struct platform_device *pdev)
  {
--	struct dw_dma_pci_data *data = pci_get_drvdata(pdev);
-+	struct dw_dma_chip_pdata *data = pci_get_drvdata(pdev);
- 	struct dw_dma_chip *chip = data->chip;
- 	int ret;
+-	struct dw_dma_chip *chip = platform_get_drvdata(pdev);
++	struct dw_dma_chip_pdata *data = platform_get_drvdata(pdev);
++	struct dw_dma_chip *chip = data->chip;
++	int ret;
  
-@@ -108,7 +80,7 @@ static void dw_pci_remove(struct pci_dev *pdev)
+ 	if (pdev->dev.of_node)
+ 		of_dma_controller_free(pdev->dev.of_node);
  
- static int dw_pci_suspend_late(struct device *dev)
+-	dw_dma_remove(chip);
++	ret = data->remove(chip);
++	if (ret)
++		dev_warn(chip->dev, "can't remove device properly: %d\n", ret);
++
+ 	pm_runtime_disable(&pdev->dev);
+ 	clk_disable_unprepare(chip->clk);
+ 
+@@ -249,7 +266,8 @@ static int dw_remove(struct platform_device *pdev)
+ 
+ static void dw_shutdown(struct platform_device *pdev)
  {
--	struct dw_dma_pci_data *data = dev_get_drvdata(dev);
-+	struct dw_dma_chip_pdata *data = dev_get_drvdata(dev);
- 	struct dw_dma_chip *chip = data->chip;
+-	struct dw_dma_chip *chip = platform_get_drvdata(pdev);
++	struct dw_dma_chip_pdata *data = platform_get_drvdata(pdev);
++	struct dw_dma_chip *chip = data->chip;
  
- 	return do_dw_dma_disable(chip);
-@@ -116,7 +88,7 @@ static int dw_pci_suspend_late(struct device *dev)
+ 	/*
+ 	 * We have to call do_dw_dma_disable() to stop any ongoing transfer. On
+@@ -269,7 +287,7 @@ static void dw_shutdown(struct platform_device *pdev)
  
- static int dw_pci_resume_early(struct device *dev)
- {
--	struct dw_dma_pci_data *data = dev_get_drvdata(dev);
-+	struct dw_dma_chip_pdata *data = dev_get_drvdata(dev);
- 	struct dw_dma_chip *chip = data->chip;
+ #ifdef CONFIG_OF
+ static const struct of_device_id dw_dma_of_id_table[] = {
+-	{ .compatible = "snps,dma-spear1340" },
++	{ .compatible = "snps,dma-spear1340", .data = &dw_dma_chip_pdata },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, dw_dma_of_id_table);
+@@ -277,9 +295,9 @@ MODULE_DEVICE_TABLE(of, dw_dma_of_id_table);
  
- 	return do_dw_dma_enable(chip);
-@@ -130,29 +102,29 @@ static const struct dev_pm_ops dw_pci_dev_pm_ops = {
- 
- static const struct pci_device_id dw_pci_id_table[] = {
- 	/* Medfield (GPDMA) */
--	{ PCI_VDEVICE(INTEL, 0x0827), (kernel_ulong_t)&dw_pci_data },
-+	{ PCI_VDEVICE(INTEL, 0x0827), (kernel_ulong_t)&dw_dma_chip_pdata },
- 
- 	/* BayTrail */
--	{ PCI_VDEVICE(INTEL, 0x0f06), (kernel_ulong_t)&dw_pci_data },
--	{ PCI_VDEVICE(INTEL, 0x0f40), (kernel_ulong_t)&dw_pci_data },
-+	{ PCI_VDEVICE(INTEL, 0x0f06), (kernel_ulong_t)&dw_dma_chip_pdata },
-+	{ PCI_VDEVICE(INTEL, 0x0f40), (kernel_ulong_t)&dw_dma_chip_pdata },
- 
- 	/* Merrifield */
--	{ PCI_VDEVICE(INTEL, 0x11a2), (kernel_ulong_t)&idma32_pci_data },
-+	{ PCI_VDEVICE(INTEL, 0x11a2), (kernel_ulong_t)&idma32_chip_pdata },
- 
- 	/* Braswell */
--	{ PCI_VDEVICE(INTEL, 0x2286), (kernel_ulong_t)&dw_pci_data },
--	{ PCI_VDEVICE(INTEL, 0x22c0), (kernel_ulong_t)&dw_pci_data },
-+	{ PCI_VDEVICE(INTEL, 0x2286), (kernel_ulong_t)&dw_dma_chip_pdata },
-+	{ PCI_VDEVICE(INTEL, 0x22c0), (kernel_ulong_t)&dw_dma_chip_pdata },
- 
- 	/* Elkhart Lake iDMA 32-bit (OSE DMA) */
--	{ PCI_VDEVICE(INTEL, 0x4bb4), (kernel_ulong_t)&idma32_pci_data },
--	{ PCI_VDEVICE(INTEL, 0x4bb5), (kernel_ulong_t)&idma32_pci_data },
--	{ PCI_VDEVICE(INTEL, 0x4bb6), (kernel_ulong_t)&idma32_pci_data },
-+	{ PCI_VDEVICE(INTEL, 0x4bb4), (kernel_ulong_t)&idma32_chip_pdata },
-+	{ PCI_VDEVICE(INTEL, 0x4bb5), (kernel_ulong_t)&idma32_chip_pdata },
-+	{ PCI_VDEVICE(INTEL, 0x4bb6), (kernel_ulong_t)&idma32_chip_pdata },
- 
- 	/* Haswell */
--	{ PCI_VDEVICE(INTEL, 0x9c60), (kernel_ulong_t)&dw_pci_data },
-+	{ PCI_VDEVICE(INTEL, 0x9c60), (kernel_ulong_t)&dw_dma_chip_pdata },
- 
- 	/* Broadwell */
--	{ PCI_VDEVICE(INTEL, 0x9ce0), (kernel_ulong_t)&dw_pci_data },
-+	{ PCI_VDEVICE(INTEL, 0x9ce0), (kernel_ulong_t)&dw_dma_chip_pdata },
- 
+ #ifdef CONFIG_ACPI
+ static const struct acpi_device_id dw_dma_acpi_id_table[] = {
+-	{ "INTL9C60", 0 },
+-	{ "80862286", 0 },
+-	{ "808622C0", 0 },
++	{ "INTL9C60", (kernel_ulong_t)&dw_dma_chip_pdata },
++	{ "80862286", (kernel_ulong_t)&dw_dma_chip_pdata },
++	{ "808622C0", (kernel_ulong_t)&dw_dma_chip_pdata },
  	{ }
  };
+ MODULE_DEVICE_TABLE(acpi, dw_dma_acpi_id_table);
+@@ -289,7 +307,8 @@ MODULE_DEVICE_TABLE(acpi, dw_dma_acpi_id_table);
+ 
+ static int dw_suspend_late(struct device *dev)
+ {
+-	struct dw_dma_chip *chip = dev_get_drvdata(dev);
++	struct dw_dma_chip_pdata *data = dev_get_drvdata(dev);
++	struct dw_dma_chip *chip = data->chip;
+ 
+ 	do_dw_dma_disable(chip);
+ 	clk_disable_unprepare(chip->clk);
+@@ -299,7 +318,8 @@ static int dw_suspend_late(struct device *dev)
+ 
+ static int dw_resume_early(struct device *dev)
+ {
+-	struct dw_dma_chip *chip = dev_get_drvdata(dev);
++	struct dw_dma_chip_pdata *data = dev_get_drvdata(dev);
++	struct dw_dma_chip *chip = data->chip;
+ 	int ret;
+ 
+ 	ret = clk_prepare_enable(chip->clk);
 -- 
 2.20.1
 

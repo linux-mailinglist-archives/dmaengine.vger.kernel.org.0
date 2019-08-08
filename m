@@ -2,156 +2,143 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D037861F4
-	for <lists+dmaengine@lfdr.de>; Thu,  8 Aug 2019 14:33:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DC0F86206
+	for <lists+dmaengine@lfdr.de>; Thu,  8 Aug 2019 14:39:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390083AbfHHMdF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 8 Aug 2019 08:33:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47080 "EHLO mail.kernel.org"
+        id S1728025AbfHHMjq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 8 Aug 2019 08:39:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389923AbfHHMdF (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 8 Aug 2019 08:33:05 -0400
+        id S1727649AbfHHMjp (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 8 Aug 2019 08:39:45 -0400
 Received: from localhost (unknown [122.178.245.201])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 778AA21883;
-        Thu,  8 Aug 2019 12:33:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99CA521874;
+        Thu,  8 Aug 2019 12:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565267584;
-        bh=KMINRkuYBok2QumR2R4JgROUPh1CgGn+fh9C0MQuJiE=;
+        s=default; t=1565267985;
+        bh=tEVnB+ZIRs6bWPkFofl5oiksJyqMHWq5C73maWLshGc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rRHR+XO248Pa0ZDXn56QqJWmT9Z/E/aSJJ7Hi4HzJvTCl2kb91e3emsYz6phOwGU8
-         UDvpi8rzBAx/NX6r7HDbIBq+yDdlaqDK3fxdcC8fWu20Tr6kgV5WSSFnrCEglGU7Tj
-         jLjsCWLb4MmUXsT7LQEfxdO4j60jkFPsgcJcC5zY=
-Date:   Thu, 8 Aug 2019 18:01:52 +0530
+        b=0QWq71Bcutvw6b3bK5ZkpyziNhp5L8G1dYP5XTJz+Nur2B/nL/TpzVdDn57EuKluB
+         O+lymUv10ew71ZKsi7h3MHapYZbcxVQyylDlWw3BkZBFcXXyvyZaoB+Km0rox0F9fe
+         mQnDsfBJAb72DjrSWSrrCfkn1iUT8qLCtqUCNTsM=
+Date:   Thu, 8 Aug 2019 18:08:33 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Mark Brown <broonie@kernel.org>, Stefan Wahren <wahrenst@gmx.net>,
-        linux-spi@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>, Nuno Sa <nuno.sa@analog.com>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Noralf Tronnes <noralf@tronnes.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Florian Kauer <florian.kauer@koalo.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Subject: Re: [PATCH 09/10] dmaengine: bcm2835: Avoid accessing memory when
- copying zeroes
-Message-ID: <20190808123152.GW12733@vkoul-mobl.Dlink>
-References: <cover.1564825752.git.lukas@wunner.de>
- <a8efa43470bc5092b8727a93c9cf694c80e0c8c4.1564825752.git.lukas@wunner.de>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Sameer Pujar <spujar@nvidia.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        dan.j.williams@intel.com, tiwai@suse.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sharadg@nvidia.com, rlokhande@nvidia.com, dramesh@nvidia.com,
+        mkumard@nvidia.com
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+Message-ID: <20190808123833.GX12733@vkoul-mobl.Dlink>
+References: <23474b74-3c26-3083-be21-4de7731a0e95@nvidia.com>
+ <20190624062609.GV2962@vkoul-mobl>
+ <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
+ <75be49ac-8461-0798-b673-431ec527d74f@nvidia.com>
+ <20190719050459.GM12733@vkoul-mobl.Dlink>
+ <3e7f795d-56fb-6a71-b844-2fc2b85e099e@nvidia.com>
+ <20190729061010.GC12733@vkoul-mobl.Dlink>
+ <98954eb3-21f1-6008-f8e1-f9f9b82f87fb@nvidia.com>
+ <20190731151610.GT12733@vkoul-mobl.Dlink>
+ <c0f4de86-423a-35df-3744-40db89f2fdfe@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a8efa43470bc5092b8727a93c9cf694c80e0c8c4.1564825752.git.lukas@wunner.de>
+In-Reply-To: <c0f4de86-423a-35df-3744-40db89f2fdfe@nvidia.com>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 03-08-19, 12:10, Lukas Wunner wrote:
-> The BCM2835 DMA controller is capable of synthesizing zeroes instead of
-> copying them from a source address. The feature is enabled by setting
-> the SRC_IGNORE bit in the Transfer Information field of a Control Block:
+On 02-08-19, 09:51, Jon Hunter wrote:
 > 
-> "Do not perform source reads.
->  In addition, destination writes will zero all the write strobes.
->  This is used for fast cache fill operations."
-> https://www.raspberrypi.org/app/uploads/2012/02/BCM2835-ARM-Peripherals.pdf
+> On 31/07/2019 16:16, Vinod Koul wrote:
+> > On 31-07-19, 10:48, Jon Hunter wrote:
+> >>
+> >> On 29/07/2019 07:10, Vinod Koul wrote:
+> >>> On 23-07-19, 11:24, Sameer Pujar wrote:
+> >>>>
+> >>>> On 7/19/2019 10:34 AM, Vinod Koul wrote:
+> >>>>> On 05-07-19, 11:45, Sameer Pujar wrote:
+> >>>>>> Hi Vinod,
+> >>>>>>
+> >>>>>> What are your final thoughts regarding this?
+> >>>>> Hi sameer,
+> >>>>>
+> >>>>> Sorry for the delay in replying
+> >>>>>
+> >>>>> On this, I am inclined to think that dma driver should not be involved.
+> >>>>> The ADMAIF needs this configuration and we should take the path of
+> >>>>> dma_router for this piece and add features like this to it
+> >>>>
+> >>>> Hi Vinod,
+> >>>>
+> >>>> The configuration is needed by both ADMA and ADMAIF. The size is
+> >>>> configurable
+> >>>> on ADMAIF side. ADMA needs to know this info and program accordingly.
+> >>>
+> >>> Well I would say client decides the settings for both DMA, DMAIF and
+> >>> sets the peripheral accordingly as well, so client communicates the two
+> >>> sets of info to two set of drivers
+> >>
+> >> That maybe, but I still don't see how the information is passed from the
+> >> client in the first place. The current problem is that there is no means
+> >> to pass both a max-burst size and fifo-size to the DMA driver from the
+> >> client.
+> > 
+> > So one thing not clear to me is why ADMA needs fifo-size, I thought it
+> > was to program ADMAIF and if we have client programme the max-burst
+> > size to ADMA and fifo-size to ADMAIF we wont need that. Can you please
+> > confirm if my assumption is valid?
 > 
-> The feature is only available on 8 of the 16 channels. The others are
-> so-called "lite" channels with a limited feature set and performance.
+> Let me see if I can clarify ...
 > 
-> Enable the feature if a cyclic transaction copies from the zero page.
-> This reduces traffic on the memory bus.
+> 1. The FIFO we are discussing here resides in the ADMAIF module which is
+>    a separate hardware block the ADMA (although the naming make this
+>    unclear).
 > 
-> A forthcoming use case is the BCM2835 SPI driver, which will cyclically
-> copy from the zero page to the TX FIFO. The idea to use SRC_IGNORE was
-> taken from an ancient GitHub conversation between Martin and Noralf:
-> https://github.com/msperl/spi-bcm2835/issues/13#issuecomment-98180451
+> 2. The size of FIFO in the ADMAIF is configurable and it this is
+>    configured via the ADMAIF registers. This allows different channels
+>    to use different FIFO sizes. Think of this as a shared memory that is
+>    divided into n FIFOs shared between all channels.
+> 
+> 3. The ADMA, not the ADMAIF, manages the flow to the FIFO and this is
+>    because the ADMAIF only tells the ADMA when a word has been
+>    read/written (depending on direction), the ADMAIF does not indicate
+>    if the FIFO is full, empty, etc. Hence, the ADMA needs to know the
+>    total FIFO size.
+> 
+> So the ADMA needs to know the FIFO size so that it does not overrun the
+> FIFO and we can also set a burst size (less than the total FIFO size)
+> indicating how many words to transfer at a time. Hence, the two parameters.
 
-Acked-by: Vinod Koul <vkoul@kernel.org>
+Thanks, I confirm this is my understanding as well.
 
+To compare to regular case for example SPI on DMA, SPI driver will
+calculate fifo size & burst to be used and program dma (burst size) and
+its own fifos accordingly
+
+So, in your case why should the peripheral driver not calculate the fifo
+size for both ADMA and ADMAIF and (if required it's own FIFO) and
+program the two (ADMA and ADMAIF).
+
+What is the limiting factor in this flow is not clear to me.
+
+> Even if we were to use some sort of router between the ADMA and ADMAIF,
+> the client still needs to indicate to the ADMA what FIFO size and burst
+> size, if I am following you correctly.
 > 
-> Tested-by: Nuno Sá <nuno.sa@analog.com>
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: Martin Sperl <kernel@martin.sperl.org>
-> Cc: Noralf Trønnes <noralf@tronnes.org>
-> Cc: Florian Kauer <florian.kauer@koalo.de>
-> ---
->  drivers/dma/bcm2835-dma.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
+> Let me know if this is clearer.
 > 
-> diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-> index 14358faf3bff..67100e4e1083 100644
-> --- a/drivers/dma/bcm2835-dma.c
-> +++ b/drivers/dma/bcm2835-dma.c
-> @@ -42,11 +42,14 @@
->   * @ddev: DMA device
->   * @base: base address of register map
->   * @dma_parms: DMA parameters (to convey 1 GByte max segment size to clients)
-> + * @zero_page: bus address of zero page (to detect transactions copying from
-> + *	zero page and avoid accessing memory if so)
->   */
->  struct bcm2835_dmadev {
->  	struct dma_device ddev;
->  	void __iomem *base;
->  	struct device_dma_parameters dma_parms;
-> +	dma_addr_t zero_page;
->  };
->  
->  struct bcm2835_dma_cb {
-> @@ -693,6 +696,7 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_dma_cyclic(
->  	size_t period_len, enum dma_transfer_direction direction,
->  	unsigned long flags)
->  {
-> +	struct bcm2835_dmadev *od = to_bcm2835_dma_dev(chan->device);
->  	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
->  	struct bcm2835_desc *d;
->  	dma_addr_t src, dst;
-> @@ -743,6 +747,10 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_dma_cyclic(
->  		dst = c->cfg.dst_addr;
->  		src = buf_addr;
->  		info |= BCM2835_DMA_D_DREQ | BCM2835_DMA_S_INC;
-> +
-> +		/* non-lite channels can write zeroes w/o accessing memory */
-> +		if (buf_addr == od->zero_page && !c->is_lite_channel)
-> +			info |= BCM2835_DMA_S_IGNORE;
->  	}
->  
->  	/* calculate number of frames */
-> @@ -845,6 +853,9 @@ static void bcm2835_dma_free(struct bcm2835_dmadev *od)
->  		list_del(&c->vc.chan.device_node);
->  		tasklet_kill(&c->vc.task);
->  	}
-> +
-> +	dma_unmap_page_attrs(od->ddev.dev, od->zero_page, PAGE_SIZE,
-> +			     DMA_TO_DEVICE, DMA_ATTR_SKIP_CPU_SYNC);
->  }
->  
->  static const struct of_device_id bcm2835_dma_of_match[] = {
-> @@ -927,6 +938,14 @@ static int bcm2835_dma_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, od);
->  
-> +	od->zero_page = dma_map_page_attrs(od->ddev.dev, ZERO_PAGE(0), 0,
-> +					   PAGE_SIZE, DMA_TO_DEVICE,
-> +					   DMA_ATTR_SKIP_CPU_SYNC);
-> +	if (dma_mapping_error(od->ddev.dev, od->zero_page)) {
-> +		dev_err(&pdev->dev, "Failed to map zero page\n");
-> +		return -ENOMEM;
-> +	}
-> +
->  	/* Request DMA channel mask from device tree */
->  	if (of_property_read_u32(pdev->dev.of_node,
->  			"brcm,dma-channel-mask",
+> Thanks
+> Jon
+> 
 > -- 
-> 2.20.1
+> nvpublic
 
 -- 
 ~Vinod

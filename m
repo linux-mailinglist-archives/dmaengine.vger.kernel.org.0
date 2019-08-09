@@ -2,132 +2,114 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 069A5863ED
-	for <lists+dmaengine@lfdr.de>; Thu,  8 Aug 2019 16:09:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B853287423
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Aug 2019 10:32:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733200AbfHHOJ4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 8 Aug 2019 10:09:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46856 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbfHHOJz (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 8 Aug 2019 10:09:55 -0400
-Received: from localhost (unknown [122.178.245.201])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D0D721743;
-        Thu,  8 Aug 2019 14:09:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565273394;
-        bh=gA44XLKRN/pAQgX4lVuLJHPX31ttKB8ZduENEjxuRdQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1cFxuMxzmr71qoyYuXvjzcX/McYNk2Mypanay4lBJ6eV06PuGWcysIHo3ovxOufgJ
-         jvX0Jk8XEWAYjw1BK7K+ZbXaq85E5fFaEFT+bSzAtqJqY9oOJJb2baJcni3UhmzQDw
-         Ip/JEMo9RpTNQfy26s5CGE0af8tb7NsneNzINzFo=
-Date:   Thu, 8 Aug 2019 19:38:42 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     jonathanh@nvidia.com, ldewangan@nvidia.com,
-        thierry.reding@gmail.com, dmaengine@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v2] dmaengine: tegra210-adma: fix transfer failure
-Message-ID: <20190808140842.GC12733@vkoul-mobl.Dlink>
-References: <1562929830-29344-1-git-send-email-spujar@nvidia.com>
+        id S2405826AbfHIIcz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 9 Aug 2019 04:32:55 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:55857 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726059AbfHIIcy (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 9 Aug 2019 04:32:54 -0400
+Received: from [IPv6:2001:983:e9a7:1:a042:9da:6cf5:9cb5] ([IPv6:2001:983:e9a7:1:a042:9da:6cf5:9cb5])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id w0KGhZ768qTdhw0KHhUIPC; Fri, 09 Aug 2019 10:32:52 +0200
+To:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        dmaengine@vger.kernel.org
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Subject: [PATCHv2] omap-dma/omap_vout_vrfb: fix off-by-one fi value
+Message-ID: <952e7f51-f208-9333-6f58-b7ed20d2ea0b@xs4all.nl>
+Date:   Fri, 9 Aug 2019 10:32:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1562929830-29344-1-git-send-email-spujar@nvidia.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfGBHksXKv+i7JHE9cu112c8cGY7ctVJUw0pW0Bt3iAVUUkdCDjMSRv3o+ys1hJAB9v2cbfIWCaU3yBEIRuQ5AqQbu3lHdi4PCQplnlLwdL4++vFJOu8n
+ UDlH1nHvh8em4OIHRDM927TN7mcd0KiMS2RGDCgcfsID62xn9OBqlD849zSgelMMl+1Xz5eKSVbPrj572sLvxyqiMWtbBCzYqI9Mp4WzHHr2j2jNeiUAPmXL
+ Xx6Fvh3rzFfQw15XEzNddY8MZcYXGF2pj2BU8iyB/psd/r2QoeSgjG6P/mC9NwjSYS5KV0f3qwkrbhhzC1Gt+kyrqTFQqLa+bMk8ld5sSvi00Lfodm5CiBEK
+ hgjJzwJguYcNF48Sy8hErtLqRsrhQbbC2RK3tcMoD8c3dNO6fUUnCQ6+FHfiXrAk8x9+aJF3qvuAzd3/0p1+EkyrDMLgoA==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 12-07-19, 16:40, Sameer Pujar wrote:
-> >From Tegra186 onwards OUTSTANDING_REQUESTS field is added in channel
-  ^^
-please remove the leading char from the para
+The OMAP 4 TRM specifies that when using double-index addressing
+the address increases by the ES plus the EI value minus 1 within
+a frame. When a full frame is transferred, the address increases
+by the ES plus the frame index (FI) value minus 1.
 
-> configuration register(bits 7:4) which defines the maximum number of reads
-> from the source and writes to the destination that may be outstanding at
-> any given point of time. This field must be programmed with a value
-> between 1 and 8. A value of 0 will prevent any transfers from happening.
-> 
-> Thus added 'ch_pending_req' member in chip data structure and the same is
-> populated with maximum allowed pending requests. Since the field is not
-> applicable to Tegra210, mentioned bit fields are unused and hence the
-> member is initialized with 0. For Tegra186, by default program this field
-> with the maximum permitted value of 8.
-> 
-> Fixes: 433de642a76c ("dmaengine: tegra210-adma: add support for Tegra186/Tegra194")
+The omap-dma code didn't account for the 'minus 1' in the FI register.
+To get correct addressing, add 1 to the src_icg value.
 
-Should this be tagged stable? Also some reviews from Tegra folks would
-be great
+This was found when testing a hacked version of the media m2m-deinterlace.c
+driver on a Pandaboard.
 
-> 
-> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-> ---
->  drivers/dma/tegra210-adma.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-> index 2805853..5ab4e3a9 100644
-> --- a/drivers/dma/tegra210-adma.c
-> +++ b/drivers/dma/tegra210-adma.c
-> @@ -74,6 +74,8 @@
->  				    TEGRA186_ADMA_CH_FIFO_CTRL_TXSIZE(3)    | \
->  				    TEGRA186_ADMA_CH_FIFO_CTRL_RXSIZE(3))
->  
-> +#define TEGRA186_DMA_MAX_PENDING_REQS			8
-> +
->  #define ADMA_CH_REG_FIELD_VAL(val, mask, shift)	(((val) & mask) << shift)
->  
->  struct tegra_adma;
-> @@ -85,6 +87,7 @@ struct tegra_adma;
->   * @ch_req_tx_shift: Register offset for AHUB transmit channel select.
->   * @ch_req_rx_shift: Register offset for AHUB receive channel select.
->   * @ch_base_offset: Register offset of DMA channel registers.
-> + * @ch_pending_req: Outstaning DMA requests for a channel.
->   * @ch_fifo_ctrl: Default value for channel FIFO CTRL register.
->   * @ch_req_mask: Mask for Tx or Rx channel select.
->   * @ch_req_max: Maximum number of Tx or Rx channels available.
-> @@ -98,6 +101,7 @@ struct tegra_adma_chip_data {
->  	unsigned int ch_req_tx_shift;
->  	unsigned int ch_req_rx_shift;
->  	unsigned int ch_base_offset;
-> +	unsigned int ch_pending_req;
->  	unsigned int ch_fifo_ctrl;
->  	unsigned int ch_req_mask;
->  	unsigned int ch_req_max;
-> @@ -602,6 +606,7 @@ static int tegra_adma_set_xfer_params(struct tegra_adma_chan *tdc,
->  			 ADMA_CH_CTRL_FLOWCTRL_EN;
->  	ch_regs->config |= cdata->adma_get_burst_config(burst_size);
->  	ch_regs->config |= ADMA_CH_CONFIG_WEIGHT_FOR_WRR(1);
-> +	ch_regs->config |= cdata->ch_pending_req;
+The only other source that uses this feature is omap_vout_vrfb.c,
+and that adds a + 1 when setting the dst_icg. This is a workaround
+for the broken omap-dma.c behavior. So remove the workaround at the
+same time that we fix omap-dma.c.
 
-so for tegra186 this will be 0, which per above would prevent any
-transfers?? What did i miss
+I tested the omap_vout driver with a Beagle XM board to check that
+the '+ 1' in omap_vout_vrfb.c was indeed a workaround for the omap-dma
+bug.
 
->  	ch_regs->fifo_ctrl = cdata->ch_fifo_ctrl;
->  	ch_regs->tc = desc->period_len & ADMA_CH_TC_COUNT_MASK;
->  
-> @@ -786,6 +791,7 @@ static const struct tegra_adma_chip_data tegra210_chip_data = {
->  	.ch_req_tx_shift	= 28,
->  	.ch_req_rx_shift	= 24,
->  	.ch_base_offset		= 0,
-> +	.ch_pending_req		= 0,
->  	.ch_fifo_ctrl		= TEGRA210_FIFO_CTRL_DEFAULT,
->  	.ch_req_mask		= 0xf,
->  	.ch_req_max		= 10,
-> @@ -800,6 +806,7 @@ static const struct tegra_adma_chip_data tegra186_chip_data = {
->  	.ch_req_tx_shift	= 27,
->  	.ch_req_rx_shift	= 22,
->  	.ch_base_offset		= 0x10000,
-> +	.ch_pending_req		= (TEGRA186_DMA_MAX_PENDING_REQS << 4),
->  	.ch_fifo_ctrl		= TEGRA186_FIFO_CTRL_DEFAULT,
->  	.ch_req_mask		= 0x1f,
->  	.ch_req_max		= 20,
-> -- 
-> 2.7.4
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+Changes since v1: removed unnecessary parenthesis in omap_vout_vrfb.c
+as suggested by Laurent.
 
+It makes sense that this patch goes in through the dmaengine subsystem
+(Mauro, can you Ack this patch?), but if preferred it can also go in
+through the media subsystem if we get an Ack from Vinod.
+---
+ drivers/dma/ti/omap-dma.c                    | 4 ++--
+ drivers/media/platform/omap/omap_vout_vrfb.c | 3 +--
+ 2 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+index ba2489d4ea24..ba27802efcd0 100644
+--- a/drivers/dma/ti/omap-dma.c
++++ b/drivers/dma/ti/omap-dma.c
+@@ -1234,7 +1234,7 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_interleaved(
+ 	if (src_icg) {
+ 		d->ccr |= CCR_SRC_AMODE_DBLIDX;
+ 		d->ei = 1;
+-		d->fi = src_icg;
++		d->fi = src_icg + 1;
+ 	} else if (xt->src_inc) {
+ 		d->ccr |= CCR_SRC_AMODE_POSTINC;
+ 		d->fi = 0;
+@@ -1249,7 +1249,7 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_interleaved(
+ 	if (dst_icg) {
+ 		d->ccr |= CCR_DST_AMODE_DBLIDX;
+ 		sg->ei = 1;
+-		sg->fi = dst_icg;
++		sg->fi = dst_icg + 1;
+ 	} else if (xt->dst_inc) {
+ 		d->ccr |= CCR_DST_AMODE_POSTINC;
+ 		sg->fi = 0;
+diff --git a/drivers/media/platform/omap/omap_vout_vrfb.c b/drivers/media/platform/omap/omap_vout_vrfb.c
+index 29e3f5da59c1..11ec048929e8 100644
+--- a/drivers/media/platform/omap/omap_vout_vrfb.c
++++ b/drivers/media/platform/omap/omap_vout_vrfb.c
+@@ -253,8 +253,7 @@ int omap_vout_prepare_vrfb(struct omap_vout_device *vout,
+ 	 */
+
+ 	pixsize = vout->bpp * vout->vrfb_bpp;
+-	dst_icg = ((MAX_PIXELS_PER_LINE * pixsize) -
+-		  (vout->pix.width * vout->bpp)) + 1;
++	dst_icg = MAX_PIXELS_PER_LINE * pixsize - vout->pix.width * vout->bpp;
+
+ 	xt->src_start = vout->buf_phy_addr[vb->i];
+ 	xt->dst_start = vout->vrfb_context[vb->i].paddr[0];
 -- 
-~Vinod
+2.20.1
+

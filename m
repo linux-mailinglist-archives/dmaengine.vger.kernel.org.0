@@ -2,104 +2,119 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B62F48836B
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Aug 2019 21:44:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99EEE88CE3
+	for <lists+dmaengine@lfdr.de>; Sat, 10 Aug 2019 21:27:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbfHIToJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 9 Aug 2019 15:44:09 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46931 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfHIToI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 9 Aug 2019 15:44:08 -0400
-Received: by mail-ot1-f67.google.com with SMTP id z17so18526886otk.13
-        for <dmaengine@vger.kernel.org>; Fri, 09 Aug 2019 12:44:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AwTeQv0nkF8ZzkbuQwNoI5oM1jAqjP+SUKLHmshqgU4=;
-        b=rVihWVM562FWHeevrHmURj44PEleWt0ASN0AHKY6Hov5uYsCDz6oAGJ08b5H+EjqCD
-         hrjmBpOMNbBTXqmeCjkz46TBjIJrLkXjEjT+pVCiYGb3t70pJZ2s6SOhfMQAgipiQcfh
-         voXpiKFXiOl4fpATrz2qU7P+Vg3vo2ah//XnRDQOufMi7c8/E93rAoGgLk+1pT8eIesw
-         585O3KBYW/5zl+F/ep6RKtKY1WSoGGTwUAiTU/eKHm+FE0rZel3W99kgCKtIDv2+gsT6
-         wOOIjgW/HCzR2ZqBx4Wu4gcauVBAzX3ll5QJUQsdIRWzbWiBDlsl1aGpBEBpZSKJ+Urg
-         5L/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AwTeQv0nkF8ZzkbuQwNoI5oM1jAqjP+SUKLHmshqgU4=;
-        b=Z0Zxr0NKTkIwmwArZHO3NJoAG2QVbY0jpW/kTXPvWS0PEUB7+VdaV7XoQswDqugFJE
-         BYIITIyA1ooLz59b8aKNBHZU3fJEJB9rD6WWzIxpB7L9CHN65c5Gy4dsbmSr7RvhjwZ0
-         LLjXFlhHoOpfzjeXRM5VIT4NsKpqbtWY05IhEKfPGA6icW5kfdhXSS6+CMzv5Bm1Bdpn
-         QkMGGuzr9fUIlZO+YJF0HAr5CHO6W9TTFQeg51gSHjZ6x426rBvkBf/33il6X/7utGVo
-         g7/X3P2C8SVFreZ3pkJwPbAwv02BOp5AIorLDZuWw8KHWsDRwzA+ipNl/1yCTJQr8laH
-         OhLA==
-X-Gm-Message-State: APjAAAXeVmlOjdasj4i3j3mLb/e0MfRVuTJgeiaBhyQK3JBVTHMGmL6U
-        NftjoD7acHPXBF0J3HUoNM93zpa12Z+wGdx2g+v3Ug==
-X-Google-Smtp-Source: APXvYqwmGWxKnhH0pu0CdmdtkY9MWiQA2sqa6Y0AXYzLsTz11/rPRS6N91uTv6hH5s8O/RR8/YTXeJBAlToJ8WjZMUg=
-X-Received: by 2002:aca:d80a:: with SMTP id p10mr7522848oig.105.1565379847824;
- Fri, 09 Aug 2019 12:44:07 -0700 (PDT)
+        id S1726104AbfHJT1u (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 10 Aug 2019 15:27:50 -0400
+Received: from smtp08.smtpout.orange.fr ([80.12.242.130]:18193 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726136AbfHJT1r (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 10 Aug 2019 15:27:47 -0400
+Received: from belgarion ([90.76.53.202])
+        by mwinf5d31 with ME
+        id nXTS2000D4MlyVm03XTeb7; Sat, 10 Aug 2019 21:27:43 +0200
+X-ME-Helo: belgarion
+X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
+X-ME-Date: Sat, 10 Aug 2019 21:27:43 +0200
+X-ME-IP: 90.76.53.202
+From:   Robert Jarzmik <robert.jarzmik@free.fr>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     dan.j.williams@intel.com, vkoul@kernel.org,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] dma: pxa_dma: no need to check return value of debugfs_create functions
+References: <20190612122557.24158-1-gregkh@linuxfoundation.org>
+        <20190612122557.24158-4-gregkh@linuxfoundation.org>
+X-URL:  http://belgarath.falguerolles.org/
+Date:   Sat, 10 Aug 2019 21:27:26 +0200
+In-Reply-To: <20190612122557.24158-4-gregkh@linuxfoundation.org> (Greg
+        Kroah-Hartman's message of "Wed, 12 Jun 2019 14:25:55 +0200")
+Message-ID: <87tvaorfc1.fsf@belgarion.home>
+User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
 MIME-Version: 1.0
-References: <20190809162956.488941-1-arnd@arndb.de> <20190809163334.489360-1-arnd@arndb.de>
- <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com> <20190809183658.GA13294@shell.armlinux.org.uk>
-In-Reply-To: <20190809183658.GA13294@shell.armlinux.org.uk>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 9 Aug 2019 12:43:56 -0700
-Message-ID: <CAPcyv4juKU5TLU+3=xAw0Hq=6EeLSxKA4C9kR1YqEV8XuH7e2Q@mail.gmail.com>
-Subject: Re: [PATCH 1/7] [RFC] ARM: remove Intel iop33x and iop13xx support
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>, soc@kernel.org,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, Martin Michlmayr <tbm@cyrius.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 11:37 AM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> On Fri, Aug 09, 2019 at 11:34:12AM -0700, Dan Williams wrote:
-> > [ add Martin (if cyrius.com address is still valid) ]
-> >
-> > On Fri, Aug 9, 2019 at 9:35 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> > >
-> > > There are three families of IOP machines we support in Linux: iop32x
-> > > (which includes EP80219), iop33x and iop13xx (aka IOP34x aka WP8134x).
-> > >
-> > > All products we support in the kernel are based on the first of these,
-> > > iop32x, the other families only ever supported the Intel reference
-> > > boards but no actual machine anyone could ever buy.
-> > >
-> > > While one could clearly make them all three work in a single kernel
-> > > with some work, this takes the easy way out, removing the later two
-> > > platforms entirely, under the assumption that there are no remaining
-> > > users.
-> > >
-> > > Earlier versions of OpenWRT and Debian both had support for iop32x
-> > > but not the others, and they both dropped iop32x as well in their 2015
-> > > releases.
-> > >
-> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > > ---
-> > > I'm just guessing that iop32x is still needed, and the other two are
-> > > not. If anyone disagrees with that assessment, let me know so we
-> > > can come up with an alternative approach.
-> >
-> > I'm not sure who would scream if iop32x support went away as well, but
-> > I have not followed this space in years hence copying Martin.
-> >
-> > In any event:
-> >
-> > Acked-by: Dan Williams <dan.j.williams@intel.com>
->
-> Those of us who have and still run Thecus N2100's, for example?
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 
-Nice! Good to hear.
+Hi Greg,
+
+> When calling debugfs functions, there is no need to ever check the
+> return value.  The function can work or not, but the code logic should
+> never do something different based on this.
+>
+> Also, because there is no need to save the file dentry, remove the
+> variable that was saving it as it was never even being used once set.
+>
+> Cc: Daniel Mack <daniel@zonque.org>
+> Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
+> Cc: Robert Jarzmik <robert.jarzmik@free.fr>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: dmaengine@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  drivers/dma/pxa_dma.c | 56 +++++++++----------------------------------
+>  1 file changed, 11 insertions(+), 45 deletions(-)
+>
+> diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
+> index b429642f3e7a..0f698f49ee26 100644
+> --- a/drivers/dma/pxa_dma.c
+> +++ b/drivers/dma/pxa_dma.c
+> @@ -132,7 +132,6 @@ struct pxad_device {
+>  	spinlock_t			phy_lock;	/* Phy association */
+>  #ifdef CONFIG_DEBUG_FS
+>  	struct dentry			*dbgfs_root;
+> -	struct dentry			*dbgfs_state;
+>  	struct dentry			**dbgfs_chan;
+>  #endif
+>  };
+> @@ -326,31 +325,18 @@ static struct dentry *pxad_dbg_alloc_chan(struct pxad_device *pdev,
+>  					     int ch, struct dentry *chandir)
+>  {
+>  	char chan_name[11];
+> -	struct dentry *chan, *chan_state = NULL, *chan_descr = NULL;
+> -	struct dentry *chan_reqs = NULL;
+> +	struct dentry *chan;
+>  	void *dt;
+>  
+>  	scnprintf(chan_name, sizeof(chan_name), "%d", ch);
+>  	chan = debugfs_create_dir(chan_name, chandir);
+>  	dt = (void *)&pdev->phys[ch];
+>  
+> -	if (chan)
+> -		chan_state = debugfs_create_file("state", 0400, chan, dt,
+> -						 &chan_state_fops);
+> -	if (chan_state)
+> -		chan_descr = debugfs_create_file("descriptors", 0400, chan, dt,
+> -						 &descriptors_fops);
+> -	if (chan_descr)
+> -		chan_reqs = debugfs_create_file("requesters", 0400, chan, dt,
+> -						&requester_chan_fops);
+> -	if (!chan_reqs)
+> -		goto err_state;
+> +	debugfs_create_file("state", 0400, chan, dt, &chan_state_fops);
+> +	debugfs_create_file("descriptors", 0400, chan, dt, &descriptors_fops);
+> +	debugfs_create_file("requesters", 0400, chan, dt, &requester_chan_fops);
+
+This is not strictly equivalent.
+Imagine that the debugfs_create_dir() fails and returns NULL :
+ - in the former case, neither "state", "descriptors" nor "requesters" would be
+   created
+ - in the new code, "state", "descriptors" nor "requesters" will be created in
+   the debugfs root directory
+
+Apart from that it looks fine.
+
+Cheers.
+
+-- 
+Robert

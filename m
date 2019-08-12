@@ -2,106 +2,67 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B577D89521
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Aug 2019 03:08:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DE18897F6
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Aug 2019 09:38:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbfHLBI5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 11 Aug 2019 21:08:57 -0400
-Received: from gateway23.websitewelcome.com ([192.185.50.141]:49744 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725870AbfHLBI5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 11 Aug 2019 21:08:57 -0400
-X-Greylist: delayed 1502 seconds by postgrey-1.27 at vger.kernel.org; Sun, 11 Aug 2019 21:08:56 EDT
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 54B255AB6
-        for <dmaengine@vger.kernel.org>; Sun, 11 Aug 2019 19:22:03 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id wy65h1PneiQerwy65hNzx6; Sun, 11 Aug 2019 19:22:03 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rOOPxfsGYN4ADAoetTEhwGr2GPC2m5yYCGICAwSLA1A=; b=V+g+WALm4X/kwH+wvXaJ6qDBvd
-        waEP+UkdGFUylUdlIgI4Nevdkq6rFad044GJxvbyq1DCf2nLjQcTTnBONgh8Q7RNWPJJl1wcngKQ6
-        tvWThJyI6b52FptrqWKwwudEfSMuwE5etxuDMPs6dLhsqCNrSzUjAZnuwgzxf1XavDACYLcnN+8eX
-        P7p5q+x9/rMd/I9EfZYazn2SocvkmRIr2S1T6o6Oy/C3KqmN5ayXseInCj90f3yPE9aBwV9R3sNo/
-        TX+Th24EIsrPyuCUgC0BJAWNlHdNIYzUKq5rDhjO2w7USIw6vW9xrt3zzsArkl5Rg5gJDw3aG/n4V
-        Q1Shd5sA==;
-Received: from [187.192.11.120] (port=52044 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hwy64-002b9l-LT; Sun, 11 Aug 2019 19:22:00 -0500
-Date:   Sun, 11 Aug 2019 19:22:00 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Li Yang <leoyang.li@nxp.com>, Zhang Wei <zw@zh-kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] dmaengine: fsldma: Mark expected switch fall-through
-Message-ID: <20190812002159.GA26899@embeddedor>
+        id S1726719AbfHLHi1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 12 Aug 2019 03:38:27 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45114 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726304AbfHLHi1 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 12 Aug 2019 03:38:27 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C6624B928CFFF8E18AE1;
+        Mon, 12 Aug 2019 15:38:24 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 12 Aug 2019 15:38:14 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        "Mao Wenan" <maowenan@huawei.com>
+Subject: [PATCH linux-next] drivers: dma: Fix sparse warning for mux_configure32
+Date:   Mon, 12 Aug 2019 15:42:05 +0800
+Message-ID: <20190812074205.96759-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.11.120
-X-Source-L: No
-X-Exim-ID: 1hwy64-002b9l-LT
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.11.120]:52044
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 13
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Mark switch cases where we are expecting to fall through.
+There is one sparse warning in drivers/dma/fsl-edma-common.c,
+fix it by setting mux_configure32() as static.
 
-Fix the following warning (Building: powerpc-ppa8548_defconfig powerpc):
+make allmodconfig ARCH=mips CROSS_COMPILE=mips-linux-gnu-
+make C=2 drivers/dma/fsl-edma-common.o ARCH=mips CROSS_COMPILE=mips-linux-gnu-
+drivers/dma/fsl-edma-common.c:93:6: warning: symbol 'mux_configure32' was not declared. Should it be static?
 
-drivers/dma/fsldma.c: In function ‘fsl_dma_chan_probe’:
-drivers/dma/fsldma.c:1165:26: warning: this statement may fall through [-Wimplicit-fallthrough=]
-   chan->toggle_ext_pause = fsl_chan_toggle_ext_pause;
-   ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/dma/fsldma.c:1166:2: note: here
-  case FSL_DMA_IP_83XX:
-  ^~~~
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Fixes: 232a7f18cf8ec ("dmaengine: fsl-edma: add i.mx7ulp edma2 version support")
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
 ---
- drivers/dma/fsldma.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/fsl-edma-common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
-index 23e0a356f167..ad72b3f42ffa 100644
---- a/drivers/dma/fsldma.c
-+++ b/drivers/dma/fsldma.c
-@@ -1163,6 +1163,7 @@ static int fsl_dma_chan_probe(struct fsldma_device *fdev,
- 	switch (chan->feature & FSL_DMA_IP_MASK) {
- 	case FSL_DMA_IP_85XX:
- 		chan->toggle_ext_pause = fsl_chan_toggle_ext_pause;
-+		/* Fall through */
- 	case FSL_DMA_IP_83XX:
- 		chan->toggle_ext_start = fsl_chan_toggle_ext_start;
- 		chan->set_src_loop_size = fsl_chan_set_src_loop_size;
+diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+index 6d6d8a4..7dbf7df 100644
+--- a/drivers/dma/fsl-edma-common.c
++++ b/drivers/dma/fsl-edma-common.c
+@@ -90,8 +90,8 @@ static void mux_configure8(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
+ 	iowrite8(val8, addr + off);
+ }
+ 
+-void mux_configure32(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
+-		     u32 off, u32 slot, bool enable)
++static void mux_configure32(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
++			    u32 off, u32 slot, bool enable)
+ {
+ 	u32 val;
+ 
 -- 
-2.22.0
+2.7.4
 

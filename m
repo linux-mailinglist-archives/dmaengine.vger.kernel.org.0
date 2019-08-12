@@ -2,93 +2,84 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E90B899E6
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Aug 2019 11:36:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19D6F89A34
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Aug 2019 11:45:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfHLJge (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 12 Aug 2019 05:36:34 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:33571 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbfHLJge (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Aug 2019 05:36:34 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MsZif-1iHOUK1HEh-00u1ou; Mon, 12 Aug 2019 11:36:27 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dma: ti: unexport filter functions
-Date:   Mon, 12 Aug 2019 11:36:03 +0200
-Message-Id: <20190812093623.992757-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        id S1727699AbfHLJpD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 12 Aug 2019 05:45:03 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:51325 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727430AbfHLJpC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Aug 2019 05:45:02 -0400
+X-Originating-IP: 91.118.195.70
+Received: from jirafa.cyrius.com (91-118-195-70.static.upcbusiness.at [91.118.195.70])
+        (Authenticated sender: tbm@cyrius.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id DA1BF40003;
+        Mon, 12 Aug 2019 09:44:56 +0000 (UTC)
+Received: by jirafa.cyrius.com (Postfix, from userid 1000)
+        id 58518A887E; Mon, 12 Aug 2019 11:44:56 +0200 (CEST)
+Date:   Mon, 12 Aug 2019 11:44:56 +0200
+From:   Martin Michlmayr <tbm@cyrius.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, soc@kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Vinod Koul <vkoul@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dmaengine@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org,
+        Peter Teichmann <lists@peter-teichmann.de>
+Subject: Re: [PATCH 1/7] [RFC] ARM: remove Intel iop33x and iop13xx support
+Message-ID: <20190812094456.GI10598@jirafa.cyrius.com>
+References: <20190809162956.488941-1-arnd@arndb.de>
+ <20190809163334.489360-1-arnd@arndb.de>
+ <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:iHoKzkx8FxpNNjHjNARDge07F2F1gIdlZvyjKllLCMxtH7U7qRf
- xDOxNP6Xg7nQdTnaNW/bpikUISl1FT8XmAVGvWd0muxyq/35hRTqAy/I0o57ghw6WcUcey6
- 0GULuES/ojGaCrEYuiBnvTjY95ZxUi4YF5tXP/oOfRC+b7WKugl6XRgiSU3XJnDX5vxwXYy
- ZkG6uCEAL+tyBbZ5PKqow==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:162hD8IolNI=:DPQ4Pvt6me0yBKPmjd/Z6F
- bqJ+ckMUBy2YWjbp9gTOpFanU6y8PyA7Nh+aWJYdS/Cfo4G0fLzDgLhXqoE+ksYNDGrNwCnWX
- nS+/BRGrZAyM3eNekYWYLluy7QMfUM2nSOUjwjTxrNqGbJzzLDKA183h1PS6lEMAMCfBNkWwZ
- H+lkWv9EXJx4njUx/1VyoBAkeC4egkTluey59A/Jei0dJLIxEasRgxX/nG+hGEa5Vn6kr1zb1
- tq8RkJoqbby8FJVuxw08dVoL1TGgV+6kZD2i15kObG4H9+JfOYB0omSVRgp7juqUXnOSGOm08
- hIxS9njeDLEySckVsLjSNm5DvOUqyB8yz00wdINxUfBlee0NPp2dz6Cs9Nvk8XFGmAZKLr0Rl
- BU/SQkxwOD9J9HQdFYgi9IoHgTHpEy0KL3Bon3JQaNfKewNdr7SqIRyZIEp3r/m3RiIvhDakE
- ipxeY8ZLBKkQoSH0iKz4BohpOYimNXG/QPojVKVp/5ColA6WQMgsftO+2dZGewV5eirPTqYwA
- jTnPn++xY7sRiiLLQhs58MR2D7BlYHj+VVxOWR1LSJlVLlScaVCsquNLnINmn+W1o/xb59JPl
- yDAYmga7nQSvTz+z7VwvzOdaf3XE/xIPp/Z+Og4XjtPui+Nqs6P1XuP7iPGi33V6YcVonVn1W
- ZPHrs7dgp0qdCCqDsbMZE5cvblKMe8aq9nCpK4IlLsxd/CfWWcRFQ2a6renqxC3pkDTv4bjrs
- 2xAe/UQewB/CrwryXKferhLGQ/Bwfg/W4frp9Q==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The two filter functions are now marked stable, but still exported,
-which triggers a coming build-time check:
+* Dan Williams <dan.j.williams@intel.com> [2019-08-09 11:34]:
+> > Earlier versions of OpenWRT and Debian both had support for iop32x
+> > but not the others, and they both dropped iop32x as well in their 2015
+> > releases.
+> >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> > I'm just guessing that iop32x is still needed, and the other two are
+> > not. If anyone disagrees with that assessment, let me know so we
+> > can come up with an alternative approach.
+> 
+> I'm not sure who would scream if iop32x support went away as well, but
+> I have not followed this space in years hence copying Martin.
 
-WARNING: "omap_dma_filter_fn" [vmlinux] is a static EXPORT_SYMBOL_GPL
-WARNING: "edma_filter_fn" [vmlinux] is a static EXPORT_SYMBOL
+I believe iop13xx were mostly Intel dev boards.  I'm not aware of any
+major devices based on iop33x.
 
-Remove the unneeded exports as well, as originally intended.
+As Arnd points out, Debian used to have support for various iop32x
+devices.  While Debian hasn't supported iop32x in a number of years,
+these devices are still usable and in use (RMK being a prime example).
 
-Fixes: 9c71b9eb3cb2 ("dmaengine: omap-dma: make omap_dma_filter_fn private")
-Fixes: d2bfe7b5d182 ("dmaengine: edma: make edma_filter_fn private")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/dma/ti/edma.c     | 1 -
- drivers/dma/ti/omap-dma.c | 1 -
- 2 files changed, 2 deletions(-)
+So I think it's safe to drop iop33x/iop13xx while retaining support
+for iop32x.
 
-diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-index f2549ee3fb49..ea028388451a 100644
---- a/drivers/dma/ti/edma.c
-+++ b/drivers/dma/ti/edma.c
-@@ -2540,7 +2540,6 @@ static bool edma_filter_fn(struct dma_chan *chan, void *param)
- 	}
- 	return match;
- }
--EXPORT_SYMBOL(edma_filter_fn);
- 
- static int edma_init(void)
- {
-diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index 49da402a1927..98b39bcb7b37 100644
---- a/drivers/dma/ti/omap-dma.c
-+++ b/drivers/dma/ti/omap-dma.c
-@@ -1652,7 +1652,6 @@ static bool omap_dma_filter_fn(struct dma_chan *chan, void *param)
- 	}
- 	return false;
- }
--EXPORT_SYMBOL_GPL(omap_dma_filter_fn);
- 
- static int omap_dma_init(void)
- {
+As I was looking at my email archives, I saw an email from Peter
+Teichmann who was working on an iop33x based platform (around 2009) so
+I've copied him as well.
+
+> In any event:
+> 
+> Acked-by: Dan Williams <dan.j.williams@intel.com>
+
+Acked-by: Martin Michlmayr <tbm@cyrius.com>
+
 -- 
-2.20.0
-
+Martin Michlmayr
+https://www.cyrius.com/

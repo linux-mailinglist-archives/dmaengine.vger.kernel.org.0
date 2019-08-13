@@ -2,48 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BFD48AF0D
-	for <lists+dmaengine@lfdr.de>; Tue, 13 Aug 2019 08:00:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7F048AFFB
+	for <lists+dmaengine@lfdr.de>; Tue, 13 Aug 2019 08:36:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725867AbfHMGAY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 13 Aug 2019 02:00:24 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34319 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfHMGAX (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 13 Aug 2019 02:00:23 -0400
-Received: by mail-lj1-f194.google.com with SMTP id x18so3978420ljh.1;
-        Mon, 12 Aug 2019 23:00:22 -0700 (PDT)
+        id S1727035AbfHMGgT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 13 Aug 2019 02:36:19 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38991 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbfHMGgS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 13 Aug 2019 02:36:18 -0400
+Received: by mail-wr1-f68.google.com with SMTP id t16so16542235wra.6;
+        Mon, 12 Aug 2019 23:36:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ReHlvZFH1ZeXccZOj4ZMudkc0sB4myxec1s5FoIRfYM=;
-        b=VMEm/ew89LeoITWhzPDFhZT8IVMh9dV6jacaz9bnY89lMDox3R/Zpncv8uGSalCc7M
-         wk9L01A8AEzNduYTDT7YDct37dDK/kewM6TTOqXvMsHAwD9+1XGRYU+9zEDv30L0CxIX
-         A4CzLzk9v3H8LXvZNARNKtF1O1wAXGNyxM3PFrRytIMBBOu2e080TqZs3DT4qP0DZmI2
-         5Ws/px4vQJ7UMOw4ma2yHfPDf8Vf2zWmWOeHtWOaer3XHbCGXmrcXH/14jtLRGkcMEDi
-         MP1WEEev8p2Qjrrslj2xOXiXQg3KgeYAdm00sHVNwt5w4hGD87m/vyyxkoYyXgbGEwpe
-         e2fA==
-X-Gm-Message-State: APjAAAVy19TnB+YNPJwDIUVh7E0V7GditFgY5S6DXdpzMViye9Z4cIW/
-        n7s1YKpqSEHj4Ce7GLlJi0u2niI7vVw=
-X-Google-Smtp-Source: APXvYqxcANLDQtTMky+XNKIvXW+Sb2r8gyW8lRSRn8ZT7Kn6Rt2ogKF8m/ewTwP/hDCDhCHPXE3AEQ==
-X-Received: by 2002:a2e:b0cf:: with SMTP id g15mr4633433ljl.237.1565676021561;
-        Mon, 12 Aug 2019 23:00:21 -0700 (PDT)
+        bh=ie9Rb39uo73LLfEZw6hnNpJOlbAByYR2bYHJOHwVGT4=;
+        b=PrDlhu4Tx7zsRCfOXZOsnL1TJFuXNGHrh16hPwLDqfX87N7eCnStElYnmqq6kUY317
+         eZhawYFQNFhY361FIZVhqJGS4t3Tq5/YEZfG+hfxnwj8ZfRoN9gbRAzXUt1MrgCUl32N
+         kLB8f0h2WUV9bSyf9G3ePleAFIJz2kPW9X7kaAsxbhECDmu/aRUcJJC4atpvu4WmWSDu
+         yI0L56vcYp6SAoqRNGVFMpBQOfAgKR5Tc+EdPYqz8U4Dk0UgcIwH7W4ZsZcESKIXnWdV
+         VszWgugrHuxLGqUGoWLHacz+ZcG+DMuuYkcHw96jkWy6k03+731g7kI+P8EZ+ur767Ny
+         vm7A==
+X-Gm-Message-State: APjAAAWlYfdk/JFMBHk9jihKRsBNyInrdZk5fuUQ6ZjcCaSxumHVSgKT
+        vSvc0hH0kbLPe03eCAtyoCHYxQCr53w=
+X-Google-Smtp-Source: APXvYqxYnRe7RYbzul5+gXRnf0USBcbQpm4WXxEuqRbLFKP2XLbynxueCIAILTHcZaFcUEXdg2ZGbQ==
+X-Received: by 2002:adf:f507:: with SMTP id q7mr21370026wro.210.1565678176672;
+        Mon, 12 Aug 2019 23:36:16 -0700 (PDT)
 Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id o5sm1427951lji.43.2019.08.12.23.00.20
+        by smtp.googlemail.com with ESMTPSA id q20sm57578075wrc.79.2019.08.12.23.36.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 23:00:21 -0700 (PDT)
+        Mon, 12 Aug 2019 23:36:16 -0700 (PDT)
 From:   Denis Efremov <efremov@linux.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Denis Efremov <efremov@linux.com>, joe@perches.com,
         Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: dw axi dmac: Fix typo in a path
-Date:   Tue, 13 Aug 2019 09:00:04 +0300
-Message-Id: <20190813060004.10594-1-efremov@linux.com>
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Subject: [RESEND PATCH] MAINTAINERS: dw axi dmac: Fix typo in a path
+Date:   Tue, 13 Aug 2019 09:36:05 +0300
+Message-Id: <20190813063605.23102-1-efremov@linux.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190325212809.27891-1-joe@perches.com>
-References: <20190325212809.27891-1-joe@perches.com>
+In-Reply-To: <20190813060004.10594-1-efremov@linux.com>
+References: <20190813060004.10594-1-efremov@linux.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
@@ -54,7 +54,7 @@ X-Mailing-List: dmaengine@vger.kernel.org
 Fix typo (s/dwi-/dw-/) in the directory path.
 
 Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc: Vinod Koul <vinod.koul@intel.com>
+Cc: Vinod Koul <vkoul@kernel.org>
 Cc: dmaengine@vger.kernel.org
 Fixes: 1fe20f1b8454 ("dmaengine: Introduce DW AXI DMAC driver")
 Signed-off-by: Denis Efremov <efremov@linux.com>
@@ -63,10 +63,10 @@ Signed-off-by: Denis Efremov <efremov@linux.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index bf5f0467988c..9b4717ea2cfe 100644
+index 5ec418d8c386..eeeb4097d5bd 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -15495,7 +15495,7 @@ F:	Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+@@ -15482,7 +15482,7 @@ F:	Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
  SYNOPSYS DESIGNWARE AXI DMAC DRIVER
  M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
  S:	Maintained

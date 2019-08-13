@@ -2,101 +2,79 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 135B18ADF6
-	for <lists+dmaengine@lfdr.de>; Tue, 13 Aug 2019 06:44:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BFD48AF0D
+	for <lists+dmaengine@lfdr.de>; Tue, 13 Aug 2019 08:00:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725903AbfHMEok (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 13 Aug 2019 00:44:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbfHMEok (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 13 Aug 2019 00:44:40 -0400
-Received: from localhost (unknown [106.201.103.22])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B4412063F;
-        Tue, 13 Aug 2019 04:44:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565671479;
-        bh=SpfUN57SJ7lgvjo3JXsVpHsmNRBqwd9iNm1bTWA2dBc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Mz0bbGaBsgvLWWy35YepM+f5dhcj7me+fQd4N51wJm9lz5d+um7ezxDjsDe5361j2
-         /Kg05/kvodmBq5uKqLp3U/6IR69z31Ky5oa4l+utMIK5KpAO5+qyiCncEInOggXQVz
-         SRfO35xvOYBl8lBsY/OSlS38SbPABv7euo+HBwAU=
-Date:   Tue, 13 Aug 2019 10:13:27 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH linux-next] drivers: dma: Fix sparse warning for
- mux_configure32
-Message-ID: <20190813044327.GR12733@vkoul-mobl.Dlink>
-References: <20190812074205.96759-1-maowenan@huawei.com>
+        id S1725867AbfHMGAY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 13 Aug 2019 02:00:24 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34319 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfHMGAX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 13 Aug 2019 02:00:23 -0400
+Received: by mail-lj1-f194.google.com with SMTP id x18so3978420ljh.1;
+        Mon, 12 Aug 2019 23:00:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ReHlvZFH1ZeXccZOj4ZMudkc0sB4myxec1s5FoIRfYM=;
+        b=VMEm/ew89LeoITWhzPDFhZT8IVMh9dV6jacaz9bnY89lMDox3R/Zpncv8uGSalCc7M
+         wk9L01A8AEzNduYTDT7YDct37dDK/kewM6TTOqXvMsHAwD9+1XGRYU+9zEDv30L0CxIX
+         A4CzLzk9v3H8LXvZNARNKtF1O1wAXGNyxM3PFrRytIMBBOu2e080TqZs3DT4qP0DZmI2
+         5Ws/px4vQJ7UMOw4ma2yHfPDf8Vf2zWmWOeHtWOaer3XHbCGXmrcXH/14jtLRGkcMEDi
+         MP1WEEev8p2Qjrrslj2xOXiXQg3KgeYAdm00sHVNwt5w4hGD87m/vyyxkoYyXgbGEwpe
+         e2fA==
+X-Gm-Message-State: APjAAAVy19TnB+YNPJwDIUVh7E0V7GditFgY5S6DXdpzMViye9Z4cIW/
+        n7s1YKpqSEHj4Ce7GLlJi0u2niI7vVw=
+X-Google-Smtp-Source: APXvYqxcANLDQtTMky+XNKIvXW+Sb2r8gyW8lRSRn8ZT7Kn6Rt2ogKF8m/ewTwP/hDCDhCHPXE3AEQ==
+X-Received: by 2002:a2e:b0cf:: with SMTP id g15mr4633433ljl.237.1565676021561;
+        Mon, 12 Aug 2019 23:00:21 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id o5sm1427951lji.43.2019.08.12.23.00.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 12 Aug 2019 23:00:21 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Denis Efremov <efremov@linux.com>, joe@perches.com,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: dw axi dmac: Fix typo in a path
+Date:   Tue, 13 Aug 2019 09:00:04 +0300
+Message-Id: <20190813060004.10594-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190325212809.27891-1-joe@perches.com>
+References: <20190325212809.27891-1-joe@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812074205.96759-1-maowenan@huawei.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 12-08-19, 15:42, Mao Wenan wrote:
+Fix typo (s/dwi-/dw-/) in the directory path.
 
-Patch title is incorrect, it should mention the changes in patch, for
-example make mux_configure32 static
+Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc: Vinod Koul <vinod.koul@intel.com>
+Cc: dmaengine@vger.kernel.org
+Fixes: 1fe20f1b8454 ("dmaengine: Introduce DW AXI DMAC driver")
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Do read up on Documentation/process/submitting-patches.rst again!
-
-> There is one sparse warning in drivers/dma/fsl-edma-common.c,
-
-It will help to explain the warning before the fix
-
-> fix it by setting mux_configure32() as static.
-> 
-> make allmodconfig ARCH=mips CROSS_COMPILE=mips-linux-gnu-
-> make C=2 drivers/dma/fsl-edma-common.o ARCH=mips CROSS_COMPILE=mips-linux-gnu-
-
-Make cmds are not relevant for the log
-
-> drivers/dma/fsl-edma-common.c:93:6: warning: symbol 'mux_configure32' was not declared. Should it be static?
-
-This one is and should be retained
-
-> 
-> Fixes: 232a7f18cf8ec ("dmaengine: fsl-edma: add i.mx7ulp edma2 version support")
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> ---
->  drivers/dma/fsl-edma-common.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-> index 6d6d8a4..7dbf7df 100644
-> --- a/drivers/dma/fsl-edma-common.c
-> +++ b/drivers/dma/fsl-edma-common.c
-> @@ -90,8 +90,8 @@ static void mux_configure8(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
->  	iowrite8(val8, addr + off);
->  }
->  
-> -void mux_configure32(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
-> -		     u32 off, u32 slot, bool enable)
-> +static void mux_configure32(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
-
-just change this to static
-
-> +			    u32 off, u32 slot, bool enable)
-
-and dont change anything else.
-
-If you feel to change this, propose a new patch for this line explaining
-why this should be changed
-
->  {
->  	u32 val;
->  
-> -- 
-> 2.7.4
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bf5f0467988c..9b4717ea2cfe 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15495,7 +15495,7 @@ F:	Documentation/devicetree/bindings/gpio/snps-dwapb-gpio.txt
+ SYNOPSYS DESIGNWARE AXI DMAC DRIVER
+ M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+ S:	Maintained
+-F:	drivers/dma/dwi-axi-dmac/
++F:	drivers/dma/dw-axi-dmac/
+ F:	Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
+ 
+ SYNOPSYS DESIGNWARE DMAC DRIVER
 -- 
-~Vinod
+2.21.0
+

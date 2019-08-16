@@ -2,23 +2,23 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ECFE590989
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Aug 2019 22:41:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 222579098A
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Aug 2019 22:41:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbfHPUlb convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Fri, 16 Aug 2019 16:41:31 -0400
-Received: from emita3.mittwald.de ([37.202.1.53]:48200 "EHLO
+        id S1727585AbfHPUlo convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Fri, 16 Aug 2019 16:41:44 -0400
+Received: from emita3.mittwald.de ([37.202.1.53]:41801 "EHLO
         emita3.mittwald.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727585AbfHPUlb (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 16 Aug 2019 16:41:31 -0400
+        with ESMTP id S1727545AbfHPUlo (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 16 Aug 2019 16:41:44 -0400
 Received: from s4953 (s4953.internal21 [172.21.149.53])
-        by emita3.mittwald.de (Postfix) with ESMTP id E862CA407B
-        for <dmaengine@vger.kernel.org>; Fri, 16 Aug 2019 22:41:28 +0200 (CEST)
+        by emita3.mittwald.de (Postfix) with ESMTP id 24915A407C
+        for <dmaengine@vger.kernel.org>; Fri, 16 Aug 2019 22:41:42 +0200 (CEST)
 To:     dmaengine@vger.kernel.org
 Subject: Newsletter Stiftung Marktwirtschaft
 X-PHP-Originating-Script: 433988:SimpleMailInvoker.php
-Message-ID: <d69a195480116567ada941ce13aec0aa@www.stiftung-marktwirtschaft.de>
-Date:   Fri, 16 Aug 2019 22:41:28 +0200
+Message-ID: <356ea7b5b956e3f66ec720d5d5c9d49e@www.stiftung-marktwirtschaft.de>
+Date:   Fri, 16 Aug 2019 22:41:42 +0200
 From:   Stiftung Marktwirtschaft <newsletter@stiftung-marktwirtschaft.de>
 Reply-To: Stiftung Marktwirtschaft 
           <newsletter@stiftung-marktwirtschaft.de>

@@ -2,83 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4665C90591
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Aug 2019 18:15:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8019D905D3
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Aug 2019 18:32:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbfHPQPS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 16 Aug 2019 12:15:18 -0400
-Received: from emh02.mail.saunalahti.fi ([62.142.5.108]:44832 "EHLO
-        emh02.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfHPQPS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 16 Aug 2019 12:15:18 -0400
-Received: from darkstar.musicnaut.iki.fi (85-76-65-201-nat.elisa-mobile.fi [85.76.65.201])
-        by emh02.mail.saunalahti.fi (Postfix) with ESMTP id 15AB6200D9;
-        Fri, 16 Aug 2019 19:15:14 +0300 (EEST)
-Date:   Fri, 16 Aug 2019 19:15:14 +0300
-From:   Aaro Koskinen <aaro.koskinen@iki.fi>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Martin Michlmayr <tbm@cyrius.com>,
-        Peter Teichmann <lists@peter-teichmann.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        soc@kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>, dmaengine@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/7] [RFC] ARM: remove Intel iop33x and iop13xx support
-Message-ID: <20190816161514.GB30291@darkstar.musicnaut.iki.fi>
-References: <20190809162956.488941-1-arnd@arndb.de>
- <20190809163334.489360-1-arnd@arndb.de>
- <CAA9_cmdDbBm0ookyqGJMcyLVFHkYHuR3mEeawQKS2UqYJoWWaQ@mail.gmail.com>
- <20190812094456.GI10598@jirafa.cyrius.com>
- <CACRpkdao8LF8g5qi_h+9BT9cHwmB4OadabkdGfP0sEFeLbmiLw@mail.gmail.com>
- <20190816154249.GA30291@darkstar.musicnaut.iki.fi>
- <20190816155833.GL13294@shell.armlinux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816155833.GL13294@shell.armlinux.org.uk>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S1727457AbfHPQaN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 16 Aug 2019 12:30:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51068 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727391AbfHPQaH (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 16 Aug 2019 12:30:07 -0400
+Subject: Re: [GIT PULL]: dmaengine fixes for v5.3-rc5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565973007;
+        bh=C+15RRON7v0kZNLZM4cWgiba2GqK7EyGHEkGjYx5UfA=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=PjlYNJax/L7UGcDSkucKo0TTavXoe2/VUOj8GwiQMtCON/4sHzYxrX2PPxMstVWL1
+         14ZBeIIFJEUlMsI122qDsJb6cim0+rvpy5/EHDQlFWxOJ45xB4iB3SPIxW/V6wyMqF
+         ODpc3cQp/ao10YyELyKFsVqvazEZMtyHURFY/BAY=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190816094627.GB12733@vkoul-mobl.Dlink>
+References: <20190816094627.GB12733@vkoul-mobl.Dlink>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190816094627.GB12733@vkoul-mobl.Dlink>
+X-PR-Tracked-Remote: git://git.infradead.org/users/vkoul/slave-dma.git
+ tags/dmaengine-fix-5.3-rc5
+X-PR-Tracked-Commit-Id: d555c34338cae844b207564c482e5a3fb089d25e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9da5bb24bb368567a43ac2df0e108e43d80f3564
+Message-Id: <156597300729.15122.18141782735058596853.pr-tracker-bot@kernel.org>
+Date:   Fri, 16 Aug 2019 16:30:07 +0000
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi,
+The pull request you sent on Fri, 16 Aug 2019 15:16:28 +0530:
 
-On Fri, Aug 16, 2019 at 04:58:33PM +0100, Russell King - ARM Linux admin wrote:
-> On Fri, Aug 16, 2019 at 06:42:49PM +0300, Aaro Koskinen wrote:
-> > On Wed, Aug 14, 2019 at 10:36:01AM +0200, Linus Walleij wrote:
-> > > On Mon, Aug 12, 2019 at 11:45 AM Martin Michlmayr <tbm@cyrius.com> wrote:
-> > > > As Arnd points out, Debian used to have support for various iop32x
-> > > > devices.  While Debian hasn't supported iop32x in a number of years,
-> > > > these devices are still usable and in use (RMK being a prime example).
-> > > 
-> > > I suppose it could be a good idea to add support for iop32x to
-> > > OpenWrt and/or OpenEmbedded, both of which support some
-> > > pretty constrained systems.
-> > 
-> > This platform is not really too constrained... E.g. on N2100 you have
-> > 512 MB RAM, SATA disks and gigabit ethernet. Not that different from
-> > mvebu that Debian currently (?) supports. Maybe with multiplatform they
-> > could support iop32x again.
-> 
-> Probably not.  The kernel has a dividing line between ARMv5 and ARMv6
-> where it's not possible to multiplatform across that boundary, so
-> you're already needing separate kernel images there.
-> 
-> Secondly, armhf distros won't be compatible with ARMv5, and to make
-> them compatible will make performance on armhf suffer - you have to
-> stop using barriers, exclusive load/store and a few other things.
-> You have to rely on the kuser page exported by the kernel (which is
-> now optional as it's deemed to be a security issue for ROP attacks)
-> for some things that such a userspace requires - such as NPTL support.
-> 
-> Effectively, ARMv5 is an entirely separate userspace distro from armhf.
+> git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.3-rc5
 
-I thought they still had armel for ARMv5 and mvebu (kirkwood).
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9da5bb24bb368567a43ac2df0e108e43d80f3564
 
-A.
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker

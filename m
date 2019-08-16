@@ -2,197 +2,81 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B1D5C8F9F8
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Aug 2019 06:44:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0C0F8FADB
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Aug 2019 08:23:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbfHPEoT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 16 Aug 2019 00:44:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34168 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbfHPEoT (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 16 Aug 2019 00:44:19 -0400
-Received: from localhost (unknown [106.51.111.160])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AE2B206C1;
-        Fri, 16 Aug 2019 04:44:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565930657;
-        bh=HoOiP4Os9/9fBa74N3hlSgQz1gtiyi53N9679RT9kfk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AClldIkLtgr6Aw7Lzwr2ibQAoLDn7DS5kMi1dfVqMq8HSouTAgobXYCHzJCkopIRp
-         DtIbTsmbT5akTq9h9QDrVVPqZooaqvOpskhXYRdEuQ+SAv7ZMvXJCH6GMJ5knWAJUB
-         VZekHf5C8lqwCUnKsRPoB6m1gFNPpcmH9JkCRG3k=
-Date:   Fri, 16 Aug 2019 10:13:04 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     dmaengine@vger.kernel.org,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, orito.takao@socionext.com,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        kasai.kazuhiro@socionext.com,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH 2/2] dmaengine: milbeaut-hdmac: Add HDMAC driver for
- Milbeaut platforms
-Message-ID: <20190816044304.GZ12733@vkoul-mobl.Dlink>
-References: <20190613005109.1867-1-jassisinghbrar@gmail.com>
- <20190613005247.2048-1-jassisinghbrar@gmail.com>
- <20190624064442.GW2962@vkoul-mobl>
- <CABb+yY3pLBA=Y_4kUZ-E_VWOiJsofung2bMA5HqkNeNJkOOZxQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABb+yY3pLBA=Y_4kUZ-E_VWOiJsofung2bMA5HqkNeNJkOOZxQ@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        id S1726519AbfHPGXn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 16 Aug 2019 02:23:43 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:44236 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbfHPGXm (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 16 Aug 2019 02:23:42 -0400
+Received: by mail-yw1-f65.google.com with SMTP id l79so1459063ywe.11;
+        Thu, 15 Aug 2019 23:23:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kdbxFDHYGClUoNsZGKKPkP7v5sij1u1AQCARlCPuJqQ=;
+        b=LbEPwmQELKI6lVvU5HXRMNCTD97aRYptdnIL5tWhGaFE3Ty4MljhgarlTjiqenA6R6
+         j6blhWUa1VCtHpucFvdTcEvufym5+sKQIMfvCixRhIFrfApj79DcdK6z0OvV1jsye/Sq
+         mB0vDXPM/3oqIb9eSAxHULytAtTktZkKPCUE6v4Ye8cjCwcJcAYWRhvNfyER1CUx1A81
+         XWkdG7o/m+1/TwDF8r/nb4FVmwODbq1x8f0w/uxGMjQn8vGNAgWoC3r6+ENm0Kz0lR1i
+         +KGSIgyDlGb+2IIsrcSlVTHw8D+VGSP4rbhDDmzwQN7aHpmsLcAQxPTyjm0TQgDGJI4D
+         gdtQ==
+X-Gm-Message-State: APjAAAXGauqwHA6ih05oQ+yA+jamOYb2eTfwD3YSzsAV51hg7pmpyTIX
+        OQU8iuT8ukueVlgz/Xv/cZo=
+X-Google-Smtp-Source: APXvYqywBfTJYmI15P2I8UPLwdkI1BGOYxCsoYU9qhLcPwi06K1nVH0hF6HjVX1PHxtVX678sm798w==
+X-Received: by 2002:a81:4bc5:: with SMTP id y188mr5444262ywa.177.1565936621994;
+        Thu, 15 Aug 2019 23:23:41 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id g68sm1102026ywb.87.2019.08.15.23.23.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 15 Aug 2019 23:23:40 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        dmaengine@vger.kernel.org (open list:DMA GENERIC OFFLOAD ENGINE
+        SUBSYSTEM), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] dmaengine: ti: Fix a memory leak bug
+Date:   Fri, 16 Aug 2019 01:23:21 -0500
+Message-Id: <1565936603-7046-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 15-08-19, 21:25, Jassi Brar wrote:
-> On Mon, Jun 24, 2019 at 1:47 AM Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > On 12-06-19, 19:52, jassisinghbrar@gmail.com wrote:
-> >
-> > > +#include <linux/bits.h>
-> > > +#include <linux/clk.h>
-> > > +#include <linux/dma-mapping.h>
-> > > +#include <linux/dmaengine.h>
-> > > +#include <linux/interrupt.h>
-> > > +#include <linux/iopoll.h>
-> > > +#include <linux/list.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/of_dma.h>
-> >
-> > Do we need both, IIRC of_dma.h does include of.h!
-> >
-> OK
-> 
-> > > +/* mc->vc.lock must be held by caller */
-> > > +static void milbeaut_chan_start(struct milbeaut_hdmac_chan *mc,
-> > > +                             struct milbeaut_hdmac_desc *md)
-> > > +{
-> > > +     struct scatterlist *sg;
-> > > +     u32  cb, ca, src_addr, dest_addr, len;
-> >            ^^
-> > double space
-> >
-> OK
-> 
-> > > +static irqreturn_t milbeaut_hdmac_interrupt(int irq, void *dev_id)
-> > > +{
-> > > +     struct milbeaut_hdmac_chan *mc = dev_id;
-> > > +     struct milbeaut_hdmac_desc *md;
-> > > +     irqreturn_t ret = IRQ_HANDLED;
-> > > +     u32 val;
-> > > +
-> > > +     spin_lock(&mc->vc.lock);
-> > > +
-> > > +     /* Ack and Disable irqs */
-> > > +     val = readl_relaxed(mc->reg_ch_base + MLB_HDMAC_DMACB);
-> > > +     val &= ~(FIELD_PREP(MLB_HDMAC_SS, 0x7));
-> >                                          ^^^^
-> > Magic ..?
-> >
-> OK, will define a macro for 7
-> 
-> > > +static int milbeaut_hdmac_chan_pause(struct dma_chan *chan)
-> > > +{
-> > > +     struct virt_dma_chan *vc = to_virt_chan(chan);
-> > > +     struct milbeaut_hdmac_chan *mc = to_milbeaut_hdmac_chan(vc);
-> > > +     u32 val;
-> > > +
-> > > +     spin_lock(&mc->vc.lock);
-> > > +     val = readl_relaxed(mc->reg_ch_base + MLB_HDMAC_DMACA);
-> > > +     val |= MLB_HDMAC_PB;
-> > > +     writel_relaxed(val, mc->reg_ch_base + MLB_HDMAC_DMACA);
-> >
-> > We really should have an updatel() and friends in kernel, feel free to
-> > add in your driver though!
-> >
-> I'll pass on that for now.
-> 
-> > > +static int milbeaut_hdmac_chan_init(struct platform_device *pdev,
-> > > +                                 struct milbeaut_hdmac_device *mdev,
-> > > +                                 int chan_id)
-> > > +{
-> > > +     struct device *dev = &pdev->dev;
-> > > +     struct milbeaut_hdmac_chan *mc = &mdev->channels[chan_id];
-> > > +     char *irq_name;
-> > > +     int irq, ret;
-> > > +
-> > > +     irq = platform_get_irq(pdev, chan_id);
-> > > +     if (irq < 0) {
-> > > +             dev_err(&pdev->dev, "failed to get IRQ number for ch%d\n",
-> > > +                     chan_id);
-> > > +             return irq;
-> > > +     }
-> > > +
-> > > +     irq_name = devm_kasprintf(dev, GFP_KERNEL, "milbeaut-hdmac-%d",
-> > > +                               chan_id);
-> > > +     if (!irq_name)
-> > > +             return -ENOMEM;
-> > > +
-> > > +     ret = devm_request_irq(dev, irq, milbeaut_hdmac_interrupt,
-> > > +                            IRQF_SHARED, irq_name, mc);
-> >
-> > I tend to dislike using devm_request_irq(), we have no control over when
-> > the irq is freed and what is a spirious irq is running while we are
-> > unrolling, so IMHO it make sense to free up and ensure all tasklets are
-> > quiesced when remove returns
-> >
-> If the code is written clean and tight we need not be so paranoid.
-> 
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     mc->mdev = mdev;
-> > > +     mc->reg_ch_base = mdev->reg_base + MLB_HDMAC_CH_STRIDE * (chan_id + 1);
-> > > +     mc->vc.desc_free = milbeaut_hdmac_desc_free;
-> > > +     vchan_init(&mc->vc, &mdev->ddev);
-> >
-> > who kills the vc->task?
-> >
-> vchan_synchronize() called from milbeaut_hdmac_synchronize()
+In ti_dra7_xbar_probe(), 'rsv_events' is allocated through kcalloc(). Then
+of_property_read_u32_array() is invoked to search for the property.
+However, if this process fails, 'rsv_events' is not deallocated, leading to
+a memory leak bug. To fix this issue, free 'rsv_events' before returning
+the error.
 
-But that can be skipped by called, from driver pov we need to ensure
-that it is killed
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ drivers/dma/ti/dma-crossbar.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> > > +static int milbeaut_hdmac_remove(struct platform_device *pdev)
-> > > +{
-> > > +     struct milbeaut_hdmac_device *mdev = platform_get_drvdata(pdev);
-> > > +     struct dma_chan *chan;
-> > > +     int ret;
-> > > +
-> > > +     /*
-> > > +      * Before reaching here, almost all descriptors have been freed by the
-> > > +      * ->device_free_chan_resources() hook. However, each channel might
-> > > +      * be still holding one descriptor that was on-flight at that moment.
-> > > +      * Terminate it to make sure this hardware is no longer running. Then,
-> > > +      * free the channel resources once again to avoid memory leak.
-> > > +      */
-> > > +     list_for_each_entry(chan, &mdev->ddev.channels, device_node) {
-> > > +             ret = dmaengine_terminate_sync(chan);
-> > > +             if (ret)
-> > > +                     return ret;
-> > > +             milbeaut_hdmac_free_chan_resources(chan);
-> > > +     }
-> > > +
-> > > +     of_dma_controller_free(pdev->dev.of_node);
-> > > +     dma_async_device_unregister(&mdev->ddev);
-> > > +     clk_disable_unprepare(mdev->clk);
-> >
-> > And as suspected we have active tasklets and irq at this time :(
-> >
-> Not sure how is that....
-
-Since you use devm variants, and driver tasklet is not killed, irq can
-be fired (spurious as well) and can run irq and schedule a tasklet. How
-do you prevent that?
-
-Thanks
+diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
+index ad2f0a4..f255056 100644
+--- a/drivers/dma/ti/dma-crossbar.c
++++ b/drivers/dma/ti/dma-crossbar.c
+@@ -391,8 +391,10 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
+ 
+ 		ret = of_property_read_u32_array(node, pname, (u32 *)rsv_events,
+ 						 nelm * 2);
+-		if (ret)
++		if (ret) {
++			kfree(rsv_events);
+ 			return ret;
++		}
+ 
+ 		for (i = 0; i < nelm; i++) {
+ 			ti_dra7_xbar_reserve(rsv_events[i][0], rsv_events[i][1],
 -- 
-~Vinod
+2.7.4
+

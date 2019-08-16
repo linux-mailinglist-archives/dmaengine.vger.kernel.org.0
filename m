@@ -2,54 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8019D905D3
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Aug 2019 18:32:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52A1290985
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Aug 2019 22:39:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfHPQaN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 16 Aug 2019 12:30:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727391AbfHPQaH (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 16 Aug 2019 12:30:07 -0400
-Subject: Re: [GIT PULL]: dmaengine fixes for v5.3-rc5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565973007;
-        bh=C+15RRON7v0kZNLZM4cWgiba2GqK7EyGHEkGjYx5UfA=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=PjlYNJax/L7UGcDSkucKo0TTavXoe2/VUOj8GwiQMtCON/4sHzYxrX2PPxMstVWL1
-         14ZBeIIFJEUlMsI122qDsJb6cim0+rvpy5/EHDQlFWxOJ45xB4iB3SPIxW/V6wyMqF
-         ODpc3cQp/ao10YyELyKFsVqvazEZMtyHURFY/BAY=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190816094627.GB12733@vkoul-mobl.Dlink>
-References: <20190816094627.GB12733@vkoul-mobl.Dlink>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190816094627.GB12733@vkoul-mobl.Dlink>
-X-PR-Tracked-Remote: git://git.infradead.org/users/vkoul/slave-dma.git
- tags/dmaengine-fix-5.3-rc5
-X-PR-Tracked-Commit-Id: d555c34338cae844b207564c482e5a3fb089d25e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9da5bb24bb368567a43ac2df0e108e43d80f3564
-Message-Id: <156597300729.15122.18141782735058596853.pr-tracker-bot@kernel.org>
-Date:   Fri, 16 Aug 2019 16:30:07 +0000
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        id S1727620AbfHPUj0 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Fri, 16 Aug 2019 16:39:26 -0400
+Received: from emita4.mittwald.de ([37.202.1.54]:58540 "EHLO
+        emita4.mittwald.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727613AbfHPUj0 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 16 Aug 2019 16:39:26 -0400
+X-Greylist: delayed 380 seconds by postgrey-1.27 at vger.kernel.org; Fri, 16 Aug 2019 16:39:25 EDT
+Received: from emita3.mittwald.de (emita3-float.internal20 [172.20.0.71])
+        by emita4.mittwald.de (Postfix) with ESMTP id 2DBFC6236A
+        for <dmaengine@vger.kernel.org>; Fri, 16 Aug 2019 22:33:06 +0200 (CEST)
+Received: from s4953 (s4953.internal21 [172.21.149.53])
+        by emita3.mittwald.de (Postfix) with ESMTP id 4F1DDA407E
+        for <dmaengine@vger.kernel.org>; Fri, 16 Aug 2019 22:33:04 +0200 (CEST)
+To:     dmaengine@vger.kernel.org
+Subject: Newsletteranmeldung bei Stiftung Marktwirtschaft
+X-PHP-Originating-Script: 433988:SimpleMailInvoker.php
+Message-ID: <a8cc3aa6ffcdb323b322e22784dc3755@www.stiftung-marktwirtschaft.de>
+Date:   Fri, 16 Aug 2019 22:33:04 +0200
+From:   Stiftung Marktwirtschaft <newsletter@stiftung-marktwirtschaft.de>
+Reply-To: Stiftung Marktwirtschaft 
+          <newsletter@stiftung-marktwirtschaft.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Mailer: TYPO3
+X-Sender: p144184@vger.kernel.org
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The pull request you sent on Fri, 16 Aug 2019 15:16:28 +0530:
+Sehr geehrte(r) Newsletter-Interessent(in),
 
-> git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.3-rc5
+bitte bestätigen Sie über folgenden Link Ihre Newsletter-Anmeldung: 
+https://www.stiftung-marktwirtschaft.de/kontakt/newsletter/?1=1&cmd=setfixed&sFK=approve&rU=1226&fD%5B_FIELDLIST%5D=hidden%2Cuid&fD%5Bhidden%5D=0&aC=c5e820bd
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9da5bb24bb368567a43ac2df0e108e43d80f3564
 
-Thank you!
+Mit den besten Grüßen
+Ihr Team der Stiftung Marktwirtschaft
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+------------------------------------------------------
+
+Stiftung Marktwirtschaft
+Charlottenstr. 60, 10117 Berlin
+Telefon + 49 (0)30 - 20 60 57-0
+Fax + 49 (0)30 - 20 60 57-57
+E-Mail info@stiftung-marktwirtschaft.de
+www.stiftung-marktwirtschaft.de

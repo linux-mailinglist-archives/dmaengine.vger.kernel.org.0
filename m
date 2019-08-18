@@ -2,58 +2,58 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D8D99914D6
-	for <lists+dmaengine@lfdr.de>; Sun, 18 Aug 2019 07:17:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99A66914D9
+	for <lists+dmaengine@lfdr.de>; Sun, 18 Aug 2019 07:17:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726073AbfHRFRF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 18 Aug 2019 01:17:05 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35180 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbfHRFRE (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 18 Aug 2019 01:17:04 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n4so5045309pgv.2;
-        Sat, 17 Aug 2019 22:17:04 -0700 (PDT)
+        id S1725916AbfHRFR6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 18 Aug 2019 01:17:58 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36938 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725290AbfHRFR6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 18 Aug 2019 01:17:58 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 129so5251459pfa.4;
+        Sat, 17 Aug 2019 22:17:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GYojZGC5006nwo6kR7R2OZwjHJuHZ/9aX9d0KGWKaQU=;
-        b=twnB7ogm/4eFH+xL0A74M/BWrNx6MEwPEsjywUDNZjBbQgtqY0UzUuJ78mNXP/n3gC
-         xKgyjRny40bsqyVNJGc+Oxr1G2jzVe51W7ivC99YVTAgX7Kvf3kxLnSHux5DMzq43Unz
-         ABfiaS2149XLWu2Zxm3Z3WCpoF/6zWfCX2uKugbD3SSshO3pqhAGnOPlDt6pn7BzSluc
-         21HKfdevidRnNvdCzRpnqGg557IKiM0QKDO7K22HzAg7dmknvyEG1O2nKIV/Lshod1EL
-         WD3k010kykKouBR9UqgKayd1SPwIn3kvBHXj1mS5mjE90lW+SxFxZf32GduvTIMwUIFG
-         gVMw==
+        bh=iEatzND/aC5crywDjtqzdYBxGGvNVlFaCiZdi1PIp/M=;
+        b=bj/pTK8rTnK0G2wb6zgmdgsYOAMH86NodQ39afYDG8wewHPtmXKLlwBC06mZMVT8m1
+         DHDHU29mG3bRxDlLByV9B4jX6ypaDh1wxHMlHA7lYl3ZjocUqJfdRXiKpuy+u8LENkzd
+         Cux/JbVNv0VGO+TeL+4pLi55El7LD2wmcCPqXCREGx5XznI0q/m4uT/bf67l3ZaGdnXv
+         OO7TyHxhaTsgevKgBQKXnbh+UWCLZeaKQjmw2Yqc2pXanIVzyyhKLISG5sG/uGfu2QlN
+         K2Qomkp/izzwhVWgYNX9Fwtjhtz6Smo4xSHvjaQZzCicTutoDiX8PVjh/Je68d/cooAU
+         H6Fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=GYojZGC5006nwo6kR7R2OZwjHJuHZ/9aX9d0KGWKaQU=;
-        b=Dy++nVj6TIIvazoxJAFXDmj9jRhhn/tWQ/2iTwaBgpdJpV6ssgcFwoTIe7AH7Jezz3
-         ajlBS5NFlfrHhYfLxYrQC+svtqzaaOdw2blaKY3sHmR8Z8EuRJkmG8NIYJsjtMiIyAEw
-         vt0IMdJT3uQIpvWCNIgf8iEoAThqt2VpMMfjjjhZ8DyVhpIP08nwOFUv8QGEOpVvz4uw
-         VHvK1tJUAWQIxB264zs7hBHfUxmpNWD6cAVOH054O6xso8oVD9cP2DwLfkF8lNDCVq91
-         /+TI6ExoUR2vEFHM/G5JT/OcSnbHi38UlZfr7RJvWYCizXTRlbgLTYolAOHzMleCwqa3
-         u2dQ==
-X-Gm-Message-State: APjAAAVgCsOVv+JH8QUey/3aoYSvVQ5UE2lp0Q4DH/OIw1J5WZhZNAQY
-        QPkJ7GrnGSiRMTVUS+WvJHg0z80n
-X-Google-Smtp-Source: APXvYqy138emwbhHhKdukk9/lK+WWtnqmCrX9/OvUebxSQTdCNDqhK1h+iL0lzYNQNA1lv+zcATWZg==
-X-Received: by 2002:a63:4a50:: with SMTP id j16mr14368297pgl.126.1566105423964;
-        Sat, 17 Aug 2019 22:17:03 -0700 (PDT)
+        bh=iEatzND/aC5crywDjtqzdYBxGGvNVlFaCiZdi1PIp/M=;
+        b=ZzBJzeTtRzVoVRxQ8oYLRdV0IJOqG08rhLsZp7/4Sqk+FbCyjwkScfLhX+5+Jngq4V
+         naGkoBEkOQGJhqIJcxitgVCyi5pbAhPEnmPPxk1Fiboj9a8vAVfvxtf5Ni63QOf7S9oy
+         BV+ZA89zm5l401hhhuaBqw9i4BDTRJcF/ccCIE8aPHfZ7z4GqHsHNM/jExcV95teXJis
+         pIe9helQ590+fks4Y4Bko/VrjDuNqQCSCP2OkK5HBlofi5OHUamqlcM1iRaKw/bvdzV3
+         3XzJcqixLEKXA6TutT3TvT6CoqmoJDMsAHWCZMYeQ2EDtmiBvtBLRSTiAqMT+qMOV0L0
+         DKSA==
+X-Gm-Message-State: APjAAAVtmRkQ0ZZ+RzrUZ2afe+jlbaupocvGJpDRPJW7whkQmrl/jxWM
+        d5uAJIayADM7PhDaVHbIHhbGr5fa
+X-Google-Smtp-Source: APXvYqxPs3xRYAWZAfHHfrG4KT/BjwTX0VXpuewNXGxuYyDrzmpuRKY6yGRtyoFfkm3kx1dfqWg0Yg==
+X-Received: by 2002:a17:90a:b016:: with SMTP id x22mr15275516pjq.116.1566105477716;
+        Sat, 17 Aug 2019 22:17:57 -0700 (PDT)
 Received: from localhost.localdomain (S0106d80d17472dbd.wp.shawcable.net. [24.79.253.190])
-        by smtp.gmail.com with ESMTPSA id 33sm9610386pgy.22.2019.08.17.22.17.02
+        by smtp.gmail.com with ESMTPSA id j5sm11599982pfi.104.2019.08.17.22.17.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Aug 2019 22:17:03 -0700 (PDT)
+        Sat, 17 Aug 2019 22:17:57 -0700 (PDT)
 From:   jassisinghbrar@gmail.com
 To:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     vkoul@kernel.org, robh+dt@kernel.org,
         Jassi Brar <jaswinder.singh@linaro.org>
-Subject: [PATCH v2 0/2] Add support for AHB DMA controller on Milbeaut series
-Date:   Sun, 18 Aug 2019 00:16:47 -0500
-Message-Id: <20190818051647.17475-1-jassisinghbrar@gmail.com>
+Subject: [PATCH v2 1/2] dt-bindings: milbeaut-m10v-hdmac: Add Socionext Milbeaut HDMAC bindings
+Date:   Sun, 18 Aug 2019 00:17:54 -0500
+Message-Id: <20190818051754.17548-1-jassisinghbrar@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190613005109.1867-1-jassisinghbrar@gmail.com>
-References: <20190613005109.1867-1-jassisinghbrar@gmail.com>
+In-Reply-To: <20190818051647.17475-1-jassisinghbrar@gmail.com>
+References: <20190818051647.17475-1-jassisinghbrar@gmail.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
@@ -61,25 +61,54 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Jassi Brar <jaswinder.singh@linaro.org>
 
-Changes since v1:
-1) Drop uncessary headers from driver
-2) Some Cosmetic changes.
-3) Define macro for magic numbers
-4) Specify constraints on number of channels/irq in DT bindings
+Document the devicetree bindings for Socionext Milbeaut HDMAC
+controller. Controller has upto 8 floating channels, that need
+a predefined slave-id to work from a set of slaves.
 
-Jassi Brar (2):
-  dt-bindings: milbeaut-m10v-hdmac: Add Socionext Milbeaut HDMAC
-    bindings
-  dmaengine: milbeaut-hdmac: Add HDMAC driver for Milbeaut platforms
-
- .../bindings/dma/milbeaut-m10v-hdmac.txt      |  32 +
- drivers/dma/Kconfig                           |  10 +
- drivers/dma/Makefile                          |   1 +
- drivers/dma/milbeaut-hdmac.c                  | 571 ++++++++++++++++++
- 4 files changed, 614 insertions(+)
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+---
+ .../bindings/dma/milbeaut-m10v-hdmac.txt      | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
- create mode 100644 drivers/dma/milbeaut-hdmac.c
 
+diff --git a/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
+new file mode 100644
+index 000000000000..f0960724f1c7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
+@@ -0,0 +1,32 @@
++* Milbeaut AHB DMA Controller
++
++Milbeaut AHB DMA controller has transfer capability bellow.
++ - device to memory transfer
++ - memory to device transfer
++
++Required property:
++- compatible:       Should be  "socionext,milbeaut-m10v-hdmac"
++- reg:              Should contain DMA registers location and length.
++- interrupts:       Should contain all of the per-channel DMA interrupts.
++                     Number of channels is configurable - 2, 4 or 8, so
++                     the number of interrupts specfied should be {2,4,8}.
++- #dma-cells:       Should be 1. Specify the ID of the slave.
++- clocks:           Phandle to the clock used by the HDMAC module.
++
++
++Example:
++
++	hdmac1: dma-controller@1e110000 {
++		compatible = "socionext,milbeaut-m10v-hdmac";
++		reg = <0x1e110000 0x10000>;
++		interrupts = <0 132 4>,
++			     <0 133 4>,
++			     <0 134 4>,
++			     <0 135 4>,
++			     <0 136 4>,
++			     <0 137 4>,
++			     <0 138 4>,
++			     <0 139 4>;
++		#dma-cells = <1>;
++		clocks = <&dummy_clk>;
++	};
 -- 
 2.17.1
 

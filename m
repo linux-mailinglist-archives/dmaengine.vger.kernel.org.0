@@ -2,54 +2,41 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B97A094940
-	for <lists+dmaengine@lfdr.de>; Mon, 19 Aug 2019 17:56:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E562694BE2
+	for <lists+dmaengine@lfdr.de>; Mon, 19 Aug 2019 19:40:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbfHSP45 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 19 Aug 2019 11:56:57 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:15352 "EHLO
+        id S1727094AbfHSRkh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 19 Aug 2019 13:40:37 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:3410 "EHLO
         hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727353AbfHSP44 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 19 Aug 2019 11:56:56 -0400
+        with ESMTP id S1726959AbfHSRkh (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 19 Aug 2019 13:40:37 -0400
 Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d5ac6c70000>; Mon, 19 Aug 2019 08:56:55 -0700
+        id <B5d5adf130000>; Mon, 19 Aug 2019 10:40:35 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 19 Aug 2019 08:56:54 -0700
+  Mon, 19 Aug 2019 10:40:35 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 19 Aug 2019 08:56:54 -0700
+        by hqpgpgate102.nvidia.com on Mon, 19 Aug 2019 10:40:35 -0700
 Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
  (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 19 Aug
- 2019 15:56:54 +0000
+ 2019 17:40:34 +0000
 Received: from [10.2.167.147] (172.20.13.39) by DRHQMAIL107.nvidia.com
  (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 19 Aug
- 2019 15:56:53 +0000
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Sameer Pujar <spujar@nvidia.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        <dan.j.williams@intel.com>, <tiwai@suse.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
-        <mkumard@nvidia.com>
-References: <23474b74-3c26-3083-be21-4de7731a0e95@nvidia.com>
- <20190624062609.GV2962@vkoul-mobl>
- <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
- <75be49ac-8461-0798-b673-431ec527d74f@nvidia.com>
- <20190719050459.GM12733@vkoul-mobl.Dlink>
- <3e7f795d-56fb-6a71-b844-2fc2b85e099e@nvidia.com>
- <20190729061010.GC12733@vkoul-mobl.Dlink>
- <98954eb3-21f1-6008-f8e1-f9f9b82f87fb@nvidia.com>
- <20190731151610.GT12733@vkoul-mobl.Dlink>
- <c0f4de86-423a-35df-3744-40db89f2fdfe@nvidia.com>
- <20190808123833.GX12733@vkoul-mobl.Dlink>
+ 2019 17:40:34 +0000
+Subject: Re: [PATCH v2] dmaengine: tegra210-adma: fix transfer failure
+To:     Sameer Pujar <spujar@nvidia.com>, <vkoul@kernel.org>,
+        <ldewangan@nvidia.com>
+CC:     <thierry.reding@gmail.com>, <dmaengine@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>
+References: <1562929830-29344-1-git-send-email-spujar@nvidia.com>
 From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <a93a472d-b8f7-973f-6068-607492421472@nvidia.com>
-Date:   Mon, 19 Aug 2019 16:56:52 +0100
+Message-ID: <9ac012f8-2594-cc70-44cb-b2c560c7df07@nvidia.com>
+Date:   Mon, 19 Aug 2019 18:40:33 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190808123833.GX12733@vkoul-mobl.Dlink>
+In-Reply-To: <1562929830-29344-1-git-send-email-spujar@nvidia.com>
 X-Originating-IP: [172.20.13.39]
 X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
  DRHQMAIL107.nvidia.com (10.27.9.16)
@@ -57,104 +44,111 @@ Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566230215; bh=PuhvZPBAKGFT1rNZtyq++viay+aZnss2mM1vyg8TnK0=;
+        t=1566236435; bh=uQh+7CPWh4ks7omq4xN3mkaxSmfuZgkVZPCXQ6ROol4=;
         h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
          User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
          X-ClientProxiedBy:Content-Type:Content-Language:
          Content-Transfer-Encoding;
-        b=mE+HEY9RJIqIcMDX5kiJU6rb8gBm/bR42R+NQ5a6+lQgJdoHfHKXtJpE2uKkQKVsd
-         xLxxEhGT9M5o+yd5tZTzWfyLNbx2IGM3zz/uBsZjq0qKjuJnHOlklJQo0VoEBxafgX
-         nOFodfExt6tm6qAI1XBVuHQCRcEQrf3RKWRVQMZwWFpSephguedKThyAlGWFED5Gxk
-         hBVUbg9QIPtH0iSmgIO3crewJTxGJ68kfhe+ZISHrGg0p7loRQJLYhyBCqT/QtDNVT
-         QBnYEyDtYzhswoVunnghEl5mR7uD7yLoBYRfmeBZXLvIkXYmXsWLmvbcqt/WrlMXg6
-         SS9hg3lNDgvUw==
+        b=mi6aAY/45Y/6Y7v+DEUgAM5rxYhPc890D2MyJu6rL7CF3tnBkTebmcofZKnLLHBYx
+         57mc6IEEbBmqJut2kglzkKem80PrBTZaAGjhTGt5IJ0kNpS5okPWVDDTCFZyxtLScH
+         dIeUuiE5mmd03tJq3rWBFaVOktTuXWzvgRaOFH0bFvSsDZQ+LJYBI8LJcitd91C4Bl
+         cjcJyqX6m/yqqiUAnelLHDtLS3HXTGI8j26YtwjPFP+Nz7IsPLXWkVOg49N815tnwG
+         c2p2J4/mnM5vEY3E/zBwiM436c1QUzOFVjYs4CSv7iT3CCXbAVUvNRcHxXe6gJBM9H
+         S+Rn5w6rIU9Yg==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On 08/08/2019 13:38, Vinod Koul wrote:
-> On 02-08-19, 09:51, Jon Hunter wrote:
->>
->> On 31/07/2019 16:16, Vinod Koul wrote:
->>> On 31-07-19, 10:48, Jon Hunter wrote:
->>>>
->>>> On 29/07/2019 07:10, Vinod Koul wrote:
->>>>> On 23-07-19, 11:24, Sameer Pujar wrote:
->>>>>>
->>>>>> On 7/19/2019 10:34 AM, Vinod Koul wrote:
->>>>>>> On 05-07-19, 11:45, Sameer Pujar wrote:
->>>>>>>> Hi Vinod,
->>>>>>>>
->>>>>>>> What are your final thoughts regarding this?
->>>>>>> Hi sameer,
->>>>>>>
->>>>>>> Sorry for the delay in replying
->>>>>>>
->>>>>>> On this, I am inclined to think that dma driver should not be involved.
->>>>>>> The ADMAIF needs this configuration and we should take the path of
->>>>>>> dma_router for this piece and add features like this to it
->>>>>>
->>>>>> Hi Vinod,
->>>>>>
->>>>>> The configuration is needed by both ADMA and ADMAIF. The size is
->>>>>> configurable
->>>>>> on ADMAIF side. ADMA needs to know this info and program accordingly.
->>>>>
->>>>> Well I would say client decides the settings for both DMA, DMAIF and
->>>>> sets the peripheral accordingly as well, so client communicates the two
->>>>> sets of info to two set of drivers
->>>>
->>>> That maybe, but I still don't see how the information is passed from the
->>>> client in the first place. The current problem is that there is no means
->>>> to pass both a max-burst size and fifo-size to the DMA driver from the
->>>> client.
->>>
->>> So one thing not clear to me is why ADMA needs fifo-size, I thought it
->>> was to program ADMAIF and if we have client programme the max-burst
->>> size to ADMA and fifo-size to ADMAIF we wont need that. Can you please
->>> confirm if my assumption is valid?
->>
->> Let me see if I can clarify ...
->>
->> 1. The FIFO we are discussing here resides in the ADMAIF module which is
->>    a separate hardware block the ADMA (although the naming make this
->>    unclear).
->>
->> 2. The size of FIFO in the ADMAIF is configurable and it this is
->>    configured via the ADMAIF registers. This allows different channels
->>    to use different FIFO sizes. Think of this as a shared memory that is
->>    divided into n FIFOs shared between all channels.
->>
->> 3. The ADMA, not the ADMAIF, manages the flow to the FIFO and this is
->>    because the ADMAIF only tells the ADMA when a word has been
->>    read/written (depending on direction), the ADMAIF does not indicate
->>    if the FIFO is full, empty, etc. Hence, the ADMA needs to know the
->>    total FIFO size.
->>
->> So the ADMA needs to know the FIFO size so that it does not overrun the
->> FIFO and we can also set a burst size (less than the total FIFO size)
->> indicating how many words to transfer at a time. Hence, the two parameters.
+On 12/07/2019 12:10, Sameer Pujar wrote:
+> From Tegra186 onwards OUTSTANDING_REQUESTS field is added in channel
+> configuration register(bits 7:4) which defines the maximum number of reads
+> from the source and writes to the destination that may be outstanding at
+> any given point of time. This field must be programmed with a value
+> between 1 and 8. A value of 0 will prevent any transfers from happening.
 > 
-> Thanks, I confirm this is my understanding as well.
+> Thus added 'ch_pending_req' member in chip data structure and the same is
+> populated with maximum allowed pending requests. Since the field is not
+> applicable to Tegra210, mentioned bit fields are unused and hence the
+> member is initialized with 0. For Tegra186, by default program this field
+> with the maximum permitted value of 8.
 > 
-> To compare to regular case for example SPI on DMA, SPI driver will
-> calculate fifo size & burst to be used and program dma (burst size) and
-> its own fifos accordingly
+> Fixes: 433de642a76c ("dmaengine: tegra210-adma: add support for Tegra186/Tegra194")
 > 
-> So, in your case why should the peripheral driver not calculate the fifo
-> size for both ADMA and ADMAIF and (if required it's own FIFO) and
-> program the two (ADMA and ADMAIF).
+> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+> ---
+>  drivers/dma/tegra210-adma.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> What is the limiting factor in this flow is not clear to me.
+> diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+> index 2805853..5ab4e3a9 100644
+> --- a/drivers/dma/tegra210-adma.c
+> +++ b/drivers/dma/tegra210-adma.c
+> @@ -74,6 +74,8 @@
+>  				    TEGRA186_ADMA_CH_FIFO_CTRL_TXSIZE(3)    | \
+>  				    TEGRA186_ADMA_CH_FIFO_CTRL_RXSIZE(3))
+>  
+> +#define TEGRA186_DMA_MAX_PENDING_REQS			8
+> +
+>  #define ADMA_CH_REG_FIELD_VAL(val, mask, shift)	(((val) & mask) << shift)
+>  
+>  struct tegra_adma;
+> @@ -85,6 +87,7 @@ struct tegra_adma;
+>   * @ch_req_tx_shift: Register offset for AHUB transmit channel select.
+>   * @ch_req_rx_shift: Register offset for AHUB receive channel select.
+>   * @ch_base_offset: Register offset of DMA channel registers.
+> + * @ch_pending_req: Outstaning DMA requests for a channel.
 
-The FIFO size that is configured by the ADMAIF driver needs to be given
-to the ADMA driver so that it can program its registers accordingly. The
-difference here is that both the ADMA and ADMAIF need the FIFO size.
+s/Outstaning/Outstanding
 
-Cheers
-Jon
+I do wonder if this variable should be a boolean variable
+'has_oustanding_reqs' because this is not applicable to Tegra210. I
+think this will be clearer that this is a difference between SoC
+versions and that it should not be configured for Tegra210. And then ...
+
+>   * @ch_fifo_ctrl: Default value for channel FIFO CTRL register.
+>   * @ch_req_mask: Mask for Tx or Rx channel select.
+>   * @ch_req_max: Maximum number of Tx or Rx channels available.
+> @@ -98,6 +101,7 @@ struct tegra_adma_chip_data {
+>  	unsigned int ch_req_tx_shift;
+>  	unsigned int ch_req_rx_shift;
+>  	unsigned int ch_base_offset;
+> +	unsigned int ch_pending_req;
+>  	unsigned int ch_fifo_ctrl;
+>  	unsigned int ch_req_mask;
+>  	unsigned int ch_req_max;
+> @@ -602,6 +606,7 @@ static int tegra_adma_set_xfer_params(struct tegra_adma_chan *tdc,
+>  			 ADMA_CH_CTRL_FLOWCTRL_EN;
+>  	ch_regs->config |= cdata->adma_get_burst_config(burst_size);
+>  	ch_regs->config |= ADMA_CH_CONFIG_WEIGHT_FOR_WRR(1);
+> +	ch_regs->config |= cdata->ch_pending_req;
+
+... you can ...
+
+        if (cdata->has_outstanding_reqs)
+            ch_regs->config |= TEGRA186_ADMA_CH_CONFIG_OUTSTNDREQS(8)
+
+>  	ch_regs->fifo_ctrl = cdata->ch_fifo_ctrl;
+>  	ch_regs->tc = desc->period_len & ADMA_CH_TC_COUNT_MASK;
+>  
+> @@ -786,6 +791,7 @@ static const struct tegra_adma_chip_data tegra210_chip_data = {
+>  	.ch_req_tx_shift	= 28,
+>  	.ch_req_rx_shift	= 24,
+>  	.ch_base_offset		= 0,
+> +	.ch_pending_req		= 0,
+>  	.ch_fifo_ctrl		= TEGRA210_FIFO_CTRL_DEFAULT,
+>  	.ch_req_mask		= 0xf,
+>  	.ch_req_max		= 10,
+> @@ -800,6 +806,7 @@ static const struct tegra_adma_chip_data tegra186_chip_data = {
+>  	.ch_req_tx_shift	= 27,
+>  	.ch_req_rx_shift	= 22,
+>  	.ch_base_offset		= 0x10000,
+> +	.ch_pending_req		= (TEGRA186_DMA_MAX_PENDING_REQS << 4),
+>  	.ch_fifo_ctrl		= TEGRA186_FIFO_CTRL_DEFAULT,
+>  	.ch_req_mask		= 0x1f,
+>  	.ch_req_max		= 20,
+> 
 
 -- 
 nvpublic

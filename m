@@ -2,34 +2,34 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BF7B95FBB
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Aug 2019 15:16:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 163A095FBC
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Aug 2019 15:16:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729886AbfHTNPx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        id S1729818AbfHTNPx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
         Tue, 20 Aug 2019 09:15:53 -0400
-Received: from mga07.intel.com ([134.134.136.100]:44062 "EHLO mga07.intel.com"
+Received: from mga09.intel.com ([134.134.136.24]:13987 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729859AbfHTNPx (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        id S1729672AbfHTNPx (ORCPT <rfc822;dmaengine@vger.kernel.org>);
         Tue, 20 Aug 2019 09:15:53 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 06:15:52 -0700
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 06:15:52 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
-   d="scan'208";a="195769288"
+   d="scan'208";a="179742847"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 20 Aug 2019 06:15:51 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 20 Aug 2019 06:15:50 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 6EC26392; Tue, 20 Aug 2019 16:15:47 +0300 (EEST)
+        id 7AA863C6; Tue, 20 Aug 2019 16:15:47 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
         Viresh Kumar <vireshk@kernel.org>,
         Jarkko Nikula <jarkko.nikula@linux.intel.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 09/10] dmaengine: dw: platform: Split ACPI helpers to separate module
-Date:   Tue, 20 Aug 2019 16:15:45 +0300
-Message-Id: <20190820131546.75744-10-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 10/10] dmaengine: dw: platform: Split OF helpers to separate module
+Date:   Tue, 20 Aug 2019 16:15:46 +0300
+Message-Id: <20190820131546.75744-11-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20190820131546.75744-1-andriy.shevchenko@linux.intel.com>
 References: <20190820131546.75744-1-andriy.shevchenko@linux.intel.com>
@@ -40,179 +40,338 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-For better maintenance split ACPI helpers to the separate module.
+For better maintenance split OF helpers to the separate module.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/dma/dw/Makefile   |  3 ++-
- drivers/dma/dw/acpi.c     | 53 +++++++++++++++++++++++++++++++++++++++
- drivers/dma/dw/internal.h |  8 ++++++
- drivers/dma/dw/platform.c | 52 --------------------------------------
- 4 files changed, 63 insertions(+), 53 deletions(-)
- create mode 100644 drivers/dma/dw/acpi.c
+ drivers/dma/dw/Makefile   |   1 +
+ drivers/dma/dw/internal.h |  15 +++++
+ drivers/dma/dw/of.c       | 131 ++++++++++++++++++++++++++++++++++++++
+ drivers/dma/dw/platform.c | 115 +--------------------------------
+ 4 files changed, 149 insertions(+), 113 deletions(-)
+ create mode 100644 drivers/dma/dw/of.c
 
 diff --git a/drivers/dma/dw/Makefile b/drivers/dma/dw/Makefile
-index 63ed895c09aa..5e69815f3cf1 100644
+index 5e69815f3cf1..b6f06699e91a 100644
 --- a/drivers/dma/dw/Makefile
 +++ b/drivers/dma/dw/Makefile
-@@ -3,7 +3,8 @@ obj-$(CONFIG_DW_DMAC_CORE)	+= dw_dmac_core.o
- dw_dmac_core-objs	:= core.o dw.o idma32.o
- 
+@@ -5,6 +5,7 @@ dw_dmac_core-objs	:= core.o dw.o idma32.o
  obj-$(CONFIG_DW_DMAC)		+= dw_dmac.o
--dw_dmac-objs		:= platform.o
-+dw_dmac-y			:= platform.o
-+dw_dmac-$(CONFIG_ACPI)		+= acpi.o
+ dw_dmac-y			:= platform.o
+ dw_dmac-$(CONFIG_ACPI)		+= acpi.o
++dw_dmac-$(CONFIG_OF)		+= of.o
  
  obj-$(CONFIG_DW_DMAC_PCI)	+= dw_dmac_pci.o
  dw_dmac_pci-objs	:= pci.o
-diff --git a/drivers/dma/dw/acpi.c b/drivers/dma/dw/acpi.c
-new file mode 100644
-index 000000000000..f6e8d55b4f6e
---- /dev/null
-+++ b/drivers/dma/dw/acpi.c
-@@ -0,0 +1,53 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2013,2019 Intel Corporation
-+
-+#include <linux/acpi.h>
-+#include <linux/acpi_dma.h>
-+
-+#include "internal.h"
-+
-+static bool dw_dma_acpi_filter(struct dma_chan *chan, void *param)
-+{
-+	struct acpi_dma_spec *dma_spec = param;
-+	struct dw_dma_slave slave = {
-+		.dma_dev = dma_spec->dev,
-+		.src_id = dma_spec->slave_id,
-+		.dst_id = dma_spec->slave_id,
-+		.m_master = 0,
-+		.p_master = 1,
-+	};
-+
-+	return dw_dma_filter(chan, &slave);
-+}
-+
-+void dw_dma_acpi_controller_register(struct dw_dma *dw)
-+{
-+	struct device *dev = dw->dma.dev;
-+	struct acpi_dma_filter_info *info;
-+	int ret;
-+
-+	if (!has_acpi_companion(dev))
-+		return;
-+
-+	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-+	if (!info)
-+		return;
-+
-+	dma_cap_zero(info->dma_cap);
-+	dma_cap_set(DMA_SLAVE, info->dma_cap);
-+	info->filter_fn = dw_dma_acpi_filter;
-+
-+	ret = acpi_dma_controller_register(dev, acpi_dma_simple_xlate, info);
-+	if (ret)
-+		dev_err(dev, "could not register acpi_dma_controller\n");
-+}
-+
-+void dw_dma_acpi_controller_free(struct dw_dma *dw)
-+{
-+	struct device *dev = dw->dma.dev;
-+
-+	if (!has_acpi_companion(dev))
-+		return;
-+
-+	acpi_dma_controller_free(dev);
-+}
 diff --git a/drivers/dma/dw/internal.h b/drivers/dma/dw/internal.h
-index df5c84e2a4fd..acada530aa96 100644
+index acada530aa96..2e1c52eefdeb 100644
 --- a/drivers/dma/dw/internal.h
 +++ b/drivers/dma/dw/internal.h
-@@ -23,6 +23,14 @@ int do_dw_dma_enable(struct dw_dma_chip *chip);
+@@ -31,6 +31,21 @@ static inline void dw_dma_acpi_controller_register(struct dw_dma *dw) {}
+ static inline void dw_dma_acpi_controller_free(struct dw_dma *dw) {}
+ #endif /* !CONFIG_ACPI */
  
- extern bool dw_dma_filter(struct dma_chan *chan, void *param);
- 
-+#ifdef CONFIG_ACPI
-+void dw_dma_acpi_controller_register(struct dw_dma *dw);
-+void dw_dma_acpi_controller_free(struct dw_dma *dw);
-+#else /* !CONFIG_ACPI */
-+static inline void dw_dma_acpi_controller_register(struct dw_dma *dw) {}
-+static inline void dw_dma_acpi_controller_free(struct dw_dma *dw) {}
-+#endif /* !CONFIG_ACPI */
++struct platform_device;
++
++#ifdef CONFIG_OF
++struct dw_dma_platform_data *dw_dma_parse_dt(struct platform_device *pdev);
++void dw_dma_of_controller_register(struct dw_dma *dw);
++void dw_dma_of_controller_free(struct dw_dma *dw);
++#else
++static inline struct dw_dma_platform_data *dw_dma_parse_dt(struct platform_device *pdev)
++{
++	return NULL;
++}
++static inline void dw_dma_of_controller_register(struct dw_dma *dw) {}
++static inline void dw_dma_of_controller_free(struct dw_dma *dw) {}
++#endif
 +
  struct dw_dma_chip_pdata {
  	const struct dw_dma_platform_data *pdata;
  	int (*probe)(struct dw_dma_chip *chip);
+diff --git a/drivers/dma/dw/of.c b/drivers/dma/dw/of.c
+new file mode 100644
+index 000000000000..9e27831dee32
+--- /dev/null
++++ b/drivers/dma/dw/of.c
+@@ -0,0 +1,131 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Platform driver for the Synopsys DesignWare DMA Controller
++ *
++ * Copyright (C) 2007-2008 Atmel Corporation
++ * Copyright (C) 2010-2011 ST Microelectronics
++ * Copyright (C) 2013 Intel Corporation
++ */
++
++#include <linux/of.h>
++#include <linux/of_dma.h>
++#include <linux/platform_device.h>
++
++#include "internal.h"
++
++static struct dma_chan *dw_dma_of_xlate(struct of_phandle_args *dma_spec,
++					struct of_dma *ofdma)
++{
++	struct dw_dma *dw = ofdma->of_dma_data;
++	struct dw_dma_slave slave = {
++		.dma_dev = dw->dma.dev,
++	};
++	dma_cap_mask_t cap;
++
++	if (dma_spec->args_count != 3)
++		return NULL;
++
++	slave.src_id = dma_spec->args[0];
++	slave.dst_id = dma_spec->args[0];
++	slave.m_master = dma_spec->args[1];
++	slave.p_master = dma_spec->args[2];
++
++	if (WARN_ON(slave.src_id >= DW_DMA_MAX_NR_REQUESTS ||
++		    slave.dst_id >= DW_DMA_MAX_NR_REQUESTS ||
++		    slave.m_master >= dw->pdata->nr_masters ||
++		    slave.p_master >= dw->pdata->nr_masters))
++		return NULL;
++
++	dma_cap_zero(cap);
++	dma_cap_set(DMA_SLAVE, cap);
++
++	/* TODO: there should be a simpler way to do this */
++	return dma_request_channel(cap, dw_dma_filter, &slave);
++}
++
++struct dw_dma_platform_data *dw_dma_parse_dt(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct dw_dma_platform_data *pdata;
++	u32 tmp, arr[DW_DMA_MAX_NR_MASTERS], mb[DW_DMA_MAX_NR_CHANNELS];
++	u32 nr_masters;
++	u32 nr_channels;
++
++	if (!np) {
++		dev_err(&pdev->dev, "Missing DT data\n");
++		return NULL;
++	}
++
++	if (of_property_read_u32(np, "dma-masters", &nr_masters))
++		return NULL;
++	if (nr_masters < 1 || nr_masters > DW_DMA_MAX_NR_MASTERS)
++		return NULL;
++
++	if (of_property_read_u32(np, "dma-channels", &nr_channels))
++		return NULL;
++	if (nr_channels > DW_DMA_MAX_NR_CHANNELS)
++		return NULL;
++
++	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return NULL;
++
++	pdata->nr_masters = nr_masters;
++	pdata->nr_channels = nr_channels;
++
++	if (!of_property_read_u32(np, "chan_allocation_order", &tmp))
++		pdata->chan_allocation_order = (unsigned char)tmp;
++
++	if (!of_property_read_u32(np, "chan_priority", &tmp))
++		pdata->chan_priority = tmp;
++
++	if (!of_property_read_u32(np, "block_size", &tmp))
++		pdata->block_size = tmp;
++
++	if (!of_property_read_u32_array(np, "data-width", arr, nr_masters)) {
++		for (tmp = 0; tmp < nr_masters; tmp++)
++			pdata->data_width[tmp] = arr[tmp];
++	} else if (!of_property_read_u32_array(np, "data_width", arr, nr_masters)) {
++		for (tmp = 0; tmp < nr_masters; tmp++)
++			pdata->data_width[tmp] = BIT(arr[tmp] & 0x07);
++	}
++
++	if (!of_property_read_u32_array(np, "multi-block", mb, nr_channels)) {
++		for (tmp = 0; tmp < nr_channels; tmp++)
++			pdata->multi_block[tmp] = mb[tmp];
++	} else {
++		for (tmp = 0; tmp < nr_channels; tmp++)
++			pdata->multi_block[tmp] = 1;
++	}
++
++	if (!of_property_read_u32(np, "snps,dma-protection-control", &tmp)) {
++		if (tmp > CHAN_PROTCTL_MASK)
++			return NULL;
++		pdata->protctl = tmp;
++	}
++
++	return pdata;
++}
++
++void dw_dma_of_controller_register(struct dw_dma *dw)
++{
++	struct device *dev = dw->dma.dev;
++	int ret;
++
++	if (!dev->of_node)
++		return;
++
++	ret = of_dma_controller_register(dev->of_node, dw_dma_of_xlate, dw);
++	if (ret)
++		dev_err(dev, "could not register of_dma_controller\n");
++}
++
++void dw_dma_of_controller_free(struct dw_dma *dw)
++{
++	struct device *dev = dw->dma.dev;
++
++	if (!dev->of_node)
++		return;
++
++	of_dma_controller_free(dev->of_node);
++}
 diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
-index b8514d7895d1..d50e038acb1e 100644
+index d50e038acb1e..c90c798e5ec3 100644
 --- a/drivers/dma/dw/platform.c
 +++ b/drivers/dma/dw/platform.c
-@@ -19,7 +19,6 @@
+@@ -17,116 +17,12 @@
+ #include <linux/dmaengine.h>
+ #include <linux/dma-mapping.h>
  #include <linux/of.h>
- #include <linux/of_dma.h>
+-#include <linux/of_dma.h>
  #include <linux/acpi.h>
--#include <linux/acpi_dma.h>
  
  #include "internal.h"
  
-@@ -55,57 +54,6 @@ static struct dma_chan *dw_dma_of_xlate(struct of_phandle_args *dma_spec,
- 	return dma_request_channel(cap, dw_dma_filter, &slave);
- }
+ #define DRV_NAME	"dw_dmac"
  
--#ifdef CONFIG_ACPI
--static bool dw_dma_acpi_filter(struct dma_chan *chan, void *param)
+-static struct dma_chan *dw_dma_of_xlate(struct of_phandle_args *dma_spec,
+-					struct of_dma *ofdma)
 -{
--	struct acpi_dma_spec *dma_spec = param;
+-	struct dw_dma *dw = ofdma->of_dma_data;
 -	struct dw_dma_slave slave = {
--		.dma_dev = dma_spec->dev,
--		.src_id = dma_spec->slave_id,
--		.dst_id = dma_spec->slave_id,
--		.m_master = 0,
--		.p_master = 1,
+-		.dma_dev = dw->dma.dev,
 -	};
+-	dma_cap_mask_t cap;
 -
--	return dw_dma_filter(chan, &slave);
+-	if (dma_spec->args_count != 3)
+-		return NULL;
+-
+-	slave.src_id = dma_spec->args[0];
+-	slave.dst_id = dma_spec->args[0];
+-	slave.m_master = dma_spec->args[1];
+-	slave.p_master = dma_spec->args[2];
+-
+-	if (WARN_ON(slave.src_id >= DW_DMA_MAX_NR_REQUESTS ||
+-		    slave.dst_id >= DW_DMA_MAX_NR_REQUESTS ||
+-		    slave.m_master >= dw->pdata->nr_masters ||
+-		    slave.p_master >= dw->pdata->nr_masters))
+-		return NULL;
+-
+-	dma_cap_zero(cap);
+-	dma_cap_set(DMA_SLAVE, cap);
+-
+-	/* TODO: there should be a simpler way to do this */
+-	return dma_request_channel(cap, dw_dma_filter, &slave);
 -}
 -
--static void dw_dma_acpi_controller_register(struct dw_dma *dw)
+-#ifdef CONFIG_OF
+-static struct dw_dma_platform_data *
+-dw_dma_parse_dt(struct platform_device *pdev)
 -{
--	struct device *dev = dw->dma.dev;
--	struct acpi_dma_filter_info *info;
--	int ret;
+-	struct device_node *np = pdev->dev.of_node;
+-	struct dw_dma_platform_data *pdata;
+-	u32 tmp, arr[DW_DMA_MAX_NR_MASTERS], mb[DW_DMA_MAX_NR_CHANNELS];
+-	u32 nr_masters;
+-	u32 nr_channels;
 -
--	if (!has_acpi_companion(dev))
--		return;
+-	if (!np) {
+-		dev_err(&pdev->dev, "Missing DT data\n");
+-		return NULL;
+-	}
 -
--	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
--	if (!info)
--		return;
+-	if (of_property_read_u32(np, "dma-masters", &nr_masters))
+-		return NULL;
+-	if (nr_masters < 1 || nr_masters > DW_DMA_MAX_NR_MASTERS)
+-		return NULL;
 -
--	dma_cap_zero(info->dma_cap);
--	dma_cap_set(DMA_SLAVE, info->dma_cap);
--	info->filter_fn = dw_dma_acpi_filter;
+-	if (of_property_read_u32(np, "dma-channels", &nr_channels))
+-		return NULL;
+-	if (nr_channels > DW_DMA_MAX_NR_CHANNELS)
+-		return NULL;
 -
--	ret = acpi_dma_controller_register(dev, acpi_dma_simple_xlate, info);
--	if (ret)
--		dev_err(dev, "could not register acpi_dma_controller\n");
+-	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+-	if (!pdata)
+-		return NULL;
+-
+-	pdata->nr_masters = nr_masters;
+-	pdata->nr_channels = nr_channels;
+-
+-	if (!of_property_read_u32(np, "chan_allocation_order", &tmp))
+-		pdata->chan_allocation_order = (unsigned char)tmp;
+-
+-	if (!of_property_read_u32(np, "chan_priority", &tmp))
+-		pdata->chan_priority = tmp;
+-
+-	if (!of_property_read_u32(np, "block_size", &tmp))
+-		pdata->block_size = tmp;
+-
+-	if (!of_property_read_u32_array(np, "data-width", arr, nr_masters)) {
+-		for (tmp = 0; tmp < nr_masters; tmp++)
+-			pdata->data_width[tmp] = arr[tmp];
+-	} else if (!of_property_read_u32_array(np, "data_width", arr, nr_masters)) {
+-		for (tmp = 0; tmp < nr_masters; tmp++)
+-			pdata->data_width[tmp] = BIT(arr[tmp] & 0x07);
+-	}
+-
+-	if (!of_property_read_u32_array(np, "multi-block", mb, nr_channels)) {
+-		for (tmp = 0; tmp < nr_channels; tmp++)
+-			pdata->multi_block[tmp] = mb[tmp];
+-	} else {
+-		for (tmp = 0; tmp < nr_channels; tmp++)
+-			pdata->multi_block[tmp] = 1;
+-	}
+-
+-	if (!of_property_read_u32(np, "snps,dma-protection-control", &tmp)) {
+-		if (tmp > CHAN_PROTCTL_MASK)
+-			return NULL;
+-		pdata->protctl = tmp;
+-	}
+-
+-	return pdata;
 -}
--
--static void dw_dma_acpi_controller_free(struct dw_dma *dw)
+-#else
+-static inline struct dw_dma_platform_data *
+-dw_dma_parse_dt(struct platform_device *pdev)
 -{
--	struct device *dev = dw->dma.dev;
--
--	if (!has_acpi_companion(dev))
--		return;
--
--	acpi_dma_controller_free(dev);
+-	return NULL;
 -}
--#else /* !CONFIG_ACPI */
--static inline void dw_dma_acpi_controller_register(struct dw_dma *dw) {}
--static inline void dw_dma_acpi_controller_free(struct dw_dma *dw) {}
--#endif /* !CONFIG_ACPI */
+-#endif
 -
- #ifdef CONFIG_OF
- static struct dw_dma_platform_data *
- dw_dma_parse_dt(struct platform_device *pdev)
+ static int dw_probe(struct platform_device *pdev)
+ {
+ 	const struct dw_dma_chip_pdata *match;
+@@ -185,13 +81,7 @@ static int dw_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, data);
+ 
+-	if (pdev->dev.of_node) {
+-		err = of_dma_controller_register(pdev->dev.of_node,
+-						 dw_dma_of_xlate, chip->dw);
+-		if (err)
+-			dev_err(&pdev->dev,
+-				"could not register of_dma_controller\n");
+-	}
++	dw_dma_of_controller_register(chip->dw);
+ 
+ 	dw_dma_acpi_controller_register(chip->dw);
+ 
+@@ -211,8 +101,7 @@ static int dw_remove(struct platform_device *pdev)
+ 
+ 	dw_dma_acpi_controller_free(chip->dw);
+ 
+-	if (pdev->dev.of_node)
+-		of_dma_controller_free(pdev->dev.of_node);
++	dw_dma_of_controller_free(chip->dw);
+ 
+ 	ret = data->remove(chip);
+ 	if (ret)
 -- 
 2.23.0.rc1
 

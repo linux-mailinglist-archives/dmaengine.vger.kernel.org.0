@@ -2,174 +2,97 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 33D4C95FB6
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Aug 2019 15:16:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 275B095FB8
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Aug 2019 15:16:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbfHTNPu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 20 Aug 2019 09:15:50 -0400
+        id S1729795AbfHTNPw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 20 Aug 2019 09:15:52 -0400
 Received: from mga09.intel.com ([134.134.136.24]:13976 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728771AbfHTNPu (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:15:50 -0400
+        id S1729576AbfHTNPw (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:15:52 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 06:15:49 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 06:15:51 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
-   d="scan'208";a="202674802"
+   d="scan'208";a="202674810"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Aug 2019 06:15:48 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 20 Aug 2019 06:15:50 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 357DD2A3; Tue, 20 Aug 2019 16:15:47 +0300 (EEST)
+        id 411CF2BA; Tue, 20 Aug 2019 16:15:47 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
         Viresh Kumar <vireshk@kernel.org>,
         Jarkko Nikula <jarkko.nikula@linux.intel.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 04/10] dmaengine: dw: platform: Use struct dw_dma_chip_pdata
-Date:   Tue, 20 Aug 2019 16:15:40 +0300
-Message-Id: <20190820131546.75744-5-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 05/10] dmaengine: dw: platform: Enable iDMA 32-bit on Intel Elkhart Lake
+Date:   Tue, 20 Aug 2019 16:15:41 +0300
+Message-Id: <20190820131546.75744-6-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.23.0.rc1
 In-Reply-To: <20190820131546.75744-1-andriy.shevchenko@linux.intel.com>
 References: <20190820131546.75744-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Now, when we have a generic structure for the chip and platform data,
-use it in the platform glue driver.
+Intel® PSE (Programmable Services Engine) provides few DMA controllers
+to the host on Intel Elkhart Lake. Enable them in the ACPI glue driver.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/dma/dw/platform.c | 42 +++++++++++++++++++++++++++++----------
- 1 file changed, 31 insertions(+), 11 deletions(-)
+ drivers/dma/dw/platform.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
-index 382dfd9e9600..234abbd6359a 100644
+index 234abbd6359a..63465fd0e286 100644
 --- a/drivers/dma/dw/platform.c
 +++ b/drivers/dma/dw/platform.c
-@@ -168,12 +168,22 @@ dw_dma_parse_dt(struct platform_device *pdev)
- 
- static int dw_probe(struct platform_device *pdev)
- {
-+	const struct dw_dma_chip_pdata *match;
-+	struct dw_dma_chip_pdata *data;
+@@ -173,7 +173,6 @@ static int dw_probe(struct platform_device *pdev)
  	struct dw_dma_chip *chip;
  	struct device *dev = &pdev->dev;
  	struct resource *mem;
- 	const struct dw_dma_platform_data *pdata;
+-	const struct dw_dma_platform_data *pdata;
  	int err;
  
-+	match = device_get_match_data(dev);
-+	if (!match)
-+		return -ENODEV;
-+
-+	data = devm_kmemdup(&pdev->dev, match, sizeof(*match), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
- 	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
- 	if (!chip)
- 		return -ENOMEM;
-@@ -199,6 +209,8 @@ static int dw_probe(struct platform_device *pdev)
- 	chip->id = pdev->id;
- 	chip->pdata = pdata;
- 
-+	data->chip = chip;
-+
- 	chip->clk = devm_clk_get(chip->dev, "hclk");
- 	if (IS_ERR(chip->clk))
- 		return PTR_ERR(chip->clk);
-@@ -208,11 +220,11 @@ static int dw_probe(struct platform_device *pdev)
- 
- 	pm_runtime_enable(&pdev->dev);
- 
--	err = dw_dma_probe(chip);
-+	err = data->probe(chip);
+ 	match = device_get_match_data(dev);
+@@ -201,13 +200,14 @@ static int dw_probe(struct platform_device *pdev)
  	if (err)
- 		goto err_dw_dma_probe;
+ 		return err;
  
--	platform_set_drvdata(pdev, chip);
-+	platform_set_drvdata(pdev, data);
+-	pdata = dev_get_platdata(dev);
+-	if (!pdata)
+-		pdata = dw_dma_parse_dt(pdev);
++	if (!data->pdata)
++		data->pdata = dev_get_platdata(dev);
++	if (!data->pdata)
++		data->pdata = dw_dma_parse_dt(pdev);
  
- 	if (pdev->dev.of_node) {
- 		err = of_dma_controller_register(pdev->dev.of_node,
-@@ -235,12 +247,17 @@ static int dw_probe(struct platform_device *pdev)
+ 	chip->dev = dev;
+ 	chip->id = pdev->id;
+-	chip->pdata = pdata;
++	chip->pdata = data->pdata;
  
- static int dw_remove(struct platform_device *pdev)
- {
--	struct dw_dma_chip *chip = platform_get_drvdata(pdev);
-+	struct dw_dma_chip_pdata *data = platform_get_drvdata(pdev);
-+	struct dw_dma_chip *chip = data->chip;
-+	int ret;
+ 	data->chip = chip;
  
- 	if (pdev->dev.of_node)
- 		of_dma_controller_free(pdev->dev.of_node);
- 
--	dw_dma_remove(chip);
-+	ret = data->remove(chip);
-+	if (ret)
-+		dev_warn(chip->dev, "can't remove device properly: %d\n", ret);
+@@ -298,6 +298,12 @@ static const struct acpi_device_id dw_dma_acpi_id_table[] = {
+ 	{ "INTL9C60", (kernel_ulong_t)&dw_dma_chip_pdata },
+ 	{ "80862286", (kernel_ulong_t)&dw_dma_chip_pdata },
+ 	{ "808622C0", (kernel_ulong_t)&dw_dma_chip_pdata },
 +
- 	pm_runtime_disable(&pdev->dev);
- 	clk_disable_unprepare(chip->clk);
- 
-@@ -249,7 +266,8 @@ static int dw_remove(struct platform_device *pdev)
- 
- static void dw_shutdown(struct platform_device *pdev)
- {
--	struct dw_dma_chip *chip = platform_get_drvdata(pdev);
-+	struct dw_dma_chip_pdata *data = platform_get_drvdata(pdev);
-+	struct dw_dma_chip *chip = data->chip;
- 
- 	/*
- 	 * We have to call do_dw_dma_disable() to stop any ongoing transfer. On
-@@ -269,7 +287,7 @@ static void dw_shutdown(struct platform_device *pdev)
- 
- #ifdef CONFIG_OF
- static const struct of_device_id dw_dma_of_id_table[] = {
--	{ .compatible = "snps,dma-spear1340" },
-+	{ .compatible = "snps,dma-spear1340", .data = &dw_dma_chip_pdata },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, dw_dma_of_id_table);
-@@ -277,9 +295,9 @@ MODULE_DEVICE_TABLE(of, dw_dma_of_id_table);
- 
- #ifdef CONFIG_ACPI
- static const struct acpi_device_id dw_dma_acpi_id_table[] = {
--	{ "INTL9C60", 0 },
--	{ "80862286", 0 },
--	{ "808622C0", 0 },
-+	{ "INTL9C60", (kernel_ulong_t)&dw_dma_chip_pdata },
-+	{ "80862286", (kernel_ulong_t)&dw_dma_chip_pdata },
-+	{ "808622C0", (kernel_ulong_t)&dw_dma_chip_pdata },
++	/* Elkhart Lake iDMA 32-bit (PSE DMA) */
++	{ "80864BB4", (kernel_ulong_t)&idma32_chip_pdata },
++	{ "80864BB5", (kernel_ulong_t)&idma32_chip_pdata },
++	{ "80864BB6", (kernel_ulong_t)&idma32_chip_pdata },
++
  	{ }
  };
  MODULE_DEVICE_TABLE(acpi, dw_dma_acpi_id_table);
-@@ -289,7 +307,8 @@ MODULE_DEVICE_TABLE(acpi, dw_dma_acpi_id_table);
- 
- static int dw_suspend_late(struct device *dev)
- {
--	struct dw_dma_chip *chip = dev_get_drvdata(dev);
-+	struct dw_dma_chip_pdata *data = dev_get_drvdata(dev);
-+	struct dw_dma_chip *chip = data->chip;
- 
- 	do_dw_dma_disable(chip);
- 	clk_disable_unprepare(chip->clk);
-@@ -299,7 +318,8 @@ static int dw_suspend_late(struct device *dev)
- 
- static int dw_resume_early(struct device *dev)
- {
--	struct dw_dma_chip *chip = dev_get_drvdata(dev);
-+	struct dw_dma_chip_pdata *data = dev_get_drvdata(dev);
-+	struct dw_dma_chip *chip = data->chip;
- 	int ret;
- 
- 	ret = clk_prepare_enable(chip->clk);
 -- 
 2.23.0.rc1
 

@@ -2,58 +2,69 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ED23B95DAE
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Aug 2019 13:46:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D63DF95DCD
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Aug 2019 13:51:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbfHTLpR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 20 Aug 2019 07:45:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47126 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729574AbfHTLpR (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 20 Aug 2019 07:45:17 -0400
-Received: from localhost (unknown [106.201.62.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CD5C22CE3;
-        Tue, 20 Aug 2019 11:45:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566301516;
-        bh=0lT4v0LX5pXjxpd6d87L+ufuAZo4ezWjtwt8ULNdJPc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fDMllfagwKR8/yMdUxTCr+elQziywK4erQs3BAm7X1MV4qGn5c4YYxwVNB79ZxSt1
-         fGQxFMaJMOKTxT3jVgRlowh/ueYII+COBETOpzG2HRuXis4+qF3TSeRHI/juwti0jp
-         Bxoiih4+OKFKAyQnhv7Jl7N5tu0KkSjElIyPf/ac=
-Date:   Tue, 20 Aug 2019 17:14:05 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Enrico Weigelt <info@metux.net>,
-        Allison Randal <allison@lohutok.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dmaengine: ti: omap-dma: Add cleanup in omap_dma_probe()
-Message-ID: <20190820114405.GY12733@vkoul-mobl.Dlink>
-References: <1565938570-7528-1-git-send-email-wenwen@cs.uga.edu>
+        id S1729843AbfHTLts (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 20 Aug 2019 07:49:48 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4733 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728283AbfHTLts (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 20 Aug 2019 07:49:48 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D0C39179BBA873435022;
+        Tue, 20 Aug 2019 19:49:43 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.96) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 20 Aug 2019
+ 19:49:40 +0800
+Subject: Re: [PATCH v2 linux-next 0/2] change mux_configure32() to static
+To:     Vinod Koul <vkoul@kernel.org>
+References: <20190814072105.144107-1-maowenan@huawei.com>
+ <20190820114105.GW12733@vkoul-mobl.Dlink>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+From:   maowenan <maowenan@huawei.com>
+Message-ID: <bdd606cb-535f-c153-d51f-4571db2d23dc@huawei.com>
+Date:   Tue, 20 Aug 2019 19:48:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1565938570-7528-1-git-send-email-wenwen@cs.uga.edu>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190820114105.GW12733@vkoul-mobl.Dlink>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.96.96]
+X-CFilter-Loop: Reflected
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 16-08-19, 01:56, Wenwen Wang wrote:
-> If devm_request_irq() fails to disable all interrupts, no cleanup is
-> performed before retuning the error. To fix this issue, invoke
-> omap_dma_free() to do the cleanup.
 
-Applied, thanks
 
--- 
-~Vinod
+On 2019/8/20 19:41, Vinod Koul wrote:
+> On 14-08-19, 15:21, Mao Wenan wrote:
+>> First patch is to make mux_configure32() static to avoid sparse warning,
+>> the second patch is to chage alignment of two functions.
+> 
+> The subsystem name is "dmaengine" please use that in future, I have
+> fixed that and applied
+
+Okay, thanks.
+
+> 
+>> v2: change subject from "drivers: dma: Fix sparse warning for mux_configure32"
+>> to "drivers: dma: make mux_configure32 static", and cleanup the log. And add 
+>> one patch to change alignment of two functions. 
+>>
+>> Mao Wenan (2):
+>>   drivers: dma: make mux_configure32 static
+>>   drivers: dma: change alignment of mux_configure32 and
+>>     fsl_edma_chan_mux
+>>
+>>  drivers/dma/fsl-edma-common.c | 6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> -- 
+>> 2.20.1
+> 
+

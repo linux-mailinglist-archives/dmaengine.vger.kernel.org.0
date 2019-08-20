@@ -2,27 +2,27 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D0B296110
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Aug 2019 15:45:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F3B1960F4
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Aug 2019 15:44:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730743AbfHTNm5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 20 Aug 2019 09:42:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38400 "EHLO mail.kernel.org"
+        id S1730327AbfHTNoJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 20 Aug 2019 09:44:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730738AbfHTNm4 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:42:56 -0400
+        id S1730826AbfHTNnS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:43:18 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6009622DD3;
-        Tue, 20 Aug 2019 13:42:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DBCE22DA7;
+        Tue, 20 Aug 2019 13:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308575;
-        bh=qUaOPb/mu+XUx/KhqRS8QoPo/+btlIAr0vSCDsN3KPE=;
+        s=default; t=1566308597;
+        bh=0Am0qtdNwSQg3Bskun8I7pWCiq0uX0Ute1NE12kHESs=;
         h=From:To:Cc:Subject:Date:From;
-        b=R/Lp2AlCBkG56/FA/a3hYnovyZYDhqnZbix9HW54IYrohLIWZFi0+4MHU2ukC5jG9
-         xaNb5osM0e7DGdUW5PnMmbHsZra8E1Z540Plcvv8Hr3cTgBwJmusreS07re7bYOnl5
-         7oAjzucQLpWdOnHFElO/Ro4vB9FAlclq9Rn56YJU=
+        b=raDt/mLxCZACRJPbLPpOkg8bg71QTxKg2hK3N98UPJhwB56ls4f2LxZ0fW02cHJwo
+         gI8xSKR724JR0rP8VzMwN/62fGXwg8cRZQGfxbGzDt6p13lj3kYhupJsaKiTa48aUV
+         WK+R2XeV5EiU4RXpQHxUt13D3PuX8sLqpxwkaieQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>,
@@ -30,9 +30,9 @@ Cc:     Arnd Bergmann <arnd@arndb.de>,
         Linus Walleij <linus.walleij@linaro.org>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
         dmaengine@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 01/12] dmaengine: ste_dma40: fix unneeded variable warning
-Date:   Tue, 20 Aug 2019 09:42:42 -0400
-Message-Id: <20190820134253.11562-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 1/7] dmaengine: ste_dma40: fix unneeded variable warning
+Date:   Tue, 20 Aug 2019 09:43:09 -0400
+Message-Id: <20190820134315.11720-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 X-stable: review
@@ -70,7 +70,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
-index c2b089af04208..90feb6a05e59b 100644
+index 8684d11b29bba..68b41daab3a8f 100644
 --- a/drivers/dma/ste_dma40.c
 +++ b/drivers/dma/ste_dma40.c
 @@ -142,7 +142,7 @@ enum d40_events {

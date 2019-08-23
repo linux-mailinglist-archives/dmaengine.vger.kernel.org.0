@@ -2,52 +2,93 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 923D599B1D
-	for <lists+dmaengine@lfdr.de>; Thu, 22 Aug 2019 19:21:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C64969A910
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Aug 2019 09:44:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbfHVRUb convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Thu, 22 Aug 2019 13:20:31 -0400
-Received: from mail.physics.pub.ro ([141.85.216.3]:35108 "EHLO
-        physics1.physics.pub.ro" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731533AbfHVRUb (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 22 Aug 2019 13:20:31 -0400
-X-Greylist: delayed 21627 seconds by postgrey-1.27 at vger.kernel.org; Thu, 22 Aug 2019 13:20:30 EDT
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by physics1.physics.pub.ro (Postfix) with ESMTP id 6033AE3AFF6;
-        Thu, 22 Aug 2019 13:25:17 +0300 (EEST)
-X-Virus-Scanned: amavisd-new at physics.pub.ro
-Received: from physics1.physics.pub.ro ([127.0.0.1])
-        by localhost (physics1.physics.pub.ro [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 3ofgCM-whVpW; Thu, 22 Aug 2019 13:25:17 +0300 (EEST)
-Received: from [10.51.176.174] (unknown [105.4.6.61])
-        by physics1.physics.pub.ro (Postfix) with ESMTPSA id F1373E3A1F1;
-        Thu, 22 Aug 2019 13:25:02 +0300 (EEST)
-Content-Type: text/plain; charset="utf-8"
+        id S1732110AbfHWHod (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 23 Aug 2019 03:44:33 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44708 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfHWHod (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 23 Aug 2019 03:44:33 -0400
+Received: by mail-lf1-f65.google.com with SMTP id v16so6414046lfg.11
+        for <dmaengine@vger.kernel.org>; Fri, 23 Aug 2019 00:44:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8VhnyQ/lvnPjeI+ZEe4VcwGbfHZbPpwY+AwHcnvR+oE=;
+        b=I7Wm2w112kZVo5kWC7G4B9lxgpkpfdDFoX4S5HugYjmAlJg9Z0erMI9NUjIR6JI91X
+         Ksvwc+eyUbldOgsBbz65LlhuXXdpscFzJc1vJ07sq2yZe6jlm9x/fvoK0tql9th3ci1/
+         CS+DHzG+MT0BgLZQuteblBYRpuXfutqgO3hdFI44CeD329VZcVFLu1vQ44gVVuzeSVII
+         9p9q/El026NdnM9A+3b7963AZEg2TEzK3EH31+tAvlgORlD7In2/scnhEcL1feu4ST/1
+         DZzgp81ZoP5eiSFgyUIMgsd2vNRj0qHbQfnJPxqefeos6vZgInxz5UN2yqRGIAW1wRLF
+         a/Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8VhnyQ/lvnPjeI+ZEe4VcwGbfHZbPpwY+AwHcnvR+oE=;
+        b=mCSwRDlSb+XiDS6MXBEhmkXi77amERrBgH4yLTROtnSPRqLiwSTorKyaq9flQsKnP9
+         BGzfchW/DfEJ/mZOa8e2JXli+4Qls+Lalmmp89Mbo+ATY6yrpnOe2A1MB06fqISTimx8
+         RK/5LU9Ph3yd3WdC1z9fE7k/BYUbfi01NBoReg1OnixQBZjDi9JiSqzMpA+k+xfdIM5m
+         97kfDlObZru4sZsjimyiLLgSPM/ZBifY60nJb/6Xn2Aa0fYW5c8zfhh2V45redN9HDA1
+         yXCsj560U+Hi92+UdLYK9Gu2qJpwWA9NxztVdGT8pzKTy3eSpYObe8E0EAYZHxp9ub0t
+         M60Q==
+X-Gm-Message-State: APjAAAW6teNPbUnJTFO3+5FpviGl6weVbKi5iUbA/wzIUjLiBbwXAEDE
+        WvlJUj90t6sDTDAAXBJJbNPCJ2x4UJ0rQ2OY6Nr3Pw==
+X-Google-Smtp-Source: APXvYqyNoQgfYc8y4pHvuwV6KbLFLXwLC/iwoPTjq9ZJq+M/tH/JxhgIoE9IKKUF7jG7d7iHWjhzOuKCY0Oof3gDTrw=
+X-Received: by 2002:a19:e006:: with SMTP id x6mr1828413lfg.165.1566546271241;
+ Fri, 23 Aug 2019 00:44:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: =?utf-8?q?Wohlt=C3=A4tigkeitsspende_von_2=2E000=2E000_Millionen_Euro?=
-To:     Recipients <niculae-tiberiu.puscas@physics.pub.ro>
-From:   ''Tayeb Souami'' <niculae-tiberiu.puscas@physics.pub.ro>
-Date:   Thu, 22 Aug 2019 12:24:58 +0200
-Reply-To: Tayebsouam.spende@gmail.com
-Message-Id: <20190822102502.F1373E3A1F1@physics1.physics.pub.ro>
+References: <20190809162956.488941-1-arnd@arndb.de> <20190809163334.489360-1-arnd@arndb.de>
+ <20190809163334.489360-5-arnd@arndb.de>
+In-Reply-To: <20190809163334.489360-5-arnd@arndb.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 23 Aug 2019 09:44:19 +0200
+Message-ID: <CACRpkdajapOw+fsEx1fqG3FL-n-WYmOUoGw_HGRHd730h+uv-w@mail.gmail.com>
+Subject: Re: [PATCH 5/7] ARM: xscale: fix multi-cpu compilation
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     soc@kernel.org, Russell King <linux@armlinux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dmaengine@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Lieber Freund,
+On Fri, Aug 9, 2019 at 6:33 PM Arnd Bergmann <arnd@arndb.de> wrote:
 
-Ich bin Herr Tayeb Souami, New Jersey, Vereinigte Staaten von Amerika, der Mega-Gewinner von $ 315million In Mega Millions Jackpot, spende ich an 5 zufällige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Mail nach einem Spinball ausgewählt.Ich habe den größten Teil meines Vermögens auf eine Reihe von Wohltätigkeitsorganisationen und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die Summe von € 2.000.000,00 an Sie als eine der ausgewählten 5 zu spenden, um meine Gewinne zu überprüfen, sehen Sie bitte meine You Tube Seite unten.
+> Building a combined ARMv4+XScale kernel produces these
+> and other build failures:
+>
+> /tmp/copypage-xscale-3aa821.s: Assembler messages:
+> /tmp/copypage-xscale-3aa821.s:167: Error: selected processor does not support `pld [r7,#0]' in ARM mode
+> /tmp/copypage-xscale-3aa821.s:168: Error: selected processor does not support `pld [r7,#32]' in ARM mode
+> /tmp/copypage-xscale-3aa821.s:169: Error: selected processor does not support `pld [r1,#0]' in ARM mode
+> /tmp/copypage-xscale-3aa821.s:170: Error: selected processor does not support `pld [r1,#32]' in ARM mode
+> /tmp/copypage-xscale-3aa821.s:171: Error: selected processor does not support `pld [r7,#64]' in ARM mode
+> /tmp/copypage-xscale-3aa821.s:176: Error: selected processor does not support `ldrd r4,r5,[r7],#8' in ARM mode
+> /tmp/copypage-xscale-3aa821.s:180: Error: selected processor does not support `strd r4,r5,[r1],#8' in ARM mode
 
-UHR MICH HIER: https://www.youtube.com/watch?v=Z6ui8ZDQ6Ks
+OK we certainly need this.
 
-Das ist dein Spendencode: [TS530342018]
+> Add an explict .arch armv5 in the inline assembly to allow the ARMv5
+> specific instructions regardless of the compiler -march= target.
 
-Antworten Sie mit dem SPENDE-CODE an diese E-Mail:Tayebsouam.spende@gmail.com
+You probably mean...
 
-Ich hoffe, Sie und Ihre Familie glücklich zu machen.
+> +.arch xscale                                   \n\
+>         pld     [%0, #0]                        \n\
 
-Grüße
-Herr Tayeb Souami
+Explicit .arch xscale rather than .arch armv5.
+
+Yours,
+Linus Walleij

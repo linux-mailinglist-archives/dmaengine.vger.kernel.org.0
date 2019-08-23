@@ -2,49 +2,49 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A5BD9B017
-	for <lists+dmaengine@lfdr.de>; Fri, 23 Aug 2019 14:59:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B6709B01B
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Aug 2019 14:59:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389846AbfHWM4K (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 23 Aug 2019 08:56:10 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:58864 "EHLO
+        id S2394982AbfHWM4M (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 23 Aug 2019 08:56:12 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58866 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfHWM4K (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 23 Aug 2019 08:56:10 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7NCu3Aq103808;
-        Fri, 23 Aug 2019 07:56:04 -0500
+        with ESMTP id S1726197AbfHWM4L (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 23 Aug 2019 08:56:11 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7NCu6uB103832;
+        Fri, 23 Aug 2019 07:56:06 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566564964;
-        bh=GXDyiG/PPmHFuQlZYe5lHx0rEDkmlewlyaVELKgzcow=;
+        s=ti-com-17Q1; t=1566564966;
+        bh=z7aNVn0YYauCti4+ZL7WkTdhJclZFoX05/eUquPIZnU=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=pIDS9PREJWRUQO5xoR+AfT1NASJB+hkayTXAdV1jBQCPqU3tkY0dDBGbUzRMXZ0T5
-         tF7tRVsnk4OYRTuqBr/fbPZ2LyyUgAHGq/RcWAgy+LsTfCag5yYuSqZfahuBKpmULq
-         K5oZvidNkaKv92JyAnBiyvKtG9pmOD57EQkAJnt0=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7NCu3UV015095
+        b=byBQEq30ILKRQAB4n4ESMgjjmPpVKcmVZoaZtDu7Sv1yotDwZAmksKVMSJcEbfaba
+         /PgiYi0KmJ6aQCNtQ9iDq9hA0JgT9fpdLX94yMT/ItaNQbWhZ2AaXe1zgnPrG7R6oD
+         qwvMwBOCSOEYpUQcw+ox0zqUOUfCi1X5+rs27kdA=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7NCu6Em080831
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 23 Aug 2019 07:56:03 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 23 Aug 2019 07:56:06 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 23
- Aug 2019 07:56:03 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ Aug 2019 07:56:05 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 23 Aug 2019 07:56:03 -0500
+ Frontend Transport; Fri, 23 Aug 2019 07:56:06 -0500
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7NCtwkf092319;
-        Fri, 23 Aug 2019 07:56:01 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7NCtwkg092319;
+        Fri, 23 Aug 2019 07:56:03 -0500
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <robh+dt@kernel.org>
 CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-omap@vger.kernel.org>
-Subject: [PATCH 1/5] dmaengine: ti: edma: Do not reset reserved paRAM slots
-Date:   Fri, 23 Aug 2019 15:56:14 +0300
-Message-ID: <20190823125618.8133-2-peter.ujfalusi@ti.com>
+Subject: [PATCH 2/5] dmaengine: ti: edma: Only reset region0 access registers
+Date:   Fri, 23 Aug 2019 15:56:15 +0300
+Message-ID: <20190823125618.8133-3-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190823125618.8133-1-peter.ujfalusi@ti.com>
 References: <20190823125618.8133-1-peter.ujfalusi@ti.com>
@@ -57,41 +57,34 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Skip resetting paRAM slots marked as reserved as they might be used by
-other cores.
+Region0 is used by Linux, do not reset other registers controlling access
+for other shadow regions.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/dma/ti/edma.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/dma/ti/edma.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-index 54895112ba59..1aae95cc0d4b 100644
+index 1aae95cc0d4b..87450431f336 100644
 --- a/drivers/dma/ti/edma.c
 +++ b/drivers/dma/ti/edma.c
-@@ -2338,9 +2338,6 @@ static int edma_probe(struct platform_device *pdev)
+@@ -2434,11 +2434,10 @@ static int edma_probe(struct platform_device *pdev)
+ 		edma_assign_priority_to_queue(ecc, queue_priority_mapping[i][0],
+ 					      queue_priority_mapping[i][1]);
  
- 	ecc->default_queue = info->default_queue;
- 
--	for (i = 0; i < ecc->num_slots; i++)
--		edma_write_slot(ecc, i, &dummy_paramset);
--
- 	if (info->rsv) {
- 		/* Set the reserved slots in inuse list */
- 		rsv_slots = info->rsv->rsv_slots;
-@@ -2353,6 +2350,12 @@ static int edma_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	for (i = 0; i < ecc->num_slots; i++) {
-+		/* Reset only unused - not reserved - paRAM slots */
-+		if (!test_bit(i, ecc->slot_inuse))
-+			edma_write_slot(ecc, i, &dummy_paramset);
-+	}
+-	for (i = 0; i < ecc->num_region; i++) {
+-		edma_write_array2(ecc, EDMA_DRAE, i, 0, 0x0);
+-		edma_write_array2(ecc, EDMA_DRAE, i, 1, 0x0);
+-		edma_write_array(ecc, EDMA_QRAE, i, 0x0);
+-	}
++	edma_write_array2(ecc, EDMA_DRAE, 0, 0, 0x0);
++	edma_write_array2(ecc, EDMA_DRAE, 0, 1, 0x0);
++	edma_write_array(ecc, EDMA_QRAE, 0, 0x0);
 +
- 	/* Clear the xbar mapped channels in unused list */
- 	xbar_chans = info->xbar_chans;
- 	if (xbar_chans) {
+ 	ecc->info = info;
+ 
+ 	/* Init the dma device and channels */
 -- 
 Peter
 

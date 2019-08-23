@@ -2,93 +2,91 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C64969A910
-	for <lists+dmaengine@lfdr.de>; Fri, 23 Aug 2019 09:44:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60FA49B019
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Aug 2019 14:59:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732110AbfHWHod (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 23 Aug 2019 03:44:33 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44708 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbfHWHod (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 23 Aug 2019 03:44:33 -0400
-Received: by mail-lf1-f65.google.com with SMTP id v16so6414046lfg.11
-        for <dmaengine@vger.kernel.org>; Fri, 23 Aug 2019 00:44:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8VhnyQ/lvnPjeI+ZEe4VcwGbfHZbPpwY+AwHcnvR+oE=;
-        b=I7Wm2w112kZVo5kWC7G4B9lxgpkpfdDFoX4S5HugYjmAlJg9Z0erMI9NUjIR6JI91X
-         Ksvwc+eyUbldOgsBbz65LlhuXXdpscFzJc1vJ07sq2yZe6jlm9x/fvoK0tql9th3ci1/
-         CS+DHzG+MT0BgLZQuteblBYRpuXfutqgO3hdFI44CeD329VZcVFLu1vQ44gVVuzeSVII
-         9p9q/El026NdnM9A+3b7963AZEg2TEzK3EH31+tAvlgORlD7In2/scnhEcL1feu4ST/1
-         DZzgp81ZoP5eiSFgyUIMgsd2vNRj0qHbQfnJPxqefeos6vZgInxz5UN2yqRGIAW1wRLF
-         a/Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8VhnyQ/lvnPjeI+ZEe4VcwGbfHZbPpwY+AwHcnvR+oE=;
-        b=mCSwRDlSb+XiDS6MXBEhmkXi77amERrBgH4yLTROtnSPRqLiwSTorKyaq9flQsKnP9
-         BGzfchW/DfEJ/mZOa8e2JXli+4Qls+Lalmmp89Mbo+ATY6yrpnOe2A1MB06fqISTimx8
-         RK/5LU9Ph3yd3WdC1z9fE7k/BYUbfi01NBoReg1OnixQBZjDi9JiSqzMpA+k+xfdIM5m
-         97kfDlObZru4sZsjimyiLLgSPM/ZBifY60nJb/6Xn2Aa0fYW5c8zfhh2V45redN9HDA1
-         yXCsj560U+Hi92+UdLYK9Gu2qJpwWA9NxztVdGT8pzKTy3eSpYObe8E0EAYZHxp9ub0t
-         M60Q==
-X-Gm-Message-State: APjAAAW6teNPbUnJTFO3+5FpviGl6weVbKi5iUbA/wzIUjLiBbwXAEDE
-        WvlJUj90t6sDTDAAXBJJbNPCJ2x4UJ0rQ2OY6Nr3Pw==
-X-Google-Smtp-Source: APXvYqyNoQgfYc8y4pHvuwV6KbLFLXwLC/iwoPTjq9ZJq+M/tH/JxhgIoE9IKKUF7jG7d7iHWjhzOuKCY0Oof3gDTrw=
-X-Received: by 2002:a19:e006:: with SMTP id x6mr1828413lfg.165.1566546271241;
- Fri, 23 Aug 2019 00:44:31 -0700 (PDT)
+        id S2394987AbfHWM4M (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 23 Aug 2019 08:56:12 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:59260 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732824AbfHWM4K (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 23 Aug 2019 08:56:10 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7NCu3ku076487;
+        Fri, 23 Aug 2019 07:56:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1566564964;
+        bh=90F2Ku1Xn8M7W9QVFhYhs3tdIyL07/aRX/oyDTbPkQM=;
+        h=From:To:CC:Subject:Date;
+        b=vjbu0oxDaj/Z/q8NQPAemQSd1aSsfSI2xT2o831AZa+07dKUXjZFWW/vKhp7Gsf2A
+         8y9RuVmeskLNZ60kCzGY6UDJQ++Kw8IUgrsFye+VFKF6h6Fs7/gi88FtyEhyk+WzVt
+         S+VTFIsDkI5uG5LpKX/832LrD010lPyKiyP4ZmsM=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7NCu3uB015093
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 23 Aug 2019 07:56:03 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 23
+ Aug 2019 07:56:01 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 23 Aug 2019 07:56:01 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7NCtwke092319;
+        Fri, 23 Aug 2019 07:55:59 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+Subject: [PATCH 0/5] dmaengine: ti: edma: Multicore usage related fixes
+Date:   Fri, 23 Aug 2019 15:56:13 +0300
+Message-ID: <20190823125618.8133-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20190809162956.488941-1-arnd@arndb.de> <20190809163334.489360-1-arnd@arndb.de>
- <20190809163334.489360-5-arnd@arndb.de>
-In-Reply-To: <20190809163334.489360-5-arnd@arndb.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 23 Aug 2019 09:44:19 +0200
-Message-ID: <CACRpkdajapOw+fsEx1fqG3FL-n-WYmOUoGw_HGRHd730h+uv-w@mail.gmail.com>
-Subject: Re: [PATCH 5/7] ARM: xscale: fix multi-cpu compilation
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     soc@kernel.org, Russell King <linux@armlinux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dmaengine@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Aug 9, 2019 at 6:33 PM Arnd Bergmann <arnd@arndb.de> wrote:
+Hi,
 
-> Building a combined ARMv4+XScale kernel produces these
-> and other build failures:
->
-> /tmp/copypage-xscale-3aa821.s: Assembler messages:
-> /tmp/copypage-xscale-3aa821.s:167: Error: selected processor does not support `pld [r7,#0]' in ARM mode
-> /tmp/copypage-xscale-3aa821.s:168: Error: selected processor does not support `pld [r7,#32]' in ARM mode
-> /tmp/copypage-xscale-3aa821.s:169: Error: selected processor does not support `pld [r1,#0]' in ARM mode
-> /tmp/copypage-xscale-3aa821.s:170: Error: selected processor does not support `pld [r1,#32]' in ARM mode
-> /tmp/copypage-xscale-3aa821.s:171: Error: selected processor does not support `pld [r7,#64]' in ARM mode
-> /tmp/copypage-xscale-3aa821.s:176: Error: selected processor does not support `ldrd r4,r5,[r7],#8' in ARM mode
-> /tmp/copypage-xscale-3aa821.s:180: Error: selected processor does not support `strd r4,r5,[r1],#8' in ARM mode
+When other cores want to use EDMA for their use cases Linux was not playing
+nicely.
+By design EDMA is supporting shared use with shadow regions. Linux is using
+region0, others can be used by other cores.
 
-OK we certainly need this.
+In order to not break multicore shared usage of EDMA:
+- do not reset paRAM slots which is not allocated for Linux (reserved paRAM
+  slots)
+- Only reset region0 access registers, do not touch other regions
+- Add option for reserved channels which should not be used by Linux in a similar
+  fashion as we already have for reserved paRAM slots.
 
-> Add an explict .arch armv5 in the inline assembly to allow the ARMv5
-> specific instructions regardless of the compiler -march= target.
+Regards,
+Peter
+---
+Peter Ujfalusi (5):
+  dmaengine: ti: edma: Do not reset reserved paRAM slots
+  dmaengine: ti: edma: Only reset region0 access registers
+  dmaengine: ti: edma: Use bitmap_set() instead of open coded
+    edma_set_bits()
+  dt-bindings: dma: ti-edma: Add option for reserved channel ranges
+  dmaengine: ti: edma: Add support for handling reserved channels
 
-You probably mean...
+ .../devicetree/bindings/dma/ti-edma.txt       |   5 +
+ drivers/dma/ti/edma.c                         | 190 +++++++++++-------
+ 2 files changed, 123 insertions(+), 72 deletions(-)
 
-> +.arch xscale                                   \n\
->         pld     [%0, #0]                        \n\
+-- 
+Peter
 
-Explicit .arch xscale rather than .arch armv5.
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-Yours,
-Linus Walleij

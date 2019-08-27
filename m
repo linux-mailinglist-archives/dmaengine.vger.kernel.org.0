@@ -2,104 +2,96 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D6229BD08
-	for <lists+dmaengine@lfdr.de>; Sat, 24 Aug 2019 12:33:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31C8A9E56A
+	for <lists+dmaengine@lfdr.de>; Tue, 27 Aug 2019 12:10:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfHXKdk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 24 Aug 2019 06:33:40 -0400
-Received: from bmailout2.hostsharing.net ([83.223.78.240]:40433 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfHXKdj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 24 Aug 2019 06:33:39 -0400
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 40EC728000DF1;
-        Sat, 24 Aug 2019 12:33:37 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 0F24316F35; Sat, 24 Aug 2019 12:33:37 +0200 (CEST)
-Date:   Sat, 24 Aug 2019 12:33:36 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Stefan Wahren <wahrenst@gmx.net>, linux-spi@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     Eric Anholt <eric@anholt.net>, Nuno Sa <nuno.sa@analog.com>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Noralf Tronnes <noralf@tronnes.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Florian Kauer <florian.kauer@koalo.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Subject: Re: [PATCH 00/10] Raspberry Pi SPI speedups
-Message-ID: <20190824103336.splslj4jqihzfi23@wunner.de>
-References: <cover.1564825752.git.lukas@wunner.de>
+        id S1729353AbfH0KKx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 27 Aug 2019 06:10:53 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45920 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728749AbfH0KKw (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 27 Aug 2019 06:10:52 -0400
+Received: by mail-ed1-f65.google.com with SMTP id x19so30607199eda.12
+        for <dmaengine@vger.kernel.org>; Tue, 27 Aug 2019 03:10:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=E1mXiLDMeCBnuH8acbRiGZEzKKN2n3++JkCRPbUs8fc=;
+        b=kidxx+uovea9w+z6uivl1T/sIyChibnfqX+DPzul34ZBgy+mL+RhOGlaIk7B3QudYy
+         jCCoyRCkqOsxJxWRepGJ6JUTARi2qMslmtR/QmKZOF1tr/TAfCiaJPwaATYT+dqcemc3
+         +L2dCM5GszkfN+1fflv6G2O1rQVqR2LctyrtgxyYDKqVWc5mqc2hX4IzBhy+PhiylKvG
+         M1dRFT9K4Kub4tynLiFI6PNFEO/rmNeik3Ppi8rOmGAVf9qS2PK+Gu4CVnAqx9BXnj7N
+         CWTSHMnXRQY63iDPTuWnifTQrraYg8SuDs4TEO0wFFaFyQbgLWkdMBrVWSxG3DGAdvr+
+         ZvWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=E1mXiLDMeCBnuH8acbRiGZEzKKN2n3++JkCRPbUs8fc=;
+        b=mCzmnM/p+yLNvElZxwKIrFb1T8V5OUwn+Gzg09beQcglRVKrKeW/rkYOPqGJ7BBrFW
+         UfHMvLCo9M6w+73XEFDMNKDnWa8kG/+EkFZFyZGO7V2rLgkDtnbCOYQlA+QRkmQVAmX7
+         6/HKz20vwG//s/GITvSEZ1NMSvpTzo1ulM0h4HzvBlovDhjCDOMw1qDA0APEmoQbUfox
+         hLCKsGbpAAI2SNc4exObDm2XS18UPbvByn2wUoIRhkZGBtk2UhrekYBZOxIZV2LtqeuH
+         oRKRL2gGtN9nVjtf/aixPGYNmGq31kGez9aGJeEwwwhbtqfejE8x6rlED+NbxHQCUXRO
+         hjTQ==
+X-Gm-Message-State: APjAAAUlgfOt82HOJlVH64Ryw/KVkG72aP3CZMQrwspQUC7VFHvhqMHp
+        aqC4O4OWyVs1Vk6Z26+mUzTnoJZ+VQU4LUCg3YU=
+X-Google-Smtp-Source: APXvYqzhci0Ua6Ho8kCBc9Vt4yZmZTtlNIYLUymOL/edOkV+MQbptJFokyo5Qum6EG8/YZNNxKtJvVfPE1yKPwVPxr4=
+X-Received: by 2002:aa7:cf0d:: with SMTP id a13mr23602527edy.286.1566900651436;
+ Tue, 27 Aug 2019 03:10:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cover.1564825752.git.lukas@wunner.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Received: by 2002:aa7:d94f:0:0:0:0:0 with HTTP; Tue, 27 Aug 2019 03:10:51
+ -0700 (PDT)
+Reply-To: eco.bank1204@gmail.com
+From:   "MS. MARYANNA B. THOMASON" <eco.bank1204@gmail.com>
+Date:   Tue, 27 Aug 2019 11:10:51 +0100
+Message-ID: <CAOE+jAAtPS4VjjCN3WX_Sa2nkeJsvuUWM8bTkbT+7xRYJH+eOg@mail.gmail.com>
+Subject: WHAT IS GOING ON? DID YOU AUTHORIZE MR. WILLIAM GEORGE TO RECEIVE
+ YOUR ATM CARD WORTH $15.600,000MILLION US DOLLARS FROM OUR DIPLOMATIC AGENT?
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Dear Marc,
+ATTN, DEAR
 
-to alleviate you of having to add all the Acked-by and Tested-by tags
-to this series, I've prepared a "prêt-à-porter" branch complete with
-all tags which you can cherry-pick or merge from.
+WHAT IS GOING ON? DID YOU AUTHORIZE MR. WILLIAM GEORGE TO RECEIVE YOUR
+ATM CARD  WORTH $15.600,000MILLION US DOLLARS FROM OUR DIPLOMATIC
+AGENT?
+CONTACT OUR DIPLOMATIC AGENT MR. CATHY JONES TO RECEIVE YOUR ATM
+MASTER CARD WORTH $15.600.000MUS DOLLARS.
+SHE WILL HANDLE THE DELIVERY TO YOUR HOUSE ADDRESS
+IMMEDIATELY YOU GET IN TOUCH WITH HER TODAY.
+Contact Her on this Address listed for you
+DIPLOMATIC AGENT Mrs. CATHY JONES
+Email; Katerinejones19@gmail.com
 
-If you decide to instead apply the patches yourself, you can double-check
-the result by comparing it to my branch with "git range-diff".
+Contact Her by texting on this phone numver (408) 650-6103)
+listed for you
+DIPLOMATIC AGENT MS. CATHY JONES
+Phone Number; (408) 650-6103, Note she can receive only text message.
 
-If you have any comments on the series or would like to have anything
-changed, please let me know.
+TEXT OR CALL HER FOR URGENT COMMUNICATIONS. (408) 650-6103
+ASK HIM TO SEND YOU THE ATM MASTER CARD WORTH $15.600.000MUS DOLLARS
+AS WE INSTRUCTED.
+PLEASE, ENDEAVOUR to re-ceonfirm your current mailing address to him
+as i have writing below.Avoid of wrong shipment, delivering your
+Parcel to another person.
+This is only informations He need from you to deliver your ATm MASTER
+Card to you now
+1.YOUR FULL NAME______________
+2.COUNTRY___________________
+3.ADDRESS_____________________
+4.PHONE NUMBERS______________________________
+Remember,Contact this Diplomatic Agent, Mrs. Cathy Jones on her
+email address .
+EMAIL: Katerinejones19@gmail.com, only money you are required to send
+to Her is official diplomatic agent delivery fee sum of $50.00 us
+only. She is at JFK Airport,New York
+Text Her this on telephone No: (408) 650-6103
 
-Thanks!
-
-----------------------------------------------------------------
-
-The following changes since commit c55be305915974db160ce6472722ff74f45b8d4e:
-
-  spi: spi-fsl-dspi: Use poll mode in case the platform IRQ is missing (2019-08-23 12:01:44 +0100)
-
-are available in the git repository at:
-
-  https://github.com/l1k/linux bcm2835_spi_simplex_v1
-
-for you to fetch changes up to 37ad33d4bee27d9a24f1deffd675e327d1bb899e:
-
-  spi: bcm2835: Speed up RX-only DMA transfers by zero-filling TX FIFO (2019-08-24 11:54:11 +0200)
-
-----------------------------------------------------------------
-So far the BCM2835 SPI driver cannot cope with TX-only and RX-only
-transfers (rx_buf or tx_buf is NULL) when using DMA:  It relies on
-the SPI core to convert them to full-duplex transfers by allocating
-and DMA-mapping a dummy rx_buf or tx_buf.  This costs performance.
-
-Resolve by pre-allocating reusable DMA descriptors which cyclically
-clear the RX FIFO (for TX-only transfers) or zero-fill the TX FIFO
-(for RX-only transfers).  Commit fecf4ba3f248 provides some numbers
-for the achieved latency improvement and CPU time reduction with an
-SPI Ethernet controller.  SPI displays should see a similar speedup.
-I've also made an effort to reduce peripheral and memory bus accesses.
-----------------------------------------------------------------
-Lukas Wunner (10):
-      dmaengine: bcm2835: Allow reusable descriptors
-      dmaengine: bcm2835: Allow cyclic transactions without interrupt
-      spi: Guarantee cacheline alignment of driver-private data
-      spi: bcm2835: Drop dma_pending flag
-      spi: bcm2835: Work around DONE bit erratum
-      spi: bcm2835: Cache CS register value for ->prepare_message()
-      spi: bcm2835: Speed up TX-only DMA transfers by clearing RX FIFO
-      dmaengine: bcm2835: Document struct bcm2835_dmadev
-      dmaengine: bcm2835: Avoid accessing memory when copying zeroes
-      spi: bcm2835: Speed up RX-only DMA transfers by zero-filling TX FIFO
-
- drivers/dma/bcm2835-dma.c |  38 ++++-
- drivers/spi/spi-bcm2835.c | 408 ++++++++++++++++++++++++++++++++++++++--------
- drivers/spi/spi.c         |  18 +-
- 3 files changed, 390 insertions(+), 74 deletions(-)
+God bless
+SINCERELY YOURS
+MS. MARYANNA B. THOMASON

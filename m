@@ -2,70 +2,113 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A51A1A010E
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Aug 2019 13:53:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2146A09CD
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Aug 2019 20:41:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbfH1LxD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 28 Aug 2019 07:53:03 -0400
-Received: from mga17.intel.com ([192.55.52.151]:21549 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbfH1LxD (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 28 Aug 2019 07:53:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 04:53:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
-   d="scan'208";a="171519671"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 28 Aug 2019 04:53:01 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i2wVY-0007co-Ih; Wed, 28 Aug 2019 14:53:00 +0300
-Date:   Wed, 28 Aug 2019 14:53:00 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Subject: Re: [PATCH v2 00/10] dmaengine: dw: Enable for Intel Elkhart Lake
-Message-ID: <20190828115300.GL2680@smile.fi.intel.com>
-References: <20190820131546.75744-1-andriy.shevchenko@linux.intel.com>
- <20190821041144.GG12733@vkoul-mobl.Dlink>
+        id S1726711AbfH1SlW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 28 Aug 2019 14:41:22 -0400
+Received: from gateway36.websitewelcome.com ([50.116.125.2]:45077 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726400AbfH1SlV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 28 Aug 2019 14:41:21 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id A13784015E147
+        for <dmaengine@vger.kernel.org>; Wed, 28 Aug 2019 13:07:13 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 32siir2LH4FKp32siivI06; Wed, 28 Aug 2019 13:41:20 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=9ehTI29T7w72VnCiJ4pfIoIouCCdrHpXCFm9DHTh2s4=; b=mkNi/cNFtVf0MNWH51wJwoX8Hr
+        mG2NK2idTEeFuEztzH2/JpZCo+lbmV5TBhJObknptd996kFtTFqdi6jvKTF8c9ZQdEe0K1JOX6gdK
+        mUr7ntIJPc+6Rhw8APEkbLysjJi/8ik4So+gakMQe6jt5CJUtAO97yG/HaxBL1nvKprmXSSPBWuzU
+        5pGO13cmmziszdg0R5mYt3ayJGalON46VY8iPTpRi104JOaEdXznNW+GvggkXAym4t4j/4XOyCRpm
+        CpMHI0ytgqa1FE4eJCVygP+Nr7/ll7+51OmVY/HLzQO9j8VxYfsKKMTpPQFHCS4rvzwRtjIMEmQCq
+        dAne+x5w==;
+Received: from [189.152.216.116] (port=43062 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1i32rf-004L4p-TI; Wed, 28 Aug 2019 13:40:15 -0500
+Date:   Wed, 28 Aug 2019 13:40:15 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] ioat/dca: Use struct_size() helper
+Message-ID: <20190828184015.GA4273@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190821041144.GG12733@vkoul-mobl.Dlink>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.152.216.116
+X-Source-L: No
+X-Exim-ID: 1i32rf-004L4p-TI
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.152.216.116]:43062
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 32
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 09:41:44AM +0530, Vinod Koul wrote:
-> On 20-08-19, 16:15, Andy Shevchenko wrote:
-> > On Intel Elkhart Lake the DMA controllers can be provided by Intel® PSE
-> > (Programmable Services Engine) and exposed either as PCI or ACPI devices.
-> > 
-> > To support both schemes here is a patch series.
-> > 
-> > First two patches fixes minor issues in DMA ACPI layer, patches 3-5 enables
-> > Intel Elkhart Lake DMA controllers that exposed as ACPI devices, patch 6 is
-> > clean up, patch 7 is fix for possible race on ->remove() stage, patch 8 is
-> > follow up clean up and patches 9-10 is a split for better maintenance.
-> 
-> Applied all, thanks
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-Thank you!
+struct ioat_dca_priv {
+	...
+        struct ioat_dca_slot     req_slots[0];
+};
 
-Though I haven't seen yet them in Linux next. Can we give at least the rest of
-the time, till the release, to dangle them in Linux next?
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
 
+So, replace the following form:
+
+sizeof(*ioatdca) + (sizeof(struct ioat_dca_slot) * slots)
+
+with:
+
+struct_size(ioatdca, req_slots, slots)
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/dma/ioat/dca.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/dma/ioat/dca.c b/drivers/dma/ioat/dca.c
+index 70fd8454d002..be61c32a876f 100644
+--- a/drivers/dma/ioat/dca.c
++++ b/drivers/dma/ioat/dca.c
+@@ -286,8 +286,7 @@ struct dca_provider *ioat_dca_init(struct pci_dev *pdev, void __iomem *iobase)
+ 		return NULL;
+ 
+ 	dca = alloc_dca_provider(&ioat_dca_ops,
+-				 sizeof(*ioatdca)
+-				      + (sizeof(struct ioat_dca_slot) * slots));
++				 struct_size(ioatdca, req_slots, slots));
+ 	if (!dca)
+ 		return NULL;
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.23.0
 

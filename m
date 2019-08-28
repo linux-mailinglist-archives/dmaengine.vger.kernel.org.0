@@ -2,63 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ECE069FFF1
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Aug 2019 12:32:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B908BA0091
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Aug 2019 13:15:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfH1KcH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 28 Aug 2019 06:32:07 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:29746 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726328AbfH1KcG (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 28 Aug 2019 06:32:06 -0400
+        id S1726315AbfH1LPj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 28 Aug 2019 07:15:39 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:61955 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726293AbfH1LPj (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 28 Aug 2019 07:15:39 -0400
 X-IronPort-AV: E=Sophos;i="5.64,440,1559487600"; 
-   d="scan'208";a="24927763"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 28 Aug 2019 19:32:05 +0900
+   d="scan'208";a="25148804"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 28 Aug 2019 20:15:37 +0900
 Received: from localhost.localdomain (unknown [10.166.17.210])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 0B1A54004CFD;
-        Wed, 28 Aug 2019 19:32:05 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 5E54642296E6;
+        Wed, 28 Aug 2019 20:15:37 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+To:     vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH] dt-bindings: dmaengine: dma-common: Fix the dma-channel-mask property
-Date:   Wed, 28 Aug 2019 19:30:23 +0900
-Message-Id: <1566988223-14657-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 0/2] dmaengine: rcar-dmac: Add dma-channel-mask property support
+Date:   Wed, 28 Aug 2019 20:13:53 +0900
+Message-Id: <1566990835-27028-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.7.4
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The commit b37e3534ac42 ("dt-bindings: dmaengine: Add YAML schemas
-for the generic DMA bindings") changed the property from
-dma-channel-mask to dma-channel-masks. So, this patch fixes it.
+This patch series is based on
+ - renesas-drivers.git / renesas-drivers-2019-08-13-v5.3-rc4 tag
+ - and the following patch series:
+https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=165881
 
-Fixes: b37e3534ac42 ("dt-bindings: dmaengine: Add YAML schemas for the generic DMA bindings")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Changes from v1:
- - s/Revise/Fix/ in the subject and s/revises/fixes/ the commit log.
- https://patchwork.kernel.org/patch/11117885/
+The commit e2d896c08ca3 ("Documentation: bindings: dma: Add binding for
+dma-channel-mask") adds the generic property and R-Car also has such
+use cases so that I made this patch series. Before adding the property
+support, I made a clean-up patch as the patch 1/2.
 
- Documentation/devicetree/bindings/dma/dma-common.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yoshihiro Shimoda (2):
+  dmaengine: rcar-dmac: Don't set DMACHCLR bit 0 to 1 if iommu is mapped
+  dmaengine: rcar-dmac: Add dma-channel-mask property support
 
-diff --git a/Documentation/devicetree/bindings/dma/dma-common.yaml b/Documentation/devicetree/bindings/dma/dma-common.yaml
-index 0141af0..ed0a49a 100644
---- a/Documentation/devicetree/bindings/dma/dma-common.yaml
-+++ b/Documentation/devicetree/bindings/dma/dma-common.yaml
-@@ -24,7 +24,7 @@ properties:
-     description:
-       Used to provide DMA controller specific information.
- 
--  dma-channel-masks:
-+  dma-channel-mask:
-     $ref: /schemas/types.yaml#definitions/uint32
-     description:
-       Bitmask of available DMA channels in ascending order that are
+ drivers/dma/sh/rcar-dmac.c | 32 ++++++++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 8 deletions(-)
+
 -- 
 2.7.4
 

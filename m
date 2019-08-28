@@ -2,69 +2,70 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A2BD3A0095
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Aug 2019 13:15:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A51A1A010E
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Aug 2019 13:53:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfH1LPk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 28 Aug 2019 07:15:40 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:61955 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726341AbfH1LPk (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 28 Aug 2019 07:15:40 -0400
-X-IronPort-AV: E=Sophos;i="5.64,440,1559487600"; 
-   d="scan'208";a="25148807"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 28 Aug 2019 20:15:37 +0900
-Received: from localhost.localdomain (unknown [10.166.17.210])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 8F8C342296E7;
-        Wed, 28 Aug 2019 20:15:37 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 2/2] dmaengine: rcar-dmac: Add dma-channel-mask property support
-Date:   Wed, 28 Aug 2019 20:13:55 +0900
-Message-Id: <1566990835-27028-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1566990835-27028-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1566990835-27028-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+        id S1726400AbfH1LxD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 28 Aug 2019 07:53:03 -0400
+Received: from mga17.intel.com ([192.55.52.151]:21549 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726368AbfH1LxD (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 28 Aug 2019 07:53:03 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 28 Aug 2019 04:53:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,441,1559545200"; 
+   d="scan'208";a="171519671"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 28 Aug 2019 04:53:01 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i2wVY-0007co-Ih; Wed, 28 Aug 2019 14:53:00 +0300
+Date:   Wed, 28 Aug 2019 14:53:00 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Subject: Re: [PATCH v2 00/10] dmaengine: dw: Enable for Intel Elkhart Lake
+Message-ID: <20190828115300.GL2680@smile.fi.intel.com>
+References: <20190820131546.75744-1-andriy.shevchenko@linux.intel.com>
+ <20190821041144.GG12733@vkoul-mobl.Dlink>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190821041144.GG12733@vkoul-mobl.Dlink>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This patch adds dma-channel-mask property support not to reserve
-some DMA channels for some reasons. (for example: a heterogeneous
-CPU uses it.)
+On Wed, Aug 21, 2019 at 09:41:44AM +0530, Vinod Koul wrote:
+> On 20-08-19, 16:15, Andy Shevchenko wrote:
+> > On Intel Elkhart Lake the DMA controllers can be provided by Intel® PSE
+> > (Programmable Services Engine) and exposed either as PCI or ACPI devices.
+> > 
+> > To support both schemes here is a patch series.
+> > 
+> > First two patches fixes minor issues in DMA ACPI layer, patches 3-5 enables
+> > Intel Elkhart Lake DMA controllers that exposed as ACPI devices, patch 6 is
+> > clean up, patch 7 is fix for possible race on ->remove() stage, patch 8 is
+> > follow up clean up and patches 9-10 is a split for better maintenance.
+> 
+> Applied all, thanks
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/dma/sh/rcar-dmac.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+Thank you!
 
-diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
-index 204160e..bae0fe8 100644
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -1806,7 +1806,17 @@ static int rcar_dmac_parse_of(struct device *dev, struct rcar_dmac *dmac)
- 		return -EINVAL;
- 	}
- 
--	dmac->channels_mask = GENMASK(dmac->n_channels - 1, 0);
-+	/*
-+	 * If the driver is unable to read dma-channel-mask property,
-+	 * the driver assumes that it can use all channels.
-+	 */
-+	ret = of_property_read_u32(np, "dma-channel-mask",
-+				   &dmac->channels_mask);
-+	if (ret < 0)
-+		dmac->channels_mask = GENMASK(dmac->n_channels - 1, 0);
-+
-+	/* If the property has out-of-channel mask, this driver clears it */
-+	dmac->channels_mask &= GENMASK(dmac->n_channels - 1, 0);
- 
- 	return 0;
- }
+Though I haven't seen yet them in Linux next. Can we give at least the rest of
+the time, till the release, to dangle them in Linux next?
+
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
+
 

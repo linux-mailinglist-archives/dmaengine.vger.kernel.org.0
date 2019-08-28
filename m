@@ -2,95 +2,74 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 498469FB98
-	for <lists+dmaengine@lfdr.de>; Wed, 28 Aug 2019 09:25:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 390439FBC5
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Aug 2019 09:30:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbfH1HZK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 28 Aug 2019 03:25:10 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:34204 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726154AbfH1HZK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 28 Aug 2019 03:25:10 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7S7OxBL128105;
-        Wed, 28 Aug 2019 02:24:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566977099;
-        bh=pHyb5hhjOJ/59tZ3itIB2wCsNr0fqOVSdMsLMcMWCFg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=DprJg+7gYdCQZU3GT0E4RZqlgPotiqCwfk4/ZIrngU2ongYe4mokK686Rnj+8I0xr
-         IGya1Edsw00RFX6LQeC+EFbZt4g4MhamBOOVxJkE/2gwtrOA0vU6Vf0F7CYkjqXP8Q
-         PyfdZXK+wt2I6GRnyBmKO41um+l6u+dp49pldKhI=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7S7OxBR030983
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 28 Aug 2019 02:24:59 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 28
- Aug 2019 02:24:58 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 28 Aug 2019 02:24:57 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7S7Oumq019424;
-        Wed, 28 Aug 2019 02:24:56 -0500
+        id S1726437AbfH1Ha3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 28 Aug 2019 03:30:29 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36512 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726429AbfH1Ha3 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 28 Aug 2019 03:30:29 -0400
+Received: by mail-oi1-f195.google.com with SMTP id n1so1349478oic.3;
+        Wed, 28 Aug 2019 00:30:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5uFFUgG2fl+PE0Xn05agzG2nI14mh1nZWXeP/6T/JUc=;
+        b=WzzjVIe0KihewabIDKEz0w3fdz5IPx7Fr/8sWMeUY4Jtb/pIGQ+7tmTQcfcTd881Xt
+         krG0Vv4YMrhCucXg36fE0wRha8fgh1fHiW7hR4t1Le3zD05l4Ce5eVtCAB9qy9R9vvLj
+         XCqazOzcjlmPgT0ddpej/Wc4joHDGQImCHDK8TLWybwxgWxc7KAZuNyUSO/kgfjUdehT
+         fP6Utd101/8xtIrj3Zu2JJNuPSh1LneDZBc47yhGdz9F9Jidqe7DtnSmLwCQprriFZ08
+         D8E+a7Ou/AbqnB5jNeRltjNHcyeUryrfkPlYe6ILy1wrByFhXHiI09MP+8gwQcdJUGDx
+         LJrw==
+X-Gm-Message-State: APjAAAVEpMlY0XbudlTMBRZ7rUVJ/3+z7KW8OO1I07pOO7o36H98X04B
+        7Vq5KWY+GM5yszPdzvtN0G3mNWCdoMghEAk85RI=
+X-Google-Smtp-Source: APXvYqy6Aj7QiR5ojjg02TTmi5aa8CtyV1Qo+g/8uJHeTnQwaRQD9PXlCcqe5RSk0bdMxOev0BpmrxEi5T3jZpJd/lo=
+X-Received: by 2002:aca:3382:: with SMTP id z124mr1805472oiz.102.1566977428785;
+ Wed, 28 Aug 2019 00:30:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <1566974375-32482-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1566974375-32482-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 28 Aug 2019 09:30:17 +0200
+Message-ID: <CAMuHMdVHtJTmuW0z+LRRFGL4O2bjiNv6odyGTmLi-EqxN1PP8g@mail.gmail.com>
 Subject: Re: [PATCH] dt-bindings: dmaengine: dma-common: Revise the
  dma-channel-mask property
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        <vkoul@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <1566974375-32482-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <eb823985-5cf6-0d83-8613-1baeeaf7d9c8@ti.com>
-Date:   Wed, 28 Aug 2019 10:25:19 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <1566974375-32482-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Vinod <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi Shimoda-san,
 
+I would s/Revise/Fix/ in the subject.
 
-On 28/08/2019 9.39, Yoshihiro Shimoda wrote:
+On Wed, Aug 28, 2019 at 8:41 AM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
 > The commit b37e3534ac42 ("dt-bindings: dmaengine: Add YAML schemas
 > for the generic DMA bindings") changed the property from
 > dma-channel-mask to dma-channel-masks. So, this patch revises it.
-> 
+>
 > Fixes: b37e3534ac42 ("dt-bindings: dmaengine: Add YAML schemas for the generic DMA bindings")
 > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  Documentation/devicetree/bindings/dma/dma-common.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/dma-common.yaml b/Documentation/devicetree/bindings/dma/dma-common.yaml
-> index 0141af0..ed0a49a 100644
-> --- a/Documentation/devicetree/bindings/dma/dma-common.yaml
-> +++ b/Documentation/devicetree/bindings/dma/dma-common.yaml
-> @@ -24,7 +24,7 @@ properties:
->      description:
->        Used to provide DMA controller specific information.
->  
-> -  dma-channel-masks:
-> +  dma-channel-mask:
->      $ref: /schemas/types.yaml#definitions/uint32
 
-How this mask supposed to be used for controllers having more than 32
-channels (64, 300+)?
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
->      description:
->        Bitmask of available DMA channels in ascending order that are
-> 
+Gr{oetje,eeting}s,
 
-- Péter
+                        Geert
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds

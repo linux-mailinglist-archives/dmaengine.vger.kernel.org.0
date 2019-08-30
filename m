@@ -2,233 +2,153 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 00868A374C
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Aug 2019 14:57:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1887A3BCE
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Aug 2019 18:19:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfH3M5H (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 30 Aug 2019 08:57:07 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:39476 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727522AbfH3M5H (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 30 Aug 2019 08:57:07 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7UCuudL128298;
-        Fri, 30 Aug 2019 07:56:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1567169816;
-        bh=UaNOBiFUxRDC03w4l9TpbqiM1zQ9drYlCsOBiGaSkK8=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=ZVo/sXkrLT2YKSlm9KphTh8pa8fpy8Yxtk31+HIMrpO0xXZhtFrDJBsv3TToTaRL8
-         2oaPEYUs+8cgDmCHW1aJRlW2BeAN7+bkSKn9Pv/gXRQ63sLjriXlSCnkstgz11OztG
-         MPa9lz4/NXbo/ABspA4TLVs3uTTGR6r3PbjE9uEA=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7UCuuXV051443
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 30 Aug 2019 07:56:56 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 30
- Aug 2019 07:56:55 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 30 Aug 2019 07:56:55 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7UCuql1036840;
-        Fri, 30 Aug 2019 07:56:52 -0500
-Subject: Re: [PATCH v2 02/14] soc: ti: k3: add navss ringacc driver
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
-        <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20190730093450.12664-1-peter.ujfalusi@ti.com>
- <20190730093450.12664-3-peter.ujfalusi@ti.com>
-Message-ID: <4da72d53-60cf-06ed-63c0-6cf8b4aeb690@ti.com>
-Date:   Fri, 30 Aug 2019 15:57:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727809AbfH3QTX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 30 Aug 2019 12:19:23 -0400
+Received: from gateway24.websitewelcome.com ([192.185.50.93]:27792 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727434AbfH3QTX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 30 Aug 2019 12:19:23 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id F1BD914B99
+        for <dmaengine@vger.kernel.org>; Fri, 30 Aug 2019 11:14:25 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 3jXdil38x2qH73jXdihUbt; Fri, 30 Aug 2019 11:14:25 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=aGYr2FM4QQtcTWRAHMFf23E34Ywi1aRTuyHCXd6kje0=; b=pAliF8TGvjsDz5WSKpj+xjc670
+        wG3SdMnDpV0CMTt6RY56y+kj5QAhp2VlSc66xWk513X6/TkKw8+aHdNS5DlJCWj2wigHMxromxRDb
+        iPMa3sVurbFOI1x6bHYrFu01Ip3EMiC/12ms7poxNoi/ph1lIjLU6lXhk48DXileLCfFVsD9pJ4vq
+        cfz7hSg96NYDOrSLiAHa4CBH656OaB0m3kdO7QTCtTdurZlwthlR6Lqs+ZfQFij4WWCpJIx0nA2ZY
+        4AgSPWtE4OGElW/r2HR+6Kfro853MmI01eRtd1Emp6UirKMojcshO4o8s21IWNAPiR/Gc3CBsE8U+
+        0+f630WA==;
+Received: from [189.152.216.116] (port=34988 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1i3jXc-000lDa-Le; Fri, 30 Aug 2019 11:14:24 -0500
+Date:   Fri, 30 Aug 2019 11:14:23 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] dmaengine: stm32-dma: Use struct_size() helper
+Message-ID: <20190830161423.GA3483@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <20190730093450.12664-3-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.152.216.116
+X-Source-L: No
+X-Exim-ID: 1i3jXc-000lDa-Le
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.152.216.116]:34988
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi,
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
 
-On 30/07/2019 12.34, Peter Ujfalusi wrote:
-> From: Grygorii Strashko <grygorii.strashko@ti.com>
-> 
-> The Ring Accelerator (RINGACC or RA) provides hardware acceleration to
-> enable straightforward passing of work between a producer and a consumer.
-> There is one RINGACC module per NAVSS on TI AM65x SoCs.
-> 
-> The RINGACC converts constant-address read and write accesses to equivalent
-> read or write accesses to a circular data structure in memory. The RINGACC
-> eliminates the need for each DMA controller which needs to access ring
-> elements from having to know the current state of the ring (base address,
-> current offset). The DMA controller performs a read or write access to a
-> specific address range (which maps to the source interface on the RINGACC)
-> and the RINGACC replaces the address for the transaction with a new address
-> which corresponds to the head or tail element of the ring (head for reads,
-> tail for writes). Since the RINGACC maintains the state, multiple DMA
-> controllers or channels are allowed to coherently share the same rings as
-> applicable. The RINGACC is able to place data which is destined towards
-> software into cached memory directly.
-> 
-> Supported ring modes:
-> - Ring Mode
-> - Messaging Mode
-> - Credentials Mode
-> - Queue Manager Mode
-> 
-> TI-SCI integration:
-> 
-> Texas Instrument's System Control Interface (TI-SCI) Message Protocol now
-> has control over Ringacc module resources management (RM) and Rings
-> configuration.
-> 
-> The corresponding support of TI-SCI Ringacc module RM protocol
-> introduced as option through DT parameters:
-> - ti,sci: phandle on TI-SCI firmware controller DT node
-> - ti,sci-dev-id: TI-SCI device identifier as per TI-SCI firmware spec
-> 
-> if both parameters present - Ringacc driver will configure/free/reset Rings
-> using TI-SCI Message Ringacc RM Protocol.
-> 
-> The Ringacc driver manages Rings allocation by itself now and requests
-> TI-SCI firmware to allocate and configure specific Rings only. It's done
-> this way because, Linux driver implements two stage Rings allocation and
-> configuration (allocate ring and configure ring) while I-SCI Message
-> Protocol supports only one combined operation (allocate+configure).
-> 
-> Grygorii Strashko <grygorii.strashko@ti.com>
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  drivers/soc/ti/Kconfig            |   17 +
->  drivers/soc/ti/Makefile           |    1 +
->  drivers/soc/ti/k3-ringacc.c       | 1191 +++++++++++++++++++++++++++++
->  include/linux/soc/ti/k3-ringacc.h |  262 +++++++
->  4 files changed, 1471 insertions(+)
->  create mode 100644 drivers/soc/ti/k3-ringacc.c
->  create mode 100644 include/linux/soc/ti/k3-ringacc.h
-> 
-> diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
-> index cf545f428d03..10c76faa503e 100644
-> --- a/drivers/soc/ti/Kconfig
-> +++ b/drivers/soc/ti/Kconfig
-> @@ -80,6 +80,23 @@ config TI_SCI_PM_DOMAINS
->  	  called ti_sci_pm_domains. Note this is needed early in boot before
->  	  rootfs may be available.
->  
-> +config TI_K3_RINGACC
-> +	tristate "K3 Ring accelerator Sub System"
-> +	depends on ARCH_K3 || COMPILE_TEST
-> +	depends on TI_SCI_INTA_IRQCHIP
-> +	default y
-> +	help
-> +	  Say y here to support the K3 Ring accelerator module.
-> +	  The Ring Accelerator (RINGACC or RA)  provides hardware acceleration
-> +	  to enable straightforward passing of work between a producer
-> +	  and a consumer. There is one RINGACC module per NAVSS on TI AM65x SoCs
-> +	  If unsure, say N.
-> +
-> +config TI_K3_RINGACC_DEBUG
-> +	tristate "K3 Ring accelerator Sub System tests and debug"
-> +	depends on TI_K3_RINGACC
-> +	default n
-> +
->  endif # SOC_TI
->  
->  config TI_SCI_INTA_MSI_DOMAIN
-> diff --git a/drivers/soc/ti/Makefile b/drivers/soc/ti/Makefile
-> index b3868d392d4f..cc4bc8b08bf5 100644
-> --- a/drivers/soc/ti/Makefile
-> +++ b/drivers/soc/ti/Makefile
-> @@ -9,3 +9,4 @@ obj-$(CONFIG_AMX3_PM)			+= pm33xx.o
->  obj-$(CONFIG_WKUP_M3_IPC)		+= wkup_m3_ipc.o
->  obj-$(CONFIG_TI_SCI_PM_DOMAINS)		+= ti_sci_pm_domains.o
->  obj-$(CONFIG_TI_SCI_INTA_MSI_DOMAIN)	+= ti_sci_inta_msi.o
-> +obj-$(CONFIG_TI_K3_RINGACC)		+= k3-ringacc.o
-> diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
-> new file mode 100644
-> index 000000000000..401dfc963319
-> --- /dev/null
-> +++ b/drivers/soc/ti/k3-ringacc.c
-> @@ -0,0 +1,1191 @@
+struct stm32_dma_desc {
+	...
+        struct stm32_dma_sg_req sg_req[];
+};
 
-...
 
-> +void k3_ringacc_ring_reset_dma(struct k3_ring *ring, u32 occ)
-> +{
-> +	if (!ring || !(ring->flags & K3_RING_FLAG_BUSY))
-> +		return;
-> +
-> +	if (!ring->parent->dma_ring_reset_quirk)
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes.
 
-k3_ringacc_ring_reset(ring); is missing from here.
+So, replace the following function:
 
-> +		return;
-> +
-> +	if (!occ)
-> +		occ = dbg_readl(&ring->rt->occ);
-> +
-> +	if (occ) {
-> +		u32 db_ring_cnt, db_ring_cnt_cur;
-> +
-> +		k3_nav_dbg(ring->parent->dev, "%s %u occ: %u\n", __func__,
-> +			   ring->ring_id, occ);
-> +		/* 2. Reset the ring */
-> +		k3_ringacc_ring_reset_sci(ring);
-> +
-> +		/*
-> +		 * 3. Setup the ring in ring/doorbell mode
-> +		 * (if not already in this mode)
-> +		 */
-> +		if (ring->mode != K3_RINGACC_RING_MODE_RING)
-> +			k3_ringacc_ring_reconfig_qmode_sci(
-> +					ring, K3_RINGACC_RING_MODE_RING);
-> +		/*
-> +		 * 4. Ring the doorbell 2**22 – ringOcc times.
-> +		 * This will wrap the internal UDMAP ring state occupancy
-> +		 * counter (which is 21-bits wide) to 0.
-> +		 */
-> +		db_ring_cnt = (1U << 22) - occ;
-> +
-> +		while (db_ring_cnt != 0) {
-> +			/*
-> +			 * Ring the doorbell with the maximum count each
-> +			 * iteration if possible to minimize the total
-> +			 * of writes
-> +			 */
-> +			if (db_ring_cnt > K3_RINGACC_MAX_DB_RING_CNT)
-> +				db_ring_cnt_cur = K3_RINGACC_MAX_DB_RING_CNT;
-> +			else
-> +				db_ring_cnt_cur = db_ring_cnt;
-> +
-> +			writel(db_ring_cnt_cur, &ring->rt->db);
-> +			db_ring_cnt -= db_ring_cnt_cur;
-> +		}
-> +
-> +		/* 5. Restore the original ring mode (if not ring mode) */
-> +		if (ring->mode != K3_RINGACC_RING_MODE_RING)
-> +			k3_ringacc_ring_reconfig_qmode_sci(ring, ring->mode);
-> +	}
-> +
-> +	/* 2. Reset the ring */
-> +	k3_ringacc_ring_reset(ring);
-> +}
-> +EXPORT_SYMBOL_GPL(k3_ringacc_ring_reset_dma);
+static struct stm32_dma_desc *stm32_dma_alloc_desc(u32 num_sgs)
+{
+       return kzalloc(sizeof(struct stm32_dma_desc) +
+                      sizeof(struct stm32_dma_sg_req) * num_sgs, GFP_NOWAIT);
+}
 
-- Péter
+with:
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+kzalloc(struct_size(desc, sg_req, num_sgs), GFP_NOWAIT)
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/dma/stm32-dma.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
+index e4cbe38d1b83..5989b0893521 100644
+--- a/drivers/dma/stm32-dma.c
++++ b/drivers/dma/stm32-dma.c
+@@ -243,12 +243,6 @@ static void stm32_dma_write(struct stm32_dma_device *dmadev, u32 reg, u32 val)
+ 	writel_relaxed(val, dmadev->base + reg);
+ }
+ 
+-static struct stm32_dma_desc *stm32_dma_alloc_desc(u32 num_sgs)
+-{
+-	return kzalloc(sizeof(struct stm32_dma_desc) +
+-		       sizeof(struct stm32_dma_sg_req) * num_sgs, GFP_NOWAIT);
+-}
+-
+ static int stm32_dma_get_width(struct stm32_dma_chan *chan,
+ 			       enum dma_slave_buswidth width)
+ {
+@@ -853,7 +847,7 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_slave_sg(
+ 		return NULL;
+ 	}
+ 
+-	desc = stm32_dma_alloc_desc(sg_len);
++	desc = kzalloc(struct_size(desc, sg_req, sg_len), GFP_NOWAIT);
+ 	if (!desc)
+ 		return NULL;
+ 
+@@ -954,7 +948,7 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_dma_cyclic(
+ 
+ 	num_periods = buf_len / period_len;
+ 
+-	desc = stm32_dma_alloc_desc(num_periods);
++	desc = kzalloc(struct_size(desc, sg_req, num_periods), GFP_NOWAIT);
+ 	if (!desc)
+ 		return NULL;
+ 
+@@ -989,7 +983,7 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_dma_memcpy(
+ 	int i;
+ 
+ 	num_sgs = DIV_ROUND_UP(len, STM32_DMA_ALIGNED_MAX_DATA_ITEMS);
+-	desc = stm32_dma_alloc_desc(num_sgs);
++	desc = kzalloc(struct_size(desc, sg_req, num_sgs), GFP_NOWAIT);
+ 	if (!desc)
+ 		return NULL;
+ 
+-- 
+2.23.0
+

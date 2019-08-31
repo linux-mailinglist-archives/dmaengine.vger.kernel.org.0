@@ -2,99 +2,97 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7245EA3FCB
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Aug 2019 23:44:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78FE7A4354
+	for <lists+dmaengine@lfdr.de>; Sat, 31 Aug 2019 10:36:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbfH3Vo1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 30 Aug 2019 17:44:27 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44344 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727304AbfH3Vo1 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 30 Aug 2019 17:44:27 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 21so877693otj.11
-        for <dmaengine@vger.kernel.org>; Fri, 30 Aug 2019 14:44:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=r1D8IBfKr4KZlJAXW83t95Uh5aoX1KNuipA/xtxjo60=;
-        b=Fhn1uylrMdzREK7eYqWED0WvNZ1Ku4t5vt0mZaUQ3C/daCMt/M8NLBe72uqOl+uXnx
-         qUEHUORlBMnz5XExb9bZgKcd/bg2lKWnNwECVRTeycXBXoXADxKk4V1hucdSiU7bwL2D
-         N7mo33ESuYNMq82D/PEQkuHMONxIYx/1jm/90u3PI9uY8NJbS8rPS76LD5aQuwwdbzqP
-         iOu/7NsACp+ncarLbfhPuqhmre837CWIiurHwjB1NjNiwah93VVJt54hx46Sp0O7urgl
-         RzniFpYnB85NAbtwK4MuDJsnl4fVxXsXiOAbnsqIu3y02xABqMFfuWVLfhryU6kWt/g8
-         0Bvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=r1D8IBfKr4KZlJAXW83t95Uh5aoX1KNuipA/xtxjo60=;
-        b=dhE96863siUKQUAJ4u18C8vimvDf0dQUhmtvy3BFi10PC6HXcFHUVDs5oyoc4oalnD
-         5JLED2BpKnM/DmV1O0mhc7PsLdxJakRKdLkfnBzvrl4wRYr4fea69hl3jwy0VljMxrxz
-         qzHY+0ShgQzCaTCbXmZw0dVrlPEHwimRRqy965yLarSaBR6cNm5gDlvttQYbmzw+Md9+
-         ockEsSvYXddUaQV7IK1OhzNEqUQKGwHf2KxQeQMX2essUkcZYtMDVfuGWNO6XYPjdjp1
-         YM2bl98kNOcazQcG/rHF9BwgiPpMWjoKQ9U76mUB4Eztg+sTz7ZS8siz/Hf95Jqv1SWO
-         7I8w==
-X-Gm-Message-State: APjAAAV3+92fKOJG79AG3EChA2rCXjH90jmqYxR+xccYb/uhNi/4gpuu
-        C9SnBVPMmBWbbF8LcToyg8NnR+Q3WIjHizFsxEo43w==
-X-Google-Smtp-Source: APXvYqyHGGTpqtaUrDEaJb5+VPW23VqDVAKTDUaAj/zAYp3Ck7ETaN61CyWKthYg/A1Mhw3hQ0GKgsSRlNINMeUgHJk=
-X-Received: by 2002:a05:6830:14d:: with SMTP id j13mr6038863otp.71.1567201466536;
- Fri, 30 Aug 2019 14:44:26 -0700 (PDT)
+        id S1726453AbfHaIgK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 31 Aug 2019 04:36:10 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:49694 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbfHaIgK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 31 Aug 2019 04:36:10 -0400
+Received: from penelope.horms.nl (ip4dab7138.direct-adsl.nl [77.171.113.56])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 0DBFD25AD78;
+        Sat, 31 Aug 2019 18:36:08 +1000 (AEST)
+Received: by penelope.horms.nl (Postfix, from userid 7100)
+        id E20C7E218F0; Sat, 31 Aug 2019 10:36:05 +0200 (CEST)
+Date:   Sat, 31 Aug 2019 10:36:05 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Vinod <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH 1/2] dmaengine: rcar-dmac: Use of_data values instead of
+ a macro
+Message-ID: <20190831083605.t6wf2lu3xzdtiarv@verge.net.au>
+References: <1566904231-25486-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1566904231-25486-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdV9pSq1RrXG53=az1krVVnZF3M=F3MiS7t+Z5dMo_iKHg@mail.gmail.com>
 MIME-Version: 1.0
-References: <138f82a9-08ad-2bb2-cfce-f3124ec502fc@infradead.org>
-In-Reply-To: <138f82a9-08ad-2bb2-cfce-f3124ec502fc@infradead.org>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 30 Aug 2019 14:44:15 -0700
-Message-ID: <CAPcyv4hvPrkMhSKKWnqTs93=G7712j82jRw43tjoqJoqsZfzDg@mail.gmail.com>
-Subject: Re: [PATCH] IOAT: iop-adma.c: fix printk format warning
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        dmaengine@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV9pSq1RrXG53=az1krVVnZF3M=F3MiS7t+Z5dMo_iKHg@mail.gmail.com>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-[ add Vinod and dmaengine ]
+On Tue, Aug 27, 2019 at 03:08:16PM +0200, Geert Uytterhoeven wrote:
+> Hi Shimoda-san,
+> 
+> On Tue, Aug 27, 2019 at 1:12 PM Yoshihiro Shimoda
+> <yoshihiro.shimoda.uh@renesas.com> wrote:
+> > Since we will have changed memory mapping of the DMAC in the future,
+> > this patch uses of_data values instead of a macro to calculate
+> > each channel's base offset.
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> > --- a/drivers/dma/sh/rcar-dmac.c
+> > +++ b/drivers/dma/sh/rcar-dmac.c
+> > @@ -208,12 +208,20 @@ struct rcar_dmac {
+> >
+> >  #define to_rcar_dmac(d)                container_of(d, struct rcar_dmac, engine)
+> >
+> > +/*
+> > + * struct rcar_dmac_of_data - This driver's OF data
+> > + * @chan_offset_base: DMAC channels base offset
+> > + * @chan_offset_coefficient: DMAC channels offset coefficient
+> 
+> Perhaps "stride" instead of "coefficient"? Or "step"?
+> 
+> > @@ -1803,10 +1813,15 @@ static int rcar_dmac_probe(struct platform_device *pdev)
+> >         unsigned int channels_offset = 0;
+> >         struct dma_device *engine;
+> >         struct rcar_dmac *dmac;
+> > +       const struct rcar_dmac_of_data *data;
+> >         struct resource *mem;
+> >         unsigned int i;
+> >         int ret;
+> >
+> > +       data = of_device_get_match_data(&pdev->dev);
+> > +       if (!data)
+> > +               return -EINVAL;
+> 
+> This cannot fail, as the driver is DT only, and all entries in the match table
+> have a data pointer.
 
-On Fri, Aug 30, 2019 at 2:32 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> From: Randy Dunlap <rdunlap@infradead.org>
->
-> Fix printk format warning in iop-adma.c (seen on x86_64) by using
-> %pad:
->
-> ../drivers/dma/iop-adma.c:118:12: warning: format =E2=80=98%x=E2=80=99 ex=
-pects argument of type =E2=80=98unsigned int=E2=80=99, but argument 6 has t=
-ype =E2=80=98dma_addr_t {aka long long unsigned int}=E2=80=99 [-Wformat=3D]
->
-> Fixes: c211092313b9 ("dmaengine: driver for the iop32x, iop33x, and iop13=
-xx raid engines")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
+It seems to me that not including this check would make the code both more
+fragile and less intuitive for a marginal gain in simplicity.
 
-Acked-by: Dan Williams <dan.j.williams@intel.com>
-
-> ---
->  drivers/dma/iop-adma.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> --- linux-next-20190830.orig/drivers/dma/iop-adma.c
-> +++ linux-next-20190830/drivers/dma/iop-adma.c
-> @@ -116,9 +116,9 @@ static void __iop_adma_slot_cleanup(stru
->         list_for_each_entry_safe(iter, _iter, &iop_chan->chain,
->                                         chain_node) {
->                 pr_debug("\tcookie: %d slot: %d busy: %d "
-> -                       "this_desc: %#x next_desc: %#llx ack: %d\n",
-> +                       "this_desc: %pad next_desc: %#llx ack: %d\n",
->                         iter->async_tx.cookie, iter->idx, busy,
-> -                       iter->async_tx.phys, (u64)iop_desc_get_next_desc(=
-iter),
-> +                       &iter->async_tx.phys, (u64)iop_desc_get_next_desc=
-(iter),
->                         async_tx_test_ack(&iter->async_tx));
->                 prefetch(_iter);
->                 prefetch(&_iter->async_tx);
->
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> 

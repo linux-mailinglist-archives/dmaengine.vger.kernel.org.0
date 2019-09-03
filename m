@@ -2,68 +2,139 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A5230A583D
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Sep 2019 15:42:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC962A6670
+	for <lists+dmaengine@lfdr.de>; Tue,  3 Sep 2019 12:19:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbfIBNkj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 2 Sep 2019 09:40:39 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33714 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730221AbfIBNis (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 2 Sep 2019 09:38:48 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r17so11990513wme.0;
-        Mon, 02 Sep 2019 06:38:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:subject:references
-         :in-reply-to:cc:cc:to;
-        bh=TpRHrWDk+BKtVt16BeWPVl2Sj4S7ymxrqVbVJgDIHmM=;
-        b=F4yhXb0UbAicyQ1qM5Aed/kzyZxzIuLsOS9zrfsvM3g1+YTEvgL1mWWSUWHmfEDT8j
-         h0klIJQmWSGzthSc0iRj2FilHodzh8GG8oeWeV6e29EU4xFl55kFT0rsnQLbFxKOrmrA
-         csEFgTGJljBMwREVJ3XrfEDuLkZYawy1LA/103JzZS5pwX+9/VvHA62yGkn5nYmi/Kmp
-         jaY31gpeYsdh1Z/Qs54C/YtyZbNp247KGrzxsGxyy9wlHGMl9M/M3WaZshHoAW2nkirF
-         bFYDSHA+rTYfRn8jkVrhrIxE1sor83ICWng5HATrFeqOWOeGwk5QZt8bf0XpbVPSz3c0
-         TdAA==
-X-Gm-Message-State: APjAAAWT2DNpgSJIASTqAS2HHyiDGMnN31ch8XPNR1WSzWQ5S1ZrtxZS
-        yeJI330H0O0lyaafdLhjBI+OgBFIlA==
-X-Google-Smtp-Source: APXvYqx0IbfQx421rMxJRsliJiRNSgfS7S13d8uiiggmXY+SbLRC8+XkevIKmxeykpo9JQltTt3UOw==
-X-Received: by 2002:a7b:c216:: with SMTP id x22mr36357141wmi.19.1567431525970;
-        Mon, 02 Sep 2019 06:38:45 -0700 (PDT)
-Received: from localhost ([212.187.182.166])
-        by smtp.gmail.com with ESMTPSA id n2sm9271782wro.52.2019.09.02.06.38.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Sep 2019 06:38:45 -0700 (PDT)
-Message-ID: <5d6d1b65.1c69fb81.735c8.5363@mx.google.com>
-Date:   Mon, 02 Sep 2019 14:38:44 +0100
-From:   Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: dmaengine: dma-common: Fix the dma-channel-mask property
-References: <1566988223-14657-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1566988223-14657-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Cc:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+        id S1728599AbfICKT2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 3 Sep 2019 06:19:28 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:42974 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbfICKT2 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 Sep 2019 06:19:28 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x83AJJrI043302;
+        Tue, 3 Sep 2019 05:19:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1567505959;
+        bh=nRTqcKo/WxW5TqzAmvGzBhBJLV092AmqWAXRSgLL4HQ=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=MAVqHP5rCVzAK7qY2G2VaRwl+Eht1wf++tyKAUBDMpBXY1dqWnkSOasWdWuL3UJH0
+         U1dTBLkeDz1xPdv8fjND7octTCvsoznIQlEEKIsiKu28tOdcGOTTPx52xwX7H2+Mlc
+         7C8KTXqRqmsSup83zDK3uH75JreICd8llooyx7us=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x83AJJXP081861
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 3 Sep 2019 05:19:19 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 3 Sep
+ 2019 05:19:19 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 3 Sep 2019 05:19:19 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x83AJHVI102032;
+        Tue, 3 Sep 2019 05:19:17 -0500
+Subject: Re: [PATCH 4/5] dt-bindings: dma: ti-edma: Add option for reserved
+ channel ranges
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     <vkoul@kernel.org>, <dan.j.williams@intel.com>,
+        <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+References: <20190823125618.8133-1-peter.ujfalusi@ti.com>
+ <20190823125618.8133-5-peter.ujfalusi@ti.com> <20190829224728.GA1198@bogus>
+ <a4c5688b-cbeb-5059-5351-11d9ae1b25d5@ti.com>
+Message-ID: <15d5dc03-d6ca-f438-f37a-e71298abda95@ti.com>
+Date:   Tue, 3 Sep 2019 13:19:45 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <a4c5688b-cbeb-5059-5351-11d9ae1b25d5@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, 28 Aug 2019 19:30:23 +0900, Yoshihiro Shimoda wrote:
-> The commit b37e3534ac42 ("dt-bindings: dmaengine: Add YAML schemas
-> for the generic DMA bindings") changed the property from
-> dma-channel-mask to dma-channel-masks. So, this patch fixes it.
-> 
-> Fixes: b37e3534ac42 ("dt-bindings: dmaengine: Add YAML schemas for the generic DMA bindings")
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  Changes from v1:
->  - s/Revise/Fix/ in the subject and s/revises/fixes/ the commit log.
->  https://patchwork.kernel.org/patch/11117885/
-> 
->  Documentation/devicetree/bindings/dma/dma-common.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+Hi Rob,
 
-Acked-by: Rob Herring <robh@kernel.org>
+On 30/08/2019 8.37, Peter Ujfalusi wrote:
+> Rob,
+> 
+> On 30/08/2019 1.47, Rob Herring wrote:
+>> On Fri, Aug 23, 2019 at 03:56:17PM +0300, Peter Ujfalusi wrote:
+>>> Similarly to paRAM slots, channels can be used by other cores.
+>>>
+>>> Add optional property to configure the reserved channel ranges.
+>>>
+>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/dma/ti-edma.txt | 5 +++++
+>>>  1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
+>>> index 4bbc94d829c8..1198682ada99 100644
+>>> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
+>>> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
+>>> @@ -42,6 +42,9 @@ Optional properties:
+>>>  - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be used by
+>>>  		the driver, they are allocated to be used by for example the
+>>>  		DSP. See example.
+>>> +- ti,edma-reserved-chan-ranges: channel ranges which should not be used by
+>>> +		the driver, they are allocated to be used by for example the
+>>> +		DSP. See example.
+>>
+>> Based on the other thread, I think extending dma-channel-mask to a 
+>> uint32-array makes sense here.
+> 
+> Yes, that is the reason I have asked on that and I'm in progress of
+> converting the edma driver to use the dma-channel-mask.
+> Just need to do some shuffling in the driver to get the mask in a form
+> usable by the driver.
+> 
+> I'll send an updated series early next week.
 
+How should the dma-channel-mask uint31-array should be documented and used?
+
+Basically some EDMA have 32, some 64 channels. This is fine.
+Let's say I want to mask out channel 0-4 and 24-27
+
+This would look like in case of EDMA with 32 channels:
+&edma {
+	/* channel 0-4 and 24-27 is not to be used */
+	dma-channel-mask = <0xf0fffff0>;
+};
+
+How this should look like in case when I have 64 channels?
+&edma {
+	/* channel 0-4 and 24-27 is not to be used */
+	dma-channel-mask = <0xf0fffff0>, <0xffffffff>;
+};
+
+When I read the u32s then
+chan_mask[0] is for channel 0-31 (LSB is channel 0)
+chan_maks[1] is for channel 32-63 (LSB is channel 32)
+
+Or:
+&edma {
+	/* channel 0-4 and 24-27 is not to be used */
+	dma-channel-mask = <0xffffffff>, <0xf0fffff0>;
+};
+
+chan_maks[0] is for channel 32-63 (LSB is channel 32)
+chan_mask[1] is for channel 0-31 (LSB is channel 0)
+
+Do you have pointer on already established notion on how to document and
+handle this?
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

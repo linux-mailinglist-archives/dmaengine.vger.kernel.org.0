@@ -2,40 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CFA8A7A18
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Sep 2019 06:41:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A5C8A7A1B
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Sep 2019 06:42:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725877AbfIDEl4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 4 Sep 2019 00:41:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50558 "EHLO mail.kernel.org"
+        id S1726046AbfIDEmd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 4 Sep 2019 00:42:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbfIDEl4 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 4 Sep 2019 00:41:56 -0400
+        id S1725267AbfIDEmd (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 4 Sep 2019 00:42:33 -0400
 Received: from localhost (unknown [122.182.201.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A30022CED;
-        Wed,  4 Sep 2019 04:41:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5B8322CED;
+        Wed,  4 Sep 2019 04:42:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567572115;
-        bh=Y3SgjdI4eTUWwvUoaem0J4TTnC5iUZrRH8WOPdvvpp0=;
+        s=default; t=1567572152;
+        bh=m4F5Q8UfN0GHnykOXwLzKXVq4D8Xmr2BgfunVwAekLA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qprynB9AGH9qA25g6oG7NVhLbnrtnuUd3wQ1EMSI6lTWdifZYUGC9P3+PjwcyAzSu
-         z8wlY3zIdNXnYsOFfey3c4ZnxLVsFqh80Rv1zs2BfYzUIk6YuXc3OwwSehoNCBA1DW
-         zvPPY7JU5f6UyvCB0erYVoO1bbRwBb3khRt6rrjM=
-Date:   Wed, 4 Sep 2019 10:10:47 +0530
+        b=p9N+ebYnuInXthVBf8+7lSgEarA1XZzh3V5v07ou3zmIu2gSHGfzwfR5q8iyaQ90t
+         HWtL/vfegjydUewdmaYFzLv8Sa2lxMKKadKoipkNbt1sEdg8o62krINQlB8QMroGOh
+         /TbNsE3tj9o2cXlUGA3sqEs0eRapN+C2uVvTqPKI=
+Date:   Wed, 4 Sep 2019 10:11:24 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
 Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: ti: omap-dma: Remove 'Assignment in if
- condition'
-Message-ID: <20190904044047.GT2672@vkoul-mobl>
-References: <20190730132015.2863-1-peter.ujfalusi@ti.com>
+Subject: Re: [PATCH] dmaengine: ti: omap-dma: Remove variable override in
+ omap_dma_tx_status()
+Message-ID: <20190904044124.GU2672@vkoul-mobl>
+References: <20190730132029.2971-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190730132015.2863-1-peter.ujfalusi@ti.com>
+In-Reply-To: <20190730132029.2971-1-peter.ujfalusi@ti.com>
 User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
@@ -43,8 +43,8 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 On 30-07-19, 16:20, Peter Ujfalusi wrote:
-> While the compiler does not have problem with how it is implemented,
-> checkpatch does give en ERROR for this arrangement.
+> There is no need to fetch local omap_desc since the desc we have is the
+> correct one already when we need to check the channel status.
 
 Applied, thanks
 

@@ -2,82 +2,81 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AEBCA990E
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Sep 2019 05:55:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62AA2A9A58
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Sep 2019 08:03:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbfIEDzQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 4 Sep 2019 23:55:16 -0400
-Received: from condef-06.nifty.com ([202.248.20.71]:41154 "EHLO
-        condef-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727156AbfIEDzP (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Sep 2019 23:55:15 -0400
-X-Greylist: delayed 624 seconds by postgrey-1.27 at vger.kernel.org; Wed, 04 Sep 2019 23:55:14 EDT
-Received: from conuserg-11.nifty.com ([10.126.8.74])by condef-06.nifty.com with ESMTP id x853g6jX011050
-        for <dmaengine@vger.kernel.org>; Thu, 5 Sep 2019 12:42:06 +0900
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id x853fY68003716;
-        Thu, 5 Sep 2019 12:41:35 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x853fY68003716
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567654895;
-        bh=R46SqTBG0wiskAaYxuXipqRLOslxanzHTdul3DZROHA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gv5Y3PoZTVKNnNJlAVgNZCYAMA72KKtMMFDvlAhmFn2EpRR2yChDvt3wababkCszC
-         HHY21EZLMBcHIcaahCgEr4j7ZAyYb3wxK2UmxQdOAd7arl/8TcNvAxPYuRfHaNq4PY
-         dUNc1yK1b7AGXq3L1LUq2yzWwiQ2zYn2seXtQWtKJsJAOF0ZmLaGfi6JQMNH3ZME0X
-         fZqvqKfLsR58uvg84zWeCYhhRDilgEERcDRB41+8yzsfLQy6kZNlmoUQUJxIv1of9d
-         X9LEnsW5HeBrk7ClwAMnKWyna+X8DDcrzqE+M+9E3cm8uhLqs4BnBYQGyuL2VsBS7V
-         p64SIMHKVZyKQ==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] dmaengine: uniphier-mdmac: use devm_platform_ioremap_resource()
-Date:   Thu,  5 Sep 2019 12:41:33 +0900
-Message-Id: <20190905034133.29514-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        id S1731353AbfIEGDu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 5 Sep 2019 02:03:50 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6221 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726175AbfIEGDu (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 5 Sep 2019 02:03:50 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 0180536790BE16221016;
+        Thu,  5 Sep 2019 14:03:48 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Sep 2019
+ 14:03:39 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <dan.j.williams@intel.com>, <vkoul@kernel.org>,
+        <peter.ujfalusi@ti.com>, <arnd@arndb.de>, <yuehaibing@huawei.com>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] dmaengine: ti: edma: remove unused code
+Date:   Thu, 5 Sep 2019 14:02:49 +0800
+Message-ID: <20190905060249.23928-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Replace the chain of platform_get_resource() and devm_ioremap_resource()
-with devm_platform_ioremap_resource().
+drivers/dma/ti/edma.c: In function edma_probe:
+drivers/dma/ti/edma.c:2252:11: warning:
+ variable off set but not used [-Wunused-but-set-variable]
 
-This allows to remove the local variable for (struct resource *), and
-have one function call less.
+'off' is not used now, so remove it.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
+ drivers/dma/ti/edma.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
- drivers/dma/uniphier-mdmac.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/dma/uniphier-mdmac.c b/drivers/dma/uniphier-mdmac.c
-index ec65a7430dc4..e42f2312b7a1 100644
---- a/drivers/dma/uniphier-mdmac.c
-+++ b/drivers/dma/uniphier-mdmac.c
-@@ -385,7 +385,6 @@ static int uniphier_mdmac_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct uniphier_mdmac_device *mdev;
- 	struct dma_device *ddev;
--	struct resource *res;
- 	int nr_chans, ret, i;
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index ba7c4f0..54fd981 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -2249,10 +2249,8 @@ static int edma_probe(struct platform_device *pdev)
+ {
+ 	struct edma_soc_info	*info = pdev->dev.platform_data;
+ 	s8			(*queue_priority_mapping)[2];
+-	int			i, off;
+ 	const s16		(*rsv_slots)[2];
+-	const s16		(*xbar_chans)[2];
+-	int			irq;
++	int			i, irq;
+ 	char			*irq_name;
+ 	struct resource		*mem;
+ 	struct device_node	*node = pdev->dev.of_node;
+@@ -2349,14 +2347,6 @@ static int edma_probe(struct platform_device *pdev)
+ 			edma_write_slot(ecc, i, &dummy_paramset);
+ 	}
  
- 	nr_chans = platform_irq_count(pdev);
-@@ -401,8 +400,7 @@ static int uniphier_mdmac_probe(struct platform_device *pdev)
- 	if (!mdev)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	mdev->reg_base = devm_ioremap_resource(dev, res);
-+	mdev->reg_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(mdev->reg_base))
- 		return PTR_ERR(mdev->reg_base);
- 
+-	/* Clear the xbar mapped channels in unused list */
+-	xbar_chans = info->xbar_chans;
+-	if (xbar_chans) {
+-		for (i = 0; xbar_chans[i][1] != -1; i++) {
+-			off = xbar_chans[i][1];
+-		}
+-	}
+-
+ 	irq = platform_get_irq_byname(pdev, "edma3_ccint");
+ 	if (irq < 0 && node)
+ 		irq = irq_of_parse_and_map(node, 0);
 -- 
-2.17.1
+2.7.4
+
 

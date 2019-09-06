@@ -2,143 +2,115 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 72595AB8F1
-	for <lists+dmaengine@lfdr.de>; Fri,  6 Sep 2019 15:10:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 886F6ABA84
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Sep 2019 16:17:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392834AbfIFNKk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 6 Sep 2019 09:10:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33198 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392815AbfIFNKj (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 6 Sep 2019 09:10:39 -0400
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E82A5206BB;
-        Fri,  6 Sep 2019 13:10:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567775438;
-        bh=fsvy9vB8q4xTi27VCFoIvbbPemsnqqmabbXkyz4cBfE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GVwE5+RV6T7Gk0Oq0NkKxThLbuJJSjnvI2Fitw6yXzMf7D4uZ6OIeVDHXzmCK5XnV
-         bq+EA39B9jr5AId38ttNcjiDLYKzPER1qO2wSA3U2M1i/WXGu0VKr0Dx5t2AOBb/oT
-         SaVnWO//bsZKavhY81nypz6K1yXB1rEYJovkI/jA=
-Received: by mail-qk1-f169.google.com with SMTP id q203so5561287qke.1;
-        Fri, 06 Sep 2019 06:10:37 -0700 (PDT)
-X-Gm-Message-State: APjAAAWuwzl3XeH0cZIlzgltmPftGaBM8ky9lW2Y01t9oq4m9C7yu5NN
-        bumJ2gtfVkGOzdhFV3nGUdE9J2coI2+52AV5/w==
-X-Google-Smtp-Source: APXvYqzQsKhFz6B/Tax9+gdiWg6xhgwxLCJHR+sGwYgZteGSTYU6RIcYIc2kuLGw0yP+EpjEMjHw0xD2+f0cwiairNk=
-X-Received: by 2002:a37:682:: with SMTP id 124mr8391679qkg.393.1567775437120;
- Fri, 06 Sep 2019 06:10:37 -0700 (PDT)
+        id S2394124AbfIFORB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 6 Sep 2019 10:17:01 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:33784 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729017AbfIFORA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 6 Sep 2019 10:17:00 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x86EGvd7033627;
+        Fri, 6 Sep 2019 09:16:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1567779417;
+        bh=+L55aTwWGyUbvaaXfZF0uAs4AUymc3puZPlhVMgEnt8=;
+        h=From:To:CC:Subject:Date;
+        b=dNTsJlMUUD6VqosfnnTAlbfQHS4eZt7K2vopJ1oJAmBClpbH/cYWGLr/1m/yYmL/e
+         JkpvlK1hcNLgPkthtNnB8F3QOpxRUum/DFgDTlxXLwR3AloROK7IZ91AYFJLroVoxd
+         dJbKTm9wjQaUjJbohIwJ2MhJkdAiAIzqfnNu/LGs=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x86EGvha127778;
+        Fri, 6 Sep 2019 09:16:57 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 6 Sep
+ 2019 09:16:51 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 6 Sep 2019 09:16:51 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x86EGmac042400;
+        Fri, 6 Sep 2019 09:16:49 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vinod.koul@intel.com>, <robh+dt@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <devicetree@vger.kernel.org>
+Subject: [RFC 0/3] dmaengine: Support for DMA domain controllers
+Date:   Fri, 6 Sep 2019 17:17:14 +0300
+Message-ID: <20190906141717.23859-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20190823125618.8133-1-peter.ujfalusi@ti.com> <20190823125618.8133-5-peter.ujfalusi@ti.com>
- <20190829224728.GA1198@bogus> <a4c5688b-cbeb-5059-5351-11d9ae1b25d5@ti.com> <15d5dc03-d6ca-f438-f37a-e71298abda95@ti.com>
-In-Reply-To: <15d5dc03-d6ca-f438-f37a-e71298abda95@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 6 Sep 2019 14:10:25 +0100
-X-Gmail-Original-Message-ID: <CAL_JsqJ6R9X93vVM6A6H5yDFnQk5T7ym126TRb140m5COD3nwg@mail.gmail.com>
-Message-ID: <CAL_JsqJ6R9X93vVM6A6H5yDFnQk5T7ym126TRb140m5COD3nwg@mail.gmail.com>
-Subject: Re: [PATCH 4/5] dt-bindings: dma: ti-edma: Add option for reserved
- channel ranges
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Vinod <vkoul@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 11:19 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->
-> Hi Rob,
->
-> On 30/08/2019 8.37, Peter Ujfalusi wrote:
-> > Rob,
-> >
-> > On 30/08/2019 1.47, Rob Herring wrote:
-> >> On Fri, Aug 23, 2019 at 03:56:17PM +0300, Peter Ujfalusi wrote:
-> >>> Similarly to paRAM slots, channels can be used by other cores.
-> >>>
-> >>> Add optional property to configure the reserved channel ranges.
-> >>>
-> >>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/dma/ti-edma.txt | 5 +++++
-> >>>  1 file changed, 5 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
-> >>> index 4bbc94d829c8..1198682ada99 100644
-> >>> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
-> >>> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
-> >>> @@ -42,6 +42,9 @@ Optional properties:
-> >>>  - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be used by
-> >>>             the driver, they are allocated to be used by for example the
-> >>>             DSP. See example.
-> >>> +- ti,edma-reserved-chan-ranges: channel ranges which should not be used by
-> >>> +           the driver, they are allocated to be used by for example the
-> >>> +           DSP. See example.
-> >>
-> >> Based on the other thread, I think extending dma-channel-mask to a
-> >> uint32-array makes sense here.
-> >
-> > Yes, that is the reason I have asked on that and I'm in progress of
-> > converting the edma driver to use the dma-channel-mask.
-> > Just need to do some shuffling in the driver to get the mask in a form
-> > usable by the driver.
-> >
-> > I'll send an updated series early next week.
->
-> How should the dma-channel-mask uint31-array should be documented and used?
->
-> Basically some EDMA have 32, some 64 channels. This is fine.
-> Let's say I want to mask out channel 0-4 and 24-27
->
-> This would look like in case of EDMA with 32 channels:
-> &edma {
->         /* channel 0-4 and 24-27 is not to be used */
->         dma-channel-mask = <0xf0fffff0>;
-> };
->
-> How this should look like in case when I have 64 channels?
-> &edma {
->         /* channel 0-4 and 24-27 is not to be used */
->         dma-channel-mask = <0xf0fffff0>, <0xffffffff>;
-> };
->
-> When I read the u32s then
-> chan_mask[0] is for channel 0-31 (LSB is channel 0)
-> chan_maks[1] is for channel 32-63 (LSB is channel 32)
->
-> Or:
-> &edma {
->         /* channel 0-4 and 24-27 is not to be used */
->         dma-channel-mask = <0xffffffff>, <0xf0fffff0>;
-> };
->
-> chan_maks[0] is for channel 32-63 (LSB is channel 32)
-> chan_mask[1] is for channel 0-31 (LSB is channel 0)
->
-> Do you have pointer on already established notion on how to document and
-> handle this?
+Hi,
 
-As far as word ordering, I guess you can do whatever order you want.
-MSB first would make the most sense if this was only going to be up to
-64-bit. But given it could be 96, 128, ... bits, probably the least
-significant word first makes sense and is easier to parse for a
-variable length.
+More and more SoC have more than one DMA controller integrated.
 
-The binding schema can be something like this:
+If a device needs none slave DMA channel for operation (block copy from/to
+memory mapped regions for example) at the moment when they request a channel it
+is going to be taken from the first DMA controller which was registered, but
+this might be not optimal for the device.
 
-items:
-  - description: Mask of channels 0-31
-  - description: Mask of channels 32-63
+For example on AM654 we have two DMAs: main_udmap and mcu_udmap.
+DDR to DDR memcpy is twice as fast on main_udmap compared to mcu_udmap, while
+devices on MCU domain (OSPI for example) are more than twice as fast on
+mcu_udmap than with main_udmap.
 
-The length is implied by the number of list items.
+Because of probing order (mcu_udmap is probing first) modules would use
+mcu_udmap instead of the better main_udmap. Currently the only solution is to
+make a choice and disable the MEM_TO_MEM functionality on one of them which is
+not a great solution.
 
-Rob
+With the introduction of DMA domain controllers we can utilize the best DMA
+controller for the job around the SoC without the need to degrade performance.
+
+If the dma-domain-controller is not present in DT or booted w/o DT the none
+slave channel request will work as it does today.
+
+The last patch introduces a new dma_domain_request_chan_by_mask() function and
+I have a define for dma_request_chan_by_mask() to avoid breaking users of the
+dma_request_chan_by_mask, but looking at the kernel we have small amount of
+users:
+drivers/gpu/drm/vc4/vc4_dsi.c
+drivers/media/platform/omap/omap_vout_vrfb.c
+drivers/media/platform/omap3isp/isphist.c
+drivers/mtd/spi-nor/cadence-quadspi.c
+drivers/spi/spi-ti-qspi.c
+
+If it is acceptable we can modify the parameters of dma_request_chan_by_mask()
+to include ther device pointer and at the same time change all of the clients
+by giving NULL or in case of the last two their dev.
+
+Regards,
+Peter
+---
+Peter Ujfalusi (3):
+  dt-bindings: dma: Add documentation for DMA domains
+  dmaengine: of_dma: Function to look up the DMA domain of a client
+  dmaengine: Support for requesting channels preferring DMA domain
+    controller
+
+ .../devicetree/bindings/dma/dma-domain.yaml   | 59 +++++++++++++++++++
+ drivers/dma/dmaengine.c                       | 17 ++++--
+ drivers/dma/of-dma.c                          | 42 +++++++++++++
+ include/linux/dmaengine.h                     |  9 ++-
+ include/linux/of_dma.h                        |  7 +++
+ 5 files changed, 126 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
+
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+

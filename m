@@ -2,46 +2,47 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 35C84ABAA1
-	for <lists+dmaengine@lfdr.de>; Fri,  6 Sep 2019 16:18:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B67AABAA4
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Sep 2019 16:18:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394355AbfIFOR5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 6 Sep 2019 10:17:57 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:60276 "EHLO
+        id S2394362AbfIFOR6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 6 Sep 2019 10:17:58 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:60278 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394353AbfIFOR5 (ORCPT
+        with ESMTP id S2394290AbfIFOR5 (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Fri, 6 Sep 2019 10:17:57 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x86EHsid033204;
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x86EHs8R033208;
         Fri, 6 Sep 2019 09:17:54 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
         s=ti-com-17Q1; t=1567779474;
-        bh=lL+zXXpiAMPM0yEzqtzknYNhG5vy2NXPPxTYA7JesO0=;
+        bh=Q0YSzmtvj7sqG004BV4lez3XreU1ptGoRlCRKi0kkXE=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ofwXpHE7AsqrsmL6NeU0jtuoK4b5jvfACKy6wPiinroLAiTz5FQeJg3Y9kKn+qEdu
-         f3lNvBdPkGA9mdzRoHlVqX0Ht+ZkdVkUrv/uxhZIf8xK0InD8d9/Lt2RxVaaX6Iq2e
-         tEYlJwoAgYBuKjgoj/7ecdZWS23/S72u2LIbobHg=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x86EHs7h129321;
+        b=iK2R5BfLmLoYQap6f051TME+qiH2qqg6MAM9FFHgfLpiiMrKzF1qqgB5KaVZrpLbf
+         vm81b+vTVeokvamwL1wAiQWWgdZP5WxrwDGxT2z1y1J5iHD2VBIH0Qz3J286oDDRW2
+         zDMT/O3VG5LwVPZl9Y+hpoqsfO7k0Uvxqrc0OsZo=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x86EHsY8065345
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
         Fri, 6 Sep 2019 09:17:54 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 6 Sep
- 2019 09:17:52 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 09:17:54 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 6 Sep 2019 09:17:52 -0500
+ Frontend Transport; Fri, 6 Sep 2019 09:17:54 -0500
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x86EHlOe032723;
-        Fri, 6 Sep 2019 09:17:50 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x86EHlOf032723;
+        Fri, 6 Sep 2019 09:17:52 -0500
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <robh+dt@kernel.org>
 CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <dan.j.williams@intel.com>, <devicetree@vger.kernel.org>
-Subject: [RFC 1/3] dt-bindings: dma: Add documentation for DMA domains
-Date:   Fri, 6 Sep 2019 17:18:14 +0300
-Message-ID: <20190906141816.24095-2-peter.ujfalusi@ti.com>
+Subject: [RFC 2/3] dmaengine: of_dma: Function to look up the DMA domain of a client
+Date:   Fri, 6 Sep 2019 17:18:15 +0300
+Message-ID: <20190906141816.24095-3-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190906141816.24095-1-peter.ujfalusi@ti.com>
 References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
@@ -54,91 +55,96 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On systems where multiple DMA controllers available, none Slave (for example
-memcpy operation) users can not be described in DT as there is no device
-involved from the DMA controller's point of view, DMA binding is not usable.
-However in these systems still a peripheral might need to be serviced by or
-it is better to serviced by specific DMA controller.
-When a memcpy is used to/from a memory mapped region for example a DMA in the
-same domain can perform better.
-For generic software modules doing mem 2 mem operations it also matter that
-they will get a channel from a controller which is faster in DDR to DDR mode
-rather then from the first controller happen to be loaded.
+Find the DMA domain controller of the client device by iterating up in
+device tree looking for the closest 'dma-domain-controller' property.
 
-This property is inherited, so it may be specified in a device node or in any
-of its parent nodes.
+If the client's node is not provided then check the DT root for the
+controller.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- .../devicetree/bindings/dma/dma-domain.yaml   | 59 +++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
+ drivers/dma/of-dma.c   | 42 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_dma.h |  7 +++++++
+ 2 files changed, 49 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/dma-domain.yaml b/Documentation/devicetree/bindings/dma/dma-domain.yaml
-new file mode 100644
-index 000000000000..c2f182f30081
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/dma-domain.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/dma-controller.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+index c2d779daa4b5..04b5795cd76b 100644
+--- a/drivers/dma/of-dma.c
++++ b/drivers/dma/of-dma.c
+@@ -18,6 +18,48 @@
+ static LIST_HEAD(of_dma_list);
+ static DEFINE_MUTEX(of_dma_lock);
+ 
++/**
++ * of_find_dma_domain - Get the domain DMA controller
++ * @np:		device node of the client device
++ *
++ * Look up the DMA controller of the domain the client device is part of.
++ * Finds the dma-domain controller the client device belongs to. It is used when
++ * requesting non slave channels (like channel for memcpy) to make sure that the
++ * channel can be request from a DMA controller which can service the given
++ * domain best.
++ *
++ * Returns the device_node pointer of the DMA controller or succes or NULL on
++ * error.
++ */
++struct device_node *of_find_dma_domain(struct device_node *np)
++{
++	struct device_node *dma_domain = NULL;
++	phandle dma_phandle;
 +
-+title: DMA Domain Controller Definition
++	/*
++	 * If no device_node is provided look at the root level for system
++	 * default DMA controller for modules.
++	 */
++	if (!np)
++		np = of_root;
 +
-+maintainers:
-+  - Vinod Koul <vkoul@kernel.org>
++	if (!np || !of_node_get(np))
++		return NULL;
 +
-+allOf:
-+  - $ref: "dma-controller.yaml#"
++	do {
++		if (of_property_read_u32(np, "dma-domain-controller",
++					 &dma_phandle))
++			np = of_get_next_parent(np);
++		else {
++			dma_domain = of_find_node_by_phandle(dma_phandle);
++			of_node_put(np);
++		}
++	} while (!dma_domain && np);
 +
-+description:
-+  On systems where multiple DMA controllers available, none Slave (for example
-+  memcpy operation) users can not be described in DT as there is no device
-+  involved from the DMA controller's point of view, DMA binding is not usable.
-+  However in these systems still a peripheral might need to be serviced by or
-+  it is better to serviced by specific DMA controller.
-+  When a memcpy is used to/from a memory mapped region for example a DMA in the
-+  same domain can perform better.
-+  For generic software modules doing mem 2 mem operations it also matter that
-+  they will get a channel from a controller which is faster in DDR to DDR mode
-+  rather then from the first controller happen to be loaded.
++	return dma_domain;
++}
++EXPORT_SYMBOL_GPL(of_find_dma_domain);
 +
-+  This property is inherited, so it may be specified in a device node or in any
-+  of its parent nodes.
+ /**
+  * of_dma_find_controller - Get a DMA controller in DT DMA helpers list
+  * @dma_spec:	pointer to DMA specifier as found in the device tree
+diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
+index fd706cdf255c..6eab0a8d3335 100644
+--- a/include/linux/of_dma.h
++++ b/include/linux/of_dma.h
+@@ -32,6 +32,8 @@ struct of_dma_filter_info {
+ };
+ 
+ #ifdef CONFIG_DMA_OF
++extern struct device_node *of_find_dma_domain(struct device_node *np);
 +
-+properties:
-+  $dma-domain-controller:
-+    $ref: /schemas/types.yaml#definitions/phandle
-+    description:
-+      phande to the DMA controller node which should be used for the device or
-+      domain.
+ extern int of_dma_controller_register(struct device_node *np,
+ 		struct dma_chan *(*of_dma_xlate)
+ 		(struct of_phandle_args *, struct of_dma *),
+@@ -52,6 +54,11 @@ extern struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec
+ 		struct of_dma *ofdma);
+ 
+ #else
++static inline struct device_node *of_find_dma_domain(struct device_node *np)
++{
++	return NULL;
++}
 +
-+examples:
-+  - |
-+    / {
-+        model = "Texas Instruments K3 AM654 SoC";
-+        compatible = "ti,am654";
-+        interrupt-parent = <&gic500>;
-+        /* For modules without device, DDR to DDR is faster on main UDMAP */
-+        dma-domain-controller = <&main_udmap>;
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+        ...
-+    };
-+
-+    &cbass_main {
-+        /* For modules within MAIN domain, use main UDMAP */
-+        dma-domain-controller = <&main_udmap>;
-+    };
-+
-+    &cbass_mcu {
-+        /* For modules within MCU domain, use mcu UDMAP */
-+        dma-domain-controller = <&mcu_udmap>;
-+    };
-+...
+ static inline int of_dma_controller_register(struct device_node *np,
+ 		struct dma_chan *(*of_dma_xlate)
+ 		(struct of_phandle_args *, struct of_dma *),
 -- 
 Peter
 

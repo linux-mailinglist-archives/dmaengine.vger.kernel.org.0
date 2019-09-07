@@ -2,86 +2,100 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 23BCCAC54A
-	for <lists+dmaengine@lfdr.de>; Sat,  7 Sep 2019 10:13:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B59DCAC579
+	for <lists+dmaengine@lfdr.de>; Sat,  7 Sep 2019 11:06:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfIGINp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 7 Sep 2019 04:13:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbfIGINp (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sat, 7 Sep 2019 04:13:45 -0400
-Received: from localhost (unknown [223.226.124.26])
+        id S1733030AbfIGJGk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 7 Sep 2019 05:06:40 -0400
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:38477 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728315AbfIGJGk (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 7 Sep 2019 05:06:40 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0C2E208C3;
-        Sat,  7 Sep 2019 08:13:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567844024;
-        bh=mafzhMPZiGWkW1SiBA8276/Vtqm3xN/GmkS2BBdN6Ig=;
-        h=Date:From:To:Cc:Subject:From;
-        b=KB03eYeDvaxU+Me6/wa2AU7K9BUABrwYNk7bY1FRTbLN/Czwrm+ZAM7AUlMmwNHFq
-         905pl8Nw6WiuqP+aybBaD7CkspJVeOiteiMarC7JPRWS5DYDKpb70QOMLoIvV6CrIK
-         sT0ArO8IW/hxqi59ChT1Psofs0mXeMaxlX4Yqc3I=
-Date:   Sat, 7 Sep 2019 13:42:34 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] dmaengine late fixes for 5.3
-Message-ID: <20190907081234.GJ2672@vkoul-mobl>
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 06F003000618E;
+        Sat,  7 Sep 2019 11:06:38 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id D2B7DA0C; Sat,  7 Sep 2019 11:06:37 +0200 (CEST)
+Date:   Sat, 7 Sep 2019 11:06:37 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     Eric Anholt <eric@anholt.net>, Nuno Sa <nuno.sa@analog.com>,
+        Martin Sperl <kernel@martin.sperl.org>,
+        Noralf Tronnes <noralf@tronnes.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Florian Kauer <florian.kauer@koalo.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Vinod Koul <vkoul@kernel.org>, Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH 00/10] Raspberry Pi SPI speedups
+Message-ID: <20190907090637.macdahajrzjepluc@wunner.de>
+References: <cover.1564825752.git.lukas@wunner.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <cover.1564825752.git.lukas@wunner.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Heya Linus,
+Dear Mark,
 
-I would like you to pull for couple of simple dmaengine driver fixes we
-got in last few days.
+On Sat, Aug 03, 2019 at 12:10:00PM +0200, Lukas Wunner wrote:
+> So far the BCM2835 SPI driver cannot cope with TX-only and RX-only
+> transfers (rx_buf or tx_buf is NULL) when using DMA:  It relies on
+> the SPI core to convert them to full-duplex transfers by allocating
+> and DMA-mapping a dummy rx_buf or tx_buf.  This costs performance.
+> 
+> Resolve by pre-allocating reusable DMA descriptors which cyclically
+> clear the RX FIFO (for TX-only transfers) or zero-fill the TX FIFO
+> (for RX-only transfers).  Patch [07/10] provides some numbers for
+> the achieved latency improvement and CPU time reduction with an
+> SPI Ethernet controller.  SPI displays should see a similar speedup.
+> I've also made an effort to reduce peripheral and memory bus accesses.
 
-The following changes since commit d1abaeb3be7b5fa6d7a1fbbd2e14e3310005c4c1:
+Just a gentle ping, this patch set was posted to the list 5 weeks ago,
+has all necessary acks and has been tested successfully by 2 people
+besides myself.
 
-  Linux 5.3-rc5 (2019-08-18 14:31:08 -0700)
+Do you have any thoughts on it?  Any objections?
 
-are available in the Git repository at:
+In case the patches no longer apply cleanly I've prepared this branch
+based on your for-next branch of Aug 23 from which you can merge if
+you prefer that:
 
-  git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.3
+https://github.com/l1k/linux/commits/bcm2835_spi_simplex_v1
 
-for you to fetch changes up to cf24aac38698bfa1d021afd3883df3c4c65143a4:
+However I can also repost if necessary.
 
-  dmaengine: rcar-dmac: Fix DMACHCLR handling if iommu is mapped (2019-09-04 11:35:58 +0530)
+(PS: Apologies for misspelling your name as "Marc" in my e-mail of Aug 24.)
 
-----------------------------------------------------------------
-dmaengine late fixes for 5.3
+Thanks,
 
-Some late fixes for drivers:
- - memory leak in ti crossbar dma driver
- - cleanup of omap dma probe
- - Fix for link list configuration in sprd dma driver
- - Handling fixed for DMACHCLR if iommu is mapped in rcar dma
+Lukas
 
-----------------------------------------------------------------
-Baolin Wang (1):
-      dmaengine: sprd: Fix the DMA link-list configuration
-
-Wenwen Wang (2):
-      dmaengine: ti: dma-crossbar: Fix a memory leak bug
-      dmaengine: ti: omap-dma: Add cleanup in omap_dma_probe()
-
-Yoshihiro Shimoda (1):
-      dmaengine: rcar-dmac: Fix DMACHCLR handling if iommu is mapped
-
- drivers/dma/sh/rcar-dmac.c    | 28 +++++++++++++++++++---------
- drivers/dma/sprd-dma.c        | 10 ++++++++--
- drivers/dma/ti/dma-crossbar.c |  4 +++-
- drivers/dma/ti/omap-dma.c     |  4 +++-
- 4 files changed, 33 insertions(+), 13 deletions(-)
-
-Thanks
--- 
-~Vinod
+> Lukas Wunner (10):
+>   dmaengine: bcm2835: Allow reusable descriptors
+>   dmaengine: bcm2835: Allow cyclic transactions without interrupt
+>   spi: Guarantee cacheline alignment of driver-private data
+>   spi: bcm2835: Drop dma_pending flag
+>   spi: bcm2835: Work around DONE bit erratum
+>   spi: bcm2835: Cache CS register value for ->prepare_message()
+>   spi: bcm2835: Speed up TX-only DMA transfers by clearing RX FIFO
+>   dmaengine: bcm2835: Document struct bcm2835_dmadev
+>   dmaengine: bcm2835: Avoid accessing memory when copying zeroes
+>   spi: bcm2835: Speed up RX-only DMA transfers by zero-filling TX FIFO
+> 
+>  drivers/dma/bcm2835-dma.c |  38 +++-
+>  drivers/spi/spi-bcm2835.c | 408 ++++++++++++++++++++++++++++++++------
+>  drivers/spi/spi.c         |  18 +-
+>  3 files changed, 390 insertions(+), 74 deletions(-)
+> 
+> -- 
+> 2.20.1

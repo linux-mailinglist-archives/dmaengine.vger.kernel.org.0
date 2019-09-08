@@ -2,119 +2,147 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DDF9AACC8F
-	for <lists+dmaengine@lfdr.de>; Sun,  8 Sep 2019 14:12:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85270ACC94
+	for <lists+dmaengine@lfdr.de>; Sun,  8 Sep 2019 14:13:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbfIHMMJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 8 Sep 2019 08:12:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39470 "EHLO mail.kernel.org"
+        id S1729024AbfIHMNm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 8 Sep 2019 08:13:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728818AbfIHMMJ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sun, 8 Sep 2019 08:12:09 -0400
+        id S1729003AbfIHMNm (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 8 Sep 2019 08:13:42 -0400
 Received: from localhost (unknown [122.182.221.179])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4146320863;
-        Sun,  8 Sep 2019 12:12:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7997218AC;
+        Sun,  8 Sep 2019 12:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567944728;
-        bh=UmeDjAzR6/3LB9jjoTbqWWv9lFExcVwjpss84j0OuUM=;
+        s=default; t=1567944821;
+        bh=Hw3q1ag0I8CbUon0M+dF8zfRHhWR8pPixExolxzfN4Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PCditvPD0UQC6dVxIKH3ICuj3ZIA1Dy+Dle+f8rL1WQecFnEwS/c5Tvxeg8OHPjZJ
-         /v8+4LCoekmWFchXedhGGwXcdlR2c74fCa51qg6FqmzK2y/yPDRa4llpTfXpBBVT/T
-         kt8JpNhlZRuyb4HwSLIkwv/ZJO3qm7JX/kDhX+J4=
-Date:   Sun, 8 Sep 2019 17:40:58 +0530
+        b=vnz+wlEPnfhzYmcMiY0M0iFU/ND4by/c+ETjEbVH94MIbRMJxEjlf/RlibWPTTYvv
+         mxp2ma8QPh1DTLUPmDPLnC4Fy/c0LBVqM9zkRrlR+OhDaCx8ihym5PeQ44ogsTPlZ+
+         w6lpJqw70sy1ApNDt8mO+oAmcs100jE9EHazoj9w=
+Date:   Sun, 8 Sep 2019 17:42:33 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
 Cc:     robh+dt@kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
         devicetree@vger.kernel.org
-Subject: Re: [RFC 1/3] dt-bindings: dma: Add documentation for DMA domains
-Message-ID: <20190908121058.GL2672@vkoul-mobl>
+Subject: Re: [RFC 2/3] dmaengine: of_dma: Function to look up the DMA domain
+ of a client
+Message-ID: <20190908121233.GM2672@vkoul-mobl>
 References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
- <20190906141816.24095-2-peter.ujfalusi@ti.com>
- <961d30ea-d707-1120-7ecf-f51c11c41891@ti.com>
+ <20190906141816.24095-3-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <961d30ea-d707-1120-7ecf-f51c11c41891@ti.com>
+In-Reply-To: <20190906141816.24095-3-peter.ujfalusi@ti.com>
 User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 08-09-19, 10:47, Peter Ujfalusi wrote:
+On 06-09-19, 17:18, Peter Ujfalusi wrote:
+> Find the DMA domain controller of the client device by iterating up in
+> device tree looking for the closest 'dma-domain-controller' property.
 > 
+> If the client's node is not provided then check the DT root for the
+> controller.
 > 
-> On 06/09/2019 17.18, Peter Ujfalusi wrote:
-> > On systems where multiple DMA controllers available, none Slave (for example
-> > memcpy operation) users can not be described in DT as there is no device
-> > involved from the DMA controller's point of view, DMA binding is not usable.
-> > However in these systems still a peripheral might need to be serviced by or
-> > it is better to serviced by specific DMA controller.
-> > When a memcpy is used to/from a memory mapped region for example a DMA in the
-> > same domain can perform better.
-> > For generic software modules doing mem 2 mem operations it also matter that
-> > they will get a channel from a controller which is faster in DDR to DDR mode
-> > rather then from the first controller happen to be loaded.
-> > 
-> > This property is inherited, so it may be specified in a device node or in any
-> > of its parent nodes.
-> > 
-> > Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> > ---
-> >  .../devicetree/bindings/dma/dma-domain.yaml   | 59 +++++++++++++++++++
-> >  1 file changed, 59 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/dma/dma-domain.yaml b/Documentation/devicetree/bindings/dma/dma-domain.yaml
-> > new file mode 100644
-> > index 000000000000..c2f182f30081
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/dma-domain.yaml
-> > @@ -0,0 +1,59 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/dma/dma-controller.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: DMA Domain Controller Definition
-> > +
-> > +maintainers:
-> > +  - Vinod Koul <vkoul@kernel.org>
-> > +
-> > +allOf:
-> > +  - $ref: "dma-controller.yaml#"
-> > +
-> > +description:
-> > +  On systems where multiple DMA controllers available, none Slave (for example
-> > +  memcpy operation) users can not be described in DT as there is no device
-> > +  involved from the DMA controller's point of view, DMA binding is not usable.
-> > +  However in these systems still a peripheral might need to be serviced by or
-> > +  it is better to serviced by specific DMA controller.
-> > +  When a memcpy is used to/from a memory mapped region for example a DMA in the
-> > +  same domain can perform better.
-> > +  For generic software modules doing mem 2 mem operations it also matter that
-> > +  they will get a channel from a controller which is faster in DDR to DDR mode
-> > +  rather then from the first controller happen to be loaded.
-> > +
-> > +  This property is inherited, so it may be specified in a device node or in any
-> > +  of its parent nodes.
-> > +
-> > +properties:
-> > +  $dma-domain-controller:
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  drivers/dma/of-dma.c   | 42 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_dma.h |  7 +++++++
+>  2 files changed, 49 insertions(+)
 > 
-> or domain-dma-controller?
+> diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+> index c2d779daa4b5..04b5795cd76b 100644
+> --- a/drivers/dma/of-dma.c
+> +++ b/drivers/dma/of-dma.c
+> @@ -18,6 +18,48 @@
+>  static LIST_HEAD(of_dma_list);
+>  static DEFINE_MUTEX(of_dma_lock);
+>  
+> +/**
+> + * of_find_dma_domain - Get the domain DMA controller
+> + * @np:		device node of the client device
+> + *
+> + * Look up the DMA controller of the domain the client device is part of.
+> + * Finds the dma-domain controller the client device belongs to. It is used when
+> + * requesting non slave channels (like channel for memcpy) to make sure that the
+> + * channel can be request from a DMA controller which can service the given
+> + * domain best.
+> + *
+> + * Returns the device_node pointer of the DMA controller or succes or NULL on
+> + * error.
+> + */
+> +struct device_node *of_find_dma_domain(struct device_node *np)
+> +{
+> +	struct device_node *dma_domain = NULL;
+> +	phandle dma_phandle;
+> +
+> +	/*
+> +	 * If no device_node is provided look at the root level for system
+> +	 * default DMA controller for modules.
+> +	 */
+> +	if (!np)
+> +		np = of_root;
+> +
+> +	if (!np || !of_node_get(np))
+> +		return NULL;
+> +
+> +	do {
+> +		if (of_property_read_u32(np, "dma-domain-controller",
+> +					 &dma_phandle))
+> +			np = of_get_next_parent(np);
 
-I feel dma-domain-controller sounds fine as we are defining domains for
-dmaengine. Another thought which comes here is that why not extend this to
-slave as well and define dma-domain-controller for them as use that for
-filtering, that is what we really need along with slave id in case a
-specific channel is to be used by a peripheral
+lets have braces around if as well please
 
-Thoughts..?
+> +		else {
+> +			dma_domain = of_find_node_by_phandle(dma_phandle);
+> +			of_node_put(np);
+> +		}
+> +	} while (!dma_domain && np);
+> +
+> +	return dma_domain;
+> +}
+> +EXPORT_SYMBOL_GPL(of_find_dma_domain);
+> +
+>  /**
+>   * of_dma_find_controller - Get a DMA controller in DT DMA helpers list
+>   * @dma_spec:	pointer to DMA specifier as found in the device tree
+> diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
+> index fd706cdf255c..6eab0a8d3335 100644
+> --- a/include/linux/of_dma.h
+> +++ b/include/linux/of_dma.h
+> @@ -32,6 +32,8 @@ struct of_dma_filter_info {
+>  };
+>  
+>  #ifdef CONFIG_DMA_OF
+> +extern struct device_node *of_find_dma_domain(struct device_node *np);
+> +
+>  extern int of_dma_controller_register(struct device_node *np,
+>  		struct dma_chan *(*of_dma_xlate)
+>  		(struct of_phandle_args *, struct of_dma *),
+> @@ -52,6 +54,11 @@ extern struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec
+>  		struct of_dma *ofdma);
+>  
+>  #else
+> +static inline struct device_node *of_find_dma_domain(struct device_node *np)
+> +{
+> +	return NULL;
+> +}
+> +
+>  static inline int of_dma_controller_register(struct device_node *np,
+>  		struct dma_chan *(*of_dma_xlate)
+>  		(struct of_phandle_args *, struct of_dma *),
+> -- 
+> Peter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
 -- 
 ~Vinod

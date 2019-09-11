@@ -2,20 +2,19 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD756AFF47
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Sep 2019 16:56:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE31CAFF4F
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Sep 2019 16:56:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbfIKOzk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 11 Sep 2019 10:55:40 -0400
-Received: from mx1.emlix.com ([188.40.240.192]:37226 "EHLO mx1.emlix.com"
+        id S1728416AbfIKOzx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 11 Sep 2019 10:55:53 -0400
+Received: from mx1.emlix.com ([188.40.240.192]:37204 "EHLO mx1.emlix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727912AbfIKOzk (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        id S1728182AbfIKOzk (ORCPT <rfc822;dmaengine@vger.kernel.org>);
         Wed, 11 Sep 2019 10:55:40 -0400
-X-Greylist: delayed 338 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Sep 2019 10:55:39 EDT
 Received: from mailer.emlix.com (unknown [81.20.119.6])
         (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.emlix.com (Postfix) with ESMTPS id CB1555FCF6;
+        by mx1.emlix.com (Postfix) with ESMTPS id D6CEE5FCFF;
         Wed, 11 Sep 2019 16:50:00 +0200 (CEST)
 From:   Philipp Puschmann <philipp.puschmann@emlix.com>
 To:     linux-kernel@vger.kernel.org
@@ -25,9 +24,9 @@ Cc:     vkoul@kernel.org, dan.j.williams@intel.com, shawnguo@kernel.org,
         dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-serial@vger.kernel.org,
         Philipp Puschmann <philipp.puschmann@emlix.com>
-Subject: [PATCH 3/4] serial: imx: adapt rx buffer and dma periods
-Date:   Wed, 11 Sep 2019 16:49:42 +0200
-Message-Id: <20190911144943.21554-4-philipp.puschmann@emlix.com>
+Subject: [PATCH 4/4] dmaengine: imx-sdma: drop redundant variable
+Date:   Wed, 11 Sep 2019 16:49:43 +0200
+Message-Id: <20190911144943.21554-5-philipp.puschmann@emlix.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190911144943.21554-1-philipp.puschmann@emlix.com>
 References: <20190911144943.21554-1-philipp.puschmann@emlix.com>
@@ -38,43 +37,45 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Using only 4 DMA periods for UART RX is very few if we have a high
-frequency of small transfers - like in our case using Bluetooth with many
-small packets via UART - causing many dma transfers but in each only
-filling a fraction of a single buffer. Such a case may lead to the
-situation that DMA RX transfer is triggered but no buffer is available.
-While we have addressed the dma handling already we still want to avoid
-UART RX FIFO overrun. So we decrease the size of the buffers and increase
-their number and the total buffer size.
+In sdma_prep_dma_cyclic buf is redundant. Drop it.
 
 Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
 ---
- drivers/tty/serial/imx.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/dma/imx-sdma.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index 57d6e6ba556e..cdc51569237c 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -1028,8 +1028,6 @@ static void imx_uart_timeout(struct timer_list *t)
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 6a5a84504858..5b6beeee9f0e 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -1544,7 +1544,7 @@ static struct dma_async_tx_descriptor *sdma_prep_dma_cyclic(
+ 	struct sdma_engine *sdma = sdmac->sdma;
+ 	int num_periods = buf_len / period_len;
+ 	int channel = sdmac->channel;
+-	int i = 0, buf = 0;
++	int i;
+ 	struct sdma_desc *desc;
+ 
+ 	dev_dbg(sdma->dev, "%s channel: %d\n", __func__, channel);
+@@ -1565,7 +1565,7 @@ static struct dma_async_tx_descriptor *sdma_prep_dma_cyclic(
+ 		goto err_bd_out;
  	}
- }
  
--#define RX_BUF_SIZE	(PAGE_SIZE)
+-	while (buf < buf_len) {
++	for (i = 0; i < num_periods; i++) {
+ 		struct sdma_buffer_descriptor *bd = &desc->bd[i];
+ 		int param;
+ 
+@@ -1592,9 +1592,6 @@ static struct dma_async_tx_descriptor *sdma_prep_dma_cyclic(
+ 		bd->mode.status = param;
+ 
+ 		dma_addr += period_len;
+-		buf += period_len;
 -
- /*
-  * There are two kinds of RX DMA interrupts(such as in the MX6Q):
-  *   [1] the RX DMA buffer is full.
-@@ -1112,7 +1110,8 @@ static void imx_uart_dma_rx_callback(void *data)
- }
+-		i++;
+ 	}
  
- /* RX DMA buffer periods */
--#define RX_DMA_PERIODS 4
-+#define RX_DMA_PERIODS	16
-+#define RX_BUF_SIZE	(PAGE_SIZE / 4)
- 
- static int imx_uart_start_rx_dma(struct imx_port *sport)
- {
+ 	return vchan_tx_prep(&sdmac->vc, &desc->vd, flags);
 -- 
 2.23.0
 

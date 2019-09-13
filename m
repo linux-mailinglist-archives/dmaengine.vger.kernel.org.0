@@ -2,169 +2,178 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BC92B1B9A
-	for <lists+dmaengine@lfdr.de>; Fri, 13 Sep 2019 12:38:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 255E9B1CB2
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Sep 2019 13:55:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728382AbfIMKiD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 13 Sep 2019 06:38:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38240 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726266AbfIMKiD (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 13 Sep 2019 06:38:03 -0400
-Received: from localhost (unknown [117.99.85.83])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1FB2208C0;
-        Fri, 13 Sep 2019 10:38:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568371081;
-        bh=oU3a12NfiJIjFSxgc9/S51/UO/lBe7aSHfdp9MwruCc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PrfDIWI0vMkjyCoUzAs7y/Epi9QYxrZm5xewcu7xyMYQ6L8vW4yyTbgfC8vj8P46w
-         ZEdi3urijZJlSaO/OqSIuZrgnjlEajtQTqgvtz2YhJxwMiCXD6Tl6cVRQBhO6AAWkN
-         SFADjoVPuqQopGJ5dtvjMZe7yNqyN3aHNdayYbd8=
-Date:   Fri, 13 Sep 2019 16:06:54 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     robh+dt@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC 1/3] dt-bindings: dma: Add documentation for DMA domains
-Message-ID: <20190913103654.GE4392@vkoul-mobl>
-References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
- <20190906141816.24095-2-peter.ujfalusi@ti.com>
- <961d30ea-d707-1120-7ecf-f51c11c41891@ti.com>
- <20190908121058.GL2672@vkoul-mobl>
- <a452cd06-79ca-424d-b259-c8d60fc59772@ti.com>
- <20190912170312.GD4392@vkoul-mobl>
- <1992ccdd-78b3-f248-3d4d-76b5e6d4cb37@ti.com>
+        id S1729499AbfIMLzT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 13 Sep 2019 07:55:19 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:39544 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729497AbfIMLzT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 13 Sep 2019 07:55:19 -0400
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8DBqsH0009487;
+        Fri, 13 Sep 2019 07:54:12 -0400
+Received: from nam01-by2-obe.outbound.protection.outlook.com (mail-by2nam01lp2059.outbound.protection.outlook.com [104.47.34.59])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2uytd1hhjj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Sep 2019 07:54:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=doVIlqVN3xuSOsU5cvqD7lv/Zh0YEGhXql4LA/ZlbzClU0UKMIcIrr/jrk/vg/CylAKqwSaJEmzrlsPOpVoWXQup1e3yRtcdLK9+FdXhUH9oe0gc+qJ2KqAngaR4tCAfvKhsYORASHTDmWecAJiu79L82L9Bh8KK1X4hwWkCA6seBF9w2yyad/zW77KTwiyk1z3qKi3FMa5W70FaOvKPcH5wIem33MK/bevW1P+NobA5s6F+pIXbmJD62Z6tXgLkUooIENFVGLKjLVrbOC6syfYsHaicG3lbYaysgW2YiO/6TrKrBQ77Tfx9pL5EriHhgh+iY3PVX57JAK8yWDxN/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SxkSVdHGqrHyDid8NKBggxJxI+u5Fv8wsgt5rZUXG+8=;
+ b=Rwq19Y4cQB8nwdyzq75Wb/5WrSgAFZ+v/2+5gOZkJaGJl4AT+iYuvwdZAOog6sN5feqZTmN2xhMcA9QjZdBFskOG3d2kyMydUJVksHn8fz7KAhStai5bzSIVpdtSKPtkHmywiHhCwuePqRH6cB4DZD52UifIgEohM0n71aERn3glP3BwS8bFDlxMteO3bFBLTP6EePwaHT8+guNKxBuwHroALvq/XcgNYirAwUP3S9EwB3h239rCJsrkEWRRODiA/nPYlEcPlCgqR5/g0BOCtYyB/QDEOIlek1P2d+0kjCxCUig3Q20atPdMJhHK5olpmkphfqgMmmCeQ2iAl8Ahww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.57) smtp.rcpttodomain=kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SxkSVdHGqrHyDid8NKBggxJxI+u5Fv8wsgt5rZUXG+8=;
+ b=ewiEfGzlLRNdeOuYwIyzfs5vQ8NiQsJYmuyDlIhEbYtGLsH/LLsLGycM6fopMv3wtxDkLEaFdbxnixJEgM2UAlAco7fyXIoaxeXbXPrccYexJ/cfEduW9xEe0G8JfXWqdKtckDu1V1hRN/N4jk0gZKXuWda8BND+cpAtd85GlVA=
+Received: from BN6PR03CA0066.namprd03.prod.outlook.com (2603:10b6:404:4c::28)
+ by BYAPR03MB3927.namprd03.prod.outlook.com (2603:10b6:a03:62::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2263.13; Fri, 13 Sep
+ 2019 11:54:10 +0000
+Received: from SN1NAM02FT010.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::206) by BN6PR03CA0066.outlook.office365.com
+ (2603:10b6:404:4c::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2263.13 via Frontend
+ Transport; Fri, 13 Sep 2019 11:54:09 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ SN1NAM02FT010.mail.protection.outlook.com (10.152.72.86) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2263.17
+ via Frontend Transport; Fri, 13 Sep 2019 11:54:09 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x8DBs27g005229
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Fri, 13 Sep 2019 04:54:02 -0700
+Received: from saturn.ad.analog.com (10.48.65.123) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Fri, 13 Sep 2019 07:54:07 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <vkoul@kernel.org>, <lars@metafoo.de>,
+        Rodrigo Alencar <alencar.fmce@imbel.gov.br>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] dmaengine: axi-dmac: simple device_config operation implemented
+Date:   Fri, 13 Sep 2019 17:54:04 +0300
+Message-ID: <20190913145404.28715-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1992ccdd-78b3-f248-3d4d-76b5e6d4cb37@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(376002)(346002)(39860400002)(396003)(199004)(189003)(336012)(6666004)(4326008)(51416003)(7696005)(186003)(107886003)(36756003)(106002)(426003)(8676002)(316002)(8936002)(54906003)(1076003)(110136005)(48376002)(50466002)(50226002)(47776003)(356004)(86362001)(70586007)(7636002)(5660300002)(126002)(2616005)(476003)(246002)(70206006)(486006)(305945005)(44832011)(2870700001)(26005)(2906002)(14444005)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3927;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 35b99c7e-d0e1-4400-15b0-08d73841166a
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328);SRVR:BYAPR03MB3927;
+X-MS-TrafficTypeDiagnostic: BYAPR03MB3927:
+X-Microsoft-Antispam-PRVS: <BYAPR03MB3927BB5C48F6F3C9CED637F0F9B30@BYAPR03MB3927.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 0159AC2B97
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: ITxexAT51/T6EUr5E2l+IvbNv+5TcbC3ZVtnUNjUFaSEG9dOrk2feaZ4XnW8NHDZrh3VWFBoexed8HwXBfk5UT3DOFDULnaLtFrcJAHHr30Za8Jyrt+OvjqFHOPoVtjjOcfsj0F2CwtGOtZuND6kWlNYrn4hP8MCG60fRHe3Pw4idNadvl8g0fQg5IieZMfHZQkIK5xLDIieUieGfz0ihaKFgyoeRzUuPW0HzBylI9seVPsWjhWMo+g182Sc0lIv5jIpld2cN8n8acstJa7JQtCiD6SGTVV9p2CtjexEGFAx5amql4zGAOyqMAjPdm769ZT5Nfoz1fEfALsxHfQwUt/ATyC0+5JJB1qmzH/9LSmatrkgvd+AHR74VB2BaHoszahjZEIhZMQ5PWhD7w3vRoWIc23s1szJnP902QZ1Rhc=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2019 11:54:09.5164
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 35b99c7e-d0e1-4400-15b0-08d73841166a
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3927
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-13_06:2019-09-11,2019-09-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ mlxscore=0 phishscore=0 impostorscore=0 suspectscore=9 mlxlogscore=999
+ clxscore=1011 lowpriorityscore=0 priorityscore=1501 bulkscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1909130116
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 13-09-19, 10:21, Peter Ujfalusi wrote:
-> 
-> 
-> On 12/09/2019 20.03, Vinod Koul wrote:
-> > On 09-09-19, 09:30, Peter Ujfalusi wrote:
-> > 
-> >>>> or domain-dma-controller?
-> >>>
-> >>> I feel dma-domain-controller sounds fine as we are defining domains for
-> >>> dmaengine. Another thought which comes here is that why not extend this to
-> >>> slave as well and define dma-domain-controller for them as use that for
-> >>> filtering, that is what we really need along with slave id in case a
-> >>> specific channel is to be used by a peripheral
-> >>>
-> >>> Thoughts..?
-> >>
-> >> I have thought about this, we should be able to drop the phandle to the
-> >> dma controller from the slave binding just fine.
-> >>
-> >> However we have the dma routers for the slave channels and there is no
-> >> clear way to handle them.
-> >> They are not needed for non slave channels as there is no trigger to
-> >> route. In DRA7 for example we have an event router for EDMA and another
-> >> one for sDMA. If a slave device is to be serviced by EDMA, the EDMA
-> >> event router needs to be specified, for sDMA clients should use the sDMA
-> >> event router.
-> > 
-> > So you have dma, xbar and client? And you need to use a specfic xbar,
-> > did i get that right?
-> 
-> At the end yes.
+From: Rodrigo Alencar <alencar.fmce@imbel.gov.br>
 
-:)
+dmaengine_slave_config is called by dmaengine_pcm_hw_params when using
+axi-i2s with axi-dmac. If device_config is NULL, -ENOSYS  is returned,
+which breaks the snd_pcm_hw_params function.
+This is a fix for the error:
 
-> EDMA have dedicated crossbar
-> sDMA have dedicated crossbar
+$ aplay -D plughw:ADAU1761 /usr/share/sounds/alsa/Front_Center.wav
+Playing WAVE '/usr/share/sounds/alsa/Front_Center.wav' : Signed 16 bit
+Little Endian, Rate 48000 Hz, Mono
+axi-i2s 43c20000.axi-i2s: ASoC: 43c20000.axi-i2s hw params failed: -38
+aplay: set_params:1403: Unable to install hw params:
+ACCESS:  RW_INTERLEAVED
+FORMAT:  S16_LE
+SUBFORMAT:  STD
+SAMPLE_BITS: 16
+FRAME_BITS: 16
+CHANNELS: 1
+RATE: 48000
+PERIOD_TIME: 125000
+PERIOD_SIZE: 6000
+PERIOD_BYTES: 12000
+PERIODS: 4
+BUFFER_TIME: 500000
+BUFFER_SIZE: 24000
+BUFFER_BYTES: 48000
+TICK_TIME: 0
 
-So the domain mapping should point to crossbar.
+Signed-off-by: Rodrigo Alencar <alencar.fmce@imbel.gov.br>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
 
-> Slave devices must use the crossbar to request channel from the DMA
-> controllers. Non slave request are directed to the controllers directly
-> (no DT binding).
+Note: Fixes tag not added intentionally.
 
-The clients for these are different right, if so slave clients will
-point to domain xbar and non slave will point to domain controller (to
-make everyone use domains). Non domain get any channel ... (fallback as
-well)
+ drivers/dma/dma-axi-dmac.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-
-> At minimum we would need a new property for DMA routers.
-> dma-domain-router perhaps which is pointing to the xbar.
-
-Precisely!
-
-> A slave channel request would first look for dma-domain-router, if it is
-> there, the request goes via that.
-> If not then look for dma-domain-controller and use it for the request.
-> The DMA binding can drop the phandle to the xbar/dma.
-> Request for not slave channel would only look for dma-domain-controller.
->
-> 
-> But...
-> 
-> - If we have one dedicated memcpy DMA and one for slave usage.
-> In top we declare dma-domain-controller = <&m2m_dma>;
-> 
-> Then you have  a slave client somewhere
-> client1: peripheral@42 {
-> 	dma-domain-controller = <&slave_dma>;
-> 	dmas = <6>, <7>;
-> 	dma-names = "tx", "rx";
-> };
-> 
-> This is fine I guess. But what would we do if the driver for client1
-> needs additional memcpy channel? By the definition of the binding the
-> non slave channel should be taken from the closest dma-domain-controller
-> which is not what we want. We want the channel from m2m_dma.
-
-I would not envision same controller needs both memcpy or slave
-channels. If so, that should be represented as something like dma-names
-and represent two sets of dmas one for domain1 and another for domain2.
-
-I would generalize it and not call it memcpy/slave but just domains and
-have a controller use multiple domains (if we have a super controller
-which can do that :D)
-
-client1: peripheral@42 {
-        dma-domain-names = "memcpy", "slave";
-        dma-domains = <&mem_dma>, <&slave_dma>;
-        ...
-};
-
-
-> 
-> And no, we can not start looking for the dma-domain-controller starting
-> from the root as in most cases the dma-domain-controller closer to the
-> client is what we really want and not the globally best controller.
-> 
-> - How to handle the transition?
->
-> If neither dma-domain-controller/router is found, assume that the first
-> argument in the binding is a phandle to the dma/router?
-> We need to carry the support for what we have today for a long time. The
-> kernel must boot with old DT blob.
-> 
-> - Will it make things cleaner? Atm it is pretty easy to see which
-> controller/router is used for which device.
-> 
-> - Also to note that the EDMA and sDMA bindings are different, so we can
-> not just swap dma-domain-controller/router underneath, we also need to
-> modify the client's dmas line as well.
-> 
-> - Péter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+index a0ee404b736e..ab2677343202 100644
+--- a/drivers/dma/dma-axi-dmac.c
++++ b/drivers/dma/dma-axi-dmac.c
+@@ -564,6 +564,21 @@ static struct dma_async_tx_descriptor *axi_dmac_prep_slave_sg(
+ 	return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
+ }
+ 
++static int axi_dmac_device_config(struct dma_chan *c,
++			struct dma_slave_config *slave_config)
++{
++	struct axi_dmac_chan *chan = to_axi_dmac_chan(c);
++	struct axi_dmac *dmac = chan_to_axi_dmac(chan);
++
++	/* no configuration required, a sanity check is done instead */
++	if (slave_config->direction != chan->direction) {
++		dev_err(dmac->dma_dev.dev, "Direction not supported by this DMA Channel");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static struct dma_async_tx_descriptor *axi_dmac_prep_dma_cyclic(
+ 	struct dma_chan *c, dma_addr_t buf_addr, size_t buf_len,
+ 	size_t period_len, enum dma_transfer_direction direction,
+@@ -878,6 +893,7 @@ static int axi_dmac_probe(struct platform_device *pdev)
+ 	dma_dev->device_tx_status = dma_cookie_status;
+ 	dma_dev->device_issue_pending = axi_dmac_issue_pending;
+ 	dma_dev->device_prep_slave_sg = axi_dmac_prep_slave_sg;
++	dma_dev->device_config = axi_dmac_device_config;
+ 	dma_dev->device_prep_dma_cyclic = axi_dmac_prep_dma_cyclic;
+ 	dma_dev->device_prep_interleaved_dma = axi_dmac_prep_interleaved;
+ 	dma_dev->device_terminate_all = axi_dmac_terminate_all;
 -- 
-~Vinod
+2.20.1
+

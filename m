@@ -2,306 +2,164 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 33466B2EFC
-	for <lists+dmaengine@lfdr.de>; Sun, 15 Sep 2019 09:27:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AC4CB2EFF
+	for <lists+dmaengine@lfdr.de>; Sun, 15 Sep 2019 09:29:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727540AbfIOH1W (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 15 Sep 2019 03:27:22 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45136 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfIOH1V (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 15 Sep 2019 03:27:21 -0400
-Received: by mail-pl1-f196.google.com with SMTP id x3so15111303plr.12;
-        Sun, 15 Sep 2019 00:27:19 -0700 (PDT)
+        id S1726340AbfIOH3V (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 15 Sep 2019 03:29:21 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40858 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfIOH3V (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 15 Sep 2019 03:29:21 -0400
+Received: by mail-pg1-f195.google.com with SMTP id w10so17535101pgj.7;
+        Sun, 15 Sep 2019 00:29:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GTvFcpOUyieP9opBGHsT+B42cxzpcATMaoHH0I+0J1I=;
-        b=dtYKXDrGv9xWSDJp5V4bb6UhJfXvdsElJS9v+PO1KZtmJZ+kYN/G9D3z6k7JM5CHjl
-         97txUbvRcF+RpggFFczLZtTVvIJYile1i3reqybCb/H3+gbeLHONkPJS5Kl/hRRTSemP
-         EX1Lfy+5tAcaww7+Jb4+QM4lWaq6m6ElB/Umpe07KOq+sHYnNAwsgetIDMkW45Iybgcu
-         ULay1kOBUmL/Ncvogpmx2RwNnx6xz6hbBxhmniOsGcKJOakPjT2YlxE6vYMjpjcr/4+1
-         rZscGGbTSeHWS/kccuXE5kcR/7+tA/x+jl3APtzJL+6qFag8BemK+9WG0Rni+V/Qlaco
-         18mA==
+        bh=feHoHeaJlwzigA+EFklJwcCVQwO/8riLigRDqPWgDLg=;
+        b=NJeF3w3mqwFtxyYc6Vx7gx8+PgVwkfnoD0KpBOj8vR0ObgGYjjzTciTaOL5l7Z/10P
+         TrdIuOUbmw3MglvyVpGIO6SXmJTeucjeepVZhW20jidr95rMHI6uOWyO5hzGFSvPnb9G
+         2lP/cQlsUl60iujTSh10e5H6/druZQiWwgXbESiaJRerwxK+ak/KxoYjEk5dUsuYNNqf
+         J8Z1KG9aKF1BbyTES6USDeMJzbqwmdJYfW1VWEvtPPIMc3md8eL6f4dk6OhNYKJ/hYBu
+         AKFX2KpDm/ro/j4WFMxc4ZXkR1KuQFSHH5rEGkDHZmZLR18B2t30+0e722ksMNOR9qKT
+         jwwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=GTvFcpOUyieP9opBGHsT+B42cxzpcATMaoHH0I+0J1I=;
-        b=SCgKNE0/0nnyhjqHA8KIcorDjRlJJdKdkFZJuvXA4Uu688000nc2MFiVS35yjNimj0
-         trD9T5OGHYTDVf/YoCMDodtaob05Lq4oVenB5zbVzd89ZI0Byb8V6uY+PgWmwDNalzaR
-         WpqLzrayAQw/VAez0uxiMtkVDgbuP9o4xkK3hQs3goR28wSMGNzTlWfeneVv1lwD7hPM
-         nfB6CXwQviDEjWkyzjk/dTdkKqXeKAFcmFFlSIHiwURJpElm4/gbvjCarGJnG9oEo3B9
-         mFYKaUMdbfjMGQ9S6SSiwVZKq1LagB/8zmp8t4scXk1uJohJkPvs8mHftCN9JHX2Ib6Q
-         0t1w==
-X-Gm-Message-State: APjAAAVODRPA11dWSxNh2Aa7uHDzjDYjNOVNslzmA5xQfvb5VZ3Mq9l5
-        uNVbtaUvrppWuOP/YThq0tE=
-X-Google-Smtp-Source: APXvYqwfyHgYY759f5pUy7ZvnMQo/+BDd2d/wdpUuKRx33ViG0X3MEVEEhSs02ToRewoskfhy8mbOA==
-X-Received: by 2002:a17:902:820f:: with SMTP id x15mr37974997pln.130.1568532439090;
-        Sun, 15 Sep 2019 00:27:19 -0700 (PDT)
+        bh=feHoHeaJlwzigA+EFklJwcCVQwO/8riLigRDqPWgDLg=;
+        b=bL4l/jGqy+1PqKH0VvIF7MwyHc1ThBGGwCGTfTUBcsNUW8XCFibSRSsg76NKzU64fy
+         z2hm4MrdD3tJOAXtMUhg2jVMdIW28285MMMR1NwuNyrJSo7n2XCywrz1oFy3bsTucxh/
+         eJJXFQdpHlNvyyPH74jLnRZFuKz2C63V6AB9wbRjz7CiWwXV8E3Oe9q6wr0AP+IHoBdx
+         ZuDMDhTbtyYB1A6uzuwFK25j1BQ/p5pOY/15Lo1XvZQ3Ltu3ZmjEdMVvc4bpuoxLeWRr
+         d4ifPFsgkN5RqCyTKBiynwc90dFa4f4acQFJqI/1DyITn7hHa83SIWFIPoe2M7zlVv1c
+         bPlA==
+X-Gm-Message-State: APjAAAUbuNF/6pOKFes9CWlaqzXpQE7l4cGoQ+3ld8dfjy3STDBZnRny
+        ikdi5K2i4fBmxjJ3vQ+GXyc4BXxq1GWbsg==
+X-Google-Smtp-Source: APXvYqwF3YgMbjKR1jnQH7AInYrRQmHT8uS+agDXvbe9lIlt1XJpsKDqBX2oKXpQxmSoBluhKUmwZw==
+X-Received: by 2002:a17:90a:3086:: with SMTP id h6mr14562263pjb.1.1568532560912;
+        Sun, 15 Sep 2019 00:29:20 -0700 (PDT)
 Received: from satendra-MM061.ib-wrb304n.setup.in ([103.82.150.111])
-        by smtp.gmail.com with ESMTPSA id i19sm7254486pjx.1.2019.09.15.00.27.11
+        by smtp.gmail.com with ESMTPSA id i1sm43107195pfg.2.2019.09.15.00.29.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Sep 2019 00:27:18 -0700 (PDT)
+        Sun, 15 Sep 2019 00:29:20 -0700 (PDT)
 From:   Satendra Singh Thakur <sst2005@gmail.com>
-To:     dan.j.williams@intel.com, vkoul@kernel.org, jun.nie@linaro.org,
-        shawnguo@kernel.org, agross@kernel.org, sean.wang@mediatek.com,
-        matthias.bgg@gmail.com, maxime.ripard@bootlin.com, wens@csie.org,
-        lars@metafoo.de, afaerber@suse.de, manivannan.sadhasivam@linaro.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, satendrasingh.thakur@hcl.com,
-        Satendra Singh Thakur <sst2005@gmail.com>
-Subject: [PATCH 1/9] probe/dma : added helper macros to remove redundant/duplicate code from probe functions of the dma controller drivers
-Date:   Sun, 15 Sep 2019 12:56:44 +0530
-Message-Id: <20190915072644.23329-1-sst2005@gmail.com>
+Cc:     satendrasingh.thakur@hcl.com,
+        Satendra Singh Thakur <sst2005@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/9] probe/dma/jz4740: removed redundant code from jz4740 dma controller's     probe function
+Date:   Sun, 15 Sep 2019 12:59:03 +0530
+Message-Id: <20190915072903.23522-1-sst2005@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190915070003.21260-1-sst2005@gmail.com>
-References: <20190915070003.21260-1-sst2005@gmail.com>
+In-Reply-To: <20190915072644.23329-1-sst2005@gmail.com>
+References: <20190915072644.23329-1-sst2005@gmail.com>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-1. For most of the drivers probe include following steps
+1. In order to remove duplicate code, following functions:
+devm_kzalloc
+platform_get_resource
+devm_ioremap_resource
+clk_get
+clk_prepare_enable
+platform_get_irq
+are replaced with a macro devm_platform_probe_helper_clk.
 
-a) memory allocation for driver's private structure
-b) getting io resources
-c) io remapping resources
-d) getting clock
-e) getting irq number
-f) registering irq
-g) preparing and enabling clock
-i) setting platform's drv data
+2. Added irq field in the struct jz4740_dma_dev.
+Removed platform_get_irq from remove method.
 
-2. We have defined a set of macros to combine above mentioned
-steps.
-This will remove redundant/duplicate code in drivers' probe
-functions.
-
-3. This macro combines all the steps except f), g) and i).
-
-devm_platform_probe_helper(pdev, priv, clk_name);
-
-4. This macro combines all the steps except f) and i).
-
-devm_platform_probe_helper_clk(pdev, priv, clk_name);
-
-5. This macro combines all the steps except g) and i).
-
-devm_platform_probe_helper_irq(pdev, priv, clk_name,
-	irq_hndlr, irq_flags, irq_name, irq_devid);
-
-6. This is because, some drivers perform step f) and g)
-after hw init or subsys registration at very different points
-in the probe function. The step i) is called at the end of
-probe function by several drivers; while other drivers call it at
-different points in probe function.
-
-7. This macro combines above mentioned steps a) to g).
-
-devm_platform_probe_helper_all(pdev, priv, clk_name,
-	irq_hndlr, irq_flags, irq_name, irq_devid);
-
-8. This macro combines all of the above mentioned steps a) to i).
-
-devm_platform_probe_helper_all_data(pdev, priv, clk_name,
-	irq_hndlr, irq_flags, irq_name, irq_devid);
-9. Above macros will be useful for wide variety of probe
-functions of different drivers.
+3. This patch depends on the file include/linux/probe-helper.h
+which is pushed in previous patch [01/09].
 
 Signed-off-by: Satendra Singh Thakur <satendrasingh.thakur@hcl.com>
 Signed-off-by: Satendra Singh Thakur <sst2005@gmail.com>
 ---
- include/linux/probe-helper.h | 179 +++++++++++++++++++++++++++++++++++
- 1 file changed, 179 insertions(+)
- create mode 100644 include/linux/probe-helper.h
+ drivers/dma/dma-jz4740.c | 33 +++++++++++++--------------------
+ 1 file changed, 13 insertions(+), 20 deletions(-)
 
-diff --git a/include/linux/probe-helper.h b/include/linux/probe-helper.h
-new file mode 100644
-index 000000000000..7baa468509e3
---- /dev/null
-+++ b/include/linux/probe-helper.h
-@@ -0,0 +1,179 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ *
-+ * probe_helper.h - helper functions for platform drivers' probe
-+ * function
-+ * Author: Satendra Singh Thakur <satendrasingh.thakur@hcl.com> Sep 2019
-+ *				  <sst2005@gmail.com>
-+ */
-+#ifndef _PROBE_HELPER_H_
-+#define _PROBE_HELPER_H_
-+
-+#include <linux/platform_device.h>
-+#include <linux/clk.h>
-+
-+/* devm_platform_probe_helper - Macro for helping probe method
-+ * of platform drivers
-+ * This macro combines the functions:
-+ * devm_kzalloc, platform_get_resource, devm_ioremap_resource,
-+ * devm_clk_get, platform_get_irq
-+ * @pdev platform device
-+ * @priv driver's private object for memory allocation
-+ * @clk_name clock name as in DT
-+ */
-+#define devm_platform_probe_helper(pdev, priv, clk_name)	\
-+({	\
-+	__label__ __out;	\
-+	int __ret = 0;	\
-+	priv = devm_kzalloc(&(pdev)->dev, sizeof(*priv), GFP_KERNEL);	\
-+	if (!(priv)) {	\
-+		dev_err(&(pdev)->dev, "devm_kzalloc failed\n");	\
-+		__ret = -ENOMEM;	\
-+		goto __out;	\
-+	}	\
-+	(priv)->base = devm_platform_ioremap_resource(pdev, 0);	\
-+	if (IS_ERR((priv)->base)) {	\
-+		dev_err(&(pdev)->dev,	\
-+			"devm_platform_ioremap_resource failed\n");	\
-+		__ret = PTR_ERR((priv)->base);	\
-+		goto __out;	\
-+	}	\
-+	(priv)->clk = devm_clk_get(&(pdev)->dev, clk_name);	\
-+	if (IS_ERR((priv)->clk)) {	\
-+		dev_err(&(pdev)->dev, "devm_clk_get failed\n");	\
-+		__ret = PTR_ERR((priv)->clk);	\
-+		goto __out;	\
-+	}	\
-+	(priv)->irq = platform_get_irq(pdev, 0);	\
-+	if ((priv)->irq < 0) {	\
-+		dev_err(&(pdev)->dev, "platform_get_irq failed\n");	\
-+		__ret = (priv)->irq;	\
-+		goto __out;	\
-+	}	\
-+__out:	\
-+	__ret;	\
-+})
-+
-+/* devm_platform_probe_helper_irq - Macro for helping probe method
-+ * of platform drivers
-+ * This macro combines the functions:
-+ * devm_kzalloc, platform_get_resource, devm_ioremap_resource,
-+ * devm_clk_get, platform_get_irq, devm_request_irq
-+ * @pdev platform device
-+ * @priv driver's private object for memory allocation
-+ * @clk_name clock name as in DT
-+ * @irq_hndlr interrupt handler function (isr)
-+ * @irq_flags flags for interrupt registration
-+ * @irq_name name of the interrupt handler
-+ * @irq_devid device identifier for irq
-+ */
-+#define devm_platform_probe_helper_irq(pdev, priv, clk_name,	\
-+		irq_hndlr, irq_flags, irq_name, irq_devid)	\
-+({	\
-+	__label__ __out;	\
-+	int __ret = 0;	\
-+	__ret = devm_platform_probe_helper(pdev, priv, clk_name);	\
-+	if (__ret < 0)	\
-+		goto __out;	\
-+	__ret = devm_request_irq(&(pdev)->dev, (priv)->irq, irq_hndlr,	\
-+			irq_flags, irq_name, irq_devid);	\
-+	if (__ret < 0) {	\
-+		dev_err(&(pdev)->dev,	\
-+			"devm_request_irq failed for irq num %d\n",	\
-+			(priv)->irq);	\
-+		goto __out;	\
-+	}	\
-+__out:	\
-+	__ret;	\
-+})
-+
-+/* devm_platform_probe_helper_clk Macro - for helping probe method
-+ * of platform drivers
-+ * This macro combines the functions:
-+ * devm_kzalloc, platform_get_resource, devm_ioremap_resource,
-+ * devm_clk_get, platform_get_irq, clk_prepare_enable
-+ * @pdev platform device
-+ * @priv driver's private object for memory allocation
-+ * @clk_name clock name as in DT
-+ */
-+#define devm_platform_probe_helper_clk(pdev, priv, clk_name)	\
-+({	\
-+	__label__ __out;	\
-+	int __ret = 0;	\
-+	__ret = devm_platform_probe_helper(pdev, priv, clk_name);	\
-+	if (__ret < 0)	\
-+		goto __out;	\
-+	__ret = clk_prepare_enable((priv)->clk);	\
-+	if (__ret < 0) {	\
-+		dev_err(&(pdev)->dev, "clk_prepare_enable failed\n");	\
-+		goto __out;	\
-+	}	\
-+__out:	\
-+	__ret;	\
-+})
-+
-+/* devm_platform_probe_helper_all - Macro for helping probe method
-+ * of platform drivers
-+ * This macro combines the functions:
-+ * devm_kzalloc, platform_get_resource, devm_ioremap_resource,
-+ * devm_clk_get, platform_get_irq, devm_request_irq,
-+ * clk_prepare_enable
-+ * @pdev platform device
-+ * @priv driver's private object for memory allocation
-+ * @clk_name clock name as in DT
-+ * @irq_hndlr interrupt handler function (isr)
-+ * @irq_flags flags for interrupt registration
-+ * @irq_name name of the interrupt handler
-+ * @irq_devid device identifier for irq
-+ */
-+#define devm_platform_probe_helper_all(pdev, priv, clk_name,	\
-+	irq_hndlr, irq_flags, irq_name, irq_devid)	\
-+({	\
-+	__label__ __out;	\
-+	int __ret = 0;	\
-+	__ret = devm_platform_probe_helper_clk(pdev, priv, clk_name);	\
-+	if (__ret < 0)	\
-+		goto __out;	\
-+	__ret = devm_request_irq(&(pdev)->dev, (priv)->irq,	\
-+		irq_hndlr, irq_flags, irq_name, irq_devid);	\
-+	if (__ret < 0) {	\
-+		dev_err(&(pdev)->dev,	\
-+			"devm_request_irq failed for irq num %d\n",	\
-+			(priv)->irq);	\
-+		if ((priv)->clk)	\
-+			clk_disable_unprepare((priv)->clk);	\
-+		goto __out;	\
-+	}	\
-+__out:	\
-+	__ret;	\
-+})
-+
-+/* devm_platform_probe_helper_all_data - Macro for helping probe method
-+ * of platform drivers
-+ * This macro combines the functions:
-+ * devm_kzalloc, platform_get_resource, devm_ioremap_resource,
-+ * devm_clk_get, platform_get_irq, devm_request_irq,
-+ * clk_prepare_enable, platform_set_drvdata
-+ * @pdev platform device
-+ * @priv driver's private object for memory allocation
-+ * @clk_name clock name as in DT
-+ * @irq_hndlr interrupt handler function (isr)
-+ * @irq_flags flags for interrupt registration
-+ * @irq_name name of the interrupt handler
-+ * @irq_devid device identifier for irq
-+ */
-+#define devm_platform_probe_helper_all_data(pdev, priv, clk_name,	\
-+	irq_hndlr, irq_flags, irq_name, irq_devid)	\
-+({	\
-+	__label__ __out;	\
-+	int __ret = 0;	\
-+	__ret = devm_platform_probe_helper_all(pdev, priv, clk_name,	\
-+		irq_hndlr, irq_flags, irq_name, irq_devid);	\
-+	if (__ret < 0)	\
-+		goto __out;	\
-+	platform_set_drvdata(pdev, priv);	\
-+__out:	\
-+	__ret;	\
-+})
-+
-+#endif /*_PROBE_HELPER_H_*/
+diff --git a/drivers/dma/dma-jz4740.c b/drivers/dma/dma-jz4740.c
+index 39c676c47082..b012896d02bb 100644
+--- a/drivers/dma/dma-jz4740.c
++++ b/drivers/dma/dma-jz4740.c
+@@ -15,6 +15,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/irq.h>
+ #include <linux/clk.h>
++#include <linux/probe-helper.h>
+ 
+ #include "virt-dma.h"
+ 
+@@ -121,6 +122,7 @@ struct jz4740_dma_dev {
+ 	struct dma_device ddev;
+ 	void __iomem *base;
+ 	struct clk *clk;
++	int irq;
+ 
+ 	struct jz4740_dmaengine_chan chan[JZ_DMA_NR_CHANS];
+ };
+@@ -519,27 +521,19 @@ static int jz4740_dma_probe(struct platform_device *pdev)
+ 	struct jz4740_dma_dev *dmadev;
+ 	struct dma_device *dd;
+ 	unsigned int i;
+-	struct resource *res;
+ 	int ret;
+-	int irq;
+ 
+-	dmadev = devm_kzalloc(&pdev->dev, sizeof(*dmadev), GFP_KERNEL);
+-	if (!dmadev)
+-		return -EINVAL;
++	/*
++	 * This macro internally combines following functions:
++	 * devm_kzalloc, platform_get_resource, devm_ioremap_resource,
++	 * devm_clk_get, platform_get_irq, clk_prepare_enable
++	 */
++	ret = devm_platform_probe_helper_clk(pdev, dmadev, "dma");
++	if (ret < 0)
++		return ret;
+ 
+ 	dd = &dmadev->ddev;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	dmadev->base = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(dmadev->base))
+-		return PTR_ERR(dmadev->base);
+-
+-	dmadev->clk = clk_get(&pdev->dev, "dma");
+-	if (IS_ERR(dmadev->clk))
+-		return PTR_ERR(dmadev->clk);
+-
+-	clk_prepare_enable(dmadev->clk);
+-
+ 	dma_cap_set(DMA_SLAVE, dd->cap_mask);
+ 	dma_cap_set(DMA_CYCLIC, dd->cap_mask);
+ 	dd->device_free_chan_resources = jz4740_dma_free_chan_resources;
+@@ -567,8 +561,8 @@ static int jz4740_dma_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_clk;
+ 
+-	irq = platform_get_irq(pdev, 0);
+-	ret = request_irq(irq, jz4740_dma_irq, 0, dev_name(&pdev->dev), dmadev);
++	ret = request_irq(dmadev->irq, jz4740_dma_irq, 0,
++			dev_name(&pdev->dev), dmadev);
+ 	if (ret)
+ 		goto err_unregister;
+ 
+@@ -598,9 +592,8 @@ static void jz4740_cleanup_vchan(struct dma_device *dmadev)
+ static int jz4740_dma_remove(struct platform_device *pdev)
+ {
+ 	struct jz4740_dma_dev *dmadev = platform_get_drvdata(pdev);
+-	int irq = platform_get_irq(pdev, 0);
+ 
+-	free_irq(irq, dmadev);
++	free_irq(dmadev->irq, dmadev);
+ 
+ 	jz4740_cleanup_vchan(&dmadev->ddev);
+ 	dma_async_device_unregister(&dmadev->ddev);
 -- 
 2.17.1
 

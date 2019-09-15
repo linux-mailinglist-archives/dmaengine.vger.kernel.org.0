@@ -2,90 +2,126 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F1EBB2242
-	for <lists+dmaengine@lfdr.de>; Fri, 13 Sep 2019 16:39:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E211B2EE1
+	for <lists+dmaengine@lfdr.de>; Sun, 15 Sep 2019 09:00:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387971AbfIMOgc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 13 Sep 2019 10:36:32 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44771 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730887AbfIMOga (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 13 Sep 2019 10:36:30 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 21so29631288otj.11;
-        Fri, 13 Sep 2019 07:36:29 -0700 (PDT)
+        id S1725991AbfIOHAi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 15 Sep 2019 03:00:38 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46275 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725788AbfIOHAh (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 15 Sep 2019 03:00:37 -0400
+Received: by mail-pg1-f193.google.com with SMTP id m3so17469235pgv.13;
+        Sun, 15 Sep 2019 00:00:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=qTxLl5voUFSb9X26smlelj8GYPRuvUJLayWNlgtrH8I=;
+        b=W6CL0NcuOOKiayvD0SZ2TQ8KNDiXRiTQoN+morrL2hU5DijtUSqNQM3zTPPdChx0j/
+         c9lrCWh+xKTHyxxva/vhIr6blk0ZF4gNl8oeb4lQyJCAMSzutvtbb66WFQPn2HfYdsMk
+         AeqKA36ulAIJuaFlkr0pr9FOryh9s/7wNXjtdaXl2rStcGrzQc5tWeXRmc5PSgJTryRx
+         wkZr1oSCapdVN3YouuleEWUawIH6Rb3RXCMV7KRZDGbEaEtTnwsMizb827nV9Y1NCj0v
+         k5QZj8DW+4x9hWs0Qn2BQo6H3+H26M6mXG+bmVw7gWsUGS4e88Ii21n0nX13wa58MBZ+
+         GeGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:subject:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EE+keOIZ1AFHTETx/xa5OA2Ucn28ZMv9VA7ngTJ2uO4=;
-        b=Sx/qwDQMYx6IRLSYPYrt1izcJv4PBYaEnMMwRgkrD5C4n2z9kFNJL6HXaX7ldMnJRw
-         B1L+taMl00krgIHm9U/tVZ6z3WVtz2O50gWBntfTjDN40O6NZRXFTvriUgmSvdlqlina
-         1I2uPOBXthV/9Qmj60IfFEe5tPgxp6jbeCeoX6LcZ6GCkzzqiTTu2lmzjpBmRw3mbzuP
-         1jYJGvO41kI+7mtfLSYt1Iu/ADmJeIzWj0m9xVaCIlgaCft3xYNEJH8MSnle3d6+/8Vx
-         qjglfAj4F5NfPVvL5ANO7ZZI+I9MJWfXQZ7lFThRsSLXhH2e2ZSYHO8EYtiVO8FCtMOL
-         GwoA==
-X-Gm-Message-State: APjAAAVR4DKErL9qurU1bIZ56qD7S0xjz9AAQbzCuzI0BJgYktyTYHAj
-        IziI48A4ZXoxYkL702A6yA==
-X-Google-Smtp-Source: APXvYqyRB/M5XLXv7J5tHMtHFVpUxo8jev2xZZpJoYNBxXFfRA5I0vTsW+cuHiU4kLiCtEPE7YhWUg==
-X-Received: by 2002:a05:6830:100e:: with SMTP id a14mr13806578otp.238.1568385389243;
-        Fri, 13 Sep 2019 07:36:29 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t7sm525642otp.58.2019.09.13.07.36.28
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qTxLl5voUFSb9X26smlelj8GYPRuvUJLayWNlgtrH8I=;
+        b=Sv3gnu8HoleEGjdmEWh+d0nBwfYdQ+xBMWRmJ2NHkRj8guqm1uivkQPALelYKTZZW/
+         Q0lfwXclRNgeMUKblshQpfRQFOI1++MG6oyGUYEb4v2J2mlzrj9U973KDpxblQ+wia8K
+         7SQ8bs/4Dj5pDG1SuURX9gSwBRgHM+xBXP/cVjVKTP60nhjDWGiZu15Btss4fpvDRQrw
+         mpdKMNREPVCJxn+SHb4kCWtHhxJG+INvz/wvqHrXtUqA7RmEBiqZutzCQoVAKDDgzfq6
+         2Oiv/UwBILI5plQr1uZMFz5tZ6CmzyAwkou387u7DRGvRUEQjdUqDGwkMAjJTbBDkqyG
+         5WZw==
+X-Gm-Message-State: APjAAAV/hYU7ugLQkDCo1gdVfi6oMpVjXWF0tk1XwbBrAEjeS5CoL/+Z
+        ddCcx6p1+6+j0SKauEphOGs=
+X-Google-Smtp-Source: APXvYqzDLofZo0Q9BogI7k5yAM89atbsKPZgSNVhbxB/0fbNPWM4aT0+glaa5BRRGORfoywzP7hEIw==
+X-Received: by 2002:a63:5222:: with SMTP id g34mr16131609pgb.405.1568530836882;
+        Sun, 15 Sep 2019 00:00:36 -0700 (PDT)
+Received: from satendra-MM061.ib-wrb304n.setup.in ([103.82.150.111])
+        by smtp.gmail.com with ESMTPSA id 197sm16699453pge.39.2019.09.15.00.00.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Sep 2019 07:36:28 -0700 (PDT)
-Message-ID: <5d7ba96c.1c69fb81.ee467.32b9@mx.google.com>
-Date:   Fri, 13 Sep 2019 15:36:28 +0100
-From:   Rob Herring <robh@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: dma: Add documentation for DMA domains
-References: <20190910115037.23539-1-peter.ujfalusi@ti.com>
- <20190910115037.23539-2-peter.ujfalusi@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190910115037.23539-2-peter.ujfalusi@ti.com>
-X-Mutt-References: <20190910115037.23539-2-peter.ujfalusi@ti.com>
+        Sun, 15 Sep 2019 00:00:35 -0700 (PDT)
+From:   Satendra Singh Thakur <sst2005@gmail.com>
+To:     dan.j.williams@intel.com, vkoul@kernel.org, jun.nie@linaro.org,
+        shawnguo@kernel.org, agross@kernel.org, sean.wang@mediatek.com,
+        matthias.bgg@gmail.com, maxime.ripard@bootlin.com, wens@csie.org,
+        lars@metafoo.de, afaerber@suse.de, manivannan.sadhasivam@linaro.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, satendrasingh.thakur@hcl.com,
+        Satendra Singh Thakur <sst2005@gmail.com>
+Subject: [PATCH 0/9] added helper macros to remove duplicate code from probe functions of the platform drivers
+Date:   Sun, 15 Sep 2019 12:30:03 +0530
+Message-Id: <20190915070003.21260-1-sst2005@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 02:50:35PM +0300, Peter Ujfalusi wrote:
-> On systems where multiple DMA controllers available, non Slave (for example
-> memcpy operation) users can not be described in DT as there is no device
-> involved from the DMA controller's point of view, DMA binding is not usable.
-> However in these systems still a peripheral might need to be serviced by or
-> it is better to serviced by specific DMA controller.
-> When a memcpy is used to/from a memory mapped region for example a DMA in the
-> same domain can perform better.
-> For generic software modules doing mem 2 mem operations it also matter that
-> they will get a channel from a controller which is faster in DDR to DDR mode
-> rather then from the first controller happen to be loaded.
-> 
-> This property is inherited, so it may be specified in a device node or in any
-> of its parent nodes.
+1. For most of the platform drivers's probe include following steps
 
-If a device needs mem2mem dma, I think we should just use the existing 
-dma binding. The provider will need a way to define cell values which 
-mean mem2mem.
+-memory allocation for driver's private structure
+-getting io resources
+-io remapping resources
+-getting irq number
+-registering irq
+-setting driver's private data
+-getting clock
+-preparing and enabling clock
 
-For generic s/w, it should be able to query the dma speed or get a 
-preferred one IMO. It's not a DT problem.
+2. We have defined a set of macros to combine some or all of
+the above mentioned steps. This will remove redundant/duplicate
+code in drivers' probe functions of platform drivers.
 
-We measure memcpy speeds at boot time to select the fastest 
-implementation for a chip, why not do that for mem2mem DMA?
+devm_platform_probe_helper(pdev, priv, clk_name);
+devm_platform_probe_helper_clk(pdev, priv, clk_name);
+devm_platform_probe_helper_irq(pdev, priv, clk_name,
+irq_hndlr, irq_flags, irq_name, irq_devid);
+devm_platform_probe_helper_all(pdev, priv, clk_name,
+irq_hndlr, irq_flags, irq_name, irq_devid);
+devm_platform_probe_helper_all_data(pdev, priv, clk_name,
+irq_hndlr, irq_flags, irq_name, irq_devid);
 
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  .../devicetree/bindings/dma/dma-domain.yaml   | 88 +++++++++++++++++++
->  1 file changed, 88 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
+3. Code is made devres compatible (wherever required)
+The functions: clk_get, request_irq, kzalloc, platform_get_resource
+are replaced with their devm_* counterparts.
 
-Note that you have several errors in your schema. Run 'make dt_bindings_check'.
+4. Few bugs are also fixed.
 
-Rob
+Satendra Singh Thakur (9):
+  probe/dma : added helper macros to remove redundant/duplicate code
+    from probe functions of the dma controller drivers
+  probe/dma/jz4740: removed redundant code from jz4740 dma controller's 
+       probe function
+  probe/dma/zx: removed redundant code from zx dma controller's probe
+    function
+  probe/dma/qcom-bam: removed redundant code from qcom bam dma
+    controller's probe function
+  probe/dma/mtk-hs: removed redundant code from mediatek hs dma
+    controller's probe function
+  probe/dma/sun6i: removed redundant code from sun6i dma controller's
+    probe function
+  probe/dma/sun4i: removed redundant code from sun4i dma controller's
+    probe function
+  probe/dma/axi: removed redundant code from axi dma controller's probe
+    function
+  probe/dma/owl: removed redundant code from owl dma controller's probe
+    function
+
+ drivers/dma/dma-axi-dmac.c       |  28 ++---
+ drivers/dma/dma-jz4740.c         |  33 +++---
+ drivers/dma/mediatek/mtk-hsdma.c |  38 +++----
+ drivers/dma/owl-dma.c            |  29 ++---
+ drivers/dma/qcom/bam_dma.c       |  71 +++++-------
+ drivers/dma/sun4i-dma.c          |  30 ++----
+ drivers/dma/sun6i-dma.c          |  30 ++----
+ drivers/dma/zx_dma.c             |  35 ++----
+ include/linux/probe-helper.h     | 179 +++++++++++++++++++++++++++++++
+ 9 files changed, 280 insertions(+), 193 deletions(-)
+ create mode 100644 include/linux/probe-helper.h
+
+-- 
+2.17.1
 

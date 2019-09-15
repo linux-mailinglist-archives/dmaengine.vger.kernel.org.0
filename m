@@ -2,59 +2,58 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A8376B2F08
-	for <lists+dmaengine@lfdr.de>; Sun, 15 Sep 2019 09:30:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 604F5B2F0D
+	for <lists+dmaengine@lfdr.de>; Sun, 15 Sep 2019 09:32:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725613AbfIOHa7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 15 Sep 2019 03:30:59 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41905 "EHLO
+        id S1726363AbfIOHbz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 15 Sep 2019 03:31:55 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40510 "EHLO
         mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfIOHa6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 15 Sep 2019 03:30:58 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b13so20526743pfo.8;
-        Sun, 15 Sep 2019 00:30:58 -0700 (PDT)
+        with ESMTP id S1725497AbfIOHby (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 15 Sep 2019 03:31:54 -0400
+Received: by mail-pf1-f194.google.com with SMTP id x127so20535251pfb.7;
+        Sun, 15 Sep 2019 00:31:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GkvCW2yDGpRo3PSFTuRArziiou4pMe6vPX17Y8y6Dnc=;
-        b=jH53rpPk8Uk1MSBhnWEhXTfoJMN+iJEQ7EKpauS+mO+CCAQ033B4UaLO04rOUTzP9Z
-         PWJfnMr8F1cxat2FMQdXS2RJJ1iqxl+Ly5gMy7fE6XV6H3/Dvqci/SSY4YzCsumfD9VD
-         0S0HaXx4zVtosSZZQ5Vt1m3HfctPhInLJAyRuKiMEPe3JR7UT/I4dFsaNYmNiAby8+d6
-         mfaUBZP6heEKzHQR8jC+6grUVpMO7KekOvRcDWcq7hWfDtElp27rRwCOlRWJQ4u9PBVF
-         6aLTQYOVDHUKwV0yJ6E7AuHoHSZLagv8Sqmmz+O4IupGz8GOqVKzxUnpkbDWF+JaO3q4
-         245A==
+        bh=0DZe/s2/vHEDWjkZMS1zmvi4NsZEIq/1qP/znK935TQ=;
+        b=ZfZ5uJOkXcijb1z+GqXDBCpSk0K10rTW5epVfdMwpJ0sQtC4xP+TyVfe2nF8YAgxsU
+         qJS0C73jzw7UM6QUQ579KcOuDXGKpkGfzPV/tp7gb+7ecsj4JJQ6plI3JtPmtvr9Fmax
+         uFXQsiFTe5us54At0SivWKJ1tTzeZeqL2DVs/rvaXaQm23avCPCG97VL5oxD/KAgMfyg
+         zVa/RFNlCn3kwXddw87Gfa818o6mmG1BpAmEHykzM5kESMLk+OW1ijdy5ZBCoDkU0dYc
+         71wMeNwdotk6vTtXfJryYveNv4V+sV9qW972v8PlpEATz8RYb/rKb7NevuQGFwflVz8f
+         R9cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=GkvCW2yDGpRo3PSFTuRArziiou4pMe6vPX17Y8y6Dnc=;
-        b=eAmVxGJ/tm1SEU7azCI7UHws78TRJyjc4STFmCY/rptpOKBlC1IbVwH2ZL2tdg2ktM
-         FLgV/TSzegBjyl33iv0MnqpmDtY5ROMHymy26R0rzrw8rm0fzglrajbofuyMVMV5eyiK
-         mQdDp1/3NNcL8SzrjSIjmq0fdgh1OukQxKmVO3KR5UZ16qTAEXfoe3+LQ9pWHn432FCa
-         MHg0/Ddtp+Ow4xmBD3On74FPOFbUzJHBLTOj4bJZbNHatOucNF8LWhGHxPCmoJSkeImy
-         T+NM22Rklojq3EjJKPsVr2yVXx+qlqPSWm0/4n8w3/Jiox+Wh6KsHZVbqt9dIuIn9s7f
-         PiOw==
-X-Gm-Message-State: APjAAAUQ1rIBjttH2ibr8Gjpl49tm667sFPQFbYUiEomC8vfZhcJVVOO
-        +jdPnRuwef8cKkErxgHan0o=
-X-Google-Smtp-Source: APXvYqxuah8yl/pvu9JVO+yv2YIraDJx3bTe6QtVyQFOYlpd+/GcXmhFtP4zDYlq6PIBRRZ/EtEAEQ==
-X-Received: by 2002:a17:90a:65c9:: with SMTP id i9mr13948462pjs.54.1568532657679;
-        Sun, 15 Sep 2019 00:30:57 -0700 (PDT)
+        bh=0DZe/s2/vHEDWjkZMS1zmvi4NsZEIq/1qP/znK935TQ=;
+        b=I8jibTD1bluqZlWxIAYNhD8xezdnU28zXpoAFp4Pw20aLp8/CMnVia0nyggMbEXfS4
+         COEzJYjkAcH/GmMa37SD8/s6aaAVJIXqqxJsc4c8Cx+eLOc2pD9bERbThQU1NoTkRTmi
+         uIGjQUyKyQ/35WLps8hNLRS/hFcdshdQjxFiOc5I0fgb6sfz2Mrt2tnuKVk9qfIX9YgS
+         DqTl5XTVKjCNOGOvynkNKRWxiyry3d3NuN8qOwZSomRNWfKNYbDTJGdBvzjSpqwJWZ98
+         siNEohzloCbWm/bvEtKKdNC1eqmAKWYY/F+FZ3HURVZcTkwtQ9uXzje9/BCefA5YY8Lh
+         K3NA==
+X-Gm-Message-State: APjAAAXR/uPFhQWvBBqUkJHXgBwC6/MSiVra7e4DzyWtpqigS2p9xq9a
+        vDrT1RAAptHgmbpIQyyvadaum5P8c0y+ow==
+X-Google-Smtp-Source: APXvYqycv60YtanN5Vu0TRpL2U5mtB8FDs+f7JRrqV4nnVE9qEcmwM7IZJEy/v83woF+LAH77BTX/Q==
+X-Received: by 2002:a62:cf82:: with SMTP id b124mr64368927pfg.159.1568532714069;
+        Sun, 15 Sep 2019 00:31:54 -0700 (PDT)
 Received: from satendra-MM061.ib-wrb304n.setup.in ([103.82.150.111])
-        by smtp.gmail.com with ESMTPSA id c11sm65160088pfj.114.2019.09.15.00.30.53
+        by smtp.gmail.com with ESMTPSA id e192sm45142269pfh.83.2019.09.15.00.31.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Sep 2019 00:30:56 -0700 (PDT)
+        Sun, 15 Sep 2019 00:31:53 -0700 (PDT)
 From:   Satendra Singh Thakur <sst2005@gmail.com>
 Cc:     satendrasingh.thakur@hcl.com,
         Satendra Singh Thakur <sst2005@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>,
         Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/9] probe/dma/mtk-hs: removed redundant code from mediatek hs dma controller's probe function
-Date:   Sun, 15 Sep 2019 13:00:48 +0530
-Message-Id: <20190915073048.23817-1-sst2005@gmail.com>
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 6/9] probe/dma/sun6i: removed redundant code from sun6i dma controller's probe function
+Date:   Sun, 15 Sep 2019 13:01:44 +0530
+Message-Id: <20190915073144.23965-1-sst2005@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190915072644.23329-1-sst2005@gmail.com>
 References: <20190915072644.23329-1-sst2005@gmail.com>
@@ -72,98 +71,70 @@ devm_clk_get
 platform_get_irq
 are replaced with a macro devm_platform_probe_helper.
 
-2. Fixed a memory leak when devm_request_irq fails,
-Called of_dma_controller_free in such case.
-
-3. This patch depends on the file include/linux/probe-helper.h
+2. This patch depends on the file include/linux/probe-helper.h
 which is pushed in previous patch [01/09].
 
 Signed-off-by: Satendra Singh Thakur <satendrasingh.thakur@hcl.com>
 Signed-off-by: Satendra Singh Thakur <sst2005@gmail.com>
 ---
- drivers/dma/mediatek/mtk-hsdma.c | 38 ++++++++++----------------------
- 1 file changed, 12 insertions(+), 26 deletions(-)
+ drivers/dma/sun6i-dma.c | 30 +++++++++---------------------
+ 1 file changed, 9 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/dma/mediatek/mtk-hsdma.c b/drivers/dma/mediatek/mtk-hsdma.c
-index 1a2028e1c29e..6fc01093aeea 100644
---- a/drivers/dma/mediatek/mtk-hsdma.c
-+++ b/drivers/dma/mediatek/mtk-hsdma.c
-@@ -23,6 +23,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/refcount.h>
+diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+index ed5b68dcfe50..41ee054bbeeb 100644
+--- a/drivers/dma/sun6i-dma.c
++++ b/drivers/dma/sun6i-dma.c
+@@ -19,6 +19,7 @@
+ #include <linux/reset.h>
  #include <linux/slab.h>
+ #include <linux/types.h>
 +#include <linux/probe-helper.h>
  
- #include "../virt-dma.h"
+ #include "virt-dma.h"
  
-@@ -896,41 +897,24 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
- 	struct mtk_hsdma_device *hsdma;
- 	struct mtk_hsdma_vchan *vc;
- 	struct dma_device *dd;
+@@ -1234,34 +1235,21 @@ static int sun6i_dma_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct sun6i_dma_dev *sdc;
 -	struct resource *res;
- 	int i, err;
+ 	int ret, i;
  
--	hsdma = devm_kzalloc(&pdev->dev, sizeof(*hsdma), GFP_KERNEL);
--	if (!hsdma)
+-	sdc = devm_kzalloc(&pdev->dev, sizeof(*sdc), GFP_KERNEL);
+-	if (!sdc)
 -		return -ENOMEM;
--
 +	/*
 +	 * This macro internally combines following functions:
 +	 * devm_kzalloc, platform_get_resource, devm_ioremap_resource,
 +	 * devm_clk_get, platform_get_irq
 +	 */
-+	err = devm_platform_probe_helper(pdev, hsdma, "hsdma");
-+	if (err < 0)
-+		return err;
- 	dd = &hsdma->ddev;
++	ret = devm_platform_probe_helper(pdev, sdc, NULL);
++	if (ret < 0)
++		return ret;
+ 
+ 	sdc->cfg = of_device_get_match_data(&pdev->dev);
+ 	if (!sdc->cfg)
+ 		return -ENODEV;
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	hsdma->base = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(hsdma->base))
--		return PTR_ERR(hsdma->base);
+-	sdc->base = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(sdc->base))
+-		return PTR_ERR(sdc->base);
 -
- 	hsdma->soc = of_device_get_match_data(&pdev->dev);
- 	if (!hsdma->soc) {
- 		dev_err(&pdev->dev, "No device match found\n");
- 		return -ENODEV;
- 	}
- 
--	hsdma->clk = devm_clk_get(&pdev->dev, "hsdma");
--	if (IS_ERR(hsdma->clk)) {
--		dev_err(&pdev->dev, "No clock for %s\n",
--			dev_name(&pdev->dev));
--		return PTR_ERR(hsdma->clk);
+-	sdc->irq = platform_get_irq(pdev, 0);
+-	if (sdc->irq < 0) {
+-		dev_err(&pdev->dev, "Cannot claim IRQ\n");
+-		return sdc->irq;
 -	}
 -
--	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
--	if (!res) {
--		dev_err(&pdev->dev, "No irq resource for %s\n",
--			dev_name(&pdev->dev));
--		return -EINVAL;
+-	sdc->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(sdc->clk)) {
+-		dev_err(&pdev->dev, "No clock specified\n");
+-		return PTR_ERR(sdc->clk);
 -	}
--	hsdma->irq = res->start;
 -
- 	refcount_set(&hsdma->pc_refcnt, 0);
- 	spin_lock_init(&hsdma->lock);
- 
-@@ -997,7 +981,7 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
- 	if (err) {
- 		dev_err(&pdev->dev,
- 			"request_irq failed with err %d\n", err);
--		goto err_unregister;
-+		goto err_free;
- 	}
- 
- 	platform_set_drvdata(pdev, hsdma);
-@@ -1006,6 +990,8 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
-+err_free:
-+	of_dma_controller_free(pdev->dev.of_node);
- err_unregister:
- 	dma_async_device_unregister(dd);
- 
+ 	if (sdc->cfg->has_mbus_clk) {
+ 		sdc->clk_mbus = devm_clk_get(&pdev->dev, "mbus");
+ 		if (IS_ERR(sdc->clk_mbus)) {
 -- 
 2.17.1
 

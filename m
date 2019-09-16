@@ -2,132 +2,144 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 96ECAB3673
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Sep 2019 10:37:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B140B36CB
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Sep 2019 11:02:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731076AbfIPIhm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 16 Sep 2019 04:37:42 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:15002 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729718AbfIPIhm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 Sep 2019 04:37:42 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d7f49d60000>; Mon, 16 Sep 2019 01:37:42 -0700
+        id S1729814AbfIPJCj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 16 Sep 2019 05:02:39 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:12116 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729124AbfIPJCj (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 Sep 2019 05:02:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d7f4fb30000>; Mon, 16 Sep 2019 02:02:43 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 16 Sep 2019 01:37:41 -0700
+  Mon, 16 Sep 2019 02:02:37 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 16 Sep 2019 01:37:41 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
- 2019 08:37:41 +0000
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
- 2019 08:37:40 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 16 Sep 2019 08:37:40 +0000
-Received: from audio.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d7f49d20000>; Mon, 16 Sep 2019 01:37:40 -0700
+        by hqpgpgate101.nvidia.com on Mon, 16 Sep 2019 02:02:37 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
+ 2019 09:02:37 +0000
+Received: from [10.24.44.187] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
+ 2019 09:02:33 +0000
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Vinod Koul <vkoul@kernel.org>, Jon Hunter <jonathanh@nvidia.com>
+CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <dan.j.williams@intel.com>,
+        <tiwai@suse.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
+        <rlokhande@nvidia.com>, <dramesh@nvidia.com>, <mkumard@nvidia.com>
+References: <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
+ <75be49ac-8461-0798-b673-431ec527d74f@nvidia.com>
+ <20190719050459.GM12733@vkoul-mobl.Dlink>
+ <3e7f795d-56fb-6a71-b844-2fc2b85e099e@nvidia.com>
+ <20190729061010.GC12733@vkoul-mobl.Dlink>
+ <98954eb3-21f1-6008-f8e1-f9f9b82f87fb@nvidia.com>
+ <20190731151610.GT12733@vkoul-mobl.Dlink>
+ <c0f4de86-423a-35df-3744-40db89f2fdfe@nvidia.com>
+ <20190808123833.GX12733@vkoul-mobl.Dlink>
+ <a93a472d-b8f7-973f-6068-607492421472@nvidia.com>
+ <20190820110510.GQ12733@vkoul-mobl.Dlink>
 From:   Sameer Pujar <spujar@nvidia.com>
-To:     <vkoul@kernel.org>, <jonathanh@nvidia.com>, <ldewangan@nvidia.com>
-CC:     <thierry.reding@gmail.com>, <dmaengine@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, Sameer Pujar <spujar@nvidia.com>,
-        <stable@vger.kernel.org>
-Subject: [PATCH v3] dmaengine: tegra210-adma: fix transfer failure
-Date:   Mon, 16 Sep 2019 14:07:17 +0530
-Message-ID: <1568623038-20879-1-git-send-email-spujar@nvidia.com>
-X-Mailer: git-send-email 2.7.4
+Message-ID: <14c52eb7-8676-652a-ae7a-8713ba536f05@nvidia.com>
+Date:   Mon, 16 Sep 2019 14:32:30 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190820110510.GQ12733@vkoul-mobl.Dlink>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1568623063; bh=b8GifglBDrM9Sb+fBYL1SLJ8XSYRki5roMq5cuYh6ac=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:Content-Type;
-        b=Jb2jt9mvS5zl0YbdQhkm61vWsDp+f1IvFc5euKCpFhyDnzoR1L04H/PmXfFAcCb9i
-         V5o9UyZyIvolVj5LesciJ44pLijkqeRw1Ui9ecG/07mPO79TfDpRZgaQnvC/7VbLSZ
-         XNAdRNAMx2W7a5vQoUUF+2fNDAAYWgCBHz1z7BbUI56iyNQwoSDIvwlYP4b66yqqX4
-         Gdx6kyxaTMnD8eO5FphuMa/rPc3JlwsWnkpI7O7IrXIEy9FtYMbezt3Uf2o3tMqhh0
-         qA/tUV2T2ZDYAkgoHeEI8ir7XeGkIs4BdDwVUgm2KJqN/HAk+VkPPah/wd2mEZJmmt
-         K/ws2Jh4m1tQw==
+        t=1568624563; bh=cuF+Igy2GwJ49vOlXWUBi0B7TdlTzJNkyFnoTY+Cp+E=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=p8W6QYTSLIdyL0nh46f7T29uFZxtD5dh+8czsxC6FG3mC7fMg70vz3Y/oNi869Edk
+         Avi4Z6Rz363YOQlYeoDUoinU/a7v/6iuA4PMdRfmGmrxq1PxeO2Q+/lwazHAaR/yh3
+         2xhvr8UV9opRCxFWJehx1MEPd9Cuk+71qfBYi6lfv2e5Rje4Y/SjII22fc4un9Lmyt
+         WzbwiYg3N3s46mLIQs0EaONSnU6gXnfCA8LQ4b5Pra33MX9VKEyfydpDjoqD65zj2S
+         6xG9xcN2QtjeG/7HWEaaNQflowW9E3xn/sU1CqUJQ2FjuopUWeFOL/hFW4A8wX/aL2
+         dcuS4E3CIdzkw==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From Tegra186 onwards OUTSTANDING_REQUESTS field is added in channel
-configuration register(bits 7:4) which defines the maximum number of reads
-from the source and writes to the destination that may be outstanding at
-any given point of time. This field must be programmed with a value
-between 1 and 8. A value of 0 will prevent any transfers from happening.
+Sorry for the delay in replying.
 
-Thus added 'has_outstanding_reqs' bool member in chip data structure and is
-set to false for Tegra210, since the field is not applicable. For Tegra186
-it is set to true and channel configuration is updated with maximum
-outstanding requests.
-
-Fixes: 433de642a76c ("dmaengine: tegra210-adma: add support for Tegra186/Tegra194")
-Cc: stable@vger.kernel.org
-
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
----
- drivers/dma/tegra210-adma.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index 5f8adf5..e19732f 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -66,6 +66,8 @@
- #define TEGRA186_FIFO_CTRL_DEFAULT (TEGRA186_ADMA_CH_FIFO_CTRL_TXSIZE(3) | \
- 				    TEGRA186_ADMA_CH_FIFO_CTRL_RXSIZE(3))
- 
-+#define TEGRA186_ADMA_CH_CONFIG_OUTSTANDING_REQS(reqs)	(reqs << 4)
-+
- #define ADMA_CH_REG_FIELD_VAL(val, mask, shift)	(((val) & mask) << shift)
- 
- struct tegra_adma;
-@@ -77,6 +79,7 @@ struct tegra_adma;
-  * @ch_req_tx_shift: Register offset for AHUB transmit channel select.
-  * @ch_req_rx_shift: Register offset for AHUB receive channel select.
-  * @ch_base_offset: Register offset of DMA channel registers.
-+ * @has_outstanding_reqs: If DMA channel can have outstanding requests.
-  * @ch_fifo_ctrl: Default value for channel FIFO CTRL register.
-  * @ch_req_mask: Mask for Tx or Rx channel select.
-  * @ch_req_max: Maximum number of Tx or Rx channels available.
-@@ -95,6 +98,7 @@ struct tegra_adma_chip_data {
- 	unsigned int ch_req_max;
- 	unsigned int ch_reg_size;
- 	unsigned int nr_channels;
-+	bool has_outstanding_reqs;
- };
- 
- /*
-@@ -594,6 +598,8 @@ static int tegra_adma_set_xfer_params(struct tegra_adma_chan *tdc,
- 			 ADMA_CH_CTRL_FLOWCTRL_EN;
- 	ch_regs->config |= cdata->adma_get_burst_config(burst_size);
- 	ch_regs->config |= ADMA_CH_CONFIG_WEIGHT_FOR_WRR(1);
-+	if (cdata->has_outstanding_reqs)
-+		ch_regs->config |= TEGRA186_ADMA_CH_CONFIG_OUTSTANDING_REQS(8);
- 	ch_regs->fifo_ctrl = cdata->ch_fifo_ctrl;
- 	ch_regs->tc = desc->period_len & ADMA_CH_TC_COUNT_MASK;
- 
-@@ -778,6 +784,7 @@ static const struct tegra_adma_chip_data tegra210_chip_data = {
- 	.ch_req_tx_shift	= 28,
- 	.ch_req_rx_shift	= 24,
- 	.ch_base_offset		= 0,
-+	.has_outstanding_reqs	= false,
- 	.ch_fifo_ctrl		= TEGRA210_FIFO_CTRL_DEFAULT,
- 	.ch_req_mask		= 0xf,
- 	.ch_req_max		= 10,
-@@ -792,6 +799,7 @@ static const struct tegra_adma_chip_data tegra186_chip_data = {
- 	.ch_req_tx_shift	= 27,
- 	.ch_req_rx_shift	= 22,
- 	.ch_base_offset		= 0x10000,
-+	.has_outstanding_reqs	= true,
- 	.ch_fifo_ctrl		= TEGRA186_FIFO_CTRL_DEFAULT,
- 	.ch_req_mask		= 0x1f,
- 	.ch_req_max		= 20,
--- 
-2.7.4
-
+On 8/20/2019 4:35 PM, Vinod Koul wrote:
+> On 19-08-19, 16:56, Jon Hunter wrote:
+>>>>>>>>> On this, I am inclined to think that dma driver should not be involved.
+>>>>>>>>> The ADMAIF needs this configuration and we should take the path of
+>>>>>>>>> dma_router for this piece and add features like this to it
+>>>>>>>> Hi Vinod,
+>>>>>>>>
+>>>>>>>> The configuration is needed by both ADMA and ADMAIF. The size is
+>>>>>>>> configurable
+>>>>>>>> on ADMAIF side. ADMA needs to know this info and program accordingly.
+>>>>>>> Well I would say client decides the settings for both DMA, DMAIF and
+>>>>>>> sets the peripheral accordingly as well, so client communicates the two
+>>>>>>> sets of info to two set of drivers
+>>>>>> That maybe, but I still don't see how the information is passed from the
+>>>>>> client in the first place. The current problem is that there is no means
+>>>>>> to pass both a max-burst size and fifo-size to the DMA driver from the
+>>>>>> client.
+>>>>> So one thing not clear to me is why ADMA needs fifo-size, I thought it
+>>>>> was to program ADMAIF and if we have client programme the max-burst
+>>>>> size to ADMA and fifo-size to ADMAIF we wont need that. Can you please
+>>>>> confirm if my assumption is valid?
+>>>> Let me see if I can clarify ...
+>>>>
+>>>> 1. The FIFO we are discussing here resides in the ADMAIF module which is
+>>>>     a separate hardware block the ADMA (although the naming make this
+>>>>     unclear).
+>>>>
+>>>> 2. The size of FIFO in the ADMAIF is configurable and it this is
+>>>>     configured via the ADMAIF registers. This allows different channels
+>>>>     to use different FIFO sizes. Think of this as a shared memory that is
+>>>>     divided into n FIFOs shared between all channels.
+>>>>
+>>>> 3. The ADMA, not the ADMAIF, manages the flow to the FIFO and this is
+>>>>     because the ADMAIF only tells the ADMA when a word has been
+>>>>     read/written (depending on direction), the ADMAIF does not indicate
+>>>>     if the FIFO is full, empty, etc. Hence, the ADMA needs to know the
+>>>>     total FIFO size.
+>>>>
+>>>> So the ADMA needs to know the FIFO size so that it does not overrun the
+>>>> FIFO and we can also set a burst size (less than the total FIFO size)
+>>>> indicating how many words to transfer at a time. Hence, the two parameters.
+>>> Thanks, I confirm this is my understanding as well.
+>>>
+>>> To compare to regular case for example SPI on DMA, SPI driver will
+>>> calculate fifo size & burst to be used and program dma (burst size) and
+>>> its own fifos accordingly
+>>>
+>>> So, in your case why should the peripheral driver not calculate the fifo
+>>> size for both ADMA and ADMAIF and (if required it's own FIFO) and
+>>> program the two (ADMA and ADMAIF).
+>>>
+>>> What is the limiting factor in this flow is not clear to me.
+>> The FIFO size that is configured by the ADMAIF driver needs to be given
+>> to the ADMA driver so that it can program its registers accordingly. The
+>> difference here is that both the ADMA and ADMAIF need the FIFO size.
+> Can you please help describing what it is programming using the FIFO
+> size of ADMAIF?
+**ADMA channel register is programmed with the same FIFO_SIZE as ADMAIF 
+channel
+to which it is mapped to.**
+As previously mentioned, HW (on ADMA) uses this value to understand the 
+FIFO depth
+and comes to know when a space of BURST_SIZE is available. ADMAIF is an 
+interface
+to AHUB and when data moves forward to other clients via AHUB, it sends 
+signal to
+ADMA per WORD basis. ADMA calculates this to know available space and 
+initiates a
+transfer when sufficient space is available.
+> Thanks

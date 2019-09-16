@@ -2,42 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 495C5B35AF
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Sep 2019 09:35:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D75CB35C1
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Sep 2019 09:37:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbfIPHfh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 16 Sep 2019 03:35:37 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:8063 "EHLO
+        id S1729231AbfIPHh1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 16 Sep 2019 03:37:27 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:8163 "EHLO
         hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfIPHfh (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 Sep 2019 03:35:37 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d7f3b4c0001>; Mon, 16 Sep 2019 00:35:40 -0700
+        with ESMTP id S1728109AbfIPHh1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 Sep 2019 03:37:27 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d7f3bbb0002>; Mon, 16 Sep 2019 00:37:31 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 16 Sep 2019 00:35:35 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 16 Sep 2019 00:37:26 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 16 Sep 2019 00:35:35 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
- 2019 07:35:34 +0000
+        by hqpgpgate101.nvidia.com on Mon, 16 Sep 2019 00:37:26 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
+ 2019 07:37:26 +0000
 Received: from [10.24.44.187] (10.124.1.5) by DRHQMAIL107.nvidia.com
  (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
- 2019 07:35:32 +0000
+ 2019 07:37:24 +0000
 Subject: Re: [PATCH v2] dmaengine: tegra210-adma: fix transfer failure
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <jonathanh@nvidia.com>, <ldewangan@nvidia.com>,
-        <thierry.reding@gmail.com>, <dmaengine@vger.kernel.org>,
+To:     Jon Hunter <jonathanh@nvidia.com>, <vkoul@kernel.org>,
+        <ldewangan@nvidia.com>
+CC:     <thierry.reding@gmail.com>, <dmaengine@vger.kernel.org>,
         <linux-tegra@vger.kernel.org>
 References: <1562929830-29344-1-git-send-email-spujar@nvidia.com>
- <20190808140842.GC12733@vkoul-mobl.Dlink>
+ <9ac012f8-2594-cc70-44cb-b2c560c7df07@nvidia.com>
 From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <8dd8a0f5-f6a4-46e7-f9ec-8aeecb13dcee@nvidia.com>
-Date:   Mon, 16 Sep 2019 13:05:29 +0530
+Message-ID: <69348c44-7c26-61aa-520e-1177b6c68259@nvidia.com>
+Date:   Mon, 16 Sep 2019 13:07:21 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20190808140842.GC12733@vkoul-mobl.Dlink>
+In-Reply-To: <9ac012f8-2594-cc70-44cb-b2c560c7df07@nvidia.com>
 X-Originating-IP: [10.124.1.5]
 X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
  DRHQMAIL107.nvidia.com (10.27.9.16)
@@ -45,31 +45,27 @@ Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-GB
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1568619340; bh=FLc/5TVlOelxaUy+rQDBGvtj9ADWtjdIx1EDw6PtL/I=;
+        t=1568619451; bh=ZQMpdGSntHDeVB3aL2F0OXr8wH6L0E7vrSRdUbxCBhE=;
         h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
          User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
          X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
          Content-Language;
-        b=fepYiNwc6NuQHTDK7VYGgqwYKmkCQkZwPDOIy4cwvV9da8THfdx1SxmEC1KAF+UTv
-         hstOOLQYeZf4vOoxEPPdUxWgvPv0vPmxSGyrohFC7bX4p1RKSkZha+oeZ8nxCnD5A7
-         soOBP/vCrHHlsDi6rmFwn3A+7rRUm98ZY2aC+KGX4Hg4QmIOE4efyVuxdSxslZ3TRY
-         93s2QmCszJ7Sw8JEBluzsTYi44tFdoWDeLCK+OQFsSx8LW7i/AufoO28Ct9oiUn4Ow
-         HYBzWcVgWgBznHOZ3t42TWWRWxkCpHJ7GMbYYiPldgq+fv8K1rT64CRUIqIwt9Ljti
-         KCdPlVreZi26w==
+        b=k5DAKvj5cNT9DtqHJnYlaaTiF1efR/jPhPYihy7NSRjQUtiDrkywdm+zht5J/8hOW
+         PGsqE8rA1p7EDBzxTCP1fqzPd+SooHKx/XtPQEjWJRAmdOYYHWZlZvu6XI+znLD6Qy
+         0kshQmZCFaPSIxpS3oVI/9kAHZsN5hv0+5bqbVSToGhNGFPRJFa06ZfpQyDocp6CCV
+         NgOOK71I6XZaZ+BYEGMS4xH/wUqLfSk+/oNc0Z3CRqSbA5Kg2agXCswpA/GT6ygyW2
+         DhD2U7WzDPzrr9bzalVogJ1Kid41lDwsC1Ue7/ilZAPx6cI6q6L2RCLS8lQ/6I/KxF
+         BjINptCzsrZSg==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Sorry for the delayed reply.
+Sorry for delayed reply, I was consumed in some other work.
 
-On 8/8/2019 7:38 PM, Vinod Koul wrote:
-> On 12-07-19, 16:40, Sameer Pujar wrote:
->> >From Tegra186 onwards OUTSTANDING_REQUESTS field is added in channel
->    ^^
-> please remove the leading char from the para
-Are you referring to extra char '>' here? I don't see this in my diff patch.
->
+On 8/19/2019 11:10 PM, Jon Hunter wrote:
+> On 12/07/2019 12:10, Sameer Pujar wrote:
+>>  From Tegra186 onwards OUTSTANDING_REQUESTS field is added in channel
 >> configuration register(bits 7:4) which defines the maximum number of reads
 >> from the source and writes to the destination that may be outstanding at
 >> any given point of time. This field must be programmed with a value
@@ -82,9 +78,7 @@ Are you referring to extra char '>' here? I don't see this in my diff patch.
 >> with the maximum permitted value of 8.
 >>
 >> Fixes: 433de642a76c ("dmaengine: tegra210-adma: add support for Tegra186/Tegra194")
-> Should this be tagged stable? Also some reviews from Tegra folks would
-> be great
-Ok, will tag this for stable.
+>>
 >> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
 >> ---
 >>   drivers/dma/tegra210-adma.c | 7 +++++++
@@ -108,6 +102,13 @@ Ok, will tag this for stable.
 >>    * @ch_req_rx_shift: Register offset for AHUB receive channel select.
 >>    * @ch_base_offset: Register offset of DMA channel registers.
 >> + * @ch_pending_req: Outstaning DMA requests for a channel.
+> s/Outstaning/Outstanding
+will fix.
+> I do wonder if this variable should be a boolean variable
+> 'has_oustanding_reqs' because this is not applicable to Tegra210. I
+> think this will be clearer that this is a difference between SoC
+> versions and that it should not be configured for Tegra210. And then ...
+>
 >>    * @ch_fifo_ctrl: Default value for channel FIFO CTRL register.
 >>    * @ch_req_mask: Mask for Tx or Rx channel select.
 >>    * @ch_req_max: Maximum number of Tx or Rx channels available.
@@ -124,10 +125,12 @@ Ok, will tag this for stable.
 >>   	ch_regs->config |= cdata->adma_get_burst_config(burst_size);
 >>   	ch_regs->config |= ADMA_CH_CONFIG_WEIGHT_FOR_WRR(1);
 >> +	ch_regs->config |= cdata->ch_pending_req;
-> so for tegra186 this will be 0, which per above would prevent any
-> transfers?? What did i miss
-For tegra186/tegra194 this will be non-zero and for tegra210 it will be 0.
-The chip data reflects above.
+> ... you can ...
+>
+>          if (cdata->has_outstanding_reqs)
+>              ch_regs->config |= TEGRA186_ADMA_CH_CONFIG_OUTSTNDREQS(8)
+yes, this can be done. Will update in next revision.
+>
 >>   	ch_regs->fifo_ctrl = cdata->ch_fifo_ctrl;
 >>   	ch_regs->tc = desc->period_len & ADMA_CH_TC_COUNT_MASK;
 >>   
@@ -147,5 +150,4 @@ The chip data reflects above.
 >>   	.ch_fifo_ctrl		= TEGRA186_FIFO_CTRL_DEFAULT,
 >>   	.ch_req_mask		= 0x1f,
 >>   	.ch_req_max		= 20,
->> -- 
->> 2.7.4
+>>

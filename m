@@ -2,25 +2,55 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1945EB3BE0
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Sep 2019 15:55:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 595E3B3BF7
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Sep 2019 15:58:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388092AbfIPNzH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 16 Sep 2019 09:55:07 -0400
-Received: from mx1.emlix.com ([188.40.240.192]:49150 "EHLO mx1.emlix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728005AbfIPNzH (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:55:07 -0400
-Received: from mailer.emlix.com (unknown [81.20.119.6])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1.emlix.com (Postfix) with ESMTPS id E92B15FAD2;
-        Mon, 16 Sep 2019 15:55:04 +0200 (CEST)
+        id S1728127AbfIPN66 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 16 Sep 2019 09:58:58 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:33274 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbfIPN66 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 Sep 2019 09:58:58 -0400
+Received: by mail-ua1-f66.google.com with SMTP id u31so2181665uah.0;
+        Mon, 16 Sep 2019 06:58:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xZkupYvtBSCgKvrJHoyKINcu7Om+TqesekV8j3GB0l8=;
+        b=abcnjjRp0vfqDss/cKOd135SiL2FsmKpPoVJY3cDGezMtJYB2RDqqK33YBjLeoK15k
+         52xq3IKCxncEyF6pFqAjp9j/Uu3gZAaeah9VUzvW5kPRoeqX+XTEL8QZvZOnIseZ/Ngw
+         qHCCcVfOKj83hZTbK6Ix/I6MS+PujIU+ATucD0mmoPkRWHs0KDbh395ALd+txHZbtBaT
+         gjL3gO/fj5TCK9YoySfJa3EHtyhoXpKOMydiT9aAWJ2THFtA0IgR3HXJOCkuNWOkz+Hx
+         CNzThJ/K0TJgQr9EJGz8xViE7j03o65dPMFUY+u/iztYZ3kZKAJIt/pbpm1NtyWQUnhg
+         M8JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xZkupYvtBSCgKvrJHoyKINcu7Om+TqesekV8j3GB0l8=;
+        b=gxQfBSIr+j2V5y1+Mok0BM+kpZmpxj8MATkMLzo6mQJgegnGZuSpwGaXoFhZDYDLPT
+         2vKdhB45nTtWvtOHEJ/URLmWPEA5lh9iYAe0FDnz9Upi+I1tL5wlshfjTJ0qwH1AxnRR
+         9/tySsTG8NWlmF3ACJ75osPGRo8yzmRlaG98flgv3w5ZeAtq7hlwjr1dtOkTd2Ivtoj+
+         6RTAbZTHvUHqrlYALxXUn0gDD0SRRlN0960um8XGWoR/LlibLYjvhMuR7SuJSEkt0+N8
+         yrtP39M1Z6FKLSfsUnTRb6cBRVmySHodNsLeidUjXVJskTA38WEldkt0gZL4WZN7xLJl
+         hGCQ==
+X-Gm-Message-State: APjAAAUfdFTpfHmx8ollDmrOLrW1AaIMben2N18TOHkq0RY5O1cCwjVL
+        rq1SB4B87YDvOo/gLCtlXjKfYwCIKvyqEybWuqs=
+X-Google-Smtp-Source: APXvYqxCMEZl6OxrxpHpVk54lt6TihIEe1Fcqyo/s0j004PQA6BisRf6ikHlA0omRb/c6VbpoOQnGbGIAwgH8aLaW4Q=
+X-Received: by 2002:a9f:3110:: with SMTP id m16mr26100819uab.10.1568642336893;
+ Mon, 16 Sep 2019 06:58:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190911144943.21554-1-philipp.puschmann@emlix.com>
+ <CAOMZO5BKiZGF=iR071DaWLp-_7wTVJKLbOn3ihwPeVVSNF6nCg@mail.gmail.com> <2613a28d-d363-ee4e-679a-e7442e6fde48@emlix.com>
+In-Reply-To: <2613a28d-d363-ee4e-679a-e7442e6fde48@emlix.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 16 Sep 2019 11:00:47 -0300
+Message-ID: <CAOMZO5BftiJcpefSaM0-DAdhOqrKfv4k5n=y1RhbTpZ=HZDtOQ@mail.gmail.com>
 Subject: Re: [PATCH 0/4] Fix UART DMA freezes for iMX6
-To:     Fabio Estevam <festevam@gmail.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        Fugang Duan <fugang.duan@nxp.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+To:     Philipp Puschmann <philipp.puschmann@emlix.com>
+Cc:     Robin Gong <yibin.gong@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
         Vinod <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Shawn Guo <shawnguo@kernel.org>,
@@ -28,77 +58,26 @@ Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
         NXP Linux Team <linux-imx@nxp.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org
-References: <20190911144943.21554-1-philipp.puschmann@emlix.com>
- <CAOMZO5BKiZGF=iR071DaWLp-_7wTVJKLbOn3ihwPeVVSNF6nCg@mail.gmail.com>
-From:   Philipp Puschmann <philipp.puschmann@emlix.com>
-Openpgp: preference=signencrypt
-Message-ID: <2613a28d-d363-ee4e-679a-e7442e6fde48@emlix.com>
-Date:   Mon, 16 Sep 2019 15:55:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAOMZO5BKiZGF=iR071DaWLp-_7wTVJKLbOn3ihwPeVVSNF6nCg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Fabio,
+Hi Philipp,
 
-Am 12.09.19 um 20:23 schrieb Fabio Estevam:
-> Hi Philipp,
-> 
-> Thanks for submitting these fixes.
-> 
-> On Wed, Sep 11, 2019 at 11:50 AM Philipp Puschmann
-> <philipp.puschmann@emlix.com> wrote:
->>
->> For some years and since many kernel versions there are reports that
->> RX UART DMA channel stops working at one point. So far the usual workaround was
->> to disable RX DMA. This patches try to fix the underlying problem.
->>
->> When a running sdma script does not find any usable destination buffer to put
->> its data into it just leads to stopping the channel being scheduled again. As
->> solution we we manually retrigger the sdma script for this channel and by this
->> dissolve the freeze.
->>
->> While this seems to work fine so far a further patch in this series increases
->> the number of RX DMA periods for UART to reduce use cases running into such
->> a situation.
->>
->> This patch series was tested with the current kernel and backported to
->> kernel 4.15 with a special use case using a WL1837MOD via UART and provoking
->> the hanging of UART RX DMA within seconds after starting a test application.
->> It resulted in well known
->>   "Bluetooth: hci0: command 0x0408 tx timeout"
->> errors and complete stop of UART data reception. Our Bluetooth traffic consists
->> of many independent small packets, mostly only a few bytes, causing high usage
->> of periods.
->>
->>
->> Philipp Puschmann (4):
->>   dmaengine: imx-sdma: fix buffer ownership
->>   dmaengine: imx-sdma: fix dma freezes
->>   serial: imx: adapt rx buffer and dma periods
->>   dmaengine: imx-sdma: drop redundant variable
-> 
-> I have some suggestions:
-> 
-> 1. Please split this in two series: one for dmaengine and other one for serial
-> 
-> 2. Please add Fixes tag when appropriate, so that the fixes can be
-> backported to stable kernels.
-> 
-> 3. Please Cc Robin and Andy
-> 
-> Thanks
-> 
+On Mon, Sep 16, 2019 at 10:55 AM Philipp Puschmann
+<philipp.puschmann@emlix.com> wrote:
 
-Thanks for the hints. I will apply them if the contentual feedback is positive.
+> Thanks for the hints. I will apply them if the contentual feedback is positive.
+>
+> p.s. Did you forget to add Andy? I don't see a Andy in the to- and cc-list.
 
-p.s. Did you forget to add Andy? I don't see a Andy in the to- and cc-list.
+Andy's e-mail is fugang.duan@nxp.com, which I added on Cc.
 
+I think your patches look good and are in good shape to be resubmitted.
+
+Thanks for fixing these hard to debug issues!

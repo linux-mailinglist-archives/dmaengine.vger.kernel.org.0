@@ -2,91 +2,60 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A8E86B3C8F
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Sep 2019 16:30:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8946B4678
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Sep 2019 06:28:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388661AbfIPOag (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 16 Sep 2019 10:30:36 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54065 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727121AbfIPOag (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 Sep 2019 10:30:36 -0400
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1i9s1K-0003g6-HX; Mon, 16 Sep 2019 16:30:26 +0200
-Message-ID: <fcc6e54f56089d2204ca9aff79ac769a62b3adcb.camel@pengutronix.de>
-Subject: Re: [PATCH 4/4] dmaengine: imx-sdma: drop redundant variable
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Philipp Puschmann <philipp.puschmann@emlix.com>,
-        linux-kernel@vger.kernel.org
-Cc:     linux-serial@vger.kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, jslaby@suse.com, vkoul@kernel.org,
-        linux-imx@nxp.com, kernel@pengutronix.de,
-        gregkh@linuxfoundation.org, dmaengine@vger.kernel.org,
-        dan.j.williams@intel.com, festevam@gmail.com,
-        linux-arm-kernel@lists.infradead.org
-Date:   Mon, 16 Sep 2019 16:30:25 +0200
-In-Reply-To: <20190911144943.21554-5-philipp.puschmann@emlix.com>
-References: <20190911144943.21554-1-philipp.puschmann@emlix.com>
-         <20190911144943.21554-5-philipp.puschmann@emlix.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        id S1726500AbfIQE2w convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Tue, 17 Sep 2019 00:28:52 -0400
+Received: from mail.11d03.mspz7.gob.ec ([190.214.23.250]:54524 "EHLO
+        mail.11d03.mspz7.gob.ec" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfIQE2w (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 17 Sep 2019 00:28:52 -0400
+X-Greylist: delayed 1342 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Sep 2019 00:28:51 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.11d03.mspz7.gob.ec (Postfix) with ESMTP id 837C8404D0410;
+        Mon, 16 Sep 2019 23:02:36 -0500 (-05)
+Received: from mail.11d03.mspz7.gob.ec ([127.0.0.1])
+        by localhost (mail.11d03.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id pMACWXFkZa_o; Mon, 16 Sep 2019 23:02:36 -0500 (-05)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.11d03.mspz7.gob.ec (Postfix) with ESMTP id 29D1F404D2363;
+        Mon, 16 Sep 2019 23:02:36 -0500 (-05)
+X-Virus-Scanned: amavisd-new at 11d03.mspz7.gob.ec
+Received: from mail.11d03.mspz7.gob.ec ([127.0.0.1])
+        by localhost (mail.11d03.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id SjCnnfJ05Bmc; Mon, 16 Sep 2019 23:02:36 -0500 (-05)
+Received: from [10.33.79.142] (unknown [105.4.0.133])
+        by mail.11d03.mspz7.gob.ec (Postfix) with ESMTPSA id 1A7C2404D0410;
+        Mon, 16 Sep 2019 23:02:26 -0500 (-05)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: =?utf-8?q?Wohlt=C3=A4tigkeitsspende_von_2=2E000=2E000_Millionen_Euro?=
+To:     Recipients <vicenta.sinche@11d03.mspz7.gob.ec>
+From:   ''Tayeb souami'' <vicenta.sinche@11d03.mspz7.gob.ec>
+Date:   Tue, 17 Sep 2019 06:02:17 +0200
+Reply-To: Tayebsouam.spende@gmail.com
+Message-Id: <20190917040227.1A7C2404D0410@mail.11d03.mspz7.gob.ec>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mi, 2019-09-11 at 16:49 +0200, Philipp Puschmann wrote:
-> In sdma_prep_dma_cyclic buf is redundant. Drop it.
-> 
-> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
+Lieber Freund,
 
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Ich bin Herr Tayeb Souami, New Jersey, Vereinigte Staaten von Amerika, der Mega-Gewinner von $ 315million In Mega Millions Jackpot, spende ich an 5 zufällige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Mail nach einem Spinball ausgewählt.Ich habe den größten Teil meines Vermögens auf eine Reihe von Wohltätigkeitsorganisationen und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die Summe von € 2.000.000,00 an Sie als eine der ausgewählten 5 zu spenden, um meine Gewinne zu überprüfen, sehen Sie bitte meine You Tube Seite unten.
 
-> ---
->  drivers/dma/imx-sdma.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> index 6a5a84504858..5b6beeee9f0e 100644
-> --- a/drivers/dma/imx-sdma.c
-> +++ b/drivers/dma/imx-sdma.c
-> @@ -1544,7 +1544,7 @@ static struct dma_async_tx_descriptor
-> *sdma_prep_dma_cyclic(
->  	struct sdma_engine *sdma = sdmac->sdma;
->  	int num_periods = buf_len / period_len;
->  	int channel = sdmac->channel;
-> -	int i = 0, buf = 0;
-> +	int i;
->  	struct sdma_desc *desc;
->  
->  	dev_dbg(sdma->dev, "%s channel: %d\n", __func__, channel);
-> @@ -1565,7 +1565,7 @@ static struct dma_async_tx_descriptor
-> *sdma_prep_dma_cyclic(
->  		goto err_bd_out;
->  	}
->  
-> -	while (buf < buf_len) {
-> +	for (i = 0; i < num_periods; i++) {
->  		struct sdma_buffer_descriptor *bd = &desc->bd[i];
->  		int param;
->  
-> @@ -1592,9 +1592,6 @@ static struct dma_async_tx_descriptor
-> *sdma_prep_dma_cyclic(
->  		bd->mode.status = param;
->  
->  		dma_addr += period_len;
-> -		buf += period_len;
-> -
-> -		i++;
->  	}
->  
->  	return vchan_tx_prep(&sdmac->vc, &desc->vd, flags);
+UHR MICH HIER: https://www.youtube.com/watch?v=Z6ui8ZDQ6Ks
 
+Das ist dein Spendencode: [TS530342018]
+
+Antworten Sie mit dem SPENDE-CODE an diese 
+
+E-Mail:Tayebsouam.spende@gmail.com
+
+Ich hoffe, Sie und Ihre Familie glücklich zu machen.
+
+Grüße
+Herr Tayeb Souami

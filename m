@@ -2,125 +2,105 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BC82B616B
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Sep 2019 12:28:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDF86B645C
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Sep 2019 15:28:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727658AbfIRK2Y (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 18 Sep 2019 06:28:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725298AbfIRK2Y (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 18 Sep 2019 06:28:24 -0400
-Received: from localhost (unknown [122.178.229.153])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 295DB205F4;
-        Wed, 18 Sep 2019 10:28:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568802503;
-        bh=NU/XZq0YjEUS1CaZjiEgjV/Mv/zFt98RSp0oEKn6bpU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OlpbDhJc/XVCrrvg80yx1mZCdGbXBOUYMa6om5ZKj5YNXWraiyble4+RQQF+k50ac
-         Fivo3B1hhAenmy4QvJ2sGPlVggOT300c09DPVsaXnDC51oj3rHZCq1BaRSqn6mJyGJ
-         fwADBKoOoMi18cBYp4pLnmel2LVxaTHjcDaV/P6U=
-Date:   Wed, 18 Sep 2019 15:57:15 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Satendra Singh Thakur <sst2005@gmail.com>
-Cc:     dan.j.williams@intel.com, jun.nie@linaro.org, shawnguo@kernel.org,
-        agross@kernel.org, sean.wang@mediatek.com, matthias.bgg@gmail.com,
-        maxime.ripard@bootlin.com, wens@csie.org, lars@metafoo.de,
-        afaerber@suse.de, manivannan.sadhasivam@linaro.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, satendrasingh.thakur@hcl.com
-Subject: Re: [PATCH 0/9] added helper macros to remove duplicate code from
- probe functions of the platform drivers
-Message-ID: <20190918102715.GO4392@vkoul-mobl>
-References: <20190915070003.21260-1-sst2005@gmail.com>
+        id S1726268AbfIRN2i (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 18 Sep 2019 09:28:38 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42928 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfIRN2h (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 18 Sep 2019 09:28:37 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c10so6299399otd.9;
+        Wed, 18 Sep 2019 06:28:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NkZYaq2iZjzdrhEFixjMapWH/xPBRxX7c/SIzfnLapw=;
+        b=rWCfFGwQ0abnPrj7JMkKhwmsqShZbL8CvMirVPr/8GVRAqt7WNH4nIXYySp1rIzjZi
+         Id79UGEsgN82920pcfrP25pWdgJTANNDmF+F2/zYCpvywwkXv+oJEF9ifroc+DvNWFb9
+         Dha0Hn6bFaGzbfs6WoZTymsSLzH222mNdLvugFJUUPF7T8/s5+vGWzIh/6OPO6oJVjbA
+         JnMsYdniwtqYM/YVJO57Z3byPUQJ7ueMeVeAGWX/IYnFU/h9BOTFGFz1talweOymaFnB
+         QQBsoNkBY9G9TiqC2kPVxvJeQatPotu5ejybWMKilhDR9sTvQbgTgzjypHUEcHS8ViUV
+         tfXQ==
+X-Gm-Message-State: APjAAAXbZDY9+wXatlj1aaHzzv/rM/PSA9UO2vCqsL3MSB4BdqxiRrDj
+        VGa1+PCZ114ULFhVq6/dcQ==
+X-Google-Smtp-Source: APXvYqzDcQJ+48SBzJT1crszQqE+NUEsQ0YhLMJVqMyGjF5xjZO/NZpG5waXv6rdmBqIgPUXqVwiuQ==
+X-Received: by 2002:a9d:7354:: with SMTP id l20mr2964491otk.131.1568813316679;
+        Wed, 18 Sep 2019 06:28:36 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h5sm1820349oth.29.2019.09.18.06.28.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 06:28:35 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 08:28:35 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: dmaengine: dma-common: Change
+ dma-channel-mask to uint32-array
+Message-ID: <20190918132835.GA4527@bogus>
+References: <20190910114559.22810-1-peter.ujfalusi@ti.com>
+ <20190910114559.22810-2-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190915070003.21260-1-sst2005@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190910114559.22810-2-peter.ujfalusi@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 15-09-19, 12:30, Satendra Singh Thakur wrote:
-> 1. For most of the platform drivers's probe include following steps
+On Tue, Sep 10, 2019 at 02:45:57PM +0300, Peter Ujfalusi wrote:
+> Make the dma-channel-mask to be usable for controllers with more than 32
+> channels.
 > 
-> -memory allocation for driver's private structure
-> -getting io resources
-> -io remapping resources
-> -getting irq number
-> -registering irq
-> -setting driver's private data
-> -getting clock
-> -preparing and enabling clock
-
-And we have perfect set of APIs for these tasks!
-
-> 2. We have defined a set of macros to combine some or all of
-> the above mentioned steps. This will remove redundant/duplicate
-> code in drivers' probe functions of platform drivers.
-
-Why, how does it help and you do realize it also introduces bugs
-
-> devm_platform_probe_helper(pdev, priv, clk_name);
-> devm_platform_probe_helper_clk(pdev, priv, clk_name);
-> devm_platform_probe_helper_irq(pdev, priv, clk_name,
-> irq_hndlr, irq_flags, irq_name, irq_devid);
-> devm_platform_probe_helper_all(pdev, priv, clk_name,
-> irq_hndlr, irq_flags, irq_name, irq_devid);
-> devm_platform_probe_helper_all_data(pdev, priv, clk_name,
-> irq_hndlr, irq_flags, irq_name, irq_devid);
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  Documentation/devicetree/bindings/dma/dma-common.yaml | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 > 
-> 3. Code is made devres compatible (wherever required)
-> The functions: clk_get, request_irq, kzalloc, platform_get_resource
-> are replaced with their devm_* counterparts.
+> diff --git a/Documentation/devicetree/bindings/dma/dma-common.yaml b/Documentation/devicetree/bindings/dma/dma-common.yaml
+> index ed0a49a6f020..41460946be64 100644
+> --- a/Documentation/devicetree/bindings/dma/dma-common.yaml
+> +++ b/Documentation/devicetree/bindings/dma/dma-common.yaml
+> @@ -25,11 +25,19 @@ properties:
+>        Used to provide DMA controller specific information.
+>  
+>    dma-channel-mask:
+> -    $ref: /schemas/types.yaml#definitions/uint32
+>      description:
+>        Bitmask of available DMA channels in ascending order that are
+>        not reserved by firmware and are available to the
+>        kernel. i.e. first channel corresponds to LSB.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        items:
+> +          minItems = 1
 
-We already have devres APIs for people to use!
-> 
-> 4. Few bugs are also fixed.
+'='? Just making up the syntax?
 
-Which ones..?
+> +          maxItems = 255 # Should be enough
+> +          - description: Mask of channels 0-31
+> +          - description: Mask of channels 32-63
 
-> 
-> Satendra Singh Thakur (9):
->   probe/dma : added helper macros to remove redundant/duplicate code
->     from probe functions of the dma controller drivers
->   probe/dma/jz4740: removed redundant code from jz4740 dma controller's 
->        probe function
->   probe/dma/zx: removed redundant code from zx dma controller's probe
->     function
->   probe/dma/qcom-bam: removed redundant code from qcom bam dma
->     controller's probe function
->   probe/dma/mtk-hs: removed redundant code from mediatek hs dma
->     controller's probe function
->   probe/dma/sun6i: removed redundant code from sun6i dma controller's
->     probe function
->   probe/dma/sun4i: removed redundant code from sun4i dma controller's
->     probe function
->   probe/dma/axi: removed redundant code from axi dma controller's probe
->     function
->   probe/dma/owl: removed redundant code from owl dma controller's probe
->     function
-> 
->  drivers/dma/dma-axi-dmac.c       |  28 ++---
->  drivers/dma/dma-jz4740.c         |  33 +++---
->  drivers/dma/mediatek/mtk-hsdma.c |  38 +++----
->  drivers/dma/owl-dma.c            |  29 ++---
->  drivers/dma/qcom/bam_dma.c       |  71 +++++-------
->  drivers/dma/sun4i-dma.c          |  30 ++----
->  drivers/dma/sun6i-dma.c          |  30 ++----
->  drivers/dma/zx_dma.c             |  35 ++----
->  include/linux/probe-helper.h     | 179 +++++++++++++++++++++++++++++++
->  9 files changed, 280 insertions(+), 193 deletions(-)
->  create mode 100644 include/linux/probe-helper.h
-> 
-> -- 
-> 2.17.1
+You are mixing a schema and list here...
 
--- 
-~Vinod
+> +          ...
+
+That's end of doc marker in YAML...
+
+> +          - description: Mask of chnanels X-(X+31)
+
+Obviously, this was not validated with 'make dt_binding_check'. What you 
+want is:
+
+    allOf:
+      - $ref: /schemas/types.yaml#/definitions/uint32-array
+      - minItems: 1
+        maxItems: 255 # Should be enough
+
+Rob

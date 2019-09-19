@@ -2,46 +2,46 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EA1AB76D5
-	for <lists+dmaengine@lfdr.de>; Thu, 19 Sep 2019 11:59:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8ADBAB76D7
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Sep 2019 11:59:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388956AbfISJ7W (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 19 Sep 2019 05:59:22 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36321 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388981AbfISJ7W (ORCPT
+        id S2388981AbfISJ70 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 19 Sep 2019 05:59:26 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51023 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389040AbfISJ7W (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Thu, 19 Sep 2019 05:59:22 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y19so2428413wrd.3;
-        Thu, 19 Sep 2019 02:59:18 -0700 (PDT)
+Received: by mail-wm1-f67.google.com with SMTP id 5so3711775wmg.0;
+        Thu, 19 Sep 2019 02:59:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Hft77d490JmLJKBoVSy/JIsXGtbcCfU/LGbyPoVIByA=;
-        b=rZZKFLDCapFlU80ainNSoDAgfwcgjxtyuMygbUNlZsz561pHZxC2Zo0GSrB7Xnn1vD
-         yzh2JR9V9eHbUzIK73srLQ7j5qdm9ii9nPohC/UlMrydAmVBL+NhAJ7CNM1CYrpDWAQf
-         XT+xHy/URBtGCiKd6rnD2ly8n1XIhqFupeQFhqZPp+arAmepzb7Hug7Bs7f1ZnzE41Av
-         6X9tJ2UVPI/abPn0CAnw89J0emmUpk4RccwI3/KwbDrKsyIuqoGr4DIIt1F7q07+0olX
-         80SoxMNtInRiwKCpEqGf1VZppZzNYuoxuwSYbkaC6dVDrE24ZXVpzH6YmcEmUc48z6sS
-         dv6w==
+        bh=rfuq4hsFUjAwxkhFGSEVf6cth/C6nP54hmb7Z69vTlU=;
+        b=Se1QIhDJ/aMmEKO8nKFWQhubpPf+JQobP49Rsol8pjO13/r8QHpgjBg3vRNxPT+Pji
+         XgPiQp7+mCNJwl7tkNW3mraNKcyTiD1bEsHQYSP0fIOSwLnvFHiTQ8g5zowbJUGtNm2x
+         oRUOa+9DYxJ9FzwPfxi8r4sughdh03M75gPiSWCsP0ZdqBeSBjYxpHEmx086i/GaavJ4
+         EC5XB4D18wZ4LrM2zORl1RrUOoC4SsqXyLSf0RienZ9oBrQpw5dayef15piIVZtrhJCS
+         6uXZgFXrGsKK3XP2JebdBEhNT4vStyHLbbddnAag3PVfxWArdb0ibv0LwIwgnUnZ3uyH
+         sF2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Hft77d490JmLJKBoVSy/JIsXGtbcCfU/LGbyPoVIByA=;
-        b=MSYpIJ0jvolTaOIj6lWnQI9NJz53pW4oXCitMp4c7hxkHoQenO7X8JpWieIBWMsq3/
-         xChgBcIKFzH6VCEaUcDRbHFRv/17lmBJKh8ItEPfc7ZGJXEEe4JWl/m802FP02edPrAG
-         KGQvMZtatQu5gYdO2o3sUqyLWveAFhHOOZpnyLK/Usq3jmBaV1U2QoFplrHt/ecN8ssk
-         RUDcEwD2E3MfEw3yz3y3eaWZVYMF8PZV+lyMoCIk5Qdt5WiscnQPe/P9eqgjLzNpPJSi
-         xZxWsSEsAwd5o2+lSiCJ17umSzau4F10Zk9guYBWsPtFcjaiQe85wIrFnvb4FF7eJ2Be
-         qpIg==
-X-Gm-Message-State: APjAAAUB7p/ht4MXXt9A429pXqD55zY1i1y1N56Z+iU+cWipxk3zprMv
-        1wOiFMLdmoSrgCmZJTix8J18Crij
-X-Google-Smtp-Source: APXvYqxgavBTVVj9FwbAODiMpIh9H5arbGrcLC9jX6dkZg4BsE4+jikhUdlWvQZggFYg9nPOnqF4xA==
-X-Received: by 2002:adf:f150:: with SMTP id y16mr6090523wro.71.1568887157608;
-        Thu, 19 Sep 2019 02:59:17 -0700 (PDT)
+        bh=rfuq4hsFUjAwxkhFGSEVf6cth/C6nP54hmb7Z69vTlU=;
+        b=QoKNJ096qyAXkZDCY8XjZFCfzf5t8otiOx4yyfBcf/zSBTnHtucoFvMnwJM7WOGzdJ
+         YRCYmMT+KZ8ZuuMNPiP8giUtpx0B3qyRJ+r/1OW1akWtm6puz50/TCJ/dWJAggksZAxQ
+         WuL3whtYkbOdt+pbW2BYmAgAge0Mdj8QV0miyHxeSaDRnLqWs23nyLxOtNyqvaxPLw2P
+         zv0/359cSIDoyXPy6PFc3QJuFRVlEwLmN12r8+D6QpmCP68+RHBHTf19pFHOgsK3y3/b
+         AcsU7RrjKKqc2nxaNcV54VGYMXh+TLAMpYIggTm92J6V0cdBVcTYwTcbg7V5UZ8Ky4Cs
+         /d8Q==
+X-Gm-Message-State: APjAAAWthXP6JCyzFYcLdT+p73vUinP5P1snfJ2yzDN5ogrWRjgt87vU
+        lwDQsATjpZKRA4HQbehKIkwAxJ1f
+X-Google-Smtp-Source: APXvYqxC+iddNYFkj4pV2VERJZNVRNoQ1rUzTEZWZGGvzDIU79G8QpXhofx6eNJAarFEnQ4khnZk3g==
+X-Received: by 2002:a05:600c:118a:: with SMTP id i10mr2065933wmf.80.1568887158595;
+        Thu, 19 Sep 2019 02:59:18 -0700 (PDT)
 Received: from localhost.localdomain ([213.86.25.14])
-        by smtp.googlemail.com with ESMTPSA id y186sm10037704wmb.41.2019.09.19.02.59.16
+        by smtp.googlemail.com with ESMTPSA id y186sm10037704wmb.41.2019.09.19.02.59.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 19 Sep 2019 02:59:17 -0700 (PDT)
 From:   Alexander Gordeev <a.gordeev.box@gmail.com>
@@ -49,9 +49,9 @@ To:     linux-kernel@vger.kernel.org
 Cc:     Alexander Gordeev <a.gordeev.box@gmail.com>,
         Michael Chen <micchen@altera.com>, devel@driverdev.osuosl.org,
         dmaengine@vger.kernel.org
-Subject: [PATCH RFC 1/2] staging: avalon-dma: Avalon DMA engine
-Date:   Thu, 19 Sep 2019 11:59:12 +0200
-Message-Id: <6499f97c811f1fd7e7cf229cc41977e23b9765f2.1568817357.git.a.gordeev.box@gmail.com>
+Subject: [PATCH RFC 2/2] staging: avalon-drv: Avalon DMA driver
+Date:   Thu, 19 Sep 2019 11:59:13 +0200
+Message-Id: <41c74d13f2555b4fd05c7307a70302e246f8b06c.1568817357.git.a.gordeev.box@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1568817357.git.a.gordeev.box@gmail.com>
 References: <cover.1568817357.git.a.gordeev.box@gmail.com>
@@ -62,14 +62,13 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Basic support for Avalon-MM DMA Interface for PCIe found in
-hard IPs for Intel Arria, Cyclone or Stratix FPGAs. This is
-an alternative (though minimal functionality) implementation
-of reference design driver from Intel.
+This is sample implementation of a driver that uses "avalon-dma"
+driver interface to perform data transfers between on-chip and
+system memory in devices using Avalon-MM DMA Interface for PCIe
+design.
 
-Unlike the reference design, the introduced interface allows
-submitting contiguous buffers, scatterlists and DMA completion
-callbacks - much like "dmaengine" does.
+Companion user-level tool could be found at
+git@github.com:a-gordeev/avalon-drv-tool.git
 
 CC: Michael Chen <micchen@altera.com>
 CC: devel@driverdev.osuosl.org
@@ -79,1221 +78,1596 @@ Signed-off-by: Alexander Gordeev <a.gordeev.box@gmail.com>
 ---
  drivers/staging/Kconfig                       |   2 +
  drivers/staging/Makefile                      |   1 +
- drivers/staging/avalon-dma/Kconfig            |  45 ++
- drivers/staging/avalon-dma/Makefile           |  11 +
- drivers/staging/avalon-dma/avalon-dma-core.c  | 515 ++++++++++++++++++
- drivers/staging/avalon-dma/avalon-dma-core.h  |  52 ++
- .../staging/avalon-dma/avalon-dma-interrupt.c | 118 ++++
- .../staging/avalon-dma/avalon-dma-interrupt.h |  13 +
- drivers/staging/avalon-dma/avalon-dma-util.c  | 196 +++++++
- drivers/staging/avalon-dma/avalon-dma-util.h  |  25 +
- include/linux/avalon-dma-hw.h                 |  72 +++
- include/linux/avalon-dma.h                    |  68 +++
- 12 files changed, 1118 insertions(+)
- create mode 100644 drivers/staging/avalon-dma/Kconfig
- create mode 100644 drivers/staging/avalon-dma/Makefile
- create mode 100644 drivers/staging/avalon-dma/avalon-dma-core.c
- create mode 100644 drivers/staging/avalon-dma/avalon-dma-core.h
- create mode 100644 drivers/staging/avalon-dma/avalon-dma-interrupt.c
- create mode 100644 drivers/staging/avalon-dma/avalon-dma-interrupt.h
- create mode 100644 drivers/staging/avalon-dma/avalon-dma-util.c
- create mode 100644 drivers/staging/avalon-dma/avalon-dma-util.h
- create mode 100644 include/linux/avalon-dma-hw.h
- create mode 100644 include/linux/avalon-dma.h
+ drivers/staging/avalon-drv/Kconfig            |  34 +
+ drivers/staging/avalon-drv/Makefile           |  14 +
+ drivers/staging/avalon-drv/avalon-drv-dev.c   | 193 ++++++
+ drivers/staging/avalon-drv/avalon-drv-ioctl.c | 137 ++++
+ drivers/staging/avalon-drv/avalon-drv-ioctl.h |  12 +
+ drivers/staging/avalon-drv/avalon-drv-mmap.c  |  93 +++
+ drivers/staging/avalon-drv/avalon-drv-mmap.h  |  12 +
+ .../staging/avalon-drv/avalon-drv-sg-buf.c    | 132 ++++
+ .../staging/avalon-drv/avalon-drv-sg-buf.h    |  26 +
+ drivers/staging/avalon-drv/avalon-drv-util.c  |  54 ++
+ drivers/staging/avalon-drv/avalon-drv-util.h  |  12 +
+ drivers/staging/avalon-drv/avalon-drv-xfer.c  | 655 ++++++++++++++++++
+ drivers/staging/avalon-drv/avalon-drv-xfer.h  |  24 +
+ drivers/staging/avalon-drv/avalon-drv.h       |  22 +
+ include/uapi/linux/avalon-drv-ioctl.h         |  30 +
+ 17 files changed, 1453 insertions(+)
+ create mode 100644 drivers/staging/avalon-drv/Kconfig
+ create mode 100644 drivers/staging/avalon-drv/Makefile
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-dev.c
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-ioctl.c
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-ioctl.h
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-mmap.c
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-mmap.h
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-sg-buf.c
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-sg-buf.h
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-util.c
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-util.h
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-xfer.c
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv-xfer.h
+ create mode 100644 drivers/staging/avalon-drv/avalon-drv.h
+ create mode 100644 include/uapi/linux/avalon-drv-ioctl.h
 
 diff --git a/drivers/staging/Kconfig b/drivers/staging/Kconfig
-index 7c96a01eef6c..31c732ececd1 100644
+index 31c732ececd1..6a4e9fdae9f6 100644
 --- a/drivers/staging/Kconfig
 +++ b/drivers/staging/Kconfig
-@@ -120,4 +120,6 @@ source "drivers/staging/kpc2000/Kconfig"
+@@ -122,4 +122,6 @@ source "drivers/staging/isdn/Kconfig"
  
- source "drivers/staging/isdn/Kconfig"
+ source "drivers/staging/avalon-dma/Kconfig"
  
-+source "drivers/staging/avalon-dma/Kconfig"
++source "drivers/staging/avalon-drv/Kconfig"
 +
  endif # STAGING
 diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
-index fcaac9693b83..eb974cac85d3 100644
+index eb974cac85d3..e09e1aea1506 100644
 --- a/drivers/staging/Makefile
 +++ b/drivers/staging/Makefile
-@@ -50,3 +50,4 @@ obj-$(CONFIG_EROFS_FS)		+= erofs/
- obj-$(CONFIG_FIELDBUS_DEV)     += fieldbus/
+@@ -51,3 +51,4 @@ obj-$(CONFIG_FIELDBUS_DEV)     += fieldbus/
  obj-$(CONFIG_KPC2000)		+= kpc2000/
  obj-$(CONFIG_ISDN_CAPI)		+= isdn/
-+obj-$(CONFIG_AVALON_DMA)	+= avalon-dma/
-diff --git a/drivers/staging/avalon-dma/Kconfig b/drivers/staging/avalon-dma/Kconfig
+ obj-$(CONFIG_AVALON_DMA)	+= avalon-dma/
++obj-$(CONFIG_AVALON_DRV)	+= avalon-drv/
+diff --git a/drivers/staging/avalon-drv/Kconfig b/drivers/staging/avalon-drv/Kconfig
 new file mode 100644
-index 000000000000..5164e990a62b
+index 000000000000..18c43a65b6f5
 --- /dev/null
-+++ b/drivers/staging/avalon-dma/Kconfig
-@@ -0,0 +1,45 @@
++++ b/drivers/staging/avalon-drv/Kconfig
+@@ -0,0 +1,34 @@
 +# SPDX-License-Identifier: GPL-2.0
 +#
-+# Avalon DMA engine
++# Avalon DMA driver
 +#
 +# Author: Alexander Gordeev <a.gordeev.box@gmail.com>
 +#
-+config AVALON_DMA
-+	tristate "Avalon DMA engine"
++config AVALON_DRV
++	depends on AVALON_DMA
++	tristate "Avalon DMA driver"
 +	help
-+	  This selects a driver for Avalon DMA engine IP block
++	  This selects a driver for Avalon DMA
 +
-+config AVALON_DMA_TARGET_BASE
-+	hex "Target device base address"
-+	default "0x70000000"
-+	depends on AVALON_DMA
++config AVALON_DRV_PCI_VENDOR_ID
++	hex "PCI vendor ID"
++	default "0x1172"
 +
-+config AVALON_DMA_TARGET_SIZE
-+	hex "Target device memory size"
-+	default "0x10000000"
-+	depends on AVALON_DMA
++config AVALON_DRV_PCI_DEVICE_ID
++	hex "PCI device ID"
++	default "0xe003"
 +
-+config AVALON_DMA_CTRL_BASE
-+	hex "Avalon DMA controllers base"
-+	default "0x00000000"
-+	depends on AVALON_DMA
++config AVALON_DRV_PCI_BAR
++	int "PCI device BAR the Avalon DMA controller is mapped to"
++	range 0 5
++	default 0
 +
-+config AVALON_DMA_RD_EP_DST_LO
-+	hex "Avalon DMA read controller base low"
-+	default "0x80000000"
-+	depends on AVALON_DMA
++config AVALON_DRV_PCI_MSI_COUNT_ORDER
++	int "Count of MSIs the PCI device provides (order)"
++	range 0 5
++	default 5
 +
-+config AVALON_DMA_RD_EP_DST_HI
-+	hex "Avalon DMA read controller base high"
-+	default "0x00000000"
-+	depends on AVALON_DMA
-+
-+config AVALON_DMA_WR_EP_DST_LO
-+	hex "Avalon DMA write controller base low"
-+	default "0x80002000"
-+	depends on AVALON_DMA
-+
-+config AVALON_DMA_WR_EP_DST_HI
-+	hex "Avalon DMA write controller base high"
-+	default "0x00000000"
-+	depends on AVALON_DMA
-diff --git a/drivers/staging/avalon-dma/Makefile b/drivers/staging/avalon-dma/Makefile
++config AVALON_DRV_PCI_MSI_VECTOR
++	int "MSI vector the Avalon DMA controller uses in multi-MSI mode"
++	range 0 31
++	default 0
+diff --git a/drivers/staging/avalon-drv/Makefile b/drivers/staging/avalon-drv/Makefile
 new file mode 100644
-index 000000000000..61cb0ee7c7a8
+index 000000000000..2e0f5f46488e
 --- /dev/null
-+++ b/drivers/staging/avalon-dma/Makefile
-@@ -0,0 +1,11 @@
++++ b/drivers/staging/avalon-drv/Makefile
+@@ -0,0 +1,14 @@
 +# SPDX-License-Identifier: GPL-2.0
 +#
-+# Avalon DMA engine
++# Avalon DMA driver
 +#
 +# Author: Alexander Gordeev <a.gordeev.box@gmail.com>
 +#
-+obj-$(CONFIG_AVALON_DMA)	+= avalon-dma.o
++obj-$(CONFIG_AVALON_DRV)	+= avalon-drv.o
 +
-+avalon-dma-objs :=	avalon-dma-core.o \
-+			avalon-dma-util.o \
-+			avalon-dma-interrupt.o
-diff --git a/drivers/staging/avalon-dma/avalon-dma-core.c b/drivers/staging/avalon-dma/avalon-dma-core.c
++avalon-drv-objs :=	avalon-drv-dev.o \
++			avalon-drv-ioctl.o \
++			avalon-drv-mmap.o \
++			avalon-drv-sg-buf.o \
++			avalon-drv-xfer.o \
++			avalon-drv-util.o
+diff --git a/drivers/staging/avalon-drv/avalon-drv-dev.c b/drivers/staging/avalon-drv/avalon-drv-dev.c
 new file mode 100644
-index 000000000000..9e90c694785f
+index 000000000000..3c930770552f
 --- /dev/null
-+++ b/drivers/staging/avalon-dma/avalon-dma-core.c
-@@ -0,0 +1,515 @@
++++ b/drivers/staging/avalon-drv/avalon-drv-dev.c
+@@ -0,0 +1,193 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Avalon DMA engine
++ * Avalon DMA driver
 + *
 + * Author: Alexander Gordeev <a.gordeev.box@gmail.com>
 + */
 +#include <linux/kernel.h>
 +#include <linux/module.h>
 +#include <linux/pci.h>
-+#include <linux/delay.h>
 +
-+#include <linux/avalon-dma.h>
++#include "avalon-drv.h"
++#include "avalon-drv-ioctl.h"
++#include "avalon-drv-mmap.h"
 +
-+#include "avalon-dma-core.h"
-+#include "avalon-dma-util.h"
-+#include "avalon-dma-interrupt.h"
++#define AVALON_DRV_PCI_VENDOR_ID	CONFIG_AVALON_DRV_PCI_VENDOR_ID
++#define AVALON_DRV_PCI_DEVICE_ID	CONFIG_AVALON_DRV_PCI_DEVICE_ID
 +
-+#define AVALON_DMA_DESC_ALLOC
-+#define AVALON_DMA_DESC_COUNT	0
++#define PCI_BAR			CONFIG_AVALON_DRV_PCI_BAR
++#define PCI_MSI_VECTOR		CONFIG_AVALON_DRV_PCI_MSI_VECTOR
++#define PCI_MSI_COUNT		BIT(CONFIG_AVALON_DRV_PCI_MSI_COUNT_ORDER)
 +
-+static struct avalon_dma_tx_desc *__alloc_desc(gfp_t flags)
-+{
-+	struct avalon_dma_tx_desc *desc;
++const struct file_operations avalon_dev_fops = {
++	.llseek		= generic_file_llseek,
++	.unlocked_ioctl	= avalon_dev_ioctl,
++	.mmap		= avalon_dev_mmap,
++};
 +
-+	desc = kzalloc(sizeof(*desc), flags);
-+	if (!desc)
-+		return NULL;
-+
-+	INIT_LIST_HEAD(&desc->node);
-+	desc->direction = DMA_NONE;
-+
-+	return desc;
-+}
-+
-+static void free_descs(struct list_head *descs)
-+{
-+	struct avalon_dma_tx_desc *desc;
-+	struct list_head *node, *tmp;
-+
-+	list_for_each_safe(node, tmp, descs) {
-+		desc = list_entry(node, struct avalon_dma_tx_desc, node);
-+		list_del(node);
-+
-+		kfree(desc);
-+	}
-+}
-+
-+static int alloc_descs(struct list_head *descs, int nr_descs)
-+{
-+	struct avalon_dma_tx_desc *desc;
-+	int i;
-+
-+	for (i = 0; i < nr_descs; i++) {
-+		desc = __alloc_desc(GFP_KERNEL);
-+		if (!desc) {
-+			free_descs(descs);
-+			return -ENOMEM;
-+		}
-+		list_add(&desc->node, descs);
-+	}
-+
-+	return 0;
-+}
-+
-+#ifdef AVALON_DMA_DESC_ALLOC
-+struct avalon_dma_tx_desc *get_desc_locked(spinlock_t *lock,
-+					   struct list_head *descs)
-+{
-+	struct avalon_dma_tx_desc *desc;
-+
-+	assert_spin_locked(lock);
-+
-+	if (unlikely(list_empty(descs))) {
-+		gfp_t gfp_flags = GFP_KERNEL;
-+
-+		if (WARN_ON(in_interrupt()))
-+			gfp_flags |= GFP_ATOMIC;
-+
-+		desc = __alloc_desc(gfp_flags);
-+		if (!desc)
-+			return NULL;
-+
-+		list_add(&desc->node, descs);
-+	} else {
-+		desc = list_first_entry(descs,
-+					struct avalon_dma_tx_desc,
-+					node);
-+	}
-+
-+	return desc;
-+}
-+#else
-+struct avalon_dma_tx_desc *get_desc_locked(spinlock_t *lock,
-+					   struct list_head *descs)
-+{
-+	assert_spin_locked(lock);
-+
-+	if (unlikely(list_empty(descs)))
-+		return NULL;
-+
-+	return list_first_entry(descs, struct avalon_dma_tx_desc, node);
-+}
-+#endif
-+
-+int avalon_dma_init(struct avalon_dma *avalon_dma,
-+		    struct device *dev,
-+		    void __iomem *regs,
-+		    unsigned int irq)
++static int init_interrupts(struct pci_dev *pci_dev)
 +{
 +	int ret;
 +
-+	memset(avalon_dma, 0, sizeof(*avalon_dma));
-+
-+	spin_lock_init(&avalon_dma->lock);
-+
-+	avalon_dma->dev		= dev;
-+	avalon_dma->regs	= regs;
-+	avalon_dma->irq		= irq;
-+
-+	avalon_dma->active_desc	= NULL;
-+
-+	avalon_dma->h2d_last_id = -1;
-+	avalon_dma->d2h_last_id = -1;
-+
-+	INIT_LIST_HEAD(&avalon_dma->desc_allocated);
-+	INIT_LIST_HEAD(&avalon_dma->desc_submitted);
-+	INIT_LIST_HEAD(&avalon_dma->desc_issued);
-+	INIT_LIST_HEAD(&avalon_dma->desc_completed);
-+
-+	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-+	if (ret)
-+		goto dma_set_mask_err;
-+
-+	ret = alloc_descs(&avalon_dma->desc_allocated,
-+			  AVALON_DMA_DESC_COUNT);
-+	if (ret)
-+		goto alloc_descs_err;
-+
-+	avalon_dma->dma_desc_table_rd.cpu_addr = dma_alloc_coherent(
-+		dev,
-+		sizeof(struct dma_desc_table),
-+		&avalon_dma->dma_desc_table_rd.dma_addr,
-+		GFP_KERNEL);
-+	if (!avalon_dma->dma_desc_table_rd.cpu_addr) {
-+		ret = -ENOMEM;
-+		goto alloc_rd_dma_table_err;
++	ret = pci_alloc_irq_vectors(pci_dev,
++				    PCI_MSI_COUNT, PCI_MSI_COUNT,
++				    PCI_IRQ_MSI);
++	if (ret < 0) {
++		goto msi_err;
++	} else if (ret != PCI_MSI_COUNT) {
++		ret = -ENOSPC;
++		goto nr_msi_err;
 +	}
 +
-+	avalon_dma->dma_desc_table_wr.cpu_addr = dma_alloc_coherent(
-+		dev,
-+		sizeof(struct dma_desc_table),
-+		&avalon_dma->dma_desc_table_wr.dma_addr,
-+		GFP_KERNEL);
-+	if (!avalon_dma->dma_desc_table_wr.cpu_addr) {
++	ret = pci_irq_vector(pci_dev, PCI_MSI_VECTOR);
++	if (ret < 0)
++		goto vec_err;
++
++	return ret;
++
++vec_err:
++nr_msi_err:
++	pci_disable_msi(pci_dev);
++
++msi_err:
++	return ret;
++}
++
++static void term_interrupts(struct pci_dev *pci_dev)
++{
++	pci_disable_msi(pci_dev);
++}
++
++static int avalon_dev_register(struct avalon_dev *avalon_dev,
++			       const struct file_operations *fops)
++{
++	avalon_dev->misc_dev.minor	= MISC_DYNAMIC_MINOR;
++	avalon_dev->misc_dev.name	= DRIVER_NAME;
++	avalon_dev->misc_dev.nodename	= DRIVER_NAME;
++	avalon_dev->misc_dev.fops	= fops;
++	avalon_dev->misc_dev.mode	= 0644;
++
++	return misc_register(&avalon_dev->misc_dev);
++}
++
++static void avalon_dev_unregister(struct avalon_dev *avalon_dev)
++{
++	misc_deregister(&avalon_dev->misc_dev);
++}
++
++static int __init avalon_pci_probe(struct pci_dev *pci_dev,
++				   const struct pci_device_id *id)
++{
++	struct device *dev = &pci_dev->dev;
++	struct avalon_dev *avalon_dev;
++	void __iomem *regs;
++	int ret;
++
++	avalon_dev = kzalloc(sizeof(*avalon_dev), GFP_KERNEL);
++	if (!avalon_dev)
++		return -ENOMEM;
++
++	ret = pci_enable_device(pci_dev);
++	if (ret)
++		goto enable_err;
++
++	ret = pci_request_regions(pci_dev, DRIVER_NAME);
++	if (ret)
++		goto reg_err;
++
++	regs = pci_ioremap_bar(pci_dev, PCI_BAR);
++	if (!regs) {
 +		ret = -ENOMEM;
-+		goto alloc_wr_dma_table_err;
++		goto ioremap_err;
 +	}
 +
-+	tasklet_init(&avalon_dma->tasklet,
-+		     avalon_dma_tasklet, (unsigned long)avalon_dma);
++	ret = init_interrupts(pci_dev);
++	if (ret < 0)
++		goto int_err;
 +
-+	ret = request_irq(irq, avalon_dma_interrupt, IRQF_SHARED,
-+			  INTERRUPT_NAME, avalon_dma);
++	ret = avalon_dma_init(&avalon_dev->avalon_dma, dev, regs, ret);
 +	if (ret)
-+		goto req_irq_err;
++		goto dma_err;
++
++	ret = avalon_dev_register(avalon_dev, &avalon_dev_fops);
++	if (ret)
++		goto dev_reg_err;
++
++	pci_set_master(pci_dev);
++	pci_write_config_byte(pci_dev, PCI_INTERRUPT_LINE, pci_dev->irq);
++
++	avalon_dev->pci_dev = pci_dev;
++	pci_set_drvdata(pci_dev, avalon_dev);
 +
 +	return 0;
 +
-+req_irq_err:
-+	tasklet_kill(&avalon_dma->tasklet);
++	avalon_dev_unregister(avalon_dev);
 +
-+	dma_free_coherent(
-+		dev,
-+		sizeof(struct dma_desc_table),
-+		avalon_dma->dma_desc_table_wr.cpu_addr,
-+		avalon_dma->dma_desc_table_wr.dma_addr);
++dev_reg_err:
++	avalon_dma_term(&avalon_dev->avalon_dma);
 +
-+alloc_wr_dma_table_err:
-+	dma_free_coherent(
-+		dev,
-+		sizeof(struct dma_desc_table),
-+		avalon_dma->dma_desc_table_rd.cpu_addr,
-+		avalon_dma->dma_desc_table_rd.dma_addr);
++dma_err:
++	term_interrupts(pci_dev);
 +
-+alloc_rd_dma_table_err:
-+	free_descs(&avalon_dma->desc_allocated);
++int_err:
++	pci_iounmap(pci_dev, regs);
 +
-+alloc_descs_err:
-+dma_set_mask_err:
++ioremap_err:
++	pci_release_regions(pci_dev);
++
++reg_err:
++	pci_disable_device(pci_dev);
++
++enable_err:
++	kfree(avalon_dev);
++
 +	return ret;
 +}
-+EXPORT_SYMBOL_GPL(avalon_dma_init);
 +
-+static void avalon_dma_sync(struct avalon_dma *avalon_dma)
++static void __exit avalon_pci_remove(struct pci_dev *pci_dev)
 +{
-+	struct list_head *head = &avalon_dma->desc_allocated;
-+	struct avalon_dma_tx_desc *desc;
-+	int nr_retries = 0;
-+	unsigned long flags;
++	struct avalon_dev *avalon_dev = pci_get_drvdata(pci_dev);
 +
-+	/*
-+	 * FIXME Implement graceful race-free completion
-+	 */
-+again:
-+	synchronize_irq(avalon_dma->irq);
++	pci_set_drvdata(pci_dev, NULL);
 +
-+	spin_lock_irqsave(&avalon_dma->lock, flags);
++	avalon_dev_unregister(avalon_dev);
 +
-+	if (!list_empty(&avalon_dma->desc_submitted) ||
-+	    !list_empty(&avalon_dma->desc_issued) ||
-+	    !list_empty(&avalon_dma->desc_completed)) {
++	avalon_dma_term(&avalon_dev->avalon_dma);
 +
-+		spin_unlock_irqrestore(&avalon_dma->lock, flags);
++	term_interrupts(pci_dev);
 +
-+		msleep(250);
-+		nr_retries++;
++	pci_release_regions(pci_dev);
++	pci_disable_device(pci_dev);
 +
-+		goto again;
-+	}
-+
-+	BUG_ON(avalon_dma->active_desc);
-+
-+	list_splice_tail_init(&avalon_dma->desc_submitted, head);
-+	list_splice_tail_init(&avalon_dma->desc_issued, head);
-+	list_splice_tail_init(&avalon_dma->desc_completed, head);
-+
-+	list_for_each_entry(desc, head, node)
-+		desc->direction = DMA_NONE;
-+
-+	spin_unlock_irqrestore(&avalon_dma->lock, flags);
-+
-+	WARN_ON_ONCE(nr_retries);
++	kfree(avalon_dev);
 +}
 +
-+void avalon_dma_term(struct avalon_dma *avalon_dma)
++static struct pci_device_id pci_ids[] = {
++	{ PCI_DEVICE(AVALON_DRV_PCI_VENDOR_ID, AVALON_DRV_PCI_DEVICE_ID) },
++	{ 0 }
++};
++
++static struct pci_driver dma_driver_ops = {
++	.name		= DRIVER_NAME,
++	.id_table	= pci_ids,
++	.probe		= avalon_pci_probe,
++	.remove		= avalon_pci_remove,
++};
++
++static int __init avalon_drv_init(void)
++{
++	return pci_register_driver(&dma_driver_ops);
++}
++
++static void __exit avalon_drv_exit(void)
++{
++	pci_unregister_driver(&dma_driver_ops);
++}
++
++module_init(avalon_drv_init);
++module_exit(avalon_drv_exit);
++
++MODULE_AUTHOR("Alexander Gordeev <a.gordeev.box@gmail.com>");
++MODULE_DESCRIPTION("Avalon DMA control driver");
++MODULE_LICENSE("GPL v2");
++MODULE_DEVICE_TABLE(pci, pci_ids);
+diff --git a/drivers/staging/avalon-drv/avalon-drv-ioctl.c b/drivers/staging/avalon-drv/avalon-drv-ioctl.c
+new file mode 100644
+index 000000000000..ca68f3a3c697
+--- /dev/null
++++ b/drivers/staging/avalon-drv/avalon-drv-ioctl.c
+@@ -0,0 +1,137 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Avalon DMA driver
++ *
++ * Author: Alexander Gordeev <a.gordeev.box@gmail.com>
++ */
++#include <linux/kernel.h>
++#include <linux/fs.h>
++#include <linux/pci.h>
++#include <linux/uio.h>
++
++#include <uapi/linux/avalon-drv-ioctl.h>
++
++#include "avalon-drv.h"
++#include "avalon-drv-xfer.h"
++
++static const gfp_t gfp_flags = GFP_KERNEL;
++
++long avalon_dev_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
++{
++	struct avalon_dev *avalon_dev = container_of(file->private_data,
++		struct avalon_dev, misc_dev);
++	struct device *dev = &avalon_dev->pci_dev->dev;
++	struct iovec iovec[2];
++	void __user *buf = NULL, __user *buf_rd = NULL, __user *buf_wr = NULL;
++	size_t len = 0, len_rd = 0, len_wr = 0;
++	int ret = 0;
++
++	dev_dbg(dev, "%s(%d) { cmd %x", __FUNCTION__, __LINE__, cmd);
++
++	switch (cmd) {
++	case IOCTL_AVALON_GET_INFO: {
++		struct avalon_ioc_info info = {
++			.mem_addr	= TARGET_MEM_BASE,
++			.mem_size	= TARGET_MEM_SIZE,
++			.dma_size	= TARGET_DMA_SIZE,
++			.dma_size_sg	= TARGET_DMA_SIZE_SG,
++		};
++
++		if (copy_to_user((void *)arg, &info, sizeof(info))) {
++			ret = -EFAULT;
++			goto done;
++		}
++
++		goto done;
++	}
++	case IOCTL_AVALON_SET_INFO:
++		ret = -EINVAL;
++		goto done;
++
++	case IOCTL_AVALON_DMA_READ:
++	case IOCTL_AVALON_DMA_WRITE:
++	case IOCTL_AVALON_DMA_READ_SG:
++	case IOCTL_AVALON_DMA_WRITE_SG:
++	case IOCTL_AVALON_DMA_READ_SG_SMP:
++	case IOCTL_AVALON_DMA_WRITE_SG_SMP:
++		if (copy_from_user(iovec, (void *)arg, sizeof(iovec[0]))) {
++			ret = -EFAULT;
++			goto done;
++		}
++
++		buf = iovec[0].iov_base;
++		len = iovec[0].iov_len;
++
++		break;
++
++	case IOCTL_AVALON_DMA_RDWR:
++	case IOCTL_AVALON_DMA_RDWR_SG:
++		if (copy_from_user(iovec, (void *)arg, sizeof(iovec))) {
++			ret = -EFAULT;
++			goto done;
++		}
++
++		buf_rd = iovec[0].iov_base;
++		len_rd = iovec[0].iov_len;
++
++		buf_wr = iovec[1].iov_base;
++		len_wr = iovec[1].iov_len;
++
++		break;
++
++	default:
++		ret = -EINVAL;
++		goto done;
++	};
++
++	dev_dbg(dev,
++		"%s(%d) buf %px len %ld\nbuf_rd %px len_rd %ld\nbuf_wr %px len_wr %ld\n",
++		__FUNCTION__, __LINE__, buf, len, buf_rd, len_rd, buf_wr, len_wr);
++
++	switch (cmd) {
++	case IOCTL_AVALON_DMA_READ:
++		ret = xfer_rw(&avalon_dev->avalon_dma,
++			      DMA_FROM_DEVICE, buf, len);
++		break;
++	case IOCTL_AVALON_DMA_WRITE:
++		ret = xfer_rw(&avalon_dev->avalon_dma,
++			      DMA_TO_DEVICE, buf, len);
++		break;
++	case IOCTL_AVALON_DMA_RDWR:
++		ret = xfer_simultaneous(&avalon_dev->avalon_dma,
++					buf_rd, len_rd,
++					buf_wr, len_wr);
++		break;
++
++	case IOCTL_AVALON_DMA_READ_SG:
++		ret = xfer_rw_sg(&avalon_dev->avalon_dma,
++				 DMA_FROM_DEVICE, buf, len, false);
++		break;
++	case IOCTL_AVALON_DMA_WRITE_SG:
++		ret = xfer_rw_sg(&avalon_dev->avalon_dma,
++				 DMA_TO_DEVICE, buf, len, false);
++		break;
++	case IOCTL_AVALON_DMA_READ_SG_SMP:
++		ret = xfer_rw_sg(&avalon_dev->avalon_dma,
++				 DMA_FROM_DEVICE, buf, len, true);
++		break;
++	case IOCTL_AVALON_DMA_WRITE_SG_SMP:
++		ret = xfer_rw_sg(&avalon_dev->avalon_dma,
++				 DMA_TO_DEVICE, buf, len, true);
++		break;
++	case IOCTL_AVALON_DMA_RDWR_SG:
++		ret = xfer_simultaneous_sg(&avalon_dev->avalon_dma,
++					   buf_rd, len_rd,
++					   buf_wr, len_wr);
++		break;
++
++	default:
++		BUG();
++		ret = -EINVAL;
++	};
++
++done:
++	dev_dbg(dev, "%s(%d) } = %d", __FUNCTION__, __LINE__, ret);
++
++	return ret;
++}
+diff --git a/drivers/staging/avalon-drv/avalon-drv-ioctl.h b/drivers/staging/avalon-drv/avalon-drv-ioctl.h
+new file mode 100644
+index 000000000000..149428c25c2b
+--- /dev/null
++++ b/drivers/staging/avalon-drv/avalon-drv-ioctl.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Avalon DMA driver
++ *
++ * Author: Alexander Gordeev <a.gordeev.box@gmail.com>
++ */
++#ifndef __AVALON_DRV_IOCTL_H__
++#define __AVALON_DRV_IOCTL_H__
++
++long avalon_dev_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
++
++#endif
+diff --git a/drivers/staging/avalon-drv/avalon-drv-mmap.c b/drivers/staging/avalon-drv/avalon-drv-mmap.c
+new file mode 100644
+index 000000000000..7af2f70c961e
+--- /dev/null
++++ b/drivers/staging/avalon-drv/avalon-drv-mmap.c
+@@ -0,0 +1,93 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Avalon DMA driver
++ *
++ * Author: Alexander Gordeev <a.gordeev.box@gmail.com>
++ */
++#include <linux/kernel.h>
++#include <linux/fs.h>
++#include <linux/pci.h>
++
++#include "avalon-drv.h"
++#include "avalon-drv-sg-buf.h"
++
++const gfp_t gfp_flags = GFP_KERNEL;
++
++static void avalon_drv_vm_close(struct vm_area_struct *vma)
++{
++	struct dma_sg_buf *sg_buf = vma->vm_private_data;
++	struct device *dev = sg_buf->dev;
++
++	dev_dbg(dev, "%s(%d) vma %px sg_buf %px",
++		__FUNCTION__, __LINE__, vma, sg_buf);
++
++	dma_sg_buf_free(sg_buf);
++}
++
++static const struct vm_operations_struct avalon_drv_vm_ops = {
++	.close	= avalon_drv_vm_close,
++};
++
++int avalon_dev_mmap(struct file *file, struct vm_area_struct *vma)
++{
++	struct avalon_dev *avalon_dev = container_of(file->private_data,
++		struct avalon_dev, misc_dev);
++	struct device *dev = &avalon_dev->pci_dev->dev;
++	unsigned long addr = vma->vm_start;
++	unsigned long size = vma->vm_end - vma->vm_start;
++	enum dma_data_direction dir;
++	struct dma_sg_buf *sg_buf;
++	int ret;
++	int i;
++
++	dev_dbg(dev, "%s(%d) { vm_pgoff %08lx vm_flags %08lx, size %lu",
++		__FUNCTION__, __LINE__, vma->vm_pgoff, vma->vm_flags, size);
++
++	if (!(IS_ALIGNED(addr, PAGE_SIZE) && IS_ALIGNED(size, PAGE_SIZE)))
++		return -EINVAL;
++	if ((vma->vm_pgoff * PAGE_SIZE + size) > TARGET_MEM_SIZE)
++		return -EINVAL;
++	if (!(((vma->vm_flags & (VM_READ | VM_WRITE)) == VM_READ) ||
++	      ((vma->vm_flags & (VM_READ | VM_WRITE)) == VM_WRITE)))
++		return -EINVAL;
++	if (!(vma->vm_flags & VM_SHARED))
++		return -EINVAL;
++
++	vma->vm_ops = &avalon_drv_vm_ops;
++
++	if (vma->vm_flags & VM_WRITE)
++		dir = DMA_TO_DEVICE;
++	else
++		dir = DMA_FROM_DEVICE;
++
++	sg_buf = dma_sg_buf_alloc(dev, size, dir, gfp_flags);
++	if (IS_ERR(sg_buf)) {
++		ret = PTR_ERR(sg_buf);
++		goto sg_buf_alloc_err;
++	}
++
++	for (i = 0; size > 0; i++) {
++		ret = vm_insert_page(vma, addr, sg_buf->pages[i]);
++		if (ret)
++			goto ins_page_err;
++
++		addr += PAGE_SIZE;
++		size -= PAGE_SIZE;
++	};
++
++	vma->vm_private_data = sg_buf;
++
++	dev_dbg(dev, "%s(%d) } vma %px sg_buf %px",
++		__FUNCTION__, __LINE__, vma, sg_buf);
++
++	return 0;
++
++ins_page_err:
++	dma_sg_buf_free(sg_buf);
++
++sg_buf_alloc_err:
++	dev_dbg(dev, "%s(%d) } vma %px err %d",
++		__FUNCTION__, __LINE__, vma, ret);
++
++	return ret;
++}
+diff --git a/drivers/staging/avalon-drv/avalon-drv-mmap.h b/drivers/staging/avalon-drv/avalon-drv-mmap.h
+new file mode 100644
+index 000000000000..8ec7d9692217
+--- /dev/null
++++ b/drivers/staging/avalon-drv/avalon-drv-mmap.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Avalon DMA driver
++ *
++ * Author: Alexander Gordeev <a.gordeev.box@gmail.com>
++ */
++#ifndef __AVALON_DRV_MMAP_H__
++#define __AVALON_DRV_MMAP_H__
++
++int avalon_dev_mmap(struct file *file, struct vm_area_struct *vma);
++
++#endif
+diff --git a/drivers/staging/avalon-drv/avalon-drv-sg-buf.c b/drivers/staging/avalon-drv/avalon-drv-sg-buf.c
+new file mode 100644
+index 000000000000..f8d76a055bba
+--- /dev/null
++++ b/drivers/staging/avalon-drv/avalon-drv-sg-buf.c
+@@ -0,0 +1,132 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Avalon DMA driver
++ *
++ * Author: Alexander Gordeev <a.gordeev.box@gmail.com>
++ */
++#include <linux/kernel.h>
++#include <linux/dma-mapping.h>
++#include <linux/slab.h>
++
++#include "avalon-drv-sg-buf.h"
++
++static int dma_sg_alloc_compacted(struct dma_sg_buf *buf, gfp_t gfp_flags)
++{
++	unsigned int last_page = 0;
++	int size = buf->size;
++
++	while (size > 0) {
++		struct page *pages;
++		int order;
++		int i;
++
++		order = get_order(size);
++		/* Dont over allocate*/
++		if ((PAGE_SIZE << order) > size)
++			order--;
++
++		pages = NULL;
++		while (!pages) {
++			pages = alloc_pages(gfp_flags | __GFP_NOWARN, order);
++			if (pages)
++				break;
++
++			if (order == 0) {
++				while (last_page--)
++					__free_page(buf->pages[last_page]);
++				return -ENOMEM;
++			}
++			order--;
++		}
++
++		split_page(pages, order);
++		for (i = 0; i < (1 << order); i++)
++			buf->pages[last_page++] = &pages[i];
++
++		size -= PAGE_SIZE << order;
++	}
++
++	return 0;
++}
++
++struct dma_sg_buf *dma_sg_buf_alloc(struct device *dev,
++				    unsigned long size,
++				    enum dma_data_direction dma_dir,
++				    gfp_t gfp_flags)
++{
++	struct dma_sg_buf *buf;
++	struct sg_table *sgt;
++	int ret;
++	int num_pages;
++
++	buf = kzalloc(sizeof(*buf), GFP_KERNEL);
++	if (!buf)
++		return ERR_PTR(-ENOMEM);
++
++	buf->dma_dir = dma_dir;
++	buf->size = size;
++	/* size is already page aligned */
++	buf->num_pages = size >> PAGE_SHIFT;
++
++	buf->pages = kvmalloc_array(buf->num_pages, sizeof(struct page *),
++				    GFP_KERNEL | __GFP_ZERO);
++	if (!buf->pages)
++		goto fail_pages_array_alloc;
++
++	ret = dma_sg_alloc_compacted(buf, gfp_flags);
++	if (ret)
++		goto fail_pages_alloc;
++
++	ret = sg_alloc_table_from_pages(&buf->sgt, buf->pages,
++					buf->num_pages, 0, size,
++					GFP_KERNEL);
++	if (ret)
++		goto fail_table_alloc;
++
++	buf->dev = get_device(dev);
++
++	sgt = &buf->sgt;
++
++	sgt->nents = dma_map_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
++				      buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
++	if (!sgt->nents)
++		goto fail_map;
++
++	buf->vaddr = vm_map_ram(buf->pages, buf->num_pages, -1, PAGE_KERNEL);
++	if (!buf->vaddr)
++		goto fail_vm_map;
++
++	return buf;
++
++fail_vm_map:
++	dma_unmap_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
++			   buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
++fail_map:
++	put_device(buf->dev);
++	sg_free_table(&buf->sgt);
++fail_table_alloc:
++	num_pages = buf->num_pages;
++	while (num_pages--)
++		__free_page(buf->pages[num_pages]);
++fail_pages_alloc:
++	kvfree(buf->pages);
++fail_pages_array_alloc:
++	kfree(buf);
++	return ERR_PTR(-ENOMEM);
++}
++
++void dma_sg_buf_free(struct dma_sg_buf *buf)
++{
++	struct sg_table *sgt = &buf->sgt;
++	int i = buf->num_pages;
++
++	dma_unmap_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
++			   buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
++	vm_unmap_ram(buf->vaddr, buf->num_pages);
++	sg_free_table(&buf->sgt);
++	while (--i >= 0)
++		__free_page(buf->pages[i]);
++	kvfree(buf->pages);
++	put_device(buf->dev);
++	kfree(buf);
++}
+diff --git a/drivers/staging/avalon-drv/avalon-drv-sg-buf.h b/drivers/staging/avalon-drv/avalon-drv-sg-buf.h
+new file mode 100644
+index 000000000000..538f9329f8df
+--- /dev/null
++++ b/drivers/staging/avalon-drv/avalon-drv-sg-buf.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Avalon DMA driver
++ *
++ * Author: Alexander Gordeev <a.gordeev.box@gmail.com>
++ */
++#ifndef __AVALON_DRV_SG_BUF_H__
++#define __AVALON_DRV_SG_BUF_H__
++
++struct dma_sg_buf {
++	struct device			*dev;
++	void				*vaddr;
++	struct page			**pages;
++	enum dma_data_direction		dma_dir;
++	struct sg_table			sgt;
++	size_t				size;
++	unsigned int			num_pages;
++};
++
++struct dma_sg_buf *dma_sg_buf_alloc(struct device *dev,
++				    unsigned long size,
++				    enum dma_data_direction dma_dir,
++				    gfp_t gfp_flags);
++void dma_sg_buf_free(struct dma_sg_buf *buf);
++
++#endif
+diff --git a/drivers/staging/avalon-drv/avalon-drv-util.c b/drivers/staging/avalon-drv/avalon-drv-util.c
+new file mode 100644
+index 000000000000..b7ca5aa495d2
+--- /dev/null
++++ b/drivers/staging/avalon-drv/avalon-drv-util.c
+@@ -0,0 +1,54 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Avalon DMA driver
++ *
++ * Author: Alexander Gordeev <a.gordeev.box@gmail.com>
++ */
++#include <linux/kernel.h>
++#include <linux/errno.h>
++#include <linux/string.h>
++#include <linux/device.h>
++
++#if defined(CONFIG_DYNAMIC_DEBUG)
++static int print_mem(char *buf, size_t buf_len,
++		     const void *mem, size_t mem_len)
++{
++	int ret, i, total = 0;
++
++	if (buf_len < 3)
++		return -EINVAL;
++
++	mem_len = min_t(size_t, mem_len, buf_len / 3);
++	for (i = 0; i < mem_len; i++) {
++		ret = snprintf(buf + total, buf_len - total,
++			       "%02X ", ((const unsigned char *)mem)[i]);
++		if (ret < 0) {
++			strcpy(buf, "--");
++			return ret;
++		}
++		total += ret;
++	}
++
++	buf[total] = 0;
++
++	return total;
++}
++
++void dump_mem(struct device *dev, void *data, size_t len)
++{
++	char buf[256];
++	int n;
++
++	n = snprintf(buf, sizeof(buf),
++		     "%s(%d): %px [ ",
++		     __FUNCTION__, __LINE__, data);
++
++	print_mem(buf + n, sizeof(buf) - n, data, len);
++
++	dev_dbg(dev, "%s(%d): %s]\n", __FUNCTION__, __LINE__, buf);
++}
++#else
++void dump_mem(struct device *dev, void *data, size_t len)
++{
++}
++#endif
+diff --git a/drivers/staging/avalon-drv/avalon-drv-util.h b/drivers/staging/avalon-drv/avalon-drv-util.h
+new file mode 100644
+index 000000000000..113115b7e59d
+--- /dev/null
++++ b/drivers/staging/avalon-drv/avalon-drv-util.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Avalon DMA driver
++ *
++ * Author: Alexander Gordeev <a.gordeev.box@gmail.com>
++ */
++#ifndef __AVALON_DRV_UTIL_H__
++#define __AVALON_DRV_UTIL_H__
++
++void dump_mem(struct device *dev, void *data, size_t len);
++
++#endif
+diff --git a/drivers/staging/avalon-drv/avalon-drv-xfer.c b/drivers/staging/avalon-drv/avalon-drv-xfer.c
+new file mode 100644
+index 000000000000..a4e305708308
+--- /dev/null
++++ b/drivers/staging/avalon-drv/avalon-drv-xfer.c
+@@ -0,0 +1,655 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Avalon DMA driver
++ *
++ * Author: Alexander Gordeev <a.gordeev.box@gmail.com>
++ */
++#include <linux/kernel.h>
++#include <linux/slab.h>
++#include <linux/dma-mapping.h>
++#include <linux/uaccess.h>
++#include <linux/kthread.h>
++#include <linux/sched/signal.h>
++
++#include "avalon-drv.h"
++#include "avalon-drv-sg-buf.h"
++#include "avalon-drv-util.h"
++
++static const gfp_t gfp_flags	= GFP_KERNEL;
++static const size_t dma_size	= TARGET_DMA_SIZE;
++static const int nr_dma_reps	= 2;
++static const int dmas_per_cpu	= 8;
++
++char *__dir_str[] = {
++	[DMA_BIDIRECTIONAL]	= "DMA_BIDIRECTIONAL",
++	[DMA_TO_DEVICE]		= "DMA_TO_DEVICE",
++	[DMA_FROM_DEVICE]	= "DMA_FROM_DEVICE",
++	[DMA_NONE]		= "DMA_NONE",
++};
++
++struct xfer_callback_info {
++	struct device *dev;
++	struct completion completion;
++	atomic_t counter;
++	ktime_t kt_start;
++};
++
++static void init_callback_info(struct xfer_callback_info *info,
++			       struct device *dev,
++			       int value)
++{
++	info->dev = dev;
++	init_completion(&info->completion);
++
++	atomic_set(&info->counter, value);
++	smp_wmb();
++
++	info->kt_start = ktime_get();
++}
++
++static int xfer_callback(struct xfer_callback_info *info, const char *pfx)
++{
++	s64 time_us = ktime_us_delta(ktime_get(), info->kt_start);
++	int ret;
++
++	smp_rmb();
++	if (atomic_dec_and_test(&info->counter)) {
++		complete(&info->completion);
++		ret = 0;
++	} else {
++		ret = 1;
++	}
++
++	dev_dbg(info->dev, "%s_%s(%d) done = %d in %lli us",
++		pfx, __FUNCTION__, __LINE__, ret, time_us);
++
++	return ret;
++}
++
++static void rd_xfer_callback(void *dma_async_param)
++{
++	struct xfer_callback_info *info = dma_async_param;
++
++	xfer_callback(info, "rd");
++
++}
++
++static void wr_xfer_callback(void *dma_async_param)
++{
++	struct xfer_callback_info *info = dma_async_param;
++
++	xfer_callback(info, "wr");
++}
++
++int xfer_rw(struct avalon_dma *avalon_dma,
++	    enum dma_data_direction dir,
++	    void __user *user_buf, size_t user_len)
 +{
 +	struct device *dev = avalon_dma->dev;
++	dma_addr_t dma_addr;
++	void *buf;
++	struct xfer_callback_info info;
++	void (*xfer_callback)(void *dma_async_param);
++	int ret;
++	int i;
 +
-+	avalon_dma_sync(avalon_dma);
++	const size_t size = dma_size;
++	const int nr_reps = nr_dma_reps;
 +
-+	free_irq(avalon_dma->irq, (void *)avalon_dma);
-+	tasklet_kill(&avalon_dma->tasklet);
++	dev_dbg(dev, "%s(%d) { dir %s",
++		__FUNCTION__, __LINE__, __dir_str[dir]);
 +
-+	dma_free_coherent(
-+		dev,
-+		sizeof(struct dma_desc_table),
-+		avalon_dma->dma_desc_table_rd.cpu_addr,
-+		avalon_dma->dma_desc_table_rd.dma_addr);
-+
-+	dma_free_coherent(
-+		dev,
-+		sizeof(struct dma_desc_table),
-+		avalon_dma->dma_desc_table_wr.cpu_addr,
-+		avalon_dma->dma_desc_table_wr.dma_addr);
-+
-+	free_descs(&avalon_dma->desc_allocated);
-+
-+	iounmap(avalon_dma->regs);
-+}
-+EXPORT_SYMBOL_GPL(avalon_dma_term);
-+
-+static int submit_xfer(struct avalon_dma *avalon_dma,
-+		       enum avalon_dma_xfer_desc_type type,
-+		       enum dma_data_direction direction,
-+		       union avalon_dma_xfer_info *xfer_info,
-+		       avalon_dma_xfer_callback callback,
-+		       void *callback_param)
-+{
-+	struct avalon_dma_tx_desc *desc;
-+	unsigned long flags;
-+	int ret = 0;
-+
-+	spin_lock_irqsave(&avalon_dma->lock, flags);
-+
-+	desc = get_desc_locked(&avalon_dma->lock, &avalon_dma->desc_allocated);
-+	if (WARN_ON(!desc)) {
-+		spin_unlock_irqrestore(&avalon_dma->lock, flags);
-+		return -EBUSY;
++	if (user_len < size) {
++		ret = -EINVAL;
++		goto mem_len_err;
++	} else {
++		user_len = size;
 +	}
 +
-+	desc->avalon_dma = avalon_dma;
-+	desc->type = type;
-+	desc->direction = direction;
-+	desc->callback = callback;
-+	desc->callback_param = callback_param;
-+
-+	if (type == xfer_buf)
-+		desc->xfer_info.xfer_buf = xfer_info->xfer_buf;
-+	else if (type == xfer_sgt)
-+		desc->xfer_info.xfer_sgt = xfer_info->xfer_sgt;
-+	else
++	switch (dir) {
++	case DMA_TO_DEVICE:
++		xfer_callback = wr_xfer_callback;
++		break;
++	case DMA_FROM_DEVICE:
++		xfer_callback = rd_xfer_callback;
++		break;
++	default:
 +		BUG();
++		ret = -EINVAL;
++		goto dma_dir_err;
++	}
 +
-+	list_move_tail(&desc->node, &avalon_dma->desc_submitted);
++	buf = kmalloc(size, gfp_flags);
++	if (!buf) {
++		ret = -ENOMEM;
++		goto mem_alloc_err;
++	}
 +
-+	spin_unlock_irqrestore(&avalon_dma->lock, flags);
++	memset(buf, 0, size);
++
++	if (dir == DMA_TO_DEVICE) {
++		if (copy_from_user(buf, user_buf, user_len)) {
++			ret = -EFAULT;
++			goto cp_from_user_err;
++		}
++	}
++
++	dma_addr = dma_map_single(dev, buf, size, dir);
++	if (dma_mapping_error(dev, dma_addr)) {
++		ret = -ENOMEM;
++		goto dma_alloc_err;
++	}
++
++	init_callback_info(&info, dev, nr_reps);
++
++	dev_dbg(dev, "%s(%d) dma_addr %08llx size %lu dir %d reps = %d",
++		__FUNCTION__, __LINE__, dma_addr, size, dir, nr_reps);
++
++	for (i = 0; i < nr_reps; i++) {
++		ret = avalon_dma_submit_xfer(avalon_dma,
++					     dir,
++					     TARGET_MEM_BASE,
++					     dma_addr, size,
++					     xfer_callback, &info);
++		if (ret)
++			goto dma_submit_err;
++	}
++
++	ret = avalon_dma_issue_pending(avalon_dma);
++	if (ret)
++		goto issue_pending_err;
++
++	ret = wait_for_completion_interruptible(&info.completion);
++	if (ret)
++		goto wait_err;
++
++	if (dir == DMA_FROM_DEVICE) {
++		if (copy_to_user(user_buf, buf, user_len))
++			ret = -EFAULT;
++	}
++
++wait_err:
++issue_pending_err:
++dma_submit_err:
++	dma_unmap_single(dev, dma_addr, size, dir);
++
++dma_alloc_err:
++cp_from_user_err:
++	kfree(buf);
++
++mem_alloc_err:
++dma_dir_err:
++mem_len_err:
++	dev_dbg(dev, "%s(%d) } = %d", __FUNCTION__, __LINE__, ret);
 +
 +	return ret;
 +}
 +
-+int avalon_dma_issue_pending(struct avalon_dma *avalon_dma)
++int xfer_simultaneous(struct avalon_dma *avalon_dma,
++		      void __user *user_buf_rd, size_t user_len_rd,
++		      void __user *user_buf_wr, size_t user_len_wr)
 +{
-+	struct avalon_dma_tx_desc *desc;
-+	unsigned long flags;
-+	int ret = 0;
++	struct device *dev = avalon_dma->dev;
++	dma_addr_t dma_addr_rd, dma_addr_wr;
++	void *buf_rd, *buf_wr;
++	struct xfer_callback_info info;
++	int ret;
++	int i;
 +
-+	spin_lock_irqsave(&avalon_dma->lock, flags);
++	const size_t size = dma_size;
++	const dma_addr_t target_rd = TARGET_MEM_BASE;
++	const dma_addr_t target_wr = target_rd + size;
++	const int nr_reps = nr_dma_reps;
 +
-+	if (WARN_ON(list_empty(&avalon_dma->desc_submitted))) {
-+		ret = -ENOENT;
-+		goto err;
++	dev_dbg(dev, "%s(%d) {", __FUNCTION__, __LINE__);
++
++	if (user_len_rd < size) {
++		ret = -EINVAL;
++		goto mem_len_err;
++	} else {
++		user_len_rd = size;
 +	}
 +
-+	list_splice_tail_init(&avalon_dma->desc_submitted,
-+			      &avalon_dma->desc_issued);
++	if (user_len_wr < size) {
++		ret = -EINVAL;
++		goto mem_len_err;
++	} else {
++		user_len_wr = size;
++	}
 +
-+	/*
-+	 * We must check BOTH read and write status here!
-+	 */
-+	if (avalon_dma->d2h_last_id < 0 && avalon_dma->h2d_last_id < 0) {
-+		BUG_ON(avalon_dma->active_desc);
++	buf_rd = kmalloc(size, gfp_flags);
++	if (!buf_rd) {
++		ret = -ENOMEM;
++		goto rd_mem_alloc_err;
++	}
 +
-+		desc = list_first_entry(&avalon_dma->desc_issued,
-+					struct avalon_dma_tx_desc,
-+					node);
++	buf_wr = kmalloc(size, gfp_flags);
++	if (!buf_wr) {
++		ret = -ENOMEM;
++		goto wr_mem_alloc_err;
++	}
 +
-+		ret = avalon_dma_start_xfer(avalon_dma, desc);
++	memset(buf_rd, 0, size);
++	memset(buf_wr, 0, size);
++
++	if (copy_from_user(buf_wr, user_buf_wr, user_len_wr)) {
++		ret = -EFAULT;
++		goto cp_from_user_err;
++	}
++
++	dma_addr_rd = dma_map_single(dev, buf_rd, size, DMA_FROM_DEVICE);
++	if (dma_mapping_error(dev, dma_addr_rd)) {
++		ret = -ENOMEM;
++		goto rd_dma_map_err;
++	}
++
++	dma_addr_wr = dma_map_single(dev, buf_wr, size, DMA_TO_DEVICE);
++	if (dma_mapping_error(dev, dma_addr_rd)) {
++		ret = -ENOMEM;
++		goto wr_dma_map_err;
++	}
++
++	init_callback_info(&info, dev, 2 * nr_reps);
++
++	for (i = 0; i < nr_reps; i++) {
++		ret = avalon_dma_submit_xfer(avalon_dma,
++					     DMA_TO_DEVICE,
++					     target_wr, dma_addr_wr, size,
++					     wr_xfer_callback, &info);
++		if (ret)
++			goto rd_dma_submit_err;
++
++		ret = avalon_dma_submit_xfer(avalon_dma,
++					     DMA_FROM_DEVICE,
++					     target_rd, dma_addr_rd, size,
++					     rd_xfer_callback, &info);
++		BUG_ON(ret);
++		if (ret)
++			goto wr_dma_submit_err;
++	}
++
++	ret = avalon_dma_issue_pending(avalon_dma);
++	BUG_ON(ret);
++	if (ret)
++		goto issue_pending_err;
++
++	dev_dbg(dev,
++		"%s(%d) dma_addr %08llx/%08llx rd_size %lu wr_size %lu",
++		__FUNCTION__, __LINE__,
++		dma_addr_rd, dma_addr_wr, size, size);
++
++	ret = wait_for_completion_interruptible(&info.completion);
++	if (ret)
++		goto wait_err;
++
++	if (copy_to_user(user_buf_rd, buf_rd, user_len_rd))
++		ret = -EFAULT;
++
++wait_err:
++issue_pending_err:
++wr_dma_submit_err:
++rd_dma_submit_err:
++	dma_unmap_single(dev, dma_addr_wr, size, DMA_TO_DEVICE);
++
++wr_dma_map_err:
++	dma_unmap_single(dev, dma_addr_rd, size, DMA_FROM_DEVICE);
++
++rd_dma_map_err:
++cp_from_user_err:
++	kfree(buf_wr);
++
++wr_mem_alloc_err:
++	kfree(buf_rd);
++
++rd_mem_alloc_err:
++mem_len_err:
++	dev_dbg(dev, "%s(%d) } = %d", __FUNCTION__, __LINE__, ret);
++
++	return ret;
++}
++
++static int kthread_xfer_rw_sg(struct avalon_dma *avalon_dma,
++			      enum dma_data_direction dir,
++			      dma_addr_t dev_addr, struct sg_table *sgt,
++			      void (*xfer_callback)(void *dma_async_param))
++{
++	struct device *dev = avalon_dma->dev;
++	struct xfer_callback_info info;
++	int ret = 0;
++	int i;
++
++	const int nr_reps = nr_dma_reps;
++
++	while (!kthread_should_stop()) {
++		init_callback_info(&info, dev, nr_reps);
++
++		for (i = 0; i < nr_reps; i++) {
++			ret = avalon_dma_submit_xfer_sg(avalon_dma,
++							dir,
++							dev_addr, sgt,
++							xfer_callback, &info);
++			if (ret) {
++				/*
++				 * Ideally, kind of avalon_dma_cancel() should
++				 * be called here to avoid running out of descs
++				 * (ones stuck in "submitted" list since it
++				 * never gets processed)
++				 *
++				 * However, a call to avalon_dma_issue_pending()
++				 * would do the job and let all outstanding
++				 * descs processed and moved back to "allocated"
++				 * queue in the end of the day.
++				 *
++				 * Leave it as is as a showcase of "allocated"
++				 * list empty and "submitted" list full and
++				 * unprocessed.
++				 */
++				goto err;
++			}
++		}
++
++		ret = avalon_dma_issue_pending(avalon_dma);
 +		if (ret)
 +			goto err;
 +
-+		avalon_dma->active_desc = desc;
-+	} else {
-+		BUG_ON(!avalon_dma->active_desc);
++		ret = wait_for_completion_interruptible(&info.completion);
++		if (ret)
++			goto err;
 +	}
 +
++	return 0;
++
 +err:
-+	spin_unlock_irqrestore(&avalon_dma->lock, flags);
++	dev_dbg(dev, "%s(%d) cpu %d avalon_dma_submit_xfer_sg() %d",
++		__FUNCTION__, __LINE__, smp_processor_id(), ret);
 +
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(avalon_dma_issue_pending);
-+
-+int avalon_dma_submit_xfer(struct avalon_dma *avalon_dma,
-+			   enum dma_data_direction direction,
-+			   dma_addr_t dev_addr,
-+			   dma_addr_t host_addr,
-+			   unsigned int size,
-+			   avalon_dma_xfer_callback callback,
-+			   void *callback_param)
-+{
-+	union avalon_dma_xfer_info xi;
-+
-+	xi.xfer_buf.dev_addr	= dev_addr;
-+	xi.xfer_buf.host_addr	= host_addr;
-+	xi.xfer_buf.size	= size;
-+	xi.xfer_buf.offset	= 0;
-+
-+	return submit_xfer(avalon_dma, xfer_buf, direction, &xi,
-+			   callback, callback_param);
-+}
-+EXPORT_SYMBOL_GPL(avalon_dma_submit_xfer);
-+
-+int avalon_dma_submit_xfer_sg(struct avalon_dma *avalon_dma,
-+			      enum dma_data_direction direction,
-+			      dma_addr_t dev_addr,
-+			      struct sg_table *sg_table,
-+			      avalon_dma_xfer_callback callback,
-+			      void *callback_param)
-+{
-+	union avalon_dma_xfer_info xi;
-+
-+	xi.xfer_sgt.dev_addr	= dev_addr;
-+	xi.xfer_sgt.sg_table	= sg_table;
-+	xi.xfer_sgt.sg_curr	= sg_table->sgl;
-+	xi.xfer_sgt.sg_offset	= 0;
-+
-+	return submit_xfer(avalon_dma, xfer_sgt, direction, &xi,
-+			   callback, callback_param);
-+}
-+EXPORT_SYMBOL_GPL(avalon_dma_submit_xfer_sg);
-+
-+static int setup_dma_descs_buf(struct dma_desc *dma_descs,
-+			       struct avalon_dma_tx_desc *desc)
-+{
-+	struct xfer_buf *xfer_buf = &desc->xfer_info.xfer_buf;
-+	unsigned int offset = xfer_buf->offset;
-+	unsigned int size = xfer_buf->size - offset;
-+	dma_addr_t dev_addr = xfer_buf->dev_addr + offset;
-+	dma_addr_t host_addr = xfer_buf->host_addr + offset;
-+	unsigned int set;
-+	int ret;
-+
-+	BUG_ON(size > xfer_buf->size);
-+	ret = setup_descs(dma_descs, 0, desc->direction,
-+			  dev_addr, host_addr, size, &set);
-+	BUG_ON(!ret);
-+	if (ret > 0)
-+		xfer_buf->offset += set;
++	while (!kthread_should_stop())
++		cond_resched();
 +
 +	return ret;
 +}
 +
-+static int setup_dma_descs_sg(struct dma_desc *dma_descs,
-+			      struct avalon_dma_tx_desc *desc)
-+{
-+	struct xfer_sgt *xfer_sgt = &desc->xfer_info.xfer_sgt;
-+	struct scatterlist *sg_stop;
-+	unsigned int sg_set;
-+	int ret;
++struct kthread_xfer_rw_sg_data {
++	struct avalon_dma *avalon_dma;
++	enum dma_data_direction dir;
++	dma_addr_t dev_addr;
++	struct sg_table *sgt;
++	void (*xfer_callback)(void *dma_async_param);
++};
 +
-+	ret = setup_descs_sg(dma_descs, 0,
-+			     desc->direction,
-+			     xfer_sgt->dev_addr, xfer_sgt->sg_table,
-+			     xfer_sgt->sg_curr, xfer_sgt->sg_offset,
-+			     &sg_stop, &sg_set);
-+	BUG_ON(!ret);
-+	if (ret > 0) {
-+		if (sg_stop == xfer_sgt->sg_curr) {
-+			xfer_sgt->sg_offset += sg_set;
-+		} else {
-+			xfer_sgt->sg_curr = sg_stop;
-+			xfer_sgt->sg_offset = sg_set;
++static int __kthread_xfer_rw_sg(void *_data)
++{
++	struct kthread_xfer_rw_sg_data *data = _data;
++
++	return kthread_xfer_rw_sg(data->avalon_dma,
++				  data->dir,
++				  data->dev_addr, data->sgt,
++				  data->xfer_callback);
++}
++
++static int __xfer_rw_sg_smp(struct avalon_dma *avalon_dma,
++			    enum dma_data_direction dir,
++			    dma_addr_t dev_addr, struct sg_table *sgt,
++			    void (*xfer_callback)(void *dma_async_param))
++{
++	struct kthread_xfer_rw_sg_data data = {
++		avalon_dma,
++		dir,
++		dev_addr,
++		sgt,
++		xfer_callback
++	};
++	struct task_struct *task;
++	struct task_struct **tasks;
++	int nr_tasks = dmas_per_cpu * num_online_cpus();
++	int n, cpu;
++	int ret = 0;
++	int i = 0;
++
++	tasks = kmalloc(sizeof(tasks[0]) * nr_tasks, GFP_KERNEL);
++	if (!tasks)
++		return -ENOMEM;
++
++	for (n = 0; n < dmas_per_cpu; n++) {
++		for_each_online_cpu(cpu) {
++			if (i >= nr_tasks) {
++				ret = -ENOMEM;
++				goto kthread_err;
++			}
++
++			task = kthread_create(__kthread_xfer_rw_sg,
++					      &data, "av-dma-sg-%d-%d", cpu, n);
++			if (IS_ERR(task)) {
++				ret = PTR_ERR(task);
++				goto kthread_err;
++			}
++
++			kthread_bind(task, cpu);
++
++			tasks[i] = task;
++			i++;
 +		}
 +	}
 +
++	for (i = 0; i < nr_tasks; i++)
++		wake_up_process(tasks[i]);
++
++	/*
++	 * Run child kthreads until user sent a signal (i.e Ctrl+C)
++	 * and clear the signal to avid user program from being killed.
++	 */
++	schedule_timeout_interruptible(MAX_SCHEDULE_TIMEOUT);
++	flush_signals(current);
++
++kthread_err:
++	for (i = 0; i < nr_tasks; i++)
++		kthread_stop(tasks[i]);
++
++	kfree(tasks);
++
 +	return ret;
 +}
 +
-+static int setup_dma_descs(struct dma_desc *dma_descs,
-+			   struct avalon_dma_tx_desc *desc)
++static int __xfer_rw_sg(struct avalon_dma *avalon_dma,
++			enum dma_data_direction dir,
++			dma_addr_t dev_addr, struct sg_table *sgt,
++			void (*xfer_callback)(void *dma_async_param))
 +{
-+	int ret;
++	struct device *dev = avalon_dma->dev;
++	struct xfer_callback_info info;
++	int ret = 0;
++	int i;
 +
-+	if (desc->type == xfer_buf) {
-+		ret = setup_dma_descs_buf(dma_descs, desc);
-+	} else if (desc->type == xfer_sgt) {
-+		ret = setup_dma_descs_sg(dma_descs, desc);
-+	} else {
-+		BUG();
-+		ret = -EINVAL;
++	const int nr_reps = nr_dma_reps;
++
++	init_callback_info(&info, dev, nr_reps);
++
++	for (i = 0; i < nr_reps; i++) {
++		ret = avalon_dma_submit_xfer_sg(avalon_dma,
++						dir,
++						dev_addr, sgt,
++						xfer_callback, &info);
++		if (ret)
++			return ret;
 +	}
 +
-+	return ret;
-+}
++	ret = avalon_dma_issue_pending(avalon_dma);
++	if (ret)
++		return ret;
 +
-+static void start_xfer(void __iomem *base, size_t ctrl_off,
-+		       u32 rc_src_hi, u32 rc_src_lo,
-+		       u32 ep_dst_hi, u32 ep_dst_lo,
-+		       int last_id)
-+{
-+	av_write32(rc_src_hi, base, ctrl_off, rc_src_hi);
-+	av_write32(rc_src_lo, base, ctrl_off, rc_src_lo);
-+	av_write32(ep_dst_hi, base, ctrl_off, ep_dst_hi);
-+	av_write32(ep_dst_lo, base, ctrl_off, ep_dst_lo);
-+	av_write32(last_id, base, ctrl_off, table_size);
-+	av_write32(last_id, base, ctrl_off, last_ptr);
-+}
-+
-+int avalon_dma_start_xfer(struct avalon_dma *avalon_dma,
-+			  struct avalon_dma_tx_desc *desc)
-+{
-+	size_t ctrl_off;
-+	struct __dma_desc_table *__table;
-+	struct dma_desc_table *table;
-+	u32 rc_src_hi, rc_src_lo;
-+	u32 ep_dst_lo, ep_dst_hi;
-+	int last_id, *__last_id;
-+	int nr_descs;
-+
-+	if (desc->direction == DMA_TO_DEVICE) {
-+		__table = &avalon_dma->dma_desc_table_rd;
-+
-+		ctrl_off = AVALON_DMA_RD_CTRL_OFFSET;
-+
-+		ep_dst_hi = AVALON_DMA_RD_EP_DST_HI;
-+		ep_dst_lo = AVALON_DMA_RD_EP_DST_LO;
-+
-+		__last_id = &avalon_dma->h2d_last_id;
-+	} else if (desc->direction == DMA_FROM_DEVICE) {
-+		__table = &avalon_dma->dma_desc_table_wr;
-+
-+		ctrl_off = AVALON_DMA_WR_CTRL_OFFSET;
-+
-+		ep_dst_hi = AVALON_DMA_WR_EP_DST_HI;
-+		ep_dst_lo = AVALON_DMA_WR_EP_DST_LO;
-+
-+		__last_id = &avalon_dma->d2h_last_id;
-+	} else {
-+		BUG();
-+	}
-+
-+	table = __table->cpu_addr;
-+	memset(&table->flags, 0, sizeof(table->flags));
-+
-+	nr_descs = setup_dma_descs(table->descs, desc);
-+	if (WARN_ON(nr_descs < 1))
-+		return nr_descs;
-+
-+	last_id = nr_descs - 1;
-+	*__last_id = last_id;
-+
-+	rc_src_hi = __table->dma_addr >> 32;
-+	rc_src_lo = (u32)__table->dma_addr;
-+
-+	start_xfer(avalon_dma->regs, ctrl_off,
-+		   rc_src_hi, rc_src_lo,
-+		   ep_dst_hi, ep_dst_lo,
-+		   last_id);
++	ret = wait_for_completion_interruptible(&info.completion);
++	if (ret)
++		return ret;
 +
 +	return 0;
 +}
 +
-+MODULE_AUTHOR("Alexander Gordeev <a.gordeev.box@gmail.com>");
-+MODULE_DESCRIPTION("Avalon DMA engine driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/staging/avalon-dma/avalon-dma-core.h b/drivers/staging/avalon-dma/avalon-dma-core.h
-new file mode 100644
-index 000000000000..230f6ab9ca11
---- /dev/null
-+++ b/drivers/staging/avalon-dma/avalon-dma-core.h
-@@ -0,0 +1,52 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Avalon DMA engine
-+ *
-+ * Author: Alexander Gordeev <a.gordeev.box@gmail.com>
-+ */
-+#ifndef __AVALON_DMA_CORE_H__
-+#define __AVALON_DMA_CORE_H__
-+
-+#include <linux/interrupt.h>
-+#include <linux/dma-direction.h>
-+
-+#include <linux/avalon-dma.h>
-+
-+#define INTERRUPT_NAME	"avalon_dma"
-+
-+struct avalon_dma_tx_desc {
-+	struct list_head node;
-+
-+	struct avalon_dma *avalon_dma;
-+
-+	enum avalon_dma_xfer_desc_type {
-+		xfer_buf,
-+		xfer_sgt
-+	} type;
-+
-+	enum dma_data_direction direction;
-+
-+	avalon_dma_xfer_callback callback;
-+	void *callback_param;
-+
-+	union avalon_dma_xfer_info {
-+		struct xfer_buf {
-+			dma_addr_t dev_addr;
-+			dma_addr_t host_addr;
-+			unsigned int size;
-+			unsigned int offset;
-+		} xfer_buf;
-+		struct xfer_sgt {
-+			dma_addr_t dev_addr;
-+			struct sg_table *sg_table;
-+			struct scatterlist *sg_curr;
-+			unsigned int sg_offset;
-+		} xfer_sgt;
-+	} xfer_info;
-+};
-+
-+int avalon_dma_start_xfer(struct avalon_dma *avalon_dma,
-+			  struct avalon_dma_tx_desc *desc);
-+
-+#endif
-+
-diff --git a/drivers/staging/avalon-dma/avalon-dma-interrupt.c b/drivers/staging/avalon-dma/avalon-dma-interrupt.c
-new file mode 100644
-index 000000000000..84261aee2d63
---- /dev/null
-+++ b/drivers/staging/avalon-dma/avalon-dma-interrupt.c
-@@ -0,0 +1,118 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Avalon DMA engine
-+ *
-+ * Author: Alexander Gordeev <a.gordeev.box@gmail.com>
-+ */
-+#include <linux/kernel.h>
-+#include <linux/pci.h>
-+
-+#include "avalon-dma-core.h"
-+
-+static bool dma_desc_done(struct avalon_dma_tx_desc *desc)
++static struct vm_area_struct *get_vma(unsigned long addr,
++				      unsigned long size)
 +{
-+	if (desc->type == xfer_buf) {
-+		struct xfer_buf *xfer_buf = &desc->xfer_info.xfer_buf;
++	struct vm_area_struct *vma;
++	unsigned long vm_size;
 +
-+		BUG_ON(xfer_buf->offset > xfer_buf->size);
-+		if (xfer_buf->offset < xfer_buf->size)
-+			return false;
-+	} else if (desc->type == xfer_sgt) {
-+		struct xfer_sgt *xfer_sgt = &desc->xfer_info.xfer_sgt;
-+		struct scatterlist *sg_curr = xfer_sgt->sg_curr;
-+		unsigned int sg_len = sg_dma_len(sg_curr);
++	vma = find_vma(current->mm, addr);
++	if (!vma || (vma->vm_start != addr))
++		return ERR_PTR(-ENXIO);
 +
-+		if (!sg_is_last(sg_curr))
-+			return false;
++	vm_size = vma->vm_end - vma->vm_start;
++	if (size > vm_size)
++		return ERR_PTR(-EINVAL);
 +
-+		BUG_ON(xfer_sgt->sg_offset > sg_len);
-+		if (xfer_sgt->sg_offset < sg_len)
-+			return false;
-+	} else {
-+		BUG();
-+	}
-+
-+	return true;
++	return vma;
 +}
 +
-+irqreturn_t avalon_dma_interrupt(int irq, void *dev_id)
++int xfer_rw_sg(struct avalon_dma *avalon_dma,
++	       enum dma_data_direction dir,
++	       void __user *user_buf, size_t user_len,
++	       bool is_smp)
 +{
-+	struct avalon_dma *avalon_dma = (struct avalon_dma *)dev_id;
-+	struct avalon_dma_tx_desc *desc;
-+	u32 *rd_flags = avalon_dma->dma_desc_table_rd.cpu_addr->flags;
-+	u32 *wr_flags = avalon_dma->dma_desc_table_wr.cpu_addr->flags;
-+	bool rd_done;
-+	bool wr_done;
-+	bool desc_done;
++	struct device *dev = avalon_dma->dev;
++	int (*xfer)(struct avalon_dma *avalon_dma,
++		    enum dma_data_direction dir,
++		    dma_addr_t dev_addr,
++		    struct sg_table *sgt,
++		    void (*xfer_callback)(void *dma_async_param));
++	void (*xfer_callback)(void *dma_async_param);
++	struct vm_area_struct *vma;
++	struct dma_sg_buf *sg_buf;
++	dma_addr_t dma_addr;
++	int ret;
 +
-+	spin_lock(&avalon_dma->lock);
++	dev_dbg(dev, "%s(%d) { dir %s smp %d",
++		__FUNCTION__, __LINE__, __dir_str[dir], is_smp);
 +
-+	rd_done = (avalon_dma->h2d_last_id < 0);
-+	wr_done = (avalon_dma->d2h_last_id < 0);
++	vma = get_vma((unsigned long)user_buf, user_len);
++	if (IS_ERR(vma))
++		return PTR_ERR(vma);
 +
-+	if (rd_done && wr_done) {
-+		spin_unlock(&avalon_dma->lock);
-+		return IRQ_NONE;
-+	}
-+
-+	do {
-+		if (!rd_done && rd_flags[avalon_dma->h2d_last_id])
-+			rd_done = true;
-+
-+		if (!wr_done && wr_flags[avalon_dma->d2h_last_id])
-+			wr_done = true;
-+	} while (!rd_done || !wr_done);
-+
-+	avalon_dma->h2d_last_id = -1;
-+	avalon_dma->d2h_last_id = -1;
-+
-+	BUG_ON(!avalon_dma->active_desc);
-+	desc = avalon_dma->active_desc;
-+
-+	desc_done = dma_desc_done(desc);
-+	if (desc_done) {
-+		desc->direction = DMA_NONE;
-+		list_move_tail(&desc->node, &avalon_dma->desc_completed);
-+
-+		if (list_empty(&avalon_dma->desc_issued)) {
-+			avalon_dma->active_desc = NULL;
-+		} else {
-+			desc = list_first_entry(&avalon_dma->desc_issued,
-+						struct avalon_dma_tx_desc,
-+						node);
-+			avalon_dma->active_desc = desc;
-+		}
-+	}
-+
-+	if (avalon_dma->active_desc) {
-+		BUG_ON(desc != avalon_dma->active_desc);
-+		avalon_dma_start_xfer(avalon_dma, desc);
-+	}
-+
-+	spin_unlock(&avalon_dma->lock);
-+
-+	if (desc_done)
-+		tasklet_schedule(&avalon_dma->tasklet);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+void avalon_dma_tasklet(unsigned long arg)
-+{
-+	struct avalon_dma *avalon_dma = (struct avalon_dma *)arg;
-+	struct avalon_dma_tx_desc *desc;
-+	LIST_HEAD(desc_completed);
-+
-+	spin_lock_irq(&avalon_dma->lock);
-+	list_splice_tail_init(&avalon_dma->desc_completed, &desc_completed);
-+	spin_unlock_irq(&avalon_dma->lock);
-+
-+	list_for_each_entry(desc, &desc_completed, node) {
-+		if (desc->callback)
-+			desc->callback(desc->callback_param);
-+	}
-+
-+	spin_lock_irq(&avalon_dma->lock);
-+	list_splice_tail(&desc_completed, &avalon_dma->desc_allocated);
-+	spin_unlock_irq(&avalon_dma->lock);
-+}
-diff --git a/drivers/staging/avalon-dma/avalon-dma-interrupt.h b/drivers/staging/avalon-dma/avalon-dma-interrupt.h
-new file mode 100644
-index 000000000000..15603fe431c4
---- /dev/null
-+++ b/drivers/staging/avalon-dma/avalon-dma-interrupt.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Avalon DMA engine
-+ *
-+ * Author: Alexander Gordeev <a.gordeev.box@gmail.com>
-+ */
-+#ifndef __AVALON_DMA_INTERRUPT_H__
-+#define __AVALON_DMA_INTERRUPT_H__
-+
-+irqreturn_t avalon_dma_interrupt(int irq, void *dev_id);
-+void avalon_dma_tasklet(unsigned long arg);
-+
-+#endif
-diff --git a/drivers/staging/avalon-dma/avalon-dma-util.c b/drivers/staging/avalon-dma/avalon-dma-util.c
-new file mode 100644
-index 000000000000..038973a1b3b3
---- /dev/null
-+++ b/drivers/staging/avalon-dma/avalon-dma-util.c
-@@ -0,0 +1,196 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Avalon DMA engine
-+ *
-+ * Author: Alexander Gordeev <a.gordeev.box@gmail.com>
-+ */
-+#include <linux/kernel.h>
-+#include <linux/scatterlist.h>
-+
-+#include <linux/avalon-dma-hw.h>
-+
-+#include "avalon-dma-util.h"
-+
-+void setup_desc(struct dma_desc *desc, u32 desc_id,
-+		u64 dst, u64 src, u32 size)
-+{
-+	BUG_ON(!size);
-+	WARN_ON(!IS_ALIGNED(size, sizeof(u32)));
-+	BUG_ON(desc_id > (DMA_DESC_MAX - 1));
-+
-+	desc->src_lo = cpu_to_le32(src & 0xfffffffful);
-+	desc->src_hi = cpu_to_le32((src >> 32));
-+	desc->dst_lo = cpu_to_le32(dst & 0xfffffffful);
-+	desc->dst_hi = cpu_to_le32((dst >> 32));
-+	desc->ctl_dma_len = cpu_to_le32((size >> 2) | (desc_id << 18));
-+	desc->reserved[0] = cpu_to_le32(0x0);
-+	desc->reserved[1] = cpu_to_le32(0x0);
-+	desc->reserved[2] = cpu_to_le32(0x0);
-+}
-+
-+int setup_descs(struct dma_desc *descs, unsigned int desc_id,
-+		enum dma_data_direction direction,
-+		dma_addr_t dev_addr, dma_addr_t host_addr, unsigned int len,
-+		unsigned int *_set)
-+{
-+	int nr_descs = 0;
-+	unsigned int set = 0;
-+	dma_addr_t src;
-+	dma_addr_t dest;
-+
-+	if (direction == DMA_TO_DEVICE) {
-+		src = host_addr;
-+		dest = dev_addr;
-+	} else if (direction == DMA_FROM_DEVICE) {
-+		src = dev_addr;
-+		dest = host_addr;
-+	} else {
-+		BUG();
-+		return -EINVAL;
-+	}
-+
-+	if (unlikely(desc_id > DMA_DESC_MAX - 1)) {
-+		BUG();
-+		return -EINVAL;
-+	}
-+
-+	if (WARN_ON(!len))
++	sg_buf = vma->vm_private_data;
++	if (dir != sg_buf->dma_dir)
 +		return -EINVAL;
 +
-+	while (len) {
-+		unsigned int xfer_len = min_t(unsigned int, len, AVALON_DMA_MAX_TANSFER_SIZE);
++	if (is_smp)
++		xfer = __xfer_rw_sg_smp;
++	else
++		xfer = __xfer_rw_sg;
 +
-+		setup_desc(descs, desc_id, dest, src, xfer_len);
++	if (dir == DMA_FROM_DEVICE)
++		xfer_callback = rd_xfer_callback;
++	else
++		xfer_callback = wr_xfer_callback;
 +
-+		set += xfer_len;
++	dma_addr = TARGET_MEM_BASE + vma->vm_pgoff * PAGE_SIZE;
 +
-+		nr_descs++;
-+		if (nr_descs >= DMA_DESC_MAX)
-+			break;
++	if (dir == DMA_TO_DEVICE)
++		dump_mem(dev, sg_buf->vaddr, 16);
 +
-+		desc_id++;
-+		if (desc_id >= DMA_DESC_MAX)
-+			break;
++	dma_sync_sg_for_device(dev,
++			       sg_buf->sgt.sgl, sg_buf->sgt.nents,
++			       sg_buf->dma_dir);
 +
-+		descs++;
++	ret = xfer(avalon_dma, dir, dma_addr, &sg_buf->sgt, xfer_callback);
++	if (ret)
++		goto xfer_err;
 +
-+		dest += xfer_len;
-+		src += xfer_len;
++	dma_sync_sg_for_cpu(dev,
++			    sg_buf->sgt.sgl, sg_buf->sgt.nents,
++			    sg_buf->dma_dir);
 +
-+		len -= xfer_len;
-+	}
++	if (dir == DMA_FROM_DEVICE)
++		dump_mem(dev, sg_buf->vaddr, 16);
 +
-+	*_set = set;
++xfer_err:
++	dev_dbg(dev, "%s(%d) } = %d", __FUNCTION__, __LINE__, ret);
 +
-+	return nr_descs;
++	return ret;
 +}
 +
-+int setup_descs_sg(struct dma_desc *descs, unsigned int desc_id,
-+		   enum dma_data_direction direction,
-+		   dma_addr_t dev_addr, struct sg_table *sg_table,
-+		   struct scatterlist *sg_start, unsigned int sg_offset,
-+		   struct scatterlist **_sg_stop, unsigned int *_sg_set)
++int xfer_simultaneous_sg(struct avalon_dma *avalon_dma,
++			 void __user *user_buf_rd, size_t user_len_rd,
++			 void __user *user_buf_wr, size_t user_len_wr)
 +{
-+	struct scatterlist *sg;
-+	dma_addr_t sg_addr;
-+	unsigned int sg_len;
-+	unsigned int sg_set;
-+	int nr_descs = 0;
++	struct device *dev = avalon_dma->dev;
++	dma_addr_t dma_addr_rd, dma_addr_wr;
++	struct xfer_callback_info info;
++	struct vm_area_struct *vma_rd, *vma_wr;
++	struct dma_sg_buf *sg_buf_rd, *sg_buf_wr;
 +	int ret;
 +	int i;
 +
-+	/*
-+	 * Find the SGE that the previous xfer has stopped on - it should exist.
-+	 */
-+	for_each_sg(sg_table->sgl, sg, sg_table->nents, i) {
-+		if (sg == sg_start)
-+			break;
++	const int nr_reps = nr_dma_reps;
 +
-+		dev_addr += sg_dma_len(sg);
-+	}
++	dev_dbg(dev, "%s(%d) {", __FUNCTION__, __LINE__);
 +
-+	if (WARN_ON(i >= sg_table->nents))
++	vma_rd = get_vma((unsigned long)user_buf_rd, user_len_rd);
++	if (IS_ERR(vma_rd))
++		return PTR_ERR(vma_rd);
++
++	vma_wr = get_vma((unsigned long)user_buf_wr, user_len_wr);
++	if (IS_ERR(vma_wr))
++		return PTR_ERR(vma_wr);
++
++	sg_buf_rd = vma_rd->vm_private_data;
++	sg_buf_wr = vma_wr->vm_private_data;
++
++	if ((sg_buf_rd->dma_dir != DMA_FROM_DEVICE) ||
++	    (sg_buf_wr->dma_dir != DMA_TO_DEVICE))
 +		return -EINVAL;
 +
-+	/*
-+	 * The offset can not be longer than the SGE length.
-+	 */
-+	sg_len = sg_dma_len(sg);
-+	if (WARN_ON(sg_len < sg_offset))
-+		return -EINVAL;
++	dma_addr_rd = TARGET_MEM_BASE + vma_rd->vm_pgoff * PAGE_SIZE;
++	dma_addr_wr = TARGET_MEM_BASE + vma_wr->vm_pgoff * PAGE_SIZE;
 +
-+	/*
-+	 * Skip the starting SGE if it has been fully transmitted.
-+	 */
-+	if (sg_offset == sg_len) {
-+		if (WARN_ON(sg_is_last(sg)))
-+			return -EINVAL;
++	init_callback_info(&info, dev, 2 * nr_reps);
 +
-+		dev_addr += sg_len;
-+		sg_offset = 0;
++	dma_sync_sg_for_device(dev,
++			       sg_buf_rd->sgt.sgl,
++			       sg_buf_rd->sgt.nents,
++			       DMA_FROM_DEVICE);
++	dma_sync_sg_for_device(dev,
++			       sg_buf_wr->sgt.sgl,
++			       sg_buf_wr->sgt.nents,
++			       DMA_TO_DEVICE);
 +
-+		i++;
-+		sg = sg_next(sg);
++	for (i = 0; i < nr_reps; i++) {
++		ret = avalon_dma_submit_xfer_sg(avalon_dma,
++						DMA_TO_DEVICE,
++						dma_addr_wr,
++						&sg_buf_wr->sgt,
++						wr_xfer_callback, &info);
++		if (ret)
++			goto dma_submit_rd_err;
++
++		ret = avalon_dma_submit_xfer_sg(avalon_dma,
++						DMA_FROM_DEVICE,
++						dma_addr_rd,
++						&sg_buf_rd->sgt,
++						rd_xfer_callback, &info);
++		if (ret)
++			goto dma_submit_wr_err;
 +	}
 +
-+	/*
-+	 * Setup as many SGEs as the controller is able to transmit.
-+	 */
-+	BUG_ON(i >= sg_table->nents);
-+	for (; i < sg_table->nents; i++) {
-+		sg_addr = sg_dma_address(sg);
-+		sg_len = sg_dma_len(sg);
++	ret = avalon_dma_issue_pending(avalon_dma);
++	if (ret)
++		goto issue_pending_err;
 +
-+		if (sg_offset) {
-+			if (unlikely(sg_len <= sg_offset)) {
-+				BUG();
-+				return -EINVAL;
-+			}
++	ret = wait_for_completion_interruptible(&info.completion);
++	if (ret)
++		goto wait_err;
 +
-+			dev_addr += sg_offset;
-+			sg_addr += sg_offset;
-+			sg_len -= sg_offset;
++	dma_sync_sg_for_cpu(dev,
++			    sg_buf_rd->sgt.sgl,
++			    sg_buf_rd->sgt.nents,
++			    DMA_FROM_DEVICE);
++	dma_sync_sg_for_cpu(dev,
++			    sg_buf_wr->sgt.sgl,
++			    sg_buf_wr->sgt.nents,
++			    DMA_TO_DEVICE);
 +
-+			sg_offset = 0;
-+		}
++wait_err:
++issue_pending_err:
++dma_submit_wr_err:
++dma_submit_rd_err:
++	dev_dbg(dev, "%s(%d) } = %d", __FUNCTION__, __LINE__, ret);
 +
-+		ret = setup_descs(descs, desc_id, direction,
-+				  dev_addr, sg_addr, sg_len, &sg_set);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (unlikely((desc_id + ret > DMA_DESC_MAX) ||
-+			     (nr_descs + ret > DMA_DESC_MAX))) {
-+			BUG();
-+			return -ENOMEM;
-+		}
-+
-+		nr_descs += ret;
-+		desc_id += ret;
-+
-+		if (desc_id >= DMA_DESC_MAX)
-+			break;
-+
-+		if (unlikely(sg_len != sg_set)) {
-+			BUG();
-+			return -EINVAL;
-+		}
-+
-+		if (sg_is_last(sg))
-+			break;
-+
-+		descs += ret;
-+		dev_addr += sg_len;
-+
-+		sg = sg_next(sg);
-+	}
-+
-+	/*
-+	 * Remember the SGE that next transmission should be started from.
-+	 */
-+	BUG_ON(!sg);
-+	*_sg_stop = sg;
-+	*_sg_set = sg_set;
-+
-+	return nr_descs;
++	return ret;
 +}
-diff --git a/drivers/staging/avalon-dma/avalon-dma-util.h b/drivers/staging/avalon-dma/avalon-dma-util.h
+diff --git a/drivers/staging/avalon-drv/avalon-drv-xfer.h b/drivers/staging/avalon-drv/avalon-drv-xfer.h
 new file mode 100644
-index 000000000000..38d3bccba7ae
+index 000000000000..5bd76cc393d3
 --- /dev/null
-+++ b/drivers/staging/avalon-dma/avalon-dma-util.h
-@@ -0,0 +1,25 @@
++++ b/drivers/staging/avalon-drv/avalon-drv-xfer.h
+@@ -0,0 +1,24 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Avalon DMA engine
++ * Avalon DMA driver
 + *
 + * Author: Alexander Gordeev <a.gordeev.box@gmail.com>
 + */
-+#ifndef __AVALON_DMA_UTIL_H__
-+#define __AVALON_DMA_UTIL_H__
++#ifndef __AVALON_DRV_XFER_H__
++#define __AVALON_DRV_XFER_H__
 +
-+#include <linux/scatterlist.h>
-+#include <linux/dma-direction.h>
-+
-+#define DMA_DESC_MAX	AVALON_DMA_DESC_NUM
-+
-+int setup_descs(struct dma_desc *descs, unsigned int desc_id,
-+		enum dma_data_direction direction,
-+		dma_addr_t dev_addr, dma_addr_t host_addr, unsigned int len,
-+		unsigned int *set);
-+int setup_descs_sg(struct dma_desc *descs, unsigned int desc_id,
-+		   enum dma_data_direction direction,
-+		   dma_addr_t dev_addr, struct sg_table *sg_table,
-+		   struct scatterlist *sg_start, unsigned int sg_offset,
-+		   struct scatterlist **sg_stop, unsigned int *sg_set);
++int xfer_rw(struct avalon_dma *avalon_dma,
++	    enum dma_data_direction dir,
++	    void __user *user_buf, size_t user_len);
++int xfer_simultaneous(struct avalon_dma *avalon_dma,
++		      void __user *user_buf_rd, size_t user_len_rd,
++		      void __user *user_buf_wr, size_t user_len_wr);
++int xfer_rw_sg(struct avalon_dma *avalon_dma,
++	       enum dma_data_direction dir,
++	       void __user *user_buf, size_t user_len,
++	       bool is_smp);
++int xfer_simultaneous_sg(struct avalon_dma *avalon_dma,
++			 void __user *user_buf_rd, size_t user_len_rd,
++			 void __user *user_buf_wr, size_t user_len_wr);
 +
 +#endif
-diff --git a/include/linux/avalon-dma-hw.h b/include/linux/avalon-dma-hw.h
+diff --git a/drivers/staging/avalon-drv/avalon-drv.h b/drivers/staging/avalon-drv/avalon-drv.h
 new file mode 100644
-index 000000000000..d9dbee404143
+index 000000000000..290c75ba4c77
 --- /dev/null
-+++ b/include/linux/avalon-dma-hw.h
-@@ -0,0 +1,72 @@
++++ b/drivers/staging/avalon-drv/avalon-drv.h
+@@ -0,0 +1,22 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Avalon DMA engine
++ * Avalon DMA driver
 + *
 + * Author: Alexander Gordeev <a.gordeev.box@gmail.com>
 + */
-+#ifndef __AVALON_DMA_HW_H__
-+#define __AVALON_DMA_HW_H__
++#ifndef __AVALON_DRV_H__
++#define __AVALON_DRV_H__
 +
-+#define AVALON_DMA_DESC_NUM		128
++#include <linux/miscdevice.h>
 +
-+#define AVALON_DMA_FIXUP_SIZE		0x100
-+#define AVALON_DMA_MAX_TANSFER_SIZE	(0x100000 - AVALON_DMA_FIXUP_SIZE)
++#include <linux/avalon-dma.h>
 +
-+#define AVALON_DMA_CTRL_BASE		CONFIG_AVALON_DMA_CTRL_BASE
-+#define AVALON_DMA_RD_CTRL_OFFSET	0x0
-+#define AVALON_DMA_WR_CTRL_OFFSET	0x100
++#define DRIVER_NAME "avalon-drv"
 +
-+#define AVALON_DMA_RD_EP_DST_LO		CONFIG_AVALON_DMA_RD_EP_DST_LO
-+#define AVALON_DMA_RD_EP_DST_HI		CONFIG_AVALON_DMA_RD_EP_DST_HI
-+#define AVALON_DMA_WR_EP_DST_LO		CONFIG_AVALON_DMA_WR_EP_DST_LO
-+#define AVALON_DMA_WR_EP_DST_HI		CONFIG_AVALON_DMA_WR_EP_DST_HI
-+
-+struct dma_ctrl {
-+	u32 rc_src_lo;
-+	u32 rc_src_hi;
-+	u32 ep_dst_lo;
-+	u32 ep_dst_hi;
-+	u32 last_ptr;
-+	u32 table_size;
-+	u32 control;
-+} __packed;
-+
-+struct dma_desc {
-+	u32 src_lo;
-+	u32 src_hi;
-+	u32 dst_lo;
-+	u32 dst_hi;
-+	u32 ctl_dma_len;
-+	u32 reserved[3];
-+} __packed;
-+
-+struct dma_desc_table {
-+	u32 flags[AVALON_DMA_DESC_NUM];
-+	struct dma_desc descs[AVALON_DMA_DESC_NUM];
-+} __packed;
-+
-+static inline u32 __av_read32(void __iomem *base,
-+			      size_t ctrl_off,
-+			      size_t reg_off)
-+{
-+	size_t offset = AVALON_DMA_CTRL_BASE + ctrl_off + reg_off;
-+
-+	return ioread32(base + offset);
-+}
-+
-+static inline void __av_write32(u32 value,
-+				void __iomem *base,
-+				size_t ctrl_off,
-+				size_t reg_off)
-+{
-+	size_t offset = AVALON_DMA_CTRL_BASE + ctrl_off + reg_off;
-+
-+	iowrite32(value, base + offset);
-+}
-+
-+#define av_read32(b, o, r) \
-+	__av_read32(b, o, offsetof(struct dma_ctrl, r))
-+#define av_write32(v, b, o, r) \
-+	__av_write32(v, b, o, offsetof(struct dma_ctrl, r))
-+
-+#endif
-diff --git a/include/linux/avalon-dma.h b/include/linux/avalon-dma.h
-new file mode 100644
-index 000000000000..bb34d414f2c2
---- /dev/null
-+++ b/include/linux/avalon-dma.h
-@@ -0,0 +1,68 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Avalon DMA engine
-+ *
-+ * Author: Alexander Gordeev <a.gordeev.box@gmail.com>
-+ */
-+#ifndef __AVALON_DMA_H__
-+#define __AVALON_DMA_H__
-+
-+#include <linux/dma-direction.h>
-+#include <linux/interrupt.h>
-+#include <linux/scatterlist.h>
-+
-+#include <linux/avalon-dma-hw.h>
-+
-+typedef void (*avalon_dma_xfer_callback)(void *dma_async_param);
-+
-+struct avalon_dma_tx_desc;
-+
-+struct avalon_dma {
-+	spinlock_t lock;
-+	struct device *dev;
-+	struct tasklet_struct tasklet;
-+	unsigned int irq;
-+
-+	struct avalon_dma_tx_desc *active_desc;
-+
-+	struct list_head desc_allocated;
-+	struct list_head desc_submitted;
-+	struct list_head desc_issued;
-+	struct list_head desc_completed;
-+
-+	struct __dma_desc_table {
-+		struct dma_desc_table *cpu_addr;
-+		dma_addr_t dma_addr;
-+	} dma_desc_table_rd, dma_desc_table_wr;
-+
-+	int h2d_last_id;
-+	int d2h_last_id;
-+
-+	void __iomem *regs;
++struct avalon_dev {
++	struct pci_dev *pci_dev;
++	struct avalon_dma avalon_dma;
++	struct miscdevice misc_dev;
 +};
 +
-+int avalon_dma_init(struct avalon_dma *avalon_dma,
-+		    struct device *dev,
-+		    void __iomem *regs,
-+		    unsigned int irq);
-+void avalon_dma_term(struct avalon_dma *avalon_dma);
++#endif
+diff --git a/include/uapi/linux/avalon-drv-ioctl.h b/include/uapi/linux/avalon-drv-ioctl.h
+new file mode 100644
+index 000000000000..af676b41a50f
+--- /dev/null
++++ b/include/uapi/linux/avalon-drv-ioctl.h
+@@ -0,0 +1,30 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * Avalon DMA driver
++ *
++ * Author: Alexander Gordeev <a.gordeev.box@gmail.com>
++ */
++#ifndef _UAPI_LINUX_AVALON_DRV_IOCTL_H__
++#define _UAPI_LINUX_AVALON_DRV_IOCTL_H__
 +
-+int avalon_dma_submit_xfer(struct avalon_dma *avalon_dma,
-+			   enum dma_data_direction direction,
-+			   dma_addr_t dev_addr, dma_addr_t host_addr,
-+			   unsigned int size,
-+			   avalon_dma_xfer_callback callback,
-+			   void *callback_param);
-+int avalon_dma_submit_xfer_sg(struct avalon_dma *avalon_dma,
-+			      enum dma_data_direction direction,
-+			      dma_addr_t dev_addr, struct sg_table *sg_table,
-+			      avalon_dma_xfer_callback callback,
-+			      void *callback_param);
-+int avalon_dma_issue_pending(struct avalon_dma *avalon_dma);
++struct avalon_ioc_info {
++	size_t mem_addr;
++	size_t mem_size;
++	size_t dma_size;
++	size_t dma_size_sg;
++} __attribute((packed));
 +
-+#define TARGET_MEM_BASE		CONFIG_AVALON_DMA_TARGET_BASE
-+#define TARGET_MEM_SIZE		CONFIG_AVALON_DMA_TARGET_SIZE
-+#define TARGET_DMA_SIZE		(2 * AVALON_DMA_MAX_TANSFER_SIZE)
-+#define TARGET_DMA_SIZE_SG	TARGET_MEM_SIZE
++#define AVALON_IOC 'V'
++
++#define IOCTL_AVALON_GET_INFO		_IOR(AVALON_IOC, 0, struct avalon_ioc_info)
++#define IOCTL_AVALON_SET_INFO		_IOR(AVALON_IOC, 1, struct avalon_ioc_info)
++#define IOCTL_AVALON_DMA_READ		_IOR(AVALON_IOC, 2, struct iovec)
++#define IOCTL_AVALON_DMA_WRITE		_IOW(AVALON_IOC, 3, struct iovec)
++#define IOCTL_AVALON_DMA_RDWR		_IOWR(AVALON_IOC, 4, struct iovec[2])
++#define IOCTL_AVALON_DMA_READ_SG	_IOR(AVALON_IOC, 5, struct iovec)
++#define IOCTL_AVALON_DMA_WRITE_SG	_IOW(AVALON_IOC, 6, struct iovec)
++#define IOCTL_AVALON_DMA_RDWR_SG	_IOWR(AVALON_IOC, 7, struct iovec[2])
++#define IOCTL_AVALON_DMA_READ_SG_SMP	_IOR(AVALON_IOC, 8, struct iovec)
++#define IOCTL_AVALON_DMA_WRITE_SG_SMP	_IOW(AVALON_IOC, 9, struct iovec)
 +
 +#endif
 -- 

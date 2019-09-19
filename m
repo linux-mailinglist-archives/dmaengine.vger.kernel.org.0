@@ -2,110 +2,125 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D141B7787
-	for <lists+dmaengine@lfdr.de>; Thu, 19 Sep 2019 12:35:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA118B788C
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Sep 2019 13:37:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387579AbfISKfA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 19 Sep 2019 06:35:00 -0400
-Received: from mx1.emlix.com ([188.40.240.192]:57656 "EHLO mx1.emlix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387575AbfISKfA (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 19 Sep 2019 06:35:00 -0400
-Received: from mailer.emlix.com (unknown [81.20.119.6])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1.emlix.com (Postfix) with ESMTPS id 3132A603CA;
-        Thu, 19 Sep 2019 12:34:58 +0200 (CEST)
-Subject: Re: [PATCH v2 1/3] dmaengine: imx-sdma: fix buffer ownership
-To:     Lucas Stach <l.stach@pengutronix.de>, linux-kernel@vger.kernel.org
-Cc:     yibin.gong@nxp.com, fugang.duan@nxp.com, dan.j.williams@intel.com,
-        vkoul@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190911144943.21554-1-philipp.puschmann@emlix.com>
- <20190919102319.23368-1-philipp.puschmann@emlix.com>
- <20190919102319.23368-2-philipp.puschmann@emlix.com>
- <7d694da8ffe098c6c8f6fe9c3a2306fda55eb655.camel@pengutronix.de>
-From:   Philipp Puschmann <philipp.puschmann@emlix.com>
-Openpgp: preference=signencrypt
-Message-ID: <1b821b38-2206-07b3-eb0a-47b02bced95c@emlix.com>
-Date:   Thu, 19 Sep 2019 12:34:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2389941AbfISLhO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 19 Sep 2019 07:37:14 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:39027 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389926AbfISLhN (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 19 Sep 2019 07:37:13 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id E801D55D;
+        Thu, 19 Sep 2019 07:37:11 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Thu, 19 Sep 2019 07:37:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=ZARt8hsAD051BiaNqNy7562HyN8
+        dnfaPuX2yAo3nA44=; b=NA+ZP2sCRY3gy1Z0H31SNqMbZtdSvGuIuKgu1+xfrf/
+        G20FIsW6V/ZoDwIT8atOKwEO+IWw4xekjBqWpu8bkHs0V0eCW94kvvNBBzGlK6pP
+        yH1kd9H0yBQXSCsKUr511xLNQsEPK9Nvhuz8t2P+qpWdOnURyeiGL1Gff4/aEWfm
+        xCcp+chkIH4V8N/nu7wO6qeuIZvYu8BhzrxkMudAyddYDOpt5lrVgwzLK/1jc6U/
+        lpO3Ajngy4dPoitb/TeZUqi6ZmUPbhhf4AbpH6UiUe4lIVE1ZL+dwSAfu9aZW+yg
+        GLc5f1JytRZLyvHP16clJBgMpeL6jXL6+fwZEOC4I3g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ZARt8h
+        sAD051BiaNqNy7562HyN8dnfaPuX2yAo3nA44=; b=I3Cchtg9uhi1ZFsrLN5Tqd
+        vYI2slu1+DYe6Qrhqjy9gy+nBkL5CNQUdGcdBXyGbXqOkkvQBxe7cIn76bx8RwpW
+        O3rUzfO0ktf7TSy9JJriM4p40YiNn/WXDw1RpiiFV68kj78XulxqnYbBi0ANU7dW
+        hPTQf9i2AVtPXBAyLPTIqHi2/jBhrHk+Sj7yofgyw+hDM1B13jU+OunP2D5Z2qdQ
+        hXm9AF2Gu0Cy+3+G6i1BE9nJhB0pAz5aXd4Z4wtRlbYeLrydPNaI6y1d3K/1X1t8
+        k0LFOQqsoFbNFc3Fi1LicLzuoqfBONfm0Sz2kx2ba7vDJHStcvP5jDWIBS9OrfQg
+        ==
+X-ME-Sender: <xms:Z2iDXZX-i1b_ISJjhSqWLFvybvFbagfzKf1XYUGdYRIhcU9saI_U6A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddtgdegfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:Z2iDXQHjHu2VslpUuPMpKBSJnMQov_hL1W6WXYP9f_GNm_EUzeBmsg>
+    <xmx:Z2iDXTaY73GFQwUaHXI4dvdiYnAFjkYrGSdUbDB6zQhhWMJ7BgkNeg>
+    <xmx:Z2iDXfGeNvks9qGsxzh1ownU__Bu0Oxc00C6iFUeQt172GwZM9umMg>
+    <xmx:Z2iDXZc8JSv76pdOf06o1SZhQNnFI1y1O2BWmXBCseyUH93QeIt8Nw>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E420880060;
+        Thu, 19 Sep 2019 07:37:10 -0400 (EDT)
+Date:   Thu, 19 Sep 2019 13:37:08 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Alexander Gordeev <a.gordeev.box@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Michael Chen <micchen@altera.com>, dmaengine@vger.kernel.org
+Subject: Re: [PATCH RFC 0/2] staging: Support Avalon-MM DMA Interface for PCIe
+Message-ID: <20190919113708.GA3153236@kroah.com>
+References: <cover.1568817357.git.a.gordeev.box@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <7d694da8ffe098c6c8f6fe9c3a2306fda55eb655.camel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1568817357.git.a.gordeev.box@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Lucas,
-
-
-Am 19.09.19 um 12:27 schrieb Lucas Stach:
-> Hi Philipp,
+On Thu, Sep 19, 2019 at 11:59:11AM +0200, Alexander Gordeev wrote:
+> The Avalon-MM DMA Interface for PCIe is a design found in hard IPs for
+> Intel Arria, Cyclone or Stratix FPGAs. It transfers data between on-chip
+> memory and system memory. This RFC is an attempt to provide a generic API:
 > 
-> On Do, 2019-09-19 at 12:23 +0200, Philipp Puschmann wrote:
->> BD_DONE flag marks ownership of the buffer. When 1 SDMA owns the
->> buffer, when 0 ARM owns it. When processing the buffers in
->> sdma_update_channel_loop the ownership of the currently processed
->> buffer was set to SDMA again before running the callback function of
->> the buffer and while the sdma script may be running in parallel. So
->> there was the possibility to get the buffer overwritten by SDMA
->> before
->> it has been processed by kernel leading to kind of random errors in
->> the
->> upper layers, e.g. bluetooth.
->>
->> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
->>
->> ---
->>
->> Changelog v2:
->>  - add dma_wb()
->>
->>  drivers/dma/imx-sdma.c | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
->> index 9ba74ab7e912..e029a2443cfc 100644
->> --- a/drivers/dma/imx-sdma.c
->> +++ b/drivers/dma/imx-sdma.c
->> @@ -802,7 +802,6 @@ static void sdma_update_channel_loop(struct
->> sdma_channel *sdmac)
->>  		*/
->>  
->>  		desc->chn_real_count = bd->mode.count;
->> -		bd->mode.status |= BD_DONE;
->>  		bd->mode.count = desc->period_len;
->>  		desc->buf_ptail = desc->buf_tail;
->>  		desc->buf_tail = (desc->buf_tail + 1) % desc->num_bd;
->> @@ -817,6 +816,9 @@ static void sdma_update_channel_loop(struct
->> sdma_channel *sdmac)
->>  		dmaengine_desc_get_callback_invoke(&desc->vd.tx, NULL);
->>  		spin_lock(&sdmac->vc.lock);
->>  
->> +		dma_wb();
+> 	typedef void (*avalon_dma_xfer_callback)(void *dma_async_param);
+>  
+> 	int avalon_dma_submit_xfer(
+> 		struct avalon_dma *avalon_dma,
+> 		enum dma_data_direction direction,
+> 		dma_addr_t dev_addr, dma_addr_t host_addr,
+> 		unsigned int size,
+> 		avalon_dma_xfer_callback callback,
+> 		void *callback_param);
+>  
+> 	int avalon_dma_submit_xfer_sg(struct avalon_dma *avalon_dma,
+> 		enum dma_data_direction direction,
+> 		dma_addr_t dev_addr,
+> 		struct sg_table *sg_table,
+> 		avalon_dma_xfer_callback callback,
+> 		void *callback_param);
+>  
+> 	int avalon_dma_issue_pending(struct avalon_dma *avalon_dma);
 > 
-> Has this change been tested? The function you want here is called
-> dma_wmb().
-embarrassingly you are right. c&p error and even have not tried to build it :/
-V3 comes soon..
+> Patch 1 introduces "avalon-dma" driver that provides the above-mentioned
+> generic interface.
+> 
+> Patch 2 adds "avalon-drv" driver using "avalon-dma" to transfer user-
+> provided data. This driver was used to debug and stress "avalon-dma"
+> and could be used as a code base for other implementations. Strictly
+> speaking, it does not need to be part of the kernel tree.
+> A companion tool using "avalon-drv" to DMA files (not part of this
+> patchset) is located at git@github.com:a-gordeev/avalon-drv-tool.git
+> 
+> The suggested interface is developed with the standard "dmaengine"
+> in mind and could be reworked to suit it. I would appreciate, however
+> gathering some feedback on the implemenation first - as the hardware-
+> specific code would persist. It is also a call for testing - I only
+> have access to a single Arria 10 device to try on.
+> 
+> This series is against v5.3 and could be found at
+> git@github.com:a-gordeev/linux.git avalon-dma-engine
 
-Regards,
-Philipp
+Why is this being submitted for drivers/staging/ and not the "real" part
+of the kernel tree?
 
-> 
-> Regards,
-> Lucas
-> 
->> +		bd->mode.status |= BD_DONE;
->> +
->>  		if (error)
->>  			sdmac->status = old_status;
->>  	}
-> 
+All staging code must have a TODO file listing what needs to be done in
+order to get it out of staging, and be self-contained (i.e. no files
+include/linux/)
 
+Please fix that up when resending this series.
+
+thanks,
+
+greg k-h

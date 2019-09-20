@@ -2,174 +2,128 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 09FB9B8E31
-	for <lists+dmaengine@lfdr.de>; Fri, 20 Sep 2019 12:01:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22B61B8F4A
+	for <lists+dmaengine@lfdr.de>; Fri, 20 Sep 2019 13:52:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437968AbfITKBs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 20 Sep 2019 06:01:48 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39118 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437988AbfITKBs (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 20 Sep 2019 06:01:48 -0400
-Received: by mail-io1-f65.google.com with SMTP id a1so14842179ioc.6
-        for <dmaengine@vger.kernel.org>; Fri, 20 Sep 2019 03:01:46 -0700 (PDT)
+        id S2438303AbfITLw2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 20 Sep 2019 07:52:28 -0400
+Received: from mtax.cdmx.gob.mx ([187.141.35.197]:10164 "EHLO mtaw.cdmx.gob.mx"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2438245AbfITLw2 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 20 Sep 2019 07:52:28 -0400
+X-NAI-Header: Modified by McAfee Email Gateway (4500)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g994BJg/jPAigCOVsri275vhxV1YMwyqa+ZWpEcSJHY=;
-        b=iFc44JyzXlsEdJ8ZGOrWgpTK0QF37LYXPDpneIFX6jIh3j9MM3sAu1JGGTadYRKuwW
-         CGl0Fmrl34Sy+7DxuUlu82SW2IVLCHpQOmoeAApYxtgGdXZ4U4i504sEJ9qWkIE2mR0k
-         gWIeJskW/cZLd2m2sNLkxAFFne9NpN8DuiK+ZshTWQJboqhi3fk5xYVnFyDkbDoGmDam
-         5xiLOm5+J+eEPhm2b+N/5/2Xo/v4KTqIeYmEtXWgDctdq8wzZvJ/nzPPedZwHZKdqTOZ
-         vrp0QrFtQntkesy5Rp7I1O5fqPAz5BGq6ELB/cOVvXCoOkAZYUNmwlxjXXRnSLmzsb8Y
-         /3bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g994BJg/jPAigCOVsri275vhxV1YMwyqa+ZWpEcSJHY=;
-        b=M3dxmpW/bMJ5D+usTEO3m4bwXWYm9aVo1IZVjwTkluBDxS0dh+3ukl5pXsebL1nrTd
-         qgXMNEOxxE/af1deeBvAI5HhNuvW6WbctZzAPF8RO5UBrEtvEdC52Qnb155UZY27jZx1
-         h5an9wFIa8tdgfW1ZorW2KMRafHkerXN7EbDXexY8qzAuGTR9OsEDifb8oXZ624c6a45
-         MdeUnAZev9WS1ZWQI9OlylsMEAVecUDQ+UOgOwkqoBr0tVW5dm+/lmJN661yVpioqnjN
-         2ndDUXZxuetiW/luB2rKixBRwaWTngCzWi9lA9tofuQDUn2gRPmMX64iFmOoHhZWC/iB
-         8AMA==
-X-Gm-Message-State: APjAAAWDssGKpEUIIkGy1sAPe9HyDcWtvGTfOYRkSHxPA3qIbDiz6QL4
-        tN7LUnSkEbbE4xaVM12yjCjPIOKwmZFAoH6YMHiVZw==
-X-Google-Smtp-Source: APXvYqxfUxvLHOR+Wn2vv6/tsz0PWRvLzPL3QAajZParvvSIWZcYkRXLxLuyaEQmx0JgaIHOXcW/CUZEbaflcc7pARM=
-X-Received: by 2002:a6b:e719:: with SMTP id b25mr11639828ioh.100.1568973705798;
- Fri, 20 Sep 2019 03:01:45 -0700 (PDT)
+        d=cdmx.gob.mx; s=72359050-3965-11E6-920A-0192F7A2F08E;
+        t=1568964935; h=X-Virus-Scanned:Content-Type:
+         MIME-Version:Content-Transfer-Encoding:Content-Description:
+         Subject:To:From:Date:Reply-To:Message-Id:X-AnalysisOut:
+         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
+         X-AnalysisOut:X-AnalysisOut:X-SAAS-TrackingID:
+         X-NAIMIME-Disclaimer:X-NAIMIME-Modified:X-NAI-Spam-Flag:
+         X-NAI-Spam-Threshold:X-NAI-Spam-Score:X-NAI-Spam-Rules:
+         X-NAI-Spam-Version; bh=p7gWlwfEWOsbONfopC
+        8BPhtqdzKUJiGtXCGJ3YtSNOM=; b=dZ/hC7p7uVutYd03Jl3h
+        keF9BA3TXYxfpBy+WqXiNRlC05O/m8mCw75zH0tVpdOWfiBWCp
+        ZioOF1qOWAnMIjISRjSxpwwXG7YrG5Ncj/DUHpln82Dy0LsnY9
+        SEkBkDCaHT3jWqxKbFK8ugWB40gBs0nOasjbxlJZDXII2xKNiB
+        M=
+Received: from correo.seciti.cdmx.gob.mx (gdf-correo.cdmx.gob.mx [10.250.102.17]) by mtaw.cdmx.gob.mx with smtp
+         id 0865_2999_4bff49c1_c502_443f_9b86_095d10e136f7;
+        Fri, 20 Sep 2019 02:35:35 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by gdf-correo.df.gob.mx (Postfix) with ESMTP id 4FD063371;
+        Fri, 20 Sep 2019 02:35:33 -0500 (CDT)
+Received: from correo.seciti.cdmx.gob.mx ([127.0.0.1])
+        by localhost (gdf-correo.df.gob.mx [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id vVM-OoBtcWTp; Fri, 20 Sep 2019 02:35:33 -0500 (CDT)
+Received: from localhost (localhost [127.0.0.1])
+        by gdf-correo.df.gob.mx (Postfix) with ESMTP id 173D033E8;
+        Fri, 20 Sep 2019 02:35:33 -0500 (CDT)
+X-Virus-Scanned: amavisd-new at gdf-correo.df.gob.mx
+Received: from correo.seciti.cdmx.gob.mx ([127.0.0.1])
+        by localhost (gdf-correo.df.gob.mx [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id m9Xt5zvPEYmA; Fri, 20 Sep 2019 02:35:32 -0500 (CDT)
+Received: from [100.80.130.141] (8ta-250-0-72.telkomadsl.co.za [102.250.0.72])
+        by gdf-correo.df.gob.mx (Postfix) with ESMTPSA id 0CE403371;
+        Fri, 20 Sep 2019 02:35:23 -0500 (CDT)
+Content-Type: text/plain;
+  charset="utf-8"
 MIME-Version: 1.0
-References: <20190920090033.19438-1-green.wan@sifive.com>
-In-Reply-To: <20190920090033.19438-1-green.wan@sifive.com>
-From:   Pragnesh Patel <pragnesh.patel@sifive.com>
-Date:   Fri, 20 Sep 2019 15:31:35 +0530
-Message-ID: <CAN8ut8Lfo3zm2mjoiH3o4FSTkHexagwUFT=V3MpgcE=arm5c4g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: dmaengine: sf-pdma: add bindins for
- SiFive PDMA
-To:     Green Wan <green.wan@sifive.com>
-Cc:     linux-hackers@sifive.com, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Content-Description: Mail message body
+Subject: Spende von 5 Millionen Euro
+To:     Recipients <mramirezg@mexicocity.gob.mx>
+From:   "Shane Missler" <mramirezg@mexicocity.gob.mx>
+Date:   Fri, 20 Sep 2019 09:35:30 +0200
+Reply-To: "shanemissler.spende11@gmail.comshanemissler.spende11"@gmail.com
+Message-Id: <20190920073524.0CE403371@gdf-correo.df.gob.mx>
+X-AnalysisOut: [v=2.2 cv=AanBJzfG c=1 sm=1 tr=0 p=09-KjHS_CW8A:10 p=bEr4i4]
+X-AnalysisOut: [eggGkA:10 p=Lyqu6MUUigPyaOuRX7ce:22 a=KsSCQl7LcZej77FuluUc]
+X-AnalysisOut: [Qw==:117 a=+/zS2XqOcqrzxqj0Epa8oQ==:17 a=IkcTkHD0fZMA:10 a]
+X-AnalysisOut: [=x7bEGLp0ZPQA:10 a=J70Eh1EUuV4A:10 a=pGLkceISAAAA:8 a=wN7r]
+X-AnalysisOut: [T8hNlMSaUXRpxSgA:9 a=K7tsimcRO30Sg2YH:21 a=QOCYt1FwmxBrUrR]
+X-AnalysisOut: [v:21 a=QEXdDO2ut3YA:10]
+X-SAAS-TrackingID: 741848d5.0.86209782.00-2386.144897281.s12p02m012.mxlogic.net
+X-NAIMIME-Disclaimer: 1
+X-NAIMIME-Modified: 1
+X-NAI-Spam-Flag: NO
+X-NAI-Spam-Threshold: 3
+X-NAI-Spam-Score: -5000
+X-NAI-Spam-Rules: 1 Rules triggered
+        WHITELISTED=-5000
+X-NAI-Spam-Version: 2.3.0.9418 : core <6638> : inlines <7144> : streams
+ <1833284> : uri <2907341>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 2:30 PM Green Wan <green.wan@sifive.com> wrote:
->
-> Add DT bindings document for Platform DMA(PDMA) driver of board,
-> HiFive Unleashed Rev A00.
->
-> Signed-off-by: Green Wan <green.wan@sifive.com>
-> ---
->  .../bindings/dma/sifive,fu540-c000-pdma.yaml  | 55 +++++++++++++++++++
->  MAINTAINERS                                   |  5 ++
->  2 files changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
->
-> diff --git a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-> new file mode 100644
-> index 000000000000..3ed015f2b83a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-> @@ -0,0 +1,55 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/sifive,fu540-c000-pdma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: SiFive Unleashed Rev C000 Platform DMA
-> +
-> +maintainers:
-> +  - Green Wan <green.wan@sifive.com>
-> +  - Palmer Debbelt <palmer@sifive.com>
-> +  - Paul Walmsley <paul.walmsley@sifive.com>
-> +
-> +description: |
-> +  Platform DMA is a DMA engine of SiFive Unleashed. It supports 4
-> +  channels. Each channel has 2 interrupts. One is for DMA done and
-> +  the other is for DME error.
-> +
-> +  In different SoC, DMA could be attached to different IRQ line.
-> +  DT file need to be changed to meet the difference. For technical
-> +  doc,
-> +
-> +  https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: sifive,fu540-c000-pdma
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 8
-> +    maxItems: 8
-
-"make dt_binding_check" should give you the error that interrupts is too short.
-
-When you say minItems: 8 then interrupts property should be like this:
-interrupts = <23>, <24>,  <25>,  <26>,  <27>,  <28>,  <29>,  <30>;
-
-So,  remove the minItems: 8 and change maxItems: 1 for interrupts =
-<23 24 25 26 27 28 29 30>;
-
-> +
-> +  '#dma-cells':
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - '#dma-cells'
-> +
-> +examples:
-> +  - |
-> +    dma@3000000 {
-> +      compatible = "sifive,fu540-c000-pdma";
-> +      reg = <0x0 0x3000000 0x0 0x8000>;
-> +      interrupts = <23 24 25 26 27 28 29 30>;
-> +      #dma-cells = <1>;
-> +    };
-> +
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 49f75d1b7b51..d0caa09a479e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14591,6 +14591,11 @@ F:     drivers/media/usb/siano/
->  F:     drivers/media/usb/siano/
->  F:     drivers/media/mmc/siano/
->
-> +SIFIVE PDMA DRIVER
-> +M:     Green Wan <green.wan@sifive.com>
-> +S:     Maintained
-> +F:     Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-> +
->  SIFIVE DRIVERS
->  M:     Palmer Dabbelt <palmer@sifive.com>
->  M:     Paul Walmsley <paul.walmsley@sifive.com>
-> --
-> 2.17.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-hackers" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-hackers+unsubscribe@sifive.com.
-> To view this discussion on the web visit https://groups.google.com/a/sifive.com/d/msgid/linux-hackers/20190920090033.19438-1-green.wan%40sifive.com.
+RGllcyBpc3QgZWluZSBwZXJzw7ZubGljaGUgTWFpbCwgZGllIGljaCBhbiBTaWUgYWRyZXNzaWVy
+ZS4gSWNoIGJpbiBTSEFORSBNSVNTTEVSIGF1cyBGbG9yaWRhLCBVU0EuIFdpZSBTaWUgYmVyZWl0
+cyB3aXNzZW4sIGhhYmUgaWNoIGVpbmVuIExvdHRvLUphY2twb3QgaW4gSMO2aGUgdm9uIDQ1MSBN
+aW8uIFVTRCAoMzMwIE1pby4gR0JQKSBnZXdvbm5lbiB1bmQgZGFzIEdlbGQgaGF0IG1laW4gTGVi
+ZW4gdW5kIG1laW4gRmFtaWxpZW5sZWJlbiB2ZXLDpG5kZXJ0LCBhYmVyIGVzIHdpcmQgbWVpbiBI
+ZXJ6IG5pY2h0IHZlcsOkbmRlcm4sIHdpZSBpY2ggYW4gZGVtIFRhZyBzYWd0ZSwgYW4gZGVtIGlj
+aCBtZWluIEdlbGQgaGFiZSwgZGFzIGljaCB2ZXJ3ZW5kZW4gd2VyZGUgRGllc2VzIEdlbGQgZsO8
+ciBkaWUgSGlsZmUgZGVyIE1lbnNjaGhlaXQuIEljaCBoYWJlIGJlc2NobG9zc2VuLCBJaG5lbiB1
+bmQgSWhyZXIgR2VtZWluZGUgZWluZW4gQmV0cmFnIHZvbiA1IE1pbGxpb25lbiBFdXJvIHp1IHNw
+ZW5kZW4sIHVtIGRpZXNlIFNwZW5kZSBhbnp1Zm9yZGVybi4gRS1NYWlsOiAoc2hhbmVtaXNzbGVy
+MEBnbWFpbC5jb20pCgpDZWNpIGVzdCB1biBjb3VycmllciBwZXJzb25uZWwgcXVlIGplIHZvdXMg
+YWRyZXNzZS4gSmUgc3VpcyBTSEFORSBNSVNTTEVSLCBkZSBGbG9yaWRlLCDDiXRhdHMtVW5pcy4g
+Q29tbWUgdm91cyBsZSBzYXZleiBkw6lqw6AsIGonYWkgZ2FnbsOpIDQ1MSBtaWxsaW9ucyBkZSBk
+b2xsYXJzIChMb3R0byBKYWNrcG90KSBldCBsJ2FyZ2VudCBhIGNoYW5nw6kgbWEgdmllIGV0IGNl
+bGxlIGRlIG1hIGZhbWlsbGUsIG1haXMgY2VsYSBuZSBjaGFuZ2VyYSBwYXMgbW9uIGPFk3VyLCBj
+b21tZSBqZSBsJ2FpIGRpdCBsZSBqb3VyIG/DuSBqJ2FpIG1vbiBhcmdlbnQsIGondXRpbGlzZXJh
+aSBjZXQgYXJnZW50IHBvdXIgbCdhaWRlIGRlIGwnaHVtYW5pdMOpLkonYWkgZMOpY2lkw6kgZGUg
+dm91cyBkb25uZXIgbGEgc29tbWUgZGUgNSBtaWxsaW9ucyBkJ2V1cm9zIMOgIHZvdXMgZXQgw6Ag
+dm90cmUgY29tbXVuYXV0w6ksIHBvdXIgcsOpY2xhbWVyIGNlIGRvbiwgZW1haWwtIChzaGFuZW1p
+c3NsZXIwQGdtYWlsLmNvbSkKCgoKLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uCgoKTGEgaW5mb3JtYWNpb24gY29udGVuaWRhIGVuIGVzdGUgY29ycmVvLCBhc2kgY29t
+byBsYSBjb250ZW5pZGEgZW4gbG9zIGRvY3VtZW50b3MgYW5leG9zLCBwdWVkZSBjb250ZW5lciBk
+YXRvcyBwZXJzb25hbGVzLCBwb3IgbG8gcXVlIHN1IGRpZnVzaW9uIGVzIHJlc3BvbnNhYmlsaWRh
+ZCBkZSBxdWllbiBsb3MgdHJhbnNtaXRlIHkgcXVpZW4gbG9zIHJlY2liZSwgZW4gdMOpcm1pbm9z
+IGRlIGxvIGRpc3B1ZXN0byBwb3IgbGFzIGZyYWNjaW9uZXMgSUkgeSBWSUkgZGVsIGFydGljdWxv
+IDQsIHVsdGltbyBwYXJyYWZvIGRlbCBhcnRpY3VsbyA4LCBhcnRpY3VsbyAzNiBwYXJyYWZvIElJ
+LCAzOCBmcmFjY2lvbiBJIHkgZGVtYXMgYXBsaWNhYmxlcyBkZSBsYSBMZXkgZGUgVHJhbnNwYXJl
+bmNpYSB5IEFjY2VzbyBhIGxhIEluZm9ybWFjaW9uIFB1YmxpY2EgZGVsIERpc3RyaXRvIEZlZGVy
+YWwuDQpMb3MgRGF0b3MgUGVyc29uYWxlcyBzZSBlbmN1ZW50cmFuIHByb3RlZ2lkb3MgcG9yIGxh
+IExleSBkZSBQcm90ZWNjaW9uIGRlIERhdG9zIFBlcnNvbmFsZXMgZGVsIERpc3RyaXRvIEZlZGVy
+YWwsIHBvciBsbyBxdWUgc3UgZGlmdXNpb24gc2UgZW5jdWVudHJhIHR1dGVsYWRhIGVuIHN1cyBh
+cnRpY3Vsb3MgMiwgNSwgMTYsIDIxLCA0MSB5IGRlbWFzIHJlbGF0aXZvcyB5IGFwbGljYWJsZXMs
+IGRlYmllbmRvIHN1amV0YXJzZSBlbiBzdSBjYXNvLCBhIGxhcyBkaXNwb3NpY2lvbmVzIHJlbGF0
+aXZhcyBhIGxhIGNyZWFjaW9uLCBtb2RpZmljYWNpb24gbyBzdXByZXNpb24gZGUgZGF0b3MgcGVy
+c29uYWxlcyBwcmV2aXN0b3MuIEFzaW1pc21vLCBkZWJlcmEgZXN0YXJzZSBhIGxvIHNlw7FhbGFk
+byBlbiBsb3MgbnVtZXJhbGVzIDEgLCAzLCAxMiwgMTgsIDE5LCAyMCwgMjEsIDIzLCAyNCwgMjks
+IDM1IHkgZGVtYXMgYXBsaWNhYmxlcyBkZSBsb3MgTGluZWFtaWVudG9zIHBhcmEgbGEgUHJvdGVj
+Y2lvbiBkZSBEYXRvcyBQZXJzb25hbGVzIGVuIGVsIERpc3RyaXRvIEZlZGVyYWwuDQpFbiBlbCB1
+c28gZGUgbGFzIHRlY25vbG9naWFzIGRlIGxhIGluZm9ybWFjaW9uIHkgY29tdW5pY2FjaW9uZXMg
+ZGVsIEdvYmllcm5vIGRlbCBEaXN0cml0byBGZWRlcmFsLCBkZWJlcmEgb2JzZXJ2YXJzZSBwdW50
+dWFsbWVudGUgbG8gZGlzcHVlc3RvIHBvciBsYSBMZXkgR29iaWVybm8gRWxlY3Ryb25pY28gZGVs
+IERpc3RyaXRvIEZlZGVyYWwsIGxhIGxleSBwYXJhIGhhY2VyIGRlIGxhIENpdWRhZCBkZSBNZXhp
+Y28gdW5hIENpdWRhZCBNYXMgQWJpZXJ0YSwgZWwgYXBhcnRhZG8gMTAgZGUgbGEgQ2lyY3VsYXIg
+VW5vIHZpZ2VudGUgeSBsYXMgTm9ybWFzIEdlbmVyYWxlcyBxdWUgZGViZXJhbiBvYnNlcnZhcnNl
+IGVuIG1hdGVyaWEgZGUgU2VndXJpZGFkIGRlIGxhIEluZm9ybWFjaW9uIGVuIGxhIEFkbWluaXN0
+cmFjaW9uIFB1YmxpY2EgZGVsIERpc3RyaXRvIEZlZGVyYWwuCg==

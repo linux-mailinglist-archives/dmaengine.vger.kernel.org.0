@@ -2,173 +2,174 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 80EABB8DB9
-	for <lists+dmaengine@lfdr.de>; Fri, 20 Sep 2019 11:27:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09FB9B8E31
+	for <lists+dmaengine@lfdr.de>; Fri, 20 Sep 2019 12:01:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408329AbfITJ1B (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 20 Sep 2019 05:27:01 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42187 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405604AbfITJ1B (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 20 Sep 2019 05:27:01 -0400
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1iBFBk-0004Qu-4T; Fri, 20 Sep 2019 11:26:52 +0200
-Message-ID: <363fe4763ab3445f29f775b9694334acbe8638f1.camel@pengutronix.de>
-Subject: Re: [PATCH v4 2/3] dmaengine: imx-sdma: fix dma freezes
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Philipp Puschmann <philipp.puschmann@emlix.com>,
-        Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>,
-        linux-kernel@vger.kernel.org
-Cc:     fugang.duan@nxp.com, festevam@gmail.com, s.hauer@pengutronix.de,
-        vkoul@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de,
-        dan.j.williams@intel.com, yibin.gong@nxp.com, shawnguo@kernel.org,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Date:   Fri, 20 Sep 2019 11:26:51 +0200
-In-Reply-To: <9305e5ff-f555-3c6e-9e99-36d88edcae0a@emlix.com>
-References: <20190919142942.12469-1-philipp.puschmann@emlix.com>
-         <20190919142942.12469-3-philipp.puschmann@emlix.com>
-         <ad87f175496358adb825240f1de609318ed8204c.camel@pengutronix.de>
-         <9305e5ff-f555-3c6e-9e99-36d88edcae0a@emlix.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        id S2437968AbfITKBs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 20 Sep 2019 06:01:48 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39118 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437988AbfITKBs (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 20 Sep 2019 06:01:48 -0400
+Received: by mail-io1-f65.google.com with SMTP id a1so14842179ioc.6
+        for <dmaengine@vger.kernel.org>; Fri, 20 Sep 2019 03:01:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g994BJg/jPAigCOVsri275vhxV1YMwyqa+ZWpEcSJHY=;
+        b=iFc44JyzXlsEdJ8ZGOrWgpTK0QF37LYXPDpneIFX6jIh3j9MM3sAu1JGGTadYRKuwW
+         CGl0Fmrl34Sy+7DxuUlu82SW2IVLCHpQOmoeAApYxtgGdXZ4U4i504sEJ9qWkIE2mR0k
+         gWIeJskW/cZLd2m2sNLkxAFFne9NpN8DuiK+ZshTWQJboqhi3fk5xYVnFyDkbDoGmDam
+         5xiLOm5+J+eEPhm2b+N/5/2Xo/v4KTqIeYmEtXWgDctdq8wzZvJ/nzPPedZwHZKdqTOZ
+         vrp0QrFtQntkesy5Rp7I1O5fqPAz5BGq6ELB/cOVvXCoOkAZYUNmwlxjXXRnSLmzsb8Y
+         /3bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g994BJg/jPAigCOVsri275vhxV1YMwyqa+ZWpEcSJHY=;
+        b=M3dxmpW/bMJ5D+usTEO3m4bwXWYm9aVo1IZVjwTkluBDxS0dh+3ukl5pXsebL1nrTd
+         qgXMNEOxxE/af1deeBvAI5HhNuvW6WbctZzAPF8RO5UBrEtvEdC52Qnb155UZY27jZx1
+         h5an9wFIa8tdgfW1ZorW2KMRafHkerXN7EbDXexY8qzAuGTR9OsEDifb8oXZ624c6a45
+         MdeUnAZev9WS1ZWQI9OlylsMEAVecUDQ+UOgOwkqoBr0tVW5dm+/lmJN661yVpioqnjN
+         2ndDUXZxuetiW/luB2rKixBRwaWTngCzWi9lA9tofuQDUn2gRPmMX64iFmOoHhZWC/iB
+         8AMA==
+X-Gm-Message-State: APjAAAWDssGKpEUIIkGy1sAPe9HyDcWtvGTfOYRkSHxPA3qIbDiz6QL4
+        tN7LUnSkEbbE4xaVM12yjCjPIOKwmZFAoH6YMHiVZw==
+X-Google-Smtp-Source: APXvYqxfUxvLHOR+Wn2vv6/tsz0PWRvLzPL3QAajZParvvSIWZcYkRXLxLuyaEQmx0JgaIHOXcW/CUZEbaflcc7pARM=
+X-Received: by 2002:a6b:e719:: with SMTP id b25mr11639828ioh.100.1568973705798;
+ Fri, 20 Sep 2019 03:01:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+References: <20190920090033.19438-1-green.wan@sifive.com>
+In-Reply-To: <20190920090033.19438-1-green.wan@sifive.com>
+From:   Pragnesh Patel <pragnesh.patel@sifive.com>
+Date:   Fri, 20 Sep 2019 15:31:35 +0530
+Message-ID: <CAN8ut8Lfo3zm2mjoiH3o4FSTkHexagwUFT=V3MpgcE=arm5c4g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: dmaengine: sf-pdma: add bindins for
+ SiFive PDMA
+To:     Green Wan <green.wan@sifive.com>
+Cc:     linux-hackers@sifive.com, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fr, 2019-09-20 at 10:53 +0200, Philipp Puschmann wrote:
-> Hi Jan,
-> 
-> Am 19.09.19 um 17:19 schrieb Jan Lübbe:
-> > Hi Philipp,
-> > 
-> > see below...
-> > 
-> > On Thu, 2019-09-19 at 16:29 +0200, Philipp Puschmann wrote:
-> > > For some years and since many kernel versions there are reports that the
-> > > RX UART SDMA channel stops working at some point. The workaround was to
-> > > disable DMA for RX. This commit tries to fix the problem itself.
-> > > 
-> > > Due to its license i wasn't able to debug the sdma script itself but it
-> > > somehow leads to blocking the scheduling of the channel script when a
-> > > running sdma script does not find any free descriptor in the ring to put
-> > > its data into.
-> > > 
-> > > If we detect such a potential case we manually restart the channel.
-> > > 
-> > > As sdmac->desc is constant we can move desc out of the loop.
-> > > 
-> > > Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
-> > > Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
-> > > Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-> > > ---
-> > > 
-> > > Changelog v4:
-> > >  - fixed the fixes tag
-> > >  
-> > > Changelog v3:
-> > >  - use correct dma_wmb() instead of dma_wb()
-> > >  - add fixes tag
-> > >  
-> > > Changelog v2:
-> > >  - clarify comment and commit description
-> > > 
-> > >  drivers/dma/imx-sdma.c | 21 +++++++++++++++++----
-> > >  1 file changed, 17 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> > > index e029a2443cfc..a32b5962630e 100644
-> > > --- a/drivers/dma/imx-sdma.c
-> > > +++ b/drivers/dma/imx-sdma.c
-> > > @@ -775,21 +775,23 @@ static void sdma_start_desc(struct sdma_channel *sdmac)
-> > >  static void sdma_update_channel_loop(struct sdma_channel *sdmac)
-> > >  {
-> > >  	struct sdma_buffer_descriptor *bd;
-> > > -	int error = 0;
-> > > -	enum dma_status	old_status = sdmac->status;
-> > > +	struct sdma_desc *desc = sdmac->desc;
-> > > +	int error = 0, cnt = 0;
-> > > +	enum dma_status old_status = sdmac->status;
-> > >  
-> > >  	/*
-> > >  	 * loop mode. Iterate over descriptors, re-setup them and
-> > >  	 * call callback function.
-> > >  	 */
-> > > -	while (sdmac->desc) {
-> > > -		struct sdma_desc *desc = sdmac->desc;
-> > > +	while (desc) {
-> > >  
-> > >  		bd = &desc->bd[desc->buf_tail];
-> > >  
-> > >  		if (bd->mode.status & BD_DONE)
-> > >  			break;
-> > >  
-> > > +		cnt++;
-> > > +
-> > >  		if (bd->mode.status & BD_RROR) {
-> > >  			bd->mode.status &= ~BD_RROR;
-> > >  			sdmac->status = DMA_ERROR;
-> > > @@ -822,6 +824,17 @@ static void sdma_update_channel_loop(struct sdma_channel *sdmac)
-> > >  		if (error)
-> > >  			sdmac->status = old_status;
-> > >  	}
-> > > +
-> > > +	/* In some situations it may happen that the sdma does not found any
-> >                                                           ^ hasn't
-> > > +	 * usable descriptor in the ring to put data into. The channel is
-> > > +	 * stopped then. While there is no specific error condition we can
-> > > +	 * check for, a necessary condition is that all available buffers for
-> > > +	 * the current channel have been written to by the sdma script. In
-> > > +	 * this case and after we have made the buffers available again,
-> > > +	 * we restart the channel.
-> > > +	 */
-> > 
-> > Are you sure we can't miss cases where we only had to make some buffers
-> > available again, but the SDMA already ran out of buffers before?
-> Think so, yes.
-> > A while ago, I was debugging a similar issue triggered by receiving
-> > data with a wrong baud rate, which leads to all descriptors being
-> > marked with the error flag very quickly (and the SDMA stalling).
-> > I noticed that you can check if the channel is still running by
-> > checking the SDMA_H_STATSTOP register & BIT(sdmac->channel).
-> 
-> I think checking for this register is the better approach. Then i could drop the
-> cnt variable. And by droppting cnt i would propose to move the check and reenabling
-> to the end of the while loop to reenable the channel after freeing first buffer.
+On Fri, Sep 20, 2019 at 2:30 PM Green Wan <green.wan@sifive.com> wrote:
+>
+> Add DT bindings document for Platform DMA(PDMA) driver of board,
+> HiFive Unleashed Rev A00.
+>
+> Signed-off-by: Green Wan <green.wan@sifive.com>
+> ---
+>  .../bindings/dma/sifive,fu540-c000-pdma.yaml  | 55 +++++++++++++++++++
+>  MAINTAINERS                                   |  5 ++
+>  2 files changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+> new file mode 100644
+> index 000000000000..3ed015f2b83a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/sifive,fu540-c000-pdma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: SiFive Unleashed Rev C000 Platform DMA
+> +
+> +maintainers:
+> +  - Green Wan <green.wan@sifive.com>
+> +  - Palmer Debbelt <palmer@sifive.com>
+> +  - Paul Walmsley <paul.walmsley@sifive.com>
+> +
+> +description: |
+> +  Platform DMA is a DMA engine of SiFive Unleashed. It supports 4
+> +  channels. Each channel has 2 interrupts. One is for DMA done and
+> +  the other is for DME error.
+> +
+> +  In different SoC, DMA could be attached to different IRQ line.
+> +  DT file need to be changed to meet the difference. For technical
+> +  doc,
+> +
+> +  https://static.dev.sifive.com/FU540-C000-v1.0.pdf
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: sifive,fu540-c000-pdma
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 8
+> +    maxItems: 8
 
-You certainly don't want to have a MMIO read at each iteration of the
-loop, as that would be quite a bit of overhead. I'm not sure it's worth
-it to try to minimize the channel re-enable latency. You are only
-getting into this situation because of bad system latencies before this
-part of the code run, so the little bit of latency added by cleaning
-the descriptors before trying to re-enable the channel will probably
-not add much further harm and you don't risk running in the out-of-
-descriptors error immediately again. Remember, in a preemptible kernel
-the task cleaning the descriptors could be put to sleep immediately
-after you you cleaned a single descriptor and kicked the channel back
-to life.
+"make dt_binding_check" should give you the error that interrupts is too short.
 
-> > I also added a flag for the sdmac->flags field to allow stopping the
-> > channel from the callback (otherwise it would enable the channel
-> > again).
-> 
-> Could memory and compiler ordering a problem here?
-> I'm not that into these kind of problems, but is this
-> 	sdmac->flags &= ~IMX_DMA_ACTIVE;
->   	writel_relaxed(BIT(channel), sdma->regs + SDMA_H_STATSTOP);
-> guaranteed to be free of race conditions?
+When you say minItems: 8 then interrupts property should be like this:
+interrupts = <23>, <24>,  <25>,  <26>,  <27>,  <28>,  <29>,  <30>;
 
-In fact the writel_relaxed needs to be replaced by the non-relaxed
-version to imply a proper memory barrier before the register write.
+So,  remove the minItems: 8 and change maxItems: 1 for interrupts =
+<23 24 25 26 27 28 29 30>;
 
-Regards,
-Lucas
-
+> +
+> +  '#dma-cells':
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - '#dma-cells'
+> +
+> +examples:
+> +  - |
+> +    dma@3000000 {
+> +      compatible = "sifive,fu540-c000-pdma";
+> +      reg = <0x0 0x3000000 0x0 0x8000>;
+> +      interrupts = <23 24 25 26 27 28 29 30>;
+> +      #dma-cells = <1>;
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 49f75d1b7b51..d0caa09a479e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14591,6 +14591,11 @@ F:     drivers/media/usb/siano/
+>  F:     drivers/media/usb/siano/
+>  F:     drivers/media/mmc/siano/
+>
+> +SIFIVE PDMA DRIVER
+> +M:     Green Wan <green.wan@sifive.com>
+> +S:     Maintained
+> +F:     Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+> +
+>  SIFIVE DRIVERS
+>  M:     Palmer Dabbelt <palmer@sifive.com>
+>  M:     Paul Walmsley <paul.walmsley@sifive.com>
+> --
+> 2.17.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-hackers" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-hackers+unsubscribe@sifive.com.
+> To view this discussion on the web visit https://groups.google.com/a/sifive.com/d/msgid/linux-hackers/20190920090033.19438-1-green.wan%40sifive.com.

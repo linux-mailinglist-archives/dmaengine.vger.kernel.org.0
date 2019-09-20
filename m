@@ -2,46 +2,46 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B21BB8D4F
-	for <lists+dmaengine@lfdr.de>; Fri, 20 Sep 2019 10:59:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7901B8D53
+	for <lists+dmaengine@lfdr.de>; Fri, 20 Sep 2019 11:00:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405356AbfITI7o (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 20 Sep 2019 04:59:44 -0400
-Received: from mail-pg1-f174.google.com ([209.85.215.174]:45164 "EHLO
-        mail-pg1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393181AbfITI7o (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 20 Sep 2019 04:59:44 -0400
-Received: by mail-pg1-f174.google.com with SMTP id 4so3432267pgm.12
-        for <dmaengine@vger.kernel.org>; Fri, 20 Sep 2019 01:59:44 -0700 (PDT)
+        id S2405405AbfITJAn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 20 Sep 2019 05:00:43 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44546 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405402AbfITJAm (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 20 Sep 2019 05:00:42 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q21so4053305pfn.11
+        for <dmaengine@vger.kernel.org>; Fri, 20 Sep 2019 02:00:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=fl7tvYNwHE+ftYPEVIMQMzgm5oG99WNIuJI3GxZgUsA=;
-        b=hyZVfm0sFvnfaVQ8yA97zAHqoWuJ7+HR/2+eWXOyui1BFw6qlUB9f6vMq+kKuLsiA8
-         OBIaI5j/gM9V8KHksAR8fWJEpJgawjRYNS88Ea1YGS21kOK56j8DU5YpyzqqL+8IXwiG
-         YJTqMcklLsVrIbiCcrpICEEFsmW0JbG3X1KGLjxJHBIBDnifxUco/NWjDfIlI/bePnrJ
-         dH+SsPUMJfqh/jZWhd2RwSxI8c1KRL3fxgGyNnkNT6xqNMNGoBxECIlYE57tlnqriDqa
-         oQ+WuCYAEFr/C9eYGbbvAz/n+gfcyfoI3V0rZfSqXJLMyNGzEp8K/ZUZjcB/J/Q1BEj6
-         cuoA==
+        bh=lZ6o83XsrCODlciR1nsXn3cLtmEeSlMrbT5toWJpCcc=;
+        b=boRD9KgdLzUDsKREFe8UooLcvnhttqrmMKJ4JJhiYtlGGMw+CVF6SF+eZPxWodTfbL
+         BNFPx1e5qW4K0Z19vCoeGPRDaw5+mnXvWTBdQns+nrRSQeFimtdY44ONxttr5iMp5alO
+         TIlGWUwDdgP3OWd7JA6Cn2GCNYXO10D91svahg0d7vqDoSiZxLmu7ChaNdQH1JhZXhDu
+         EQRo6w897sfn6bT21bnOvhffhZQxWPMQoIfDzWeieIlF3MBEbvgy0X6YaxAa/fJsMChA
+         AxDMf7BVksAMmhU8syqB3tE0udnT9TiSQz3cIumCQMqa8VtcqgU4qwIMEOHO4ZsBGgOP
+         kH7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=fl7tvYNwHE+ftYPEVIMQMzgm5oG99WNIuJI3GxZgUsA=;
-        b=WUn8sKwP2eaS/AXPcOU9Jh5ojCvOFHW7KD4bzuYvdr2tX9S0SeElL+Oj8ig0tikE34
-         7t27Yrw8abaMovJEGLBu6ApOhmdVK5AHUKsD1q+MJAMJS3y2YiuD2xp5MyVIsXIzmV8m
-         WJ43bs5jX2NULwWpe8ogY/RFDVHXl+sEmtVrPHWigr4wu/mlKxmP/8oGMpBNF5qezhtO
-         KQL+ghXa4hPQGGwvNNAKQvMgn6HfmY9QLophB2zSiSBrAr5rjaTM0vN6TWFumThGLvhq
-         PjwCFE67SGsI9BIvd+gUlrx3u13mKSkv2EnW7b7bWAqb8zhWh0QVRJT45bHotnGrIqWN
-         LLiA==
-X-Gm-Message-State: APjAAAUYz4oklAv3DYg6Sa5tzNAC31CkF4X0fMMjqQDa2XGWOKgAyU5i
-        hWHwQ6CoBmHvB9/NRZl0ycpx/A==
-X-Google-Smtp-Source: APXvYqzmet1EfGHuUHqh6NTQ1lvfZsx/K1gCHSn3id2QMeiTRQkBQBnhD+Yp5VeV4ljcAy19JYpMFQ==
-X-Received: by 2002:a17:90a:aa0a:: with SMTP id k10mr3457599pjq.18.1568969983538;
-        Fri, 20 Sep 2019 01:59:43 -0700 (PDT)
+        bh=lZ6o83XsrCODlciR1nsXn3cLtmEeSlMrbT5toWJpCcc=;
+        b=T5OsNqFyQN4CAwZPWIoe6xglJ8BhbA4t5l4wfdh5jZBw04cafsppiVPFoAVYxV0CVJ
+         TdLlpk5YcjTuI17RuwOkxaMwP/deD41/JE/ryCRc3uv2JNAwPlOrtRoHPDP+hUnPh7aT
+         lKnSxnA0nbrUPLEprfgmMLP88yVFxfDQm3oozH2JBgP9kZxZNyGwMpSG/a9D4tVyCfj5
+         rDFK9vpd0ArZ+IlXxjh+GcYV22HkdozrvYYMSOneWixS6BmFA6GvDq8lD7v512gVfUGZ
+         vr30KJ7Tcl+TYKHcmk1cJQA9K/rhchRRiVT02Hicb44lR6+ZNyjNFQzQE8IcVnSUvvs9
+         OpYA==
+X-Gm-Message-State: APjAAAUNUxcBOlxIQevgUSWhoF2CBqTcXPTId5mQ1JBxmtGOLPIzeMaa
+        bpHROifpNJp8VhwaBnrkqNx2WA==
+X-Google-Smtp-Source: APXvYqw+06XQxJJ/V6LSwB5FOqyXHpQco/KIgZInvygsU6gRfbquO1CkKRsztR7zc2+L4Gy1eVkotQ==
+X-Received: by 2002:a65:4286:: with SMTP id j6mr14346419pgp.218.1568970041990;
+        Fri, 20 Sep 2019 02:00:41 -0700 (PDT)
 Received: from localhost.localdomain (36-228-113-219.dynamic-ip.hinet.net. [36.228.113.219])
-        by smtp.gmail.com with ESMTPSA id h3sm1144046pgb.13.2019.09.20.01.59.40
+        by smtp.gmail.com with ESMTPSA id n9sm1287730pgf.64.2019.09.20.02.00.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Sep 2019 01:59:42 -0700 (PDT)
+        Fri, 20 Sep 2019 02:00:41 -0700 (PDT)
 From:   Green Wan <green.wan@sifive.com>
 Cc:     linux-hackers@sifive.com, Green Wan <green.wan@sifive.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -49,7 +49,6 @@ Cc:     linux-hackers@sifive.com, Green Wan <green.wan@sifive.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -58,9 +57,9 @@ Cc:     linux-hackers@sifive.com, Green Wan <green.wan@sifive.com>,
         "Paul E. McKenney" <paulmck@linux.ibm.com>,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/3] dmaengine: sf-pdma: Add platform dma driver
-Date:   Fri, 20 Sep 2019 16:58:59 +0800
-Message-Id: <20190920085930.19380-1-green.wan@sifive.com>
+Subject: [PATCH v3 1/3] dt-bindings: dmaengine: sf-pdma: add bindins for SiFive PDMA
+Date:   Fri, 20 Sep 2019 17:00:01 +0800
+Message-Id: <20190920090033.19438-1-green.wan@sifive.com>
 X-Mailer: git-send-email 2.17.1
 To:     unlisted-recipients:; (no To-header on input)
 Sender: dmaengine-owner@vger.kernel.org
@@ -68,63 +67,93 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add PDMA driver support for SiFive HiFive Unleashed RevA00 board. Mainly follows
-DMAengine controller doc[1] to implement and take other DMA drivers as reference.
-Such as
+Add DT bindings document for Platform DMA(PDMA) driver of board,
+HiFive Unleashed Rev A00.
 
-  - drivers/dma/fsl-edma.c
-  - drivers/dma/dw-edma/
-  - drivers/dma/pxa-dma.c
-
-Using DMA test client[2] to test. Detailed datasheet is doc[3]. Driver supports:
-
- - 4 physical DMA channels, share same DONE and error interrupt handler. 
- - Support MEM_TO_MEM
- - Tested by DMA test client
- - patches include DT Bindgins document and dts for fu450-c000 SoC. Separate dts
-   patch for easier review and apply to different branch or SoC platform.
- - retry 1 time if DMA error occurs.
-
-[Reference Doc]
- [1] ./Documentation/driver-api/dmaengine/provider.rst
- [2] ./Documentation/driver-api/dmaengine/dmatest.rst
- [3] https://static.dev.sifive.com/FU540-C000-v1.0.pdf 
-
-[Simple steps to test of DMA Test client]
- $ echo 1 > /sys/module/dmatest/parameters/iterations
- $ echo dma0chan0 > /sys/module/dmatest/parameters/channel
- $ echo dma0chan1 > /sys/module/dmatest/parameters/channel
- $ echo dma0chan2 > /sys/module/dmatest/parameters/channel
- $ echo dma0chan3 > /sys/module/dmatest/parameters/channel
- $ echo 1 > /sys/module/dmatest/parameters/run
-
-[Expected test result]
-[ 7756.975356] dmatest: dma0chan0-copy0: summary 11208260 tests, 0 failures 36207.82 iops 579325 KB/s (0)
-[ 7756.984093] dmatest: dma0chan1-copy0: summary 11206263 tests, 0 failures 36007.36 iops 576117 KB/s (0)
-[ 7756.993453] dmatest: dma0chan2-copy0: summary 10929638 tests, 0 failures 33984.39 iops 543750 KB/s (0)
-[ 7757.003008] dmatest: dma0chan3-copy0: summary 11204208 tests, 0 failures 35759.65 iops 572154 KB/s (0)
-
-Green Wan (3):
-  dt-bindings: dmaengine: sf-pdma: add bindins for SiFive PDMA
-  riscv: dts: add support for PDMA device of HiFive Unleashed Rev A00
-  dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00
-
- .../bindings/dma/sifive,fu540-c000-pdma.yaml  |  55 ++
- MAINTAINERS                                   |   6 +
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi    |   7 +
- drivers/dma/Kconfig                           |   2 +
- drivers/dma/Makefile                          |   1 +
- drivers/dma/sf-pdma/Kconfig                   |   6 +
- drivers/dma/sf-pdma/Makefile                  |   1 +
- drivers/dma/sf-pdma/sf-pdma.c                 | 623 ++++++++++++++++++
- drivers/dma/sf-pdma/sf-pdma.h                 | 124 ++++
- 9 files changed, 825 insertions(+)
+Signed-off-by: Green Wan <green.wan@sifive.com>
+---
+ .../bindings/dma/sifive,fu540-c000-pdma.yaml  | 55 +++++++++++++++++++
+ MAINTAINERS                                   |  5 ++
+ 2 files changed, 60 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
- create mode 100644 drivers/dma/sf-pdma/Kconfig
- create mode 100644 drivers/dma/sf-pdma/Makefile
- create mode 100644 drivers/dma/sf-pdma/sf-pdma.c
- create mode 100644 drivers/dma/sf-pdma/sf-pdma.h
 
+diff --git a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+new file mode 100644
+index 000000000000..3ed015f2b83a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/sifive,fu540-c000-pdma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: SiFive Unleashed Rev C000 Platform DMA
++
++maintainers:
++  - Green Wan <green.wan@sifive.com>
++  - Palmer Debbelt <palmer@sifive.com>
++  - Paul Walmsley <paul.walmsley@sifive.com>
++
++description: |
++  Platform DMA is a DMA engine of SiFive Unleashed. It supports 4
++  channels. Each channel has 2 interrupts. One is for DMA done and
++  the other is for DME error.
++
++  In different SoC, DMA could be attached to different IRQ line.
++  DT file need to be changed to meet the difference. For technical
++  doc,
++
++  https://static.dev.sifive.com/FU540-C000-v1.0.pdf
++
++properties:
++  compatible:
++    items:
++      - const: sifive,fu540-c000-pdma
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 8
++    maxItems: 8
++
++  '#dma-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - '#dma-cells'
++
++examples:
++  - |
++    dma@3000000 {
++      compatible = "sifive,fu540-c000-pdma";
++      reg = <0x0 0x3000000 0x0 0x8000>;
++      interrupts = <23 24 25 26 27 28 29 30>;
++      #dma-cells = <1>;
++    };
++
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 49f75d1b7b51..d0caa09a479e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14591,6 +14591,11 @@ F:	drivers/media/usb/siano/
+ F:	drivers/media/usb/siano/
+ F:	drivers/media/mmc/siano/
+ 
++SIFIVE PDMA DRIVER
++M:	Green Wan <green.wan@sifive.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
++
+ SIFIVE DRIVERS
+ M:	Palmer Dabbelt <palmer@sifive.com>
+ M:	Paul Walmsley <paul.walmsley@sifive.com>
 -- 
 2.17.1
 

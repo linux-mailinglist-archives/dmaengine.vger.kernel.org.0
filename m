@@ -2,128 +2,143 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 22B61B8F4A
-	for <lists+dmaengine@lfdr.de>; Fri, 20 Sep 2019 13:52:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CE0EB9E43
+	for <lists+dmaengine@lfdr.de>; Sat, 21 Sep 2019 16:58:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438303AbfITLw2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 20 Sep 2019 07:52:28 -0400
-Received: from mtax.cdmx.gob.mx ([187.141.35.197]:10164 "EHLO mtaw.cdmx.gob.mx"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2438245AbfITLw2 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 20 Sep 2019 07:52:28 -0400
-X-NAI-Header: Modified by McAfee Email Gateway (4500)
+        id S2393539AbfIUO6N (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 21 Sep 2019 10:58:13 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41450 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390556AbfIUO6N (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 21 Sep 2019 10:58:13 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q7so6431378pfh.8;
+        Sat, 21 Sep 2019 07:58:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cdmx.gob.mx; s=72359050-3965-11E6-920A-0192F7A2F08E;
-        t=1568964935; h=X-Virus-Scanned:Content-Type:
-         MIME-Version:Content-Transfer-Encoding:Content-Description:
-         Subject:To:From:Date:Reply-To:Message-Id:X-AnalysisOut:
-         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
-         X-AnalysisOut:X-AnalysisOut:X-SAAS-TrackingID:
-         X-NAIMIME-Disclaimer:X-NAIMIME-Modified:X-NAI-Spam-Flag:
-         X-NAI-Spam-Threshold:X-NAI-Spam-Score:X-NAI-Spam-Rules:
-         X-NAI-Spam-Version; bh=p7gWlwfEWOsbONfopC
-        8BPhtqdzKUJiGtXCGJ3YtSNOM=; b=dZ/hC7p7uVutYd03Jl3h
-        keF9BA3TXYxfpBy+WqXiNRlC05O/m8mCw75zH0tVpdOWfiBWCp
-        ZioOF1qOWAnMIjISRjSxpwwXG7YrG5Ncj/DUHpln82Dy0LsnY9
-        SEkBkDCaHT3jWqxKbFK8ugWB40gBs0nOasjbxlJZDXII2xKNiB
-        M=
-Received: from correo.seciti.cdmx.gob.mx (gdf-correo.cdmx.gob.mx [10.250.102.17]) by mtaw.cdmx.gob.mx with smtp
-         id 0865_2999_4bff49c1_c502_443f_9b86_095d10e136f7;
-        Fri, 20 Sep 2019 02:35:35 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by gdf-correo.df.gob.mx (Postfix) with ESMTP id 4FD063371;
-        Fri, 20 Sep 2019 02:35:33 -0500 (CDT)
-Received: from correo.seciti.cdmx.gob.mx ([127.0.0.1])
-        by localhost (gdf-correo.df.gob.mx [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id vVM-OoBtcWTp; Fri, 20 Sep 2019 02:35:33 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-        by gdf-correo.df.gob.mx (Postfix) with ESMTP id 173D033E8;
-        Fri, 20 Sep 2019 02:35:33 -0500 (CDT)
-X-Virus-Scanned: amavisd-new at gdf-correo.df.gob.mx
-Received: from correo.seciti.cdmx.gob.mx ([127.0.0.1])
-        by localhost (gdf-correo.df.gob.mx [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id m9Xt5zvPEYmA; Fri, 20 Sep 2019 02:35:32 -0500 (CDT)
-Received: from [100.80.130.141] (8ta-250-0-72.telkomadsl.co.za [102.250.0.72])
-        by gdf-correo.df.gob.mx (Postfix) with ESMTPSA id 0CE403371;
-        Fri, 20 Sep 2019 02:35:23 -0500 (CDT)
-Content-Type: text/plain;
-  charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Description: Mail message body
-Subject: Spende von 5 Millionen Euro
-To:     Recipients <mramirezg@mexicocity.gob.mx>
-From:   "Shane Missler" <mramirezg@mexicocity.gob.mx>
-Date:   Fri, 20 Sep 2019 09:35:30 +0200
-Reply-To: "shanemissler.spende11@gmail.comshanemissler.spende11"@gmail.com
-Message-Id: <20190920073524.0CE403371@gdf-correo.df.gob.mx>
-X-AnalysisOut: [v=2.2 cv=AanBJzfG c=1 sm=1 tr=0 p=09-KjHS_CW8A:10 p=bEr4i4]
-X-AnalysisOut: [eggGkA:10 p=Lyqu6MUUigPyaOuRX7ce:22 a=KsSCQl7LcZej77FuluUc]
-X-AnalysisOut: [Qw==:117 a=+/zS2XqOcqrzxqj0Epa8oQ==:17 a=IkcTkHD0fZMA:10 a]
-X-AnalysisOut: [=x7bEGLp0ZPQA:10 a=J70Eh1EUuV4A:10 a=pGLkceISAAAA:8 a=wN7r]
-X-AnalysisOut: [T8hNlMSaUXRpxSgA:9 a=K7tsimcRO30Sg2YH:21 a=QOCYt1FwmxBrUrR]
-X-AnalysisOut: [v:21 a=QEXdDO2ut3YA:10]
-X-SAAS-TrackingID: 741848d5.0.86209782.00-2386.144897281.s12p02m012.mxlogic.net
-X-NAIMIME-Disclaimer: 1
-X-NAIMIME-Modified: 1
-X-NAI-Spam-Flag: NO
-X-NAI-Spam-Threshold: 3
-X-NAI-Spam-Score: -5000
-X-NAI-Spam-Rules: 1 Rules triggered
-        WHITELISTED=-5000
-X-NAI-Spam-Version: 2.3.0.9418 : core <6638> : inlines <7144> : streams
- <1833284> : uri <2907341>
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to;
+        bh=rMu789LD1T8uU9KacNFi9FCRB7xCR3S38zLi0aGwMPk=;
+        b=n35lnfvxCsApW2kK/lMjVc0YEBMnaP2lRsh3iZP3PqPJ2tV3sg11DolTl/kk9xyJde
+         /ha5P/doLG5uKhkPQNY5bQt/JkPdzdAEqzqk3AkVfHXePMgjGLWFzx80KbrzYnZ78z7s
+         oKFHDgAnjMCs0loyHFt1jjasbEjPENOE1nLRi9OkT3p6vUCxrLXzpNR/BOoFSGI+z9Y7
+         4OaVoqk3tj5sFv/99bVXIE/7qHl3U+ulaMA5oy3DSGu7oxcstDO/eXPyv6MwtrqODYPG
+         U1QjzItNO/Fqx18aXt3H2HDvTec+8NdgrenBqnlI0CejEldxq1YFrwkqsWEk6G5YoH8C
+         mdXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
+        bh=rMu789LD1T8uU9KacNFi9FCRB7xCR3S38zLi0aGwMPk=;
+        b=izd/ZohTSYNTXe4yKXd8tFo99/ktHj0JfJNs615xVOLjgopJ1mbI3j5ZHOsh+9sn+C
+         A9if4zpUTfdzIXP8iFIuopdgT3HvNwd22aAqNMpVotwOik1YI07Lb3AtkTri5qZni/74
+         dAHr5m/M9Fw9sOQkeuIxXCA+y2NYs+THJJG5gTudXUGV8rBXjIpyklcCbX1+rYNWPpG5
+         8Or1AVCylBjOR5F5iiVfjlt58bvedDywTXA03d8BDt1TmI+qDVKMVp6ItP6jFsf235qt
+         wGYmWYC0O5Xf7ekk6nGiJFOIKbapInz3VeHofzX+B/7baPxVEP8z5Epvz0x6KUoohN3S
+         60rA==
+X-Gm-Message-State: APjAAAViIAeo2KwNqVZVaAYGR45ldqvfDZ1N/6LHtBq9TmFVDh/K4itA
+        CzJOA+wBcWIbXBlkkU3/GOI=
+X-Google-Smtp-Source: APXvYqzq1rGaqCGeV44c1S06GyiRUKXeYke/1wz8RtK+UwfNjVz8EIJCJF0JnYuM5kiFHQQ1VUVAJA==
+X-Received: by 2002:a63:2224:: with SMTP id i36mr12763638pgi.135.1569077891943;
+        Sat, 21 Sep 2019 07:58:11 -0700 (PDT)
+Received: from satendra-MM061.ib-wrb304n.setup.in ([103.82.150.67])
+        by smtp.gmail.com with ESMTPSA id r185sm5933695pfr.68.2019.09.21.07.58.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Sep 2019 07:58:10 -0700 (PDT)
+From:   Satendra Singh Thakur <sst2005@gmail.com>
+To:     dan.j.williams@intel.com, vkoul@kernel.org, jun.nie@linaro.org,
+        shawnguo@kernel.org, agross@kernel.org, sean.wang@mediatek.com,
+        matthias.bgg@gmail.com, maxime.ripard@bootlin.com, wens@csie.org,
+        lars@metafoo.de, afaerber@suse.de, manivannan.sadhasivam@linaro.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, satendrasingh.thakur@hcl.com,
+        Satendra Singh Thakur <sst2005@gmail.com>
+Subject: Re: Re: [PATCH 0/9] added helper macros to remove duplicate code from probe functions of the platform drivers
+Date:   Sat, 21 Sep 2019 20:27:26 +0530
+Message-Id: <2356e29bca5bdfa901534bb32a2782185eb0415f.1568909689.git.sst2005@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190918102715.GO4392@vkoul-mobl>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-RGllcyBpc3QgZWluZSBwZXJzw7ZubGljaGUgTWFpbCwgZGllIGljaCBhbiBTaWUgYWRyZXNzaWVy
-ZS4gSWNoIGJpbiBTSEFORSBNSVNTTEVSIGF1cyBGbG9yaWRhLCBVU0EuIFdpZSBTaWUgYmVyZWl0
-cyB3aXNzZW4sIGhhYmUgaWNoIGVpbmVuIExvdHRvLUphY2twb3QgaW4gSMO2aGUgdm9uIDQ1MSBN
-aW8uIFVTRCAoMzMwIE1pby4gR0JQKSBnZXdvbm5lbiB1bmQgZGFzIEdlbGQgaGF0IG1laW4gTGVi
-ZW4gdW5kIG1laW4gRmFtaWxpZW5sZWJlbiB2ZXLDpG5kZXJ0LCBhYmVyIGVzIHdpcmQgbWVpbiBI
-ZXJ6IG5pY2h0IHZlcsOkbmRlcm4sIHdpZSBpY2ggYW4gZGVtIFRhZyBzYWd0ZSwgYW4gZGVtIGlj
-aCBtZWluIEdlbGQgaGFiZSwgZGFzIGljaCB2ZXJ3ZW5kZW4gd2VyZGUgRGllc2VzIEdlbGQgZsO8
-ciBkaWUgSGlsZmUgZGVyIE1lbnNjaGhlaXQuIEljaCBoYWJlIGJlc2NobG9zc2VuLCBJaG5lbiB1
-bmQgSWhyZXIgR2VtZWluZGUgZWluZW4gQmV0cmFnIHZvbiA1IE1pbGxpb25lbiBFdXJvIHp1IHNw
-ZW5kZW4sIHVtIGRpZXNlIFNwZW5kZSBhbnp1Zm9yZGVybi4gRS1NYWlsOiAoc2hhbmVtaXNzbGVy
-MEBnbWFpbC5jb20pCgpDZWNpIGVzdCB1biBjb3VycmllciBwZXJzb25uZWwgcXVlIGplIHZvdXMg
-YWRyZXNzZS4gSmUgc3VpcyBTSEFORSBNSVNTTEVSLCBkZSBGbG9yaWRlLCDDiXRhdHMtVW5pcy4g
-Q29tbWUgdm91cyBsZSBzYXZleiBkw6lqw6AsIGonYWkgZ2FnbsOpIDQ1MSBtaWxsaW9ucyBkZSBk
-b2xsYXJzIChMb3R0byBKYWNrcG90KSBldCBsJ2FyZ2VudCBhIGNoYW5nw6kgbWEgdmllIGV0IGNl
-bGxlIGRlIG1hIGZhbWlsbGUsIG1haXMgY2VsYSBuZSBjaGFuZ2VyYSBwYXMgbW9uIGPFk3VyLCBj
-b21tZSBqZSBsJ2FpIGRpdCBsZSBqb3VyIG/DuSBqJ2FpIG1vbiBhcmdlbnQsIGondXRpbGlzZXJh
-aSBjZXQgYXJnZW50IHBvdXIgbCdhaWRlIGRlIGwnaHVtYW5pdMOpLkonYWkgZMOpY2lkw6kgZGUg
-dm91cyBkb25uZXIgbGEgc29tbWUgZGUgNSBtaWxsaW9ucyBkJ2V1cm9zIMOgIHZvdXMgZXQgw6Ag
-dm90cmUgY29tbXVuYXV0w6ksIHBvdXIgcsOpY2xhbWVyIGNlIGRvbiwgZW1haWwtIChzaGFuZW1p
-c3NsZXIwQGdtYWlsLmNvbSkKCgoKLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uCgoKTGEgaW5mb3JtYWNpb24gY29udGVuaWRhIGVuIGVzdGUgY29ycmVvLCBhc2kgY29t
-byBsYSBjb250ZW5pZGEgZW4gbG9zIGRvY3VtZW50b3MgYW5leG9zLCBwdWVkZSBjb250ZW5lciBk
-YXRvcyBwZXJzb25hbGVzLCBwb3IgbG8gcXVlIHN1IGRpZnVzaW9uIGVzIHJlc3BvbnNhYmlsaWRh
-ZCBkZSBxdWllbiBsb3MgdHJhbnNtaXRlIHkgcXVpZW4gbG9zIHJlY2liZSwgZW4gdMOpcm1pbm9z
-IGRlIGxvIGRpc3B1ZXN0byBwb3IgbGFzIGZyYWNjaW9uZXMgSUkgeSBWSUkgZGVsIGFydGljdWxv
-IDQsIHVsdGltbyBwYXJyYWZvIGRlbCBhcnRpY3VsbyA4LCBhcnRpY3VsbyAzNiBwYXJyYWZvIElJ
-LCAzOCBmcmFjY2lvbiBJIHkgZGVtYXMgYXBsaWNhYmxlcyBkZSBsYSBMZXkgZGUgVHJhbnNwYXJl
-bmNpYSB5IEFjY2VzbyBhIGxhIEluZm9ybWFjaW9uIFB1YmxpY2EgZGVsIERpc3RyaXRvIEZlZGVy
-YWwuDQpMb3MgRGF0b3MgUGVyc29uYWxlcyBzZSBlbmN1ZW50cmFuIHByb3RlZ2lkb3MgcG9yIGxh
-IExleSBkZSBQcm90ZWNjaW9uIGRlIERhdG9zIFBlcnNvbmFsZXMgZGVsIERpc3RyaXRvIEZlZGVy
-YWwsIHBvciBsbyBxdWUgc3UgZGlmdXNpb24gc2UgZW5jdWVudHJhIHR1dGVsYWRhIGVuIHN1cyBh
-cnRpY3Vsb3MgMiwgNSwgMTYsIDIxLCA0MSB5IGRlbWFzIHJlbGF0aXZvcyB5IGFwbGljYWJsZXMs
-IGRlYmllbmRvIHN1amV0YXJzZSBlbiBzdSBjYXNvLCBhIGxhcyBkaXNwb3NpY2lvbmVzIHJlbGF0
-aXZhcyBhIGxhIGNyZWFjaW9uLCBtb2RpZmljYWNpb24gbyBzdXByZXNpb24gZGUgZGF0b3MgcGVy
-c29uYWxlcyBwcmV2aXN0b3MuIEFzaW1pc21vLCBkZWJlcmEgZXN0YXJzZSBhIGxvIHNlw7FhbGFk
-byBlbiBsb3MgbnVtZXJhbGVzIDEgLCAzLCAxMiwgMTgsIDE5LCAyMCwgMjEsIDIzLCAyNCwgMjks
-IDM1IHkgZGVtYXMgYXBsaWNhYmxlcyBkZSBsb3MgTGluZWFtaWVudG9zIHBhcmEgbGEgUHJvdGVj
-Y2lvbiBkZSBEYXRvcyBQZXJzb25hbGVzIGVuIGVsIERpc3RyaXRvIEZlZGVyYWwuDQpFbiBlbCB1
-c28gZGUgbGFzIHRlY25vbG9naWFzIGRlIGxhIGluZm9ybWFjaW9uIHkgY29tdW5pY2FjaW9uZXMg
-ZGVsIEdvYmllcm5vIGRlbCBEaXN0cml0byBGZWRlcmFsLCBkZWJlcmEgb2JzZXJ2YXJzZSBwdW50
-dWFsbWVudGUgbG8gZGlzcHVlc3RvIHBvciBsYSBMZXkgR29iaWVybm8gRWxlY3Ryb25pY28gZGVs
-IERpc3RyaXRvIEZlZGVyYWwsIGxhIGxleSBwYXJhIGhhY2VyIGRlIGxhIENpdWRhZCBkZSBNZXhp
-Y28gdW5hIENpdWRhZCBNYXMgQWJpZXJ0YSwgZWwgYXBhcnRhZG8gMTAgZGUgbGEgQ2lyY3VsYXIg
-VW5vIHZpZ2VudGUgeSBsYXMgTm9ybWFzIEdlbmVyYWxlcyBxdWUgZGViZXJhbiBvYnNlcnZhcnNl
-IGVuIG1hdGVyaWEgZGUgU2VndXJpZGFkIGRlIGxhIEluZm9ybWFjaW9uIGVuIGxhIEFkbWluaXN0
-cmFjaW9uIFB1YmxpY2EgZGVsIERpc3RyaXRvIEZlZGVyYWwuCg==
+On Wed, Sep 18, 2019 at 3:57 PM, Vinod Koul wrote:
+> On 15-09-19, 12:30, Satendra Singh Thakur wrote:
+> > 1. For most of the platform drivers's probe include following steps
+> > 
+> > -memory allocation for driver's private structure
+> > -getting io resources
+> > -io remapping resources
+> > -getting irq number
+> > -registering irq
+> > -setting driver's private data
+> > -getting clock
+> > -preparing and enabling clock
+>
+> And we have perfect set of APIs for these tasks!
+Hi Vinod,
+Thanks for the comments.
+You are right, we already have set of APIs for these tasks.
+The proposed macros combine the very same APIs to remove 
+duplicate/redundant code.
+A new driver author can use these macros to easily write probe 
+function without having to worry about signatures of internal APIs.
+In the past, people have combined some of them e.g.
+a) clk_prepare_enable combines clk_prepare and clk_enable
+b) devm_platform_ioremap_resource combines
+platform_get_resource (for type IORESOURCE_MEM)
+and devm_ioremap_resource
+c) module_platform_driver macro encompasses module_init/exit 
+and driver_register/unregister functions.
+The basic idea is to simplyfy coding.
+> > 2. We have defined a set of macros to combine some or all of
+> > the above mentioned steps. This will remove redundant/duplicate
+> > code in drivers' probe functions of platform drivers.
+> 
+> Why, how does it help and you do realize it also introduces bugs
+This will make probe function shorter by removing repeated code.
+This will also reduce bugs caused due to improper handling
+of failure cases because of these reasons:
+a) If the developer calls each API individualy one might miss
+proper handling of the failure for some API; Whereas the macro
+properly handles failure of each API.
+b) Macros are devres compatible which leaves less room for
+memory leaks.
+
+Yes, the macros which enable clock and request irqs
+might cause bugs if they are not used carefully.
+For instance, enabling the clock or requesting the irq
+earlier than actually required. So, the macros with _clk
+and _irq, _all suffix should be used carefully.
+
+Please let me know if I miss any specific type of bug
+here.
+> 
+> > devm_platform_probe_helper(pdev, priv, clk_name);
+> > devm_platform_probe_helper_clk(pdev, priv, clk_name);
+> > devm_platform_probe_helper_irq(pdev, priv, clk_name,
+> > irq_hndlr, irq_flags, irq_name, irq_devid);
+> > devm_platform_probe_helper_all(pdev, priv, clk_name,
+> > irq_hndlr, irq_flags, irq_name, irq_devid);
+> > devm_platform_probe_helper_all_data(pdev, priv, clk_name,
+> > irq_hndlr, irq_flags, irq_name, irq_devid);
+> > 
+> > 3. Code is made devres compatible (wherever required)
+> > The functions: clk_get, request_irq, kzalloc, platform_get_resource
+> > are replaced with their devm_* counterparts.
+> 
+> We already have devres APIs for people to use!
+Yes, we have devres APIs and many drivers do use them.
+But still there are many which don't use them.
+The proposed macros provides just another way to use devres APIs.
+> > 
+> > 4. Few bugs are also fixed.
+> 
+> Which ones..?
+The bug is that the failure of request_irq 
+is not handled properly in mtk-hsdma.c. This is fixed in patch [5/9].
+https://lkml.org/lkml/2019/9/15/35
+
+Please let me know if I am missing something here.
+Thanks
+-Satendra 
+

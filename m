@@ -2,33 +2,38 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CE51FBA1BD
-	for <lists+dmaengine@lfdr.de>; Sun, 22 Sep 2019 12:10:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8B36BA1EF
+	for <lists+dmaengine@lfdr.de>; Sun, 22 Sep 2019 13:00:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfIVKJ7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 22 Sep 2019 06:09:59 -0400
-Received: from mout.web.de ([217.72.192.78]:43293 "EHLO mout.web.de"
+        id S1728485AbfIVLAn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 22 Sep 2019 07:00:43 -0400
+Received: from mout.web.de ([212.227.17.12]:38457 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727492AbfIVKJ7 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sun, 22 Sep 2019 06:09:59 -0400
+        id S1728488AbfIVLAm (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 22 Sep 2019 07:00:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1569146984;
-        bh=x0xTUVNZ5DZI5aFJZQ6x46EDyr2xe+kGBRm1hkcsD0Y=;
+        s=dbaedf251592; t=1569150012;
+        bh=31q+m6nv3NSTbrLlF0GK7cMZgO8xqs0OAU+VDW2WZe8=;
         h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
-        b=F9WA/lImU+qXyqHyFPmzmVObVT3wwCsbgE0R8rDIiGS03P9RGuTLLUocKU9N+rRFH
-         tziYJW8LNFIuCIN9RzZr84BiM5Vqjgf5o1DbfhSt5+WBxY5p/HfO2Cwa1nPZ8ltjtN
-         ZogCxyDkrpiy7Omwf/+klkVH2cPKakw2xaYbM9JQ=
+        b=JgUbv4dgXxeHxMoiW0EbcII+BzWxAT4v3nzlJfC55P8pgNVfAjRibaWnj7EtKlKht
+         D0CzORZdZ2+5Fow2eUDV0OeoPbE2+ReeQPa8u/aGFfKsC3ea6xsxIFymRvrVa2Xfe8
+         v8FWdn7I9v8K/1aHNcrUuDwLdu3rr5iWzJljRHzg=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
 Received: from [192.168.1.2] ([2.244.8.78]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LrK0u-1i4NZk0xOm-0139DX; Sun, 22
- Sep 2019 12:09:44 +0200
-To:     dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lhvpu-1hpbKb3yOA-00n9AT; Sun, 22
+ Sep 2019 13:00:12 +0200
+To:     dmaengine@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Shun-Chih Yu <shun-chih.yu@mediatek.com>,
         Vinod Koul <vkoul@kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         kernel-janitors@vger.kernel.org
 From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] dmaengine: k3dma: Use devm_platform_ioremap_resource() in
- k3_dma_probe()
+Subject: [PATCH] dmaengine: mediatek: Use devm_platform_ioremap_resource() in
+ mtk_cqdma_probe()
 Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
  +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
@@ -72,81 +77,78 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <aaed7862-49bb-e368-3e7b-5cc2c3d915b1@web.de>
-Date:   Sun, 22 Sep 2019 12:09:42 +0200
+Message-ID: <c7e3bbae-44fa-9019-18ee-c6cdfd7c2a14@web.de>
+Date:   Sun, 22 Sep 2019 13:00:09 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:kI58SOul5RHBDRAQhyI+cRexLHBkmreL0ZLp9+F5Ki/9/weUZLr
- f2z1MQg/y847feRPM7+2OzrE09C2xpXJCZ6MyC0+OuRtFh1/+jnrVr8ZmyvGGVv2sEpkChz
- 9v5wJgRu+n2qBP6fRjcsZkoUt2Rvy+jglC/IAsnxKY/gtFbE6XwDrI+OKcnK94fSy7LG8cW
- LWZxZ9XkTA4nMU9vM5QTQ==
+X-Provags-ID: V03:K1:hAXADknAtGNYATmVWj93rnsc4+dPRkCq4IiYKz204pSpN0HWOTp
+ F2WSVct/qhgaupn0VeWpSXbddaIZpOS0m0Re0Mpr3+6JT+pHpLle7a6JlH4BcidWm6TT+vF
+ 7jGdM1RKg9wj+lBNnSVMIqbFpyQzAQFJn2ViR0nr32JoSP5GASQouJidE0HhTjD6MFaAXFQ
+ pSX0HKZlLnyVZdaBdJq+Q==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9MPXdxXL8yE=:xqDoSkfR802PUJ6DnILu2y
- HvDUASu2MuVr4St0rc9OjeIAqV9iBwj2jsekmZhlRHVDRIpr+JnZK7OoKuT1LOkpQl47X+G5f
- tvNbbTDOK37kuXqzQ/uY7U1vtfnLL5XH0oYNSPPlpiz0GW2UMDNDPiJ6avJ5an5xg/eKfGAbG
- EX7RGiEKfYyLcA7Lepd/h6397l8SRjXoxuD8IfUm+OdKJ4xTC/uWOuT293I5E/n/D+Gp1BIdj
- /qRhWgNlq0kuByqO7Y2m37co9lbmc4XmwJJsR1jNkCrAUDUtSwbcPr5ir6MpEHnOXpqwBqKnI
- bF4RT8MJ/Ro5qKtmQzaljq2WGMTDTMcEdJC7jU1r5DFZCxpIRvgPC3nglnUAbV3niyWEHIPGX
- y8QpLWy+nl56HX49y9Vzf9Md9lSyMxkxbs6E5BuQA3fK4hqg6MyfUy2UI5zUlzH8DjCg2ntdg
- cWazNNf1LWAgX6QYq0dqimglzbYoY4g97bxTx3qq0UQiUzp9YGqVRAJGJGaVfLcVUeuf0rI8V
- UprEtdURz8coWvDR6/jO7c0vSjR0mBtv+BiqyY2h/ahgvWU8lIKSgZq18dkN7Psj1taumbhSb
- PK/QMIGZH+LDzBVi9KfragCoqW8l8IEFbKG2zNT9kIXls17x/AnxRnCyGOOTLhSM6FA9A4zbk
- zrlyHgDItOc4bE/rynQv/SWzhBMNoeKIwHCfDP9C76ilQmb2afUAKVeqCLLYwlqIE7KMnJHJM
- U6NX9BmA0PiBfeeH3SmnmURrH72mvxf8/41IHaFWs6gZfQBCZ8LojwmfRDrArcxO3wortmnwY
- 5BNfUmP5tUE8K5jrbUiqJZmGm1qOweltn8piYg0PL/98/h28d13H4tH94UCu18ngnVc4ijkeC
- x865sMu78BvcaPAk21fyWBiGQ2WCsocOCII5aI6tNQzSOU6zOH1OP8kLDYl/tFu6MalVRdWB4
- K/mMPOV7aw0pAYJl4G+cABOQuTGXBcFpsbfTa2OBbBxWvL4jXQCw3cqiMlB7kjEnQaW5kjWv/
- kx8NJcnQo0bxXSCxbQ+2H9omoeoe4ooMJ9cohZc4bBV8cR8p0yuBprLkC+Nh9KnRIIgmwPZru
- CW5j4+CiNBTkIlXKG/biRkt8Az4rXyZwHMmWqkbIgAIvOdgPRBoIHM96Vq64wHR+WCmD45REQ
- g6Q9d5XPPxg5jChYoE/g0/AQx8GU6DBXQqe0GlvAJ+oSxy5eIbcism2q8K6XhTJZPzmWjA2cd
- B+uTquRWMMZuEtIZVLU0PBVvZpZahuX78dQxsjo+e+KITNzOpKCPqwDUhzqI=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Z4RCimlTYfI=:z0KqTyPUk4pIEwxeayyqmr
+ oJwkWUI2bGwQkePKBV58Ou6gEuTmsRCHq1m2eSKhc6yiq4MEbUp/LQigcFehU+76MbigXcFS3
+ 5CKgGA/sf/mWWuHbX/2KV1qdFOD6lhiHO0J88SYtnicNW0JjTkQbTsPwxQjnMuGtUOdJe+TB9
+ NXLF3P1r4tyFv1/qj56vOEqQoETUC/cC9+dbdXdNbG4sQtUJ1IR/C+a+6BQOLbauvWrbEMjS6
+ HVuZtF5gjv3a70ZKxTReHDf+LBJ045A550XQhB/FT7oC0ps/d+M4lA7E9xUq1J6ZbOkSfNrgo
+ RlEazPIgA3ju6UR9oystpcpdyr5U+NGKTTY/WLqxW3LkyTm7lADgv/shqu6Ai/tR8eAH7JbM/
+ 3mqPIbN8ikiWLztOQM1PfubJdJ3BFv68OGa9B7uV9mncJrjd8BOYfHnFiqetZNnTILmQgdJdB
+ JWktWIVKVDAqAb9Fe+4aLz2sqx7i9kQiSlgD4gkDvMXfUXt+ds2Z2lMMVFRwO04Qb9GL7ZQ5W
+ /uqkKlb4ac4cFru7ByLKJVKQ7v8H1EZFWN1TNqPzUF3IynmDVjwW71K0RTU7sr6EGXNS3a/HB
+ D+G1vjYXV2C1iaES+/6jaO4wdsPem3WsAZRQ4rGRPo0H5as0Bu851vExcr8+zhUvP9avO3lip
+ XguEvRPbZG2b5o5J9aEUL8sXQGmDjLFkBz5lnEj/HgG5Sgv/GdIB1suVEl1vfkUc8/zbbYno4
+ 89ocPjmsg86ct3HE4MLRK7/x89xYa7F6AVq/jDHcRMiN7EyR/+/z1876lPdaC870IN882txWc
+ WnkQ0Db9E9U71fKwkWvDiPXGc7+Te/a7lIJJSMa8MWiUVexXWbD2dK4/k4LBlo+yteBYd5cSp
+ szR9eLF8wvkAU7uXocPkKt3CdvAluffiENFW3ep1VdqsDaATmYnH1VGSthkZa5zrywln6wE2A
+ 0LQBB2OZcGEKQ7gYJurvS2UvVdnnkaXxiXB6D34GwayKeH27EvqH+jPV0y1Iwmkk3GfWTdWNi
+ FHYP65eRP9g2y/afJoYc/H/EgfiTgME6v2HYmUa9hBXt14UBLvLZvaw5BdlkO3fpA3A/uk2S4
+ dFErNAIGY3YvcLYkyUvrvUZey9WVTeZplNc5oAcBCT9uoxbvfs6IhZXqtY0/pCbW/KEv9Xp8D
+ jx3+/yjt3gWyKIPTxsSLhlaApLTjtxo6Nc0JLn1op4W7sh8ff4O5W1OsYl6CImLf3nV9uvao7
+ q9H4j1pGentPgA3UvsAkECEybVfob2eWSlNYBMLDud03q9fAacoItdUh7NgA=
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sun, 22 Sep 2019 11:36:18 +0200
+Date: Sun, 22 Sep 2019 12:52:25 +0200
 
-Simplify this function implementation by using a known wrapper function.
+Simplify this function implementation a bit by using
+a known wrapper function.
 
 This issue was detected by using the Coccinelle software.
 
 Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 =2D--
- drivers/dma/k3dma.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/dma/mediatek/mtk-cqdma.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-diff --git a/drivers/dma/k3dma.c b/drivers/dma/k3dma.c
-index 4b36c8810517..adecea51814f 100644
-=2D-- a/drivers/dma/k3dma.c
-+++ b/drivers/dma/k3dma.c
-@@ -835,13 +835,8 @@ static int k3_dma_probe(struct platform_device *op)
- 	const struct k3dma_soc_data *soc_data;
- 	struct k3_dma_dev *d;
- 	const struct of_device_id *of_id;
--	struct resource *iores;
- 	int i, ret, irq =3D 0;
-
--	iores =3D platform_get_resource(op, IORESOURCE_MEM, 0);
--	if (!iores)
--		return -EINVAL;
+diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-c=
+qdma.c
+index 723b11c190b3..6bf838e63be1 100644
+=2D-- a/drivers/dma/mediatek/mtk-cqdma.c
++++ b/drivers/dma/mediatek/mtk-cqdma.c
+@@ -819,15 +819,7 @@ static int mtk_cqdma_probe(struct platform_device *pd=
+ev)
+ 		INIT_LIST_HEAD(&cqdma->pc[i]->queue);
+ 		spin_lock_init(&cqdma->pc[i]->lock);
+ 		refcount_set(&cqdma->pc[i]->refcnt, 0);
 -
- 	d =3D devm_kzalloc(&op->dev, sizeof(*d), GFP_KERNEL);
- 	if (!d)
- 		return -ENOMEM;
-@@ -850,7 +845,7 @@ static int k3_dma_probe(struct platform_device *op)
- 	if (!soc_data)
- 		return -EINVAL;
-
--	d->base =3D devm_ioremap_resource(&op->dev, iores);
-+	d->base =3D devm_platform_ioremap_resource(op, 0);
- 	if (IS_ERR(d->base))
- 		return PTR_ERR(d->base);
+-		res =3D platform_get_resource(pdev, IORESOURCE_MEM, i);
+-		if (!res) {
+-			dev_err(&pdev->dev, "No mem resource for %s\n",
+-				dev_name(&pdev->dev));
+-			return -EINVAL;
+-		}
+-
+-		cqdma->pc[i]->base =3D devm_ioremap_resource(&pdev->dev, res);
++		cqdma->pc[i]->base =3D devm_platform_ioremap_resource(pdev, i);
+ 		if (IS_ERR(cqdma->pc[i]->base))
+ 			return PTR_ERR(cqdma->pc[i]->base);
 
 =2D-
 2.23.0

@@ -2,228 +2,134 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 26885BC0A4
-	for <lists+dmaengine@lfdr.de>; Tue, 24 Sep 2019 05:14:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F0BCBC2A9
+	for <lists+dmaengine@lfdr.de>; Tue, 24 Sep 2019 09:31:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394639AbfIXDOb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 23 Sep 2019 23:14:31 -0400
-Received: from mail-eopbgr50061.outbound.protection.outlook.com ([40.107.5.61]:28161
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        id S1729377AbfIXHbF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 24 Sep 2019 03:31:05 -0400
+Received: from mail-eopbgr730062.outbound.protection.outlook.com ([40.107.73.62]:36400
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2394624AbfIXDOb (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 23 Sep 2019 23:14:31 -0400
+        id S1726828AbfIXHbF (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 24 Sep 2019 03:31:05 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nMriBbbweZsg9Fp5DzRDbBRk+AYKOjF5jlD0xPd62xfGyQ0X2moNpZlwvwHoefcvuk2tmwdNyBs0WsHIgk3MQ/KEAkokp4dao8H8nqEgEqyFvWjJrjkhqe4EnMQkUMlx9aGlhZG8nH4z7LC42N2HepxLqDLJveqCLW2VBQtZFiceAAcXa6xwbXR/2fsWYkDuGXPCzScOSFa39wmNOP0ne31oTN7OyrNmHsP+hVzRpZRmYmiIG72QCNWfW2Z9Smq42liEJPuUNMFs2CGnrvyJTHD9su3+WFIHWrRfCLctTkc4n8kzf/uUUW2ZD8/ROa+uVsZPxepHX/+b8W7Mg6XmcA==
+ b=jgy/gtaOGKQ+sNE9u7IuZAV0lZLfDqxgDeRRxs9/gbb07zb+/MRlwgg4pyAe3ReSh/N1q4ek+wQF26BphwvJa2aEYUy/CAbUCKZe9SZrcO+O7Zfm0EJ+TAVtvkB/IZMGl12bPqXEHqulomCy/0HLCv+Ovifd5gUrfHGTBYIltOoy6rwfNHdVyCQ+rrEO+P2I3ncLV7CVnDPFgV0jOWzrGXrgbt6OehDNxGyDDMc+IHe7P6U0mwW+gdHU0jzkupun/TDwr4U7ptNCfWUksNDpmCq1X2m2vg+ZRZ2bNWd82GwpMcHlEcAxAL+TYJIMa/OPN9KmdFT3vSVddRQwOR0S8g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=16b8EmVXrilFECDyKYGrxPy5Xt3f/iGALurs8fHvoCc=;
- b=RMBfmQAxv+bVepUlE8plx2ZwXMqVP3RVkM/qynosndNj7vwHSjsLUz2KQm4/XOVu4A4Nrzkj4MhFF4MAef4FXMz0uCEPe0ExIDyl2uC+AEOpTLLEpRmq7b86bQyUPRlaFUW8bE+93KPhsa4nUsfO/vSBKVDd4cQ5RWxJfuht88DERdlmOnWkvzP4VYE3Wdj/Uh3KuTM2BHo63mnhhuzaUebHlYM3741JYDyFL5g+dEXdD//7bt1fDjUxNjMWXfQIi1OGyyM4oC9P5V4/xznzlAhV/HcudyPr2fRuUsNLYjOeKeg4bq/71w7+9YGSldyiHTt4AVlV1zMziV3DN3mhaw==
+ bh=T9KWIkoLuRTxmp3OtITsfmkrdtPzqi2SbrkKiVNSO50=;
+ b=JpxbdDUunieVU26EFVgoSd9iz2KXThk6DRohiF9wcEvXG3JdqZjQtjaBqnrnRFe7H1u1SBrwrCswmgJnkGGjYh8/2RVM9brV/IkWMG8zuTh0e/iDLRWvwAWUsUoazpSU5BO3TL5hqYD4GfH87/bg0YlKoxZ7wvMdYZ8pZWBU57h2/76niewsSwDY5oJZKwDrX+o4cPMlt0hmhDGx495GFrSJobsblW+gLHaxDciCwpUzE8D8lMWYEhz/MwTGAy3EVj7o3s84c08Eq4EAzoKHVcr95vRuqDMx1r6pnn2i/A8ZaY4AO1h346xm6jnpyyhmZoDEg+BcCpzdWeKQp9Tiqw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=16b8EmVXrilFECDyKYGrxPy5Xt3f/iGALurs8fHvoCc=;
- b=HqABhrGVnNtZqp6Jn2s0bVfbXo2MtWABFCj1sY/oSTV4nc2vyzm6MNKsd+JyNPTECbfqilJvPx+b4jN3AnU31ELQb/DNZUL4eeZq3kvdQDZLFpHqs15JlbUSlfhUv7MPn5oJpus/v2zHRSSNaNVLt/ZaEIPj7XIBHhCGyErat+g=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
- VE1PR04MB6608.eurprd04.prod.outlook.com (20.179.235.12) with Microsoft SMTP
+ bh=T9KWIkoLuRTxmp3OtITsfmkrdtPzqi2SbrkKiVNSO50=;
+ b=20mSIpB1XtNO1Nvk/ZCuP6T+/ctk9f1VqOt2NIaRCGWpDEqmsbXWf4eQ/f8ZKV+O0GgbZrHFzPQEHEbXo5c37a3XA64ns5a6KjFyaWHNa2WxQAP7nvs2A+e3SwU6KfNLXIMinbUfmzMcnYEiYb6EiRWfTnf5bXYFYlROp+4HeDA=
+Received: from MN2PR12MB3455.namprd12.prod.outlook.com (20.178.244.22) by
+ MN2PR12MB3359.namprd12.prod.outlook.com (20.178.243.29) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Tue, 24 Sep 2019 03:14:26 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::35d1:8d88:10f4:561]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::35d1:8d88:10f4:561%5]) with mapi id 15.20.2284.023; Tue, 24 Sep 2019
- 03:14:26 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Philipp Puschmann <philipp.puschmann@emlix.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "jlu@pengutronix.de" <jlu@pengutronix.de>,
-        Andy Duan <fugang.duan@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+ 15.20.2284.26; Tue, 24 Sep 2019 07:31:02 +0000
+Received: from MN2PR12MB3455.namprd12.prod.outlook.com
+ ([fe80::ec02:b95d:560a:ad36]) by MN2PR12MB3455.namprd12.prod.outlook.com
+ ([fe80::ec02:b95d:560a:ad36%7]) with mapi id 15.20.2284.023; Tue, 24 Sep 2019
+ 07:31:02 +0000
+From:   "Mehta, Sanju" <Sanju.Mehta@amd.com>
+To:     "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
+        "Kumar, Rajesh" <Rajesh1.Kumar@amd.com>,
         "vkoul@kernel.org" <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH v5 2/3] dmaengine: imx-sdma: fix dma freezes
-Thread-Topic: [PATCH v5 2/3] dmaengine: imx-sdma: fix dma freezes
-Thread-Index: AQHVchbyOim+CiOpQECRxZtOGlM/Lac6JGVA
-Date:   Tue, 24 Sep 2019 03:14:25 +0000
-Message-ID: <VE1PR04MB66381655BCED05ED2F212DE389840@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <20190923135808.815-1-philipp.puschmann@emlix.com>
- <20190923135808.815-3-philipp.puschmann@emlix.com>
-In-Reply-To: <20190923135808.815-3-philipp.puschmann@emlix.com>
-Accept-Language: en-US
+        "Mehta, Sanju" <Sanju.Mehta@amd.com>
+Subject: [PATCH 0/4] *** AMD PTDMA driver ***
+Thread-Topic: [PATCH 0/4] *** AMD PTDMA driver ***
+Thread-Index: AQHVcqoESUxZSvjG70+062OZ6XyZgg==
+Date:   Tue, 24 Sep 2019 07:31:01 +0000
+Message-ID: <1569310236-29113-1-git-send-email-Sanju.Mehta@amd.com>
+Accept-Language: en-IN, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+x-clientproxiedby: MA1PR01CA0128.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:35::22) To MN2PR12MB3455.namprd12.prod.outlook.com
+ (2603:10b6:208:d0::22)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
+ smtp.mailfrom=Sanju.Mehta@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-originating-ip: [165.204.156.251]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0607aa95-b12f-40e3-1534-08d7409d4e13
+x-ms-office365-filtering-correlation-id: 404c7ee1-7280-4fcf-96d0-08d740c1266c
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6608;
-x-ms-traffictypediagnostic: VE1PR04MB6608:|VE1PR04MB6608:
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MN2PR12MB3359;
+x-ms-traffictypediagnostic: MN2PR12MB3359:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB66084B803C920B8499B6134889840@VE1PR04MB6608.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-microsoft-antispam-prvs: <MN2PR12MB33590719E59CCB5F5C82C65BE5840@MN2PR12MB3359.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2201;
 x-forefront-prvs: 0170DAF08C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(136003)(366004)(39860400002)(376002)(54534003)(199004)(189003)(229853002)(52536014)(7696005)(33656002)(76176011)(6506007)(53546011)(9686003)(186003)(2906002)(316002)(54906003)(55016002)(3846002)(446003)(99286004)(66066001)(6246003)(486006)(102836004)(4326008)(6116002)(476003)(64756008)(11346002)(66476007)(66946007)(25786009)(76116006)(6436002)(4001150100001)(8676002)(305945005)(256004)(7736002)(478600001)(110136005)(26005)(7416002)(86362001)(8936002)(66446008)(66556008)(14444005)(74316002)(81166006)(2501003)(71200400001)(81156014)(71190400001)(14454004)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6608;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(4636009)(136003)(396003)(346002)(366004)(39860400002)(376002)(189003)(199004)(3846002)(6116002)(476003)(14454004)(478600001)(102836004)(25786009)(7736002)(2201001)(256004)(99286004)(186003)(2501003)(6506007)(2616005)(305945005)(4326008)(54906003)(66946007)(6512007)(86362001)(6436002)(5660300002)(7416002)(2906002)(66066001)(386003)(110136005)(6486002)(71190400001)(71200400001)(66476007)(8676002)(64756008)(52116002)(66446008)(66556008)(26005)(50226002)(486006)(36756003)(81166006)(316002)(8936002)(81156014)(921003)(1121003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3359;H:MN2PR12MB3455.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1tL9wEztGS0K4yrtCLdU2XCArP2FnjVwVklADJ9mArf1+7pGUktRG0dx7n9eQK/BPfAYTjkWYXJx96BQlypSUCMIgt1oKqOHkPA4wXOoi82YJ+BBSEPSxrz8CBpb2aD8XuKNTacytnktuevMv+DtpjzG8ebK2Ja4WSKlyw83l9e68zQgo6q4jy4B/52BdW49pg3d/DhpklwzhhU7f63/+h10VNm7bD9kY/p7vt2iW+sRVb4lL5DcPPu3hQciSr7KG9334ARLOmi1GWi9ttUYyNS6sBb1oGUH1TBwjvrrPGL6OXOOTKxNXbSFnoTIC7u4SIw1AjSYqiSSd5Hi4VBNLjTEEqur+VFLQANjEd35YS3hux+nzAGmSy8j5wrjPWcTT3h/ZBKYYr4qIMAvbbfZdd3CBssDJP5IqPwNoPLXZVk=
-Content-Type: text/plain; charset="us-ascii"
+x-microsoft-antispam-message-info: q2nN0XjOCcIxwxuMTT4FV+9hAu780EPbXYNm92FghcjbTeBW4/QEnoEIit0xv7/MBJ9jf+0STcZZFfQ+kjj1/qd0+5XeqVERSg/AiuKiYhTqOkOTbuP92vZDLbzm4dMUV9TwhQaf4k4gWeYPt8jGEW5oLJVCYGOA9BLgmLUgiOO4iJZGqW6+PkygAzbwujCP9daRZ30lcvUb2RVNHauk9E1fmfWs429ORmXUTGZdPx9KSUXlaENTaJdL+8dXUWDQpfi4g1roPwFX+Dz1pWcRmcl2nojpTY8TsWuhEwJpZL7mc0KspaLpLdK/SEs4dU3USdV4kFrCvAXm4hAhhY6tx9TeHTo60yukFRq8eHrjxubgfVfJWPcnA9f4oD4ZBiWM8mNEIf6cJztNOsrY/QM6fXuWny408FnWzmdWTKnPVq8=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0607aa95-b12f-40e3-1534-08d7409d4e13
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2019 03:14:25.8392
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 404c7ee1-7280-4fcf-96d0-08d740c1266c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2019 07:31:02.0926
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ERLK8bQLr3Yhwfwx5QLMrbKrefEGZKjFUqCXMK7MT0xi5hCHTqRcYEeK73iL+ZMQcNnipLxRi5Jq2okrTD6Wdg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6608
+X-MS-Exchange-CrossTenant-userprincipalname: q9dr1tpJcUuCADnwnAhMFaPJOPqoJVeFtKorNOwnkECx3LeVUZBnNdd2PAYieqI/Vgu3wywpyEOs/7j6Mtz6vQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3359
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 2019-9-23 21:58 Philipp Puschmann <philipp.puschmann@emlix.com> wrote:
-> For some years and since many kernel versions there are reports that the =
-RX
-> UART SDMA channel stops working at some point. The workaround was to
-> disable DMA for RX. This commit fixes the problem itself. Cyclic DMA tran=
-sfers
-> are used by uart and other drivers and these can fail in at least two cas=
-es
-> where we can run out of descriptors available to the
-> engine:
-> - Interrupts are disabled for too long and all buffers are filled with
->   data, especially in a setup where many small dma transfers are being
->   executed only using a tiny part of a single buffer
-> - DMA errors (such as generated by baud rate mismatch with imx-uart)
->   use up all descriptors before we can react.
->=20
-> In this case, SDMA stops the channel and no further transfers are done un=
-til
-> the respective channel is disabled and re-enabled. We can check if the
-> channel has been stopped and re-enable it then. To distinguish from the t=
-he
-> case that the channel was stopped by upper-level driver we introduce new
-> flag IMX_DMA_ACTIVE.
->=20
-> As sdmac->desc is constant we can move desc out of the loop.
->=20
-> Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
-> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
-> Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
-> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-> ---
->=20
-> Changelog v5:
->  - join with patch version from Jan Luebbe
->  - adapt comments and patch descriptions
->=20
-> Changelog v4:
->  - fixed the fixes tag
->=20
-> Changelog v3:
->  - use correct dma_wmb() instead of dma_wb()
->  - add fixes tag
->=20
-> Changelog v2:
->  - clarify comment and commit description
->=20
->  drivers/dma/imx-sdma.c | 26 ++++++++++++++++++++++----
->  1 file changed, 22 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c index
-> b42281604e54..0b1d6a62423d 100644
-> --- a/drivers/dma/imx-sdma.c
-> +++ b/drivers/dma/imx-sdma.c
-> @@ -383,6 +383,7 @@ struct sdma_channel {  };
->=20
->  #define IMX_DMA_SG_LOOP		BIT(0)
-> +#define IMX_DMA_ACTIVE		BIT(1)
->=20
->  #define MAX_DMA_CHANNELS 32
->  #define MXC_SDMA_DEFAULT_PRIORITY 1
-> @@ -658,6 +659,9 @@ static int sdma_config_ownership(struct
-> sdma_channel *sdmac,
->=20
->  static void sdma_enable_channel(struct sdma_engine *sdma, int channel)  =
-{
-> +	struct sdma_channel *sdmac =3D &sdma->channel[channel];
-> +
-> +	sdmac->flags |=3D IMX_DMA_ACTIVE;
-Add spin_lock_irq protect this flags.
->  	writel(BIT(channel), sdma->regs + SDMA_H_START);  }
->=20
-> @@ -774,16 +778,17 @@ static void sdma_start_desc(struct sdma_channel
-> *sdmac)
->=20
->  static void sdma_update_channel_loop(struct sdma_channel *sdmac)  {
-> +	struct sdma_engine *sdma =3D sdmac->sdma;
->  	struct sdma_buffer_descriptor *bd;
-> +	struct sdma_desc *desc =3D sdmac->desc;
->  	int error =3D 0;
-> -	enum dma_status	old_status =3D sdmac->status;
-> +	enum dma_status old_status =3D sdmac->status;
->=20
->  	/*
->  	 * loop mode. Iterate over descriptors, re-setup them and
->  	 * call callback function.
->  	 */
-> -	while (sdmac->desc) {
-> -		struct sdma_desc *desc =3D sdmac->desc;
-> +	while (desc) {
->=20
->  		bd =3D &desc->bd[desc->buf_tail];
->=20
-> @@ -822,6 +827,18 @@ static void sdma_update_channel_loop(struct
-> sdma_channel *sdmac)
->  		if (error)
->  			sdmac->status =3D old_status;
->  	}
-> +
-> +	/* In some situations it may happen that the sdma does not find any
-> +	 * usable descriptor in the ring to put data into. The channel is
-> +	 * stopped then and after having freed some buffers we have to restart
-> +	 * it manually.
-> +	 */
-> +	if ((sdmac->flags & IMX_DMA_ACTIVE) &&
-> +	    !(readl_relaxed(sdma->regs + SDMA_H_STATSTOP) &
-> BIT(sdmac->channel))) {
-Seems duplicate checking here, IMX_DMA_ACTIVE is enough.
-> +		dev_err_ratelimited(sdma->dev, "SDMA channel %d: cyclic transfer
-> disabled by HW, reenabling\n",
-Would you change the print log to below:
-"cyclic bds consumed all,reenableing".?
-> +				    sdmac->channel);
-> +			writel(BIT(sdmac->channel), sdma->regs + SDMA_H_START);
-> +	};
->  }
->=20
->  static void mxc_sdma_handle_channel_normal(struct sdma_channel *data)
-> @@ -1051,7 +1068,8 @@ static int sdma_disable_channel(struct dma_chan
-> *chan)
->  	struct sdma_engine *sdma =3D sdmac->sdma;
->  	int channel =3D sdmac->channel;
->=20
-> -	writel_relaxed(BIT(channel), sdma->regs + SDMA_H_STATSTOP);
-> +	sdmac->flags &=3D ~IMX_DMA_ACTIVE;
-> +	writel(BIT(channel), sdma->regs + SDMA_H_STATSTOP);
->  	sdmac->status =3D DMA_ERROR;
->=20
->  	return 0;
-> --
-> 2.23.0
+From: Sanjay R Mehta <sanju.mehta@amd.com>
+
+*** This patch series adds support for AMD PTDMA engine ***
+
+Sanjay R Mehta (4):
+  dma: Add PTDMA Engine driver support
+  dma: Support for multiple PTDMA
+  dmaengine: Register as a DMA resource
+  dmaengine: Add debugfs entries for PTDMA information
+
+ MAINTAINERS                         |   6 +
+ drivers/dma/Kconfig                 |   2 +
+ drivers/dma/Makefile                |   1 +
+ drivers/dma/ptdma/Kconfig           |   8 +
+ drivers/dma/ptdma/Makefile          |  12 +
+ drivers/dma/ptdma/ptdma-debugfs.c   | 249 +++++++++++++
+ drivers/dma/ptdma/ptdma-dev.c       | 445 +++++++++++++++++++++++
+ drivers/dma/ptdma/ptdma-dmaengine.c | 700 ++++++++++++++++++++++++++++++++=
+++++
+ drivers/dma/ptdma/ptdma-ops.c       | 464 ++++++++++++++++++++++++
+ drivers/dma/ptdma/ptdma-pci.c       | 244 +++++++++++++
+ drivers/dma/ptdma/ptdma.h           | 563 +++++++++++++++++++++++++++++
+ 11 files changed, 2694 insertions(+)
+ create mode 100644 drivers/dma/ptdma/Kconfig
+ create mode 100644 drivers/dma/ptdma/Makefile
+ create mode 100644 drivers/dma/ptdma/ptdma-debugfs.c
+ create mode 100644 drivers/dma/ptdma/ptdma-dev.c
+ create mode 100644 drivers/dma/ptdma/ptdma-dmaengine.c
+ create mode 100644 drivers/dma/ptdma/ptdma-ops.c
+ create mode 100644 drivers/dma/ptdma/ptdma-pci.c
+ create mode 100644 drivers/dma/ptdma/ptdma.h
+
+--=20
+2.7.4
 

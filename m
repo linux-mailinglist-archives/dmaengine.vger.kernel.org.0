@@ -2,79 +2,66 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 47734BC3C0
-	for <lists+dmaengine@lfdr.de>; Tue, 24 Sep 2019 10:05:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFD3EBC44B
+	for <lists+dmaengine@lfdr.de>; Tue, 24 Sep 2019 10:51:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503940AbfIXIFO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 24 Sep 2019 04:05:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58312 "EHLO mail.kernel.org"
+        id S1726029AbfIXIvT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 24 Sep 2019 04:51:19 -0400
+Received: from mga03.intel.com ([134.134.136.65]:8091 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2503939AbfIXIFO (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 24 Sep 2019 04:05:14 -0400
-Received: from localhost (unknown [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BA50207FD;
-        Tue, 24 Sep 2019 08:05:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569312313;
-        bh=rzf24i5MOO6JLM6uk7Ln1hDt9nruRckWWZNiYKKdNuw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vgc7lkZzopNzeioAQ+OdFSLVSTZTT0hxd6e1y57S+wM86h+D2jRlJbyTeeelCEGKA
-         4A9/zftChp1wFfF2Zfqtr605BpAwI28u0cD96tVI02I03nJt3dhga7f+uVGp+ZwP0O
-         R1PeyO7fnwTiaPVtS6+1qNz7bPH8RrRjs54TGcmo=
-Date:   Tue, 24 Sep 2019 10:05:03 +0200
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     "Mehta, Sanju" <Sanju.Mehta@amd.com>
-Cc:     "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
-        "Kumar, Rajesh" <Rajesh1.Kumar@amd.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Subject: Re: [PATCH 4/4] dmaengine: Add debugfs entries for PTDMA information
-Message-ID: <20190924080503.GA564935@kroah.com>
-References: <1569310357-29271-1-git-send-email-Sanju.Mehta@amd.com>
+        id S1725943AbfIXIvT (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 24 Sep 2019 04:51:19 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 24 Sep 2019 01:51:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,543,1559545200"; 
+   d="scan'208";a="340015920"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 24 Sep 2019 01:51:17 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 62F4C1A1; Tue, 24 Sep 2019 11:51:16 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Viresh Kumar <vireshk@kernel.org>, dmaengine@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] dmaengine: dw: platform: Mark 'hclk' clock optional
+Date:   Tue, 24 Sep 2019 11:51:16 +0300
+Message-Id: <20190924085116.83683-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569310357-29271-1-git-send-email-Sanju.Mehta@amd.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 07:33:02AM +0000, Mehta, Sanju wrote:
-> +static const struct file_operations pt_debugfs_info_ops = {
-> +	.owner = THIS_MODULE,
-> +	.open = simple_open,
-> +	.read = ptdma_debugfs_info_read,
-> +	.write = NULL,
-> +};
-> +
-> +static const struct file_operations pt_debugfs_queue_ops = {
-> +	.owner = THIS_MODULE,
-> +	.open = simple_open,
-> +	.read = ptdma_debugfs_queue_read,
-> +	.write = ptdma_debugfs_queue_write,
-> +};
-> +
-> +static const struct file_operations pt_debugfs_stats_ops = {
-> +	.owner = THIS_MODULE,
-> +	.open = simple_open,
-> +	.read = ptdma_debugfs_stats_read,
-> +	.write = ptdma_debugfs_stats_write,
-> +};
+On some platforms the clock can be fixed rate, always running one and
+there is no need to do anything with it.
 
-Can you use DEFINE_SIMPLE_ATTRIBUTE() here intead of these?
+In order to support those platforms, switch to use optional clock.
 
-thanks,
+Fixes: f8d9ddbc2851 ("Enable iDMA 32-bit on Intel Elkhart Lake")
+Depends-on: 60b8f0ddf1a9 ("clk: Add (devm_)clk_get_optional() functions")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/dma/dw/platform.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-greg k-h
+diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
+index 6a94f22b6637..bffc79a620ae 100644
+--- a/drivers/dma/dw/platform.c
++++ b/drivers/dma/dw/platform.c
+@@ -66,7 +66,7 @@ static int dw_probe(struct platform_device *pdev)
+ 
+ 	data->chip = chip;
+ 
+-	chip->clk = devm_clk_get(chip->dev, "hclk");
++	chip->clk = devm_clk_get_optional(chip->dev, "hclk");
+ 	if (IS_ERR(chip->clk))
+ 		return PTR_ERR(chip->clk);
+ 	err = clk_prepare_enable(chip->clk);
+-- 
+2.23.0
+

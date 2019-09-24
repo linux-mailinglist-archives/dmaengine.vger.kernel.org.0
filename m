@@ -2,19 +2,19 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B5CCBD180
-	for <lists+dmaengine@lfdr.de>; Tue, 24 Sep 2019 20:14:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53EBBBD176
+	for <lists+dmaengine@lfdr.de>; Tue, 24 Sep 2019 20:13:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730438AbfIXSNs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 24 Sep 2019 14:13:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44010 "EHLO mx1.suse.de"
+        id S2439740AbfIXSNC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 24 Sep 2019 14:13:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44098 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2439657AbfIXSM7 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 24 Sep 2019 14:12:59 -0400
+        id S2439705AbfIXSNB (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 24 Sep 2019 14:13:01 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D66E4AE78;
-        Tue, 24 Sep 2019 18:12:56 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 376C8AC93;
+        Tue, 24 Sep 2019 18:12:58 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     robh+dt@kernel.org, devicetree@vger.kernel.org,
         frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org,
@@ -26,9 +26,9 @@ To:     robh+dt@kernel.org, devicetree@vger.kernel.org,
 Cc:     mbrugger@suse.com, robin.murphy@arm.com, f.fainelli@gmail.com,
         james.quinlan@broadcom.com, wahrenst@gmx.net,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH 05/11] of: expose __of_get_dma_parent() to OF subsystem
-Date:   Tue, 24 Sep 2019 20:12:36 +0200
-Message-Id: <20190924181244.7159-6-nsaenzjulienne@suse.de>
+Subject: [PATCH 06/11] of: address: use parent OF node in of_dma_get_range()
+Date:   Tue, 24 Sep 2019 20:12:37 +0200
+Message-Id: <20190924181244.7159-7-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190924181244.7159-1-nsaenzjulienne@suse.de>
 References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
@@ -39,95 +39,129 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The function was only available locally to of/address.c, make it
-available to the OF subsystem.
+Some devices don't have their own OF node, and are stuck passing their
+bus node. Adapt the function for this use case.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
 
- drivers/of/address.c    | 18 ------------------
- drivers/of/base.c       | 25 +++++++++++++++++++++++++
- drivers/of/of_private.h |  2 ++
- 3 files changed, 27 insertions(+), 18 deletions(-)
+ drivers/of/address.c       | 33 +++++++++++++++------------------
+ drivers/of/device.c        |  3 ++-
+ include/linux/of_address.h |  8 ++++----
+ 3 files changed, 21 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/of/address.c b/drivers/of/address.c
-index c9eb4ebcc2e9..53666063e938 100644
+index 53666063e938..b7b864b0ac75 100644
 --- a/drivers/of/address.c
 +++ b/drivers/of/address.c
-@@ -681,24 +681,6 @@ u64 of_translate_address(struct device_node *dev, const __be32 *in_addr)
- }
- EXPORT_SYMBOL(of_translate_address);
- 
--static struct device_node *__of_get_dma_parent(const struct device_node *np)
--{
--	struct of_phandle_args args;
--	int ret, index;
--
--	index = of_property_match_string(np, "interconnect-names", "dma-mem");
--	if (index < 0)
--		return of_get_parent(np);
--
--	ret = of_parse_phandle_with_args(np, "interconnects",
--					 "#interconnect-cells",
--					 index, &args);
--	if (ret < 0)
--		return of_get_parent(np);
--
--	return of_node_get(args.np);
--}
--
- static u64 of_translate_dma_address_parent(struct device_node *parent,
- 					   const __be32 *in_addr)
+@@ -914,30 +914,21 @@ EXPORT_SYMBOL(of_io_request_and_map);
+  * It returns -ENODEV if "dma-ranges" property was not found
+  * for this device in DT.
+  */
+-int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *size)
++int of_dma_get_range(struct device_node *parent, u64 *dma_addr,
++		     u64 *paddr, u64 *size)
  {
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 94f83051910c..ec161e6b5222 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -716,6 +716,31 @@ struct device_node *of_get_parent(const struct device_node *node)
+-	struct device_node *node = of_node_get(np);
++	struct device_node *node = of_node_get(parent);
+ 	const __be32 *ranges = NULL;
+ 	int naddr, nsize, pna;
+ 	int ret = 0;
+ 	u64 dmaaddr;
+ 
+-	if (!node)
+-		return -EINVAL;
+-
+ 	while (1) {
+-		struct device_node *parent;
++		struct device_node *tmp;
+ 		int len;
+ 
+-		naddr = of_n_addr_cells(node);
+-		nsize = of_n_size_cells(node);
+-
+-		parent = __of_get_dma_parent(node);
+-		of_node_put(node);
+-
+-		node = parent;
+-		if (!node)
+-			break;
++		naddr = __of_n_addr_cells_parent(node);
++		nsize = __of_n_size_cells_parent(node);
+ 
+ 		ranges = of_get_property(node, "dma-ranges", &len);
+ 
+@@ -951,10 +942,16 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+ 		 */
+ 		if (!ranges)
+ 			break;
++
++		tmp = __of_get_dma_parent(node);
++		of_node_put(node);
++		node = tmp;
++		if (!node)
++			break;
+ 	}
+ 
+ 	if (!ranges) {
+-		pr_debug("no dma-ranges found for node(%pOF)\n", np);
++		pr_debug("no dma-ranges found for node(%pOF)\n", node);
+ 		ret = -ENODEV;
+ 		goto out;
+ 	}
+@@ -967,10 +964,10 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+ 	 * size		: nsize cells
+ 	 */
+ 	dmaaddr = of_read_number(ranges, naddr);
+-	*paddr = of_translate_dma_address(np, ranges);
++	*paddr = of_translate_dma_address_parent(parent, ranges);
+ 	if (*paddr == OF_BAD_ADDR) {
+ 		pr_err("translation of DMA address(%pad) to CPU address failed node(%pOF)\n",
+-		       dma_addr, np);
++		       dma_addr, parent);
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index da8158392010..267b509df517 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -95,7 +95,8 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
+ 	const struct iommu_ops *iommu;
+ 	u64 mask;
+ 
+-	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
++	ret = of_dma_get_range(__of_get_dma_parent(np), &dma_addr,
++			       &paddr, &size);
+ 	if (ret < 0) {
+ 		/*
+ 		 * For legacy reasons, we have to assume some devices need
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 30e40fb6936b..aa1ce0cb59a1 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -55,8 +55,8 @@ extern int of_pci_dma_range_parser_init(struct of_pci_range_parser *parser,
+ extern struct of_pci_range *of_pci_range_parser_one(
+ 					struct of_pci_range_parser *parser,
+ 					struct of_pci_range *range);
+-extern int of_dma_get_range(struct device_node *np, u64 *dma_addr,
+-				u64 *paddr, u64 *size);
++extern int of_dma_get_range(struct device_node *parent, u64 *dma_addr,
++			    u64 *paddr, u64 *size);
+ extern bool of_dma_is_coherent(struct device_node *np);
+ #else /* CONFIG_OF_ADDRESS */
+ static inline void __iomem *of_io_request_and_map(struct device_node *device,
+@@ -104,8 +104,8 @@ static inline struct of_pci_range *of_pci_range_parser_one(
+ 	return NULL;
  }
- EXPORT_SYMBOL(of_get_parent);
  
-+/**
-+ *	__of_get_dma_parent - Get a node's dma parent if any
-+ *	@node:	Node to get dma parent
-+ *
-+ *	Returns a node pointer with refcount incremented, use
-+ *	of_node_put() on it when done.
-+ */
-+struct device_node *__of_get_dma_parent(const struct device_node *np)
-+{
-+	struct of_phandle_args args;
-+	int ret, index;
-+
-+	index = of_property_match_string(np, "interconnect-names", "dma-mem");
-+	if (index < 0)
-+		return of_get_parent(np);
-+
-+	ret = of_parse_phandle_with_args(np, "interconnects",
-+					 "#interconnect-cells",
-+					 index, &args);
-+	if (ret < 0)
-+		return of_get_parent(np);
-+
-+	return of_node_get(args.np);
-+}
-+
- /**
-  *	of_get_next_parent - Iterate to a node's parent
-  *	@node:	Node to get parent of
-diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index b528304be244..63bb16cc454c 100644
---- a/drivers/of/of_private.h
-+++ b/drivers/of/of_private.h
-@@ -42,6 +42,8 @@ extern struct kset *of_kset;
- int __of_n_addr_cells_parent(struct device_node *parent);
- int __of_n_size_cells_parent(struct device_node *parent);
- 
-+struct device_node *__of_get_dma_parent(const struct device_node *np);
-+
- #if defined(CONFIG_OF_DYNAMIC)
- extern int of_property_notify(int action, struct device_node *np,
- 			      struct property *prop, struct property *old_prop);
+-static inline int of_dma_get_range(struct device_node *np, u64 *dma_addr,
+-				u64 *paddr, u64 *size)
++static inline int of_dma_get_range(struct device_node *parent, u64 *dma_addr,
++				   u64 *paddr, u64 *size)
+ {
+ 	return -ENODEV;
+ }
 -- 
 2.23.0
 

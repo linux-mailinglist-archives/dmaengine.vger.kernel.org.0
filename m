@@ -2,101 +2,117 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C6932BCC90
-	for <lists+dmaengine@lfdr.de>; Tue, 24 Sep 2019 18:38:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6844BD142
+	for <lists+dmaengine@lfdr.de>; Tue, 24 Sep 2019 20:12:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbfIXQir (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 24 Sep 2019 12:38:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725208AbfIXQiq (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 24 Sep 2019 12:38:46 -0400
-Received: from localhost (unknown [12.157.10.118])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F357A20872;
-        Tue, 24 Sep 2019 16:38:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569343126;
-        bh=SljDFFMo90crqwi671Z3O1CEkHPiBtOHyj4ru/WL+RE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MJtsyQR/QJh5MBrSmme4Yi4JJeupeEh5dasYT1OYhrA8RDK70k+BAF6YqccEpZarI
-         1d7xI1+VwKxRJJmjWBE/cQAHwNdbBWOsu96uCluF8eottaxzEO5/27sv+A/CATMJix
-         UeVIBUoCb5IXuoMGXuaPVSzfN9VMnlR2UiVR4IFo=
-Date:   Tue, 24 Sep 2019 09:37:44 -0700
-From:   Vinod Koul <vkoul@kernel.org>
-To:     "Mehta, Sanju" <Sanju.Mehta@amd.com>
-Cc:     "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
-        "Kumar, Rajesh" <Rajesh1.Kumar@amd.com>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Subject: Re: [PATCH 0/4] *** AMD PTDMA driver ***
-Message-ID: <20190924163744.GC3824@vkoul-mobl>
-References: <1569310236-29113-1-git-send-email-Sanju.Mehta@amd.com>
+        id S2393935AbfIXSMz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 24 Sep 2019 14:12:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43946 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2393874AbfIXSMy (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 24 Sep 2019 14:12:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 22E57AC93;
+        Tue, 24 Sep 2019 18:12:51 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        xen-devel@lists.xenproject.org, linux-tegra@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     mbrugger@suse.com, robin.murphy@arm.com, f.fainelli@gmail.com,
+        james.quinlan@broadcom.com, wahrenst@gmx.net,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        freedreno@lists.freedesktop.org
+Subject: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
+Date:   Tue, 24 Sep 2019 20:12:31 +0200
+Message-Id: <20190924181244.7159-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569310236-29113-1-git-send-email-Sanju.Mehta@amd.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 24-09-19, 07:31, Mehta, Sanju wrote:
-> From: Sanjay R Mehta <sanju.mehta@amd.com>
-> 
-> *** This patch series adds support for AMD PTDMA engine ***
+Hi All,
+this series tries to address one of the issues blocking us from
+upstreaming Broadcom's STB PCIe controller[1]. Namely, the fact that
+devices not represented in DT which sit behind a PCI bus fail to get the
+bus' DMA addressing constraints.
 
-What lots of stars!
+This is due to the fact that of_dma_configure() assumes it's receiving a
+DT node representing the device being configured, as opposed to the PCIe
+bridge node we currently pass. This causes the code to directly jump
+into PCI's parent node when checking for 'dma-ranges' and misses
+whatever was set there.
 
-Can you describe the controller a bit more to help people set the
-context for the review!
+To address this I create a new API in OF - inspired from Robin Murphys
+original proposal[2] - which accepts a bus DT node as it's input in
+order to configure a device's DMA constraints. The changes go deep into
+of/address.c's implementation, as a device being having a DT node
+assumption was pretty strong.
 
-And also helps to make the email subject as "Add AMD PTDMA driver ...."
-or similar!
+On top of this work, I also cleaned up of_dma_configure() removing its
+redundant arguments and creating an alternative function for the special cases
+not applicable to either the above case or the default usage.
 
-> 
-> Sanjay R Mehta (4):
->   dma: Add PTDMA Engine driver support
->   dma: Support for multiple PTDMA
->   dmaengine: Register as a DMA resource
->   dmaengine: Add debugfs entries for PTDMA information
+IMO the resulting functions are more explicit. They will probably
+surface some hacky usages that can be properly fixed as I show with the
+DT fixes on the Layerscape platform.
 
-Can you be consistent with naming, and yes do use dmaengine!
+This was also tested on a Raspberry Pi 4 with a custom PCIe driver and
+on a Seattle AMD board.
 
-> 
->  MAINTAINERS                         |   6 +
->  drivers/dma/Kconfig                 |   2 +
->  drivers/dma/Makefile                |   1 +
->  drivers/dma/ptdma/Kconfig           |   8 +
->  drivers/dma/ptdma/Makefile          |  12 +
->  drivers/dma/ptdma/ptdma-debugfs.c   | 249 +++++++++++++
->  drivers/dma/ptdma/ptdma-dev.c       | 445 +++++++++++++++++++++++
->  drivers/dma/ptdma/ptdma-dmaengine.c | 700 ++++++++++++++++++++++++++++++++++++
->  drivers/dma/ptdma/ptdma-ops.c       | 464 ++++++++++++++++++++++++
->  drivers/dma/ptdma/ptdma-pci.c       | 244 +++++++++++++
->  drivers/dma/ptdma/ptdma.h           | 563 +++++++++++++++++++++++++++++
->  11 files changed, 2694 insertions(+)
->  create mode 100644 drivers/dma/ptdma/Kconfig
->  create mode 100644 drivers/dma/ptdma/Makefile
->  create mode 100644 drivers/dma/ptdma/ptdma-debugfs.c
->  create mode 100644 drivers/dma/ptdma/ptdma-dev.c
->  create mode 100644 drivers/dma/ptdma/ptdma-dmaengine.c
->  create mode 100644 drivers/dma/ptdma/ptdma-ops.c
->  create mode 100644 drivers/dma/ptdma/ptdma-pci.c
->  create mode 100644 drivers/dma/ptdma/ptdma.h
-> 
-> -- 
-> 2.7.4
+Regards,
+Nicolas
+
+[1] https://patchwork.kernel.org/patch/9650345/#20294961
+[2] https://patchwork.kernel.org/patch/9650345/
+
+---
+
+Nicolas Saenz Julienne (11):
+  of: address: clean-up unused variable in of_dma_get_range()
+  of: base: introduce __of_n_*_cells_parent()
+  of: address: use parent DT node in bus->count_cells()
+  of: address: introduce of_translate_dma_address_parent()
+  of: expose __of_get_dma_parent() to OF subsystem
+  of: address: use parent OF node in of_dma_get_range()
+  dts: arm64: layerscape: add dma-ranges property to qoric-mc node
+  dts: arm64: layerscape: add dma-ranges property to pcie nodes
+  of: device: remove comment in of_dma_configure()
+  of: device: introduce of_dma_configure_parent()
+  of: simplify of_dma_config()'s arguments
+
+ .../arm64/boot/dts/freescale/fsl-ls1088a.dtsi |   1 +
+ .../arm64/boot/dts/freescale/fsl-ls208xa.dtsi |   5 +
+ .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi |   1 +
+ drivers/base/platform.c                       |   2 +-
+ drivers/bcma/main.c                           |   2 +-
+ drivers/bus/fsl-mc/fsl-mc-bus.c               |   2 +-
+ drivers/dma/qcom/hidma_mgmt.c                 |   2 +-
+ drivers/gpu/drm/etnaviv/etnaviv_drv.c         |   2 +-
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c         |   2 +-
+ drivers/gpu/drm/sun4i/sun4i_backend.c         |   2 +-
+ drivers/gpu/drm/xen/xen_drm_front.c           |   2 +-
+ drivers/gpu/host1x/bus.c                      |   4 +-
+ drivers/media/platform/qcom/venus/firmware.c  |   2 +-
+ drivers/media/platform/s5p-mfc/s5p_mfc.c      |   2 +-
+ drivers/of/address.c                          | 136 +++++++++---------
+ drivers/of/base.c                             |  69 +++++++--
+ drivers/of/device.c                           |  59 +++++++-
+ drivers/of/of_private.h                       |   5 +
+ drivers/pci/pci-driver.c                      |   3 +-
+ drivers/xen/gntdev.c                          |   2 +-
+ include/linux/of_address.h                    |   8 +-
+ include/linux/of_device.h                     |  23 ++-
+ 22 files changed, 223 insertions(+), 113 deletions(-)
 
 -- 
-~Vinod
+2.23.0
+

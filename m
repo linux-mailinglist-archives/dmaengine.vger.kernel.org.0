@@ -2,170 +2,150 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 46E7CBE153
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Sep 2019 17:30:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C75D9BE1F3
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Sep 2019 18:07:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbfIYPaP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 25 Sep 2019 11:30:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57058 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727381AbfIYPaP (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 25 Sep 2019 11:30:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 86EB3ACA5;
-        Wed, 25 Sep 2019 15:30:12 +0000 (UTC)
-Message-ID: <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de>
+        id S2501890AbfIYQHk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 25 Sep 2019 12:07:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727993AbfIYQHj (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 25 Sep 2019 12:07:39 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 756CA21E6F;
+        Wed, 25 Sep 2019 16:07:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569427658;
+        bh=BDhFvt5VGk5cpLsmQKS0fUfwCU66ZuF9Gw8byviviXQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZJuV1cg80pgN5dVIrsTjC7nHNpCLFivnDjpwqkOACU+jgzrs95f/ObjU5069y94x6
+         lIYLvZ5Z7fUWPr+ln7f2YxRfxo0Zbx7YXvc/WRwt3Y5Gwp01ZAG03eVOmAmpcuqA7q
+         dmDoEZvV0iEhslx4g4bWqERTerzWbEQeJhtFz0iM=
+Received: by mail-qt1-f175.google.com with SMTP id c21so7185020qtj.12;
+        Wed, 25 Sep 2019 09:07:38 -0700 (PDT)
+X-Gm-Message-State: APjAAAVNM6tmq0uayl7fAteNRWeJ6dXHYFExP0h5hrs0FvkzxT12bph2
+        TFQWRgz0K9X/EdsaX38ux5jZh9kaAPZpWiKh7w==
+X-Google-Smtp-Source: APXvYqz1oy5m7mjvghNWjvvttiTqJZiM9hvPOK4OCMBp672J3JDiM/K63youpJW2QLzFXg+mEvd77PmoRL1xNiFzCqU=
+X-Received: by 2002:ac8:75c7:: with SMTP id z7mr19500qtq.136.1569427657263;
+ Wed, 25 Sep 2019 09:07:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190924181244.7159-1-nsaenzjulienne@suse.de> <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
+ <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
+In-Reply-To: <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 25 Sep 2019 11:07:25 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKuz7WEB9zP6apZrdsC_8Q4OQmSuvqgLzJFPsZio0Z6=g@mail.gmail.com>
+Message-ID: <CAL_JsqKuz7WEB9zP6apZrdsC_8Q4OQmSuvqgLzJFPsZio0Z6=g@mail.gmail.com>
 Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        etnaviv@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com,
-        linux-pci@vger.kernel.org,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>, xen-devel@lists.xenproject.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Frank Rowand <frowand.list@gmail.com>,
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
         "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Date:   Wed, 25 Sep 2019 17:30:10 +0200
-In-Reply-To: <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
-References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
-         <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
-         <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
-         <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-Jc6/4bVbm9VDLL08SmH3"
-User-Agent: Evolution 3.32.4 
-MIME-Version: 1.0
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>, etnaviv@lists.freedesktop.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        xen-devel@lists.xenproject.org, linux-tegra@vger.kernel.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-pci@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        james.quinlan@broadcom.com, Stefan Wahren <wahrenst@gmx.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        freedreno <freedreno@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On Wed, Sep 25, 2019 at 9:53 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> On Tue, 2019-09-24 at 16:59 -0500, Rob Herring wrote:
+> > On Tue, Sep 24, 2019 at 1:12 PM Nicolas Saenz Julienne
+> > <nsaenzjulienne@suse.de> wrote:
+> > > Hi All,
+> > > this series tries to address one of the issues blocking us from
+> > > upstreaming Broadcom's STB PCIe controller[1]. Namely, the fact that
+> > > devices not represented in DT which sit behind a PCI bus fail to get the
+> > > bus' DMA addressing constraints.
+> > >
+> > > This is due to the fact that of_dma_configure() assumes it's receiving a
+> > > DT node representing the device being configured, as opposed to the PCIe
+> > > bridge node we currently pass. This causes the code to directly jump
+> > > into PCI's parent node when checking for 'dma-ranges' and misses
+> > > whatever was set there.
+> > >
+> > > To address this I create a new API in OF - inspired from Robin Murphys
+> > > original proposal[2] - which accepts a bus DT node as it's input in
+> > > order to configure a device's DMA constraints. The changes go deep into
+> > > of/address.c's implementation, as a device being having a DT node
+> > > assumption was pretty strong.
+> > >
+> > > On top of this work, I also cleaned up of_dma_configure() removing its
+> > > redundant arguments and creating an alternative function for the special
+> > > cases
+> > > not applicable to either the above case or the default usage.
+> > >
+> > > IMO the resulting functions are more explicit. They will probably
+> > > surface some hacky usages that can be properly fixed as I show with the
+> > > DT fixes on the Layerscape platform.
+> > >
+> > > This was also tested on a Raspberry Pi 4 with a custom PCIe driver and
+> > > on a Seattle AMD board.
+> >
+> > Humm, I've been working on this issue too. Looks similar though yours
+> > has a lot more churn and there's some other bugs I've found.
+>
+> That's good news, and yes now that I see it, some stuff on my series is overly
+> complicated. Specially around of_translate_*().
+>
+> On top of that, you removed in of_dma_get_range():
+>
+> -       /*
+> -        * At least empty ranges has to be defined for parent node if
+> -        * DMA is supported
+> -        */
+> -       if (!ranges)
+> -               break;
+>
+> Which I assumed was bound to the standard and makes things easier.
 
---=-Jc6/4bVbm9VDLL08SmH3
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The standard is whatever we say it is and what exists in the wild...
 
-On Wed, 2019-09-25 at 16:09 +0100, Robin Murphy wrote:
-> On 25/09/2019 15:52, Nicolas Saenz Julienne wrote:
-> > On Tue, 2019-09-24 at 16:59 -0500, Rob Herring wrote:
-> > > On Tue, Sep 24, 2019 at 1:12 PM Nicolas Saenz Julienne
-> > > <nsaenzjulienne@suse.de> wrote:
-> > > > Hi All,
-> > > > this series tries to address one of the issues blocking us from
-> > > > upstreaming Broadcom's STB PCIe controller[1]. Namely, the fact tha=
-t
-> > > > devices not represented in DT which sit behind a PCI bus fail to ge=
-t the
-> > > > bus' DMA addressing constraints.
-> > > >=20
-> > > > This is due to the fact that of_dma_configure() assumes it's receiv=
-ing a
-> > > > DT node representing the device being configured, as opposed to the=
- PCIe
-> > > > bridge node we currently pass. This causes the code to directly jum=
-p
-> > > > into PCI's parent node when checking for 'dma-ranges' and misses
-> > > > whatever was set there.
-> > > >=20
-> > > > To address this I create a new API in OF - inspired from Robin Murp=
-hys
-> > > > original proposal[2] - which accepts a bus DT node as it's input in
-> > > > order to configure a device's DMA constraints. The changes go deep =
-into
-> > > > of/address.c's implementation, as a device being having a DT node
-> > > > assumption was pretty strong.
-> > > >=20
-> > > > On top of this work, I also cleaned up of_dma_configure() removing =
-its
-> > > > redundant arguments and creating an alternative function for the sp=
-ecial
-> > > > cases
-> > > > not applicable to either the above case or the default usage.
-> > > >=20
-> > > > IMO the resulting functions are more explicit. They will probably
-> > > > surface some hacky usages that can be properly fixed as I show with=
- the
-> > > > DT fixes on the Layerscape platform.
-> > > >=20
-> > > > This was also tested on a Raspberry Pi 4 with a custom PCIe driver =
-and
-> > > > on a Seattle AMD board.
-> > >=20
-> > > Humm, I've been working on this issue too. Looks similar though yours
-> > > has a lot more churn and there's some other bugs I've found.
-> >=20
-> > That's good news, and yes now that I see it, some stuff on my series is
-> > overly
-> > complicated. Specially around of_translate_*().
-> >=20
-> > On top of that, you removed in of_dma_get_range():
-> >=20
-> > -	/*
-> > -	 * At least empty ranges has to be defined for parent node if
-> > -	 * DMA is supported
-> > -	 */
-> > -	if (!ranges)
-> > -		break;
-> >=20
-> > Which I assumed was bound to the standard and makes things easier.
-> >=20
-> > > Can you test out this branch[1]. I don't have any h/w needing this,
-> > > but wrote a unittest and tested with modified QEMU.
-> >=20
-> > I reviewed everything, I did find a minor issue, see the patch attached=
-.
->=20
-> WRT that patch, the original intent of "force_dma" was purely to=20
-> consider a device DMA-capable regardless of the presence of=20
-> "dma-ranges". Expecting of_dma_configure() to do anything for a non-OF=
-=20
-> device has always been bogus - magic paravirt devices which appear out=
-=20
-> of nowhere and expect to be treated as genuine DMA masters are a=20
-> separate problem that we haven't really approached yet.
+Probably better for me to get the series posted for context, but the
+above is removed because we could be passing in the bus device/child
+node and checking for 'dma-ranges' rather than only the bus node.
+While this does mean 'dma-ranges' could be in a child node which is
+wrong, it simplifies the only caller of_dma_configure(). And really,
+there's no way to detect that error. Someone could call
+of_dma_configure(NULL, child, ...). Perhaps we could assert that
+'ranges' is present whenever 'dma-ranges' is.
 
-I agree it's clearly abusing the function. I have no problem with the behav=
-iour
-change if it's OK with you.
+Back to the standard, I think it can be summarized as a device's
+immediate parent (a bus node) must contain 'dma-ranges'. All the
+parent nodes of the bus node should also have 'dma-ranges', but
+missing is treated as empty (1:1 translation). 'dma-ranges' missing in
+all the parent nodes is also treated as 1:1 translation and no
+addressing restrictions.
 
-Robin, have you looked into supporting multiple dma-ranges? It's the next t=
-hing
-we need for BCM STB's PCIe. I'll have a go at it myself if nothing is in th=
-e
-works already.
+> > Can you test out this branch[1]. I don't have any h/w needing this,
+> > but wrote a unittest and tested with modified QEMU.
+>
+> I reviewed everything, I did find a minor issue, see the patch attached.
+>
+> Also I tested your branch both on an RPi4, with a PCI device that depends on
+> these changes and by comparing the OF debugs logs on a Layerscape board which
+> uses dma-ranges, dma-coherent and IOMMU. All works as expected.
+>
+> Will you send this series for v5.5? Please keep me in the loop, I'll review and
+> test the final version.
 
-Regards,
-Nicolas
+Yes, sending it out soon.
 
-
---=-Jc6/4bVbm9VDLL08SmH3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2LiAIACgkQlfZmHno8
-x/7J7Af+NrtcYkM0WphLDC8n2KXI1Rofej10z7b8lAcPZvn586CNcayUtga34+e3
-jMIOwHl9qzzFJrgAT9FoyDjkcJ0gfVWKSzQYB798pTOVEND7LdUsHH0ZNqNqf4YM
-yRmNNvCpZi+i83aeetAQjPoMUeDjKU0dMCX7oEzfvlrmxi4YRx59jcOfIbaqr2Hg
-SGipuOc97V/so7VcwvypG9xeYU/zTeZ0wFoQzT7X4OdEUp4uBAgHoeou4kez1gSy
-27EmZX8DU3l7YbWTM5SBP13uDcQ0I2y25cjjy55r4gBm+zQYdGCuh3oHbdOvyws/
-xjAYrC9sFk3+VCjuPTn9CTbfyDqZ8A==
-=9rW4
------END PGP SIGNATURE-----
-
---=-Jc6/4bVbm9VDLL08SmH3--
-
+Rob

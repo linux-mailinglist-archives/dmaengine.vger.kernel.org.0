@@ -2,115 +2,75 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E537BF129
-	for <lists+dmaengine@lfdr.de>; Thu, 26 Sep 2019 13:21:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F0C7BF304
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Sep 2019 14:30:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725912AbfIZLUz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 26 Sep 2019 07:20:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:46496 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbfIZLUy (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 26 Sep 2019 07:20:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9053B142F;
-        Thu, 26 Sep 2019 04:20:53 -0700 (PDT)
-Received: from [192.168.1.124] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8D1D3F67D;
-        Thu, 26 Sep 2019 04:20:50 -0700 (PDT)
-Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        etnaviv@lists.freedesktop.org,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com,
-        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
-        xen-devel@lists.xenproject.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
- <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
- <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
- <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
- <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de>
- <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
- <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
- <CAL_JsqKKYcHPnA80ZwLY=Sk3e5MqrimedUhWQ5+iuPZXQxYHdA@mail.gmail.com>
- <307b988d0c67fb1c42166eca12742bcfda09d92d.camel@suse.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <c27a51e1-1adf-ae6a-dc67-ae76222a1163@arm.com>
-Date:   Thu, 26 Sep 2019 12:20:44 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        id S1726100AbfIZMaC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 26 Sep 2019 08:30:02 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34195 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbfIZMaB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 26 Sep 2019 08:30:01 -0400
+Received: by mail-ot1-f68.google.com with SMTP id m19so1842254otp.1;
+        Thu, 26 Sep 2019 05:30:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oJJH7c5Zoj531ptgrS+I6xbKj34WO31mf5Hp3BAxJlI=;
+        b=KnjQP1UJ9Tj/tV3fB2G4OaXXgW1w77j2fa+fqAm90CgwDzi/Ufm3meX+R0hVifDn2z
+         Sf6hueZvPkFVkwIZqDcHNu7Y0yv+5FC/0geE54InMoIrHxE8teVsq526T9o3DV6LUUhj
+         MNERHPK2RgbK+EHyKoeD68bkALfWEsJq/7Km8BcU2HC0AkGWOgZPHBT2AqBGAmtONG5a
+         BV3sQEO3KR+CxJfpRHoEzcm9v3gm1NgCLXD9NpPoOBzqnjCCjIcACRibFunFsf0BV1K2
+         nnH1Fa1BfTj7RgmC6KiVqPwanAdHAFO1JUhFKhgRzwpn7EQ/OIqGDK6o5/l/Hz7RWL0i
+         RNIA==
+X-Gm-Message-State: APjAAAXQn59Ia82W3msmqM876OE0EYjKsbWo2X2dchujda0vU4kehBGU
+        GYXMxl85WKY4gQQKw8bIDfAquH48KbeuHtLsBhw=
+X-Google-Smtp-Source: APXvYqxQ5nDWf+QViSnoTMdDQxAvHVUfXRiLX2Bq6HYe4MkOQoHeudp3c7jCIoFhciCeMVI5V28Dlnm1CHRerw+nvok=
+X-Received: by 2002:a9d:730d:: with SMTP id e13mr2375699otk.145.1569501000905;
+ Thu, 26 Sep 2019 05:30:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <307b988d0c67fb1c42166eca12742bcfda09d92d.camel@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <1569245078-26031-1-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1569245078-26031-1-git-send-email-biju.das@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 26 Sep 2019 14:29:49 +0200
+Message-ID: <CAMuHMdW+AwUFTbN6+084jZdYdVHYdi1wzBGAxkreqcQCGXm8zw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: dmaengine: rcar-dmac: Document R8A774B1 bindings
+To:     Biju Das <biju.das@bp.renesas.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms@verge.net.au>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 2019-09-26 11:44 am, Nicolas Saenz Julienne wrote:
->>>>> Robin, have you looked into supporting multiple dma-ranges? It's the
->>>>> next thing
->>>>> we need for BCM STB's PCIe. I'll have a go at it myself if nothing is in
->>>>> the
->>>>> works already.
->>>>
->>>> Multiple dma-ranges as far as configuring inbound windows should work
->>>> already other than the bug when there's any parent translation. But if
->>>> you mean supporting multiple DMA offsets and masks per device in the
->>>> DMA API, there's nothing in the works yet.
-> 
-> Sorry, I meant supporting multiple DMA offsets[1]. I think I could still make
-> it with a single DMA mask though.
+On Mon, Sep 23, 2019 at 3:24 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> Renesas RZ/G2N (R8A774B1) SoC has DMA controllers compatible
+> with this driver, therefore document RZ/G2N specific bindings.
 
-The main problem for supporting that case in general is the disgusting 
-carving up of the physical memory map you may have to do to guarantee 
-that a single buffer allocation cannot ever span two windows with 
-different offsets. I don't think we ever reached a conclusion on whether 
-that was even achievable in practice.
+Please don't mention "driver", as DT bindings are intended to be
+implementation-agnostic.
 
->>> There's also the in-between step of making of_dma_get_range() return a
->>> size based on all the dma-ranges entries rather than only the first one
->>> - otherwise, something like [1] can lead to pretty unworkable default
->>> masks. We implemented that when doing acpi_dma_get_range(), it's just
->>> that the OF counterpart never caught up.
->>
->> Right. I suppose we assume any holes in the ranges are addressable by
->> the device but won't get used for other reasons (such as no memory
->> there). However, to be correct, the range of the dma offset plus mask
->> would need to be within the min start and max end addresses. IOW,
->> while we need to round up (0xa_8000_0000 - 0x2c1c_0000) to the next
->> power of 2, the 'correct' thing to do is round down.
-> 
-> IIUC I also have this issue on my list. The RPi4 PCIe block has an integration
-> bug that only allows DMA to the lower 3GB. With dma-ranges of size 0xc000_0000
-> you get a 32bit DMA mask wich is not what you need. So far I faked it in the
-> device-tree but I guess it be better to add an extra check in
-> of_dma_configure(), decrease the mask and print some kind of warning stating
-> that DMA addressing is suboptimal.
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-Yeah, there's just no way for masks to describe that the device can 
-drive all the individual bits, just not in certain combinations :(
+For the actual change:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-The plan I have sketched out there is to merge dma_pfn_offset and 
-bus_dma_mask into a "DMA range" descriptor, so we can then hang one or 
-more of those off a device to properly cope with all these weird 
-interconnects. Conceptually it feels pretty straightforward; I think 
-most of the challenge is in implementing it efficiently. Plus there's 
-the question of whether it could also subsume the dma_mask as well.
+Gr{oetje,eeting}s,
 
-Robin.
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds

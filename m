@@ -2,175 +2,267 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D29B6BE74A
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Sep 2019 23:33:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED64BBEBBB
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Sep 2019 07:54:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfIYVdi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 25 Sep 2019 17:33:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727058AbfIYVdh (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 25 Sep 2019 17:33:37 -0400
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95011222BD;
-        Wed, 25 Sep 2019 21:33:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569447215;
-        bh=TszXw7S5GIEzEo992EEMfz4W0WtzSxu1MBpaBhf4tmw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QlI2Sj1D5LJahPlbpQRPzC/Kfp42A3NwekR29GtyvfIPAZlvPN1zAfycydpBTfcd8
-         IvT8WVCyptqcO23hrQq7/1AbSsfzPRa68TLRQRP+hrXx+5Qsz/4M4CfEt25gMVn9on
-         EMq0EmayAeKNvnaIFqzE8CzGz5kGoSiMNjw4W64I=
-Received: by mail-qt1-f181.google.com with SMTP id m15so298885qtq.2;
-        Wed, 25 Sep 2019 14:33:35 -0700 (PDT)
-X-Gm-Message-State: APjAAAU/MDgYmsvDWUxhr0S/Q958v/NMn7J4JTGJNu6zn2KE6uwZuvLx
-        +uW755Pt4Q2Nc+sOQUjGxURuNzeHmiO1sPSfVA==
-X-Google-Smtp-Source: APXvYqy9YJ9VRUtFzrkZ+iKb5Tx5rlamJJuwaAKBRmCflwCEbYKpuVBbZPPVrEImTOCJgn8Jl5TlEwRQfbhe0HNZXOU=
-X-Received: by 2002:a0c:8a6d:: with SMTP id 42mr1647258qvu.138.1569447214653;
- Wed, 25 Sep 2019 14:33:34 -0700 (PDT)
+        id S2388882AbfIZFyi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 26 Sep 2019 01:54:38 -0400
+Received: from mail-eopbgr760070.outbound.protection.outlook.com ([40.107.76.70]:8708
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387630AbfIZFyh (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 26 Sep 2019 01:54:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AUT7ExYB+Vk7sja428zaBomkaH9NZV+/F8pjJok2kn8zKYwCVn5imcnPYlF8jc6XBr2cBAU3cwVOVip9eeYzbT9a7KZOjLjooOxKm2Qj51JwxpxcIQSClMA2wkrY8zZ4qI+V01UWU/Yjqt1AHZhBMciyEekSq4gYPzeZMINWaOOVPWe4Yz7Esf6ApZYyis8rVRY1crGLSjJi0xIyIItVLSd6zmEBvMDXKOTThWjlwnruB5sbvxJvVIaxM55vBusmr6oqPQ8RZvuuREQBJv0hjmn6j2uJS8z3NcVA3b824jw8WwwbzvpiKfmIDgZBGGap0hbkAs1vf8F/IIaSAdax+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0zWfdk0aV2ULAx+zJ0E6TFSmDruM2D+9qAwgqqzoHKI=;
+ b=h6MGwsdujgK4XLvStyoL0QqgwyBk1E8WPyTeZeKo94v9fxcFz5sX9u2iyG6aJRyQEFMzn+UjbHJRwcebBuxYgFkQzZI1wISnu9thNzw9KZadThBS0IpFFVv6DCudwh/pqvH2EwQWU0d5DlhYtVOPA0oRWVSrZXfV9t+WfdkQK1VoxhI1QudRWtFtRGv1XwTma8Jw5VoFKQKGn/50frYwZ15Ewd6u7uwFxCcxBYuV3BQDZ1+5uOHBxnET/YGEWeJFiNGF5fOp6luk1qX/hUP8pnROHWVNd/Wpp/ko3KI5Y7Ja7s3nTcbgELM1VgYbUsnzmQJfqrZijTirUli74Uc4+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0zWfdk0aV2ULAx+zJ0E6TFSmDruM2D+9qAwgqqzoHKI=;
+ b=SMgulXPA+UKzErf11ItVEwbKsTbFlcpc0M3MNvZZDZFlSZhvcckdZxQdCG9qPqbvmwUvjLM8pW7QGHKyRbG+n10eSN6eul/kNZO4OZ0ASFfXovF3sCEHqcgJvH5/OJ2+OTP/JR6CXhL7Lsp6Dmw5zPzSudGPXwkoCr6bJZg3Fhw=
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
+ CH2PR02MB6856.namprd02.prod.outlook.com (20.180.7.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20; Thu, 26 Sep 2019 05:52:55 +0000
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::3515:e3a7:8799:73bd]) by CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::3515:e3a7:8799:73bd%2]) with mapi id 15.20.2305.017; Thu, 26 Sep 2019
+ 05:52:55 +0000
+From:   Radhey Shyam Pandey <radheys@xilinx.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        Michal Simek <michals@xilinx.com>,
+        "nick.graumann@gmail.com" <nick.graumann@gmail.com>,
+        "andrea.merello@gmail.com" <andrea.merello@gmail.com>,
+        Appana Durga Kedareswara Rao <appanad@xilinx.com>,
+        "mcgrof@kernel.org" <mcgrof@kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH -next 3/8] dmaengine: xilinx_dma: Introduce
+ xilinx_dma_get_residue
+Thread-Topic: [PATCH -next 3/8] dmaengine: xilinx_dma: Introduce
+ xilinx_dma_get_residue
+Thread-Index: AQHVZAhKDg4F4xU8mE+kGY5hxnspoac9ALWAgACRLOA=
+Date:   Thu, 26 Sep 2019 05:52:55 +0000
+Message-ID: <CH2PR02MB70008CE8600D98753BE1CC97C7860@CH2PR02MB7000.namprd02.prod.outlook.com>
+References: <1567701424-25658-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <1567701424-25658-4-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <20190925210123.GL3824@vkoul-mobl>
+In-Reply-To: <20190925210123.GL3824@vkoul-mobl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=radheys@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bf54f24c-2e18-4356-564a-08d74245c6da
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CH2PR02MB6856;
+x-ms-traffictypediagnostic: CH2PR02MB6856:|CH2PR02MB6856:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR02MB6856EEA1ABF3BCA25B170CADC7860@CH2PR02MB6856.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 0172F0EF77
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(346002)(396003)(366004)(13464003)(199004)(189003)(76094002)(7736002)(305945005)(8936002)(74316002)(86362001)(33656002)(14444005)(256004)(6916009)(229853002)(6436002)(66066001)(3846002)(9686003)(55016002)(2906002)(6246003)(4326008)(99286004)(102836004)(186003)(7696005)(76176011)(53546011)(486006)(476003)(11346002)(66476007)(66556008)(64756008)(66446008)(76116006)(66946007)(446003)(6116002)(52536014)(5660300002)(81156014)(81166006)(8676002)(6506007)(26005)(25786009)(478600001)(54906003)(316002)(71190400001)(71200400001)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6856;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: EKYayfp+PMTDfX5rVcRO2hwHHmQwZL8pCu7Z+oN5p1q8yx6t2Ymj/JZhvop+SpsVgBx5cBYXc0rkjqBZJw9+5YVD0ZyawkiJToZqKq6ibwXbYg8ho3ByfyOOJhLS2cVFQvuxusnP3Af1/3uVNd6CqXWzEXRKpZOFC6dcqptX6BU0cxWb+5/FVVFEviRDyD4H68lamjjTdifU759YmVs5DDF6oqHWMQ7W+n6XlYWqAYEnxW0Kl2FITyBflRR1JPvrjtPKAqdF1SDN943+51mYU2Ae/9dRfxhIm8l2iuBO2NXXu1VsFwtmdEfVImUMqzFHnMoW0MGqJ4j+Ec7TUv6fxVuI+/7cOchO1vhTxgkhmniX5e3hVo5EqQbxp2P+nYclunnkFUACU+K53ade6RrR01Y8qKQqbKY++2MNZrMNpu0=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190924181244.7159-1-nsaenzjulienne@suse.de> <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
- <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de> <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
- <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de> <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
- <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
-In-Reply-To: <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 25 Sep 2019 16:33:23 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKKYcHPnA80ZwLY=Sk3e5MqrimedUhWQ5+iuPZXQxYHdA@mail.gmail.com>
-Message-ID: <CAL_JsqKKYcHPnA80ZwLY=Sk3e5MqrimedUhWQ5+iuPZXQxYHdA@mail.gmail.com>
-Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        devicetree@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        etnaviv@lists.freedesktop.org, linux-tegra@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com,
-        linux-pci@vger.kernel.org,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>, xen-devel@lists.xenproject.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf54f24c-2e18-4356-564a-08d74245c6da
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Sep 2019 05:52:55.1267
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JECvYZ6cfKU3T88qHeEsS900EcWC3b0SwiGYe0yybq95E4Wb1XjvFZ1RlX6Utj5B2Mdw0/Gl+s8SIHBWpFHuyg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6856
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 11:52 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 25/09/2019 17:16, Rob Herring wrote:
-> > On Wed, Sep 25, 2019 at 10:30 AM Nicolas Saenz Julienne
-> > <nsaenzjulienne@suse.de> wrote:
-> >>
-> >> On Wed, 2019-09-25 at 16:09 +0100, Robin Murphy wrote:
-> >>> On 25/09/2019 15:52, Nicolas Saenz Julienne wrote:
-> >>>> On Tue, 2019-09-24 at 16:59 -0500, Rob Herring wrote:
-> >>>>> On Tue, Sep 24, 2019 at 1:12 PM Nicolas Saenz Julienne
-> >>>>> <nsaenzjulienne@suse.de> wrote:
-> >>>>>> Hi All,
-> >>>>>> this series tries to address one of the issues blocking us from
-> >>>>>> upstreaming Broadcom's STB PCIe controller[1]. Namely, the fact that
-> >>>>>> devices not represented in DT which sit behind a PCI bus fail to get the
-> >>>>>> bus' DMA addressing constraints.
-> >>>>>>
-> >>>>>> This is due to the fact that of_dma_configure() assumes it's receiving a
-> >>>>>> DT node representing the device being configured, as opposed to the PCIe
-> >>>>>> bridge node we currently pass. This causes the code to directly jump
-> >>>>>> into PCI's parent node when checking for 'dma-ranges' and misses
-> >>>>>> whatever was set there.
-> >>>>>>
-> >>>>>> To address this I create a new API in OF - inspired from Robin Murphys
-> >>>>>> original proposal[2] - which accepts a bus DT node as it's input in
-> >>>>>> order to configure a device's DMA constraints. The changes go deep into
-> >>>>>> of/address.c's implementation, as a device being having a DT node
-> >>>>>> assumption was pretty strong.
-> >>>>>>
-> >>>>>> On top of this work, I also cleaned up of_dma_configure() removing its
-> >>>>>> redundant arguments and creating an alternative function for the special
-> >>>>>> cases
-> >>>>>> not applicable to either the above case or the default usage.
-> >>>>>>
-> >>>>>> IMO the resulting functions are more explicit. They will probably
-> >>>>>> surface some hacky usages that can be properly fixed as I show with the
-> >>>>>> DT fixes on the Layerscape platform.
-> >>>>>>
-> >>>>>> This was also tested on a Raspberry Pi 4 with a custom PCIe driver and
-> >>>>>> on a Seattle AMD board.
-> >>>>>
-> >>>>> Humm, I've been working on this issue too. Looks similar though yours
-> >>>>> has a lot more churn and there's some other bugs I've found.
-> >>>>
-> >>>> That's good news, and yes now that I see it, some stuff on my series is
-> >>>> overly
-> >>>> complicated. Specially around of_translate_*().
-> >>>>
-> >>>> On top of that, you removed in of_dma_get_range():
-> >>>>
-> >>>> -   /*
-> >>>> -    * At least empty ranges has to be defined for parent node if
-> >>>> -    * DMA is supported
-> >>>> -    */
-> >>>> -   if (!ranges)
-> >>>> -           break;
-> >>>>
-> >>>> Which I assumed was bound to the standard and makes things easier.
-> >>>>
-> >>>>> Can you test out this branch[1]. I don't have any h/w needing this,
-> >>>>> but wrote a unittest and tested with modified QEMU.
-> >>>>
-> >>>> I reviewed everything, I did find a minor issue, see the patch attached.
-> >>>
-> >>> WRT that patch, the original intent of "force_dma" was purely to
-> >>> consider a device DMA-capable regardless of the presence of
-> >>> "dma-ranges". Expecting of_dma_configure() to do anything for a non-OF
-> >>> device has always been bogus - magic paravirt devices which appear out
-> >>> of nowhere and expect to be treated as genuine DMA masters are a
-> >>> separate problem that we haven't really approached yet.
-> >>
-> >> I agree it's clearly abusing the function. I have no problem with the behaviour
-> >> change if it's OK with you.
->
-> Thinking about it, you could probably just remove that call from the Xen
-> DRM driver now anyway - since the dma-direct rework, we lost the ability
-> to set dma_dummy_ops by default, and NULL ops now represent what it
-> (presumably) wants.
-
-Not xen_dma_ops? In any case, I'll send out a patch for the the Xen
-folks to comment on.
-
-> >> Robin, have you looked into supporting multiple dma-ranges? It's the next thing
-> >> we need for BCM STB's PCIe. I'll have a go at it myself if nothing is in the
-> >> works already.
+> -----Original Message-----
+> From: Vinod Koul <vkoul@kernel.org>
+> Sent: Thursday, September 26, 2019 2:31 AM
+> To: Radhey Shyam Pandey <radheys@xilinx.com>
+> Cc: dan.j.williams@intel.com; Michal Simek <michals@xilinx.com>;
+> nick.graumann@gmail.com; andrea.merello@gmail.com; Appana Durga
+> Kedareswara Rao <appanad@xilinx.com>; mcgrof@kernel.org;
+> dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH -next 3/8] dmaengine: xilinx_dma: Introduce
+> xilinx_dma_get_residue
+>=20
+> On 05-09-19, 22:06, Radhey Shyam Pandey wrote:
+> > From: Nicholas Graumann <nick.graumann@gmail.com>
 > >
-> > Multiple dma-ranges as far as configuring inbound windows should work
-> > already other than the bug when there's any parent translation. But if
-> > you mean supporting multiple DMA offsets and masks per device in the
-> > DMA API, there's nothing in the works yet.
->
-> There's also the in-between step of making of_dma_get_range() return a
-> size based on all the dma-ranges entries rather than only the first one
-> - otherwise, something like [1] can lead to pretty unworkable default
-> masks. We implemented that when doing acpi_dma_get_range(), it's just
-> that the OF counterpart never caught up.
+> > Introduce a function that can calculate residues for IPs that support i=
+t:
+> > AXI DMA and CDMA.
+> >
+> > Signed-off-by: Nicholas Graumann <nick.graumann@gmail.com>
+> > Signed-off-by: Radhey Shyam Pandey
+> <radhey.shyam.pandey@xilinx.com>
+> > ---
+> >  drivers/dma/xilinx/xilinx_dma.c | 75
+> > ++++++++++++++++++++++++++++++-----------
+> >  1 file changed, 56 insertions(+), 19 deletions(-)
+> >
+> > diff --git a/drivers/dma/xilinx/xilinx_dma.c
+> > b/drivers/dma/xilinx/xilinx_dma.c index 9909bfb..4094adb 100644
+> > --- a/drivers/dma/xilinx/xilinx_dma.c
+> > +++ b/drivers/dma/xilinx/xilinx_dma.c
+> > @@ -787,6 +787,51 @@ static void xilinx_dma_free_chan_resources(struct
+> > dma_chan *dchan)  }
+> >
+> >  /**
+> > + * xilinx_dma_get_residue - Compute residue for a given descriptor
+> > + * @chan: Driver specific dma channel
+> > + * @desc: dma transaction descriptor
+> > + *
+> > + * Return: The number of residue bytes for the descriptor.
+> > + */
+> > +static u32 xilinx_dma_get_residue(struct xilinx_dma_chan *chan,
+> > +				  struct xilinx_dma_tx_descriptor *desc) {
+> > +	struct xilinx_cdma_tx_segment *cdma_seg;
+> > +	struct xilinx_axidma_tx_segment *axidma_seg;
+> > +	struct xilinx_cdma_desc_hw *cdma_hw;
+> > +	struct xilinx_axidma_desc_hw *axidma_hw;
+> > +	struct list_head *entry;
+> > +	u32 residue =3D 0;
+> > +
+> > +	/**
+>=20
+> it should be:
+>         /*
+>          * comment...
+>=20
+Thanks for pointing it out. I will fix it in v2.
 
-Right. I suppose we assume any holes in the ranges are addressable by
-the device but won't get used for other reasons (such as no memory
-there). However, to be correct, the range of the dma offset plus mask
-would need to be within the min start and max end addresses. IOW,
-while we need to round up (0xa_8000_0000 - 0x2c1c_0000) to the next
-power of 2, the 'correct' thing to do is round down.
-
-Rob
-
-> [1]
-> http://linux-arm.org/git?p=linux-rm.git;a=commitdiff;h=a2814af56b3486c2985a95540a88d8f9fa3a699f
+> > +	 * VDMA and simple mode do not support residue reporting, so the
+> > +	 * residue field will always be 0.
+> > +	 */
+> > +	if (chan->xdev->dma_config->dmatype =3D=3D XDMA_TYPE_VDMA ||
+> !chan->has_sg)
+> > +		return residue;
+>=20
+> why not check this in status callback?
+Assuming we mean to move vdma and non-sg check to xilinx_dma_tx_status.
+Just a thought- Keeping this check in xilinx_dma_get_residue provides
+an abstraction and caller can simply call this func with knowing about
+IP config specific residue calculation. Considering this point does it
+looks ok ?=20
+>=20
+> > +
+> > +	list_for_each(entry, &desc->segments) {
+> > +		if (chan->xdev->dma_config->dmatype =3D=3D
+> XDMA_TYPE_CDMA) {
+> > +			cdma_seg =3D list_entry(entry,
+> > +					      struct xilinx_cdma_tx_segment,
+> > +					      node);
+> > +			cdma_hw =3D &cdma_seg->hw;
+> > +			residue +=3D (cdma_hw->control - cdma_hw->status)
+> &
+> > +				   chan->xdev->max_buffer_len;
+> > +		} else {
+> > +			axidma_seg =3D list_entry(entry,
+> > +						struct
+> xilinx_axidma_tx_segment,
+> > +						node);
+> > +			axidma_hw =3D &axidma_seg->hw;
+> > +			residue +=3D (axidma_hw->control - axidma_hw-
+> >status) &
+> > +				   chan->xdev->max_buffer_len;
+> > +		}
+> > +	}
+> > +
+> > +	return residue;
+> > +}
+> > +
+> > +/**
+> >   * xilinx_dma_chan_handle_cyclic - Cyclic dma callback
+> >   * @chan: Driver specific dma channel
+> >   * @desc: dma transaction descriptor
+> > @@ -995,33 +1040,22 @@ static enum dma_status
+> > xilinx_dma_tx_status(struct dma_chan *dchan,  {
+> >  	struct xilinx_dma_chan *chan =3D to_xilinx_chan(dchan);
+> >  	struct xilinx_dma_tx_descriptor *desc;
+> > -	struct xilinx_axidma_tx_segment *segment;
+> > -	struct xilinx_axidma_desc_hw *hw;
+> >  	enum dma_status ret;
+> >  	unsigned long flags;
+> > -	u32 residue =3D 0;
+> >
+> >  	ret =3D dma_cookie_status(dchan, cookie, txstate);
+> >  	if (ret =3D=3D DMA_COMPLETE || !txstate)
+> >  		return ret;
+> >
+> > -	if (chan->xdev->dma_config->dmatype =3D=3D XDMA_TYPE_AXIDMA) {
+> > -		spin_lock_irqsave(&chan->lock, flags);
+> > +	spin_lock_irqsave(&chan->lock, flags);
+> >
+> > -		desc =3D list_last_entry(&chan->active_list,
+> > -				       struct xilinx_dma_tx_descriptor, node);
+> > -		if (chan->has_sg) {
+> > -			list_for_each_entry(segment, &desc->segments,
+> node) {
+> > -				hw =3D &segment->hw;
+> > -				residue +=3D (hw->control - hw->status) &
+> > -					   chan->xdev->max_buffer_len;
+> > -			}
+> > -		}
+> > -		spin_unlock_irqrestore(&chan->lock, flags);
+> > +	desc =3D list_last_entry(&chan->active_list,
+> > +			       struct xilinx_dma_tx_descriptor, node);
+> > +	chan->residue =3D xilinx_dma_get_residue(chan, desc);
+> >
+> > -		chan->residue =3D residue;
+> > -		dma_set_residue(txstate, chan->residue);
+> > -	}
+> > +	spin_unlock_irqrestore(&chan->lock, flags);
+> > +
+> > +	dma_set_residue(txstate, chan->residue);
+> >
+> >  	return ret;
+> >  }
+> > @@ -2701,12 +2735,15 @@ static int xilinx_dma_probe(struct
+> platform_device *pdev)
+> >  					  xilinx_dma_prep_dma_cyclic;
+> >  		xdev->common.device_prep_interleaved_dma =3D
+> >  					xilinx_dma_prep_interleaved;
+> > -		/* Residue calculation is supported by only AXI DMA */
+> > +		/* Residue calculation is supported by only AXI DMA and
+> CDMA */
+> >  		xdev->common.residue_granularity =3D
+> >
+> DMA_RESIDUE_GRANULARITY_SEGMENT;
+> >  	} else if (xdev->dma_config->dmatype =3D=3D XDMA_TYPE_CDMA) {
+> >  		dma_cap_set(DMA_MEMCPY, xdev->common.cap_mask);
+> >  		xdev->common.device_prep_dma_memcpy =3D
+> xilinx_cdma_prep_memcpy;
+> > +		/* Residue calculation is supported by only AXI DMA and
+> CDMA */
+> > +		xdev->common.residue_granularity =3D
+> > +
+> 	DMA_RESIDUE_GRANULARITY_SEGMENT;
+> >  	} else {
+> >  		xdev->common.device_prep_interleaved_dma =3D
+> >  				xilinx_vdma_dma_prep_interleaved;
+> > --
+> > 2.7.4
+>=20
+> --
+> ~Vinod

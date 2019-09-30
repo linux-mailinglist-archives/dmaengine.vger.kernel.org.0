@@ -2,108 +2,637 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49D93C0CD5
-	for <lists+dmaengine@lfdr.de>; Fri, 27 Sep 2019 22:49:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8CA3C1A29
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Sep 2019 04:15:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfI0Us4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 27 Sep 2019 16:48:56 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46036 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfI0Us4 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 27 Sep 2019 16:48:56 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 41so3386014oti.12;
-        Fri, 27 Sep 2019 13:48:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bHbuAWRgyfdd0/7I5EKejphIr7Awr7Ufl06cGZr9UWM=;
-        b=Yb14P2FVCzrEpsFJiIKszbjwMIp+FUs8TF+SomX6vu1HZ9mTIwr9RNEg2oLNtOkSRW
-         GYudXChlGNB0VlyoM15UkEHDVmTiHB/8dwVBrccCOmtVPqkA0KtSGJkjixkLtAEjZVh3
-         rt+HvzUZoQEHm0Ed15jNLXWwZStGoCsEwy39qfoLGEtYRmEOcVkYeJbUHcrNoWKuni34
-         VE63EnxIIRtOtikgUKgZGee2SGQsMG1LTNsA9EFWPZezVhJ7aF0NyVbLJZizUfV+OuFu
-         WLQZsnIVbOjQNDWk5/HBdwT588YYygPk21TEwYiN+8w6asdaT1vzTUBtJDrUY8XTZBsm
-         LrEA==
-X-Gm-Message-State: APjAAAVNcAiLJn3ZvC84zsg8fP7Se76wLqRURRnQ0y6zDaaWhDTMrYRO
-        9szaHpGMZU+ap6MX0Ff7SA==
-X-Google-Smtp-Source: APXvYqzPZhS/oOuHCnSCXzdNvjnEYVT4GzMZW0oHF4dRC74KXAwNQ6LWjjs9BHI9deVVAemO9XYlbA==
-X-Received: by 2002:a9d:744e:: with SMTP id p14mr4942965otk.323.1569617335327;
-        Fri, 27 Sep 2019 13:48:55 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o2sm1317553ota.3.2019.09.27.13.48.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Sep 2019 13:48:54 -0700 (PDT)
-Date:   Fri, 27 Sep 2019 15:48:54 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] dt-bindings: dma: ti-edma: Document
- dma-channel-mask for EDMA
-Message-ID: <20190927204854.GA20463@bogus>
-References: <20190926111954.9184-1-peter.ujfalusi@ti.com>
- <20190926111954.9184-3-peter.ujfalusi@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190926111954.9184-3-peter.ujfalusi@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1728755AbfI3CPU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 29 Sep 2019 22:15:20 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:38276 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726360AbfI3CPU (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 29 Sep 2019 22:15:20 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4EFFA200015;
+        Mon, 30 Sep 2019 04:15:16 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 267062002BB;
+        Mon, 30 Sep 2019 04:15:13 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 74E22402B7;
+        Mon, 30 Sep 2019 10:15:09 +0800 (SGT)
+From:   Peng Ma <peng.ma@nxp.com>
+To:     vkoul@kernel.org, dan.j.williams@intel.com, leoyang.li@nxp.com
+Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        Peng Ma <peng.ma@nxp.com>
+Subject: [V5 1/2] dmaengine: fsl-dpaa2-qdma: Add the DPDMAI(Data Path DMA Interface) support
+Date:   Mon, 30 Sep 2019 02:04:39 +0000
+Message-Id: <20190930020440.7754-1-peng.ma@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 02:19:53PM +0300, Peter Ujfalusi wrote:
-> Similarly to paRAM slots, channels can be used by other cores.
-> 
-> The common dma-channel-mask property can be used for specifying the
-> available channels.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  Documentation/devicetree/bindings/dma/ti-edma.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
-> index 4bbc94d829c8..014187088020 100644
-> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
-> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
-> @@ -42,6 +42,11 @@ Optional properties:
->  - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be used by
->  		the driver, they are allocated to be used by for example the
->  		DSP. See example.
-> +- dma-channel-mask: Mask of usable channels.
-> +		Single uint32 for EDMA with 32 channels, array of two uint32 for
-> +		EDMA with 64 channels. See example and
-> +		Documentation/devicetree/bindings/dma/dma-common.yaml
-> +
->  
->  ------------------------------------------------------------------------------
->  eDMA3 Transfer Controller
-> @@ -91,6 +96,9 @@ edma: edma@49000000 {
->  	ti,edma-memcpy-channels = <20 21>;
->  	/* The following PaRAM slots are reserved: 35-44 and 100-109 */
->  	ti,edma-reserved-slot-ranges = <35 10>, <100 10>;
-> +	/* The following channels are reserved: 35-44 */
-> +	dma-channel-mask = <0xffffffff>, /* Channel 0-31 */
-> +			   <0xffffe007>; /* Channel 32-63 */
+The MC(Management Complex) exports the DPDMAI(Data Path DMA Interface)
+object as an interface to operate the DPAA2(Data Path Acceleration
+Architecture 2) qDMA Engine. The DPDMAI enables sending frame-based
+requests to qDMA and receiving back confirmation response on transaction
+completion, utilizing the DPAA2 QBMan(Queue Manager and Buffer Manager
+hardware) infrastructure. DPDMAI object provides up to two priorities for
+processing qDMA requests.
+The following list summarizes the DPDMAI main features and capabilities:
+	1. Supports up to two scheduling priorities for processing
+	service requests.
+	- Each DPDMAI transmit queue is mapped to one of two service
+	priorities, allowing further prioritization in hardware between
+	requests from different DPDMAI objects.
+	2. Supports up to two receive queues for incoming transaction
+	completion confirmations.
+	- Each DPDMAI receive queue is mapped to one of two receive
+	priorities, allowing further prioritization between other
+	interfaces when associating the DPDMAI receive queues to DPIO
+	or DPCON(Data Path Concentrator) objects.
+	3. Supports different scheduling options for processing received
+	packets:
+	- Queues can be configured either in 'parked' mode (default),
+	or attached to a DPIO object, or attached to DPCON object.
+	4. Allows interaction with one or more DPIO objects for
+	dequeueing/enqueueing frame descriptors(FD) and for
+	acquiring/releasing buffers.
+	5. Supports enable, disable, and reset operations.
 
-Doesn't matter yet, but you have a mismatch here with the schema. While 
-the <> around each int or not doesn't matter for the dtb, it does for 
-the schema.
+Add dpdmai to support some platforms with dpaa2 qdma engine.
 
-dma-channel-mask = <0xffffffff>, <0xffffe007>;
-minItems: 1
-maxItems: 255
+Signed-off-by: Peng Ma <peng.ma@nxp.com>
+---
+changed for v5:
+	- Clean up the format.
+	- Delete some useless struct and macro.
+	- Fix spell.
+	- Move the description of function from header to C file.
 
-dma-channel-mask = <0xffffffff 0xffffe007>;
-items:
-  minItems: 1
-  maxItems: 255
+ drivers/dma/fsl-dpaa2-qdma/dpdmai.c |  366 +++++++++++++++++++++++++++++++++++
+ drivers/dma/fsl-dpaa2-qdma/dpdmai.h |  177 +++++++++++++++++
+ 2 files changed, 543 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/dma/fsl-dpaa2-qdma/dpdmai.c
+ create mode 100644 drivers/dma/fsl-dpaa2-qdma/dpdmai.h
 
-I think the latter case is slightly more logical here as you have 1 
-thing (a mask). If had N of something (like interrupts), then the former 
-makes sense. 
+diff --git a/drivers/dma/fsl-dpaa2-qdma/dpdmai.c b/drivers/dma/fsl-dpaa2-qdma/dpdmai.c
+new file mode 100644
+index 0000000..fbc2b2f
+--- /dev/null
++++ b/drivers/dma/fsl-dpaa2-qdma/dpdmai.c
+@@ -0,0 +1,366 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright 2019 NXP
++
++#include <linux/types.h>
++#include <linux/io.h>
++#include <linux/fsl/mc.h>
++#include "dpdmai.h"
++
++struct dpdmai_rsp_get_attributes {
++	__le32 id;
++	u8 num_of_priorities;
++	u8 pad0[3];
++	__le16 major;
++	__le16 minor;
++};
++
++struct dpdmai_cmd_queue {
++	__le32 dest_id;
++	u8 priority;
++	u8 queue;
++	u8 dest_type;
++	u8 pad;
++	__le64 user_ctx;
++	union {
++		__le32 options;
++		__le32 fqid;
++	};
++};
++
++struct dpdmai_rsp_get_tx_queue {
++	__le64 pad;
++	__le32 fqid;
++};
++
++#define MC_CMD_OP(_cmd, _param, _offset, _width, _type, _arg) \
++	((_cmd).params[_param] |= mc_enc((_offset), (_width), _arg))
++
++/* cmd, param, offset, width, type, arg_name */
++#define DPDMAI_CMD_CREATE(_cmd, _cfg) \
++do { \
++	typeof(_cmd) (cmd) = (_cmd); \
++	typeof(_cfg) (cfg) = (_cfg); \
++	MC_CMD_OP(cmd, 0, 8,  8,  u8,  (cfg)->priorities[0]);\
++	MC_CMD_OP(cmd, 0, 16, 8,  u8,  (cfg)->priorities[1]);\
++} while (0)
++
++static inline u64 mc_enc(int lsoffset, int width, u64 val)
++{
++	return (val & MAKE_UMASK64(width)) << lsoffset;
++}
++
++/**
++ * dpdmai_open() - Open a control session for the specified object
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @dpdmai_id:	DPDMAI unique ID
++ * @token:	Returned token; use in subsequent API calls
++ *
++ * This function can be used to open a control session for an
++ * already created object; an object may have been declared in
++ * the DPL or by calling the dpdmai_create() function.
++ * This function returns a unique authentication token,
++ * associated with the specific object ID and the specific MC
++ * portal; this token must be used in all subsequent commands for
++ * this specific object.
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_open(struct fsl_mc_io *mc_io, u32 cmd_flags,
++		int dpdmai_id, u16 *token)
++{
++	struct fsl_mc_command cmd = { 0 };
++	__le64 *cmd_dpdmai_id;
++	int err;
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_OPEN,
++					  cmd_flags, 0);
++
++	cmd_dpdmai_id = cmd.params;
++	*cmd_dpdmai_id = cpu_to_le32(dpdmai_id);
++
++	/* send command to mc*/
++	err = mc_send_command(mc_io, &cmd);
++	if (err)
++		return err;
++
++	/* retrieve response parameters */
++	*token = mc_cmd_hdr_read_token(&cmd);
++
++	return 0;
++}
++
++/**
++ * dpdmai_close() - Close the control session of the object
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @token:	Token of DPDMAI object
++ *
++ * After this function is called, no further operations are
++ * allowed on the object without opening a new control session.
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_close(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
++{
++	struct fsl_mc_command cmd = { 0 };
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_CLOSE,
++					  cmd_flags, token);
++
++	/* send command to mc*/
++	return mc_send_command(mc_io, &cmd);
++}
++
++/**
++ * dpdmai_create() - Create the DPDMAI object
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @cfg:	Configuration structure
++ * @token:	Returned token; use in subsequent API calls
++ *
++ * Create the DPDMAI object, allocate required resources and
++ * perform required initialization.
++ *
++ * The object can be created either by declaring it in the
++ * DPL file, or by calling this function.
++ *
++ * This function returns a unique authentication token,
++ * associated with the specific object ID and the specific MC
++ * portal; this token must be used in all subsequent calls to
++ * this specific object. For objects that are created using the
++ * DPL file, call dpdmai_open() function to get an authentication
++ * token first.
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_create(struct fsl_mc_io *mc_io, u32 cmd_flags,
++		  const struct dpdmai_cfg *cfg, u16 *token)
++{
++	struct fsl_mc_command cmd = { 0 };
++	int err;
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_CREATE,
++					  cmd_flags, 0);
++	DPDMAI_CMD_CREATE(cmd, cfg);
++
++	/* send command to mc*/
++	err = mc_send_command(mc_io, &cmd);
++	if (err)
++		return err;
++
++	/* retrieve response parameters */
++	*token = mc_cmd_hdr_read_token(&cmd);
++
++	return 0;
++}
++
++/**
++ * dpdmai_enable() - Enable the DPDMAI, allow sending and receiving frames.
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @token:	Token of DPDMAI object
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_enable(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
++{
++	struct fsl_mc_command cmd = { 0 };
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_ENABLE,
++					  cmd_flags, token);
++
++	/* send command to mc*/
++	return mc_send_command(mc_io, &cmd);
++}
++
++/**
++ * dpdmai_disable() - Disable the DPDMAI, stop sending and receiving frames.
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @token:	Token of DPDMAI object
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_disable(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
++{
++	struct fsl_mc_command cmd = { 0 };
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_DISABLE,
++					  cmd_flags, token);
++
++	/* send command to mc*/
++	return mc_send_command(mc_io, &cmd);
++}
++
++/**
++ * dpdmai_reset() - Reset the DPDMAI, returns the object to initial state.
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @token:	Token of DPDMAI object
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_reset(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
++{
++	struct fsl_mc_command cmd = { 0 };
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_RESET,
++					  cmd_flags, token);
++
++	/* send command to mc*/
++	return mc_send_command(mc_io, &cmd);
++}
++
++/**
++ * dpdmai_get_attributes() - Retrieve DPDMAI attributes.
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @token:	Token of DPDMAI object
++ * @attr:	Returned object's attributes
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_get_attributes(struct fsl_mc_io *mc_io, u32 cmd_flags,
++			  u16 token, struct dpdmai_attr *attr)
++{
++	struct dpdmai_rsp_get_attributes *rsp_params;
++	struct fsl_mc_command cmd = { 0 };
++	int err;
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_GET_ATTR,
++					  cmd_flags, token);
++
++	/* send command to mc*/
++	err = mc_send_command(mc_io, &cmd);
++	if (err)
++		return err;
++
++	/* retrieve response parameters */
++	rsp_params = (struct dpdmai_rsp_get_attributes *)cmd.params;
++	attr->id = le32_to_cpu(rsp_params->id);
++	attr->version.major = le16_to_cpu(rsp_params->major);
++	attr->version.minor = le16_to_cpu(rsp_params->minor);
++	attr->num_of_priorities = rsp_params->num_of_priorities;
++
++	return 0;
++}
++
++/**
++ * dpdmai_set_rx_queue() - Set Rx queue configuration
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @token:	Token of DPDMAI object
++ * @priority:	Select the queue relative to number of
++ *		priorities configured at DPDMAI creation
++ * @cfg:	Rx queue configuration
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_set_rx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token,
++			u8 priority, const struct dpdmai_rx_queue_cfg *cfg)
++{
++	struct dpdmai_cmd_queue *cmd_params;
++	struct fsl_mc_command cmd = { 0 };
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_SET_RX_QUEUE,
++					  cmd_flags, token);
++
++	cmd_params = (struct dpdmai_cmd_queue *)cmd.params;
++	cmd_params->dest_id = cpu_to_le32(cfg->dest_cfg.dest_id);
++	cmd_params->priority = cfg->dest_cfg.priority;
++	cmd_params->queue = priority;
++	cmd_params->dest_type = cfg->dest_cfg.dest_type;
++	cmd_params->user_ctx = cpu_to_le64(cfg->user_ctx);
++	cmd_params->options = cpu_to_le32(cfg->options);
++
++	/* send command to mc*/
++	return mc_send_command(mc_io, &cmd);
++}
++
++/**
++ * dpdmai_get_rx_queue() - Retrieve Rx queue attributes.
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @token:	Token of DPDMAI object
++ * @priority:	Select the queue relative to number of
++ *				priorities configured at DPDMAI creation
++ * @attr:	Returned Rx queue attributes
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_get_rx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token,
++			u8 priority, struct dpdmai_rx_queue_attr *attr)
++{
++	struct dpdmai_cmd_queue *cmd_params;
++	struct fsl_mc_command cmd = { 0 };
++	int err;
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_GET_RX_QUEUE,
++					  cmd_flags, token);
++
++	cmd_params = (struct dpdmai_cmd_queue *)cmd.params;
++	cmd_params->queue = priority;
++
++	/* send command to mc*/
++	err = mc_send_command(mc_io, &cmd);
++	if (err)
++		return err;
++
++	/* retrieve response parameters */
++	attr->dest_cfg.dest_id = le32_to_cpu(cmd_params->dest_id);
++	attr->dest_cfg.priority = cmd_params->priority;
++	attr->dest_cfg.dest_type = cmd_params->dest_type;
++	attr->user_ctx = le64_to_cpu(cmd_params->user_ctx);
++	attr->fqid = le32_to_cpu(cmd_params->fqid);
++
++	return 0;
++}
++
++/**
++ * dpdmai_get_tx_queue() - Retrieve Tx queue attributes.
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @token:	Token of DPDMAI object
++ * @priority:	Select the queue relative to number of
++ *			priorities configured at DPDMAI creation
++ * @fqid:	Returned Tx queue
++ *
++ * Return:	'0' on Success; Error code otherwise.
++ */
++int dpdmai_get_tx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags,
++			u16 token, u8 priority, u32 *fqid)
++{
++	struct dpdmai_rsp_get_tx_queue *rsp_params;
++	struct dpdmai_cmd_queue *cmd_params;
++	struct fsl_mc_command cmd = { 0 };
++	int err;
++
++	/* prepare command */
++	cmd.header = mc_encode_cmd_header(DPDMAI_CMDID_GET_TX_QUEUE,
++					  cmd_flags, token);
++
++	cmd_params = (struct dpdmai_cmd_queue *)cmd.params;
++	cmd_params->queue = priority;
++
++	/* send command to mc*/
++	err = mc_send_command(mc_io, &cmd);
++	if (err)
++		return err;
++
++	/* retrieve response parameters */
++
++	rsp_params = (struct dpdmai_rsp_get_tx_queue *)cmd.params;
++	*fqid = le32_to_cpu(rsp_params->fqid);
++
++	return 0;
++}
+diff --git a/drivers/dma/fsl-dpaa2-qdma/dpdmai.h b/drivers/dma/fsl-dpaa2-qdma/dpdmai.h
+new file mode 100644
+index 0000000..6d78509
+--- /dev/null
++++ b/drivers/dma/fsl-dpaa2-qdma/dpdmai.h
+@@ -0,0 +1,177 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright 2019 NXP */
++
++#ifndef __FSL_DPDMAI_H
++#define __FSL_DPDMAI_H
++
++/* DPDMAI Version */
++#define DPDMAI_VER_MAJOR	2
++#define DPDMAI_VER_MINOR	2
++
++#define DPDMAI_CMD_BASE_VERSION	0
++#define DPDMAI_CMD_ID_OFFSET	4
++
++#define DPDMAI_CMDID_FORMAT(x)	(((x) << DPDMAI_CMD_ID_OFFSET) | \
++				DPDMAI_CMD_BASE_VERSION)
++
++/* Command IDs */
++#define DPDMAI_CMDID_CLOSE		DPDMAI_CMDID_FORMAT(0x800)
++#define DPDMAI_CMDID_OPEN               DPDMAI_CMDID_FORMAT(0x80E)
++#define DPDMAI_CMDID_CREATE             DPDMAI_CMDID_FORMAT(0x90E)
++
++#define DPDMAI_CMDID_ENABLE             DPDMAI_CMDID_FORMAT(0x002)
++#define DPDMAI_CMDID_DISABLE            DPDMAI_CMDID_FORMAT(0x003)
++#define DPDMAI_CMDID_GET_ATTR           DPDMAI_CMDID_FORMAT(0x004)
++#define DPDMAI_CMDID_RESET              DPDMAI_CMDID_FORMAT(0x005)
++#define DPDMAI_CMDID_IS_ENABLED         DPDMAI_CMDID_FORMAT(0x006)
++
++#define DPDMAI_CMDID_SET_IRQ            DPDMAI_CMDID_FORMAT(0x010)
++#define DPDMAI_CMDID_GET_IRQ            DPDMAI_CMDID_FORMAT(0x011)
++#define DPDMAI_CMDID_SET_IRQ_ENABLE     DPDMAI_CMDID_FORMAT(0x012)
++#define DPDMAI_CMDID_GET_IRQ_ENABLE     DPDMAI_CMDID_FORMAT(0x013)
++#define DPDMAI_CMDID_SET_IRQ_MASK       DPDMAI_CMDID_FORMAT(0x014)
++#define DPDMAI_CMDID_GET_IRQ_MASK       DPDMAI_CMDID_FORMAT(0x015)
++#define DPDMAI_CMDID_GET_IRQ_STATUS     DPDMAI_CMDID_FORMAT(0x016)
++#define DPDMAI_CMDID_CLEAR_IRQ_STATUS	DPDMAI_CMDID_FORMAT(0x017)
++
++#define DPDMAI_CMDID_SET_RX_QUEUE	DPDMAI_CMDID_FORMAT(0x1A0)
++#define DPDMAI_CMDID_GET_RX_QUEUE       DPDMAI_CMDID_FORMAT(0x1A1)
++#define DPDMAI_CMDID_GET_TX_QUEUE       DPDMAI_CMDID_FORMAT(0x1A2)
++
++#define MC_CMD_HDR_TOKEN_O 32  /* Token field offset */
++#define MC_CMD_HDR_TOKEN_S 16  /* Token field size */
++
++#define MAKE_UMASK64(_width) \
++	((u64)((_width) < 64 ? ((u64)1 << (_width)) - 1 : (u64)-1))
++
++/* Data Path DMA Interface API
++ * Contains initialization APIs and runtime control APIs for DPDMAI
++ */
++
++/**
++ * Maximum number of Tx/Rx priorities per DPDMAI object
++ */
++#define DPDMAI_PRIO_NUM		2
++
++/* DPDMAI queue modification options */
++
++/**
++ * Select to modify the user's context associated with the queue
++ */
++#define DPDMAI_QUEUE_OPT_USER_CTX	0x1
++
++/**
++ * Select to modify the queue's destination
++ */
++#define DPDMAI_QUEUE_OPT_DEST		0x2
++
++/**
++ * struct dpdmai_cfg - Structure representing DPDMAI configuration
++ * @priorities: Priorities for the DMA hardware processing; valid priorities are
++ *	configured with values 1-8; the entry following last valid entry
++ *	should be configured with 0
++ */
++struct dpdmai_cfg {
++	u8 priorities[DPDMAI_PRIO_NUM];
++};
++
++/**
++ * struct dpdmai_attr - Structure representing DPDMAI attributes
++ * @id: DPDMAI object ID
++ * @version: DPDMAI version
++ * @num_of_priorities: number of priorities
++ */
++struct dpdmai_attr {
++	int	id;
++	/**
++	 * struct version - DPDMAI version
++	 * @major: DPDMAI major version
++	 * @minor: DPDMAI minor version
++	 */
++	struct {
++		u16 major;
++		u16 minor;
++	} version;
++	u8 num_of_priorities;
++};
++
++/**
++ * enum dpdmai_dest - DPDMAI destination types
++ * @DPDMAI_DEST_NONE: Unassigned destination; The queue is set in parked mode
++ *	and does not generate FQDAN notifications; user is expected to dequeue
++ *	from the queue based on polling or other user-defined method
++ * @DPDMAI_DEST_DPIO: The queue is set in schedule mode and generates FQDAN
++ *	notifications to the specified DPIO; user is expected to dequeue
++ *	from the queue only after notification is received
++ * @DPDMAI_DEST_DPCON: The queue is set in schedule mode and does not generate
++ *	FQDAN notifications, but is connected to the specified DPCON object;
++ *	user is expected to dequeue from the DPCON channel
++ */
++enum dpdmai_dest {
++	DPDMAI_DEST_NONE = 0,
++	DPDMAI_DEST_DPIO = 1,
++	DPDMAI_DEST_DPCON = 2
++};
++
++/**
++ * struct dpdmai_dest_cfg - Structure representing DPDMAI destination parameters
++ * @dest_type: Destination type
++ * @dest_id: Either DPIO ID or DPCON ID, depending on the destination type
++ * @priority: Priority selection within the DPIO or DPCON channel; valid values
++ *	are 0-1 or 0-7, depending on the number of priorities in that
++ *	channel; not relevant for 'DPDMAI_DEST_NONE' option
++ */
++struct dpdmai_dest_cfg {
++	enum dpdmai_dest dest_type;
++	int dest_id;
++	u8 priority;
++};
++
++/**
++ * struct dpdmai_rx_queue_cfg - DPDMAI RX queue configuration
++ * @options: Flags representing the suggested modifications to the queue;
++ *	Use any combination of 'DPDMAI_QUEUE_OPT_<X>' flags
++ * @user_ctx: User context value provided in the frame descriptor of each
++ *	dequeued frame;
++ *	valid only if 'DPDMAI_QUEUE_OPT_USER_CTX' is contained in 'options'
++ * @dest_cfg: Queue destination parameters;
++ *	valid only if 'DPDMAI_QUEUE_OPT_DEST' is contained in 'options'
++ */
++struct dpdmai_rx_queue_cfg {
++	struct dpdmai_dest_cfg dest_cfg;
++	u32 options;
++	u64 user_ctx;
++
++};
++
++/**
++ * struct dpdmai_rx_queue_attr - Structure representing attributes of Rx queues
++ * @user_ctx:  User context value provided in the frame descriptor of each
++ *	 dequeued frame
++ * @dest_cfg: Queue destination configuration
++ * @fqid: Virtual FQID value to be used for dequeue operations
++ */
++struct dpdmai_rx_queue_attr {
++	struct dpdmai_dest_cfg	dest_cfg;
++	u64 user_ctx;
++	u32 fqid;
++};
++
++int dpdmai_open(struct fsl_mc_io *mc_io, u32 cmd_flags,
++		int dpdmai_id, u16 *token);
++int dpdmai_close(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token);
++int dpdmai_create(struct fsl_mc_io *mc_io, u32 cmd_flags,
++		  const struct dpdmai_cfg *cfg, u16 *token);
++int dpdmai_enable(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token);
++int dpdmai_disable(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token);
++int dpdmai_reset(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token);
++int dpdmai_get_attributes(struct fsl_mc_io *mc_io, u32 cmd_flags,
++			  u16 token, struct dpdmai_attr	*attr);
++int dpdmai_set_rx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token,
++			u8 priority, const struct dpdmai_rx_queue_cfg *cfg);
++int dpdmai_get_rx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token,
++			u8 priority, struct dpdmai_rx_queue_attr *attr);
++int dpdmai_get_tx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags,
++			u16 token, u8 priority, u32 *fqid);
++
++#endif /* __FSL_DPDMAI_H */
+-- 
+1.7.1
 
-Rob

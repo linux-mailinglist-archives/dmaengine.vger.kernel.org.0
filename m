@@ -2,95 +2,152 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D06BC8AA0
-	for <lists+dmaengine@lfdr.de>; Wed,  2 Oct 2019 16:12:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC20CC90D6
+	for <lists+dmaengine@lfdr.de>; Wed,  2 Oct 2019 20:29:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbfJBOMN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 2 Oct 2019 10:12:13 -0400
-Received: from mail-eopbgr760054.outbound.protection.outlook.com ([40.107.76.54]:31099
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726214AbfJBOMN (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 2 Oct 2019 10:12:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TjqB7cJxeQQtK84pfrgAVAyhnVrP+w7ReMshVBkOv60Y3vXxbq2UMVmBbQsNMULTjxdLOPqnvcdFvld7XtF+wSLjTJqDHEni49ncdrEpbucnpsMkXTUn0v7f5KR9qX3asoEUPpjy5IzE7/IeCKeq+lwz3LKMkgeygUCNF5QutnRijypXbMZ5RsIA5rBm1YEZaq+BosywywRTwMrevIIrnd1rHsy5DY90ketN4ISGWQqMEB+QkmKAIFWjgqxKlZGIpKClQRLl4Q00LZoD+8692pU92eGV9STJM1hifDOecdWYlavD1OtHmLML2/A5rGBV/8shM6bEnInd04yp6s9uDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4xObepoDVfyH4Ze4N4vbZ38xPys14l70MGGhww5kd60=;
- b=IVsVWVGs1FHfyfzwOMRUBnzA/FChbEZLkNADMA7XXt/q2TklZIKPgPpUxgkL5SIxW1TE3AyaLqePbnfX67vmqa70pqfYhm/ZmHKPUb3beOUMHt6On3dGa7mY+YVIyMb/Prp4kVkmdwUfZXeV1FNY/WRv1EHym8bfPaQrzpY4uTHrAosgDAs90X3JH0GMv4KmOGwZLiKtfp7+/oHEAhk2eI3I2XrWJGqOyZBaaYLc7GymFH18z0J+6PyzSzg2c9bIEQbgf9Xd+zam7+Nx6v5RvGznpwvXL16los8b2Kwz2Zx1D1QoMjsaf9qhwmeZJDp9LJR5zJ3Bc3K5TA1y7ennLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
- dkim=pass header.d=micron.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4xObepoDVfyH4Ze4N4vbZ38xPys14l70MGGhww5kd60=;
- b=n/w3Yvl5Iz9u1idvBFzJmsezXT0nOnQP4xQUzDnEGWou6ahbLfzqMAMgFexpFYF00sM6t4IdNu5HIVUD/DMVRj72hjhzyBrGK7nUnooC0cJsOMDEqAeTzmX2PhFDrcI7ss62kHeXyyLuVkrBcUWajBYlViNR3VdKlZyE2dHgCrI=
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.179.87) by
- BN7PR08MB5217.namprd08.prod.outlook.com (20.176.176.217) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2305.20; Wed, 2 Oct 2019 14:12:10 +0000
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::f0ca:4368:4e6e:6f18]) by BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::f0ca:4368:4e6e:6f18%7]) with mapi id 15.20.2305.022; Wed, 2 Oct 2019
- 14:12:10 +0000
-From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
-To:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-CC:     "Bean Huo (beanhuo)" <beanhuo@micron.com>
-Subject: dma_map_sg_attrs() time consumption not consistent
-Thread-Topic: dma_map_sg_attrs() time consumption not consistent
-Thread-Index: AdV5KRr2pDl8tJdoR4KQGu3cJ+BqMA==
-Date:   Wed, 2 Oct 2019 14:12:10 +0000
-Message-ID: <BN7PR08MB5684D50621234D24E29FFED6DB9C0@BN7PR08MB5684.namprd08.prod.outlook.com>
-Accept-Language: en-150, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLTliNmUwMjcwLWU1MWUtMTFlOS05ZTJkLWI4OGE2MDU1NTMwMVxhbWUtdGVzdFw5YjZlMDI3MS1lNTFlLTExZTktOWUyZC1iODhhNjA1NTUzMDFib2R5LnR4dCIgc3o9IjU3MyIgdD0iMTMyMTQ0OTkxMjQxNDU5Nzc3IiBoPSJaYVRqYXp1OTlBUkpvZENYejFJbFU4RXBJUDA9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=beanhuo@micron.com; 
-x-originating-ip: [165.225.80.134]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a3d32a37-bf5e-421a-7fb9-08d74742843a
-x-ms-traffictypediagnostic: BN7PR08MB5217:|BN7PR08MB5217:|BN7PR08MB5217:|BN7PR08MB5217:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN7PR08MB521756A0A5458FA826C1AA87DB9C0@BN7PR08MB5217.namprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0178184651
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(39860400002)(366004)(376002)(136003)(199004)(189003)(66946007)(71200400001)(71190400001)(81166006)(2351001)(81156014)(1730700003)(305945005)(14444005)(8936002)(256004)(6506007)(55236004)(102836004)(2906002)(6916009)(25786009)(3846002)(6116002)(8676002)(74316002)(9686003)(33656002)(2501003)(55016002)(76116006)(5640700003)(4744005)(316002)(186003)(14454004)(478600001)(26005)(86362001)(7696005)(4326008)(107886003)(66066001)(99286004)(7736002)(64756008)(66446008)(476003)(486006)(66476007)(66556008)(6436002)(52536014)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB5217;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: micron.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: K0z5Zu/AsJfc7cBUbUois/QAsfyMx7rnvotmcZ3gUmWzuVBrkRUTQ0BPPyCUCtT/sTl0xhYsmtdIT4xY1jgwWdTO2nKT9+uSavMs0lO4xngvXmqQDJC5WaTWhxA1I0gDWrZJq/SrQVL/USE1raZ1t0mWNLf/h3zHbsihuLoMGT2LfWoicLUU5RJyb9qJYBsrLhhf6C4aOr7IeYc4KV176nHvTUbkYU6LH2RwLkf2rym4SEaaluyUmZYzFN5QbjVx2SyRM7vYhN8prBGqotfZkjKAiDPmZORcrNp1Zbzc4ydpEXCcV3dt0GzmjT7KpcJp9bbpeTtvvlpohNXuDmvSc0Y11S/FCihl4ph082SEuGJ6IX3znavCKiFknYFGU3SiiZAO4POmeyoen0JU+X2voNSwrLBBro8OQgwIosJQ2zE=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1728787AbfJBS2L (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 2 Oct 2019 14:28:11 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43682 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726076AbfJBS2L (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 2 Oct 2019 14:28:11 -0400
+Received: by mail-pg1-f196.google.com with SMTP id v27so12326847pgk.10;
+        Wed, 02 Oct 2019 11:28:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=izcdKMTlTPXdg1rZpK9PkNPTeAL5ACc5p0aT6ECn+3o=;
+        b=nr6ZKcXN/729CI5YvKkqVc0Bz2wyp7AqMiNJbnneIbJ2S8a6/RpgT+vQxveooa1g8o
+         Tzstjrebdj0ch6CBEQIhLHedt+Meqh8poQODSN2lg0OykjXXZCvv3ItaPXFO7ZImXqcW
+         RuKmutNc32nfhTfdTSE+Gn+FP0hyvVehIb12ZNHr5rdWDezRIrhU/4qCY2koq02vv9hS
+         0JYsKwzPEkKLeHC0o1yMLr4lNeC7nIidqjJQlgZ17X3hwG7uMGUGlb0FYDKstybAoxSN
+         PuzGKEISFL71Mt9LOzHTLH19Bi/ikZqtSvsTTAUBs/9/pSrhf3mQrJw/Bi+Y2mWPIur/
+         yzHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=izcdKMTlTPXdg1rZpK9PkNPTeAL5ACc5p0aT6ECn+3o=;
+        b=pmsHGoI1ePqZE8TLIu0Dey8pVqh1NIIj/A8bMidf6zGs1MH2FE1AqnpVY91B+3CLt4
+         8BheWaKNwiIe64AuVFIJOqTmRF+wchCvko/tc6ceKJuIY8xNxd18XG4w7zxqtj7bOmQM
+         23z+BEWQzE3U6Kc5/wR3Ro7gBJr/RNPvTtzVCBwWjkobkxurHdBt8LgZEXKKObj/ijfp
+         V1Z9ByZuI2uY3INWNDsKubaNPWcLw4eDL/a8pIDp789JIRi43c9zAMNUZiMvu13fc4ug
+         oD3vwMBWsm5OejBjBXsSYU+mE8l75Yv7FuI+nl6TSMi5293fIXUyqTuPChzLR1LiXXB7
+         3y7Q==
+X-Gm-Message-State: APjAAAWttjPq1lnPKLQ3CMBX0r/izgeFIFB8DCBRwvf1KTLBlY3nuQVw
+        rLq29wRs+YQEyzQLoW9cqqNMYGeN
+X-Google-Smtp-Source: APXvYqwrs3FB89RH0+kgXBF3ejwmYPZLTgHaLNuUiXE1AjcShSZR76+3xPYW28RCBcE0p63294782w==
+X-Received: by 2002:a17:90a:c214:: with SMTP id e20mr5758828pjt.81.1570040889544;
+        Wed, 02 Oct 2019 11:28:09 -0700 (PDT)
+Received: from [10.69.78.41] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id b14sm162486pfi.95.2019.10.02.11.28.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Oct 2019 11:28:08 -0700 (PDT)
+Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        Matthias Brugger <mbrugger@suse.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        etnaviv@lists.freedesktop.org,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>, Stefan Wahren <wahrenst@gmx.net>,
+        james.quinlan@broadcom.com, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
+ <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
+ <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
+ <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
+ <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de>
+ <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
+ <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
+ <CAL_JsqKKYcHPnA80ZwLY=Sk3e5MqrimedUhWQ5+iuPZXQxYHdA@mail.gmail.com>
+ <307b988d0c67fb1c42166eca12742bcfda09d92d.camel@suse.de>
+ <c27a51e1-1adf-ae6a-dc67-ae76222a1163@arm.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <fbae48ca-fbd4-e32b-e874-92b5bba5df4d@gmail.com>
+Date:   Wed, 2 Oct 2019 11:28:06 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3d32a37-bf5e-421a-7fb9-08d74742843a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Oct 2019 14:12:10.6395
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BYeeepKxPTTMWtbmyZvf+XgeI4ZAfy22erTBJLubfzIt3WKM0q1ugsXYOsuy+85WQONrWbBm7ap3PayrWxSTWA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB5217
+In-Reply-To: <c27a51e1-1adf-ae6a-dc67-ae76222a1163@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi,=20
-Recently, I experienced a problem on scaterlist DMA mappping. It is said th=
-at if mapping 128KB data length for DMA tranfer,
-when I enable jbd2, dma_map_sg_attrs() will take more thant two times of ti=
-me, comparing to the condition which jbd2 disabled.
-Somebody suggested me to print out  DMA entry to look at what happening.  I=
- studied dma_map_sg_attrs() funciton a little bit,
-But don't much clear how to print this kind of info. Is there anyone who kn=
-ows this?
-Thanks.
 
-//Bean
 
+On 9/26/2019 4:20 AM, Robin Murphy wrote:
+> On 2019-09-26 11:44 am, Nicolas Saenz Julienne wrote:
+>>>>>> Robin, have you looked into supporting multiple dma-ranges? It's the
+>>>>>> next thing
+>>>>>> we need for BCM STB's PCIe. I'll have a go at it myself if nothing
+>>>>>> is in
+>>>>>> the
+>>>>>> works already.
+>>>>>
+>>>>> Multiple dma-ranges as far as configuring inbound windows should work
+>>>>> already other than the bug when there's any parent translation. But if
+>>>>> you mean supporting multiple DMA offsets and masks per device in the
+>>>>> DMA API, there's nothing in the works yet.
+>>
+>> Sorry, I meant supporting multiple DMA offsets[1]. I think I could
+>> still make
+>> it with a single DMA mask though.
+> 
+> The main problem for supporting that case in general is the disgusting
+> carving up of the physical memory map you may have to do to guarantee
+> that a single buffer allocation cannot ever span two windows with
+> different offsets. I don't think we ever reached a conclusion on whether
+> that was even achievable in practice.
+
+It is with the Broadcom STB SoCs which have between 1 and 3 memory
+controllers depending on the SoC, and multiple dma-ranges cells for PCIe
+as a consequence.
+
+Each memory controller has a different physical address aperture in the
+CPU's physical address map (e.g.: MEMC0 is 0x0 - 0x3fff_ffff, MEMC1
+0x4000_0000 - 0x7ffff_ffff and MEMC2 0x8000_0000 - 0xbfff_ffff, not
+counting the extension regions above 4GB), and while the CPU is
+scheduled and arbitrated the same way across all memory controllers
+(thus making it virtually UMA, almost) having a buffer span two memory
+controllers would be problematic because the memory controllers do not
+know how to guarantee the transaction ordering and buffer data
+consistency in both DRAM itself and for other memory controller clients,
+like PCIe.
+
+We historically had to reserve the last 4KB of each memory controller to
+avoid problematic controllers like EHCI to prefetch beyond the end of a
+memory controller's populated memory and that also incidentally takes
+care of never having a buffer cross a controller boundary. Either you
+can allocate the entire buffer on a given memory controller, or you
+cannot allocate memory at all on that zone/region and another one must
+be found (or there is no more memory and there is a genuine OOM).
+
+The way we reserve memory right now is based on the first patch
+submitted by Jim:
+
+https://lore.kernel.org/patchwork/patch/988469/
+
+whereby we read the memory node's "reg" property and we map the physical
+addresses to the memory controller configuration read from the specific
+registers in the CPU's Bus Interface Unit (where the memory controller
+apertures are architecturally defined) and then we use that to call
+memblock_reserve() (not part of that patch, it should be though).
+-- 
+Florian

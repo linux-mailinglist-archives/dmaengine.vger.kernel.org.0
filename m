@@ -2,109 +2,154 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5936DCB110
-	for <lists+dmaengine@lfdr.de>; Thu,  3 Oct 2019 23:26:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA7B4CBB25
+	for <lists+dmaengine@lfdr.de>; Fri,  4 Oct 2019 15:03:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbfJCV0g (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 3 Oct 2019 17:26:36 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:59283 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728763AbfJCV0f (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 3 Oct 2019 17:26:35 -0400
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1iG8cL-0006f6-S6; Thu, 03 Oct 2019 23:26:34 +0200
-Message-ID: <1daf496b14c9682a52e06592471ca37a5abb72e7.camel@pengutronix.de>
-Subject: Re: kernel freeze regression relating to imx-sdma
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Kevin Groeneveld <KGroeneveld@lenbrook.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Date:   Thu, 03 Oct 2019 23:26:27 +0200
-In-Reply-To: <BF6B9AADDDF11740967545E971C7C0DE6BAAEB86@MAIL1.pickering.lenbrook.com>
+        id S2387593AbfJDNDC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 4 Oct 2019 09:03:02 -0400
+Received: from mail.lenbrook.com ([69.156.198.123]:4560 "EHLO
+        mail.lenbrook.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfJDNDB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 4 Oct 2019 09:03:01 -0400
+Received: from MAIL1.pickering.lenbrook.com ([192.168.0.250]) by
+ MAIL1.pickering.lenbrook.com ([192.168.0.250]) with mapi id 14.03.0415.000;
+ Fri, 4 Oct 2019 09:03:00 -0400
+From:   Kevin Groeneveld <KGroeneveld@lenbrook.com>
+To:     Lucas Stach <l.stach@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+CC:     "lars@metafoo.de" <lars@metafoo.de>
+Subject: RE: kernel freeze regression relating to imx-sdma
+Thread-Topic: kernel freeze regression relating to imx-sdma
+Thread-Index: AdV6LyY1Rzd7AEOaQv+Ew+dBI1dYnwAI5e+AABa2rgA=
+Date:   Fri, 4 Oct 2019 13:02:59 +0000
+Message-ID: <BF6B9AADDDF11740967545E971C7C0DE6BAAEC23@MAIL1.pickering.lenbrook.com>
 References: <BF6B9AADDDF11740967545E971C7C0DE6BAAEB86@MAIL1.pickering.lenbrook.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+ <1daf496b14c9682a52e06592471ca37a5abb72e7.camel@pengutronix.de>
+In-Reply-To: <1daf496b14c9682a52e06592471ca37a5abb72e7.camel@pengutronix.de>
+Accept-Language: en-US, en-CA
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [192.168.0.66]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Kevin,
-
-Am Donnerstag, den 03.10.2019, 21:11 +0000 schrieb Kevin Groeneveld:
-> We have recently come across an issue which can cause the linux kernel to freeze on an iMX6 based system.  After bisecting the issue I have found the issue is related to the following imx-sdma commits:
-> 
-> 64068853bc77786d1a28abb4087d6a3e93aedbe2 dmaengine: imx-sdma: use GFP_NOWAIT for dma descriptor allocations
-> b8603d2a5795c42f78998e70dc792336e0dc20c9 dmaengine: imx-sdma: implement channel termination via worker
-> ebb853b1bd5f659b92c71dc6a9de44cfc37c78c0 Revert "dmaengine: imx-sdma: alloclate bd memory from dma pool"
-> c06abca69218ac42fa58d1ba7a7b0d9bab5f1b18 Revert "dmaengine: imx-sdma: Use GFP_NOWAIT for dma allocations"
-> 
-> If I revert these four commits the freeze does not happen.  The issue is still present up to at least v5.3.
-> 
-> The problem seems to be related to overruns when doing an SPDIF capture, particularly when there is not actually a valid SPDIF input to the iMX6.  When the issue occurs the following is (usually) printed on the console (using a v5.0 based kernel):
-> 
-> [ 1251.944877] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> [ 1251.950823] rcu:     (detected by 0, t=2102 jiffies, g=220425, q=0)
-> [ 1251.956866] rcu: All QSes seen, last rcu_sched kthread activity 2102 (95117-93015), jiffies_till_next_fqs=1, root ->qsmask 0x0
-> [ 1251.968266] arecord         S    0  1916   1908 0x00000002
-> [ 1251.973816] [<8010dcec>] (unwind_backtrace) from [<8010a4c4>] (show_stack+0x10/0x14)
-> [ 1251.981596] [<8010a4c4>] (show_stack) from [<8016b314>] (rcu_check_callbacks+0x57c/0x5d8)
-> [ 1251.989806] [<8016b314>] (rcu_check_callbacks) from [<8016fe84>] (update_process_times+0x30/0x5c)
-> [ 1251.998709] [<8016fe84>] (update_process_times) from [<8017e960>] (tick_sched_timer+0x44/0x94)
-> [ 1252.007353] [<8017e960>] (tick_sched_timer) from [<80170a84>] (__hrtimer_run_queues+0xd8/0x160)
-> [ 1252.016081] [<80170a84>] (__hrtimer_run_queues) from [<8017103c>] (hrtimer_interrupt+0xdc/0x284)
-> [ 1252.024891] [<8017103c>] (hrtimer_interrupt) from [<8010d6c0>] (twd_handler+0x2c/0x38)
-> [ 1252.032839] [<8010d6c0>] (twd_handler) from [<80160b34>] (handle_percpu_devid_irq+0x70/0x11c)
-> [ 1252.041401] [<80160b34>] (handle_percpu_devid_irq) from [<8015c234>] (generic_handle_irq+0x18/0x28)
-> [ 1252.050480] [<8015c234>] (generic_handle_irq) from [<8015c814>] (__handle_domain_irq+0xa0/0xb4)
-> [ 1252.059211] [<8015c814>] (__handle_domain_irq) from [<8039098c>] (gic_handle_irq+0x58/0x90)
-> [ 1252.067590] [<8039098c>] (gic_handle_irq) from [<80101a0c>] (__irq_svc+0x6c/0x90)
-> [ 1252.075085] Exception stack(0x848afe30 to 0x848afe78)
-> [ 1252.080155] fe20:                                     8decf200 00000000 00000000 80b84ac8
-> [ 1252.088354] fe40: 00000000 8decf200 892f7800 00001589 892f7800 00000000 00000000 848ae000
-> [ 1252.096549] fe60: 8d8cf000 848afe80 805721e8 8056aae4 60000013 ffffffff
-> [ 1252.103200] [<80101a0c>] (__irq_svc) from [<8056aae4>] (__snd_pcm_stream_unlock_mode+0xc0/0xd8)
-> [ 1252.111925] [<8056aae4>] (__snd_pcm_stream_unlock_mode) from [<00000000>] (  (null))
-> [ 1252.119695] rcu: rcu_sched kthread starved for 2102 jiffies! g220425 f0x2 RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=0
-> [ 1252.129877] rcu: RCU grace-period kthread stack dump:
-> [ 1252.134938] rcu_sched       R  running task        0    10      2 0x00000000
-> [ 1252.142034] [<806eee5c>] (__schedule) from [<806eef80>] (schedule+0x90/0xa0)
-> [ 1252.149116] [<806eef80>] (schedule) from [<806f2244>] (schedule_timeout+0x1f0/0x238)
-> [ 1252.156891] [<806f2244>] (schedule_timeout) from [<8016940c>] (rcu_gp_kthread+0x550/0x8f0)
-> [ 1252.165183] [<8016940c>] (rcu_gp_kthread) from [<8013a358>] (kthread+0x110/0x128)
-> [ 1252.172693] [<8013a358>] (kthread) from [<801010e8>] (ret_from_fork+0x14/0x2c)
-> [ 1252.179925] Exception stack(0x8f877fb0 to 0x8f877ff8)
-> [ 1252.184991] 7fa0:                                     00000000 00000000 00000000 00000000
-> [ 1252.193187] 7fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [ 1252.201380] 7fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> 
-> I suspect the issue may not actually be a bug with imx-sdma but a
-> race condition elsewhere that is exposed by the four mentioned
-> commits.
-> 
-> I did notice that when an SPDIF overrun occurs
-> dmaengine_terminate_async is called but dmaengine_synchronize is
-> not.  Should these calls always be paired? Or is it okay to call
-> dmaengine_terminate_async without dmaengine_synchronize in some
-> cases?
-> 
-
-Yes, it seems this uncovered a bug in the SPDIF driver. Before those
-commits the dmaengine_terminate_async in the SDMA driver wasn't really
-async, now it is. The API requires that you call dmaengine_synchronize
-eventually after the terminate_async before starting any new operations
-on the dmaengine. It doesn't necessarily need to be in the same
-codepath, but the the async terminate always needs to be paired up with
-a synchronize.
-
-Regards,
-Lucas
-
+SGkgTHVjYXMsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+LS0tLS1PcmlnaW5hbCBN
+ZXNzYWdlLS0tLS0NCj5Gcm9tOiBMdWNhcyBTdGFjaCBbbWFpbHRvOmwuc3RhY2hAcGVuZ3V0cm9u
+aXguZGVdDQo+U2VudDogT2N0b2JlciAzLCAyMDE5IDU6MjYgUE0NCj5UbzogS2V2aW4gR3JvZW5l
+dmVsZDsgZG1hZW5naW5lQHZnZXIua2VybmVsLm9yZw0KPlN1YmplY3Q6IFJlOiBrZXJuZWwgZnJl
+ZXplIHJlZ3Jlc3Npb24gcmVsYXRpbmcgdG8gaW14LXNkbWENCj4NCj5IaSBLZXZpbiwNCj4NCj5B
+bSBEb25uZXJzdGFnLCBkZW4gMDMuMTAuMjAxOSwgMjE6MTEgKzAwMDAgc2NocmllYiBLZXZpbiBH
+cm9lbmV2ZWxkOg0KPj4gV2UgaGF2ZSByZWNlbnRseSBjb21lIGFjcm9zcyBhbiBpc3N1ZSB3aGlj
+aCBjYW4gY2F1c2UgdGhlIGxpbnV4IGtlcm5lbCB0bw0KPj4gZnJlZXplIG9uIGFuIGlNWDYgYmFz
+ZWQgc3lzdGVtLiAgQWZ0ZXIgYmlzZWN0aW5nIHRoZSBpc3N1ZSBJIGhhdmUgZm91bmQgdGhlDQo+
+PiBpc3N1ZSBpcyByZWxhdGVkIHRvIHRoZSBmb2xsb3dpbmcgaW14LXNkbWEgY29tbWl0czoNCj4+
+DQo+PiA2NDA2ODg1M2JjNzc3ODZkMWEyOGFiYjQwODdkNmEzZTkzYWVkYmUyIGRtYWVuZ2luZTog
+aW14LXNkbWE6IHVzZSBHRlBfTk9XQUlUIGZvciBkbWEgZGVzY3JpcHRvciBhbGxvY2F0aW9ucw0K
+Pj4gYjg2MDNkMmE1Nzk1YzQyZjc4OTk4ZTcwZGM3OTIzMzZlMGRjMjBjOSBkbWFlbmdpbmU6IGlt
+eC1zZG1hOiBpbXBsZW1lbnQgY2hhbm5lbCB0ZXJtaW5hdGlvbiB2aWEgd29ya2VyDQo+PiBlYmI4
+NTNiMWJkNWY2NTliOTJjNzFkYzZhOWRlNDRjZmMzN2M3OGMwIFJldmVydCAiZG1hZW5naW5lOiBp
+bXgtc2RtYTogYWxsb2NsYXRlIGJkIG1lbW9yeSBmcm9tIGRtYSBwb29sIg0KPj4gYzA2YWJjYTY5
+MjE4YWM0MmZhNThkMWJhN2E3YjBkOWJhYjVmMWIxOCBSZXZlcnQgImRtYWVuZ2luZTogaW14LXNk
+bWE6IFVzZSBHRlBfTk9XQUlUIGZvciBkbWEgYWxsb2NhdGlvbnMiDQo+Pg0KPj4gSWYgSSByZXZl
+cnQgdGhlc2UgZm91ciBjb21taXRzIHRoZSBmcmVlemUgZG9lcyBub3QgaGFwcGVuLiAgVGhlIGlz
+c3VlIGlzIHN0aWxsDQo+PiBwcmVzZW50IHVwIHRvIGF0IGxlYXN0IHY1LjMuDQo+Pg0KPj4gVGhl
+IHByb2JsZW0gc2VlbXMgdG8gYmUgcmVsYXRlZCB0byBvdmVycnVucyB3aGVuIGRvaW5nIGFuIFNQ
+RElGIGNhcHR1cmUsDQo+PiBwYXJ0aWN1bGFybHkgd2hlbiB0aGVyZSBpcyBub3QgYWN0dWFsbHkg
+YSB2YWxpZCBTUERJRiBpbnB1dCB0byB0aGUgaU1YNi4gIFdoZW4NCj4+IHRoZSBpc3N1ZSBvY2N1
+cnMgdGhlIGZvbGxvd2luZyBpcyAodXN1YWxseSkgcHJpbnRlZCBvbiB0aGUgY29uc29sZSAodXNp
+bmcgYSB2NS4wDQo+PiBiYXNlZCBrZXJuZWwpOg0KPj4NCj4+IFsgMTI1MS45NDQ4NzddIHJjdTog
+SU5GTzogcmN1X3NjaGVkIGRldGVjdGVkIHN0YWxscyBvbiBDUFVzL3Rhc2tzOg0KPj4gWyAxMjUx
+Ljk1MDgyM10gcmN1OiAgICAgKGRldGVjdGVkIGJ5IDAsIHQ9MjEwMiBqaWZmaWVzLCBnPTIyMDQy
+NSwgcT0wKQ0KPj4gWyAxMjUxLjk1Njg2Nl0gcmN1OiBBbGwgUVNlcyBzZWVuLCBsYXN0IHJjdV9z
+Y2hlZCBrdGhyZWFkIGFjdGl2aXR5IDIxMDIgKDk1MTE3LTkzMDE1KSwgamlmZmllc190aWxsX25l
+eHRfZnFzPTEsIHJvb3QgLT5xc21hc2sgMHgwDQo+PiBbIDEyNTEuOTY4MjY2XSBhcmVjb3JkICAg
+ICAgICAgUyAgICAwICAxOTE2ICAgMTkwOCAweDAwMDAwMDAyDQo+PiBbIDEyNTEuOTczODE2XSBb
+PDgwMTBkY2VjPl0gKHVud2luZF9iYWNrdHJhY2UpIGZyb20gWzw4MDEwYTRjND5dIChzaG93X3N0
+YWNrKzB4MTAvMHgxNCkNCj4+IFsgMTI1MS45ODE1OTZdIFs8ODAxMGE0YzQ+XSAoc2hvd19zdGFj
+aykgZnJvbSBbPDgwMTZiMzE0Pl0gKHJjdV9jaGVja19jYWxsYmFja3MrMHg1N2MvMHg1ZDgpDQo+
+PiBbIDEyNTEuOTg5ODA2XSBbPDgwMTZiMzE0Pl0gKHJjdV9jaGVja19jYWxsYmFja3MpIGZyb20g
+Wzw4MDE2ZmU4ND5dICh1cGRhdGVfcHJvY2Vzc190aW1lcysweDMwLzB4NWMpDQo+PiBbIDEyNTEu
+OTk4NzA5XSBbPDgwMTZmZTg0Pl0gKHVwZGF0ZV9wcm9jZXNzX3RpbWVzKSBmcm9tIFs8ODAxN2U5
+NjA+XSAodGlja19zY2hlZF90aW1lcisweDQ0LzB4OTQpDQo+PiBbIDEyNTIuMDA3MzUzXSBbPDgw
+MTdlOTYwPl0gKHRpY2tfc2NoZWRfdGltZXIpIGZyb20gWzw4MDE3MGE4ND5dIChfX2hydGltZXJf
+cnVuX3F1ZXVlcysweGQ4LzB4MTYwKQ0KPj4gWyAxMjUyLjAxNjA4MV0gWzw4MDE3MGE4ND5dIChf
+X2hydGltZXJfcnVuX3F1ZXVlcykgZnJvbSBbPDgwMTcxMDNjPl0gKGhydGltZXJfaW50ZXJydXB0
+KzB4ZGMvMHgyODQpDQo+PiBbIDEyNTIuMDI0ODkxXSBbPDgwMTcxMDNjPl0gKGhydGltZXJfaW50
+ZXJydXB0KSBmcm9tIFs8ODAxMGQ2YzA+XSAodHdkX2hhbmRsZXIrMHgyYy8weDM4KQ0KPj4gWyAx
+MjUyLjAzMjgzOV0gWzw4MDEwZDZjMD5dICh0d2RfaGFuZGxlcikgZnJvbSBbPDgwMTYwYjM0Pl0g
+KGhhbmRsZV9wZXJjcHVfZGV2aWRfaXJxKzB4NzAvMHgxMWMpDQo+PiBbIDEyNTIuMDQxNDAxXSBb
+PDgwMTYwYjM0Pl0gKGhhbmRsZV9wZXJjcHVfZGV2aWRfaXJxKSBmcm9tIFs8ODAxNWMyMzQ+XSAo
+Z2VuZXJpY19oYW5kbGVfaXJxKzB4MTgvMHgyOCkNCj4+IFsgMTI1Mi4wNTA0ODBdIFs8ODAxNWMy
+MzQ+XSAoZ2VuZXJpY19oYW5kbGVfaXJxKSBmcm9tIFs8ODAxNWM4MTQ+XSAoX19oYW5kbGVfZG9t
+YWluX2lycSsweGEwLzB4YjQpDQo+PiBbIDEyNTIuMDU5MjExXSBbPDgwMTVjODE0Pl0gKF9faGFu
+ZGxlX2RvbWFpbl9pcnEpIGZyb20gWzw4MDM5MDk4Yz5dIChnaWNfaGFuZGxlX2lycSsweDU4LzB4
+OTApDQo+PiBbIDEyNTIuMDY3NTkwXSBbPDgwMzkwOThjPl0gKGdpY19oYW5kbGVfaXJxKSBmcm9t
+IFs8ODAxMDFhMGM+XSAoX19pcnFfc3ZjKzB4NmMvMHg5MCkNCj4+IFsgMTI1Mi4wNzUwODVdIEV4
+Y2VwdGlvbiBzdGFjaygweDg0OGFmZTMwIHRvIDB4ODQ4YWZlNzgpDQo+PiBbIDEyNTIuMDgwMTU1
+XSBmZTIwOiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA4ZGVjZjIwMCAwMDAw
+MDAwMCAwMDAwMDAwMCA4MGI4NGFjOA0KPj4gWyAxMjUyLjA4ODM1NF0gZmU0MDogMDAwMDAwMDAg
+OGRlY2YyMDAgODkyZjc4MDAgMDAwMDE1ODkgODkyZjc4MDAgMDAwMDAwMDAgMDAwMDAwMDAgODQ4
+YWUwMDANCj4+IFsgMTI1Mi4wOTY1NDldIGZlNjA6IDhkOGNmMDAwIDg0OGFmZTgwIDgwNTcyMWU4
+IDgwNTZhYWU0IDYwMDAwMDEzIGZmZmZmZmZmDQo+PiBbIDEyNTIuMTAzMjAwXSBbPDgwMTAxYTBj
+Pl0gKF9faXJxX3N2YykgZnJvbSBbPDgwNTZhYWU0Pl0gKF9fc25kX3BjbV9zdHJlYW1fdW5sb2Nr
+X21vZGUrMHhjMC8weGQ4KQ0KPj4gWyAxMjUyLjExMTkyNV0gWzw4MDU2YWFlND5dIChfX3NuZF9w
+Y21fc3RyZWFtX3VubG9ja19tb2RlKSBmcm9tIFs8MDAwMDAwMDA+XSAoICAobnVsbCkpDQo+PiBb
+IDEyNTIuMTE5Njk1XSByY3U6IHJjdV9zY2hlZCBrdGhyZWFkIHN0YXJ2ZWQgZm9yIDIxMDIgamlm
+ZmllcyEgZzIyMDQyNSBmMHgyIFJDVV9HUF9XQUlUX0ZRUyg1KSAtPnN0YXRlPTB4MCAtPmNwdT0w
+DQo+PiBbIDEyNTIuMTI5ODc3XSByY3U6IFJDVSBncmFjZS1wZXJpb2Qga3RocmVhZCBzdGFjayBk
+dW1wOg0KPj4gWyAxMjUyLjEzNDkzOF0gcmN1X3NjaGVkICAgICAgIFIgIHJ1bm5pbmcgdGFzayAg
+ICAgICAgMCAgICAxMCAgICAgIDIgMHgwMDAwMDAwMA0KPj4gWyAxMjUyLjE0MjAzNF0gWzw4MDZl
+ZWU1Yz5dIChfX3NjaGVkdWxlKSBmcm9tIFs8ODA2ZWVmODA+XSAoc2NoZWR1bGUrMHg5MC8weGEw
+KQ0KPj4gWyAxMjUyLjE0OTExNl0gWzw4MDZlZWY4MD5dIChzY2hlZHVsZSkgZnJvbSBbPDgwNmYy
+MjQ0Pl0gKHNjaGVkdWxlX3RpbWVvdXQrMHgxZjAvMHgyMzgpDQo+PiBbIDEyNTIuMTU2ODkxXSBb
+PDgwNmYyMjQ0Pl0gKHNjaGVkdWxlX3RpbWVvdXQpIGZyb20gWzw4MDE2OTQwYz5dIChyY3VfZ3Bf
+a3RocmVhZCsweDU1MC8weDhmMCkNCj4+IFsgMTI1Mi4xNjUxODNdIFs8ODAxNjk0MGM+XSAocmN1
+X2dwX2t0aHJlYWQpIGZyb20gWzw4MDEzYTM1OD5dIChrdGhyZWFkKzB4MTEwLzB4MTI4KQ0KPj4g
+WyAxMjUyLjE3MjY5M10gWzw4MDEzYTM1OD5dIChrdGhyZWFkKSBmcm9tIFs8ODAxMDEwZTg+XSAo
+cmV0X2Zyb21fZm9yaysweDE0LzB4MmMpDQo+PiBbIDEyNTIuMTc5OTI1XSBFeGNlcHRpb24gc3Rh
+Y2soMHg4Zjg3N2ZiMCB0byAweDhmODc3ZmY4KQ0KPj4gWyAxMjUyLjE4NDk5MV0gN2ZhMDogICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAw
+MDAgMDAwMDAwMDANCj4+IFsgMTI1Mi4xOTMxODddIDdmYzA6IDAwMDAwMDAwIDAwMDAwMDAwIDAw
+MDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwDQo+PiBb
+IDEyNTIuMjAxMzgwXSA3ZmUwOiAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAw
+MDAwMDAxMyAwMDAwMDAwMA0KPj4NCj4+IEkgc3VzcGVjdCB0aGUgaXNzdWUgbWF5IG5vdCBhY3R1
+YWxseSBiZSBhIGJ1ZyB3aXRoIGlteC1zZG1hIGJ1dCBhDQo+PiByYWNlIGNvbmRpdGlvbiBlbHNl
+d2hlcmUgdGhhdCBpcyBleHBvc2VkIGJ5IHRoZSBmb3VyIG1lbnRpb25lZA0KPj4gY29tbWl0cy4N
+Cj4+DQo+PiBJIGRpZCBub3RpY2UgdGhhdCB3aGVuIGFuIFNQRElGIG92ZXJydW4gb2NjdXJzDQo+
+PiBkbWFlbmdpbmVfdGVybWluYXRlX2FzeW5jIGlzIGNhbGxlZCBidXQgZG1hZW5naW5lX3N5bmNo
+cm9uaXplIGlzDQo+PiBub3QuICBTaG91bGQgdGhlc2UgY2FsbHMgYWx3YXlzIGJlIHBhaXJlZD8g
+T3IgaXMgaXQgb2theSB0byBjYWxsDQo+PiBkbWFlbmdpbmVfdGVybWluYXRlX2FzeW5jIHdpdGhv
+dXQgZG1hZW5naW5lX3N5bmNocm9uaXplIGluIHNvbWUNCj4+IGNhc2VzPw0KPg0KPlllcywgaXQg
+c2VlbXMgdGhpcyB1bmNvdmVyZWQgYSBidWcgaW4gdGhlIFNQRElGIGRyaXZlci4gQmVmb3JlIHRo
+b3NlDQo+Y29tbWl0cyB0aGUgZG1hZW5naW5lX3Rlcm1pbmF0ZV9hc3luYyBpbiB0aGUgU0RNQSBk
+cml2ZXIgd2Fzbid0IHJlYWxseQ0KPmFzeW5jLCBub3cgaXQgaXMuIFRoZSBBUEkgcmVxdWlyZXMg
+dGhhdCB5b3UgY2FsbCBkbWFlbmdpbmVfc3luY2hyb25pemUNCj5ldmVudHVhbGx5IGFmdGVyIHRo
+ZSB0ZXJtaW5hdGVfYXN5bmMgYmVmb3JlIHN0YXJ0aW5nIGFueSBuZXcgb3BlcmF0aW9ucw0KPm9u
+IHRoZSBkbWFlbmdpbmUuIEl0IGRvZXNuJ3QgbmVjZXNzYXJpbHkgbmVlZCB0byBiZSBpbiB0aGUg
+c2FtZQ0KPmNvZGVwYXRoLCBidXQgdGhlIHRoZSBhc3luYyB0ZXJtaW5hdGUgYWx3YXlzIG5lZWRz
+IHRvIGJlIHBhaXJlZCB1cCB3aXRoDQo+YSBzeW5jaHJvbml6ZS4NCg0KSSBkb24ndCB0aGluayB0
+aGUgYnVnIGlzIGxpbWl0ZWQgdG8gU1BESUYuICBUaGUgY2FsbHMgdG8gZG1hZW5naW5lX3Rlcm1p
+bmF0ZV9hc3luYyBhcmUgaW4gc291bmQvY29yZS9wY21fZG1hZW5naW5lLmMuICBXaGVuIHRoZSBB
+TFNBIGRldmljZSBpcyBjbG9zZWQgaXQgZG9lcyBjYWxsIGRtYWVuZ2luZV9zeW5jaHJvbml6ZS4g
+IEJ1dCB3aGVuIHRoZXJlIGlzIGFuIG92ZXJydW4gaXQgZG9lcyBub3QuICBJdCB3YXMgY29tbWl0
+IGJjMGU3MzQ1MTY4YzBmNzQ4M2QyZDFkYTg2Mjg1ZDg5MTM2NDE3Y2QgKGJ5IExhcnMtUGV0ZXIg
+Q2xhdXNlbikgd2hlcmUgdGhlIGNhbGwgdG8gZG1hZW5naW5lX3N5bmNocm9uaXplIHdhcyBhZGRl
+ZCBmb3IgY2xvc2luZyBhbiBBTFNBIGRldmljZS4gIEl0IHNlZW1zIHRoZSBvdmVycnVuIGNhc2Ug
+d2FzIG92ZXJsb29rZWQ/ICBJIHRoaW5rIG1heWJlIEkgc2hvdWxkIGNvcHkgdGhlIEFMU0EgbGlz
+dCBvbiB0aGlzIGFzIHdlbGwuDQoNCkkgaGF2ZSBhbHNvIGZvdW5kIGFub3RoZXIgbWFuaWZlc3Rh
+dGlvbiBvZiB0aGUgaW14LXNkbWEgY2hhbmdlIHdoaWNoIG1heSBiZSB1c2VmdWwgZm9yIG90aGVy
+cyB0cnlpbmcgdG8gZGVidWcgdGhpcy4gIElmIEkgcnVuIHRoZSBmb2xsb3dpbmcgY29tbWFuZDoN
+Cg0KYXJlY29yZCAtRGh3OjQsMCAtZlMyNF9MRSAtYzIgLXI0NDEwMCAtLWJ1ZmZlci1zaXplIDEw
+MCA+IC9kZXYvbnVsbA0KDQpXaXRoIGtlcm5lbCB2NC4yMC1yYzUgSSBnZXQgYW4gZW5kbGVzcyBz
+dHJlYW0gb2Ygb3ZlcnJ1biBtZXNzYWdlcy4gIFdpdGgga2VybmVsIHY0LjIwLXJjNiAod2hpY2gg
+aW5jbHVkZXMgdGhlIGZvdXIgaW14LXNkbWEgY29tbWl0cyBtZW50aW9uZWQgYWJvdmUpIEkgZ2V0
+IGEgZmV3IG92ZXJydW4gbWVzc2FnZXMgYnV0IHRoZW4gYXJlY29yZCBleGl0cyB3aXRoICJhcmVj
+b3JkOiBwY21fcmVhZDoyMDk2OiByZWFkIGVycm9yOiBJbnB1dC9vdXRwdXQgZXJyb3IiDQoNCkJl
+c3QgcmVnYXJkcywNCktldmluDQoNCg==

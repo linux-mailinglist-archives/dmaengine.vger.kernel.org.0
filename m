@@ -2,44 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EB63CF86C
-	for <lists+dmaengine@lfdr.de>; Tue,  8 Oct 2019 13:34:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5399CCF894
+	for <lists+dmaengine@lfdr.de>; Tue,  8 Oct 2019 13:37:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730866AbfJHLed (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 8 Oct 2019 07:34:33 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37615 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730317AbfJHLec (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 8 Oct 2019 07:34:32 -0400
-Received: by mail-oi1-f194.google.com with SMTP id i16so14470589oie.4;
-        Tue, 08 Oct 2019 04:34:31 -0700 (PDT)
+        id S1730731AbfJHLgl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 8 Oct 2019 07:36:41 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39718 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730631AbfJHLgl (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 8 Oct 2019 07:36:41 -0400
+Received: by mail-ot1-f65.google.com with SMTP id s22so13702920otr.6;
+        Tue, 08 Oct 2019 04:36:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
         bh=rWU50A1ftSfnXS5t6he0dr7vBuFC5vEUJUAdKOgY8bw=;
-        b=N527jT4PgHTmlvHAVhCNHtZNL738nc/OGDDOsUN8frAJui2iRa5Ppc1CNAsXjx9VyR
-         8696sO7bTM3oVRV9yADjmUpkmBYBNWpXuJJL21tkRgsiq385hvblWNFggoXQRTBrqtJH
-         ACyMAYy8BmaTEqEAWb01vhSx9pRwlzlYoZhxwqHXuJEYpbRHkcGGGwyeqthxjO8ftYz9
-         zsldRXpo75NK4CQ38MdGem7yuys70bfHqSn+VdJ2K/WYsg1KbesP1taYL2gJICDbyxnO
-         8chJ8nSsCPzERIeA2aRpIzCpngdUCHR4MqVlLEfxXG4W6D5aVVyfLFLPAMsunG8HXtJP
-         FRxQ==
-X-Gm-Message-State: APjAAAWr9MtuF4U0g1yMWswyt9oe1KNX8MjyFqG9HKuYwngnPex7955A
-        CX0mqtuJder2U8E4QiOEROmV6mUa8zYy+LBB7Gw=
-X-Google-Smtp-Source: APXvYqwAPA2l7U6mPkupJHpYJrzDgXDrTLl3jL3YFnacDYrvezNetIgkQYwcj5GZ7SdPtESzr+7ZY8OXFr4We2D5N+s=
-X-Received: by 2002:aca:f305:: with SMTP id r5mr3342982oih.131.1570534471508;
- Tue, 08 Oct 2019 04:34:31 -0700 (PDT)
+        b=gP9IM6l6V6qKOfuktxpG0VRlaXArt61lORsvVGnbVT++lkPctXP0dWCpDERiMFUUmc
+         cjFyCNXrGB0vVSfF++qlezXiacav5QqZuKW6KdUdGxm3mQTzNdfxGf1FmBsdpG7+iI4M
+         zFs/IcQ6vfl3LaQG/+d/qjBIpKpUq7O9SN/SCjKB+bKhSm1t+u3jKuBBHDfsHTxRg4vl
+         lfcSTuAONvBaQGTNvQa/IlE2TbN+CQlllr0nGRAebOUP+AXdFtN1G+vL+ERPIgXUFRtp
+         u9r0LeA6LJ79/lhYxsk5EOsyMr88Kmi7+98K1tYxa5bg3ROiP0C7o9blWgylrJ6q/mr9
+         za2Q==
+X-Gm-Message-State: APjAAAWPxEKQEZGFMKrNNr5qneKJkNiDTuExMPOg+k1oiwTlrBrnESql
+        rF/waHFfc8PFDEHFPQx5Q7frMwsc5hUqRwKrw6k=
+X-Google-Smtp-Source: APXvYqwOO5BS1K03L9uNR/miBqU63vEKiq23BoSUvbF63agtYSvu+oyojKsPD8km90+OaPp+oi4YlXVQvWCX4HWrRxM=
+X-Received: by 2002:a9d:404d:: with SMTP id o13mr15570285oti.39.1570534599950;
+ Tue, 08 Oct 2019 04:36:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570531132-21856-4-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1570531132-21856-4-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570531132-21856-5-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1570531132-21856-5-git-send-email-fabrizio.castro@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 8 Oct 2019 13:34:20 +0200
-Message-ID: <CAMuHMdVGcsVZoJdqaYHVYi4XHkUT24ryRBFo6cXmJ+zfYF69DQ@mail.gmail.com>
-Subject: Re: [PATCH 03/10] dt-bindings: usb: renesas_usbhs: Add r8a774b1 support
+Date:   Tue, 8 Oct 2019 13:36:26 +0200
+Message-ID: <CAMuHMdVUV2=RE4BmF94_bZfg_JoiU_JFPAguVqQWjAzwydRUbA@mail.gmail.com>
+Subject: Re: [PATCH 04/10] dt-bindings: rcar-gen3-phy-usb3: Add r8a774b1 support
 To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms@verge.net.au>,
-        Vinod Koul <vkoul@kernel.org>,
+Cc:     Simon Horman <horms@verge.net.au>, Vinod Koul <vkoul@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Kishon Vijay Abraham I <kishon@ti.com>,

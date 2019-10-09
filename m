@@ -2,137 +2,125 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 69194D0866
-	for <lists+dmaengine@lfdr.de>; Wed,  9 Oct 2019 09:37:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16927D08B0
+	for <lists+dmaengine@lfdr.de>; Wed,  9 Oct 2019 09:46:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725776AbfJIHhX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 9 Oct 2019 03:37:23 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:37700 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbfJIHhX (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 9 Oct 2019 03:37:23 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x997bF5W009620;
-        Wed, 9 Oct 2019 02:37:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1570606635;
-        bh=GCItb3o8zhNxqRL1dRRtIRmWKNz8QsnOl1OUx9AOT4I=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=uvYSScH8JQexfEgbwLHmKsT+mxIii8+PYvvzx80wIrWuyzqCrneKqYeRU+c3v5TjR
-         33258nGN8c2GtCF3hKAtxp+bQMLqGjQpQwxQpuqucOv9w2b9AS4gthrF8nqgz3lx3Z
-         365eJkW25sexQFudnADgsBKL4aWPCohdphSn5LH4=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x997bFWP060657
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 9 Oct 2019 02:37:15 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 9 Oct
- 2019 02:37:13 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 9 Oct 2019 02:37:13 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x997bAx9121069;
-        Wed, 9 Oct 2019 02:37:10 -0500
-Subject: Re: [PATCH v3 04/14] dmaengine: Add metadata_ops for
- dma_async_tx_descriptor
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
-        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        id S1729618AbfJIHqi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 9 Oct 2019 03:46:38 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:22667 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfJIHqi (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 9 Oct 2019 03:46:38 -0400
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 8v0tdMs3LlvQuSHU7rzAWhRtWIVlotOUQ8ditN56wCSdkOVwSWrpH6xpRpB5o4IFGvwz2oQWnn
+ IIj3G65C0gTbgnRV+douGVZvsSs5albruElzTe2OAUWUZNsguLdlc6PBeICA8q2ZCy5PBDKLNx
+ 3yOjtw6tAsg6bPGLyfJ2eavi13JhfaL84i8Mm82sgjZXzkv5jwHGouLGCzuHKtkV4ax2cf8mWS
+ RojiYrUy9JaS7J+XD+q6QhVZetGADXwhPxHErHQ8eotSGUrP2WfzIOigipksHTLSF+468tjMif
+ Xxk=
+X-IronPort-AV: E=Sophos;i="5.67,273,1566889200"; 
+   d="scan'208";a="52257068"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Oct 2019 00:46:36 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 9 Oct 2019 00:46:33 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Wed, 9 Oct 2019 00:46:33 -0700
+Date:   Wed, 9 Oct 2019 09:46:42 +0200
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+CC:     <dmaengine@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <tony@atomide.com>, <j-keerthy@ti.com>
-References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
- <20191001061704.2399-5-peter.ujfalusi@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <1d4e049b-737c-3904-2bb1-6e058ab69a4d@ti.com>
-Date:   Wed, 9 Oct 2019 10:37:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        "Dan Williams" <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        "Nicolas Ferre" <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH] dmaengine: at_xdmac: Use
+ devm_platform_ioremap_resource() in at_xdmac_probe()
+Message-ID: <20191009074641.taocxbrs2vodvsgm@M43218.corp.atmel.com>
+Mail-Followup-To: Markus Elfring <Markus.Elfring@web.de>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@atmel.com>
+References: <377247f3-b53a-a9d9-66c7-4b8515de3809@web.de>
 MIME-Version: 1.0
-In-Reply-To: <20191001061704.2399-5-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <377247f3-b53a-a9d9-66c7-4b8515de3809@web.de>
+User-Agent: NeoMutt/20180716
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 01/10/2019 09:16, Peter Ujfalusi wrote:
-> The metadata is best described as side band data or parameters traveling
-> alongside the data DMAd by the DMA engine. It is data
-> which is understood by the peripheral and the peripheral driver only, the
-> DMA engine see it only as data block and it is not interpreting it in any
-> way.
+On Sun, Sep 22, 2019 at 10:48:20AM +0200, Markus Elfring wrote:
 > 
-> The metadata can be different per descriptor as it is a parameter for the
-> data being transferred.
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Sun, 22 Sep 2019 10:37:31 +0200
 > 
-> If the DMA supports per descriptor metadata it can implement the attach,
-> get_ptr/set_len callbacks.
+> Simplify this function implementation by using a known wrapper function.
 > 
-> Client drivers must only use either attach or get_ptr/set_len to avoid
-> misconfiguration.
+> This issue was detected by using the Coccinelle software.
 > 
-> Client driver can check if a given metadata mode is supported by the
-> channel during probe time with
-> dmaengine_is_metadata_mode_supported(chan, DESC_METADATA_CLIENT);
-> dmaengine_is_metadata_mode_supported(chan, DESC_METADATA_ENGINE);
-> 
-> and based on this information can use either mode.
-> 
-> Wrappers are also added for the metadata_ops.
-> 
-> To be used in DESC_METADATA_CLIENT mode:
-> dmaengine_desc_attach_metadata()
-> 
-> To be used in DESC_METADATA_ENGINE mode:
-> dmaengine_desc_get_metadata_ptr()
-> dmaengine_desc_set_metadata_len()
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com> 
 
-Again couple of typos below, but other than that:
-
-Reviewed-by: Tero Kristo <t-kristo@ti.com>
+Thanks
 
 > ---
->   drivers/dma/dmaengine.c   |  73 ++++++++++++++++++++++++++
->   include/linux/dmaengine.h | 108 ++++++++++++++++++++++++++++++++++++++
-
-<snip>
-
-> + * @DESC_METADATA_ENGINE - the metadata buffer is allocated/managed by the DMA
-> + *  driver. The client driver can ask for the pointer, maximum size and the
-> + *  currently used size of the metadata and can directly update or read it.
-> + *  dmaengine_desc_get_metadata_ptr() and dmaengine_desc_set_metadata_len() is
-> + *  provided as helper functions.
-> + *
-> + * Client drivers interested to use this mode can follow:
-> + * - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
-> + *   1. prepare the descriptor (dmaengine_prep_*)
-> + *   2. use dmaengine_desc_get_metadata_ptr() to get the pointer to the engine's
-> + *	metadata area
-> + *   3. update the metadata at the pointer
-> + *   4. use dmaengine_desc_set_metadata_len()  to tell the DMA engine the amount
-> + *	of data the client has placed into the metadata buffer
-> + *   5. submit the transfer
-> + * - DMA_DEV_TO_MEM:
-> + *   1. prepare the descriptor (dmaengine_prep_*)
-> + *   2. submit the transfer
-> + *   3. on transfer completion, use dmaengine_desc_get_metadata_ptr() to get the
-> + *	pointer to the engine's metadata are
-
-are = area?
-
-> + *   4. Read out the metadate from the pointer
-
-metadate = metadata?
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>  drivers/dma/at_xdmac.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
+> 
+> diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+> index b58ac720d9a1..f71c9f77d405 100644
+> --- a/drivers/dma/at_xdmac.c
+> +++ b/drivers/dma/at_xdmac.c
+> @@ -1957,21 +1957,16 @@ static int atmel_xdmac_resume(struct device *dev)
+> 
+>  static int at_xdmac_probe(struct platform_device *pdev)
+>  {
+> -	struct resource	*res;
+>  	struct at_xdmac	*atxdmac;
+>  	int		irq, size, nr_channels, i, ret;
+>  	void __iomem	*base;
+>  	u32		reg;
+> 
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	if (!res)
+> -		return -EINVAL;
+> -
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq < 0)
+>  		return irq;
+> 
+> -	base = devm_ioremap_resource(&pdev->dev, res);
+> +	base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(base))
+>  		return PTR_ERR(base);
+> 
+> --
+> 2.23.0
+> 

@@ -2,80 +2,157 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BEB4D119B
-	for <lists+dmaengine@lfdr.de>; Wed,  9 Oct 2019 16:43:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 807D7D11D9
+	for <lists+dmaengine@lfdr.de>; Wed,  9 Oct 2019 16:58:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731290AbfJIOnI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 9 Oct 2019 10:43:08 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42965 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731133AbfJIOnI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 9 Oct 2019 10:43:08 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c10so1917075otd.9;
-        Wed, 09 Oct 2019 07:43:07 -0700 (PDT)
+        id S1729471AbfJIO6R (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 9 Oct 2019 10:58:17 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39107 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728019AbfJIO6Q (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 9 Oct 2019 10:58:16 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r3so3428806wrj.6;
+        Wed, 09 Oct 2019 07:58:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bLOSHRRPDzF4u9wV1pAUxn+EtmiKCY8TCQWeWSJQ6Uo=;
+        b=OYuPtr1jHzPRfv++Z2pCkoqLuGO/0+qLoBHw9RCheLRJMgSMKtaoTukrtr+lCdWivc
+         jE0dSWd/VHkytRBntY3rh029k9/55x66tZhRxtPQCmxtwpvNb6V4J8TRdMP1SGBp1FkB
+         e1aKT53MDA9G/4sgbLJzaWAt4ctbVmjqdxlkl0FXWKlk95JNfVajJmpI9ydLJ0n+y/eW
+         Du/txE1OMchSZGkIlhVzo7xXk1iNsCsNPZFv+dWmIgtNSCAHdePd+2pTeTEzssDhyiPw
+         W1f9LWAFCXKKZ8uFc8+8m/sPYN4lb1DKUYldNzxDewYdpm+wCva3BgwXIhh8dXEjOdyN
+         PMWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yOIw38zD/ngNIg+xiz6Rbo3Jdwlcuf3nU+5nbTT8sV0=;
-        b=borU7pg/yY7wtYipu5Oq8+zMUmREUzW0w29JTbrIek4Hb20hPKiSrGcPwa2V14Qjum
-         oYRAidRZF2a7AlQpm8GkoquqgKLL6pLHfIkZTNtD4vkE/39sO7NhxpYn+HfEXJnIDQ1A
-         BxYabMa+fSRpnlDJ3y8hnqgbSzDTevwCHXMocr3UvYD6oAirjpWOKSOEHEiqzv5ZvKSX
-         sJf3H6sEDaKaCDoDbB+uccM16trZUh+J4Fj9HGjmag+SiR2nLgHF0/55WSbFHfA4Nv13
-         wunZSKQKDeOF1wHK4NdKguHQsTZtWpdLPNyId2qACcXau1/bm1pmw1b9zPdZMQcQiykM
-         kodA==
-X-Gm-Message-State: APjAAAVUh4sM3Z6LqLbyts+7jmdrRqI2NPgVw8fRol0v80l0zg1YFonA
-        yzYlx+xoX2v61LM276ATbDsMqJUpYR03D0FhG2Y=
-X-Google-Smtp-Source: APXvYqxft/u7/XRb6nPeiCWFxPpaJowaExImgMdOt4nCer4aDN+X7hyxDQILaidnjOoe0WuTCqJnO3OSvFCZ8bO3zVk=
-X-Received: by 2002:a05:6830:1b75:: with SMTP id d21mr3231975ote.145.1570632187381;
- Wed, 09 Oct 2019 07:43:07 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bLOSHRRPDzF4u9wV1pAUxn+EtmiKCY8TCQWeWSJQ6Uo=;
+        b=EcjHdAQB3qd/CBX22jmcyBknx/VPVhi6nMaYyf4PBBUg/SChQKjiZDMfAtdEkqhFfv
+         sGthj3iPBe7OQO1OReEtJHt4lnl/a4KPw0ugBesAJ8WiHhK04Pl44E3X3fTTLaEQAHK5
+         CiQROq5s/i13PVHnJrTjpb30/0tD4THqqIj/ezdYsd/KWUXK5h1DbKzwJONnAD41896X
+         +9e1NHMV/V/lPh+4f6kdodbH6g/0CSuuvERjA+Y8f75zNKPNekyTkNoK/gQkFK1yhBL2
+         AgbtwbgAhDs6XXMzEgAZ6Y5kakJlpJsazQw14LFaYtlAj0MXW0Ib5aOVuqlxCo3glrCU
+         LAQA==
+X-Gm-Message-State: APjAAAUKn/IIDZEV0IH0FNF7Usn+W12KfVw31TDsfYMq5w75j0iWZHpY
+        4MeghLOiP1gvGgjC+Ov1fE0=
+X-Google-Smtp-Source: APXvYqzhuDvocnI5zvw34t/95cTa0BVorSk8YqtdkDxCZqRGi0eKZU91Ddkfq2+aCFgxSIWAdDvDAA==
+X-Received: by 2002:a5d:540d:: with SMTP id g13mr438062wrv.8.1570633094550;
+        Wed, 09 Oct 2019 07:58:14 -0700 (PDT)
+Received: from AlexGordeev-DPT-VI0092 ([213.86.25.46])
+        by smtp.gmail.com with ESMTPSA id n18sm1645825wrq.20.2019.10.09.07.58.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 09 Oct 2019 07:58:14 -0700 (PDT)
+Date:   Wed, 9 Oct 2019 16:58:12 +0200
+From:   Alexander Gordeev <a.gordeev.box@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Michael Chen <micchen@altera.com>, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dmaengine: avalon: Intel Avalon-MM DMA Interface
+ for PCIe
+Message-ID: <20191009145811.GA3823@AlexGordeev-DPT-VI0092>
+References: <cover.1570558807.git.a.gordeev.box@gmail.com>
+ <3ed3c016b7fbe69e36023e7ee09c53acac8a064c.1570558807.git.a.gordeev.box@gmail.com>
+ <20191009121441.GM25098@kadam>
 MIME-Version: 1.0
-References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570531132-21856-11-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1570531132-21856-11-git-send-email-fabrizio.castro@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 9 Oct 2019 16:42:56 +0200
-Message-ID: <CAMuHMdVSqWMqTq3wS43jX5bi+RhjzfH8CEJpTz5JySUUxq_DfA@mail.gmail.com>
-Subject: Re: [PATCH 10/10] arm64: dts: renesas: r8a774b1: Add INTC-EX device node
-To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc:     Simon Horman <horms@verge.net.au>, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009121441.GM25098@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Oct 8, 2019 at 12:39 PM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> Add support for the Interrupt Controller for External Devices
-> (INTC-EX) on RZ/G2N.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+On Wed, Oct 09, 2019 at 03:14:41PM +0300, Dan Carpenter wrote:
+> > +config AVALON_DMA_PCI_VENDOR_ID
+> > +	hex "PCI vendor ID"
+> > +	default "0x1172"
+> > +
+> > +config AVALON_DMA_PCI_DEVICE_ID
+> > +	hex "PCI device ID"
+> > +	default "0xe003"
+> 
+> This feels wrong.  Why isn't it known in advance.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.5.
+Because device designers would likely use they own IDs. The ones I
+put are just defaults inherited from the (Altera) reference design.
 
-Gr{oetje,eeting}s,
+> > +	u32 *rd_flags = hw->dma_desc_table_rd.cpu_addr->flags;
+> > +	u32 *wr_flags = hw->dma_desc_table_wr.cpu_addr->flags;
+> > +	struct avalon_dma_desc *desc;
+> > +	struct virt_dma_desc *vdesc;
+> > +	bool rd_done;
+> > +	bool wr_done;
+> > +
+> > +	spin_lock(lock);
+> > +
+> > +	rd_done = (hw->h2d_last_id < 0);
+> > +	wr_done = (hw->d2h_last_id < 0);
+> > +
+> > +	if (rd_done && wr_done) {
+> > +		spin_unlock(lock);
+> > +		return IRQ_NONE;
+> > +	}
+> > +
+> > +	do {
+> > +		if (!rd_done && rd_flags[hw->h2d_last_id])
+> > +			rd_done = true;
+> > +
+> > +		if (!wr_done && wr_flags[hw->d2h_last_id])
+> > +			wr_done = true;
+> > +	} while (!rd_done || !wr_done);
+> 
+> This loop is very strange.  It feels like the last_id indexes needs
+> to atomic or protected from racing somehow so we don't do an out of
+> bounds read.
 
-                        Geert
+My bad. I should have put a comment on this. This polling comes from my
+reading of the Intel documentation:
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+"The MSI interrupt notifies the host when a DMA operation has completed.
+After the host receives this interrupt, it can poll the DMA read or write
+status table to determine which entry or entries have the done bit set."
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+"The Descriptor Controller writes a 1 to the done bit of the status DWORD
+to indicate successful completion. The Descriptor Controller also sends
+an MSI interrupt for the final descriptor. After receiving this MSI,
+host software can poll the done bit to determine status."
+
+I sense an ambiguity above. It sounds possible an MSI interrupt could be
+delivered before corresponding done bit is set. May be imperfect wording..
+Anyway, the loop does look weird and in reality I doubt I observed the
+done bit unset even once. So I put this polling just in case.
+
+> > +	struct avalon_dma_chan *chan = to_avalon_dma_chan(dma_chan);
+> > +	struct avalon_dma_desc *desc;
+> > +	gfp_t gfp_flags = in_interrupt() ? GFP_NOWAIT : GFP_KERNEL;
+> > +	dma_addr_t dev_addr;
+> > +
+> > +	if (direction == DMA_MEM_TO_DEV)
+> > +		dev_addr = chan->dst_addr;
+> > +	else if (direction == DMA_DEV_TO_MEM)
+> > +		dev_addr = chan->src_addr;
+> > +	else
+> > +		return NULL;
+> > +
+> > +	desc = kzalloc(sizeof(*desc), gfp_flags);
+> 
+> Everyone else does GFP_WAIT or GFP_ATOMIC.  Is GFP_KERNEL really okay?
+
+I am not sure why not to use GFP_KERNEL from non-atomic context.
+Documentation/driver-api/dmaengine/provider.rst claims always to
+use GFP_NOWAIT though:
+
+  - Any allocation you might do should be using the GFP_NOWAIT
+    flag, in order not to potentially sleep, but without depleting
+    the emergency pool either.
+
+So probably I just should use GFP_NOWAIT.
+
+Thanks, Dan!
+
+> regards,
+> dan carpenter
+> 

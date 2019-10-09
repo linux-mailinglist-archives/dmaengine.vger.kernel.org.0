@@ -2,40 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9821AD1193
-	for <lists+dmaengine@lfdr.de>; Wed,  9 Oct 2019 16:42:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BEB4D119B
+	for <lists+dmaengine@lfdr.de>; Wed,  9 Oct 2019 16:43:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731481AbfJIOmE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 9 Oct 2019 10:42:04 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33413 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731155AbfJIOmE (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 9 Oct 2019 10:42:04 -0400
-Received: by mail-oi1-f193.google.com with SMTP id a15so1977717oic.0;
-        Wed, 09 Oct 2019 07:42:03 -0700 (PDT)
+        id S1731290AbfJIOnI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 9 Oct 2019 10:43:08 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42965 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731133AbfJIOnI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 9 Oct 2019 10:43:08 -0400
+Received: by mail-ot1-f66.google.com with SMTP id c10so1917075otd.9;
+        Wed, 09 Oct 2019 07:43:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oYxICKoSLEOlVM2G1DTLDI58Zl5VZZN+hm3z/KE4F50=;
-        b=CqHywPZQ9NiS7VYZ2le0ENoM/T7ZGBTn5W3QJVXV17TEr9k3PFrlyuaq9LQHHKvKnR
-         VEmWaiks34Qtp2aPX+gmWM6hvSVOIWIg/W2wB2ApOUBA50yu1tSFgmmd7C0JepeNdtLJ
-         E6jvvW+zCTNGimbJygeFUu9qdYBxKG8c+u5Q/I1W3QANDmAuAsKdo4uU/o3dzia8HwCC
-         mLFD4NMsMmmy7/1rFwfwj6HizSt9OEpOvcwD+iLAXMOW96tEGnBg2bWYQ8V0t8zLhcHS
-         Qr8IzBxMzlQT5+4X6obbylwgVg2V2/X/P7DcgLojd30m3ob65vLXEFsRF5xIo+MTnC+x
-         qVMA==
-X-Gm-Message-State: APjAAAWYcnyZrBQ+FqOGfwEGR8c1Ma9ZX2HLErA5tMLG3wh+gpgwpv15
-        nBvkTo/E9k9D2jHoaEoFZpKZp/xFG3rzMkQ+xB4=
-X-Google-Smtp-Source: APXvYqynYzkCNt/wi6NEo/s2UWx/NZZFg6Was2FQZhzdPqRiGIrPZ3EPJCu6XJUT6hG+zgiGcSD3/NbDL/nuU3Culjc=
-X-Received: by 2002:aca:882:: with SMTP id 124mr2706202oii.54.1570632123470;
- Wed, 09 Oct 2019 07:42:03 -0700 (PDT)
+        bh=yOIw38zD/ngNIg+xiz6Rbo3Jdwlcuf3nU+5nbTT8sV0=;
+        b=borU7pg/yY7wtYipu5Oq8+zMUmREUzW0w29JTbrIek4Hb20hPKiSrGcPwa2V14Qjum
+         oYRAidRZF2a7AlQpm8GkoquqgKLL6pLHfIkZTNtD4vkE/39sO7NhxpYn+HfEXJnIDQ1A
+         BxYabMa+fSRpnlDJ3y8hnqgbSzDTevwCHXMocr3UvYD6oAirjpWOKSOEHEiqzv5ZvKSX
+         sJf3H6sEDaKaCDoDbB+uccM16trZUh+J4Fj9HGjmag+SiR2nLgHF0/55WSbFHfA4Nv13
+         wunZSKQKDeOF1wHK4NdKguHQsTZtWpdLPNyId2qACcXau1/bm1pmw1b9zPdZMQcQiykM
+         kodA==
+X-Gm-Message-State: APjAAAVUh4sM3Z6LqLbyts+7jmdrRqI2NPgVw8fRol0v80l0zg1YFonA
+        yzYlx+xoX2v61LM276ATbDsMqJUpYR03D0FhG2Y=
+X-Google-Smtp-Source: APXvYqxft/u7/XRb6nPeiCWFxPpaJowaExImgMdOt4nCer4aDN+X7hyxDQILaidnjOoe0WuTCqJnO3OSvFCZ8bO3zVk=
+X-Received: by 2002:a05:6830:1b75:: with SMTP id d21mr3231975ote.145.1570632187381;
+ Wed, 09 Oct 2019 07:43:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570531132-21856-10-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1570531132-21856-10-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <1570531132-21856-1-git-send-email-fabrizio.castro@bp.renesas.com> <1570531132-21856-11-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1570531132-21856-11-git-send-email-fabrizio.castro@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 9 Oct 2019 16:41:52 +0200
-Message-ID: <CAMuHMdV4moTd0PSkRv=bZK9GZCQ5cWVrCV5iXoBX6e+zJ-012w@mail.gmail.com>
-Subject: Re: [PATCH 09/10] arm64: dts: renesas: r8a774b1: Add USB3.0 device nodes
+Date:   Wed, 9 Oct 2019 16:42:56 +0200
+Message-ID: <CAMuHMdVSqWMqTq3wS43jX5bi+RhjzfH8CEJpTz5JySUUxq_DfA@mail.gmail.com>
+Subject: Re: [PATCH 10/10] arm64: dts: renesas: r8a774b1: Add INTC-EX device node
 To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 Cc:     Simon Horman <horms@verge.net.au>, Vinod Koul <vkoul@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -61,7 +61,8 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 On Tue, Oct 8, 2019 at 12:39 PM Fabrizio Castro
 <fabrizio.castro@bp.renesas.com> wrote:
-> Add usb3.0 phy, host and function device nodes on RZ/G2N SoC dtsi.
+> Add support for the Interrupt Controller for External Devices
+> (INTC-EX) on RZ/G2N.
 >
 > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 

@@ -2,75 +2,152 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F3ADD0B84
-	for <lists+dmaengine@lfdr.de>; Wed,  9 Oct 2019 11:41:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99B0BD0C4F
+	for <lists+dmaengine@lfdr.de>; Wed,  9 Oct 2019 12:12:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbfJIJl2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 9 Oct 2019 05:41:28 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:44402 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfJIJl2 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 9 Oct 2019 05:41:28 -0400
-Received: by mail-yb1-f194.google.com with SMTP id v1so503439ybo.11
-        for <dmaengine@vger.kernel.org>; Wed, 09 Oct 2019 02:41:27 -0700 (PDT)
+        id S1727769AbfJIKMj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 9 Oct 2019 06:12:39 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43738 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbfJIKMj (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 9 Oct 2019 06:12:39 -0400
+Received: by mail-wr1-f65.google.com with SMTP id j18so2094881wrq.10;
+        Wed, 09 Oct 2019 03:12:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ub-ac-id.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=GO77O9NugfDMF3sM0pFxjAVwqVXEKORDEOteZl6SPpM=;
-        b=eY/SqleutKFAKnv1KXDj9N+9mFdWCh+tXzr9kTYiMm8Qe9MvW9OFPTWXaAvepJ9G/g
-         hd0Zy12oj4jOxAf8bgM7wSEXw8dHDU3wv9S+jyEXonY9FKeXgMtM0tO8x7wNr791e1vw
-         UrZMrR+g6KIRCb6I8YFbySb29ryTD6+R3X3Pm4AAzyB9XKHDkwa/mg46BiPzoJFh95w7
-         TkpcJvfkKmucDlFwa60lmiUVWaLwuoCFyuO62cySt6FwXHPlMPK3kGAcQAcb1XCXYCW1
-         uCiYYhgyipc/P49jycvkxjjMSxFPYGEJASSzCcrHxuIb1Y0HgVOCF7Vxqj3xa1s1Brnf
-         JR9g==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wjxBl8JVTeBkw1ybmm6ARk+VPLt4aw30+c3whil0xws=;
+        b=YCmAWBs2tTCDWa3IVF98HVbrBj0n2irMFOeOmY8ma0B7vRBaxACcxOarB45PnzXIvS
+         fCscdaA2+EKkTAPFm6GPUP6dOPEw7J8qEBxChVDcTVcqA8h+unmVPavGhOSdO8IF+wBO
+         2fEVt+NcARrSuugwc0OUeuJpBDS6PJfHEYfh951L4XVhMDjOV1mSH8lePwaXJFCrPV7W
+         uDJ0zHgu2Tqx9KFa9SYZndCj1wIgnn+hJfHIJlPad1ZOgG7djpBsOTbNLunEX4uI4/vq
+         SCMdgnAhil4M1FDevWjTnuDLWxZyfX5X1QC8D7TQb0sdXoKyN7grzvFXK8l4JvWGkue0
+         ReTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=GO77O9NugfDMF3sM0pFxjAVwqVXEKORDEOteZl6SPpM=;
-        b=g/w1+lDybpumhwcaHPhzcMAIxAIVzMK+soo5At2/l6KkFbxQhWtPTjwh+rojaAmbm6
-         kCC+tLTMG1f+DLEzu5cHoI9JAMYkz7GwT8TUBlXCY1DbYGOf5mmZxlExbLq4p5SzzWce
-         merg+Eto0GE7LCEM/yEPXV1n2Sk5i3FQTMdCQLPsFr6NYPxXvdUCDLZ6TBAM89BfSMik
-         Ywkse6+RBXmdpExCGIukQQWP6TX3jJa5jwOpexTN1ABw2btvBrqYbVrDDAXfNohjeOH5
-         r3fQDZVqxvoVRHqe30wisHkJ0Zpe09nTmLKbYhg6bUPv93S4akpaL8R3Ydd4rGcNoAaF
-         r0nQ==
-X-Gm-Message-State: APjAAAVcYO3jRxAa5/Xh/LdsdfbDO+bT8TvK68bD+gT2OAEc9BGSK4mF
-        tdU8ld19F3l44vYHmJgapttilOgGuYGQl11wN0IG
-X-Google-Smtp-Source: APXvYqz4GKq8mldE+j8Bc/Mpw1kn7fugQ4rzSbdaeNx9YUbdcz1b+iOkKhzc2gLPcoVUnx6b9f7Rf/01+gUyFkI5sBU=
-X-Received: by 2002:a25:30d5:: with SMTP id w204mr1276597ybw.382.1570614087134;
- Wed, 09 Oct 2019 02:41:27 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wjxBl8JVTeBkw1ybmm6ARk+VPLt4aw30+c3whil0xws=;
+        b=hlLZVngtlhn2+kVceHG34ubfedTe2AyZ2u3JwbHvWKtHDWfcFiOK3uKClzGqEI68GQ
+         VONpRBeOArF/8T6ukvlfOJgHDCzCFWngh5lSM39IxWl8uHwIVxJKvTdwcaTQEY3JZlAU
+         IFuNO4BVoeQBGp8taVbt7L+aTOaV1pjWvTQhJBnG0xJXGKbgXBHsTqd69/EsL7Flm/CJ
+         TyUP9Njp64hMGjROPhWM45FThFRahhqVIzUmNmYJs+14TLJ3Trk2lw/Byt2LeZbROpH8
+         quzAFrUwJrEMdeSv2SmW1eyU0VJwFlX7NbT+6F61NLlTx8tUC13YS4072QiNXqZHvaI+
+         glEg==
+X-Gm-Message-State: APjAAAWi2HRHl6OP2+GasKyghYApuD4pFXR9obWLvg/kZfLNVToDuCgN
+        8GGMewLp3HlGRx1WBVui5U0vURLD
+X-Google-Smtp-Source: APXvYqyjKNrShLJVNytjycENdygWBA7Vr7MqYDPSxVbOURW7IqnNzmR4aK5VX66v5LuE52kOTswNxQ==
+X-Received: by 2002:a5d:5144:: with SMTP id u4mr2175095wrt.181.1570615956423;
+        Wed, 09 Oct 2019 03:12:36 -0700 (PDT)
+Received: from localhost.localdomain ([213.86.25.46])
+        by smtp.googlemail.com with ESMTPSA id c9sm1734065wrt.7.2019.10.09.03.12.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Oct 2019 03:12:35 -0700 (PDT)
+From:   Alexander Gordeev <a.gordeev.box@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alexander Gordeev <a.gordeev.box@gmail.com>,
+        Michael Chen <micchen@altera.com>, devel@driverdev.osuosl.org,
+        dmaengine@vger.kernel.org
+Subject: [PATCH v2 0/2] dmaengine: avalon: Support Avalon-MM DMA Interface for PCIe
+Date:   Wed,  9 Oct 2019 12:12:29 +0200
+Message-Id: <cover.1570558807.git.a.gordeev.box@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Received: by 2002:a25:abe1:0:0:0:0:0 with HTTP; Wed, 9 Oct 2019 02:41:26 -0700 (PDT)
-Reply-To: sunrisefundingltd50@gmail.com
-From:   Nadia Artha Dewi <nadia_dewi@ub.ac.id>
-Date:   Wed, 9 Oct 2019 10:41:26 +0100
-Message-ID: <CAPkHNVxLyaPdzFcaJwTQF367wj06onXYuNd+2j7SoJNjKD-0tQ@mail.gmail.com>
-Subject: Apply For Financial investment at a lower rate 2%
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+This series is against v5.4-rc2
+
+Changes since v1:
+- "avalon-dma" converted to "dmaengine" model;
+- "avalon-drv" renamed to "avalon-test";
+
+The Avalon-MM DMA Interface for PCIe is a design used in hard IPs for
+Intel Arria, Cyclone or Stratix FPGAs. It transfers data between on-chip
+memory and system memory.
+
+Patch 1. This patch introduces "avalon-dma" driver that conforms to
+"dmaengine" model.
+
+Patch 2. The existing "dmatest" is not meant for DMA_SLAVE type of
+transfers needed by "avalon-dma". Instead, custom "avalon-test" driver
+was used to debug and stress "avalon-dma". If it could be useful for a
+wider audience, I can make it optional part of "avalon-dma" sources or
+leave it as separate driver. Marking patch 2 as RFC for now.
+
+Testing was done using a custom FPGA build with Arria 10 FPGA streaming
+data to target device RAM:
+
+  +----------+    +----------+    +----------+        +----------+
+  | Nios CPU |<-->|   RAM    |<-->|  Avalon  |<-PCIe->| Host CPU |
+  +----------+    +----------+    +----------+        +----------+
+
+The RAM was examined for data integrity by examining RAM contents
+from host CPU (indirectly - checking data DMAed to the system) and
+from Nios CPU that has direct access to the device RAM. A companion
+tool using "avalon-test" driver was used to DMA files to the device:
+https://github.com/a-gordeev/avalon-tool.git
+
+CC: Michael Chen <micchen@altera.com>
+CC: devel@driverdev.osuosl.org
+CC: dmaengine@vger.kernel.org
+
+Alexander Gordeev (2):
+  dmaengine: avalon: Intel Avalon-MM DMA Interface for PCIe
+  dmaengine: avalon: Intel Avalon-MM DMA Interface for PCIe test
+
+ drivers/dma/Kconfig                     |   3 +
+ drivers/dma/Makefile                    |   2 +
+ drivers/dma/avalon-test/Kconfig         |  23 +
+ drivers/dma/avalon-test/Makefile        |  14 +
+ drivers/dma/avalon-test/avalon-dev.c    |  65 +++
+ drivers/dma/avalon-test/avalon-dev.h    |  33 ++
+ drivers/dma/avalon-test/avalon-ioctl.c  | 128 +++++
+ drivers/dma/avalon-test/avalon-ioctl.h  |  12 +
+ drivers/dma/avalon-test/avalon-mmap.c   |  93 ++++
+ drivers/dma/avalon-test/avalon-mmap.h   |  12 +
+ drivers/dma/avalon-test/avalon-sg-buf.c | 132 +++++
+ drivers/dma/avalon-test/avalon-sg-buf.h |  26 +
+ drivers/dma/avalon-test/avalon-util.c   |  54 ++
+ drivers/dma/avalon-test/avalon-util.h   |  12 +
+ drivers/dma/avalon-test/avalon-xfer.c   | 697 ++++++++++++++++++++++++
+ drivers/dma/avalon-test/avalon-xfer.h   |  28 +
+ drivers/dma/avalon/Kconfig              |  88 +++
+ drivers/dma/avalon/Makefile             |   6 +
+ drivers/dma/avalon/avalon-core.c        | 432 +++++++++++++++
+ drivers/dma/avalon/avalon-core.h        |  90 +++
+ drivers/dma/avalon/avalon-hw.c          | 212 +++++++
+ drivers/dma/avalon/avalon-hw.h          |  86 +++
+ drivers/dma/avalon/avalon-pci.c         | 150 +++++
+ include/uapi/linux/avalon-ioctl.h       |  32 ++
+ 24 files changed, 2430 insertions(+)
+ create mode 100644 drivers/dma/avalon-test/Kconfig
+ create mode 100644 drivers/dma/avalon-test/Makefile
+ create mode 100644 drivers/dma/avalon-test/avalon-dev.c
+ create mode 100644 drivers/dma/avalon-test/avalon-dev.h
+ create mode 100644 drivers/dma/avalon-test/avalon-ioctl.c
+ create mode 100644 drivers/dma/avalon-test/avalon-ioctl.h
+ create mode 100644 drivers/dma/avalon-test/avalon-mmap.c
+ create mode 100644 drivers/dma/avalon-test/avalon-mmap.h
+ create mode 100644 drivers/dma/avalon-test/avalon-sg-buf.c
+ create mode 100644 drivers/dma/avalon-test/avalon-sg-buf.h
+ create mode 100644 drivers/dma/avalon-test/avalon-util.c
+ create mode 100644 drivers/dma/avalon-test/avalon-util.h
+ create mode 100644 drivers/dma/avalon-test/avalon-xfer.c
+ create mode 100644 drivers/dma/avalon-test/avalon-xfer.h
+ create mode 100644 drivers/dma/avalon/Kconfig
+ create mode 100644 drivers/dma/avalon/Makefile
+ create mode 100644 drivers/dma/avalon/avalon-core.c
+ create mode 100644 drivers/dma/avalon/avalon-core.h
+ create mode 100644 drivers/dma/avalon/avalon-hw.c
+ create mode 100644 drivers/dma/avalon/avalon-hw.h
+ create mode 100644 drivers/dma/avalon/avalon-pci.c
+ create mode 100644 include/uapi/linux/avalon-ioctl.h
+
 -- 
-Hello,
+2.23.0
 
-We are private lenders based in UK.
-Do you need a loan (credit) as soon as possible. Are you in search of
-money to solve your personal needs or finance your business venture,
-then get Your desired loan today! Consult us at Sunrise Funding Ltd.
-
-* We offer personal loan & huge capital loan at 2% interest rate to
-the general public both locally and internationally.
-* Credit amount range from $5,000.00 -- $500,000.00 and above.
-* Special $10,000,000.00 Loan offer for huge project also available.
-* Loan period of 6 months -- 10 years.
-* Loan is granted 24 hours after approval and accredited, directly in
-hand or bank account.
-
-Please note that you are advised to contact us for more details via
-the following e-mail address below;
-
-EMAIL : sunrisefundingltd50@gmail.com
-FIRM : Sunrise Funding Ltd UK.

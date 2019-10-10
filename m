@@ -2,89 +2,64 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EE8623AFD4
-	for <lists+dmaengine@lfdr.de>; Mon,  3 Aug 2020 23:52:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7AC023C618
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Aug 2020 08:39:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725863AbgHCVvv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 3 Aug 2020 17:51:51 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43107 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgHCVvv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 3 Aug 2020 17:51:51 -0400
-Received: by mail-io1-f65.google.com with SMTP id k23so40077726iom.10;
-        Mon, 03 Aug 2020 14:51:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rTTd0JLEQIircW3THThScxa603LDzD4tC7cJBVnxw/8=;
-        b=PS9Vc/RaXghQo6qgZra6AA1HZaUeqqdzy5Sh+gGZDDLwLd3xw0hXBc2A9kgZ/p+kD3
-         CxamUkzPr2Zak69584gWpoPi9bHPd6T9g72y66RME3WGe88T/Kh56wOcNmPXqT8gWhPv
-         5Im1tAD/UlEefCQKXdrge5C73h1hnM0VY3cDkQ+o9vCylwNZaGvbI5PLwz+/m451yFcf
-         oNkSvqUHFncWrRWYCmRRpW+tz9Af23KH0RlIlcbNgs+TGoAQiE3GUjAYsuIZCp+g0Qg1
-         VoyIwUKcoZ4t7wN5Bs9uFL6sJd1MDBwzDXBwAkL7Thw87/1uHBONB7VHcXfgIptX6hnD
-         QJRA==
-X-Gm-Message-State: AOAM5300fO1gBZf1ZnUCqVxG8GxXcmb2qCFUISiVFzUjAB0gUBUsN0y5
-        cl3PoegjrrHTgpDYSZst3Q==
-X-Google-Smtp-Source: ABdhPJwk9JxW57b/cc2Ai3TSARPfqnml762G9Vu/UjF/k0tep6wviRYkAv+/P4mTcChWZ7hQ2RQBRg==
-X-Received: by 2002:a6b:dd12:: with SMTP id f18mr1938079ioc.109.1596491510169;
-        Mon, 03 Aug 2020 14:51:50 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v63sm5891342ilk.67.2020.08.03.14.51.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 14:51:49 -0700 (PDT)
-Received: (nullmailer pid 3201910 invoked by uid 1000);
-        Mon, 03 Aug 2020 21:51:47 -0000
-Date:   Mon, 3 Aug 2020 15:51:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-Subject: Re: [PATCH v2 1/5] dt-bindings: dma: dw: Add optional DMA-channels
- mask cell support
-Message-ID: <20200803215147.GA3201744@bogus>
-References: <20200731200826.9292-1-Sergey.Semin@baikalelectronics.ru>
- <20200731200826.9292-2-Sergey.Semin@baikalelectronics.ru>
+        id S1726635AbgHEGjd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 5 Aug 2020 02:39:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbgHEGjc (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Aug 2020 02:39:32 -0400
+Received: from dockerbox (unknown [IPv6:2001:4800:7817:101:be76:4eff:fe04:a215])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 813E6C06174A
+        for <dmaengine@vger.kernel.org>; Tue,  4 Aug 2020 23:39:32 -0700 (PDT)
+Received: from 127.0.0.1 (localhost [127.0.0.1])
+        by dockerbox (Postfix) with SMTP id 4D11C778B1;
+        Wed,  9 Oct 2019 23:23:31 -0500 (CDT)
+Received: from [232.65.177.177] by 127.0.0.1; Thu, 10 Oct 2019 04:17:37 +0000
+Message-ID: <1bes8z9f0-3kzl87aza9p-39-4$wb@pf6.aee.dl>
+From:   "Mr Barrister Hans Erich" <dave@dbsoundfactory.com>
+Reply-To: "Mr Barrister Hans Erich" <dave@dbsoundfactory.com>
+To:     dl-mptfusionlinux@lsi.com
+Subject: RE:PERSONAL LETTER FROM MRS RASHIA AMIRA
+Date:   Thu, 10 Oct 19 04:17:37 GMT
+X-Mailer: Microsoft Outlook IMO, Build 9.0.2416 (9.0.2910.0)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200731200826.9292-2-Sergey.Semin@baikalelectronics.ru>
+Content-Type: multipart/alternative;
+        boundary="7FE33.7_8EAEF6982F"
+X-Priority: 3
+X-MSMail-Priority: Normal
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, 31 Jul 2020 23:08:22 +0300, Serge Semin wrote:
-> Each DW DMA controller channel can be synthesized with different
-> parameters like maximum burst-length, multi-block support, maximum data
-> width, etc. Most of these parameters determine the DW DMAC channels
-> performance in its own aspect. On the other hand these parameters can
-> be implicitly responsible for the channels performance degradation
-> (for instance multi-block support is a very useful feature, but having
-> it disabled during the DW DMAC synthesize will provide a more optimized
-> core). Since DMA slave devices may have critical dependency on the DMA
-> engine performance, let's provide a way for the slave devices to have
-> the DMA-channels allocated from a pool of the channels, which according
-> to the system engineer fulfill their performance requirements.
-> 
-> The pool is determined by a mask optionally specified in the fifth
-> DMA-cell of the DMA DT-property. If the fifth cell is omitted from the
-> phandle arguments or the mask is zero, then the allocation will be
-> performed from a set of all channels provided by the DMA controller.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> ---
->  .../devicetree/bindings/dma/snps,dma-spear1340.yaml        | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+--7FE33.7_8EAEF6982F
+Content-Type: text/plain;
+Content-Transfer-Encoding: quoted-printable
+
+Greetings
+
+My name is Barrister Hans Erich.
+
+I have a client who is interested to invest in your country, she is a well=
+ known politician in her country and deserve a lucrative investment partne=
+rship with you outside her country without any delay   Please can you mana=
+ge such investment please Kindly reply for further details.
+
+Your full nameS -----------
+
+
+Your urgent response will be appreciated
+
+Thank you and God bless you.
+
+Barrister Hans Erich
+
+Yours sincerely,
+Barrister Hans Erich
+
+--7FE33.7_8EAEF6982F--
+

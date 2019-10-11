@@ -2,75 +2,62 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F374D42EE
-	for <lists+dmaengine@lfdr.de>; Fri, 11 Oct 2019 16:32:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BDC5D524B
+	for <lists+dmaengine@lfdr.de>; Sat, 12 Oct 2019 21:58:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbfJKOcI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 11 Oct 2019 10:32:08 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46229 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728068AbfJKOcI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 11 Oct 2019 10:32:08 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 89so8100523oth.13;
-        Fri, 11 Oct 2019 07:32:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=H3n2Fz+qj7wCeXKJS+vYpyY/63hEGZCo5PhUXjdN+zA=;
-        b=nIgAbI29o+gkDMUimIzxegd63rTcNMRG+h8NOlRQlabevaRcCm85QeZ3aT0RiGY3Cx
-         ZDe9vE9atVg+4MMnTVCip4UadSHlnvOmvNIeTM59pBWnXneRxmyyWVXHqBMZicpbyoyz
-         2TkOvWgLE2V6j1o4eIVRUVIPWZGLfRXa8dneDYNMaRS4LHKNVR4S1vB7JDz1EWoPUMng
-         LdcGS+rUgpjKqXNQmiLfxIdnITVAhJV+4OD7niN/vUy1Yn039GqzzxoBUqaj9WJwzlpI
-         AFNwSq+vDxX8McvwmsWeoqeq9Q5Wi0CO9SAxuRnkvCllXUDnYEXxbgFVQtTxw+tsM69j
-         TFzw==
-X-Gm-Message-State: APjAAAUfUp45ibHm7z3d9qP9OpxWT3UPkARIg5ETTUOtpMh+H7OBrdr2
-        1339wCHWSPlAaxBAspE4RQ==
-X-Google-Smtp-Source: APXvYqzBomLw3m4J3taZnodc7sOY0vwonGNkdZBQ5F2aw5rN7biaYOSRbhELpcDaSNS8gI1A1Ds40A==
-X-Received: by 2002:a05:6830:1e59:: with SMTP id e25mr12350373otj.342.1570804327317;
-        Fri, 11 Oct 2019 07:32:07 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i4sm2668323oto.43.2019.10.11.07.32.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2019 07:32:06 -0700 (PDT)
-Date:   Fri, 11 Oct 2019 09:32:05 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Biju Das <biju.das@bp.renesas.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Biju Das <biju.das@bp.renesas.com>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: dmaengine: rcar-dmac: Document R8A774B1
- bindings
-Message-ID: <20191011143205.GA19988@bogus>
-References: <1569580629-55677-1-git-send-email-biju.das@bp.renesas.com>
+        id S1729611AbfJLT6p (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 12 Oct 2019 15:58:45 -0400
+Received: from [206.81.8.171] ([206.81.8.171]:55992 "EHLO varon.localdomain"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729432AbfJLT6p (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sat, 12 Oct 2019 15:58:45 -0400
+X-Greylist: delayed 93031 seconds by postgrey-1.27 at vger.kernel.org; Sat, 12 Oct 2019 15:58:45 EDT
+Received: from 127.0.0.1 (varon [127.0.0.1])
+        by varon.localdomain (Postfix) with SMTP id DE208555B2D;
+        Fri, 11 Oct 2019 10:20:36 +0000 (UTC)
+Received: from (HELO 5jsqh1) [55.250.110.148] by 127.0.0.1 id <8206000-26232>; Fri, 11 Oct 2019 06:19:41 -0400
+Message-ID: <7w44-3y6-ao0@ht6.8p>
+From:   "Mr Barrister Hans Erich" <dave@dbsoundfactory.com>
+Reply-To: "Mr Barrister Hans Erich" <dave@dbsoundfactory.com>
+To:     dlovett@hancock.ms.us
+Subject: RE:PERSONAL LETTER FROM MRS RASHIA AMIRA ??
+Date:   Fri, 11 Oct 19 06:19:41 GMT
+X-Mailer: The Bat! (v1.52f) Business
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1569580629-55677-1-git-send-email-biju.das@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/alternative;
+        boundary="C.F387.BA..3D"
+X-Priority: 3
+X-MSMail-Priority: Normal
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, 27 Sep 2019 11:37:09 +0100, Biju Das wrote:
-> Renesas RZ/G2N (R8A774B1) SoC also has the R-Car gen2/3 compatible
-> DMA controllers, therefore document RZ/G2N specific bindings.
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> V1-->V2
->   * Incorporated Geert's review comment
->   * Added Geert's reviewed by tag
-> ---
->  Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
 
-Acked-by: Rob Herring <robh@kernel.org>
+--C.F387.BA..3D
+Content-Type: text/plain;
+Content-Transfer-Encoding: quoted-printable
+
+Greetings
+
+My name is Barrister Hans Erich.
+
+I have a client who is interested to invest in your country, she is a well=
+ known politician in her country and deserve a lucrative investment partne=
+rship with you outside her country without any delay   Please can you mana=
+ge such investment please Kindly reply for further details.
+
+Your full nameS -----------
+
+
+Your urgent response will be appreciated
+
+Thank you and God bless you.
+
+Barrister Hans Erich
+
+Yours sincerely,
+Barrister Hans Erich
+
+--C.F387.BA..3D--
+

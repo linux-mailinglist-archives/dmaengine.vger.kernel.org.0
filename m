@@ -2,61 +2,109 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 85702D5D7E
-	for <lists+dmaengine@lfdr.de>; Mon, 14 Oct 2019 10:30:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1614D5D76
+	for <lists+dmaengine@lfdr.de>; Mon, 14 Oct 2019 10:30:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730448AbfJNIav (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 14 Oct 2019 04:30:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56922 "EHLO mail.kernel.org"
+        id S1729234AbfJNIah (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 14 Oct 2019 04:30:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbfJNIau (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 14 Oct 2019 04:30:50 -0400
-Received: from dragon (li937-157.members.linode.com [45.56.119.157])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        id S1725936AbfJNIah (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 14 Oct 2019 04:30:37 -0400
+Received: from localhost (unknown [122.167.124.160])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5443B207FF;
-        Mon, 14 Oct 2019 08:29:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83B5C20873;
+        Mon, 14 Oct 2019 08:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571041850;
-        bh=p7mjM/EcKkarwYBL8yjO5OkJb2HPOW4/n1CL+uOOlMU=;
+        s=default; t=1571041836;
+        bh=pzx2a4+gtimMDY/H1zTjMD6F+r1Ky2VYeb6/PVRnv84=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RTnfmVLrzT1mElpLV1XpxtXmAYaHC4vXjDk1D8B2kTsZLHBXEuOXdUn57LgcXb0Ej
-         h3mpF2mTZzuwOHBrv9gd3TZkQ4d/61IzyEHJNqi+GNSCzH6D3Q9rxbNjPNVhwsqsHm
-         enxUHSuGte972ZNKUuW2YUasfYnn5BuldVKKqFww=
-Date:   Mon, 14 Oct 2019 16:29:28 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        xen-devel@lists.xenproject.org, linux-tegra@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
-        Li Yang <leoyang.li@nxp.com>, mbrugger@suse.com,
-        robin.murphy@arm.com, f.fainelli@gmail.com,
-        james.quinlan@broadcom.com, wahrenst@gmx.net,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 08/11] dts: arm64: layerscape: add dma-ranges property to
- pcie nodes
-Message-ID: <20191014082924.GI12262@dragon>
-References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
- <20190924181244.7159-9-nsaenzjulienne@suse.de>
+        b=HL4tcFX850OdWfyKl5gMt1JCpVNADA3j8KOlJWHeBOTak1X7EAHgqheIovTpuevmZ
+         +Qxs7ilLooplHcmWIyG2Vgw8ERibstkgTEHKE1CeiBCrL+9nz7sTAe0WiqNDRuBari
+         LD1kzyW/ZGJZznbyYn/rJWdzUhK5FgjkXQOyCOaU=
+Date:   Mon, 14 Oct 2019 14:00:31 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Cc:     Vinod Koul <vinod.koul@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH] dmaengine: bcm-sba-raid: Handle mbox_request_channel
+ failure
+Message-ID: <20191014083031.GP2654@vkoul-mobl>
+References: <1547100464-7020-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+ <3d5497d8-7275-1461-8b59-b3695838be45@broadcom.com>
+ <CAHO=5PE_Y2sx1pVnG79_JD_AFU8Vtu+e6PfCnBZDVLAcms64ug@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190924181244.7159-9-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CAHO=5PE_Y2sx1pVnG79_JD_AFU8Vtu+e6PfCnBZDVLAcms64ug@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 08:12:39PM +0200, Nicolas Saenz Julienne wrote:
-> The bus behind the board's PCIe core has DMA addressing limitations. Add
-> an empty 'dma-ranges' property on all PCIe bus descriptions to inform
-> the OF core that a translation is due further down the line.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Hi Rayagonda,
 
-Applied, thanks.
+On 27-09-19, 09:38, Rayagonda Kokatanur wrote:
+> Hi Vinod,
+> 
+> Did you get chance to review this fix?
+
+Please do *not* top post
+
+And on your question, sorry this is not in my queue somehow, please
+rebase and repost
+
+> 
+> Best regards,
+> Rayagonda
+> 
+> 
+> On Thu, Jan 10, 2019 at 11:06 PM Ray Jui <ray.jui@broadcom.com> wrote:
+> >
+> >
+> >
+> > On 1/9/2019 10:07 PM, Rayagonda Kokatanur wrote:
+> > > Fix kernel NULL pointer dereference error when mbox_request_channel()
+> > > fails to allocate channel.
+> > >
+> > > Fixes: 4e9f8187aecb ("dmaengine: bcm-sba-raid: Use only single mailbox channel")
+> > > Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> > > ---
+> > >  drivers/dma/bcm-sba-raid.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/dma/bcm-sba-raid.c b/drivers/dma/bcm-sba-raid.c
+> > > index 72878ac5c78d..77ae74663a45 100644
+> > > --- a/drivers/dma/bcm-sba-raid.c
+> > > +++ b/drivers/dma/bcm-sba-raid.c
+> > > @@ -1690,7 +1690,7 @@ static int sba_probe(struct platform_device *pdev)
+> > >       sba->mchan = mbox_request_channel(&sba->client, 0);
+> > >       if (IS_ERR(sba->mchan)) {
+> > >               ret = PTR_ERR(sba->mchan);
+> > > -             goto fail_free_mchan;
+> > > +             goto fail_exit;
+> > >       }
+> > >
+> > >       /* Find-out underlying mailbox device */
+> > > @@ -1747,6 +1747,7 @@ static int sba_probe(struct platform_device *pdev)
+> > >       sba_freeup_channel_resources(sba);
+> > >  fail_free_mchan:
+> > >       mbox_free_channel(sba->mchan);
+> > > +fail_exit:
+> > >       return ret;
+> > >  }
+> > >
+> > >
+> >
+> > Looks good to me.
+> >
+> > Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+
+-- 
+~Vinod

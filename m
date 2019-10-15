@@ -2,149 +2,217 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0ACA7D791A
-	for <lists+dmaengine@lfdr.de>; Tue, 15 Oct 2019 16:52:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 256DCD7DC1
+	for <lists+dmaengine@lfdr.de>; Tue, 15 Oct 2019 19:29:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733009AbfJOOtG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 15 Oct 2019 10:49:06 -0400
-Received: from mail-eopbgr770051.outbound.protection.outlook.com ([40.107.77.51]:6851
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732933AbfJOOsw (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:48:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JOI8LOxvr4u8oLmJrjzmp/JcCywZyOhRLdDfsFAGLPnu36A8ENGkZiSnOcBlYFhA7utJ6XyjVZ5bEgu26vAFEVTZ0fxk7WgshKBIZvWl4gTEy6ZZM89ip3j6gKl6uIW1/wNeJxbCF/DKAJkLfcivtIwk3EVNrHroD+uMDBuEh/liXD3lr+KYruehEETbTgx6c5zRHtGdhsVyOn3Vb9bC7lIqEg6VCtq7L0/R43PBMb7mvSOeRcYXRJfg6rZ3KvFe1TzuNRhCKRn+zl8G0ie6fomN01pn8+oj/Do98+9OR0mWqoqeSZsenCO9CRlnw75KClk0RIJiMETL1IkJu9y9AA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hGLJy7WjISY0rEn0djaXuX0N0QEmpJG0gZngoPbvPO4=;
- b=i0c+XFprSc1MdKmXuPmjgm4TRpiLcSLOQl2llUMxkm9ckA7D1ZsGyYcUZXla0OGMweitJyAqpoec2VCarRELXv1rhEjC+u6k7rRpQtC1GYe3psxs2zNR8VTrgY1YtiYenC0sBHiEb7Iow9lHwJAPYmOePPxK0mlYUWZxUKj7fMKKAoaVhK4qFrA1k27/oHEInlhqKJrszPbsY0u55Dr1AAvweQi7qj3strNdkOs1/0nQiC17T6ZOuk/ltJpFDMgQgtDDTqRuVlxQyaEeafZJMFQLH9LcpOf10e5Teew/KOl0aP/ZtvfMXw9tX0XfuSVfg1oHm5Wi/AdbJCPWWBLNSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hGLJy7WjISY0rEn0djaXuX0N0QEmpJG0gZngoPbvPO4=;
- b=f9EpqBRoUJmwTsToomjFdj/6Nmd3VV3aTUS2Krb5xPrHczBIU99HwIMztRhYE2gVQ6r30vGO62D23AaIrdJQpnljtWmvOXVKR9T7X0tYXesKCQ9A9Nus4Hf2IrXxPoYWloPRXENyIkwNRvxRxKJ8NC0x7Z6xl9uDz54R5Pa78BE=
-Received: from DM6PR02CA0130.namprd02.prod.outlook.com (2603:10b6:5:1b4::32)
- by BN7PR02MB4066.namprd02.prod.outlook.com (2603:10b6:406:f2::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.16; Tue, 15 Oct
- 2019 14:48:49 +0000
-Received: from BL2NAM02FT029.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::208) by DM6PR02CA0130.outlook.office365.com
- (2603:10b6:5:1b4::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2327.24 via Frontend
- Transport; Tue, 15 Oct 2019 14:48:49 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT029.mail.protection.outlook.com (10.152.77.100) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2347.16
- via Frontend Transport; Tue, 15 Oct 2019 14:48:49 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <radhey.shyam.pandey@xilinx.com>)
-        id 1iKO80-0006Fz-Dh; Tue, 15 Oct 2019 07:48:48 -0700
-Received: from [127.0.0.1] (helo=xsj-smtp-dlp1.xlnx.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <radhey.shyam.pandey@xilinx.com>)
-        id 1iKO7v-0002As-2H; Tue, 15 Oct 2019 07:48:43 -0700
-Received: from xsj-pvapsmtp01 (smtp-fallback.xilinx.com [149.199.38.66] (may be forged))
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x9FEmgcW014677;
-        Tue, 15 Oct 2019 07:48:42 -0700
-Received: from [10.140.184.180] (helo=ubuntu)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <radheys@ubuntu>)
-        id 1iKO7t-0002AK-PY; Tue, 15 Oct 2019 07:48:42 -0700
-Received: by ubuntu (Postfix, from userid 13245)
-        id 2414F101134; Tue, 15 Oct 2019 20:18:40 +0530 (IST)
-From:   Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-To:     vkoul@kernel.org, dan.j.williams@intel.com,
-        michal.simek@xilinx.com, nick.graumann@gmail.com,
-        andrea.merello@gmail.com, appana.durga.rao@xilinx.com,
-        mcgrof@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Subject: [PATCH v2 -next 7/7] dmaengine: xilinx_dma: Clear desc_pendingcount in xilinx_dma_reset
-Date:   Tue, 15 Oct 2019 20:18:24 +0530
-Message-Id: <1571150904-3988-8-git-send-email-radhey.shyam.pandey@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571150904-3988-1-git-send-email-radhey.shyam.pandey@xilinx.com>
-References: <1571150904-3988-1-git-send-email-radhey.shyam.pandey@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-Result: No--4.495-7.0-31-1
-X-imss-scan-details: No--4.495-7.0-31-1;No--4.495-5.0-31-1
-X-TM-AS-User-Approved-Sender: No;No
-X-TM-AS-Result-Xfilter: Match text exemption rules:No
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(39860400002)(346002)(189003)(199004)(8676002)(36756003)(81156014)(8936002)(107886003)(51416003)(81166006)(336012)(486006)(186003)(47776003)(76176011)(70206006)(70586007)(50226002)(50466002)(6266002)(126002)(2616005)(446003)(426003)(11346002)(476003)(478600001)(14444005)(103686004)(4326008)(16586007)(42186006)(316002)(305945005)(26005)(48376002)(5660300002)(2906002)(356004)(106002)(6666004)(42866002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB4066;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+        id S2388733AbfJOR3u (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 15 Oct 2019 13:29:50 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:52392 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730734AbfJOR3u (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 15 Oct 2019 13:29:50 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9FHTXFQ085986;
+        Tue, 15 Oct 2019 12:29:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571160573;
+        bh=KrgWh3TYfGhwD7OfEBPyzWk6XjSnfwlDaFgeUWGRq+4=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=L1gtts7qAYQjzYbF+sV9wfqa36DIJryMOvxkH5mko3FySUga9Qv0Ryz9RwRoaqamS
+         H9ZKjoBMctkL1BsrCqknon/FODW30FoI6MktcLlD77XWoZwCjgM0G8/RTcnMektaHw
+         gxwd0TSqbVxFCU9w4vc9/HCRI1Ym8atG/0w0fKpU=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9FHTX9g073402
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 15 Oct 2019 12:29:33 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 15
+ Oct 2019 12:29:33 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 15 Oct 2019 12:29:26 -0500
+Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9FHTTnV090514;
+        Tue, 15 Oct 2019 12:29:29 -0500
+Subject: Re: [PATCH v3 07/14] dt-bindings: dma: ti: Add document for K3 UDMA
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     <nm@ti.com>, <devicetree@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <j-keerthy@ti.com>, <linux-kernel@vger.kernel.org>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <vkoul@kernel.org>,
+        <ssantosh@kernel.org>, <dmaengine@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <linux-arm-kernel@lists.infradead.org>
+References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
+ <20191001061704.2399-8-peter.ujfalusi@ti.com> <20191010175232.GA24556@bogus>
+ <ef07299b-eb43-d582-adb8-46f46681f9a5@ti.com>
+Message-ID: <d53f3bd7-d331-33c8-5232-c8f3cc9ac708@ti.com>
+Date:   Tue, 15 Oct 2019 20:30:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1407bfba-cd59-42b8-e9f0-08d7517ec9f8
-X-MS-TrafficTypeDiagnostic: BN7PR02MB4066:
-X-Microsoft-Antispam-PRVS: <BN7PR02MB40664A843283D3A87B8E9A72C7930@BN7PR02MB4066.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-Forefront-PRVS: 01917B1794
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vFhYbtDZiXVRancgtqa5HWPyXGdzLh+01+JysKkR7EiCPLr3PmHoAOqrmfeHprEoUlQJU/LwqI3OG9fnczprhmRX5Xyo+bsPMT3Pv57g1CwUgq2YIhdsp9TZ/iR35rYMzS4ZMMrap8sRWrXUdfggvNjgmh5aBm7d6NutKk1zZ8ZCtEd5XqAsRiYlJ6rvyvtDh2wGETYi3GSWmd7+8qi4sQ8BNP78BK06zVZBhEPl63ugGoapiREe+RRXE3Zuq8GVx1weJUzxz0JujZluC61AfdtY8LzEspn7BZ9RmGii7cNkyZGTUtWC06hQhvFKD6E7/szoFV5BA0/6C7f5kfAINioixd/jPz52zWN0ZJIWLkeLaaJ/Izg6GUxvMxDtfS41nvbqfx/4nSwGOrPCD5K1q2wnEEvEPEO37wDaghYU2v0=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Oct 2019 14:48:49.0735
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1407bfba-cd59-42b8-e9f0-08d7517ec9f8
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB4066
+In-Reply-To: <ef07299b-eb43-d582-adb8-46f46681f9a5@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Nicholas Graumann <nick.graumann@gmail.com>
+Rob,
 
-Whenever we reset the channel, we need to clear desc_pendingcount
-along with desc_submitcount. Otherwise when a new transaction is
-submitted, the irq coalesce level could be programmed to an incorrect
-value in the axidma case.
+On 10/11/19 10:30 AM, Peter Ujfalusi wrote:
+> 
+> I have already moved the TR vs Packet mode channel selection, which does
+> make sense as it was Linux's choice to use TR for certain cases.
+> 
+> If I move these to code then we need to have big tables
+> struct psil_config am654_psil[32767] = {};
+> struct psil_config j721e_psil[32767] = {};
 
-This behavior can be observed when terminating pending transactions
-with xilinx_dma_terminate_all() and then submitting new transactions
-without releasing and requesting the channel.
+After thinking about this a bit more, I think we can move all the PSI-L
+endpoint configuration to the kernel as not all the 32767 threads are
+actually in use. Sure it is going to be some amount of static data in
+the kernel, but it is an acceptable compromise.
 
-Signed-off-by: Nicholas Graumann <nick.graumann@gmail.com>
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
----
-Changes for v2:
-None
----
- drivers/dma/xilinx/xilinx_dma.c | 1 +
- 1 file changed, 1 insertion(+)
+The DMA binding can look like this:
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index b0d3aac..56a7317 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -1486,6 +1486,7 @@ static int xilinx_dma_reset(struct xilinx_dma_chan *chan)
- 
- 	chan->err = false;
- 	chan->idle = true;
-+	chan->desc_pendingcount = 0;
- 	chan->desc_submitcount = 0;
- 
- 	return err;
--- 
-2.7.4
+dmas = <&main_udmap 0xc400>,
+       <&main_udmap 0x4400>;
+dma-names = "tx", "rx";
 
+or
+dmas = <&main_udmap 0x4400 UDMA_DIR_TX>,
+       <&main_udmap 0x4400 UDMA_DIR_RX>;
+dma-names = "tx", "rx";
+
+If I keep the direction.
+0xc400 is destination ID, which is 0x4400 | 0x8000 as per PSI-L
+specification.
+In the TRM only the source threads can be found as a map (thread IDs <
+0x7fff), but the binding document can cover this.
+
+This way we don't need another dtsi file and I can create the map in the
+kernel.
+
+This will hide some details of the HW from DT, but since the PSI-L
+thread configuration is static in hardware I believe it is acceptable.
+
+However we still have uncovered features in the binding or in code, like
+a case when the RX does not have access to the DMA channel, only flows.
+Not sure if I should reserve the direction parameter as an indication to
+this or find other way.
+Basically we communicate on the given PSI-L thread without having a DMA
+channel as other core is owning the channel.
+
+What do you think?
+
+> 
+> and for each new family member a new one.
+> 
+> Also, if we want add DMA support for a new peripheral we would need to
+> modify the kernel and the DT in sync (well, kernel first, than DT).
+> 
+>> Or do some combination of the above. 
+> 
+> What about this:
+> create a new dtsi file per SoC (k3-am654-psil.dtsi, k3-k721e-psil.dtsi)
+> for the PSI-L threads and inside something like this:
+> 
+> psil-threads: psil-threads {
+> 	...
+> 	/* SA2UL: 0x4000 - 0x4003 */
+> 	ti,psil-config-4000 {
+> 		linux,udma-mode = <UDMA_PKT_MODE>;
+> 		ti,needs-epib;
+> 		ti,psd-size = <64>;
+> 		ti,notdpkt;
+> 	};
+> 
+> 	ti,psil-config-4001 {
+> 		linux,udma-mode = <UDMA_PKT_MODE>;
+> 		ti,needs-epib;
+> 		ti,psd-size = <64>;
+> 		ti,notdpkt;
+> 	};
+> 
+> 	ti,psil-config-4002 {
+> 		linux,udma-mode = <UDMA_PKT_MODE>;
+> 		ti,needs-epib;
+> 		ti,psd-size = <64>;
+> 		ti,notdpkt;
+> 	};
+> 
+> 	...
+> 	/* PDMA6 (PDMA_MCASP_G0): 0x4400 - 0x4402 */
+> 	thread-4400 {
+> 		ti,pdma-statictr-type = <PDMA_STATIC_TR_XY>;
+> 		ti,pdma-enable-acc32;
+> 		ti,pdma-enable-burst;
+> 	};
+> 
+> 	thread-4401 {
+> 		ti,pdma-statictr-type = <PDMA_STATIC_TR_XY>;
+> 		ti,pdma-enable-acc32;
+> 		ti,pdma-enable-burst;
+> 	};
+> 
+> 	thread-4402 {
+> 		ti,pdma-statictr-type = <PDMA_STATIC_TR_XY>;
+> 		ti,pdma-enable-acc32;
+> 		ti,pdma-enable-burst;
+> 	};
+> 
+> 	...
+> };
+> 
+> Then the binding would look like this for sa2ul:
+> 
+> /* tx: crypto_pnp-1, rx: crypto_pnp-1 */
+> dmas = <&main_udmap 0x4000 UDMA_DIR_TX>,
+>        <&main_udmap 0x4000 UDMA_DIR_RX>,
+>        <&main_udmap 0x4001 UDMA_DIR_RX>;
+> dma-names = "tx", "rx1", "rx2";
+> 
+> for McASP:
+> dmas = <&main_udmap 0x4400 UDMA_DIR_TX>,
+>        <&main_udmap 0x4400 UDMA_DIR_RX>;
+> dma-names = "tx", "rx";
+> 
+> Then either we can have phandle in the udmap nodes to the psil-threads,
+> or just find it from the root when needed.
+> 
+>> Sorry I don't have specific suggestions, but I just see lots of properties 
+>> and complexity, and I don't really understand the h/w here. Putting the 
+>> complexity in what is an ABI is generally not a good plan.
+> 
+> The complexity is coming from the hardware itself. If I can not describe
+> the hardware than it is not going to be easy for the software to figure
+> out what it is dealing with.
+> 
+>> And I don't 
+>> have the bandwidth to study and understand the complexities of your h/w 
+>> (and everyone elses), so just more explanations are not likely to really 
+>> help.
+> 
+> Sure, I understand.
+> 
+> - Péter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
+- Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

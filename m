@@ -2,144 +2,89 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27D82D64D5
-	for <lists+dmaengine@lfdr.de>; Mon, 14 Oct 2019 16:13:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B865D6DCB
+	for <lists+dmaengine@lfdr.de>; Tue, 15 Oct 2019 05:31:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732437AbfJNONr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 14 Oct 2019 10:13:47 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:34903 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732330AbfJNONr (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 14 Oct 2019 10:13:47 -0400
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1iK16X-00045S-Gq; Mon, 14 Oct 2019 16:13:45 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <sha@pengutronix.de>)
-        id 1iK16W-0003OA-Hl; Mon, 14 Oct 2019 16:13:44 +0200
-Date:   Mon, 14 Oct 2019 16:13:44 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Bruno Thomsen <bruno.thomsen@gmail.com>
-Cc:     dmaengine@vger.kernel.org, linux-mtd@lists.infradead.org,
-        vkoul@kernel.org, miquel.raynal@bootlin.com, bth@kamstrup.com,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: Regression: dmaengine: imx28 with emmc
-Message-ID: <20191014141344.uwnzy3j3kxngzv7a@pengutronix.de>
-References: <CAH+2xPB7rbeJnOPU10Ss9BhV_2DJV-ToQ3XNOy97+vrGx+ubcg@mail.gmail.com>
+        id S1727851AbfJODbb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 14 Oct 2019 23:31:31 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44350 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727807AbfJODbb (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 14 Oct 2019 23:31:31 -0400
+Received: by mail-pl1-f195.google.com with SMTP id q15so8875619pll.11;
+        Mon, 14 Oct 2019 20:31:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kcTiANv3bdbvw944ObmUJeWBJyrPQFWZ0rLqctEkp3k=;
+        b=kNB7zsIdYUG3wLG6gGYVv52cd+gyptFAO4DIh6Z8KZ3IWYgVUBSYnbnYvHogqvoZHq
+         CdAowTkTxenQFx5sh4/Oh2vPHdy/2Fqp+oEYCrmz36cYzOTZU6sulNPyHfdCOtmi7wqR
+         n/32uySBMaCkubkVGFSOD+75IsaKFhFm2a2c4c/G0XnUaiRETiirn1EfojiKOHbA0Q0T
+         18aBDoRqBkS4kJf0kVtxzBstftE6RJeX4ZleeWkNFwu5fM4w0ffxMK9Y1tqLWK/0ydx/
+         SGq6lR5VOQY4ejQk+Ft0oBP1nNeqndhG6mSlyIepZ1JthtHdfQhRd0649Cj45MrSeHvd
+         u/NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kcTiANv3bdbvw944ObmUJeWBJyrPQFWZ0rLqctEkp3k=;
+        b=QyW5/4NLYhd3cGwx5eZfrTShOTCIQq/ynVcXx33N/kcIeShJK1NaHtlOL3B0j6uBU/
+         b+E9QQqMRwyEE7zSkXtdPvIe4LY8yyEZktTpdCqZGzqkrsSw2C7tjPRcNMgzlbfEHU/R
+         lbTJZqkGjt7ajgzjzDQymTMpGAtw9Lh9yrZsIpGmPEsTVuqeV1Gv7KPITrdNj0CKmrg0
+         XByKn2wamDVNgXoWHvXuQ8L3m4jQi9hlFy/RSjS1N37/8RgETb3h3HpREIFhSxEjVkGl
+         0BSsfd4Qh4bsug2ALZ87YfB1jgWJxZCv3NLDej0inydroxkpOA2BNNB5WEB/ovVnP8Mc
+         QgIA==
+X-Gm-Message-State: APjAAAXu7h/IdVBQWKys2mLOP1uTMqGS4NbuI8IWgw3rSfTn6t7Zk3KG
+        JYhtV50ozwLPySPkH5z6HGxeqDAY
+X-Google-Smtp-Source: APXvYqyKaU0kicO0Q8U5Q4TPzIszdr401voEh0M21j5kNj87ZilmOxqwqkZMY0fhNSvAhGcigF7eiQ==
+X-Received: by 2002:a17:902:b70b:: with SMTP id d11mr32144741pls.339.1571110290299;
+        Mon, 14 Oct 2019 20:31:30 -0700 (PDT)
+Received: from localhost.localdomain (S0106d80d17472dbd.wp.shawcable.net. [24.79.253.190])
+        by smtp.gmail.com with ESMTPSA id y9sm7808565pgq.11.2019.10.14.20.31.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 20:31:29 -0700 (PDT)
+From:   jassisinghbrar@gmail.com
+To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     vkoul@kernel.org, masami.hiramatsu@linaro.org,
+        orito.takao@socionext.com, Jassi Brar <jaswinder.singh@linaro.org>
+Subject: [PATCH v3 0/2] Add support for AXI DMA controller on Milbeaut series
+Date:   Mon, 14 Oct 2019 22:31:16 -0500
+Message-Id: <20191015033116.14580-1-jassisinghbrar@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAH+2xPB7rbeJnOPU10Ss9BhV_2DJV-ToQ3XNOy97+vrGx+ubcg@mail.gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 16:11:15 up 98 days, 20:21, 105 users,  load average: 0.18, 0.22,
- 0.32
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Bruno,
+From: Jassi Brar <jaswinder.singh@linaro.org>
 
-On Tue, Oct 08, 2019 at 10:03:16AM +0200, Bruno Thomsen wrote:
-> Hi
-> 
-> I am getting a kernel oops[1] during boot on imx28 with emmc flash right
-> around rootfs mounting. Using git bisect I found the cause to be the
-> following commit.
-> 
-> Regression: ceeeb99cd821 ("dmaengine: mxs: rename custom flag")
-> 
-> Reverting the 2 changes in drivers/dma/mxs-dma.c fixes the oops,
-> but I am not sure that is the right solution as I don't have the full
-> mxs-dma + mtd/mmc overview.
-> 
-> I did see that the patch isn't a simple rename but also a bit define
-> change.
-> From: DMA_CTRL_ACK = (1 << 1) = BIT(1)
-> To: MXS_DMA_CTRL_WAIT4END = BIT(31)
-> 
+The following series adds AXI DMA (XDMAC) controller support on Milbeaut series.
+This controller is capable of only Mem<->MEM transfers. Number of channels is
+configurable {2,4,8}
 
-Damn, I wasn't aware the DMA driver has other users than the GPMI Nand.
-Please try the attached patch, it should fix it for MMC/SD. It seems
-however, that I2C and AUART and SPI are also affected. Are you able to
-test any of these?
+Changes Since v2:
+ # Drop unused variable
 
-Sascha
+Changes Since v1:
+  # Spelling mistake fix
 
----------------------------8<---------------------------
+Jassi Brar (2):
+  dt-bindings: milbeaut-m10v-xdmac: Add Socionext Milbeaut XDMAC
+    bindings
+  dmaengine: milbeaut-xdmac: Add XDMAC driver for Milbeaut platforms
 
-From 3f7a1097099c9e57e31a86503edc479f9964bc95 Mon Sep 17 00:00:00 2001
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Date: Mon, 14 Oct 2019 16:07:31 +0200
-Subject: [PATCH] mmc: mxs: fix flags passed to dmaengine_prep_slave_sg
-
-Since ceeeb99cd821 we no longer abuse the DMA_CTRL_ACK flag for custom
-driver use and introduced the MXS_DMA_CTRL_WAIT4END instead. We have not
-changed all users to this flag though. This patch fixes it for the
-mxs-mmc driver.
-
-Fixes: ceeeb99cd821 ("dmaengine: mxs: rename custom flag")
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
----
- drivers/mmc/host/mxs-mmc.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/mmc/host/mxs-mmc.c b/drivers/mmc/host/mxs-mmc.c
-index 78e7e350655c..4031217d21c3 100644
---- a/drivers/mmc/host/mxs-mmc.c
-+++ b/drivers/mmc/host/mxs-mmc.c
-@@ -17,6 +17,7 @@
- #include <linux/interrupt.h>
- #include <linux/dma-mapping.h>
- #include <linux/dmaengine.h>
-+#include <linux/dma/mxs-dma.h>
- #include <linux/highmem.h>
- #include <linux/clk.h>
- #include <linux/err.h>
-@@ -266,7 +267,7 @@ static void mxs_mmc_bc(struct mxs_mmc_host *host)
- 	ssp->ssp_pio_words[2] = cmd1;
- 	ssp->dma_dir = DMA_NONE;
- 	ssp->slave_dirn = DMA_TRANS_NONE;
--	desc = mxs_mmc_prep_dma(host, DMA_CTRL_ACK);
-+	desc = mxs_mmc_prep_dma(host, MXS_DMA_CTRL_WAIT4END);
- 	if (!desc)
- 		goto out;
- 
-@@ -311,7 +312,7 @@ static void mxs_mmc_ac(struct mxs_mmc_host *host)
- 	ssp->ssp_pio_words[2] = cmd1;
- 	ssp->dma_dir = DMA_NONE;
- 	ssp->slave_dirn = DMA_TRANS_NONE;
--	desc = mxs_mmc_prep_dma(host, DMA_CTRL_ACK);
-+	desc = mxs_mmc_prep_dma(host, MXS_DMA_CTRL_WAIT4END);
- 	if (!desc)
- 		goto out;
- 
-@@ -441,7 +442,7 @@ static void mxs_mmc_adtc(struct mxs_mmc_host *host)
- 	host->data = data;
- 	ssp->dma_dir = dma_data_dir;
- 	ssp->slave_dirn = slave_dirn;
--	desc = mxs_mmc_prep_dma(host, DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-+	desc = mxs_mmc_prep_dma(host, DMA_PREP_INTERRUPT | MXS_DMA_CTRL_WAIT4END);
- 	if (!desc)
- 		goto out;
- 
--- 
-2.23.0
-
+ .../bindings/dma/milbeaut-m10v-xdmac.txt      |  24 +
+ drivers/dma/Kconfig                           |  10 +
+ drivers/dma/Makefile                          |   1 +
+ drivers/dma/milbeaut-xdmac.c                  | 418 ++++++++++++++++++
+ 4 files changed, 453 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-xdmac.txt
+ create mode 100644 drivers/dma/milbeaut-xdmac.c
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.20.1
+

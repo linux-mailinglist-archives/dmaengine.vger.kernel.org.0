@@ -2,217 +2,174 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 256DCD7DC1
-	for <lists+dmaengine@lfdr.de>; Tue, 15 Oct 2019 19:29:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 084E6D8221
+	for <lists+dmaengine@lfdr.de>; Tue, 15 Oct 2019 23:24:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388733AbfJOR3u (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 15 Oct 2019 13:29:50 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:52392 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730734AbfJOR3u (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 15 Oct 2019 13:29:50 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9FHTXFQ085986;
-        Tue, 15 Oct 2019 12:29:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571160573;
-        bh=KrgWh3TYfGhwD7OfEBPyzWk6XjSnfwlDaFgeUWGRq+4=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=L1gtts7qAYQjzYbF+sV9wfqa36DIJryMOvxkH5mko3FySUga9Qv0Ryz9RwRoaqamS
-         H9ZKjoBMctkL1BsrCqknon/FODW30FoI6MktcLlD77XWoZwCjgM0G8/RTcnMektaHw
-         gxwd0TSqbVxFCU9w4vc9/HCRI1Ym8atG/0w0fKpU=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9FHTX9g073402
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 15 Oct 2019 12:29:33 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 15
- Oct 2019 12:29:33 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 15 Oct 2019 12:29:26 -0500
-Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9FHTTnV090514;
-        Tue, 15 Oct 2019 12:29:29 -0500
-Subject: Re: [PATCH v3 07/14] dt-bindings: dma: ti: Add document for K3 UDMA
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     <nm@ti.com>, <devicetree@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <j-keerthy@ti.com>, <linux-kernel@vger.kernel.org>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <vkoul@kernel.org>,
-        <ssantosh@kernel.org>, <dmaengine@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <linux-arm-kernel@lists.infradead.org>
-References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
- <20191001061704.2399-8-peter.ujfalusi@ti.com> <20191010175232.GA24556@bogus>
- <ef07299b-eb43-d582-adb8-46f46681f9a5@ti.com>
-Message-ID: <d53f3bd7-d331-33c8-5232-c8f3cc9ac708@ti.com>
-Date:   Tue, 15 Oct 2019 20:30:12 +0300
+        id S1727557AbfJOVYD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 15 Oct 2019 17:24:03 -0400
+Received: from www381.your-server.de ([78.46.137.84]:41314 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfJOVYD (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 15 Oct 2019 17:24:03 -0400
+X-Greylist: delayed 1022 seconds by postgrey-1.27 at vger.kernel.org; Tue, 15 Oct 2019 17:24:01 EDT
+Received: from sslproxy01.your-server.de ([88.198.220.130])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1iKU1s-00079J-3q; Tue, 15 Oct 2019 23:06:52 +0200
+Received: from [93.104.114.34] (helo=[192.168.178.20])
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <lars@metafoo.de>)
+        id 1iKU1r-0001zM-Ky; Tue, 15 Oct 2019 23:06:51 +0200
+Subject: Re: [PATCH] dmaengine: axi-dmac: simple device_config operation
+ implemented
+To:     Vinod Koul <vkoul@kernel.org>,
+        "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "alencar.fmce@imbel.gov.br" <alencar.fmce@imbel.gov.br>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190913145404.28715-1-alexandru.ardelean@analog.com>
+ <20191014070142.GB2654@vkoul-mobl>
+ <4384347cc94a54e3fa22790aaa91375afda54e1b.camel@analog.com>
+ <20191015104342.GW2654@vkoul-mobl>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <4428e1fa-1a2a-5a5f-ada8-806078c8da94@metafoo.de>
+Date:   Tue, 15 Oct 2019 23:06:50 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <ef07299b-eb43-d582-adb8-46f46681f9a5@ti.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191015104342.GW2654@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25603/Tue Oct 15 10:57:00 2019)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Rob,
+On 10/15/19 12:43 PM, Vinod Koul wrote:
+> On 15-10-19, 07:05, Ardelean, Alexandru wrote:
+>> On Mon, 2019-10-14 at 12:31 +0530, Vinod Koul wrote:
+>>> [External]
+>>>
+>>
+>> Hey,
+>>
+>>> On 13-09-19, 17:54, Alexandru Ardelean wrote:
+>>>> From: Rodrigo Alencar <alencar.fmce@imbel.gov.br>
+>>>>
+>>>> dmaengine_slave_config is called by dmaengine_pcm_hw_params when using
+>>>> axi-i2s with axi-dmac. If device_config is NULL, -ENOSYS  is returned,
+>>>> which breaks the snd_pcm_hw_params function.
+>>>> This is a fix for the error:
+>>>
+>>> and what is that?
+>>>
+>>>> $ aplay -D plughw:ADAU1761 /usr/share/sounds/alsa/Front_Center.wav
+>>>> Playing WAVE '/usr/share/sounds/alsa/Front_Center.wav' : Signed 16 bit
+>>>> Little Endian, Rate 48000 Hz, Mono
+>>>> axi-i2s 43c20000.axi-i2s: ASoC: 43c20000.axi-i2s hw params failed: -38
+>>
+>> Error is above this line [code -38].
+> 
+> Right and it would help explaining a bit more on the error!
+> 
+>>
+>>>> aplay: set_params:1403: Unable to install hw params:
+>>>> ACCESS:  RW_INTERLEAVED
+>>>> FORMAT:  S16_LE
+>>>> SUBFORMAT:  STD
+>>>> SAMPLE_BITS: 16
+>>>> FRAME_BITS: 16
+>>>> CHANNELS: 1
+>>>> RATE: 48000
+>>>> PERIOD_TIME: 125000
+>>>> PERIOD_SIZE: 6000
+>>>> PERIOD_BYTES: 12000
+>>>> PERIODS: 4
+>>>> BUFFER_TIME: 500000
+>>>> BUFFER_SIZE: 24000
+>>>> BUFFER_BYTES: 48000
+>>>> TICK_TIME: 0
+>>>>
+>>>> Signed-off-by: Rodrigo Alencar <alencar.fmce@imbel.gov.br>
+>>>> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+>>>> ---
+>>>>
+>>>> Note: Fixes tag not added intentionally.
+>>>>
+>>>>  drivers/dma/dma-axi-dmac.c | 16 ++++++++++++++++
+>>>>  1 file changed, 16 insertions(+)
+>>>>
+>>>> diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+>>>> index a0ee404b736e..ab2677343202 100644
+>>>> --- a/drivers/dma/dma-axi-dmac.c
+>>>> +++ b/drivers/dma/dma-axi-dmac.c
+>>>> @@ -564,6 +564,21 @@ static struct dma_async_tx_descriptor
+>>>> *axi_dmac_prep_slave_sg(
+>>>>  	return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
+>>>>  }
+>>>>  
+>>>> +static int axi_dmac_device_config(struct dma_chan *c,
+>>>> +			struct dma_slave_config *slave_config)
+>>>> +{
+>>>> +	struct axi_dmac_chan *chan = to_axi_dmac_chan(c);
+>>>> +	struct axi_dmac *dmac = chan_to_axi_dmac(chan);
+>>>> +
+>>>> +	/* no configuration required, a sanity check is done instead */
+>>>> +	if (slave_config->direction != chan->direction) {
+>>>
+>>>  slave_config->direction is a deprecated field, pls dont use that
+>>
+>> ack
+>> any alternative recommendations of what to do in this case?
 
-On 10/11/19 10:30 AM, Peter Ujfalusi wrote:
-> 
-> I have already moved the TR vs Packet mode channel selection, which does
-> make sense as it was Linux's choice to use TR for certain cases.
-> 
-> If I move these to code then we need to have big tables
-> struct psil_config am654_psil[32767] = {};
-> struct psil_config j721e_psil[32767] = {};
+iirc direction is checked when the channel is requested, there should be
+no need to check it again.
 
-After thinking about this a bit more, I think we can move all the PSI-L
-endpoint configuration to the kernel as not all the 32767 threads are
-actually in use. Sure it is going to be some amount of static data in
-the kernel, but it is an acceptable compromise.
+>> i can take a look, but if you have something on-the-top-of-your-head, i'm
+>> open to suggestions
+>> we can also just drop this completely and let userspace fail
+> 
+> Yeah it is tricky, this should be ideally implemented properly.
+> 
+>>>> +		dev_err(dmac->dma_dev.dev, "Direction not supported by this
+>>>> DMA Channel");
+>>>> +		return -EINVAL;
+>>>
+>>> So you intent to support slave dma but do not use dma_slave_config.. how
+>>> are you getting the slave address and other details?
+>>
+>> This DMA controller is a bit special.
+>> It gets synthesized in FPGA, so the configuration is fixed and cannot be
+>> changed at runtime. Maybe later we would allow/implement this
+>> functionality, but this is a question for my HDL colleagues.
+>>
+>> Two things are done (in this order):
+>> 1. For some paramters, axi_dmac_parse_chan_dt() is used to determine things
+>> from device-tree; as it's an FPGA core, things are synthesized once and
+>> cannot change (yet)
+>> 2. For other parameters, the axi_dmac_detect_caps() is used to guess some
+>> of them at probe time, by doing some reg reads/writes
+> 
+> So the question for you hw folks is how would a controller work with
+> multiple slave devices, do they need to synthesize it everytime?
+> 
+> Rather than that why cant they make the peripheral addresses
+> programmable so that you dont need updating fpga everytime!
 
-The DMA binding can look like this:
+The DMA has a direct connection to the peripheral and the peripheral
+data port is not connected to the general purpose memory interconnect.
+So you can't write to it by an MMIO address and	 there is no address
+that needs to be configured. For an FPGA based design this is quite a
+good solution in terms of resource usage, performance and simplicity. A
+direct connection requires less resources than connection it to the
+central memory interconnect, while at the same time having lower latency
+and not eating up any additional bandwidth on the central memory connect.
 
-dmas = <&main_udmap 0xc400>,
-       <&main_udmap 0x4400>;
-dma-names = "tx", "rx";
+So slave config in this case is a noop and all it can do is verify that
+the requested configuration matches the available configuration.
 
-or
-dmas = <&main_udmap 0x4400 UDMA_DIR_TX>,
-       <&main_udmap 0x4400 UDMA_DIR_RX>;
-dma-names = "tx", "rx";
-
-If I keep the direction.
-0xc400 is destination ID, which is 0x4400 | 0x8000 as per PSI-L
-specification.
-In the TRM only the source threads can be found as a map (thread IDs <
-0x7fff), but the binding document can cover this.
-
-This way we don't need another dtsi file and I can create the map in the
-kernel.
-
-This will hide some details of the HW from DT, but since the PSI-L
-thread configuration is static in hardware I believe it is acceptable.
-
-However we still have uncovered features in the binding or in code, like
-a case when the RX does not have access to the DMA channel, only flows.
-Not sure if I should reserve the direction parameter as an indication to
-this or find other way.
-Basically we communicate on the given PSI-L thread without having a DMA
-channel as other core is owning the channel.
-
-What do you think?
-
-> 
-> and for each new family member a new one.
-> 
-> Also, if we want add DMA support for a new peripheral we would need to
-> modify the kernel and the DT in sync (well, kernel first, than DT).
-> 
->> Or do some combination of the above. 
-> 
-> What about this:
-> create a new dtsi file per SoC (k3-am654-psil.dtsi, k3-k721e-psil.dtsi)
-> for the PSI-L threads and inside something like this:
-> 
-> psil-threads: psil-threads {
-> 	...
-> 	/* SA2UL: 0x4000 - 0x4003 */
-> 	ti,psil-config-4000 {
-> 		linux,udma-mode = <UDMA_PKT_MODE>;
-> 		ti,needs-epib;
-> 		ti,psd-size = <64>;
-> 		ti,notdpkt;
-> 	};
-> 
-> 	ti,psil-config-4001 {
-> 		linux,udma-mode = <UDMA_PKT_MODE>;
-> 		ti,needs-epib;
-> 		ti,psd-size = <64>;
-> 		ti,notdpkt;
-> 	};
-> 
-> 	ti,psil-config-4002 {
-> 		linux,udma-mode = <UDMA_PKT_MODE>;
-> 		ti,needs-epib;
-> 		ti,psd-size = <64>;
-> 		ti,notdpkt;
-> 	};
-> 
-> 	...
-> 	/* PDMA6 (PDMA_MCASP_G0): 0x4400 - 0x4402 */
-> 	thread-4400 {
-> 		ti,pdma-statictr-type = <PDMA_STATIC_TR_XY>;
-> 		ti,pdma-enable-acc32;
-> 		ti,pdma-enable-burst;
-> 	};
-> 
-> 	thread-4401 {
-> 		ti,pdma-statictr-type = <PDMA_STATIC_TR_XY>;
-> 		ti,pdma-enable-acc32;
-> 		ti,pdma-enable-burst;
-> 	};
-> 
-> 	thread-4402 {
-> 		ti,pdma-statictr-type = <PDMA_STATIC_TR_XY>;
-> 		ti,pdma-enable-acc32;
-> 		ti,pdma-enable-burst;
-> 	};
-> 
-> 	...
-> };
-> 
-> Then the binding would look like this for sa2ul:
-> 
-> /* tx: crypto_pnp-1, rx: crypto_pnp-1 */
-> dmas = <&main_udmap 0x4000 UDMA_DIR_TX>,
->        <&main_udmap 0x4000 UDMA_DIR_RX>,
->        <&main_udmap 0x4001 UDMA_DIR_RX>;
-> dma-names = "tx", "rx1", "rx2";
-> 
-> for McASP:
-> dmas = <&main_udmap 0x4400 UDMA_DIR_TX>,
->        <&main_udmap 0x4400 UDMA_DIR_RX>;
-> dma-names = "tx", "rx";
-> 
-> Then either we can have phandle in the udmap nodes to the psil-threads,
-> or just find it from the root when needed.
-> 
->> Sorry I don't have specific suggestions, but I just see lots of properties 
->> and complexity, and I don't really understand the h/w here. Putting the 
->> complexity in what is an ABI is generally not a good plan.
-> 
-> The complexity is coming from the hardware itself. If I can not describe
-> the hardware than it is not going to be easy for the software to figure
-> out what it is dealing with.
-> 
->> And I don't 
->> have the bandwidth to study and understand the complexities of your h/w 
->> (and everyone elses), so just more explanations are not likely to really 
->> help.
-> 
-> Sure, I understand.
-> 
-> - Péter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
-- Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

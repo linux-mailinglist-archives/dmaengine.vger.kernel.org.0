@@ -2,163 +2,147 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A56FD7392
-	for <lists+dmaengine@lfdr.de>; Tue, 15 Oct 2019 12:43:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30AE6D74DF
+	for <lists+dmaengine@lfdr.de>; Tue, 15 Oct 2019 13:24:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbfJOKns (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 15 Oct 2019 06:43:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45688 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728214AbfJOKns (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:43:48 -0400
-Received: from localhost (unknown [171.76.96.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6334820854;
-        Tue, 15 Oct 2019 10:43:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571136226;
-        bh=S3B+ofswemQthW/eKUQJFkeu8fu8WPXvCfq+gdh/oNk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a4+5VIBfbh54Faf9vFA1aBP8YseXHySX3OEYN04PVDvBJ3P7wDiAPqUx3wU/ENTq+
-         Rh021lx5OjEP4fAVs4Vw0PEIUfDXwBjBpiaznH6L9jFnabOP17QmQcVbleYtC3doFj
-         OipAfTTHfzq52r0S2xGyKBITF69ag8ZaE+p+FFQo=
-Date:   Tue, 15 Oct 2019 16:13:42 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "alencar.fmce@imbel.gov.br" <alencar.fmce@imbel.gov.br>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>
-Subject: Re: [PATCH] dmaengine: axi-dmac: simple device_config operation
- implemented
-Message-ID: <20191015104342.GW2654@vkoul-mobl>
-References: <20190913145404.28715-1-alexandru.ardelean@analog.com>
- <20191014070142.GB2654@vkoul-mobl>
- <4384347cc94a54e3fa22790aaa91375afda54e1b.camel@analog.com>
+        id S1726092AbfJOLYy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 15 Oct 2019 07:24:54 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55955 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfJOLYy (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 15 Oct 2019 07:24:54 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a6so20419213wma.5;
+        Tue, 15 Oct 2019 04:24:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8A7Og6YrsNa6Jz4NPh/sr2qSneIY/eo7oy9Kxx1XwyI=;
+        b=itmfcmkP98PF2cuksSleUiSre0o4GC8cxVqb/B0PXO5YN8dxgloXDcSxtIPzcdEyPC
+         3k6N7do6sEFPNYQ+sL4CUR54wqrfEvxnFBtBGDV/IZQpc9cEi3dInpn/2cHLrs4QZIAw
+         2dr91MVvoxnp6yAyazvqfez8Q92Y+EouYXfP78a5QjP/VILyXJG0pX1rjwjGn48A0g1c
+         v61fproDxAuc4EZw66LQpGZ5/aDHjZFqjN3cv7iPLj2QljTswdfTJHDqYQk/NRquovjI
+         mqEdRT1DA+NgtIDfo+D35Pm39yoXCdvHAu2JOKIggc6JgodnE+VOHk5LXlymQApGUr18
+         1R8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8A7Og6YrsNa6Jz4NPh/sr2qSneIY/eo7oy9Kxx1XwyI=;
+        b=dzXtGyJCmd16FAWF9NRyPnvJq7RKKf5RaYHMgvO9ED+YBjTmaES66kM61oJpEiYh98
+         W86hv1Nqa7l5jnJ5XLfuQ8+PkGeLHoF2YqvHj0LErUjfyZ/bKNchcKwj1dN3E2iVBVnE
+         0XyYnI/y3WLQmC2tF7XD8hRVAy9ydVQEPj/JtAsQqaU5Ly5RdxdsLW994bnrt0VYFRho
+         4/62dy1r4OzGzpxDASBdwpYxUyYIR8wbMo6m1NuzZ3P8qC+K0rGxKhgzlU7MfW4BM9LA
+         PAz7U3HEIqxixUQnWVavpLnhoKVfugTqD0mXHi7RLvLu0a9+rJNvynvkpWcGnDVZ8sTP
+         NZkg==
+X-Gm-Message-State: APjAAAXkpWugYzjoOb8NiuFmb3CsetT4pNcqPKQNOFVfkF/IjKVhRBHg
+        rZxR3Iy+hq7gDImnPPA0tIF10D3hHtM=
+X-Google-Smtp-Source: APXvYqwgKFVoBdR2vB6WfkTcUeVjwLe+r3you6uJEglg0KqmHpyWY6/964F9b3P1HHYuj+ZjHn71VA==
+X-Received: by 2002:a7b:c773:: with SMTP id x19mr18460344wmk.157.1571138692413;
+        Tue, 15 Oct 2019 04:24:52 -0700 (PDT)
+Received: from AlexGordeev-DPT-VI0092 ([213.86.25.46])
+        by smtp.gmail.com with ESMTPSA id t6sm38301036wmf.8.2019.10.15.04.24.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 15 Oct 2019 04:24:51 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 13:24:50 +0200
+From:   Alexander Gordeev <a.gordeev.box@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Michael Chen <micchen@altera.com>, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dmaengine: avalon: Intel Avalon-MM DMA Interface
+ for PCIe
+Message-ID: <20191015112449.GA28852@AlexGordeev-DPT-VI0092>
+References: <cover.1570558807.git.a.gordeev.box@gmail.com>
+ <3ed3c016b7fbe69e36023e7ee09c53acac8a064c.1570558807.git.a.gordeev.box@gmail.com>
+ <20191009121441.GM25098@kadam>
+ <20191009145811.GA3823@AlexGordeev-DPT-VI0092>
+ <20191009185323.GG13286@kadam>
+ <20191010085144.GA14197@AlexGordeev-DPT-VI0092>
+ <20191010113034.GN13286@kadam>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4384347cc94a54e3fa22790aaa91375afda54e1b.camel@analog.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191010113034.GN13286@kadam>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 15-10-19, 07:05, Ardelean, Alexandru wrote:
-> On Mon, 2019-10-14 at 12:31 +0530, Vinod Koul wrote:
-> > [External]
+On Thu, Oct 10, 2019 at 02:30:34PM +0300, Dan Carpenter wrote:
+> On Thu, Oct 10, 2019 at 10:51:45AM +0200, Alexander Gordeev wrote:
+> > On Wed, Oct 09, 2019 at 09:53:23PM +0300, Dan Carpenter wrote:
+> > > > > > +	u32 *rd_flags = hw->dma_desc_table_rd.cpu_addr->flags;
+> > > > > > +	u32 *wr_flags = hw->dma_desc_table_wr.cpu_addr->flags;
+> > > > > > +	struct avalon_dma_desc *desc;
+> > > > > > +	struct virt_dma_desc *vdesc;
+> > > > > > +	bool rd_done;
+> > > > > > +	bool wr_done;
+> > > > > > +
+> > > > > > +	spin_lock(lock);
+
+[*]
+
+> > > > > > +
+> > > > > > +	rd_done = (hw->h2d_last_id < 0);
+> > > > > > +	wr_done = (hw->d2h_last_id < 0);
+> > > > > > +
+> > > > > > +	if (rd_done && wr_done) {
+> > > > > > +		spin_unlock(lock);
+> > > > > > +		return IRQ_NONE;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	do {
+> > > > > > +		if (!rd_done && rd_flags[hw->h2d_last_id])
+> > > > > > +			rd_done = true;
+> > > > > > +
+> > > > > > +		if (!wr_done && wr_flags[hw->d2h_last_id])
+> > > > > > +			wr_done = true;
+> > > > > > +	} while (!rd_done || !wr_done);
+> > > > > 
+> > > > > This loop is very strange.  It feels like the last_id indexes needs
+> > > > > to atomic or protected from racing somehow so we don't do an out of
+> > > > > bounds read.
+> > 
+> > [...]
+> > 
+> > > You're missing my point.  When we set
+> > > hw->d2h_last_id = 1;
+> > [1]
+> > > ...
+> > > hw->d2h_last_id = 2;
+> > [2]
+> > 
+> > > There is a tiny moment where ->d2h_last_id is transitioning from 1 to 2
+> > > where its value is unknown.  We're in a busy loop here so we have a
+> > > decent chance of hitting that 1/1000,000th of a second.  If we happen to
+> > > hit it at exactly the right time then we're reading from a random
+> > > address and it will cause an oops.
+> > > 
+> > > We have to use atomic_t types or something to handle race conditions.
+> > 
+> > Err.. I am still missing the point :( In your example I do see a chance
+> > for a reader to read out 1 at point in time [2] - because of SMP race.
+> > But what could it be other than 1 or 2?
 > > 
 > 
-> Hey,
+> The 1 to 2 transition was a poorly chosen example, but a -1 to 1
+> trasition is better.  The cpu could write a byte at a time.  So maybe
+> it only wrote the two highest bytes so now it's 0xffff.  It's not -1 and
+> it's not 1 and it's not a valid index.
 > 
-> > On 13-09-19, 17:54, Alexandru Ardelean wrote:
-> > > From: Rodrigo Alencar <alencar.fmce@imbel.gov.br>
-> > > 
-> > > dmaengine_slave_config is called by dmaengine_pcm_hw_params when using
-> > > axi-i2s with axi-dmac. If device_config is NULL, -ENOSYS  is returned,
-> > > which breaks the snd_pcm_hw_params function.
-> > > This is a fix for the error:
-> > 
-> > and what is that?
-> > 
-> > > $ aplay -D plughw:ADAU1761 /usr/share/sounds/alsa/Front_Center.wav
-> > > Playing WAVE '/usr/share/sounds/alsa/Front_Center.wav' : Signed 16 bit
-> > > Little Endian, Rate 48000 Hz, Mono
-> > > axi-i2s 43c20000.axi-i2s: ASoC: 43c20000.axi-i2s hw params failed: -38
+> > Anyways, all code paths dealing with h2d_last_id and d2h_last_id indexes
+> > are protected with a spinlock.
 > 
-> Error is above this line [code -38].
+> You have to protect both the writer and the reader.  (That's why this
+> bug is so easy to spot).  https://lwn.net/Articles/793253/
 
-Right and it would help explaining a bit more on the error!
+I struggle to realize how the spinlock I use (see [*] above) does not
+protect the reader.
 
+I am going to post updated version shortly, hopefully it will make more
+sense.
+
+> regards,
+> dan carpenter
 > 
-> > > aplay: set_params:1403: Unable to install hw params:
-> > > ACCESS:  RW_INTERLEAVED
-> > > FORMAT:  S16_LE
-> > > SUBFORMAT:  STD
-> > > SAMPLE_BITS: 16
-> > > FRAME_BITS: 16
-> > > CHANNELS: 1
-> > > RATE: 48000
-> > > PERIOD_TIME: 125000
-> > > PERIOD_SIZE: 6000
-> > > PERIOD_BYTES: 12000
-> > > PERIODS: 4
-> > > BUFFER_TIME: 500000
-> > > BUFFER_SIZE: 24000
-> > > BUFFER_BYTES: 48000
-> > > TICK_TIME: 0
-> > > 
-> > > Signed-off-by: Rodrigo Alencar <alencar.fmce@imbel.gov.br>
-> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > > ---
-> > > 
-> > > Note: Fixes tag not added intentionally.
-> > > 
-> > >  drivers/dma/dma-axi-dmac.c | 16 ++++++++++++++++
-> > >  1 file changed, 16 insertions(+)
-> > > 
-> > > diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-> > > index a0ee404b736e..ab2677343202 100644
-> > > --- a/drivers/dma/dma-axi-dmac.c
-> > > +++ b/drivers/dma/dma-axi-dmac.c
-> > > @@ -564,6 +564,21 @@ static struct dma_async_tx_descriptor
-> > > *axi_dmac_prep_slave_sg(
-> > >  	return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
-> > >  }
-> > >  
-> > > +static int axi_dmac_device_config(struct dma_chan *c,
-> > > +			struct dma_slave_config *slave_config)
-> > > +{
-> > > +	struct axi_dmac_chan *chan = to_axi_dmac_chan(c);
-> > > +	struct axi_dmac *dmac = chan_to_axi_dmac(chan);
-> > > +
-> > > +	/* no configuration required, a sanity check is done instead */
-> > > +	if (slave_config->direction != chan->direction) {
-> > 
-> >  slave_config->direction is a deprecated field, pls dont use that
-> 
-> ack
-> any alternative recommendations of what to do in this case?
-> i can take a look, but if you have something on-the-top-of-your-head, i'm
-> open to suggestions
-> we can also just drop this completely and let userspace fail
-
-Yeah it is tricky, this should be ideally implemented properly.
-
-> > > +		dev_err(dmac->dma_dev.dev, "Direction not supported by this
-> > > DMA Channel");
-> > > +		return -EINVAL;
-> > 
-> > So you intent to support slave dma but do not use dma_slave_config.. how
-> > are you getting the slave address and other details?
-> 
-> This DMA controller is a bit special.
-> It gets synthesized in FPGA, so the configuration is fixed and cannot be
-> changed at runtime. Maybe later we would allow/implement this
-> functionality, but this is a question for my HDL colleagues.
-> 
-> Two things are done (in this order):
-> 1. For some paramters, axi_dmac_parse_chan_dt() is used to determine things
-> from device-tree; as it's an FPGA core, things are synthesized once and
-> cannot change (yet)
-> 2. For other parameters, the axi_dmac_detect_caps() is used to guess some
-> of them at probe time, by doing some reg reads/writes
-
-So the question for you hw folks is how would a controller work with
-multiple slave devices, do they need to synthesize it everytime?
-
-Rather than that why cant they make the peripheral addresses
-programmable so that you dont need updating fpga everytime!
-
-> 
-> I'll admit that maybe the whole approach could be done a bit
-> differently/better. But I guess this approach was chosen by the fact that
-> it's FPGA.
-
-Well FPGA doesnt mean hw should know everything, having SW program
-things is not a terrible idea
-
--- 
-~Vinod

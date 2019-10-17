@@ -2,111 +2,92 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 344BDDA64E
-	for <lists+dmaengine@lfdr.de>; Thu, 17 Oct 2019 09:20:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30996DAB3E
+	for <lists+dmaengine@lfdr.de>; Thu, 17 Oct 2019 13:30:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408101AbfJQHU0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 17 Oct 2019 03:20:26 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:36822 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2408044AbfJQHUW (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 17 Oct 2019 03:20:22 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0C58F1A0935;
-        Thu, 17 Oct 2019 09:20:21 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2EB661A060C;
-        Thu, 17 Oct 2019 09:20:17 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 80967402AE;
-        Thu, 17 Oct 2019 15:20:12 +0800 (SGT)
-From:   Peng Ma <peng.ma@nxp.com>
-To:     vkoul@kernel.org
-Cc:     dan.j.williams@intel.com, leoyang.li@nxp.com,
-        k.kozlowski.k@gmail.com, fabio.estevam@nxp.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peng Ma <peng.ma@nxp.com>
-Subject: [PATCH] dmaengine: fsl-edma: Add eDMA support for QorIQ LS1028A platform
-Date:   Thu, 17 Oct 2019 15:09:23 +0800
-Message-Id: <20191017070923.6705-1-peng.ma@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S2405990AbfJQLaf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 17 Oct 2019 07:30:35 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36631 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405941AbfJQLaf (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 17 Oct 2019 07:30:35 -0400
+Received: by mail-ed1-f68.google.com with SMTP id h2so1460196edn.3
+        for <dmaengine@vger.kernel.org>; Thu, 17 Oct 2019 04:30:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xOUnKgMCGvJAUS6ZmiNycMfRjAPWUKvG/ScZda78+rE=;
+        b=YxL1FETtHlQHtaMhDaZE+71PQ4/7AGbOHQq4QSq/n4THHpMgTH8KjFhEgEc31MBRSH
+         PhOhR3eucYV6Wv1QLau4+vcNh6FlYwI9CdlqYjyFDdtTroBHB0RUeqh84lU04fLADi4H
+         Le7M4ECQGFRBhvS09UF9WS1pmP+37BmFO2rUdJsEWcbXOWzRYEk2E3x5K6z+WssWBkdn
+         gSq+pTGgWlpwqkP7bpjPpzxgzNpjC2DC76O8v8crP2/jOeSP43iVOXpfKnczw9XfpyJu
+         mGFhVovdVCn555iDdkRxoTKomSzAnhAnC1Wk3fnPdlBOy2oTcK1ZIFuXysOdEtwP4aaw
+         sViQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xOUnKgMCGvJAUS6ZmiNycMfRjAPWUKvG/ScZda78+rE=;
+        b=ZuuJl35bkIEGd3ihb40lNaDoCRD8lFiNRuDXrn0IwILAhSuYMMpnNjC57+0elQYa5O
+         nzHYH5QqOwfo/dkZWX5ekdiMtRSy7t7EFdIt2w+ZGZjTQhcXG1FJU0wOSF51HIAJ/IBK
+         K0rYrE1q2xM5ZHNoi7/5o6iZDcaFA3/0igfUrT3qx1D6m8m+tss34NJ+Vz/BAdAliAqZ
+         OVBENJxWMXYfqrALMSAYKLZ8qun+WyUFzB8b0ZjHHPfrBO5tGiq7vLjv8KOM97jjFg78
+         w3yrAxuf2z+ko5YiCzHqXeBo0tT9yGBGIuh17vk9zDy30jLNP/0LHuBOvly08zQuTxwB
+         QE1A==
+X-Gm-Message-State: APjAAAVAulXmuzLIxBpv+uGEPTIBTpkhsGh3RyDwTx3fKrXFwW87H8lA
+        Yc4EvV0ezfvmqUnZDBTYJt8YdCxGSQyZmjiXOsc=
+X-Google-Smtp-Source: APXvYqz0BCequpqQtk3DLEXB4V3hf6VDFbhGpCB0CFvhsKBkDICNIKHulUg3eB1NY3Cbq4CLBW50if5yTfzGO5PYuOQ=
+X-Received: by 2002:a50:98c6:: with SMTP id j64mr3145971edb.295.1571311832243;
+ Thu, 17 Oct 2019 04:30:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAH+2xPB7rbeJnOPU10Ss9BhV_2DJV-ToQ3XNOy97+vrGx+ubcg@mail.gmail.com>
+ <20191014141344.uwnzy3j3kxngzv7a@pengutronix.de>
+In-Reply-To: <20191014141344.uwnzy3j3kxngzv7a@pengutronix.de>
+From:   Bruno Thomsen <bruno.thomsen@gmail.com>
+Date:   Thu, 17 Oct 2019 13:30:16 +0200
+Message-ID: <CAH+2xPCLr4B-=Z=Rf9NryF6wU2yLLYhFpNNZ6QBtKP8KEW_FTA@mail.gmail.com>
+Subject: Re: Regression: dmaengine: imx28 with emmc
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     dmaengine@vger.kernel.org, linux-mtd@lists.infradead.org,
+        vkoul@kernel.org, miquel.raynal@bootlin.com, bth@kamstrup.com,
+        NXP Linux Team <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Our platforms with below registers(CHCFG0 - CHCFG15) of eDMA as follows:
-*-----------------------------------------------------------*
-|     Offset   |	OTHERS      |		LS1028A	    |
-|--------------|--------------------|-----------------------|
-|     0x0      |        CHCFG0      |           CHCFG3      |
-|--------------|--------------------|-----------------------|
-|     0x1      |        CHCFG1      |           CHCFG2      |
-|--------------|--------------------|-----------------------|
-|     0x2      |        CHCFG2      |           CHCFG1      |
-|--------------|--------------------|-----------------------|
-|     0x3      |        CHCFG3      |           CHCFG0      |
-|--------------|--------------------|-----------------------|
-|     ...      |        ......      |           ......      |
-|--------------|--------------------|-----------------------|
-|     0xC      |        CHCFG12     |           CHCFG15     |
-|--------------|--------------------|-----------------------|
-|     0xD      |        CHCFG13     |           CHCFG14     |
-|--------------|--------------------|-----------------------|
-|     0xE      |        CHCFG14     |           CHCFG13     |
-|--------------|--------------------|-----------------------|
-|     0xF      |        CHCFG15     |           CHCFG12     |
-*-----------------------------------------------------------*
+Hi Sascha,
 
-This patch is to improve edma driver to fit LS1028A platform.
+Den man. 14. okt. 2019 kl. 16.13 skrev Sascha Hauer <s.hauer@pengutronix.de>:
+>
+> > I am getting a kernel oops[1] during boot on imx28 with emmc flash right
+> > around rootfs mounting. Using git bisect I found the cause to be the
+> > following commit.
+> >
+> > Regression: ceeeb99cd821 ("dmaengine: mxs: rename custom flag")
+>
+> Damn, I wasn't aware the DMA driver has other users than the GPMI Nand.
+> Please try the attached patch, it should fix it for MMC/SD. It seems
+> however, that I2C and AUART and SPI are also affected. Are you able to
+> test any of these?
 
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
----
- drivers/dma/fsl-edma-common.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Thanks for looking into the reported issue.
 
-diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index b1a7ca9..611186b 100644
---- a/drivers/dma/fsl-edma-common.c
-+++ b/drivers/dma/fsl-edma-common.c
-@@ -7,6 +7,7 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/dma-mapping.h>
-+#include <linux/sys_soc.h>
- 
- #include "fsl-edma-common.h"
- 
-@@ -42,6 +43,11 @@
- 
- #define EDMA_TCD		0x1000
- 
-+static struct soc_device_attribute soc_fixup_tuning[] = {
-+	{ .family = "QorIQ LS1028A"},
-+	{ },
-+};
-+
- static void fsl_edma_enable_request(struct fsl_edma_chan *fsl_chan)
- {
- 	struct edma_regs *regs = &fsl_chan->edma->regs;
-@@ -109,10 +115,16 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
- 	u32 ch = fsl_chan->vchan.chan.chan_id;
- 	void __iomem *muxaddr;
- 	unsigned int chans_per_mux, ch_off;
-+	int endian_diff[4] = {3, 1, -1, -3};
- 	u32 dmamux_nr = fsl_chan->edma->drvdata->dmamuxs;
- 
- 	chans_per_mux = fsl_chan->edma->n_chans / dmamux_nr;
- 	ch_off = fsl_chan->vchan.chan.chan_id % chans_per_mux;
-+
-+	if (!fsl_chan->edma->big_endian &&
-+	    soc_device_match(soc_fixup_tuning))
-+		ch_off += endian_diff[ch_off % 4];
-+
- 	muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
- 	slot = EDMAMUX_CHCFG_SOURCE(slot);
- 
--- 
-2.9.5
+I have tested your patch and it works. Rootfs is now successfully
+mounted during boot and it seems to work in user-land as well.
 
+Yes, our hardware uses I2C, AUARTs and SPI as well so I can test more patches.
+I have not seen them produce kernel oops or errors, so maybe they
+fallback to non-DMA mode.
+
+> Subject: [PATCH] mmc: mxs: fix flags passed to dmaengine_prep_slave_sg
+>
+> Fixes: ceeeb99cd821 ("dmaengine: mxs: rename custom flag")
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+
+Reported-by: Bruno Thomsen <bruno.thomsen@gmail.com>
+Tested-by: Bruno Thomsen <bruno.thomsen@gmail.com>
+
+/Bruno

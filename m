@@ -2,88 +2,84 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D1BEDC1C1
-	for <lists+dmaengine@lfdr.de>; Fri, 18 Oct 2019 11:50:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1872DC41E
+	for <lists+dmaengine@lfdr.de>; Fri, 18 Oct 2019 13:42:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390881AbfJRJue (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 18 Oct 2019 05:50:34 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:34089 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730808AbfJRJue (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 18 Oct 2019 05:50:34 -0400
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1iLOu0-00089m-UX; Fri, 18 Oct 2019 11:50:32 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <sha@pengutronix.de>)
-        id 1iLOu0-0005Tx-5Y; Fri, 18 Oct 2019 11:50:32 +0200
-Date:   Fri, 18 Oct 2019 11:50:32 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Bruno Thomsen <bruno.thomsen@gmail.com>
-Cc:     dmaengine@vger.kernel.org, linux-mtd@lists.infradead.org,
-        vkoul@kernel.org, miquel.raynal@bootlin.com, bth@kamstrup.com,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: Regression: dmaengine: imx28 with emmc
-Message-ID: <20191018095032.akdis5anygjl4pio@pengutronix.de>
-References: <CAH+2xPB7rbeJnOPU10Ss9BhV_2DJV-ToQ3XNOy97+vrGx+ubcg@mail.gmail.com>
- <20191014141344.uwnzy3j3kxngzv7a@pengutronix.de>
+        id S2392620AbfJRLmN convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Fri, 18 Oct 2019 07:42:13 -0400
+Received: from mail.delivery-3-us-west-2.prod.hydra.sophos.com ([34.212.96.102]:42964
+        "EHLO mail.delivery-3-us-west-2.prod.hydra.sophos.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390948AbfJRLmM (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 18 Oct 2019 07:42:12 -0400
+X-Greylist: delayed 491 seconds by postgrey-1.27 at vger.kernel.org; Fri, 18 Oct 2019 07:42:12 EDT
+Received: from mail.delivery-4-us-west-2.prod.hydra.sophos.com (ip-172-17-2-18.us-west-2.compute.internal [172.17.2.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.delivery-3-us-west-2.prod.hydra.sophos.com (Postfix) with ESMTPS id 46vkSn19yDz6Br
+        for <dmaengine@vger.kernel.org>; Fri, 18 Oct 2019 11:34:01 +0000 (UTC)
+Received: from ip-172-17-2-134.us-west-2.compute.internal (ip-172-17-2-134.us-west-2.compute.internal [127.0.0.1])
+        by mail.delivery-4-us-west-2.prod.hydra.sophos.com (Postfix) with ESMTP id 46vkSl56SNz1xn2;
+        Fri, 18 Oct 2019 11:33:59 +0000 (UTC)
+X-Sophos-Email-ID: 8145f43945ee4dc4b1b2d6a12e1f6645
+Received: from EXMB02.TISD-AD.tomballisd.net (unknown [50.228.85.208])
+ (using TLSv1 with cipher AES256-SHA (256/256 bits))
+ (No client certificate requested)
+ by relay-us-west-2.prod.hydra.sophos.com (Postfix) with ESMTPS id
+ 46vkSY0gChz5vMr; Fri, 18 Oct 2019 11:33:49 +0000 (UTC)
+Received: from EXM01.TISD-AD.tomballisd.net (10.8.101.112) by
+ EXMB02.TISD-AD.tomballisd.net (10.8.101.113) with Microsoft SMTP Server (TLS)
+ id 15.0.1365.1; Fri, 18 Oct 2019 06:33:39 -0500
+Received: from EXM01.TISD-AD.tomballisd.net ([::1]) by
+ EXM01.TISD-AD.tomballisd.net ([fe80::9dd0:78e4:daed:5bf0%13]) with mapi id
+ 15.00.1365.000; Fri, 18 Oct 2019 06:33:38 -0500
+From:   Barbara Coleman <barbaracoleman@tomballisd.net>
+Subject: Darlehen
+Thread-Topic: Darlehen
+Thread-Index: AQHVhadIaC3OGl03h0mu3W3RPhlWuA==
+Date:   Fri, 18 Oct 2019 11:33:37 +0000
+Message-ID: <1571398351765.3113@tomballisd.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [70.32.0.114]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014141344.uwnzy3j3kxngzv7a@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 11:49:27 up 102 days, 15:59, 102 users,  load average: 0.31, 0.13,
- 0.12
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+X-LASED-Pver: 0000002
+X-Sophos-Email: [us-west-2] Antispam-Engine: 3.4.1,
+ AntispamData: 2019.10.18.111817
+X-LASED-SpamProbabilty: 0.083173
+X-LASED-Hits: BODYTEXTP_SIZE_3000_LESS 0.000000,
+ BODYTEXTP_SIZE_400_LESS 0.000000, BODY_SIZE_1000_LESS 0.000000,
+ BODY_SIZE_2000_LESS 0.000000, BODY_SIZE_300_399 0.000000,
+ BODY_SIZE_5000_LESS 0.000000, BODY_SIZE_7000_LESS 0.000000,
+ HTML_00_01 0.050000, HTML_00_10 0.050000, MISSING_HEADERS 0.000000,
+ NO_URI_HTTPS 0.000000, OUTBOUND 0.000000, OUTBOUND_SOPHOS 0.000000,
+ RDNS_NXDOMAIN 0.000000, RDNS_SUSP_GENERIC 0.000000, SUBJ_1WORD 0.100000,
+ TO_MALFORMED 0.000000, WEBMAIL_SOURCE 0.000000, WEBMAIL_XOIP 0.000000,
+ WEBMAIL_X_IP_HDR 0.000000, __ANY_URI 0.000000, __BODY_NO_MAILTO 0.000000,
+ __CT 0.000000, __CTE 0.000000, __CT_TEXT_PLAIN 0.000000,
+ __FRAUD_BODY_WEBMAIL 0.000000, __FRAUD_MONEY 0.000000,
+ __FRAUD_MONEY_CURRENCY 0.000000, __FRAUD_MONEY_CURRENCY_DOLLAR 0.000000,
+ __FRAUD_MONEY_CURRENCY_EURO 0.000000, __FRAUD_MONEY_DENOMINATION 0.000000,
+ __FRAUD_MONEY_VALUE 0.000000, __FRAUD_WEBMAIL 0.000000, __HAS_FROM 0.000000,
+ __HAS_MSGID 0.000000, __HAS_XOIP 0.000000, __MIME_TEXT_ONLY 0.000000,
+ __MIME_TEXT_P 0.000000, __MIME_TEXT_P1 0.000000, __MIME_VERSION 0.000000,
+ __NETFLIX_URI_ONLY 0.000000, __NO_HTML_TAG_RAW 0.000000,
+ __PHISH_SPEAR_STRUCTURE_1 0.000000, __PHISH_SPEAR_STRUCTURE_2 0.000000,
+ __SANE_MSGID 0.000000, __URI_NO_WWW 0.000000, __URI_NS 0.000000
+X-LASED-Authed: 1
+X-LASED-Spam: NonSpam
+To:     unlisted-recipients:; (no To-header on input)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 04:13:44PM +0200, Sascha Hauer wrote:
-> Hi Bruno,
-> 
-> On Tue, Oct 08, 2019 at 10:03:16AM +0200, Bruno Thomsen wrote:
-> > Hi
-> > 
-> > I am getting a kernel oops[1] during boot on imx28 with emmc flash right
-> > around rootfs mounting. Using git bisect I found the cause to be the
-> > following commit.
-> > 
-> > Regression: ceeeb99cd821 ("dmaengine: mxs: rename custom flag")
-> > 
-> > Reverting the 2 changes in drivers/dma/mxs-dma.c fixes the oops,
-> > but I am not sure that is the right solution as I don't have the full
-> > mxs-dma + mtd/mmc overview.
-> > 
-> > I did see that the patch isn't a simple rename but also a bit define
-> > change.
-> > From: DMA_CTRL_ACK = (1 << 1) = BIT(1)
-> > To: MXS_DMA_CTRL_WAIT4END = BIT(31)
-> > 
-> 
-> Damn, I wasn't aware the DMA driver has other users than the GPMI Nand.
-> Please try the attached patch, it should fix it for MMC/SD. It seems
-> however, that I2C and AUART and SPI are also affected. Are you able to
-> test any of these?
 
-I just sent out the patch again for inclusion with the collected
-tested-by tags.
 
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Benötigen Sie einen Kredit, um Ihre Rechnungen zu begleichen oder ein eigenes Unternehmen zu gründen? Wir geben alle Arten von Darlehen zu einem Zinssatz von 3% ab
+Das Minimum von 5.000,00 USD bis zum Maximum von 100 Millionen US-Dollar, Pfund, Euro. Bei Interesse kontaktieren Sie uns per E-Mail:  pw18443@aol.com  E-Mail:  pw18443@financier.com

@@ -2,74 +2,57 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F2CCDDBEA1
-	for <lists+dmaengine@lfdr.de>; Fri, 18 Oct 2019 09:44:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14F3EDBF25
+	for <lists+dmaengine@lfdr.de>; Fri, 18 Oct 2019 09:59:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437519AbfJRHom (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 18 Oct 2019 03:44:42 -0400
-Received: from zaovasilisa.ru ([88.200.194.99]:37583 "EHLO usrv.lan"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2409622AbfJRHom (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 18 Oct 2019 03:44:42 -0400
-X-Greylist: delayed 40143 seconds by postgrey-1.27 at vger.kernel.org; Fri, 18 Oct 2019 03:44:41 EDT
-Received: from 127.0.0.1 (localhost [127.0.0.1])
-        by usrv.lan (Postfix) with SMTP id 0A88C185B2B;
-        Thu, 17 Oct 2019 17:01:29 +0400 (MSD)
-Received: from [108.132.32.1] by 127.0.0.1; Thu, 17 Oct 2019 15:00:27 +0200
-Message-ID: <637invvv5cb0$r633l$-ajd$0o@nn6.zp1>
-From:   "Mr Ekrem Bayraktar" <dave@dbsoundfactory.com>
-Reply-To: "Mr Ekrem Bayraktar" <dave@dbsoundfactory.com>
-To:     dixiedixieusa@msn.com
-Subject: MOTHERLESS CHILDREN IN YOUR CITY !!
-Date:   Thu, 17 Oct 19 15:00:27 GMT
-X-Mailer: Internet Mail Service (5.5.2650.21)
+        id S2391397AbfJRH7A (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 18 Oct 2019 03:59:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728064AbfJRH7A (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 18 Oct 2019 03:59:00 -0400
+Received: from localhost (unknown [106.200.243.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DED7D21897;
+        Fri, 18 Oct 2019 07:58:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571385539;
+        bh=r9mIGNyICLZKduhVIr2wJ2+qRiOFioKTV4sTZSUNf3A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jruileM5WG9ou5fFTu2c50e/SsvPW9vAVRA2x9RoEOb9Xpg7VC5on6WTuJSFi6umb
+         /X4BOrkAB4MfipWflUnbeusBocDcFdDOqwKHMdbsFc65EFdd49YwfygMv/1RpTh/6H
+         zB06aBSif9CCW1lX9f4mdX4IMw7fniSfNJh8AEUw=
+Date:   Fri, 18 Oct 2019 13:28:55 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        dan.j.williams@intel.com, linux-arm-msm@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: qcom: bam_dma: Fix resource leak
+Message-ID: <20191018075855.GP2654@vkoul-mobl>
+References: <20191017152606.34120-1-jeffrey.l.hugo@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-        boundary="EFA7_FB09FAD2"
-X-Priority: 3
-X-MSMail-Priority: Normal
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017152606.34120-1-jeffrey.l.hugo@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On 17-10-19, 08:26, Jeffrey Hugo wrote:
+> bam_dma_terminate_all() will leak resources if any of the transactions are
+> committed to the hardware (present in the desc fifo), and not complete.
+> Since bam_dma_terminate_all() does not cause the hardware to be updated,
+> the hardware will still operate on any previously committed transactions.
+> This can cause memory corruption if the memory for the transaction has been
+> reassigned, and will cause a sync issue between the BAM and its client(s).
+> 
+> Fix this by properly updating the hardware in bam_dma_terminate_all().
 
---EFA7_FB09FAD2
-Content-Type: text/plain;
-Content-Transfer-Encoding: quoted-printable
+Applied and marked stable, thanks
 
-Dear Sir / Madam
-
-
-
-Since ever we left your country back to Canada , we have gotten Government=
- approval and we have been busying planning for the less privilege Childre=
-n projects.
-
-We are planning to release first batch of the funds $2,990,000.00 within 1=
-4 days for building an estate for motherless children in your city.
-
-I want you to use my mother;s company name to register this charity projec=
-t in your country after receiving the project funds.
-
-It must be registered as { Bayraktar Group Homeless Children Ltd }.
-
-
-Can you handle and supervise this big project ?
-Can you manager all the workers as a senior supervisor ?
-We want to be sure you can handle it before we proceed with this project.
-
-
-Please call me if you want to hear from us + 1-917 580 4919.
-Please can you manage such project please Kindly reply for further details=
-.
-
-Your full names-----------
-
-
-
-Ekrem Bayraktar.
-Bayraktar Shipping Group
-
---EFA7_FB09FAD2--
-
+-- 
+~Vinod

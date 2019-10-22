@@ -2,172 +2,157 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 44B6BE0857
-	for <lists+dmaengine@lfdr.de>; Tue, 22 Oct 2019 18:11:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3883CE09F6
+	for <lists+dmaengine@lfdr.de>; Tue, 22 Oct 2019 19:01:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727531AbfJVQKe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 22 Oct 2019 12:10:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727152AbfJVQKd (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 22 Oct 2019 12:10:33 -0400
-Received: from localhost (unknown [122.181.223.147])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00FFD21783;
-        Tue, 22 Oct 2019 16:10:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571760632;
-        bh=xi2a30iBVKEL1sbscpkqFNVDbDwtN/p2WWW2qs/YLkQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cvVReUhK0Gi+MolURPUlwdVU9rgKwtBoKTYg7TUkYCCEGQnhIYKXrhp2QzXoiaHpy
-         yS7u3wlZm159nh6r8fuAel3wEIohOqO7t6if1BSO8zq0cUGbXKFCERfD2REYQb7tUk
-         dFcjmJZp4zr7OKU1cEByjjYxYn7U5lROS8Al4mNo=
-Date:   Tue, 22 Oct 2019 21:40:20 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peng Ma <peng.ma@nxp.com>
-Cc:     Anders Roxell <anders.roxell@linaro.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Subject: Re: [EXT] Re: [V5 1/2] dmaengine: fsl-dpaa2-qdma: Add the
- DPDMAI(Data Path DMA Interface) support
-Message-ID: <20191022161020.GM2654@vkoul-mobl>
-References: <20190930020440.7754-1-peng.ma@nxp.com>
- <20191017041124.GN2654@vkoul-mobl>
- <AM0PR04MB44207F0EF575C5FB44DA6984ED6D0@AM0PR04MB4420.eurprd04.prod.outlook.com>
- <CADYN=9JkQMawVnLoJ8sXAbV8NB_BK0zQA0PomJ583Agj12r8Cg@mail.gmail.com>
- <VI1PR04MB443121007853185039A65534ED680@VI1PR04MB4431.eurprd04.prod.outlook.com>
+        id S1733029AbfJVRA5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 22 Oct 2019 13:00:57 -0400
+Received: from mail-eopbgr810075.outbound.protection.outlook.com ([40.107.81.75]:21088
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732901AbfJVRAo (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 22 Oct 2019 13:00:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HNFUQMl7Ear6ArU2DxvaGoyfLdgd3SZAOd2o+07cFAqiiXnRLeKThZZvy/+xCoKvHEA6pE0Dv1FI7VInf5l9qXgVTJOdYh+nTDwrtxTV4/3P3CtTxCVs1r6upMR5zpNZcmteKPUGR7Zos1UQxxrfuuQggcn0d9Fqi6Ancw20bpehejd1cjNXyQHmNn0DspEMEeJqRXCvv2EvexlZmcPFhEqkXi3oxcpP8L50A3Rkr0zvBDEtE8uXopq42OAAXGDOnlW4c0kh/G403jKsY8Zk2TFA9MqjyqQFGlIBaOI4Obj34VzReqFYPnRVw8D+WN+4zSg5wvP1VOOkyYvfLohmWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mv/e1GMX0SeztnCQFk/4xSve8HK350bCNHTx0laONDE=;
+ b=dfk/GsVMjG+HC4esa2DWO2XJweZr1U2ghak3qyk/YfiVlNOBh07bpdWy3/iK77aNm/hfL2EmgARF7+hJNRaR3Ganh8Py37PsuH2WD+NaVcp4I7UF62pVsYUj4KIgQUAiBACpiaXnNsMjsZcsbdi5gj7e7iDrD3zG02rElvD4WjKmwDRLJF0066pUSlsBcQ0IA8h8r1BWmd8i7ovjDl04FxSbpzOFJVJ3SycpWJUc+hPetmaILaHXtDvUgzfqV8C/feXVZbiBrioQdJlI2P6cvWOgbTGDFquc0ohs2dyXZVKhUslnrpfgQWfBwzJR2ez9MCT7SZFzJUEIw2Q8SrESjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mv/e1GMX0SeztnCQFk/4xSve8HK350bCNHTx0laONDE=;
+ b=qiLOxJ95XorhCyq3MSlafeuGgc9BqhCM8wIRUvtfC85/iXQRm1rGTE88wlo+rzK/FPMm2ptzAOm6QBPDg+2rVcNSc9f2wnBlOCt2RaZmKSFqckk4BxCOhRxQq1/1hjT3EYvbicoKB624VIy86gwIyj6iJUAo/s/VGHQTjJPF2AE=
+Received: from BN6PR02CA0030.namprd02.prod.outlook.com (2603:10b6:404:5f::16)
+ by CH2PR02MB6053.namprd02.prod.outlook.com (2603:10b6:610:1::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2347.16; Tue, 22 Oct
+ 2019 17:00:41 +0000
+Received: from SN1NAM02FT033.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::206) by BN6PR02CA0030.outlook.office365.com
+ (2603:10b6:404:5f::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2367.20 via Frontend
+ Transport; Tue, 22 Oct 2019 17:00:41 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT033.mail.protection.outlook.com (10.152.72.133) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2367.14
+ via Frontend Transport; Tue, 22 Oct 2019 17:00:41 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <radhey.shyam.pandey@xilinx.com>)
+        id 1iMxWS-0006Am-GU; Tue, 22 Oct 2019 10:00:40 -0700
+Received: from [127.0.0.1] (helo=xsj-smtp-dlp2.xlnx.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <radhey.shyam.pandey@xilinx.com>)
+        id 1iMxWN-0005DF-4Y; Tue, 22 Oct 2019 10:00:35 -0700
+Received: from xsj-pvapsmtp01 (maildrop.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x9MH0WM1030515;
+        Tue, 22 Oct 2019 10:00:32 -0700
+Received: from [10.140.184.180] (helo=ubuntu)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <radheys@ubuntu>)
+        id 1iMxWJ-00059Y-Hj; Tue, 22 Oct 2019 10:00:31 -0700
+Received: by ubuntu (Postfix, from userid 13245)
+        id BE39C10104D; Tue, 22 Oct 2019 22:30:30 +0530 (IST)
+From:   Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+To:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        dan.j.williams@intel.com, michal.simek@xilinx.com,
+        anirudha.sarangi@xilinx.com, nick.graumann@gmail.com,
+        andrea.merello@gmail.com, appana.durga.rao@xilinx.com,
+        mcgrof@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Subject: [PATCH -next 0/6] dmaengine: xilinx_dma: Add Xilinx AXI MCDMA Engine driver support
+Date:   Tue, 22 Oct 2019 22:30:16 +0530
+Message-Id: <1571763622-29281-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-Result: No--6.831-7.0-31-1
+X-imss-scan-details: No--6.831-7.0-31-1;No--6.831-5.0-31-1
+X-TM-AS-User-Approved-Sender: No;No
+X-TM-AS-Result-Xfilter: Match text exemption rules:No
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(376002)(39860400002)(189003)(199004)(2906002)(5660300002)(107886003)(50226002)(16586007)(6266002)(47776003)(14444005)(50466002)(106002)(186003)(478600001)(7416002)(336012)(426003)(966005)(70206006)(6666004)(486006)(476003)(4326008)(6306002)(81156014)(126002)(103686004)(356004)(26005)(48376002)(51416003)(81166006)(316002)(2616005)(36756003)(70586007)(42186006)(8936002)(305945005)(8676002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6053;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <VI1PR04MB443121007853185039A65534ED680@VI1PR04MB4431.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e5b8795e-bfb9-4177-a852-08d757115eb6
+X-MS-TrafficTypeDiagnostic: CH2PR02MB6053:
+X-MS-Exchange-PUrlCount: 3
+X-Microsoft-Antispam-PRVS: <CH2PR02MB6053A31784BDF03E71A79C22C7680@CH2PR02MB6053.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 01986AE76B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: xu2O7nIvjM0cZM7MXPRkLJAcF0qyOkxZBLHegV5vBF8afvtiuvzhtlBh+Z4fQxLv8coOthKHoLmxmQlQj/FOrD+mDF/IlLM6ebF69BlREEGWesUYhY3MHGh3F+s9WdylJmOGiFs9J+yjhYFsUHsJZbC7pO6E7ylPPxr2T5BPzQUKavVIRgfIz6B9oroPCDlSrPogi+4g0eGnTPMBBXzm8y4POZa9dpAACDt0YBCbpfChW8XC6r30kN9a0YgK3NCZGyrUwBSJLGHzfho+VCqg/URkzyjwcjDzCWv7ypWs7qPOIjfFuKYGq9Az7eLz1FX3AnKZ5YSEk9kYg2Hgq8SO7oSMHwHiNvw6XCGoa8OmXP/S5eYtPtixd+3vpLDbDFRUDQmgvx0UyYPqHrWbSyYbKKQw8vjsUbkyOS6eWCj+8IOJV3/3HrkRUBy5jo+P4gK0CAM6DavUZIVJgzqvfQ3iTc9+bu++zh8+aWv69qMNl2k=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Oct 2019 17:00:41.0173
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5b8795e-bfb9-4177-a852-08d757115eb6
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6053
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Please *do* *not* top post!
+This patchset adds Xilinx AXI MCDMA IP support. The AXI MCDMA provides
+high-bandwidth direct memory access between memory and AXI4-Stream target
+peripherals. It supports up to 16 independent read/write channels.
 
-On 22-10-19, 10:19, Peng Ma wrote:
-> Hi Anders && Viod,
+MCDMA IP supports per channel interrupt output but driver support one
+interrupt per channel for simplification. IP specification/programming
+sequence and register description is mentioned in PG [1].
 
-Its Vinod!
+The driver is tested with xilinx internal dmatest client. In end usecase
+MCDMA will be used by xilinx axiethernet driver using dma API's.
 
-> 
-> I sent v6 patch to fix the build error, please check.
-> Patchwork link:
-> https://patchwork.kernel.org/project/linux-dmaengine/list/?series=191397
+Changes since RFC[2]:
+- Remove xilinx axidma multichannel support.
+- Addressed all RFC comments except modularizing initialization of channel
+  segment is skipped as it would create tight coupling b/w axidma and
+  mcdma internal structures.
+- Include MCDMA IP description in Kconfig.
+- Few regression fixes from xilinx tree.
 
-No I have already applied v5, please send fixes on top on
-dmaengine-next! Would also make sense to give credit to Anders using
-Reported-by tag
+NOTE: This patchset is based on next and previous[3] axidma series.
 
-> 
-> Best Regards,
-> Peng
-> >-----Original Message-----
-> >From: Anders Roxell <anders.roxell@linaro.org>
-> >Sent: 2019年10月22日 17:27
-> >To: Peng Ma <peng.ma@nxp.com>
-> >Cc: Vinod Koul <vkoul@kernel.org>; dan.j.williams@intel.com; Leo Li
-> ><leoyang.li@nxp.com>; linux-kernel@vger.kernel.org;
-> >dmaengine@vger.kernel.org
-> >Subject: Re: [EXT] Re: [V5 1/2] dmaengine: fsl-dpaa2-qdma: Add the
-> >DPDMAI(Data Path DMA Interface) support
-> >
-> >Caution: EXT Email
-> >
-> >On Thu, 17 Oct 2019 at 08:16, Peng Ma <peng.ma@nxp.com> wrote:
-> >>
-> >> Hi Vinod,
-> >>
-> >> Thanks very much for your reply.
-> >>
-> >> Best Regards,
-> >> Peng
-> >> >-----Original Message-----
-> >> >From: Vinod Koul <vkoul@kernel.org>
-> >> >Sent: 2019年10月17日 12:11
-> >> >To: Peng Ma <peng.ma@nxp.com>
-> >> >Cc: dan.j.williams@intel.com; Leo Li <leoyang.li@nxp.com>;
-> >> >linux-kernel@vger.kernel.org; dmaengine@vger.kernel.org
-> >> >Subject: [EXT] Re: [V5 1/2] dmaengine: fsl-dpaa2-qdma: Add the
-> >> >DPDMAI(Data Path DMA Interface) support
-> >> >
-> >> >Caution: EXT Email
-> >> >
-> >> >On 30-09-19, 02:04, Peng Ma wrote:
-> >> >> The MC(Management Complex) exports the DPDMAI(Data Path DMA
-> >> >Interface)
-> >> >> object as an interface to operate the DPAA2(Data Path Acceleration
-> >> >> Architecture 2) qDMA Engine. The DPDMAI enables sending frame-based
-> >> >> requests to qDMA and receiving back confirmation response on
-> >> >> transaction completion, utilizing the DPAA2 QBMan(Queue Manager and
-> >> >> Buffer Manager
-> >> >> hardware) infrastructure. DPDMAI object provides up to two
-> >> >> priorities for processing qDMA requests.
-> >> >> The following list summarizes the DPDMAI main features and capabilities:
-> >> >>       1. Supports up to two scheduling priorities for processing
-> >> >>       service requests.
-> >> >>       - Each DPDMAI transmit queue is mapped to one of two service
-> >> >>       priorities, allowing further prioritization in hardware between
-> >> >>       requests from different DPDMAI objects.
-> >> >>       2. Supports up to two receive queues for incoming transaction
-> >> >>       completion confirmations.
-> >> >>       - Each DPDMAI receive queue is mapped to one of two receive
-> >> >>       priorities, allowing further prioritization between other
-> >> >>       interfaces when associating the DPDMAI receive queues to DPIO
-> >> >>       or DPCON(Data Path Concentrator) objects.
-> >> >>       3. Supports different scheduling options for processing received
-> >> >>       packets:
-> >> >>       - Queues can be configured either in 'parked' mode (default),
-> >> >>       or attached to a DPIO object, or attached to DPCON object.
-> >> >>       4. Allows interaction with one or more DPIO objects for
-> >> >>       dequeueing/enqueueing frame descriptors(FD) and for
-> >> >>       acquiring/releasing buffers.
-> >> >>       5. Supports enable, disable, and reset operations.
-> >> >>
-> >> >> Add dpdmai to support some platforms with dpaa2 qdma engine.
-> >> >
-> >> >Applied both, thanks
-> >
-> >I see this error when I'm building.
-> >
-> >WARNING: modpost: missing MODULE_LICENSE() in
-> >drivers/dma/fsl-dpaa2-qdma/dpdmai.o
-> >see include/linux/module.h for more information
-> >ERROR: "dpdmai_enable" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
-> >undefined!
-> >ERROR: "dpdmai_set_rx_queue"
-> >[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-> >ERROR: "dpdmai_get_tx_queue"
-> >[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-> >ERROR: "dpdmai_get_rx_queue"
-> >[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-> >ERROR: "dpdmai_get_attributes"
-> >[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
-> >ERROR: "dpdmai_open" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
-> >undefined!
-> >ERROR: "dpdmai_close" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
-> >undefined!
-> >ERROR: "dpdmai_disable" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
-> >undefined!
-> >ERROR: "dpdmai_reset" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
-> >undefined!
-> >make[2]: *** [../scripts/Makefile.modpost:95: __modpost] Error 1
-> >make[1]: *** [/srv/src/kernel/next/Makefile:1282: modules] Error 2
-> >make: *** [Makefile:179: sub-make] Error 2
-> >make: Target 'Image' not remade because of errors.
-> >make: Target 'modules' not remade because of errors.
-> >
-> >any other that see the same ?
-> >
-> >Cheers,
-> >Anders
+[1] https://www.xilinx.com/support/documentation/ip_documentation/axi_mcdma/v1_0/pg288-axi-mcdma.pdf
+[2] https://spinics.net/lists/devicetree/msg242427.html
+[3] https://www.spinics.net/lists/dmaengine/msg19910.html
+
+Radhey Shyam Pandey (6):
+  dt-bindings: dmaengine: xilinx_dma: Remove axidma multichannel support
+  dt-bindings: dmaengine: xilinx_dma: Fix formatting and style
+  dt-bindings: dmaengine: xilinx_dma: Add binding for Xilinx MCDMA IP
+  dmaengine: xilinx_dma: Remove axidma multichannel mode support
+  dmaengine: xilinx_dma: Extend dma_config struct to store irq routine
+    handle
+  dmaengine: xilinx_dma: Add Xilinx AXI MCDMA Engine driver support
+
+ .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |  24 +-
+ drivers/dma/Kconfig                                |   4 +
+ drivers/dma/xilinx/xilinx_dma.c                    | 517 ++++++++++++++++-----
+ 3 files changed, 431 insertions(+), 114 deletions(-)
 
 -- 
-~Vinod
+2.7.4
+

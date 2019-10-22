@@ -2,148 +2,188 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B7FD9E034F
-	for <lists+dmaengine@lfdr.de>; Tue, 22 Oct 2019 13:47:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EDC6E0391
+	for <lists+dmaengine@lfdr.de>; Tue, 22 Oct 2019 14:05:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387975AbfJVLqZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 22 Oct 2019 07:46:25 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:34966 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387977AbfJVLqZ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 22 Oct 2019 07:46:25 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9MBk78K081386;
-        Tue, 22 Oct 2019 06:46:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1571744767;
-        bh=D8Xr36FkHE114oLNdhxs8VF7GbCwyndapIYX2707LgU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=gZbLaC6QZ+CqLi7kfRJOAAKHSHqz7JqJcfixVJagdPBqB8/yM/ig1qGVaSdgGQFC7
-         ZucfhMxwgH52ce1n/sXJXjdYlmSzY9+pFUo1NTxxIOiccoVIXiVuyEqWZVfN3Iclge
-         4BuMMXC+wsAPGudnwMjoGGgDtjcBN2uGGiPQZKiQ=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9MBjahZ023272
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 22 Oct 2019 06:45:36 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 22
- Oct 2019 06:45:26 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 22 Oct 2019 06:45:26 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9MBj2NU038532;
-        Tue, 22 Oct 2019 06:45:03 -0500
-Subject: Re: [PATCH v3 07/14] dt-bindings: dma: ti: Add document for K3 UDMA
-To:     Rob Herring <robh@kernel.org>
-CC:     Nishanth Menon <nm@ti.com>, <devicetree@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>,
+        id S2388315AbfJVMFR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 22 Oct 2019 08:05:17 -0400
+Received: from mail-lj1-f179.google.com ([209.85.208.179]:35739 "EHLO
+        mail-lj1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388245AbfJVMFR (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 22 Oct 2019 08:05:17 -0400
+Received: by mail-lj1-f179.google.com with SMTP id m7so16913700lji.2
+        for <dmaengine@vger.kernel.org>; Tue, 22 Oct 2019 05:05:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=VGTfUe//Lkyyq1CFsi2Aw+FdHH2W9Ju5Bb6Df3fquDw=;
+        b=pi2vCaoItbcXJ3F6Bo71yn+jXqd3pUZmK66jHNjAkxWt9qjAswyRHIIsKKK72IkTXF
+         /IvctVUS5+Et1kRm85+/fTdAMG6rzkj4+bC/284zs0NqpGElHvrvhM6VtG5Oteyu3d8z
+         X3/6G6g//2ckZ/demrHv7AuYYD7M7xSSbVgMj0XayXZhIwSodnRNmXSaxpCWbszhUD68
+         wQb6DLFyZ+Hj85zp69FgdmjvHHjZuGsYd56eKrruHekeB9s2DSlxgz1TYs2RZPVqBGKj
+         yaiHok3rmXo/vPDzoXU0deh8jdiYvdZaUgncHbfuyUiknG+ebmixBr2n3MkfWfs2FE7w
+         hKcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=VGTfUe//Lkyyq1CFsi2Aw+FdHH2W9Ju5Bb6Df3fquDw=;
+        b=XhcyBMyXzqYGamnASIAvrbxc30Aqu4wCOIccTD4QpXrAn4aiubi9gEHG+GX7CPqdfy
+         755NYH1wNjXlAuaH/dxVz2zW6aOFu7mOk5wDYqUOTCAJ7Eb8DFV2R01D8gMoXMEPmf9I
+         s7HfdM3gbHxr8l8kGj9f+0gL0UbUUn2DFLSuq6sXvYTmemLPZWY+dcWNXSRJjft4JReI
+         DYD6SmRazhCTGjrZrBCl+D0dfoqtbJXdej8lcm6LVKr+iQ1ER2nATaLTnkQfxeaSzGrA
+         ilycFJ0XJA1qXnX409GdCmysTcdtWqHDQ9fZct9oCFcXD+S6wRUFtPXAex8kHvDxmt2Y
+         vu+g==
+X-Gm-Message-State: APjAAAX3ddZJRAPOVUp8ezuZCS45xHZECrlF33XG7npWCBSqgntEIqhd
+        +Q3Y3UUI3sbzKiDOik0txd6NMw==
+X-Google-Smtp-Source: APXvYqw73VgC0S976eZM9uQqGSZ6Ma0RPqQ57qIGOHoyqFCwxrGlaeFe6OIdIpOCQtqa5/Z8vQsNJA==
+X-Received: by 2002:a2e:9b46:: with SMTP id o6mr2071632ljj.90.1571745914535;
+        Tue, 22 Oct 2019 05:05:14 -0700 (PDT)
+Received: from localhost.localdomain (c-413e70d5.07-21-73746f28.bbcust.telenor.se. [213.112.62.65])
+        by smtp.gmail.com with ESMTPSA id r75sm6940248lff.93.2019.10.22.05.05.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 22 Oct 2019 05:05:12 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 13:10:39 +0200
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        Leo Li <leoyang.li@nxp.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Tony Lindgren <tony@atomide.com>, Vinod <vkoul@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
- <20191001061704.2399-8-peter.ujfalusi@ti.com> <20191010175232.GA24556@bogus>
- <ef07299b-eb43-d582-adb8-46f46681f9a5@ti.com>
- <d53f3bd7-d331-33c8-5232-c8f3cc9ac708@ti.com>
- <CAL_JsqKWVLMa=AJ+SNHjMRFpCk6cM=UPBgmmHVonOQ03a_zxXQ@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <a844b84c-8dc7-6562-1f66-e4d625fa42e6@ti.com>
-Date:   Tue, 22 Oct 2019 14:46:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+Subject: Re: [EXT] Re: [V5 1/2] dmaengine: fsl-dpaa2-qdma: Add the
+ DPDMAI(Data Path DMA Interface) support
+Message-ID: <20191022111039.GA8762@localhost.localdomain>
+References: <20190930020440.7754-1-peng.ma@nxp.com>
+ <20191017041124.GN2654@vkoul-mobl>
+ <AM0PR04MB44207F0EF575C5FB44DA6984ED6D0@AM0PR04MB4420.eurprd04.prod.outlook.com>
+ <CADYN=9JkQMawVnLoJ8sXAbV8NB_BK0zQA0PomJ583Agj12r8Cg@mail.gmail.com>
+ <VI1PR04MB443121007853185039A65534ED680@VI1PR04MB4431.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKWVLMa=AJ+SNHjMRFpCk6cM=UPBgmmHVonOQ03a_zxXQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <VI1PR04MB443121007853185039A65534ED680@VI1PR04MB4431.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 17/10/2019 17.03, Rob Herring wrote:
-> On Tue, Oct 15, 2019 at 12:29 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>
->> Rob,
->>
->> On 10/11/19 10:30 AM, Peter Ujfalusi wrote:
->>>
->>> I have already moved the TR vs Packet mode channel selection, which does
->>> make sense as it was Linux's choice to use TR for certain cases.
->>>
->>> If I move these to code then we need to have big tables
->>> struct psil_config am654_psil[32767] = {};
->>> struct psil_config j721e_psil[32767] = {};
->>
->> After thinking about this a bit more, I think we can move all the PSI-L
->> endpoint configuration to the kernel as not all the 32767 threads are
->> actually in use. Sure it is going to be some amount of static data in
->> the kernel, but it is an acceptable compromise.
->>
->> The DMA binding can look like this:
->>
->> dmas = <&main_udmap 0xc400>,
->>        <&main_udmap 0x4400>;
->> dma-names = "tx", "rx";
->>
->> or
->> dmas = <&main_udmap 0x4400 UDMA_DIR_TX>,
->>        <&main_udmap 0x4400 UDMA_DIR_RX>;
->> dma-names = "tx", "rx";
->>
->> If I keep the direction.
->> 0xc400 is destination ID, which is 0x4400 | 0x8000 as per PSI-L
->> specification.
->> In the TRM only the source threads can be found as a map (thread IDs <
->> 0x7fff), but the binding document can cover this.
->>
->> This way we don't need another dtsi file and I can create the map in the
->> kernel.
->>
->> This will hide some details of the HW from DT, but since the PSI-L
->> thread configuration is static in hardware I believe it is acceptable.
->>
->> However we still have uncovered features in the binding or in code, like
->> a case when the RX does not have access to the DMA channel, only flows.
->> Not sure if I should reserve the direction parameter as an indication to
->> this or find other way.
->> Basically we communicate on the given PSI-L thread without having a DMA
->> channel as other core is owning the channel.
->>
->> What do you think?
+On 2019-10-22 10:19, Peng Ma wrote:
+> Hi Anders && Viod,
 > 
-> Seems like a reasonable solution
+> I sent v6 patch to fix the build error, please check.
 
-OK, I'll go ahead and implement the PSI-L thread representation to the
-kernel.
+oh I will check, didn't see them when I sent out my email. =/
 
-> though I don't really follow the last issue.
+Cheers,
+Anders
 
-In this DMA for RX (DEV_TO_MEM) we need the source thread paired to
-UDMAP receive channel to get data flowing.
-The arriving packets within PSI-L are directed by flowID to a specific
-receive flow configuration which describe the ring from where UDMAP
-should pick up the descriptor and to where the completed one should be
-placed for the SW.
-
-There are cases when Linux for example does not have access to the
-receive channel at all, it is handled by another core, but certain
-receive flow(s) are given to Linux so they can receive packets.
-In this case we do RX DMA without actual DMA channel.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> Patchwork link:
+> https://patchwork.kernel.org/project/linux-dmaengine/list/?series=191397
+> 
+> Best Regards,
+> Peng
+> >-----Original Message-----
+> >From: Anders Roxell <anders.roxell@linaro.org>
+> >Sent: 2019年10月22日 17:27
+> >To: Peng Ma <peng.ma@nxp.com>
+> >Cc: Vinod Koul <vkoul@kernel.org>; dan.j.williams@intel.com; Leo Li
+> ><leoyang.li@nxp.com>; linux-kernel@vger.kernel.org;
+> >dmaengine@vger.kernel.org
+> >Subject: Re: [EXT] Re: [V5 1/2] dmaengine: fsl-dpaa2-qdma: Add the
+> >DPDMAI(Data Path DMA Interface) support
+> >
+> >Caution: EXT Email
+> >
+> >On Thu, 17 Oct 2019 at 08:16, Peng Ma <peng.ma@nxp.com> wrote:
+> >>
+> >> Hi Vinod,
+> >>
+> >> Thanks very much for your reply.
+> >>
+> >> Best Regards,
+> >> Peng
+> >> >-----Original Message-----
+> >> >From: Vinod Koul <vkoul@kernel.org>
+> >> >Sent: 2019年10月17日 12:11
+> >> >To: Peng Ma <peng.ma@nxp.com>
+> >> >Cc: dan.j.williams@intel.com; Leo Li <leoyang.li@nxp.com>;
+> >> >linux-kernel@vger.kernel.org; dmaengine@vger.kernel.org
+> >> >Subject: [EXT] Re: [V5 1/2] dmaengine: fsl-dpaa2-qdma: Add the
+> >> >DPDMAI(Data Path DMA Interface) support
+> >> >
+> >> >Caution: EXT Email
+> >> >
+> >> >On 30-09-19, 02:04, Peng Ma wrote:
+> >> >> The MC(Management Complex) exports the DPDMAI(Data Path DMA
+> >> >Interface)
+> >> >> object as an interface to operate the DPAA2(Data Path Acceleration
+> >> >> Architecture 2) qDMA Engine. The DPDMAI enables sending frame-based
+> >> >> requests to qDMA and receiving back confirmation response on
+> >> >> transaction completion, utilizing the DPAA2 QBMan(Queue Manager and
+> >> >> Buffer Manager
+> >> >> hardware) infrastructure. DPDMAI object provides up to two
+> >> >> priorities for processing qDMA requests.
+> >> >> The following list summarizes the DPDMAI main features and capabilities:
+> >> >>       1. Supports up to two scheduling priorities for processing
+> >> >>       service requests.
+> >> >>       - Each DPDMAI transmit queue is mapped to one of two service
+> >> >>       priorities, allowing further prioritization in hardware between
+> >> >>       requests from different DPDMAI objects.
+> >> >>       2. Supports up to two receive queues for incoming transaction
+> >> >>       completion confirmations.
+> >> >>       - Each DPDMAI receive queue is mapped to one of two receive
+> >> >>       priorities, allowing further prioritization between other
+> >> >>       interfaces when associating the DPDMAI receive queues to DPIO
+> >> >>       or DPCON(Data Path Concentrator) objects.
+> >> >>       3. Supports different scheduling options for processing received
+> >> >>       packets:
+> >> >>       - Queues can be configured either in 'parked' mode (default),
+> >> >>       or attached to a DPIO object, or attached to DPCON object.
+> >> >>       4. Allows interaction with one or more DPIO objects for
+> >> >>       dequeueing/enqueueing frame descriptors(FD) and for
+> >> >>       acquiring/releasing buffers.
+> >> >>       5. Supports enable, disable, and reset operations.
+> >> >>
+> >> >> Add dpdmai to support some platforms with dpaa2 qdma engine.
+> >> >
+> >> >Applied both, thanks
+> >
+> >I see this error when I'm building.
+> >
+> >WARNING: modpost: missing MODULE_LICENSE() in
+> >drivers/dma/fsl-dpaa2-qdma/dpdmai.o
+> >see include/linux/module.h for more information
+> >ERROR: "dpdmai_enable" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
+> >undefined!
+> >ERROR: "dpdmai_set_rx_queue"
+> >[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+> >ERROR: "dpdmai_get_tx_queue"
+> >[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+> >ERROR: "dpdmai_get_rx_queue"
+> >[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+> >ERROR: "dpdmai_get_attributes"
+> >[drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+> >ERROR: "dpdmai_open" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
+> >undefined!
+> >ERROR: "dpdmai_close" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
+> >undefined!
+> >ERROR: "dpdmai_disable" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
+> >undefined!
+> >ERROR: "dpdmai_reset" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko]
+> >undefined!
+> >make[2]: *** [../scripts/Makefile.modpost:95: __modpost] Error 1
+> >make[1]: *** [/srv/src/kernel/next/Makefile:1282: modules] Error 2
+> >make: *** [Makefile:179: sub-make] Error 2
+> >make: Target 'Image' not remade because of errors.
+> >make: Target 'modules' not remade because of errors.
+> >
+> >any other that see the same ?
+> >
+> >Cheers,
+> >Anders

@@ -2,22 +2,22 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AB958E12A1
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Oct 2019 09:03:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D1B3E12A5
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Oct 2019 09:03:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389351AbfJWHDC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 23 Oct 2019 03:03:02 -0400
-Received: from sender4-pp-o94.zoho.com ([136.143.188.94]:25465 "EHLO
+        id S2389570AbfJWHDO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 23 Oct 2019 03:03:14 -0400
+Received: from sender4-pp-o94.zoho.com ([136.143.188.94]:25473 "EHLO
         sender4-pp-o94.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388218AbfJWHDC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 23 Oct 2019 03:03:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1571814163; cv=none; 
+        with ESMTP id S1725796AbfJWHDO (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 23 Oct 2019 03:03:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1571814174; cv=none; 
         d=zohomail.com; s=zohoarc; 
-        b=KCiBiHYUKwg02M0NGi/PywQmb/1mCTb0rk80P7sUWkPoBfkr1kBzZ7nM+87+hojo7lFSJJAkMJAS4eM4puYqFBUOGnAsoCTTlwQE/qQ9+XXqjx5re6f0UAD19veLwpc3mGruBnw5u+Deku0CD+X9lOFLwJu6E6uxSXyRKtLvQFs=
+        b=oDqiQMTGm70gnqQYG9/BrBb1wCzvr+2281o13ylKptWnc4EoWjMdQgisWyVC/7p9EIQoV456XDtxjIIEF4rv/OyQONGeZHmhtfduJQ3629UDHaNhs5ecQpVCmrX316tn+2eLa9cSlEP7rD6bUQLSmiNFpfKNWafuAj3+QhrsUbY=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1571814163; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
-        bh=3LfvkXpP25PpD+nI8+Onyh93L0MPN93ZWQCuDDun+fs=; 
-        b=i96FXHlZp3TgQgWZCf8But43XklqjB4DjYyrsswAQ1wMpXHJRaJbVrOR4TKfWlk7Mah0KP9B9Qy4CmO32fYNZOgA2bYnurSS/Q63SCdC8oqhpERdKEn7LkuLHmouD1wrOptme3FiRQgv9ywzbF44jqYubDEa6eaCT5zWSTZNcSc=
+        t=1571814174; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
+        bh=Di8V3CBB4Wm1a2j2vP6dQGcqZopjJWn+fHh0H9hPQ8A=; 
+        b=Uj3mge6WLTjDQcKPS++ChSa/fJ4GPkMGVLB+TJx8MDnB6EI2/FFD2u8FPe1Y9A02saDLyQh6OXuRxx7FW1PP0TAG8O2Ki/l9cTnMVaffA6CsV90v3vMdMaPW7170bT69wrq+xNgVU946eXiOi7ieXWzt/mD0OTL/pBH4nAhegZc=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
         dkim=pass  header.i=zoho.com;
         spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
@@ -25,17 +25,17 @@ ARC-Authentication-Results: i=1; mx.zohomail.com;
 DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
   s=zapps768; d=zoho.com; 
   h=from:to:cc:subject:date:message-id:in-reply-to:references; 
-  b=WM+X5w5/om/UyhAm1RTDL1BI/PCgdEGxfvrpNmusEhUN2h2/b9taUxfjOVRS7qqA7WiwkjIyaWQU
-    zmJjMxgnEtiuZ6QMBhHgJApfl5NKuZgyuTqtjbVB8xotY/1AeX/G  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1571814163;
+  b=H0WoeZTpY42Jn6ptUQmrmqtJz8H6jkfq56oetzUCw4tMv4hNUry5xxa6EYEpf6SJyPeaEzv6h9kb
+    1AOukpfj4Szol3wV/2O17Rys+Q6DN8g36ePUypbB3Jxaev8gu4If  
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1571814174;
         s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
         h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        l=2669; bh=3LfvkXpP25PpD+nI8+Onyh93L0MPN93ZWQCuDDun+fs=;
-        b=dIBMIULd3Ic6wT3wRZP7y7fFCjmJlaOWUbO3SKyuaXqA80Ywif7ta47nEKPbIrxI
-        5f4AmnglMtY2ZF8PXi9WnGpt7zy3eb30XnMmsKFqLVFs37bfj2rPgTWOhbJkO0qZt6M
-        kXXx28pzZDJlix2awVeRS8Qwa/mCCRnAHZxEERAo=
+        l=1210; bh=Di8V3CBB4Wm1a2j2vP6dQGcqZopjJWn+fHh0H9hPQ8A=;
+        b=GgQhLN+WODaSYgHpMD+Eipjeq5fV5bKfgATgT+hFKpMtGiYLa8s1/K/qwrwUNszz
+        zu/v2TGYzROa3JcwWng7d+6xYBP187EI4BSzYGZKHYTK6KZAw+CeCJ9TthlHKv5OQ7Y
+        kTSdgTdl9HQp1jb1GdCw42Ck2dH3hxcpqQg7B4qU=
 Received: from zhouyanjie-virtual-machine.localdomain (125.71.5.36 [125.71.5.36]) by mx.zohomail.com
-        with SMTPS id 1571814162508823.4897078530958; Wed, 23 Oct 2019 00:02:42 -0700 (PDT)
+        with SMTPS id 1571814172029893.5936204313408; Wed, 23 Oct 2019 00:02:52 -0700 (PDT)
 From:   Zhou Yanjie <zhouyanjie@zoho.com>
 To:     linux-mips@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
@@ -43,9 +43,9 @@ Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
         paul.burton@mips.com, vkoul@kernel.org, paul@crapouillou.net,
         mark.rutland@arm.com, Zubair.Kakakhel@imgtec.com,
         dan.j.williams@intel.com
-Subject: [PATCH RESEND 1/2] dt-bindings: dmaengine: Add X1000 bindings.
-Date:   Wed, 23 Oct 2019 15:02:16 +0800
-Message-Id: <1571814137-46002-2-git-send-email-zhouyanjie@zoho.com>
+Subject: [PATCH RESEND 2/2] dmaengine: JZ4780: Add support for the X1000.
+Date:   Wed, 23 Oct 2019 15:02:17 +0800
+Message-Id: <1571814137-46002-3-git-send-email-zhouyanjie@zoho.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1571814137-46002-1-git-send-email-zhouyanjie@zoho.com>
 References: <1571799903-44561-1-git-send-email-zhouyanjie@zoho.com>
@@ -56,78 +56,36 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add the dmaengine bindings for the X1000 Soc from Ingenic.
+Add support for probing the dma-jz4780 driver on the X1000 Soc.
 
 Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
 ---
- .../devicetree/bindings/dma/jz4780-dma.txt         |  3 +-
- include/dt-bindings/dma/x1000-dma.h                | 40 ++++++++++++++++++++++
- 2 files changed, 42 insertions(+), 1 deletion(-)
- create mode 100644 include/dt-bindings/dma/x1000-dma.h
+ drivers/dma/dma-jz4780.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/jz4780-dma.txt b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
-index 636fcb2..ec89782 100644
---- a/Documentation/devicetree/bindings/dma/jz4780-dma.txt
-+++ b/Documentation/devicetree/bindings/dma/jz4780-dma.txt
-@@ -7,10 +7,11 @@ Required properties:
-   * ingenic,jz4725b-dma
-   * ingenic,jz4770-dma
-   * ingenic,jz4780-dma
-+  * ingenic,x1000-dma
- - reg: Should contain the DMA channel registers location and length, followed
-   by the DMA controller registers location and length.
- - interrupts: Should contain the interrupt specifier of the DMA controller.
--- clocks: Should contain a clock specifier for the JZ4780 PDMA clock.
-+- clocks: Should contain a clock specifier for the JZ4780/X1000 PDMA clock.
- - #dma-cells: Must be <2>. Number of integer cells in the dmas property of
-   DMA clients (see below).
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index cafb1cc0..f809a6e 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -1019,11 +1019,18 @@ static const struct jz4780_dma_soc_data jz4780_dma_soc_data = {
+ 	.flags = JZ_SOC_DATA_ALLOW_LEGACY_DT | JZ_SOC_DATA_PROGRAMMABLE_DMA,
+ };
  
-diff --git a/include/dt-bindings/dma/x1000-dma.h b/include/dt-bindings/dma/x1000-dma.h
-new file mode 100644
-index 00000000..401e165
---- /dev/null
-+++ b/include/dt-bindings/dma/x1000-dma.h
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * This header provides macros for X1000 DMA bindings.
-+ *
-+ * Copyright (c) 2019 Zhou Yanjie <zhouyanjie@zoho.com>
-+ */
++static const struct jz4780_dma_soc_data x1000_dma_soc_data = {
++	.nb_channels = 8,
++	.transfer_ord_max = 7,
++	.flags = JZ_SOC_DATA_ALLOW_LEGACY_DT | JZ_SOC_DATA_PROGRAMMABLE_DMA,
++};
 +
-+#ifndef __DT_BINDINGS_DMA_X1000_DMA_H__
-+#define __DT_BINDINGS_DMA_X1000_DMA_H__
-+
-+/*
-+ * Request type numbers for the X1000 DMA controller (written to the DRTn
-+ * register for the channel).
-+ */
-+#define X1000_DMA_DMIC_RX	0x5
-+#define X1000_DMA_I2S0_TX	0x6
-+#define X1000_DMA_I2S0_RX	0x7
-+#define X1000_DMA_AUTO		0x8
-+#define X1000_DMA_UART2_TX	0x10
-+#define X1000_DMA_UART2_RX	0x11
-+#define X1000_DMA_UART1_TX	0x12
-+#define X1000_DMA_UART1_RX	0x13
-+#define X1000_DMA_UART0_TX	0x14
-+#define X1000_DMA_UART0_RX	0x15
-+#define X1000_DMA_SSI0_TX	0x16
-+#define X1000_DMA_SSI0_RX	0x17
-+#define X1000_DMA_MSC0_TX	0x1a
-+#define X1000_DMA_MSC0_RX	0x1b
-+#define X1000_DMA_MSC1_TX	0x1c
-+#define X1000_DMA_MSC1_RX	0x1d
-+#define X1000_DMA_PCM0_TX	0x20
-+#define X1000_DMA_PCM0_RX	0x21
-+#define X1000_DMA_SMB0_TX	0x24
-+#define X1000_DMA_SMB0_RX	0x25
-+#define X1000_DMA_SMB1_TX	0x26
-+#define X1000_DMA_SMB1_RX	0x27
-+#define X1000_DMA_SMB2_TX	0x28
-+#define X1000_DMA_SMB2_RX	0x29
-+
-+#endif /* __DT_BINDINGS_DMA_X1000_DMA_H__ */
+ static const struct of_device_id jz4780_dma_dt_match[] = {
+ 	{ .compatible = "ingenic,jz4740-dma", .data = &jz4740_dma_soc_data },
+ 	{ .compatible = "ingenic,jz4725b-dma", .data = &jz4725b_dma_soc_data },
+ 	{ .compatible = "ingenic,jz4770-dma", .data = &jz4770_dma_soc_data },
+ 	{ .compatible = "ingenic,jz4780-dma", .data = &jz4780_dma_soc_data },
++	{ .compatible = "ingenic,x1000-dma", .data = &x1000_dma_soc_data },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, jz4780_dma_dt_match);
 -- 
 2.7.4
 

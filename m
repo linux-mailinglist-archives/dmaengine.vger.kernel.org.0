@@ -2,136 +2,153 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E190E113E
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Oct 2019 06:53:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D859E1178
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Oct 2019 07:07:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732604AbfJWExl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 23 Oct 2019 00:53:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59652 "EHLO mail.kernel.org"
+        id S1731026AbfJWFHZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 23 Oct 2019 01:07:25 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:57658 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731061AbfJWExl (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 23 Oct 2019 00:53:41 -0400
-Received: from localhost (unknown [122.181.210.10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D3122173B;
-        Wed, 23 Oct 2019 04:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571806420;
-        bh=KmXEO9N15emCT7iHfRUVAzsxcCk2lj537nwdJsgIXJE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PvK6csaJTyaVFUf/KOKnftCZA6SnTccubTAMBReC0Rscti6sxfYml5eUnEtFiyncy
-         HYscRAxdFIqhU6GiTRllBuZz2tTxJXZdWU7k91OQgvJKmUY7k2E6NQWr61toWXC0ew
-         tycYBGN2SuBzTrMA6OkeqKJi/AM99Nt/VCVHkyTs=
-Date:   Wed, 23 Oct 2019 10:23:33 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vinod.koul@intel.com>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bin Liu <b-liu@ti.com>, Daniel Mack <zonque@gmail.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        George Cherian <george.cherian@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Johan Hovold <johan@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        dmaengine@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org, giulio.benetti@benettiengineering.com,
-        Sebastian Reichel <sre@kernel.org>,
-        Skvortsov <andrej.skvortzov@gmail.com>,
-        Yegor Yefremov <yegorslists@googlemail.com>
-Subject: Re: [PATCH] dmaengine: cppi41: Fix issue with musb and ftdi uart
-Message-ID: <20191023045333.GO2654@vkoul-mobl>
-References: <20191022145545.6449-1-tony@atomide.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022145545.6449-1-tony@atomide.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        id S1728697AbfJWFHZ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 23 Oct 2019 01:07:25 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1C10F1A0311;
+        Wed, 23 Oct 2019 07:07:20 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8B2051A0129;
+        Wed, 23 Oct 2019 07:07:16 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 1C28F402DF;
+        Wed, 23 Oct 2019 13:07:12 +0800 (SGT)
+From:   Peng Ma <peng.ma@nxp.com>
+To:     vkoul@kernel.org, dan.j.williams@intel.com, leoyang.li@nxp.com,
+        anders.roxell@linaro.org
+Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        Peng Ma <peng.ma@nxp.com>
+Subject: [next, v2] dmaengine: fsl-dpaa2-qdma: export the symbols
+Date:   Wed, 23 Oct 2019 12:56:17 +0800
+Message-Id: <20191023045617.22764-1-peng.ma@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Tony,
+The symbols were not exported leading to error:
 
-On 22-10-19, 07:55, Tony Lindgren wrote:
+WARNING: modpost: missing MODULE_LICENSE() in drivers/dma/fsl-dpaa2-qdma/dpdmai.o
+see include/linux/module.h for more information
+GZIP    arch/arm64/boot/Image.gz
+ERROR: "dpdmai_enable" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+ERROR: "dpdmai_set_rx_queue" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+ERROR: "dpdmai_get_tx_queue" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+ERROR: "dpdmai_get_rx_queue" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+ERROR: "dpdmai_get_attributes" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+ERROR: "dpdmai_open" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+ERROR: "dpdmai_close" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+ERROR: "dpdmai_disable" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+ERROR: "dpdmai_reset" [drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.ko] undefined!
+WARNING: "HYPERVISOR_platform_op" [vmlinux] is a static EXPORT_SYMBOL_GPL
+make[2]: *** [__modpost] Error 1
+make[1]: *** [modules] Error 2
+make[1]: *** Waiting for unfinished jobs....
+make: *** [sub-make] Error 2
 
-Patch subject should reflect the patch changes not the fix. The patch
-title here is not telling me anything about the change below. Pls
-consider updating the title.
+So export it.
 
-> The first dma call done by musb_ep_program() must wait if cppi41 is PM
-> runtime suspended. Otherwise musb_ep_program() continues with other
-> non-dma packets before the DMA transfer is started causing at least ftdi
-> uarts to fail to receive data.
-> 
-> Let's fix the issue by waking up cppi41 with PM runtime calls added to
-> cppi41_dma_prep_slave_sg() and return NULL if still idled. This way we
-> have musb_ep_program() continue with PIO until cppi41 is awake.
-> 
-> Fixes: fdea2d09b997 ("dmaengine: cppi41: Add basic PM runtime support")
+Signed-off-by: Peng Ma <peng.ma@nxp.com>
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
+---
+Changed for v2:
+	- Rewrite the title and subject
 
-Cc stable?
+ drivers/dma/fsl-dpaa2-qdma/dpdmai.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-> Cc: Bin Liu <b-liu@ti.com>
-> Cc: giulio.benetti@benettiengineering.com
-> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: Skvortsov <andrej.skvortzov@gmail.com>
-> Reported-by: Yegor Yefremov <yegorslists@googlemail.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->  drivers/dma/ti/cppi41.c | 21 ++++++++++++++++++++-
->  1 file changed, 20 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/ti/cppi41.c b/drivers/dma/ti/cppi41.c
-> --- a/drivers/dma/ti/cppi41.c
-> +++ b/drivers/dma/ti/cppi41.c
-> @@ -586,9 +586,22 @@ static struct dma_async_tx_descriptor *cppi41_dma_prep_slave_sg(
->  	enum dma_transfer_direction dir, unsigned long tx_flags, void *context)
->  {
->  	struct cppi41_channel *c = to_cpp41_chan(chan);
-> +	struct dma_async_tx_descriptor *txd = NULL;
-> +	struct cppi41_dd *cdd = c->cdd;
->  	struct cppi41_desc *d;
->  	struct scatterlist *sg;
->  	unsigned int i;
-> +	int error;
-> +
-> +	error = pm_runtime_get(cdd->ddev.dev);
-> +	if (error < 0) {
-> +		pm_runtime_put_noidle(cdd->ddev.dev);
-> +
-> +		return NULL;
-> +	}
-> +
-> +	if (cdd->is_suspended)
-> +		goto err_out_not_ready;
->  
->  	d = c->desc;
->  	for_each_sg(sgl, sg, sg_len, i) {
-> @@ -611,7 +624,13 @@ static struct dma_async_tx_descriptor *cppi41_dma_prep_slave_sg(
->  		d++;
->  	}
->  
-> -	return &c->txd;
-> +	txd = &c->txd;
-> +
-> +err_out_not_ready:
-> +	pm_runtime_mark_last_busy(cdd->ddev.dev);
-> +	pm_runtime_put_autosuspend(cdd->ddev.dev);
-> +
-> +	return txd;
->  }
->  
->  static void cppi41_compute_td_desc(struct cppi41_desc *d)
-> -- 
-> 2.23.0
-
+diff --git a/drivers/dma/fsl-dpaa2-qdma/dpdmai.c b/drivers/dma/fsl-dpaa2-qdma/dpdmai.c
+index fbc2b2f..f8a1f66 100644
+--- a/drivers/dma/fsl-dpaa2-qdma/dpdmai.c
++++ b/drivers/dma/fsl-dpaa2-qdma/dpdmai.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // Copyright 2019 NXP
+ 
++#include <linux/module.h>
+ #include <linux/types.h>
+ #include <linux/io.h>
+ #include <linux/fsl/mc.h>
+@@ -90,6 +91,7 @@ int dpdmai_open(struct fsl_mc_io *mc_io, u32 cmd_flags,
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(dpdmai_open);
+ 
+ /**
+  * dpdmai_close() - Close the control session of the object
+@@ -113,6 +115,7 @@ int dpdmai_close(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
+ 	/* send command to mc*/
+ 	return mc_send_command(mc_io, &cmd);
+ }
++EXPORT_SYMBOL_GPL(dpdmai_close);
+ 
+ /**
+  * dpdmai_create() - Create the DPDMAI object
+@@ -177,6 +180,7 @@ int dpdmai_enable(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
+ 	/* send command to mc*/
+ 	return mc_send_command(mc_io, &cmd);
+ }
++EXPORT_SYMBOL_GPL(dpdmai_enable);
+ 
+ /**
+  * dpdmai_disable() - Disable the DPDMAI, stop sending and receiving frames.
+@@ -197,6 +201,7 @@ int dpdmai_disable(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
+ 	/* send command to mc*/
+ 	return mc_send_command(mc_io, &cmd);
+ }
++EXPORT_SYMBOL_GPL(dpdmai_disable);
+ 
+ /**
+  * dpdmai_reset() - Reset the DPDMAI, returns the object to initial state.
+@@ -217,6 +222,7 @@ int dpdmai_reset(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
+ 	/* send command to mc*/
+ 	return mc_send_command(mc_io, &cmd);
+ }
++EXPORT_SYMBOL_GPL(dpdmai_reset);
+ 
+ /**
+  * dpdmai_get_attributes() - Retrieve DPDMAI attributes.
+@@ -252,6 +258,7 @@ int dpdmai_get_attributes(struct fsl_mc_io *mc_io, u32 cmd_flags,
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(dpdmai_get_attributes);
+ 
+ /**
+  * dpdmai_set_rx_queue() - Set Rx queue configuration
+@@ -285,6 +292,7 @@ int dpdmai_set_rx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token,
+ 	/* send command to mc*/
+ 	return mc_send_command(mc_io, &cmd);
+ }
++EXPORT_SYMBOL_GPL(dpdmai_set_rx_queue);
+ 
+ /**
+  * dpdmai_get_rx_queue() - Retrieve Rx queue attributes.
+@@ -325,6 +333,7 @@ int dpdmai_get_rx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token,
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(dpdmai_get_rx_queue);
+ 
+ /**
+  * dpdmai_get_tx_queue() - Retrieve Tx queue attributes.
+@@ -364,3 +373,6 @@ int dpdmai_get_tx_queue(struct fsl_mc_io *mc_io, u32 cmd_flags,
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(dpdmai_get_tx_queue);
++
++MODULE_LICENSE("GPL v2");
 -- 
-~Vinod
+2.9.5
+

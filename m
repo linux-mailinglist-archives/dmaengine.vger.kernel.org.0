@@ -2,121 +2,168 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 31B04E11DC
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Oct 2019 07:56:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D99E2E122E
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Oct 2019 08:32:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732348AbfJWF4T (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 23 Oct 2019 01:56:19 -0400
-Received: from mail-eopbgr130077.outbound.protection.outlook.com ([40.107.13.77]:32685
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727719AbfJWF4T (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 23 Oct 2019 01:56:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U0+4nejTfmiQgU1HJ/l31N0uBKLF3gL7MlxAYXIEq4/KKWs9lKupHjiOmCnsvaLhqeS984yZoB7Ibim7hKQFx3C+acl1RlXE+JgVmXPFrlfRL/c+BVm3xULB3OLkwRDNYtDFmbkqwdGsVr8qf+NF5HbtuEIscozrplEC8K74lq5XQqfMKGON4NU3KB+gZGgSt2Q/an3lIAjQzz48twA7I6Z+qnBdo8gVd6g1WJvyGo5p79bJ69Ku6fWGqo7LMLFKWostySaVB9uec+RzJI02jTj5bXT8CV/eRXa4sw3FAFmOXVNkQbNbrtBQN9CByBY/+Wbn6ji6q2wPNQI7aNkOTA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FvmfVbpP8z9zHsOS41N1PhFSOYATxLqbP6qWWyCz/Jc=;
- b=OHVr8meKiM1cf3y6cVob2YHNCJ+HvZtHajIlX6eoNf7cbdWkiWm+a8cY6usema9BJrSWQHgFT9NbwLEMD/yp+pFG8dpRwBCykuWIF9INozERt5JqmA/Ln9kFLseUdaU7TZeL5rs6E2MNbc0p5cx5rlZqhA2Y31Ym3XVUOOJjeHhPIVyJmwxcVxCLXAoCFkUBXK/cO88KLyeJoTqurMMTVeLmEdm0H7/4aoIFDKr0mJ1rsfnPfzpo/8YfHTMnl96+Y6JCa7DBLRKsEwNiQKyPCvx6TO/WnS+Pc6NxsAr5XWV+7I+94RGHfYrz07oktKb71vIo6NopLSud7Pwjf8kTRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FvmfVbpP8z9zHsOS41N1PhFSOYATxLqbP6qWWyCz/Jc=;
- b=b4lF43Kb7Qag+KDAqdZOZHSoQVXtqYk8udo37RnHjzrNc5BscbTSExp0SxiS8CR3XFowlMhyCmxqETQCoh0xpRve17HSlLF1Mn2wiMMXCH5i/tEvbifrUCykLgZmH/CalRBegQ7EMrH6MH0lhvqB4JgE1mEt4jGcRD7SLsksqiQ=
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.205) by
- VI1PR04MB4557.eurprd04.prod.outlook.com (20.177.56.220) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20; Wed, 23 Oct 2019 05:56:14 +0000
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::7cba:52d6:9ae9:e5bb]) by VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::7cba:52d6:9ae9:e5bb%6]) with mapi id 15.20.2367.025; Wed, 23 Oct 2019
- 05:56:14 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "anders.roxell@linaro.org" <anders.roxell@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Subject: RE: [EXT] Re: [next, v2] dmaengine: fsl-dpaa2-qdma: export the
- symbols
-Thread-Topic: [EXT] Re: [next, v2] dmaengine: fsl-dpaa2-qdma: export the
- symbols
-Thread-Index: AQHViV+/ULN5mRIKtk2reoe4slbMB6dnrVaAgAAM8LA=
-Date:   Wed, 23 Oct 2019 05:56:14 +0000
-Message-ID: <VI1PR04MB443123073362B13FE8C6F181ED6B0@VI1PR04MB4431.eurprd04.prod.outlook.com>
-References: <20191023045617.22764-1-peng.ma@nxp.com>
- <20191023050927.GP2654@vkoul-mobl>
-In-Reply-To: <20191023050927.GP2654@vkoul-mobl>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b1614be9-fb54-4835-7cb2-08d7577db6e6
-x-ms-traffictypediagnostic: VI1PR04MB4557:|VI1PR04MB4557:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB4557747CE604C5281CCCA48FED6B0@VI1PR04MB4557.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 019919A9E4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(376002)(39860400002)(396003)(136003)(13464003)(189003)(199004)(33656002)(256004)(25786009)(9686003)(316002)(55016002)(52536014)(229853002)(54906003)(6116002)(6436002)(14444005)(3846002)(6246003)(4326008)(76176011)(7696005)(6916009)(478600001)(71200400001)(71190400001)(5660300002)(6506007)(186003)(102836004)(99286004)(2906002)(14454004)(26005)(74316002)(66066001)(86362001)(76116006)(486006)(446003)(66946007)(8676002)(44832011)(7736002)(8936002)(66556008)(66476007)(66446008)(476003)(305945005)(81156014)(81166006)(11346002)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4557;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: oJ2miAMYIHwHpgjVheelCcYDB47abUmCyBoICtnepYt1YGmQPvj7SlYiT19tKLjoQLjSR7dRdniUrRhKsbwXujJRumd8dq99Aq9+/RC+FdZPa243p4HEu0ElnqMesPTai+2zMIADwDTkq+KFsqCnv9wVslJtEGmSaQIBypFq/7AvT+6TtK1yCLRAe4p8wH4hFd7xV6vlmVkXGr3ahloX0StfFVhfu6KUl+dual/lMmof3iiHxYL5K67BHLNvC7oZgVQhdw4K7BDU0605EEiN51Uw/kgayJ9eqBnZQIhnsdpZHeEYyruozMK8tXNUFO/Ulix7XlEgGuBr3Va6gckgm0CxLnxdCtlnZYu4Y7NxrV4Nlx7oRZ2D7oHgC70ogDICcoTsHsiZyZNXHXOPCKOgNbsm2IvVdi1QILhN1g5U6ixnyfLOQg0wju1FgqpwIZw5
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b1614be9-fb54-4835-7cb2-08d7577db6e6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Oct 2019 05:56:14.6282
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vP3Q+QvLc9B3YdzbzYISIu7TY+eBkIFcCnCbF50DKdr5GPJnu3aB5uTNhFc2PRuD
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4557
+        id S2388077AbfJWGcQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 23 Oct 2019 02:32:16 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35137 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387924AbfJWGcP (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 23 Oct 2019 02:32:15 -0400
+Received: by mail-pl1-f196.google.com with SMTP id c3so9593079plo.2
+        for <dmaengine@vger.kernel.org>; Tue, 22 Oct 2019 23:32:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=z3BS8hNGDisqpRfkHtgUnIkj8IIlWeTgWBdo/Yh3MnM=;
+        b=RvX8/Ifnq61PEF8c6CKaESj1qOYiXBEd334mw+mpvXJQ20JFoFNJ7GsN7JgXCv8l33
+         iXoLxyJb5PUOEH8uU2Vj3237vLqRtyhXhoJcH2MTynmzpY5HLm3YBDrDQnT6wVbpvxNs
+         bpCF608uxh9vDHae94muG7hBj18psIv+EtzBDbMkgwoLbSSN1GcQVU71EUXt/0kZnVGj
+         aFrhklHKikIm5vR0QmxWHcvjezDzF5N1wGiv/N2GcR+BHS+Z1C9Nu/B5NMgxvrrm0ZCL
+         Zn+51xullfRKN9TK6os1IRf7oQLIDz1ximULFGGZAnlLDHTWnA9n+cO3tYb8jH58qD+J
+         X2CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=z3BS8hNGDisqpRfkHtgUnIkj8IIlWeTgWBdo/Yh3MnM=;
+        b=fReEq61/UORnvWFNrScuIrjR3f8CHzBuZkL46AfzW8WqYlbt3pdPD+2NbesQHKTAUT
+         nypemtkIOKw5+FBq0TCgQk0eDJvuneTdUCtBl61Ffv/14Au6e37zIra7wHE512e+WvLw
+         ENJtsLtCI+6WuyLR2zInYDIEnYHnv0uCpwN9BLJFgL+rLj1v/1meqLyIUtt/u69lNUex
+         w+eOG8VfQf0iSCJszdjYhn6RQxmhwfjkVVYzu/X7bH7+W7+HPaKD5ZT5LfEnW7UFw+WH
+         kM4BbMXqyBHfjOi/tLXnKGLZr/O5w9ryo8mROeltfNSSW6B7ec8KWSTgV33OWKKmO2/p
+         uuTw==
+X-Gm-Message-State: APjAAAVJOZMtrQVR2/eZJWvrpaEN1VOd+KpL+7zaeJxccQjeGP+WBseV
+        P49vau6IKLucyfrFJr1Lpx+SVA==
+X-Google-Smtp-Source: APXvYqw1BwYa+pommJGiYoOew4lRqPcC8rXhOBMJmQZbR2TQP1VH5ipW1fFRFsH5X3Tz/bxtZMu+Tw==
+X-Received: by 2002:a17:902:a70f:: with SMTP id w15mr7929063plq.146.1571812334654;
+        Tue, 22 Oct 2019 23:32:14 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id l93sm6695279pjb.6.2019.10.22.23.32.11
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 22 Oct 2019 23:32:13 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     vkoul@kernel.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com,
+        dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, eric.long@unisoc.com,
+        baolin.wang@linaro.org, baolin.wang7@gmail.com
+Subject: [PATCH] dmaengine: sprd: Add wrap address support for link-list mode
+Date:   Wed, 23 Oct 2019 14:31:32 +0800
+Message-Id: <85a5484bc1f3dd53ce6f92700ad8b35f30a0b096.1571812029.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IFZpbm9kIEtvdWwgPHZrb3Vs
-QGtlcm5lbC5vcmc+DQo+U2VudDogMjAxOcTqMTDUwjIzyNUgMTM6MDkNCj5UbzogUGVuZyBNYSA8
-cGVuZy5tYUBueHAuY29tPg0KPkNjOiBkYW4uai53aWxsaWFtc0BpbnRlbC5jb207IExlbyBMaSA8
-bGVveWFuZy5saUBueHAuY29tPjsNCj5hbmRlcnMucm94ZWxsQGxpbmFyby5vcmc7IGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+ZG1hZW5naW5lQHZnZXIua2VybmVsLm9yZw0KPlN1Ympl
-Y3Q6IFtFWFRdIFJlOiBbbmV4dCwgdjJdIGRtYWVuZ2luZTogZnNsLWRwYWEyLXFkbWE6IGV4cG9y
-dCB0aGUgc3ltYm9scw0KPg0KPkNhdXRpb246IEVYVCBFbWFpbA0KPg0KPk9uIDIzLTEwLTE5LCAx
-Mjo1NiwgUGVuZyBNYSB3cm90ZToNCj4+IFRoZSBzeW1ib2xzIHdlcmUgbm90IGV4cG9ydGVkIGxl
-YWRpbmcgdG8gZXJyb3I6DQo+Pg0KPj4gV0FSTklORzogbW9kcG9zdDogbWlzc2luZyBNT0RVTEVf
-TElDRU5TRSgpIGluDQo+ZHJpdmVycy9kbWEvZnNsLWRwYWEyLXFkbWEvZHBkbWFpLm8NCj4+IHNl
-ZSBpbmNsdWRlL2xpbnV4L21vZHVsZS5oIGZvciBtb3JlIGluZm9ybWF0aW9uDQo+PiBHWklQICAg
-IGFyY2gvYXJtNjQvYm9vdC9JbWFnZS5neg0KPj4gRVJST1I6ICJkcGRtYWlfZW5hYmxlIiBbZHJp
-dmVycy9kbWEvZnNsLWRwYWEyLXFkbWEvZHBhYTItcWRtYS5rb10NCj51bmRlZmluZWQhDQo+PiBF
-UlJPUjogImRwZG1haV9zZXRfcnhfcXVldWUiDQo+W2RyaXZlcnMvZG1hL2ZzbC1kcGFhMi1xZG1h
-L2RwYWEyLXFkbWEua29dIHVuZGVmaW5lZCENCj4+IEVSUk9SOiAiZHBkbWFpX2dldF90eF9xdWV1
-ZSINCj5bZHJpdmVycy9kbWEvZnNsLWRwYWEyLXFkbWEvZHBhYTItcWRtYS5rb10gdW5kZWZpbmVk
-IQ0KPj4gRVJST1I6ICJkcGRtYWlfZ2V0X3J4X3F1ZXVlIg0KPltkcml2ZXJzL2RtYS9mc2wtZHBh
-YTItcWRtYS9kcGFhMi1xZG1hLmtvXSB1bmRlZmluZWQhDQo+PiBFUlJPUjogImRwZG1haV9nZXRf
-YXR0cmlidXRlcyINCj5bZHJpdmVycy9kbWEvZnNsLWRwYWEyLXFkbWEvZHBhYTItcWRtYS5rb10g
-dW5kZWZpbmVkIQ0KPj4gRVJST1I6ICJkcGRtYWlfb3BlbiIgW2RyaXZlcnMvZG1hL2ZzbC1kcGFh
-Mi1xZG1hL2RwYWEyLXFkbWEua29dDQo+dW5kZWZpbmVkIQ0KPj4gRVJST1I6ICJkcGRtYWlfY2xv
-c2UiIFtkcml2ZXJzL2RtYS9mc2wtZHBhYTItcWRtYS9kcGFhMi1xZG1hLmtvXQ0KPnVuZGVmaW5l
-ZCENCj4+IEVSUk9SOiAiZHBkbWFpX2Rpc2FibGUiIFtkcml2ZXJzL2RtYS9mc2wtZHBhYTItcWRt
-YS9kcGFhMi1xZG1hLmtvXQ0KPnVuZGVmaW5lZCENCj4+IEVSUk9SOiAiZHBkbWFpX3Jlc2V0IiBb
-ZHJpdmVycy9kbWEvZnNsLWRwYWEyLXFkbWEvZHBhYTItcWRtYS5rb10NCj51bmRlZmluZWQhDQo+
-PiBXQVJOSU5HOiAiSFlQRVJWSVNPUl9wbGF0Zm9ybV9vcCIgW3ZtbGludXhdIGlzIGEgc3RhdGlj
-DQo+RVhQT1JUX1NZTUJPTF9HUEwNCj4+IG1ha2VbMl06ICoqKiBbX19tb2Rwb3N0XSBFcnJvciAx
-DQo+PiBtYWtlWzFdOiAqKiogW21vZHVsZXNdIEVycm9yIDINCj4+IG1ha2VbMV06ICoqKiBXYWl0
-aW5nIGZvciB1bmZpbmlzaGVkIGpvYnMuLi4uDQo+PiBtYWtlOiAqKiogW3N1Yi1tYWtlXSBFcnJv
-ciAyDQo+Pg0KPj4gU28gZXhwb3J0IGl0Lg0KPg0KPkFwcGxpZWQsIHRoYW5rcw0KW1BlbmcgTWFd
-IEdvdCBpdC4NClRoYW5rcywNClBlbmcNCj4NCj4tLQ0KPn5WaW5vZA0K
+From: Eric Long <eric.long@unisoc.com>
+
+The Spreadtrum Audio compress offload mode will use 2-stage DMA transfer
+to save power. That means we can request 2 dma channels, one for source
+channel, and another one for destination channel. Once the source channel's
+transaction is done, it will trigger the destination channel's transaction
+automatically by hardware signal.
+
+In this case, the source channel will transfer data from IRAM buffer to
+the DSP fifo to decoding/encoding, once IRAM buffer is empty by transferring
+done, the destination channel will start to transfer data from DDR buffer
+to IRAM buffer. Since the destination channel will use link-list mode to
+fill the IRAM data, and IRAM buffer is allocated by 32K, and DDR buffer
+is larger to 2M, that means we need lots of link-list nodes to do a cyclic
+transfer, instead wasting lots of link-list memory, we can use wrap address
+support to reduce link-list node number, which means when the transfer
+address reaches the wrap address, the transfer address will jump to the
+wrap_to address specified by wrap_to register, and only 2 link-list nodes
+can do a cyclic transfer to transfer data from DDR to IRAM.
+
+Thus this patch adds wrap address to support this case.
+
+[Baolin Wang changes the commit message]
+Signed-off-by: Eric Long <eric.long@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ drivers/dma/sprd-dma.c       |   13 +++++++++++++
+ include/linux/dma/sprd-dma.h |    4 ++++
+ 2 files changed, 17 insertions(+)
+
+diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+index 32402c2..9a31a315 100644
+--- a/drivers/dma/sprd-dma.c
++++ b/drivers/dma/sprd-dma.c
+@@ -99,6 +99,7 @@
+ /* DMA_CHN_WARP_* register definition */
+ #define SPRD_DMA_HIGH_ADDR_MASK		GENMASK(31, 28)
+ #define SPRD_DMA_LOW_ADDR_MASK		GENMASK(31, 0)
++#define SPRD_DMA_WRAP_ADDR_MASK		GENMASK(27, 0)
+ #define SPRD_DMA_HIGH_ADDR_OFFSET	4
+ 
+ /* SPRD_DMA_CHN_INTC register definition */
+@@ -118,6 +119,8 @@
+ #define SPRD_DMA_SWT_MODE_OFFSET	26
+ #define SPRD_DMA_REQ_MODE_OFFSET	24
+ #define SPRD_DMA_REQ_MODE_MASK		GENMASK(1, 0)
++#define SPRD_DMA_WRAP_SEL_DEST		BIT(23)
++#define SPRD_DMA_WRAP_EN		BIT(22)
+ #define SPRD_DMA_FIX_SEL_OFFSET		21
+ #define SPRD_DMA_FIX_EN_OFFSET		20
+ #define SPRD_DMA_LLIST_END		BIT(19)
+@@ -804,6 +807,8 @@ static int sprd_dma_fill_desc(struct dma_chan *chan,
+ 	temp |= req_mode << SPRD_DMA_REQ_MODE_OFFSET;
+ 	temp |= fix_mode << SPRD_DMA_FIX_SEL_OFFSET;
+ 	temp |= fix_en << SPRD_DMA_FIX_EN_OFFSET;
++	temp |= schan->linklist.wrap_addr ?
++		SPRD_DMA_WRAP_EN | SPRD_DMA_WRAP_SEL_DEST : 0;
+ 	temp |= slave_cfg->src_maxburst & SPRD_DMA_FRG_LEN_MASK;
+ 	hw->frg_len = temp;
+ 
+@@ -831,6 +836,12 @@ static int sprd_dma_fill_desc(struct dma_chan *chan,
+ 		hw->llist_ptr = lower_32_bits(llist_ptr);
+ 		hw->src_blk_step = (upper_32_bits(llist_ptr) << SPRD_DMA_LLIST_HIGH_SHIFT) &
+ 			SPRD_DMA_LLIST_HIGH_MASK;
++
++		if (schan->linklist.wrap_addr) {
++			hw->wrap_ptr |= schan->linklist.wrap_addr &
++				SPRD_DMA_WRAP_ADDR_MASK;
++			hw->wrap_to |= dst & SPRD_DMA_WRAP_ADDR_MASK;
++		}
+ 	} else {
+ 		hw->llist_ptr = 0;
+ 		hw->src_blk_step = 0;
+@@ -939,9 +950,11 @@ static int sprd_dma_fill_linklist_desc(struct dma_chan *chan,
+ 
+ 		schan->linklist.phy_addr = ll_cfg->phy_addr;
+ 		schan->linklist.virt_addr = ll_cfg->virt_addr;
++		schan->linklist.wrap_addr = ll_cfg->wrap_addr;
+ 	} else {
+ 		schan->linklist.phy_addr = 0;
+ 		schan->linklist.virt_addr = 0;
++		schan->linklist.wrap_addr = 0;
+ 	}
+ 
+ 	/*
+diff --git a/include/linux/dma/sprd-dma.h b/include/linux/dma/sprd-dma.h
+index ab82df6..d09c6f6 100644
+--- a/include/linux/dma/sprd-dma.h
++++ b/include/linux/dma/sprd-dma.h
+@@ -118,6 +118,9 @@ enum sprd_dma_int_type {
+  * struct sprd_dma_linklist - DMA link-list address structure
+  * @virt_addr: link-list virtual address to configure link-list node
+  * @phy_addr: link-list physical address to link DMA transfer
++ * @wrap_addr: the wrap address for link-list mode, which means once the
++ * transfer address reaches the wrap address, the next transfer address
++ * will jump to the address specified by wrap_to register.
+  *
+  * The Spreadtrum DMA controller supports the link-list mode, that means slaves
+  * can supply several groups configurations (each configuration represents one
+@@ -181,6 +184,7 @@ enum sprd_dma_int_type {
+ struct sprd_dma_linklist {
+ 	unsigned long virt_addr;
+ 	phys_addr_t phy_addr;
++	phys_addr_t wrap_addr;
+ };
+ 
+ #endif
+-- 
+1.7.9.5
+

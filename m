@@ -2,148 +2,113 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C7EB6E2339
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Oct 2019 21:19:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 034BDE233D
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Oct 2019 21:19:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390153AbfJWTTG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 23 Oct 2019 15:19:06 -0400
-Received: from muru.com ([72.249.23.125]:39548 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732232AbfJWTTF (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 23 Oct 2019 15:19:05 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 7F9BE80CF;
-        Wed, 23 Oct 2019 19:19:37 +0000 (UTC)
-Date:   Wed, 23 Oct 2019 12:18:59 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
+        id S2390237AbfJWTT4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 23 Oct 2019 15:19:56 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40095 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387989AbfJWTT4 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 23 Oct 2019 15:19:56 -0400
+Received: by mail-lj1-f194.google.com with SMTP id u22so4293385lji.7
+        for <dmaengine@vger.kernel.org>; Wed, 23 Oct 2019 12:19:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Bjb6E5o86jRaWkMUAMaUmOeuRzJYRhMdLd2b26gDTww=;
+        b=nmiJoJ8l1o9knls8nsIWmUpDi5FlEUu3SbVzMufRfoCa8k71fcAIUu6uRG5rhsOUZq
+         nOt5gP4Fwd8kLkbvIBdckJ/Fe2eugM0y9cAipqL8cQJgz97BlKPmarLSou+harWormyS
+         o+U2FQSfYk91d0xFzPzs4I8SAU4yG288VCwI/CCrw3yFN93ujzv55Kurj3ghes70kbHB
+         ohg2oLxoZSDExctnRbL/WtFRbbYhu1tCwQ8m9Z6Wg8OVg+fIn2an0rTKdpx20ItXaFVv
+         QQSPJ3cM+qqGLTm4AEBSVQ7CwcpdsgGQF4V35EQn+n4ttGyp03QCXdO8s6B0z1pDF2dg
+         wGEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Bjb6E5o86jRaWkMUAMaUmOeuRzJYRhMdLd2b26gDTww=;
+        b=eH11i7/KWobv5VqdptcKHKaJZx4TRVAxAGHtplldxHa4izlYtqsZOfVM3y0fqBgHx4
+         xC3FLK3X026FzL1JUEazVF9R9WC2BEKYvK25pqP1QEcnN2jWbVVXp7Wn7rLZebrNnnF9
+         xQ3UxspIgdtoRND/2CupqyZ1SeF2N49G6npSPLRFjUd09lFyqEtv8TvYUhJw5I7Gs+yN
+         q7bCjubZO4+LaFwBmyfLuwvhTBxkCOgXwAYKVlMjiaR9Q9KZvsh8Sauv6cralIUbbx76
+         aDHhbgpIQa3NkUrYyeICJ4CUbus4KCjKE716zACjxj9nWRSoU8auZHEomjg2hAf083h3
+         IOHQ==
+X-Gm-Message-State: APjAAAUgBCnD7POgrpycvXnXiL4SztohQxtU2g6EQfmb5WFGN68U4sEA
+        7GghizEFIiF/TPqlbAS+OzhP7A==
+X-Google-Smtp-Source: APXvYqyp+ELRQOy9DNzDhRPqQaZJ9rdA1w3HqxPMLTejDtvzPI+0Q0HoViasfZ4qVRRNhvvbMQUQmA==
+X-Received: by 2002:a2e:878a:: with SMTP id n10mr24044289lji.229.1571858393968;
+        Wed, 23 Oct 2019 12:19:53 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:4201:cc87:e4a0:50f7:ca47:8e61])
+        by smtp.gmail.com with ESMTPSA id m28sm3215287ljc.96.2019.10.23.12.19.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 23 Oct 2019 12:19:53 -0700 (PDT)
+Subject: Re: [PATCH] dmaengine: cppi41: Fix cppi41_dma_prep_slave_sg() when
+ idle
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Vinod Koul <vinod.koul@intel.com>,
         Alexandre Bailon <abailon@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
         Bin Liu <b-liu@ti.com>, Daniel Mack <zonque@gmail.com>,
         Felipe Balbi <felipe.balbi@linux.intel.com>,
+        George Cherian <george.cherian@ti.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>,
-        Johan Hovold <johan@kernel.org>, Sekhar Nori <nsekhar@ti.com>,
+        Johan Hovold <johan@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        dmaengine@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org, giulio.benetti@benettiengineering.com,
+        dmaengine <dmaengine@vger.kernel.org>,
+        USB <linux-usb@vger.kernel.org>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        giulio.benetti@benettiengineering.com,
         Sebastian Reichel <sre@kernel.org>,
         Skvortsov <andrej.skvortzov@gmail.com>,
         Yegor Yefremov <yegorslists@googlemail.com>
-Subject: Re: [PATCH] dmaengine: cppi41: Fix cppi41_dma_prep_slave_sg() when
- idle
-Message-ID: <20191023191859.GQ5610@atomide.com>
 References: <20191023153138.23442-1-tony@atomide.com>
- <245e1e8f-7933-bae1-b779-239f33d4d449@ti.com>
- <20191023171628.GO5610@atomide.com>
- <5deab8a9-5796-5367-213e-90c5961b8498@ti.com>
+ <6996a5de-215b-f9a2-1aeb-5eeed1b7cf8d@cogentembedded.com>
+ <CAHp75VfyTJ+ptA8+AAgRgUNETLu=5EBc=bO7tmNhgxtdQq4EUw@mail.gmail.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <71b9a4ad-4f60-9edd-7dc4-ba4642b7748b@cogentembedded.com>
+Date:   Wed, 23 Oct 2019 22:19:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5deab8a9-5796-5367-213e-90c5961b8498@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAHp75VfyTJ+ptA8+AAgRgUNETLu=5EBc=bO7tmNhgxtdQq4EUw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [191023 19:02]:
-> On 10/23/19 8:16 PM, Tony Lindgren wrote:
-> > * Peter Ujfalusi <peter.ujfalusi@ti.com> [191023 17:04]:
-> >> On 10/23/19 6:31 PM, Tony Lindgren wrote:
-> >>> diff --git a/drivers/dma/ti/cppi41.c b/drivers/dma/ti/cppi41.c
-> >>> --- a/drivers/dma/ti/cppi41.c
-> >>> +++ b/drivers/dma/ti/cppi41.c
-> >>> @@ -586,9 +586,22 @@ static struct dma_async_tx_descriptor *cppi41_dma_prep_slave_sg(
-> >>>  	enum dma_transfer_direction dir, unsigned long tx_flags, void *context)
-> >>>  {
-> >>>  	struct cppi41_channel *c = to_cpp41_chan(chan);
-> >>> +	struct dma_async_tx_descriptor *txd = NULL;
-> >>> +	struct cppi41_dd *cdd = c->cdd;
-> >>>  	struct cppi41_desc *d;
-> >>>  	struct scatterlist *sg;
-> >>>  	unsigned int i;
-> >>> +	int error;
-> >>> +
-> >>> +	error = pm_runtime_get(cdd->ddev.dev);
-> >>
-> >> If pm_runtime_get()
-> >> pm_runtime_mark_last_busy()+pm_runtime_put_autosuspend() around a code
-> >> which updates a descriptor in _memory_ helps then this best described as
-> >> works by luck ;)
-> > 
-> > It also checks the cpp41 state for cdd->is_suspended
-> > though.
+Hello!
+
+On 10/23/2019 09:58 PM, Andy Shevchenko wrote:
+
+>>> +     int error;
+>>> +
+>>> +     error = pm_runtime_get(cdd->ddev.dev);
+>>> +     if (error < 0) {
+>>
+>>    I'd call that variable 'status', comparison (error < 0) just doesn't look right.
+>> If it was *if* (error), it would have been more correct.
 > 
-> Which is cleared/set in the suspend/resume callbacks and they are called
-> from a work (the driver uses async runtime_get).
+> It's error when it's negative. That's how PM runtime is designed.
 
-Right, only the cppi41 driver itself knows when it's idled
-or not, we cannot rely on pm_runtime functions for that.
+   Most of the other code too. However, the RPM code tends to return 
+positive values if a call is OK, so you have to go greater lengths and
+check a result for < 0. Calling the variable 'error' doesn't seem right
+in this context...
 
-> >> I have a feeling that if you put enough delay between prepare_sg and
-> >> issue_pending in the usb driver then it will keep failing, no?
-> > 
-> > Nope, it will just queue it and run the queue when awake.
-> 
-> the autosuspend_delay is set 100 ms, so if you put a udelay(101) between
-> prep_sg and issue_pending in the usb driver this trickery will be for
-> nothing, right?
-> If the usb driver is preempted for longer than 100ms between the two
-> calls, same issue.
-> Not sure, but if for some reason the transfer would take longer than
-> 100ms than pm_runtime will bring down the dma, no?
+>>> +             pm_runtime_put_noidle(cdd->ddev.dev);
+>>> +
+>>> +             return NULL;
+>>> +     }
 
-No, the dma will happen just fine no matter what the delay is.
-
-Part of the problem here is the musb driver. It friggin
-continues before checking the completion of a dma transfer!
-Fixing that currently is not trivial.
-
-> > But yeah, some dmaengine API that can sleep to tell
-> > a request is about to come would simplify things.
-> 
-> any of the prep callbacks kind of indicates that a client is preparing a
-> transfer so in a perfect world it is going to want to execute it..
-> 
-> > I don't think we have anything like that available
-> > right now?
-> 
-> Well, it would have the same issues. If the time between
-> dmaengine_be_warned_i_m_going_to_call_issue_pending_soon and
-> issue_pending is more than the autosuspend_delay then it is not going to
-> help.
-
-We'd have to allow dma consumer driver call pm_runtime_get_sync()
-on the dma device. Something similar maybe to what we have
-for phy_pm_runtime_get_sync(). Or just get the device handle for
-dma so the consumer can call pm_runtime_get_sync() on it.
-
-> On the other hand: if the usb driver assumes that the dma transfer is
-> already finished when issue_pending returned and carry on with
-> subsequent request, that is also a problematic assumption. One can only
-> consider a transfer to be done if the completion callback is called or
-> you have polled for the completion and it tells you the same.
-> This is problematic if you are in atomic context as the DMA completion
-> interrupt might not come while you are there.
-
-Yeah the musb driver has a history of 14 years of issues.
-I guess the logic there has been, it's usb, it can disconnect
-at any time..
-
-> imho, this fix is working by lucky constellation of the stars ;)
-> Or we can assume that there will never be more than 100ms delay between
-> prepare_sg and issue_pending...
-
-Not true. The cpp41 dma is doing the right thing and is not
-affected by the PM runtime autosuspend delay. Otherwise USB
-hard drives would not work, they can take seconds to spin up :)
-
-The missing part here seems to be the fact that musb continues
-before the dma completion is done.
-
-Regards,
-
-Tony
+MBR, Sergei

@@ -2,92 +2,101 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 82B6DE39CC
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Oct 2019 19:23:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B5AFE4468
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Oct 2019 09:30:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440038AbfJXRXC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 24 Oct 2019 13:23:02 -0400
-Received: from sender4-pp-o94.zoho.com ([136.143.188.94]:25442 "EHLO
-        sender4-pp-o94.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389384AbfJXRXC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Oct 2019 13:23:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1571937775; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=X/RbDHeP6dJCNtZcSeOTfQ0Ys48We0cjcNPbrxbaT+HuNyqTyf02W2/W83UHGjXcLp7uyqghwZRv+iomOF+0UCIT+VchmwRdlYMTtzdP9ria73hH0ZKYC0eMUaSpWVA66qqIZ2g811z960dZsHk3kNmNyEtYVo9BumXPx91nqPA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1571937775; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To; 
-        bh=4E+Rpg5l5lwQv4Fs+9WoNkjj0J33QSsoc+dKM2jzHQw=; 
-        b=jY0J4W42g7/gT5MVAVg2QkmarVk3DeBcK9umeiN04D7zT7pAT0Sw6SU68aT+2mnqZ/6JVtC3eb3EcZaG9bcWNSPXOlk/suiO1aB7LfhCDZS06n25WYEIbgO+vEPy0p6itl/vO+clvinSFRdBZfUdnbkJ3EnV4UBZh86DJB0K6dg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
-  b=JXj9iOjOYcqi2t/rG7odkldOG2QdvmfXhvIesGZXSIJ9dL0WzKfyz7yK2I2gLQjZDDtHGFBLZz+i
-    dOIrUz3ukQ0YIXqm+ridoxMuT/GKq+AGqYu8Sp1wNR7MzAOCcKnK  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1571937775;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        l=1231; bh=4E+Rpg5l5lwQv4Fs+9WoNkjj0J33QSsoc+dKM2jzHQw=;
-        b=A4y/omKw2ab7vGPKPtYPW9TB7hWrRSema0DX7z6N8N04UC13ai9ls+e/yu7ajm+5
-        +ds6jwlLU2W3XL3h9JeqrUY3Qx/1Cu8Vr/C15+cUBpsYMVx/3Tn+g6cuIeM3XScES65
-        vQsMSR8/czHTkXWFtsFVIaxFayohNXuCGmedpKcQ=
-Received: from zhouyanjie-virtual-machine.localdomain (171.221.113.49 [171.221.113.49]) by mx.zohomail.com
-        with SMTPS id 1571937774306831.6615968475469; Thu, 24 Oct 2019 10:22:54 -0700 (PDT)
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        paul.burton@mips.com, vkoul@kernel.org, paul@crapouillou.net,
-        mark.rutland@arm.com, Zubair.Kakakhel@imgtec.com,
-        dan.j.williams@intel.com
-Subject: [PATCH 2/2 v2] dmaengine: JZ4780: Add support for the X1000.
-Date:   Fri, 25 Oct 2019 01:21:10 +0800
-Message-Id: <1571937670-30828-3-git-send-email-zhouyanjie@zoho.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1571937670-30828-1-git-send-email-zhouyanjie@zoho.com>
-References: <1571799903-44561-1-git-send-email-zhouyanjie@zoho.com>
- <1571937670-30828-1-git-send-email-zhouyanjie@zoho.com>
-X-ZohoMailClient: External
+        id S1725775AbfJYHaD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 25 Oct 2019 03:30:03 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:41784 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393141AbfJYHaD (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 25 Oct 2019 03:30:03 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9P7TuEW083485;
+        Fri, 25 Oct 2019 02:29:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1571988596;
+        bh=1cUSfoEykjjueYG50S/BGu6RsBmbXbVHtUUcLABJHMI=;
+        h=From:To:CC:Subject:Date;
+        b=uwRBtnrtb3CFRjtSl0++4rf3rnturX1wqc1+D9oes00aGejogJ7GbOKKslvkEwjjV
+         I19AB807gOyTl43CB3aaKU3+cqj9tPekh9xEGcOm4Neu3Fxr5ZNPZI5wvP4SoIy8fi
+         HUJdRg1i7p0Xh/lnJgDVLAQIOr7UifrA2flW/vfU=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9P7TuIY094281
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 25 Oct 2019 02:29:56 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 25
+ Oct 2019 02:29:55 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 25 Oct 2019 02:29:44 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9P7Tr4F103329;
+        Fri, 25 Oct 2019 02:29:53 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <devicetree@vger.kernel.org>
+Subject: [PATCH v5 0/3] dmaengine: bindings/edma: dma-channel-mask to array
+Date:   Fri, 25 Oct 2019 10:30:53 +0300
+Message-ID: <20191025073056.25450-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add support for probing the dma-jz4780 driver on the X1000 Soc.
+Hi,
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+Changes since v4:
+- Rebased on next to make it apply cleanly
+- Added Reviewed-by from Rob for the DT documentation patches
+
+Changes since v3:
+- Update the dma-common.yaml and edma binding documentation according to Rob's
+  suggestion
+
+Changes since v2:
+- Fix dma-common.yaml documentation patch and extend the description of the
+  dma-channel-mask array
+- The edma documentation now includes information on the dma-channel-mask array
+  size for EDMAs with 32 or 64 channels
+
+Changes since v1:
+- Extend the common dma-channel-mask to uint32-array to be usable for
+  controllers with more than 32 channels
+- Use the dma-channel-mask instead custom property for available channels for
+  EDMA.
+
+The original patch was part of the EDMA multicore usage series.
+
+EDMAs can have 32 or 64 channels depending on the SoC, the dma-channel-mask
+needs to be an array to be usable for the driver.
+
+Regards,
+Peter
 ---
- drivers/dma/dma-jz4780.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Peter Ujfalusi (3):
+  dt-bindings: dmaengine: dma-common: Change dma-channel-mask to
+    uint32-array
+  dt-bindings: dma: ti-edma: Document dma-channel-mask for EDMA
+  dmaengine: ti: edma: Add support for handling reserved channels
 
-diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index cafb1cc0..5e3af48 100644
---- a/drivers/dma/dma-jz4780.c
-+++ b/drivers/dma/dma-jz4780.c
-@@ -1019,11 +1019,18 @@ static const struct jz4780_dma_soc_data jz4780_dma_soc_data = {
- 	.flags = JZ_SOC_DATA_ALLOW_LEGACY_DT | JZ_SOC_DATA_PROGRAMMABLE_DMA,
- };
- 
-+static const struct jz4780_dma_soc_data x1000_dma_soc_data = {
-+	.nb_channels = 8,
-+	.transfer_ord_max = 7,
-+	.flags = JZ_SOC_DATA_PROGRAMMABLE_DMA,
-+};
-+
- static const struct of_device_id jz4780_dma_dt_match[] = {
- 	{ .compatible = "ingenic,jz4740-dma", .data = &jz4740_dma_soc_data },
- 	{ .compatible = "ingenic,jz4725b-dma", .data = &jz4725b_dma_soc_data },
- 	{ .compatible = "ingenic,jz4770-dma", .data = &jz4770_dma_soc_data },
- 	{ .compatible = "ingenic,jz4780-dma", .data = &jz4780_dma_soc_data },
-+	{ .compatible = "ingenic,x1000-dma", .data = &x1000_dma_soc_data },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, jz4780_dma_dt_match);
+ .../devicetree/bindings/dma/dma-common.yaml   |  9 ++-
+ .../devicetree/bindings/dma/ti-edma.txt       |  8 +++
+ drivers/dma/ti/edma.c                         | 59 +++++++++++++++++--
+ 3 files changed, 69 insertions(+), 7 deletions(-)
+
 -- 
-2.7.4
+Peter
 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 

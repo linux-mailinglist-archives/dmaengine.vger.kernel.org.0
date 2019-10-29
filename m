@@ -2,101 +2,151 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 92600E6DB8
-	for <lists+dmaengine@lfdr.de>; Mon, 28 Oct 2019 09:00:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CECA7E837F
+	for <lists+dmaengine@lfdr.de>; Tue, 29 Oct 2019 09:53:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731303AbfJ1IAt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 28 Oct 2019 04:00:49 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38253 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733125AbfJ1IAt (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 28 Oct 2019 04:00:49 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c13so6368023pfp.5
-        for <dmaengine@vger.kernel.org>; Mon, 28 Oct 2019 01:00:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Teb+nHfVj7QdEHZ6F94pdipxxAtosBBL8l+HZTtIm4A=;
-        b=buaiJ3wCZ4lN8R+UyQC0KOVQoxUBt6E4y93SYARVuR1cEQmv/6DKg4GcFkpHRoxyuZ
-         owizS5k3E6U2+4tNLCi2VzzTujDhbLZADv9SNpK6h5Mz6od8pwnNy7juEGYAPj9frn3F
-         yMPdfWr/m297s++31zAjbgfMq5FEv0rtrzsAX4Y2BOTh+VgZTwFpHrM5maha5RYfJ28s
-         i8vTW8T+L+PZ6mcbUUiC2fx9aHpoqrolWGKjjfqnrPFR5V91EuX3/bL3FfVDEPg26AcG
-         iWZwa4z03A1Bx0nETUvG+uyojlpdadDnzPWailVA/qhmAwdUW2H8KxKlfpRvCsiEm6Iu
-         D7KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Teb+nHfVj7QdEHZ6F94pdipxxAtosBBL8l+HZTtIm4A=;
-        b=MWPfZzB85WogXENdYm0yl9xXcWmtnoN/26OZo4jeHP5b3hfSUXl2oSC+rj95ujvzkL
-         UlUPBScZy3m83yx8MoT2m8LL6yrxMTrJmvPHpknseOLRUIIJkQ77AKLd3uu5uVV7v1xW
-         g6570KdDa1rxzZlE5ais1Q90SdNEzgFy9sglcMHVS0awBgl7FsPOrpnhnGuQtC3c3EMT
-         0xNGnVc8ObTPO30cxYt1m1TGKTB5VkV6teWFIs5gDV8zfe1q75cfBm6Jik0if1qAJfei
-         DrluMe8OFoAgXqHItfXfLYNfl56BpGbEVnzg347vRSTmaxPoMIbhhfxlXWAKJOlyxzm0
-         Q4Aw==
-X-Gm-Message-State: APjAAAWw2b24oT4E8K+tLBDt4+tckQJv0ZRmznLJ9O7xYRehfhl9Qpmf
-        q0idAMExGIbivxS+3HRQyyjqfg==
-X-Google-Smtp-Source: APXvYqw5o9OQqVfoQBgItzsJbWV2pBxZDfEZpu9OM5nA5X7iLkchHyEIoGZfQuSvRNFLCJ9raZ6acA==
-X-Received: by 2002:a62:77c2:: with SMTP id s185mr3990854pfc.129.1572249648961;
-        Mon, 28 Oct 2019 01:00:48 -0700 (PDT)
-Received: from localhost.localdomain (111-241-170-106.dynamic-ip.hinet.net. [111.241.170.106])
-        by smtp.gmail.com with ESMTPSA id y36sm9504752pgk.66.2019.10.28.01.00.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 01:00:48 -0700 (PDT)
-From:   Green Wan <green.wan@sifive.com>
-Cc:     Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 4/4] MAINTAINERS: Add Green as SiFive PDMA driver maintainer
-Date:   Mon, 28 Oct 2019 15:56:23 +0800
-Message-Id: <20191028075658.12143-5-green.wan@sifive.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191028075658.12143-1-green.wan@sifive.com>
-References: <20191028075658.12143-1-green.wan@sifive.com>
-To:     unlisted-recipients:; (no To-header on input)
+        id S1728126AbfJ2Ixg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 29 Oct 2019 04:53:36 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59186 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbfJ2Ixf (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 29 Oct 2019 04:53:35 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x9T8rMdP075590;
+        Tue, 29 Oct 2019 03:53:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572339202;
+        bh=GENQOkaFvVatZv1GMFR3zbGCbH5x94AbSDwlQyYRy4k=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ryNYsmDLJEX96Q+mU0OivEDViSqNSb3nMrcJpZ1CwikrLprdf3c1ZFwFLFEGyr7Z4
+         bjY4DGY2VwoPy0uOWRd4JCMwAgwubYxlHYWPTXUntK8Ky3GoXdkre/Nmar9eZ/SrHJ
+         sZVM/v/z2jsQ1peboThHmeA9SGFCGu6tzGoGz8ds=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x9T8rMG2086926
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 29 Oct 2019 03:53:22 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 29
+ Oct 2019 03:53:10 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 29 Oct 2019 03:53:10 -0500
+Received: from [172.24.190.117] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x9T8rIvA090581;
+        Tue, 29 Oct 2019 03:53:18 -0500
+Subject: Re: [PATCH v3 02/14] soc: ti: k3: add navss ringacc driver
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <t-kristo@ti.com>, <tony@atomide.com>,
+        <j-keerthy@ti.com>
+References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
+ <20191001061704.2399-3-peter.ujfalusi@ti.com>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <b5f47303-b6d2-190b-d38c-d3557a93b111@ti.com>
+Date:   Tue, 29 Oct 2019 14:22:14 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20191001061704.2399-3-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Update MAINTAINERS for SiFive PDMA driver.
+Hi Grygorii,
 
-Signed-off-by: Green Wan <green.wan@sifive.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+[...snip..]
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c6c34d04ce95..330fbd050059 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14782,6 +14782,12 @@ F:	drivers/media/usb/siano/
- F:	drivers/media/usb/siano/
- F:	drivers/media/mmc/siano/
- 
-+SIFIVE PDMA DRIVER
-+M:	Green Wan <green.wan@sifive.com>
-+S:	Maintained
-+F:	drivers/dma/sf-pdma/
-+F:	Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-+
- SIFIVE DRIVERS
- M:	Palmer Dabbelt <palmer@sifive.com>
- M:	Paul Walmsley <paul.walmsley@sifive.com>
--- 
-2.17.1
+> +
+> +static int k3_ringacc_ring_access_io(struct k3_ring *ring, void *elem,
+> +				     enum k3_ringacc_access_mode access_mode)
+> +{
+> +	void __iomem *ptr;
+> +
+> +	switch (access_mode) {
+> +	case K3_RINGACC_ACCESS_MODE_PUSH_HEAD:
+> +	case K3_RINGACC_ACCESS_MODE_POP_HEAD:
+> +		ptr = (void __iomem *)&ring->fifos->head_data;
+> +		break;
+> +	case K3_RINGACC_ACCESS_MODE_PUSH_TAIL:
+> +	case K3_RINGACC_ACCESS_MODE_POP_TAIL:
+> +		ptr = (void __iomem *)&ring->fifos->tail_data;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	ptr += k3_ringacc_ring_get_fifo_pos(ring);
+> +
+> +	switch (access_mode) {
+> +	case K3_RINGACC_ACCESS_MODE_POP_HEAD:
+> +	case K3_RINGACC_ACCESS_MODE_POP_TAIL:
+> +		dev_dbg(ring->parent->dev,
+> +			"memcpy_fromio(x): --> ptr(%p), mode:%d\n", ptr,
+> +			access_mode);
+> +		memcpy_fromio(elem, ptr, (4 << ring->elm_size));
 
+Does this work for any elem_size < 64 or any element size not aligned with 64?
+
+IIUC, in message mode, ring element should be inserted in a single burst write
+and there is no doorbell facility. If the above conditions are not met, we are
+supposed to use proxy.
+
+In this driver, I don't see any restrictions on the ring element size for
+message mode and directly written to io. Am I missing something?
+
+Thanks and regards,
+Lokesh
+
+> +		ring->occ--;
+> +		break;
+> +	case K3_RINGACC_ACCESS_MODE_PUSH_TAIL:
+> +	case K3_RINGACC_ACCESS_MODE_PUSH_HEAD:
+> +		dev_dbg(ring->parent->dev,
+> +			"memcpy_toio(x): --> ptr(%p), mode:%d\n", ptr,
+> +			access_mode);
+> +		memcpy_toio(ptr, elem, (4 << ring->elm_size));
+> +		ring->free--;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	dev_dbg(ring->parent->dev, "free%d index%d occ%d index%d\n", ring->free,
+> +		ring->windex, ring->occ, ring->rindex);
+> +	return 0;
+> +}
+> +
+> +static int k3_ringacc_ring_push_head_io(struct k3_ring *ring, void *elem)
+> +{
+> +	return k3_ringacc_ring_access_io(ring, elem,
+> +					 K3_RINGACC_ACCESS_MODE_PUSH_HEAD);
+> +}
+> +
+> +static int k3_ringacc_ring_push_io(struct k3_ring *ring, void *elem)
+> +{
+> +	return k3_ringacc_ring_access_io(ring, elem,
+> +					 K3_RINGACC_ACCESS_MODE_PUSH_TAIL);
+> +}
+> +
+> +static int k3_ringacc_ring_pop_io(struct k3_ring *ring, void *elem)
+> +{
+> +	return k3_ringacc_ring_access_io(ring, elem,
+> +					 K3_RINGACC_ACCESS_MODE_POP_HEAD);
+> +}
+> +
+> +static int k3_ringacc_ring_pop_tail_io(struct k3_ring *ring, void *elem)
+> +{
+> +	return k3_ringacc_ring_access_io(ring, elem,
+> +					 K3_RINGACC_ACCESS_MODE_POP_HEAD);
+> +}
+> +

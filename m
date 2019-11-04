@@ -2,120 +2,86 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E3A78ED391
-	for <lists+dmaengine@lfdr.de>; Sun,  3 Nov 2019 15:35:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3773DEE47F
+	for <lists+dmaengine@lfdr.de>; Mon,  4 Nov 2019 17:16:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbfKCOff (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 3 Nov 2019 09:35:35 -0500
-Received: from mga18.intel.com ([134.134.136.126]:31578 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727350AbfKCOfe (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sun, 3 Nov 2019 09:35:34 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Nov 2019 06:35:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,263,1569308400"; 
-   d="scan'208";a="195205369"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 03 Nov 2019 06:35:32 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iRGya-0008Wg-4E; Sun, 03 Nov 2019 22:35:32 +0800
-Date:   Sun, 3 Nov 2019 22:34:55 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Alexander Gordeev <a.gordeev.box@gmail.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Alexander Gordeev <a.gordeev.box@gmail.com>,
-        dmaengine@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] dmaengine: avalon: Intel Avalon-MM DMA Interface
- for PCIe
-Message-ID: <201911032232.QyQMzYkg%lkp@intel.com>
-References: <d5301a136caa6cd1cfcfedf31e426a18a7c05c12.1572441900.git.a.gordeev.box@gmail.com>
+        id S1728144AbfKDQQg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 4 Nov 2019 11:16:36 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40517 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728138AbfKDQQg (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 4 Nov 2019 11:16:36 -0500
+Received: by mail-wr1-f65.google.com with SMTP id o28so17761475wro.7;
+        Mon, 04 Nov 2019 08:16:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/Xhq0H5pLLtX0Ww6fnj03dQOrsFXJBAwNPPPx6Ye9nM=;
+        b=uq8ZW9pIQW4yWd3s07FDkzrPSTAb037Z+3vX+UfJZojPUV4AJXiIY3NiFvJNXSDVcM
+         HrVlzfg0u53TzIxZavbNf4G4KQQkrkjTu6+XcysXMXv1nuxh1eBOmg+a2YoF4QlW1cGT
+         6utz9YoUabbCV9CSdV/njE1my0HMpUgPtpp23PvH+1tYeGwHKqk4QtVpwZYxgsT+WY38
+         vih2eszoe21JVWag3ZUmoRmQDhsKm97PzLEMhPsUTMFZOyuS+jQOONmOnHWlcYh2yJng
+         vvTtqEg3QSK3+7w859a7FITf/AbVWqvrL0NjPU3tUDWr0S+/Bsjbq1GBbpRzLgAFJ8nD
+         5YEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/Xhq0H5pLLtX0Ww6fnj03dQOrsFXJBAwNPPPx6Ye9nM=;
+        b=MeN4lP0z0YfpjYvhpz5XOa/5jsfoZ09k+gMHC3oLn+NPBQf8adxkt4cOGyP3pKRvig
+         pbGKS8I4EqSClbUcxre4fTNasOMEYGbjUeU2hpGYekHHHu0fTBK1lzBBRQCfocOmlmud
+         yhOJfe+Z1KfDCdo2D6of2nhut/7v6cz95yX4gsYYsy4LAD6NKCoV2ajAtWAC6Gnz919I
+         x7rw8/XTWt8DRTVrBhja992FKqEfHazqhj4mUO3x1PoFqPsYSUSMTiBHd+qhtdFf6D1Z
+         dNFklL+2SxURWLHQt9RuHEQKy8DkD4yPdcNSniRamGno5cdZdPqYSU5ko2jwZ1jBWg5r
+         qrhw==
+X-Gm-Message-State: APjAAAV535bdM7kAm3p9AUhiGCibTNr9gEOEXJq5gPQIp78PQg1Hb+6X
+        3Sk1ZSu3c/a+Ou0cIdRiZBw=
+X-Google-Smtp-Source: APXvYqwuQiiMHirp5J8wAt3nc9veuTB7izFK8r/TGXUkIv971Jb0Imnw8HDrPd4Wu0kgMSIiJw0EkQ==
+X-Received: by 2002:a5d:6947:: with SMTP id r7mr18751271wrw.129.1572884194088;
+        Mon, 04 Nov 2019 08:16:34 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id f188sm10410999wmf.3.2019.11.04.08.16.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 08:16:33 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] dmaengine: dma-jz4780: add missed clk_disable_unprepare in remove
+Date:   Tue,  5 Nov 2019 00:16:22 +0800
+Message-Id: <20191104161622.11758-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d5301a136caa6cd1cfcfedf31e426a18a7c05c12.1572441900.git.a.gordeev.box@gmail.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Alexander,
+The remove misses to disable and unprepare jzdma->clk.
+Add a call to clk_disable_unprepare to fix it.
 
-Thank you for the patch! Perhaps something to improve:
-
-[auto build test WARNING on linus/master]
-[also build test WARNING on v5.4-rc5]
-[cannot apply to next-20191031]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Alexander-Gordeev/dmaengine-avalon-Intel-Avalon-MM-DMA-Interface-for-PCIe/20191102-044059
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 0dbe6cb8f7e05bc9611602ef45980a6c57b245a3
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-6-g57f8611-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/dma/avalon/avalon-hw.c:17:22: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [usertype] src_lo @@    got restrunsigned int [usertype] src_lo @@
->> drivers/dma/avalon/avalon-hw.c:17:22: sparse:    expected unsigned int [usertype] src_lo
->> drivers/dma/avalon/avalon-hw.c:17:22: sparse:    got restricted __le32 [usertype]
->> drivers/dma/avalon/avalon-hw.c:18:22: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [usertype] src_hi @@    got restrunsigned int [usertype] src_hi @@
->> drivers/dma/avalon/avalon-hw.c:18:22: sparse:    expected unsigned int [usertype] src_hi
-   drivers/dma/avalon/avalon-hw.c:18:22: sparse:    got restricted __le32 [usertype]
->> drivers/dma/avalon/avalon-hw.c:19:22: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [usertype] dst_lo @@    got restrunsigned int [usertype] dst_lo @@
->> drivers/dma/avalon/avalon-hw.c:19:22: sparse:    expected unsigned int [usertype] dst_lo
-   drivers/dma/avalon/avalon-hw.c:19:22: sparse:    got restricted __le32 [usertype]
->> drivers/dma/avalon/avalon-hw.c:20:22: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [usertype] dst_hi @@    got restrunsigned int [usertype] dst_hi @@
->> drivers/dma/avalon/avalon-hw.c:20:22: sparse:    expected unsigned int [usertype] dst_hi
-   drivers/dma/avalon/avalon-hw.c:20:22: sparse:    got restricted __le32 [usertype]
->> drivers/dma/avalon/avalon-hw.c:21:27: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int [usertype] ctl_dma_len @@    got restrunsigned int [usertype] ctl_dma_len @@
->> drivers/dma/avalon/avalon-hw.c:21:27: sparse:    expected unsigned int [usertype] ctl_dma_len
-   drivers/dma/avalon/avalon-hw.c:21:27: sparse:    got restricted __le32 [usertype]
->> drivers/dma/avalon/avalon-hw.c:22:27: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int @@    got restricted __le32unsigned int @@
->> drivers/dma/avalon/avalon-hw.c:22:27: sparse:    expected unsigned int
-   drivers/dma/avalon/avalon-hw.c:22:27: sparse:    got restricted __le32 [usertype]
-   drivers/dma/avalon/avalon-hw.c:23:27: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int @@    got restricted __le32unsigned int @@
-   drivers/dma/avalon/avalon-hw.c:23:27: sparse:    expected unsigned int
-   drivers/dma/avalon/avalon-hw.c:23:27: sparse:    got restricted __le32 [usertype]
-   drivers/dma/avalon/avalon-hw.c:24:27: sparse: sparse: incorrect type in assignment (different base types) @@    expected unsigned int @@    got restricted __le32unsigned int @@
-   drivers/dma/avalon/avalon-hw.c:24:27: sparse:    expected unsigned int
-   drivers/dma/avalon/avalon-hw.c:24:27: sparse:    got restricted __le32 [usertype]
---
->> drivers/dma/avalon/avalon-core.c:346:27: sparse: sparse: mixing different enum types:
->> drivers/dma/avalon/avalon-core.c:346:27: sparse:    unsigned int enum dma_transfer_direction
->> drivers/dma/avalon/avalon-core.c:346:27: sparse:    unsigned int enum dma_data_direction
-
-vim +17 drivers/dma/avalon/avalon-hw.c
-
-    13	
-    14	static void setup_desc(struct dma_desc *desc, u32 desc_id,
-    15			       u64 dest, u64 src, u32 size)
-    16	{
-  > 17		desc->src_lo = cpu_to_le32(src & 0xfffffffful);
-  > 18		desc->src_hi = cpu_to_le32((src >> 32));
-  > 19		desc->dst_lo = cpu_to_le32(dest & 0xfffffffful);
-  > 20		desc->dst_hi = cpu_to_le32((dest >> 32));
-  > 21		desc->ctl_dma_len = cpu_to_le32((size >> 2) | (desc_id << 18));
-  > 22		desc->reserved[0] = cpu_to_le32(0x0);
-    23		desc->reserved[1] = cpu_to_le32(0x0);
-    24		desc->reserved[2] = cpu_to_le32(0x0);
-    25	}
-    26	
-
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ drivers/dma/dma-jz4780.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index cafb1cc065bb..66ab76b9520f 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -987,6 +987,7 @@ static int jz4780_dma_remove(struct platform_device *pdev)
+ 
+ 	of_dma_controller_free(pdev->dev.of_node);
+ 
++	clk_disable_unprepare(jzdma->clk);
+ 	free_irq(jzdma->irq, jzdma);
+ 
+ 	for (i = 0; i < jzdma->soc_data->nb_channels; i++)
+-- 
+2.23.0
+

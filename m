@@ -2,101 +2,110 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E4AF6F29E0
-	for <lists+dmaengine@lfdr.de>; Thu,  7 Nov 2019 09:54:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A30C5F2D67
+	for <lists+dmaengine@lfdr.de>; Thu,  7 Nov 2019 12:27:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733241AbfKGIyv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 7 Nov 2019 03:54:51 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:32862 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbfKGIyu (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 7 Nov 2019 03:54:50 -0500
-Received: by mail-pf1-f194.google.com with SMTP id c184so2169916pfb.0
-        for <dmaengine@vger.kernel.org>; Thu, 07 Nov 2019 00:54:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=REr9FfqxVfrOvMfCnBHOUFhY/pw9eZJd+cJfs5nnvmk=;
-        b=Ub5AuL2yBlrx2kEGok4LLkMsGs9Tg85TheBaiJPVAl5Zup7IALWGjeBGQNQxT66fGQ
-         /+Kx4qiwPKcqzjoOsuuQL20s7hdAkUp1V5GqLlC4CyA4Oh5Qh1iF6hi4f+GocdYoQJOI
-         TEVLqzJZE1uOsHzBekKouNqI77hN5vukb/5zyXZIj5F54WAxVrtm9Xh3GUaULvUhz4+v
-         Cn4dummdKET9/QWP9fYXYzcRNChTj9x7K4V/zV1j2BojghVhhhmEVvq3FgdM+YbDMPip
-         d8lOL0vcQmJYZ5r8tUheQJ+w2J6FE+u4Xwizyk9fU7IUU2M56Ynbz+vgU6uagWRKDDwL
-         SkEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=REr9FfqxVfrOvMfCnBHOUFhY/pw9eZJd+cJfs5nnvmk=;
-        b=cGbBThxxADd779zGq77Gc4EcGrUab5zq7+LP+XvvSKGzC0AWsimMNw9K/K3TLlXWBY
-         wKhHtRY9385GWIQplvRfNytNabR8AlU6KE2jyN5ouQ2VThTkY4CQkosphqpYjU66QPYt
-         msqZ+nxWhULJ2rWysrCpp7SjUFxeTs5Cp2co2ssh/p/X3Pta9NbN9DAr5G2Ci3pYkhAK
-         9QhUVlK1Ey+rByHD739Sl3LmKGHvXkQEb9QgMsmXCqMIVRjXNGKk5qhVAlpefPGp3End
-         qjEOqruuLuclcE6Jnq6BDuDKuLfEPlmvIuaSBRwEtq8abe349i37SE1zmNxkbIAyQ81H
-         /5ow==
-X-Gm-Message-State: APjAAAVzB29PxeIMBKNxs6TlRP1QtYmDHzv+ypAWtkCmJ9i5n7tG6Fs4
-        Vj9vNDitrkpxM1REUX0GMPamtw==
-X-Google-Smtp-Source: APXvYqwDFuK/xyGSDVKNWtwLPNsCCdPj7+umcyIkizF5k0puUXO125ZdEGWjnl7vA9pTpceKyeB6Bg==
-X-Received: by 2002:a63:91c1:: with SMTP id l184mr3073440pge.57.1573116888516;
-        Thu, 07 Nov 2019 00:54:48 -0800 (PST)
-Received: from localhost.localdomain (36-228-119-18.dynamic-ip.hinet.net. [36.228.119.18])
-        by smtp.gmail.com with ESMTPSA id a33sm2402361pgb.57.2019.11.07.00.54.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 00:54:48 -0800 (PST)
-From:   Green Wan <green.wan@sifive.com>
-Cc:     Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 4/4] MAINTAINERS: Add Green as SiFive PDMA driver maintainer
-Date:   Thu,  7 Nov 2019 16:49:22 +0800
-Message-Id: <20191107084955.7580-5-green.wan@sifive.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191107084955.7580-1-green.wan@sifive.com>
-References: <20191107084955.7580-1-green.wan@sifive.com>
-To:     unlisted-recipients:; (no To-header on input)
+        id S1733142AbfKGL1g (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 7 Nov 2019 06:27:36 -0500
+Received: from mail-m975.mail.163.com ([123.126.97.5]:47592 "EHLO
+        mail-m975.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbfKGL1g (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 7 Nov 2019 06:27:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=VxXuxyye1MqjU+hDjg
+        02qbrKx1jLX10dIV/GDARuXpU=; b=b6XWFLM1DY02QNi+PAd31aRrO6jgY1b51z
+        UiunWg4MGfA6LGfW9dtQeS44ggK81ISAo3d/cBoRqO0KR+B3yIph2aZ2OiKLRr6m
+        jW65MQHNHjtcxF2DbkDaCdId16uGV6fd4mXFuA7MkaGAJM3laVsNWXn9IEIsIXYJ
+        IiVR1ElHI=
+Received: from localhost.localdomain (unknown [202.112.113.212])
+        by smtp5 (Coremail) with SMTP id HdxpCgCXTueP_8Nd8iYXAA--.227S3;
+        Thu, 07 Nov 2019 19:27:17 +0800 (CST)
+From:   Pan Bian <bianpan2016@163.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Pan Bian <bianpan2016@163.com>
+Subject: [PATCH] dmaengine: sun6i: Fix use after free
+Date:   Thu,  7 Nov 2019 19:26:53 +0800
+Message-Id: <1573126013-17609-1-git-send-email-bianpan2016@163.com>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: HdxpCgCXTueP_8Nd8iYXAA--.227S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Zr17Kr15JFy3XrWfGryfZwb_yoW8KF1kpF
+        43Ja4rur45tF1aga13Z348uF13KF4fJFyUCay5Gwn0vr9xXr1kGa17Aa4Fkr98JFn8CrWf
+        Xrs0gF1ruF4UGwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UypBhUUUUU=
+X-Originating-IP: [202.112.113.212]
+X-CM-SenderInfo: held01tdqsiiqw6rljoofrz/xtbBzxVmclaD5QFnNAAAss
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Update MAINTAINERS for SiFive PDMA driver.
+The members in the LLI list is released in an incorrect way. Read and
+store the next member before releasing it to avoid accessing the freed
+memory.
 
-Signed-off-by: Green Wan <green.wan@sifive.com>
+Fixes: a90e173f3faf ("dmaengine: sun6i: Add cyclic capability")
+
+Signed-off-by: Pan Bian <bianpan2016@163.com>
 ---
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/dma/sun6i-dma.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2a427d1e9f01..d319f7f33407 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14785,6 +14785,12 @@ F:	drivers/media/usb/siano/
- F:	drivers/media/usb/siano/
- F:	drivers/media/mmc/siano/
+diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+index 06cd7f867f7c..096aad7e75bb 100644
+--- a/drivers/dma/sun6i-dma.c
++++ b/drivers/dma/sun6i-dma.c
+@@ -687,7 +687,7 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_slave_sg(
+ 	struct sun6i_dma_dev *sdev = to_sun6i_dma_dev(chan->device);
+ 	struct sun6i_vchan *vchan = to_sun6i_vchan(chan);
+ 	struct dma_slave_config *sconfig = &vchan->cfg;
+-	struct sun6i_dma_lli *v_lli, *prev = NULL;
++	struct sun6i_dma_lli *v_lli, *next, *prev = NULL;
+ 	struct sun6i_desc *txd;
+ 	struct scatterlist *sg;
+ 	dma_addr_t p_lli;
+@@ -752,8 +752,12 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_slave_sg(
+ 	return vchan_tx_prep(&vchan->vc, &txd->vd, flags);
  
-+SIFIVE PDMA DRIVER
-+M:	Green Wan <green.wan@sifive.com>
-+S:	Maintained
-+F:	drivers/dma/sf-pdma/
-+F:	Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-+
- SIFIVE DRIVERS
- M:	Palmer Dabbelt <palmer@dabbelt.com>
- M:	Paul Walmsley <paul.walmsley@sifive.com>
+ err_lli_free:
+-	for (prev = txd->v_lli; prev; prev = prev->v_lli_next)
+-		dma_pool_free(sdev->pool, prev, virt_to_phys(prev));
++	v_lli = txd->v_lli;
++	while (v_lli) {
++		next = v_lli->v_lli_next;
++		dma_pool_free(sdev->pool, v_lli, virt_to_phys(v_lli));
++		v_lli = next;
++	}
+ 	kfree(txd);
+ 	return NULL;
+ }
+@@ -769,7 +773,7 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_dma_cyclic(
+ 	struct sun6i_dma_dev *sdev = to_sun6i_dma_dev(chan->device);
+ 	struct sun6i_vchan *vchan = to_sun6i_vchan(chan);
+ 	struct dma_slave_config *sconfig = &vchan->cfg;
+-	struct sun6i_dma_lli *v_lli, *prev = NULL;
++	struct sun6i_dma_lli *v_lli, *next, *prev = NULL;
+ 	struct sun6i_desc *txd;
+ 	dma_addr_t p_lli;
+ 	u32 lli_cfg;
+@@ -820,8 +824,12 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_dma_cyclic(
+ 	return vchan_tx_prep(&vchan->vc, &txd->vd, flags);
+ 
+ err_lli_free:
+-	for (prev = txd->v_lli; prev; prev = prev->v_lli_next)
+-		dma_pool_free(sdev->pool, prev, virt_to_phys(prev));
++	v_lli = txd->v_lli;
++	while (v_lli) {
++		next = v_lli->v_lli_next;
++		dma_pool_free(sdev->pool, v_lli, virt_to_phys(v_lli));
++		v_lli = next;
++	}
+ 	kfree(txd);
+ 	return NULL;
+ }
 -- 
-2.17.1
+2.7.4
 

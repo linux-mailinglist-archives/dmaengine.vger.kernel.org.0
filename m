@@ -2,27 +2,27 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C103BF46FF
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Nov 2019 12:48:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D13FCF4769
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Nov 2019 12:50:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391371AbfKHLqe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 8 Nov 2019 06:46:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34336 "EHLO mail.kernel.org"
+        id S2388183AbfKHLuP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 8 Nov 2019 06:50:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391367AbfKHLqe (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:46:34 -0500
+        id S2391683AbfKHLrw (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:47:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0C57222D4;
-        Fri,  8 Nov 2019 11:46:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F28022459;
+        Fri,  8 Nov 2019 11:47:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213593;
-        bh=lgzmDY7hvgwZlBz91lc4Dp9NshUnGaue5baV8VcMsmk=;
+        s=default; t=1573213672;
+        bh=VD4UdahY3GQ+xQ2/+jHwTXiwPVyL987arVvNOOss+w0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zSCoHkKjZLSbCDO02+ZP65Fx0Rk51LEjqULJsXdtJAqlZFqqAO9VJliosqgeMX2VP
-         6M2aP6BBF34vilOmrEsg64AIfQlcKv0WP+yzJ84y4NdpSRwev8kSFt47kFUTs4BgiF
-         KRhXPkGSlyTF3hSZy4epcZchH3q63B8d7tJC8Mf8=
+        b=NXe3X35z3lFae9cdAJzGdnbX2cRPlkEbCUMGiZeZebQeknjEXDt0BQIlNKKBOArai
+         Vf/72gAQ+JnsiR+X3HNpIojx9IQGXkrClV/EohQRUS/73uOihxZqAZoeD+YYk3dJvR
+         21srGf3PFHghqqrYjrDlVKzcgy1P378AKmxjTvDI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Daniel Silsby <dansilsby@gmail.com>,
@@ -30,12 +30,12 @@ Cc:     Daniel Silsby <dansilsby@gmail.com>,
         Mathieu Malaterre <malat@debian.org>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
         dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 35/64] dmaengine: dma-jz4780: Further residue status fix
-Date:   Fri,  8 Nov 2019 06:45:16 -0500
-Message-Id: <20191108114545.15351-35-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 24/44] dmaengine: dma-jz4780: Further residue status fix
+Date:   Fri,  8 Nov 2019 06:47:00 -0500
+Message-Id: <20191108114721.15944-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191108114545.15351-1-sashal@kernel.org>
-References: <20191108114545.15351-1-sashal@kernel.org>
+In-Reply-To: <20191108114721.15944-1-sashal@kernel.org>
+References: <20191108114721.15944-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -71,10 +71,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 803cfb4523b08..aca2d6fd92d56 100644
+index 8344b7c91fe35..1d01e3805f9c2 100644
 --- a/drivers/dma/dma-jz4780.c
 +++ b/drivers/dma/dma-jz4780.c
-@@ -580,7 +580,7 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
+@@ -576,7 +576,7 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
  					to_jz4780_dma_desc(vdesc), 0);
  	} else if (cookie == jzchan->desc->vdesc.tx.cookie) {
  		txstate->residue = jz4780_dma_desc_residue(jzchan, jzchan->desc,

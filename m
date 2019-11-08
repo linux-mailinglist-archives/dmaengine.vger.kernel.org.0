@@ -2,37 +2,35 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 27ECEF4A2C
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Nov 2019 13:08:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4457BF4A08
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Nov 2019 13:07:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391870AbfKHMHS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 8 Nov 2019 07:07:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54030 "EHLO mail.kernel.org"
+        id S2391849AbfKHMGv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 8 Nov 2019 07:06:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731612AbfKHLk5 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 8 Nov 2019 06:40:57 -0500
+        id S2389140AbfKHLlE (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 8 Nov 2019 06:41:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AF96222C2;
-        Fri,  8 Nov 2019 11:40:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F69721D7F;
+        Fri,  8 Nov 2019 11:41:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573213257;
-        bh=jVMivIphEJg/VS15640mhwO4FSp2BARzrIpoBp8ADYM=;
+        s=default; t=1573213264;
+        bh=V7Y1dJQO8mOAP60zX3u5fffB0gbGPVIIu4AGNz9dDsk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S97XyX3pbe5dkDxtKzPr75Ul+++Dy1kD1vB5l3a1GY/itG3tCsI5fhU6MUUxT9/Yc
-         dMABCbWY6r4XEWahYt4/7sBM5R544WpmB2Cs/yoMkC1v3QVwK+PuLfAZJWaSfq+WfI
-         KWAN1/rN/w68/GmyKFXNPMT2WNUYE37WgtK0gIec=
+        b=aEjY9uqpXOQ3PG/YiNqBhuDM7gWuOKBWjnvzE4sbT+NBi6FO6FRUTAmEV13tNCRsI
+         d1vAZJNzadTAURT8eufNSBz8uoga5LyI8CZdUnBH77mmPYopSICTlmaAmTKDu6bZgt
+         IqWjvDw1TTfM9OqgiW2Yw8/kCIVQXOum7XGxaJaU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Silsby <dansilsby@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 122/205] dmaengine: dma-jz4780: Further residue status fix
-Date:   Fri,  8 Nov 2019 06:36:29 -0500
-Message-Id: <20191108113752.12502-122-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 128/205] dmaengine: at_xdmac: remove a stray bottom half unlock
+Date:   Fri,  8 Nov 2019 06:36:35 -0500
+Message-Id: <20191108113752.12502-128-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191108113752.12502-1-sashal@kernel.org>
 References: <20191108113752.12502-1-sashal@kernel.org>
@@ -45,43 +43,34 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Daniel Silsby <dansilsby@gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 83ef4fb7556b6a673f755da670cbacab7e2c7f1b ]
+[ Upstream commit 0b515abb6b7eb08e90bdfc01fc8fbdd112c15d81 ]
 
-Func jz4780_dma_desc_residue() expects the index to the next hw
-descriptor as its last parameter. Caller func jz4780_dma_tx_status(),
-however, applied modulus before passing it. When the current hw
-descriptor was last in the list, the index passed became zero.
+We switched this code from spin_lock_bh() to vanilla spin_lock() but
+there was one stray spin_unlock_bh() that was overlooked.  This
+patch converts it to spin_unlock() as well.
 
-The resulting excess of reported residue especially caused problems
-with cyclic DMA transfer clients, i.e. ALSA AIC audio output, which
-rely on this for determining current DMA location within buffer.
-
-Combined with the recent and related residue-reporting fixes, spurious
-ALSA audio underruns on jz4770 hardware are now fixed.
-
-Signed-off-by: Daniel Silsby <dansilsby@gmail.com>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Mathieu Malaterre <malat@debian.org>
+Fixes: d8570d018f69 ("dmaengine: at_xdmac: move spin_lock_bh to spin_lock in tasklet")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dma-jz4780.c | 2 +-
+ drivers/dma/at_xdmac.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 987899610b461..edff93aacad36 100644
---- a/drivers/dma/dma-jz4780.c
-+++ b/drivers/dma/dma-jz4780.c
-@@ -587,7 +587,7 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
- 					to_jz4780_dma_desc(vdesc), 0);
- 	} else if (cookie == jzchan->desc->vdesc.tx.cookie) {
- 		txstate->residue = jz4780_dma_desc_residue(jzchan, jzchan->desc,
--			  (jzchan->curr_hwdesc + 1) % jzchan->desc->count);
-+					jzchan->curr_hwdesc + 1);
- 	} else
- 		txstate->residue = 0;
+diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+index db5b8fe1dd4ab..7db66f974041e 100644
+--- a/drivers/dma/at_xdmac.c
++++ b/drivers/dma/at_xdmac.c
+@@ -1608,7 +1608,7 @@ static void at_xdmac_tasklet(unsigned long data)
+ 		dev_vdbg(chan2dev(&atchan->chan), "%s: desc 0x%p\n", __func__, desc);
+ 		if (!desc->active_xfer) {
+ 			dev_err(chan2dev(&atchan->chan), "Xfer not active: exiting");
+-			spin_unlock_bh(&atchan->lock);
++			spin_unlock(&atchan->lock);
+ 			return;
+ 		}
  
 -- 
 2.20.1

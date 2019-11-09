@@ -2,89 +2,126 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 05AEAF5EC5
-	for <lists+dmaengine@lfdr.de>; Sat,  9 Nov 2019 12:36:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29CA9F609B
+	for <lists+dmaengine@lfdr.de>; Sat,  9 Nov 2019 18:19:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbfKILgl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 9 Nov 2019 06:36:41 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38236 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbfKILgl (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 9 Nov 2019 06:36:41 -0500
-Received: by mail-pf1-f193.google.com with SMTP id c13so6916472pfp.5;
-        Sat, 09 Nov 2019 03:36:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=IySrLInNHpGtXZb/RlBk37czseGukluRznzmeXhsOUw=;
-        b=c2atN5xyWK5ZrlenspGo0BGSReIDH9DVJ0qGXWoIw/Bm3pvXnC33rk7wgsIK7ihu27
-         BbZNVY/5xvmfG9ORUr7R2H7G/kg/mByqtzEZenb+y5IyWK7Dz0JNDFLp9SDNZ0x5gQBs
-         TYg1iliRzD1GZTQMK42JzI0kopIAktzxaEGRIz2MhvtG6vAPAiBNZ+Tgel2pg7sTQgg5
-         wfzAbCXpDOKScJMYAWbIb9rv3vb23qePDLLtkh6V8hzLi4XRSJve9cD5nc0YpBfDdG0w
-         DEaWOkd32D5H+W2mJE0qqC/+T2qu07dtAqrYKuq0fAiREiTnvq3rhuJjYUKWa70pmEKk
-         26pA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=IySrLInNHpGtXZb/RlBk37czseGukluRznzmeXhsOUw=;
-        b=f02AnQ1Is0WeQV19TdyLQTwRIwVjuVJ0ZVgzRCVIv2Oz3NJEofG2CPotgDcTRr/GKY
-         P0rzoSSueT6+mIGY9vmNLVhwz21HCps5FaThyObvRrgeF7dUTF7dWr+yVjZUszuf7Tde
-         xXBaJzTUQpLH1uEO5uv7dPFiMx5ilF/1HbJ+p6dBr+ksd3wPJ+UY7wyhVp4F5CYsTNsj
-         kMyZJTWVsVgwgtDaPmHUn3GEjUHQk8bfD43UZruwBjFJyiEHZwlWN87Pv0vH+dnV1Utz
-         9gQw9W1h7ygbvA2ruOVwCLfJEiQ8ghR9/Gm9zMPQJJobCBi9i1e6VkAzDKMEbHR+UR8m
-         YICA==
-X-Gm-Message-State: APjAAAW7sDptdX/Jl6amG1yqJrSwKoE2mK6UP7wkLfr8mADAylHTWHdw
-        1t5flQSKavjZHntYIPxZaHA=
-X-Google-Smtp-Source: APXvYqyThD6xef7t/WXPB/lRjTcr8wjUSnUYFWVHKkgpQuccnZB0IobwOMDFpgZ+Q3do3iYXTVbMgA==
-X-Received: by 2002:a63:c103:: with SMTP id w3mr17766224pgf.275.1573299400205;
-        Sat, 09 Nov 2019 03:36:40 -0800 (PST)
-Received: from localhost.localdomain ([103.82.150.242])
-        by smtp.gmail.com with ESMTPSA id j126sm10757713pfg.4.2019.11.09.03.36.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Nov 2019 03:36:39 -0800 (PST)
-From:   Satendra Singh Thakur <sst2005@gmail.com>
-Cc:     Satendra Singh Thakur <sst2005@gmail.com>,
-        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1] dmaengine: zx: remove: removed dmam_pool_destroy
-Date:   Sat,  9 Nov 2019 17:06:09 +0530
-Message-Id: <20191109113609.6159-1-sst2005@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191105165855.GC952516@vkoul-mobl>
-References: <20191105165855.GC952516@vkoul-mobl>
-To:     unlisted-recipients:; (no To-header on input)
+        id S1726204AbfKIRS7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 9 Nov 2019 12:18:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44572 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726181AbfKIRS7 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sat, 9 Nov 2019 12:18:59 -0500
+Received: from localhost (unknown [106.51.111.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0F762075C;
+        Sat,  9 Nov 2019 17:18:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573319937;
+        bh=HzJ7dGmJxIILn40spE1JrouBnapRyxOA8oFRQa2+oEk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MFHEGeFMED+7A5jC+amrIsC3ZCxVOcSdC2rvONfCQS3Ixf5udq5kHzG/4XObnTcfE
+         PMQ3NScJDWL5cqt19X9zTZ3TNe0aCvNI9H8xFlkisRBquq4CD1Q4VkQyc2N1P/KmkC
+         u4oN1zI5Pzcyspa6Sf/vJSdF6y4WcS+OqGK4PVdo=
+Date:   Sat, 9 Nov 2019 22:48:53 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH 1/5] dmaengine: Store module owner in dma_device struct
+Message-ID: <20191109171853.GF952516@vkoul-mobl>
+References: <20191022214616.7943-1-logang@deltatee.com>
+ <20191022214616.7943-2-logang@deltatee.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022214616.7943-2-logang@deltatee.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-In the probe method dmam_pool_create is used. Therefore, there is no
-need to explicitly call dmam_pool_destroy in remove method as this
-will be automatically taken care by devres
+Hi Logan,
 
-Signed-off-by: Satendra Singh Thakur <sst2005@gmail.com>
----
- v1: modified the subject line with new tags
+Sorry for delay in reply!
 
- drivers/dma/zx_dma.c | 1 -
- 1 file changed, 1 deletion(-)
+On 22-10-19, 15:46, Logan Gunthorpe wrote:
+> dma_chan_to_owner() dereferences the driver from the struct device to
+> obtain the owner and call module_[get|put](). However, if the backing
+> device is unbound before the dma_device is unregistered, the driver
+> will be cleared and this will cause a NULL pointer dereference.
 
-diff --git a/drivers/dma/zx_dma.c b/drivers/dma/zx_dma.c
-index 9f4436f7c914..7e4e457ac6d5 100644
---- a/drivers/dma/zx_dma.c
-+++ b/drivers/dma/zx_dma.c
-@@ -894,7 +894,6 @@ static int zx_dma_remove(struct platform_device *op)
- 		list_del(&c->vc.chan.device_node);
- 	}
- 	clk_disable_unprepare(d->clk);
--	dmam_pool_destroy(d->pool);
- 
- 	return 0;
- }
+Have you been able to repro this? If so how..?
+
+The expectation is that the driver shall unregister before removed.
+> 
+> Instead, store a pointer to the owner module in the dma_device struct
+> so the module reference can be properly put when the channel is put, even
+> if the backing device was destroyed first.
+> 
+> This change helps to support a safer unbind of DMA engines.
+
+For error cases which should be fixed, so maybe this is a right way and
+gets things fixed :)
+
+> If the dma_device is unregistered in the driver's remove function,
+> there's no guarantee that there are no existing clients and a users
+> action may trigger the WARN_ONCE in dma_async_device_unregister()
+> which is unlikely to leave the system in a consistent state.
+> Instead, a better approach is to allow the backing driver to go away
+> and fail any subsequent requests to it.
+> 
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> ---
+>  drivers/dma/dmaengine.c   | 4 +++-
+>  include/linux/dmaengine.h | 2 ++
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index 03ac4b96117c..4b604086b1b3 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -179,7 +179,7 @@ __dma_device_satisfies_mask(struct dma_device *device,
+>  
+>  static struct module *dma_chan_to_owner(struct dma_chan *chan)
+>  {
+> -	return chan->device->dev->driver->owner;
+> +	return chan->device->owner;
+>  }
+>  
+>  /**
+> @@ -919,6 +919,8 @@ int dma_async_device_register(struct dma_device *device)
+>  		return -EIO;
+>  	}
+>  
+> +	device->owner = device->dev->driver->owner;
+> +
+>  	if (dma_has_cap(DMA_MEMCPY, device->cap_mask) && !device->device_prep_dma_memcpy) {
+>  		dev_err(device->dev,
+>  			"Device claims capability %s, but op is not defined\n",
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index 8fcdee1c0cf9..13aa0abb71de 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -674,6 +674,7 @@ struct dma_filter {
+>   * @fill_align: alignment shift for memset operations
+>   * @dev_id: unique device ID
+>   * @dev: struct device reference for dma mapping api
+> + * @owner: owner module (automatically set based on the provided dev)
+>   * @src_addr_widths: bit mask of src addr widths the device supports
+>   *	Width is specified in bytes, e.g. for a device supporting
+>   *	a width of 4 the mask should have BIT(4) set.
+> @@ -737,6 +738,7 @@ struct dma_device {
+>  
+>  	int dev_id;
+>  	struct device *dev;
+> +	struct module *owner;
+>  
+>  	u32 src_addr_widths;
+>  	u32 dst_addr_widths;
+> -- 
+> 2.20.1
+
 -- 
-2.17.1
-
+~Vinod

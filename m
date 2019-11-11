@@ -2,42 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 35C80F703B
-	for <lists+dmaengine@lfdr.de>; Mon, 11 Nov 2019 10:15:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EADBBF70F0
+	for <lists+dmaengine@lfdr.de>; Mon, 11 Nov 2019 10:39:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfKKJPF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 11 Nov 2019 04:15:05 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44204 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbfKKJPF (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Nov 2019 04:15:05 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAB9Etav002180;
-        Mon, 11 Nov 2019 03:14:55 -0600
+        id S1726770AbfKKJjy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 11 Nov 2019 04:39:54 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44438 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726768AbfKKJjy (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Nov 2019 04:39:54 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAB9deam107948;
+        Mon, 11 Nov 2019 03:39:40 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573463695;
-        bh=A9b+LfFAU9abDyZML7frujnSPbQT16TGgA6T2WhOOz4=;
+        s=ti-com-17Q1; t=1573465180;
+        bh=BEXZAIpRzxqNeefh/J9C5EiDlt0B/TXLhAEH6e8HpHk=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fQXw6SsF4mnZggBOhlgS28uuqZ4Tzagnl1FPaRYECHFiWK6vN9ubexYdHjs1HIhZ4
-         8Fy986pCalwDYiZXODoSgiQJIoj+1iYER22prIGrZPa3Qcwdu5LLK1nqegB9+BFZr/
-         Rf8UcyjnoItwQGskYC/OHAIMqer6vRO859N09DhI=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAB9Et3o062305
+        b=TfHXEZamg58rdWlK5BysZV02AQQQj4UU7QrHapkWnMxQ72oxEdzvHcEsimBil1wd6
+         lIv6CticHJZrV5CnF2Wvc1LS51J6EAP0NNB2ojI1Ni1R8wx7dk5/zdc+zQD6o+kLjX
+         Xs7IUjaUFXCKeqpsS6D3oBG9JK6xefyD/07vDVUc=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAB9ddRZ118324
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 Nov 2019 03:14:55 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 11 Nov 2019 03:39:40 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 11
- Nov 2019 03:14:37 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 03:39:21 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 11 Nov 2019 03:14:37 -0600
+ Frontend Transport; Mon, 11 Nov 2019 03:39:21 -0600
 Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAB9Epbh106565;
-        Mon, 11 Nov 2019 03:14:51 -0600
-Subject: Re: [PATCH v4 10/15] dmaengine: ti: New driver for K3 UDMA - split#2:
- probe/remove, xlate and filter_fn
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAB9dZnY090658;
+        Mon, 11 Nov 2019 03:39:36 -0600
+Subject: Re: [PATCH v4 11/15] dmaengine: ti: New driver for K3 UDMA - split#3:
+ alloc/free chan_resources
 To:     Vinod Koul <vkoul@kernel.org>
 CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
         <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
@@ -46,15 +46,15 @@ CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
         <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
         <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
 References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-11-peter.ujfalusi@ti.com>
- <20191111053301.GO952516@vkoul-mobl>
+ <20191101084135.14811-12-peter.ujfalusi@ti.com>
+ <20191111060625.GP952516@vkoul-mobl>
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <9b0f8bec-4964-8136-4173-7b45e479c0c5@ti.com>
-Date:   Mon, 11 Nov 2019 11:16:06 +0200
+Message-ID: <33c88201-3311-0438-ead5-63ea14a0b153@ti.com>
+Date:   Mon, 11 Nov 2019 11:40:51 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191111053301.GO952516@vkoul-mobl>
+In-Reply-To: <20191111060625.GP952516@vkoul-mobl>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -66,68 +66,230 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 
 
-On 11/11/2019 7.33, Vinod Koul wrote:
+On 11/11/2019 8.06, Vinod Koul wrote:
 > On 01-11-19, 10:41, Peter Ujfalusi wrote:
+>> Split patch for review containing: channel rsource allocation and free
 > 
->> +static bool udma_dma_filter_fn(struct dma_chan *chan, void *param)
+> s/rsource/resource
+
+I'll try to remember to fix up this temporally commit message, at the
+end these split patches are going to be squashed into one commit when
+things are ready to be applied.
+
+>> +static int udma_tisci_tx_channel_config(struct udma_chan *uc)
 >> +{
->> +	struct psil_endpoint_config *ep_config;
->> +	struct udma_chan *uc;
->> +	struct udma_dev *ud;
->> +	u32 *args;
+>> +	struct udma_dev *ud = uc->ud;
+>> +	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
+>> +	const struct ti_sci_rm_udmap_ops *tisci_ops = tisci_rm->tisci_udmap_ops;
+>> +	struct udma_tchan *tchan = uc->tchan;
+>> +	int tc_ring = k3_ringacc_get_ring_id(tchan->tc_ring);
+>> +	struct ti_sci_msg_rm_udmap_tx_ch_cfg req_tx = { 0 };
+>> +	u32 mode, fetch_size;
+>> +	int ret = 0;
 >> +
->> +	if (chan->device->dev->driver != &udma_driver.driver)
->> +		return false;
+>> +	if (uc->pkt_mode) {
+>> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_PKT_PBRR;
+>> +		fetch_size = cppi5_hdesc_calc_size(uc->needs_epib, uc->psd_size,
+>> +						   0);
+>> +	} else {
+>> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_3RDP_PBRR;
+>> +		fetch_size = sizeof(struct cppi5_desc_hdr_t);
+>> +	}
 >> +
->> +	uc = to_udma_chan(chan);
->> +	ud = uc->ud;
->> +	args = param;
->> +	uc->remote_thread_id = args[0];
+>> +	req_tx.valid_params =
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_EINFO_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FILT_PSWORDS_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_SUPR_TDPKT_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID;
+> 
+> bunch of these are repeat, you can define a COMMON_VALID_PARAMS and use
+> that + specific ones..
+
+OK, I'll try to sanitize these a bit.
+
 >> +
->> +	if (uc->remote_thread_id & K3_PSIL_DST_THREAD_ID_OFFSET)
->> +		uc->dir = DMA_MEM_TO_DEV;
+>> +	req_tx.nav_id = tisci_rm->tisci_dev_id;
+>> +	req_tx.index = tchan->id;
+>> +	req_tx.tx_pause_on_err = 0;
+>> +	req_tx.tx_filt_einfo = 0;
+>> +	req_tx.tx_filt_pswords = 0;
+> 
+> i think initialization to 0 is superfluous
+
+Indeed, I'll remove these.
+
+>> +	req_tx.tx_chan_type = mode;
+>> +	req_tx.tx_supr_tdpkt = uc->notdpkt;
+>> +	req_tx.tx_fetch_size = fetch_size >> 2;
+>> +	req_tx.txcq_qnum = tc_ring;
+>> +	if (uc->ep_type == PSIL_EP_PDMA_XY) {
+>> +		/* wait for peer to complete the teardown for PDMAs */
+>> +		req_tx.valid_params |=
+>> +				TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_TDTYPE_VALID;
+>> +		req_tx.tx_tdtype = 1;
+>> +	}
+>> +
+>> +	ret = tisci_ops->tx_ch_cfg(tisci_rm->tisci, &req_tx);
+>> +	if (ret)
+>> +		dev_err(ud->dev, "tchan%d cfg failed %d\n", tchan->id, ret);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int udma_tisci_rx_channel_config(struct udma_chan *uc)
+>> +{
+>> +	struct udma_dev *ud = uc->ud;
+>> +	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
+>> +	const struct ti_sci_rm_udmap_ops *tisci_ops = tisci_rm->tisci_udmap_ops;
+>> +	struct udma_rchan *rchan = uc->rchan;
+>> +	int fd_ring = k3_ringacc_get_ring_id(rchan->fd_ring);
+>> +	int rx_ring = k3_ringacc_get_ring_id(rchan->r_ring);
+>> +	struct ti_sci_msg_rm_udmap_rx_ch_cfg req_rx = { 0 };
+>> +	struct ti_sci_msg_rm_udmap_flow_cfg flow_req = { 0 };
+>> +	u32 mode, fetch_size;
+>> +	int ret = 0;
+>> +
+>> +	if (uc->pkt_mode) {
+>> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_PKT_PBRR;
+>> +		fetch_size = cppi5_hdesc_calc_size(uc->needs_epib,
+>> +							uc->psd_size, 0);
+>> +	} else {
+>> +		mode = TI_SCI_RM_UDMAP_CHAN_TYPE_3RDP_PBRR;
+>> +		fetch_size = sizeof(struct cppi5_desc_hdr_t);
+>> +	}
+>> +
+>> +	req_rx.valid_params =
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_PAUSE_ON_ERR_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_FETCH_SIZE_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CQ_QNUM_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_CHAN_TYPE_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_SHORT_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_IGNORE_LONG_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_START_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_CH_RX_FLOWID_CNT_VALID;
+>> +
+>> +	req_rx.nav_id = tisci_rm->tisci_dev_id;
+>> +	req_rx.index = rchan->id;
+>> +	req_rx.rx_fetch_size =  fetch_size >> 2;
+>> +	req_rx.rxcq_qnum = rx_ring;
+>> +	req_rx.rx_pause_on_err = 0;
+>> +	req_rx.rx_chan_type = mode;
+>> +	req_rx.rx_ignore_short = 0;
+>> +	req_rx.rx_ignore_long = 0;
+>> +	req_rx.flowid_start = 0;
+>> +	req_rx.flowid_cnt = 0;
+>> +
+>> +	ret = tisci_ops->rx_ch_cfg(tisci_rm->tisci, &req_rx);
+>> +	if (ret) {
+>> +		dev_err(ud->dev, "rchan%d cfg failed %d\n", rchan->id, ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	flow_req.valid_params =
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_EINFO_PRESENT_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_PSINFO_PRESENT_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_ERROR_HANDLING_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DESC_TYPE_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DEST_QNUM_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_SRC_TAG_HI_SEL_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_SRC_TAG_LO_SEL_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DEST_TAG_HI_SEL_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_DEST_TAG_LO_SEL_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ0_SZ0_QNUM_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ1_QNUM_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ2_QNUM_VALID |
+>> +		TI_SCI_MSG_VALUE_RM_UDMAP_FLOW_FDQ3_QNUM_VALID;
+>> +
+>> +	flow_req.nav_id = tisci_rm->tisci_dev_id;
+>> +	flow_req.flow_index = rchan->id;
+>> +
+>> +	if (uc->needs_epib)
+>> +		flow_req.rx_einfo_present = 1;
 >> +	else
->> +		uc->dir = DMA_DEV_TO_MEM;
+>> +		flow_req.rx_einfo_present = 0;
+>> +	if (uc->psd_size)
+>> +		flow_req.rx_psinfo_present = 1;
+>> +	else
+>> +		flow_req.rx_psinfo_present = 0;
+>> +	flow_req.rx_error_handling = 1;
+>> +	flow_req.rx_desc_type = 0;
+>> +	flow_req.rx_dest_qnum = rx_ring;
+>> +	flow_req.rx_src_tag_hi_sel = 2;
+>> +	flow_req.rx_src_tag_lo_sel = 4;
+>> +	flow_req.rx_dest_tag_hi_sel = 5;
+>> +	flow_req.rx_dest_tag_lo_sel = 4;
 > 
-> Can you explain this a bit?
+> can we get rid of magic numbers here and elsewhere, or at least comment
+> on what these mean..
 
-The UDMAP in K3 works between two PSI-L endpoint. The source and
-destination needs to be paired to allow data flow.
-Source thread IDs are in range of 0x0000 - 0x7fff, while destination
-thread IDs are 0x8000 - 0xffff.
+True, I'll clean it up.
 
-If the remote thread ID have the bit 31 set (0x8000) then the transfer
-is MEM_TO_DEV and I need to pick one unused tchan for it. If the remote
-is the source then it can be handled by rchan.
-
-dmas = <&main_udmap 0xc400>, <&main_udmap 0x4400>;
-dma-names = "tx", "rx";
-
-0xc400 is a destination thread ID, so it is MEM_TO_DEV
-0x4400 is a source thread ID, so it is DEV_TO_MEM
-
-Even in MEM_TO_MEM case I need to pair two UDMAP channels:
-UDMAP source threads are starting at offset 0x1000, UDMAP destination
-threads are 0x9000+
-
-Changing direction runtime is hardly possible as it would involve
-tearing down the channel, removing interrupts, destroying rings,
-removing the PSI-L pairing and redoing everything.
-
->> +static int udma_remove(struct platform_device *pdev)
+>> +static int udma_alloc_chan_resources(struct dma_chan *chan)
 >> +{
->> +	struct udma_dev *ud = platform_get_drvdata(pdev);
+>> +	struct udma_chan *uc = to_udma_chan(chan);
+>> +	struct udma_dev *ud = to_udma_dev(chan->device);
+>> +	const struct udma_match_data *match_data = ud->match_data;
+>> +	struct k3_ring *irq_ring;
+>> +	u32 irq_udma_idx;
+>> +	int ret;
 >> +
->> +	of_dma_controller_free(pdev->dev.of_node);
->> +	dma_async_device_unregister(&ud->ddev);
+>> +	if (uc->pkt_mode || uc->dir == DMA_MEM_TO_MEM) {
+>> +		uc->use_dma_pool = true;
+>> +		/* in case of MEM_TO_MEM we have maximum of two TRs */
+>> +		if (uc->dir == DMA_MEM_TO_MEM) {
+>> +			uc->hdesc_size = cppi5_trdesc_calc_size(
+>> +					sizeof(struct cppi5_tr_type15_t), 2);
+>> +			uc->pkt_mode = false;
+>> +		}
+>> +	}
 >> +
->> +	/* Make sure that we did proper cleanup */
->> +	cancel_work_sync(&ud->purge_work);
->> +	udma_purge_desc_work(&ud->purge_work);
+>> +	if (uc->use_dma_pool) {
+>> +		uc->hdesc_pool = dma_pool_create(uc->name, ud->ddev.dev,
+>> +						 uc->hdesc_size, ud->desc_align,
+>> +						 0);
+>> +		if (!uc->hdesc_pool) {
+>> +			dev_err(ud->ddev.dev,
+>> +				"Descriptor pool allocation failed\n");
+>> +			uc->use_dma_pool = false;
+>> +			return -ENOMEM;
+>> +		}
+>> +	}
+>> +
+>> +	/*
+>> +	 * Make sure that the completion is in a known state:
+>> +	 * No teardown, the channel is idle
+>> +	 */
+>> +	reinit_completion(&uc->teardown_completed);
+>> +	complete_all(&uc->teardown_completed);
 > 
-> kill the vchan tasklets at it too please
+> should we not complete first and then do reinit to bring a clean state?
 
-Oh, I have missed that, I'll add it.
+The reason why it is like this is that the udma_synchronize() is
+checking the completion and if the client requested the channel and
+calls terminate_all_sync() without any transfer then no one will mark
+the completion completed.
+
+>> +	uc->state = UDMA_CHAN_IS_IDLE;
+>> +
+>> +	switch (uc->dir) {
+>> +	case DMA_MEM_TO_MEM:
+> 
+> can you explain why a allocation should be channel dependent, shouldn't
+> these things be done in prep_ calls?
+
+A channel can not change direction, it is either MEM_TO_DEV, DEV_TO_MEM
+or MEM_TO_MEM and it is set when the channel is requested.
+
+> I looked ahead and checked the prep_ calls and we can use any direction
+> so this somehow doesn't make sense!
+
+I'm checking in the prep callbacks if the requested direction is
+matching with the channel direction.
+
+I just can not change the channel direction runtime.
 
 - Péter
 

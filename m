@@ -2,84 +2,100 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 92979F9596
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Nov 2019 17:25:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88C64F95EB
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Nov 2019 17:45:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbfKLQZ6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 12 Nov 2019 11:25:58 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:36651 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbfKLQZ6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 12 Nov 2019 11:25:58 -0500
-Received: by mail-ed1-f67.google.com with SMTP id f7so15415043edq.3
-        for <dmaengine@vger.kernel.org>; Tue, 12 Nov 2019 08:25:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=qNdulMghwGPBvmgJ8scwCvXDFRwh4jWCkPxL6qrSIjQ=;
-        b=s0OtgEyBzfQDX6l8iBQ656aK39QT9cYJrK6j6UoM8p49K2fPKW+lTxH2miOW+ifKyj
-         EgnDTf2vYoyvMousqCqSfvE48FZ3pllh3Rl8BSfrN6LrYDdLlaYxolDctk1GAV1Dc5Ha
-         rjBNRq3QMDUEjQN6llJceHRYeZCIpbjOgVUOu5ltYM5HPsYUtrtS1xpUtchKOBWMyXlF
-         fI/xOEvBVdgh4UgxpuIcK/uKoHa2ydxQAth1DQZonHDQR53zY6EyvOIV8NnE+3duVFJ5
-         9Fg5pah82j+3sEATgT+JUt6VVyeRs6ZQqyq7iFVH/iLTxqhrZpQwNaf2jdk9KH50OtNp
-         8DMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=qNdulMghwGPBvmgJ8scwCvXDFRwh4jWCkPxL6qrSIjQ=;
-        b=R2E1SQ7sPo1I2nOClNj0y3Q2RD05sJ1GtVhiciWniPsXdQ3Fe8DIgOyKyEfWOBZNJu
-         WCwvleUKqVBsuP72zZnAqAXDVsH1H0GL/a7S5ZwyndNfKxh01lwkk0lIQFMOKH2qQBFG
-         /cOQhu5rwtcSbIl1SyLOUsyKs7turKFrRqRViJdRHmyIeXz6srI4upIi3iy2PqhwEKli
-         4RApm450ta6gJuhUwzNI82zQb6AflHQDr247ohFVGJSRILIVJEonXb1/AwYOTmEyT269
-         KFfCjLHDKLrc9yNBc6xOO8adC6OfUmiGuN6kwnxlEyVEQrNu1S6dV1+HzhgthCjwMPfi
-         clGw==
-X-Gm-Message-State: APjAAAW98F7Zvtb4GoQ1EvvKHyvGXBf6YZ/YWhEegdb6Y/gfznxkvfLR
-        NJ4L3UBHUwVLu4454yq7gpfeXcupNNQvOyJF4Jk=
-X-Google-Smtp-Source: APXvYqwhqdRow05DXBj589Vp0KphTrjQ6ciBUn4XUPHVWtpvXM4UmtBTg9o5ymv8pW+npmlqSU6LWMvGS55XZEcH0aU=
-X-Received: by 2002:a17:906:2552:: with SMTP id j18mr29694003ejb.244.1573575955519;
- Tue, 12 Nov 2019 08:25:55 -0800 (PST)
+        id S1727020AbfKLQpP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 12 Nov 2019 11:45:15 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:45114 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726896AbfKLQpP (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 12 Nov 2019 11:45:15 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1iUZHv-0006ul-FF; Tue, 12 Nov 2019 09:45:13 -0700
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20191022214616.7943-1-logang@deltatee.com>
+ <20191022214616.7943-2-logang@deltatee.com>
+ <20191109171853.GF952516@vkoul-mobl>
+ <3a19f075-6a86-4ace-9184-227f3dc2f2d3@deltatee.com>
+ <20191112055540.GY952516@vkoul-mobl>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <5ca7ef5d-dda7-e36c-1d40-ef67612d2ac4@deltatee.com>
+Date:   Tue, 12 Nov 2019 09:45:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Received: by 2002:a05:6402:1118:0:0:0:0 with HTTP; Tue, 12 Nov 2019 08:25:55
- -0800 (PST)
-Reply-To: walmart.b100263@gmail.com
-From:   "MS. MARYANNA B. THOMASON" <eco.bank1204@gmail.com>
-Date:   Tue, 12 Nov 2019 17:25:55 +0100
-Message-ID: <CAOE+jACK6QHRhhASVJWjC0bme2moy8jH40ErzPVPxpbcmo8RNQ@mail.gmail.com>
-Subject: CONTACT WALMART TRANSFER To pick up $5000 sent to you this morning
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191112055540.GY952516@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [PATCH 1/5] dmaengine: Store module owner in dma_device struct
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
- CONTACT WALMART TRANSFER To pick up $5000 sent to you this morning
 
-Attn Dear Beneficiary.
-Happy to inform you,I have deposited your payment funds
-$10.500,000MillionUS DollarsWith Walmart international money
-transfers.
-Receive the Money with Walmart | MoneyGram service.
-Walmart partners with MoneyGram to allow customers
-easily receive money transfers abroad,
-Contact Walmart international money transfers office -Benin
-Receive your approval payment funds $10.500,000MillionUS Dollars
-HERE IS WALMART CONTACT INFORMATIONS.
-Contact person. Mrs. Mary Anderson,Dir. Walmart transfers-Benin
-Email: walmart.b100263@gmail.com
-Telephone. +229 68823234
-Text Her on this international phone line. (256) 284-4886
-Ask Mrs. Mary Anderson,Dir. Walmart transfers-Benin to send the transfer
-as i instructed.
-we agreed to keep sending the transfer to you $5000.00 daily.
-Until you received your total payment $10.500,000 from the office
-Once again,
-make sure you contact Mrs. Mary Anderson,Dir. Walmart transfers-Benin
-today including your infos.
-(1) Your  Full Name==============
-(2) house address=============
-(3) Your Phone Numbers=============
-Urgent to receive your transfer now without any further delay.
-Thanks
-MS. MARYANNA B. THOMASON
+
+On 2019-11-11 10:56 p.m., Vinod Koul wrote:
+> On 11-11-19, 09:50, Logan Gunthorpe wrote:
+>>
+>>
+>> On 2019-11-09 10:18 a.m., Vinod Koul wrote:
+>>> Hi Logan,
+>>>
+>>> Sorry for delay in reply!
+>>>
+>>> On 22-10-19, 15:46, Logan Gunthorpe wrote:
+>>>> dma_chan_to_owner() dereferences the driver from the struct device to
+>>>> obtain the owner and call module_[get|put](). However, if the backing
+>>>> device is unbound before the dma_device is unregistered, the driver
+>>>> will be cleared and this will cause a NULL pointer dereference.
+>>>
+>>> Have you been able to repro this? If so how..?
+>>>
+>>> The expectation is that the driver shall unregister before removed.
+>>
+>> Yes, with my new driver, if I do a PCI unbind (which unregisters) while
+>> the DMA engine is in use, it panics. The point is the underlying driver
+>> can go away before the channel is removed.
+> 
+> and in your driver remove you do not unregister? When unbind is invoked
+> the driver remove is invoked by core and you should unregister whatever
+> you have registered in your probe!
+>
+> Said that, if someone is using the dmaengine at that point of time, it
+> is not a nice thing to do and can cause issues, but on idle it should
+> just work!
+
+But that's the problem. We can't expect our users to be "nice" and not
+unbind when the driver is in use. Killing the kernel if the user
+unexpectedly unbinds is not acceptable.
+
+>> I suspect this is less of an issue for most devices as they wouldn't
+>> normally be unbound while in use (for example there's really no reason
+>> to ever unbind IOAT seeing it's built into the system). Though, the fact
+>> is, the user could unbind these devices at anytime and we don't want to
+>> panic if they do.
+> 
+> There are many drivers which do modules so yes I am expecting unbind and
+> even a bind following that to work
+
+Except they will panic if they unbind while in use, so that's a
+questionable definition of "work".
+
+Logan
+

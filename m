@@ -2,28 +2,28 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0325BF8807
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Nov 2019 06:34:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B716FF8812
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Nov 2019 06:36:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725811AbfKLFes (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 12 Nov 2019 00:34:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60958 "EHLO mail.kernel.org"
+        id S1726954AbfKLFg0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 12 Nov 2019 00:36:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfKLFes (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 12 Nov 2019 00:34:48 -0500
+        id S1725283AbfKLFg0 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 12 Nov 2019 00:36:26 -0500
 Received: from localhost (unknown [122.167.70.123])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80D8D2084F;
-        Tue, 12 Nov 2019 05:34:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6960321783;
+        Tue, 12 Nov 2019 05:36:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573536887;
-        bh=Jb7dYixP6yIjsrokC6NTgrZ/74+6EVtRM48rK5FZNvY=;
+        s=default; t=1573536986;
+        bh=YDjjnafho2uCvMpxMXlnLJhhfTeoSuyoFzfDVXn7/m4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=swnFRxTopGg49WadsvYOwM4ZljN75NOKNOp1Z9e5BW0FyYQHYvejgIuS/T6ZaeS+f
-         gxIT4lF0hqOk50dDZyDJJSafiZ3bZ8R9mleb8cOsMrZAepP86BKYPsfg0wzquvM826
-         YuIVlpKmlK7CHZSlLwZbDQfxBtffsMv1FmSgU/Ak=
-Date:   Tue, 12 Nov 2019 11:04:40 +0530
+        b=sP/sZWa6JWAiI7hq87AEWqr9AfSulRdI9YTrCKxSrQ9hoL4y7OXcCBvFDo6lhJO0f
+         FeJ/Vqsm9SzcuKMOUI1LrLDl4Fp3KOIMDqB1bOIZf5z1Xn5+3hQ0ld7AfxnpvhMfIT
+         NS+jfbiH+eK3W0HryxKa7RJk06UWxK51nrET6tF0=
+Date:   Tue, 12 Nov 2019 11:06:21 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
 Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
@@ -32,79 +32,49 @@ Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
         linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
         lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
         j-keerthy@ti.com
-Subject: Re: [PATCH v4 10/15] dmaengine: ti: New driver for K3 UDMA -
- split#2: probe/remove, xlate and filter_fn
-Message-ID: <20191112053440.GV952516@vkoul-mobl>
+Subject: Re: [PATCH v4 12/15] dmaengine: ti: New driver for K3 UDMA -
+ split#4: dma_device callbacks 1
+Message-ID: <20191112053621.GW952516@vkoul-mobl>
 References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-11-peter.ujfalusi@ti.com>
- <20191111053301.GO952516@vkoul-mobl>
- <9b0f8bec-4964-8136-4173-7b45e479c0c5@ti.com>
+ <20191101084135.14811-13-peter.ujfalusi@ti.com>
+ <20191111060943.GQ952516@vkoul-mobl>
+ <6d73f6e1-6d85-d468-2e69-47d36ed75807@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9b0f8bec-4964-8136-4173-7b45e479c0c5@ti.com>
+In-Reply-To: <6d73f6e1-6d85-d468-2e69-47d36ed75807@ti.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 11-11-19, 11:16, Peter Ujfalusi wrote:
-> 
-> 
-> On 11/11/2019 7.33, Vinod Koul wrote:
+On 11-11-19, 12:29, Peter Ujfalusi wrote:
+> On 11/11/2019 8.09, Vinod Koul wrote:
 > > On 01-11-19, 10:41, Peter Ujfalusi wrote:
-> > 
-> >> +static bool udma_dma_filter_fn(struct dma_chan *chan, void *param)
+
+> >> +static enum dma_status udma_tx_status(struct dma_chan *chan,
+> >> +				      dma_cookie_t cookie,
+> >> +				      struct dma_tx_state *txstate)
 > >> +{
-> >> +	struct psil_endpoint_config *ep_config;
-> >> +	struct udma_chan *uc;
-> >> +	struct udma_dev *ud;
-> >> +	u32 *args;
+> >> +	struct udma_chan *uc = to_udma_chan(chan);
+> >> +	enum dma_status ret;
+> >> +	unsigned long flags;
 > >> +
-> >> +	if (chan->device->dev->driver != &udma_driver.driver)
-> >> +		return false;
+> >> +	spin_lock_irqsave(&uc->vc.lock, flags);
 > >> +
-> >> +	uc = to_udma_chan(chan);
-> >> +	ud = uc->ud;
-> >> +	args = param;
-> >> +	uc->remote_thread_id = args[0];
+> >> +	ret = dma_cookie_status(chan, cookie, txstate);
 > >> +
-> >> +	if (uc->remote_thread_id & K3_PSIL_DST_THREAD_ID_OFFSET)
-> >> +		uc->dir = DMA_MEM_TO_DEV;
-> >> +	else
-> >> +		uc->dir = DMA_DEV_TO_MEM;
+> >> +	if (!udma_is_chan_running(uc))
+> >> +		ret = DMA_COMPLETE;
 > > 
-> > Can you explain this a bit?
+> > so a paused channel will result in dma complete status?
 > 
-> The UDMAP in K3 works between two PSI-L endpoint. The source and
-> destination needs to be paired to allow data flow.
-> Source thread IDs are in range of 0x0000 - 0x7fff, while destination
-> thread IDs are 0x8000 - 0xffff.
-> 
-> If the remote thread ID have the bit 31 set (0x8000) then the transfer
-> is MEM_TO_DEV and I need to pick one unused tchan for it. If the remote
-> is the source then it can be handled by rchan.
-> 
-> dmas = <&main_udmap 0xc400>, <&main_udmap 0x4400>;
-> dma-names = "tx", "rx";
-> 
-> 0xc400 is a destination thread ID, so it is MEM_TO_DEV
-> 0x4400 is a source thread ID, so it is DEV_TO_MEM
-> 
-> Even in MEM_TO_MEM case I need to pair two UDMAP channels:
-> UDMAP source threads are starting at offset 0x1000, UDMAP destination
-> threads are 0x9000+
+> The channel is still enabled (running), the pause only sets a bit in the
+> channel's real time control register.
 
-Okay so a channel is set for a direction until teardown. Also this and
-other patch comments are quite useful, can we add them here?
-
-> Changing direction runtime is hardly possible as it would involve
-> tearing down the channel, removing interrupts, destroying rings,
-> removing the PSI-L pairing and redoing everything.
-
-okay I would expect the prep_ to check for direction and reject the call
-if direction is different.
+Okay and which cases will channel not be running i.e., you return
+DMA_COMPLETE above?
 
 -- 
 ~Vinod

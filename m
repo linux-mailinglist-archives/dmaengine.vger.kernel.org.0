@@ -2,28 +2,28 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B716FF8812
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Nov 2019 06:36:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 049A6F8817
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Nov 2019 06:37:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfKLFg0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 12 Nov 2019 00:36:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33100 "EHLO mail.kernel.org"
+        id S1725919AbfKLFhS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 12 Nov 2019 00:37:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbfKLFg0 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 12 Nov 2019 00:36:26 -0500
+        id S1725283AbfKLFhS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 12 Nov 2019 00:37:18 -0500
 Received: from localhost (unknown [122.167.70.123])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6960321783;
-        Tue, 12 Nov 2019 05:36:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54CF02084F;
+        Tue, 12 Nov 2019 05:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573536986;
-        bh=YDjjnafho2uCvMpxMXlnLJhhfTeoSuyoFzfDVXn7/m4=;
+        s=default; t=1573537038;
+        bh=DY28ZU9iJjrpae4knOfkZebu2FgGI1JEdHocfirJtGU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sP/sZWa6JWAiI7hq87AEWqr9AfSulRdI9YTrCKxSrQ9hoL4y7OXcCBvFDo6lhJO0f
-         FeJ/Vqsm9SzcuKMOUI1LrLDl4Fp3KOIMDqB1bOIZf5z1Xn5+3hQ0ld7AfxnpvhMfIT
-         NS+jfbiH+eK3W0HryxKa7RJk06UWxK51nrET6tF0=
-Date:   Tue, 12 Nov 2019 11:06:21 +0530
+        b=Ne9ss+MVsI/j6Y/+Q5x3RMKfDe5np4vko2s3/+2sXfpBN/jAr0RvQO6Rl0Hs4lq17
+         2lnc6rDPlVkKSU6bH+s7oJKE4rM3Ley2L1M4JT76AOC5cA1fnUZ5roRpINGLiRcrVh
+         5Xkpl6VeEXsVQiRXSXd+XGAnKlWysyWckSPyS0KI=
+Date:   Tue, 12 Nov 2019 11:07:14 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
 Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
@@ -32,49 +32,43 @@ Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
         linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
         lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
         j-keerthy@ti.com
-Subject: Re: [PATCH v4 12/15] dmaengine: ti: New driver for K3 UDMA -
- split#4: dma_device callbacks 1
-Message-ID: <20191112053621.GW952516@vkoul-mobl>
+Subject: Re: [PATCH v4 15/15] dmaengine: ti: k3-udma: Add glue layer for non
+ DMAengine users
+Message-ID: <20191112053714.GX952516@vkoul-mobl>
 References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-13-peter.ujfalusi@ti.com>
- <20191111060943.GQ952516@vkoul-mobl>
- <6d73f6e1-6d85-d468-2e69-47d36ed75807@ti.com>
+ <20191101084135.14811-16-peter.ujfalusi@ti.com>
+ <20191111061258.GS952516@vkoul-mobl>
+ <6d4d2fcc-502b-4b41-cd71-8942741f4ad8@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6d73f6e1-6d85-d468-2e69-47d36ed75807@ti.com>
+In-Reply-To: <6d4d2fcc-502b-4b41-cd71-8942741f4ad8@ti.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 11-11-19, 12:29, Peter Ujfalusi wrote:
-> On 11/11/2019 8.09, Vinod Koul wrote:
-> > On 01-11-19, 10:41, Peter Ujfalusi wrote:
-
-> >> +static enum dma_status udma_tx_status(struct dma_chan *chan,
-> >> +				      dma_cookie_t cookie,
-> >> +				      struct dma_tx_state *txstate)
-> >> +{
-> >> +	struct udma_chan *uc = to_udma_chan(chan);
-> >> +	enum dma_status ret;
-> >> +	unsigned long flags;
-> >> +
-> >> +	spin_lock_irqsave(&uc->vc.lock, flags);
-> >> +
-> >> +	ret = dma_cookie_status(chan, cookie, txstate);
-> >> +
-> >> +	if (!udma_is_chan_running(uc))
-> >> +		ret = DMA_COMPLETE;
-> > 
-> > so a paused channel will result in dma complete status?
+On 11-11-19, 12:31, Peter Ujfalusi wrote:
 > 
-> The channel is still enabled (running), the pause only sets a bit in the
-> channel's real time control register.
+> 
+> On 11/11/2019 8.12, Vinod Koul wrote:
+> > On 01-11-19, 10:41, Peter Ujfalusi wrote:
+> >> From: Grygorii Strashko <grygorii.strashko@ti.com>
+> >>
+> >> Certain users can not use right now the DMAengine API due to missing
+> >> features in the core. Prime example is Networking.
+> >>
+> >> These users can use the glue layer interface to avoid misuse of DMAengine
+> >> API and when the core gains the needed features they can be converted to
+> >> use generic API.
+> > 
+> > Can you add some notes on what all features does this layer implement..
+> 
+> In the commit message or in the code?
 
-Okay and which cases will channel not be running i.e., you return
-DMA_COMPLETE above?
+commit here so that we know what to expect.
 
+Thanks
 -- 
 ~Vinod

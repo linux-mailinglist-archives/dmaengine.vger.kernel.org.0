@@ -2,39 +2,39 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 146B5FA162
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Nov 2019 02:57:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31DDEFA5F3
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Nov 2019 03:25:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729642AbfKMB46 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 12 Nov 2019 20:56:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49780 "EHLO mail.kernel.org"
+        id S1727473AbfKMCZw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 12 Nov 2019 21:25:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729636AbfKMB46 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 12 Nov 2019 20:56:58 -0500
+        id S1727834AbfKMBv1 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:51:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F22D2247B;
-        Wed, 13 Nov 2019 01:56:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5467A2246D;
+        Wed, 13 Nov 2019 01:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610217;
-        bh=S42pxMw6/wYTxvLBzsja1ndTqzGbyWY3pPEbYY4F1S4=;
+        s=default; t=1573609887;
+        bh=kL0HXZps80TZHqhI8/x93MmrZiMXxsREYGLIJetJgV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2X1a76TOX+sdhJMk6WLTZuB9yf0DR5J5tCXgqYqqqzzR+NjtMr7CTfNlRaPq3q+E+
-         M87kFzykvtqoLLBl74VG8xbeteIiRDXPs5trWdORh1Zm7149kIOSB+8baC+67Ig5yx
-         Z0T5/yWW/Aci2tUYPPRHiBYBjGbGZtvuNY5nMeRY=
+        b=PGPJLckZ8LaKVOHnYTezb/o8xeBPfDmnuEXzYNLzHh4L4etdwU2njchcW2TM9WSFg
+         cy/b8x7y7gwSy5izAqYlfgGEC9pH6l01tjb33NbwRa/mLgEKMPd170uTsqdworZHgl
+         0dl8TVGcy1AwNrBoP0Zyp6WWhmn96gOG4z4jRW0U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Nathan Chancellor <natechancellor@gmail.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
         dmaengine@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 024/115] dmaengine: timb_dma: Use proper enum in td_prep_slave_sg
-Date:   Tue, 12 Nov 2019 20:54:51 -0500
-Message-Id: <20191113015622.11592-24-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 046/209] dmaengine: timb_dma: Use proper enum in td_prep_slave_sg
+Date:   Tue, 12 Nov 2019 20:47:42 -0500
+Message-Id: <20191113015025.9685-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
-References: <20191113015622.11592-1-sashal@kernel.org>
+In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
+References: <20191113015025.9685-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -69,7 +69,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/dma/timb_dma.c b/drivers/dma/timb_dma.c
-index 896bafb7a5324..cf6588cc3efdc 100644
+index 395c698edb4d7..fc0f9c8766a87 100644
 --- a/drivers/dma/timb_dma.c
 +++ b/drivers/dma/timb_dma.c
 @@ -545,7 +545,7 @@ static struct dma_async_tx_descriptor *td_prep_slave_sg(struct dma_chan *chan,

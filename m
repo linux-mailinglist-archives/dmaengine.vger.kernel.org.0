@@ -2,74 +2,85 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6278FF99B0
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Nov 2019 20:27:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 146B5FA162
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Nov 2019 02:57:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbfKLT1s (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 12 Nov 2019 14:27:48 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43298 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbfKLT1r (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 12 Nov 2019 14:27:47 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l20so15879966oie.10;
-        Tue, 12 Nov 2019 11:27:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Y4VJU4JPIoN8kP/oz54y8Wq1pxD+B52sbN7PsTOLQlY=;
-        b=exflkZjI2ZBILdpW4axODjadTtAsEC9yplHk6gpcDHwN8UEaZBqUW2Eu/aXFA/841Q
-         8pZYg5asWPMioRYW5Ec7Bl4NfsD6QJfKZrPPF4wA1+N4gXijWdZBNmGXYGYDbfV5nTDD
-         P3OUjNQNMLXAblEKTEOeigw3c3CATQbvdwPGX0eeabfmPD0efEWAKm5P7wvtLMx18qQ8
-         YV4uOduCTDCLp6MnYDMx6vO4BhgVNJc0d0t097r+oeWrdOVlKm9zvecq9hyr5p2xuqOE
-         CYAebG2375JT+GsDZoCZKBDHeMCcRo40jVvj8xR/+Soa5tMutXzusGyGuwA/dfdSd16v
-         K8mA==
-X-Gm-Message-State: APjAAAVQGrLQ8+llY1mrZtTn7ZuaE4oW3O8u6ne3LpLBN0cfCyBuBJaC
-        MLM692buAVlkCe45jbXkvsP0k38=
-X-Google-Smtp-Source: APXvYqz4Jkfw6OOk4L5JFnxQar5zpZUQ12T/aVbn6qghLtQRbJWl1rIMeQ2geyDRfOhX2lw8P+1LcA==
-X-Received: by 2002:aca:5006:: with SMTP id e6mr501570oib.127.1573586866587;
-        Tue, 12 Nov 2019 11:27:46 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 202sm6330662oii.39.2019.11.12.11.27.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Nov 2019 11:27:46 -0800 (PST)
-Date:   Tue, 12 Nov 2019 13:27:45 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     vkoul@kernel.org, robh+dt@kernel.org, nm@ti.com,
-        ssantosh@kernel.org, dan.j.williams@intel.com,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        grygorii.strashko@ti.com, lokeshvutla@ti.com, t-kristo@ti.com,
-        tony@atomide.com, j-keerthy@ti.com
-Subject: Re: [PATCH v5 08/15] dt-bindings: dma: ti: Add document for K3 UDMA
-Message-ID: <20191112192745.GA20639@bogus>
-References: <20191111135330.8235-1-peter.ujfalusi@ti.com>
- <20191111135330.8235-9-peter.ujfalusi@ti.com>
+        id S1729642AbfKMB46 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 12 Nov 2019 20:56:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49780 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729636AbfKMB46 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 12 Nov 2019 20:56:58 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F22D2247B;
+        Wed, 13 Nov 2019 01:56:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573610217;
+        bh=S42pxMw6/wYTxvLBzsja1ndTqzGbyWY3pPEbYY4F1S4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2X1a76TOX+sdhJMk6WLTZuB9yf0DR5J5tCXgqYqqqzzR+NjtMr7CTfNlRaPq3q+E+
+         M87kFzykvtqoLLBl74VG8xbeteIiRDXPs5trWdORh1Zm7149kIOSB+8baC+67Ig5yx
+         Z0T5/yWW/Aci2tUYPPRHiBYBjGbGZtvuNY5nMeRY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 024/115] dmaengine: timb_dma: Use proper enum in td_prep_slave_sg
+Date:   Tue, 12 Nov 2019 20:54:51 -0500
+Message-Id: <20191113015622.11592-24-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
+References: <20191113015622.11592-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191111135330.8235-9-peter.ujfalusi@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, 11 Nov 2019 15:53:23 +0200, Peter Ujfalusi wrote:
-> New binding document for
-> Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P).
-> 
-> UDMA-P is introduced as part of the K3 architecture and can be found in
-> AM654 and j721e.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  .../devicetree/bindings/dma/ti/k3-udma.yaml   | 192 ++++++++++++++++++
->  1 file changed, 192 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
-> 
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+[ Upstream commit 5e621f5d538985f010035c6f3e28c22829d36db1 ]
+
+Clang warns when implicitly converting from one enumerated type to
+another. Avoid this by using the equivalent value from the expected
+type.
+
+drivers/dma/timb_dma.c:548:27: warning: implicit conversion from
+enumeration type 'enum dma_transfer_direction' to different enumeration
+type 'enum dma_data_direction' [-Wenum-conversion]
+                td_desc->desc_list_len, DMA_MEM_TO_DEV);
+                                        ^~~~~~~~~~~~~~
+1 warning generated.
+
+Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/dma/timb_dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/dma/timb_dma.c b/drivers/dma/timb_dma.c
+index 896bafb7a5324..cf6588cc3efdc 100644
+--- a/drivers/dma/timb_dma.c
++++ b/drivers/dma/timb_dma.c
+@@ -545,7 +545,7 @@ static struct dma_async_tx_descriptor *td_prep_slave_sg(struct dma_chan *chan,
+ 	}
+ 
+ 	dma_sync_single_for_device(chan2dmadev(chan), td_desc->txd.phys,
+-		td_desc->desc_list_len, DMA_MEM_TO_DEV);
++		td_desc->desc_list_len, DMA_TO_DEVICE);
+ 
+ 	return &td_desc->txd;
+ }
+-- 
+2.20.1
+

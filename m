@@ -2,93 +2,90 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A1F46FBFB8
-	for <lists+dmaengine@lfdr.de>; Thu, 14 Nov 2019 06:33:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 19EBFFC056
+	for <lists+dmaengine@lfdr.de>; Thu, 14 Nov 2019 07:45:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfKNFdo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 14 Nov 2019 00:33:44 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38211 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfKNFdn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 14 Nov 2019 00:33:43 -0500
-Received: by mail-lf1-f68.google.com with SMTP id q28so3946964lfa.5
-        for <dmaengine@vger.kernel.org>; Wed, 13 Nov 2019 21:33:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hlxXISlHgvgxQVX7a0oSoBMgtYJmQzfQCH804Ekjahk=;
-        b=RYEhuf0nlP1NnAjn+C3HFZXL6sWwN5JnPBpgOhvcpgRCjwaTt7S28+rHkH7G4mKjHF
-         JwMvY6kO89ch9r47AxymeUt6gQlJ+yg7E/d7LCvxMyxWE40OcVLyarfEbKll1fx14pQs
-         lTA6jvG+CpfB3XohLrpVemQnDe0qH535C2zBn0vY9sZLAVOljNVV/HwkX+oD1KeO306e
-         dzOxAMdFqeqOAUNtpLsM1X8uOxQg8onk7++bbFtTwPBaj19qWEV4hn/miRc/Qzajd+Vf
-         4pXMvadiVlLODCx7bn/JAGcfmG+WREyR88ZAarkUKoYubgTI6ArIFy53RxoUrupwErRY
-         sb/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hlxXISlHgvgxQVX7a0oSoBMgtYJmQzfQCH804Ekjahk=;
-        b=snY8DjA3AKw/gOTzVx0E2Y7SX5ZZeY1lVoHiTzBYDhTVSnZlpYmIXvEcb3rItVfWs7
-         6YnVqVArvyZx7C/g4f8dr04GnxtzaFpRZworKB6/jLOU3+IRGD/4JBG+v4zjCrMuFMe8
-         TZvCwvghQAPOfPEUZQC8bxk9HXf+cfBbZ5zVi4vOa4dTGXIlFfnR1Kk7k1MkDChbunlt
-         7kVJPMjIiJqAm9pK34b2bBLOM9XHDtRKyA2v05nBqzymgz+iVDtHayXgwQTsud/lj2ev
-         +eNwAkEMn2vNRL8Luc6mjZWRe/zWOnsUBAd4NI5OHhttPGWcHG//lXkdzx3ijLVhUVa2
-         mUWg==
-X-Gm-Message-State: APjAAAU2O3HBBWDsYE+pv9Zc3Wds3c+nXR63kZ4knwsNILxt8fQ4n2WC
-        J2fROk6PBixeh4yi3EpMFaPT6KDeemHUcmKJZjnaow==
-X-Google-Smtp-Source: APXvYqwG8ieHlYRuz3jM86+PN7ilP65cTzag/LR2P38xH849z6xUHMzkTYozXtctvxB19clr0OEhUkA29M4vvH7RmN8=
-X-Received: by 2002:a19:f107:: with SMTP id p7mr5179412lfh.91.1573709621587;
- Wed, 13 Nov 2019 21:33:41 -0800 (PST)
+        id S1726098AbfKNGpg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 14 Nov 2019 01:45:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725807AbfKNGpf (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 14 Nov 2019 01:45:35 -0500
+Received: from localhost (unknown [223.226.110.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F6E120715;
+        Thu, 14 Nov 2019 06:45:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573713935;
+        bh=NI0BNW4CQQr9LgH0Ss7MkLNdKC1BPofEObcRVGKZmt4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bqXeNC0DK2IP2Jbg/fJB5IV14pqzVRXIiibVY2ax6OzPt/nNx3u8jEjUnYXiHyFRi
+         LJJoi5dih3QXTuvxshKCSXPDKgGTMDaq0RJ/wINppuudc93MHdLusa1tISYkw5YiCM
+         tUAOCCa9eTvSR9vyXZRtMWEZV95l6c9DidPLzLWA=
+Date:   Thu, 14 Nov 2019 12:15:31 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pan Bian <bianpan2016@163.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: sun6i: Fix use after free
+Message-ID: <20191114064514.GO952516@vkoul-mobl>
+References: <1573126013-17609-1-git-send-email-bianpan2016@163.com>
 MIME-Version: 1.0
-References: <85a5484bc1f3dd53ce6f92700ad8b35f30a0b096.1571812029.git.baolin.wang@linaro.org>
- <20191114045005.GI952516@vkoul-mobl>
-In-Reply-To: <20191114045005.GI952516@vkoul-mobl>
-From:   "(Exiting) Baolin Wang" <baolin.wang@linaro.org>
-Date:   Thu, 14 Nov 2019 13:33:30 +0800
-Message-ID: <CAMz4kuL8by3BzFYocO5eZ0YdA5aUoCjybMHwDC4HsVSzr1Pt6Q@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: sprd: Add wrap address support for link-list mode
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org,
-        eric.long@unisoc.com, baolin.wang7@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573126013-17609-1-git-send-email-bianpan2016@163.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, 14 Nov 2019 at 12:50, Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 23-10-19, 14:31, Baolin Wang wrote:
-> > From: Eric Long <eric.long@unisoc.com>
-> >
-> > The Spreadtrum Audio compress offload mode will use 2-stage DMA transfer
-> > to save power. That means we can request 2 dma channels, one for source
-> > channel, and another one for destination channel. Once the source channel's
-> > transaction is done, it will trigger the destination channel's transaction
-> > automatically by hardware signal.
-> >
-> > In this case, the source channel will transfer data from IRAM buffer to
-> > the DSP fifo to decoding/encoding, once IRAM buffer is empty by transferring
-> > done, the destination channel will start to transfer data from DDR buffer
-> > to IRAM buffer. Since the destination channel will use link-list mode to
-> > fill the IRAM data, and IRAM buffer is allocated by 32K, and DDR buffer
-> > is larger to 2M, that means we need lots of link-list nodes to do a cyclic
-> > transfer, instead wasting lots of link-list memory, we can use wrap address
-> > support to reduce link-list node number, which means when the transfer
-> > address reaches the wrap address, the transfer address will jump to the
-> > wrap_to address specified by wrap_to register, and only 2 link-list nodes
-> > can do a cyclic transfer to transfer data from DDR to IRAM.
-> >
-> > Thus this patch adds wrap address to support this case.
->
-> This fails to apply, can you please rebase and resend!
+On 07-11-19, 19:26, Pan Bian wrote:
+> The members in the LLI list is released in an incorrect way. Read and
+> store the next member before releasing it to avoid accessing the freed
+> memory.
+> 
+> Fixes: a90e173f3faf ("dmaengine: sun6i: Add cyclic capability")
+> 
+> Signed-off-by: Pan Bian <bianpan2016@163.com>
+> ---
+>  drivers/dma/sun6i-dma.c | 20 ++++++++++++++------
+>  1 file changed, 14 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+> index 06cd7f867f7c..096aad7e75bb 100644
+> --- a/drivers/dma/sun6i-dma.c
+> +++ b/drivers/dma/sun6i-dma.c
+> @@ -687,7 +687,7 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_slave_sg(
+>  	struct sun6i_dma_dev *sdev = to_sun6i_dma_dev(chan->device);
+>  	struct sun6i_vchan *vchan = to_sun6i_vchan(chan);
+>  	struct dma_slave_config *sconfig = &vchan->cfg;
+> -	struct sun6i_dma_lli *v_lli, *prev = NULL;
+> +	struct sun6i_dma_lli *v_lli, *next, *prev = NULL;
+>  	struct sun6i_desc *txd;
+>  	struct scatterlist *sg;
+>  	dma_addr_t p_lli;
+> @@ -752,8 +752,12 @@ static struct dma_async_tx_descriptor *sun6i_dma_prep_slave_sg(
+>  	return vchan_tx_prep(&vchan->vc, &txd->vd, flags);
+>  
+>  err_lli_free:
+> -	for (prev = txd->v_lli; prev; prev = prev->v_lli_next)
+> -		dma_pool_free(sdev->pool, prev, virt_to_phys(prev));
+> +	v_lli = txd->v_lli;
+> +	while (v_lli) {
+> +		next = v_lli->v_lli_next;
+> +		dma_pool_free(sdev->pool, v_lli, virt_to_phys(v_lli));
+> +		v_lli = next;
 
-Sure, sorry for the trouble. Will rebase and resend. Thanks.
+Have you seen this issue, a panic trace? Has some static checker flagged
+this?
+
+I see the code *seems* equivalent. The prev is assigned to txd->v_lli,
+checked and then code block will be executed and updated. When do you
+see the case when we access freed memory?
 
 -- 
-Baolin Wang
-Best Regards
+~Vinod

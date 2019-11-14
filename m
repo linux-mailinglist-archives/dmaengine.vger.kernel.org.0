@@ -2,125 +2,78 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E697FD326
-	for <lists+dmaengine@lfdr.de>; Fri, 15 Nov 2019 04:10:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F153FD43E
+	for <lists+dmaengine@lfdr.de>; Fri, 15 Nov 2019 06:26:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfKODKf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 14 Nov 2019 22:10:35 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42223 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbfKODKe (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 14 Nov 2019 22:10:34 -0500
-Received: by mail-pf1-f195.google.com with SMTP id s5so5645200pfh.9
-        for <dmaengine@vger.kernel.org>; Thu, 14 Nov 2019 19:10:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=TRkIoUi0GBj9I4dT2JvmosKGsiQbJSEbDRvIbo63/Gs=;
-        b=fYgwOJG4p9E2bxbHOo4pCi89Hr08mSB/gRVLkMDo8YVyIIskkfZmcetI7SGL1kvyqy
-         3eO1N/T57ru6/euwUaEJejoKH6VZACKTd5iN4k1772MFSuuka+MmixMTp3yVdTIpQGK2
-         6XY3GqQeP5Yla8O5YPKiW+8loVXwnFV6MAaE8ptt3nqnwPYGr4CMtkGhjPr9UilcBvvh
-         sBZ0Yqczu5m/VGWJ+dJ1fphpOECSRurVOpLgb5VHTqsXsuFmgZaI3IlO7FE9T93iRSFt
-         UakLoWh57bVXCLTBaVk1wXwvKzlONOWYRoxwdIOs4uuBK5IwWRy4XqgQVfKVfu3Zjd7J
-         mHLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TRkIoUi0GBj9I4dT2JvmosKGsiQbJSEbDRvIbo63/Gs=;
-        b=B5KKCvoRtj6Q+W9SD3D7SBs6IUmN2he0Cq78Tc7jhVn2XOAwm+9N1H4LfIoHxUInQE
-         Ug9ZUTfBVOhqxYGWtuYRzbmyk4i/gs0dnhRnC+I4KJ6gFdJn3B2mtvqPbWB9YftSrzM8
-         GB0NAl8mJdVAGYfjbFqXVWYY4tTOfauyo9/zl7c8DRkq8QXPwQpV1DzQqSfQnMebJkad
-         Nu0Hl3FoUfawOIkj8A7xdtH2pvOrU6v8zFjT00RK7CbqdhXJraOkDWDWU57eEyYLF9Ck
-         f28SlPV+O5ucjJS5m1S/dzYKhtGBhagrTwLS74fIBF8p+nX6zxHNi5D35yT+Rb123TDW
-         4vDw==
-X-Gm-Message-State: APjAAAVwJzGUQNXBzB1SaF4jXFAaJ/DDxinuxSwK27+ULN1H6S5Ai95w
-        4nTRGRiY07EVcaY1FkIfN6OP8A==
-X-Google-Smtp-Source: APXvYqxUrktXvFs7jzxCHAmUbP3k8BfyrSbz4O+ZCgj98MyJK5NAdeX2EiyFlAwcnLMJqUyG3/Rkag==
-X-Received: by 2002:a63:f743:: with SMTP id f3mr10817140pgk.410.1573787431911;
-        Thu, 14 Nov 2019 19:10:31 -0800 (PST)
-Received: from localhost.localdomain (111-241-173-86.dynamic-ip.hinet.net. [111.241.173.86])
-        by smtp.gmail.com with ESMTPSA id z23sm7260287pgj.43.2019.11.14.19.10.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 19:10:31 -0800 (PST)
-From:   Green Wan <green.wan@sifive.com>
-Cc:     Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: sf-pdma: fix kernel-doc W=1 warning
-Date:   Fri, 15 Nov 2019 11:10:09 +0800
-Message-Id: <20191115031013.30448-1-green.wan@sifive.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        id S1726017AbfKOF0K (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 15 Nov 2019 00:26:10 -0500
+Received: from mail.hgs.gob.ec ([190.214.19.83]:34664 "HELO mail.hgs.gob.ec"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with SMTP
+        id S1725848AbfKOF0K (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 15 Nov 2019 00:26:10 -0500
+X-Greylist: delayed 22539 seconds by postgrey-1.27 at vger.kernel.org; Fri, 15 Nov 2019 00:26:00 EST
+Received: from localhost (localhost [127.0.0.1])
+        by mail.hgs.gob.ec (Postfix) with ESMTP id CD6D39F4C82;
+        Thu, 14 Nov 2019 15:54:51 -0500 (-05)
+Received: from mail.hgs.gob.ec ([127.0.0.1])
+        by localhost (mail.hgs.gob.ec [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id drCWL4iuCjWE; Thu, 14 Nov 2019 15:54:51 -0500 (-05)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.hgs.gob.ec (Postfix) with ESMTP id 4B0469FCCC3;
+        Thu, 14 Nov 2019 15:54:39 -0500 (-05)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.hgs.gob.ec 4B0469FCCC3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hgs.gob.ec;
+        s=DD120D66-D63F-11E9-9729-9452E74E1CB4; t=1573764879;
+        bh=oYeOwTtTK4mcRNNK0JGL7ZOgP8mm7StpJG1pujYq4Z0=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=And48+TWNCU/qv86FjwDf/gMYvj6CM82t7XnumZw4H2+1cfu0MUHKhCmoUbPOQRMt
+         XzSmcWzWb+yuryZ4Yb36F+YBhu7uoMSVMPG2TUuYoKWwQgS70k9H7Z/TXZtQqhXQiH
+         q/rcZHB1+iYhDkBmzytflRvv8Ajy8nu6A0Zi+eKxdxMqJknmJHFbSwN+kF36gq5rTd
+         hUJAux/gtMok7i/tBsA+WVjF4uX+PJsXNRFhSR9AZIksVfFaRih29BEjQJSbHUFm8x
+         xsTUC8h0xVTGyUn2EO9eC1mpGFOrMlRD4v3bn+Yr3U+a6+7acNlhUYdoYW84SQaidy
+         QAuTeKmdBpxrQ==
+X-Virus-Scanned: amavisd-new at hgs.gob.ec
+Received: from mail.hgs.gob.ec ([127.0.0.1])
+        by localhost (mail.hgs.gob.ec [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id SLaSBnIzCfSH; Thu, 14 Nov 2019 15:54:39 -0500 (-05)
+Received: from [10.32.142.65] (unknown [105.4.7.6])
+        by mail.hgs.gob.ec (Postfix) with ESMTPSA id BDC73A005E4;
+        Thu, 14 Nov 2019 15:54:18 -0500 (-05)
+Content-Type: text/plain; charset="iso-8859-1"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: =?utf-8?q?Wohlt=C3=A4tigkeitsspende_von_2=2E000=2E000=2E000_Euro?=
+To:     Recipients <dietetica@hgs.gob.ec>
+From:   ''Charles jackson'' <dietetica@hgs.gob.ec>
+Date:   Thu, 14 Nov 2019 22:54:09 +0200
+Reply-To: charlesjacksonjr001@gmail.com
+Message-Id: <20191114205418.BDC73A005E4@mail.hgs.gob.ec>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Fix kernel-doc W=1 warning. There are several comments starting from "/**"
-but not for function comment purpose. Remove them to fix the warning.
-Another definition in front of function causes warning. Move definition
-to header file.
+Lieber Freund,
 
-kernel-doc warning:
+Ich bin Herr Charles W Jackson, North Carolina, Vereinigte Staaten von Amer=
+ika, der Mega-Gewinner von 344 Millionen US-Dollar. Beim Mega-Millions-Jack=
+pot spende ich an 5 zuf&auml;llige Personen. Wenn Sie diese E-Mail erhalten=
+, wurde Ihre E-Mail zu einem Spinball, den ich am h&auml;ufigsten verteilt =
+habe von meinem Verm&ouml;gen an eine Reihe von Wohlt&auml;tigkeitsorganisa=
+tionen. Ich habe mich freiwillig entschlossen, Ihnen als einer der ausgew&a=
+uml;hlten 5 einen Betrag von &euro; 2.000.000,00 zu spenden, um meine Gewin=
+ne zu &uuml;berpr&uuml;fen.
+Dies ist Ihr Spendencode: [CJ530342019]
 
-drivers/dma/sf-pdma/sf-pdma.c:28: warning: Function parameter or member
-	'addr' not described in 'readq'
-drivers/dma/sf-pdma/sf-pdma.c:438: warning: Function parameter or member
-	'ch' not described in 'SF_PDMA_REG_BASE'
-drivers/dma/sf-pdma/sf-pdma.c:438: warning: Excess function parameter
-	'pdma' description in 'SF_PDMA_REG_BASE'
+www.youtube.com/watch?v=3DBSr8myiLPMQ
 
-Changes:
- - Replace string '/**' with '/*' not for comment purpose
- - Move definition, "SF_PDMA_REG_BASE", fomr sf-pdma.c to sf-pdma.h
+Antworten Sie auf diese E-Mail mit dem SPENDER-CODE: =
 
-Signed-off-by: Green Wan <green.wan@sifive.com>
----
- drivers/dma/sf-pdma/sf-pdma.c | 3 +--
- drivers/dma/sf-pdma/sf-pdma.h | 4 +++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
-index 16fe00553496..465256fe8b1f 100644
---- a/drivers/dma/sf-pdma/sf-pdma.c
-+++ b/drivers/dma/sf-pdma/sf-pdma.c
-@@ -1,5 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
--/**
-+/*
-  * SiFive FU540 Platform DMA driver
-  * Copyright (C) 2019 SiFive
-  *
-@@ -435,7 +435,6 @@ static int sf_pdma_irq_init(struct platform_device *pdev, struct sf_pdma *pdma)
-  *
-  * Return: none
-  */
--#define SF_PDMA_REG_BASE(ch)	(pdma->membase + (PDMA_CHAN_OFFSET * (ch)))
- static void sf_pdma_setup_chans(struct sf_pdma *pdma)
- {
- 	int i;
-diff --git a/drivers/dma/sf-pdma/sf-pdma.h b/drivers/dma/sf-pdma/sf-pdma.h
-index 55816c9e0249..0c20167b097d 100644
---- a/drivers/dma/sf-pdma/sf-pdma.h
-+++ b/drivers/dma/sf-pdma/sf-pdma.h
-@@ -1,5 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0-or-later */
--/**
-+/*
-  * SiFive FU540 Platform DMA driver
-  * Copyright (C) 2019 SiFive
-  *
-@@ -57,6 +57,8 @@
- /* Error Recovery */
- #define MAX_RETRY					1
- 
-+#define SF_PDMA_REG_BASE(ch)	(pdma->membase + (PDMA_CHAN_OFFSET * (ch)))
-+
- struct pdma_regs {
- 	/* read-write regs */
- 	void __iomem *ctrl;		/* 4 bytes */
+charlesjacksonjr001@gmail.com
 
-base-commit: a7e335deed174a37fc6f84f69caaeff8a08f8ff8
--- 
-2.17.1
+Ich hoffe, Sie und Ihre Familie gl&uuml;cklich zu machen
 
+Sch&ouml;ne Gr&uuml;&szlig;e
+Mr. Charles Jackson

@@ -2,30 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D6B4FC097
-	for <lists+dmaengine@lfdr.de>; Thu, 14 Nov 2019 08:15:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8093BFC4BA
+	for <lists+dmaengine@lfdr.de>; Thu, 14 Nov 2019 11:53:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725920AbfKNHP5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 14 Nov 2019 02:15:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbfKNHP5 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 14 Nov 2019 02:15:57 -0500
-Received: from localhost (unknown [223.226.110.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 539B9206C0;
-        Thu, 14 Nov 2019 07:15:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573715756;
-        bh=CdaQJfZeE12NS1/9Gejd29MDaXIfXJWzS072VrL8Xes=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PhsOCoDGSgOK8ezKmJxaKvTdSHilYh12J6nNN8tFokL7n2P2BHdFFLr3jKRR4wcSB
-         kHkUc5uIaH/d1CCakQKBk9IVDJHVa0Hzz7WHtWGluW3kwSI9Kb0arWaeqG8M6/M0vt
-         /5dpCcS3I4+Zhf/lF6Xke7riMzVuVnG37CmLzPhs=
-Date:   Thu, 14 Nov 2019 12:45:51 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Green Wan <green.wan@sifive.com>
+        id S1726960AbfKNKxj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 14 Nov 2019 05:53:39 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37948 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfKNKxj (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 14 Nov 2019 05:53:39 -0500
+Received: by mail-io1-f67.google.com with SMTP id i13so6290876ioj.5
+        for <dmaengine@vger.kernel.org>; Thu, 14 Nov 2019 02:53:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Kc1/vTjFDnJ6RXRT1JfBA3hLPFiKVT3unzuRtbwelRQ=;
+        b=hvzFvQO7iwFtVGzpjj/Maiqd069dCHHQRZr66u+oC+RQ1n+onzGFN2lFQyU7+ki5Nt
+         X3c3lwpx/09gSFw9oZsytsBMgFMLyLarOOpIMbLhDHkbmObM/6ddkY6niO8e8pzoCygg
+         W1A2GlQSLF6PLnckXx2TGtGPdwFGkV1r33rkH0iS+Uaz+oaA7VOiSv/Il/7bUKFTm4lQ
+         zlPQAs4GXxa+7MuK+3lU09La6r2BEWna8dDKT+hvmDm9LbPT8b/fRUFwyDs6meFARJTr
+         2ZTknw4Rw8HFpc2I50vVO08psCbJDF4v3rIgHWmmPQaJgB+3u/wElMqGnLfiUdpaUaIQ
+         4eCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Kc1/vTjFDnJ6RXRT1JfBA3hLPFiKVT3unzuRtbwelRQ=;
+        b=fYok6GB+3Q0yv/VUSx4LeHefoVc4lFj53UKtiyz3QH4gE7eDkwRhZuJeBHQH2nHSWh
+         Y66CD8BFJcCG2Yc3bFSjYebIlOqRm97KEVLbv/hwE/jnycrvuFoSKk9i8bKx+dpI1mOR
+         2CHnLIa9DwJWupinQ1j5Q6BCiMCUeaITFUd3SDZtl6H+kFcIooP5McWWOOcF/7FEYQ+z
+         3dNXz8jogXVFDNaf6IEvBz6YyDkmGbAwebwQCYZQbzRtQuFEUfRqJ8JXevt6GNHulgo0
+         ay3hvH9Wo2KbVNcYDHl7waDj/Srdi5f4vuBxUXDp7yg+SNcvHyakANDn8qxZ15Lf8jey
+         Iesg==
+X-Gm-Message-State: APjAAAWoGwqmFWwBCwjIfxYWrAla5rauVZasVStXwgHzbjISAK/8SMyD
+        l4BSpcGXi8Zny7NOlL+kf6f3SRp9GFgxB/wvZqGdJg==
+X-Google-Smtp-Source: APXvYqwAEZUqjQiKuLs/wQ808KcqyDjY/QSLEFXpvnVRqBTItldaB74gt5LHaetoQeAUw00tv7D7uTNxdb8HFM/8Dxk=
+X-Received: by 2002:a6b:5f0e:: with SMTP id t14mr8298204iob.228.1573728818553;
+ Thu, 14 Nov 2019 02:53:38 -0800 (PST)
+MIME-Version: 1.0
+References: <20191107084955.7580-1-green.wan@sifive.com> <20191114071551.GQ952516@vkoul-mobl>
+In-Reply-To: <20191114071551.GQ952516@vkoul-mobl>
+From:   Green Wan <green.wan@sifive.com>
+Date:   Thu, 14 Nov 2019 18:53:28 +0800
+Message-ID: <CAJivOr6=7+vYUe1tmgEkOAbtoT6=0-6zzTGzfamycjHqqneWRw@mail.gmail.com>
+Subject: Re: [PATCH v6 0/4] dmaengine: sf-pdma: Add platform dma driver
+To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
@@ -42,41 +64,46 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Sagar Kadam <sagar.kadam@sifive.com>,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/4] dmaengine: sf-pdma: Add platform dma driver
-Message-ID: <20191114071551.GQ952516@vkoul-mobl>
-References: <20191107084955.7580-1-green.wan@sifive.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191107084955.7580-1-green.wan@sifive.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 07-11-19, 16:49, Green Wan wrote:
-> Add PDMA driver support for SiFive HiFive Unleashed RevA00 board. Mainly follows
-> DMAengine controller doc[1] to implement and take other DMA drivers as reference.
-> Such as
-> 
->   - drivers/dma/fsl-edma.c
->   - drivers/dma/dw-edma/
->   - drivers/dma/pxa-dma.c
-> 
-> Using DMA test client[2] to test. Detailed datasheet is doc[3]. Driver supports:
-> 
->  - 4 physical DMA channels, share same DONE and error interrupt handler. 
->  - Support MEM_TO_MEM
->  - Tested by DMA test client
->  - patches include DT Bindgins document and dts for fu450-c000 SoC. Separate dts
->    patch for easier review and apply to different branch or SoC platform.
->  - retry 1 time if DMA error occurs.
+Thanks, Vinod,
 
-I have applied this expect dt change. I see some warns due to missing
-kernel-doc style comments with W=1, please fix that and send update on
-top of these
+I found there are "/**" in the beginning of files but not for
+commenting function purpose. Those comments cause kernel-doc W=1
+warning. I've fixed them and rebased to latest source. will send the
+patch after running regression tests soon.
 
-Thanks
--- 
-~Vinod
+--
+Green
+
+On Thu, Nov 14, 2019 at 3:15 PM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 07-11-19, 16:49, Green Wan wrote:
+> > Add PDMA driver support for SiFive HiFive Unleashed RevA00 board. Mainly follows
+> > DMAengine controller doc[1] to implement and take other DMA drivers as reference.
+> > Such as
+> >
+> >   - drivers/dma/fsl-edma.c
+> >   - drivers/dma/dw-edma/
+> >   - drivers/dma/pxa-dma.c
+> >
+> > Using DMA test client[2] to test. Detailed datasheet is doc[3]. Driver supports:
+> >
+> >  - 4 physical DMA channels, share same DONE and error interrupt handler.
+> >  - Support MEM_TO_MEM
+> >  - Tested by DMA test client
+> >  - patches include DT Bindgins document and dts for fu450-c000 SoC. Separate dts
+> >    patch for easier review and apply to different branch or SoC platform.
+> >  - retry 1 time if DMA error occurs.
+>
+> I have applied this expect dt change. I see some warns due to missing
+> kernel-doc style comments with W=1, please fix that and send update on
+> top of these
+>
+> Thanks
+> --
+> ~Vinod

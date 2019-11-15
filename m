@@ -2,173 +2,125 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B367FFCC2E
-	for <lists+dmaengine@lfdr.de>; Thu, 14 Nov 2019 18:54:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E697FD326
+	for <lists+dmaengine@lfdr.de>; Fri, 15 Nov 2019 04:10:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfKNRxz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 14 Nov 2019 12:53:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55184 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbfKNRxz (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 14 Nov 2019 12:53:55 -0500
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87F1820727;
-        Thu, 14 Nov 2019 17:53:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573754033;
-        bh=FoOAY9hvViKgsLTmMcUUrky6j/lBk2/WL9cdhbynSys=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pPnZ1tFP/zb5Uf2eZitrrBr8+RHnAG6QVR8CxikW4VkVO1PQH5mYV+oXMOM6ld38T
-         YIVr5/twVsXxuIgPVQCnP0xAutIdwUNJZ2xec42lOyGSrfE7vgFvjAMsNYqtZZ/0aF
-         hEvOg0fKelyt6wpN22J/RyxKzwUpHKEPbh2L1f0w=
-Received: by mail-qv1-f42.google.com with SMTP id x14so2720318qvu.0;
-        Thu, 14 Nov 2019 09:53:53 -0800 (PST)
-X-Gm-Message-State: APjAAAXWXTRVBQM6CWboTRV//sk+7waxIBKaYOqyVMaJ5uTNnqg+nGU7
-        tbH7daUoZxTYADmYuypB5CqkkFA7zNZfyCs45A==
-X-Google-Smtp-Source: APXvYqxn0/HOay449gy4df/pZe6Fvu/CaSWw8Nv4yCJSz4K/ab7BUtNCox5hzRHIyowoAHUW18uT482SqJVnK3bZG+o=
-X-Received: by 2002:ad4:42b4:: with SMTP id e20mr9393130qvr.85.1573754032554;
- Thu, 14 Nov 2019 09:53:52 -0800 (PST)
-MIME-Version: 1.0
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com> <20191101084135.14811-9-peter.ujfalusi@ti.com>
- <20191105021900.GA17829@bogus> <fc1ea525-54f1-ff1a-7e1c-61b54f5be862@ti.com>
-In-Reply-To: <fc1ea525-54f1-ff1a-7e1c-61b54f5be862@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 14 Nov 2019 11:53:41 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJbV7Zd40admW-x2SSveMqMkG0tM6RFTwjCJyYxX4Cxtw@mail.gmail.com>
-Message-ID: <CAL_JsqJbV7Zd40admW-x2SSveMqMkG0tM6RFTwjCJyYxX4Cxtw@mail.gmail.com>
-Subject: Re: [PATCH v4 08/15] dt-bindings: dma: ti: Add document for K3 UDMA
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
+        id S1727063AbfKODKf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 14 Nov 2019 22:10:35 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42223 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbfKODKe (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 14 Nov 2019 22:10:34 -0500
+Received: by mail-pf1-f195.google.com with SMTP id s5so5645200pfh.9
+        for <dmaengine@vger.kernel.org>; Thu, 14 Nov 2019 19:10:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=TRkIoUi0GBj9I4dT2JvmosKGsiQbJSEbDRvIbo63/Gs=;
+        b=fYgwOJG4p9E2bxbHOo4pCi89Hr08mSB/gRVLkMDo8YVyIIskkfZmcetI7SGL1kvyqy
+         3eO1N/T57ru6/euwUaEJejoKH6VZACKTd5iN4k1772MFSuuka+MmixMTp3yVdTIpQGK2
+         6XY3GqQeP5Yla8O5YPKiW+8loVXwnFV6MAaE8ptt3nqnwPYGr4CMtkGhjPr9UilcBvvh
+         sBZ0Yqczu5m/VGWJ+dJ1fphpOECSRurVOpLgb5VHTqsXsuFmgZaI3IlO7FE9T93iRSFt
+         UakLoWh57bVXCLTBaVk1wXwvKzlONOWYRoxwdIOs4uuBK5IwWRy4XqgQVfKVfu3Zjd7J
+         mHLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TRkIoUi0GBj9I4dT2JvmosKGsiQbJSEbDRvIbo63/Gs=;
+        b=B5KKCvoRtj6Q+W9SD3D7SBs6IUmN2he0Cq78Tc7jhVn2XOAwm+9N1H4LfIoHxUInQE
+         Ug9ZUTfBVOhqxYGWtuYRzbmyk4i/gs0dnhRnC+I4KJ6gFdJn3B2mtvqPbWB9YftSrzM8
+         GB0NAl8mJdVAGYfjbFqXVWYY4tTOfauyo9/zl7c8DRkq8QXPwQpV1DzQqSfQnMebJkad
+         Nu0Hl3FoUfawOIkj8A7xdtH2pvOrU6v8zFjT00RK7CbqdhXJraOkDWDWU57eEyYLF9Ck
+         f28SlPV+O5ucjJS5m1S/dzYKhtGBhagrTwLS74fIBF8p+nX6zxHNi5D35yT+Rb123TDW
+         4vDw==
+X-Gm-Message-State: APjAAAVwJzGUQNXBzB1SaF4jXFAaJ/DDxinuxSwK27+ULN1H6S5Ai95w
+        4nTRGRiY07EVcaY1FkIfN6OP8A==
+X-Google-Smtp-Source: APXvYqxUrktXvFs7jzxCHAmUbP3k8BfyrSbz4O+ZCgj98MyJK5NAdeX2EiyFlAwcnLMJqUyG3/Rkag==
+X-Received: by 2002:a63:f743:: with SMTP id f3mr10817140pgk.410.1573787431911;
+        Thu, 14 Nov 2019 19:10:31 -0800 (PST)
+Received: from localhost.localdomain (111-241-173-86.dynamic-ip.hinet.net. [111.241.173.86])
+        by smtp.gmail.com with ESMTPSA id z23sm7260287pgj.43.2019.11.14.19.10.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Nov 2019 19:10:31 -0800 (PST)
+From:   Green Wan <green.wan@sifive.com>
+Cc:     Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: sf-pdma: fix kernel-doc W=1 warning
+Date:   Fri, 15 Nov 2019 11:10:09 +0800
+Message-Id: <20191115031013.30448-1-green.wan@sifive.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 4:07 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote=
-:
->
->
->
-> On 05/11/2019 4.19, Rob Herring wrote:
-> > On Fri, Nov 01, 2019 at 10:41:28AM +0200, Peter Ujfalusi wrote:
-> >> New binding document for
-> >> Texas Instruments K3 NAVSS Unified DMA =E2=80=93 Peripheral Root Compl=
-ex (UDMA-P).
-> >>
-> >> UDMA-P is introduced as part of the K3 architecture and can be found i=
-n
-> >> AM654 and j721e.
-> >>
-> >> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> >> ---
-> >> Rob,
-> >>
-> >> can you give me some hint on how to fix these two warnings from dt_bin=
-ding_check:
-> >>
-> >>   DTC     Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.=
-yaml
-> >> Documentation/devicetree/bindings/dma/ti/k3-udma.example.dts:23.13-72:=
- Warning (ranges_format): /example-0/interconnect@30800000:ranges: "ranges"=
- property has invalid length (24 bytes) (parent #address-cells =3D=3D 1, ch=
-ild #address-cells =3D=3D 2, #size-cells =3D=3D 2)
-> >>   CHECK   Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.=
-yaml
-> >
-> > The default #address-cells is 1 for examples. So you need to
-> > either override it or change ranges parent address size.
->
-> wrapping the cbass_main_navss inside:
-> cbass_main {
->     #address-cells =3D <2>;
->     #size-cells =3D <2>;
->     ...
-> };
->
-> fixes it.
->
-> >>
-> >> Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml: inte=
-rconnect@30800000: $nodename:0: 'interconnect@30800000' does not match '^(b=
-us|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
-> >
-> > Use 'bus' for the node name of 'simple-bus'.
->
-> I took the navss node from the upstream dts (I'm going to fix it there
-> as well).
-> It has simple-bus for the navss, which is not quite right as NAVSS is
-> not a bus, but a big subsystem with multiple components (UDMAP, ringacc,
-> INTA, INTR, timers, etc).
->
-> What about to change the binding doc to simple-mfd like this
+Fix kernel-doc W=1 warning. There are several comments starting from "/**"
+but not for function comment purpose. Remove them to fix the warning.
+Another definition in front of function causes warning. Move definition
+to header file.
 
-That's really for things not memory-mapped (I'm sure you can probably
-find an example to contradict me), so better to keep simple-bus if all
-the child nodes have addresses.
+kernel-doc warning:
 
-Do you need the node name to be 'navss' for some reason? If so, then
-better have a compatible string in there to identify it. If not, just
-use 'bus' and be done with it.
+drivers/dma/sf-pdma/sf-pdma.c:28: warning: Function parameter or member
+	'addr' not described in 'readq'
+drivers/dma/sf-pdma/sf-pdma.c:438: warning: Function parameter or member
+	'ch' not described in 'SF_PDMA_REG_BASE'
+drivers/dma/sf-pdma/sf-pdma.c:438: warning: Excess function parameter
+	'pdma' description in 'SF_PDMA_REG_BASE'
 
-> cbass_main_navss: navss@30800000 {
->     compatible =3D "simple-mfd";
->     #address-cells =3D <2>;
->     #size-cells =3D <2>;
->     ...
-> };
->
-> and fix up the DT when I got to the point when I can send the patches to
-> enable DMA for am654 and j721e?
+Changes:
+ - Replace string '/**' with '/*' not for comment purpose
+ - Move definition, "SF_PDMA_REG_BASE", fomr sf-pdma.c to sf-pdma.h
 
-There's no requirement yet for DTS files to not have warnings.
+Signed-off-by: Green Wan <green.wan@sifive.com>
+---
+ drivers/dma/sf-pdma/sf-pdma.c | 3 +--
+ drivers/dma/sf-pdma/sf-pdma.h | 4 +++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-> >> +  compatible:
-> >> +    oneOf:
-> >> +      - const: ti,am654-navss-main-udmap
-> >> +      - const: ti,am654-navss-mcu-udmap
-> >> +      - const: ti,j721e-navss-main-udmap
-> >> +      - const: ti,j721e-navss-mcu-udmap
-> >
-> > enum works better than oneOf+const. Better error messages.
->
-> Like this:
->   compatible:
->     oneOf:
->       - description: for AM654
->         items:
->           - enum:
->               - ti,am654-navss-main-udmap
->               - ti,am654-navss-mcu-udmap
->
->       - description: for J721E
->         items:
->           - enum:
->               - ti,j721e-navss-main-udmap
->               - ti,j721e-navss-mcu-udmap
+diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
+index 16fe00553496..465256fe8b1f 100644
+--- a/drivers/dma/sf-pdma/sf-pdma.c
++++ b/drivers/dma/sf-pdma/sf-pdma.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+-/**
++/*
+  * SiFive FU540 Platform DMA driver
+  * Copyright (C) 2019 SiFive
+  *
+@@ -435,7 +435,6 @@ static int sf_pdma_irq_init(struct platform_device *pdev, struct sf_pdma *pdma)
+  *
+  * Return: none
+  */
+-#define SF_PDMA_REG_BASE(ch)	(pdma->membase + (PDMA_CHAN_OFFSET * (ch)))
+ static void sf_pdma_setup_chans(struct sf_pdma *pdma)
+ {
+ 	int i;
+diff --git a/drivers/dma/sf-pdma/sf-pdma.h b/drivers/dma/sf-pdma/sf-pdma.h
+index 55816c9e0249..0c20167b097d 100644
+--- a/drivers/dma/sf-pdma/sf-pdma.h
++++ b/drivers/dma/sf-pdma/sf-pdma.h
+@@ -1,5 +1,5 @@
+ /* SPDX-License-Identifier: GPL-2.0-or-later */
+-/**
++/*
+  * SiFive FU540 Platform DMA driver
+  * Copyright (C) 2019 SiFive
+  *
+@@ -57,6 +57,8 @@
+ /* Error Recovery */
+ #define MAX_RETRY					1
+ 
++#define SF_PDMA_REG_BASE(ch)	(pdma->membase + (PDMA_CHAN_OFFSET * (ch)))
++
+ struct pdma_regs {
+ 	/* read-write regs */
+ 	void __iomem *ctrl;		/* 4 bytes */
 
-If the 'description' was useful, but it's not. Just:
+base-commit: a7e335deed174a37fc6f84f69caaeff8a08f8ff8
+-- 
+2.17.1
 
-compatible:
-  enum:
-    - ti,am654-navss-main-udmap
-    - ti,am654-navss-mcu-udmap
-    - ti,j721e-navss-main-udmap
-    - ti,j721e-navss-mcu-udmap
-
-
-Rob

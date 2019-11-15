@@ -2,55 +2,55 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DA807FD7F9
-	for <lists+dmaengine@lfdr.de>; Fri, 15 Nov 2019 09:31:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23035FD800
+	for <lists+dmaengine@lfdr.de>; Fri, 15 Nov 2019 09:32:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbfKOIbV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 15 Nov 2019 03:31:21 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36373 "EHLO
+        id S1726973AbfKOIcF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 15 Nov 2019 03:32:05 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37233 "EHLO
         mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfKOIbV (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 15 Nov 2019 03:31:21 -0500
-Received: by mail-pl1-f194.google.com with SMTP id d7so4132579pls.3;
-        Fri, 15 Nov 2019 00:31:20 -0800 (PST)
+        with ESMTP id S1725829AbfKOIcF (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 15 Nov 2019 03:32:05 -0500
+Received: by mail-pl1-f194.google.com with SMTP id bb5so4135179plb.4;
+        Fri, 15 Nov 2019 00:32:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=RnTVU3msasSGFVmLQ6w3HwKQq7iABYeW4r2PZszqmD0=;
-        b=UyApXg21rduT6941OYAxmxV6yDowZjbsIqLcSD7rlWy6kVOcgHvexsjgj5UDiJpD7F
-         hz7bwGEZ8HB1Ldr6JOXdIjb1JCfIxPcIHmJACnloTi5FuI9WXn0JrtN2FWPWAO56Mm1P
-         6TxjN2eM8S1NtjVNnQ1HPojLXZLIaTozP/5UJ0yj23tVe4mAw42syzutqN4R0cB0gHnW
-         s1/NQUL6H9jW1kR0JIQdBW85ILQSwtYgM8A5KN8OfZgg8lgIyBrHEFWqehMQ70I7eXUP
-         TV9qIHT0XzEa0Td6dRe5snuqkJJNLRQWARQC+xnZpe2dUhbJOBKQt9Mh0Rj5VmdwnBS0
-         UvqQ==
+        bh=OCpyp7VlXRWKtfspUgWzs1CQ4X3tbOzNUUacTAQ1h0c=;
+        b=LZe+lZUE9hQ0aZNfcLDPsBUDHmfZCHMlwOVbI2C+0igiwcL1MTf0W975poTI0U68eB
+         pLruGRp9Rg+UyjBzHaPBZAhlQcY2u3sNvfNc98fDmx+pBAJ4Sjt6MVHCQ0hApcKbE0Uf
+         BgF81Q7dq5gh5dxlQTLrWO/jH0lwkpusB3Gq7XW4AWn1QyOGHGrmhNNbacLxDh5uergJ
+         DRipIURtIrxwBVvDeWcnZ4sOyn6mF8WzBrWhhPqNRk442OB6JYWxPLjH6GOZkqH2Aa37
+         0fiD1SMcsIUYD3RxEdroAnDxKGLbiZLvL5fvnOvzuwGll+AIZPufdYBfIG4IrkWNBN+d
+         2bEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=RnTVU3msasSGFVmLQ6w3HwKQq7iABYeW4r2PZszqmD0=;
-        b=Bch2xYkO4lZVZUjGEzYpDU4s5ulBjQM4mgbjR4/t9eUF4DoJPVqoHJgKn4MvOofoGt
-         tSM1trur4J5BbOS2MiUfQLva2AwdSFEWljaV5cPZLGXYkwubzqGkSjiRELr+jNKZL+WL
-         38+LlqWy1W4rL8jRQSyZjG8M0zgWPbB3DIBEeakXjU2kSSxhZwpwPV2AfaVCWk1lTjb6
-         /S50sMcf1V9LQWOl9OX4WloAFLSFX4uc51UvNfGOsN0uKmHQa8PIw/ngG1ry1Hlt4UPP
-         chvIDc27cb47GJcRK9zs7NcO2IY+PpUaeUhfZoH82FpRQ8CsyWvNSmc3NkVNmh5GxJ4x
-         3EDQ==
-X-Gm-Message-State: APjAAAUWhwrBvvGjZQm3hgxLG3h40nRvsiQwV2Pa5E3SXf+n/0at6mff
-        m/wMs/jzJNMCHtqV+pLbUHk=
-X-Google-Smtp-Source: APXvYqxgxpn5+ozBvP+tWX4FbyNK4npTxvNqQk9+ptchYUGRDCLEYH90309gfNmR/B9Dtwcmu5ymkw==
-X-Received: by 2002:a17:90a:b30b:: with SMTP id d11mr17869764pjr.25.1573806680591;
-        Fri, 15 Nov 2019 00:31:20 -0800 (PST)
+        bh=OCpyp7VlXRWKtfspUgWzs1CQ4X3tbOzNUUacTAQ1h0c=;
+        b=WsnRKD9qFoRDgJbmEpNbTywCUddaSYV2ZqNACgS7dDO62iDo1lpIFjEl2FAJgi80h6
+         Y+uWunsZeiLxHZ8HRl3cDhyByBVVPMUuAssnqapc9LsbG70P8WRyFDH3da1ntARKy3G4
+         rsXxxQGZgOPLIkz2to2xFmLLl+JexF6GclG3B1qCC/232lZcdTY4CXGelc1DHMgiVWCK
+         cyYbB18vx+E5H8D1exadYF8yjL0OH90PcNIpy6Op7qm0BEYB7OUFZtLfyCSKmNYglE4y
+         CdIT2okd5Z7bEElx2JGFo0MIsPAOxM+RsXRWO5dnXlC0+kfLKRT4VFYOIRrcYV1c6f+9
+         reww==
+X-Gm-Message-State: APjAAAVl2Ud2UMprZQskHDJcGXo1/aREBjJK7OLg5Y49wbmFE4BCOf3U
+        dYXEUOgbZEJDAelv+rFdGlw=
+X-Google-Smtp-Source: APXvYqzGHHWHf6oK+MCJbGsnVBtLpmAG4XOJZSPBpO9E3gdQsRFrknJkZa+90QJvK9ZIXkeiY3KaiA==
+X-Received: by 2002:a17:902:ab98:: with SMTP id f24mr7023396plr.257.1573806724797;
+        Fri, 15 Nov 2019 00:32:04 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id 81sm11804997pfx.142.2019.11.15.00.31.15
+        by smtp.gmail.com with ESMTPSA id z4sm9190597pfn.80.2019.11.15.00.32.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Nov 2019 00:31:19 -0800 (PST)
+        Fri, 15 Nov 2019 00:32:04 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
         Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH 1/2] dmaengine: mmp_tdma: add missed of_dma_controller_free
-Date:   Fri, 15 Nov 2019 16:31:00 +0800
-Message-Id: <20191115083100.12220-1-hslester96@gmail.com>
+Subject: [PATCH 2/2] dmaengine: mmp_pdma: add missed of_dma_controller_free
+Date:   Fri, 15 Nov 2019 16:31:53 +0800
+Message-Id: <20191115083153.12334-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -66,23 +66,22 @@ Add the call to fix it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/dma/mmp_tdma.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/dma/mmp_pdma.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/dma/mmp_tdma.c b/drivers/dma/mmp_tdma.c
-index e7d1e12bf464..10117f271b12 100644
---- a/drivers/dma/mmp_tdma.c
-+++ b/drivers/dma/mmp_tdma.c
-@@ -544,6 +544,9 @@ static void mmp_tdma_issue_pending(struct dma_chan *chan)
+diff --git a/drivers/dma/mmp_pdma.c b/drivers/dma/mmp_pdma.c
+index 7fe494fc50d4..ad06f260e907 100644
+--- a/drivers/dma/mmp_pdma.c
++++ b/drivers/dma/mmp_pdma.c
+@@ -945,6 +945,8 @@ static int mmp_pdma_remove(struct platform_device *op)
+ 	struct mmp_pdma_phy *phy;
+ 	int i, irq = 0, irq_num = 0;
  
- static int mmp_tdma_remove(struct platform_device *pdev)
- {
-+	if (pdev->dev.of_node)
-+		of_dma_controller_free(pdev->dev.of_node);
-+
- 	return 0;
- }
++	if (op->dev.of_node)
++		of_dma_controller_free(op->dev.of_node);
  
+ 	for (i = 0; i < pdev->dma_channels; i++) {
+ 		if (platform_get_irq(op, i) > 0)
 -- 
 2.24.0
 

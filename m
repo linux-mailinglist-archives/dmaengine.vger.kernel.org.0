@@ -2,104 +2,95 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 82C61100153
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Nov 2019 10:33:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35EFE10077D
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Nov 2019 15:37:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbfKRJd3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 18 Nov 2019 04:33:29 -0500
-Received: from smtp2.axis.com ([195.60.68.18]:34531 "EHLO smtp2.axis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726464AbfKRJd3 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 18 Nov 2019 04:33:29 -0500
-X-Greylist: delayed 432 seconds by postgrey-1.27 at vger.kernel.org; Mon, 18 Nov 2019 04:33:28 EST
-IronPort-SDR: /ZR5xX+73d/C8ro/l/i8tfrG/O4pT9ZCbVHflRFTpnylxq8+Qpgra+nV9eGfx1ngB/G5XziGfW
- +HcDcr3mGC5AwP3aDQLe3IE6pC+5SPJIqljZAymuL5qPdRWDxsJYfK2iuza5RBkvUwQM0jog6Q
- oj0/Bk42qrkA63XsowN8VcCTyFatGZhwP3Ro6O6+RvOcw99SEec6Vi9eRmVRRwUPTfYwkTSGdC
- Aqtwk9d7ETdnLJOaXRMasCWFNUeLgn058RHzk2qwwl2dtKQzxjOqkUN4S417VKPaVuLdtHg+F3
- ccU=
-X-IronPort-AV: E=Sophos;i="5.68,319,1569276000"; 
-   d="scan'208";a="2531062"
-X-Axis-User: NO
-X-Axis-NonUser: YES
-X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     linux@armlinux.org.uk, gregkh@linuxfoundation.org
-Cc:     jslaby@suse.com, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        Vincent Whitchurch <rabinv@axis.com>
-Subject: [PATCH] serial: pl011: Fix DMA ->flush_buffer()
-Date:   Mon, 18 Nov 2019 10:25:47 +0100
-Message-Id: <20191118092547.32135-1-vincent.whitchurch@axis.com>
-X-Mailer: git-send-email 2.20.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726830AbfKROgr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 18 Nov 2019 09:36:47 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42910 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727220AbfKROgq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 18 Nov 2019 09:36:46 -0500
+Received: by mail-pl1-f196.google.com with SMTP id j12so9902485plt.9
+        for <dmaengine@vger.kernel.org>; Mon, 18 Nov 2019 06:36:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=uaGtjQjkiXQCGGVyN/yvfM6hHUAMfrH/0aSuT3FKPok=;
+        b=dXr2HiDHC+WF7WTSzcXRorBdBEEEgGeM1BgutFITl9KcciFzaGe1qDCYMYwb84+f41
+         03kMnArtj/j5dOV+EsvJnXimx88ca6TOO+QRUIkZRfOQlxvI5a2UEKatswHBJ3GeCLr7
+         8EWherCy1ydgUv617d/4Ug6AQgyuVxapZ3LygvUlJPDfqKJms5udKg89pFfN0s0wKuoK
+         /4kFS36KX/dcNP44P4QDJQYRFPMfHq8eUlqr5QWLo2Rjy/b7KSrlH2cp5iW4VK92GJEu
+         RA1W18d7EUWFLhpL58Lew3y3zCchT1+KQMhEDMLFKN1B99zxQSIdzKmzHlp741dtC41t
+         zwfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=uaGtjQjkiXQCGGVyN/yvfM6hHUAMfrH/0aSuT3FKPok=;
+        b=qUAN57Gc9M+jd2DG3nnPOUSwGwnWhtxz+XT6ekFWBAfWQRYt761LAx5TWshK3+bUTK
+         fCJQiLVPhLeDAX5CNjtPulSO4YtScpcx9r99016+4qSNLCuVTQQhru/0h3jb2vko7usw
+         +xgnNT6hknv2MX5LqdVaocJLBNmXlDCq/t3UEfBiT9amAua1l8qnrT0s+nMsMv7+PXPM
+         7fV/hUEaxK9KM+pGUVIGaQ+zd4Ho5ye8U4KYntIxrysMmwVbNMbx4ENtGk3V8gpjOuyB
+         7UvLOoiBPABu7+hHS02ZnyX4a2bd0lzm3IYpYyei4LZfJzAf34q2LvdWXaqJCwCz5CSl
+         dWCw==
+X-Gm-Message-State: APjAAAUQk8ihYhn4I8yV/QAV7m4dSH1rXTjUmVXXPy7s6aCZwlA77YEB
+        Chc45kMmBrX8Lzk1kAzQdmCeOQ==
+X-Google-Smtp-Source: APXvYqxZ54D+VZ1BRTP9UpgguFCizP4ZBPpYz1OoT7BDsD1dW5wa3A5/4dEWw3lEyHmvu/gNNUOCMA==
+X-Received: by 2002:a17:90a:8d0d:: with SMTP id c13mr39718491pjo.68.1574087806084;
+        Mon, 18 Nov 2019 06:36:46 -0800 (PST)
+Received: from localhost.localdomain (1-169-21-101.dynamic-ip.hinet.net. [1.169.21.101])
+        by smtp.gmail.com with ESMTPSA id x10sm21910996pfn.36.2019.11.18.06.36.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 06:36:45 -0800 (PST)
+From:   Green Wan <green.wan@sifive.com>
+Cc:     Green Wan <green.wan@sifive.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dmaengine: sf-pdma: replace /** with /* for non-function comment
+Date:   Mon, 18 Nov 2019 22:35:52 +0800
+Message-Id: <20191118143554.16129-1-green.wan@sifive.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-PL011's ->flush_buffer() implementation releases and reacquires the port
-lock.  Due to a race condition here, data can end up being added to the
-circular buffer but neither being discarded nor being sent out.  This
-leads to, for example, tcdrain(2) waiting indefinitely.
+There are several comments starting from "/**" but not for function
+comment purpose. It causes kernel-doc parsing wrong string. Replace
+"/**" with "/*" to fix them.
 
-Process A                       Process B
-
-uart_flush_buffer()
- - acquire lock
- - circ_clear
- - pl011_flush_buffer()
- -- release lock
- -- dmaengine_terminate_all()
-
-                                uart_write()
-                                - acquire lock
-                                - add chars to circ buffer
-                                - start_tx()
-                                -- start DMA
-                                - release lock
-
- -- acquire lock
- -- turn off DMA
- -- release lock
-
-                                // Data in circ buffer but DMA is off
-
-According to the comment in the code, the releasing of the lock around
-dmaengine_terminate_all() is to avoid a deadlock with the DMA engine
-callback.  However, since the time this code was written, the DMA engine
-API documentation seems to have been clarified to say that
-dmaengine_terminate_all() (in the identically implemented but
-differently named dmaengine_terminate_async() variant) does not wait for
-any running complete callback to be completed and can even be called
-from a complete callback.  So there is no possibility of deadlock if the
-DMA engine driver implements this API correctly.
-
-So we should be able to just remove this release and reacquire of the
-lock to prevent the aforementioned race condition.
-
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Signed-off-by: Green Wan <green.wan@sifive.com>
 ---
- drivers/tty/serial/amba-pl011.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/dma/sf-pdma/sf-pdma.c | 2 +-
+ drivers/dma/sf-pdma/sf-pdma.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-index 3a7d1a66f79c..b0b689546395 100644
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -813,10 +813,8 @@ __acquires(&uap->port.lock)
- 	if (!uap->using_tx_dma)
- 		return;
- 
--	/* Avoid deadlock with the DMA engine callback */
--	spin_unlock(&uap->port.lock);
--	dmaengine_terminate_all(uap->dmatx.chan);
--	spin_lock(&uap->port.lock);
-+	dmaengine_terminate_async(uap->dmatx.chan);
-+
- 	if (uap->dmatx.queued) {
- 		dma_unmap_sg(uap->dmatx.chan->device->dev, &uap->dmatx.sg, 1,
- 			     DMA_TO_DEVICE);
+diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
+index 16fe00553496..e8b9770dcfba 100644
+--- a/drivers/dma/sf-pdma/sf-pdma.c
++++ b/drivers/dma/sf-pdma/sf-pdma.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+-/**
++/*
+  * SiFive FU540 Platform DMA driver
+  * Copyright (C) 2019 SiFive
+  *
+diff --git a/drivers/dma/sf-pdma/sf-pdma.h b/drivers/dma/sf-pdma/sf-pdma.h
+index 55816c9e0249..aab65a0bdfcc 100644
+--- a/drivers/dma/sf-pdma/sf-pdma.h
++++ b/drivers/dma/sf-pdma/sf-pdma.h
+@@ -1,5 +1,5 @@
+ /* SPDX-License-Identifier: GPL-2.0-or-later */
+-/**
++/*
+  * SiFive FU540 Platform DMA driver
+  * Copyright (C) 2019 SiFive
+  *
+
+base-commit: a7e335deed174a37fc6f84f69caaeff8a08f8ff8
 -- 
-2.20.0
+2.17.1
 

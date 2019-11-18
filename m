@@ -2,95 +2,98 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 35EFE10077D
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Nov 2019 15:37:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9618E10077F
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Nov 2019 15:37:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfKROgr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 18 Nov 2019 09:36:47 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42910 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727220AbfKROgq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 18 Nov 2019 09:36:46 -0500
-Received: by mail-pl1-f196.google.com with SMTP id j12so9902485plt.9
-        for <dmaengine@vger.kernel.org>; Mon, 18 Nov 2019 06:36:46 -0800 (PST)
+        id S1726654AbfKROhE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 18 Nov 2019 09:37:04 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33326 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727007AbfKROhE (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 18 Nov 2019 09:37:04 -0500
+Received: by mail-pf1-f193.google.com with SMTP id c184so10499403pfb.0
+        for <dmaengine@vger.kernel.org>; Mon, 18 Nov 2019 06:37:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=uaGtjQjkiXQCGGVyN/yvfM6hHUAMfrH/0aSuT3FKPok=;
-        b=dXr2HiDHC+WF7WTSzcXRorBdBEEEgGeM1BgutFITl9KcciFzaGe1qDCYMYwb84+f41
-         03kMnArtj/j5dOV+EsvJnXimx88ca6TOO+QRUIkZRfOQlxvI5a2UEKatswHBJ3GeCLr7
-         8EWherCy1ydgUv617d/4Ug6AQgyuVxapZ3LygvUlJPDfqKJms5udKg89pFfN0s0wKuoK
-         /4kFS36KX/dcNP44P4QDJQYRFPMfHq8eUlqr5QWLo2Rjy/b7KSrlH2cp5iW4VK92GJEu
-         RA1W18d7EUWFLhpL58Lew3y3zCchT1+KQMhEDMLFKN1B99zxQSIdzKmzHlp741dtC41t
-         zwfA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=mvcfD7jITpqxjPheoMWCVxZTnjlcuW9ormSnkwSOmcw=;
+        b=gx9t8ngLd1CKC2pOlKZxYKX/nb5b9Fla8ZmjaRV/f8hRHqcWzKT0SkQjuOeLUjkKzn
+         bFiG1jbyJFszN6zUVehwdvnzDa7wZFbptFOlC8GAokKRZ3Q+zT4GLa1Dc5f2kvdflX5K
+         +M+f/XLEWA3bayoKRh2Nze4IHteHT7+NASZQ8d29w77i2HMTvYoB2mSW8SALJd3zeKJm
+         SBVQv3hzaaye8Qo/qR4EM4KkduTQLorIhb0ox4uMXRTsllk1x22dGuN2bKMV/fkDCMGp
+         h9eaKaNwdcjjSMo77ClhglL2Ih9Xy7ydV2KvQq7MbYshPYZ3HtTJZIAAQqepUV5ttn64
+         jhnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=uaGtjQjkiXQCGGVyN/yvfM6hHUAMfrH/0aSuT3FKPok=;
-        b=qUAN57Gc9M+jd2DG3nnPOUSwGwnWhtxz+XT6ekFWBAfWQRYt761LAx5TWshK3+bUTK
-         fCJQiLVPhLeDAX5CNjtPulSO4YtScpcx9r99016+4qSNLCuVTQQhru/0h3jb2vko7usw
-         +xgnNT6hknv2MX5LqdVaocJLBNmXlDCq/t3UEfBiT9amAua1l8qnrT0s+nMsMv7+PXPM
-         7fV/hUEaxK9KM+pGUVIGaQ+zd4Ho5ye8U4KYntIxrysMmwVbNMbx4ENtGk3V8gpjOuyB
-         7UvLOoiBPABu7+hHS02ZnyX4a2bd0lzm3IYpYyei4LZfJzAf34q2LvdWXaqJCwCz5CSl
-         dWCw==
-X-Gm-Message-State: APjAAAUQk8ihYhn4I8yV/QAV7m4dSH1rXTjUmVXXPy7s6aCZwlA77YEB
-        Chc45kMmBrX8Lzk1kAzQdmCeOQ==
-X-Google-Smtp-Source: APXvYqxZ54D+VZ1BRTP9UpgguFCizP4ZBPpYz1OoT7BDsD1dW5wa3A5/4dEWw3lEyHmvu/gNNUOCMA==
-X-Received: by 2002:a17:90a:8d0d:: with SMTP id c13mr39718491pjo.68.1574087806084;
-        Mon, 18 Nov 2019 06:36:46 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=mvcfD7jITpqxjPheoMWCVxZTnjlcuW9ormSnkwSOmcw=;
+        b=hL/8NdUvkyDPjr+bWtbXzoOOusSQ3Q2myCNV+CFdtDb8Vkxd9pR2c4NPZrh6Qd4yos
+         FTXDdsWfyWx2UBzkedf+UTiAxFa0W5bm8mgTJhkYFjKGeD59Nw8g7CQL8S3UzeIqBywa
+         zd3TjZxPeRhyncrtiz8x4/iab2IJskj+EvRcIwHMgYLNfqY0SekKFVU+T+ubaLAr59rp
+         zdQyQrt6elQs0BnXwjQyHJ+sZCsJfBGrD/81pDqvDzByrfC8VbDupPL+xj0bjHtgWxbT
+         +e0ZBStpcWmugXPeZD/UCHgE9bikAfSYO17RD2TZ0kBX23DpBMHihOQyU6DQt5VhIY3l
+         ffpg==
+X-Gm-Message-State: APjAAAUTmymRNY1QA0Sgr6K3geCRuw6nPGihX6gM52RnySyON1IbaJ+M
+        z1137sAFEzmMMbY/zHT0doHDLA==
+X-Google-Smtp-Source: APXvYqynVHo9DCmHG04AdxQEaRenl+NyG/k0fpAYb6SsXQrD+cOLuHrcjkW15y7tKXTly3zWYi5gEw==
+X-Received: by 2002:a63:5b0c:: with SMTP id p12mr5854647pgb.196.1574087823195;
+        Mon, 18 Nov 2019 06:37:03 -0800 (PST)
 Received: from localhost.localdomain (1-169-21-101.dynamic-ip.hinet.net. [1.169.21.101])
-        by smtp.gmail.com with ESMTPSA id x10sm21910996pfn.36.2019.11.18.06.36.44
+        by smtp.gmail.com with ESMTPSA id x10sm21910996pfn.36.2019.11.18.06.37.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 06:36:45 -0800 (PST)
+        Mon, 18 Nov 2019 06:37:02 -0800 (PST)
 From:   Green Wan <green.wan@sifive.com>
 Cc:     Green Wan <green.wan@sifive.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] dmaengine: sf-pdma: replace /** with /* for non-function comment
-Date:   Mon, 18 Nov 2019 22:35:52 +0800
-Message-Id: <20191118143554.16129-1-green.wan@sifive.com>
+Subject: [PATCH 2/2] dmaengine: sf-pdma: move macro to header file
+Date:   Mon, 18 Nov 2019 22:35:53 +0800
+Message-Id: <20191118143554.16129-2-green.wan@sifive.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191118143554.16129-1-green.wan@sifive.com>
+References: <20191118143554.16129-1-green.wan@sifive.com>
 To:     unlisted-recipients:; (no To-header on input)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-There are several comments starting from "/**" but not for function
-comment purpose. It causes kernel-doc parsing wrong string. Replace
-"/**" with "/*" to fix them.
+The place where the macro, SF_PDMA_REG_BASE(), is cause kernel-doc
+using wrong function declaration. Move it to header file.
 
 Signed-off-by: Green Wan <green.wan@sifive.com>
 ---
- drivers/dma/sf-pdma/sf-pdma.c | 2 +-
- drivers/dma/sf-pdma/sf-pdma.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/sf-pdma/sf-pdma.c | 1 -
+ drivers/dma/sf-pdma/sf-pdma.h | 2 ++
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
-index 16fe00553496..e8b9770dcfba 100644
+index e8b9770dcfba..465256fe8b1f 100644
 --- a/drivers/dma/sf-pdma/sf-pdma.c
 +++ b/drivers/dma/sf-pdma/sf-pdma.c
-@@ -1,5 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
--/**
-+/*
-  * SiFive FU540 Platform DMA driver
-  * Copyright (C) 2019 SiFive
+@@ -435,7 +435,6 @@ static int sf_pdma_irq_init(struct platform_device *pdev, struct sf_pdma *pdma)
   *
+  * Return: none
+  */
+-#define SF_PDMA_REG_BASE(ch)	(pdma->membase + (PDMA_CHAN_OFFSET * (ch)))
+ static void sf_pdma_setup_chans(struct sf_pdma *pdma)
+ {
+ 	int i;
 diff --git a/drivers/dma/sf-pdma/sf-pdma.h b/drivers/dma/sf-pdma/sf-pdma.h
-index 55816c9e0249..aab65a0bdfcc 100644
+index aab65a0bdfcc..0c20167b097d 100644
 --- a/drivers/dma/sf-pdma/sf-pdma.h
 +++ b/drivers/dma/sf-pdma/sf-pdma.h
-@@ -1,5 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0-or-later */
--/**
-+/*
-  * SiFive FU540 Platform DMA driver
-  * Copyright (C) 2019 SiFive
-  *
-
-base-commit: a7e335deed174a37fc6f84f69caaeff8a08f8ff8
+@@ -57,6 +57,8 @@
+ /* Error Recovery */
+ #define MAX_RETRY					1
+ 
++#define SF_PDMA_REG_BASE(ch)	(pdma->membase + (PDMA_CHAN_OFFSET * (ch)))
++
+ struct pdma_regs {
+ 	/* read-write regs */
+ 	void __iomem *ctrl;		/* 4 bytes */
 -- 
 2.17.1
 

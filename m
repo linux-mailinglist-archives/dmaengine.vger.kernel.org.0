@@ -2,110 +2,104 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EDBD100099
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Nov 2019 09:41:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 82C61100153
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Nov 2019 10:33:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbfKRIlz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 18 Nov 2019 03:41:55 -0500
-Received: from mail-io1-f52.google.com ([209.85.166.52]:41051 "EHLO
-        mail-io1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfKRIlz (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 18 Nov 2019 03:41:55 -0500
-Received: by mail-io1-f52.google.com with SMTP id r144so17753361iod.8
-        for <dmaengine@vger.kernel.org>; Mon, 18 Nov 2019 00:41:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TrJHWfr+LGQ/k5dnM0bN+O+tHzuCMT/6DLGYdaMSND8=;
-        b=ljRcbmCH1Uu3c493sES9cLZsKkgXIjjNvKesBmkWzvwfN1Stw7BgPrNDdq8AtBS6Au
-         cwQ15qTTvEuk1Ajwkf/AuxjesLuaNdUwV00lHUAq1lHtG37/vt9SKG1U89+ZacSYBpsE
-         87qnXFSMj9UEUXxwSNnT2asGqWxkc/EO6wV+VNp5cg5Jpx4j/aBIGegKYwPiAUH224vv
-         c83dyfdpe+Tia0sJFn6VB1Q7cS0dHHRD4mSzYGVnJmL5c/xt/FpA0xPIRGCN0ihIt2fF
-         FM3xilW+n92jSMyQ2qykrhTaLb9DXsNha5t9zRBbvsNdRXNb1udDasKooExWFx7pPwFU
-         gQaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TrJHWfr+LGQ/k5dnM0bN+O+tHzuCMT/6DLGYdaMSND8=;
-        b=qK0mYLfw0aoch2hd5AT2VDa9r6lTh8fm3f+uMPvrFllwpeAtoCTtog4TbO697CatYr
-         4oZ2o3CpB3+K8Aeds8KsWZ81VBXQgwgruy6/twlRkj8KttgyDF1xi75XwlQSMK5KK5no
-         ElnR24dhh5EY2bSxEyDLqwxgnw80Kbx/5t1lHQ/CJnnt5WtmdrJyFLVdbf3NZocKR5uE
-         hZLlhMUcudyMt2H3J++GW6fZJs8l688lvvDCafIF4Z7TJ4purYWQY/EuO4zajUVgRoLu
-         vt94/MLpfQwe+AUge747f5x2vesNr8MDW2toLqXiPPTObwpnMWiA3Ki4a0omMqatEXNn
-         bG1Q==
-X-Gm-Message-State: APjAAAXyyhhGSxRoqKUpkp9WfOrZ3dNORzdE9+xEV6lZfsqDs5Jrswdq
-        1Nw2z/9fx54r/dqT71oh0drg4+NVAvwcUCcbrmzcaFSr
-X-Google-Smtp-Source: APXvYqzp2FZdCeg8vw3Lm3poGe3kOVWCzDxy1qvWc1BZ/R00Fw/AzI5nSWy/iLL4mCDs5++BnjT7eTKVxp11SxDY2C8=
-X-Received: by 2002:a02:a08:: with SMTP id 8mr12289083jaw.98.1574066513456;
- Mon, 18 Nov 2019 00:41:53 -0800 (PST)
+        id S1726490AbfKRJd3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 18 Nov 2019 04:33:29 -0500
+Received: from smtp2.axis.com ([195.60.68.18]:34531 "EHLO smtp2.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726464AbfKRJd3 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 18 Nov 2019 04:33:29 -0500
+X-Greylist: delayed 432 seconds by postgrey-1.27 at vger.kernel.org; Mon, 18 Nov 2019 04:33:28 EST
+IronPort-SDR: /ZR5xX+73d/C8ro/l/i8tfrG/O4pT9ZCbVHflRFTpnylxq8+Qpgra+nV9eGfx1ngB/G5XziGfW
+ +HcDcr3mGC5AwP3aDQLe3IE6pC+5SPJIqljZAymuL5qPdRWDxsJYfK2iuza5RBkvUwQM0jog6Q
+ oj0/Bk42qrkA63XsowN8VcCTyFatGZhwP3Ro6O6+RvOcw99SEec6Vi9eRmVRRwUPTfYwkTSGdC
+ Aqtwk9d7ETdnLJOaXRMasCWFNUeLgn058RHzk2qwwl2dtKQzxjOqkUN4S417VKPaVuLdtHg+F3
+ ccU=
+X-IronPort-AV: E=Sophos;i="5.68,319,1569276000"; 
+   d="scan'208";a="2531062"
+X-Axis-User: NO
+X-Axis-NonUser: YES
+X-Virus-Scanned: Debian amavisd-new at bes.se.axis.com
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     linux@armlinux.org.uk, gregkh@linuxfoundation.org
+Cc:     jslaby@suse.com, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        Vincent Whitchurch <rabinv@axis.com>
+Subject: [PATCH] serial: pl011: Fix DMA ->flush_buffer()
+Date:   Mon, 18 Nov 2019 10:25:47 +0100
+Message-Id: <20191118092547.32135-1-vincent.whitchurch@axis.com>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-References: <20191116082253.mdowmeywwtroo6xt@kili.mountain>
- <CAJivOr7ZaZWzw-5QnOkakmBhN3TidzoM_WwDVpPAsaGp5tMw-Q@mail.gmail.com> <20191118063704.GC1776@kadam>
-In-Reply-To: <20191118063704.GC1776@kadam>
-From:   Green Wan <green.wan@sifive.com>
-Date:   Mon, 18 Nov 2019 16:41:43 +0800
-Message-ID: <CAJivOr5j8uqDhrhY1CY=3i_Ydn0BPGnymP6Cz4G+Er5=y4u=mA@mail.gmail.com>
-Subject: Re: [bug report] dmaengine: sf-pdma: add platform DMA support for
- HiFive Unleashed A00
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     dmaengine@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Dan,
+PL011's ->flush_buffer() implementation releases and reacquires the port
+lock.  Due to a race condition here, data can end up being added to the
+circular buffer but neither being discarded nor being sent out.  This
+leads to, for example, tcdrain(2) waiting indefinitely.
 
-Thanks for the comment. I'd like to do check and fix it. And to be
-honest, I don't use smatch tool to do static analysis. Looks
-interesting. Let me enable it to see how it helps/works.
+Process A                       Process B
 
-Thanks a lot.
+uart_flush_buffer()
+ - acquire lock
+ - circ_clear
+ - pl011_flush_buffer()
+ -- release lock
+ -- dmaengine_terminate_all()
 
+                                uart_write()
+                                - acquire lock
+                                - add chars to circ buffer
+                                - start_tx()
+                                -- start DMA
+                                - release lock
 
+ -- acquire lock
+ -- turn off DMA
+ -- release lock
 
+                                // Data in circ buffer but DMA is off
 
+According to the comment in the code, the releasing of the lock around
+dmaengine_terminate_all() is to avoid a deadlock with the DMA engine
+callback.  However, since the time this code was written, the DMA engine
+API documentation seems to have been clarified to say that
+dmaengine_terminate_all() (in the identically implemented but
+differently named dmaengine_terminate_async() variant) does not wait for
+any running complete callback to be completed and can even be called
+from a complete callback.  So there is no possibility of deadlock if the
+DMA engine driver implements this API correctly.
 
-On Mon, Nov 18, 2019 at 3:36 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
->
-> On Mon, Nov 18, 2019 at 12:25:14PM +0800, Green Wan wrote:
-> > Hi Dan,
-> >
-> > Thanks for reaching out. I do have the same question before. If I
-> > remember it correctly, the 'chan' is returned by to_sf_pdma_chan()
-> > which contains 'dchan'. 'chan' s unlikely to be NULL since it's
-> > container.
->
-> to_sf_pdma_chan() is really a no-op when you read it carefully.  "chan"
-> and "dchan" are equivalent.  Smatch parses it correctly.
->
-> You are obviously correct that people should check the original "dchan"
-> instead of the returned "chan", but I feel like some people are clever
-> enough to know when container_of() is a no-op and deliberately check the
-> returned value...  These are sorts of people you don't want to get into
-> a debate with because they're an ultra annoying blend of clever and
-> dumb.
->
-> My other comment here is that Smatch doesn't warn about inconsistent
-> NULL checking when the pointer is provably non-NULL.  In this case, the
-> only caller that Smatch doesn't parse correctly is ioat_dma_self_test().
-> For all the other callers it knows that "dchan" is non-NULL.  In
-> ioat_dma_self_test() the code looks like:
->
->    330          /* Start copy, using first DMA channel */
->    331          dma_chan = container_of(dma->channels.next, struct dma_chan,
->    332                                  device_node);
->
-> Smatch says that both "dma->channels.next" and "dma_chan" are complete
-> unknowns.
->
-> I could probably safely mark dma_chan as a valid pointer in this
-> instance which would make the warning disappear...  Maybe I will add a
-> check to see if "dma->channels.next" can be controlled by the user.
->
-> regards,
-> dan carpenter
->
+So we should be able to just remove this release and reacquire of the
+lock to prevent the aforementioned race condition.
+
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+---
+ drivers/tty/serial/amba-pl011.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
+index 3a7d1a66f79c..b0b689546395 100644
+--- a/drivers/tty/serial/amba-pl011.c
++++ b/drivers/tty/serial/amba-pl011.c
+@@ -813,10 +813,8 @@ __acquires(&uap->port.lock)
+ 	if (!uap->using_tx_dma)
+ 		return;
+ 
+-	/* Avoid deadlock with the DMA engine callback */
+-	spin_unlock(&uap->port.lock);
+-	dmaengine_terminate_all(uap->dmatx.chan);
+-	spin_lock(&uap->port.lock);
++	dmaengine_terminate_async(uap->dmatx.chan);
++
+ 	if (uap->dmatx.queued) {
+ 		dma_unmap_sg(uap->dmatx.chan->device->dev, &uap->dmatx.sg, 1,
+ 			     DMA_TO_DEVICE);
+-- 
+2.20.0
+

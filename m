@@ -2,91 +2,123 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 547BEFFFA4
-	for <lists+dmaengine@lfdr.de>; Mon, 18 Nov 2019 08:38:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 61121FFFDF
+	for <lists+dmaengine@lfdr.de>; Mon, 18 Nov 2019 08:58:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbfKRHiN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 18 Nov 2019 02:38:13 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42318 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfKRHiM (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 18 Nov 2019 02:38:12 -0500
-Received: by mail-pf1-f194.google.com with SMTP id s5so9950704pfh.9;
-        Sun, 17 Nov 2019 23:38:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xIM6IXRnSxbx7vbbSZ24HqMj6ByTjI4AKAea6u3wZSY=;
-        b=H7q9s83v1qdkEy2VUJmsAMturo6ZKk11J/dTHKeaf3v6FhlU520xsD12CfcS8b7dVT
-         DJiTShyto5IJXqC9v4uZoLNHQHqj8OWgIVjrR0Zu0tPFtYH7X5ah7CDyvL7ATUDkkEwb
-         KAzknfNcYKfTQkBwK5VYnYmGDeQ+LLsgY5/uoaC3cv9ZKZN6RIkAj7AQ4uoJeN1ftJ31
-         F8q1XcZTl8rbHI7jWGWiMSH9Ha4Yt6VpZ3mejMrHdaRpL7eUsgWxYGMVy4Q06ph0UzvE
-         EUkVRFyecbUh2SMHhGOWSYo6cdGSDMiTnwUf09zHwdRG2+gHUjfCnohHQWXjhF6PQW6A
-         liqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xIM6IXRnSxbx7vbbSZ24HqMj6ByTjI4AKAea6u3wZSY=;
-        b=N+wx6WJEmJRVnXvwUZgf1Y7Lk4ubXFv50ro+CTAUd89N/jRPa+MoCqfFPF//bLeDhX
-         T3jv5taDT94S6CLyAvyx+GO/oSwkTkaLbvR1LRJoMfMaiV9jboA6S9LThFgqKFtBsTwQ
-         eaMJCIsVL5ifYkv9OXfDLVsT61cgxsxtNddoXUO9c+rovzB/u+UOgwiOXgnKuXifKpCU
-         WILlfL5jCKrDhXkueV4nNygZy6o6IOMnSaQPYKv8lwjzHirDTHwWfBMriKGLcVTyy0In
-         PBe3VE06l0YozNhTvRtIdTzYMpjck1MGqi9IJOJP3QzIBB8WGJkhH1SQDmDXSUwLIQT2
-         /dDg==
-X-Gm-Message-State: APjAAAWl1rp60jBEipkzEEIIS24qMRB/p8WTxYHwxjidBn7Nn1xwIcje
-        APmdjArKWcqNypFMyttb59s=
-X-Google-Smtp-Source: APXvYqyLuf7/B7U7H2n7DvK597Wu55o4DpuWiaJQay5ukzRAnuAQ2Kw2UWT4V04eu00gc1JfY6NkCA==
-X-Received: by 2002:aa7:8b47:: with SMTP id i7mr33085677pfd.226.1574062692250;
-        Sun, 17 Nov 2019 23:38:12 -0800 (PST)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id f24sm17239479pjp.12.2019.11.17.23.38.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Nov 2019 23:38:11 -0800 (PST)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH 2/2] dmaengine: ti: edma: fix missed failure handling
-Date:   Mon, 18 Nov 2019 15:38:02 +0800
-Message-Id: <20191118073802.28424-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        id S1726328AbfKRH63 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 18 Nov 2019 02:58:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39478 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726317AbfKRH63 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 18 Nov 2019 02:58:29 -0500
+Received: from localhost (unknown [122.167.117.250])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 614B820692;
+        Mon, 18 Nov 2019 07:58:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574063909;
+        bh=2inFxxvwRMGZpWan2xQ1yUu6g4OjzeAlqm+cS029Jkk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GIUOEw9VUPEfCmkeckbz0iSW3JnqhEPwU61x17w/0G6rFiTZPx2+fC8ouwz+klFaS
+         KJEjiSCXf2K+K93SijTnH4ocZ5Lk7Qurup7ZYlavjL8jQJILJ2yahZw4vEp6YVDx3C
+         aA5dJzjJ3CvUtlySWB8/ozLBoAHyHK87Fnzco4nk=
+Date:   Mon, 18 Nov 2019 13:28:21 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Green Wan <green.wan@sifive.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: sf-pdma: fix kernel-doc W=1 warning
+Message-ID: <20191118075821.GA82508@vkoul-mobl>
+References: <20191115031013.30448-1-green.wan@sifive.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191115031013.30448-1-green.wan@sifive.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-When devm_kcalloc fails, it forgets to call edma_free_slot.
-Replace direct return with failure handler to fix it.
+On 15-11-19, 11:10, Green Wan wrote:
+> Fix kernel-doc W=1 warning. There are several comments starting from "/**"
+> but not for function comment purpose. Remove them to fix the warning.
+> Another definition in front of function causes warning. Move definition
+> to header file.
 
-Fixes: 1be5336bc7ba ("dmaengine: edma: New device tree binding")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/dma/ti/edma.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+We do not do these kind of titles for a patch, a patch should have
+subject which describes the changes and we do not mix multiple changes
+into a patch , so..
+> 
+> kernel-doc warning:
+> 
+> drivers/dma/sf-pdma/sf-pdma.c:28: warning: Function parameter or member
+> 	'addr' not described in 'readq'
 
-diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-index 8be32fd9f762..79bc8503cf32 100644
---- a/drivers/dma/ti/edma.c
-+++ b/drivers/dma/ti/edma.c
-@@ -2413,8 +2413,10 @@ static int edma_probe(struct platform_device *pdev)
- 
- 		ecc->tc_list = devm_kcalloc(dev, ecc->num_tc,
- 					    sizeof(*ecc->tc_list), GFP_KERNEL);
--		if (!ecc->tc_list)
--			return -ENOMEM;
-+		if (!ecc->tc_list) {
-+			ret = -ENOMEM;
-+			goto err_reg1;
-+		}
- 
- 		for (i = 0;; i++) {
- 			ret = of_parse_phandle_with_fixed_args(node, "ti,tptcs",
+'describe redq parameter' can be good subject and a patch
+
+> drivers/dma/sf-pdma/sf-pdma.c:438: warning: Function parameter or member
+> 	'ch' not described in 'SF_PDMA_REG_BASE'
+> drivers/dma/sf-pdma/sf-pdma.c:438: warning: Excess function parameter
+> 	'pdma' description in 'SF_PDMA_REG_BASE'
+
+'remove pdma description' can be second patch and subject
+
+> 
+> Changes:
+>  - Replace string '/**' with '/*' not for comment purpose
+>  - Move definition, "SF_PDMA_REG_BASE", fomr sf-pdma.c to sf-pdma.h
+> 
+> Signed-off-by: Green Wan <green.wan@sifive.com>
+> ---
+>  drivers/dma/sf-pdma/sf-pdma.c | 3 +--
+>  drivers/dma/sf-pdma/sf-pdma.h | 4 +++-
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
+> index 16fe00553496..465256fe8b1f 100644
+> --- a/drivers/dma/sf-pdma/sf-pdma.c
+> +++ b/drivers/dma/sf-pdma/sf-pdma.c
+> @@ -1,5 +1,5 @@
+>  // SPDX-License-Identifier: GPL-2.0-or-later
+> -/**
+> +/*
+>   * SiFive FU540 Platform DMA driver
+>   * Copyright (C) 2019 SiFive
+>   *
+> @@ -435,7 +435,6 @@ static int sf_pdma_irq_init(struct platform_device *pdev, struct sf_pdma *pdma)
+>   *
+>   * Return: none
+>   */
+> -#define SF_PDMA_REG_BASE(ch)	(pdma->membase + (PDMA_CHAN_OFFSET * (ch)))
+>  static void sf_pdma_setup_chans(struct sf_pdma *pdma)
+>  {
+>  	int i;
+> diff --git a/drivers/dma/sf-pdma/sf-pdma.h b/drivers/dma/sf-pdma/sf-pdma.h
+> index 55816c9e0249..0c20167b097d 100644
+> --- a/drivers/dma/sf-pdma/sf-pdma.h
+> +++ b/drivers/dma/sf-pdma/sf-pdma.h
+> @@ -1,5 +1,5 @@
+>  /* SPDX-License-Identifier: GPL-2.0-or-later */
+> -/**
+> +/*
+>   * SiFive FU540 Platform DMA driver
+>   * Copyright (C) 2019 SiFive
+>   *
+> @@ -57,6 +57,8 @@
+>  /* Error Recovery */
+>  #define MAX_RETRY					1
+>  
+> +#define SF_PDMA_REG_BASE(ch)	(pdma->membase + (PDMA_CHAN_OFFSET * (ch)))
+> +
+>  struct pdma_regs {
+>  	/* read-write regs */
+>  	void __iomem *ctrl;		/* 4 bytes */
+> 
+> base-commit: a7e335deed174a37fc6f84f69caaeff8a08f8ff8
+> -- 
+> 2.17.1
+
 -- 
-2.24.0
-
+~Vinod

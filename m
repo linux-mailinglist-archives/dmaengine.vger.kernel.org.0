@@ -2,70 +2,104 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 32C321046F2
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Nov 2019 00:26:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CF9410470E
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Nov 2019 00:46:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbfKTX0y (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 20 Nov 2019 18:26:54 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:55652 "EHLO mail.skyhub.de"
+        id S1725936AbfKTXqz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 20 Nov 2019 18:46:55 -0500
+Received: from mga07.intel.com ([134.134.136.100]:19050 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbfKTX0y (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 20 Nov 2019 18:26:54 -0500
-Received: from zn.tnic (p200300EC2F0D8C0040FB9E04CC44F6A0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:8c00:40fb:9e04:cc44:f6a0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 31F9D1EC0A02;
-        Thu, 21 Nov 2019 00:26:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1574292413;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=/XYqnRGAq6RG2RaGU9yxebpQvpxNBGiW9TEKW3oyXbM=;
-        b=lKkjgQ2T4h40tR3ptv2+Ho1zJ71DoGz1OC7Y7iondHIz8kvLm6kBedwzbTyR4uSvpRbh40
-        7CJGlyL06XPdxbchffvVnrrfvKU3JttbS2AeXxJUIt///Hbbq7bUNOY9eRowN8q6ZmMUiz
-        PNA1yyyVk24Zt8TwOx/e0dS1er5Azto=
-Date:   Thu, 21 Nov 2019 00:26:45 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vkoul@kernel.org,
-        dan.j.williams@intel.com, jing.lin@intel.com, ashok.raj@intel.com,
-        sanjay.k.kumar@intel.com, megha.dey@intel.com,
-        jacob.jun.pan@intel.com, yi.l.liu@intel.com, axboe@kernel.dk,
-        akpm@linux-foundation.org, tglx@linutronix.de, mingo@redhat.com,
-        fenghua.yu@intel.com, hpa@zytor.com
+        id S1725878AbfKTXqz (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 20 Nov 2019 18:46:55 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 15:46:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,223,1571727600"; 
+   d="scan'208";a="204980377"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga007.fm.intel.com with ESMTP; 20 Nov 2019 15:46:53 -0800
 Subject: Re: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
  movdir64b CPU instruction
-Message-ID: <20191120232645.GO2634@zn.tnic>
+To:     "Hansen, Dave" <dave.hansen@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>
+Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "hpa@zytor.com" <hpa@zytor.com>
 References: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
  <157428502934.36836.8119026517510193201.stgit@djiang5-desk3.ch.intel.com>
- <20191120215338.GN2634@zn.tnic>
- <20191120231923.GA32680@agluck-desk2.amr.corp.intel.com>
+ <8f860476-24e4-6e03-752b-10a59aed8901@intel.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <7d3ba8bb-fbb6-097c-fa5a-6b3ec21f72e3@intel.com>
+Date:   Wed, 20 Nov 2019 16:46:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191120231923.GA32680@agluck-desk2.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <8f860476-24e4-6e03-752b-10a59aed8901@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 03:19:23PM -0800, Luck, Tony wrote:
-> That's the underlying functionality of the MOVDIR64B instruction. A
-> posted write so no way to know if it succeeded.
 
-So how do you know whether any of the writes went through?
 
-> When using dedicated queues the caller must keep count of how many
-> operations are in flight and not send more than the depth of the
-> queue.
+On 11/20/19 2:50 PM, Hansen, Dave wrote:
+> On 11/20/19 1:23 PM, Dave Jiang wrote:
+>> +static inline void __iowrite512(void __iomem *__dst, const void *src)
+>> +{
+>> +	volatile struct { char _[64]; } *dst = __dst;
+> 
+> This _looks_ like gibberish.  I know it's not, but it is subtle enough
+> that it really needs specific comments.
 
-This way?
+I'll add comments explaining.
 
--- 
-Regards/Gruss,
-    Boris.
+> 
+>> +static inline void iosubmit_cmds512(void __iomem *dst, const void *src,
+>> +				    size_t count)
+>> +{
+>> +	const u8 *from = src;
+>> +	const u8 *end = from + count * 64;
+>> +
+>> +	if (!cpu_has_write512())
+>> +		return;
+>> +
+>> +	while (from < end) {
+>> +		__iowrite512(dst, from);
+>> +		from += 64;
+>> +	}
+>> +}
+> 
+> Won't this silently just drop things if the CPU doesn't have movdir64b
+> support?
+> 
+> It seems like this shouldn't be called at all if
+> !cpu_has_write512(), but wouldn't something like this be mroe appropriate?
+> 
+> 	if (!cpu_has_write512()) {
+> 		WARN_ON_ONCE(1);
+> 		return;
+> 	}
+> 
+> Is the caller just supposed to infer that "dst" was never overwritten?
+> 
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks. I'll add the WARN().

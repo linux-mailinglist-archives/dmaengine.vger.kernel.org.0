@@ -2,28 +2,32 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E94831046EB
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Nov 2019 00:19:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 32C321046F2
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Nov 2019 00:26:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbfKTXTb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 20 Nov 2019 18:19:31 -0500
-Received: from mga06.intel.com ([134.134.136.31]:55062 "EHLO mga06.intel.com"
+        id S1726335AbfKTX0y (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 20 Nov 2019 18:26:54 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:55652 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbfKTXTb (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 20 Nov 2019 18:19:31 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 15:19:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,223,1571727600"; 
-   d="scan'208";a="381539125"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by orsmga005.jf.intel.com with ESMTP; 20 Nov 2019 15:19:24 -0800
-Date:   Wed, 20 Nov 2019 15:19:23 -0800
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
+        id S1725820AbfKTX0y (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 20 Nov 2019 18:26:54 -0500
+Received: from zn.tnic (p200300EC2F0D8C0040FB9E04CC44F6A0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:8c00:40fb:9e04:cc44:f6a0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 31F9D1EC0A02;
+        Thu, 21 Nov 2019 00:26:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574292413;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=/XYqnRGAq6RG2RaGU9yxebpQvpxNBGiW9TEKW3oyXbM=;
+        b=lKkjgQ2T4h40tR3ptv2+Ho1zJ71DoGz1OC7Y7iondHIz8kvLm6kBedwzbTyR4uSvpRbh40
+        7CJGlyL06XPdxbchffvVnrrfvKU3JttbS2AeXxJUIt///Hbbq7bUNOY9eRowN8q6ZmMUiz
+        PNA1yyyVk24Zt8TwOx/e0dS1er5Azto=
+Date:   Thu, 21 Nov 2019 00:26:45 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
 Cc:     Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org, vkoul@kernel.org,
         dan.j.williams@intel.com, jing.lin@intel.com, ashok.raj@intel.com,
@@ -33,71 +37,35 @@ Cc:     Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org,
         fenghua.yu@intel.com, hpa@zytor.com
 Subject: Re: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
  movdir64b CPU instruction
-Message-ID: <20191120231923.GA32680@agluck-desk2.amr.corp.intel.com>
+Message-ID: <20191120232645.GO2634@zn.tnic>
 References: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
  <157428502934.36836.8119026517510193201.stgit@djiang5-desk3.ch.intel.com>
  <20191120215338.GN2634@zn.tnic>
+ <20191120231923.GA32680@agluck-desk2.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191120215338.GN2634@zn.tnic>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191120231923.GA32680@agluck-desk2.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 10:53:39PM +0100, Borislav Petkov wrote:
-> On Wed, Nov 20, 2019 at 02:23:49PM -0700, Dave Jiang wrote:
-> > +static inline void iosubmit_cmds512(void __iomem *dst, const void *src,
-> > +				    size_t count)
-> 
-> An iosubmit function which returns void and doesn't tell its callers
-> whether it succeeded or not? That looks non-optimal to say the least.
+On Wed, Nov 20, 2019 at 03:19:23PM -0800, Luck, Tony wrote:
+> That's the underlying functionality of the MOVDIR64B instruction. A
+> posted write so no way to know if it succeeded.
 
-That's the underlying functionality of the MOVDIR64B instruction. A
-posted write so no way to know if it succeeded. When using dedicated
-queues the caller must keep count of how many operations are in flight
-and not send more than the depth of the queue.
+So how do you know whether any of the writes went through?
 
-> Why isn't there a fallback function which to call when the CPU doesn't
-> support movdir64b?
+> When using dedicated queues the caller must keep count of how many
+> operations are in flight and not send more than the depth of the
+> queue.
 
-This particular driver has no option for fallback. Descriptors can
-only be submitted with MOVDIR64B (to dedicated queues ... in later
-patch series support for shared queues will be added, but those require
-ENQCMD or ENQCMDS to submit).
+This way?
 
-The driver bails out at the beginning of the probe routine if the
-necessary instructions are not supported:
+-- 
+Regards/Gruss,
+    Boris.
 
-+       /*
-+        * If the CPU does not support write512, there's no point in
-+        * enumerating the device. We can not utilize it.
-+        */
-+       if (!cpu_has_write512())
-+               return -ENXIO;
-
-Though we should always get past that as this PCI device ID shouldn't
-every appear on a system that doesn't have the support. Device is on
-the die, not a plug-in card.
-
-> Because then you can use alternative_call() and have the thing work
-> regardless of hardware support for MOVDIR*.
-> 
-> > +{
-> > +	const u8 *from = src;
-> > +	const u8 *end = from + count * 64;
-> > +
-> > +	if (!cpu_has_write512())
-> 
-> If anything, that thing needs to go and you should use
-> 
->   static_cpu_has(X86_FEATURE_MOVDIR64B)
-> 
-> as it looks to me like you would care about speed on this fast path?
-> Yes, no?
-
-That might be a better.
-
--Tony
+https://people.kernel.org/tglx/notes-about-netiquette

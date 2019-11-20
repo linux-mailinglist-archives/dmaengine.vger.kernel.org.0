@@ -2,25 +2,26 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A9831045A3
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Nov 2019 22:24:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09D181045A5
+	for <lists+dmaengine@lfdr.de>; Wed, 20 Nov 2019 22:24:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725936AbfKTVYQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 20 Nov 2019 16:24:16 -0500
-Received: from mga05.intel.com ([192.55.52.43]:31719 "EHLO mga05.intel.com"
+        id S1726836AbfKTVYV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 20 Nov 2019 16:24:21 -0500
+Received: from mga18.intel.com ([134.134.136.126]:10799 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbfKTVYP (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 20 Nov 2019 16:24:15 -0500
+        id S1725819AbfKTVYV (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 20 Nov 2019 16:24:21 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 13:24:14 -0800
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 13:24:20 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,223,1571727600"; 
-   d="scan'208";a="237898627"
+   d="scan'208";a="200878954"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga002.fm.intel.com with ESMTP; 20 Nov 2019 13:24:14 -0800
-Subject: [PATCH RFC 05/14] dmaengine: add dma_request support functions
+  by orsmga008.jf.intel.com with ESMTP; 20 Nov 2019 13:24:19 -0800
+Subject: [PATCH RFC 06/14] dmaengine: add dma request submit and completion
+ path support
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         vkoul@kernel.org
@@ -29,8 +30,8 @@ Cc:     dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
         jacob.jun.pan@intel.com, yi.l.liu@intel.com, axboe@kernel.dk,
         akpm@linux-foundation.org, tglx@linutronix.de, mingo@redhat.com,
         bp@alien8.de, fenghua.yu@intel.com, hpa@zytor.com
-Date:   Wed, 20 Nov 2019 14:24:13 -0700
-Message-ID: <157428505388.36836.6718021856806210449.stgit@djiang5-desk3.ch.intel.com>
+Date:   Wed, 20 Nov 2019 14:24:19 -0700
+Message-ID: <157428505967.36836.2643365866611175344.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
 References: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/unknown-version
@@ -42,254 +43,204 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-In order to provide a lockless submission path, the request context needs
-to be pre-allocated rather than pulling from a memory pool.
-Use the common request allocation call request_from_pages_alloc() to
-accomplish this. The sbitmap code will be used to get the next
-free request context. This is a simplified version of what blk-mq does
-(not sbitmap_queue). The config option DMA_ENGINE_REQUEST is added so that
-only drivers that supports dma request would enable the code.
+There are several issues with the existing dmaengine submission APIs.
+1. A new function pointer is introduced every time a new operation is
+   added.
+2. The whole submission path requires locking and requires multiple API
+   calls with prep+submit+start engine.
+
+A new DMA register function for request based DMA devices is added,
+dma_async_request_device_register(). This allows the checking of parts for
+dma requests that are setup.
+
+A new submission API call that can start an I/O immediately in a single
+call and will be lockless is being introduced. A helper function that
+submits and wait is also added for consumers such as dmatest that will wait
+on the completion of the I/O. And a helper function is added that completes
+the I/O by either calling complete() or envoking the callback depending on
+the setup for submission.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/dma/Kconfig       |    5 ++
- drivers/dma/Makefile      |    1 
- drivers/dma/dma-request.c |   96 +++++++++++++++++++++++++++++++++++++++++++++
- include/linux/dmaengine.h |   57 +++++++++++++++++++++++++++
- 4 files changed, 159 insertions(+)
- create mode 100644 drivers/dma/dma-request.c
+ drivers/dma/dmaengine.c   |   59 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/dmaengine.h |   67 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 126 insertions(+)
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 7af874b69ffb..8885e9d3f363 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -56,6 +56,11 @@ config DMA_OF
- 	depends on OF
- 	select DMA_ENGINE
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index 3c74402f1c34..5b053624f9e3 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -1050,6 +1050,37 @@ static int __dma_async_device_register(struct dma_device *device)
+ 	return 0;
+ }
  
-+config DMA_ENGINE_REQUEST
-+	def_bool n
-+	depends on DMA_ENGINE
-+	select SBITMAP
-+
- #devices
- config ALTERA_MSGDMA
- 	tristate "Altera / Intel mSGDMA Engine"
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index f5ce8665e944..205f343e39fe 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_DMA_ENGINE) += dmaengine.o
- obj-$(CONFIG_DMA_VIRTUAL_CHANNELS) += virt-dma.o
- obj-$(CONFIG_DMA_ACPI) += acpi-dma.o
- obj-$(CONFIG_DMA_OF) += of-dma.o
-+obj-$(CONFIG_DMA_ENGINE_REQUEST) += dma-request.o
- 
- #dmatest
- obj-$(CONFIG_DMATEST) += dmatest.o
-diff --git a/drivers/dma/dma-request.c b/drivers/dma/dma-request.c
-new file mode 100644
-index 000000000000..01390f179107
---- /dev/null
-+++ b/drivers/dma/dma-request.c
-@@ -0,0 +1,96 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/* Copyright(c) 2019 Intel Corporation. All rights reserved.  */
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/mm.h>
-+#include <linux/device.h>
-+#include <linux/dmaengine.h>
-+#include <linux/mempool.h>
-+
-+struct dma_request *dma_chan_alloc_request(struct dma_chan *chan)
++/**
++ * dma_async_request_device_register - registers DMA devices found that
++ *					support DMA requests.
++ * @device: &dma_device
++ */
++int dma_async_request_device_register(struct dma_device *device)
 +{
-+	int nr;
-+	struct dma_request *req;
++	int rc;
 +
-+	nr = sbitmap_get(&chan->sbmap, 0, false);
-+	if (nr < 0)
-+		return NULL;
++	if (!device)
++		return -ENODEV;
 +
-+	req = chan->rqs[nr];
-+	req->rq_private = NULL;
-+	req->callback = NULL;
-+	memset(&req->result, 0, sizeof(struct dmaengine_result));
-+	return req;
-+}
-+EXPORT_SYMBOL_GPL(dma_chan_alloc_request);
++	/* validate device routines */
++	if (!device->dev) {
++		pr_err("DMA device must have dev\n");
++		return -EIO;
++	}
 +
-+void dma_chan_free_request(struct dma_chan *chan, struct dma_request *rq)
-+{
-+	sbitmap_clear_bit(&chan->sbmap, rq->id);
-+}
-+EXPORT_SYMBOL_GPL(dma_chan_free_request);
++	if (!device->device_submit_request) {
++		dev_err(device->dev, "Device has no op defined\n");
++		return -EIO;
++	}
 +
-+void dma_chan_free_request_resources(struct dma_chan *chan)
-+{
-+	request_from_pages_free(&chan->page_list);
-+	kfree(chan->rqs);
-+}
-+EXPORT_SYMBOL_GPL(dma_chan_free_request_resources);
-+
-+static void dma_chan_assign_request(void *ctx, void *ptr, int idx)
-+{
-+	struct dma_chan *chan = (struct dma_chan *)ctx;
-+	struct dma_request *rq = ptr;
-+
-+	chan->rqs[idx] = rq;
-+}
-+
-+int dma_chan_alloc_request_resources(struct dma_chan *chan)
-+{
-+	int i, node, rc, id = 0;
-+	size_t rq_size;
-+
-+	/* Requests are already allocated */
-+	if (chan->rqs)
-+		return 0;
-+
-+	node = dev_to_node(chan->device->dev);
-+	rc = sbitmap_init_node(&chan->sbmap, chan->depth, -1,
-+			       GFP_KERNEL, node);
-+	if (rc < 0)
++	rc = __dma_async_device_register(device);
++	if (rc != 0)
 +		return rc;
 +
-+	chan->rqs = kcalloc_node(chan->depth, sizeof(struct dma_request *),
-+				 GFP_KERNEL, node);
-+	if (!chan->rqs) {
-+		rc = -ENOMEM;
-+		goto fail;
-+	}
-+
-+	INIT_LIST_HEAD(&chan->page_list);
-+
-+	rq_size = round_up(sizeof(struct dma_request) +
-+			chan->max_sgs * sizeof(struct scatterlist),
-+			cache_line_size());
-+
-+	rc = request_from_pages_alloc((void *)chan, chan->depth, rq_size,
-+				      &chan->page_list, 4, node,
-+				      dma_chan_assign_request);
-+	if (rc < 0)
-+		goto fail;
-+
-+	for (i = 0; i < rc; i++) {
-+		struct dma_request *rq = chan->rqs[i];
-+
-+		rq->id = id++;
-+		rq->chan = chan;
-+	}
-+
 +	return 0;
-+
-+ fail:
-+	sbitmap_free(&chan->sbmap);
-+	dma_chan_free_request_resources(chan);
-+	return rc;
 +}
-+EXPORT_SYMBOL_GPL(dma_chan_alloc_request_resources);
++EXPORT_SYMBOL_GPL(dma_async_request_device_register);
++
+ /**
+  * dma_async_device_register - registers DMA devices found
+  * @device: &dma_device
+@@ -1232,6 +1263,34 @@ int dmaenginem_async_device_register(struct dma_device *device)
+ }
+ EXPORT_SYMBOL(dmaenginem_async_device_register);
+ 
++/**
++ * dmaenginem_async_request_device_register - registers DMA devices
++ *					support DMA requests found
++ * @device: &dma_device
++ *
++ * The operation is managed and will be undone on driver detach.
++ */
++int dmaenginem_async_request_device_register(struct dma_device *device)
++{
++	void *p;
++	int ret;
++
++	p = devres_alloc(dmam_device_release, sizeof(void *), GFP_KERNEL);
++	if (!p)
++		return -ENOMEM;
++
++	ret = dma_async_request_device_register(device);
++	if (!ret) {
++		*(struct dma_device **)p = device;
++		devres_add(device->dev, p);
++	} else {
++		devres_free(p);
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL(dmaenginem_async_request_device_register);
++
+ struct dmaengine_unmap_pool {
+ 	struct kmem_cache *cache;
+ 	const char *name;
 diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 0202d44a17a5..7bc8c3f8283f 100644
+index 7bc8c3f8283f..220d241d71ed 100644
 --- a/include/linux/dmaengine.h
 +++ b/include/linux/dmaengine.h
-@@ -12,6 +12,8 @@
- #include <linux/scatterlist.h>
- #include <linux/bitmap.h>
- #include <linux/types.h>
-+#include <linux/sbitmap.h>
-+#include <linux/bvec.h>
- #include <asm/page.h>
- 
- /**
-@@ -176,6 +178,8 @@ struct dma_interleaved_template {
-  * @DMA_PREP_CMD: tell the driver that the data passed to DMA API is command
-  *  data and the descriptor should be in different format from normal
-  *  data descriptors.
-+ *  @DMA_SUBMIT_NONBLOCK: tell the driver do not wait for resources if submit
-+ *  is not possible.
-  */
- enum dma_ctrl_flags {
- 	DMA_PREP_INTERRUPT = (1 << 0),
-@@ -186,6 +190,7 @@ enum dma_ctrl_flags {
- 	DMA_PREP_FENCE = (1 << 5),
- 	DMA_CTRL_REUSE = (1 << 6),
- 	DMA_PREP_CMD = (1 << 7),
-+	DMA_SUBMIT_NONBLOCK = (1 << 8),
+@@ -461,6 +461,7 @@ enum dmaengine_tx_result {
+ 	DMA_TRANS_NOERROR = 0,		/* SUCCESS */
+ 	DMA_TRANS_READ_FAILED,		/* Source DMA read failed */
+ 	DMA_TRANS_WRITE_FAILED,		/* Destination DMA write failed */
++	DMA_TRANS_ERROR,		/* General error not rd/wr */
+ 	DMA_TRANS_ABORTED,		/* Op never submitted / aborted */
  };
  
- /**
-@@ -268,6 +273,13 @@ struct dma_chan {
- 	struct dma_router *router;
- 	void *route_data;
- 
-+	/* DMA request */
-+	int max_sgs;
-+	int depth;
-+	struct sbitmap sbmap;
-+	struct dma_request **rqs;
-+	struct list_head page_list;
+@@ -831,6 +832,10 @@ struct dma_device {
+ 					    dma_cookie_t cookie,
+ 					    struct dma_tx_state *txstate);
+ 	void (*device_issue_pending)(struct dma_chan *chan);
 +
- 	void *private;
++	/* function calls for request API */
++	int (*device_submit_request)(struct dma_chan *chan,
++				     struct dma_request *req);
  };
  
-@@ -511,6 +523,25 @@ struct dma_async_tx_descriptor {
- #endif
- };
- 
-+struct dma_request {
-+	int id;
-+	struct dma_chan *chan;
-+	enum dma_transaction_type cmd;
-+	enum dma_ctrl_flags flags;
-+	struct bio_vec bvec;
-+	dma_addr_t pg_dma;
-+	int sg_nents;
-+	void *rq_private;
-+
-+	/* Set by driver */
-+	dma_async_tx_callback_result callback;
-+	struct dmaengine_result result;
-+	void *callback_param;
-+
-+	/* Leave as last member for flexible array of scatterlist */
-+	struct scatterlist sg[];
-+};
-+
- #ifdef CONFIG_DMA_ENGINE
- static inline void dma_set_unmap(struct dma_async_tx_descriptor *tx,
- 				 struct dmaengine_unmap_data *unmap)
-@@ -1359,6 +1390,32 @@ static inline int dma_get_slave_caps(struct dma_chan *chan,
+ static inline int dmaengine_slave_config(struct dma_chan *chan,
+@@ -1390,6 +1395,66 @@ static inline int dma_get_slave_caps(struct dma_chan *chan,
  }
  #endif
  
-+#ifdef CONFIG_DMA_ENGINE_REQUEST
-+struct dma_request *dma_chan_alloc_request(struct dma_chan *chan);
-+void dma_chan_free_request(struct dma_chan *chan, struct dma_request *rq);
-+void dma_chan_free_request_resources(struct dma_chan *chan);
-+int dma_chan_alloc_request_resources(struct dma_chan *chan);
-+#else
-+static inline struct dma_request *dma_chan_alloc_request(struct dma_chan *chan)
++/* dmaengine_submit_request - helper routine for caller to submit
++ *				a DMA request.
++ * @chan: dma channel context
++ * @req: dma request context
++ */
++static inline int dmaengine_submit_request(struct dma_chan *chan,
++					   struct dma_request *req)
 +{
-+	return NULL;
++	struct dma_device *ddev;
++
++	if (!chan)
++		return -EINVAL;
++
++	ddev = chan->device;
++	if (!ddev->device_submit_request)
++		return -EINVAL;
++
++	return ddev->device_submit_request(chan, req);
 +}
 +
-+static inline void dma_chan_free_request(struct dma_chan *chan,
-+					 struct dma_request *rq)
++/* dmaengine_submit_request_and_wait - helper routine for caller to submit
++ *					a DMA request and wait until
++ *					completion or timeout.
++ * @chan: dma channel context
++ * @req: dma request context
++ * @timeout: time in jiffies to wait for completion timeout. A timeout of 0
++ *		equals to wait indefinitely.
++ */
++static inline int dmaengine_submit_request_and_wait(struct dma_chan *chan,
++						    struct dma_request *req,
++						    int timeout)
 +{
++	int rc;
++	DECLARE_COMPLETION_ONSTACK(done);
++
++	req->rq_private = &done;
++	rc = dmaengine_submit_request(chan, req);
++	if (rc < 0)
++		return rc;
++
++	if (timeout)
++		return wait_for_completion_timeout(&done, timeout);
++
++	wait_for_completion(&done);
++	return 0;
 +}
 +
-+static inline void dma_chan_free_request_resources(struct dma_chan *chan)
++/* dmaengine_request_complete - helper function to complete dma request.
++ *				If callback exists will envoke callback.
++ *
++ * @req - dma request context
++ */
++static inline void dmaengine_request_complete(struct dma_request *req)
 +{
++	if (req->rq_private)
++		complete(req->rq_private);
++	else if (req->callback)
++		req->callback(req->callback_param, &req->result);
 +}
 +
-+static inline int dma_chan_alloc_request_resources(struct dma_chan *chan)
-+{
-+	return -EOPNOTSUPP;
-+}
-+#endif
-+
- #define dma_request_slave_channel_reason(dev, name) dma_request_chan(dev, name)
+ #ifdef CONFIG_DMA_ENGINE_REQUEST
+ struct dma_request *dma_chan_alloc_request(struct dma_chan *chan);
+ void dma_chan_free_request(struct dma_chan *chan, struct dma_request *rq);
+@@ -1454,7 +1519,9 @@ static inline int dmaengine_desc_free(struct dma_async_tx_descriptor *desc)
+ /* --- DMA device --- */
  
- static inline int dmaengine_desc_set_reuse(struct dma_async_tx_descriptor *tx)
+ int dma_async_device_register(struct dma_device *device);
++int dma_async_request_device_register(struct dma_device *device);
+ int dmaenginem_async_device_register(struct dma_device *device);
++int dmaenginem_async_request_device_register(struct dma_device *device);
+ void dma_async_device_unregister(struct dma_device *device);
+ int dma_async_device_channel_register(struct dma_device *device,
+ 				      struct dma_chan *chan);
 

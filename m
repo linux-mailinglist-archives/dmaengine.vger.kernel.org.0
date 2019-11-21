@@ -2,32 +2,27 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 56B6F1050F0
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Nov 2019 11:59:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C822105779
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Nov 2019 17:52:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfKUK7Z (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 21 Nov 2019 05:59:25 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:43724 "EHLO mail.skyhub.de"
+        id S1726293AbfKUQwW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 21 Nov 2019 11:52:22 -0500
+Received: from mga18.intel.com ([134.134.136.126]:23669 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfKUK7Y (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 21 Nov 2019 05:59:24 -0500
-Received: from zn.tnic (p200300EC2F0F07006553A4184595DC73.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:700:6553:a418:4595:dc73])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8E3F31EC0CE5;
-        Thu, 21 Nov 2019 11:59:19 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1574333959;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=QhsFZCXrb1b4ERZRWtn5IkK6bsH9IOyVY2ulQt2IjIg=;
-        b=I1M5VzyS/+wDFhWcVQugJqlf1BgdxtOdJJWBIARqrZG6pXKpqHmawFxdDLSRbG7Q+ew9UC
-        +8jG/8ji9Bb+Fr0kORmuojafVT6cJKxEoNn7lbGQkI/Dz4JeX6vE6MX7BfBfUDQrYNfc7t
-        f5oWVyDDI1wQ2UjrrT1G11rLCHQFWZY=
-Date:   Thu, 21 Nov 2019 11:59:13 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dave Jiang <dave.jiang@intel.com>
+        id S1726279AbfKUQwW (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 21 Nov 2019 11:52:22 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 08:52:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,226,1571727600"; 
+   d="scan'208";a="205204778"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga007.fm.intel.com with ESMTP; 21 Nov 2019 08:52:19 -0800
+Subject: Re: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
+ movdir64b CPU instruction
+To:     Borislav Petkov <bp@alien8.de>
 Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "vkoul@kernel.org" <vkoul@kernel.org>,
@@ -45,47 +40,57 @@ Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
         "mingo@redhat.com" <mingo@redhat.com>,
         "Yu, Fenghua" <fenghua.yu@intel.com>,
         "hpa@zytor.com" <hpa@zytor.com>
-Subject: Re: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
- movdir64b CPU instruction
-Message-ID: <20191121105913.GB6540@zn.tnic>
 References: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
  <157428502934.36836.8119026517510193201.stgit@djiang5-desk3.ch.intel.com>
  <20191120215338.GN2634@zn.tnic>
  <247008b5-6d33-a51b-0caa-7f1991a94dbd@intel.com>
+ <20191121105913.GB6540@zn.tnic>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <ef6bc4a4-b307-9bc4-f3be-f7ab7232d303@intel.com>
+Date:   Thu, 21 Nov 2019 09:52:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <247008b5-6d33-a51b-0caa-7f1991a94dbd@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191121105913.GB6540@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 05:10:41PM -0700, Dave Jiang wrote:
-> I'll add the check on the destination address. The call is modeled after
-> __iowrite64_copy() / __iowrite32_copy() in lib/iomap_copy.c. Looks like
-> those functions do not check for the alignment requirements either.
 
-So just because they don't check, you don't need to check either?
 
-Can you guarantee that all callers will always do the right thing?
-
-I mean, if you don't care too much, why even write "(must be 512-bit
-aligned)"? Who cares then if the data is aligned or not...
-
-> > > + * @dst: destination, in MMIO space (must be 512-bit aligned)
-> > > + * @src: source
-> > > + * @count: number of 512 bits quantities to submit
-> > 
-> > Where's that check on the data?
+On 11/21/19 3:59 AM, Borislav Petkov wrote:
+> On Wed, Nov 20, 2019 at 05:10:41PM -0700, Dave Jiang wrote:
+>> I'll add the check on the destination address. The call is modeled after
+>> __iowrite64_copy() / __iowrite32_copy() in lib/iomap_copy.c. Looks like
+>> those functions do not check for the alignment requirements either.
 > 
-> I don't follow?
+> So just because they don't check, you don't need to check either?
 
-What do you do if the caller doesn't submit data in 512 bits quantities?
+No what I mean was those primitives are missing the checks and we should 
+probably address that at some point.
 
--- 
-Regards/Gruss,
-    Boris.
+> 
+> Can you guarantee that all callers will always do the right thing?
+> 
+> I mean, if you don't care too much, why even write "(must be 512-bit
+> aligned)"? Who cares then if the data is aligned or not...
+> 
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
+>>>> + * @dst: destination, in MMIO space (must be 512-bit aligned)
+>>>> + * @src: source
+>>>> + * @count: number of 512 bits quantities to submit
+>>>
+>>> Where's that check on the data?
+>>
+>> I don't follow?
+> 
+> What do you do if the caller doesn't submit data in 512 bits quantities?
+> 
+
+How would I detect that? Add a size (in bytes) parameter for the total 
+source data?

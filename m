@@ -2,138 +2,82 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C62D4104912
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Nov 2019 04:20:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D1FD10509E
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Nov 2019 11:37:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfKUDTO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 20 Nov 2019 22:19:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60748 "EHLO mail.kernel.org"
+        id S1726197AbfKUKhl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 21 Nov 2019 05:37:41 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:40430 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbfKUDTM (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:19:12 -0500
-Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1726293AbfKUKhk (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 21 Nov 2019 05:37:40 -0500
+Received: from zn.tnic (p200300EC2F0F07006553A4184595DC73.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:700:6553:a418:4595:dc73])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 841ED20721;
-        Thu, 21 Nov 2019 03:19:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574306351;
-        bh=fuKwYNhnEaHwePLWYy4xsWV102lg4SPtdbTJkGFerLo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AbXvEL/J6fGY4IwcGySN2QD28ASDu7NkI8j2eiVglwoIc1FqUKw+TlmZ4qMTyrVAk
-         gaiuK4icHAprAXmuKmXG/+bvlL4jJ7C3/qsc0R+Qvo2r/kKsS/xmW2zi0GTmVbuYYG
-         3ePikbhgmP1/cUDkqfB+cNKpE/ZcUo0wEn1y2OJI=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH v2] dmaengine: Fix Kconfig indentation
-Date:   Thu, 21 Nov 2019 04:19:08 +0100
-Message-Id: <1574306348-29212-1-git-send-email-krzk@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 56EAC1EC0CE8;
+        Thu, 21 Nov 2019 11:37:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574332659;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=my9hQkLlPxW1AW3Gf6LZ+XTRjwwqHQaGN1kMFbCEOqE=;
+        b=Lxe4g4WvUvDvhj0e3y9i6X8rFEb/ZwgPwWLV+22CCGmthpcg/8F/AGemWTGZt97D+ZJisu
+        TMqjdV8iM/oD7CTpIkXqMARMwe9RztOmT93qV8yoK1AXPakLeaa+VWzXLDzvnkz0KQNuR5
+        kbkg6ZBgj+DmK0a7/3FeZqgyjFAlQaY=
+Date:   Thu, 21 Nov 2019 11:37:32 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, Jing Lin <jing.lin@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, Jens Axboe <axboe@kernel.dk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
+ movdir64b CPU instruction
+Message-ID: <20191121103732.GA6540@zn.tnic>
+References: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
+ <157428502934.36836.8119026517510193201.stgit@djiang5-desk3.ch.intel.com>
+ <20191120215338.GN2634@zn.tnic>
+ <20191120231923.GA32680@agluck-desk2.amr.corp.intel.com>
+ <20191120232645.GO2634@zn.tnic>
+ <CAPcyv4gngO04iWuKu2_DV4_AXw5yssd6njTNKF=eKk+YJw3AfQ@mail.gmail.com>
+ <alpine.DEB.2.21.1911210151590.29534@nanos.tec.linutronix.de>
+ <CAPcyv4iSv893n_gri+SC42Wcsr8EOGJfuWYUzi3v-fDnGBSriA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4iSv893n_gri+SC42Wcsr8EOGJfuWYUzi3v-fDnGBSriA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Adjust indentation from spaces to tab (+optional two spaces) as in
-coding style with command like:
-	$ sed -e 's/^        /\t/' -i */Kconfig
+On Wed, Nov 20, 2019 at 05:32:51PM -0800, Dan Williams wrote:
+> True, but that would be a driver coding mistake flagged by the
+> WARN_ON_ONCE, and the failure is static. The driver must check for
+> static_cpu_has(X86_FEATURE_MOVDIR64B) once at init,
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+So if you do that at driver init time, you don't need the static variant
+- simply use boot_cpu_has(). But if this function is going to be used on
+other platforms, then you need the check in the function and it must be
+static_cpu_has() for speed.
 
----
+The static_cpu_has() thing is a soft-of once check anyway because it
+gets patched by alternatives and after that it is 0 overhead.
 
-Changes since v1:
-1. Fix also 7-space and tab+1 space indentation issues.
----
- drivers/dma/Kconfig | 60 ++++++++++++++++++++++++++---------------------------
- 1 file changed, 30 insertions(+), 30 deletions(-)
-
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 03dfee5c66d9..6fa1eba9d477 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -15,19 +15,19 @@ menuconfig DMADEVICES
- 	  be empty in some cases.
- 
- config DMADEVICES_DEBUG
--        bool "DMA Engine debugging"
--        depends on DMADEVICES != n
--        help
--          This is an option for use by developers; most people should
--          say N here.  This enables DMA engine core and driver debugging.
-+	bool "DMA Engine debugging"
-+	depends on DMADEVICES != n
-+	help
-+	  This is an option for use by developers; most people should
-+	  say N here.  This enables DMA engine core and driver debugging.
- 
- config DMADEVICES_VDEBUG
--        bool "DMA Engine verbose debugging"
--        depends on DMADEVICES_DEBUG != n
--        help
--          This is an option for use by developers; most people should
--          say N here.  This enables deeper (more verbose) debugging of
--          the DMA engine core and drivers.
-+	bool "DMA Engine verbose debugging"
-+	depends on DMADEVICES_DEBUG != n
-+	help
-+	  This is an option for use by developers; most people should
-+	  say N here.  This enables deeper (more verbose) debugging of
-+	  the DMA engine core and drivers.
- 
- 
- if DMADEVICES
-@@ -215,28 +215,28 @@ config FSL_EDMA
- 	  This module can be found on Freescale Vybrid and LS-1 SoCs.
- 
- config FSL_QDMA
--       tristate "NXP Layerscape qDMA engine support"
--       depends on ARM || ARM64
--       select DMA_ENGINE
--       select DMA_VIRTUAL_CHANNELS
--       select DMA_ENGINE_RAID
--       select ASYNC_TX_ENABLE_CHANNEL_SWITCH
--       help
--         Support the NXP Layerscape qDMA engine with command queue and legacy mode.
--         Channel virtualization is supported through enqueuing of DMA jobs to,
--         or dequeuing DMA jobs from, different work queues.
--         This module can be found on NXP Layerscape SoCs.
-+	tristate "NXP Layerscape qDMA engine support"
-+	depends on ARM || ARM64
-+	select DMA_ENGINE
-+	select DMA_VIRTUAL_CHANNELS
-+	select DMA_ENGINE_RAID
-+	select ASYNC_TX_ENABLE_CHANNEL_SWITCH
-+	help
-+	 Support the NXP Layerscape qDMA engine with command queue and legacy mode.
-+	 Channel virtualization is supported through enqueuing of DMA jobs to,
-+	 or dequeuing DMA jobs from, different work queues.
-+	 This module can be found on NXP Layerscape SoCs.
- 	  The qdma driver only work on  SoCs with a DPAA hardware block.
- 
- config FSL_RAID
--        tristate "Freescale RAID engine Support"
--        depends on FSL_SOC && !ASYNC_TX_ENABLE_CHANNEL_SWITCH
--        select DMA_ENGINE
--        select DMA_ENGINE_RAID
--        ---help---
--          Enable support for Freescale RAID Engine. RAID Engine is
--          available on some QorIQ SoCs (like P5020/P5040). It has
--          the capability to offload memcpy, xor and pq computation
-+	tristate "Freescale RAID engine Support"
-+	depends on FSL_SOC && !ASYNC_TX_ENABLE_CHANNEL_SWITCH
-+	select DMA_ENGINE
-+	select DMA_ENGINE_RAID
-+	---help---
-+	  Enable support for Freescale RAID Engine. RAID Engine is
-+	  available on some QorIQ SoCs (like P5020/P5040). It has
-+	  the capability to offload memcpy, xor and pq computation
- 	  for raid5/6.
- 
- config IMG_MDC_DMA
 -- 
-2.7.4
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette

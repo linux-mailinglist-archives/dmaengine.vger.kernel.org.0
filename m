@@ -2,102 +2,128 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B32A107606
-	for <lists+dmaengine@lfdr.de>; Fri, 22 Nov 2019 17:53:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 410B6107654
+	for <lists+dmaengine@lfdr.de>; Fri, 22 Nov 2019 18:20:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfKVQxY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 22 Nov 2019 11:53:24 -0500
-Received: from mga05.intel.com ([192.55.52.43]:27190 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbfKVQxY (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 22 Nov 2019 11:53:24 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Nov 2019 08:53:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,230,1571727600"; 
-   d="scan'208";a="205519460"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga007.fm.intel.com with ESMTP; 22 Nov 2019 08:53:23 -0800
-Subject: Re: [PATCH 1/5] dmaengine: Store module owner in dma_device struct
-To:     Vinod Koul <vkoul@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20191022214616.7943-1-logang@deltatee.com>
- <20191022214616.7943-2-logang@deltatee.com>
- <20191109171853.GF952516@vkoul-mobl>
- <3a19f075-6a86-4ace-9184-227f3dc2f2d3@deltatee.com>
- <20191112055540.GY952516@vkoul-mobl>
- <5ca7ef5d-dda7-e36c-1d40-ef67612d2ac4@deltatee.com>
- <20191114045555.GJ952516@vkoul-mobl>
- <fa45de06-089f-367c-7816-2ee040e41d24@deltatee.com>
- <20191122052010.GO82508@vkoul-mobl>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <4c03b5c6-6f25-2753-22b9-7cdcb4f8b527@intel.com>
-Date:   Fri, 22 Nov 2019 09:53:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1726633AbfKVRUv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 22 Nov 2019 12:20:51 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37589 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727124AbfKVRUv (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 22 Nov 2019 12:20:51 -0500
+Received: by mail-oi1-f194.google.com with SMTP id y194so7162967oie.4
+        for <dmaengine@vger.kernel.org>; Fri, 22 Nov 2019 09:20:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fN9Q7xWO0FbuGOg0ZLM+ialJgn3N+fh3qmMRWr4AQ6U=;
+        b=LemNwUSKL4Zq/wre+tl5MbDnUNuFV8wVTA/PzNJt4iFC1YfvZzAWiNNG2hmkKZsyVk
+         Ux0I9Hv8eN3hO/xU/RkQa//cWiL99jSy8YQpwI9kXWbGUA5uIuTb8mgjlJ4U+zXNTbl9
+         FbCDtaokZgJu9yVGkDkDj0hC8g6O4gN4AJ87hdzrvps3ENE4IFRcF7ppAFebtWnSDyZV
+         TgYPhansYSrM2FKPG2oiKnKP/uaBzJjiJWHHGsHNCce2uGWUekNod7gNDEYxS7lEiABy
+         ciYc+BEo447C39/mxTGF12eKz6OdAdPNvEdZKod+fnIs2gaKY3mBzxZn4TlNmB42luUc
+         rQYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fN9Q7xWO0FbuGOg0ZLM+ialJgn3N+fh3qmMRWr4AQ6U=;
+        b=LvX4ozbavJu7iFERnWFtQ53VgiEM/RM628fvUO0smo5KfciAQEHWbh/Ik4LaYsBxIe
+         p1yBVqXVgUKR3duR0K2iC1sq71ukcsCLOdDBRybugg7g0opSvvMSUYFhDoMpMxY0+Vs0
+         o72+855UgQPHOo4zkKe+wNYMdeEX4Ha6xaQsTlWXN2WJA7bu+jBmI1+BvrHBW7KUnwLi
+         +bCwIdyG6jVexHBNtBWIseu0srbxgr8a3/Om81RyQDB0ch51h3YX+/WEBxw2YkXHOYzM
+         uPpt7fhi/yHyGlTUYsh1E4uXwkBgZhPUiiOV5xhEGrfMN+qw5deg31EYZ3A0f1IwpHS5
+         o0Qw==
+X-Gm-Message-State: APjAAAWRFkSFmu8llJcjxjZlXPG32p+z94KcrmIQRfN8IzOEdBlFUind
+        uNQNyJWQ2p+v498Da1NDAKnWocXt6syNBnyngpVZgg==
+X-Google-Smtp-Source: APXvYqwhIC9vQ8yjpEDPT9U3Y2BSJTtNQkNiL/hHwJTZOR5pP0KAc6amfY2OBoTPfD1k9znhgvRcAOCxr3xuGAnF1I8=
+X-Received: by 2002:aca:3c1:: with SMTP id 184mr12377716oid.70.1574443250004;
+ Fri, 22 Nov 2019 09:20:50 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191122052010.GO82508@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
+ <157428502934.36836.8119026517510193201.stgit@djiang5-desk3.ch.intel.com>
+ <20191120215338.GN2634@zn.tnic> <247008b5-6d33-a51b-0caa-7f1991a94dbd@intel.com>
+ <20191121105913.GB6540@zn.tnic> <ef6bc4a4-b307-9bc4-f3be-f7ab7232d303@intel.com>
+ <20191122085953.GA6289@zn.tnic>
+In-Reply-To: <20191122085953.GA6289@zn.tnic>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 22 Nov 2019 09:20:39 -0800
+Message-ID: <CAPcyv4isyT3FOPARBc8cSANbRWjhAsJrZTkT-fYivPZZJzF=tw@mail.gmail.com>
+Subject: Re: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
+ movdir64b CPU instruction
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Dave Jiang <dave.jiang@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "hpa@zytor.com" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On Fri, Nov 22, 2019 at 1:00 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Thu, Nov 21, 2019 at 09:52:19AM -0700, Dave Jiang wrote:
+> > No what I mean was those primitives are missing the checks and we should
+> > probably address that at some point.
+>
+> Oh, patches are always welcome! :)
+>
+> > How would I detect that? Add a size (in bytes) parameter for the total
+> > source data?
+>
+> Sure.
+>
+> So, here's the deal: the more I look at this thing, the more I think
+> this iosubmit_cmds512() function should not be in a generic header but
+> in an intel-/driver-specific one. Why?
+>
+> Well, movdir64b is Intel-only for now, you don't have a fallback
+> option for the platforms which do not support that insn and it is more
+> preferential for you to do the feature check once at driver init and
+> then call the function because you *know* you have movdir64b support
+> and not have any feature check in the function itself, not even a fast
+> static_cpu_has() one.
+>
+> And this way you can do away with alignment and size checks because you
+> control what your driver does.
+>
+> If it turns out that this function needs to be shared with other
+> platforms, then we can consider lifting it into a generic header and
+> making it more generic.
+>
+> Ok?
 
+I do agree that iosubmit_cmds512() can live in a driver specific
+header, and it was my fault for advising Dave to make it generic. The
+long story of how that came to pass below, but the short story is yes,
+lets just make this one driver specific.
 
-On 11/21/19 10:20 PM, Vinod Koul wrote:
-> On 14-11-19, 10:03, Logan Gunthorpe wrote:
->>
->>
->> On 2019-11-13 9:55 p.m., Vinod Koul wrote:
->>>> But that's the problem. We can't expect our users to be "nice" and not
->>>> unbind when the driver is in use. Killing the kernel if the user
->>>> unexpectedly unbinds is not acceptable.
->>>
->>> And that is why we review the code and ensure this does not happen and
->>> behaviour is as expected
->>
->> Yes, but the current code can kill the kernel when the driver is unbound.
->>
->>>>>> I suspect this is less of an issue for most devices as they wouldn't
->>>>>> normally be unbound while in use (for example there's really no reason
->>>>>> to ever unbind IOAT seeing it's built into the system). Though, the fact
->>>>>> is, the user could unbind these devices at anytime and we don't want to
->>>>>> panic if they do.
->>>>>
->>>>> There are many drivers which do modules so yes I am expecting unbind and
->>>>> even a bind following that to work
->>>>
->>>> Except they will panic if they unbind while in use, so that's a
->>>> questionable definition of "work".
->>>
->>> dmaengine core has module reference so while they are being used they
->>> won't be removed (unless I complete misread the driver core behaviour)
->>
->> Yes, as I mentioned in my other email, holding a module reference does
->> not prevent the driver from being unbound. Any driver can be unbound by
->> the user at any time without the module being removed.
-> 
-> That sounds okay then.
+The long story is that there is already line of sight for a need for
+other generic movdir64b() helpers as mentioned in the changelog, and
+iosubmit_cmds512() got wrapped up in that momentum.
 
-I'm actually glad Logan is putting some work in addressing this. I also 
-ran into the same issue as well dealing with unbinds on my new driver.
+For those cases the thought would be to have memset512() for case1 and
+__iowrite512_copy() for case3. Where memset512() writes a
+non-incrementing source to an incrementing destination, and
+__iowrite512_copy() copies an incrementing source to an incrementing
+destination. Those 2 helpers *would* have fallbacks, but with the
+option to use something like cpu_has_write512() to check in advance
+whether those routines will fallback, or not.
 
->>
->> Essentially, at any time, a user can do this:
->>
->> echo 0000:83:00.4 > /sys/bus/pci/drivers/plx_dma/unbind
->>
->> Which will call plx_dma_remove() regardless of whether anyone has a
->> reference to the module, and regardless of whether the dma channel is
->> currently in use. I feel it is important that drivers support this
->> without crashing, and my plx_dma driver does the correct thing here.
->>
->> Logan
-> 
+That can be a discussion for a future patchset when those users arrive.

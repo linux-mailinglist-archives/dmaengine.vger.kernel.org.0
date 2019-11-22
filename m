@@ -2,95 +2,121 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C822105779
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Nov 2019 17:52:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 42F7A105F61
+	for <lists+dmaengine@lfdr.de>; Fri, 22 Nov 2019 06:06:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbfKUQwW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 21 Nov 2019 11:52:22 -0500
-Received: from mga18.intel.com ([134.134.136.126]:23669 "EHLO mga18.intel.com"
+        id S1726018AbfKVFGu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 22 Nov 2019 00:06:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbfKUQwW (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:52:22 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 08:52:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,226,1571727600"; 
-   d="scan'208";a="205204778"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga007.fm.intel.com with ESMTP; 21 Nov 2019 08:52:19 -0800
-Subject: Re: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
- movdir64b CPU instruction
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "hpa@zytor.com" <hpa@zytor.com>
-References: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
- <157428502934.36836.8119026517510193201.stgit@djiang5-desk3.ch.intel.com>
- <20191120215338.GN2634@zn.tnic>
- <247008b5-6d33-a51b-0caa-7f1991a94dbd@intel.com>
- <20191121105913.GB6540@zn.tnic>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <ef6bc4a4-b307-9bc4-f3be-f7ab7232d303@intel.com>
-Date:   Thu, 21 Nov 2019 09:52:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1726248AbfKVFGu (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:06:50 -0500
+Received: from localhost (unknown [171.61.94.63])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D6B82068E;
+        Fri, 22 Nov 2019 05:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574399209;
+        bh=o9P+CVnroeoeDkGZ+LQ16OPYhmH/QzjmVRjx/5JnAL8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YN+4aXsR/BUW7qoSgA3XoVlN2adRpnGpvvqamoVtbMt5egAYIfqbBn1kVrG8VbhgG
+         ei56tZpdkKvB3SpLzzGmSyVSN2OzoVkeisNubyhnQwa0sF1qjSfQdhmQ+dzrvK/dNa
+         3PmARuGyKD7z/K1Abqmy3SixFKUfDIp9O+O0ZjF8=
+Date:   Fri, 22 Nov 2019 10:36:43 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Alexander Gordeev <a.gordeev.box@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH RFC v5 2/2] dmaengine: avalon-test: Intel Avalon-MM DMA
+ Interface for PCIe test
+Message-ID: <20191122050643.GM82508@vkoul-mobl>
+References: <cover.1573052725.git.a.gordeev.box@gmail.com>
+ <948f34471b74a8a20747311cc1d7733d00d77645.1573052725.git.a.gordeev.box@gmail.com>
+ <20191114050331.GL952516@vkoul-mobl>
+ <20191114155331.GA19187@AlexGordeev-DPL-IR1335>
 MIME-Version: 1.0
-In-Reply-To: <20191121105913.GB6540@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114155331.GA19187@AlexGordeev-DPL-IR1335>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 11/21/19 3:59 AM, Borislav Petkov wrote:
-> On Wed, Nov 20, 2019 at 05:10:41PM -0700, Dave Jiang wrote:
->> I'll add the check on the destination address. The call is modeled after
->> __iowrite64_copy() / __iowrite32_copy() in lib/iomap_copy.c. Looks like
->> those functions do not check for the alignment requirements either.
+On 14-11-19, 16:53, Alexander Gordeev wrote:
+> On Thu, Nov 14, 2019 at 10:33:31AM +0530, Vinod Koul wrote:
+> > On 06-11-19, 20:22, Alexander Gordeev wrote:
+> > > This is a sample implementation of a driver using "avalon-dma" to
+> > > perform data transfers between target device memory and system memory:
+> > > 
+> > >     +----------+    +----------+            +----------+
+> > >     |   RAM    |<-->|  Avalon  |<---PCIe--->|   Host   |
+> > >     +----------+    +----------+            +----------+
+> > >
+> > > The target device is expected to use only Avalon-MM DMA Interface for
+> > > PCIe to initiate DMA transactions - without custom hardware specifics
+> > > to make such transfers possible.
+> > > 
+> > > Unlike "dmatest" driver, the contents of DMAed data is not manipulated by
+> > > "avalon-test" in any way. It is basically pass-through and the the data
+> > > are fully dependent on the target device implementation. Thus, it is up
+> > > to the users to analyze received or provide meaningful transmitted data.
+> > 
+> > Is this the only reason why you have not used dmatest. If so, why not
+> > add the feature to dmatest to optionally not check the DMAed data
+> > contents?
 > 
-> So just because they don't check, you don't need to check either?
+> The main reason is that "dmatest" does not support DMA_SLAVE type of
+> transactions.
 
-No what I mean was those primitives are missing the checks and we should 
-probably address that at some point.
+That is correct, but it can be added!
 
-> 
-> Can you guarantee that all callers will always do the right thing?
-> 
-> I mean, if you don't care too much, why even write "(must be 512-bit
-> aligned)"? Who cares then if the data is aligned or not...
-> 
+> I considered adding DMA_SLAVE to "dmatest". But it would break the 
+> current neat design and does not appear solving the issue of data
+> verification. Simply besause in general DMA_SLAVE case there is no
 
+Am not sure why it break the current design. We have to skip the
+verification part. It would not only help you but also other to have
+this support in dmatest
 
->>>> + * @dst: destination, in MMIO space (must be 512-bit aligned)
->>>> + * @src: source
->>>> + * @count: number of 512 bits quantities to submit
->>>
->>> Where's that check on the data?
->>
->> I don't follow?
-> 
-> What do you do if the caller doesn't submit data in 512 bits quantities?
-> 
+> data integrity criteria easily available to the driver. I.e if the
+> data is a sensor image then verifying it in the driver would be
+> pointless.
 
-How would I detect that? Add a size (in bytes) parameter for the total 
-source data?
+The biggest issue with slave and dmatest is how to setup slave
+
+> So in case of "avalon-test" I offloaded the task of data verification
+> to the user. The driver itself just streams user data to/from device.
+> 
+> In fact, this approach is not "avalon-dma" specific and could be used
+> with any "dmaengine" compatible driver. Moreover, it would be quite
+> useful for bringing up devices in embedded systems. I.e one could
+> master a raw display frame in user space and DMA it via the driver -
+> without graphic stack involved.
+
+Right and having it in dmatest makes more sense for everyone :)
+
+> The only missing functionality I could think of is using DMABUFs, but that
+> is very easy to add.
+> 
+> Actually, "avalon-test" is rather a presentation of how I tested
+> "avalon-dma". I understand "dmatest" is more easy to trust and I could
+> probably make it working with DMA_SLAVE type. But that would entail
+> hardware design requirements:
+> 
+>   - DMA slave should both respond to read and write transactions;
+>   - data read should always be the same as data written;
+> 
+> I have such version of hardware design, but I doubt majorify of devices
+> out there can honor the above requirements. 
+> 
+> Summarizing - I would suggest not to change "dmatest" and bring in a
+> generalized version of "avalon-test" if you find it useful for a wider
+> audience.
+
+I would still think adding to dmatest makes more sense!
+
+-- 
+~Vinod

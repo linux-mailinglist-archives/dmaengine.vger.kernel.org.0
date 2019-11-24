@@ -2,188 +2,78 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AAD3108202
-	for <lists+dmaengine@lfdr.de>; Sun, 24 Nov 2019 06:29:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CE0D10836D
+	for <lists+dmaengine@lfdr.de>; Sun, 24 Nov 2019 14:29:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725810AbfKXF3J (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 24 Nov 2019 00:29:09 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37871 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfKXF3J (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 24 Nov 2019 00:29:09 -0500
-Received: by mail-pg1-f195.google.com with SMTP id b10so5448262pgd.4;
-        Sat, 23 Nov 2019 21:29:08 -0800 (PST)
+        id S1726797AbfKXN3R (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 24 Nov 2019 08:29:17 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33676 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726740AbfKXN3R (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 24 Nov 2019 08:29:17 -0500
+Received: by mail-io1-f66.google.com with SMTP id j13so13218397ioe.0
+        for <dmaengine@vger.kernel.org>; Sun, 24 Nov 2019 05:29:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ON5n9I/25k32O1A/2D3MIyo2BlxDNMBzybIh7RG8xz8=;
-        b=ovCu849udwskipv9/n1UhD8x9SQztBcID0T7scQUYgV/Oqa9t9ykaT5HLGPaH2OfbT
-         iyXIL9hLJ+W4msEziMmzJsDwGEnQoQHZaQxdOJe3qY8OTBhbSZM4K8dGrg4zqN5EW2Ds
-         xySz8L3x/m2cnLnOVjyW4SqeYEZuIXK7hIxrhZAB13CNQgVFex2YyqCg0Nqqg7zSsPzP
-         KQJWNl+6OR9b7UmAW8JG/nFkmK1Dmw/+/hMxRILeHz4aZLVhzNZiGHR+kq7tH7hxdj30
-         4fk6XbUxGUCqzbKE/ZHMG8GoIdA58IEt2++duGOKMGZTet3ZGg6pnLPTuB6748RUZ7mM
-         qrag==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=pI7cV3FDgc1XH+A619u5I2fUvKpFMBjQiQlWPO2Scvc=;
+        b=qx8DLDlWc8NNSIaydIiQKW7g0h9GmT8nEzXndlUAjmX5dBsr7C0B6FNps0lTI16YvZ
+         h04AKYIBw4KismPVKYPlMp61YCmfWnXjGgsBmYdNYG9iHA5AWjdJ+/8+UwI0zahBbkuS
+         sdHGMuuuLUVpBlRIXNRN0g31BGVLpymAYNOUwq2thVcH6jbNZgMR0OWh4BNogWUnbWeM
+         CnAPqyL8u3V6fACdQqYj5cGHh6QHNnCZ8xw5O6rG4ixnaeP9EEGVboYIX6Y2UxX7l1Q2
+         bfI/uEHl7MFPdMyRtCdUHbUKD99VlzOL6vztUMi6yhJyYCXhbS+7ZhxpvdFnpY8lVh2v
+         v3oA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ON5n9I/25k32O1A/2D3MIyo2BlxDNMBzybIh7RG8xz8=;
-        b=mn3QJMMuiDuF4dYn8M/nHJxatBg0B7BUP1rvz3flUKFcX3SH1FyG5dtNyRmUcgIBfq
-         oextaWePwgkFONYI/846eLhIOBXLPuwzIRwlY1AVOCRvmXKzQ9O31kRIjhFTe1BJlpe9
-         jLoNVQ5XxaXNpqHsakc412FsGXvHPo9LP/Xrj27N6WRuY78FZPTZRHeyoHu/HjAq7dg/
-         pWIE3GhJTARADED6K//a574mf+wOCrT/E2gOxNYBc7OTOFfTCXX2A37fa76ONVsld5ME
-         49f1L9FgdmoqAl5FX6d1pKqOINKWl/ADRYCu5rGU26vo4F+/f1h2/uxEnFRIwEyhJppJ
-         asmQ==
-X-Gm-Message-State: APjAAAXKP9i76EaZ+9/GxynnuH+upsOfmQT/dYsSIeRXBlYv3H9LtgCD
-        N8WjB1MlkSiSU3ZHg3qLCk0=
-X-Google-Smtp-Source: APXvYqzY/4pwBvAuCjFLW6iGX4cS5O5pnbcB2MKCL8mSMp5arnvtk+SQTE1PdNAwdvov+JskFcDtcg==
-X-Received: by 2002:a62:140d:: with SMTP id 13mr26312229pfu.79.1574573348284;
-        Sat, 23 Nov 2019 21:29:08 -0800 (PST)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id w2sm3453358pfj.22.2019.11.23.21.29.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 Nov 2019 21:29:07 -0800 (PST)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] dmaengine: ti: edma: add missed operations
-Date:   Sun, 24 Nov 2019 13:28:55 +0800
-Message-Id: <20191124052855.6472-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=pI7cV3FDgc1XH+A619u5I2fUvKpFMBjQiQlWPO2Scvc=;
+        b=mHimgeNye80ZFAQf51sveeffCERjbJ2SRzGUayRGEWdk2wtaZ7mkV3ER9riymz+XY+
+         bgZitS0ptLc4mTCaaEL9DtCmx68NToxR2C+uM0irA5XbW68bb9wt80mv+O6Jrbpt+G7n
+         ZfwXOMejMUS9QPAFlnjn1rs5GneEOqJMspfxBndr1wsW4WizcYVAzoFavq/JDImA3det
+         dL91elLUuWEs/sl8EIaNxaN6POop6XhPR/1dmi02DjSRrqR/q2blDETlfrVjNaZ/k7r4
+         G0C1Qe9VwojmfODgHLpSYrrYNM/R9LSMUYaXw5wlpcISFn2he6RJrfSkOOn2SHi2XR8x
+         9zbw==
+X-Gm-Message-State: APjAAAV0glL50mW3uEK6UR/w0lueuSAKMdxaqsQNS93qzolAaCL4Ycde
+        hBoI8s3sqYC7gAfdlzGXSqcMKUEMFVZmJ+Z4lp4=
+X-Google-Smtp-Source: APXvYqybx2/dgBiAWbOdq2vR9EEcolLI5DF5fgJLg1i9ud7rdMKBKVVjyFq8kpteGpC8DkYv21Lm3zDnyNNkk8NIqho=
+X-Received: by 2002:a05:6602:251a:: with SMTP id i26mr21555562ioe.302.1574602154837;
+ Sun, 24 Nov 2019 05:29:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Received: by 2002:a4f:4fd0:0:0:0:0:0 with HTTP; Sun, 24 Nov 2019 05:29:14
+ -0800 (PST)
+Reply-To: afginvestmentbrokers@al-faisaliah.org
+From:   "Mr. Joon-Kyu Lin" <johnpfox60@gmail.com>
+Date:   Sun, 24 Nov 2019 05:29:14 -0800
+Message-ID: <CAHLmmYOYTB_fENaVKB_mmR1SNF1OH-=yZCuin3NR32Nkz5z4+A@mail.gmail.com>
+Subject: Venture Capital & Private Investors
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The driver forgets to call pm_runtime_disable and pm_runtime_put_sync in
-probe failure and remove.
-Add the calls and modify probe failure handling to fix it.
+Attention:
 
-To simplify the fix, the patch adjusts the calling order and merges checks
-for devm_kcalloc.
+I am an investor that can provide funding for any viable business idea or
+venture.
 
-Fixes: 2b6b3b742019 ("ARM/dmaengine: edma: Merge the two drivers under drivers/dma/")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v2:
-  - Add the missed pm_runtime_put_sync.
-  - Simplify the patch.
-  - Rebase to dma-next.
+Please do let me know if you have fund management abilities, credible
+projects in need of funding or advanced stage projects requiring Bank
+Guarantees, Loans or Partnership, Joint Venture, Equity, we would be
+delighted to work with you.
 
- drivers/dma/ti/edma.c | 37 ++++++++++++++++++++-----------------
- 1 file changed, 20 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-index 756a3c951dc7..0628ee4bf1b4 100644
---- a/drivers/dma/ti/edma.c
-+++ b/drivers/dma/ti/edma.c
-@@ -2289,13 +2289,6 @@ static int edma_probe(struct platform_device *pdev)
- 	if (!info)
- 		return -ENODEV;
- 
--	pm_runtime_enable(dev);
--	ret = pm_runtime_get_sync(dev);
--	if (ret < 0) {
--		dev_err(dev, "pm_runtime_get_sync() failed\n");
--		return ret;
--	}
--
- 	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
- 	if (ret)
- 		return ret;
-@@ -2326,27 +2319,31 @@ static int edma_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, ecc);
- 
-+	pm_runtime_enable(dev);
-+	ret = pm_runtime_get_sync(dev);
-+	if (ret < 0) {
-+		dev_err(dev, "pm_runtime_get_sync() failed\n");
-+		pm_runtime_disable(dev);
-+		return ret;
-+	}
-+
- 	/* Get eDMA3 configuration from IP */
- 	ret = edma_setup_from_hw(dev, info, ecc);
- 	if (ret)
--		return ret;
-+		goto err_disable_pm;
- 
- 	/* Allocate memory based on the information we got from the IP */
- 	ecc->slave_chans = devm_kcalloc(dev, ecc->num_channels,
- 					sizeof(*ecc->slave_chans), GFP_KERNEL);
--	if (!ecc->slave_chans)
--		return -ENOMEM;
- 
- 	ecc->slot_inuse = devm_kcalloc(dev, BITS_TO_LONGS(ecc->num_slots),
- 				       sizeof(unsigned long), GFP_KERNEL);
--	if (!ecc->slot_inuse)
--		return -ENOMEM;
- 
- 	ecc->channels_mask = devm_kcalloc(dev,
- 					   BITS_TO_LONGS(ecc->num_channels),
- 					   sizeof(unsigned long), GFP_KERNEL);
--	if (!ecc->channels_mask)
--		return -ENOMEM;
-+	if (!ecc->slave_chans || !ecc->slot_inuse || !ecc->channels_mask)
-+		goto err_disable_pm;
- 
- 	/* Mark all channels available initially */
- 	bitmap_fill(ecc->channels_mask, ecc->num_channels);
-@@ -2388,7 +2385,7 @@ static int edma_probe(struct platform_device *pdev)
- 				       ecc);
- 		if (ret) {
- 			dev_err(dev, "CCINT (%d) failed --> %d\n", irq, ret);
--			return ret;
-+			goto err_disable_pm;
- 		}
- 		ecc->ccint = irq;
- 	}
-@@ -2404,7 +2401,7 @@ static int edma_probe(struct platform_device *pdev)
- 				       ecc);
- 		if (ret) {
- 			dev_err(dev, "CCERRINT (%d) failed --> %d\n", irq, ret);
--			return ret;
-+			goto err_disable_pm;
- 		}
- 		ecc->ccerrint = irq;
- 	}
-@@ -2412,7 +2409,8 @@ static int edma_probe(struct platform_device *pdev)
- 	ecc->dummy_slot = edma_alloc_slot(ecc, EDMA_SLOT_ANY);
- 	if (ecc->dummy_slot < 0) {
- 		dev_err(dev, "Can't allocate PaRAM dummy slot\n");
--		return ecc->dummy_slot;
-+		ret = ecc->dummy_slot;
-+		goto err_disable_pm;
- 	}
- 
- 	queue_priority_mapping = info->queue_priority_mapping;
-@@ -2512,6 +2510,9 @@ static int edma_probe(struct platform_device *pdev)
- 
- err_reg1:
- 	edma_free_slot(ecc, ecc->dummy_slot);
-+err_disable_pm:
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
- 	return ret;
- }
- 
-@@ -2542,6 +2543,8 @@ static int edma_remove(struct platform_device *pdev)
- 	if (ecc->dma_memcpy)
- 		dma_async_device_unregister(ecc->dma_memcpy);
- 	edma_free_slot(ecc, ecc->dummy_slot);
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
- 
- 	return 0;
- }
--- 
-2.24.0
+Best Regards,
+Mr. Joon-Kyu Lim
+Al Faisaliah Group (AFG)
+Venture Capital & Private Investors
 
+--
+*This email and any attachments are intended for the named recipients only
+and contain confidential materials. Any unauthorized copying, reviewing,
+dissemination or other use by anyone other than the named recipients of
+this communication is strictly prohibited. If you received this email in
+error and/or are not a named recipient, please notify the sender (Al
+Faisaliah Group) and delete all copies of this email. Thank you.

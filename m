@@ -2,236 +2,147 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A7163109A26
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Nov 2019 09:29:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B1FC610C756
+	for <lists+dmaengine@lfdr.de>; Thu, 28 Nov 2019 11:59:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfKZI3i (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 26 Nov 2019 03:29:38 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:55100 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727356AbfKZI3i (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 26 Nov 2019 03:29:38 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAQ8TIGd113992;
-        Tue, 26 Nov 2019 02:29:18 -0600
+        id S1726641AbfK1K76 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 28 Nov 2019 05:59:58 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59160 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfK1K76 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 Nov 2019 05:59:58 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xASAxoMf099557;
+        Thu, 28 Nov 2019 04:59:50 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574756958;
-        bh=sOlBif7gK5pnyCr+lDdyRLduRMavJKYGdPrcVdrE3vk=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=D8uPLtYb5/IfCiXlyv90/OI9+s3XAyzzegnbexNxyBmMAlhDsyMh32hGIKoAflM3P
-         OYs0ZDbdS0Yrxvcvm8v2hWOsK8Kh9wV3g4wyAHG6M0B8AqVszRrkgWG0kvn+JOomMz
-         7eA37MHwzghpLHmPgFCVCY1D3Ckmpb0WRtkKJEvw=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAQ8TInK027696
+        s=ti-com-17Q1; t=1574938790;
+        bh=EeH349x8o4SCZvve2w+07qwX2Rkls7hx3AcZBuQt9LU=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=sWhxq+s3W0b+pkKBdLhbIultvfQuGqTfydHKuhZuEGUOEWj33z6YihPboOL6t1dft
+         uAy75xYdY9+wI6iOGGGydQs++Zh+l/S3CHBeQRN3I2Kti7d5/oNx+YvuwgGbM9kguG
+         WoT/XsT1WRF+Bgxp8ZYJZkvH2RWl3mCy5u4HTSCs=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xASAxosP045258
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 26 Nov 2019 02:29:18 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 26
- Nov 2019 02:29:17 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 28 Nov 2019 04:59:50 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 28
+ Nov 2019 04:59:49 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 26 Nov 2019 02:29:17 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAQ8TDfx099514;
-        Tue, 26 Nov 2019 02:29:14 -0600
-Subject: Re: [PATCH v4 08/15] dt-bindings: dma: ti: Add document for K3 UDMA
+ Frontend Transport; Thu, 28 Nov 2019 04:59:49 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xASAxgJF073287;
+        Thu, 28 Nov 2019 04:59:46 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Nishanth Menon <nm@ti.com>, <devicetree@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Tony Lindgren <tony@atomide.com>, Vinod <vkoul@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-9-peter.ujfalusi@ti.com> <20191105021900.GA17829@bogus>
- <fc1ea525-54f1-ff1a-7e1c-61b54f5be862@ti.com>
- <CAL_JsqJbV7Zd40admW-x2SSveMqMkG0tM6RFTwjCJyYxX4Cxtw@mail.gmail.com>
- <b4705f2e-b2fb-f00f-7d4d-bd440fe89135@ti.com>
-Message-ID: <f2f4a4f5-335d-9a20-b410-91a7619fb84d@ti.com>
-Date:   Tue, 26 Nov 2019 10:29:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
+        <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>
+Subject: [PATCH v6 01/17] bindings: soc: ti: add documentation for k3 ringacc
+Date:   Thu, 28 Nov 2019 12:59:29 +0200
+Message-ID: <20191128105945.13071-2-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191128105945.13071-1-peter.ujfalusi@ti.com>
+References: <20191128105945.13071-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <b4705f2e-b2fb-f00f-7d4d-bd440fe89135@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Rob,
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-On 15/11/2019 11.45, Peter Ujfalusi wrote:
-> Rob,
-> 
-> On 14/11/2019 19.53, Rob Herring wrote:
->> On Tue, Nov 5, 2019 at 4:07 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>>
->>>
->>>
->>> On 05/11/2019 4.19, Rob Herring wrote:
->>>> On Fri, Nov 01, 2019 at 10:41:28AM +0200, Peter Ujfalusi wrote:
->>>>> New binding document for
->>>>> Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P).
->>>>>
->>>>> UDMA-P is introduced as part of the K3 architecture and can be found in
->>>>> AM654 and j721e.
->>>>>
->>>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>>>> ---
->>>>> Rob,
->>>>>
->>>>> can you give me some hint on how to fix these two warnings from dt_binding_check:
->>>>>
->>>>>   DTC     Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml
->>>>> Documentation/devicetree/bindings/dma/ti/k3-udma.example.dts:23.13-72: Warning (ranges_format): /example-0/interconnect@30800000:ranges: "ranges" property has invalid length (24 bytes) (parent #address-cells == 1, child #address-cells == 2, #size-cells == 2)
->>>>>   CHECK   Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml
->>>>
->>>> The default #address-cells is 1 for examples. So you need to
->>>> either override it or change ranges parent address size.
->>>
->>> wrapping the cbass_main_navss inside:
->>> cbass_main {
->>>     #address-cells = <2>;
->>>     #size-cells = <2>;
->>>     ...
->>> };
->>>
->>> fixes it.
->>>
->>>>>
->>>>> Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml: interconnect@30800000: $nodename:0: 'interconnect@30800000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
->>>>
->>>> Use 'bus' for the node name of 'simple-bus'.
->>>
->>> I took the navss node from the upstream dts (I'm going to fix it there
->>> as well).
->>> It has simple-bus for the navss, which is not quite right as NAVSS is
->>> not a bus, but a big subsystem with multiple components (UDMAP, ringacc,
->>> INTA, INTR, timers, etc).
->>>
->>> What about to change the binding doc to simple-mfd like this
->>
->> That's really for things not memory-mapped (I'm sure you can probably
->> find an example to contradict me), so better to keep simple-bus if all
->> the child nodes have addresses.
-> 
-> According to Documentation/devicetree/bindings/mfd/mfd.txt:
-> - A range of memory registers containing "miscellaneous system
->   registers" also known as a system controller "syscon" or any other
->   memory range containing a mix of unrelated hardware devices.
-> 
-> NAVSS (NAVigator SubSystem) falls in the later case, it contains
-> unrelated blocks, like the UDMAP, ringacc, mailboxes, spinlocks,
-> interrupt aggregator, interrupt router, etc.
-> 
-> - compatible : "simple-mfd" - this signifies that the operating system
->   should consider all subnodes of the MFD device as separate devices
->   akin to how "simple-bus" indicates when to see subnodes as children
->   for a simple memory-mapped bus.
-> 
-> This is a bit confusing, but NAVSS is not really a bus, everything in it
-> can be accessed by the CPU via memory mapped registers (some sub devices
-> does not have registers defined, they are controlled via system firmware).
-> 
->> Do you need the node name to be 'navss' for some reason? If so, then
->> better have a compatible string in there to identify it. If not, just
->> use 'bus' and be done with it.
-> 
-> We don't need unique compatible for the NAVSS itself as there is not
-> much we can configure on the top level, it is 'just' a big subsystem
-> with all sorts of things.
-> 
-> I like to keep the 'navss' as node name as it gives human understandable
-> representation of it in /sys for example, easier to see the topology.
-> 
-> I just feel that the 'bus' does not really apply to what NAVSS is.
-> Probably my view of simple-bus is not correct.
+The Ring Accelerator (RINGACC or RA) provides hardware acceleration to
+enable straightforward passing of work between a producer and a consumer.
+There is one RINGACC module per NAVSS on TI AM65x and j721e.
 
-Can you advice on how to proceed? I would like to send v6 so Vinod can
-pick it for next after 5.5-rc1 is tagged.
-This is the only thing which I need to close on to be able to do that.
+This patch introduces RINGACC device tree bindings.
 
-> 
->>> cbass_main_navss: navss@30800000 {
->>>     compatible = "simple-mfd";
->>>     #address-cells = <2>;
->>>     #size-cells = <2>;
->>>     ...
->>> };
->>>
->>> and fix up the DT when I got to the point when I can send the patches to
->>> enable DMA for am654 and j721e?
->>
->> There's no requirement yet for DTS files to not have warnings.
-> 
-> Sure, but it does not hurt if they are clean ;)
-> 
->>>>> +  compatible:
->>>>> +    oneOf:
->>>>> +      - const: ti,am654-navss-main-udmap
->>>>> +      - const: ti,am654-navss-mcu-udmap
->>>>> +      - const: ti,j721e-navss-main-udmap
->>>>> +      - const: ti,j721e-navss-mcu-udmap
->>>>
->>>> enum works better than oneOf+const. Better error messages.
->>>
->>> Like this:
->>>   compatible:
->>>     oneOf:
->>>       - description: for AM654
->>>         items:
->>>           - enum:
->>>               - ti,am654-navss-main-udmap
->>>               - ti,am654-navss-mcu-udmap
->>>
->>>       - description: for J721E
->>>         items:
->>>           - enum:
->>>               - ti,j721e-navss-main-udmap
->>>               - ti,j721e-navss-mcu-udmap
->>
->> If the 'description' was useful, but it's not. Just:
->>
->> compatible:
->>   enum:
->>     - ti,am654-navss-main-udmap
->>     - ti,am654-navss-mcu-udmap
->>     - ti,j721e-navss-main-udmap
->>     - ti,j721e-navss-mcu-udmap
-> 
-> OK, can I keep your Reviewed-by you have given to v5 if I do this change
-> for v6?
-> 
->>
->>
->> Rob
->>
-> 
-> - Péter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/soc/ti/k3-ringacc.txt | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
 
-- Péter
+diff --git a/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt b/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+new file mode 100644
+index 000000000000..59758ccce809
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+@@ -0,0 +1,59 @@
++* Texas Instruments K3 NavigatorSS Ring Accelerator
++
++The Ring Accelerator (RA) is a machine which converts read/write accesses
++from/to a constant address into corresponding read/write accesses from/to a
++circular data structure in memory. The RA eliminates the need for each DMA
++controller which needs to access ring elements from having to know the current
++state of the ring (base address, current offset). The DMA controller
++performs a read or write access to a specific address range (which maps to the
++source interface on the RA) and the RA replaces the address for the transaction
++with a new address which corresponds to the head or tail element of the ring
++(head for reads, tail for writes).
++
++The Ring Accelerator is a hardware module that is responsible for accelerating
++management of the packet queues. The K3 SoCs can have more than one RA instances
++
++Required properties:
++- compatible	: Must be "ti,am654-navss-ringacc";
++- reg		: Should contain register location and length of the following
++		  named register regions.
++- reg-names	: should be
++		  "rt" - The RA Ring Real-time Control/Status Registers
++		  "fifos" - The RA Queues Registers
++		  "proxy_gcfg" - The RA Proxy Global Config Registers
++		  "proxy_target" - The RA Proxy Datapath Registers
++- ti,num-rings	: Number of rings supported by RA
++- ti,sci-rm-range-gp-rings : TI-SCI RM subtype for GP ring range
++- ti,sci	: phandle on TI-SCI compatible System controller node
++- ti,sci-dev-id	: TI-SCI device id of the ring accelerator
++- msi-parent	: phandle for "ti,sci-inta" interrupt controller
++
++Optional properties:
++ -- ti,dma-ring-reset-quirk : enable ringacc / udma ring state interoperability
++		  issue software w/a
++
++Example:
++
++ringacc: ringacc@3c000000 {
++	compatible = "ti,am654-navss-ringacc";
++	reg =	<0x0 0x3c000000 0x0 0x400000>,
++		<0x0 0x38000000 0x0 0x400000>,
++		<0x0 0x31120000 0x0 0x100>,
++		<0x0 0x33000000 0x0 0x40000>;
++	reg-names = "rt", "fifos",
++		    "proxy_gcfg", "proxy_target";
++	ti,num-rings = <818>;
++	ti,sci-rm-range-gp-rings = <0x2>; /* GP ring range */
++	ti,dma-ring-reset-quirk;
++	ti,sci = <&dmsc>;
++	ti,sci-dev-id = <187>;
++	msi-parent = <&inta_main_udmass>;
++};
++
++client:
++
++dma_ipx: dma_ipx@<addr> {
++	...
++	ti,ringacc = <&ringacc>;
++	...
++}
+-- 
+Peter
 
 Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
 Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+

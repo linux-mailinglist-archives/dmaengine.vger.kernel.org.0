@@ -2,89 +2,114 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7742110E2F4
-	for <lists+dmaengine@lfdr.de>; Sun,  1 Dec 2019 19:18:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D845210F18C
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Dec 2019 21:32:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfLASSo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 1 Dec 2019 13:18:44 -0500
-Received: from mtax.cdmx.gob.mx ([187.141.35.197]:8348 "EHLO mtax.cdmx.gob.mx"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727231AbfLASSo (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sun, 1 Dec 2019 13:18:44 -0500
-X-Greylist: delayed 6541 seconds by postgrey-1.27 at vger.kernel.org; Sun, 01 Dec 2019 13:18:43 EST
-X-NAI-Header: Modified by McAfee Email Gateway (4500)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cdmx.gob.mx; s=72359050-3965-11E6-920A-0192F7A2F08E;
-        t=1575217603; h=DKIM-Filter:X-Virus-Scanned:
-         Content-Type:MIME-Version:Content-Transfer-Encoding:
-         Content-Description:Subject:To:From:Date:Message-Id:
-         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
-         X-AnalysisOut:X-AnalysisOut:X-SAAS-TrackingID:
-         X-NAI-Spam-Flag:X-NAI-Spam-Threshold:X-NAI-Spam-Score:
-         X-NAI-Spam-Rules:X-NAI-Spam-Version; bh=M
-        8rWdUYQ57RAYAgTWJQ4Rsch0kO0UXllaAVDzocOs4
-        8=; b=QlKY051+nlgamh//MH3+RvpMFZVcKaMbtYoRKmITE+Zn
-        XDmUOeqIFrbFh9wkUYCJtFtyH+w8P2Bndq91buz7pbRyST3o3B
-        gIKvlftM1wnCUrak6bIEsD9YJwQw1d4oz4ROef2HoTOvR8m0FS
-        DYldqw7qdkKG28gNoyWukHpPEtI=
-Received: from cdmx.gob.mx (correo.cdmx.gob.mx [10.250.108.150]) by mtax.cdmx.gob.mx with smtp
-        (TLS: TLSv1/SSLv3,256bits,ECDHE-RSA-AES256-GCM-SHA384)
-         id 217f_6126_384380c8_7b1b_4ec5_bc29_3a1e117d3493;
-        Sun, 01 Dec 2019 10:26:42 -0600
-Received: from localhost (localhost [127.0.0.1])
-        by cdmx.gob.mx (Postfix) with ESMTP id 6DCF31E24DD;
-        Sun,  1 Dec 2019 10:18:21 -0600 (CST)
-Received: from cdmx.gob.mx ([127.0.0.1])
-        by localhost (cdmx.gob.mx [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id ZgfBZGo71kTo; Sun,  1 Dec 2019 10:18:21 -0600 (CST)
-Received: from localhost (localhost [127.0.0.1])
-        by cdmx.gob.mx (Postfix) with ESMTP id 3E59B1E29F5;
-        Sun,  1 Dec 2019 10:13:06 -0600 (CST)
-DKIM-Filter: OpenDKIM Filter v2.9.2 cdmx.gob.mx 3E59B1E29F5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cdmx.gob.mx;
-        s=72359050-3965-11E6-920A-0192F7A2F08E; t=1575216786;
-        bh=M8rWdUYQ57RAYAgTWJQ4Rsch0kO0UXllaAVDzocOs48=;
-        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:To:
-         From:Date:Message-Id;
-        b=BFh/7eRcl5KaTI/PQgDVNrMRwh3JjHTMnhelFt9+cJZNYbkbobg3H21CrJajRZc2r
-         C0TGIubI+rbBN/ybjKJTwz2+AeoNbB6mEvXrocZ4U8BBnaBPzO1YYPKKYyJuYg514x
-         SseoJGsOoJ8mabxv3KHZYt5o+dZpytzPOsZ1Ne7Y=
-X-Virus-Scanned: amavisd-new at cdmx.gob.mx
-Received: from cdmx.gob.mx ([127.0.0.1])
-        by localhost (cdmx.gob.mx [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id D2YVkcKhCKPv; Sun,  1 Dec 2019 10:13:06 -0600 (CST)
-Received: from [192.168.0.104] (unknown [188.125.168.160])
-        by cdmx.gob.mx (Postfix) with ESMTPSA id 589651E301D;
-        Sun,  1 Dec 2019 10:04:35 -0600 (CST)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1727417AbfLBUbo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 2 Dec 2019 15:31:44 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:40426 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727418AbfLBUbo (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 2 Dec 2019 15:31:44 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB2KVS18016993;
+        Mon, 2 Dec 2019 14:31:28 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575318688;
+        bh=5Z6pCiRczTsYgQn5fCzOc5mk4+KH6wL16PymQnDr8y8=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=eYXPYGYH7sO4YJnmAcvQhTGPUN1O4mVzP8PHJtTZBPYxLilbfXy0n2A8QTFXbgCdK
+         Pse+gKeoZmZ++iXKXMreChEq7j++1GDk33ldUV/53wN9EXMGXe7CJnktOO+Ucp6JqF
+         cFAyAZpA+kSGvQDrcqBqUkEe5iGcDXAUlmZZto58=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB2KVRwN090288
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 2 Dec 2019 14:31:28 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 2 Dec
+ 2019 14:31:27 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 2 Dec 2019 14:31:27 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB2KVOPl106889;
+        Mon, 2 Dec 2019 14:31:25 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <grygorii.strashko@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <vigneshr@ti.com>
+Subject: [PATCH 0/3] dmaengine: ti: k3-udma: Fixes against v6 series
+Date:   Mon, 2 Dec 2019 22:31:25 +0200
+Message-ID: <20191202203128.14348-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <0191128105945.13071-1-peter.ujfalusi@ti.com>
+References: <0191128105945.13071-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Congratulations
-To:     Recipients <aac-styfe@cdmx.gob.mx>
-From:   "Bishop Johnr" <aac-styfe@cdmx.gob.mx>
-Date:   Sun, 01 Dec 2019 17:04:27 +0100
-Message-Id: <20191201160435.589651E301D@cdmx.gob.mx>
-X-AnalysisOut: [v=2.2 cv=cLaQihWN c=1 sm=1 tr=0 p=6K-Ig8iNAUou4E5wYCEA:9 p]
-X-AnalysisOut: [=zRI05YRXt28A:10 a=T6zFoIZ12MK39YzkfxrL7A==:117 a=9152RP8M]
-X-AnalysisOut: [6GQqDhC/mI/QXQ==:17 a=8nJEP1OIZ-IA:10 a=pxVhFHJ0LMsA:10 a=]
-X-AnalysisOut: [pGLkceISAAAA:8 a=wPNLvfGTeEIA:10 a=M8O0W8wq6qAA:10 a=Ygvjr]
-X-AnalysisOut: [iKHvHXA2FhpO6d-:22]
-X-SAAS-TrackingID: 0c9e3ed5.0.90879181.00-2298.152482853.s12p02m012.mxlogic.net
-X-NAI-Spam-Flag: NO
-X-NAI-Spam-Threshold: 3
-X-NAI-Spam-Score: -5000
-X-NAI-Spam-Rules: 1 Rules triggered
-        WHITELISTED=-5000
-X-NAI-Spam-Version: 2.3.0.9418 : core <6686> : inlines <7165> : streams
- <1840193> : uri <2949749>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Money was donated to you by Mr and Mrs Allen and Violet Large, just contact=
- them with this email for more information =
+Hi Vinod,
 
+When I thought that all corner cases are handled I got report of a failure on a
+miss-configured setup:
+UART without lines connected
+Enable HW flow control (nothing is connected)
+Do a small tx like "dd if=/dev/urandom of=/dev/ttyS1 bs=128 count=1"
 
-EMail: allenandvioletlargeaward@gmail.com
+The result is an interrupt flood caused by constant TDCM reception.
+
+The explanation comes from the DMA split design and explained in patch 3:
+
+"If the peripheral is disabled (or it is not able to send out data) the
+UDMAP will complete a 'short' transfer. In other words: if the amount of
+data can fit into PSI-L and PDMA (and peripheral FIFO) then UDMAP will
+send out the data and return as the transfer is completed, however the
+peripheral did not actually received all the data.
+
+It was wrong to issue a normal teardown on the channel for several reasons:
+UDMAP is not processing any packet so it will just return the TDCM and if
+the peripheral is not consuming data from PDMA then we will have constant
+flood of TDCMs (interrupts).
+After the teardown the channel will be in reset state and we would need to
+reset the rings as well, but it can not be done in interrupt context.
+If the peripheral is just slow to consume data or even there is a delay
+between starting the DMA then we will have again issues detecting the
+state.
+
+We could set force teardown, but that will make PDMA to discard the data
+which is not correct in case of slow or delayed transfer start on the
+peripheral.
+
+The only solution is to use a work and check the progress in there after
+the descriptor is returned and the UDMA and PDMA counters are not showing
+the same number of bytes processed."
+
+I'll squash these to v7, but I thought that this change is better to be visible
+alone as it is kind of a big one on handling the early TX completion.
+
+Regards,
+Peter
+---
+Peter Ujfalusi (3):
+  dmaengine: ti: k3-udma: Correct completed descriptor's residue value
+  dmaengine: ti: k3-udma: Workaround for stale transfers
+  dmaengine: ti: k3-udma: Fix early TX completion against PDMAs
+
+ drivers/dma/ti/k3-udma.c | 89 +++++++++++++++++++++++++++++-----------
+ 1 file changed, 66 insertions(+), 23 deletions(-)
+
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+

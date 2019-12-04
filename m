@@ -2,109 +2,137 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F580112BD3
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2019 13:44:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52CB5112D22
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2019 15:01:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbfLDMoW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 4 Dec 2019 07:44:22 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:32983 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727268AbfLDMoV (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Dec 2019 07:44:21 -0500
-Received: by mail-qt1-f194.google.com with SMTP id d5so7614339qto.0
-        for <dmaengine@vger.kernel.org>; Wed, 04 Dec 2019 04:44:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=SWzs3svZdfoJNhQZue5B0UPApGf3QNVhTsPQAsjB3v0=;
-        b=YNKqFnrX9A37VXTiRJQeKr0TVoVFMlrNSYgUkn0licj+UoOJvZ+HJ8IjWp12nh0vJD
-         oytTss+Gq8P5m3/QMSk9JCuAV6wkVFMmzaroivqVDnEVM61FXNyCf9yJ9ShxtjiQAzs3
-         oP+XEYn8LB8uuNxPWuzgRGTKnRgL3GKoHUk8Ul/OCIn4gK08h9XtnXbtuPmEnWwV1n17
-         a54f8OonjvTFoOebCLtjTpqwEMalcfNKNaE5nCr8IHZsPF65G7ohSjT1TQyQmetMSyZK
-         5y7qzS9EGQgzC1cntwO4RcFJmjQnBSkiD9BmH/gb+uUzXGA+574DNCTpz9glICml7wve
-         5HNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=SWzs3svZdfoJNhQZue5B0UPApGf3QNVhTsPQAsjB3v0=;
-        b=pzySFgVwm00jXQAtE7PpG7+BYXtELtR6h+z5bOqAM7LE7/Z2FRBS1tGfoXkuUxdh76
-         7SWNyA/Uf3NhSyiF9r2cNKNSAMK/yuos/Bh223BxXjuQXE5JIC0sFnLrt1a+oLn26ZrF
-         Eg9MRULzsFK8cPqeXVqn73CIebiTVPWcTzPdU7Q4s2i37w7v5wUHbQ4/3Vf0FufdRYmx
-         W6P5u+CysLLPFBTrjgncu2t1SEFpTAZ69o9uUYSfzQNKse4xylINqXtZgRCmBHb+b4nN
-         R/0QAjN0shbGhhB1AIxj88vIPAghvvw6YaE9ysmDFLNoKEeRuOaRYdm1Vp2QHzYeE60Z
-         qXZQ==
-X-Gm-Message-State: APjAAAWT/fWgQaP4d+824Uz+HBAYC3QYvu2aOSPkfDVBovHFBBpsqdLE
-        qZMoRdc1j7UMsn1K5axqIqdQ4fDo1h0Wh9LexMw=
-X-Google-Smtp-Source: APXvYqxWzKOteDVh9XQL6m/8aKKtTfjBsArmcTuuA2whuVyRtJyctpUk/k0WpughITz8sXR5uhrYJxmexMBU0sOD298=
-X-Received: by 2002:ac8:67cb:: with SMTP id r11mr2394254qtp.54.1575463460895;
- Wed, 04 Dec 2019 04:44:20 -0800 (PST)
+        id S1727838AbfLDOBS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 4 Dec 2019 09:01:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727828AbfLDOBS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 4 Dec 2019 09:01:18 -0500
+Received: from localhost (unknown [122.178.246.30])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DFEF205F4;
+        Wed,  4 Dec 2019 14:01:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575468077;
+        bh=61Cj72oRv0JHSjGbWXtj3mk2DE3IKgsrpLNIkbH/oys=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GOs0nTI8bdm2PZ8u8o30otqkwRisxRmEXBVm5xUSQlxxDsjNADfg2qA2s6sgbkvp0
+         KwHWW42U3Nd6oB8xf+ByMLGpVYZLNdpww93Jp5Hd7/yFjGEx4meGrC5xq4CUy990dd
+         NMVv2j8j4h76SAK6znUogXcbv3NCEpd3oiSoWwHg=
+Date:   Wed, 4 Dec 2019 19:31:12 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>, dmaengine@vger.kernel.org,
+        Robert Jarzmik <robert.jarzmik@free.fr>, kernel@pengutronix.de,
+        Russell King <linux@armlinux.org.uk>
+Subject: Re: vchan helper broken wrt locking
+Message-ID: <20191204140112.GD82508@vkoul-mobl>
+References: <20191203115050.yvpaehsrck6zydmk@pengutronix.de>
+ <12ec3499-ac9a-2722-2052-02d77975c26c@ti.com>
 MIME-Version: 1.0
-Received: by 2002:ac8:2f0c:0:0:0:0:0 with HTTP; Wed, 4 Dec 2019 04:44:20 -0800 (PST)
-Reply-To: moneygram.1820@outlook.fr
-From:   "Rev.Dr Emmanuel Okoye CEO Ecobank-benin" 
-        <westernunion.benin982@gmail.com>
-Date:   Wed, 4 Dec 2019 13:44:20 +0100
-Message-ID: <CAP=nHBKe8nF-LP3f1956UTMeq15bm+xDr11wyG0H-FNEsu4NzQ@mail.gmail.com>
-Subject: Attn, dear Beneficiary. God has remembered your prayers
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <12ec3499-ac9a-2722-2052-02d77975c26c@ti.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Attn, dear Beneficiary.
+On 04-12-19, 13:47, Peter Ujfalusi wrote:
+> Hi Sascha,
+> 
+> On 03/12/2019 13.50, Sascha Hauer wrote:
+> > Hi All,
+> > 
+> > vc->desc_free() used to be called in non atomic context which makes
+> > sense to me. This changed over time and now vc->desc_free() is sometimes
+> > called in atomic context and sometimes not.
+> > 
+> > The story starts with 13bb26ae8850 ("dmaengine: virt-dma: don't always
+> > free descriptor upon completion"). This introduced a vc->desc_allocated
+> > list which is mostly handled with the lock held, except in vchan_complete().
+> > vchan_complete() moves the completed descs onto a separate list for the sake
+> > of iterating over that list without the lock held allowing to call
+> > vc->desc_free() without lock. 13bb26ae8850 changes this to:
+> > 
+> > @@ -83,8 +110,10 @@ static void vchan_complete(unsigned long arg)
+> >                 cb_data = vd->tx.callback_param;
+> >  
+> >                 list_del(&vd->node);
+> > -
+> > -               vc->desc_free(vd);
+> > +               if (dmaengine_desc_test_reuse(&vd->tx))
+> > +                       list_add(&vd->node, &vc->desc_allocated);
+> > +               else
+> > +                       vc->desc_free(vd);
+> > 
+> > vc->desc_free() is still called without lock, but the list operation is done
+> > without locking as well which is wrong.
+> 
+> Hrm, yes all list operation against desc_* should be protected by the
+> lock, it is a miss.
+> 
+> > Now with 6af149d2b142 ("dmaengine: virt-dma: Add helper to free/reuse a
+> > descriptor") the hunk above was moved to a separate function
+> > (vchan_vdesc_fini()). With 1c7f072d94e8 ("dmaengine: virt-dma: Support for
+> > race free transfer termination") the helper is started to be called with
+> > lock held resulting in vc->desc_free() being called under the lock as
+> > well. It is still called from vchan_complete() without lock.
+> 
+> Right.
+> I think the most elegant way to fix this would be to introduce a new
+> list_head in virt_dma_chan, let's name it desc_terminated.
+> 
+> We would add the descriptor to this within vchan_terminate_vdesc() (lock
+> is held).
+> In vchan_synchronize() we would
+> list_splice_tail_init(&vc->desc_terminated, &head);
+> with the lock held and outside of the lock we free them up.
+> 
+> So we would put the terminated descs to the new list and free them up in
+> synchronize.
+> 
+> This way the vchan_vdesc_fini() would be only called without the lock held.
 
-God has remembered your prayers
-I have already sent you Money Gram payment of $5000.00 today, MG 1029-8096
-This is because we have finally concluded to effect your transfer
-funds of $4.8,000.000usd
-through MONEY GRAM International Fund transfer Service
-Each payment will be sending to you by $5000.00 daily until the
-($4.8,000.000usd) is completely transferred
-we have this morning sent  MONEY GRAM payment of $5,000.00 in your name today
-So contact the MONEY GRAM Agent to pick up this first payment of $5000 now
+This makes sense to me as well. I would like the vc->desc_free() to be
+always called with lock and in non-atomic context.
+> 
+> > I think vc->desc_free() being called under a spin_lock is unfortunate as
+> > the i.MX SDMA driver does a dma_free_coherent() there which is required
+> > to be called with interrupts enabled.
+> 
+> In the in review k3-udma driver I use dma_pool or dma_alloc_coherent in
+> mixed mode depending on the type of the channel.
+> 
+> I did also see the same issue and what I ended up doing is to have
+> desc_to_purge list and udma_purge_desc_work()
+> in udma_desc_free() if the descriptor is from the dma_pool, I free it
+> right away, if it needs dma_free_coherent() then I put it to the
+> desc_to_purge list and schedule the purge worker to deal with them at a
+> later time.
+> 
+> In this driver I don't use vchan_terminate_vdesc() because of this.
+> 
+> > I am not sure where to go from here hence I'm writing this mail. Do we
+> > agree that vc->desc_free() should be called without lock?
+> 
+> I think it should be called without the lock held.
+> 
+> > 
+> > Sascha
+> > 
+> > 
+> 
+> - Péter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-Contact person Mrs. Alan Ude
-Dir. MONEY GRAM Service,Benin
-Phone number: +229 98856728
-E-mail: moneygram.1820@outlook.fr
-
-Ask him to give you the complete mtcn, sender name, question and
-answer to enable you
-pick up the $5000.00 sent today,
-Also you are instructed to re-confirm your information's
-to Mrs.Alan Ude as listed below to avoid wrong transactions.
-
-(1Your Full name:............................................
-(2 Phone number.....................................................
-(3 Contact address:.....................................
-(4 Age:..................................................................
-(5 Country..............................................
-(6) Sex .................................................................
-(7) your occupation...........................................
-
-(8)Passport/By Attach or Drivers License Number:
-Contact Mrs. Alan Ude for your MONEY GRAM payment of $4.8,000.000usd
-Note please: I have paid service fees for you but the only money you
-are required
-to send to Mrs. Alan Ude is $90.00 only Transfer fee before you can
-pick up your transfer today.
-
-Send it to via Money Gram
-Receiver's Name-----Alan Ude
-Country----------Benin
-Address-----------Cotonou
-Quest--------Honest
-Ans-----------Trust
-
-I done all my best for you to receive your transfer now ok.
-We need your urgent reply
-Best Regards
-Rev.Dr Emmanuel Okoye
-CEO Ecobank-benin
-
-If we did not receive it urgent from you today,
-I will go ahead and release you funds to Mrs. Lyndia Ppaulson as your
-representative.
+-- 
+~Vinod

@@ -2,49 +2,55 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 52CB5112D22
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2019 15:01:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB527112EF2
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2019 16:51:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfLDOBS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 4 Dec 2019 09:01:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54184 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727828AbfLDOBS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 4 Dec 2019 09:01:18 -0500
-Received: from localhost (unknown [122.178.246.30])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DFEF205F4;
-        Wed,  4 Dec 2019 14:01:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1575468077;
-        bh=61Cj72oRv0JHSjGbWXtj3mk2DE3IKgsrpLNIkbH/oys=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GOs0nTI8bdm2PZ8u8o30otqkwRisxRmEXBVm5xUSQlxxDsjNADfg2qA2s6sgbkvp0
-         KwHWW42U3Nd6oB8xf+ByMLGpVYZLNdpww93Jp5Hd7/yFjGEx4meGrC5xq4CUy990dd
-         NMVv2j8j4h76SAK6znUogXcbv3NCEpd3oiSoWwHg=
-Date:   Wed, 4 Dec 2019 19:31:12 +0530
-From:   Vinod Koul <vkoul@kernel.org>
+        id S1728149AbfLDPvU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 4 Dec 2019 10:51:20 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:56265 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727878AbfLDPvT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Dec 2019 10:51:19 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1icWvu-0001a8-IC; Wed, 04 Dec 2019 16:51:18 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <sha@pengutronix.de>)
+        id 1icWvs-0003qa-Pm; Wed, 04 Dec 2019 16:51:16 +0100
+Date:   Wed, 4 Dec 2019 16:51:16 +0100
+From:   Sascha Hauer <s.hauer@pengutronix.de>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>, dmaengine@vger.kernel.org,
-        Robert Jarzmik <robert.jarzmik@free.fr>, kernel@pengutronix.de,
+Cc:     dmaengine@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>,
+        Vinod Koul <vkoul@kernel.org>, kernel@pengutronix.de,
         Russell King <linux@armlinux.org.uk>
 Subject: Re: vchan helper broken wrt locking
-Message-ID: <20191204140112.GD82508@vkoul-mobl>
+Message-ID: <20191204155116.uqxioshtombxfe5g@pengutronix.de>
 References: <20191203115050.yvpaehsrck6zydmk@pengutronix.de>
  <12ec3499-ac9a-2722-2052-02d77975c26c@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 In-Reply-To: <12ec3499-ac9a-2722-2052-02d77975c26c@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 16:49:40 up 149 days, 21:59, 147 users,  load average: 0.08, 0.13,
+ 0.09
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 04-12-19, 13:47, Peter Ujfalusi wrote:
+On Wed, Dec 04, 2019 at 01:47:03PM +0200, Peter Ujfalusi wrote:
 > Hi Sascha,
 > 
 > On 03/12/2019 13.50, Sascha Hauer wrote:
@@ -100,39 +106,13 @@ On 04-12-19, 13:47, Peter Ujfalusi wrote:
 > 
 > This way the vchan_vdesc_fini() would be only called without the lock held.
 
-This makes sense to me as well. I would like the vc->desc_free() to be
-always called with lock and in non-atomic context.
-> 
-> > I think vc->desc_free() being called under a spin_lock is unfortunate as
-> > the i.MX SDMA driver does a dma_free_coherent() there which is required
-> > to be called with interrupts enabled.
-> 
-> In the in review k3-udma driver I use dma_pool or dma_alloc_coherent in
-> mixed mode depending on the type of the channel.
-> 
-> I did also see the same issue and what I ended up doing is to have
-> desc_to_purge list and udma_purge_desc_work()
-> in udma_desc_free() if the descriptor is from the dma_pool, I free it
-> right away, if it needs dma_free_coherent() then I put it to the
-> desc_to_purge list and schedule the purge worker to deal with them at a
-> later time.
-> 
-> In this driver I don't use vchan_terminate_vdesc() because of this.
-> 
-> > I am not sure where to go from here hence I'm writing this mail. Do we
-> > agree that vc->desc_free() should be called without lock?
-> 
-> I think it should be called without the lock held.
-> 
-> > 
-> > Sascha
-> > 
-> > 
-> 
-> - Péter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Ok, this sounds like a plan. I'll try and make up a patch for this.
+
+Thanks,
+  Sascha
 
 -- 
-~Vinod
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |

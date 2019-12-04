@@ -2,166 +2,143 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AC0C1126F1
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2019 10:20:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E08A112A73
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Dec 2019 12:47:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725971AbfLDJUD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 4 Dec 2019 04:20:03 -0500
-Received: from mail-eopbgr30060.outbound.protection.outlook.com ([40.107.3.60]:38533
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725922AbfLDJUD (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 4 Dec 2019 04:20:03 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ellcuqNu/Jy7Eaav6mjOgR6dVMucSadJUblpUKdT84Se1flGGF/JYlCgCBLHRoJPAvIUq/92/FLjmkkrBjFaR3+oKCkn5yCkuQmJWks4wZhanGN2lAT7hMckAUKj0j4ZGupdwxKPNZdPvWzVE4x1AYsg7jh3f+P2M09y2CmhNPYe7q1mq9MFoQXWjOWmcSvfZMTARvEkFCKfAkknBJrzp9fBAYL/6MJOd/rdqmrUR/WjA3/SRx5Pwv5lK/qLQy5irWggkfgKvFaCyH3nEjfHFN/FfaBHzl1mJnNGvAHIzirJpzXKLnGZD/fG+zdMxnRVhg/gQ+J6g9ZEobvhTGlXAA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qZVyHOgk7TYJe2eRsgGmRu9EdrfHo3xF1bFy1m0FNtU=;
- b=GfzxvPKZ22KM5OInCZLJV3gU+V/VRsT/6Zq2OylRtYxpZKkGeEIJpBWAwlDROefWBpshFYwvWPnlNXr2nCPIfIQ2WKqNDhGAbaGxbVTfvTLG+wkRav90HnvnMBBoTgL+TzCuNqszPGfO8zUK3+zw5PnTI14/22cJMc+OXVrLpnIVZEuq0doFTJ+cbcGTyI70mxmsAGCobWAgXwyG2Mr05xMuAt3pHOmtlfSSkgbQjhORxwojLE33JBa2TkTnhW2judg/vXG0/L6+tjjPwodopFmkTCcKzkAeF24RhLf0h56+DAR40SMM14r3/ssT3t9YdpgsBrCbTN3bLWUqgzkn9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qZVyHOgk7TYJe2eRsgGmRu9EdrfHo3xF1bFy1m0FNtU=;
- b=ji6VCDz9QlNDv1Pf3/2Gg1AQ/owNit8VgByAmu58rbDCRW89FB+gHXDgAob+qiCIFwFUaLMXd7uN5W/JfVPSs4ThzG8Y4iouRBDs8xecl5ksXrWwfLOjmyOfkLvvXsruwQU810i94cDzgIwlwp/mDDGGanBOJIF3MtbmzOhzzPI=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
- VE1PR04MB6350.eurprd04.prod.outlook.com (20.179.234.91) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.18; Wed, 4 Dec 2019 09:19:59 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::100:f42b:82a1:68c2]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::100:f42b:82a1:68c2%7]) with mapi id 15.20.2495.014; Wed, 4 Dec 2019
- 09:19:59 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Philipp Puschmann <philipp.puschmann@emlix.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "jlu@pengutronix.de" <jlu@pengutronix.de>,
-        Andy Duan <fugang.duan@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH v5 1/3] dmaengine: imx-sdma: fix buffer ownership
-Thread-Topic: [PATCH v5 1/3] dmaengine: imx-sdma: fix buffer ownership
-Thread-Index: AQHVchby6WsIv+QhqUqHYVdym6wSTaeqHbhA
-Date:   Wed, 4 Dec 2019 09:19:59 +0000
-Message-ID: <VE1PR04MB6638A9E882D40FB7F8CB7F14895D0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <20190923135808.815-1-philipp.puschmann@emlix.com>
- <20190923135808.815-2-philipp.puschmann@emlix.com>
-In-Reply-To: <20190923135808.815-2-philipp.puschmann@emlix.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f160f391-13ae-403e-f335-08d7789b22c9
-x-ms-traffictypediagnostic: VE1PR04MB6350:|VE1PR04MB6350:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB63509C5B616A63AE92B97C9B895D0@VE1PR04MB6350.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0241D5F98C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(39860400002)(376002)(346002)(54534003)(189003)(199004)(86362001)(4001150100001)(6506007)(8936002)(7736002)(81166006)(76116006)(2906002)(66446008)(9686003)(71190400001)(6116002)(71200400001)(33656002)(478600001)(5660300002)(305945005)(52536014)(99286004)(14454004)(26005)(2501003)(7696005)(3846002)(81156014)(74316002)(76176011)(102836004)(14444005)(11346002)(66946007)(66556008)(8676002)(186003)(229853002)(7416002)(256004)(446003)(25786009)(4326008)(110136005)(54906003)(64756008)(6246003)(316002)(66476007)(6436002)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6350;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: DqRbV/VNwT0dJeGLtRISVBiy2xibEFS8vrKif1RMiP6FQodk9R1wiFNgkmNL8uj7bPb02snlETBZEg0wmf0Ezva80CTwKcbxI0OaXY2VsmGLmrcGik/1EcivKqRMZ+JBP4jesXnXOZtD9HTO8SddcMsmeOQOrfmvH8MscXa6hdkb3B88LkAioF+SDVrDZ7y6RTlVmwG5vlL0sjZ6LXKapLlbSsE1/H1TCrkm5fAJjeVKnjIC3l2YpsWWAhNTA8jtilgycnrqRts01qtOkUqFLNH5Fji540q+oHySFYwokX/8Q+KQJBlPUGInahSNCbNHPBnjRgUyk72XCTxH2CpyMpqFAOW+Obekkzt/6Cw9gohfEEi8vuIUxP3a6K50ScTHav261orUMyZ9mkh+wiN3ZJv/pFoI3MB4M5eAD3INVTfN6QlFr0djufPO3lM1wFtYVa/Ym3fgQ5Pal5ZTZIlwqoUvbPOyFRBhgNeCNxXjG86a70Q99vTlL8KB+QYeNpES
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1727445AbfLDLr0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 4 Dec 2019 06:47:26 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:37240 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727268AbfLDLr0 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Dec 2019 06:47:26 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB4Bl2sF002950;
+        Wed, 4 Dec 2019 05:47:02 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575460022;
+        bh=GzDNworWBtqYezjFy1PouWFEtcVajB2CsP3RTLTs3EY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=vFIdZ3f78mYDNJR7se/mnsiflN1hDZ9MW30244U1lxnT8OcUlZsWbD4Tx9tEqQBtm
+         bOIbiLlceJjbeb4Qi2B0nnnYMUDFDeL/3P3spxPoKWyrL/pQNK+184q4BaFYNQSO/C
+         Lzn9Y8F9r/m4T7Sq9LkbWNN8ayGL4VCf3+1KS4Nc=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4Bl201096189;
+        Wed, 4 Dec 2019 05:47:02 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Dec
+ 2019 05:47:01 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Dec 2019 05:47:01 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB4BkxEa033437;
+        Wed, 4 Dec 2019 05:47:00 -0600
+Subject: Re: vchan helper broken wrt locking
+To:     Sascha Hauer <s.hauer@pengutronix.de>, <dmaengine@vger.kernel.org>
+CC:     Robert Jarzmik <robert.jarzmik@free.fr>,
+        Vinod Koul <vkoul@kernel.org>, <kernel@pengutronix.de>,
+        Russell King <linux@armlinux.org.uk>
+References: <20191203115050.yvpaehsrck6zydmk@pengutronix.de>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <12ec3499-ac9a-2722-2052-02d77975c26c@ti.com>
+Date:   Wed, 4 Dec 2019 13:47:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f160f391-13ae-403e-f335-08d7789b22c9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2019 09:19:59.3749
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PL+N9ws3Zt9VOmqrwTRm7mkdqaM3Whjr79+TdTMjCche7qQXX7temTU4G0rwKnX1EjL3dDPLiRmvPN84gpD8iQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6350
+In-Reply-To: <20191203115050.yvpaehsrck6zydmk@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 2019-9-23 Philipp Puschmann <philipp.puschmann@emlix.com> wrote:
-> BD_DONE flag marks ownership of the buffer. When 1 SDMA owns the buffer,
-> when 0 ARM owns it. When processing the buffers in
-> sdma_update_channel_loop the ownership of the currently processed buffer
-> was set to SDMA again before running the callback function of the buffer =
-and
-> while the sdma script may be running in parallel. So there was the possib=
-ility to
-> get the buffer overwritten by SDMA before it has been processed by kernel
-Does this patch need indeed? I don't think any difference here move done fl=
-ag
-before callback or after callback, because callback never care this flag an=
-d actually
-done flag is setup for next time rather than this time. Basically, this fla=
-g should be
-set to 1 quickly asap so that sdma could use this bd asap. If delay the fla=
-g may cause
-sdma channel stop since all BDs consumed. Could you try again your case wit=
-hout
-this patch?
-> leading to kind of random errors in the upper layers, e.g. bluetooth.
->=20
-> Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
-> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
-> ---
->=20
-> Changelog v5:
->  - no changes
->=20
-> Changelog v4:
->  - fixed the fixes tag
->=20
-> Changelog v3:
->  - use correct dma_wmb() instead of dma_wb()
->  - add fixes tag
->=20
-> Changelog v2:
->  - add dma_wb()
->=20
->  drivers/dma/imx-sdma.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c index
-> 9ba74ab7e912..b42281604e54 100644
-> --- a/drivers/dma/imx-sdma.c
-> +++ b/drivers/dma/imx-sdma.c
-> @@ -802,7 +802,6 @@ static void sdma_update_channel_loop(struct
-> sdma_channel *sdmac)
->  		*/
->=20
->  		desc->chn_real_count =3D bd->mode.count;
-> -		bd->mode.status |=3D BD_DONE;
->  		bd->mode.count =3D desc->period_len;
->  		desc->buf_ptail =3D desc->buf_tail;
->  		desc->buf_tail =3D (desc->buf_tail + 1) % desc->num_bd; @@ -817,6
-> +816,9 @@ static void sdma_update_channel_loop(struct sdma_channel
-> *sdmac)
->  		dmaengine_desc_get_callback_invoke(&desc->vd.tx, NULL);
->  		spin_lock(&sdmac->vc.lock);
->=20
-> +		dma_wmb();
-> +		bd->mode.status |=3D BD_DONE;
-> +
->  		if (error)
->  			sdmac->status =3D old_status;
->  	}
-> --
-> 2.23.0
+Hi Sascha,
 
+On 03/12/2019 13.50, Sascha Hauer wrote:
+> Hi All,
+> 
+> vc->desc_free() used to be called in non atomic context which makes
+> sense to me. This changed over time and now vc->desc_free() is sometimes
+> called in atomic context and sometimes not.
+> 
+> The story starts with 13bb26ae8850 ("dmaengine: virt-dma: don't always
+> free descriptor upon completion"). This introduced a vc->desc_allocated
+> list which is mostly handled with the lock held, except in vchan_complete().
+> vchan_complete() moves the completed descs onto a separate list for the sake
+> of iterating over that list without the lock held allowing to call
+> vc->desc_free() without lock. 13bb26ae8850 changes this to:
+> 
+> @@ -83,8 +110,10 @@ static void vchan_complete(unsigned long arg)
+>                 cb_data = vd->tx.callback_param;
+>  
+>                 list_del(&vd->node);
+> -
+> -               vc->desc_free(vd);
+> +               if (dmaengine_desc_test_reuse(&vd->tx))
+> +                       list_add(&vd->node, &vc->desc_allocated);
+> +               else
+> +                       vc->desc_free(vd);
+> 
+> vc->desc_free() is still called without lock, but the list operation is done
+> without locking as well which is wrong.
+
+Hrm, yes all list operation against desc_* should be protected by the
+lock, it is a miss.
+
+> Now with 6af149d2b142 ("dmaengine: virt-dma: Add helper to free/reuse a
+> descriptor") the hunk above was moved to a separate function
+> (vchan_vdesc_fini()). With 1c7f072d94e8 ("dmaengine: virt-dma: Support for
+> race free transfer termination") the helper is started to be called with
+> lock held resulting in vc->desc_free() being called under the lock as
+> well. It is still called from vchan_complete() without lock.
+
+Right.
+I think the most elegant way to fix this would be to introduce a new
+list_head in virt_dma_chan, let's name it desc_terminated.
+
+We would add the descriptor to this within vchan_terminate_vdesc() (lock
+is held).
+In vchan_synchronize() we would
+list_splice_tail_init(&vc->desc_terminated, &head);
+with the lock held and outside of the lock we free them up.
+
+So we would put the terminated descs to the new list and free them up in
+synchronize.
+
+This way the vchan_vdesc_fini() would be only called without the lock held.
+
+> I think vc->desc_free() being called under a spin_lock is unfortunate as
+> the i.MX SDMA driver does a dma_free_coherent() there which is required
+> to be called with interrupts enabled.
+
+In the in review k3-udma driver I use dma_pool or dma_alloc_coherent in
+mixed mode depending on the type of the channel.
+
+I did also see the same issue and what I ended up doing is to have
+desc_to_purge list and udma_purge_desc_work()
+in udma_desc_free() if the descriptor is from the dma_pool, I free it
+right away, if it needs dma_free_coherent() then I put it to the
+desc_to_purge list and schedule the purge worker to deal with them at a
+later time.
+
+In this driver I don't use vchan_terminate_vdesc() because of this.
+
+> I am not sure where to go from here hence I'm writing this mail. Do we
+> agree that vc->desc_free() should be called without lock?
+
+I think it should be called without the lock held.
+
+> 
+> Sascha
+> 
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

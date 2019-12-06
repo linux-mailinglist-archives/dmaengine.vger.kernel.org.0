@@ -2,196 +2,159 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D1AB3114818
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Dec 2019 21:28:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A71C0114FF2
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Dec 2019 12:46:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbfLEU2D (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 5 Dec 2019 15:28:03 -0500
-Received: from mail-eopbgr760087.outbound.protection.outlook.com ([40.107.76.87]:8902
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726589AbfLEU2C (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 5 Dec 2019 15:28:02 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UzSDgxMGZcbE6Q31MEbhL6LRnnmlATtmofd0THZxNTFAXVodoMRyvVJrppd2FxGK3oWjp1AAXKniUdDAq1LljYU5E//23h2JqTq09C3A/IrexhGwK7WNcc8RTXfE+Gw/vxKmi1Q7mgoLsJa8RkTaAntPWBghiAznH9E+vp9KUubKfQTKrQeD0esMOftoxjMW8ARtk8vuNXMBehBgWmp25AYJwXNMwYIcK7XYstxOVMYzkHOliWW+0tJTUCHw/B6joPFRRJAxSU/d7SvldLW2BBRLSaa1q06LjyoqhEbS52EdeWUOm7J+jPbZ5KHuHVmdvYDFWK4FpUIZbu2N7CtH8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2oTmKkeucpPjT5Fji27ONaj4c6hosb+/RW+4pZy11Lo=;
- b=Ao88hb8IoxI7GF9TDSJwcwpQ78o2Gn6Wacvit8tc50mrTHDRIZAaVlcYPMLJE56OYokv4fCnnHkJTWrGz7GXt44rlOUtOf1aQS+p5XAaZj2HzkYKBgPUGTD8tTU3RtEFM8YqWurMcoVFrgXpX97gCns+a6S96pQv1lPOYgjn1/0jcuhzA8aCPG+AxZ49+Zv4gxc6LLgGgC+lk5b4pv8Un33OpIqLPSLLBdH6LBh3/ECXmi5mIfuO7luruYEo0H73a/H8YOK7en8hcAZXEzcF0NwHXI/huMaRs/uIrp+VvL3GQRN8/m0a2+6MQyR+UorIKLBpPM2zVoisw1FXE1OaRA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2oTmKkeucpPjT5Fji27ONaj4c6hosb+/RW+4pZy11Lo=;
- b=jpVou1UL5uuBSFCvgDB85DkxHBv8IOPaan2/c3rSrcsM5ZwYFN2NIA4ZPF61GiLdeDEyLCze9W4VlGZhLr8gzCs+8bTFOB+XMTrDly6r2BbmlXeDBAFJNCqbTeZR8VOZz470FTZXxm5VwzBdR8JjVnU07CRgQsIgM93Tl/PbXg0=
-Received: from BL0PR02CA0094.namprd02.prod.outlook.com (2603:10b6:208:51::35)
- by MWHPR02MB2271.namprd02.prod.outlook.com (2603:10b6:300:5b::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.22; Thu, 5 Dec
- 2019 20:27:57 +0000
-Received: from CY1NAM02FT038.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::207) by BL0PR02CA0094.outlook.office365.com
- (2603:10b6:208:51::35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2516.13 via Frontend
- Transport; Thu, 5 Dec 2019 20:27:57 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT038.mail.protection.outlook.com (10.152.74.217) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
- via Frontend Transport; Thu, 5 Dec 2019 20:27:57 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <hyun.kwon@xilinx.com>)
-        id 1icxjA-0000pO-HB; Thu, 05 Dec 2019 12:27:56 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <hyun.kwon@xilinx.com>)
-        id 1icxj5-0005lH-Dz; Thu, 05 Dec 2019 12:27:51 -0800
-Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xB5KRlvr001474;
-        Thu, 5 Dec 2019 12:27:47 -0800
-Received: from [172.19.2.244] (helo=localhost)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <hyun.kwon@xilinx.com>)
-        id 1icxj1-0005l7-JN; Thu, 05 Dec 2019 12:27:47 -0800
-Date:   Thu, 5 Dec 2019 12:27:47 -0800
-From:   Hyun Kwon <hyun.kwon@xilinx.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Michal Simek <michals@xilinx.com>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        Tejas Upadhyay <tejasu@xilinx.com>,
-        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
-Subject: Re: [PATCH v2 2/4] dma: xilinx: dpdma: Add the Xilinx DisplayPort
- DMA engine driver
-Message-ID: <20191205202746.GA26880@smtp.xilinx.com>
-References: <20191107021400.16474-1-laurent.pinchart@ideasonboard.com>
- <20191107021400.16474-3-laurent.pinchart@ideasonboard.com>
- <20191109175908.GI952516@vkoul-mobl>
- <20191205150407.GL4734@pendragon.ideasonboard.com>
- <20191205163909.GH82508@vkoul-mobl>
+        id S1726214AbfLFLqQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 6 Dec 2019 06:46:16 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:37992 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbfLFLqQ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 6 Dec 2019 06:46:16 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191206114615euoutp011a20f54e92890ae9e22dc050bc5c572c~dxakq7aAB3065530655euoutp01g
+        for <dmaengine@vger.kernel.org>; Fri,  6 Dec 2019 11:46:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191206114615euoutp011a20f54e92890ae9e22dc050bc5c572c~dxakq7aAB3065530655euoutp01g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1575632775;
+        bh=9oqbt/YoxE9ewYGvwAnCxMcAVSivXi3Xzu/zRpPkl+A=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=J8xREQQX21WEgN3QViALH4lvQxJO9Z3Mx+YHs6EDPwrQRoUlbnJJN1WU2bStI+v72
+         2HyXhOa5k7bz2djwSnM1a4MECMSFe7+/sspMBA5Bb37791dUzU0n6jqEmFEhqVj81a
+         A6w9jTdrzxaTP9OJ7NOjcbE6LyC+5odFIfHKXFRg=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191206114614eucas1p1e13a0ce5b2997151a28511035986ef3e~dxakPJuM_0584305843eucas1p1H;
+        Fri,  6 Dec 2019 11:46:14 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id BC.78.60698.68F3AED5; Fri,  6
+        Dec 2019 11:46:14 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191206114613eucas1p2454e9af3dbc8a315405da5f8d04d6db7~dxajMYQZN1645116451eucas1p2O;
+        Fri,  6 Dec 2019 11:46:13 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191206114613eusmtrp271a40490cb01b67dac870abe2765558f~dxajLyniP2763827638eusmtrp2o;
+        Fri,  6 Dec 2019 11:46:13 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-d3-5dea3f86356c
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id D9.BF.08375.58F3AED5; Fri,  6
+        Dec 2019 11:46:13 +0000 (GMT)
+Received: from [106.120.51.15] (unknown [106.120.51.15]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191206114612eusmtip1e9434b31cd64fb27b57e7e358b932458~dxaiypoIk3097330973eusmtip1Z;
+        Fri,  6 Dec 2019 11:46:12 +0000 (GMT)
+Subject: Re: [PATCH 1/2] dmaengine: pl330: Drop boilerplate code for
+ suspend/resume
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <d413878c-1383-7964-1f94-d35dbb0b07d8@samsung.com>
+Date:   Fri, 6 Dec 2019 12:46:12 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191205163909.GH82508@vkoul-mobl>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(39860400002)(376002)(136003)(54094003)(189003)(199004)(76506006)(58126008)(16586007)(316002)(8676002)(70206006)(305945005)(53546011)(70586007)(9786002)(966005)(11346002)(54906003)(44832011)(1076003)(426003)(478600001)(5660300002)(356004)(336012)(36386004)(107886003)(2906002)(57986006)(76176011)(6916009)(8936002)(4326008)(229853002)(50466002)(26005)(81166006)(23676004)(81156014)(14444005)(186003)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR02MB2271;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 57be8f6e-7dc6-4c8a-718a-08d779c19d5f
-X-MS-TrafficTypeDiagnostic: MWHPR02MB2271:
-X-Microsoft-Antispam-PRVS: <MWHPR02MB22715623221B1A609567FF09D65C0@MWHPR02MB2271.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 02426D11FE
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ivBYac3lQXJ3peS/3ZEqesyDwhfvTbwRL+wBg15mIQJtmcC4UPZr5rqyu+Un2jaRjI6e9tUaFfUBq8TJ5Y0njnJ4DgeGEeB1CeAcurUgukHZOU8T+WPnxlS15Gdq6qQ7JxPc4mY9QzDP56Zxw2CBKZPXNcAD4noAGwsvtYQ47ODg41vyZ//YYItWr87lgphvXJMSEm3Gu7W55dwOD4nATsRc7Q/k4ozbqiS20yul0a++Dtdep3IR2L41znnEGvb2vUHuPlbwo1wZEhr5xvik6g4kPV486/k5zMTvGdo/k9aj1QHU5PIBvhG0eUKFte880A9VH4dB8AMpS8A7BDJZKkJqMfeGPlmzJoUgzxuixpgFPyCMO+fXB80f4pcYNvdF2wE3pvkrtQxZALbKysqrXX+YT70xgtYsSL5h2u6Q2QCu+jE9vtT4F3mtc0O1VFdV7KFkY33p2flu0kq4wlPIaL4ldChQBsTGSJ0dxlXoqQ3ui8hQKAvUWvJg8XKintnt23o9mxBVRy0mt1078/Brbg==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2019 20:27:57.0410
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57be8f6e-7dc6-4c8a-718a-08d779c19d5f
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR02MB2271
+In-Reply-To: <20191205143746.24873-2-ulf.hansson@linaro.org>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFKsWRmVeSWpSXmKPExsWy7djP87pt9q9iDda+krVYPfUvq8X58xvY
+        LTY9vsZqMeP8PiaL42vDLXbeOcHswOaxaVUnm8eda3vYPDYvqff4vEkugCWKyyYlNSezLLVI
+        3y6BK+P1lDusBa94Kt7Pf8PYwLiUq4uRg0NCwERi7iWzLkYuDiGBFYwS/S8WskI4Xxglfl35
+        zwbhfGaU6Li3nwWm4/cZJ4j4ckaJy5N2skA4bxklnv09ANTBySEsECqx5coDFhBbRCBFYsqc
+        xawgzcwCJRIP7vqBhNkEDCW63naxgYR5BewkPrZrg4RZBFQkJh1fCxYWFYiV6FieARLmFRCU
+        ODnzCdhATgEbiUv/37GD2MwC8hLb385hhrDFJW49mc8Eco2EwCp2iS2bdjFBnOwi8fxSMUiN
+        hICwxKvjW9ghbBmJ/zth6psZJR6eW8sO4fQA/dU0gxGiylri8PGLUOdrSqzfpQ8RdpToXbqU
+        FWI+n8SNt4IQN/BJTNo2nRkizCvR0SYEUa0mMev4Ori1By9cYp7AqDQLyWezkHwzC8k3sxD2
+        LmBkWcUonlpanJueWmycl1quV5yYW1yal66XnJ+7iRGYYk7/O/51B+O+P0mHGAU4GJV4eGd8
+        fhErxJpYVlyZe4hRgoNZSYQ3ne9lrBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe40VAKYH0xJLU
+        7NTUgtQimCwTB6dUAyP7J1HjYxxB1nGiW7lvPtf6rnDPc11T6tG0za7bPf5ucHd05a8/EfF+
+        4bHVJ5meTg8yE7pgu3ONSaz85NWtq1eW2Unrqhg+5m779HO5QHbQK0HVqS/+//S3jJov4n+S
+        P4Lj1JGaqeXb+s6qXkv7a6tq/3Bq1e1ffhvP/c0pfHrExEtRvjfZJEeJpTgj0VCLuag4EQD7
+        st8ZLQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsVy+t/xu7qt9q9iDe6sFbFYPfUvq8X58xvY
+        LTY9vsZqMeP8PiaL42vDLXbeOcHswOaxaVUnm8eda3vYPDYvqff4vEkugCVKz6Yov7QkVSEj
+        v7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSezLLVI3y5BL+P1lDusBa94Kt7Pf8PY
+        wLiUq4uRg0NCwETi9xmnLkYuDiGBpYwSG2duYO9i5ASKy0icnNbACmELS/y51sUGUfSaUaLt
+        yB82kISwQKjElisPWEBsEYEUiXNtD1lBhjILlEjMepEFUX+QUeLR4S+MIDVsAoYSXW9BBnFw
+        8ArYSXxs1wYJswioSEw6vhZspKhArMT3lZ/AynkFBCVOznwCNp5TwEbi0v93YLcxC5hJzNv8
+        kBnClpfY/nYOlC0ucevJfKYJjEKzkLTPQtIyC0nLLCQtCxhZVjGKpJYW56bnFhvqFSfmFpfm
+        pesl5+duYgRG1rZjPzfvYLy0MfgQowAHoxIP74zPL2KFWBPLiitzDzFKcDArifCm872MFeJN
+        SaysSi3Kjy8qzUktPsRoCvTcRGYp0eR8YNTnlcQbmhqaW1gamhubG5tZKInzdggcjBESSE8s
+        Sc1OTS1ILYLpY+LglGpgFF3CY6tu7XtLjc/1ovHBu6sK5kkk/vTfK3VU9Ut4Wrz8/QufFhz2
+        PM22IE9/s5tk8rv2Ew+OZ/T/0Qm/e2Dh6sePIi5sL7jhvdijYKUO2/ylr7+L+9oo/IpeZlO0
+        Y9muBTN/hfDFbWCZVBhzoFBgVv6SK52b/CYXP5W6Na0x5yUzo9qJ493fPiixFGckGmoxFxUn
+        AgD1Kl+/wgIAAA==
+X-CMS-MailID: 20191206114613eucas1p2454e9af3dbc8a315405da5f8d04d6db7
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191205143807eucas1p25392de83697a408fcd303a2289d4e88a
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191205143807eucas1p25392de83697a408fcd303a2289d4e88a
+References: <20191205143746.24873-1-ulf.hansson@linaro.org>
+        <CGME20191205143807eucas1p25392de83697a408fcd303a2289d4e88a@eucas1p2.samsung.com>
+        <20191205143746.24873-2-ulf.hansson@linaro.org>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Laurent,
+Hi Ulf,
 
-On Thu, 2019-12-05 at 08:39:09 -0800, Vinod Koul wrote:
-> Hi Laurent,
-> 
-> On 05-12-19, 17:04, Laurent Pinchart wrote:
-> > > > +/*
-> > > > + * DPDMA descriptor placement
-> > > > + * --------------------------
-> > > > + * DPDMA descritpor life time is described with following placements:
-> > > > + *
-> > > > + * allocated_desc -> submitted_desc -> pending_desc -> active_desc -> done_list
-> > > > + *
-> > > > + * Transition is triggered as following:
-> > > > + *
-> > > > + * -> allocated_desc : a descriptor allocation
-> > > > + * allocated_desc -> submitted_desc: a descriptor submission
-> > > > + * submitted_desc -> pending_desc: request to issue pending a descriptor
-> > > > + * pending_desc -> active_desc: VSYNC intr when a desc is scheduled to DPDMA
-> > > > + * active_desc -> done_list: VSYNC intr when DPDMA switches to a new desc
-> > > 
-> > > Well this tells me driver is not using vchan infrastructure, the
-> > > drivers/dma/virt-dma.c is common infra which does pretty decent list
-> > > management and drivers do not need to open code this.
-> > > 
-> > > Please convert the driver to use virt-dma
-> > 
-> > As noted in the cover letter,
-> > 
-> > "There is one review comment that is still pending: switching to
-> > virt-dma. I started investigating this, and it quickly appeared that
-> > this would result in an almost complete rewrite of the driver's logic.
-> > While the end result may be better, I wonder if this is worth it, given
-> > that the DPDMA is tied to the DisplayPort subsystem and can't be used
-> > with other DMA slaves. The DPDMA is thus used with very specific usage
-> > patterns, which don't need the genericity of descriptor handling
-> > provided by virt-dma. Vinod, what's your opinion on this ? Is virt-dma
-> > usage a blocker to merge this driver, could we switch to it later, or is
-> > it just overkill in this case ?"
-> > 
-> > I'd like to ask an additional question : is the dmaengine API the best
-> > solution for this ? The DPDMA is a separate IP core, but it is tied with
-> > the DP subsystem. I'm tempted to just fold it in the display driver. The
-> > only reason why I'm hesitant on this is that the DPDMA also handles
-> > audio channels, that are also part of the DP subsystem, but that could
-> > be handled by a separate ALSA driver. Still, handling display, audio and
-> > DMA in drivers that we pretend are independent and generic would be a
-> > bit of a lie.
-> 
-> Yeah if it is _only_ going to be used in display and no other client
-> using it, then I really do not see any advantage of this being a
-> dmaengine driver. That is pretty much we have been telling folks over
-> the years.
+On 05.12.2019 15:37, Ulf Hansson wrote:
+> Let's drop the boilerplate code in the system suspend/resume callbacks and
+> convert to use pm_runtime_force_suspend|resume(). This change also has a
+> nice side effect, as pm_runtime_force_resume() may decide to leave the
+> device in low power state, when that is feasible, thus avoiding to waste
+> both time and energy during system resume.
+>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-In the development cycles, the IP blocks came in pieces. The DP tx driver
-was developed first as one driver, with dmaengine driver other than DPDMA.
-Then the ZynqMP block was added along with this DPDMA driver. Hence,
-the reverse is possible, meaning some can decide to take a part of it
-and harden with other blocks in next generation SoC. So there was and will
-be benefit of keeping drivers modular at block level in my opinion, and
-I'm not sure if it needs to put in a monolithic format, when it's already
-modular.
+Works fine on various Samsung Exynos boards I have for tests.
 
-> 
-> Btw since this is xilinx and I guess everything is an IP how difficult
-> would it be to put this on a non display core :)
-> 
-> If you decide to use dmaengine I would prefer it use virt-dma that mean
-> rewrite yes but helps you term
-> 
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-I made changes using vchan[1], but it was a while ago. So it might have
-been outdated, and details are vague in my head. Not sure if it was at
-fully functional stage. Still, just in case it may be helpful.
+> ---
+>   drivers/dma/pl330.c | 12 ++----------
+>   1 file changed, 2 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+> index 6cce9ef61b29..8e01da157518 100644
+> --- a/drivers/dma/pl330.c
+> +++ b/drivers/dma/pl330.c
+> @@ -2961,12 +2961,7 @@ static int __maybe_unused pl330_suspend(struct device *dev)
+>   {
+>   	struct amba_device *pcdev = to_amba_device(dev);
+>   
+> -	pm_runtime_disable(dev);
+> -
+> -	if (!pm_runtime_status_suspended(dev)) {
+> -		/* amba did not disable the clock */
+> -		amba_pclk_disable(pcdev);
+> -	}
+> +	pm_runtime_force_suspend(dev);
+>   	amba_pclk_unprepare(pcdev);
+>   
+>   	return 0;
+> @@ -2981,10 +2976,7 @@ static int __maybe_unused pl330_resume(struct device *dev)
+>   	if (ret)
+>   		return ret;
+>   
+> -	if (!pm_runtime_status_suspended(dev))
+> -		ret = amba_pclk_enable(pcdev);
+> -
+> -	pm_runtime_enable(dev);
+> +	pm_runtime_force_resume(dev);
+>   
+>   	return ret;
+>   }
 
-[1] https://github.com/starhwk/linux-xlnx/commits/hyunk/upstreaming?after=0b0002113e7381d8a5f3119d064676af4d0953f4+34
-
-Thanks,
--hyun
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 

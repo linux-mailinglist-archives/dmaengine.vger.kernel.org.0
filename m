@@ -2,172 +2,129 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A0B41168FB
-	for <lists+dmaengine@lfdr.de>; Mon,  9 Dec 2019 10:16:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35A9C11694C
+	for <lists+dmaengine@lfdr.de>; Mon,  9 Dec 2019 10:28:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbfLIJQg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 9 Dec 2019 04:16:36 -0500
-Received: from mail-eopbgr130073.outbound.protection.outlook.com ([40.107.13.73]:29832
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727370AbfLIJQg (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 9 Dec 2019 04:16:36 -0500
+        id S1727144AbfLIJ2z (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 9 Dec 2019 04:28:55 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:53910 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727044AbfLIJ2z (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 9 Dec 2019 04:28:55 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB99QZJ2016727;
+        Mon, 9 Dec 2019 04:28:40 -0500
+Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2053.outbound.protection.outlook.com [104.47.46.53])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2wraq3dq7a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Dec 2019 04:28:40 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BWDzhDzFKd7DEVP+SrmN1fbkpjvxu0XDt6M0SuxMGZFqpckQcirCwCIq/6XAUn6lvmBqLitLSMrrQ3dAEAwg0UNQiAPWiSarKvVYiF4H32RmtmGdr3RbXoDGDpsUOPaYJLkY8Z6hfBQgp/p6JAkZwjXfbzDys/2E04kUc/nmykAvY91lY+QubH2zgwBl6jsYKc7d7bRN58kaP3X5bCoCkNyd11xSDhs5X/GrB2n69JbL1DIpvVAxWeWumqNu3Z1OFhoG/x5DLFBS4TnOlFhD6sEbuLjO51mwbxipuy74sAFEPccw09UXu5hXzUmmy16Dt8LVT4IzcUT9FV0ge8mVAw==
+ b=aK0PQSRfwc1+gBjhpVn5lxzIwz1ELTaWRv+InqNheEUesiEcNTP0+8C5Y8s3J7sxiBjkUVL2QLhJBdT3ZnblvUlKKWR580PxMclSnrHCC/0r0IoWJ7YtjBeQKGVy8NgCdznMb+xNvYMhnK8ZS2zkFakePyitBjjluph6SZcWujmrl+CXCkykvIHxZlQzUP5n/J8cjQ+b+DSE2cp5XmdU++spoaW24Us8oZZls5VuN6P+V8k1ePJEVfHR5UAaEOSEdFNTajTbKoA5qnRi4mdGQI9RDLSosb+Li2QguqZVS/APwfZtsymRnjuqeu0p3ZPz8DoeFtQ3lAFAd9szFV+TKQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3ACUsr9MeoTLaHsFYoBOt5PpAow2E2HFdETLHOrvG7k=;
- b=YakHlpjQT6VBbGfM+DPcbY47ht2qASKvGZEo9d8+gl3S/s1VhJ7NN1yC1xhmgh7e1qJUEsQDLpZ7q+SxpXOQp3Qn71Yk1ymIvwgLBzJLnPWk1mpWl76/DTOZ6ioNM2rkcW6nKj1HmUgyLs24K8V2NKNthhPoSG6PIGq+/qQm+gtBjlFm/Y9o7+ZzqX9QaV0JdliJlJNXpfcoeTymQerbUWWhWJfWFnuLtkfNAodcUh8/6qdpKZ+SeKpwFWRvf4Y7seJZPDe2GdjqcJR17A+IemQQ/wtHpadgRv5P0D2AJqDwPADXR3jUSxcCT/3lfobxvz9HbZ+6w7dcTtiSxmVKOQ==
+ bh=DPfe8uiSJkHB0cz3cnWoauntF7PbirniIBxeuaxGMtc=;
+ b=iYm3moC+KhNgx6naVYQyj4urrqKlV2UwJF0A2+/uuEV2Cn6pcUeBIPGeB/l0ovy6u0wXE6hpX6L1KZkeyqcFoFywblMRmoJ0kYDBSKHX4GeFU+dVNjNyrr2Gy3h3V3qQWwYoorghuXUTHw0yyC/8iP7y05GkZ11cNEbQjRgvkec3vL+eEWeCrYuC6K4Fckoqpnd8UXzu2IpQnwppRepAjNE7BQ1sBY0Zeelwl2weAfH2WNmBuuB+hUsChu2ivHyVp0QCFIIrKeaxgN6DJYep8Zx9LMNfNZr8IpXwQtZ0Ef9ByGerdLLBPHAYVJ2iv/lj7nGqyidB4uX9Sz6T1jA3JA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3ACUsr9MeoTLaHsFYoBOt5PpAow2E2HFdETLHOrvG7k=;
- b=bhDV/olPjsB9Zd31YDVYIX6AwCbfqiXi4lWTureawv1jUrf/Dz2vi5dpvvxr+6W8lThxJ47E4edgcw3hQp50MMAtHhSYwlrxPpvUnK4NmkcmQ08gkZaKL6CGVU0OHVN3RP9p/H06EA5kff/cWg0aU+XD00uL+11rPj+RIvydPUs=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
- VE1PR04MB6493.eurprd04.prod.outlook.com (20.179.233.139) with Microsoft SMTP
+ bh=DPfe8uiSJkHB0cz3cnWoauntF7PbirniIBxeuaxGMtc=;
+ b=9GZZrx/v9XzJeMnaK+EBu6CcuYIH5pH0+Ttw+JKQa+MzqgsgMWhVYgYoCcGkqhuCYRFQlDOgqusL+p1jhGD/q+2/cBgnWz4qUPedUrRIsowPNpxVa2v2y5TsEb6icLP5BL3FEbzfWnHQd7nil3Sta3pj5Lyi+z0P8cPtkJYtpdQ=
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
+ CH2PR03MB5174.namprd03.prod.outlook.com (20.180.4.83) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.13; Mon, 9 Dec 2019 09:15:50 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::100:f42b:82a1:68c2]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::100:f42b:82a1:68c2%7]) with mapi id 15.20.2516.018; Mon, 9 Dec 2019
- 09:15:50 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Peng Ma <peng.ma@nxp.com>, "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Leo Li <leoyang.li@nxp.com>
-CC:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+ 15.20.2516.14; Mon, 9 Dec 2019 09:28:37 +0000
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::38e7:c7c5:75cc:682c]) by CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::38e7:c7c5:75cc:682c%5]) with mapi id 15.20.2516.018; Mon, 9 Dec 2019
+ 09:28:37 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "hslester96@gmail.com" <hslester96@gmail.com>
+CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [v3] dmaengine: fsl-edma: Add eDMA support for QorIQ LS1028A
- platform
-Thread-Topic: [v3] dmaengine: fsl-edma: Add eDMA support for QorIQ LS1028A
- platform
-Thread-Index: AQHVrm9ixVNwnMvsy0G4gu21x4yF3Kexg4wg
-Date:   Mon, 9 Dec 2019 09:15:50 +0000
-Message-ID: <VE1PR04MB6638C13336F3F87585AC17F189580@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <20191209090110.20240-1-peng.ma@nxp.com>
-In-Reply-To: <20191209090110.20240-1-peng.ma@nxp.com>
+Subject: Re: [PATCH] dmaengine: axi-dmac: add a check for
+ devm_regmap_init_mmio
+Thread-Topic: [PATCH] dmaengine: axi-dmac: add a check for
+ devm_regmap_init_mmio
+Thread-Index: AQHVrm6zhfB4YXZwDU+2mjrHrKjDGKexiZaA
+Date:   Mon, 9 Dec 2019 09:28:37 +0000
+Message-ID: <232e1bafc05611355fdd26e2ffa16d0050ad37fc.camel@analog.com>
+References: <20191209085711.16001-1-hslester96@gmail.com>
+In-Reply-To: <20191209085711.16001-1-hslester96@gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
+x-originating-ip: [137.71.226.54]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 945531f5-d8c3-475b-a730-08d77c88629d
-x-ms-traffictypediagnostic: VE1PR04MB6493:|VE1PR04MB6493:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6493278E688D1EEED75AEAC189580@VE1PR04MB6493.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-office365-filtering-correlation-id: d0ae8cc0-01c2-4f7b-f76e-08d77c8a2b75
+x-ms-traffictypediagnostic: CH2PR03MB5174:
+x-microsoft-antispam-prvs: <CH2PR03MB5174AEA2D43BF58B8EBD00FAF9580@CH2PR03MB5174.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1388;
 x-forefront-prvs: 02462830BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(396003)(366004)(136003)(199004)(189003)(74316002)(8676002)(110136005)(8936002)(26005)(305945005)(33656002)(9686003)(2906002)(71200400001)(81166006)(186003)(81156014)(316002)(71190400001)(54906003)(55016002)(76116006)(4326008)(66946007)(76176011)(7696005)(66446008)(64756008)(99286004)(66476007)(66556008)(5660300002)(53546011)(6506007)(52536014)(86362001)(6636002)(478600001)(102836004)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6493;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(366004)(39860400002)(136003)(376002)(199004)(189003)(478600001)(186003)(2906002)(4326008)(86362001)(66946007)(316002)(76176011)(99286004)(2616005)(229853002)(26005)(54906003)(8936002)(305945005)(6916009)(6512007)(102836004)(6486002)(5660300002)(118296001)(81156014)(71200400001)(71190400001)(5640700003)(6506007)(81166006)(8676002)(66446008)(66476007)(66556008)(64756008)(76116006)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5174;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: JZS/xMy5IfJvOEa3cyTLmFq0O4qSNpT0eYZAQ1SjLq4EsxJJkTEA6kZFRdJTRistL0xB+e0k40sFmhaAUkdgrIYJZ8sOR2S8e/ovhjw572MXzwQ80XPGUpPaM1jEa/a4HqhicJhWbeHgMm2Bk2nBaenOIZZ5Pjc5kXbQoWQLz5ajirnQCKdmIGBTAVjdrvd4EoyF1nM3ShldAmEViS70W+pw3M/CPk0YTLeO9sXNJTPZvZOs0F2XvfCh1iGVQ1OWj85q6gGvAiyT94lBqC2OydcTx7OqURbqupTb01rhRah6kTGIELzFEKkovTb/6IFamk1HiV+krSa2jIGDWVrMbRB4odLAxzL5ecLq/dBsCkS1pq17TrDaTYPdDSdsQG0qzGKgONkKF+izBUi9qmRpOMFWwclgY7KiVnU7AyXtrJS9bgvao2qYCXZmbdBtIw5i
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: 79jiqzfQxxLhN8KVQzuQcWUsBsWo/O60NN7BWf7hCiJTAeILIW9FrMBm7zj86nwH8nUD3rqiyIRgcA0DYreDVFbR1P9v71lDpseE5OIBD+rjhntsJq8PwkU+7YIp3mwgWPsiwUv0b60xRKjlYfTyIitzMpXE5bAvGW4OdbjdbewIVa8FaYOOTssvzROYEj4G7BT6Ibxg6DVT3rqNzVhlxJKIHU0S/cm4KS2XOVAOBD+bwlySjjUrXUOYdd2rBMT06ImKQjhA1sjx6/8RM3gjWzvVGgkfISFFDmP2PNBKAdhF7DD04ChWNhWKTue43xcPEfs1nDfUhHoN8isdBNG0wQQycGqOWl/x/s5RwWVK5uESHtfmITjrMlOefXiQfUY6PDj+2VYaigxvaPyOU9GESrxOjToQJKLoloDVFalsEx3NbL3L1AukaOOfa8bcN/ks
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B8155289B51E944EAC1D2C16AE73ED20@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 945531f5-d8c3-475b-a730-08d77c88629d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2019 09:15:50.6640
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0ae8cc0-01c2-4f7b-f76e-08d77c8a2b75
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2019 09:28:37.1432
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4OQr3t9+cl0trjt88J3TqbvYsf/bqhvlPD7XBXBciJ1h2MQsz20nd6eQ3phQBy8fJGLoKkq/lKypRhAoAtvBMQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6493
+X-MS-Exchange-CrossTenant-userprincipalname: pmDRS4l6O/MzOzwAHdE3xLS7yumb1VC/Y3STBn7oCCw9GKRjPsTnNBwWNj+IjLbtNd5++hnDhtzOlqoH8iJ/qctFVfcuJrE9jz3yWHGigEI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5174
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-09_01:2019-12-09,2019-12-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 phishscore=0
+ impostorscore=0 mlxscore=0 clxscore=1011 mlxlogscore=999 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912090081
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 2019/12/9 17:03 Peng Ma <peng.ma@nxp.com> wrote:
-> Our platforms(such as LS1021A, LS1012A, LS1043A, LS1046A, LS1028A) with
-> below registers(CHCFG0 - CHCFG15) of eDMA as follows:
-> *-----------------------------------------------------------*
-> |     Offset   |	OTHERS      |		LS1028A	    |
-> |--------------|--------------------|-----------------------|
-> |     0x0      |        CHCFG0      |           CHCFG3      |
-> |--------------|--------------------|-----------------------|
-> |     0x1      |        CHCFG1      |           CHCFG2      |
-> |--------------|--------------------|-----------------------|
-> |     0x2      |        CHCFG2      |           CHCFG1      |
-> |--------------|--------------------|-----------------------|
-> |     0x3      |        CHCFG3      |           CHCFG0      |
-> |--------------|--------------------|-----------------------|
-> |     ...      |        ......      |           ......      |
-> |--------------|--------------------|-----------------------|
-> |     0xC      |        CHCFG12     |           CHCFG15     |
-> |--------------|--------------------|-----------------------|
-> |     0xD      |        CHCFG13     |           CHCFG14     |
-> |--------------|--------------------|-----------------------|
-> |     0xE      |        CHCFG14     |           CHCFG13     |
-> |--------------|--------------------|-----------------------|
-> |     0xF      |        CHCFG15     |           CHCFG12     |
-> *-----------------------------------------------------------*
->=20
-> This patch is to improve edma driver to fit LS1028A platform.
->=20
-> Signed-off-by: Peng Ma <peng.ma@nxp.com>
-> ---
-> Changed for v3:
-> 	- Rename struct soc_device_attribute
->=20
->  drivers/dma/fsl-edma-common.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->=20
-> diff --git a/drivers/dma/fsl-edma-common.c
-> b/drivers/dma/fsl-edma-common.c index b1a7ca9..10234e1 100644
-> --- a/drivers/dma/fsl-edma-common.c
-> +++ b/drivers/dma/fsl-edma-common.c
-> @@ -7,6 +7,7 @@
->  #include <linux/module.h>
->  #include <linux/slab.h>
->  #include <linux/dma-mapping.h>
-> +#include <linux/sys_soc.h>
->=20
->  #include "fsl-edma-common.h"
->=20
-> @@ -42,6 +43,11 @@
->=20
->  #define EDMA_TCD		0x1000
->=20
-> +static struct soc_device_attribute mux_byte_swap_quirk[] =3D {
-> +	{ .family =3D "QorIQ LS1028A"},
-> +	{ },
-> +};
-> +
-How about add 'mux_swap' into 'struct fsl_edma_drvdata' instead
-of involving any soc type into the common fsl-edma-common.c? Then
-soc type could be added into chip level driver fsl-edma.c like "fsl,vf610-e=
-dma"/
-"fsl,imx7ulp-edma".
-
->  static void fsl_edma_enable_request(struct fsl_edma_chan *fsl_chan)  {
->  	struct edma_regs *regs =3D &fsl_chan->edma->regs; @@ -109,10 +115,16
-> @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
->  	u32 ch =3D fsl_chan->vchan.chan.chan_id;
->  	void __iomem *muxaddr;
->  	unsigned int chans_per_mux, ch_off;
-> +	int endian_diff[4] =3D {3, 1, -1, -3};
->  	u32 dmamux_nr =3D fsl_chan->edma->drvdata->dmamuxs;
->=20
->  	chans_per_mux =3D fsl_chan->edma->n_chans / dmamux_nr;
->  	ch_off =3D fsl_chan->vchan.chan.chan_id % chans_per_mux;
-> +
-> +	if (!fsl_chan->edma->big_endian &&
-> +	    soc_device_match(mux_byte_swap_quirk))
-> +		ch_off +=3D endian_diff[ch_off % 4];
-> +
->  	muxaddr =3D fsl_chan->edma->muxbase[ch / chans_per_mux];
->  	slot =3D EDMAMUX_CHCFG_SOURCE(slot);
->=20
-> --
-> 2.9.5
-
+T24gTW9uLCAyMDE5LTEyLTA5IGF0IDE2OjU3ICswODAwLCBDaHVob25nIFl1YW4gd3JvdGU6DQo+
+IFtFeHRlcm5hbF0NCj4gDQo+IFRoZSBkcml2ZXIgbWlzc2VzIGNoZWNraW5nIHRoZSByZXN1bHQg
+b2YgZGV2bV9yZWdtYXBfaW5pdF9tbWlvKCkuDQo+IEFkZCBhIGNoZWNrIHRvIGZpeCBpdC4NCg0K
+VGhhbmtzIDopDQoNClJldmlld2VkLWJ5OiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5h
+cmRlbGVhbkBhbmFsb2cuY29tPg0KDQo+IA0KPiBGaXhlczogZmMxNWJlMzlhODI3ICgiZG1hZW5n
+aW5lOiBheGktZG1hYzogYWRkIHJlZ21hcCBzdXBwb3J0IikNCj4gU2lnbmVkLW9mZi1ieTogQ2h1
+aG9uZyBZdWFuIDxoc2xlc3Rlcjk2QGdtYWlsLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2RtYS9k
+bWEtYXhpLWRtYWMuYyB8IDEwICsrKysrKysrKy0NCj4gIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2Vy
+dGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2RtYS9k
+bWEtYXhpLWRtYWMuYyBiL2RyaXZlcnMvZG1hL2RtYS1heGktZG1hYy5jDQo+IGluZGV4IGEwZWU0
+MDRiNzM2ZS4uY2Y0Zjg5MjU2MmNjIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2RtYS9kbWEtYXhp
+LWRtYWMuYw0KPiArKysgYi9kcml2ZXJzL2RtYS9kbWEtYXhpLWRtYWMuYw0KPiBAQCAtODMwLDYg
+KzgzMCw3IEBAIHN0YXRpYyBpbnQgYXhpX2RtYWNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rldmlj
+ZQ0KPiAqcGRldikNCj4gIAlzdHJ1Y3QgZG1hX2RldmljZSAqZG1hX2RldjsNCj4gIAlzdHJ1Y3Qg
+YXhpX2RtYWMgKmRtYWM7DQo+ICAJc3RydWN0IHJlc291cmNlICpyZXM7DQo+ICsJc3RydWN0IHJl
+Z21hcCAqcmVnbWFwOw0KPiAgCWludCByZXQ7DQo+ICANCj4gIAlkbWFjID0gZGV2bV9remFsbG9j
+KCZwZGV2LT5kZXYsIHNpemVvZigqZG1hYyksIEdGUF9LRVJORUwpOw0KPiBAQCAtOTIxLDEwICs5
+MjIsMTcgQEAgc3RhdGljIGludCBheGlfZG1hY19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
+DQo+ICpwZGV2KQ0KPiAgDQo+ICAJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgZG1hYyk7DQo+
+ICANCj4gLQlkZXZtX3JlZ21hcF9pbml0X21taW8oJnBkZXYtPmRldiwgZG1hYy0+YmFzZSwNCj4g
+JmF4aV9kbWFjX3JlZ21hcF9jb25maWcpOw0KPiArCXJlZ21hcCA9IGRldm1fcmVnbWFwX2luaXRf
+bW1pbygmcGRldi0+ZGV2LCBkbWFjLT5iYXNlLA0KPiArCQkgJmF4aV9kbWFjX3JlZ21hcF9jb25m
+aWcpOw0KPiArCWlmIChJU19FUlIocmVnbWFwKSkgew0KPiArCQlyZXQgPSBQVFJfRVJSKHJlZ21h
+cCk7DQo+ICsJCWdvdG8gZXJyX2ZyZWVfaXJxOw0KPiArCX0NCj4gIA0KPiAgCXJldHVybiAwOw0K
+PiAgDQo+ICtlcnJfZnJlZV9pcnE6DQo+ICsJZnJlZV9pcnEoZG1hYy0+aXJxLCBkbWFjKTsNCj4g
+IGVycl91bnJlZ2lzdGVyX29mOg0KPiAgCW9mX2RtYV9jb250cm9sbGVyX2ZyZWUocGRldi0+ZGV2
+Lm9mX25vZGUpOw0KPiAgZXJyX3VucmVnaXN0ZXJfZGV2aWNlOg0K

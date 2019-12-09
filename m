@@ -2,133 +2,106 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B24B1162EB
-	for <lists+dmaengine@lfdr.de>; Sun,  8 Dec 2019 17:03:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 642F6116796
+	for <lists+dmaengine@lfdr.de>; Mon,  9 Dec 2019 08:38:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbfLHQD6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 8 Dec 2019 11:03:58 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:43348 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfLHQD6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 8 Dec 2019 11:03:58 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8C0FD52B;
-        Sun,  8 Dec 2019 17:03:56 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1575821036;
-        bh=ZvcLAs9fZ2AAwtiANkJEvG48AhEnJZDrE7y69+gtfrY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jmE86OGjx3jjJihEpMBUADS5i36a7sfOt11aXF8KWBxaFKkNXJDjb778FQbIsEc3I
-         RJQIkDE4CddaPMfLkJen8rWH+wvCFwU8Jme0x2CBxuHgMdHlJBzkga2q6BcWINVobt
-         8w2LC6DY0G9e1txjvMryZ+DhExEIrxei2/lhmKqc=
-Date:   Sun, 8 Dec 2019 18:03:49 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Hyun Kwon <hyun.kwon@xilinx.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Michal Simek <michals@xilinx.com>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        Tejas Upadhyay <tejasu@xilinx.com>,
-        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
-Subject: Re: [PATCH v2 2/4] dma: xilinx: dpdma: Add the Xilinx DisplayPort
- DMA engine driver
-Message-ID: <20191208160349.GD14311@pendragon.ideasonboard.com>
-References: <20191107021400.16474-1-laurent.pinchart@ideasonboard.com>
- <20191107021400.16474-3-laurent.pinchart@ideasonboard.com>
- <20191109175908.GI952516@vkoul-mobl>
- <20191205150407.GL4734@pendragon.ideasonboard.com>
- <20191205163909.GH82508@vkoul-mobl>
- <20191205202746.GA26880@smtp.xilinx.com>
+        id S1726623AbfLIHiX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 9 Dec 2019 02:38:23 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:40098 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfLIHiX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 9 Dec 2019 02:38:23 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xB97cCvB065492;
+        Mon, 9 Dec 2019 01:38:12 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1575877092;
+        bh=OElIG5LMZuOsqn8ukFVxaVNXGeLlQFb4+8JTaf86QlI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=CtyGzkCrxJH89u+7/zFmsx8oLbLeyiLP9paEAJAfY3hk1qLwHxvRgIaY+gTPFnHPH
+         LL9j5VH+gKgOT/7upWG+wF+8M+Wn+0x2f7Du9bGQBiDQDHdNxrVC6R3KZ53qGCUOdk
+         GuiMLks9z9xdtXYdQg1K/oydY+JymMcBNJ21J4t4=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xB97cCAV112228
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Dec 2019 01:38:12 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 9 Dec
+ 2019 01:38:11 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 9 Dec 2019 01:38:11 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xB97c9kO003091;
+        Mon, 9 Dec 2019 01:38:09 -0600
+Subject: Re: [PATCH 1/5] dmaengine: virt-dma: Add missing locking around list
+ operations
+To:     Sascha Hauer <s.hauer@pengutronix.de>, <dmaengine@vger.kernel.org>
+CC:     Vinod Koul <vkoul@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>
+References: <20191206135344.29330-1-s.hauer@pengutronix.de>
+ <20191206135344.29330-2-s.hauer@pengutronix.de>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <2da64628-20e5-b12d-798e-b47cf025badc@ti.com>
+Date:   Mon, 9 Dec 2019 09:38:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191205202746.GA26880@smtp.xilinx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191206135344.29330-2-s.hauer@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Hyun and Vinod,
+Hi Sascha,
 
-On Thu, Dec 05, 2019 at 12:27:47PM -0800, Hyun Kwon wrote:
-> On Thu, 2019-12-05 at 08:39:09 -0800, Vinod Koul wrote:
-> > On 05-12-19, 17:04, Laurent Pinchart wrote:
-> > > > > +/*
-> > > > > + * DPDMA descriptor placement
-> > > > > + * --------------------------
-> > > > > + * DPDMA descritpor life time is described with following placements:
-> > > > > + *
-> > > > > + * allocated_desc -> submitted_desc -> pending_desc -> active_desc -> done_list
-> > > > > + *
-> > > > > + * Transition is triggered as following:
-> > > > > + *
-> > > > > + * -> allocated_desc : a descriptor allocation
-> > > > > + * allocated_desc -> submitted_desc: a descriptor submission
-> > > > > + * submitted_desc -> pending_desc: request to issue pending a descriptor
-> > > > > + * pending_desc -> active_desc: VSYNC intr when a desc is scheduled to DPDMA
-> > > > > + * active_desc -> done_list: VSYNC intr when DPDMA switches to a new desc
-> > > > 
-> > > > Well this tells me driver is not using vchan infrastructure, the
-> > > > drivers/dma/virt-dma.c is common infra which does pretty decent list
-> > > > management and drivers do not need to open code this.
-> > > > 
-> > > > Please convert the driver to use virt-dma
-> > > 
-> > > As noted in the cover letter,
-> > > 
-> > > "There is one review comment that is still pending: switching to
-> > > virt-dma. I started investigating this, and it quickly appeared that
-> > > this would result in an almost complete rewrite of the driver's logic.
-> > > While the end result may be better, I wonder if this is worth it, given
-> > > that the DPDMA is tied to the DisplayPort subsystem and can't be used
-> > > with other DMA slaves. The DPDMA is thus used with very specific usage
-> > > patterns, which don't need the genericity of descriptor handling
-> > > provided by virt-dma. Vinod, what's your opinion on this ? Is virt-dma
-> > > usage a blocker to merge this driver, could we switch to it later, or is
-> > > it just overkill in this case ?"
-> > > 
-> > > I'd like to ask an additional question : is the dmaengine API the best
-> > > solution for this ? The DPDMA is a separate IP core, but it is tied with
-> > > the DP subsystem. I'm tempted to just fold it in the display driver. The
-> > > only reason why I'm hesitant on this is that the DPDMA also handles
-> > > audio channels, that are also part of the DP subsystem, but that could
-> > > be handled by a separate ALSA driver. Still, handling display, audio and
-> > > DMA in drivers that we pretend are independent and generic would be a
-> > > bit of a lie.
-> > 
-> > Yeah if it is _only_ going to be used in display and no other client
-> > using it, then I really do not see any advantage of this being a
-> > dmaengine driver. That is pretty much we have been telling folks over
-> > the years.
+On 06/12/2019 15.53, Sascha Hauer wrote:
+> All list operations are protected by &vc->lock. As vchan_vdesc_fini()
+> is called unlocked add the missing locking around the list operations.
+
+At this commit the vhcan_vdesc_fini() _is_ called when the lock is held
+via vchan_terminate_vdesc() which must be called with the lock held...
+
+Swap patch 1 and 2.
+
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> ---
+>  drivers/dma/virt-dma.h | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 > 
-> In the development cycles, the IP blocks came in pieces. The DP tx driver
-> was developed first as one driver, with dmaengine driver other than DPDMA.
-> Then the ZynqMP block was added along with this DPDMA driver. Hence,
-> the reverse is possible, meaning some can decide to take a part of it
-> and harden with other blocks in next generation SoC. So there was and will
-> be benefit of keeping drivers modular at block level in my opinion, and
-> I'm not sure if it needs to put in a monolithic format, when it's already
-> modular.
-
-OK, in the light of this information I'll keep the two separate and will
-switch to vchan as requested by Vinod.
-
-> > Btw since this is xilinx and I guess everything is an IP how difficult
-> > would it be to put this on a non display core :)
-> > 
-> > If you decide to use dmaengine I would prefer it use virt-dma that mean
-> > rewrite yes but helps you term
+> diff --git a/drivers/dma/virt-dma.h b/drivers/dma/virt-dma.h
+> index ab158bac03a7..41883ee2c29f 100644
+> --- a/drivers/dma/virt-dma.h
+> +++ b/drivers/dma/virt-dma.h
+> @@ -113,10 +113,15 @@ static inline void vchan_vdesc_fini(struct virt_dma_desc *vd)
+>  {
+>  	struct virt_dma_chan *vc = to_virt_chan(vd->tx.chan);
+>  
+> -	if (dmaengine_desc_test_reuse(&vd->tx))
+> +	if (dmaengine_desc_test_reuse(&vd->tx)) {
+> +		unsigned long flags;
+> +
+> +		spin_lock_irqsave(&vc->lock, flags);
+>  		list_add(&vd->node, &vc->desc_allocated);
+> -	else
+> +		spin_unlock_irqrestore(&vc->lock, flags);
+> +	} else {
+>  		vc->desc_free(vd);
+> +	}
+>  }
+>  
+>  /**
 > 
-> I made changes using vchan[1], but it was a while ago. So it might have
-> been outdated, and details are vague in my head. Not sure if it was at
-> fully functional stage. Still, just in case it may be helpful.
-> 
-> [1] https://github.com/starhwk/linux-xlnx/commits/hyunk/upstreaming?after=0b0002113e7381d8a5f3119d064676af4d0953f4+34
 
-Thank you, I will use that as a starting point.
+- Péter
 
--- 
-Regards,
-
-Laurent Pinchart
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

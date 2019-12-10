@@ -2,117 +2,72 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A26FE118962
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Dec 2019 14:16:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FDAE118A37
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Dec 2019 14:56:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfLJNQ5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 10 Dec 2019 08:16:57 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:47618 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727211AbfLJNQ5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 10 Dec 2019 08:16:57 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBADGk4t034681;
-        Tue, 10 Dec 2019 07:16:46 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1575983807;
-        bh=+9dhGSfHLOA7rXBc4Xlr8mMK0v5WGUNIIPWZXmwBRxA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fXaCMbdsOrF1O9xndHnxJ1sgeTkOTvkTjktJpeoVU9DPUCkdz2s+kM4euyUhSNYfv
-         PliBCckXRWguBMHr++F0wB6u6uaKJy7C2qLfDZepbu+9A+WcMiBq/Uhe7rfix4RVz/
-         wqe+Nu30UqrBp4bivW28sH01lRQICncrrR0hDoh8=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBADGke2119436
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Dec 2019 07:16:46 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 10
- Dec 2019 07:16:44 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 10 Dec 2019 07:16:44 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBADGgtL009904;
-        Tue, 10 Dec 2019 07:16:43 -0600
-Subject: Re: [PATCH 2/6] dmaengine: virt-dma: Add missing locking around list
- operations
-To:     Sascha Hauer <s.hauer@pengutronix.de>, <dmaengine@vger.kernel.org>
-CC:     Vinod Koul <vkoul@kernel.org>,
+        id S1727332AbfLJN4K (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 10 Dec 2019 08:56:10 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57023 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727007AbfLJN4K (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 10 Dec 2019 08:56:10 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1iefzk-00013I-HK; Tue, 10 Dec 2019 14:56:08 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <sha@pengutronix.de>)
+        id 1iefzj-0004Tx-Mg; Tue, 10 Dec 2019 14:56:07 +0100
+Date:   Tue, 10 Dec 2019 14:56:07 +0100
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     dmaengine@vger.kernel.org
+Cc:     Vinod Koul <vkoul@kernel.org>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         NXP Linux Team <linux-imx@nxp.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH 6/6] ARM: imx_v6_v7_defconfig: Enable NFS_V4_1 and
+ NFS_V4_2 support
+Message-ID: <20191210135607.sjaotvtwbfaqo7dy@pengutronix.de>
 References: <20191210123352.7555-1-s.hauer@pengutronix.de>
- <20191210123352.7555-3-s.hauer@pengutronix.de>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <6fd01a9e-9eda-b1a3-88e3-893d2c3ee70a@ti.com>
-Date:   Tue, 10 Dec 2019 15:16:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ <20191210123352.7555-7-s.hauer@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191210123352.7555-3-s.hauer@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210123352.7555-7-s.hauer@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 14:55:40 up 155 days, 20:05, 150 users,  load average: 0.34, 0.14,
+ 0.10
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 10/12/2019 14.33, Sascha Hauer wrote:
-> All list operations are protected by &vc->lock. As vchan_vdesc_fini()
-> is called unlocked add the missing locking around the list operations.
+On Tue, Dec 10, 2019 at 01:33:52PM +0100, Sascha Hauer wrote:
+> Enable NFS_V4_1 and NFS_V4_2 to support NFS servers providing that
+> protocol.
 > 
 > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 > ---
->  drivers/dma/virt-dma.h | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/dma/virt-dma.h b/drivers/dma/virt-dma.h
-> index e213137b6bc1..e9f5250fbe4d 100644
-> --- a/drivers/dma/virt-dma.h
-> +++ b/drivers/dma/virt-dma.h
-> @@ -113,10 +113,15 @@ static inline void vchan_vdesc_fini(struct virt_dma_desc *vd)
->  {
->  	struct virt_dma_chan *vc = to_virt_chan(vd->tx.chan);
->  
-> -	if (dmaengine_desc_test_reuse(&vd->tx))
-> +	if (dmaengine_desc_test_reuse(&vd->tx)) {
-> +		unsigned long flags;
-> +
-> +		spin_lock_irqsave(&vc->lock, flags);
->  		list_add(&vd->node, &vc->desc_allocated);
-> -	else
-> +		spin_unlock_irqrestore(&vc->lock, flags);
-> +	} else {
+>  arch/arm/configs/imx_v6_v7_defconfig | 2 ++
+>  1 file changed, 2 insertions(+)
 
-If we add:
-		list_del(&vd->node);
+Ignore this one, it shouldn't be part of this series.
 
-here, then the list_del() can be removed from vchan_complete() before
-vchan_vdesc_fini() is called and as a plus the
-vchan_dma_desc_free_list() can be as simple as:
+Sascha
 
-list_for_each_entry_safe(vd, _vd, head, node)
-	vchan_vdesc_fini(vd);
-
-But only if we don't care about the debug print in there, if we care
-then the vchan_synchronize() could use the very same simple loop to free
-up only the descriptors from the desc_terminated list.
-
-
->  		vc->desc_free(vd);
-> +	}
->  }
->  
->  /**
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |

@@ -2,52 +2,46 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D05C7118F26
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Dec 2019 18:39:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0FF9118F36
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Dec 2019 18:44:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbfLJRjK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 10 Dec 2019 12:39:10 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:37918 "EHLO ale.deltatee.com"
+        id S1727565AbfLJRoG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 10 Dec 2019 12:44:06 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:38038 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727495AbfLJRjK (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 10 Dec 2019 12:39:10 -0500
+        id S1727527AbfLJRoG (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 10 Dec 2019 12:44:06 -0500
 Received: from guinness.priv.deltatee.com ([172.16.1.162])
         by ale.deltatee.com with esmtp (Exim 4.92)
         (envelope-from <logang@deltatee.com>)
-        id 1iejTY-0006ZR-AV; Tue, 10 Dec 2019 10:39:09 -0700
-To:     Vinod Koul <vkoul@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-References: <20191112055540.GY952516@vkoul-mobl>
- <5ca7ef5d-dda7-e36c-1d40-ef67612d2ac4@deltatee.com>
- <20191114045555.GJ952516@vkoul-mobl>
- <fa45de06-089f-367c-7816-2ee040e41d24@deltatee.com>
- <20191122052010.GO82508@vkoul-mobl>
- <4c03b5c6-6f25-2753-22b9-7cdcb4f8b527@intel.com>
- <CAPcyv4iOjSX=Diw3Gs0Xnpe4HmVZ0xxD_13aQcCMomqUJWr58A@mail.gmail.com>
- <dd40f8ff-62bb-648c-eb65-7e335cde6138@deltatee.com>
- <CAPcyv4gnvQsAen0DUW3o4Kv1WPW28Q00+mxBowUN8yMy6Kmgvw@mail.gmail.com>
- <3ae58ea7-5cab-23f9-512f-bec30410ff6f@intel.com>
- <20191210095327.GA2536@vkoul-mobl>
+        id 1iejYJ-0006f9-7f; Tue, 10 Dec 2019 10:44:04 -0700
+To:     Jiasen Lin <linjiasen@hygon.cn>, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Kit Chow <kchow@gigaio.com>
+References: <20191210002437.2907-1-logang@deltatee.com>
+ <20191210002437.2907-4-logang@deltatee.com>
+ <d2ecc0c0-21a2-146f-950f-765d3ceee6d2@hygon.cn>
 From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <27c40d72-ab83-f2a4-7b98-55d16e602a1e@deltatee.com>
-Date:   Tue, 10 Dec 2019 10:39:08 -0700
+Message-ID: <1fcb7d33-c8ac-509d-0962-a50c31f9430c@deltatee.com>
+Date:   Tue, 10 Dec 2019 10:44:02 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191210095327.GA2536@vkoul-mobl>
+In-Reply-To: <d2ecc0c0-21a2-146f-950f-765d3ceee6d2@hygon.cn>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
 X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, dave.jiang@intel.com, vkoul@kernel.org
+X-SA-Exim-Rcpt-To: kchow@gigaio.com, dan.j.williams@intel.com, vkoul@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, linjiasen@hygon.cn
 X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [PATCH 1/5] dmaengine: Store module owner in dma_device struct
+X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,MYRULES_FREE autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: Re: [PATCH v2 3/5] dmaengine: plx-dma: Introduce PLX DMA engine PCI
+ driver skeleton
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: dmaengine-owner@vger.kernel.org
@@ -57,76 +51,199 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 
 
-On 2019-12-10 2:53 a.m., Vinod Koul wrote:
-> On 22-11-19, 14:42, Dave Jiang wrote:
->>
->>
->> On 11/22/19 2:01 PM, Dan Williams wrote:
->>> On Fri, Nov 22, 2019 at 12:56 PM Logan Gunthorpe <logang@deltatee.com> wrote:
->>>>
->>>>
->>>>
->>>> On 2019-11-22 1:50 p.m., Dan Williams wrote:
->>>>> On Fri, Nov 22, 2019 at 8:53 AM Dave Jiang <dave.jiang@intel.com> wrote:
->>>>>>
->>>>>>
->>>>>>
->>>>>> On 11/21/19 10:20 PM, Vinod Koul wrote:
->>>>>>> On 14-11-19, 10:03, Logan Gunthorpe wrote:
->>>>>>>>
->>>>>>>>
->>>>>>>> On 2019-11-13 9:55 p.m., Vinod Koul wrote:
->>>>>>>>>> But that's the problem. We can't expect our users to be "nice" and not
->>>>>>>>>> unbind when the driver is in use. Killing the kernel if the user
->>>>>>>>>> unexpectedly unbinds is not acceptable.
->>>>>>>>>
->>>>>>>>> And that is why we review the code and ensure this does not happen and
->>>>>>>>> behaviour is as expected
->>>>>>>>
->>>>>>>> Yes, but the current code can kill the kernel when the driver is unbound.
->>>>>>>>
->>>>>>>>>>>> I suspect this is less of an issue for most devices as they wouldn't
->>>>>>>>>>>> normally be unbound while in use (for example there's really no reason
->>>>>>>>>>>> to ever unbind IOAT seeing it's built into the system). Though, the fact
->>>>>>>>>>>> is, the user could unbind these devices at anytime and we don't want to
->>>>>>>>>>>> panic if they do.
->>>>>>>>>>>
->>>>>>>>>>> There are many drivers which do modules so yes I am expecting unbind and
->>>>>>>>>>> even a bind following that to work
->>>>>>>>>>
->>>>>>>>>> Except they will panic if they unbind while in use, so that's a
->>>>>>>>>> questionable definition of "work".
->>>>>>>>>
->>>>>>>>> dmaengine core has module reference so while they are being used they
->>>>>>>>> won't be removed (unless I complete misread the driver core behaviour)
->>>>>>>>
->>>>>>>> Yes, as I mentioned in my other email, holding a module reference does
->>>>>>>> not prevent the driver from being unbound. Any driver can be unbound by
->>>>>>>> the user at any time without the module being removed.
->>>>>>>
->>>>>>> That sounds okay then.
->>>>>>
->>>>>> I'm actually glad Logan is putting some work in addressing this. I also
->>>>>> ran into the same issue as well dealing with unbinds on my new driver.
->>>>>
->>>>> This was an original mistake of the dmaengine implementation that
->>>>> Vinod inherited. Module pinning is distinct from preventing device
->>>>> unbind which ultimately can't be prevented. Longer term I think we
->>>>> need to audit dmaengine consumers to make sure they are prepared for
->>>>> the driver to be removed similar to how other request based drivers
->>>>> can gracefully return an error status when the device goes away rather
->>>>> than crashing.
+On 2019-12-09 7:33 p.m., Jiasen Lin wrote:
 > 
-> Right finally wrapping my head of static dmaengine devices! we can
-> indeed have devices going away, but me wondering why this should be
-> handled in subsystems! Should the driver core not be doing this instead?
-> Would it be not a safe behaviour for unplug to unload the driver and
-> thus give a chance to unbind from subsystems too...
+> 
+> On 2019/12/10 8:24, Logan Gunthorpe wrote:
+>> Some PLX Switches can expose DMA engines via extra PCI functions
+>> on the upstream port. Each function will have one DMA channel.
+>>
+>> This patch is just the core PCI driver skeleton and dma
+>> engine registration.
+>>
+>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>> ---
+>>   MAINTAINERS           |   5 ++
+>>   drivers/dma/Kconfig   |   9 ++
+>>   drivers/dma/Makefile  |   1 +
+>>   drivers/dma/plx_dma.c | 197 ++++++++++++++++++++++++++++++++++++++++++
+>>   4 files changed, 212 insertions(+)
+>>   create mode 100644 drivers/dma/plx_dma.c
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index bd5847e802de..76713226f256 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -13139,6 +13139,11 @@ S:	Maintained
+>>   F:	drivers/iio/chemical/pms7003.c
+>>   F:	Documentation/devicetree/bindings/iio/chemical/plantower,pms7003.yaml
+>>   
+>> +PLX DMA DRIVER
+>> +M:	Logan Gunthorpe <logang@deltatee.com>
+>> +S:	Maintained
+>> +F:	drivers/dma/plx_dma.c
+>> +
+>>   PMBUS HARDWARE MONITORING DRIVERS
+>>   M:	Guenter Roeck <linux@roeck-us.net>
+>>   L:	linux-hwmon@vger.kernel.org
+>> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+>> index 6fa1eba9d477..312a6cc36c78 100644
+>> --- a/drivers/dma/Kconfig
+>> +++ b/drivers/dma/Kconfig
+>> @@ -497,6 +497,15 @@ config PXA_DMA
+>>   	  16 to 32 channels for peripheral to memory or memory to memory
+>>   	  transfers.
+>>   
+>> +config PLX_DMA
+>> +	tristate "PLX ExpressLane PEX Switch DMA Engine Support"
+>> +	depends on PCI
+>> +	select DMA_ENGINE
+>> +	help
+>> +	  Some PLX ExpressLane PCI Switches support additional DMA engines.
+>> +	  These are exposed via extra functions on the switch's
+>> +	  upstream port. Each function exposes one DMA channel.
+>> +
+>>   config SIRF_DMA
+>>   	tristate "CSR SiRFprimaII/SiRFmarco DMA support"
+>>   	depends on ARCH_SIRF
+>> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+>> index 42d7e2fc64fa..a150d1d792fd 100644
+>> --- a/drivers/dma/Makefile
+>> +++ b/drivers/dma/Makefile
+>> @@ -59,6 +59,7 @@ obj-$(CONFIG_NBPFAXI_DMA) += nbpfaxi.o
+>>   obj-$(CONFIG_OWL_DMA) += owl-dma.o
+>>   obj-$(CONFIG_PCH_DMA) += pch_dma.o
+>>   obj-$(CONFIG_PL330_DMA) += pl330.o
+>> +obj-$(CONFIG_PLX_DMA) += plx_dma.o
+>>   obj-$(CONFIG_PPC_BESTCOMM) += bestcomm/
+>>   obj-$(CONFIG_PXA_DMA) += pxa_dma.o
+>>   obj-$(CONFIG_RENESAS_DMA) += sh/
+>> diff --git a/drivers/dma/plx_dma.c b/drivers/dma/plx_dma.c
+>> new file mode 100644
+>> index 000000000000..54e13cb92d51
+>> --- /dev/null
+>> +++ b/drivers/dma/plx_dma.c
+>> @@ -0,0 +1,197 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Microsemi Switchtec(tm) PCIe Management Driver
+>> + * Copyright (c) 2019, Logan Gunthorpe <logang@deltatee.com>
+>> + * Copyright (c) 2019, GigaIO Networks, Inc
+>> + */
+>> +
+>> +#include "dmaengine.h"
+>> +
+>> +#include <linux/dmaengine.h>
+>> +#include <linux/kref.h>
+>> +#include <linux/list.h>
+>> +#include <linux/module.h>
+>> +#include <linux/pci.h>
+>> +
+>> +MODULE_DESCRIPTION("PLX ExpressLane PEX PCI Switch DMA Engine");
+>> +MODULE_VERSION("0.1");
+>> +MODULE_LICENSE("GPL");
+>> +MODULE_AUTHOR("Logan Gunthorpe");
+>> +
+>> +struct plx_dma_dev {
+>> +	struct dma_device dma_dev;
+>> +	struct dma_chan dma_chan;
+>> +	void __iomem *bar;
+>> +
+>> +	struct kref ref;
+>> +	struct work_struct release_work;
+>> +};
+>> +
+>> +static struct plx_dma_dev *chan_to_plx_dma_dev(struct dma_chan *c)
+>> +{
+>> +	return container_of(c, struct plx_dma_dev, dma_chan);
+>> +}
+>> +
+>> +static void plx_dma_release_work(struct work_struct *work)
+>> +{
+>> +	struct plx_dma_dev *plxdev = container_of(work, struct plx_dma_dev,
+>> +						  release_work);
+>> +
+>> +	dma_async_device_unregister(&plxdev->dma_dev);
+>> +	put_device(plxdev->dma_dev.dev);
+>> +	kfree(plxdev);
+>> +}
+>> +
+>> +static void plx_dma_release(struct kref *ref)
+>> +{
+>> +	struct plx_dma_dev *plxdev = container_of(ref, struct plx_dma_dev, ref);
+>> +
+>> +	/*
+>> +	 * The dmaengine reference counting and locking is a bit of a
+>> +	 * mess so we have to work around it a bit here. We might put
+>> +	 * the reference while the dmaengine holds the dma_list_mutex
+>> +	 * which means we can't call dma_async_device_unregister() directly
+>> +	 * here and it must be delayed.
+>> +	 */
+>> +	schedule_work(&plxdev->release_work);
+>> +}
+>> +
+>> +static void plx_dma_put(struct plx_dma_dev *plxdev)
+>> +{
+>> +	kref_put(&plxdev->ref, plx_dma_release);
+>> +}
+>> +
+>> +static int plx_dma_alloc_chan_resources(struct dma_chan *chan)
+>> +{
+>> +	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(chan);
+>> +
+>> +	kref_get(&plxdev->ref);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void plx_dma_free_chan_resources(struct dma_chan *chan)
+>> +{
+>> +	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(chan);
+>> +
+>> +	plx_dma_put(plxdev);
+>> +}
+>> +
+>> +static int plx_dma_create(struct pci_dev *pdev)
+>> +{
+>> +	struct plx_dma_dev *plxdev;
+>> +	struct dma_device *dma;
+>> +	struct dma_chan *chan;
+>> +	int rc;
+>> +
+>> +	plxdev = kzalloc(sizeof(*plxdev), GFP_KERNEL);
+>> +	if (!plxdev)
+>> +		return -ENOMEM;
+>> +
+>> +	kref_init(&plxdev->ref);
+>> +	INIT_WORK(&plxdev->release_work, plx_dma_release_work);
+>> +
+>> +	plxdev->bar = pcim_iomap_table(pdev)[0];
+>> +
+>> +	dma = &plxdev->dma_dev;
+>> +	dma->chancnt = 1;
+>> +	INIT_LIST_HEAD(&dma->channels);
+>> +	dma->copy_align = DMAENGINE_ALIGN_1_BYTE;
+>> +	dma->dev = get_device(&pdev->dev);
+>> +
+>> +	dma->device_alloc_chan_resources = plx_dma_alloc_chan_resources;
+>> +	dma->device_free_chan_resources = plx_dma_free_chan_resources;
+>> +
+>> +	chan = &plxdev->dma_chan;
+>> +	chan->device = dma;
+>> +	dma_cookie_init(chan);
+>> +	list_add_tail(&chan->device_node, &dma->channels);
+>> +
+>> +	rc = dma_async_device_register(dma);
+>> +	if (rc) {
+>> +		pci_err(pdev, "Failed to register dma device: %d\n", rc);
+>> +		free_irq(pci_irq_vector(pdev, 0),  plxdev);
+> 
+> Hi Logan
+> Failed to register dma device need to call plx_dma_put(plxdev) or 
+> kfree(plxdev), otherwise it result in memory leak.
 
-Yes, I think it should be in the core. I was just worried about breaking
-older drivers. But I'll see if I can move a bit more of the logic for a
-v3 series.
+Nice catch! Thanks.
 
-Thanks,
+Will fix for v3.
 
 Logan

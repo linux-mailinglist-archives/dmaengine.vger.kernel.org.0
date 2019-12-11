@@ -2,79 +2,92 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F267411B76D
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Dec 2019 17:08:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C402711B93F
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Dec 2019 17:55:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733215AbfLKQHs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 11 Dec 2019 11:07:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33950 "EHLO mail.kernel.org"
+        id S1730314AbfLKQzD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 11 Dec 2019 11:55:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731117AbfLKPMZ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:25 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727118AbfLKQzC (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 11 Dec 2019 11:55:02 -0500
+Received: from localhost (unknown [171.76.100.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2384208C3;
-        Wed, 11 Dec 2019 15:12:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 945C3214AF;
+        Wed, 11 Dec 2019 16:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077144;
-        bh=HY3j7n3byT9QT0It2CXSCU9ZX3FuttIs9KmwYNh5x4w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WGZbdKlJmVMuw6yi5NztOCK9kWDqeZL/t4xFOgJtWey4UdT5y3GOw3B90h2kOguv9
-         6rJFhSFRqvqPK18XxlIdbY8bpMAaLNxgvDIWKUzZj1C+ajfhJxya2tW40QBZXtcW5M
-         /nVIA4hKeaqhChpJc04tmUlgQsRltdPwejFM1RBo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>, Peng Ma <peng.ma@nxp.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 031/134] dmaengine: fsl-qdma: Handle invalid qdma-queue0 IRQ
-Date:   Wed, 11 Dec 2019 10:10:07 -0500
-Message-Id: <20191211151150.19073-31-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        s=default; t=1576083302;
+        bh=uiy+c3OW5H/SA+I7Cjaglj3+jSQybqFy415N64mpZs8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OTnk7wXu4g2FR69RGSAO6fzwD6rRN0b/33mQSieSER7mZuUl1hRGcsEUiVbMwPr65
+         EZO26xnBgUCZh7JjCSNlFxa8RHwq2RHEfRhx/Vd3KNp3FxTbSriCj5r9LFCFjt0hqt
+         +sIEmBR0My/ACp3/hURZTMMP2DAXsvYpsxl12vjs=
+Date:   Wed, 11 Dec 2019 22:24:58 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Zhou Wang <wangzhou1@hisilicon.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
+        linuxarm@huawei.com, Zhenfa Qiu <qiuzhenfa@hisilicon.com>
+Subject: Re: [PATCH v2] dmaengine: hisilicon: Add Kunpeng DMA engine support
+Message-ID: <20191211165458.GJ2536@vkoul-mobl>
+References: <1575943997-164744-1-git-send-email-wangzhou1@hisilicon.com>
+ <20191211105234.GG2536@vkoul-mobl>
+ <5DF0D666.6060908@hisilicon.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5DF0D666.6060908@hisilicon.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+On 11-12-19, 19:43, Zhou Wang wrote:
+> On 2019/12/11 18:52, Vinod Koul wrote:
+> > On 10-12-19, 10:13, Zhou Wang wrote:
 
-[ Upstream commit 41814c4eadf8a791b6d07114f96e7e120e59555c ]
+> >> +static int hisi_dma_terminate_all(struct dma_chan *c)
+> >> +{
+> >> +	struct hisi_dma_chan *chan = to_hisi_dma_chan(c);
+> >> +	unsigned long flags;
+> >> +	LIST_HEAD(head);
+> >> +
+> >> +	spin_lock_irqsave(&chan->vc.lock, flags);
+> >> +
+> >> +	hisi_dma_pause_dma(chan->hdma_dev, chan->qp_num, true);
+> >> +	if (chan->desc) {
+> >> +		vchan_terminate_vdesc(&chan->desc->vd);
+> >> +		chan->desc = NULL;
+> >> +	}
+> >> +
+> >> +	vchan_get_all_descriptors(&chan->vc, &head);
+> >> +
+> >> +	spin_unlock_irqrestore(&chan->vc.lock, flags);
+> >> +
+> >> +	vchan_dma_desc_free_list(&chan->vc, &head);
+> >> +	hisi_dma_pause_dma(chan->hdma_dev, chan->qp_num, false);
+> > 
+> > pause on terminate? Not DISABLE?
+> 
+> here this function just aborts transfers on specific channel.
 
-platform_get_irq_byname() might return -errno which later would be cast
-to an unsigned int and used in IRQ handling code leading to usage of
-wrong ID and errors about wrong irq_base.
+yeah and I would expect the channel to go into disable state right!
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Peng Ma <peng.ma@nxp.com>
-Tested-by: Peng Ma <peng.ma@nxp.com>
-Link: https://lore.kernel.org/r/20191004150826.6656-1-krzk@kernel.org
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/dma/fsl-qdma.c | 3 +++
- 1 file changed, 3 insertions(+)
+> >> +static struct pci_driver hisi_dma_pci_driver = {
+> >> +	.name		= "hisi_dma",
+> >> +	.id_table	= hisi_dma_pci_tbl,
+> >> +	.probe		= hisi_dma_probe,
+> > 
+> > no .remove and kconfig has a tristate option!
+> 
+> Use devres APIs in probe, so seems nothing should be done in remove :)
 
-diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
-index 06664fbd2d911..89792083d62c5 100644
---- a/drivers/dma/fsl-qdma.c
-+++ b/drivers/dma/fsl-qdma.c
-@@ -1155,6 +1155,9 @@ static int fsl_qdma_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	fsl_qdma->irq_base = platform_get_irq_byname(pdev, "qdma-queue0");
-+	if (fsl_qdma->irq_base < 0)
-+		return fsl_qdma->irq_base;
-+
- 	fsl_qdma->feature = of_property_read_bool(np, "big-endian");
- 	INIT_LIST_HEAD(&fsl_qdma->dma_dev.channels);
- 
+who will de-register from dmaengine, you have dangiling chan_tasklet
+which needs to be killed and you have isr which is still enabled, yeah
+what could go wrong!
+
+Please, deregister from dmaengine, kill the vchan tasklet and make sur
+irq is disabled and tasklets killed
+
 -- 
-2.20.1
-
+~Vinod

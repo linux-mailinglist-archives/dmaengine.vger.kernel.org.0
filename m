@@ -2,142 +2,153 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 39DA611A59F
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Dec 2019 09:09:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3214C11A8CF
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Dec 2019 11:24:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbfLKIJm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 11 Dec 2019 03:09:42 -0500
-Received: from mail-eopbgr10044.outbound.protection.outlook.com ([40.107.1.44]:32051
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726543AbfLKIJm (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 11 Dec 2019 03:09:42 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VhfKxSKaBCL7oTe5WS0EOrzd46MqLnrFz4mmKZrWoyWEvSn6/VgYWXixy3RWBZmrjnfvR/iW+zRw7KeNgbQ0FviWBbdUThskxSAH/Fc7db9QD5XmYFrDk3wqhYehNDYtOdfIZnTgexyFFaSLb4b03rt2It3toMZTF0+9YJfhqoMkVn5tQJ0Ibn/qQBmoeUvsGdd4j4l6f97cHrxqHKu7/InZo4o9OWLgVHctBAIbBzAIs0/LOV51+ylM9qvN7/V8UkMAEGG9qKdxUjl+S1/83whbMnPGZ9MZiq3Mc4LUAvUWV4K6rQLfSl58JiDq9MsUwuhHWH0knRq90AnVTf5XQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CY43+1YJu09T2gmZkR/fFiUsp4P9KFzFb9FUwGAZieQ=;
- b=RdinnvKyBDMcRd5yHGwMGZtvwHXlQaK74MGbCvxAmSwPdLC60ozmfLnHAfM0Qb4W96Y9bK11+AvtbgmENXQmIMf1ZW3hbPRfWwEIB5ZC/RY3iUvkI130cGOuPBs//6cgk8iKz2yRMo2JKxSN8am29W/5CEZacxecUNx9eEeiFQL+sxfqx/uMxRkxZAAPv+PhWmHcX9zerhHrzQUvOJfTJxHgQm4t91PAgTGbZmH5dzROKRwI5kd5f89iDkPBNUfZZNqq/QPRTRLzkF15uDzrWFafZBgS/gknb30/xwqmbUvd+0Fin6ugiqQi3NkgTn8L7cIkyBTFayhqfamvG3xNAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CY43+1YJu09T2gmZkR/fFiUsp4P9KFzFb9FUwGAZieQ=;
- b=hy8zA17VWK3OrP0u96sUXg7IThjqK+mkG1f+phNWi2yQ0YmGHGpB5Do0vO7ZuFI9/zUVzBMjozEwsDi/H8/dO7spZdYbhDOl+MM/UrwT/Mkvnj4y871WS6s3NuifE4O+6L+eOpvqcRIYEINUpWEwJ/UipCtjXiBIFdM5D5xbALE=
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.205) by
- VI1PR04MB6222.eurprd04.prod.outlook.com (20.179.24.205) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.14; Wed, 11 Dec 2019 08:09:39 +0000
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::c947:5ae7:2a68:a4f2]) by VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::c947:5ae7:2a68:a4f2%3]) with mapi id 15.20.2516.019; Wed, 11 Dec 2019
- 08:09:39 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Robin Gong <yibin.gong@nxp.com>
-CC:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>, Peng Ma <peng.ma@nxp.com>
-Subject: [v4 2/2] arm64: dts: ls1028a: Update edma compatible to fit eDMA
- driver
-Thread-Topic: [v4 2/2] arm64: dts: ls1028a: Update edma compatible to fit eDMA
- driver
-Thread-Index: AQHVr/pVLFcNUBU5x0yRpJwDJ3vngA==
-Date:   Wed, 11 Dec 2019 08:09:39 +0000
-Message-ID: <20191211080749.30751-2-peng.ma@nxp.com>
-References: <20191211080749.30751-1-peng.ma@nxp.com>
-In-Reply-To: <20191211080749.30751-1-peng.ma@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SGXP274CA0012.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::24)
- To VI1PR04MB4431.eurprd04.prod.outlook.com (2603:10a6:803:6f::13)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0d902cc3-ebce-48ff-61eb-08d77e117818
-x-ms-traffictypediagnostic: VI1PR04MB6222:|VI1PR04MB6222:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB6222DCC4B6E4C60DDD61CA93ED5A0@VI1PR04MB6222.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 024847EE92
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(366004)(136003)(376002)(199004)(189003)(8936002)(8676002)(6506007)(5660300002)(44832011)(6512007)(4326008)(2906002)(36756003)(6636002)(66446008)(71200400001)(186003)(81166006)(26005)(2616005)(52116002)(64756008)(110136005)(66556008)(1076003)(66476007)(6486002)(81156014)(478600001)(54906003)(86362001)(316002)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6222;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jsx34WGeCfk63oNUUfhMXqojF7xilNN+fBswtDpBC6EbpLlE0J0dYX3HGQAXEkQbLZodtPbZzcOeTLJi1hqEFiodsab41TUclIxYkurq0l1eF9rZReXneFt/aU7GENg4DTynacQOM2EJRGrtI8eoAUtKGAx2OFPa1HY5zpDClOXDg69F7WhCEMdlhqVhINZvPGcK5MjsmWhxzq1/IPmTToa4HbWxW2o8k/rSxO6H3HRrZj+7CL4mnged4HvHX5beS8WLP2JpTSdgTQIW92jQpLE2oHxoDL08FmZK7vskxL0+NEjk0UrbU1s/G2DWGS3A0TDKI1d1wIHRTwBLyh9QceOgIltpXwOCm+pF7yPRLU2RDi0phPZPHh9pma84d9NVyI1JYPAYBut9AidG6GjbjOa7TuY2lzANnXnM8HROJZEQ6YjSyfG3VmPo7GVel3Ad
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        id S1728836AbfLKKY4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 11 Dec 2019 05:24:56 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35542 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727469AbfLKKY4 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 11 Dec 2019 05:24:56 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBAOj8Q115655;
+        Wed, 11 Dec 2019 04:24:45 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576059885;
+        bh=W+RMFciMhRgB2xiAH7N3KcyPOaKYa0Y2g73Ycx9qJBU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=AlEFjwGweVEw8qSb+hWRM560R4gcZ7LdQZ7uT5KGIJsgTrfW8NMyt7CLxYaIfAK7/
+         9i+s5zTdbewcepjqroGmDL/g963+nLlM7PN4rIUCzTtx7AnaFGJ6YvBuMudA2LnFlu
+         E9LCQFxJqBv/nvaI1HudJqEX0eIujtBgobWH2jN8=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBAOjKf030751;
+        Wed, 11 Dec 2019 04:24:45 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
+ Dec 2019 04:24:43 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 11 Dec 2019 04:24:43 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBAOeLj096803;
+        Wed, 11 Dec 2019 04:24:40 -0600
+Subject: Re: [PATCH v7 11/12] firmware: ti_sci: rm: Add support for tx_tdtype
+ parameter for tx channel
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <tony@atomide.com>, <j-keerthy@ti.com>, <vigneshr@ti.com>
+References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
+ <20191209094332.4047-12-peter.ujfalusi@ti.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <3d3a4f1d-e449-88d6-ec5a-5ce516faf436@ti.com>
+Date:   Wed, 11 Dec 2019 12:24:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d902cc3-ebce-48ff-61eb-08d77e117818
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Dec 2019 08:09:39.3070
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2qKfU6odnM+cRP4zHfEBmD+6wPo1I2vZ4ftqUJrxVnAb1uasLGwYhSMJx/KVLvDH
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6222
+In-Reply-To: <20191209094332.4047-12-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The eDMA of LS1028A soc has a little bit different from others, So we
-should distinguish them in driver by compatible.
+On 09/12/2019 11:43, Peter Ujfalusi wrote:
+> The system controller's resource manager have support for configuring the
+> TDTYPE of TCHAN_CFG register on j721e.
+> With this parameter the teardown completion can be controlled:
+> TDTYPE == 0: Return without waiting for peer to complete the teardown
+> TDTYPE == 1: Wait for peer to complete the teardown
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
----
-Changed for v4
-	- Add new change patch
+Hi Peter,
 
- Documentation/devicetree/bindings/dma/fsl-edma.txt | 1 +
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi     | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+You somehow dropped my reviewed by tag from this patch, this appears 
+identical to the v6 one. So,
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl-edma.txt b/Documenta=
-tion/devicetree/bindings/dma/fsl-edma.txt
-index 29dd3ccb1235..e77b08ebcd06 100644
---- a/Documentation/devicetree/bindings/dma/fsl-edma.txt
-+++ b/Documentation/devicetree/bindings/dma/fsl-edma.txt
-@@ -10,6 +10,7 @@ Required properties:
- - compatible :
- 	- "fsl,vf610-edma" for eDMA used similar to that on Vybrid vf610 SoC
- 	- "fsl,imx7ulp-edma" for eDMA2 used similar to that on i.mx7ulp
-+	- "fsl,fsl,ls1028a-edma" for eDMA used similar to that on Vybrid vf610 So=
-C
- - reg : Specifies base physical address(s) and size of the eDMA registers.
- 	The 1st region is eDMA control register's address and size.
- 	The 2nd and the 3rd regions are programmable channel multiplexing
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls1028a.dtsi
-index 8e8a77eb596a..b3716a89fa0d 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -316,7 +316,7 @@
-=20
- 		edma0: dma-controller@22c0000 {
- 			#dma-cells =3D <2>;
--			compatible =3D "fsl,vf610-edma";
-+			compatible =3D "fsl,ls1028a-edma";
- 			reg =3D <0x0 0x22c0000 0x0 0x10000>,
- 			      <0x0 0x22d0000 0x0 0x10000>,
- 			      <0x0 0x22e0000 0x0 0x10000>;
---=20
-2.17.1
+Reviewed-by: Tero Kristo <t-kristo@ti.com>
 
+> ---
+>   drivers/firmware/ti_sci.c              | 1 +
+>   drivers/firmware/ti_sci.h              | 7 +++++++
+>   include/linux/soc/ti/ti_sci_protocol.h | 2 ++
+>   3 files changed, 10 insertions(+)
+> 
+> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
+> index 4126be9e3216..f13e4a96f3b7 100644
+> --- a/drivers/firmware/ti_sci.c
+> +++ b/drivers/firmware/ti_sci.c
+> @@ -2412,6 +2412,7 @@ static int ti_sci_cmd_rm_udmap_tx_ch_cfg(const struct ti_sci_handle *handle,
+>   	req->fdepth = params->fdepth;
+>   	req->tx_sched_priority = params->tx_sched_priority;
+>   	req->tx_burst_size = params->tx_burst_size;
+> +	req->tx_tdtype = params->tx_tdtype;
+>   
+>   	ret = ti_sci_do_xfer(info, xfer);
+>   	if (ret) {
+> diff --git a/drivers/firmware/ti_sci.h b/drivers/firmware/ti_sci.h
+> index f0d068c03944..255327171dae 100644
+> --- a/drivers/firmware/ti_sci.h
+> +++ b/drivers/firmware/ti_sci.h
+> @@ -910,6 +910,7 @@ struct rm_ti_sci_msg_udmap_rx_flow_opt_cfg {
+>    *   12 - Valid bit for @ref ti_sci_msg_rm_udmap_tx_ch_cfg::tx_credit_count
+>    *   13 - Valid bit for @ref ti_sci_msg_rm_udmap_tx_ch_cfg::fdepth
+>    *   14 - Valid bit for @ref ti_sci_msg_rm_udmap_tx_ch_cfg::tx_burst_size
+> + *   15 - Valid bit for @ref ti_sci_msg_rm_udmap_tx_ch_cfg::tx_tdtype
+>    *
+>    * @nav_id: SoC device ID of Navigator Subsystem where tx channel is located
+>    *
+> @@ -973,6 +974,11 @@ struct rm_ti_sci_msg_udmap_rx_flow_opt_cfg {
+>    *
+>    * @tx_burst_size: UDMAP transmit channel burst size configuration to be
+>    * programmed into the tx_burst_size field of the TCHAN_TCFG register.
+> + *
+> + * @tx_tdtype: UDMAP transmit channel teardown type configuration to be
+> + * programmed into the tdtype field of the TCHAN_TCFG register:
+> + * 0 - Return immediately
+> + * 1 - Wait for completion message from remote peer
+>    */
+>   struct ti_sci_msg_rm_udmap_tx_ch_cfg_req {
+>   	struct ti_sci_msg_hdr hdr;
+> @@ -994,6 +1000,7 @@ struct ti_sci_msg_rm_udmap_tx_ch_cfg_req {
+>   	u16 fdepth;
+>   	u8 tx_sched_priority;
+>   	u8 tx_burst_size;
+> +	u8 tx_tdtype;
+>   } __packed;
+>   
+>   /**
+> diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
+> index 9531ec823298..f3aed0b91564 100644
+> --- a/include/linux/soc/ti/ti_sci_protocol.h
+> +++ b/include/linux/soc/ti/ti_sci_protocol.h
+> @@ -342,6 +342,7 @@ struct ti_sci_msg_rm_udmap_tx_ch_cfg {
+>   #define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_SUPR_TDPKT_VALID        BIT(11)
+>   #define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_CREDIT_COUNT_VALID      BIT(12)
+>   #define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_FDEPTH_VALID            BIT(13)
+> +#define TI_SCI_MSG_VALUE_RM_UDMAP_CH_TX_TDTYPE_VALID            BIT(15)
+>   	u16 nav_id;
+>   	u16 index;
+>   	u8 tx_pause_on_err;
+> @@ -359,6 +360,7 @@ struct ti_sci_msg_rm_udmap_tx_ch_cfg {
+>   	u16 fdepth;
+>   	u8 tx_sched_priority;
+>   	u8 tx_burst_size;
+> +	u8 tx_tdtype;
+>   };
+>   
+>   /**
+> 
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

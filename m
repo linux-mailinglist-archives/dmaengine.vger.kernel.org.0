@@ -2,26 +2,25 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A055711D56E
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Dec 2019 19:25:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04B5811D571
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Dec 2019 19:25:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730367AbfLLSZa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 12 Dec 2019 13:25:30 -0500
-Received: from mga01.intel.com ([192.55.52.88]:20703 "EHLO mga01.intel.com"
+        id S1730582AbfLLSZg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 12 Dec 2019 13:25:36 -0500
+Received: from mga18.intel.com ([134.134.136.126]:35504 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730312AbfLLSZ3 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:25:29 -0500
+        id S1730373AbfLLSZf (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:25:35 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:25:29 -0800
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:25:35 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
-   d="scan'208";a="220750025"
+   d="scan'208";a="245829827"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Dec 2019 10:25:28 -0800
-Subject: [PATCH RFC v2 13/14] dmaengine: idxd: add char driver to expose
- submission portal to userland
+  by fmsmga002.fm.intel.com with ESMTP; 12 Dec 2019 10:25:34 -0800
+Subject: [PATCH RFC v2 14/14] dmaengine: idxd: add sysfs ABI for idxd driver
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         vkoul@kernel.org
@@ -30,8 +29,8 @@ Cc:     dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
         jacob.jun.pan@intel.com, yi.l.liu@intel.com, axboe@kernel.dk,
         akpm@linux-foundation.org, tglx@linutronix.de, mingo@redhat.com,
         bp@alien8.de, fenghua.yu@intel.com, hpa@zytor.com
-Date:   Thu, 12 Dec 2019 11:25:28 -0700
-Message-ID: <157617512852.42350.11721243168831821440.stgit@djiang5-desk3.ch.intel.com>
+Date:   Thu, 12 Dec 2019 11:25:34 -0700
+Message-ID: <157617513437.42350.6807398093670501469.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
 References: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/unknown-version
@@ -43,710 +42,193 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Create a char device region that will allow acquisition of user portals in
-order to allow applications to submit DMA operations. A char device will be
-created per work queue that gets exposed. The workqueue type "user"
-is used to mark a work queue for user char device. For example if the
-workqueue 0 of DSA device 0 is marked for char device, then a device node
-of /dev/dsa/wq0.0 will be created.
+From: Jing Lin <jing.lin@intel.com>
 
+Add the sysfs ABI information for idxd driver in
+Documentation/ABI/stable directory.
+
+Signed-off-by: Jing Lin <jing.lin@intel.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/dma/idxd/Makefile |    2 
- drivers/dma/idxd/cdev.c   |  304 +++++++++++++++++++++++++++++++++++++++++++++
- drivers/dma/idxd/device.c |    2 
- drivers/dma/idxd/idxd.h   |   38 ++++++
- drivers/dma/idxd/init.c   |   10 +
- drivers/dma/idxd/irq.c    |   18 +++
- drivers/dma/idxd/submit.c |    4 -
- drivers/dma/idxd/sysfs.c  |   52 +++++++-
- 8 files changed, 425 insertions(+), 5 deletions(-)
- create mode 100644 drivers/dma/idxd/cdev.c
+ Documentation/ABI/stable/sysfs-driver-dma-idxd |  171 ++++++++++++++++++++++++
+ 1 file changed, 171 insertions(+)
+ create mode 100644 Documentation/ABI/stable/sysfs-driver-dma-idxd
 
-diff --git a/drivers/dma/idxd/Makefile b/drivers/dma/idxd/Makefile
-index a036ba0e77d2..8978b898d777 100644
---- a/drivers/dma/idxd/Makefile
-+++ b/drivers/dma/idxd/Makefile
-@@ -1,2 +1,2 @@
- obj-$(CONFIG_INTEL_IDXD) += idxd.o
--idxd-y := init.o irq.o device.o sysfs.o submit.o dma.o
-+idxd-y := init.o irq.o device.o sysfs.o submit.o dma.o cdev.o
-diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+diff --git a/Documentation/ABI/stable/sysfs-driver-dma-idxd b/Documentation/ABI/stable/sysfs-driver-dma-idxd
 new file mode 100644
-index 000000000000..a90d38a9769a
+index 000000000000..f4be46cc6cb6
 --- /dev/null
-+++ b/drivers/dma/idxd/cdev.c
-@@ -0,0 +1,304 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright(c) 2019 Intel Corporation. All rights rsvd. */
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/device.h>
-+#include <linux/sched/task.h>
-+#include <linux/intel-svm.h>
-+#include <linux/io-64-nonatomic-lo-hi.h>
-+#include <linux/cdev.h>
-+#include <linux/fs.h>
-+#include <linux/poll.h>
-+#include <uapi/linux/idxd.h>
-+#include "registers.h"
-+#include "idxd.h"
-+
-+struct idxd_cdev_context {
-+	const char *name;
-+	dev_t devt;
-+	struct ida minor_ida;
-+};
-+
-+/*
-+ * ictx is an array based off of accelerator types. enum idxd_type
-+ * is used as index
-+ */
-+static struct idxd_cdev_context ictx[IDXD_TYPE_MAX] = {
-+	{ .name = "dsa" },
-+};
-+
-+struct idxd_user_context {
-+	struct idxd_wq *wq;
-+	struct task_struct *task;
-+	unsigned int flags;
-+};
-+
-+enum idxd_cdev_cleanup {
-+	CDEV_NORMAL = 0,
-+	CDEV_FAILED,
-+};
-+
-+static void idxd_cdev_dev_release(struct device *dev)
-+{
-+	dev_dbg(dev, "releasing cdev device\n");
-+	kfree(dev);
-+}
-+
-+static struct device_type idxd_cdev_device_type = {
-+	.name = "idxd_cdev",
-+	.release = idxd_cdev_dev_release,
-+};
-+
-+static inline struct idxd_cdev *inode_idxd_cdev(struct inode *inode)
-+{
-+	struct cdev *cdev = inode->i_cdev;
-+
-+	return container_of(cdev, struct idxd_cdev, cdev);
-+}
-+
-+static inline struct idxd_wq *idxd_cdev_wq(struct idxd_cdev *idxd_cdev)
-+{
-+	return container_of(idxd_cdev, struct idxd_wq, idxd_cdev);
-+}
-+
-+static inline struct idxd_wq *inode_wq(struct inode *inode)
-+{
-+	return idxd_cdev_wq(inode_idxd_cdev(inode));
-+}
-+
-+static int idxd_cdev_open(struct inode *inode, struct file *filp)
-+{
-+	struct idxd_user_context *ctx;
-+	struct idxd_device *idxd;
-+	struct idxd_wq *wq;
-+	struct device *dev;
-+	struct idxd_cdev *idxd_cdev;
-+
-+	wq = inode_wq(inode);
-+	idxd = wq->idxd;
-+	dev = &idxd->pdev->dev;
-+	idxd_cdev = &wq->idxd_cdev;
-+
-+	dev_dbg(dev, "%s called\n", __func__);
-+
-+	if (idxd_wq_refcount(wq) > 1 && wq_dedicated(wq))
-+		return -EBUSY;
-+
-+	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ctx->wq = wq;
-+	filp->private_data = ctx;
-+	idxd_wq_get(wq);
-+	return 0;
-+}
-+
-+static int idxd_cdev_release(struct inode *node, struct file *filep)
-+{
-+	struct idxd_user_context *ctx = filep->private_data;
-+	struct idxd_wq *wq = ctx->wq;
-+	struct idxd_device *idxd = wq->idxd;
-+	struct device *dev = &idxd->pdev->dev;
-+
-+	dev_dbg(dev, "%s called\n", __func__);
-+	filep->private_data = NULL;
-+
-+	kfree(ctx);
-+	idxd_wq_put(wq);
-+	return 0;
-+}
-+
-+static int check_vma(struct idxd_wq *wq, struct vm_area_struct *vma,
-+		     const char *func)
-+{
-+	struct device *dev = &wq->idxd->pdev->dev;
-+
-+	if ((vma->vm_end - vma->vm_start) > PAGE_SIZE) {
-+		dev_info_ratelimited(dev,
-+				     "%s: %s: mapping too large: %lu\n",
-+				     current->comm, func,
-+				     vma->vm_end - vma->vm_start);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int idxd_cdev_mmap(struct file *filp, struct vm_area_struct *vma)
-+{
-+	struct idxd_user_context *ctx = filp->private_data;
-+	struct idxd_wq *wq = ctx->wq;
-+	struct idxd_device *idxd = wq->idxd;
-+	struct pci_dev *pdev = idxd->pdev;
-+	phys_addr_t base = pci_resource_start(pdev, IDXD_WQ_BAR);
-+	unsigned long pfn;
-+	int rc;
-+
-+	dev_dbg(&pdev->dev, "%s called\n", __func__);
-+	rc = check_vma(wq, vma, __func__);
-+
-+	vma->vm_flags |= VM_DONTCOPY;
-+	pfn = (base + idxd_get_wq_portal_full_offset(wq->id,
-+				IDXD_PORTAL_LIMITED)) >> PAGE_SHIFT;
-+	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
-+	vma->vm_private_data = ctx;
-+
-+	return io_remap_pfn_range(vma, vma->vm_start, pfn, PAGE_SIZE,
-+			vma->vm_page_prot);
-+}
-+
-+static __poll_t idxd_cdev_poll(struct file *filp,
-+			       struct poll_table_struct *wait)
-+{
-+	struct idxd_user_context *ctx = filp->private_data;
-+	struct idxd_wq *wq = ctx->wq;
-+	struct idxd_device *idxd = wq->idxd;
-+	struct idxd_cdev *idxd_cdev = &wq->idxd_cdev;
-+	unsigned long flags;
-+	__poll_t out = 0;
-+
-+	poll_wait(filp, &idxd_cdev->err_queue, wait);
-+	spin_lock_irqsave(&idxd->dev_lock, flags);
-+	if (idxd->sw_err.valid)
-+		out = EPOLLIN | EPOLLRDNORM;
-+	spin_unlock_irqrestore(&idxd->dev_lock, flags);
-+
-+	return out;
-+}
-+
-+static const struct file_operations idxd_cdev_fops = {
-+	.owner = THIS_MODULE,
-+	.open = idxd_cdev_open,
-+	.release = idxd_cdev_release,
-+	.mmap = idxd_cdev_mmap,
-+	.poll = idxd_cdev_poll,
-+};
-+
-+int idxd_cdev_get_major(struct idxd_device *idxd)
-+{
-+	return MAJOR(ictx[idxd->type].devt);
-+}
-+
-+static int idxd_wq_cdev_dev_setup(struct idxd_wq *wq)
-+{
-+	struct idxd_device *idxd = wq->idxd;
-+	struct idxd_cdev *idxd_cdev = &wq->idxd_cdev;
-+	struct idxd_cdev_context *cdev_ctx;
-+	struct device *dev;
-+	int minor, rc;
-+
-+	idxd_cdev->dev = kzalloc(sizeof(*idxd_cdev->dev), GFP_KERNEL);
-+	if (!idxd_cdev->dev)
-+		return -ENOMEM;
-+
-+	dev = idxd_cdev->dev;
-+	dev->parent = &idxd->pdev->dev;
-+	dev_set_name(dev, "%s/wq%u.%u", idxd_get_dev_name(idxd),
-+		     idxd->id, wq->id);
-+	dev->bus = idxd_get_bus_type(idxd);
-+
-+	cdev_ctx = &ictx[wq->idxd->type];
-+	minor = ida_simple_get(&cdev_ctx->minor_ida, 0, MINORMASK, GFP_KERNEL);
-+	if (minor < 0) {
-+		rc = minor;
-+		goto ida_err;
-+	}
-+
-+	dev->devt = MKDEV(MAJOR(cdev_ctx->devt), minor);
-+	dev->type = &idxd_cdev_device_type;
-+	rc = device_register(dev);
-+	if (rc < 0) {
-+		dev_err(&idxd->pdev->dev, "device register failed\n");
-+		put_device(dev);
-+		goto dev_reg_err;
-+	}
-+	idxd_cdev->minor = minor;
-+
-+	return 0;
-+
-+ dev_reg_err:
-+	ida_simple_remove(&cdev_ctx->minor_ida, MINOR(dev->devt));
-+ ida_err:
-+	kfree(dev);
-+	idxd_cdev->dev = NULL;
-+	return rc;
-+}
-+
-+static void idxd_wq_cdev_cleanup(struct idxd_wq *wq,
-+				 enum idxd_cdev_cleanup cdev_state)
-+{
-+	struct idxd_cdev *idxd_cdev = &wq->idxd_cdev;
-+	struct idxd_cdev_context *cdev_ctx;
-+
-+	cdev_ctx = &ictx[wq->idxd->type];
-+	if (cdev_state == CDEV_NORMAL)
-+		cdev_del(&idxd_cdev->cdev);
-+	device_unregister(idxd_cdev->dev);
-+	/*
-+	 * The device_type->release() will be called on the device and free
-+	 * the allocated struct device. We can just forget it.
-+	 */
-+	ida_simple_remove(&cdev_ctx->minor_ida, idxd_cdev->minor);
-+	idxd_cdev->dev = NULL;
-+	idxd_cdev->minor = -1;
-+}
-+
-+int idxd_wq_add_cdev(struct idxd_wq *wq)
-+{
-+	struct idxd_cdev *idxd_cdev = &wq->idxd_cdev;
-+	struct cdev *cdev = &idxd_cdev->cdev;
-+	struct device *dev;
-+	int rc;
-+
-+	rc = idxd_wq_cdev_dev_setup(wq);
-+	if (rc < 0)
-+		return rc;
-+
-+	dev = idxd_cdev->dev;
-+	cdev_init(cdev, &idxd_cdev_fops);
-+	cdev_set_parent(cdev, &dev->kobj);
-+	rc = cdev_add(cdev, dev->devt, 1);
-+	if (rc) {
-+		dev_dbg(&wq->idxd->pdev->dev, "cdev_add failed: %d\n", rc);
-+		idxd_wq_cdev_cleanup(wq, CDEV_FAILED);
-+		return rc;
-+	}
-+
-+	init_waitqueue_head(&idxd_cdev->err_queue);
-+	idxd_wq_get(wq);
-+	return 0;
-+}
-+
-+void idxd_wq_del_cdev(struct idxd_wq *wq)
-+{
-+	idxd_wq_cdev_cleanup(wq, CDEV_NORMAL);
-+	idxd_wq_put(wq);
-+}
-+
-+int idxd_cdev_register(void)
-+{
-+	int rc, i;
-+
-+	for (i = 0; i < IDXD_TYPE_MAX; i++) {
-+		ida_init(&ictx[i].minor_ida);
-+		rc = alloc_chrdev_region(&ictx[i].devt, 0, MINORMASK,
-+					 ictx[i].name);
-+		if (rc)
-+			return rc;
-+	}
-+
-+	return 0;
-+}
-+
-+void idxd_cdev_remove(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < IDXD_TYPE_MAX; i++) {
-+		unregister_chrdev_region(ictx[i].devt, MINORMASK);
-+		ida_destroy(&ictx[i].minor_ida);
-+	}
-+}
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 49638d3a2151..fd33e2985e95 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -545,7 +545,7 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
- 	wq->wqcfg.wq_thresh = wq->threshold;
- 
- 	/* byte 8-11 */
--	wq->wqcfg.priv = 1; /* kernel, therefore priv */
-+	wq->wqcfg.priv = !!(wq->type == IDXD_WQT_KERNEL);
- 	wq->wqcfg.mode = 1;
- 
- 	wq->wqcfg.priority = wq->priority;
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 7f94e50267cc..62ee01ab0901 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -7,6 +7,7 @@
- #include <linux/dmaengine.h>
- #include <linux/percpu-rwsem.h>
- #include <linux/wait.h>
-+#include <linux/cdev.h>
- #include "registers.h"
- 
- #define IDXD_DRIVER_VERSION	"1.00"
-@@ -63,6 +64,14 @@ enum idxd_wq_flag {
- enum idxd_wq_type {
- 	IDXD_WQT_NONE = 0,
- 	IDXD_WQT_KERNEL,
-+	IDXD_WQT_USER,
-+};
-+
-+struct idxd_cdev {
-+	struct cdev cdev;
-+	struct device *dev;
-+	int minor;
-+	struct wait_queue_head err_queue;
- };
- 
- #define IDXD_ALLOCATED_BATCH_SIZE	128U
-@@ -72,6 +81,7 @@ enum idxd_wq_type {
- struct idxd_wq {
- 	void __iomem *dportal;
- 	struct device conf_dev;
-+	struct idxd_cdev idxd_cdev;
- 	struct idxd_device *idxd;
- 	int id;
- 	enum idxd_wq_type type;
-@@ -139,6 +149,7 @@ struct idxd_device {
- 	enum idxd_device_state state;
- 	unsigned long flags;
- 	int id;
-+	int major;
- 
- 	struct pci_dev *pdev;
- 	void __iomem *reg_base;
-@@ -191,11 +202,29 @@ struct idxd_desc {
- #define confdev_to_idxd(dev) container_of(dev, struct idxd_device, conf_dev)
- #define confdev_to_wq(dev) container_of(dev, struct idxd_wq, conf_dev)
- 
-+extern struct bus_type dsa_bus_type;
-+
- static inline bool wq_dedicated(struct idxd_wq *wq)
- {
- 	return test_bit(WQ_FLAG_DEDICATED, &wq->flags);
- }
- 
-+enum idxd_portal_prot {
-+	IDXD_PORTAL_UNLIMITED = 0,
-+	IDXD_PORTAL_LIMITED,
-+};
-+
-+static inline int idxd_get_wq_portal_offset(enum idxd_portal_prot prot)
-+{
-+	return prot * 0x1000;
-+}
-+
-+static inline int idxd_get_wq_portal_full_offset(int wq_id,
-+						 enum idxd_portal_prot prot)
-+{
-+	return ((wq_id * 4) << PAGE_SHIFT) + idxd_get_wq_portal_offset(prot);
-+}
-+
- static inline void idxd_set_type(struct idxd_device *idxd)
- {
- 	struct pci_dev *pdev = idxd->pdev;
-@@ -228,6 +257,7 @@ int idxd_setup_sysfs(struct idxd_device *idxd);
- void idxd_cleanup_sysfs(struct idxd_device *idxd);
- int idxd_register_driver(void);
- void idxd_unregister_driver(void);
-+struct bus_type *idxd_get_bus_type(struct idxd_device *idxd);
- 
- /* device interrupt control */
- irqreturn_t idxd_irq_handler(int vec, void *data);
-@@ -266,4 +296,12 @@ void idxd_unregister_dma_device(struct idxd_device *idxd);
- int idxd_register_dma_channel(struct idxd_wq *wq);
- void idxd_unregister_dma_channel(struct idxd_wq *wq);
- void idxd_parse_completion_status(u8 status, enum dmaengine_tx_result *res);
-+
-+/* cdev */
-+int idxd_cdev_register(void);
-+void idxd_cdev_remove(void);
-+int idxd_cdev_get_major(struct idxd_device *idxd);
-+int idxd_wq_add_cdev(struct idxd_wq *wq);
-+void idxd_wq_del_cdev(struct idxd_wq *wq);
-+
- #endif
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 3ec1ef0f733e..6ec477e9026f 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -188,6 +188,7 @@ static int idxd_setup_internals(struct idxd_device *idxd)
- 		mutex_init(&wq->wq_lock);
- 		atomic_set(&wq->dq_count, 0);
- 		init_waitqueue_head(&wq->submit_waitq);
-+		wq->idxd_cdev.minor = -1;
- 		rc = percpu_init_rwsem(&wq->submit_lock);
- 		if (rc < 0) {
- 			idxd_wqs_free_lock(idxd);
-@@ -320,6 +321,8 @@ static int idxd_probe(struct idxd_device *idxd)
- 		goto err_idr_fail;
- 	}
- 
-+	idxd->major = idxd_cdev_get_major(idxd);
-+
- 	dev_dbg(dev, "IDXD device %d probed successfully\n", idxd->id);
- 	return 0;
- 
-@@ -518,6 +521,10 @@ static int __init idxd_init_module(void)
- 	if (err < 0)
- 		goto err_idxd_driver_register;
- 
-+	err = idxd_cdev_register();
-+	if (err)
-+		goto err_cdev_register;
-+
- 	err = pci_register_driver(&idxd_pci_driver);
- 	if (err)
- 		goto err_pci_register;
-@@ -525,6 +532,8 @@ static int __init idxd_init_module(void)
- 	return 0;
- 
- err_pci_register:
-+	idxd_cdev_remove();
-+err_cdev_register:
- 	idxd_unregister_driver();
- err_idxd_driver_register:
- 	idxd_unregister_bus_type();
-@@ -535,6 +544,7 @@ module_init(idxd_init_module);
- static void __exit idxd_exit_module(void)
- {
- 	pci_unregister_driver(&idxd_pci_driver);
-+	idxd_cdev_remove();
- 	idxd_unregister_bus_type();
- }
- module_exit(idxd_exit_module);
-diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
-index b4adeb2817d1..442f21eeb0fb 100644
---- a/drivers/dma/idxd/irq.c
-+++ b/drivers/dma/idxd/irq.c
-@@ -89,6 +89,24 @@ irqreturn_t idxd_misc_thread(int vec, void *data)
- 			idxd->sw_err.bits[i] = ioread64(idxd->reg_base +
- 					IDXD_SWERR_OFFSET + i * sizeof(u64));
- 		iowrite64(IDXD_SWERR_ACK, idxd->reg_base + IDXD_SWERR_OFFSET);
-+
-+		if (idxd->sw_err.valid && idxd->sw_err.wq_idx_valid) {
-+			int id = idxd->sw_err.wq_idx;
-+			struct idxd_wq *wq = &idxd->wqs[id];
-+
-+			if (wq->type == IDXD_WQT_USER)
-+				wake_up_interruptible(&wq->idxd_cdev.err_queue);
-+		} else {
-+			int i;
-+
-+			for (i = 0; i < idxd->max_wqs; i++) {
-+				struct idxd_wq *wq = &idxd->wqs[i];
-+
-+				if (wq->type == IDXD_WQT_USER)
-+					wake_up_interruptible(&wq->idxd_cdev.err_queue);
-+			}
-+		}
-+
- 		spin_unlock_bh(&idxd->dev_lock);
- 		val |= IDXD_INTC_ERR;
- 
-diff --git a/drivers/dma/idxd/submit.c b/drivers/dma/idxd/submit.c
-index f7baa1bbb0c7..0e6dea34edc9 100644
---- a/drivers/dma/idxd/submit.c
-+++ b/drivers/dma/idxd/submit.c
-@@ -71,17 +71,19 @@ static int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc,
- {
- 	struct idxd_device *idxd = wq->idxd;
- 	int vec = desc->hw->int_handle;
-+	void __iomem *portal;
- 
- 	if (idxd->state != IDXD_DEV_ENABLED)
- 		return -EIO;
- 
-+	portal = wq->dportal + idxd_get_wq_portal_offset(IDXD_PORTAL_UNLIMITED);
- 	/*
- 	 * The wmb() flushes writes to coherent DMA data before possibly
- 	 * triggering a DMA read. The wmb() is necessary even on UP because
- 	 * the recipient is a device.
- 	 */
- 	wmb();
--	iosubmit_cmds512(wq->dportal, desc->hw, 1);
-+	iosubmit_cmds512(portal, desc->hw, 1);
- 
- 	/*
- 	 * Pending the descriptor to the lockless list for the irq_entry
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index a7468d22c287..81a41a2b84ce 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -13,6 +13,7 @@
- static char *idxd_wq_type_names[] = {
- 	[IDXD_WQT_NONE]		= "none",
- 	[IDXD_WQT_KERNEL]	= "kernel",
-+	[IDXD_WQT_USER]		= "user",
- };
- 
- static void idxd_conf_device_release(struct device *dev)
-@@ -63,6 +64,11 @@ static inline bool is_idxd_wq_dmaengine(struct idxd_wq *wq)
- 	return false;
- }
- 
-+static inline bool is_idxd_wq_cdev(struct idxd_wq *wq)
-+{
-+	return wq->type == IDXD_WQT_USER ? true : false;
-+}
-+
- static int idxd_config_bus_match(struct device *dev,
- 				 struct device_driver *drv)
- {
-@@ -109,6 +115,9 @@ static int idxd_config_bus_probe(struct device *dev)
- 			return -EBUSY;
- 		}
- 
-+		if (!try_module_get(THIS_MODULE))
-+			return -ENXIO;
-+
- 		spin_lock_irqsave(&idxd->dev_lock, flags);
- 
- 		/* Perform IDXD configuration and enabling */
-@@ -216,6 +225,13 @@ static int idxd_config_bus_probe(struct device *dev)
- 				mutex_unlock(&wq->wq_lock);
- 				return rc;
- 			}
-+		} else if (is_idxd_wq_cdev(wq)) {
-+			rc = idxd_wq_add_cdev(wq);
-+			if (rc < 0) {
-+				dev_dbg(dev, "Cdev creation failed\n");
-+				mutex_unlock(&wq->wq_lock);
-+				return rc;
-+			}
- 		}
- 
- 		mutex_unlock(&wq->wq_lock);
-@@ -241,6 +257,8 @@ static void disable_wq(struct idxd_wq *wq)
- 
- 	if (is_idxd_wq_dmaengine(wq))
- 		idxd_unregister_dma_channel(wq);
-+	else if (is_idxd_wq_cdev(wq))
-+		idxd_wq_del_cdev(wq);
- 
- 	if (idxd_wq_refcount(wq))
- 		dev_warn(dev, "Clients has claim on wq %d: %d\n",
-@@ -295,10 +313,12 @@ static int idxd_config_bus_remove(struct device *dev)
- 		spin_lock_irqsave(&idxd->dev_lock, flags);
- 		rc = idxd_device_disable(idxd);
- 		spin_unlock_irqrestore(&idxd->dev_lock, flags);
-+		module_put(THIS_MODULE);
- 		if (rc < 0)
- 			dev_warn(dev, "Device disable failed\n");
- 		else
- 			dev_info(dev, "Device %s disabled\n", dev_name(dev));
-+
- 	}
- 
- 	return 0;
-@@ -309,7 +329,7 @@ static void idxd_config_bus_shutdown(struct device *dev)
- 	dev_dbg(dev, "%s called\n", __func__);
- }
- 
--static struct bus_type dsa_bus_type = {
-+struct bus_type dsa_bus_type = {
- 	.name = "dsa",
- 	.match = idxd_config_bus_match,
- 	.probe = idxd_config_bus_probe,
-@@ -334,7 +354,7 @@ static struct idxd_device_driver *idxd_drvs[] = {
- 	&dsa_drv
- };
- 
--static struct bus_type *idxd_get_bus_type(struct idxd_device *idxd)
-+struct bus_type *idxd_get_bus_type(struct idxd_device *idxd)
- {
- 	return idxd_bus_types[idxd->type];
- }
-@@ -938,6 +958,9 @@ static ssize_t wq_type_show(struct device *dev,
- 	case IDXD_WQT_KERNEL:
- 		return sprintf(buf, "%s\n",
- 			       idxd_wq_type_names[IDXD_WQT_KERNEL]);
-+	case IDXD_WQT_USER:
-+		return sprintf(buf, "%s\n",
-+			       idxd_wq_type_names[IDXD_WQT_USER]);
- 	case IDXD_WQT_NONE:
- 	default:
- 		return sprintf(buf, "%s\n",
-@@ -960,6 +983,8 @@ static ssize_t wq_type_store(struct device *dev,
- 	old_type = wq->type;
- 	if (sysfs_streq(buf, idxd_wq_type_names[IDXD_WQT_KERNEL]))
- 		wq->type = IDXD_WQT_KERNEL;
-+	else if (sysfs_streq(buf, idxd_wq_type_names[IDXD_WQT_USER]))
-+		wq->type = IDXD_WQT_USER;
- 	else
- 		wq->type = IDXD_WQT_NONE;
- 
-@@ -1002,6 +1027,17 @@ static ssize_t wq_name_store(struct device *dev,
- static struct device_attribute dev_attr_wq_name =
- 		__ATTR(name, 0644, wq_name_show, wq_name_store);
- 
-+static ssize_t wq_cdev_minor_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
-+{
-+	struct idxd_wq *wq = container_of(dev, struct idxd_wq, conf_dev);
-+
-+	return sprintf(buf, "%d\n", wq->idxd_cdev.minor);
-+}
-+
-+static struct device_attribute dev_attr_wq_cdev_minor =
-+		__ATTR(cdev_minor, 0444, wq_cdev_minor_show, NULL);
-+
- static struct attribute *idxd_wq_attributes[] = {
- 	&dev_attr_wq_clients.attr,
- 	&dev_attr_wq_state.attr,
-@@ -1011,6 +1047,7 @@ static struct attribute *idxd_wq_attributes[] = {
- 	&dev_attr_wq_priority.attr,
- 	&dev_attr_wq_type.attr,
- 	&dev_attr_wq_name.attr,
-+	&dev_attr_wq_cdev_minor.attr,
- 	NULL,
- };
- 
-@@ -1224,6 +1261,16 @@ static ssize_t token_limit_store(struct device *dev,
- }
- static DEVICE_ATTR_RW(token_limit);
- 
-+static ssize_t cdev_major_show(struct device *dev,
-+			       struct device_attribute *attr, char *buf)
-+{
-+	struct idxd_device *idxd =
-+		container_of(dev, struct idxd_device, conf_dev);
-+
-+	return sprintf(buf, "%u\n", idxd->major);
-+}
-+static DEVICE_ATTR_RO(cdev_major);
-+
- static struct attribute *idxd_device_attributes[] = {
- 	&dev_attr_max_groups.attr,
- 	&dev_attr_max_work_queues.attr,
-@@ -1239,6 +1286,7 @@ static struct attribute *idxd_device_attributes[] = {
- 	&dev_attr_errors.attr,
- 	&dev_attr_max_tokens.attr,
- 	&dev_attr_token_limit.attr,
-+	&dev_attr_cdev_major.attr,
- 	NULL,
- };
- 
++++ b/Documentation/ABI/stable/sysfs-driver-dma-idxd
+@@ -0,0 +1,171 @@
++What:           sys/bus/dsa/devices/dsa<m>/cdev_major
++Date:           Oct 25, 2019
++KernelVersion: 	5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:	The major number that the character device driver assigned to
++		this device.
++
++What:           sys/bus/dsa/devices/dsa<m>/errors
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The error information for this device.
++
++What:           sys/bus/dsa/devices/dsa<m>/max_batch_size
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The largest number of work descriptors in a batch.
++
++What:           sys/bus/dsa/devices/dsa<m>/max_work_queues_size
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The maximum work queue size supported by this device.
++
++What:           sys/bus/dsa/devices/dsa<m>/max_engines
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The maximum number of engines supported by this device.
++
++What:           sys/bus/dsa/devices/dsa<m>/max_groups
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The maximum number of groups can be created under this device.
++
++What:           sys/bus/dsa/devices/dsa<m>/max_tokens
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The total number of bandwidth tokens supported by this device.
++		The bandwidth tokens represent resources within the DSA
++		implementation, and these resources are allocated by engines to
++		support operations.
++
++What:           sys/bus/dsa/devices/dsa<m>/max_transfer_size
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The number of bytes to be read from the source address to
++		perform the operation. The maximum transfer size is dependent on
++		the workqueue the descriptor was submitted to.
++
++What:           sys/bus/dsa/devices/dsa<m>/max_work_queues
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The maximum work queue number that this device supports.
++
++What:           sys/bus/dsa/devices/dsa<m>/numa_node
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The numa node number for this device.
++
++What:           sys/bus/dsa/devices/dsa<m>/op_cap
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The operation capability bit mask specify the operation types
++		supported by the this device.
++
++What:           sys/bus/dsa/devices/dsa<m>/state
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The state information of this device. It can be either enabled
++		or disabled.
++
++What:           sys/bus/dsa/devices/dsa<m>/group<m>.<n>
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The assigned group under this device.
++
++What:           sys/bus/dsa/devices/dsa<m>/engine<m>.<n>
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The assigned engine under this device.
++
++What:           sys/bus/dsa/devices/dsa<m>/wq<m>.<n>
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The assigned work queue under this device.
++
++What:           sys/bus/dsa/devices/dsa<m>/configurable
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    To indicate if this device is configurable or not.
++
++What:           sys/bus/dsa/devices/dsa<m>/token_limit
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The maximum number of bandwidth tokens that may be in use at
++		one time by operations that access low bandwidth memory in the
++		device.
++
++What:           sys/bus/dsa/devices/wq<m>.<n>/group_id
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The group id that this work queue belongs to.
++
++What:           sys/bus/dsa/devices/wq<m>.<n>/size
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The work queue size for this work queue.
++
++What:           sys/bus/dsa/devices/wq<m>.<n>/type
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The type of this work queue, it can be "kernel" type for work
++		queue usages in the kernel space or "user" type for work queue
++		usages by applications in user space.
++
++What:           sys/bus/dsa/devices/wq<m>.<n>/cdev_minor
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The minor number assigned to this work queue by the character
++		device driver.
++
++What:           sys/bus/dsa/devices/wq<m>.<n>/mode
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The work queue mode type for this work queue.
++
++What:           sys/bus/dsa/devices/wq<m>.<n>/priority
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The priority value of this work queue, it is a vlue relative to
++		other work queue in the same group to control quality of service
++		for dispatching work from multiple workqueues in the same group.
++
++What:           sys/bus/dsa/devices/wq<m>.<n>/state
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The current state of the work queue.
++
++What:           sys/bus/dsa/devices/wq<m>.<n>/threshold
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The number of entries in this work queue that may be filled
++		via a limited portal.
++
++What:           sys/bus/dsa/devices/engine<m>.<n>/group_id
++Date:           Oct 25, 2019
++KernelVersion:  5.6.0
++Contact:        dmaengine@vger.kernel.org
++Description:    The group that this engine belongs to.
 

@@ -2,25 +2,26 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04B5811D571
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Dec 2019 19:25:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16AFE11D5AC
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Dec 2019 19:33:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730582AbfLLSZg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 12 Dec 2019 13:25:36 -0500
-Received: from mga18.intel.com ([134.134.136.126]:35504 "EHLO mga18.intel.com"
+        id S1730435AbfLLSdW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 12 Dec 2019 13:33:22 -0500
+Received: from mga14.intel.com ([192.55.52.115]:13185 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730373AbfLLSZf (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:25:35 -0500
+        id S1730344AbfLLSdW (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:33:22 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:25:35 -0800
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:25:11 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
-   d="scan'208";a="245829827"
+   d="scan'208";a="216380396"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga002.fm.intel.com with ESMTP; 12 Dec 2019 10:25:34 -0800
-Subject: [PATCH RFC v2 14/14] dmaengine: idxd: add sysfs ABI for idxd driver
+  by orsmga003.jf.intel.com with ESMTP; 12 Dec 2019 10:25:10 -0800
+Subject: [PATCH RFC v2 10/14] dmaengine: idxd: add descriptor manipulation
+ routines
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         vkoul@kernel.org
@@ -29,8 +30,8 @@ Cc:     dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
         jacob.jun.pan@intel.com, yi.l.liu@intel.com, axboe@kernel.dk,
         akpm@linux-foundation.org, tglx@linutronix.de, mingo@redhat.com,
         bp@alien8.de, fenghua.yu@intel.com, hpa@zytor.com
-Date:   Thu, 12 Dec 2019 11:25:34 -0700
-Message-ID: <157617513437.42350.6807398093670501469.stgit@djiang5-desk3.ch.intel.com>
+Date:   Thu, 12 Dec 2019 11:25:10 -0700
+Message-ID: <157617511035.42350.5798193672511246769.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
 References: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/unknown-version
@@ -42,193 +43,160 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Jing Lin <jing.lin@intel.com>
+This commit adds helper functions for DSA descriptor allocation, setup,
+submission, and free operations.
 
-Add the sysfs ABI information for idxd driver in
-Documentation/ABI/stable directory.
-
-Signed-off-by: Jing Lin <jing.lin@intel.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- Documentation/ABI/stable/sysfs-driver-dma-idxd |  171 ++++++++++++++++++++++++
- 1 file changed, 171 insertions(+)
- create mode 100644 Documentation/ABI/stable/sysfs-driver-dma-idxd
 
-diff --git a/Documentation/ABI/stable/sysfs-driver-dma-idxd b/Documentation/ABI/stable/sysfs-driver-dma-idxd
+---
+
+idxd_submit_desc() and idxd_alloc_desc() are used in the next patch in the
+series.
+---
+ drivers/dma/idxd/Makefile |    2 -
+ drivers/dma/idxd/submit.c |  127 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 128 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/dma/idxd/submit.c
+
+diff --git a/drivers/dma/idxd/Makefile b/drivers/dma/idxd/Makefile
+index a552560a03dc..50eca12015e2 100644
+--- a/drivers/dma/idxd/Makefile
++++ b/drivers/dma/idxd/Makefile
+@@ -1,2 +1,2 @@
+ obj-$(CONFIG_INTEL_IDXD) += idxd.o
+-idxd-y := init.o irq.o device.o sysfs.o
++idxd-y := init.o irq.o device.o sysfs.o submit.o
+diff --git a/drivers/dma/idxd/submit.c b/drivers/dma/idxd/submit.c
 new file mode 100644
-index 000000000000..f4be46cc6cb6
+index 000000000000..2dcd13f9f654
 --- /dev/null
-+++ b/Documentation/ABI/stable/sysfs-driver-dma-idxd
-@@ -0,0 +1,171 @@
-+What:           sys/bus/dsa/devices/dsa<m>/cdev_major
-+Date:           Oct 25, 2019
-+KernelVersion: 	5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:	The major number that the character device driver assigned to
-+		this device.
++++ b/drivers/dma/idxd/submit.c
+@@ -0,0 +1,127 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright(c) 2019 Intel Corporation. All rights rsvd. */
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/dmaengine.h>
++#include <uapi/linux/idxd.h>
++#include "../dmaengine.h"
++#include "idxd.h"
++#include "registers.h"
 +
-+What:           sys/bus/dsa/devices/dsa<m>/errors
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The error information for this device.
++static struct idxd_desc *idxd_alloc_desc(struct idxd_wq *wq, bool nonblock)
++{
++	struct idxd_desc *desc;
++	int idx;
++	struct idxd_device *idxd = wq->idxd;
 +
-+What:           sys/bus/dsa/devices/dsa<m>/max_batch_size
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The largest number of work descriptors in a batch.
++	if (idxd->state != IDXD_DEV_ENABLED)
++		return ERR_PTR(-EIO);
 +
-+What:           sys/bus/dsa/devices/dsa<m>/max_work_queues_size
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The maximum work queue size supported by this device.
++	if (!nonblock)
++		percpu_down_read(&wq->submit_lock);
++	else if (!percpu_down_read_trylock(&wq->submit_lock))
++		return ERR_PTR(-EBUSY);
 +
-+What:           sys/bus/dsa/devices/dsa<m>/max_engines
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The maximum number of engines supported by this device.
++	if (!atomic_add_unless(&wq->dq_count, 1, wq->size)) {
++		int rc;
 +
-+What:           sys/bus/dsa/devices/dsa<m>/max_groups
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The maximum number of groups can be created under this device.
++		if (nonblock) {
++			percpu_up_read(&wq->submit_lock);
++			return ERR_PTR(-EAGAIN);
++		}
 +
-+What:           sys/bus/dsa/devices/dsa<m>/max_tokens
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The total number of bandwidth tokens supported by this device.
-+		The bandwidth tokens represent resources within the DSA
-+		implementation, and these resources are allocated by engines to
-+		support operations.
++		percpu_up_read(&wq->submit_lock);
++		percpu_down_write(&wq->submit_lock);
++		rc = wait_event_interruptible(wq->submit_waitq,
++				atomic_add_unless(&wq->dq_count, 1, wq->size) ||
++				idxd->state != IDXD_DEV_ENABLED);
++		percpu_up_write(&wq->submit_lock);
++		if (rc < 0)
++			return ERR_PTR(-EINTR);
++		if (idxd->state != IDXD_DEV_ENABLED)
++			return ERR_PTR(-EIO);
++	} else {
++		percpu_up_read(&wq->submit_lock);
++	}
 +
-+What:           sys/bus/dsa/devices/dsa<m>/max_transfer_size
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The number of bytes to be read from the source address to
-+		perform the operation. The maximum transfer size is dependent on
-+		the workqueue the descriptor was submitted to.
++	idx = sbitmap_get(&wq->sbmap, 0, false);
++	if (idx < 0) {
++		atomic_dec(&wq->dq_count);
++		return ERR_PTR(-EAGAIN);
++	}
 +
-+What:           sys/bus/dsa/devices/dsa<m>/max_work_queues
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The maximum work queue number that this device supports.
++	desc = wq->descs[idx];
++	memset(desc->hw, 0, sizeof(struct dsa_hw_desc));
++	memset(desc->completion, 0, sizeof(struct dsa_completion_record));
++	return desc;
++}
 +
-+What:           sys/bus/dsa/devices/dsa<m>/numa_node
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The numa node number for this device.
++void idxd_free_desc(struct idxd_wq *wq, struct idxd_desc *desc)
++{
++	atomic_dec(&wq->dq_count);
 +
-+What:           sys/bus/dsa/devices/dsa<m>/op_cap
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The operation capability bit mask specify the operation types
-+		supported by the this device.
++	sbitmap_clear_bit(&wq->sbmap, desc->id);
++	wake_up(&wq->submit_waitq);
++}
 +
-+What:           sys/bus/dsa/devices/dsa<m>/state
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The state information of this device. It can be either enabled
-+		or disabled.
++static int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc,
++			    bool nonblock)
++{
++	struct idxd_device *idxd = wq->idxd;
++	int vec = desc->hw->int_handle;
 +
-+What:           sys/bus/dsa/devices/dsa<m>/group<m>.<n>
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The assigned group under this device.
++	if (idxd->state != IDXD_DEV_ENABLED)
++		return -EIO;
 +
-+What:           sys/bus/dsa/devices/dsa<m>/engine<m>.<n>
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The assigned engine under this device.
++	/*
++	 * The wmb() flushes writes to coherent DMA data before possibly
++	 * triggering a DMA read. The wmb() is necessary even on UP because
++	 * the recipient is a device.
++	 */
++	wmb();
++	iosubmit_cmds512(wq->dportal, desc->hw, 1);
 +
-+What:           sys/bus/dsa/devices/dsa<m>/wq<m>.<n>
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The assigned work queue under this device.
++	/*
++	 * Pending the descriptor to the lockless list for the irq_entry
++	 * that we designated the descriptor to.
++	 */
++	llist_add(&desc->llnode, &idxd->irq_entries[vec].pending_llist);
 +
-+What:           sys/bus/dsa/devices/dsa<m>/configurable
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    To indicate if this device is configurable or not.
++	return 0;
++}
 +
-+What:           sys/bus/dsa/devices/dsa<m>/token_limit
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The maximum number of bandwidth tokens that may be in use at
-+		one time by operations that access low bandwidth memory in the
-+		device.
++static inline void idxd_prep_desc_common(struct idxd_wq *wq,
++					 struct dsa_hw_desc *hw, char opcode,
++					 u64 addr_f1, u64 addr_f2, u64 len,
++					 u64 compl, u32 flags)
++{
++	hw->flags = flags;
++	hw->opcode = opcode;
++	hw->src_addr = addr_f1;
++	hw->dst_addr = addr_f2;
++	hw->xfer_size = len;
++	hw->priv = !!(wq->type == IDXD_WQT_KERNEL);
++	hw->completion_addr = compl;
 +
-+What:           sys/bus/dsa/devices/wq<m>.<n>/group_id
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The group id that this work queue belongs to.
++	/*
++	 * Descriptor completion vectors are 1-8 for MSIX. We will round
++	 * robin through the 8 vectors.
++	 */
++	hw->int_handle = ++wq->vec_ptr;
++	wq->vec_ptr = wq->vec_ptr & 7;
++}
 +
-+What:           sys/bus/dsa/devices/wq<m>.<n>/size
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The work queue size for this work queue.
++static inline void set_desc_addresses(struct dma_request *req,
++				      u64 *src, u64 *dst)
++{
++		*src = sg_dma_address(&req->sg[0]);
++		*dst = req->pg_dma;
++}
 +
-+What:           sys/bus/dsa/devices/wq<m>.<n>/type
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The type of this work queue, it can be "kernel" type for work
-+		queue usages in the kernel space or "user" type for work queue
-+		usages by applications in user space.
-+
-+What:           sys/bus/dsa/devices/wq<m>.<n>/cdev_minor
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The minor number assigned to this work queue by the character
-+		device driver.
-+
-+What:           sys/bus/dsa/devices/wq<m>.<n>/mode
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The work queue mode type for this work queue.
-+
-+What:           sys/bus/dsa/devices/wq<m>.<n>/priority
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The priority value of this work queue, it is a vlue relative to
-+		other work queue in the same group to control quality of service
-+		for dispatching work from multiple workqueues in the same group.
-+
-+What:           sys/bus/dsa/devices/wq<m>.<n>/state
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The current state of the work queue.
-+
-+What:           sys/bus/dsa/devices/wq<m>.<n>/threshold
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The number of entries in this work queue that may be filled
-+		via a limited portal.
-+
-+What:           sys/bus/dsa/devices/engine<m>.<n>/group_id
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The group that this engine belongs to.
++static inline void set_completion_address(struct idxd_desc *desc,
++					  u64 *compl_addr)
++{
++		*compl_addr = desc->compl_dma;
++}
 

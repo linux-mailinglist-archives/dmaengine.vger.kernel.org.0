@@ -2,26 +2,25 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D052D11D553
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Dec 2019 19:24:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BBDCC11D555
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Dec 2019 19:24:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730295AbfLLSYg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 12 Dec 2019 13:24:36 -0500
-Received: from mga18.intel.com ([134.134.136.126]:35418 "EHLO mga18.intel.com"
+        id S1730398AbfLLSYm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 12 Dec 2019 13:24:42 -0500
+Received: from mga07.intel.com ([134.134.136.100]:40421 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730210AbfLLSYf (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:24:35 -0500
+        id S1730210AbfLLSYl (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:24:41 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:24:35 -0800
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:24:40 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
-   d="scan'208";a="211201169"
+   d="scan'208";a="220749862"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga008.fm.intel.com with ESMTP; 12 Dec 2019 10:24:34 -0800
-Subject: [PATCH RFC v2 04/14] mm: create common code from request allocation
- based from blk-mq code
+  by fmsmga001.fm.intel.com with ESMTP; 12 Dec 2019 10:24:40 -0800
+Subject: [PATCH RFC v2 05/14] dmaengine: add dma_request support functions
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         vkoul@kernel.org
@@ -30,8 +29,8 @@ Cc:     dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
         jacob.jun.pan@intel.com, yi.l.liu@intel.com, axboe@kernel.dk,
         akpm@linux-foundation.org, tglx@linutronix.de, mingo@redhat.com,
         bp@alien8.de, fenghua.yu@intel.com, hpa@zytor.com
-Date:   Thu, 12 Dec 2019 11:24:34 -0700
-Message-ID: <157617507410.42350.16156693139630931510.stgit@djiang5-desk3.ch.intel.com>
+Date:   Thu, 12 Dec 2019 11:24:40 -0700
+Message-ID: <157617507999.42350.9957499768810549174.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
 References: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/unknown-version
@@ -43,306 +42,254 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Move the allocation of requests from compound pages to a common function
-to allow usages by other callers. Since the routine has more to do with
-memory allocation and management, it is moved to be exported by the
-mempool.h and be part of mm subsystem.
+In order to provide a lockless submission path, the request context needs
+to be pre-allocated rather than pulling from a memory pool.
+Use the common request allocation call request_from_pages_alloc() to
+accomplish this. The sbitmap code will be used to get the next
+free request context. This is a simplified version of what blk-mq does
+(not sbitmap_queue). The config option DMA_ENGINE_REQUEST is added so that
+only drivers that supports dma request would enable the code.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- block/blk-mq.c          |   94 +++++++++++++----------------------------------
- include/linux/mempool.h |    6 +++
- mm/Makefile             |    2 -
- mm/request_alloc.c      |   95 +++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 128 insertions(+), 69 deletions(-)
- create mode 100644 mm/request_alloc.c
+ drivers/dma/Kconfig       |    5 ++
+ drivers/dma/Makefile      |    1 
+ drivers/dma/dma-request.c |   96 +++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/dmaengine.h |   57 +++++++++++++++++++++++++++
+ 4 files changed, 159 insertions(+)
+ create mode 100644 drivers/dma/dma-request.c
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 323c9cb28066..10f3fecb381a 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -10,7 +10,6 @@
- #include <linux/backing-dev.h>
- #include <linux/bio.h>
- #include <linux/blkdev.h>
--#include <linux/kmemleak.h>
- #include <linux/mm.h>
- #include <linux/init.h>
- #include <linux/slab.h>
-@@ -26,6 +25,7 @@
- #include <linux/delay.h>
- #include <linux/crash_dump.h>
- #include <linux/prefetch.h>
-+#include <linux/mempool.h>
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 6fa1eba9d477..4a1458bdd249 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -56,6 +56,11 @@ config DMA_OF
+ 	depends on OF
+ 	select DMA_ENGINE
  
- #include <trace/events/block.h>
- 
-@@ -2015,8 +2015,6 @@ static blk_qc_t blk_mq_make_request(struct request_queue *q, struct bio *bio)
- void blk_mq_free_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
- 		     unsigned int hctx_idx)
- {
--	struct page *page;
--
- 	if (tags->rqs && set->ops->exit_request) {
- 		int i;
- 
-@@ -2030,16 +2028,7 @@ void blk_mq_free_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
- 		}
- 	}
- 
--	while (!list_empty(&tags->page_list)) {
--		page = list_first_entry(&tags->page_list, struct page, lru);
--		list_del_init(&page->lru);
--		/*
--		 * Remove kmemleak object previously allocated in
--		 * blk_mq_alloc_rqs().
--		 */
--		kmemleak_free(page_address(page));
--		__free_pages(page, page->private);
--	}
-+	request_from_pages_free(&tags->page_list);
- }
- 
- void blk_mq_free_rq_map(struct blk_mq_tags *tags)
-@@ -2089,11 +2078,6 @@ struct blk_mq_tags *blk_mq_alloc_rq_map(struct blk_mq_tag_set *set,
- 	return tags;
- }
- 
--static size_t order_to_size(unsigned int order)
--{
--	return (size_t)PAGE_SIZE << order;
--}
--
- static int blk_mq_init_request(struct blk_mq_tag_set *set, struct request *rq,
- 			       unsigned int hctx_idx, int node)
- {
-@@ -2109,12 +2093,20 @@ static int blk_mq_init_request(struct blk_mq_tag_set *set, struct request *rq,
- 	return 0;
- }
- 
-+static void blk_mq_assign_request(void *ctx, void *ptr, int idx)
-+{
-+	struct blk_mq_tags *tags = (struct blk_mq_tags *)ctx;
-+	struct request *rq = ptr;
++config DMA_ENGINE_REQUEST
++	def_bool n
++	depends on DMA_ENGINE
++	select SBITMAP
 +
-+	tags->static_rqs[idx] = rq;
+ #devices
+ config ALTERA_MSGDMA
+ 	tristate "Altera / Intel mSGDMA Engine"
+diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+index 42d7e2fc64fa..f80720075399 100644
+--- a/drivers/dma/Makefile
++++ b/drivers/dma/Makefile
+@@ -8,6 +8,7 @@ obj-$(CONFIG_DMA_ENGINE) += dmaengine.o
+ obj-$(CONFIG_DMA_VIRTUAL_CHANNELS) += virt-dma.o
+ obj-$(CONFIG_DMA_ACPI) += acpi-dma.o
+ obj-$(CONFIG_DMA_OF) += of-dma.o
++obj-$(CONFIG_DMA_ENGINE_REQUEST) += dma-request.o
+ 
+ #dmatest
+ obj-$(CONFIG_DMATEST) += dmatest.o
+diff --git a/drivers/dma/dma-request.c b/drivers/dma/dma-request.c
+new file mode 100644
+index 000000000000..01390f179107
+--- /dev/null
++++ b/drivers/dma/dma-request.c
+@@ -0,0 +1,96 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/* Copyright(c) 2019 Intel Corporation. All rights reserved.  */
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/mm.h>
++#include <linux/device.h>
++#include <linux/dmaengine.h>
++#include <linux/mempool.h>
++
++struct dma_request *dma_chan_alloc_request(struct dma_chan *chan)
++{
++	int nr;
++	struct dma_request *req;
++
++	nr = sbitmap_get(&chan->sbmap, 0, false);
++	if (nr < 0)
++		return NULL;
++
++	req = chan->rqs[nr];
++	req->rq_private = NULL;
++	req->callback = NULL;
++	memset(&req->result, 0, sizeof(struct dmaengine_result));
++	return req;
++}
++EXPORT_SYMBOL_GPL(dma_chan_alloc_request);
++
++void dma_chan_free_request(struct dma_chan *chan, struct dma_request *rq)
++{
++	sbitmap_clear_bit(&chan->sbmap, rq->id);
++}
++EXPORT_SYMBOL_GPL(dma_chan_free_request);
++
++void dma_chan_free_request_resources(struct dma_chan *chan)
++{
++	request_from_pages_free(&chan->page_list);
++	kfree(chan->rqs);
++}
++EXPORT_SYMBOL_GPL(dma_chan_free_request_resources);
++
++static void dma_chan_assign_request(void *ctx, void *ptr, int idx)
++{
++	struct dma_chan *chan = (struct dma_chan *)ctx;
++	struct dma_request *rq = ptr;
++
++	chan->rqs[idx] = rq;
 +}
 +
- int blk_mq_alloc_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
- 		     unsigned int hctx_idx, unsigned int depth)
- {
--	unsigned int i, j, entries_per_page, max_order = 4;
--	size_t rq_size, left;
--	int node;
-+	unsigned int i;
++int dma_chan_alloc_request_resources(struct dma_chan *chan)
++{
++	int i, node, rc, id = 0;
 +	size_t rq_size;
-+	int node, rc;
- 
- 	node = blk_mq_hw_queue_to_node(&set->map[HCTX_TYPE_DEFAULT], hctx_idx);
- 	if (node == NUMA_NO_NODE)
-@@ -2128,62 +2120,28 @@ int blk_mq_alloc_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
- 	 */
- 	rq_size = round_up(sizeof(struct request) + set->cmd_size,
- 				cache_line_size());
--	left = rq_size * depth;
--
--	for (i = 0; i < depth; ) {
--		int this_order = max_order;
--		struct page *page;
--		int to_do;
--		void *p;
--
--		while (this_order && left < order_to_size(this_order - 1))
--			this_order--;
--
--		do {
--			page = alloc_pages_node(node,
--				GFP_NOIO | __GFP_NOWARN | __GFP_NORETRY | __GFP_ZERO,
--				this_order);
--			if (page)
--				break;
--			if (!this_order--)
--				break;
--			if (order_to_size(this_order) < rq_size)
--				break;
--		} while (1);
- 
--		if (!page)
--			goto fail;
-+	rc = request_from_pages_alloc((void *)tags, depth, rq_size,
-+				      &tags->page_list, 4, node,
-+				      blk_mq_assign_request);
++
++	/* Requests are already allocated */
++	if (chan->rqs)
++		return 0;
++
++	node = dev_to_node(chan->device->dev);
++	rc = sbitmap_init_node(&chan->sbmap, chan->depth, -1,
++			       GFP_KERNEL, node);
++	if (rc < 0)
++		return rc;
++
++	chan->rqs = kcalloc_node(chan->depth, sizeof(struct dma_request *),
++				 GFP_KERNEL, node);
++	if (!chan->rqs) {
++		rc = -ENOMEM;
++		goto fail;
++	}
++
++	INIT_LIST_HEAD(&chan->page_list);
++
++	rq_size = round_up(sizeof(struct dma_request) +
++			chan->max_sgs * sizeof(struct scatterlist),
++			cache_line_size());
++
++	rc = request_from_pages_alloc((void *)chan, chan->depth, rq_size,
++				      &chan->page_list, 4, node,
++				      dma_chan_assign_request);
 +	if (rc < 0)
 +		goto fail;
- 
--		page->private = this_order;
--		list_add_tail(&page->lru, &tags->page_list);
++
 +	for (i = 0; i < rc; i++) {
-+		struct request *rq = tags->static_rqs[i];
- 
--		p = page_address(page);
--		/*
--		 * Allow kmemleak to scan these pages as they contain pointers
--		 * to additional allocations like via ops->init_request().
--		 */
--		kmemleak_alloc(p, order_to_size(this_order), 1, GFP_NOIO);
--		entries_per_page = order_to_size(this_order) / rq_size;
--		to_do = min(entries_per_page, depth - i);
--		left -= to_do * rq_size;
--		for (j = 0; j < to_do; j++) {
--			struct request *rq = p;
--
--			tags->static_rqs[i] = rq;
--			if (blk_mq_init_request(set, rq, hctx_idx, node)) {
--				tags->static_rqs[i] = NULL;
--				goto fail;
--			}
--
--			p += rq_size;
--			i++;
-+		if (blk_mq_init_request(set, rq, hctx_idx, node)) {
-+			tags->static_rqs[i] = NULL;
-+			rc = -ENOMEM;
-+			goto fail;
- 		}
- 	}
++		struct dma_request *rq = chan->rqs[i];
 +
- 	return 0;
- 
- fail:
- 	blk_mq_free_rqs(set, tags, hctx_idx);
--	return -ENOMEM;
++		rq->id = id++;
++		rq->chan = chan;
++	}
++
++	return 0;
++
++ fail:
++	sbitmap_free(&chan->sbmap);
++	dma_chan_free_request_resources(chan);
 +	return rc;
++}
++EXPORT_SYMBOL_GPL(dma_chan_alloc_request_resources);
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 0202d44a17a5..7bc8c3f8283f 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -12,6 +12,8 @@
+ #include <linux/scatterlist.h>
+ #include <linux/bitmap.h>
+ #include <linux/types.h>
++#include <linux/sbitmap.h>
++#include <linux/bvec.h>
+ #include <asm/page.h>
+ 
+ /**
+@@ -176,6 +178,8 @@ struct dma_interleaved_template {
+  * @DMA_PREP_CMD: tell the driver that the data passed to DMA API is command
+  *  data and the descriptor should be in different format from normal
+  *  data descriptors.
++ *  @DMA_SUBMIT_NONBLOCK: tell the driver do not wait for resources if submit
++ *  is not possible.
+  */
+ enum dma_ctrl_flags {
+ 	DMA_PREP_INTERRUPT = (1 << 0),
+@@ -186,6 +190,7 @@ enum dma_ctrl_flags {
+ 	DMA_PREP_FENCE = (1 << 5),
+ 	DMA_CTRL_REUSE = (1 << 6),
+ 	DMA_PREP_CMD = (1 << 7),
++	DMA_SUBMIT_NONBLOCK = (1 << 8),
+ };
+ 
+ /**
+@@ -268,6 +273,13 @@ struct dma_chan {
+ 	struct dma_router *router;
+ 	void *route_data;
+ 
++	/* DMA request */
++	int max_sgs;
++	int depth;
++	struct sbitmap sbmap;
++	struct dma_request **rqs;
++	struct list_head page_list;
++
+ 	void *private;
+ };
+ 
+@@ -511,6 +523,25 @@ struct dma_async_tx_descriptor {
+ #endif
+ };
+ 
++struct dma_request {
++	int id;
++	struct dma_chan *chan;
++	enum dma_transaction_type cmd;
++	enum dma_ctrl_flags flags;
++	struct bio_vec bvec;
++	dma_addr_t pg_dma;
++	int sg_nents;
++	void *rq_private;
++
++	/* Set by driver */
++	dma_async_tx_callback_result callback;
++	struct dmaengine_result result;
++	void *callback_param;
++
++	/* Leave as last member for flexible array of scatterlist */
++	struct scatterlist sg[];
++};
++
+ #ifdef CONFIG_DMA_ENGINE
+ static inline void dma_set_unmap(struct dma_async_tx_descriptor *tx,
+ 				 struct dmaengine_unmap_data *unmap)
+@@ -1359,6 +1390,32 @@ static inline int dma_get_slave_caps(struct dma_chan *chan,
  }
+ #endif
  
- /*
-diff --git a/include/linux/mempool.h b/include/linux/mempool.h
-index 0c964ac107c2..5b1f6214c881 100644
---- a/include/linux/mempool.h
-+++ b/include/linux/mempool.h
-@@ -108,4 +108,10 @@ static inline mempool_t *mempool_create_page_pool(int min_nr, int order)
- 			      (void *)(long)order);
- }
- 
-+int request_from_pages_alloc(void *ctx, unsigned int depth, size_t rq_size,
-+			     struct list_head *page_list, int max_order,
-+			     int node,
-+			     void (*assign)(void *ctx, void *req, int idx));
-+void request_from_pages_free(struct list_head *page_list);
-+
- #endif /* _LINUX_MEMPOOL_H */
-diff --git a/mm/Makefile b/mm/Makefile
-index 1937cc251883..92e7d74ba7a7 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -42,7 +42,7 @@ obj-y			:= filemap.o mempool.o oom_kill.o fadvise.o \
- 			   mm_init.o mmu_context.o percpu.o slab_common.o \
- 			   compaction.o vmacache.o \
- 			   interval_tree.o list_lru.o workingset.o \
--			   debug.o gup.o $(mmu-y)
-+			   debug.o gup.o request_alloc.o $(mmu-y)
- 
- # Give 'page_alloc' its own module-parameter namespace
- page-alloc-y := page_alloc.o
-diff --git a/mm/request_alloc.c b/mm/request_alloc.c
-new file mode 100644
-index 000000000000..01ebea8ccdfc
---- /dev/null
-+++ b/mm/request_alloc.c
-@@ -0,0 +1,95 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Common function for struct allocation. Moved from blk-mq code
-+ *
-+ * Copyright (C) 2013-2014 Jens Axboe
-+ */
-+#include <linux/kernel.h>
-+#include <linux/export.h>
-+#include <linux/mm_types.h>
-+#include <linux/list.h>
-+#include <linux/kmemleak.h>
-+#include <linux/mm.h>
-+
-+void request_from_pages_free(struct list_head *page_list)
++#ifdef CONFIG_DMA_ENGINE_REQUEST
++struct dma_request *dma_chan_alloc_request(struct dma_chan *chan);
++void dma_chan_free_request(struct dma_chan *chan, struct dma_request *rq);
++void dma_chan_free_request_resources(struct dma_chan *chan);
++int dma_chan_alloc_request_resources(struct dma_chan *chan);
++#else
++static inline struct dma_request *dma_chan_alloc_request(struct dma_chan *chan)
 +{
-+	struct page *page, *n;
-+
-+	list_for_each_entry_safe(page, n, page_list, lru) {
-+		list_del_init(&page->lru);
-+		/*
-+		 * Remove kmemleak object previously allocated in
-+		 * blk_mq_alloc_rqs().
-+		 */
-+		kmemleak_free(page_address(page));
-+		__free_pages(page, page->private);
-+	}
-+}
-+EXPORT_SYMBOL_GPL(request_from_pages_free);
-+
-+static size_t order_to_size(unsigned int order)
-+{
-+	return (size_t)PAGE_SIZE << order;
++	return NULL;
 +}
 +
-+int request_from_pages_alloc(void *ctx, unsigned int depth, size_t rq_size,
-+			     struct list_head *page_list, int max_order,
-+			     int node,
-+			     void (*assign)(void *ctx, void *req, int idx))
++static inline void dma_chan_free_request(struct dma_chan *chan,
++					 struct dma_request *rq)
 +{
-+	size_t left;
-+	unsigned int i, j, entries_per_page;
-+
-+	left = rq_size * depth;
-+
-+	for (i = 0; i < depth; ) {
-+		int this_order = max_order;
-+		struct page *page;
-+		int to_do;
-+		void *p;
-+
-+		while (this_order && left < order_to_size(this_order - 1))
-+			this_order--;
-+
-+		do {
-+			page = alloc_pages_node(node,
-+						GFP_NOIO | __GFP_NOWARN |
-+						__GFP_NORETRY | __GFP_ZERO,
-+						this_order);
-+			if (page)
-+				break;
-+			if (!this_order--)
-+				break;
-+			if (order_to_size(this_order) < rq_size)
-+				break;
-+		} while (1);
-+
-+		if (!page)
-+			goto fail;
-+
-+		page->private = this_order;
-+		list_add_tail(&page->lru, page_list);
-+
-+		p = page_address(page);
-+		/*
-+		 * Allow kmemleak to scan these pages as they contain pointers
-+		 * to additional allocations like via ops->init_request().
-+		 */
-+		kmemleak_alloc(p, order_to_size(this_order), 1, GFP_NOIO);
-+		entries_per_page = order_to_size(this_order) / rq_size;
-+		to_do = min(entries_per_page, depth - i);
-+		left -= to_do * rq_size;
-+		for (j = 0; j < to_do; j++) {
-+			assign((void *)ctx, p, i);
-+			p += rq_size;
-+			i++;
-+		}
-+	}
-+
-+	return i;
-+
-+fail:
-+	request_from_pages_free(page_list);
-+	return -ENOMEM;
 +}
-+EXPORT_SYMBOL_GPL(request_from_pages_alloc);
++
++static inline void dma_chan_free_request_resources(struct dma_chan *chan)
++{
++}
++
++static inline int dma_chan_alloc_request_resources(struct dma_chan *chan)
++{
++	return -EOPNOTSUPP;
++}
++#endif
++
+ #define dma_request_slave_channel_reason(dev, name) dma_request_chan(dev, name)
+ 
+ static inline int dmaengine_desc_set_reuse(struct dma_async_tx_descriptor *tx)
 

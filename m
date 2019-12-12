@@ -2,26 +2,25 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 79AB711D54B
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Dec 2019 19:24:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4C0C11D54F
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Dec 2019 19:24:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730431AbfLLSYS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 12 Dec 2019 13:24:18 -0500
-Received: from mga07.intel.com ([134.134.136.100]:40385 "EHLO mga07.intel.com"
+        id S1730275AbfLLSY0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 12 Dec 2019 13:24:26 -0500
+Received: from mga01.intel.com ([192.55.52.88]:20582 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730295AbfLLSYS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:24:18 -0500
+        id S1730295AbfLLSYY (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:24:24 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:24:17 -0800
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:24:23 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
-   d="scan'208";a="245829305"
+   d="scan'208";a="216201185"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga002.fm.intel.com with ESMTP; 12 Dec 2019 10:24:16 -0800
-Subject: [PATCH RFC v2 01/14] x86/asm: add iosubmit_cmds512() based on
- movdir64b CPU instruction
+  by orsmga006.jf.intel.com with ESMTP; 12 Dec 2019 10:24:22 -0800
+Subject: [PATCH RFC v2 02/14] dmaengine: break out channel registration
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         vkoul@kernel.org
@@ -30,8 +29,8 @@ Cc:     dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
         jacob.jun.pan@intel.com, yi.l.liu@intel.com, axboe@kernel.dk,
         akpm@linux-foundation.org, tglx@linutronix.de, mingo@redhat.com,
         bp@alien8.de, fenghua.yu@intel.com, hpa@zytor.com
-Date:   Thu, 12 Dec 2019 11:24:16 -0700
-Message-ID: <157617505636.42350.1170110675242558018.stgit@djiang5-desk3.ch.intel.com>
+Date:   Thu, 12 Dec 2019 11:24:22 -0700
+Message-ID: <157617506217.42350.158281933095533374.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
 References: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/unknown-version
@@ -43,90 +42,238 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-With the introduction of movdir64b instruction, there is now an instruction
-that can write 64 bytes of data atomicaly.
-
-Quoting from Intel SDM:
-"There is no atomicity guarantee provided for the 64-byte load operation
-from source address, and processor implementations may use multiple
-load operations to read the 64-bytes. The 64-byte direct-store issued
-by MOVDIR64B guarantees 64-byte write-completion atomicity. This means
-that the data arrives at the destination in a single undivided 64-byte
-write transaction."
-
-We have identified at least 3 different use cases for this instruction in
-the format of func(dst, src, count):
-1) Clear poison / Initialize MKTME memory
-   Destination is normal memory.
-   Source in normal memory. Does not increment. (Copy same line to all
-   targets)
-   Count (to clear/init multiple lines)
-2) Submit command(s) to new devices
-   Destination is a special MMIO region for a device. Does not increment.
-   Source is normal memory. Increments.
-   Count usually is 1, but can be multiple.
-3) Copy to iomem in big chunks
-   Destination is iomem and increments
-   Source in normal memory and increments
-   Count is number of chunks to copy
-
-This commit adds support for case #2 to support device that will accept
-commands via this instruction.
+In preparation for dynamic channel registration, the code segment that
+does the channel registration is broken out to its own function.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- arch/x86/include/asm/io.h |   42 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ drivers/dma/dmaengine.c   |  157 ++++++++++++++++++++++++++++++---------------
+ include/linux/dmaengine.h |    4 +
+ 2 files changed, 107 insertions(+), 54 deletions(-)
 
-diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
-index 9997521fc5cd..2d3c9dd39479 100644
---- a/arch/x86/include/asm/io.h
-+++ b/arch/x86/include/asm/io.h
-@@ -399,4 +399,46 @@ extern bool arch_memremap_can_ram_remap(resource_size_t offset,
- extern bool phys_mem_access_encrypted(unsigned long phys_addr,
- 				      unsigned long size);
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index 03ac4b96117c..a20ab568b637 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -900,15 +900,109 @@ static int get_dma_id(struct dma_device *device)
+ 	return 0;
+ }
  
-+static inline void __iowrite512(void __iomem *__dst, const void *src)
++static int __dma_async_device_channel_register(struct dma_device *device,
++					       struct dma_chan *chan,
++					       int chan_id)
 +{
-+	/*
-+	 * Note that this isn't an "on-stack copy", just definition of "dst"
-+	 * as a pointer to 64-bytes of stuff that is going to be overwritten.
-+	 * In the movdir64b() case that may be needed as you can use the
-+	 * MOVDIR64B instruction to copy arbitrary memory around. This trick
-+	 * lets the compiler know how much gets clobbered.
-+	 */
-+	volatile struct { char _[64]; } *dst = __dst;
++	int rc = 0;
++	int chancnt = device->chancnt;
++	atomic_t *idr_ref;
++	struct dma_chan *tchan;
 +
-+	/* movdir64b [rdx], rax */
-+	asm volatile(".byte 0x66, 0x0f, 0x38, 0xf8, 0x02"
-+			: "=m" (dst)
-+			: "d" (src), "a" (dst));
-+}
-+
-+/**
-+ * iosubmit_cmds512 - copy data to single MMIO location, in 512-bit units
-+ * @dst: destination, in MMIO space (must be 512-bit aligned)
-+ * @src: source
-+ * @count: number of 512 bits quantities to submit
-+ *
-+ * Submit data from kernel space to MMIO space, in units of 512 bits at a
-+ * time.  Order of access is not guaranteed, nor is a memory barrier
-+ * performed afterwards.
-+ *
-+ * Warning: Do not use this helper unless your driver has checked that the CPU
-+ * instruction is supported on the platform.
-+ */
-+static inline void iosubmit_cmds512(void __iomem *dst, const void *src,
-+				    size_t count)
-+{
-+	const u8 *from = src;
-+	const u8 *end = from + count * 64;
-+
-+	while (from < end) {
-+		__iowrite512(dst, from);
-+		from += 64;
++	tchan = list_first_entry_or_null(&device->channels,
++					 struct dma_chan, device_node);
++	if (tchan->dev) {
++		idr_ref = tchan->dev->idr_ref;
++	} else {
++		idr_ref = kmalloc(sizeof(*idr_ref), GFP_KERNEL);
++		if (!idr_ref)
++			return -ENOMEM;
++		atomic_set(idr_ref, 0);
 +	}
++
++	chan->local = alloc_percpu(typeof(*chan->local));
++	if (!chan->local)
++		goto err_out;
++	chan->dev = kzalloc(sizeof(*chan->dev), GFP_KERNEL);
++	if (!chan->dev) {
++		free_percpu(chan->local);
++		chan->local = NULL;
++		goto err_out;
++	}
++
++	/*
++	 * When the chan_id is a negative value, we are dynamically adding
++	 * the channel. Otherwise we are static enumerating.
++	 */
++	chan->chan_id = chan_id < 0 ? chancnt : chan_id;
++	chan->dev->device.class = &dma_devclass;
++	chan->dev->device.parent = device->dev;
++	chan->dev->chan = chan;
++	chan->dev->idr_ref = idr_ref;
++	chan->dev->dev_id = device->dev_id;
++	atomic_inc(idr_ref);
++	dev_set_name(&chan->dev->device, "dma%dchan%d",
++		     device->dev_id, chan->chan_id);
++
++	rc = device_register(&chan->dev->device);
++	if (rc)
++		goto err_out;
++	chan->client_count = 0;
++	device->chancnt = chan->chan_id + 1;
++
++	return 0;
++
++ err_out:
++	free_percpu(chan->local);
++	kfree(chan->dev);
++	if (atomic_dec_return(idr_ref) == 0)
++		kfree(idr_ref);
++	return rc;
 +}
 +
- #endif /* _ASM_X86_IO_H */
++int dma_async_device_channel_register(struct dma_device *device,
++				      struct dma_chan *chan)
++{
++	int rc;
++
++	rc = __dma_async_device_channel_register(device, chan, -1);
++	if (rc < 0)
++		return rc;
++
++	dma_channel_rebalance();
++	return 0;
++}
++EXPORT_SYMBOL_GPL(dma_async_device_channel_register);
++
++static void __dma_async_device_channel_unregister(struct dma_device *device,
++						  struct dma_chan *chan)
++{
++	WARN_ONCE(chan->client_count,
++		  "%s called while %d clients hold a reference\n",
++		  __func__, chan->client_count);
++	mutex_lock(&dma_list_mutex);
++	chan->dev->chan = NULL;
++	mutex_unlock(&dma_list_mutex);
++	device_unregister(&chan->dev->device);
++	free_percpu(chan->local);
++}
++
++void dma_async_device_channel_unregister(struct dma_device *device,
++					 struct dma_chan *chan)
++{
++	__dma_async_device_channel_unregister(device, chan);
++	dma_channel_rebalance();
++}
++EXPORT_SYMBOL_GPL(dma_async_device_channel_unregister);
++
+ /**
+  * dma_async_device_register - registers DMA devices found
+  * @device: &dma_device
+  */
+ int dma_async_device_register(struct dma_device *device)
+ {
+-	int chancnt = 0, rc;
++	int rc, i = 0;
+ 	struct dma_chan* chan;
+-	atomic_t *idr_ref;
+ 
+ 	if (!device)
+ 		return -ENODEV;
+@@ -1000,59 +1094,23 @@ int dma_async_device_register(struct dma_device *device)
+ 	if (device_has_all_tx_types(device))
+ 		dma_cap_set(DMA_ASYNC_TX, device->cap_mask);
+ 
+-	idr_ref = kmalloc(sizeof(*idr_ref), GFP_KERNEL);
+-	if (!idr_ref)
+-		return -ENOMEM;
+ 	rc = get_dma_id(device);
+-	if (rc != 0) {
+-		kfree(idr_ref);
++	if (rc != 0)
+ 		return rc;
+-	}
+-
+-	atomic_set(idr_ref, 0);
+ 
+ 	/* represent channels in sysfs. Probably want devs too */
+ 	list_for_each_entry(chan, &device->channels, device_node) {
+-		rc = -ENOMEM;
+-		chan->local = alloc_percpu(typeof(*chan->local));
+-		if (chan->local == NULL)
++		rc = __dma_async_device_channel_register(device, chan, i++);
++		if (rc < 0)
+ 			goto err_out;
+-		chan->dev = kzalloc(sizeof(*chan->dev), GFP_KERNEL);
+-		if (chan->dev == NULL) {
+-			free_percpu(chan->local);
+-			chan->local = NULL;
+-			goto err_out;
+-		}
+-
+-		chan->chan_id = chancnt++;
+-		chan->dev->device.class = &dma_devclass;
+-		chan->dev->device.parent = device->dev;
+-		chan->dev->chan = chan;
+-		chan->dev->idr_ref = idr_ref;
+-		chan->dev->dev_id = device->dev_id;
+-		atomic_inc(idr_ref);
+-		dev_set_name(&chan->dev->device, "dma%dchan%d",
+-			     device->dev_id, chan->chan_id);
+-
+-		rc = device_register(&chan->dev->device);
+-		if (rc) {
+-			free_percpu(chan->local);
+-			chan->local = NULL;
+-			kfree(chan->dev);
+-			atomic_dec(idr_ref);
+-			goto err_out;
+-		}
+-		chan->client_count = 0;
+ 	}
+ 
+-	if (!chancnt) {
++	if (!device->chancnt) {
+ 		dev_err(device->dev, "%s: device has no channels!\n", __func__);
+ 		rc = -ENODEV;
+ 		goto err_out;
+ 	}
+ 
+-	device->chancnt = chancnt;
+-
+ 	mutex_lock(&dma_list_mutex);
+ 	/* take references on public channels */
+ 	if (dmaengine_ref_count && !dma_has_cap(DMA_PRIVATE, device->cap_mask))
+@@ -1080,9 +1138,8 @@ int dma_async_device_register(struct dma_device *device)
+ 
+ err_out:
+ 	/* if we never registered a channel just release the idr */
+-	if (atomic_read(idr_ref) == 0) {
++	if (!device->chancnt) {
+ 		ida_free(&dma_ida, device->dev_id);
+-		kfree(idr_ref);
+ 		return rc;
+ 	}
+ 
+@@ -1115,16 +1172,8 @@ void dma_async_device_unregister(struct dma_device *device)
+ 	dma_channel_rebalance();
+ 	mutex_unlock(&dma_list_mutex);
+ 
+-	list_for_each_entry(chan, &device->channels, device_node) {
+-		WARN_ONCE(chan->client_count,
+-			  "%s called while %d clients hold a reference\n",
+-			  __func__, chan->client_count);
+-		mutex_lock(&dma_list_mutex);
+-		chan->dev->chan = NULL;
+-		mutex_unlock(&dma_list_mutex);
+-		device_unregister(&chan->dev->device);
+-		free_percpu(chan->local);
+-	}
++	list_for_each_entry(chan, &device->channels, device_node)
++		__dma_async_device_channel_unregister(device, chan);
+ }
+ EXPORT_SYMBOL(dma_async_device_unregister);
+ 
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 8fcdee1c0cf9..0202d44a17a5 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -1399,6 +1399,10 @@ static inline int dmaengine_desc_free(struct dma_async_tx_descriptor *desc)
+ int dma_async_device_register(struct dma_device *device);
+ int dmaenginem_async_device_register(struct dma_device *device);
+ void dma_async_device_unregister(struct dma_device *device);
++int dma_async_device_channel_register(struct dma_device *device,
++				      struct dma_chan *chan);
++void dma_async_device_channel_unregister(struct dma_device *device,
++					 struct dma_chan *chan);
+ void dma_run_dependencies(struct dma_async_tx_descriptor *tx);
+ struct dma_chan *dma_get_slave_channel(struct dma_chan *chan);
+ struct dma_chan *dma_get_any_slave_channel(struct dma_device *device);
 

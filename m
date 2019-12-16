@@ -2,125 +2,110 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3227F12045C
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Dec 2019 12:50:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F37BC120674
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Dec 2019 13:56:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfLPLta (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 16 Dec 2019 06:49:30 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49196 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727199AbfLPLta (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 Dec 2019 06:49:30 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBGBn9OX094329;
-        Mon, 16 Dec 2019 05:49:09 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576496949;
-        bh=nGVCHx75cu0pEAfo0Qae/2CuVSK8AxUIsg6p2K/zw6Y=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=YcrY96FE0Oawv4LmOTXnxnKYXUidfUCzDoSKXKmrbXPPaHbvg25RMwMvkC65OV1CK
-         LNHHUUpM2eFDtOvq3QupAa/uw9zSyL5WqU22lCXkml0eSYJ6A48LNmzNaoBxNje5j1
-         xsTT24nLN7+CQERTLQACsrY3Co1JqmHXMIaAkoro=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBGBn9hR085008;
-        Mon, 16 Dec 2019 05:49:09 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 16
- Dec 2019 05:49:09 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 16 Dec 2019 05:49:09 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBGBn6cL124255;
-        Mon, 16 Dec 2019 05:49:06 -0600
-Subject: Re: [PATCH v3 0/9] dmaengine: virt-dma related fixes
-To:     Sascha Hauer <s.hauer@pengutronix.de>, <dmaengine@vger.kernel.org>
-CC:     Vinod Koul <vkoul@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Green Wan <green.wan@sifive.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>
-References: <20191216105328.15198-1-s.hauer@pengutronix.de>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <e3ab3aba-6d64-ff42-8353-9ae6a0f377be@ti.com>
-Date:   Mon, 16 Dec 2019 13:49:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1727681AbfLPMzy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 16 Dec 2019 07:55:54 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:39877 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727611AbfLPMzy (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 Dec 2019 07:55:54 -0500
+Received: by mail-ed1-f65.google.com with SMTP id v16so4905835edy.6
+        for <dmaengine@vger.kernel.org>; Mon, 16 Dec 2019 04:55:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=tDwS+iNU9JGSp+goJy4t4RaGpR/i+KbC6rKWKCSOga0=;
+        b=tsaFFwAkFZPP3uePZhLGpihy3O3TyfZCUNT49AgDqcgEQbCsmMswil8lcmPpx7MVWA
+         ZyLaoVA/bbz6k1dybdduufHEzItoBHmNd/0c91+2CoSOeJ1if9bcfPyaceiiDKbMLsJ2
+         Th6c9HrUOkLuDwWbKdVXKt5K+YG+mIbV5mIP2jqbUOgL4FMMVdzTeMz2vA+4t8WdxZRy
+         B/NsV2eBRsGYFKgZqSZZEHDQqu99IZc0Y0jC4114vAXPiiGfK86U3kAP0Wll4ut94Thl
+         L/E3wr7+NuGUxjzVwEKWtzF9HL8OGcHxtGH5Y+8hOow1j1/tJ49VHNpYs2rLejWJSqci
+         2nuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=tDwS+iNU9JGSp+goJy4t4RaGpR/i+KbC6rKWKCSOga0=;
+        b=hRBsSANYZnEogD0jyuaIJTrS4UDGYA9aIxUOUJWT3wEjxSRR104xu+VREE9hDIMSCc
+         dXUFbBiDg9x5nhTRumVHa0JuB4P4l0LlobOU4S076P857y7zRO+YW/2dMPr2S4vxixfP
+         tU1ip6o4JLh4ah74N0yvDMc60VeTNN1VVOUVg93CC34XGUYu/RhlT8iA2MIHwNyzwUwS
+         WtIDuYkpcnnnY3ztg20Ew4m1WALEnhxiwogVwsiEW584kTpQIgsuNa3uf89H7u7NrdTp
+         8QXiJcC6MV8PVEX9j5nDDXRNVLbYgjzXOAHdgU3nO7UrW2yYakTu40XwAZZcE3g4sPZH
+         zjsA==
+X-Gm-Message-State: APjAAAVdAKMrVF89VilTM2SdQq9h7SSaD1hCa4VHiYBc2hunOs+661UG
+        p0UW1PpdoSqBTwIo8cK4xuEpPpOH/+Ck7aARLg0=
+X-Google-Smtp-Source: APXvYqy4YQhEsUngx6+kPmjSqg6TVkx0e06K7noYt3aS+IjSlGNX/ZkXV5EJkL/PUPpff1SgWN+R5yB0DYNFcv/VDSg=
+X-Received: by 2002:aa7:d84b:: with SMTP id f11mr31679903eds.96.1576500952537;
+ Mon, 16 Dec 2019 04:55:52 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191216105328.15198-1-s.hauer@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Received: by 2002:a05:6402:22dc:0:0:0:0 with HTTP; Mon, 16 Dec 2019 04:55:52
+ -0800 (PST)
+Reply-To: moneygram.1820@outlook.fr
+From:   "Mrs. ALAN UDE, Official Director.Money Gram-Benin" 
+        <eco.bank1204@gmail.com>
+Date:   Mon, 16 Dec 2019 13:55:52 +0100
+Message-ID: <CAOE+jADT4zuvCiAsa=43yEUKtgEWHsvOfM28G2V1JjY+Fiw3gA@mail.gmail.com>
+Subject: Why did you authorized Mrs. Lyndia Paulson to receive your funds
+ $4.800.000 us dollars from this office?,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+MONEY GRAM.
+AROPORT INTL DE COTONOU COTONOU.
+Office of Mrs. ALAN UDE.
 
+Attn,Dear Funds beneficiary.
 
-On 16/12/2019 12.53, Sascha Hauer wrote:
-> Several drivers call vchan_dma_desc_free_list() or vchan_vdesc_fini() under
-> &vc->lock. This is not allowed and the first two patches fix this up. If you
-> are a DMA driver maintainer, the first two patches are the reason you are on
-> Cc.
-> 
-> The remaining patches are the original purpose of this series:
-> The i.MX SDMA driver leaks memory when a currently running descriptor is
-> aborted. Calling vchan_terminate_vdesc() on it to fix this revealed that
-> the virt-dma support calls the desc_free with the spin_lock held. This
-> doesn't work for the SDMA driver because it calls dma_free_coherent in
-> its desc_free hook. This series aims to fix that up.
+I am Mrs. ALAN UDE., Official Director.Money Gram-Benin
+Confirm to us urgent,
+Why  did you authorized Mrs. Lyndia Paulson to receive your funds
+$4.800.000 us dollars from this office?, I need your urgent response
+now because this woman contacted us again this morning with all her
+mailing address stating that you are very ill, meanwhile you have
+advised her to claim the funds on your behalf, i am real confuse now,
+and i need to hear from you urgent before our office will release your
+transfer to this woman,
+Here is the address she forward to us this morning where your funds
+will be transfer to her.Please do you know this address?
 
-for drivers/dma/virt-dma.* :
-Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Full name, Mrs. Lyndia Paulson
+Address. 21644 Vaca Dr.
+Eckert Colorado 81418
+Country. USA
 
+Also i want you to know that we have cut down the transfer fees to
+$23.00 only for your help, to enable you afford it,
+this is because we need all our real customers to receive their funds
+before the end of this year 2019, due after this physical year 2019,
+all remaining and unclaimed funds in our office will be cancelled, so
+you are advised to try and send the remaining $23.00 today so that you
+can pick up your first $US5000.00 immediately today,
+I promise you with all of my life, no more fees, this $23.00 is the
+last fee you will pay to receive your transfer now, once i receive it,
+you must pick up first $US5000.00 at your Money Gram today,
+and i will send you another US$5000.00 tomorrow morning, i just plan
+to make sure that you receive at least $100,000.00 US Dollars before
+the Christmas day, to enable you celebrate a good Christmas with your
+family. Note Iam only here to help you out and make sure you did not
+lose your transfer total amount of $4.8m us dollars to Mrs. Lyndia
+Paulson ok.
+So try and send the $23.00 today once you receive this email ok. God
+bless you, it is your time to rejoice and be happy forever.
+Send the transfer fee $23.00 to us by Money Gram.
 
-> Changes since v2:
-> - change drivers to not call vchan_dma_desc_free_list() under spin_lock
-> - remove debug message from vchan_dma_desc_free_list()
-> 
-> Changes since v1:
-> - rebase on v5.5-rc1
-> - Swap patches 1 and 2 for bisectablity
-> - Rename desc_aborted to desc_terminated
-> - Free up terminated descriptors immediately instead of letting them accumulate
-> 
-> Sascha Hauer (9):
->   dmaengine: bcm2835: do not call vchan_vdesc_fini() with lock held
->   dmaengine: virt-dma: Add missing locking
->   dmaengine: virt-dma: remove debug message
->   dmaengine: virt-dma: Do not call desc_free() under a spin_lock
->   dmaengine: virt-dma: Add missing locking around list operations
->   dmaengine: virt-dma: use vchan_vdesc_fini() to free descriptors
->   dmaengine: imx-sdma: rename function
->   dmaengine: imx-sdma: find desc first in sdma_tx_status
->   dmaengine: imx-sdma: Fix memory leak
-> 
->  drivers/dma/bcm2835-dma.c                     |  5 +--
->  .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    |  8 +---
->  drivers/dma/imx-sdma.c                        | 37 +++++++++++--------
->  drivers/dma/mediatek/mtk-uart-apdma.c         |  3 +-
->  drivers/dma/owl-dma.c                         |  3 +-
->  drivers/dma/s3c24xx-dma.c                     | 22 +++++------
->  drivers/dma/sf-pdma/sf-pdma.c                 |  4 +-
->  drivers/dma/sun4i-dma.c                       |  3 +-
->  drivers/dma/virt-dma.c                        | 10 ++---
->  drivers/dma/virt-dma.h                        | 27 ++++++++------
->  10 files changed, 63 insertions(+), 59 deletions(-)
-> 
+Receiver's Name--------Alan Ude
+Country------Benin
+City address-----Cotonou
+Amount------23.00 dollars Only
+Text  Question---------Honest
+Answer-----------------Trust
 
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thanks
+I wait for your urgent response
+Mrs. ALAN UDE., Official Director.Money Gram-Benin

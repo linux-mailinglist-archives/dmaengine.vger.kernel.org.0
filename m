@@ -2,23 +2,23 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D16EC1202F8
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Dec 2019 11:53:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 252FD1202FE
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Dec 2019 11:54:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbfLPKxf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 16 Dec 2019 05:53:35 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60969 "EHLO
+        id S1727422AbfLPKyG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 16 Dec 2019 05:54:06 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43691 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727099AbfLPKxf (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 Dec 2019 05:53:35 -0500
+        with ESMTP id S1727403AbfLPKyG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 Dec 2019 05:54:06 -0500
 Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <sha@pengutronix.de>)
-        id 1igo0L-0001dc-9O; Mon, 16 Dec 2019 11:53:33 +0100
+        id 1igo0L-0001dd-9S; Mon, 16 Dec 2019 11:53:33 +0100
 Received: from sha by dude.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <sha@pengutronix.de>)
-        id 1igo0I-0005tJ-EH; Mon, 16 Dec 2019 11:53:30 +0100
+        id 1igo0I-0005tN-Ew; Mon, 16 Dec 2019 11:53:30 +0100
 From:   Sascha Hauer <s.hauer@pengutronix.de>
 To:     dmaengine@vger.kernel.org
 Cc:     Vinod Koul <vkoul@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     Vinod Koul <vkoul@kernel.org>,
         NXP Linux Team <linux-imx@nxp.com>,
         Robert Jarzmik <robert.jarzmik@free.fr>,
         Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH 6/9] dmaengine: virt-dma: use vchan_vdesc_fini() to free descriptors
-Date:   Mon, 16 Dec 2019 11:53:25 +0100
-Message-Id: <20191216105328.15198-7-s.hauer@pengutronix.de>
+Subject: [PATCH 7/9] dmaengine: imx-sdma: rename function
+Date:   Mon, 16 Dec 2019 11:53:26 +0100
+Message-Id: <20191216105328.15198-8-s.hauer@pengutronix.de>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191216105328.15198-1-s.hauer@pengutronix.de>
 References: <20191216105328.15198-1-s.hauer@pengutronix.de>
@@ -52,37 +52,45 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-vchan_dma_desc_free_list() basically open codes vchan_vdesc_fini() in its
-loop body. Call it directly rather than duplicating the code.
+Rename sdma_disable_channel_async() after the hook it implements, like
+done for all other functions in the SDMA driver.
 
 Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 ---
- drivers/dma/virt-dma.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ drivers/dma/imx-sdma.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/virt-dma.c b/drivers/dma/virt-dma.c
-index 26e08c7a7465..95dfe431777e 100644
---- a/drivers/dma/virt-dma.c
-+++ b/drivers/dma/virt-dma.c
-@@ -115,16 +115,8 @@ void vchan_dma_desc_free_list(struct virt_dma_chan *vc, struct list_head *head)
- 	struct virt_dma_desc *vd, *_vd;
- 
- 	list_for_each_entry_safe(vd, _vd, head, node) {
--		if (dmaengine_desc_test_reuse(&vd->tx)) {
--			unsigned long flags;
--
--			spin_lock_irqsave(&vc->lock, flags);
--			list_move_tail(&vd->node, &vc->desc_allocated);
--			spin_unlock_irqrestore(&vc->lock, flags);
--		} else {
--			list_del(&vd->node);
--			vc->desc_free(vd);
--		}
-+		list_del(&vd->node);
-+		vchan_vdesc_fini(vd);
- 	}
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index c27e206a764c..527f8a81f50b 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -1077,7 +1077,7 @@ static void sdma_channel_terminate_work(struct work_struct *work)
+ 	sdmac->context_loaded = false;
  }
- EXPORT_SYMBOL_GPL(vchan_dma_desc_free_list);
+ 
+-static int sdma_disable_channel_async(struct dma_chan *chan)
++static int sdma_terminate_all(struct dma_chan *chan)
+ {
+ 	struct sdma_channel *sdmac = to_sdma_chan(chan);
+ 
+@@ -1324,7 +1324,7 @@ static void sdma_free_chan_resources(struct dma_chan *chan)
+ 	struct sdma_channel *sdmac = to_sdma_chan(chan);
+ 	struct sdma_engine *sdma = sdmac->sdma;
+ 
+-	sdma_disable_channel_async(chan);
++	sdma_terminate_all(chan);
+ 
+ 	sdma_channel_synchronize(chan);
+ 
+@@ -2103,7 +2103,7 @@ static int sdma_probe(struct platform_device *pdev)
+ 	sdma->dma_device.device_prep_slave_sg = sdma_prep_slave_sg;
+ 	sdma->dma_device.device_prep_dma_cyclic = sdma_prep_dma_cyclic;
+ 	sdma->dma_device.device_config = sdma_config;
+-	sdma->dma_device.device_terminate_all = sdma_disable_channel_async;
++	sdma->dma_device.device_terminate_all = sdma_terminate_all;
+ 	sdma->dma_device.device_synchronize = sdma_channel_synchronize;
+ 	sdma->dma_device.src_addr_widths = SDMA_DMA_BUSWIDTHS;
+ 	sdma->dma_device.dst_addr_widths = SDMA_DMA_BUSWIDTHS;
 -- 
 2.24.0
 

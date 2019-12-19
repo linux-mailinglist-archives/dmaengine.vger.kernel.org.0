@@ -2,116 +2,64 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 66805125159
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Dec 2019 20:09:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FC3012662C
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Dec 2019 16:55:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfLRTJK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 18 Dec 2019 14:09:10 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44934 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfLRTJK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 18 Dec 2019 14:09:10 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 195so859723pfw.11
-        for <dmaengine@vger.kernel.org>; Wed, 18 Dec 2019 11:09:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=j0zBkq0VgJoL6PSpb9mhqIxD+Izq0jA3YTPBw0iDOVI=;
-        b=cpQOKq46F3NoaI609tjoxOTU4bqZ6/gguyChGCfNtNNp+G9VmpWSMl3ctH9P3EEHOt
-         SUDVzO2PqPC+yeJFDiQSXPvK1akjj7zKG55VVCamYt+/1mymm5EY8Bsg/+tyRSnk717B
-         bb/DOkEwp52gHt5Xx8ueGKentiKKJkzpKsnjs4xxo/bZynRzSehP+skC+Y9HYTMxGwDj
-         eqLFU9QXeHAU3MaMuWqvVt7nMCi3+kQYStuaPygHgwsgQD2td4jjVS/zvexgb6ElB1/9
-         Jsf4OukzbhjBfubeQCH038G2vSBZ1odepyBe02+V0UBagJQdzpwoX5iXNUDn2nFFaQIM
-         QfVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=j0zBkq0VgJoL6PSpb9mhqIxD+Izq0jA3YTPBw0iDOVI=;
-        b=QBLToEhsjHcGd8Y9wZM8bkAxAMy4IXs47BoXeiYB1k29RDBwXUYpkn8FpUIeVFUnvi
-         X3slwtNmSRiW7rnnll1tjhJkEdVyWcW4PhepMsic/dJhfR5kixLMDMnfjKhKfbNdstf7
-         lYPsevSJt7EdLlQRUl2/8Vv3kB5svqfN6IvnTFhc6Rxvax3uSaEJBRLNFnZBaT02gbvO
-         e2wAKneXcdIGgdYLAvU4zDPLXYQe8bDimqMU6nSc5xpinDS3GyF4+Po+PD7+31K4Wi49
-         J0LXDusGcr4BbobFp3YUFibmP9yUC9Adyd8Iz97MKTeGkY0GhnN9dQ9zjXwffKE5nMSl
-         TV1Q==
-X-Gm-Message-State: APjAAAWjCqpQCZTj75keGbsl99Anwf4TIFxmUnLLbNn5Z+t8UlUCChiD
-        q1ceP+qg3wAq3SUzZdHBg0KipQ==
-X-Google-Smtp-Source: APXvYqxHKPx9oJncAqOZSvlZDU+b6hC8CJR05VxvwFjY+yLFMVdyoo1P4k1hS1WOwawqq6M7cbqOFQ==
-X-Received: by 2002:aa7:8299:: with SMTP id s25mr4610914pfm.261.1576696149859;
-        Wed, 18 Dec 2019 11:09:09 -0800 (PST)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id r6sm4376396pfh.91.2019.12.18.11.09.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 11:09:09 -0800 (PST)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>, ryan@edited.us,
-        aserbinski@gmail.com, dmaengine@vger.kernel.org
-Subject: [PATCH] k3dma: Avoid null pointer traversal
-Date:   Wed, 18 Dec 2019 19:09:06 +0000
-Message-Id: <20191218190906.6641-1-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        id S1726778AbfLSPzD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 19 Dec 2019 10:55:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726760AbfLSPzD (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 19 Dec 2019 10:55:03 -0500
+Received: from localhost (unknown [122.178.234.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 226FA2067C;
+        Thu, 19 Dec 2019 15:55:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576770902;
+        bh=XAe58tWkatLiv8U7yH0Pi/yFrHc9gUQ/cOhT6V93d/o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CgcM8KNJxpwGrcMVhDHuqC5MbtAT1hNmQzgTKdAfgY0e5JaaUW148Cx5JLbqEMFhs
+         WAACX1p3/uI99rrzjaMD4YAPnQyJHakW8rtvrOzwtOzDpNmJCCQk4rcUThtDUdnI5U
+         4+/DMZ5Q3yqKJpH+KXnptFP2LRP4KAyH9ufe68Js=
+Date:   Thu, 19 Dec 2019 21:24:58 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [EXT] Re: [v5 1/3] dmaengine: fsl-edma: Add eDMA support for
+ QorIQ LS1028A platform
+Message-ID: <20191219155458.GY2536@vkoul-mobl>
+References: <20191212033714.4090-1-peng.ma@nxp.com>
+ <20191218062636.GS2536@vkoul-mobl>
+ <VI1PR04MB44311BE955B863C73DF4CD4CED530@VI1PR04MB4431.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB44311BE955B863C73DF4CD4CED530@VI1PR04MB4431.eurprd04.prod.outlook.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-In some cases we seem to submit two transactions in a row, which
-causes us to lose track of the first. If we then cancel the
-request, we may still get an interrupt, which traverses a null
-ds_run value.
+On 18-12-19, 08:08, Peng Ma wrote:
+ >Btw pls send bindings as patch1 and driver changes as patch2.
+> [Peng Ma] I don't understand this sentence, Please give me more information.
+> As I know patch1 is driver changes, patch2 is dts changes, patch3 is binding changes.
+> You accepted patch1 and patch3, I am puzzled for patch2 and your comments.
 
-So try to avoid starting a new transaction if the ds_run value
-is set.
+The order of patches should always be dt-bindings first, followerd by
+driver change and the dts changes as the last one in the series.
 
-While this patch avoids the null pointer crash, I've had some
-reports of the k3dma driver still getting confused, which
-suggests the ds_run/ds_done value handling still isn't quite
-right. However, I've not run into an issue recently with it
-so I think this patch is worth pushing upstream to avoid the
-crash.
-
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: ryan@edited.us
-Cc: aserbinski@gmail.com
-Cc: dmaengine@vger.kernel.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- drivers/dma/k3dma.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/dma/k3dma.c b/drivers/dma/k3dma.c
-index adecea51814f..c5c1aa0dcaed 100644
---- a/drivers/dma/k3dma.c
-+++ b/drivers/dma/k3dma.c
-@@ -229,9 +229,11 @@ static irqreturn_t k3_dma_int_handler(int irq, void *dev_id)
- 			c = p->vchan;
- 			if (c && (tc1 & BIT(i))) {
- 				spin_lock_irqsave(&c->vc.lock, flags);
--				vchan_cookie_complete(&p->ds_run->vd);
--				p->ds_done = p->ds_run;
--				p->ds_run = NULL;
-+				if (p->ds_run != NULL) {
-+					vchan_cookie_complete(&p->ds_run->vd);
-+					p->ds_done = p->ds_run;
-+					p->ds_run = NULL;
-+				}
- 				spin_unlock_irqrestore(&c->vc.lock, flags);
- 			}
- 			if (c && (tc2 & BIT(i))) {
-@@ -271,6 +273,10 @@ static int k3_dma_start_txd(struct k3_dma_chan *c)
- 	if (BIT(c->phy->idx) & k3_dma_get_chan_stat(d))
- 		return -EAGAIN;
- 
-+	/* Avoid losing track of  ds_run if a transaction is in flight */
-+	if (c->phy->ds_run)
-+		return -EAGAIN;
-+
- 	if (vd) {
- 		struct k3_dma_desc_sw *ds =
- 			container_of(vd, struct k3_dma_desc_sw, vd);
 -- 
-2.17.1
-
+~Vinod

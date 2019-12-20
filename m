@@ -2,109 +2,96 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 426B2127EC0
-	for <lists+dmaengine@lfdr.de>; Fri, 20 Dec 2019 15:50:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01789127FAC
+	for <lists+dmaengine@lfdr.de>; Fri, 20 Dec 2019 16:43:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfLTOun (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 20 Dec 2019 09:50:43 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:52530 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727384AbfLTOum (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 20 Dec 2019 09:50:42 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBKEoTm1004532;
-        Fri, 20 Dec 2019 08:50:29 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576853429;
-        bh=HySbb/5w1zvG6YvuW9/AmHG+LPi1aw1qydYFk77daCo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=kw03c87jQHs455VkiVj5u6aeSMl9kt8Jsi+12E99G4a+l2+Czhk23UQaVbRfL7seZ
-         +Fh2aaBLLxl+leNKV2nIL0WG4OtkO0sMUfHOsfYrdFWzZrZX+YJqiHIgGADyauhR1L
-         Ak4/HuigWtPRdR49YEmtt0rn89JGq8xdZOorD+p4=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBKEoSQr064466
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Dec 2019 08:50:29 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
- Dec 2019 08:50:28 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 20 Dec 2019 08:50:28 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBKEoQMa075755;
-        Fri, 20 Dec 2019 08:50:27 -0600
-Subject: Re: [PATCH] dmaengine: virt-dma: Fix access after free in
- vcna_complete()
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>
-CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        id S1727440AbfLTPmv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 20 Dec 2019 10:42:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59110 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727594AbfLTPmP (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 20 Dec 2019 10:42:15 -0500
+Received: from localhost (unknown [106.51.110.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76F0624682;
+        Fri, 20 Dec 2019 15:42:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576856534;
+        bh=3VTO4Of7ArZVCW+QOWQQE9+iZy3/2pCvkz6U/47Djqc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wwOZXb6v0MkPJ+bCywhJ1MQnDG61bm4wrveq9MEjXYc44PvKBZjOoSPEq/oV6pzN0
+         Olle2bqmpouZwTfoxA8qKTXJERYF8hVwHdANQQb5BeLLWvCtkxMelVf8eosOurATMe
+         uOO7R6W0/4lWnQDJUtKP0fs68uszfwqoYp3BN0xM=
+Date:   Fri, 20 Dec 2019 21:10:59 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Cc:     Hyun Kwon <hyun.kwon@xilinx.com>,
         "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20191220131100.21804-1-peter.ujfalusi@ti.com>
- <0303ceda023121d9048d2508e28c0306b1871561.camel@analog.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <486093bc-b1bf-1727-0402-f07606fffd1e@ti.com>
-Date:   Fri, 20 Dec 2019 16:50:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Michal Simek <michals@xilinx.com>,
+        Hyun Kwon <hyunk@xilinx.com>,
+        Tejas Upadhyay <tejasu@xilinx.com>,
+        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
+Subject: Re: [PATCH v2 2/4] dma: xilinx: dpdma: Add the Xilinx DisplayPort
+ DMA engine driver
+Message-ID: <20191220154059.GR2536@vkoul-mobl>
+References: <20191107021400.16474-1-laurent.pinchart@ideasonboard.com>
+ <20191107021400.16474-3-laurent.pinchart@ideasonboard.com>
+ <20191109175908.GI952516@vkoul-mobl>
+ <20191205150407.GL4734@pendragon.ideasonboard.com>
+ <20191205163909.GH82508@vkoul-mobl>
+ <20191205202746.GA26880@smtp.xilinx.com>
+ <20191208160349.GD14311@pendragon.ideasonboard.com>
+ <20191220051309.GA19504@pendragon.ideasonboard.com>
+ <20191220080127.GI2536@vkoul-mobl>
+ <20191220123523.GB4865@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <0303ceda023121d9048d2508e28c0306b1871561.camel@analog.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191220123523.GB4865@pendragon.ideasonboard.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi Laurent,
 
-
-On 20/12/2019 16.01, Ardelean, Alexandru wrote:
-> On Fri, 2019-12-20 at 15:11 +0200, Peter Ujfalusi wrote:
->> [External]
->>
->> vchan_vdesc_fini() is freeing up 'vd' so the access to vd->tx_result is
->> via already freed up memory.
->>
->> Move the vchan_vdesc_fini() after invoking the callback to avoid this.
->>
+On 20-12-19, 14:35, Laurent Pinchart wrote:
+> On Fri, Dec 20, 2019 at 01:31:27PM +0530, Vinod Koul wrote:
+> > On 20-12-19, 07:13, Laurent Pinchart wrote:
+> > 
+> > > > OK, in the light of this information I'll keep the two separate and will
+> > > > switch to vchan as requested by Vinod.
+> > > 
+> > > I've moved forward with this task, but eventually ran into one hack in
+> > > the driver that is more difficult to get rid of than the other ones.
+> > > 
+> > > For display operation, the DPSUB driver needs to submit cyclic
+> > > interleaved transfer requests. There's no such thing (as far as I can
+> > > tell) in the DMA engine API, so the DPDMA drive simply keeps processing
+> > 
+> > we do support interleave, you need to implement
+> > .device_prep_interleaved_dma and use dmaengine_prep_interleaved_dma()
+> > from the client
 > 
-> Apologies for seeing this too late: typo in title vcna_complete() ->
-> vchan_complete()
+> I mean both interleaved and cyclic at the same time.
+> 
+> > > the same descriptor over and over again until a new one is issued. The
+> > > hardware supports this with the help of hardware-based chaining of
+> > > descriptors, and the DPDMA driver simply sets the next pointer of the
+> > > descriptor to itself.
+> > > 
+> > > How can I solve this in a way that wouldn't abuse the DMA engine API ?
+> > 
+> > Is this not a cyclic case of descriptor?
+> 
+> Exactly my point :-) It's cyclic, but has to be interleaved too as it's
+> a 2D transfer.
 
-Yep, I also noticed after sending it, I hope Vinod is kind enough and
-fix it up when applying ;)
+IIRC the interleaved descriptor can be set in such a way that last chunk
+points to the first one.. I think Jassi had good ideas for generic
+interleave API which can do all this :)
 
-- Péter
-
->> Fixes: 09d5b702b0f97 ("dmaengine: virt-dma: store result on dma
->> descriptor")
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->>  drivers/dma/virt-dma.c | 3 +--
->>  1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> diff --git a/drivers/dma/virt-dma.c b/drivers/dma/virt-dma.c
->> index ec4adf4260a0..256fc662c500 100644
->> --- a/drivers/dma/virt-dma.c
->> +++ b/drivers/dma/virt-dma.c
->> @@ -104,9 +104,8 @@ static void vchan_complete(unsigned long arg)
->>  		dmaengine_desc_get_callback(&vd->tx, &cb);
->>  
->>  		list_del(&vd->node);
->> -		vchan_vdesc_fini(vd);
->> -
->>  		dmaengine_desc_callback_invoke(&cb, &vd->tx_result);
->> +		vchan_vdesc_fini(vd);
->>  	}
->>  }
->>  
-
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-- 
+~Vinod

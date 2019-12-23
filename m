@@ -2,133 +2,150 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EF5B2129209
-	for <lists+dmaengine@lfdr.de>; Mon, 23 Dec 2019 07:53:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6BB312921D
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Dec 2019 08:11:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725855AbfLWGxs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 23 Dec 2019 01:53:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbfLWGxs (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 23 Dec 2019 01:53:48 -0500
-Received: from localhost (unknown [223.226.34.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 074DA20663;
-        Mon, 23 Dec 2019 06:53:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577084027;
-        bh=E9GtJEv5/Wg7wYSZvBrnuOFI6hszhwu0cq6AppC+9qw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j+LXOHERLq+MKBHwX9oReM+7sdw6pEx/s6vS7PyfqPzKYep06rK5pIlC4m4Gducuq
-         mfX/7Cw8wMCBSF3tMP0UEiWULBiZ9nz6f8dnC78zuo278yvLszzyY+2EtyXWQLq6Jg
-         n5kwc14VXmG8ht7j0M596/8/bNi+j4Ai7rEbaEIw=
-Date:   Mon, 23 Dec 2019 12:23:40 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
-        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
-        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
-        j-keerthy@ti.com, vigneshr@ti.com
-Subject: Re: [PATCH v7 08/12] dt-bindings: dma: ti: Add document for K3 UDMA
-Message-ID: <20191223065340.GU2536@vkoul-mobl>
+        id S1725927AbfLWHLS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 23 Dec 2019 02:11:18 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:40650 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbfLWHLR (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 23 Dec 2019 02:11:17 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBN7B4Cf088308;
+        Mon, 23 Dec 2019 01:11:04 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1577085064;
+        bh=02Y5bx6iWO9Ds4+8bjzc1aI2WrawgyCHLyU/VpC8TA4=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=lftrXC8/DpJwn4Aso0DNv9JYSikjp4xa+4lEDZ8K4mMS3sGTr4XSiQvYnp4pLYSuH
+         emlLOLHPhfy9CXMN3gbQHLrlYWlz0dKcfUx2YOIpr0ipSzjmm7F6/lJoztW2mLuZba
+         7J0/QvgAdr1EpLS7GrofRWhCtadHOEZFbvjK/uV8=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBN7B4JB086044
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 23 Dec 2019 01:11:04 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 23
+ Dec 2019 01:11:02 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 23 Dec 2019 01:11:02 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBN7AxHw061310;
+        Mon, 23 Dec 2019 01:10:59 -0600
+Subject: Re: [PATCH v7 06/12] dmaengine: ti: Add cppi5 header for K3
+ NAVSS/UDMA
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
+        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
+        <vigneshr@ti.com>
 References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
- <20191209094332.4047-9-peter.ujfalusi@ti.com>
+ <20191209094332.4047-7-peter.ujfalusi@ti.com>
+ <20191220095455.GM2536@vkoul-mobl>
+ <d5bd6bcf-9c1e-8633-fdc4-ee787100b44c@ti.com>
+Message-ID: <dc251d90-2e1f-ae3e-2a29-4191e8eefb7a@ti.com>
+Date:   Mon, 23 Dec 2019 09:11:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <d5bd6bcf-9c1e-8633-fdc4-ee787100b44c@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191209094332.4047-9-peter.ujfalusi@ti.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 09-12-19, 11:43, Peter Ujfalusi wrote:
-> New binding document for
-> Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P).
+Hi Vinod,
+
+On 20/12/2019 12.42, Peter Ujfalusi wrote:
+> Hi Vinod,
 > 
-> UDMA-P is introduced as part of the K3 architecture and can be found in
-> AM654 and j721e.
+> On 20/12/2019 11.54, Vinod Koul wrote:
+>> On 09-12-19, 11:43, Peter Ujfalusi wrote:
+>>
+>>> +#define CPPI5_INFO2_DESC_RETPUSHPOLICY		BIT(16)
+>>> +#define CPPI5_INFO2_DESC_RETP_MASK		GENMASK(18, 16)
+>>> +
+>>> +#define CPPI5_INFO2_DESC_RETQ_SHIFT		(0)
+>>> +#define CPPI5_INFO2_DESC_RETQ_MASK		GENMASK(15, 0)
+>>> +
+>>> +#define CPPI5_INFO3_DESC_SRCTAG_SHIFT		(16U)
+>>> +#define CPPI5_INFO3_DESC_SRCTAG_MASK		GENMASK(31, 16)
+>>> +#define CPPI5_INFO3_DESC_DSTTAG_SHIFT		(0)
+>>> +#define CPPI5_INFO3_DESC_DSTTAG_MASK		GENMASK(15, 0)
+>>> +
+>>> +#define CPPI5_BUFINFO1_HDESC_DATA_LEN_SHIFT	(0)
+>>> +#define CPPI5_BUFINFO1_HDESC_DATA_LEN_MASK	GENMASK(27, 0)
+>>> +
+>>> +#define CPPI5_OBUFINFO0_HDESC_BUF_LEN_SHIFT	(0)
+>>> +#define CPPI5_OBUFINFO0_HDESC_BUF_LEN_MASK	GENMASK(27, 0)
+>>
+>> I think you can remove the SHIFT defines and use ffs() to get the bit
+>> position for shift
 > 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/dma/ti/k3-udma.yaml   | 185 ++++++++++++++++++
->  1 file changed, 185 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
+> Right. I'll convert to use ffs()
+
+I rather keep the defines.
+While ffs() is simple, it is going to have effect in speeds gigabit or
+beyond.
+
+>>> +static inline u32 cppi5_hdesc_calc_size(bool epib, u32 psdata_size,
+>>> +					u32 sw_data_size)
+>>> +{
+>>> +	u32 desc_size;
+>>> +
+>>> +	if (psdata_size > CPPI5_INFO0_HDESC_PSDATA_MAX_SIZE)
+>>> +		return 0;
+>>> +
+>>> +	desc_size = sizeof(struct cppi5_host_desc_t) + psdata_size +
+>>> +		    sw_data_size;
+>>
+>> I think there was an API for this kind of mem allocation of struct and
+>> buffer attached...
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml b/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
-> new file mode 100644
-> index 000000000000..77aef4a4abce
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
-> @@ -0,0 +1,185 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/ti/k3-udma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Texas Instruments K3 NAVSS Unified DMA Device Tree Bindings
-> +
-> +maintainers:
-> +  - Peter Ujfalusi <peter.ujfalusi@ti.com>
-> +
-> +description: |
-> +  The UDMA-P is intended to perform similar (but significantly upgraded)
-> +  functions as the packet-oriented DMA used on previous SoC devices. The UDMA-P
-> +  module supports the transmission and reception of various packet types.
-> +  The UDMA-P is architected to facilitate the segmentation and reassembly of
+> The returned size is not only used when allocating memory or setting up
+> the dma_pool, but for UDMAP's fetch size parameter.
+> 
+>>> +static inline void cppi5_hdesc_reset_hbdesc(struct cppi5_host_desc_t *desc)
+>>> +{
+>>> +	desc->hdr = (struct cppi5_desc_hdr_t) { 0 };
+>>> +	desc->next_desc = 0;
+>>
+>> would this not be superfluous? Or if you want a memset call?
+> 
+> The intention is to reset the header and the next descriptor link but
+> leave the backing buffer information intact. This allows the reuse of a
+> descriptor+buffer and we only need to set the header bits + next
+> descriptor pointer if any.
+> 
+>>> +static inline u32 *cppi5_hdesc_get_psdata32(struct cppi5_host_desc_t *desc)
+>>> +{
+>>> +	return (u32 *)cppi5_hdesc_get_psdata(desc);
+>>
+>> you dont need casts away from void *
+> 
+> Hrm, or just remove this, clients can use the cppi5_hdesc_get_psdata()
+> directly.
+> 
+> 
+> - Péter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
 
-How about:
+- Péter
 
-The UDMA-P architecture facilitates the segmentation...
-
-> +  SoC DMA data structure compliant packets to/from smaller data blocks that are
-> +  natively compatible with the specific requirements of each connected
-> +  peripheral.
-> +  Multiple Tx and Rx channels are provided within the DMA which allow multiple
-> +  segmentation or reassembly operations to be ongoing. The DMA controller
-> +  maintains state information for each of the channels which allows packet
-> +  segmentation and reassembly operations to be time division multiplexed between
-> +  channels in order to share the underlying DMA hardware. An external DMA
-> +  scheduler is used to control the ordering and rate at which this multiplexing
-> +  occurs for Transmit operations. The ordering and rate of Receive operations
-> +  is indirectly controlled by the order in which blocks are pushed into the DMA
-> +  on the Rx PSI-L interface.
-> +
-> +  The UDMA-P also supports acting as both a UTC and UDMA-C for its internal
-> +  channels. Channels in the UDMA-P can be configured to be either Packet-Based
-> +  or Third-Party channels on a channel by channel basis.
-> +
-> +  All transfers within NAVSS is done between PSI-L source and destination
-> +  threads.
-> +  The peripherals serviced by UDMA can be PSI-L native (sa2ul, cpsw, etc) or
-> +  legacy, non PSI-L native peripherals. In the later case a special, small PDMA
-> +  is tasked to act as a bridge between the PSI-L fabric and the legacy
-> +  peripheral.
-> +
-> +  PDMAs can be configured via UDMAP peer registers to match with the
-> +  configuration of the legacy peripheral.
-> +
-> +allOf:
-> +  - $ref: "../dma-controller.yaml#"
-> +
-> +properties:
-> +  "#dma-cells":
-> +    const: 1
-> +    description: |
-> +      The cell is the PSI-L  thread ID of the remote (to UDMAP) end.
-> +      Valid ranges for thread ID depends on the data movement direction:
-> +      for source thread IDs (rx): 0 - 0x7fff
-> +      for destination thread IDs (tx): 0x8000 - 0xffff
-> +
-> +      PLease refer to the device documentation for the PSI-L thread map and also
-
-s/PLease/Please
-
--- 
-~Vinod
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

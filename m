@@ -2,40 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EB481294A3
-	for <lists+dmaengine@lfdr.de>; Mon, 23 Dec 2019 12:05:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E6E8A1294A2
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Dec 2019 12:05:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfLWLFb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 23 Dec 2019 06:05:31 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:44700 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbfLWLFa (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 23 Dec 2019 06:05:30 -0500
+        id S1727092AbfLWLFa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 23 Dec 2019 06:05:30 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54082 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726933AbfLWLF3 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 23 Dec 2019 06:05:29 -0500
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBNB5E5b110574;
-        Mon, 23 Dec 2019 05:05:14 -0600
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBNB5H9A085667;
+        Mon, 23 Dec 2019 05:05:17 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577099114;
-        bh=9h5fuGvvwcL69KxpMz9u42YyPOmRoZ3WluoBBdYYVqs=;
+        s=ti-com-17Q1; t=1577099117;
+        bh=MheCHb4mMwBEh100tl2VKDMiyG+sqNJm0I5Ycd2wDzA=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ZqNX69PJBADEJDGPoW3oCc4o/rVeWrAWq35WKZx+xP/TjvpX0rP2iVFl77Rwa9vzz
-         dMS49hbay+k7TosQnzEkWr27535aaoisFUtFY73+IDjZ8MfiYdWHvZDuZQ5dPcYJMe
-         TMLK9wJmpSeAE6z8Ilbr4sn7waQ+ybuGxBERTpBs=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBNB5ENE106806
+        b=hVUFU7yGloMpp6W2GUFeMtq0lcANX/2wYTzDPMFF5/7JESuj0hUnwdPUSBqZZYons
+         M85Wnm2BCoGvYsGL+B2dRzHJA4cByix4ZNo6ZnMogGwri1R9ErF+ZefYVj+qqyDeZN
+         kTLipzttBjOBvVSMaoT4IAglsZ0dRwwuWagRIZEo=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBNB5H2K106845
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 23 Dec 2019 05:05:14 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 23 Dec 2019 05:05:17 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 23
- Dec 2019 05:05:11 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 05:05:15 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 23 Dec 2019 05:05:12 -0600
+ Frontend Transport; Mon, 23 Dec 2019 05:05:15 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBNB4eME025693;
-        Mon, 23 Dec 2019 05:05:08 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBNB4eMF025693;
+        Mon, 23 Dec 2019 05:05:12 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
         <ssantosh@kernel.org>
@@ -45,9 +45,9 @@ CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
         <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
         <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
         <vigneshr@ti.com>, <frowand.list@gmail.com>
-Subject: [PATCH v8 07/18] dmaengine: ti: Add cppi5 header for K3 NAVSS/UDMA
-Date:   Mon, 23 Dec 2019 13:04:47 +0200
-Message-ID: <20191223110458.30766-8-peter.ujfalusi@ti.com>
+Subject: [PATCH v8 08/18] dmaengine: ti: k3 PSI-L remote endpoint configuration
+Date:   Mon, 23 Dec 2019 13:04:48 +0200
+Message-ID: <20191223110458.30766-9-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191223110458.30766-1-peter.ujfalusi@ti.com>
 References: <20191223110458.30766-1-peter.ujfalusi@ti.com>
@@ -60,1085 +60,692 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The K3 DMA architecture uses CPPI5 (Communications Port Programming
-Interface) specified descriptors over PSI-L bus within NAVSS.
+In K3 architecture the DMA operates within threads. One end of the thread
+is UDMAP, the other is on the peripheral side.
 
-The header provides helpers, macros to work with these descriptors in a
-consistent way.
+The UDMAP channel configuration depends on the needs of the remote
+endpoint and it can be differ from peripheral to peripheral.
+
+This patch adds database for am654 and j721e and small API to fetch the
+PSI-L endpoint configuration from the database which should only used by
+the DMA driver(s).
+
+Another API is added for native peripherals to give possibility to pass new
+configuration for the threads they are using, which is needed to be able to
+handle changes caused by different firmware loaded for the peripheral for
+example.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 Tested-by: Keerthy <j-keerthy@ti.com>
 Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- include/linux/dma/ti-cppi5.h | 1059 ++++++++++++++++++++++++++++++++++
- 1 file changed, 1059 insertions(+)
- create mode 100644 include/linux/dma/ti-cppi5.h
+ drivers/dma/ti/Kconfig         |   3 +
+ drivers/dma/ti/Makefile        |   1 +
+ drivers/dma/ti/k3-psil-am654.c | 175 ++++++++++++++++++++++++++
+ drivers/dma/ti/k3-psil-j721e.c | 222 +++++++++++++++++++++++++++++++++
+ drivers/dma/ti/k3-psil-priv.h  |  39 ++++++
+ drivers/dma/ti/k3-psil.c       |  93 ++++++++++++++
+ include/linux/dma/k3-psil.h    |  71 +++++++++++
+ 7 files changed, 604 insertions(+)
+ create mode 100644 drivers/dma/ti/k3-psil-am654.c
+ create mode 100644 drivers/dma/ti/k3-psil-j721e.c
+ create mode 100644 drivers/dma/ti/k3-psil-priv.h
+ create mode 100644 drivers/dma/ti/k3-psil.c
+ create mode 100644 include/linux/dma/k3-psil.h
 
-diff --git a/include/linux/dma/ti-cppi5.h b/include/linux/dma/ti-cppi5.h
+diff --git a/drivers/dma/ti/Kconfig b/drivers/dma/ti/Kconfig
+index d507c24fbf31..72f3d2728178 100644
+--- a/drivers/dma/ti/Kconfig
++++ b/drivers/dma/ti/Kconfig
+@@ -34,5 +34,8 @@ config DMA_OMAP
+ 	  Enable support for the TI sDMA (System DMA or DMA4) controller. This
+ 	  DMA engine is found on OMAP and DRA7xx parts.
+ 
++config TI_K3_PSIL
++	bool
++
+ config TI_DMA_CROSSBAR
+ 	bool
+diff --git a/drivers/dma/ti/Makefile b/drivers/dma/ti/Makefile
+index 113e59ec9c32..f8d912ad7eaf 100644
+--- a/drivers/dma/ti/Makefile
++++ b/drivers/dma/ti/Makefile
+@@ -2,4 +2,5 @@
+ obj-$(CONFIG_TI_CPPI41) += cppi41.o
+ obj-$(CONFIG_TI_EDMA) += edma.o
+ obj-$(CONFIG_DMA_OMAP) += omap-dma.o
++obj-$(CONFIG_TI_K3_PSIL) += k3-psil.o k3-psil-am654.o k3-psil-j721e.o
+ obj-$(CONFIG_TI_DMA_CROSSBAR) += dma-crossbar.o
+diff --git a/drivers/dma/ti/k3-psil-am654.c b/drivers/dma/ti/k3-psil-am654.c
 new file mode 100644
-index 000000000000..579356ae447e
+index 000000000000..7da9242b6114
 --- /dev/null
-+++ b/include/linux/dma/ti-cppi5.h
-@@ -0,0 +1,1059 @@
++++ b/drivers/dma/ti/k3-psil-am654.c
+@@ -0,0 +1,175 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
++ *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
++ */
++
++#include <linux/kernel.h>
++
++#include "k3-psil-priv.h"
++
++#define PSIL_PDMA_XY_TR(x)				\
++	{						\
++		.thread_id = x,				\
++		.ep_config = {				\
++			.ep_type = PSIL_EP_PDMA_XY,	\
++		},					\
++	}
++
++#define PSIL_PDMA_XY_PKT(x)				\
++	{						\
++		.thread_id = x,				\
++		.ep_config = {				\
++			.ep_type = PSIL_EP_PDMA_XY,	\
++			.pkt_mode = 1,			\
++		},					\
++	}
++
++#define PSIL_ETHERNET(x)				\
++	{						\
++		.thread_id = x,				\
++		.ep_config = {				\
++			.ep_type = PSIL_EP_NATIVE,	\
++			.pkt_mode = 1,			\
++			.needs_epib = 1,		\
++			.psd_size = 16,			\
++		},					\
++	}
++
++#define PSIL_SA2UL(x, tx)				\
++	{						\
++		.thread_id = x,				\
++		.ep_config = {				\
++			.ep_type = PSIL_EP_NATIVE,	\
++			.pkt_mode = 1,			\
++			.needs_epib = 1,		\
++			.psd_size = 64,			\
++			.notdpkt = tx,			\
++		},					\
++	}
++
++/* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
++struct psil_ep am654_src_ep_map[] = {
++	/* SA2UL */
++	PSIL_SA2UL(0x4000, 0),
++	PSIL_SA2UL(0x4001, 0),
++	PSIL_SA2UL(0x4002, 0),
++	PSIL_SA2UL(0x4003, 0),
++	/* PRU_ICSSG0 */
++	PSIL_ETHERNET(0x4100),
++	PSIL_ETHERNET(0x4101),
++	PSIL_ETHERNET(0x4102),
++	PSIL_ETHERNET(0x4103),
++	/* PRU_ICSSG1 */
++	PSIL_ETHERNET(0x4200),
++	PSIL_ETHERNET(0x4201),
++	PSIL_ETHERNET(0x4202),
++	PSIL_ETHERNET(0x4203),
++	/* PRU_ICSSG2 */
++	PSIL_ETHERNET(0x4300),
++	PSIL_ETHERNET(0x4301),
++	PSIL_ETHERNET(0x4302),
++	PSIL_ETHERNET(0x4303),
++	/* PDMA0 - McASPs */
++	PSIL_PDMA_XY_TR(0x4400),
++	PSIL_PDMA_XY_TR(0x4401),
++	PSIL_PDMA_XY_TR(0x4402),
++	/* PDMA1 - SPI0-4 */
++	PSIL_PDMA_XY_PKT(0x4500),
++	PSIL_PDMA_XY_PKT(0x4501),
++	PSIL_PDMA_XY_PKT(0x4502),
++	PSIL_PDMA_XY_PKT(0x4503),
++	PSIL_PDMA_XY_PKT(0x4504),
++	PSIL_PDMA_XY_PKT(0x4505),
++	PSIL_PDMA_XY_PKT(0x4506),
++	PSIL_PDMA_XY_PKT(0x4507),
++	PSIL_PDMA_XY_PKT(0x4508),
++	PSIL_PDMA_XY_PKT(0x4509),
++	PSIL_PDMA_XY_PKT(0x450a),
++	PSIL_PDMA_XY_PKT(0x450b),
++	PSIL_PDMA_XY_PKT(0x450c),
++	PSIL_PDMA_XY_PKT(0x450d),
++	PSIL_PDMA_XY_PKT(0x450e),
++	PSIL_PDMA_XY_PKT(0x450f),
++	PSIL_PDMA_XY_PKT(0x4510),
++	PSIL_PDMA_XY_PKT(0x4511),
++	PSIL_PDMA_XY_PKT(0x4512),
++	PSIL_PDMA_XY_PKT(0x4513),
++	/* PDMA1 - USART0-2 */
++	PSIL_PDMA_XY_PKT(0x4514),
++	PSIL_PDMA_XY_PKT(0x4515),
++	PSIL_PDMA_XY_PKT(0x4516),
++	/* CPSW0 */
++	PSIL_ETHERNET(0x7000),
++	/* MCU_PDMA0 - ADCs */
++	PSIL_PDMA_XY_TR(0x7100),
++	PSIL_PDMA_XY_TR(0x7101),
++	PSIL_PDMA_XY_TR(0x7102),
++	PSIL_PDMA_XY_TR(0x7103),
++	/* MCU_PDMA1 - MCU_SPI0-2 */
++	PSIL_PDMA_XY_PKT(0x7200),
++	PSIL_PDMA_XY_PKT(0x7201),
++	PSIL_PDMA_XY_PKT(0x7202),
++	PSIL_PDMA_XY_PKT(0x7203),
++	PSIL_PDMA_XY_PKT(0x7204),
++	PSIL_PDMA_XY_PKT(0x7205),
++	PSIL_PDMA_XY_PKT(0x7206),
++	PSIL_PDMA_XY_PKT(0x7207),
++	PSIL_PDMA_XY_PKT(0x7208),
++	PSIL_PDMA_XY_PKT(0x7209),
++	PSIL_PDMA_XY_PKT(0x720a),
++	PSIL_PDMA_XY_PKT(0x720b),
++	/* MCU_PDMA1 - MCU_USART0 */
++	PSIL_PDMA_XY_PKT(0x7212),
++};
++
++/* PSI-L destination thread IDs, used for TX (DMA_MEM_TO_DEV) */
++struct psil_ep am654_dst_ep_map[] = {
++	/* SA2UL */
++	PSIL_SA2UL(0xc000, 1),
++	PSIL_SA2UL(0xc001, 1),
++	/* PRU_ICSSG0 */
++	PSIL_ETHERNET(0xc100),
++	PSIL_ETHERNET(0xc101),
++	PSIL_ETHERNET(0xc102),
++	PSIL_ETHERNET(0xc103),
++	PSIL_ETHERNET(0xc104),
++	PSIL_ETHERNET(0xc105),
++	PSIL_ETHERNET(0xc106),
++	PSIL_ETHERNET(0xc107),
++	/* PRU_ICSSG1 */
++	PSIL_ETHERNET(0xc200),
++	PSIL_ETHERNET(0xc201),
++	PSIL_ETHERNET(0xc202),
++	PSIL_ETHERNET(0xc203),
++	PSIL_ETHERNET(0xc204),
++	PSIL_ETHERNET(0xc205),
++	PSIL_ETHERNET(0xc206),
++	PSIL_ETHERNET(0xc207),
++	/* PRU_ICSSG2 */
++	PSIL_ETHERNET(0xc300),
++	PSIL_ETHERNET(0xc301),
++	PSIL_ETHERNET(0xc302),
++	PSIL_ETHERNET(0xc303),
++	PSIL_ETHERNET(0xc304),
++	PSIL_ETHERNET(0xc305),
++	PSIL_ETHERNET(0xc306),
++	PSIL_ETHERNET(0xc307),
++	/* CPSW0 */
++	PSIL_ETHERNET(0xf000),
++	PSIL_ETHERNET(0xf001),
++	PSIL_ETHERNET(0xf002),
++	PSIL_ETHERNET(0xf003),
++	PSIL_ETHERNET(0xf004),
++	PSIL_ETHERNET(0xf005),
++	PSIL_ETHERNET(0xf006),
++	PSIL_ETHERNET(0xf007),
++};
++
++struct psil_ep_map am654_ep_map = {
++	.name = "am654",
++	.src = am654_src_ep_map,
++	.src_count = ARRAY_SIZE(am654_src_ep_map),
++	.dst = am654_dst_ep_map,
++	.dst_count = ARRAY_SIZE(am654_dst_ep_map),
++};
+diff --git a/drivers/dma/ti/k3-psil-j721e.c b/drivers/dma/ti/k3-psil-j721e.c
+new file mode 100644
+index 000000000000..a609d496fddd
+--- /dev/null
++++ b/drivers/dma/ti/k3-psil-j721e.c
+@@ -0,0 +1,222 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
++ *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
++ */
++
++#include <linux/kernel.h>
++
++#include "k3-psil-priv.h"
++
++#define PSIL_PDMA_XY_TR(x)				\
++	{						\
++		.thread_id = x,				\
++		.ep_config = {				\
++			.ep_type = PSIL_EP_PDMA_XY,	\
++		},					\
++	}
++
++#define PSIL_PDMA_XY_PKT(x)				\
++	{						\
++		.thread_id = x,				\
++		.ep_config = {				\
++			.ep_type = PSIL_EP_PDMA_XY,	\
++			.pkt_mode = 1,			\
++		},					\
++	}
++
++#define PSIL_PDMA_MCASP(x)				\
++	{						\
++		.thread_id = x,				\
++		.ep_config = {				\
++			.ep_type = PSIL_EP_PDMA_XY,	\
++			.pdma_acc32 = 1,		\
++			.pdma_burst = 1,		\
++		},					\
++	}
++
++#define PSIL_ETHERNET(x)				\
++	{						\
++		.thread_id = x,				\
++		.ep_config = {				\
++			.ep_type = PSIL_EP_NATIVE,	\
++			.pkt_mode = 1,			\
++			.needs_epib = 1,		\
++			.psd_size = 16,			\
++		},					\
++	}
++
++#define PSIL_SA2UL(x, tx)				\
++	{						\
++		.thread_id = x,				\
++		.ep_config = {				\
++			.ep_type = PSIL_EP_NATIVE,	\
++			.pkt_mode = 1,			\
++			.needs_epib = 1,		\
++			.psd_size = 64,			\
++			.notdpkt = tx,			\
++		},					\
++	}
++
++/* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
++struct psil_ep j721e_src_ep_map[] = {
++	/* SA2UL */
++	PSIL_SA2UL(0x4000, 0),
++	PSIL_SA2UL(0x4001, 0),
++	PSIL_SA2UL(0x4002, 0),
++	PSIL_SA2UL(0x4003, 0),
++	/* PRU_ICSSG0 */
++	PSIL_ETHERNET(0x4100),
++	PSIL_ETHERNET(0x4101),
++	PSIL_ETHERNET(0x4102),
++	PSIL_ETHERNET(0x4103),
++	/* PRU_ICSSG1 */
++	PSIL_ETHERNET(0x4200),
++	PSIL_ETHERNET(0x4201),
++	PSIL_ETHERNET(0x4202),
++	PSIL_ETHERNET(0x4203),
++	/* PDMA6 (PSIL_PDMA_MCASP_G0) - McASP0-2 */
++	PSIL_PDMA_MCASP(0x4400),
++	PSIL_PDMA_MCASP(0x4401),
++	PSIL_PDMA_MCASP(0x4402),
++	/* PDMA7 (PSIL_PDMA_MCASP_G1) - McASP3-11 */
++	PSIL_PDMA_MCASP(0x4500),
++	PSIL_PDMA_MCASP(0x4501),
++	PSIL_PDMA_MCASP(0x4502),
++	PSIL_PDMA_MCASP(0x4503),
++	PSIL_PDMA_MCASP(0x4504),
++	PSIL_PDMA_MCASP(0x4505),
++	PSIL_PDMA_MCASP(0x4506),
++	PSIL_PDMA_MCASP(0x4507),
++	PSIL_PDMA_MCASP(0x4508),
++	/* PDMA8 (PDMA_MISC_G0) - SPI0-1 */
++	PSIL_PDMA_XY_PKT(0x4600),
++	PSIL_PDMA_XY_PKT(0x4601),
++	PSIL_PDMA_XY_PKT(0x4602),
++	PSIL_PDMA_XY_PKT(0x4603),
++	PSIL_PDMA_XY_PKT(0x4604),
++	PSIL_PDMA_XY_PKT(0x4605),
++	PSIL_PDMA_XY_PKT(0x4606),
++	PSIL_PDMA_XY_PKT(0x4607),
++	/* PDMA9 (PDMA_MISC_G1) - SPI2-3 */
++	PSIL_PDMA_XY_PKT(0x460c),
++	PSIL_PDMA_XY_PKT(0x460d),
++	PSIL_PDMA_XY_PKT(0x460e),
++	PSIL_PDMA_XY_PKT(0x460f),
++	PSIL_PDMA_XY_PKT(0x4610),
++	PSIL_PDMA_XY_PKT(0x4611),
++	PSIL_PDMA_XY_PKT(0x4612),
++	PSIL_PDMA_XY_PKT(0x4613),
++	/* PDMA10 (PDMA_MISC_G2) - SPI4-5 */
++	PSIL_PDMA_XY_PKT(0x4618),
++	PSIL_PDMA_XY_PKT(0x4619),
++	PSIL_PDMA_XY_PKT(0x461a),
++	PSIL_PDMA_XY_PKT(0x461b),
++	PSIL_PDMA_XY_PKT(0x461c),
++	PSIL_PDMA_XY_PKT(0x461d),
++	PSIL_PDMA_XY_PKT(0x461e),
++	PSIL_PDMA_XY_PKT(0x461f),
++	/* PDMA11 (PDMA_MISC_G3) */
++	PSIL_PDMA_XY_PKT(0x4624),
++	PSIL_PDMA_XY_PKT(0x4625),
++	PSIL_PDMA_XY_PKT(0x4626),
++	PSIL_PDMA_XY_PKT(0x4627),
++	PSIL_PDMA_XY_PKT(0x4628),
++	PSIL_PDMA_XY_PKT(0x4629),
++	PSIL_PDMA_XY_PKT(0x4630),
++	PSIL_PDMA_XY_PKT(0x463a),
++	/* PDMA13 (PDMA_USART_G0) - UART0-1 */
++	PSIL_PDMA_XY_PKT(0x4700),
++	PSIL_PDMA_XY_PKT(0x4701),
++	/* PDMA14 (PDMA_USART_G1) - UART2-3 */
++	PSIL_PDMA_XY_PKT(0x4702),
++	PSIL_PDMA_XY_PKT(0x4703),
++	/* PDMA15 (PDMA_USART_G2) - UART4-9 */
++	PSIL_PDMA_XY_PKT(0x4704),
++	PSIL_PDMA_XY_PKT(0x4705),
++	PSIL_PDMA_XY_PKT(0x4706),
++	PSIL_PDMA_XY_PKT(0x4707),
++	PSIL_PDMA_XY_PKT(0x4708),
++	PSIL_PDMA_XY_PKT(0x4709),
++	/* CPSW9 */
++	PSIL_ETHERNET(0x4a00),
++	/* CPSW0 */
++	PSIL_ETHERNET(0x7000),
++	/* MCU_PDMA0 (MCU_PDMA_MISC_G0) - SPI0 */
++	PSIL_PDMA_XY_PKT(0x7100),
++	PSIL_PDMA_XY_PKT(0x7101),
++	PSIL_PDMA_XY_PKT(0x7102),
++	PSIL_PDMA_XY_PKT(0x7103),
++	/* MCU_PDMA1 (MCU_PDMA_MISC_G1) - SPI1-2 */
++	PSIL_PDMA_XY_PKT(0x7200),
++	PSIL_PDMA_XY_PKT(0x7201),
++	PSIL_PDMA_XY_PKT(0x7202),
++	PSIL_PDMA_XY_PKT(0x7203),
++	PSIL_PDMA_XY_PKT(0x7204),
++	PSIL_PDMA_XY_PKT(0x7205),
++	PSIL_PDMA_XY_PKT(0x7206),
++	PSIL_PDMA_XY_PKT(0x7207),
++	/* MCU_PDMA2 (MCU_PDMA_MISC_G2) - UART0 */
++	PSIL_PDMA_XY_PKT(0x7300),
++	/* MCU_PDMA_ADC - ADC0-1 */
++	PSIL_PDMA_XY_TR(0x7400),
++	PSIL_PDMA_XY_TR(0x7401),
++	PSIL_PDMA_XY_TR(0x7402),
++	PSIL_PDMA_XY_TR(0x7403),
++	/* SA2UL */
++	PSIL_SA2UL(0x7500, 0),
++	PSIL_SA2UL(0x7501, 0),
++};
++
++/* PSI-L destination thread IDs, used for TX (DMA_MEM_TO_DEV) */
++struct psil_ep j721e_dst_ep_map[] = {
++	/* SA2UL */
++	PSIL_SA2UL(0xc000, 1),
++	PSIL_SA2UL(0xc001, 1),
++	/* PRU_ICSSG0 */
++	PSIL_ETHERNET(0xc100),
++	PSIL_ETHERNET(0xc101),
++	PSIL_ETHERNET(0xc102),
++	PSIL_ETHERNET(0xc103),
++	PSIL_ETHERNET(0xc104),
++	PSIL_ETHERNET(0xc105),
++	PSIL_ETHERNET(0xc106),
++	PSIL_ETHERNET(0xc107),
++	/* PRU_ICSSG1 */
++	PSIL_ETHERNET(0xc200),
++	PSIL_ETHERNET(0xc201),
++	PSIL_ETHERNET(0xc202),
++	PSIL_ETHERNET(0xc203),
++	PSIL_ETHERNET(0xc204),
++	PSIL_ETHERNET(0xc205),
++	PSIL_ETHERNET(0xc206),
++	PSIL_ETHERNET(0xc207),
++	/* CPSW9 */
++	PSIL_ETHERNET(0xca00),
++	PSIL_ETHERNET(0xca01),
++	PSIL_ETHERNET(0xca02),
++	PSIL_ETHERNET(0xca03),
++	PSIL_ETHERNET(0xca04),
++	PSIL_ETHERNET(0xca05),
++	PSIL_ETHERNET(0xca06),
++	PSIL_ETHERNET(0xca07),
++	/* CPSW0 */
++	PSIL_ETHERNET(0xf000),
++	PSIL_ETHERNET(0xf001),
++	PSIL_ETHERNET(0xf002),
++	PSIL_ETHERNET(0xf003),
++	PSIL_ETHERNET(0xf004),
++	PSIL_ETHERNET(0xf005),
++	PSIL_ETHERNET(0xf006),
++	PSIL_ETHERNET(0xf007),
++	/* SA2UL */
++	PSIL_SA2UL(0xf500, 1),
++};
++
++struct psil_ep_map j721e_ep_map = {
++	.name = "j721e",
++	.src = j721e_src_ep_map,
++	.src_count = ARRAY_SIZE(j721e_src_ep_map),
++	.dst = j721e_dst_ep_map,
++	.dst_count = ARRAY_SIZE(j721e_dst_ep_map),
++};
+diff --git a/drivers/dma/ti/k3-psil-priv.h b/drivers/dma/ti/k3-psil-priv.h
+new file mode 100644
+index 000000000000..f74420653d8a
+--- /dev/null
++++ b/drivers/dma/ti/k3-psil-priv.h
+@@ -0,0 +1,39 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * CPPI5 descriptors interface
++ *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
++ */
++
++#ifndef K3_PSIL_PRIV_H_
++#define K3_PSIL_PRIV_H_
++
++#include <linux/dma/k3-psil.h>
++
++struct psil_ep {
++	u32 thread_id;
++	struct psil_endpoint_config ep_config;
++};
++
++/**
++ * struct psil_ep_map - PSI-L thread ID configuration maps
++ * @name:	Name of the map, set it to the name of the SoC
++ * @src:	Array of source PSI-L thread configurations
++ * @src_count:	Number of entries in the src array
++ * @dst:	Array of destination PSI-L thread configurations
++ * @dst_count:	Number of entries in the dst array
 + *
-+ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
++ * In case of symmetric configuration for a matching src/dst thread (for example
++ * 0x4400 and 0xc400) only the src configuration can be present. If no dst
++ * configuration found the code will look for (dst_thread_id & ~0x8000) to find
++ * the symmetric match.
 + */
++struct psil_ep_map {
++	char *name;
++	struct psil_ep	*src;
++	int src_count;
++	struct psil_ep	*dst;
++	int dst_count;
++};
 +
-+#ifndef __TI_CPPI5_H__
-+#define __TI_CPPI5_H__
++struct psil_endpoint_config *psil_get_ep_config(u32 thread_id);
 +
-+#include <linux/bitops.h>
-+#include <linux/printk.h>
-+#include <linux/bug.h>
-+
-+/**
-+ * struct cppi5_desc_hdr_t - Descriptor header, present in all types of
-+ *			     descriptors
-+ * @pkt_info0:		Packet info word 0 (n/a in Buffer desc)
-+ * @pkt_info0:		Packet info word 1 (n/a in Buffer desc)
-+ * @pkt_info0:		Packet info word 2 (n/a in Buffer desc)
-+ * @src_dst_tag:	Packet info word 3 (n/a in Buffer desc)
-+ */
-+struct cppi5_desc_hdr_t {
-+	u32 pkt_info0;
-+	u32 pkt_info1;
-+	u32 pkt_info2;
-+	u32 src_dst_tag;
-+} __packed;
-+
-+/**
-+ * struct cppi5_host_desc_t - Host-mode packet and buffer descriptor definition
-+ * @hdr:		Descriptor header
-+ * @next_desc:		word 4/5: Linking word
-+ * @buf_ptr:		word 6/7: Buffer pointer
-+ * @buf_info1:		word 8: Buffer valid data length
-+ * @org_buf_len:	word 9: Original buffer length
-+ * @org_buf_ptr:	word 10/11: Original buffer pointer
-+ * @epib[0]:		Extended Packet Info Data (optional, 4 words), and/or
-+ *			Protocol Specific Data (optional, 0-128 bytes in
-+ *			multiples of 4), and/or
-+ *			Other Software Data (0-N bytes, optional)
-+ */
-+struct cppi5_host_desc_t {
-+	struct cppi5_desc_hdr_t hdr;
-+	u64 next_desc;
-+	u64 buf_ptr;
-+	u32 buf_info1;
-+	u32 org_buf_len;
-+	u64 org_buf_ptr;
-+	u32 epib[0];
-+} __packed;
-+
-+#define CPPI5_DESC_MIN_ALIGN			(16U)
-+
-+#define CPPI5_INFO0_HDESC_EPIB_SIZE		(16U)
-+#define CPPI5_INFO0_HDESC_PSDATA_MAX_SIZE	(128U)
-+
-+#define CPPI5_INFO0_HDESC_TYPE_SHIFT		(30U)
-+#define CPPI5_INFO0_HDESC_TYPE_MASK		GENMASK(31, 30)
-+#define   CPPI5_INFO0_DESC_TYPE_VAL_HOST	(1U)
-+#define   CPPI5_INFO0_DESC_TYPE_VAL_MONO	(2U)
-+#define   CPPI5_INFO0_DESC_TYPE_VAL_TR		(3U)
-+#define CPPI5_INFO0_HDESC_EPIB_PRESENT		BIT(29)
++#endif /* K3_PSIL_PRIV_H_ */
+diff --git a/drivers/dma/ti/k3-psil.c b/drivers/dma/ti/k3-psil.c
+new file mode 100644
+index 000000000000..9314cf9a52e4
+--- /dev/null
++++ b/drivers/dma/ti/k3-psil.c
+@@ -0,0 +1,93 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Protocol Specific Words location:
-+ * 0 - located in the descriptor,
-+ * 1 = located in the SOP Buffer immediately prior to the data.
++ *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
++ *  Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
 + */
-+#define CPPI5_INFO0_HDESC_PSINFO_LOCATION	BIT(28)
-+#define CPPI5_INFO0_HDESC_PSINFO_SIZE_SHIFT	(22U)
-+#define CPPI5_INFO0_HDESC_PSINFO_SIZE_MASK	GENMASK(27, 22)
-+#define CPPI5_INFO0_HDESC_PKTLEN_SHIFT		(0)
-+#define CPPI5_INFO0_HDESC_PKTLEN_MASK		GENMASK(21, 0)
 +
-+#define CPPI5_INFO1_DESC_PKTERROR_SHIFT		(28U)
-+#define CPPI5_INFO1_DESC_PKTERROR_MASK		GENMASK(31, 28)
-+#define CPPI5_INFO1_HDESC_PSFLGS_SHIFT		(24U)
-+#define CPPI5_INFO1_HDESC_PSFLGS_MASK		GENMASK(27, 24)
-+#define CPPI5_INFO1_DESC_PKTID_SHIFT		(14U)
-+#define CPPI5_INFO1_DESC_PKTID_MASK		GENMASK(23, 14)
-+#define CPPI5_INFO1_DESC_FLOWID_SHIFT		(0)
-+#define CPPI5_INFO1_DESC_FLOWID_MASK		GENMASK(13, 0)
-+#define CPPI5_INFO1_DESC_FLOWID_DEFAULT		CPPI5_INFO1_DESC_FLOWID_MASK
++#include <linux/kernel.h>
++#include <linux/device.h>
++#include <linux/init.h>
++#include <linux/mutex.h>
++#include <linux/of.h>
 +
-+#define CPPI5_INFO2_HDESC_PKTTYPE_SHIFT		(27U)
-+#define CPPI5_INFO2_HDESC_PKTTYPE_MASK		GENMASK(31, 27)
-+/* Return Policy: 0 - Entire packet 1 - Each buffer */
-+#define CPPI5_INFO2_HDESC_RETPOLICY		BIT(18)
++#include "k3-psil-priv.h"
++
++extern struct psil_ep_map am654_ep_map;
++extern struct psil_ep_map j721e_ep_map;
++
++static DEFINE_MUTEX(ep_map_mutex);
++static struct psil_ep_map *soc_ep_map;
++
++struct psil_endpoint_config *psil_get_ep_config(u32 thread_id)
++{
++	int i;
++
++	mutex_lock(&ep_map_mutex);
++	if (!soc_ep_map) {
++		if (of_machine_is_compatible("ti,am654")) {
++			soc_ep_map = &am654_ep_map;
++		} else if (of_machine_is_compatible("ti,j721e")) {
++			soc_ep_map = &j721e_ep_map;
++		} else {
++			pr_err("PSIL: No compatible machine found for map\n");
++			return ERR_PTR(-ENOTSUPP);
++		}
++		pr_debug("%s: Using map for %s\n", __func__, soc_ep_map->name);
++	}
++	mutex_unlock(&ep_map_mutex);
++
++	if (thread_id & K3_PSIL_DST_THREAD_ID_OFFSET && soc_ep_map->dst) {
++		/* check in destination thread map */
++		for (i = 0; i < soc_ep_map->dst_count; i++) {
++			if (soc_ep_map->dst[i].thread_id == thread_id)
++				return &soc_ep_map->dst[i].ep_config;
++		}
++	}
++
++	thread_id &= ~K3_PSIL_DST_THREAD_ID_OFFSET;
++	if (soc_ep_map->src) {
++		for (i = 0; i < soc_ep_map->src_count; i++) {
++			if (soc_ep_map->src[i].thread_id == thread_id)
++				return &soc_ep_map->src[i].ep_config;
++		}
++	}
++
++	return ERR_PTR(-ENOENT);
++}
++EXPORT_SYMBOL_GPL(psil_get_ep_config);
++
++int psil_set_new_ep_config(struct device *dev, const char *name,
++			   struct psil_endpoint_config *ep_config)
++{
++	struct psil_endpoint_config *dst_ep_config;
++	struct of_phandle_args dma_spec;
++	u32 thread_id;
++	int index;
++
++	if (!dev || !dev->of_node)
++		return -EINVAL;
++
++	index = of_property_match_string(dev->of_node, "dma-names", name);
++	if (index < 0)
++		return index;
++
++	if (of_parse_phandle_with_args(dev->of_node, "dmas", "#dma-cells",
++				       index, &dma_spec))
++		return -ENOENT;
++
++	thread_id = dma_spec.args[0];
++
++	dst_ep_config = psil_get_ep_config(thread_id);
++	if (IS_ERR(dst_ep_config)) {
++		pr_err("PSIL: thread ID 0x%04x not defined in map\n",
++		       thread_id);
++		of_node_put(dma_spec.np);
++		return PTR_ERR(dst_ep_config);
++	}
++
++	memcpy(dst_ep_config, ep_config, sizeof(*dst_ep_config));
++
++	of_node_put(dma_spec.np);
++	return 0;
++}
++EXPORT_SYMBOL_GPL(psil_set_new_ep_config);
+diff --git a/include/linux/dma/k3-psil.h b/include/linux/dma/k3-psil.h
+new file mode 100644
+index 000000000000..61d5cc0ad601
+--- /dev/null
++++ b/include/linux/dma/k3-psil.h
+@@ -0,0 +1,71 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Early Return:
-+ * 0 = desc pointers should be returned after all reads have been completed
-+ * 1 = desc pointers should be returned immediately upon fetching
-+ * the descriptor and beginning to transfer data.
++ *  Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com
 + */
-+#define CPPI5_INFO2_HDESC_EARLYRET		BIT(17)
-+/*
-+ * Return Push Policy:
-+ * 0 = Descriptor must be returned to tail of queue
-+ * 1 = Descriptor must be returned to head of queue
-+ */
-+#define CPPI5_INFO2_DESC_RETPUSHPOLICY		BIT(16)
-+#define CPPI5_INFO2_DESC_RETP_MASK		GENMASK(18, 16)
 +
-+#define CPPI5_INFO2_DESC_RETQ_SHIFT		(0)
-+#define CPPI5_INFO2_DESC_RETQ_MASK		GENMASK(15, 0)
++#ifndef K3_PSIL_H_
++#define K3_PSIL_H_
 +
-+#define CPPI5_INFO3_DESC_SRCTAG_SHIFT		(16U)
-+#define CPPI5_INFO3_DESC_SRCTAG_MASK		GENMASK(31, 16)
-+#define CPPI5_INFO3_DESC_DSTTAG_SHIFT		(0)
-+#define CPPI5_INFO3_DESC_DSTTAG_MASK		GENMASK(15, 0)
++#include <linux/types.h>
 +
-+#define CPPI5_BUFINFO1_HDESC_DATA_LEN_SHIFT	(0)
-+#define CPPI5_BUFINFO1_HDESC_DATA_LEN_MASK	GENMASK(27, 0)
++#define K3_PSIL_DST_THREAD_ID_OFFSET 0x8000
 +
-+#define CPPI5_OBUFINFO0_HDESC_BUF_LEN_SHIFT	(0)
-+#define CPPI5_OBUFINFO0_HDESC_BUF_LEN_MASK	GENMASK(27, 0)
++struct device;
 +
 +/**
-+ * struct cppi5_desc_epib_t - Host Packet Descriptor Extended Packet Info Block
-+ * @timestamp:		word 0: application specific timestamp
-+ * @sw_info0:		word 1: Software Info 0
-+ * @sw_info1:		word 1: Software Info 1
-+ * @sw_info2:		word 1: Software Info 2
++ * enum udma_tp_level - Channel Throughput Levels
++ * @UDMA_TP_NORMAL:	Normal channel
++ * @UDMA_TP_HIGH:	High Throughput channel
++ * @UDMA_TP_ULTRAHIGH:	Ultra High Throughput channel
 + */
-+struct cppi5_desc_epib_t {
-+	u32 timestamp;	/* w0: application specific timestamp */
-+	u32 sw_info0;	/* w1: Software Info 0 */
-+	u32 sw_info1;	/* w2: Software Info 1 */
-+	u32 sw_info2;	/* w3: Software Info 2 */
++enum udma_tp_level {
++	UDMA_TP_NORMAL = 0,
++	UDMA_TP_HIGH,
++	UDMA_TP_ULTRAHIGH,
++	UDMA_TP_LAST,
 +};
 +
 +/**
-+ * struct cppi5_monolithic_desc_t - Monolithic-mode packet descriptor
-+ * @hdr:		Descriptor header
-+ * @epib[0]:		Extended Packet Info Data (optional, 4 words), and/or
-+ *			Protocol Specific Data (optional, 0-128 bytes in
-+ *			multiples of 4), and/or
-+ *			Other Software Data (0-N bytes, optional)
++ * enum psil_endpoint_type - PSI-L Endpoint type
++ * @PSIL_EP_NATIVE:	Normal channel
++ * @PSIL_EP_PDMA_XY:	XY mode PDMA
++ * @PSIL_EP_PDMA_MCAN:	MCAN mode PDMA
++ * @PSIL_EP_PDMA_AASRC: AASRC mode PDMA
 + */
-+struct cppi5_monolithic_desc_t {
-+	struct cppi5_desc_hdr_t hdr;
-+	u32 epib[0];
-+};
-+
-+#define CPPI5_INFO2_MDESC_DATA_OFFSET_SHIFT	(18U)
-+#define CPPI5_INFO2_MDESC_DATA_OFFSET_MASK	GENMASK(26, 18)
-+
-+/*
-+ * Reload Count:
-+ * 0 = Finish the packet and place the descriptor back on the return queue
-+ * 1-0x1ff = Vector to the Reload Index and resume processing
-+ * 0x1ff indicates perpetual loop, infinite reload until the channel is stopped
-+ */
-+#define CPPI5_INFO0_TRDESC_RLDCNT_SHIFT		(20U)
-+#define CPPI5_INFO0_TRDESC_RLDCNT_MASK		GENMASK(28, 20)
-+#define CPPI5_INFO0_TRDESC_RLDCNT_MAX		(0x1ff)
-+#define CPPI5_INFO0_TRDESC_RLDCNT_INFINITE	CPPI5_INFO0_TRDESC_RLDCNT_MAX
-+#define CPPI5_INFO0_TRDESC_RLDIDX_SHIFT		(14U)
-+#define CPPI5_INFO0_TRDESC_RLDIDX_MASK		GENMASK(19, 14)
-+#define CPPI5_INFO0_TRDESC_RLDIDX_MAX		(0x3f)
-+#define CPPI5_INFO0_TRDESC_LASTIDX_SHIFT	(0)
-+#define CPPI5_INFO0_TRDESC_LASTIDX_MASK		GENMASK(13, 0)
-+
-+#define CPPI5_INFO1_TRDESC_RECSIZE_SHIFT	(24U)
-+#define CPPI5_INFO1_TRDESC_RECSIZE_MASK		GENMASK(26, 24)
-+#define   CPPI5_INFO1_TRDESC_RECSIZE_VAL_16B	(0)
-+#define   CPPI5_INFO1_TRDESC_RECSIZE_VAL_32B	(1U)
-+#define   CPPI5_INFO1_TRDESC_RECSIZE_VAL_64B	(2U)
-+#define   CPPI5_INFO1_TRDESC_RECSIZE_VAL_128B	(3U)
-+
-+static inline void cppi5_desc_dump(void *desc, u32 size)
-+{
-+	print_hex_dump(KERN_ERR, "dump udmap_desc: ", DUMP_PREFIX_NONE,
-+		       32, 4, desc, size, false);
-+}
-+
-+#define CPPI5_TDCM_MARKER			(0x1)
-+/**
-+ * cppi5_desc_is_tdcm - check if the paddr indicates Teardown Complete Message
-+ * @paddr: Physical address of the packet popped from the ring
-+ *
-+ * Returns true if the address indicates TDCM
-+ */
-+static inline bool cppi5_desc_is_tdcm(dma_addr_t paddr)
-+{
-+	return (paddr & CPPI5_TDCM_MARKER) ? true : false;
-+}
-+
-+/**
-+ * cppi5_desc_get_type - get descriptor type
-+ * @desc_hdr: packet descriptor/TR header
-+ *
-+ * Returns descriptor type:
-+ * CPPI5_INFO0_DESC_TYPE_VAL_HOST
-+ * CPPI5_INFO0_DESC_TYPE_VAL_MONO
-+ * CPPI5_INFO0_DESC_TYPE_VAL_TR
-+ */
-+static inline u32 cppi5_desc_get_type(struct cppi5_desc_hdr_t *desc_hdr)
-+{
-+	return (desc_hdr->pkt_info0 & CPPI5_INFO0_HDESC_TYPE_MASK) >>
-+		CPPI5_INFO0_HDESC_TYPE_SHIFT;
-+}
-+
-+/**
-+ * cppi5_desc_get_errflags - get Error Flags from Desc
-+ * @desc_hdr: packet/TR descriptor header
-+ *
-+ * Returns Error Flags from Packet/TR Descriptor
-+ */
-+static inline u32 cppi5_desc_get_errflags(struct cppi5_desc_hdr_t *desc_hdr)
-+{
-+	return (desc_hdr->pkt_info1 & CPPI5_INFO1_DESC_PKTERROR_MASK) >>
-+		CPPI5_INFO1_DESC_PKTERROR_SHIFT;
-+}
-+
-+/**
-+ * cppi5_desc_get_pktids - get Packet and Flow ids from Desc
-+ * @desc_hdr: packet/TR descriptor header
-+ * @pkt_id: Packet ID
-+ * @flow_id: Flow ID
-+ *
-+ * Returns Packet and Flow ids from packet/TR descriptor
-+ */
-+static inline void cppi5_desc_get_pktids(struct cppi5_desc_hdr_t *desc_hdr,
-+					 u32 *pkt_id, u32 *flow_id)
-+{
-+	*pkt_id = (desc_hdr->pkt_info1 & CPPI5_INFO1_DESC_PKTID_MASK) >>
-+		   CPPI5_INFO1_DESC_PKTID_SHIFT;
-+	*flow_id = (desc_hdr->pkt_info1 & CPPI5_INFO1_DESC_FLOWID_MASK) >>
-+		    CPPI5_INFO1_DESC_FLOWID_SHIFT;
-+}
-+
-+/**
-+ * cppi5_desc_set_pktids - set Packet and Flow ids in Desc
-+ * @desc_hdr: packet/TR descriptor header
-+ * @pkt_id: Packet ID
-+ * @flow_id: Flow ID
-+ */
-+static inline void cppi5_desc_set_pktids(struct cppi5_desc_hdr_t *desc_hdr,
-+					 u32 pkt_id, u32 flow_id)
-+{
-+	desc_hdr->pkt_info1 &= ~(CPPI5_INFO1_DESC_PKTID_MASK |
-+				 CPPI5_INFO1_DESC_FLOWID_MASK);
-+	desc_hdr->pkt_info1 |= (pkt_id << CPPI5_INFO1_DESC_PKTID_SHIFT) &
-+				CPPI5_INFO1_DESC_PKTID_MASK;
-+	desc_hdr->pkt_info1 |= (flow_id << CPPI5_INFO1_DESC_FLOWID_SHIFT) &
-+				CPPI5_INFO1_DESC_FLOWID_MASK;
-+}
-+
-+/**
-+ * cppi5_desc_set_retpolicy - set Packet Return Policy in Desc
-+ * @desc_hdr: packet/TR descriptor header
-+ * @flags: fags, supported values
-+ *  CPPI5_INFO2_HDESC_RETPOLICY
-+ *  CPPI5_INFO2_HDESC_EARLYRET
-+ *  CPPI5_INFO2_DESC_RETPUSHPOLICY
-+ * @return_ring_id: Packet Return Queue/Ring id, value 0xFFFF reserved
-+ */
-+static inline void cppi5_desc_set_retpolicy(struct cppi5_desc_hdr_t *desc_hdr,
-+					    u32 flags, u32 return_ring_id)
-+{
-+	desc_hdr->pkt_info2 &= ~(CPPI5_INFO2_DESC_RETP_MASK |
-+				 CPPI5_INFO2_DESC_RETQ_MASK);
-+	desc_hdr->pkt_info2 |= flags & CPPI5_INFO2_DESC_RETP_MASK;
-+	desc_hdr->pkt_info2 |= return_ring_id & CPPI5_INFO2_DESC_RETQ_MASK;
-+}
-+
-+/**
-+ * cppi5_desc_get_tags_ids - get Packet Src/Dst Tags from Desc
-+ * @desc_hdr: packet/TR descriptor header
-+ * @src_tag_id: Source Tag
-+ * @dst_tag_id: Dest Tag
-+ *
-+ * Returns Packet Src/Dst Tags from packet/TR descriptor
-+ */
-+static inline void cppi5_desc_get_tags_ids(struct cppi5_desc_hdr_t *desc_hdr,
-+					   u32 *src_tag_id, u32 *dst_tag_id)
-+{
-+	if (src_tag_id)
-+		*src_tag_id = (desc_hdr->src_dst_tag &
-+			      CPPI5_INFO3_DESC_SRCTAG_MASK) >>
-+			      CPPI5_INFO3_DESC_SRCTAG_SHIFT;
-+	if (dst_tag_id)
-+		*dst_tag_id = desc_hdr->src_dst_tag &
-+			      CPPI5_INFO3_DESC_DSTTAG_MASK;
-+}
-+
-+/**
-+ * cppi5_desc_set_tags_ids - set Packet Src/Dst Tags in HDesc
-+ * @desc_hdr: packet/TR descriptor header
-+ * @src_tag_id: Source Tag
-+ * @dst_tag_id: Dest Tag
-+ *
-+ * Returns Packet Src/Dst Tags from packet/TR descriptor
-+ */
-+static inline void cppi5_desc_set_tags_ids(struct cppi5_desc_hdr_t *desc_hdr,
-+					   u32 src_tag_id, u32 dst_tag_id)
-+{
-+	desc_hdr->src_dst_tag = (src_tag_id << CPPI5_INFO3_DESC_SRCTAG_SHIFT) &
-+				CPPI5_INFO3_DESC_SRCTAG_MASK;
-+	desc_hdr->src_dst_tag |= dst_tag_id & CPPI5_INFO3_DESC_DSTTAG_MASK;
-+}
-+
-+/**
-+ * cppi5_hdesc_calc_size - Calculate Host Packet Descriptor size
-+ * @epib: is EPIB present
-+ * @psdata_size: PSDATA size
-+ * @sw_data_size: SWDATA size
-+ *
-+ * Returns required Host Packet Descriptor size
-+ * 0 - if PSDATA > CPPI5_INFO0_HDESC_PSDATA_MAX_SIZE
-+ */
-+static inline u32 cppi5_hdesc_calc_size(bool epib, u32 psdata_size,
-+					u32 sw_data_size)
-+{
-+	u32 desc_size;
-+
-+	if (psdata_size > CPPI5_INFO0_HDESC_PSDATA_MAX_SIZE)
-+		return 0;
-+
-+	desc_size = sizeof(struct cppi5_host_desc_t) + psdata_size +
-+		    sw_data_size;
-+
-+	if (epib)
-+		desc_size += CPPI5_INFO0_HDESC_EPIB_SIZE;
-+
-+	return ALIGN(desc_size, CPPI5_DESC_MIN_ALIGN);
-+}
-+
-+/**
-+ * cppi5_hdesc_init - Init Host Packet Descriptor size
-+ * @desc: Host packet descriptor
-+ * @flags: supported values
-+ *	CPPI5_INFO0_HDESC_EPIB_PRESENT
-+ *	CPPI5_INFO0_HDESC_PSINFO_LOCATION
-+ * @psdata_size: PSDATA size
-+ *
-+ * Returns required Host Packet Descriptor size
-+ * 0 - if PSDATA > CPPI5_INFO0_HDESC_PSDATA_MAX_SIZE
-+ */
-+static inline void cppi5_hdesc_init(struct cppi5_host_desc_t *desc, u32 flags,
-+				    u32 psdata_size)
-+{
-+	desc->hdr.pkt_info0 = (CPPI5_INFO0_DESC_TYPE_VAL_HOST <<
-+			       CPPI5_INFO0_HDESC_TYPE_SHIFT) | (flags);
-+	desc->hdr.pkt_info0 |= ((psdata_size >> 2) <<
-+				CPPI5_INFO0_HDESC_PSINFO_SIZE_SHIFT) &
-+				CPPI5_INFO0_HDESC_PSINFO_SIZE_MASK;
-+	desc->next_desc = 0;
-+}
-+
-+/**
-+ * cppi5_hdesc_update_flags - Replace descriptor flags
-+ * @desc: Host packet descriptor
-+ * @flags: supported values
-+ *	CPPI5_INFO0_HDESC_EPIB_PRESENT
-+ *	CPPI5_INFO0_HDESC_PSINFO_LOCATION
-+ */
-+static inline void cppi5_hdesc_update_flags(struct cppi5_host_desc_t *desc,
-+					    u32 flags)
-+{
-+	desc->hdr.pkt_info0 &= ~(CPPI5_INFO0_HDESC_EPIB_PRESENT |
-+				 CPPI5_INFO0_HDESC_PSINFO_LOCATION);
-+	desc->hdr.pkt_info0 |= flags;
-+}
-+
-+/**
-+ * cppi5_hdesc_update_psdata_size - Replace PSdata size
-+ * @desc: Host packet descriptor
-+ * @psdata_size: PSDATA size
-+ */
-+static inline void
-+cppi5_hdesc_update_psdata_size(struct cppi5_host_desc_t *desc, u32 psdata_size)
-+{
-+	desc->hdr.pkt_info0 &= ~CPPI5_INFO0_HDESC_PSINFO_SIZE_MASK;
-+	desc->hdr.pkt_info0 |= ((psdata_size >> 2) <<
-+				CPPI5_INFO0_HDESC_PSINFO_SIZE_SHIFT) &
-+				CPPI5_INFO0_HDESC_PSINFO_SIZE_MASK;
-+}
-+
-+/**
-+ * cppi5_hdesc_get_psdata_size - get PSdata size in bytes
-+ * @desc: Host packet descriptor
-+ */
-+static inline u32 cppi5_hdesc_get_psdata_size(struct cppi5_host_desc_t *desc)
-+{
-+	u32 psdata_size = 0;
-+
-+	if (!(desc->hdr.pkt_info0 & CPPI5_INFO0_HDESC_PSINFO_LOCATION))
-+		psdata_size = (desc->hdr.pkt_info0 &
-+			       CPPI5_INFO0_HDESC_PSINFO_SIZE_MASK) >>
-+			       CPPI5_INFO0_HDESC_PSINFO_SIZE_SHIFT;
-+
-+	return (psdata_size << 2);
-+}
-+
-+/**
-+ * cppi5_hdesc_get_pktlen - get Packet Length from HDesc
-+ * @desc: Host packet descriptor
-+ *
-+ * Returns Packet Length from Host Packet Descriptor
-+ */
-+static inline u32 cppi5_hdesc_get_pktlen(struct cppi5_host_desc_t *desc)
-+{
-+	return (desc->hdr.pkt_info0 & CPPI5_INFO0_HDESC_PKTLEN_MASK);
-+}
-+
-+/**
-+ * cppi5_hdesc_set_pktlen - set Packet Length in HDesc
-+ * @desc: Host packet descriptor
-+ */
-+static inline void cppi5_hdesc_set_pktlen(struct cppi5_host_desc_t *desc,
-+					  u32 pkt_len)
-+{
-+	desc->hdr.pkt_info0 &= ~CPPI5_INFO0_HDESC_PKTLEN_MASK;
-+	desc->hdr.pkt_info0 |= (pkt_len & CPPI5_INFO0_HDESC_PKTLEN_MASK);
-+}
-+
-+/**
-+ * cppi5_hdesc_get_psflags - get Protocol Specific Flags from HDesc
-+ * @desc: Host packet descriptor
-+ *
-+ * Returns Protocol Specific Flags from Host Packet Descriptor
-+ */
-+static inline u32 cppi5_hdesc_get_psflags(struct cppi5_host_desc_t *desc)
-+{
-+	return (desc->hdr.pkt_info1 & CPPI5_INFO1_HDESC_PSFLGS_MASK) >>
-+		CPPI5_INFO1_HDESC_PSFLGS_SHIFT;
-+}
-+
-+/**
-+ * cppi5_hdesc_set_psflags - set Protocol Specific Flags in HDesc
-+ * @desc: Host packet descriptor
-+ */
-+static inline void cppi5_hdesc_set_psflags(struct cppi5_host_desc_t *desc,
-+					   u32 ps_flags)
-+{
-+	desc->hdr.pkt_info1 &= ~CPPI5_INFO1_HDESC_PSFLGS_MASK;
-+	desc->hdr.pkt_info1 |= (ps_flags <<
-+				CPPI5_INFO1_HDESC_PSFLGS_SHIFT) &
-+				CPPI5_INFO1_HDESC_PSFLGS_MASK;
-+}
-+
-+/**
-+ * cppi5_hdesc_get_errflags - get Packet Type from HDesc
-+ * @desc: Host packet descriptor
-+ */
-+static inline u32 cppi5_hdesc_get_pkttype(struct cppi5_host_desc_t *desc)
-+{
-+	return (desc->hdr.pkt_info2 & CPPI5_INFO2_HDESC_PKTTYPE_MASK) >>
-+		CPPI5_INFO2_HDESC_PKTTYPE_SHIFT;
-+}
-+
-+/**
-+ * cppi5_hdesc_get_errflags - set Packet Type in HDesc
-+ * @desc: Host packet descriptor
-+ * @pkt_type: Packet Type
-+ */
-+static inline void cppi5_hdesc_set_pkttype(struct cppi5_host_desc_t *desc,
-+					   u32 pkt_type)
-+{
-+	desc->hdr.pkt_info2 &= ~CPPI5_INFO2_HDESC_PKTTYPE_MASK;
-+	desc->hdr.pkt_info2 |=
-+			(pkt_type << CPPI5_INFO2_HDESC_PKTTYPE_SHIFT) &
-+			 CPPI5_INFO2_HDESC_PKTTYPE_MASK;
-+}
-+
-+/**
-+ * cppi5_hdesc_attach_buf - attach buffer to HDesc
-+ * @desc: Host packet descriptor
-+ * @buf: Buffer physical address
-+ * @buf_data_len: Buffer length
-+ * @obuf: Original Buffer physical address
-+ * @obuf_len: Original Buffer length
-+ *
-+ * Attaches buffer to Host Packet Descriptor
-+ */
-+static inline void cppi5_hdesc_attach_buf(struct cppi5_host_desc_t *desc,
-+					  dma_addr_t buf, u32 buf_data_len,
-+					  dma_addr_t obuf, u32 obuf_len)
-+{
-+	desc->buf_ptr = buf;
-+	desc->buf_info1 = buf_data_len & CPPI5_BUFINFO1_HDESC_DATA_LEN_MASK;
-+	desc->org_buf_ptr = obuf;
-+	desc->org_buf_len = obuf_len & CPPI5_OBUFINFO0_HDESC_BUF_LEN_MASK;
-+}
-+
-+static inline void cppi5_hdesc_get_obuf(struct cppi5_host_desc_t *desc,
-+					dma_addr_t *obuf, u32 *obuf_len)
-+{
-+	*obuf = desc->org_buf_ptr;
-+	*obuf_len = desc->org_buf_len & CPPI5_OBUFINFO0_HDESC_BUF_LEN_MASK;
-+}
-+
-+static inline void cppi5_hdesc_reset_to_original(struct cppi5_host_desc_t *desc)
-+{
-+	desc->buf_ptr = desc->org_buf_ptr;
-+	desc->buf_info1 = desc->org_buf_len;
-+}
-+
-+/**
-+ * cppi5_hdesc_link_hbdesc - link Host Buffer Descriptor to HDesc
-+ * @desc: Host Packet Descriptor
-+ * @buf_desc: Host Buffer Descriptor physical address
-+ *
-+ * add and link Host Buffer Descriptor to HDesc
-+ */
-+static inline void cppi5_hdesc_link_hbdesc(struct cppi5_host_desc_t *desc,
-+					   dma_addr_t hbuf_desc)
-+{
-+	desc->next_desc = hbuf_desc;
-+}
-+
-+static inline dma_addr_t
-+cppi5_hdesc_get_next_hbdesc(struct cppi5_host_desc_t *desc)
-+{
-+	return (dma_addr_t)desc->next_desc;
-+}
-+
-+static inline void cppi5_hdesc_reset_hbdesc(struct cppi5_host_desc_t *desc)
-+{
-+	desc->hdr = (struct cppi5_desc_hdr_t) { 0 };
-+	desc->next_desc = 0;
-+}
-+
-+/**
-+ * cppi5_hdesc_epib_present -  check if EPIB present
-+ * @desc_hdr: packet descriptor/TR header
-+ *
-+ * Returns true if EPIB present in the packet
-+ */
-+static inline bool cppi5_hdesc_epib_present(struct cppi5_desc_hdr_t *desc_hdr)
-+{
-+	return !!(desc_hdr->pkt_info0 & CPPI5_INFO0_HDESC_EPIB_PRESENT);
-+}
-+
-+/**
-+ * cppi5_hdesc_get_psdata -  Get pointer on PSDATA
-+ * @desc: Host packet descriptor
-+ *
-+ * Returns pointer on PSDATA in HDesc.
-+ * NULL - if ps_data placed at the start of data buffer.
-+ */
-+static inline void *cppi5_hdesc_get_psdata(struct cppi5_host_desc_t *desc)
-+{
-+	u32 psdata_size;
-+	void *psdata;
-+
-+	if (desc->hdr.pkt_info0 & CPPI5_INFO0_HDESC_PSINFO_LOCATION)
-+		return NULL;
-+
-+	psdata_size = (desc->hdr.pkt_info0 &
-+		       CPPI5_INFO0_HDESC_PSINFO_SIZE_MASK) >>
-+		       CPPI5_INFO0_HDESC_PSINFO_SIZE_SHIFT;
-+
-+	if (!psdata_size)
-+		return NULL;
-+
-+	psdata = &desc->epib;
-+
-+	if (cppi5_hdesc_epib_present(&desc->hdr))
-+		psdata += CPPI5_INFO0_HDESC_EPIB_SIZE;
-+
-+	return psdata;
-+}
-+
-+/**
-+ * cppi5_hdesc_get_swdata -  Get pointer on swdata
-+ * @desc: Host packet descriptor
-+ *
-+ * Returns pointer on SWDATA in HDesc.
-+ * NOTE. It's caller responsibility to be sure hdesc actually has swdata.
-+ */
-+static inline void *cppi5_hdesc_get_swdata(struct cppi5_host_desc_t *desc)
-+{
-+	u32 psdata_size = 0;
-+	void *swdata;
-+
-+	if (!(desc->hdr.pkt_info0 & CPPI5_INFO0_HDESC_PSINFO_LOCATION))
-+		psdata_size = (desc->hdr.pkt_info0 &
-+			       CPPI5_INFO0_HDESC_PSINFO_SIZE_MASK) >>
-+			       CPPI5_INFO0_HDESC_PSINFO_SIZE_SHIFT;
-+
-+	swdata = &desc->epib;
-+
-+	if (cppi5_hdesc_epib_present(&desc->hdr))
-+		swdata += CPPI5_INFO0_HDESC_EPIB_SIZE;
-+
-+	swdata += (psdata_size << 2);
-+
-+	return swdata;
-+}
-+
-+/* ================================== TR ================================== */
-+
-+#define CPPI5_TR_TYPE_SHIFT			(0U)
-+#define CPPI5_TR_TYPE_MASK			GENMASK(3, 0)
-+#define CPPI5_TR_STATIC				BIT(4)
-+#define CPPI5_TR_WAIT				BIT(5)
-+#define CPPI5_TR_EVENT_SIZE_SHIFT		(6U)
-+#define CPPI5_TR_EVENT_SIZE_MASK		GENMASK(7, 6)
-+#define CPPI5_TR_TRIGGER0_SHIFT			(8U)
-+#define CPPI5_TR_TRIGGER0_MASK			GENMASK(9, 8)
-+#define CPPI5_TR_TRIGGER0_TYPE_SHIFT		(10U)
-+#define CPPI5_TR_TRIGGER0_TYPE_MASK		GENMASK(11, 10)
-+#define CPPI5_TR_TRIGGER1_SHIFT			(12U)
-+#define CPPI5_TR_TRIGGER1_MASK			GENMASK(13, 12)
-+#define CPPI5_TR_TRIGGER1_TYPE_SHIFT		(14U)
-+#define CPPI5_TR_TRIGGER1_TYPE_MASK		GENMASK(15, 14)
-+#define CPPI5_TR_CMD_ID_SHIFT			(16U)
-+#define CPPI5_TR_CMD_ID_MASK			GENMASK(23, 16)
-+#define CPPI5_TR_CSF_FLAGS_SHIFT		(24U)
-+#define CPPI5_TR_CSF_FLAGS_MASK			GENMASK(31, 24)
-+#define   CPPI5_TR_CSF_SA_INDIRECT		BIT(0)
-+#define   CPPI5_TR_CSF_DA_INDIRECT		BIT(1)
-+#define   CPPI5_TR_CSF_SUPR_EVT			BIT(2)
-+#define   CPPI5_TR_CSF_EOL_ADV_SHIFT		(4U)
-+#define   CPPI5_TR_CSF_EOL_ADV_MASK		GENMASK(6, 4)
-+#define   CPPI5_TR_CSF_EOP			BIT(7)
-+
-+/**
-+ * enum cppi5_tr_types - TR types
-+ * @CPPI5_TR_TYPE0:	One dimensional data move
-+ * @CPPI5_TR_TYPE1:	Two dimensional data move
-+ * @CPPI5_TR_TYPE2:	Three dimensional data move
-+ * @CPPI5_TR_TYPE3:	Four dimensional data move
-+ * @CPPI5_TR_TYPE4:	Four dimensional data move with data formatting
-+ * @CPPI5_TR_TYPE5:	Four dimensional Cache Warm
-+ * @CPPI5_TR_TYPE8:	Four Dimensional Block Move
-+ * @CPPI5_TR_TYPE9:	Four Dimensional Block Move with Repacking
-+ * @CPPI5_TR_TYPE10:	Two Dimensional Block Move
-+ * @CPPI5_TR_TYPE11:	Two Dimensional Block Move with Repacking
-+ * @CPPI5_TR_TYPE15:	Four Dimensional Block Move with Repacking and
-+ *			Indirection
-+ */
-+enum cppi5_tr_types {
-+	CPPI5_TR_TYPE0 = 0,
-+	CPPI5_TR_TYPE1,
-+	CPPI5_TR_TYPE2,
-+	CPPI5_TR_TYPE3,
-+	CPPI5_TR_TYPE4,
-+	CPPI5_TR_TYPE5,
-+	/* type6-7: Reserved */
-+	CPPI5_TR_TYPE8 = 8,
-+	CPPI5_TR_TYPE9,
-+	CPPI5_TR_TYPE10,
-+	CPPI5_TR_TYPE11,
-+	/* type12-14: Reserved */
-+	CPPI5_TR_TYPE15 = 15,
-+	CPPI5_TR_TYPE_MAX
++enum psil_endpoint_type {
++	PSIL_EP_NATIVE = 0,
++	PSIL_EP_PDMA_XY,
++	PSIL_EP_PDMA_MCAN,
++	PSIL_EP_PDMA_AASRC,
 +};
 +
 +/**
-+ * enum cppi5_tr_event_size - TR Flags EVENT_SIZE field specifies when an event
-+ *			      is generated for each TR.
-+ * @CPPI5_TR_EVENT_SIZE_COMPLETION:	When TR is complete and all status for
-+ * 					the TR has been received
-+ * @CPPI5_TR_EVENT_SIZE_ICNT1_DEC:	Type 0: when the last data transaction
-+ *					is sent for the TR
-+ *					Type 1-11: when ICNT1 is decremented
-+ * @CPPI5_TR_EVENT_SIZE_ICNT2_DEC:	Type 0-1,10-11: when the last data
-+ *					transaction is sent for the TR
-+ *					All other types: when ICNT2 is
-+ *					decremented
-+ * @CPPI5_TR_EVENT_SIZE_ICNT3_DEC:	Type 0-2,10-11: when the last data
-+ *					transaction is sent for the TR
-+ *					All other types: when ICNT3 is
-+ *					decremented
++ * struct psil_endpoint_config - PSI-L Endpoint configuration
++ * @ep_type:		PSI-L endpoint type
++ * @pkt_mode:		If set, the channel must be in Packet mode, otherwise in
++ *			TR mode
++ * @notdpkt:		TDCM must be suppressed on the TX channel
++ * @needs_epib:		Endpoint needs EPIB
++ * @psd_size:		If set, PSdata is used by the endpoint
++ * @channel_tpl:	Desired throughput level for the channel
++ * @pdma_acc32:		ACC32 must be enabled on the PDMA side
++ * @pdma_burst:		BURST must be enabled on the PDMA side
 + */
-+enum cppi5_tr_event_size {
-+	CPPI5_TR_EVENT_SIZE_COMPLETION,
-+	CPPI5_TR_EVENT_SIZE_ICNT1_DEC,
-+	CPPI5_TR_EVENT_SIZE_ICNT2_DEC,
-+	CPPI5_TR_EVENT_SIZE_ICNT3_DEC,
-+	CPPI5_TR_EVENT_SIZE_MAX
++struct psil_endpoint_config {
++	enum psil_endpoint_type ep_type;
++
++	unsigned pkt_mode:1;
++	unsigned notdpkt:1;
++	unsigned needs_epib:1;
++	u32 psd_size;
++	enum udma_tp_level channel_tpl;
++
++	/* PDMA properties, valid for PSIL_EP_PDMA_* */
++	unsigned pdma_acc32:1;
++	unsigned pdma_burst:1;
 +};
 +
-+/**
-+ * enum cppi5_tr_trigger - TR Flags TRIGGERx field specifies the type of trigger
-+ *			   used to enable the TR to transfer data as specified
-+ *			   by TRIGGERx_TYPE field.
-+ * @CPPI5_TR_TRIGGER_NONE:		No trigger
-+ * @CPPI5_TR_TRIGGER_GLOBAL0:		Global trigger 0
-+ * @CPPI5_TR_TRIGGER_GLOBAL1:		Global trigger 1
-+ * @CPPI5_TR_TRIGGER_LOCAL_EVENT:	Local Event
-+ */
-+enum cppi5_tr_trigger {
-+	CPPI5_TR_TRIGGER_NONE,
-+	CPPI5_TR_TRIGGER_GLOBAL0,
-+	CPPI5_TR_TRIGGER_GLOBAL1,
-+	CPPI5_TR_TRIGGER_LOCAL_EVENT,
-+	CPPI5_TR_TRIGGER_MAX
-+};
++int psil_set_new_ep_config(struct device *dev, const char *name,
++			   struct psil_endpoint_config *ep_config);
 +
-+/**
-+ * enum cppi5_tr_trigger_type - TR Flags TRIGGERx_TYPE field specifies the type
-+ *				of data transfer that will be enabled by
-+ *				receiving a trigger as specified by TRIGGERx.
-+ * @CPPI5_TR_TRIGGER_TYPE_ICNT1_DEC:	The second inner most loop (ICNT1) will
-+ *					be decremented by 1
-+ * @CPPI5_TR_TRIGGER_TYPE_ICNT2_DEC:	The third inner most loop (ICNT2) will
-+ *					be decremented by 1
-+ * @CPPI5_TR_TRIGGER_TYPE_ICNT3_DEC:	The outer most loop (ICNT3) will be
-+ *					decremented by 1
-+ * @CPPI5_TR_TRIGGER_TYPE_ALL:		The entire TR will be allowed to
-+ *					complete
-+ */
-+enum cppi5_tr_trigger_type {
-+	CPPI5_TR_TRIGGER_TYPE_ICNT1_DEC,
-+	CPPI5_TR_TRIGGER_TYPE_ICNT2_DEC,
-+	CPPI5_TR_TRIGGER_TYPE_ICNT3_DEC,
-+	CPPI5_TR_TRIGGER_TYPE_ALL,
-+	CPPI5_TR_TRIGGER_TYPE_MAX
-+};
-+
-+typedef u32 cppi5_tr_flags_t;
-+
-+/**
-+ * struct cppi5_tr_type0_t - Type 0 (One dimensional data move) TR (16 byte)
-+ * @flags:		TR flags (type, triggers, event, configuration)
-+ * @icnt0:		Total loop iteration count for level 0 (innermost)
-+ * @_reserved:		Not used
-+ * @addr:		Starting address for the source data or destination data
-+ */
-+struct cppi5_tr_type0_t {
-+	cppi5_tr_flags_t flags;
-+	u16 icnt0;
-+	u16 _reserved;
-+	u64 addr;
-+} __aligned(16) __packed;
-+
-+/**
-+ * struct cppi5_tr_type1_t - Type 1 (Two dimensional data move) TR (32 byte)
-+ * @flags:		TR flags (type, triggers, event, configuration)
-+ * @icnt0:		Total loop iteration count for level 0 (innermost)
-+ * @icnt1:		Total loop iteration count for level 1
-+ * @addr:		Starting address for the source data or destination data
-+ * @dim1:		Signed dimension for loop level 1
-+ */
-+struct cppi5_tr_type1_t {
-+	cppi5_tr_flags_t flags;
-+	u16 icnt0;
-+	u16 icnt1;
-+	u64 addr;
-+	s32 dim1;
-+} __aligned(32) __packed;
-+
-+/**
-+ * struct cppi5_tr_type2_t - Type 2 (Three dimensional data move) TR (32 byte)
-+ * @flags:		TR flags (type, triggers, event, configuration)
-+ * @icnt0:		Total loop iteration count for level 0 (innermost)
-+ * @icnt1:		Total loop iteration count for level 1
-+ * @addr:		Starting address for the source data or destination data
-+ * @dim1:		Signed dimension for loop level 1
-+ * @icnt2:		Total loop iteration count for level 2
-+ * @_reserved:		Not used
-+ * @dim2:		Signed dimension for loop level 2
-+ */
-+struct cppi5_tr_type2_t {
-+	cppi5_tr_flags_t flags;
-+	u16 icnt0;
-+	u16 icnt1;
-+	u64 addr;
-+	s32 dim1;
-+	u16 icnt2;
-+	u16 _reserved;
-+	s32 dim2;
-+} __aligned(32) __packed;
-+
-+/**
-+ * struct cppi5_tr_type3_t - Type 3 (Four dimensional data move) TR (32 byte)
-+ * @flags:		TR flags (type, triggers, event, configuration)
-+ * @icnt0:		Total loop iteration count for level 0 (innermost)
-+ * @icnt1:		Total loop iteration count for level 1
-+ * @addr:		Starting address for the source data or destination data
-+ * @dim1:		Signed dimension for loop level 1
-+ * @icnt2:		Total loop iteration count for level 2
-+ * @icnt3:		Total loop iteration count for level 3 (outermost)
-+ * @dim2:		Signed dimension for loop level 2
-+ * @dim3:		Signed dimension for loop level 3
-+ */
-+struct cppi5_tr_type3_t {
-+	cppi5_tr_flags_t flags;
-+	u16 icnt0;
-+	u16 icnt1;
-+	u64 addr;
-+	s32 dim1;
-+	u16 icnt2;
-+	u16 icnt3;
-+	s32 dim2;
-+	s32 dim3;
-+} __aligned(32) __packed;
-+
-+/**
-+ * struct cppi5_tr_type15_t - Type 15 (Four Dimensional Block Copy with
-+ *			      Repacking and Indirection Support) TR (64 byte)
-+ * @flags:		TR flags (type, triggers, event, configuration)
-+ * @icnt0:		Total loop iteration count for level 0 (innermost) for
-+ *			source
-+ * @icnt1:		Total loop iteration count for level 1 for source
-+ * @addr:		Starting address for the source data
-+ * @dim1:		Signed dimension for loop level 1 for source
-+ * @icnt2:		Total loop iteration count for level 2 for source
-+ * @icnt3:		Total loop iteration count for level 3 (outermost) for
-+ *			source
-+ * @dim2:		Signed dimension for loop level 2 for source
-+ * @dim3:		Signed dimension for loop level 3 for source
-+ * @_reserved:		Not used
-+ * @ddim1:		Signed dimension for loop level 1 for destination
-+ * @daddr:		Starting address for the destination data
-+ * @ddim2:		Signed dimension for loop level 2 for destination
-+ * @ddim3:		Signed dimension for loop level 3 for destination
-+ * @dicnt0:		Total loop iteration count for level 0 (innermost) for
-+ *			destination
-+ * @dicnt1:		Total loop iteration count for level 1 for destination
-+ * @dicnt2:		Total loop iteration count for level 2 for destination
-+ * @sicnt3:		Total loop iteration count for level 3 (outermost) for
-+ *			destination
-+ */
-+struct cppi5_tr_type15_t {
-+	cppi5_tr_flags_t flags;
-+	u16 icnt0;
-+	u16 icnt1;
-+	u64 addr;
-+	s32 dim1;
-+	u16 icnt2;
-+	u16 icnt3;
-+	s32 dim2;
-+	s32 dim3;
-+	u32 _reserved;
-+	s32 ddim1;
-+	u64 daddr;
-+	s32 ddim2;
-+	s32 ddim3;
-+	u16 dicnt0;
-+	u16 dicnt1;
-+	u16 dicnt2;
-+	u16 dicnt3;
-+} __aligned(64) __packed;
-+
-+/**
-+ * struct cppi5_tr_resp_t - TR response record
-+ * @status:		Status type and info
-+ * @_reserved:		Not used
-+ * @cmd_id:		Command ID for the TR for TR identification
-+ * @flags:		Configuration Specific Flags
-+ */
-+struct cppi5_tr_resp_t {
-+	u8 status;
-+	u8 _reserved;
-+	u8 cmd_id;
-+	u8 flags;
-+} __packed;
-+
-+#define CPPI5_TR_RESPONSE_STATUS_TYPE_SHIFT	(0U)
-+#define CPPI5_TR_RESPONSE_STATUS_TYPE_MASK	GENMASK(3, 0)
-+#define CPPI5_TR_RESPONSE_STATUS_INFO_SHIFT	(4U)
-+#define CPPI5_TR_RESPONSE_STATUS_INFO_MASK	GENMASK(7, 4)
-+#define CPPI5_TR_RESPONSE_CMDID_SHIFT		(16U)
-+#define CPPI5_TR_RESPONSE_CMDID_MASK		GENMASK(23, 16)
-+#define CPPI5_TR_RESPONSE_CFG_SPECIFIC_SHIFT	(24U)
-+#define CPPI5_TR_RESPONSE_CFG_SPECIFIC_MASK	GENMASK(31, 24)
-+
-+/**
-+ * enum cppi5_tr_resp_status_type - TR Response Status Type field is used to
-+ *				    determine what type of status is being
-+ *				    returned.
-+ * @CPPI5_TR_RESPONSE_STATUS_NONE:		No error, completion: completed
-+ * @CPPI5_TR_RESPONSE_STATUS_TRANSFER_ERR:	Transfer Error, completion: none
-+ *						or partially completed
-+ * @CPPI5_TR_RESPONSE_STATUS_ABORTED_ERR:	Aborted Error, completion: none
-+ *						or partially completed
-+ * @CPPI5_TR_RESPONSE_STATUS_SUBMISSION_ERR:	Submission Error, completion:
-+ *						none
-+ * @CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_ERR:	Unsupported Error, completion:
-+ *						none
-+ * @CPPI5_TR_RESPONSE_STATUS_TRANSFER_EXCEPTION: Transfer Exception, completion:
-+ *						partially completed
-+ * @CPPI5_TR_RESPONSE_STATUS__TEARDOWN_FLUSH:	Teardown Flush, completion: none
-+ */
-+enum cppi5_tr_resp_status_type {
-+	CPPI5_TR_RESPONSE_STATUS_NONE,
-+	CPPI5_TR_RESPONSE_STATUS_TRANSFER_ERR,
-+	CPPI5_TR_RESPONSE_STATUS_ABORTED_ERR,
-+	CPPI5_TR_RESPONSE_STATUS_SUBMISSION_ERR,
-+	CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_ERR,
-+	CPPI5_TR_RESPONSE_STATUS_TRANSFER_EXCEPTION,
-+	CPPI5_TR_RESPONSE_STATUS__TEARDOWN_FLUSH,
-+	CPPI5_TR_RESPONSE_STATUS_MAX
-+};
-+
-+/**
-+ * enum cppi5_tr_resp_status_submission - TR Response Status field values which
-+ *					  corresponds Submission Error
-+ * @CPPI5_TR_RESPONSE_STATUS_SUBMISSION_ICNT0:	ICNT0 was 0
-+ * @CPPI5_TR_RESPONSE_STATUS_SUBMISSION_FIFO_FULL: Channel FIFO was full when TR
-+ *						received
-+ * @CPPI5_TR_RESPONSE_STATUS_SUBMISSION_OWN:	Channel is not owned by the
-+ *						submitter
-+ */
-+enum cppi5_tr_resp_status_submission {
-+	CPPI5_TR_RESPONSE_STATUS_SUBMISSION_ICNT0,
-+	CPPI5_TR_RESPONSE_STATUS_SUBMISSION_FIFO_FULL,
-+	CPPI5_TR_RESPONSE_STATUS_SUBMISSION_OWN,
-+	CPPI5_TR_RESPONSE_STATUS_SUBMISSION_MAX
-+};
-+
-+/**
-+ * enum cppi5_tr_resp_status_unsupported - TR Response Status field values which
-+ *					   corresponds Unsupported Error
-+ * @CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_TR_TYPE:	TR Type not supported
-+ * @CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_STATIC:	STATIC not supported
-+ * @CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_EOL:		EOL not supported
-+ * @CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_CFG_SPECIFIC:	CONFIGURATION SPECIFIC
-+ *							not supported
-+ * @CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_AMODE:		AMODE not supported
-+ * @CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_ELTYPE:	ELTYPE not supported
-+ * @CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_DFMT:		DFMT not supported
-+ * @CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_SECTR:		SECTR not supported
-+ * @CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_AMODE_SPECIFIC: AMODE SPECIFIC field
-+ *							not supported
-+ */
-+enum cppi5_tr_resp_status_unsupported {
-+	CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_TR_TYPE,
-+	CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_STATIC,
-+	CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_EOL,
-+	CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_CFG_SPECIFIC,
-+	CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_AMODE,
-+	CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_ELTYPE,
-+	CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_DFMT,
-+	CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_SECTR,
-+	CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_AMODE_SPECIFIC,
-+	CPPI5_TR_RESPONSE_STATUS_UNSUPPORTED_MAX
-+};
-+
-+/**
-+ * cppi5_trdesc_calc_size - Calculate TR Descriptor size
-+ * @tr_count: number of TR records
-+ * @tr_size: Nominal size of TR record (max) [16, 32, 64, 128]
-+ *
-+ * Returns required TR Descriptor size
-+ */
-+static inline size_t cppi5_trdesc_calc_size(u32 tr_count, u32 tr_size)
-+{
-+	/*
-+	 * The Size of a TR descriptor is:
-+	 * 1 x tr_size : the first 16 bytes is used by the packet info block +
-+	 * tr_count x tr_size : Transfer Request Records +
-+	 * tr_count x sizeof(struct cppi5_tr_resp_t) : Transfer Response Records
-+	 */
-+	return tr_size * (tr_count + 1) +
-+		sizeof(struct cppi5_tr_resp_t) * tr_count;
-+}
-+
-+/**
-+ * cppi5_trdesc_init - Init TR Descriptor
-+ * @desc: TR Descriptor
-+ * @tr_count: number of TR records
-+ * @tr_size: Nominal size of TR record (max) [16, 32, 64, 128]
-+ * @reload_idx: Absolute index to jump to on the 2nd and following passes
-+ *		through the TR packet.
-+ * @reload_count: Number of times to jump from last entry to reload_idx. 0x1ff
-+ *		  indicates infinite looping.
-+ *
-+ * Init TR Descriptor
-+ */
-+static inline void cppi5_trdesc_init(struct cppi5_desc_hdr_t *desc_hdr,
-+				     u32 tr_count, u32 tr_size, u32 reload_idx,
-+				     u32 reload_count)
-+{
-+	desc_hdr->pkt_info0 = CPPI5_INFO0_DESC_TYPE_VAL_TR <<
-+			      CPPI5_INFO0_HDESC_TYPE_SHIFT;
-+	desc_hdr->pkt_info0 |=
-+			(reload_count << CPPI5_INFO0_TRDESC_RLDCNT_SHIFT) &
-+			CPPI5_INFO0_TRDESC_RLDCNT_MASK;
-+	desc_hdr->pkt_info0 |=
-+			(reload_idx << CPPI5_INFO0_TRDESC_RLDIDX_SHIFT) &
-+			CPPI5_INFO0_TRDESC_RLDIDX_MASK;
-+	desc_hdr->pkt_info0 |= (tr_count - 1) & CPPI5_INFO0_TRDESC_LASTIDX_MASK;
-+
-+	desc_hdr->pkt_info1 |= ((ffs(tr_size >> 4) - 1) <<
-+				CPPI5_INFO1_TRDESC_RECSIZE_SHIFT) &
-+				CPPI5_INFO1_TRDESC_RECSIZE_MASK;
-+}
-+
-+/**
-+ * cppi5_tr_init - Init TR record
-+ * @flags: Pointer to the TR's flags
-+ * @type: TR type
-+ * @static_tr: TR is static
-+ * @wait: Wait for TR completion before allow the next TR to start
-+ * @event_size: output event generation cfg
-+ * @cmd_id: TR identifier (application specifics)
-+ *
-+ * Init TR record
-+ */
-+static inline void cppi5_tr_init(cppi5_tr_flags_t *flags,
-+				 enum cppi5_tr_types type, bool static_tr,
-+				 bool wait, enum cppi5_tr_event_size event_size,
-+				 u32 cmd_id)
-+{
-+	*flags = type;
-+	*flags |= (event_size << CPPI5_TR_EVENT_SIZE_SHIFT) &
-+		  CPPI5_TR_EVENT_SIZE_MASK;
-+
-+	*flags |= (cmd_id << CPPI5_TR_CMD_ID_SHIFT) &
-+		  CPPI5_TR_CMD_ID_MASK;
-+
-+	if (static_tr && (type == CPPI5_TR_TYPE8 || type == CPPI5_TR_TYPE9))
-+		*flags |= CPPI5_TR_STATIC;
-+
-+	if (wait)
-+		*flags |= CPPI5_TR_WAIT;
-+}
-+
-+/**
-+ * cppi5_tr_set_trigger - Configure trigger0/1 and trigger0/1_type
-+ * @flags: Pointer to the TR's flags
-+ * @trigger0: trigger0 selection
-+ * @trigger0_type: type of data transfer that will be enabled by trigger0
-+ * @trigger1: trigger1 selection
-+ * @trigger1_type: type of data transfer that will be enabled by trigger1
-+ *
-+ * Configure the triggers for the TR
-+ */
-+static inline void cppi5_tr_set_trigger(cppi5_tr_flags_t *flags,
-+		enum cppi5_tr_trigger trigger0,
-+		enum cppi5_tr_trigger_type trigger0_type,
-+		enum cppi5_tr_trigger trigger1,
-+		enum cppi5_tr_trigger_type trigger1_type)
-+{
-+	*flags &= ~(CPPI5_TR_TRIGGER0_MASK | CPPI5_TR_TRIGGER0_TYPE_MASK |
-+		    CPPI5_TR_TRIGGER1_MASK | CPPI5_TR_TRIGGER1_TYPE_MASK);
-+	*flags |= (trigger0 << CPPI5_TR_TRIGGER0_SHIFT) &
-+		  CPPI5_TR_TRIGGER0_MASK;
-+	*flags |= (trigger0_type << CPPI5_TR_TRIGGER0_TYPE_SHIFT) &
-+		  CPPI5_TR_TRIGGER0_TYPE_MASK;
-+
-+	*flags |= (trigger1 << CPPI5_TR_TRIGGER1_SHIFT) &
-+		  CPPI5_TR_TRIGGER1_MASK;
-+	*flags |= (trigger1_type << CPPI5_TR_TRIGGER1_TYPE_SHIFT) &
-+		  CPPI5_TR_TRIGGER1_TYPE_MASK;
-+}
-+
-+/**
-+ * cppi5_tr_cflag_set - Update the Configuration specific flags
-+ * @flags: Pointer to the TR's flags
-+ * @csf: Configuration specific flags
-+ *
-+ * Set a bit in Configuration Specific Flags section of the TR flags.
-+ */
-+static inline void cppi5_tr_csf_set(cppi5_tr_flags_t *flags, u32 csf)
-+{
-+	*flags &= ~CPPI5_TR_CSF_FLAGS_MASK;
-+	*flags |= (csf << CPPI5_TR_CSF_FLAGS_SHIFT) &
-+		  CPPI5_TR_CSF_FLAGS_MASK;
-+}
-+
-+#endif /* __TI_CPPI5_H__ */
++#endif /* K3_PSIL_H_ */
 -- 
 Peter
 

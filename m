@@ -2,169 +2,138 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 28B511294C7
-	for <lists+dmaengine@lfdr.de>; Mon, 23 Dec 2019 12:07:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BBA71294F9
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Dec 2019 12:26:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfLWLGR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 23 Dec 2019 06:06:17 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52766 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbfLWLGG (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 23 Dec 2019 06:06:06 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBNB5txe067332;
-        Mon, 23 Dec 2019 05:05:55 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577099155;
-        bh=VgdWAAJ3Cz8tiJk/iLF7p/5t+YnecUVQdlQ8kNoKFXU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=UoxeAjlYwCQ2sLKXKo2e9e6TOQhzNiiMKWLsTvljz/X0oleqHX+A9Bl8IJUh1FQnJ
-         HBoP/HcHIvF5H/Zn5cGwoRVnF5aTyyomxVrlVGK7jUg4GjQFJK0Ky9eB7hbZ4ZCkQg
-         92hWHY1bcsTDib4jaKxFU2nFJDUJbfLbatbKBzpU=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBNB5tJJ041498
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 23 Dec 2019 05:05:55 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 23
- Dec 2019 05:05:55 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 23 Dec 2019 05:05:55 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBNB4eMP025693;
-        Mon, 23 Dec 2019 05:05:51 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
-        <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
-        <vigneshr@ti.com>, <frowand.list@gmail.com>
-Subject: [PATCH v8 18/18] soc: ti: k3-ringacc: Allow the driver to be built as module
-Date:   Mon, 23 Dec 2019 13:04:58 +0200
-Message-ID: <20191223110458.30766-19-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191223110458.30766-1-peter.ujfalusi@ti.com>
-References: <20191223110458.30766-1-peter.ujfalusi@ti.com>
+        id S1726663AbfLWL03 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 23 Dec 2019 06:26:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45654 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbfLWL02 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 23 Dec 2019 06:26:28 -0500
+Received: from localhost (unknown [223.226.34.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83040207FF;
+        Mon, 23 Dec 2019 11:26:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577100387;
+        bh=U674jlYACjQhhGCy4e3+CzEaPgiSjsEmvjKCwhbFzqw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eroF/x42FAFqJKFuiVMDn5gYmfp+YgrmPRGgnjhd4c9dKvwJB7A1iMuS5bamcLlIk
+         HL+DKo0W06Yey+iPDZ+l97Ca4a9P+7vi679IhZ4hpHK7VfFnZH0qIxJFFHZ0ydILBj
+         9puTCrdym62yreuoQBN3bvWGm7HublXnyBDANolg=
+Date:   Mon, 23 Dec 2019 16:56:23 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
+        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
+        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
+        j-keerthy@ti.com, vigneshr@ti.com
+Subject: Re: [PATCH v7 09/12] dmaengine: ti: New driver for K3 UDMA
+Message-ID: <20191223112623.GF2536@vkoul-mobl>
+References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
+ <20191209094332.4047-10-peter.ujfalusi@ti.com>
+ <20191223073425.GV2536@vkoul-mobl>
+ <ea473fed-276f-6b71-070b-02ab1f51ed89@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ea473fed-276f-6b71-070b-02ab1f51ed89@ti.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The ring accelerator driver can be built as module since all depending
-functions are exported.
+On 23-12-19, 10:59, Peter Ujfalusi wrote:
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Tested-by: Keerthy <j-keerthy@ti.com>
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/soc/ti/Kconfig      |  2 +-
- drivers/soc/ti/k3-ringacc.c | 29 ++++++++++++++++++++++++++---
- 2 files changed, 27 insertions(+), 4 deletions(-)
+> >> +static void udma_reset_counters(struct udma_chan *uc)
+> >> +{
+> >> +	u32 val;
+> >> +
+> >> +	if (uc->tchan) {
+> >> +		val = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_BCNT_REG);
+> >> +		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_BCNT_REG, val);
+> > 
+> > so you read back from UDMA_TCHAN_RT_BCNT_REG and write same value to
+> > it??
+> 
+> Yes, that's correct. This is how we can reset it. The counter is
+> decremented with the value you have written to the register.
 
-diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
-index 4486e055794c..bdce98f68a3e 100644
---- a/drivers/soc/ti/Kconfig
-+++ b/drivers/soc/ti/Kconfig
-@@ -81,7 +81,7 @@ config TI_SCI_PM_DOMAINS
- 	  rootfs may be available.
- 
- config TI_K3_RINGACC
--	bool "K3 Ring accelerator Sub System"
-+	tristate "K3 Ring accelerator Sub System"
- 	depends on ARCH_K3 || COMPILE_TEST
- 	depends on TI_SCI_INTA_IRQCHIP
- 	help
-diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
-index 5fb2ee2ac978..fd9f35b7c9a6 100644
---- a/drivers/soc/ti/k3-ringacc.c
-+++ b/drivers/soc/ti/k3-ringacc.c
-@@ -7,7 +7,7 @@
- 
- #include <linux/dma-mapping.h>
- #include <linux/io.h>
--#include <linux/init.h>
-+#include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/soc/ti/k3-ringacc.h>
-@@ -264,6 +264,11 @@ struct k3_ring *k3_ringacc_request_ring(struct k3_ringacc *ringacc,
- 
- 	mutex_lock(&ringacc->req_lock);
- 
-+	if (!try_module_get(ringacc->dev->driver->owner)) {
-+		mutex_unlock(&ringacc->req_lock);
-+		return NULL;
-+	}
-+
- 	if (id == K3_RINGACC_RING_ID_ANY) {
- 		/* Request for any general purpose ring */
- 		struct ti_sci_resource_desc *gp_rings =
-@@ -308,6 +313,7 @@ struct k3_ring *k3_ringacc_request_ring(struct k3_ringacc *ringacc,
- 	return &ringacc->rings[id];
- 
- error:
-+	module_put(ringacc->dev->driver->owner);
- 	mutex_unlock(&ringacc->req_lock);
- 	return NULL;
- }
-@@ -488,6 +494,8 @@ int k3_ringacc_ring_free(struct k3_ring *ring)
- no_init:
- 	clear_bit(ring->ring_id, ringacc->rings_inuse);
- 
-+	module_put(ringacc->dev->driver->owner);
-+
- out:
- 	mutex_unlock(&ringacc->req_lock);
- 	return 0;
-@@ -1140,18 +1148,33 @@ static int k3_ringacc_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int k3_ringacc_remove(struct platform_device *pdev)
-+{
-+	struct k3_ringacc *ringacc = dev_get_drvdata(&pdev->dev);
-+
-+	mutex_lock(&k3_ringacc_list_lock);
-+	list_del(&ringacc->list);
-+	mutex_unlock(&k3_ringacc_list_lock);
-+	return 0;
-+}
-+
- /* Match table for of_platform binding */
- static const struct of_device_id k3_ringacc_of_match[] = {
- 	{ .compatible = "ti,am654-navss-ringacc", },
- 	{},
- };
-+MODULE_DEVICE_TABLE(of, k3_ringacc_of_match);
- 
- static struct platform_driver k3_ringacc_driver = {
- 	.probe		= k3_ringacc_probe,
-+	.remove		= k3_ringacc_remove,
- 	.driver		= {
- 		.name	= "k3-ringacc",
- 		.of_match_table = k3_ringacc_of_match,
--		.suppress_bind_attrs = true,
- 	},
- };
--builtin_platform_driver(k3_ringacc_driver);
-+module_platform_driver(k3_ringacc_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("TI Ringacc driver for K3 SOCs");
-+MODULE_AUTHOR("Grygorii Strashko <grygorii.strashko@ti.com>");
+aha, with so many read+write back I would have added a helper.. Not a
+big deal though can be updated later
+
+> >> +static struct udma_desc *udma_alloc_tr_desc(struct udma_chan *uc,
+> >> +					    size_t tr_size, int tr_count,
+> >> +					    enum dma_transfer_direction dir)
+> >> +{
+> >> +	struct udma_hwdesc *hwdesc;
+> >> +	struct cppi5_desc_hdr_t *tr_desc;
+> >> +	struct udma_desc *d;
+> >> +	u32 reload_count = 0;
+> >> +	u32 ring_id;
+> >> +
+> >> +	switch (tr_size) {
+> >> +	case 16:
+> >> +	case 32:
+> >> +	case 64:
+> >> +	case 128:
+> >> +		break;
+> >> +	default:
+> >> +		dev_err(uc->ud->dev, "Unsupported TR size of %zu\n", tr_size);
+> >> +		return NULL;
+> >> +	}
+> >> +
+> >> +	/* We have only one descriptor containing multiple TRs */
+> >> +	d = kzalloc(sizeof(*d) + sizeof(d->hwdesc[0]), GFP_ATOMIC);
+> > 
+> > this is invoked from prep_ so should use GFP_NOWAIT, we dont use
+> > GFP_ATOMIC :)
+> 
+> Ok. btw: EDMA and sDMA driver is using GFP_ATOMIC :o
+
+heh, we made sure to document this bit :)
+
+> >> +static int udma_configure_statictr(struct udma_chan *uc, struct udma_desc *d,
+> >> +				   enum dma_slave_buswidth dev_width,
+> >> +				   u16 elcnt)
+> >> +{
+> >> +	if (uc->ep_type != PSIL_EP_PDMA_XY)
+> >> +		return 0;
+> >> +
+> >> +	/* Bus width translates to the element size (ES) */
+> >> +	switch (dev_width) {
+> >> +	case DMA_SLAVE_BUSWIDTH_1_BYTE:
+> >> +		d->static_tr.elsize = 0;
+> >> +		break;
+> >> +	case DMA_SLAVE_BUSWIDTH_2_BYTES:
+> >> +		d->static_tr.elsize = 1;
+> >> +		break;
+> >> +	case DMA_SLAVE_BUSWIDTH_3_BYTES:
+> >> +		d->static_tr.elsize = 2;
+> >> +		break;
+> >> +	case DMA_SLAVE_BUSWIDTH_4_BYTES:
+> >> +		d->static_tr.elsize = 3;
+> >> +		break;
+> >> +	case DMA_SLAVE_BUSWIDTH_8_BYTES:
+> >> +		d->static_tr.elsize = 4;
+> > 
+> > seems like ffs(dev_width) to me?
+> 
+> Not really:
+> ffs(DMA_SLAVE_BUSWIDTH_1_BYTE) = 1
+> ffs(DMA_SLAVE_BUSWIDTH_2_BYTES) = 2
+> ffs(DMA_SLAVE_BUSWIDTH_3_BYTES) = 1
+
+I missed this!
+
+> ffs(DMA_SLAVE_BUSWIDTH_4_BYTES) = 3
+> ffs(DMA_SLAVE_BUSWIDTH_8_BYTES) = 4
+
+Otherwise you are ffs() - 1
+
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+~Vinod

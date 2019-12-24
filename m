@@ -2,66 +2,68 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 17770129D97
-	for <lists+dmaengine@lfdr.de>; Tue, 24 Dec 2019 06:03:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B5D3129E0E
+	for <lists+dmaengine@lfdr.de>; Tue, 24 Dec 2019 07:25:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725858AbfLXFDm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 24 Dec 2019 00:03:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33740 "EHLO mail.kernel.org"
+        id S1726020AbfLXGZy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 24 Dec 2019 01:25:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725816AbfLXFDm (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 24 Dec 2019 00:03:42 -0500
-Received: from localhost.localdomain (unknown [122.167.68.227])
+        id S1726009AbfLXGZy (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 24 Dec 2019 01:25:54 -0500
+Received: from localhost (unknown [122.167.68.227])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C26F2071E;
-        Tue, 24 Dec 2019 05:03:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D89F4206CB;
+        Tue, 24 Dec 2019 06:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577163821;
-        bh=+IGau3AyCY8MYwyo4wJdg0D20GhOXqWNP0G6ezWvWRo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B4MLPnYJqBEvQRd632dzBaLgux506TtiO0gJlSESoC0183S44n5kK1SuFTIvELNK+
-         I4zRBsPsQMy/M2fy3J40gCHnzPFX5kk3uVwes3J8qV8IwJNITZ6u1LLKaLv+2Vll6V
-         1Zbwz6kxf2sOyYF3Gpr33MXNWj0Mik1te2D/rLmA=
+        s=default; t=1577168753;
+        bh=InoE8ryzjR+FID2QK7KPw32193qUgMsnYRn9+U++QDM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SK2AZDRtPCzRvSUy+gpty5CrqB1jckZ6y+Itx/Um154hA9qntpCsm/3UdO0zc1xGW
+         uFMkO5LygHb3YW5QTabCdz3ZQnE6Lutf0k2K89ZBFtVWo9JsrwUr677S84Y/OtSd8Z
+         OEHOoxhmV4YoQlnUJTpR5CGKQl2hTyKnPVBRPSIw=
+Date:   Tue, 24 Dec 2019 11:55:47 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     dmaengine@vger.kernel.org
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: [PATCH 2/2] dmaengine: print more meaningful error message
-Date:   Tue, 24 Dec 2019 10:33:26 +0530
-Message-Id: <20191224050326.3481588-2-vkoul@kernel.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191224050326.3481588-1-vkoul@kernel.org>
-References: <20191224050326.3481588-1-vkoul@kernel.org>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     dmaengine@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Green Wan <green.wan@sifive.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH v3 0/9] dmaengine: virt-dma related fixes
+Message-ID: <20191224062547.GJ2536@vkoul-mobl>
+References: <20191216105328.15198-1-s.hauer@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191216105328.15198-1-s.hauer@pengutronix.de>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-error log for dma_channel_table_init() failure pointed a mere
-"initialization failure", which is not very helpful message, so print
-additional details like function name and error code.
+On 16-12-19, 11:53, Sascha Hauer wrote:
+> Several drivers call vchan_dma_desc_free_list() or vchan_vdesc_fini() under
+> &vc->lock. This is not allowed and the first two patches fix this up. If you
+> are a DMA driver maintainer, the first two patches are the reason you are on
+> Cc.
+> 
+> The remaining patches are the original purpose of this series:
+> The i.MX SDMA driver leaks memory when a currently running descriptor is
+> aborted. Calling vchan_terminate_vdesc() on it to fix this revealed that
+> the virt-dma support calls the desc_free with the spin_lock held. This
+> doesn't work for the SDMA driver because it calls dma_free_coherent in
+> its desc_free hook. This series aims to fix that up.
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/dma/dmaengine.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied all, thanks
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 0505ea5b002f..4ac77456e830 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -206,7 +206,7 @@ static int __init dma_channel_table_init(void)
- 	}
- 
- 	if (err) {
--		pr_err("initialization failure\n");
-+		pr_err("dmaengine dma_channel_table_init failure: %d\n", err);
- 		for_each_dma_cap_mask(cap, dma_cap_mask_all)
- 			free_percpu(channel_table[cap]);
- 	}
 -- 
-2.23.0
-
+~Vinod

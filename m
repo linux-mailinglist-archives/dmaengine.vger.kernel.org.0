@@ -2,68 +2,58 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B5D3129E0E
-	for <lists+dmaengine@lfdr.de>; Tue, 24 Dec 2019 07:25:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90C64129F0C
+	for <lists+dmaengine@lfdr.de>; Tue, 24 Dec 2019 09:37:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726020AbfLXGZy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 24 Dec 2019 01:25:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726009AbfLXGZy (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 24 Dec 2019 01:25:54 -0500
-Received: from localhost (unknown [122.167.68.227])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D89F4206CB;
-        Tue, 24 Dec 2019 06:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577168753;
-        bh=InoE8ryzjR+FID2QK7KPw32193qUgMsnYRn9+U++QDM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SK2AZDRtPCzRvSUy+gpty5CrqB1jckZ6y+Itx/Um154hA9qntpCsm/3UdO0zc1xGW
-         uFMkO5LygHb3YW5QTabCdz3ZQnE6Lutf0k2K89ZBFtVWo9JsrwUr677S84Y/OtSd8Z
-         OEHOoxhmV4YoQlnUJTpR5CGKQl2hTyKnPVBRPSIw=
-Date:   Tue, 24 Dec 2019 11:55:47 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     dmaengine@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Green Wan <green.wan@sifive.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v3 0/9] dmaengine: virt-dma related fixes
-Message-ID: <20191224062547.GJ2536@vkoul-mobl>
-References: <20191216105328.15198-1-s.hauer@pengutronix.de>
+        id S1726213AbfLXIhS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 24 Dec 2019 03:37:18 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:42832 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbfLXIhS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 24 Dec 2019 03:37:18 -0500
+Received: by mail-il1-f193.google.com with SMTP id t2so725796ilq.9
+        for <dmaengine@vger.kernel.org>; Tue, 24 Dec 2019 00:37:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=LcGU1mt+nAQIi3eKcWZpiy7DqrkNG23tK1MNYV9CB+M=;
+        b=thLznmLowQYlgCkXssGgqDu9lyH9UW6YjKmOssHb1tTK4hOQZrMXPmcN+NyMPf6FCl
+         UvREnc30T4YWVk+0sz5tUX66h6x9TrTk5PLAy+j6B7YQx87dbuBKpJdKp6vHEaeyv/Mk
+         +ugQax6dxzQYdZRO2RuhmUBXO0k1ex+ujK03f0IwAMz2143noOnX/n9FaaLqE/JawMIu
+         cAyyILMJ9qtw2dvj23jE86BJWZZAt8n9o0u6ZQ2NXyeUK9YTazBgzNeXTkC83D8e6w+y
+         LyuzLzl8dZr8HmmG/1asFn/Ndqg1z9wICefdZo1ski0C2gomR8pQBnx9Wa/071qwcZbY
+         xpeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=LcGU1mt+nAQIi3eKcWZpiy7DqrkNG23tK1MNYV9CB+M=;
+        b=TlK04B+FNtlt3xEREEg5V+UbMOQvy8zXPSTZO8SunG8klHTlKkZqpVvppxmH2RUrt/
+         cnzn0N1aRlKv4ijZB2sYGC3ZeMnP930AiQUjiY2fll2qRu1tJ6zzgKg1aXihRMdi6PYe
+         8BCcVDt6N0ORGO/9Mca+Pw8emQpkJvAomHuRtVqugiGvece29E4QcrH+mlVWl7FlxbMJ
+         Knaq5veiXvlCsWfnuS+TjtotDrttSkS24LEaBkVKqEZl8WzsCKiHoljr7ZuvO3meyUn7
+         8v+zCDRUNZlBJjE03mobRxet0AOwa/BUcN0L4H3YUeId6zw4sTmc+PZBILn4cnvOYC3i
+         P3Vw==
+X-Gm-Message-State: APjAAAVtAI+nJVhP+Ul2CGkDOYUuea59Tkx2dw7PIB5qMCd94gE41Ors
+        dF8gDZyGV4oKMbup8s2NaqDkU8mQalQteGJq/lM=
+X-Google-Smtp-Source: APXvYqz2tBa4QzKmO6wzSXUBWoAEt+AdW5keElYd0pxn2QCdUk0KRvhLw5nMwIzFzVTuSc6Cp+qr2Z5Nq+YfPm0LYgM=
+X-Received: by 2002:a92:3b98:: with SMTP id n24mr4582447ilh.108.1577176637594;
+ Tue, 24 Dec 2019 00:37:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191216105328.15198-1-s.hauer@pengutronix.de>
+Received: by 2002:ac0:f302:0:0:0:0:0 with HTTP; Tue, 24 Dec 2019 00:37:16
+ -0800 (PST)
+Reply-To: bethnatividad9@gmail.com
+From:   Beth Nat <clementidibia1960@gmail.com>
+Date:   Tue, 24 Dec 2019 08:37:16 +0000
+Message-ID: <CAEG=icHSiKA+obxr5hSbrz+bX3f1O1rMyddMXXp8YnqnRrxBeQ@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 16-12-19, 11:53, Sascha Hauer wrote:
-> Several drivers call vchan_dma_desc_free_list() or vchan_vdesc_fini() under
-> &vc->lock. This is not allowed and the first two patches fix this up. If you
-> are a DMA driver maintainer, the first two patches are the reason you are on
-> Cc.
-> 
-> The remaining patches are the original purpose of this series:
-> The i.MX SDMA driver leaks memory when a currently running descriptor is
-> aborted. Calling vchan_terminate_vdesc() on it to fix this revealed that
-> the virt-dma support calls the desc_free with the spin_lock held. This
-> doesn't work for the SDMA driver because it calls dma_free_coherent in
-> its desc_free hook. This series aims to fix that up.
-
-Applied all, thanks
-
--- 
-~Vinod
+How are you today my dear? i saw your profile and it interests me, i
+am a Military nurse from USA. Can we be friend? I want to know more
+about you.

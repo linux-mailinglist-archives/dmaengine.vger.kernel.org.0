@@ -2,476 +2,137 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 524A012B54F
-	for <lists+dmaengine@lfdr.de>; Fri, 27 Dec 2019 15:49:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 08CD112B5CC
+	for <lists+dmaengine@lfdr.de>; Fri, 27 Dec 2019 17:27:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbfL0Os7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 27 Dec 2019 09:48:59 -0500
-Received: from mail-dm6nam12on2061.outbound.protection.outlook.com ([40.107.243.61]:37857
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726379AbfL0Os7 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 27 Dec 2019 09:48:59 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TH1T770FwKkhSEdQahRhXXDcPt/cFRQm4tILajRX+Rhifh+yMvXuDjK0iMwTnIOWH2GhjRQNLAYYaI7wCgOb0N/GZPIXsp498gF8k5Pu7SDEhuJFMqKmITHjhJSb3I5iYIb/75gOLDTxTl6piXyQI0HUvNjrfHqU8wd8z0slvsapwme1i/80OOTHuvOFVPBGEyHotessElGF8wdHwI8enKbzbgy04/oRnWAdUM8L3kUBw7TzE4F7AzFBQcNN1CHof35NwxbcO7bSAvxRIY+qMvs0DjRa3b57cqM1wwyAr0yJuvwKDbtiVbK3gYV5+WqW/bA6eAda6ubwOawqBIwoDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sBKNzRBG/bHUbCS+7M9ep4kk41HUKA/HzvOlJ5Ld+zg=;
- b=UE3AYYIBe1ETKTSs+aTJA25eHa7mHaK98YAQhUC+eUBQUv40GVvNjQyLT54wmGxe8osdozMX6J9lRRs5/Z98grIIJRDEnvrChcOyQBLv+R6JxMdUrsudVysLU/V5ZWruKf/hCU6dEIFVBu2UxTCxb0Ry6Mh9LPpQQxMs/RiArwniqRxHmMa3v4VR1XgOrnYRIs4+RlrqvYhlYvtZVgDNnHIJlsuWJ/FAdNkNhu5nPcPstr2Ne8iOUJVvFPneBZb5g/xnSAscII1jApHRNVZRLHz9EHjjzK/1hvnUNHn9I8EOLNx7fa9SOpxSGydYP6688tMG4aPeRfoVsRn8X5LIvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        id S1726527AbfL0Q1Q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 27 Dec 2019 11:27:16 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42898 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfL0Q1Q (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 27 Dec 2019 11:27:16 -0500
+Received: by mail-pg1-f193.google.com with SMTP id s64so14642094pgb.9;
+        Fri, 27 Dec 2019 08:27:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sBKNzRBG/bHUbCS+7M9ep4kk41HUKA/HzvOlJ5Ld+zg=;
- b=qRQu9/jpe1AYIP9qzdoHoTK4sye8NmsH9D9yIp/NEqJoUlhfq8wn+7jiNbqwHMK/4fWCKpQpxeeOeTbSwcd0YrIhhteB5pY5lk5GbGD4qRKoApkI9Y1rrzFE/xj584UJS9TThdmRdJbaJ3jHFeWcM5qn7JwjtkriJnkT9h2Tcug=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Sanju.Mehta@amd.com; 
-Received: from MN2PR12MB3455.namprd12.prod.outlook.com (20.178.244.22) by
- MN2PR12MB3485.namprd12.prod.outlook.com (20.178.242.86) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2581.11; Fri, 27 Dec 2019 14:48:51 +0000
-Received: from MN2PR12MB3455.namprd12.prod.outlook.com
- ([fe80::1900:6cb7:12ff:11c]) by MN2PR12MB3455.namprd12.prod.outlook.com
- ([fe80::1900:6cb7:12ff:11c%4]) with mapi id 15.20.2581.007; Fri, 27 Dec 2019
- 14:48:51 +0000
-From:   Sanjay R Mehta <Sanju.Mehta@amd.com>
-To:     vkoul@kernel.org, dan.j.williams@intel.com,
-        gregkh@linuxfoundation.org, Gary.Hook@amd.com,
-        Nehal-bakulchandra.Shah@amd.com, Shyam-sundar.S-k@amd.com
-Cc:     davem@davemloft.net, mchehab+samsung@kernel.org, robh@kernel.org,
-        Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, Sanjay R Mehta <sanju.mehta@amd.com>
-Subject: [PATCH v2 3/3] dmaengine: ptdma: Add debugfs entries for PTDMA information
-Date:   Fri, 27 Dec 2019 08:48:32 -0600
-Message-Id: <1577458112-109734-1-git-send-email-Sanju.Mehta@amd.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA1PR01CA0120.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:35::14) To MN2PR12MB3455.namprd12.prod.outlook.com
- (2603:10b6:208:d0::22)
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dBglm2b9cBYAu0nButjv6ALtbsVTI4wGtnK8QiJ9kuA=;
+        b=HXH5qj5MpqkC/Wg91xmZNI6UqZs9+2G5fbf5vxWjkYjYXaMQ1+QVgjvuy4zGOZ/UW3
+         gpLksLNwSeOtENO27U/QUZDCbHJePyWqMGKEiad7Bvel5uFVWCehPSiFZt5becFi1qZG
+         FzblXsQFhzuNEzFqgStKzRKKvag14EK34M/OzUCnapxLmzAE9vGbXczHMLeSW1dDBmk7
+         5uXCrWs51KjE2jlFGiodDLIn8zNrx0jkX3uiJ08bAqO00XAoRrcihi9OsxYQuEbS4UUz
+         RiwV6KT+fB+my5l+asv9xcY0PfJkPW5DNb46SKoZXlMoUkWmUiZNykMeB7fyyL+6JSeK
+         tUcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dBglm2b9cBYAu0nButjv6ALtbsVTI4wGtnK8QiJ9kuA=;
+        b=VV5DjtSRWJO5qfG5JRAAJOMoGaojuUBxL8W4TGfyuDhSm8MGtLGJQVMY/+qlx/dEG+
+         DzrF8p7d1TFSvNWIgI8Ar8WmNmb82DF6P3+fdwlryCml4ZS5JKfcPmJ4gykc+VZ75rV6
+         hDqJ4x3m90xBON3dEs/ttkjiGxJNdZSCH93inEgSE9MGvT3M4jYIh2gYUzcWw+0/1Y/e
+         l3LeSr3B8hk7ma7hl3TuC6PkbzRpnpAdg+0ucEzoTL9cdHfmP4buR/GfmYuEElwNq5aR
+         FsSrYZOLWEGYrGfyHbtOxyNxVVSEXHhyITufZ4F9rR67JyreoAWyeaQzFGXyC1kqKwXo
+         56qA==
+X-Gm-Message-State: APjAAAVYNB/E+hq2zHzAbAKucV5I8cizS72xHWglRAGZt90kMRrjMwG6
+        1YM+twjdiwEGb+8M4Ofv8uk=
+X-Google-Smtp-Source: APXvYqw2Nt4ErSmudRvoQl6pHm6RVZbj8lourXai9DAfd9L6E9Y/e31fHJcAyz6LaUQiq8nvnZRqFQ==
+X-Received: by 2002:aa7:9629:: with SMTP id r9mr22022265pfg.51.1577464034941;
+        Fri, 27 Dec 2019 08:27:14 -0800 (PST)
+Received: from [10.230.28.123] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id x7sm42874149pfp.93.2019.12.27.08.27.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Dec 2019 08:27:14 -0800 (PST)
+Subject: Re: [PATCH 1/1] dmaengine: bcm-sba-raid: Handle mbox_request_channel
+ failure
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+References: <20191227095428.3924-1-rayagonda.kokatanur@broadcom.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
+Message-ID: <3ab7434a-e2da-2767-a20d-4f4ebb48e553@gmail.com>
+Date:   Fri, 27 Dec 2019 08:27:13 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Received: from sanjuamdntb2.amd.com (165.204.156.251) by MA1PR01CA0120.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:35::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2581.11 via Frontend Transport; Fri, 27 Dec 2019 14:48:47 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: dc64b79d-c7ce-4212-5fe2-08d78adbe341
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3485:|MN2PR12MB3485:|MN2PR12MB3485:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB34857B855AE376B5EA5A6576E52A0@MN2PR12MB3485.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2657;
-X-Forefront-PRVS: 0264FEA5C3
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(39860400002)(376002)(366004)(396003)(189003)(199004)(81156014)(478600001)(2616005)(16526019)(186003)(6486002)(8936002)(956004)(86362001)(36756003)(8676002)(81166006)(66556008)(66946007)(66476007)(6636002)(4326008)(5660300002)(52116002)(2906002)(6666004)(316002)(26005)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3485;H:MN2PR12MB3455.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gEuEDtQBLLFGt22wZiKO9tnyHY9C06sUwYooru7+WMS4IZ+XkJod/NzYVR1ogBt/l3JVHV/9Ege5/kAcfDSdmQhoT2CY9miwx+ounIMnFPa/8NaaNt6jGObBXrmvlFctnAxrspF46JOOkF+zgiIf9VejQUocqyjBH67JF6LYxgjMz9zKxK2pgTichGUgLty6u7mJjw+o6+Ip9BoDOZGbgtv4dIeUjGvhOykZwsRrjXHe8POuGsgXngqulKiia5eRhcc0Pp5kqEW+xgppHGAzAaErZ9OKt2109SgM/HgV/HqhjQ/KaPf5MJn7vc6WXj+R0idHopqVZQvNJ5DRLAQPeGipVxkHFPV7ZYWGNkdEKMeQo+l0bJBE3B8IejYtufvuKsykZWdz87rfsc0f21sY4BJtSGuqFzFyAuQ9Lk/OIskX7xZx1RCJkwtbahIdWt0P
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc64b79d-c7ce-4212-5fe2-08d78adbe341
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Dec 2019 14:48:51.5295
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eBXOWlX6NJeQZ9n7Pipe7cRhloYVvX5lL8V1e4o7nFQHSBSmLNQyGOQ2qZXoy1m1w7Rook5n/gY8W9vS3YLrvw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3485
+In-Reply-To: <20191227095428.3924-1-rayagonda.kokatanur@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Sanjay R Mehta <sanju.mehta@amd.com>
 
-Expose data about the configuration and operation of the
-PTDMA through debugfs entries: device name, capabilities,
-configuration, statistics.
 
-Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
----
- drivers/dma/ptdma/Makefile        |   3 +-
- drivers/dma/ptdma/ptdma-debugfs.c | 237 ++++++++++++++++++++++++++++++++++++++
- drivers/dma/ptdma/ptdma-dev.c     |  26 +++++
- drivers/dma/ptdma/ptdma.h         |  12 ++
- 4 files changed, 277 insertions(+), 1 deletion(-)
- create mode 100644 drivers/dma/ptdma/ptdma-debugfs.c
+On 12/27/2019 1:54 AM, Rayagonda Kokatanur wrote:
+> Fix kernel NULL pointer dereference error when mbox_request_channel()
+> fails to allocate channel.
+> 
+> Fixes: 4e9f8187aec ("dmaengine: bcm-sba-raid: Use only single mailbox channel")
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
-diff --git a/drivers/dma/ptdma/Makefile b/drivers/dma/ptdma/Makefile
-index 6fcb4ad..60e7c10 100644
---- a/drivers/dma/ptdma/Makefile
-+++ b/drivers/dma/ptdma/Makefile
-@@ -6,6 +6,7 @@
- obj-$(CONFIG_AMD_PTDMA) += ptdma.o
- 
- ptdma-objs := ptdma-dev.o \
--	      ptdma-dmaengine.o
-+	      ptdma-dmaengine.o \
-+	      ptdma-debugfs.o
- 
- ptdma-$(CONFIG_PCI) += ptdma-pci.o
-diff --git a/drivers/dma/ptdma/ptdma-debugfs.c b/drivers/dma/ptdma/ptdma-debugfs.c
-new file mode 100644
-index 0000000..b4af83c
---- /dev/null
-+++ b/drivers/dma/ptdma/ptdma-debugfs.c
-@@ -0,0 +1,237 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * AMD Passthrough DMA device driver
-+ * -- Based on the CCP driver
-+ *
-+ * Copyright (C) 2016,2019 Advanced Micro Devices, Inc.
-+ *
-+ * Author: Sanjay R Mehta <sanju.mehta@amd.com>
-+ * Author: Gary R Hook <gary.hook@amd.com>
-+ */
-+
-+#include <linux/debugfs.h>
-+
-+#include "ptdma.h"
-+
-+/* DebugFS helpers */
-+#define	OBUFP		(obuf + oboff)
-+#define	OBUFLEN		512
-+#define	OBUFSPC		(OBUFLEN - oboff)
-+
-+#define	MAX_NAME_LEN	20
-+#define	BUFLEN		63
-+#define	RI_VERSION_NUM	0x0000003F
-+
-+#define	RI_NUM_VQM	0x00078000
-+#define	RI_NVQM_SHIFT	15
-+#define	RI_NVQM(r)	(((r) * RI_NUM_VQM) >> RI_NVQM_SHIFT)
-+#define	RI_LSB_ENTRIES	0x0FF80000
-+#define	RI_NLSB_SHIFT	19
-+#define	RI_NLSB(r)	(((r) * RI_LSB_ENTRIES) >> RI_NLSB_SHIFT)
-+
-+static struct dentry *pt_debugfs_dir;
-+static DEFINE_MUTEX(pt_debugfs_lock);
-+
-+static ssize_t ptdma_debugfs_info_read(struct file *filp, char __user *ubuf,
-+				       size_t count, loff_t *offp)
-+{
-+	struct pt_device *pt = filp->private_data;
-+	unsigned int oboff = 0;
-+	unsigned int regval;
-+	ssize_t ret;
-+	char *obuf;
-+
-+	if (!pt)
-+		return 0;
-+
-+	obuf = kmalloc(OBUFLEN, GFP_KERNEL);
-+	if (!obuf)
-+		return -ENOMEM;
-+
-+	oboff += snprintf(OBUFP, OBUFSPC, "Device name: %s\n", pt->name);
-+	oboff += snprintf(OBUFP, OBUFSPC, "   # Queues: %d\n", 1);
-+	oboff += snprintf(OBUFP, OBUFSPC, "     # Cmds: %d\n", pt->cmd_count);
-+
-+	regval = ioread32(pt->io_regs + CMD_PT_VERSION);
-+
-+	oboff += snprintf(OBUFP, OBUFSPC, "    Version: %d\n",
-+		   regval & RI_VERSION_NUM);
-+	oboff += snprintf(OBUFP, OBUFSPC, "    Engines:");
-+	oboff += snprintf(OBUFP, OBUFSPC, "\n");
-+	oboff += snprintf(OBUFP, OBUFSPC, "     Queues: %d\n",
-+		   (regval & RI_NUM_VQM) >> RI_NVQM_SHIFT);
-+
-+	ret = simple_read_from_buffer(ubuf, count, offp, obuf, oboff);
-+	kfree(obuf);
-+
-+	return ret;
-+}
-+
-+/*
-+ * Return a formatted buffer containing the current
-+ * statistics of queue for PTDMA
-+ */
-+static ssize_t ptdma_debugfs_stats_read(struct file *filp, char __user *ubuf,
-+					size_t count, loff_t *offp)
-+{
-+	struct pt_device *pt = filp->private_data;
-+	unsigned long total_pt_ops = 0;
-+	unsigned int oboff = 0;
-+	ssize_t ret = 0;
-+	char *obuf;
-+	struct pt_cmd_queue *cmd_q = &pt->cmd_q;
-+
-+	total_pt_ops += cmd_q->total_pt_ops;
-+
-+	obuf = kmalloc(OBUFLEN, GFP_KERNEL);
-+	if (!obuf)
-+		return -ENOMEM;
-+
-+	oboff += snprintf(OBUFP, OBUFSPC, "Total Interrupts Handled: %ld\n",
-+			    pt->total_interrupts);
-+
-+	ret = simple_read_from_buffer(ubuf, count, offp, obuf, oboff);
-+	kfree(obuf);
-+
-+	return ret;
-+}
-+
-+/*
-+ * Reset the counters in a queue
-+ */
-+static void ptdma_debugfs_reset_queue_stats(struct pt_cmd_queue *cmd_q)
-+{
-+	cmd_q->total_pt_ops = 0L;
-+}
-+
-+/*
-+ * A value was written to the stats variable, which
-+ * should be used to reset the queue counters across
-+ * that device.
-+ */
-+static ssize_t ptdma_debugfs_stats_write(struct file *filp,
-+					 const char __user *ubuf,
-+					 size_t count, loff_t *offp)
-+{
-+	struct pt_device *pt = filp->private_data;
-+
-+	ptdma_debugfs_reset_queue_stats(&pt->cmd_q);
-+	pt->total_interrupts = 0L;
-+
-+	return count;
-+}
-+
-+/*
-+ * Return a formatted buffer containing the current information
-+ * for that queue
-+ */
-+static ssize_t ptdma_debugfs_queue_read(struct file *filp, char __user *ubuf,
-+					size_t count, loff_t *offp)
-+{
-+	struct pt_cmd_queue *cmd_q = filp->private_data;
-+	unsigned int oboff = 0;
-+	unsigned int regval;
-+	ssize_t ret;
-+	char *obuf;
-+
-+	if (!cmd_q)
-+		return 0;
-+
-+	obuf = kmalloc(OBUFLEN, GFP_KERNEL);
-+	if (!obuf)
-+		return -ENOMEM;
-+
-+	oboff += snprintf(OBUFP, OBUFSPC, "               Pass-Thru: %ld\n",
-+			    cmd_q->total_pt_ops);
-+
-+	regval = ioread32(cmd_q->reg_int_enable);
-+	oboff += snprintf(OBUFP, OBUFSPC, "      Enabled Interrupts:");
-+	if (regval & INT_EMPTY_QUEUE)
-+		oboff += snprintf(OBUFP, OBUFSPC, " EMPTY");
-+	if (regval & INT_QUEUE_STOPPED)
-+		oboff += snprintf(OBUFP, OBUFSPC, " STOPPED");
-+	if (regval & INT_ERROR)
-+		oboff += snprintf(OBUFP, OBUFSPC, " ERROR");
-+	if (regval & INT_COMPLETION)
-+		oboff += snprintf(OBUFP, OBUFSPC, " COMPLETION");
-+	oboff += snprintf(OBUFP, OBUFSPC, "\n");
-+
-+	ret = simple_read_from_buffer(ubuf, count, offp, obuf, oboff);
-+	kfree(obuf);
-+
-+	return ret;
-+}
-+
-+/*
-+ * A value was written to the stats variable for a
-+ * queue. Reset the queue counters to this value.
-+ */
-+static ssize_t ptdma_debugfs_queue_write(struct file *filp,
-+					 const char __user *ubuf,
-+					 size_t count, loff_t *offp)
-+{
-+	struct pt_cmd_queue *cmd_q = filp->private_data;
-+
-+	ptdma_debugfs_reset_queue_stats(cmd_q);
-+
-+	return count;
-+}
-+
-+static const struct file_operations pt_debugfs_info_ops = {
-+	.owner = THIS_MODULE,
-+	.open = simple_open,
-+	.read = ptdma_debugfs_info_read,
-+	.write = NULL,
-+};
-+
-+static const struct file_operations pt_debugfs_queue_ops = {
-+	.owner = THIS_MODULE,
-+	.open = simple_open,
-+	.read = ptdma_debugfs_queue_read,
-+	.write = ptdma_debugfs_queue_write,
-+};
-+
-+static const struct file_operations pt_debugfs_stats_ops = {
-+	.owner = THIS_MODULE,
-+	.open = simple_open,
-+	.read = ptdma_debugfs_stats_read,
-+	.write = ptdma_debugfs_stats_write,
-+};
-+
-+void ptdma_debugfs_setup(struct pt_device *pt)
-+{
-+	struct pt_cmd_queue *cmd_q;
-+	char name[MAX_NAME_LEN + 1];
-+	struct dentry *debugfs_q_instance;
-+
-+	if (!debugfs_initialized())
-+		return;
-+
-+	mutex_lock(&pt_debugfs_lock);
-+	if (!pt_debugfs_dir)
-+		pt_debugfs_dir = debugfs_create_dir(KBUILD_MODNAME, NULL);
-+	mutex_unlock(&pt_debugfs_lock);
-+
-+	pt->debugfs_instance = debugfs_create_dir(pt->name, pt_debugfs_dir);
-+
-+	debugfs_create_file("info", 0400, pt->debugfs_instance, pt,
-+			    &pt_debugfs_info_ops);
-+
-+	debugfs_create_file("stats", 0600, pt->debugfs_instance, pt,
-+			    &pt_debugfs_stats_ops);
-+
-+	cmd_q = &pt->cmd_q;
-+
-+	snprintf(name, MAX_NAME_LEN - 1, "q");
-+
-+	debugfs_q_instance =
-+		debugfs_create_dir(name, pt->debugfs_instance);
-+
-+	debugfs_create_file("stats", 0600, debugfs_q_instance, cmd_q,
-+			    &pt_debugfs_queue_ops);
-+}
-+
-+void ptdma_debugfs_destroy(void)
-+{
-+	debugfs_remove_recursive(pt_debugfs_dir);
-+}
-diff --git a/drivers/dma/ptdma/ptdma-dev.c b/drivers/dma/ptdma/ptdma-dev.c
-index 893ba32..1cb47bb 100644
---- a/drivers/dma/ptdma/ptdma-dev.c
-+++ b/drivers/dma/ptdma/ptdma-dev.c
-@@ -14,6 +14,7 @@
- #include <linux/pci.h>
- #include <linux/dma-mapping.h>
- #include <linux/interrupt.h>
-+#include <linux/debugfs.h>
- 
- #include "ptdma.h"
- 
-@@ -130,6 +131,23 @@ static void pt_del_device(struct pt_device *pt)
- 	write_unlock_irqrestore(&pt_unit_lock, flags);
- }
- 
-+/*
-+ * pt_present - check if a PTDMA device is present
-+ *
-+ * Returns zero if a PTDMA device is present, -ENODEV otherwise.
-+ */
-+int pt_present(void)
-+{
-+	unsigned long flags;
-+	int ret;
-+
-+	read_lock_irqsave(&pt_unit_lock, flags);
-+	ret = list_empty(&pt_units);
-+	read_unlock_irqrestore(&pt_unit_lock, flags);
-+
-+	return ret ? -ENODEV : 0;
-+}
-+
- static int pt_core_execute_cmd(struct ptdma_desc *desc,
- 			       struct pt_cmd_queue *cmd_q)
- {
-@@ -173,6 +191,7 @@ int pt_core_perform_passthru(struct pt_cmd_queue *cmd_q,
- 
- 	cmd_q->cmd_error = 0;
- 
-+	cmd_q->total_pt_ops++;
- 	memset(&desc, 0, Q_DESC_SIZE);
- 
- 	desc.dw0.val = CMD_DESC_DW0_VAL;
-@@ -205,6 +224,7 @@ static irqreturn_t pt_core_irq_handler(int irq, void *data)
- 	u32 status;
- 
- 	pt_core_disable_queue_interrupts(pt);
-+	pt->total_interrupts++;
- 
- 	status = ioread32(cmd_q->reg_interrupt_status);
- 	if (status) {
-@@ -370,6 +390,9 @@ int pt_core_init(struct pt_device *pt)
- 
- 	tasklet_init(&pt->tasklet, pt_do_cmd_complete, (ulong)&pt->tdata);
- 
-+	/* Set up debugfs entries */
-+	ptdma_debugfs_setup(pt);
-+
- 	return 0;
- 
- e_dmaengine:
-@@ -396,6 +419,9 @@ void pt_core_destroy(struct pt_device *pt)
- 	/* Remove this device from the list of available units first */
- 	pt_del_device(pt);
- 
-+	if (pt_present())
-+		ptdma_debugfs_destroy();
-+
- 	/* Disable and clear interrupts */
- 	pt_core_disable_queue_interrupts(pt);
- 
-diff --git a/drivers/dma/ptdma/ptdma.h b/drivers/dma/ptdma/ptdma.h
-index 20e1de8..0d373d2 100644
---- a/drivers/dma/ptdma/ptdma.h
-+++ b/drivers/dma/ptdma/ptdma.h
-@@ -45,6 +45,7 @@
- #define	CMD_QUEUE_PRIO_OFFSET		0x00
- #define	CMD_REQID_CONFIG_OFFSET		0x04
- #define	CMD_TIMEOUT_OFFSET		0x08
-+#define	CMD_PT_VERSION			0x10
- 
- #define CMD_Q_CONTROL_BASE		0x0000
- #define CMD_Q_TAIL_LO_BASE		0x0004
-@@ -252,6 +253,8 @@ struct pt_cmd_queue {
- 	u32 q_int_status;
- 	u32 cmd_error;
- 
-+	/* queue Statistics */
-+	unsigned long total_pt_ops;
- } ____cacheline_aligned;
- 
- struct pt_device {
-@@ -290,6 +293,12 @@ struct pt_device {
- 
- 	wait_queue_head_t lsb_queue;
- 
-+	/* Device Statistics */
-+	unsigned long total_interrupts;
-+
-+	/* DebugFS info */
-+	struct dentry *debugfs_instance;
-+
- 	struct tasklet_struct tasklet;
- 	struct pt_tasklet_data tdata;
- };
-@@ -357,6 +366,9 @@ struct pt_dev_vdata {
- int pt_dmaengine_register(struct pt_device *pt);
- void pt_dmaengine_unregister(struct pt_device *pt);
- 
-+void ptdma_debugfs_setup(struct pt_device *pt);
-+void ptdma_debugfs_destroy(void);
-+
- int pt_core_init(struct pt_device *pt);
- void pt_core_destroy(struct pt_device *pt);
- 
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.7.4
-
+Florian

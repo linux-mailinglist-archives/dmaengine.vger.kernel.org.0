@@ -2,137 +2,152 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 08CD112B5CC
-	for <lists+dmaengine@lfdr.de>; Fri, 27 Dec 2019 17:27:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CBC612BBD7
+	for <lists+dmaengine@lfdr.de>; Sat, 28 Dec 2019 00:57:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbfL0Q1Q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 27 Dec 2019 11:27:16 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42898 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfL0Q1Q (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 27 Dec 2019 11:27:16 -0500
-Received: by mail-pg1-f193.google.com with SMTP id s64so14642094pgb.9;
-        Fri, 27 Dec 2019 08:27:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dBglm2b9cBYAu0nButjv6ALtbsVTI4wGtnK8QiJ9kuA=;
-        b=HXH5qj5MpqkC/Wg91xmZNI6UqZs9+2G5fbf5vxWjkYjYXaMQ1+QVgjvuy4zGOZ/UW3
-         gpLksLNwSeOtENO27U/QUZDCbHJePyWqMGKEiad7Bvel5uFVWCehPSiFZt5becFi1qZG
-         FzblXsQFhzuNEzFqgStKzRKKvag14EK34M/OzUCnapxLmzAE9vGbXczHMLeSW1dDBmk7
-         5uXCrWs51KjE2jlFGiodDLIn8zNrx0jkX3uiJ08bAqO00XAoRrcihi9OsxYQuEbS4UUz
-         RiwV6KT+fB+my5l+asv9xcY0PfJkPW5DNb46SKoZXlMoUkWmUiZNykMeB7fyyL+6JSeK
-         tUcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dBglm2b9cBYAu0nButjv6ALtbsVTI4wGtnK8QiJ9kuA=;
-        b=VV5DjtSRWJO5qfG5JRAAJOMoGaojuUBxL8W4TGfyuDhSm8MGtLGJQVMY/+qlx/dEG+
-         DzrF8p7d1TFSvNWIgI8Ar8WmNmb82DF6P3+fdwlryCml4ZS5JKfcPmJ4gykc+VZ75rV6
-         hDqJ4x3m90xBON3dEs/ttkjiGxJNdZSCH93inEgSE9MGvT3M4jYIh2gYUzcWw+0/1Y/e
-         l3LeSr3B8hk7ma7hl3TuC6PkbzRpnpAdg+0ucEzoTL9cdHfmP4buR/GfmYuEElwNq5aR
-         FsSrYZOLWEGYrGfyHbtOxyNxVVSEXHhyITufZ4F9rR67JyreoAWyeaQzFGXyC1kqKwXo
-         56qA==
-X-Gm-Message-State: APjAAAVYNB/E+hq2zHzAbAKucV5I8cizS72xHWglRAGZt90kMRrjMwG6
-        1YM+twjdiwEGb+8M4Ofv8uk=
-X-Google-Smtp-Source: APXvYqw2Nt4ErSmudRvoQl6pHm6RVZbj8lourXai9DAfd9L6E9Y/e31fHJcAyz6LaUQiq8nvnZRqFQ==
-X-Received: by 2002:aa7:9629:: with SMTP id r9mr22022265pfg.51.1577464034941;
-        Fri, 27 Dec 2019 08:27:14 -0800 (PST)
-Received: from [10.230.28.123] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id x7sm42874149pfp.93.2019.12.27.08.27.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Dec 2019 08:27:14 -0800 (PST)
-Subject: Re: [PATCH 1/1] dmaengine: bcm-sba-raid: Handle mbox_request_channel
- failure
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
-References: <20191227095428.3924-1-rayagonda.kokatanur@broadcom.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
-Message-ID: <3ab7434a-e2da-2767-a20d-4f4ebb48e553@gmail.com>
-Date:   Fri, 27 Dec 2019 08:27:13 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        id S1725860AbfL0X5I (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 27 Dec 2019 18:57:08 -0500
+Received: from mga01.intel.com ([192.55.52.88]:43813 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbfL0X5I (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 27 Dec 2019 18:57:08 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Dec 2019 15:57:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,364,1571727600"; 
+   d="scan'208";a="418456292"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 27 Dec 2019 15:57:05 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1ikzTd-0001sD-79; Sat, 28 Dec 2019 07:57:05 +0800
+Date:   Sat, 28 Dec 2019 07:56:48 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Sanjay R Mehta <Sanju.Mehta@amd.com>
+Cc:     kbuild-all@lists.01.org, vkoul@kernel.org,
+        dan.j.williams@intel.com, gregkh@linuxfoundation.org,
+        Gary.Hook@amd.com, Nehal-bakulchandra.Shah@amd.com,
+        Shyam-sundar.S-k@amd.com, davem@davemloft.net,
+        mchehab+samsung@kernel.org, robh@kernel.org,
+        Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, Sanjay R Mehta <sanju.mehta@amd.com>
+Subject: Re: [PATCH v2 1/3] dmaengine: ptdma: Initial driver for the AMD
+ PassThru DMA engine
+Message-ID: <201912280738.zotyIgEi%lkp@intel.com>
+References: <1577458047-109654-1-git-send-email-Sanju.Mehta@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <20191227095428.3924-1-rayagonda.kokatanur@broadcom.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1577458047-109654-1-git-send-email-Sanju.Mehta@amd.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi Sanjay,
+
+I love your patch! Perhaps something to improve:
+
+[auto build test WARNING on linus/master]
+[also build test WARNING on v5.5-rc3 next-20191220]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Sanjay-R-Mehta/Add-AMD-PassThru-DMA-Engine-driver/20191227-234539
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 46cf053efec6a3a5f343fead837777efe8252a46
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-129-g341daf20-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
 
-On 12/27/2019 1:54 AM, Rayagonda Kokatanur wrote:
-> Fix kernel NULL pointer dereference error when mbox_request_channel()
-> fails to allocate channel.
-> 
-> Fixes: 4e9f8187aec ("dmaengine: bcm-sba-raid: Use only single mailbox channel")
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+sparse warnings: (new ones prefixed by >>)
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+>> drivers/dma/ptdma/ptdma-dev.c:151:25: sparse: sparse: cast from restricted __le32
+>> drivers/dma/ptdma/ptdma-dev.c:151:23: sparse: sparse: incorrect type in assignment (different base types)
+>> drivers/dma/ptdma/ptdma-dev.c:151:23: sparse:    expected unsigned int [usertype]
+>> drivers/dma/ptdma/ptdma-dev.c:151:23: sparse:    got restricted __le32 [usertype]
+   drivers/dma/ptdma/ptdma-dev.c:180:21: sparse: sparse: incorrect type in assignment (different base types)
+>> drivers/dma/ptdma/ptdma-dev.c:180:21: sparse:    expected restricted __le32 [addressable] [assigned] [usertype] length
+>> drivers/dma/ptdma/ptdma-dev.c:180:21: sparse:    got unsigned long long [usertype] src_len
+   drivers/dma/ptdma/ptdma-dev.c:182:21: sparse: sparse: incorrect type in assignment (different base types)
+>> drivers/dma/ptdma/ptdma-dev.c:182:21: sparse:    expected restricted __le32 [addressable] [assigned] [usertype] src_lo
+>> drivers/dma/ptdma/ptdma-dev.c:182:21: sparse:    got unsigned int [usertype]
+   drivers/dma/ptdma/ptdma-dev.c:185:21: sparse: sparse: incorrect type in assignment (different base types)
+>> drivers/dma/ptdma/ptdma-dev.c:185:21: sparse:    expected restricted __le32 [addressable] [assigned] [usertype] dst_lo
+   drivers/dma/ptdma/ptdma-dev.c:185:21: sparse:    got unsigned int [usertype]
+
+vim +151 drivers/dma/ptdma/ptdma-dev.c
+
+   132	
+   133	static int pt_core_execute_cmd(struct ptdma_desc *desc,
+   134				       struct pt_cmd_queue *cmd_q)
+   135	{
+   136		u32 *mp;
+   137		__le32 *dp;
+   138		u32 tail;
+   139		int	i;
+   140		int ret = 0;
+   141	
+   142		if (desc->dw0.soc) {
+   143			desc->dw0.ioc = 1;
+   144			desc->dw0.soc = 0;
+   145		}
+   146		mutex_lock(&cmd_q->q_mutex);
+   147	
+   148		mp = (u32 *)&cmd_q->qbase[cmd_q->qidx];
+   149		dp = (__le32 *)desc;
+   150		for (i = 0; i < 8; i++)
+ > 151			mp[i] = cpu_to_le32(dp[i]); /* handle endianness */
+   152	
+   153		cmd_q->qidx = (cmd_q->qidx + 1) % cmd_queue_length;
+   154	
+   155		/* The data used by this command must be flushed to memory */
+   156		wmb();
+   157	
+   158		/* Write the new tail address back to the queue register */
+   159		tail = lower_32_bits(cmd_q->qdma_tail + cmd_q->qidx * Q_DESC_SIZE);
+   160		iowrite32(tail, cmd_q->reg_tail_lo);
+   161	
+   162		/* Turn the queue back on using our cached control register */
+   163		iowrite32(cmd_q->qcontrol | CMD_Q_RUN, cmd_q->reg_control);
+   164		mutex_unlock(&cmd_q->q_mutex);
+   165	
+   166		return ret;
+   167	}
+   168	
+   169	int pt_core_perform_passthru(struct pt_cmd_queue *cmd_q,
+   170				     struct pt_passthru_engine *pt_engine)
+   171	{
+   172		struct ptdma_desc desc;
+   173	
+   174		cmd_q->cmd_error = 0;
+   175	
+   176		memset(&desc, 0, Q_DESC_SIZE);
+   177	
+   178		desc.dw0.val = CMD_DESC_DW0_VAL;
+   179	
+ > 180		desc.length = pt_engine->src_len;
+   181	
+ > 182		desc.src_lo = lower_32_bits(pt_engine->src_dma);
+   183		desc.dw3.src_hi = upper_32_bits(pt_engine->src_dma);
+   184	
+ > 185		desc.dst_lo = lower_32_bits(pt_engine->dst_dma);
+   186		desc.dw5.dst_hi = upper_32_bits(pt_engine->dst_dma);
+   187	
+   188		return pt_core_execute_cmd(&desc, cmd_q);
+   189	}
+   190	
+
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation

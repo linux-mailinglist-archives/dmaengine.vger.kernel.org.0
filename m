@@ -2,48 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CE9F12C2F0
-	for <lists+dmaengine@lfdr.de>; Sun, 29 Dec 2019 15:57:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CACFE12C2E8
+	for <lists+dmaengine@lfdr.de>; Sun, 29 Dec 2019 15:57:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbfL2O5F (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 29 Dec 2019 09:57:05 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46664 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726831AbfL2O44 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 29 Dec 2019 09:56:56 -0500
-Received: by mail-lj1-f193.google.com with SMTP id m26so28649533ljc.13;
-        Sun, 29 Dec 2019 06:56:54 -0800 (PST)
+        id S1726810AbfL2O5A (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 29 Dec 2019 09:57:00 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44976 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfL2O45 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 29 Dec 2019 09:56:57 -0500
+Received: by mail-lf1-f68.google.com with SMTP id v201so23708258lfa.11;
+        Sun, 29 Dec 2019 06:56:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0hLaeTkiGQpndBzsnntj+Kt92MOlWlIIs3RhP31I+1g=;
-        b=Eh1dRrvxz8kK/TglzuPUhe0Y74P+h1G/MBTgM4Y9ELYCdHjeP9o9M52N07MeZhT3ed
-         LxwVthtF+jFIBKReehE1dwYVvei3L7oZWr9nVgdkVWvh/w6jExokYiYBqycnTMOeI14b
-         VA1QMnzHGON895VsOakCjJZUsbAS3URbnUFzimVBlQrewCaYD9fAm1lOwV4LzSwdqymm
-         0tyth4+0SpOYah3G29IH8vqH2xi2w5MV1yIjn+TTKI6mYkFMe3iShnYg6YgBjFZeyYuK
-         E7sRPc5bAyUbIRGnBjfZ9bCi1EjZIBO7b/6Kgc6nVR4cYAy9h/MidW5CLFzde01xKINY
-         9cfQ==
+        bh=d61xLjjxWbxI5eV1Fujn9jWtoC4pEzqs0yuJAlEPGQA=;
+        b=etWVTJZaT3p8VPlVN8QeSiQ46gN7rtZ/ANKmqtVpbKPlKyXl/+ZAvJm2HSxQMBs2zu
+         3Ufe5/SgD0LCr2UrtEmHCJmngmiNwek2rJtOXOB2WQzzllZ/9kMkbMB5SQ/R9ea6xqOX
+         OV3pHGxrAuRDPsF/zfTJVMWi4rEOhOIuYhVIqcgI/s3LuZMO3F61IID8O935GxBK3ex1
+         xVESRfgJNtuoVNyVzLqJxxRgSqD8kSQy9a9BWxOB+hNiyzVL5fi7yPSTtgez1p/2KnzE
+         lTgTsmJOsceoub4xCrlD5/tvCaeRhr7b138p/IUYrUx1P2UyVLccGmy/ZlbU10TttJQ7
+         ljMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0hLaeTkiGQpndBzsnntj+Kt92MOlWlIIs3RhP31I+1g=;
-        b=Fs2Q7Mb7EDoN9LJdjsdQBVRvd6wgzRPBkd/MUyWj6h/psi7ETiiHSOsSFhy4exEcyY
-         yDLcWqs+ZqGv6Xdy2jZmOOInxjg5ZJto+qaaNH5bb9ZeyoB8aof+xoz5w5juFy6sPe0X
-         nuU9kZugHBT22Jwi5y6K3ex7w1OLl7doZ6fcJ/xIKzt/HIJ7VZi1uA9Ve3Eu/4T3lph+
-         UqpkkpafbCyJBzjvHYPD/Ex3nVN/WZ58cH2XK/1V58HIXquLUrTz6tZ8RNVYaR5YMiXk
-         qkJA/aYc+FNVfxfHshqaBuubm8kU6lxs9dNV/uBVR1N4N14aVn3hPVST54p/8rA/woii
-         kuSA==
-X-Gm-Message-State: APjAAAWzP2Q5u6PpCrjZACxLtQmqjadI1cuBmkvGWB+oft5DepThSdiQ
-        KCDxBeKwDbajbCS14TRncoY=
-X-Google-Smtp-Source: APXvYqwV1kO6kX2KfXMDwGhOFM0j75VPLE/+4fgGg4Xx/thE3781NtkX836LcPQrpXEj6CQH9lzGXQ==
-X-Received: by 2002:a2e:7005:: with SMTP id l5mr35617973ljc.230.1577631414283;
-        Sun, 29 Dec 2019 06:56:54 -0800 (PST)
+        bh=d61xLjjxWbxI5eV1Fujn9jWtoC4pEzqs0yuJAlEPGQA=;
+        b=Wt1jgXbRDv74hioZyoX2MK64mxdzSzSIfrKiNvX6BJGU5DN/j9Cl1KRlakLXMD3WWm
+         A1kOs27WjFt8eV8g1mY3u037jhcreR19iXfBRHYqgJzbwGui5L8Pha7sBsYto3PuVsJu
+         bSpTm0OuOKOUu/bFKJotlvcwcny0dMFir2eRJALeckryA5bBcfE//i4DlmPoryBdmPmt
+         N1xPy0yIj8N7mRpngKbaKRaE+Efe8bd+vr6RqNNAC75E1uEfnJPePhjwhFU/bYtLsXIF
+         lEFbeE3MbAUHhk84UxmgULOoj1ORH0RLIt7Y2aDYttyiJEHkpG+gS71xwFJt4cpUiZ2e
+         0Pcw==
+X-Gm-Message-State: APjAAAW/WNp9FRnXgVU1Drvm5aOi5Or9NtXcppORTRmdAWouzZZhheiO
+        g2S2XlBa/k3ZJtPoDblQZb8=
+X-Google-Smtp-Source: APXvYqz6IXklzOjO/CUbhhhRC452FVyyPClstVpWvjv0naGRCdnjLM2OpgK3B6pFVOGuCBbvWCBoLA==
+X-Received: by 2002:ac2:4add:: with SMTP id m29mr34356272lfp.190.1577631415131;
+        Sun, 29 Dec 2019 06:56:55 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id g15sm11563944ljl.10.2019.12.29.06.56.53
+        by smtp.gmail.com with ESMTPSA id g15sm11563944ljl.10.2019.12.29.06.56.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Dec 2019 06:56:53 -0800 (PST)
+        Sun, 29 Dec 2019 06:56:54 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -52,9 +52,9 @@ To:     Laxman Dewangan <ldewangan@nvidia.com>,
         Jonathan Hunter <jonathanh@nvidia.com>
 Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 11/12] dmaengine: tegra-apb: Allow to compile as a loadable kernel module
-Date:   Sun, 29 Dec 2019 17:55:24 +0300
-Message-Id: <20191229145525.533-12-digetx@gmail.com>
+Subject: [PATCH v2 12/12] dmaengine: tegra-apb: Remove MODULE_ALIAS
+Date:   Sun, 29 Dec 2019 17:55:25 +0300
+Message-Id: <20191229145525.533-13-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191229145525.533-1-digetx@gmail.com>
 References: <20191229145525.533-1-digetx@gmail.com>
@@ -65,27 +65,27 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The driver's removal was fixed by a recent commit and module load/unload
-is working well now, tested on Tegra30.
+Tegra APB DMA driver is an Open Firmware driver and thus it uses OF alias
+naming scheme which overrides MODULE_ALIAS, meaning that MODULE_ALIAS does
+nothing and could be removed safely.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/dma/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/tegra20-apb-dma.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 6fa1eba9d477..9f43e2cae8b4 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -586,7 +586,7 @@ config TXX9_DMAC
- 	  integrated in chips such as the Toshiba TX4927/38/39.
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index d96de35c8253..2eae3b3cdc58 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -1633,7 +1633,6 @@ static struct platform_driver tegra_dmac_driver = {
  
- config TEGRA20_APB_DMA
--	bool "NVIDIA Tegra20 APB DMA support"
-+	tristate "NVIDIA Tegra20 APB DMA support"
- 	depends on ARCH_TEGRA
- 	select DMA_ENGINE
- 	help
+ module_platform_driver(tegra_dmac_driver);
+ 
+-MODULE_ALIAS("platform:tegra20-apbdma");
+ MODULE_DESCRIPTION("NVIDIA Tegra APB DMA Controller driver");
+ MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
+ MODULE_LICENSE("GPL v2");
 -- 
 2.24.0
 

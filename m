@@ -2,48 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F152712C2F7
-	for <lists+dmaengine@lfdr.de>; Sun, 29 Dec 2019 15:57:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E2B6712C2EC
+	for <lists+dmaengine@lfdr.de>; Sun, 29 Dec 2019 15:57:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfL2O5O (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 29 Dec 2019 09:57:14 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33316 "EHLO
+        id S1726903AbfL2O5G (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 29 Dec 2019 09:57:06 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46661 "EHLO
         mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbfL2O4y (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 29 Dec 2019 09:56:54 -0500
-Received: by mail-lj1-f193.google.com with SMTP id y6so23082734lji.0;
-        Sun, 29 Dec 2019 06:56:52 -0800 (PST)
+        with ESMTP id S1726761AbfL2O4z (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 29 Dec 2019 09:56:55 -0500
+Received: by mail-lj1-f193.google.com with SMTP id m26so28649474ljc.13;
+        Sun, 29 Dec 2019 06:56:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qda0WNYpRV+5EirA6AoP9JWL8S1KmaXxHr54oi+EycE=;
-        b=YCzlAa0juZDUea22GSVQONvEXkJqZcte5A8F6fZdpVFhOVijl5uZU+N0ES/BV5mSw5
-         BfDwzlitmvZlzKOOJw7JHRmxaS50KkIrZjork8ixBBaJuO/gwGD3P71Mo7nsakwYnTJp
-         NjEBc1ufLjMWITjUnoH0YKUjvCJwEQOaYKNyMEGOFNkLLIZ2CnyRTbdxPj0F6VHA8ToT
-         5ws/ZO7GbeAgVx8Ig2fW65EQ9av3d3A7e07ZVa7rcd+qw56lVMNnYxLaeHt3Lz4RbwkK
-         mGIXJzzzVcxpjC2mDyLeU17mxa5ZnEz33JcgBJU8x/KUuuBiSVg2fOyfCQn8YyvjnDfA
-         Qzag==
+        bh=zJ3tlxXbP7QQrpYAm8owyCW2cUGn+abpGH2dAN9Fzyw=;
+        b=gZ8ytL+mcaooqdmrm1bj3UsjEMUuUVDvQz9DLLpFYZkpL90JfK9uzZ0iEEob3i9mDB
+         ZQcZqAD7tlN308LPeOeu0/ZrowhHasmlyLziSMLVfyiFTteanIuTpjKnxnZ4DadL+Tg5
+         b0yv53lSJEiOASG86LNCpcB8lTpwMvbCEUkJMMvjQP166ekpfnj4w1ZRdjMBx+8wUjLH
+         5sSJD+cDm5cfPMhF8bvxHQBirj9M/5AyEqIk/wv6GVqorotsf+/3yjBHr5g0H8oLWgo0
+         g6ROPpF7KqzgFjXjR2Rull67cMxy7hv7Pt33yY6qrGM0f8tczxZtVEH6lYkuhHTA7di/
+         Zhow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qda0WNYpRV+5EirA6AoP9JWL8S1KmaXxHr54oi+EycE=;
-        b=gbiTE1e7H0x176lNSd398mJ1hJqpHd/Jb77JutnjMfD9qvOeRD4MY5r4dDvWna4SJ4
-         n/QfP78HSwXVVRFES383DqKSVKBtL/Ps5lM/nrOJdmiG0sI01qMmoYoAB4aaj6U4iH3H
-         p2m2FdioJsK+vELVB7Q3VOkc+3SmxqY5YLl6YGr7Y8kEp73eMNVevaNa9O2WzfZyYQoZ
-         Rhqrt4GqWT3UFI35CJdwBj8Nf+LTw7AWIjmecoKxO1xVuDqitfng3ILTo+1pBmZJ6drT
-         3u9C24rQWfGLX5z2B04zRkEa4CB1mqDrYx+/UXQMasneLqpb2npQ9fSlA51Wtdlctm/h
-         XUGg==
-X-Gm-Message-State: APjAAAWmPTjJOPTPuJozKtaJEBf/HG/uN3jwtIAGyTRsoNkMS6moMt7x
-        w6Q73Wt1/nTg2O04yx9Y1+o=
-X-Google-Smtp-Source: APXvYqx9fiVJVx+scfsNqUnzM1dJX/Zx/rnBfiFZOjt38HHAmjiYEMdD2X2W+0uYLNqyLOd+gOSX6w==
-X-Received: by 2002:a2e:978d:: with SMTP id y13mr35271939lji.103.1577631411621;
-        Sun, 29 Dec 2019 06:56:51 -0800 (PST)
+        bh=zJ3tlxXbP7QQrpYAm8owyCW2cUGn+abpGH2dAN9Fzyw=;
+        b=fh5f9bLYBykM6dTArhbqWDQeLVU1v+c9/ib5BaLrwyRquKzGLQ40XRoMNquckmZkSK
+         vJAv6sDv1R0+2Jobb8NFX7Cg8Ot4u0taSjUTK1Iy7b+VLOGJLbBxGyENLjAmp5Svgcy8
+         k47rmp5bKTu2U9o9UBWXJ5hu7brO1RXo0Xtx30lBfV2vMrANnbKQH7xTDRQhchSzwEah
+         bdc7fvQy+Ts/MSqb1lJEu/SENuOe9T0Yjop8NEtCg+RTTZrjz1tOSRLkogtZ1C0cA1fY
+         jCuoA+6JMHwIMdvy8nRAxiNNyjcBibU9aCTOUk7emCdYKmHibnUd6fOimXNbwTFovwAk
+         a1Mw==
+X-Gm-Message-State: APjAAAWTKME1wh5XlwLixr5RLV+y83sC5wKO76+SzNLidiNUeoY5wIuq
+        ghNYLarnMmOI+X8Hi8UYCeQ=
+X-Google-Smtp-Source: APXvYqwJwNjTQqKM+OwLDqUp9P0VvQ6Ys3gDT+6yqZc7Em4DuJDUrrgU0OhhzazYvCCbl/x+e3tFUA==
+X-Received: by 2002:a2e:9248:: with SMTP id v8mr28855098ljg.189.1577631412560;
+        Sun, 29 Dec 2019 06:56:52 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id g15sm11563944ljl.10.2019.12.29.06.56.50
+        by smtp.gmail.com with ESMTPSA id g15sm11563944ljl.10.2019.12.29.06.56.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Dec 2019 06:56:51 -0800 (PST)
+        Sun, 29 Dec 2019 06:56:52 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -52,9 +52,9 @@ To:     Laxman Dewangan <ldewangan@nvidia.com>,
         Jonathan Hunter <jonathanh@nvidia.com>
 Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 08/12] dmaengine: tegra-apb: Remove runtime PM usage
-Date:   Sun, 29 Dec 2019 17:55:21 +0300
-Message-Id: <20191229145525.533-9-digetx@gmail.com>
+Subject: [PATCH v2 09/12] dmaengine: tegra-apb: Clean up suspend-resume
+Date:   Sun, 29 Dec 2019 17:55:22 +0300
+Message-Id: <20191229145525.533-10-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191229145525.533-1-digetx@gmail.com>
 References: <20191229145525.533-1-digetx@gmail.com>
@@ -65,201 +65,208 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-There is no benefit from runtime PM usage for the APB DMA driver because
-it enables clock at the time of channel's allocation and thus clock stays
-enabled all the time in practice, secondly there is benefit from manually
-disabled clock because hardware auto-gates it during idle by itself.
+It is enough to check whether hardware is busy on suspend and to reset
+it across of suspend-resume because channel's configuration is fully
+re-programmed on each DMA transaction anyways and because save-restore
+of an active channel won't end up well without pausing transfer prior to
+saving of the state (note that all channels shall be idling at the time of
+suspend, so save-restore is not needed at all).
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/dma/tegra20-apb-dma.c | 76 +++++++++++------------------------
- 1 file changed, 24 insertions(+), 52 deletions(-)
+ drivers/dma/tegra20-apb-dma.c | 122 +++++++++++++++-------------------
+ 1 file changed, 55 insertions(+), 67 deletions(-)
 
 diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index 48fc48d32064..f52feca05f09 100644
+index f52feca05f09..ad54a55e2f24 100644
 --- a/drivers/dma/tegra20-apb-dma.c
 +++ b/drivers/dma/tegra20-apb-dma.c
-@@ -21,7 +21,6 @@
- #include <linux/of_dma.h>
- #include <linux/platform_device.h>
- #include <linux/pm.h>
--#include <linux/pm_runtime.h>
- #include <linux/reset.h>
- #include <linux/slab.h>
+@@ -220,9 +220,6 @@ struct tegra_dma {
+ 	 */
+ 	u32				global_pause_count;
  
-@@ -266,8 +265,6 @@ static inline struct device *tdc2dev(struct tegra_dma_channel *tdc)
- }
- 
- static dma_cookie_t tegra_dma_tx_submit(struct dma_async_tx_descriptor *tx);
--static int tegra_dma_runtime_suspend(struct device *dev);
--static int tegra_dma_runtime_resume(struct device *dev);
- 
- /* Get DMA desc from free list, if not there then allocate it.  */
- static struct tegra_dma_desc *tegra_dma_desc_get(struct tegra_dma_channel *tdc)
-@@ -1280,22 +1277,15 @@ tegra_dma_prep_dma_cyclic(struct dma_chan *dc, dma_addr_t buf_addr,
- static int tegra_dma_alloc_chan_resources(struct dma_chan *dc)
- {
- 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
--	struct tegra_dma *tdma = tdc->tdma;
--	int ret;
- 
- 	dma_cookie_init(&tdc->dma_chan);
- 
--	ret = pm_runtime_get_sync(tdma->dev);
--	if (ret < 0)
--		return ret;
+-	/* Some register need to be cache before suspend */
+-	u32				reg_gen;
 -
- 	return 0;
- }
+ 	/* Last member of the structure */
+ 	struct tegra_dma_channel channels[0];
+ };
+@@ -1383,6 +1380,40 @@ static const struct tegra_dma_chip_data tegra148_dma_chip_data = {
+ 	.support_separate_wcount_reg = true,
+ };
  
- static void tegra_dma_free_chan_resources(struct dma_chan *dc)
++static int tegra_dma_init_hw(struct tegra_dma *tdma)
++{
++	int err;
++
++	err = reset_control_assert(tdma->rst);
++	if (err) {
++		dev_err(tdma->dev, "failed to assert reset: %d\n", err);
++		return err;
++	}
++
++	err = clk_prepare_enable(tdma->dma_clk);
++	if (err) {
++		dev_err(tdma->dev, "failed to enable clk: %d\n", err);
++		return err;
++	}
++
++	/* Reset DMA controller */
++	udelay(2);
++	reset_control_deassert(tdma->rst);
++
++	/* Enable global DMA registers */
++	tdma_write(tdma, TEGRA_APBDMA_GENERAL, TEGRA_APBDMA_GENERAL_ENABLE);
++	tdma_write(tdma, TEGRA_APBDMA_CONTROL, 0);
++	tdma_write(tdma, TEGRA_APBDMA_IRQ_MASK_SET, 0xFFFFFFFF);
++
++	return 0;
++}
++
++static void tegra_dma_deinit_hw(struct tegra_dma *tdma)
++{
++	reset_control_reset(tdma->rst);
++	clk_disable_unprepare(tdma->dma_clk);
++}
++
+ static int tegra_dma_probe(struct platform_device *pdev)
  {
- 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
--	struct tegra_dma *tdma = tdc->tdma;
- 	struct tegra_dma_desc *dma_desc;
- 	struct tegra_dma_sg_req *sg_req;
- 	struct list_head dma_desc_list;
-@@ -1331,7 +1321,6 @@ static void tegra_dma_free_chan_resources(struct dma_chan *dc)
- 		list_del(&sg_req->node);
- 		kfree(sg_req);
+ 	const struct tegra_dma_chip_data *cdata;
+@@ -1463,19 +1494,9 @@ static int tegra_dma_probe(struct platform_device *pdev)
+ 		INIT_LIST_HEAD(&tdc->cb_desc);
  	}
--	pm_runtime_put(tdma->dev);
  
- 	tdc->slave_id = TEGRA_APBDMA_SLAVE_ID_INVALID;
- }
-@@ -1431,27 +1420,6 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 
- 	spin_lock_init(&tdma->global_lock);
- 
--	pm_runtime_enable(&pdev->dev);
--	if (!pm_runtime_enabled(&pdev->dev))
--		ret = tegra_dma_runtime_resume(&pdev->dev);
--	else
--		ret = pm_runtime_get_sync(&pdev->dev);
--
--	if (ret < 0)
--		goto err_pm_disable;
+-	ret = clk_prepare_enable(tdma->dma_clk);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "clk_enable failed: %d\n", ret);
++	ret = tegra_dma_init_hw(tdma);
++	if (ret)
+ 		return ret;
+-	}
 -
 -	/* Reset DMA controller */
--	reset_control_assert(tdma->rst);
--	udelay(2);
--	reset_control_deassert(tdma->rst);
+-	reset_control_reset(tdma->rst);
 -
 -	/* Enable global DMA registers */
 -	tdma_write(tdma, TEGRA_APBDMA_GENERAL, TEGRA_APBDMA_GENERAL_ENABLE);
 -	tdma_write(tdma, TEGRA_APBDMA_CONTROL, 0);
 -	tdma_write(tdma, TEGRA_APBDMA_IRQ_MASK_SET, 0xFFFFFFFFul);
--
--	pm_runtime_put(&pdev->dev);
--
- 	INIT_LIST_HEAD(&tdma->dma_dev.channels);
- 	for (i = 0; i < cdata->nr_channels; i++) {
- 		struct tegra_dma_channel *tdc = &tdma->channels[i];
-@@ -1463,9 +1431,8 @@ static int tegra_dma_probe(struct platform_device *pdev)
  
- 		irq = platform_get_irq(pdev, i);
- 		if (irq < 0) {
--			ret = irq;
- 			dev_err(&pdev->dev, "No irq resource for chan %d\n", i);
--			goto err_pm_disable;
-+			return irq;
- 		}
- 
- 		snprintf(tdc->name, sizeof(tdc->name), "apbdma.%d", i);
-@@ -1475,7 +1442,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 			dev_err(&pdev->dev,
- 				"request_irq failed with err %d channel %d\n",
- 				ret, i);
--			goto err_pm_disable;
-+			return ret;
- 		}
- 
- 		tdc->dma_chan.device = &tdma->dma_dev;
-@@ -1496,6 +1463,20 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 		INIT_LIST_HEAD(&tdc->cb_desc);
- 	}
- 
-+	ret = clk_prepare_enable(tdma->dma_clk);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "clk_enable failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Reset DMA controller */
-+	reset_control_reset(tdma->rst);
-+
-+	/* Enable global DMA registers */
-+	tdma_write(tdma, TEGRA_APBDMA_GENERAL, TEGRA_APBDMA_GENERAL_ENABLE);
-+	tdma_write(tdma, TEGRA_APBDMA_CONTROL, 0);
-+	tdma_write(tdma, TEGRA_APBDMA_IRQ_MASK_SET, 0xFFFFFFFFul);
-+
  	dma_cap_set(DMA_SLAVE, tdma->dma_dev.cap_mask);
  	dma_cap_set(DMA_PRIVATE, tdma->dma_dev.cap_mask);
- 	dma_cap_set(DMA_CYCLIC, tdma->dma_dev.cap_mask);
-@@ -1528,7 +1509,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
+@@ -1509,7 +1530,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
  	if (ret < 0) {
  		dev_err(&pdev->dev,
  			"Tegra20 APB DMA driver registration failed %d\n", ret);
--		goto err_pm_disable;
-+		goto err_clk_disable;
+-		goto err_clk_disable;
++		goto err_deinit_hw;
  	}
  
  	ret = of_dma_controller_register(pdev->dev.of_node,
-@@ -1547,10 +1528,8 @@ static int tegra_dma_probe(struct platform_device *pdev)
+@@ -1528,8 +1549,8 @@ static int tegra_dma_probe(struct platform_device *pdev)
  err_unregister_dma_dev:
  	dma_async_device_unregister(&tdma->dma_dev);
  
--err_pm_disable:
--	pm_runtime_disable(&pdev->dev);
--	if (!pm_runtime_status_suspended(&pdev->dev))
--		tegra_dma_runtime_suspend(&pdev->dev);
-+err_clk_disable:
-+	clk_disable_unprepare(tdma->dma_clk);
+-err_clk_disable:
+-	clk_disable_unprepare(tdma->dma_clk);
++err_deinit_hw:
++	tegra_dma_deinit_hw(tdma);
  
  	return ret;
  }
-@@ -1560,15 +1539,12 @@ static int tegra_dma_remove(struct platform_device *pdev)
+@@ -1539,7 +1560,7 @@ static int tegra_dma_remove(struct platform_device *pdev)
  	struct tegra_dma *tdma = platform_get_drvdata(pdev);
  
  	dma_async_device_unregister(&tdma->dma_dev);
+-	clk_disable_unprepare(tdma->dma_clk);
++	tegra_dma_deinit_hw(tdma);
+ 
+ 	return 0;
+ }
+@@ -1547,28 +1568,26 @@ static int tegra_dma_remove(struct platform_device *pdev)
+ static int __maybe_unused tegra_dma_dev_suspend(struct device *dev)
+ {
+ 	struct tegra_dma *tdma = dev_get_drvdata(dev);
++	unsigned long flags;
+ 	unsigned int i;
++	bool busy;
+ 
+-	tdma->reg_gen = tdma_read(tdma, TEGRA_APBDMA_GENERAL);
+ 	for (i = 0; i < tdma->chip_data->nr_channels; i++) {
+ 		struct tegra_dma_channel *tdc = &tdma->channels[i];
+-		struct tegra_dma_channel_regs *ch_reg = &tdc->channel_reg;
 -
--	pm_runtime_disable(&pdev->dev);
--	if (!pm_runtime_status_suspended(&pdev->dev))
--		tegra_dma_runtime_suspend(&pdev->dev);
-+	clk_disable_unprepare(tdma->dma_clk);
+-		/* Only save the state of DMA channels that are in use */
+-		if (!tdc->config_init)
+-			continue;
+-
+-		ch_reg->csr = tdc_read(tdc, TEGRA_APBDMA_CHAN_CSR);
+-		ch_reg->ahb_ptr = tdc_read(tdc, TEGRA_APBDMA_CHAN_AHBPTR);
+-		ch_reg->apb_ptr = tdc_read(tdc, TEGRA_APBDMA_CHAN_APBPTR);
+-		ch_reg->ahb_seq = tdc_read(tdc, TEGRA_APBDMA_CHAN_AHBSEQ);
+-		ch_reg->apb_seq = tdc_read(tdc, TEGRA_APBDMA_CHAN_APBSEQ);
+-		if (tdma->chip_data->support_separate_wcount_reg)
+-			ch_reg->wcount = tdc_read(tdc,
+-						  TEGRA_APBDMA_CHAN_WCOUNT);
++
++		spin_lock_irqsave(&tdc->lock, flags);
++		busy = tdc->busy;
++		spin_unlock_irqrestore(&tdc->lock, flags);
++
++		if (busy) {
++			dev_err(tdma->dev, "channel %u busy\n", i);
++			return -EBUSY;
++		}
++
++		tasklet_kill(&tdc->tasklet);
+ 	}
+ 
+-	clk_disable_unprepare(tdma->dma_clk);
++	tegra_dma_deinit_hw(tdma);
  
  	return 0;
  }
- 
--static int tegra_dma_runtime_suspend(struct device *dev)
-+static int __maybe_unused tegra_dma_dev_suspend(struct device *dev)
+@@ -1576,39 +1595,8 @@ static int __maybe_unused tegra_dma_dev_suspend(struct device *dev)
+ static int __maybe_unused tegra_dma_dev_resume(struct device *dev)
  {
  	struct tegra_dma *tdma = dev_get_drvdata(dev);
- 	unsigned int i;
-@@ -1597,7 +1573,7 @@ static int tegra_dma_runtime_suspend(struct device *dev)
- 	return 0;
+-	unsigned int i;
+-	int ret;
+ 
+-	ret = clk_prepare_enable(tdma->dma_clk);
+-	if (ret < 0) {
+-		dev_err(dev, "clk_enable failed: %d\n", ret);
+-		return ret;
+-	}
+-
+-	tdma_write(tdma, TEGRA_APBDMA_GENERAL, tdma->reg_gen);
+-	tdma_write(tdma, TEGRA_APBDMA_CONTROL, 0);
+-	tdma_write(tdma, TEGRA_APBDMA_IRQ_MASK_SET, 0xFFFFFFFFul);
+-
+-	for (i = 0; i < tdma->chip_data->nr_channels; i++) {
+-		struct tegra_dma_channel *tdc = &tdma->channels[i];
+-		struct tegra_dma_channel_regs *ch_reg = &tdc->channel_reg;
+-
+-		/* Only restore the state of DMA channels that are in use */
+-		if (!tdc->config_init)
+-			continue;
+-
+-		if (tdma->chip_data->support_separate_wcount_reg)
+-			tdc_write(tdc, TEGRA_APBDMA_CHAN_WCOUNT,
+-				  ch_reg->wcount);
+-		tdc_write(tdc, TEGRA_APBDMA_CHAN_APBSEQ, ch_reg->apb_seq);
+-		tdc_write(tdc, TEGRA_APBDMA_CHAN_APBPTR, ch_reg->apb_ptr);
+-		tdc_write(tdc, TEGRA_APBDMA_CHAN_AHBSEQ, ch_reg->ahb_seq);
+-		tdc_write(tdc, TEGRA_APBDMA_CHAN_AHBPTR, ch_reg->ahb_ptr);
+-		tdc_write(tdc, TEGRA_APBDMA_CHAN_CSR,
+-			  ch_reg->csr & ~TEGRA_APBDMA_CSR_ENB);
+-	}
+-
+-	return 0;
++	return tegra_dma_init_hw(tdma);
  }
  
--static int tegra_dma_runtime_resume(struct device *dev)
-+static int __maybe_unused tegra_dma_dev_resume(struct device *dev)
- {
- 	struct tegra_dma *tdma = dev_get_drvdata(dev);
- 	unsigned int i;
-@@ -1635,12 +1611,8 @@ static int tegra_dma_runtime_resume(struct device *dev)
- 	return 0;
- }
- 
--static const struct dev_pm_ops tegra_dma_dev_pm_ops = {
--	SET_RUNTIME_PM_OPS(tegra_dma_runtime_suspend, tegra_dma_runtime_resume,
--			   NULL)
--	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
--				pm_runtime_force_resume)
--};
-+static SIMPLE_DEV_PM_OPS(tegra_dma_dev_pm_ops, tegra_dma_dev_suspend,
-+			 tegra_dma_dev_resume);
- 
- static const struct of_device_id tegra_dma_of_match[] = {
- 	{
+ static SIMPLE_DEV_PM_OPS(tegra_dma_dev_pm_ops, tegra_dma_dev_suspend,
 -- 
 2.24.0
 

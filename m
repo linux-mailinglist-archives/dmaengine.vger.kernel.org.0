@@ -2,48 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 98F5012C2FE
-	for <lists+dmaengine@lfdr.de>; Sun, 29 Dec 2019 15:57:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0855512C2FB
+	for <lists+dmaengine@lfdr.de>; Sun, 29 Dec 2019 15:57:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbfL2O5Y (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        id S1727003AbfL2O5Y (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
         Sun, 29 Dec 2019 09:57:24 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42777 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726667AbfL2O4t (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 29 Dec 2019 09:56:49 -0500
-Received: by mail-lj1-f196.google.com with SMTP id y4so16745956ljj.9;
-        Sun, 29 Dec 2019 06:56:47 -0800 (PST)
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41025 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfL2O4u (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 29 Dec 2019 09:56:50 -0500
+Received: by mail-lj1-f193.google.com with SMTP id h23so31093703ljc.8;
+        Sun, 29 Dec 2019 06:56:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=fLPm8kYY1aMbkcJ/I/yZlSuw3yqow+z5kIYMGPZJf+g=;
-        b=N468EFQYmzTBqfBQ/MQb5nqJRl41XCor99VIBGQNl/RGUocG1zG9x8SFHqEyQihfBz
-         kgh09LplbUjWoPsq8BOAJIbq3gk1IyE+ckMiyRxgVm+KYy7cwQHWm+2kLbzvq6qFBh49
-         w3Phlw7QG0BYvZsWrutVH52xq1PEZ0XIkttcbIl4o6a0JiIk53MXMJm6RCgqzVPoUW0r
-         tRbcVSgbJuMR08HzVXWGkROvFhkZhPdNSLokGR00azzYgsP7An1+FTtzaoRY3Osh8RRf
-         BU/R4KSnWl0pFSIiEVCuTpE7mgTjQkhuZvJb62wGBNixh864xVdE/eqoku+QJ32fOxln
-         X/EA==
+        bh=4rypt1/kYJGAf6C/Gog1EznwTiuR8sj2lcgKvtqgbT8=;
+        b=jtDU/f23fjGAkrYDUGfztSbigaefpxmAZE1wgF6mNUXR7ud4IkLl34nOYjjQd4Ufz5
+         2GJdDFGqwpoDNzvawQdzGMLk39Xq+6ACTYbb+8qPX9gfpC0u+1WzCnrLYG9Vn2nFMJQ5
+         EDnSJ9M5w/ah8hYslp1kcWZEIZGnOlWAHhowA7s5qPLyWvzV7ziC7eownNVdF7KgB1dD
+         d5vo2A6KPBCx0vW3ncBjGiDia/5kpnJhVaKH9rHjbR7YkOWB7kPN6NNexB2cZ24qK/0g
+         R3GK7Cmko1cA89+4D1EguRytBvocYYBjm40K+Evd9nvuEF7Iqk8CtoJqiqHniv/E9iRy
+         l8UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=fLPm8kYY1aMbkcJ/I/yZlSuw3yqow+z5kIYMGPZJf+g=;
-        b=HfrDLTeq9xj23cFIWiN6/Pr6ljgDeVUSCLnk67l3mSIRE5KmOZN1xWwCbGczt9Drt8
-         ppFaltNOv8P70k7FputlsCMnoySgmkJ/7vl4L6guPHaoRwKHHu3gw6bXb+RUp57JvqIm
-         jRRmXSlTa/Z9ImtrOu8YyH7gBHjlYcOD8A1CHBwgC993SsZi9THCchTGTdfkrPscaWf2
-         YAZr4mmcmN3gwGqVD7NQFDBmk5nCBtsuz/ptRJ235gwOcgfq52Fbmock5Eas20rc9vEJ
-         E43tyZmVePC1oLnmhjaTHWQbNwsgcoP+qTrdi+Goqgns7xIt9FQVKHmEwtjh3pz4CL6b
-         1zzQ==
-X-Gm-Message-State: APjAAAWGj2//w0ofey5DYlFR12HL2XWLvYT+KQVro9V8y3fVuZ++/HsH
-        K5glxwm+dDTlXN3bohxiKRo=
-X-Google-Smtp-Source: APXvYqxk59W/NMB4acxBqQ54lf+yLgcVlD9J+Ly905f8fzEEcpGMYSfrMRaJ8bOM3Mda8nVG24aQYw==
-X-Received: by 2002:a05:651c:1110:: with SMTP id d16mr35569724ljo.86.1577631407157;
-        Sun, 29 Dec 2019 06:56:47 -0800 (PST)
+        bh=4rypt1/kYJGAf6C/Gog1EznwTiuR8sj2lcgKvtqgbT8=;
+        b=l9B+Yn6GpeJVpFZfO8paBpUVlSTVV/i7wMbKwkP5+qMFZoasXG77xETOb5760KAwTW
+         bbQccw+Ypzd2+8zyFV6mClrB48B5t1nIgv0DaoEr3jquk+uiF+MQSw2RJXRtE2uy02I0
+         O29qnd0/SaUjq+3D3HRZMVm0ApLyrtTDHPbWt98NTAitnxiEQn3xHJ/e/x2TI1ljPJOT
+         +T7SAT5SpOgIRd2D+avzEmrgT3SYWiDduHQPzFK7B4isje0Rkx1fChmKQx0o0GaWWpu3
+         22b3buKz5DI3YZszNVycZWcA9800tZbGjQHdKNpKAXvVsUUBO32u0ZQLfuHi+RXHTVDw
+         SGXA==
+X-Gm-Message-State: APjAAAXdZYO3rpaTUvnUgv4wsfX0Z6+G6CPPVLVcuXgVE4oouBm2AI6Z
+        O5mdUl74ZBfYp1rIlJgYbv8=
+X-Google-Smtp-Source: APXvYqxrPDaWDjTL2XwKhhtOIHEW3ERFEraLYPk2l+FsJV658+vWGCONjFA/eymMN/UCUeQbO8lbOA==
+X-Received: by 2002:a2e:8755:: with SMTP id q21mr35122419ljj.156.1577631408038;
+        Sun, 29 Dec 2019 06:56:48 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id g15sm11563944ljl.10.2019.12.29.06.56.46
+        by smtp.gmail.com with ESMTPSA id g15sm11563944ljl.10.2019.12.29.06.56.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Dec 2019 06:56:46 -0800 (PST)
+        Sun, 29 Dec 2019 06:56:47 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -52,9 +52,9 @@ To:     Laxman Dewangan <ldewangan@nvidia.com>,
         Jonathan Hunter <jonathanh@nvidia.com>
 Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 03/12] dmaengine: tegra-apb: Prevent race conditions on channel's freeing
-Date:   Sun, 29 Dec 2019 17:55:16 +0300
-Message-Id: <20191229145525.533-4-digetx@gmail.com>
+Subject: [PATCH v2 04/12] dmaengine: tegra-apb: Prevent race conditions of tasklet vs free list
+Date:   Sun, 29 Dec 2019 17:55:17 +0300
+Message-Id: <20191229145525.533-5-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191229145525.533-1-digetx@gmail.com>
 References: <20191229145525.533-1-digetx@gmail.com>
@@ -65,45 +65,30 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-It's unsafe to check the channel's "busy" state without taking a lock,
-it is also unsafe to assume that tasklet isn't in-fly.
+The interrupt handler puts a half-completed DMA descriptor on a free list
+and then schedules tasklet to process bottom half of the descriptor that
+executes client's callback, this creates possibility to pick up the busy
+descriptor from the free list. Thus let's disallow descriptor's re-use
+until it is fully processed.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/dma/tegra20-apb-dma.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/dma/tegra20-apb-dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index 664e9c5df3ba..28aff0b9763e 100644
+index 28aff0b9763e..740b0ceec7ec 100644
 --- a/drivers/dma/tegra20-apb-dma.c
 +++ b/drivers/dma/tegra20-apb-dma.c
-@@ -1294,8 +1294,8 @@ static void tegra_dma_free_chan_resources(struct dma_chan *dc)
+@@ -281,7 +281,7 @@ static struct tegra_dma_desc *tegra_dma_desc_get(
  
- 	dev_dbg(tdc2dev(tdc), "Freeing channel %d\n", tdc->id);
- 
--	if (tdc->busy)
--		tegra_dma_terminate_all(dc);
-+	tegra_dma_terminate_all(dc);
-+	tasklet_kill(&tdc->tasklet);
- 
- 	spin_lock_irqsave(&tdc->lock, flags);
- 	list_splice_init(&tdc->pending_sg_req, &sg_req_list);
-@@ -1543,7 +1543,6 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 		struct tegra_dma_channel *tdc = &tdma->channels[i];
- 
- 		free_irq(tdc->irq, tdc);
--		tasklet_kill(&tdc->tasklet);
- 	}
- 
- 	pm_runtime_disable(&pdev->dev);
-@@ -1563,7 +1562,6 @@ static int tegra_dma_remove(struct platform_device *pdev)
- 	for (i = 0; i < tdma->chip_data->nr_channels; ++i) {
- 		tdc = &tdma->channels[i];
- 		free_irq(tdc->irq, tdc);
--		tasklet_kill(&tdc->tasklet);
- 	}
- 
- 	pm_runtime_disable(&pdev->dev);
+ 	/* Do not allocate if desc are waiting for ack */
+ 	list_for_each_entry(dma_desc, &tdc->free_dma_desc, node) {
+-		if (async_tx_test_ack(&dma_desc->txd)) {
++		if (async_tx_test_ack(&dma_desc->txd) && !dma_desc->cb_count) {
+ 			list_del(&dma_desc->node);
+ 			spin_unlock_irqrestore(&tdc->lock, flags);
+ 			dma_desc->txd.flags = 0;
 -- 
 2.24.0
 

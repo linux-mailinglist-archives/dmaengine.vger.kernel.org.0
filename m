@@ -2,90 +2,103 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CACFE12C2E8
-	for <lists+dmaengine@lfdr.de>; Sun, 29 Dec 2019 15:57:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A985912CC2E
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Dec 2019 04:39:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbfL2O5A (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 29 Dec 2019 09:57:00 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44976 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfL2O45 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 29 Dec 2019 09:56:57 -0500
-Received: by mail-lf1-f68.google.com with SMTP id v201so23708258lfa.11;
-        Sun, 29 Dec 2019 06:56:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=d61xLjjxWbxI5eV1Fujn9jWtoC4pEzqs0yuJAlEPGQA=;
-        b=etWVTJZaT3p8VPlVN8QeSiQ46gN7rtZ/ANKmqtVpbKPlKyXl/+ZAvJm2HSxQMBs2zu
-         3Ufe5/SgD0LCr2UrtEmHCJmngmiNwek2rJtOXOB2WQzzllZ/9kMkbMB5SQ/R9ea6xqOX
-         OV3pHGxrAuRDPsF/zfTJVMWi4rEOhOIuYhVIqcgI/s3LuZMO3F61IID8O935GxBK3ex1
-         xVESRfgJNtuoVNyVzLqJxxRgSqD8kSQy9a9BWxOB+hNiyzVL5fi7yPSTtgez1p/2KnzE
-         lTgTsmJOsceoub4xCrlD5/tvCaeRhr7b138p/IUYrUx1P2UyVLccGmy/ZlbU10TttJQ7
-         ljMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=d61xLjjxWbxI5eV1Fujn9jWtoC4pEzqs0yuJAlEPGQA=;
-        b=Wt1jgXbRDv74hioZyoX2MK64mxdzSzSIfrKiNvX6BJGU5DN/j9Cl1KRlakLXMD3WWm
-         A1kOs27WjFt8eV8g1mY3u037jhcreR19iXfBRHYqgJzbwGui5L8Pha7sBsYto3PuVsJu
-         bSpTm0OuOKOUu/bFKJotlvcwcny0dMFir2eRJALeckryA5bBcfE//i4DlmPoryBdmPmt
-         N1xPy0yIj8N7mRpngKbaKRaE+Efe8bd+vr6RqNNAC75E1uEfnJPePhjwhFU/bYtLsXIF
-         lEFbeE3MbAUHhk84UxmgULOoj1ORH0RLIt7Y2aDYttyiJEHkpG+gS71xwFJt4cpUiZ2e
-         0Pcw==
-X-Gm-Message-State: APjAAAW/WNp9FRnXgVU1Drvm5aOi5Or9NtXcppORTRmdAWouzZZhheiO
-        g2S2XlBa/k3ZJtPoDblQZb8=
-X-Google-Smtp-Source: APXvYqz6IXklzOjO/CUbhhhRC452FVyyPClstVpWvjv0naGRCdnjLM2OpgK3B6pFVOGuCBbvWCBoLA==
-X-Received: by 2002:ac2:4add:: with SMTP id m29mr34356272lfp.190.1577631415131;
-        Sun, 29 Dec 2019 06:56:55 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id g15sm11563944ljl.10.2019.12.29.06.56.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Dec 2019 06:56:54 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 12/12] dmaengine: tegra-apb: Remove MODULE_ALIAS
-Date:   Sun, 29 Dec 2019 17:55:25 +0300
-Message-Id: <20191229145525.533-13-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191229145525.533-1-digetx@gmail.com>
-References: <20191229145525.533-1-digetx@gmail.com>
+        id S1727065AbfL3Djj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 29 Dec 2019 22:39:39 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:42696 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727081AbfL3Djj (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 29 Dec 2019 22:39:39 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C73592ED2E51E9DDE1FC;
+        Mon, 30 Dec 2019 11:39:37 +0800 (CST)
+Received: from [127.0.0.1] (10.63.139.185) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 30 Dec 2019
+ 11:39:29 +0800
+Subject: Re: [PATCH v3] dmaengine: hisilicon: Add Kunpeng DMA engine support
+To:     kbuild test robot <lkp@intel.com>
+References: <1577533684-152202-1-git-send-email-wangzhou1@hisilicon.com>
+ <201912290029.kc8oo1h9%lkp@intel.com>
+CC:     <kbuild-all@lists.01.org>, Dan Williams <dan.j.williams@intel.com>,
+        "Vinod Koul" <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+        <linuxarm@huawei.com>, Zhenfa Qiu <qiuzhenfa@hisilicon.com>
+From:   Zhou Wang <wangzhou1@hisilicon.com>
+Message-ID: <5E097171.1090608@hisilicon.com>
+Date:   Mon, 30 Dec 2019 11:39:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <201912290029.kc8oo1h9%lkp@intel.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.63.139.185]
+X-CFilter-Loop: Reflected
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Tegra APB DMA driver is an Open Firmware driver and thus it uses OF alias
-naming scheme which overrides MODULE_ALIAS, meaning that MODULE_ALIAS does
-nothing and could be removed safely.
+On 2019/12/29 0:54, kbuild test robot wrote:
+> Hi Zhou,
+> 
+> I love your patch! Yet something to improve:
+> 
+> [auto build test ERROR on slave-dma/next]
+> [also build test ERROR on linus/master v5.5-rc3 next-20191220]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Zhou-Wang/dmaengine-hisilicon-Add-Kunpeng-DMA-engine-support/20191228-195257
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/slave-dma.git next
+> config: sh-allmodconfig (attached as .config)
+> compiler: sh4-linux-gcc (GCC) 7.5.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.5.0 make.cross ARCH=sh 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All error/warnings (new ones prefixed by >>):
+> 
+>    drivers//dma/hisi_dma.c: In function 'hisi_dma_free_irq_vectors':
+>>> drivers//dma/hisi_dma.c:132:2: error: implicit declaration of function 'pci_free_irq_vectors'; did you mean 'pci_alloc_irq_vectors'? [-Werror=implicit-function-declaration]
+>      pci_free_irq_vectors(data);
+>      ^~~~~~~~~~~~~~~~~~~~
+>      pci_alloc_irq_vectors
+>    drivers//dma/hisi_dma.c: At top level:
+>>> drivers//dma/hisi_dma.c:593:1: warning: data definition has no type or storage class
+>     module_pci_driver(hisi_dma_pci_driver);
+>     ^~~~~~~~~~~~~~~~~
+>>> drivers//dma/hisi_dma.c:593:1: error: type defaults to 'int' in declaration of 'module_pci_driver' [-Werror=implicit-int]
+>>> drivers//dma/hisi_dma.c:593:1: warning: parameter names (without types) in function declaration
+>    drivers//dma/hisi_dma.c:587:26: warning: 'hisi_dma_pci_driver' defined but not used [-Wunused-variable]
+>     static struct pci_driver hisi_dma_pci_driver = {
+>                              ^~~~~~~~~~~~~~~~~~~
+>    cc1: some warnings being treated as errors
+> 
+> vim +132 drivers//dma/hisi_dma.c
+> 
+>    129	
+>    130	static void hisi_dma_free_irq_vectors(void *data)
+>    131	{
+>  > 132		pci_free_irq_vectors(data);
+>    133	}
+>    134	
+> 
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/dma/tegra20-apb-dma.c | 1 -
- 1 file changed, 1 deletion(-)
+Will add PCI_MSI dependency in Kconfig, like: depends on ARM64 || (COMPILE_TEST && PCI_MSI)
 
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index d96de35c8253..2eae3b3cdc58 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -1633,7 +1633,6 @@ static struct platform_driver tegra_dmac_driver = {
- 
- module_platform_driver(tegra_dmac_driver);
- 
--MODULE_ALIAS("platform:tegra20-apbdma");
- MODULE_DESCRIPTION("NVIDIA Tegra APB DMA Controller driver");
- MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
- MODULE_LICENSE("GPL v2");
--- 
-2.24.0
+Thanks,
+Zhou
+
+> ---
+> 0-DAY kernel test infrastructure                 Open Source Technology Center
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+> 
 

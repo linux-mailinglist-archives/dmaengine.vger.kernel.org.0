@@ -2,103 +2,90 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A985912CC2E
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Dec 2019 04:39:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DA1312D48F
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Dec 2019 21:46:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfL3Djj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 29 Dec 2019 22:39:39 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:42696 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727081AbfL3Djj (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sun, 29 Dec 2019 22:39:39 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C73592ED2E51E9DDE1FC;
-        Mon, 30 Dec 2019 11:39:37 +0800 (CST)
-Received: from [127.0.0.1] (10.63.139.185) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 30 Dec 2019
- 11:39:29 +0800
-Subject: Re: [PATCH v3] dmaengine: hisilicon: Add Kunpeng DMA engine support
-To:     kbuild test robot <lkp@intel.com>
-References: <1577533684-152202-1-git-send-email-wangzhou1@hisilicon.com>
- <201912290029.kc8oo1h9%lkp@intel.com>
-CC:     <kbuild-all@lists.01.org>, Dan Williams <dan.j.williams@intel.com>,
-        "Vinod Koul" <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-        <linuxarm@huawei.com>, Zhenfa Qiu <qiuzhenfa@hisilicon.com>
-From:   Zhou Wang <wangzhou1@hisilicon.com>
-Message-ID: <5E097171.1090608@hisilicon.com>
-Date:   Mon, 30 Dec 2019 11:39:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        id S1727706AbfL3Up7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 30 Dec 2019 15:45:59 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:19990 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727695AbfL3Up7 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 30 Dec 2019 15:45:59 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47mqFw56cFz7N;
+        Mon, 30 Dec 2019 21:45:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1577738757; bh=s8g4G6MZBSj/JWYHiBIoQB/A8P4MtqlOvvb/SvdlSCY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VDha4HNHARaXWKwkXfwXhdcJhvvlxLkCKi4YkvuMri5gDvcBQOfLwG6NM9mp2XQhE
+         g0I4h4JM3kJlDcoOI0jX3vOedeQzgzGN9x4zbd/ERKZ4ViZYvGXCqUR5kmCdD9J01l
+         4OqseEfhCnRpJkWYaJ0IP6MGB9phe9Jo2hDy7ezUZjEVEx1DLby3lk71A/6KOzRbw2
+         ZNtsNx8cZg/8tcy3fExnRHePQMY/vPU8xwOQm4bWllLFFP1nhAh8nEm6rnPczwMGbG
+         9L2ij2VfuX5hCwived2I6oiMASBbE1ZFaFaYcnsTnzVqVUa5EQQfwEloAp+RABrTon
+         hW+YBvA70zupw==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Mon, 30 Dec 2019 21:45:55 +0100
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 3/7] dmaengine: tegra-apb: Prevent race conditions on
+ channel's freeing
+Message-ID: <20191230204555.GB24135@qmqm.qmqm.pl>
+References: <20191228204640.25163-1-digetx@gmail.com>
+ <20191228204640.25163-4-digetx@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <201912290029.kc8oo1h9%lkp@intel.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.63.139.185]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191228204640.25163-4-digetx@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 2019/12/29 0:54, kbuild test robot wrote:
-> Hi Zhou,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on slave-dma/next]
-> [also build test ERROR on linus/master v5.5-rc3 next-20191220]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Zhou-Wang/dmaengine-hisilicon-Add-Kunpeng-DMA-engine-support/20191228-195257
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/slave-dma.git next
-> config: sh-allmodconfig (attached as .config)
-> compiler: sh4-linux-gcc (GCC) 7.5.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.5.0 make.cross ARCH=sh 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All error/warnings (new ones prefixed by >>):
-> 
->    drivers//dma/hisi_dma.c: In function 'hisi_dma_free_irq_vectors':
->>> drivers//dma/hisi_dma.c:132:2: error: implicit declaration of function 'pci_free_irq_vectors'; did you mean 'pci_alloc_irq_vectors'? [-Werror=implicit-function-declaration]
->      pci_free_irq_vectors(data);
->      ^~~~~~~~~~~~~~~~~~~~
->      pci_alloc_irq_vectors
->    drivers//dma/hisi_dma.c: At top level:
->>> drivers//dma/hisi_dma.c:593:1: warning: data definition has no type or storage class
->     module_pci_driver(hisi_dma_pci_driver);
->     ^~~~~~~~~~~~~~~~~
->>> drivers//dma/hisi_dma.c:593:1: error: type defaults to 'int' in declaration of 'module_pci_driver' [-Werror=implicit-int]
->>> drivers//dma/hisi_dma.c:593:1: warning: parameter names (without types) in function declaration
->    drivers//dma/hisi_dma.c:587:26: warning: 'hisi_dma_pci_driver' defined but not used [-Wunused-variable]
->     static struct pci_driver hisi_dma_pci_driver = {
->                              ^~~~~~~~~~~~~~~~~~~
->    cc1: some warnings being treated as errors
-> 
-> vim +132 drivers//dma/hisi_dma.c
-> 
->    129	
->    130	static void hisi_dma_free_irq_vectors(void *data)
->    131	{
->  > 132		pci_free_irq_vectors(data);
->    133	}
->    134	
-> 
+On Sat, Dec 28, 2019 at 11:46:36PM +0300, Dmitry Osipenko wrote:
+> It's unsafe to check the channel's "busy" state without taking a lock,
+> it is also unsafe to assume that tasklet isn't in-fly.
 
-Will add PCI_MSI dependency in Kconfig, like: depends on ARM64 || (COMPILE_TEST && PCI_MSI)
+'in-flight'. Also, the patch seems to have two independent bug-fixes
+in it. Second one doesn't look right, at least not without an explanation.
 
-Thanks,
-Zhou
+First:
 
-> ---
-> 0-DAY kernel test infrastructure                 Open Source Technology Center
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
-> 
+> -	if (tdc->busy)
+> -		tegra_dma_terminate_all(dc);
+> +	tegra_dma_terminate_all(dc);
 
+Second:
+
+> +	tasklet_kill(&tdc->tasklet);
+>  
+>  	spin_lock_irqsave(&tdc->lock, flags);
+>  	list_splice_init(&tdc->pending_sg_req, &sg_req_list);
+> @@ -1543,7 +1543,6 @@ static int tegra_dma_probe(struct platform_device *pdev)
+>  		struct tegra_dma_channel *tdc = &tdma->channels[i];
+>  
+>  		free_irq(tdc->irq, tdc);
+> -		tasklet_kill(&tdc->tasklet);
+>  	}
+>  
+>  	pm_runtime_disable(&pdev->dev);
+> @@ -1563,7 +1562,6 @@ static int tegra_dma_remove(struct platform_device *pdev)
+>  	for (i = 0; i < tdma->chip_data->nr_channels; ++i) {
+>  		tdc = &tdma->channels[i];
+>  		free_irq(tdc->irq, tdc);
+> -		tasklet_kill(&tdc->tasklet);
+>  	}
+>  
+>  	pm_runtime_disable(&pdev->dev);
+
+Best Regards,
+Micha³ Miros³aw

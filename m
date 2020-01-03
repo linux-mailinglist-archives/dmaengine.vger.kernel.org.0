@@ -2,109 +2,111 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 97DF112F74D
-	for <lists+dmaengine@lfdr.de>; Fri,  3 Jan 2020 12:34:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3AAB12F997
+	for <lists+dmaengine@lfdr.de>; Fri,  3 Jan 2020 16:12:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbgACLeG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 3 Jan 2020 06:34:06 -0500
-Received: from mail-bn7nam10on2052.outbound.protection.outlook.com ([40.107.92.52]:31072
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        id S1727729AbgACPMY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 3 Jan 2020 10:12:24 -0500
+Received: from mail-bn8nam12on2042.outbound.protection.outlook.com ([40.107.237.42]:43329
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727462AbgACLeF (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 3 Jan 2020 06:34:05 -0500
+        id S1725890AbgACPMX (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 3 Jan 2020 10:12:23 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EVzUanb7dAam24pacZxZsTGLd48ktOFKFGYUU+8eeGHbIAdqmBH0u33ZjkgWlWZo1wbyUdKrF3m3GoSSFHOk5VrRN7PTjLS+2iLFWiqC7ZWDB5A+hI51Ksalv4rstLAPl3AD61Cp9EGxkaGDz7RQ/RdNwDG+oNzoiwczArr1YtCar7WKiHQnb3Va9zpkojUhZcQApWzQ4MbR/I4a6XVqqo6zDkoStSgRaQ2pctpjhysAxX/BqXMLkhbIho0dQ7Qr483t1B52ElGIqtjimkQZHaTSOIwHfqyEPtsXV8HAkHl+DHAtw1CQ4FsVInIjJs/uQvfOW1H4a0jAMDpr+4wevw==
+ b=QATz2CdOoYHmRL3k/7HvtYzYgWmOwioVEzN/XkfdJaA5+KiA2S/et31HP/R/NOx9bTlOz57BBtP3AUX804Qgo2xod8Uc214KUPnnYbd3rGkNQBmA/O0vBY04BHFDHwhf1QVClcHTm4aZIYSb//6xkRu+2GYmVLbcbMwRE7T7BTVveSVxHlY7qm+isEih/6HMN0WRq3ZZo4BztEt7bY4kn4ArURc0rOsrwNVjpiUUABoFCUFeTsV34Lry7yk3uGOp0yHH5VUg7R5lvxwvXADs5FHEwEVcYYpRI+4Rugv2RvSQUJ4t1ssHa6ALpCIWjYjzBETdJfx0DtG+tJf49CERhA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=28rDXYRYpvcpZTvZMfbXBdg6OBxlIdjAuZce/I8aeVE=;
- b=oRXRW71Kh7Vtqnk+DLRcCgOlESpPdQyRozLGFpuQHgT08AHQjr/foWrTlgQtzftR5GVmnUP6hEcyT7rmjJi4Q747hb0gXWDV1fO9dLrFbJToNaG3pPLL1ZwTNcvGd9Vmh/PghC6+Ym07mSZnJliiEUdltJGDMcor9XHSGqshwE5GE7jxV+XQtdYfDj+RhfzdgvptdkUnH0qlm56BDIv0+HUkYFmless2JjqvM6sr/zcUnzNrdRhLwfp7/Bv0lpNiNCKmzSg8y0sbQKZcGCjvdHoTKJLnFBH2IDwjXCDXb5thGO5EToBjZm16k5/1A71pMU7yZqy7C25aUWTzhSf+BA==
+ bh=2PfIP4//meg0o6OdFvbQGlEv29a++do92w0Zw2MtbQg=;
+ b=Y1eXuzviorFItn1wHg02nt6pIcLklfin83S12JHW0SedtVQZn0e2+NjlFKw4CZ7O7gUpr9rvzfbHIUsGE5TZIrHSkQBWnl+sK0G8MtME7xdC12ykDagvc0c/8L80i4vUOWtqMiNmLazFyK2XkFuqrH8VJKVtVuDzTaQxKhfyOHB8W83zgYNLGXlFmJe7e1DxRYwTlaVIQWfn9evkLZw7idu8/yG+USPfsuxK8cQjRF8/lM22plWbRWPJNolrEY29Yyh+0tGJ9aMAj8b53YTr9Pj4iY7la3f/dPIl/DYEiboA28pauY8XgH8RwT6QxL1xdBSXklLdxZtcIVV8rCErfQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=28rDXYRYpvcpZTvZMfbXBdg6OBxlIdjAuZce/I8aeVE=;
- b=XlUMUXkV2pyMFjYFKaXuGnRBygnNX7+O+XXiOehUCMbN5g+i7R3tYqYqIW5USDu036komHMZg+A7CG+Zj47J2SsyzeWEVaUzjizOUt5ndBk0FzIeYzbhP5mCcl6+CG3fAXoL2orc2JrvQgv8R2fn46KZDZWGkQiVx/5wzZCtQuU=
+ bh=2PfIP4//meg0o6OdFvbQGlEv29a++do92w0Zw2MtbQg=;
+ b=JeqC3hiIkbJ9kiQlyjBd0y1EgYXXUbFoGT2924wJF6zje1F//L6dsZwEIKTzwLGz34NhiyyJjgwllLzts3Lac+fGehkMPHnPVVzxJvFqgUh1hBter7uOHndLUb+WzJlcZvdAzJPM9EwS1Mrv84F7XsRyQn6DdSXc/H7IHesdc8c=
 Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Sanju.Mehta@amd.com; 
-Received: from MN2PR12MB3455.namprd12.prod.outlook.com (20.178.244.22) by
- MN2PR12MB3343.namprd12.prod.outlook.com (20.178.240.159) with Microsoft SMTP
+ smtp.mailfrom=Gary.Hook@amd.com; 
+Received: from BN8PR12MB2916.namprd12.prod.outlook.com (20.179.66.155) by
+ BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2581.12; Fri, 3 Jan 2020 11:34:03 +0000
-Received: from MN2PR12MB3455.namprd12.prod.outlook.com
- ([fe80::1900:6cb7:12ff:11c]) by MN2PR12MB3455.namprd12.prod.outlook.com
- ([fe80::1900:6cb7:12ff:11c%4]) with mapi id 15.20.2602.012; Fri, 3 Jan 2020
- 11:34:03 +0000
+ 15.20.2602.10; Fri, 3 Jan 2020 15:12:21 +0000
+Received: from BN8PR12MB2916.namprd12.prod.outlook.com
+ ([fe80::45d0:ec5c:7480:8029]) by BN8PR12MB2916.namprd12.prod.outlook.com
+ ([fe80::45d0:ec5c:7480:8029%5]) with mapi id 15.20.2581.014; Fri, 3 Jan 2020
+ 15:12:21 +0000
 Subject: Re: [PATCH v2 1/3] dmaengine: ptdma: Initial driver for the AMD
  PassThru DMA engine
 To:     Vinod Koul <vkoul@kernel.org>, Sanjay R Mehta <Sanju.Mehta@amd.com>
-Cc:     kbuild-all@lists.01.org, kbuild test robot <lkp@intel.com>,
-        dan.j.williams@intel.com, gregkh@linuxfoundation.org,
-        Gary.Hook@amd.com, Nehal-bakulchandra.Shah@amd.com,
+Cc:     kbuild test robot <lkp@intel.com>, dan.j.williams@intel.com,
+        gregkh@linuxfoundation.org, Nehal-bakulchandra.Shah@amd.com,
         Shyam-sundar.S-k@amd.com, davem@davemloft.net,
         mchehab+samsung@kernel.org, robh@kernel.org,
         Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org,
         dmaengine@vger.kernel.org
 References: <1577458047-109654-1-git-send-email-Sanju.Mehta@amd.com>
  <201912280738.zotyIgEi%lkp@intel.com> <20200103062630.GD2818@vkoul-mobl>
-From:   Sanjay R Mehta <sanmehta@amd.com>
-Message-ID: <4f821b57-9b45-6aa3-99a2-abe3539eb15e@amd.com>
-Date:   Fri, 3 Jan 2020 17:03:49 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+From:   Gary R Hook <gary.hook@amd.com>
+Message-ID: <de0bf6de-5c44-bb81-f3ac-2db1c1c4595d@amd.com>
+Date:   Fri, 3 Jan 2020 09:12:18 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 In-Reply-To: <20200103062630.GD2818@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-ClientProxiedBy: MAXPR01CA0100.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:5d::18) To MN2PR12MB3455.namprd12.prod.outlook.com
- (2603:10b6:208:d0::22)
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN4PR0501CA0147.namprd05.prod.outlook.com
+ (2603:10b6:803:2c::25) To BN8PR12MB2916.namprd12.prod.outlook.com
+ (2603:10b6:408:6a::27)
 MIME-Version: 1.0
-Received: from [10.136.17.186] (165.204.157.251) by MAXPR01CA0100.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:5d::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.12 via Frontend Transport; Fri, 3 Jan 2020 11:33:58 +0000
-X-Originating-IP: [165.204.157.251]
+Received: from [10.236.30.71] (165.204.77.1) by SN4PR0501CA0147.namprd05.prod.outlook.com (2603:10b6:803:2c::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.4 via Frontend Transport; Fri, 3 Jan 2020 15:12:19 +0000
+X-Originating-IP: [165.204.77.1]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: dbe21c11-f14f-46a4-6c15-08d79040d516
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3343:|MN2PR12MB3343:|MN2PR12MB3343:
+X-MS-Office365-Filtering-Correlation-Id: c69273e5-3fe7-4234-d5bf-08d7905f5457
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3266:|BN8PR12MB3266:|BN8PR12MB3266:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB3343E9530491345440B96F23E5230@MN2PR12MB3343.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3044;
+X-Microsoft-Antispam-PRVS: <BN8PR12MB3266F96220E4160247933C40FD230@BN8PR12MB3266.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
 X-Forefront-PRVS: 0271483E06
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(396003)(376002)(39860400002)(366004)(189003)(199004)(66556008)(6636002)(2906002)(66946007)(5660300002)(4326008)(31686004)(81156014)(7416002)(4744005)(52116002)(186003)(36756003)(53546011)(16526019)(66476007)(26005)(956004)(2616005)(316002)(8936002)(8676002)(6486002)(31696002)(478600001)(6666004)(110136005)(81166006)(16576012);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3343;H:MN2PR12MB3455.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(396003)(366004)(376002)(199004)(189003)(16576012)(110136005)(86362001)(36756003)(2616005)(66556008)(53546011)(31696002)(2906002)(26005)(66946007)(956004)(66476007)(478600001)(6636002)(5660300002)(316002)(6486002)(52116002)(186003)(16526019)(81156014)(31686004)(81166006)(4326008)(4744005)(8676002)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR12MB3266;H:BN8PR12MB2916.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 Received-SPF: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VpDlppeyMfk7XcYbl6b7hR+OUFF/OuZX068hf8Mwth9r1hXDVnFyXsUE1fW6i3axC6Ox2wv1oSwdPDgMefyqE276sxjC02ktW37BLTCmq9Yfs/IUhH1LXSv+9cnhHnlxc9d8gmhNCtOPX0ugE6muhMmKXp0AyrkI8Jsw/4bRAubF4r38vOQIkV2dDAiPb4kN8G9+nNLLaOQEWBsMczxDCy3GEhwyxoag+XVlxg8iwpKLeU75BkJFQTUppdG+fLL6il3VFbr7ACupacCgsZ2QCZuQOsi4MjV9E5cwslechGkIUHmnTcyvNlR0syC11d+9dvsHQxFwhK/UDcRFf1yDsPVIFGOsvvLr7gWpnEC/9FPO4Dh7eE1wxao/pjnlQXdlMc5s9c09S0p8DqkDIwfKaSX69Vv2egEvUNshatHQBmDcBoq4IoJtkHh3yGX81XAs
+X-Microsoft-Antispam-Message-Info: MDnTSB7ybRQNHm4rQbFjEuZ9ELh6LWACJFU02YmE7nG7udXYPIgK829NxQ1DPedvkocgQGuN6zZqeNhrRuA+oNWyxnSXW9meSom/9dFkEiG0rd1wghmWbUIq8w6LXYzfGqc6lbWKy0NJry0iiKChsXLSFvNPw6KSImHy8etdgOUTpx8hDM17HUl9ehcjhLCwzzF6yQinHbmyx5emvc5tQHe/CmF3ZgnPMo2gIE5NjcRuZQucwRWlJpEpKequ1ZdQBAtWVya3rRsLyJ6lDX2krQofU9M47P4uZK4Ww7rrTTuWUnx6pfR35wGYFxMG8eRmTwaqKGcpunJ+Q/xzaxIF30HCct/2Y96Ab3J61pICv2RKqZ/87ajcg9QvZG2ficK3yXWYGbmAcy36Reb/Ih4HyNGXhmLqFBNuo+kYnWeUPwZB8qh4t732a4t0WhQpBQYa
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dbe21c11-f14f-46a4-6c15-08d79040d516
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jan 2020 11:34:02.9144
+X-MS-Exchange-CrossTenant-Network-Message-Id: c69273e5-3fe7-4234-d5bf-08d7905f5457
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jan 2020 15:12:21.0378
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OE1D7DJYl8wFTb4BLBdwtom4TlFbPJD9245UvTmKGrbZtJQbXKtbgNKECGYOLzRUR5Xc2KPipUrbZATJmDuGAg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3343
+X-MS-Exchange-CrossTenant-UserPrincipalName: G+69nq33nT2EHmlLVOWq844RH22kQJ9Q3nR6T11sdYqvvLIgKRrnboV4y6LwbN11
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3266
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-On 1/3/2020 11:56 AM, Vinod Koul wrote:
+On 1/3/20 12:26 AM, Vinod Koul wrote:
 > On 28-12-19, 07:56, kbuild test robot wrote:
 >> Hi Sanjay,
 >>
 >> I love your patch! Perhaps something to improve:
+> 
 > Please fix the issues reported and also make sure the patches sent are
 > threaded, right now they are not and the series is all over my inbox :(
+> 
 
-Sure Vinod, will address those fixes.
+What does this mean? The patches showed up in my inbox as a set of 3, 
+properly indexed, just like they should when sent with "git send-email".
 
-will check about threading. Just simply git send to the list obtained from get_maintainer.pl? 
+We've not had any reports from other lists/maintainers of similar 
+problems. So you'll understand how we might be a bit confused.
 
->
-> --
-> ~Vinod
+Would you please elaborate on the problem you are seeing?
+
+grh

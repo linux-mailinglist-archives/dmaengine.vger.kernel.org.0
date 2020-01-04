@@ -2,228 +2,132 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A5B412FE4C
-	for <lists+dmaengine@lfdr.de>; Fri,  3 Jan 2020 22:20:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1207312FF8F
+	for <lists+dmaengine@lfdr.de>; Sat,  4 Jan 2020 01:27:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728732AbgACVUc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 3 Jan 2020 16:20:32 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:53062 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728707AbgACVUb (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 3 Jan 2020 16:20:31 -0500
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1inUMq-00053I-OW; Fri, 03 Jan 2020 14:20:30 -0700
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1inUMp-0000lN-56; Fri, 03 Jan 2020 14:20:23 -0700
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Jiasen Lin <linjiasen@hygon.cn>, Kit Chow <kchow@gigaio.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Fri,  3 Jan 2020 14:20:21 -0700
-Message-Id: <20200103212021.2881-4-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200103212021.2881-1-logang@deltatee.com>
-References: <20200103212021.2881-1-logang@deltatee.com>
+        id S1726697AbgADA1V (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 3 Jan 2020 19:27:21 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36324 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbgADA1V (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 3 Jan 2020 19:27:21 -0500
+Received: by mail-lf1-f65.google.com with SMTP id n12so32914215lfe.3;
+        Fri, 03 Jan 2020 16:27:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZWkELf4CBgeAYNIurRlueebcxpdZ5jZGPBfBd+vxH7I=;
+        b=Nu5Yi3JpH5JV3WI56GXPVEyXKneEuNmA9KVFQnmADeJt4zG1tBp+QKGsQJ1a0epyfK
+         mxkPpMLFK8dr15W0UpKBznsZaNh2OLgxEniIhlEvgiSWiYLgT286L0vN2Qs5hXQnlydS
+         uSQmC0ayM4PDvR/QiCySjLh28MupY9iMVTwyA1ZqNnTr8lOhLk1+8GfumFhrAfGtCSzQ
+         P/ixvPFk6SfBhSjqyv1PWPd/DVD6QProAGr982yyJC285Wo4sT5xF3eDw0c3YHLpj6OD
+         /mdus/Wl+FnrZ7TFkf4drVrj8fmr+B8sgxz6KNugnSmiGNc4RvosM0m+SVPxuGSesIrb
+         boVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZWkELf4CBgeAYNIurRlueebcxpdZ5jZGPBfBd+vxH7I=;
+        b=bTXX6ltIpYS/jGywrmBPFsQw7Nch0lE0mc855NMHKNPskuQ3cAVAjMgr/gwwi0oKSn
+         XmDxQ0r2m+px7d1RyYk7kWgnxgZPFDytAT+CUJ3EMn7XknAE7k4hwZTDV61UM334+voc
+         fPhXDi7S0peaKKG9zD51GWbK6L2bXriJOpiOAgL/4HLhpN0vNDB8IDfmFVo+8KytNp+8
+         VSyFS4JRBEiyGGR1popi2zbh3/aKyDGvKOTfJAvuVxFACcCRQNbJIwI/sBNdAX0NAHNj
+         xu0smUDNjIlkPsk46ER62Uol08W4euKJ7bt1kfsNI3WbTwnNcEt6d6HqnYbYo9Gkgbh+
+         nIfA==
+X-Gm-Message-State: APjAAAUpYZeekJhXxs2quvnaM/GxRKScNfZcllJ3iKFHXLGk29AyevRG
+        DgETRl8ENTEMnD/710fs8VbuITiF
+X-Google-Smtp-Source: APXvYqwQMOg4LAL9u2e6ktspztd+rveqntwhZF+XxZ9TeJSAzLKV4Lk3W8gY0012Vx8I4bR2Cn2emQ==
+X-Received: by 2002:ac2:4adc:: with SMTP id m28mr49831242lfp.26.1578097639050;
+        Fri, 03 Jan 2020 16:27:19 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id d25sm25340043ljj.51.2020.01.03.16.27.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jan 2020 16:27:18 -0800 (PST)
+Subject: Re: [PATCH v1 3/7] dmaengine: tegra-apb: Prevent race conditions on
+ channel's freeing
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191228204640.25163-1-digetx@gmail.com>
+ <20191228204640.25163-4-digetx@gmail.com>
+ <20191230204555.GB24135@qmqm.qmqm.pl> <20191230205054.GC24135@qmqm.qmqm.pl>
+ <4e1e4fef-f75c-f2e2-4d9e-29af69daf8db@gmail.com>
+ <20200103081604.GD14228@qmqm.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <0d76d93d-a465-646b-8dfa-7b42d3f597f6@gmail.com>
+Date:   Sat, 4 Jan 2020 03:27:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <20200103081604.GD14228@qmqm.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org, dan.j.williams@intel.com, linjiasen@hygon.cn, kchow@gigaio.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE,MYRULES_FREE,MYRULES_NO_TEXT autolearn=ham
-        autolearn_force=no version=3.4.2
-Subject: [PATCH v3 3/3] dmaengine: plx-dma: Implement descriptor submission
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On prep, a spin lock is taken and the next entry in the circular buffer
-is filled. On submit, the valid bit is set in the hardware descriptor
-and the lock is released.
+03.01.2020 11:16, Michał Mirosław пишет:
+> On Thu, Jan 02, 2020 at 06:09:45PM +0300, Dmitry Osipenko wrote:
+>> 30.12.2019 23:50, Michał Mirosław пишет:
+>>> On Mon, Dec 30, 2019 at 09:45:55PM +0100, Michał Mirosław wrote:
+>>>> On Sat, Dec 28, 2019 at 11:46:36PM +0300, Dmitry Osipenko wrote:
+>>>>> It's unsafe to check the channel's "busy" state without taking a lock,
+>>>>> it is also unsafe to assume that tasklet isn't in-fly.
+>>>>
+>>>> 'in-flight'. Also, the patch seems to have two independent bug-fixes
+>>>> in it. Second one doesn't look right, at least not without an explanation.
+>>>>
+>>>> First:
+>>>>
+>>>>> -	if (tdc->busy)
+>>>>> -		tegra_dma_terminate_all(dc);
+>>>>> +	tegra_dma_terminate_all(dc);
+>>>>
+>>>> Second:
+>>>>
+>>>>> +	tasklet_kill(&tdc->tasklet);
+>>>
+>>> BTW, maybe you can convert the code to threaded interrupt handler and
+>>> just get rid of the tasklet instead of fixing it?
+>>
+>> This shouldn't bring much benefit because the the code's logic won't be
+>> changed since we will still have to use the threaded ISR part as the
+>> bottom-half and then IRQ API doesn't provide a nice way to synchronize
+>> interrupt's execution, while tasklet_kill() is a nice way to sync it.
+> 
+> What about synchronize_irq()?
 
-The DMA engine is started (if it's not already running) when the client
-calls dma_async_issue_pending().
+Good point! I totally forgot about it.
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/dma/plx_dma.c | 119 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 119 insertions(+)
+The only difference between tasklet and threaded ISR should be that
+hardware interrupt is masked during of the threaded ISR execution, but
+at quick glance it shouldn't be a problem.
 
-diff --git a/drivers/dma/plx_dma.c b/drivers/dma/plx_dma.c
-index f3a5c9e47658..db4c5fd453a9 100644
---- a/drivers/dma/plx_dma.c
-+++ b/drivers/dma/plx_dma.c
-@@ -7,6 +7,7 @@
- 
- #include "dmaengine.h"
- 
-+#include <linux/circ_buf.h>
- #include <linux/dmaengine.h>
- #include <linux/kref.h>
- #include <linux/list.h>
-@@ -120,6 +121,11 @@ static struct plx_dma_dev *chan_to_plx_dma_dev(struct dma_chan *c)
- 	return container_of(c, struct plx_dma_dev, dma_chan);
- }
- 
-+static struct plx_dma_desc *to_plx_desc(struct dma_async_tx_descriptor *txd)
-+{
-+	return container_of(txd, struct plx_dma_desc, txd);
-+}
-+
- static struct plx_dma_desc *plx_dma_get_desc(struct plx_dma_dev *plxdev, int i)
- {
- 	return plxdev->desc_ring[i & (PLX_DMA_RING_COUNT - 1)];
-@@ -242,6 +248,113 @@ static void plx_dma_desc_task(unsigned long data)
- 	plx_dma_process_desc(plxdev);
- }
- 
-+static struct dma_async_tx_descriptor *plx_dma_prep_memcpy(struct dma_chan *c,
-+		dma_addr_t dma_dst, dma_addr_t dma_src, size_t len,
-+		unsigned long flags)
-+	__acquires(plxdev->ring_lock)
-+{
-+	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(c);
-+	struct plx_dma_desc *plxdesc;
-+
-+	spin_lock_bh(&plxdev->ring_lock);
-+	if (!plxdev->ring_active)
-+		goto err_unlock;
-+
-+	if (!CIRC_SPACE(plxdev->head, plxdev->tail, PLX_DMA_RING_COUNT))
-+		goto err_unlock;
-+
-+	if (len > PLX_DESC_SIZE_MASK)
-+		goto err_unlock;
-+
-+	plxdesc = plx_dma_get_desc(plxdev, plxdev->head);
-+	plxdev->head++;
-+
-+	plxdesc->hw->dst_addr_lo = cpu_to_le32(lower_32_bits(dma_dst));
-+	plxdesc->hw->dst_addr_hi = cpu_to_le16(upper_32_bits(dma_dst));
-+	plxdesc->hw->src_addr_lo = cpu_to_le32(lower_32_bits(dma_src));
-+	plxdesc->hw->src_addr_hi = cpu_to_le16(upper_32_bits(dma_src));
-+
-+	plxdesc->orig_size = len;
-+
-+	if (flags & DMA_PREP_INTERRUPT)
-+		len |= PLX_DESC_FLAG_INT_WHEN_DONE;
-+
-+	plxdesc->hw->flags_and_size = cpu_to_le32(len);
-+	plxdesc->txd.flags = flags;
-+
-+	/* return with the lock held, it will be released in tx_submit */
-+
-+	return &plxdesc->txd;
-+
-+err_unlock:
-+	/*
-+	 * Keep sparse happy by restoring an even lock count on
-+	 * this lock.
-+	 */
-+	__acquire(plxdev->ring_lock);
-+
-+	spin_unlock_bh(&plxdev->ring_lock);
-+	return NULL;
-+}
-+
-+static dma_cookie_t plx_dma_tx_submit(struct dma_async_tx_descriptor *desc)
-+	__releases(plxdev->ring_lock)
-+{
-+	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(desc->chan);
-+	struct plx_dma_desc *plxdesc = to_plx_desc(desc);
-+	dma_cookie_t cookie;
-+
-+	cookie = dma_cookie_assign(desc);
-+
-+	/*
-+	 * Ensure the descriptor updates are visible to the dma device
-+	 * before setting the valid bit.
-+	 */
-+	wmb();
-+
-+	plxdesc->hw->flags_and_size |= cpu_to_le32(PLX_DESC_FLAG_VALID);
-+
-+	spin_unlock_bh(&plxdev->ring_lock);
-+
-+	return cookie;
-+}
-+
-+static enum dma_status plx_dma_tx_status(struct dma_chan *chan,
-+		dma_cookie_t cookie, struct dma_tx_state *txstate)
-+{
-+	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(chan);
-+	enum dma_status ret;
-+
-+	ret = dma_cookie_status(chan, cookie, txstate);
-+	if (ret == DMA_COMPLETE)
-+		return ret;
-+
-+	plx_dma_process_desc(plxdev);
-+
-+	return dma_cookie_status(chan, cookie, txstate);
-+}
-+
-+static void plx_dma_issue_pending(struct dma_chan *chan)
-+{
-+	struct plx_dma_dev *plxdev = chan_to_plx_dma_dev(chan);
-+
-+	rcu_read_lock();
-+	if (!rcu_dereference(plxdev->pdev)) {
-+		rcu_read_unlock();
-+		return;
-+	}
-+
-+	/*
-+	 * Ensure the valid bits are visible before starting the
-+	 * DMA engine.
-+	 */
-+	wmb();
-+
-+	writew(PLX_REG_CTRL_START_VAL, plxdev->bar + PLX_REG_CTRL);
-+
-+	rcu_read_unlock();
-+}
-+
- static irqreturn_t plx_dma_isr(int irq, void *devid)
- {
- 	struct plx_dma_dev *plxdev = devid;
-@@ -276,7 +389,9 @@ static int plx_dma_alloc_desc(struct plx_dma_dev *plxdev)
- 			goto free_and_exit;
- 
- 		dma_async_tx_descriptor_init(&desc->txd, &plxdev->dma_chan);
-+		desc->txd.tx_submit = plx_dma_tx_submit;
- 		desc->hw = &plxdev->hw_ring[i];
-+
- 		plxdev->desc_ring[i] = desc;
- 	}
- 
-@@ -407,11 +522,15 @@ static int plx_dma_create(struct pci_dev *pdev)
- 	dma = &plxdev->dma_dev;
- 	dma->chancnt = 1;
- 	INIT_LIST_HEAD(&dma->channels);
-+	dma_cap_set(DMA_MEMCPY, dma->cap_mask);
- 	dma->copy_align = DMAENGINE_ALIGN_1_BYTE;
- 	dma->dev = get_device(&pdev->dev);
- 
- 	dma->device_alloc_chan_resources = plx_dma_alloc_chan_resources;
- 	dma->device_free_chan_resources = plx_dma_free_chan_resources;
-+	dma->device_prep_dma_memcpy = plx_dma_prep_memcpy;
-+	dma->device_issue_pending = plx_dma_issue_pending;
-+	dma->device_tx_status = plx_dma_tx_status;
- 	dma->device_release = plx_dma_release;
- 
- 	chan = &plxdev->dma_chan;
--- 
-2.20.1
+BTW, I'm now thinking that the current code is wrong by accumulating
+callbacks count in ISR if callback's execution takes too much time, not
+sure that it's something what DMA clients expect to happen, will try to
+verify that.
 
+It also will be nice to get rid of the free list since it only
+complicates code without any real benefits, I actually checked that
+kmalloc doesn't introduce any noticeable latency at all.
+
+I'll probably defer the above changes for now, leaving them for 5.7,
+otherwise it could be a bit too many changes for this patchset
+(hopefully it will get into 5.6).
+
+> BTW, does tegra_dma_terminate_all() prevent further interrupts that might
+> cause the tasklet to be scheduled again?
+
+Yes, it should prevent further interrupts because it stops hardware and
+clears interrupt status, thus in a worst case ISR could emit "Interrupt
+already served status" message.

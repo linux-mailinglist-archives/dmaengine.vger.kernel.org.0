@@ -2,175 +2,121 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E7CE130295
-	for <lists+dmaengine@lfdr.de>; Sat,  4 Jan 2020 15:19:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E82A91303C7
+	for <lists+dmaengine@lfdr.de>; Sat,  4 Jan 2020 18:32:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725928AbgADOTB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 4 Jan 2020 09:19:01 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:33178 "EHLO mail.skyhub.de"
+        id S1726061AbgADRcp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 4 Jan 2020 12:32:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbgADOTB (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sat, 4 Jan 2020 09:19:01 -0500
-Received: from zn.tnic (p200300EC2F18F800CC7EEF965DC10FDE.dip0.t-ipconnect.de [IPv6:2003:ec:2f18:f800:cc7e:ef96:5dc1:fde])
+        id S1726054AbgADRcp (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sat, 4 Jan 2020 12:32:45 -0500
+Received: from localhost (unknown [106.51.108.53])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8781A1EC0626;
-        Sat,  4 Jan 2020 15:18:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1578147539;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=grHGSZANPdRX4GYfQm3z7DlEzhiM+6VKLUd0nRV33tA=;
-        b=Y7/wS0YXsjQghvkU8yEZ40tZhEzBbsKiNBJ1HmgK5aYWcv9BkvQzjCnnOq9DqdlMvytTFd
-        sgmZJm+4JvQCu43OuEd3pjOrVI+sKdsWA46seByvy6aGs2d9BXTGeR9sWGEFCREPpM/Sk2
-        Q+yinBO2YOC2ZGxYyDClL8N7uGscesA=
-Date:   Sat, 4 Jan 2020 15:18:51 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkoul@kernel.org, dan.j.williams@intel.com, tony.luck@intel.com,
-        jing.lin@intel.com, ashok.raj@intel.com, sanjay.k.kumar@intel.com,
-        megha.dey@intel.com, jacob.jun.pan@intel.com, yi.l.liu@intel.com,
-        axboe@kernel.dk, akpm@linux-foundation.org, tglx@linutronix.de,
-        mingo@redhat.com, fenghua.yu@intel.com, hpa@zytor.com
-Subject: Re: [PATCH RFC v3 01/14] x86/asm: add iosubmit_cmds512() based on
- movdir64b CPU instruction
-Message-ID: <20200104141851.GA31856@zn.tnic>
-References: <157662541786.51652.7666763291600764054.stgit@djiang5-desk3.ch.intel.com>
- <157662558568.51652.16396789566261303659.stgit@djiang5-desk3.ch.intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id E2EA52464E;
+        Sat,  4 Jan 2020 17:32:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578159164;
+        bh=mgrvlSBDUo99OlCWA23LLgyX9ga8hC+UzSWpQP8B+rA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=UPXNtbHcWZ/JzEhPJCoxMZ22j3sm7n5Okuc22xVFl2JdF64Wydt8Jwel4o4lY/ksC
+         bYgwNqhIHbSKTUfI/S/rEtjAuyDMD6/oXSLHU3Yj3ClvHbi17PnKGNgRTxSe5ZDhJ6
+         2Fq69w+IqSvOppgvKhDVxwnOvKunyPAIymMASTQE=
+Date:   Sat, 4 Jan 2020 23:02:40 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL]: dmaengine fixes for v5.5-rc5
+Message-ID: <20200104173240.GH2818@vkoul-mobl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="YZ5djTAD1cGYuMQK"
 Content-Disposition: inline
-In-Reply-To: <157662558568.51652.16396789566261303659.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 04:33:05PM -0700, Dave Jiang wrote:
-> With the introduction of movdir64b instruction, there is now an instruction
 
-MOVDIR64B in caps like the SDM.
+--YZ5djTAD1cGYuMQK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> that can write 64 bytes of data atomicaly.
+Heya Linus,
 
-"atomically"
+Happy new year and new pull request for you to consider for v5.5-rc5
+(nice version numbers!). Couple of core fixes and few driver fixes to be
+considered.
 
-> Quoting from Intel SDM:
-> "There is no atomicity guarantee provided for the 64-byte load operation
-> from source address, and processor implementations may use multiple
-> load operations to read the 64-bytes. The 64-byte direct-store issued
-> by MOVDIR64B guarantees 64-byte write-completion atomicity. This means
-> that the data arrives at the destination in a single undivided 64-byte
-> write transaction."
-> 
-> We have identified at least 3 different use cases for this instruction in
-> the format of func(dst, src, count):
-> 1) Clear poison / Initialize MKTME memory
->    Destination is normal memory.
->    Source in normal memory. Does not increment. (Copy same line to all
->    targets)
->    Count (to clear/init multiple lines)
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
 
-If you're going to refer to @dst, @src and @count as the arguments of
-"func", then use the same spelling here too pls.
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
 
-> 2) Submit command(s) to new devices
->    Destination is a special MMIO region for a device. Does not increment.
->    Source is normal memory. Increments.
->    Count usually is 1, but can be multiple.
-> 3) Copy to iomem in big chunks
->    Destination is iomem and increments
->    Source in normal memory and increments
->    Count is number of chunks to copy
+are available in the Git repository at:
 
-I could use some blurb here explaining why is this needed. As in, device
-takes only 64byte writes as commands, we want it faster by shuffling
-more data in one go, etc, etc.
+  git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.5-=
+rc5
 
-> This commit adds support for case #2 to support device that will accept
+for you to fetch changes up to b0b5ce1010ffc50015eaec72b0028aaae3f526bb:
 
-s/This commit//
+  ioat: ioat_alloc_ring() failure handling. (2019-12-27 12:06:06 +0530)
 
-> commands via this instruction.
+----------------------------------------------------------------
+dmaengine fixes for v5.5-rc5
 
-This is hinting at the need for the atomic 64-bit writes but an explicit
-justification would be better.
+Bunch of fixes for:
+ - uninitialized dma_slave_caps access
+ - virt-dma use after free in vchan_complete()
+ - driver fixes for ioat, k3dma and jz4780
 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  arch/x86/include/asm/io.h |   42 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
-> index 9997521fc5cd..2d3c9dd39479 100644
-> --- a/arch/x86/include/asm/io.h
-> +++ b/arch/x86/include/asm/io.h
-> @@ -399,4 +399,46 @@ extern bool arch_memremap_can_ram_remap(resource_size_t offset,
->  extern bool phys_mem_access_encrypted(unsigned long phys_addr,
->  				      unsigned long size);
->  
-> +static inline void __iowrite512(void __iomem *__dst, const void *src)
+----------------------------------------------------------------
+Alexander.Barabash@dell.com (1):
+      ioat: ioat_alloc_ring() failure handling.
 
-I don't see that function used anywhere except in iosubmit_cmds512(). If
-you're not going to use it elsewhere, pls fold it into iosubmit_cmds512().
+John Stultz (1):
+      dmaengine: k3dma: Avoid null pointer traversal
 
-> +{
-> +	/*
-> +	 * Note that this isn't an "on-stack copy", just definition of "dst"
-> +	 * as a pointer to 64-bytes of stuff that is going to be overwritten.
-> +	 * In the movdir64b() case that may be needed as you can use the
-		  ^^^^^^^^^^^
+Lukas Wunner (1):
+      dmaengine: Fix access to uninitialized dma_slave_caps
 
-Is that a function?
+Paul Cercueil (1):
+      dmaengine: dma-jz4780: Also break descriptor chains on JZ4725B
 
-> +	 * MOVDIR64B instruction to copy arbitrary memory around. This trick
-> +	 * lets the compiler know how much gets clobbered.
-> +	 */
-> +	volatile struct { char _[64]; } *dst = __dst;
-> +
-> +	/* movdir64b [rdx], rax */
+Peter Ujfalusi (1):
+      dmaengine: virt-dma: Fix access after free in vchan_complete()
 
-MOVDIR64B - we usually spell instruction mnemonics in all caps.
+ drivers/dma/dma-jz4780.c  |  3 ++-
+ drivers/dma/ioat/dma.c    |  3 ++-
+ drivers/dma/k3dma.c       | 12 +++++++++---
+ drivers/dma/virt-dma.c    |  3 +--
+ include/linux/dmaengine.h |  5 ++++-
+ 5 files changed, 18 insertions(+), 8 deletions(-)
 
-> +	asm volatile(".byte 0x66, 0x0f, 0x38, 0xf8, 0x02"
-> +			: "=m" (dst)
-> +			: "d" (src), "a" (dst));
-> +}
-> +
-> +/**
-> + * iosubmit_cmds512 - copy data to single MMIO location, in 512-bit units
-> + * @dst: destination, in MMIO space (must be 512-bit aligned)
-> + * @src: source
-> + * @count: number of 512 bits quantities to submit
-> + *
-> + * Submit data from kernel space to MMIO space, in units of 512 bits at a
-> + * time.  Order of access is not guaranteed, nor is a memory barrier
-> + * performed afterwards.
-> + *
-> + * Warning: Do not use this helper unless your driver has checked that the CPU
-> + * instruction is supported on the platform.
-> + */
-> +static inline void iosubmit_cmds512(void __iomem *dst, const void *src,
-> +				    size_t count)
-> +{
-> +	const u8 *from = src;
-> +	const u8 *end = from + count * 64;
-> +
-> +	while (from < end) {
-> +		__iowrite512(dst, from);
-> +		from += 64;
-> +	}
-> +}
-> +
->  #endif /* _ASM_X86_IO_H */
+Thanks
+--=20
+~Vinod
 
-Thx.
+--YZ5djTAD1cGYuMQK
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Regards/Gruss,
-    Boris.
+-----BEGIN PGP SIGNATURE-----
 
-https://people.kernel.org/tglx/notes-about-netiquette
+iQIyBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAl4QzDgACgkQfBQHDyUj
+g0e2fQ/2I9343hEqKSxbQTGfVdxw1zJpM9d6MJuQwSnuyqn/Dvpi9AV7ixpnpFmq
+Jw966sIkXXQ8/xUwrVSxkQLCRgIQD1vLi+533/2PZKLTOcBp5svSORoDgvMHLtSr
+xi5LKM0DLVUSj1eKH/5vQPEoVGStAfQS8hBtFd+s8G3pCy16RS6DWoz/qDbB9zHT
+yhp6TPQ85uhUbbFANF7hF/brHi6Vg+LtTuey9XORQ5MmIvfYRqm/0ZnIvJhF+kQi
+qixgUqz+yVG2L5QYbCYPHPz3zvWbleC61VyDlthdG7GqD+DOoRiJD0xsGwZKta+a
+2ocADPlwTyp8y0mnbCXrArl34kbMivs3aIukGzMpxqmxN3k1Wr+FicsD2RjI6l2g
+3/W20V5L1qY4ddSc4Bs07yW9Y5tWFO2OSA9RsLMiFcD9lx1MllZsZAQRB4g6UWsQ
+5shjWbx/xmdgucf6smoX/RZ35n4wNZ7SFFuL3OE3G/Vf09VAMA8O3SKTuN1QJ2FH
+sVh5mwzJYi+bnszRTiLsaZEWuN25ro3ysSYLWa3u+2egsaMDZLgQW3mnzC7HNVa8
+SveicRYm096GgY9F4Bj+ZV7xZU+/APVuerEbkw46E9f1EctIVFisyqIiH6Iklije
+BhAg1sLAuL6PmD9ruoNtuwvSrHAcuG0KdUzuaNYSoEXNBN5SNw==
+=G97I
+-----END PGP SIGNATURE-----
+
+--YZ5djTAD1cGYuMQK--

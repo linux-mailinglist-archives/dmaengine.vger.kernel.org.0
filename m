@@ -2,132 +2,175 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1207312FF8F
-	for <lists+dmaengine@lfdr.de>; Sat,  4 Jan 2020 01:27:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E7CE130295
+	for <lists+dmaengine@lfdr.de>; Sat,  4 Jan 2020 15:19:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgADA1V (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 3 Jan 2020 19:27:21 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36324 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbgADA1V (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 3 Jan 2020 19:27:21 -0500
-Received: by mail-lf1-f65.google.com with SMTP id n12so32914215lfe.3;
-        Fri, 03 Jan 2020 16:27:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZWkELf4CBgeAYNIurRlueebcxpdZ5jZGPBfBd+vxH7I=;
-        b=Nu5Yi3JpH5JV3WI56GXPVEyXKneEuNmA9KVFQnmADeJt4zG1tBp+QKGsQJ1a0epyfK
-         mxkPpMLFK8dr15W0UpKBznsZaNh2OLgxEniIhlEvgiSWiYLgT286L0vN2Qs5hXQnlydS
-         uSQmC0ayM4PDvR/QiCySjLh28MupY9iMVTwyA1ZqNnTr8lOhLk1+8GfumFhrAfGtCSzQ
-         P/ixvPFk6SfBhSjqyv1PWPd/DVD6QProAGr982yyJC285Wo4sT5xF3eDw0c3YHLpj6OD
-         /mdus/Wl+FnrZ7TFkf4drVrj8fmr+B8sgxz6KNugnSmiGNc4RvosM0m+SVPxuGSesIrb
-         boVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZWkELf4CBgeAYNIurRlueebcxpdZ5jZGPBfBd+vxH7I=;
-        b=bTXX6ltIpYS/jGywrmBPFsQw7Nch0lE0mc855NMHKNPskuQ3cAVAjMgr/gwwi0oKSn
-         XmDxQ0r2m+px7d1RyYk7kWgnxgZPFDytAT+CUJ3EMn7XknAE7k4hwZTDV61UM334+voc
-         fPhXDi7S0peaKKG9zD51GWbK6L2bXriJOpiOAgL/4HLhpN0vNDB8IDfmFVo+8KytNp+8
-         VSyFS4JRBEiyGGR1popi2zbh3/aKyDGvKOTfJAvuVxFACcCRQNbJIwI/sBNdAX0NAHNj
-         xu0smUDNjIlkPsk46ER62Uol08W4euKJ7bt1kfsNI3WbTwnNcEt6d6HqnYbYo9Gkgbh+
-         nIfA==
-X-Gm-Message-State: APjAAAUpYZeekJhXxs2quvnaM/GxRKScNfZcllJ3iKFHXLGk29AyevRG
-        DgETRl8ENTEMnD/710fs8VbuITiF
-X-Google-Smtp-Source: APXvYqwQMOg4LAL9u2e6ktspztd+rveqntwhZF+XxZ9TeJSAzLKV4Lk3W8gY0012Vx8I4bR2Cn2emQ==
-X-Received: by 2002:ac2:4adc:: with SMTP id m28mr49831242lfp.26.1578097639050;
-        Fri, 03 Jan 2020 16:27:19 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id d25sm25340043ljj.51.2020.01.03.16.27.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jan 2020 16:27:18 -0800 (PST)
-Subject: Re: [PATCH v1 3/7] dmaengine: tegra-apb: Prevent race conditions on
- channel's freeing
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191228204640.25163-1-digetx@gmail.com>
- <20191228204640.25163-4-digetx@gmail.com>
- <20191230204555.GB24135@qmqm.qmqm.pl> <20191230205054.GC24135@qmqm.qmqm.pl>
- <4e1e4fef-f75c-f2e2-4d9e-29af69daf8db@gmail.com>
- <20200103081604.GD14228@qmqm.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <0d76d93d-a465-646b-8dfa-7b42d3f597f6@gmail.com>
-Date:   Sat, 4 Jan 2020 03:27:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        id S1725928AbgADOTB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 4 Jan 2020 09:19:01 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:33178 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725924AbgADOTB (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sat, 4 Jan 2020 09:19:01 -0500
+Received: from zn.tnic (p200300EC2F18F800CC7EEF965DC10FDE.dip0.t-ipconnect.de [IPv6:2003:ec:2f18:f800:cc7e:ef96:5dc1:fde])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8781A1EC0626;
+        Sat,  4 Jan 2020 15:18:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1578147539;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=grHGSZANPdRX4GYfQm3z7DlEzhiM+6VKLUd0nRV33tA=;
+        b=Y7/wS0YXsjQghvkU8yEZ40tZhEzBbsKiNBJ1HmgK5aYWcv9BkvQzjCnnOq9DqdlMvytTFd
+        sgmZJm+4JvQCu43OuEd3pjOrVI+sKdsWA46seByvy6aGs2d9BXTGeR9sWGEFCREPpM/Sk2
+        Q+yinBO2YOC2ZGxYyDClL8N7uGscesA=
+Date:   Sat, 4 Jan 2020 15:18:51 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org, dan.j.williams@intel.com, tony.luck@intel.com,
+        jing.lin@intel.com, ashok.raj@intel.com, sanjay.k.kumar@intel.com,
+        megha.dey@intel.com, jacob.jun.pan@intel.com, yi.l.liu@intel.com,
+        axboe@kernel.dk, akpm@linux-foundation.org, tglx@linutronix.de,
+        mingo@redhat.com, fenghua.yu@intel.com, hpa@zytor.com
+Subject: Re: [PATCH RFC v3 01/14] x86/asm: add iosubmit_cmds512() based on
+ movdir64b CPU instruction
+Message-ID: <20200104141851.GA31856@zn.tnic>
+References: <157662541786.51652.7666763291600764054.stgit@djiang5-desk3.ch.intel.com>
+ <157662558568.51652.16396789566261303659.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200103081604.GD14228@qmqm.qmqm.pl>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <157662558568.51652.16396789566261303659.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-03.01.2020 11:16, Michał Mirosław пишет:
-> On Thu, Jan 02, 2020 at 06:09:45PM +0300, Dmitry Osipenko wrote:
->> 30.12.2019 23:50, Michał Mirosław пишет:
->>> On Mon, Dec 30, 2019 at 09:45:55PM +0100, Michał Mirosław wrote:
->>>> On Sat, Dec 28, 2019 at 11:46:36PM +0300, Dmitry Osipenko wrote:
->>>>> It's unsafe to check the channel's "busy" state without taking a lock,
->>>>> it is also unsafe to assume that tasklet isn't in-fly.
->>>>
->>>> 'in-flight'. Also, the patch seems to have two independent bug-fixes
->>>> in it. Second one doesn't look right, at least not without an explanation.
->>>>
->>>> First:
->>>>
->>>>> -	if (tdc->busy)
->>>>> -		tegra_dma_terminate_all(dc);
->>>>> +	tegra_dma_terminate_all(dc);
->>>>
->>>> Second:
->>>>
->>>>> +	tasklet_kill(&tdc->tasklet);
->>>
->>> BTW, maybe you can convert the code to threaded interrupt handler and
->>> just get rid of the tasklet instead of fixing it?
->>
->> This shouldn't bring much benefit because the the code's logic won't be
->> changed since we will still have to use the threaded ISR part as the
->> bottom-half and then IRQ API doesn't provide a nice way to synchronize
->> interrupt's execution, while tasklet_kill() is a nice way to sync it.
+On Tue, Dec 17, 2019 at 04:33:05PM -0700, Dave Jiang wrote:
+> With the introduction of movdir64b instruction, there is now an instruction
+
+MOVDIR64B in caps like the SDM.
+
+> that can write 64 bytes of data atomicaly.
+
+"atomically"
+
+> Quoting from Intel SDM:
+> "There is no atomicity guarantee provided for the 64-byte load operation
+> from source address, and processor implementations may use multiple
+> load operations to read the 64-bytes. The 64-byte direct-store issued
+> by MOVDIR64B guarantees 64-byte write-completion atomicity. This means
+> that the data arrives at the destination in a single undivided 64-byte
+> write transaction."
 > 
-> What about synchronize_irq()?
+> We have identified at least 3 different use cases for this instruction in
+> the format of func(dst, src, count):
+> 1) Clear poison / Initialize MKTME memory
+>    Destination is normal memory.
+>    Source in normal memory. Does not increment. (Copy same line to all
+>    targets)
+>    Count (to clear/init multiple lines)
 
-Good point! I totally forgot about it.
+If you're going to refer to @dst, @src and @count as the arguments of
+"func", then use the same spelling here too pls.
 
-The only difference between tasklet and threaded ISR should be that
-hardware interrupt is masked during of the threaded ISR execution, but
-at quick glance it shouldn't be a problem.
+> 2) Submit command(s) to new devices
+>    Destination is a special MMIO region for a device. Does not increment.
+>    Source is normal memory. Increments.
+>    Count usually is 1, but can be multiple.
+> 3) Copy to iomem in big chunks
+>    Destination is iomem and increments
+>    Source in normal memory and increments
+>    Count is number of chunks to copy
 
-BTW, I'm now thinking that the current code is wrong by accumulating
-callbacks count in ISR if callback's execution takes too much time, not
-sure that it's something what DMA clients expect to happen, will try to
-verify that.
+I could use some blurb here explaining why is this needed. As in, device
+takes only 64byte writes as commands, we want it faster by shuffling
+more data in one go, etc, etc.
 
-It also will be nice to get rid of the free list since it only
-complicates code without any real benefits, I actually checked that
-kmalloc doesn't introduce any noticeable latency at all.
+> This commit adds support for case #2 to support device that will accept
 
-I'll probably defer the above changes for now, leaving them for 5.7,
-otherwise it could be a bit too many changes for this patchset
-(hopefully it will get into 5.6).
+s/This commit//
 
-> BTW, does tegra_dma_terminate_all() prevent further interrupts that might
-> cause the tasklet to be scheduled again?
+> commands via this instruction.
 
-Yes, it should prevent further interrupts because it stops hardware and
-clears interrupt status, thus in a worst case ISR could emit "Interrupt
-already served status" message.
+This is hinting at the need for the atomic 64-bit writes but an explicit
+justification would be better.
+
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  arch/x86/include/asm/io.h |   42 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
+> index 9997521fc5cd..2d3c9dd39479 100644
+> --- a/arch/x86/include/asm/io.h
+> +++ b/arch/x86/include/asm/io.h
+> @@ -399,4 +399,46 @@ extern bool arch_memremap_can_ram_remap(resource_size_t offset,
+>  extern bool phys_mem_access_encrypted(unsigned long phys_addr,
+>  				      unsigned long size);
+>  
+> +static inline void __iowrite512(void __iomem *__dst, const void *src)
+
+I don't see that function used anywhere except in iosubmit_cmds512(). If
+you're not going to use it elsewhere, pls fold it into iosubmit_cmds512().
+
+> +{
+> +	/*
+> +	 * Note that this isn't an "on-stack copy", just definition of "dst"
+> +	 * as a pointer to 64-bytes of stuff that is going to be overwritten.
+> +	 * In the movdir64b() case that may be needed as you can use the
+		  ^^^^^^^^^^^
+
+Is that a function?
+
+> +	 * MOVDIR64B instruction to copy arbitrary memory around. This trick
+> +	 * lets the compiler know how much gets clobbered.
+> +	 */
+> +	volatile struct { char _[64]; } *dst = __dst;
+> +
+> +	/* movdir64b [rdx], rax */
+
+MOVDIR64B - we usually spell instruction mnemonics in all caps.
+
+> +	asm volatile(".byte 0x66, 0x0f, 0x38, 0xf8, 0x02"
+> +			: "=m" (dst)
+> +			: "d" (src), "a" (dst));
+> +}
+> +
+> +/**
+> + * iosubmit_cmds512 - copy data to single MMIO location, in 512-bit units
+> + * @dst: destination, in MMIO space (must be 512-bit aligned)
+> + * @src: source
+> + * @count: number of 512 bits quantities to submit
+> + *
+> + * Submit data from kernel space to MMIO space, in units of 512 bits at a
+> + * time.  Order of access is not guaranteed, nor is a memory barrier
+> + * performed afterwards.
+> + *
+> + * Warning: Do not use this helper unless your driver has checked that the CPU
+> + * instruction is supported on the platform.
+> + */
+> +static inline void iosubmit_cmds512(void __iomem *dst, const void *src,
+> +				    size_t count)
+> +{
+> +	const u8 *from = src;
+> +	const u8 *end = from + count * 64;
+> +
+> +	while (from < end) {
+> +		__iowrite512(dst, from);
+> +		from += 64;
+> +	}
+> +}
+> +
+>  #endif /* _ASM_X86_IO_H */
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette

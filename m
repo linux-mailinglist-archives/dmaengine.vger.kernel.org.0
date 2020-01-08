@@ -2,105 +2,88 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 66DD11345D7
-	for <lists+dmaengine@lfdr.de>; Wed,  8 Jan 2020 16:10:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 788FB134F43
+	for <lists+dmaengine@lfdr.de>; Wed,  8 Jan 2020 23:05:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbgAHPKe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 8 Jan 2020 10:10:34 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37269 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726921AbgAHPKe (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 8 Jan 2020 10:10:34 -0500
-Received: by mail-lj1-f194.google.com with SMTP id o13so3687920ljg.4;
-        Wed, 08 Jan 2020 07:10:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8N6auOkOUI9EBQePB/gLYAhFAr4sHXqpFT+qTfELYHM=;
-        b=biuLjm7aMHQWJyjiDU1z8tHxoz2PkBpj3EllPwynYOXp3U1b25Y37N3fL9m7uYZBYJ
-         wJpmwVJne4XkIWn42w+2OG0Of24f3SMqDKrqnwRsXzkZAHWc8WWb2+MDv+E+vrb0zg07
-         Cz02hrb27HfQxgHSFsmPGfhRIQTZ1xOKgl5wAyQXEyTT2qK+IZVCHyHLefop8tfRJR3v
-         6uybFPww8NPheKBFGyGvMD9jmxfFxDX+kh5R7bomsX+oWTiD2lZF2eDYSDOWCpdkIAxe
-         io9hazK7DVZGv3sT7COO7Zr0nVDeLo4VrgFN8IHWwcOvqb0efqHNe7W3FHx3xiqNdzgO
-         fxVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8N6auOkOUI9EBQePB/gLYAhFAr4sHXqpFT+qTfELYHM=;
-        b=sIjdA926Gyk9YmhZa1uyxRipN8Qr0qGSHhfmIJkN+oYYfntZg4x9n53FFBHYvaKjTb
-         rbSxa7q0cuAaNlzzgjFuqb3MDRRojM/woJGOvjUg28O9jKyapTzk2rsdRX47/QS29ey1
-         2TspNE4TaNxXR11oI5lGxksqj2LuMdrXpurBoUeC8+2B9Dq/v55oMrNm0smHqGTOU0Ot
-         4M+d734LcZvdAns30KodVxnRCCdgO3L2VdkwXGx4MZkaunu3s1GA75J6U4nnPj7dWh/O
-         Wc8kbG7EDUHi9QwsVE2lt+W6+9cPdtpnrHVf3qomEXxJD4k07k91+Q0agj0sgE84Nvk+
-         b/Uw==
-X-Gm-Message-State: APjAAAXwsv/dwhsRmaKNg5dm2aCILuBmW3hRyEYGuuPvSU90P1Vk8CYy
-        gTOCXOw/8erqAs+703Bx2X8YVjE1
-X-Google-Smtp-Source: APXvYqxxccz+shxx6y4OUo6Cf2u0jOQFiHInlXXrdSYyWuxBoQ7/f9jW62bqg8Lu1WdVGt+EXIU3sg==
-X-Received: by 2002:a05:651c:282:: with SMTP id b2mr3162824ljo.41.1578496231767;
-        Wed, 08 Jan 2020 07:10:31 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id r26sm1512029lfm.82.2020.01.08.07.10.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2020 07:10:31 -0800 (PST)
-Subject: Re: [PATCH v3 09/13] dmaengine: tegra-apb: Remove runtime PM usage
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
+        id S1726721AbgAHWFZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 8 Jan 2020 17:05:25 -0500
+Received: from muru.com ([72.249.23.125]:50508 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726179AbgAHWFZ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 8 Jan 2020 17:05:25 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id B46DC80C5;
+        Wed,  8 Jan 2020 22:06:04 +0000 (UTC)
+Date:   Wed, 8 Jan 2020 14:05:20 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Colin King <colin.king@canonical.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200106011708.7463-1-digetx@gmail.com>
- <20200106011708.7463-10-digetx@gmail.com>
- <f63a68cf-bb9d-0e79-23f3-233fc97ca6f9@nvidia.com>
- <fd6215ac-a646-4e13-ee22-e815a69cd099@gmail.com>
- <01660250-0489-870a-6f0e-d74c5041e8e3@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c077c687-57dc-c33f-f434-57918492c789@gmail.com>
-Date:   Wed, 8 Jan 2020 18:10:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] dmaengine: ti: omap-dma: don't allow a null
+ od->plat pointer to be dereferenced
+Message-ID: <20200108220520.GJ5885@atomide.com>
+References: <20200106122325.39121-1-colin.king@canonical.com>
+ <b7200998-c8e7-0841-ce91-ad3834c63cae@ti.com>
+ <f6b24302-a90e-7aa5-b2e8-3c459e6d0598@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <01660250-0489-870a-6f0e-d74c5041e8e3@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f6b24302-a90e-7aa5-b2e8-3c459e6d0598@ti.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-07.01.2020 21:38, Jon Hunter пишет:
+* Peter Ujfalusi <peter.ujfalusi@ti.com> [200108 07:20]:
+> Colin, Tony,
 > 
-> On 07/01/2020 17:12, Dmitry Osipenko wrote:
->> 07.01.2020 18:13, Jon Hunter пишет:
->>>
->>> On 06/01/2020 01:17, Dmitry Osipenko wrote:
->>>> There is no benefit from runtime PM usage for the APB DMA driver because
->>>> it enables clock at the time of channel's allocation and thus clock stays
->>>> enabled all the time in practice, secondly there is benefit from manually
->>>> disabled clock because hardware auto-gates it during idle by itself.
->>>
->>> This assumes that the channel is allocated during a driver
->>> initialisation. That may not always be the case. I believe audio is one
->>> case where channels are requested at the start of audio playback.
->>
->> At least serial, I2C, SPI and T20 FUSE are permanently keeping channels
->> allocated, thus audio is an exception here. I don't think that it's
->> practical to assume that there is a real-world use-case where audio
->> driver is the only active DMA client.
->>
->> The benefits of gating the DMA clock are also dim, do you have any
->> power-consumption numbers that show that it's really worth to care about
->> the clock-gating?
+> On 07/01/2020 13.59, Peter Ujfalusi wrote:
+> > Colin,
+> > 
+> > On 06/01/2020 14.23, Colin King wrote:
+> >> From: Colin Ian King <colin.king@canonical.com>
+> >>
+> >> Currently when the call to dev_get_platdata returns null the driver issues
+> >> a warning and then later dereferences the null pointer.  Avoid this issue
+> >> by returning -EPROBE_DEFER errror rather when the platform data is null.
+> > 
+> > Thank you for noticing it!
+> > 
+> > Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> > 
+> >> Addresses-Coverity: ("Dereference after null check")
+> >> Fixes: 211010aeb097 ("dmaengine: ti: omap-dma: Pass sdma auxdata to driver and use it")
+> >> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> >> ---
+> >>  drivers/dma/ti/omap-dma.c | 4 +++-
+> >>  1 file changed, 3 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+> >> index fc8f7b2fc7b3..335c3fa7a3b1 100644
+> >> --- a/drivers/dma/ti/omap-dma.c
+> >> +++ b/drivers/dma/ti/omap-dma.c
+> >> @@ -1658,8 +1658,10 @@ static int omap_dma_probe(struct platform_device *pdev)
+> >>  	if (conf) {
+> >>  		od->cfg = conf;
+> >>  		od->plat = dev_get_platdata(&pdev->dev);
+> >> -		if (!od->plat)
+> >> +		if (!od->plat) {
+> >>  			dev_warn(&pdev->dev, "no sdma auxdata needed?\n");
+> >> +			return -EPROBE_DEFER;
 > 
-> No, but at the same time, I really don't see the point in this. In fact,
-> I think it is a step backwards. If we wanted to only enable clocks while
-> DMA channels are active we could. So I request you drop this.
+> I think we should make the print as dev_err("&pdev->dev,
+> "omap_system_dma_plat_info is missing") and return with -ENODEV. The
+> omap_system_dma_plat_info is _needed_ and if we have booted with device
+> tree it is not going to appear later.
+> 
+> Tony, what do you think?
 
-I'll take a look at making RPM active only during the time of DMA
-activity, otherwise it's pretty much a dead code as it is now.
+Yes makes sense, the auxdata is needed for the quirks for now.
+Eventually the quirks can be set directly in the dmaengine driver
+based on compatible and soc_device_match().
+
+Regards,
+
+Tony

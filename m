@@ -2,19 +2,19 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1134F1372A9
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jan 2020 17:18:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5AA51372B7
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jan 2020 17:19:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728603AbgAJQSn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 10 Jan 2020 11:18:43 -0500
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:25289 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728500AbgAJQSn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 10 Jan 2020 11:18:43 -0500
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+        id S1728660AbgAJQSv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 10 Jan 2020 11:18:51 -0500
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:27548 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728500AbgAJQSv (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 10 Jan 2020 11:18:51 -0500
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
   Claudiu.Beznea@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
   envelope-from="Claudiu.Beznea@microchip.com";
   x-sender="Claudiu.Beznea@microchip.com";
   x-conformance=spf_only; x-record-type="v=spf1";
@@ -22,30 +22,30 @@ Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
   a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
   include:servers.mcsv.net include:mktomail.com
   include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
   authenticity information available from domain of
   postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
   envelope-from="Claudiu.Beznea@microchip.com";
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: bgvyRviLtSMBagCbW5xU15eyDlYUnS2bKX3SApzPK+ZELkixZqoDg+qhOMwxYIVA+B81vBgAh4
- ppcuQyjdNHfre+ii56Ui0NDTNRyalmYKsAZwv7Y5N4StRauxz+AIxC6ZeLkAy0WkVr3zZswTpO
- ycLeK0lAg4BY5nkGnFCiVtmYJlN5R4cebLc3cwgAzPHcX8DmpXiiCQGUGsPhbNv8wX4QPUlWx3
- 3IlYCASxr2soI/fh9+iytkkHg8n3/Yrz8/wmRBH9CWxEb+H7syfZEGmAnIdK8lyzQeD7gnPaBg
- a/Q=
+Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 4g0fpLEraewUpnwanCBO4SqagWXfgX1jP3CXlv28NEsZBdS/uZuhUFNSEbSYH6jYoEvYB0aiBj
+ 194PvpUb5b1McfsGhfslRLvON+jBCEi6iPMszCQ9b7rJmydxf1uOeD27LVYxtgvylebtxVbNdH
+ fZsn8MgGK+FBR1AZZ0mwfXiTLZWJL9Xw6EU19tVNfB2wfFlN7y9GZM7OLtzNZ3YPIGynxQVdbu
+ l58CMi4eKbzqOzi8jWqZgPUTnN1CJUMgOU16Luit3p0obIQCT4AMHYfTTonRukd36qWLpbvYn4
+ mNM=
 X-IronPort-AV: E=Sophos;i="5.69,417,1571727600"; 
-   d="scan'208";a="60748306"
+   d="scan'208";a="60405364"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jan 2020 09:18:41 -0700
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jan 2020 09:18:49 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 10 Jan 2020 09:18:40 -0700
+ 15.1.1713.5; Fri, 10 Jan 2020 09:18:49 -0700
 Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 10 Jan 2020 09:18:32 -0700
+ 15.1.1713.5 via Frontend Transport; Fri, 10 Jan 2020 09:18:41 -0700
 From:   Claudiu Beznea <claudiu.beznea@microchip.com>
 To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
         <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
@@ -64,10 +64,12 @@ CC:     <devicetree@vger.kernel.org>,
         <linux-spi@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
         <linux-can@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
         Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 00/17] add device tree for SAM9X60 SoC and SAM9X60-EK board
-Date:   Fri, 10 Jan 2020 18:17:52 +0200
-Message-ID: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH v2 01/17] dt-bindings: at_xdmac: remove wildcard
+Date:   Fri, 10 Jan 2020 18:17:53 +0200
+Message-ID: <1578673089-3484-2-git-send-email-claudiu.beznea@microchip.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
+References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: dmaengine-owner@vger.kernel.org
@@ -75,65 +77,28 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-This series add device tree for SAM9X60 SoC and SAM9X60-EK board.
-Allong with these, there are patches that documents some compatibles
-for SAM9X60's IPs.
+Remove wildcard and use the available compatible.
 
-Changes in v2:
-- replace patch "dt-bindings: at_xdmac: add entry for microchip compatibles"
-  by patches:
-	- dt-bindings: at_xdmac: add microchip,sam9x60-dma
-	- dt-bindings: at_xdmac: remove wildcard.
-- replace patch "dt-bindings: atmel-usart: add microchip,<chip>-usart"
-  by patches:
-	- dt-bindings: atmel-usart: add microchip,sam9x60-{usart, dbgu}
-	- dt-bindings: atmel-usart: remove wildcard
-- remove patch "dt-bindings: spi_atmel: add microchip,sam9x60-spi"
-  as it was accepted
-- collect reviewed-by tags
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
+ Documentation/devicetree/bindings/dma/atmel-xdma.txt | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Claudiu Beznea (16):
-  dt-bindings: at_xdmac: remove wildcard.
-  dt-bindings: at_xdmac: add microchip,sam9x60-dma
-  dt-bindings: atmel-can: add microchip,sam9x60-can
-  dt-bindings: atmel-tcb: add microchip,sam9x60-tcb
-  dt-bindings: atmel-isi: add microchip,sam9x60-isi
-  dt-bindings: at91-sama5d2_adc: add microchip,sam9x60-adc
-  dt-bindings: atmel-matrix: add microchip,sam9x60-matrix
-  dt-bindings: atmel-nand: add microchip,sam9x60-pmecc
-  dt-bindings: atmel-sysreg: add microchip,sam9x60-ddramc
-  dt-bindings: atmel-smc: add microchip,sam9x60-smc
-  dt-bindings: atmel-gpbr: add microchip,sam9x60-gpbr
-  dt-bindings: atmel,at91rm9200-rtc: add microchip,sam9x60-rtc
-  dt-bindings: atmel-usart: remove wildcard
-  dt-bindings: atmel-usart: add microchip,sam9x60-{usart, dbgu}
-  dt-bindings: arm: add sam9x60-ek board
-  ARM: at91/defconfig: enable MMC_SDHCI_OF_AT91 and MICROCHIP_PIT64B
-
-Sandeep Sheriker Mallikarjun (1):
-  ARM: dts: at91: sam9x60: add device tree for soc and board
-
- .../devicetree/bindings/arm/atmel-at91.yaml        |   6 +
- .../devicetree/bindings/arm/atmel-sysregs.txt      |   1 +
- .../devicetree/bindings/dma/atmel-xdma.txt         |   4 +-
- .../bindings/iio/adc/at91-sama5d2_adc.txt          |   2 +-
- .../devicetree/bindings/media/atmel-isi.txt        |   2 +-
- .../devicetree/bindings/mfd/atmel-gpbr.txt         |   4 +-
- .../devicetree/bindings/mfd/atmel-matrix.txt       |   1 +
- .../devicetree/bindings/mfd/atmel-smc.txt          |   1 +
- .../devicetree/bindings/mfd/atmel-tcb.txt          |   4 +-
- .../devicetree/bindings/mfd/atmel-usart.txt        |  11 +-
- .../devicetree/bindings/mtd/atmel-nand.txt         |   1 +
- .../devicetree/bindings/net/can/atmel-can.txt      |   3 +-
- .../bindings/rtc/atmel,at91rm9200-rtc.txt          |   3 +-
- arch/arm/boot/dts/Makefile                         |   2 +
- arch/arm/boot/dts/at91-sam9x60ek.dts               | 647 +++++++++++++++++++
- arch/arm/boot/dts/sam9x60.dtsi                     | 691 +++++++++++++++++++++
- arch/arm/configs/at91_dt_defconfig                 |   4 +
- 17 files changed, 1373 insertions(+), 14 deletions(-)
- create mode 100644 arch/arm/boot/dts/at91-sam9x60ek.dts
- create mode 100644 arch/arm/boot/dts/sam9x60.dtsi
-
+diff --git a/Documentation/devicetree/bindings/dma/atmel-xdma.txt b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
+index 0eb2b3207e08..ad03920b7a28 100644
+--- a/Documentation/devicetree/bindings/dma/atmel-xdma.txt
++++ b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
+@@ -2,9 +2,7 @@
+ 
+ * XDMA Controller
+ Required properties:
+-- compatible: Should be "atmel,<chip>-dma".
+-  <chip> compatible description:
+-  - sama5d4: first SoC adding the XDMAC
++- compatible: Should be "atmel,sama5d4-dma".
+ - reg: Should contain DMA registers location and length.
+ - interrupts: Should contain DMA interrupt.
+ - #dma-cells: Must be <1>, used to represent the number of integer cells in
 -- 
 2.7.4
 

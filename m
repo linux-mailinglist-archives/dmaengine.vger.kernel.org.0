@@ -2,78 +2,138 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6028F136E45
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jan 2020 14:40:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3295F136F3D
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jan 2020 15:22:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgAJNkO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 10 Jan 2020 08:40:14 -0500
-Received: from relay10.mail.gandi.net ([217.70.178.230]:33685 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727639AbgAJNkO (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 10 Jan 2020 08:40:14 -0500
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 29C1E240016;
-        Fri, 10 Jan 2020 13:40:01 +0000 (UTC)
-Date:   Fri, 10 Jan 2020 14:40:01 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
-        vkoul@kernel.org, eugen.hristev@microchip.com, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        mchehab@kernel.org, lee.jones@linaro.org, richard.genoud@gmail.com,
-        radu_nicolae.pirea@upb.ro, tudor.ambarus@microchip.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        wg@grandegger.com, mkl@pengutronix.de, a.zummo@towertech.it,
-        broonie@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH 03/16] dt-bindings: atmel-tcb: add microchip,<chip>-tcb
-Message-ID: <20200110134001.GD1027187@piout.net>
-References: <1578488123-26127-1-git-send-email-claudiu.beznea@microchip.com>
- <1578488123-26127-4-git-send-email-claudiu.beznea@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1578488123-26127-4-git-send-email-claudiu.beznea@microchip.com>
+        id S1727820AbgAJOW5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 10 Jan 2020 09:22:57 -0500
+Received: from olimex.com ([184.105.72.32]:43850 "EHLO olimex.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727781AbgAJOW5 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 10 Jan 2020 09:22:57 -0500
+X-Greylist: delayed 655 seconds by postgrey-1.27 at vger.kernel.org; Fri, 10 Jan 2020 09:22:57 EST
+Received: from localhost.localdomain ([94.155.250.134])
+        by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
+        for <dmaengine@vger.kernel.org>; Fri, 10 Jan 2020 06:12:01 -0800
+From:   Stefan Mavrodiev <stefan@olimex.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel@vger.kernel.org (open list),
+        dmaengine@vger.kernel.org (open list:DMA GENERIC OFFLOAD ENGINE
+        SUBSYSTEM),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Allwinner
+        sunXi SoC support),
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS FOR ALLWINNER
+        A10)
+Cc:     linux-sunxi@googlegroups.com, Stefan Mavrodiev <stefan@olimex.com>
+Subject: [PATCH 1/2] dmaengine: sun4i: Add support for cyclic requests with dedicated DMA
+Date:   Fri, 10 Jan 2020 16:11:39 +0200
+Message-Id: <20200110141140.28527-2-stefan@olimex.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200110141140.28527-1-stefan@olimex.com>
+References: <20200110141140.28527-1-stefan@olimex.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 08/01/2020 14:55:10+0200, Claudiu Beznea wrote:
-> Add microchip,<chip>-tcb to DT bindings documentation. This is for
-> microchip,sam9x60-tcb.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  Documentation/devicetree/bindings/mfd/atmel-tcb.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/atmel-tcb.txt b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
-> index c4a83e364cb6..e1713e41f6e0 100644
-> --- a/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
-> +++ b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
-> @@ -1,6 +1,7 @@
->  * Device tree bindings for Atmel Timer Counter Blocks
-> -- compatible: Should be "atmel,<chip>-tcb", "simple-mfd", "syscon".
-> -  <chip> can be "at91rm9200" or "at91sam9x5"
-> +- compatible: Should be "atmel,<chip>-tcb", "microchip,<chip>-tcb",
-> +  "simple-mfd", "syscon".
-> +  <chip> can be "at91rm9200", "at91sam9x5" or "sam9x60"
+Currently the cyclic transfers can be used only with normal DMAs. They
+can be used by pcm_dmaengine module, which is required for implementing
+sound with sun4i-hdmi encoder. This is so because the controller can
+accept audio only from a dedicated DMA.
 
-atmel,sam9x60-tcb, microchip,at91rm9200-tcb and microchip,at91sam9x5-tcb
-are not allowed and the documentation should reflect that.
+This patch enables them, following the existing style for the
+scatter/gather type transfers.
 
-It would probably be easier to do that on top of the yaml conversion
-here:
-https://lore.kernel.org/lkml/20191009224006.5021-2-alexandre.belloni@bootlin.com/
+Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+---
+ drivers/dma/sun4i-dma.c | 45 ++++++++++++++++++++++-------------------
+ 1 file changed, 24 insertions(+), 21 deletions(-)
 
+diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
+index e397a50058c8..7b41815d86fb 100644
+--- a/drivers/dma/sun4i-dma.c
++++ b/drivers/dma/sun4i-dma.c
+@@ -669,43 +669,41 @@ sun4i_dma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf, size_t len,
+ 	dma_addr_t src, dest;
+ 	u32 endpoints;
+ 	int nr_periods, offset, plength, i;
++	u8 ram_type, io_mode, linear_mode;
+ 
+ 	if (!is_slave_direction(dir)) {
+ 		dev_err(chan2dev(chan), "Invalid DMA direction\n");
+ 		return NULL;
+ 	}
+ 
+-	if (vchan->is_dedicated) {
+-		/*
+-		 * As we are using this just for audio data, we need to use
+-		 * normal DMA. There is nothing stopping us from supporting
+-		 * dedicated DMA here as well, so if a client comes up and
+-		 * requires it, it will be simple to implement it.
+-		 */
+-		dev_err(chan2dev(chan),
+-			"Cyclic transfers are only supported on Normal DMA\n");
+-		return NULL;
+-	}
+-
+ 	contract = generate_dma_contract();
+ 	if (!contract)
+ 		return NULL;
+ 
+ 	contract->is_cyclic = 1;
+ 
+-	/* Figure out the endpoints and the address we need */
++	if (vchan->is_dedicated) {
++		io_mode = SUN4I_DDMA_ADDR_MODE_IO;
++		linear_mode = SUN4I_DDMA_ADDR_MODE_LINEAR;
++		ram_type = SUN4I_DDMA_DRQ_TYPE_SDRAM;
++	} else {
++		io_mode = SUN4I_NDMA_ADDR_MODE_IO;
++		linear_mode = SUN4I_NDMA_ADDR_MODE_LINEAR;
++		ram_type = SUN4I_NDMA_DRQ_TYPE_SDRAM;
++	}
++
+ 	if (dir == DMA_MEM_TO_DEV) {
+ 		src = buf;
+ 		dest = sconfig->dst_addr;
+-		endpoints = SUN4I_DMA_CFG_SRC_DRQ_TYPE(SUN4I_NDMA_DRQ_TYPE_SDRAM) |
+-			    SUN4I_DMA_CFG_DST_DRQ_TYPE(vchan->endpoint) |
+-			    SUN4I_DMA_CFG_DST_ADDR_MODE(SUN4I_NDMA_ADDR_MODE_IO);
++		endpoints = SUN4I_DMA_CFG_DST_DRQ_TYPE(vchan->endpoint) |
++			    SUN4I_DMA_CFG_DST_ADDR_MODE(io_mode) |
++			    SUN4I_DMA_CFG_SRC_DRQ_TYPE(ram_type);
+ 	} else {
+ 		src = sconfig->src_addr;
+ 		dest = buf;
+-		endpoints = SUN4I_DMA_CFG_SRC_DRQ_TYPE(vchan->endpoint) |
+-			    SUN4I_DMA_CFG_SRC_ADDR_MODE(SUN4I_NDMA_ADDR_MODE_IO) |
+-			    SUN4I_DMA_CFG_DST_DRQ_TYPE(SUN4I_NDMA_DRQ_TYPE_SDRAM);
++		endpoints = SUN4I_DMA_CFG_DST_DRQ_TYPE(ram_type) |
++			    SUN4I_DMA_CFG_SRC_DRQ_TYPE(vchan->endpoint) |
++			    SUN4I_DMA_CFG_SRC_ADDR_MODE(io_mode);
+ 	}
+ 
+ 	/*
+@@ -747,8 +745,13 @@ sun4i_dma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf, size_t len,
+ 			dest = buf + offset;
+ 
+ 		/* Make the promise */
+-		promise = generate_ndma_promise(chan, src, dest,
+-						plength, sconfig, dir);
++		if (vchan->is_dedicated)
++			promise = generate_ddma_promise(chan, src, dest,
++							plength, sconfig);
++		else
++			promise = generate_ndma_promise(chan, src, dest,
++							plength, sconfig, dir);
++
+ 		if (!promise) {
+ 			/* TODO: should we free everything? */
+ 			return NULL;
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.17.1
+

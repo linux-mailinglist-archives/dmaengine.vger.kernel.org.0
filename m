@@ -2,86 +2,93 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C3BA3137955
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jan 2020 23:08:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C1F99137F39
+	for <lists+dmaengine@lfdr.de>; Sat, 11 Jan 2020 11:17:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbgAJWH1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 10 Jan 2020 17:07:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55190 "EHLO mail.kernel.org"
+        id S1730400AbgAKKQs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 11 Jan 2020 05:16:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728063AbgAJWH0 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 10 Jan 2020 17:07:26 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729229AbgAKKQr (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:16:47 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B756F21569;
-        Fri, 10 Jan 2020 22:07:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E34AB20673;
+        Sat, 11 Jan 2020 10:16:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578694045;
-        bh=V3GbiHcfk6BfHbV+lS0V0Esc5dLq3FYLB6Xqf/5iltk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=10aczAVCN5InKBNkPy8RNtszHE/ArUo6nnwejsmxE3Rs9sIxqJay/AH+TZp+EyboE
-         XXjgDc/82A19wJGCbSzGnNBqXYKBIvtAd0M2mF0CZmkHC0lxCkHCrCi/gQuaql8jVB
-         lezaN31s24oB8pzbmISkMMzXfm5YRX9J3f0k8Utg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
-        Alexander Barabash <alexander.barabash@dell.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 3/6] ioat: ioat_alloc_ring() failure handling.
-Date:   Fri, 10 Jan 2020 17:07:18 -0500
-Message-Id: <20200110220721.28780-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200110220721.28780-1-sashal@kernel.org>
-References: <20200110220721.28780-1-sashal@kernel.org>
+        s=default; t=1578737807;
+        bh=cWDB7LJUkZzYeNN+RNZaHLYw/EuP9iPySeFRixVAIjA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0qhrTvJ622zuqqpkVY6pldy0gCLgzoi6fLpEKdLGssA+K+q3Fav7TZlYrzPTGIIBl
+         TVokV2Sr087WkhwqRXpD6MVH1E4QUO9n4BX+xy9AuCHloJLmKQFiIN3G08ewL08zRg
+         Je0b8p1WKEiuZZW1e3Yt6xXOhhTJXUYByXAEcbvI=
+Date:   Sat, 11 Jan 2020 10:16:38 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>, <vkoul@kernel.org>,
+        <eugen.hristev@microchip.com>, <knaack.h@gmx.de>,
+        <lars@metafoo.de>, <pmeerw@pmeerw.net>, <mchehab@kernel.org>,
+        <lee.jones@linaro.org>, <radu_nicolae.pirea@upb.ro>,
+        <richard.genoud@gmail.com>, <tudor.ambarus@microchip.com>,
+        <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <wg@grandegger.com>, <mkl@pengutronix.de>, <a.zummo@towertech.it>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
+        <linux-can@vger.kernel.org>, <linux-rtc@vger.kernel.org>
+Subject: Re: [PATCH v2 06/17] dt-bindings: at91-sama5d2_adc: add
+ microchip,sam9x60-adc
+Message-ID: <20200111101638.7920f26c@archlinux>
+In-Reply-To: <1578673089-3484-7-git-send-email-claudiu.beznea@microchip.com>
+References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
+        <1578673089-3484-7-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>
+On Fri, 10 Jan 2020 18:17:58 +0200
+Claudiu Beznea <claudiu.beznea@microchip.com> wrote:
 
-[ Upstream commit b0b5ce1010ffc50015eaec72b0028aaae3f526bb ]
+> Add microchip,sam9x60-adc to DT bindings documentation.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-If dma_alloc_coherent() returns NULL in ioat_alloc_ring(), ring
-allocation must not proceed.
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Until now, if the first call to dma_alloc_coherent() in
-ioat_alloc_ring() returned NULL, the processing could proceed, failing
-with NULL-pointer dereferencing further down the line.
+I'm assuming this lot of binding changes will all go via Rob.
+Let me know if you are expecting it to go via the various
+individual trees.
 
-Signed-off-by: Alexander Barabash <alexander.barabash@dell.com>
-Acked-by: Dave Jiang <dave.jiang@intel.com>
-Link: https://lore.kernel.org/r/75e9c0e84c3345d693c606c64f8b9ab5@x13pwhopdag1307.AMER.DELL.COM
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/dma/ioat/dma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Thanks,
 
-diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-index 49386ce04bf5..1389f0582e29 100644
---- a/drivers/dma/ioat/dma.c
-+++ b/drivers/dma/ioat/dma.c
-@@ -394,10 +394,11 @@ ioat_alloc_ring(struct dma_chan *c, int order, gfp_t flags)
- 
- 		descs->virt = dma_alloc_coherent(to_dev(ioat_chan),
- 						 SZ_2M, &descs->hw, flags);
--		if (!descs->virt && (i > 0)) {
-+		if (!descs->virt) {
- 			int idx;
- 
- 			for (idx = 0; idx < i; idx++) {
-+				descs = &ioat_chan->descs[idx];
- 				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
- 						  descs->virt, descs->hw);
- 				descs->virt = NULL;
--- 
-2.20.1
+Jonathan
+
+
+> ---
+>  Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
+> index 4a3c1d496e1a..07c59f301b31 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
+> @@ -1,7 +1,7 @@
+>  * AT91 SAMA5D2 Analog to Digital Converter (ADC)
+>  
+>  Required properties:
+> -  - compatible: Should be "atmel,sama5d2-adc".
+> +  - compatible: Should be "atmel,sama5d2-adc" or "microchip,sam9x60-adc".
+>    - reg: Should contain ADC registers location and length.
+>    - interrupts: Should contain the IRQ line for the ADC.
+>    - clocks: phandle to device clock.
 

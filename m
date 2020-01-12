@@ -2,48 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 196C913875F
+	by mail.lfdr.de (Postfix) with ESMTP id 7E255138760
 	for <lists+dmaengine@lfdr.de>; Sun, 12 Jan 2020 18:31:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733121AbgALRbd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 12 Jan 2020 12:31:33 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39877 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732972AbgALRbc (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 12 Jan 2020 12:31:32 -0500
-Received: by mail-lj1-f196.google.com with SMTP id l2so7438104lja.6;
-        Sun, 12 Jan 2020 09:31:30 -0800 (PST)
+        id S1733141AbgALRbe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 12 Jan 2020 12:31:34 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45374 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733115AbgALRbd (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 12 Jan 2020 12:31:33 -0500
+Received: by mail-lj1-f194.google.com with SMTP id j26so7423670ljc.12;
+        Sun, 12 Jan 2020 09:31:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=v3aEWiKiUIKlnyGDWrJTtogZVkNTJgIo6DWcgGLcpCo=;
-        b=rnVhNxqCfDE+XLWYc6q2yJ8rtxAYQKDTrumUj7JLMXqMQ1NyPnHHtoxUBvBLvICeXQ
-         Malqt2Rn3Gb4Jf4Z/sPTDHpKL4U5Ad5kBB5F2wcFA2ExuLvpBAdpi7XDbRkQh+gkFEfY
-         fQvjvkpTOTW+ubBmTIkQZGhzb/9N27FPB8LkvS82HP223GAxLan+ZzPtuRnm/oL/BPso
-         zpxcQpy7/OLbfoVZIoevFx/HTTy3hmx+RWscG9ebQvcTu8K25rdyFf2cHDRirmO39vnb
-         3Ff8Zk9kARvUE70FRyuAFTdAkKm1xc8RTeTbm+HuRTMfgu21+hXCoHkKw7Ecb/D4mWVX
-         jk9Q==
+        bh=iSzNtTGK3mbZvFsWdibdEoWrg4nzIZ5PMxmWTFl+mGA=;
+        b=VLhpT+xtSOOwihhyK3NBL7PpJlC5RGYW6+AL19VuiQzXByT/1ufPIS8D/RH7vouOJW
+         B298S+32ed8q7d4kG+fgtBv7U4ULiNaN9G5vjHGZAUm9faPwgGecPJYTkVPLg0V48yHh
+         jJo0Pgq3O0+v8i9gSah+8whTlahMvTWCDVJcva2nN0hd+n53T2hjgE96LH3Vwt8H2kXr
+         wiDztZLS3j3q8UfpIiWshX7/MzNGYgiYKAoz+9CeP95bJ82DqyixnG45O80Rqfm16Fkc
+         yiQR8AJOzrY+/zG/iwPBAV2yycuQD25y8vwBaTPnYfnL/wi7DToyAEnHG95YHbR5CfBH
+         XbeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=v3aEWiKiUIKlnyGDWrJTtogZVkNTJgIo6DWcgGLcpCo=;
-        b=kEhogkqTUwqEis9pJCvctB1/2G68Y/nN22048DQyTfSz1TQjAbzkos4bMbjd6S3BvF
-         FJ+qo6KYNKe9Pn4ffq21lGEzZTna4rBqrx1UEQ2850b2dc/3G4wLJuEmQwwiRamGNX0i
-         Efq1dlIz7gMB3q5FmjmQmuWmv1+Z+3EUeTPYKuPihBAlZCxBjfpF5yYNQk7CAGF36I6D
-         AX7WjalWcVpHLl41wbE5UHbh7r2OdkAiVfu3mTiiP89sknmMZMgY74smrVlJC9Um7hzj
-         gPIQtO49+ShVAYCYzgLFUGBThZy+RKOZ1XZ16X0+S+W1idG2nvnqO1gkKpXmgBMBovaq
-         dkJg==
-X-Gm-Message-State: APjAAAWWjVnFpeZ1CEGXCCDqoRAOyw8f5nW7izuIs7pSJ9Y24/pfjyXg
-        ywOoUfjeurgq2w0efRWfLxDn7bkK
-X-Google-Smtp-Source: APXvYqxJOOnnEe+TT/kaxiDI0CySBUJuqn6U8+sEPnyhnWtqT37vwWichFveYRRMS5pkAlEoacw7MA==
-X-Received: by 2002:a2e:9592:: with SMTP id w18mr8415393ljh.98.1578850289846;
-        Sun, 12 Jan 2020 09:31:29 -0800 (PST)
+        bh=iSzNtTGK3mbZvFsWdibdEoWrg4nzIZ5PMxmWTFl+mGA=;
+        b=NATfVFjN/R8qocyqJpXzD/jY18Tu3/3mkz2mW2JDM74PrYgxMKG5QaXIPdB+PWyVvX
+         csv1j+MDfkXoBC2ukwLElNtMN6WMauL7VYl1lxAziJt+fOaSXTT4bU/I2XAPwFzsQnOe
+         x5iUz39nV/y5I/srxUyOjlnGr5DeTssKxPTUZunt4RzLoQZOVSfIHd+49gD6s7wlvRWX
+         2/ivnP6txAuDaEnPIuETfSB1tjqYkawPiVIIBh2mAzUMCcys0OeRWFMk+oRhmayF+GXI
+         mEcc3AiDKzSphHIXXD4S2stJ4w1F6kzP7+EFFgjHkGU0NVoV5wMlVR3ru9kIL5O/FCBe
+         NugA==
+X-Gm-Message-State: APjAAAVsztuLjtlRBo19kZYrLVyKndf+QYopr/lsLSYCj/sFgLSjZGz9
+        dkxeTVWHcYbPNGEhDUSQd1I=
+X-Google-Smtp-Source: APXvYqz69GLc2KT2ts1nF62Z5SiaR2QrLqQYyJCJ1+hOSA3Q6Mtq/x1Mut6cnygLHSPhmXAuRcuSYA==
+X-Received: by 2002:a05:651c:32b:: with SMTP id b11mr8585302ljp.203.1578850290755;
+        Sun, 12 Jan 2020 09:31:30 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id 140sm4458888lfk.78.2020.01.12.09.31.28
+        by smtp.gmail.com with ESMTPSA id 140sm4458888lfk.78.2020.01.12.09.31.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jan 2020 09:31:29 -0800 (PST)
+        Sun, 12 Jan 2020 09:31:30 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -53,9 +53,9 @@ To:     Laxman Dewangan <ldewangan@nvidia.com>,
         =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
 Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 01/14] dmaengine: tegra-apb: Fix use-after-free
-Date:   Sun, 12 Jan 2020 20:29:53 +0300
-Message-Id: <20200112173006.29863-2-digetx@gmail.com>
+Subject: [PATCH v4 02/14] dmaengine: tegra-apb: Implement synchronization callback
+Date:   Sun, 12 Jan 2020 20:29:54 +0300
+Message-Id: <20200112173006.29863-3-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200112173006.29863-1-digetx@gmail.com>
 References: <20200112173006.29863-1-digetx@gmail.com>
@@ -66,56 +66,40 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-I was doing some experiments with I2C and noticed that Tegra APB DMA
-driver crashes sometime after I2C DMA transfer termination. The crash
-happens because tegra_dma_terminate_all() bails out immediately if pending
-list is empty, thus it doesn't release the half-completed descriptors
-which are getting re-used before ISR tasklet kicks-in.
+The ISR tasklet could be kept scheduled after DMA transfer termination,
+let's add synchronization callback which blocks until tasklet is finished.
 
- tegra-i2c 7000c400.i2c: DMA transfer timeout
- elants_i2c 0-0010: elants_i2c_irq: failed to read data: -110
- ------------[ cut here ]------------
- WARNING: CPU: 0 PID: 142 at lib/list_debug.c:45 __list_del_entry_valid+0x45/0xac
- list_del corruption, ddbaac44->next is LIST_POISON1 (00000100)
- Modules linked in:
- CPU: 0 PID: 142 Comm: kworker/0:2 Not tainted 5.5.0-rc2-next-20191220-00175-gc3605715758d-dirty #538
- Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
- Workqueue: events_freezable_power_ thermal_zone_device_check
- [<c010e5c5>] (unwind_backtrace) from [<c010a1c5>] (show_stack+0x11/0x14)
- [<c010a1c5>] (show_stack) from [<c0973925>] (dump_stack+0x85/0x94)
- [<c0973925>] (dump_stack) from [<c011f529>] (__warn+0xc1/0xc4)
- [<c011f529>] (__warn) from [<c011f7e9>] (warn_slowpath_fmt+0x61/0x78)
- [<c011f7e9>] (warn_slowpath_fmt) from [<c042497d>] (__list_del_entry_valid+0x45/0xac)
- [<c042497d>] (__list_del_entry_valid) from [<c047a87f>] (tegra_dma_tasklet+0x5b/0x154)
- [<c047a87f>] (tegra_dma_tasklet) from [<c0124799>] (tasklet_action_common.constprop.0+0x41/0x7c)
- [<c0124799>] (tasklet_action_common.constprop.0) from [<c01022ab>] (__do_softirq+0xd3/0x2a8)
- [<c01022ab>] (__do_softirq) from [<c0124683>] (irq_exit+0x7b/0x98)
- [<c0124683>] (irq_exit) from [<c0168c19>] (__handle_domain_irq+0x45/0x80)
- [<c0168c19>] (__handle_domain_irq) from [<c043e429>] (gic_handle_irq+0x45/0x7c)
- [<c043e429>] (gic_handle_irq) from [<c0101aa5>] (__irq_svc+0x65/0x94)
- Exception stack(0xde2ebb90 to 0xde2ebbd8)
-
-Cc: <stable@vger.kernel.org>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/dma/tegra20-apb-dma.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/dma/tegra20-apb-dma.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index 3a45079d11ec..319f31d27014 100644
+index 319f31d27014..664e9c5df3ba 100644
 --- a/drivers/dma/tegra20-apb-dma.c
 +++ b/drivers/dma/tegra20-apb-dma.c
-@@ -756,10 +756,6 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
- 	bool was_busy;
+@@ -798,6 +798,13 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+ 	return 0;
+ }
  
- 	spin_lock_irqsave(&tdc->lock, flags);
--	if (list_empty(&tdc->pending_sg_req)) {
--		spin_unlock_irqrestore(&tdc->lock, flags);
--		return 0;
--	}
++static void tegra_dma_synchronize(struct dma_chan *dc)
++{
++	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
++
++	tasklet_kill(&tdc->tasklet);
++}
++
+ static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
+ 					       struct tegra_dma_sg_req *sg_req)
+ {
+@@ -1506,6 +1513,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
+ 	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+ 	tdma->dma_dev.device_config = tegra_dma_slave_config;
+ 	tdma->dma_dev.device_terminate_all = tegra_dma_terminate_all;
++	tdma->dma_dev.device_synchronize = tegra_dma_synchronize;
+ 	tdma->dma_dev.device_tx_status = tegra_dma_tx_status;
+ 	tdma->dma_dev.device_issue_pending = tegra_dma_issue_pending;
  
- 	if (!tdc->busy)
- 		goto skip_dma_stop;
 -- 
 2.24.0
 

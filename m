@@ -2,93 +2,123 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C1F99137F39
-	for <lists+dmaengine@lfdr.de>; Sat, 11 Jan 2020 11:17:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EAF0E13875C
+	for <lists+dmaengine@lfdr.de>; Sun, 12 Jan 2020 18:31:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730400AbgAKKQs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 11 Jan 2020 05:16:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60336 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729229AbgAKKQr (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:16:47 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E34AB20673;
-        Sat, 11 Jan 2020 10:16:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737807;
-        bh=cWDB7LJUkZzYeNN+RNZaHLYw/EuP9iPySeFRixVAIjA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0qhrTvJ622zuqqpkVY6pldy0gCLgzoi6fLpEKdLGssA+K+q3Fav7TZlYrzPTGIIBl
-         TVokV2Sr087WkhwqRXpD6MVH1E4QUO9n4BX+xy9AuCHloJLmKQFiIN3G08ewL08zRg
-         Je0b8p1WKEiuZZW1e3Yt6xXOhhTJXUYByXAEcbvI=
-Date:   Sat, 11 Jan 2020 10:16:38 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <vkoul@kernel.org>,
-        <eugen.hristev@microchip.com>, <knaack.h@gmx.de>,
-        <lars@metafoo.de>, <pmeerw@pmeerw.net>, <mchehab@kernel.org>,
-        <lee.jones@linaro.org>, <radu_nicolae.pirea@upb.ro>,
-        <richard.genoud@gmail.com>, <tudor.ambarus@microchip.com>,
-        <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <wg@grandegger.com>, <mkl@pengutronix.de>, <a.zummo@towertech.it>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        <linux-can@vger.kernel.org>, <linux-rtc@vger.kernel.org>
-Subject: Re: [PATCH v2 06/17] dt-bindings: at91-sama5d2_adc: add
- microchip,sam9x60-adc
-Message-ID: <20200111101638.7920f26c@archlinux>
-In-Reply-To: <1578673089-3484-7-git-send-email-claudiu.beznea@microchip.com>
-References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
-        <1578673089-3484-7-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1732975AbgALRbb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 12 Jan 2020 12:31:31 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37045 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728512AbgALRbb (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 12 Jan 2020 12:31:31 -0500
+Received: by mail-lf1-f67.google.com with SMTP id b15so5161737lfc.4;
+        Sun, 12 Jan 2020 09:31:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HL3afQ+2XxQB+ynh5iqFR45GHfhJh9TiDp615Gudnb4=;
+        b=KhECHmAVbC3Fprb9kCDCVjlCGhTNHOkSopDW0RZV93mxWB7MBdQq5hPuBfKrkI4GeT
+         kM5kjdpBUnyk2Qjio0B9lty7PwCXl11BdriCtvhJ4cOxbZ89T61UvM6zli8THNekLJLF
+         eIIkKyhDJqwewxySl3Vf9X93FhVrhjsO9h04QzGDfvpITIxN5mbZ5rG8BrDSyL3NjML4
+         iNxu3yAy3jv5W5B5828OdTLV86KIZ5ANZqgtHmuxkdgKrNLoYqcZQFgafH+V04XE3Hrq
+         BHDkYZJo38QSX7BYKBDL7J3qFNiz/yzppLRVLpOQRJPK+7eIBob7F1Byy112TNS8hvD5
+         X+Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HL3afQ+2XxQB+ynh5iqFR45GHfhJh9TiDp615Gudnb4=;
+        b=iohWnhCTLwDKB/S53sb5/MmmKWftLVFpeIHBTmLJ1Y+k5CfjMdLqZgNXx8aVcKI/hf
+         tyq24mUpJduF9ltIe0DNJs17zTDVVGfRcTt+TwlpNIHjlWDRtnN/PhNls4L35u7IBXLS
+         1qY35EeuE6Z6d2ulBNPof5HxPFXyo0VYTpBKbkw7fn/xdbjwHBNDCXzZHBnaHpi1OXpk
+         3o2/meymOdMBK759FSRQcE/AYFHxDlGeZTgWGxU284VWwS+y6BItxqk+ERt8kyI8ofmo
+         FlhWCwWuL2TKfOlYiHENDO6AvLvDbaWsDTjSAMb7dGxZLyTGdjxRVz3+oFGN/R7wlJEX
+         21AQ==
+X-Gm-Message-State: APjAAAUu5IkS93+H3nxxasFFZx83iXePst6EDiqFo8hGHqNLqWX92AbT
+        YP/PcZgM4p0/0EGJPImrlqA=
+X-Google-Smtp-Source: APXvYqx4g4hUx2cpDSpbPJ7XN261mpPtdubTxU9fvGwI1/9jdskROiJOMxQHgDvu7mPjWXPQu2Y4Ng==
+X-Received: by 2002:ac2:555c:: with SMTP id l28mr7526643lfk.52.1578850288898;
+        Sun, 12 Jan 2020 09:31:28 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id 140sm4458888lfk.78.2020.01.12.09.31.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jan 2020 09:31:28 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 00/14] NVIDIA Tegra APB DMA driver fixes and improvements
+Date:   Sun, 12 Jan 2020 20:29:52 +0300
+Message-Id: <20200112173006.29863-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, 10 Jan 2020 18:17:58 +0200
-Claudiu Beznea <claudiu.beznea@microchip.com> wrote:
+Hello,
 
-> Add microchip,sam9x60-adc to DT bindings documentation.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+This series fixes some problems that I spotted recently, secondly the
+driver's code gets a cleanup. Please review and apply, thanks in advance!
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Changelog:
 
-I'm assuming this lot of binding changes will all go via Rob.
-Let me know if you are expecting it to go via the various
-individual trees.
+v4: - Addressed Jon's request to *not* remove the runtime PM usage, instead
+      there is now new patch that makes RPM more practical:
 
-Thanks,
+        dmaengine: tegra-apb: Keep clock enabled only during of DMA transfer
 
-Jonathan
+    - Added new minor patch to clean up RPM's teardown:
 
+        dmaengine: tegra-apb: Clean up runtime PM teardown
 
-> ---
->  Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-> index 4a3c1d496e1a..07c59f301b31 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-> @@ -1,7 +1,7 @@
->  * AT91 SAMA5D2 Analog to Digital Converter (ADC)
->  
->  Required properties:
-> -  - compatible: Should be "atmel,sama5d2-adc".
-> +  - compatible: Should be "atmel,sama5d2-adc" or "microchip,sam9x60-adc".
->    - reg: Should contain ADC registers location and length.
->    - interrupts: Should contain the IRQ line for the ADC.
->    - clocks: phandle to device clock.
+v3: - In the review comment to v1 Michał Mirosław suggested that "Prevent
+      race conditions on channel's freeing" does changes that deserve to
+      be separated into two patches. I factored out and improved tasklet
+      releasing into this new patch:
+
+        dmaengine: tegra-apb: Clean up tasklet releasing
+
+    - The "Fix use-after-free" patch got an improved commit message.
+
+v2: - I took another look at the driver and spotted few more things that
+      could be improved, which resulted in these new patches:
+
+        dmaengine: tegra-apb: Remove runtime PM usage
+        dmaengine: tegra-apb: Clean up suspend-resume
+        dmaengine: tegra-apb: Add missing of_dma_controller_free
+        dmaengine: tegra-apb: Allow to compile as a loadable kernel module
+        dmaengine: tegra-apb: Remove MODULE_ALIAS
+
+Dmitry Osipenko (14):
+  dmaengine: tegra-apb: Fix use-after-free
+  dmaengine: tegra-apb: Implement synchronization callback
+  dmaengine: tegra-apb: Prevent race conditions on channel's freeing
+  dmaengine: tegra-apb: Clean up tasklet releasing
+  dmaengine: tegra-apb: Prevent race conditions of tasklet vs free list
+  dmaengine: tegra-apb: Use devm_platform_ioremap_resource
+  dmaengine: tegra-apb: Use devm_request_irq
+  dmaengine: tegra-apb: Fix coding style problems
+  dmaengine: tegra-apb: Clean up runtime PM teardown
+  dmaengine: tegra-apb: Keep clock enabled only during of DMA transfer
+  dmaengine: tegra-apb: Clean up suspend-resume
+  dmaengine: tegra-apb: Add missing of_dma_controller_free
+  dmaengine: tegra-apb: Allow to compile as a loadable kernel module
+  dmaengine: tegra-apb: Remove MODULE_ALIAS
+
+ drivers/dma/Kconfig           |   2 +-
+ drivers/dma/tegra20-apb-dma.c | 509 +++++++++++++++++-----------------
+ 2 files changed, 263 insertions(+), 248 deletions(-)
+
+-- 
+2.24.0
 

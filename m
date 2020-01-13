@@ -2,91 +2,72 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BB8B813876D
-	for <lists+dmaengine@lfdr.de>; Sun, 12 Jan 2020 18:32:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFF30138AF0
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Jan 2020 06:37:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733242AbgALRbz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 12 Jan 2020 12:31:55 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36128 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733197AbgALRbo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 12 Jan 2020 12:31:44 -0500
-Received: by mail-lf1-f66.google.com with SMTP id n12so5153822lfe.3;
-        Sun, 12 Jan 2020 09:31:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=EVgvDl53i+vPBSkzgipL2f7yd+gUN+cTRTJ+9Dy9ATg=;
-        b=WHMulbMfP+gG/qPUHdjCEhz9ZAuexs7xrWz+rt17nYhHsnTqWPqJy21hbbuPSXZZcX
-         o76gVaCku4QL19yNdce4TpuPQpgNmRgFMsMd4XhDEXDOx8YWRITbGZE9s7SjtakHQfCs
-         G6HsN3BbR2HYL9guNa0IimYuL1WSP6ki+O/FAJ78lB/Boc+8/wxGcIS3adV0XTfyPcXC
-         xEjM6zOMnjICDNRw1eQUxW4g2UGoIdKOdaq7xwV8NSXcR6IjpwvL4WM6gzJq4fpnbDtR
-         DYFLEZgUsd6bgj7qwhtxpnOB8xHHwUnOxiqvX6vhM7Kcf32NLkYuGu6kudXZzVhTmTwQ
-         z8LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=EVgvDl53i+vPBSkzgipL2f7yd+gUN+cTRTJ+9Dy9ATg=;
-        b=a3yBmjeD7zZBZd/nM3kp+qaCtU0TvJvh+THvUzHg7UQDLChROLtZmv6Q/pS1cdWtND
-         TFkRRa5osNemcsv6qrKLaK2i6kLn2tgdMeA74R8DOekryE2DOS/cpYtNvP8T3Bd+yzzZ
-         QoUuqL2bXTVcgIdGOoFa0iZlJIyd/XJkyQtjTvs4FbfuUH86zVZltdBvAd5DLFokCUFt
-         cCM8lIirLnzFSnp6vQEFJyzH82/cy3gMABqg6bENhjzSis9LTVusNCMz14IaRCKzbyIi
-         fZaZ2gMwz7FhaA/PsSl8EarA1uh7qlCz88hBBmFi8tRvryhPaTYApfqtV2Ei0jY2jkq5
-         qRHQ==
-X-Gm-Message-State: APjAAAWZknMH6qjmvunhGEEQfDdpMSyO5lHoqANZgs+mbY6iaNhFvj05
-        mliak8mC+wrbgmT/WTcpDJc=
-X-Google-Smtp-Source: APXvYqxuvn1YNVbrHwYIIOff8+3bBu2pceXbSKOZlk5bGqBqAcwqGfCfN5KhgOSIWyiXKZHzXgpuuA==
-X-Received: by 2002:a19:6a0e:: with SMTP id u14mr5421763lfu.197.1578850301617;
-        Sun, 12 Jan 2020 09:31:41 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id 140sm4458888lfk.78.2020.01.12.09.31.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jan 2020 09:31:41 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 14/14] dmaengine: tegra-apb: Remove MODULE_ALIAS
-Date:   Sun, 12 Jan 2020 20:30:06 +0300
-Message-Id: <20200112173006.29863-15-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200112173006.29863-1-digetx@gmail.com>
-References: <20200112173006.29863-1-digetx@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726055AbgAMFhp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 13 Jan 2020 00:37:45 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:32912 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725978AbgAMFhp (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 13 Jan 2020 00:37:45 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 89A1C1A01C0;
+        Mon, 13 Jan 2020 06:37:43 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5B8A81A01A4;
+        Mon, 13 Jan 2020 06:37:30 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 246E540285;
+        Mon, 13 Jan 2020 13:37:17 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, vkoul@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, ulf.hansson@linaro.org,
+        srinivas.kandagatla@linaro.org, broonie@kernel.org,
+        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
+        rjones@gateworks.com, marcel.ziswiler@toradex.com,
+        sebastien.szymanski@armadeus.com, aisheng.dong@nxp.com,
+        richard.hu@technexion.com, angus@akkea.ca, cosmin.stoica@nxp.com,
+        l.stach@pengutronix.de, rabeeh@solid-run.com,
+        leonard.crestez@nxp.com, daniel.baluta@nxp.com, jun.li@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-spi@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 1/7] dt-bindings: fsl-imx-sdma: Add i.MX8MM/i.MX8MN/i.MX8MP compatible string
+Date:   Mon, 13 Jan 2020 13:33:16 +0800
+Message-Id: <1578893602-14395-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Tegra APB DMA driver is an Open Firmware driver and thus it uses OF alias
-naming scheme which overrides MODULE_ALIAS, meaning that MODULE_ALIAS does
-nothing and could be removed safely.
+Add imx8mm/imx8mn/imx8mp sdma support.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/dma/tegra20-apb-dma.c | 1 -
- 1 file changed, 1 deletion(-)
+New patch
+---
+ Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index fbbb6a60901e..0a45dd77618c 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -1688,7 +1688,6 @@ static struct platform_driver tegra_dmac_driver = {
- 
- module_platform_driver(tegra_dmac_driver);
- 
--MODULE_ALIAS("platform:tegra20-apbdma");
- MODULE_DESCRIPTION("NVIDIA Tegra APB DMA Controller driver");
- MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
- MODULE_LICENSE("GPL v2");
+diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+index 9d8bbac..c9e9740 100644
+--- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
++++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+@@ -10,6 +10,9 @@ Required properties:
+       "fsl,imx6q-sdma"
+       "fsl,imx7d-sdma"
+       "fsl,imx8mq-sdma"
++      "fsl,imx8mm-sdma"
++      "fsl,imx8mn-sdma"
++      "fsl,imx8mp-sdma"
+   The -to variants should be preferred since they allow to determine the
+   correct ROM script addresses needed for the driver to work without additional
+   firmware.
 -- 
-2.24.0
+2.7.4
 

@@ -2,177 +2,198 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7778113ADEC
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jan 2020 16:45:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D19CF13B1AC
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jan 2020 19:08:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgANPo7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 14 Jan 2020 10:44:59 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5534 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbgANPo7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Jan 2020 10:44:59 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1de1e60000>; Tue, 14 Jan 2020 07:44:38 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 14 Jan 2020 07:44:58 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 14 Jan 2020 07:44:58 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jan
- 2020 15:44:56 +0000
-Subject: Re: [PATCH v4 07/14] dmaengine: tegra-apb: Use devm_request_irq
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200112173006.29863-1-digetx@gmail.com>
- <20200112173006.29863-8-digetx@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <915e9583-7f1e-a045-1ced-cb0e60cb156c@nvidia.com>
-Date:   Tue, 14 Jan 2020 15:44:54 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1726971AbgANSIY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 14 Jan 2020 13:08:24 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:49550 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgANSIX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Jan 2020 13:08:23 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00EI35PI135086;
+        Tue, 14 Jan 2020 18:08:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=8huRquYJuRzktEGhLgBn3jch4GfJtH2XqGhnCkGfssw=;
+ b=sjLkjcigTAvd2hbqEY+IHT16I8X12Wq7ECnPesHsmDHbQRezbEyd9oHjd08M/zLLFDqg
+ hi5VDwFKAjeUYuj6e9YguvE9eYYGMhd7JUEGxXtzCoeGG2UPDW45I1ETz1lbj3/gNANV
+ Xp5je2uSnPrmvxD4z+ai8OmRR+lKMfa+tYmxPbDXZRUMkHfu4Rz4DhtDAN4/Dg+j45i+
+ qiuKZ5lWW/B/mLTXmxIeVtvqai0vf5bXwtWmBIUAhur/m2p/M6LrNJqmhu1Nmf1v6wVj
+ 0cKchYbG4CUGNeezEAdFtssB2fntWkimymkl1m4GvWhUaNeb4hbHHWBr69gRDVEwIWow pg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2xf73tqk92-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jan 2020 18:08:10 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00EI4KsI061308;
+        Tue, 14 Jan 2020 18:06:10 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2xh2tp4n1b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jan 2020 18:06:09 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00EI688F009660;
+        Tue, 14 Jan 2020 18:06:09 GMT
+Received: from [10.209.227.41] (/10.209.227.41)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 Jan 2020 10:06:08 -0800
+Subject: Re: [PATCH v8 02/18] soc: ti: k3: add navss ringacc driver
+To:     Sekhar Nori <nsekhar@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>, vkoul@kernel.org,
+        robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
+Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
+        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
+        j-keerthy@ti.com, vigneshr@ti.com, frowand.list@gmail.com
+References: <20191223110458.30766-1-peter.ujfalusi@ti.com>
+ <20191223110458.30766-3-peter.ujfalusi@ti.com>
+ <6d70686b-a94e-18d1-7b33-ff9df7176089@ti.com>
+ <900c2f21-22bf-47f9-5c3c-0a3d95a5d645@oracle.com>
+ <ea6a87ae-b978-a786-27eb-db99483a82d9@ti.com>
+ <f0230e88-bd9b-cd6d-433d-06d507cafcbd@ti.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <9177657a-71c7-7bd0-a981-3ef1f736d4dc@oracle.com>
+Date:   Tue, 14 Jan 2020 10:06:06 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20200112173006.29863-8-digetx@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <f0230e88-bd9b-cd6d-433d-06d507cafcbd@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1579016678; bh=WKV89CKnbPQ4ptWtTZGhSK4VZA9YeMZfVCrzVyqodcQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=YVN4xbNZA2b7rEMlxqyY+7HCY2L5IOVPVph1W4uv0Ud09clm5nAXWsacDJ1ExVL8X
-         d3UrQAbgY0RaPU4EAc2k3lwPbU5FKeqoOo7T3+Wis1JPWV89qlBROWNP8+DXMa7UIU
-         WB+z3rRV1jYK+M/loEmdet4Q9RqKoaLbrWaItlywH2hJke7/CB9spIk5Vt0HyxhmIO
-         GG+BidwLVqfYsdBe4KQTN0wOcjNIL1PpNTtmxOhbhBpDRSxJjTfW1kdiOyfjGFHxdo
-         FcIWoRKuYM8MrvZ5ZSNbIDTOaAB5+QnkfIWG3hg0QHlPpHxEhFgLDjkfOGIqEECDyI
-         zRCBBySSfL4vA==
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001140143
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001140143
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-On 12/01/2020 17:29, Dmitry Osipenko wrote:
-> Use resource-managed variant of request_irq for brevity.
+On 1/14/20 12:11 AM, Sekhar Nori wrote:
+> On 14/01/20 12:28 PM, Peter Ujfalusi wrote:
+>> Hi Santosh,
+>>
+>> On 13/01/2020 23.28, santosh.shilimkar@oracle.com wrote:
+>>>
+>>>
+>>> On 12/23/19 3:38 AM, Peter Ujfalusi wrote:
+>>>> Hi Santosh,
+>>>>
+>>>> On 23/12/2019 13.04, Peter Ujfalusi wrote:
+>>>>> From: Grygorii Strashko <grygorii.strashko@ti.com>
+>>>>>
+>>>>> The Ring Accelerator (RINGACC or RA) provides hardware acceleration to
+>>>>> enable straightforward passing of work between a producer and a
+>>>>> consumer.
+>>>>> There is one RINGACC module per NAVSS on TI AM65x SoCs.
+>>>>>
+>>>>> The RINGACC converts constant-address read and write accesses to
+>>>>> equivalent
+>>>>> read or write accesses to a circular data structure in memory. The
+>>>>> RINGACC
+>>>>> eliminates the need for each DMA controller which needs to access ring
+>>>>> elements from having to know the current state of the ring (base
+>>>>> address,
+>>>>> current offset). The DMA controller performs a read or write access to a
+>>>>> specific address range (which maps to the source interface on the
+>>>>> RINGACC)
+>>>>> and the RINGACC replaces the address for the transaction with a new
+>>>>> address
+>>>>> which corresponds to the head or tail element of the ring (head for
+>>>>> reads,
+>>>>> tail for writes). Since the RINGACC maintains the state, multiple DMA
+>>>>> controllers or channels are allowed to coherently share the same
+>>>>> rings as
+>>>>> applicable. The RINGACC is able to place data which is destined towards
+>>>>> software into cached memory directly.
+>>>>>
+>>>>> Supported ring modes:
+>>>>> - Ring Mode
+>>>>> - Messaging Mode
+>>>>> - Credentials Mode
+>>>>> - Queue Manager Mode
+>>>>>
+>>>>> TI-SCI integration:
+>>>>>
+>>>>> Texas Instrument's System Control Interface (TI-SCI) Message Protocol
+>>>>> now
+>>>>> has control over Ringacc module resources management (RM) and Rings
+>>>>> configuration.
+>>>>>
+>>>>> The corresponding support of TI-SCI Ringacc module RM protocol
+>>>>> introduced as option through DT parameters:
+>>>>> - ti,sci: phandle on TI-SCI firmware controller DT node
+>>>>> - ti,sci-dev-id: TI-SCI device identifier as per TI-SCI firmware spec
+>>>>>
+>>>>> if both parameters present - Ringacc driver will configure/free/reset
+>>>>> Rings
+>>>>> using TI-SCI Message Ringacc RM Protocol.
+>>>>>
+>>>>> The Ringacc driver manages Rings allocation by itself now and requests
+>>>>> TI-SCI firmware to allocate and configure specific Rings only. It's done
+>>>>> this way because, Linux driver implements two stage Rings allocation and
+>>>>> configuration (allocate ring and configure ring) while TI-SCI Message
+>>>>> Protocol supports only one combined operation (allocate+configure).
+>>>>>
+>>>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>>>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>>>> Reviewed-by: Tero Kristo <t-kristo@ti.com>
+>>>>> Tested-by: Keerthy <j-keerthy@ti.com>
+>>>>
+>>>> Can you please giver your Acked-by for the ringacc patches if they are
+>>>> still OK from your point of view as you had offered to take them before
+>>>> I got comments from Lokesh.
+>>>>
+>>> Sure. But you really need to split the series so that dma engine and
+>>> soc driver patches can be applied independently.
+>>
+>> The ringacc is a build and runtime dependency for the DMA. I have hoped
+>> that all of them can go via DMAengine (hence asking for your ACK on the
+>> drivers/soc/ti/ patches) for 5.6.
+>>
+>>> Can you please do that?
+>>
+>> This late in the merge window that would really mean that I will miss
+>> another release for the KS3 DMA...
+>> I can live with that if you can pick the ringacc for 5.6 and if Vinod
+>> takes the DMAengine core changes as well.
+>>
+>> That would leave only the DMA drivers for 5.7 and we can also queue up
+>> changes for 5.7 which depends on the DMAengine API (ASoC changes, UART,
+>> sa2ul, etc).
+>>
+>> If they go independently and nothing makes it to 5.6 then 5.8 is the
+>> realistic target for the DMA support for the KS3 family of devices...
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/dma/tegra20-apb-dma.c | 35 +++++++++++------------------------
->  1 file changed, 11 insertions(+), 24 deletions(-)
+> Thats too many kernel versions to get this important piece in.
 > 
-> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-> index f44291207928..dff21e80ffa4 100644
-> --- a/drivers/dma/tegra20-apb-dma.c
-> +++ b/drivers/dma/tegra20-apb-dma.c
-> @@ -182,7 +182,6 @@ struct tegra_dma_channel {
->  	char			name[12];
->  	bool			config_init;
->  	int			id;
-> -	int			irq;
->  	void __iomem		*chan_addr;
->  	spinlock_t		lock;
->  	bool			busy;
-> @@ -1380,7 +1379,6 @@ static const struct tegra_dma_chip_data tegra148_dma_chip_data = {
->  
->  static int tegra_dma_probe(struct platform_device *pdev)
->  {
-> -	struct resource *res;
->  	struct tegra_dma *tdma;
->  	int ret;
->  	int i;
-> @@ -1446,25 +1444,27 @@ static int tegra_dma_probe(struct platform_device *pdev)
->  	INIT_LIST_HEAD(&tdma->dma_dev.channels);
->  	for (i = 0; i < cdata->nr_channels; i++) {
->  		struct tegra_dma_channel *tdc = &tdma->channels[i];
-> +		int irq;
->  
->  		tdc->chan_addr = tdma->base_addr +
->  				 TEGRA_APBDMA_CHANNEL_BASE_ADD_OFFSET +
->  				 (i * cdata->channel_reg_size);
->  
-> -		res = platform_get_resource(pdev, IORESOURCE_IRQ, i);
-> -		if (!res) {
-> -			ret = -EINVAL;
-> +		irq = platform_get_irq(pdev, i);
-> +		if (irq < 0) {
-> +			ret = irq;
->  			dev_err(&pdev->dev, "No irq resource for chan %d\n", i);
-> -			goto err_irq;
-> +			goto err_pm_disable;
->  		}
-> -		tdc->irq = res->start;
-> +
->  		snprintf(tdc->name, sizeof(tdc->name), "apbdma.%d", i);
-> -		ret = request_irq(tdc->irq, tegra_dma_isr, 0, tdc->name, tdc);
-> +		ret = devm_request_irq(&pdev->dev, irq, tegra_dma_isr, 0,
-> +				       tdc->name, tdc);
->  		if (ret) {
->  			dev_err(&pdev->dev,
->  				"request_irq failed with err %d channel %d\n",
->  				ret, i);
-> -			goto err_irq;
-> +			goto err_pm_disable;
->  		}
->  
->  		tdc->dma_chan.device = &tdma->dma_dev;
-> @@ -1517,7 +1517,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
->  	if (ret < 0) {
->  		dev_err(&pdev->dev,
->  			"Tegra20 APB DMA driver registration failed %d\n", ret);
-> -		goto err_irq;
-> +		goto err_pm_disable;
->  	}
->  
->  	ret = of_dma_controller_register(pdev->dev.of_node,
-> @@ -1534,13 +1534,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
->  
->  err_unregister_dma_dev:
->  	dma_async_device_unregister(&tdma->dma_dev);
-> -err_irq:
-> -	while (--i >= 0) {
-> -		struct tegra_dma_channel *tdc = &tdma->channels[i];
-> -
-> -		free_irq(tdc->irq, tdc);
-> -	}
-> -
-> +err_pm_disable:
->  	pm_runtime_disable(&pdev->dev);
->  	if (!pm_runtime_status_suspended(&pdev->dev))
->  		tegra_dma_runtime_suspend(&pdev->dev);
-> @@ -1550,16 +1544,9 @@ static int tegra_dma_probe(struct platform_device *pdev)
->  static int tegra_dma_remove(struct platform_device *pdev)
->  {
->  	struct tegra_dma *tdma = platform_get_drvdata(pdev);
-> -	int i;
-> -	struct tegra_dma_channel *tdc;
->  
->  	dma_async_device_unregister(&tdma->dma_dev);
->  
-> -	for (i = 0; i < tdma->chip_data->nr_channels; ++i) {
-> -		tdc = &tdma->channels[i];
-> -		free_irq(tdc->irq, tdc);
-> -	}
-> -
->  	pm_runtime_disable(&pdev->dev);
->  	if (!pm_runtime_status_suspended(&pdev->dev))
->  		tegra_dma_runtime_suspend(&pdev->dev);
+> Santosh, if you do not have anything else queued up that clashes with
+> this, can the whole series be picked up by Vinod with your ack on the
+> drivers/soc/ti/ pieces?
 > 
+I would prefer driver patches to go via driver tree.
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
+> Vinod could also perhaps setup an immutable branch based on v5.5-rc1
+> with just the drivers/soc/ti parts applied so you can merge that branch
+> in case you end up having to send up anything that conflicts.
+> 
+As suggested on other email to Peter, these DMA engine related patches
+should be queued up since they don't have any dependency. Based on
+the status of that patchset, will take care of pulling in the driver
+patches either for this merge window or early part of next merge window.
 
-Cheers
-Jon
-
--- 
-nvpublic
+Regards,
+Santosh

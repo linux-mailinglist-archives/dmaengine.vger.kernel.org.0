@@ -2,26 +2,27 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3527C13ADC4
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jan 2020 16:36:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E5A1613ADE1
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jan 2020 16:43:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbgANPgF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 14 Jan 2020 10:36:05 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5190 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgANPgF (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Jan 2020 10:36:05 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1ddfd00000>; Tue, 14 Jan 2020 07:35:44 -0800
+        id S1727331AbgANPnk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 14 Jan 2020 10:43:40 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3047 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgANPnk (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Jan 2020 10:43:40 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1de1740000>; Tue, 14 Jan 2020 07:42:44 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 14 Jan 2020 07:36:04 -0800
+  Tue, 14 Jan 2020 07:43:39 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 14 Jan 2020 07:36:04 -0800
+        by hqpgpgate102.nvidia.com on Tue, 14 Jan 2020 07:43:39 -0800
 Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jan
- 2020 15:36:02 +0000
-Subject: Re: [PATCH v4 04/14] dmaengine: tegra-apb: Clean up tasklet releasing
+ 2020 15:43:37 +0000
+Subject: Re: [PATCH v4 05/14] dmaengine: tegra-apb: Prevent race conditions of
+ tasklet vs free list
 To:     Dmitry Osipenko <digetx@gmail.com>,
         Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -31,14 +32,14 @@ To:     Dmitry Osipenko <digetx@gmail.com>,
 CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 References: <20200112173006.29863-1-digetx@gmail.com>
- <20200112173006.29863-5-digetx@gmail.com>
+ <20200112173006.29863-6-digetx@gmail.com>
 From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <2395e415-c435-0305-b53e-81278ff24d30@nvidia.com>
-Date:   Tue, 14 Jan 2020 15:36:00 +0000
+Message-ID: <1331b7c1-3839-69cb-4de2-16771c652d41@nvidia.com>
+Date:   Tue, 14 Jan 2020 15:43:35 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200112173006.29863-5-digetx@gmail.com>
+In-Reply-To: <20200112173006.29863-6-digetx@gmail.com>
 X-Originating-IP: [10.124.1.5]
 X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
  HQMAIL107.nvidia.com (172.20.187.13)
@@ -46,17 +47,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1579016144; bh=4nzaSqhuTxBtHcd2ez0EJ4Bfl+5vH4h40EZkwwGBUgA=;
+        t=1579016564; bh=TOxcfPb22CxCMWcfOogB2CSM8aUSAE1trXziDRi5ilw=;
         h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
          User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
          X-ClientProxiedBy:Content-Type:Content-Language:
          Content-Transfer-Encoding;
-        b=bCRhGJGpIM4zf0HkZYKQe4MwSUQPwKEpXlAxKLWJPIIp/CT1afIFYr0HYE6BWgEzx
-         m9HFHWr9g41QOPxlyoBFcpZ25fLuDO5vb47QTrFtNFIv15WTgNZbVT2io0IIY4FFAC
-         rChsqV8tzUaIGtJ/mjdd+VqZEnKPFxdkKES013iVV8XCkiQDow4oSA/WOjrfYDn3NX
-         /JHzeNXuidGr7MM2A4oA+Qnh79VfoQDCK50tPbYqZMWPRl+KTAquKDRh1WXaJcvzuF
-         vR4ZdEKaGBcQVhWvLyA0VVyNukqnS8igFknhOuqn91X1vRT4yJ3hB9RTbjQD1a+iWr
-         vENEnpNAnkruw==
+        b=oN1q3vz+2upl5Id8/Ezu9QGXscK1EDXlatHEjHm92sS3Sgz3M/8hykNnkNL1LGVKy
+         GhzHjpvpgb8xzu0TrZB6xwM23YSezV3NDesny5xhQYPgJvQzWRJ9NoOxxQEcDbXBQv
+         s1Y8Av7MbeV49VHdMwlaf6ZWLwRkQ9Rvcf5lReG/vXBpEnZOaJTBI0GvE1oL7uPBwc
+         qZ7+jOdIwjjNPOjwVaDmA3HTMlqOmydvRD1L1Iv52k8Q6o42PCXmogIwaVjrmTy5zq
+         xARprz5pRqvfwRoQ+fiV+a5e++fagBamDmGwkJLL9ahXs5AeD/zxWw4jevDpZxtoTQ
+         0nU16Tz2jPBzA==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
@@ -64,62 +65,31 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 
 On 12/01/2020 17:29, Dmitry Osipenko wrote:
-> There is no need to kill tasklet when driver's probe fails because tasklet
-> can't be scheduled at this time. It is also cleaner to kill tasklet on
-> channel's freeing rather than to kill it on driver's removal, otherwise
-> tasklet could perform a dummy execution after channel's releasing, which
-> isn't very nice.
+> The interrupt handler puts a half-completed DMA descriptor on a free list
+> and then schedules tasklet to process bottom half of the descriptor that
+> executes client's callback, this creates possibility to pick up the busy
+> descriptor from the free list. Thus let's disallow descriptor's re-use
+> until it is fully processed.
 > 
 > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  drivers/dma/tegra20-apb-dma.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
+>  drivers/dma/tegra20-apb-dma.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-> index 24ad3a5a04e3..1b8a11804962 100644
+> index 1b8a11804962..aafad50d075e 100644
 > --- a/drivers/dma/tegra20-apb-dma.c
 > +++ b/drivers/dma/tegra20-apb-dma.c
-> @@ -1287,7 +1287,6 @@ static void tegra_dma_free_chan_resources(struct dma_chan *dc)
->  	struct tegra_dma_sg_req *sg_req;
->  	struct list_head dma_desc_list;
->  	struct list_head sg_req_list;
-> -	unsigned long flags;
+> @@ -281,7 +281,7 @@ static struct tegra_dma_desc *tegra_dma_desc_get(
 >  
->  	INIT_LIST_HEAD(&dma_desc_list);
->  	INIT_LIST_HEAD(&sg_req_list);
-> @@ -1295,15 +1294,14 @@ static void tegra_dma_free_chan_resources(struct dma_chan *dc)
->  	dev_dbg(tdc2dev(tdc), "Freeing channel %d\n", tdc->id);
->  
->  	tegra_dma_terminate_all(dc);
-> +	tasklet_kill(&tdc->tasklet);
->  
-> -	spin_lock_irqsave(&tdc->lock, flags);
->  	list_splice_init(&tdc->pending_sg_req, &sg_req_list);
->  	list_splice_init(&tdc->free_sg_req, &sg_req_list);
->  	list_splice_init(&tdc->free_dma_desc, &dma_desc_list);
->  	INIT_LIST_HEAD(&tdc->cb_desc);
->  	tdc->config_init = false;
->  	tdc->isr_handler = NULL;
-> -	spin_unlock_irqrestore(&tdc->lock, flags);
->  
->  	while (!list_empty(&dma_desc_list)) {
->  		dma_desc = list_first_entry(&dma_desc_list,
-> @@ -1542,7 +1540,6 @@ static int tegra_dma_probe(struct platform_device *pdev)
->  		struct tegra_dma_channel *tdc = &tdma->channels[i];
->  
->  		free_irq(tdc->irq, tdc);
-> -		tasklet_kill(&tdc->tasklet);
->  	}
->  
->  	pm_runtime_disable(&pdev->dev);
-> @@ -1562,7 +1559,6 @@ static int tegra_dma_remove(struct platform_device *pdev)
->  	for (i = 0; i < tdma->chip_data->nr_channels; ++i) {
->  		tdc = &tdma->channels[i];
->  		free_irq(tdc->irq, tdc);
-> -		tasklet_kill(&tdc->tasklet);
->  	}
->  
->  	pm_runtime_disable(&pdev->dev);
+>  	/* Do not allocate if desc are waiting for ack */
+>  	list_for_each_entry(dma_desc, &tdc->free_dma_desc, node) {
+> -		if (async_tx_test_ack(&dma_desc->txd)) {
+> +		if (async_tx_test_ack(&dma_desc->txd) && !dma_desc->cb_count) {
+>  			list_del(&dma_desc->node);
+>  			spin_unlock_irqrestore(&tdc->lock, flags);
+>  			dma_desc->txd.flags = 0;
+> 
 
 Acked-by: Jon Hunter <jonathanh@nvidia.com>
 

@@ -2,175 +2,220 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BE4C13A28E
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jan 2020 09:11:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 138FD13A363
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jan 2020 10:05:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729127AbgANILf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 14 Jan 2020 03:11:35 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43462 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgANILf (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Jan 2020 03:11:35 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00E8BNXc111226;
-        Tue, 14 Jan 2020 02:11:23 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578989483;
-        bh=OXgw5jVtI/P8lq90Ajh5uW2OyAX5bZNN5cmbnuabCec=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lSkH2eFWkfeoKXLvH8m9BL6PJIVxyND0b2PDvvSWCvc6AmTrP8EkrYHWbizr4Uh3U
-         JVv+2AFLRMJj8+obgV7Uk4gxbH8g0OgqDiPFhM+NtqxxAb1yVtKGwkHaerfaZL+1FN
-         LrUTSzHksvbzuGgY75fOE1sG8yzira/dqDplrJy8=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00E8BNHU078292
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 14 Jan 2020 02:11:23 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 14
- Jan 2020 02:11:23 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 14 Jan 2020 02:11:23 -0600
-Received: from [172.24.145.246] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00E8BHg1063367;
-        Tue, 14 Jan 2020 02:11:18 -0600
-Subject: Re: [PATCH v8 02/18] soc: ti: k3: add navss ringacc driver
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        <santosh.shilimkar@oracle.com>, <vkoul@kernel.org>,
-        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        id S1728797AbgANJFK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 14 Jan 2020 04:05:10 -0500
+Received: from olimex.com ([184.105.72.32]:53695 "EHLO olimex.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725820AbgANJFK (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 14 Jan 2020 04:05:10 -0500
+Received: from 94.155.250.134 ([94.155.250.134])
+        by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
+        for <dmaengine@vger.kernel.org>; Tue, 14 Jan 2020 01:04:59 -0800
+Subject: Re: [PATCH 2/2] drm: sun4i: hdmi: Add support for sun4i HDMI encoder
+ audio
+To:     Maxime Ripard <mripard@kernel.org>,
+        Stefan Mavrodiev <stefan@olimex.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
         <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
-        <vigneshr@ti.com>, <frowand.list@gmail.com>
-References: <20191223110458.30766-1-peter.ujfalusi@ti.com>
- <20191223110458.30766-3-peter.ujfalusi@ti.com>
- <6d70686b-a94e-18d1-7b33-ff9df7176089@ti.com>
- <900c2f21-22bf-47f9-5c3c-0a3d95a5d645@oracle.com>
- <ea6a87ae-b978-a786-27eb-db99483a82d9@ti.com>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <f0230e88-bd9b-cd6d-433d-06d507cafcbd@ti.com>
-Date:   Tue, 14 Jan 2020 13:41:17 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        "open list:DRM DRIVERS FOR ALLWINNER A10" 
+        <dri-devel@lists.freedesktop.org>, linux-sunxi@googlegroups.com
+References: <20200110141140.28527-1-stefan@olimex.com>
+ <20200110141140.28527-3-stefan@olimex.com>
+ <20200110162631.wbufz5h7nqfgd6am@gilmour.lan>
+From:   Stefan Mavrodiev <stefan@olimex.com>
+Message-ID: <f4ad41ce-e3d0-33e4-1e85-d23e557b484d@olimex.com>
+Date:   Tue, 14 Jan 2020 11:04:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <ea6a87ae-b978-a786-27eb-db99483a82d9@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <20200110162631.wbufz5h7nqfgd6am@gilmour.lan>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Language: en-US
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 14/01/20 12:28 PM, Peter Ujfalusi wrote:
-> Hi Santosh,
-> 
-> On 13/01/2020 23.28, santosh.shilimkar@oracle.com wrote:
+Hi,
+
+On 1/10/20 6:26 PM, Maxime Ripard wrote:
+> Hi,
+>
+> On Fri, Jan 10, 2020 at 04:11:40PM +0200, Stefan Mavrodiev wrote:
+>> Add HDMI audio support for the sun4i-hdmi encoder, used on
+>> the older Allwinner chips - A10, A20, A31.
 >>
+>> Most of the code is based on the BSP implementation. In it
+>> dditional formats are supported (S20_3LE and S24_LE), however
+>> there where some problems with them and only S16_LE is left.
 >>
->> On 12/23/19 3:38 AM, Peter Ujfalusi wrote:
->>> Hi Santosh,
->>>
->>> On 23/12/2019 13.04, Peter Ujfalusi wrote:
->>>> From: Grygorii Strashko <grygorii.strashko@ti.com>
->>>>
->>>> The Ring Accelerator (RINGACC or RA) provides hardware acceleration to
->>>> enable straightforward passing of work between a producer and a
->>>> consumer.
->>>> There is one RINGACC module per NAVSS on TI AM65x SoCs.
->>>>
->>>> The RINGACC converts constant-address read and write accesses to
->>>> equivalent
->>>> read or write accesses to a circular data structure in memory. The
->>>> RINGACC
->>>> eliminates the need for each DMA controller which needs to access ring
->>>> elements from having to know the current state of the ring (base
->>>> address,
->>>> current offset). The DMA controller performs a read or write access to a
->>>> specific address range (which maps to the source interface on the
->>>> RINGACC)
->>>> and the RINGACC replaces the address for the transaction with a new
->>>> address
->>>> which corresponds to the head or tail element of the ring (head for
->>>> reads,
->>>> tail for writes). Since the RINGACC maintains the state, multiple DMA
->>>> controllers or channels are allowed to coherently share the same
->>>> rings as
->>>> applicable. The RINGACC is able to place data which is destined towards
->>>> software into cached memory directly.
->>>>
->>>> Supported ring modes:
->>>> - Ring Mode
->>>> - Messaging Mode
->>>> - Credentials Mode
->>>> - Queue Manager Mode
->>>>
->>>> TI-SCI integration:
->>>>
->>>> Texas Instrument's System Control Interface (TI-SCI) Message Protocol
->>>> now
->>>> has control over Ringacc module resources management (RM) and Rings
->>>> configuration.
->>>>
->>>> The corresponding support of TI-SCI Ringacc module RM protocol
->>>> introduced as option through DT parameters:
->>>> - ti,sci: phandle on TI-SCI firmware controller DT node
->>>> - ti,sci-dev-id: TI-SCI device identifier as per TI-SCI firmware spec
->>>>
->>>> if both parameters present - Ringacc driver will configure/free/reset
->>>> Rings
->>>> using TI-SCI Message Ringacc RM Protocol.
->>>>
->>>> The Ringacc driver manages Rings allocation by itself now and requests
->>>> TI-SCI firmware to allocate and configure specific Rings only. It's done
->>>> this way because, Linux driver implements two stage Rings allocation and
->>>> configuration (allocate ring and configure ring) while TI-SCI Message
->>>> Protocol supports only one combined operation (allocate+configure).
->>>>
->>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>>> Reviewed-by: Tero Kristo <t-kristo@ti.com>
->>>> Tested-by: Keerthy <j-keerthy@ti.com>
->>>
->>> Can you please giver your Acked-by for the ringacc patches if they are
->>> still OK from your point of view as you had offered to take them before
->>> I got comments from Lokesh.
->>>
->> Sure. But you really need to split the series so that dma engine and
->> soc driver patches can be applied independently.
-> 
-> The ringacc is a build and runtime dependency for the DMA. I have hoped
-> that all of them can go via DMAengine (hence asking for your ACK on the
-> drivers/soc/ti/ patches) for 5.6.
-> 
->> Can you please do that?
-> 
-> This late in the merge window that would really mean that I will miss
-> another release for the KS3 DMA...
-> I can live with that if you can pick the ringacc for 5.6 and if Vinod
-> takes the DMAengine core changes as well.
-> 
-> That would leave only the DMA drivers for 5.7 and we can also queue up
-> changes for 5.7 which depends on the DMAengine API (ASoC changes, UART,
-> sa2ul, etc).
-> 
-> If they go independently and nothing makes it to 5.6 then 5.8 is the
-> realistic target for the DMA support for the KS3 family of devices...
+>> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+>> ---
+>>   drivers/gpu/drm/sun4i/Kconfig            |   1 +
+>>   drivers/gpu/drm/sun4i/Makefile           |   1 +
+>>   drivers/gpu/drm/sun4i/sun4i_hdmi.h       |  30 ++
+>>   drivers/gpu/drm/sun4i/sun4i_hdmi_audio.c | 375 +++++++++++++++++++++++
+>>   drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c   |   4 +
+>>   5 files changed, 411 insertions(+)
+>>   create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi_audio.c
+>>
+>> diff --git a/drivers/gpu/drm/sun4i/Kconfig b/drivers/gpu/drm/sun4i/Kconfig
+>> index 37e90e42943f..192b732b10cd 100644
+>> --- a/drivers/gpu/drm/sun4i/Kconfig
+>> +++ b/drivers/gpu/drm/sun4i/Kconfig
+>> @@ -19,6 +19,7 @@ if DRM_SUN4I
+>>   config DRM_SUN4I_HDMI
+>>          tristate "Allwinner A10 HDMI Controller Support"
+>>          default DRM_SUN4I
+>> +       select SND_PCM_ELD
+>>          help
+>>   	  Choose this option if you have an Allwinner SoC with an HDMI
+>>   	  controller.
+>> diff --git a/drivers/gpu/drm/sun4i/Makefile b/drivers/gpu/drm/sun4i/Makefile
+>> index 0d04f2447b01..e2d82b451c36 100644
+>> --- a/drivers/gpu/drm/sun4i/Makefile
+>> +++ b/drivers/gpu/drm/sun4i/Makefile
+>> @@ -5,6 +5,7 @@ sun4i-frontend-y		+= sun4i_frontend.o
+>>   sun4i-drm-y			+= sun4i_drv.o
+>>   sun4i-drm-y			+= sun4i_framebuffer.o
+>>
+>> +sun4i-drm-hdmi-y		+= sun4i_hdmi_audio.o
+>>   sun4i-drm-hdmi-y		+= sun4i_hdmi_ddc_clk.o
+>>   sun4i-drm-hdmi-y		+= sun4i_hdmi_enc.o
+>>   sun4i-drm-hdmi-y		+= sun4i_hdmi_i2c.o
+>> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+>> index 7ad3f06c127e..456964e681b0 100644
+>> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+>> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+>> @@ -42,7 +42,32 @@
+>>   #define SUN4I_HDMI_VID_TIMING_POL_VSYNC		BIT(1)
+>>   #define SUN4I_HDMI_VID_TIMING_POL_HSYNC		BIT(0)
+>>
+>> +#define SUN4I_HDMI_AUDIO_CTRL_REG	0x040
+>> +#define SUN4I_HDMI_AUDIO_CTRL_ENABLE		BIT(31)
+>> +#define SUN4I_HDMI_AUDIO_CTRL_RESET		BIT(30)
+>> +
+>> +#define SUN4I_HDMI_AUDIO_FMT_REG	0x048
+>> +#define SUN4I_HDMI_AUDIO_FMT_SRC		BIT(31)
+>> +#define SUN4I_HDMI_AUDIO_FMT_LAYOUT		BIT(3)
+>> +#define SUN4I_HDMI_AUDIO_FMT_CH_CFG(n)		(n - 1)
+> There's the issue multiple times in the headers, but you should wrap n
+> in parentheses to make sure we have no issue with precedence when
+> calling the macro.
+>
+>> +int sun4i_hdmi_audio_create(struct sun4i_hdmi *hdmi)
+>> +{
+>> +	struct snd_soc_card *card = &sun4i_hdmi_audio_card;
+>> +	struct snd_soc_dai_link_component *comp;
+>> +	struct snd_soc_dai_link *link;
+>> +	int ret;
+>> +
+>> +	ret = devm_snd_dmaengine_pcm_register(hdmi->dev,
+>> +					      &sun4i_hdmi_audio_pcm_config, 0);
+>> +	if (ret) {
+>> +		DRM_ERROR("Could not register PCM\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = devm_snd_soc_register_component(hdmi->dev,
+>> +					      &sun4i_hdmi_audio_component,
+>> +					      &sun4i_hdmi_audio_dai, 1);
+>> +	if (ret) {
+>> +		DRM_ERROR("Could not register DAI\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	link = devm_kzalloc(hdmi->dev, sizeof(*link), GFP_KERNEL);
+>> +	if (!link)
+>> +		return -ENOMEM;
+>> +
+>> +	comp = devm_kzalloc(hdmi->dev, sizeof(*comp) * 3, GFP_KERNEL);
+>> +	if (!comp)
+>> +		return -ENOMEM;
+>> +
+>> +	link->cpus = &comp[0];
+>> +	link->codecs = &comp[1];
+>> +	link->platforms = &comp[2];
+>> +
+>> +	link->num_cpus = 1;
+>> +	link->num_codecs = 1;
+>> +	link->num_platforms = 1;
+>> +
+>> +	link->playback_only = 1;
+>> +
+>> +	link->name = "SUN4I-HDMI";
+>> +	link->stream_name = "SUN4I-HDMI PCM";
+>> +
+>> +	link->codecs->name = dev_name(hdmi->dev);
+>> +	link->codecs->dai_name	= sun4i_hdmi_audio_dai.name;
+>> +
+>> +	link->cpus->dai_name = dev_name(hdmi->dev);
+>> +
+>> +	link->platforms->name = dev_name(hdmi->dev);
+>> +
+>> +	link->dai_fmt = SND_SOC_DAIFMT_I2S;
+>> +
+>> +	card->dai_link = link;
+>> +	card->num_links = 1;
+>> +	card->dev = hdmi->dev;
+>> +
+>> +	snd_soc_card_set_drvdata(card, hdmi);
+>> +	return devm_snd_soc_register_card(hdmi->dev, card);
+> Out of curiosity, did you try to remove the module with that patch
+> applied? IIRC, these functions will overwrite the device drvdata, and
+> we will try to access them in unbind / remove.
+Actually I did not. Just tried that and you're right. The module crashes 
+at the unbind call.
+I use sun4i_hdmi struct only for regmap. Maybe create separate private 
+structure and copy only
+regmap?
+>
+>> +}
+>> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+>> index a7c4654445c7..79ecd89fb705 100644
+>> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+>> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+>> @@ -114,6 +114,9 @@ static void sun4i_hdmi_enable(struct drm_encoder *encoder)
+>>   		val |= SUN4I_HDMI_VID_CTRL_HDMI_MODE;
+>>
+>>   	writel(val, hdmi->base + SUN4I_HDMI_VID_CTRL_REG);
+>> +
+>> +	if (hdmi->hdmi_audio && sun4i_hdmi_audio_create(hdmi))
+>> +		DRM_ERROR("Couldn't create the HDMI audio adapter\n");
+> So you create the audio card each time the display is enabled? I guess
+> this is to deal with the hotplug?
+Yes. See below.
+>
+> I'm not sure this is the right thing to do. If I remember well, the
+> ELD are here precisely to let userspace know that the display is
+> plugged (and audio-capable) or not.
+>
+> Also, you don't remove that card in the disable, which mean that if
+> you end up in a situation where you would enable the display, disable
+> it and then enable it again, you have two audio cards now.
+There is issue with the hotplug. When inserting the cable, the event is 
+detected
+and the hdmi encoder is enabled. Thus the card is created. However 
+further removal and
+insertions are not detected. This is why I don't remove the card.
 
-Thats too many kernel versions to get this important piece in.
+Also I count on devm_snd_soc_register_card() to release the card.
+>
+> Thanks!
+> Maxime
 
-Santosh, if you do not have anything else queued up that clashes with
-this, can the whole series be picked up by Vinod with your ack on the
-drivers/soc/ti/ pieces?
 
-Vinod could also perhaps setup an immutable branch based on v5.5-rc1
-with just the drivers/soc/ti parts applied so you can merge that branch
-in case you end up having to send up anything that conflicts.
+Best regards,
+Stefan
 
-Thanks,
-Sekhar

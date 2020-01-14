@@ -2,24 +2,24 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 031AF13B4AC
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jan 2020 22:48:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A1D1313B4A3
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jan 2020 22:48:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbgANVsk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 14 Jan 2020 16:48:40 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:54906 "EHLO inva021.nxp.com"
+        id S1728901AbgANVs3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 14 Jan 2020 16:48:29 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:54948 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728882AbgANVs1 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 14 Jan 2020 16:48:27 -0500
+        id S1728890AbgANVs2 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 14 Jan 2020 16:48:28 -0500
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0F3BF2004FB;
-        Tue, 14 Jan 2020 22:48:25 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3BB9A2004FC;
+        Tue, 14 Jan 2020 22:48:26 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D50102004FC;
-        Tue, 14 Jan 2020 22:48:18 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 102542000EA;
+        Tue, 14 Jan 2020 22:48:20 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5EB87402C7;
-        Wed, 15 Jan 2020 05:48:11 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 90B72402AF;
+        Wed, 15 Jan 2020 05:48:12 +0800 (SGT)
 From:   Han Xu <han.xu@nxp.com>
 To:     vkoul@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
         miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
@@ -27,9 +27,9 @@ To:     vkoul@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
 Cc:     festevam@gmail.com, linux-imx@nxp.com, dmaengine@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, han.xu@nxp.com,
         linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/6] dmaengine: mxs: switch from dma_coherent to dma_pool
-Date:   Wed, 15 Jan 2020 05:44:01 +0800
-Message-Id: <1579038243-28550-5-git-send-email-han.xu@nxp.com>
+Subject: [PATCH 5/6] mtd: rawnand: gpmi: refine the runtime pm ops
+Date:   Wed, 15 Jan 2020 05:44:02 +0800
+Message-Id: <1579038243-28550-6-git-send-email-han.xu@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1579038243-28550-1-git-send-email-han.xu@nxp.com>
 References: <1579038243-28550-1-git-send-email-han.xu@nxp.com>
@@ -39,119 +39,163 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-create one dma_pool dedicate for mxs-dma to avoid the
-"alloc_contig_range: [xxx, xxx) PFNs busy" warning message during
-frequently alloc/free resource ops in runtime pm.
+several changes for runtime code in gpmi-nand driver
+
+- Always invoke runtime get/put in same function to balance the usage
+counter.
+
+- leverage the runtime pm for system pm, move acquire dma to runtime pm
+to acquire dma only when needed.
+
+- add pm_runtime_dont_use_autosuspend in err path. If driver failed to
+probe before runtime pm timeout, such as NAND not mounted in socket,
+runtime suspend won't be called without the change.
 
 Signed-off-by: Han Xu <han.xu@nxp.com>
 ---
- drivers/dma/mxs-dma.c | 32 ++++++++++++++++++++++++--------
- 1 file changed, 24 insertions(+), 8 deletions(-)
+ drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c | 56 +++++++++++-----------
+ 1 file changed, 29 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
-index 251492c5ea58..dfee41ae1981 100644
---- a/drivers/dma/mxs-dma.c
-+++ b/drivers/dma/mxs-dma.c
-@@ -26,6 +26,7 @@
- #include <linux/list.h>
- #include <linux/dma/mxs-dma.h>
- #include <linux/pm_runtime.h>
-+#include <linux/dmapool.h>
+diff --git a/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c
+index fcc7325f2a10..73644c96fa9b 100644
+--- a/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c
++++ b/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c
+@@ -183,7 +183,6 @@ static int gpmi_init(struct gpmi_nand_data *this)
+ 	 */
+ 	writel(BM_GPMI_CTRL1_DECOUPLE_CS, r->gpmi_regs + HW_GPMI_CTRL1_SET);
  
- #include <asm/irq.h>
+-	return 0;
+ err_out:
+ 	pm_runtime_mark_last_busy(this->dev);
+ 	pm_runtime_put_autosuspend(this->dev);
+@@ -556,7 +555,6 @@ static int bch_set_geometry(struct gpmi_nand_data *this)
+ 	/* Set *all* chip selects to use layout 0. */
+ 	writel(0, r->bch_regs + HW_BCH_LAYOUTSELECT);
  
-@@ -121,6 +122,7 @@ struct mxs_dma_chan {
- 	enum dma_status			status;
- 	unsigned int			flags;
- 	bool				reset;
-+	struct dma_pool			*ccw_pool;
- #define MXS_DMA_SG_LOOP			(1 << 0)
- #define MXS_DMA_USE_SEMAPHORE		(1 << 1)
- };
-@@ -422,9 +424,10 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
- 	struct device *dev = &mxs_dma->pdev->dev;
- 	int ret;
+-	ret = 0;
+ err_out:
+ 	pm_runtime_mark_last_busy(this->dev);
+ 	pm_runtime_put_autosuspend(this->dev);
+@@ -1213,10 +1211,6 @@ static int acquire_resources(struct gpmi_nand_data *this)
+ 	if (ret)
+ 		goto exit_regs;
  
--	mxs_chan->ccw = dma_alloc_coherent(mxs_dma->dma_device.dev,
--					   CCW_BLOCK_SIZE,
--					   &mxs_chan->ccw_phys, GFP_KERNEL);
-+	mxs_chan->ccw = dma_pool_zalloc(mxs_chan->ccw_pool,
-+					GFP_ATOMIC,
-+					&mxs_chan->ccw_phys);
-+
- 	if (!mxs_chan->ccw) {
- 		ret = -ENOMEM;
- 		goto err_alloc;
-@@ -454,8 +457,8 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
- err_clk:
- 	free_irq(mxs_chan->chan_irq, mxs_dma);
- err_irq:
--	dma_free_coherent(mxs_dma->dma_device.dev, CCW_BLOCK_SIZE,
--			mxs_chan->ccw, mxs_chan->ccw_phys);
-+	dma_pool_free(mxs_chan->ccw_pool, mxs_chan->ccw,
-+		      mxs_chan->ccw_phys);
- err_alloc:
- 	return ret;
- }
-@@ -470,8 +473,8 @@ static void mxs_dma_free_chan_resources(struct dma_chan *chan)
- 
- 	free_irq(mxs_chan->chan_irq, mxs_dma);
- 
--	dma_free_coherent(mxs_dma->dma_device.dev, CCW_BLOCK_SIZE,
--			mxs_chan->ccw, mxs_chan->ccw_phys);
-+	dma_pool_free(mxs_chan->ccw_pool, mxs_chan->ccw,
-+		      mxs_chan->ccw_phys);
- 
- 	pm_runtime_mark_last_busy(dev);
- 	pm_runtime_put_autosuspend(dev);
-@@ -796,6 +799,7 @@ static int mxs_dma_probe(struct platform_device *pdev)
- 	const struct mxs_dma_type *dma_type;
- 	struct mxs_dma_engine *mxs_dma;
- 	struct resource *iores;
-+	struct dma_pool *ccw_pool;
- 	int ret, i;
- 
- 	mxs_dma = devm_kzalloc(&pdev->dev, sizeof(*mxs_dma), GFP_KERNEL);
-@@ -843,7 +847,6 @@ static int mxs_dma_probe(struct platform_device *pdev)
- 		tasklet_init(&mxs_chan->tasklet, mxs_dma_tasklet,
- 			     (unsigned long) mxs_chan);
- 
+-	ret = acquire_dma_channels(this);
+-	if (ret)
+-		goto exit_regs;
 -
- 		/* Add the channel to mxs_chan list */
- 		list_add_tail(&mxs_chan->chan.device_node,
- 			&mxs_dma->dma_device.channels);
-@@ -858,6 +861,17 @@ static int mxs_dma_probe(struct platform_device *pdev)
+ 	ret = gpmi_get_clks(this);
+ 	if (ret)
+ 		goto exit_clock;
+@@ -2656,15 +2650,9 @@ static int gpmi_nand_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto exit_acquire_resources;
  
- 	mxs_dma->dma_device.dev = &pdev->dev;
+-	ret = __gpmi_enable_clk(this, true);
+-	if (ret)
+-		goto exit_nfc_init;
+-
++	pm_runtime_enable(&pdev->dev);
+ 	pm_runtime_set_autosuspend_delay(&pdev->dev, 500);
+ 	pm_runtime_use_autosuspend(&pdev->dev);
+-	pm_runtime_set_active(&pdev->dev);
+-	pm_runtime_enable(&pdev->dev);
+-	pm_runtime_get_sync(&pdev->dev);
  
-+	/* create the dma pool */
-+	ccw_pool = dma_pool_create("ccw_pool",
-+				   mxs_dma->dma_device.dev,
-+				   CCW_BLOCK_SIZE, 32, 0);
-+
-+	for (i = 0; i < MXS_DMA_CHANNELS; i++) {
-+		struct mxs_dma_chan *mxs_chan = &mxs_dma->mxs_chans[i];
-+
-+		mxs_chan->ccw_pool = ccw_pool;
-+	}
-+
- 	/* mxs_dma gets 65535 bytes maximum sg size */
- 	mxs_dma->dma_device.dev->dma_parms = &mxs_dma->dma_parms;
- 	dma_set_max_seg_size(mxs_dma->dma_device.dev, MAX_XFER_BYTES);
-@@ -899,11 +913,13 @@ static int mxs_dma_remove(struct platform_device *pdev)
- 	int i;
+ 	ret = gpmi_init(this);
+ 	if (ret)
+@@ -2674,15 +2662,12 @@ static int gpmi_nand_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto exit_nfc_init;
  
- 	dma_async_device_unregister(&mxs_dma->dma_device);
-+	dma_pool_destroy(mxs_dma->mxs_chans[0].ccw_pool);
- 
- 	for (i = 0; i < MXS_DMA_CHANNELS; i++) {
- 		struct mxs_dma_chan *mxs_chan = &mxs_dma->mxs_chans[i];
- 
- 		tasklet_kill(&mxs_chan->tasklet);
-+		mxs_chan->ccw_pool = NULL;
- 	}
+-	pm_runtime_mark_last_busy(&pdev->dev);
+-	pm_runtime_put_autosuspend(&pdev->dev);
+-
+ 	dev_info(this->dev, "driver registered.\n");
  
  	return 0;
+ 
+ exit_nfc_init:
+-	pm_runtime_put(&pdev->dev);
++	pm_runtime_dont_use_autosuspend(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+ 	release_resources(this);
+ exit_acquire_resources:
+@@ -2694,7 +2679,6 @@ static int gpmi_nand_remove(struct platform_device *pdev)
+ {
+ 	struct gpmi_nand_data *this = platform_get_drvdata(pdev);
+ 
+-	pm_runtime_put_sync(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+ 
+ 	nand_release(&this->nand);
+@@ -2706,10 +2690,11 @@ static int gpmi_nand_remove(struct platform_device *pdev)
+ #ifdef CONFIG_PM_SLEEP
+ static int gpmi_pm_suspend(struct device *dev)
+ {
+-	struct gpmi_nand_data *this = dev_get_drvdata(dev);
++	int ret;
+ 
+-	release_dma_channels(this);
+-	return 0;
++	ret = pm_runtime_force_suspend(dev);
++
++	return ret;
+ }
+ 
+ static int gpmi_pm_resume(struct device *dev)
+@@ -2717,9 +2702,11 @@ static int gpmi_pm_resume(struct device *dev)
+ 	struct gpmi_nand_data *this = dev_get_drvdata(dev);
+ 	int ret;
+ 
+-	ret = acquire_dma_channels(this);
+-	if (ret < 0)
++	ret = pm_runtime_force_resume(dev);
++	if (ret) {
++		dev_err(this->dev, "Error in resume %d\n", ret);
+ 		return ret;
++	}
+ 
+ 	/* re-init the GPMI registers */
+ 	ret = gpmi_init(this);
+@@ -2743,18 +2730,33 @@ static int gpmi_pm_resume(struct device *dev)
+ }
+ #endif /* CONFIG_PM_SLEEP */
+ 
+-static int __maybe_unused gpmi_runtime_suspend(struct device *dev)
++#define gpmi_enable_clk(x)	__gpmi_enable_clk(x, true)
++#define gpmi_disable_clk(x)	__gpmi_enable_clk(x, false)
++
++static int gpmi_runtime_suspend(struct device *dev)
+ {
+ 	struct gpmi_nand_data *this = dev_get_drvdata(dev);
+ 
+-	return __gpmi_enable_clk(this, false);
++	gpmi_disable_clk(this);
++	release_dma_channels(this);
++
++	return 0;
+ }
+ 
+-static int __maybe_unused gpmi_runtime_resume(struct device *dev)
++static int gpmi_runtime_resume(struct device *dev)
+ {
+ 	struct gpmi_nand_data *this = dev_get_drvdata(dev);
++	int ret;
+ 
+-	return __gpmi_enable_clk(this, true);
++	ret = gpmi_enable_clk(this);
++	if (ret)
++		return ret;
++
++	ret = acquire_dma_channels(this);
++	if (ret < 0)
++		return ret;
++
++	return 0;
+ }
+ 
+ static const struct dev_pm_ops gpmi_pm_ops = {
 -- 
 2.17.1
 

@@ -2,79 +2,73 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1701A13B4A5
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jan 2020 22:48:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 084CF13B524
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jan 2020 23:13:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbgANVse (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 14 Jan 2020 16:48:34 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:55816 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728928AbgANVse (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 14 Jan 2020 16:48:34 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 649BB1A140C;
-        Tue, 14 Jan 2020 22:48:32 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6476B1A0201;
-        Tue, 14 Jan 2020 22:48:26 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C2864402CA;
-        Wed, 15 Jan 2020 05:48:13 +0800 (SGT)
-From:   Han Xu <han.xu@nxp.com>
-To:     vkoul@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        esben@geanix.com, boris.brezillon@collabora.com
-Cc:     festevam@gmail.com, linux-imx@nxp.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, han.xu@nxp.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] mtd: rawnand: gpmi: set the pinctrl state for suspend/reusme
-Date:   Wed, 15 Jan 2020 05:44:03 +0800
-Message-Id: <1579038243-28550-7-git-send-email-han.xu@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1579038243-28550-1-git-send-email-han.xu@nxp.com>
-References: <1579038243-28550-1-git-send-email-han.xu@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726495AbgANWNm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 14 Jan 2020 17:13:42 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44726 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgANWNm (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Jan 2020 17:13:42 -0500
+Received: by mail-lj1-f196.google.com with SMTP id u71so16148461lje.11;
+        Tue, 14 Jan 2020 14:13:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cm+CoTM0+jhOXDNc30YUOsZAT6IC0O3DFYyTQEFb64Y=;
+        b=S74dWuBqv3AbnCdv3dgeQq/lxdwYTrhinVamWcvPdDyekZU35ibKEMhjrC5G+zJU/a
+         HLvEGMR5spesjlGfGtswHQrvcUedM/E0QwkgCcGHEz5tdVmcQvuChLd+2a1uB3ZFZaJW
+         wu9dVz6659OdbEOu7cFkes2SeGnaufGc476swME+HHtu5yMszvN/se0TdjWTLtbIRXxo
+         HgvgZchckDeg53Slmdr+KNMjHzu0z9iJOeSn5l8f/c/UjvfHf6G574NbUIwE/Yqj2KTV
+         msXk+SbQGsqdU9RD04fTTdIPguj48HAMKM7EtqeVav72zAg3A+kizc66ghVrGcwRJAu9
+         OXVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cm+CoTM0+jhOXDNc30YUOsZAT6IC0O3DFYyTQEFb64Y=;
+        b=CbLwrewlPjOlb2pFnaaut1c0Fei9ZTknlOpJaWbCa1483nakmiKSvacky5Y3ZofHDv
+         jYWmPpSaZ1VwdIoFnV1DjX+m8G7LHS0CbgNZ1S7vNvf8B7QqfIGmPTidBO+yu0Rc3u8K
+         n1xCZj4tGcak8dYa2zQYgw0v7pnXH2im/+qUa/eNWA3RE92C+KF2V4gUuwDwL5m7Iytd
+         SzljK98K0hrWBqAItM7xKpMuQSUQwqdaFTbhF1TBwxdsSFa/xiU2fIJFwa6KMG9Ihwj7
+         oYGGL1D++f0Dp4QO9sR29NmLFAUvPch5CT/UGYE4d7IGWuP4LVdFAiXa7BazU3xNXhfa
+         JAag==
+X-Gm-Message-State: APjAAAWifMSxqPSt+mhiX6iFHaXU1bq1DP5ehHrXcnP6McA3liUhiLhp
+        j1BkB6i2UkuthW22CWGctx1+PzgUZ+NSupNrXCQ=
+X-Google-Smtp-Source: APXvYqwN82PPY2p/a4NKRmOqyvi3rbYFvy/BLp5c2pkHMed/zTaGeP3v+iuRDWViPLXh0eZZNQcY0U7v9CZ+YZhZJXs=
+X-Received: by 2002:a2e:8197:: with SMTP id e23mr15595800ljg.250.1579040019756;
+ Tue, 14 Jan 2020 14:13:39 -0800 (PST)
+MIME-Version: 1.0
+References: <1579038243-28550-1-git-send-email-han.xu@nxp.com> <1579038243-28550-2-git-send-email-han.xu@nxp.com>
+In-Reply-To: <1579038243-28550-2-git-send-email-han.xu@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 14 Jan 2020 19:13:26 -0300
+Message-ID: <CAOMZO5D0LoE8-kJbJ+7AEHJ9PODmCD5Ttv3MUSk7=feWPrdN1Q@mail.gmail.com>
+Subject: Re: [PATCH 1/6] dmaengine: mxs: change the way to register probe function
+To:     Han Xu <han.xu@nxp.com>
+Cc:     Vinod <vkoul@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Esben Haabendal <esben@geanix.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        dmaengine@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-mtd@lists.infradead.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-set the correct pinctrl state in system pm suspend/resume ops
+On Tue, Jan 14, 2020 at 6:48 PM Han Xu <han.xu@nxp.com> wrote:
+>
+> change the way to register probe function for mxs-dma
 
-Signed-off-by: Han Xu <han.xu@nxp.com>
----
- drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c
-index 73644c96fa9b..de1e3dbb2eb1 100644
---- a/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c
-+++ b/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c
-@@ -15,6 +15,7 @@
- #include <linux/of.h>
- #include <linux/of_device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/dma/mxs-dma.h>
- #include "gpmi-nand.h"
- #include "gpmi-regs.h"
-@@ -2692,6 +2693,7 @@ static int gpmi_pm_suspend(struct device *dev)
- {
- 	int ret;
- 
-+	pinctrl_pm_select_sleep_state(dev);
- 	ret = pm_runtime_force_suspend(dev);
- 
- 	return ret;
-@@ -2708,6 +2710,8 @@ static int gpmi_pm_resume(struct device *dev)
- 		return ret;
- 	}
- 
-+	pinctrl_pm_select_default_state(dev);
-+
- 	/* re-init the GPMI registers */
- 	ret = gpmi_init(this);
- 	if (ret) {
--- 
-2.17.1
-
+Please provide the reasoning for such change in the commit log.

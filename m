@@ -2,109 +2,122 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 17A5F13BD49
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Jan 2020 11:23:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AD9413BD58
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Jan 2020 11:26:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729602AbgAOKXL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 15 Jan 2020 05:23:11 -0500
-Received: from rmisp-mx-out4.tele.net ([194.208.23.39]:37320 "EHLO
-        rmisp-mx-out4.tele.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729539AbgAOKXL (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Jan 2020 05:23:11 -0500
-Received: from wvls01.wolfvision-at.intra (91-118-163-37.static.upcbusiness.at [91.118.163.37])
-        by rmisp-mx-out4.tele.net (Postfix) with ESMTPSA id B5D1810C5F14;
-        Wed, 15 Jan 2020 11:23:07 +0100 (CET)
-From:   Matthias Fend <matthias.fend@wolfvision.net>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     dmaengine@vger.kernel.org, michal.simek@xilinx.com,
-        vkoul@kernel.org, harinik@xilinx.com, radheys@xilinx.com,
-        Matthias Fend <matthias.fend@wolfvision.net>
-Subject: [PATCH v2] dmaengine: zynqmp_dma: fix burst length configuration
-Date:   Wed, 15 Jan 2020 11:22:49 +0100
-Message-Id: <20200115102249.24398-1-matthias.fend@wolfvision.net>
-X-Mailer: git-send-email 2.17.1
-X-Scanned-By: MIMEDefang 2.75 on 194.208.23.39
+        id S1729639AbgAOKZu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 15 Jan 2020 05:25:50 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6509 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729631AbgAOKZu (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Jan 2020 05:25:50 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1ee8750000>; Wed, 15 Jan 2020 02:24:54 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 15 Jan 2020 02:25:49 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 15 Jan 2020 02:25:49 -0800
+Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jan
+ 2020 10:25:47 +0000
+Subject: Re: [PATCH v4 02/14] dmaengine: tegra-apb: Implement synchronization
+ callback
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200112173006.29863-1-digetx@gmail.com>
+ <20200112173006.29863-3-digetx@gmail.com>
+ <c225399c-f032-8001-e67b-b807dcda748c@nvidia.com>
+ <627f996c-1487-1b9a-e953-f5737f3ad32a@gmail.com>
+ <34ec4c18-f082-def6-8544-0d15a109d7f8@nvidia.com>
+Message-ID: <d07d3d64-8abd-e3d7-ca1c-01ab8607b8c2@nvidia.com>
+Date:   Wed, 15 Jan 2020 10:25:45 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <34ec4c18-f082-def6-8544-0d15a109d7f8@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579083894; bh=WDMyn/ZqNy9l1iysLsV2lNTZb/96GII9G+k29s8H9tY=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=MQURN8Zw4jvuLuapdX0bHMWKlRbOsoej7k6+p4drP5m6V+CEidzrouaGDiiHZWlQ4
+         x9xPnF951BwUjSrWp8Okv9aidiHrG0OXJGab3agHi9rfXfiIba/cg+03h2YjPEUipe
+         mdC8+tHCthzfmetGHXkamozI1tcVD1LapvWEQArL2xWJGkA9N4feBaD8cEvnpuUCJv
+         rcm9w3zMOR+0IjQGQjL/5UCeSA0kNx3LG7fRGX7l6/9eKqc4fZQtj7pfshn+4qZ15K
+         o57qvPFykaEh6MQxv7Jv/go7oEO9o4y/5Ph5YHn+ae80GrloQuV9Ci1Mn63wO87g2h
+         tpdgnRXuznHsA==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Since the dma engine expects the burst length register content as
-power of 2 value, the burst length needs to be converted first.
-Additionally add a burst length range check to avoid corrupting unrelated
-register bits.
 
-Signed-off-by: Matthias Fend <matthias.fend@wolfvision.net>
----
- drivers/dma/xilinx/zynqmp_dma.c | 24 +++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
+On 15/01/2020 09:18, Jon Hunter wrote:
+>=20
+> On 14/01/2020 21:02, Dmitry Osipenko wrote:
+>> 14.01.2020 18:15, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>
+>>> On 12/01/2020 17:29, Dmitry Osipenko wrote:
+>>>> The ISR tasklet could be kept scheduled after DMA transfer termination=
+,
+>>>> let's add synchronization callback which blocks until tasklet is finis=
+hed.
+>>>>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  drivers/dma/tegra20-apb-dma.c | 8 ++++++++
+>>>>  1 file changed, 8 insertions(+)
+>>>>
+>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-d=
+ma.c
+>>>> index 319f31d27014..664e9c5df3ba 100644
+>>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>>> @@ -798,6 +798,13 @@ static int tegra_dma_terminate_all(struct dma_cha=
+n *dc)
+>>>>  	return 0;
+>>>>  }
+>>>> =20
+>>>> +static void tegra_dma_synchronize(struct dma_chan *dc)
+>>>> +{
+>>>> +	struct tegra_dma_channel *tdc =3D to_tegra_dma_chan(dc);
+>>>> +
+>>>> +	tasklet_kill(&tdc->tasklet);
+>>>> +}
+>>>> +
+>>>
+>>> Wouldn't there need to be some clean-up here? If the tasklet is
+>>> scheduled, seems that there would be some other house-keeping that need=
+s
+>>> to be done after killing it.
+>>
+>> I'm not seeing anything to clean-up, could you please clarify?
+>=20
+> Clean-up with regard to the descriptors. I was concerned if you will the
+> tasklet the necessary clean-up of the descriptors is not handled.
 
-diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
-index 9c845c07b107..d47749a35863 100644
---- a/drivers/dma/xilinx/zynqmp_dma.c
-+++ b/drivers/dma/xilinx/zynqmp_dma.c
-@@ -123,10 +123,12 @@
- /* Max transfer size per descriptor */
- #define ZYNQMP_DMA_MAX_TRANS_LEN	0x40000000
- 
-+/* Max burst lengths */
-+#define ZYNQMP_DMA_MAX_DST_BURST_LEN    32768U
-+#define ZYNQMP_DMA_MAX_SRC_BURST_LEN    32768U
-+
- /* Reset values for data attributes */
- #define ZYNQMP_DMA_AXCACHE_VAL		0xF
--#define ZYNQMP_DMA_ARLEN_RST_VAL	0xF
--#define ZYNQMP_DMA_AWLEN_RST_VAL	0xF
- 
- #define ZYNQMP_DMA_SRC_ISSUE_RST_VAL	0x1F
- 
-@@ -534,17 +536,19 @@ static void zynqmp_dma_handle_ovfl_int(struct zynqmp_dma_chan *chan, u32 status)
- 
- static void zynqmp_dma_config(struct zynqmp_dma_chan *chan)
- {
--	u32 val;
-+	u32 val, burst_val;
- 
- 	val = readl(chan->regs + ZYNQMP_DMA_CTRL0);
- 	val |= ZYNQMP_DMA_POINT_TYPE_SG;
- 	writel(val, chan->regs + ZYNQMP_DMA_CTRL0);
- 
- 	val = readl(chan->regs + ZYNQMP_DMA_DATA_ATTR);
-+	burst_val = __ilog2_u32(chan->src_burst_len);
- 	val = (val & ~ZYNQMP_DMA_ARLEN) |
--		(chan->src_burst_len << ZYNQMP_DMA_ARLEN_OFST);
-+		((burst_val << ZYNQMP_DMA_ARLEN_OFST) & ZYNQMP_DMA_ARLEN);
-+	burst_val = __ilog2_u32(chan->dst_burst_len);
- 	val = (val & ~ZYNQMP_DMA_AWLEN) |
--		(chan->dst_burst_len << ZYNQMP_DMA_AWLEN_OFST);
-+		((burst_val << ZYNQMP_DMA_AWLEN_OFST) & ZYNQMP_DMA_AWLEN);
- 	writel(val, chan->regs + ZYNQMP_DMA_DATA_ATTR);
- }
- 
-@@ -560,8 +564,10 @@ static int zynqmp_dma_device_config(struct dma_chan *dchan,
- {
- 	struct zynqmp_dma_chan *chan = to_chan(dchan);
- 
--	chan->src_burst_len = config->src_maxburst;
--	chan->dst_burst_len = config->dst_maxburst;
-+	chan->src_burst_len = clamp(config->src_maxburst, 1U,
-+		ZYNQMP_DMA_MAX_SRC_BURST_LEN);
-+	chan->dst_burst_len = clamp(config->dst_maxburst, 1U,
-+		ZYNQMP_DMA_MAX_DST_BURST_LEN);
- 
- 	return 0;
- }
-@@ -887,8 +893,8 @@ static int zynqmp_dma_chan_probe(struct zynqmp_dma_device *zdev,
- 		return PTR_ERR(chan->regs);
- 
- 	chan->bus_width = ZYNQMP_DMA_BUS_WIDTH_64;
--	chan->dst_burst_len = ZYNQMP_DMA_AWLEN_RST_VAL;
--	chan->src_burst_len = ZYNQMP_DMA_ARLEN_RST_VAL;
-+	chan->dst_burst_len = ZYNQMP_DMA_MAX_DST_BURST_LEN;
-+	chan->src_burst_len = ZYNQMP_DMA_MAX_SRC_BURST_LEN;
- 	err = of_property_read_u32(node, "xlnx,bus-width", &chan->bus_width);
- 	if (err < 0) {
- 		dev_err(&pdev->dev, "missing xlnx,bus-width property\n");
--- 
-2.17.1
+Ah I see that tasklet_kill, unlike tasklet_kill_immediate, does wait for
+the tasklet to run if scheduled. OK, then this should be fine.
 
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+
+Cheers
+Jon
+
+--=20
+nvpublic

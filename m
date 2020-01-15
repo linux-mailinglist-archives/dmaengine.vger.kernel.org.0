@@ -2,107 +2,83 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 40EC113C5F0
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Jan 2020 15:26:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 531DD13C818
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Jan 2020 16:40:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgAOOZv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 15 Jan 2020 09:25:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726248AbgAOOZv (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 15 Jan 2020 09:25:51 -0500
-Received: from localhost (unknown [49.207.51.160])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D56F62073A;
-        Wed, 15 Jan 2020 14:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579098350;
-        bh=j9yEfBDHhl+/vGQXG9FN/ORRlqtP/XAwny5T+hPsUVU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=03MtiPEbz1i6sSJvezDHWfrAss5uRCGxKCCGQW6SSPxlW9Vd/wQriScmQof2+eopa
-         EAe6RmCEpUlAe72Cgs+7FGMqztbCvifGxme4U4YwdWDQvOHkFNuFMvoDygYJijOzBr
-         IAhoko6A4S5rboOsJagr3cjmSP9FxuX95h7kPKWI=
-Date:   Wed, 15 Jan 2020 19:55:34 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Zhou Wang <wangzhou1@hisilicon.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
-        linuxarm@huawei.com, Zhenfa Qiu <qiuzhenfa@hisilicon.com>
-Subject: Re: [PATCH v4] dmaengine: hisilicon: Add Kunpeng DMA engine support
-Message-ID: <20200115142534.GM2818@vkoul-mobl>
-References: <1577932428-217801-1-git-send-email-wangzhou1@hisilicon.com>
+        id S1726248AbgAOPk3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 15 Jan 2020 10:40:29 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37147 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbgAOPk0 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Jan 2020 10:40:26 -0500
+Received: by mail-ot1-f68.google.com with SMTP id k14so16490337otn.4
+        for <dmaengine@vger.kernel.org>; Wed, 15 Jan 2020 07:40:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=h8tviBIGxzG0M2SWVlzB/ZX7WYO/ibSFmw3TBS+98tw=;
+        b=Htss4129Ypllz3Xx+xq8a0RhXijVUFil3apa45q83uHShkmfnUhIl1+JEJpdT/k68e
+         YNrU1oPSeR8xSbmWehfbG/cgXPFdxnFzXh32dZ8MM/C92WnvC+O5ksLKYeXSC79rmuUP
+         /Uorv+U7WTIDrsusMx5g/KbURLzMpFrDaEgTnqhC6JwsMWPQQ1SfrLAdniZNfmq6AlWd
+         ssAELQrkIeeroFJd5JBszgvw5zMIodrCnVbW4tGPE36WcPSiHQPM7VGOWhEtDgyEPjQA
+         bpovIN9ayzQhN+ed4mzfXC5/PMEKHFTR0bjg/+8X3Hh4m4VowCtK30jAia10RAWsgly0
+         mZUQ==
+X-Gm-Message-State: APjAAAU1MV6pbVIesZN4JQkdWEb+M5RBFQ0xoNScQ7tqGiZPZv+jgZ3n
+        8uFaV4zSwFeBls/VYGaTfLGa4mM=
+X-Google-Smtp-Source: APXvYqxQOn+FM3doDds6UHXZ76JZXb0UZguuCWfLIKLMwmpTKlcqwaIq7AwOjPr/9w3pfXy1QnHgnQ==
+X-Received: by 2002:a05:6830:2361:: with SMTP id r1mr3037104oth.88.1579102825251;
+        Wed, 15 Jan 2020 07:40:25 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w201sm5766785oif.29.2020.01.15.07.40.23
+        for <dmaengine@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 07:40:24 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 220379
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Wed, 15 Jan 2020 09:40:22 -0600
+Date:   Wed, 15 Jan 2020 09:40:22 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, vkoul@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, ulf.hansson@linaro.org,
+        srinivas.kandagatla@linaro.org, broonie@kernel.org,
+        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
+        rjones@gateworks.com, marcel.ziswiler@toradex.com,
+        sebastien.szymanski@armadeus.com, aisheng.dong@nxp.com,
+        richard.hu@technexion.com, angus@akkea.ca, cosmin.stoica@nxp.com,
+        l.stach@pengutronix.de, rabeeh@solid-run.com,
+        leonard.crestez@nxp.com, daniel.baluta@nxp.com, jun.li@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-spi@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V2 1/7] dt-bindings: fsl-imx-sdma: Add
+ i.MX8MM/i.MX8MN/i.MX8MP compatible string
+Message-ID: <20200115154022.GA10946@bogus>
+References: <1578893602-14395-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1577932428-217801-1-git-send-email-wangzhou1@hisilicon.com>
+In-Reply-To: <1578893602-14395-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 02-01-20, 10:33, Zhou Wang wrote:
+On Mon, 13 Jan 2020 13:33:16 +0800, Anson Huang wrote:
+> Add imx8mm/imx8mn/imx8mp sdma support.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> New patch
+> ---
+>  Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
 
-> +#define HISI_DMA_SQ_BASE_L(i)		(0x0 + (i) * 0x100)
-> +#define HISI_DMA_SQ_BASE_H(i)		(0x4 + (i) * 0x100)
-> +#define HISI_DMA_SQ_DEPTH(i)		(0x8 + (i) * 0x100)
-> +#define HISI_DMA_SQ_TAIL_PTR(i)		(0xc + (i) * 0x100)
-> +#define HISI_DMA_CQ_BASE_L(i)		(0x10 + (i) * 0x100)
-> +#define HISI_DMA_CQ_BASE_H(i)		(0x14 + (i) * 0x100)
-> +#define HISI_DMA_CQ_DEPTH(i)		(0x18 + (i) * 0x100)
-> +#define HISI_DMA_CQ_HEAD_PTR(i)		(0x1c + (i) * 0x100)
-> +#define HISI_DMA_CTRL0(i)		(0x20 + (i) * 0x100)
-> +#define HISI_DMA_CTRL0_QUEUE_EN_S	0
-> +#define HISI_DMA_CTRL0_QUEUE_PAUSE_S	4
-> +#define HISI_DMA_CTRL1(i)		(0x24 + (i) * 0x100)
-> +#define HISI_DMA_CTRL1_QUEUE_RESET_S	0
-> +#define HISI_DMA_Q_FSM_STS(i)		(0x30 + (i) * 0x100)
-> +#define HISI_DMA_FSM_STS_MASK		GENMASK(3, 0)
-> +#define HISI_DMA_INT_STS(i)		(0x40 + (i) * 0x100)
-> +#define HISI_DMA_INT_STS_MASK		GENMASK(12, 0)
-> +#define HISI_DMA_INT_MSK(i)		(0x44 + (i) * 0x100)
-
-These really sound as offset + i * 0x100, so I think it might be better
-to define this as:
-
-define HISI_DMA_SQ_BASE_L               0x0
-with HISI_DMA_OFFSET                    0x100
-
-and then use read/write accessors:
-
-hisi_channel_read(... , register, index)
-{
-        return readl( register + index * HISI_DMA_OFFSET)
-}
-
-> +#define HISI_DMA_MODE			0x217c
-> +
-> +#define HISI_DMA_MSI_NUM		30
-> +#define HISI_DMA_CHAN_NUM		30
-> +#define HISI_DMA_Q_DEPTH_VAL		1024
-> +
-> +#define PCI_DEVICE_ID_HISI_DMA		0xa122
-
-This is used only once so can be removed
-
-> +static void hisi_dma_reset_hw_chan(struct hisi_dma_chan *chan)
-> +{
-> +	struct hisi_dma_dev *hdma_dev = chan->hdma_dev;
-> +	u32 index = chan->qp_num, tmp;
-> +	int ret;
-> +
-> +	hisi_dma_pause_dma(hdma_dev, index, true);
-> +	hisi_dma_enable_dma(hdma_dev, index, false);
-> +	hisi_dma_mask_irq(hdma_dev, index);
-> +
-> +	ret = readl_relaxed_poll_timeout(hdma_dev->base +
-> +		HISI_DMA_Q_FSM_STS(index), tmp,
-> +		FIELD_GET(HISI_DMA_FSM_STS_MASK, tmp) != RUN, 10, 1000);
-> +	if (ret) {
-> +		dev_err(&hdma_dev->pdev->dev, "disable channel timeout!\n");
-> +		BUG_ON(1);
-
-we dont kill kernel on this! you should probably complain violently
-(dump_stack() etc)...)
-
--- 
-~Vinod
+Acked-by: Rob Herring <robh@kernel.org>

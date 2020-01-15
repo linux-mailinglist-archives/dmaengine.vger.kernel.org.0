@@ -2,128 +2,272 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B302B13BDC0
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Jan 2020 11:47:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F134613C0B9
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Jan 2020 13:23:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgAOKry (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 15 Jan 2020 05:47:54 -0500
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:35358 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbgAOKry (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Jan 2020 05:47:54 -0500
-Received: by mail-ua1-f65.google.com with SMTP id y23so6045512ual.2
-        for <dmaengine@vger.kernel.org>; Wed, 15 Jan 2020 02:47:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=IoBXTB9lgUgXp5+AJ6CzxG2/sS/gUaK/Twlw3aSrBA0=;
-        b=udrlokkODRAT+vr5uzT19MGHQV2LdgArLvATbusAN7aOpCdXHVRQXd6z0A+O4ONMhI
-         9S9nqfwO2V5eK5PQfZuBaxVvmlpUliQgC0sDJKKCqQWlCZjx+QXi1R1ZBKXY/FR7n7Ix
-         W5AJldVCJgSwRIwxNEpLdO1kJ09duCZ6MKMzFzRHjXaUobCj2XJYzWqUHOHvn0w3iwfF
-         4lS4B+dq0v1Ih5cN/5B3MxyfVRgagTKv6BBqcswH1QH+fr/n2WnxU31RGzDABeSEVuGY
-         MXsSBDSkkbduz2Z/nbFuq1+kmi7SP230mn50oGxHj4CEqCVeDfLNREtQkgtuWcTzpqLu
-         yx6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=IoBXTB9lgUgXp5+AJ6CzxG2/sS/gUaK/Twlw3aSrBA0=;
-        b=L+FD/oFSkw2MXhBDd50Iw75a1i0uEigiQVoW3RFinKr320V2FOKuwmw28Szb8fRX0p
-         ag0Sa5yPEsF4V8xVNT0tT5Y3MmBvQopCFFy1DGkBo2E9nCHHEJtkJnOfGfIKGl0MjNyc
-         PTMVwHDu3xWK1lErcuQi+Zl+R2i9jfVIfIVjolmA9gdWqIdMR8JqbZP4Q35S8RSBZuBc
-         6zTtYRMfdHKzWwfKQMZb2NV7bQAeI+R6nk97iMFL3iVkQYKXqzK4zI8ikVJKf+xT8DIM
-         hf/Pr3GOiSHxc5pUunq0FnMCUAUF6WS/En++COWKBhT6578Xl5Kpu5MJOxkaUMlEkbFT
-         d7YQ==
-X-Gm-Message-State: APjAAAVLPetG1mBBCoIFVSqq9mM8mvYykdUi0IZABF7PDOy1K4wuaPGQ
-        1TRUaKZmZNg0clovZRM3lxhWU1k97JMKat4x3h8=
-X-Google-Smtp-Source: APXvYqyIhzl/NoHj2WOpeXZrBE2HuHQNkh0d/nGPQzNjBDTCu58huc9br4XkqBbB5P8QkLSnkCRUjLCSFfGwYQ8FoJY=
-X-Received: by 2002:ab0:48cf:: with SMTP id y15mr16562833uac.26.1579085272846;
- Wed, 15 Jan 2020 02:47:52 -0800 (PST)
+        id S1730191AbgAOMXj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 15 Jan 2020 07:23:39 -0500
+Received: from olimex.com ([184.105.72.32]:50711 "EHLO olimex.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730276AbgAOMXj (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 15 Jan 2020 07:23:39 -0500
+Received: from 94.155.250.134 ([94.155.250.134])
+        by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
+        for <dmaengine@vger.kernel.org>; Wed, 15 Jan 2020 04:23:28 -0800
+Subject: Re: [PATCH 2/2] drm: sun4i: hdmi: Add support for sun4i HDMI encoder
+ audio
+To:     Maxime Ripard <mripard@kernel.org>,
+        Stefan Mavrodiev <stefan@olimex.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:DRM DRIVERS FOR ALLWINNER A10" 
+        <dri-devel@lists.freedesktop.org>, linux-sunxi@googlegroups.com
+References: <20200110141140.28527-1-stefan@olimex.com>
+ <20200110141140.28527-3-stefan@olimex.com>
+ <20200110162631.wbufz5h7nqfgd6am@gilmour.lan>
+ <f4ad41ce-e3d0-33e4-1e85-d23e557b484d@olimex.com>
+ <20200115083233.7wedmnkj4ju4eccv@gilmour.lan>
+From:   Stefan Mavrodiev <stefan@olimex.com>
+Message-ID: <03081515-efd8-f281-947a-29928c8d5923@olimex.com>
+Date:   Wed, 15 Jan 2020 14:23:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Reply-To: sebastient766@gmail.com
-Received: by 2002:ab0:5487:0:0:0:0:0 with HTTP; Wed, 15 Jan 2020 02:47:52
- -0800 (PST)
-From:   =?UTF-8?B?TXIuU8OpYmFzdGllbiBUb25p?= <sebastient766@gmail.com>
-Date:   Wed, 15 Jan 2020 02:47:52 -0800
-X-Google-Sender-Auth: UbSGVYVIU36Sq8p9SHDQPIbo5GY
-Message-ID: <CANg70n+E62N75ZZS85KmOWNqjAVDKkZWGiiAHQWShmqs0U9CRA@mail.gmail.com>
-Subject: Dear Friend,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200115083233.7wedmnkj4ju4eccv@gilmour.lan>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-FROM MR.S=C3=89BASTIEN TONI
-AUDIT& ACCOUNT MANAGER
-BANK OF AFRICA (B.O.A)
-OUAGADOUGOU BURKINA FASO
-WEST AFRICA.
+Hi,
 
-Dear Friend,
+On 1/15/20 10:32 AM, Maxime Ripard wrote:
+> Hi Stefan,
+>
+> On Tue, Jan 14, 2020 at 11:04:55AM +0200, Stefan Mavrodiev wrote:
+>> On 1/10/20 6:26 PM, Maxime Ripard wrote:
+>>> Hi,
+>>>
+>>> On Fri, Jan 10, 2020 at 04:11:40PM +0200, Stefan Mavrodiev wrote:
+>>>> Add HDMI audio support for the sun4i-hdmi encoder, used on
+>>>> the older Allwinner chips - A10, A20, A31.
+>>>>
+>>>> Most of the code is based on the BSP implementation. In it
+>>>> dditional formats are supported (S20_3LE and S24_LE), however
+>>>> there where some problems with them and only S16_LE is left.
+>>>>
+>>>> Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+>>>> ---
+>>>>    drivers/gpu/drm/sun4i/Kconfig            |   1 +
+>>>>    drivers/gpu/drm/sun4i/Makefile           |   1 +
+>>>>    drivers/gpu/drm/sun4i/sun4i_hdmi.h       |  30 ++
+>>>>    drivers/gpu/drm/sun4i/sun4i_hdmi_audio.c | 375 +++++++++++++++++++++++
+>>>>    drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c   |   4 +
+>>>>    5 files changed, 411 insertions(+)
+>>>>    create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi_audio.c
+>>>>
+>>>> diff --git a/drivers/gpu/drm/sun4i/Kconfig b/drivers/gpu/drm/sun4i/Kconfig
+>>>> index 37e90e42943f..192b732b10cd 100644
+>>>> --- a/drivers/gpu/drm/sun4i/Kconfig
+>>>> +++ b/drivers/gpu/drm/sun4i/Kconfig
+>>>> @@ -19,6 +19,7 @@ if DRM_SUN4I
+>>>>    config DRM_SUN4I_HDMI
+>>>>           tristate "Allwinner A10 HDMI Controller Support"
+>>>>           default DRM_SUN4I
+>>>> +       select SND_PCM_ELD
+>>>>           help
+>>>>    	  Choose this option if you have an Allwinner SoC with an HDMI
+>>>>    	  controller.
+>>>> diff --git a/drivers/gpu/drm/sun4i/Makefile b/drivers/gpu/drm/sun4i/Makefile
+>>>> index 0d04f2447b01..e2d82b451c36 100644
+>>>> --- a/drivers/gpu/drm/sun4i/Makefile
+>>>> +++ b/drivers/gpu/drm/sun4i/Makefile
+>>>> @@ -5,6 +5,7 @@ sun4i-frontend-y		+= sun4i_frontend.o
+>>>>    sun4i-drm-y			+= sun4i_drv.o
+>>>>    sun4i-drm-y			+= sun4i_framebuffer.o
+>>>>
+>>>> +sun4i-drm-hdmi-y		+= sun4i_hdmi_audio.o
+>>>>    sun4i-drm-hdmi-y		+= sun4i_hdmi_ddc_clk.o
+>>>>    sun4i-drm-hdmi-y		+= sun4i_hdmi_enc.o
+>>>>    sun4i-drm-hdmi-y		+= sun4i_hdmi_i2c.o
+>>>> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+>>>> index 7ad3f06c127e..456964e681b0 100644
+>>>> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+>>>> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
+>>>> @@ -42,7 +42,32 @@
+>>>>    #define SUN4I_HDMI_VID_TIMING_POL_VSYNC		BIT(1)
+>>>>    #define SUN4I_HDMI_VID_TIMING_POL_HSYNC		BIT(0)
+>>>>
+>>>> +#define SUN4I_HDMI_AUDIO_CTRL_REG	0x040
+>>>> +#define SUN4I_HDMI_AUDIO_CTRL_ENABLE		BIT(31)
+>>>> +#define SUN4I_HDMI_AUDIO_CTRL_RESET		BIT(30)
+>>>> +
+>>>> +#define SUN4I_HDMI_AUDIO_FMT_REG	0x048
+>>>> +#define SUN4I_HDMI_AUDIO_FMT_SRC		BIT(31)
+>>>> +#define SUN4I_HDMI_AUDIO_FMT_LAYOUT		BIT(3)
+>>>> +#define SUN4I_HDMI_AUDIO_FMT_CH_CFG(n)		(n - 1)
+>>> There's the issue multiple times in the headers, but you should wrap n
+>>> in parentheses to make sure we have no issue with precedence when
+>>> calling the macro.
+>>>
+>>>> +int sun4i_hdmi_audio_create(struct sun4i_hdmi *hdmi)
+>>>> +{
+>>>> +	struct snd_soc_card *card = &sun4i_hdmi_audio_card;
+>>>> +	struct snd_soc_dai_link_component *comp;
+>>>> +	struct snd_soc_dai_link *link;
+>>>> +	int ret;
+>>>> +
+>>>> +	ret = devm_snd_dmaengine_pcm_register(hdmi->dev,
+>>>> +					      &sun4i_hdmi_audio_pcm_config, 0);
+>>>> +	if (ret) {
+>>>> +		DRM_ERROR("Could not register PCM\n");
+>>>> +		return ret;
+>>>> +	}
+>>>> +
+>>>> +	ret = devm_snd_soc_register_component(hdmi->dev,
+>>>> +					      &sun4i_hdmi_audio_component,
+>>>> +					      &sun4i_hdmi_audio_dai, 1);
+>>>> +	if (ret) {
+>>>> +		DRM_ERROR("Could not register DAI\n");
+>>>> +		return ret;
+>>>> +	}
+>>>> +
+>>>> +	link = devm_kzalloc(hdmi->dev, sizeof(*link), GFP_KERNEL);
+>>>> +	if (!link)
+>>>> +		return -ENOMEM;
+>>>> +
+>>>> +	comp = devm_kzalloc(hdmi->dev, sizeof(*comp) * 3, GFP_KERNEL);
+>>>> +	if (!comp)
+>>>> +		return -ENOMEM;
+>>>> +
+>>>> +	link->cpus = &comp[0];
+>>>> +	link->codecs = &comp[1];
+>>>> +	link->platforms = &comp[2];
+>>>> +
+>>>> +	link->num_cpus = 1;
+>>>> +	link->num_codecs = 1;
+>>>> +	link->num_platforms = 1;
+>>>> +
+>>>> +	link->playback_only = 1;
+>>>> +
+>>>> +	link->name = "SUN4I-HDMI";
+>>>> +	link->stream_name = "SUN4I-HDMI PCM";
+>>>> +
+>>>> +	link->codecs->name = dev_name(hdmi->dev);
+>>>> +	link->codecs->dai_name	= sun4i_hdmi_audio_dai.name;
+>>>> +
+>>>> +	link->cpus->dai_name = dev_name(hdmi->dev);
+>>>> +
+>>>> +	link->platforms->name = dev_name(hdmi->dev);
+>>>> +
+>>>> +	link->dai_fmt = SND_SOC_DAIFMT_I2S;
+>>>> +
+>>>> +	card->dai_link = link;
+>>>> +	card->num_links = 1;
+>>>> +	card->dev = hdmi->dev;
+>>>> +
+>>>> +	snd_soc_card_set_drvdata(card, hdmi);
+>>>> +	return devm_snd_soc_register_card(hdmi->dev, card);
+>>> Out of curiosity, did you try to remove the module with that patch
+>>> applied? IIRC, these functions will overwrite the device drvdata, and
+>>> we will try to access them in unbind / remove.
+>> Actually I did not. Just tried that and you're right. The module
+>> crashes at the unbind call.  I use sun4i_hdmi struct only for
+>> regmap. Maybe create separate private structure and copy only
+>> regmap?
+> I think the issue is that:
+>
+>    - In bind, we first call dev_set_drvdata on the bound device, with a
+>      pointer to struct sun4i_hdmi as the value. The driver_data field
+>      in struct device is now a pointer to our instance of struct
+>      sun4i_hdmi.
+>
+>    - In audio create, you then call snd_soc_card_set_drvdata with a
+>      pointer to struct sun4i_hdmi as the value. The drvdata field in
+>      the struct snd_soc_card is now a pointer to our instance of struct
+>      sun4i_hdmi (so far so good).
+>
+>    - Then you call (devm_)snd_soc_register_card. One of the thing that
+>      it will do is call drv_set_drvdata on the card->dev device,
+>      setting it to our pointer to the struct snd_soc_card we provided.
+>      However, since you set card->dev to the same device than the one
+>      initially bound, this means that you just overwrote the struct
+>      sun4i_hdmi pointer with a pointer to struct snd_soc_card.
+>
+>    - The driver will operate properly, since we never really use the
+>      driver_data field, in the HDMI driver, except when...
+>
+>    - At unbind, you retrieve the driver_data field, expecting a struct
+>      sun4i_hdmi pointer, except you have a pointer to struct
+>      snd_soc_card, and everything explodes.
+>
+> I think the way to work around that would be to create a new
+> (platform_)device for the HDMI audio component, so that ASoC can work
+> on that device instead.
+>
+> This seems to be what dw-hdmi is doing here:
+> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c#L2812
+>
+> (Except that they are also using platform_data, since they have
+> multiple drivers, we wouldn't, so we can just lookup sun4i_hdmi using
+> the parent's device driver_data).
+>
+>>>> +}
+>>>> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+>>>> index a7c4654445c7..79ecd89fb705 100644
+>>>> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+>>>> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+>>>> @@ -114,6 +114,9 @@ static void sun4i_hdmi_enable(struct drm_encoder *encoder)
+>>>>    		val |= SUN4I_HDMI_VID_CTRL_HDMI_MODE;
+>>>>
+>>>>    	writel(val, hdmi->base + SUN4I_HDMI_VID_CTRL_REG);
+>>>> +
+>>>> +	if (hdmi->hdmi_audio && sun4i_hdmi_audio_create(hdmi))
+>>>> +		DRM_ERROR("Couldn't create the HDMI audio adapter\n");
+>>> So you create the audio card each time the display is enabled? I guess
+>>> this is to deal with the hotplug?
+>> Yes. See below.
+>>
+>>> I'm not sure this is the right thing to do. If I remember well, the
+>>> ELD are here precisely to let userspace know that the display is
+>>> plugged (and audio-capable) or not.
+>>>
+>>> Also, you don't remove that card in the disable, which mean that if
+>>> you end up in a situation where you would enable the display, disable
+>>> it and then enable it again, you have two audio cards now.
+>> There is issue with the hotplug. When inserting the cable, the event
+>> is detected and the hdmi encoder is enabled. Thus the card is
+>> created. However further removal and insertions are not
+>> detected.
+> I guess we would need to fix that then?
+>
+>> This is why I don't remove the card.
+>>
+>> Also I count on devm_snd_soc_register_card() to release the card.
+> I think you should really create the card all the time, and just
+> update the ELD to let the userspace know when something has been
+> created.
+>
+> And yeah, we should have a working hotplug, but that's a separate
+> story :)
 
+Thank you for the review. Soon I'll prepare v2.
 
-With due respect, I have decided to contact you on
-abusinesstransaction  that will be beneficial to both of us. At the
-bank last account and  auditing evaluation, my staffs came across an
-old account which was being maintained by a foreign client who we
-learn was among the deceased passengers of motor accident on
-November.2003, the deceased was unable to run this account since his
-death. Theaccount has  remained dormant without the knowledge of his
-family since it was put in a  safe deposit account in the bank for
-future investment by the client.
+Also I'll check the hotplug issue.
 
+>
+> Maxime
 
-Since his demise, even the members of his family haven't applied for
-claims  over this fund and it has been in the safe deposit account
-until I  discovered that it cannot be claimed since our client
-isaforeign nationaland we are sure that he has no next of kin here to
-file claims over the money. As the director of the department, this
-discovery was brought to my office so as to decide what is to bedone.I
-decided to seek ways through which to transfer this money out of the
-bank  and out of the country too.
+Best regards,
+Stefan
 
-
-The total amount in the account is 18.6 million with my positions as
-staffs  of the bank, I am handicapped because I cannot operate foreign
-accounts and  cannot lay bonafide claim over this money. The client
-was a foreign  national and you will only be asked to act as his next
-of kin and I will  supply you with all the necessary information and
-bank data to assist you in being able to transfer this money to any
-bank of your  choice where this money could be transferred into.The
-total sum will be shared as follows: 50% for me, 50% for you and
-expenses incidental occur  during the transfer will be incur by both
-of us. The transfer is risk free on both sides hence you are going to
-follow my instruction till the fund  transfer to your account. Since I
-work in this bank that is why you should  be confident in the success
-of this transaction because you will be updated with information as at
-when desired.
-
-
-I will wish you to keep this transaction secret and confidential as I
-am  hoping to retire with my share of this money at the end of
-transaction  which will be when this money is safety in your account.
-I will then come over to your country for sharing according to the
-previously agreed percentages. You might even have to advise me on
-possibilities of investment in your country or elsewhere of our
-choice. May  God help you to help me to a restive retirement, Amen,And
-You have to  contact me through my private e-mail
-at(sebastient766@gmail.com)Please for further information and inquires
-feel free to contact me back immediately for more explanation and
-better  understanding I want you to assure me your capability of
-handling this  project with trust by providing me your following
-information details such as:
-
-(1)NAME..............
-(2)AGE:................
-(3)SEX:.....................
-(4)PHONE NUMBER:.................
-(5)OCCUPATION:.....................
-(6)YOUR COUNTRY:.....................
-
-
-Yours sincerely,
-Mr.S=C3=A9bastien Toni

@@ -2,40 +2,37 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D05513F1EE
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Jan 2020 19:32:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4015A13F8BE
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Jan 2020 20:20:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391875AbgAPRZG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 Jan 2020 12:25:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60568 "EHLO mail.kernel.org"
+        id S1731255AbgAPQxz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 16 Jan 2020 11:53:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391871AbgAPRZG (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:25:06 -0500
+        id S1730092AbgAPQxy (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:53:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82A7E246CD;
-        Thu, 16 Jan 2020 17:25:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F8B72176D;
+        Thu, 16 Jan 2020 16:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195505;
-        bh=o/9sH5pE9k4rFAh1zROCpzLfE+tZgovyTyZunZJY9j8=;
+        s=default; t=1579193634;
+        bh=ooG/u0lpuDU3KfgsjKqprWqYhFBmpX+EfQTgpYhU9xA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a5UoZiRIaDUkMvWEV1sURwM6bY7eHa2BJorh1h/6RiJRTELGqb+e73v3IiEjxJgaH
-         AMn49uV601Yu21zGn/u8pUYs58989sreuH5wFSMAqnrjZgHbtTtHNpopy0XWRZES95
-         HbokOs3d8fMUqqjusprHK9SrpJo2YoQ+A3MgUqec=
+        b=usoq8sppPnKyUviULo+0W2Qq6zd+TYIrjfGHjOjQIqEx9YvZGfwxrBVdUtX+TjpMD
+         bHeXjZLIFsZhxxz3A/kUFxC2k4b7yyd7XYhMXR4PuPgxP695QHFHqc8tMmmnDB8ahz
+         l18h8YScUekr2J5KWX5k9YGtD/IrRhMxT7eRjlIU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        John David Anglin <dave.anglin@bell.net>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 105/371] dmaengine: mv_xor: Use correct device for DMA API
-Date:   Thu, 16 Jan 2020 12:19:37 -0500
-Message-Id: <20200116172403.18149-48-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 167/205] dmaengine: ti: edma: fix missed failure handling
+Date:   Thu, 16 Jan 2020 11:42:22 -0500
+Message-Id: <20200116164300.6705-167-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
+In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
+References: <20200116164300.6705-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -45,51 +42,39 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 3e5daee5ecf314da33a890fabaa2404244cd2a36 ]
+[ Upstream commit 340049d453682a9fe8d91fe794dd091730f4bb25 ]
 
-Using dma_dev->dev for mappings before it's assigned with the correct
-device is unlikely to work as expected, and with future dma-direct
-changes, passing a NULL device may end up crashing entirely. I don't
-know enough about this hardware or the mv_xor_prep_dma_interrupt()
-operation to implement the appropriate error-handling logic that would
-have revealed those dma_map_single() calls failing on arm64 for as long
-as the driver has been enabled there, but moving the assignment earlier
-will at least make the current code operate as intended.
+When devm_kcalloc fails, it forgets to call edma_free_slot.
+Replace direct return with failure handler to fix it.
 
-Fixes: 22843545b200 ("dma: mv_xor: Add support for DMA_INTERRUPT")
-Reported-by: John David Anglin <dave.anglin@bell.net>
-Tested-by: John David Anglin <dave.anglin@bell.net>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Tested-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Fixes: 1be5336bc7ba ("dmaengine: edma: New device tree binding")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20191118073802.28424-1-hslester96@gmail.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/mv_xor.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/ti/edma.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
-index 1993889003fd..1c57577f49fe 100644
---- a/drivers/dma/mv_xor.c
-+++ b/drivers/dma/mv_xor.c
-@@ -1059,6 +1059,7 @@ mv_xor_channel_add(struct mv_xor_device *xordev,
- 		mv_chan->op_in_desc = XOR_MODE_IN_DESC;
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index ba7c4f07fcd6..80b780e49971 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -2403,8 +2403,10 @@ static int edma_probe(struct platform_device *pdev)
  
- 	dma_dev = &mv_chan->dmadev;
-+	dma_dev->dev = &pdev->dev;
- 	mv_chan->xordev = xordev;
+ 		ecc->tc_list = devm_kcalloc(dev, ecc->num_tc,
+ 					    sizeof(*ecc->tc_list), GFP_KERNEL);
+-		if (!ecc->tc_list)
+-			return -ENOMEM;
++		if (!ecc->tc_list) {
++			ret = -ENOMEM;
++			goto err_reg1;
++		}
  
- 	/*
-@@ -1091,7 +1092,6 @@ mv_xor_channel_add(struct mv_xor_device *xordev,
- 	dma_dev->device_free_chan_resources = mv_xor_free_chan_resources;
- 	dma_dev->device_tx_status = mv_xor_status;
- 	dma_dev->device_issue_pending = mv_xor_issue_pending;
--	dma_dev->dev = &pdev->dev;
- 
- 	/* set prep routines based on capability */
- 	if (dma_has_cap(DMA_INTERRUPT, dma_dev->cap_mask))
+ 		for (i = 0;; i++) {
+ 			ret = of_parse_phandle_with_fixed_args(node, "ti,tptcs",
 -- 
 2.20.1
 

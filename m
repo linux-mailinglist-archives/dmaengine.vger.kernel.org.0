@@ -2,149 +2,118 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E7F5313CC0F
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Jan 2020 19:27:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A74E13D163
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Jan 2020 02:11:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbgAOS06 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 15 Jan 2020 13:26:58 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:37032 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728993AbgAOS05 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Jan 2020 13:26:57 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FIN5FU121958;
-        Wed, 15 Jan 2020 18:26:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=F6SQaCFi8PmmmsQylROI5thWFZ79H1A5nXmOx7Fhsqw=;
- b=eq16sBhr1nm2LAd1UoC2Ko1hyhCVTxJGFyyrkdx0g2/3AniqAFOfA2xaW5JZJa7GhOlL
- SjgttsTM7rmQSvWPBch+qegcifOmi15P72fO5zXBuBK3k3i98/fP/S3MLXnM5w1nlamd
- F8GApoOouXEsp1QpiCPTlR7Mxz8Y3BMcYOT+PbfpTI/FwwIM22gvZytazeDIxh8Hf3dG
- a+rUMGoA/TCEbbuG509sLVCn9Dc+8TNwlB5aNI8nAJOVOLR+C+7hBfUH6lbwYZvJ1YPD
- eDWNzm3y8OBkzUG3At4MoHzorh+zc1jWnuFwEO22dqOBGOnen/aMYbul4b0/gDLIqu9B oA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2xf74sdw4p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 18:26:42 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FIOOOi072681;
-        Wed, 15 Jan 2020 18:26:41 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2xj1aq9drw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 18:26:41 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00FIQdkm008377;
-        Wed, 15 Jan 2020 18:26:39 GMT
-Received: from dhcp-10-159-239-64.vpn.oracle.com (/10.159.239.64)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jan 2020 10:26:38 -0800
-Subject: Re: [PATCH v8 02/18] soc: ti: k3: add navss ringacc driver
+        id S1729076AbgAPBLF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 15 Jan 2020 20:11:05 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9623 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729031AbgAPBLF (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 15 Jan 2020 20:11:05 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C39ED3220F7E9B3D5759;
+        Thu, 16 Jan 2020 09:11:02 +0800 (CST)
+Received: from [127.0.0.1] (10.63.139.185) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Thu, 16 Jan 2020
+ 09:10:35 +0800
+Subject: Re: [PATCH v4] dmaengine: hisilicon: Add Kunpeng DMA engine support
 To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>, robh+dt@kernel.org, nm@ti.com,
-        ssantosh@kernel.org, dan.j.williams@intel.com,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        grygorii.strashko@ti.com, lokeshvutla@ti.com, t-kristo@ti.com,
-        tony@atomide.com, j-keerthy@ti.com, vigneshr@ti.com,
-        frowand.list@gmail.com
-References: <20191223110458.30766-1-peter.ujfalusi@ti.com>
- <20191223110458.30766-3-peter.ujfalusi@ti.com>
- <6d70686b-a94e-18d1-7b33-ff9df7176089@ti.com>
- <900c2f21-22bf-47f9-5c3c-0a3d95a5d645@oracle.com>
- <ea6a87ae-b978-a786-27eb-db99483a82d9@ti.com>
- <f0230e88-bd9b-cd6d-433d-06d507cafcbd@ti.com>
- <9177657a-71c7-7bd0-a981-3ef1f736d4dc@oracle.com>
- <2c933a6c-37c6-3ef6-7c37-ae36e8c49bf7@ti.com>
- <20200115122440.GI2818@vkoul-mobl>
-From:   "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <b1dba0ad-f7d6-607b-87f7-d3ca746d19ea@oracle.com>
-Date:   Wed, 15 Jan 2020 10:26:36 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+References: <1577932428-217801-1-git-send-email-wangzhou1@hisilicon.com>
+ <20200115142534.GM2818@vkoul-mobl>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        <dmaengine@vger.kernel.org>, <linuxarm@huawei.com>,
+        Zhenfa Qiu <qiuzhenfa@hisilicon.com>
+From:   Zhou Wang <wangzhou1@hisilicon.com>
+Message-ID: <5E1FB80A.4030607@hisilicon.com>
+Date:   Thu, 16 Jan 2020 09:10:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-In-Reply-To: <20200115122440.GI2818@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20200115142534.GM2818@vkoul-mobl>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001150141
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=4 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001150141
+X-Originating-IP: [10.63.139.185]
+X-CFilter-Loop: Reflected
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vinod,
-
-On 1/15/20 4:24 AM, Vinod Koul wrote:
-> On 15-01-20, 11:44, Peter Ujfalusi wrote:
->>
-
->>> I would prefer driver patches to go via driver tree.
->>
->> Not sure what you mean by 'driver patches'...
->> The series to enable DMA support on TI's K3 platform consists:
->> Patch 1-2: Ring Accelerator _driver_ (drivers/soc/ti/)
->> Patch 3-6: DMAengine core patches to add new features needed for k3-udma
->> Patch 7-11: DMA _driver_ patches for K3 (drivers/dma/ti/)
->>
->> Patch 10 depends on the ringacc and the DMAengine core patches
->> Patch 11 depends on patch 10
->>
->> I kept it as a single series in hope that they will go via one subsystem
->> tree to avoid build dependency issues and will have a good amount of
->> time in linux-next for testing.
->>
->>>> Vinod could also perhaps setup an immutable branch based on v5.5-rc1
->>>> with just the drivers/soc/ti parts applied so you can merge that branch
->>>> in case you end up having to send up anything that conflicts.
->>>>
->>> As suggested on other email to Peter, these DMA engine related patches
->>> should be queued up since they don't have any dependency. Based on
->>> the status of that patchset, will take care of pulling in the driver
->>> patches either for this merge window or early part of next merge window.
->>
->> OK, I'll send the two patch for ringacc as a separate series.
->>
->> Vinod: Would it be possible for you to pick up the DMAengine core
->> patches (patch 3-6)?
->> The UDMA driver patches have hard dependency on DMAengine core and
->> ringacc, not sure how they are going to go in...
+On 2020/1/15 22:25, Vinod Koul wrote:
+> On 02-01-20, 10:33, Zhou Wang wrote:
 > 
-> Since they have build dependency, the usual method for this is:
+>> +#define HISI_DMA_SQ_BASE_L(i)		(0x0 + (i) * 0x100)
+>> +#define HISI_DMA_SQ_BASE_H(i)		(0x4 + (i) * 0x100)
+>> +#define HISI_DMA_SQ_DEPTH(i)		(0x8 + (i) * 0x100)
+>> +#define HISI_DMA_SQ_TAIL_PTR(i)		(0xc + (i) * 0x100)
+>> +#define HISI_DMA_CQ_BASE_L(i)		(0x10 + (i) * 0x100)
+>> +#define HISI_DMA_CQ_BASE_H(i)		(0x14 + (i) * 0x100)
+>> +#define HISI_DMA_CQ_DEPTH(i)		(0x18 + (i) * 0x100)
+>> +#define HISI_DMA_CQ_HEAD_PTR(i)		(0x1c + (i) * 0x100)
+>> +#define HISI_DMA_CTRL0(i)		(0x20 + (i) * 0x100)
+>> +#define HISI_DMA_CTRL0_QUEUE_EN_S	0
+>> +#define HISI_DMA_CTRL0_QUEUE_PAUSE_S	4
+>> +#define HISI_DMA_CTRL1(i)		(0x24 + (i) * 0x100)
+>> +#define HISI_DMA_CTRL1_QUEUE_RESET_S	0
+>> +#define HISI_DMA_Q_FSM_STS(i)		(0x30 + (i) * 0x100)
+>> +#define HISI_DMA_FSM_STS_MASK		GENMASK(3, 0)
+>> +#define HISI_DMA_INT_STS(i)		(0x40 + (i) * 0x100)
+>> +#define HISI_DMA_INT_STS_MASK		GENMASK(12, 0)
+>> +#define HISI_DMA_INT_MSK(i)		(0x44 + (i) * 0x100)
 > 
-[...]
+> These really sound as offset + i * 0x100, so I think it might be better
+> to define this as:
 > 
-> 2. Santosh picks up ring driver patches, provides a signed immutable tag
-> which I will pull in and apply the rest, i.e., dmaengine updates and new
-> dmaengine driver
+> define HISI_DMA_SQ_BASE_L               0x0
+> with HISI_DMA_OFFSET                    0x100
 > 
-I have pushed the ring driver changes with an immutable tag and also 
-pushed out to next. I will know if it breaks anything in a day.
-If all good, will send out the pull request to ARM soc folks.
-Since its already late, its not guaranteed that driver will get
-picked up for 5.6 but will request and copy you on pull request. Based
-on the state of the pull request, I suggest you decide to
-pull my tag and rest of the dma patches to your tree so that we
-can avoid any breakage in linus's tree. Feel free to add my ack
-for rest of the DMA patchset.
+> and then use read/write accessors:
+> 
+> hisi_channel_read(... , register, index)
+> {
+>         return readl( register + index * HISI_DMA_OFFSET)
+> }
+>
 
-git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git 
-tags/drivers_soc_for_5.6
+OK, I will modify this in v5.
 
-Let me know if you have any concerns/questions.
+>> +#define HISI_DMA_MODE			0x217c
+>> +
+>> +#define HISI_DMA_MSI_NUM		30
+>> +#define HISI_DMA_CHAN_NUM		30
+>> +#define HISI_DMA_Q_DEPTH_VAL		1024
+>> +
+>> +#define PCI_DEVICE_ID_HISI_DMA		0xa122
+> 
+> This is used only once so can be removed
 
-Regards,
-Santosh
+OK.
+
+> 
+>> +static void hisi_dma_reset_hw_chan(struct hisi_dma_chan *chan)
+>> +{
+>> +	struct hisi_dma_dev *hdma_dev = chan->hdma_dev;
+>> +	u32 index = chan->qp_num, tmp;
+>> +	int ret;
+>> +
+>> +	hisi_dma_pause_dma(hdma_dev, index, true);
+>> +	hisi_dma_enable_dma(hdma_dev, index, false);
+>> +	hisi_dma_mask_irq(hdma_dev, index);
+>> +
+>> +	ret = readl_relaxed_poll_timeout(hdma_dev->base +
+>> +		HISI_DMA_Q_FSM_STS(index), tmp,
+>> +		FIELD_GET(HISI_DMA_FSM_STS_MASK, tmp) != RUN, 10, 1000);
+>> +	if (ret) {
+>> +		dev_err(&hdma_dev->pdev->dev, "disable channel timeout!\n");
+>> +		BUG_ON(1);
+> 
+> we dont kill kernel on this! you should probably complain violently
+> (dump_stack() etc)...)
+> 
+
+OK, will change to WARN_ON in v5.
+
+Thanks for your help!
+Zhou
+

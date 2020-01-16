@@ -2,39 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 281A213E0DD
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Jan 2020 17:46:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8529E13E35E
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Jan 2020 18:01:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgAPQqO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 Jan 2020 11:46:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55378 "EHLO mail.kernel.org"
+        id S2387830AbgAPRBc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 16 Jan 2020 12:01:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729122AbgAPQqN (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:46:13 -0500
+        id S2387670AbgAPRBc (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:01:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26B8720663;
-        Thu, 16 Jan 2020 16:46:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 764D324684;
+        Thu, 16 Jan 2020 17:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193172;
-        bh=yK5TvpLuz4Z0jsh9P/SNatynnR9D2SS7hXVXfA471Yk=;
+        s=default; t=1579194091;
+        bh=Vgu7OrnRpkJqobvkw4XRI1HavqMpMCUHZK0vAJPiCnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1dMTDHrM7I0O3nCDbslcoytZVH+ww7BpBawp5N5A/RK5Jp/6ZVCcj04D67o6MHuSJ
-         Nv+C+rRofzTdSriJ4B+N79rROQtbCLU0Vo6L+hqI1uq+oslhbijrSuTt3/+dVqzcc5
-         4bCWKzvgx2LoOkiZuSUt31LA3D3AD0PPoyGxlfSo=
+        b=r/TfxilhifLsWhasZBvK8b5B+GKFkjAvdCNndyV3lhxNJpcCD1eLZSaahAPiUcmxW
+         Gs48oZY7f5AxN/v4sQgB7MSPHGCfqCxjEkapHc1x/WKpgLCBm1TUae9/I55mtVmA1z
+         9ac9oPTBqjUn+WMCnLDi5pwL2x4gVbvSbF6HzoGs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        John David Anglin <dave.anglin@bell.net>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
         dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 039/205] dmaengine: dw: platform: Mark 'hclk' clock optional
-Date:   Thu, 16 Jan 2020 11:40:14 -0500
-Message-Id: <20200116164300.6705-39-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 194/671] dmaengine: mv_xor: Use correct device for DMA API
+Date:   Thu, 16 Jan 2020 11:51:43 -0500
+Message-Id: <20200116165940.10720-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
-References: <20200116164300.6705-1-sashal@kernel.org>
+In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
+References: <20200116165940.10720-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,39 +45,51 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Robin Murphy <robin.murphy@arm.com>
 
-[ Upstream commit f27c22736d133baff0ab3fdc7b015d998267d817 ]
+[ Upstream commit 3e5daee5ecf314da33a890fabaa2404244cd2a36 ]
 
-On some platforms the clock can be fixed rate, always running one and
-there is no need to do anything with it.
+Using dma_dev->dev for mappings before it's assigned with the correct
+device is unlikely to work as expected, and with future dma-direct
+changes, passing a NULL device may end up crashing entirely. I don't
+know enough about this hardware or the mv_xor_prep_dma_interrupt()
+operation to implement the appropriate error-handling logic that would
+have revealed those dma_map_single() calls failing on arm64 for as long
+as the driver has been enabled there, but moving the assignment earlier
+will at least make the current code operate as intended.
 
-In order to support those platforms, switch to use optional clock.
-
-Fixes: f8d9ddbc2851 ("dmaengine: dw: platform: Enable iDMA 32-bit on Intel Elkhart Lake")
-Depends-on: 60b8f0ddf1a9 ("clk: Add (devm_)clk_get_optional() functions")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Link: https://lore.kernel.org/r/20190924085116.83683-1-andriy.shevchenko@linux.intel.com
+Fixes: 22843545b200 ("dma: mv_xor: Add support for DMA_INTERRUPT")
+Reported-by: John David Anglin <dave.anglin@bell.net>
+Tested-by: John David Anglin <dave.anglin@bell.net>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Acked-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Tested-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dw/platform.c | 2 +-
+ drivers/dma/mv_xor.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
-index c90c798e5ec3..0585d749d935 100644
---- a/drivers/dma/dw/platform.c
-+++ b/drivers/dma/dw/platform.c
-@@ -66,7 +66,7 @@ static int dw_probe(struct platform_device *pdev)
+diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
+index 969534c1a6c6..abc8d3e0487b 100644
+--- a/drivers/dma/mv_xor.c
++++ b/drivers/dma/mv_xor.c
+@@ -1059,6 +1059,7 @@ mv_xor_channel_add(struct mv_xor_device *xordev,
+ 		mv_chan->op_in_desc = XOR_MODE_IN_DESC;
  
- 	data->chip = chip;
+ 	dma_dev = &mv_chan->dmadev;
++	dma_dev->dev = &pdev->dev;
+ 	mv_chan->xordev = xordev;
  
--	chip->clk = devm_clk_get(chip->dev, "hclk");
-+	chip->clk = devm_clk_get_optional(chip->dev, "hclk");
- 	if (IS_ERR(chip->clk))
- 		return PTR_ERR(chip->clk);
- 	err = clk_prepare_enable(chip->clk);
+ 	/*
+@@ -1091,7 +1092,6 @@ mv_xor_channel_add(struct mv_xor_device *xordev,
+ 	dma_dev->device_free_chan_resources = mv_xor_free_chan_resources;
+ 	dma_dev->device_tx_status = mv_xor_status;
+ 	dma_dev->device_issue_pending = mv_xor_issue_pending;
+-	dma_dev->dev = &pdev->dev;
+ 
+ 	/* set prep routines based on capability */
+ 	if (dma_has_cap(DMA_INTERRUPT, dma_dev->cap_mask))
 -- 
 2.20.1
 

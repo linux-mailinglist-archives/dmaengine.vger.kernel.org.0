@@ -2,88 +2,156 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AFAB013DFAB
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Jan 2020 17:12:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09C5613E039
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Jan 2020 17:36:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgAPQMC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 Jan 2020 11:12:02 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52102 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726991AbgAPQL7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Jan 2020 11:11:59 -0500
-Received: by mail-wm1-f66.google.com with SMTP id d73so4360073wmd.1
-        for <dmaengine@vger.kernel.org>; Thu, 16 Jan 2020 08:11:58 -0800 (PST)
+        id S1726343AbgAPQgq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 16 Jan 2020 11:36:46 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:43618 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbgAPQgq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Jan 2020 11:36:46 -0500
+Received: by mail-il1-f196.google.com with SMTP id v69so18712129ili.10;
+        Thu, 16 Jan 2020 08:36:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wq116TZAe0p40heVVDfMLRBuWEj6xKtwx1Np2GXHzlk=;
-        b=qdQEY1n8v+dLZaHvHfDyqgC04UQvFEYkL0iVEjWLFmsSkU3RdqM+lv6eJPlKsfZZJo
-         V2U5I8ZZfySoMK28rBSpL6Qi9hZ1hBksNdUKrrlpCgVLxMi5EXSi5jSaVoIKprkgosd5
-         tsDC/ZoH/IOGHUHa5cOqrpght5pR8sZ8tAU7KkBzmrV/NVIcLC4BYWkLn3qFk7vMY0dG
-         3cUuGjOTM7lrJfGCwT9DuQ2es9Hy/CCF+RThAtg047ML104Uh1CTu5cc9rYcPLtsT3GC
-         B/ZdafPWXHclyQ++k9xdn+0fxAl7T0KV1vSnNRH8BNknm6iXsf0sfW0O3mzquuFtLaDf
-         naeA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F5CUZisbEmcuPSU1emkEgklMu7uKE46FRb40awhcNNw=;
+        b=EJLTwp2ZhMt6m8MIODOMxX8F0WUxZXnFllgPy0vjYRaP2a/uqLd7VgfSGrWmo8hpAJ
+         NPHIjFIJGRLr4oNAz9tf5hOsdcfuVYMnqjiTf2J4RCADCuxQW+oGSsB83s4QcMRYpoPy
+         vf1DpVdQTI/VdvN2YcvhWNwF4XaXJSfsa0NNO5bimCUjbA5cJJ6NJWxgsXS2WESS+fUM
+         XotHwzWPyWBYZMI9ssGzm7k30A7uRYYqAYpyL23ouh5EW6o0lP2Rp5LvXf14sfItRsni
+         tEMr9QVNKomtq9S+mvxD/frcA8S1mOvx2byWGDSjpzIyfdwenphPtbBOjb3rbGha0prQ
+         SK/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wq116TZAe0p40heVVDfMLRBuWEj6xKtwx1Np2GXHzlk=;
-        b=ASZ3Eue37bMfdhIMTp7ig0iquR4r+fwqaqCIFNND0SFvw40oi4wbq0DDc5iSmDfAkV
-         PjUMqN7GmKlCAwZglAAujwYKyB7rI3ha09pDmFlLuO8nCbFNtX1Cn/zZewi9Kx3uOWP1
-         wgIbA4K8feRRx1ORRiBeoum/lK13KNEXp19PqZYRGqTWaFjrJiosCns8VEfTLAZPPgH9
-         9l73Oa05oFWFPeeWkOi30Z1NSn1fIBwqHLBXPO56vXqxtcgyG1cAULwA+DQLtn5IQ/35
-         rqgdH7iLnNdDqJE3ZjUR1kdAuTBUL/PI/74dtqvBGU+dFSZRf94sw8+OpT0CjU2GfkzG
-         lyDg==
-X-Gm-Message-State: APjAAAXgELc75W/XssXlPfBhf+5YTPM4HA5mKOtr9ucEIJsehxa5MJ1U
-        my+RTocV96HGvvKs/mWizys/Qw==
-X-Google-Smtp-Source: APXvYqxia/hYDamKXklRlZ4uVwwfWKaRzmR3+FORgkBCwOjEeD6jP03Gwc0fSu+Qsj8bDjor8a5sTA==
-X-Received: by 2002:a1c:a982:: with SMTP id s124mr6705085wme.132.1579191117317;
-        Thu, 16 Jan 2020 08:11:57 -0800 (PST)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id i5sm30424978wrv.34.2020.01.16.08.11.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Jan 2020 08:11:55 -0800 (PST)
-Subject: Re: [PATCH V2 3/7] dt-bindings: imx-ocotp: Add i.MX8MP compatible
-To:     Anson Huang <Anson.Huang@nxp.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, vkoul@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        ulf.hansson@linaro.org, broonie@kernel.org,
-        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
-        rjones@gateworks.com, marcel.ziswiler@toradex.com,
-        sebastien.szymanski@armadeus.com, aisheng.dong@nxp.com,
-        richard.hu@technexion.com, angus@akkea.ca, cosmin.stoica@nxp.com,
-        l.stach@pengutronix.de, rabeeh@solid-run.com,
-        leonard.crestez@nxp.com, daniel.baluta@nxp.com, jun.li@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-spi@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-References: <1578893602-14395-1-git-send-email-Anson.Huang@nxp.com>
- <1578893602-14395-3-git-send-email-Anson.Huang@nxp.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <c2c3d925-a69a-d7f8-a58a-5f4abe46960b@linaro.org>
-Date:   Thu, 16 Jan 2020 16:11:54 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F5CUZisbEmcuPSU1emkEgklMu7uKE46FRb40awhcNNw=;
+        b=TUp5TzhjNk+h2WOj3yUFK93LVHevOE7wKgNdfVVxRgMv0oEcQGbsYMQ9hZBUlpLZrG
+         vxiFQ1Vj1UoSwwwe/tc7+Wiza9IUVoBStit6tFdJO5hjMKkRuXiFOuAqOxJKKXpwh7YL
+         yBIK4rP1Ym+KNaGStYklazb3w6XAJQe42CT/CYofZafEPJ9MsQp/5w0TUrgJsnwcEnJP
+         GOX5RlqnuhRdc2jCqAuuI+Mq6kzptwNPuiz1RgCXv24rFo9mJyyeLOn5ZnMsFQ/S2DY4
+         y9nySAAYk+AdNn6Y4lGzvtF8mlHX+9c92fP+R4o8YyB9lH+9kJbqO7mJOR5USaQykrWx
+         UUiA==
+X-Gm-Message-State: APjAAAXImM+WtoprLs2RKOgNconYGOCvSc4MqhpuNYbmY3u88+1O0jBP
+        WoWdV076dDmui+oknjn2UdEV8A2BPZx1PxgL18+bqMGj
+X-Google-Smtp-Source: APXvYqxwMlno7wjUoiFGxFWb2n/ehu6lv/LisVmo7tUhvmCPmOwoAt13VzXh6hngJWSHaeNKOw/agO1BB94B4lZ59eo=
+X-Received: by 2002:a92:3d17:: with SMTP id k23mr4375754ila.110.1579192605275;
+ Thu, 16 Jan 2020 08:36:45 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1578893602-14395-3-git-send-email-Anson.Huang@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1579038243-28550-1-git-send-email-han.xu@nxp.com>
+ <1579038243-28550-4-git-send-email-han.xu@nxp.com> <20200115080257.dtd4vss4uhopbvn2@pengutronix.de>
+In-Reply-To: <20200115080257.dtd4vss4uhopbvn2@pengutronix.de>
+From:   Han Xu <xhnjupt@gmail.com>
+Date:   Thu, 16 Jan 2020 10:36:33 -0600
+Message-ID: <CA+EcR23TCUU83Y7BYX5LCvGAj20+s67n+rWaGR5R9BSMHUH82A@mail.gmail.com>
+Subject: Re: [PATCH 3/6] dmaengine: mxs: add the power management functions
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Han Xu <han.xu@nxp.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        Esben Haabendal <esben@geanix.com>,
+        linux-kernel@vger.kernel.org, vkoul@kernel.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>, linux-imx@nxp.com,
+        Fabio Estevam <festevam@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        dmaengine@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On Wed, Jan 15, 2020 at 2:03 AM Sascha Hauer <s.hauer@pengutronix.de> wrote:
+>
+> On Wed, Jan 15, 2020 at 05:44:00AM +0800, Han Xu wrote:
+> > add the power management functions and leverage the runtime pm for
+> > system suspend/resume
+> >
+> > Signed-off-by: Han Xu <han.xu@nxp.com>
+> > ---
+> >  drivers/dma/mxs-dma.c | 97 +++++++++++++++++++++++++++++++++++++++----
+> >  1 file changed, 90 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
+> > index b458f06f9067..251492c5ea58 100644
+> > --- a/drivers/dma/mxs-dma.c
+> > +++ b/drivers/dma/mxs-dma.c
+> > @@ -25,6 +25,7 @@
+> >  #include <linux/of_dma.h>
+> >  #include <linux/list.h>
+> >  #include <linux/dma/mxs-dma.h>
+> > +#include <linux/pm_runtime.h>
+> >
+> >  #include <asm/irq.h>
+> >
+> > @@ -39,6 +40,8 @@
+> >  #define dma_is_apbh(mxs_dma) ((mxs_dma)->type == MXS_DMA_APBH)
+> >  #define apbh_is_old(mxs_dma) ((mxs_dma)->dev_id == IMX23_DMA)
+> >
+> > +#define MXS_DMA_RPM_TIMEOUT 50 /* ms */
+> > +
+> >  #define HW_APBHX_CTRL0                               0x000
+> >  #define BM_APBH_CTRL0_APB_BURST8_EN          (1 << 29)
+> >  #define BM_APBH_CTRL0_APB_BURST_EN           (1 << 28)
+> > @@ -416,6 +419,7 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
+> >  {
+> >       struct mxs_dma_chan *mxs_chan = to_mxs_dma_chan(chan);
+> >       struct mxs_dma_engine *mxs_dma = mxs_chan->mxs_dma;
+> > +     struct device *dev = &mxs_dma->pdev->dev;
+> >       int ret;
+> >
+> >       mxs_chan->ccw = dma_alloc_coherent(mxs_dma->dma_device.dev,
+> > @@ -431,9 +435,11 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
+> >       if (ret)
+> >               goto err_irq;
+> >
+> > -     ret = clk_prepare_enable(mxs_dma->clk);
+> > -     if (ret)
+> > +     ret = pm_runtime_get_sync(dev);
+> > +     if (ret < 0) {
+> > +             dev_err(dev, "Failed to enable clock\n");
+> >               goto err_clk;
+>
+> From looking at other DMA drivers I know we are in good company here,
+> but I think this is wrong. Doing pm_runtime_get_sync() in
+> alloc_chan_resources() and going to autosuspend in free_chan_resources()
+> effectively disables runtime_pm as clients normally acquire their
+> channels during driver probe and release them only in driver remove.
+
+Thanks for the comments.
+That's why I moved acquire_dma_resource from the probe to
+runtime_resume in the gpmi driver, this change won't disable the
+runtime_pm function and the incremental counter always balanced.
+
+>
+> In the next patch you release the DMA channels in the GPMI nand drivers
+> runtime_suspend hook just to somehow trigger the runtime_suspend of the
+> DMA driver.
+>
+> What you should do instead is to make sure the hook runtime_pm to the
+> DMA drivers activity phases, like for example the pl330 driver does.
+> Then you wouldn't have to care about manually putting the DMA driver into
+> suspend from the GPMI NAND driver.
+>
+> Sascha
+>
+> --
+> Pengutronix e.K.                           |                             |
+> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+>
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
 
 
-On 13/01/2020 05:33, Anson Huang wrote:
-> Add compatible and description for i.MX8MP.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Applied Thanks,
+-- 
+Sincerely,
 
---srini
+Han XU

@@ -2,38 +2,39 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2937613E05F
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Jan 2020 17:43:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 281A213E0DD
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Jan 2020 17:46:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgAPQnL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 Jan 2020 11:43:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50402 "EHLO mail.kernel.org"
+        id S1729028AbgAPQqO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 16 Jan 2020 11:46:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726440AbgAPQnK (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:43:10 -0500
+        id S1729122AbgAPQqN (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:46:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85C0A2073A;
-        Thu, 16 Jan 2020 16:43:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26B8720663;
+        Thu, 16 Jan 2020 16:46:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579192989;
-        bh=Fiz5fCpuoIFHozhj8KdiO82jhr2DQ5w1R7fvcwlPtaM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=da2Oeno71ikm/WDnQXLPh+cwFbZ/HN59YyRCQs4BLrvQL0m0y326N4pmQdjlcfffb
-         wCAyxcssdUbPGHFLaeSYLOSEy4aEpA1kMg0r8jGAch0O+ofigTv33R7Sb8kT6FBfTS
-         M4Wdaos7H5JYWO30R4NDG/Fo9Eb+FXWohLJEOSZ4=
+        s=default; t=1579193172;
+        bh=yK5TvpLuz4Z0jsh9P/SNatynnR9D2SS7hXVXfA471Yk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1dMTDHrM7I0O3nCDbslcoytZVH+ww7BpBawp5N5A/RK5Jp/6ZVCcj04D67o6MHuSJ
+         Nv+C+rRofzTdSriJ4B+N79rROQtbCLU0Vo6L+hqI1uq+oslhbijrSuTt3/+dVqzcc5
+         4bCWKzvgx2LoOkiZuSUt31LA3D3AD0PPoyGxlfSo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
-        Alexander Barabash <alexander.barabash@dell.com>,
-        Dave Jiang <dave.jiang@intel.com>,
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
         dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 001/205] ioat: ioat_alloc_ring() failure handling.
-Date:   Thu, 16 Jan 2020 11:39:36 -0500
-Message-Id: <20200116164300.6705-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 039/205] dmaengine: dw: platform: Mark 'hclk' clock optional
+Date:   Thu, 16 Jan 2020 11:40:14 -0500
+Message-Id: <20200116164300.6705-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
+References: <20200116164300.6705-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -43,43 +44,39 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit b0b5ce1010ffc50015eaec72b0028aaae3f526bb ]
+[ Upstream commit f27c22736d133baff0ab3fdc7b015d998267d817 ]
 
-If dma_alloc_coherent() returns NULL in ioat_alloc_ring(), ring
-allocation must not proceed.
+On some platforms the clock can be fixed rate, always running one and
+there is no need to do anything with it.
 
-Until now, if the first call to dma_alloc_coherent() in
-ioat_alloc_ring() returned NULL, the processing could proceed, failing
-with NULL-pointer dereferencing further down the line.
+In order to support those platforms, switch to use optional clock.
 
-Signed-off-by: Alexander Barabash <alexander.barabash@dell.com>
-Acked-by: Dave Jiang <dave.jiang@intel.com>
-Link: https://lore.kernel.org/r/75e9c0e84c3345d693c606c64f8b9ab5@x13pwhopdag1307.AMER.DELL.COM
+Fixes: f8d9ddbc2851 ("dmaengine: dw: platform: Enable iDMA 32-bit on Intel Elkhart Lake")
+Depends-on: 60b8f0ddf1a9 ("clk: Add (devm_)clk_get_optional() functions")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Link: https://lore.kernel.org/r/20190924085116.83683-1-andriy.shevchenko@linux.intel.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ioat/dma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/dma/dw/platform.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-index 1a422a8b43cf..18c011e57592 100644
---- a/drivers/dma/ioat/dma.c
-+++ b/drivers/dma/ioat/dma.c
-@@ -377,10 +377,11 @@ ioat_alloc_ring(struct dma_chan *c, int order, gfp_t flags)
+diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
+index c90c798e5ec3..0585d749d935 100644
+--- a/drivers/dma/dw/platform.c
++++ b/drivers/dma/dw/platform.c
+@@ -66,7 +66,7 @@ static int dw_probe(struct platform_device *pdev)
  
- 		descs->virt = dma_alloc_coherent(to_dev(ioat_chan),
- 						 SZ_2M, &descs->hw, flags);
--		if (!descs->virt && (i > 0)) {
-+		if (!descs->virt) {
- 			int idx;
+ 	data->chip = chip;
  
- 			for (idx = 0; idx < i; idx++) {
-+				descs = &ioat_chan->descs[idx];
- 				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
- 						  descs->virt, descs->hw);
- 				descs->virt = NULL;
+-	chip->clk = devm_clk_get(chip->dev, "hclk");
++	chip->clk = devm_clk_get_optional(chip->dev, "hclk");
+ 	if (IS_ERR(chip->clk))
+ 		return PTR_ERR(chip->clk);
+ 	err = clk_prepare_enable(chip->clk);
 -- 
 2.20.1
 

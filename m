@@ -2,35 +2,36 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BAB0613EDB9
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Jan 2020 19:05:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C82513ED64
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Jan 2020 19:02:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393598AbgAPRkN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 Jan 2020 12:40:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57252 "EHLO mail.kernel.org"
+        id S2389157AbgAPSCg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 16 Jan 2020 13:02:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393596AbgAPRkM (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:40:12 -0500
+        id S2405535AbgAPRlG (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:41:06 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D0FF2471B;
-        Thu, 16 Jan 2020 17:40:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B83B22469B;
+        Thu, 16 Jan 2020 17:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196412;
-        bh=NXRH1zrkux0uh3Nx6CaKGorHIc5+hpGlHHAkdvf5fMo=;
+        s=default; t=1579196466;
+        bh=wpw707HpFYDq89uTHid5xGLvMj+Vcf2BvVGilTsS0O0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PLhnPk7je4uzsf+4dFl2zJiLTl6U7kYt5Nkri4Ya0CGm9Q9p9CENDKSpchFMCs8s5
-         dMV8mvEj0WrC3Hzb2y8zJBmA+Lyx2GG2Gc7F1Q3+5/6fxzVO8oRRk6IBMqWVGOLfCg
-         ASA5YPNW5NbptIv/Vruame5PNPj7JmgD+I+d50tY=
+        b=2c1bIu+xGzssicJ8ozhA/mNgUq/3ZezXUknk7vGEkdXAGu9tPVR8KgCoUzjt0472y
+         XCgv3h8WFoLjw5mpyUvOFmBjlF2Q/WzzfV58zu/zY24ZNglYuHfBzz6vzZIeG5QfCt
+         yx3HhS3vAnfJBjiyUc1fBLAiX/o4JcWsyXUgfFis=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc:     Robin Gong <yibin.gong@nxp.com>, stable@vger.kernel,
+        Jurgen Lambrecht <J.Lambrecht@TELEVIC.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 185/251] dmaengine: dw: platform: Switch to acpi_dma_controller_register()
-Date:   Thu, 16 Jan 2020 12:35:34 -0500
-Message-Id: <20200116173641.22137-145-sashal@kernel.org>
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 218/251] dmaengine: imx-sdma: fix size check for sdma script_number
+Date:   Thu, 16 Jan 2020 12:36:07 -0500
+Message-Id: <20200116173641.22137-178-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -43,62 +44,71 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Robin Gong <yibin.gong@nxp.com>
 
-[ Upstream commit e7b8514e4d68bec21fc6385fa0a66797ddc34ac9 ]
+[ Upstream commit bd73dfabdda280fc5f05bdec79b6721b4b2f035f ]
 
-There is a possibility to have registered ACPI DMA controller
-while it has been gone already.
+Illegal memory will be touch if SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
+(41) exceed the size of structure sdma_script_start_addrs(40),
+thus cause memory corrupt such as slob block header so that kernel
+trap into while() loop forever in slob_free(). Please refer to below
+code piece in imx-sdma.c:
+for (i = 0; i < sdma->script_number; i++)
+	if (addr_arr[i] > 0)
+		saddr_arr[i] = addr_arr[i]; /* memory corrupt here */
+That issue was brought by commit a572460be9cf ("dmaengine: imx-sdma: Add
+support for version 3 firmware") because SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3
+(38->41 3 scripts added) not align with script number added in
+sdma_script_start_addrs(2 scripts).
 
-To avoid the potential crash, move to non-managed
-acpi_dma_controller_register().
-
-Fixes: 42c91ee71d6d ("dw_dmac: add ACPI support")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/r/20190820131546.75744-8-andriy.shevchenko@linux.intel.com
+Fixes: a572460be9cf ("dmaengine: imx-sdma: Add support for version 3 firmware")
+Cc: stable@vger.kernel
+Link: https://www.spinics.net/lists/arm-kernel/msg754895.html
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+Reported-by: Jurgen Lambrecht <J.Lambrecht@TELEVIC.com>
+Link: https://lore.kernel.org/r/1569347584-3478-1-git-send-email-yibin.gong@nxp.com
+[vkoul: update the patch title]
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dw/platform.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/dma/imx-sdma.c                     | 8 ++++++++
+ include/linux/platform_data/dma-imx-sdma.h | 3 +++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
-index 5bda0eb9f393..7536fe80bc33 100644
---- a/drivers/dma/dw/platform.c
-+++ b/drivers/dma/dw/platform.c
-@@ -87,13 +87,20 @@ static void dw_dma_acpi_controller_register(struct dw_dma *dw)
- 	dma_cap_set(DMA_SLAVE, info->dma_cap);
- 	info->filter_fn = dw_dma_acpi_filter;
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 9f240b2d85a5..558d509b7d85 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -1441,6 +1441,14 @@ static void sdma_add_scripts(struct sdma_engine *sdma,
+ 	if (!sdma->script_number)
+ 		sdma->script_number = SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1;
  
--	ret = devm_acpi_dma_controller_register(dev, acpi_dma_simple_xlate,
--						info);
-+	ret = acpi_dma_controller_register(dev, acpi_dma_simple_xlate, info);
- 	if (ret)
- 		dev_err(dev, "could not register acpi_dma_controller\n");
- }
++	if (sdma->script_number > sizeof(struct sdma_script_start_addrs)
++				  / sizeof(s32)) {
++		dev_err(sdma->dev,
++			"SDMA script number %d not match with firmware.\n",
++			sdma->script_number);
++		return;
++	}
 +
-+static void dw_dma_acpi_controller_free(struct dw_dma *dw)
-+{
-+	struct device *dev = dw->dma.dev;
-+
-+	acpi_dma_controller_free(dev);
-+}
- #else /* !CONFIG_ACPI */
- static inline void dw_dma_acpi_controller_register(struct dw_dma *dw) {}
-+static inline void dw_dma_acpi_controller_free(struct dw_dma *dw) {}
- #endif /* !CONFIG_ACPI */
+ 	for (i = 0; i < sdma->script_number; i++)
+ 		if (addr_arr[i] > 0)
+ 			saddr_arr[i] = addr_arr[i];
+diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
+index 2d08816720f6..5bb0a119f39a 100644
+--- a/include/linux/platform_data/dma-imx-sdma.h
++++ b/include/linux/platform_data/dma-imx-sdma.h
+@@ -50,7 +50,10 @@ struct sdma_script_start_addrs {
+ 	/* End of v2 array */
+ 	s32 zcanfd_2_mcu_addr;
+ 	s32 zqspi_2_mcu_addr;
++	s32 mcu_2_ecspi_addr;
+ 	/* End of v3 array */
++	s32 mcu_2_zqspi_addr;
++	/* End of v4 array */
+ };
  
- #ifdef CONFIG_OF
-@@ -226,6 +233,9 @@ static int dw_remove(struct platform_device *pdev)
- {
- 	struct dw_dma_chip *chip = platform_get_drvdata(pdev);
- 
-+	if (ACPI_HANDLE(&pdev->dev))
-+		dw_dma_acpi_controller_free(chip->dw);
-+
- 	if (pdev->dev.of_node)
- 		of_dma_controller_free(pdev->dev.of_node);
- 
+ /**
 -- 
 2.20.1
 

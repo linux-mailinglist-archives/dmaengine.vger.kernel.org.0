@@ -2,38 +2,38 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FE8613EFE1
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Jan 2020 19:18:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C349713EE49
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Jan 2020 19:08:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391317AbgAPSRz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 Jan 2020 13:17:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40276 "EHLO mail.kernel.org"
+        id S2405073AbgAPRig (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 16 Jan 2020 12:38:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404207AbgAPR2y (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:28:54 -0500
+        id S2405058AbgAPRig (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:38:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB1F524704;
-        Thu, 16 Jan 2020 17:28:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98BDF24700;
+        Thu, 16 Jan 2020 17:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195733;
-        bh=ewYn3Rzs8WG8sRJs5m3fMXgRAX3QqSzeKFi7bb7ATCc=;
+        s=default; t=1579196315;
+        bh=206sE0FgN/guZTm+kxehiEoGAU09Y0UfRM/qPQMxmPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ixNFVI8cFP9dnYjzaYbqk+CHpwqdCg4HaqTkcuU4YHmoQor2G0N6T+7e4KVYFqZmj
-         Z2wMYCZfbiWFkMc/ZgNIUF/k2GGG2oD4kbyDAdGvaWDdPtXYbgmBHR6k9gWFjENHBy
-         qvpsIOzftBb2IUhxEW/GJCtDoeAW116H2PTpVM0M=
+        b=K+EfXb8j03j9bO5AhfTzwohUiVkUmb2lQ85aVLkbBp2lZkl7fO+oLxFxV4m74bZvN
+         gvfDYGj6kGM+My9zemR0qRBIu6MVn9yDSetsor4/SCxWJodX3Uw6hSZBdH7kbleVwL
+         KivVUnDQeUp2fwS6HNH5LSbUarTl/J8rTCCrC2JA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
         dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 272/371] dmaengine: dw: platform: Switch to acpi_dma_controller_register()
-Date:   Thu, 16 Jan 2020 12:22:24 -0500
-Message-Id: <20200116172403.18149-215-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 121/251] dmaengine: axi-dmac: Don't check the number of frames for alignment
+Date:   Thu, 16 Jan 2020 12:34:30 -0500
+Message-Id: <20200116173641.22137-81-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
+In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
+References: <20200116173641.22137-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -43,62 +43,43 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit e7b8514e4d68bec21fc6385fa0a66797ddc34ac9 ]
+[ Upstream commit 648865a79d8ee3d1aa64aab5eb2a9d12eeed14f9 ]
 
-There is a possibility to have registered ACPI DMA controller
-while it has been gone already.
+In 2D transfers (for the AXI DMAC), the number of frames (numf) represents
+Y_LENGTH, and the length of a frame is X_LENGTH. 2D transfers are useful
+for video transfers where screen resolutions ( X * Y ) are typically
+aligned for X, but not for Y.
 
-To avoid the potential crash, move to non-managed
-acpi_dma_controller_register().
+There is no requirement for Y_LENGTH to be aligned to the bus-width (or
+anything), and this is also true for AXI DMAC.
 
-Fixes: 42c91ee71d6d ("dw_dmac: add ACPI support")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/r/20190820131546.75744-8-andriy.shevchenko@linux.intel.com
+Checking the Y_LENGTH for alignment causes false errors when initiating DMA
+transfers. This change fixes this by checking only that the Y_LENGTH is
+non-zero.
+
+Fixes: 0e3b67b348b8 ("dmaengine: Add support for the Analog Devices AXI-DMAC DMA controller")
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dw/platform.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/dma/dma-axi-dmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/dw/platform.c b/drivers/dma/dw/platform.c
-index 46a519e07195..b408c07662f5 100644
---- a/drivers/dma/dw/platform.c
-+++ b/drivers/dma/dw/platform.c
-@@ -87,13 +87,20 @@ static void dw_dma_acpi_controller_register(struct dw_dma *dw)
- 	dma_cap_set(DMA_SLAVE, info->dma_cap);
- 	info->filter_fn = dw_dma_acpi_filter;
+diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+index 7f0b9aa15867..9887f2a14aa9 100644
+--- a/drivers/dma/dma-axi-dmac.c
++++ b/drivers/dma/dma-axi-dmac.c
+@@ -451,7 +451,7 @@ static struct dma_async_tx_descriptor *axi_dmac_prep_interleaved(
  
--	ret = devm_acpi_dma_controller_register(dev, acpi_dma_simple_xlate,
--						info);
-+	ret = acpi_dma_controller_register(dev, acpi_dma_simple_xlate, info);
- 	if (ret)
- 		dev_err(dev, "could not register acpi_dma_controller\n");
- }
-+
-+static void dw_dma_acpi_controller_free(struct dw_dma *dw)
-+{
-+	struct device *dev = dw->dma.dev;
-+
-+	acpi_dma_controller_free(dev);
-+}
- #else /* !CONFIG_ACPI */
- static inline void dw_dma_acpi_controller_register(struct dw_dma *dw) {}
-+static inline void dw_dma_acpi_controller_free(struct dw_dma *dw) {}
- #endif /* !CONFIG_ACPI */
- 
- #ifdef CONFIG_OF
-@@ -249,6 +256,9 @@ static int dw_remove(struct platform_device *pdev)
- {
- 	struct dw_dma_chip *chip = platform_get_drvdata(pdev);
- 
-+	if (ACPI_HANDLE(&pdev->dev))
-+		dw_dma_acpi_controller_free(chip->dw);
-+
- 	if (pdev->dev.of_node)
- 		of_dma_controller_free(pdev->dev.of_node);
- 
+ 	if (chan->hw_2d) {
+ 		if (!axi_dmac_check_len(chan, xt->sgl[0].size) ||
+-		    !axi_dmac_check_len(chan, xt->numf))
++		    xt->numf == 0)
+ 			return NULL;
+ 		if (xt->sgl[0].size + dst_icg > chan->max_length ||
+ 		    xt->sgl[0].size + src_icg > chan->max_length)
 -- 
 2.20.1
 

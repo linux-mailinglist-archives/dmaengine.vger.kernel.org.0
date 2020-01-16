@@ -2,37 +2,34 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B513513E9FA
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Jan 2020 18:41:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7053313EA0D
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Jan 2020 18:41:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405619AbgAPRlP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 Jan 2020 12:41:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58762 "EHLO mail.kernel.org"
+        id S2405791AbgAPRls (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 16 Jan 2020 12:41:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405614AbgAPRlP (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:41:15 -0500
+        id S2405784AbgAPRlr (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:41:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4DCC246AE;
-        Thu, 16 Jan 2020 17:41:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B88124731;
+        Thu, 16 Jan 2020 17:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196474;
-        bh=V3GbiHcfk6BfHbV+lS0V0Esc5dLq3FYLB6Xqf/5iltk=;
+        s=default; t=1579196507;
+        bh=Gz3DyGPdoK3HaUxL8jcQcFzoATbXBNNfW6xPJ5GWL7Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cRtmCXPrXBbQbDSKBbV3zGaN96SWAIiROzYjRp7CcUx66LdJGO5XMPvY1crZfHJJm
-         lRXCP7Yv0NyK4Aiif89TLtpNDnskq46F1YF+W+Xba1h5MsHs4rNwM1y3A4+Wg6FeZ9
-         +k8VI0+QaKrFotEylE8d3wJnLN8NLs5mRqC+QAJY=
+        b=hVoTnASGp9KZ+4h9S/CNCVP6Glr6XM8r2+dYLixLD1klfK0Pt54t/NVa/k6tqx8hd
+         bjPOmTodDGV7zMLe31/+Ory395LypBdxqKeknnzYyuHOS4LlflinWzuYlMDm9SWdZp
+         tYcE+83UtrSQq7aHEG7NKm7tyfB6xdFX/+Xk2oNE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
-        Alexander Barabash <alexander.barabash@dell.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 223/251] ioat: ioat_alloc_ring() failure handling.
-Date:   Thu, 16 Jan 2020 12:36:12 -0500
-Message-Id: <20200116173641.22137-183-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 247/251] dmaengine: ti: edma: fix missed failure handling
+Date:   Thu, 16 Jan 2020 12:36:36 -0500
+Message-Id: <20200116173641.22137-207-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -45,43 +42,39 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit b0b5ce1010ffc50015eaec72b0028aaae3f526bb ]
+[ Upstream commit 340049d453682a9fe8d91fe794dd091730f4bb25 ]
 
-If dma_alloc_coherent() returns NULL in ioat_alloc_ring(), ring
-allocation must not proceed.
+When devm_kcalloc fails, it forgets to call edma_free_slot.
+Replace direct return with failure handler to fix it.
 
-Until now, if the first call to dma_alloc_coherent() in
-ioat_alloc_ring() returned NULL, the processing could proceed, failing
-with NULL-pointer dereferencing further down the line.
-
-Signed-off-by: Alexander Barabash <alexander.barabash@dell.com>
-Acked-by: Dave Jiang <dave.jiang@intel.com>
-Link: https://lore.kernel.org/r/75e9c0e84c3345d693c606c64f8b9ab5@x13pwhopdag1307.AMER.DELL.COM
+Fixes: 1be5336bc7ba ("dmaengine: edma: New device tree binding")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20191118073802.28424-1-hslester96@gmail.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ioat/dma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/dma/edma.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-index 49386ce04bf5..1389f0582e29 100644
---- a/drivers/dma/ioat/dma.c
-+++ b/drivers/dma/ioat/dma.c
-@@ -394,10 +394,11 @@ ioat_alloc_ring(struct dma_chan *c, int order, gfp_t flags)
+diff --git a/drivers/dma/edma.c b/drivers/dma/edma.c
+index 72f31e837b1d..56ec72468745 100644
+--- a/drivers/dma/edma.c
++++ b/drivers/dma/edma.c
+@@ -2340,8 +2340,10 @@ static int edma_probe(struct platform_device *pdev)
  
- 		descs->virt = dma_alloc_coherent(to_dev(ioat_chan),
- 						 SZ_2M, &descs->hw, flags);
--		if (!descs->virt && (i > 0)) {
-+		if (!descs->virt) {
- 			int idx;
+ 		ecc->tc_list = devm_kcalloc(dev, ecc->num_tc,
+ 					    sizeof(*ecc->tc_list), GFP_KERNEL);
+-		if (!ecc->tc_list)
+-			return -ENOMEM;
++		if (!ecc->tc_list) {
++			ret = -ENOMEM;
++			goto err_reg1;
++		}
  
- 			for (idx = 0; idx < i; idx++) {
-+				descs = &ioat_chan->descs[idx];
- 				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
- 						  descs->virt, descs->hw);
- 				descs->virt = NULL;
+ 		for (i = 0;; i++) {
+ 			ret = of_parse_phandle_with_fixed_args(node, "ti,tptcs",
 -- 
 2.20.1
 

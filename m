@@ -2,66 +2,59 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B4BF140EEE
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Jan 2020 17:26:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8113F14121D
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Jan 2020 21:08:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgAQQ0o (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 17 Jan 2020 11:26:44 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42764 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbgAQQ0o (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Jan 2020 11:26:44 -0500
-Received: by mail-lj1-f196.google.com with SMTP id y4so27059050ljj.9
-        for <dmaengine@vger.kernel.org>; Fri, 17 Jan 2020 08:26:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=inxR1wA+jz9jvQ8VP84ip6LN880c6JYvrjnRZfT90Sw=;
-        b=qFZT+WPtAQjHf/dXz2se/v1C0FZuDeCi9+Dc4H+qsnlWfQN8R+IeODlwQTntgOwS1g
-         KlOOuJ2Ue4nJU/pReIND5RcvCPSftbqzItRAyJHhlGIuE8yq95olk/MI/w6Zao0iiD00
-         lDis8Hjzf6cLVKUkIOudsOd0NppclqpG/I7Nz+9ZETnNxyrbmIBZ94mdtVOlH7XFDoPy
-         b073Ump4J29YOS43WvXMk7qTpxHkJZ3KnbNkPPdwQAtJO/q5wyt51Tv9kX3kKro3gTIa
-         WwZAxCjeswrEvXJtzLm3brro9HDyJyHVVBlBuF7fPoJm3koSX+S5ri5AEPwNwKRTp4H/
-         DzDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=inxR1wA+jz9jvQ8VP84ip6LN880c6JYvrjnRZfT90Sw=;
-        b=QEM9SUee4R7RUVMDSYHjllPzYlmYg9iKk0Qa+iY5qswHtyzMZB2SuyIAOVzYVVEx4R
-         +ubzxjUC/aX0FcYppZoyIHQEcA7FDO0xtLVjGBez0Np+f5hl3Iz6nEi7PCBkeSaLelsS
-         rbBB5EQZw/PGTMI2SzA3oSJ5CUd7DkeYsOKw4A/VMtQjyXIBb0OTBbFlLrgDFlfrlbmo
-         72/Nu907w/isMK8QietkTeNT5E3ItPeV/yXt0fWnSSXxKvJ1cdvqiapbHPCTXGderEM/
-         pQzYhTY7N1QP7beHWb5632E1+e/8fo+Q3wWhD/KbN0aAI9q5AUgEiFRKxHsDJTy6t7ms
-         +p9Q==
-X-Gm-Message-State: APjAAAXYBU58tj3fOCWgJ2o3Ownux+K5MAds0YePNUyoCa+qMMK0F/9X
-        pjYoVgHILSEdoS6EcTPDc2hDDOXHrj4=
-X-Google-Smtp-Source: APXvYqxNa+cnmPu1ROl9cASz4Uh2mKsEeyud8twaL/Ha3Ul2JvDVodaWUQjkrJTodxG9+12Qgkw0oA==
-X-Received: by 2002:a2e:884f:: with SMTP id z15mr6181709ljj.46.1579278401982;
-        Fri, 17 Jan 2020 08:26:41 -0800 (PST)
-Received: from localhost (h-93-159.A463.priv.bahnhof.se. [46.59.93.159])
-        by smtp.gmail.com with ESMTPSA id i17sm12664361ljd.34.2020.01.17.08.26.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 08:26:41 -0800 (PST)
-Date:   Fri, 17 Jan 2020 17:26:40 +0100
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        id S1729316AbgAQUIx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 17 Jan 2020 15:08:53 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:53086 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727519AbgAQUIw (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Jan 2020 15:08:52 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00HK8jAF113059;
+        Fri, 17 Jan 2020 14:08:45 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579291725;
+        bh=mbY87qveryPPYQ1EQ2+4SCwD3anHdznVGfKwmBfB3qU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=MiUR3HmUa3MijBs1Fep5EiIV+Us20ffc6Q27yybmrdBJvSwAAhhNz0ZY4neX4aUOW
+         jVYy+eBfNXLxFh1+g9WD64HsxQNyC7owP5QuVnwTIbHHpOEJ0pUIshEfxnieCsiUu5
+         fT8poCuKpCNlzPY4L4DTPYO2pvfd6ufjuvk7HYSk=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00HK8jxc093876
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Jan 2020 14:08:45 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
+ Jan 2020 14:08:44 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 17 Jan 2020 14:08:44 -0600
+Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00HK8giI051925;
+        Fri, 17 Jan 2020 14:08:43 -0600
 Subject: Re: [PATCH v2] dmaengine: Create symlinks between DMA channels and
  slaves
-Message-ID: <20200117162640.GD1074550@oden.dyn.berto.se>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+CC:     <dmaengine@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
 References: <20200117153056.31363-1-geert+renesas@glider.be>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <d2b669e7-a5d4-20ec-5b54-103b71df7407@ti.com>
+Date:   Fri, 17 Jan 2020 22:10:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 In-Reply-To: <20200117153056.31363-1-geert+renesas@glider.be>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
@@ -69,15 +62,21 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 Hi Geert,
 
-Thanks for your patch.
-
-On 2020-01-17 16:30:56 +0100, Geert Uytterhoeven wrote:
+On 1/17/20 5:30 PM, Geert Uytterhoeven wrote:
 > Currently it is not easy to find out which DMA channels are in use, and
 > which slave devices are using which channels.
 > 
 > Fix this by creating two symlinks between the DMA channel and the actual
 > slave device when a channel is requested:
 >   1. A "slave" symlink from DMA channel to slave device,
+
+Have you considered similar link name as on the slave device:
+slave:<name>
+
+That way it would be easier to grasp which channel is used for what
+purpose by only looking under /sys/class/dma/ and no need to check the
+slave device.
+
 >   2. A "dma:<name>" symlink slave device to DMA channel.
 > When the channel is released, the symlinks are removed again.
 > The latter requires keeping track of the slave device and the channel
@@ -88,11 +87,6 @@ On 2020-01-17 16:30:56 +0100, Geert Uytterhoeven wrote:
 > and dma_request_slave_channel*()).
 > 
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-I like this change,
-
-Tested-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
-
 > ---
 > v2:
 >   - Add DMA_SLAVE_NAME macro,
@@ -258,10 +252,9 @@ Tested-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
 >  
 >  	struct list_head device_node;
 >  	struct dma_chan_percpu __percpu *local;
-> -- 
-> 2.17.1
 > 
 
--- 
-Regards,
-Niklas Söderlund
+- Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

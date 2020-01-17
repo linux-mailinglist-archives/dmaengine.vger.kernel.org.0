@@ -2,188 +2,147 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D227613FA30
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Jan 2020 21:10:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D6435140510
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Jan 2020 09:14:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgAPUKn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 Jan 2020 15:10:43 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35814 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgAPUKm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Jan 2020 15:10:42 -0500
-Received: by mail-lj1-f195.google.com with SMTP id j1so23976247lja.2;
-        Thu, 16 Jan 2020 12:10:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pEuLrU2BpUSNmu4UveCDpaLLg5RgdT00zU5cu7LGBZo=;
-        b=OYiDI3E0+941verm/XyKBDtUuzeBmpC3dQzWzBwkMV2XnCoxs9/fS31Xq2a5jOFxDA
-         mwjTXSWEZobvhxVEv3+0tVLKNfr1lxKE2EqtAaX6aEuPBQmo6I0VBDBaX57DO9wlCaVz
-         stwqvbzL5dgy4028sWtq3otIOcS0c7kZk20DKMt1NfwtOeqa5fXQsHz/oI27TwA13kwJ
-         sGsPkvHxLT/lhqb7dFxhjCb7v97VpMY0QRxCwgaAUULyzr8jWqXUVV8QAVgs46hWN6Fz
-         ItqurV4kXbTK7i33pOaRgKoVIH2R2ikVDn7kRNm5til8ggpVUyquEutNY9IRcGTnSCkA
-         NPig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pEuLrU2BpUSNmu4UveCDpaLLg5RgdT00zU5cu7LGBZo=;
-        b=SUsmQpwJ31a2rZXpeGlYc9TMqSSCh9bFNb70IMXVHhiNS1bcdnxURBwJiyDSPjfAHN
-         bJr6yuLDJ8tNyomnQIeU+ijL6bmAN6wUf7ZtBO4OpVG8xjV4pkymUC1AWXVGrLHEpvPh
-         /B0nEDWDegYqN2SyoXEARV6L3uJ7rkli8XYLu2kBLX2nv22dp6cPjPQrtpmDDbMr4epa
-         SlOUTjDxsbZvYx81fi6or2wb4tS+wK09/gSrsCXyEb+hVtZd8eLtL922lw8OAMNTNDNk
-         gjoTkqWeyRFMpBk/kN2WgYzqRmuyFyGRFQdOV8JYz9ehYlFzuFyjFjP6G72c6f4COjC5
-         28lg==
-X-Gm-Message-State: APjAAAVCUnMB0f95rn/1b/Vpnk9vyCTCrWplpmw4sBI6bgSIF6Z2p6aL
-        EN2my0Z1dbLr9Cvz9G7B69mIy7ko
-X-Google-Smtp-Source: APXvYqzZnQfQ2a6Vct+CFJCYllwIuR6cpEoraA9CzIxdzJ0PID4MK+W4sOeq/jKjZ6+IkmeYOPDneA==
-X-Received: by 2002:a05:651c:2046:: with SMTP id t6mr3367132ljo.180.1579205439902;
-        Thu, 16 Jan 2020 12:10:39 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id r125sm11049150lff.70.2020.01.16.12.10.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jan 2020 12:10:39 -0800 (PST)
-Subject: Re: [PATCH v4 01/14] dmaengine: tegra-apb: Fix use-after-free
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200112173006.29863-1-digetx@gmail.com>
- <20200112173006.29863-2-digetx@gmail.com>
- <4c1b9e48-5468-0c03-2108-158ee814eea8@nvidia.com>
- <1327bb21-0364-da26-e6ed-ff6c19df03e6@gmail.com>
- <e39ef31d-4cff-838a-0fc1-73a39a8d6120@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b0c85ca7-d8ac-5f9d-2c57-79543c1f9b5d@gmail.com>
-Date:   Thu, 16 Jan 2020 23:10:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        id S1729011AbgAQINQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 17 Jan 2020 03:13:16 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44183 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729238AbgAQINP (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Jan 2020 03:13:15 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1isMkd-0001Cc-OT; Fri, 17 Jan 2020 09:13:07 +0100
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <sha@pengutronix.de>)
+        id 1isMkc-0004pJ-7a; Fri, 17 Jan 2020 09:13:06 +0100
+Date:   Fri, 17 Jan 2020 09:13:06 +0100
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Han Xu <xhnjupt@gmail.com>
+Cc:     Han Xu <han.xu@nxp.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        Esben Haabendal <esben@geanix.com>,
+        linux-kernel@vger.kernel.org, vkoul@kernel.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>, linux-imx@nxp.com,
+        Fabio Estevam <festevam@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        dmaengine@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/6] dmaengine: mxs: add the power management functions
+Message-ID: <20200117081306.eeuf3fvph5rb7tjf@pengutronix.de>
+References: <1579038243-28550-1-git-send-email-han.xu@nxp.com>
+ <1579038243-28550-4-git-send-email-han.xu@nxp.com>
+ <20200115080257.dtd4vss4uhopbvn2@pengutronix.de>
+ <CA+EcR23TCUU83Y7BYX5LCvGAj20+s67n+rWaGR5R9BSMHUH82A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <e39ef31d-4cff-838a-0fc1-73a39a8d6120@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+EcR23TCUU83Y7BYX5LCvGAj20+s67n+rWaGR5R9BSMHUH82A@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:08:04 up 193 days, 14:18, 87 users,  load average: 0.09, 0.28,
+ 0.30
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-15.01.2020 12:00, Jon Hunter пишет:
+On Thu, Jan 16, 2020 at 10:36:33AM -0600, Han Xu wrote:
+> On Wed, Jan 15, 2020 at 2:03 AM Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> >
+> > On Wed, Jan 15, 2020 at 05:44:00AM +0800, Han Xu wrote:
+> > > add the power management functions and leverage the runtime pm for
+> > > system suspend/resume
+> > >
+> > > Signed-off-by: Han Xu <han.xu@nxp.com>
+> > > ---
+> > >  drivers/dma/mxs-dma.c | 97 +++++++++++++++++++++++++++++++++++++++----
+> > >  1 file changed, 90 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
+> > > index b458f06f9067..251492c5ea58 100644
+> > > --- a/drivers/dma/mxs-dma.c
+> > > +++ b/drivers/dma/mxs-dma.c
+> > > @@ -25,6 +25,7 @@
+> > >  #include <linux/of_dma.h>
+> > >  #include <linux/list.h>
+> > >  #include <linux/dma/mxs-dma.h>
+> > > +#include <linux/pm_runtime.h>
+> > >
+> > >  #include <asm/irq.h>
+> > >
+> > > @@ -39,6 +40,8 @@
+> > >  #define dma_is_apbh(mxs_dma) ((mxs_dma)->type == MXS_DMA_APBH)
+> > >  #define apbh_is_old(mxs_dma) ((mxs_dma)->dev_id == IMX23_DMA)
+> > >
+> > > +#define MXS_DMA_RPM_TIMEOUT 50 /* ms */
+> > > +
+> > >  #define HW_APBHX_CTRL0                               0x000
+> > >  #define BM_APBH_CTRL0_APB_BURST8_EN          (1 << 29)
+> > >  #define BM_APBH_CTRL0_APB_BURST_EN           (1 << 28)
+> > > @@ -416,6 +419,7 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
+> > >  {
+> > >       struct mxs_dma_chan *mxs_chan = to_mxs_dma_chan(chan);
+> > >       struct mxs_dma_engine *mxs_dma = mxs_chan->mxs_dma;
+> > > +     struct device *dev = &mxs_dma->pdev->dev;
+> > >       int ret;
+> > >
+> > >       mxs_chan->ccw = dma_alloc_coherent(mxs_dma->dma_device.dev,
+> > > @@ -431,9 +435,11 @@ static int mxs_dma_alloc_chan_resources(struct dma_chan *chan)
+> > >       if (ret)
+> > >               goto err_irq;
+> > >
+> > > -     ret = clk_prepare_enable(mxs_dma->clk);
+> > > -     if (ret)
+> > > +     ret = pm_runtime_get_sync(dev);
+> > > +     if (ret < 0) {
+> > > +             dev_err(dev, "Failed to enable clock\n");
+> > >               goto err_clk;
+> >
+> > From looking at other DMA drivers I know we are in good company here,
+> > but I think this is wrong. Doing pm_runtime_get_sync() in
+> > alloc_chan_resources() and going to autosuspend in free_chan_resources()
+> > effectively disables runtime_pm as clients normally acquire their
+> > channels during driver probe and release them only in driver remove.
 > 
-> On 14/01/2020 20:33, Dmitry Osipenko wrote:
->> 14.01.2020 18:09, Jon Hunter пишет:
->>>
->>> On 12/01/2020 17:29, Dmitry Osipenko wrote:
->>>> I was doing some experiments with I2C and noticed that Tegra APB DMA
->>>> driver crashes sometime after I2C DMA transfer termination. The crash
->>>> happens because tegra_dma_terminate_all() bails out immediately if pending
->>>> list is empty, thus it doesn't release the half-completed descriptors
->>>> which are getting re-used before ISR tasklet kicks-in.
->>>
->>> Can you elaborate a bit more on how these are getting re-used? What is
->>> the sequence of events which results in the panic? I believe that this
->>> was also reported in the past [0] and so I don't doubt there is an issue
->>> here, but would like to completely understand this.
->>>
->>> Thanks!
->>> Jon
->>>
->>> [0] https://lore.kernel.org/patchwork/patch/675349/
->>>
->>
->> In my case it happens in the touchscreen driver during of the
->> touchscreen's interrupt handling (in a threaded IRQ handler) + CPU is
->> under load and there is other interrupts activity. So what happens here
->> is that the TS driver issues one I2C transfer, which fails with
->> (apparently bogus) timeout (because DMA descriptor is completed and
->> removed from the pending list, but tasklet not executed yet), and then
->> TS immediately issues another I2C transfer that re-uses the
->> yet-incompleted descriptor. That's my understanding.
+> Thanks for the comments.
+> That's why I moved acquire_dma_resource from the probe to
+> runtime_resume in the gpmi driver, this change won't disable the
+> runtime_pm function and the incremental counter always balanced.
+
+Yes, that's what I've written a few lines further down:
+
 > 
-> OK, but what is the exact sequence that it allowing it to re-use the
-> incompleted descriptor?
+> >
+> > In the next patch you release the DMA channels in the GPMI nand drivers
+> > runtime_suspend hook just to somehow trigger the runtime_suspend of the
+> > DMA driver.
 
-   TDMA driver                      DMA Client
+And I consider doing this a crude hack. Here is what I suggested doing
+instead:
 
-1.
-                                    dmaengine_prep()
+> >
+> > What you should do instead is to make sure the hook runtime_pm to the
+> > DMA drivers activity phases, like for example the pl330 driver does.
+> > Then you wouldn't have to care about manually putting the DMA driver into
+> > suspend from the GPMI NAND driver.
 
-2.
-   tegra_dma_desc_get()
-   dma_desc = kzalloc()
-   ...
-   tegra_dma_prep_slave_sg()
-   INIT_LIST_HEAD(&dma_desc->tx_list);
-   INIT_LIST_HEAD(&dma_desc->cb_node);
-   list_add_tail(sgreq->node,
-                 dma_desc->tx_list)
+Sascha
 
-3.
-                                    dma_async_issue_pending()
-
-4.
-   tegra_dma_tx_submit()
-   list_splice_tail_init(dma_desc->tx_list,
-                         tdc->pending_sg_req)
-
-5.
-   tegra_dma_isr()
-   ...
-   handle_once_dma_done()
-   ...
-   sgreq = list_first_entry(tdc->pending_sg_req)
-   list_del(sgreq->node);
-   ...
-   list_add_tail(dma_desc->cb_node,
-                 tdc->cb_desc);
-   list_add_tail(dma_desc->node,
-                 tdc->free_dma_desc);
-   ...
-   tasklet_schedule(&tdc->tasklet);
-   ...
-
-6.
-                                    timeout
-                                    dmaengine_terminate_async()
-
-7.
-   tegra_dma_terminate_all()
-   if (list_empty(tdc->pending_sg_req))
-       return 0;
-
-8.
-                                    dmaengine_prep()
-
-9.
-   tegra_dma_desc_get()
-   list_for_each_entry(dma_desc,
-                       tdc->free_dma_desc) {
-       list_del(dma_desc->node);
-       return dma_desc;
-   }
-   ...
-   tegra_dma_prep_slave_sg()
-   INIT_LIST_HEAD(&dma_desc->tx_list);
-   INIT_LIST_HEAD(&dma_desc->cb_node);
-
-   *** tdc->cb_desc list is wrecked now! ***
-
-   list_add_tail(sgreq->node,
-                 dma_desc->tx_list)
-   ...
-
-10.
-   same actions as in #4 #5 ...
-
-11.
-   tegra_dma_tasklet()
-   dma_desc = list_first_entry(tdc->cb_desc)
-   list_del(dma_desc->cb_node);
-
-   eventual woopsie
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |

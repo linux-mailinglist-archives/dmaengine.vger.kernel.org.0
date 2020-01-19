@@ -2,91 +2,62 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E4D0E14122B
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Jan 2020 21:15:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9909B142043
+	for <lists+dmaengine@lfdr.de>; Sun, 19 Jan 2020 22:42:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbgAQUPs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 17 Jan 2020 15:15:48 -0500
-Received: from first.geanix.com ([116.203.34.67]:55076 "EHLO first.geanix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727519AbgAQUPs (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 17 Jan 2020 15:15:48 -0500
-Received: from localhost (87-49-44-45-mobile.dk.customer.tdc.net [87.49.44.45])
-        by first.geanix.com (Postfix) with ESMTPSA id 8A681AB7CF;
-        Fri, 17 Jan 2020 20:14:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1579292096; bh=NyD2V5SZSfQVTYmJ6N+L70KBjajwnojRIy5BahhEoVQ=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To;
-        b=b/n+rnpA3v2O8rwAeqUqPDB/3pEwDc8aT2Fzok20ORw+bUJDTkgOWQJHZ3Eb86Nia
-         h98IRvImFLnZ3NQRetCb6D/15fc32Ni9LV793Q5O3DKiP92rHDevyMv5bwJLFN0Ta6
-         ctOCLIZmzJBbNrwj5Z2qa7uSVgnhjj37BGjVLtTy5oUdnotiRsWizk+MAELt9JT9KH
-         GFdOjdO64TpbS+k62YS0jqpEbH46IEswdqmK+kaLNugVhwRmefu4zDFGZCI48g0Lsf
-         W4gUgVPD8KoWVI0J28kJEVZhPwjJMfaGqologNqBxhwXb0FMrHeMhgdOTg9/hJ2g9S
-         as4l4hd/ssMvQ==
-From:   Esben Haabendal <esben@geanix.com>
-To:     Han Xu <han.xu@nxp.com>
-Cc:     vkoul@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        boris.brezillon@collabora.com, festevam@gmail.com,
-        linux-imx@nxp.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/6] mtd: rawnand: gpmi: set the pinctrl state for suspend/reusme
-References: <1579038243-28550-1-git-send-email-han.xu@nxp.com>
-        <1579038243-28550-7-git-send-email-han.xu@nxp.com>
-Date:   Fri, 17 Jan 2020 21:15:44 +0100
-In-Reply-To: <1579038243-28550-7-git-send-email-han.xu@nxp.com> (Han Xu's
-        message of "Wed, 15 Jan 2020 05:44:03 +0800")
-Message-ID: <87wo9pvnyn.fsf@geanix.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        id S1728831AbgASVmP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 19 Jan 2020 16:42:15 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:46902 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728827AbgASVmP (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 19 Jan 2020 16:42:15 -0500
+Received: by mail-ua1-f65.google.com with SMTP id l6so10805981uap.13
+        for <dmaengine@vger.kernel.org>; Sun, 19 Jan 2020 13:42:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=/o+CA7VDRA7UR3HGeT8+/tYzwEnOXwq5B8ZHP2/HeYc=;
+        b=TNa1u7qy8qpCevp+SF6o0nQ13/6bK4eIa9cNS6DTqHxrrGrsw7SCnc6z7camA5Udo0
+         8Z8Ln4dBcjxbuQ/qyE+cA4YfYRAHdXmOf/9E8K6wRrNsgr6YAo6JJDkBzxAInTJy/NuN
+         j71g+vsITrrWNAfZSte1DoJCr9BgwGYoLQqFEpVcshTZBwr+jeRSHy+qUA3ycu9IjsSx
+         Lg0pM9nviKRGB4zaS/IDkkUjMSga6TDCsHPi8JwrglLABV31Mvxh0qU0apIx9NyZykfz
+         uwXE6cxVIqU7GWrj58dsbt359TGplkU3PV7ZET4vsKLCpMkE4TIy1gWkuErmtUazmtLl
+         2QYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=/o+CA7VDRA7UR3HGeT8+/tYzwEnOXwq5B8ZHP2/HeYc=;
+        b=ZpXs0/G1D9tztEBIVRCBMpZejcfw5HIAd0e36gegIyGp/vyKJ5k3Sim22Ek6Pzr0CI
+         DShVz4gpbSCEivNnDgF0zZY5vwtkMbfEbUOtU/DQixU3YiHry7q2CTDGJwMK/13wbNFo
+         +52Uko8sS22/PnRcjxeokeChF62QdcgTaCyvyDDBAEsKgp7uwBKVnwrAK2x0kw//XhvS
+         Kz+1ZGI5Lygs+m4OpYBFmCJBgSsDJhXFEr+8EheonTzl8Q/bnPtRnU2wzRttZKB//DiD
+         /SROmeOCDuAz6HU625ZAcvrdN03CQkCzhzha2SAuGerPXKA8us3SPRDxHoK0D/YwSTui
+         I7ag==
+X-Gm-Message-State: APjAAAUFxfuTqZZZ+lmTZB9Yhewo+M33ZaVCG1uKbSMEUXyEu+vZwYi2
+        KHDQyeTb27VOP5ne3OPpk4EuUY2BX7mUfHuDRnY=
+X-Google-Smtp-Source: APXvYqwq7hNGQenPTfCmBCsTWah79JesRR4St2SMf1uxkB/h1Kcf7vP2XqxuV+crbGQwiSIycECacL810SAdrTDxs6Y=
+X-Received: by 2002:ab0:3085:: with SMTP id h5mr26573644ual.110.1579470134826;
+ Sun, 19 Jan 2020 13:42:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-1.7 required=4.0 tests=BAYES_00,DKIM_INVALID,
-        DKIM_SIGNED,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=disabled
-        version=3.4.3
-X-Spam-Checker-Version: SpamAssassin 3.4.3 (2019-12-06) on ea2d15de10a4
+Received: by 2002:ab0:60c2:0:0:0:0:0 with HTTP; Sun, 19 Jan 2020 13:42:14
+ -0800 (PST)
+Reply-To: favordens@email.com
+From:   Favor Desmond <jerrylawson206@gmail.com>
+Date:   Sun, 19 Jan 2020 21:42:14 +0000
+Message-ID: <CAAy7SGW4c_tR4j_7L71Ex=_NrbajmHpvzaL7ZuNJkCggof7TGg@mail.gmail.com>
+Subject: HELLO
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Han Xu <han.xu@nxp.com> writes:
-
-> set the correct pinctrl state in system pm suspend/resume ops
->
-> Signed-off-by: Han Xu <han.xu@nxp.com>
-> ---
->  drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c b/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c
-> index 73644c96fa9b..de1e3dbb2eb1 100644
-> --- a/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c
-> +++ b/drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c
-> @@ -15,6 +15,7 @@
->  #include <linux/of.h>
->  #include <linux/of_device.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/pinctrl/consumer.h>
->  #include <linux/dma/mxs-dma.h>
->  #include "gpmi-nand.h"
->  #include "gpmi-regs.h"
-> @@ -2692,6 +2693,7 @@ static int gpmi_pm_suspend(struct device *dev)
->  {
->  	int ret;
->  
-> +	pinctrl_pm_select_sleep_state(dev);
->  	ret = pm_runtime_force_suspend(dev);
->  
->  	return ret;
-> @@ -2708,6 +2710,8 @@ static int gpmi_pm_resume(struct device *dev)
->  		return ret;
->  	}
->  
-> +	pinctrl_pm_select_default_state(dev);
-> +
->  	/* re-init the GPMI registers */
->  	ret = gpmi_init(this);
->  	if (ret) {
-
-Acked-by: Esben Haabendal <esben@geanix.com>
+Hello Dear
+Greetings to you,I am Favor Desmond from Ivory coast currently living
+in  Togo Republic,I would like to know you more, so that i can tell
+you little amount myself and my photo, email address is
+favordens@email.com
+Thanks
+Favor

@@ -2,62 +2,131 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9909B142043
-	for <lists+dmaengine@lfdr.de>; Sun, 19 Jan 2020 22:42:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5B30142684
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Jan 2020 10:02:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbgASVmP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 19 Jan 2020 16:42:15 -0500
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:46902 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728827AbgASVmP (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 19 Jan 2020 16:42:15 -0500
-Received: by mail-ua1-f65.google.com with SMTP id l6so10805981uap.13
-        for <dmaengine@vger.kernel.org>; Sun, 19 Jan 2020 13:42:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=/o+CA7VDRA7UR3HGeT8+/tYzwEnOXwq5B8ZHP2/HeYc=;
-        b=TNa1u7qy8qpCevp+SF6o0nQ13/6bK4eIa9cNS6DTqHxrrGrsw7SCnc6z7camA5Udo0
-         8Z8Ln4dBcjxbuQ/qyE+cA4YfYRAHdXmOf/9E8K6wRrNsgr6YAo6JJDkBzxAInTJy/NuN
-         j71g+vsITrrWNAfZSte1DoJCr9BgwGYoLQqFEpVcshTZBwr+jeRSHy+qUA3ycu9IjsSx
-         Lg0pM9nviKRGB4zaS/IDkkUjMSga6TDCsHPi8JwrglLABV31Mvxh0qU0apIx9NyZykfz
-         uwXE6cxVIqU7GWrj58dsbt359TGplkU3PV7ZET4vsKLCpMkE4TIy1gWkuErmtUazmtLl
-         2QYQ==
+        id S1726075AbgATJCO convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Mon, 20 Jan 2020 04:02:14 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39842 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgATJCN (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 20 Jan 2020 04:02:13 -0500
+Received: by mail-oi1-f195.google.com with SMTP id z2so3892632oih.6;
+        Mon, 20 Jan 2020 01:02:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=/o+CA7VDRA7UR3HGeT8+/tYzwEnOXwq5B8ZHP2/HeYc=;
-        b=ZpXs0/G1D9tztEBIVRCBMpZejcfw5HIAd0e36gegIyGp/vyKJ5k3Sim22Ek6Pzr0CI
-         DShVz4gpbSCEivNnDgF0zZY5vwtkMbfEbUOtU/DQixU3YiHry7q2CTDGJwMK/13wbNFo
-         +52Uko8sS22/PnRcjxeokeChF62QdcgTaCyvyDDBAEsKgp7uwBKVnwrAK2x0kw//XhvS
-         Kz+1ZGI5Lygs+m4OpYBFmCJBgSsDJhXFEr+8EheonTzl8Q/bnPtRnU2wzRttZKB//DiD
-         /SROmeOCDuAz6HU625ZAcvrdN03CQkCzhzha2SAuGerPXKA8us3SPRDxHoK0D/YwSTui
-         I7ag==
-X-Gm-Message-State: APjAAAUFxfuTqZZZ+lmTZB9Yhewo+M33ZaVCG1uKbSMEUXyEu+vZwYi2
-        KHDQyeTb27VOP5ne3OPpk4EuUY2BX7mUfHuDRnY=
-X-Google-Smtp-Source: APXvYqwq7hNGQenPTfCmBCsTWah79JesRR4St2SMf1uxkB/h1Kcf7vP2XqxuV+crbGQwiSIycECacL810SAdrTDxs6Y=
-X-Received: by 2002:ab0:3085:: with SMTP id h5mr26573644ual.110.1579470134826;
- Sun, 19 Jan 2020 13:42:14 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EDa/ZVNGvwyY4lRA+wxSdtjDm7nJG1InbdRTQhCgYUs=;
+        b=IwkMv58ZRHL1ohFY2z4UYBfLxjCUADjseozTDn+Rif1z1QSesm6F463J4/maGZd1/x
+         kFzGbBNJ3Qki2iNejZRJeUzhlkLICaUpVST7mKSj6LO2T8bAukwCfMIKtJBMyvOPy19t
+         c8jUF2+TfZu83U0IUHY8H1Jp4S8nA5pDlfLvWvtpLrGB57zOFmPwCk0epapK0kq64ud3
+         gs452+HseZPll6uiZjV4iCUJWRj206QLUXvePUzsTdC66u0dXc4UU1YKnsHL+S1/HEmx
+         uRnM/Bk/J3ePN7/qPxXanz4iJADwMsD/Y+tjUY3wGEaGrhJ4WOwIwFmNhuhwnN8jZYBt
+         NXdA==
+X-Gm-Message-State: APjAAAVHKvvIabGkeEbIx82yZioMstHHhJaV3pZxtOUxpeiSOVNz2xQk
+        kL1I3V8xm0XMDXGO/oC5BP3wKFazzpHe69boqRw=
+X-Google-Smtp-Source: APXvYqy2+nlFf8CNQvNrugEXLRUIQO11SX6/COqt7l6vSF13D0b6ZBMZc6d0k+QLUiI4gi0VYO0PziFbmhdmtWhG8GA=
+X-Received: by 2002:a05:6808:292:: with SMTP id z18mr11627160oic.131.1579510933130;
+ Mon, 20 Jan 2020 01:02:13 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:ab0:60c2:0:0:0:0:0 with HTTP; Sun, 19 Jan 2020 13:42:14
- -0800 (PST)
-Reply-To: favordens@email.com
-From:   Favor Desmond <jerrylawson206@gmail.com>
-Date:   Sun, 19 Jan 2020 21:42:14 +0000
-Message-ID: <CAAy7SGW4c_tR4j_7L71Ex=_NrbajmHpvzaL7ZuNJkCggof7TGg@mail.gmail.com>
-Subject: HELLO
-To:     undisclosed-recipients:;
+References: <20200117153056.31363-1-geert+renesas@glider.be> <d2b669e7-a5d4-20ec-5b54-103b71df7407@ti.com>
+In-Reply-To: <d2b669e7-a5d4-20ec-5b54-103b71df7407@ti.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 20 Jan 2020 10:01:51 +0100
+Message-ID: <CAMuHMdVzQCWvH-LJ9ME5dRyafudZBHQLaJQzkSCPnughv_q2aA@mail.gmail.com>
+Subject: Re: [PATCH v2] dmaengine: Create symlinks between DMA channels and slaves
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello Dear
-Greetings to you,I am Favor Desmond from Ivory coast currently living
-in  Togo Republic,I would like to know you more, so that i can tell
-you little amount myself and my photo, email address is
-favordens@email.com
-Thanks
-Favor
+Hi Peter,
+
+On Fri, Jan 17, 2020 at 9:08 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> On 1/17/20 5:30 PM, Geert Uytterhoeven wrote:
+> > Currently it is not easy to find out which DMA channels are in use, and
+> > which slave devices are using which channels.
+> >
+> > Fix this by creating two symlinks between the DMA channel and the actual
+> > slave device when a channel is requested:
+> >   1. A "slave" symlink from DMA channel to slave device,
+>
+> Have you considered similar link name as on the slave device:
+> slave:<name>
+>
+> That way it would be easier to grasp which channel is used for what
+> purpose by only looking under /sys/class/dma/ and no need to check the
+> slave device.
+
+Would this really provide more information?
+The device name is already provided in the target of the symlink:
+
+root@koelsch:~# readlink
+/sys/devices/platform/soc/e6720000.dma-controller/dma/dma1chan2/slave
+../../../ee140000.sd
+
+> >   2. A "dma:<name>" symlink slave device to DMA channel.
+> > When the channel is released, the symlinks are removed again.
+> > The latter requires keeping track of the slave device and the channel
+> > name in the dma_chan structure.
+> >
+> > Note that this is limited to channel request functions for requesting an
+> > exclusive slave channel that take a device pointer (dma_request_chan()
+> > and dma_request_slave_channel*()).
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> > v2:
+> >   - Add DMA_SLAVE_NAME macro,
+> >   - Also handle channels from FIXME,
+> >   - Add backlinks from slave device to DMA channel,
+> >
+> > On r8a7791/koelsch, the following new symlinks are created:
+> >
+> >     /sys/devices/platform/soc/
+> >     ├── e6700000.dma-controller/dma/dma0chan0/slave -> ../../../e6e20000.spi
+> >     ├── e6700000.dma-controller/dma/dma0chan1/slave -> ../../../e6e20000.spi
+> >     ├── e6700000.dma-controller/dma/dma0chan2/slave -> ../../../ee100000.sd
+> >     ├── e6700000.dma-controller/dma/dma0chan3/slave -> ../../../ee100000.sd
+> >     ├── e6700000.dma-controller/dma/dma0chan4/slave -> ../../../ee160000.sd
+> >     ├── e6700000.dma-controller/dma/dma0chan5/slave -> ../../../ee160000.sd
+> >     ├── e6700000.dma-controller/dma/dma0chan6/slave -> ../../../e6e68000.serial
+> >     ├── e6700000.dma-controller/dma/dma0chan7/slave -> ../../../e6e68000.serial
+> >     ├── e6720000.dma-controller/dma/dma1chan0/slave -> ../../../e6b10000.spi
+> >     ├── e6720000.dma-controller/dma/dma1chan1/slave -> ../../../e6b10000.spi
+> >     ├── e6720000.dma-controller/dma/dma1chan2/slave -> ../../../ee140000.sd
+> >     ├── e6720000.dma-controller/dma/dma1chan3/slave -> ../../../ee140000.sd
+> >     ├── e6b10000.spi/dma:rx -> ../e6720000.dma-controller/dma/dma1chan1
+> >     ├── e6b10000.spi/dma:tx -> ../e6720000.dma-controller/dma/dma1chan0
+> >     ├── e6e20000.spi/dma:rx -> ../e6700000.dma-controller/dma/dma0chan1
+> >     ├── e6e20000.spi/dma:tx -> ../e6700000.dma-controller/dma/dma0chan0
+> >     ├── e6e68000.serial/dma:rx -> ../e6700000.dma-controller/dma/dma0chan7
+> >     ├── e6e68000.serial/dma:tx -> ../e6700000.dma-controller/dma/dma0chan6
+> >     ├── ee100000.sd/dma:rx -> ../e6700000.dma-controller/dma/dma0chan3
+> >     ├── ee100000.sd/dma:tx -> ../e6700000.dma-controller/dma/dma0chan2
+> >     ├── ee140000.sd/dma:rx -> ../e6720000.dma-controller/dma/dma1chan3
+> >     ├── ee140000.sd/dma:tx -> ../e6720000.dma-controller/dma/dma1chan2
+> >     ├── ee160000.sd/dma:rx -> ../e6700000.dma-controller/dma/dma0chan5
+> >     └── ee160000.sd/dma:tx -> ../e6700000.dma-controller/dma/dma0chan4
+
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds

@@ -2,41 +2,41 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B683143905
-	for <lists+dmaengine@lfdr.de>; Tue, 21 Jan 2020 10:06:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5195E143908
+	for <lists+dmaengine@lfdr.de>; Tue, 21 Jan 2020 10:06:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgAUJFv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 21 Jan 2020 04:05:51 -0500
-Received: from mail-bn8nam11on2066.outbound.protection.outlook.com ([40.107.236.66]:6028
+        id S1727360AbgAUJGB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 21 Jan 2020 04:06:01 -0500
+Received: from mail-bn8nam11on2050.outbound.protection.outlook.com ([40.107.236.50]:16989
         "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727360AbgAUJFv (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 21 Jan 2020 04:05:51 -0500
+        id S1729162AbgAUJGA (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 21 Jan 2020 04:06:00 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TqZZXPR7GCXQrElezzBcxlyE0AxfUvS3eoae7YLjAuK842bTSNrelz2vApsdteE2wKhwByhLHCUO3OZT/NUJZkWNlwjt4ygGXQ0wxsEBt5mePWozr1Jm9Cpe2kX/zZbIhUVTYzywbXJzTJSy3FgG8ZbVHMQrmmobW0/tINKUMGPQ4P5O5UVQqM8WhRa6EEj42OsXCr8vPg+sKTWYLaFmSqVG3PZZdj0NK0puCcG4f8QnUtLEJr3D1oY/dA/Zzw/06OAWf5cgTKOvyGYFqy/ONpa4zP4LZNFPLVUarbbRbd+4mIAUaTyKwKRheE5UyFDB8xwtrLe3SiEIxKsslFF2RQ==
+ b=FHJw3RXbg6cGh8lFGMLI2szis91k76OgNcG+U5e78Pf4etVLudg+bXlBPrmnoaSb63OqinGa8CN9LM9Fe1N/oD5VQfKe6bzlal6ipugWyNNUmrAGW+pvTorb8h37IeW6RKICWN7o7U7UnUkqUGt4uT/+xByQ4zVVJ8IlfA51OH0au5V5bqzuMuEGuQPa1Cz8RJ5MPBcsMsRoIL95axy4yNTItCG1HGVgFi9AKxy8TuKvSc4oPqP14HiE4PeM6ubESYXaOc+tg3ijiCLUlW8HqDzpLQQpW1lTmnfqyphSvPZLxuXahFRKKia5MVL9A+SVooh3mbXq6ged/cuPMJzRlw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J8bKn37AXl7GreNi2VMkMs0JJMANKUG3s7ImIQzdlI0=;
- b=FVWNLZY4OYdJSG09q7snsoxEtEonb5lcp5czivZhbtMukFUbhB3WPJvSZDRfslyLv85uW5AJZwDt7hTNRGhACJ+pSHu0Sy8bVFSCw4R9QgtsiCO3grvVX/QLOrxRzvfWcTMfu6uqkKafLiTsQX408uwj0xzC3MaAtsnx/fClesWXo8EgxspNvhJoHuBzW+t+HrbKk2lvqaSjs1CeWCMTStzsyUfLKEX2U/VbUjffEBVLsHgzMY5yoeYFyI1+NPQibUbejCBLnw7ne/s0/k8hnBbRG9Jw3wzWGJX1ce55ldwRmB0bVOMJSOJQrngGjIousgUgIirigfd7U45F2M37MA==
+ bh=y7iH4gzkPjKML9AgRslwHtXV++rxgHNJsw0Fk9Wgmio=;
+ b=Mq0+uu9tSsrPmiazXkclT/XdBtJadj1w+YD7MI9xVKbiDykXWhiiZ/KUgrsQGCQkZr1x40hRBQJBr+u1GsIY8Av0BcBGzJ+pr1597XXPgEp/poDDniYcDNX6VYsrjWqe+1TmvQqIbaIOOk+Ak850M3LLlbXGtEJmDk1UumOb4CKJ7na5HOMgGGbC8BRlcOS5yE8tRXUBJJ0lNP5lTEz3/uAo6w2bmOmTysgWIVacmGDFpBWfhEOrUxqW5QsZpf7b32jVUokj5xE7cnRMGK+iPW6adm2ofQsHq5LKrxJbXxorSSHSE3GsYgk6vxoxIfhS6oU6JWJlUOlWTJ5pNTzZ8Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J8bKn37AXl7GreNi2VMkMs0JJMANKUG3s7ImIQzdlI0=;
- b=UEMJd/ChRBQ25rYgEwmCRG2c026BWoZjVMdfpdY3+JxFi0kiNGn3pw+NBm/wol0FU5LcxTpcA0c+gyK0j6fm8FpvQLQzLOc6G1Tzu4ihxYQukyrNSI4NHEH+ch8UVJfw36PSTqFoTGkmiZcsHZPTaB5Hpzc4Xsh23epbTswAeeI=
+ bh=y7iH4gzkPjKML9AgRslwHtXV++rxgHNJsw0Fk9Wgmio=;
+ b=ZuuxTahWHQYnyrSJMAW2Oq92VmTPaBTKEEUy8+9s3SwLgfckTRarHjlFHuxHvwyLKxd67ItXaSO7iFPI+dRke1ZG6utsd6YUJn71SnSn18D6ku/CCTk0gNVHpW9hzb+EKADBp407zFw4HXVZgloiImOJ4utno2bBZLF5dpXefDw=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=Sanju.Mehta@amd.com; 
 Received: from MN2PR12MB3455.namprd12.prod.outlook.com (20.178.244.22) by
  MN2PR12MB4048.namprd12.prod.outlook.com (52.135.49.8) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.19; Tue, 21 Jan 2020 09:05:47 +0000
+ 15.20.2644.19; Tue, 21 Jan 2020 09:05:53 +0000
 Received: from MN2PR12MB3455.namprd12.prod.outlook.com
  ([fe80::1900:6cb7:12ff:11c]) by MN2PR12MB3455.namprd12.prod.outlook.com
  ([fe80::1900:6cb7:12ff:11c%4]) with mapi id 15.20.2644.027; Tue, 21 Jan 2020
- 09:05:47 +0000
+ 09:05:53 +0000
 From:   Sanjay R Mehta <Sanju.Mehta@amd.com>
 To:     vkoul@kernel.org, gregkh@linuxfoundation.org,
         dan.j.williams@intel.com, Thomas.Lendacky@amd.com,
@@ -44,9 +44,9 @@ To:     vkoul@kernel.org, gregkh@linuxfoundation.org,
 Cc:     robh@kernel.org, mchehab+samsung@kernel.org, davem@davemloft.net,
         Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org,
         dmaengine@vger.kernel.org, Sanjay R Mehta <sanju.mehta@amd.com>
-Subject: [PATCH v3 2/3] dmaengine: ptdma: Register pass-through engine as a DMA resource
-Date:   Tue, 21 Jan 2020 03:04:53 -0600
-Message-Id: <1579597494-60348-3-git-send-email-Sanju.Mehta@amd.com>
+Subject: [PATCH v3 3/3] dmaengine: ptdma: Add debugfs entries for PTDMA information
+Date:   Tue, 21 Jan 2020 03:04:54 -0600
+Message-Id: <1579597494-60348-4-git-send-email-Sanju.Mehta@amd.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1579597494-60348-1-git-send-email-Sanju.Mehta@amd.com>
 References: <1579597494-60348-1-git-send-email-Sanju.Mehta@amd.com>
@@ -56,31 +56,31 @@ X-ClientProxiedBy: MA1PR01CA0152.INDPRD01.PROD.OUTLOOK.COM
  (2603:1096:a00:71::22) To MN2PR12MB3455.namprd12.prod.outlook.com
  (2603:10b6:208:d0::22)
 MIME-Version: 1.0
-Received: from sanjuamdntb2.amd.com (165.204.156.251) by MA1PR01CA0152.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:71::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2644.18 via Frontend Transport; Tue, 21 Jan 2020 09:05:43 +0000
+Received: from sanjuamdntb2.amd.com (165.204.156.251) by MA1PR01CA0152.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:71::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2644.18 via Frontend Transport; Tue, 21 Jan 2020 09:05:49 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [165.204.156.251]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: d7fcda3e-9ba6-4cc5-074a-08d79e511a69
+X-MS-Office365-Filtering-Correlation-Id: 526c6199-116c-4379-e84a-08d79e511e00
 X-MS-TrafficTypeDiagnostic: MN2PR12MB4048:|MN2PR12MB4048:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB40486FA94BFF6987F276905AE50D0@MN2PR12MB4048.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:126;
+X-Microsoft-Antispam-PRVS: <MN2PR12MB4048BFC1B6F62F2575529C03E50D0@MN2PR12MB4048.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2657;
 X-Forefront-PRVS: 0289B6431E
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(366004)(376002)(39860400002)(199004)(189003)(7696005)(52116002)(30864003)(6486002)(6666004)(8676002)(81166006)(2906002)(81156014)(8936002)(5660300002)(316002)(186003)(66476007)(66556008)(16526019)(2616005)(26005)(956004)(478600001)(66946007)(36756003)(86362001)(4326008)(6636002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB4048;H:MN2PR12MB3455.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(366004)(376002)(39860400002)(199004)(189003)(7696005)(52116002)(6486002)(6666004)(8676002)(81166006)(2906002)(81156014)(8936002)(5660300002)(316002)(186003)(66476007)(66556008)(16526019)(2616005)(26005)(956004)(478600001)(66946007)(36756003)(86362001)(4326008)(6636002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB4048;H:MN2PR12MB3455.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 Received-SPF: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +Ju7NsQdXQECaeLcktnHUTCG7wSqvTdH3Vy90ibmnpckxjHnPEcL9zj/jNFLtfTrF0OerbAP5Z72yetzUWYWw2enT2pXiDkXfPBFEPvL0/6USh+jnQeY1AsXXI6DHDVJU4UJSPoOlIAjDsZNf2Wlz/JIG0ilKjbNEkKLqFCFgROgAk38wpZh80wGjvWiBl42cBoIdZ829LU8NhuMoaEmGV71H0rvfaiQVs9bBnoZLB1uyg8AcL2737JVx1Nt6pwN5GuYv/58nES0VtkbwYpb5CTOuHCA45EXNfEiFNx6QUZiR+JwXvdogkjrumxWZvHx+R2IyoHXky49yd7emM+4NvFuvSsa2RMeRjEkBfoLlOTMGzKEkjKH13aq/aOANee/fBgbKX3CiiUWynFGgBWpVLElnqcsaVKkV9Npl5Fko7wr7OGfGhYNYQwJWROqE2Nx
+X-Microsoft-Antispam-Message-Info: l/ChpZIG9G6PtAJUOK3t9Mt4++ZL20nfWBbbgaL/otT+jaVs7AF5I+ih+HkUw7/m7N6zCiDACP+fhOiukhwD3RiFJgwrDM4nf6s+kwkOT74DVEuMQFmOfxf32h0PvPQdyKKILLqkJI233ZKXOO8UMyWbpkFloEqUa5mVZZ2LE78EWfUf16g2uvBCjypQUCrdNSgtajwGtGP4rIgFbiC810Y7XiaMgqYnQa1SiyhXSSQ13HZoprXSIessmdSApaNJ2AGSp+J4m86Fa0jjkMc9+HLEgu7ji9j2b0g+YXjmBA9a/QleAHJfP5/Q1s+Zsyz6fjd9JkhGLfdCU9fAxBI5unfJmnABGhdn3+J48/ThjHSnhsBnWsO4sZDT2AE/1qcZ46bdcmRHKtE9sQ+nHxCjz8Rk8RoOwtVT77/8Bl07KTnGbigdr2LchDFj0PHbu4qq
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d7fcda3e-9ba6-4cc5-074a-08d79e511a69
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2020 09:05:47.1533
+X-MS-Exchange-CrossTenant-Network-Message-Id: 526c6199-116c-4379-e84a-08d79e511e00
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2020 09:05:53.1768
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vtSmuLBX1ZbOq91wG6VFjMQbyza7Hm/n0LHNT5dEc8qhMIV+ZUzHpkLVbLDzECTpkQWEMLXBf6bnFIvowHmyiA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: n22DZ6r7yfdb+qxP3yz0vxFERmm5PsBsxFIfgQM4TlpNaOevCixJ726V+o42izoYimsMEH3W2AXY7BjijuRMAw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4048
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
@@ -89,118 +89,38 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Sanjay R Mehta <sanju.mehta@amd.com>
 
-This Registers the ptdma queue to Linux dmaengine
-framework as general purpose DMA channels.
+Expose data about the configuration and operation of the
+PTDMA through debugfs entries: device name, capabilities,
+configuration, statistics.
 
 Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
 ---
- drivers/dma/ptdma/Kconfig           |   1 +
- drivers/dma/ptdma/Makefile          |   3 +-
- drivers/dma/ptdma/ptdma-dev.c       |  35 ++
- drivers/dma/ptdma/ptdma-dmaengine.c | 704 ++++++++++++++++++++++++++++++++++++
- drivers/dma/ptdma/ptdma.h           |  45 +++
- 5 files changed, 787 insertions(+), 1 deletion(-)
- create mode 100644 drivers/dma/ptdma/ptdma-dmaengine.c
+ drivers/dma/ptdma/Makefile        |   3 +-
+ drivers/dma/ptdma/ptdma-debugfs.c | 237 ++++++++++++++++++++++++++++++++++++++
+ drivers/dma/ptdma/ptdma-dev.c     |  26 +++++
+ drivers/dma/ptdma/ptdma.h         |  12 ++
+ 4 files changed, 277 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/dma/ptdma/ptdma-debugfs.c
 
-diff --git a/drivers/dma/ptdma/Kconfig b/drivers/dma/ptdma/Kconfig
-index 4ec259e..f4848bf 100644
---- a/drivers/dma/ptdma/Kconfig
-+++ b/drivers/dma/ptdma/Kconfig
-@@ -2,5 +2,6 @@
- config AMD_PTDMA
- 	tristate  "AMD PassThru DMA Engine"
- 	depends on X86_64 && PCI
-+	select DMA_ENGINE
- 	help
- 	  Provides the support for AMD PassThru DMA Engine.
 diff --git a/drivers/dma/ptdma/Makefile b/drivers/dma/ptdma/Makefile
-index 320fa82..6fcb4ad 100644
+index 6fcb4ad..60e7c10 100644
 --- a/drivers/dma/ptdma/Makefile
 +++ b/drivers/dma/ptdma/Makefile
-@@ -5,6 +5,7 @@
- 
+@@ -6,6 +6,7 @@
  obj-$(CONFIG_AMD_PTDMA) += ptdma.o
  
--ptdma-objs := ptdma-dev.o
-+ptdma-objs := ptdma-dev.o \
-+	      ptdma-dmaengine.o
+ ptdma-objs := ptdma-dev.o \
+-	      ptdma-dmaengine.o
++	      ptdma-dmaengine.o \
++	      ptdma-debugfs.o
  
  ptdma-$(CONFIG_PCI) += ptdma-pci.o
-diff --git a/drivers/dma/ptdma/ptdma-dev.c b/drivers/dma/ptdma/ptdma-dev.c
-index c10adce..0162ecd 100644
---- a/drivers/dma/ptdma/ptdma-dev.c
-+++ b/drivers/dma/ptdma/ptdma-dev.c
-@@ -222,6 +222,8 @@ static irqreturn_t pt_core_irq_handler(int irq, void *data)
- 
- 	pt_core_enable_queue_interrupts(pt);
- 
-+	tasklet_schedule(&pt->tasklet);
-+
- 	return IRQ_HANDLED;
- }
- 
-@@ -240,6 +242,26 @@ static void pt_init_cmdq_regs(struct pt_cmd_queue *cmd_q)
- 	cmd_q->reg_interrupt_status = io_regs + CMD_Q_INTERRUPT_STATUS_BASE;
- }
- 
-+static void pt_do_cmd_complete(unsigned long data)
-+{
-+	struct pt_tasklet_data *tdata = (struct pt_tasklet_data *)data;
-+	struct pt_cmd *cmd = tdata->cmd;
-+	struct pt_cmd_queue *cmd_q = &cmd->pt->cmd_q;
-+	u32 tail;
-+
-+	tail = lower_32_bits(cmd_q->qdma_tail + cmd_q->qidx * Q_DESC_SIZE);
-+	if (cmd_q->cmd_error) {
-+	       /*
-+		* Log the error and flush the queue by
-+		* moving the head pointer
-+		*/
-+		pt_log_error(cmd_q->pt, cmd_q->cmd_error);
-+		iowrite32(tail, cmd_q->reg_head_lo);
-+	}
-+
-+	cmd->pt_cmd_callback(cmd->data, cmd->ret);
-+}
-+
- int pt_core_init(struct pt_device *pt)
- {
- 	struct device *dev = pt->dev;
-@@ -341,8 +363,18 @@ int pt_core_init(struct pt_device *pt)
- 
- 	dev_dbg(dev, "PTDMA device %s registration successful...\n", pt->name);
- 
-+	/* Register the DMA engine support */
-+	ret = pt_dmaengine_register(pt);
-+	if (ret)
-+		goto e_dmaengine;
-+
-+	tasklet_init(&pt->tasklet, pt_do_cmd_complete, (ulong)&pt->tdata);
-+
- 	return 0;
- 
-+e_dmaengine:
-+	free_irq(pt->pt_irq, pt);
-+
- e_dma_alloc:
- 	dma_free_coherent(dev, cmd_q->qsize, cmd_q->qbase, cmd_q->qbase_dma);
- 
-@@ -358,6 +390,9 @@ void pt_core_destroy(struct pt_device *pt)
- 	struct pt_cmd_queue *cmd_q = &pt->cmd_q;
- 	struct pt_cmd *cmd;
- 
-+	/* Unregister the DMA engine */
-+	pt_dmaengine_unregister(pt);
-+
- 	/* Remove this device from the list of available units first */
- 	pt_del_device(pt);
- 
-diff --git a/drivers/dma/ptdma/ptdma-dmaengine.c b/drivers/dma/ptdma/ptdma-dmaengine.c
+diff --git a/drivers/dma/ptdma/ptdma-debugfs.c b/drivers/dma/ptdma/ptdma-debugfs.c
 new file mode 100644
-index 0000000..b91a83e
+index 0000000..b4af83c
 --- /dev/null
-+++ b/drivers/dma/ptdma/ptdma-dmaengine.c
-@@ -0,0 +1,704 @@
++++ b/drivers/dma/ptdma/ptdma-debugfs.c
+@@ -0,0 +1,237 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * AMD Passthrough DMA device driver
@@ -212,772 +132,344 @@ index 0000000..b91a83e
 + * Author: Gary R Hook <gary.hook@amd.com>
 + */
 +
++#include <linux/debugfs.h>
++
 +#include "ptdma.h"
-+#include "../dmaengine.h"
 +
-+#define PT_DMA_WIDTH(_mask)		\
-+({					\
-+	u64 mask = (_mask) + 1;		\
-+	(mask == 0) ? 64 : fls64(mask);	\
-+})
++/* DebugFS helpers */
++#define	OBUFP		(obuf + oboff)
++#define	OBUFLEN		512
++#define	OBUFSPC		(OBUFLEN - oboff)
 +
-+static void pt_free_cmd_resources(struct pt_device *pt,
-+				  struct list_head *list)
++#define	MAX_NAME_LEN	20
++#define	BUFLEN		63
++#define	RI_VERSION_NUM	0x0000003F
++
++#define	RI_NUM_VQM	0x00078000
++#define	RI_NVQM_SHIFT	15
++#define	RI_NVQM(r)	(((r) * RI_NUM_VQM) >> RI_NVQM_SHIFT)
++#define	RI_LSB_ENTRIES	0x0FF80000
++#define	RI_NLSB_SHIFT	19
++#define	RI_NLSB(r)	(((r) * RI_LSB_ENTRIES) >> RI_NLSB_SHIFT)
++
++static struct dentry *pt_debugfs_dir;
++static DEFINE_MUTEX(pt_debugfs_lock);
++
++static ssize_t ptdma_debugfs_info_read(struct file *filp, char __user *ubuf,
++				       size_t count, loff_t *offp)
 +{
-+	struct pt_dma_cmd *cmd, *ctmp;
++	struct pt_device *pt = filp->private_data;
++	unsigned int oboff = 0;
++	unsigned int regval;
++	ssize_t ret;
++	char *obuf;
 +
-+	list_for_each_entry_safe(cmd, ctmp, list, entry) {
-+		list_del(&cmd->entry);
-+		kmem_cache_free(pt->dma_cmd_cache, cmd);
-+	}
++	if (!pt)
++		return 0;
++
++	obuf = kmalloc(OBUFLEN, GFP_KERNEL);
++	if (!obuf)
++		return -ENOMEM;
++
++	oboff += snprintf(OBUFP, OBUFSPC, "Device name: %s\n", pt->name);
++	oboff += snprintf(OBUFP, OBUFSPC, "   # Queues: %d\n", 1);
++	oboff += snprintf(OBUFP, OBUFSPC, "     # Cmds: %d\n", pt->cmd_count);
++
++	regval = ioread32(pt->io_regs + CMD_PT_VERSION);
++
++	oboff += snprintf(OBUFP, OBUFSPC, "    Version: %d\n",
++		   regval & RI_VERSION_NUM);
++	oboff += snprintf(OBUFP, OBUFSPC, "    Engines:");
++	oboff += snprintf(OBUFP, OBUFSPC, "\n");
++	oboff += snprintf(OBUFP, OBUFSPC, "     Queues: %d\n",
++		   (regval & RI_NUM_VQM) >> RI_NVQM_SHIFT);
++
++	ret = simple_read_from_buffer(ubuf, count, offp, obuf, oboff);
++	kfree(obuf);
++
++	return ret;
 +}
 +
-+static void pt_free_desc_resources(struct pt_device *pt,
-+				   struct list_head *list)
++/*
++ * Return a formatted buffer containing the current
++ * statistics of queue for PTDMA
++ */
++static ssize_t ptdma_debugfs_stats_read(struct file *filp, char __user *ubuf,
++					size_t count, loff_t *offp)
 +{
-+	struct pt_dma_desc *desc, *dtmp;
++	struct pt_device *pt = filp->private_data;
++	unsigned long total_pt_ops = 0;
++	unsigned int oboff = 0;
++	ssize_t ret = 0;
++	char *obuf;
++	struct pt_cmd_queue *cmd_q = &pt->cmd_q;
 +
-+	list_for_each_entry_safe(desc, dtmp, list, entry) {
-+		pt_free_cmd_resources(pt, &desc->active);
-+		pt_free_cmd_resources(pt, &desc->pending);
++	total_pt_ops += cmd_q->total_pt_ops;
 +
-+		list_del(&desc->entry);
-+		kmem_cache_free(pt->dma_desc_cache, desc);
-+	}
++	obuf = kmalloc(OBUFLEN, GFP_KERNEL);
++	if (!obuf)
++		return -ENOMEM;
++
++	oboff += snprintf(OBUFP, OBUFSPC, "Total Interrupts Handled: %ld\n",
++			    pt->total_interrupts);
++
++	ret = simple_read_from_buffer(ubuf, count, offp, obuf, oboff);
++	kfree(obuf);
++
++	return ret;
 +}
 +
-+static void pt_free_chan_resources(struct dma_chan *dma_chan)
++/*
++ * Reset the counters in a queue
++ */
++static void ptdma_debugfs_reset_queue_stats(struct pt_cmd_queue *cmd_q)
 +{
-+	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
-+						 dma_chan);
-+	unsigned long flags;
-+
-+	dev_dbg(chan->pt->dev, "%s - chan=%p\n", __func__, chan);
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+
-+	pt_free_desc_resources(chan->pt, &chan->complete);
-+	pt_free_desc_resources(chan->pt, &chan->active);
-+	pt_free_desc_resources(chan->pt, &chan->pending);
-+	pt_free_desc_resources(chan->pt, &chan->created);
-+
-+	spin_unlock_irqrestore(&chan->lock, flags);
++	cmd_q->total_pt_ops = 0L;
 +}
 +
-+static void pt_cleanup_desc_resources(struct pt_device *pt,
-+				      struct list_head *list)
++/*
++ * A value was written to the stats variable, which
++ * should be used to reset the queue counters across
++ * that device.
++ */
++static ssize_t ptdma_debugfs_stats_write(struct file *filp,
++					 const char __user *ubuf,
++					 size_t count, loff_t *offp)
 +{
-+	struct pt_dma_desc *desc, *dtmp;
++	struct pt_device *pt = filp->private_data;
 +
-+	list_for_each_entry_safe_reverse(desc, dtmp, list, entry) {
-+		if (!async_tx_test_ack(&desc->tx_desc))
-+			continue;
++	ptdma_debugfs_reset_queue_stats(&pt->cmd_q);
++	pt->total_interrupts = 0L;
 +
-+		dev_dbg(pt->dev, "%s - desc=%p\n", __func__, desc);
-+
-+		pt_free_cmd_resources(pt, &desc->active);
-+		pt_free_cmd_resources(pt, &desc->pending);
-+
-+		list_del(&desc->entry);
-+		kmem_cache_free(pt->dma_desc_cache, desc);
-+	}
++	return count;
 +}
 +
-+static void pt_do_cleanup(unsigned long data)
++/*
++ * Return a formatted buffer containing the current information
++ * for that queue
++ */
++static ssize_t ptdma_debugfs_queue_read(struct file *filp, char __user *ubuf,
++					size_t count, loff_t *offp)
 +{
-+	struct pt_dma_chan *chan = (struct pt_dma_chan *)data;
-+	unsigned long flags;
++	struct pt_cmd_queue *cmd_q = filp->private_data;
++	unsigned int oboff = 0;
++	unsigned int regval;
++	ssize_t ret;
++	char *obuf;
 +
-+	dev_dbg(chan->pt->dev, "%s - chan=%s\n", __func__,
-+		dma_chan_name(&chan->dma_chan));
++	if (!cmd_q)
++		return 0;
 +
-+	spin_lock_irqsave(&chan->lock, flags);
++	obuf = kmalloc(OBUFLEN, GFP_KERNEL);
++	if (!obuf)
++		return -ENOMEM;
 +
-+	pt_cleanup_desc_resources(chan->pt, &chan->complete);
++	oboff += snprintf(OBUFP, OBUFSPC, "               Pass-Thru: %ld\n",
++			    cmd_q->total_pt_ops);
 +
-+	spin_unlock_irqrestore(&chan->lock, flags);
++	regval = ioread32(cmd_q->reg_int_enable);
++	oboff += snprintf(OBUFP, OBUFSPC, "      Enabled Interrupts:");
++	if (regval & INT_EMPTY_QUEUE)
++		oboff += snprintf(OBUFP, OBUFSPC, " EMPTY");
++	if (regval & INT_QUEUE_STOPPED)
++		oboff += snprintf(OBUFP, OBUFSPC, " STOPPED");
++	if (regval & INT_ERROR)
++		oboff += snprintf(OBUFP, OBUFSPC, " ERROR");
++	if (regval & INT_COMPLETION)
++		oboff += snprintf(OBUFP, OBUFSPC, " COMPLETION");
++	oboff += snprintf(OBUFP, OBUFSPC, "\n");
++
++	ret = simple_read_from_buffer(ubuf, count, offp, obuf, oboff);
++	kfree(obuf);
++
++	return ret;
 +}
 +
-+static int pt_issue_next_cmd(struct pt_dma_desc *desc)
++/*
++ * A value was written to the stats variable for a
++ * queue. Reset the queue counters to this value.
++ */
++static ssize_t ptdma_debugfs_queue_write(struct file *filp,
++					 const char __user *ubuf,
++					 size_t count, loff_t *offp)
 +{
-+	struct pt_passthru_engine *pt_engine;
-+	struct pt_dma_cmd *cmd;
-+	struct pt_device *pt;
-+	struct pt_cmd *pt_cmd;
++	struct pt_cmd_queue *cmd_q = filp->private_data;
++
++	ptdma_debugfs_reset_queue_stats(cmd_q);
++
++	return count;
++}
++
++static const struct file_operations pt_debugfs_info_ops = {
++	.owner = THIS_MODULE,
++	.open = simple_open,
++	.read = ptdma_debugfs_info_read,
++	.write = NULL,
++};
++
++static const struct file_operations pt_debugfs_queue_ops = {
++	.owner = THIS_MODULE,
++	.open = simple_open,
++	.read = ptdma_debugfs_queue_read,
++	.write = ptdma_debugfs_queue_write,
++};
++
++static const struct file_operations pt_debugfs_stats_ops = {
++	.owner = THIS_MODULE,
++	.open = simple_open,
++	.read = ptdma_debugfs_stats_read,
++	.write = ptdma_debugfs_stats_write,
++};
++
++void ptdma_debugfs_setup(struct pt_device *pt)
++{
 +	struct pt_cmd_queue *cmd_q;
++	char name[MAX_NAME_LEN + 1];
++	struct dentry *debugfs_q_instance;
 +
-+	cmd = list_first_entry(&desc->pending, struct pt_dma_cmd, entry);
-+	list_move(&cmd->entry, &desc->active);
++	if (!debugfs_initialized())
++		return;
 +
-+	dev_dbg(desc->pt->dev, "%s - tx %d, cmd=%p\n", __func__,
-+		desc->tx_desc.cookie, cmd);
++	mutex_lock(&pt_debugfs_lock);
++	if (!pt_debugfs_dir)
++		pt_debugfs_dir = debugfs_create_dir(KBUILD_MODNAME, NULL);
++	mutex_unlock(&pt_debugfs_lock);
 +
-+	pt_cmd = &cmd->pt_cmd;
-+	pt = pt_cmd->pt;
++	pt->debugfs_instance = debugfs_create_dir(pt->name, pt_debugfs_dir);
++
++	debugfs_create_file("info", 0400, pt->debugfs_instance, pt,
++			    &pt_debugfs_info_ops);
++
++	debugfs_create_file("stats", 0600, pt->debugfs_instance, pt,
++			    &pt_debugfs_stats_ops);
++
 +	cmd_q = &pt->cmd_q;
-+	pt_engine = &pt_cmd->passthru;
 +
-+	if (!pt_engine->final)
-+		return -EINVAL;
++	snprintf(name, MAX_NAME_LEN - 1, "q");
 +
-+	if (!pt_engine->src_dma || !pt_engine->dst_dma)
-+		return -EINVAL;
++	debugfs_q_instance =
++		debugfs_create_dir(name, pt->debugfs_instance);
 +
-+	pt->tdata.cmd = pt_cmd;
-+
-+	/* Execute the command */
-+	pt_cmd->ret = pt_core_perform_passthru(cmd_q, pt_engine);
-+
-+	return 0;
++	debugfs_create_file("stats", 0600, debugfs_q_instance, cmd_q,
++			    &pt_debugfs_queue_ops);
 +}
 +
-+static void pt_free_active_cmd(struct pt_dma_desc *desc)
++void ptdma_debugfs_destroy(void)
 +{
-+	struct pt_dma_cmd *cmd;
-+
-+	cmd = list_first_entry_or_null(&desc->active, struct pt_dma_cmd,
-+				       entry);
-+	if (!cmd)
-+		return;
-+
-+	dev_dbg(desc->pt->dev, "%s - freeing tx %d cmd=%p\n",
-+		__func__, desc->tx_desc.cookie, cmd);
-+
-+	list_del(&cmd->entry);
-+	kmem_cache_free(desc->pt->dma_cmd_cache, cmd);
++	debugfs_remove_recursive(pt_debugfs_dir);
 +}
-+
-+static struct pt_dma_desc *__pt_next_dma_desc(struct pt_dma_chan *chan,
-+					      struct pt_dma_desc *desc)
+diff --git a/drivers/dma/ptdma/ptdma-dev.c b/drivers/dma/ptdma/ptdma-dev.c
+index 0162ecd..9815185 100644
+--- a/drivers/dma/ptdma/ptdma-dev.c
++++ b/drivers/dma/ptdma/ptdma-dev.c
+@@ -14,6 +14,7 @@
+ #include <linux/pci.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/interrupt.h>
++#include <linux/debugfs.h>
+ 
+ #include "ptdma.h"
+ 
+@@ -130,6 +131,23 @@ static void pt_del_device(struct pt_device *pt)
+ 	write_unlock_irqrestore(&pt_unit_lock, flags);
+ }
+ 
++/*
++ * pt_present - check if a PTDMA device is present
++ *
++ * Returns zero if a PTDMA device is present, -ENODEV otherwise.
++ */
++static int pt_present(void)
 +{
-+	/* Move current DMA descriptor to the complete list */
-+	if (desc)
-+		list_move(&desc->entry, &chan->complete);
-+
-+	/* Get the next DMA descriptor on the active list */
-+	desc = list_first_entry_or_null(&chan->active, struct pt_dma_desc,
-+					entry);
-+
-+	return desc;
-+}
-+
-+static struct pt_dma_desc *pt_handle_active_desc(struct pt_dma_chan *chan,
-+						 struct pt_dma_desc *desc)
-+{
-+	struct dma_async_tx_descriptor *tx_desc;
 +	unsigned long flags;
-+
-+	/* Loop over descriptors until one is found with commands */
-+	do {
-+		if (desc) {
-+			/* Remove the DMA command from the list and free it */
-+			pt_free_active_cmd(desc);
-+
-+			if (!list_empty(&desc->pending)) {
-+				/* No errors, keep going */
-+				if (desc->status != DMA_ERROR)
-+					return desc;
-+
-+				/* Error, free remaining commands and move on */
-+				pt_free_cmd_resources(desc->pt,
-+						      &desc->pending);
-+			}
-+
-+			tx_desc = &desc->tx_desc;
-+		} else {
-+			tx_desc = NULL;
-+		}
-+
-+		spin_lock_irqsave(&chan->lock, flags);
-+
-+		if (desc) {
-+			if (desc->status != DMA_ERROR)
-+				desc->status = DMA_COMPLETE;
-+
-+			dev_dbg(desc->pt->dev,
-+				"%s - tx %d complete, status=%u\n", __func__,
-+				desc->tx_desc.cookie, desc->status);
-+
-+			dma_cookie_complete(tx_desc);
-+			dma_descriptor_unmap(tx_desc);
-+		}
-+
-+		desc = __pt_next_dma_desc(chan, desc);
-+
-+		spin_unlock_irqrestore(&chan->lock, flags);
-+
-+		if (tx_desc) {
-+			dmaengine_desc_get_callback_invoke(tx_desc, NULL);
-+
-+			dma_run_dependencies(tx_desc);
-+		}
-+	} while (desc);
-+
-+	return NULL;
-+}
-+
-+static struct pt_dma_desc *__pt_pending_to_active(struct pt_dma_chan *chan)
-+{
-+	struct pt_dma_desc *desc;
-+
-+	if (list_empty(&chan->pending))
-+		return NULL;
-+
-+	desc = list_empty(&chan->active)
-+		? list_first_entry(&chan->pending, struct pt_dma_desc, entry)
-+		: NULL;
-+
-+	list_splice_tail_init(&chan->pending, &chan->active);
-+
-+	return desc;
-+}
-+
-+static void pt_cmd_callback(void *data, int err)
-+{
-+	struct pt_dma_desc *desc = data;
-+	struct pt_dma_chan *chan;
 +	int ret;
 +
-+	if (err == -EINPROGRESS)
-+		return;
++	read_lock_irqsave(&pt_unit_lock, flags);
++	ret = list_empty(&pt_units);
++	read_unlock_irqrestore(&pt_unit_lock, flags);
 +
-+	chan = container_of(desc->tx_desc.chan, struct pt_dma_chan,
-+			    dma_chan);
-+
-+	dev_dbg(chan->pt->dev, "%s - tx %d callback, err=%d\n",
-+		__func__, desc->tx_desc.cookie, err);
-+
-+	if (err)
-+		desc->status = DMA_ERROR;
-+
-+	while (true) {
-+		/* Check for DMA descriptor completion */
-+		desc = pt_handle_active_desc(chan, desc);
-+
-+		/* Don't submit cmd if no descriptor or DMA is paused */
-+		if (!desc || chan->status == DMA_PAUSED)
-+			break;
-+
-+		ret = pt_issue_next_cmd(desc);
-+		if (!ret)
-+			break;
-+
-+		desc->status = DMA_ERROR;
-+	}
-+
-+	tasklet_schedule(&chan->cleanup_tasklet);
++	return ret ? -ENODEV : 0;
 +}
 +
-+static dma_cookie_t pt_tx_submit(struct dma_async_tx_descriptor *tx_desc)
-+{
-+	struct pt_dma_desc *desc = container_of(tx_desc, struct pt_dma_desc,
-+						 tx_desc);
-+	struct pt_dma_chan *chan;
-+	dma_cookie_t cookie;
-+	unsigned long flags;
-+
-+	chan = container_of(tx_desc->chan, struct pt_dma_chan, dma_chan);
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+
-+	cookie = dma_cookie_assign(tx_desc);
-+	list_del(&desc->entry);
-+	list_add_tail(&desc->entry, &chan->pending);
-+
-+	spin_unlock_irqrestore(&chan->lock, flags);
-+
-+	dev_dbg(chan->pt->dev, "%s - added tx descriptor %d to pending list\n",
-+		__func__, cookie);
-+
-+	return cookie;
-+}
-+
-+static struct pt_dma_cmd *pt_alloc_dma_cmd(struct pt_dma_chan *chan)
-+{
-+	struct pt_dma_cmd *cmd;
-+
-+	cmd = kmem_cache_zalloc(chan->pt->dma_cmd_cache, GFP_NOWAIT);
-+
-+	return cmd;
-+}
-+
-+static struct pt_dma_desc *pt_alloc_dma_desc(struct pt_dma_chan *chan,
-+					     unsigned long flags)
-+{
-+	struct pt_dma_desc *desc;
-+
-+	desc = kmem_cache_zalloc(chan->pt->dma_desc_cache, GFP_NOWAIT);
-+	if (!desc)
-+		return NULL;
-+
-+	dma_async_tx_descriptor_init(&desc->tx_desc, &chan->dma_chan);
-+	desc->tx_desc.flags = flags;
-+	desc->tx_desc.tx_submit = pt_tx_submit;
-+	desc->pt = chan->pt;
-+	INIT_LIST_HEAD(&desc->pending);
-+	INIT_LIST_HEAD(&desc->active);
-+	desc->status = DMA_IN_PROGRESS;
-+
-+	return desc;
-+}
-+
-+static struct pt_dma_desc *pt_create_desc(struct dma_chan *dma_chan,
-+					  struct scatterlist *dst_sg,
-+					    unsigned int dst_nents,
-+					    struct scatterlist *src_sg,
-+					    unsigned int src_nents,
-+					    unsigned long flags)
-+{
-+	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
-+						 dma_chan);
-+	struct pt_device *pt = chan->pt;
-+	struct pt_dma_desc *desc;
-+	struct pt_dma_cmd *cmd;
-+	struct pt_cmd *pt_cmd;
-+	struct pt_passthru_engine *pt_engine;
-+	unsigned int src_offset, src_len;
-+	unsigned int dst_offset, dst_len;
-+	unsigned int len;
-+	unsigned long sflags;
-+	size_t total_len;
-+
-+	if (!dst_sg || !src_sg)
-+		return NULL;
-+
-+	if (!dst_nents || !src_nents)
-+		return NULL;
-+
-+	desc = pt_alloc_dma_desc(chan, flags);
-+	if (!desc)
-+		return NULL;
-+
-+	total_len = 0;
-+
-+	src_len = sg_dma_len(src_sg);
-+	src_offset = 0;
-+
-+	dst_len = sg_dma_len(dst_sg);
-+	dst_offset = 0;
-+
-+	while (true) {
-+		if (!src_len) {
-+			src_nents--;
-+			if (!src_nents)
-+				break;
-+
-+			src_sg = sg_next(src_sg);
-+			if (!src_sg)
-+				break;
-+
-+			src_len = sg_dma_len(src_sg);
-+			src_offset = 0;
-+			continue;
-+		}
-+
-+		if (!dst_len) {
-+			dst_nents--;
-+			if (!dst_nents)
-+				break;
-+
-+			dst_sg = sg_next(dst_sg);
-+			if (!dst_sg)
-+				break;
-+
-+			dst_len = sg_dma_len(dst_sg);
-+			dst_offset = 0;
-+			continue;
-+		}
-+
-+		len = min(dst_len, src_len);
-+
-+		cmd = pt_alloc_dma_cmd(chan);
-+		if (!cmd)
-+			goto err;
-+
-+		pt_cmd = &cmd->pt_cmd;
-+		pt_cmd->pt = chan->pt;
-+		pt_engine = &pt_cmd->passthru;
-+		pt_cmd->engine = PT_ENGINE_PASSTHRU;
-+		pt_engine->src_dma = sg_dma_address(src_sg) + src_offset;
-+		pt_engine->dst_dma = sg_dma_address(dst_sg) + dst_offset;
-+		pt_engine->src_len = len;
-+		pt_engine->final = 1;
-+		pt_cmd->pt_cmd_callback = pt_cmd_callback;
-+		pt_cmd->data = desc;
-+
-+		list_add_tail(&cmd->entry, &desc->pending);
-+
-+		dev_dbg(pt->dev,
-+			"%s - cmd=%p, src=%pad, dst=%pad, len=%llu\n", __func__,
-+			cmd, &pt_engine->src_dma,
-+			&pt_engine->dst_dma, pt_engine->src_len);
-+
-+		total_len += len;
-+
-+		src_len -= len;
-+		src_offset += len;
-+
-+		dst_len -= len;
-+		dst_offset += len;
-+	}
-+
-+	desc->len = total_len;
-+
-+	if (list_empty(&desc->pending))
-+		goto err;
-+
-+	dev_dbg(pt->dev, "%s - desc=%p\n", __func__, desc);
-+
-+	spin_lock_irqsave(&chan->lock, sflags);
-+
-+	list_add_tail(&desc->entry, &chan->created);
-+
-+	spin_unlock_irqrestore(&chan->lock, sflags);
-+
-+	return desc;
-+
-+err:
-+	pt_free_cmd_resources(pt, &desc->pending);
-+	kmem_cache_free(pt->dma_desc_cache, desc);
-+
-+	return NULL;
-+}
-+
-+static struct dma_async_tx_descriptor *
-+pt_prep_dma_memcpy(struct dma_chan *dma_chan, dma_addr_t dst,
-+		   dma_addr_t src, size_t len, unsigned long flags)
-+{
-+	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
-+						 dma_chan);
-+	struct pt_dma_desc *desc;
-+	struct scatterlist dst_sg, src_sg;
-+
-+	dev_dbg(chan->pt->dev,
-+		"%s - src=%pad, dst=%pad, len=%zu, flags=%#lx\n",
-+		__func__, &src, &dst, len, flags);
-+
-+	sg_init_table(&dst_sg, 1);
-+	sg_dma_address(&dst_sg) = dst;
-+	sg_dma_len(&dst_sg) = len;
-+
-+	sg_init_table(&src_sg, 1);
-+	sg_dma_address(&src_sg) = src;
-+	sg_dma_len(&src_sg) = len;
-+
-+	desc = pt_create_desc(dma_chan, &dst_sg, 1, &src_sg, 1, flags);
-+	if (!desc)
-+		return NULL;
-+
-+	return &desc->tx_desc;
-+}
-+
-+static struct dma_async_tx_descriptor *
-+pt_prep_dma_interrupt(struct dma_chan *dma_chan, unsigned long flags)
-+{
-+	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
-+						 dma_chan);
-+	struct pt_dma_desc *desc;
-+
-+	desc = pt_alloc_dma_desc(chan, flags);
-+	if (!desc)
-+		return NULL;
-+
-+	return &desc->tx_desc;
-+}
-+
-+static void pt_issue_pending(struct dma_chan *dma_chan)
-+{
-+	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
-+						 dma_chan);
-+	struct pt_dma_desc *desc;
-+	unsigned long flags;
-+
-+	dev_dbg(chan->pt->dev, "%s\n", __func__);
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+
-+	desc = __pt_pending_to_active(chan);
-+
-+	spin_unlock_irqrestore(&chan->lock, flags);
-+
-+	/* If there was nothing active, start processing */
-+	if (desc)
-+		pt_cmd_callback(desc, 0);
-+}
-+
-+static enum dma_status pt_tx_status(struct dma_chan *dma_chan,
-+				    dma_cookie_t cookie,
-+				    struct dma_tx_state *state)
-+{
-+	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
-+						 dma_chan);
-+	struct pt_dma_desc *desc;
-+	enum dma_status ret;
-+	unsigned long flags;
-+
-+	if (chan->status == DMA_PAUSED) {
-+		ret = DMA_PAUSED;
-+		goto out;
-+	}
-+
-+	ret = dma_cookie_status(dma_chan, cookie, state);
-+	if (ret == DMA_COMPLETE) {
-+		spin_lock_irqsave(&chan->lock, flags);
-+
-+		/* Get status from complete chain, if still there */
-+		list_for_each_entry(desc, &chan->complete, entry) {
-+			if (desc->tx_desc.cookie != cookie)
-+				continue;
-+
-+			ret = desc->status;
-+			break;
-+		}
-+
-+		spin_unlock_irqrestore(&chan->lock, flags);
-+	}
-+
-+out:
-+	dev_dbg(chan->pt->dev, "%s - %u\n", __func__, ret);
-+
-+	return ret;
-+}
-+
-+static int pt_pause(struct dma_chan *dma_chan)
-+{
-+	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
-+						 dma_chan);
-+
-+	chan->status = DMA_PAUSED;
-+
-+	/*TODO: Wait for active DMA to complete before returning? */
-+
-+	return 0;
-+}
-+
-+static int pt_resume(struct dma_chan *dma_chan)
-+{
-+	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
-+						 dma_chan);
-+	struct pt_dma_desc *desc;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+
-+	desc = list_first_entry_or_null(&chan->active, struct pt_dma_desc,
-+					entry);
-+
-+	spin_unlock_irqrestore(&chan->lock, flags);
-+
-+	/* Indicate the channel is running again */
-+	chan->status = DMA_IN_PROGRESS;
-+
-+	/* If there was something active, re-start */
-+	if (desc)
-+		pt_cmd_callback(desc, 0);
-+
-+	return 0;
-+}
-+
-+static int pt_terminate_all(struct dma_chan *dma_chan)
-+{
-+	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
-+						 dma_chan);
-+	unsigned long flags;
-+
-+	dev_dbg(chan->pt->dev, "%s\n", __func__);
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+
-+	pt_free_desc_resources(chan->pt, &chan->active);
-+	pt_free_desc_resources(chan->pt, &chan->pending);
-+	pt_free_desc_resources(chan->pt, &chan->created);
-+
-+	spin_unlock_irqrestore(&chan->lock, flags);
-+
-+	return 0;
-+}
-+
-+int pt_dmaengine_register(struct pt_device *pt)
-+{
-+	struct pt_dma_chan *chan;
-+	struct dma_device *dma_dev = &pt->dma_dev;
-+	struct dma_chan *dma_chan;
-+	char *dma_cmd_cache_name;
-+	char *dma_desc_cache_name;
-+	int ret;
-+
-+	pt->pt_dma_chan = devm_kcalloc(pt->dev, 1,
-+				       sizeof(*pt->pt_dma_chan),
-+				       GFP_KERNEL);
-+	if (!pt->pt_dma_chan)
-+		return -ENOMEM;
-+
-+	dma_cmd_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
-+					    "%s-dmaengine-cmd-cache",
-+					    pt->name);
-+	if (!dma_cmd_cache_name)
-+		return -ENOMEM;
-+
-+	pt->dma_cmd_cache = kmem_cache_create(dma_cmd_cache_name,
-+					      sizeof(struct pt_dma_cmd),
-+					      sizeof(void *),
-+					      SLAB_HWCACHE_ALIGN, NULL);
-+	if (!pt->dma_cmd_cache)
-+		return -ENOMEM;
-+
-+	dma_desc_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
-+					     "%s-dmaengine-desc-cache",
-+					     pt->name);
-+	if (!dma_desc_cache_name) {
-+		ret = -ENOMEM;
-+		goto err_cache;
-+	}
-+
-+	pt->dma_desc_cache = kmem_cache_create(dma_desc_cache_name,
-+					       sizeof(struct pt_dma_desc),
-+					       sizeof(void *),
-+					       SLAB_HWCACHE_ALIGN, NULL);
-+	if (!pt->dma_desc_cache) {
-+		ret = -ENOMEM;
-+		goto err_cache;
-+	}
-+
-+	dma_dev->dev = pt->dev;
-+	dma_dev->src_addr_widths = PT_DMA_WIDTH(dma_get_mask(pt->dev));
-+	dma_dev->dst_addr_widths = PT_DMA_WIDTH(dma_get_mask(pt->dev));
-+	dma_dev->directions = DMA_MEM_TO_MEM;
-+	dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
-+	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
-+	dma_cap_set(DMA_INTERRUPT, dma_dev->cap_mask);
-+	dma_cap_set(DMA_PRIVATE, dma_dev->cap_mask);
-+
-+	INIT_LIST_HEAD(&dma_dev->channels);
-+
-+	chan = pt->pt_dma_chan;
-+	dma_chan = &chan->dma_chan;
-+
-+	chan->pt = pt;
-+
-+	spin_lock_init(&chan->lock);
-+	INIT_LIST_HEAD(&chan->created);
-+	INIT_LIST_HEAD(&chan->pending);
-+	INIT_LIST_HEAD(&chan->active);
-+	INIT_LIST_HEAD(&chan->complete);
-+
-+	tasklet_init(&chan->cleanup_tasklet, pt_do_cleanup,
-+		     (unsigned long)chan);
-+
-+	dma_chan->device = dma_dev;
-+	dma_cookie_init(dma_chan);
-+
-+	list_add_tail(&dma_chan->device_node, &dma_dev->channels);
-+
-+	dma_dev->device_free_chan_resources = pt_free_chan_resources;
-+	dma_dev->device_prep_dma_memcpy = pt_prep_dma_memcpy;
-+	dma_dev->device_prep_dma_interrupt = pt_prep_dma_interrupt;
-+	dma_dev->device_issue_pending = pt_issue_pending;
-+	dma_dev->device_tx_status = pt_tx_status;
-+	dma_dev->device_pause = pt_pause;
-+	dma_dev->device_resume = pt_resume;
-+	dma_dev->device_terminate_all = pt_terminate_all;
-+
-+	ret = dma_async_device_register(dma_dev);
-+	if (ret)
-+		goto err_reg;
-+
-+	return 0;
-+
-+err_reg:
-+	kmem_cache_destroy(pt->dma_desc_cache);
-+
-+err_cache:
-+	kmem_cache_destroy(pt->dma_cmd_cache);
-+
-+	return ret;
-+}
-+
-+void pt_dmaengine_unregister(struct pt_device *pt)
-+{
-+	struct dma_device *dma_dev = &pt->dma_dev;
-+
-+	dma_async_device_unregister(dma_dev);
-+
-+	kmem_cache_destroy(pt->dma_desc_cache);
-+	kmem_cache_destroy(pt->dma_cmd_cache);
-+}
+ static int pt_core_execute_cmd(struct ptdma_desc *desc,
+ 			       struct pt_cmd_queue *cmd_q)
+ {
+@@ -173,6 +191,7 @@ int pt_core_perform_passthru(struct pt_cmd_queue *cmd_q,
+ 
+ 	cmd_q->cmd_error = 0;
+ 
++	cmd_q->total_pt_ops++;
+ 	memset(&desc, 0, Q_DESC_SIZE);
+ 
+ 	desc.dw0.val = CMD_DESC_DW0_VAL;
+@@ -205,6 +224,7 @@ static irqreturn_t pt_core_irq_handler(int irq, void *data)
+ 	u32 status;
+ 
+ 	pt_core_disable_queue_interrupts(pt);
++	pt->total_interrupts++;
+ 
+ 	status = ioread32(cmd_q->reg_interrupt_status);
+ 	if (status) {
+@@ -370,6 +390,9 @@ int pt_core_init(struct pt_device *pt)
+ 
+ 	tasklet_init(&pt->tasklet, pt_do_cmd_complete, (ulong)&pt->tdata);
+ 
++	/* Set up debugfs entries */
++	ptdma_debugfs_setup(pt);
++
+ 	return 0;
+ 
+ e_dmaengine:
+@@ -396,6 +419,9 @@ void pt_core_destroy(struct pt_device *pt)
+ 	/* Remove this device from the list of available units first */
+ 	pt_del_device(pt);
+ 
++	if (pt_present())
++		ptdma_debugfs_destroy();
++
+ 	/* Disable and clear interrupts */
+ 	pt_core_disable_queue_interrupts(pt);
+ 
 diff --git a/drivers/dma/ptdma/ptdma.h b/drivers/dma/ptdma/ptdma.h
-index 7cd1b0d..943660b 100644
+index 943660b..cbeed10 100644
 --- a/drivers/dma/ptdma/ptdma.h
 +++ b/drivers/dma/ptdma/ptdma.h
-@@ -20,6 +20,7 @@
- #include <linux/list.h>
- #include <linux/wait.h>
- #include <linux/dmapool.h>
-+#include <linux/dmaengine.h>
+@@ -45,6 +45,7 @@
+ #define	CMD_QUEUE_PRIO_OFFSET		0x00
+ #define	CMD_REQID_CONFIG_OFFSET		0x04
+ #define	CMD_TIMEOUT_OFFSET		0x08
++#define	CMD_PT_VERSION			0x10
  
- #define MAX_PT_NAME_LEN			16
- #define MAX_DMAPOOL_NAME_LEN	32
-@@ -177,6 +178,41 @@ struct pt_cmd {
- 	void *data;
- };
+ #define CMD_Q_CONTROL_BASE		0x0000
+ #define CMD_Q_TAIL_LO_BASE		0x0004
+@@ -252,6 +253,8 @@ struct pt_cmd_queue {
+ 	u32 q_int_status;
+ 	u32 cmd_error;
  
-+struct pt_dma_cmd {
-+	struct list_head entry;
-+	struct pt_cmd pt_cmd;
-+};
-+
-+struct pt_dma_desc {
-+	struct list_head entry;
-+
-+	struct pt_device *pt;
-+
-+	struct list_head pending;
-+	struct list_head active;
-+
-+	enum dma_status status;
-+	struct dma_async_tx_descriptor tx_desc;
-+	size_t len;
-+};
-+
-+struct pt_dma_chan {
-+	struct pt_device *pt;
-+
-+	/* channel lock */
-+	spinlock_t lock;
-+
-+	struct list_head created;
-+	struct list_head pending;
-+	struct list_head active;
-+	struct list_head complete;
-+
-+	struct tasklet_struct cleanup_tasklet;
-+
-+	enum dma_status status;
-+	struct dma_chan dma_chan;
-+};
-+
- struct pt_cmd_queue {
- 	struct pt_device *pt;
++	/* queue Statistics */
++	unsigned long total_pt_ops;
+ } ____cacheline_aligned;
  
-@@ -246,6 +282,12 @@ struct pt_device {
- 	 */
- 	struct pt_cmd_queue cmd_q;
+ struct pt_device {
+@@ -290,6 +293,12 @@ struct pt_device {
  
-+	/* Support for the DMA Engine capabilities */
-+	struct dma_device dma_dev;
-+	struct pt_dma_chan *pt_dma_chan;
-+	struct kmem_cache *dma_cmd_cache;
-+	struct kmem_cache *dma_desc_cache;
-+
  	wait_queue_head_t lsb_queue;
  
++	/* Device Statistics */
++	unsigned long total_interrupts;
++
++	/* DebugFS info */
++	struct dentry *debugfs_instance;
++
  	struct tasklet_struct tasklet;
-@@ -312,6 +354,9 @@ struct pt_dev_vdata {
- 	const unsigned int version;
+ 	struct pt_tasklet_data tdata;
  };
+@@ -357,6 +366,9 @@ struct pt_dev_vdata {
+ int pt_dmaengine_register(struct pt_device *pt);
+ void pt_dmaengine_unregister(struct pt_device *pt);
  
-+int pt_dmaengine_register(struct pt_device *pt);
-+void pt_dmaengine_unregister(struct pt_device *pt);
++void ptdma_debugfs_setup(struct pt_device *pt);
++void ptdma_debugfs_destroy(void);
 +
  int pt_core_init(struct pt_device *pt);
  void pt_core_destroy(struct pt_device *pt);

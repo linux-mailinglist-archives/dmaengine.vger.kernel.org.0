@@ -2,102 +2,158 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E7AA61435E5
-	for <lists+dmaengine@lfdr.de>; Tue, 21 Jan 2020 04:28:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA786143764
+	for <lists+dmaengine@lfdr.de>; Tue, 21 Jan 2020 08:00:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbgAUD2t (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 20 Jan 2020 22:28:49 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10108 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727009AbgAUD2s (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 20 Jan 2020 22:28:48 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 265DDF03C5BA81701639;
-        Tue, 21 Jan 2020 11:28:47 +0800 (CST)
-Received: from [127.0.0.1] (10.177.131.64) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 21 Jan 2020
- 11:28:43 +0800
-Subject: Re: [PATCH -next] dmaengine: fsl-qdma: fix duplicated argument to &&
-To:     Peng Ma <peng.ma@nxp.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>
-References: <20200120125843.34398-1-chenzhou10@huawei.com>
- <VI1PR04MB44314C51FA4C397F352C14C8ED0D0@VI1PR04MB4431.eurprd04.prod.outlook.com>
-CC:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <96b96dda-0fdc-bbc1-cdb8-b7d0f20940e7@huawei.com>
-Date:   Tue, 21 Jan 2020 11:28:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        id S1726729AbgAUHAb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 21 Jan 2020 02:00:31 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:37412 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgAUHAb (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 21 Jan 2020 02:00:31 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00L70RBA026879;
+        Tue, 21 Jan 2020 01:00:27 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579590027;
+        bh=UQBJCDZRnfhIDDJNLa9n5i9Wb+4Tvw6qRjtCAg/LL6E=;
+        h=From:To:CC:Subject:Date;
+        b=h5GGTdllqZQpx4QHql7o+6NsUE5IZDdZC01LWHwp5nSdOSpf92eLybPClG9wsD7QJ
+         ED6esDlH/kTh5UzYI8b8GE/dKdKBQxFZufyA6+1UlAdP/wZTJuRgHa9kuf7TqhtsNg
+         ktfOyd5dJ4xZKL9AJ9nkn1gZvAM35xb56uZutp9g=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00L70RvO123473
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 21 Jan 2020 01:00:27 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 21
+ Jan 2020 01:00:25 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 21 Jan 2020 01:00:25 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00L70NgB111713;
+        Tue, 21 Jan 2020 01:00:24 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <grygorii.strashko@ti.com>
+Subject: [PATCH] dmaengine: ti: k3-psil: Fix warnings with C=1 and W=1
+Date:   Tue, 21 Jan 2020 09:01:04 +0200
+Message-ID: <20200121070104.4393-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <VI1PR04MB44314C51FA4C397F352C14C8ED0D0@VI1PR04MB4431.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="gbk"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.131.64]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Peng,
+Fixes the following warnings:
+drivers/dma/ti/k3-psil-j721e.c:62:16: warning: symbol 'j721e_src_ep_map' was not declared. Should it be static?
+drivers/dma/ti/k3-psil-j721e.c:172:16: warning: symbol 'j721e_dst_ep_map' was not declared. Should it be static?
+drivers/dma/ti/k3-psil-j721e.c:216:20: warning: symbol 'j721e_ep_map' was not declared. Should it be static?
+  CC      drivers/dma/ti/k3-psil-j721e.o
+drivers/dma/ti/k3-psil-am654.c:52:16: warning: symbol 'am654_src_ep_map' was not declared. Should it be static?
+drivers/dma/ti/k3-psil-am654.c:127:16: warning: symbol 'am654_dst_ep_map' was not declared. Should it be static?
+drivers/dma/ti/k3-psil-am654.c:169:20: warning: symbol 'am654_ep_map' was not declared. Should it be static?
 
-On 2020/1/21 10:54, Peng Ma wrote:
-> 
-> 
->> -----Original Message-----
->> From: Chen Zhou <chenzhou10@huawei.com>
->> Sent: 2020Äê1ÔÂ20ÈÕ 20:59
->> To: dan.j.williams@intel.com; vkoul@kernel.org
->> Cc: Peng Ma <peng.ma@nxp.com>; Wen He <wen.he_1@nxp.com>;
->> jiaheng.fan@nxp.com; dmaengine@vger.kernel.org;
->> linux-kernel@vger.kernel.org; chenzhou10@huawei.com
->> Subject: [PATCH -next] dmaengine: fsl-qdma: fix duplicated argument to &&
->>
->> There is duplicated argument to && in function fsl_qdma_free_chan_resources,
->> which looks like a typo, pointer fsl_queue->desc_pool also needs NULL check,
->> fix it.
->> Detected with coccinelle.
->>
-> What does the " coccinelle " mean here?
+Reported-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+Hi Vinod,
 
-The scripts in kernel dir, that is coccicheck.
+Thanks for catching it!
 
-Thanks,
-Chen Zhou
+This is on top of the v8 series.
 
-> 
->> Fixes: b092529e0aa0 ("dmaengine: fsl-qdma: Add qDMA controller driver for
->> Layerscape SoCs")
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> ---
->> drivers/dma/fsl-qdma.c | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c index
->> 8979208..95cc025 100644
->> --- a/drivers/dma/fsl-qdma.c
->> +++ b/drivers/dma/fsl-qdma.c
->> @@ -304,7 +304,7 @@ static void fsl_qdma_free_chan_resources(struct
->> dma_chan *chan)
->>
->> 	vchan_dma_desc_free_list(&fsl_chan->vchan, &head);
->>
->> -	if (!fsl_queue->comp_pool && !fsl_queue->comp_pool)
->> +	if (!fsl_queue->comp_pool && !fsl_queue->desc_pool)
->> 		return;
->>
-> Hi Chen,
-> 
-> Thanks very much for your patch, It is really need to check comp_pool and desc_pool here.
-> Reviewed-by: Peng Ma <peng.ma@nxp.com>
-> Tested-by: Peng Ma <peng.ma@nxp.com>
-> 
-> BR,
-> Peng
->> 	list_for_each_entry_safe(comp_temp, _comp_temp,
->> --
->> 2.7.4
-> 
+Regards,
+Peter
+
+ drivers/dma/ti/k3-psil-am654.c | 4 ++--
+ drivers/dma/ti/k3-psil-j721e.c | 4 ++--
+ drivers/dma/ti/k3-psil-priv.h  | 4 ++++
+ drivers/dma/ti/k3-psil.c       | 3 ---
+ 4 files changed, 8 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/dma/ti/k3-psil-am654.c b/drivers/dma/ti/k3-psil-am654.c
+index 7da9242b6114..a896a15908cf 100644
+--- a/drivers/dma/ti/k3-psil-am654.c
++++ b/drivers/dma/ti/k3-psil-am654.c
+@@ -49,7 +49,7 @@
+ 	}
+ 
+ /* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
+-struct psil_ep am654_src_ep_map[] = {
++static struct psil_ep am654_src_ep_map[] = {
+ 	/* SA2UL */
+ 	PSIL_SA2UL(0x4000, 0),
+ 	PSIL_SA2UL(0x4001, 0),
+@@ -124,7 +124,7 @@ struct psil_ep am654_src_ep_map[] = {
+ };
+ 
+ /* PSI-L destination thread IDs, used for TX (DMA_MEM_TO_DEV) */
+-struct psil_ep am654_dst_ep_map[] = {
++static struct psil_ep am654_dst_ep_map[] = {
+ 	/* SA2UL */
+ 	PSIL_SA2UL(0xc000, 1),
+ 	PSIL_SA2UL(0xc001, 1),
+diff --git a/drivers/dma/ti/k3-psil-j721e.c b/drivers/dma/ti/k3-psil-j721e.c
+index a609d496fddd..e3cfd5f66842 100644
+--- a/drivers/dma/ti/k3-psil-j721e.c
++++ b/drivers/dma/ti/k3-psil-j721e.c
+@@ -59,7 +59,7 @@
+ 	}
+ 
+ /* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
+-struct psil_ep j721e_src_ep_map[] = {
++static struct psil_ep j721e_src_ep_map[] = {
+ 	/* SA2UL */
+ 	PSIL_SA2UL(0x4000, 0),
+ 	PSIL_SA2UL(0x4001, 0),
+@@ -169,7 +169,7 @@ struct psil_ep j721e_src_ep_map[] = {
+ };
+ 
+ /* PSI-L destination thread IDs, used for TX (DMA_MEM_TO_DEV) */
+-struct psil_ep j721e_dst_ep_map[] = {
++static struct psil_ep j721e_dst_ep_map[] = {
+ 	/* SA2UL */
+ 	PSIL_SA2UL(0xc000, 1),
+ 	PSIL_SA2UL(0xc001, 1),
+diff --git a/drivers/dma/ti/k3-psil-priv.h b/drivers/dma/ti/k3-psil-priv.h
+index f74420653d8a..a1f389ca371e 100644
+--- a/drivers/dma/ti/k3-psil-priv.h
++++ b/drivers/dma/ti/k3-psil-priv.h
+@@ -36,4 +36,8 @@ struct psil_ep_map {
+ 
+ struct psil_endpoint_config *psil_get_ep_config(u32 thread_id);
+ 
++/* SoC PSI-L endpoint maps */
++extern struct psil_ep_map am654_ep_map;
++extern struct psil_ep_map j721e_ep_map;
++
+ #endif /* K3_PSIL_PRIV_H_ */
+diff --git a/drivers/dma/ti/k3-psil.c b/drivers/dma/ti/k3-psil.c
+index 9314cf9a52e4..d7b965049ccb 100644
+--- a/drivers/dma/ti/k3-psil.c
++++ b/drivers/dma/ti/k3-psil.c
+@@ -12,9 +12,6 @@
+ 
+ #include "k3-psil-priv.h"
+ 
+-extern struct psil_ep_map am654_ep_map;
+-extern struct psil_ep_map j721e_ep_map;
+-
+ static DEFINE_MUTEX(ep_map_mutex);
+ static struct psil_ep_map *soc_ep_map;
+ 
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 

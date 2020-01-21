@@ -2,99 +2,71 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DD53143991
-	for <lists+dmaengine@lfdr.de>; Tue, 21 Jan 2020 10:35:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36C3B143987
+	for <lists+dmaengine@lfdr.de>; Tue, 21 Jan 2020 10:33:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbgAUJe2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 21 Jan 2020 04:34:28 -0500
-Received: from xavier.telenet-ops.be ([195.130.132.52]:37226 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729107AbgAUJeQ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 21 Jan 2020 04:34:16 -0500
-Received: from ramsan ([84.195.182.253])
-        by xavier.telenet-ops.be with bizsmtp
-        id sxaD2100H5USYZQ01xaDZk; Tue, 21 Jan 2020 10:34:14 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1itpvI-0008IS-FH; Tue, 21 Jan 2020 10:34:12 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1itpuM-0007Sy-3L; Tue, 21 Jan 2020 10:33:14 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
+        id S1728682AbgAUJd5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 21 Jan 2020 04:33:57 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45102 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727220AbgAUJd5 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 21 Jan 2020 04:33:57 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 59so2300193otp.12;
+        Tue, 21 Jan 2020 01:33:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qj5VbwsxDuvi6Lzh2JzA8IRCPYG3njmnwC8KpSoN7Fo=;
+        b=Q9ddjvG4F10/oPJhrPZSLZPl6xpzubsP5a8MauU8U0mMqPWquJJzUAabI9Gl3b6rL6
+         VCPEgd+xdTbYILya/UjEreEu1bXHZMZzWq2k0/vMxEOstyNG1hmY4DNgPzwtstZxKBae
+         gacOGmoHEevTWHZsU3ed1U+9UlkjdUmfBRa5M69t5XEZ7FDiLNDME5VaZ2N6/3bNLwaE
+         nNyVVzckUOZ6pLkpnDREzzpZIAiSUu8FzqVsTC/zqrPvsMWMZIUyKtR09BNXJQRWGL5A
+         ZS56toNZyLztXImgxOP/jRi1NBgUfPgIkSCizYvkJDdQiiF50XNUhX+NZTWEsNIZ0a4w
+         yyqA==
+X-Gm-Message-State: APjAAAVRYtFmDCsBBdA27Lq6xXIES/c+Ayavn98j4Em3bOVLKGtwwHYP
+        7H1VgBT2JIFor5ZeXSsf8zCtlGAn0AJUZ8lZHr4=
+X-Google-Smtp-Source: APXvYqxhBfAirvha1jNyHcG9Wj357aKqFNFvum/Vm4ne3rqK1ZgfHgEvQ8rv4ewYeH7Yc9GdPstY3m6KPf+b0CnOlwk=
+X-Received: by 2002:a9d:dc1:: with SMTP id 59mr2869459ots.250.1579599236621;
+ Tue, 21 Jan 2020 01:33:56 -0800 (PST)
+MIME-Version: 1.0
+References: <20200117152933.31175-1-geert+renesas@glider.be> <20200121092303.GI2841@vkoul-mobl>
+In-Reply-To: <20200121092303.GI2841@vkoul-mobl>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 21 Jan 2020 10:33:45 +0100
+Message-ID: <CAMuHMdW39YMNixAkCKZexE2QZNxy5HoMGNtMGtRJ5n5rR-3FHA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] dmaengine: Miscellaneous cleanups
 To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Dan Williams <dan.j.williams@intel.com>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Matt Porter <mporter@konsulko.com>,
         Arnd Bergmann <arnd@arndb.de>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 3/3] dmaengine: Move dma_get_{,any_}slave_channel() to private dmaengine.h
-Date:   Tue, 21 Jan 2020 10:33:11 +0100
-Message-Id: <20200121093311.28639-4-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200121093311.28639-1-geert+renesas@glider.be>
-References: <20200121093311.28639-1-geert+renesas@glider.be>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The functions dma_get_slave_channel() and dma_get_any_slave_channel()
-are called from DMA engine drivers only.  Hence move their declarations
-from the public header file <linux/dmaengine.h> to the private header
-file drivers/dma/dmaengine.h.
+Hi Vinod,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
----
-v2:
-  - Add Acked-by,
-  - Rebase on top of today's slave-dma/next.
----
- drivers/dma/dmaengine.h   | 3 +++
- drivers/dma/of-dma.c      | 2 ++
- include/linux/dmaengine.h | 2 --
- 3 files changed, 5 insertions(+), 2 deletions(-)
+On Tue, Jan 21, 2020 at 10:23 AM Vinod Koul <vkoul@kernel.org> wrote:
+> On 17-01-20, 16:29, Geert Uytterhoeven wrote:
+> > This patch series contains a few miscellaneous cleanups for the DMA
+> > engine code and API.
+>
+> This looks good, thanks for the cleanup. But it fails to apply, can you
+> please rebase and resend
 
-diff --git a/drivers/dma/dmaengine.h b/drivers/dma/dmaengine.h
-index b0b97475707a789f..e8a320c9e57c2d74 100644
---- a/drivers/dma/dmaengine.h
-+++ b/drivers/dma/dmaengine.h
-@@ -179,4 +179,7 @@ dmaengine_desc_callback_valid(struct dmaengine_desc_callback *cb)
- 	return (cb->callback) ? true : false;
- }
- 
-+struct dma_chan *dma_get_slave_channel(struct dma_chan *chan);
-+struct dma_chan *dma_get_any_slave_channel(struct dma_device *device);
-+
- #endif
-diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
-index c2d779daa4b51ac8..b2c2b5e8093cf0d7 100644
---- a/drivers/dma/of-dma.c
-+++ b/drivers/dma/of-dma.c
-@@ -15,6 +15,8 @@
- #include <linux/of.h>
- #include <linux/of_dma.h>
- 
-+#include "dmaengine.h"
-+
- static LIST_HEAD(of_dma_list);
- static DEFINE_MUTEX(of_dma_lock);
- 
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 230d50ef7360ecee..9cc0e70e7c3543a9 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -1522,8 +1522,6 @@ int dma_async_device_register(struct dma_device *device);
- int dmaenginem_async_device_register(struct dma_device *device);
- void dma_async_device_unregister(struct dma_device *device);
- void dma_run_dependencies(struct dma_async_tx_descriptor *tx);
--struct dma_chan *dma_get_slave_channel(struct dma_chan *chan);
--struct dma_chan *dma_get_any_slave_channel(struct dma_device *device);
- #define dma_request_channel(mask, x, y) \
- 	__dma_request_channel(&(mask), x, y, NULL)
- 
+Done.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds

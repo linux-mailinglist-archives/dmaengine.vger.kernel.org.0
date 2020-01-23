@@ -2,93 +2,139 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 055A01466E1
-	for <lists+dmaengine@lfdr.de>; Thu, 23 Jan 2020 12:36:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EBD51467D8
+	for <lists+dmaengine@lfdr.de>; Thu, 23 Jan 2020 13:23:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgAWLgx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 23 Jan 2020 06:36:53 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:38607 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726584AbgAWLgw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 23 Jan 2020 06:36:52 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iuan3-0008M3-MY; Thu, 23 Jan 2020 11:36:49 +0000
-Subject: Re: [PATCH] dmaengine: fix spelling mistake "to" -> "too"
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, dmaengine@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200123092359.10714-1-colin.king@canonical.com>
- <20200123113522.GY2841@vkoul-mobl>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <37684969-d807-7dfd-3a9f-4d0ee86f408d@canonical.com>
-Date:   Thu, 23 Jan 2020 11:36:49 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726191AbgAWMXX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 23 Jan 2020 07:23:23 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:41670 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbgAWMXX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 23 Jan 2020 07:23:23 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2AC8F2E5;
+        Thu, 23 Jan 2020 13:23:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1579782201;
+        bh=nqoOyuzteAsp3JCuE6CUyoS3sknJ6Ys+4mWrHCizbvg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XiDP0bHMR2IKhhhQzEO5yDQNURys5I7cRmx3RhjgQg2m2hulVRdRmsm8yqabWykSn
+         vaodX241eWs1kpKn0XEZdp7JBxrAYFS6XRWriVMxO/DJDJ/yLC7QjUQzoe44ewHAO+
+         2yZwpSdleDN1HU1ueJldxNqiHdxY58W5TMrxwD9M=
+Date:   Thu, 23 Jan 2020 14:23:04 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Michal Simek <michal.simek@xilinx.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Tejas Upadhyay <tejasu@xilinx.com>,
+        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
+Subject: Re: [PATCH v3 2/6] dmaengine: Add interleaved cyclic transaction type
+Message-ID: <20200123122304.GB13922@pendragon.ideasonboard.com>
+References: <20200123022939.9739-1-laurent.pinchart@ideasonboard.com>
+ <20200123022939.9739-3-laurent.pinchart@ideasonboard.com>
+ <2f3a9e9e-9b74-7c2e-de3a-4897ab0e8205@ti.com>
+ <20200123084352.GU2841@vkoul-mobl>
+ <88aa9920-cdaf-97f0-c36f-66a998860ed2@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200123113522.GY2841@vkoul-mobl>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <88aa9920-cdaf-97f0-c36f-66a998860ed2@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 23/01/2020 11:35, Vinod Koul wrote:
-> On 23-01-20, 09:23, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> There is a spelling mistake in a dev_err message. Fix it.
+Hello,
+
+On Thu, Jan 23, 2020 at 10:51:42AM +0200, Peter Ujfalusi wrote:
+> On 23/01/2020 10.43, Vinod Koul wrote:
+> > On 23-01-20, 10:03, Peter Ujfalusi wrote:
+> >> On 23/01/2020 4.29, Laurent Pinchart wrote:
+> >>> The new interleaved cyclic transaction type combines interleaved and
+> >>> cycle transactions. It is designed for DMA engines that back display
+> >>> controllers, where the same 2D frame needs to be output to the display
+> >>> until a new frame is available.
+> >>>
+> >>> Suggested-by: Vinod Koul <vkoul@kernel.org>
+> >>> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >>> ---
+> >>>  drivers/dma/dmaengine.c   |  8 +++++++-
+> >>>  include/linux/dmaengine.h | 18 ++++++++++++++++++
+> >>>  2 files changed, 25 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> >>> index 03ac4b96117c..4ffb98a47f31 100644
+> >>> --- a/drivers/dma/dmaengine.c
+> >>> +++ b/drivers/dma/dmaengine.c
+> >>> @@ -981,7 +981,13 @@ int dma_async_device_register(struct dma_device *device)
+> >>>  			"DMA_INTERLEAVE");
+> >>>  		return -EIO;
+> >>>  	}
+> >>> -
+> >>> +	if (dma_has_cap(DMA_INTERLEAVE_CYCLIC, device->cap_mask) &&
+> >>> +	    !device->device_prep_interleaved_cyclic) {
+> >>> +		dev_err(device->dev,
+> >>> +			"Device claims capability %s, but op is not defined\n",
+> >>> +			"DMA_INTERLEAVE_CYCLIC");
+> >>> +		return -EIO;
+> >>> +	}
+> >>>  
+> >>>  	if (!device->device_tx_status) {
+> >>>  		dev_err(device->dev, "Device tx_status is not defined\n");
+> >>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> >>> index 8fcdee1c0cf9..e9af3bf835cb 100644
+> >>> --- a/include/linux/dmaengine.h
+> >>> +++ b/include/linux/dmaengine.h
+> >>> @@ -61,6 +61,7 @@ enum dma_transaction_type {
+> >>>  	DMA_SLAVE,
+> >>>  	DMA_CYCLIC,
+> >>>  	DMA_INTERLEAVE,
+> >>> +	DMA_INTERLEAVE_CYCLIC,
+> >>>  /* last transaction type for creation of the capabilities mask */
+> >>>  	DMA_TX_TYPE_END,
+> >>>  };
+> >>> @@ -701,6 +702,10 @@ struct dma_filter {
+> >>>   *	The function takes a buffer of size buf_len. The callback function will
+> >>>   *	be called after period_len bytes have been transferred.
+> >>>   * @device_prep_interleaved_dma: Transfer expression in a generic way.
+> >>> + * @device_prep_interleaved_cyclic: prepares an interleaved cyclic transfer.
+> >>> + *	This is similar to @device_prep_interleaved_dma, but the transfer is
+> >>> + *	repeated until a new transfer is issued. This transfer type is meant
+> >>> + *	for display.
+> >>
+> >> I think capture (camera) is another potential beneficiary of this.
+
+Possibly, although in the camera case I'd rather have the hardware stop
+if there's no more buffer. Requiring a buffer to always be present is
+annoying from a userspace point of view. For display it's different, if
+userspace doesn't submit a new frame, the same frame should keep being
+displayed on the screen.
+
+> >> So you don't need to terminate the running interleaved_cyclic and start
+> >> a new one, but prepare and issue a new one, which would
+> >> terminate/replace the currently running cyclic interleaved DMA?
+
+Correct.
+
+> > Why not explicitly terminate the transfer and start when a new one is
+> > issued. That can be common usage for audio and display..
 > 
-> You had sent this earlier, I have picked that one already!
+> Yes, this is what I'm asking. The cyclic transfer is running and in
+> order to start the new transfer, the previous should stop. But in cyclic
+> case it is not going to happen unless it is terminated.
 > 
-Oops. I'm going mad.
+> When one would want to have different interleaved transfer the display
+> (or capture )IP needs to be reconfigured as well. The the would need to
+> be terminated anyways to avoid interpreting data in a wrong way.
+
+The use case here is not to switch to a new configuration, but to switch
+to a new buffer. If the transfer had to be terminated manually first,
+the DMA engine would potentially miss a frame, which is not acceptable.
+We need an atomic way to switch to the next transfer.
+
+-- 
+Regards,
+
+Laurent Pinchart

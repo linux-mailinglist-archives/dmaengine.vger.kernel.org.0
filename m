@@ -2,78 +2,101 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B6497146027
-	for <lists+dmaengine@lfdr.de>; Thu, 23 Jan 2020 02:01:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60E241460B8
+	for <lists+dmaengine@lfdr.de>; Thu, 23 Jan 2020 03:30:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbgAWBBm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 22 Jan 2020 20:01:42 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:52871 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgAWBBm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Jan 2020 20:01:42 -0500
-Received: from [82.43.126.140] (helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iuQsI-00089p-FT; Thu, 23 Jan 2020 01:01:34 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-hams@vger.kernel.org, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net/rose: fix spelling mistake "to" -> "too"
-Date:   Thu, 23 Jan 2020 01:01:33 +0000
-Message-Id: <20200123010133.2834467-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
+        id S1725989AbgAWCaB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 22 Jan 2020 21:30:01 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:59046 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgAWCaB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Jan 2020 21:30:01 -0500
+Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E81762E5;
+        Thu, 23 Jan 2020 03:29:58 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1579746599;
+        bh=hL+ZJjJl57D49P6/L6YtuMuonqe2sTZf+JuEqSRp1MM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=DDrPzAFGj9ovxzzWxQ4wtBsCruyt4U5AEuozjqfaZBuZwHkOywnK+S7cmYGjbJEgz
+         2Ns70QscNVI+NgQDG/AY8MpgVWn+a4QWb6JIl5xQKBKCavbfoAwbQ0Ho5JD6+JLyoa
+         Qija8cf3JUGenMRIYMRbKTptVwkdc8h1S6Qcf558=
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     dmaengine@vger.kernel.org
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Tejas Upadhyay <tejasu@xilinx.com>,
+        Satish Kumar Nagireddy <SATISHNA@xilinx.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v3 0/6] dma: Add Xilinx ZynqMP DPDMA driver
+Date:   Thu, 23 Jan 2020 04:29:33 +0200
+Message-Id: <20200123022939.9739-1-laurent.pinchart@ideasonboard.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hello,
 
-There is a spelling mistake in a printk message. Fix it.
+This patch series adds a new driver for the DPDMA engine found in the
+Xilinx ZynqMP.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/dma/s3c24xx-dma.c | 2 +-
- net/rose/af_rose.c        | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+The previous version can be found at [1]. All review comments have been
+taken into account. The most notable changes are
 
-diff --git a/drivers/dma/s3c24xx-dma.c b/drivers/dma/s3c24xx-dma.c
-index 8e14c72d03f0..63f1453ca250 100644
---- a/drivers/dma/s3c24xx-dma.c
-+++ b/drivers/dma/s3c24xx-dma.c
-@@ -826,7 +826,7 @@ static struct dma_async_tx_descriptor *s3c24xx_dma_prep_memcpy(
- 			len, s3cchan->name);
- 
- 	if ((len & S3C24XX_DCON_TC_MASK) != len) {
--		dev_err(&s3cdma->pdev->dev, "memcpy size %zu to large\n", len);
-+		dev_err(&s3cdma->pdev->dev, "memcpy size %zu too large\n", len);
- 		return NULL;
- 	}
- 
-diff --git a/net/rose/af_rose.c b/net/rose/af_rose.c
-index 46b8ff24020d..1e8eeb044b07 100644
---- a/net/rose/af_rose.c
-+++ b/net/rose/af_rose.c
-@@ -1475,7 +1475,7 @@ static int __init rose_proto_init(void)
- 	int rc;
- 
- 	if (rose_ndevs > 0x7FFFFFFF/sizeof(struct net_device *)) {
--		printk(KERN_ERR "ROSE: rose_proto_init - rose_ndevs parameter to large\n");
-+		printk(KERN_ERR "ROSE: rose_proto_init - rose_ndevs parameter too large\n");
- 		rc = -EINVAL;
- 		goto out;
- 	}
+- Introduction of a new DMA transfer type that combines interleaved and
+  cyclic tranfers (patch 2/6, suggested by Vinod)
+
+- Switch to virt-dma (including a drive-by lockdep addition to virt-dma
+  in patch 3/6)
+
+- Removal of all non-interleaved, non-cyclic transfer types, as I have
+  currently no way to test them given how the IP core is integrated in
+  the hardware. Support for non-interleaved cyclic transfers may be
+  added later for audio.
+
+The driver has been successfully tested with the ZynqMP DisplayPort
+subsystem DRM driver.
+
+Vinod, please let me know if you would like authorship of patch 2/6 to
+be assigned to you, in which case I will need your SoB line.
+
+[1] https://lore.kernel.org/dmaengine/20191107021400.16474-1-laurent.pinchart@ideasonboard.com/
+
+Hyun Kwon (1):
+  dmaengine: xilinx: dpdma: Add the Xilinx DisplayPort DMA engine driver
+
+Laurent Pinchart (5):
+  dt: bindings: dma: xilinx: dpdma: DT bindings for Xilinx DPDMA
+  dmaengine: Add interleaved cyclic transaction type
+  dmaengine: virt-dma: Use lockdep to check locking requirements
+  dmaengine: xilinx: dpdma: Add debugfs support
+  arm64: dts: zynqmp: Add DPDMA node
+
+ .../dma/xilinx/xlnx,zynqmp-dpdma.yaml         |   68 +
+ MAINTAINERS                                   |    9 +
+ arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi    |    4 +
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi        |   10 +
+ drivers/dma/Kconfig                           |   10 +
+ drivers/dma/dmaengine.c                       |    8 +-
+ drivers/dma/virt-dma.c                        |    2 +
+ drivers/dma/virt-dma.h                        |   14 +
+ drivers/dma/xilinx/Makefile                   |    1 +
+ drivers/dma/xilinx/xilinx_dpdma.c             | 1754 +++++++++++++++++
+ include/dt-bindings/dma/xlnx-zynqmp-dpdma.h   |   16 +
+ include/linux/dmaengine.h                     |   18 +
+ 12 files changed, 1913 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+ create mode 100644 drivers/dma/xilinx/xilinx_dpdma.c
+ create mode 100644 include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
+
+
+base-commit: d1eef1c619749b2a57e514a3fa67d9a516ffa919
 -- 
-2.24.0
+Regards,
+
+Laurent Pinchart
 

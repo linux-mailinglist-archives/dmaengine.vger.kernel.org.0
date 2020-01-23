@@ -2,139 +2,143 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EBD51467D8
-	for <lists+dmaengine@lfdr.de>; Thu, 23 Jan 2020 13:23:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2021B146AA2
+	for <lists+dmaengine@lfdr.de>; Thu, 23 Jan 2020 15:03:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgAWMXX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 23 Jan 2020 07:23:23 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:41670 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgAWMXX (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 23 Jan 2020 07:23:23 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2AC8F2E5;
-        Thu, 23 Jan 2020 13:23:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1579782201;
-        bh=nqoOyuzteAsp3JCuE6CUyoS3sknJ6Ys+4mWrHCizbvg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XiDP0bHMR2IKhhhQzEO5yDQNURys5I7cRmx3RhjgQg2m2hulVRdRmsm8yqabWykSn
-         vaodX241eWs1kpKn0XEZdp7JBxrAYFS6XRWriVMxO/DJDJ/yLC7QjUQzoe44ewHAO+
-         2yZwpSdleDN1HU1ueJldxNqiHdxY58W5TMrxwD9M=
-Date:   Thu, 23 Jan 2020 14:23:04 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Michal Simek <michal.simek@xilinx.com>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Tejas Upadhyay <tejasu@xilinx.com>,
-        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
-Subject: Re: [PATCH v3 2/6] dmaengine: Add interleaved cyclic transaction type
-Message-ID: <20200123122304.GB13922@pendragon.ideasonboard.com>
-References: <20200123022939.9739-1-laurent.pinchart@ideasonboard.com>
- <20200123022939.9739-3-laurent.pinchart@ideasonboard.com>
- <2f3a9e9e-9b74-7c2e-de3a-4897ab0e8205@ti.com>
- <20200123084352.GU2841@vkoul-mobl>
- <88aa9920-cdaf-97f0-c36f-66a998860ed2@ti.com>
+        id S1728057AbgAWODI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 23 Jan 2020 09:03:08 -0500
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:22605 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbgAWODI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 23 Jan 2020 09:03:08 -0500
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="Tudor.Ambarus@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: wJFLhp0KtSYkzVWYxNCfEkJwW1O5jVtN8S1EzBBUOAFbUkp009wRfMDqfQitgWf//gOnWCVMWj
+ wjm3fzC5ncIdu1oH6mpdmTsjrUyRhY7xGm91C0tF2WEMS/BNfpVwvF87jtmPF3LHWuihaShJqq
+ AJpAj3J+Qkvhw/2J5pAdijAnrkCEWS0azkZgIg2lC7CL+hLu8wqvpjImBS/solKpX+FKsLa2HA
+ 1pKJsMrYnaN6oEH7pKpOBojbpshM4c4fyzio1vnmoRSMAH339VCELb3cGe1zfese0OIwEnmO3C
+ 40I=
+X-IronPort-AV: E=Sophos;i="5.70,354,1574146800"; 
+   d="scan'208";a="62879867"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Jan 2020 07:03:07 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 23 Jan 2020 07:03:06 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Thu, 23 Jan 2020 07:03:06 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fu+gjaGMnnW+0/HAXJBntc36dYhyjuSR7r0WjNfQxH1WjADJIEbC6chlqimZEp7ooGLW36eJyaqZscIXzNs9qpwpQKsRB7lv9ed4suk7FqVLP9ALDbks4lAAyteR0tfB8ygQ9jw6cJ0oZTFS5QONkRZ5xqFMSxU9aWYFx6Sr8kYliiubj1uaqM1fXeydXPhqDPNdZu99fC/2N30xLqMzFhNiq4UlW2VFnh4KUS9Qm7C0QxwALwvgMaDd2AADh71KnN4Aie0Hz/GMo9fTLF89WHgUw3NmfBSJgaopC2viDD1KH+4sHO8WAqQfEYlPhg2UaIjQ1w3p8P/rtpSoeCD4/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NkT8JJetRMdDwVGPcWOgCt77LA+s0kNgmTWF9ltJLnA=;
+ b=iDsceVSWLExJAMVUXMKCfNDqQBlTFqZYsu8MHKZzyquu30bmEf1Kkbmy9kQ2H5DTDRPPuTxTD3ii2FHlDnDHozz5Tp/e/pSBghlVkvC5dk433JdRv5R3Cjnjai53BMA/SEppoeaqg9qE/FR5olRsg8ZZrAnTDEXXroVQUlQZVLgO9Wih1sQGvvT73pv2pMBKVP45ih5qNbJJon5ERBsXC6yN7Wm8KOAPDFBJPj/WAqzcwkqnfwLz8NIkglJYfTZ1/JHlywhPMH+S2qcpnLMbLQsGaJdZY3DvZ+Y/eUq545eTSGRoPb8maggVpWAaWGjF+UhPqjvDJW1MCBF2RapTcw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NkT8JJetRMdDwVGPcWOgCt77LA+s0kNgmTWF9ltJLnA=;
+ b=TcP3lEOLVmXM6syYVt/hyj5GAJ/xFQiJvczFjn0Qn3X3BtOuwFvR/g+OfDfesl6M5HRFoGvvhN8pknus5VYyNROV5MWJQbpe3uyb2EyeA2CdtVAn6HGtsk0n+Nj5YhjjDnQX78QnyHnq8BljKnBwsNA2RGwLsyajA9kU62RYByU=
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
+ MN2PR11MB3582.namprd11.prod.outlook.com (20.178.251.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.20; Thu, 23 Jan 2020 14:03:03 +0000
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::3c8f:7a55:cbd:adfb]) by MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::3c8f:7a55:cbd:adfb%5]) with mapi id 15.20.2644.027; Thu, 23 Jan 2020
+ 14:03:02 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <Ludovic.Desroches@microchip.com>, <dan.j.williams@intel.com>,
+        <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <Tudor.Ambarus@microchip.com>
+Subject: [PATCH 01/10] dmaengine: at_hdmac: Substitute kzalloc with kmalloc
+Thread-Topic: [PATCH 01/10] dmaengine: at_hdmac: Substitute kzalloc with
+ kmalloc
+Thread-Index: AQHV0fXTyMvfeqBPZU6BecAiUKnxHg==
+Date:   Thu, 23 Jan 2020 14:03:02 +0000
+Message-ID: <20200123140237.125799-1-tudor.ambarus@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 94ab9cfb-6b7d-41f1-10f3-08d7a00cf661
+x-ms-traffictypediagnostic: MN2PR11MB3582:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR11MB3582259EC4C688BC3AC7C655F00F0@MN2PR11MB3582.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 029174C036
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(366004)(39860400002)(136003)(189003)(199004)(2616005)(6486002)(316002)(26005)(36756003)(4326008)(81156014)(186003)(54906003)(110136005)(81166006)(6512007)(5660300002)(478600001)(8676002)(66946007)(64756008)(66476007)(76116006)(91956017)(66446008)(66556008)(1076003)(2906002)(4744005)(6506007)(107886003)(8936002)(71200400001)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3582;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 493Yewy6wuki3Kwx+Hebux81J9J16fpFYgOrLIaJTXJA95Es6O9vsTdjZnf0Zg1tkmVPcJcDMB/mCdnsSLNEqVkarV9nlRmBy6q5+kX6VDMrMLM4rFsW52Uq1+qdUZUswWJuNsJUwfxUtc44/zq1tx/naOzyEcSCXlDT69DBDsFLklq3UHiRYvyTCSaO+wBiPosljsAOF48O8/3iWJXYd/65VypdWOzdkBx+HBU1wvlPfNBZnVfoqIpfsk9vEjou0Bi1lRlMovWS/yo9El7Au6HI7bN78FC13Wm+Oek3iA5j3mFJbC1u/mcBGbRpDKvi/YqA+NBIf5GM89joqQPgVIu/tiOlJH66S9lMrt7W5X/tRHGzBik6ugHkoyT7P9wQA7BpUCnd+3eFbbY/X/dcbZKhaptDBA6ZhcoWnss/5Ql+Gg8y1pu4/c5jVSY3G4Cp
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <88aa9920-cdaf-97f0-c36f-66a998860ed2@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 94ab9cfb-6b7d-41f1-10f3-08d7a00cf661
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 14:03:02.6844
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aOOtcxQtjBuLj50G+/0mquFw/38o5HXpTOOTbr+V2ogBIFb/5ytdpyL2BtI8kUintODW9Yxdhk0rwbLTWc/XpDO/tYzoecCBZTwXRWLdm1M=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3582
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello,
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-On Thu, Jan 23, 2020 at 10:51:42AM +0200, Peter Ujfalusi wrote:
-> On 23/01/2020 10.43, Vinod Koul wrote:
-> > On 23-01-20, 10:03, Peter Ujfalusi wrote:
-> >> On 23/01/2020 4.29, Laurent Pinchart wrote:
-> >>> The new interleaved cyclic transaction type combines interleaved and
-> >>> cycle transactions. It is designed for DMA engines that back display
-> >>> controllers, where the same 2D frame needs to be output to the display
-> >>> until a new frame is available.
-> >>>
-> >>> Suggested-by: Vinod Koul <vkoul@kernel.org>
-> >>> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> >>> ---
-> >>>  drivers/dma/dmaengine.c   |  8 +++++++-
-> >>>  include/linux/dmaengine.h | 18 ++++++++++++++++++
-> >>>  2 files changed, 25 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-> >>> index 03ac4b96117c..4ffb98a47f31 100644
-> >>> --- a/drivers/dma/dmaengine.c
-> >>> +++ b/drivers/dma/dmaengine.c
-> >>> @@ -981,7 +981,13 @@ int dma_async_device_register(struct dma_device *device)
-> >>>  			"DMA_INTERLEAVE");
-> >>>  		return -EIO;
-> >>>  	}
-> >>> -
-> >>> +	if (dma_has_cap(DMA_INTERLEAVE_CYCLIC, device->cap_mask) &&
-> >>> +	    !device->device_prep_interleaved_cyclic) {
-> >>> +		dev_err(device->dev,
-> >>> +			"Device claims capability %s, but op is not defined\n",
-> >>> +			"DMA_INTERLEAVE_CYCLIC");
-> >>> +		return -EIO;
-> >>> +	}
-> >>>  
-> >>>  	if (!device->device_tx_status) {
-> >>>  		dev_err(device->dev, "Device tx_status is not defined\n");
-> >>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> >>> index 8fcdee1c0cf9..e9af3bf835cb 100644
-> >>> --- a/include/linux/dmaengine.h
-> >>> +++ b/include/linux/dmaengine.h
-> >>> @@ -61,6 +61,7 @@ enum dma_transaction_type {
-> >>>  	DMA_SLAVE,
-> >>>  	DMA_CYCLIC,
-> >>>  	DMA_INTERLEAVE,
-> >>> +	DMA_INTERLEAVE_CYCLIC,
-> >>>  /* last transaction type for creation of the capabilities mask */
-> >>>  	DMA_TX_TYPE_END,
-> >>>  };
-> >>> @@ -701,6 +702,10 @@ struct dma_filter {
-> >>>   *	The function takes a buffer of size buf_len. The callback function will
-> >>>   *	be called after period_len bytes have been transferred.
-> >>>   * @device_prep_interleaved_dma: Transfer expression in a generic way.
-> >>> + * @device_prep_interleaved_cyclic: prepares an interleaved cyclic transfer.
-> >>> + *	This is similar to @device_prep_interleaved_dma, but the transfer is
-> >>> + *	repeated until a new transfer is issued. This transfer type is meant
-> >>> + *	for display.
-> >>
-> >> I think capture (camera) is another potential beneficiary of this.
+All members of the structure are initialized below in the function,
+there is no need to use kzalloc.
 
-Possibly, although in the camera case I'd rather have the hardware stop
-if there's no more buffer. Requiring a buffer to always be present is
-annoying from a userspace point of view. For display it's different, if
-userspace doesn't submit a new frame, the same frame should keep being
-displayed on the screen.
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+---
+ drivers/dma/at_hdmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> >> So you don't need to terminate the running interleaved_cyclic and start
-> >> a new one, but prepare and issue a new one, which would
-> >> terminate/replace the currently running cyclic interleaved DMA?
-
-Correct.
-
-> > Why not explicitly terminate the transfer and start when a new one is
-> > issued. That can be common usage for audio and display..
-> 
-> Yes, this is what I'm asking. The cyclic transfer is running and in
-> order to start the new transfer, the previous should stop. But in cyclic
-> case it is not going to happen unless it is terminated.
-> 
-> When one would want to have different interleaved transfer the display
-> (or capture )IP needs to be reconfigured as well. The the would need to
-> be terminated anyways to avoid interpreting data in a wrong way.
-
-The use case here is not to switch to a new configuration, but to switch
-to a new buffer. If the transfer had to be terminated manually first,
-the DMA engine would potentially miss a frame, which is not acceptable.
-We need an atomic way to switch to the next transfer.
-
--- 
-Regards,
-
-Laurent Pinchart
+diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
+index 672c73b4a2d4..cad6dcd9cfb5 100644
+--- a/drivers/dma/at_hdmac.c
++++ b/drivers/dma/at_hdmac.c
+@@ -1671,7 +1671,7 @@ static struct dma_chan *at_dma_xlate(struct of_phandl=
+e_args *dma_spec,
+ 	dma_cap_zero(mask);
+ 	dma_cap_set(DMA_SLAVE, mask);
+=20
+-	atslave =3D kzalloc(sizeof(*atslave), GFP_KERNEL);
++	atslave =3D kmalloc(sizeof(*atslave), GFP_KERNEL);
+ 	if (!atslave)
+ 		return NULL;
+=20
+--=20
+2.23.0

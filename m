@@ -2,238 +2,139 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 48B1B146AB5
-	for <lists+dmaengine@lfdr.de>; Thu, 23 Jan 2020 15:03:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 022C5147463
+	for <lists+dmaengine@lfdr.de>; Fri, 24 Jan 2020 00:12:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgAWODc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 23 Jan 2020 09:03:32 -0500
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:5788 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729191AbgAWODX (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 23 Jan 2020 09:03:23 -0500
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: +SuwJ2geEPTUVyfVVC8KY4h+0BM5fjoSWH97sqqwARGIna/CVqhpIyTOPqEzBc6KaAOsZjo6M7
- 1+SIY851hqSZ3n77C/6a6jNwppuNvbBF2P0cYGAoE14DMg8AyLv4vEPXDoGjVwPrvIlMdfN/OR
- mTuKFSKvpqaxrIM3EAe7tTLVJofjUBmGX4igsFnWxnNiD1vf1oKeSJvXcbmKsoCUy3Ydf8QwK0
- 5cC7lTkeHK/kjOP6UFY/McPgGnIakW4ZwQYbo2b7ykt2yiU+R55vIjnZzZ05ypTbG3tHVLKNst
- HIs=
-X-IronPort-AV: E=Sophos;i="5.70,354,1574146800"; 
-   d="scan'208";a="63527843"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Jan 2020 07:03:21 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 23 Jan 2020 07:03:18 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Thu, 23 Jan 2020 07:03:18 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QcRqky0Ij3bxRq1bHLtDWTek7+zS3q8Yvq21pbK4QSLnPkDbyZIqpGGbVJlPfRGMJSV+Ng+BMH0eN4hJomvh8l+t/N7/8LIsr/9k4w+r6aZlHoPQJlEWvIIR0uXTcYoDvrWLRDJWVCz+vrSOAYjJFnIiX0C1jHb89zYkVsRnGkNoQkXbRYEbv1sUI/WDncT7Z4Bg8fgCy2uUI+jZVwG+K5ExKsw2lgF6bic+fywpkkY7hJUYUVtj5wY4UTdM4Gu/aB/QUTYRKhsW+jFeAk3bpTwjLbrztuqodOi2N/ycPbhHDRRBdGVoSGwtXAIuC9oLNk5vAyS6lA3gAS/uFyWb2Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u1+h7dVbV6KuHmrHlLYHbEDUOaXx+4BA6QBHOz5of6s=;
- b=P/6+bM1URAguUfpbHg63FXUbQ3Y9EJUe5uwPLTduIymWkRfVCqwdQAjkmdb6OoYEv1iXVdMjzafE21NpGYY8PwJ3t1mRkT0yQ4m/65DDCdWvmFaX0rRlrYvY4vpL4Zh4pT1sq1ja49c9OW1rVg7TrIstIZzOmD8W55Jk9MIS0gtwo6ibUolRY2YiEdl7exQg2jMJDe74m5wVjOFfIkSQPmOQ3kUfioQcT4Ih/rYLHjHlUHKV4iz91ERxB47vScZb9Y4MywgK/2Z/kXO38c7wiG0poc2cI29BDTAv/jDk9qQrdAIG5wVhIYwVt3zPwTvYk06MCmY3GzaeMDGW5sSBWg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        id S1729640AbgAWXKq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 23 Jan 2020 18:10:46 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33640 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727056AbgAWXKp (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 23 Jan 2020 18:10:45 -0500
+Received: by mail-wr1-f67.google.com with SMTP id b6so5249513wrq.0;
+        Thu, 23 Jan 2020 15:10:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u1+h7dVbV6KuHmrHlLYHbEDUOaXx+4BA6QBHOz5of6s=;
- b=hVcEXG3R7nbEY+eMYflWKeOUcyKhdgFsIJ2zG9ktn+wdxbYedB0y0mpBT/Hgogb8BNIVNX440aJKU8z3ld9z/owsHwoQ+v1AzxS+88dziNz0zsP9Dr/oTamUmmAtjZpVkOXwokbtVyl48kup4RtoizHs4VuA9efVPfpu7pEU3Ss=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
- MN2PR11MB3582.namprd11.prod.outlook.com (20.178.251.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.20; Thu, 23 Jan 2020 14:03:17 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::3c8f:7a55:cbd:adfb]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::3c8f:7a55:cbd:adfb%5]) with mapi id 15.20.2644.027; Thu, 23 Jan 2020
- 14:03:17 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <Ludovic.Desroches@microchip.com>, <dan.j.williams@intel.com>,
-        <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <Tudor.Ambarus@microchip.com>
-Subject: [PATCH 10/10] dmaengine: at_xdmac: Fix locking in tasklet
-Thread-Topic: [PATCH 10/10] dmaengine: at_xdmac: Fix locking in tasklet
-Thread-Index: AQHV0fXcFbXcnKYrSE6o/6h9ErutqQ==
-Date:   Thu, 23 Jan 2020 14:03:17 +0000
-Message-ID: <20200123140237.125799-10-tudor.ambarus@microchip.com>
-References: <20200123140237.125799-1-tudor.ambarus@microchip.com>
-In-Reply-To: <20200123140237.125799-1-tudor.ambarus@microchip.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 87a3c654-dff5-46b4-a5ea-08d7a00cff19
-x-ms-traffictypediagnostic: MN2PR11MB3582:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR11MB35824D1818AECB0349A7F050F00F0@MN2PR11MB3582.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3044;
-x-forefront-prvs: 029174C036
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(366004)(39860400002)(136003)(189003)(199004)(2616005)(6486002)(316002)(26005)(36756003)(4326008)(81156014)(186003)(54906003)(110136005)(81166006)(6512007)(5660300002)(478600001)(8676002)(66946007)(64756008)(66476007)(76116006)(91956017)(66446008)(66556008)(1076003)(2906002)(6506007)(107886003)(8936002)(71200400001)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3582;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0MeQXV5t/KeNsFuI0nFbSadcwVttu+dleXDuGvlBLdr5hvurQ4Rg6PHpaBUW4XdGi/NVpnzknSYP8XrwO0yIseGXp2+jiKEZvrxcI9NPBIbdGhl9//sHDO7GwZ2onS3RJfp0whxX0H5/PJj2Ks6aWfMKzmHvTJj8kbbK/I6N22cdTyNYpRqWIzMni8YOoRvP9pDXuYtb/wdV+ByB1wS+zrd3/VoFE3hzhXmS1tJ3APQ5D+M/ELK1Bdw5qcjFlZTDX21LuXN7nLHMtIalOTUgk5D+8YDCPAhOScMBO+TFNAIF+wr2m5lKtfxco3Tt84kK5wNYQdEZOt+XOCSYlBhk5PcHOMuvVplkrW1b6gkbQ6BEL6s35zdeKg8Ek0FktJ+nsE+FVCeTM39GkfOzkrrTZcuuaAwUhGpByRNpR/1kmAgYnC5m+vM14YRxuRbTysTL
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J4auLfeTWYpfRnRGmALkFYqcKSPLJ0m/g2ODa3jrK1c=;
+        b=EGal7W4OAs1ShOUeFk8DBOF/grFbVGnHDqKtZt6ZKvoeae2FHLK346srFokFr8Z856
+         Ud9eLuOY5qggOmoXGH8Q94pIrY36Kn7ZVzrI/Z1JqsXPAQISwuZDRevKgJINRcBq/OiL
+         LnSfkgcK872L+evBH8dMdO42/WjPU9z0IF8BZysUCHP0vjr4Huugp8qMLcYzfVST3+Co
+         CNtbKiVBbTjSIIQFUI54BTxevfmyZNQ1ebq6sMP/yjmE4o5XlVU7Nj+mTQO/363CR7CL
+         UYPgdK94BqMLuWvOLS0PLUp90LGgES+1XTVBuyEo4P9g28GZEVnDUe3SmyHl4+/j6eRC
+         RmOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=J4auLfeTWYpfRnRGmALkFYqcKSPLJ0m/g2ODa3jrK1c=;
+        b=Fun1lxI/o94/bOQgy8wOYsJQwPQ2uM0MF04fXShLzh4vy85ttKPK63YsJHKQoxhcy7
+         boW4kgkNtZxgE8SeWW4HoUzoktVonpQM3PbIwSYrcqXLGJsUgpiIH2C1GM7r/fN+ZmB8
+         RTl2eTiD1fT8B5vAv0GftUDiMWehY1W3SuvZm2ZzuHB9Tg9PX04U8httX8dFlnYt+0rP
+         EWsRr31l9W4ME75x14XlMowzkrHuocf4jRC3ofW2bibjC5gMaUrbBFrQ1w9AcfYnL6dB
+         s+bBe1OEKD/L7hVBm4yWOOfsyn+2sX+SLkyMVWZJfSTuWsWMP6XPvuN3uRVwTzPp8B0N
+         Bjdg==
+X-Gm-Message-State: APjAAAWdSN9sRwOr175kKZMn0yFWrMinvSrYlwtICAV8wnX/6JA4nGWA
+        /YjFURX/2lkuaOmGpq1S410=
+X-Google-Smtp-Source: APXvYqzpix3/UoO0zYYUskqcPQbRVEYyW2mrxMcV8vZWmWwc5qbmGd7vTFIsErg56ocucvRROmcNVg==
+X-Received: by 2002:a5d:4f8e:: with SMTP id d14mr473570wru.112.1579821043400;
+        Thu, 23 Jan 2020 15:10:43 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id z6sm5105552wrw.36.2020.01.23.15.10.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jan 2020 15:10:42 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 00/14] NVIDIA Tegra APB DMA driver fixes and improvements
+Date:   Fri, 24 Jan 2020 02:03:11 +0300
+Message-Id: <20200123230325.3037-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87a3c654-dff5-46b4-a5ea-08d7a00cff19
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2020 14:03:17.4638
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gDbFX3kxyhUtvGuA8qjKOsg86eD7lar57HuUi4TZd464wildMXcfUm/68Z3itpKUB0c1GfMOie0U88zuxLL5f7ACnmTHPvvAQk8/eO4b9w0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3582
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
+Hello,
 
-Tasklets run with all the interrupts enabled. This means that we should
-replace all the (already present) spin_lock_irqsave() uses in the tasklet
-with spin_lock_irq() to protect being interrupted by a IRQ which tries
-to get the same lock (via calls to device_prep_dma_* for example).
+This series fixes some problems that I spotted recently, secondly the
+driver's code gets a cleanup. Please review and apply, thanks in advance!
 
-spin_lock and spin_lock_bh in tasklets are not enough to protect from IRQs,
-update these to spin_lock_irq().
+Changelog:
 
-at_xdmac_advance_work() can be called with all the interrupts enabled (when
-called from tasklet), or with interrupts disabled (when called from
-at_xdmac_issue_pending). Move the locking in the callers to be able to use
-spin_lock_irq() and spin_lock_irqsave() for these cases.
+v5: - Fixed touching hardware registers after RPM-suspending in the patch
+      "Keep clock enabled only during of DMA transfer", now RPM is kept
+      resumed in the tegra_dma_terminate_all() while needed. Thanks to
+      Jon Hunter for pointing at this problem in a review comment to v4.
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
----
- drivers/dma/at_xdmac.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+    - The "Clean up runtime PM teardown" patch is replaced with the "Remove
+      assumptions about unavailable runtime PM" patch because I recalled that
+      now RPM is always available on all Tegra SoCs.
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index 31321da69ae6..bb0eaf38b594 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -1543,9 +1543,6 @@ static void at_xdmac_remove_xfer(struct at_xdmac_chan=
- *atchan,
- static void at_xdmac_advance_work(struct at_xdmac_chan *atchan)
- {
- 	struct at_xdmac_desc	*desc;
--	unsigned long		flags;
--
--	spin_lock_irqsave(&atchan->lock, flags);
-=20
- 	/*
- 	 * If channel is enabled, do nothing, advance_work will be triggered
-@@ -1559,8 +1556,6 @@ static void at_xdmac_advance_work(struct at_xdmac_cha=
-n *atchan)
- 		if (!desc->active_xfer)
- 			at_xdmac_start_xfer(atchan, desc);
- 	}
--
--	spin_unlock_irqrestore(&atchan->lock, flags);
- }
-=20
- static void at_xdmac_handle_cyclic(struct at_xdmac_chan *atchan)
-@@ -1596,7 +1591,7 @@ static void at_xdmac_handle_error(struct at_xdmac_cha=
-n *atchan)
- 	if (atchan->irq_status & AT_XDMAC_CIS_ROIS)
- 		dev_err(chan2dev(&atchan->chan), "request overflow error!!!");
-=20
--	spin_lock_bh(&atchan->lock);
-+	spin_lock_irq(&atchan->lock);
-=20
- 	/* Channel must be disabled first as it's not done automatically */
- 	at_xdmac_write(atxdmac, AT_XDMAC_GD, atchan->mask);
-@@ -1607,7 +1602,7 @@ static void at_xdmac_handle_error(struct at_xdmac_cha=
-n *atchan)
- 				    struct at_xdmac_desc,
- 				    xfer_node);
-=20
--	spin_unlock_bh(&atchan->lock);
-+	spin_unlock_irq(&atchan->lock);
-=20
- 	/* Print bad descriptor's details if needed */
- 	dev_dbg(chan2dev(&atchan->chan),
-@@ -1640,21 +1635,21 @@ static void at_xdmac_tasklet(unsigned long data)
- 		if (atchan->irq_status & error_mask)
- 			at_xdmac_handle_error(atchan);
-=20
--		spin_lock(&atchan->lock);
-+		spin_lock_irq(&atchan->lock);
- 		desc =3D list_first_entry(&atchan->xfers_list,
- 					struct at_xdmac_desc,
- 					xfer_node);
- 		dev_vdbg(chan2dev(&atchan->chan), "%s: desc 0x%p\n", __func__, desc);
- 		if (!desc->active_xfer) {
- 			dev_err(chan2dev(&atchan->chan), "Xfer not active: exiting");
--			spin_unlock(&atchan->lock);
-+			spin_unlock_irq(&atchan->lock);
- 			return;
- 		}
-=20
- 		txd =3D &desc->tx_dma_desc;
-=20
- 		at_xdmac_remove_xfer(atchan, desc);
--		spin_unlock(&atchan->lock);
-+		spin_unlock_irq(&atchan->lock);
-=20
- 		dma_cookie_complete(txd);
- 		if (txd->flags & DMA_PREP_INTERRUPT)
-@@ -1662,7 +1657,9 @@ static void at_xdmac_tasklet(unsigned long data)
-=20
- 		dma_run_dependencies(txd);
-=20
-+		spin_lock_irq(&atchan->lock);
- 		at_xdmac_advance_work(atchan);
-+		spin_unlock_irq(&atchan->lock);
- 	}
- }
-=20
-@@ -1723,11 +1720,15 @@ static irqreturn_t at_xdmac_interrupt(int irq, void=
- *dev_id)
- static void at_xdmac_issue_pending(struct dma_chan *chan)
- {
- 	struct at_xdmac_chan *atchan =3D to_at_xdmac_chan(chan);
-+	unsigned long flags;
-=20
- 	dev_dbg(chan2dev(&atchan->chan), "%s\n", __func__);
-=20
--	if (!at_xdmac_chan_is_cyclic(atchan))
-+	if (!at_xdmac_chan_is_cyclic(atchan)) {
-+		spin_lock_irqsave(&atchan->lock, flags);
- 		at_xdmac_advance_work(atchan);
-+		spin_unlock_irqrestore(&atchan->lock, flags);
-+	}
-=20
- 	return;
- }
---=20
-2.23.0
+    - The "Clean up suspend-resume" patch got a minor improvement, now
+      tasklet_kill() is invoked before checking of the busy state in
+      tegra_dma_dev_suspend(), this should allow us to catch problems if DMA
+      callback issues a new DMA transfer.
+
+    - Added Jon's acks to the reviewed patches.
+
+v4: - Addressed Jon's request to *not* remove the runtime PM usage, instead
+      there is now new patch that makes RPM more practical:
+
+        dmaengine: tegra-apb: Keep clock enabled only during of DMA transfer
+
+    - Added new minor patch to clean up RPM's teardown:
+
+        dmaengine: tegra-apb: Clean up runtime PM teardown
+
+v3: - In the review comment to v1 Michał Mirosław suggested that "Prevent
+      race conditions on channel's freeing" does changes that deserve to
+      be separated into two patches. I factored out and improved tasklet
+      releasing into this new patch:
+
+        dmaengine: tegra-apb: Clean up tasklet releasing
+
+    - The "Fix use-after-free" patch got an improved commit message.
+
+v2: - I took another look at the driver and spotted few more things that
+      could be improved, which resulted in these new patches:
+
+        dmaengine: tegra-apb: Remove runtime PM usage
+        dmaengine: tegra-apb: Clean up suspend-resume
+        dmaengine: tegra-apb: Add missing of_dma_controller_free
+        dmaengine: tegra-apb: Allow to compile as a loadable kernel module
+        dmaengine: tegra-apb: Remove MODULE_ALIAS
+
+Dmitry Osipenko (14):
+  dmaengine: tegra-apb: Fix use-after-free
+  dmaengine: tegra-apb: Implement synchronization hook
+  dmaengine: tegra-apb: Prevent race conditions on channel's freeing
+  dmaengine: tegra-apb: Clean up tasklet releasing
+  dmaengine: tegra-apb: Prevent race conditions of tasklet vs free list
+  dmaengine: tegra-apb: Use devm_platform_ioremap_resource
+  dmaengine: tegra-apb: Use devm_request_irq
+  dmaengine: tegra-apb: Fix coding style problems
+  dmaengine: tegra-apb: Remove assumptions about unavailable runtime PM
+  dmaengine: tegra-apb: Keep clock enabled only during of DMA transfer
+  dmaengine: tegra-apb: Clean up suspend-resume
+  dmaengine: tegra-apb: Add missing of_dma_controller_free
+  dmaengine: tegra-apb: Allow to compile as a loadable kernel module
+  dmaengine: tegra-apb: Remove MODULE_ALIAS
+
+ drivers/dma/Kconfig           |   2 +-
+ drivers/dma/tegra20-apb-dma.c | 507 +++++++++++++++++-----------------
+ 2 files changed, 260 insertions(+), 249 deletions(-)
+
+-- 
+2.24.0
+

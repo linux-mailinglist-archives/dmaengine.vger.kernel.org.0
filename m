@@ -2,97 +2,102 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C2B0147872
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Jan 2020 07:05:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D7383147875
+	for <lists+dmaengine@lfdr.de>; Fri, 24 Jan 2020 07:10:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730126AbgAXGFh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 24 Jan 2020 01:05:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59104 "EHLO mail.kernel.org"
+        id S1727295AbgAXGKx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 24 Jan 2020 01:10:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725817AbgAXGFh (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 24 Jan 2020 01:05:37 -0500
+        id S1725817AbgAXGKx (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 24 Jan 2020 01:10:53 -0500
 Received: from localhost (unknown [106.200.244.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66A9D2071A;
-        Fri, 24 Jan 2020 06:05:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01EEA2072C;
+        Fri, 24 Jan 2020 06:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579845936;
-        bh=O4VGvtDvjcC1nUtedyxB+0sSubL0ZZpjKeBF+Knm1qw=;
+        s=default; t=1579846251;
+        bh=7BODJKPESXKudIiPPYqNSviFVhKL+rucS8GGIDGsp4k=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W/ezq8gS3TtnXkKWlPfTtCWmf4XkUckEfqJyHY5XOcwAC2mH78JB0bPXyu8/e560v
-         +mzYxSRidBPebCaygjngo1XhHfso3c9wY+MelMtYrzeLaT0/DC1xl1pe5AyCpngVY5
-         RGNfGZzcZmcATxEjhx0xwf+4Apvq5hwbRUhs6sYQ=
-Date:   Fri, 24 Jan 2020 11:35:32 +0530
+        b=xueU7jXzIhNPqzCZnEg7rq4jLU2h1ENQD+UmZgxpA0s79ELI+2McAzeiqAUbN4Gfv
+         hmkbl7VWtsG/wO55n4RL87xrrbNqinQ5d3xuh4K0Pdv0FjCzVs0m49DyFOdEvay4dT
+         FtvIaaSSQPD7DIcFHO727p2KuN6KeV4k+i9sKMLc=
+Date:   Fri, 24 Jan 2020 11:40:47 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Sanjay R Mehta <Sanju.Mehta@amd.com>
-Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
-        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
-        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] dmaengine: ptdma: Register pass-through engine as
- a DMA resource
-Message-ID: <20200124060532.GD2841@vkoul-mobl>
-References: <1579597494-60348-1-git-send-email-Sanju.Mehta@amd.com>
- <1579597494-60348-3-git-send-email-Sanju.Mehta@amd.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>, dmaengine@vger.kernel.org,
+        Michal Simek <michal.simek@xilinx.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Tejas Upadhyay <tejasu@xilinx.com>,
+        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
+Subject: Re: [PATCH v3 2/6] dmaengine: Add interleaved cyclic transaction type
+Message-ID: <20200124061047.GE2841@vkoul-mobl>
+References: <20200123022939.9739-1-laurent.pinchart@ideasonboard.com>
+ <20200123022939.9739-3-laurent.pinchart@ideasonboard.com>
+ <2f3a9e9e-9b74-7c2e-de3a-4897ab0e8205@ti.com>
+ <20200123084352.GU2841@vkoul-mobl>
+ <88aa9920-cdaf-97f0-c36f-66a998860ed2@ti.com>
+ <20200123122304.GB13922@pendragon.ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1579597494-60348-3-git-send-email-Sanju.Mehta@amd.com>
+In-Reply-To: <20200123122304.GB13922@pendragon.ideasonboard.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 21-01-20, 03:04, Sanjay R Mehta wrote:
+Hi Laurent,
 
-> +static void pt_free_chan_resources(struct dma_chan *dma_chan)
-> +{
-> +	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
-> +						 dma_chan);
-> +	unsigned long flags;
-> +
-> +	dev_dbg(chan->pt->dev, "%s - chan=%p\n", __func__, chan);
-> +
-> +	spin_lock_irqsave(&chan->lock, flags);
-> +
-> +	pt_free_desc_resources(chan->pt, &chan->complete);
-> +	pt_free_desc_resources(chan->pt, &chan->active);
-> +	pt_free_desc_resources(chan->pt, &chan->pending);
-> +	pt_free_desc_resources(chan->pt, &chan->created);
+On 23-01-20, 14:23, Laurent Pinchart wrote:
+> > >>> @@ -701,6 +702,10 @@ struct dma_filter {
+> > >>>   *	The function takes a buffer of size buf_len. The callback function will
+> > >>>   *	be called after period_len bytes have been transferred.
+> > >>>   * @device_prep_interleaved_dma: Transfer expression in a generic way.
+> > >>> + * @device_prep_interleaved_cyclic: prepares an interleaved cyclic transfer.
+> > >>> + *	This is similar to @device_prep_interleaved_dma, but the transfer is
+> > >>> + *	repeated until a new transfer is issued. This transfer type is meant
+> > >>> + *	for display.
+> > >>
+> > >> I think capture (camera) is another potential beneficiary of this.
+> 
+> Possibly, although in the camera case I'd rather have the hardware stop
+> if there's no more buffer. Requiring a buffer to always be present is
+> annoying from a userspace point of view. For display it's different, if
+> userspace doesn't submit a new frame, the same frame should keep being
+> displayed on the screen.
+> 
+> > >> So you don't need to terminate the running interleaved_cyclic and start
+> > >> a new one, but prepare and issue a new one, which would
+> > >> terminate/replace the currently running cyclic interleaved DMA?
+> 
+> Correct.
+> 
+> > > Why not explicitly terminate the transfer and start when a new one is
+> > > issued. That can be common usage for audio and display..
+> > 
+> > Yes, this is what I'm asking. The cyclic transfer is running and in
+> > order to start the new transfer, the previous should stop. But in cyclic
+> > case it is not going to happen unless it is terminated.
+> > 
+> > When one would want to have different interleaved transfer the display
+> > (or capture )IP needs to be reconfigured as well. The the would need to
+> > be terminated anyways to avoid interpreting data in a wrong way.
+> 
+> The use case here is not to switch to a new configuration, but to switch
+> to a new buffer. If the transfer had to be terminated manually first,
+> the DMA engine would potentially miss a frame, which is not acceptable.
+> We need an atomic way to switch to the next transfer.
 
-can you use the virt-dma layer instead for list and descriptor
-management..
+So in this case you have, let's say a cyclic descriptor with N buffers
+and they are cyclically capturing data and providing to client/user..
 
-> +static enum dma_status pt_tx_status(struct dma_chan *dma_chan,
-> +				    dma_cookie_t cookie,
-> +				    struct dma_tx_state *state)
-> +{
-> +	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
-> +						 dma_chan);
-> +	struct pt_dma_desc *desc;
-> +	enum dma_status ret;
-> +	unsigned long flags;
-> +
-> +	if (chan->status == DMA_PAUSED) {
-> +		ret = DMA_PAUSED;
+So why would you like to submit again...? Once whole capture has
+completed you would terminate, right...
 
-the pt_tx_status is for a specific cookie and not for the channel, so
-you need to return status of the cookie which may have been completed or
-pending (where pause makes sense)
-
-> +static int pt_pause(struct dma_chan *dma_chan)
-> +{
-> +	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
-> +						 dma_chan);
-> +
-> +	chan->status = DMA_PAUSED;
-> +
-> +	/*TODO: Wait for active DMA to complete before returning? */
-
-When will the be resolved :)
+Sorry not able to wrap my head around why new submission is required and
+if that is the case why previous one cant be terminated :)
 
 -- 
 ~Vinod

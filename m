@@ -2,102 +2,81 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D7383147875
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Jan 2020 07:10:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 71E8514787A
+	for <lists+dmaengine@lfdr.de>; Fri, 24 Jan 2020 07:14:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbgAXGKx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 24 Jan 2020 01:10:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60300 "EHLO mail.kernel.org"
+        id S1729847AbgAXGOE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 24 Jan 2020 01:14:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725817AbgAXGKx (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 24 Jan 2020 01:10:53 -0500
+        id S1725817AbgAXGOE (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 24 Jan 2020 01:14:04 -0500
 Received: from localhost (unknown [106.200.244.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01EEA2072C;
-        Fri, 24 Jan 2020 06:10:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 554BE20718;
+        Fri, 24 Jan 2020 06:14:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579846251;
-        bh=7BODJKPESXKudIiPPYqNSviFVhKL+rucS8GGIDGsp4k=;
+        s=default; t=1579846443;
+        bh=hPxhx/xkr883zKOO/zMMfJPW/taB/rLS1YKC4mlh6lk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xueU7jXzIhNPqzCZnEg7rq4jLU2h1ENQD+UmZgxpA0s79ELI+2McAzeiqAUbN4Gfv
-         hmkbl7VWtsG/wO55n4RL87xrrbNqinQ5d3xuh4K0Pdv0FjCzVs0m49DyFOdEvay4dT
-         FtvIaaSSQPD7DIcFHO727p2KuN6KeV4k+i9sKMLc=
-Date:   Fri, 24 Jan 2020 11:40:47 +0530
+        b=T9WGunnW/1R9rfdy6tqpXM3FIhxOtgH53RKUV4kOIwE7qw21RWr4WNvLEmi6T+Lu0
+         hns2Zb6wxzSlK1jGqgXWZKDYuDC3W/VRRVQWrId8EaMw1SwM/u/h4gNrbk3FarxVYJ
+         RdVMCrC9YLXeog6o6MqvIr7oah0xGyVQyLc35NnE=
+Date:   Fri, 24 Jan 2020 11:43:59 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>, dmaengine@vger.kernel.org,
-        Michal Simek <michal.simek@xilinx.com>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Tejas Upadhyay <tejasu@xilinx.com>,
-        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
-Subject: Re: [PATCH v3 2/6] dmaengine: Add interleaved cyclic transaction type
-Message-ID: <20200124061047.GE2841@vkoul-mobl>
-References: <20200123022939.9739-1-laurent.pinchart@ideasonboard.com>
- <20200123022939.9739-3-laurent.pinchart@ideasonboard.com>
- <2f3a9e9e-9b74-7c2e-de3a-4897ab0e8205@ti.com>
- <20200123084352.GU2841@vkoul-mobl>
- <88aa9920-cdaf-97f0-c36f-66a998860ed2@ti.com>
- <20200123122304.GB13922@pendragon.ideasonboard.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] dmaengine: Create symlinks between DMA channels and
+ slaves
+Message-ID: <20200124061359.GF2841@vkoul-mobl>
+References: <20200117153056.31363-1-geert+renesas@glider.be>
+ <d2b669e7-a5d4-20ec-5b54-103b71df7407@ti.com>
+ <CAMuHMdVzQCWvH-LJ9ME5dRyafudZBHQLaJQzkSCPnughv_q2aA@mail.gmail.com>
+ <1cdc4f71-f365-8c9e-4634-408c59e6a3f9@ti.com>
+ <CAMuHMdU=-Eo29=DQmq96OegdYAvW7Vw9PpgNWSTfjDWVF5jd-A@mail.gmail.com>
+ <f7bbb132-1278-7030-7f40-b89733bcbd83@ti.com>
+ <CAMuHMdXDiwTomiKp8Kaw0NvMNpg78-M88F0mNTWBOz5MLE4LtQ@mail.gmail.com>
+ <20200122094002.GS2841@vkoul-mobl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200123122304.GB13922@pendragon.ideasonboard.com>
+In-Reply-To: <20200122094002.GS2841@vkoul-mobl>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Laurent,
+On 22-01-20, 15:10, Vinod Koul wrote:
 
-On 23-01-20, 14:23, Laurent Pinchart wrote:
-> > >>> @@ -701,6 +702,10 @@ struct dma_filter {
-> > >>>   *	The function takes a buffer of size buf_len. The callback function will
-> > >>>   *	be called after period_len bytes have been transferred.
-> > >>>   * @device_prep_interleaved_dma: Transfer expression in a generic way.
-> > >>> + * @device_prep_interleaved_cyclic: prepares an interleaved cyclic transfer.
-> > >>> + *	This is similar to @device_prep_interleaved_dma, but the transfer is
-> > >>> + *	repeated until a new transfer is issued. This transfer type is meant
-> > >>> + *	for display.
-> > >>
-> > >> I think capture (camera) is another potential beneficiary of this.
+> I like the idea of adding this in debugfs and giving more info, I would
+> actually love to add bytes_transferred and few more info (descriptors
+> submitted etc) to it...
 > 
-> Possibly, although in the camera case I'd rather have the hardware stop
-> if there's no more buffer. Requiring a buffer to always be present is
-> annoying from a userspace point of view. For display it's different, if
-> userspace doesn't submit a new frame, the same frame should keep being
-> displayed on the screen.
-> 
-> > >> So you don't need to terminate the running interleaved_cyclic and start
-> > >> a new one, but prepare and issue a new one, which would
-> > >> terminate/replace the currently running cyclic interleaved DMA?
-> 
-> Correct.
-> 
-> > > Why not explicitly terminate the transfer and start when a new one is
-> > > issued. That can be common usage for audio and display..
+> > > This way we will have all the information in one place, easy to look up
+> > > and you don't need to manage symlinks dynamically, just check all
+> > > channels if they have slave_device/name when they are in_use (in_use w/o
+> > > slave_device is 'non slave')
+> > >
+> > > Some drivers are requesting and releasing the DMA channel per transfer
+> > > or when they are opened/closed or other variations.
+> > >
+> > > > What do other people think?
 > > 
-> > Yes, this is what I'm asking. The cyclic transfer is running and in
-> > order to start the new transfer, the previous should stop. But in cyclic
-> > case it is not going to happen unless it is terminated.
-> > 
-> > When one would want to have different interleaved transfer the display
-> > (or capture )IP needs to be reconfigured as well. The the would need to
-> > be terminated anyways to avoid interpreting data in a wrong way.
+> > Vinod: do you have some guidance for your minions? ;-)
 > 
-> The use case here is not to switch to a new configuration, but to switch
-> to a new buffer. If the transfer had to be terminated manually first,
-> the DMA engine would potentially miss a frame, which is not acceptable.
-> We need an atomic way to switch to the next transfer.
+> 
+> That said, I am not against merging this patch while we add more
+> (debugfs)... So do my minions agree or they have better ideas :-)
 
-So in this case you have, let's say a cyclic descriptor with N buffers
-and they are cyclically capturing data and providing to client/user..
+So no new ideas, I am going to apply this and queue for 5.6, something
+is better than nothing.
 
-So why would you like to submit again...? Once whole capture has
-completed you would terminate, right...
-
-Sorry not able to wrap my head around why new submission is required and
-if that is the case why previous one cant be terminated :)
+And I am looking forward for debugfs to give better picture, volunteers?
 
 -- 
 ~Vinod

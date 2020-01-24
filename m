@@ -2,81 +2,162 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 71E8514787A
-	for <lists+dmaengine@lfdr.de>; Fri, 24 Jan 2020 07:14:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4A5B1478E3
+	for <lists+dmaengine@lfdr.de>; Fri, 24 Jan 2020 08:19:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729847AbgAXGOE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 24 Jan 2020 01:14:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60870 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725817AbgAXGOE (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 24 Jan 2020 01:14:04 -0500
-Received: from localhost (unknown [106.200.244.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 554BE20718;
-        Fri, 24 Jan 2020 06:14:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579846443;
-        bh=hPxhx/xkr883zKOO/zMMfJPW/taB/rLS1YKC4mlh6lk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T9WGunnW/1R9rfdy6tqpXM3FIhxOtgH53RKUV4kOIwE7qw21RWr4WNvLEmi6T+Lu0
-         hns2Zb6wxzSlK1jGqgXWZKDYuDC3W/VRRVQWrId8EaMw1SwM/u/h4gNrbk3FarxVYJ
-         RdVMCrC9YLXeog6o6MqvIr7oah0xGyVQyLc35NnE=
-Date:   Fri, 24 Jan 2020 11:43:59 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] dmaengine: Create symlinks between DMA channels and
- slaves
-Message-ID: <20200124061359.GF2841@vkoul-mobl>
-References: <20200117153056.31363-1-geert+renesas@glider.be>
- <d2b669e7-a5d4-20ec-5b54-103b71df7407@ti.com>
- <CAMuHMdVzQCWvH-LJ9ME5dRyafudZBHQLaJQzkSCPnughv_q2aA@mail.gmail.com>
- <1cdc4f71-f365-8c9e-4634-408c59e6a3f9@ti.com>
- <CAMuHMdU=-Eo29=DQmq96OegdYAvW7Vw9PpgNWSTfjDWVF5jd-A@mail.gmail.com>
- <f7bbb132-1278-7030-7f40-b89733bcbd83@ti.com>
- <CAMuHMdXDiwTomiKp8Kaw0NvMNpg78-M88F0mNTWBOz5MLE4LtQ@mail.gmail.com>
- <20200122094002.GS2841@vkoul-mobl>
+        id S1726351AbgAXHTj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 24 Jan 2020 02:19:39 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:34796 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbgAXHTj (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 24 Jan 2020 02:19:39 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00O7JXsd034060;
+        Fri, 24 Jan 2020 01:19:33 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579850373;
+        bh=K3ojjYFJc5hyubu7S16l6n5hDopFoplhfjpd9nAcnF0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=FDd/9fLBiO8uHvWskVB7CFF0in1DOAd+3ssiw24WT1s8nAVNDzlF9OXEQmej4grY/
+         MP2KccDEKsSsD5PBXacaBN6RLyrQLug5/L5DYXYzrsLwgDm2yd6EuV09H9uai551fj
+         dKVUwCgIdpwc74i5adb9Bf5TkLJ6IZ61R+Zvnzyc=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00O7JXu5109193;
+        Fri, 24 Jan 2020 01:19:33 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 24
+ Jan 2020 01:19:33 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 24 Jan 2020 01:19:33 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00O7JVQ4061300;
+        Fri, 24 Jan 2020 01:19:32 -0600
+Subject: Re: [PATCH v3 2/6] dmaengine: Add interleaved cyclic transaction type
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Tejas Upadhyay <tejasu@xilinx.com>,
+        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
+References: <20200123022939.9739-1-laurent.pinchart@ideasonboard.com>
+ <20200123022939.9739-3-laurent.pinchart@ideasonboard.com>
+ <2f3a9e9e-9b74-7c2e-de3a-4897ab0e8205@ti.com>
+ <20200123084352.GU2841@vkoul-mobl>
+ <88aa9920-cdaf-97f0-c36f-66a998860ed2@ti.com>
+ <20200123122304.GB13922@pendragon.ideasonboard.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <ded9c051-11f3-e61a-e0de-1cd54a8c85d5@ti.com>
+Date:   Fri, 24 Jan 2020 09:20:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200122094002.GS2841@vkoul-mobl>
+In-Reply-To: <20200123122304.GB13922@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 22-01-20, 15:10, Vinod Koul wrote:
+Hi Laurent,
 
-> I like the idea of adding this in debugfs and giving more info, I would
-> actually love to add bytes_transferred and few more info (descriptors
-> submitted etc) to it...
+On 23/01/2020 14.23, Laurent Pinchart wrote:
+>>>> I think capture (camera) is another potential beneficiary of this.
 > 
-> > > This way we will have all the information in one place, easy to look up
-> > > and you don't need to manage symlinks dynamically, just check all
-> > > channels if they have slave_device/name when they are in_use (in_use w/o
-> > > slave_device is 'non slave')
-> > >
-> > > Some drivers are requesting and releasing the DMA channel per transfer
-> > > or when they are opened/closed or other variations.
-> > >
-> > > > What do other people think?
-> > 
-> > Vinod: do you have some guidance for your minions? ;-)
+> Possibly, although in the camera case I'd rather have the hardware stop
+> if there's no more buffer. Requiring a buffer to always be present is
+> annoying from a userspace point of view. For display it's different, if
+> userspace doesn't submit a new frame, the same frame should keep being
+> displayed on the screen.
 > 
+>>>> So you don't need to terminate the running interleaved_cyclic and start
+>>>> a new one, but prepare and issue a new one, which would
+>>>> terminate/replace the currently running cyclic interleaved DMA?
 > 
-> That said, I am not against merging this patch while we add more
-> (debugfs)... So do my minions agree or they have better ideas :-)
+> Correct.
+> 
+>>> Why not explicitly terminate the transfer and start when a new one is
+>>> issued. That can be common usage for audio and display..
+>>
+>> Yes, this is what I'm asking. The cyclic transfer is running and in
+>> order to start the new transfer, the previous should stop. But in cyclic
+>> case it is not going to happen unless it is terminated.
+>>
+>> When one would want to have different interleaved transfer the display
+>> (or capture )IP needs to be reconfigured as well. The the would need to
+>> be terminated anyways to avoid interpreting data in a wrong way.
+> 
+> The use case here is not to switch to a new configuration, but to switch
+> to a new buffer. If the transfer had to be terminated manually first,
+> the DMA engine would potentially miss a frame, which is not acceptable.
+> We need an atomic way to switch to the next transfer.
 
-So no new ideas, I am going to apply this and queue for 5.6, something
-is better than nothing.
+You have a special hardware in hand, most DMAs can not just replace a
+cyclic transfer in-flight and it also kind of violates the DMAengine
+principles.
+If cyclic transfer is started then it is expected to run forever until
+it is terminated. Preparing and issuing a new transfer will not get
+executed when there is already a cyclic transfer in flight as your only
+option is to terminate_all, which will kill the running cyclic _and_
+will discard the issued and pending transfers.
 
-And I am looking forward for debugfs to give better picture, volunteers?
+So the use case is page flip when you have multiple framebuffers and you
+switch them to show the updated one, right?
 
--- 
-~Vinod
+There are things missing in DMAengine in API level for sure to do this,
+imho.
+The issue is that cyclic transfers will never complete, they run until
+terminated, but you want to replace the currently executing one with a
+another cyclic transfer without actually terminating the other.
+
+It is like pause the 1st cyclic and continue with the 2nd one. Then at
+some point you pause the 2nd one and restart the 1st one.
+It is also crucial that the pause /switch happens when the executing one
+finished the interleaved round and not in the middle somewhere, right?
+
+If you:
+desc_1 = dmaengine_prep_interleaved_cyclic(chan, );
+cookie_1 = dmaengine_submit(desc_1);
+desc_2 = dmaengine_prep_interleaved_cyclic(chan, );
+cookie_2 = dmaengine_submit(desc_1);
+
+/* cookie_1/desc_1 is started */
+dma_async_issue_pending(chan);
+
+/* When need to switch to cookie_2 */
+dmaengine_cyclic_set_active_cookie(chan, cookie_2);
+/*
+ * cookie_1 execution is suspended after it finished the running
+ * dma_interleaved_template or buffer in normal cyclic and cookie_2
+ * is replacing it.
+ */
+
+/* Switch back to cookie_1 */
+dmaengine_cyclic_set_active_cookie(chan, cookie_1);
+/*
+ * cookie_2 execution is suspended after it finished the running
+ * dma_interleaved_template or buffer in normal cyclic and cookie_1
+ * is replacing it.
+ */
+
+There should be a (yet another) capabilities flag got
+cyclic_set_active_cookie and the documentation should be strict on what
+is the expected behavior.
+
+You can kill everything with terminate_all.
+There is another thing which is missing imho from DMAengine: to
+terminate a specific cookie, not the entire channel, which might be a
+good addition as you might spawn framebuffers and then delete them and
+you might want to release the corresponding cookie/descriptor as well.
+
+What do you think?
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

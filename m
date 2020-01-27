@@ -2,48 +2,47 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FF9714A4CC
+	by mail.lfdr.de (Postfix) with ESMTP id 94EE814A4CD
 	for <lists+dmaengine@lfdr.de>; Mon, 27 Jan 2020 14:20:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgA0NUg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        id S1726635AbgA0NUg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
         Mon, 27 Jan 2020 08:20:36 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:40006 "EHLO
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:40008 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbgA0NUf (ORCPT
+        with ESMTP id S1726485AbgA0NUf (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Mon, 27 Jan 2020 08:20:35 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00RDKVKs022212;
-        Mon, 27 Jan 2020 07:20:31 -0600
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00RDKXuF022227;
+        Mon, 27 Jan 2020 07:20:33 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580131231;
-        bh=y78xSIuHzdAwwROj7T1USmG5wMQgDcQjT7ar5Rw9eCk=;
+        s=ti-com-17Q1; t=1580131233;
+        bh=gXzS2h5LUCwG6H/9ZUQm3pQgqmTnpwsji7vRctJN/RU=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=jQQrN2qmTHec2iSC4afY+qaZpAY1sR9G+MaUYoRjnOgtGp5VkfwOLdZPNFwIp2vdJ
-         HXZa8MNrpPBVtemMbaQvTQrnWJYO6/fmXEFMrXafEN6IC2W8C/nfw6nInVVX79eCiD
-         Qld9CSIkINEqM+ziiUgaTerKOcg56KG3/rqPcB4M=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00RDKVVK085205
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 27 Jan 2020 07:20:31 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        b=iA63bBkpTehgIDPgSjR5wbkhxiOETsIL1kTiqmLKSZwboedOJXWG/GxUMdcZrThqm
+         rMPW7FHG7WVgLp+EpNY9NSnhx3bswOl2s7BZX+wrYWkvZsF62xgZ0AIEDX3+wy3Qn+
+         vmg6/s16555V/Wd9f09Gy5O16j5+GYqFfmFDQ7mE=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00RDKX5H118204;
+        Mon, 27 Jan 2020 07:20:33 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 27
- Jan 2020 07:20:31 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ Jan 2020 07:20:32 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 27 Jan 2020 07:20:31 -0600
+ Frontend Transport; Mon, 27 Jan 2020 07:20:33 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00RDKPa4020427;
-        Mon, 27 Jan 2020 07:20:29 -0600
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00RDKPa5020427;
+        Mon, 27 Jan 2020 07:20:31 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>
 CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <dan.j.williams@intel.com>, <grygorii.strashko@ti.com>,
         <vigneshr@ti.com>
-Subject: [PATCH for-next 2/4] dmaengine: ti: k3-udma: Workaround for RX teardown with stale data in peer
-Date:   Mon, 27 Jan 2020 15:21:09 +0200
-Message-ID: <20200127132111.20464-3-peter.ujfalusi@ti.com>
+Subject: [PATCH for-next 3/4] dmaengine: ti: k3-udma: Move the TR counter calculation to helper function
+Date:   Mon, 27 Jan 2020 15:21:10 +0200
+Message-ID: <20200127132111.20464-4-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200127132111.20464-1-peter.ujfalusi@ti.com>
 References: <20200127132111.20464-1-peter.ujfalusi@ti.com>
@@ -56,273 +55,107 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-When a channel is asked to be stopped (teardown) and we do not have active
-descriptor to receive stale data buffered on the remote side then the
-teardown will not complete as UDMA needs a descriptor to be able to flush
-out the DMA pipe.
-The peer is trying to push the data to UDMA in teardown, but UDMA is
-pushing back because it has no descriptor which would allow it to drain the
-data.
-
-The workaround is to create 1K 'trashcan' to receive the discarded data and
-set up descriptors for packet and TR mode channels.
-When a channel is stopped and there is no active descriptor then a
-descriptor is pushed to the ring for UDMA before the teardown is initiated.
+Move the TR counter parameter configuration code out from the prep_memcpy
+callback to a helper function to allow a generic re-usable code for other
+TR based transfers.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/dma/ti/k3-udma.c | 168 +++++++++++++++++++++++++++++++++++----
- 1 file changed, 151 insertions(+), 17 deletions(-)
+ drivers/dma/ti/k3-udma.c | 74 +++++++++++++++++++++++++++-------------
+ 1 file changed, 51 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index fb59c869a6a7..cb9259e104b4 100644
+index cb9259e104b4..9b00013d6f63 100644
 --- a/drivers/dma/ti/k3-udma.c
 +++ b/drivers/dma/ti/k3-udma.c
-@@ -97,6 +97,24 @@ struct udma_match_data {
- 	u32 level_start_idx[];
- };
- 
-+struct udma_hwdesc {
-+	size_t cppi5_desc_size;
-+	void *cppi5_desc_vaddr;
-+	dma_addr_t cppi5_desc_paddr;
-+
-+	/* TR descriptor internal pointers */
-+	void *tr_req_base;
-+	struct cppi5_tr_resp_t *tr_resp_base;
-+};
-+
-+struct udma_rx_flush {
-+	struct udma_hwdesc hwdescs[2];
-+
-+	size_t buffer_size;
-+	void *buffer_vaddr;
-+	dma_addr_t buffer_paddr;
-+};
-+
- struct udma_dev {
- 	struct dma_device ddev;
- 	struct device *dev;
-@@ -113,6 +131,8 @@ struct udma_dev {
- 	struct list_head desc_to_purge;
- 	spinlock_t lock;
- 
-+	struct udma_rx_flush rx_flush;
-+
- 	int tchan_cnt;
- 	int echan_cnt;
- 	int rchan_cnt;
-@@ -131,16 +151,6 @@ struct udma_dev {
- 	u32 psil_base;
- };
- 
--struct udma_hwdesc {
--	size_t cppi5_desc_size;
--	void *cppi5_desc_vaddr;
--	dma_addr_t cppi5_desc_paddr;
--
--	/* TR descriptor internal pointers */
--	void *tr_req_base;
--	struct cppi5_tr_resp_t *tr_resp_base;
--};
--
- struct udma_desc {
- 	struct virt_dma_desc vd;
- 
-@@ -552,12 +562,17 @@ static void udma_sync_for_device(struct udma_chan *uc, int idx)
- 	}
+@@ -2029,6 +2029,51 @@ static struct udma_desc *udma_alloc_tr_desc(struct udma_chan *uc,
+ 	return d;
  }
  
-+static inline dma_addr_t udma_get_rx_flush_hwdesc_paddr(struct udma_chan *uc)
++/**
++ * udma_get_tr_counters - calculate TR counters for a given length
++ * @len: Length of the trasnfer
++ * @align_to: Preferred alignment
++ * @tr0_cnt0: First TR icnt0
++ * @tr0_cnt1: First TR icnt1
++ * @tr1_cnt0: Second (if used) TR icnt0
++ *
++ * For len < SZ_64K only one TR is enough, tr1_cnt0 is not updated
++ * For len >= SZ_64K two TRs are used in a simple way:
++ * First TR: SZ_64K-alignment blocks (tr0_cnt0, tr0_cnt1)
++ * Second TR: the remaining length (tr1_cnt0)
++ *
++ * Returns the number of TRs the length needs (1 or 2)
++ * -EINVAL if the length can not be supported
++ */
++static int udma_get_tr_counters(size_t len, unsigned long align_to,
++				u16 *tr0_cnt0, u16 *tr0_cnt1, u16 *tr1_cnt0)
 +{
-+	return uc->ud->rx_flush.hwdescs[uc->config.pkt_mode].cppi5_desc_paddr;
-+}
++	if (len < SZ_64K) {
++		*tr0_cnt0 = len;
++		*tr0_cnt1 = 1;
 +
- static int udma_push_to_ring(struct udma_chan *uc, int idx)
- {
- 	struct udma_desc *d = uc->desc;
--
- 	struct k3_ring *ring = NULL;
--	int ret = -EINVAL;
-+	dma_addr_t paddr;
-+	int ret;
- 
- 	switch (uc->config.dir) {
- 	case DMA_DEV_TO_MEM:
-@@ -568,21 +583,37 @@ static int udma_push_to_ring(struct udma_chan *uc, int idx)
- 		ring = uc->tchan->t_ring;
- 		break;
- 	default:
--		break;
++		return 1;
++	}
++
++	if (align_to > 3)
++		align_to = 3;
++
++realign:
++	*tr0_cnt0 = SZ_64K - BIT(align_to);
++	if (len / *tr0_cnt0 >= SZ_64K) {
++		if (align_to) {
++			align_to--;
++			goto realign;
++		}
 +		return -EINVAL;
- 	}
- 
--	if (ring) {
--		dma_addr_t desc_addr = udma_curr_cppi5_desc_paddr(d, idx);
-+	/* RX flush packet: idx == -1 is only passed in case of DEV_TO_MEM */
-+	if (idx == -1) {
-+		paddr = udma_get_rx_flush_hwdesc_paddr(uc);
-+	} else {
-+		paddr = udma_curr_cppi5_desc_paddr(d, idx);
- 
- 		wmb(); /* Ensure that writes are not moved over this point */
- 		udma_sync_for_device(uc, idx);
--		ret = k3_ringacc_ring_push(ring, &desc_addr);
--		uc->in_ring_cnt++;
- 	}
- 
-+	ret = k3_ringacc_ring_push(ring, &paddr);
-+	if (!ret)
-+		uc->in_ring_cnt++;
++	}
 +
- 	return ret;
- }
- 
-+static bool udma_desc_is_rx_flush(struct udma_chan *uc, dma_addr_t addr)
-+{
-+	if (uc->config.dir != DMA_DEV_TO_MEM)
-+		return false;
++	*tr0_cnt1 = len / *tr0_cnt0;
++	*tr1_cnt0 = len % *tr0_cnt0;
 +
-+	if (addr == udma_get_rx_flush_hwdesc_paddr(uc))
-+		return true;
-+
-+	return false;
++	return 2;
 +}
 +
- static int udma_pop_from_ring(struct udma_chan *uc, dma_addr_t *addr)
- {
- 	struct k3_ring *ring = NULL;
-@@ -611,6 +642,10 @@ static int udma_pop_from_ring(struct udma_chan *uc, dma_addr_t *addr)
- 		if (cppi5_desc_is_tdcm(*addr))
- 			return ret;
+ static struct udma_desc *
+ udma_prep_slave_sg_tr(struct udma_chan *uc, struct scatterlist *sgl,
+ 		      unsigned int sglen, enum dma_transfer_direction dir,
+@@ -2581,29 +2626,12 @@ udma_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
+ 		return NULL;
+ 	}
  
-+		/* Check for flush descriptor */
-+		if (udma_desc_is_rx_flush(uc, *addr))
-+			return -ENOENT;
-+
- 		d = udma_udma_desc_from_paddr(uc, *addr);
+-	if (len < SZ_64K) {
+-		num_tr = 1;
+-		tr0_cnt0 = len;
+-		tr0_cnt1 = 1;
+-	} else {
+-		unsigned long align_to = __ffs(src | dest);
+-
+-		if (align_to > 3)
+-			align_to = 3;
+-		/*
+-		 * Keep simple: tr0: SZ_64K-alignment blocks,
+-		 *		tr1: the remaining
+-		 */
+-		num_tr = 2;
+-		tr0_cnt0 = (SZ_64K - BIT(align_to));
+-		if (len / tr0_cnt0 >= SZ_64K) {
+-			dev_err(uc->ud->dev, "size %zu is not supported\n",
+-				len);
+-			return NULL;
+-		}
+-
+-		tr0_cnt1 = len / tr0_cnt0;
+-		tr1_cnt0 = len % tr0_cnt0;
++	num_tr = udma_get_tr_counters(len, __ffs(src | dest), &tr0_cnt0,
++				      &tr0_cnt1, &tr1_cnt0);
++	if (num_tr < 0) {
++		dev_err(uc->ud->dev, "size %zu is not supported\n",
++			len);
++		return NULL;
+ 	}
  
- 		if (d)
-@@ -891,6 +926,9 @@ static int udma_stop(struct udma_chan *uc)
- 
- 	switch (uc->config.dir) {
- 	case DMA_DEV_TO_MEM:
-+		if (!uc->cyclic && !uc->desc)
-+			udma_push_to_ring(uc, -1);
-+
- 		udma_rchanrt_write(uc->rchan, UDMA_RCHAN_RT_PEER_RT_EN_REG,
- 				   UDMA_PEER_RT_EN_ENABLE |
- 				   UDMA_PEER_RT_EN_TEARDOWN);
-@@ -3274,6 +3312,98 @@ static int udma_setup_resources(struct udma_dev *ud)
- 	return ch_count;
- }
- 
-+static int udma_setup_rx_flush(struct udma_dev *ud)
-+{
-+	struct udma_rx_flush *rx_flush = &ud->rx_flush;
-+	struct cppi5_desc_hdr_t *tr_desc;
-+	struct cppi5_tr_type1_t *tr_req;
-+	struct cppi5_host_desc_t *desc;
-+	struct device *dev = ud->dev;
-+	struct udma_hwdesc *hwdesc;
-+	size_t tr_size;
-+
-+	/* Allocate 1K buffer for discarded data on RX channel teardown */
-+	rx_flush->buffer_size = SZ_1K;
-+	rx_flush->buffer_vaddr = devm_kzalloc(dev, rx_flush->buffer_size,
-+					      GFP_KERNEL);
-+	if (!rx_flush->buffer_vaddr)
-+		return -ENOMEM;
-+
-+	rx_flush->buffer_paddr = dma_map_single(dev, rx_flush->buffer_vaddr,
-+						rx_flush->buffer_size,
-+						DMA_TO_DEVICE);
-+	if (dma_mapping_error(dev, rx_flush->buffer_paddr))
-+		return -ENOMEM;
-+
-+	/* Set up descriptor to be used for TR mode */
-+	hwdesc = &rx_flush->hwdescs[0];
-+	tr_size = sizeof(struct cppi5_tr_type1_t);
-+	hwdesc->cppi5_desc_size = cppi5_trdesc_calc_size(tr_size, 1);
-+	hwdesc->cppi5_desc_size = ALIGN(hwdesc->cppi5_desc_size,
-+					ud->desc_align);
-+
-+	hwdesc->cppi5_desc_vaddr = devm_kzalloc(dev, hwdesc->cppi5_desc_size,
-+						GFP_KERNEL);
-+	if (!hwdesc->cppi5_desc_vaddr)
-+		return -ENOMEM;
-+
-+	hwdesc->cppi5_desc_paddr = dma_map_single(dev, hwdesc->cppi5_desc_vaddr,
-+						  hwdesc->cppi5_desc_size,
-+						  DMA_TO_DEVICE);
-+	if (dma_mapping_error(dev, hwdesc->cppi5_desc_paddr))
-+		return -ENOMEM;
-+
-+	/* Start of the TR req records */
-+	hwdesc->tr_req_base = hwdesc->cppi5_desc_vaddr + tr_size;
-+	/* Start address of the TR response array */
-+	hwdesc->tr_resp_base = hwdesc->tr_req_base + tr_size;
-+
-+	tr_desc = hwdesc->cppi5_desc_vaddr;
-+	cppi5_trdesc_init(tr_desc, 1, tr_size, 0, 0);
-+	cppi5_desc_set_pktids(tr_desc, 0, CPPI5_INFO1_DESC_FLOWID_DEFAULT);
-+	cppi5_desc_set_retpolicy(tr_desc, 0, 0);
-+
-+	tr_req = hwdesc->tr_req_base;
-+	cppi5_tr_init(&tr_req->flags, CPPI5_TR_TYPE1, false, false,
-+		      CPPI5_TR_EVENT_SIZE_COMPLETION, 0);
-+	cppi5_tr_csf_set(&tr_req->flags, CPPI5_TR_CSF_SUPR_EVT);
-+
-+	tr_req->addr = rx_flush->buffer_paddr;
-+	tr_req->icnt0 = rx_flush->buffer_size;
-+	tr_req->icnt1 = 1;
-+
-+	/* Set up descriptor to be used for packet mode */
-+	hwdesc = &rx_flush->hwdescs[1];
-+	hwdesc->cppi5_desc_size = ALIGN(sizeof(struct cppi5_host_desc_t) +
-+					CPPI5_INFO0_HDESC_EPIB_SIZE +
-+					CPPI5_INFO0_HDESC_PSDATA_MAX_SIZE,
-+					ud->desc_align);
-+
-+	hwdesc->cppi5_desc_vaddr = devm_kzalloc(dev, hwdesc->cppi5_desc_size,
-+						GFP_KERNEL);
-+	if (!hwdesc->cppi5_desc_vaddr)
-+		return -ENOMEM;
-+
-+	hwdesc->cppi5_desc_paddr = dma_map_single(dev, hwdesc->cppi5_desc_vaddr,
-+						  hwdesc->cppi5_desc_size,
-+						  DMA_TO_DEVICE);
-+	if (dma_mapping_error(dev, hwdesc->cppi5_desc_paddr))
-+		return -ENOMEM;
-+
-+	desc = hwdesc->cppi5_desc_vaddr;
-+	cppi5_hdesc_init(desc, 0, 0);
-+	cppi5_desc_set_pktids(&desc->hdr, 0, CPPI5_INFO1_DESC_FLOWID_DEFAULT);
-+	cppi5_desc_set_retpolicy(&desc->hdr, 0, 0);
-+
-+	cppi5_hdesc_attach_buf(desc,
-+			       rx_flush->buffer_paddr, rx_flush->buffer_size,
-+			       rx_flush->buffer_paddr, rx_flush->buffer_size);
-+
-+	dma_sync_single_for_device(dev, hwdesc->cppi5_desc_paddr,
-+				   hwdesc->cppi5_desc_size, DMA_TO_DEVICE);
-+	return 0;
-+}
-+
- #define TI_UDMAC_BUSWIDTHS	(BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) | \
- 				 BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | \
- 				 BIT(DMA_SLAVE_BUSWIDTH_3_BYTES) | \
-@@ -3387,6 +3517,10 @@ static int udma_probe(struct platform_device *pdev)
- 	if (ud->desc_align < dma_get_cache_alignment())
- 		ud->desc_align = dma_get_cache_alignment();
- 
-+	ret = udma_setup_rx_flush(ud);
-+	if (ret)
-+		return ret;
-+
- 	for (i = 0; i < ud->tchan_cnt; i++) {
- 		struct udma_tchan *tchan = &ud->tchans[i];
- 
+ 	d = udma_alloc_tr_desc(uc, tr_size, num_tr, DMA_MEM_TO_MEM);
 -- 
 Peter
 

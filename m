@@ -2,104 +2,85 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 662F6149E94
-	for <lists+dmaengine@lfdr.de>; Mon, 27 Jan 2020 06:08:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AC1414A02F
+	for <lists+dmaengine@lfdr.de>; Mon, 27 Jan 2020 09:54:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725830AbgA0FIf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 27 Jan 2020 00:08:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57590 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725308AbgA0FIe (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 27 Jan 2020 00:08:34 -0500
-Received: from localhost (unknown [122.181.201.159])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E87720716;
-        Mon, 27 Jan 2020 05:08:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580101714;
-        bh=sh4gpOdiYLotpOkB88cXx9+mmjB24ViBFWqv5LExZ4k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Wx8aPOpTS+Kb2Sy5Wmlm+U+6x5esBaImXY6fF8DDRxJiOuDQ2Gthx9hRn5n1quRzx
-         hnI7vjTugmK/dGJ8BV7fRkGx9TGps7+BxXI0/Ho2D7B7MUdXVpDw1QOr8OUUxTnVgM
-         FGMR+Aml/vS6dPUaDOXay9A0w9g3UwsPu1iErjGY=
-Date:   Mon, 27 Jan 2020 10:38:28 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        id S1729449AbgA0IyF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 27 Jan 2020 03:54:05 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:31958 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729423AbgA0IyF (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 27 Jan 2020 03:54:05 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00R8rFdF011482;
+        Mon, 27 Jan 2020 09:53:47 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=ph4w8wTNIFAH7Lv1cHY+WCanej56MAlJja9BHKFQag4=;
+ b=XxLDSW/oMTYlYGoDFhaCAy0QhI/ticramibopIUoEDsXm9T+L44NWf9NMnd8LcysTRkB
+ xExnoMz9HiLgattMBBjlbHX5AmoTxGJjYZlDeFebU5uIoMtuS2akMUYbx9njCWlQyhVh
+ rCuTdkB/HgCowGLe6WjRUfIWreG4fdq6IGL4ABVAZbhWW9ukVkiiCIHbKzINuN9+pxgG
+ zJVae9Wosv6CbGwBsB3TqUUdqRTCKw9G2lA/TZkn/9xfMafPhsAaAKhcAR4dJp2wUfdi
+ 0bWPx17GvXi6j945h3g5/JXcL1cMM4Ur+l3Ug00UzJDAaMALDLQkG9Dkuzb3+gC+x+y2 bw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xrbpar4st-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jan 2020 09:53:47 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 604B6100038;
+        Mon, 27 Jan 2020 09:53:42 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4F7ED21CA6A;
+        Mon, 27 Jan 2020 09:53:42 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 27 Jan 2020 09:53:41
+ +0100
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] dmaengine: Create symlinks between DMA channels and
- slaves
-Message-ID: <20200127050828.GH2841@vkoul-mobl>
-References: <20200117153056.31363-1-geert+renesas@glider.be>
- <d2b669e7-a5d4-20ec-5b54-103b71df7407@ti.com>
- <CAMuHMdVzQCWvH-LJ9ME5dRyafudZBHQLaJQzkSCPnughv_q2aA@mail.gmail.com>
- <1cdc4f71-f365-8c9e-4634-408c59e6a3f9@ti.com>
- <CAMuHMdU=-Eo29=DQmq96OegdYAvW7Vw9PpgNWSTfjDWVF5jd-A@mail.gmail.com>
- <f7bbb132-1278-7030-7f40-b89733bcbd83@ti.com>
- <CAMuHMdXDiwTomiKp8Kaw0NvMNpg78-M88F0mNTWBOz5MLE4LtQ@mail.gmail.com>
- <20200122094002.GS2841@vkoul-mobl>
- <20200124061359.GF2841@vkoul-mobl>
- <876eb72f-db74-86b5-5f2c-7fc9a5252421@ti.com>
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+CC:     <dmaengine@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: [PATCH 0/6] STM32 MDMA driver fixes and improvements
+Date:   Mon, 27 Jan 2020 09:53:28 +0100
+Message-ID: <20200127085334.13163-1-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <876eb72f-db74-86b5-5f2c-7fc9a5252421@ti.com>
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-27_02:2020-01-24,2020-01-27 signatures=0
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 24-01-20, 09:31, Peter Ujfalusi wrote:
-> Vinod, Geert,
-> 
-> On 24/01/2020 8.13, Vinod Koul wrote:
-> > On 22-01-20, 15:10, Vinod Koul wrote:
-> > 
-> >> I like the idea of adding this in debugfs and giving more info, I would
-> >> actually love to add bytes_transferred and few more info (descriptors
-> >> submitted etc) to it...
-> >>
-> >>>> This way we will have all the information in one place, easy to look up
-> >>>> and you don't need to manage symlinks dynamically, just check all
-> >>>> channels if they have slave_device/name when they are in_use (in_use w/o
-> >>>> slave_device is 'non slave')
-> >>>>
-> >>>> Some drivers are requesting and releasing the DMA channel per transfer
-> >>>> or when they are opened/closed or other variations.
-> >>>>
-> >>>>> What do other people think?
-> >>>
-> >>> Vinod: do you have some guidance for your minions? ;-)
-> >>
-> >>
-> >> That said, I am not against merging this patch while we add more
-> >> (debugfs)... So do my minions agree or they have better ideas :-)
-> > 
-> > So no new ideas, I am going to apply this and queue for 5.6, something
-> > is better than nothing.
-> 
-> My only issue with the symlink is that it is created/removed on some
-> setups quite frequently as they request/release channel per transfer or
-> open/close.
-> It might be a small hit in performance, but it is going to be for them.
-> 
-> > And I am looking forward for debugfs to give better picture, volunteers?
-> 
-> Well, I still feel that the debugfs can give better view in one place
-> and in production it can be disabled to save few bytes per channel and
-> code is not complied in.
-> 
-> If we have the debugfs we can remove some of the sysfs devices files
-> probably.
+This series brings improvements to the MDMA driver, with support of power
+management and descriptor reuse. Probe function gets a cleanup and to avoid
+a race with vchan_complete, driver now adopts vchan_terminate_vdesc().
 
-Sure I dont mind if we move to something better :) We went from zero to
-something and can do better!
+Amelie Delaunay (2):
+  dmaengine: stm32-mdma: driver defers probe for clock and reset
+  dmaengine: stm32-mdma: use vchan_terminate_vdesc() in .terminate_all
 
-Thanks
+Etienne Carriere (2):
+  dmaengine: stm32-mdma: use reset controller only at probe time
+  dmaengine: stm32-mdma: disable clock in case of error during probe
+
+Pierre-Yves MORDRET (2):
+  dmaengine: stm32-mdma: add suspend/resume power management support
+  dmaengine: stm32-mdma: enable descriptor_reuse
+
+ drivers/dma/stm32-mdma.c | 78 +++++++++++++++++++++++++++++++---------
+ 1 file changed, 62 insertions(+), 16 deletions(-)
 
 -- 
-~Vinod
+2.17.1
+

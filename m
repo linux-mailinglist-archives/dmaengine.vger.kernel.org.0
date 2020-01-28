@@ -2,50 +2,50 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F0D4614BC42
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Jan 2020 15:51:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F33F14BC57
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Jan 2020 15:53:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgA1Ovp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 28 Jan 2020 09:51:45 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33952 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726762AbgA1Ove (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Jan 2020 09:51:34 -0500
-Received: by mail-lf1-f65.google.com with SMTP id l18so9322587lfc.1;
-        Tue, 28 Jan 2020 06:51:31 -0800 (PST)
+        id S1726445AbgA1OxJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 28 Jan 2020 09:53:09 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37272 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgA1OxJ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Jan 2020 09:53:09 -0500
+Received: by mail-lj1-f195.google.com with SMTP id v17so15023379ljg.4;
+        Tue, 28 Jan 2020 06:53:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eFQApFkHfSijVKTUUrUwJVn0wlaUnmghVVpOTatZBc0=;
-        b=i1eWOouQAS7TnZdny1CCxPmzkOsNL514kyDso/tgHDC9ht6uZ4x5lkco1i1S/K04gd
-         qRThOaBSQ2DgIkOGQ1UHav+qKuX2xP0eSCk9bCFrXG9yt33qrW1iDm0XTvdi/wChIWX1
-         ErAIZZ3pzbztHsEeSfSnGSX/1WJbTICOcTN0Suln1Ce7TYawxIZY7AhiJV1CYm+ztNMV
-         9vl9lNzxf0/w1AABEVWAnMlNviFSr/oOZ512zLn3dPXrIweLVqajI2wANbEBG9m1Xpk6
-         ntCF9xDgpavJHRCBBNsvJRnCWZBlNTdKo8aBnIa2Rg4tUZS+C9phUNST5D+NsHp14v7j
-         Xejg==
+        bh=U/Ya9HgJWhgUTwQZYe1oiJhltZSo1E2iHMK7KNQPMfY=;
+        b=Hodtc920lvy8sd8TOTlPdC/iSYLKAGwpRDk06V/01Ur3aQ4XL1ivGkNnH84m2XjAn1
+         gGLP60qux/AnellnnVvVspIXPaLRsziphTxCBokG4OTCtZ37vGJY3/YoQ2fa9RmNWcuw
+         ZV86MylNds9Suufer9RChI2yJlqms8dr4wV4zQwlHVmMfjWRHPNtMMtWIgY981nuxJsS
+         4tdkUc+CqcFdlyhyvWbWqu3IjfoNzIVRRtQvsxGCcRsUqvsNlvo1NMi0Af120Fi5YKK+
+         BxdcmSxZWWgyU7tyEmQ0FOuBXEVAgcxCB1ZjL7J/Dy0tCkLWHON44PcYQozxI1tzq6Xo
+         O5GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=eFQApFkHfSijVKTUUrUwJVn0wlaUnmghVVpOTatZBc0=;
-        b=lRcAcN0NjvVW4ajUTKCy4rfFB3N1QT7OQuvGfcGNhVgrGtTSODdJ2QtYeX/28C6zbz
-         VSmJEvfUr06XnGbOXD3U7NCaBz+SKN+TJpS6lC+ajVawaXFWgxVuCUiCgvFCB/Lh5n7C
-         Xu0gWkMVLa2svNbiV1jO9hoLvcXtZEhv4aFsNcfHkpGhAzcZYQboU1oZvFOzaWOWSCju
-         NA+cJzraTVxVewD8fHuhJfmR82p1Fd4buAQ9sr/RH+bXaQGISiX2ThNo1ofuE9Wdj3Uz
-         PQyx3D/t0fgJpL2VSMdUDD1o+g9RPI0cAkRBYl8Vbg+05/kZV2bmarEA3z1dlsDtmLMo
-         QFWg==
-X-Gm-Message-State: APjAAAUksn5nHzyKmf/ioZluIme/6p0kH3ek7s6zFqIsOXK4j9MVxoJK
-        ZaGwdJ/az70mD96nM+s9Q7keHik+
-X-Google-Smtp-Source: APXvYqzutaBEYTWQbmXBikAIIpfSDGxe+iBkX/mtL9YJnlopi80AjM/us3OPXhD3Q2kkipwoNJ0hkw==
-X-Received: by 2002:ac2:5e2e:: with SMTP id o14mr2662509lfg.198.1580223090891;
-        Tue, 28 Jan 2020 06:51:30 -0800 (PST)
+        bh=U/Ya9HgJWhgUTwQZYe1oiJhltZSo1E2iHMK7KNQPMfY=;
+        b=fl33GQHmo6O1cXOiJbcka+vqgWU/3ZBCV8Htmy7j1Is6VidKNr/qbqr0oXoz06HZlj
+         kcbcuEifTCpLjiR26BB1MqiXf5TtL8ZZnFqwgH/QqS5bpMFunyFocT9ZFR7hyDpr45uE
+         RgMeosSH6xw68mnjDxCFSxlWrgHYRDLTEAf2nBCTUeDnLS5Uub/481Mo3RKW5TfzOJRS
+         UY/Haq15GHLyNGHv3fWmS/oFHRWYN0prtSCGwO5QQoAO3U4CFK+8h3UuqMyw+0msKsGN
+         8fp8dPFg7DJn1vmdPCA1JZkpJ4eDt91QLVqCwRZtF1eYbKRHweECBIYhpQu0Th42nWl9
+         Lqdw==
+X-Gm-Message-State: APjAAAXwMvA+lX1A1rUHrmjZI6b/sDpCJ/at+PkHd4LAhmLlDkvTB7fO
+        foku411XUvG3HhsBpvC8qdhcJLXg
+X-Google-Smtp-Source: APXvYqw9Pp2WA7B96iEHSu67EpIA7RH2scmzETdUu6IFWu6gJGRHjOAtKCEWC03WfutzAH5DvVqD2w==
+X-Received: by 2002:a2e:7009:: with SMTP id l9mr13222873ljc.96.1580223186894;
+        Tue, 28 Jan 2020 06:53:06 -0800 (PST)
 Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id u9sm9737575lji.49.2020.01.28.06.51.29
+        by smtp.googlemail.com with ESMTPSA id j19sm12072651lfb.90.2020.01.28.06.53.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2020 06:51:30 -0800 (PST)
-Subject: Re: [PATCH v4 01/14] dmaengine: tegra-apb: Fix use-after-free
+        Tue, 28 Jan 2020 06:53:06 -0800 (PST)
+Subject: Re: [PATCH v4 11/14] dmaengine: tegra-apb: Clean up suspend-resume
 To:     Jon Hunter <jonathanh@nvidia.com>,
         Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -55,19 +55,16 @@ To:     Jon Hunter <jonathanh@nvidia.com>,
 Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
 References: <20200112173006.29863-1-digetx@gmail.com>
- <20200112173006.29863-2-digetx@gmail.com>
- <4c1b9e48-5468-0c03-2108-158ee814eea8@nvidia.com>
- <1327bb21-0364-da26-e6ed-ff6c19df03e6@gmail.com>
- <e39ef31d-4cff-838a-0fc1-73a39a8d6120@nvidia.com>
- <b0c85ca7-d8ac-5f9d-2c57-79543c1f9b5d@gmail.com>
- <5bbe9e3e-a64f-53be-e7f6-63e36cbae77d@nvidia.com>
+ <20200112173006.29863-12-digetx@gmail.com>
+ <7e0d2cfa-5570-93e6-e3dc-7d3f6902a528@gmail.com>
+ <831d5e28-72df-3175-bfb6-b33985d93a52@nvidia.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <be7addff-9f5c-e40a-923f-db895ce89fa2@gmail.com>
-Date:   Tue, 28 Jan 2020 17:51:23 +0300
+Message-ID: <e245618c-6ae9-18d9-5671-1d6c0cf47a39@gmail.com>
+Date:   Tue, 28 Jan 2020 17:53:05 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <5bbe9e3e-a64f-53be-e7f6-63e36cbae77d@nvidia.com>
+In-Reply-To: <831d5e28-72df-3175-bfb6-b33985d93a52@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -76,85 +73,83 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-28.01.2020 17:02, Jon Hunter пишет:
+28.01.2020 17:10, Jon Hunter пишет:
 > 
-> On 16/01/2020 20:10, Dmitry Osipenko wrote:
->> 15.01.2020 12:00, Jon Hunter пишет:
+> On 21/01/2020 21:23, Dmitry Osipenko wrote:
+>> 12.01.2020 20:30, Dmitry Osipenko пишет:
+>>> It is enough to check whether hardware is busy on suspend and to reset
+>>> it across of suspend-resume because channel's configuration is fully
+>>> re-programmed on each DMA transaction anyways and because save-restore
+>>> of an active channel won't end up well without pausing transfer prior to
+>>> saving of the state (note that all channels shall be idling at the time of
+>>> suspend, so save-restore is not needed at all).
 >>>
->>> On 14/01/2020 20:33, Dmitry Osipenko wrote:
->>>> 14.01.2020 18:09, Jon Hunter пишет:
->>>>>
->>>>> On 12/01/2020 17:29, Dmitry Osipenko wrote:
->>>>>> I was doing some experiments with I2C and noticed that Tegra APB DMA
->>>>>> driver crashes sometime after I2C DMA transfer termination. The crash
->>>>>> happens because tegra_dma_terminate_all() bails out immediately if pending
->>>>>> list is empty, thus it doesn't release the half-completed descriptors
->>>>>> which are getting re-used before ISR tasklet kicks-in.
->>>>>
->>>>> Can you elaborate a bit more on how these are getting re-used? What is
->>>>> the sequence of events which results in the panic? I believe that this
->>>>> was also reported in the past [0] and so I don't doubt there is an issue
->>>>> here, but would like to completely understand this.
->>>>>
->>>>> Thanks!
->>>>> Jon
->>>>>
->>>>> [0] https://lore.kernel.org/patchwork/patch/675349/
->>>>>
->>>>
->>>> In my case it happens in the touchscreen driver during of the
->>>> touchscreen's interrupt handling (in a threaded IRQ handler) + CPU is
->>>> under load and there is other interrupts activity. So what happens here
->>>> is that the TS driver issues one I2C transfer, which fails with
->>>> (apparently bogus) timeout (because DMA descriptor is completed and
->>>> removed from the pending list, but tasklet not executed yet), and then
->>>> TS immediately issues another I2C transfer that re-uses the
->>>> yet-incompleted descriptor. That's my understanding.
+>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>> ---
+>>>  drivers/dma/tegra20-apb-dma.c | 131 +++++++++++++++++-----------------
+>>>  1 file changed, 67 insertions(+), 64 deletions(-)
 >>>
->>> OK, but what is the exact sequence that it allowing it to re-use the
->>> incompleted descriptor?
+>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+>>> index b9d8e57eaf54..398a0e1d6506 100644
+>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>> @@ -1392,6 +1392,36 @@ static const struct tegra_dma_chip_data tegra148_dma_chip_data = {
+>>>  	.support_separate_wcount_reg = true,
+>>>  };
+>>>  
+>>> +static int tegra_dma_init_hw(struct tegra_dma *tdma)
+>>> +{
+>>> +	int err;
+>>> +
+>>> +	err = reset_control_assert(tdma->rst);
+>>> +	if (err) {
+>>> +		dev_err(tdma->dev, "failed to assert reset: %d\n", err);
+>>> +		return err;
+>>> +	}
+>>> +
+>>> +	err = clk_enable(tdma->dma_clk);
+>>> +	if (err) {
+>>> +		dev_err(tdma->dev, "failed to enable clk: %d\n", err);
+>>> +		return err;
+>>> +	}
+>>> +
+>>> +	/* reset DMA controller */
+>>> +	udelay(2);
+>>> +	reset_control_deassert(tdma->rst);
+>>> +
+>>> +	/* enable global DMA registers */
+>>> +	tdma_write(tdma, TEGRA_APBDMA_GENERAL, TEGRA_APBDMA_GENERAL_ENABLE);
+>>> +	tdma_write(tdma, TEGRA_APBDMA_CONTROL, 0);
+>>> +	tdma_write(tdma, TEGRA_APBDMA_IRQ_MASK_SET, 0xFFFFFFFF);
+>>> +
+>>> +	clk_disable(tdma->dma_clk);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>>  static int tegra_dma_probe(struct platform_device *pdev)
+>>>  {
+>>>  	const struct tegra_dma_chip_data *cdata;
+>>> @@ -1433,30 +1463,18 @@ static int tegra_dma_probe(struct platform_device *pdev)
+>>>  	if (ret)
+>>>  		return ret;
+>>>  
+>>> +	ret = tegra_dma_init_hw(tdma);
+>>> +	if (ret)
+>>> +		goto err_clk_unprepare;
+>>> +
+>>>  	pm_runtime_irq_safe(&pdev->dev);
+>>>  	pm_runtime_enable(&pdev->dev);
+>>>  	if (!pm_runtime_enabled(&pdev->dev)) {
+>>>  		ret = tegra_dma_runtime_resume(&pdev->dev);
+>>>  		if (ret)
+>>>  			goto err_clk_unprepare;
 >>
->>    TDMA driver                      DMA Client
->>
->> 1.
->>                                     dmaengine_prep()
->>
->> 2.
->>    tegra_dma_desc_get()
->>    dma_desc = kzalloc()
->>    ...
->>    tegra_dma_prep_slave_sg()
->>    INIT_LIST_HEAD(&dma_desc->tx_list);
->>    INIT_LIST_HEAD(&dma_desc->cb_node);
->>    list_add_tail(sgreq->node,
->>                  dma_desc->tx_list)
->>
->> 3.
->>                                     dma_async_issue_pending()
->>
->> 4.
->>    tegra_dma_tx_submit()
->>    list_splice_tail_init(dma_desc->tx_list,
->>                          tdc->pending_sg_req)
->>
->> 5.
->>    tegra_dma_isr()
->>    ...
->>    handle_once_dma_done()
->>    ...
->>    sgreq = list_first_entry(tdc->pending_sg_req)
->>    list_del(sgreq->node);
->>    ...
->>    list_add_tail(dma_desc->cb_node,
->>                  tdc->cb_desc);
->>    list_add_tail(dma_desc->node,
->>                  tdc->free_dma_desc);
+>> Jon, but isn't the RPM mandatory for all Tegra SoCs now and thus
+>> guaranteed to be enabled? Maybe we should start to remove handling the
+>> case of unavailable RPM from all Tegra drivers?
 > 
-> Isn't this the problem here, that we have placed this on the free list
-> before we are actually done?
-> 
-> It seems to me that there could still be a potential race condition
-> between the ISR and the tasklet running.
+> Yes that's true, even ARCH_TEGRA selects PM now
 
-Yes, this should be addressed by the patch #3 "dmaengine: tegra-apb:
-Prevent race conditions of tasklet vs free list".
+I already sent out v5 with the !RPM handling removed from the code,
+please take a look at it.

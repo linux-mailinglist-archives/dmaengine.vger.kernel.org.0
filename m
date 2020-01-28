@@ -2,122 +2,80 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B9F714B092
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Jan 2020 08:53:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9419114B1E9
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Jan 2020 10:42:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725844AbgA1HxW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 28 Jan 2020 02:53:22 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:43642 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgA1HxW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Jan 2020 02:53:22 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00S7qwsh032869;
-        Tue, 28 Jan 2020 01:52:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580197978;
-        bh=nDdLPYZ6LprTv2NjVWGFnvSMmFg46W0Ix7XgkSNJ8EY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=d/UvB+j8pNRgH37eFe3kuwKD0BAbukWFdtwrecsE/2l1bXd64J0e4b9QYHtjxaUPy
-         11s0Zq9X2odVsawhOPTRqfO0GzLmj1WHKC63LGAh7XAM+CJ5VhhyohIH/mjTQM91fR
-         Kx+AU9NJG9N9U6NcKEYJRGny7lpKBOuaQLmaCTsM=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00S7qwCT050697
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 28 Jan 2020 01:52:58 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 28
- Jan 2020 01:52:57 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 28 Jan 2020 01:52:57 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00S7qtWf064227;
-        Tue, 28 Jan 2020 01:52:55 -0600
-Subject: Re: [PATCH] dma: ti: dma-crossbar: convert to
- devm_platform_ioremap_resource()
-To:     <qiwuchen55@gmail.com>, <vkoul@kernel.org>,
-        <dan.j.williams@intel.com>, <allison@lohutok.net>,
-        <kstewart@linuxfoundation.org>
-CC:     <tglx@linutronix.de>, <wenwen@cs.uga.edu>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        chenqiwu <chenqiwu@xiaomi.com>
-References: <1580189746-2864-1-git-send-email-qiwuchen55@gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <2d85b488-6cc1-f062-c926-b17d1165bde1@ti.com>
-Date:   Tue, 28 Jan 2020 09:53:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1725937AbgA1Jm1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 28 Jan 2020 04:42:27 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1512 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726141AbgA1Jm0 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Jan 2020 04:42:26 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00S9XRJJ026097;
+        Tue, 28 Jan 2020 10:42:11 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=Kmmsnt0GP19LNEdrBchAyZ2FdgB00aCxXbF9RNsjpVY=;
+ b=L75TFrdwxinDcyog/Ny+M12HWHDQn6p/hu+wpK++jUkFR3mHiXuSzx1jJUgXOLmowAly
+ SbpW6ULAXjmvz8CVKMRvE5OmhJH5990xBQaD/dfxgKbksxwsm6MaALEd1S20HQeE5TES
+ aEXQ9UL3jNu6m7zFcU7XvXRIcsyg7VoVviwEE3ky8D69BEiI1hUoqGNRb3owDfq2h9KE
+ jsImpwzSBBEMEDDxr0Mb1NQQEh7MBOLYGeGmF/eolceW84EvpOkHIS4kvdn4e/5mHmlG
+ 38Cx7W3ogTGatTcYpMp8+qkOvs2KQzjeo9+YiXPIbpwDPeJrTlmyHTyIUx6k5j+lsITO sg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xrbpaw9xb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jan 2020 10:42:11 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C18FD100034;
+        Tue, 28 Jan 2020 10:42:07 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B396921D3C0;
+        Tue, 28 Jan 2020 10:42:07 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 28 Jan 2020 10:42:07
+ +0100
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+CC:     <dmaengine@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: [PATCH 0/4] STM32 DMAMUX driver fixes and improvements
+Date:   Tue, 28 Jan 2020 10:41:54 +0100
+Message-ID: <20200128094158.20361-1-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <1580189746-2864-1-git-send-email-qiwuchen55@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-28_02:2020-01-24,2020-01-28 signatures=0
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+This series brings improvements to the DMAMUX driver with support of power
+management and probe function gets a cleanup.
 
+Etienne Carriere (3):
+  dmaengine: stm32-dmamux: fix clock handling in probe sequence
+  dmaengine: stm32-dmamux: use reset controller only at probe time
+  dmaengine: stm32-dmamux: driver defers probe for clock and reset
 
-On 28/01/2020 7.35, qiwuchen55@gmail.com wrote:
-> From: chenqiwu <chenqiwu@xiaomi.com>
-> 
-> Use a new API devm_platform_ioremap_resource() to simplify code.
+Pierre-Yves MORDRET (1):
+  dmaengine: stm32-dmamux: add suspend/resume power management support
 
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+ drivers/dma/stm32-dmamux.c | 93 +++++++++++++++++++++++++++++++-------
+ 1 file changed, 77 insertions(+), 16 deletions(-)
 
-> Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
-> ---
->  drivers/dma/ti/dma-crossbar.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
-> index f255056..4ba8fa5 100644
-> --- a/drivers/dma/ti/dma-crossbar.c
-> +++ b/drivers/dma/ti/dma-crossbar.c
-> @@ -133,7 +133,6 @@ static int ti_am335x_xbar_probe(struct platform_device *pdev)
->  	const struct of_device_id *match;
->  	struct device_node *dma_node;
->  	struct ti_am335x_xbar_data *xbar;
-> -	struct resource *res;
->  	void __iomem *iomem;
->  	int i, ret;
->  
-> @@ -173,8 +172,7 @@ static int ti_am335x_xbar_probe(struct platform_device *pdev)
->  		xbar->xbar_events = TI_AM335X_XBAR_LINES;
->  	}
->  
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	iomem = devm_ioremap_resource(&pdev->dev, res);
-> +	iomem = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(iomem))
->  		return PTR_ERR(iomem);
->  
-> @@ -323,7 +321,6 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
->  	struct device_node *dma_node;
->  	struct ti_dra7_xbar_data *xbar;
->  	struct property *prop;
-> -	struct resource *res;
->  	u32 safe_val;
->  	int sz;
->  	void __iomem *iomem;
-> @@ -403,8 +400,7 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
->  		kfree(rsv_events);
->  	}
->  
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	iomem = devm_ioremap_resource(&pdev->dev, res);
-> +	iomem = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(iomem))
->  		return PTR_ERR(iomem);
->  
-> 
+-- 
+2.17.1
 
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

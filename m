@@ -2,50 +2,50 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F33F14BC57
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Jan 2020 15:53:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CB9014BC87
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Jan 2020 16:01:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbgA1OxJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 28 Jan 2020 09:53:09 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37272 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgA1OxJ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Jan 2020 09:53:09 -0500
-Received: by mail-lj1-f195.google.com with SMTP id v17so15023379ljg.4;
-        Tue, 28 Jan 2020 06:53:07 -0800 (PST)
+        id S1726758AbgA1PBm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 28 Jan 2020 10:01:42 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35496 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbgA1PBm (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Jan 2020 10:01:42 -0500
+Received: by mail-lf1-f67.google.com with SMTP id z18so9329540lfe.2;
+        Tue, 28 Jan 2020 07:01:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=U/Ya9HgJWhgUTwQZYe1oiJhltZSo1E2iHMK7KNQPMfY=;
-        b=Hodtc920lvy8sd8TOTlPdC/iSYLKAGwpRDk06V/01Ur3aQ4XL1ivGkNnH84m2XjAn1
-         gGLP60qux/AnellnnVvVspIXPaLRsziphTxCBokG4OTCtZ37vGJY3/YoQ2fa9RmNWcuw
-         ZV86MylNds9Suufer9RChI2yJlqms8dr4wV4zQwlHVmMfjWRHPNtMMtWIgY981nuxJsS
-         4tdkUc+CqcFdlyhyvWbWqu3IjfoNzIVRRtQvsxGCcRsUqvsNlvo1NMi0Af120Fi5YKK+
-         BxdcmSxZWWgyU7tyEmQ0FOuBXEVAgcxCB1ZjL7J/Dy0tCkLWHON44PcYQozxI1tzq6Xo
-         O5GA==
+        bh=jxwyE4yCuJly/POgSDmd0mgjgoTTNrnCHPv8m1hThlw=;
+        b=r9pKAmpcGxCnJQHpeUV186FjMp6g8ZLFV0vbqprv6kdJ06k55bvT1gSajqUntVTSSj
+         /dBkeIqVll8OujXg80OGCegtmjpTelrjQ34GbYIJ/kWJ8v+Pe1nmicD+xBYekQuggSd0
+         T5zhu4wYNUF5tLHncUPdiR9qJCDeyoB1tjnWWCKqJzuw++TmtRoY46p61ZIaDkVM+Fw6
+         l+D/km54MrSWj65dv7z52suZ/YiOdwiPYz/HSG/FAfhuSWpHTDEQp5XSX2eO2BNOXGxG
+         Z4QEHFf5wtUvIzwh4kko0qen16g5eEfU95Shd+b0QF3rF1izob6S0iOXOKSgrxx1Y0s2
+         OMVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=U/Ya9HgJWhgUTwQZYe1oiJhltZSo1E2iHMK7KNQPMfY=;
-        b=fl33GQHmo6O1cXOiJbcka+vqgWU/3ZBCV8Htmy7j1Is6VidKNr/qbqr0oXoz06HZlj
-         kcbcuEifTCpLjiR26BB1MqiXf5TtL8ZZnFqwgH/QqS5bpMFunyFocT9ZFR7hyDpr45uE
-         RgMeosSH6xw68mnjDxCFSxlWrgHYRDLTEAf2nBCTUeDnLS5Uub/481Mo3RKW5TfzOJRS
-         UY/Haq15GHLyNGHv3fWmS/oFHRWYN0prtSCGwO5QQoAO3U4CFK+8h3UuqMyw+0msKsGN
-         8fp8dPFg7DJn1vmdPCA1JZkpJ4eDt91QLVqCwRZtF1eYbKRHweECBIYhpQu0Th42nWl9
-         Lqdw==
-X-Gm-Message-State: APjAAAXwMvA+lX1A1rUHrmjZI6b/sDpCJ/at+PkHd4LAhmLlDkvTB7fO
-        foku411XUvG3HhsBpvC8qdhcJLXg
-X-Google-Smtp-Source: APXvYqw9Pp2WA7B96iEHSu67EpIA7RH2scmzETdUu6IFWu6gJGRHjOAtKCEWC03WfutzAH5DvVqD2w==
-X-Received: by 2002:a2e:7009:: with SMTP id l9mr13222873ljc.96.1580223186894;
-        Tue, 28 Jan 2020 06:53:06 -0800 (PST)
+        bh=jxwyE4yCuJly/POgSDmd0mgjgoTTNrnCHPv8m1hThlw=;
+        b=Ctkj+Bkm4kRC90ur9aFKMkFKq9G4Nn1MJj9s77DdYbHzffyVg0LFjM8VPF4Fc/xDxl
+         PtzVV+p667c2p+zlw25wz0Qmk9iq8WIqzKsEHIywfW5VAJ3c1BRqbLOpVPdbKsANO9al
+         elptn4bF7FCBGx/pcNo7D9WQeDic4NhOJ2TpcROM63fwK7Yc1wuE9OxDQ86HLv19hpD9
+         g1gAJyQ1NF7XMtKv1CXuj2xdsGPP1PS5WA7ev8SMKFTiWscsaoNfK3TBOaW9EaO4Glb/
+         fB3Bd59sFBHxxCeZh+n/NMh4ii9EJPax21CIH9DnJDopI9m6z1p5Ub8WpmeTvl+DxOZX
+         36Bw==
+X-Gm-Message-State: APjAAAU1eAiEfgoK0GfPGC2JH2ORspjoUZs4OYxSxJ57VENxtlqI5Xp4
+        oTmoU/BwBDInCXyOf2ntECSbdd9h
+X-Google-Smtp-Source: APXvYqw3RsrE6AGKOzv0pZfEsLBAjHfve5tnkCmTy0TEA0qNwFJ2y1TSQdaqNO+CJhWKyHw5evw2WA==
+X-Received: by 2002:a19:c6cd:: with SMTP id w196mr2653759lff.79.1580223699796;
+        Tue, 28 Jan 2020 07:01:39 -0800 (PST)
 Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id j19sm12072651lfb.90.2020.01.28.06.53.05
+        by smtp.googlemail.com with ESMTPSA id u13sm9960229lfq.19.2020.01.28.07.01.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2020 06:53:06 -0800 (PST)
-Subject: Re: [PATCH v4 11/14] dmaengine: tegra-apb: Clean up suspend-resume
+        Tue, 28 Jan 2020 07:01:39 -0800 (PST)
+Subject: Re: [PATCH v4 08/14] dmaengine: tegra-apb: Fix coding style problems
 To:     Jon Hunter <jonathanh@nvidia.com>,
         Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -55,16 +55,17 @@ To:     Jon Hunter <jonathanh@nvidia.com>,
 Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
 References: <20200112173006.29863-1-digetx@gmail.com>
- <20200112173006.29863-12-digetx@gmail.com>
- <7e0d2cfa-5570-93e6-e3dc-7d3f6902a528@gmail.com>
- <831d5e28-72df-3175-bfb6-b33985d93a52@nvidia.com>
+ <20200112173006.29863-9-digetx@gmail.com>
+ <844c4ace-d043-a908-823d-545b5b753008@nvidia.com>
+ <134adcfb-83fb-4bb7-986e-65217bc4f821@gmail.com>
+ <bab1eec0-8b1d-6005-e9eb-05e93da844aa@nvidia.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <e245618c-6ae9-18d9-5671-1d6c0cf47a39@gmail.com>
-Date:   Tue, 28 Jan 2020 17:53:05 +0300
+Message-ID: <a99ff711-22af-a377-9500-ab4b8644b0ff@gmail.com>
+Date:   Tue, 28 Jan 2020 18:01:38 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <831d5e28-72df-3175-bfb6-b33985d93a52@nvidia.com>
+In-Reply-To: <bab1eec0-8b1d-6005-e9eb-05e93da844aa@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -73,83 +74,153 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-28.01.2020 17:10, Jon Hunter пишет:
+28.01.2020 17:05, Jon Hunter пишет:
 > 
-> On 21/01/2020 21:23, Dmitry Osipenko wrote:
->> 12.01.2020 20:30, Dmitry Osipenko пишет:
->>> It is enough to check whether hardware is busy on suspend and to reset
->>> it across of suspend-resume because channel's configuration is fully
->>> re-programmed on each DMA transaction anyways and because save-restore
->>> of an active channel won't end up well without pausing transfer prior to
->>> saving of the state (note that all channels shall be idling at the time of
->>> suspend, so save-restore is not needed at all).
+> On 16/01/2020 17:37, Dmitry Osipenko wrote:
+>> 15.01.2020 12:49, Jon Hunter пишет:
 >>>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  drivers/dma/tegra20-apb-dma.c | 131 +++++++++++++++++-----------------
->>>  1 file changed, 67 insertions(+), 64 deletions(-)
 >>>
->>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->>> index b9d8e57eaf54..398a0e1d6506 100644
->>> --- a/drivers/dma/tegra20-apb-dma.c
->>> +++ b/drivers/dma/tegra20-apb-dma.c
->>> @@ -1392,6 +1392,36 @@ static const struct tegra_dma_chip_data tegra148_dma_chip_data = {
->>>  	.support_separate_wcount_reg = true,
->>>  };
->>>  
->>> +static int tegra_dma_init_hw(struct tegra_dma *tdma)
->>> +{
->>> +	int err;
->>> +
->>> +	err = reset_control_assert(tdma->rst);
->>> +	if (err) {
->>> +		dev_err(tdma->dev, "failed to assert reset: %d\n", err);
->>> +		return err;
->>> +	}
->>> +
->>> +	err = clk_enable(tdma->dma_clk);
->>> +	if (err) {
->>> +		dev_err(tdma->dev, "failed to enable clk: %d\n", err);
->>> +		return err;
->>> +	}
->>> +
->>> +	/* reset DMA controller */
->>> +	udelay(2);
->>> +	reset_control_deassert(tdma->rst);
->>> +
->>> +	/* enable global DMA registers */
->>> +	tdma_write(tdma, TEGRA_APBDMA_GENERAL, TEGRA_APBDMA_GENERAL_ENABLE);
->>> +	tdma_write(tdma, TEGRA_APBDMA_CONTROL, 0);
->>> +	tdma_write(tdma, TEGRA_APBDMA_IRQ_MASK_SET, 0xFFFFFFFF);
->>> +
->>> +	clk_disable(tdma->dma_clk);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>>  static int tegra_dma_probe(struct platform_device *pdev)
->>>  {
->>>  	const struct tegra_dma_chip_data *cdata;
->>> @@ -1433,30 +1463,18 @@ static int tegra_dma_probe(struct platform_device *pdev)
->>>  	if (ret)
->>>  		return ret;
->>>  
->>> +	ret = tegra_dma_init_hw(tdma);
->>> +	if (ret)
->>> +		goto err_clk_unprepare;
->>> +
->>>  	pm_runtime_irq_safe(&pdev->dev);
->>>  	pm_runtime_enable(&pdev->dev);
->>>  	if (!pm_runtime_enabled(&pdev->dev)) {
->>>  		ret = tegra_dma_runtime_resume(&pdev->dev);
->>>  		if (ret)
->>>  			goto err_clk_unprepare;
+>>> On 12/01/2020 17:30, Dmitry Osipenko wrote:
+>>>> This patch fixes few dozens of coding style problems reported by
+>>>> checkpatch and prettifies code where makes sense.
+>>>>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  drivers/dma/tegra20-apb-dma.c | 276 ++++++++++++++++++----------------
+>>>>  1 file changed, 144 insertions(+), 132 deletions(-)
+>>>>
+>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+>>>> index dff21e80ffa4..7158bd3145c4 100644
+>>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>>
+>>> ...
+>>>
+>>>> @@ -1003,20 +1014,23 @@ static void tegra_dma_prep_wcount(struct tegra_dma_channel *tdc,
+>>>>  		ch_regs->csr |= len_field;
+>>>>  }
+>>>>  
+>>>> -static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+>>>> -	struct dma_chan *dc, struct scatterlist *sgl, unsigned int sg_len,
+>>>> -	enum dma_transfer_direction direction, unsigned long flags,
+>>>> -	void *context)
+>>>> +static struct dma_async_tx_descriptor *
+>>>> +tegra_dma_prep_slave_sg(struct dma_chan *dc,
+>>>> +			struct scatterlist *sgl,
+>>>> +			unsigned int sg_len,
+>>>> +			enum dma_transfer_direction direction,
+>>>> +			unsigned long flags,
+>>>> +			void *context)
+>>>>  {
+>>>>  	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+>>>> +	struct tegra_dma_sg_req *sg_req = NULL;
+>>>> +	u32 csr, ahb_seq, apb_ptr, apb_seq;
+>>>> +	enum dma_slave_buswidth slave_bw;
+>>>>  	struct tegra_dma_desc *dma_desc;
+>>>> -	unsigned int i;
+>>>> -	struct scatterlist *sg;
+>>>> -	unsigned long csr, ahb_seq, apb_ptr, apb_seq;
+>>>>  	struct list_head req_list;
+>>>> -	struct tegra_dma_sg_req  *sg_req = NULL;
+>>>> -	u32 burst_size;
+>>>> -	enum dma_slave_buswidth slave_bw;
+>>>> +	struct scatterlist *sg;
+>>>> +	unsigned int burst_size;
+>>>> +	unsigned int i;
+>>>
+>>> This is not really consistent with the rest of the changes by having 'i'
+>>> and 'burst_size' on separate lines.
 >>
->> Jon, but isn't the RPM mandatory for all Tegra SoCs now and thus
->> guaranteed to be enabled? Maybe we should start to remove handling the
->> case of unavailable RPM from all Tegra drivers?
+>> The goal wasn't to squash everything into a single line, but to make
+>> code more readable. In this particular case the separated lines look
+>> better to me.
+>>
+>>>>  
+>>>>  	if (!tdc->config_init) {
+>>>>  		dev_err(tdc2dev(tdc), "DMA channel is not configured\n");
+>>>> @@ -1028,7 +1042,7 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+>>>>  	}
+>>>>  
+>>>>  	if (get_transfer_param(tdc, direction, &apb_ptr, &apb_seq, &csr,
+>>>> -				&burst_size, &slave_bw) < 0)
+>>>> +			       &burst_size, &slave_bw) < 0)
+>>>>  		return NULL;
+>>>>  
+>>>>  	INIT_LIST_HEAD(&req_list);
+>>>> @@ -1074,7 +1088,7 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+>>>>  		len = sg_dma_len(sg);
+>>>>  
+>>>>  		if ((len & 3) || (mem & 3) ||
+>>>> -				(len > tdc->tdma->chip_data->max_dma_count)) {
+>>>> +		    len > tdc->tdma->chip_data->max_dma_count) {
+>>>>  			dev_err(tdc2dev(tdc),
+>>>>  				"DMA length/memory address is not supported\n");
+>>>>  			tegra_dma_desc_put(tdc, dma_desc);
+>>>> @@ -1126,20 +1140,21 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
+>>>>  	return &dma_desc->txd;
+>>>>  }
+>>>>  
+>>>> -static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
+>>>> -	struct dma_chan *dc, dma_addr_t buf_addr, size_t buf_len,
+>>>> -	size_t period_len, enum dma_transfer_direction direction,
+>>>> -	unsigned long flags)
+>>>> +static struct dma_async_tx_descriptor *
+>>>> +tegra_dma_prep_dma_cyclic(struct dma_chan *dc, dma_addr_t buf_addr,
+>>>> +			  size_t buf_len,
+>>>> +			  size_t period_len,
+>>>> +			  enum dma_transfer_direction direction,
+>>>> +			  unsigned long flags)
+>>>>  {
+>>>>  	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+>>>> -	struct tegra_dma_desc *dma_desc = NULL;
+>>>>  	struct tegra_dma_sg_req *sg_req = NULL;
+>>>> -	unsigned long csr, ahb_seq, apb_ptr, apb_seq;
+>>>> -	int len;
+>>>> -	size_t remain_len;
+>>>> -	dma_addr_t mem = buf_addr;
+>>>> -	u32 burst_size;
+>>>> +	u32 csr, ahb_seq, apb_ptr, apb_seq;
+>>>>  	enum dma_slave_buswidth slave_bw;
+>>>> +	struct tegra_dma_desc *dma_desc;
+>>>> +	dma_addr_t mem = buf_addr;
+>>>> +	unsigned int burst_size;
+>>>> +	size_t len, remain_len;
+>>>>  
+>>>>  	if (!buf_len || !period_len) {
+>>>>  		dev_err(tdc2dev(tdc), "Invalid buffer/period len\n");
+>>>> @@ -1173,13 +1188,13 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
+>>>>  
+>>>>  	len = period_len;
+>>>>  	if ((len & 3) || (buf_addr & 3) ||
+>>>> -			(len > tdc->tdma->chip_data->max_dma_count)) {
+>>>> +	    len > tdc->tdma->chip_data->max_dma_count) {
+>>>>  		dev_err(tdc2dev(tdc), "Req len/mem address is not correct\n");
+>>>>  		return NULL;
+>>>>  	}
+>>>>  
+>>>>  	if (get_transfer_param(tdc, direction, &apb_ptr, &apb_seq, &csr,
+>>>> -				&burst_size, &slave_bw) < 0)
+>>>> +			       &burst_size, &slave_bw) < 0)
+>>>>  		return NULL;
+>>>>  
+>>>>  	ahb_seq = TEGRA_APBDMA_AHBSEQ_INTR_ENB;
+>>>> @@ -1269,7 +1284,6 @@ static int tegra_dma_alloc_chan_resources(struct dma_chan *dc)
+>>>>  	int ret;
+>>>>  
+>>>>  	dma_cookie_init(&tdc->dma_chan);
+>>>> -	tdc->config_init = false;
+>>>
+>>> Why is this removed? Does not seem to belong in this patch.
+>>
+>> Because initially, on driver's probe, the tdc->config_init is false for
+>> all channels and then tegra_dma_free_chan_resources() also sets it to
+>> false. Thus there is no need to re-initilize the already initialized
+>> variable. It's not a very good coding style if variables are
+>> unnecessarily initialized, you probably noticed that there are few other
+>> cases of removing the unneeded initializations of local variables in
+>> this patch.
 > 
-> Yes that's true, even ARCH_TEGRA selects PM now
+> OK, but I don't really consider this coding-style and would prefer a
+> separate patch for this.
 
-I already sent out v5 with the !RPM handling removed from the code,
-please take a look at it.
+If if it's not a coding-style, then how would you name it? :)

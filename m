@@ -2,44 +2,60 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AC4014B3C3
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Jan 2020 12:50:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9224214B3E8
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Jan 2020 13:05:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbgA1Lu2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 28 Jan 2020 06:50:28 -0500
-Received: from ozlabs.org ([203.11.71.1]:59483 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbgA1Lu2 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 28 Jan 2020 06:50:28 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 486Q0c3KnHz9sP6;
-        Tue, 28 Jan 2020 22:50:24 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1580212225;
-        bh=c5DNuCqxh54Hk0ufEiRkHS36c/7jzrd+sF8bgHCvQeU=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=bWCQD9VqND/0LIAyeQoi7QbDUbEjZVmPv5DOscLMdnPaB0sHImlK8hI9jpcRk2xtO
-         e4y/KYr++Iqj+7eUazD04bDFuhcR5p7moyYc9h/6A/lg+aMUxe2WussGhB9fEBWhsB
-         n8UJY1ZzKMnmBsjun8MdIrew4iERCJDh0eDZEGGeXJTVMw9ZgEjrmqtkWhpMSH3U54
-         XplqhK4ZpMplOMbpphQGk7DNoc+f1IZ36103ePsFtvoGTN1G4b7MdlvMzGc5woRizD
-         ml/aSd0/fJt37f/e+H5mtsbWPJs1OtTCHXOslhfSuKmJacBYTeEHEmbfIW+jy6qG3m
-         ANYhsu3fiGTjg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Vinod Koul <vkoul@kernel.org>, peter.ujfalusi@ti.com
-Cc:     dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, corbet@lwn.net,
-        linux-doc@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Docs build broken by driver-api/dmaengine/client.rst ? (was Re: [GIT PULL]: dmaengine updates for v5.6-rc1)
-In-Reply-To: <20200127145835.GI2841@vkoul-mobl>
-References: <20200127145835.GI2841@vkoul-mobl>
-Date:   Tue, 28 Jan 2020 22:50:21 +1100
-Message-ID: <87imkvhkaq.fsf@mpe.ellerman.id.au>
+        id S1726024AbgA1MFd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 28 Jan 2020 07:05:33 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:40938 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbgA1MFd (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Jan 2020 07:05:33 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00SC5TVA092253;
+        Tue, 28 Jan 2020 06:05:29 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580213129;
+        bh=qf6KoXV0NoeksHSlsz3CR71z99ZWbFKtw2snxt6n0lc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Yw7ngQxxqR4p+V3Sw71LWhsQV8tildeltY2ELeDlnLfFm4do5VAhMClpAexp4sg4h
+         Jh/EtSVd7frGZ3SXbmn4wXqWCVMzI7sN99xjt6naXDtsNyCZcDRCcrVB8LatiO8KVl
+         pbqj0OsRfozyxeloWloK3UhWJXdiEXWLb3DkmlU4=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00SC5TpV008173
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 28 Jan 2020 06:05:29 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 28
+ Jan 2020 06:05:28 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 28 Jan 2020 06:05:28 -0600
+Received: from [172.24.217.206] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00SC5Pbg031998;
+        Tue, 28 Jan 2020 06:05:26 -0600
+Subject: Re: [PATCH for-next 1/4] dmaengine: ti: k3-udma: Use
+ ktime/usleep_range based TX completion check
+To:     Vinod Koul <vkoul@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <grygorii.strashko@ti.com>
+References: <20200127132111.20464-1-peter.ujfalusi@ti.com>
+ <20200127132111.20464-2-peter.ujfalusi@ti.com>
+ <20200128114820.GS2841@vkoul-mobl>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <d968f32d-dc5f-0567-5aa4-faf318025c23@ti.com>
+Date:   Tue, 28 Jan 2020 17:35:25 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200128114820.GS2841@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
@@ -47,63 +63,61 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 Hi Vinod,
 
-Vinod Koul <vkoul@kernel.org> writes:
-> Hello Linus,
->
-> Please pull to receive the dmaengine updates for v5.6-rc1. This time we
-> have a bunch of core changes to support dynamic channels, hotplug of
-> controllers, new apis for metadata ops etc along with new drivers for
-> Intel data accelerators, TI K3 UDMA, PLX DMA engine and hisilicon
-> Kunpeng DMA engine. Also usual assorted updates to drivers.
->
-> The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
->
->   Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
->
-> are available in the Git repository at:
->
->   git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-5.6-rc1
->
-> for you to fetch changes up to 71723a96b8b1367fefc18f60025dae792477d602:
->
->   dmaengine: Create symlinks between DMA channels and slaves (2020-01-24 11:41:32 +0530)
->
-> ----------------------------------------------------------------
-> dmaengine updates for v5.6-rc1
-...
->
-> Peter Ujfalusi (9):
->       dmaengine: doc: Add sections for per descriptor metadata support
+On 1/28/2020 5:18 PM, Vinod Koul wrote:
+> On 27-01-20, 15:21, Peter Ujfalusi wrote:
+>> From: Vignesh Raghavendra <vigneshr@ti.com>
+>>
+>> In some cases (McSPI for example) the jiffie and delayed_work based
+>> workaround can cause big throughput drop.
+>>
+>> Switch to use ktime/usleep_range based implementation to be able
+>> to sustain speed for PDMA based peripherals.
+>>
+>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>>  drivers/dma/ti/k3-udma.c | 80 ++++++++++++++++++++++++++--------------
+>>  1 file changed, 53 insertions(+), 27 deletions(-)
+>>
+>> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+>> index ea79c2df28e0..fb59c869a6a7 100644
+>> --- a/drivers/dma/ti/k3-udma.c
+>> +++ b/drivers/dma/ti/k3-udma.c
+>> @@ -5,6 +5,7 @@
+>>   */
+>>  
+>>  #include <linux/kernel.h>
+>> +#include <linux/delay.h>
+>>  #include <linux/dmaengine.h>
+>>  #include <linux/dma-mapping.h>
+>>  #include <linux/dmapool.h>
+>> @@ -169,7 +170,7 @@ enum udma_chan_state {
+>>  
+>>  struct udma_tx_drain {
+>>  	struct delayed_work work;
+>> -	unsigned long jiffie;
+>> +	ktime_t tstamp;
+>>  	u32 residue;
+>>  };
+>>  
+>> @@ -946,9 +947,10 @@ static bool udma_is_desc_really_done(struct udma_chan *uc, struct udma_desc *d)
+>>  	peer_bcnt = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_PEER_BCNT_REG);
+>>  	bcnt = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_BCNT_REG);
+>>  
+>> +	/* Transfer is incomplete, store current residue and time stamp */
+>>  	if (peer_bcnt < bcnt) {
+>>  		uc->tx_drain.residue = bcnt - peer_bcnt;
+>> -		uc->tx_drain.jiffie = jiffies;
+>> +		uc->tx_drain.tstamp = ktime_get();
+> 
+> Any reason why ktime_get() is better than jiffies..?
 
-This broke the docs build for me with:
+Resolution of jiffies is 4ms. ktime_t is has better resolution (upto ns
+scale). With jiffies, I observed that code was either always polling DMA
+progress counters (which affects HW data transfer speed) or sleeping too
+long, both causing performance loss. Switching to ktime_t provides
+better prediction of how long transfer takes to complete.
 
-  Sphinx parallel build error:
-  docutils.utils.SystemMessage: /linux/Documentation/driver-api/dmaengine/client.rst:155: (SEVERE/4) Unexpected section title.
-  
-  Optional: per descriptor metadata
-  ---------------------------------
+Regards
+Vignesh
 
-
-The patch below fixes the build. It may not produce the output you
-intended, it just makes it bold rather than a heading, but it doesn't
-really make sense to have a heading inside a numbered list.
-
-diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
-index a9a7a3c84c63..343df26e73e8 100644
---- a/Documentation/driver-api/dmaengine/client.rst
-+++ b/Documentation/driver-api/dmaengine/client.rst
-@@ -151,8 +151,8 @@ DMA usage
-      Note that callbacks will always be invoked from the DMA
-      engines tasklet, never from interrupt context.
- 
--  Optional: per descriptor metadata
--  ---------------------------------
-+  **Optional: per descriptor metadata**
-+
-   DMAengine provides two ways for metadata support.
- 
-   DESC_METADATA_CLIENT
-
-
-
-cheers

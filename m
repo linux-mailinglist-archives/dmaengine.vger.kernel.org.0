@@ -2,82 +2,108 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 81C4B14B3BF
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Jan 2020 12:50:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AC4014B3C3
+	for <lists+dmaengine@lfdr.de>; Tue, 28 Jan 2020 12:50:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgA1LuL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 28 Jan 2020 06:50:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41048 "EHLO mail.kernel.org"
+        id S1726010AbgA1Lu2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 28 Jan 2020 06:50:28 -0500
+Received: from ozlabs.org ([203.11.71.1]:59483 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbgA1LuL (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 28 Jan 2020 06:50:11 -0500
-Received: from localhost (unknown [223.226.101.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725903AbgA1Lu2 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 28 Jan 2020 06:50:28 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14C9F214AF;
-        Tue, 28 Jan 2020 11:50:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580212210;
-        bh=jW6H9OlD/jgob7HlVx2GQo9Y2WJ5ofqdPX2DH4cN0ws=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D2cb1YugqwH2Kyc7TSXkHPyGqa4SajqkS1G/5EzKpQt0ER0jWrgg8B8kx41irg/+P
-         BmEt88S8IfoSTGx/NcGkJg+nkUDwnlrAk26uaXIsT0nysYKSUK6RZBdYlykEVlKYRt
-         KA1+RCXSefrCA4DP2Z8kNYqDDPctG8DwSf0SHbPk=
-Date:   Tue, 28 Jan 2020 17:20:06 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dan.j.williams@intel.com, grygorii.strashko@ti.com, vigneshr@ti.com
-Subject: Re: [PATCH for-next 0/4] dmaengine: ti: k3-udma: Updates for next
-Message-ID: <20200128115006.GT2841@vkoul-mobl>
-References: <20200127132111.20464-1-peter.ujfalusi@ti.com>
- <41c53cc4-fa3e-1ab1-32b8-1d516cda7341@ti.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 486Q0c3KnHz9sP6;
+        Tue, 28 Jan 2020 22:50:24 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1580212225;
+        bh=c5DNuCqxh54Hk0ufEiRkHS36c/7jzrd+sF8bgHCvQeU=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=bWCQD9VqND/0LIAyeQoi7QbDUbEjZVmPv5DOscLMdnPaB0sHImlK8hI9jpcRk2xtO
+         e4y/KYr++Iqj+7eUazD04bDFuhcR5p7moyYc9h/6A/lg+aMUxe2WussGhB9fEBWhsB
+         n8UJY1ZzKMnmBsjun8MdIrew4iERCJDh0eDZEGGeXJTVMw9ZgEjrmqtkWhpMSH3U54
+         XplqhK4ZpMplOMbpphQGk7DNoc+f1IZ36103ePsFtvoGTN1G4b7MdlvMzGc5woRizD
+         ml/aSd0/fJt37f/e+H5mtsbWPJs1OtTCHXOslhfSuKmJacBYTeEHEmbfIW+jy6qG3m
+         ANYhsu3fiGTjg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Vinod Koul <vkoul@kernel.org>, peter.ujfalusi@ti.com
+Cc:     dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, corbet@lwn.net,
+        linux-doc@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Docs build broken by driver-api/dmaengine/client.rst ? (was Re: [GIT PULL]: dmaengine updates for v5.6-rc1)
+In-Reply-To: <20200127145835.GI2841@vkoul-mobl>
+References: <20200127145835.GI2841@vkoul-mobl>
+Date:   Tue, 28 Jan 2020 22:50:21 +1100
+Message-ID: <87imkvhkaq.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <41c53cc4-fa3e-1ab1-32b8-1d516cda7341@ti.com>
+Content-Type: text/plain
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 28-01-20, 12:15, Peter Ujfalusi wrote:
-> Vinod,
-> 
-> On 27/01/2020 15.21, Peter Ujfalusi wrote:
-> > Hi Vinod,
-> > 
-> > Based on customer reports we have identified two issues with the UDMA driver:
-> > 
-> > TX completion (1st patch):
-> > The scheduled work based workaround for checking for completion worked well for
-> > UART, but it had significant impact on SPI performance.
-> > The underlying issue is coming from the fact that we have split data movement
-> > architecture.
-> > In order to know that the transfer is really done we need to check the remote
-> > end's (PDMA) byte counter.
-> > 
-> > RX channel teardown with stale data in PDMA (2nd patch):
-> > If we try to stop the RX DMA channel (teardown) then PDMA is trying to flush the
-> > data is might received from a peripheral, but if UDMA does not have a packet to
-> > use for this draining than it is going to push back on the PDMA and the flush
-> > will never completes.
-> > The workaround is to use a dummy descriptor for flush purposes when the channel
-> > is terminated and we did not have active transfer (no descriptor for UDMA).
-> > This allows UDMA to drain the data and the teardown can complete.
-> > 
-> > The last two patch is to use common code to set up the TR parameters for
-> > slave_sg, cyclic and memcpy. The setup code is the same as we used for memcpy
-> > with the change we can handle 4.2GB sg elements and periods in case of cyclic.
-> > It is also nice that we have single function to do the configuration.
-> 
-> I have marked these patches as for-next as 5.5 was not released yet.
-> Would it be possible to have these as fixes for 5.6?
+Hi Vinod,
 
-Sure but are they really fixes, why cant they go for next release :)
+Vinod Koul <vkoul@kernel.org> writes:
+> Hello Linus,
+>
+> Please pull to receive the dmaengine updates for v5.6-rc1. This time we
+> have a bunch of core changes to support dynamic channels, hotplug of
+> controllers, new apis for metadata ops etc along with new drivers for
+> Intel data accelerators, TI K3 UDMA, PLX DMA engine and hisilicon
+> Kunpeng DMA engine. Also usual assorted updates to drivers.
+>
+> The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+>
+>   Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+>
+> are available in the Git repository at:
+>
+>   git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-5.6-rc1
+>
+> for you to fetch changes up to 71723a96b8b1367fefc18f60025dae792477d602:
+>
+>   dmaengine: Create symlinks between DMA channels and slaves (2020-01-24 11:41:32 +0530)
+>
+> ----------------------------------------------------------------
+> dmaengine updates for v5.6-rc1
+...
+>
+> Peter Ujfalusi (9):
+>       dmaengine: doc: Add sections for per descriptor metadata support
 
-They seem to improve things for sure, but do we want to call them as
-fixes..?
+This broke the docs build for me with:
 
--- 
-~Vinod
+  Sphinx parallel build error:
+  docutils.utils.SystemMessage: /linux/Documentation/driver-api/dmaengine/client.rst:155: (SEVERE/4) Unexpected section title.
+  
+  Optional: per descriptor metadata
+  ---------------------------------
+
+
+The patch below fixes the build. It may not produce the output you
+intended, it just makes it bold rather than a heading, but it doesn't
+really make sense to have a heading inside a numbered list.
+
+diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
+index a9a7a3c84c63..343df26e73e8 100644
+--- a/Documentation/driver-api/dmaengine/client.rst
++++ b/Documentation/driver-api/dmaengine/client.rst
+@@ -151,8 +151,8 @@ DMA usage
+      Note that callbacks will always be invoked from the DMA
+      engines tasklet, never from interrupt context.
+ 
+-  Optional: per descriptor metadata
+-  ---------------------------------
++  **Optional: per descriptor metadata**
++
+   DMAengine provides two ways for metadata support.
+ 
+   DESC_METADATA_CLIENT
+
+
+
+cheers

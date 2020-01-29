@@ -2,158 +2,89 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A213914CB92
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Jan 2020 14:41:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C763614CC75
+	for <lists+dmaengine@lfdr.de>; Wed, 29 Jan 2020 15:31:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726560AbgA2NlS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 29 Jan 2020 08:41:18 -0500
-Received: from mail-wr1-f100.google.com ([209.85.221.100]:39567 "EHLO
-        mail-wr1-f100.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbgA2NlS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Jan 2020 08:41:18 -0500
-Received: by mail-wr1-f100.google.com with SMTP id y11so20212479wrt.6
-        for <dmaengine@vger.kernel.org>; Wed, 29 Jan 2020 05:41:16 -0800 (PST)
+        id S1726178AbgA2ObL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 29 Jan 2020 09:31:11 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38532 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbgA2ObL (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Jan 2020 09:31:11 -0500
+Received: by mail-lf1-f68.google.com with SMTP id r14so12027984lfm.5;
+        Wed, 29 Jan 2020 06:31:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=flowbird.group; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=LKAhm5fgnCM0f4ool+EzZtuKWekhU6ZjNjBMoV+cWXA=;
-        b=PMb22boP3CV1EyVw1dzQscsMHDiMAsnTPfS80IVQS+kzcT55qoid2iPIWveJzgs1t4
-         TbtnBge7nIGnp4Yk2L58XyNcE5vaEbZl1icPp8g9mvE81iNUQZBIHdx03Jzb/O19uYjR
-         lm5tgSgLRJIZdcb3ZXqucs9cpbiJJRec7cNEBeh0jLIxESZPSN8rxqivDbcu6lNgT6m8
-         EKHj9I3QJSf453pGCmysJSM7LOkU3+B4onEA/w/xWvFxxVK/Ae5fYCEq182LGRJECnU3
-         0h/9iSOseqfUelq0iw0GKK3tuawCrHhslneda3rv+roe31BI9cd5MLZAPyj17bhP1n0R
-         gIew==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=R91c9ntZBlaQPLyZ3wJ8nBbTe0YSkDQN97EOOHvSD+8=;
+        b=qm5WLSTVvRQQw9NA8BW6L1l7nF8NSOarFCXgMoxmpB2VVJqt198tbokl4Doj6RjaX2
+         zu2jABl64d6IgDGQkeuuq9IkrHBmZkgzVPxb2hX8NVYMD+6T1niUF2fv5nn/3r005psU
+         jcH66osAbyof6mdWpU8e/vHTlXXVuUkRQeDQPK+T3F7WfjsjvkWlYFVk0Brj8pBSz/fM
+         NFYMNTaqDN7OUwENhNCOZGrgBFdP5RjfrHaXlInEw20sZ2mKePpTtmJ92AJXXBbJi0WQ
+         O9L+ljA4I1SsqdJvagSzgnD7bIO8QFjZ47oY5G77DKU2F1aik0sYeL08phAOxPCbaZns
+         A+dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=LKAhm5fgnCM0f4ool+EzZtuKWekhU6ZjNjBMoV+cWXA=;
-        b=Pw3sxbCoagKCSWTa3pIVDbM0S9asLvB4QyRnviDC6fOI7BS94H/OEXiQuNss3jKocv
-         5LYeGv96Cs6CbajnROaed45DfVlHJ8AKQNUEJtUwd/D3lOSOqIq1K6Cqhb/OryR8orKz
-         npMhOeNgjoEWjJwuEez3v7p94usRaNuEHAZWmkGjyK7aqDtCPQPL/2rVe12m5ue2i6IH
-         /xA1yakKdIsaqlnSofpXhezAaxpk8NougSfG6GtyWQ5UWUDsl2yMfyodXvIjkU363NZl
-         yDmz5c2xtsJt57snm5KmHUNtC8aEG1848I+RVLG8H/9RMFS2QhyM8sVDeq5A0W7nt8DK
-         SdDw==
-X-Gm-Message-State: APjAAAW9fZ6azHkytaIi26AUxAuE2R8CWjBXYI/E5gkHmRiPN043gTGc
-        y9sBtHR2qpu8aj3u9r2ZiWyMWhQ66CjYNmUa/0JhWqL51Qtx
-X-Google-Smtp-Source: APXvYqyFQ98FYktk+97oLQYaNelIlb9g5MjMxMu3Mz01RbmXwDkqAxJuAuvFxeN+z7MX3XHkYpJc92dWUgQm
-X-Received: by 2002:adf:97d6:: with SMTP id t22mr35073052wrb.407.1580305275875;
-        Wed, 29 Jan 2020 05:41:15 -0800 (PST)
-Received: from mail.besancon.parkeon.com ([185.149.63.251])
-        by smtp-relay.gmail.com with ESMTPS id r3sm33567wro.56.2020.01.29.05.41.15
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Wed, 29 Jan 2020 05:41:15 -0800 (PST)
-X-Relaying-Domain: flowbird.group
-Received: from [10.32.51.186] (port=60422 helo=PC12445-BES.dynamic.besancon.parkeon.com)
-        by mail.besancon.parkeon.com with esmtp (Exim 4.71)
-        (envelope-from <martin.fuzzey@flowbird.group>)
-        id 1iwnak-0003Z2-Rk; Wed, 29 Jan 2020 14:41:14 +0100
-From:   Martin Fuzzey <martin.fuzzey@flowbird.group>
-To:     dmaengine@vger.kernel.org
-Cc:     stable@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: imx-sdma: fix context cache
-Date:   Wed, 29 Jan 2020 14:40:06 +0100
-Message-Id: <1580305274-27274-1-git-send-email-martin.fuzzey@flowbird.group>
-X-Mailer: git-send-email 1.9.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=R91c9ntZBlaQPLyZ3wJ8nBbTe0YSkDQN97EOOHvSD+8=;
+        b=twCVGhR7io4efdSDtc7rZdVbfWWH06ztaXDFtecq1KBeW6gVxTF7B/tQyhHeeBrrsv
+         mSdgSyWiQ7MVd//+zfMBrNA2D8T49oCDhOffBqJ5sO4JzI8+ZDSfskcd2hsKkS002ud/
+         vGkdaSnjJisbt/KW3inqMlimQeC7feA6E07P+vUbACeUxWlH0yHQlRbLw/jH2SLj8Cyb
+         06QRqiycH3JkA2kLtt3E/BuMFngAFHyVg+WiUZqSZiY/XveHuYWjGMXQISNu/0kuNSwy
+         hpW6y6yLd1fPEhOyu8SV43pr0ghIvbm/AH8nwqRoj5SpDElzRnSi6GSbSqSI5MZ3s+0p
+         HnVA==
+X-Gm-Message-State: APjAAAX0U1gEljef+Zz0Kbu+x4+uNE+Dz/Vaity2i3cbcMXWQ0dZdnWV
+        BhWOTRLdlWvPCoCxctXaooWzfjTZ
+X-Google-Smtp-Source: APXvYqzz2jPA2pFPn9WN/J9pcbI/wLvRYdPhKymxgZi3LpG4PWstlzWJpvg8L3XrcDw/Wwo6bhQg7A==
+X-Received: by 2002:a19:ee1a:: with SMTP id g26mr5710270lfb.147.1580308268269;
+        Wed, 29 Jan 2020 06:31:08 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id l64sm1164871lfd.30.2020.01.29.06.31.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jan 2020 06:31:07 -0800 (PST)
+Subject: Re: [PATCH v5 08/14] dmaengine: tegra-apb: Fix coding style problems
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200123230325.3037-1-digetx@gmail.com>
+ <20200123230325.3037-9-digetx@gmail.com>
+ <f724fd45-aa91-face-a267-5ea4caf6d8d5@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <5f540eb8-07ab-eb42-b5de-e198d5439cbd@gmail.com>
+Date:   Wed, 29 Jan 2020 17:31:06 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <f724fd45-aa91-face-a267-5ea4caf6d8d5@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-There is a DMA problem with the serial ports on i.MX6.
+29.01.2020 14:03, Jon Hunter пишет:
+> On 23/01/2020 23:03, Dmitry Osipenko wrote:
+>>  	ahb_seq = TEGRA_APBDMA_AHBSEQ_INTR_ENB;
+>> @@ -1269,7 +1284,6 @@ static int tegra_dma_alloc_chan_resources(struct dma_chan *dc)
+>>  	int ret;
+>>  
+>>  	dma_cookie_init(&tdc->dma_chan);
+>> -	tdc->config_init = false;
+> 
+> Please put this in a separate patch. It is easily overlooked in this big
+> change.
 
-When the following sequence is performed:
+Somehow I missed context of yours reply to the v4 of this patch and was
+thinking that you were talking about the "unsigned int".. sorry :)
 
-1) Open a port
-2) Write some data
-3) Close the port
-4) Open a *different* port
-5) Write some data
-6) Close the port
-
-The second write sends nothing and the second close hangs.
-If the first close() is omitted it works.
-
-Adding logs to the the UART driver shows that the DMA is being setup but
-the callback is never invoked for the second write.
-
-This used to work in 4.19.
-
-Git bisect leads to:
-	ad0d92d: "dmaengine: imx-sdma: refine to load context only once"
-
-This commit adds a "context_loaded" flag used to avoid unnecessary context
-setups.
-However the flag is only reset in sdma_channel_terminate_work(),
-which is only invoked in a worker triggered by sdma_terminate_all() IF
-there is an active descriptor.
-
-So, if no active descriptor remains when the channel is terminated, the
-flag is not reset and, when the channel is later reused the old context
-is used.
-
-Fix the problem by always resetting the flag in sdma_free_chan_resources().
-
-Fixes: ad0d92d: "dmaengine: imx-sdma: refine to load context only once"
-Cc: stable@vger.kernel.org
-Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
-
----
-
-The following python script may be used to reproduce the problem:
-
-import re, serial, sys
-
-ports=(0, 4) # Can be any ports not used (no need to connect anything) NOT console...
-
-def get_tx_counts():
-        pattern = re.compile("(\d+):.*tx:(\d+).*")
-        tx_counts = {}
-        with open("/proc/tty/driver/IMX-uart", "r") as f:
-                for line in f:
-                        match = pattern.match(line)
-                        if match:
-                                tx_counts[int(match.group(1))] = int(match.group(2))
-        return tx_counts
-
-before = get_tx_counts()
-
-a = serial.Serial("/dev/ttymxc%d" % ports[0])
-a.write("polop")
-a.close()
-b = serial.Serial("/dev/ttymxc%d" % ports[1])
-b.write("test")
-
-after = get_tx_counts()
-
-if (after[ports[0]] - before[ports[0]]  > 0) and (after[ports[1]] - before[ports[1]] > 0):
-        print "PASS"
-        sys.exit(0)
-else:
-        print "FAIL"
-        print "Before: %s" % before
-        print "After: %s" % after
-        sys.exit(1)
----
- drivers/dma/imx-sdma.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 066b21a..332ca50 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1338,6 +1338,7 @@ static void sdma_free_chan_resources(struct dma_chan *chan)
- 
- 	sdmac->event_id0 = 0;
- 	sdmac->event_id1 = 0;
-+	sdmac->context_loaded = false;
- 
- 	sdma_set_channel_priority(sdmac, 0);
- 
--- 
-1.9.1
-
+I'll factor out this change into a separate patch in v6.

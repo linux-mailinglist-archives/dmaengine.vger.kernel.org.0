@@ -2,149 +2,107 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0428214CFD4
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Jan 2020 18:47:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF62F14D166
+	for <lists+dmaengine@lfdr.de>; Wed, 29 Jan 2020 20:51:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727369AbgA2Rr1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 29 Jan 2020 12:47:27 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:51687 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726679AbgA2Rr1 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Jan 2020 12:47:27 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200129174724euoutp011b52cb9762063003fd20608eda5d48e2~ubLU9xp0M1422914229euoutp01t
-        for <dmaengine@vger.kernel.org>; Wed, 29 Jan 2020 17:47:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200129174724euoutp011b52cb9762063003fd20608eda5d48e2~ubLU9xp0M1422914229euoutp01t
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1580320044;
-        bh=Gv4yBUMCeYHdHBHWfyFydKrL6tXtlVDup9vy81yiy50=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=pz9lJtiln5AXtGTpuPv3Wgqxb373lIHBSsOFUsAmccxO1fuQ2cN87R3aBM3tjgexW
-         oluuxs3/UvkI+ioLlOMqsAdTcqMfpmNpLXQIp6VXp1wOefYlzkDoD5ns4+YvkTuFkh
-         8x7VjPPe2RzK3ef/AHxplzufQy+77ox3GfjPHm4g=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200129174724eucas1p2b1ab8eb72df18d25afac410fd98ee200~ubLUglMA72293422934eucas1p2y;
-        Wed, 29 Jan 2020 17:47:24 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 6E.75.61286.C25C13E5; Wed, 29
-        Jan 2020 17:47:24 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200129174723eucas1p1fe4f76325f463fc9e3645ce18740d2eb~ubLUC1z9l1193711937eucas1p11;
-        Wed, 29 Jan 2020 17:47:23 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200129174723eusmtrp27e6644c724431c052887f52ce7594860~ubLUCPrV-2706627066eusmtrp2J;
-        Wed, 29 Jan 2020 17:47:23 +0000 (GMT)
-X-AuditID: cbfec7f2-f0bff7000001ef66-8d-5e31c52c4e2d
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id D5.C0.07950.B25C13E5; Wed, 29
-        Jan 2020 17:47:23 +0000 (GMT)
-Received: from [106.120.51.15] (unknown [106.120.51.15]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200129174723eusmtip1fc91445ca438891f4e1af0c633757ce7~ubLTqw4nq1608116081eusmtip1L;
-        Wed, 29 Jan 2020 17:47:23 +0000 (GMT)
-Subject: Re: [PATCH v2] dmaengine: Create symlinks between DMA channels and
- slaves
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        id S1727615AbgA2TvS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 29 Jan 2020 14:51:18 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52230 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726708AbgA2TvR (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Jan 2020 14:51:17 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00TJp1Lr078023;
+        Wed, 29 Jan 2020 13:51:01 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580327461;
+        bh=rbB/lD7xEgzLxXwTLa3JpCV55iUJ31TPZ7JK+o77KyA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=i+SbOgfPYo7oQJfA+Q3vNaHmk6uHqFgEJ28i3Fxt7pifIhEH2MdjGg/uPNV9NVRsc
+         zc+SHz4kE0B1WMghT0gX6uVeGbGIST4r+ydRgsHFPkxh1t/ew60x+KwLXY0RuCMcgK
+         BoyjKqrW1p9iPtwSYX4spV6syCAb1RVBuU8FVrVY=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00TJp1fk010922
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 29 Jan 2020 13:51:01 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 29
+ Jan 2020 13:51:01 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 29 Jan 2020 13:51:01 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00TJowTf087910;
+        Wed, 29 Jan 2020 13:50:59 -0600
+Subject: Re: [PATCH] dmaengine: Fix return value for dma_requrest_chan() in
+ case of failure
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        <dmaengine@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <linux-samsung-soc@vger.kernel.org>
+CC:     Mark Brown <broonie@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <fde812a2-aea6-c16e-5ed7-ab5195b1259f@samsung.com>
-Date:   Wed, 29 Jan 2020 18:47:21 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.4.1
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+References: <CGME20200129163716eucas1p19550fcbfff81ca8586df28782399cff0@eucas1p1.samsung.com>
+ <20200129163548.11096-1-m.szyprowski@samsung.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <3d7a612a-851f-85f1-4207-531f5a87212a@ti.com>
+Date:   Wed, 29 Jan 2020 21:51:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200117153056.31363-1-geert+renesas@glider.be>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLKsWRmVeSWpSXmKPExsWy7djP87o6Rw3jDK7OlbCYPvUCo8XqqX9Z
-        LebOnsRocXnXHDaLrS/fMVnsvHOC2YHNY+JZXY/Fe14yeWxa1cnm8XmTXABLFJdNSmpOZllq
-        kb5dAlfG0wmlBUt5Kw79OMjewPieq4uRk0NCwERi1uE/LCC2kMAKRol9i5W6GLmA7C+MEhdW
-        /mGFcD4zSryY9IUFpmPevK2MEB3LGSX2TPSEKHrLKPFpz2ImkISwQIjEvnPtYEUiAlUSZ77+
-        YwOxmQUSJE48vgxWwyZgKNH1tgsszitgJ/F97zawBSwCqhJv7/0HqxEViJW4v3oqI0SNoMTJ
-        mU/AajgFbCWmnp/KAjFTXqJ562xmCFtc4taT+UwgB0kIzGOXaJrxFOpqF4m7K1ugbGGJV8e3
-        sEPYMhL/d8I0NDNKPDy3lh3C6WGUuNw0gxGiylrizrlfQKdyAK3QlFi/Sx/ElBBwlGi8HQlh
-        8knceCsIcQOfxKRt05khwrwSHW1CEDPUJGYdXwe39eCFS8wTGJVmIflsFpJvZiH5ZhbC2gWM
-        LKsYxVNLi3PTU4sN81LL9YoTc4tL89L1kvNzNzECE83pf8c/7WD8einpEKMAB6MSD69EmWGc
-        EGtiWXFl7iFGCQ5mJRFeUVegEG9KYmVValF+fFFpTmrxIUZpDhYlcV7jRS9jhQTSE0tSs1NT
-        C1KLYLJMHJxSDYyKS/NiXs1IWvBw+WtPbk/hn49j0vtfdv9Z8mta9LsjU2KPnO5Y9c69PFVs
-        9/XvPy5JLiz2c4qXqC9Zs9njhn3lZ6sA/ml5zTUMm3csvHTZZo/ArarbrMr2KnNX8eV+ehRa
-        pywSXFX7cQH/gx7NjAnn7mv98mHhqarkbBTRYN0ox3bjCNPEb4eVWIozEg21mIuKEwHMQNfw
-        MAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsVy+t/xu7raRw3jDJbtM7KYPvUCo8XqqX9Z
-        LebOnsRocXnXHDaLrS/fMVnsvHOC2YHNY+JZXY/Fe14yeWxa1cnm8XmTXABLlJ5NUX5pSapC
-        Rn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7G0wmlBUt5Kw79OMje
-        wPieq4uRk0NCwERi3rytjCC2kMBSRonfq6Ug4jISJ6c1sELYwhJ/rnWxdTFyAdW8ZpRYcvwU
-        E0hCWCBEYt+5drBmEYEqiXl7toDFmQUSJE48X8HexcgB1GAjcee1C0iYTcBQoustyBxODl4B
-        O4nve7exgNgsAqoSb+/9B2sVFYiV+H/mGlSNoMTJmU/AajgFbCWmnp/KAjHeTGLe5ofMELa8
-        RPPW2VC2uMStJ/OZJjAKzULSPgtJyywkLbOQtCxgZFnFKJJaWpybnltspFecmFtcmpeul5yf
-        u4kRGFnbjv3csoOx613wIUYBDkYlHl6JMsM4IdbEsuLK3EOMEhzMSiK8oq5AId6UxMqq1KL8
-        +KLSnNTiQ4ymQM9NZJYSTc4HRn1eSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILU
-        Ipg+Jg5OqQbGHeoHbmcckGgJr4+uf1wsGZd66eYbvoxc8+CqyVpXuX/8ePeyMfXRJ93yb0vv
-        vb7QPJf535qpQfYVj9JPcz0RTFz5lmOy6Zpp7d+ULO7yLtyYqVP9SdFZssJh6pl1Ld8r/qzh
-        d/u+0Tv90g43BZ9/87LS2k88n/Z/U63DGvNHyt/EX9QeVfO+ocRSnJFoqMVcVJwIANypueDC
-        AgAA
-X-CMS-MailID: 20200129174723eucas1p1fe4f76325f463fc9e3645ce18740d2eb
-X-Msg-Generator: CA
+In-Reply-To: <20200129163548.11096-1-m.szyprowski@samsung.com>
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200129174723eucas1p1fe4f76325f463fc9e3645ce18740d2eb
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200129174723eucas1p1fe4f76325f463fc9e3645ce18740d2eb
-References: <20200117153056.31363-1-geert+renesas@glider.be>
-        <CGME20200129174723eucas1p1fe4f76325f463fc9e3645ce18740d2eb@eucas1p1.samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Geert,
 
-On 17.01.2020 16:30, Geert Uytterhoeven wrote:
-> Currently it is not easy to find out which DMA channels are in use, and
-> which slave devices are using which channels.
->
-> Fix this by creating two symlinks between the DMA channel and the actual
-> slave device when a channel is requested:
->    1. A "slave" symlink from DMA channel to slave device,
->    2. A "dma:<name>" symlink slave device to DMA channel.
-> When the channel is released, the symlinks are removed again.
-> The latter requires keeping track of the slave device and the channel
-> name in the dma_chan structure.
->
-> Note that this is limited to channel request functions for requesting an
-> exclusive slave channel that take a device pointer (dma_request_chan()
-> and dma_request_slave_channel*()).
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Tested-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
 
-This patch breaks booting on almost all Exynos based boards:
+On 29/01/2020 18.35, Marek Szyprowski wrote:
+> Commit 71723a96b8b1 ("dmaengine: Create symlinks between DMA channels and
+> slaves") changed the dma_request_chan() function flow in such a way that
+> it always returns EPROBE_DEFER in case of channels that cannot be found.
+> This break the operation of the devices which have optional DMA channels
+> as it puts their drivers in endless deferred probe loop. Fix this by
+> propagating the proper error value.
+> 
+> Fixes: 71723a96b8b1 ("dmaengine: Create symlinks between DMA channels and slaves")
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  drivers/dma/dmaengine.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index f3ef4edd4de1..27b64a665347 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -759,7 +759,7 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
+>  	if (!IS_ERR_OR_NULL(chan))
+>  		goto found;
+>  
+> -	return ERR_PTR(-EPROBE_DEFER);
+> +	return chan;
 
-https://lore.kernel.org/linux-samsung-soc/20200129161113.GE3928@sirena.org.uk/T/#u
+It should be:
+return chan ? chan : ERR_PTR(-EPROBE_DEFER);
 
-I've already sent a fix:
+dma_request_chan() should never return NULL, it either returns the
+dma_chan, or ERR_PTR().
 
-https://lkml.org/lkml/2020/1/29/498
+>  
+>  found:
+>  	chan->slave = dev;
+> 
 
-BTW, this patch reminds me some of my earlier work:
+- Péter
 
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1329778.html
-
-I had similar need to keep a client's struct device pointer for every 
-requested channel, but it turned out to be much more complicated than 
-I've initially thought. I've abandoned that, due to lack of time, but 
-maybe some of that discussion and concerns are still valid (I hope that 
-links to earlier versions are still working)...
-
- > ...
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

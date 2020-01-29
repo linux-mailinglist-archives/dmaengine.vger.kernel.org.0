@@ -2,116 +2,253 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D90AA14D1D0
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Jan 2020 21:20:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C72A414D35C
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Jan 2020 00:13:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbgA2UUA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 29 Jan 2020 15:20:00 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37600 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbgA2UT7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Jan 2020 15:19:59 -0500
-Received: by mail-lj1-f195.google.com with SMTP id v17so804373ljg.4;
-        Wed, 29 Jan 2020 12:19:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cBAvgEILNC/DpIEeIO9O9bZop1LPit11TI5TK6r2sd0=;
-        b=f6HglhEYBtGlI+1MJLA1H4Vfw050nUY3c/mP1sFKr8Wb9XRxK7dw1/gnSfQDg06rRT
-         0t8ti8HFq9tZ3Jx3f/U1S+AUYfBV98K2Vf5Tjm9hW+c23UxJNS76DfzgOyoNHuvGx+zN
-         sXZWQY857pdIbKJ3bDqFr7UmhBFUETm66k9viw7YDkQ7/BuPNp+720SCEP1STs2CDdko
-         Ubjko+gAGEcIcIKdQdA3I6wNiIpQPIq/tdqPgKS03xo+OvvCVKoEETeJEHbByswy7sid
-         mK/nuxs14s0PqRbndIF4OxzPgDBL8JMwoqSQpFOLGhlaz/k0PLpe9/UAWs48Rq3olRho
-         dzPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cBAvgEILNC/DpIEeIO9O9bZop1LPit11TI5TK6r2sd0=;
-        b=bHhIm1111hndF0w9rruS6EnEivohnUZvTeCSxsD8zwZwSNgLhW6BQto0MaiQ8byycr
-         iHSUkSDGIBogOz8ZHCsa2+Jyf2bMD/y6oih/lsiXG+yxg4BOxaGqPlkq1zAWuPqWItEQ
-         kY/TrNPVvGV6/DUciY0iHmGaqrDU/6ez+HgaaKsCrWjlC3Q9efcJKKuLAol/iybaLX0+
-         Rql1ObyB1LbTNIej7aLRAK0f0mcCYB/iO+q1pff9+L2BbRzK71vAzZxSSrLfvXFeN57K
-         wKYpLGNGm/vjWv2NbwdIg5Ny8hjY5/vz0mj6komZCB/rRr+UmA/uh6ERV7D5vIiDpcIx
-         5Pcw==
-X-Gm-Message-State: APjAAAXUWBg2U7dvXmC06qGW9bCKCW4NCydF7ya+RhUtfCZ8zkO4ML6i
-        g8ixfSPGUsytqJK6JLcnKnifNiQwYXSXm+zoJ1U=
-X-Google-Smtp-Source: APXvYqzuA9WbX+X2q0ILY1NfmpmvLlSyBrUHhpaWuevXJtsv/YP7zNE3FxI6k3UU76WiAjiLa4NEUjWGR9uylY0tU6c=
-X-Received: by 2002:a2e:5056:: with SMTP id v22mr557613ljd.164.1580329196994;
- Wed, 29 Jan 2020 12:19:56 -0800 (PST)
+        id S1726932AbgA2XNx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 29 Jan 2020 18:13:53 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35390 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbgA2XNw (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Jan 2020 18:13:52 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id 69FCE265C5A
+Subject: Re: mainline/master bisection: baseline.login on odroid-xu3
+To:     Vinod Koul <vkoul@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>
+References: <5e320e71.1c69fb81.e97dd.2bf5@mx.google.com>
+Cc:     dmaengine@vger.kernel.org, mgalka@collabora.com,
+        enric.balletbo@collabora.com, broonie@kernel.org,
+        khilman@baylibre.com, tomeu.vizoso@collabora.com,
+        linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <71ae1017-2077-87c9-d140-cac181017fb7@collabora.com>
+Date:   Wed, 29 Jan 2020 23:13:47 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <1580305274-27274-1-git-send-email-martin.fuzzey@flowbird.group>
-In-Reply-To: <1580305274-27274-1-git-send-email-martin.fuzzey@flowbird.group>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 29 Jan 2020 17:19:45 -0300
-Message-ID: <CAOMZO5AFJvEdWNSsnsRW70_M6rzyvO4ip3zJHET2Gc2Wzj5RPQ@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: imx-sdma: fix context cache
-To:     Martin Fuzzey <martin.fuzzey@flowbird.group>
-Cc:     dmaengine@vger.kernel.org, stable <stable@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5e320e71.1c69fb81.e97dd.2bf5@mx.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Martin,
+Please see the bisection report below about a boot failure.
 
-Thanks for the fix.
+Reports aren't automatically sent to the public while we're
+trialing new bisection features on kernelci.org but this one
+looks valid.
 
-On Wed, Jan 29, 2020 at 10:41 AM Martin Fuzzey
-<martin.fuzzey@flowbird.group> wrote:
->
-> There is a DMA problem with the serial ports on i.MX6.
->
-> When the following sequence is performed:
->
-> 1) Open a port
-> 2) Write some data
-> 3) Close the port
-> 4) Open a *different* port
-> 5) Write some data
-> 6) Close the port
->
-> The second write sends nothing and the second close hangs.
-> If the first close() is omitted it works.
->
-> Adding logs to the the UART driver shows that the DMA is being setup but
-> the callback is never invoked for the second write.
->
-> This used to work in 4.19.
->
-> Git bisect leads to:
->         ad0d92d: "dmaengine: imx-sdma: refine to load context only once"
->
-> This commit adds a "context_loaded" flag used to avoid unnecessary context
-> setups.
-> However the flag is only reset in sdma_channel_terminate_work(),
-> which is only invoked in a worker triggered by sdma_terminate_all() IF
-> there is an active descriptor.
->
-> So, if no active descriptor remains when the channel is terminated, the
-> flag is not reset and, when the channel is later reused the old context
-> is used.
->
-> Fix the problem by always resetting the flag in sdma_free_chan_resources().
->
-> Fixes: ad0d92d: "dmaengine: imx-sdma: refine to load context only once"
+Guillaume
 
-Nit: in the Fixes tag we use 12 digits for the commit ID and the
-Subject is enclosed by parenthesis.
+On 29/01/2020 23:00, kernelci.org bot wrote:
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> * This automated bisection report was sent to you on the basis  *
+> * that you may be involved with the breaking commit it has      *
+> * found.  No manual investigation has been done to verify it,   *
+> * and the root cause of the problem may be somewhere else.      *
+> *                                                               *
+> * If you do send a fix, please include this trailer:            *
+> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+> *                                                               *
+> * Hope this helps!                                              *
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> 
+> mainline/master bisection: baseline.login on odroid-xu3
+> 
+> Summary:
+>   Start:      b3a608222336 Merge branch 'for-v5.6' of git://git.kernel.org:/pub/scm/linux/kernel/git/jmorris/linux-security
+>   Plain log:  https://storage.kernelci.org//mainline/master/v5.5-3996-gb3a608222336/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-8/lab-collabora/baseline-exynos5422-odroidxu3.txt
+>   HTML log:   https://storage.kernelci.org//mainline/master/v5.5-3996-gb3a608222336/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-8/lab-collabora/baseline-exynos5422-odroidxu3.html
+>   Result:     71723a96b8b1 dmaengine: Create symlinks between DMA channels and slaves
+> 
+> Checks:
+>   revert:     PASS
+>   verify:     PASS
+> 
+> Parameters:
+>   Tree:       mainline
+>   URL:        git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+>   Branch:     master
+>   Target:     odroid-xu3
+>   CPU arch:   arm
+>   Lab:        lab-collabora
+>   Compiler:   gcc-8
+>   Config:     multi_v7_defconfig+CONFIG_SMP=n
+>   Test case:  baseline.login
+> 
+> Breaking commit found:
+> 
+> -------------------------------------------------------------------------------
+> commit 71723a96b8b1367fefc18f60025dae792477d602
+> Author: Geert Uytterhoeven <geert+renesas@glider.be>
+> Date:   Fri Jan 17 16:30:56 2020 +0100
+> 
+>     dmaengine: Create symlinks between DMA channels and slaves
+>     
+>     Currently it is not easy to find out which DMA channels are in use, and
+>     which slave devices are using which channels.
+>     
+>     Fix this by creating two symlinks between the DMA channel and the actual
+>     slave device when a channel is requested:
+>       1. A "slave" symlink from DMA channel to slave device,
+>       2. A "dma:<name>" symlink slave device to DMA channel.
+>     When the channel is released, the symlinks are removed again.
+>     The latter requires keeping track of the slave device and the channel
+>     name in the dma_chan structure.
+>     
+>     Note that this is limited to channel request functions for requesting an
+>     exclusive slave channel that take a device pointer (dma_request_chan()
+>     and dma_request_slave_channel*()).
+>     
+>     Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>     Tested-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
+>     Link: https://lore.kernel.org/r/20200117153056.31363-1-geert+renesas@glider.be
+>     Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> 
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index 51a2f2b1b2de..f3ef4edd4de1 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -60,6 +60,8 @@ static long dmaengine_ref_count;
+>  
+>  /* --- sysfs implementation --- */
+>  
+> +#define DMA_SLAVE_NAME	"slave"
+> +
+>  /**
+>   * dev_to_dma_chan - convert a device pointer to its sysfs container object
+>   * @dev - device node
+> @@ -730,11 +732,11 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
+>  	if (has_acpi_companion(dev) && !chan)
+>  		chan = acpi_dma_request_slave_chan_by_name(dev, name);
+>  
+> -	if (chan) {
+> -		/* Valid channel found or requester needs to be deferred */
+> -		if (!IS_ERR(chan) || PTR_ERR(chan) == -EPROBE_DEFER)
+> -			return chan;
+> -	}
+> +	if (PTR_ERR(chan) == -EPROBE_DEFER)
+> +		return chan;
+> +
+> +	if (!IS_ERR_OR_NULL(chan))
+> +		goto found;
+>  
+>  	/* Try to find the channel via the DMA filter map(s) */
+>  	mutex_lock(&dma_list_mutex);
+> @@ -754,7 +756,23 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
+>  	}
+>  	mutex_unlock(&dma_list_mutex);
+>  
+> -	return chan ? chan : ERR_PTR(-EPROBE_DEFER);
+> +	if (!IS_ERR_OR_NULL(chan))
+> +		goto found;
+> +
+> +	return ERR_PTR(-EPROBE_DEFER);
+> +
+> +found:
+> +	chan->slave = dev;
+> +	chan->name = kasprintf(GFP_KERNEL, "dma:%s", name);
+> +	if (!chan->name)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	if (sysfs_create_link(&chan->dev->device.kobj, &dev->kobj,
+> +			      DMA_SLAVE_NAME))
+> +		dev_err(dev, "Cannot create DMA %s symlink\n", DMA_SLAVE_NAME);
+> +	if (sysfs_create_link(&dev->kobj, &chan->dev->device.kobj, chan->name))
+> +		dev_err(dev, "Cannot create DMA %s symlink\n", chan->name);
+> +	return chan;
+>  }
+>  EXPORT_SYMBOL_GPL(dma_request_chan);
+>  
+> @@ -812,6 +830,13 @@ void dma_release_channel(struct dma_chan *chan)
+>  	/* drop PRIVATE cap enabled by __dma_request_channel() */
+>  	if (--chan->device->privatecnt == 0)
+>  		dma_cap_clear(DMA_PRIVATE, chan->device->cap_mask);
+> +	if (chan->slave) {
+> +		sysfs_remove_link(&chan->slave->kobj, chan->name);
+> +		kfree(chan->name);
+> +		chan->name = NULL;
+> +		chan->slave = NULL;
+> +	}
+> +	sysfs_remove_link(&chan->dev->device.kobj, DMA_SLAVE_NAME);
+>  	mutex_unlock(&dma_list_mutex);
+>  }
+>  EXPORT_SYMBOL_GPL(dma_release_channel);
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index f52f274773ed..fef69a9c5824 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -294,10 +294,12 @@ struct dma_router {
+>  /**
+>   * struct dma_chan - devices supply DMA channels, clients use them
+>   * @device: ptr to the dma device who supplies this channel, always !%NULL
+> + * @slave: ptr to the device using this channel
+>   * @cookie: last cookie value returned to client
+>   * @completed_cookie: last completed cookie for this channel
+>   * @chan_id: channel ID for sysfs
+>   * @dev: class device for sysfs
+> + * @name: backlink name for sysfs
+>   * @device_node: used to add this to the device chan list
+>   * @local: per-cpu pointer to a struct dma_chan_percpu
+>   * @client_count: how many clients are using this channel
+> @@ -308,12 +310,14 @@ struct dma_router {
+>   */
+>  struct dma_chan {
+>  	struct dma_device *device;
+> +	struct device *slave;
+>  	dma_cookie_t cookie;
+>  	dma_cookie_t completed_cookie;
+>  
+>  	/* sysfs */
+>  	int chan_id;
+>  	struct dma_chan_dev *dev;
+> +	const char *name;
+>  
+>  	struct list_head device_node;
+>  	struct dma_chan_percpu __percpu *local;
+> -------------------------------------------------------------------------------
+> 
+> 
+> Git bisection log:
+> 
+> -------------------------------------------------------------------------------
+> git bisect start
+> # good: [4703d9119972bf586d2cca76ec6438f819ffa30e] Merge tag 'xarray-5.5' of git://git.infradead.org/users/willy/linux-dax
+> git bisect good 4703d9119972bf586d2cca76ec6438f819ffa30e
+> # bad: [b3a6082223369203d7e7db7e81253ac761377644] Merge branch 'for-v5.6' of git://git.kernel.org:/pub/scm/linux/kernel/git/jmorris/linux-security
+> git bisect bad b3a6082223369203d7e7db7e81253ac761377644
+> # bad: [a78208e2436963d0b2c7d186277d6e1a9755029a] Merge branch 'linus' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
+> git bisect bad a78208e2436963d0b2c7d186277d6e1a9755029a
+> # bad: [b1dba2473114588be3df916bf629a61bdcc83737] Merge tag 'selinux-pr-20200127' of git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux
+> git bisect bad b1dba2473114588be3df916bf629a61bdcc83737
+> # good: [9e1af7567b266dc6c3c8fd434ea807b3206bfdc1] Merge tag 'mmc-v5.6' of git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc
+> git bisect good 9e1af7567b266dc6c3c8fd434ea807b3206bfdc1
+> # bad: [aae1464f46a2403565f75717438118691d31ccf1] Merge tag 'regulator-v5.6' of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator
+> git bisect bad aae1464f46a2403565f75717438118691d31ccf1
+> # bad: [a5b871c91d470326eed3ae0ebd2fc07f3aee9050] Merge tag 'dmaengine-5.6-rc1' of git://git.infradead.org/users/vkoul/slave-dma
+> git bisect bad a5b871c91d470326eed3ae0ebd2fc07f3aee9050
+> # good: [12fb2b993e1508a0d9032a2314dfdda2a3a5535e] Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid
+> git bisect good 12fb2b993e1508a0d9032a2314dfdda2a3a5535e
+> # good: [7d083ae983573de16e3ab0bfd47486996d211417] dmaengine: doc: Add sections for per descriptor metadata support
+> git bisect good 7d083ae983573de16e3ab0bfd47486996d211417
+> # good: [e606c8b9d751e593b71bdcb636ac3392c62c1c50] dmaengine: s3c24xx-dma: fix spelling mistake "to" -> "too"
+> git bisect good e606c8b9d751e593b71bdcb636ac3392c62c1c50
+> # good: [8f47d1a5e545f903cd049c42da31a3be36178447] dmaengine: idxd: connect idxd to dmaengine subsystem
+> git bisect good 8f47d1a5e545f903cd049c42da31a3be36178447
+> # good: [f46e49a9cc3814f3564477f0fffc00e0a2bc9e80] livepatch: Handle allocation failure in the sample of shadow variable API
+> git bisect good f46e49a9cc3814f3564477f0fffc00e0a2bc9e80
+> # good: [e9f08b65250d73ab70e79e194813f52b8d306784] dmaengine: hisilicon: Add Kunpeng DMA engine support
+> git bisect good e9f08b65250d73ab70e79e194813f52b8d306784
+> # bad: [71723a96b8b1367fefc18f60025dae792477d602] dmaengine: Create symlinks between DMA channels and slaves
+> git bisect bad 71723a96b8b1367fefc18f60025dae792477d602
+> # first bad commit: [71723a96b8b1367fefc18f60025dae792477d602] dmaengine: Create symlinks between DMA channels and slaves
+> -------------------------------------------------------------------------------
+> 
 
-The preferred format would be:
-
-Fixes: ad0d92d7ba6a ("dmaengine: imx-sdma: refine to load context only once")
-
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-
-Thanks

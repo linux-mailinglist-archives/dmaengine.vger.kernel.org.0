@@ -2,107 +2,116 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CF62F14D166
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Jan 2020 20:51:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D90AA14D1D0
+	for <lists+dmaengine@lfdr.de>; Wed, 29 Jan 2020 21:20:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbgA2TvS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 29 Jan 2020 14:51:18 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:52230 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbgA2TvR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Jan 2020 14:51:17 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00TJp1Lr078023;
-        Wed, 29 Jan 2020 13:51:01 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580327461;
-        bh=rbB/lD7xEgzLxXwTLa3JpCV55iUJ31TPZ7JK+o77KyA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=i+SbOgfPYo7oQJfA+Q3vNaHmk6uHqFgEJ28i3Fxt7pifIhEH2MdjGg/uPNV9NVRsc
-         zc+SHz4kE0B1WMghT0gX6uVeGbGIST4r+ydRgsHFPkxh1t/ew60x+KwLXY0RuCMcgK
-         BoyjKqrW1p9iPtwSYX4spV6syCAb1RVBuU8FVrVY=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00TJp1fk010922
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 29 Jan 2020 13:51:01 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 29
- Jan 2020 13:51:01 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 29 Jan 2020 13:51:01 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00TJowTf087910;
-        Wed, 29 Jan 2020 13:50:59 -0600
-Subject: Re: [PATCH] dmaengine: Fix return value for dma_requrest_chan() in
- case of failure
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        <dmaengine@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <linux-samsung-soc@vger.kernel.org>
-CC:     Mark Brown <broonie@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Vinod Koul <vkoul@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-References: <CGME20200129163716eucas1p19550fcbfff81ca8586df28782399cff0@eucas1p1.samsung.com>
- <20200129163548.11096-1-m.szyprowski@samsung.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <3d7a612a-851f-85f1-4207-531f5a87212a@ti.com>
-Date:   Wed, 29 Jan 2020 21:51:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726317AbgA2UUA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 29 Jan 2020 15:20:00 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37600 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbgA2UT7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Jan 2020 15:19:59 -0500
+Received: by mail-lj1-f195.google.com with SMTP id v17so804373ljg.4;
+        Wed, 29 Jan 2020 12:19:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cBAvgEILNC/DpIEeIO9O9bZop1LPit11TI5TK6r2sd0=;
+        b=f6HglhEYBtGlI+1MJLA1H4Vfw050nUY3c/mP1sFKr8Wb9XRxK7dw1/gnSfQDg06rRT
+         0t8ti8HFq9tZ3Jx3f/U1S+AUYfBV98K2Vf5Tjm9hW+c23UxJNS76DfzgOyoNHuvGx+zN
+         sXZWQY857pdIbKJ3bDqFr7UmhBFUETm66k9viw7YDkQ7/BuPNp+720SCEP1STs2CDdko
+         Ubjko+gAGEcIcIKdQdA3I6wNiIpQPIq/tdqPgKS03xo+OvvCVKoEETeJEHbByswy7sid
+         mK/nuxs14s0PqRbndIF4OxzPgDBL8JMwoqSQpFOLGhlaz/k0PLpe9/UAWs48Rq3olRho
+         dzPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cBAvgEILNC/DpIEeIO9O9bZop1LPit11TI5TK6r2sd0=;
+        b=bHhIm1111hndF0w9rruS6EnEivohnUZvTeCSxsD8zwZwSNgLhW6BQto0MaiQ8byycr
+         iHSUkSDGIBogOz8ZHCsa2+Jyf2bMD/y6oih/lsiXG+yxg4BOxaGqPlkq1zAWuPqWItEQ
+         kY/TrNPVvGV6/DUciY0iHmGaqrDU/6ez+HgaaKsCrWjlC3Q9efcJKKuLAol/iybaLX0+
+         Rql1ObyB1LbTNIej7aLRAK0f0mcCYB/iO+q1pff9+L2BbRzK71vAzZxSSrLfvXFeN57K
+         wKYpLGNGm/vjWv2NbwdIg5Ny8hjY5/vz0mj6komZCB/rRr+UmA/uh6ERV7D5vIiDpcIx
+         5Pcw==
+X-Gm-Message-State: APjAAAXUWBg2U7dvXmC06qGW9bCKCW4NCydF7ya+RhUtfCZ8zkO4ML6i
+        g8ixfSPGUsytqJK6JLcnKnifNiQwYXSXm+zoJ1U=
+X-Google-Smtp-Source: APXvYqzuA9WbX+X2q0ILY1NfmpmvLlSyBrUHhpaWuevXJtsv/YP7zNE3FxI6k3UU76WiAjiLa4NEUjWGR9uylY0tU6c=
+X-Received: by 2002:a2e:5056:: with SMTP id v22mr557613ljd.164.1580329196994;
+ Wed, 29 Jan 2020 12:19:56 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200129163548.11096-1-m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1580305274-27274-1-git-send-email-martin.fuzzey@flowbird.group>
+In-Reply-To: <1580305274-27274-1-git-send-email-martin.fuzzey@flowbird.group>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 29 Jan 2020 17:19:45 -0300
+Message-ID: <CAOMZO5AFJvEdWNSsnsRW70_M6rzyvO4ip3zJHET2Gc2Wzj5RPQ@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: imx-sdma: fix context cache
+To:     Martin Fuzzey <martin.fuzzey@flowbird.group>
+Cc:     dmaengine@vger.kernel.org, stable <stable@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi Martin,
 
+Thanks for the fix.
 
-On 29/01/2020 18.35, Marek Szyprowski wrote:
-> Commit 71723a96b8b1 ("dmaengine: Create symlinks between DMA channels and
-> slaves") changed the dma_request_chan() function flow in such a way that
-> it always returns EPROBE_DEFER in case of channels that cannot be found.
-> This break the operation of the devices which have optional DMA channels
-> as it puts their drivers in endless deferred probe loop. Fix this by
-> propagating the proper error value.
-> 
-> Fixes: 71723a96b8b1 ("dmaengine: Create symlinks between DMA channels and slaves")
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->  drivers/dma/dmaengine.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-> index f3ef4edd4de1..27b64a665347 100644
-> --- a/drivers/dma/dmaengine.c
-> +++ b/drivers/dma/dmaengine.c
-> @@ -759,7 +759,7 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
->  	if (!IS_ERR_OR_NULL(chan))
->  		goto found;
->  
-> -	return ERR_PTR(-EPROBE_DEFER);
-> +	return chan;
+On Wed, Jan 29, 2020 at 10:41 AM Martin Fuzzey
+<martin.fuzzey@flowbird.group> wrote:
+>
+> There is a DMA problem with the serial ports on i.MX6.
+>
+> When the following sequence is performed:
+>
+> 1) Open a port
+> 2) Write some data
+> 3) Close the port
+> 4) Open a *different* port
+> 5) Write some data
+> 6) Close the port
+>
+> The second write sends nothing and the second close hangs.
+> If the first close() is omitted it works.
+>
+> Adding logs to the the UART driver shows that the DMA is being setup but
+> the callback is never invoked for the second write.
+>
+> This used to work in 4.19.
+>
+> Git bisect leads to:
+>         ad0d92d: "dmaengine: imx-sdma: refine to load context only once"
+>
+> This commit adds a "context_loaded" flag used to avoid unnecessary context
+> setups.
+> However the flag is only reset in sdma_channel_terminate_work(),
+> which is only invoked in a worker triggered by sdma_terminate_all() IF
+> there is an active descriptor.
+>
+> So, if no active descriptor remains when the channel is terminated, the
+> flag is not reset and, when the channel is later reused the old context
+> is used.
+>
+> Fix the problem by always resetting the flag in sdma_free_chan_resources().
+>
+> Fixes: ad0d92d: "dmaengine: imx-sdma: refine to load context only once"
 
-It should be:
-return chan ? chan : ERR_PTR(-EPROBE_DEFER);
+Nit: in the Fixes tag we use 12 digits for the commit ID and the
+Subject is enclosed by parenthesis.
 
-dma_request_chan() should never return NULL, it either returns the
-dma_chan, or ERR_PTR().
+The preferred format would be:
 
->  
->  found:
->  	chan->slave = dev;
-> 
+Fixes: ad0d92d7ba6a ("dmaengine: imx-sdma: refine to load context only once")
 
-- Péter
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thanks

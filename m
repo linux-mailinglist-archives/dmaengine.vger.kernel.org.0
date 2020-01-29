@@ -2,50 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CB9014BC87
-	for <lists+dmaengine@lfdr.de>; Tue, 28 Jan 2020 16:01:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A52614C3D9
+	for <lists+dmaengine@lfdr.de>; Wed, 29 Jan 2020 01:12:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgA1PBm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 28 Jan 2020 10:01:42 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35496 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726243AbgA1PBm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Jan 2020 10:01:42 -0500
-Received: by mail-lf1-f67.google.com with SMTP id z18so9329540lfe.2;
-        Tue, 28 Jan 2020 07:01:40 -0800 (PST)
+        id S1726333AbgA2AMR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 28 Jan 2020 19:12:17 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:33153 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbgA2AMR (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Jan 2020 19:12:17 -0500
+Received: by mail-lf1-f68.google.com with SMTP id n25so10535090lfl.0;
+        Tue, 28 Jan 2020 16:12:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
+        h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jxwyE4yCuJly/POgSDmd0mgjgoTTNrnCHPv8m1hThlw=;
-        b=r9pKAmpcGxCnJQHpeUV186FjMp6g8ZLFV0vbqprv6kdJ06k55bvT1gSajqUntVTSSj
-         /dBkeIqVll8OujXg80OGCegtmjpTelrjQ34GbYIJ/kWJ8v+Pe1nmicD+xBYekQuggSd0
-         T5zhu4wYNUF5tLHncUPdiR9qJCDeyoB1tjnWWCKqJzuw++TmtRoY46p61ZIaDkVM+Fw6
-         l+D/km54MrSWj65dv7z52suZ/YiOdwiPYz/HSG/FAfhuSWpHTDEQp5XSX2eO2BNOXGxG
-         Z4QEHFf5wtUvIzwh4kko0qen16g5eEfU95Shd+b0QF3rF1izob6S0iOXOKSgrxx1Y0s2
-         OMVw==
+        bh=psUfs///qMSHOm9aXYzwh4HiVAe1F3rkwgDr4o7mUaM=;
+        b=MpQM8JJPlZK9lxvh5fdSl6yBznDQhw/9xmqh0Qgrnt1s/XNmA6lSIQv+JETtiCD4vt
+         KwFe7nnHog+AK2UvaAUcUvo5a5UWAyfPovSivogOPeWUzuJ/DoHqUYVQXIec1Eq5WO+H
+         FDAHujlXk0S2hxrKBB3LASKNu14aiPXdowSBplN+sKlBtA2oALw6l4+t5mPZ8BILYKHh
+         oQNu7GUpzraOOK6L0uFFG/I+wvZzY+ez/gcuxP1KomhGIPZEjCcmIcgeQcKbKOpdHi3D
+         FvgjEmvAHz0phCVWSjBNn5fH/MwrKHI7ujg1Mtv0i5HBPchbRFnikII7L5N5rACkjHYX
+         xGMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=jxwyE4yCuJly/POgSDmd0mgjgoTTNrnCHPv8m1hThlw=;
-        b=Ctkj+Bkm4kRC90ur9aFKMkFKq9G4Nn1MJj9s77DdYbHzffyVg0LFjM8VPF4Fc/xDxl
-         PtzVV+p667c2p+zlw25wz0Qmk9iq8WIqzKsEHIywfW5VAJ3c1BRqbLOpVPdbKsANO9al
-         elptn4bF7FCBGx/pcNo7D9WQeDic4NhOJ2TpcROM63fwK7Yc1wuE9OxDQ86HLv19hpD9
-         g1gAJyQ1NF7XMtKv1CXuj2xdsGPP1PS5WA7ev8SMKFTiWscsaoNfK3TBOaW9EaO4Glb/
-         fB3Bd59sFBHxxCeZh+n/NMh4ii9EJPax21CIH9DnJDopI9m6z1p5Ub8WpmeTvl+DxOZX
-         36Bw==
-X-Gm-Message-State: APjAAAU1eAiEfgoK0GfPGC2JH2ORspjoUZs4OYxSxJ57VENxtlqI5Xp4
-        oTmoU/BwBDInCXyOf2ntECSbdd9h
-X-Google-Smtp-Source: APXvYqw3RsrE6AGKOzv0pZfEsLBAjHfve5tnkCmTy0TEA0qNwFJ2y1TSQdaqNO+CJhWKyHw5evw2WA==
-X-Received: by 2002:a19:c6cd:: with SMTP id w196mr2653759lff.79.1580223699796;
-        Tue, 28 Jan 2020 07:01:39 -0800 (PST)
+        bh=psUfs///qMSHOm9aXYzwh4HiVAe1F3rkwgDr4o7mUaM=;
+        b=r+W6auvRm7JWT4whMCDEsSqRuaViYhNqGQqtc0WNR8SIl0JJ2m/pY/tXXu/A/ONNLS
+         Kv8LG0wc++/cnuHixDlARvm9x7vVU3MgmPZWbh9ECuoS+f2NtecxNO9E+q33c6IvxtKg
+         DnDy02jnKoRjogN2uRYSBo7JXi+dVwN7bX6/0aZWWOXrGdxqDCsruWXMI6mvJQDdzgqP
+         guR6zbuXKTyVQtv3ubkP9KP/HAqQVPuSpCK75M+MN4ikrXe7M9tcx+SZwx0o3GDEd4P+
+         Z4RBcPIQGi835Z6M9VitXlLImOyz5C3nHIF7n1Ma1SXv12NQmGpPbLjcNlWLd0zumSOI
+         hZBQ==
+X-Gm-Message-State: APjAAAWWMHfk/RGjyDtN29MmMPsQLTIgrKK2iNMJURS7dQTFvHy0weNO
+        oOgaXiw/EwPJgQTsLXlm8uPtiahK
+X-Google-Smtp-Source: APXvYqxTJlG7wOIv+UJKLGHQJvZKYe5wt9n/sI7rk3hlqJpwsyWrduSnriKvZ/KMzACQVQQ3u0alhw==
+X-Received: by 2002:a19:8456:: with SMTP id g83mr3898822lfd.0.1580256733060;
+        Tue, 28 Jan 2020 16:12:13 -0800 (PST)
 Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id u13sm9960229lfq.19.2020.01.28.07.01.38
+        by smtp.googlemail.com with ESMTPSA id 21sm57951ljv.19.2020.01.28.16.12.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jan 2020 07:01:39 -0800 (PST)
-Subject: Re: [PATCH v4 08/14] dmaengine: tegra-apb: Fix coding style problems
+        Tue, 28 Jan 2020 16:12:12 -0800 (PST)
+Subject: Re: [PATCH v4 01/14] dmaengine: tegra-apb: Fix use-after-free
+From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Jon Hunter <jonathanh@nvidia.com>,
         Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -55,17 +56,19 @@ To:     Jon Hunter <jonathanh@nvidia.com>,
 Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
 References: <20200112173006.29863-1-digetx@gmail.com>
- <20200112173006.29863-9-digetx@gmail.com>
- <844c4ace-d043-a908-823d-545b5b753008@nvidia.com>
- <134adcfb-83fb-4bb7-986e-65217bc4f821@gmail.com>
- <bab1eec0-8b1d-6005-e9eb-05e93da844aa@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a99ff711-22af-a377-9500-ab4b8644b0ff@gmail.com>
-Date:   Tue, 28 Jan 2020 18:01:38 +0300
+ <20200112173006.29863-2-digetx@gmail.com>
+ <4c1b9e48-5468-0c03-2108-158ee814eea8@nvidia.com>
+ <1327bb21-0364-da26-e6ed-ff6c19df03e6@gmail.com>
+ <e39ef31d-4cff-838a-0fc1-73a39a8d6120@nvidia.com>
+ <b0c85ca7-d8ac-5f9d-2c57-79543c1f9b5d@gmail.com>
+ <5bbe9e3e-a64f-53be-e7f6-63e36cbae77d@nvidia.com>
+ <be7addff-9f5c-e40a-923f-db895ce89fa2@gmail.com>
+Message-ID: <9ca67d17-3bb0-abb4-9d95-1057d0828ed2@gmail.com>
+Date:   Wed, 29 Jan 2020 03:12:05 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <bab1eec0-8b1d-6005-e9eb-05e93da844aa@nvidia.com>
+In-Reply-To: <be7addff-9f5c-e40a-923f-db895ce89fa2@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -74,153 +77,88 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-28.01.2020 17:05, Jon Hunter пишет:
-> 
-> On 16/01/2020 17:37, Dmitry Osipenko wrote:
->> 15.01.2020 12:49, Jon Hunter пишет:
->>>
->>>
->>> On 12/01/2020 17:30, Dmitry Osipenko wrote:
->>>> This patch fixes few dozens of coding style problems reported by
->>>> checkpatch and prettifies code where makes sense.
+28.01.2020 17:51, Dmitry Osipenko пишет:
+> 28.01.2020 17:02, Jon Hunter пишет:
+>>
+>> On 16/01/2020 20:10, Dmitry Osipenko wrote:
+>>> 15.01.2020 12:00, Jon Hunter пишет:
 >>>>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>  drivers/dma/tegra20-apb-dma.c | 276 ++++++++++++++++++----------------
->>>>  1 file changed, 144 insertions(+), 132 deletions(-)
+>>>> On 14/01/2020 20:33, Dmitry Osipenko wrote:
+>>>>> 14.01.2020 18:09, Jon Hunter пишет:
+>>>>>>
+>>>>>> On 12/01/2020 17:29, Dmitry Osipenko wrote:
+>>>>>>> I was doing some experiments with I2C and noticed that Tegra APB DMA
+>>>>>>> driver crashes sometime after I2C DMA transfer termination. The crash
+>>>>>>> happens because tegra_dma_terminate_all() bails out immediately if pending
+>>>>>>> list is empty, thus it doesn't release the half-completed descriptors
+>>>>>>> which are getting re-used before ISR tasklet kicks-in.
+>>>>>>
+>>>>>> Can you elaborate a bit more on how these are getting re-used? What is
+>>>>>> the sequence of events which results in the panic? I believe that this
+>>>>>> was also reported in the past [0] and so I don't doubt there is an issue
+>>>>>> here, but would like to completely understand this.
+>>>>>>
+>>>>>> Thanks!
+>>>>>> Jon
+>>>>>>
+>>>>>> [0] https://lore.kernel.org/patchwork/patch/675349/
+>>>>>>
+>>>>>
+>>>>> In my case it happens in the touchscreen driver during of the
+>>>>> touchscreen's interrupt handling (in a threaded IRQ handler) + CPU is
+>>>>> under load and there is other interrupts activity. So what happens here
+>>>>> is that the TS driver issues one I2C transfer, which fails with
+>>>>> (apparently bogus) timeout (because DMA descriptor is completed and
+>>>>> removed from the pending list, but tasklet not executed yet), and then
+>>>>> TS immediately issues another I2C transfer that re-uses the
+>>>>> yet-incompleted descriptor. That's my understanding.
 >>>>
->>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->>>> index dff21e80ffa4..7158bd3145c4 100644
->>>> --- a/drivers/dma/tegra20-apb-dma.c
->>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>>> OK, but what is the exact sequence that it allowing it to re-use the
+>>>> incompleted descriptor?
 >>>
->>> ...
+>>>    TDMA driver                      DMA Client
 >>>
->>>> @@ -1003,20 +1014,23 @@ static void tegra_dma_prep_wcount(struct tegra_dma_channel *tdc,
->>>>  		ch_regs->csr |= len_field;
->>>>  }
->>>>  
->>>> -static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
->>>> -	struct dma_chan *dc, struct scatterlist *sgl, unsigned int sg_len,
->>>> -	enum dma_transfer_direction direction, unsigned long flags,
->>>> -	void *context)
->>>> +static struct dma_async_tx_descriptor *
->>>> +tegra_dma_prep_slave_sg(struct dma_chan *dc,
->>>> +			struct scatterlist *sgl,
->>>> +			unsigned int sg_len,
->>>> +			enum dma_transfer_direction direction,
->>>> +			unsigned long flags,
->>>> +			void *context)
->>>>  {
->>>>  	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
->>>> +	struct tegra_dma_sg_req *sg_req = NULL;
->>>> +	u32 csr, ahb_seq, apb_ptr, apb_seq;
->>>> +	enum dma_slave_buswidth slave_bw;
->>>>  	struct tegra_dma_desc *dma_desc;
->>>> -	unsigned int i;
->>>> -	struct scatterlist *sg;
->>>> -	unsigned long csr, ahb_seq, apb_ptr, apb_seq;
->>>>  	struct list_head req_list;
->>>> -	struct tegra_dma_sg_req  *sg_req = NULL;
->>>> -	u32 burst_size;
->>>> -	enum dma_slave_buswidth slave_bw;
->>>> +	struct scatterlist *sg;
->>>> +	unsigned int burst_size;
->>>> +	unsigned int i;
+>>> 1.
+>>>                                     dmaengine_prep()
 >>>
->>> This is not really consistent with the rest of the changes by having 'i'
->>> and 'burst_size' on separate lines.
+>>> 2.
+>>>    tegra_dma_desc_get()
+>>>    dma_desc = kzalloc()
+>>>    ...
+>>>    tegra_dma_prep_slave_sg()
+>>>    INIT_LIST_HEAD(&dma_desc->tx_list);
+>>>    INIT_LIST_HEAD(&dma_desc->cb_node);
+>>>    list_add_tail(sgreq->node,
+>>>                  dma_desc->tx_list)
+>>>
+>>> 3.
+>>>                                     dma_async_issue_pending()
+>>>
+>>> 4.
+>>>    tegra_dma_tx_submit()
+>>>    list_splice_tail_init(dma_desc->tx_list,
+>>>                          tdc->pending_sg_req)
+>>>
+>>> 5.
+>>>    tegra_dma_isr()
+>>>    ...
+>>>    handle_once_dma_done()
+>>>    ...
+>>>    sgreq = list_first_entry(tdc->pending_sg_req)
+>>>    list_del(sgreq->node);
+>>>    ...
+>>>    list_add_tail(dma_desc->cb_node,
+>>>                  tdc->cb_desc);
+>>>    list_add_tail(dma_desc->node,
+>>>                  tdc->free_dma_desc);
 >>
->> The goal wasn't to squash everything into a single line, but to make
->> code more readable. In this particular case the separated lines look
->> better to me.
+>> Isn't this the problem here, that we have placed this on the free list
+>> before we are actually done?
 >>
->>>>  
->>>>  	if (!tdc->config_init) {
->>>>  		dev_err(tdc2dev(tdc), "DMA channel is not configured\n");
->>>> @@ -1028,7 +1042,7 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
->>>>  	}
->>>>  
->>>>  	if (get_transfer_param(tdc, direction, &apb_ptr, &apb_seq, &csr,
->>>> -				&burst_size, &slave_bw) < 0)
->>>> +			       &burst_size, &slave_bw) < 0)
->>>>  		return NULL;
->>>>  
->>>>  	INIT_LIST_HEAD(&req_list);
->>>> @@ -1074,7 +1088,7 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
->>>>  		len = sg_dma_len(sg);
->>>>  
->>>>  		if ((len & 3) || (mem & 3) ||
->>>> -				(len > tdc->tdma->chip_data->max_dma_count)) {
->>>> +		    len > tdc->tdma->chip_data->max_dma_count) {
->>>>  			dev_err(tdc2dev(tdc),
->>>>  				"DMA length/memory address is not supported\n");
->>>>  			tegra_dma_desc_put(tdc, dma_desc);
->>>> @@ -1126,20 +1140,21 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_slave_sg(
->>>>  	return &dma_desc->txd;
->>>>  }
->>>>  
->>>> -static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
->>>> -	struct dma_chan *dc, dma_addr_t buf_addr, size_t buf_len,
->>>> -	size_t period_len, enum dma_transfer_direction direction,
->>>> -	unsigned long flags)
->>>> +static struct dma_async_tx_descriptor *
->>>> +tegra_dma_prep_dma_cyclic(struct dma_chan *dc, dma_addr_t buf_addr,
->>>> +			  size_t buf_len,
->>>> +			  size_t period_len,
->>>> +			  enum dma_transfer_direction direction,
->>>> +			  unsigned long flags)
->>>>  {
->>>>  	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
->>>> -	struct tegra_dma_desc *dma_desc = NULL;
->>>>  	struct tegra_dma_sg_req *sg_req = NULL;
->>>> -	unsigned long csr, ahb_seq, apb_ptr, apb_seq;
->>>> -	int len;
->>>> -	size_t remain_len;
->>>> -	dma_addr_t mem = buf_addr;
->>>> -	u32 burst_size;
->>>> +	u32 csr, ahb_seq, apb_ptr, apb_seq;
->>>>  	enum dma_slave_buswidth slave_bw;
->>>> +	struct tegra_dma_desc *dma_desc;
->>>> +	dma_addr_t mem = buf_addr;
->>>> +	unsigned int burst_size;
->>>> +	size_t len, remain_len;
->>>>  
->>>>  	if (!buf_len || !period_len) {
->>>>  		dev_err(tdc2dev(tdc), "Invalid buffer/period len\n");
->>>> @@ -1173,13 +1188,13 @@ static struct dma_async_tx_descriptor *tegra_dma_prep_dma_cyclic(
->>>>  
->>>>  	len = period_len;
->>>>  	if ((len & 3) || (buf_addr & 3) ||
->>>> -			(len > tdc->tdma->chip_data->max_dma_count)) {
->>>> +	    len > tdc->tdma->chip_data->max_dma_count) {
->>>>  		dev_err(tdc2dev(tdc), "Req len/mem address is not correct\n");
->>>>  		return NULL;
->>>>  	}
->>>>  
->>>>  	if (get_transfer_param(tdc, direction, &apb_ptr, &apb_seq, &csr,
->>>> -				&burst_size, &slave_bw) < 0)
->>>> +			       &burst_size, &slave_bw) < 0)
->>>>  		return NULL;
->>>>  
->>>>  	ahb_seq = TEGRA_APBDMA_AHBSEQ_INTR_ENB;
->>>> @@ -1269,7 +1284,6 @@ static int tegra_dma_alloc_chan_resources(struct dma_chan *dc)
->>>>  	int ret;
->>>>  
->>>>  	dma_cookie_init(&tdc->dma_chan);
->>>> -	tdc->config_init = false;
->>>
->>> Why is this removed? Does not seem to belong in this patch.
->>
->> Because initially, on driver's probe, the tdc->config_init is false for
->> all channels and then tegra_dma_free_chan_resources() also sets it to
->> false. Thus there is no need to re-initilize the already initialized
->> variable. It's not a very good coding style if variables are
->> unnecessarily initialized, you probably noticed that there are few other
->> cases of removing the unneeded initializations of local variables in
->> this patch.
+>> It seems to me that there could still be a potential race condition
+>> between the ISR and the tasklet running.
 > 
-> OK, but I don't really consider this coding-style and would prefer a
-> separate patch for this.
+> Yes, this should be addressed by the patch #3 "dmaengine: tegra-apb:
+> Prevent race conditions of tasklet vs free list".
 
-If if it's not a coding-style, then how would you name it? :)
+correction (to avoid confusion): it's actually patch #5, my bad

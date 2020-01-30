@@ -2,292 +2,131 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 64E5314D9F8
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Jan 2020 12:41:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A8EB14DB0B
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Jan 2020 13:55:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgA3Llp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 30 Jan 2020 06:41:45 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:37446 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727107AbgA3Llo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Jan 2020 06:41:44 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00UBfc5p039522;
-        Thu, 30 Jan 2020 05:41:38 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580384498;
-        bh=nOaK30hKcU0nHopMIcNcNAI7Bta7pqRO8AZ6vId2DZU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=iYEDvFcQ1/K+Xei33XXarqTk2bXsPv6Meu3Q+Fq4bt1TwJJwidwjI6nwQgYz2AS6t
-         nCMmEbdIpnVJzX5i+etGWlch5N0I+txNPEYv5xyRZ6L2LFXXfRWYU8Mh84fHAMTOwy
-         UPT/w4MdxQ/YFcnz4vezisOhneFcjnsLlTWGMvDo=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00UBfcUf008738;
-        Thu, 30 Jan 2020 05:41:38 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 30
- Jan 2020 05:41:37 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 30 Jan 2020 05:41:38 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00UBfW7Y104655;
-        Thu, 30 Jan 2020 05:41:36 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <geert@linux-m68k.org>
-Subject: [PATCH 2/2] dmaengine: Add basic debugfs support
-Date:   Thu, 30 Jan 2020 13:42:20 +0200
-Message-ID: <20200130114220.23538-3-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200130114220.23538-1-peter.ujfalusi@ti.com>
-References: <20200130114220.23538-1-peter.ujfalusi@ti.com>
+        id S1727275AbgA3Myq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 30 Jan 2020 07:54:46 -0500
+Received: from mail-mw2nam12on2046.outbound.protection.outlook.com ([40.107.244.46]:16582
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727165AbgA3Myp (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 30 Jan 2020 07:54:45 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OSc2J0OZq1eH4o07babSHq9r1hnSZEoPh31UHCoi1+4FzzOxIg7Zdyusp94pLeK4kT59EheQeaZPnWqvPtAUEMancqH4z0P7qmxzG1fyBavW5lVWyKAhPmz106A721KOSp3CsuqixkAK8CKxH/USH3el7kgk79LGmD/2th+yKFDYRJ88mXJcec2wSVO3jfiqXNxKTiSyVIubd9zn8LoYEunuU691cqf8AbIgharC+8VUHxNU3wYL/J5K2SUJpv2d2xjF4BarR5zdIDOHMvCsT+/Xz4fu4qn+1YqQTF8nsZbZXwwO8NHptzI/RHmUCzoRgdEzKji3n87/vKbflkWU0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qJSMS+NLJIeszLfKL3SmPUfLLD/5iNiwQeDHJQIxpu4=;
+ b=FgegFda8MMSE3Uz0wvmCUrcVkBTs4JP1jYe64bD3Mv5rH0p0KCBT9mhzeKd6aEzYRkaO3oDzH8ql/A47V3kuwL9yrXvIVTHJ5l5qa1IljdfrMLYG3jstYVmYy5UJbN6KNP516HO97HRIV52ktwm1CK3o1c6GhUKV8DD8CT1u6650jxoJgVJaisA7Js0FtkhkRwGj1Atr7+X6Vrzgapr8OrbLlBsDY/ZHxUAQIZEFVOORRY1aW99plWuN4gUA+1a4aXTjlMMjzOZkazLzxu5cpZ3qsObUrbcZbAqVWHTITZDzQVr7Nvvl4BqOz4edyGlQco7zdVtSuB2mC2/yRnbBew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=xhdpunnaia40.localdomain; dmarc=none action=none
+ header.from=xilinx.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qJSMS+NLJIeszLfKL3SmPUfLLD/5iNiwQeDHJQIxpu4=;
+ b=C6d/mbcjTdIT0/d+UtX9t7tw+jGy30MKXP40lKEmrckyZSQDgCg80ZqyayCv9PvRF17EaAgkZWkM+BHokLpF7hRMF7TDndvwKxOVJb3lL6zbrAK/OpTcbxSVP+5QQRXys/ubxjROvMZxyHCNtOOh8vEYBrshakacopcLzbfpmr4=
+Received: from BYAPR02CA0067.namprd02.prod.outlook.com (2603:10b6:a03:54::44)
+ by SN6PR02MB3983.namprd02.prod.outlook.com (2603:10b6:805:2c::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2665.23; Thu, 30 Jan
+ 2020 12:54:41 +0000
+Received: from CY1NAM02FT021.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::204) by BYAPR02CA0067.outlook.office365.com
+ (2603:10b6:a03:54::44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.27 via Frontend
+ Transport; Thu, 30 Jan 2020 12:54:41 +0000
+Authentication-Results: spf=none (sender IP is 149.199.60.83)
+ smtp.mailfrom=xhdpunnaia40.localdomain; vger.kernel.org; dkim=none (message
+ not signed) header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=xilinx.com;
+Received-SPF: None (protection.outlook.com: xhdpunnaia40.localdomain does not
+ designate permitted sender hosts)
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT021.mail.protection.outlook.com (10.152.75.187) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2686.25
+ via Frontend Transport; Thu, 30 Jan 2020 12:54:40 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <radheys@xhdpunnaia40.localdomain>)
+        id 1ix9LD-0004Lj-7O; Thu, 30 Jan 2020 04:54:39 -0800
+Received: from [127.0.0.1] (helo=xsj-smtp-dlp1.xlnx.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <radheys@xhdpunnaia40.localdomain>)
+        id 1ix9L7-0000i2-G9; Thu, 30 Jan 2020 04:54:33 -0800
+Received: from xsj-pvapsmtp01 (xsj-mail.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 00UCsWmW005663;
+        Thu, 30 Jan 2020 04:54:32 -0800
+Received: from [10.140.184.180] (helo=xhdpunnaia40.localdomain)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <radheys@xhdpunnaia40.localdomain>)
+        id 1ix9L5-0000hf-Sy; Thu, 30 Jan 2020 04:54:32 -0800
+Received: by xhdpunnaia40.localdomain (Postfix, from userid 13245)
+        id 17E6AFF8A7; Thu, 30 Jan 2020 18:24:31 +0530 (IST)
+From:   Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+To:     vkoul@kernel.org, dan.j.williams@intel.com,
+        michal.simek@xilinx.com, nick.graumann@gmail.com,
+        andrea.merello@gmail.com, appana.durga.rao@xilinx.com,
+        mcgrof@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        git@xilinx.com,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Subject: [PATCH -next 0/2] dmaengine: xilinx_dma: In dma channel probe fix node order dependency
+Date:   Thu, 30 Jan 2020 18:24:23 +0530
+Message-Id: <1580388865-9960-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-Result: No--2.382-7.0-31-1
+X-imss-scan-details: No--2.382-7.0-31-1;No--2.382-5.0-31-1
+X-TM-AS-User-Approved-Sender: No;No
+X-TM-AS-Result-Xfilter: Match text exemption rules:No
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(376002)(396003)(39860400002)(428003)(249900001)(189003)(199004)(316002)(42186006)(356004)(6666004)(70586007)(36756003)(70206006)(2616005)(5660300002)(26005)(2906002)(498600001)(336012)(42882007)(8676002)(107886003)(6266002)(4744005)(82310400001)(81156014)(8936002)(81166006)(450100002)(4326008)(966005);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB3983;H:xsj-pvapsmtpgw01;FPR:;SPF:None;LANG:en;PTR:unknown-60-83.xilinx.com;MX:0;A:0;
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 97ee8bc1-48ff-476c-6ce8-08d7a5839244
+X-MS-TrafficTypeDiagnostic: SN6PR02MB3983:
+X-Microsoft-Antispam-PRVS: <SN6PR02MB398374063500E00037E32E1DD5040@SN6PR02MB3983.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 02981BE340
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: kThNGl4H7rqbjh8fuAQ1+dY55qI1ReA5I0aO1DJB0R6O8BRSJYLWZYMUJX0+ZGJA5oScSqf5RfKHMy77KGZD2ioCHSKA+ETjfU8B6Waqgr4pskqNRZsnidgl/T7yFWyfrIMhrqwH5l1tCUH0iyqsxmXzJ3nB1hzZOQHlmrmHOsKfj/7sEngoQFsT3CNt2DvdczmIZHkEESyF12RYR+2EzZviyYDH+RlfasNrksJ4unGK94iKaRd9EIVeyN6PKEy1AGGJ4sQXT4DVkgSQ+0oJIhqUxKVYPJuqp7VvZfleizXPKlbBD/dn3X/bbeUbHqJrEjQCr3S+XmBC0mS+swE5qDxSQqKQO9r2XkPYOexpyMZTAQOJLqH6lay99Uv+UKB/fi6xQ3p/vUJVxAKwtIjAXnW+xA0fgwWhHoKvfXadDB9/mDPLeHqKUJ7C1AC9sCCahvorNKNHOtMUwJjeBJLANCODraGnRK+F1mKl/dBmB53yJuobj1hA2V7op0i4xD+Jfg00ZCTMQ4SSqHIGGv8sBQ==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2020 12:54:40.8920
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 97ee8bc1-48ff-476c-6ce8-08d7a5839244
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB3983
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Via the /sys/kernel/debug/dmaengine users can get information about the
-DMA devices and the used channels.
+In overlay application[1] we noticed that channel DT nodes are inverted and
+as a sideffect of this behaviour the axidmatest client fails.
 
-Example output on am654-evm with audio using two channels and after running
-dmatest on 6 channels:
+In general driver should not assume specific DT probe order. So to fix this
+failure remove channel node ordering restriction from the xilinx dma driver.
 
- # cat /sys/kernel/debug/dmaengine
-dma0 (285c0000.dma-controller): number of channels: 96
+[1]: https://github.com/raspberrypi/linux/issues/2416
 
-dma1 (31150000.dma-controller): number of channels: 267
- dma1chan0:             2b00000.mcasp:tx
- dma1chan1:             2b00000.mcasp:rx
- dma1chan2:             in-use
- dma1chan3:             in-use
- dma1chan4:             in-use
- dma1chan5:             in-use
- dma1chan6:             in-use
- dma1chan7:             in-use
+Radhey Shyam Pandey (2):
+  dmaengine: xilinx_dma: Extend dma_config structure to store max
+    channel count
+  dmaengine: xilinx_dma: In dma channel probe fix node order dependency
 
-For slave channels we can show the device and the channel name a given
-channel is requested.
-For non slave devices the only information we know is that the channel is
-in use.
+ drivers/dma/xilinx/xilinx_dma.c | 48 +++++++++++++++++++++--------------------
+ 1 file changed, 25 insertions(+), 23 deletions(-)
 
-DMA drivers can implement the optional dbg_show callback to provide
-controller specific information instead of the generic one.
-
-It is easy to extend the generic dmaengine_dbg_show() to print additional
-information about the used channels.
-
-I have taken the idea from gpiolib.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/dma/dmaengine.c   | 120 ++++++++++++++++++++++++++++++++++++++
- include/linux/dmaengine.h |  12 +++-
- 2 files changed, 131 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 75516f9fbab4..7573a4d0f9d7 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -32,6 +32,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/platform_device.h>
-+#include <linux/debugfs.h>
- #include <linux/dma-mapping.h>
- #include <linux/init.h>
- #include <linux/module.h>
-@@ -760,6 +761,13 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
- 		return chan ? chan : ERR_PTR(-EPROBE_DEFER);
- 
- found:
-+#ifdef CONFIG_DEBUG_FS
-+	chan->slave_name = kasprintf(GFP_KERNEL, "%s:%s", dev_name(dev), name);
-+	if (!chan->slave_name)
-+		dev_warn(dev,
-+			 "Cannot allocate memory for slave name (debugfs)\n");
-+#endif
-+
- 	chan->name = kasprintf(GFP_KERNEL, "dma:%s", name);
- 	if (!chan->name) {
- 		dev_warn(dev,
-@@ -840,6 +848,13 @@ void dma_release_channel(struct dma_chan *chan)
- 		chan->name = NULL;
- 		chan->slave = NULL;
- 	}
-+
-+#ifdef CONFIG_DEBUG_FS
-+	if (chan->slave_name) {
-+		kfree(chan->slave_name);
-+		chan->slave_name = NULL;
-+	}
-+#endif
- 	mutex_unlock(&dma_list_mutex);
- }
- EXPORT_SYMBOL_GPL(dma_release_channel);
-@@ -1562,3 +1577,108 @@ static int __init dma_bus_init(void)
- 	return class_register(&dma_devclass);
- }
- arch_initcall(dma_bus_init);
-+
-+#ifdef CONFIG_DEBUG_FS
-+static void *dmaengine_seq_start(struct seq_file *s, loff_t *pos)
-+{
-+	struct dma_device *dma_dev = NULL;
-+	loff_t index = *pos;
-+
-+	s->private = "";
-+
-+	mutex_lock(&dma_list_mutex);
-+	list_for_each_entry(dma_dev, &dma_device_list, global_node)
-+		if (index-- == 0) {
-+			mutex_unlock(&dma_list_mutex);
-+			return dma_dev;
-+		}
-+	mutex_unlock(&dma_list_mutex);
-+
-+	return NULL;
-+}
-+
-+static void *dmaengine_seq_next(struct seq_file *s, void *v, loff_t *pos)
-+{
-+	struct dma_device *dma_dev = v;
-+	void *ret = NULL;
-+
-+	mutex_lock(&dma_list_mutex);
-+	if (list_is_last(&dma_dev->global_node, &dma_device_list))
-+		ret = NULL;
-+	else
-+		ret = list_entry(dma_dev->global_node.next,
-+				 struct dma_device, global_node);
-+	mutex_unlock(&dma_list_mutex);
-+
-+	s->private = "\n";
-+	++*pos;
-+
-+	return ret;
-+}
-+
-+static void dmaengine_seq_stop(struct seq_file *s, void *v)
-+{
-+}
-+
-+static void dmaengine_dbg_show(struct seq_file *s, struct dma_device *dma_dev)
-+{
-+	struct dma_chan *chan;
-+
-+	list_for_each_entry(chan, &dma_dev->channels, device_node) {
-+		if (chan->client_count) {
-+			seq_printf(s, " dma%dchan%d:", dma_dev->dev_id,
-+				   chan->chan_id);
-+			if (chan->slave_name)
-+				seq_printf(s, "\t\t%s\n", chan->slave_name);
-+			else
-+				seq_printf(s, "\t\t%s\n", "in-use");
-+		}
-+	}
-+}
-+
-+static int dmaengine_seq_show(struct seq_file *s, void *v)
-+{
-+	struct dma_device *dma_dev = v;
-+
-+	seq_printf(s, "%sdma%d (%s): number of channels: %u\n",
-+		   (char *)s->private, dma_dev->dev_id, dev_name(dma_dev->dev),
-+		   dma_dev->chancnt);
-+
-+	if (dma_dev->dbg_show)
-+		dma_dev->dbg_show(s, dma_dev);
-+	else
-+		dmaengine_dbg_show(s, dma_dev);
-+
-+	return 0;
-+}
-+
-+static const struct seq_operations dmaengine_seq_ops = {
-+	.start = dmaengine_seq_start,
-+	.next = dmaengine_seq_next,
-+	.stop = dmaengine_seq_stop,
-+	.show = dmaengine_seq_show,
-+};
-+
-+static int dmaengine_open(struct inode *inode, struct file *file)
-+{
-+	return seq_open(file, &dmaengine_seq_ops);
-+}
-+
-+static const struct file_operations dmaengine_operations = {
-+	.owner		= THIS_MODULE,
-+	.open		= dmaengine_open,
-+	.read		= seq_read,
-+	.llseek		= seq_lseek,
-+	.release	= seq_release,
-+};
-+
-+static int __init dmaengine_debugfs_init(void)
-+{
-+	/* /sys/kernel/debug/dmaengine */
-+	debugfs_create_file("dmaengine", S_IFREG | 0444, NULL, NULL,
-+			    &dmaengine_operations);
-+	return 0;
-+}
-+subsys_initcall(dmaengine_debugfs_init);
-+
-+#endif	/* DEBUG_FS */
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 64461fc64e1b..5b9d6b1aa6e9 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -300,6 +300,8 @@ struct dma_router {
-  * @chan_id: channel ID for sysfs
-  * @dev: class device for sysfs
-  * @name: backlink name for sysfs
-+ * @slave_name: slave name for debugfs in format:
-+ *	dev_name(requester's dev):channel name, for example: "2b00000.mcasp:tx"
-  * @device_node: used to add this to the device chan list
-  * @local: per-cpu pointer to a struct dma_chan_percpu
-  * @client_count: how many clients are using this channel
-@@ -318,6 +320,9 @@ struct dma_chan {
- 	int chan_id;
- 	struct dma_chan_dev *dev;
- 	const char *name;
-+#ifdef CONFIG_DEBUG_FS
-+	char *slave_name;
-+#endif
- 
- 	struct list_head device_node;
- 	struct dma_chan_percpu __percpu *local;
-@@ -805,7 +810,9 @@ struct dma_filter {
-  *     called and there are no further references to this structure. This
-  *     must be implemented to free resources however many existing drivers
-  *     do not and are therefore not safe to unbind while in use.
-- *
-+ * @dbg_show: optional routine to show contents in debugfs; default code
-+ *     will be used when this is omitted, but custom code can show extra,
-+ *     controller specific information.
-  */
- struct dma_device {
- 	struct kref ref;
-@@ -891,6 +898,9 @@ struct dma_device {
- 					    struct dma_tx_state *txstate);
- 	void (*device_issue_pending)(struct dma_chan *chan);
- 	void (*device_release)(struct dma_device *dev);
-+#ifdef CONFIG_DEBUG_FS
-+	void (*dbg_show)(struct seq_file *s, struct dma_device *dev);
-+#endif
- };
- 
- static inline int dmaengine_slave_config(struct dma_chan *chan,
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.7.4
 

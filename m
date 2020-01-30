@@ -2,97 +2,105 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 40AC814D93B
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Jan 2020 11:47:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F90114D9FC
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Jan 2020 12:41:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgA3KrU convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Thu, 30 Jan 2020 05:47:20 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44305 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbgA3KrU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Jan 2020 05:47:20 -0500
-Received: by mail-oi1-f193.google.com with SMTP id d62so2990447oia.11;
-        Thu, 30 Jan 2020 02:47:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bPds3H999b4sbHrI2xdAWDEqcLze26VG68J4dxk2Yzk=;
-        b=hMJEGbqCGoXqKSMm7XRaHGmbjlgrwgA35iGbJ6tjlpXkjSz9HM5pUHHn8ZIiiHeeLe
-         2Lnhbyqpw+Kb4JkIdM0qHToDd85qVJ74mIho77RoWzEXha+ZabgI7sQ+ZQZGD9ueR0dc
-         o9k+GGWM5kOd9qDV/fH92l9MF0QHEmejEGBcJCcszmMeZh80CQTVDt9jtjgbS8QYY3or
-         RkfExkDASbxI10MM3qf4Z+Q+HK7c/BuegdFSB87HbsNB4nP1XQXxtexFG1AZ5CEZiYFH
-         cIPlB6BSsVlvTHd8O5zJ5GS0wHqQDSTsFim6TYB318kTYV8LiE3Zm8JDFjYd9iWH4gF2
-         ZtIQ==
-X-Gm-Message-State: APjAAAW2hfsMAlsVDdNYmMVVWbSgEEe4z3wQ0PKacILSF//G5ty5OCMB
-        NtfdQXhJaCY7uehkiwAXKNzW55U/KWzJYh6KNEY=
-X-Google-Smtp-Source: APXvYqxIIIUZohrSHPenmUgXJVSQveonFR4aBuAgIfsx5KeWWKf4XoO8s9HK9UDm6Zq9rBqeQiGzkmicCj+rhBlMZPs=
-X-Received: by 2002:aca:48cd:: with SMTP id v196mr2530305oia.102.1580381238139;
- Thu, 30 Jan 2020 02:47:18 -0800 (PST)
+        id S1726980AbgA3Llv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 30 Jan 2020 06:41:51 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:58478 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbgA3Llp (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Jan 2020 06:41:45 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00UBfYAq040398;
+        Thu, 30 Jan 2020 05:41:34 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580384495;
+        bh=MgMgxrY4r0pbPJYk9YGQY7AwMzFYv2Fq/3K2ab3HHT0=;
+        h=From:To:CC:Subject:Date;
+        b=cCK+MwDnWoHsMgJsdb7I0D8fWDIPyIiIV9hmI/qs7ylA0RU6XLiOYh2Elnyc/uPsx
+         2B1bv7OE3HorJ6rmQcugfhIke/+GzjlJLH8fU/vTz6/ZuPU8lNV5K2z8mzjQ1d3nF6
+         qUoXNEuR563qzw2P5DntFX+7Yelcr5osP7QpLO6g=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00UBfY9U015549
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 30 Jan 2020 05:41:34 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 30
+ Jan 2020 05:41:34 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 30 Jan 2020 05:41:34 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00UBfW7W104655;
+        Thu, 30 Jan 2020 05:41:33 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <geert@linux-m68k.org>
+Subject: [PATCH 0/2] dmaengine: Cleanups for symlink handling and debugfs support
+Date:   Thu, 30 Jan 2020 13:42:18 +0200
+Message-ID: <20200130114220.23538-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <CGME20200129174723eucas1p1fe4f76325f463fc9e3645ce18740d2eb@eucas1p1.samsung.com>
- <20200117153056.31363-1-geert+renesas@glider.be> <fde812a2-aea6-c16e-5ed7-ab5195b1259f@samsung.com>
- <CAMuHMdXds2HuBAnLXmLVaCWKX77iZGvNSnD35-ysY9AnG9TKMw@mail.gmail.com> <ab83c4e0-87d2-c60e-afa7-4549ffb15397@samsung.com>
-In-Reply-To: <ab83c4e0-87d2-c60e-afa7-4549ffb15397@samsung.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Jan 2020 11:47:06 +0100
-Message-ID: <CAMuHMdV3iCgcOxNnjEaAW-E=OzyWfnFJppS5pPoGD6O6h6kcfg@mail.gmail.com>
-Subject: Re: [PATCH v2] dmaengine: Create symlinks between DMA channels and slaves
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Marek,
+Hi,
 
-On Thu, Jan 30, 2020 at 11:33 AM Marek Szyprowski
-<m.szyprowski@samsung.com> wrote:
-> On 30.01.2020 09:30, Geert Uytterhoeven wrote:
-> > On Wed, Jan 29, 2020 at 6:47 PM Marek Szyprowski
-> > <m.szyprowski@samsung.com> wrote:
-> >> On 17.01.2020 16:30, Geert Uytterhoeven wrote:
-> >>> Currently it is not easy to find out which DMA channels are in use, and
-> >>> which slave devices are using which channels.
-> >>>
-> >>> Fix this by creating two symlinks between the DMA channel and the actual
-> >>> slave device when a channel is requested:
-> >>>     1. A "slave" symlink from DMA channel to slave device,
-> >>>     2. A "dma:<name>" symlink slave device to DMA channel.
-> >>> When the channel is released, the symlinks are removed again.
-> >>> The latter requires keeping track of the slave device and the channel
-> >>> name in the dma_chan structure.
-> >>>
-> >>> Note that this is limited to channel request functions for requesting an
-> >>> exclusive slave channel that take a device pointer (dma_request_chan()
-> >>> and dma_request_slave_channel*()).
-> >>>
-> >>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >>> Tested-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
-> >> This patch breaks booting on almost all Exynos based boards:
-> >>
-> >> https://lore.kernel.org/linux-samsung-soc/20200129161113.GE3928@sirena.org.uk/T/#u
-> > Sorry for the breakage.
->
-> No problem, that's why we have linux-next.
+As I have mentioned on the symlink patch earlier I like how the gpio's debugfs
+shows in one place information.
 
-Not really: by that time it had been upstream for 2 days :-(
+These patches are on top of Vinod's next (with the v2 fix for the symlink
+support).
 
-Gr{oetje,eeting}s,
+The first patch fixes and cleans up the symlink handling code a bit and the
+second adds support for debugfs file:
 
-                        Geert
+On my board with audio and after a run with dmatest on 6 channels this is how
+the information is presented about the DMA drivers:
+
+ # cat /sys/kernel/debug/dmaengine 
+dma0 (285c0000.dma-controller): number of channels: 96
+
+dma1 (31150000.dma-controller): number of channels: 267
+ dma1chan0:             2b00000.mcasp:tx
+ dma1chan1:             2b00000.mcasp:rx
+ dma1chan2:             in-use
+ dma1chan3:             in-use
+ dma1chan4:             in-use
+ dma1chan5:             in-use
+ dma1chan6:             in-use
+ dma1chan7:             in-use
+
+It shows the users (device name + channel name) of the channels. If it is not a
+slave channel, then it only prints 'in-use' as no other information is
+available for non save channels.
+
+DMA drivers can implement the dbg_show callback to provide custom information
+for their channels if needed.
+
+Regards,
+Peter
+---
+Peter Ujfalusi (2):
+  dmaengine: Cleanups for the slave <-> channel symlink support
+  dmaengine: Add basic debugfs support
+
+ drivers/dma/dmaengine.c   | 143 +++++++++++++++++++++++++++++++++++---
+ include/linux/dmaengine.h |  12 +++-
+ 2 files changed, 144 insertions(+), 11 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Peter
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+

@@ -2,27 +2,26 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F04AD14DC83
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Jan 2020 15:09:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 128C414DC85
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Jan 2020 15:09:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgA3OJT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 30 Jan 2020 09:09:19 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15373 "EHLO
+        id S1727266AbgA3OJr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 30 Jan 2020 09:09:47 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15390 "EHLO
         hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbgA3OJS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Jan 2020 09:09:18 -0500
+        with ESMTP id S1727107AbgA3OJr (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Jan 2020 09:09:47 -0500
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e32e3590000>; Thu, 30 Jan 2020 06:08:25 -0800
+        id <B5e32e3760000>; Thu, 30 Jan 2020 06:08:54 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 30 Jan 2020 06:09:17 -0800
+  Thu, 30 Jan 2020 06:09:46 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 30 Jan 2020 06:09:17 -0800
+        by hqpgpgate101.nvidia.com on Thu, 30 Jan 2020 06:09:46 -0800
 Received: from [10.26.11.91] (10.124.1.5) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jan
- 2020 14:09:15 +0000
-Subject: Re: [PATCH v6 11/16] dmaengine: tegra-apb: Keep clock enabled only
- during of DMA transfer
+ 2020 14:09:44 +0000
+Subject: Re: [PATCH v6 12/16] dmaengine: tegra-apb: Clean up suspend-resume
 To:     Dmitry Osipenko <digetx@gmail.com>,
         Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -32,14 +31,14 @@ To:     Dmitry Osipenko <digetx@gmail.com>,
 CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 References: <20200130043804.32243-1-digetx@gmail.com>
- <20200130043804.32243-12-digetx@gmail.com>
+ <20200130043804.32243-13-digetx@gmail.com>
 From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <2442aee7-2c2a-bacc-7be9-8eed17498928@nvidia.com>
-Date:   Thu, 30 Jan 2020 14:09:13 +0000
+Message-ID: <e787bee2-4b52-1643-b3a5-8c4e70f6fdca@nvidia.com>
+Date:   Thu, 30 Jan 2020 14:09:41 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200130043804.32243-12-digetx@gmail.com>
+In-Reply-To: <20200130043804.32243-13-digetx@gmail.com>
 X-Originating-IP: [10.124.1.5]
 X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
  HQMAIL107.nvidia.com (172.20.187.13)
@@ -47,153 +46,37 @@ Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580393305; bh=HWlyfZ71Su4DVsbgBsytbUP9opeqYEQXFIp2NCSNEr0=;
+        t=1580393335; bh=senWrEFj3zdIo7s6cZjVMOCga/bYlHRoVltSZ82rcI8=;
         h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
          User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
          X-ClientProxiedBy:Content-Type:Content-Language:
          Content-Transfer-Encoding;
-        b=YbPzO+4q9MS1+XUF5LlQkhWMjz/06SvknvfFOBMEMSPkhwK4uSzb633oKW6A2ZOOU
-         UrYr8df9Gxg/pvpb7Uypomr/ggZkpRNSls+kw5Otj8uAJdIGfPys+OfF+5g8Qy5rC8
-         RTSOEGlHgO2DR1BQxXpbSBwD631fAwm6efDVdqqnZdN5gNQ80bWuRHeVLPUMI/MB9h
-         oslELN74kYaQoh4kybufXmxr87yKuWzeLgNvAqLJOXTlNQ1sZ6asQ6XGzKSdisU98d
-         0blnGnrTfdsJQRj97plRIggiOf/wDxOqr1yRRvPg/p1Y3i3LKobDbAZebwFKFs72zH
-         lq+wrlc13z/mw==
+        b=p3NP+bz5dLTiUrhGqKj7vkUTRuaj9DgTLOzM04KEzAR/I3DsgDgiYeaMDB9efpAco
+         b3xXdoW43rXvG1eOxl8dUz1eYnKA4dC7A4J/9T6OYrRQd6I28B6aHFF0vQsSMFm87V
+         pWBJS4WvhuFTtt4wzJYfUxtil9ENGAlZ/1skdpwo1gGziNif67vzf4VacG+20GRYnF
+         axakdTlKTV8V8e01V5o+pH1PBFOIa91ZSwczhczDfSwxJE5pUdgeeOMjgyl/iERMOn
+         JsmMBc3XaeuTSUIXiTzqTWn0L/EDsnBWNMxP5/B+Dm89MFLBgKEud2mAYiAtP/uqSQ
+         BwNMTatvWHxtQ==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On 30/01/2020 04:37, Dmitry Osipenko wrote:
-> It's a bit impractical to enable hardware's clock at the time of DMA
-> channel's allocation because most of DMA client drivers allocate DMA
-> channel at the time of the driver's probing, and thus, DMA clock is kept
-> always-enabled in practice, defeating the whole purpose of runtime PM.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/dma/tegra20-apb-dma.c | 47 ++++++++++++++++++++++++-----------
->  1 file changed, 32 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-> index 22b88ccff05d..0ee28d8e3c96 100644
-> --- a/drivers/dma/tegra20-apb-dma.c
-> +++ b/drivers/dma/tegra20-apb-dma.c
-> @@ -436,6 +436,8 @@ static void tegra_dma_stop(struct tegra_dma_channel *tdc)
->  		tdc_write(tdc, TEGRA_APBDMA_CHAN_STATUS, status);
->  	}
->  	tdc->busy = false;
-> +
-> +	pm_runtime_put(tdc->tdma->dev);
->  }
->  
->  static void tegra_dma_start(struct tegra_dma_channel *tdc,
-> @@ -500,18 +502,25 @@ static void tegra_dma_configure_for_next(struct tegra_dma_channel *tdc,
->  	tegra_dma_resume(tdc);
->  }
->  
-> -static void tdc_start_head_req(struct tegra_dma_channel *tdc)
-> +static bool tdc_start_head_req(struct tegra_dma_channel *tdc)
->  {
->  	struct tegra_dma_sg_req *sg_req;
-> +	int err;
->  
->  	if (list_empty(&tdc->pending_sg_req))
-> -		return;
-> +		return false;
-> +
-> +	err = pm_runtime_get_sync(tdc->tdma->dev);
-> +	if (WARN_ON_ONCE(err < 0))
-> +		return false;
->  
->  	sg_req = list_first_entry(&tdc->pending_sg_req, typeof(*sg_req), node);
->  	tegra_dma_start(tdc, sg_req);
->  	sg_req->configured = true;
->  	sg_req->words_xferred = 0;
->  	tdc->busy = true;
-> +
-> +	return true;
->  }
->  
->  static void tdc_configure_next_head_desc(struct tegra_dma_channel *tdc)
-> @@ -615,6 +624,8 @@ static void handle_once_dma_done(struct tegra_dma_channel *tdc,
->  	}
->  	list_add_tail(&sgreq->node, &tdc->free_sg_req);
->  
-> +	pm_runtime_put(tdc->tdma->dev);
-> +
->  	/* Do not start DMA if it is going to be terminate */
->  	if (to_terminate || list_empty(&tdc->pending_sg_req))
->  		return;
-> @@ -730,9 +741,7 @@ static void tegra_dma_issue_pending(struct dma_chan *dc)
->  		dev_err(tdc2dev(tdc), "No DMA request\n");
->  		goto end;
->  	}
-> -	if (!tdc->busy) {
-> -		tdc_start_head_req(tdc);
-> -
-> +	if (!tdc->busy && tdc_start_head_req(tdc)) {
->  		/* Continuous single mode: Configure next req */
->  		if (tdc->cyclic) {
->  			/*
-> @@ -775,6 +784,13 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
->  	else
->  		wcount = status;
->  
-> +	/*
-> +	 * tegra_dma_stop() will drop the RPM's usage refcount, but
-> +	 * tegra_dma_resume() touches hardware and thus we should keep
-> +	 * the DMA clock active while it's needed.
-> +	 */
-> +	pm_runtime_get(tdc->tdma->dev);
-> +
+On 30/01/2020 04:38, Dmitry Osipenko wrote:
+> It is enough to check whether hardware is busy on suspend and to reset
+> it across of suspend-resume because channel's configuration is fully
+> re-programmed on each DMA transaction anyways and because save-restore
+> of an active channel won't end up well without pausing transfer prior to
+> saving of the state (note that all channels shall be idling at the time of
+> suspend, so save-restore is not needed at all).
 
-Would it work and make it simpler to just enable in the issue_pending
-and disable in the handle_once_dma_done or terminate_all?
+I guess if we ever wanted to support SNDRV_PCM_INFO_PAUSE for audio and
+support the pause callback, then saving and restoring the channels could
+be needed. Right now I believe that it will just terminate_all transfers
+for audio on entering suspend. Any value in keeping this?
 
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index 3a45079d11ec..86bbb45da93d 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -616,9 +616,14 @@ static void handle_once_dma_done(struct
-tegra_dma_channel *tdc,
-        list_add_tail(&sgreq->node, &tdc->free_sg_req);
-
-        /* Do not start DMA if it is going to be terminate */
--       if (to_terminate || list_empty(&tdc->pending_sg_req))
-+       if (to_terminate)
-                return;
-
-+       if (list_empty(&tdc->pending_sg_req)) {
-+               pm_runtime_put(tdc->tdma->dev);
-+               return;
-+       }
-+
-        tdc_start_head_req(tdc);
- }
-
-@@ -729,6 +734,11 @@ static void tegra_dma_issue_pending(struct dma_chan
-*dc)
-                goto end;
-        }
-        if (!tdc->busy) {
-+               if (pm_runtime_get_sync(tdc->tdma->dev) < 0) {
-+                       dev_err(tdc2dev(tdc), "Failed to enable DMA!\n");
-+                       goto end;
-+               }
-+
-                tdc_start_head_req(tdc);
-
-                /* Continuous single mode: Configure next req */
-@@ -788,6 +798,7 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
-                                get_current_xferred_count(tdc, sgreq,
-wcount);
-        }
-        tegra_dma_resume(tdc);
-+       pm_runtime_put(tdc->tdma->dev);
-
- skip_dma_stop:
-        tegra_dma_abort_all(tdc);
+Jon
 
 -- 
 nvpublic

@@ -2,27 +2,27 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 21C9514DC7E
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Jan 2020 15:09:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F04AD14DC83
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Jan 2020 15:09:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbgA3OJJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 30 Jan 2020 09:09:09 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15367 "EHLO
+        id S1726980AbgA3OJT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 30 Jan 2020 09:09:19 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15373 "EHLO
         hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbgA3OJJ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Jan 2020 09:09:09 -0500
+        with ESMTP id S1726902AbgA3OJS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Jan 2020 09:09:18 -0500
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e32e3500000>; Thu, 30 Jan 2020 06:08:16 -0800
+        id <B5e32e3590000>; Thu, 30 Jan 2020 06:08:25 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 30 Jan 2020 06:09:08 -0800
+  Thu, 30 Jan 2020 06:09:17 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 30 Jan 2020 06:09:08 -0800
+        by hqpgpgate101.nvidia.com on Thu, 30 Jan 2020 06:09:17 -0800
 Received: from [10.26.11.91] (10.124.1.5) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 30 Jan
- 2020 14:09:05 +0000
-Subject: Re: [PATCH v6 10/16] dmaengine: tegra-apb: Remove assumptions about
- unavailable runtime PM
+ 2020 14:09:15 +0000
+Subject: Re: [PATCH v6 11/16] dmaengine: tegra-apb: Keep clock enabled only
+ during of DMA transfer
 To:     Dmitry Osipenko <digetx@gmail.com>,
         Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -32,14 +32,14 @@ To:     Dmitry Osipenko <digetx@gmail.com>,
 CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 References: <20200130043804.32243-1-digetx@gmail.com>
- <20200130043804.32243-11-digetx@gmail.com>
+ <20200130043804.32243-12-digetx@gmail.com>
 From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <24ca0a86-032f-2686-4dd2-6e4c5cf60223@nvidia.com>
-Date:   Thu, 30 Jan 2020 14:09:02 +0000
+Message-ID: <2442aee7-2c2a-bacc-7be9-8eed17498928@nvidia.com>
+Date:   Thu, 30 Jan 2020 14:09:13 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200130043804.32243-11-digetx@gmail.com>
+In-Reply-To: <20200130043804.32243-12-digetx@gmail.com>
 X-Originating-IP: [10.124.1.5]
 X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
  HQMAIL107.nvidia.com (172.20.187.13)
@@ -47,17 +47,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580393296; bh=KJgXa4zfX87+bxWY3bif1JVu28xO50calGRRSABfXWc=;
+        t=1580393305; bh=HWlyfZ71Su4DVsbgBsytbUP9opeqYEQXFIp2NCSNEr0=;
         h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
          User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
          X-ClientProxiedBy:Content-Type:Content-Language:
          Content-Transfer-Encoding;
-        b=ToaKl1X/Fed8Dfu6I3GsF5ou1UjrEaoqwLc5ltxew+2d/s8BIzWQYgFye5SQjBHqz
-         rrU6c7IVSfn3QlhXTgshO7b62h0Kdz4jC2NVlrtq/Qdvrsdu+050NDL5YWjKxclWQ7
-         UN9YrVKi/f6MbdCIdwHt/WN6xMDRbjSqkC4NG34107W6RLSGXINZllIMoa7YmMkGBb
-         L8R8FTjI1R/E9GgjY3QVXLdR4aV894hdGuxx+y5xdpehizw6GudWrRHUO6raXqI83A
-         qu2HGsJ/LAyd8Fj3adBTh0+190tQs1Rce3k3AeE2IkrN0MYmo6226JJ6AlYcPIhsSu
-         ZWrOYw7+XI+Vw==
+        b=YbPzO+4q9MS1+XUF5LlQkhWMjz/06SvknvfFOBMEMSPkhwK4uSzb633oKW6A2ZOOU
+         UrYr8df9Gxg/pvpb7Uypomr/ggZkpRNSls+kw5Otj8uAJdIGfPys+OfF+5g8Qy5rC8
+         RTSOEGlHgO2DR1BQxXpbSBwD631fAwm6efDVdqqnZdN5gNQ80bWuRHeVLPUMI/MB9h
+         oslELN74kYaQoh4kybufXmxr87yKuWzeLgNvAqLJOXTlNQ1sZ6asQ6XGzKSdisU98d
+         0blnGnrTfdsJQRj97plRIggiOf/wDxOqr1yRRvPg/p1Y3i3LKobDbAZebwFKFs72zH
+         lq+wrlc13z/mw==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
@@ -65,58 +65,135 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 
 On 30/01/2020 04:37, Dmitry Osipenko wrote:
-> The runtime PM is always available on all Tegra SoCs since the commit
-> 40b2bb1b132a ("ARM: tegra: enforce PM requirement"), so there is no
-> need to handle the case of unavailable RPM in the code anymore.
+> It's a bit impractical to enable hardware's clock at the time of DMA
+> channel's allocation because most of DMA client drivers allocate DMA
+> channel at the time of the driver's probing, and thus, DMA clock is kept
+> always-enabled in practice, defeating the whole purpose of runtime PM.
 > 
 > Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  drivers/dma/tegra20-apb-dma.c | 10 +---------
->  1 file changed, 1 insertion(+), 9 deletions(-)
+>  drivers/dma/tegra20-apb-dma.c | 47 ++++++++++++++++++++++++-----------
+>  1 file changed, 32 insertions(+), 15 deletions(-)
 > 
 > diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-> index 7158bd3145c4..22b88ccff05d 100644
+> index 22b88ccff05d..0ee28d8e3c96 100644
 > --- a/drivers/dma/tegra20-apb-dma.c
 > +++ b/drivers/dma/tegra20-apb-dma.c
-> @@ -1429,11 +1429,8 @@ static int tegra_dma_probe(struct platform_device *pdev)
->  	spin_lock_init(&tdma->global_lock);
->  
->  	pm_runtime_enable(&pdev->dev);
-> -	if (!pm_runtime_enabled(&pdev->dev))
-> -		ret = tegra_dma_runtime_resume(&pdev->dev);
-> -	else
-> -		ret = pm_runtime_get_sync(&pdev->dev);
->  
-> +	ret = pm_runtime_get_sync(&pdev->dev);
->  	if (ret < 0)
->  		goto err_pm_disable;
->  
-> @@ -1546,8 +1543,6 @@ static int tegra_dma_probe(struct platform_device *pdev)
->  
->  err_pm_disable:
->  	pm_runtime_disable(&pdev->dev);
-> -	if (!pm_runtime_status_suspended(&pdev->dev))
-> -		tegra_dma_runtime_suspend(&pdev->dev);
->  
->  	return ret;
+> @@ -436,6 +436,8 @@ static void tegra_dma_stop(struct tegra_dma_channel *tdc)
+>  		tdc_write(tdc, TEGRA_APBDMA_CHAN_STATUS, status);
+>  	}
+>  	tdc->busy = false;
+> +
+> +	pm_runtime_put(tdc->tdma->dev);
 >  }
-> @@ -1557,10 +1552,7 @@ static int tegra_dma_remove(struct platform_device *pdev)
->  	struct tegra_dma *tdma = platform_get_drvdata(pdev);
 >  
->  	dma_async_device_unregister(&tdma->dma_dev);
+>  static void tegra_dma_start(struct tegra_dma_channel *tdc,
+> @@ -500,18 +502,25 @@ static void tegra_dma_configure_for_next(struct tegra_dma_channel *tdc,
+>  	tegra_dma_resume(tdc);
+>  }
+>  
+> -static void tdc_start_head_req(struct tegra_dma_channel *tdc)
+> +static bool tdc_start_head_req(struct tegra_dma_channel *tdc)
+>  {
+>  	struct tegra_dma_sg_req *sg_req;
+> +	int err;
+>  
+>  	if (list_empty(&tdc->pending_sg_req))
+> -		return;
+> +		return false;
+> +
+> +	err = pm_runtime_get_sync(tdc->tdma->dev);
+> +	if (WARN_ON_ONCE(err < 0))
+> +		return false;
+>  
+>  	sg_req = list_first_entry(&tdc->pending_sg_req, typeof(*sg_req), node);
+>  	tegra_dma_start(tdc, sg_req);
+>  	sg_req->configured = true;
+>  	sg_req->words_xferred = 0;
+>  	tdc->busy = true;
+> +
+> +	return true;
+>  }
+>  
+>  static void tdc_configure_next_head_desc(struct tegra_dma_channel *tdc)
+> @@ -615,6 +624,8 @@ static void handle_once_dma_done(struct tegra_dma_channel *tdc,
+>  	}
+>  	list_add_tail(&sgreq->node, &tdc->free_sg_req);
+>  
+> +	pm_runtime_put(tdc->tdma->dev);
+> +
+>  	/* Do not start DMA if it is going to be terminate */
+>  	if (to_terminate || list_empty(&tdc->pending_sg_req))
+>  		return;
+> @@ -730,9 +741,7 @@ static void tegra_dma_issue_pending(struct dma_chan *dc)
+>  		dev_err(tdc2dev(tdc), "No DMA request\n");
+>  		goto end;
+>  	}
+> -	if (!tdc->busy) {
+> -		tdc_start_head_req(tdc);
 > -
->  	pm_runtime_disable(&pdev->dev);
-> -	if (!pm_runtime_status_suspended(&pdev->dev))
-> -		tegra_dma_runtime_suspend(&pdev->dev);
+> +	if (!tdc->busy && tdc_start_head_req(tdc)) {
+>  		/* Continuous single mode: Configure next req */
+>  		if (tdc->cyclic) {
+>  			/*
+> @@ -775,6 +784,13 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+>  	else
+>  		wcount = status;
 >  
->  	return 0;
->  }
+> +	/*
+> +	 * tegra_dma_stop() will drop the RPM's usage refcount, but
+> +	 * tegra_dma_resume() touches hardware and thus we should keep
+> +	 * the DMA clock active while it's needed.
+> +	 */
+> +	pm_runtime_get(tdc->tdma->dev);
+> +
 
-I wonder if we need to make the pm_runtime_put a pm_runtime_put_sync or
-call pm_runtime_barrier() here, to ensure it has called the callback
-when freeing the channel? Otherwise this is fine.
+Would it work and make it simpler to just enable in the issue_pending
+and disable in the handle_once_dma_done or terminate_all?
 
-Jon
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index 3a45079d11ec..86bbb45da93d 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -616,9 +616,14 @@ static void handle_once_dma_done(struct
+tegra_dma_channel *tdc,
+        list_add_tail(&sgreq->node, &tdc->free_sg_req);
+
+        /* Do not start DMA if it is going to be terminate */
+-       if (to_terminate || list_empty(&tdc->pending_sg_req))
++       if (to_terminate)
+                return;
+
++       if (list_empty(&tdc->pending_sg_req)) {
++               pm_runtime_put(tdc->tdma->dev);
++               return;
++       }
++
+        tdc_start_head_req(tdc);
+ }
+
+@@ -729,6 +734,11 @@ static void tegra_dma_issue_pending(struct dma_chan
+*dc)
+                goto end;
+        }
+        if (!tdc->busy) {
++               if (pm_runtime_get_sync(tdc->tdma->dev) < 0) {
++                       dev_err(tdc2dev(tdc), "Failed to enable DMA!\n");
++                       goto end;
++               }
++
+                tdc_start_head_req(tdc);
+
+                /* Continuous single mode: Configure next req */
+@@ -788,6 +798,7 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+                                get_current_xferred_count(tdc, sgreq,
+wcount);
+        }
+        tegra_dma_resume(tdc);
++       pm_runtime_put(tdc->tdma->dev);
+
+ skip_dma_stop:
+        tegra_dma_abort_all(tdc);
 
 -- 
 nvpublic

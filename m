@@ -2,253 +2,156 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C72A414D35C
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Jan 2020 00:13:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0620314D5A8
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Jan 2020 05:41:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgA2XNx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 29 Jan 2020 18:13:53 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35390 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbgA2XNw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Jan 2020 18:13:52 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 69FCE265C5A
-Subject: Re: mainline/master bisection: baseline.login on odroid-xu3
-To:     Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>
-References: <5e320e71.1c69fb81.e97dd.2bf5@mx.google.com>
-Cc:     dmaengine@vger.kernel.org, mgalka@collabora.com,
-        enric.balletbo@collabora.com, broonie@kernel.org,
-        khilman@baylibre.com, tomeu.vizoso@collabora.com,
-        linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <71ae1017-2077-87c9-d140-cac181017fb7@collabora.com>
-Date:   Wed, 29 Jan 2020 23:13:47 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726811AbgA3ElN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 29 Jan 2020 23:41:13 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39255 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbgA3ElN (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Jan 2020 23:41:13 -0500
+Received: by mail-wm1-f67.google.com with SMTP id c84so2568441wme.4;
+        Wed, 29 Jan 2020 20:41:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8mcUDkOWGULuQ9Y+ECUahZ1YIpKQNag00Dt8JWWpACM=;
+        b=Ndm1zex43ionJqExd895NA0rg9xCR3DFq4OnA8F2bqEDDyHuQiBKZohbJ7cmvgrAK6
+         0KC7oJFDHhoB3cOAbIQVnEWono5ZvbJXa+obV5iZlDtMxyzz/k0PetT3MMoMa7O9Y04y
+         k1wYJbdhUvR6VK9HFiLvdnc/6IZ183Y3WmIgcjGubEGP6FYbc/2dsPNAgxmmodLqkLgO
+         gSsRteP4MqBRH3J1LKBLKhEGCV8iWz9b1lHmNY/fxalCTsUoJUtpUh4Y64SntXgCdMTB
+         gc3iyVBsQYd66GUcBHLrlbYebOaenLSQrQl+IVK9OcWO/sJygh1UIPdBF/lqjlePArDi
+         SE6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8mcUDkOWGULuQ9Y+ECUahZ1YIpKQNag00Dt8JWWpACM=;
+        b=eRX+6dqzGoE0+pbDPHcVJUqkKcjacuRUN3pyGMdGZzGRZR+JZ5OfhGbrwYIclrJXbt
+         1UeFI3N8DvBXKUfwXwdoCX7M74sna8xPTtnjqnoIRWzO6+GVZ65rJOUJYs4IEwoLRzgg
+         y1Otnv1LJF8opAM80nE/m4osncdQi2pYiAVEmfYsosGmP8IQMIAPxWmtPtKhaPyJe4wt
+         AerK3ZWh0HOHJJVxX1oK5FI6zbQ3t3DQgT5X4mR2abCjTYsL2AZqsgiIH/f0nTXznh1C
+         fDmLWe6/mI0ikUuMfAaSTbHcJPWW317JykvIyhmo/HcKSyi7jQynuzCK5dkY7a4rowsI
+         xo+Q==
+X-Gm-Message-State: APjAAAUQcZubryeOyCfHz1iEbht+9rA4sD5vNAJl+tW5wxQhMdkTu4gq
+        di9pC/yEEgai/Bc6fiCtoGL83bZq
+X-Google-Smtp-Source: APXvYqxxTtqKAh91lqHfKF312r09wQYaitmQ83jqmWSXFb/t82I0pfDch/r5p/bFC2pxgYI6Sdym4A==
+X-Received: by 2002:a05:600c:149:: with SMTP id w9mr2728889wmm.132.1580359270871;
+        Wed, 29 Jan 2020 20:41:10 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id g128sm4494672wme.47.2020.01.29.20.41.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jan 2020 20:41:10 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v6 00/16] NVIDIA Tegra APB DMA driver fixes and improvements
+Date:   Thu, 30 Jan 2020 07:37:48 +0300
+Message-Id: <20200130043804.32243-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <5e320e71.1c69fb81.e97dd.2bf5@mx.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Please see the bisection report below about a boot failure.
+Hello,
 
-Reports aren't automatically sent to the public while we're
-trialing new bisection features on kernelci.org but this one
-looks valid.
+This series fixes some problems that I spotted recently, secondly the
+driver's code gets a cleanup. Please review and apply, thanks in advance!
 
-Guillaume
+Changelog:
 
-On 29/01/2020 23:00, kernelci.org bot wrote:
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> * This automated bisection report was sent to you on the basis  *
-> * that you may be involved with the breaking commit it has      *
-> * found.  No manual investigation has been done to verify it,   *
-> * and the root cause of the problem may be somewhere else.      *
-> *                                                               *
-> * If you do send a fix, please include this trailer:            *
-> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-> *                                                               *
-> * Hope this helps!                                              *
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> 
-> mainline/master bisection: baseline.login on odroid-xu3
-> 
-> Summary:
->   Start:      b3a608222336 Merge branch 'for-v5.6' of git://git.kernel.org:/pub/scm/linux/kernel/git/jmorris/linux-security
->   Plain log:  https://storage.kernelci.org//mainline/master/v5.5-3996-gb3a608222336/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-8/lab-collabora/baseline-exynos5422-odroidxu3.txt
->   HTML log:   https://storage.kernelci.org//mainline/master/v5.5-3996-gb3a608222336/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-8/lab-collabora/baseline-exynos5422-odroidxu3.html
->   Result:     71723a96b8b1 dmaengine: Create symlinks between DMA channels and slaves
-> 
-> Checks:
->   revert:     PASS
->   verify:     PASS
-> 
-> Parameters:
->   Tree:       mainline
->   URL:        git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
->   Branch:     master
->   Target:     odroid-xu3
->   CPU arch:   arm
->   Lab:        lab-collabora
->   Compiler:   gcc-8
->   Config:     multi_v7_defconfig+CONFIG_SMP=n
->   Test case:  baseline.login
-> 
-> Breaking commit found:
-> 
-> -------------------------------------------------------------------------------
-> commit 71723a96b8b1367fefc18f60025dae792477d602
-> Author: Geert Uytterhoeven <geert+renesas@glider.be>
-> Date:   Fri Jan 17 16:30:56 2020 +0100
-> 
->     dmaengine: Create symlinks between DMA channels and slaves
->     
->     Currently it is not easy to find out which DMA channels are in use, and
->     which slave devices are using which channels.
->     
->     Fix this by creating two symlinks between the DMA channel and the actual
->     slave device when a channel is requested:
->       1. A "slave" symlink from DMA channel to slave device,
->       2. A "dma:<name>" symlink slave device to DMA channel.
->     When the channel is released, the symlinks are removed again.
->     The latter requires keeping track of the slave device and the channel
->     name in the dma_chan structure.
->     
->     Note that this is limited to channel request functions for requesting an
->     exclusive slave channel that take a device pointer (dma_request_chan()
->     and dma_request_slave_channel*()).
->     
->     Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->     Tested-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
->     Link: https://lore.kernel.org/r/20200117153056.31363-1-geert+renesas@glider.be
->     Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> 
-> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-> index 51a2f2b1b2de..f3ef4edd4de1 100644
-> --- a/drivers/dma/dmaengine.c
-> +++ b/drivers/dma/dmaengine.c
-> @@ -60,6 +60,8 @@ static long dmaengine_ref_count;
->  
->  /* --- sysfs implementation --- */
->  
-> +#define DMA_SLAVE_NAME	"slave"
-> +
->  /**
->   * dev_to_dma_chan - convert a device pointer to its sysfs container object
->   * @dev - device node
-> @@ -730,11 +732,11 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
->  	if (has_acpi_companion(dev) && !chan)
->  		chan = acpi_dma_request_slave_chan_by_name(dev, name);
->  
-> -	if (chan) {
-> -		/* Valid channel found or requester needs to be deferred */
-> -		if (!IS_ERR(chan) || PTR_ERR(chan) == -EPROBE_DEFER)
-> -			return chan;
-> -	}
-> +	if (PTR_ERR(chan) == -EPROBE_DEFER)
-> +		return chan;
-> +
-> +	if (!IS_ERR_OR_NULL(chan))
-> +		goto found;
->  
->  	/* Try to find the channel via the DMA filter map(s) */
->  	mutex_lock(&dma_list_mutex);
-> @@ -754,7 +756,23 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
->  	}
->  	mutex_unlock(&dma_list_mutex);
->  
-> -	return chan ? chan : ERR_PTR(-EPROBE_DEFER);
-> +	if (!IS_ERR_OR_NULL(chan))
-> +		goto found;
-> +
-> +	return ERR_PTR(-EPROBE_DEFER);
-> +
-> +found:
-> +	chan->slave = dev;
-> +	chan->name = kasprintf(GFP_KERNEL, "dma:%s", name);
-> +	if (!chan->name)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	if (sysfs_create_link(&chan->dev->device.kobj, &dev->kobj,
-> +			      DMA_SLAVE_NAME))
-> +		dev_err(dev, "Cannot create DMA %s symlink\n", DMA_SLAVE_NAME);
-> +	if (sysfs_create_link(&dev->kobj, &chan->dev->device.kobj, chan->name))
-> +		dev_err(dev, "Cannot create DMA %s symlink\n", chan->name);
-> +	return chan;
->  }
->  EXPORT_SYMBOL_GPL(dma_request_chan);
->  
-> @@ -812,6 +830,13 @@ void dma_release_channel(struct dma_chan *chan)
->  	/* drop PRIVATE cap enabled by __dma_request_channel() */
->  	if (--chan->device->privatecnt == 0)
->  		dma_cap_clear(DMA_PRIVATE, chan->device->cap_mask);
-> +	if (chan->slave) {
-> +		sysfs_remove_link(&chan->slave->kobj, chan->name);
-> +		kfree(chan->name);
-> +		chan->name = NULL;
-> +		chan->slave = NULL;
-> +	}
-> +	sysfs_remove_link(&chan->dev->device.kobj, DMA_SLAVE_NAME);
->  	mutex_unlock(&dma_list_mutex);
->  }
->  EXPORT_SYMBOL_GPL(dma_release_channel);
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index f52f274773ed..fef69a9c5824 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -294,10 +294,12 @@ struct dma_router {
->  /**
->   * struct dma_chan - devices supply DMA channels, clients use them
->   * @device: ptr to the dma device who supplies this channel, always !%NULL
-> + * @slave: ptr to the device using this channel
->   * @cookie: last cookie value returned to client
->   * @completed_cookie: last completed cookie for this channel
->   * @chan_id: channel ID for sysfs
->   * @dev: class device for sysfs
-> + * @name: backlink name for sysfs
->   * @device_node: used to add this to the device chan list
->   * @local: per-cpu pointer to a struct dma_chan_percpu
->   * @client_count: how many clients are using this channel
-> @@ -308,12 +310,14 @@ struct dma_router {
->   */
->  struct dma_chan {
->  	struct dma_device *device;
-> +	struct device *slave;
->  	dma_cookie_t cookie;
->  	dma_cookie_t completed_cookie;
->  
->  	/* sysfs */
->  	int chan_id;
->  	struct dma_chan_dev *dev;
-> +	const char *name;
->  
->  	struct list_head device_node;
->  	struct dma_chan_percpu __percpu *local;
-> -------------------------------------------------------------------------------
-> 
-> 
-> Git bisection log:
-> 
-> -------------------------------------------------------------------------------
-> git bisect start
-> # good: [4703d9119972bf586d2cca76ec6438f819ffa30e] Merge tag 'xarray-5.5' of git://git.infradead.org/users/willy/linux-dax
-> git bisect good 4703d9119972bf586d2cca76ec6438f819ffa30e
-> # bad: [b3a6082223369203d7e7db7e81253ac761377644] Merge branch 'for-v5.6' of git://git.kernel.org:/pub/scm/linux/kernel/git/jmorris/linux-security
-> git bisect bad b3a6082223369203d7e7db7e81253ac761377644
-> # bad: [a78208e2436963d0b2c7d186277d6e1a9755029a] Merge branch 'linus' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
-> git bisect bad a78208e2436963d0b2c7d186277d6e1a9755029a
-> # bad: [b1dba2473114588be3df916bf629a61bdcc83737] Merge tag 'selinux-pr-20200127' of git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux
-> git bisect bad b1dba2473114588be3df916bf629a61bdcc83737
-> # good: [9e1af7567b266dc6c3c8fd434ea807b3206bfdc1] Merge tag 'mmc-v5.6' of git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc
-> git bisect good 9e1af7567b266dc6c3c8fd434ea807b3206bfdc1
-> # bad: [aae1464f46a2403565f75717438118691d31ccf1] Merge tag 'regulator-v5.6' of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator
-> git bisect bad aae1464f46a2403565f75717438118691d31ccf1
-> # bad: [a5b871c91d470326eed3ae0ebd2fc07f3aee9050] Merge tag 'dmaengine-5.6-rc1' of git://git.infradead.org/users/vkoul/slave-dma
-> git bisect bad a5b871c91d470326eed3ae0ebd2fc07f3aee9050
-> # good: [12fb2b993e1508a0d9032a2314dfdda2a3a5535e] Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid
-> git bisect good 12fb2b993e1508a0d9032a2314dfdda2a3a5535e
-> # good: [7d083ae983573de16e3ab0bfd47486996d211417] dmaengine: doc: Add sections for per descriptor metadata support
-> git bisect good 7d083ae983573de16e3ab0bfd47486996d211417
-> # good: [e606c8b9d751e593b71bdcb636ac3392c62c1c50] dmaengine: s3c24xx-dma: fix spelling mistake "to" -> "too"
-> git bisect good e606c8b9d751e593b71bdcb636ac3392c62c1c50
-> # good: [8f47d1a5e545f903cd049c42da31a3be36178447] dmaengine: idxd: connect idxd to dmaengine subsystem
-> git bisect good 8f47d1a5e545f903cd049c42da31a3be36178447
-> # good: [f46e49a9cc3814f3564477f0fffc00e0a2bc9e80] livepatch: Handle allocation failure in the sample of shadow variable API
-> git bisect good f46e49a9cc3814f3564477f0fffc00e0a2bc9e80
-> # good: [e9f08b65250d73ab70e79e194813f52b8d306784] dmaengine: hisilicon: Add Kunpeng DMA engine support
-> git bisect good e9f08b65250d73ab70e79e194813f52b8d306784
-> # bad: [71723a96b8b1367fefc18f60025dae792477d602] dmaengine: Create symlinks between DMA channels and slaves
-> git bisect bad 71723a96b8b1367fefc18f60025dae792477d602
-> # first bad commit: [71723a96b8b1367fefc18f60025dae792477d602] dmaengine: Create symlinks between DMA channels and slaves
-> -------------------------------------------------------------------------------
-> 
+v6: - Added stable tag and changed order of the patch "Prevent race
+      conditions of tasklet vs free list", making it patch #2, as was
+      requested by Jon Hunter in the review comment to v5.
+
+    - Factored out the tdc->config_init cleanup into separate patch, as was
+      requested by Jon Hunter in the review comment to v5:
+
+        dmaengine: tegra-apb: Remove unneeded initialization of tdc->config_init
+
+    - Added new very minor patch to enable compile-testing for the driver:
+
+        dmaengine: tegra-apb: Support COMPILE_TEST
+
+v5: - Fixed touching hardware registers after RPM-suspending in the patch
+      "Keep clock enabled only during of DMA transfer", now RPM is kept
+      resumed in the tegra_dma_terminate_all() while needed. Thanks to
+      Jon Hunter for pointing at this problem in a review comment to v4.
+
+    - The "Clean up runtime PM teardown" patch is replaced with the "Remove
+      assumptions about unavailable runtime PM" patch because I recalled that
+      now RPM is always available on all Tegra SoCs.
+
+    - The "Clean up suspend-resume" patch got a minor improvement, now
+      tasklet_kill() is invoked before checking of the busy state in
+      tegra_dma_dev_suspend(), this should allow us to catch problems if DMA
+      callback issues a new DMA transfer.
+
+    - Added Jon's acks to the reviewed patches.
+
+v4: - Addressed Jon's request to *not* remove the runtime PM usage, instead
+      there is now new patch that makes RPM more practical:
+
+        dmaengine: tegra-apb: Keep clock enabled only during of DMA transfer
+
+    - Added new minor patch to clean up RPM's teardown:
+
+        dmaengine: tegra-apb: Clean up runtime PM teardown
+
+v3: - In the review comment to v1 Michał Mirosław suggested that "Prevent
+      race conditions on channel's freeing" does changes that deserve to
+      be separated into two patches. I factored out and improved tasklet
+      releasing into this new patch:
+
+        dmaengine: tegra-apb: Clean up tasklet releasing
+
+    - The "Fix use-after-free" patch got an improved commit message.
+
+v2: - I took another look at the driver and spotted few more things that
+      could be improved, which resulted in these new patches:
+
+        dmaengine: tegra-apb: Remove runtime PM usage
+        dmaengine: tegra-apb: Clean up suspend-resume
+        dmaengine: tegra-apb: Add missing of_dma_controller_free
+        dmaengine: tegra-apb: Allow to compile as a loadable kernel module
+        dmaengine: tegra-apb: Remove MODULE_ALIAS
+
+
+Dmitry Osipenko (16):
+  dmaengine: tegra-apb: Fix use-after-free
+  dmaengine: tegra-apb: Prevent race conditions of tasklet vs free list
+  dmaengine: tegra-apb: Implement synchronization hook
+  dmaengine: tegra-apb: Prevent race conditions on channel's freeing
+  dmaengine: tegra-apb: Clean up tasklet releasing
+  dmaengine: tegra-apb: Use devm_platform_ioremap_resource
+  dmaengine: tegra-apb: Use devm_request_irq
+  dmaengine: tegra-apb: Fix coding style problems
+  dmaengine: tegra-apb: Remove unneeded initialization of
+    tdc->config_init
+  dmaengine: tegra-apb: Remove assumptions about unavailable runtime PM
+  dmaengine: tegra-apb: Keep clock enabled only during of DMA transfer
+  dmaengine: tegra-apb: Clean up suspend-resume
+  dmaengine: tegra-apb: Add missing of_dma_controller_free
+  dmaengine: tegra-apb: Allow to compile as a loadable kernel module
+  dmaengine: tegra-apb: Remove MODULE_ALIAS
+  dmaengine: tegra-apb: Support COMPILE_TEST
+
+ drivers/dma/Kconfig           |   4 +-
+ drivers/dma/tegra20-apb-dma.c | 507 +++++++++++++++++-----------------
+ 2 files changed, 261 insertions(+), 250 deletions(-)
+
+-- 
+2.24.0
 

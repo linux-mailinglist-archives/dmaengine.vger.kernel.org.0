@@ -2,99 +2,123 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1ABE614E9E3
-	for <lists+dmaengine@lfdr.de>; Fri, 31 Jan 2020 10:05:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CE8D14EA28
+	for <lists+dmaengine@lfdr.de>; Fri, 31 Jan 2020 10:38:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbgAaJFr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 31 Jan 2020 04:05:47 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3813 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728151AbgAaJFr (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 31 Jan 2020 04:05:47 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e33edd50001>; Fri, 31 Jan 2020 01:05:25 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 31 Jan 2020 01:05:46 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 31 Jan 2020 01:05:46 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 31 Jan
- 2020 09:05:43 +0000
-Subject: Re: [PATCH v6 11/16] dmaengine: tegra-apb: Keep clock enabled only
- during of DMA transfer
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200130043804.32243-1-digetx@gmail.com>
- <20200130043804.32243-12-digetx@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <1b7dd052-20f0-7b38-9578-44967eca1770@nvidia.com>
-Date:   Fri, 31 Jan 2020 09:05:41 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1728284AbgAaJiV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 31 Jan 2020 04:38:21 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:46410 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728237AbgAaJiV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 31 Jan 2020 04:38:21 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00V9cDiP053693;
+        Fri, 31 Jan 2020 03:38:13 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580463493;
+        bh=WP6XzFHxhcx79wYspVykJWrDTxn03RSvvCmcK8MHA6o=;
+        h=From:To:CC:Subject:Date;
+        b=mbDMS6Zdwm3BPhECIkZsEFQOxtWqG2bNTyyxeDsNfnhEv/s56l7JgdYQmiXWELlTn
+         +cTliDNRaxKKWvRpB4lFUbIQvYsrCE+M2H7zyhAk5/0QsS1hbmY41Pi74LYZnpjs3E
+         /Kl25Vigl5y3WFNNzccJuMLw8fi7/5r5ZAQ+usAs=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00V9cD5q129435;
+        Fri, 31 Jan 2020 03:38:13 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
+ Jan 2020 03:38:12 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 31 Jan 2020 03:38:12 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00V9cAGj054689;
+        Fri, 31 Jan 2020 03:38:11 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <geert@linux-m68k.org>
+Subject: [PATCH v2 0/2] dmaengine: Cleanups for symlink handling and debugfs support
+Date:   Fri, 31 Jan 2020 11:38:57 +0200
+Message-ID: <20200131093859.3311-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <20200130043804.32243-12-digetx@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580461525; bh=BuOEIlbunk7DCg4cTZ3hlSTaa7xG8buVShKe71iVBmQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=k/JTHwA+ZPbXyAPIaXapcZO+zRym95tsMi+ep9eF4W9lfzOG8Y06NARftq85MOHVP
-         Lr6IyrwUWnGPWk6hcySr55nBl+xo5E0DxYNYl5lcqsvtDMi7Pyp5NPZLSFdShVwy/J
-         ikNQgBb0HASbDZwN+8FIXiXULXt5SpotCdZRYGF4v9MrMrSVkgdaoG05xLdlHYAlM4
-         o+dtJOQfxMdutQLJoVsx8YDu3F7eFlX09gHJLwwQqiMegRxNQp9zeOCmGbFvy69zpD
-         LAkrbDqiAdPy4eYuoXvBYojxIM+XRrvpY2AKM/424qEnzYo79Kr5KAw7gH7watJZRj
-         TYtMakNWvDvtg==
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi,
 
-On 30/01/2020 04:37, Dmitry Osipenko wrote:
-> It's a bit impractical to enable hardware's clock at the time of DMA
-> channel's allocation because most of DMA client drivers allocate DMA
-> channel at the time of the driver's probing, and thus, DMA clock is kept
-> always-enabled in practice, defeating the whole purpose of runtime PM.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/dma/tegra20-apb-dma.c | 47 ++++++++++++++++++++++++-----------
->  1 file changed, 32 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-> index 22b88ccff05d..0ee28d8e3c96 100644
-> --- a/drivers/dma/tegra20-apb-dma.c
-> +++ b/drivers/dma/tegra20-apb-dma.c
-> @@ -436,6 +436,8 @@ static void tegra_dma_stop(struct tegra_dma_channel *tdc)
->  		tdc_write(tdc, TEGRA_APBDMA_CHAN_STATUS, status);
->  	}
->  	tdc->busy = false;
-> +
-> +	pm_runtime_put(tdc->tdma->dev);
+Changes since v1:
+- Removed dev_warn() for kasprintf in both patch
+- Added Reviewed-by from Geert to the first patch
+- Use much more simplified fops for the debugfs file (via DEFINE_SHOW_ATTRIBUTE)
+- do not allow modification to dma_device_list while the debugfs file is read
+- rename the slave_name to dbg_client_name (it is only for debugging)
+- print information about dma_router if it is used by the channel
+- Formating of the output slightly changed
 
-There are only 3 places where tegra_dma_stop is called, does it simplify
-the code if we move the pm_runtime_put() outside of tegra_dma_stop? In
-other words, everywhere there is a tegra_dma_stop, afterwards we then
-call pm_runtime_put?
+As I have mentioned on the symlink patch earlier I like how the gpio's debugfs
+shows in one place information.
 
-This would allow us to get rid of the extra pm_runtime_get in
-terminate_all.
+These patches are on top of Vinod's next (with the v2 fix for the symlink
+support).
 
-Jon
+The first patch fixes and cleans up the symlink handling code a bit and the
+second adds support for debugfs file:
+
+On my board with audio and after a run with dmatest on 6 channels this is how
+the information is presented about the DMA drivers:
+
+# cat /sys/kernel/debug/dmaengine 
+dma0 (285c0000.dma-controller): number of channels: 96
+
+dma1 (31150000.dma-controller): number of channels: 267
+ dma1chan0   | 2b00000.mcasp:tx
+ dma1chan1   | 2b00000.mcasp:rx
+ dma1chan2   | in-use
+ dma1chan3   | in-use
+ dma1chan4   | in-use
+ dma1chan5   | in-use
+ dma1chan6   | in-use
+ dma1chan7   | in-use
+
+On dra7-evm after boot:
+# cat /sys/kernel/debug/dmaengine 
+dma0 (43300000.edma): number of channels: 64
+ dma0chan0   | 48468000.mcasp:tx (via router: 4a002c78.dma-router)
+ dma0chan1   | 48468000.mcasp:rx (via router: 4a002c78.dma-router)
+
+dma1 (4a056000.dma-controller): number of channels: 127
+ dma1chan0   | in-use
+ dma1chan1   | in-use
+
+It shows the users (device name + channel name) of the channels. If it is not a
+slave channel, then it only prints 'in-use' as no other information is
+available for non save channels.
+
+DMA drivers can implement the dbg_show callback to provide custom information
+for their channels if needed.
+
+Regards,
+Peter
+---
+Peter Ujfalusi (2):
+  dmaengine: Cleanups for the slave <-> channel symlink support
+  dmaengine: Add basic debugfs support
+
+ drivers/dma/dmaengine.c   | 84 ++++++++++++++++++++++++++++++++++-----
+ include/linux/dmaengine.h | 12 +++++-
+ 2 files changed, 86 insertions(+), 10 deletions(-)
 
 -- 
-nvpublic
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+

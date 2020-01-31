@@ -2,107 +2,143 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CABC514E811
-	for <lists+dmaengine@lfdr.de>; Fri, 31 Jan 2020 06:00:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4E7714E910
+	for <lists+dmaengine@lfdr.de>; Fri, 31 Jan 2020 08:13:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725268AbgAaFAr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 31 Jan 2020 00:00:47 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:39432 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725263AbgAaFAr (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 31 Jan 2020 00:00:47 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00V4wWVP195240;
-        Fri, 31 Jan 2020 05:00:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=/QmMO/8yHL9c5HdMAqWBKY6PNXPxSw2tZWrggSZk29o=;
- b=U46FC8Tz/eYPUl4MdqZYB+ya38n2vKFUu2I2b1LsuL4eS6qXU4wTf4TM/AP4v2yLl09R
- 3a0YI8CyKimnydmxv5+JnuNM1KWGR/oHf97TVwM1OQBbuCsYA30OTfRMwA1XwU9DUAem
- y0LXbZbg0Ft0TojFBH9EY2kkDik9Bt3mWPBEf7mE7BisWgl2eO0f+okv0SO1ocVM5gBo
- 4hP2A1qO4eNdM6DZwoOKDTGFzXVYRanOmKI2ONe9N7psf1So6RqFoa02oiSF1tiLgg9E
- MwRq0QhUzzpI/7aLYcEkZSC84W10lEnHinNkoys40LpKb1+o8wjtx3vy6MragCeRPBze hQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2xrd3ur3yq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jan 2020 05:00:44 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00V4wYPi089524;
-        Fri, 31 Jan 2020 05:00:43 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2xuheufy9h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jan 2020 05:00:43 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00V50gNL021516;
-        Fri, 31 Jan 2020 05:00:42 GMT
-Received: from kili.mountain (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 30 Jan 2020 21:00:42 -0800
-Date:   Fri, 31 Jan 2020 08:00:36 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     dave.jiang@intel.com
-Cc:     dmaengine@vger.kernel.org
-Subject: [bug report] dmaengine: break out channel registration
-Message-ID: <20200131050036.fqb4ke6phimki4x7@kili.mountain>
+        id S1727525AbgAaHNm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 31 Jan 2020 02:13:42 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33138 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbgAaHNl (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 31 Jan 2020 02:13:41 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00V7DZnN057099;
+        Fri, 31 Jan 2020 01:13:35 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1580454815;
+        bh=n7YRRXxTreq+7HAtJOKxQ41+gApgSjQtvS2mF0Li8+U=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=dJfDrIIzOnBFJQ0rjnMAohy6qhC7OjKOFrPlJwOquaRnDHsmtSkuO8P8IG6drvKmD
+         NhGdhG5ifW18OyQKn9ymgYgoUO8646fS9x3FglMBJAj353yM1dCPO9CG2CriujQNkc
+         4MRippftiJfk9tYiVb90vU9Fk67FPHoD+mBUi6l0=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00V7DZD5116750
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 31 Jan 2020 01:13:35 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 31
+ Jan 2020 01:13:34 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 31 Jan 2020 01:13:35 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00V7DXLg070011;
+        Fri, 31 Jan 2020 01:13:33 -0600
+Subject: Re: [PATCH 1/2] dmaengine: Cleanups for the slave <-> channel symlink
+ support
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Vinod <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20200130114220.23538-1-peter.ujfalusi@ti.com>
+ <20200130114220.23538-2-peter.ujfalusi@ti.com>
+ <CAMuHMdUdhqRU8NmHrcgKQpiVDsuFosWUykZs47HdF9RRCDv-KA@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <fef9eeac-f088-61e8-eecc-a106a6f09224@ti.com>
+Date:   Fri, 31 Jan 2020 09:14:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9516 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=771
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001310043
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9516 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=834 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001310043
+In-Reply-To: <CAMuHMdUdhqRU8NmHrcgKQpiVDsuFosWUykZs47HdF9RRCDv-KA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello Dave Jiang,
+Hi Geert,
 
-The patch d2fb0a043838: "dmaengine: break out channel registration"
-from Jan 21, 2020, leads to the following static checker warning:
+On 30/01/2020 17.20, Geert Uytterhoeven wrote:
+> Hi Peter,
+> 
+> On Thu, Jan 30, 2020 at 12:41 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>> No need to use goto to jump over the
+>> return chan ? chan : ERR_PTR(-EPROBE_DEFER);
+>> We can just revert the check and return right there.
+>>
+>> Do not fail the channel request if the chan->name allocation fails, but
+>> print a warning about it.
+>>
+>> Change the dev_err to dev_warn if sysfs_create_link() fails as it is not
+>> fatal.
+>>
+>> Only attempt to remove the DMA_SLAVE_NAME symlink if it is created - or it
+>> was attempted to be created.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> 
+> Thanks for your patch!
+> 
+>> --- a/drivers/dma/dmaengine.c
+>> +++ b/drivers/dma/dmaengine.c
+>> @@ -756,22 +756,24 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
+>>         }
+>>         mutex_unlock(&dma_list_mutex);
+>>
+>> -       if (!IS_ERR_OR_NULL(chan))
+>> -               goto found;
+>> -
+>> -       return chan ? chan : ERR_PTR(-EPROBE_DEFER);
+>> +       if (IS_ERR_OR_NULL(chan))
+>> +               return chan ? chan : ERR_PTR(-EPROBE_DEFER);
+>>
+>>  found:
+>> -       chan->slave = dev;
+>>         chan->name = kasprintf(GFP_KERNEL, "dma:%s", name);
+>> -       if (!chan->name)
+>> -               return ERR_PTR(-ENOMEM);
+>> +       if (!chan->name) {
+>> +               dev_warn(dev,
+>> +                        "Cannot allocate memory for slave symlink name\n");
+> 
+> No need to print a message, as the memory allocator core will have
+> screamed already.
 
-	drivers/dma/dmaengine.c:965 __dma_async_device_channel_register()
-	error: potential NULL dereference 'tchan'.
+Right, I tend to forget this ;)
 
-drivers/dma/dmaengine.c
-   954  static int __dma_async_device_channel_register(struct dma_device *device,
-   955                                                 struct dma_chan *chan,
-   956                                                 int chan_id)
-   957  {
-   958          int rc = 0;
-   959          int chancnt = device->chancnt;
-   960          atomic_t *idr_ref;
-   961          struct dma_chan *tchan;
-   962  
-   963          tchan = list_first_entry_or_null(&device->channels,
-                                        ^^^^^^^^
-The "or_null" suggests that "tchan" can be NULL
+> 
+>> +               return chan;
+>> +       }
+>> +       chan->slave = dev;
+>>
+>>         if (sysfs_create_link(&chan->dev->device.kobj, &dev->kobj,
+>>                               DMA_SLAVE_NAME))
+>> -               dev_err(dev, "Cannot create DMA %s symlink\n", DMA_SLAVE_NAME);
+>> +               dev_warn(dev, "Cannot create DMA %s symlink\n", DMA_SLAVE_NAME);
+>>         if (sysfs_create_link(&dev->kobj, &chan->dev->device.kobj, chan->name))
+>> -               dev_err(dev, "Cannot create DMA %s symlink\n", chan->name);
+>> +               dev_warn(dev, "Cannot create DMA %s symlink\n", chan->name);
+>> +
+>>         return chan;
+>>  }
+>>  EXPORT_SYMBOL_GPL(dma_request_chan);
+> 
+> With the above fixed:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-   964                                           struct dma_chan, device_node);
-   965          if (tchan->dev) {
-                    ^^^^^^^^^^
-so this should be "if (tchan && tchan->dev)"?
+Thanks,
+- Péter
 
-   966                  idr_ref = tchan->dev->idr_ref;
-   967          } else {
-   968                  idr_ref = kmalloc(sizeof(*idr_ref), GFP_KERNEL);
-   969                  if (!idr_ref)
-   970                          return -ENOMEM;
-   971                  atomic_set(idr_ref, 0);
-   972          }
-   973  
-   974          chan->local = alloc_percpu(typeof(*chan->local));
-   975          if (!chan->local)
-   976                  goto err_out;
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
 
-regards,
-dan carpenter
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

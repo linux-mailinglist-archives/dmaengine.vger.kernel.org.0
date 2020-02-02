@@ -2,137 +2,127 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8630E14F862
-	for <lists+dmaengine@lfdr.de>; Sat,  1 Feb 2020 16:13:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED24714FF99
+	for <lists+dmaengine@lfdr.de>; Sun,  2 Feb 2020 23:29:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgBAPN5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 1 Feb 2020 10:13:57 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46631 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726677AbgBAPN5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 1 Feb 2020 10:13:57 -0500
-Received: by mail-lj1-f195.google.com with SMTP id x14so10125864ljd.13;
-        Sat, 01 Feb 2020 07:13:55 -0800 (PST)
+        id S1727169AbgBBW34 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 2 Feb 2020 17:29:56 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33009 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727142AbgBBW3z (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 2 Feb 2020 17:29:55 -0500
+Received: by mail-lf1-f67.google.com with SMTP id n25so8399873lfl.0;
+        Sun, 02 Feb 2020 14:29:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=x8auQfYSjBpZuOhTuDNeJ3x3bvJ53JLG86ep/bJMnbM=;
-        b=KRaPo/P5+/A3UdshhvRtEXEma+O6VULl7vV5J6EfVsQR3/LFLIcOcUlZ8UIgdmUuzE
-         6Gcxjp0JaCPX/1pLX94YcUeJLMQP6Clh4JvkM4SAnaVWuG6YaKeRQpjb9Kblf7sRNc9p
-         fyeH1RMCrr+LSHUG9v3ysJsjBQufsHB6vyr58bqPAdpvsDgACBQDWXKcjqa9yMD+q0ie
-         UWP51YtMTI43YUrJAMOcccwMJkLwgvcicZo3efYBonvwsJWlvX8qzPqh8FHhhoB9/YrU
-         A11hFUiUddOnbU6HN3DX7fT9phg7XKdGOd4dOrUD++6qz0qTOJq350YMj+iX5c9U9EWT
-         VmIQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=GC/z2ZWZ2YFoOCLaKR682od65UK+N/gvRCg6ifsNRc4=;
+        b=fCKGiLwny+rl/sC22taBWekzseGF3PfRzLzxP0yqdXO8SkO/sQFCcvL6Ov7YzP7OEH
+         RWk+ESSb/Qw06cqsMpv4prFkk1fzCGnL3jZRyx5HIgDjqXkQH2s+hLaZj3x/REwim6pz
+         QzePOZYIGDhZ0PQMeVEJMOCk4jVe967C1oX37qX7vmCBXg+ofKnRhlbDL9eAM0mMpi5D
+         fAGWS5ap5qBJ4vga8aTWLwFG+cXwr9LtHH1BoYxQey7CgWoSbFSj9tjF1BBI/OckrJgI
+         8DW9XWfxNXVeERKeWeKPr9tJXlSVlSXiUSpXLH0lI3dbk4AKKq1OW4lk/El7nAmAOxCD
+         4Wag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=x8auQfYSjBpZuOhTuDNeJ3x3bvJ53JLG86ep/bJMnbM=;
-        b=Fgy1XwU/hp7drY+3OIRNsMZw+fY79pMOVP9EWoFHy9y8tE7M9eC8jMnRDRG8TRHPzM
-         R0QjOkkBAoozFnsIvd0D/d1GoezXbgQrrrgFybdvybnXItivnDefS5IHJESq083zYGoW
-         ph88vGwTevLuLO53hcyqxE5H3n9E0eEQ9CY5S4mizYF611Vvi14uenSUcbiMwMGTq5Nz
-         QZFlDfxHzeVX8mHQMo0sRzH7HaAsNoknNEmD9Hian/o0GIoJXgeFW+0PiRKHbawT5i8m
-         yEIbWjF3EIOEY/DFb2zBeH+3a3OETjf2Vy3s3hAxsB3f9FiqMOJtfBnfnWa2Ju9pVz+W
-         YJng==
-X-Gm-Message-State: APjAAAVZS9yQrkwQgWiNcfCw54M2kL6NnssMAkD/4KBn+4baddjGqWg6
-        V+G1bUNoXq2YXkOAz2ChnXajFRqk
-X-Google-Smtp-Source: APXvYqx1q4UYJfxBrUTrc4rMfdFSOYKP0jUe9QjqckWSglTHxUz3YCCHUlwOhNCo0UVBafW18vaU9w==
-X-Received: by 2002:a2e:3e13:: with SMTP id l19mr8813755lja.11.1580570034026;
-        Sat, 01 Feb 2020 07:13:54 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id c8sm6113348lfm.65.2020.02.01.07.13.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Feb 2020 07:13:53 -0800 (PST)
-Subject: Re: [PATCH v6 11/16] dmaengine: tegra-apb: Keep clock enabled only
- during of DMA transfer
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=GC/z2ZWZ2YFoOCLaKR682od65UK+N/gvRCg6ifsNRc4=;
+        b=Vb75NJJwzuW57lBwE5S21AQ1j7SwXhJXUNAb3vXvvdMlVqpUa4sRgNLRJKPCleWNv4
+         8EwQy8fUPpIp2RdSNJTJYBzSAlHm3s+kbLcfp253lbNCbd2QsYH7uSbdlxsXJnhzJPCf
+         VuctUi4dI1ZnJqo/fBmfxfOsC1SOZwmTuSTP8M8uGza5bHmVxAVQdl4rTCYi5IQ9rPUu
+         PI9g1icnvX7kY6Ntjl1JrSHWrKxWsSqRNBpVXCwh/gIKxTKQjrtUN/Ur4IW6+JQJVhI2
+         BMLW4Va8darktCv5T5wzp94ZMDIWdJqDIdQA4BOdFpzvCj+BesXpiW3tD2wdY0G+1hzJ
+         c22w==
+X-Gm-Message-State: APjAAAW5AY4KbecGgRNa0uFkz/vBDAUBAOF64d7JK7nB//1PHqCqKzTF
+        jB/sr3bB/WPIYniizg8x94w=
+X-Google-Smtp-Source: APXvYqyejqLOO2Cz7Nqf8FE0ab5NsMxMcHsODdW3rSsA7pZGAsTDRHR+3MILxRjru071EEBvjHe+jw==
+X-Received: by 2002:a19:23d0:: with SMTP id j199mr2642264lfj.137.1580682593041;
+        Sun, 02 Feb 2020 14:29:53 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id b190sm8050307lfd.39.2020.02.02.14.29.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Feb 2020 14:29:52 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
 Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20200130043804.32243-1-digetx@gmail.com>
- <20200130043804.32243-12-digetx@gmail.com>
- <2442aee7-2c2a-bacc-7be9-8eed17498928@nvidia.com>
- <0c766352-700a-68bf-cf7b-9b1686ba9ca9@gmail.com>
- <e72d00ee-abee-9ae2-4654-da77420b440e@nvidia.com>
- <cedbf558-b15b-81ca-7833-c94aedce5c5c@gmail.com>
- <315241b5-f5a2-aaa0-7327-24055ff306c7@nvidia.com>
- <1b64a3c6-a8b9-34d7-96cc-95b93ca1a392@gmail.com>
-Message-ID: <bf459b54-fa4c-b0ff-0af8-b7cb66b0a43c@gmail.com>
-Date:   Sat, 1 Feb 2020 18:13:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+Subject: [PATCH v7 05/19] dmaengine: tegra-apb: Clean up tasklet releasing
+Date:   Mon,  3 Feb 2020 01:28:40 +0300
+Message-Id: <20200202222854.18409-6-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200202222854.18409-1-digetx@gmail.com>
+References: <20200202222854.18409-1-digetx@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1b64a3c6-a8b9-34d7-96cc-95b93ca1a392@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-31.01.2020 17:22, Dmitry Osipenko пишет:
-> 31.01.2020 12:02, Jon Hunter пишет:
->>
->> On 30/01/2020 20:04, Dmitry Osipenko wrote:
->>
->> ...
->>
->>>>> The tegra_dma_stop() should put RPM anyways, which is missed in yours
->>>>> sample. Please see handle_continuous_head_request().
->>>>
->>>> Yes and that is deliberate. The cyclic transfers the transfers *should*
->>>> not stop until terminate_all is called. The tegra_dma_stop in
->>>> handle_continuous_head_request() is an error condition and so I am not
->>>> sure it is actually necessary to call pm_runtime_put() here.
->>>
->>> But then tegra_dma_stop() shouldn't unset the "busy" mark.
->>
->> True.
->>
->>>>> I'm also finding the explicit get/put a bit easier to follow in the
->>>>> code, don't you think so?
->>>>
->>>> I can see that, but I was thinking that in the case of cyclic transfers,
->>>> it should only really be necessary to call the get/put at the beginning
->>>> and end. So in my mind there should only be two exit points which are
->>>> the ISR handler for SG and terminate_all for SG and cyclic.
->>>
->>> Alright, I'll update this patch.
->>
->> Hmmm ... I am wondering if we should not mess with that and leave how
->> you have it.
-> 
-> I took another look and seems my current v6 should be more correct because:
-> 
-> 1. If "busy" is unset in tegra_dma_stop(), then the RPM should be put
-> there since tegra_dma_terminate_all() won't put RPM in this case:
-> 
-> 	if (!tdc->busy)
-> 		goto skip_dma_stop;
-> 
-> 2. We can't move the "busy" unsetting into the terminate because then
-> tegra_dma_stop() will be invoked twice. Although, one option could be to
-> remove the tegra_dma_stop() from the error paths of
-> handle_continuous_head_request(), but I'm not sure that this is correct
-> to do.
+There is no need to kill tasklet when driver's probe fails because tasklet
+can't be scheduled at this time. It is also cleaner to kill tasklet on
+channel's freeing rather than to kill it on driver's removal, otherwise
+tasklet could perform a dummy execution after channel's releasing, which
+isn't very nice.
 
-Jon, I realized that my v6 variant is wrong too because
-tegra_dma_terminate_all() -> tdc->isr_handler() will put RPM, and thus,
-the RPM enable-count will be wrecked in this case.
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/dma/tegra20-apb-dma.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-I'm now leaning to adopt yours variant and simply remove the
-tegra_dma_stop() from handle_continuous_head_request() because there
-shouldn't be any harm in keeping DMA active in the case of error
-condition. Besides, these error conditions are very extreme cases that
-should never happen in practice.
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index 766c2c9eac8e..aafad50d075e 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -1287,7 +1287,6 @@ static void tegra_dma_free_chan_resources(struct dma_chan *dc)
+ 	struct tegra_dma_sg_req *sg_req;
+ 	struct list_head dma_desc_list;
+ 	struct list_head sg_req_list;
+-	unsigned long flags;
+ 
+ 	INIT_LIST_HEAD(&dma_desc_list);
+ 	INIT_LIST_HEAD(&sg_req_list);
+@@ -1295,15 +1294,14 @@ static void tegra_dma_free_chan_resources(struct dma_chan *dc)
+ 	dev_dbg(tdc2dev(tdc), "Freeing channel %d\n", tdc->id);
+ 
+ 	tegra_dma_terminate_all(dc);
++	tasklet_kill(&tdc->tasklet);
+ 
+-	spin_lock_irqsave(&tdc->lock, flags);
+ 	list_splice_init(&tdc->pending_sg_req, &sg_req_list);
+ 	list_splice_init(&tdc->free_sg_req, &sg_req_list);
+ 	list_splice_init(&tdc->free_dma_desc, &dma_desc_list);
+ 	INIT_LIST_HEAD(&tdc->cb_desc);
+ 	tdc->config_init = false;
+ 	tdc->isr_handler = NULL;
+-	spin_unlock_irqrestore(&tdc->lock, flags);
+ 
+ 	while (!list_empty(&dma_desc_list)) {
+ 		dma_desc = list_first_entry(&dma_desc_list,
+@@ -1542,7 +1540,6 @@ static int tegra_dma_probe(struct platform_device *pdev)
+ 		struct tegra_dma_channel *tdc = &tdma->channels[i];
+ 
+ 		free_irq(tdc->irq, tdc);
+-		tasklet_kill(&tdc->tasklet);
+ 	}
+ 
+ 	pm_runtime_disable(&pdev->dev);
+@@ -1562,7 +1559,6 @@ static int tegra_dma_remove(struct platform_device *pdev)
+ 	for (i = 0; i < tdma->chip_data->nr_channels; ++i) {
+ 		tdc = &tdma->channels[i];
+ 		free_irq(tdc->irq, tdc);
+-		tasklet_kill(&tdc->tasklet);
+ 	}
+ 
+ 	pm_runtime_disable(&pdev->dev);
+-- 
+2.24.0
 
-The "list_empty(&tdc->pending_sg_req)" error seems couldn't ever happen
-at all, I'll remove it in v7.

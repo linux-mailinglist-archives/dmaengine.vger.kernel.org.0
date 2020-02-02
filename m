@@ -2,48 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E75214FFAB
-	for <lists+dmaengine@lfdr.de>; Sun,  2 Feb 2020 23:30:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B09B814FFCE
+	for <lists+dmaengine@lfdr.de>; Sun,  2 Feb 2020 23:31:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbgBBWaU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 2 Feb 2020 17:30:20 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40954 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbgBBWaI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 2 Feb 2020 17:30:08 -0500
-Received: by mail-lj1-f195.google.com with SMTP id n18so12589190ljo.7;
-        Sun, 02 Feb 2020 14:30:07 -0800 (PST)
+        id S1727431AbgBBWbA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 2 Feb 2020 17:31:00 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37055 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbgBBW3x (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 2 Feb 2020 17:29:53 -0500
+Received: by mail-lj1-f194.google.com with SMTP id v17so12611698ljg.4;
+        Sun, 02 Feb 2020 14:29:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3LEQBc7KTSu78YIgLtGrWKgS6uNh01RCVuGt61iLvic=;
-        b=lISbZZnU00bjOcwK6lNgW9KFw92cIfNM3if8VKNZtXucp1xR1p+hyPn8C2qOPRm0ge
-         1wrXq8YVv56Lba+CUMLxV5WHKyMOn/xz9TN1Ld7LW3ONV9B9RXtZZOl5DtgVspqQ7HCQ
-         IbEmlQDXxu60wz4O5nRctRtfAwxb40oOn0Wpce3pdoBpKwUfDXnAXeqR2yNjyvqaPYFj
-         Cu8HOoCOLDccgr45I/EGGOhTjxcqL+KfG7TyxFzEHmYrhCfkxxWibGIIchZm0OLeK3ya
-         8e7RPPC9OQQnbJByhMP8FfqZzXEKqCI/46bqJpXBV3FV5NTZ4jF3jihJYtTESVoI0CNs
-         B9HQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ezMQKD85XJhHGrGBIOdtzVLvRLd5t7MtgsapbZEE7GU=;
+        b=tGckCKAx/G4/asNFzXkqBSLWkYq8tPMK4uGK9QE7Nequzqm5BcBNJCfFyPQF8dw30+
+         ldrtv1FAGUwQeKjI8OeQwZRcwBNaysugffE26xe82LzZ3xHmWuVKpUogO8y9P7osJd2/
+         IEnE74TEYYDa+YvuONpfr2E3BPg7FyX+xT+azqxm1aUKr2P+95f02oyhISvJqSUU17PR
+         JdvignxDsTPmnqjYo8q82HhS/Ivh5ve1mz2F1YMPUVdJGaDkxNXQ1WeDvyZGlcaL4639
+         BPvS5scKvHbJM+rXrvdjZLWnRE+ggJ+l69L9SF9p1KhviSHvtY67NRoJ58usdY89Erot
+         u3gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3LEQBc7KTSu78YIgLtGrWKgS6uNh01RCVuGt61iLvic=;
-        b=Osf+9CAA7//32TMc8aVBG3jXDIuAYbLAfVGuugc+Ro+D1Yd/PSYpPP+8SH9DXsD0Le
-         aRKR8f6DkxEP4cnfQ/nwnkZn38RnfS715T6PJmt5ag9jX872PFG0wjw5nvLjOjvwUOlv
-         4YfHd4TJ6QFCVCxh97dbqT7dbxFr4f59c7IOrvuDfMWy8aKbjFyGIm8ButPqnqTtz2Xd
-         QLySXbyYYQZ9g0k+GWDWhEGkH5F0IvEMQaZwC9U8gYA3T5r+rYW9Fe7FNdblw9wq/vKO
-         E7jEYitmKOfZKncYYGKFwa6tJDicC9AfdZYrtdzrt/uKXfphJ25f18PZi2lHAtRP3m3G
-         3qYw==
-X-Gm-Message-State: APjAAAU1QPzRj19MRmqjQANlfXP2vk2arq6d3R0mJAMDJB46ppJHQifc
-        rySYBm4r6AbmqXzh+MvAJJE=
-X-Google-Smtp-Source: APXvYqymT/4UFwSeWHKrSiy8uEFhmCxBIB0KVVlaYQ/aIjzvXG3nCjdIm9QuR7NkHZLCmR4mUy5neg==
-X-Received: by 2002:a2e:809a:: with SMTP id i26mr12363549ljg.108.1580682606502;
-        Sun, 02 Feb 2020 14:30:06 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ezMQKD85XJhHGrGBIOdtzVLvRLd5t7MtgsapbZEE7GU=;
+        b=O78UObY7VCcUNmuCXnd7gBjcRF0UeABDEPJGrkh/C301f0W1c89ZEu7kfTf2F4Yx6o
+         EX/2FgWeAFBlupVs1As8OjBenJNNLiZHGlY4QbgeFYEsMoLyqp/YW/SAVeKuCg2wsWt2
+         seHDmF7GgWiJnINxZf3p6kbEGjcHhCefTa+IMFgb1QtCbVk3qJOfkqjBPWnxWPSBEMtn
+         UGlMXk/7RrMINYUNRR4KSpH685zXRgSZL/T7qyWTGo1zUSSFhBz8niWLQyRW9xfoZZdy
+         XPiT2wy3QeJalQLQfXWy6Oa7/dp8qq9BoFWuPydT49TtAQTK4UuAZVFhR5f1qTbZVNR2
+         WSOA==
+X-Gm-Message-State: APjAAAV9NXotgc8k859qC7sjqJz6+7J5Vcpv9j6tmYcci5Bh5cjyPTIP
+        /kkDjKXcwWpDVk2BaFX5D+4=
+X-Google-Smtp-Source: APXvYqwBwm7wCsPvxT5FWRfFxhGfKX2jvCKdr9xIOdjMwJSuNgngaeTiL8h5TwEk863cWqC+UYL2hg==
+X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr12314396ljc.39.1580682588546;
+        Sun, 02 Feb 2020 14:29:48 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id b190sm8050307lfd.39.2020.02.02.14.30.05
+        by smtp.gmail.com with ESMTPSA id b190sm8050307lfd.39.2020.02.02.14.29.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Feb 2020 14:30:06 -0800 (PST)
+        Sun, 02 Feb 2020 14:29:47 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -53,41 +53,126 @@ To:     Laxman Dewangan <ldewangan@nvidia.com>,
         =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
 Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v7 19/19] dmaengine: tegra-apb: Support COMPILE_TEST
-Date:   Mon,  3 Feb 2020 01:28:54 +0300
-Message-Id: <20200202222854.18409-20-digetx@gmail.com>
+Subject: [PATCH v7 00/19] NVIDIA Tegra APB DMA driver fixes and improvements
+Date:   Mon,  3 Feb 2020 01:28:35 +0300
+Message-Id: <20200202222854.18409-1-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200202222854.18409-1-digetx@gmail.com>
-References: <20200202222854.18409-1-digetx@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-There is nothing arch-specific in the driver's code, so let's enable
-compile-testing for the driver.
+Hello,
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/dma/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This series fixes some problems that I spotted recently, secondly the
+driver's code gets a cleanup. Please review and apply, thanks in advance!
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 98daf3aafdcc..7fc725d928b2 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -617,7 +617,7 @@ config TXX9_DMAC
- 
- config TEGRA20_APB_DMA
- 	tristate "NVIDIA Tegra20 APB DMA support"
--	depends on ARCH_TEGRA
-+	depends on ARCH_TEGRA || COMPILE_TEST
- 	select DMA_ENGINE
- 	help
- 	  Support for the NVIDIA Tegra20 APB DMA controller driver. The
+Changelog:
+
+v7: - Updated patch "Keep clock enabled only during of DMA transfer" by
+      fixing RPM refcount problem of v6 that should happen if oneshot
+      transfer is terminated with EOC being set. The patch was change in
+      accordance to Jon's Hunter recommendation. In a result there are
+      these new small additional patches:
+
+        dmaengine: tegra-apb: Remove handling of unrealistic error condition
+        dmaengine: tegra-apb: Don't stop cyclic DMA in a case of error condition
+
+    - Updated commit's message of the "Clean up suspend-resume" patch in
+      accordance to Jon's request, now saying that channel's pausing isn't
+      supported by the driver.
+
+    - Added new very minor patch to clean up tdc_start_head_req():
+
+        dmaengine: tegra-apb: Remove pending_sg_req checking from tdc_start_head_req
+
+v6: - Added stable tag and changed order of the patch "Prevent race
+      conditions of tasklet vs free list", making it patch #2, as was
+      requested by Jon Hunter in the review comment to v5.
+
+    - Factored out the tdc->config_init cleanup into separate patch, as was
+      requested by Jon Hunter in the review comment to v5:
+
+        dmaengine: tegra-apb: Remove unneeded initialization of tdc->config_init
+
+    - Added new very minor patch to enable compile-testing for the driver:
+
+        dmaengine: tegra-apb: Support COMPILE_TEST
+
+v5: - Fixed touching hardware registers after RPM-suspending in the patch
+      "Keep clock enabled only during of DMA transfer", now RPM is kept
+      resumed in the tegra_dma_terminate_all() while needed. Thanks to
+      Jon Hunter for pointing at this problem in a review comment to v4.
+
+    - The "Clean up runtime PM teardown" patch is replaced with the "Remove
+      assumptions about unavailable runtime PM" patch because I recalled that
+      now RPM is always available on all Tegra SoCs.
+
+    - The "Clean up suspend-resume" patch got a minor improvement, now
+      tasklet_kill() is invoked before checking of the busy state in
+      tegra_dma_dev_suspend(), this should allow us to catch problems if DMA
+      callback issues a new DMA transfer.
+
+    - Added Jon's acks to the reviewed patches.
+
+v4: - Addressed Jon's request to *not* remove the runtime PM usage, instead
+      there is now new patch that makes RPM more practical:
+
+        dmaengine: tegra-apb: Keep clock enabled only during of DMA transfer
+
+    - Added new minor patch to clean up RPM's teardown:
+
+        dmaengine: tegra-apb: Clean up runtime PM teardown
+
+v3: - In the review comment to v1 Michał Mirosław suggested that "Prevent
+      race conditions on channel's freeing" does changes that deserve to
+      be separated into two patches. I factored out and improved tasklet
+      releasing into this new patch:
+
+        dmaengine: tegra-apb: Clean up tasklet releasing
+
+    - The "Fix use-after-free" patch got an improved commit message.
+
+v2: - I took another look at the driver and spotted few more things that
+      could be improved, which resulted in these new patches:
+
+        dmaengine: tegra-apb: Remove runtime PM usage
+        dmaengine: tegra-apb: Clean up suspend-resume
+        dmaengine: tegra-apb: Add missing of_dma_controller_free
+        dmaengine: tegra-apb: Allow to compile as a loadable kernel module
+        dmaengine: tegra-apb: Remove MODULE_ALIAS
+
+Dmitry Osipenko (19):
+  dmaengine: tegra-apb: Fix use-after-free
+  dmaengine: tegra-apb: Prevent race conditions of tasklet vs free list
+  dmaengine: tegra-apb: Implement synchronization hook
+  dmaengine: tegra-apb: Prevent race conditions on channel's freeing
+  dmaengine: tegra-apb: Clean up tasklet releasing
+  dmaengine: tegra-apb: Use devm_platform_ioremap_resource
+  dmaengine: tegra-apb: Use devm_request_irq
+  dmaengine: tegra-apb: Fix coding style problems
+  dmaengine: tegra-apb: Remove unneeded initialization of
+    tdc->config_init
+  dmaengine: tegra-apb: Remove assumptions about unavailable runtime PM
+  dmaengine: tegra-apb: Remove pending_sg_req checking from
+    tdc_start_head_req
+  dmaengine: tegra-apb: Remove handling of unrealistic error condition
+  dmaengine: tegra-apb: Don't stop cyclic DMA in a case of error
+    condition
+  dmaengine: tegra-apb: Keep clock enabled only during of DMA transfer
+  dmaengine: tegra-apb: Clean up suspend-resume
+  dmaengine: tegra-apb: Add missing of_dma_controller_free
+  dmaengine: tegra-apb: Allow to compile as a loadable kernel module
+  dmaengine: tegra-apb: Remove MODULE_ALIAS
+  dmaengine: tegra-apb: Support COMPILE_TEST
+
+ drivers/dma/Kconfig           |   4 +-
+ drivers/dma/tegra20-apb-dma.c | 516 +++++++++++++++++-----------------
+ 2 files changed, 258 insertions(+), 262 deletions(-)
+
 -- 
 2.24.0
 

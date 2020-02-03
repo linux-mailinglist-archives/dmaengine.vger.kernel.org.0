@@ -2,70 +2,63 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FCD8150658
-	for <lists+dmaengine@lfdr.de>; Mon,  3 Feb 2020 13:48:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 74BD515074C
+	for <lists+dmaengine@lfdr.de>; Mon,  3 Feb 2020 14:32:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbgBCMsK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 3 Feb 2020 07:48:10 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35697 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgBCMsK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 3 Feb 2020 07:48:10 -0500
-Received: by mail-pf1-f193.google.com with SMTP id y73so7544426pfg.2;
-        Mon, 03 Feb 2020 04:48:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p07v49PtEWK6UbUh2LVFZtqDumji1911rjb5hk+Uiv8=;
-        b=FW8oF/xj1ohlIFDmU/3cnFQw7i6XkGAidGdY2LclPV+mM8kOY4j2FYA64zdHvx8NcW
-         VTx4yXbaIPoc36DmnxaKm9jZx5DZ5SFN/Jv3Y5tL2EIrZxa5jJiiSgUpMy1xpfMZXLYG
-         8Y9bmsuU2cDM8gvQV4wS/a2HIHUDYIWbi/T+N1bR7lESdkyDuReASwtEQQkw5w3YGpJY
-         VdCy4xj55dBfjezgKykdEho38aVGNlv0NTPoJqmiJpuR3uzlfGJcf+vJntNSgHF3pWib
-         AFMXnyluL9priAHPJ4biXf63ObZutZ2IJ/zD25wUXyEiR+WeuL5tkivPVRIGxvEKuZmt
-         izXQ==
+        id S1727723AbgBCNcs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 3 Feb 2020 08:32:48 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38693 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727257AbgBCNcs (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 3 Feb 2020 08:32:48 -0500
+Received: by mail-oi1-f196.google.com with SMTP id l9so10890529oii.5;
+        Mon, 03 Feb 2020 05:32:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=p07v49PtEWK6UbUh2LVFZtqDumji1911rjb5hk+Uiv8=;
-        b=Ig7LAE8OyJFwSZdOzPLtSzevSTp89MGmoxzMHKh0OuYT/vrljaG8YUB4D87qaYhHjP
-         lwJqmx1xVDvVxjuELxzeSXyoj3f8D/qIfuk4Ni31aPYlq7M3dGabVzuQdCeokq9KGaN4
-         3CYIPyqzXNX77FIVk7xQd9t3Q4S1+3QNwdLVXoAn85iFTDs4XTTe1Vm25yEUb8Gxgjjv
-         tQYO1HMgtNMZ98gJWlkASdqFrV2M2KUiTs6YCKfhT8XZIA5Yu1Q7rIQZb8WlvVbsYBmN
-         RXKyGWHz0VU+ZNpf7i2tVM3X1JYhA9+DXVC6L9AWaXXw87/42L9B6rPXuTGeay8nJsdH
-         U0MA==
-X-Gm-Message-State: APjAAAVVmb4Vz12v5HZLuuyjdUvfC93DAqqmgiXG8job/XcZ6lmeDFU9
-        mcRjBspjFWvoqTKCFF6UuwYLQqts8j8BgqVOF1w=
-X-Google-Smtp-Source: APXvYqzXjtZD005c7kSgyTqpXbdo1LkMDVDE4IVAG/gS70JK5QFhv/RGiKtjjxPKuaO/fi+gSgpJzGkDplJhwVZ5fS0=
-X-Received: by 2002:a63:5a23:: with SMTP id o35mr24793753pgb.4.1580734089554;
- Mon, 03 Feb 2020 04:48:09 -0800 (PST)
+        bh=j8a77+R58LAe2xXbMwZGt5F1KqF29qhEEgIiu5hvCV0=;
+        b=IKZjN3TyHGpqzNf2xzFfp2+EkVgfU3rNJIMOXhZLcjIqnKMB/+xsakj5Igol8nv5To
+         wFF6YdYXH0JN9YuqQDEnpjH+nrpBq3VujbwL0/IIGBMvJwEy0Uw2i2bb9F1a4fBeDVgf
+         HD199wQNEyF6kV6FX/5hZ2TE5bXlUZDAfD1MD+n3EjGr9t9yhADVt6IYq1+2fj34b4Dy
+         iXQRuynJpuui0hFdv6fjiSwqLCSyGMmyx/andR9yHBtZAu2IqY8r6y2b1IKW4dB1ZYEp
+         XkURyqYnsrjA/n4Js0+C2gDo38lEYc8CbbvFr+yfJhqvwS9Am6YcMniIOOPKUhmVj8cK
+         8UgQ==
+X-Gm-Message-State: APjAAAWmoe61y0oqFpbP3IOA8qYJxthrK66ZkBnF94BObr7XtM/A+4i3
+        8xe+scESk5WSpSFY5ApOlsYLtpXYgi2gSZt/RVM=
+X-Google-Smtp-Source: APXvYqyRJiH/1Qcj8aUeQeozGzHCPtNftoPVo7qflSkX4WA3sZYULTlbZxKTd5bnObw2ce+CmK026N210WC5uhGFItw=
+X-Received: by 2002:aca:1a06:: with SMTP id a6mr14052076oia.148.1580736767514;
+ Mon, 03 Feb 2020 05:32:47 -0800 (PST)
 MIME-Version: 1.0
 References: <20200203101806.2441-1-peter.ujfalusi@ti.com> <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
  <e47927aa-8d40-aa71-aef4-5f9c4cbbc03a@ti.com> <CAHp75Vd1A+8N_RPq3oeoXS19XeFtv7YK69H5XfzLMxWyCHbzBQ@mail.gmail.com>
  <701ab186-c240-3c37-2c0b-8ac195f8073f@ti.com>
 In-Reply-To: <701ab186-c240-3c37-2c0b-8ac195f8073f@ti.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 3 Feb 2020 14:48:01 +0200
-Message-ID: <CAHp75VcnxUj88Vb=Fn1WKoiM0h2e8cMvG+e16h8RyerfB6WN6w@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 3 Feb 2020 14:32:35 +0100
+Message-ID: <CAMuHMdUYRvjR5qe5RVzggN+BaHw8ObEtnm8Kdn25XUiv2sJpPg@mail.gmail.com>
 Subject: Re: [PATCH 0/3] dmaengine: Stear users towards dma_request_slave_chan()
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
         dmaengine <dmaengine@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Feb 3, 2020 at 2:09 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+Hi Peter,
+
+On Mon, Feb 3, 2020 at 1:49 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
 > On 03/02/2020 13.16, Andy Shevchenko wrote:
 > > On Mon, Feb 3, 2020 at 12:59 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
 > >> On 03/02/2020 12.37, Andy Shevchenko wrote:
 > >>> On Mon, Feb 3, 2020 at 12:32 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> >
 > >>>> Advise users of dma_request_slave_channel() and
 > >>>> dma_request_slave_channel_compat() to move to dma_request_slave_chan()
 > >>>
@@ -87,68 +80,52 @@ On Mon, Feb 3, 2020 at 2:09 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
 > change).
 > After this the _compat() can be replaced with dma_request_chan()
 >
-
 > In most cases I do not have access to documentation and boards to test.
-
-So, why everyone with the boards outside of your scope has to suffer?
-
-...
-
-> >> Imho it is confusing to have 4+ APIs to do the same thing, but in a
-> >> slightly different way.
-> >
-> > It was always an excuse by authors "that too many drivers to convert..."
 >
-> Sure, but before you accuse anyone with neglect, can you check the git
-> log for 'dma_request_slave_channel' in the commit messages?
-
-It's good people, and you, are taking care of it, but make user suffer
-because somebody wants to call for *developers* is a bad idea. And it
-happened not first time in the DMA engine subsystem.
-
-...
-
-> > No, it's a reason when you first take care of existing users and
-> > decide to obsolete an API followed by removal few releases later.
+> Looking at the output of 'git grep dma_request_slave_channel_compat':
+> drivers/mmc/host/renesas_sdhi_sys_dmac.c
+> drivers/spi/spi-pxa2xx-dma.c
+> drivers/spi/spi-rspi.c
+> drivers/spi/spi-sh-msiof.c
+> drivers/tty/serial/8250/8250_dma.c
 >
-> I'm fine to drop the pr_info()
+> From these rspi boots only in DT and I'm not sure about the others.
 
-Yes, please do.
+Both rspi and sh-msiof have users on legacy SH (i.e. without DT):
 
-> and the __deprecated mark for
-> dma_request_slave_channel.
+    arch/sh/kernel/cpu/sh4a/setup-sh7757.c: .name   = "rspi",
+    arch/sh/boards/mach-ecovec24/setup.c:   .name           = "spi_sh_msiof",
 
-This OTOH is for *developers* and its scope won't scary people. So,
-it's more or less fine.
+The former seems to be used with drivers/dma/sh/shdmac.c:
 
-> > But
-> > I see no reason to keep such APIs at all, so, instead of this
-> > *wonderful* messages perhaps somebody should do better work?
->
-> To touch the _compat() variant one needs to have access to the
-> documentation of the SoC on which the code falls back. It is not a
-> matter of sloppy/poor/ignorant/etc work attitude.
-> I have kept clear on touching those few drivers using it [1] as I don't
-> have documentation.
->
-> >> New drivers should not use the old API i new code and developers tend to
-> >> pick the API they use after a quick 'git grep dma_request_' and see what
-> >> the majority is using.
-> >
-> > Isn't it a point to do better review rather than scary end users?
->
-> Sure, but we rarely CCd on new client drivers for DMAengine API usage.
+    arch/sh/include/cpu-sh4/cpu/sh7757.h:   SHDMA_SLAVE_RSPI_TX,
+    arch/sh/include/cpu-sh4/cpu/sh7757.h:   SHDMA_SLAVE_RSPI_RX,
+    arch/sh/kernel/cpu/sh4a/setup-sh7757.c:         .slave_id       =
+SHDMA_SLAVE_RSPI_TX,
+    arch/sh/kernel/cpu/sh4a/setup-sh7757.c:         .slave_id       =
+SHDMA_SLAVE_RSPI_RX,
 
-Linux Next allows people to `git grep -n dma_slave_DO_NOT_CALL` and
-tell developers. Isn't it the job good maintainer can do?
+but I have no idea if it still works (and no hardware).
 
-> [1] fwiw, there are drivers using dma_request_channel() and by the look
-> their use is either _compat() or the dma_request_chan_by_mask() style
-> and some even have a twist here and there...
+The latter doesn't seem to be used with DMA on ecovec24/sh7724, so
+probably we can just drop the _compat() from sh-sh-msiof.c.
 
-Bottom line, if you need to tell *developers* about something, please
-don't bother *end users*.
+BTW, we no longer support non-legacy DMA in drivers/tty/serial/sh-sci.c
+(DMA was completely broken in that driver when I added DT suppport),
+but it seems it was used at some point on various SH, cfr. e.g.
+arch/sh/kernel/cpu/sh4a/setup-sh7724.c still setting up the channels.
+Which might be a motivation for just dropping _compat() from spi-rspi.c,
+too? ;-)
+
+Anyone who cares for DMA on SuperH?
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds

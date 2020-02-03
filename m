@@ -2,61 +2,108 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 38F411500EE
-	for <lists+dmaengine@lfdr.de>; Mon,  3 Feb 2020 05:19:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D466150275
+	for <lists+dmaengine@lfdr.de>; Mon,  3 Feb 2020 09:24:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgBCETe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 2 Feb 2020 23:19:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727205AbgBCETe (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sun, 2 Feb 2020 23:19:34 -0500
-Received: from localhost (unknown [223.226.103.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 013602073C;
-        Mon,  3 Feb 2020 04:19:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580703573;
-        bh=IH7MZ7wfVCS98XcAo+WOXS9G/+El1YXtx/1W25OAr+I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Bz/72cVcnoviSQTRjp0qwJH35Q19OHlEbGx8zZ4lazlmtLV/piMohBmFgk2fYXeF4
-         Z3PYhThdmMtp6rUwYhTRPaLjiimerkyOpPorNc5pzS07bk2nGwtewL9LIiRijdTPY1
-         qOfj2wXkmu2NdJHp1OtcEsprnjPEJ5PSV4yKpO8Y=
-Date:   Mon, 3 Feb 2020 09:49:29 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dan.j.williams@intel.com, geert@linux-m68k.org
-Subject: Re: [PATCH v2 1/2] dmaengine: Cleanups for the slave <-> channel
- symlink support
-Message-ID: <20200203041929.GM2841@vkoul-mobl>
-References: <20200131093859.3311-1-peter.ujfalusi@ti.com>
- <20200131093859.3311-2-peter.ujfalusi@ti.com>
+        id S1727352AbgBCIY6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 3 Feb 2020 03:24:58 -0500
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:62548 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbgBCIY6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 3 Feb 2020 03:24:58 -0500
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: LYzB8tjFzwME2IoR4inF3aAMR7E8mFznysBZRpxY0qLtLp+o30w47celA5tYohtq/EQ+OPcUPP
+ VOwpY9HfKlqC6+tVpHI/0SfinRC93oEXfSydvmuHNe1VOWKjHXeBWewDHhMugGaj0KAVL8QVZC
+ efDneFt+/tM/CAlk2ufRy0ph/PFrbDy3SBhRQ66vTGKKjID6cPvp8N2dyl/IR+x/Sugp0GYHLi
+ c4ZbyGl077x69yTYNOvkVLpov63QtXs9Ys2s2bHUKvCeOxL6pbTNG9+S4qIYotYLhAQkb3zr4j
+ oIo=
+X-IronPort-AV: E=Sophos;i="5.70,397,1574146800"; 
+   d="scan'208";a="1018402"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Feb 2020 01:24:57 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 3 Feb 2020 01:24:57 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Mon, 3 Feb 2020 01:24:56 -0700
+Date:   Mon, 3 Feb 2020 09:24:27 +0100
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Tudor Ambarus - M18064 <Tudor.Ambarus@microchip.com>
+CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 01/10] dmaengine: at_hdmac: Substitute kzalloc with
+ kmalloc
+Message-ID: <20200203082427.bog6ykmxvixeisg5@M43218.corp.atmel.com>
+Mail-Followup-To: Tudor Ambarus - M18064 <Tudor.Ambarus@microchip.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200123140237.125799-1-tudor.ambarus@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200131093859.3311-2-peter.ujfalusi@ti.com>
+In-Reply-To: <20200123140237.125799-1-tudor.ambarus@microchip.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 31-01-20, 11:38, Peter Ujfalusi wrote:
-> No need to use goto to jump over the
-> return chan ? chan : ERR_PTR(-EPROBE_DEFER);
-> We can just revert the check and return right there.
+On Thu, Jan 23, 2020 at 02:03:02PM +0000, Tudor Ambarus - M18064 wrote:
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
 > 
-> Do not fail the channel request if the chan->name allocation fails, but
-> print a warning about it.
+> All members of the structure are initialized below in the function,
+> there is no need to use kzalloc.
 > 
-> Change the dev_err to dev_warn if sysfs_create_link() fails as it is not
-> fatal.
-> 
-> Only attempt to remove the DMA_SLAVE_NAME symlink if it is created - or it
-> was attempted to be created.
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-Applied, thanks
+Hi Tudor,
 
--- 
-~Vinod
+It sounds good for me. Thanks for the cleanup and deadlock fixes.
+
+For the whole set of patches:
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+
+Ludovic
+
+> ---
+>  drivers/dma/at_hdmac.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
+> index 672c73b4a2d4..cad6dcd9cfb5 100644
+> --- a/drivers/dma/at_hdmac.c
+> +++ b/drivers/dma/at_hdmac.c
+> @@ -1671,7 +1671,7 @@ static struct dma_chan *at_dma_xlate(struct of_phandle_args *dma_spec,
+>  	dma_cap_zero(mask);
+>  	dma_cap_set(DMA_SLAVE, mask);
+>  
+> -	atslave = kzalloc(sizeof(*atslave), GFP_KERNEL);
+> +	atslave = kmalloc(sizeof(*atslave), GFP_KERNEL);
+>  	if (!atslave)
+>  		return NULL;
+>  
+> -- 
+> 2.23.0

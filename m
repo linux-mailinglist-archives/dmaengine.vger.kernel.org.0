@@ -2,154 +2,117 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DF5B150B19
-	for <lists+dmaengine@lfdr.de>; Mon,  3 Feb 2020 17:24:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A0671510EF
+	for <lists+dmaengine@lfdr.de>; Mon,  3 Feb 2020 21:21:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbgBCQYS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 3 Feb 2020 11:24:18 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38266 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727240AbgBCQYS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 3 Feb 2020 11:24:18 -0500
-Received: by mail-lf1-f66.google.com with SMTP id r14so10140582lfm.5;
-        Mon, 03 Feb 2020 08:24:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uUy4vRmg/IViSfkGS7qXoi1FXp8JHaRxb1uE8sd35YM=;
-        b=lO1Qv4ObxLYQ3bk2N2Yp6wk6tzpUgSAyoFcwbDB+ZlcerRXtS02g3foHWfyKvspCEC
-         U78JtqOfHWvnK7R16bK5gI5xnA4XGPEPA0PSAPRlwd9x+0m0isqhKUon063SSLH90EKs
-         MuaWSyh3YoYLcYwyWek8NE30zpLELqxiaY/qFAFoHVPPe2Tj+T9hSU9iu6DX7vd7lEhI
-         84HfVa3teHbeLvPTgQlWX/wrdpweT5bZVtXS9ADndO5O890nMz3D5i9IVR3mpyRsourv
-         Ub410u8ZXkTaF3BOEu8h9LsmlT0yi8SwuQCZFpGsZEiAlfik6W5CHpUtyCJ5qsenewcz
-         GiCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uUy4vRmg/IViSfkGS7qXoi1FXp8JHaRxb1uE8sd35YM=;
-        b=C9I4KTQUXolzNcQCoQfUDioJkKLinW6UTObbTirp+gikqWgC+ZOQSR+u70au7eSdMq
-         Nq3vS1vSrvyBeD7/yHYBz4b/tP97O1E+Y/AD8223V5PI4ujlaf56mMp7ch6oFz4PeuUk
-         d54YIfmbZtX+DVqJLnSlcgddwa2eTporquDYpGh4bzj15qsh6z24ykQwBBYxoQEjQfzc
-         QpbCIupb2kvPdnkkdUlTxjHqzoHeD2l0JziYRO0hw1iKYzW+Nt8oYe3ewS9UUn9JckOk
-         EFfby/qeKugJq+QZD108U31j2EGs2TZfYOq1G6V4Y7VcKHGtXZycN7Uo/uvFaZngLjCE
-         PKMw==
-X-Gm-Message-State: APjAAAUsAphioRSvpOZ1CSnchtwoBIuBH8A2V8ibPRowJIijBsdS0qtY
-        IhBZBVNDJR9I5pu8H1Eeci4HSuNW
-X-Google-Smtp-Source: APXvYqyLQekPZ5gmtRp04/5q+OgQXMl1WI6Hb0OWuSm5NZJntHjjG5dk9Y3snSaGu/Qb4cFfqDs2LA==
-X-Received: by 2002:a19:9d0:: with SMTP id 199mr12610493lfj.110.1580747055716;
-        Mon, 03 Feb 2020 08:24:15 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id k24sm12055935ljj.27.2020.02.03.08.24.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Feb 2020 08:24:15 -0800 (PST)
-Subject: Re: [PATCH v6 11/16] dmaengine: tegra-apb: Keep clock enabled only
- during of DMA transfer
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
+        id S1727044AbgBCUVW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 3 Feb 2020 15:21:22 -0500
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:40917 "EHLO
+        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726224AbgBCUVW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 3 Feb 2020 15:21:22 -0500
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.85)
+          with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id <1iyiDd-003u8p-Lv>; Mon, 03 Feb 2020 21:21:17 +0100
+Received: from p508832b6.dip0.t-ipconnect.de ([80.136.50.182] helo=[192.168.46.51])
+          by inpost2.zedat.fu-berlin.de (Exim 4.85)
+          with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id <1iyiDd-001fSt-ET>; Mon, 03 Feb 2020 21:21:17 +0100
+Subject: Re: [PATCH 0/3] dmaengine: Stear users towards
+ dma_request_slave_chan()
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Vinod Koul <vkoul@kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200130043804.32243-1-digetx@gmail.com>
- <20200130043804.32243-12-digetx@gmail.com>
- <2442aee7-2c2a-bacc-7be9-8eed17498928@nvidia.com>
- <0c766352-700a-68bf-cf7b-9b1686ba9ca9@gmail.com>
- <e72d00ee-abee-9ae2-4654-da77420b440e@nvidia.com>
- <cedbf558-b15b-81ca-7833-c94aedce5c5c@gmail.com>
- <315241b5-f5a2-aaa0-7327-24055ff306c7@nvidia.com>
- <1b64a3c6-a8b9-34d7-96cc-95b93ca1a392@gmail.com>
- <bf459b54-fa4c-b0ff-0af8-b7cb66b0a43c@gmail.com>
- <423eb28f-b5fc-c917-a7b2-72562183683f@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <1a1a52e1-8d75-93cd-b082-29846f9d2fb9@gmail.com>
-Date:   Mon, 3 Feb 2020 19:24:12 +0300
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+References: <20200203101806.2441-1-peter.ujfalusi@ti.com>
+ <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
+ <e47927aa-8d40-aa71-aef4-5f9c4cbbc03a@ti.com>
+ <CAHp75Vd1A+8N_RPq3oeoXS19XeFtv7YK69H5XfzLMxWyCHbzBQ@mail.gmail.com>
+ <701ab186-c240-3c37-2c0b-8ac195f8073f@ti.com>
+ <CAMuHMdUYRvjR5qe5RVzggN+BaHw8ObEtnm8Kdn25XUiv2sJpPg@mail.gmail.com>
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
+ 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
+ scOkTAZQGVpD/8AaLH4v1w==
+Message-ID: <38f686ae-66fa-0e3a-ec2e-a09fc4054ac4@physik.fu-berlin.de>
+Date:   Mon, 3 Feb 2020 21:21:16 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <423eb28f-b5fc-c917-a7b2-72562183683f@nvidia.com>
+In-Reply-To: <CAMuHMdUYRvjR5qe5RVzggN+BaHw8ObEtnm8Kdn25XUiv2sJpPg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: 80.136.50.182
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-03.02.2020 14:37, Jon Hunter пишет:
-> 
-> On 01/02/2020 15:13, Dmitry Osipenko wrote:
->> 31.01.2020 17:22, Dmitry Osipenko пишет:
->>> 31.01.2020 12:02, Jon Hunter пишет:
->>>>
->>>> On 30/01/2020 20:04, Dmitry Osipenko wrote:
->>>>
->>>> ...
->>>>
->>>>>>> The tegra_dma_stop() should put RPM anyways, which is missed in yours
->>>>>>> sample. Please see handle_continuous_head_request().
->>>>>>
->>>>>> Yes and that is deliberate. The cyclic transfers the transfers *should*
->>>>>> not stop until terminate_all is called. The tegra_dma_stop in
->>>>>> handle_continuous_head_request() is an error condition and so I am not
->>>>>> sure it is actually necessary to call pm_runtime_put() here.
->>>>>
->>>>> But then tegra_dma_stop() shouldn't unset the "busy" mark.
->>>>
->>>> True.
->>>>
->>>>>>> I'm also finding the explicit get/put a bit easier to follow in the
->>>>>>> code, don't you think so?
->>>>>>
->>>>>> I can see that, but I was thinking that in the case of cyclic transfers,
->>>>>> it should only really be necessary to call the get/put at the beginning
->>>>>> and end. So in my mind there should only be two exit points which are
->>>>>> the ISR handler for SG and terminate_all for SG and cyclic.
->>>>>
->>>>> Alright, I'll update this patch.
->>>>
->>>> Hmmm ... I am wondering if we should not mess with that and leave how
->>>> you have it.
->>>
->>> I took another look and seems my current v6 should be more correct because:
->>>
->>> 1. If "busy" is unset in tegra_dma_stop(), then the RPM should be put
->>> there since tegra_dma_terminate_all() won't put RPM in this case:
->>>
->>> 	if (!tdc->busy)
->>> 		goto skip_dma_stop;
->>>
->>> 2. We can't move the "busy" unsetting into the terminate because then
->>> tegra_dma_stop() will be invoked twice. Although, one option could be to
->>> remove the tegra_dma_stop() from the error paths of
->>> handle_continuous_head_request(), but I'm not sure that this is correct
->>> to do.
->>
->> Jon, I realized that my v6 variant is wrong too because
->> tegra_dma_terminate_all() -> tdc->isr_handler() will put RPM, and thus,
->> the RPM enable-count will be wrecked in this case.
-> 
-> Did you see my other suggestion to move the pm_runtime_put() outside of
-> tegra_dma_stop?
+On 2/3/20 2:32 PM, Geert Uytterhoeven wrote:
+> Both rspi and sh-msiof have users on legacy SH (i.e. without DT):
 
-Yes, but seems I skimmed too quickly through the lines and failed to
-recognize the point you made.
+FWIW, there is a patch set by Yoshinori Sato to add device tree support
+for classical SuperH hardware. It was never merged, unfortunately :(.
 
-> There are only a few call sites for tegra_dma_stop and
-> so if we call pm_runtime_put() after calling tegra_dma_stop this should
-> simplify matters.
+> Anyone who cares for DMA on SuperH?
 
-This is somewhat similar to what I made in the v7. Instead of adding
-pm_runtime_put() after each tegra_dma_stop(), I removed the
-tegra_dma_stop().
+What is DMA used for on SuperH? Wouldn't dropping it cut support for
+essential hardware features?
 
-Looking at it once again, perhaps indeed it will be better to leave the
-relevant tegra_dma_stop() in place (the irrelevant could be removed).
+Adrian
 
-Please take a look at the v7, I'll drop the "[PATCH v7 13/19] dmaengine:
-tegra-apb: Don't stop cyclic DMA in a case of error condition" and make
-v8 after yours review of the v7. Thanks in advance!
+-- 
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913

@@ -2,52 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2654E150453
-	for <lists+dmaengine@lfdr.de>; Mon,  3 Feb 2020 11:35:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC22415045B
+	for <lists+dmaengine@lfdr.de>; Mon,  3 Feb 2020 11:37:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgBCKfZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 3 Feb 2020 05:35:25 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:35701 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbgBCKfZ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 3 Feb 2020 05:35:25 -0500
-Received: by mail-pj1-f67.google.com with SMTP id q39so6223456pjc.0;
-        Mon, 03 Feb 2020 02:35:25 -0800 (PST)
+        id S1727080AbgBCKhg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 3 Feb 2020 05:37:36 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34320 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgBCKhf (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 3 Feb 2020 05:37:35 -0500
+Received: by mail-pl1-f196.google.com with SMTP id j7so5701694plt.1;
+        Mon, 03 Feb 2020 02:37:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lia+nCVPidpTdOXM9PCOjvOmj8H2mFaldrs7XGRJlZM=;
-        b=Ltnrjz77GclMDf82N7PF9E4bIG28r30mif81mtf+3FynVJl/LdMnoEarJjrxihL3GV
-         uk9LRxP3xIl9Lrnj37QJYxfRa/CEyEvJdtOGBzw3eDgENcXQ74ydKgRoSICheYcBZq4+
-         o7ju57Saof9c07gkewzGE9XZsnmdGXq0vgsuVA3VRGLpxnc6YaeQ1T2W+qkLwot9d13C
-         E2Dz6Pxjio7MGAkvD/zPRgbvIxAHmAbqdY8hjGrweMqyytfMxEGH/seLRoiW9KjsoS5W
-         GbZC0aw6muYrq2RlArCfpE5lSvNGbY680tcBqWKWCHwFI8Mr24N+pWLXoZ8isEdMBNzj
-         7pSQ==
+        bh=+zY3ZjySCMgRqo1DurDULy/mPL5i5TjLVEpmoFrzFls=;
+        b=KY9mY/PAd+JI4NB2OCt+ChTAjVMm4azYwodEGZcskbpKNzD4xmncvq+BibFFg+V6io
+         UV/SiEZ+thmt8Gud4r2Q5C3YCyB/wjhRPuvvNOC5I1YUQiwH9EoCIyE/AlvCv8MUG7oQ
+         Pe/qwBqZtkVwULJrSp5mWZ5cOX3Jkto8/95vZYjcXfaKoHqRcyhpVUT8VZ6XUU72bj7T
+         Nkpnv/Q5jDrnK+z63Rg83nh5pt6z52sLReZTfiZhjQhIewBsEy/cOOGwTmlTbnr9HJ3A
+         HBUI+93Db5nkkR033fr5EppcVVl4Z2K6PlpB9GurUxm7EllZVu+pkzcrdVDMsdlBNMs5
+         wmXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lia+nCVPidpTdOXM9PCOjvOmj8H2mFaldrs7XGRJlZM=;
-        b=APzJpZzl7xeTBHFFP1s4Bw/4IVDVhRuVBcQpjW8R2FOVvspiGStkSmP5i3Zxy4p7gp
-         WAnlXcKULPLCvZMwA7BvHz4/kZHv+Dz49vrnx36PDBKy8Zgd+6QhoKSQlixjy3mDFg2i
-         KBGdbf9SSL/PkT3sP7VmUfyEaMbmZRqeUaiQ8sH1HkFZ7xYISdYKwPbMFiefAc6O+ULi
-         0FWX511JA+1oSVw7ugAymF326zloMoLRiFhNWKKVqeePsTxFqpPy2ygFnE6dN133s+oQ
-         /dhm5t94jqlCJQdsZ4iAPC+vvLMAWXJpFnb4kHhSOWaC/kfXPvulIEZjGliK31koCxG6
-         vM8g==
-X-Gm-Message-State: APjAAAXHCWmTQq7MYlWXgC528ZmK5ByQWp9hy4Tq7kjaRE2sOLD9Ln14
-        fvz+xW6R7LNAGBDLDkJilmd4qwv6OxBtYc7rxusW0poDXoA=
-X-Google-Smtp-Source: APXvYqymAyffMgx0RQpZjaQQ96FpAo65pgZ1eldw3u7YisZDQSYu6+UGb0nEoO5KZOueAEU7SIi4tuzTF81/vZSlsaw=
-X-Received: by 2002:a17:902:54f:: with SMTP id 73mr698048plf.255.1580726124840;
- Mon, 03 Feb 2020 02:35:24 -0800 (PST)
+        bh=+zY3ZjySCMgRqo1DurDULy/mPL5i5TjLVEpmoFrzFls=;
+        b=EGyulTqxANaK3xa/cOVXqpYi2dE7MN8EZ14i+WGPbQqn9WGnEFBYW3t45o1nchmmQZ
+         LUIoLwrh00bLdvjuTERCGE4z714/tXeZxCHtk7yD+sWAbF4prmp0sZIxOEW5MXNG+O5C
+         f+nNLYlGLVMmPfHuFizxNadJsP/963lcBXITnjoSHZPahVGs4t3BJxBVDe4mGA48tflo
+         JrfpTLuPLFIYHrSlMiLRfN4vG3yQgJx1hmbPpylYCNkVUT/cb1UEIdgkGKwvFrn4gFmS
+         7Ebt9S2/nxTeIBi8o6u5DWstD/DHO/cBGXkxt3oSCqLfAU9KCOZ2LPbZFKsHkGDlfpkH
+         2Mmw==
+X-Gm-Message-State: APjAAAXvQ+vs+9f8gEE+T2jpJAa0u+fRQQks4FycULSpEIJgbmCGqECH
+        jT5F3oVopIPk4gxF4oos7JbT23CcSYqNflCCSQ4=
+X-Google-Smtp-Source: APXvYqx62M5/se5iwIWB9pEguzBWQOMquBjSvm0EyvQgjYLzX9CeYRP3pZKp481LnhUGHiwWjEe54uiHhSYqtzMv/vw=
+X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr29301013pjq.132.1580726255079;
+ Mon, 03 Feb 2020 02:37:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20200203101806.2441-1-peter.ujfalusi@ti.com> <20200203101806.2441-4-peter.ujfalusi@ti.com>
-In-Reply-To: <20200203101806.2441-4-peter.ujfalusi@ti.com>
+References: <20200203101806.2441-1-peter.ujfalusi@ti.com>
+In-Reply-To: <20200203101806.2441-1-peter.ujfalusi@ti.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 3 Feb 2020 12:35:16 +0200
-Message-ID: <CAHp75Vd-yjWV=m1TaWnqq-aTa-OGcGeUysiuJ6eDE+PezmY7gQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dmaengine: Encourage dma_request_slave_channel_compat()
- users to migrate
+Date:   Mon, 3 Feb 2020 12:37:27 +0200
+Message-ID: <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
+Subject: Re: [PATCH 0/3] dmaengine: Stear users towards dma_request_slave_chan()
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
 Cc:     Vinod Koul <vkoul@kernel.org>,
         dmaengine <dmaengine@vger.kernel.org>,
@@ -61,11 +60,16 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 On Mon, Feb 3, 2020 at 12:32 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
 
+> dma_request_slave_channel_reason() no longer have user in mainline, it
+> can be removed.
+>
+> Advise users of dma_request_slave_channel() and
+> dma_request_slave_channel_compat() to move to dma_request_slave_chan()
 
-> +       dev_info(dev, "Please add dma_slave_map entry for %s:%s and migrate to"
-> +                " dma_request_chan()", dev_name(dev), name);
-
-Please, don't split string literals.
+How? There are legacy ARM boards you have to care / remove before.
+DMAengine subsystem makes a p*s off decisions without taking care of
+(I'm talking now about dma release callback, for example) end users.
+They will be scary for no reason.
 
 -- 
 With Best Regards,

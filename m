@@ -2,115 +2,134 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B9D9151A3F
-	for <lists+dmaengine@lfdr.de>; Tue,  4 Feb 2020 13:02:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CDA2151AC7
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Feb 2020 13:51:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgBDMCl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 4 Feb 2020 07:02:41 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2251 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727126AbgBDMCl (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Feb 2020 07:02:41 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e395d480000>; Tue, 04 Feb 2020 04:02:17 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 04 Feb 2020 04:02:40 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 04 Feb 2020 04:02:40 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Feb
- 2020 12:02:38 +0000
-Subject: Re: [PATCH v7 13/19] dmaengine: tegra-apb: Don't stop cyclic DMA in a
- case of error condition
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200202222854.18409-1-digetx@gmail.com>
- <20200202222854.18409-14-digetx@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <332e8e86-dca5-19f2-9ef1-6d89a55f3651@nvidia.com>
-Date:   Tue, 4 Feb 2020 12:02:36 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727149AbgBDMvY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 4 Feb 2020 07:51:24 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37236 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727136AbgBDMvY (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Feb 2020 07:51:24 -0500
+Received: by mail-pg1-f195.google.com with SMTP id z12so2664633pgl.4;
+        Tue, 04 Feb 2020 04:51:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IMrrb66MGEbD6GSo5BdrpjzOshLwkOOTkFspZPak8GE=;
+        b=WHMVZUVJEJ0pC8B+iZ1JBCsWVsv8eBXdKZrzP/8K4esYX9yDFyUClbdP4SU2ERAtok
+         Ar9ZWb8B/4N6/hfedwSpxqgzn1vqG0NKD86moVuR5ZuAa0DmSkUur8PtxOvep20pMN8+
+         dZ/CISaFDHrknP7w3vo9EnhqbP+Ot3LswpzL3KrzPhiAx8Qw8HXQUqHbrHnbYoPlIDTN
+         uwkBWBa/zl5/i90txXKaso/Kv7zTHRqQWxKXNWgf8oQVjGzPLaEZ9Ju2ywJ/RjcpZGjk
+         aUg8hbaXlS0trsAgzggVyuSsNKIFsFoYI3SoxNV9wFW0zcY+kmnbRo2xmVU1zIOwZq9Z
+         jonA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IMrrb66MGEbD6GSo5BdrpjzOshLwkOOTkFspZPak8GE=;
+        b=i+yI89ZGYvxO6yUOxQRMNRCgqHfPp9mxiUKGn30km8MNOtg7RaTrB2f1pF+W37j7pB
+         gMij1Wci9N0I9GGtJejq6qfEVa8COLcibhUkOj8BhUIb8WbHtsdgC6YvBDDIWVxfOOn9
+         Cvn+NevQUv1+zqJPKkiAUi14GqHXHUxo68/rOX3hUIoMONLR9y2vcjfuuaDzezkZGaOW
+         M/FJQU0jMkBXpEmq+KY7DwhwRe4Es5xXXWfk7pznc+sa7049L1FgQ5RTawwAOTgTdRgl
+         oFf9QPmygbww4MnafqHBT3c6NRmazXs99MF89yAz06s0C6WBiBnzmlrV0kYLKz9hyhZ7
+         eeCg==
+X-Gm-Message-State: APjAAAVDeABUDrzKiScaenWW0U6Yod4nsrKpfqjVyEx10O9RdFOfPc2c
+        u5gimckmQec+hr+mATasUEb1ZUjer2k=
+X-Google-Smtp-Source: APXvYqxtixvFWJN7QKq8GwCcWpgDv9aJd+UJz4i9Aa+hcWvkdTCpaIFsi/+d3+56oWUKrj+T8PlCiA==
+X-Received: by 2002:a63:d442:: with SMTP id i2mr32444338pgj.349.1580820683740;
+        Tue, 04 Feb 2020 04:51:23 -0800 (PST)
+Received: from vultr.guest ([149.248.10.52])
+        by smtp.gmail.com with ESMTPSA id o19sm3529569pjr.2.2020.02.04.04.51.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Feb 2020 04:51:22 -0800 (PST)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, dmaengine@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH] dmaengine: doc: fix warnings/issues of client.rst
+Date:   Tue,  4 Feb 2020 20:51:15 +0800
+Message-Id: <20200204125115.12128-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20200202222854.18409-14-digetx@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1580817737; bh=YSg/qbG14MiZuAToLwQ5blhK1Nmrg/mcf5vl0/afAAw=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=m9UTLUIIId235cw0ULyX13ftzhjrj7wY3MNr02uOYo/bYdhFXACVE6u1Mixfm5Vsy
-         J4xZxviKZO3uqBG+E+k2sSH2jo+hJYvY//4L/TeESJLMT7bCXURsyaAzwOtt5j/FvC
-         ZqRGusEcuqN59AuMLczl02u5dEBJy+O3RamTUMQCGCOt+70ZlFp89sz4UmuCOZn5g6
-         5WlQ1mabejQS3P1G60Hz4yhih334IRDrM3VhVNG6ZycJLqx6eOkDFZLkRP2K8/Fb7H
-         oL0sQgiidNP0jA9izYnhiZqtuTIPANqe3V79D5a4RvYuxOq8FGIYdQY4i/IRYhHdLN
-         pjvlLol1T+6vQ==
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+This fixed some warnings/issues of client.rst.
+ o Need a blank line for enumerated lists.
+ o Do not create section in enumerated list.
+ o Remove suffix ':' from section title.
 
-On 02/02/2020 22:28, Dmitry Osipenko wrote:
-> There is no harm in keeping DMA active in the case of error condition,
-> which should never happen in practice anyways. This will become useful
-> for the next patch, which will keep RPM enabled only during of DMA
-> transfer, and thus, it will be much nicer if cyclic DMA handler could
-> not touch the DMA-enable state.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/dma/tegra20-apb-dma.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-> index c7dc27ef1856..50abce608318 100644
-> --- a/drivers/dma/tegra20-apb-dma.c
-> +++ b/drivers/dma/tegra20-apb-dma.c
-> @@ -571,9 +571,7 @@ static bool handle_continuous_head_request(struct tegra_dma_channel *tdc,
->  	 */
->  	hsgreq = list_first_entry(&tdc->pending_sg_req, typeof(*hsgreq), node);
->  	if (!hsgreq->configured) {
-> -		tegra_dma_stop(tdc);
-> -		dev_err(tdc2dev(tdc), "Error in DMA transfer, aborting DMA\n");
-> -		tegra_dma_abort_all(tdc);
-> +		dev_err_ratelimited(tdc2dev(tdc), "Error in DMA transfer\n");
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+---
+ Documentation/driver-api/dmaengine/client.rst | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-While we are at it, a more descriptive error message could be good here.
-I believe that this condition would indicate a potential underrun condition.
-
->  		return false;
->  	}
->  
-> @@ -772,7 +770,10 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
->  	if (!list_empty(&tdc->pending_sg_req) && was_busy) {
->  		sgreq = list_first_entry(&tdc->pending_sg_req, typeof(*sgreq),
->  					 node);
-> -		sgreq->dma_desc->bytes_transferred +=
-> +		dma_desc = sgreq->dma_desc;
-> +
-> +		if (dma_desc->dma_status != DMA_ERROR)
-> +			dma_desc->bytes_transferred +=
->  				get_current_xferred_count(tdc, sgreq, wcount);
-
-I am wondering if we need to check this here? I assume that the transfer
-count would still reflect the amount of data transferred, even if some
-was dropped. We will never know how much data was lost.
-
-Jon
-
+diff --git a/Documentation/driver-api/dmaengine/client.rst b/Documentation/driver-api/dmaengine/client.rst
+index e5953e7e4bf4..2104830a99ae 100644
+--- a/Documentation/driver-api/dmaengine/client.rst
++++ b/Documentation/driver-api/dmaengine/client.rst
+@@ -151,8 +151,8 @@ The details of these operations are:
+      Note that callbacks will always be invoked from the DMA
+      engines tasklet, never from interrupt context.
+ 
+-Optional: per descriptor metadata
+----------------------------------
++  **Optional: per descriptor metadata**
++
+   DMAengine provides two ways for metadata support.
+ 
+   DESC_METADATA_CLIENT
+@@ -199,12 +199,15 @@ Optional: per descriptor metadata
+   DESC_METADATA_CLIENT
+ 
+     - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++
+       1. prepare the descriptor (dmaengine_prep_*)
+          construct the metadata in the client's buffer
+       2. use dmaengine_desc_attach_metadata() to attach the buffer to the
+          descriptor
+       3. submit the transfer
++
+     - DMA_DEV_TO_MEM:
++
+       1. prepare the descriptor (dmaengine_prep_*)
+       2. use dmaengine_desc_attach_metadata() to attach the buffer to the
+          descriptor
+@@ -215,6 +218,7 @@ Optional: per descriptor metadata
+   DESC_METADATA_ENGINE
+ 
+     - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
++
+       1. prepare the descriptor (dmaengine_prep_*)
+       2. use dmaengine_desc_get_metadata_ptr() to get the pointer to the
+          engine's metadata area
+@@ -222,7 +226,9 @@ Optional: per descriptor metadata
+       4. use dmaengine_desc_set_metadata_len()  to tell the DMA engine the
+          amount of data the client has placed into the metadata buffer
+       5. submit the transfer
++
+     - DMA_DEV_TO_MEM:
++
+       1. prepare the descriptor (dmaengine_prep_*)
+       2. submit the transfer
+       3. on transfer completion, use dmaengine_desc_get_metadata_ptr() to get
+@@ -278,8 +284,8 @@ Optional: per descriptor metadata
+ 
+       void dma_async_issue_pending(struct dma_chan *chan);
+ 
+-Further APIs:
+--------------
++Further APIs
++------------
+ 
+ 1. Terminate APIs
+ 
 -- 
-nvpublic
+2.24.0
+

@@ -2,51 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AFE8151DB1
-	for <lists+dmaengine@lfdr.de>; Tue,  4 Feb 2020 16:55:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B644D152248
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Feb 2020 23:17:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbgBDPzJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 4 Feb 2020 10:55:09 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36063 "EHLO
+        id S1727494AbgBDWRh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 4 Feb 2020 17:17:37 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42183 "EHLO
         mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727311AbgBDPzI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Feb 2020 10:55:08 -0500
-Received: by mail-lj1-f194.google.com with SMTP id r19so19166336ljg.3;
-        Tue, 04 Feb 2020 07:55:06 -0800 (PST)
+        with ESMTP id S1727468AbgBDWRg (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Feb 2020 17:17:36 -0500
+Received: by mail-lj1-f194.google.com with SMTP id d10so272883ljl.9;
+        Tue, 04 Feb 2020 14:17:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JZwaZAs4VPg+MZljM+SS0kMupA1fP3M0vka2FZtHyUs=;
-        b=keuTsSrKE/2sGEZ/mCNFBtfA5/nM187MrzUuQuHvBMmn2K8XCXRwbE4Qd/r2UMIFFV
-         h3JnXWcGCpHrRZwHIqf0ethN27sLiVG1o9ZYsC26dJpmv/z8C/RL9eXARiuUvm+/2p5V
-         8oMMC4Munw/6fj9RtsfimU/AzN8AvGQ9BdGRhWzJLJQjbpSzCLLQeT2nF7gUfdl25TXY
-         z2pBxogs5PUSvzyLaTZudiH75HrxrB+rUZXm3MFl8tFHa+Okjfcugglb1V2jXhPKKtA5
-         tR//mSQjS0Z3wXRffaKwje4oWDEZQFJtc4pFHM+GRYHN3bVX2nwF4SZANs2/s9z7A4MP
-         ay1Q==
+        bh=OMnQ0aho9hVBXoHkw9xlZzqlNYr0sDiGuRFANK6I7Ws=;
+        b=l3e9dDsNbimyYI+HcnwDopd0zhHkC2U9diKtxcOoxySzKqCtcYYAvSsKCoRJnfl6b2
+         xbEphyBQJU0CwjAu81sC5Mjk8eIhpcdDEFYIcR7Ir7gI/pIo8XH+RoIbg2iGuuFxpYSp
+         QyfIRNdYPJbo+bIousQ/Ak6kx3SIkT9iC15mLgp4mmFBH2MRfa9tgxF6611esth0/7BA
+         OwsE7DJWjzXP8OYKn0PeumQywchtvjJMR/CtXaovHPDhjq07b/KURZoNJ3/8g4QKQYGU
+         B+lzRaokfUTm+bnD2kHkx+euy/VN+91NlABOSEHITa7VbD0k28h86uY4tkdI7cM26UFA
+         8pKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=JZwaZAs4VPg+MZljM+SS0kMupA1fP3M0vka2FZtHyUs=;
-        b=eOygJrkwboHkKPfu+9anbZXpXi2D5A/VFWp8OMt2d7eK7XMDFquTKllc6jqjgVeWZj
-         YKJwSX2zFIG/MaDwOzSka/APNVEg2rWNSuW/8SHpxIU10UC7+eGW4rpSj40IzsuPK6lW
-         viaTlPqW4ky9c4b1/CP4sBmwy8zxF8vwwlO/ymNucpw+cK+HTUE/Sl3RZvJ2BL7//89R
-         4t65P8C1mCqiYnM+P5ezo2aFPuY771wUdef/P98WmbRe00PDfWQdqpdZqtGtdz0X7Fkd
-         VfAmQNshuq0aNdtqRjrLLEDm4LjE8oEvUyePcrLT78g7CfU+ln1DTCiI4FealRK3FqiM
-         mp8w==
-X-Gm-Message-State: APjAAAVfSGOyTc1X0jhQu0cYyPs+WfT4TGCOs4HdQb+K0vUpm3CpzdVa
-        +X8BDvt5w3b17iO9It9YAo/qooy5
-X-Google-Smtp-Source: APXvYqz9EywivV4SrY2+zghH9X/t0s+7ktKmSSPeAg5hYqrzXzJR9qDy2sP9teMcgdHvAfU0z97esg==
-X-Received: by 2002:a2e:9708:: with SMTP id r8mr17980763lji.92.1580831705084;
-        Tue, 04 Feb 2020 07:55:05 -0800 (PST)
+        bh=OMnQ0aho9hVBXoHkw9xlZzqlNYr0sDiGuRFANK6I7Ws=;
+        b=MDRlnkl7KTbQIRkdo0mK5Mh1fhSgLelX1HMycrlRrRgkhDOUryvqw4eyeETrm2mx/B
+         tqmXZzKw1cH9G8nsH96VTCtgVL1DZNlczbxMifJh5ryW7Cvut0Kqg/MmZuScH2f2EtDF
+         orLYNxsEtn7Q7KGpeYkcH6DFvA9z6PMLYcxd6I+bZPEquyKq3w8sJ84ZQo2hl5v7aDaG
+         v2NG0T8zp6Iz8OdHsyAgGVbv+OqJIAWBg9/Zo9doFpMVbNr3F8N1RygMb4AwVAGx2OvO
+         ddCUBXJvf+PIj2P/GbE57YmwL6jtveU2ZE8oeUe/NTU3U3VZDM5dgdYp9iZxU7bdG826
+         RnwQ==
+X-Gm-Message-State: APjAAAWIOJXc6So6+CzVfnAzINHt1N3rpi6zivVQTVDcRwaD4L7Wo+U1
+        HTfLWz7jat/UYPfJh/9ZmeHizIJK
+X-Google-Smtp-Source: APXvYqwVB+ckkMTuJHrbL+3XrfRf0KN6xTDOjLSiqZ1gk92dkj0kiUZrTFSCehELuFI/y51nqp56Mw==
+X-Received: by 2002:a2e:990d:: with SMTP id v13mr19304487lji.47.1580854652656;
+        Tue, 04 Feb 2020 14:17:32 -0800 (PST)
 Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id 126sm10695751lfm.38.2020.02.04.07.55.04
+        by smtp.googlemail.com with ESMTPSA id i4sm12254131ljg.102.2020.02.04.14.17.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2020 07:55:04 -0800 (PST)
-Subject: Re: [PATCH v7 13/19] dmaengine: tegra-apb: Don't stop cyclic DMA in a
- case of error condition
+        Tue, 04 Feb 2020 14:17:31 -0800 (PST)
+Subject: Re: [PATCH v7 12/19] dmaengine: tegra-apb: Remove handling of
+ unrealistic error condition
 To:     Jon Hunter <jonathanh@nvidia.com>,
         Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -56,15 +56,15 @@ To:     Jon Hunter <jonathanh@nvidia.com>,
 Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
 References: <20200202222854.18409-1-digetx@gmail.com>
- <20200202222854.18409-14-digetx@gmail.com>
- <332e8e86-dca5-19f2-9ef1-6d89a55f3651@nvidia.com>
+ <20200202222854.18409-13-digetx@gmail.com>
+ <b2461a42-5939-b2b1-01fe-6f18c860dbd9@nvidia.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ad86f2a4-6fa0-7958-aad7-1b18f02cabfe@gmail.com>
-Date:   Tue, 4 Feb 2020 18:55:03 +0300
+Message-ID: <e89b7319-74c6-4a88-4634-f127aca86851@gmail.com>
+Date:   Wed, 5 Feb 2020 01:17:29 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <332e8e86-dca5-19f2-9ef1-6d89a55f3651@nvidia.com>
+In-Reply-To: <b2461a42-5939-b2b1-01fe-6f18c860dbd9@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -73,58 +73,48 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-04.02.2020 15:02, Jon Hunter пишет:
+04.02.2020 14:52, Jon Hunter пишет:
 > 
 > On 02/02/2020 22:28, Dmitry Osipenko wrote:
->> There is no harm in keeping DMA active in the case of error condition,
->> which should never happen in practice anyways. This will become useful
->> for the next patch, which will keep RPM enabled only during of DMA
->> transfer, and thus, it will be much nicer if cyclic DMA handler could
->> not touch the DMA-enable state.
+>> The pending_sg_req list can't ever be empty because:
 >>
+>> 1. If it was empty, then handle_cont_sngl_cycle_dma_done() shall crash
+>>    before of handle_continuous_head_request() invocation.
+>>
+>> 2. The handle_cont_sngl_cycle_dma_done() can't happen after stopping DMA.
+> 
+> By this you mean calling terminate_all?
+
+Yes, and also the handle_continuous_head_request() itself because it
+stops DMA on error, which clears interrupt status, and thus, ISR handle
+returns IRQ_NONE without handling next interrupt.
+
 >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 >> ---
->>  drivers/dma/tegra20-apb-dma.c | 9 +++++----
->>  1 file changed, 5 insertions(+), 4 deletions(-)
+>>  drivers/dma/tegra20-apb-dma.c | 6 ------
+>>  1 file changed, 6 deletions(-)
 >>
 >> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->> index c7dc27ef1856..50abce608318 100644
+>> index 62d181bd5e62..c7dc27ef1856 100644
 >> --- a/drivers/dma/tegra20-apb-dma.c
 >> +++ b/drivers/dma/tegra20-apb-dma.c
->> @@ -571,9 +571,7 @@ static bool handle_continuous_head_request(struct tegra_dma_channel *tdc,
->>  	 */
->>  	hsgreq = list_first_entry(&tdc->pending_sg_req, typeof(*hsgreq), node);
->>  	if (!hsgreq->configured) {
->> -		tegra_dma_stop(tdc);
->> -		dev_err(tdc2dev(tdc), "Error in DMA transfer, aborting DMA\n");
->> -		tegra_dma_abort_all(tdc);
->> +		dev_err_ratelimited(tdc2dev(tdc), "Error in DMA transfer\n");
-> 
-> While we are at it, a more descriptive error message could be good here.
-> I believe that this condition would indicate a potential underrun condition.
-
-Yes, this error indicates the underrun and indeed the error message
-could be improved. I'll change it in v8.
-
->>  		return false;
->>  	}
+>> @@ -564,12 +564,6 @@ static bool handle_continuous_head_request(struct tegra_dma_channel *tdc,
+>>  {
+>>  	struct tegra_dma_sg_req *hsgreq;
 >>  
->> @@ -772,7 +770,10 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
->>  	if (!list_empty(&tdc->pending_sg_req) && was_busy) {
->>  		sgreq = list_first_entry(&tdc->pending_sg_req, typeof(*sgreq),
->>  					 node);
->> -		sgreq->dma_desc->bytes_transferred +=
->> +		dma_desc = sgreq->dma_desc;
->> +
->> +		if (dma_desc->dma_status != DMA_ERROR)
->> +			dma_desc->bytes_transferred +=
->>  				get_current_xferred_count(tdc, sgreq, wcount);
+>> -	if (list_empty(&tdc->pending_sg_req)) {
+>> -		dev_err(tdc2dev(tdc), "DMA is running without req\n");
+>> -		tegra_dma_stop(tdc);
+>> -		return false;
+>> -	}
+>> -
+>>  	/*
+>>  	 * Check that head req on list should be in flight.
+>>  	 * If it is not in flight then abort transfer as
+>>
 > 
-> I am wondering if we need to check this here? I assume that the transfer
-> count would still reflect the amount of data transferred, even if some
-> was dropped. We will never know how much data was lost.
+> There is also a list_empty() check in tdc_configure_next_head_desc()
+> which is also redundant and could be removed here as well.
 
-I'm wondering too.. stopping DMA in a error case removes this ambiguity
-and that's why in my previous answer to v6 I suggested to drop this patch.
-
-Do you think it's worth to keep this patch?
+Good catch :) I'll squash all these list_empty() removals into a single
+patch.

@@ -2,46 +2,46 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C7301516AB
-	for <lists+dmaengine@lfdr.de>; Tue,  4 Feb 2020 09:02:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E99C51516D9
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Feb 2020 09:13:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgBDICI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 4 Feb 2020 03:02:08 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44017 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgBDICI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Feb 2020 03:02:08 -0500
-Received: by mail-oi1-f193.google.com with SMTP id p125so17544249oif.10;
-        Tue, 04 Feb 2020 00:02:07 -0800 (PST)
+        id S1726406AbgBDINk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 4 Feb 2020 03:13:40 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38961 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbgBDINk (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Feb 2020 03:13:40 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 77so16297201oty.6;
+        Tue, 04 Feb 2020 00:13:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dum+o5gu2gGFpSl+O8wsomQ94Fs2sL9d8ohYuPebAnY=;
-        b=ns192hVFZLPa4xwD+cCtN++jd0e7NrjqVwQ2e49oDjaLNhpOUm/Bu5kJ5a4d1lgosZ
-         TVlJ/oOUVGyp5LEq+2VxMJRPMh8sLMzj3oi+ms1wJ7GiTdLp0+pop+ISVGvhyPILgUZI
-         1k7J2R1U6/1y8Qfqd5XeKpshgkilbPJiOsB32iW8KxoZG4nXFqeG05SceaVXIPGY/1Nz
-         GzGWAIHK0r7SXnIGwuSv8BePCNKYWBW3GgPmEkDMWRbx/pUkfK41/5hSbwlqYNnGyg34
-         0aDiv+dpr8yazbNJdtwXU2Oefr8FCq/cEo4rJmfe2yjTjSX6QaWZl6X0JwRfCtmGpSsN
-         SHnQ==
-X-Gm-Message-State: APjAAAUQGwSL/O+4LDLfB9hZmiUtemXsVbAEjPbZVlgohb0erih9g1mw
-        9fQg+VLAuAfxF5RtnjkEEqCOhYHg1LjMMX+A7Mg=
-X-Google-Smtp-Source: APXvYqzzEX39mrChEWmOwQfxI4cvrJqp32wsemcpmKn2mv1qMu0WlwDSpDrURvjggP7ZnFmlvGoXXaie/JESZoxAYEY=
-X-Received: by 2002:a54:4707:: with SMTP id k7mr2486144oik.153.1580803327484;
- Tue, 04 Feb 2020 00:02:07 -0800 (PST)
+        bh=kOzfGH3X0V7ecKmEp3BZzWw2D7F64fbWXNLsPHZv3Qk=;
+        b=I06b4qcYw2a+YqKHfHovDGMw9nYIicHHhZBgjaSpaAZUiUZwdqvUM58O9u8NL8qg7T
+         HllGG6chJ04qBQ4nkKwxFIndOVlBpHtqMc6Y6ao4xDCcpcoyHYiX3kV6mt6ZgQWYmplB
+         Q5LvqC92WgM+60BE8GqxSFG7/xl17joJJ5YaoCipYcAEwwk3LvgVL/ceoe2gCuyfkCgy
+         u5r4moENdkaDIY1YZ+gzl3Tia+1tY7yMAUzL2gfMn4kcCp5yQfVXflGG782HUPkayzmh
+         NPCHs7wkehjaRc2pa42qB7wKKxgjZZOi3Bt13hz1wfwYw9eYgzyGHOSBcnefw7ClmV6f
+         BnAg==
+X-Gm-Message-State: APjAAAWDkcH/khYA1HjPF/PZPGHxypp9nmHo9ZbJsAufkuaeTAteRdw3
+        12YmDLGpHqPl7BTIoPE6bJr9ZwUxYGRaxWloPSTabCHs
+X-Google-Smtp-Source: APXvYqzBBbfQ012lpgP2RMvqRgR8Gp2+vA99nmHPTZXVWc6+0iUKHnH6KWrk+z3SoV9h6r6W7AXNIMmHDCOpoG3WrKM=
+X-Received: by 2002:a05:6830:1d55:: with SMTP id p21mr21313411oth.145.1580804018956;
+ Tue, 04 Feb 2020 00:13:38 -0800 (PST)
 MIME-Version: 1.0
 References: <20200203101806.2441-1-peter.ujfalusi@ti.com> <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
  <e47927aa-8d40-aa71-aef4-5f9c4cbbc03a@ti.com> <CAHp75Vd1A+8N_RPq3oeoXS19XeFtv7YK69H5XfzLMxWyCHbzBQ@mail.gmail.com>
  <701ab186-c240-3c37-2c0b-8ac195f8073f@ti.com> <CAMuHMdUYRvjR5qe5RVzggN+BaHw8ObEtnm8Kdn25XUiv2sJpPg@mail.gmail.com>
  <38f686ae-66fa-0e3a-ec2e-a09fc4054ac4@physik.fu-berlin.de>
- <CAMuHMdXahPt4q7Dd-mQ9RNr7JiCt8PhXeT5U2D+n-ngJmEQMgw@mail.gmail.com> <b09ad222-f5b8-af5a-6c2b-2dd6b30f1c73@ti.com>
-In-Reply-To: <b09ad222-f5b8-af5a-6c2b-2dd6b30f1c73@ti.com>
+ <CAMuHMdXahPt4q7Dd-mQ9RNr7JiCt8PhXeT5U2D+n-ngJmEQMgw@mail.gmail.com> <00734e40-da0b-9d7f-20bc-ce1f9658dcd3@physik.fu-berlin.de>
+In-Reply-To: <00734e40-da0b-9d7f-20bc-ce1f9658dcd3@physik.fu-berlin.de>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 4 Feb 2020 09:01:55 +0100
-Message-ID: <CAMuHMdUYcSPoK8NOSdMzU_Jtg84aPMNKeGnacnF7=aidV4eqvw@mail.gmail.com>
+Date:   Tue, 4 Feb 2020 09:13:27 +0100
+Message-ID: <CAMuHMdWKHOm8WjMx3Lm-MwZ_VZVaFz_otGe0V3pKp01v81mqZA@mail.gmail.com>
 Subject: Re: [PATCH 0/3] dmaengine: Stear users towards dma_request_slave_chan()
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Vinod Koul <vkoul@kernel.org>,
         dmaengine <dmaengine@vger.kernel.org>,
@@ -55,10 +55,11 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Peter,
+Hi Adrian,
 
-On Tue, Feb 4, 2020 at 7:52 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> On 03/02/2020 22.34, Geert Uytterhoeven wrote:
+On Mon, Feb 3, 2020 at 10:26 PM John Paul Adrian Glaubitz
+<glaubitz@physik.fu-berlin.de> wrote:
+> On 2/3/20 9:34 PM, Geert Uytterhoeven wrote:
 > > On Mon, Feb 3, 2020 at 9:21 PM John Paul Adrian Glaubitz
 > > <glaubitz@physik.fu-berlin.de> wrote:
 > >> On 2/3/20 2:32 PM, Geert Uytterhoeven wrote:
@@ -68,24 +69,59 @@ On Tue, Feb 4, 2020 at 7:52 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
 > >> for classical SuperH hardware. It was never merged, unfortunately :(.
 > >
 > > True.
-> >
+>
+> Would it be possible to keep DMA support if device tree support was
+> added for SuperH? I think Rich eventually wanted to merge the patches,
+> there were just some minor issues with them.
+
+Adding DT support would definitely make things easier, but would be a lot
+of work.
+However, using dma_slave_map would be an alternative.
+
 > >>> Anyone who cares for DMA on SuperH?
 > >>
 > >> What is DMA used for on SuperH? Wouldn't dropping it cut support for
 > >> essential hardware features?
 > >
 > > It may make a few things slower.
+> >
+> > Does any of your SuperH boards use DMA?
+> > Anything interesting in /proc or /sys w.r.t. DMA?
 >
-> I would not drop DMA support but I would suggest to add dma_slave_map
-> for non DT boot so the _compat() can be dropped.
+> I have:
+>
+> root@tirpitz:/sys> find . -iname "*dma*"
+> ./bus/dma
+> ./bus/dma/devices/dma0
+> ./bus/dma/devices/dma1
+> ./bus/dma/devices/dma2
+> ./bus/dma/devices/dma3
+> ./bus/dma/devices/dma4
+> ./bus/dma/devices/dma5
+> ./bus/dma/devices/dma6
+> ./bus/dma/devices/dma7
+> ./bus/dma/devices/dma8
+> ./bus/dma/devices/dma9
+> ./bus/dma/devices/dma10
+> ./bus/dma/devices/dma11
+> ./bus/platform/devices/sh_dmac
+> ./bus/platform/devices/sh-dma-engine.0
+> ./bus/platform/devices/sh-dma-engine.1
 
-Which is similar in spirit to gpiod_lookup and clk_register_clkdev(),
-right?
+So you do have the two dmaengines...
 
-> Imho on lower spec SoC (and I believe SuperH is) the DMA makes big
-> difference offloading data movement from the CPU.
+> On my SH-7785LCR.
 
-Assumed it is actually used...
+... but are they actually used?
+
+git grep -E "(SHDMA|sh_dmae_slave_config)" -- "arch/sh/*7785*"
+doesn't come up with any matches, so I don't think any sh7785 platform
+is wired to use DMA (yet), only sh7757 and sh772[234].
+
+To double-check:
+With current upstream, you can look for "slave" symlinks in sysfs.
+With older kernels, you can look at the interrupt counts for the DMACs
+in /proc/interrupts.
 
 Gr{oetje,eeting}s,
 

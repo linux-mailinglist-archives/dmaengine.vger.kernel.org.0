@@ -2,48 +2,57 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1798A1516F0
-	for <lists+dmaengine@lfdr.de>; Tue,  4 Feb 2020 09:21:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A3AD151779
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Feb 2020 10:12:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgBDIVw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 4 Feb 2020 03:21:52 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:47448 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbgBDIVw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Feb 2020 03:21:52 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0148LedE106347;
-        Tue, 4 Feb 2020 02:21:40 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1580804500;
-        bh=cdRcHIYmGTk/Lxu45I64Xr0pKK1z8aQrkVi5WMDxmYY=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=ff+vWcmQviCPynq90OM6xs1y0zx4ibzBOnMqqEZZxoxJabWduWTXEg1qrzqIp05I1
-         CUZdXO/Xue7Iiuy8fgdzvuxPOEp2BbEm+cIwrLqUlIJa6dvQH238HfvLmBTv2HWGxF
-         o5Ox7OsNXF0gdgBt+EOD0NaBgN3B5uzB1thaFRTg=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0148Lek3029462;
-        Tue, 4 Feb 2020 02:21:40 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 4 Feb
- 2020 02:21:40 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 4 Feb 2020 02:21:40 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0148Lbad104400;
-        Tue, 4 Feb 2020 02:21:38 -0600
+        id S1726917AbgBDJMX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 4 Feb 2020 04:12:23 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42200 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbgBDJMW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Feb 2020 04:12:22 -0500
+Received: by mail-pg1-f193.google.com with SMTP id w21so3579895pgl.9
+        for <dmaengine@vger.kernel.org>; Tue, 04 Feb 2020 01:12:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=landley-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OEno8L+dLk53KEqvLYXsrFVru+rwMQDT1MCsCBWWmic=;
+        b=PGeL2yv80M/Xyz3TqQfy30bcMf6fkJSWDpFtX5zg7SPUH32tZaavlnLQLUeJvm61jL
+         7jc1TvZBXJLdQqek38XGa/IQ7IISMsQ6Z+WP22qtzWArm4IfXAQjwdE2Ga+ecWTR7ANa
+         YERU2WTGz9nVMujVG57yYbPj32BYQtRfE68nkB3pq2NXz1q3L+5qIKStEyr+Dhc9FAaX
+         xi6xSd1RLMPZ0pXPtcy8nYd5D924/AO2HMEt0/LdLK7SnHAYIkl+EEjc7yT/DPAWgn6p
+         gkp4llgs/xk3IzTuqHUQ5FfkQ923tWRHTjwVPNc0B2adGWZK2sgorrP3b4qNJ5nL8m+0
+         MJrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OEno8L+dLk53KEqvLYXsrFVru+rwMQDT1MCsCBWWmic=;
+        b=X6yNtNzbwn8AfFKGHySomt1kSolDrwejfe/Ee+JTVnNOR7Zp61aaSebBBmZ1akPW6f
+         n/l3p9/SNtSi7Vj70hD9MTdO9TMvRuz1GJ9LY7vsI8t5n2+nR9tEI8gfjY8i4+EEgnub
+         VlfLVOteNQmvyqwB9JvFyVt4R7wZ7hGgBxRhvidBAOeYyCYS+huD31r0FcWwJSmYRz+C
+         QC+9gKlL1BLT6qBQN+rFGXXudgMh9mwmoFpfgCPfRcm2hLca06VtlKZ8V1NK/mHmCq9+
+         ACezb3SdZOfQmZ3iStp2pBi6WP7YjyPwlC6F+e4Db/qA/44J9PKVqjVFPIlVhzx2w5yj
+         +J0w==
+X-Gm-Message-State: APjAAAU3A03pYGBMbWWU0dMAweUiJpqI+Ma8MGrYETpYMWsBOKEQSnSU
+        l6sfDvxGUKUIv/10xpi1OvNuVQ==
+X-Google-Smtp-Source: APXvYqxShwB5mksr4VLPF6EQdoB3Thrj1dJI1OjTYyqPg21c1H8oXz+rhju/pYJoSihlvb9nLNYwrA==
+X-Received: by 2002:a62:e414:: with SMTP id r20mr29513047pfh.154.1580807542320;
+        Tue, 04 Feb 2020 01:12:22 -0800 (PST)
+Received: from [192.168.11.4] (softbank126112255110.biz.bbtec.net. [126.112.255.110])
+        by smtp.googlemail.com with ESMTPSA id b130sm23059315pga.4.2020.02.04.01.12.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Feb 2020 01:12:21 -0800 (PST)
 Subject: Re: [PATCH 0/3] dmaengine: Stear users towards
  dma_request_slave_chan()
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Vinod Koul <vkoul@kernel.org>,
         dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Linux-sh list <linux-sh@vger.kernel.org>,
         Linux-Renesas <linux-renesas-soc@vger.kernel.org>
@@ -57,138 +66,67 @@ References: <20200203101806.2441-1-peter.ujfalusi@ti.com>
  <CAMuHMdXahPt4q7Dd-mQ9RNr7JiCt8PhXeT5U2D+n-ngJmEQMgw@mail.gmail.com>
  <b09ad222-f5b8-af5a-6c2b-2dd6b30f1c73@ti.com>
  <CAMuHMdUYcSPoK8NOSdMzU_Jtg84aPMNKeGnacnF7=aidV4eqvw@mail.gmail.com>
- <b0a0e1ca-a2c4-5144-d02e-efbf04b88a6e@ti.com>
-Message-ID: <eab36657-5f03-456d-79da-93bd026cda72@ti.com>
-Date:   Tue, 4 Feb 2020 10:21:37 +0200
+From:   Rob Landley <rob@landley.net>
+Message-ID: <64cffbfe-a639-c09d-8aa2-fdda8fad2cf7@landley.net>
+Date:   Tue, 4 Feb 2020 03:16:58 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <b0a0e1ca-a2c4-5144-d02e-efbf04b88a6e@ti.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <CAMuHMdUYcSPoK8NOSdMzU_Jtg84aPMNKeGnacnF7=aidV4eqvw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 04/02/2020 10.15, Peter Ujfalusi wrote:
-> Hi Geert,
+On 2/4/20 2:01 AM, Geert Uytterhoeven wrote:
+> Hi Peter,
 > 
-> On 04/02/2020 10.01, Geert Uytterhoeven wrote:
->> Hi Peter,
->>
->> On Tue, Feb 4, 2020 at 7:52 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>> On 03/02/2020 22.34, Geert Uytterhoeven wrote:
->>>> On Mon, Feb 3, 2020 at 9:21 PM John Paul Adrian Glaubitz
->>>> <glaubitz@physik.fu-berlin.de> wrote:
->>>>> On 2/3/20 2:32 PM, Geert Uytterhoeven wrote:
->>>>>> Both rspi and sh-msiof have users on legacy SH (i.e. without DT):
->>>>>
->>>>> FWIW, there is a patch set by Yoshinori Sato to add device tree support
->>>>> for classical SuperH hardware. It was never merged, unfortunately :(.
+> On Tue, Feb 4, 2020 at 7:52 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>> On 03/02/2020 22.34, Geert Uytterhoeven wrote:
+>>> On Mon, Feb 3, 2020 at 9:21 PM John Paul Adrian Glaubitz
+>>> <glaubitz@physik.fu-berlin.de> wrote:
+>>>> On 2/3/20 2:32 PM, Geert Uytterhoeven wrote:
+>>>>> Both rspi and sh-msiof have users on legacy SH (i.e. without DT):
 >>>>
->>>> True.
->>>>
->>>>>> Anyone who cares for DMA on SuperH?
->>>>>
->>>>> What is DMA used for on SuperH? Wouldn't dropping it cut support for
->>>>> essential hardware features?
->>>>
->>>> It may make a few things slower.
+>>>> FWIW, there is a patch set by Yoshinori Sato to add device tree support
+>>>> for classical SuperH hardware. It was never merged, unfortunately :(.
 >>>
->>> I would not drop DMA support but I would suggest to add dma_slave_map
->>> for non DT boot so the _compat() can be dropped.
->>
->> Which is similar in spirit to gpiod_lookup and clk_register_clkdev(),
->> right?
-> 
-> Yes, it is similar:
-> 
-> /* OMAP730, OMAP850 */
-> static const struct dma_slave_map omap7xx_sdma_map[] = {
-> 	{ "omap-mcbsp.1", "tx", SDMA_FILTER_PARAM(8) },
-> 	{ "omap-mcbsp.1", "rx", SDMA_FILTER_PARAM(9) },
-> 	{ "omap-mcbsp.2", "tx", SDMA_FILTER_PARAM(10) },
-> 	{ "omap-mcbsp.2", "rx", SDMA_FILTER_PARAM(11) },
-> 	{ "mmci-omap.0", "tx", SDMA_FILTER_PARAM(21) },
-> 	{ "mmci-omap.0", "rx", SDMA_FILTER_PARAM(22) },
-> 	{ "omap_udc", "rx0", SDMA_FILTER_PARAM(26) },
-> 	{ "omap_udc", "rx1", SDMA_FILTER_PARAM(27) },
-> 	{ "omap_udc", "rx2", SDMA_FILTER_PARAM(28) },
-> 	{ "omap_udc", "tx0", SDMA_FILTER_PARAM(29) },
-> 	{ "omap_udc", "tx1", SDMA_FILTER_PARAM(30) },
-> 	{ "omap_udc", "tx2", SDMA_FILTER_PARAM(31) },
-> };
-> 
-> "device name", "channel name", "parameter for filter"
+>>> True.
+>>>
+>>>>> Anyone who cares for DMA on SuperH?
+>>>>
+>>>> What is DMA used for on SuperH? Wouldn't dropping it cut support for
+>>>> essential hardware features?
+>>>
+>>> It may make a few things slower.
 
-fwiw for EDMA on daVinci we have these (for da850):
-static const struct dma_slave_map da850_edma0_map[] = {
-	{ "davinci-mcasp.0", "rx", EDMA_FILTER_PARAM(0, 0) },
-	{ "davinci-mcasp.0", "tx", EDMA_FILTER_PARAM(0, 1) },
-	{ "davinci-mcbsp.0", "rx", EDMA_FILTER_PARAM(0, 2) },
-	{ "davinci-mcbsp.0", "tx", EDMA_FILTER_PARAM(0, 3) },
-	{ "davinci-mcbsp.1", "rx", EDMA_FILTER_PARAM(0, 4) },
-	{ "davinci-mcbsp.1", "tx", EDMA_FILTER_PARAM(0, 5) },
-	{ "spi_davinci.0", "rx", EDMA_FILTER_PARAM(0, 14) },
-	{ "spi_davinci.0", "tx", EDMA_FILTER_PARAM(0, 15) },
-	{ "da830-mmc.0", "rx", EDMA_FILTER_PARAM(0, 16) },
-	{ "da830-mmc.0", "tx", EDMA_FILTER_PARAM(0, 17) },
-	{ "spi_davinci.1", "rx", EDMA_FILTER_PARAM(0, 18) },
-	{ "spi_davinci.1", "tx", EDMA_FILTER_PARAM(0, 19) },
-};
+The j-core stuff has DMA but we haven't hooked it up to dmaengine yet. (It's on
+the todo list but pretty far down.)
 
-static const struct dma_slave_map da850_edma1_map[] = {
-	{ "da830-mmc.1", "rx", EDMA_FILTER_PARAM(1, 28) },
-	{ "da830-mmc.1", "tx", EDMA_FILTER_PARAM(1, 29) },
-};
+I fought with dmaengine in a 7760 board in 2018, and got it to run its tests but
+the ship deadline arrived before I got the ethernet working with it.
 
-and in the DMA driver:
-	ecc->dma_slave.filter.map = info->slave_map;
-	ecc->dma_slave.filter.mapcnt = info->slavecnt;
-	ecc->dma_slave.filter.fn = edma_filter_fn;
+I found the documentation fairly impenetrable, is there a good primer on what's
+_current_ for new implementations? (I had similar questions for gpio. It's easy
+to google for "here's how you did it in 2010"...)
 
-When I added the dma_slave_map support it was done in a way that it
-could be used by anyone having the same issue as we were facing with
-legacy daVinci and OMAP1 boards (no DT support in sight).
+>> I would not drop DMA support but I would suggest to add dma_slave_map
+>> for non DT boot so the _compat() can be dropped.
+> 
+> Which is similar in spirit to gpiod_lookup and clk_register_clkdev(),
+> right?
+> 
+>> Imho on lower spec SoC (and I believe SuperH is) the DMA makes big
+>> difference offloading data movement from the CPU.
+> 
+> Assumed it is actually used...
 
-Drivers do not need to care about legacy/DT boot.
+The turtle boards need it USB, ethernet, and sdcard, but Rich Felker hasn't
+finished the j32 port yet (we just got him the updated docs last month) and the
+existing implementation is nommu so the things that are using it are reaching
+around behind the OS's back...
 
-> 
-> The in the DMA driver (omap-dma.c):
-> 	od->ddev.filter.map = od->plat->slave_map;
-> 	od->ddev.filter.mapcnt = od->plat->slavecnt;
-> 	od->ddev.filter.fn = omap_dma_filter_fn;
-> 
-> When things are converted the filter function no longer needs to be
-> exported, it is local to the DMA driver.
-> 
->>
->>> Imho on lower spec SoC (and I believe SuperH is) the DMA makes big
->>> difference offloading data movement from the CPU.
->>
->> Assumed it is actually used...
-> 
-> Right, imho (again) we should not decide if given SoC needs it or not.
-> It is up to the drivers to use it or not, but with the dma_slave_map
-> there is no difference between DT or legacy boot handling towards DMA.
-> 
->> Gr{oetje,eeting}s,
->>
->>                         Geert
->>
-> 
-> - Péter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Rob

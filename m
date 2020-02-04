@@ -2,88 +2,106 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ABAC01519CA
-	for <lists+dmaengine@lfdr.de>; Tue,  4 Feb 2020 12:21:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8AF6151A1F
+	for <lists+dmaengine@lfdr.de>; Tue,  4 Feb 2020 12:52:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgBDLVJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 4 Feb 2020 06:21:09 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42964 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbgBDLVI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Feb 2020 06:21:08 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 4so9306047pfz.9;
-        Tue, 04 Feb 2020 03:21:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=etkzxQdonYJKMTHRqSVIxyc50MlvlU1LrQeOV4a4eFk=;
-        b=PIRI49xc04/X0a8DT1CIRCvr2/mgyzDfnaH9DdnMmIZbmCYVnMSpJhynEmGudh5hDO
-         kVywtrYnr1vRzyqzoru71Fes/x3ooibD9Uqd895xrv9y0yN5ECuVgYh6i0NCQRqUDhyJ
-         qO/t/LY+TELglPmEJCIFcolOV8ow1gOutzm2X7/cKDcQupCEEfZVUVo1/YSCyQdUwDSz
-         5/9f29STvTaZmVDO19GCRyVvBa9rXdFAKdLOnMmVgQYCbkdZYg1fmqJP1iBZsKNeqLWy
-         HfBK1sK9PaokmKWzOFGeMbuUZ+orx+WcSN+ZMje9YdGfzp8Kv7GKh8Ax/rt/3m6aqsWh
-         7GoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=etkzxQdonYJKMTHRqSVIxyc50MlvlU1LrQeOV4a4eFk=;
-        b=pc6gDTN3mOiBahi3MRqt7tt6mW8pSttBQrVR9VHuYfSPdQKnVnAb12UkQLaOTULtaH
-         tOopDofcD57e8xFi5HsZBFmzHVsTaAQQKduN4L8sxzOgH4zDqfxW+vgTeJFvKblGjEru
-         rdND7K8r+BKiG84kW0wQBWmmCpCthkLXN0ySlrJ/9u7GtRWTgH2x0SbpRduOvpK9OUIg
-         jDWPB6df1Ljw+SDTH2wGzOPvcUeg61HIRrKIxMIRseWUZh9D/yErNB0UmzcrZDd08Uo8
-         mcP4BdwJmwYKAKqV5LxAFMwtKWCb37JDAn40BBkjQC7Ft/FBPfkQjRkhMg9W5ysSwkEs
-         XOdg==
-X-Gm-Message-State: APjAAAWYrhQv8xUaySIOiI4DRATs/38lJT1yrLIdFxa4ExLc71Vv/uwa
-        EIvqM3p+FI3/Hm0kSWEl0s9QuhpYj7t05Ceq6qc=
-X-Google-Smtp-Source: APXvYqwt7q/UzXE/AqPSMjFYF/rze2eiuvxrpzsXScsHqjQIuEpbdTYlvnclZB19Uhn2efeEopSNoRVRDT2HM64mxy4=
-X-Received: by 2002:a65:4685:: with SMTP id h5mr32235446pgr.203.1580815268189;
- Tue, 04 Feb 2020 03:21:08 -0800 (PST)
+        id S1727090AbgBDLwq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 4 Feb 2020 06:52:46 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19437 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbgBDLwq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 4 Feb 2020 06:52:46 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e395aff0000>; Tue, 04 Feb 2020 03:52:31 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 04 Feb 2020 03:52:45 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 04 Feb 2020 03:52:45 -0800
+Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Feb
+ 2020 11:52:43 +0000
+Subject: Re: [PATCH v7 12/19] dmaengine: tegra-apb: Remove handling of
+ unrealistic error condition
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200202222854.18409-1-digetx@gmail.com>
+ <20200202222854.18409-13-digetx@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <b2461a42-5939-b2b1-01fe-6f18c860dbd9@nvidia.com>
+Date:   Tue, 4 Feb 2020 11:52:41 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200203101806.2441-1-peter.ujfalusi@ti.com> <CAHp75Vf__isc59YBS9=O+9ApSV62XuZ2nBAWKKD_K7i72P-yFg@mail.gmail.com>
- <20200204062118.GS2841@vkoul-mobl>
-In-Reply-To: <20200204062118.GS2841@vkoul-mobl>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 4 Feb 2020 13:21:00 +0200
-Message-ID: <CAHp75VeRemcJkMMB7D2==Y-A4We=s1ntojZoPRdVS8vs+dB_Ew@mail.gmail.com>
-Subject: Re: [PATCH 0/3] dmaengine: Stear users towards dma_request_slave_chan()
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200202222854.18409-13-digetx@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1580817151; bh=FpvHZ4w/sU6nKdxXINEARx9AtomCkzk2I9Ho6chDmac=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Mq9ZDQWDOswmryWzsLZ9BzAF2jlwhLzZvnH6CgxYQX2ERfUGBpRQg86ymxmW5Jc3F
+         vA2g/OhfgnzZf4yCUtZJ9f7OCoPwnU8vmodudOJS99TqDW3mZkNBIjjeFCUOTa29HL
+         4zt0xJfmDsvOON6FYqO9iV5Cetl58bORwSBJ0AME927UlDEAthtm0Uz9DnQK2O17l4
+         7EgoW54OK+OyEgX51ShyO4Um/4E0IsmOuwgaFlleObKP9e0LzPNfgvOa8dWx9kL9zB
+         HWzA+R7QEkMGQ/yNLsccNJMQR06gzZD0t6D5VI3sF4I6dJmWdli2soLvFsSIeK00jF
+         vitAnQaoLQLHQ==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 8:21 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 03-02-20, 12:37, Andy Shevchenko wrote:
-> > On Mon, Feb 3, 2020 at 12:32 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> >
-> > > dma_request_slave_channel_reason() no longer have user in mainline, it
-> > > can be removed.
-> > >
-> > > Advise users of dma_request_slave_channel() and
-> > > dma_request_slave_channel_compat() to move to dma_request_slave_chan()
-> >
-> > How? There are legacy ARM boards you have to care / remove before.
-> > DMAengine subsystem makes a p*s off decisions without taking care of
-> > (I'm talking now about dma release callback, for example) end users.
->
-> Can you elaborate issue you are seeing with dma_release callback?
 
+On 02/02/2020 22:28, Dmitry Osipenko wrote:
+> The pending_sg_req list can't ever be empty because:
+> 
+> 1. If it was empty, then handle_cont_sngl_cycle_dma_done() shall crash
+>    before of handle_continuous_head_request() invocation.
+> 
+> 2. The handle_cont_sngl_cycle_dma_done() can't happen after stopping DMA.
 
-[    7.980381] intel-lpss 0000:00:1e.3: WARN: Device release is not
-defined so it is not safe to unbind this driver while in use
+By this you mean calling terminate_all?
 
-It's not limited to that driver, but actually all I'm maintaining.
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/dma/tegra20-apb-dma.c | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+> index 62d181bd5e62..c7dc27ef1856 100644
+> --- a/drivers/dma/tegra20-apb-dma.c
+> +++ b/drivers/dma/tegra20-apb-dma.c
+> @@ -564,12 +564,6 @@ static bool handle_continuous_head_request(struct tegra_dma_channel *tdc,
+>  {
+>  	struct tegra_dma_sg_req *hsgreq;
+>  
+> -	if (list_empty(&tdc->pending_sg_req)) {
+> -		dev_err(tdc2dev(tdc), "DMA is running without req\n");
+> -		tegra_dma_stop(tdc);
+> -		return false;
+> -	}
+> -
+>  	/*
+>  	 * Check that head req on list should be in flight.
+>  	 * If it is not in flight then abort transfer as
+> 
 
-Users are not happy!
+There is also a list_empty() check in tdc_configure_next_head_desc()
+which is also redundant and could be removed here as well.
+
+Jon
 
 -- 
-With Best Regards,
-Andy Shevchenko
+nvpublic

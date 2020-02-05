@@ -2,112 +2,123 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 059171530D6
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Feb 2020 13:33:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 975551534DD
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Feb 2020 17:00:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbgBEMdC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 5 Feb 2020 07:33:02 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:57254 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbgBEMdC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Feb 2020 07:33:02 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 015CDQWe030562;
-        Wed, 5 Feb 2020 12:32:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=1vnf/xgw4kqXc7IRy8A9QgU6nxV7YLB/grjPo7sqFho=;
- b=FsnHxU8Br70a5kYGqN/iDp+Y1G5cNNwmHhDtm+K8M3q8jLCbrztd3o89lvyzKuo1whIT
- KwzEIW0jzsaU+o6V5pkxIx1ojVo55vYRvylXZYNmjnXOMaiL8MKrvguLba5HLTpvZTfA
- YE19Tn965M+4uHyLQVk3S9pNT/7372YFdt8ErKaK6xUedIZEb6COe2dUvrZfnkt3FUFr
- wpwp/PDRBQN4NcHqnTqiuzGLSDa6YxMVgOIjg/32ZOp6vixiC3ifVrGhNlQmFsYyrJrd
- EGRVBMIb0c9cWP0/wOkcYn0+EqaScjVFo2b5sY5NDKj9xcM8PFlYfeAcJqPNvau5c9Kp eQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2xykbp2q0b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 05 Feb 2020 12:32:58 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 015CEQwj144182;
-        Wed, 5 Feb 2020 12:32:58 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2xykbrrmkh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 05 Feb 2020 12:32:58 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 015CWuiC032025;
-        Wed, 5 Feb 2020 12:32:57 GMT
-Received: from kili.mountain (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 05 Feb 2020 04:32:56 -0800
-Date:   Wed, 5 Feb 2020 15:32:48 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] dmaengine: idxd: Fix error handling in
- idxd_wq_cdev_dev_setup()
-Message-ID: <20200205123248.hmtog7qa2eiqaagh@kili.mountain>
+        id S1727398AbgBEQA0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 5 Feb 2020 11:00:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726661AbgBEQA0 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 5 Feb 2020 11:00:26 -0500
+Received: from localhost (unknown [122.178.239.37])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4922E217BA;
+        Wed,  5 Feb 2020 16:00:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580918426;
+        bh=5n48n/+OAPherCXDe5xUSgmLMSiX8vRhB9CPtYCE74g=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NVAJQONiMOM1z7OAABC7HAxWgUNJyYtd+RCV+qxhPOoHZn3ppONL/l+dLNIO8sqCl
+         WtwnYsh1QISFWOtOLz7dzwLbK/OHOYVsrxpll08tFmvSzjr+4TftnbnK1hIvlbRX+k
+         p6/Ns0E/y4R7Np8VHjBlR8ln3Nr/o2ihBKORDg30=
+Date:   Wed, 5 Feb 2020 21:30:21 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] dmaengine fixes for v5.6-rc1
+Message-ID: <20200205160021.GL2618@vkoul-mobl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="QRj9sO5tAVLaXnSD"
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002050100
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9521 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002050100
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-We can't call kfree(dev) after calling device_register(dev).  The "dev"
-pointer has to be freed using put_device().
 
-Fixes: 42d279f9137a ("dmaengine: idxd: add char driver to expose submission portal to userland")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/dma/idxd/cdev.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--QRj9sO5tAVLaXnSD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index 1d7347825b95..df47be612ebb 100644
---- a/drivers/dma/idxd/cdev.c
-+++ b/drivers/dma/idxd/cdev.c
-@@ -204,6 +204,7 @@ static int idxd_wq_cdev_dev_setup(struct idxd_wq *wq)
- 	minor = ida_simple_get(&cdev_ctx->minor_ida, 0, MINORMASK, GFP_KERNEL);
- 	if (minor < 0) {
- 		rc = minor;
-+		kfree(dev);
- 		goto ida_err;
- 	}
- 
-@@ -212,7 +213,6 @@ static int idxd_wq_cdev_dev_setup(struct idxd_wq *wq)
- 	rc = device_register(dev);
- 	if (rc < 0) {
- 		dev_err(&idxd->pdev->dev, "device register failed\n");
--		put_device(dev);
- 		goto dev_reg_err;
- 	}
- 	idxd_cdev->minor = minor;
-@@ -221,8 +221,8 @@ static int idxd_wq_cdev_dev_setup(struct idxd_wq *wq)
- 
-  dev_reg_err:
- 	ida_simple_remove(&cdev_ctx->minor_ida, MINOR(dev->devt));
-+	put_device(dev);
-  ida_err:
--	kfree(dev);
- 	idxd_cdev->dev = NULL;
- 	return rc;
- }
--- 
-2.11.0
+Hello Linus,
 
+Couple of fixes came for the earlier dmaengine pull request for
+v5.6-rc1, so here is the pull request with fixes. Please pull.
+
+The following changes since commit 71723a96b8b1367fefc18f60025dae792477d602:
+
+  dmaengine: Create symlinks between DMA channels and slaves (2020-01-24 11=
+:41:32 +0530)
+
+are available in the Git repository at:
+
+  git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.6-=
+rc1
+
+for you to fetch changes up to bad83565eafe8a00922ad4eed6920625a10a2126:
+
+  dmaengine: Cleanups for the slave <-> channel symlink support (2020-02-03=
+ 09:49:20 +0530)
+
+----------------------------------------------------------------
+dmaengine fixes for v5.6-rc1
+
+Fixes for:
+ - Documentation build error fix
+ - Fix dma_request_chan() error return
+ - Remove unneeded conversion in idxd driver
+ - Fix pointer check for dma_async_device_channel_register()
+ - Fix slave-channel symlink cleanup
+
+----------------------------------------------------------------
+Dave Jiang (1):
+      dmaengine: fix null ptr check for __dma_async_device_channel_register=
+()
+
+Marek Szyprowski (1):
+      dmaengine: Fix return value for dma_request_chan() in case of failure
+
+Peter Ujfalusi (1):
+      dmaengine: Cleanups for the slave <-> channel symlink support
+
+Vinod Koul (1):
+      dmaengine: doc: Properly indent metadata title
+
+kbuild test robot (1):
+      dmaengine: idxd: fix boolconv.cocci warnings
+
+ Documentation/driver-api/dmaengine/client.rst |  4 ++--
+ drivers/dma/dmaengine.c                       | 21 ++++++++++++---------
+ drivers/dma/idxd/sysfs.c                      |  2 +-
+ 3 files changed, 15 insertions(+), 12 deletions(-)
+
+Thanks
+--=20
+~Vinod
+
+--QRj9sO5tAVLaXnSD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAl465o8ACgkQfBQHDyUj
+g0dh3RAA04DRH3vka6sjdAOE88NrH02Oot32lrC/BWJXuT7w8k3MwzY+KaQwP1nD
+kNKbEYd4bSloKTDXCGUWuK1dwYFlOwLI/eAeZ1L8qeyGLJfJvPQD01BLpTQpdkIv
+QzxBwRlRhuYErpbYn5IzfDTvxrG3gcF06CoK4Ds7FGLj10rtxZljeX8tsXr/nVPB
+LiVZwrJHb1mpgphDVFVF/zRCuilaFIdNmgvVco5uF8ggkQOjHqcvzpwKWla7Rofp
+n/TICMNOv4gGYYjJIWrhPdAcwEMiaYc6qGDJ0t6Ljogcr4v7fuIMCwH4EB1S8toy
+MXoQ10XR5CLYgjlKq+4G4rzonVate1mqOVyJXy2YmRJruz4TeA7P7pJTkysJUJ5W
+kVHWNRsqYZekhX+NkSm97WLXO2QopdaI8TiAjVqDT1wymo66VQ7wTfzavNl2Bn28
+6Z0v6efenhrWoBUV8jHh/xz0RX9hyXeGCQL4R9xOfQSHs/9kEWPqXBAoinH2Rnch
+ZhSzFGOwvV6Ost5g9CNz0Pw0iqX7jcRC8pkTqDG/RgqYcnZQCraOThlg3LEKSpIB
+kuegi3H77QcRpaYUGS8IK+S/kUyvfkLZPSRyselJo6z8JSdydKxwZzUV2gNSkmBx
+t3fUC07XyY+1wkpjlUd8vxFWckT6JCKwOEhseaN6jvZC9FBntvY=
+=wA0N
+-----END PGP SIGNATURE-----
+
+--QRj9sO5tAVLaXnSD--

@@ -2,158 +2,168 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0459E154D72
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Feb 2020 21:47:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B3682154FEF
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Feb 2020 02:15:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgBFUpn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 6 Feb 2020 15:45:43 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:55562 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728009AbgBFUpm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Feb 2020 15:45:42 -0500
-Received: by mail-pj1-f66.google.com with SMTP id d5so488746pjz.5;
-        Thu, 06 Feb 2020 12:45:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JQfj0uzbhk9PL5wqDoKeIBKd41MQ1h8voivIlPs9HKc=;
-        b=eq+XzsaqERQOwcCshZzAYec2ud6qQJ6e80VLFLiKooJkqgaLPIvHd2CwrQcSzU4ya8
-         9P2T0H34tt+P9kw5O4vjBs7Lo1K2SPq1TXBMBIcjF3UruXRG/xMwfFOALscUbSxv8MZE
-         pIYw2YaxLQpiCneGOtTDSnJLyGlm9Jt+28sEMqQAirgINql2yNsMRTQZZj8Rmeyka7B7
-         RWzR+2HTMan/4IS/m3bDbnWjh3QYFU5H2Ip86eqxUQiN9pSBNzCmlmomkegROKXl43AV
-         8D02ezfuXmPiZr5BNL4S2hc/dJ1vuMSVXEwIm5E4Csl489//k5vNSyDGTSBNp/zjG9OP
-         5cyw==
-X-Gm-Message-State: APjAAAVMLATDNr9+Vd096SBJB4MwMM0WkxWrrGw+G3RDP24wPhp2wxN8
-        1NfelBmg2zXxFQ/nqyMK2w==
-X-Google-Smtp-Source: APXvYqzSMACQuqwX22lBn2rt4IX37CGDwizLP6s5gsYe5polHbDhnFefNbnnYKXjV0FMspaifpEDqg==
-X-Received: by 2002:a17:90a:35e6:: with SMTP id r93mr6788847pjb.44.1581021940411;
-        Thu, 06 Feb 2020 12:45:40 -0800 (PST)
-Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id 4sm284539pfn.90.2020.02.06.12.45.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:45:39 -0800 (PST)
-Received: (nullmailer pid 24630 invoked by uid 1000);
-        Thu, 06 Feb 2020 17:54:58 -0000
-Date:   Thu, 6 Feb 2020 17:54:58 +0000
-From:   Rob Herring <robh@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+        id S1726997AbgBGBPW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 6 Feb 2020 20:15:22 -0500
+Received: from mx.socionext.com ([202.248.49.38]:2700 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726778AbgBGBPV (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 6 Feb 2020 20:15:21 -0500
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 07 Feb 2020 10:15:20 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 3B949180237;
+        Fri,  7 Feb 2020 10:15:20 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Fri, 7 Feb 2020 10:15:20 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id B18EA40365;
+        Fri,  7 Feb 2020 10:15:19 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 780A3120133;
+        Fri,  7 Feb 2020 10:15:19 +0900 (JST)
+Date:   Fri, 07 Feb 2020 10:15:19 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: dmaengine: Add UniPhier external DMA controller bindings
 Cc:     Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
         Masami Hiramatsu <masami.hiramatsu@linaro.org>,
         Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: dmaengine: Add UniPhier external DMA
- controller bindings
-Message-ID: <20200206175458.GA12845@bogus>
-References: <1580362048-28455-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1580362048-28455-2-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <20200206175458.GA12845@bogus>
+References: <1580362048-28455-2-git-send-email-hayashi.kunihiko@socionext.com> <20200206175458.GA12845@bogus>
+Message-Id: <20200207101519.6F78.4A936039@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1580362048-28455-2-git-send-email-hayashi.kunihiko@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 02:27:27PM +0900, Kunihiko Hayashi wrote:
-> Add devicetree binding documentation for external DMA controller
-> implemented on Socionext UniPhier SoCs.
+Hi Rob,
+
+Thank you for reviewing.
+Your comments are helpful as I'm not familiar with the new bindings yet.
+
+On Thu, 6 Feb 2020 17:54:58 +0000 <robh@kernel.org> wrote:
+
+> On Thu, Jan 30, 2020 at 02:27:27PM +0900, Kunihiko Hayashi wrote:
+> > Add devicetree binding documentation for external DMA controller
+> > implemented on Socionext UniPhier SoCs.
+> > 
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > ---
+> >  .../bindings/dma/socionext,uniphier-xdmac.yaml     | 57 ++++++++++++++++++++++
+> >  1 file changed, 57 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
+> > new file mode 100644
+> > index 00000000..32abf18
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
+> > @@ -0,0 +1,57 @@
+> > +# SPDX-License-Identifier: GPL-2.0
 > 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  .../bindings/dma/socionext,uniphier-xdmac.yaml     | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
+> Dual license new bindings:
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
-> new file mode 100644
-> index 00000000..32abf18
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
-> @@ -0,0 +1,57 @@
-> +# SPDX-License-Identifier: GPL-2.0
+> (GPL-2.0-only OR BSD-2-Clause)
 
-Dual license new bindings:
+I'll replace with it.
 
-(GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/dma/socionext,uniphier-xdmac.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Socionext UniPhier external DMA controller
+> > +
+> > +description: |
+> > +  This describes the devicetree bindings for an external DMA engine to perform
+> > +  memory-to-memory or peripheral-to-memory data transfer capable of supporting
+> > +  16 channels, implemented in Socionext UniPhier SoCs.
+> > +
+> > +maintainers:
+> > +  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > +
+> > +allOf:
+> > +  - $ref: "dma-controller.yaml#"
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - const: socionext,uniphier-xdmac
+> 
+> You can drop 'items' for a single item.
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/socionext,uniphier-xdmac.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Socionext UniPhier external DMA controller
-> +
-> +description: |
-> +  This describes the devicetree bindings for an external DMA engine to perform
-> +  memory-to-memory or peripheral-to-memory data transfer capable of supporting
-> +  16 channels, implemented in Socionext UniPhier SoCs.
-> +
-> +maintainers:
-> +  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> +
-> +allOf:
-> +  - $ref: "dma-controller.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: socionext,uniphier-xdmac
+I see.
+I found some documents didn't have expression for a compatible string.
 
-You can drop 'items' for a single item.
+> > +
+> > +  reg:
+> > +    minItems: 1
+> > +    maxItems: 2
+> 
+> You need to say what each entry is:
+> 
+> items:
+>   - description: ...
+>   - description: ...
 
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 2
+Surely there must be descriotions here.
 
-You need to say what each entry is:
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  "#dma-cells":
+> > +    const: 2
+> > +    description: |
+> > +      DMA request from clients consists of 2 cells:
+> > +        1. Channel index
+> > +        2. Transfer request factor number, If no transfer factor, use 0.
+> > +           The number is SoC-specific, and this should be specified with
+> > +           relation to the device to use the DMA controller.
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - "#dma-cells"
+> 
+> Add:
+> 
+> additionalProperties: false
 
-items:
-  - description: ...
-  - description: ...
+I'll add it.
 
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  "#dma-cells":
-> +    const: 2
-> +    description: |
-> +      DMA request from clients consists of 2 cells:
-> +        1. Channel index
-> +        2. Transfer request factor number, If no transfer factor, use 0.
-> +           The number is SoC-specific, and this should be specified with
-> +           relation to the device to use the DMA controller.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - "#dma-cells"
+> > +
+> > +examples:
+> > +  - |
+> > +    xdmac: dma-controller@5fc10000 {
+> > +        compatible = "socionext,uniphier-xdmac";
+> > +        reg = <0x5fc10000 0x1000>, <0x5fc20000 0x800>;
+> > +        interrupts = <0 188 4>;
+> > +        #dma-cells = <2>;
+> > +        dma-channels = <16>;
+> 
+> Not documented. You need at least 'dma-channels: true' to indicate 
+> you're using this. But you should be able to have some constraints such 
+> as 'maximum: 16'.
 
-Add:
+I forgot to document 'dma-channels'. I'll add it.
 
-additionalProperties: false
+Thank you,
 
-> +
-> +examples:
-> +  - |
-> +    xdmac: dma-controller@5fc10000 {
-> +        compatible = "socionext,uniphier-xdmac";
-> +        reg = <0x5fc10000 0x1000>, <0x5fc20000 0x800>;
-> +        interrupts = <0 188 4>;
-> +        #dma-cells = <2>;
-> +        dma-channels = <16>;
+---
+Best Regards,
+Kunihiko Hayashi
 
-Not documented. You need at least 'dma-channels: true' to indicate 
-you're using this. But you should be able to have some constraints such 
-as 'maximum: 16'.
-
-Rob

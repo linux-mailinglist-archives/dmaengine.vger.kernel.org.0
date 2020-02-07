@@ -2,51 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC750155B04
-	for <lists+dmaengine@lfdr.de>; Fri,  7 Feb 2020 16:50:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB70B155F70
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Feb 2020 21:19:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgBGPu2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 7 Feb 2020 10:50:28 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:42914 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727012AbgBGPu2 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 7 Feb 2020 10:50:28 -0500
-Received: by mail-il1-f194.google.com with SMTP id x2so2071482ila.9
-        for <dmaengine@vger.kernel.org>; Fri, 07 Feb 2020 07:50:27 -0800 (PST)
+        id S1727068AbgBGUTS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 7 Feb 2020 15:19:18 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40811 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727048AbgBGUTS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 7 Feb 2020 15:19:18 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q8so334517pfh.7
+        for <dmaengine@vger.kernel.org>; Fri, 07 Feb 2020 12:19:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=/BhOQtqnUGY2YoQQDfksOrap4BH7GKNNNW2gOVDMACg=;
-        b=a8yINGJH4Enq8b0oiyU6byxohlhLXMbZSNkB7x7VRkiouN5+Ph2Lp/tZ17mk1U7mIS
-         VDM/v1p0JDYI6vpesDQcx5fkTlQBWX3k+aCeGK/wj1X0Aa/ey8HK9HE/zeEf7mvAeKt/
-         SfZWhgwuEmzOS9KpRN5QnHitWgNPtXn0FpmFdklzmLrWt8Yqddrya5U0ohwPvoRYcHiJ
-         mTam3OrpK+TeORX33Ir2ZwflHlkGgFAkvm70ywIYTSS+UXkRfYZ3LiBrwz7/4fZIfJd4
-         CbocYEiPwxdLjXvknfunTDnD7T3fln4nFQTHbK3KSKfzqUCxADPI3NPgbSnT6WgbTxma
-         dyfA==
+        bh=8cDRXBFOpE9J1p6S5H+HXSQg9q3m7pUJ3iUuQ5MPcDc=;
+        b=CU05bB2nQ2DS991SUtZ4wlwVafaHyApzCR6vzIlAJFJKnxU0BeAOYQN7B8ZAVXEG3b
+         VS7WAnawdkusOgZ4ZDBNA+lPAo+Phoc3DsFGbafoKepvzVSqTtU8yQ7hcJ0PJzeWcs+s
+         46Sq6ShdJ61LFRLaHYEJ1vMPms1lkhUXvUBirW21zeinISjNLNZzj3+RvegcZXjCVkKJ
+         cECOMfVEovs4lI+ezRQN987FF0gOAeYgQ4y43B4qdvtNjHzerXZdlT6+x9C/7SLQKPHp
+         ZWjWwYz4siTInJ3A8vT3ZwFN1MP16b58rbT9OGXbcfKzmcHDCyZZ384CzwOqUEA79kAR
+         nrJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:reply-to:from:date:message-id
          :subject:to;
-        bh=/BhOQtqnUGY2YoQQDfksOrap4BH7GKNNNW2gOVDMACg=;
-        b=ablm6MhKyJB1ewJeukOR/jSyl0i54DKiuKZ2QTuQvdrgonJEGBnRVGFdY5cHxEf5kE
-         XacJmPr0ULUlIKhu54V6XpNeOpStfhnJ380eD2HxKxlyHCyPD33o3HHi5EzeseudsO8s
-         KMDq3GC7Ej7GUiF8+JzpFt6/cxR73mn5W/HXyzFMBywu9QpsVrTi2G0WFEdHGCaT8EgJ
-         CKIIRRpcz5oQBtxRptCAJb+gEZV1jpVUuGD8Ef5Iy5nhUTzWUrA5/GB74ffC6XVbPEmS
-         ItVB4CbnySLUZ3gtazUd1RO91F6vQrNiSW5q4Y6I4q2xKEjhXYmfmn2LUDr8fAoRSAIG
-         wDwQ==
-X-Gm-Message-State: APjAAAWGyWFLobXOMC2ggnfz28iGCdtGIar3LEOhRA8o1eQPzO3wbV6W
-        f7mkZl9qMOm2E1dYx5O1uOy2PJlWbcVpm82QdTQ=
-X-Google-Smtp-Source: APXvYqxbysLP1JwNahZb2rlyk84sOPso4+CeLfU3tEkbBW3nrsLTy2QorcwxSnUmBK++sSrMxTdKbkUIovOfaEKk1X4=
-X-Received: by 2002:a92:1d5a:: with SMTP id d87mr9590ild.27.1581090627459;
- Fri, 07 Feb 2020 07:50:27 -0800 (PST)
+        bh=8cDRXBFOpE9J1p6S5H+HXSQg9q3m7pUJ3iUuQ5MPcDc=;
+        b=PpCzpcxmCcdK0vkVRuyW7zljkaMrNECgTmsz65KzpGQssZn8EyDoB5zodfnVLCMmhU
+         MIb0RkX+ki8r0jR2qBQvO/M36A4uDJI3zU/ekY6xaHy2+jBZwAZTNQe3yCa+YJrVg1F8
+         eGf7rH/5kEBxC3xj0hhkiQwGKIaIfDaJ/i2bGzHHuDeh2NJrNpJjvk9STbnPg7pxyZqa
+         6nChwauhAdtoY+oSNFEwvLqktRBFcQTb0W0JAfDFmjUsTxmxDZuZUxRLHgzNNB+457rh
+         6zw8Zb1sjtgdlVYkuv92dauON9h3K7/Pype+HedlgLv7at4UHl5bqH207f1Su0v0G0f0
+         6L2w==
+X-Gm-Message-State: APjAAAXjMsg+p1p7Xd46lxz5SmAV9/p3E0/p5Q56NLBv0z38iZpLx7H2
+        2cA0nsKtqpCyBZTDQrhsXFMtu1pWJGb+MOC/5aA=
+X-Google-Smtp-Source: APXvYqxsRpiy++kxZPlFeL1OvK954JdHyZ2HI9ma99ciINv2JwiQH7KWkofq51JdPZ06c1USUsuSZZJXGDChI4siMX0=
+X-Received: by 2002:a62:4ecc:: with SMTP id c195mr628590pfb.158.1581106757820;
+ Fri, 07 Feb 2020 12:19:17 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:a05:6e02:507:0:0:0:0 with HTTP; Fri, 7 Feb 2020 07:50:27
+Received: by 2002:a17:90a:3846:0:0:0:0 with HTTP; Fri, 7 Feb 2020 12:19:17
  -0800 (PST)
-Reply-To: mikeegobbia24@gmail.com
-From:   "Rev Mike Egobia." <somchaisujjapongse@gmail.com>
-Date:   Fri, 7 Feb 2020 16:50:27 +0100
-Message-ID: <CACZNbcUiHdALY4_stxHdkiSwjjfa7bByRmQhmpU+VFr2_dST3Q@mail.gmail.com>
-Subject: Re: Information !
+Reply-To: auch197722@gmail.com
+From:   "Mr. Theophilus Odadudu" <bukahenry10@gmail.com>
+Date:   Fri, 7 Feb 2020 15:19:17 -0500
+Message-ID: <CAEzczGKQsyZWdDN+dA7iLfVDZBqJw8MQ1cbk=S-He3Xkx0mgeA@mail.gmail.com>
+Subject: LETTER OF INQUIRY
 To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
@@ -54,18 +54,20 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Dear,
+Good Day,
 
-Given my current state of health, I have decided to donate what I have
-in life for the building of motherless baby home in your country since
-I'm orphan. Well my name is Rev Mike Egobia  from London childless, i
-lost my wife 10 year back, i am a missionary, I was diagnosed cancer
-few years ago and I have less then 4 months to live according to
-medical experts although i know God is able to keep me, (please honest
-appeal) if you able to handle the project reply for more information
-about the release  of US$8.5m donation and directives if i can trust
-you.
+I work as a clerk in a Bank here in Nigeria, I have a very
+confidential Business Proposition for you. There is a said amount of
+money floating in the bank unclaimed, belonging to the bank Foreign
+customer who die with his family in the Ethiopian Airline crash of
+March 11, 2019.
 
-Sincerely,
+I seek your good collaboration to move the fund for our benefit. we
+have agreed that 40% be yours once you help claim.
 
-Rev Mike Egobia
+Do get back to with 1) Your Full Name: (2) Residential Address: (3)
+Phone, Mobile  (4) Scan Copy of Your ID. to apply for claims of the
+funds.
+
+Regards
+Theophilus Odadudu

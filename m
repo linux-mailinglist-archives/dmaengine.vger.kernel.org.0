@@ -2,40 +2,61 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 47A65157FE1
-	for <lists+dmaengine@lfdr.de>; Mon, 10 Feb 2020 17:35:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF209158C77
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Feb 2020 11:13:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgBJQfi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 10 Feb 2020 11:35:38 -0500
-Received: from mga18.intel.com ([134.134.136.126]:37096 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727845AbgBJQfi (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 10 Feb 2020 11:35:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 08:35:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,425,1574150400"; 
-   d="scan'208";a="233158533"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga003.jf.intel.com with ESMTP; 10 Feb 2020 08:35:35 -0800
-Subject: Re: [PATCH -next] dmaengine: idxd: remove set but not used variable
- 'idxd_cdev'
-To:     YueHaibing <yuehaibing@huawei.com>, vkoul@kernel.org,
-        dan.j.williams@intel.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200210151855.55044-1-yuehaibing@huawei.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <af481087-388d-fe65-6a42-af5cccb9a46b@intel.com>
-Date:   Mon, 10 Feb 2020 09:35:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1727561AbgBKKN5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 11 Feb 2020 05:13:57 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40178 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728154AbgBKKN5 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Feb 2020 05:13:57 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01BADnsq041177;
+        Tue, 11 Feb 2020 04:13:49 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581416029;
+        bh=Ab19tWANqLz4W0BIfQpv5yDQrKNtAPUTkU+NkqUXqRw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=RhMzGbJYhtVdiTbgfJe8SzC3v7cVRd/6fVu44qXlxTeInoTUFfiZh5CbpW7+YD7qq
+         IrdnapR1koxUifUS+sPrnyG2fSoZRoCUnG/pE1hX5dQq/3M+vkuLNJwn8EWgObHjMa
+         fbuDVKNHWUFJS3s0ioCGaou6D7ONSDPTWRDdS0G4=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BADnMO007640;
+        Tue, 11 Feb 2020 04:13:49 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 11
+ Feb 2020 04:13:49 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 11 Feb 2020 04:13:49 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BADlRO027902;
+        Tue, 11 Feb 2020 04:13:48 -0600
+Subject: Re: [PATCH for-next 1/4] dmaengine: ti: k3-udma: Use
+ ktime/usleep_range based TX completion check
+To:     Vinod Koul <vkoul@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <grygorii.strashko@ti.com>
+References: <20200127132111.20464-1-peter.ujfalusi@ti.com>
+ <20200127132111.20464-2-peter.ujfalusi@ti.com>
+ <20200128114820.GS2841@vkoul-mobl>
+ <d968f32d-dc5f-0567-5aa4-faf318025c23@ti.com>
+ <20200128124403.GV2841@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <f6f6b1ca-03ee-c2f0-ffeb-c274e787706c@ti.com>
+Date:   Tue, 11 Feb 2020 12:13:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200210151855.55044-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200128124403.GV2841@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
@@ -43,38 +64,35 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 
 
-On 2/10/20 8:18 AM, YueHaibing wrote:
-> drivers/dma/idxd/cdev.c: In function idxd_cdev_open:
-> drivers/dma/idxd/cdev.c:77:20: warning:
->   variable idxd_cdev set but not used [-Wunused-but-set-variable]
+On 28/01/2020 14.44, Vinod Koul wrote:
+> On 28-01-20, 17:35, Vignesh Raghavendra wrote:
 > 
-> commit 42d279f9137a ("dmaengine: idxd: add char driver to
-> expose submission portal to userland") involed this.
+>>>> +	/* Transfer is incomplete, store current residue and time stamp */
+>>>>  	if (peer_bcnt < bcnt) {
+>>>>  		uc->tx_drain.residue = bcnt - peer_bcnt;
+>>>> -		uc->tx_drain.jiffie = jiffies;
+>>>> +		uc->tx_drain.tstamp = ktime_get();
+>>>
+>>> Any reason why ktime_get() is better than jiffies..?
+>>
+>> Resolution of jiffies is 4ms. ktime_t is has better resolution (upto ns
+>> scale). With jiffies, I observed that code was either always polling DMA
+>> progress counters (which affects HW data transfer speed) or sleeping too
+>> long, both causing performance loss. Switching to ktime_t provides
+>> better prediction of how long transfer takes to complete.
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Thanks for explanation, i think it is good info to add in changelog.
 
-Acked-by: Dave Jiang <dave.jiang@intel.com>
+It turns out that this patch causes lockup with UART stress testing.
+The strange thing is that we have identical patch in production with
+4.19 without issues.
 
-> ---
->   drivers/dma/idxd/cdev.c | 2 --
->   1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-> index 1d73478..8dfdbe3 100644
-> --- a/drivers/dma/idxd/cdev.c
-> +++ b/drivers/dma/idxd/cdev.c
-> @@ -74,12 +74,10 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
->   	struct idxd_device *idxd;
->   	struct idxd_wq *wq;
->   	struct device *dev;
-> -	struct idxd_cdev *idxd_cdev;
->   
->   	wq = inode_wq(inode);
->   	idxd = wq->idxd;
->   	dev = &idxd->pdev->dev;
-> -	idxd_cdev = &wq->idxd_cdev;
->   
->   	dev_dbg(dev, "%s called\n", __func__);
->   
-> 
+I'll send two series for UDMA update as we have found a way to induce a
+kernel crash with experimental UART patches.
+One with patches as must bug fixes for 5.6 and another one with lower
+priority fixes.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

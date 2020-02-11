@@ -2,97 +2,72 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EF209158C77
-	for <lists+dmaengine@lfdr.de>; Tue, 11 Feb 2020 11:13:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4515D15914B
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Feb 2020 15:02:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbgBKKN5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 11 Feb 2020 05:13:57 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:40178 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728154AbgBKKN5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Feb 2020 05:13:57 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01BADnsq041177;
-        Tue, 11 Feb 2020 04:13:49 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581416029;
-        bh=Ab19tWANqLz4W0BIfQpv5yDQrKNtAPUTkU+NkqUXqRw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=RhMzGbJYhtVdiTbgfJe8SzC3v7cVRd/6fVu44qXlxTeInoTUFfiZh5CbpW7+YD7qq
-         IrdnapR1koxUifUS+sPrnyG2fSoZRoCUnG/pE1hX5dQq/3M+vkuLNJwn8EWgObHjMa
-         fbuDVKNHWUFJS3s0ioCGaou6D7ONSDPTWRDdS0G4=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BADnMO007640;
-        Tue, 11 Feb 2020 04:13:49 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 11
- Feb 2020 04:13:49 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 11 Feb 2020 04:13:49 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01BADlRO027902;
-        Tue, 11 Feb 2020 04:13:48 -0600
-Subject: Re: [PATCH for-next 1/4] dmaengine: ti: k3-udma: Use
- ktime/usleep_range based TX completion check
-To:     Vinod Koul <vkoul@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>
+        id S1729025AbgBKOBk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 11 Feb 2020 09:01:40 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9723 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728295AbgBKOBj (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 11 Feb 2020 09:01:39 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0B19E9F6E2C2579081B1;
+        Tue, 11 Feb 2020 22:01:37 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 11 Feb 2020
+ 22:01:27 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
+        <vkoul@kernel.org>
 CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <grygorii.strashko@ti.com>
-References: <20200127132111.20464-1-peter.ujfalusi@ti.com>
- <20200127132111.20464-2-peter.ujfalusi@ti.com>
- <20200128114820.GS2841@vkoul-mobl>
- <d968f32d-dc5f-0567-5aa4-faf318025c23@ti.com>
- <20200128124403.GV2841@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <f6f6b1ca-03ee-c2f0-ffeb-c274e787706c@ti.com>
-Date:   Tue, 11 Feb 2020 12:13:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] dmaengine: idxd: remove set but not used variable 'group'
+Date:   Tue, 11 Feb 2020 21:53:35 +0800
+Message-ID: <20200211135335.55924-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <20200128124403.GV2841@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+drivers/dma/idxd/sysfs.c: In function engine_group_id_store:
+drivers/dma/idxd/sysfs.c:419:29: warning: variable group set but not used [-Wunused-but-set-variable]
+
+It is not used, so remove it.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/dma/idxd/sysfs.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+index 6d907fe..e4f35bd 100644
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@ -416,7 +416,7 @@ static ssize_t engine_group_id_store(struct device *dev,
+ 	struct idxd_device *idxd = engine->idxd;
+ 	long id;
+ 	int rc;
+-	struct idxd_group *prevg, *group;
++	struct idxd_group *prevg;
+ 
+ 	rc = kstrtol(buf, 10, &id);
+ 	if (rc < 0)
+@@ -436,7 +436,6 @@ static ssize_t engine_group_id_store(struct device *dev,
+ 		return count;
+ 	}
+ 
+-	group = &idxd->groups[id];
+ 	prevg = engine->group;
+ 
+ 	if (prevg)
+-- 
+2.7.4
 
 
-On 28/01/2020 14.44, Vinod Koul wrote:
-> On 28-01-20, 17:35, Vignesh Raghavendra wrote:
-> 
->>>> +	/* Transfer is incomplete, store current residue and time stamp */
->>>>  	if (peer_bcnt < bcnt) {
->>>>  		uc->tx_drain.residue = bcnt - peer_bcnt;
->>>> -		uc->tx_drain.jiffie = jiffies;
->>>> +		uc->tx_drain.tstamp = ktime_get();
->>>
->>> Any reason why ktime_get() is better than jiffies..?
->>
->> Resolution of jiffies is 4ms. ktime_t is has better resolution (upto ns
->> scale). With jiffies, I observed that code was either always polling DMA
->> progress counters (which affects HW data transfer speed) or sleeping too
->> long, both causing performance loss. Switching to ktime_t provides
->> better prediction of how long transfer takes to complete.
-> 
-> Thanks for explanation, i think it is good info to add in changelog.
-
-It turns out that this patch causes lockup with UART stress testing.
-The strange thing is that we have identical patch in production with
-4.19 without issues.
-
-I'll send two series for UDMA update as we have found a way to induce a
-kernel crash with experimental UART patches.
-One with patches as must bug fixes for 5.6 and another one with lower
-priority fixes.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

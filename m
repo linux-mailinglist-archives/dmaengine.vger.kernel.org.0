@@ -2,22 +2,21 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 43D6F15B64A
-	for <lists+dmaengine@lfdr.de>; Thu, 13 Feb 2020 02:01:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD5B415B64E
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Feb 2020 02:03:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbgBMBBa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 12 Feb 2020 20:01:30 -0500
-Received: from gateway20.websitewelcome.com ([192.185.60.19]:16065 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729132AbgBMBBa (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Feb 2020 20:01:30 -0500
-X-Greylist: delayed 1376 seconds by postgrey-1.27 at vger.kernel.org; Wed, 12 Feb 2020 20:01:29 EST
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id EA22E400C7695
-        for <dmaengine@vger.kernel.org>; Wed, 12 Feb 2020 17:23:29 -0600 (CST)
+        id S1729285AbgBMBDZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 12 Feb 2020 20:03:25 -0500
+Received: from gateway24.websitewelcome.com ([192.185.51.202]:41127 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729185AbgBMBDZ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Feb 2020 20:03:25 -0500
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 7A9B935E9F
+        for <dmaengine@vger.kernel.org>; Wed, 12 Feb 2020 18:39:29 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 22V9jicYNSl8q22V9jRJTS; Wed, 12 Feb 2020 18:37:07 -0600
+        id 22XRj6YCPRP4z22XRjY8l1; Wed, 12 Feb 2020 18:39:29 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -25,25 +24,25 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=kKJv0kn/8CiWYuFmMyB4I0SAO11rL/+DS9oRFWOs7DQ=; b=fQnu/LyjuKg3u/C06g61MYjHat
-        +RqeUElmb2EEKpk3+M64szLExX29wDkSAz0fH+N4Otq+AQuEtAYPcOrvbdzGhWG3pjRpnGjCGw6sA
-        Ymod/f4dxLsqEtxlFLzTmdnu9U6wpxp5CcB3YeIOixwSSQXOVY8KnKMh9hI2dIMa7DozH8LsQfAU4
-        JSB+K2BC7Po0KuaLWhMynciE6zphMJ0hjR3Y3GNKYS2goqpnF+d1+Q93vY789nNTYRuz29og0psY4
-        GuJ0KLNtQ9KvpAozAFkVHZIn5dWw+4Z0AMWk1mNojN+6wLo52ielfmuJq8FWqjH8OibikFZ8NA/L8
-        AdOawVzA==;
-Received: from [200.68.141.42] (port=25707 helo=embeddedor)
+        bh=W5rxnkEmmddJcYu6W8YmSeFeCtiHRsFrV/J1RxPSojs=; b=Q3oAKG3kSVV5k7Ll+WJyZb40ih
+        CqEn/zx1JFKH21BqqxP22Pr1YedrmUtE9CKqG48oW4x/eBtU/Pma3B5ZBuX4vAKJWChR+/P4aEauB
+        ffnfMlPSGE8MUDHieJH4WRaXtD9Nqz6cMmrd4+R4kLZvjcQUlpJv7fW4qNGjlN9aQwuHiW9/sE6Rj
+        YGxi26ZL2SZ+V2OYSAyCXFwYF7x39OXg+b6wATsZUNZQTYQ0PZcRsacYjDkx99lQc0/cXFvlLTCEu
+        MPYjU3AgMLJzvPfCXkjZBb/wXA+Sv5/CsMHLn2v0Stae4FpxlqkgY+dFWEc8wHlHzqq81Ev/uvjp9
+        +sGAux+A==;
+Received: from [200.68.141.42] (port=17499 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j22V7-003fvN-Ib; Wed, 12 Feb 2020 18:37:06 -0600
-Date:   Wed, 12 Feb 2020 18:37:03 -0600
+        id 1j22XP-003gqx-DZ; Wed, 12 Feb 2020 18:39:27 -0600
+Date:   Wed, 12 Feb 2020 18:39:25 -0600
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
 Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] dmaengine: bcm-sba-raid: Replace zero-length array with
+Subject: [PATCH] dmaengine: ti: omap-dma: Replace zero-length array with
  flexible-array member
-Message-ID: <20200213003703.GA4177@embeddedor.com>
+Message-ID: <20200213003925.GA6906@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -56,13 +55,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 200.68.141.42
 X-Source-L: No
-X-Exim-ID: 1j22V7-003fvN-Ib
+X-Exim-ID: 1j22XP-003gqx-DZ
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.141.42]:25707
+X-Source-Sender: (embeddedor) [200.68.141.42]:17499
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 50
+X-Email-Count: 54
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: dmaengine-owner@vger.kernel.org
@@ -100,22 +99,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/dma/bcm-sba-raid.c | 2 +-
+ drivers/dma/ti/omap-dma.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/bcm-sba-raid.c b/drivers/dma/bcm-sba-raid.c
-index 275e90fa829d..64239da02e74 100644
---- a/drivers/dma/bcm-sba-raid.c
-+++ b/drivers/dma/bcm-sba-raid.c
-@@ -120,7 +120,7 @@ struct sba_request {
- 	struct brcm_message msg;
- 	struct dma_async_tx_descriptor tx;
- 	/* SBA commands */
--	struct brcm_sba_command cmds[0];
-+	struct brcm_sba_command cmds[];
+diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+index a014ab96e673..918301e17552 100644
+--- a/drivers/dma/ti/omap-dma.c
++++ b/drivers/dma/ti/omap-dma.c
+@@ -124,7 +124,7 @@ struct omap_desc {
+ 	uint32_t csdp;		/* CSDP value */
+ 
+ 	unsigned sglen;
+-	struct omap_sg sg[0];
++	struct omap_sg sg[];
  };
  
- enum sba_version {
+ enum {
 -- 
 2.23.0
 

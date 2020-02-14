@@ -2,118 +2,120 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DA53115F22A
-	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2020 19:09:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A61415F144
+	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2020 19:03:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387693AbgBNSHY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 14 Feb 2020 13:07:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34874 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731539AbgBNPyf (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:54:35 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B0342465D;
-        Fri, 14 Feb 2020 15:54:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695675;
-        bh=Cnisj9RKGQR/FA7XIim+1rtIYd3BMtJlvkxzs51h6yw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wfy1ZVwVUbNE8wSivJzxYyr48XiY7iSVDd4OiUBMSG5KNsBwbIR/Vuko/+NVAaN4M
-         UoVSM1VeSE//y1Vct+C6GsI+dWLmbc5qkRoGlotNcmwGw76uornqDOTTf6e+S4a3Vh
-         ewO9m2UPVVVP0U7wnBVdUmn/qox60G2RcBke7WM8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        Robin Gong <yibin.gong@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 262/542] dmaengine: imx-sdma: Fix memory leak
-Date:   Fri, 14 Feb 2020 10:44:14 -0500
-Message-Id: <20200214154854.6746-262-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+        id S2388666AbgBNSAS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 14 Feb 2020 13:00:18 -0500
+Received: from gateway31.websitewelcome.com ([192.185.143.40]:26227 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390670AbgBNSAJ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 14 Feb 2020 13:00:09 -0500
+X-Greylist: delayed 1502 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Feb 2020 13:00:09 EST
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id C0986F43A
+        for <dmaengine@vger.kernel.org>; Fri, 14 Feb 2020 11:10:25 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 2eTxjTyZVXVkQ2eTxjrj5J; Fri, 14 Feb 2020 11:10:25 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=BuEqONPSEjbS6nR+nsgUPfM1v5+Y+62xNXlUsAnUd/c=; b=H6W/Fiysye58hDJxiiYBMewzcd
+        VBQLgnSAN28NP/JizT+q1WA/GLkUQjzDs71ZQcSDWPJUJqAbUNFgGTYDntMRyHou+3dCqT14qCXC1
+        PV27mRIl/oku9JMFvMq9eND7VNgLR6LBjVIw/Bse2pmxb84plypHp+xPIw9Ud2kHzlcCKobwbEBAq
+        NYTs04MyY8ZSjljzrOCrBd3dMLne3zhsOKcySI0/KQTemQmjT4hT8qBufqJOqJ50JWsU5HhLEIVRr
+        KT3SBt059LMfSFeiQEbZWgaHOdC6z8m5x3/Y/to+zL8qH1SXjaYVnEXSlNl4XfRwI1E6NiP+Y+WTa
+        fhWfo0oA==;
+Received: from [200.68.140.137] (port=41921 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j2eTw-003don-BC; Fri, 14 Feb 2020 11:10:24 -0600
+Date:   Fri, 14 Feb 2020 11:13:02 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] dmanegine: ioat/dca: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200214171302.GA20586@embeddedor>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.140.137
+X-Source-L: No
+X-Exim-ID: 1j2eTw-003don-BC
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.140.137]:41921
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-[ Upstream commit 02939cd167095f16328a1bd5cab5a90b550606df ]
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-The current descriptor is not on any list of the virtual DMA channel.
-Once sdma_terminate_all() is called when a descriptor is currently
-in flight then this one is forgotten to be freed. We have to call
-vchan_terminate_vdesc() on this descriptor to re-add it to the lists.
-Now that we also free the currently running descriptor we can (and
-actually have to) remove the current descriptor from its list also
-for the cyclic case.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Reviewed-by: Robin Gong <yibin.gong@nxp.com>
-Tested-by: Robin Gong <yibin.gong@nxp.com>
-Link: https://lore.kernel.org/r/20191216105328.15198-10-s.hauer@pengutronix.de
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/dma/imx-sdma.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ drivers/dma/ioat/dca.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index c27e206a764c3..66f1b2ac5cde4 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -760,12 +760,8 @@ static void sdma_start_desc(struct sdma_channel *sdmac)
- 		return;
- 	}
- 	sdmac->desc = desc = to_sdma_desc(&vd->tx);
--	/*
--	 * Do not delete the node in desc_issued list in cyclic mode, otherwise
--	 * the desc allocated will never be freed in vchan_dma_desc_free_list
--	 */
--	if (!(sdmac->flags & IMX_DMA_SG_LOOP))
--		list_del(&vd->node);
-+
-+	list_del(&vd->node);
+diff --git a/drivers/dma/ioat/dca.c b/drivers/dma/ioat/dca.c
+index be61c32a876f..0be385587c4c 100644
+--- a/drivers/dma/ioat/dca.c
++++ b/drivers/dma/ioat/dca.c
+@@ -102,7 +102,7 @@ struct ioat_dca_priv {
+ 	int			 max_requesters;
+ 	int			 requester_count;
+ 	u8			 tag_map[IOAT_TAG_MAP_LEN];
+-	struct ioat_dca_slot 	 req_slots[0];
++	struct ioat_dca_slot	 req_slots[];
+ };
  
- 	sdma->channel_control[channel].base_bd_ptr = desc->bd_phys;
- 	sdma->channel_control[channel].current_bd_ptr = desc->bd_phys;
-@@ -1071,7 +1067,6 @@ static void sdma_channel_terminate_work(struct work_struct *work)
- 
- 	spin_lock_irqsave(&sdmac->vc.lock, flags);
- 	vchan_get_all_descriptors(&sdmac->vc, &head);
--	sdmac->desc = NULL;
- 	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
- 	vchan_dma_desc_free_list(&sdmac->vc, &head);
- 	sdmac->context_loaded = false;
-@@ -1080,11 +1075,19 @@ static void sdma_channel_terminate_work(struct work_struct *work)
- static int sdma_disable_channel_async(struct dma_chan *chan)
- {
- 	struct sdma_channel *sdmac = to_sdma_chan(chan);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&sdmac->vc.lock, flags);
- 
- 	sdma_disable_channel(chan);
- 
--	if (sdmac->desc)
-+	if (sdmac->desc) {
-+		vchan_terminate_vdesc(&sdmac->desc->vd);
-+		sdmac->desc = NULL;
- 		schedule_work(&sdmac->terminate_worker);
-+	}
-+
-+	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
- 
- 	return 0;
- }
+ static int ioat_dca_dev_managed(struct dca_provider *dca,
 -- 
-2.20.1
+2.25.0
 

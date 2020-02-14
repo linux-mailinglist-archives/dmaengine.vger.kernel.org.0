@@ -2,47 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B1A015D47A
-	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2020 10:15:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 10C2215D47B
+	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2020 10:15:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbgBNJOy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 14 Feb 2020 04:14:54 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:57610 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729052AbgBNJOv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 14 Feb 2020 04:14:51 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01E9Emua117368;
-        Fri, 14 Feb 2020 03:14:48 -0600
+        id S1729139AbgBNJO4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 14 Feb 2020 04:14:56 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:53920 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729123AbgBNJOz (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 14 Feb 2020 04:14:55 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01E9EoiG111864;
+        Fri, 14 Feb 2020 03:14:50 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581671689;
-        bh=7WldpK8BcpshZwfcHpxXX7Yepvns9PLGRnzm9vRN7jY=;
+        s=ti-com-17Q1; t=1581671691;
+        bh=OzHgH5nWkKfcQlJ+YZ/ZYmveXJLzjgDJI2DOc610CdM=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=yQMVKWkxK/HcHd/NvVhqrhPDt9Qtu/a3mY8/2sJwNEDancOhVNdySGln1LS0anj3k
-         X3vNUp/DWFENnTGB9bQvAxe8jhXx476AEnVYq4TwmpFFhD0Ap215ogtGCPaafrQEjD
-         2vU/TYQz/If+1CaChEtSZ+gD4O8JtXxAgY6dvqT4=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01E9Emhm108958;
-        Fri, 14 Feb 2020 03:14:48 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+        b=fj2/m+vqeHwlobG7670Ae3pCfFkNWkBoySACbhTOCs+CRmd/t3odMB4UaGqOYXSru
+         /fn0llcgHkb4mR2820vf+8d7cumlOo9A5VALwPDlinOaNrWUJNktHyWk5eXz+myB3H
+         w8MgMX9dC2VnWiRh+h+vnoNCMUHuv782jFyphrLA=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01E9EoYD076831
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 14 Feb 2020 03:14:50 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 14
- Feb 2020 03:14:48 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ Feb 2020 03:14:50 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 14 Feb 2020 03:14:48 -0600
+ Frontend Transport; Fri, 14 Feb 2020 03:14:50 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01E9Ea41043021;
-        Fri, 14 Feb 2020 03:14:46 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01E9Ea42043021;
+        Fri, 14 Feb 2020 03:14:48 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>
 CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <dan.j.williams@intel.com>, <grygorii.strashko@ti.com>,
         <vigneshr@ti.com>
-Subject: [PATCH v2 5/6] dmaengine: ti: k3-udma: Use the channel direction in pause/resume functions
-Date:   Fri, 14 Feb 2020 11:14:40 +0200
-Message-ID: <20200214091441.27535-6-peter.ujfalusi@ti.com>
+Subject: [PATCH v2 6/6] dmaengine: ti: k3-udma: Fix terminated transfer handling
+Date:   Fri, 14 Feb 2020 11:14:41 +0200
+Message-ID: <20200214091441.27535-7-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200214091441.27535-1-peter.ujfalusi@ti.com>
 References: <20200214091441.27535-1-peter.ujfalusi@ti.com>
@@ -55,57 +56,75 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-It should be possible to pause, resume and check the pause state of a
-channel even if we do not have active transfer.
+When we receive back the descriptor of the terminated transfer the cookie
+must be marked as completed to make sure that the accounting is correct.
 
-udma_is_chan_paused() can trigger NULL pointer reference in it's current
-form when the status is checked while uc->desc is NULL.
+In udma_tx_status() the status should be marked as completed if the channel
+is no longer running (it can only happen if the channel is not yet started
+for the first time, or after a channel termination).
 
 Fixes: 25dcb5dd7b7ce ("dmaengine: ti: New driver for K3 UDMA")
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/dma/ti/k3-udma.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ drivers/dma/ti/k3-udma.c | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index 1dba47c662c4..9b4e1e5fa849 100644
+index 9b4e1e5fa849..0536866a58ce 100644
 --- a/drivers/dma/ti/k3-udma.c
 +++ b/drivers/dma/ti/k3-udma.c
-@@ -513,7 +513,7 @@ static bool udma_is_chan_paused(struct udma_chan *uc)
- {
- 	u32 val, pause_mask;
+@@ -1097,29 +1097,27 @@ static irqreturn_t udma_ring_irq_handler(int irq, void *data)
+ 			goto out;
+ 		}
  
--	switch (uc->desc->dir) {
-+	switch (uc->config.dir) {
- 	case DMA_DEV_TO_MEM:
- 		val = udma_rchanrt_read(uc->rchan,
- 					UDMA_RCHAN_RT_PEER_RT_EN_REG);
-@@ -2835,11 +2835,8 @@ static int udma_pause(struct dma_chan *chan)
- {
- 	struct udma_chan *uc = to_udma_chan(chan);
- 
--	if (!uc->desc)
--		return -EINVAL;
+-		if (uc->cyclic) {
+-			/* push the descriptor back to the ring */
+-			if (d == uc->desc) {
++		if (d == uc->desc) {
++			/* active descriptor */
++			if (uc->cyclic) {
+ 				udma_cyclic_packet_elapsed(uc);
+ 				vchan_cyclic_callback(&d->vd);
+-			}
+-		} else {
+-			bool desc_done = false;
 -
- 	/* pause the channel */
--	switch (uc->desc->dir) {
-+	switch (uc->config.dir) {
- 	case DMA_DEV_TO_MEM:
- 		udma_rchanrt_update_bits(uc->rchan,
- 					 UDMA_RCHAN_RT_PEER_RT_EN_REG,
-@@ -2868,11 +2865,8 @@ static int udma_resume(struct dma_chan *chan)
- {
- 	struct udma_chan *uc = to_udma_chan(chan);
- 
--	if (!uc->desc)
--		return -EINVAL;
+-			if (d == uc->desc) {
+-				desc_done = udma_is_desc_really_done(uc, d);
 -
- 	/* resume the channel */
--	switch (uc->desc->dir) {
-+	switch (uc->config.dir) {
- 	case DMA_DEV_TO_MEM:
- 		udma_rchanrt_update_bits(uc->rchan,
- 					 UDMA_RCHAN_RT_PEER_RT_EN_REG,
+-				if (desc_done) {
++			} else {
++				if (udma_is_desc_really_done(uc, d)) {
+ 					uc->bcnt += d->residue;
+ 					udma_start(uc);
++					vchan_cookie_complete(&d->vd);
+ 				} else {
+ 					schedule_delayed_work(&uc->tx_drain.work,
+ 							      0);
+ 				}
+ 			}
+-
+-			if (desc_done)
+-				vchan_cookie_complete(&d->vd);
++		} else {
++			/*
++			 * terminated descriptor, mark the descriptor as
++			 * completed to update the channel's cookie marker
++			 */
++			dma_cookie_complete(&d->vd.tx);
+ 		}
+ 	}
+ out:
+@@ -2769,6 +2767,9 @@ static enum dma_status udma_tx_status(struct dma_chan *chan,
+ 
+ 	ret = dma_cookie_status(chan, cookie, txstate);
+ 
++	if (!udma_is_chan_running(uc))
++		ret = DMA_COMPLETE;
++
+ 	if (ret == DMA_IN_PROGRESS && udma_is_chan_paused(uc))
+ 		ret = DMA_PAUSED;
+ 
 -- 
 Peter
 

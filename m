@@ -2,119 +2,80 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E25C215EA31
-	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2020 18:12:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93DCF15EE97
+	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2020 18:41:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403853AbgBNRMC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 14 Feb 2020 12:12:02 -0500
-Received: from gateway20.websitewelcome.com ([192.185.60.19]:41701 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2391602AbgBNRMB (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 14 Feb 2020 12:12:01 -0500
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 01452400F5A21
-        for <dmaengine@vger.kernel.org>; Fri, 14 Feb 2020 09:58:17 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 2eVTjIoBjEfyq2eVTjS0K1; Fri, 14 Feb 2020 11:11:59 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=0ZVD8rkyaK3hLNfOdpk0wuANy7TapkEfNgzpEqlIIX8=; b=EQ0WnNgENNRvu42vmFVTkkjxra
-        aU9dZ0FLeIiApEBe20GAA+bqXNt5Gx+GGsHRdXxlQ4rwFgULaFQxxSb2IPmd7MVy+OBiWiL/GWjGT
-        /lcfERtd3WshTyA5hQ9gVMa/GEQNjVKVGqrFUtWCqYR79/mw4J4jbkILUxZcy0RBWHe8DHUVwjd0f
-        TmFPvcmiFcYZl6VjMpvHWiDtOKQALXcnxsMFtOpMAxuQn86PvOYAc6OHnF82tYENwBtlSAbcrIWA0
-        L9RqF0TiUyzvJbAQdOFPRlzuK0xnM7ahjSw03nn1QZAH/gEJeM/kH671VxUaMFl33y/rHNLmuhTus
-        +cBgopCg==;
-Received: from [200.68.140.137] (port=41751 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j2eVR-003eZL-TZ; Fri, 14 Feb 2020 11:11:58 -0600
-Date:   Fri, 14 Feb 2020 11:14:35 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] dmaengine: sa11x0: Replace zero-length array with
- flexible-array member
-Message-ID: <20200214171435.GA22930@embeddedor>
+        id S2389701AbgBNQDh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 14 Feb 2020 11:03:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389697AbgBNQDh (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:03:37 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E84B52082F;
+        Fri, 14 Feb 2020 16:03:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696216;
+        bh=WuG/B6lmBEnh3GUKDiqWFqR3zitCFb14UJnbGdNR6mY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BkFOzB6hZAlLBqKg2uWvbLleEtoAy6M8wQAmuyYqfsNig30v2bvRxSMmE657Ehh5+
+         09v68FqzPUaTB7/zoxRphtAy7pz5PoYy3KlH0124DG8y+rmeU4UN4/fawBYOLUHZ59
+         eN2h67XwlKoK5rWGG2+UZpy8CEELcgFNHiLr2ueo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Chen Zhou <chenzhou10@huawei.com>, Peng Ma <peng.ma@nxp.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 080/459] dmaengine: fsl-qdma: fix duplicated argument to &&
+Date:   Fri, 14 Feb 2020 10:55:30 -0500
+Message-Id: <20200214160149.11681-80-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.137
-X-Source-L: No
-X-Exim-ID: 1j2eVR-003eZL-TZ
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.137]:41751
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 7
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+From: Chen Zhou <chenzhou10@huawei.com>
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+[ Upstream commit 4b048178854da11656596d36a107577d66fd1e08 ]
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+There is duplicated argument to && in function fsl_qdma_free_chan_resources,
+which looks like a typo, pointer fsl_queue->desc_pool also needs NULL check,
+fix it.
+Detected with coccinelle.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Fixes: b092529e0aa0 ("dmaengine: fsl-qdma: Add qDMA controller driver for Layerscape SoCs")
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Reviewed-by: Peng Ma <peng.ma@nxp.com>
+Tested-by: Peng Ma <peng.ma@nxp.com>
+Link: https://lore.kernel.org/r/20200120125843.34398-1-chenzhou10@huawei.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/sa11x0-dma.c | 2 +-
+ drivers/dma/fsl-qdma.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/sa11x0-dma.c b/drivers/dma/sa11x0-dma.c
-index afb68055ed1b..0fa7f14a65a1 100644
---- a/drivers/dma/sa11x0-dma.c
-+++ b/drivers/dma/sa11x0-dma.c
-@@ -78,7 +78,7 @@ struct sa11x0_dma_desc {
- 	bool			cyclic;
+diff --git a/drivers/dma/fsl-qdma.c b/drivers/dma/fsl-qdma.c
+index 89792083d62c5..95cc0256b3878 100644
+--- a/drivers/dma/fsl-qdma.c
++++ b/drivers/dma/fsl-qdma.c
+@@ -304,7 +304,7 @@ static void fsl_qdma_free_chan_resources(struct dma_chan *chan)
  
- 	unsigned		sglen;
--	struct sa11x0_dma_sg	sg[0];
-+	struct sa11x0_dma_sg	sg[];
- };
+ 	vchan_dma_desc_free_list(&fsl_chan->vchan, &head);
  
- struct sa11x0_dma_phy;
+-	if (!fsl_queue->comp_pool && !fsl_queue->comp_pool)
++	if (!fsl_queue->comp_pool && !fsl_queue->desc_pool)
+ 		return;
+ 
+ 	list_for_each_entry_safe(comp_temp, _comp_temp,
 -- 
-2.25.0
+2.20.1
 

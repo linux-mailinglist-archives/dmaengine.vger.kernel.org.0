@@ -2,99 +2,119 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1415315D92F
-	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2020 15:16:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31AB115DCBA
+	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2020 16:56:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729258AbgBNOQa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 14 Feb 2020 09:16:30 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19999 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729092AbgBNOQa (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 14 Feb 2020 09:16:30 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e46abaf0000>; Fri, 14 Feb 2020 06:16:15 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 14 Feb 2020 06:16:29 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 14 Feb 2020 06:16:29 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Feb
- 2020 14:16:27 +0000
-Subject: Re: [PATCH v8 19/19] dmaengine: tegra-apb: Improve error message
- about DMA underflow
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200209163356.6439-1-digetx@gmail.com>
- <20200209163356.6439-20-digetx@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <f26f9a99-a044-a0ed-d845-5c93628d29d4@nvidia.com>
-Date:   Fri, 14 Feb 2020 14:16:25 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1731548AbgBNPyc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 14 Feb 2020 10:54:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731546AbgBNPyb (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 14 Feb 2020 10:54:31 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56CFC222C4;
+        Fri, 14 Feb 2020 15:54:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581695671;
+        bh=Aa4LQc/fQ6MQQpm24YQGRNw2rQxRYku0iwSvM44nrAE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=a0cYh/Lpq7X89HlOomx/T33VtNm3H4dr0irXrTsS+FQEb64qq6cicGGjgAJe8B2pd
+         0RX6+rXZHev+HrTwzfNWeuwShO5nFvKDy51clV7c1l+bU5osoPVyV7dGId7sE0T2KT
+         /MSt476hUdAlg6yeejCEEl4+Y+sJRt37jf+ggc6s=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 259/542] dmaengine: Store module owner in dma_device struct
+Date:   Fri, 14 Feb 2020 10:44:11 -0500
+Message-Id: <20200214154854.6746-259-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
+References: <20200214154854.6746-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200209163356.6439-20-digetx@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581689775; bh=e8YDGG5SBKWvch6oV9YVb5CtuyrsWgVzbSEi0lh2ydE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=XkntFlzoon0L80vKlRoIPbHq/UEAFGYcr20kuca+URiHavLLTta6pgPqRUNksvuea
-         QTG9w5Q3dCzslsi/hC4/c897Ny3ORs8UGN9+QnP8lYy/+NMnj7eInhw4EGVxhgEHbu
-         pWext/H213rbfDyD+sf1sDoCxMYOUyVIELQ54ZCPwq+hPXes2hcre4jreqh7ke5xJe
-         PAApGvRUAWfn//sRevKraW5HezcGwpeC7z8YVHLxH+2rfIz7tlAaivH2we/XeL7mbu
-         wkidO+C3FRQgGrNptiDQXkl8JdVVGAz4ZAxyxbvK7fB1efhgEEbFlM65HtLwzVWEmp
-         P6VKrK9wWqqLQ==
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+From: Logan Gunthorpe <logang@deltatee.com>
 
-On 09/02/2020 16:33, Dmitry Osipenko wrote:
-> Technically it is possible that DMA could be misconfigured in a way that
-> cyclic DMA transfer is processed slower than it takes to complete the
-> cycle and in this case the DMA is getting aborted with a not very
-> informative message about the problem, let's improve it.
-> 
-> Suggested-by: Jon Hunter <jonathanh@nvidia.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/dma/tegra20-apb-dma.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-> index 3e0373b89195..1a9b37c102ba 100644
-> --- a/drivers/dma/tegra20-apb-dma.c
-> +++ b/drivers/dma/tegra20-apb-dma.c
-> @@ -566,7 +566,7 @@ static bool handle_continuous_head_request(struct tegra_dma_channel *tdc,
->  	if (!hsgreq->configured) {
->  		tegra_dma_stop(tdc);
->  		pm_runtime_put(tdc->tdma->dev);
-> -		dev_err(tdc2dev(tdc), "Error in DMA transfer, aborting DMA\n");
-> +		dev_err(tdc2dev(tdc), "DMA transfer underflow, aborting DMA\n");
->  		tegra_dma_abort_all(tdc);
->  		return false;
->  	}
-> 
+[ Upstream commit dae7a589c18a4d979d5f14b09374e871b995ceb1 ]
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
+dma_chan_to_owner() dereferences the driver from the struct device to
+obtain the owner and call module_[get|put](). However, if the backing
+device is unbound before the dma_device is unregistered, the driver
+will be cleared and this will cause a NULL pointer dereference.
 
-Thanks!
-Jon
+Instead, store a pointer to the owner module in the dma_device struct
+so the module reference can be properly put when the channel is put, even
+if the backing device was destroyed first.
 
+This change helps to support a safer unbind of DMA engines.
+If the dma_device is unregistered in the driver's remove function,
+there's no guarantee that there are no existing clients and a users
+action may trigger the WARN_ONCE in dma_async_device_unregister()
+which is unlikely to leave the system in a consistent state.
+Instead, a better approach is to allow the backing driver to go away
+and fail any subsequent requests to it.
+
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Link: https://lore.kernel.org/r/20191216190120.21374-2-logang@deltatee.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/dma/dmaengine.c   | 4 +++-
+ include/linux/dmaengine.h | 2 ++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index 03ac4b96117cd..4b604086b1b3a 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -179,7 +179,7 @@ __dma_device_satisfies_mask(struct dma_device *device,
+ 
+ static struct module *dma_chan_to_owner(struct dma_chan *chan)
+ {
+-	return chan->device->dev->driver->owner;
++	return chan->device->owner;
+ }
+ 
+ /**
+@@ -919,6 +919,8 @@ int dma_async_device_register(struct dma_device *device)
+ 		return -EIO;
+ 	}
+ 
++	device->owner = device->dev->driver->owner;
++
+ 	if (dma_has_cap(DMA_MEMCPY, device->cap_mask) && !device->device_prep_dma_memcpy) {
+ 		dev_err(device->dev,
+ 			"Device claims capability %s, but op is not defined\n",
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index dad4a68fa0094..8013562751a50 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -674,6 +674,7 @@ struct dma_filter {
+  * @fill_align: alignment shift for memset operations
+  * @dev_id: unique device ID
+  * @dev: struct device reference for dma mapping api
++ * @owner: owner module (automatically set based on the provided dev)
+  * @src_addr_widths: bit mask of src addr widths the device supports
+  *	Width is specified in bytes, e.g. for a device supporting
+  *	a width of 4 the mask should have BIT(4) set.
+@@ -737,6 +738,7 @@ struct dma_device {
+ 
+ 	int dev_id;
+ 	struct device *dev;
++	struct module *owner;
+ 
+ 	u32 src_addr_widths;
+ 	u32 dst_addr_widths;
 -- 
-nvpublic
+2.20.1
+

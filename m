@@ -2,152 +2,112 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C23C15C8DF
-	for <lists+dmaengine@lfdr.de>; Thu, 13 Feb 2020 17:53:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 84F5015CF91
+	for <lists+dmaengine@lfdr.de>; Fri, 14 Feb 2020 02:52:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728462AbgBMQxL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 13 Feb 2020 11:53:11 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:52766 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727705AbgBMQxL (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 13 Feb 2020 11:53:11 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 36982504;
-        Thu, 13 Feb 2020 17:53:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1581612789;
-        bh=xw+ZhmvTjf73b+T3lgM5QsVSseZSQSFG9QD4WaQUl28=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R0w/ud8mWlmGKSjtmY7exu6ttZdxpHYsPPL4VuNS7Y59jg0z39k1mSziJqON00cEh
-         TE2zg+koTluL9kYKnGmheS7FS8wfSdTHCb8iiXJoja4+A55i896u1lXbmPAqFBYCaz
-         3GRk5EwygWFUEIOQNfhr1cgWX+XYeQZCfxeGGTcc=
-Date:   Thu, 13 Feb 2020 18:52:49 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Tejas Upadhyay <tejasu@xilinx.com>,
-        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
-Subject: Re: [PATCH v3 2/6] dmaengine: Add interleaved cyclic transaction type
-Message-ID: <20200213165249.GH29760@pendragon.ideasonboard.com>
-References: <20200123084352.GU2841@vkoul-mobl>
- <88aa9920-cdaf-97f0-c36f-66a998860ed2@ti.com>
- <20200123122304.GB13922@pendragon.ideasonboard.com>
- <20200124061047.GE2841@vkoul-mobl>
- <20200124085051.GA4842@pendragon.ideasonboard.com>
- <20200210140618.GA4727@pendragon.ideasonboard.com>
- <20200213132938.GF2618@vkoul-mobl>
- <20200213134843.GG4833@pendragon.ideasonboard.com>
- <20200213140709.GH2618@vkoul-mobl>
- <736038ef-e8b2-5542-5cda-d8923e3a4826@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <736038ef-e8b2-5542-5cda-d8923e3a4826@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1728168AbgBNBwL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 13 Feb 2020 20:52:11 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34424 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727988AbgBNBwL (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 13 Feb 2020 20:52:11 -0500
+Received: by mail-pg1-f193.google.com with SMTP id j4so4127449pgi.1
+        for <dmaengine@vger.kernel.org>; Thu, 13 Feb 2020 17:52:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=87y16Eke3JoFDTS3mJX5f9505D+ep7pI/R4smcsdKCE=;
+        b=B+bFRB2+E1zYaFZ2w8+4JNCqciHV3did2c2TS/gfpuzKlWko4BB8YsB94gwIrDph9T
+         tjliYRrDhuBNx/W2BoTbp99y27VyLEgVeN2Aa6B/YYOszVv270hGyVmktA0HxP7a0U9z
+         PuHXre754JIKgQvb6CSNjEH8B5+EAHFZAYMMHWRbMFwDgtFDsXVvfucBJajheF2/P6QO
+         ffb8LRQFHtnIGxpH9L6u35t+jetlKNYoGuBZK/Lb38Q5JaM+dydNoIel/c2golpCzE1Y
+         1ZCStTHYzYH3c6Z/VSzGQ7EfiKNxGnFOtjvMBpVN3rNbsuN5zRnp4mYZoiq9gs9V8sQX
+         JnDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=87y16Eke3JoFDTS3mJX5f9505D+ep7pI/R4smcsdKCE=;
+        b=ovdibGEPKjlN9T32imKVoZQCalbn4lVr3hrwGhYt80BMa041EirBB67rcT7Cu2JJ5s
+         AkfWL+T1jFR19EA4n8LFUALxgqfUkVG7SecEczDz7f6FADENsq5jHQ08JvvVoI89YOK8
+         6RX9ZM4Pfx8nHa0hsd99+2QS03aO4t+sD60JVYgIOMYDCwgZU5AtFtSE7K4ChJRvXins
+         0xO9yDScvs3VHvfKqxolRtU5SUEFwWcz47Etvsfst4Kt0r1N0RC8UoADvRtPF4jPcUHo
+         z/HX39U1Pp12MhU9bRnQ5mvDZr4XpIR1sXBK7k0Hod+Iy0YgbPhjx7ZZ7Lp/TJeol39H
+         0Epw==
+X-Gm-Message-State: APjAAAUd4YIy7LxrpFRj9+sMYCNH6/8Wa1PvQFYGi4h11HYD+S0f64ZR
+        KN8gVDo6MsPiyPoUVnFub5g=
+X-Google-Smtp-Source: APXvYqyPJ9A5b8Ei8d2HjFdHBiKhM56KHcmV7bVvM/Biyy6igvq5jLgJ1KALPmMGZIwTWXClj7gucw==
+X-Received: by 2002:a62:19d1:: with SMTP id 200mr856625pfz.26.1581645129489;
+        Thu, 13 Feb 2020 17:52:09 -0800 (PST)
+Received: from localhost ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id gx18sm4234355pjb.8.2020.02.13.17.52.08
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Thu, 13 Feb 2020 17:52:08 -0800 (PST)
+From:   qiwuchen55@gmail.com
+To:     dan.j.williams@intel.com, koul@kernel.org, peter.ujfalusi@ti.com
+Cc:     kstewart@linuxfoundation.org, gregkh@linuxfoundation.org,
+        info@metux.net, wenwen@cs.uga.edu, tglx@linutronix.de,
+        dmaengine@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>
+Subject: [PATCH v2] dmaengine: ti: dma-crossbar: convert to devm_platform_ioremap_resource()
+Date:   Fri, 14 Feb 2020 09:52:03 +0800
+Message-Id: <1581645123-22819-1-git-send-email-qiwuchen55@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vinod and Peter,
+From: chenqiwu <chenqiwu@xiaomi.com>
 
-On Thu, Feb 13, 2020 at 04:15:38PM +0200, Peter Ujfalusi wrote:
-> On 13/02/2020 16.07, Vinod Koul wrote:
-> > On 13-02-20, 15:48, Laurent Pinchart wrote:
-> >> On Thu, Feb 13, 2020 at 06:59:38PM +0530, Vinod Koul wrote:
-> >>> On 10-02-20, 16:06, Laurent Pinchart wrote:
-> >>>
-> >>>>>>> The use case here is not to switch to a new configuration, but to switch
-> >>>>>>> to a new buffer. If the transfer had to be terminated manually first,
-> >>>>>>> the DMA engine would potentially miss a frame, which is not acceptable.
-> >>>>>>> We need an atomic way to switch to the next transfer.
-> >>>>>>
-> >>>>>> So in this case you have, let's say a cyclic descriptor with N buffers
-> >>>>>> and they are cyclically capturing data and providing to client/user..
-> >>>>>
-> >>>>> For the display case it's cyclic over a single buffer that is repeatedly
-> >>>>> displayed over and over again until a new one replaces it, when
-> >>>>> userspace wants to change the content on the screen. Userspace only has
-> >>>>> to provide a new buffer when content changes, otherwise the display has
-> >>>>> to keep displaying the same one.
-> >>>>
-> >>>> Is the use case clear enough, or do you need more information ? Are you
-> >>>> fine with the API for this kind of use case ?
-> >>>
-> >>> So we *know* when a new buffer is being used?
-> >>
-> >> The user of the DMA engine (the DRM DPSUB driver in this case) knows
-> >> when a new buffer needs to be used, as it receives it from userspace. In
-> >> response, it prepares a new interleaved cyclic transaction and queues
-> >> it. At the next IRQ, the DMA engine driver switches to the new
-> >> transaction (the implementation is slightly more complex to handle race
-> >> conditions, but that's the idea).
-> >>
-> >>> IOW would it be possible for display (rather a dmaengine facing
-> >>> display wrapper) to detect that we are reusing an old buffer and keep
-> >>> the cyclic and once detected prepare a new descriptor, submit a new
-> >>> one and then terminate old one which should trigger next transaction
-> >>> to be submitted
-> >>
-> >> I'm not sure to follow you. Do you mean that the display driver should
-> >> submit a non-cyclic transaction for every frame, reusing the same buffer
-> >> for every transaction, until a new buffer is available ? The issue with
-> >> this is that if the CPU load gets high, we may miss a frame, and the
-> >> display will break. The DPDMA hardware implements cyclic support for
-> >> this reason, and we want to use that feature to comply with the real
-> >> time requirements.
-> > 
-> > Sorry to cause confusion :) I mean cyclic
-> > 
-> > So, DRM DPSUB get first buffer
-> > A.1 Prepare cyclic interleave txn
-> > A.2 Submit the txn (it doesn't start here)
-> > A.3 Invoke issue_pending (that starts the txn)
+Use a new API devm_platform_ioremap_resource() to simplify code.
 
-I assume that, at this point, the transfer is started, and repeated
-forever until step B below, right ?
+Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
+---
+changes in v2:
+    Subsystem name is 'dmaengine', use that tag instead.
+---
+ drivers/dma/ti/dma-crossbar.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-> > DRM DPSUB gets next buffer:
-> > B.1 Prepare cyclic interleave txn
-> > B.2 Submit the txn
-> > B.3 Call terminate for current cyclic txn (we need an updated terminate
-> > which terminates the current txn, right now we have terminate_all which
-> > is a sledge hammer approach)
-> > B.4 Next txn would start once current one is started
-
-Do you mean "once current one is completed" ?
-
-> > Does this help and make sense in your case
-
-It does, but I really wonder why we need a new terminate operation that
-would terminate a single transfer. If we call issue_pending at step B.3,
-when the new txn submitted, we can terminate the current transfer at the
-point. It changes the semantics of issue_pending, but only for cyclic
-transfers (this whole discussions it only about cyclic transfers). As a
-cyclic transfer will be repeated forever until terminated, there's no
-use case for issuing a new transfer without terminating the one in
-progress. I thus don't think we need a new terminate operation: the only
-thing that makes sense to do when submitting a new cyclic transfer is to
-terminate the current one and switch to the new one, and we already have
-all the APIs we need to enable this behaviour.
-
-> That would be a clean way to handle it. We were missing this API for a
-> long time to be able to cancel the ongoing transfer (whether it is
-> cyclic or slave_sg, or memcpy) and move to the next one if there is one
-> pending.
-
-Note that this new terminate API wouldn't terminate the ongoing transfer
-immediately, it would complete first, until the end of the cycle for
-cyclic transfers, and until the end of the whole transfer otherwise.
-This new operation would thus essentially be a no-op for non-cyclic
-transfers. I don't see how it would help :-) Do you have any particular
-use case in mind ?
-
-> +1 from me if it counts ;)
-
+diff --git a/drivers/dma/ti/dma-crossbar.c b/drivers/dma/ti/dma-crossbar.c
+index f255056..4ba8fa5 100644
+--- a/drivers/dma/ti/dma-crossbar.c
++++ b/drivers/dma/ti/dma-crossbar.c
+@@ -133,7 +133,6 @@ static int ti_am335x_xbar_probe(struct platform_device *pdev)
+ 	const struct of_device_id *match;
+ 	struct device_node *dma_node;
+ 	struct ti_am335x_xbar_data *xbar;
+-	struct resource *res;
+ 	void __iomem *iomem;
+ 	int i, ret;
+ 
+@@ -173,8 +172,7 @@ static int ti_am335x_xbar_probe(struct platform_device *pdev)
+ 		xbar->xbar_events = TI_AM335X_XBAR_LINES;
+ 	}
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	iomem = devm_ioremap_resource(&pdev->dev, res);
++	iomem = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(iomem))
+ 		return PTR_ERR(iomem);
+ 
+@@ -323,7 +321,6 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
+ 	struct device_node *dma_node;
+ 	struct ti_dra7_xbar_data *xbar;
+ 	struct property *prop;
+-	struct resource *res;
+ 	u32 safe_val;
+ 	int sz;
+ 	void __iomem *iomem;
+@@ -403,8 +400,7 @@ static int ti_dra7_xbar_probe(struct platform_device *pdev)
+ 		kfree(rsv_events);
+ 	}
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	iomem = devm_ioremap_resource(&pdev->dev, res);
++	iomem = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(iomem))
+ 		return PTR_ERR(iomem);
+ 
 -- 
-Regards,
+1.9.1
 
-Laurent Pinchart

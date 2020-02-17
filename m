@@ -2,98 +2,80 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C7B16161542
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Feb 2020 15:56:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A788A161D48
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Feb 2020 23:24:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbgBQO4l (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 17 Feb 2020 09:56:41 -0500
-Received: from mail-lf1-f50.google.com ([209.85.167.50]:38831 "EHLO
-        mail-lf1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729257AbgBQO4l (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 17 Feb 2020 09:56:41 -0500
-Received: by mail-lf1-f50.google.com with SMTP id r14so12082098lfm.5;
-        Mon, 17 Feb 2020 06:56:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=deWPm8yN9kcmmTRRZQ/czJmxbT7YJ6dCNZrwugRjTHM=;
-        b=dlCRJscS/I7Zjgd5XJfOSQ/pObZ4jf3//Faf5uosezUK3bOO0DGDi41z3BirhmaeHi
-         dPd9KPqWcXbveMKYkIpbcraqHsrY42cuusdCP4TjuKycUna4lFoCPYPHHcD9XSuYRgKv
-         aQyNarFffbvKa1rj3clZd7VhnSn57hbBEPjoJ1laXPtxDB1hkXaMxtFAgkFQSmWR9JB3
-         /wCsUklaZzTpEmyQSK3Akfk56CK25k/muMynmhUXCZgvfKhvmSjg/ud4M5qa31h5cpy/
-         fSNE3mNLNWjw3mQqucj7Djdz1l+aNodC5xPMO4WFEgtpWNKJtHqgS5iY4t304gIXr/3J
-         XCrg==
+        id S1726034AbgBQWYW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 17 Feb 2020 17:24:22 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36204 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbgBQWYW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 17 Feb 2020 17:24:22 -0500
+Received: by mail-oi1-f195.google.com with SMTP id c16so18208822oic.3;
+        Mon, 17 Feb 2020 14:24:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=deWPm8yN9kcmmTRRZQ/czJmxbT7YJ6dCNZrwugRjTHM=;
-        b=hHXYxSOz/uhOo8mnM8Chj5EIEEdMiIgV7wG6fGEYcHnEcSpCkpOrjQlFkt2eHUtOMn
-         zBqG+NKWi+7I+ybxYPGG6s5YPZHcBRgKkW4j6DL97DHp27Wth5gMMrFydkbcFG2coHym
-         q5+z3hzXpryRmo5csFFybSDyItpzQ9bk11PV9FO0Q6qidZRLlDc28BsZ7dYmhoccXSHU
-         tIh4VXVXwsaWVcLxhjuBfsLU27otl45/js0weYJMuEyrw68uFBewkQdzfdz7Rydtt4tY
-         SVPvv1BPaPmjHUsT3+5sxsrRuW6B1i0oG8b5KeNFqg3k32Dd8/d52HPmwtCrdz/rqNmj
-         8Q2Q==
-X-Gm-Message-State: APjAAAWeg1r35IpIz+tvG7fCraYbPMoOJdi6vdlcEYhRD087RulosRXq
-        vtlUx0us1I/mCoNQeO2tUrkTB2Xa
-X-Google-Smtp-Source: APXvYqyXuS84xRTVNL121HCAGGjTInIwaY98cdty84WeBg4/IE+anNryNYLokxK8DyI86f5Dyir10A==
-X-Received: by 2002:ac2:5388:: with SMTP id g8mr8123002lfh.43.1581951398567;
-        Mon, 17 Feb 2020 06:56:38 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id p15sm470882lfo.88.2020.02.17.06.56.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2020 06:56:37 -0800 (PST)
-Subject: Re: [PATCH v8 18/19] dmaengine: tegra-apb: Remove unused function
- argument
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200209163356.6439-1-digetx@gmail.com>
- <20200209163356.6439-19-digetx@gmail.com>
- <d9a1bd6a-bd26-36ad-7d94-57801a2aa616@nvidia.com>
- <392ccaf4-3cc9-e8af-130c-fa068cc56527@gmail.com>
- <f9ea6be9-71d6-0119-eade-fe06bbbcbd5b@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <1d10367e-4e1c-3d25-2e80-e601b34a01d7@gmail.com>
-Date:   Mon, 17 Feb 2020 17:56:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PbYZrxbxhBBKk5C91qZpoXk9cEvY6aisFfocm2j3KvA=;
+        b=DigCYk7AL10R2xyGSD56LmG9N8s2UW5xKw+F5q0AM1/5as56CSwFP+X1LI2ptbmogS
+         o78N9DjE2IzbZx57qharu+EdTI9jYnNGD7lO4bNMZr05CTVz3atkS0dm91UatMIVsK1n
+         bbTRw78KiETgV6B4ZqDI8ImZc2JDV8YfXLmnCIZdrI7u6WF1HQBozZuO0jECKoc9B5dQ
+         /G7vEV26sbkdww5D8tPPPUsUJoLG4e7cfVq8/o54Z/KBLVM2PwkCiMkEn5KLkOSxew/+
+         ARTXz3itkeTwyupcv8AFJ0hMEROQH9JEWK7AosTQvSSrRP94mEjnx4vQRLSkVYjDg10H
+         RAbg==
+X-Gm-Message-State: APjAAAU3Z0nbcVMb5IZrd27tFBB822aL/ezEnTxYbi4V7lNsUMAZ6DQp
+        KUJCV5OUga6NFsVQLhsPFriq501VtE8cSRDb5ePULJjs
+X-Google-Smtp-Source: APXvYqz3Xxu6MK5IoxY+z+kFQJuuEELpdbhj84fkAG33NBqiXYnC9I/rrXr/6fP1+IugvUqR7fDBJ8pHyvEZfsIXAtc=
+X-Received: by 2002:aca:c4d2:: with SMTP id u201mr802861oif.54.1581978262056;
+ Mon, 17 Feb 2020 14:24:22 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <f9ea6be9-71d6-0119-eade-fe06bbbcbd5b@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200217144050.3i4ymbytogod4ijn@kili.mountain>
+In-Reply-To: <20200217144050.3i4ymbytogod4ijn@kili.mountain>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 17 Feb 2020 23:24:10 +0100
+Message-ID: <CAMuHMdWaCqZ_zcHuBetAQu4kmoffNw5jvHM5ciTi29MAxL70bg@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: coh901318: Fix a double lock bug in dma_tc_handle()
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Linus Walleij <linus.walleij@stericsson.com>,
+        kernel-janitors@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Jia-Ju Bai <baijiaju1990@gmail.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-17.02.2020 14:15, Jon Hunter пишет:
-> 
-> On 14/02/2020 16:54, Dmitry Osipenko wrote:
->> 14.02.2020 17:16, Jon Hunter пишет:
->> ...
->>> Acked-by: Jon Hunter <jonathanh@nvidia.com>
->>>
->>> Thanks!
->>> Jon
->>>
->>
->> Jon, thank you very much!
->>
->> In the patchwork I see that you acked all the patches, but my Gmail
->> missed 2 of 4 emails, maybe the missing emails will arrive a day later :)
-> 
-> Yes all should be ACK'ed now. I did receive an email from our mail
-> server saying that there was an issue and the message was delayed. So
-> not sure if you ever got it.
+Hi Dan,
 
-The emails arrived a day later, just like it was predicted :) Thank you
-very much for reviewing the patches!
+On Mon, Feb 17, 2020 at 3:41 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> The caller is already holding the lock so this will deadlock.
+>
+> Fixes: 0b58828c923e ("DMAENGINE: COH 901 318 remove irq counting")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+> This is the second double lock bug found using static analysis.  The
+> previous one was commit 627469e4445b ("dmaengine: coh901318: Fix a
+> double-lock bug").
+>
+> The fact that this has been broken for ten years suggests that no one
+> has the hardware.
+
+Or this only runs CONFIG_SMP=n kernels?
+This seems to be used in arch/arm/boot/dts/ste-u300.dts only, and
+CONFIG_ARCH_U300 is a ARCH_MULTI_V5 platform, which looks like
+it doesn't support SMP?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds

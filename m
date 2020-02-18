@@ -2,80 +2,120 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A788A161D48
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Feb 2020 23:24:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48C00161E91
+	for <lists+dmaengine@lfdr.de>; Tue, 18 Feb 2020 02:34:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbgBQWYW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 17 Feb 2020 17:24:22 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36204 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbgBQWYW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 17 Feb 2020 17:24:22 -0500
-Received: by mail-oi1-f195.google.com with SMTP id c16so18208822oic.3;
-        Mon, 17 Feb 2020 14:24:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PbYZrxbxhBBKk5C91qZpoXk9cEvY6aisFfocm2j3KvA=;
-        b=DigCYk7AL10R2xyGSD56LmG9N8s2UW5xKw+F5q0AM1/5as56CSwFP+X1LI2ptbmogS
-         o78N9DjE2IzbZx57qharu+EdTI9jYnNGD7lO4bNMZr05CTVz3atkS0dm91UatMIVsK1n
-         bbTRw78KiETgV6B4ZqDI8ImZc2JDV8YfXLmnCIZdrI7u6WF1HQBozZuO0jECKoc9B5dQ
-         /G7vEV26sbkdww5D8tPPPUsUJoLG4e7cfVq8/o54Z/KBLVM2PwkCiMkEn5KLkOSxew/+
-         ARTXz3itkeTwyupcv8AFJ0hMEROQH9JEWK7AosTQvSSrRP94mEjnx4vQRLSkVYjDg10H
-         RAbg==
-X-Gm-Message-State: APjAAAU3Z0nbcVMb5IZrd27tFBB822aL/ezEnTxYbi4V7lNsUMAZ6DQp
-        KUJCV5OUga6NFsVQLhsPFriq501VtE8cSRDb5ePULJjs
-X-Google-Smtp-Source: APXvYqz3Xxu6MK5IoxY+z+kFQJuuEELpdbhj84fkAG33NBqiXYnC9I/rrXr/6fP1+IugvUqR7fDBJ8pHyvEZfsIXAtc=
-X-Received: by 2002:aca:c4d2:: with SMTP id u201mr802861oif.54.1581978262056;
- Mon, 17 Feb 2020 14:24:22 -0800 (PST)
+        id S1726097AbgBRBep (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 17 Feb 2020 20:34:45 -0500
+Received: from condef-09.nifty.com ([202.248.20.74]:56158 "EHLO
+        condef-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726182AbgBRBep (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 17 Feb 2020 20:34:45 -0500
+X-Greylist: delayed 305 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Feb 2020 20:34:43 EST
+Received: from conssluserg-06.nifty.com ([10.126.8.85])by condef-09.nifty.com with ESMTP id 01I1QQFF025679
+        for <dmaengine@vger.kernel.org>; Tue, 18 Feb 2020 10:26:26 +0900
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 01I1QD7N019766;
+        Tue, 18 Feb 2020 10:26:13 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 01I1QD7N019766
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1581989173;
+        bh=DFo5bZ5Bm4QsGsx8r/W+4n6QGw47HateZtKF1IqGjK4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jp8Y9Unk0X+nZxx/4xNp0bdyquwZdI2uguxEiL1thKibD01TDUQchfpR8tzH9qo54
+         ebqsDP1nPj2QrD86PyvvbtgtDZ8+GiPD1y5RNNa6TGQb56nqw213MaBrl/ua5uUOxU
+         5DgFbeS7eoU+ayS6eMsbL5jSguqEf93I5A31J7oZ1wYAGR5ojC7dKyrDGv00Cngfqv
+         iT2QgcdCBSG0oK5tLSXvBgDlhX0dsPlOMUfK8JtSI8F5ZV+NyZIQxGvqxdkZit3/wz
+         E3LUSTLD5c77SzuZHnSt3ucM4iXEOsnInbp7Gg7ExPHJF4YNry6LYvdUFi/EjL6m5E
+         7JX8AjBphg6hQ==
+X-Nifty-SrcIP: [209.85.217.47]
+Received: by mail-vs1-f47.google.com with SMTP id b79so11619638vsd.9;
+        Mon, 17 Feb 2020 17:26:13 -0800 (PST)
+X-Gm-Message-State: APjAAAXDw3l+2liVfeoZoOSWVq0aQOuWwLZcHtyuN26YGAH5hwNeh+Lo
+        fk08zvlMAvRr8imthlwwaLkWMfoNfS1LlR46Lmo=
+X-Google-Smtp-Source: APXvYqxSiKTUTozFX1mDbJzMmvg2TfqQRp6FqoGdjnaYvvmSAf4Wg9j1N4gyQ+nadCxh2KhQZghaCZKnVejvMtBs3tE=
+X-Received: by 2002:a05:6102:190:: with SMTP id r16mr9552896vsq.215.1581989172430;
+ Mon, 17 Feb 2020 17:26:12 -0800 (PST)
 MIME-Version: 1.0
-References: <20200217144050.3i4ymbytogod4ijn@kili.mountain>
-In-Reply-To: <20200217144050.3i4ymbytogod4ijn@kili.mountain>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 17 Feb 2020 23:24:10 +0100
-Message-ID: <CAMuHMdWaCqZ_zcHuBetAQu4kmoffNw5jvHM5ciTi29MAxL70bg@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: coh901318: Fix a double lock bug in dma_tc_handle()
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Linus Walleij <linus.walleij@stericsson.com>,
-        kernel-janitors@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20200213003535.GA3269@embeddedor.com>
+In-Reply-To: <20200213003535.GA3269@embeddedor.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 18 Feb 2020 10:25:36 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS8TomJow4_3T++3u+eo=KhRMP9V5X=urWNRPUE93NOvQ@mail.gmail.com>
+Message-ID: <CAK7LNAS8TomJow4_3T++3u+eo=KhRMP9V5X=urWNRPUE93NOvQ@mail.gmail.com>
+Subject: Re: [PATCH] dmaengine: uniphier-mdmac: replace zero-length array with
+ flexible-array member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Dan,
-
-On Mon, Feb 17, 2020 at 3:41 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> The caller is already holding the lock so this will deadlock.
+On Thu, Feb 13, 2020 at 9:35 AM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
 >
-> Fixes: 0b58828c923e ("DMAENGINE: COH 901 318 remove irq counting")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+>
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+>
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+>
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+>
+> This issue was found with the help of Coccinelle.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+
 > ---
-> This is the second double lock bug found using static analysis.  The
-> previous one was commit 627469e4445b ("dmaengine: coh901318: Fix a
-> double-lock bug").
+>  drivers/dma/uniphier-mdmac.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> The fact that this has been broken for ten years suggests that no one
-> has the hardware.
+> diff --git a/drivers/dma/uniphier-mdmac.c b/drivers/dma/uniphier-mdmac.c
+> index 21b8f1131d55..618839df0748 100644
+> --- a/drivers/dma/uniphier-mdmac.c
+> +++ b/drivers/dma/uniphier-mdmac.c
+> @@ -68,7 +68,7 @@ struct uniphier_mdmac_device {
+>         struct dma_device ddev;
+>         struct clk *clk;
+>         void __iomem *reg_base;
+> -       struct uniphier_mdmac_chan channels[0];
+> +       struct uniphier_mdmac_chan channels[];
+>  };
+>
+>  static struct uniphier_mdmac_chan *
+> --
+> 2.23.0
+>
 
-Or this only runs CONFIG_SMP=n kernels?
-This seems to be used in arch/arm/boot/dts/ste-u300.dts only, and
-CONFIG_ARCH_U300 is a ARCH_MULTI_V5 platform, which looks like
-it doesn't support SMP?
-
-Gr{oetje,eeting}s,
-
-                        Geert
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best Regards
+Masahiro Yamada

@@ -2,62 +2,71 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AFEE31640CD
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Feb 2020 10:51:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1B0116440D
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Feb 2020 13:19:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgBSJvy convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Wed, 19 Feb 2020 04:51:54 -0500
-Received: from scm.imp.edu.mx ([132.247.16.103]:42476 "EHLO scm.imp.edu.mx"
+        id S1726530AbgBSMTD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 19 Feb 2020 07:19:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726210AbgBSJvx (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:51:53 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by scm.imp.edu.mx (Postfix) with ESMTP id 6A7F2189F68;
-        Wed, 19 Feb 2020 03:06:17 -0600 (CST)
-X-Virus-Scanned: by SpamTitan at imp.edu.mx
-Received: from scm.imp.edu.mx (localhost [127.0.0.1])
-        by scm.imp.edu.mx (Postfix) with ESMTP id 9830E189840;
-        Wed, 19 Feb 2020 03:00:44 -0600 (CST)
-Authentication-Results: scm.imp.edu.mx; none
-Received: from imp.edu.mx (unknown [10.249.93.105])
-        by scm.imp.edu.mx (Postfix) with ESMTP id A1D92189815;
-        Wed, 19 Feb 2020 03:00:40 -0600 (CST)
-Received: from localhost (localhost [127.0.0.1])
-        by imp.edu.mx (Postfix) with ESMTP id 42F071806252DF;
-        Wed, 19 Feb 2020 03:00:41 -0600 (CST)
-Received: from imp.edu.mx ([127.0.0.1])
-        by localhost (imp.edu.mx [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id g2EmLwcPpw2P; Wed, 19 Feb 2020 03:00:41 -0600 (CST)
-Received: from localhost (localhost [127.0.0.1])
-        by imp.edu.mx (Postfix) with ESMTP id 233AB180629A4D;
-        Wed, 19 Feb 2020 03:00:41 -0600 (CST)
-X-Virus-Scanned: amavisd-new at imp.edu.mx
-Received: from imp.edu.mx ([127.0.0.1])
-        by localhost (imp.edu.mx [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id qE_LLpdFtr7u; Wed, 19 Feb 2020 03:00:41 -0600 (CST)
-Received: from [45.147.4.119] (unknown [45.147.4.119])
-        by imp.edu.mx (Postfix) with ESMTPSA id 020711806252DF;
-        Wed, 19 Feb 2020 03:00:33 -0600 (CST)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1726514AbgBSMTD (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 19 Feb 2020 07:19:03 -0500
+Received: from localhost (unknown [106.201.32.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0E8624656;
+        Wed, 19 Feb 2020 12:19:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582114742;
+        bh=zG2lPnCJ0h9HTg/FrJTKsOn5Ck5Pc8USzuemV1tBLgo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NaPdJqG8xgOlQXcpMn4VCCORBiW66C3eBtu+Fn4dtIL8+y2mWk1aWHaPW9OpfX0P/
+         nu79EQhdJgE8FblwpGhDdEHyRjE6NRtUxnNm3k7zyM3Pm8I+KXE9ztHoTq8/hcXLdl
+         EKdQZ4QnUsNcYIPrOEb1kBq3HWT2vP7gJUDVIsTw=
+Date:   Wed, 19 Feb 2020 17:48:56 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmanegine: ioat/dca: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200219121856.GI2618@vkoul-mobl>
+References: <20200214171302.GA20586@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: 19-02-2020
-To:     Recipients <mucios@imp.edu.mx>
-From:   "urs portmann" <mucios@imp.edu.mx>
-Date:   Wed, 19 Feb 2020 20:00:22 +1100
-Reply-To: onube@qq.com
-Message-Id: <20200219090034.020711806252DF@imp.edu.mx>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200214171302.GA20586@embeddedor>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Guten Morgen,
-                                          19-02-2020
-Wir haben versucht, Sie zu erreichen und haben noch nichts von Ihnen gehört. Haben Sie unsere letzte E-Mail über Ihre S.p.e.n.d.e erhalten? Wenn nicht, melden Sie sich bitte bei uns, um weitere Informationen zu erhalten.
+On 14-02-20, 11:13, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
 
-Wir warten darauf, von Ihnen zu hören, sobald Sie diese Nachricht erhalten, die Sie bei der weiteren Vorgehensweise unterstützt.
+Applied, thanks
 
-Mfg
-urs portmann
+-- 
+~Vinod

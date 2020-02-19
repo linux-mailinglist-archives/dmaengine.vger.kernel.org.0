@@ -2,86 +2,62 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BADD4164057
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Feb 2020 10:27:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AFEE31640CD
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Feb 2020 10:51:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbgBSJ14 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 19 Feb 2020 04:27:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52758 "EHLO mail.kernel.org"
+        id S1726484AbgBSJvy convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Wed, 19 Feb 2020 04:51:54 -0500
+Received: from scm.imp.edu.mx ([132.247.16.103]:42476 "EHLO scm.imp.edu.mx"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726195AbgBSJ1z (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:27:55 -0500
-Received: from localhost (unknown [106.201.32.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 849AA2064C;
-        Wed, 19 Feb 2020 09:27:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582104475;
-        bh=9kyEssX5GEbwlVExA9JUPsMK72bF0lQACS2bjDvlqvE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ps8pNHJpu5H+1dtWXtP1nZ/vMn+PISHycpZFQKHsacq25au3EysOMbcLKDHH3BAd2
-         y73T6NuhAIbWZ8PVVOg4Zm8zeE8VZvgaMlmRXAXSZpaYiONEGAhq11oUnKgpObKaGa
-         nfYJZdekeW4qPjWgALR9BhLDf5iJ6mdLxnWo5SC4=
-Date:   Wed, 19 Feb 2020 14:57:51 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        kernel-janitors@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] dmaengine: coh901318: Fix a double lock bug in
- dma_tc_handle()
-Message-ID: <20200219092751.GH2618@vkoul-mobl>
-References: <20200217144050.3i4ymbytogod4ijn@kili.mountain>
- <CAMuHMdWaCqZ_zcHuBetAQu4kmoffNw5jvHM5ciTi29MAxL70bg@mail.gmail.com>
- <20200219091754.GE2618@vkoul-mobl>
- <CAMuHMdVC_=V6z+8GubgDvWR37zZdr8f3Fqs-KYUYdZ+e=wYCyg@mail.gmail.com>
+        id S1726210AbgBSJvx (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 19 Feb 2020 04:51:53 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by scm.imp.edu.mx (Postfix) with ESMTP id 6A7F2189F68;
+        Wed, 19 Feb 2020 03:06:17 -0600 (CST)
+X-Virus-Scanned: by SpamTitan at imp.edu.mx
+Received: from scm.imp.edu.mx (localhost [127.0.0.1])
+        by scm.imp.edu.mx (Postfix) with ESMTP id 9830E189840;
+        Wed, 19 Feb 2020 03:00:44 -0600 (CST)
+Authentication-Results: scm.imp.edu.mx; none
+Received: from imp.edu.mx (unknown [10.249.93.105])
+        by scm.imp.edu.mx (Postfix) with ESMTP id A1D92189815;
+        Wed, 19 Feb 2020 03:00:40 -0600 (CST)
+Received: from localhost (localhost [127.0.0.1])
+        by imp.edu.mx (Postfix) with ESMTP id 42F071806252DF;
+        Wed, 19 Feb 2020 03:00:41 -0600 (CST)
+Received: from imp.edu.mx ([127.0.0.1])
+        by localhost (imp.edu.mx [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id g2EmLwcPpw2P; Wed, 19 Feb 2020 03:00:41 -0600 (CST)
+Received: from localhost (localhost [127.0.0.1])
+        by imp.edu.mx (Postfix) with ESMTP id 233AB180629A4D;
+        Wed, 19 Feb 2020 03:00:41 -0600 (CST)
+X-Virus-Scanned: amavisd-new at imp.edu.mx
+Received: from imp.edu.mx ([127.0.0.1])
+        by localhost (imp.edu.mx [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id qE_LLpdFtr7u; Wed, 19 Feb 2020 03:00:41 -0600 (CST)
+Received: from [45.147.4.119] (unknown [45.147.4.119])
+        by imp.edu.mx (Postfix) with ESMTPSA id 020711806252DF;
+        Wed, 19 Feb 2020 03:00:33 -0600 (CST)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVC_=V6z+8GubgDvWR37zZdr8f3Fqs-KYUYdZ+e=wYCyg@mail.gmail.com>
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: 19-02-2020
+To:     Recipients <mucios@imp.edu.mx>
+From:   "urs portmann" <mucios@imp.edu.mx>
+Date:   Wed, 19 Feb 2020 20:00:22 +1100
+Reply-To: onube@qq.com
+Message-Id: <20200219090034.020711806252DF@imp.edu.mx>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 19-02-20, 10:20, Geert Uytterhoeven wrote:
-> Hi Vinod,
-> 
-> On Wed, Feb 19, 2020 at 10:18 AM Vinod Koul <vkoul@kernel.org> wrote:
-> > On 17-02-20, 23:24, Geert Uytterhoeven wrote:
-> > > On Mon, Feb 17, 2020 at 3:41 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> > > > The caller is already holding the lock so this will deadlock.
-> > > >
-> > > > Fixes: 0b58828c923e ("DMAENGINE: COH 901 318 remove irq counting")
-> > > > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > > > ---
-> > > > This is the second double lock bug found using static analysis.  The
-> > > > previous one was commit 627469e4445b ("dmaengine: coh901318: Fix a
-> > > > double-lock bug").
-> > > >
-> > > > The fact that this has been broken for ten years suggests that no one
-> > > > has the hardware.
-> > >
-> > > Or this only runs CONFIG_SMP=n kernels?
-> > > This seems to be used in arch/arm/boot/dts/ste-u300.dts only, and
-> > > CONFIG_ARCH_U300 is a ARCH_MULTI_V5 platform, which looks like
-> > > it doesn't support SMP?
-> >
-> > Should we drop the driver then..?
-> 
-> Why? Because spinlocks are no-ops on SMP=n, and spinlock bugs thus don't
-> affect the single platform using the driver?
+Guten Morgen,
+                                          19-02-2020
+Wir haben versucht, Sie zu erreichen und haben noch nichts von Ihnen gehört. Haben Sie unsere letzte E-Mail über Ihre S.p.e.n.d.e erhalten? Wenn nicht, melden Sie sich bitte bei uns, um weitere Informationen zu erhalten.
 
-That doesn't answer the question if anyone has a hardware and we have
-users :)
+Wir warten darauf, von Ihnen zu hören, sobald Sie diese Nachricht erhalten, die Sie bei der weiteren Vorgehensweise unterstützt.
 
-Sorry I should have written better about hardware and testing
-rather than cryptic reply which may have suggested about SMP :)
-
--- 
-~Vinod
+Mfg
+urs portmann

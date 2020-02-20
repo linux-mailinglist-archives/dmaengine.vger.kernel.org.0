@@ -2,84 +2,86 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EBCA6164BD5
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Feb 2020 18:24:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 277FC1654AB
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Feb 2020 02:46:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgBSRY5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 19 Feb 2020 12:24:57 -0500
-Received: from mga12.intel.com ([192.55.52.136]:15331 "EHLO mga12.intel.com"
+        id S1727291AbgBTBqJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 19 Feb 2020 20:46:09 -0500
+Received: from mx.socionext.com ([202.248.49.38]:33097 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbgBSRY5 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:24:57 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 09:24:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,461,1574150400"; 
-   d="scan'208";a="235956435"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga003.jf.intel.com with ESMTP; 19 Feb 2020 09:24:56 -0800
-Subject: [PATCH] dmaengine: idxd: wq size configuration needs to check
- global max size
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, jerry.t.chen@intel.com
-Date:   Wed, 19 Feb 2020 10:24:56 -0700
-Message-ID: <158213309629.2509.3583411832507185041.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/unknown-version
+        id S1727211AbgBTBqJ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 19 Feb 2020 20:46:09 -0500
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 20 Feb 2020 10:46:07 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 4F39418008C;
+        Thu, 20 Feb 2020 10:46:07 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Thu, 20 Feb 2020 10:46:07 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 27FAC40376;
+        Thu, 20 Feb 2020 10:46:07 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id EC1FE12047F;
+        Thu, 20 Feb 2020 10:46:06 +0900 (JST)
+Date:   Thu, 20 Feb 2020 10:46:07 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: dmaengine: Add UniPhier external DMA controller bindings
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+In-Reply-To: <20200219135344.GA15319@bogus>
+References: <1582077141-16793-2-git-send-email-hayashi.kunihiko@socionext.com> <20200219135344.GA15319@bogus>
+Message-Id: <20200220104606.53AA.4A936039@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The current size_store() function for idxd sysfs does not check the total
-wq size. This allows configuration of all wqs with total wq size. Add check
-to make sure the wq sysfs attribute rejects storing of size over the total
-wq size.
+Hi Rob,
+Thanks for pointing out.
 
-Fixes: c52ca478233c ("dmaengine: idxd: add configuration component of driver")
-Reported-by: Jerry Chen <jerry.t.chen@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+On Wed, 19 Feb 2020 07:53:44 -0600 <robh@kernel.org> wrote:
+
+> On Wed, 19 Feb 2020 10:52:20 +0900, Kunihiko Hayashi wrote:
+> > Add devicetree binding documentation for external DMA controller
+> > implemented on Socionext UniPhier SOCs.
+> > 
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > ---
+> >  .../bindings/dma/socionext,uniphier-xdmac.yaml     | 63 ++++++++++++++++++++++
+> >  1 file changed, 63 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
+> > 
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml: Additional properties are not allowed ('additinalProperties' was unexpected)
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml: Additional properties are not allowed ('additinalProperties' was unexpected)
+> Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.example.dts' failed
+> make[1]: *** [Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.example.dts] Error 1
+> Makefile:1263: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+> 
+> See https://patchwork.ozlabs.org/patch/1240464
+> Please check and re-submit.
+
+Something was missing the string by mistake.
+I'll resubmit it.
+
+Thank you,
+
 ---
- drivers/dma/idxd/sysfs.c |   16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index b4a7885e79ed..6ca6e520a2fa 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -904,6 +904,20 @@ static ssize_t wq_size_show(struct device *dev, struct device_attribute *attr,
- 	return sprintf(buf, "%u\n", wq->size);
- }
- 
-+static int total_claimed_wq_size(struct idxd_device *idxd)
-+{
-+	int i;
-+	int wq_size = 0;
-+
-+	for (i = 0; i < idxd->max_wqs; i++) {
-+		struct idxd_wq *wq = &idxd->wqs[i];
-+
-+		wq_size += wq->size;
-+	}
-+
-+	return wq_size;
-+}
-+
- static ssize_t wq_size_store(struct device *dev,
- 			     struct device_attribute *attr, const char *buf,
- 			     size_t count)
-@@ -923,7 +937,7 @@ static ssize_t wq_size_store(struct device *dev,
- 	if (wq->state != IDXD_WQ_DISABLED)
- 		return -EPERM;
- 
--	if (size > idxd->max_wq_size)
-+	if (size + total_claimed_wq_size(idxd) - wq->size > idxd->max_wq_size)
- 		return -EINVAL;
- 
- 	wq->size = size;
+Best Regards,
+Kunihiko Hayashi
 

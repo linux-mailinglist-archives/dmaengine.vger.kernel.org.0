@@ -2,24 +2,24 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49027167038
-	for <lists+dmaengine@lfdr.de>; Fri, 21 Feb 2020 08:37:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DF56167143
+	for <lists+dmaengine@lfdr.de>; Fri, 21 Feb 2020 08:52:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbgBUHhf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 21 Feb 2020 02:37:35 -0500
-Received: from mx.socionext.com ([202.248.49.38]:50790 "EHLO mx.socionext.com"
+        id S1729951AbgBUHwm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 21 Feb 2020 02:52:42 -0500
+Received: from mx.socionext.com ([202.248.49.38]:51015 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgBUHhe (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:37:34 -0500
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 21 Feb 2020 16:37:31 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 3ADA318008C;
-        Fri, 21 Feb 2020 16:37:31 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 21 Feb 2020 16:37:31 +0900
+        id S1729935AbgBUHwl (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:52:41 -0500
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 21 Feb 2020 16:52:38 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 89437603AB;
+        Fri, 21 Feb 2020 16:52:38 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 21 Feb 2020 16:52:38 +0900
 Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id D6F211A01BB;
-        Fri, 21 Feb 2020 16:37:30 +0900 (JST)
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 2E32D1A01BB;
+        Fri, 21 Feb 2020 16:52:38 +0900 (JST)
 From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 To:     Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
@@ -31,12 +31,12 @@ Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
         Masami Hiramatsu <masami.hiramatsu@linaro.org>,
         Jassi Brar <jaswinder.singh@linaro.org>,
         Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v4 2/2] dmaengine: uniphier-xdmac: Add UniPhier external DMA controller driver
-Date:   Fri, 21 Feb 2020 16:37:26 +0900
-Message-Id: <1582270646-29161-3-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: [RESEND PATCH v4 2/2] dmaengine: uniphier-xdmac: Add UniPhier external DMA controller driver
+Date:   Fri, 21 Feb 2020 16:52:30 +0900
+Message-Id: <1582271550-3403-3-git-send-email-hayashi.kunihiko@socionext.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582270646-29161-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1582270646-29161-1-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <1582271550-3403-1-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1582271550-3403-1-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>

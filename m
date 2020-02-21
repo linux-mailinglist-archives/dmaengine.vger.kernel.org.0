@@ -2,80 +2,157 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A61FC165B08
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Feb 2020 11:02:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E215166CEF
+	for <lists+dmaengine@lfdr.de>; Fri, 21 Feb 2020 03:37:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgBTKCH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 20 Feb 2020 05:02:07 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39551 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbgBTKCH (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 Feb 2020 05:02:07 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so1365335plp.6
-        for <dmaengine@vger.kernel.org>; Thu, 20 Feb 2020 02:02:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=xsUbPWAhYtsZRE8nHbpZ90/dMr+6ACJOvf/o3gzcGwM=;
-        b=EIZPEfRD0wskAwe2toWDaZrqOTUcqIONNK1wcaqruOUAICcaUNgrj9VxZsvv8+k1WI
-         y/We2m0NDSRuUmXQER2gWKCAXBYoszln6SlPiMmZhqROLIifO2RUcigQRUZ9noMQMna5
-         lWynCl+jrgnbwW+NgVmrGbEPXckAVP9Ni3F7BzFZbEkpIqcBJvmB80AnIL5nxKZAAhFO
-         chFIaoin39Ci3rkY4I/JfLAGR3ZLFjXqPvjhcz3hY++pRaHYoNAuFTGFhcrG+LpC34gX
-         EhMdhLFMOM/pUh4v8G8npuoyOL5Ouhrn42JPiYEmsHMbGyxD1gK4Q9lukB4EsVKMnNO6
-         bRLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=xsUbPWAhYtsZRE8nHbpZ90/dMr+6ACJOvf/o3gzcGwM=;
-        b=PSb8AweOhTOByVk68oQXWFazpqvPascXQrjzoIQclx1PZ2BZlopHn+8y+QreIwEbPm
-         j1Ds7yXH6dy2rxFS8LuK6Ryfwij5bf1HtHeiBlR6AdNzDCV9Fy4MzlKNtNmJrv7yGieW
-         LpVqlBkIZVo/lsJN966WGncp+N4sJtPEuJVTM87DLks8DT5XNhSFIgZclv7p0sgqAUEz
-         0PL7P+jJ33SYTqQT5mfVEAxRBLyNuNtWCUPM/JDm8fXPwj7Gr/bkSMC4q/zzVoeFafpz
-         xEt732tl8F4ABO19xZN7sNbrH8xa+KuKdlbHbEuDEfZH9rFcu3plELaZtZbUeVO2Sajj
-         btEA==
-X-Gm-Message-State: APjAAAWAZCOvyxYouim3QkX54Nvv+IFE0l5SJKzTEfJF+GoeNKFdvu3C
-        BachsW2AOLDoiI+XSINhsVMDGWWH8nRn472k1DE=
-X-Google-Smtp-Source: APXvYqyzK2dMc+7DgIc1lhnhOp9d4qQZrp097uDTZEhYdey1Ori0+Gh3tzYFQ7L8C0tjsfuAKEiyPt9VZ77SgSXLI+E=
-X-Received: by 2002:a17:902:aa05:: with SMTP id be5mr29088993plb.142.1582192926975;
- Thu, 20 Feb 2020 02:02:06 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a17:90a:90f:0:0:0:0 with HTTP; Thu, 20 Feb 2020 02:02:06
- -0800 (PST)
-Reply-To: cagesusan199@gmail.com
-From:   "Mrs. Susan S. Cage" <drgoodluckebelejonathan061@gmail.com>
-Date:   Thu, 20 Feb 2020 02:02:06 -0800
-Message-ID: <CALjo5=8wuGD1Fh=8LwFyXaV=TcY_jkyV8AUzA9=u2Pp9oshKMg@mail.gmail.com>
-Subject: Attention:Beneficiary
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        id S1729290AbgBUChE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 20 Feb 2020 21:37:04 -0500
+Received: from condef-10.nifty.com ([202.248.20.75]:18377 "EHLO
+        condef-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729259AbgBUChE (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 Feb 2020 21:37:04 -0500
+X-Greylist: delayed 407 seconds by postgrey-1.27 at vger.kernel.org; Thu, 20 Feb 2020 21:37:02 EST
+Received: from conuserg-09.nifty.com ([10.126.8.72])by condef-10.nifty.com with ESMTP id 01L2PoJm003081
+        for <dmaengine@vger.kernel.org>; Fri, 21 Feb 2020 11:25:54 +0900
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 01L2P6P4019101;
+        Fri, 21 Feb 2020 11:25:06 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 01L2P6P4019101
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582251907;
+        bh=eqHny2FaqNErlaYN7wu9BhfmPoOAesBI8drGqqCcumU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TKEJiQp0Jz01Hs5YJIVJSHWi8i8mxGOblcOKkYhYWSMLGCXwut6zT2hr3jJ2Fp6i9
+         MU9zGmCJfeoqjBdjtN29n5GrXRemKacIW/GjCDi208sSieuJfEcpm0/mh+2L71X2d0
+         F/DJFWnQgoiG9CsZx9jxtEZA+T1XErp7mr/pv8dFwdC72xQSstOM0BUexWRuzeDa5W
+         hyeBhDa1Jg1v7q3hr9g06GjNUHfCSlfMd69A3axQUlNYnQDkxAiS9Ge07c/XtG4U0n
+         MiA3MkaFIeogPLpbEzVwDyhSHvMpd0RdyQJgomUdgG4Ie4hgzIb0MOiZrZnovFVxma
+         x00o7hYBKyPrw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: dma: Convert UniPhier MIO DMA controller to json-schema
+Date:   Fri, 21 Feb 2020 11:25:04 +0900
+Message-Id: <20200221022504.24104-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Convert the UniPhier MIO (Media I/O) DMA controller binding to DT
+schema format.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ .../dma/socionext,uniphier-mio-dmac.yaml      | 59 +++++++++++++++++++
+ .../bindings/dma/uniphier-mio-dmac.txt        | 25 --------
+ 2 files changed, 59 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
+
+diff --git a/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml b/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
+new file mode 100644
+index 000000000000..817e5aec3b31
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
+@@ -0,0 +1,59 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/socionext,uniphier-mio-dmac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: UniPhier Media IO DMA controller
++
++description: |
++  This works as an external DMA engine for SD/eMMC controllers etc.
++  found in UniPhier LD4, Pro4, sLD8 SoCs.
++
++maintainers:
++  - Masahiro Yamada <yamada.masahiro@socionext.com>
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  compatible:
++    const: socionext,uniphier-mio-dmac
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description: |
++      A list of interrupt specifiers associated with the DMA channels.
++      The number of interrupt lines is SoC-dependent.
++
++  clocks:
++    maxItems: 1
++
++  '#dma-cells':
++    description: The single cell represents the channel index.
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - '#dma-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    // In the example below, "interrupts = <0 68 4>, <0 68 4>, ..." is not a
++    // typo. The first two channels share a single interrupt line.
++
++    dmac: dma-controller@5a000000 {
++        compatible = "socionext,uniphier-mio-dmac";
++        reg = <0x5a000000 0x1000>;
++        interrupts = <0 68 4>, <0 68 4>, <0 69 4>, <0 70 4>,
++                     <0 71 4>, <0 72 4>, <0 73 4>, <0 74 4>;
++        clocks = <&mio_clk 7>;
++        #dma-cells = <1>;
++    };
+diff --git a/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt b/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
+deleted file mode 100644
+index b12388dc7eac..000000000000
+--- a/Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
++++ /dev/null
+@@ -1,25 +0,0 @@
+-UniPhier Media IO DMA controller
+-
+-This works as an external DMA engine for SD/eMMC controllers etc.
+-found in UniPhier LD4, Pro4, sLD8 SoCs.
+-
+-Required properties:
+-- compatible: should be "socionext,uniphier-mio-dmac".
+-- reg: offset and length of the register set for the device.
+-- interrupts: a list of interrupt specifiers associated with the DMA channels.
+-- clocks: a single clock specifier.
+-- #dma-cells: should be <1>. The single cell represents the channel index.
+-
+-Example:
+-	dmac: dma-controller@5a000000 {
+-		compatible = "socionext,uniphier-mio-dmac";
+-		reg = <0x5a000000 0x1000>;
+-		interrupts = <0 68 4>, <0 68 4>, <0 69 4>, <0 70 4>,
+-			     <0 71 4>, <0 72 4>, <0 73 4>, <0 74 4>;
+-		clocks = <&mio_clk 7>;
+-		#dma-cells = <1>;
+-	};
+-
+-Note:
+-In the example above, "interrupts = <0 68 4>, <0 68 4>, ..." is not a typo.
+-The first two channels share a single interrupt line.
 -- 
-Dearest Friend,
+2.17.1
 
-Sorry for invading your privacy, my name is Susan S. Cage I am 81
-years, citizen of United States and presently in hospital undergoing
-chromatography for bronchogenic carcinomas (Lung cancer) which
-affected both Lungs. The doctors said I have few days to live because
-the cancer has now affected my brain.
-
-My late husband left Fifteen Million, Five Hundred British Pounds
-Sterling in my account, I want to transfer the money to you and I want
-you to use it as a donate for charitable and help the needy,
-motherless, less privileged and widows within your location.
-
-I need your assurance that you will use the fund for charity, once I a
-favorable reply from you, will inform my Bank through my lawyer to
-transfer the fund to you as my Next of Kin and Sole Beneficiary. Once
-I receive your response, I will inform my bank in writing through my
-lawyer.
-
-
-
-Thank you and God bless you.
-
-Mrs. Susan S. Cage

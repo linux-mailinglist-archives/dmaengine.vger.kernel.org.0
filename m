@@ -2,106 +2,110 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8051F16AC63
-	for <lists+dmaengine@lfdr.de>; Mon, 24 Feb 2020 17:57:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9CDB16ACE4
+	for <lists+dmaengine@lfdr.de>; Mon, 24 Feb 2020 18:16:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbgBXQ55 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 24 Feb 2020 11:57:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38390 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727401AbgBXQ55 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 24 Feb 2020 11:57:57 -0500
-Received: from localhost (unknown [122.182.199.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727259AbgBXRQE convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Mon, 24 Feb 2020 12:16:04 -0500
+Received: from skedge03.snt-world.com ([91.208.41.68]:42874 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbgBXRQE (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 24 Feb 2020 12:16:04 -0500
+Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D8E720836;
-        Mon, 24 Feb 2020 16:57:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582563476;
-        bh=/1bbEbIQcOxdlPPRg6xaUyuKQtDYNCF5hHOF4bi9Dvw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MSIX1bCxbpk+2AJam2QywGeWlRX7OxLdOc3qL45tSA1QX24QoNZL0tomMGZHpGM7U
-         Qj360wozS445bx4ySv6JlYcQH9rp+Dqs6e45ssdEkA6fJ7ZxSPNw++9qtgXSG/Bi2w
-         RRR5AbGfS7xFkUkGKe8pxQz05FGdm9WvBtMw/rQA=
-Date:   Mon, 24 Feb 2020 22:27:52 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Martin Fuzzey <martin.fuzzey@flowbird.group>,
-        dmaengine@vger.kernel.org, stable <stable@vger.kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
+        by skedge03.snt-world.com (Postfix) with ESMTPS id AAE8367A7D5;
+        Mon, 24 Feb 2020 18:16:01 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
+ (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 24 Feb
+ 2020 18:16:01 +0100
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1913.005; Mon, 24 Feb 2020 18:16:01 +0100
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linus Walleij <linus.ml.walleij@gmail.com>,
+        "NXP Linux Team" <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
         Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        Shawn Guo <shawnguo@kernel.org>,
+        "Vinod Koul" <vkoul@kernel.org>
+CC:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        "stable@vger.kernel" <stable@vger.kernel>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dmaengine: imx-sdma: fix context cache
-Message-ID: <20200224165752.GE2618@vkoul-mobl>
-References: <1580305274-27274-1-git-send-email-martin.fuzzey@flowbird.group>
- <CAOMZO5AFJvEdWNSsnsRW70_M6rzyvO4ip3zJHET2Gc2Wzj5RPQ@mail.gmail.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] dma: imx-sdma: Fix the event id check to include RX event for
+ UART6
+Thread-Topic: [PATCH] dma: imx-sdma: Fix the event id check to include RX
+ event for UART6
+Thread-Index: AQHV6zYWVmd7WYLi20CvYMo8u04O/w==
+Date:   Mon, 24 Feb 2020 17:16:01 +0000
+Message-ID: <20200224171531.22204-1-frieder.schrempf@kontron.de>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5AFJvEdWNSsnsRW70_M6rzyvO4ip3zJHET2Gc2Wzj5RPQ@mail.gmail.com>
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: AAE8367A7D5.A05BA
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        festevam@gmail.com, kernel@pengutronix.de,
+        linus.ml.walleij@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
+        s.hauer@pengutronix.de, shawnguo@kernel.org, stable@vger.kernel,
+        vkoul@kernel.org
+X-Spam-Status: No
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 29-01-20, 17:19, Fabio Estevam wrote:
-> Hi Martin,
-> 
-> Thanks for the fix.
-> 
-> On Wed, Jan 29, 2020 at 10:41 AM Martin Fuzzey
-> <martin.fuzzey@flowbird.group> wrote:
-> >
-> > There is a DMA problem with the serial ports on i.MX6.
-> >
-> > When the following sequence is performed:
-> >
-> > 1) Open a port
-> > 2) Write some data
-> > 3) Close the port
-> > 4) Open a *different* port
-> > 5) Write some data
-> > 6) Close the port
-> >
-> > The second write sends nothing and the second close hangs.
-> > If the first close() is omitted it works.
-> >
-> > Adding logs to the the UART driver shows that the DMA is being setup but
-> > the callback is never invoked for the second write.
-> >
-> > This used to work in 4.19.
-> >
-> > Git bisect leads to:
-> >         ad0d92d: "dmaengine: imx-sdma: refine to load context only once"
-> >
-> > This commit adds a "context_loaded" flag used to avoid unnecessary context
-> > setups.
-> > However the flag is only reset in sdma_channel_terminate_work(),
-> > which is only invoked in a worker triggered by sdma_terminate_all() IF
-> > there is an active descriptor.
-> >
-> > So, if no active descriptor remains when the channel is terminated, the
-> > flag is not reset and, when the channel is later reused the old context
-> > is used.
-> >
-> > Fix the problem by always resetting the flag in sdma_free_chan_resources().
-> >
-> > Fixes: ad0d92d: "dmaengine: imx-sdma: refine to load context only once"
-> 
-> Nit: in the Fixes tag we use 12 digits for the commit ID and the
-> Subject is enclosed by parenthesis.
-> 
-> The preferred format would be:
-> 
-> Fixes: ad0d92d7ba6a ("dmaengine: imx-sdma: refine to load context only once")
-> 
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-Applied, with updated Fixes line. Thanks
+On i.MX6 the DMA event for the RX channel of UART6 is '0'. To fix
+the broken DMA support for UART6, we change the check for event_id0
+to include '0' as a valid id.
 
+Fixes: 1ec1e82f2510 ("dmaengine: Add Freescale i.MX SDMA support")
+Cc: stable@vger.kernel
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+---
+ drivers/dma/imx-sdma.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 066b21a32232..3d4aac97b1fc 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -1331,7 +1331,7 @@ static void sdma_free_chan_resources(struct dma_chan *chan)
+ 
+ 	sdma_channel_synchronize(chan);
+ 
+-	if (sdmac->event_id0)
++	if (sdmac->event_id0 >= 0)
+ 		sdma_event_disable(sdmac, sdmac->event_id0);
+ 	if (sdmac->event_id1)
+ 		sdma_event_disable(sdmac, sdmac->event_id1);
+@@ -1631,7 +1631,7 @@ static int sdma_config(struct dma_chan *chan,
+ 	memcpy(&sdmac->slave_config, dmaengine_cfg, sizeof(*dmaengine_cfg));
+ 
+ 	/* Set ENBLn earlier to make sure dma request triggered after that */
+-	if (sdmac->event_id0) {
++	if (sdmac->event_id0 >= 0) {
+ 		if (sdmac->event_id0 >= sdmac->sdma->drvdata->num_events)
+ 			return -EINVAL;
+ 		sdma_event_enable(sdmac, sdmac->event_id0);
 -- 
-~Vinod
+2.17.1

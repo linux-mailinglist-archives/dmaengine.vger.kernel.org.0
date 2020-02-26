@@ -2,64 +2,81 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04354170827
-	for <lists+dmaengine@lfdr.de>; Wed, 26 Feb 2020 19:59:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8B0C170B4D
+	for <lists+dmaengine@lfdr.de>; Wed, 26 Feb 2020 23:14:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727221AbgBZS71 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 26 Feb 2020 13:59:27 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:57732 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727189AbgBZS71 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 26 Feb 2020 13:59:27 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1j71tx-0005OH-Rj; Wed, 26 Feb 2020 18:59:21 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        dmaengine@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] dmaengine: ti: edma: fix null dereference because of a typo in pointer name
-Date:   Wed, 26 Feb 2020 18:59:21 +0000
-Message-Id: <20200226185921.351693-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.0
+        id S1727802AbgBZWOo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 26 Feb 2020 17:14:44 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37640 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727715AbgBZWOo (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 26 Feb 2020 17:14:44 -0500
+Received: by mail-oi1-f193.google.com with SMTP id q84so1220041oic.4;
+        Wed, 26 Feb 2020 14:14:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bok3LP1w1qmqsuO1k7gdAuotciHOwlDqvixeOQYTb0o=;
+        b=YGqpM8dZcGihH6WBlaxUkEguc+HOJxTEVgTtCCwcjVGb294UE8WCYrR66uqxmNw8Bc
+         8K4fsUlLwl4kNNGO/OoKjacdA3BvZFEg36DCkaSbmHX2X1WATOcxS6fZDysszstO5i5D
+         b1rJ9KPHQXijVVGzC8EukPXUD3A235ZmfWgpddYErNcOcIRVPY75Y1mtiC59HVRh+Ex/
+         qsLbx1sTsup2e11ahGXWTJHbRMQDzKs84ck271oArGWmj8rB0RDkT8tVhk1kIPeKHTjc
+         ClgRaLcvGVVfOptYTvlD94WSZVhFdv67Skl0D3N/s/EayEi5CMe5t4dXGMHPz0N59aHD
+         84Qw==
+X-Gm-Message-State: APjAAAWcu3pqsMf10plxJspB1GnPkNTb7SOTdtHrRq2ZgAWUpdQhelR9
+        ZVWAs3MS0w3s+gYJYNUVHw==
+X-Google-Smtp-Source: APXvYqxM2+l7pZyEyd1X9E2oBGjRy47x/nyBH4hVjeWJ+OHmmT1cq5nXasi2tof7gwpMjMdC0Ozchw==
+X-Received: by 2002:aca:55cc:: with SMTP id j195mr1017627oib.22.1582755282012;
+        Wed, 26 Feb 2020 14:14:42 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id z21sm1229903oto.52.2020.02.26.14.14.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2020 14:14:41 -0800 (PST)
+Received: (nullmailer pid 28496 invoked by uid 1000);
+        Wed, 26 Feb 2020 22:14:40 -0000
+Date:   Wed, 26 Feb 2020 16:14:40 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        masahiroy@kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] dt-bindings: dma: Convert UniPhier MIO DMA controller
+ to json-schema
+Message-ID: <20200226221440.GA28411@bogus>
+References: <20200222112042.32345-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200222112042.32345-1-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Sat, 22 Feb 2020 20:20:42 +0900, Masahiro Yamada wrote:
+> Convert the UniPhier MIO (Media I/O) DMA controller binding to DT
+> schema format.
+> 
+> While I was here, I added the resets property.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+> Changes in v2:
+>  - add 'resets'
+> 
+>  .../dma/socionext,uniphier-mio-dmac.yaml      | 63 +++++++++++++++++++
+>  .../bindings/dma/uniphier-mio-dmac.txt        | 25 --------
+>  2 files changed, 63 insertions(+), 25 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/socionext,uniphier-mio-dmac.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/dma/uniphier-mio-dmac.txt
+> 
 
-Currently there is a dereference of the null pointer m_ddev.  This appears
-to be a typo on the pointer, I believe s_ddev should be used instead.
-Fix this by using the correct pointer.
+Applied, thanks.
 
-Addresses-Coverity: ("Explicit null dereferenced")
-Fixes: eb0249d50153 ("dmaengine: ti: edma: Support for interleaved mem to mem transfer")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/dma/ti/edma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-index 2b1fdd438e7f..c4a5c170c1f9 100644
---- a/drivers/dma/ti/edma.c
-+++ b/drivers/dma/ti/edma.c
-@@ -1992,7 +1992,7 @@ static void edma_dma_init(struct edma_cc *ecc, bool legacy_mode)
- 			 "Legacy memcpy is enabled, things might not work\n");
- 
- 		dma_cap_set(DMA_MEMCPY, s_ddev->cap_mask);
--		dma_cap_set(DMA_INTERLEAVE, m_ddev->cap_mask);
-+		dma_cap_set(DMA_INTERLEAVE, s_ddev->cap_mask);
- 		s_ddev->device_prep_dma_memcpy = edma_prep_dma_memcpy;
- 		s_ddev->device_prep_interleaved_dma = edma_prep_dma_interleaved;
- 		s_ddev->directions = BIT(DMA_MEM_TO_MEM);
--- 
-2.25.0
-
+Rob

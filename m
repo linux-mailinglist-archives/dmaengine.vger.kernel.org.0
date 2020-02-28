@@ -2,123 +2,111 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D12F9173545
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Feb 2020 11:26:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 213EC1737A0
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Feb 2020 13:52:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgB1K0h (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 28 Feb 2020 05:26:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41352 "EHLO mail.kernel.org"
+        id S1726631AbgB1MwD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 28 Feb 2020 07:52:03 -0500
+Received: from mail1.skidata.com ([91.230.2.99]:63410 "EHLO mail1.skidata.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726440AbgB1K0g (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 28 Feb 2020 05:26:36 -0500
-Received: from localhost (unknown [122.182.215.25])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F7062469F;
-        Fri, 28 Feb 2020 10:26:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582885596;
-        bh=a6pS6AMZKTCJMUm/J9xeeK8dJhS9wNmw3vRFuEYcLyM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bJzvhfmyo02SFTzd/qHMaf+XN8630v2AC5zdK5Zinu/QCT5b1SKfRd8Ajn5MuuqD9
-         k4b9yHklC3WUsKK8LgmgO1rwFAD/EkF2s4anZabTvR9ApRZ7FGpu3Yra6WfVMlDToi
-         iDcF43qj32b58ckdoY8InIJtoujNvvrBfu6UuJNk=
-Date:   Fri, 28 Feb 2020 15:56:30 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dan.j.williams@intel.com, geert@linux-m68k.org
-Subject: Re: [PATCH v3] dmaengine: Add basic debugfs support
-Message-ID: <20200228102630.GB4148@vkoul-mobl>
-References: <20200205111557.24125-1-peter.ujfalusi@ti.com>
- <20200224163707.GA2618@vkoul-mobl>
- <71231b0e-a9a2-4795-da71-b484f4992278@ti.com>
- <20200228044704.GC2618@vkoul-mobl>
- <970899d9-1491-78e8-1e7a-14e40915d061@ti.com>
+        id S1725876AbgB1MwC (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 28 Feb 2020 07:52:02 -0500
+X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Fri, 28 Feb 2020 07:52:01 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
+  t=1582894322; x=1614430322;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=g/fumDPqX7LPA3wXxiP1dS805jxlDQnX8YtVKUMeu98=;
+  b=LjZqGN6QzHklV6YiFhSqYetNYrYn8bjM9JqpeNng0UnezFAhpXrmWHu6
+   BR00jGPg9M60QK0/3c53EzQOl7pviMJdWbMhtV1RDFZs69ZXSb4gZ+UDZ
+   IyrcsN3YS6f4pUHcYIELYAAq/4/6UTFyooVHfu7+gjezTQWvplbXIli2R
+   py2/kIf5QaLbO1V2Ok9xocu3wrSp+nVMjS26vrQaAq4tDeZRwzF3l8lIO
+   sueyrPpHw9mXayIKPTd3Xf2iQFx1LQdN59MY/dl6ZPiibZ5AnKGYKOHpB
+   +yGbuGGoZX9QySvs52yvAk7TcMOomPxGMwzFvcxlXRqyJyDv8jBLn07Q9
+   Q==;
+IronPort-SDR: 08BFDbudq1MaMeOSQQ+Gr+tpOdBaghZBiTJoclI9zpC7I1cY4eavjFCRIGYIm6UxiXKZiGbpCh
+ 5nEss8HtL7INBEMdm9q0dm9ZdiGzxuQDeYYNUGresM574MXNUjSs40GfPn4EeZDM61hp230D75
+ kp96qCOjdjvkfVtBPmqGyuBgtjq0aNsJOeLu5Dr+3VPNJYAVB4gZHbebABmkrTYdW2swMKek1c
+ nrh19pKH2WaOn+Wxg3inHxnCqCBpPIPzAUyWogmBvnV0OAWuSWAmjfATc078ZFTvTr/SskG9i6
+ Q80=
+X-IronPort-AV: E=Sophos;i="5.70,496,1574118000"; 
+   d="scan'208";a="22939519"
+Date:   Fri, 28 Feb 2020 13:44:48 +0100
+From:   Richard Leitner <richard.leitner@skidata.com>
+To:     Martin Fuzzey <martin.fuzzey@flowbird.group>
+CC:     <dmaengine@vger.kernel.org>, <stable@vger.kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dmaengine: imx-sdma: fix context cache
+Message-ID: <20200228124448.GA1689606@pcleri>
+References: <1580305274-27274-1-git-send-email-martin.fuzzey@flowbird.group>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <970899d9-1491-78e8-1e7a-14e40915d061@ti.com>
+In-Reply-To: <1580305274-27274-1-git-send-email-martin.fuzzey@flowbird.group>
+X-Originating-IP: [192.168.111.252]
+X-ClientProxiedBy: sdex3srv.skidata.net (192.168.111.81) To
+ sdex5srv.skidata.net (192.168.111.83)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 28-02-20, 12:01, Peter Ujfalusi wrote:
-> Hi Vinod,
-> 
-> On 28/02/2020 6.47, Vinod Koul wrote:
-> > Hi Peter,
-> > 
-> > On 26-02-20, 14:10, Peter Ujfalusi wrote:
-> > 
-> >>>  do we really want a custom dbg_show()..? Drivers can add their own
-> >>> files...
-> >>
-> >> They could do that already ;)
-> >>
-> >> With the custom dbg_show() DMA drivers can save on the surrounding
-> >> code and just fill in the information regarding to their HW.
-> >> Again, on am654 the default information is:
-> >> # cat /sys/kernel/debug/dmaengine 
-> >> dma0 (285c0000.dma-controller): number of channels: 96
-> >>
-> >> dma1 (31150000.dma-controller): number of channels: 267
-> >>  dma1chan0    | 2b00000.mcasp:tx
-> >>  dma1chan1    | 2b00000.mcasp:rx
-> >>  dma1chan2    | in-use
-> >>  dma1chan3    | in-use
-> >>  dma1chan4    | in-use
-> >>  dma1chan5    | in-use
-> >>
-> >> With my current .dbg_show implementation for k3-udma:
-> >> # cat /sys/kernel/debug/dmaengine 
-> >> dma0 (285c0000.dma-controller): number of channels: 96
-> >>
-> >> dma1 (31150000.dma-controller): number of channels: 267
-> >>  dma1chan0    | 2b00000.mcasp:tx (MEM_TO_DEV, tchan8 [0x1008 -> 0xc400], PDMA, TR mode)
-> >>  dma1chan1    | 2b00000.mcasp:rx (DEV_TO_MEM, rchan8 [0x4400 -> 0x9008], PDMA, TR mode)
-> >>  dma1chan2    | in-use (MEM_TO_MEM, chan2 pair [0x1002 -> 0x9002], PSI-L Native, TR mode)
-> >>  dma1chan3    | in-use (MEM_TO_MEM, chan3 pair [0x1003 -> 0x9003], PSI-L Native, TR mode)
-> >>  dma1chan4    | in-use (MEM_TO_MEM, chan4 pair [0x1004 -> 0x9004], PSI-L Native, TR mode)
-> >>  dma1chan5    | in-use (MEM_TO_MEM, chan5 pair [0x1005 -> 0x9005], PSI-L Native, TR mode)
-> >>
-> >> For me this makes a huge difference.
-> > 
-> > Ok
-> > 
-> >>>> +DEFINE_SHOW_ATTRIBUTE(dmaengine_debugfs);
-> >>>> +
-> >>>> +static int __init dmaengine_debugfs_init(void)
-> >>>> +{
-> >>>> +	/* /sys/kernel/debug/dmaengine */
-> >>>> +	debugfs_create_file("dmaengine", 0444, NULL, NULL,
-> >>>> +			    &dmaengine_debugfs_fops);
-> >>>
-> >>> Should we add a directory? That way we can keep adding stuff into that
-> >>> one
-> >>
-> >> and have this file as 'summary' underneath?
-> > 
-> > Correct
-> 
-> /sys/kernel/debug/dmaengine/summary, right?
+Hi,
 
-Yup!
-
+On Wed, Jan 29, 2020 at 02:40:06PM +0100, Martin Fuzzey wrote:
+> There is a DMA problem with the serial ports on i.MX6.
 > 
-> >> I like the fact hat I can get all the information via one file.
-> >> Saves a lot of time (and explaining to users) on finding the correct
-> >> one to cat...
-> > 
-> > But am sure we can come with more data to show, so having a directory
-> > helps :)
+> When the following sequence is performed:
 > 
-> OK, so we need to store the dbgfs rootdir and add an API so DMA drivers
-> can get the dentry of it, so they can implement their custom
-> files/directories underneath.
+> 1) Open a port
+> 2) Write some data
+> 3) Close the port
+> 4) Open a *different* port
+> 5) Write some data
+> 6) Close the port
+> 
+> The second write sends nothing and the second close hangs.
+> If the first close() is omitted it works.
+> 
+> Adding logs to the the UART driver shows that the DMA is being setup but
+> the callback is never invoked for the second write.
+> 
+> This used to work in 4.19.
+> 
+> Git bisect leads to:
+> 	ad0d92d: "dmaengine: imx-sdma: refine to load context only once"
+> 
+> This commit adds a "context_loaded" flag used to avoid unnecessary context
+> setups.
+> However the flag is only reset in sdma_channel_terminate_work(),
+> which is only invoked in a worker triggered by sdma_terminate_all() IF
+> there is an active descriptor.
+> 
+> So, if no active descriptor remains when the channel is terminated, the
+> flag is not reset and, when the channel is later reused the old context
+> is used.
+> 
+> Fix the problem by always resetting the flag in sdma_free_chan_resources().
+> 
+> Fixes: ad0d92d: "dmaengine: imx-sdma: refine to load context only once"
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
+> 
 
-Correct
+Thanks for the patch!
+We were chasing this issue for days and just found your patch as we were
+preparing our (quite similar) solution for submission ;-)
 
--- 
-~Vinod
+I've successfully tested your patch on a custom i.MX6Solo board.
+Therefore feel free to add
+
+Tested-by: Richard Leitner <richard.leitner@skidata.com>
+
+regards;rl

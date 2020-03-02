@@ -2,163 +2,336 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 94D3A1737EC
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Feb 2020 14:08:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B99717525C
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Mar 2020 04:42:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgB1NID (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 28 Feb 2020 08:08:03 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:38580 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726700AbgB1NIC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Feb 2020 08:08:02 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01SD7s3g011555;
-        Fri, 28 Feb 2020 07:07:54 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582895274;
-        bh=5vN+4gaPAOiKilti2WhXQezE/nW02Nkfaza04gj1gYA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=SYsSfLOnslcRgb8DgHYVjLfMzyDZL3zc6HWI6YownDvyX+PLPwl1rA+r4m2cUQQIi
-         Ci8ckbmcLhDjG4viDN4Zvf9q1M8SO+TM185pNzd2tFpMqjyR1EbRSZQulT9qngmYEK
-         A8YDyG8AcdDgbwTzGI0BJGWk+CZeBxCmc2ypnh2I=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01SD7smR022371
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 28 Feb 2020 07:07:54 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 28
- Feb 2020 07:07:53 -0600
-Received: from localhost.localdomain (10.64.41.19) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 28 Feb 2020 07:07:53 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 01SD7lcu037330;
-        Fri, 28 Feb 2020 07:07:51 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dan.j.williams@intel.com>, <geert@linux-m68k.org>
-Subject: [PATCH v4 2/2] dmaengine: ti: k3-udma: Implement custom dbg_summary_show for debugfs
-Date:   Fri, 28 Feb 2020 15:07:47 +0200
-Message-ID: <20200228130747.22905-3-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200228130747.22905-1-peter.ujfalusi@ti.com>
-References: <20200228130747.22905-1-peter.ujfalusi@ti.com>
+        id S1726775AbgCBDmX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 1 Mar 2020 22:42:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55690 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726758AbgCBDmX (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 1 Mar 2020 22:42:23 -0500
+Received: from localhost (unknown [171.76.77.132])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4542F2468E;
+        Mon,  2 Mar 2020 03:42:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583120541;
+        bh=uJWkkdJmXVQxOGSRHHdAuQpkzqA7SwOFFf/rG/0NT60=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=y/USMjN7/7KxM20uiL4dCX0ZOqTim1xnDyPRt1PWA/Z/cdC1B0jkqhBhgpGb6wfxF
+         kUHwzPhwt+090/U2FVyVsEsR0Q01S/p2JnqH5yxFqYuJlNsK47zSZqq/TYIrZ32r8U
+         bz6NwADGaDLE7wijbuMuoFzsHv+WeZAavi4pOAM0=
+Date:   Mon, 2 Mar 2020 09:12:15 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>, dmaengine@vger.kernel.org,
+        Michal Simek <michal.simek@xilinx.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Tejas Upadhyay <tejasu@xilinx.com>,
+        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
+Subject: Re: [PATCH v3 2/6] dmaengine: Add interleaved cyclic transaction type
+Message-ID: <20200302034215.GC4148@vkoul-mobl>
+References: <20200210140618.GA4727@pendragon.ideasonboard.com>
+ <20200213132938.GF2618@vkoul-mobl>
+ <20200213134843.GG4833@pendragon.ideasonboard.com>
+ <20200213140709.GH2618@vkoul-mobl>
+ <736038ef-e8b2-5542-5cda-d8923e3a4826@ti.com>
+ <20200213165249.GH29760@pendragon.ideasonboard.com>
+ <20200214042349.GS2618@vkoul-mobl>
+ <20200214162236.GK4831@pendragon.ideasonboard.com>
+ <becf8212-7fe6-9fb6-eb2c-7a03a9b286b1@ti.com>
+ <20200226162434.GD4770@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226162434.GD4770@pendragon.ideasonboard.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-With the custom dbg_summary_show the driver can show useful information
-about the used channels.
+On 26-02-20, 18:24, Laurent Pinchart wrote:
+> Hi Peter,
+> 
+> On Mon, Feb 17, 2020 at 12:00:02PM +0200, Peter Ujfalusi wrote:
+> > On 14/02/2020 18.22, Laurent Pinchart wrote:
+> > >>> It does, but I really wonder why we need a new terminate operation that
+> > >>> would terminate a single transfer. If we call issue_pending at step B.3,
+> > >>> when the new txn submitted, we can terminate the current transfer at the
+> > >>> point. It changes the semantics of issue_pending, but only for cyclic
+> > >>> transfers (this whole discussions it only about cyclic transfers). As a
+> > >>> cyclic transfer will be repeated forever until terminated, there's no
+> > >>> use case for issuing a new transfer without terminating the one in
+> > >>> progress. I thus don't think we need a new terminate operation: the only
+> > >>> thing that makes sense to do when submitting a new cyclic transfer is to
+> > >>> terminate the current one and switch to the new one, and we already have
+> > >>> all the APIs we need to enable this behaviour.
+> > >>
+> > >> The issue_pending() is a NOP when engine is already running.
+> > > 
+> > > That's not totally right. issue_pending() still moves submitted but not
+> > > issued transactions from the submitted queue to the issued queue. The
+> > > DMA engine only considers the issued queue, so issue_pending()
+> > > essentially tells the DMA engine to consider the submitted transaction
+> > > for processing after the already issued transactions complete (in the
+> > > non-cyclic case).
+> > 
+> > Vinod's point is for the cyclic case at the current state. It is NOP
+> > essentially as we don't have way to not kill the whole channel.
+> 
+> Considering the current implementation of issue_pending(), for cyclic
+> transfers, that's correct.
+> 
+> My point was that, semantically, and as is implemented today for
+> non-cyclic transfers, issue_pending() is meant to tell the DMA engine to
+> consider the submitted transactions for processing after the already
+> issued transactions complete. For cyclic transactions, .issue_pending
+> has no defined semantics, and is implemented as a NOP. My proposal is to
+> extend the existing semantics of issue_pending() as defined for the
+> non-cyclic transactions to also cover the cyclic transactions. This
+> won't cause any breakage (the issue_pending() operation being unused for
+> cyclic transactions, it won't cause any change to existing code), and
+> will make the API more consistent as the same semantics (moving to the
+> next submitted transaction when the current one completes) will be
+> implemented using the same operation.
 
-dma0 (285c0000.dma-controller): number of channels: 24
+Only problem is cyclic by defination never completes, so we need to add
+additional semantics for completion which is something me and Peter do
+not seem to like :)
 
-dma1 (31150000.dma-controller): number of channels: 84
- dma1chan0    | 2b00000.mcasp:tx (MEM_TO_DEV, tchan16 [0x1010 -> 0xc400], PDMA[ ACC32 BURST ], TR mode)
- dma1chan1    | 2b00000.mcasp:rx (DEV_TO_MEM, rchan16 [0x4400 -> 0x9010], PDMA[ ACC32 BURST ], TR mode)
- dma1chan2    | 2ba0000.mcasp:tx (MEM_TO_DEV, tchan17 [0x1011 -> 0xc507], PDMA[ ACC32 BURST ], TR mode)
- dma1chan3    | 2ba0000.mcasp:rx (DEV_TO_MEM, rchan17 [0x4507 -> 0x9011], PDMA[ ACC32 BURST ], TR mode)
- dma1chan4    | in-use (MEM_TO_MEM, chan0 pair [0x1000 -> 0x9000], PSI-L Native, TR mode)
- dma1chan5    | in-use (MEM_TO_MEM, chan1 pair [0x1001 -> 0x9001], PSI-L Native, TR mode)
- dma1chan6    | in-use (MEM_TO_MEM, chan4 pair [0x1004 -> 0x9004], PSI-L Native, TR mode)
- dma1chan7    | in-use (MEM_TO_MEM, chan5 pair [0x1005 -> 0x9005], PSI-L Native, TR mode)
+> 
+> > Just a sidenote: it is not even that clean cut for slave transfers
+> > either as the slave_config must _not_ change between the issued
+> > transfers. Iow, you can not switch between 16bit and 32bit word lengths
+> > with some DMA. EDMA, sDMA can do that, but UDMA can not for example...
+> 
+> I agree this can be an issue, but I'm not sure how it's related :-) I
+> believe we need to consider this feature, and specify the API better,
+> but that's fairly unrelated, isn't it ?
+> 
+> > >> The design of APIs is that we submit a txn to pending_list and then the
+> > >> pending_list is started when issue_pending() is called.
+> > >> Or if the engine is already running, it will take next txn from
+> > >> pending_list() when current txn completes.
+> > >>
+> > >> The only consideration here in this case is that the cyclic txn never
+> > >> completes. Do we really treat a new txn submission as an 'indication' of
+> > >> completeness? That is indeed a point to ponder upon.
+> > > 
+> > > The reason why I think we should is two-fold:
+> > > 
+> > > 1. I believe it's semantically aligned with the existing behaviour of
+> > > issue_pending(). As explained above, the operation tells the DMA engine
+> > > to consider submitted transactions for processing when the current (and
+> > > other issued) transactions complete. If we extend the definition of
+> > > complete to cover cyclic transactions, I think it's a good match.
+> > 
+> > We will end up with different behavior between cyclic and non cyclic
+> > transfers and the new behavior should be somehow supported by existing
+> > drivers.
+> > Yes, issue_pending is moving the submitted tx to the issued queue to be
+> > executed on HW when the current transfer finished.
+> > We only needed this for non cyclic uses so far. Some DMA hw can replace
+> > the current transfer with a new one (re-trigger to fetch the new
+> > configuration, like your's), but some can not (none of the system DMAs
+> > on TI platforms can).
+> > If we say that this is the behavior the DMA drivers must follow then we
+> > will have non compliant DMA drivers. You can not move simply to other
+> > DMA or can not create generic DMA code shared by drivers.
+> 
+> I think that's a matter of reporting the capabilities of the DMA engine,
+> and I believe a flag is enough for this. My proposal really gives a
+> purpose to an API that is unused today (.issue_pending() for cyclic
+> transfers), and that purpose is semantically coherent with the purpose
+> of the same function for non-cyclic transfers. I thus believe it brings
+> the cyclic and non-cyclic cases closer, making their behaviour more
+> similar, not different.
+> 
+> > > 2. There's really nothing else we could do with cyclic transactions.
+> > > They never complete today and have to be terminated manually with
+> > > terminate_all(). Using issue_pending() to move to a next cyclic
+> > > transaction doesn't change the existing behaviour by replacing a useful
+> > > (and used) feature, as issue_pending() is currently a no-op for cyclic
+> > > transactions. The newly issued transaction is never considered, and
+> > > calling terminate_all() will cancel the issued transactions. By
+> > > extending the behaviour of issue_pending(), we're making a new use case
+> > > possible, without restricting any other feature, and without "stealing"
+> > > issue_pending() and preventing it from implementing another useful
+> > > behaviour.
+> > 
+> > But at the same time we make existing drivers non compliant...
+> 
+> With a flag to report this new feature, that's not a problem.
+> 
+> > Imo a new callback to 'kill' / 'terminate' / 'replace' / 'abort' an
+> > issued cookie would be cleaner.
+> > 
+> > cookie1 = dmaengine_issue_pending();
+> > // will start the transfer
+> > cookie2 = dmaengine_issue_pending();
+> > // cookie1 still runs, cookie2 is waiting to be executed
+> > dmaengine_abort_tx(chan);
+> > // will kill cookie1 and executes cookie2
+> > 
+> > dmaengine_abort_tx() could take a cookie as parameter if we wish, so you
+> > can say selectively which issued tx you want to remove, if it is the
+> > running one, then stop it and move to the next one.
+> > In place of the cookie parameter a 0 could imply that I don't know the
+> > cookie, but kill the running one.
+> > 
+> > We would preserve what issue_pending does atm and would give us a
+> > generic flow of how other drivers should handle such cases.
+> > 
+> > Note that this is not only useful for cyclic cases. Any driver which
+> > currently uses brute-force termination can be upgraded.
+> > Prime example is UART RX. We issue an RX buffer to receive data, but it
+> > is not guarantied that the remote will send data which would fill the
+> > buffer and we hit a timeout waiting. We could issue the next buffer and
+> > kill the stale transfer to reclaim the received data.
+> > 
+> > I think this can be even implemented for DMAs which can not do the same
+> > thing as your DMA can.
+> 
+> But that's a different use case. What I'm after is *not*
+> killing/aborting a currently running transfer, it's moving to the next
+> submitted transfer at the next available sync point. I don't want to
+> abort the transfer in progress immediately, that would kill the display.
+> 
+> I understand that the above can be useful, but I really don't see why
+> I'd need to implement support for a more complex use case that I have no
+> need for, and could hardly even test properly, when what I'm after is
+> fixing what I view as a bug in the existing implementation: we have an
+> operation, issue_pending(), with a defined purpose, and it happens that
+> for one of the transfer types that operation doesn't work. I really see
+> no reason to implement a brand new API in this case.
+> 
+> Note that using issue_pending() as I propose doesn't preclude anyone
+> (you, or someone else) to implement your above proposal, but please
+> don't make me do your work :-) This is becoming a case of yak shaving
+> where I'm asked to fix shortcomings of the DMA engine API when they're
+> unrelated to my use case.
+> 
+> > > In a nutshell, an important reason why I like using issue_pending() for
+> > > this purpose is because it makes cyclic and non-cyclic transactions
+> > > behave more similarly, which I think is good from an API consistency
+> > > point of view.
+> > > 
+> > >> Also, we need to keep in mind that the dmaengine wont stop a cyclic
+> > >> txn. It would be running and start next transfer (in this case do
+> > >> from start) while it also gives you an interrupt. Here we would be
+> > >> required to stop it and then start a new one...
+> > > 
+> > > We wouldn't be required to stop it in the middle, the expected behaviour
+> > > is for the DMA engine to complete the cyclic transaction until the end
+> > > of the cycle and then replace it by the new one. That's exactly what
+> > > happens for non-cyclic transactions when you call issue_pending(), which
+> > > makes me like this solution.
+> > 
+> > Right, so we have two different use cases. Replace the current transfers
+> > with the next issued one and abort the current transfer now and arm the
+> > next issued one.
+> > dmaengine_abort_tx(chan, cookie, forced) ?
+> > forced == false: replace it at cyclic boundary
+> > forced == true: right away (as HW allows), do not wait for cyclic round
+> 
+> See the above. You're making this more complicated than it should be,
+> designing an API that contains a small part that could help solving my
+> problem, and asking me to implement the 90% for free. Not fair :-)
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/dma/ti/k3-udma.c | 63 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+I agree it may help in other cases, but my view here is that if we want
+to terminate the cyclic, let us be explicit about it. I would rather
+call an API to do so and explicitly convey that current cyclic txn is
+ending rather than implictly submit a new one.
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index 0536866a58ce..80a05ee5e8e4 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -3473,6 +3473,66 @@ static int udma_setup_rx_flush(struct udma_dev *ud)
- 	return 0;
- }
- 
-+#ifdef CONFIG_DEBUG_FS
-+static void udma_dbg_summary_show_chan(struct seq_file *s,
-+				       struct dma_chan *chan)
-+{
-+	struct udma_chan *uc = to_udma_chan(chan);
-+	struct udma_chan_config *ucc = &uc->config;
-+
-+	seq_printf(s, " %-13s| %s", dma_chan_name(chan),
-+		   chan->dbg_client_name ?: "in-use");
-+	seq_printf(s, " (%s, ", dmaengine_get_direction_text(uc->config.dir));
-+
-+	switch (uc->config.dir) {
-+	case DMA_MEM_TO_MEM:
-+		seq_printf(s, "chan%d pair [0x%04x -> 0x%04x], ", uc->tchan->id,
-+			   ucc->src_thread, ucc->dst_thread);
-+		break;
-+	case DMA_DEV_TO_MEM:
-+		seq_printf(s, "rchan%d [0x%04x -> 0x%04x], ", uc->rchan->id,
-+			   ucc->src_thread, ucc->dst_thread);
-+		break;
-+	case DMA_MEM_TO_DEV:
-+		seq_printf(s, "tchan%d [0x%04x -> 0x%04x], ", uc->tchan->id,
-+			   ucc->src_thread, ucc->dst_thread);
-+		break;
-+	default:
-+		seq_printf(s, ")\n");
-+		return;
-+	}
-+
-+	if (ucc->ep_type == PSIL_EP_NATIVE) {
-+		seq_printf(s, "PSI-L Native");
-+		if (ucc->metadata_size) {
-+			seq_printf(s, "[%s", ucc->needs_epib ? " EPIB" : "");
-+			if (ucc->psd_size)
-+				seq_printf(s, " PSDsize:%u", ucc->psd_size);
-+			seq_printf(s, " ]");
-+		}
-+	} else {
-+		seq_printf(s, "PDMA");
-+		if (ucc->enable_acc32 || ucc->enable_burst)
-+			seq_printf(s, "[%s%s ]",
-+				   ucc->enable_acc32 ? " ACC32" : "",
-+				   ucc->enable_burst ? " BURST" : "");
-+	}
-+
-+	seq_printf(s, ", %s)\n", ucc->pkt_mode ? "Packet mode" : "TR mode");
-+}
-+
-+static void udma_dbg_summary_show(struct seq_file *s,
-+				  struct dma_device *dma_dev)
-+{
-+	struct dma_chan *chan;
-+
-+	list_for_each_entry(chan, &dma_dev->channels, device_node) {
-+		if (chan->client_count)
-+			udma_dbg_summary_show_chan(s, chan);
-+	}
-+}
-+#endif /* CONFIG_DEBUG_FS */
-+
- #define TI_UDMAC_BUSWIDTHS	(BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) | \
- 				 BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | \
- 				 BIT(DMA_SLAVE_BUSWIDTH_3_BYTES) | \
-@@ -3553,6 +3613,9 @@ static int udma_probe(struct platform_device *pdev)
- 	ud->ddev.device_resume = udma_resume;
- 	ud->ddev.device_terminate_all = udma_terminate_all;
- 	ud->ddev.device_synchronize = udma_synchronize;
-+#ifdef CONFIG_DEBUG_FS
-+	ud->ddev.dbg_summary_show = udma_dbg_summary_show;
-+#endif
- 
- 	ud->ddev.device_free_chan_resources = udma_free_chan_resources;
- 	ud->ddev.src_addr_widths = TI_UDMAC_BUSWIDTHS;
+> > >> Or perhaps remove the cyclic setting from the txn when a new one
+> > >> arrives and that behaviour IMO is controller dependent, not sure if
+> > >> all controllers support it..
+> > > 
+> > > At the very least I would assume controllers to be able to stop a cyclic
+> > > transaction forcefully, otherwise terminate_all() could never be
+> > > implemented. This may not lead to a gracefully switch from one cyclic
+> > > transaction to another one if the hardware doesn't allow doing so. In
+> > > that case I think tx_submit() could return an error, or we could turn
+> > > issue_pending() into an int operation to signal the error. Note that
+> > > there's no need to mass-patch drivers here, if a DMA engine client
+> > > issues a second cyclic transaction while one is in progress, the second
+> > > transaction won't be considered today. Signalling an error is in my
+> > > opinion a useful feature, but not doing so in DMA engine drivers can't
+> > > be a regression. We could also add a flag to tell whether this mode of
+> > > operation is supported.
+> > 
+> > My problems is that it is changing the behavior of issue_pending() for
+> > cyclic. If we document this than all existing DMA drivers are broken
+> > (not complaint with the API documentation) as they don't do this.
+> 
+> Again, see above. I argue that it's not a behavioural change as such, as
+> the current behaviour is unused, because it's implemented as a NOP and
+> useless. With a simple flag to report if a DMA engine supports replacing
+> cyclic transfers, we would have a more consistent API as issue_pending()
+> will operate the same way for *all* types of transfers.
+> 
+> > >>>> That would be a clean way to handle it. We were missing this API for a
+> > >>>> long time to be able to cancel the ongoing transfer (whether it is
+> > >>>> cyclic or slave_sg, or memcpy) and move to the next one if there is one
+> > >>>> pending.
+> > >>>
+> > >>> Note that this new terminate API wouldn't terminate the ongoing transfer
+> > >>> immediately, it would complete first, until the end of the cycle for
+> > >>> cyclic transfers, and until the end of the whole transfer otherwise.
+> > >>> This new operation would thus essentially be a no-op for non-cyclic
+> > >>> transfers. I don't see how it would help :-) Do you have any particular
+> > >>> use case in mind ?
+> > >>
+> > >> Yeah that is something more to think about. Do we really abort here or
+> > >> wait for the txn to complete. I think Peter needs the former and your
+> > >> falls in the latter category
+> > > 
+> > > I definitely need the latter, otherwise the display will flicker (or
+> > > completely misoperate) every time a new frame is displayed, which isn't
+> > > a good idea :-)
+> > 
+> > Sure, and it is a great feature.
+> > 
+> > > I'm not sure about Peter's use cases, but it seems to me
+> > > that aborting a transaction immediately is racy in most cases, unless
+> > > the DMA engine supports byte-level residue reporting.
+> > 
+> > Sort of yes. With EDMA, sDMA I can just kill the channel and set up a
+> > new one right away.
+> > UDMA on the other hand is not that forgiving... I would need to kill the
+> > channel, wait for the termination to complete, reconfigure the channel
+> > and execute the new transfer.
+> > 
+> > But with a separate callback API at least there will be an entry point
+> > when this can be initiated and handled.
+> > Fwiw, I think it should be simple to add this functionality to them, the
+> > code is kind of handling it in other parts, but implementing it in the
+> > issue_pending() is not really a clean solution.
+> > 
+> > In a channel you can run slave_sg transfers followed by cyclic if you
+> > wish. A slave channel is what it is, slave channel which can be capable
+> > to execute slave_sg and/or cyclic (and/or interleaved).
+> > If issue_pending() is to take care then we need to check if the current
+> > transfer is cyclic or not and decide based on that.
+> > 
+> > With a separate callback we in the DMA driver just need to do what the
+> > client is asking for and no need to think.
+> 
+> Let's put it that way: are you volunteering to implement your proposal
+> (with proper API documentation) in a reasonable time frame, so that I
+> can try it for my use case ? Otherwise I see no reason to push against
+> my proposal.
+> 
+> > > One non-intrusive
+> > > option would be to add a flag to signal that a newly issued transaction
+> > > should interrupt the current transaction immediately.
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+~Vinod

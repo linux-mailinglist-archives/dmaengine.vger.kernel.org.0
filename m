@@ -2,104 +2,92 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DDAC7176E16
-	for <lists+dmaengine@lfdr.de>; Tue,  3 Mar 2020 05:33:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90C291776B8
+	for <lists+dmaengine@lfdr.de>; Tue,  3 Mar 2020 14:12:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbgCCEc7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 2 Mar 2020 23:32:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50576 "EHLO mail.kernel.org"
+        id S1728422AbgCCNMO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 3 Mar 2020 08:12:14 -0500
+Received: from smaract.com ([82.165.73.54]:46097 "EHLO smaract.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726998AbgCCEc6 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 2 Mar 2020 23:32:58 -0500
-Received: from localhost (unknown [122.167.124.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EF0920717;
-        Tue,  3 Mar 2020 04:32:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583209978;
-        bh=Ug2+vJ+ZcI5ysfWVbj5ud7It2jshGRSywGEXvUwcHKU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Wy/46AOMQbTq52frASd/nqcg/jx0ihzkgJIQqKCuonIsFSTYLp8hE/DH5X/2DxXjO
-         z5ElAcaRPkpV8NBT3RLRmdPfojKSkQSZFIzsA36pzfG0sJJ9SLs9+/W13HIUr+YjSj
-         5y+YRZ3wuwi3b/6CtMwW9b4zqQg0c02ZgN6WxyDQ=
-Date:   Tue, 3 Mar 2020 10:02:54 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>, dmaengine@vger.kernel.org,
-        Michal Simek <michal.simek@xilinx.com>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Tejas Upadhyay <tejasu@xilinx.com>,
-        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
-Subject: Re: [PATCH v3 2/6] dmaengine: Add interleaved cyclic transaction type
-Message-ID: <20200303043254.GN4148@vkoul-mobl>
-References: <20200213140709.GH2618@vkoul-mobl>
- <736038ef-e8b2-5542-5cda-d8923e3a4826@ti.com>
- <20200213165249.GH29760@pendragon.ideasonboard.com>
- <20200214042349.GS2618@vkoul-mobl>
- <20200214162236.GK4831@pendragon.ideasonboard.com>
- <becf8212-7fe6-9fb6-eb2c-7a03a9b286b1@ti.com>
- <20200219092514.GG2618@vkoul-mobl>
- <20200226163011.GE4770@pendragon.ideasonboard.com>
- <20200302034735.GD4148@vkoul-mobl>
- <20200302073728.GB9177@pendragon.ideasonboard.com>
+        id S1727913AbgCCNMO (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 3 Mar 2020 08:12:14 -0500
+X-Greylist: delayed 389 seconds by postgrey-1.27 at vger.kernel.org; Tue, 03 Mar 2020 08:12:13 EST
+Received: from mx1.smaract.de (staticdsl-213-168-205-127.ewe-ip-backbone.de [213.168.205.127])
+        by smaract.com (Postfix) with ESMTPSA id A1623A17BC;
+        Tue,  3 Mar 2020 13:05:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smaract.com;
+        s=default; t=1583240742;
+        bh=AMMfXSx0nmTaloZKYs3RYdMbrVSUtRzPFHkG5Ki/ddU=; l=1669;
+        h=Received:From:To:Subject;
+        b=mIZ2X5xoYH/wk6XmTWwXBnxWmhTginsbOOBpSc7vCCy6gW79NlU9MnwgKKamE08XP
+         H4DOo4Bm/dl+ttTJbYWxV3aQTFNbsdvbCbvi/8wvGpJSxPWyyVAP//l1BTxBq4c+rX
+         MlDd9XPUjvMjoWeieisJJrRJEnkEIZXFoEXctQ1Y=
+Authentication-Results: smaract.com;
+        spf=pass (sender IP is 213.168.205.127) smtp.mailfrom=vonohr@smaract.com smtp.helo=mx1.smaract.de
+Received-SPF: pass (smaract.com: connection is authenticated)
+Received: from sebastian-VirtualBox.smaract.local (10.100.203.42) by
+ ols12mx1.smaract.local (172.16.16.90) with Microsoft SMTP Server (TLS) id
+ 15.1.225.42; Tue, 3 Mar 2020 14:05:42 +0100
+From:   Sebastian von Ohr <vonohr@smaract.com>
+To:     <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
+CC:     Sebastian von Ohr <vonohr@smaract.com>
+Subject: [PATCH] dmaengine: xilinx_dma: Add missing check for empty list
+Date:   Tue, 3 Mar 2020 14:05:18 +0100
+Message-ID: <20200303130518.333-1-vonohr@smaract.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302073728.GB9177@pendragon.ideasonboard.com>
+Content-Type: text/plain
+X-ClientProxiedBy: ols12mx1.smaract.local (172.16.16.90) To
+ ols12mx1.smaract.local (172.16.16.90)
+X-PPP-Message-ID: <158324074274.49694.10099073382789235699@smaract.com>
+X-PPP-Vhost: mario.smaract.com
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Laurent,
+The DMA transfer might finish just after checking the state with
+dma_cookie_status, but before the lock is acquired. Not checking
+for an empty list in xilinx_dma_tx_status may result in reading
+random data or data corruption when desc is written to. This can
+be reliably triggered by using dma_sync_wait to wait for DMA
+completion.
 
-On 02-03-20, 09:37, Laurent Pinchart wrote:
+Signed-off-by: Sebastian von Ohr <vonohr@smaract.com>
+---
+ drivers/dma/xilinx/xilinx_dma.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-> > I would be more comfortable in calling an API to do so :)
-> > The flow I am thinking is:
-> > 
-> > - prep cyclic1 txn
-> > - submit cyclic1 txn
-> > - call issue_pending() (cyclic one starts)
-> > 
-> > - prep cyclic2 txn
-> > - submit cyclic2 txn
-> > - signal_cyclic1_txn aka terminate_cookie()
-> > - cyclic1 completes, switch to cyclic2 (dmaengine driver)
-> > - get callback for cyclic1 (optional)
-> > 
-> > To check if hw supports terminate_cookie() or not we can check if the
-> > callback support is implemented
-> 
-> Two questions though:
-> 
-> - Where is .issue_pending() called for cyclic2 in your above sequence ?
->   Surely it should be called somewhere, as the DMA engine API requires
->   .issue_pending() to be called for a transfer to be executed, otherwise
->   it stays in the submitted but not pending queue.
-
-Sorry missed that one, I would do that after submit cyclic2 txn step and
-then signal signal_cyclic1_txn termination
-
-> - With the introduction of a new .terminate_cookie() operation, we need
->   to specify that operation for all transfer types. What's its
-
-Correct
-
->   envisioned semantics for non-cyclic transfers ? And how do DMA engine
->   drivers report that they support .terminate_cookie() for cyclic
->   transfers but not for other transfer types (the counterpart of
->   reporting, in my proposition, that .issue_pending() isn't supported
->   replace the current cyclic transfer) ?
-
-Typically for dmaengine controller cyclic is *not* a special mode, only
-change is that a list provided to controller is circular.
-
-So, the .terminate_cookie() should be a feature for all type of txn's.
-If for some reason (dont discount what hw designers can do) a controller
-supports this for some specific type(s), then they should return
--ENOTSUPP for cookies that do not support and let the caller know.
-
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index a9c5d5cc9f2b..5d5f1d0ce16c 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -1229,16 +1229,16 @@ static enum dma_status xilinx_dma_tx_status(struct dma_chan *dchan,
+ 		return ret;
+ 
+ 	spin_lock_irqsave(&chan->lock, flags);
+-
+-	desc = list_last_entry(&chan->active_list,
+-			       struct xilinx_dma_tx_descriptor, node);
+-	/*
+-	 * VDMA and simple mode do not support residue reporting, so the
+-	 * residue field will always be 0.
+-	 */
+-	if (chan->has_sg && chan->xdev->dma_config->dmatype != XDMA_TYPE_VDMA)
+-		residue = xilinx_dma_get_residue(chan, desc);
+-
++	if (!list_empty(&chan->active_list)) {
++		desc = list_last_entry(&chan->active_list,
++				       struct xilinx_dma_tx_descriptor, node);
++		/*
++		 * VDMA and simple mode do not support residue reporting, so the
++		 * residue field will always be 0.
++		 */
++		if (chan->has_sg && chan->xdev->dma_config->dmatype != XDMA_TYPE_VDMA)
++			residue = xilinx_dma_get_residue(chan, desc);
++	}
+ 	spin_unlock_irqrestore(&chan->lock, flags);
+ 
+ 	dma_set_residue(txstate, residue);
 -- 
-~Vinod
+2.17.1
+

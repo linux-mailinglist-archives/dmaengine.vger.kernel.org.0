@@ -2,102 +2,124 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC55D177B08
-	for <lists+dmaengine@lfdr.de>; Tue,  3 Mar 2020 16:51:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3C7717830D
+	for <lists+dmaengine@lfdr.de>; Tue,  3 Mar 2020 20:23:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730247AbgCCPuu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 3 Mar 2020 10:50:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60008 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729099AbgCCPuu (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:50:50 -0500
-Received: from mail.kernel.org (tmo-101-56.customers.d1-online.com [80.187.101.56])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97D38205C9;
-        Tue,  3 Mar 2020 15:50:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583250649;
-        bh=D5TWuE5a1T3YZLgyK18r/2Ad6XegTUJLqVeALzs77vk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DNLJbCOr0dL3OAafCNleCQJcTAhFJtplSCTJUbboQOVuXYLKG5v5vAKr5uIocpI6t
-         8BIj2hKiTxUeOAteWSdqD6KbsKOo/7RLXsx1NB8S6cJ42Q1vwr2YWzXfOs9z9lowgB
-         ti+GwahryjTpEMkRbRj7Wpbhzh6yEc3xolwBrVhA=
-Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
-        (envelope-from <mchehab@kernel.org>)
-        id 1j99og-001ZOq-FA; Tue, 03 Mar 2020 16:50:42 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, dmaengine@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: [PATCH 3/9] docs: dmaengine: provider.rst: get rid of some warnings
-Date:   Tue,  3 Mar 2020 16:50:33 +0100
-Message-Id: <62cf2a87b379a92c9c0e5a40c2ae8a138b01fe0a.1583250595.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <afbe367ccb7b9abcb9fab7bc5cb5e0686c105a53.1583250595.git.mchehab+huawei@kernel.org>
-References: <afbe367ccb7b9abcb9fab7bc5cb5e0686c105a53.1583250595.git.mchehab+huawei@kernel.org>
+        id S1729436AbgCCTXT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 3 Mar 2020 14:23:19 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:53208 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728033AbgCCTXS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 3 Mar 2020 14:23:18 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id F3A6B2AF;
+        Tue,  3 Mar 2020 20:23:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1583263397;
+        bh=Q2CDy+4lbTd8LdaNdIvimeg+lgDMXUxRFBoGblnVf1Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r1snqAb5kbGtX1dAO6dzT6eOfMxOZkHdexslHciCMgLl78zTBc/4ZFUi1/DEfSkYi
+         q9VOShZxjt+RxKfGRXHs7WXvNpB/fIWFcS995CWrXtVESVMCyvnE+Pg8lk9TGpVYdN
+         iQ1nDCw0zuxGjJomh2U1kZg/Qcslv+KWuITfHYHY=
+Date:   Tue, 3 Mar 2020 21:22:55 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>, dmaengine@vger.kernel.org,
+        Michal Simek <michal.simek@xilinx.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Tejas Upadhyay <tejasu@xilinx.com>,
+        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
+Subject: Re: [PATCH v3 2/6] dmaengine: Add interleaved cyclic transaction type
+Message-ID: <20200303192255.GN11333@pendragon.ideasonboard.com>
+References: <736038ef-e8b2-5542-5cda-d8923e3a4826@ti.com>
+ <20200213165249.GH29760@pendragon.ideasonboard.com>
+ <20200214042349.GS2618@vkoul-mobl>
+ <20200214162236.GK4831@pendragon.ideasonboard.com>
+ <becf8212-7fe6-9fb6-eb2c-7a03a9b286b1@ti.com>
+ <20200219092514.GG2618@vkoul-mobl>
+ <20200226163011.GE4770@pendragon.ideasonboard.com>
+ <20200302034735.GD4148@vkoul-mobl>
+ <20200302073728.GB9177@pendragon.ideasonboard.com>
+ <20200303043254.GN4148@vkoul-mobl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200303043254.GN4148@vkoul-mobl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Get rid of those warnings by adding extra blank lines:
+Hi Vinod,
 
-    Documentation/driver-api/dmaengine/provider.rst:270: WARNING: Unexpected indentation.
-    Documentation/driver-api/dmaengine/provider.rst:273: WARNING: Block quote ends without a blank line; unexpected unindent.
-    Documentation/driver-api/dmaengine/provider.rst:288: WARNING: Unexpected indentation.
-    Documentation/driver-api/dmaengine/provider.rst:290: WARNING: Block quote ends without a blank line; unexpected unindent.
+On Tue, Mar 03, 2020 at 10:02:54AM +0530, Vinod Koul wrote:
+> On 02-03-20, 09:37, Laurent Pinchart wrote:
+> 
+> > > I would be more comfortable in calling an API to do so :)
+> > > The flow I am thinking is:
+> > > 
+> > > - prep cyclic1 txn
+> > > - submit cyclic1 txn
+> > > - call issue_pending() (cyclic one starts)
+> > > 
+> > > - prep cyclic2 txn
+> > > - submit cyclic2 txn
+> > > - signal_cyclic1_txn aka terminate_cookie()
+> > > - cyclic1 completes, switch to cyclic2 (dmaengine driver)
+> > > - get callback for cyclic1 (optional)
+> > > 
+> > > To check if hw supports terminate_cookie() or not we can check if the
+> > > callback support is implemented
+> > 
+> > Two questions though:
+> > 
+> > - Where is .issue_pending() called for cyclic2 in your above sequence ?
+> >   Surely it should be called somewhere, as the DMA engine API requires
+> >   .issue_pending() to be called for a transfer to be executed, otherwise
+> >   it stays in the submitted but not pending queue.
+> 
+> Sorry missed that one, I would do that after submit cyclic2 txn step and
+> then signal signal_cyclic1_txn termination
 
-While here, use parenthesis after get_metadata_ptr/set_metadata_len,
-as, if some day someone adds a kerneldoc markup for those, it
-should automatically generate a cross-reference to them.
+OK, that matches my understanding, good :-)
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/driver-api/dmaengine/provider.rst | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+> > - With the introduction of a new .terminate_cookie() operation, we need
+> >   to specify that operation for all transfer types. What's its
+> 
+> Correct
+> 
+> >   envisioned semantics for non-cyclic transfers ? And how do DMA engine
+> >   drivers report that they support .terminate_cookie() for cyclic
+> >   transfers but not for other transfer types (the counterpart of
+> >   reporting, in my proposition, that .issue_pending() isn't supported
+> >   replace the current cyclic transfer) ?
+> 
+> Typically for dmaengine controller cyclic is *not* a special mode, only
+> change is that a list provided to controller is circular.
 
-diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
-index 790a15089f1f..56e5833e8a07 100644
---- a/Documentation/driver-api/dmaengine/provider.rst
-+++ b/Documentation/driver-api/dmaengine/provider.rst
-@@ -266,11 +266,15 @@ to use.
-   attached (via the dmaengine_desc_attach_metadata() helper to the descriptor.
- 
-   From the DMA driver the following is expected for this mode:
-+
-   - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM
-+
-     The data from the provided metadata buffer should be prepared for the DMA
-     controller to be sent alongside of the payload data. Either by copying to a
-     hardware descriptor, or highly coupled packet.
-+
-   - DMA_DEV_TO_MEM
-+
-     On transfer completion the DMA driver must copy the metadata to the client
-     provided metadata buffer before notifying the client about the completion.
-     After the transfer completion, DMA drivers must not touch the metadata
-@@ -284,10 +288,14 @@ to use.
-   and dmaengine_desc_set_metadata_len() is provided as helper functions.
- 
-   From the DMA driver the following is expected for this mode:
--  - get_metadata_ptr
-+
-+  - get_metadata_ptr()
-+
-     Should return a pointer for the metadata buffer, the maximum size of the
-     metadata buffer and the currently used / valid (if any) bytes in the buffer.
--  - set_metadata_len
-+
-+  - set_metadata_len()
-+
-     It is called by the clients after it have placed the metadata to the buffer
-     to let the DMA driver know the number of valid bytes provided.
- 
+I don't agree with this. For cyclic transfers to be replaceable in a
+clean way, the feature must be specifically implemented at the hardware
+level. A DMA engine that supports chaining transfers with an explicit
+way to override that chaining, and without the logic to report if the
+inherent race was lost or not, really can't support this API.
+
+Furthemore, for non-cyclic transfers, what would .terminate_cookie() do
+? I need it to be defined as terminating the current transfer when it
+ends for the cyclic case, not terminating it immediately. All non-cyclic
+transfers terminate by themselves when they end, so what would this new
+operation do ?
+
+> So, the .terminate_cookie() should be a feature for all type of txn's.
+> If for some reason (dont discount what hw designers can do) a controller
+> supports this for some specific type(s), then they should return
+> -ENOTSUPP for cookies that do not support and let the caller know.
+
+But then the caller can't know ahead of time, it will only find out when
+it's too late, and can't decide not to use the DMA engine if it doesn't
+support the feature. I don't think that's a very good option.
+
 -- 
-2.24.1
+Regards,
 
+Laurent Pinchart

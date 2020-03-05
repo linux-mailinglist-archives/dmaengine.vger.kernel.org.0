@@ -2,286 +2,149 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E3C63179509
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Mar 2020 17:24:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72AFA17A194
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Mar 2020 09:43:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388223AbgCDQYd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 4 Mar 2020 11:24:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59620 "EHLO mail.kernel.org"
+        id S1725930AbgCEInL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 5 Mar 2020 03:43:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729554AbgCDQYc (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:24:32 -0500
-Received: from localhost (unknown [122.181.220.10])
+        id S1725903AbgCEInL (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 5 Mar 2020 03:43:11 -0500
+Received: from localhost (unknown [106.201.121.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B691821D56;
-        Wed,  4 Mar 2020 16:24:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAC77208CD;
+        Thu,  5 Mar 2020 08:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583339071;
-        bh=Pg2hDboSI+lYW+TpMY8oQbXikiMpcUYh26TXaA1llLY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VbB9uRL3sMtULBV0ZyTpMada27H2kzqOhzd/rgJNARez64SUCXBJsZMcL6E5WKFTG
-         nu1eRmkEaohxzxh0St51AGJaVL5Ai3vFRf7bPNEuLkU2zQKMO+i8QkJSsevocbwElv
-         1UWAej4jy8ieGqazVLIT/i2kIhJ3j6k4N7b/z08w=
-Date:   Wed, 4 Mar 2020 21:54:26 +0530
+        s=default; t=1583397790;
+        bh=DlwmQmp/mwTHAZamG/vOYPxGoDK0+BIIYn++idLjXr0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=vviui3Qi8EmVg7dqGtudm4TC9foxyWMckpMTaeH7SSSR/qAvhyhjoo8jBqnYg3mS/
+         kPD3BxJB7lbH9fEGi0hTwyDoQFjfPROsfy5bVvUeMf4oNrdzMUg3wpWpclSppfNv4p
+         tpKuTNFJLvNog4CkdJPO5664dy4i70m3ahm9UIxo=
+Date:   Thu, 5 Mar 2020 14:13:04 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>, dmaengine@vger.kernel.org,
-        Michal Simek <michal.simek@xilinx.com>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Tejas Upadhyay <tejasu@xilinx.com>,
-        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
-Subject: Re: [PATCH v3 2/6] dmaengine: Add interleaved cyclic transaction type
-Message-ID: <20200304162426.GV4148@vkoul-mobl>
-References: <20200219092514.GG2618@vkoul-mobl>
- <20200226163011.GE4770@pendragon.ideasonboard.com>
- <20200302034735.GD4148@vkoul-mobl>
- <20200302073728.GB9177@pendragon.ideasonboard.com>
- <20200303043254.GN4148@vkoul-mobl>
- <20200303192255.GN11333@pendragon.ideasonboard.com>
- <20200304051301.GS4148@vkoul-mobl>
- <20200304080128.GA4712@pendragon.ideasonboard.com>
- <20200304153718.GU4148@vkoul-mobl>
- <20200304160016.GB4712@pendragon.ideasonboard.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        dma <dmaengine@vger.kernel.org>
+Subject: [GIT PULL]: dmaengine fixes for v5.6-rc5
+Message-ID: <20200305084304.GY4148@vkoul-mobl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="VrqPEDrXMn8OVzN4"
 Content-Disposition: inline
-In-Reply-To: <20200304160016.GB4712@pendragon.ideasonboard.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Laurent,
 
-On 04-03-20, 18:00, Laurent Pinchart wrote:
-> On Wed, Mar 04, 2020 at 09:07:18PM +0530, Vinod Koul wrote:
-> > On 04-03-20, 10:01, Laurent Pinchart wrote:
-> > > On Wed, Mar 04, 2020 at 10:43:01AM +0530, Vinod Koul wrote:
-> > >> On 03-03-20, 21:22, Laurent Pinchart wrote:
-> > >>> On Tue, Mar 03, 2020 at 10:02:54AM +0530, Vinod Koul wrote:
-> > >>>> On 02-03-20, 09:37, Laurent Pinchart wrote:
-> > >>>>>> I would be more comfortable in calling an API to do so :)
-> > >>>>>> The flow I am thinking is:
-> > >>>>>> 
-> > >>>>>> - prep cyclic1 txn
-> > >>>>>> - submit cyclic1 txn
-> > >>>>>> - call issue_pending() (cyclic one starts)
-> > >>>>>> 
-> > >>>>>> - prep cyclic2 txn
-> > >>>>>> - submit cyclic2 txn
-> > >>>>>> - signal_cyclic1_txn aka terminate_cookie()
-> > >>>>>> - cyclic1 completes, switch to cyclic2 (dmaengine driver)
-> > >>>>>> - get callback for cyclic1 (optional)
-> > >>>>>> 
-> > >>>>>> To check if hw supports terminate_cookie() or not we can check if the
-> > >>>>>> callback support is implemented
-> > >>>>> 
-> > >>>>> Two questions though:
-> > >>>>> 
-> > >>>>> - Where is .issue_pending() called for cyclic2 in your above sequence ?
-> > >>>>>   Surely it should be called somewhere, as the DMA engine API requires
-> > >>>>>   .issue_pending() to be called for a transfer to be executed, otherwise
-> > >>>>>   it stays in the submitted but not pending queue.
-> > >>>> 
-> > >>>> Sorry missed that one, I would do that after submit cyclic2 txn step and
-> > >>>> then signal signal_cyclic1_txn termination
-> > >>> 
-> > >>> OK, that matches my understanding, good :-)
-> > >>> 
-> > >>>>> - With the introduction of a new .terminate_cookie() operation, we need
-> > >>>>>   to specify that operation for all transfer types. What's its
-> > >>>> 
-> > >>>> Correct
-> > >>>> 
-> > >>>>>   envisioned semantics for non-cyclic transfers ? And how do DMA engine
-> > >>>>>   drivers report that they support .terminate_cookie() for cyclic
-> > >>>>>   transfers but not for other transfer types (the counterpart of
-> > >>>>>   reporting, in my proposition, that .issue_pending() isn't supported
-> > >>>>>   replace the current cyclic transfer) ?
-> > >>>> 
-> > >>>> Typically for dmaengine controller cyclic is *not* a special mode, only
-> > >>>> change is that a list provided to controller is circular.
-> > >>> 
-> > >>> I don't agree with this. For cyclic transfers to be replaceable in a
-> > >>> clean way, the feature must be specifically implemented at the hardware
-> > >>> level. A DMA engine that supports chaining transfers with an explicit
-> > >>> way to override that chaining, and without the logic to report if the
-> > >>> inherent race was lost or not, really can't support this API.
-> > >> 
-> > >> Well chaining is a typical feature in dmaengine and making last chain
-> > >> point to first makes it circular. I have seen couple of engines and this
-> > >> was the implementation in the hardware.
-> > >> 
-> > >> There can exist special hardware for this purposes as well, but the
-> > >> point is that the cyclic can be treated as circular list.
-> > >> 
-> > >>> Furthemore, for non-cyclic transfers, what would .terminate_cookie() do
-> > >>> ? I need it to be defined as terminating the current transfer when it
-> > >>> ends for the cyclic case, not terminating it immediately. All non-cyclic
-> > >>> transfers terminate by themselves when they end, so what would this new
-> > >>> operation do ?
-> > >> 
-> > >> I would use it for two purposes, cancelling txn but at the end of
-> > >> current txn. I have couple of usages where this would be helpful.
-> > > 
-> > > I fail to see how that would help. Non-cyclic transfers always stop at
-> > > the end of the transfer. "Cancelling txn but at the end of current txn"
-> > > is what DMA engine drivers already do if you call .terminate_cookie() on
-> > > the ongoing transfer. It would thus be a no-op.
-> > 
-> > Well that actually depends on the hardware, some of them support abort
-> > so people cancel it (terminate_all approach atm)
-> 
-> In that case it's not terminating at the end of the current transfer,
-> but terminating immediately (a.k.a. aborting), right ? Cancelling at the
-> end of the current transfer still seems to be a no-op to me for
-> non-cyclic transfers, as that's what they do on their own already.
+--VrqPEDrXMn8OVzN4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Correct, it is abort for current txn.
+Hi Linus,
 
-> > >> Second in error handling where some engines do not support
-> > >> aborting (unless we reset the whole controller)
-> > > 
-> > > Could you explain that one ? I'm not sure to understand it.
-> > 
-> > So I have dma to a slow peripheral and it is stuck for some reason. I
-> > want to abort the cookie and let subsequent ones runs (btw this is for
-> > non cyclic case), so I would use that here. Today we terminate_all and
-> > then resubmit...
-> 
-> That's also for immediate abort, right ?
+Please pull to receive fixes for dmaengine.
 
-Right
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 
-> For this to work properly we need very accurate residue reporting, as
-> the client will usually need to know exactly what has been transferred.
-> The device would need to support DMA_RESIDUE_GRANULARITY_BURST when
-> aborting an ongoing transfer. What hardware supports this ?
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
 
- git grep DMA_RESIDUE_GRANULARITY_BURST drivers/dma/ |wc -l
-27
+are available in the Git repository at:
 
-So it seems many do support the burst reporting.
+  git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.6-=
+rc5
 
-> > >> But yes the .terminate_cookie() semantics should indicate if the
-> > >> termination should be immediate or end of current txn. I see people
-> > >> using it for both.
-> > > 
-> > > Immediate termination is *not* something I'll implement as I have no
-> > > good way to test that semantics. I assume you would be fine with leaving
-> > > that for later, when someone will need it ?
-> > 
-> > Sure, if you have hw to support please test. If not, you will not
-> > implement that.
-> > 
-> > The point is that API should support it and people can add support in
-> > the controllers and test :)
-> 
-> I still think this is a different API. We'll have
-> 
-> 1. Existing .issue_pending(), queueing the next transfer for non-cyclic
->    cases, and being a no-op for cyclic cases.
-> 2. New .terminate_cookie(AT_END_OF_TRANSFER), being a no-op for
->    non-cyclic cases, and moving to the next transfer for cyclic cases.
-> 3. New .terminate_cookie(ABORT_IMMEDIATELY), applicable to both cyclic
->    and non-cyclic cases.
-> 
-> 3. is an API I don't need, and can't easily test. I agree that it can
-> have use cases (provided the DMA device can abort an ongoing transfer
-> *and* still support DMA_RESIDUE_GRANULARITY_BURST in that case).
-> 
-> I'm troubled by my inability to convince you that 1. and 2. are really
-> the same, with 1. addressing the non-cyclic case and 2. addressing the
-> cyclic case :-) This is why I think they should both be implemeted using
-> .issue_pending() (no other option for 1., that's what it uses today).
-> This wouldn't prevent implementing 3. with a new .terminate_cookie()
-> operation, that wouldn't need to take a flag as it would always operate
-> in ABORT_IMMEDIATELY mode. There would also be no need to report a new
-> capability for 3., as the presence of the .terminate_cookie() handler
-> would be enough to tell clients that the API is supported. Only a new
-> capability for 2. would be needed.
+for you to fetch changes up to 25962e1a7f1d522f1b57ead2f266fab570042a70:
 
-Well I agree 1 & 2 seem similar but I would like to define the behaviour
-not dependent on the txn being cyclic or not. That is my concern and
-hence the idea that:
+  dmaengine: imx-sdma: Fix the event id check to include RX event for UART6=
+ (2020-02-25 14:15:26 +0530)
 
-1. .issue_pending() will push txn to pending_queue, you may have a case
-where that is done only once (due to nature of txn), but no other
-implication
+----------------------------------------------------------------
+dmaengine fixes for v5.6-rc5
 
-2. .terminate_cookie(EOT) will abort the transfer at the end. Maybe not
-used for cyclic but irrespective of that, the behaviour would be abort
-at end of cyclic
+Bunch of driver fixes:
+ - Doc updates to clean warnings for dmaengine
+ - Fixes for newly added Intel idxd driver
+ - More fixes for newly added TI k3-udma driver
+ - Fixes for IMX and Tegra drivers.
 
-3. .terminate_cookie(IMMEDIATE) will abort immediately. If there is
-anything in pending_queue that will get pushed to hardware.
+----------------------------------------------------------------
+Changbin Du (1):
+      dmaengine: doc: fix warnings/issues of client.rst
 
-4. Cyclic by nature never completes
-   - as a consequence needs to be stopped by terminate_all/terminate_cookie
+Dan Carpenter (2):
+      dmaengine: idxd: Fix error handling in idxd_wq_cdev_dev_setup()
+      dmaengine: coh901318: Fix a double lock bug in dma_tc_handle()
 
-Does these rules make sense :)
+Dave Jiang (4):
+      dmaengine: idxd: fix runaway module ref count on device driver bind
+      dmaengine: idxd: correct reserved token calculation
+      dmaengine: idxd: sysfs input of wq incorrect wq type should return er=
+ror
+      dmaengine: idxd: wq size configuration needs to check global max size
 
-> > >> And with this I think it would make sense to also add this to
-> > >> capabilities :)
-> > > 
-> > > I'll repeat the comment I made to Peter: you want me to implement a
-> > > feature that you think would be useful, but is completely unrelated to
-> > > my use case, while there's a more natural way to handle my issue with
-> > > the current API, without precluding in any way the addition of your new
-> > > feature in the future. Not fair.
-> > 
-> > So from API design pov, I would like this to support both the features.
-> > This helps us to not rework the API again for the immediate abort.
-> > 
-> > I am not expecting this to be implemented by you if your hw doesn't
-> > support it. The core changes are pretty minimal and callback in the
-> > driver is the one which does the job and yours wont do this
-> 
-> Xilinx DMA drivers don't support DMA_RESIDUE_GRANULARITY_BURST so I
-> can't test this indeed.
+Dmitry Osipenko (2):
+      dmaengine: tegra-apb: Fix use-after-free
+      dmaengine: tegra-apb: Prevent race conditions of tasklet vs free list
 
-Sure I understand that! Am sure folks will respond to CFT and I guess
-Peter will also be interested in testing.
+Frieder Schrempf (1):
+      dmaengine: imx-sdma: Fix the event id check to include RX event for U=
+ART6
 
-> > >>>> So, the .terminate_cookie() should be a feature for all type of txn's.
-> > >>>> If for some reason (dont discount what hw designers can do) a controller
-> > >>>> supports this for some specific type(s), then they should return
-> > >>>> -ENOTSUPP for cookies that do not support and let the caller know.
-> > >>> 
-> > >>> But then the caller can't know ahead of time, it will only find out when
-> > >>> it's too late, and can't decide not to use the DMA engine if it doesn't
-> > >>> support the feature. I don't think that's a very good option.
-> > >> 
-> > >> Agreed so lets go with adding these in caps.
-> > > 
-> > > So if there's a need for caps anyway, why not a cap that marks
-> > > .issue_pending() as moving from the current cyclic transfer to the next
-> > > one ? 
-> > 
-> > Is the overhead really too much on that :) If you like I can send the
-> > core patches and you would need to implement the driver side?
-> 
-> We can try that as a compromise. One of main concerns with developing
-> the core patches myself is that the .terminate_cookie() API still seems
-> ill-defined to me, so it would be much more efficient if you translate
+Martin Fuzzey (1):
+      dmaengine: imx-sdma: fix context cache
 
-yeah lets take a stab at defining this and see if we come up with
-something meaningful
+Peter Ujfalusi (5):
+      dmaengine: ti: k3-udma: Workaround for RX teardown with stale data in=
+ peer
+      dmaengine: ti: k3-udma: Move the TR counter calculation to helper fun=
+ction
+      dmaengine: ti: k3-udma: Use the TR counter helper for slave_sg and cy=
+clic
+      dmaengine: ti: k3-udma: Use the channel direction in pause/resume fun=
+ctions
+      dmaengine: ti: k3-udma: Fix terminated transfer handling
 
-> the idea you have in your idea into code than trying to communicate it
-> to me in all details (one of the grey areas is what should
-> .terminate_cookie() do if the cookie passed to the function corresponds
-> to an already terminated or, more tricky from a completion callback
-> point of view, an issued but not-yet-started transfer, or also a
-> submitted but not issued transfer). If you implement the core part, then
-> that problem will go away.
-> 
-> How about the implementation in virt-dma.[ch] by the way ?
+Vignesh Raghavendra (1):
+      dmaengine: ti: k3-udma: Use ktime/usleep_range based TX completion ch=
+eck
 
-It needs to be comprehended and tested as well.. since these are simple
-callbacks to driver, we should not need huge changes here (i need to
-double check though)
+ Documentation/driver-api/dmaengine/client.rst |  14 +-
+ drivers/dma/coh901318.c                       |   4 -
+ drivers/dma/idxd/cdev.c                       |   4 +-
+ drivers/dma/idxd/sysfs.c                      |  27 +-
+ drivers/dma/imx-sdma.c                        |   5 +-
+ drivers/dma/tegra20-apb-dma.c                 |   6 +-
+ drivers/dma/ti/k3-udma.c                      | 493 +++++++++++++++++++---=
+----
+ 7 files changed, 400 insertions(+), 153 deletions(-)
 
--- 
+Thanks
+--=20
 ~Vinod
+
+--VrqPEDrXMn8OVzN4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAl5gu5IACgkQfBQHDyUj
+g0fdZRAAiryLPp2bODYPcHDiJjdfWr3teNjTpcFn84VaAfR6GwOSnTyVA3o84VtV
+JCJtDRc9SJKqCcUiQ9n2vgyIpJKTQra8LxoeodPyCbNBmS1q1+Jr3qzBZ1PM43ir
+DmTDmrGkkqHvcvJYYi74ADTQ8JWA5r8EJTFSsmhocEuGpOM8I8yUikD2iQu+YoBd
+T9aj2HtwUpjiWfx+mz+z+ISGcNXr2e2tzwY1XUvKAWt8A9c+7pDvB6jbS78siSAQ
+jNujLED8HkcAZdCszgOg6iRG2B3LBmc/ds7O8UT0sz0I4dPsXdl2CYbe897K17q+
+Mu3PBw7Is9K8n4bD89PMv39O5PAa10fcA3Iv2oAWrfouFZehCpBJIaqlz8ngx6MN
+2yZefR5wkgUgITN1AtT5uakqTOek59UGcUR5GY0U8IeOMreVRw+m5I0d3q2hG1bi
++Z2T+KYyvdlc8yvsn9KoIMxW7AE77CaMlCmETqUrxL+/VoUXR9BoiLRqxcYjDFgy
+5+WDyAbFDZxIkAG1ES7kM+muvI4GO7frlssu0qwY9J2zH8zdOtiWymP//p/MSV9+
+F6/CX+HVzMRILCwV73xB9V+F2m/pnCI5qRXyy0FsNuGwzgSuy3TprOZHJS/M2VyG
+J1FRox7eeUNociqoswliGhXmV4ttpGPjih/cv1DHVvHJgf9Wi+A=
+=zhDQ
+-----END PGP SIGNATURE-----
+
+--VrqPEDrXMn8OVzN4--

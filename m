@@ -2,131 +2,65 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CE78017BF85
-	for <lists+dmaengine@lfdr.de>; Fri,  6 Mar 2020 14:48:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A5EB317BF8D
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Mar 2020 14:50:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbgCFNsc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 6 Mar 2020 08:48:32 -0500
-Received: from mail.baikalelectronics.com ([87.245.175.226]:37330 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgCFNsb (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 6 Mar 2020 08:48:31 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 342F4803087C;
-        Fri,  6 Mar 2020 13:48:29 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 5oI_7TdojgQv; Fri,  6 Mar 2020 16:48:28 +0300 (MSK)
-Date:   Fri, 6 Mar 2020 16:47:20 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/5] dmaengine: dw: Take Baikal-T1 SoC DW DMAC
- peculiarities into account
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200306132912.GA1748204@smile.fi.intel.com>
- <20200306133756.0F74C8030793@mail.baikalelectronics.ru>
+        id S1726194AbgCFNub (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 6 Mar 2020 08:50:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726090AbgCFNub (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 6 Mar 2020 08:50:31 -0500
+Received: from localhost.localdomain (unknown [122.178.250.113])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 366AF2084E;
+        Fri,  6 Mar 2020 13:50:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583502631;
+        bh=KL/dHxXT8I9vwsYkvwouoSabSs753IYnG09L9ERnlOk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oLgXrVX9FO7UfLVh4nA33Ip5H3ZV+5w399/+4cRuFl0wqB4AQ/il2jZRB4VSvYsOG
+         R4S0f1KjSr+wEYFXeMWi+qi2YoRD7eD9rvv/Uc/olQ4A4go5m6a2cg48AUIhoG5k3q
+         NcAj7fNmXemf4MTFB8StLFmqbWZzKRhm1eGz9kUY=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     dmaengine@vger.kernel.org
+Cc:     Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH] dmaengine: move .device_release missing log warning to debug level
+Date:   Fri,  6 Mar 2020 19:20:18 +0530
+Message-Id: <20200306135018.2286959-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200306133756.0F74C8030793@mail.baikalelectronics.ru>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-Message-Id: <20200306134829.342F4803087C@mail.baikalelectronics.ru>
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 03:30:35PM +0200, Andy Shevchenko wrote:
-> On Fri, Mar 06, 2020 at 03:29:12PM +0200, Andy Shevchenko wrote:
-> > On Fri, Mar 06, 2020 at 04:10:29PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > > From: Serge Semin <fancer.lancer@gmail.com>
-> > > 
-> > > Baikal-T1 SoC has an DW DMAC on-board to provide a Mem-to-Mem, low-speed
-> > > peripherals Dev-to-Mem and Mem-to-Dev functionality. Mostly it's compatible
-> > > with currently implemented in the kernel DW DMAC driver, but there are some
-> > > peculiarities which must be taken into account in order to have the device
-> > > fully supported.
-> > > 
-> > > First of all traditionally we replaced the legacy plain text-based dt-binding
-> > > file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
-> > > channels, which alas have different max burst length configuration.
-> > > In particular first two channels may burst up to 128 bits (16 bytes) at a time
-> > > while the rest of them just up to 32 bits. We must make sure that the DMA
-> > > subsystem doesn't set values exceeding these limitations otherwise the
-> > > controller will hang up. In third currently we discovered the problem in using
-> > > the DW APB SPI driver together with DW DMAC. The problem happens if there is no
-> > > natively implemented multi-block LLP transfers support and the SPI-transfer
-> > > length exceeds the max lock size. In this case due to asynchronous handling of
-> > > Tx- and Rx- SPI transfers interrupt we might end up with Dw APB SSI Rx FIFO
-> > > overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
-> > > the DMAC to asynchronously execute the transfers we'd have to at least warn
-> > > the user of the possible errors.
-> > > 
-> > > Finally there is a bug in the algorithm of the nollp flag detection.
-> > > In particular even if DW DMAC parameters state the multi-block transfers
-> > > support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
-> > > by the driver true multi-block LLP functionality unusable. This happens cause'
-> > > if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
-> > > contiguous multi-block transfers will be only supported. We must take the
-> > > flag into account when detecting the LLP support otherwise the driver just
-> > > won't work correctly.
-> > > 
-> > > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> > > commit 98d54f81e36b ("Linux 5.6-rc4").
-> > 
-> > Thank you for your series!
-> > 
-> > I'll definitely review it, but it will take time. So, I think due to late
-> > submission this is material at least for v5.8.
-> 
+Dmaengine core warns the drivers registering for missing .device_release
+implementation. The warning is accurate for dmaengine controllers which
+hotplug but not for rest.
 
-Hello Andy,
-Thanks for the quick response. Looking forward to get the patches
-reviewed and move on with the next patchset I'll send after this. It concerns
-DW APB SSI driver, which uses the changes introduced by this one. So the
-sooner we finished with this patchset the better. Although I understand
-that it may take some time. I've just sent over 12 patchset, which have a lot
-of fixups and new drivers.)
+So reduce this to a debug log.
 
-> One thing that I can tell immediately is the broken email thread in this series.
-> Whenever you do a series, use `git format-patch --cover-letter --thread ...`,
-> so, it will link the mail properly.
-> 
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ drivers/dma/dmaengine.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I've got thread=true in my gitconfig file, so each email should have
-the proper reference and in-reply-to to the cover-letter (I see it from
-the log). The problem popped up from a different place. For some reason the
-automatic CC/To list extraction command didn't do the job right, so we ended
-up with lacking of mailing lists in Cc's in this patchset. The command look like
-this:
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index c3b1283b6d31..17909fd1820f 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -1151,7 +1151,7 @@ int dma_async_device_register(struct dma_device *device)
+ 	}
+ 
+ 	if (!device->device_release)
+-		dev_warn(device->dev,
++		dev_dbg(device->dev,
+ 			 "WARN: Device release is not defined so it is not safe to unbind this driver while in use\n");
+ 
+ 	kref_init(&device->ref);
+-- 
+2.24.1
 
-git send-email --cc-cmd "scripts/get_maintainer.pl --separator , --nokeywords --nogit --nogit-fallback --norolestats --nom" \
-                   --to-cmd "scripts/get_maintainer.pl --separator , --nokeywords --nogit --nogit-fallback --norolestats --nol" \
-                   --from "Serge Semin <Sergey.Semin at baikalelectronics.ru>" \
-                   --smtp-server-option="-abaikal" --cover-letter -5
-
-Regards,
--Sergey
-
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 

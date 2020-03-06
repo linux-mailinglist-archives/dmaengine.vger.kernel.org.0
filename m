@@ -2,92 +2,130 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 05E1C17B9E5
-	for <lists+dmaengine@lfdr.de>; Fri,  6 Mar 2020 11:11:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2783017BE17
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Mar 2020 14:18:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbgCFKLI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 6 Mar 2020 05:11:08 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:45135 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbgCFKLI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 6 Mar 2020 05:11:08 -0500
-Received: by mail-qv1-f65.google.com with SMTP id du17so66847qvb.12
-        for <dmaengine@vger.kernel.org>; Fri, 06 Mar 2020 02:11:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=tBZQR8g6YaiJuYHft4AJMaXbvb2wdXi4lEJSmQgVCgQ=;
-        b=EOE3r5xMvSC09KIb7rFbVTFS8kY7sKbPQBOz37YLFtw62GLz4LpcGcwaXzkjb18/Yj
-         x+K3Yu9BNXfaC921aFMwFJtSsdga2/JqHFK+IyzL0LKhJrG1fz4MhkMDouYi1qyUQSAB
-         xW4btjJ9pMMVnuokN3w/6IUuI8GCTJv6PRkOxf9kwj8+mZuLOk+9ZA8EIIbzSkH8kidW
-         XXZym0qQLkcWeEe8L51tabS21ATXZTNPfqZPa/7GA72IxICTZLKZhGt3lPZL/enGzNWr
-         1S9Vbdy2YDK3PMOzyvMqbtudCzDE5+LHFM704HjyDjWdo6MCqeoczSFmfJ427oeBR1Fw
-         7zNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=tBZQR8g6YaiJuYHft4AJMaXbvb2wdXi4lEJSmQgVCgQ=;
-        b=PRSRV85kOaoizqT/q2bqsRcAjrCTE+WDI7esGcZJHlrvwW052RRv33uarY4vyOyITv
-         b3VX0ZZRQhPLZmB3aELeH1XYm8kQabzTcYTKI6jjlKykxW8klF+yM4nI37QkB+R26Ddn
-         MQiz1jPqsm13/KwMedeTQYDDgl9tII8gM7VTxCYJYcMYhsyOL7JmMttQi215w7AjBKJ7
-         fKvCf16+EfC+40id6lFT5kTDTBklGEnYpN6mBmUR+g+ylRE9Q7bNOc3TOCASUar6gzgk
-         yjsifjv6JtSHhoAifWv8sVDEhhK5o/Dh62MXogr9AmGhsGxfAJOZyB7UkF/WlRLGfuYd
-         rZ8Q==
-X-Gm-Message-State: ANhLgQ12By/XOn4ausRrCLjRKDJfgcbnnK0VnnypoBAP1chbUoZrM0nz
-        LOvEH41Ocl/QC33+VaUVojBdq0pvExggVHU9YdU=
-X-Google-Smtp-Source: ADFU+vuyE3xMVb1D2VT952Ki8ZIjx0gz8TP0xlwCFjKJljaVTFeskDaA6Az8p1Wok4EZQCyL/RzfD5CMRJfRMmCZ/3Y=
-X-Received: by 2002:ad4:4b68:: with SMTP id m8mr2157144qvx.1.1583489467184;
- Fri, 06 Mar 2020 02:11:07 -0800 (PST)
+        id S1726090AbgCFNSD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 6 Mar 2020 08:18:03 -0500
+Received: from mail.baikalelectronics.com ([87.245.175.226]:36638 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbgCFNSD (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 6 Mar 2020 08:18:03 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id ADBE18030797;
+        Fri,  6 Mar 2020 13:10:48 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id qFg444i0-JS6; Fri,  6 Mar 2020 16:10:43 +0300 (MSK)
+From:   <Sergey.Semin@baikalelectronics.ru>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/5] dmaengine: dw: Take Baikal-T1 SoC DW DMAC peculiarities into account
+Date:   Fri, 6 Mar 2020 16:10:29 +0300
 MIME-Version: 1.0
-Reply-To: bashamzebdani@gmail.com
-Received: by 2002:ac8:74d:0:0:0:0:0 with HTTP; Fri, 6 Mar 2020 02:11:04 -0800 (PST)
-From:   "Mr.Basham Zebdani" <bashamzebdani@gmail.com>
-Date:   Fri, 6 Mar 2020 02:11:04 -0800
-X-Google-Sender-Auth: t1hnJvCnAvLzolE-P3eIdczrmAQ
-Message-ID: <CAAkDsN7sZsy3LOg80EB2yniF4vKPLpTTBexSUGffS-xLH1mOsA@mail.gmail.com>
-Subject: Attention:My Dear Friend.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Message-Id: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Attention:My Dear Friend.
+From: Serge Semin <fancer.lancer@gmail.com>
 
-I=E2=80=99m sorry but happy to inform you about my success in getting those
-funds transfer under the cooperation of a new partner from India,
-though I tried my best to involve you in the business but God decided
-the whole situations.
+Baikal-T1 SoC has an DW DMAC on-board to provide a Mem-to-Mem, low-speed
+peripherals Dev-to-Mem and Mem-to-Dev functionality. Mostly it's compatible
+with currently implemented in the kernel DW DMAC driver, but there are some
+peculiarities which must be taken into account in order to have the device
+fully supported.
 
-Presently I=E2=80=99m in India for investment projects with my own share of
-the total sum; I decided to load your compensation fund of US1.860 000.
-one million eight hundred and sixty thoundsand dollars in an atm
-payment card and register it with Sonapost Courier Company here in
-Burkina Faso with
-registration code of (Shipment Code awb33xzs)
+First of all traditionally we replaced the legacy plain text-based dt-binding
+file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
+channels, which alas have different max burst length configuration.
+In particular first two channels may burst up to 128 bits (16 bytes) at a time
+while the rest of them just up to 32 bits. We must make sure that the DMA
+subsystem doesn't set values exceeding these limitations otherwise the
+controller will hang up. In third currently we discovered the problem in using
+the DW APB SPI driver together with DW DMAC. The problem happens if there is no
+natively implemented multi-block LLP transfers support and the SPI-transfer
+length exceeds the max lock size. In this case due to asynchronous handling of
+Tx- and Rx- SPI transfers interrupt we might end up with Dw APB SSI Rx FIFO
+overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
+the DMAC to asynchronously execute the transfers we'd have to at least warn
+the user of the possible errors.
 
-Please Contact the delivery manager of Sonapost Courier Company
-through his email address for more update on how to receive your
-compensation fund on ATM PAYMENT VISA CARD,
+Finally there is a bug in the algorithm of the nollp flag detection.
+In particular even if DW DMAC parameters state the multi-block transfers
+support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
+by the driver true multi-block LLP functionality unusable. This happens cause'
+if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
+contiguous multi-block transfers will be only supported. We must take the
+flag into account when detecting the LLP support otherwise the driver just
+won't work correctly.
 
-Contact them with the reconfirmation of your information below,
+This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+commit 98d54f81e36b ("Linux 5.6-rc4").
 
-1. Your full names.
-2. Your full contact address/country
-3. Your mobile or office phone numbers
-SONAPOST EMAIL ADDRESS BELOW
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Viresh Kumar <vireshk@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: dmaengine@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-**************************************************************
+Serge Semin (5):
+  dt-bindings: dma: dw: Replace DW DMAC legacy bindings with YAML-based
+    one
+  dt-bindings: dma: dw: Add max burst transaction length property
+    bindings
+  dmaengine: dw: Add LLP and block size config accessors
+  dmaengine: dw: Introduce max burst length hw config
+  dmaengine: dw: Take HC_LLP flag into account for noLLP auto-config
 
-Name of the Director.
-Mr. Salam Ander
-of Sonapost Courier Company
-EMAIL ADDRESS BELOW:
-andermrsalam@gmail.com
+ .../bindings/dma/snps,dma-spear1340.yaml      | 180 ++++++++++++++++++
+ .../devicetree/bindings/dma/snps-dma.txt      |  69 -------
+ drivers/dma/dw/core.c                         |  24 ++-
+ drivers/dma/dw/dw.c                           |   1 +
+ drivers/dma/dw/of.c                           |   9 +
+ drivers/dma/dw/regs.h                         |   3 +
+ include/linux/platform_data/dma-dw.h          |  22 +++
+ 7 files changed, 238 insertions(+), 70 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/snps-dma.txt
 
-Best Regards
-Mr.Basham Zebdani,
+-- 
+2.25.1
+

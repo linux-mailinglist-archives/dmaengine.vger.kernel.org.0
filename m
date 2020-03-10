@@ -2,24 +2,24 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 018BB17F11E
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Mar 2020 08:39:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E06417F161
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Mar 2020 09:03:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726224AbgCJHjn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 10 Mar 2020 03:39:43 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37815 "EHLO
+        id S1726443AbgCJIC6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 10 Mar 2020 04:02:58 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46979 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbgCJHjn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 10 Mar 2020 03:39:43 -0400
+        with ESMTP id S1726442AbgCJIC5 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 10 Mar 2020 04:02:57 -0400
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <sha@pengutronix.de>)
-        id 1jBZU3-0001OK-GJ; Tue, 10 Mar 2020 08:39:23 +0100
+        id 1jBZqd-0003q9-DC; Tue, 10 Mar 2020 09:02:43 +0100
 Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <sha@pengutronix.de>)
-        id 1jBZU0-00089j-OU; Tue, 10 Mar 2020 08:39:20 +0100
-Date:   Tue, 10 Mar 2020 08:39:20 +0100
+        id 1jBZqb-000205-1H; Tue, 10 Mar 2020 09:02:41 +0100
+Date:   Tue, 10 Mar 2020 09:02:41 +0100
 From:   Sascha Hauer <s.hauer@pengutronix.de>
 To:     Robin Gong <yibin.gong@nxp.com>
 Cc:     vkoul@kernel.org, shawnguo@kernel.org,
@@ -31,21 +31,22 @@ Cc:     vkoul@kernel.org, shawnguo@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-imx@nxp.com, dmaengine@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: Re: [RESEND v6  06/13] spi: imx: fix ERR009165
-Message-ID: <20200310073920.GR3335@pengutronix.de>
+Subject: Re: [RESEND v6  07/13] spi: imx: remove ERR009165 workaround on
+ i.mx6ul
+Message-ID: <20200310080240.GS3335@pengutronix.de>
 References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
- <1583839922-22699-7-git-send-email-yibin.gong@nxp.com>
+ <1583839922-22699-8-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583839922-22699-7-git-send-email-yibin.gong@nxp.com>
+In-Reply-To: <1583839922-22699-8-git-send-email-yibin.gong@nxp.com>
 X-Sent-From: Pengutronix Hildesheim
 X-URL:  http://www.pengutronix.de/
 X-IRC:  #ptxdist @freenode
 X-Accept-Language: de,en
 X-Accept-Content-Type: text/plain
-X-Uptime: 08:28:52 up 19 days, 14:59, 43 users,  load average: 0.01, 0.14,
- 0.20
+X-Uptime: 08:40:21 up 19 days, 15:10, 46 users,  load average: 0.37, 0.19,
+ 0.18
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
 X-SA-Exim-Mail-From: sha@pengutronix.de
@@ -56,83 +57,100 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 07:31:55PM +0800, Robin Gong wrote:
-> Change to XCH  mode even in dma mode, please refer to the below
-> errata:
-> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf
+On Tue, Mar 10, 2020 at 07:31:56PM +0800, Robin Gong wrote:
+> ERR009165 fixed on i.mx6ul/6ull/6sll. All other i.mx6/7 and
+> i.mx8m/8mm still need this errata. Please refer to nxp official
+> errata document from https://www.nxp.com/ .
+> 
+> For removing workaround on those chips. Add new i.mx6ul type.
 > 
 > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 > Acked-by: Mark Brown <broonie@kernel.org>
 > ---
->  drivers/spi/spi-imx.c | 17 ++++++++++-------
->  1 file changed, 10 insertions(+), 7 deletions(-)
+>  drivers/spi/spi-imx.c | 50 +++++++++++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 45 insertions(+), 5 deletions(-)
 > 
 > diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-> index f4f28a4..842a86e 100644
+> index 842a86e..f7ee2ec 100644
 > --- a/drivers/spi/spi-imx.c
 > +++ b/drivers/spi/spi-imx.c
-> @@ -585,8 +585,9 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
+> @@ -57,6 +57,7 @@ enum spi_imx_devtype {
+>  	IMX35_CSPI,	/* CSPI on all i.mx except above */
+>  	IMX51_ECSPI,	/* ECSPI on i.mx51 */
+>  	IMX53_ECSPI,	/* ECSPI on i.mx53 and later */
+> +	IMX6UL_ECSPI,	/* ERR009165 fix from i.mx6ul */
+>  };
+>  
+>  struct spi_imx_data;
+> @@ -75,6 +76,11 @@ struct spi_imx_devtype_data {
+>  	bool has_slavemode;
+>  	unsigned int fifo_size;
+>  	bool dynamic_burst;
+> +	/*
+> +	 * ERR009165 fixed or not:
+> +	 * https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf
+> +	 */
+> +	bool tx_glitch_fixed;
+>  	enum spi_imx_devtype devtype;
+>  };
+>  
+> @@ -128,7 +134,8 @@ static inline int is_imx35_cspi(struct spi_imx_data *d)
+>  
+>  static inline int is_imx51_ecspi(struct spi_imx_data *d)
+>  {
+> -	return d->devtype_data->devtype == IMX51_ECSPI;
+> +	return d->devtype_data->devtype == IMX51_ECSPI ||
+> +	       d->devtype_data->devtype == IMX6UL_ECSPI;
+>  }
+
+Erm, no. A i.MX51 ECSPI is a i.MX51 ECSPI and not a i.MX6UL ECSPI. If
+you want to handle them equally somewhere then explicitly test for
+i.MX6ul *and* i.MX51 there.
+
+>  
+>  static inline int is_imx53_ecspi(struct spi_imx_data *d)
+> @@ -585,9 +592,16 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
 >  	ctrl |= mx51_ecspi_clkdiv(spi_imx, t->speed_hz, &clk);
 >  	spi_imx->spi_bus_clk = clk;
 >  
-> +	/* ERR009165: work in XHC mode as PIO */
->  	if (spi_imx->usedma)
-> -		ctrl |= MX51_ECSPI_CTRL_SMC;
-> +		ctrl &= ~MX51_ECSPI_CTRL_SMC;
+> -	/* ERR009165: work in XHC mode as PIO */
+> -	if (spi_imx->usedma)
+> -		ctrl &= ~MX51_ECSPI_CTRL_SMC;
+> +	/*
+> +	 * ERR009165: work in XHC mode instead of SMC as PIO on the chips
+> +	 * before i.mx6ul.
+> +	 */
+> +	if (spi_imx->usedma) {
+> +		if (spi_imx->devtype_data->tx_glitch_fixed)
+> +			ctrl |= MX51_ECSPI_CTRL_SMC;
+> +		else
+> +			ctrl &= ~MX51_ECSPI_CTRL_SMC;
+> +	}
 
-'ctrl' was read from the hardware. In the dma case it was set
-explicitly, but it was never cleared for a PIO transfer. This looked
-wrong before this patch. Now with this patch it looks even more wrong:
-We clear a bit that has never been set and we only do this for DMA, when
-for the PIO case it definitly must be cleared. Drop the if clause.
+Changed again, but the PIO case still not honoured. This should look
+like
+	if (spi_imx->usedma && spi_imx->devtype_data->tx_glitch_fixed)
+		ctrl |= MX51_ECSPI_CTRL_SMC;
+	else
+		ctrl &= ~MX51_ECSPI_CTRL_SMC;
 
 >  
 >  	writel(ctrl, spi_imx->base + MX51_ECSPI_CTRL);
 >  
-> @@ -612,12 +613,14 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
->  
->  static void mx51_setup_wml(struct spi_imx_data *spi_imx)
+> @@ -615,6 +629,8 @@ static void mx51_setup_wml(struct spi_imx_data *spi_imx)
 >  {
-> +	u32 tx_wml = 0;
-> +
->  	/*
->  	 * Configure the DMA register: setup the watermark
->  	 * and enable DMA request.
->  	 */
->  	writel(MX51_ECSPI_DMA_RX_WML(spi_imx->wml - 1) |
-> -		MX51_ECSPI_DMA_TX_WML(spi_imx->wml) |
-> +		MX51_ECSPI_DMA_TX_WML(tx_wml) |
-
-tx_wml is never assigned any other value than 0. Drop the variable.
-
->  		MX51_ECSPI_DMA_RXT_WML(spi_imx->wml) |
->  		MX51_ECSPI_DMA_TEDEN | MX51_ECSPI_DMA_RXDEN |
->  		MX51_ECSPI_DMA_RXTDEN, spi_imx->base + MX51_ECSPI_DMA);
-> @@ -1171,7 +1174,11 @@ static int spi_imx_dma_configure(struct spi_master *master)
->  	tx.direction = DMA_MEM_TO_DEV;
->  	tx.dst_addr = spi_imx->base_phys + MXC_CSPITXDATA;
->  	tx.dst_addr_width = buswidth;
-> -	tx.dst_maxburst = spi_imx->wml;
-> +	/*
-> +	 * For ERR009165 with tx_wml = 0 could enlarge burst size to fifo size
-> +	 * to speed up fifo filling as possible.
-> +	 */
-> +	tx.dst_maxburst = spi_imx->devtype_data->fifo_size;
->  	ret = dmaengine_slave_config(master->dma_tx, &tx);
->  	if (ret) {
->  		dev_err(spi_imx->dev, "TX dma configuration failed with %d\n", ret);
-> @@ -1265,10 +1272,6 @@ static int spi_imx_sdma_init(struct device *dev, struct spi_imx_data *spi_imx,
->  {
->  	int ret;
+>  	u32 tx_wml = 0;
 >  
-> -	/* use pio mode for i.mx6dl chip TKT238285 */
-> -	if (of_machine_is_compatible("fsl,imx6dl"))
-> -		return 0;
+> +	if (spi_imx->devtype_data->tx_glitch_fixed)
+> +		tx_wml = spi_imx->wml;
 
-So with this patch it becomes possible to do DMA on i.MX6dl, but it is
-mentioned nowhere.
+That explains the variable introduced in the last patch, ok.
+
+I have the impression that splitting up 06/13 and 07/13 into two patches
+doesn't make it easier to review.
 
 Sascha
+
 
 -- 
 Pengutronix e.K.                           |                             |

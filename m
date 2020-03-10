@@ -2,166 +2,168 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E38817EBB3
-	for <lists+dmaengine@lfdr.de>; Mon,  9 Mar 2020 23:08:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 699A717EF10
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Mar 2020 04:30:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgCIWI4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 9 Mar 2020 18:08:56 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:43922 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgCIWI4 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 9 Mar 2020 18:08:56 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id E3E7880307C8;
-        Mon,  9 Mar 2020 22:08:53 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Mhon-ZlolZyP; Tue, 10 Mar 2020 01:08:53 +0300 (MSK)
-Date:   Tue, 10 Mar 2020 01:08:02 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/5] dmaengine: dw: Take Baikal-T1 SoC DW DMAC
- peculiarities into account
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200306132912.GA1748204@smile.fi.intel.com>
- <20200306133756.0F74C8030793@mail.baikalelectronics.ru>
- <20200306134829.342F4803087C@mail.baikalelectronics.ru>
- <20200306141135.9C4F380307C2@mail.baikalelectronics.ru>
+        id S1726170AbgCJDaj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 9 Mar 2020 23:30:39 -0400
+Received: from mail-eopbgr80042.outbound.protection.outlook.com ([40.107.8.42]:27969
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726164AbgCJDai (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 9 Mar 2020 23:30:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GFbZri8aRnEHbwTB4JCnKkwtM1gR83S4e0SVIxmq3+s+cV1GvB3zNYcLtONoFfMX+ByqRAHCoOqWbiM3nAKwF2Pe/ro91JznFirV7ru2m6HIkK/eYP4Y6ZhY4NtQDK5MEGUU2l6y0xKBy+rO4oZC+0o9HCbjtddI3z6lVfGT9svPzJwpekAdc63zJySWoN6TUN9J/IFCg0JMH9s4l/TnWdHjJ+/Y4K0nTToAQ8VdAQhaoTnCUAySicZbcmSyXSLQ+ev58FaWTo6W0w+2BPJAeQgpYojQh5WdExZjzNqi5GP2OnAeHyAG+CbLv9Olsa0AHozBKG5zU5by2xeu72I0Eg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OY5CDpgnANeH4Fow9sbcdYTX9ukW6L08CMaVUzkZuiQ=;
+ b=a3VGb05tuSC+iitTeSD2Kus8Kip0bTIKpAw5PIJrUXcPgyxpe7ZKrv9TwV/F0PSYrO2UMH66Lre43NanyhVSCI/5LhoiZP/rK9Jz0C1f0xHfwD5/zWEYlCUZgCT3YKN/V38dSq6ZsKlx+ljBW1n/O0pZe8vFTh2yk7BECArtBJAkJ2rKvLEjQjRBkshm7FTaYIOI/iC3kjTKETUcVx4oC5zZnoka5bwgTR2VNld0czvvR5LCbPCxa2IDLA2vo3wRznuzVhVv7mRhG4sGbhmVBdrk7vzHquIRYfp3X3evg6fWfT4gXeiwL89ddcWpgIyCAk0TAMab+qGjYSMwALk5ZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OY5CDpgnANeH4Fow9sbcdYTX9ukW6L08CMaVUzkZuiQ=;
+ b=jtiSEvHAu1j8sCyVmVBEI68Ud/JvjmKfkSLTlU2tul/pEeQP3IbMrBlZgaRO1m7HQZ/XGDqd5/G06rIEEdKSd6k0outTJtShnPy8D0uxI1a8ICmPm+vSg/oUPsmtJWcYyrb43cVFusd4Fut6yNUeb6/kEEYRhP7/Ccao3nVGALk=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
+ VE1PR04MB6621.eurprd04.prod.outlook.com (20.179.234.213) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.17; Tue, 10 Mar 2020 03:30:34 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::490:6caa:24b:4a31]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::490:6caa:24b:4a31%6]) with mapi id 15.20.2793.013; Tue, 10 Mar 2020
+ 03:30:34 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     s.hauer@pengutronix.de, vkoul@kernel.org, shawnguo@kernel.org,
+        u.kleine-koenig@pengutronix.de, broonie@kernel.org,
+        robh+dt@kernel.org, festevam@gmail.com, dan.j.williams@intel.com,
+        mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com,
+        l.stach@pengutronix.de, martin.fuzzey@flowbird.group
+Cc:     kernel@pengutronix.de, linux-spi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [RESEND v6  00/13] add ecspi ERR009165 for i.mx6/7 soc family
+Date:   Tue, 10 Mar 2020 19:31:49 +0800
+Message-Id: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR06CA0241.apcprd06.prod.outlook.com
+ (2603:1096:4:ac::25) To VE1PR04MB6638.eurprd04.prod.outlook.com
+ (2603:10a6:803:119::15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200306141135.9C4F380307C2@mail.baikalelectronics.ru>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-Message-Id: <20200309220853.E3E7880307C8@mail.baikalelectronics.ru>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SG2PR06CA0241.apcprd06.prod.outlook.com (2603:1096:4:ac::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2793.15 via Frontend Transport; Tue, 10 Mar 2020 03:30:28 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: f0f7b4fa-c875-4bc4-b2f7-08d7c4a36455
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6621:|VE1PR04MB6621:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VE1PR04MB6621B79B9C1A0982FE17A10F89FF0@VE1PR04MB6621.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
+X-Forefront-PRVS: 033857D0BD
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(346002)(366004)(376002)(396003)(199004)(189003)(4326008)(8936002)(6666004)(8676002)(81156014)(81166006)(2906002)(5660300002)(2616005)(7416002)(36756003)(66556008)(66946007)(6506007)(52116002)(316002)(956004)(966005)(26005)(478600001)(16526019)(186003)(66476007)(86362001)(6486002)(6512007)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6621;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: G8by1cZBH+GxvAD8VRg/8gXAX39N2EMh+fWAzXgraGaRexV+H8hPI1pw9SPVXWaA36HDy6Ym9DGZ9B55VR2E2MfGzBu9+OxCoCGZnNy384mdtknN3wNUkDktH/bdTk3g/ezoBr9//aG85Yh/KucW42bb3qgptf+TVz3ICA2XIv1g/DFYmMPF9N7Ov3+7DVuqwl5gdIYR3IJ2O+aXyeriGitVS0+QUfNuyOzOqAF99pnq3dfID0ZFy+gnCBQmK53+BPeDY6zQRoCENl8qDukqgmPpWdoqrIxGAi1qtzdFfUhEZsUKA4I58udSUQDSdTqzl0agYPKT7CikpC73Jfp9qLMtr0JIRgyTvImb4OOeS1PKp/ijMqMz66i8w9AAdi9Qh2/whJ83tmtQNQumz8mwNkhLLVc64qEeIwMemUIUYa6k7X/ORTa2Voj2F5tNPtQx8IOEz6xK5B4/adHz0UdRsmwgvpG8XIjapvy98T4UDYv8L+I16WADCXIruwlwdm7jEksoyu4la61tGolYZ0xMgUqXR3zkK0yGXbqNGBGRUEwmyGcDFhcgQJQyECYEQz/U8Ka4DHPJhVHbmKo+6qo+aw==
+X-MS-Exchange-AntiSpam-MessageData: 66UEprSh/OYdr7fbPR3LeUWEWI87mAPkG2WlEQt3W3H1slNeBwlsJbArX2egbzLh6KS1e+FZeXP6dU4vMVo5NPc5GXbhGrM6bxNe2VfvBhkvVKLd6LFtlYk/NY/w+bXBUov8kWtxrTfSt49ncYsbrA==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0f7b4fa-c875-4bc4-b2f7-08d7c4a36455
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2020 03:30:34.4732
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pDO+d68YDKdtSTDs2EZmKX5kT/O6Cuj3d4xjlAkfUpOPfbTxS2/7FUmx8rYwdBHZaF58Lxuh4qo/diDZxwBlIA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6621
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 04:11:28PM +0200, Andy Shevchenko wrote:
-> On Fri, Mar 06, 2020 at 04:47:20PM +0300, Sergey Semin wrote:
-> > On Fri, Mar 06, 2020 at 03:30:35PM +0200, Andy Shevchenko wrote:
-> > > On Fri, Mar 06, 2020 at 03:29:12PM +0200, Andy Shevchenko wrote:
-> > > > On Fri, Mar 06, 2020 at 04:10:29PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > > > > From: Serge Semin <fancer.lancer@gmail.com>
-> > > > > 
-> > > > > Baikal-T1 SoC has an DW DMAC on-board to provide a Mem-to-Mem, low-speed
-> > > > > peripherals Dev-to-Mem and Mem-to-Dev functionality. Mostly it's compatible
-> > > > > with currently implemented in the kernel DW DMAC driver, but there are some
-> > > > > peculiarities which must be taken into account in order to have the device
-> > > > > fully supported.
-> > > > > 
-> > > > > First of all traditionally we replaced the legacy plain text-based dt-binding
-> > > > > file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
-> > > > > channels, which alas have different max burst length configuration.
-> > > > > In particular first two channels may burst up to 128 bits (16 bytes) at a time
-> > > > > while the rest of them just up to 32 bits. We must make sure that the DMA
-> > > > > subsystem doesn't set values exceeding these limitations otherwise the
-> > > > > controller will hang up. In third currently we discovered the problem in using
-> > > > > the DW APB SPI driver together with DW DMAC. The problem happens if there is no
-> > > > > natively implemented multi-block LLP transfers support and the SPI-transfer
-> > > > > length exceeds the max lock size. In this case due to asynchronous handling of
-> > > > > Tx- and Rx- SPI transfers interrupt we might end up with Dw APB SSI Rx FIFO
-> > > > > overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
-> > > > > the DMAC to asynchronously execute the transfers we'd have to at least warn
-> > > > > the user of the possible errors.
-> > > > > 
-> > > > > Finally there is a bug in the algorithm of the nollp flag detection.
-> > > > > In particular even if DW DMAC parameters state the multi-block transfers
-> > > > > support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
-> > > > > by the driver true multi-block LLP functionality unusable. This happens cause'
-> > > > > if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
-> > > > > contiguous multi-block transfers will be only supported. We must take the
-> > > > > flag into account when detecting the LLP support otherwise the driver just
-> > > > > won't work correctly.
-> > > > > 
-> > > > > This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> > > > > commit 98d54f81e36b ("Linux 5.6-rc4").
-> > > > 
-> > > > Thank you for your series!
-> > > > 
-> > > > I'll definitely review it, but it will take time. So, I think due to late
-> > > > submission this is material at least for v5.8.
-> > > 
-> > 
-> > Hello Andy,
-> > Thanks for the quick response. Looking forward to get the patches
-> > reviewed and move on with the next patchset I'll send after this. It concerns
-> > DW APB SSI driver, which uses the changes introduced by this one.
-> 
-> > So the
-> > sooner we finished with this patchset the better.
-> 
-> Everybody will win, but review will take as long as it take. And for sure it
-> will miss v5.7 release cycle. Because too many patch sets sent at once
-> followed by schedule, we almost at v5.6-rc5.
-> 
+There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
+transfer to be send twice in DMA mode. Please get more information from:
+https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
+new sdma ram script which works in XCH  mode as PIO inside sdma instead
+of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
+exist on all legacy i.mx6/7 soc family before i.mx6ul.
+NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
+6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
+still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
+for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
+or not.
+The first two reverted patches should be the same issue, though, it
+seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
+have the chance to test this patch set if could fix their issues.
+Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
+on i.mx8mm because the event id is zero.
 
-Yeah. 13 patchsets is a lot of work to review. I was just saying, that
-even though there are many patches sent, there are even more being
-scheduled for submission after that, which rely on the alterations
-provided by these patches. Though the pacthes dependency may change
-seeing you have issues regarding some of them.)
+PS:
+   Please get sdma firmware from below linux-firmware and copy it to your
+local rootfs /lib/firmware/imx/sdma.
+https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/imx/sdma
 
-> > Although I understand
-> > that it may take some time. I've just sent over 12 patchset, which have a lot
-> > of fixups and new drivers.)
-> > 
-> > > One thing that I can tell immediately is the broken email thread in this series.
-> > > Whenever you do a series, use `git format-patch --cover-letter --thread ...`,
-> > > so, it will link the mail properly.
-> > > 
-> > 
-> > I've got thread=true in my gitconfig file, so each email should have
-> > the proper reference and in-reply-to to the cover-letter (I see it from
-> > the log). The problem popped up from a different place. For some reason the
-> > automatic CC/To list extraction command didn't do the job right, so we ended
-> > up with lacking of mailing lists in Cc's in this patchset. The command look like
-> > this:
-> > 
-> > git send-email --cc-cmd "scripts/get_maintainer.pl --separator , --nokeywords --nogit --nogit-fallback --norolestats --nom" \
-> >                    --to-cmd "scripts/get_maintainer.pl --separator , --nokeywords --nogit --nogit-fallback --norolestats --nol" \
-> >                    --from "Serge Semin <Sergey.Semin at baikalelectronics.ru>" \
-> >                    --smtp-server-option="-abaikal" --cover-letter -5
-> 
-> I'm talking about one which makes your Message-Id/Reference headers broken
-> between cover letter and the rest of the series. It might be because of missed
-> patches in the chain.
-> 
+v2:
+  1.Add commit log for reverted patches.
+  2.Add comment for 'ecspi_fixed' in sdma driver.
+  3.Add 'fsl,imx6sll-ecspi' compatible instead of 'fsl,imx6ul-ecspi'
+    rather than remove.
+v3:
+  1.Confirm with design team make sure ERR009165 fixed on i.mx6ul/i.mx6ull
+    /i.mx6sll, not fixed on i.mx8m/8mm and other i.mx6/7 legacy chips.
+    Correct dts related dts patch in v2.
+  2.Clean eratta information in binding doc and new 'tx_glitch_fixed' flag
+    in spi-imx driver to state ERR009165 fixed or not.
+  3.Enlarge burst size to fifo size for tx since tx_wml set to 0 in the
+    errata workaroud, thus improve performance as possible.
+v4:
+  1.Add Ack tag from Mark and Vinod
+  2.Remove checking 'event_id1' zero as 'event_id0'.
+v5:
+  1.Add the last patch for compatible with the current uart driver which
+    using rom script, so both uart ram script and rom script supported
+    in latest firmware, by default uart rom script used. UART driver
+    will be broken without this patch.
+v6:
+  1.Resend after rebase the latest next branch.
+  2.Remove below No.13~No.15 patches of v5 because they were mergered.
+  	ARM: dts: imx6ul: add dma support on ecspi
+  	ARM: dts: imx6sll: correct sdma compatible
+  	arm64: defconfig: Enable SDMA on i.mx8mq/8mm
+  3.Revert "dmaengine: imx-sdma: fix context cache" since
+    'context_loaded' removed.
 
-Ok. Now I see what you meant. First I had a thought there was some
-misunderstanding on your or my side, because my neomutt client didn't
-show any Ids confusion. But after another maintainer complained about
-the same problem I realized that the issue must be at someplace I
-couldn't have noticed. Then I thought that the outgoing email server
-could have changed the order of the sent emails. But it turned out the
-problem was in the message Ids replacement performed by our corporate
-exchange server. Please see the email I've sent in reply to the Vinod
-comment regarding the emailing list Ccing. It describes what was really
-wrong with the threading config.
+Robin Gong (13):
+  Revert "ARM: dts: imx6q: Use correct SDMA script for SPI5 core"
+  Revert "ARM: dts: imx6: Use correct SDMA script for SPI cores"
+  Revert "dmaengine: imx-sdma: refine to load context only once"
+  dmaengine: imx-sdma: remove dupilicated sdma_load_context
+  dmaengine: imx-sdma: add mcu_2_ecspi script
+  spi: imx: fix ERR009165
+  spi: imx: remove ERR009165 workaround on i.mx6ul
+  spi: imx: add new i.mx6ul compatible name in binding doc
+  dmaengine: imx-sdma: remove ERR009165 on i.mx6ul
+  dma: imx-sdma: add i.mx6ul/6sx compatible name
+  dmaengine: imx-sdma: fix ecspi1 rx dma not work on i.mx8mm
+  dmaengine: imx-sdma: add uart rom script
+  Revert "dmaengine: imx-sdma: fix context cache"
 
-Regards,
--Segey
+ .../devicetree/bindings/dma/fsl-imx-sdma.txt       |  2 +
+ .../devicetree/bindings/spi/fsl-imx-cspi.txt       |  1 +
+ arch/arm/boot/dts/imx6q.dtsi                       |  2 +-
+ arch/arm/boot/dts/imx6qdl.dtsi                     |  8 +-
+ drivers/dma/imx-sdma.c                             | 89 ++++++++++++++++------
+ drivers/spi/spi-imx.c                              | 61 ++++++++++++---
+ include/linux/platform_data/dma-imx-sdma.h         |  8 +-
+ 7 files changed, 130 insertions(+), 41 deletions(-)
 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+-- 
+2.7.4
+

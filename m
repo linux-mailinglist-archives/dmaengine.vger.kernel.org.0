@@ -2,24 +2,24 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E06417F161
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Mar 2020 09:03:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4A8D17F1AF
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Mar 2020 09:20:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbgCJIC6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 10 Mar 2020 04:02:58 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46979 "EHLO
+        id S1726342AbgCJIT5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 10 Mar 2020 04:19:57 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:34381 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbgCJIC5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 10 Mar 2020 04:02:57 -0400
+        with ESMTP id S1726220AbgCJIT4 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 10 Mar 2020 04:19:56 -0400
 Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <sha@pengutronix.de>)
-        id 1jBZqd-0003q9-DC; Tue, 10 Mar 2020 09:02:43 +0100
+        id 1jBa6p-00069G-Gm; Tue, 10 Mar 2020 09:19:27 +0100
 Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
         (envelope-from <sha@pengutronix.de>)
-        id 1jBZqb-000205-1H; Tue, 10 Mar 2020 09:02:41 +0100
-Date:   Tue, 10 Mar 2020 09:02:41 +0100
+        id 1jBa6n-0002TP-9h; Tue, 10 Mar 2020 09:19:25 +0100
+Date:   Tue, 10 Mar 2020 09:19:25 +0100
 From:   Sascha Hauer <s.hauer@pengutronix.de>
 To:     Robin Gong <yibin.gong@nxp.com>
 Cc:     vkoul@kernel.org, shawnguo@kernel.org,
@@ -31,22 +31,22 @@ Cc:     vkoul@kernel.org, shawnguo@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-imx@nxp.com, dmaengine@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: Re: [RESEND v6  07/13] spi: imx: remove ERR009165 workaround on
+Subject: Re: [RESEND v6  09/13] dmaengine: imx-sdma: remove ERR009165 on
  i.mx6ul
-Message-ID: <20200310080240.GS3335@pengutronix.de>
+Message-ID: <20200310081925.GT3335@pengutronix.de>
 References: <1583839922-22699-1-git-send-email-yibin.gong@nxp.com>
- <1583839922-22699-8-git-send-email-yibin.gong@nxp.com>
+ <1583839922-22699-10-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583839922-22699-8-git-send-email-yibin.gong@nxp.com>
+In-Reply-To: <1583839922-22699-10-git-send-email-yibin.gong@nxp.com>
 X-Sent-From: Pengutronix Hildesheim
 X-URL:  http://www.pengutronix.de/
 X-IRC:  #ptxdist @freenode
 X-Accept-Language: de,en
 X-Accept-Content-Type: text/plain
-X-Uptime: 08:40:21 up 19 days, 15:10, 46 users,  load average: 0.37, 0.19,
- 0.18
+X-Uptime: 09:04:16 up 19 days, 15:34, 45 users,  load average: 0.11, 0.18,
+ 0.17
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
 X-SA-Exim-Mail-From: sha@pengutronix.de
@@ -57,100 +57,125 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 07:31:56PM +0800, Robin Gong wrote:
-> ERR009165 fixed on i.mx6ul/6ull/6sll. All other i.mx6/7 and
-> i.mx8m/8mm still need this errata. Please refer to nxp official
-> errata document from https://www.nxp.com/ .
-> 
-> For removing workaround on those chips. Add new i.mx6ul type.
+On Tue, Mar 10, 2020 at 07:31:58PM +0800, Robin Gong wrote:
+> ECSPI issue fixed from i.mx6ul at hardware level, no need
+> ERR009165 anymore on those chips such as i.mx8mq. Add i.mx6sx
+> from where i.mx6ul source.
 > 
 > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> Acked-by: Mark Brown <broonie@kernel.org>
+> Acked-by: Vinod Koul <vkoul@kernel.org>
 > ---
->  drivers/spi/spi-imx.c | 50 +++++++++++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 45 insertions(+), 5 deletions(-)
+>  drivers/dma/imx-sdma.c | 51 +++++++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 50 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-> index 842a86e..f7ee2ec 100644
-> --- a/drivers/spi/spi-imx.c
-> +++ b/drivers/spi/spi-imx.c
-> @@ -57,6 +57,7 @@ enum spi_imx_devtype {
->  	IMX35_CSPI,	/* CSPI on all i.mx except above */
->  	IMX51_ECSPI,	/* ECSPI on i.mx51 */
->  	IMX53_ECSPI,	/* ECSPI on i.mx53 and later */
-> +	IMX6UL_ECSPI,	/* ERR009165 fix from i.mx6ul */
->  };
->  
->  struct spi_imx_data;
-> @@ -75,6 +76,11 @@ struct spi_imx_devtype_data {
->  	bool has_slavemode;
->  	unsigned int fifo_size;
->  	bool dynamic_burst;
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index 56288d8..5ae7237 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -419,6 +419,13 @@ struct sdma_driver_data {
+>  	int num_events;
+>  	struct sdma_script_start_addrs	*script_addrs;
+>  	bool check_ratio;
 > +	/*
-> +	 * ERR009165 fixed or not:
+> +	 * ecspi ERR009165 fixed should be done in sdma script
+> +	 * and it has been fixed in soc from i.mx6ul.
+> +	 * please get more information from the below link:
 > +	 * https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf
 > +	 */
-> +	bool tx_glitch_fixed;
->  	enum spi_imx_devtype devtype;
+> +	bool ecspi_fixed;
 >  };
 >  
-> @@ -128,7 +134,8 @@ static inline int is_imx35_cspi(struct spi_imx_data *d)
+>  struct sdma_engine {
+> @@ -539,6 +546,31 @@ static struct sdma_driver_data sdma_imx6q = {
+>  	.script_addrs = &sdma_script_imx6q,
+>  };
 >  
->  static inline int is_imx51_ecspi(struct spi_imx_data *d)
->  {
-> -	return d->devtype_data->devtype == IMX51_ECSPI;
-> +	return d->devtype_data->devtype == IMX51_ECSPI ||
-> +	       d->devtype_data->devtype == IMX6UL_ECSPI;
->  }
+> +static struct sdma_script_start_addrs sdma_script_imx6sx = {
+> +	.ap_2_ap_addr = 642,
+> +	.uart_2_mcu_addr = 817,
+> +	.mcu_2_app_addr = 747,
+> +	.uartsh_2_mcu_addr = 1032,
+> +	.mcu_2_shp_addr = 960,
+> +	.app_2_mcu_addr = 683,
+> +	.shp_2_mcu_addr = 891,
+> +	.spdif_2_mcu_addr = 1100,
+> +	.mcu_2_spdif_addr = 1134,
+> +};
+> +
+> +static struct sdma_driver_data sdma_imx6sx = {
+> +	.chnenbl0 = SDMA_CHNENBL0_IMX35,
+> +	.num_events = 48,
+> +	.script_addrs = &sdma_script_imx6sx,
+> +};
+> +
+> +static struct sdma_driver_data sdma_imx6ul = {
+> +	.chnenbl0 = SDMA_CHNENBL0_IMX35,
+> +	.num_events = 48,
+> +	.script_addrs = &sdma_script_imx6sx,
+> +	.ecspi_fixed = true,
+> +};
+> +
+>  static struct sdma_script_start_addrs sdma_script_imx7d = {
+>  	.ap_2_ap_addr = 644,
+>  	.uart_2_mcu_addr = 819,
+> @@ -584,9 +616,15 @@ static const struct platform_device_id sdma_devtypes[] = {
+>  		.name = "imx6q-sdma",
+>  		.driver_data = (unsigned long)&sdma_imx6q,
+>  	}, {
+> +		.name = "imx6sx-sdma",
+> +		.driver_data = (unsigned long)&sdma_imx6sx,
+> +	}, {
 
-Erm, no. A i.MX51 ECSPI is a i.MX51 ECSPI and not a i.MX6UL ECSPI. If
-you want to handle them equally somewhere then explicitly test for
-i.MX6ul *and* i.MX51 there.
-
->  
->  static inline int is_imx53_ecspi(struct spi_imx_data *d)
-> @@ -585,9 +592,16 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
->  	ctrl |= mx51_ecspi_clkdiv(spi_imx, t->speed_hz, &clk);
->  	spi_imx->spi_bus_clk = clk;
->  
-> -	/* ERR009165: work in XHC mode as PIO */
-> -	if (spi_imx->usedma)
-> -		ctrl &= ~MX51_ECSPI_CTRL_SMC;
-> +	/*
-> +	 * ERR009165: work in XHC mode instead of SMC as PIO on the chips
-> +	 * before i.mx6ul.
-> +	 */
-> +	if (spi_imx->usedma) {
-> +		if (spi_imx->devtype_data->tx_glitch_fixed)
-> +			ctrl |= MX51_ECSPI_CTRL_SMC;
-> +		else
-> +			ctrl &= ~MX51_ECSPI_CTRL_SMC;
-> +	}
-
-Changed again, but the PIO case still not honoured. This should look
-like
-	if (spi_imx->usedma && spi_imx->devtype_data->tx_glitch_fixed)
-		ctrl |= MX51_ECSPI_CTRL_SMC;
-	else
-		ctrl &= ~MX51_ECSPI_CTRL_SMC;
-
->  
->  	writel(ctrl, spi_imx->base + MX51_ECSPI_CTRL);
->  
-> @@ -615,6 +629,8 @@ static void mx51_setup_wml(struct spi_imx_data *spi_imx)
->  {
->  	u32 tx_wml = 0;
->  
-> +	if (spi_imx->devtype_data->tx_glitch_fixed)
-> +		tx_wml = spi_imx->wml;
-
-That explains the variable introduced in the last patch, ok.
-
-I have the impression that splitting up 06/13 and 07/13 into two patches
-doesn't make it easier to review.
+Now the i.MX6sx uses a new sdma_script_start_addrs entry which is the same
+as the i.MX6q one we used before with one exception: it lacks the
+per_2_per_addr = 6331 entry. This is only used for IMX_DMATYPE_ASRC and
+IMX_DMATYPE_ASRC_SP, both are entirely unused in the mainline kernel. So
+why must the i.MX6sx changed here and what has this to do with ECSPI?
 
 Sascha
 
+>  		.name = "imx7d-sdma",
+>  		.driver_data = (unsigned long)&sdma_imx7d,
+>  	}, {
+> +		.name = "imx6ul-sdma",
+> +		.driver_data = (unsigned long)&sdma_imx6ul,
+> +	}, {
+>  		.name = "imx8mq-sdma",
+>  		.driver_data = (unsigned long)&sdma_imx8mq,
+>  	}, {
+> @@ -602,7 +640,9 @@ static const struct of_device_id sdma_dt_ids[] = {
+>  	{ .compatible = "fsl,imx35-sdma", .data = &sdma_imx35, },
+>  	{ .compatible = "fsl,imx31-sdma", .data = &sdma_imx31, },
+>  	{ .compatible = "fsl,imx25-sdma", .data = &sdma_imx25, },
+> +	{ .compatible = "fsl,imx6sx-sdma", .data = &sdma_imx6sx, },
+>  	{ .compatible = "fsl,imx7d-sdma", .data = &sdma_imx7d, },
+> +	{ .compatible = "fsl,imx6ul-sdma", .data = &sdma_imx6ul, },
+>  	{ .compatible = "fsl,imx8mq-sdma", .data = &sdma_imx8mq, },
+>  	{ /* sentinel */ }
+>  };
+> @@ -1169,8 +1209,17 @@ static int sdma_config_channel(struct dma_chan *chan)
+>  			if (sdmac->peripheral_type == IMX_DMATYPE_ASRC_SP ||
+>  			    sdmac->peripheral_type == IMX_DMATYPE_ASRC)
+>  				sdma_set_watermarklevel_for_p2p(sdmac);
+> -		} else
+> +		} else {
+> +			/*
+> +			 * ERR009165 fixed from i.mx6ul, no errata need,
+> +			 * set bit31 to let sdma script skip the errata.
+> +			 */
+> +			if (sdmac->peripheral_type == IMX_DMATYPE_CSPI &&
+> +			    sdmac->direction == DMA_MEM_TO_DEV &&
+> +			    sdmac->sdma->drvdata->ecspi_fixed)
+> +				__set_bit(31, &sdmac->watermark_level);
+>  			__set_bit(sdmac->event_id0, sdmac->event_mask);
+> +		}
+>  
+>  		/* Address */
+>  		sdmac->shp_addr = sdmac->per_address;
+> -- 
+> 2.7.4
+> 
+> 
 
 -- 
 Pengutronix e.K.                           |                             |

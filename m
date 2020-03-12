@@ -2,91 +2,99 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BD196183CC0
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2020 23:46:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 683E4183B61
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Mar 2020 22:33:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgCLWq6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 12 Mar 2020 18:46:58 -0400
-Received: from 15.mo6.mail-out.ovh.net ([188.165.39.161]:60042 "EHLO
-        15.mo6.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbgCLWq5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 12 Mar 2020 18:46:57 -0400
-X-Greylist: delayed 11996 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Mar 2020 18:46:56 EDT
-Received: from player687.ha.ovh.net (unknown [10.108.35.210])
-        by mo6.mail-out.ovh.net (Postfix) with ESMTP id E703B20391E
-        for <dmaengine@vger.kernel.org>; Thu, 12 Mar 2020 20:10:17 +0100 (CET)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player687.ha.ovh.net (Postfix) with ESMTPSA id D21501053114D;
-        Thu, 12 Mar 2020 19:10:04 +0000 (UTC)
-Date:   Thu, 12 Mar 2020 20:10:01 +0100
-From:   Stephen Kitt <steve@sk2.org>
-To:     Vinod Koul <vkoul@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Tero Kristo <t-kristo@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        dmaengine@vger.kernel.org, linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: driver-api/dma.../provider.rst: fix indents
-Message-ID: <20200312201001.17756b09@heffalump.sk2.org>
-In-Reply-To: <20200312181318.1368421-1-steve@sk2.org>
-References: <20200312181318.1368421-1-steve@sk2.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726670AbgCLVdc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 12 Mar 2020 17:33:32 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37946 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbgCLVdc (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 12 Mar 2020 17:33:32 -0400
+Received: by mail-ot1-f66.google.com with SMTP id t28so5297973ott.5;
+        Thu, 12 Mar 2020 14:33:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rNfJtMUZ9AtdFlrm/x22oDH4yXo8oQDRHF0dEFmtX8A=;
+        b=L+E5IF0NuarUxOuSowCnRK7BnwtzBe78MVnvHj2hAqijZ0RFRHb7MhNW1DaEBHpX4g
+         UwxR5vrwHgPiRPMY3mVN77z+UY6rD+LvcCvUIEFvn9Tlgzz/9Ku61hcM4d15yks73Ico
+         UJHkQkOmBFLUc30tYsZOHJ3NKyxYs3qqjB/3xJIYZ7q6KGr+lGAzPO+Gg136FY2V3jgp
+         kBH/5l9F1eCuEra4YCk6Up9v28l+li8Qz9iDCXQ6PnO3HxWUgIL4ScE5BTAYjNNDzUhG
+         ggJVb+KDuN8HZ6m13HLBTxxT9PjRZT9sWYZcQC8h8j+gHFdOIJ0p+oYCD8i8ThiDlLVx
+         1oHA==
+X-Gm-Message-State: ANhLgQ0pIWe1c0t9jUnIsTMo7RgkIOadkVYWATLjtkVD9OGzYUV+9ssX
+        IGsM0MZNGig9QI5EnAtgEypuC/E=
+X-Google-Smtp-Source: ADFU+vsW7Zr/jjjZYXDJ9E7f4Lz3HnH6GhbmY8U8zErlnGILP92rFq5L2irBkuf1ecow5ypK68rg7w==
+X-Received: by 2002:a05:6830:12d0:: with SMTP id a16mr7357673otq.218.1584048811700;
+        Thu, 12 Mar 2020 14:33:31 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t20sm7014819oij.19.2020.03.12.14.33.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Mar 2020 14:33:31 -0700 (PDT)
+Received: (nullmailer pid 16495 invoked by uid 1000);
+        Thu, 12 Mar 2020 21:33:30 -0000
+Date:   Thu, 12 Mar 2020 16:33:30 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Vinod Koul <vkoul@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] dt-bindings: dma: dw: Add max burst transaction
+ length property bindings
+Message-ID: <20200312213330.GA30463@bogus>
+References: <20200306131035.10937-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306131049.37EDD8030708@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- boundary="Sig_/D1hSsBmuZS=0yQzzXmBo_nm"; protocol="application/pgp-signature"
-X-Ovh-Tracer-Id: 9878927258995543368
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedruddvhedguddvgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvuffkjghfofggtgesghdtreerredtvdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrheikeejrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopegumhgrvghnghhinhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306131049.37EDD8030708@mail.baikalelectronics.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
---Sig_/D1hSsBmuZS=0yQzzXmBo_nm
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Mar 06, 2020 at 04:10:31PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> 
+> This array property is used to indicate the maximum burst transaction
+> length supported by each DMA channel.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> ---
+>  .../devicetree/bindings/dma/snps,dma-spear1340.yaml  | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+> index d7f9383ceb8f..308ec6482064 100644
+> --- a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+> +++ b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+> @@ -126,6 +126,18 @@ properties:
+>            enum: [0, 1]
+>            default: 0
+>  
+> +  snps,max-burst-len:
+> +    description: |
+> +      Maximum length of burst transactions supported by hardware.
+> +      It's an array property with one cell per channel in units of
+> +      CTLx register SRC_TR_WIDTH/DST_TR_WIDTH field.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +      - maxItems: 8
+> +        items:
+> +          enum: [4, 8, 16, 32, 64, 128, 256]
+> +          default: 0
 
-On Thu, 12 Mar 2020 19:13:18 +0100, Stephen Kitt <steve@sk2.org> wrote:
-> This fixes some block indentations, formatting them as definitions
-> (which seems appropriate given the content), and addressing these
-> warnings:
->=20
-> 	Documentation/driver-api/dmaengine/provider.rst:270: WARNING:
-> Unexpected indentation.
-> 	Documentation/driver-api/dmaengine/provider.rst:273: WARNING: Block
-> quote ends without a blank line; unexpected unindent.
-> 	Documentation/driver-api/dmaengine/provider.rst:288: WARNING:
-> Unexpected indentation.
-> 	Documentation/driver-api/dmaengine/provider.rst:290: WARNING: Block
-> quote ends without a blank line; unexpected unindent.
+The default needs to be an allowed value in the enum.
 
-... which are already fixed in linux-next, so please ignore this.
-
-Regards,
-
-Stephen
-
---Sig_/D1hSsBmuZS=0yQzzXmBo_nm
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl5qiQkACgkQgNMC9Yht
-g5yjPQ/+IIi6Nyd2DgTkmWshlC+0gijXtvuEY2mvIpUm4MUnJ0QNTmC4ICVJBjHo
-+JlNfadJLaxXBqomZ1tEyBh8/9C5sFGkfyar8ofz88lX4ee1A6h8PQL1z39HtXvY
-YlSf1xSdWcjFO6BmLDAMpMBnl40dsGLFYtnSYrCerzj1It4JQUPDTSv5vSdm/Rnq
-IIE4ccNoy1LnkqqqgpsyOtih20U5MJvtZVSl3Pcnbb5SkxpQlE0kHaqZGj6EpDF2
-OIM7sIZj+ADJ+fnMEp1M/IkSCxVu/YBox7m1sOsuTAgMfjbEC6v5FDYHTMtkT/Hh
-Rdpo6HWWTIFPaWFOQC/tKQQfYR63YVHZ8npMrmYwPAzqGFJ4Ql/lWKfFvDOz6XAB
-SbrDt/FgpjN0E7p52ePT7HkPI04xojnzvPMzt+mD3hPOVFIAFQDzwPngI47WFGnK
-ZuUVylhfMVIPmzxzHNuuwjUPDwqiqhPPhfHpHF3mvb8v+urpv20Id5V9YJP1BI2Q
-InwPGeoj27I6jcIJcHijq9GSWRmzpzxyU3janNAAFsQaLZamMwAEOsOt8AaUVA7J
-zT4jSw6gD79MXP5BGMKuN772PIg+7dlf8yY/kW3+jIuuBLVTXX8WRKpazuklS3UZ
-byPY5jWhPt4dnKSzwhXVAL/aGN9wPPgSea5PE6SxSbfVF3xZjAQ=
-=WVyT
------END PGP SIGNATURE-----
-
---Sig_/D1hSsBmuZS=0yQzzXmBo_nm--
+Rob

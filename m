@@ -2,63 +2,61 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AAE0018C119
-	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2020 21:12:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8125818C1E8
+	for <lists+dmaengine@lfdr.de>; Thu, 19 Mar 2020 21:53:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbgCSUMm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 19 Mar 2020 16:12:42 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35518 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbgCSUMl (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 19 Mar 2020 16:12:41 -0400
-Received: by mail-lf1-f68.google.com with SMTP id m15so2747872lfp.2;
-        Thu, 19 Mar 2020 13:12:38 -0700 (PDT)
+        id S1727049AbgCSUx0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 19 Mar 2020 16:53:26 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39242 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbgCSUx0 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 19 Mar 2020 16:53:26 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j15so2821956lfk.6;
+        Thu, 19 Mar 2020 13:53:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8rWnveVVUhV0jZP6qk2JekF9mt/8mR18XOrixvtwDns=;
-        b=MHuJKeA/kZXo70Js7a1TtN19e8hJGw2o6tgp5HbLKe0ifRtReSjepyflK0E44eItgL
-         V2NeNarC+m60rA8i2OBWS+EB6+Lat0Yz5X5/yMAj8avWI0E6tB2PAujmdIjRvJzHcbJG
-         MzkZd9RXwnGn3Y/6OCE38pkpuIl6oQhChMczStjw1ylz7OqFwnF5xnV1u/mXellR71AL
-         LMPIRLYKnV+TiMYrlP8vmqI9hbA1O5aor9XQ62p+OzPRfkN18b9gPX8WO1sih6s6kSgv
-         q3u5qwF1TgS+22vNUVUeBbyKfW1RRdvdxKs6mKbk0ndIsi6GvBGZVwq3R6Y9ovC95If8
-         B7Ww==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VQOqpNHGnRKqa1sVk84jtgEeheH2BERwpE6r8gHxAwI=;
+        b=Sl3qviOGUGcq21NwxmkMyha+skQwAVSa5SALUzxn2Ds40Mk6CdYbDlTvxemxMzyYPR
+         ZzvqoF4kMign3pl2qO27q9vskJPFCdExM0ue7Vp9LBaDchDttasy3hF5bHSvzLGikWQD
+         BpNIJvCyVd3k7ofcml0LcAHRjrI7Sq+aHGfskNVweF2Kz+a5Cxb+teB6sF/Avz9S9IhO
+         USm2BIWEo+bUtGHnpdHJ5sBncpsMREt+XKjbDhkuYHHhfgWrtAuTc62Z82FozlEuVBRr
+         Fp1tAF5pNDchv8w6+S3hKfldDZ4u6+sCIRxFofm1imtW0N6aA3T0PxMHJOnRs672qIY3
+         wbqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8rWnveVVUhV0jZP6qk2JekF9mt/8mR18XOrixvtwDns=;
-        b=fgwVlIurcpd31V4xVY5OOpUL69IdE4hNeoS08kbZCHkGd0iAnNKk0KSM7SDurIfJo1
-         lxzt0flj+DJehiQKp7mUDwS0Jt8ROk1etJ2KTpaL6XKxm1h5bRODzxUe8BsQKrbCw39I
-         sEYw5o3DdpaR6TXQmn2AASTP+rpaFiF7y2OXi0pMWU/0GyqU0LAAMAy7eRSth86/ChEY
-         X27KuZWI0k3NO8hPFrvFEOxpVuqJibHtfDE3p0DJOd4U5YHUzR/4YwFTsv88lKkenid7
-         zIaawcRdP3xSH2MiPRdSvlNObFhK7J7U2nKia7h+3vnSmyTV7/kV+TX1epnL4MALMRUq
-         VoEg==
-X-Gm-Message-State: ANhLgQ07DAWSEOJZ1bIaVMdw7RVLhkcAW2vRccFuaKP729DoYcekhFrp
-        a3uT2V36WUeyWZzJJX2kVb8=
-X-Google-Smtp-Source: ADFU+vtSQAmtsDiVKncNEieuoVMXJL3wofav79o9W9WxOvss1hAc05X546TLUW07at33Bn8DfcG8OQ==
-X-Received: by 2002:a19:7907:: with SMTP id u7mr3123765lfc.18.1584648757441;
-        Thu, 19 Mar 2020 13:12:37 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VQOqpNHGnRKqa1sVk84jtgEeheH2BERwpE6r8gHxAwI=;
+        b=txomMYu7FKuQeMXd1y7bawoY3HuDmuwsWcEY8I3ShVH7usri+Xsp4AKlmIbsQyfFp/
+         mRlhOrK3Izj7UOro1byL0v65gFY6HA9jfliURVMJazy3IT3hUawDhcJ0NQwyIPJL8Zto
+         yNRyImD4Y8ONdSeQ2iYDfLQM4DO+cuHGPUaMBodY4/KkZ1LnTWwMTPQumcq4kF1fgpr+
+         OMYNNd/ckNbWThgyw2e99qvWLf1mi3nc//X/+YV6oj3s6gSNDDIM8y9tOgZ7qMAionem
+         mSCaRiutcLi+W5BjYDPV0uelD5dEBQ4bts233Ih36AejDsng3Cyzcs78oBBX0jMWulFO
+         HT0Q==
+X-Gm-Message-State: ANhLgQ23PvSnd9JRerXYUKz4XwBJJ/TQtOszqGc3gI9840AUyon8gcGD
+        XyxA2w92fh8JQj5DQn6YToQ=
+X-Google-Smtp-Source: ADFU+vsc3c/MwtGCczXQuWkx6DHW6qLqYcGdD+uVtu8ONWi4VFFUYKaZpRo12NRQRiDoVSOqOON5gA==
+X-Received: by 2002:a19:5008:: with SMTP id e8mr2181030lfb.32.1584651202774;
+        Thu, 19 Mar 2020 13:53:22 -0700 (PDT)
 Received: from localhost.localdomain (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.gmail.com with ESMTPSA id z21sm2059317ljz.49.2020.03.19.13.12.36
+        by smtp.gmail.com with ESMTPSA id u10sm2108661ljk.56.2020.03.19.13.53.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 13:12:37 -0700 (PDT)
+        Thu, 19 Mar 2020 13:53:22 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
         Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] i2c: tegra: Synchronize DMA before termination
-Date:   Thu, 19 Mar 2020 23:11:40 +0300
-Message-Id: <20200319201140.17451-3-digetx@gmail.com>
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/2] dmaengine: tegra-apb: Don't save/restore IRQ flags in interrupt handler
+Date:   Thu, 19 Mar 2020 23:52:27 +0300
+Message-Id: <20200319205228.8883-1-digetx@gmail.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200319201140.17451-1-digetx@gmail.com>
-References: <20200319201140.17451-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
@@ -66,37 +64,44 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-DMA transfer could be completed, but CPU (which handles DMA interrupt)
-may get too busy and can't handle the interrupt in a timely manner,
-despite of DMA IRQ being raised. In this case the DMA state needs to
-synchronized before terminating DMA transfer in order not to miss the
-DMA transfer completion.
+The interrupt is already disabled while interrupt handler is running, and
+thus, there is no need to save/restore the IRQ flags within the spinlock.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/dma/tegra20-apb-dma.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index dabb9223990c..b69a10497cd5 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -1224,6 +1224,15 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 		time_left = tegra_i2c_wait_completion_timeout(
- 				i2c_dev, &i2c_dev->dma_complete, xfer_time);
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index 4e295d121be6..26f427e02369 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -672,10 +672,9 @@ static void tegra_dma_tasklet(unsigned long data)
+ static irqreturn_t tegra_dma_isr(int irq, void *dev_id)
+ {
+ 	struct tegra_dma_channel *tdc = dev_id;
+-	unsigned long flags;
+ 	u32 status;
  
-+		/*
-+		 * Synchronize DMA first, since dmaengine_terminate_sync()
-+		 * performs synchronization after the transfer's termination
-+		 * and we want to get a completion if transfer succeeded.
-+		 */
-+		dmaengine_synchronize(i2c_dev->msg_read ?
-+				      i2c_dev->rx_dma_chan :
-+				      i2c_dev->tx_dma_chan);
-+
- 		dmaengine_terminate_sync(i2c_dev->msg_read ?
- 					 i2c_dev->rx_dma_chan :
- 					 i2c_dev->tx_dma_chan);
+-	spin_lock_irqsave(&tdc->lock, flags);
++	spin_lock(&tdc->lock);
+ 
+ 	trace_tegra_dma_isr(&tdc->dma_chan, irq);
+ 	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+@@ -683,11 +682,11 @@ static irqreturn_t tegra_dma_isr(int irq, void *dev_id)
+ 		tdc_write(tdc, TEGRA_APBDMA_CHAN_STATUS, status);
+ 		tdc->isr_handler(tdc, false);
+ 		tasklet_schedule(&tdc->tasklet);
+-		spin_unlock_irqrestore(&tdc->lock, flags);
++		spin_unlock(&tdc->lock);
+ 		return IRQ_HANDLED;
+ 	}
+ 
+-	spin_unlock_irqrestore(&tdc->lock, flags);
++	spin_unlock(&tdc->lock);
+ 	dev_info(tdc2dev(tdc), "Interrupt already served status 0x%08x\n",
+ 		 status);
+ 
 -- 
 2.25.1
 

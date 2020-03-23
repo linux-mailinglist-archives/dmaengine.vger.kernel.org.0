@@ -2,70 +2,49 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BADDC18DB8F
-	for <lists+dmaengine@lfdr.de>; Sat, 21 Mar 2020 00:10:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1868918EF9D
+	for <lists+dmaengine@lfdr.de>; Mon, 23 Mar 2020 07:02:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgCTXKk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 20 Mar 2020 19:10:40 -0400
-Received: from ms.lwn.net ([45.79.88.28]:44012 "EHLO ms.lwn.net"
+        id S1725930AbgCWGCZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 23 Mar 2020 02:02:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726955AbgCTXKk (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 20 Mar 2020 19:10:40 -0400
-Received: from lwn.net (localhost [127.0.0.1])
+        id S1725924AbgCWGCZ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 23 Mar 2020 02:02:25 -0400
+Received: from localhost (unknown [171.76.96.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 5F6412D6;
-        Fri, 20 Mar 2020 23:10:38 +0000 (UTC)
-Date:   Fri, 20 Mar 2020 17:10:20 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ricardo Ribalda Delgado <ribalda@kernel.org>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        dmaengine@vger.kernel.org, Matthias Maennich <maennich@google.com>,
-        Harry Wei <harryxiyou@gmail.com>, x86@kernel.org,
-        ecryptfs@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        target-devel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Tyler Hicks <code@tyhicks.com>, Vinod Koul <vkoul@kernel.org>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-scsi@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>, netdev@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org, Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v2 0/2] Don't generate thousands of new warnings when
- building docs
-Message-ID: <20200320171020.78f045c5@lwn.net>
-In-Reply-To: <cover.1584716446.git.mchehab+huawei@kernel.org>
-References: <cover.1584716446.git.mchehab+huawei@kernel.org>
-Organization: LWN.net
+        by mail.kernel.org (Postfix) with ESMTPSA id 1786C20409;
+        Mon, 23 Mar 2020 06:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584943344;
+        bh=ee0DvBFR0IGEeMCB7WFreXz0Sqm1oKY39XWtZzXkiXM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CuEEd5I6kltM4V4NI3FO8NDfqMx6Kf2qZEt2KEGWANZLYix88JDsILxAs1tXSIMUA
+         +nRBDjmcjoP2XDtvCtcMcBb18oMJGCaYetviByFAIuWjDeaNOfFhCEbXlvf/Jx7dli
+         tNwzqNPnPjtsT1LLMxmh1n7PPp14/FpctfCcvOQE=
+Date:   Mon, 23 Mar 2020 11:32:18 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     dmaengine@vger.kernel.org
+Subject: Re: [PATCH v2] dmaengine: idxd: fix off by one on cdev dwq refcount
+Message-ID: <20200323060218.GB72691@vkoul-mobl>
+References: <158403020187.10208.14117394394540710774.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158403020187.10208.14117394394540710774.stgit@djiang5-desk3.ch.intel.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, 20 Mar 2020 16:11:01 +0100
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+On 12-03-20, 09:23, Dave Jiang wrote:
+> The refcount check for dedicated workqueue (dwq) is off by one and allows
+> more than 1 user to open the char device. Fix check so only a single user
+> can open the device.
 
-> This small series address a regression caused by a new patch at
-> docs-next (and at linux-next).
+Applied, thanks
 
-I don't know how I missed that mess, sorry.  I plead distracting times or
-something like that.  Heck, I think I'll blame everything on the plague
-for at least the next few weeks.
-
-Anyway, I've applied this, thanks for cleaning it up.
-
-jon
+-- 
+~Vinod

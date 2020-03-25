@@ -2,54 +2,55 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 363C519174C
-	for <lists+dmaengine@lfdr.de>; Tue, 24 Mar 2020 18:15:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E63571920FD
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Mar 2020 07:19:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbgCXRPL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 24 Mar 2020 13:15:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727161AbgCXRPL (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:15:11 -0400
-Subject: Re: [GIT PULL]: dmaengine fixes for v5.6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585070107;
-        bh=3nGwtPclZmvQxYrp54AVxAccCNjmiKHtgqLUAaLIc5A=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Y/UxV21oAigP8vdKrzLAwK6wSJH5Q3pkXbXYBjBA3JsmJNnG9vLSz0d7vLkkaSuNF
-         xrr8Iq1T98z9q6wyjUtLlWWadoU57OYpyQMGgeWZy4lR+JavhLy/L2V6puzeorZrRN
-         a/WTRSoPNQJc71ttSI7ko3Al46VgeETfnduLjWko=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200324054017.GU72691@vkoul-mobl>
-References: <20200324054017.GU72691@vkoul-mobl>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200324054017.GU72691@vkoul-mobl>
-X-PR-Tracked-Remote: git://git.infradead.org/users/vkoul/slave-dma.git
- tags/dmaengine-fix-5.6
-X-PR-Tracked-Commit-Id: 018af9be3dd54e6f24f828966bdd873f4d63ad9b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c6ac7188c1142c450eb601563ad69204bf1e9286
-Message-Id: <158507010775.16590.3548326940708705089.pr-tracker-bot@kernel.org>
-Date:   Tue, 24 Mar 2020 17:15:07 +0000
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        id S1725954AbgCYGTO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 25 Mar 2020 02:19:14 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:43949 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725878AbgCYGTN (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 Mar 2020 02:19:13 -0400
+X-IronPort-AV: E=Sophos;i="5.72,303,1580742000"; 
+   d="scan'208";a="42785431"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 25 Mar 2020 15:19:12 +0900
+Received: from localhost.localdomain (unknown [10.166.252.89])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id B857D4000FAF;
+        Wed, 25 Mar 2020 15:19:12 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     vkoul@kernel.org, robh+dt@kernel.org
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH] dt-bindings: dma: renesas,usb-dmac: add r8a77961 support
+Date:   Wed, 25 Mar 2020 15:18:58 +0900
+Message-Id: <1585117138-8408-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The pull request you sent on Tue, 24 Mar 2020 11:10:17 +0530:
+This patch adds support for r8a77961 (R-Car M3-W+).
 
-> git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.6
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c6ac7188c1142c450eb601563ad69204bf1e9286
-
-Thank you!
-
+diff --git a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+index f1f95f6..e8f6c42 100644
+--- a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
++++ b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+@@ -16,6 +16,7 @@ Required Properties:
+ 	  - "renesas,r8a7794-usb-dmac" (R-Car E2)
+ 	  - "renesas,r8a7795-usb-dmac" (R-Car H3)
+ 	  - "renesas,r8a7796-usb-dmac" (R-Car M3-W)
++	  - "renesas,r8a77961-usb-dmac" (R-Car M3-W+)
+ 	  - "renesas,r8a77965-usb-dmac" (R-Car M3-N)
+ 	  - "renesas,r8a77990-usb-dmac" (R-Car E3)
+ 	  - "renesas,r8a77995-usb-dmac" (R-Car D3)
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.7.4
+

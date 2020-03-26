@@ -2,309 +2,138 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 446E1192DA0
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Mar 2020 17:00:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22289193759
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Mar 2020 05:41:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbgCYQAW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 25 Mar 2020 12:00:22 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:44808 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727867AbgCYQAW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 Mar 2020 12:00:22 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C726880C;
-        Wed, 25 Mar 2020 17:00:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1585152009;
-        bh=mNJBOQ1LkJOguHLuEvnd8aMpFS+5q1uoDZufU2xAH4Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XihIDlUJEKgfnYbtrfUspBRL7dt4t/o5PjTUyw5nDdWxoUszUSLr3hjd8E9LlN8kQ
-         tIcvn5RRABhvBNKV8hniF3Irg9fF77EfJKJtmLHwAQlluWbVHesHZvoPxo8B7UxS3c
-         YFRhZSB1/Xj3frYX8C/l8LHfYA0f4cEJyfYsizAE=
-Date:   Wed, 25 Mar 2020 18:00:05 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>, dmaengine@vger.kernel.org,
-        Michal Simek <michal.simek@xilinx.com>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Tejas Upadhyay <tejasu@xilinx.com>,
-        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
-Subject: Re: [PATCH v3 2/6] dmaengine: Add interleaved cyclic transaction type
-Message-ID: <20200325160005.GA4022@pendragon.ideasonboard.com>
-References: <20200302073728.GB9177@pendragon.ideasonboard.com>
- <20200303043254.GN4148@vkoul-mobl>
- <20200303192255.GN11333@pendragon.ideasonboard.com>
- <20200304051301.GS4148@vkoul-mobl>
- <20200304080128.GA4712@pendragon.ideasonboard.com>
- <20200304153718.GU4148@vkoul-mobl>
- <20200304160016.GB4712@pendragon.ideasonboard.com>
- <20200304162426.GV4148@vkoul-mobl>
- <20200311155248.GA4772@pendragon.ideasonboard.com>
- <20200318151427.GA24538@pendragon.ideasonboard.com>
+        id S1725842AbgCZElL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 26 Mar 2020 00:41:11 -0400
+Received: from mail-eopbgr150057.outbound.protection.outlook.com ([40.107.15.57]:18404
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725775AbgCZElL (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 26 Mar 2020 00:41:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YX5fpDQCTWCLmKngIaonup39qJSB1jgVlMJQe7k4fCbfPZk87sBfpEuqLkoxtKnO4B7FwRX68aU6vqM/qaRTDhSjWgySKOam5e91n8qKqCkk15jkpa/RHZuOdI022StcJUCYFc/iWYFQ/s15HAXV5nr+mNakbMB7eS78l086afKcskR2f8YZn9X645ha9E4TW7zUe2enuTrlYtg/HunY/65s5bYh1631grP/tqMEE1DE848WWx1eT3AjFBoIPVSQq+M7YbepZcG5Q00SxklgvX1x6qzFZBMo8WvGhRMaVhEKiiC5gv1q1Cdp1flvWladGLKwWxfMCACx4hfJG7iZ1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=duyaxEWUuBQMCf7V0ViV7/HZ4pMFoVS5hnylXAaFuu8=;
+ b=RhQoO/cM8ktPjuLeFxJiXudsyRgOaK4ht40MT9ug3uYSg8d6uT5yMZM9JUKPJkOUzoEvw/7MwLhempUh4jEQO5nIu5pQS1G9BXRaWjEPcSXtD55yN/GsKcCtN0sKOXwZtuf+8mVmNgOcVTYRZlbbd0WB+9tJ+UeaQ7EeMN5JO8IxMqVFY71XO+MH/ZsC239QAVBtgWAIg+TT9TtkIQ/tuWX3yrdGckdjCSxLAvYU+u04ikKMO/oAikxsafwmQv2MXOwCmta35mJy+It6ARK32BUOUr0Q9r2mTJ0OCfEKE+K+opglCS5x/HY2io5SafA1jbAZTK8x4HR4jyyKfxmUug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=duyaxEWUuBQMCf7V0ViV7/HZ4pMFoVS5hnylXAaFuu8=;
+ b=ep5pykqDVCkDRRr+IFRKDqL5qSPd1FxNu8BePShSuf3roqAN8g4Jb6FVS7p0JDDIe81NRs3ExN3chTsMFrGWAxOsjeMatvqpfPThgbhcC05B16FyE5fgZMJlscr4FjrQxH0VhEcYBF88b2pI4myi1LDWeXHmITrdkFoFyJClLz0=
+Received: from VI1PR04MB5040.eurprd04.prod.outlook.com (20.177.52.24) by
+ VI1PR04MB6926.eurprd04.prod.outlook.com (52.133.245.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.19; Thu, 26 Mar 2020 04:41:07 +0000
+Received: from VI1PR04MB5040.eurprd04.prod.outlook.com
+ ([fe80::154e:421d:dd21:3fc3]) by VI1PR04MB5040.eurprd04.prod.outlook.com
+ ([fe80::154e:421d:dd21:3fc3%5]) with mapi id 15.20.2835.023; Thu, 26 Mar 2020
+ 04:41:07 +0000
+From:   BOUGH CHEN <haibo.chen@nxp.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ludovic Barre <ludovic.barre@st.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+Subject: RE: [PATCH 0/2] amba/platform: Initialize dma_parms at the bus level
+Thread-Topic: [PATCH 0/2] amba/platform: Initialize dma_parms at the bus level
+Thread-Index: AQHWAplYl7UuTU7KbUCxzHoPeZdbk6haSTvA
+Date:   Thu, 26 Mar 2020 04:41:07 +0000
+Message-ID: <VI1PR04MB504097B40CE0B804FA60D67A90CF0@VI1PR04MB5040.eurprd04.prod.outlook.com>
+References: <20200325113407.26996-1-ulf.hansson@linaro.org>
+In-Reply-To: <20200325113407.26996-1-ulf.hansson@linaro.org>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=haibo.chen@nxp.com; 
+x-originating-ip: [223.106.11.120]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a12ba95b-b9e4-43ab-4fcc-08d7d13fe66b
+x-ms-traffictypediagnostic: VI1PR04MB6926:
+x-microsoft-antispam-prvs: <VI1PR04MB6926505AA638966CCD55190190CF0@VI1PR04MB6926.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0354B4BED2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(376002)(39850400004)(396003)(366004)(26005)(478600001)(316002)(7696005)(186003)(81156014)(81166006)(8936002)(8676002)(2906002)(64756008)(66556008)(7416002)(66476007)(76116006)(66446008)(66946007)(33656002)(55016002)(71200400001)(4326008)(5660300002)(9686003)(86362001)(52536014)(54906003)(110136005)(6506007)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6926;H:VI1PR04MB5040.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qoySdFAHHRD+gA0gSqn9OisgHbeQVnOmrEAz5amFbq9BRP5xxYmAbkNAZdFWseukHJzS8mXvWu/3DLRKowW1SeBphSMXd8Ii3Jzb027wXGmeWyXx7r4aLsGQAzpS0ppWbZ9aTMKO8MrwCM6PB7zK641sbB2i5JEZQVrnyyZzy93XHpWgK4nwNGcM7gCB//mIf99OvThrvBdzQeeVPGCYMXhS2j0Xi0HJbMtdtdtw00eb+NVU7L9r392ItG4ngtpupGFk9nHdTkfpTbpEFjWQVCcP5KJYGJ0Y4VLG9xQAJ25R+QzPneuJ3FyP2eWae3DgMLJ4WGUeiQNxq6ehQw7LGpSuCuYEwV6Ru9CaGZ/D8bnm/CrziLKibe1QzPELQalh8KPurCe7jdyPd6MOR403MhL4qCLnynwBzWaxTIrgg+lucNF4FppMwjoV+WjYT6Z6
+x-ms-exchange-antispam-messagedata: ZtTndVysOtTQDU/OfI8EUtVTonxXE8n8pnIRUlIWhqeh3ZNCjLBOXuFVKG0d9whtQtKiMtUGzcoiEEblZFeSKLpGzNajrdugDwX7R/JxyeF2kaaGtGuf4mXm0dmSbZw6EDgNUyZGleIVffVtXeoN2A==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200318151427.GA24538@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a12ba95b-b9e4-43ab-4fcc-08d7d13fe66b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2020 04:41:07.3662
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: c4OkTy6KnQo1Fj0R931MQegH+4WLgTAGL31jVbMSRxc9x/OjqEz6CUXw/0tmw707/1EMyWEb+lyzisuIN4w+ow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6926
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vinod,
-
-On Wed, Mar 18, 2020 at 05:14:27PM +0200, Laurent Pinchart wrote:
-> On Wed, Mar 11, 2020 at 05:52:48PM +0200, Laurent Pinchart wrote:
-> > On Wed, Mar 04, 2020 at 09:54:26PM +0530, Vinod Koul wrote:
-> >> On 04-03-20, 18:00, Laurent Pinchart wrote:
-> >>> On Wed, Mar 04, 2020 at 09:07:18PM +0530, Vinod Koul wrote:
-> >>>> On 04-03-20, 10:01, Laurent Pinchart wrote:
-> >>>>> On Wed, Mar 04, 2020 at 10:43:01AM +0530, Vinod Koul wrote:
-> >>>>>> On 03-03-20, 21:22, Laurent Pinchart wrote:
-> >>>>>>> On Tue, Mar 03, 2020 at 10:02:54AM +0530, Vinod Koul wrote:
-> >>>>>>>> On 02-03-20, 09:37, Laurent Pinchart wrote:
-> >>>>>>>>>> I would be more comfortable in calling an API to do so :)
-> >>>>>>>>>> The flow I am thinking is:
-> >>>>>>>>>> 
-> >>>>>>>>>> - prep cyclic1 txn
-> >>>>>>>>>> - submit cyclic1 txn
-> >>>>>>>>>> - call issue_pending() (cyclic one starts)
-> >>>>>>>>>> 
-> >>>>>>>>>> - prep cyclic2 txn
-> >>>>>>>>>> - submit cyclic2 txn
-> >>>>>>>>>> - signal_cyclic1_txn aka terminate_cookie()
-> >>>>>>>>>> - cyclic1 completes, switch to cyclic2 (dmaengine driver)
-> >>>>>>>>>> - get callback for cyclic1 (optional)
-> >>>>>>>>>> 
-> >>>>>>>>>> To check if hw supports terminate_cookie() or not we can check if the
-> >>>>>>>>>> callback support is implemented
-> >>>>>>>>> 
-> >>>>>>>>> Two questions though:
-> >>>>>>>>> 
-> >>>>>>>>> - Where is .issue_pending() called for cyclic2 in your above sequence ?
-> >>>>>>>>>   Surely it should be called somewhere, as the DMA engine API requires
-> >>>>>>>>>   .issue_pending() to be called for a transfer to be executed, otherwise
-> >>>>>>>>>   it stays in the submitted but not pending queue.
-> >>>>>>>> 
-> >>>>>>>> Sorry missed that one, I would do that after submit cyclic2 txn step and
-> >>>>>>>> then signal signal_cyclic1_txn termination
-> >>>>>>> 
-> >>>>>>> OK, that matches my understanding, good :-)
-> >>>>>>> 
-> >>>>>>>>> - With the introduction of a new .terminate_cookie() operation, we need
-> >>>>>>>>>   to specify that operation for all transfer types. What's its
-> >>>>>>>> 
-> >>>>>>>> Correct
-> >>>>>>>> 
-> >>>>>>>>>   envisioned semantics for non-cyclic transfers ? And how do DMA engine
-> >>>>>>>>>   drivers report that they support .terminate_cookie() for cyclic
-> >>>>>>>>>   transfers but not for other transfer types (the counterpart of
-> >>>>>>>>>   reporting, in my proposition, that .issue_pending() isn't supported
-> >>>>>>>>>   replace the current cyclic transfer) ?
-> >>>>>>>> 
-> >>>>>>>> Typically for dmaengine controller cyclic is *not* a special mode, only
-> >>>>>>>> change is that a list provided to controller is circular.
-> >>>>>>> 
-> >>>>>>> I don't agree with this. For cyclic transfers to be replaceable in a
-> >>>>>>> clean way, the feature must be specifically implemented at the hardware
-> >>>>>>> level. A DMA engine that supports chaining transfers with an explicit
-> >>>>>>> way to override that chaining, and without the logic to report if the
-> >>>>>>> inherent race was lost or not, really can't support this API.
-> >>>>>> 
-> >>>>>> Well chaining is a typical feature in dmaengine and making last chain
-> >>>>>> point to first makes it circular. I have seen couple of engines and this
-> >>>>>> was the implementation in the hardware.
-> >>>>>> 
-> >>>>>> There can exist special hardware for this purposes as well, but the
-> >>>>>> point is that the cyclic can be treated as circular list.
-> >>>>>> 
-> >>>>>>> Furthemore, for non-cyclic transfers, what would .terminate_cookie() do
-> >>>>>>> ? I need it to be defined as terminating the current transfer when it
-> >>>>>>> ends for the cyclic case, not terminating it immediately. All non-cyclic
-> >>>>>>> transfers terminate by themselves when they end, so what would this new
-> >>>>>>> operation do ?
-> >>>>>> 
-> >>>>>> I would use it for two purposes, cancelling txn but at the end of
-> >>>>>> current txn. I have couple of usages where this would be helpful.
-> >>>>> 
-> >>>>> I fail to see how that would help. Non-cyclic transfers always stop at
-> >>>>> the end of the transfer. "Cancelling txn but at the end of current txn"
-> >>>>> is what DMA engine drivers already do if you call .terminate_cookie() on
-> >>>>> the ongoing transfer. It would thus be a no-op.
-> >>>> 
-> >>>> Well that actually depends on the hardware, some of them support abort
-> >>>> so people cancel it (terminate_all approach atm)
-> >>> 
-> >>> In that case it's not terminating at the end of the current transfer,
-> >>> but terminating immediately (a.k.a. aborting), right ? Cancelling at the
-> >>> end of the current transfer still seems to be a no-op to me for
-> >>> non-cyclic transfers, as that's what they do on their own already.
-> >> 
-> >> Correct, it is abort for current txn.
-> >> 
-> >>>>>> Second in error handling where some engines do not support
-> >>>>>> aborting (unless we reset the whole controller)
-> >>>>> 
-> >>>>> Could you explain that one ? I'm not sure to understand it.
-> >>>> 
-> >>>> So I have dma to a slow peripheral and it is stuck for some reason. I
-> >>>> want to abort the cookie and let subsequent ones runs (btw this is for
-> >>>> non cyclic case), so I would use that here. Today we terminate_all and
-> >>>> then resubmit...
-> >>> 
-> >>> That's also for immediate abort, right ?
-> >> 
-> >> Right
-> >> 
-> >>> For this to work properly we need very accurate residue reporting, as
-> >>> the client will usually need to know exactly what has been transferred.
-> >>> The device would need to support DMA_RESIDUE_GRANULARITY_BURST when
-> >>> aborting an ongoing transfer. What hardware supports this ?
-> >> 
-> >>  git grep DMA_RESIDUE_GRANULARITY_BURST drivers/dma/ |wc -l
-> >> 27
-> >> 
-> >> So it seems many do support the burst reporting.
-> > 
-> > Yes, but not all of those may support aborting a transfer *and*
-> > reporting the exact residue of cancelled transfers. We need both to
-> > implement your proposal.
-> > 
-> >>>>>> But yes the .terminate_cookie() semantics should indicate if the
-> >>>>>> termination should be immediate or end of current txn. I see people
-> >>>>>> using it for both.
-> >>>>> 
-> >>>>> Immediate termination is *not* something I'll implement as I have no
-> >>>>> good way to test that semantics. I assume you would be fine with leaving
-> >>>>> that for later, when someone will need it ?
-> >>>> 
-> >>>> Sure, if you have hw to support please test. If not, you will not
-> >>>> implement that.
-> >>>> 
-> >>>> The point is that API should support it and people can add support in
-> >>>> the controllers and test :)
-> >>> 
-> >>> I still think this is a different API. We'll have
-> >>> 
-> >>> 1. Existing .issue_pending(), queueing the next transfer for non-cyclic
-> >>>    cases, and being a no-op for cyclic cases.
-> >>> 2. New .terminate_cookie(AT_END_OF_TRANSFER), being a no-op for
-> >>>    non-cyclic cases, and moving to the next transfer for cyclic cases.
-> >>> 3. New .terminate_cookie(ABORT_IMMEDIATELY), applicable to both cyclic
-> >>>    and non-cyclic cases.
-> >>> 
-> >>> 3. is an API I don't need, and can't easily test. I agree that it can
-> >>> have use cases (provided the DMA device can abort an ongoing transfer
-> >>> *and* still support DMA_RESIDUE_GRANULARITY_BURST in that case).
-> >>> 
-> >>> I'm troubled by my inability to convince you that 1. and 2. are really
-> >>> the same, with 1. addressing the non-cyclic case and 2. addressing the
-> >>> cyclic case :-) This is why I think they should both be implemeted using
-> >>> .issue_pending() (no other option for 1., that's what it uses today).
-> >>> This wouldn't prevent implementing 3. with a new .terminate_cookie()
-> >>> operation, that wouldn't need to take a flag as it would always operate
-> >>> in ABORT_IMMEDIATELY mode. There would also be no need to report a new
-> >>> capability for 3., as the presence of the .terminate_cookie() handler
-> >>> would be enough to tell clients that the API is supported. Only a new
-> >>> capability for 2. would be needed.
-> >> 
-> >> Well I agree 1 & 2 seem similar but I would like to define the behaviour
-> >> not dependent on the txn being cyclic or not. That is my concern and
-> >> hence the idea that:
-> >> 
-> >> 1. .issue_pending() will push txn to pending_queue, you may have a case
-> >> where that is done only once (due to nature of txn), but no other
-> >> implication
-> >> 
-> >> 2. .terminate_cookie(EOT) will abort the transfer at the end. Maybe not
-> >> used for cyclic but irrespective of that, the behaviour would be abort
-> >> at end of cyclic
-> > 
-> > Did you mean "maybe not used for non-cyclic" ?
-> > 
-> >> 3. .terminate_cookie(IMMEDIATE) will abort immediately. If there is
-> >> anything in pending_queue that will get pushed to hardware.
-> >> 
-> >> 4. Cyclic by nature never completes
-> >>    - as a consequence needs to be stopped by terminate_all/terminate_cookie
-> >> 
-> >> Does these rules make sense :)
-> > 
-> > It's a set of rules that I think can handle my use case, but I still
-> > believe my proposal based on just .issue_pending() would be simpler, in
-> > line with the existing API concepts, and wouldn't preclude the addition
-> > of .terminate_cookie(IMMEDIATE) at a later point. It's your call though,
-> > especially if you provide the implementation :-) When do you think you
-> > will be able to do so ?
-> 
-> Gentle ping :-)
-
-Any update ?
-
-> >>>>>> And with this I think it would make sense to also add this to
-> >>>>>> capabilities :)
-> >>>>> 
-> >>>>> I'll repeat the comment I made to Peter: you want me to implement a
-> >>>>> feature that you think would be useful, but is completely unrelated to
-> >>>>> my use case, while there's a more natural way to handle my issue with
-> >>>>> the current API, without precluding in any way the addition of your new
-> >>>>> feature in the future. Not fair.
-> >>>> 
-> >>>> So from API design pov, I would like this to support both the features.
-> >>>> This helps us to not rework the API again for the immediate abort.
-> >>>> 
-> >>>> I am not expecting this to be implemented by you if your hw doesn't
-> >>>> support it. The core changes are pretty minimal and callback in the
-> >>>> driver is the one which does the job and yours wont do this
-> >>> 
-> >>> Xilinx DMA drivers don't support DMA_RESIDUE_GRANULARITY_BURST so I
-> >>> can't test this indeed.
-> >> 
-> >> Sure I understand that! Am sure folks will respond to CFT and I guess
-> >> Peter will also be interested in testing.
-> > 
-> > s/testing/implementing it/ :-)
-> > 
-> >>>>>>>> So, the .terminate_cookie() should be a feature for all type of txn's.
-> >>>>>>>> If for some reason (dont discount what hw designers can do) a controller
-> >>>>>>>> supports this for some specific type(s), then they should return
-> >>>>>>>> -ENOTSUPP for cookies that do not support and let the caller know.
-> >>>>>>> 
-> >>>>>>> But then the caller can't know ahead of time, it will only find out when
-> >>>>>>> it's too late, and can't decide not to use the DMA engine if it doesn't
-> >>>>>>> support the feature. I don't think that's a very good option.
-> >>>>>> 
-> >>>>>> Agreed so lets go with adding these in caps.
-> >>>>> 
-> >>>>> So if there's a need for caps anyway, why not a cap that marks
-> >>>>> .issue_pending() as moving from the current cyclic transfer to the next
-> >>>>> one ? 
-> >>>> 
-> >>>> Is the overhead really too much on that :) If you like I can send the
-> >>>> core patches and you would need to implement the driver side?
-> >>> 
-> >>> We can try that as a compromise. One of main concerns with developing
-> >>> the core patches myself is that the .terminate_cookie() API still seems
-> >>> ill-defined to me, so it would be much more efficient if you translate
-> >> 
-> >> yeah lets take a stab at defining this and see if we come up with
-> >> something meaningful
-> >> 
-> >>> the idea you have in your idea into code than trying to communicate it
-> >>> to me in all details (one of the grey areas is what should
-> >>> .terminate_cookie() do if the cookie passed to the function corresponds
-> >>> to an already terminated or, more tricky from a completion callback
-> >>> point of view, an issued but not-yet-started transfer, or also a
-> >>> submitted but not issued transfer). If you implement the core part, then
-> >>> that problem will go away.
-> >>> 
-> >>> How about the implementation in virt-dma.[ch] by the way ?
-> >> 
-> >> It needs to be comprehended and tested as well.. since these are simple
-> >> callbacks to driver, we should not need huge changes here (i need to
-> >> double check though)
-
--- 
-Regards,
-
-Laurent Pinchart
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBVbGYgSGFuc3NvbiA8dWxmLmhh
+bnNzb25AbGluYXJvLm9yZz4NCj4gU2VudDogMjAyMMTqM9TCMjXI1SAxOTozNA0KPiBUbzogR3Jl
+ZyBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz47IFJhZmFlbCBKIC4g
+V3lzb2NraQ0KPiA8cmFmYWVsQGtlcm5lbC5vcmc+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
+b3JnDQo+IENjOiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPjsgQ2hyaXN0b3BoIEhlbGx3
+aWcgPGhjaEBsc3QuZGU+Ow0KPiBSdXNzZWxsIEtpbmcgPGxpbnV4QGFybWxpbnV4Lm9yZy51az47
+IExpbnVzIFdhbGxlaWoNCj4gPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz47IFZpbm9kIEtvdWwg
+PHZrb3VsQGtlcm5lbC5vcmc+OyBCT1VHSCBDSEVODQo+IDxoYWliby5jaGVuQG54cC5jb20+OyBM
+dWRvdmljIEJhcnJlIDxsdWRvdmljLmJhcnJlQHN0LmNvbT47DQo+IGxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZzsgZG1hZW5naW5lQHZnZXIua2VybmVsLm9yZzsgVWxmDQo+IEhh
+bnNzb24gPHVsZi5oYW5zc29uQGxpbmFyby5vcmc+DQo+IFN1YmplY3Q6IFtQQVRDSCAwLzJdIGFt
+YmEvcGxhdGZvcm06IEluaXRpYWxpemUgZG1hX3Bhcm1zIGF0IHRoZSBidXMgbGV2ZWwNCj4gDQo+
+IEl0J3MgY3VycmVudGx5IHRoZSBhbWJhL3BsYXRmb3JtIGRyaXZlcidzIHJlc3BvbnNpYmlsaXR5
+IHRvIGluaXRpYWxpemUgdGhlIHBvaW50ZXIsDQo+IGRtYV9wYXJtcywgZm9yIGl0cyBjb3JyZXNw
+b25kaW5nIHN0cnVjdCBkZXZpY2UuIFRoZSBiZW5lZml0IHdpdGggdGhpcw0KPiBhcHByb2FjaCBh
+bGxvd3MgdXMgdG8gYXZvaWQgdGhlIGluaXRpYWxpemF0aW9uIGFuZCB0byBub3Qgd2FzdGUgbWVt
+b3J5IGZvcg0KPiB0aGUgc3RydWN0IGRldmljZV9kbWFfcGFyYW1ldGVycywgYXMgdGhpcyBjYW4g
+YmUgZGVjaWRlZCBvbiBhIGNhc2UgYnkgY2FzZQ0KPiBiYXNpcy4NCj4gDQo+IEhvd2V2ZXIsIGl0
+IGhhcyB0dXJuZWQgb3V0IHRoYXQgdGhpcyBhcHByb2FjaCBpcyBub3QgdmVyeSBwcmFjdGljYWwu
+IE5vdCBvbmx5DQo+IGRvZXMgaXQgbGVhZCB0byBvcGVuIGNvZGluZywgYnV0IGFsc28gdG8gcmVh
+bCBlcnJvcnMuIEluIHByaW5jaXBsZSBjYWxsZXJzIG9mDQo+IGRtYV9zZXRfbWF4X3NlZ19zaXpl
+KCkgZG9lc24ndCBjaGVjayB0aGUgZXJyb3IgY29kZSwgYnV0IGp1c3QgYXNzdW1lcyBpdA0KPiBz
+dWNjZWVkcy4NCj4gDQo+IEZvciB0aGVzZSByZWFzb25zLCB0aGlzIHNlcmllcyBpbml0aWFsaXpl
+cyB0aGUgZG1hX3Bhcm1zIGZyb20gdGhlDQo+IGFtYmEvcGxhdGZvcm0gYnVzIGF0IHRoZSBkZXZp
+Y2UgcmVnaXN0cmF0aW9uIHBvaW50LiBUaGlzIGFsc28gZm9sbG93cyB0aGUNCj4gd2F5IHRoZSBQ
+Q0kgZGV2aWNlcyBhcmUgYmVpbmcgbWFuYWdlZCwgc2VlIHBjaV9kZXZpY2VfYWRkKCkuDQo+IA0K
+PiBJZiBpdCB0dXJucyBvdXQgdGhhdCB0aGlzIGlzIGFuIGFjY2VwdGFibGUgc29sdXRpb24sIHdl
+IHByb2JhYmx5IGFsc28gd2FudCB0aGUNCj4gY2hhbmdlcyBmb3Igc3RhYmxlLCBidXQgSSBhbSBu
+b3Qgc3VyZSBpZiBpdCBhcHBsaWVzIHdpdGhvdXQgY29uZmxpY3RzLg0KPiANCj4gVGhlIHNlcmll
+cyBpcyBiYXNlZCBvbiB2NS42LXJjNy4NCj4gDQoNCkhpIFVsZiwNCg0KU2luY2UgaS5NWFFNIFNN
+TVUgcmVsYXRlZCBjb2RlIHN0aWxsIG5vdCB1cHN0cmVhbSB5ZXQsIHNvIEkgYXBwbHkgeW91ciBw
+YXRjaGVzIG9uIG91ciBpbnRlcm5hbCBMaW51eCBicmFuY2ggYmFzZWQgb24gdjUuNC4yNCwgYW5k
+IGZpbmQgaXQgZG8gbm90IHdvcmsgb24gbXkgc2lkZS4gTWF5YmUgZm9yIHBsYXRmb3JtIGNvcmUg
+ZHJpdmVycywgdGhlcmUgaXMgYSBnYXAgYmV0d2VlbiB2NS40LjI0IGFuZCB2NS42LXJjNyB3aGlj
+aCBoYXMgdGhlIGltcGFjdC4NCkkgd2lsbCB0cnkgdG8gcHV0IG91ciBTTU1VIHJlbGF0ZWQgY29k
+ZSBpbnRvIHY1LjYtcmM3LCB0aGVuIGRvIHRoZSB0ZXN0IGFnYWluLg0KDQoNCkJlc3QgUmVnYXJk
+cw0KSGFpYm8gQ2hlbg0KDQo+IEtpbmQgcmVnYXJkcw0KPiBVbGYgSGFuc3Nvbg0KPiANCj4gVWxm
+IEhhbnNzb24gKDIpOg0KPiAgIGRyaXZlciBjb3JlOiBwbGF0Zm9ybTogSW5pdGlhbGl6ZSBkbWFf
+cGFybXMgZm9yIHBsYXRmb3JtIGRldmljZXMNCj4gICBhbWJhOiBJbml0aWFsaXplIGRtYV9wYXJt
+cyBmb3IgYW1iYSBkZXZpY2VzDQo+IA0KPiAgZHJpdmVycy9hbWJhL2J1cy5jICAgICAgICAgICAg
+ICB8IDIgKysNCj4gIGRyaXZlcnMvYmFzZS9wbGF0Zm9ybS5jICAgICAgICAgfCAxICsNCj4gIGlu
+Y2x1ZGUvbGludXgvYW1iYS9idXMuaCAgICAgICAgfCAxICsNCj4gIGluY2x1ZGUvbGludXgvcGxh
+dGZvcm1fZGV2aWNlLmggfCAxICsNCj4gIDQgZmlsZXMgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCsp
+DQo+IA0KPiAtLQ0KPiAyLjIwLjENCg0K

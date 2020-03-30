@@ -2,29 +2,29 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0496319866B
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Mar 2020 23:26:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88922198670
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Mar 2020 23:27:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbgC3V0u (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 30 Mar 2020 17:26:50 -0400
-Received: from mga02.intel.com ([134.134.136.20]:41438 "EHLO mga02.intel.com"
+        id S1729013AbgC3V04 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 30 Mar 2020 17:26:56 -0400
+Received: from mga07.intel.com ([134.134.136.100]:39982 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728407AbgC3V0u (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 30 Mar 2020 17:26:50 -0400
-IronPort-SDR: dpo5ufSHwsMQXSGBtsZvtd37b9JT4QYhf3/Au0Olmy6Ym2DOfshmcakjDEhWrAUN5kbLCoT49X
- aVlpH8ALMEWA==
+        id S1728407AbgC3V04 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 30 Mar 2020 17:26:56 -0400
+IronPort-SDR: AxGQcCycjVMPAOYhExXm1WELb2j8UrCyZqPFQj2BY1Vx09GbGpf5yQzpxkAGFDm635qD1wu1aJ
+ Kx5m6hV55WQA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 14:26:49 -0700
-IronPort-SDR: 7OseBlbYnckWzzWxFUuPK5S1UVxpiaR16v9WTpXluCfZ/N6FX4iRn4zmNTuwO56cl1TQnmZ3E/
- 05dztNm0fOGA==
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2020 14:26:55 -0700
+IronPort-SDR: e3npKXjUGNbV0xQjGfxiR7Q1QZXUiYdD5Mrbh3A1G8EyuVlEoc9ou3y0H+qSgi55PYYMwv8x6L
+ p9cJeM3cwhsw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,325,1580803200"; 
-   d="scan'208";a="267064542"
+   d="scan'208";a="327870796"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga002.jf.intel.com with ESMTP; 30 Mar 2020 14:26:48 -0700
-Subject: [PATCH 0/6] Add shared workqueue support for idxd driver
+  by orsmga001.jf.intel.com with ESMTP; 30 Mar 2020 14:26:55 -0700
+Subject: [PATCH 1/6] x86/asm: add iosubmit_cmds512_sync() based on enqcmds
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
         bp@alien8.de, hpa@zytor.com, bhelgaas@google.com,
@@ -34,125 +34,82 @@ Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
         ashok.raj@intel.com, fenghua.yu@intel.com,
         linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
         sanjay.k.kumar@intel.com
-Date:   Mon, 30 Mar 2020 14:26:48 -0700
-Message-ID: <158560290392.6059.16921214463585182874.stgit@djiang5-desk3.ch.intel.com>
+Date:   Mon, 30 Mar 2020 14:26:54 -0700
+Message-ID: <158560361480.6059.301907463786988479.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <158560290392.6059.16921214463585182874.stgit@djiang5-desk3.ch.intel.com>
+References: <158560290392.6059.16921214463585182874.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/unknown-version
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The patch series breaks down into following parts:
-Patch 1: x86 arch, add a new I/O accessor based on ENQCMDS
-Patches 2,3: PCI
-Patch 4: device
-Patches 5,6: idxd driver shared WQ support
+ENQCMDS is a non-posted instruction introduced to submit 64B descriptors to
+accelerator devices. The CPU instruction will set 1 for the zero flag if
+the device rejects the submission. An 1 is also set if the destination is
+not MMIO and/or the device does not respond. iosubmit_cmds512_sync() is
+introduced to support this CPU instruction and allow multiple descriptors
+to be copied to the same mmio location. This allows the caller to issue
+multiple descriptors that are virtually contiguous in memory if desired.
 
-Driver stage 1 postings for context: [1]
+ENQCMDS requires the destination address to be 64-byte aligned. No
+alignment restriction is enforced for source operand.
 
-This patch series is dependent on Fenghua's "Tag application address space
-for devices" patch series for the ENQCMD CPU command enumeration and the
-PASID MSR support. [2]
+See Intel Software Developer’s Manual for more information on the
+instruction.
 
-This patch series introduces support for shared workqueue (swq) for the
-idxd driver that is supported by the Intel Data Streaming Accelerator (DSA). In
-the stage 1 patch series posting, only dedicated workqueues (dwq) are
-supported. Another major feature being introduced is Shared Virtual Memory (SVM)
-support.
-
-In this patch series, we introduce the iosubmit_cmds512_sync() command.
-This function enables the calling of the new ENQCMDS CPU instruction on the
-Intel CPU. ENQCMDS is a ring0 CPU instruction that performs similar function as
-the ENQCMD. The CPUID capability bit will enumerate ENQCMD is supported,
-which implies that ENQCMDS is supported as well. The instruction creates a
-non-posted write command on the PCIe bus and atomically writes all 64 bytes of a
-command descriptor to the accelerator device's special BAR address. The device can
-reject the command by using the zero flag. See Intel SDM [2] for additional
-details. The ENQCMDS instruction is used for submitting command descriptors
-to the swq. With this instruction, multiple "users" in the kernel can submit
-to the swq with the synchronization done by the hardware. When the swq is
-full, a 1 will be returned indicate the wq being busy. This is different than a
-dwq where the command will be silently dropped without response. The dwq
-requires the software to track the queue depth of a dwq.
-
-The attribute of cmdmem device capability is being introduced to the PCI
-device with ongoing discussion of adding the ability to enumerate PCIe capability
-that provides the support of such device MMIO regions. A
-device_supports_cmdmem(struct device *) helper function is introduced to
-initially support devices that has this capability. Since the standardized
-way to detect such capability is not available yet, a PCI quirk is defined
-for the DSA device.
-
-ENQCMDS moves a command descriptor (64 bytes) from memory to specific MMIO
-regions on a device that supports this capability. Like MMIO, the "handle"
-for these queues is just a pointer to the address of the queue in MMIO memory.
-These specific MMIO regions on the device are called portals. To support
-these portals, wrappers functions are introduced for ioremap() to make it clear
-that the special MMIO regions that expects a response from a non-posted PCI
-write are being ioremaped.
-
-The support of SVM is done through Process Address Space ID (PASID). With
-SVM support, the DMA descriptors can be programmed with virtual address for
-source and destination addresses. When a page fault is encountered, the device can
-fault in the memory page needed to complete the operation through the
-IOMMU.  This makes calling the dma_(un)map_* API calls unnecessary which reduces
-some software latencies. Both swq and dwq can support SVM.
-
-Swq enabling has been added to the idxd char device driver to allow
-exposure of the swq to the user space. User apps can call ENQCMD to submit
-descriptors directly to a swq after calling mmap() on the portal. ENQCMD is
-similar to the ENQCMDS instruction, but is only available to ring3
-(application) code. The primary difference is that ENQCMD obtains the PASID for the
-request from the IA32_PASID MSR to ensure that all virtual addresses specified by
-the user are interpreted in the address space of the process that executed
-ENQCMD. With the SVM enabling, the user no longer has to pin the memory and program
-IO Virtual Address (IOVA) as source and address. Virtual addresses can be
-programmed in the command descriptor and be submitted to the device. The
-SVM handling is done through the usage of PASID. For more detailed explanation
-on how ENQCMD and PASID interaction works please refer to Fenghua's submission
-cover letter [6]. Multiple user apps can easily share a swq with the ENQCMD
-instruction without needing software sychronization.
-
-[1]: https://lore.kernel.org/lkml/157965011794.73301.15960052071729101309.stgit@djiang5-desk3.ch.intel.com/
-[2]: https://lore.kernel.org/lkml/1585596788-193989-1-git-send-email-fenghua.yu@intel.com/
-[3]: https://software.intel.com/en-us/articles/intel-sdm
-[4]: https://software.intel.com/en-us/download/intel-scalable-io-virtualization-technical-specification
-[5]: https://software.intel.com/en-us/download/intel-data-streaming-accelerator-preliminary-architecture-specification
-[6]: https://01.org/blogs/2019/introducing-intel-data-streaming-accelerator
-[7]: https://intel.github.io/idxd/
-[8]: https://github.com/intel/idxd-driver idxd-stage2
-
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
+ arch/x86/include/asm/io.h |   37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-Dave Jiang (6):
-      x86/asm: add iosubmit_cmds512_sync() based on enqcmds
-      device/pci: add cmdmem cap to pci_dev
-      pci: add PCI quirk cmdmem fixup for Intel DSA device
-      device: add cmdmem support for MMIO address
-      dmaengine: idxd: add shared workqueue support
-      dmaengine: idxd: add ABI documentation for shared wq
+diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
+index e1aa17a468a8..349e97766c02 100644
+--- a/arch/x86/include/asm/io.h
++++ b/arch/x86/include/asm/io.h
+@@ -435,4 +435,41 @@ static inline void iosubmit_cmds512(void __iomem *__dst, const void *src,
+ 	}
+ }
+ 
++/**
++ * iosubmit_cmds512_sync - copy data to single MMIO location, in 512-bit units
++ * @dst: destination, in MMIO space (must be 512-bit aligned)
++ * @src: source
++ * @count: number of 512 bits quantities to submit
++ *
++ * Submit data from kernel space to MMIO space, in units of 512 bits at a
++ * time. Order of access is not guaranteed, nor is a memory barrier
++ * performed afterwards. The command returns the remaining count that is not
++ * successful on failure. 0 is returned if successful.
++ *
++ * Warning: Do not use this helper unless your driver has checked that the CPU
++ * instruction is supported on the platform.
++ */
++static inline size_t iosubmit_cmds512_sync(void __iomem *dst, const void *src,
++					   size_t count)
++{
++	const u8 *from = src;
++	const u8 *end = from + count * 64;
++	size_t remain = count;
++	bool retry;
++
++	while (from < end) {
++		/* ENQCMDS [rdx], rax */
++		asm volatile(".byte 0xf3, 0x0f, 0x38, 0xf8, 0x02, 0x66, 0x90\t\n"
++			     "setz %0\t\n"
++			     : "=r"(retry) : "a" (dst), "d" (from));
++		if (retry)
++			return remain;
++
++		from += 64;
++		remain--;
++	}
++
++	return 0;
++}
++
+ #endif /* _ASM_X86_IO_H */
 
-
- Documentation/ABI/stable/sysfs-driver-dma-idxd |   14 ++
- arch/x86/include/asm/io.h                      |   37 ++++++
- drivers/base/core.c                            |   13 ++
- drivers/dma/Kconfig                            |    4 +
- drivers/dma/idxd/cdev.c                        |   46 +++++++-
- drivers/dma/idxd/device.c                      |  122 ++++++++++++++++++--
- drivers/dma/idxd/dma.c                         |    2 
- drivers/dma/idxd/idxd.h                        |   13 ++
- drivers/dma/idxd/init.c                        |   92 ++++++++++++---
- drivers/dma/idxd/irq.c                         |  147 ++++++++++++++++++++++--
- drivers/dma/idxd/submit.c                      |  119 ++++++++++++++-----
- drivers/dma/idxd/sysfs.c                       |  133 ++++++++++++++++++++++
- drivers/pci/quirks.c                           |   11 ++
- include/linux/device.h                         |    2 
- include/linux/io.h                             |    4 +
- include/linux/pci.h                            |    1 
- lib/devres.c                                   |   36 ++++++
- 17 files changed, 721 insertions(+), 75 deletions(-)
-
---

@@ -2,67 +2,91 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ECB371973BB
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Mar 2020 07:13:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7629A1974C2
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Mar 2020 08:59:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728543AbgC3FNR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 30 Mar 2020 01:13:17 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:44367 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728534AbgC3FNQ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 30 Mar 2020 01:13:16 -0400
-Received: by mail-qk1-f194.google.com with SMTP id j4so17698492qkc.11
-        for <dmaengine@vger.kernel.org>; Sun, 29 Mar 2020 22:13:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=82B0OONv9gwbZlPp43NzThDz2fRV+KRFwafOQ16joDw=;
-        b=OuZr19tlK0LCL/nKe3emolw5buR1zjvwpIrx3lUWAZXm8kkPDTnQBBSq83RmGvV/+9
-         Ozye6VmbcjHmslG9RanTEDL/07VmLUoPKI3tkNhK+vAIl1QFUNQdx3zITndDf1hj8nGJ
-         ThA2mCuCPXVL+QVD1wNDRSlY8piELRnRn12GnXMvpBSOjH/R/63WArysIz82m3LyWCmm
-         JwZ2RQ0yqHya9yutZXHB20GdAf7dUmkI3VtSejX3p0PxT8pLjEs87Oknfgx57g1yNIXQ
-         IUbCc8UXYrReBIAaAvc8EewzbesoHlIk2kCD6IeG0nfQlZ3YRgapa9B9MquIqJzfWm37
-         XZrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=82B0OONv9gwbZlPp43NzThDz2fRV+KRFwafOQ16joDw=;
-        b=VANw4cunKCwf317mOKNzRVaDgImXypVOPucGVzdeDRSN92cMDNLWGn37tmSn1Kxe1K
-         FhZ6+ViqoSkDxdvd9kk5icfxLKOVVPUcNwPkKiS85iLVQzs0YvMl9IVIyDcwrejwvZAr
-         TgJHysPgH+AvNwUqjxfvtaC4XC4zwhsR0E6dpqIVV/uz9N05N0saQ7P7HgTWLuKRFuEH
-         YPkIw3AW0RTwMk6u/wz7C+C+6i13U3xEvobJJPPk3LX1YGmrP4nZNWItpWU7qTRDChQc
-         98DkjhoBSOlMtcwiHr0jj/KeMriuTYDlbOsDxcj2ro9zM6fdZx0jSs/wYpqVT8AKq87h
-         Sy4w==
-X-Gm-Message-State: ANhLgQ0SjV6/Ekvs6iSMPZIynHAnZgGCL+e6HTHoa662mjjfFG7pIYOu
-        szmaZYCcpwNLh2pzJkVW+1HHpleBaxg/ndXeBq8=
-X-Google-Smtp-Source: ADFU+vtj/DFbxXodFiHfKGTLL0D2ACgeL+nxGGMCiUIE2Xsme+tK9zVQHPpMrntaRAFuqredkyBwQwwG+l9S//mWniA=
-X-Received: by 2002:a05:620a:401:: with SMTP id 1mr9731984qkp.465.1585545195174;
- Sun, 29 Mar 2020 22:13:15 -0700 (PDT)
+        id S1728957AbgC3G7f (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 30 Mar 2020 02:59:35 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37560 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728489AbgC3G7e (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 30 Mar 2020 02:59:34 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A0189230DE2128303A08;
+        Mon, 30 Mar 2020 14:59:15 +0800 (CST)
+Received: from [127.0.0.1] (10.173.223.234) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Mon, 30 Mar 2020
+ 14:59:09 +0800
+Subject: Re: [PATCH -next] dmaengine: hisilicon: Fix build error without
+ PCI_MSI
+To:     Zhou Wang <wangzhou1@hisilicon.com>, <dan.j.williams@intel.com>,
+        <vkoul@kernel.org>, <qiuzhenfa@hisilicon.com>
+References: <20200328114133.17560-1-yuehaibing@huawei.com>
+ <5E815BDD.8050908@hisilicon.com>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <16ccc33f-d394-b59a-b3ee-65488595580f@huawei.com>
+Date:   Mon, 30 Mar 2020 14:59:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Received: by 2002:ac8:3181:0:0:0:0:0 with HTTP; Sun, 29 Mar 2020 22:13:14
- -0700 (PDT)
-Reply-To: maryalice00.12@postribe.com
-From:   "maryalice - maryalice:" <maryalice00.06@gmail.com>
-Date:   Mon, 30 Mar 2020 03:13:14 -0200
-Message-ID: <CAJrXg5TRbPKbqUKS=Gn5kt28YpvsLNQA8ZR+OmVeUj_kaN3ovg@mail.gmail.com>
-Subject: Reply For More Details.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5E815BDD.8050908@hisilicon.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
--- 
-My dear,
+On 2020/3/30 10:39, Zhou Wang wrote:
+> On 2020/3/28 19:41, YueHaibing wrote:
+>> If PCI_MSI is not set, building fais:
+>>
+>> drivers/dma/hisi_dma.c: In function ‘hisi_dma_free_irq_vectors’:
+>> drivers/dma/hisi_dma.c:138:2: error: implicit declaration of function ‘pci_free_irq_vectors’;
+>>  did you mean ‘pci_alloc_irq_vectors’? [-Werror=implicit-function-declaration]
+>>   pci_free_irq_vectors(data);
+>>   ^~~~~~~~~~~~~~~~~~~~
+>>
+>> Make HISI_DMA depends on PCI_MSI to fix this.
+> 
+> In ARM64, it will appear this compile error if PCI disables.
+> How about adding depends on PCI && PCI_MSI here?
 
-I am Mrs Maryalice Williams, I want to send you donation of two
-million seven hundred thousand Dollars ($2.7M) for volunteer projects
-in your country due to my ill health that could not permit me. Kindly
-reply for more details, and also send me the following details, as per
-below, your full Name ..........,  Address...........,
-Age...............,  Occupation ...............
+PCI_MSI depends on PCI， while PCI is not set, PCI_MSI will never be set
 
-Remain blessed,
-Mrs. Maryalice Williams.
+so depends on PCI_MSI is enough.
+
+> 
+> Best,
+> Zhou
+> 
+>>
+>> Fixes: e9f08b65250d ("dmaengine: hisilicon: Add Kunpeng DMA engine support")
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>  drivers/dma/Kconfig | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+>> index 092483644315..023db6883d05 100644
+>> --- a/drivers/dma/Kconfig
+>> +++ b/drivers/dma/Kconfig
+>> @@ -241,7 +241,8 @@ config FSL_RAID
+>>  
+>>  config HISI_DMA
+>>  	tristate "HiSilicon DMA Engine support"
+>> -	depends on ARM64 || (COMPILE_TEST && PCI_MSI)
+>> +	depends on ARM64 || COMPILE_TEST
+>> +	depends on PCI_MSI
+>>  	select DMA_ENGINE
+>>  	select DMA_VIRTUAL_CHANNELS
+>>  	help
+>>
+> 
+> 
+> .
+> 
+

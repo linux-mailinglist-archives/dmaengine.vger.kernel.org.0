@@ -2,49 +2,45 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 77A30199D0D
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2020 19:38:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0397199D9C
+	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2020 20:02:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbgCaRif (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 31 Mar 2020 13:38:35 -0400
-Received: from mga14.intel.com ([192.55.52.115]:29500 "EHLO mga14.intel.com"
+        id S1726268AbgCaSCp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 31 Mar 2020 14:02:45 -0400
+Received: from mga06.intel.com ([134.134.136.31]:16127 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbgCaRif (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 31 Mar 2020 13:38:35 -0400
-IronPort-SDR: 7TFlakVTUL17VraFxIcpmdwQ4TklKa+3aiJz2MFnJt13hcNbOpVXMugtCS+rqjceN++0OoC9QC
- HeqpMITL6d8A==
+        id S1726199AbgCaSCo (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 31 Mar 2020 14:02:44 -0400
+IronPort-SDR: j2NZ3SlPxn625hqJet8G8+Vs3jyT3gZveo1kbHBzeVr1Sq3iAHkMkzORzP03etou3Uum/AALkx
+ TLEV/skRKVDw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 10:38:35 -0700
-IronPort-SDR: +80pqEqpZGnfcTG8qMjLqnQAe9s7PRwtT7bSfbMMZblRCRcgZ+2Vosn2js7RaCaBytTEQTG/iT
- sOl13PoC2gfg==
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 11:02:44 -0700
+IronPort-SDR: Xmx1u/O6AfpkZBrQjD1Mw4wxecKCMtKYwvOUKO7DlkvZwglVp87aDyPldtXFWEkyA6bcaalHGx
+ HGz90nJ1R8Yg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,328,1580803200"; 
-   d="scan'208";a="240199847"
+   d="scan'208";a="240205398"
 Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.251.20.204]) ([10.251.20.204])
-  by fmsmga007.fm.intel.com with ESMTP; 31 Mar 2020 10:38:32 -0700
-Subject: Re: [PATCH 2/6] device/pci: add cmdmem cap to pci_dev
-To:     Greg KH <gregkh@linuxfoundation.org>
+  by fmsmga007.fm.intel.com with ESMTP; 31 Mar 2020 11:02:42 -0700
+Subject: Re: [PATCH 3/6] pci: add PCI quirk cmdmem fixup for Intel DSA device
+To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, bhelgaas@google.com, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
+        bp@alien8.de, hpa@zytor.com, gregkh@linuxfoundation.org,
+        arnd@arndb.de, linux-kernel@vger.kernel.org, x86@kernel.org,
         dmaengine@vger.kernel.org, dan.j.williams@intel.com,
         ashok.raj@intel.com, fenghua.yu@intel.com,
         linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
         sanjay.k.kumar@intel.com
-References: <158560290392.6059.16921214463585182874.stgit@djiang5-desk3.ch.intel.com>
- <158560362090.6059.1762280705382158736.stgit@djiang5-desk3.ch.intel.com>
- <20200331100406.GB1204199@kroah.com>
- <00d8e780-105e-f552-daf0-9854f2e99a91@intel.com>
- <20200331172459.GA1841577@kroah.com>
+References: <20200331155906.GA191980@google.com>
 From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <2fb7ca3e-504a-19d7-2e7b-b34ecc481ffc@intel.com>
-Date:   Tue, 31 Mar 2020 10:38:31 -0700
+Message-ID: <03073d25-9351-5bc7-e971-8e21b82f122f@intel.com>
+Date:   Tue, 31 Mar 2020 11:02:41 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200331172459.GA1841577@kroah.com>
+In-Reply-To: <20200331155906.GA191980@google.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-GB
@@ -54,68 +50,65 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On 3/31/2020 10:24 AM, Greg KH wrote:
-> On Tue, Mar 31, 2020 at 10:07:07AM -0700, Dave Jiang wrote:
->> On 3/31/2020 3:04 AM, Greg KH wrote:
->>> On Mon, Mar 30, 2020 at 02:27:00PM -0700, Dave Jiang wrote:
->>>> Since the current accelerator devices do not have standard PCIe capability
->>>> enumeration for accepting ENQCMDS yet, for now an attribute of pdev->cmdmem has
->>>> been added to struct pci_dev.  Currently a PCI quirk must be used for the
->>>> devices that have such cap until the PCI cap is standardized. Add a helper
->>>> function to provide the check if a device supports the cmdmem capability.
->>>>
->>>> Such capability is expected to be added to PCIe device cap enumeration in
->>>> the future.
->>>>
->>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>> ---
->>>>    drivers/base/core.c    |   13 +++++++++++++
->>>>    include/linux/device.h |    2 ++
->>>>    include/linux/pci.h    |    1 +
->>>>    3 files changed, 16 insertions(+)
->>>>
->>>> diff --git a/drivers/base/core.c b/drivers/base/core.c
->>>> index dbb0f9130f42..cd9f5b040ed4 100644
->>>> --- a/drivers/base/core.c
->>>> +++ b/drivers/base/core.c
->>>> @@ -27,6 +27,7 @@
->>>>    #include <linux/netdevice.h>
->>>>    #include <linux/sched/signal.h>
->>>>    #include <linux/sysfs.h>
->>>> +#include <linux/pci.h>
->>>>    #include "base.h"
->>>>    #include "power/power.h"
->>>> @@ -3790,3 +3791,15 @@ int device_match_any(struct device *dev, const void *unused)
->>>>    	return 1;
->>>>    }
->>>>    EXPORT_SYMBOL_GPL(device_match_any);
->>>> +
->>>> +bool device_supports_cmdmem(struct device *dev)
->>>> +{
->>>> +	struct pci_dev *pdev;
->>>> +
->>>> +	if (!dev_is_pci(dev))
->>>> +		return false;
->>>> +
->>>> +	pdev = to_pci_dev(dev);
->>>> +	return pdev->cmdmem;
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(device_supports_cmdmem);
->>> Why would a pci-specific function like this be ok to have in the driver
->>> core?  Please keep it in the pci core code instead.
->> The original thought was to introduce a new arch level memory mapping
->> semantic.
-> Please do not.  Also, that's not what you are doing here from what I can
-> tell.
+On 3/31/2020 8:59 AM, Bjorn Helgaas wrote:
+> Take a look and make yours match (applies to other patches in the
+> series as well):
 >
->> If you feel this should be PCI exclusive, should we make the ioremap
->> routines for this memory type pci specific as well?
-> Why wouldn't it be?  Is this needed anywhere else?
+>    $ git log --oneline drivers/pci/quirks.c
+>    299bd044a6f3 ("PCI: Add ACS quirk for Zhaoxin Root/Downstream Ports")
+>    0325837c51cb ("PCI: Add ACS quirk for Zhaoxin multi-function devices")
+>    2880325bda8d ("PCI: Avoid ASMedia XHCI USB PME# from D0 defect")
+>    b88bf6c3b6ff ("PCI: Add boot interrupt quirk mechanism for Xeon chipsets")
+>    5e89cd303e3a ("PCI: Mark AMD Navi14 GPU rev 0xc5 ATS as broken")
+>    7b90dfc4873b ("PCI: Add DMA alias quirk for PLX PEX NTB")
+>    09298542cd89 ("PCI: Add nr_devfns parameter to pci_add_dma_alias()")
+>
+> There's no need to mention "PCI" twice.  Also no need for both "quirk"
+> and "fixup".  This is all in the interest of putting more information
+> in the small space of the subject line.
+Ok I'll fix up.
+>
+> On Mon, Mar 30, 2020 at 02:27:06PM -0700, Dave Jiang wrote:
+>> Since there is no standard way that defines a PCI device that receives
+>> descriptors or commands with synchronous write operations, add quirk to set
+>> cmdmem for the Intel accelerator device that supports it.
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>   drivers/pci/quirks.c |   11 +++++++++++
+>>   1 file changed, 11 insertions(+)
+>>
+>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>> index 29f473ebf20f..ba0572b9b9c8 100644
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>> @@ -5461,3 +5461,14 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+>>   DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
+>>   			      PCI_CLASS_DISPLAY_VGA, 8,
+>>   			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
+>> +
+>> +/*
+>> + * Until the PCI Sig defines a standard capaiblity check that indicates a
+>> + * device has cmdmem with synchronous write capability, we'll add a quirk
+>> + * for device that supports it.
+> s/PCI Sig/PCI-SIG/
+> s/capaiblity/capability/
+>
+> It's not clear why this would need to be in drivers/pci/quirks.c as
+> opposed to being in the driver itself.
 
-Ok I'll make this pci specific.
+That would make the driver to set the PCI device struct cap bit instead 
+of this being set on discovery right? And if the driver isn't loaded, 
+then the cap wouldn't be set. In the future if user space wants to 
+discover this information that may be an issue.
+
 
 
 >
-> thanks,
->
-> greg k-h
+>> + */
+>> +static void device_cmdmem_fixup(struct pci_dev *pdev)
+>> +{
+>> +	pdev->cmdmem = 1;
+>> +}
+>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0b25, device_cmdmem_fixup);
+>>

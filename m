@@ -2,113 +2,178 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E0397199D9C
-	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2020 20:02:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3C9C199DCB
+	for <lists+dmaengine@lfdr.de>; Tue, 31 Mar 2020 20:09:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgCaSCp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 31 Mar 2020 14:02:45 -0400
-Received: from mga06.intel.com ([134.134.136.31]:16127 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbgCaSCo (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 31 Mar 2020 14:02:44 -0400
-IronPort-SDR: j2NZ3SlPxn625hqJet8G8+Vs3jyT3gZveo1kbHBzeVr1Sq3iAHkMkzORzP03etou3Uum/AALkx
- TLEV/skRKVDw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2020 11:02:44 -0700
-IronPort-SDR: Xmx1u/O6AfpkZBrQjD1Mw4wxecKCMtKYwvOUKO7DlkvZwglVp87aDyPldtXFWEkyA6bcaalHGx
- HGz90nJ1R8Yg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,328,1580803200"; 
-   d="scan'208";a="240205398"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.251.20.204]) ([10.251.20.204])
-  by fmsmga007.fm.intel.com with ESMTP; 31 Mar 2020 11:02:42 -0700
-Subject: Re: [PATCH 3/6] pci: add PCI quirk cmdmem fixup for Intel DSA device
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, gregkh@linuxfoundation.org,
-        arnd@arndb.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
-        ashok.raj@intel.com, fenghua.yu@intel.com,
-        linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
-        sanjay.k.kumar@intel.com
-References: <20200331155906.GA191980@google.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <03073d25-9351-5bc7-e971-8e21b82f122f@intel.com>
-Date:   Tue, 31 Mar 2020 11:02:41 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1727798AbgCaSJR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 31 Mar 2020 14:09:17 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:41913 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbgCaSJR (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 31 Mar 2020 14:09:17 -0400
+Received: by mail-vs1-f67.google.com with SMTP id a63so14087692vsa.8
+        for <dmaengine@vger.kernel.org>; Tue, 31 Mar 2020 11:09:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=UPJq6ZlTzB31AHhJ/+QZLwm1iSTlBLnX9zVCEY1D9+4=;
+        b=oDuAK8ri3s9l8SoVYBHbDcZwEw9KgiiYf/MpM8+3UdjLAqFIF662mmjXuIXNyb/ez8
+         IzuHflTQWAUV2pof4NIUTD9JmBz2toCJIihOcdaBy8zPUmiQ+oeh/2rFJagHTursEWcs
+         4V6VYEYBBIaTCKTChOoTfPtT/NRaR/3u3mYkaI2hWqB3jPcxJF0cbe059XBt0KU6tm+z
+         MkNSk2yUyXCVvluLjfLYhYMIQgTHlVY8AL4imdlsUmenfrAaWURjFzltEvV3DcDd8qTZ
+         Nj7HLfHutH0+ZGOLDQ33x4GiMmNVJ1ka/xcvL+e0pdHMAA2DCXooIm7NmWSnhY3gVmk5
+         iaJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UPJq6ZlTzB31AHhJ/+QZLwm1iSTlBLnX9zVCEY1D9+4=;
+        b=pdReSHXxgpufxRuzQT2PAu55KzrgYnlyM2gmd8oJuHiWELmZQvJ16OoOHT2CfJ+k1+
+         E/e96EO5pMrBvSpk0xrsQBSk4WiBuynaSZjbplO5zzxqO0eEgje0YXWZuvUYRXXAIYoy
+         9V/gSexRYBKcgkGkzrQSA4RyHu9NLO9XmOJDhXtaRjfhroInr51+Ie6qF49wAw0tCfqr
+         1m+vgZna6iq3s6RnoxAZARymkgqWR7aEaKp2EB1aubZyGnNL9EbPbz12S6fC1NaFMAvv
+         yaZwtIp6mjOaI1QP6Z5zTZ1wjvbOR5ZOEuj5iNWHnxs6CLJ6x6fCt0Joh8qzboL+9wOk
+         8Kgg==
+X-Gm-Message-State: AGi0PuYIyGEG/+bDlZfNUkPfvnoJ2lP2EHHAGzVPOCagtdP4lmCWwLY4
+        fxa6Ubf6si1Suv6NuiwS1LPai4ik5rnfgJBoAbYKXA==
+X-Google-Smtp-Source: APiQypKHYbxkIBOvGCboXv205msSO49ApFYBvgXnNfouHIfGDbCAyape1yuky1eiv5St/SnqpuMkCL9RRVhFK5wt3fQ=
+X-Received: by 2002:a05:6102:72d:: with SMTP id u13mr2964354vsg.35.1585678155840;
+ Tue, 31 Mar 2020 11:09:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200331155906.GA191980@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+References: <20200325113407.26996-1-ulf.hansson@linaro.org>
+ <VI1PR04MB504097B40CE0B804FA60D67A90CF0@VI1PR04MB5040.eurprd04.prod.outlook.com>
+ <VI1PR04MB5040FFADA4F780422E208AC390CC0@VI1PR04MB5040.eurprd04.prod.outlook.com>
+ <CAPDyKFr_yOmZ2MMvp=1krHejCRDRfhC0B+1icYR5xuZfhKy_ag@mail.gmail.com> <2b2f1b1e-d186-e60f-baa9-3223ad4101f0@arm.com>
+In-Reply-To: <2b2f1b1e-d186-e60f-baa9-3223ad4101f0@arm.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 31 Mar 2020 20:08:39 +0200
+Message-ID: <CAPDyKFoSeXsNOW4Defc_nLzfd5G8UvsTWUNMJNW6tAZ0gMV4Kg@mail.gmail.com>
+Subject: Re: [PATCH 0/2] amba/platform: Initialize dma_parms at the bus level
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     BOUGH CHEN <haibo.chen@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Ludovic Barre <ludovic.barre@st.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-On 3/31/2020 8:59 AM, Bjorn Helgaas wrote:
-> Take a look and make yours match (applies to other patches in the
-> series as well):
+On Fri, 27 Mar 2020 at 20:15, Robin Murphy <robin.murphy@arm.com> wrote:
 >
->    $ git log --oneline drivers/pci/quirks.c
->    299bd044a6f3 ("PCI: Add ACS quirk for Zhaoxin Root/Downstream Ports")
->    0325837c51cb ("PCI: Add ACS quirk for Zhaoxin multi-function devices")
->    2880325bda8d ("PCI: Avoid ASMedia XHCI USB PME# from D0 defect")
->    b88bf6c3b6ff ("PCI: Add boot interrupt quirk mechanism for Xeon chipsets")
->    5e89cd303e3a ("PCI: Mark AMD Navi14 GPU rev 0xc5 ATS as broken")
->    7b90dfc4873b ("PCI: Add DMA alias quirk for PLX PEX NTB")
->    09298542cd89 ("PCI: Add nr_devfns parameter to pci_add_dma_alias()")
+> On 2020-03-27 3:34 pm, Ulf Hansson wrote:
+> > On Fri, 27 Mar 2020 at 04:02, BOUGH CHEN <haibo.chen@nxp.com> wrote:
+> >>
+> >>
+> >>> -----Original Message-----
+> >>> From: BOUGH CHEN
+> >>> Sent: 2020=E5=B9=B43=E6=9C=8826=E6=97=A5 12:41
+> >>> To: Ulf Hansson <ulf.hansson@linaro.org>; Greg Kroah-Hartman
+> >>> <gregkh@linuxfoundation.org>; Rafael J . Wysocki <rafael@kernel.org>;
+> >>> linux-kernel@vger.kernel.org
+> >>> Cc: Arnd Bergmann <arnd@arndb.de>; Christoph Hellwig <hch@lst.de>;
+> >>> Russell King <linux@armlinux.org.uk>; Linus Walleij <linus.walleij@li=
+naro.org>;
+> >>> Vinod Koul <vkoul@kernel.org>; Ludovic Barre <ludovic.barre@st.com>;
+> >>> linux-arm-kernel@lists.infradead.org; dmaengine@vger.kernel.org
+> >>> Subject: RE: [PATCH 0/2] amba/platform: Initialize dma_parms at the b=
+us level
+> >>>
+> >>>> -----Original Message-----
+> >>>> From: Ulf Hansson <ulf.hansson@linaro.org>
+> >>>> Sent: 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 19:34
+> >>>> To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Rafael J .
+> >>>> Wysocki <rafael@kernel.org>; linux-kernel@vger.kernel.org
+> >>>> Cc: Arnd Bergmann <arnd@arndb.de>; Christoph Hellwig <hch@lst.de>;
+> >>>> Russell King <linux@armlinux.org.uk>; Linus Walleij
+> >>>> <linus.walleij@linaro.org>; Vinod Koul <vkoul@kernel.org>; BOUGH CHE=
+N
+> >>>> <haibo.chen@nxp.com>; Ludovic Barre <ludovic.barre@st.com>;
+> >>>> linux-arm-kernel@lists.infradead.org; dmaengine@vger.kernel.org; Ulf
+> >>>> Hansson <ulf.hansson@linaro.org>
+> >>>> Subject: [PATCH 0/2] amba/platform: Initialize dma_parms at the bus
+> >>>> level
+> >>>>
+> >>>> It's currently the amba/platform driver's responsibility to initiali=
+ze
+> >>>> the pointer, dma_parms, for its corresponding struct device. The
+> >>>> benefit with this approach allows us to avoid the initialization and
+> >>>> to not waste memory for the struct device_dma_parameters, as this ca=
+n
+> >>>> be decided on a case by case basis.
+> >>>>
+> >>>> However, it has turned out that this approach is not very practical.
+> >>>> Not only does it lead to open coding, but also to real errors. In
+> >>>> principle callers of
+> >>>> dma_set_max_seg_size() doesn't check the error code, but just assume=
+s
+> >>>> it succeeds.
+> >>>>
+> >>>> For these reasons, this series initializes the dma_parms from the
+> >>>> amba/platform bus at the device registration point. This also follow=
+s
+> >>>> the way the PCI devices are being managed, see pci_device_add().
+> >>>>
+> >>>> If it turns out that this is an acceptable solution, we probably als=
+o
+> >>>> want the changes for stable, but I am not sure if it applies without=
+ conflicts.
+> >>>>
+> >>>> The series is based on v5.6-rc7.
+> >>>>
+> >>>
+> >>> Hi Ulf,
+> >>>
+> >>> Since i.MXQM SMMU related code still not upstream yet, so I apply you=
+r
+> >>> patches on our internal Linux branch based on v5.4.24, and find it do=
+ not work
+> >>> on my side. Maybe for platform core drivers, there is a gap between v=
+5.4.24
+> >>> and v5.6-rc7 which has the impact.
+> >>> I will try to put our SMMU related code into v5.6-rc7, then do the te=
+st again.
+> >>>
+> >>>
+> >>
+> >> Hi Ulf,
+> >>
+> >> On the latest Linux-next branch, the top commit 89295c59c1f063b533d071=
+ca49d0fa0c0783ca6f (tag: next-20200326), after add your two patches, I just=
+ add the simple debug code as following in the /driver/mmc/core/queue.c, bu=
+t seems still not work as our expect, logically, it should work, so can you=
+ or anyone test on other platform? This seems weird.
+> >
+> > You are right, this doesn't work for platform devices being added
+> > through the OF path.
+> >
+> > In other words, of_platform_device_create_pdata() manually allocates
+> > the platform device and assigns it the &platform_bus_type, but without
+> > calling platform_device_add().
+> >
+> > For amba, it works fine, as in that OF path, amba_device_add() is calle=
+d. Hmm.
+> >
+> > I re-spin this, to address the problem. Perhaps we simply need to use
+> > the ->probe() path.
 >
-> There's no need to mention "PCI" twice.  Also no need for both "quirk"
-> and "fixup".  This is all in the interest of putting more information
-> in the small space of the subject line.
-Ok I'll fix up.
->
-> On Mon, Mar 30, 2020 at 02:27:06PM -0700, Dave Jiang wrote:
->> Since there is no standard way that defines a PCI device that receives
->> descriptors or commands with synchronous write operations, add quirk to set
->> cmdmem for the Intel accelerator device that supports it.
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>   drivers/pci/quirks.c |   11 +++++++++++
->>   1 file changed, 11 insertions(+)
->>
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index 29f473ebf20f..ba0572b9b9c8 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -5461,3 +5461,14 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
->>   DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
->>   			      PCI_CLASS_DISPLAY_VGA, 8,
->>   			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
->> +
->> +/*
->> + * Until the PCI Sig defines a standard capaiblity check that indicates a
->> + * device has cmdmem with synchronous write capability, we'll add a quirk
->> + * for device that supports it.
-> s/PCI Sig/PCI-SIG/
-> s/capaiblity/capability/
->
-> It's not clear why this would need to be in drivers/pci/quirks.c as
-> opposed to being in the driver itself.
+> FWIW we already have setup_pdev_dma_masks(), so it might be logical to
+> include dma_parms in there too.
 
-That would make the driver to set the PCI device struct cap bit instead 
-of this being set on discovery right? And if the driver isn't loaded, 
-then the cap wouldn't be set. In the future if user space wants to 
-discover this information that may be an issue.
+Yep, thanks for the suggestion. This work fine.
 
+[...]
 
-
->
->> + */
->> +static void device_cmdmem_fixup(struct pci_dev *pdev)
->> +{
->> +	pdev->cmdmem = 1;
->> +}
->> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x0b25, device_cmdmem_fixup);
->>
+Kind regards
+Uffe

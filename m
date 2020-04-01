@@ -2,89 +2,102 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E43F19A1FB
-	for <lists+dmaengine@lfdr.de>; Wed,  1 Apr 2020 00:34:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D98C219A3FF
+	for <lists+dmaengine@lfdr.de>; Wed,  1 Apr 2020 05:32:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730589AbgCaWeX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 31 Mar 2020 18:34:23 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33770 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727955AbgCaWeW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 31 Mar 2020 18:34:22 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jJPSQ-0000wr-Sx; Wed, 01 Apr 2020 00:34:07 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 5CA2F103A01; Wed,  1 Apr 2020 00:34:06 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>
-Cc:     vkoul@kernel.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        gregkh@linuxfoundation.org, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        dmaengine@vger.kernel.org, dan.j.williams@intel.com,
-        ashok.raj@intel.com, fenghua.yu@intel.com,
-        linux-pci@vger.kernel.org, tony.luck@intel.com, jing.lin@intel.com,
-        sanjay.k.kumar@intel.com
-Subject: Re: [PATCH 2/6] device/pci: add cmdmem cap to pci_dev
-In-Reply-To: <20200331220006.GA37376@google.com>
-References: <20200331220006.GA37376@google.com>
-Date:   Wed, 01 Apr 2020 00:34:06 +0200
-Message-ID: <87ftdoupb5.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        id S1731608AbgDADcg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 31 Mar 2020 23:32:36 -0400
+Received: from condef-05.nifty.com ([202.248.20.70]:16753 "EHLO
+        condef-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731570AbgDADcg (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 31 Mar 2020 23:32:36 -0400
+X-Greylist: delayed 348 seconds by postgrey-1.27 at vger.kernel.org; Tue, 31 Mar 2020 23:32:35 EDT
+Received: from conuserg-11.nifty.com ([10.126.8.74])by condef-05.nifty.com with ESMTP id 0313MurR016007
+        for <dmaengine@vger.kernel.org>; Wed, 1 Apr 2020 12:22:59 +0900
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 0313MSET017333;
+        Wed, 1 Apr 2020 12:22:29 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 0313MSET017333
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585711350;
+        bh=6cmk4VhYcoiSK0648BJFDTb8WGo1i4aniwWtusevAaQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=n0crX8GxExB2dPg/8QhQatWt02gUfaOo6/Q6XF2RR3LPaFrXrpow0/nhIbhk9UaSp
+         a/+rhR9iy+jrfi4TIoRdURW1PVBAGPQ1E0Qbb7appR14bGzqqheIN3+Tx7tsYwceEx
+         mQJxi6OQmpZb6Nar5VNm/dmqec/IsB23ZD5zBEZG7VFGh1uBd2BGZXjlY06PyQGSak
+         7xgUgyNtqdbz+b1rgf6jKiqrYZsw273kOa1j7abnHphGqOx+Ff8e6bVIajur46u3j7
+         LWs5x+R6+Vo36uvL3YHv/n2qz6z9yTXvH54CSJPzjKW07NcFPpKL7LMbISOrkFEyh6
+         924kwGhB0OP7Q==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: dma: uniphier-xdmac: switch to single reg region
+Date:   Wed,  1 Apr 2020 12:21:50 +0900
+Message-Id: <20200401032150.19767-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Bjorn Helgaas <helgaas@kernel.org> writes:
-> On Tue, Mar 31, 2020 at 10:59:44AM -0700, Dave Jiang wrote:
->> On 3/31/2020 9:03 AM, Bjorn Helgaas wrote:
->> > On Mon, Mar 30, 2020 at 02:27:00PM -0700, Dave Jiang wrote:
->> > > Since the current accelerator devices do not have standard PCIe capability
->> > > enumeration for accepting ENQCMDS yet, for now an attribute of pdev->cmdmem has
->> > > been added to struct pci_dev.  Currently a PCI quirk must be used for the
->> > > devices that have such cap until the PCI cap is standardized. Add a helper
->> > > function to provide the check if a device supports the cmdmem capability.
->> > > 
->> > > Such capability is expected to be added to PCIe device cap enumeration in
->> > > the future.
->> > This needs some sort of thumbnail description of what "synchronous
->> > write notification" and "cmdmem" mean.
->> 
->> I will add more explanation.
->> 
->> > Do you have a pointer to a PCI-SIG ECR or similar?
->> 
->> Deferrable Memory Write (DMWr) ECR
->> 
->> https://members.pcisig.com/wg/PCI-SIG/document/13747
->> 
->> From what I'm told it should be available for public review by EOW.
->
-> Please use terminology from the spec instead of things like
-> "synchronous write notification".
->
-> AIUI, ENQCMDS is an x86 instruction.  That would have no meaning in
-> the PCIe domain.
->
-> I'm not committing to acking any part of this before the ECR is
-> accepted, but if you're adding support for the feature described by
-> the ECR, you might as well add support for discovering the DMWr
-> capability via Device Capabilities 2 as described in the ECR.
+The reg in the example "<0x5fc10000 0x1000>, <0x5fc20000 0x800>"
+is wrong. The register region of this controller is much smaller,
+and there is no other hardware register interleaved. There is no
+good reason to split it into two regions.
 
-Don't worry. There is nothing to decide and ack before the basic
-architecture support for ENQCMD[S] is discussed and accepted. The
-patches providing this support have been posted 2 hrs before this pile
-hit the mailing lists yesterday.
+Just use a single, contiguous register region.
 
-Thanks,
+While I am here, I made the 'dma-channels' property mandatory because
+otherwise there is no way to determine the number of the channels.
 
-        tglx
+Please note the original binding was merged recently. Since there
+is no user yet, this change has no actual impact.
+
+Fixes: b9fb56b6ba8a ("dt-bindings: dmaengine: Add UniPhier external DMA controller bindings")
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+We do not need to touch the driver either because the second
+region is not used.
+
+
+ .../devicetree/bindings/dma/socionext,uniphier-xdmac.yaml  | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
+index 86cfb599256e..371f18773198 100644
+--- a/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
++++ b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
+@@ -22,9 +22,7 @@ properties:
+     const: socionext,uniphier-xdmac
+ 
+   reg:
+-    items:
+-      - description: XDMAC base register region (offset and length)
+-      - description: XDMAC extension register region (offset and length)
++    maxItems: 1
+ 
+   interrupts:
+     maxItems: 1
+@@ -49,12 +47,13 @@ required:
+   - reg
+   - interrupts
+   - "#dma-cells"
++  - dma-channels
+ 
+ examples:
+   - |
+     xdmac: dma-controller@5fc10000 {
+         compatible = "socionext,uniphier-xdmac";
+-        reg = <0x5fc10000 0x1000>, <0x5fc20000 0x800>;
++        reg = <0x5fc10000 0x5300>;
+         interrupts = <0 188 4>;
+         #dma-cells = <2>;
+         dma-channels = <16>;
+-- 
+2.17.1
 

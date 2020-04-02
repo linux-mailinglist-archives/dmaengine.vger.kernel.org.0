@@ -2,45 +2,46 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DB3AA19BE96
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Apr 2020 11:28:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9355219BEC3
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Apr 2020 11:38:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387565AbgDBJ2L (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 2 Apr 2020 05:28:11 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:10904 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387722AbgDBJ2L (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 2 Apr 2020 05:28:11 -0400
-Received: from pps.filterd (m0170398.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0329O0Vv007786;
-        Thu, 2 Apr 2020 05:27:51 -0400
+        id S2387719AbgDBJir (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 2 Apr 2020 05:38:47 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:25740 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725965AbgDBJiq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 2 Apr 2020 05:38:46 -0400
+X-Greylist: delayed 608 seconds by postgrey-1.27 at vger.kernel.org; Thu, 02 Apr 2020 05:38:45 EDT
+Received: from pps.filterd (m0170392.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0329Ot01026600;
+        Thu, 2 Apr 2020 05:28:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id; s=smtpout1;
- bh=TIs0GHVhckV/YQTZc4Me6SXKOvBgDYy/ULASj+HFtA0=;
- b=vHAX+dRuUWdFG9a7hVtCeGPUPorhOV4k4ut4SkxeECIFTKzj5+40CK3WVLTQMQU7SqXl
- rw+3oVLnrda1Wo9NL1hB8MEhYMw1ApTMjQnko2gsCd2daY+lt6KP6JfGWalybSZZiv7a
- lc08gfY9HOfB/ctQPJMiUqyFfu9AV0JjIsg3yUs6iHtFejRSsmxc5K6GekkRK9bNVfh+
- 0FKUBafnyzD487XpjqIUw8dbOR+/rNtduR9q9kaNvHbnPgAnFeAGfCWFIbZHq067NfdB
- v91lTECEtSXw5MeIWO2QHwIaD+eZCfC2NRqp+GdI8mygg+MiEEgGqy+S9dO5YqB+XAXA cA== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 3021tau6cs-1
+ subject : date : message-id : in-reply-to : references; s=smtpout1;
+ bh=7Ocow47AB1qZAY92zenrcfT0CCgfnPw2mvZ8Wspme3k=;
+ b=WR44TD0oVT2tgVQRLV1iEGn6ZPCHXm5ftpt2b71HrPki5gFcOVsy9FDdyqM9ChlEtQaV
+ UjNQ8b1rymLV0iDOJj1GdpR8n7P+YORh9QiuDi9w4V02s7kR/swm+D5DQv5XT6KnT3PO
+ gDHNBCmcVHTtFSimvWYPCLT5Q7RtY0815R4U0tS9ISwFMl4SUOWaTAmVSatRGFJgbNr6
+ UMcGXVt79//6J2O8azJctbl2Ro8/H6Tz24ioopgB7j+ZxX8TOFa5xYddwvUQvusxyI/f
+ Vovy/VjTKTBujgh9w4Kwru77F5xZwX4OoFju3zyjvfCtJEat7smKtyrLLm1ZMN7ODFSC LA== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0a-00154904.pphosted.com with ESMTP id 3021reb5ym-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Apr 2020 05:27:50 -0400
-Received: from pps.filterd (m0134746.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0329Mfsg055527;
-        Thu, 2 Apr 2020 05:27:50 -0400
+        Thu, 02 Apr 2020 05:28:20 -0400
+Received: from pps.filterd (m0089483.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0329Oc4c093473;
+        Thu, 2 Apr 2020 05:28:19 -0400
 Received: from mailuogwdur.emc.com (mailuogwdur-nat.lss.emc.com [128.221.224.79] (may be forged))
-        by mx0a-00154901.pphosted.com with ESMTP id 3020eug06y-1
+        by mx0b-00154901.pphosted.com with ESMTP id 3023cjp9wb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 02 Apr 2020 05:27:49 -0400
+        Thu, 02 Apr 2020 05:28:19 -0400
 Received: from emc.com (localhost [127.0.0.1])
-        by mailuogwprd53.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 0329RmcS027368;
-        Thu, 2 Apr 2020 05:27:48 -0400
-Received: from mailsyshubprd05.lss.emc.com ([mailsyshubprd05.lss.emc.com [10.253.24.23]]) by mailuogwprd53.lss.emc.com with ESMTP id 0329RiQE027334 ;
-          Thu, 2 Apr 2020 05:27:46 -0400
+        by mailuogwprd53.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 0329RmcU027368;
+        Thu, 2 Apr 2020 05:28:18 -0400
+Received: from mailsyshubprd05.lss.emc.com ([mailsyshubprd05.lss.emc.com [10.253.24.23]]) by mailuogwprd53.lss.emc.com with ESMTP id 0329Rr16027395 ;
+          Thu, 2 Apr 2020 05:27:54 -0400
 Received: from arwen2.xiolab.lab.emc.com. (arwen2.xiolab.lab.emc.com [10.76.211.113])
-        by mailsyshubprd05.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 0329Re2l010727;
-        Thu, 2 Apr 2020 05:27:41 -0400
+        by mailsyshubprd05.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 0329Re2m010727;
+        Thu, 2 Apr 2020 05:27:50 -0400
 From:   leonid.ravich@dell.com
 To:     dmaengine@vger.kernel.org
 Cc:     lravich@gmail.com, Leonid Ravich <Leonid.Ravich@dell.com>,
@@ -55,22 +56,24 @@ Cc:     lravich@gmail.com, Leonid Ravich <Leonid.Ravich@dell.com>,
         Jilayne Lovejoy <opensource@jilayne.com>,
         Logan Gunthorpe <logang@deltatee.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] dmaengine: ioat: fixing chunk sizing macros dependency
-Date:   Thu,  2 Apr 2020 12:27:17 +0300
-Message-Id: <20200402092725.15121-1-leonid.ravich@dell.com>
+Subject: [PATCH 2/2] dmaengine: ioat: Decreasing  allocation chunk size 2M -> 512K
+Date:   Thu,  2 Apr 2020 12:27:18 +0300
+Message-Id: <20200402092725.15121-2-leonid.ravich@dell.com>
 X-Mailer: git-send-email 2.16.2
+In-Reply-To: <20200402092725.15121-1-leonid.ravich@dell.com>
+References: <20200402092725.15121-1-leonid.ravich@dell.com>
 X-Sentrion-Hostname: mailuogwprd53.lss.emc.com
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-02_01:2020-03-31,2020-04-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- clxscore=1011 priorityscore=1501 mlxscore=0 suspectscore=38
- lowpriorityscore=0 mlxlogscore=775 malwarescore=0 adultscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004020085
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0
- impostorscore=0 lowpriorityscore=0 suspectscore=38 phishscore=0
- bulkscore=0 malwarescore=0 mlxscore=0 clxscore=1015 mlxlogscore=850
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ suspectscore=13 mlxlogscore=338 impostorscore=0 phishscore=0
+ malwarescore=0 spamscore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0
  priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004020085
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0
+ suspectscore=13 spamscore=0 mlxscore=0 clxscore=1015 impostorscore=0
+ priorityscore=1501 malwarescore=0 phishscore=0 mlxlogscore=411
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2004020085
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
@@ -79,109 +82,32 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Leonid Ravich <Leonid.Ravich@emc.com>
 
-prepare for changing alloc size.
+current IOAT driver using big (2MB) allocations chunk for its descriptors
+therefore each ioat dma engine need 2 such chunks
+(64k entres in ring  each entry 64B = 4MB)
+requiring 2 * 2M * dmaengine contiguies memory chunk
+might fail due to memory fragmention.
+
+so we decresging chunk size and using more chunks.
 
 Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
 ---
- drivers/dma/ioat/dma.c  | 14 ++++++++------
- drivers/dma/ioat/dma.h  | 10 ++++++----
- drivers/dma/ioat/init.c |  2 +-
- 3 files changed, 15 insertions(+), 11 deletions(-)
+ drivers/dma/ioat/dma.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-index 18c011e..1e0e6c1 100644
---- a/drivers/dma/ioat/dma.c
-+++ b/drivers/dma/ioat/dma.c
-@@ -332,8 +332,8 @@ static dma_cookie_t ioat_tx_submit_unlock(struct dma_async_tx_descriptor *tx)
- 	u8 *pos;
- 	off_t offs;
- 
--	chunk = idx / IOAT_DESCS_PER_2M;
--	idx &= (IOAT_DESCS_PER_2M - 1);
-+	chunk = idx / IOAT_DESCS_PER_CHUNK;
-+	idx &= (IOAT_DESCS_PER_CHUNK - 1);
- 	offs = idx * IOAT_DESC_SZ;
- 	pos = (u8 *)ioat_chan->descs[chunk].virt + offs;
- 	phys = ioat_chan->descs[chunk].hw + offs;
-@@ -370,7 +370,8 @@ struct ioat_ring_ent **
- 	if (!ring)
- 		return NULL;
- 
--	ioat_chan->desc_chunks = chunks = (total_descs * IOAT_DESC_SZ) / SZ_2M;
-+	chunks = (total_descs * IOAT_DESC_SZ) / IOAT_CHUNK_SIZE;
-+	ioat_chan->desc_chunks = chunks;
- 
- 	for (i = 0; i < chunks; i++) {
- 		struct ioat_descs *descs = &ioat_chan->descs[i];
-@@ -382,8 +383,9 @@ struct ioat_ring_ent **
- 
- 			for (idx = 0; idx < i; idx++) {
- 				descs = &ioat_chan->descs[idx];
--				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
--						  descs->virt, descs->hw);
-+				dma_free_coherent(to_dev(ioat_chan),
-+						IOAT_CHUNK_SIZE,
-+						descs->virt, descs->hw);
- 				descs->virt = NULL;
- 				descs->hw = 0;
- 			}
-@@ -404,7 +406,7 @@ struct ioat_ring_ent **
- 
- 			for (idx = 0; idx < ioat_chan->desc_chunks; idx++) {
- 				dma_free_coherent(to_dev(ioat_chan),
--						  SZ_2M,
-+						  IOAT_CHUNK_SIZE,
- 						  ioat_chan->descs[idx].virt,
- 						  ioat_chan->descs[idx].hw);
- 				ioat_chan->descs[idx].virt = NULL;
 diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
-index b8e8e0b..535aba9 100644
+index 535aba9..e9757bc 100644
 --- a/drivers/dma/ioat/dma.h
 +++ b/drivers/dma/ioat/dma.h
-@@ -81,6 +81,11 @@ struct ioatdma_device {
- 	u32 msixpba;
- };
+@@ -83,7 +83,7 @@ struct ioatdma_device {
  
-+#define IOAT_MAX_ORDER 16
-+#define IOAT_MAX_DESCS (1 << IOAT_MAX_ORDER)
-+#define IOAT_CHUNK_SIZE (SZ_2M)
-+#define IOAT_DESCS_PER_CHUNK (IOAT_CHUNK_SIZE/IOAT_DESC_SZ)
-+
+ #define IOAT_MAX_ORDER 16
+ #define IOAT_MAX_DESCS (1 << IOAT_MAX_ORDER)
+-#define IOAT_CHUNK_SIZE (SZ_2M)
++#define IOAT_CHUNK_SIZE (SZ_512K)
+ #define IOAT_DESCS_PER_CHUNK (IOAT_CHUNK_SIZE/IOAT_DESC_SZ)
+ 
  struct ioat_descs {
- 	void *virt;
- 	dma_addr_t hw;
-@@ -128,7 +133,7 @@ struct ioatdma_chan {
- 	u16 produce;
- 	struct ioat_ring_ent **ring;
- 	spinlock_t prep_lock;
--	struct ioat_descs descs[2];
-+	struct ioat_descs descs[IOAT_MAX_DESCS/IOAT_DESCS_PER_CHUNK];
- 	int desc_chunks;
- 	int intr_coalesce;
- 	int prev_intr_coalesce;
-@@ -301,9 +306,6 @@ static inline bool is_ioat_bug(unsigned long err)
- 	return !!err;
- }
- 
--#define IOAT_MAX_ORDER 16
--#define IOAT_MAX_DESCS 65536
--#define IOAT_DESCS_PER_2M 32768
- 
- static inline u32 ioat_ring_size(struct ioatdma_chan *ioat_chan)
- {
-diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
-index 60e9afb..58d1356 100644
---- a/drivers/dma/ioat/init.c
-+++ b/drivers/dma/ioat/init.c
-@@ -651,7 +651,7 @@ static void ioat_free_chan_resources(struct dma_chan *c)
- 	}
- 
- 	for (i = 0; i < ioat_chan->desc_chunks; i++) {
--		dma_free_coherent(to_dev(ioat_chan), SZ_2M,
-+		dma_free_coherent(to_dev(ioat_chan), IOAT_CHUNK_SIZE,
- 				  ioat_chan->descs[i].virt,
- 				  ioat_chan->descs[i].hw);
- 		ioat_chan->descs[i].virt = NULL;
 -- 
 1.9.3
 

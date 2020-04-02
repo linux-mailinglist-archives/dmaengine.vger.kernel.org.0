@@ -2,87 +2,186 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EB8A219BCDB
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Apr 2020 09:40:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB3AA19BE96
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Apr 2020 11:28:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732660AbgDBHkE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 2 Apr 2020 03:40:04 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39572 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgDBHkD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 2 Apr 2020 03:40:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=CESjO59OG1g2iBZvOj+yXt5mO6YtOWaC54a1TxGlkL8=; b=Z30JqzSUNPZoOt2Ip4bnmbBTjw
-        UQg2tbGxU/lEgV84feDe5/QybUVcca6fABh8FqMRIsfdqnV4ne3XZTXN+XiBi2pRw4ldShMGQx+P2
-        /zaEiWN9LLGhcoUb6zsvfwAz7Z+rpJ5xq7FlTKL3GDmaoPdnLn2qDzvp55oybIBd2k2TgFA1ZbnHW
-        viqKwsdYp6mUbPp1TwTThX+Iw99NExNUDer8PxWNlGd1pxyUzexiK4wYKCAkpjBWXiinrVPFCrwRv
-        WVn+ZPUhbIgbSQMxxbKA0ORwMSYurbBIjj0fZ01T4LQq7M28JhcqXqcDNj2Vu2Egf0t2NG4CJyTnW
-        zXf0T31w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJuRw-0007J8-1O; Thu, 02 Apr 2020 07:39:40 +0000
-Date:   Thu, 2 Apr 2020 00:39:40 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dave Jiang <dave.jiang@intel.com>,
+        id S2387565AbgDBJ2L (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 2 Apr 2020 05:28:11 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:10904 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387722AbgDBJ2L (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 2 Apr 2020 05:28:11 -0400
+Received: from pps.filterd (m0170398.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0329O0Vv007786;
+        Thu, 2 Apr 2020 05:27:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id; s=smtpout1;
+ bh=TIs0GHVhckV/YQTZc4Me6SXKOvBgDYy/ULASj+HFtA0=;
+ b=vHAX+dRuUWdFG9a7hVtCeGPUPorhOV4k4ut4SkxeECIFTKzj5+40CK3WVLTQMQU7SqXl
+ rw+3oVLnrda1Wo9NL1hB8MEhYMw1ApTMjQnko2gsCd2daY+lt6KP6JfGWalybSZZiv7a
+ lc08gfY9HOfB/ctQPJMiUqyFfu9AV0JjIsg3yUs6iHtFejRSsmxc5K6GekkRK9bNVfh+
+ 0FKUBafnyzD487XpjqIUw8dbOR+/rNtduR9q9kaNvHbnPgAnFeAGfCWFIbZHq067NfdB
+ v91lTECEtSXw5MeIWO2QHwIaD+eZCfC2NRqp+GdI8mygg+MiEEgGqy+S9dO5YqB+XAXA cA== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0b-00154904.pphosted.com with ESMTP id 3021tau6cs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Apr 2020 05:27:50 -0400
+Received: from pps.filterd (m0134746.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0329Mfsg055527;
+        Thu, 2 Apr 2020 05:27:50 -0400
+Received: from mailuogwdur.emc.com (mailuogwdur-nat.lss.emc.com [128.221.224.79] (may be forged))
+        by mx0a-00154901.pphosted.com with ESMTP id 3020eug06y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 02 Apr 2020 05:27:49 -0400
+Received: from emc.com (localhost [127.0.0.1])
+        by mailuogwprd53.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 0329RmcS027368;
+        Thu, 2 Apr 2020 05:27:48 -0400
+Received: from mailsyshubprd05.lss.emc.com ([mailsyshubprd05.lss.emc.com [10.253.24.23]]) by mailuogwprd53.lss.emc.com with ESMTP id 0329RiQE027334 ;
+          Thu, 2 Apr 2020 05:27:46 -0400
+Received: from arwen2.xiolab.lab.emc.com. (arwen2.xiolab.lab.emc.com [10.76.211.113])
+        by mailsyshubprd05.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 0329Re2l010727;
+        Thu, 2 Apr 2020 05:27:41 -0400
+From:   leonid.ravich@dell.com
+To:     dmaengine@vger.kernel.org
+Cc:     lravich@gmail.com, Leonid Ravich <Leonid.Ravich@dell.com>,
         Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, dmaengine@vger.kernel.org,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-pci@vger.kernel.org,
-        "Luck, Tony" <tony.luck@intel.com>, Jing Lin <jing.lin@intel.com>,
-        Sanjay K Kumar <sanjay.k.kumar@intel.com>
-Subject: Re: [PATCH 3/6] pci: add PCI quirk cmdmem fixup for Intel DSA device
-Message-ID: <20200402073940.GA27871@infradead.org>
-References: <158560290392.6059.16921214463585182874.stgit@djiang5-desk3.ch.intel.com>
- <158560362665.6059.11999047251277108233.stgit@djiang5-desk3.ch.intel.com>
- <20200401071851.GA31076@infradead.org>
- <CAPcyv4iE_-g8ymYe75bLKmVUvTVtp8GJm3xqUoiscbyTxoUnbQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4iE_-g8ymYe75bLKmVUvTVtp8GJm3xqUoiscbyTxoUnbQ@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Jilayne Lovejoy <opensource@jilayne.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dmaengine: ioat: fixing chunk sizing macros dependency
+Date:   Thu,  2 Apr 2020 12:27:17 +0300
+Message-Id: <20200402092725.15121-1-leonid.ravich@dell.com>
+X-Mailer: git-send-email 2.16.2
+X-Sentrion-Hostname: mailuogwprd53.lss.emc.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-02_01:2020-03-31,2020-04-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ clxscore=1011 priorityscore=1501 mlxscore=0 suspectscore=38
+ lowpriorityscore=0 mlxlogscore=775 malwarescore=0 adultscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004020085
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0
+ impostorscore=0 lowpriorityscore=0 suspectscore=38 phishscore=0
+ bulkscore=0 malwarescore=0 mlxscore=0 clxscore=1015 mlxlogscore=850
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004020085
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 07:20:59PM -0700, Dan Williams wrote:
-> On Wed, Apr 1, 2020 at 12:19 AM Christoph Hellwig <hch@infradead.org> wrote:
-> >
-> > On Mon, Mar 30, 2020 at 02:27:06PM -0700, Dave Jiang wrote:
-> > > Since there is no standard way that defines a PCI device that receives
-> > > descriptors or commands with synchronous write operations, add quirk to set
-> > > cmdmem for the Intel accelerator device that supports it.
-> >
-> > Why do we need a quirk for this?  Even assuming a flag is needed in
-> > struct pci_dev (and I don't really understand why that is needed to
-> > start with), it could be set in ->probe.
-> 
-> The consideration in my mind is whether this new memory type and
-> instruction combination warrants a new __attribute__((noderef,
-> address_space(X))) separate from __iomem. If it stays a single device
-> concept layered on __iomem then yes, I agree it can all live locally
-> in the driver. However, when / if this facility becomes wider spread,
-> as the PCI ECR in question is trending, it might warrant general
-> annotation.
-> 
-> The enqcmds instruction does not operate on typical x86 mmio
-> addresses, only these special device portals offer the ability to have
-> non-posted writes with immediate results in the cpu condition code
-> flags.
+From: Leonid Ravich <Leonid.Ravich@emc.com>
 
-But that is not what this series does at all.  And I think it makes
-sense to wait until it gains adoption to think about a different address
-space.  In this series we could just trivially kill patches 2-4 and make
-it much easier to understand.
+prepare for changing alloc size.
+
+Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
+---
+ drivers/dma/ioat/dma.c  | 14 ++++++++------
+ drivers/dma/ioat/dma.h  | 10 ++++++----
+ drivers/dma/ioat/init.c |  2 +-
+ 3 files changed, 15 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
+index 18c011e..1e0e6c1 100644
+--- a/drivers/dma/ioat/dma.c
++++ b/drivers/dma/ioat/dma.c
+@@ -332,8 +332,8 @@ static dma_cookie_t ioat_tx_submit_unlock(struct dma_async_tx_descriptor *tx)
+ 	u8 *pos;
+ 	off_t offs;
+ 
+-	chunk = idx / IOAT_DESCS_PER_2M;
+-	idx &= (IOAT_DESCS_PER_2M - 1);
++	chunk = idx / IOAT_DESCS_PER_CHUNK;
++	idx &= (IOAT_DESCS_PER_CHUNK - 1);
+ 	offs = idx * IOAT_DESC_SZ;
+ 	pos = (u8 *)ioat_chan->descs[chunk].virt + offs;
+ 	phys = ioat_chan->descs[chunk].hw + offs;
+@@ -370,7 +370,8 @@ struct ioat_ring_ent **
+ 	if (!ring)
+ 		return NULL;
+ 
+-	ioat_chan->desc_chunks = chunks = (total_descs * IOAT_DESC_SZ) / SZ_2M;
++	chunks = (total_descs * IOAT_DESC_SZ) / IOAT_CHUNK_SIZE;
++	ioat_chan->desc_chunks = chunks;
+ 
+ 	for (i = 0; i < chunks; i++) {
+ 		struct ioat_descs *descs = &ioat_chan->descs[i];
+@@ -382,8 +383,9 @@ struct ioat_ring_ent **
+ 
+ 			for (idx = 0; idx < i; idx++) {
+ 				descs = &ioat_chan->descs[idx];
+-				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
+-						  descs->virt, descs->hw);
++				dma_free_coherent(to_dev(ioat_chan),
++						IOAT_CHUNK_SIZE,
++						descs->virt, descs->hw);
+ 				descs->virt = NULL;
+ 				descs->hw = 0;
+ 			}
+@@ -404,7 +406,7 @@ struct ioat_ring_ent **
+ 
+ 			for (idx = 0; idx < ioat_chan->desc_chunks; idx++) {
+ 				dma_free_coherent(to_dev(ioat_chan),
+-						  SZ_2M,
++						  IOAT_CHUNK_SIZE,
+ 						  ioat_chan->descs[idx].virt,
+ 						  ioat_chan->descs[idx].hw);
+ 				ioat_chan->descs[idx].virt = NULL;
+diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
+index b8e8e0b..535aba9 100644
+--- a/drivers/dma/ioat/dma.h
++++ b/drivers/dma/ioat/dma.h
+@@ -81,6 +81,11 @@ struct ioatdma_device {
+ 	u32 msixpba;
+ };
+ 
++#define IOAT_MAX_ORDER 16
++#define IOAT_MAX_DESCS (1 << IOAT_MAX_ORDER)
++#define IOAT_CHUNK_SIZE (SZ_2M)
++#define IOAT_DESCS_PER_CHUNK (IOAT_CHUNK_SIZE/IOAT_DESC_SZ)
++
+ struct ioat_descs {
+ 	void *virt;
+ 	dma_addr_t hw;
+@@ -128,7 +133,7 @@ struct ioatdma_chan {
+ 	u16 produce;
+ 	struct ioat_ring_ent **ring;
+ 	spinlock_t prep_lock;
+-	struct ioat_descs descs[2];
++	struct ioat_descs descs[IOAT_MAX_DESCS/IOAT_DESCS_PER_CHUNK];
+ 	int desc_chunks;
+ 	int intr_coalesce;
+ 	int prev_intr_coalesce;
+@@ -301,9 +306,6 @@ static inline bool is_ioat_bug(unsigned long err)
+ 	return !!err;
+ }
+ 
+-#define IOAT_MAX_ORDER 16
+-#define IOAT_MAX_DESCS 65536
+-#define IOAT_DESCS_PER_2M 32768
+ 
+ static inline u32 ioat_ring_size(struct ioatdma_chan *ioat_chan)
+ {
+diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
+index 60e9afb..58d1356 100644
+--- a/drivers/dma/ioat/init.c
++++ b/drivers/dma/ioat/init.c
+@@ -651,7 +651,7 @@ static void ioat_free_chan_resources(struct dma_chan *c)
+ 	}
+ 
+ 	for (i = 0; i < ioat_chan->desc_chunks; i++) {
+-		dma_free_coherent(to_dev(ioat_chan), SZ_2M,
++		dma_free_coherent(to_dev(ioat_chan), IOAT_CHUNK_SIZE,
+ 				  ioat_chan->descs[i].virt,
+ 				  ioat_chan->descs[i].hw);
+ 		ioat_chan->descs[i].virt = NULL;
+-- 
+1.9.3
+

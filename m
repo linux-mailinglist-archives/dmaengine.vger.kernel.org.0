@@ -2,80 +2,175 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CFA81A1C5F
-	for <lists+dmaengine@lfdr.de>; Wed,  8 Apr 2020 09:12:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EEE31A2007
+	for <lists+dmaengine@lfdr.de>; Wed,  8 Apr 2020 13:41:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgDHHMG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 8 Apr 2020 03:12:06 -0400
-Received: from smaract.com ([82.165.73.54]:60432 "EHLO smaract.com"
+        id S1728604AbgDHLlA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 8 Apr 2020 07:41:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726702AbgDHHMG (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 8 Apr 2020 03:12:06 -0400
-Received: from mx1.smaract.de (staticdsl-213-168-205-127.ewe-ip-backbone.de [213.168.205.127])
-        by smaract.com (Postfix) with ESMTPSA id CA4CAA0CB0;
-        Wed,  8 Apr 2020 07:12:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smaract.com;
-        s=default; t=1586329924;
-        bh=OsEz6GvKjLOkUJz9ClB3aeaK3X9SVPOosZop1Yctfn4=; l=1271;
-        h=From:To:Subject;
-        b=kzQ1axBS3mpOxWidODdc1Gl0X+Qj1Y6Ha2Ga3yZixYBF6qxaSEro7+LGLIvGyqTPU
-         9wDgxcySGYzjyPCYAM7zsT6tcTOQtYRm/EzlttIDM+JndCuIi+lndATpCApTDx2QXr
-         uccIawjcpxwc6gTbrJtSPZ5thr9ONXFgsy5mVOAk=
-Authentication-Results: smaract.com;
-        spf=pass (sender IP is 213.168.205.127) smtp.mailfrom=vonohr@smaract.com smtp.helo=mx1.smaract.de
-Received-SPF: pass (smaract.com: connection is authenticated)
-From:   Sebastian von Ohr <vonohr@smaract.com>
-To:     Radhey Shyam Pandey <radheys@xilinx.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Appana Durga Kedareswara Rao <appanad@xilinx.com>,
-        Michal Simek <michals@xilinx.com>
-CC:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-Subject: RE: [PATCH] dmaengine: xilinx_dma: Add missing check for empty list
-Thread-Topic: [PATCH] dmaengine: xilinx_dma: Add missing check for empty list
-Thread-Index: AQHV8VxxdjMBtKwDjUiUwfzZyHoPo6g7hG2AgAAGXQCAMfPDcIAAaXeAgAEY0ZA=
-Date:   Wed, 8 Apr 2020 07:12:03 +0000
-Message-ID: <c0883a291b5940b6b1ecb14b072ffc15@smaract.com>
-References: <20200303130518.333-1-vonohr@smaract.com>
- <20200306133427.GG4148@vkoul-mobl>
- <CH2PR02MB7000C592992EEFBFB01D5735C7E30@CH2PR02MB7000.namprd02.prod.outlook.com>
- <c12c2321f9d5407698b9992b9a375966@smaract.com>
- <BYAPR02MB5638F1A9A1B68C0FA534E07DC7C30@BYAPR02MB5638.namprd02.prod.outlook.com>
-In-Reply-To: <BYAPR02MB5638F1A9A1B68C0FA534E07DC7C30@BYAPR02MB5638.namprd02.prod.outlook.com>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1728497AbgDHLlA (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 8 Apr 2020 07:41:00 -0400
+Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 759AF20747;
+        Wed,  8 Apr 2020 11:40:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586346059;
+        bh=igLuiZn52qB1kj2vKxCTjSGs9/VNYNbdH6sNTlgRisY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lNMtsoG3BeTIbawLBoa0nrrwd0el6dj9ixd/wEe67LD2atI1u1lEiKmTJiKJA0hjV
+         FXR8cQCs+m+ksv+uue55PKV997wAUH/UarzRCS6hVK+lXwWdeotoHeiFSlypmHOYoN
+         dm4usj1My3oZ7OaxsoqH8jwAufqemuBwo1R1j8fs=
+Date:   Wed, 8 Apr 2020 13:40:48 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ricardo Ribalda Delgado <ribalda@kernel.org>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        dmaengine@vger.kernel.org, Matthias Maennich <maennich@google.com>,
+        Harry Wei <harryxiyou@gmail.com>, x86@kernel.org,
+        ecryptfs@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        target-devel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Tyler Hicks <code@tyhicks.com>, Vinod Koul <vkoul@kernel.org>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-scsi@vger.kernel.org,
+        netdev@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev@lists.ozlabs.org, Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2 0/2] Don't generate thousands of new warnings when
+ building docs
+Message-ID: <20200408134048.5329427d@coco.lan>
+In-Reply-To: <87lfn8klf4.fsf@mpe.ellerman.id.au>
+References: <cover.1584716446.git.mchehab+huawei@kernel.org>
+        <87lfn8klf4.fsf@mpe.ellerman.id.au>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-PPP-Message-ID: <158632992390.35687.17539552563877992014@smaract.com>
-X-PPP-Vhost: mario.smaract.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-> -----Original Message-----
-> From: Radhey Shyam Pandey [mailto:radheys@xilinx.com]
-> Sent: Tuesday, April 7, 2020 6:04 PM
-> To: Sebastian von Ohr <vonohr@smaract.com>; Vinod Koul
-> <vkoul@kernel.org>; Appana Durga Kedareswara Rao
-> <appanad@xilinx.com>; Michal Simek <michals@xilinx.com>
-> Cc: dmaengine@vger.kernel.org
-> Subject: RE: [PATCH] dmaengine: xilinx_dma: Add missing check for empty
-> list
->=20
-> Thanks for reminding me. Somehow I missed it. You mentioned in one
-> of earlier thread that this bug is introduced it using dma_sync_wait to
-> wait for DMA completion. So to reproduce the issue in xilinx axidma
-> test client I have to replace issue_pending with sync_wait API?
+Em Tue, 07 Apr 2020 13:46:23 +1000
+Michael Ellerman <mpe@ellerman.id.au> escreveu:
 
-Yes, dma_sync_wait triggered the bug for me almost every transfer. In the=20
-xilinx axidmatest this is probably best achieved by adding dma_sync_wait=20
-before the wait_for_completion_timeout. I encountered the bug with your=20
-xilinx-v2019.2.01 tag. On this tag it actually crashes the kernel with an=20
-invalid memory access (because the residue is written to desc). With the=20
-current driver version it probably seems to work fine. You might have to=20
-add some debug print to verify that the active_list can indeed be empty in=
-=20
-xilinx_dma_tx_status.
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+> > This small series address a regression caused by a new patch at
+> > docs-next (and at linux-next).
+> >
+
+...
+
+> > This solves almost all problems we have. Still, there are a few places
+> > where we have two chapters at the same document with the
+> > same name. The first patch addresses this problem.  
+> 
+> I'm still seeing a lot of warnings. Am I doing something wrong?
+> 
+> cheers
+> 
+> /linux/Documentation/powerpc/cxl.rst:406: WARNING: duplicate label powerpc/cxl:open, other instance in /linux/Documentation/powerpc/cxl.rst
+...
+> /linux/Documentation/powerpc/syscall64-abi.rst:86: WARNING: duplicate label powerpc/syscall64-abi:parameters and return value, other instance in /linux/Documentation/powerpc/syscall64-abi.rst
+...
+> /linux/Documentation/powerpc/ultravisor.rst:339: WARNING: duplicate label powerpc/ultravisor:syntax, other instance in /linux/Documentation/powerpc/ultravisor.rst
+...
+
+I can't reproduce your issue here at linux-next (+ my pending doc patches).
+
+So, I can only provide you some hints.
+
+If you see the logs you posted, all of them are related to duplicated
+labels inside the same file.
+
+-
+
+The new Sphinx module we're using (sphinx.ext.autosectionlabel) generates
+references for two levels, within the same document file (after this patch).
+
+
+Looking at the first document (at linux-next version), it has:
+
+1) A first level document title:
+
+   Coherent Accelerator Interface (CXL)
+
+2) Several second level titles:
+
+   Introduction
+   Hardware overview
+   AFU Modes
+   MMIO space
+   Interrupts
+   Work Element Descriptor (WED)
+   User API
+   Sysfs Class
+   Udev rules
+
+Right now, there's no duplication, but if someone adds, for example, 
+another first-level or second-level title called "Interrupts", then 
+the file will produce a duplicated label and Sphinx will warn.
+
+The same would happen if someone adds another title (either first
+level or second level) called "Coherent Accelerator Interface (CXL)",
+as this will conflict with the document title.
+
+-
+
+Now, if the title "Coherent Accelerator Interface (CXL)" got removed,
+then "Introduction".."Udev rules" will become first level titles.
+
+Then, the sections at the "User API": "open", "ioctl"... will become
+second level titles and it will produce lots of warnings.
+
+-
+
+That's said, IMHO, this document needs section titles for the two
+sections under "User API". Adding it would allow removing the document
+title. See enclosed.
+
+Thanks,
+Mauro
+
+powerpc: docs: cxl.rst: mark two section titles as such
+
+The User API chapter contains two sub-chapters. Mark them as
+such.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+
+diff --git a/Documentation/powerpc/cxl.rst b/Documentation/powerpc/cxl.rst
+index 920546d81326..d2d77057610e 100644
+--- a/Documentation/powerpc/cxl.rst
++++ b/Documentation/powerpc/cxl.rst
+@@ -133,6 +133,7 @@ User API
+ ========
+ 
+ 1. AFU character devices
++^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+     For AFUs operating in AFU directed mode, two character device
+     files will be created. /dev/cxl/afu0.0m will correspond to a
+@@ -395,6 +396,7 @@ read
+ 
+ 
+ 2. Card character device (powerVM guest only)
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 
+     In a powerVM guest, an extra character device is created for the
+     card. The device is only used to write (flash) a new image on the
+

@@ -2,92 +2,120 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C88681A2A10
-	for <lists+dmaengine@lfdr.de>; Wed,  8 Apr 2020 22:06:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 760CF1A2B5E
+	for <lists+dmaengine@lfdr.de>; Wed,  8 Apr 2020 23:43:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729634AbgDHUGP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 8 Apr 2020 16:06:15 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:43435 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbgDHUGP (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 8 Apr 2020 16:06:15 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MirfI-1iqWa42OcG-00errp; Wed, 08 Apr 2020 22:06:00 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Vinod Koul <vkoul@kernel.org>, Zhou Wang <wangzhou1@hisilicon.com>,
-        Zhenfa Qiu <qiuzhenfa@hisilicon.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: hisilicon: fix PCI_MSI dependency
-Date:   Wed,  8 Apr 2020 22:05:20 +0200
-Message-Id: <20200408200559.4124238-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.0
+        id S1727136AbgDHVnM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 8 Apr 2020 17:43:12 -0400
+Received: from avon.wwwdotorg.org ([104.237.132.123]:46164 "EHLO
+        avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbgDHVnL (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 8 Apr 2020 17:43:11 -0400
+X-Greylist: delayed 334 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Apr 2020 17:43:11 EDT
+Received: from [10.2.49.83] (thunderhill.nvidia.com [216.228.112.22])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by avon.wwwdotorg.org (Postfix) with ESMTPSA id 339571C053D;
+        Wed,  8 Apr 2020 15:37:36 -0600 (MDT)
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.1 at avon.wwwdotorg.org
+Subject: Re: [PATCH] dmaengine: tegra: fix broken 'select' statement
+To:     Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+References: <20200408200504.4067970-1-arnd@arndb.de>
+From:   Stephen Warren <swarren@wwwdotorg.org>
+Autocrypt: addr=swarren@wwwdotorg.org; prefer-encrypt=mutual; keydata=
+ xsFNBE6KoecBEACosznehcVarBMNKGOiQ4MBbDAKQo73RDLP4hKEtaTVoQKg7tAM/tcQgbR6
+ p1NSxVq9tunbEskwHkHc/ES/xT+JBFMmG8mh2SmBocyuNjlN8lsW8r2CuLA8EuDr7Laz5yl0
+ Gf/G3Q+yYH+ytUnUuPmlxTueR7MNxIT0lz0fjil2HJclha/T3o8osagYWsXyN9Iaqy+6YTit
+ fG4hVCr0s+3SYylRp9m2/LaP0CPTQVCJKnv1Oq83PnnV/BA/9sBYxDaVNGfdz2FAWqSH4H7q
+ oyonAMzsF7f/cTYcFGTN3kL3UonG43DHpqCv+gHMKITBCxN+3HjX4wuNC7raoHVRRbx7/JES
+ ZrJ1ymKdMNxl8bquldTk6VyAJlTRjuq7jRY9LIEHcns91MYFgpz7RAhCPmXnsMgpuIvU/yTE
+ aApIAkHSo2Nyk9NeyIsji5voa9VAAoZKLGFTkhyPLEcjU9JmH/x224zGLtK28bL+P61PCk02
+ jG7RTF4665IDbmC8UNvEm9mBgFNlEgOPqbVF9oa5Gd9cnaOTucDLJqjCpM53SM5Jd3eRHk7A
+ zDHSBWsRsmKXU4hhxlu+90tb7I0TcjPfqeCrO46rNELdskcJAlLzx0v07+IhhGAM70oAbP49
+ VBA7hsVCimuITFSUUwAtzFJmFg/mjxNdftTr3yssaK41VmxsIQARAQABzSZTdGVwaGVuIFdh
+ cnJlbiA8c3dhcnJlbkB3d3dkb3Rvcmcub3JnPsLBrAQTAQIAPwIbAwYLCQgHAwIGFQgCCQoL
+ BBYCAwECHgECF4AWIQTmd6/Z3M3mpZiMqw6bjacJJlQhnAUCXboEKAUJERCVvgAhCRCbjacJ
+ JlQhnBYhBOZ3r9nczealmIyrDpuNpwkmVCGc074P/jq2nW6yORiLCgiTX3I0ro0sUq6aOvkq
+ WH/g1Oq4fTr6TmabZVFvuuUZDF/AwB6p0Mm6tWar29nF1/OEx7QrrrHrBEcaAEHmZFjoenDK
+ 3SJDHDLBkcuMiZS7CFdb22vBYrgzoHwptySrRcHWW5rxhAKgyTX/p7F96zicNPS1sljc7JNW
+ oik6b90PmCeKCeuoH4ruBO+3naDInKrL389xvujF38aTkgai9DJtWjWizZzAP+DWJrHtb6zz
+ fsPA41hnZ5mKmUbiuJehPbv0+Q6QSFjLhNiP6lvkV34uANH3TQn2o6nApoa3XT5fIxrJOFrz
+ q6xuM2tcyd/dRr1TdtIQCRABaKYIF/mgtMa19+GbLI8A/t1RmxEhlctSEUOFO7E3PNiwIjvI
+ OpqZjq3NR8/+Lw2Zv9H3B7Wywk87ESwaYhYL29AzVvAMKFYHpDbn0abN+GVyit+fVbrUvKed
+ nr63H7bG81O1DBA44gBDaIZhwOQDqeTou05rFa2PLGbdd6YL8AM6nWVI9UqD2+aKg1GcXtFO
+ cq3Ll5fzUoSys13a14cCDLI82XvPxJh8TOtC8wJywYwAa75ieuVXxWh74d9qRYq3iJZpIWCE
+ s5NkkGN4Q1dul84OQrwiN+2PYH+k2M6MGMt+9MHEoR+vrtMNUIeCa/ctYX6mb+nSPZAr5Fx0
+ LZMdzsFNBE6KoecBEAC5xnYhQJCsaOCCTrzpnifMCUC0zLvhKgdChd4QAJm8ap+qufkbz3oF
+ iJx1u19AbX8PNT3mdtwsguJhcamdT49YepVEvo6znc4S/pxjbX882CovKoOqSPSnE9VIbLHG
+ VnxwDQGp2cbdqYOF7qvr4wGliR/X1Hx72EK3kSppvGEQp/uyW0QzHUC6XX9TdKawWAPohaqm
+ TXqaQSMp6uOhNCTmydTAN2V4bJpQBU3BpNNtBZ+mnHlu/Yl74x0tgIYBqxEVdYz3Ryn1FTTC
+ NCKcGiO8px2e7VBsKAiC9tRMZYjuH5HaS0SgI2asbAqX1OduiC1BTvM9P3oqps0Vs8zR7nxt
+ Lodws79Vjoc0Ab/5BSEMIooww0Eo/VYwqnMs6Bvk5dtv7kCVRMUyV2JrTD0cCw0E+urjW5Dw
+ kr4hRDTi8Xr45WecHxXMHZOllE4q8PxaK+rwoX0boXIQ+i3bL6Nemj3d6+ELYe5Dpswzmn0Z
+ RrDegq7ly9303bEve09cIVZ4PS2rkx54bGN9R9TgXhU7XnRHyCSKFE8vSXXyG9Lu2aHq+od1
+ bUoTOQfoLOAeJOrbo+crZAq33W69t6rD0Q1WHuvzd2zpOQdlsrUOGkDKuk0dBxpzlf8uusaD
+ lE5fjd4RQXreKVjSKczrMd9uhLe2cdsVNFljHZlXnFRciNsUge6AKwARAQABwsGTBBgBAgAm
+ AhsMFiEE5nev2dzN5qWYjKsOm42nCSZUIZwFAl03xTwFCRD+ZlUAIQkQm42nCSZUIZwWIQTm
+ d6/Z3M3mpZiMqw6bjacJJlQhnA+lD/9/DbFI8lUQyb0ZOBLHW6iX+Ps++hElYOmjL4T4f6wa
+ FMNiFk2lPom/xq8OL5B2swWC7w5o/j+GwrS6MbkL/s932zQ15+AVD0HfhTBKKQEnQUPVLM2T
+ 9AcXpY0s8AYsWa89YNTJpdbFc5ep/Nx6R3rYu0ixJtrJT+p19qhIavMRaHMYuxGLO4xs4CUO
+ Z2kq6+KKNIAi63FjYBLYPPGd6KyXSj1zWZwAE6qLLPl/MGrbKSqETj01Z7NuGYbJNVi0ooIq
+ b+iBGsPQRx6FhiVXbo9eheBJ/Qui4QVCur2WFzxzlhqTDknA0d5by+tQvg4NUmm0u64YIeGQ
+ 5U4wLL60kch1Cr1MSM9eBi1fsq3FRCd7QQnCO3MaJ9odE5BaHKpDFzd9cxrBA/StoDkiU6Ci
+ o9HrHblS9gNQemZT+WTSA/t7dB97NesqGbDtdW5G0wfliNFmvS9qDpUe3hSa6f9PgCz/8QzS
+ aXcBhnI7xRoXZxRKo3mnNihC/5hnNxMsUP5oNdhRPVyTs8wlLKXBHXUpj6OgoFO01e05Niak
+ UR3Mub2hXCUcJ3UuO1+nxY88x+K86LZnMCa+0A6RTeTJAz6aaF2Fr/h7xncLk3LG3/ODQFjb
+ S1cWYsAeg++INJffJzend+91hvGp1WcI8TGc6BjYnO5mKBuVumOKXi4wa2OJo9y3lMLBkwQY
+ AQIAJgIbDBYhBOZ3r9nczealmIyrDpuNpwkmVCGcBQJdugQxBQkREJXIACEJEJuNpwkmVCGc
+ FiEE5nev2dzN5qWYjKsOm42nCSZUIZywWA//d3PsJki5IAkAsALeF+qMHtyGFCf/vc1V91jN
+ MC2wuAo7MKLxQDyMdkjSp0s+UrDzTY9bYocfB2G3mXnJDEzQSd6snf0pEMQVf77SGbddcFCO
+ GsfJuE6DmsSjVncK3JO9/eXeqyTup/PNN2RYkuR394+RxeUvf/f1km80DtO0beI3g/EtMSE1
+ ljLwDuh98j9qVSJ0xK7cmf/ngi703BltS8rpoXDioS1fTlVFdJpGOH94PVlyJsDbHy4rDeFU
+ Ptk1Q0hRGKNpCPCVQntLAc3mH9++3oVxxCsvgUfjHbgwzptTGj6SbXH3piyBPMHRXhtIiHRH
+ kkrxbMKGuzkU5dPmMv7Mzw9yaMYY8mmPZMPJoLA0bW6DuZ1nAz9U7njM/xb1WIZHKA8HVfTz
+ 4fO8lP7jxCod6uBvu3vgBRbYTu3QoQjxhIjbAE5P9ZxLggx919dKypYiXeIPB8OHg5/4LwEi
+ f+rjKF/HHMo+ZCJx9BCZeW5yNkeTm638JfD1XjrZzDNsawdMFFdGL5TJrubu52fxsml41ay6
+ Qacni4jVUmZDP1HVYzcQN42O7ynZKMecpwM3G6V9L3Ifs8VpfdPpOnJb6TOXUOrITz4kyHDy
+ 0hRsU1DwGeqzyyZAJT6MHZR0qO93XKFy9+WgzUXS2j0rQ9D4zTQI4c0Zp3ri8v5ZDXJh1W0=
+Message-ID: <7c637edc-200b-ed8e-26c8-52c2c7d8025a@wwwdotorg.org>
+Date:   Wed, 8 Apr 2020 15:37:34 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:0AbTa57IfhQyvCnJShbn24hgYs9aVvJsSjsPKYW7LbrrrrylMnG
- +2anFV3e/XbnI0Q3UvpIaCE00ONFRUjEcBpkHJg3CqBkGxI1YNV4gn+Urvmuq3UInHWzfBx
- h6KmoDfXbRTrlMDQpCypp0sRYySmscF120IovP7BxTRcphdJJGTBwC3xjWsj4W5RyBYFxpF
- jDbtXr94P1n4NSL77NfwQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VJWbEVuwKdU=:v4UWQTC+x8Voy10XS6hQ+3
- H19rpa23HuiEOGju33h4iR/LCefkWYi1ZzDYMbOLb0oHk95lbS+ZOIjGGF04Dx7FsHPehqXiR
- y2T+Eb8ldrcAD+msZOCegPfzt9H+Y40CKOGiFOuEpXuMVZm2+4auBOj7MBXLfmDl4OGhHiuXd
- KpTwQ8n/lhpzPgOvcLJ2HoNZO+7JRNfqJ3H9Ibeb0GSX/PFSB7n4jndeIvv0sTWZf6MUxamdd
- lEuGVf8zGwW78Mx4jtmIt1ttZ359K/EW+Xq6EHkfRZa29hppU5KQJE9BlwWldK906kfNda2o3
- ytKpRZBRA96oPHHzAL5gqSMRXgrH5qFtEfceJnYfySM4oddMgQIMLj31MhMhJRk30BOrE0ntd
- ZLv4jRCPHXGUpEatxdjixjc98SWljuOC/3ZFvRNRncWJX04Nq/GEv3TdT/rx8HYHO/pLxaC3I
- JxCqj28aEv01y8uCUzWQRC4v0XcNI/TGG7d/a39g2QkCfGvcO8fnrCvbUGVbkfCbLozjITCB2
- nNGN228OKo6WAkUf0aDwZMGTlAHsTjtTKffVwoPhwaOpjVlyyGf65ZsGO+2wVX7OSoHyLb8dq
- NDwoJacw0X2+jJJ7lS1WoUNSUjdhAqMY3FiCcv0ErHdDl4n5hg9n5m8uITzHulhAn3rygYn+Y
- wOeSgf2vc9Hncmbxrl7IwXdRjNHipIOayhMynnPSjw3nNtR6vpCxSIQJkylZQE5aUBYj9/Rl4
- eAfJ2dMXedCCf/Oond28iYzjxnqa/ePipgfdKwaA1RrU2ZHKhb0dBrPAlz3DDIFFBlszlmPYC
- ku93/gljwUsda4fyuLT8d1GFkAerfEHSeQd6kVwg0xjj/DqzKY=
+In-Reply-To: <20200408200504.4067970-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The dependency is phrased incorrectly, so on arm64, it is possible
-to build with CONFIG_PCI disabled, resulting a build failure:
+On 4/8/20 2:04 PM, Arnd Bergmann wrote:
+> A SoC driver selects the dmaengine driver for the platform it
+> is made for, leading to Kconfig warnings in some configurations:
+> 
+> WARNING: unmet direct dependencies detected for TEGRA20_APB_DMA
+>   Depends on [n]: DMADEVICES [=n] && (ARCH_TEGRA [=y] || COMPILE_TEST [=y])
+>   Selected by [y]:
+>   - SOC_TEGRA_FUSE [=y] && ARCH_TEGRA [=y] && ARCH_TEGRA_2x_SOC [=y]
+> 
+> WARNING: unmet direct dependencies detected for TEGRA20_APB_DMA
+>   Depends on [n]: DMADEVICES [=n] && (ARCH_TEGRA [=y] || COMPILE_TEST [=y])
+>   Selected by [y]:
+>   - SOC_TEGRA_FUSE [=y] && ARCH_TEGRA [=y] && ARCH_TEGRA_2x_SOC [=y]
+> 
+> Generally, no driver should 'select' a driver from a different subsystem,
+> especially when there is no build-time dependency between the two.
 
-drivers/dma/hisi_dma.c: In function 'hisi_dma_free_irq_vectors':
-drivers/dma/hisi_dma.c:138:2: error: implicit declaration of function 'pci_free_irq_vectors'; did you mean 'pci_alloc_irq_vectors'? [-Werror=implicit-function-declaration]
-  138 |  pci_free_irq_vectors(data);
-      |  ^~~~~~~~~~~~~~~~~~~~
-      |  pci_alloc_irq_vectors
-drivers/dma/hisi_dma.c: At top level:
-drivers/dma/hisi_dma.c:605:1: warning: data definition has no type or storage class
-  605 | module_pci_driver(hisi_dma_pci_driver);
-      | ^~~~~~~~~~~~~~~~~
-drivers/dma/hisi_dma.c:605:1: error: type defaults to 'int' in declaration of 'module_pci_driver' [-Werror=implicit-int]
-drivers/dma/hisi_dma.c:605:1: warning: parameter names (without types) in function declaration
-drivers/dma/hisi_dma.c:599:26: error: 'hisi_dma_pci_driver' defined but not used [-Werror=unused-variable]
-  599 | static struct pci_driver hisi_dma_pci_driver = {
-
-Change it so we always depend on PCI_MSI, even on ARM64
-
-Fixes: e9f08b65250d ("dmaengine: hisilicon: Add Kunpeng DMA engine support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/dma/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 98ae15c82a30..c19e25b140c5 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -241,7 +241,8 @@ config FSL_RAID
- 
- config HISI_DMA
- 	tristate "HiSilicon DMA Engine support"
--	depends on ARM64 || (COMPILE_TEST && PCI_MSI)
-+	depends on ARM64 || COMPILE_TEST
-+	depends on PCI_MSI
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
--- 
-2.26.0
-
+IIRC there's a run-time dependency between the two though; without the
+DMA driver available to implement a HW WAR, the fuse driver has to
+access fuse registers directly which IIRC can cause a lock-up, or
+something like that. So I think allowing APD_DMA to be deselected by the
+user is wrong for T20 at least; it simply must be enabled. Perhaps
+ARCH_TEGRA_2x_SOC should select it instead?

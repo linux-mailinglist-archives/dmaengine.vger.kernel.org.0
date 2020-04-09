@@ -2,90 +2,96 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2386C1A2D74
-	for <lists+dmaengine@lfdr.de>; Thu,  9 Apr 2020 03:57:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 733061A2F6A
+	for <lists+dmaengine@lfdr.de>; Thu,  9 Apr 2020 08:45:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgDIB5g (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 8 Apr 2020 21:57:36 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12700 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726521AbgDIB5g (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 8 Apr 2020 21:57:36 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 0F458CA7414E7270DFF8;
-        Thu,  9 Apr 2020 09:57:34 +0800 (CST)
-Received: from [127.0.0.1] (10.63.139.185) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Thu, 9 Apr 2020
- 09:57:25 +0800
-Subject: Re: [PATCH] dmaengine: hisilicon: fix PCI_MSI dependency
-To:     Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vkoul@kernel.org>,
-        Zhenfa Qiu <qiuzhenfa@hisilicon.com>
-References: <20200408200559.4124238-1-arnd@arndb.de>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-From:   Zhou Wang <wangzhou1@hisilicon.com>
-Message-ID: <5E8E8104.5060307@hisilicon.com>
-Date:   Thu, 9 Apr 2020 09:57:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        id S1726796AbgDIGpO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 9 Apr 2020 02:45:14 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:60640 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgDIGpN (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Apr 2020 02:45:13 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0396ix9U027169;
+        Thu, 9 Apr 2020 01:44:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1586414699;
+        bh=vdhHAqjD6KP/c72S1QR0R+EvzV4ffIQ2S0zwlWNW4fI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=IPfcJLrPfAQJk2ml4I0UtMDVqPON9fKBS/4V5zp26L/WrhwTcjxlQ0j2Dodf37xem
+         ljRWxQJe6iEb63WgvnS6PwK3aDUrBFQNOOqOtTtl2bZWPwJvx9Y6J/CVg1pthsIQI7
+         /8WaOvK3ygzM1KWGHNp2D/+9Utz3HurOPNDuCCpI=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0396ixNK088950
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 9 Apr 2020 01:44:59 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 9 Apr
+ 2020 01:44:58 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 9 Apr 2020 01:44:58 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0396iu6b123222;
+        Thu, 9 Apr 2020 01:44:56 -0500
+Subject: Re: [PATCH] dmaengine: ti: k3-psil: fix deadlock on error path
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        <dmaengine@vger.kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200408185501.30776-1-grygorii.strashko@ti.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <d4a71f25-8a25-76bc-bbf7-749e20268339@ti.com>
+Date:   Thu, 9 Apr 2020 09:45:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200408200559.4124238-1-arnd@arndb.de>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.63.139.185]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200408185501.30776-1-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 2020/4/9 4:05, Arnd Bergmann wrote:
-> The dependency is phrased incorrectly, so on arm64, it is possible
-> to build with CONFIG_PCI disabled, resulting a build failure:
-> 
-> drivers/dma/hisi_dma.c: In function 'hisi_dma_free_irq_vectors':
-> drivers/dma/hisi_dma.c:138:2: error: implicit declaration of function 'pci_free_irq_vectors'; did you mean 'pci_alloc_irq_vectors'? [-Werror=implicit-function-declaration]
->   138 |  pci_free_irq_vectors(data);
->       |  ^~~~~~~~~~~~~~~~~~~~
->       |  pci_alloc_irq_vectors
-> drivers/dma/hisi_dma.c: At top level:
-> drivers/dma/hisi_dma.c:605:1: warning: data definition has no type or storage class
->   605 | module_pci_driver(hisi_dma_pci_driver);
->       | ^~~~~~~~~~~~~~~~~
-> drivers/dma/hisi_dma.c:605:1: error: type defaults to 'int' in declaration of 'module_pci_driver' [-Werror=implicit-int]
-> drivers/dma/hisi_dma.c:605:1: warning: parameter names (without types) in function declaration
-> drivers/dma/hisi_dma.c:599:26: error: 'hisi_dma_pci_driver' defined but not used [-Werror=unused-variable]
->   599 | static struct pci_driver hisi_dma_pci_driver = {
-> 
-> Change it so we always depend on PCI_MSI, even on ARM64
-> 
-> Fixes: e9f08b65250d ("dmaengine: hisilicon: Add Kunpeng DMA engine support")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+
+On 08/04/2020 21.55, Grygorii Strashko wrote:
+> The mutex_unlock() is missed on error path of psil_get_ep_config()
+> which causes deadlock, so add missed mutex_unlock().
+
+Ah, you are right, thanks for catching it!
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+
+> Fixes: 8c6bb62f6b4a ("dmaengine: ti: k3 PSI-L remote endpoint configuration")
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 > ---
->  drivers/dma/Kconfig | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/dma/ti/k3-psil.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> index 98ae15c82a30..c19e25b140c5 100644
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -241,7 +241,8 @@ config FSL_RAID
->  
->  config HISI_DMA
->  	tristate "HiSilicon DMA Engine support"
-> -	depends on ARM64 || (COMPILE_TEST && PCI_MSI)
-> +	depends on ARM64 || COMPILE_TEST
-> +	depends on PCI_MSI
->  	select DMA_ENGINE
->  	select DMA_VIRTUAL_CHANNELS
->  	help
+> diff --git a/drivers/dma/ti/k3-psil.c b/drivers/dma/ti/k3-psil.c
+> index d7b965049ccb..fb7c8150b0d1 100644
+> --- a/drivers/dma/ti/k3-psil.c
+> +++ b/drivers/dma/ti/k3-psil.c
+> @@ -27,6 +27,7 @@ struct psil_endpoint_config *psil_get_ep_config(u32 thread_id)
+>  			soc_ep_map = &j721e_ep_map;
+>  		} else {
+>  			pr_err("PSIL: No compatible machine found for map\n");
+> +			mutex_unlock(&ep_map_mutex);
+>  			return ERR_PTR(-ENOTSUPP);
+>  		}
+>  		pr_debug("%s: Using map for %s\n", __func__, soc_ep_map->name);
 > 
 
-Hi Arnd,
+- Péter
 
-There was a fix from Haibing: https://lkml.org/lkml/2020/3/28/158
-Maybe Vinod will review and take it later :)
-
-Best,
-Zhou
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

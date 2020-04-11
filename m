@@ -2,34 +2,38 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A9781A5A6E
-	for <lists+dmaengine@lfdr.de>; Sun, 12 Apr 2020 01:43:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05B1A1A54A6
+	for <lists+dmaengine@lfdr.de>; Sun, 12 Apr 2020 01:07:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgDKXnQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 11 Apr 2020 19:43:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41572 "EHLO mail.kernel.org"
+        id S1728397AbgDKXGZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 11 Apr 2020 19:06:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727221AbgDKXGV (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:06:21 -0400
+        id S1727273AbgDKXGZ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:06:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B213821924;
-        Sat, 11 Apr 2020 23:06:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FBED21744;
+        Sat, 11 Apr 2020 23:06:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646381;
-        bh=f09a1w7fNlXQ8Ts8ys9hzmXwKs22qUSqpWGXW9bs7b0=;
+        s=default; t=1586646385;
+        bh=BuT+U3bSnltRoLUw4bLKl1iPe6gDp2CGnADnaOvLaGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PhfIw2LKYniMN2Ogk88+g1jg8fdNj2zFLKzJ3H07ZgfFepf0WSIScmwRocNosC1H+
-         jeorckTFuIc/b71nx5FZvqLy39jdgSa1l/tkUNztjIk4u/AeuB3SJF8SNPyhcdes5k
-         hIlZWBmPh5ssS9+MjpaALrttNiF+maLjXDzFEC0s=
+        b=Dj+MXXl3tEVDbBM9atZ+l4MXuS1bs6JQXof0uUsgsPMFbxqsDJh8FevQ/cP62ia0y
+         pw78lT6C8gZDv0O1wn7Sv2dJJWLjGrIH/aXcRbxIjgbdTULL7rIC5h+MDqTSG/2eoA
+         9/LZvlw2XifzxVjYJ01wqwBNIjtUD321sGnT5/vI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 122/149] dmaengine: idxd: check return result from check_vma() in cdev
-Date:   Sat, 11 Apr 2020 19:03:19 -0400
-Message-Id: <20200411230347.22371-122-sashal@kernel.org>
+Cc:     Etienne Carriere <etienne.carriere@st.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 125/149] dmaengine: stm32-dma: use reset controller only at probe time
+Date:   Sat, 11 Apr 2020 19:03:22 -0400
+Message-Id: <20200411230347.22371-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200411230347.22371-1-sashal@kernel.org>
 References: <20200411230347.22371-1-sashal@kernel.org>
@@ -42,36 +46,58 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Dave Jiang <dave.jiang@intel.com>
+From: Etienne Carriere <etienne.carriere@st.com>
 
-[ Upstream commit b391554c61cb353c279523a706734b090aaf9000 ]
+[ Upstream commit 8cf1e0fc50fcc25021567bb2755580504c57c83a ]
 
-The returned result from the check_vma() function in the cdev ->mmap() call
-needs to be handled. Add the check and returning error.
+Remove reset controller reference from device instance since it is
+used only at probe time.
 
-Fixes: 42d279f9137a ("dmaengine: idxd: add char driver to expose submission portal to userland")
-Reported-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Link: https://lore.kernel.org/r/158264926659.9387.14325163515683047959.stgit@djiang5-desk3.ch.intel.com
+Signed-off-by: Etienne Carriere <etienne.carriere@st.com>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Link: https://lore.kernel.org/r/20200129153628.29329-3-amelie.delaunay@st.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/idxd/cdev.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/dma/stm32-dma.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index 989b7a25ca614..677ccbe6261f4 100644
---- a/drivers/dma/idxd/cdev.c
-+++ b/drivers/dma/idxd/cdev.c
-@@ -139,6 +139,8 @@ static int idxd_cdev_mmap(struct file *filp, struct vm_area_struct *vma)
+diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
+index 5989b08935211..ff34a10fc8d89 100644
+--- a/drivers/dma/stm32-dma.c
++++ b/drivers/dma/stm32-dma.c
+@@ -207,7 +207,6 @@ struct stm32_dma_device {
+ 	struct dma_device ddev;
+ 	void __iomem *base;
+ 	struct clk *clk;
+-	struct reset_control *rst;
+ 	bool mem2mem;
+ 	struct stm32_dma_chan chan[STM32_DMA_MAX_CHANNELS];
+ };
+@@ -1275,6 +1274,7 @@ static int stm32_dma_probe(struct platform_device *pdev)
+ 	struct dma_device *dd;
+ 	const struct of_device_id *match;
+ 	struct resource *res;
++	struct reset_control *rst;
+ 	int i, ret;
  
- 	dev_dbg(&pdev->dev, "%s called\n", __func__);
- 	rc = check_vma(wq, vma, __func__);
-+	if (rc < 0)
-+		return rc;
+ 	match = of_match_device(stm32_dma_of_match, &pdev->dev);
+@@ -1309,11 +1309,11 @@ static int stm32_dma_probe(struct platform_device *pdev)
+ 	dmadev->mem2mem = of_property_read_bool(pdev->dev.of_node,
+ 						"st,mem2mem");
  
- 	vma->vm_flags |= VM_DONTCOPY;
- 	pfn = (base + idxd_get_wq_portal_full_offset(wq->id,
+-	dmadev->rst = devm_reset_control_get(&pdev->dev, NULL);
+-	if (!IS_ERR(dmadev->rst)) {
+-		reset_control_assert(dmadev->rst);
++	rst = devm_reset_control_get(&pdev->dev, NULL);
++	if (!IS_ERR(rst)) {
++		reset_control_assert(rst);
+ 		udelay(2);
+-		reset_control_deassert(dmadev->rst);
++		reset_control_deassert(rst);
+ 	}
+ 
+ 	dma_cap_set(DMA_SLAVE, dd->cap_mask);
 -- 
 2.20.1
 

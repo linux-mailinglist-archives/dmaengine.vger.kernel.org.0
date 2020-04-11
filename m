@@ -2,27 +2,27 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8573D1A5922
-	for <lists+dmaengine@lfdr.de>; Sun, 12 Apr 2020 01:34:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD01A1A580B
+	for <lists+dmaengine@lfdr.de>; Sun, 12 Apr 2020 01:27:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgDKXJM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 11 Apr 2020 19:09:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46782 "EHLO mail.kernel.org"
+        id S1729957AbgDKXLg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 11 Apr 2020 19:11:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728076AbgDKXJM (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:09:12 -0400
+        id S1729951AbgDKXLg (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:11:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D69D20708;
-        Sat, 11 Apr 2020 23:09:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9492620757;
+        Sat, 11 Apr 2020 23:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646552;
+        s=default; t=1586646696;
         bh=BuT+U3bSnltRoLUw4bLKl1iPe6gDp2CGnADnaOvLaGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1eEN1Fbtet4vlVm4DU46J1iSdc6/Q9i3eiuR2CdoK1bjZw9oXuvuUyMr+VChiGAuF
-         tdveL62/lXc1ZR0eOfFq1RVb2XZ3qm3u2GtfPMeq2PK3jdIMso6Bz+eiA+jVliylNq
-         gVNMU+ZYm2bL2cApalkFnnRXK0CxwpabPpLbaaq4=
+        b=vZfBODVzCxORS1P0lVhDi0Cz2lCYn6vjx2TvXWf5BqGquiMJ0JTa1VRWxlUsCjwpx
+         iRq20ovaF0hq8tS1GM4vWHMGU7eAXyrQzOL1wjNBmJF0EHW35zTLhLGoUHRNKQtKhO
+         yiYiHf+Z/1S6VHMX7/KKz9mU5GTwoUP542/c28mU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Etienne Carriere <etienne.carriere@st.com>,
@@ -31,12 +31,12 @@ Cc:     Etienne Carriere <etienne.carriere@st.com>,
         dmaengine@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 102/121] dmaengine: stm32-dma: use reset controller only at probe time
-Date:   Sat, 11 Apr 2020 19:06:47 -0400
-Message-Id: <20200411230706.23855-102-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 090/108] dmaengine: stm32-dma: use reset controller only at probe time
+Date:   Sat, 11 Apr 2020 19:09:25 -0400
+Message-Id: <20200411230943.24951-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200411230706.23855-1-sashal@kernel.org>
-References: <20200411230706.23855-1-sashal@kernel.org>
+In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
+References: <20200411230943.24951-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore

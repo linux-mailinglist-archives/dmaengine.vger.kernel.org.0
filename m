@@ -2,27 +2,27 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BD01A1A580B
-	for <lists+dmaengine@lfdr.de>; Sun, 12 Apr 2020 01:27:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50B781A55F3
+	for <lists+dmaengine@lfdr.de>; Sun, 12 Apr 2020 01:13:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729957AbgDKXLg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 11 Apr 2020 19:11:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51288 "EHLO mail.kernel.org"
+        id S1727620AbgDKXNN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 11 Apr 2020 19:13:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729951AbgDKXLg (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sat, 11 Apr 2020 19:11:36 -0400
+        id S1730358AbgDKXNM (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sat, 11 Apr 2020 19:13:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9492620757;
-        Sat, 11 Apr 2020 23:11:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C48B21974;
+        Sat, 11 Apr 2020 23:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586646696;
-        bh=BuT+U3bSnltRoLUw4bLKl1iPe6gDp2CGnADnaOvLaGw=;
+        s=default; t=1586646792;
+        bh=biaprx8Yc5sJmohey7+0X3wBw157H0uUbUm0/m8ms5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vZfBODVzCxORS1P0lVhDi0Cz2lCYn6vjx2TvXWf5BqGquiMJ0JTa1VRWxlUsCjwpx
-         iRq20ovaF0hq8tS1GM4vWHMGU7eAXyrQzOL1wjNBmJF0EHW35zTLhLGoUHRNKQtKhO
-         yiYiHf+Z/1S6VHMX7/KKz9mU5GTwoUP542/c28mU=
+        b=Ge4eLeMqPzVbYEn0C6Mxm9953FLBsZsJtVAcgBBICo2dukU48m3Nt1oNB9SwMUGen
+         LtR0l/Whm+QLefFoAYq4hKpmIHLeZXEy3SDPMpwvyH/daBmOyvkqC2wUE7sE/TM95q
+         mYWoMUM/KMzsrGorHZVqZ7cDeGNMg5DNXFdi6hnY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Etienne Carriere <etienne.carriere@st.com>,
@@ -31,12 +31,12 @@ Cc:     Etienne Carriere <etienne.carriere@st.com>,
         dmaengine@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 090/108] dmaengine: stm32-dma: use reset controller only at probe time
-Date:   Sat, 11 Apr 2020 19:09:25 -0400
-Message-Id: <20200411230943.24951-90-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 56/66] dmaengine: stm32-dma: use reset controller only at probe time
+Date:   Sat, 11 Apr 2020 19:11:53 -0400
+Message-Id: <20200411231203.25933-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200411230943.24951-1-sashal@kernel.org>
-References: <20200411230943.24951-1-sashal@kernel.org>
+In-Reply-To: <20200411231203.25933-1-sashal@kernel.org>
+References: <20200411231203.25933-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,7 +63,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index 5989b08935211..ff34a10fc8d89 100644
+index 4903a408fc146..e58cee8ec2410 100644
 --- a/drivers/dma/stm32-dma.c
 +++ b/drivers/dma/stm32-dma.c
 @@ -207,7 +207,6 @@ struct stm32_dma_device {
@@ -74,7 +74,7 @@ index 5989b08935211..ff34a10fc8d89 100644
  	bool mem2mem;
  	struct stm32_dma_chan chan[STM32_DMA_MAX_CHANNELS];
  };
-@@ -1275,6 +1274,7 @@ static int stm32_dma_probe(struct platform_device *pdev)
+@@ -1215,6 +1214,7 @@ static int stm32_dma_probe(struct platform_device *pdev)
  	struct dma_device *dd;
  	const struct of_device_id *match;
  	struct resource *res;
@@ -82,7 +82,7 @@ index 5989b08935211..ff34a10fc8d89 100644
  	int i, ret;
  
  	match = of_match_device(stm32_dma_of_match, &pdev->dev);
-@@ -1309,11 +1309,11 @@ static int stm32_dma_probe(struct platform_device *pdev)
+@@ -1243,11 +1243,11 @@ static int stm32_dma_probe(struct platform_device *pdev)
  	dmadev->mem2mem = of_property_read_bool(pdev->dev.of_node,
  						"st,mem2mem");
  

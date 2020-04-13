@@ -2,60 +2,230 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 552601A67C4
-	for <lists+dmaengine@lfdr.de>; Mon, 13 Apr 2020 16:18:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB0771A6B8E
+	for <lists+dmaengine@lfdr.de>; Mon, 13 Apr 2020 19:40:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730536AbgDMOSr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 13 Apr 2020 10:18:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48664 "EHLO mail.kernel.org"
+        id S1732941AbgDMRkQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 13 Apr 2020 13:40:16 -0400
+Received: from mga18.intel.com ([134.134.136.126]:21683 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730530AbgDMOSq (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 13 Apr 2020 10:18:46 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1932A20774;
-        Mon, 13 Apr 2020 14:18:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586787525;
-        bh=OCT2ifjs9eUW+Niy3jnu8CJR1EG+m0eGSCQqnJEywXg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J6KlRzR1iUnNaimarPvjFZAIOqAry+EbSShOBKbqgc2tfDnop5w4VEwAmVUkE+Pth
-         3iyJIrLm3PaaQYRZ1ye2o6QBxFOrhwZZnlInCj2qdkHnsfUtf67k8UnU2syk404pgr
-         fe+/t/eKTLZGJPEUrk5HrVVshxVY3LFUUF7B8198=
-Date:   Mon, 13 Apr 2020 22:18:31 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Li Yang <leoyang.li@nxp.com>, Peng Ma <peng.ma@nxp.com>
-Subject: Re: [PATCH 1/2] dt-bindings: dma: fsl-edma: fix ls1028a-edma
- compatible
-Message-ID: <20200413141830.GA4722@dragon>
-References: <20200306205403.29881-1-michael@walle.cc>
+        id S1732943AbgDMRkO (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 13 Apr 2020 13:40:14 -0400
+IronPort-SDR: M9EbsviYNivJaX1ESLcbHddHnSNA3sLsA5vW1PX71+XWQE7hqLBxKWTrMzkbo9oefN1Spretpb
+ GoyfxifnLPrg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 10:40:13 -0700
+IronPort-SDR: 0wWb38CP4e2UjG2qFNBrvdcok7JQu26Evwkw+aulvi3oPt4r35F7x5CF+76PyemWLprdMgt6Am
+ emjdNHN+XxUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,378,1580803200"; 
+   d="scan'208";a="331907250"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga001.jf.intel.com with ESMTP; 13 Apr 2020 10:40:12 -0700
+Subject: [PATCH] dmaengine: fix channel index enumeration
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org
+Date:   Mon, 13 Apr 2020 10:40:12 -0700
+Message-ID: <158679961260.7674.8485924270472851852.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306205403.29881-1-michael@walle.cc>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 09:54:02PM +0100, Michael Walle wrote:
-> The bootloader will fix up the IOMMU entries only on nodes with the
-> compatible "fsl,vf610-edma". Thus make this compatible string mandatory
-> for the ls1028a-edma.
-> 
-> While at it, fix the "fsl,fsl," typo.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> Fixes: d8c1bdb5288d ("dt-bindings: dma: fsl-edma: add new fsl,fsl,ls1028a-edma")
+When the channel register code was changed to allow hotplug operations,
+dynamic indexing wasn't taken into account. When channels are randomly
+plugged and unplugged out of order, the serial indexing breaks. Convert
+channel indexing to using IDA tracking in order to allow dynamic
+assignment. The previous code does not cause any regression bug for
+existing channel allocation besides idxd driver since the hotplug usage
+case is only used by idxd at this point.
 
-Applied both.  Will try to send for 5.7-rc inclusion.
+With this change, the chan->idr_ref is also not needed any longer. We can
+have a device with no channels registered due to hot plug. The channel
+device release code no longer should attempt to free the dma device id on
+the last channel release.
 
-Shawn
+Fixes: e81274cd6b52 ("dmaengine: add support to dynamic register/unregister of channels")
+
+Reported-by: Yixin Zhang <yixin.zhang@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Tested-by: Yixin Zhang <yixin.zhang@intel.com>
+---
+ drivers/dma/dmaengine.c   |   60 ++++++++++++++++++++-------------------------
+ include/linux/dmaengine.h |    4 ++-
+ 2 files changed, 28 insertions(+), 36 deletions(-)
+
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index 72c584f1dd26..e341f8d7ae62 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -151,10 +151,6 @@ static void chan_dev_release(struct device *dev)
+ 	struct dma_chan_dev *chan_dev;
+ 
+ 	chan_dev = container_of(dev, typeof(*chan_dev), device);
+-	if (atomic_dec_and_test(chan_dev->idr_ref)) {
+-		ida_free(&dma_ida, chan_dev->dev_id);
+-		kfree(chan_dev->idr_ref);
+-	}
+ 	kfree(chan_dev);
+ }
+ 
+@@ -952,27 +948,9 @@ static int get_dma_id(struct dma_device *device)
+ }
+ 
+ static int __dma_async_device_channel_register(struct dma_device *device,
+-					       struct dma_chan *chan,
+-					       int chan_id)
++					       struct dma_chan *chan)
+ {
+ 	int rc = 0;
+-	int chancnt = device->chancnt;
+-	atomic_t *idr_ref;
+-	struct dma_chan *tchan;
+-
+-	tchan = list_first_entry_or_null(&device->channels,
+-					 struct dma_chan, device_node);
+-	if (!tchan)
+-		return -ENODEV;
+-
+-	if (tchan->dev) {
+-		idr_ref = tchan->dev->idr_ref;
+-	} else {
+-		idr_ref = kmalloc(sizeof(*idr_ref), GFP_KERNEL);
+-		if (!idr_ref)
+-			return -ENOMEM;
+-		atomic_set(idr_ref, 0);
+-	}
+ 
+ 	chan->local = alloc_percpu(typeof(*chan->local));
+ 	if (!chan->local)
+@@ -988,29 +966,36 @@ static int __dma_async_device_channel_register(struct dma_device *device,
+ 	 * When the chan_id is a negative value, we are dynamically adding
+ 	 * the channel. Otherwise we are static enumerating.
+ 	 */
+-	chan->chan_id = chan_id < 0 ? chancnt : chan_id;
++	mutex_lock(&device->chan_mutex);
++	chan->chan_id = ida_alloc(&device->chan_ida, GFP_KERNEL);
++	mutex_unlock(&device->chan_mutex);
++	if (chan->chan_id < 0) {
++		pr_err("%s: unable to alloc ida for chan: %d\n",
++		       __func__, chan->chan_id);
++		goto err_out;
++	}
++
+ 	chan->dev->device.class = &dma_devclass;
+ 	chan->dev->device.parent = device->dev;
+ 	chan->dev->chan = chan;
+-	chan->dev->idr_ref = idr_ref;
+ 	chan->dev->dev_id = device->dev_id;
+-	atomic_inc(idr_ref);
+ 	dev_set_name(&chan->dev->device, "dma%dchan%d",
+ 		     device->dev_id, chan->chan_id);
+-
+ 	rc = device_register(&chan->dev->device);
+ 	if (rc)
+-		goto err_out;
++		goto err_out_ida;
+ 	chan->client_count = 0;
+-	device->chancnt = chan->chan_id + 1;
++	device->chancnt++;
+ 
+ 	return 0;
+ 
++ err_out_ida:
++	mutex_lock(&device->chan_mutex);
++	ida_free(&device->chan_ida, chan->chan_id);
++	mutex_unlock(&device->chan_mutex);
+  err_out:
+ 	free_percpu(chan->local);
+ 	kfree(chan->dev);
+-	if (atomic_dec_return(idr_ref) == 0)
+-		kfree(idr_ref);
+ 	return rc;
+ }
+ 
+@@ -1019,7 +1004,7 @@ int dma_async_device_channel_register(struct dma_device *device,
+ {
+ 	int rc;
+ 
+-	rc = __dma_async_device_channel_register(device, chan, -1);
++	rc = __dma_async_device_channel_register(device, chan);
+ 	if (rc < 0)
+ 		return rc;
+ 
+@@ -1039,6 +1024,9 @@ static void __dma_async_device_channel_unregister(struct dma_device *device,
+ 	device->chancnt--;
+ 	chan->dev->chan = NULL;
+ 	mutex_unlock(&dma_list_mutex);
++	mutex_lock(&device->chan_mutex);
++	ida_free(&device->chan_ida, chan->chan_id);
++	mutex_unlock(&device->chan_mutex);
+ 	device_unregister(&chan->dev->device);
+ 	free_percpu(chan->local);
+ }
+@@ -1061,7 +1049,7 @@ EXPORT_SYMBOL_GPL(dma_async_device_channel_unregister);
+  */
+ int dma_async_device_register(struct dma_device *device)
+ {
+-	int rc, i = 0;
++	int rc;
+ 	struct dma_chan* chan;
+ 
+ 	if (!device)
+@@ -1168,9 +1156,12 @@ int dma_async_device_register(struct dma_device *device)
+ 	if (rc != 0)
+ 		return rc;
+ 
++	mutex_init(&device->chan_mutex);
++	ida_init(&device->chan_ida);
++
+ 	/* represent channels in sysfs. Probably want devs too */
+ 	list_for_each_entry(chan, &device->channels, device_node) {
+-		rc = __dma_async_device_channel_register(device, chan, i++);
++		rc = __dma_async_device_channel_register(device, chan);
+ 		if (rc < 0)
+ 			goto err_out;
+ 	}
+@@ -1241,6 +1232,7 @@ void dma_async_device_unregister(struct dma_device *device)
+ 	 */
+ 	dma_cap_set(DMA_PRIVATE, device->cap_mask);
+ 	dma_channel_rebalance();
++	ida_free(&dma_ida, device->dev_id);
+ 	dma_device_put(device);
+ 	mutex_unlock(&dma_list_mutex);
+ }
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 3a43dbd5f615..e7419038d60f 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -337,13 +337,11 @@ struct dma_chan {
+  * @chan: driver channel device
+  * @device: sysfs device
+  * @dev_id: parent dma_device dev_id
+- * @idr_ref: reference count to gate release of dma_device dev_id
+  */
+ struct dma_chan_dev {
+ 	struct dma_chan *chan;
+ 	struct device device;
+ 	int dev_id;
+-	atomic_t *idr_ref;
+ };
+ 
+ /**
+@@ -846,6 +844,8 @@ struct dma_device {
+ 	int dev_id;
+ 	struct device *dev;
+ 	struct module *owner;
++	struct ida chan_ida;
++	struct mutex chan_mutex;	/* to protect chan_ida */
+ 
+ 	u32 src_addr_widths;
+ 	u32 dst_addr_widths;
+

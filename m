@@ -2,107 +2,85 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E68B91A725E
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Apr 2020 06:18:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C00FD1A7F8D
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Apr 2020 16:22:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405205AbgDNESY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 14 Apr 2020 00:18:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2405149AbgDNESX (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Apr 2020 00:18:23 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28E70C0A3BDC;
-        Mon, 13 Apr 2020 21:18:23 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t16so378797plo.7;
-        Mon, 13 Apr 2020 21:18:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4xcEG33EjZw/LrE9HUefk/4aqk4uWI4YbQ1ppYifMxQ=;
-        b=bJNNYYSu2+okRxcogXY4Y6Mt80VD42NQX8DnoADvAreT9VLW/HkbVBErMRlDi9GItv
-         SApNFY5KNNe2bJ/cRN/XZtRa9zibZlOLKu9LfEujzunzjyxXwHLEGQzOy5PEyIS3F/gj
-         P1KXvfAIU3y/23yp8pmFsq9hPPDm/T/r5QtPUlp9uRito14FJtVg2HpwEHeNbJqUsBGU
-         u7CZd/6rhIkEHF8iJw/fuq8+9WuidTSuaH18GlayTmOs3cypu976JRiXsXMCcBjz7dkN
-         WNBvZzXU8tNb+3C9aYWyGD5SeExdbnTDjAROdvYoYaTZcrRXuuAwzALxH/s28J8qbbf4
-         pr2g==
+        id S2389869AbgDNOVj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 14 Apr 2020 10:21:39 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45526 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389867AbgDNOVf (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Apr 2020 10:21:35 -0400
+Received: by mail-ot1-f67.google.com with SMTP id i22so3500879otp.12;
+        Tue, 14 Apr 2020 07:21:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4xcEG33EjZw/LrE9HUefk/4aqk4uWI4YbQ1ppYifMxQ=;
-        b=NERyEZMi+DLs49tjuQMk6GieEmZuTXGJllIlnWCbrG4TaL68//l+B23mG9hpBkGXJe
-         X3pCNUTXojQ1Q9aIIeYqsC5bJzOhEAvA8HAPjM9I5IUNKmhc8enKojfFl3nnuePikpZh
-         5LgBrJ7+ZFFg+449y38DfnF6PPXcZ2sJQkvwxiHaYzxTAxDdK5R+GRY7QVq/mRcVvA9F
-         Ii+hrv9vXTFVn5uIPJrBjT17eBN0IBk9DL16ICn1ZELn6z8fHcCpJEs9X56bqEyhnN5k
-         EO65t1/xh/qji29M/4AT5tcEf0nG0d1gNjpXVIUGpNM5J1gDDvQauHLScq4WIPp4ijDG
-         C34g==
-X-Gm-Message-State: AGi0Pubk4004q3rxughHIAfIAVfy2kOkiwuBYV05pgSTReIrpg+rhTDb
-        P792MAB+RSaNgaIUWDrG6Lc=
-X-Google-Smtp-Source: APiQypKuSyu00FmXhbJYSusoKPKJUDFO7cmxWS0GS6JihlkrNj5XZmR8P7/jpgJ0Xoqz5gD7hUchPw==
-X-Received: by 2002:a17:90b:f13:: with SMTP id br19mr11533283pjb.153.1586837902552;
-        Mon, 13 Apr 2020 21:18:22 -0700 (PDT)
-Received: from osboxes.am.sony.com (ip68-225-228-191.oc.oc.cox.net. [68.225.228.191])
-        by smtp.gmail.com with ESMTPSA id v94sm1021202pjb.39.2020.04.13.21.18.20
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7qB5XS57n67MYXQJiHnjoHHOlP+v7Plet2PJhhKm2pA=;
+        b=jZPc9OVz0u4J+Lh6oJ9Au+tRHl2cAeZnFKF2xyy28eD6ImyLsUAiiwFsd1NbfcPD0d
+         +QrWHU600EA566PaS1SKY8TcwlR/Xe4xEiObo1IHRSm7qJCc/ulWMyx18rvps5/ENGWX
+         /+Xrp11zIQmhNEVq9DC1nokOnMlhSwPh+OtP46uM2sMiReBS/o99n03aNoEPmykW6IjT
+         cg+QJGKxReHnVwDCc5uyVUx1Bishagbw0U42KePffnGEGdnV3fDhWWHYW/GSWRMjkC54
+         yKM5mkwljqLSPT0yZeQAI0L2h5e5RwafVCufuNgBnEVBj2gWGEO+5RCT5I2Z+XpzP5i9
+         xkHQ==
+X-Gm-Message-State: AGi0PuaZUiL6qKok2FgPEWxaDMeqUoNPYaP3hMuaRqnnlCqFdo3SrOlv
+        PCXh49oeQ1ywYGroq32k4A==
+X-Google-Smtp-Source: APiQypLoB//SQjLQBkpXtSSlfjCiCaFzojDq5PxSqn/uIWY6+9eAJg0r+nHSgJSEib1fkfvlSTLSsA==
+X-Received: by 2002:a05:6830:1190:: with SMTP id u16mr19562600otq.83.1586874093641;
+        Tue, 14 Apr 2020 07:21:33 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c7sm1257994otp.3.2020.04.14.07.21.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2020 21:18:21 -0700 (PDT)
-From:   Maciej Grochowski <maciek.grochowski@gmail.com>
-To:     dan.j.williams@intel.com, vkoul@kernel.org
-Cc:     Maciej Grochowski <maciej.grochowski@pm.me>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] include/linux/dmaengine: Typos fixes in API documentation
-Date:   Tue, 14 Apr 2020 00:17:03 -0400
-Message-Id: <20200414041703.6661-1-maciek.grochowski@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 14 Apr 2020 07:21:32 -0700 (PDT)
+Received: (nullmailer pid 18159 invoked by uid 1000);
+        Tue, 14 Apr 2020 14:21:31 -0000
+Date:   Tue, 14 Apr 2020 09:21:31 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: dma: uniphier-xdmac: switch to single reg
+ region
+Message-ID: <20200414142131.GA18052@bogus>
+References: <20200401032150.19767-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401032150.19767-1-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Maciej Grochowski <maciej.grochowski@pm.me>
+On Wed,  1 Apr 2020 12:21:50 +0900, Masahiro Yamada wrote:
+> The reg in the example "<0x5fc10000 0x1000>, <0x5fc20000 0x800>"
+> is wrong. The register region of this controller is much smaller,
+> and there is no other hardware register interleaved. There is no
+> good reason to split it into two regions.
+> 
+> Just use a single, contiguous register region.
+> 
+> While I am here, I made the 'dma-channels' property mandatory because
+> otherwise there is no way to determine the number of the channels.
+> 
+> Please note the original binding was merged recently. Since there
+> is no user yet, this change has no actual impact.
+> 
+> Fixes: b9fb56b6ba8a ("dt-bindings: dmaengine: Add UniPhier external DMA controller bindings")
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+> We do not need to touch the driver either because the second
+> region is not used.
+> 
+> 
+>  .../devicetree/bindings/dma/socionext,uniphier-xdmac.yaml  | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
 
-Signed-off-by: Maciej Grochowski <maciej.grochowski@pm.me>
----
- include/linux/dmaengine.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 21065c04c4ac..31e58ec9f741 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -83,9 +83,9 @@ enum dma_transfer_direction {
- /**
-  * Interleaved Transfer Request
-  * ----------------------------
-- * A chunk is collection of contiguous bytes to be transfered.
-+ * A chunk is collection of contiguous bytes to be transferred.
-  * The gap(in bytes) between two chunks is called inter-chunk-gap(ICG).
-- * ICGs may or maynot change between chunks.
-+ * ICGs may or may not change between chunks.
-  * A FRAME is the smallest series of contiguous {chunk,icg} pairs,
-  *  that when repeated an integral number of times, specifies the transfer.
-  * A transfer template is specification of a Frame, the number of times
-@@ -1069,7 +1069,7 @@ static inline int dmaengine_terminate_all(struct dma_chan *chan)
-  * dmaengine_synchronize() needs to be called before it is safe to free
-  * any memory that is accessed by previously submitted descriptors or before
-  * freeing any resources accessed from within the completion callback of any
-- * perviously submitted descriptors.
-+ * previously submitted descriptors.
-  *
-  * This function can be called from atomic context as well as from within a
-  * complete callback of a descriptor submitted on the same channel.
-@@ -1091,7 +1091,7 @@ static inline int dmaengine_terminate_async(struct dma_chan *chan)
-  *
-  * Synchronizes to the DMA channel termination to the current context. When this
-  * function returns it is guaranteed that all transfers for previously issued
-- * descriptors have stopped and and it is safe to free the memory assoicated
-+ * descriptors have stopped and it is safe to free the memory associated
-  * with them. Furthermore it is guaranteed that all complete callback functions
-  * for a previously submitted descriptor have finished running and it is safe to
-  * free resources accessed from within the complete callbacks.
--- 
-2.20.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>

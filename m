@@ -2,85 +2,227 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C00FD1A7F8D
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Apr 2020 16:22:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77D951A90C0
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2020 04:08:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389869AbgDNOVj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 14 Apr 2020 10:21:39 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45526 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389867AbgDNOVf (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Apr 2020 10:21:35 -0400
-Received: by mail-ot1-f67.google.com with SMTP id i22so3500879otp.12;
-        Tue, 14 Apr 2020 07:21:34 -0700 (PDT)
+        id S2392847AbgDOCH6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 14 Apr 2020 22:07:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392789AbgDOCH5 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Apr 2020 22:07:57 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC414C061A0F
+        for <dmaengine@vger.kernel.org>; Tue, 14 Apr 2020 19:07:55 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id t40so6033360pjb.3
+        for <dmaengine@vger.kernel.org>; Tue, 14 Apr 2020 19:07:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=u2+cGS1cRmAclSEhKu1ZjnWLakz4YOOfQzuWAv57OAM=;
+        b=XCsJXqiLpCpNyksP4j7p6/CF+p6B1Z/TWHZg7DYLvgKLnFfZq6jrVa0Ro2XOLyq05O
+         Mr2GOMBFAVcJ8mb9nIaT/cRwsrBdMOmCPZiD4j4d4XM0LBomAJuXe9CBFklYjV6y6OqR
+         fi9MYbiUUFCczPMZtvUkoM0WNzpjX6SaWp5aI43UP3oJEz8Dd7gmaO/EW1ki3BqssLRt
+         xhfQWS0+otSmtaf3zBU9higbiMsGbWY5+ZnKVPzaMJ4MisDEr0FJCZGddqcnNcXvjz4v
+         8K+WD/WTG+iCjEUSYbmflqi4H2UTd1n0MUtnG5iOpJ95qIE4wnAyDWCwCv4sqth7tgwY
+         pvbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7qB5XS57n67MYXQJiHnjoHHOlP+v7Plet2PJhhKm2pA=;
-        b=jZPc9OVz0u4J+Lh6oJ9Au+tRHl2cAeZnFKF2xyy28eD6ImyLsUAiiwFsd1NbfcPD0d
-         +QrWHU600EA566PaS1SKY8TcwlR/Xe4xEiObo1IHRSm7qJCc/ulWMyx18rvps5/ENGWX
-         /+Xrp11zIQmhNEVq9DC1nokOnMlhSwPh+OtP46uM2sMiReBS/o99n03aNoEPmykW6IjT
-         cg+QJGKxReHnVwDCc5uyVUx1Bishagbw0U42KePffnGEGdnV3fDhWWHYW/GSWRMjkC54
-         yKM5mkwljqLSPT0yZeQAI0L2h5e5RwafVCufuNgBnEVBj2gWGEO+5RCT5I2Z+XpzP5i9
-         xkHQ==
-X-Gm-Message-State: AGi0PuaZUiL6qKok2FgPEWxaDMeqUoNPYaP3hMuaRqnnlCqFdo3SrOlv
-        PCXh49oeQ1ywYGroq32k4A==
-X-Google-Smtp-Source: APiQypLoB//SQjLQBkpXtSSlfjCiCaFzojDq5PxSqn/uIWY6+9eAJg0r+nHSgJSEib1fkfvlSTLSsA==
-X-Received: by 2002:a05:6830:1190:: with SMTP id u16mr19562600otq.83.1586874093641;
-        Tue, 14 Apr 2020 07:21:33 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c7sm1257994otp.3.2020.04.14.07.21.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 07:21:32 -0700 (PDT)
-Received: (nullmailer pid 18159 invoked by uid 1000);
-        Tue, 14 Apr 2020 14:21:31 -0000
-Date:   Tue, 14 Apr 2020 09:21:31 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: dma: uniphier-xdmac: switch to single reg
- region
-Message-ID: <20200414142131.GA18052@bogus>
-References: <20200401032150.19767-1-yamada.masahiro@socionext.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401032150.19767-1-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=u2+cGS1cRmAclSEhKu1ZjnWLakz4YOOfQzuWAv57OAM=;
+        b=eURKh23b1hsQnFj2TNMVnpzu08Xf4NAtPAvZqsvJzmPIb4YTWmTR4Wv4hDAhxmSYuB
+         epA8iX1kF/8ukhtyHfaYis7AlOabEAHMtGYnoVlxzoH5RdaF+XumnN8xVR7gYJO+pAAF
+         xs9ntjiK02/NtKTWALZ/xt5qNhvZdvnwzBXA1JJ5oz7U8o56vSPp5cRqbr9y8o72i9lz
+         MetSDsqv9NqHgxyyWw/4MX8GpTkqaqzJHxpcRaknjx2BTIv7fmbpeZu9ySH181BRMOpq
+         PHlskL8ukAPdHMIvtbYjqwCRrNqltN3x+Tb62AFYlCNi00zhx3I5I1uaCF9YxGtI5IM0
+         bdnw==
+X-Gm-Message-State: AGi0PubqcEGBryB9Qx0VdYUKdqexAWE22qJH4Y6NOVifgZlZXgDmeuUz
+        NNoShg1ADbK/67N8Ez4q7SpavcJlsxU=
+X-Google-Smtp-Source: APiQypLwDxz25fW2RMa28aKt7qbLdqWW2OpYsgjIwGZ1SibtL9mtqYRYEgVoOjKKUJ2gK5kWcRBTRg==
+X-Received: by 2002:a17:902:a503:: with SMTP id s3mr2821309plq.303.1586916474702;
+        Tue, 14 Apr 2020 19:07:54 -0700 (PDT)
+Received: from nuc7.sifive.com (c-24-5-48-146.hsd1.ca.comcast.net. [24.5.48.146])
+        by smtp.gmail.com with ESMTPSA id v67sm8362776pfb.83.2020.04.14.19.07.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 Apr 2020 19:07:53 -0700 (PDT)
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
+To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, gustavo.pimentel@synopsys.com,
+        dan.j.williams@intel.com, vkoul@kernel.org, kishon@ti.com,
+        paul.walmsley@sifive.com
+Cc:     Alan Mikhak <alan.mikhak@sifive.com>
+Subject: [PATCH RFC] dmaengine: dw-edma: Decouple dw-edma-core.c from struct pci_dev
+Date:   Tue, 14 Apr 2020 19:07:44 -0700
+Message-Id: <1586916464-27727-1-git-send-email-alan.mikhak@sifive.com>
+X-Mailer: git-send-email 2.7.4
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed,  1 Apr 2020 12:21:50 +0900, Masahiro Yamada wrote:
-> The reg in the example "<0x5fc10000 0x1000>, <0x5fc20000 0x800>"
-> is wrong. The register region of this controller is much smaller,
-> and there is no other hardware register interleaved. There is no
-> good reason to split it into two regions.
-> 
-> Just use a single, contiguous register region.
-> 
-> While I am here, I made the 'dma-channels' property mandatory because
-> otherwise there is no way to determine the number of the channels.
-> 
-> Please note the original binding was merged recently. Since there
-> is no user yet, this change has no actual impact.
-> 
-> Fixes: b9fb56b6ba8a ("dt-bindings: dmaengine: Add UniPhier external DMA controller bindings")
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
-> We do not need to touch the driver either because the second
-> region is not used.
-> 
-> 
->  .../devicetree/bindings/dma/socionext,uniphier-xdmac.yaml  | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
+From: Alan Mikhak <alan.mikhak@sifive.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+While reviewing the Synopsys Designware eDMA PCIe driver, I came across
+the following field of struct dw_edma in dw-edma-core.h:
+
+const struct dw_edma_core_ops	*ops;
+
+I was unable to find a definition for struct dw_edma_core_ops. It was
+surprising that the kernel would build without failure even though the
+dw-edma driver was enabled with what seems to be an undefined struct.
+
+The reason I was reviewing the dw-edma driver was to see if I could
+integrate it with pcitest to initiate dma operations from endpoint side.
+
+As I understand from reviewing the dw-edma code, it is designed to run
+on the host side of PCIe link to initiate DMA operations remotely using
+eDMA channels of PCIe controller on the endpoint side. I am not sure if
+my understanding is correct. I infer this from seeing that dw-edma uses
+struct pci_dev and accesses hardware registers of dma channels across the
+bus using BAR0 and BAR2.
+
+I was exploring what would need to change in dw-edma to integrate it with
+pci-epf-test to initiate dma operations locally from the endpoint side.
+One barrier I see is dw_edma_probe() and other functions in dw-edma-core.c
+depend on struct pci_dev. Hence, instead of posting a patch to remove the
+undefined and unused ops field, I would like to define the struct and use
+it to decouple dw-edma-core.c from struct pci_dev.
+
+To my surprise, the kernel still builds without error even after defining
+struct dw_edma_core_ops in dw-edma-core.h and using it as in this patch.
+
+I would appreciate any comments on my observations about the 'ops' field,
+decoupling dw-edma-core.c from struct pci_dev, and how best to use
+dw-edma with pcitest.
+
+Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+---
+ drivers/dma/dw-edma/dw-edma-core.c | 17 ++++++++++-------
+ drivers/dma/dw-edma/dw-edma-core.h |  4 ++++
+ drivers/dma/dw-edma/dw-edma-pcie.c | 10 ++++++++++
+ 3 files changed, 24 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+index ff392c01bad1..9417a5feabbf 100644
+--- a/drivers/dma/dw-edma/dw-edma-core.c
++++ b/drivers/dma/dw-edma/dw-edma-core.c
+@@ -14,7 +14,7 @@
+ #include <linux/err.h>
+ #include <linux/interrupt.h>
+ #include <linux/dma/edma.h>
+-#include <linux/pci.h>
++#include <linux/dma-mapping.h>
+ 
+ #include "dw-edma-core.h"
+ #include "dw-edma-v0-core.h"
+@@ -781,7 +781,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+ 
+ 	if (dw->nr_irqs == 1) {
+ 		/* Common IRQ shared among all channels */
+-		err = request_irq(pci_irq_vector(to_pci_dev(dev), 0),
++		err = request_irq(dw->ops->irq_vector(dev, 0),
+ 				  dw_edma_interrupt_common,
+ 				  IRQF_SHARED, dw->name, &dw->irq[0]);
+ 		if (err) {
+@@ -789,7 +789,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+ 			return err;
+ 		}
+ 
+-		get_cached_msi_msg(pci_irq_vector(to_pci_dev(dev), 0),
++		get_cached_msi_msg(dw->ops->irq_vector(dev, 0),
+ 				   &dw->irq[0].msi);
+ 	} else {
+ 		/* Distribute IRQs equally among all channels */
+@@ -804,7 +804,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+ 		dw_edma_add_irq_mask(&rd_mask, *rd_alloc, dw->rd_ch_cnt);
+ 
+ 		for (i = 0; i < (*wr_alloc + *rd_alloc); i++) {
+-			err = request_irq(pci_irq_vector(to_pci_dev(dev), i),
++			err = request_irq(dw->ops->irq_vector(dev, i),
+ 					  i < *wr_alloc ?
+ 						dw_edma_interrupt_write :
+ 						dw_edma_interrupt_read,
+@@ -815,7 +815,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+ 				return err;
+ 			}
+ 
+-			get_cached_msi_msg(pci_irq_vector(to_pci_dev(dev), i),
++			get_cached_msi_msg(dw->ops->irq_vector(dev, i),
+ 					   &dw->irq[i].msi);
+ 		}
+ 
+@@ -833,6 +833,9 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+ 	u32 rd_alloc = 0;
+ 	int i, err;
+ 
++	if (!dw->ops || !dw->ops->irq_vector)
++		return -EINVAL;
++
+ 	raw_spin_lock_init(&dw->lock);
+ 
+ 	/* Find out how many write channels are supported by hardware */
+@@ -884,7 +887,7 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+ 
+ err_irq_free:
+ 	for (i = (dw->nr_irqs - 1); i >= 0; i--)
+-		free_irq(pci_irq_vector(to_pci_dev(dev), i), &dw->irq[i]);
++		free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
+ 
+ 	dw->nr_irqs = 0;
+ 
+@@ -904,7 +907,7 @@ int dw_edma_remove(struct dw_edma_chip *chip)
+ 
+ 	/* Free irqs */
+ 	for (i = (dw->nr_irqs - 1); i >= 0; i--)
+-		free_irq(pci_irq_vector(to_pci_dev(dev), i), &dw->irq[i]);
++		free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
+ 
+ 	/* Power management */
+ 	pm_runtime_disable(dev);
+diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
+index 4e5f9f6e901b..31fc50d31792 100644
+--- a/drivers/dma/dw-edma/dw-edma-core.h
++++ b/drivers/dma/dw-edma/dw-edma-core.h
+@@ -103,6 +103,10 @@ struct dw_edma_irq {
+ 	struct dw_edma			*dw;
+ };
+ 
++struct dw_edma_core_ops {
++	int	(*irq_vector)(struct device *dev, unsigned int nr);
++};
++
+ struct dw_edma {
+ 	char				name[20];
+ 
+diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+index dc85f55e1bb8..1eafc602e17e 100644
+--- a/drivers/dma/dw-edma/dw-edma-pcie.c
++++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+@@ -54,6 +54,15 @@ static const struct dw_edma_pcie_data snps_edda_data = {
+ 	.irqs				= 1,
+ };
+ 
++static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
++{
++	return pci_irq_vector(to_pci_dev(dev), nr);
++}
++
++static const struct dw_edma_core_ops dw_edma_pcie_core_ops = {
++	.irq_vector = dw_edma_pcie_irq_vector,
++};
++
+ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 			      const struct pci_device_id *pid)
+ {
+@@ -151,6 +160,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 	dw->version = pdata->version;
+ 	dw->mode = pdata->mode;
+ 	dw->nr_irqs = nr_irqs;
++	dw->ops = &dw_edma_pcie_core_ops;
+ 
+ 	/* Debug info */
+ 	pci_dbg(pdev, "Version:\t%u\n", dw->version);
+-- 
+2.7.4
+

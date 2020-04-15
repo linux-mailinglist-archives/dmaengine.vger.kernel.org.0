@@ -2,227 +2,207 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77D951A90C0
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2020 04:08:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 899731A971A
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2020 10:42:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392847AbgDOCH6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 14 Apr 2020 22:07:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392789AbgDOCH5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Apr 2020 22:07:57 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC414C061A0F
-        for <dmaengine@vger.kernel.org>; Tue, 14 Apr 2020 19:07:55 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t40so6033360pjb.3
-        for <dmaengine@vger.kernel.org>; Tue, 14 Apr 2020 19:07:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=u2+cGS1cRmAclSEhKu1ZjnWLakz4YOOfQzuWAv57OAM=;
-        b=XCsJXqiLpCpNyksP4j7p6/CF+p6B1Z/TWHZg7DYLvgKLnFfZq6jrVa0Ro2XOLyq05O
-         Mr2GOMBFAVcJ8mb9nIaT/cRwsrBdMOmCPZiD4j4d4XM0LBomAJuXe9CBFklYjV6y6OqR
-         fi9MYbiUUFCczPMZtvUkoM0WNzpjX6SaWp5aI43UP3oJEz8Dd7gmaO/EW1ki3BqssLRt
-         xhfQWS0+otSmtaf3zBU9higbiMsGbWY5+ZnKVPzaMJ4MisDEr0FJCZGddqcnNcXvjz4v
-         8K+WD/WTG+iCjEUSYbmflqi4H2UTd1n0MUtnG5iOpJ95qIE4wnAyDWCwCv4sqth7tgwY
-         pvbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=u2+cGS1cRmAclSEhKu1ZjnWLakz4YOOfQzuWAv57OAM=;
-        b=eURKh23b1hsQnFj2TNMVnpzu08Xf4NAtPAvZqsvJzmPIb4YTWmTR4Wv4hDAhxmSYuB
-         epA8iX1kF/8ukhtyHfaYis7AlOabEAHMtGYnoVlxzoH5RdaF+XumnN8xVR7gYJO+pAAF
-         xs9ntjiK02/NtKTWALZ/xt5qNhvZdvnwzBXA1JJ5oz7U8o56vSPp5cRqbr9y8o72i9lz
-         MetSDsqv9NqHgxyyWw/4MX8GpTkqaqzJHxpcRaknjx2BTIv7fmbpeZu9ySH181BRMOpq
-         PHlskL8ukAPdHMIvtbYjqwCRrNqltN3x+Tb62AFYlCNi00zhx3I5I1uaCF9YxGtI5IM0
-         bdnw==
-X-Gm-Message-State: AGi0PubqcEGBryB9Qx0VdYUKdqexAWE22qJH4Y6NOVifgZlZXgDmeuUz
-        NNoShg1ADbK/67N8Ez4q7SpavcJlsxU=
-X-Google-Smtp-Source: APiQypLwDxz25fW2RMa28aKt7qbLdqWW2OpYsgjIwGZ1SibtL9mtqYRYEgVoOjKKUJ2gK5kWcRBTRg==
-X-Received: by 2002:a17:902:a503:: with SMTP id s3mr2821309plq.303.1586916474702;
-        Tue, 14 Apr 2020 19:07:54 -0700 (PDT)
-Received: from nuc7.sifive.com (c-24-5-48-146.hsd1.ca.comcast.net. [24.5.48.146])
-        by smtp.gmail.com with ESMTPSA id v67sm8362776pfb.83.2020.04.14.19.07.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 Apr 2020 19:07:53 -0700 (PDT)
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
-To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, gustavo.pimentel@synopsys.com,
-        dan.j.williams@intel.com, vkoul@kernel.org, kishon@ti.com,
-        paul.walmsley@sifive.com
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>
-Subject: [PATCH RFC] dmaengine: dw-edma: Decouple dw-edma-core.c from struct pci_dev
-Date:   Tue, 14 Apr 2020 19:07:44 -0700
-Message-Id: <1586916464-27727-1-git-send-email-alan.mikhak@sifive.com>
-X-Mailer: git-send-email 2.7.4
+        id S2894826AbgDOIlh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 15 Apr 2020 04:41:37 -0400
+Received: from mail-am6eur05on2042.outbound.protection.outlook.com ([40.107.22.42]:31712
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2894803AbgDOIlc (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 15 Apr 2020 04:41:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M0QPiLQc3yWt5+5JODoKudYptPjcWka5/+wsiq2igoWA1MxhbnmeO/MWKoJ1br86BwSQlpNHN0skDJvyRWnSGH+yNdy/9yxQ64Rsf+WabNyYBGObw1XSYtl/Gr0imMOi9lYOLrmNTuocCJAZtLkO8CsALdiTOjsw5f47ENMIxI/ELZnwUc6Pt+9uoVOkY+Jm8WFWUE8z/I09POGNlDVEknsWT03UhqHKeRiorEmJuWypKIukIsz2uSaOPNRHdZg/UjJKhzd6MBkjEZuc3d67eNn4tgKiW8EB16UbajLv6RBDt5IkJ6O8UZuXd6yq1yqYFi0n4/vceHxir4cv8EtDYg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jGGYagvqYonO9jb6cCJ4IeLj5zLHwvX2kLs45DplF9U=;
+ b=Ym9Eo5yrjKX4ZxdZTdLokPUMprwqhxckEBY6YJwIuM0B4e/Mmqp46mwBG/fVLdGKVzcNTiptEfKJAe7EpuI+xMhOjrHwjAl43Am5o10/zt8bc11FsgufFGAY99yq5cRCcA1FQx+Pb9H3+pORk7st+V/u9i/oYGyuK4ztUqTPWvhbHUZabZwziCHWiGApQbdysyi3nK2Cs65vdaKjKwIC8uz31kNY+e63GTUr75VxXhbMoJ22xZGKnIrDoGPRTbDrn0Uz0ACsn5xRU0/1voCQr+WL570fyso3cJ3Au5dTpiYRan6hnW/VoyMprwd3RPxm3UjdWq3dvLkwy0hVIWodTQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jGGYagvqYonO9jb6cCJ4IeLj5zLHwvX2kLs45DplF9U=;
+ b=BzkbGzXhpiAJVoeSFXPiQ3+f5efDsPIBpC+NQQh5NQxt3KRj2fl6Mc6+YhYgmLkn1zHNqGYCtewTbN9a63Urn36Jn+NBQAR6tNIyn0EmN4RnG66k59h3BTN/exFMB/b8OjzErWk59k5BlDMUg6B2TEvITWYU+qAF3nyFblDtl3s=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6557.eurprd04.prod.outlook.com (2603:10a6:803:129::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.16; Wed, 15 Apr
+ 2020 08:41:18 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::d5f0:c948:6ab0:c2aa]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::d5f0:c948:6ab0:c2aa%4]) with mapi id 15.20.2900.028; Wed, 15 Apr 2020
+ 08:41:18 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Robin Gong <yibin.gong@nxp.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>
+CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH v7 00/13] add ecspi ERR009165 for i.mx6/7 soc family
+Thread-Topic: [PATCH v7 00/13] add ecspi ERR009165 for i.mx6/7 soc family
+Thread-Index: AQHV93/7B768gsXihk2i42KIYKNYiqh6E8wA
+Date:   Wed, 15 Apr 2020 08:41:17 +0000
+Message-ID: <VE1PR04MB6638AE84CD338AE1CF26FDFD89DB0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <1583944596-23410-1-git-send-email-yibin.gong@nxp.com>
+In-Reply-To: <1583944596-23410-1-git-send-email-yibin.gong@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yibin.gong@nxp.com; 
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: fd1e24be-f857-4ef1-ba6c-08d7e118c41f
+x-ms-traffictypediagnostic: VE1PR04MB6557:|VE1PR04MB6557:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6557FA07ACEBAB897FE21E3A89DB0@VE1PR04MB6557.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2887;
+x-forefront-prvs: 0374433C81
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(366004)(346002)(396003)(478600001)(26005)(71200400001)(81156014)(7696005)(7416002)(66556008)(66476007)(66946007)(53546011)(64756008)(66446008)(6506007)(76116006)(8936002)(186003)(8676002)(54906003)(5660300002)(110136005)(52536014)(4326008)(966005)(2906002)(316002)(55016002)(33656002)(9686003)(86362001)(921003)(1121003);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /kvC95EK+kKjD6LaKk8X54FJ3oYiHPaGfsHfJKufc9Y7K9y3uGx3CPpgPCSfQPl7gKj+gMiN01jopZe7CPykcLYa9TuTGu+TQGzH7U9st3jMianrrXMEoXO81XHtinEPqZoAqia6CunTiBIKDUeMYT2s5+eePbb5/lGQLDWyoy/bpN/hezbKSAqez48JaSiWRjFZC1+m3TBLctCZJX/fwI0tnKMgKo7tHEpatOB80nJEDBIhB/6eU1NJ9Su8JQqgdKaASrR+vY+1WFmjjJQdeSEVT9j02yLHrPGvGtTBcW2K5RTLQScmEUh4n8849YocxXDZY29Q2pqIvycSTMFidPVnrrigDB8pagYdO29lCDGP3NbzJvI2nXkfVpA816Wpa0QV+ME2KqH4wogq8g/GEelCGYxLjfLp4P+Bvg28obxfcRbh6kBLKeqTnPHpRMEOyW+3qVY6exUgXSJGKhF2NX5ZMbyJ/575hz6tugnBB1rs0jpnXRi6JYAifH5yAA8KqM1dK7YKcr9m3Fy2xBYzSk73xtOb7gjX18bWQQiZvOKi0Arkyc7TM8ctYjr5BOQabNbnVsHhaBOtDUnDX5LU3w==
+x-ms-exchange-antispam-messagedata: BIvNf3AgOsGh1/pjEdAVGTY9PPR4CmIdI/Sae5g4Km7785nfY+zPDvrNXKadPswjvpksHRw8k1lnFiErJtE5dM0heyXmsN6naF/pFrAvJ4d4NU4T+v2wWWwzPB0su/znh0es0etIefn2nZWIK2aDAQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd1e24be-f857-4ef1-ba6c-08d7e118c41f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2020 08:41:18.0154
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zsZBj1M5MDP0LJ0fcmLNWZyIqo+u+6JW6r+x1wbipb8A/GVlM6P7gDWjJTAXeM+BlvUmx6GV7uazWVxKWDxKUA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6557
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Alan Mikhak <alan.mikhak@sifive.com>
-
-While reviewing the Synopsys Designware eDMA PCIe driver, I came across
-the following field of struct dw_edma in dw-edma-core.h:
-
-const struct dw_edma_core_ops	*ops;
-
-I was unable to find a definition for struct dw_edma_core_ops. It was
-surprising that the kernel would build without failure even though the
-dw-edma driver was enabled with what seems to be an undefined struct.
-
-The reason I was reviewing the dw-edma driver was to see if I could
-integrate it with pcitest to initiate dma operations from endpoint side.
-
-As I understand from reviewing the dw-edma code, it is designed to run
-on the host side of PCIe link to initiate DMA operations remotely using
-eDMA channels of PCIe controller on the endpoint side. I am not sure if
-my understanding is correct. I infer this from seeing that dw-edma uses
-struct pci_dev and accesses hardware registers of dma channels across the
-bus using BAR0 and BAR2.
-
-I was exploring what would need to change in dw-edma to integrate it with
-pci-epf-test to initiate dma operations locally from the endpoint side.
-One barrier I see is dw_edma_probe() and other functions in dw-edma-core.c
-depend on struct pci_dev. Hence, instead of posting a patch to remove the
-undefined and unused ops field, I would like to define the struct and use
-it to decouple dw-edma-core.c from struct pci_dev.
-
-To my surprise, the kernel still builds without error even after defining
-struct dw_edma_core_ops in dw-edma-core.h and using it as in this patch.
-
-I would appreciate any comments on my observations about the 'ops' field,
-decoupling dw-edma-core.c from struct pci_dev, and how best to use
-dw-edma with pcitest.
-
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
----
- drivers/dma/dw-edma/dw-edma-core.c | 17 ++++++++++-------
- drivers/dma/dw-edma/dw-edma-core.h |  4 ++++
- drivers/dma/dw-edma/dw-edma-pcie.c | 10 ++++++++++
- 3 files changed, 24 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index ff392c01bad1..9417a5feabbf 100644
---- a/drivers/dma/dw-edma/dw-edma-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -14,7 +14,7 @@
- #include <linux/err.h>
- #include <linux/interrupt.h>
- #include <linux/dma/edma.h>
--#include <linux/pci.h>
-+#include <linux/dma-mapping.h>
- 
- #include "dw-edma-core.h"
- #include "dw-edma-v0-core.h"
-@@ -781,7 +781,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 
- 	if (dw->nr_irqs == 1) {
- 		/* Common IRQ shared among all channels */
--		err = request_irq(pci_irq_vector(to_pci_dev(dev), 0),
-+		err = request_irq(dw->ops->irq_vector(dev, 0),
- 				  dw_edma_interrupt_common,
- 				  IRQF_SHARED, dw->name, &dw->irq[0]);
- 		if (err) {
-@@ -789,7 +789,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 			return err;
- 		}
- 
--		get_cached_msi_msg(pci_irq_vector(to_pci_dev(dev), 0),
-+		get_cached_msi_msg(dw->ops->irq_vector(dev, 0),
- 				   &dw->irq[0].msi);
- 	} else {
- 		/* Distribute IRQs equally among all channels */
-@@ -804,7 +804,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 		dw_edma_add_irq_mask(&rd_mask, *rd_alloc, dw->rd_ch_cnt);
- 
- 		for (i = 0; i < (*wr_alloc + *rd_alloc); i++) {
--			err = request_irq(pci_irq_vector(to_pci_dev(dev), i),
-+			err = request_irq(dw->ops->irq_vector(dev, i),
- 					  i < *wr_alloc ?
- 						dw_edma_interrupt_write :
- 						dw_edma_interrupt_read,
-@@ -815,7 +815,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 				return err;
- 			}
- 
--			get_cached_msi_msg(pci_irq_vector(to_pci_dev(dev), i),
-+			get_cached_msi_msg(dw->ops->irq_vector(dev, i),
- 					   &dw->irq[i].msi);
- 		}
- 
-@@ -833,6 +833,9 @@ int dw_edma_probe(struct dw_edma_chip *chip)
- 	u32 rd_alloc = 0;
- 	int i, err;
- 
-+	if (!dw->ops || !dw->ops->irq_vector)
-+		return -EINVAL;
-+
- 	raw_spin_lock_init(&dw->lock);
- 
- 	/* Find out how many write channels are supported by hardware */
-@@ -884,7 +887,7 @@ int dw_edma_probe(struct dw_edma_chip *chip)
- 
- err_irq_free:
- 	for (i = (dw->nr_irqs - 1); i >= 0; i--)
--		free_irq(pci_irq_vector(to_pci_dev(dev), i), &dw->irq[i]);
-+		free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
- 
- 	dw->nr_irqs = 0;
- 
-@@ -904,7 +907,7 @@ int dw_edma_remove(struct dw_edma_chip *chip)
- 
- 	/* Free irqs */
- 	for (i = (dw->nr_irqs - 1); i >= 0; i--)
--		free_irq(pci_irq_vector(to_pci_dev(dev), i), &dw->irq[i]);
-+		free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
- 
- 	/* Power management */
- 	pm_runtime_disable(dev);
-diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-index 4e5f9f6e901b..31fc50d31792 100644
---- a/drivers/dma/dw-edma/dw-edma-core.h
-+++ b/drivers/dma/dw-edma/dw-edma-core.h
-@@ -103,6 +103,10 @@ struct dw_edma_irq {
- 	struct dw_edma			*dw;
- };
- 
-+struct dw_edma_core_ops {
-+	int	(*irq_vector)(struct device *dev, unsigned int nr);
-+};
-+
- struct dw_edma {
- 	char				name[20];
- 
-diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-index dc85f55e1bb8..1eafc602e17e 100644
---- a/drivers/dma/dw-edma/dw-edma-pcie.c
-+++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-@@ -54,6 +54,15 @@ static const struct dw_edma_pcie_data snps_edda_data = {
- 	.irqs				= 1,
- };
- 
-+static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
-+{
-+	return pci_irq_vector(to_pci_dev(dev), nr);
-+}
-+
-+static const struct dw_edma_core_ops dw_edma_pcie_core_ops = {
-+	.irq_vector = dw_edma_pcie_irq_vector,
-+};
-+
- static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 			      const struct pci_device_id *pid)
- {
-@@ -151,6 +160,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 	dw->version = pdata->version;
- 	dw->mode = pdata->mode;
- 	dw->nr_irqs = nr_irqs;
-+	dw->ops = &dw_edma_pcie_core_ops;
- 
- 	/* Debug info */
- 	pci_dbg(pdev, "Version:\t%u\n", dw->version);
--- 
-2.7.4
+Ping....
+On 2020/03/11 16:35 Robin Gong <yibin.gong@nxp.com> wrote:
+> There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO transfer=
+ to
+> be send twice in DMA mode. Please get more information from:
+> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is
+> adding new sdma ram script which works in XCH  mode as PIO inside sdma
+> instead of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue
+> should be exist on all legacy i.mx6/7 soc family before i.mx6ul.
+> NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
+> 6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips s=
+till
+> need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
+> for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errat=
+a or not.
+> The first two reverted patches should be the same issue, though, it seems
+> 'fixed' by changing to other shp script. Hope Sean or Sascha could have t=
+he
+> chance to test this patch set if could fix their issues.
+> Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work on
+> i.mx8mm because the event id is zero.
+>=20
+> PS:
+>    Please get sdma firmware from below linux-firmware and copy it to your
+> local rootfs /lib/firmware/imx/sdma.
+> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.g=
+it/tr
+> ee/imx/sdma
+>=20
+> v2:
+>   1.Add commit log for reverted patches.
+>   2.Add comment for 'ecspi_fixed' in sdma driver.
+>   3.Add 'fsl,imx6sll-ecspi' compatible instead of 'fsl,imx6ul-ecspi'
+>     rather than remove.
+> v3:
+>   1.Confirm with design team make sure ERR009165 fixed on i.mx6ul/i.mx6ul=
+l
+>     /i.mx6sll, not fixed on i.mx8m/8mm and other i.mx6/7 legacy chips.
+>     Correct dts related dts patch in v2.
+>   2.Clean eratta information in binding doc and new 'tx_glitch_fixed' fla=
+g
+>     in spi-imx driver to state ERR009165 fixed or not.
+>   3.Enlarge burst size to fifo size for tx since tx_wml set to 0 in the
+>     errata workaroud, thus improve performance as possible.
+> v4:
+>   1.Add Ack tag from Mark and Vinod
+>   2.Remove checking 'event_id1' zero as 'event_id0'.
+> v5:
+>   1.Add the last patch for compatible with the current uart driver which
+>     using rom script, so both uart ram script and rom script supported
+>     in latest firmware, by default uart rom script used. UART driver
+>     will be broken without this patch.
+> v6:
+>   1.Resend after rebase the latest next branch.
+>   2.Remove below No.13~No.15 patches of v5 because they were mergered.
+>   	ARM: dts: imx6ul: add dma support on ecspi
+>   	ARM: dts: imx6sll: correct sdma compatible
+>   	arm64: defconfig: Enable SDMA on i.mx8mq/8mm
+>   3.Revert "dmaengine: imx-sdma: fix context cache" since
+>     'context_loaded' removed.
+> v7:
+>   1.Put the last patch 13/13 'Revert "dmaengine: imx-sdma: fix context
+>     cache"' to the ahead of 03/13 'Revert "dmaengine: imx-sdma: refine
+>     to load context only once" so that no building waring during comes ou=
+t
+>     during bisect.
+>   2.Address Sascha's comments, including eliminating any i.mx6sx in this
+>     series, adding new 'is_imx6ul_ecspi()' instead imx in imx51 and takin=
+g
+>     care SMC bit for PIO.
+>   3.Add back missing 'Reviewed-by' tag on 08/15(v5):09/13(v7)
+>    'spi: imx: add new i.mx6ul compatible name in binding doc'
+>=20
+> Robin Gong (13):
+>   Revert "ARM: dts: imx6q: Use correct SDMA script for SPI5 core"
+>   Revert "ARM: dts: imx6: Use correct SDMA script for SPI cores"
+>   Revert "dmaengine: imx-sdma: fix context cache"
+>   Revert "dmaengine: imx-sdma: refine to load context only once"
+>   dmaengine: imx-sdma: remove dupilicated sdma_load_context
+>   dmaengine: imx-sdma: add mcu_2_ecspi script
+>   spi: imx: fix ERR009165
+>   spi: imx: remove ERR009165 workaround on i.mx6ul
+>   spi: imx: add new i.mx6ul compatible name in binding doc
+>   dmaengine: imx-sdma: remove ERR009165 on i.mx6ul
+>   dma: imx-sdma: add i.mx6ul compatible name
+>   dmaengine: imx-sdma: fix ecspi1 rx dma not work on i.mx8mm
+>   dmaengine: imx-sdma: add uart rom script
+>=20
+>  .../devicetree/bindings/dma/fsl-imx-sdma.txt       |  1 +
+>  .../devicetree/bindings/spi/fsl-imx-cspi.txt       |  1 +
+>  arch/arm/boot/dts/imx6q.dtsi                       |  2 +-
+>  arch/arm/boot/dts/imx6qdl.dtsi                     |  8 +--
+>  drivers/dma/imx-sdma.c                             | 67
+> ++++++++++++++--------
+>  drivers/spi/spi-imx.c                              | 61
+> +++++++++++++++++---
+>  include/linux/platform_data/dma-imx-sdma.h         |  8 ++-
+>  7 files changed, 108 insertions(+), 40 deletions(-)
+>=20
+> --
+> 2.7.4
 

@@ -2,231 +2,297 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CBA9B1AAF85
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2020 19:27:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A23131AB073
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Apr 2020 20:19:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410983AbgDOR1W (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 15 Apr 2020 13:27:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2410875AbgDOR1V (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Apr 2020 13:27:21 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B580C061A0F
-        for <dmaengine@vger.kernel.org>; Wed, 15 Apr 2020 10:27:21 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id a32so124568pje.5
-        for <dmaengine@vger.kernel.org>; Wed, 15 Apr 2020 10:27:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=nY+69lch1Z1eEPsftYngAsdf1DrodOInXT0dD8s9W9c=;
-        b=aTrc5dlcIr5Ec1JUMT00OHAtdS1DFD55M4o5HR4FrmM1TrFAZwNiv1oXURyyBNI504
-         c4AHjTusPxJMk+Y/TcYfuWbhAnkaYpXYSQcvng0B+6ZkEHKHQqW0mNBQvOYT3adUhrsz
-         8FXC3Zoe7wen3sq2Amxl1G9uqE0Pkokfy6qfaw0cyoPYamtvNBrc3XeUhGcUK0EBEjk8
-         /h8yRYT+DwivZKTkRyljziAVQM9lA5FG2GWAGQZVhkiuLclUKvgb0O1Hv8xxJcgfaE/7
-         5Vkhn4UZL/sYV84G9k+qu3vq/FtPwfpSEKxwIBgcwNKZAFyJ8y6AtAUoi8PkVFi384JU
-         sd/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=nY+69lch1Z1eEPsftYngAsdf1DrodOInXT0dD8s9W9c=;
-        b=LDr39qmjbkVorHyC8JbzvGWLldLMnUCzGU49w8NMRN9tG+hsvpTMSkv4uzYISzcUel
-         b/fmeJ9M7+pCvtoBlqnB8DPeOlpJtEpfD0X0YkiDmieUdu+bs7WADYNP8X8ldMKeazFJ
-         4sMnE2ztYMCcnT3xT80iwlwpFifOojoE3gL5Hhaq0i4VCZwVfk0UAqOqy0Bxhbi9sfoX
-         U+zOXOybGXU37azX/eIbdOT2SzDNhXVaSj+51xyajvEJa9dD5EWRVCl5lGYbm/w0U2YG
-         UU75Pi7JHlDQMZB65ZuUlBIopRUcGxvxeU7KEco2rsAiKC7ixI0Dd9L0/0/+icu/jgyv
-         keOw==
-X-Gm-Message-State: AGi0PubBrLGxoyxyLQMGtPMMlMSSKpDTTm2zuC+re1zkceVTWvteN0B9
-        KNlj97Sv2z7rpsvqkM0fohf+30XnmpU=
-X-Google-Smtp-Source: APiQypJ3S4C89ZxzgEPCaieC6l6nSM9XM24BPwWjPdz80Q0NxTt/+zK9YejYVXMmInn12hTEr/Auiw==
-X-Received: by 2002:a17:90a:5d02:: with SMTP id s2mr326816pji.148.1586971640606;
-        Wed, 15 Apr 2020 10:27:20 -0700 (PDT)
-Received: from nuc7.sifive.com (c-24-5-48-146.hsd1.ca.comcast.net. [24.5.48.146])
-        by smtp.gmail.com with ESMTPSA id e66sm10784808pfa.69.2020.04.15.10.27.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Apr 2020 10:27:19 -0700 (PDT)
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
-To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, gustavo.pimentel@synopsys.com,
-        dan.j.williams@intel.com, vkoul@kernel.org, kishon@ti.com,
-        paul.walmsley@sifive.com
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>
-Subject: [PATCH v2] dmaengine: dw-edma: Decouple dw-edma-core.c from struct pci_dev
-Date:   Wed, 15 Apr 2020 10:27:09 -0700
-Message-Id: <1586971629-30196-1-git-send-email-alan.mikhak@sifive.com>
-X-Mailer: git-send-email 2.7.4
+        id S2898303AbgDOSSA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 15 Apr 2020 14:18:00 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:38152 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2898302AbgDOSR6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Apr 2020 14:17:58 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 695E3405B8;
+        Wed, 15 Apr 2020 18:17:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1586974677; bh=HAIcv8O6Q3lklP0dimg/6MNI7AWYs8UgO/lAc98n61s=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=UQcRhJGWlCCJb0j1OGqNA7mYiqj53uszJ4w/dVRm8FFYmvFDtkna1uwpEsKiF+rO5
+         wxrEsFuvYMgXMmk1mVinI7GL6qJVsMRIquqZOfhieLd6f5k6+QqUQj7Glq4ES9K4PB
+         VzdkbHU4QBpa9M2+vMn1E/RmaUlGHo1OV5c7aaflrCq1b0zJTBx6aP+crnsmPGDtcd
+         quf2YQ5OcKJxVnNUzSO52lf6AuDlkz9cpEN5u2fee5W6x2gEKXiWTiV4hak7Ip2xvS
+         MLA6+t6Qy9wtyurz4t7zVBLivalKCBeecA9VepRtxdnVvS1ogo5jHNb1R1KkXMve2z
+         GXyEpwKqz0Phg==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 32937A0067;
+        Wed, 15 Apr 2020 18:17:47 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 15 Apr 2020 11:17:40 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 15 Apr 2020 11:17:39 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RZudCpe0JVKmf5XxTtbkb9PZNXTBrk0XQXBmB32SqstPzZrR+15JV/S9KIwIn/sTl9O0CK5btrbH6rVCqCVbR51ktmZN9gaxpRLbA1a36B1EpwxWF5hlVOETfOkEJUIOA9FkYj1WwOaGngPaLBpqWSoGBwBRUb8svpHQeqSHZdt2Bf6dKmSe/0uOOimz0IrxaSg+/I2qpnjZ8h0LaFu6KQipjR6jXhRfRsvMO/qY+UE0bnySGnoXo/C0A436gyfsyd/0ec0Rn9EmcJ8qrXKbTbYyyo5uZchf9vcryCCZFa50w/2F2mXWFRnh5jLmP9flD+RZ06ge15gOQ2Xnucm6og==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HAIcv8O6Q3lklP0dimg/6MNI7AWYs8UgO/lAc98n61s=;
+ b=RDW53KmtB9rZFKoPaL3MxtVIEBWWUZdMk8n1K65tzoYI5/EZb4AL/n0G8s0FusiORj9YmZQS6sYCSqAvAtGOm0w++8IwZsb1zMAJeKiuFrgKLL6OAWwXG5Hjqx1jRVtilER7qAwXfTv4DECk5RHHr/0+w/W6/+kd98TXsYSvBAjKF0oTTPNONFWm7lsMfnCjUEpVhPYkdpwXMnQsnBXMYwUedTx2xoKM0dDIynddnvP90LoPI8F67AS/WXPXywchFxyWkKEhCOzRk9rvFVcX81pdsqs0dVxIg1sAs4f2A5fT1uoSYz41gnVKFzksGfHxgfLKBj0UnBEHNByixGLJbw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HAIcv8O6Q3lklP0dimg/6MNI7AWYs8UgO/lAc98n61s=;
+ b=HSaVEeowAHD+YjmIRAMVc1HhGeqlCo47GkGtePeOmQtkYuWWYsM9i45HfcCW2oT3O2cerAoYYyM80SgGatRiZV62abaX9iDwcCcBGyeRaq9BG48p6C6kzsVCAfEFkD7BW10npYI8E/lWLfUVCPQNhP+2mYpoxkWTb3H19cXethM=
+Received: from DM5PR12MB1276.namprd12.prod.outlook.com (2603:10b6:3:79::18) by
+ DM5PR12MB1276.namprd12.prod.outlook.com (2603:10b6:3:79::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2900.26; Wed, 15 Apr 2020 18:17:38 +0000
+Received: from DM5PR12MB1276.namprd12.prod.outlook.com
+ ([fe80::cd06:6b04:8f2c:157e]) by DM5PR12MB1276.namprd12.prod.outlook.com
+ ([fe80::cd06:6b04:8f2c:157e%10]) with mapi id 15.20.2900.028; Wed, 15 Apr
+ 2020 18:17:37 +0000
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Alan Mikhak <alan.mikhak@sifive.com>
+CC:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+Subject: RE: [PATCH RFC] dmaengine: dw-edma: Decouple dw-edma-core.c from
+ struct pci_dev
+Thread-Topic: [PATCH RFC] dmaengine: dw-edma: Decouple dw-edma-core.c from
+ struct pci_dev
+Thread-Index: AQHWEsrRt1OuNWp8Y0WOATK/ErlmDqh6DhYAgABhvACAAALi8A==
+Date:   Wed, 15 Apr 2020 18:17:37 +0000
+Message-ID: <DM5PR12MB1276E09460BD4DB7E70EAF91DADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
+References: <1586916464-27727-1-git-send-email-alan.mikhak@sifive.com>
+ <DM5PR12MB1276CB8FA4457D4CDCE3137EDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
+ <CABEDWGwYmO52g6cqvQdWb6HXWEHaMA1rcf96aUqv0f32tJZT-g@mail.gmail.com>
+In-Reply-To: <CABEDWGwYmO52g6cqvQdWb6HXWEHaMA1rcf96aUqv0f32tJZT-g@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
+ =?utf-8?B?bk5jWjNWemRHRjJiMXhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
+ =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
+ =?utf-8?B?Y2JYTm5MVFl3WVRrME5tTTRMVGRtTkRVdE1URmxZUzA1T0dFM0xXWTRPVFJq?=
+ =?utf-8?B?TWpjek9EQTBNbHhoYldVdGRHVnpkRncyTUdFNU5EWmpPUzAzWmpRMUxURXha?=
+ =?utf-8?B?V0V0T1RoaE55MW1PRGswWXpJM016Z3dOREppYjJSNUxuUjRkQ0lnYzNvOUlq?=
+ =?utf-8?B?UTFNRGNpSUhROUlqRXpNak14TkRRNE1qVTFOekUwTlRNMU1pSWdhRDBpU25a?=
+ =?utf-8?B?aWEySnNPREpKT0RkeWFqbGplRmh3VDNvNVVFTmxZbU4zUFNJZ2FXUTlJaUln?=
+ =?utf-8?B?WW13OUlqQWlJR0p2UFNJeElpQmphVDBpWTBGQlFVRkZVa2hWTVZKVFVsVkdU?=
+ =?utf-8?B?a05uVlVGQlFsRktRVUZCU1ZWWVZXcFZhRkJYUVZGbk5XWnRXSEppVkhreVEw?=
+ =?utf-8?B?UnNLMXBsZEhSUVRGbFBRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVaEJRVUZCUTJ0RFFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVWQlFWRkJRa0ZCUVVGRmJVMWxhM2RCUVVGQlFVRkJRVUZCUVVGQlFVRktO?=
+ =?utf-8?B?RUZCUVVKdFFVZHJRV0puUW1oQlJ6UkJXWGRDYkVGR09FRmpRVUp6UVVkRlFX?=
+ =?utf-8?B?Sm5RblZCUjJ0QlltZENia0ZHT0VGa2QwSm9RVWhSUVZwUlFubEJSekJCV1ZG?=
+ =?utf-8?B?Q2VVRkhjMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUlVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?blFVRkJRVUZCYm1kQlFVRkhXVUZpZDBJeFFVYzBRVnBCUW5sQlNHdEJXSGRD?=
+ =?utf-8?B?ZDBGSFJVRmpaMEl3UVVjMFFWcFJRbmxCU0UxQldIZENia0ZIV1VGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFWRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkRRVUZCUVVGQlEyVkJRVUZCV21kQ2RrRklWVUZpWjBKclFV?=
+ =?utf-8?B?aEpRV1ZSUW1aQlNFRkJXVkZDZVVGSVVVRmlaMEpzUVVoSlFXTjNRbVpCU0Ux?=
+ =?utf-8?B?QldWRkNkRUZJVFVGa1VVSjFRVWRqUVZoM1FtcEJSemhCWW1kQ2JVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUpCUVVGQlFVRkJRVUZCU1VGQlFVRkJRVW8wUVVGQlFtMUJSemhC?=
+ =?utf-8?B?WkZGQ2RVRkhVVUZqWjBJMVFVWTRRV05CUW1oQlNFbEJaRUZDZFVGSFZVRmpa?=
+ =?utf-8?B?MEo2UVVZNFFXTjNRbWhCUnpCQlkzZENNVUZITkVGYWQwSm1RVWhKUVZwUlFu?=
+ =?utf-8?B?cEJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVGQlFXZEJRVUZCUVVGdVow?=
+ =?utf-8?B?RkJRVWRaUVdKM1FqRkJSelJCV2tGQ2VVRklhMEZZZDBKM1FVZEZRV05uUWpC?=
+ =?utf-8?B?QlJ6UkJXbEZDZVVGSVRVRllkMEo2UVVjd1FXRlJRbXBCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJVVUZCUVVGQlFVRkJRVU5C?=
+ =?utf-8?B?UVVGQlFVRkRaVUZCUVVGYVowSjJRVWhWUVdKblFtdEJTRWxCWlZGQ1prRklR?=
+ =?utf-8?B?VUZaVVVKNVFVaFJRV0puUW14QlNFbEJZM2RDWmtGSVRVRmtRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUWtGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGSlFVRkJRVUZCU2pSQlFVRkNiVUZIT0VGa1VVSjFRVWRSUVdO?=
+ =?utf-8?B?blFqVkJSamhCWTBGQ2FFRklTVUZrUVVKMVFVZFZRV05uUW5wQlJqaEJaRUZD?=
+ =?utf-8?B?ZWtGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVVkJRVUZCUVVGQlFVRkJaMEZCUVVGQlFXNW5RVUZCUjFsQlluZENN?=
+ =?utf-8?B?VUZITkVGYVFVSjVRVWhyUVZoM1FuZEJSMFZCWTJkQ01FRkhORUZhVVVKNVFV?=
+ =?utf-8?B?aE5RVmgzUWpGQlJ6QkJXWGRCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZSUVVGQlFVRkJRVUZCUTBGQlFVRkJRVU5sUVVG?=
+ =?utf-8?B?QlFWcDNRakJCU0UxQldIZENkMEZJU1VGaWQwSnJRVWhWUVZsM1FqQkJSamhC?=
+ =?utf-8?B?WkVGQ2VVRkhSVUZoVVVKMVFVZHJRV0puUW01QlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQ1FVRkJRVUZCUVVGQlFVbEJR?=
+ =?utf-8?B?VUZCUVVGS05FRkJRVUo2UVVkRlFXSkJRbXhCU0UxQldIZENhRUZIVFVGWmQw?=
+ =?utf-8?B?SjJRVWhWUVdKblFqQkJSamhCWTBGQ2MwRkhSVUZpWjBGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJSVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZuUVVGQlFVRkJibWRCUVVGSVRVRlpVVUp6UVVkVlFXTjNRbVpC?=
+ =?utf-8?B?U0VWQlpGRkNka0ZJVVVGYVVVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVZGQlFVRkJRVUZCUVVGRFFVRkJRVUZCUTJWQlFVRkJZM2RDZFVGSVFV?=
+ =?utf-8?B?RmpkMEptUVVkM1FXRlJRbXBCUjFWQlltZENla0ZIVlVGWWQwSXdRVWRWUVdO?=
+ =?utf-8?B?blFuUkJSamhCVFZGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVSkJRVUZCUVVGQlFVRkJTVUZCUVVGQlFVbzBRVUZC?=
+ =?utf-8?B?UW5wQlJ6UkJZMEZDZWtGR09FRmlRVUp3UVVkTlFWcFJRblZCU0UxQldsRkNa?=
+ =?utf-8?B?a0ZJVVVGYVVVSjVRVWN3UVZoM1FucEJTRkZCWkZGQ2EwRkhWVUZpWjBJd1FV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdkQlFV?=
+ =?utf-8?B?RkJRVUZ1WjBGQlFVaFpRVnAzUW1aQlIzTkJXbEZDTlVGSVkwRmlkMEo1UVVk?=
+ =?utf-8?B?UlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJRVUZC?=
+ =?utf-8?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=gustavo@synopsys.com; 
+x-originating-ip: [198.182.37.200]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fc114c3f-efc3-4b77-8021-08d7e1694740
+x-ms-traffictypediagnostic: DM5PR12MB1276:
+x-microsoft-antispam-prvs: <DM5PR12MB127676DB5DC2F49914D46B97DADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0374433C81
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1276.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(396003)(346002)(376002)(136003)(39860400002)(366004)(66446008)(64756008)(66946007)(8676002)(8936002)(54906003)(66556008)(81156014)(9686003)(52536014)(86362001)(66476007)(7696005)(55016002)(478600001)(186003)(6506007)(6916009)(71200400001)(76116006)(5660300002)(4326008)(2906002)(26005)(33656002)(316002);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: D+rtel+8mOpKD+HHBGRFBqLab7W0c/NuNgBUUfPaMS9qeNWGALhZpVHKjO9iezsHEnNvHoP9vxmwZoI5M6mkNgtHa6iLuIBUcAwtI23VNWRW4Q3uLNlGXe0yPKFwTkB6j5IqFP1YhGCSq2KfxPBGUWFlIaAw2TMMPhXdrD51rZFZh4TLJ0JpgC1sSXVw1vfAt5jALGZMMnMsW/LO8GaiimBKF9LqCkRIYyp+vLdxKGjlFzSVE3TENnqHnmT02y1h6PI1Pqf3w//Tfw9H5OqVUubDvs13fgiRQKdlEjaXIJwxUVnSh/naD70YobckQgycfBHrd2bLLs6VIINrbwWrpHGmEYMUUIQuvYd8n0h0mykV8v0ehD5C1G1tLGNdKReSYfz4RR7R4PPkHjTEyk+ILQE7b3vM9pmafghLYGa9TQkamjC3BEhLVFab2D+3JCTV
+x-ms-exchange-antispam-messagedata: 3aeMZUBlD0vwBmi3QIAROQHxXRif9PlwRLMzbFsGYSzkx6DJYRyn+Mz0EX3wLRLfJQKp84hcIoj1PqOt8w9N7FDBWX0RnpcvPw9JL/uM0RD9IMMr1jatmN7exa5p4PHYAFNyITwmSEX5y1IJjREzfw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc114c3f-efc3-4b77-8021-08d7e1694740
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2020 18:17:37.6870
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OS5UOtP2x193xXO3pBJU+f+9XqxE9P2Ko5+YWq6cakad7E6n5wLDViSoK5GOCrezjS4oXDX37FhaucdEw7/5mw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1276
+X-OriginatorOrg: synopsys.com
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Alan Mikhak <alan.mikhak@sifive.com>
-
-Decouple dw-edma-core.c from struct pci_dev as a step toward integration
-of dw-edma with pci-epf-test so the latter can initiate dma operations
-locally from the endpoint side. A barrier to such integration is the
-dependency of dw_edma_probe() and other functions in dw-edma-core.c on
-struct pci_dev.
-
-The Synopsys DesignWare dw-edma driver was designed to run on host side
-of PCIe link to initiate DMA operations remotely using eDMA channels of
-PCIe controller on the endpoint side. This can be inferred from seeing
-that dw-edma uses struct pci_dev and accesses hardware registers of dma
-channels across the bus using BAR0 and BAR2.
-
-The ops field of struct dw_edma in dw-edma-core.h is currenty undefined:
-
-const struct dw_edma_core_ops   *ops;
-
-However, the kernel builds without failure even when dw-edma driver is
-enabled. Instead of removing the currently undefined and usued ops field,
-define struct dw_edma_core_ops and use the ops field to decouple
-dw-edma-core.c from struct pci_dev.
-
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
----
- drivers/dma/dw-edma/dw-edma-core.c | 29 ++++++++++++++++++++---------
- drivers/dma/dw-edma/dw-edma-core.h |  4 ++++
- drivers/dma/dw-edma/dw-edma-pcie.c | 10 ++++++++++
- 3 files changed, 34 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index ff392c01bad1..db401eb11322 100644
---- a/drivers/dma/dw-edma/dw-edma-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -14,7 +14,7 @@
- #include <linux/err.h>
- #include <linux/interrupt.h>
- #include <linux/dma/edma.h>
--#include <linux/pci.h>
-+#include <linux/dma-mapping.h>
- 
- #include "dw-edma-core.h"
- #include "dw-edma-v0-core.h"
-@@ -781,7 +781,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 
- 	if (dw->nr_irqs == 1) {
- 		/* Common IRQ shared among all channels */
--		err = request_irq(pci_irq_vector(to_pci_dev(dev), 0),
-+		err = request_irq(dw->ops->irq_vector(dev, 0),
- 				  dw_edma_interrupt_common,
- 				  IRQF_SHARED, dw->name, &dw->irq[0]);
- 		if (err) {
-@@ -789,7 +789,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 			return err;
- 		}
- 
--		get_cached_msi_msg(pci_irq_vector(to_pci_dev(dev), 0),
-+		get_cached_msi_msg(dw->ops->irq_vector(dev, 0),
- 				   &dw->irq[0].msi);
- 	} else {
- 		/* Distribute IRQs equally among all channels */
-@@ -804,7 +804,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 		dw_edma_add_irq_mask(&rd_mask, *rd_alloc, dw->rd_ch_cnt);
- 
- 		for (i = 0; i < (*wr_alloc + *rd_alloc); i++) {
--			err = request_irq(pci_irq_vector(to_pci_dev(dev), i),
-+			err = request_irq(dw->ops->irq_vector(dev, i),
- 					  i < *wr_alloc ?
- 						dw_edma_interrupt_write :
- 						dw_edma_interrupt_read,
-@@ -815,7 +815,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 				return err;
- 			}
- 
--			get_cached_msi_msg(pci_irq_vector(to_pci_dev(dev), i),
-+			get_cached_msi_msg(dw->ops->irq_vector(dev, i),
- 					   &dw->irq[i].msi);
- 		}
- 
-@@ -827,12 +827,23 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
- 
- int dw_edma_probe(struct dw_edma_chip *chip)
- {
--	struct device *dev = chip->dev;
--	struct dw_edma *dw = chip->dw;
-+	struct device *dev;
-+	struct dw_edma *dw;
- 	u32 wr_alloc = 0;
- 	u32 rd_alloc = 0;
- 	int i, err;
- 
-+	if (!chip)
-+		return -EINVAL;
-+
-+	dev = chip->dev;
-+	if (!dev)
-+		return -EINVAL;
-+
-+	dw = chip->dw;
-+	if (!dw || !dw->irq || !dw->ops || !dw->ops->irq_vector)
-+		return -EINVAL;
-+
- 	raw_spin_lock_init(&dw->lock);
- 
- 	/* Find out how many write channels are supported by hardware */
-@@ -884,7 +895,7 @@ int dw_edma_probe(struct dw_edma_chip *chip)
- 
- err_irq_free:
- 	for (i = (dw->nr_irqs - 1); i >= 0; i--)
--		free_irq(pci_irq_vector(to_pci_dev(dev), i), &dw->irq[i]);
-+		free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
- 
- 	dw->nr_irqs = 0;
- 
-@@ -904,7 +915,7 @@ int dw_edma_remove(struct dw_edma_chip *chip)
- 
- 	/* Free irqs */
- 	for (i = (dw->nr_irqs - 1); i >= 0; i--)
--		free_irq(pci_irq_vector(to_pci_dev(dev), i), &dw->irq[i]);
-+		free_irq(dw->ops->irq_vector(dev, i), &dw->irq[i]);
- 
- 	/* Power management */
- 	pm_runtime_disable(dev);
-diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-index 4e5f9f6e901b..31fc50d31792 100644
---- a/drivers/dma/dw-edma/dw-edma-core.h
-+++ b/drivers/dma/dw-edma/dw-edma-core.h
-@@ -103,6 +103,10 @@ struct dw_edma_irq {
- 	struct dw_edma			*dw;
- };
- 
-+struct dw_edma_core_ops {
-+	int	(*irq_vector)(struct device *dev, unsigned int nr);
-+};
-+
- struct dw_edma {
- 	char				name[20];
- 
-diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-index dc85f55e1bb8..1eafc602e17e 100644
---- a/drivers/dma/dw-edma/dw-edma-pcie.c
-+++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-@@ -54,6 +54,15 @@ static const struct dw_edma_pcie_data snps_edda_data = {
- 	.irqs				= 1,
- };
- 
-+static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
-+{
-+	return pci_irq_vector(to_pci_dev(dev), nr);
-+}
-+
-+static const struct dw_edma_core_ops dw_edma_pcie_core_ops = {
-+	.irq_vector = dw_edma_pcie_irq_vector,
-+};
-+
- static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 			      const struct pci_device_id *pid)
- {
-@@ -151,6 +160,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 	dw->version = pdata->version;
- 	dw->mode = pdata->mode;
- 	dw->nr_irqs = nr_irqs;
-+	dw->ops = &dw_edma_pcie_core_ops;
- 
- 	/* Debug info */
- 	pci_dbg(pdev, "Version:\t%u\n", dw->version);
--- 
-2.7.4
-
+SGkgQWxhbiwNCg0KPiA+IEkgbGlrZSB5b3VyIGFwcHJvYWNoLCBpdCBzZXBhcmF0ZXMgdGhlIFBD
+SWUgZ2x1ZSBsb2dpYyBmcm9tIHRoZSBlRE1BDQo+ID4gaXRzZWxmLg0KPiA+IEkgd291bGQgc3Vn
+Z2VzdCB0aGF0IHBjaXRlc3Qgd291bGQgaGF2ZSBtdWx0aXBsZSBvcHRpb25zIHRoYXQgY291bGQg
+YmUNCj4gPiB0cmlnZ2VyZWQsIGZvciBpbnN0YW5jZToNCj4gPiAgMSAtIEV4ZWN1dGUgRW5kcG9p
+bnQgRE1BIChyZWFkL3dyaXRlKSByZW1vdGVseSB3aXRoIExpbmtlZCBMaXN0IGZlYXR1cmUNCj4g
+PiAoZnJvbSB0aGUgUm9vdCBDb21wbGV4IHNpZGUpDQo+ID4gIDIgLSBFeGVjdXRlIEVuZHBvaW50
+IERNQSAocmVhZC93cml0ZSkgcmVtb3RlbHkgd2l0aG91dCBMaW5rZWQgTGlzdA0KPiA+IGZlYXR1
+cmUgKGZyb20gdGhlIFJvb3QgQ29tcGxleCBzaWRlKQ0KPiA+ICAzIC0gRXhlY3V0ZSBFbmRwb2lu
+dCBETUEgKHJlYWQvd3JpdGUpIGxvY2FsbHkgd2l0aCBMaW5rZWQgTGlzdCBmZWF0dXJlDQo+ID4g
+IDQgLSBFeGVjdXRlIEVuZHBvaW50IERNQSAocmVhZC93cml0ZSkgbG9jYWxseSB3aXRob3V0IExp
+bmtlZCBMaXN0DQo+ID4gZmVhdHVyZQ0KPiA+DQo+IA0KPiBJIGhhdmUgYWxsIG9mIHRoZSBhYm92
+ZSBmb3VyIHVzZSBjYXNlcyBpbiBtaW5kIGFzIHdlbGwuIEF0IHRoZSBtb21lbnQsDQo+IG9ubHkg
+IzQgaXMgcG9zc2libGUgd2l0aCBwY2l0ZXN0Lg0KPiANCj4gVXNlIGNhc2UgIzMgd291bGQgbmVl
+ZCBhIG5ldyBjb21tYW5kIGxpbmUgb3B0aW9uIGZvciBwY2l0ZXN0IHN1Y2ggYXMgLUwNCj4gdG8g
+bGV0IGl0cyB1c2VyIHNwZWNpZnkgbGlua2VkIGxpc3Qgb3BlcmF0aW9ud2hlbiB1c2VkIHdpdGgg
+ZG1hIGluDQo+IGNvbmp1bmN0aW9uIHdpdGggdGhlIGV4aXN0aW5nIC1EIG9wdGlvbi4NCj4gDQo+
+IFVzZSBjYXNlcyAjMSBhbmQgIzIgd291bGQgbmVlZCBhbm90aGVyIG5ldyBjb21tYW5kIGxpbmUg
+b3B0aW9uIHN1Y2ggYXMgLVINCj4gdG8gc3BlY2lmeSByZW1vdGVseSBpbml0aWF0ZWQgZG1hIG9w
+ZXJhdGlvbiBpbiBjb25qdW5jdGlvbiB3aXRoIC1EIG9wdGlvbi4NCj4gDQo+IE5ldyBjb2RlIGlu
+IHBjaS1lcGYtdGVzdCBhbmQgcGNpX2VuZHBvaW50X3Rlc3QgZHJpdmVycyB3b3VsZCBiZSBuZWVk
+ZWQNCj4gdG8gc3VwcG9ydCB1c2UgY2FzZXMgIzEsICMyLCBhbmQgIzMuIEhvd2V2ZXIsIHVzZSBj
+YXNlICM0IHNob3VsZCBiZQ0KPiBwb3NzaWJsZSB3aXRob3V0IG1vZGlmaWNhdGlvbiB0byBwY2kt
+ZXBmLXRlc3Qgb3IgcGNpX2VuZHBvaW50X3Rlc3QgYXMgbG9uZw0KPiBhcyB0aGUgZG1hZW5naW5l
+IGNoYW5uZWxzIGJlY29tZSBhdmFpbGFibGUgb24gdGhlIGVuZHBvaW50IHNpZGUuDQoNCkkgd291
+bGQgc3VnZ2VzdCBzb21ldGhpbmcgbGlrZSB0aGlzOg0KDQotTCBvcHRpb24sIGxvY2FsIERNQSB0
+cmlnZ2VyaW5nDQotUiBvcHRpb24sIHJlbW90ZSBETUEgdHJpZ2dlcmluZw0KLVcgPG4+IG9wdGlv
+biwgdG8gc2VsZWN0IHRoZSBETUEgd3JpdGUgY2hhbm5lbCBuID0+ICgwIC4uLiA3KSB0byBiZSAN
+CnVzZWQNCi1SIDxuPiBvcHRpb24sIHRvIHNlbGVjdCB0aGUgRE1BIHJlYWQgY2hhbm5lbCBuID0+
+ICgwIC4uLiA3KSB0byBiZSANCnVzZWQNCi1LIG9wdGlvbiwgdG8gdXNlIG9yIG5vdCB0aGUgbGlu
+a2VkIGxpc3QgZmVhdHVyZSAoSyBwcmVzZW5jZSBlbmFibGVzIA0KdGhlIExMIHVzZSkNCi1UIDxu
+PiBvcHRpb24sIHRvIHNlbGVjdCB3aGljaCB0eXBlIG9mIERNQSB0cmFuc2ZlciB0byBiZSB1c2Vk
+ID0+IChuID0gMCANCi0gc2NhdHRlci1nYXRoZXIgbW9kZSwgMSAtIGN5Y2xpYyBtb2RlKQ0KLU4g
+PG4+IG9wdGlvbiwgdG8gZGVmaW5lIHRoZSBudW1iZXIgb2YgY3ljbGljIHRyYW5zZmVycyB0byBw
+ZXJmb3JtIGluIA0KdG90YWwNCi1DIDxuPiBvcHRpb24sIHRvIGRlZmluZSB0aGUgc2l6ZSBvZiBl
+YWNoIGNodW5rIHRvIGJlIHVzZWQNCi10IDx0aW1lPiBvcHRpb24sIHRvIGRlZmluZSBhIHRpbWVv
+dXQgZm9yIHRoZSBETUEgb3BlcmF0aW9uIA0KDQpBbHNvLCB0aGUgdXNlIG9mIHRoaXMgb3B0aW9u
+cyAoZXNwZWNpYWxseSB3aGVuIHVzaW5nIHRoZSByZW1vdGUgRE1BIA0Kb3B0aW9uKSBzaG91bGQg
+YmUgY2hlY2tlZCB0aHJvdWdoIHRoZSBwY2lfZXBjX2dldF9mZWF0dXJlcygpLCB3aGljaCBtZWFu
+cyANCnByb2JhYmx5IHdlIG5lZWQgdG8gcGFzcyB0aGUgRVAgZmVhdHVyZXMgY2FwYWJpbGl0aWVz
+IHRvIHRoZSANCnBjaV9lbmRwb2ludF90ZXN0IERyaXZlciwgcGVyaGFwcyB1c2luZyBzb21lIHNl
+dHMgb2YgcmVnaXN0ZXJzIG9uIGxvY2F0ZWQgDQpvbiBCQVIwIG9yIG90aGVyLg0KDQo+IEF0IHRo
+ZSBtb21lbnQsIHBjaS1lcGYtdGVzdCBncmFicyB0aGUgZmlyc3QgYXZhaWxhYmxlIGRtYSBjaGFu
+bmVsIG9uIHRoZQ0KPiBlbmRwb2ludCBzaWRlIGFuZCB1c2VzIGl0IGZvciBlaXRoZXIgcmVhZCwg
+d3JpdGUsIG9yIGNvcHkgb3BlcmF0aW9uLiBpdCBpcyBub3QNCj4gcG9zc2libGUgYXQgdGhlIG1v
+bWVudCB0byBzcGVjaWZ5IHdoaWNoIGRtYSBjaGFubmVsIHRvIHVzZSBvbiB0aGUgcGNpdGVzdA0K
+PiBjb21tYW5kIGxpbmUuIFRoaXMgbWF5IGJlIHBvc3NpYmxlIGJ5IG1vZGlmeWluZyB0aGUgY29t
+bWFuZCBsaW5lIG9wdGlvbg0KPiAtRCB0byBhbHNvIHNwZWNpZnkgdGhlIG5hbWUgb2Ygb25lIG9y
+IG1vcmUgZG1hIGNoYW5uZWxzLg0KDQpJJ20gYXNzdW1pbmcgdGhhdCBiZWhhdmlvciBpcyBkdWUg
+dG8geW91ciBjb2RlLCByaWdodD8gSSdtIG5vdCBzZWVuIHRoYXQgDQpiZWhhdmlvciBvbiB0aGUg
+S2VybmVsIHRyZWUuDQpDaGVjayBteSBwcmV2aW91cyBzdWdnZXN0aW9uLCBpdCBzaG91bGQgYmUg
+c29tZXRoaW5nIHNpbWlsYXIgdG8gd2hhdCBpcyANCmJlZW4gZG9uZSB3aGlsZSB5b3Ugc2VsZWN0
+IHRoZSBNU0kvTVNJLVggaW50ZXJydXB0IHRvIHRyaWdnZXIuDQoNCj4gQWxzbywgcGNpLWVwZi10
+ZXN0IGdyYWJzIHRoZSBkbWEgY2hhbm5lbCBhdCBiaW5kIHRpbWUgYW5kIGhvbGRzIG9uIHRvIGl0
+DQo+IHVudGlsIHVubG9hZGVkLiBUaGlzIGRlbmllcyB0aGUgdXNlIG9mIHRoZSBkbWEgY2hhbm5l
+bCB0byBvdGhlcnMgb24gdGhlDQo+IGVuZHBvaW50IHNpZGUuIEhvd2V2ZXIsIGl0IHNlZW1zIHBv
+c3NpYmxlIHRvIGdyYWIgYW5kIHJlbGVhc2UgdGhlIGRtYQ0KPiBjaGFubmVsIG9ubHkgZm9yIHRo
+ZSBkdXJhdGlvbiBvZiBlYWNoIHJlYWQsIHdyaXRlLCBvciBjb3B5IHRlc3QuIFRoZXNlIGFyZQ0K
+PiBpbXByb3ZlbWVudHMgdGhhdCBjYW4gY29tZSBvdmVyIHRpbWUuIEl0IGlzIGdyZWF0IHRoYXQg
+cGNpLWVwZi10ZXN0IHdhcw0KPiByZWNlbnRseSB1cGRhdGVkIHRvIGluY2x1ZGUgc3VwcG9ydCBm
+b3IgZG1hIG9wZXJhdGlvbnMgd2hpY2ggbWFrZXMgc3VjaA0KPiBpbXByb3ZlbWVudHMgcG9zc2li
+bGUuDQoNCkNoZWNrIG15IHByZXZpb3VzIHN1Z2dlc3Rpb24uIEkgdGhpbmsgYnkgaGF2aW5nIGEg
+dGltZW91dCBmb3IgdGhlIERNQSANCm9wZXJhdGlvbiB3ZSBjYW4gcHJvdmlkZSBhIHdheSB0byBy
+ZWxlYXNlIHRoZSBkbWEgY2hhbm5lbC4NCk9yIHdlIGNvdWxkIHByb3ZpZGUgc29tZSBraW5kIG9m
+IGhlYXJ0IGJlYXQsIG9uY2UgYWdhaW4gdGhyb3VnaCBzb21lIA0KcmVnaXN0ZXIgaW4gYSBCQVIu
+DQoNCj4gPiBSZWxhdGl2ZSB0byB0aGUgaW1wbGVtZW50YXRpb24gb2YgdGhlIG9wdGlvbnMgMyBh
+bmQgNCwgSSB3b25kZXIgaWYgdGhlDQo+ID4gbGlua2VkIGxpc3QgbWVtb3J5IHNwYWNlIGFuZCBz
+aXplIGNvdWxkIGJlIHNldCB0aHJvdWdoIHRoZSBEVCBvciBieSB0aGUNCj4gPiBjb25maWdmcyBh
+dmFpbGFibGUgb24gdGhlIHBjaS1lcGYtdGVzdCBkcml2ZXIuDQo+ID4NCj4gDQo+IEFsdGhvdWdo
+IHRoZXNlIG9wdGlvbnMgY291bGQgYmUgc2V0IHRocm91Z2ggRFQgb3IgYnkgY29uZmlnZnMsIGFu
+b3RoZXINCj4gb3B0aW9uIGlzIHRvIGVuYWJsZSB0aGUgdXNlciBvZiBwY2l0ZXN0IHRvIHNwZWNp
+Znkgc3VjaCBwYXJhbWV0ZXJzIG9uDQo+IHRoZSBjb21tYW5kIGxpbmUgd2hlbiBpbnZva2luZyBl
+YWNoIHRlc3QgZnJvbSB0aGUgaG9zdCBzaWRlLg0KDQpUaGF0IHdvdWxkIGJlIGFuIGVhc3kgYW5k
+IHF1aWNrIHNvbHV0aW9uLCBidXQgc28gZmFyIGFzIEkga25vdyB0aGVyZSBpcyBhIA0KbW92ZW1l
+bnQgaW4gdGhlIEtlcm5lbCB0byBhdm9pZCBhbnkgY29uZmlndXJhdGlvbiB0aHJvdWdoIG1vZHVs
+ZSANCnBhcmFtZXRlcnMuIFNvIEknbSBhZnJhaWQgdGhhdCB5b3UgaGF2ZSB0byBjaG9vc2UgYnkg
+RFQgb3IgY29uZmlnZnMgDQpzdHJhdGVneS4gS2lzaG9uIGNhbiBoZWxwIHlvdSBvbiB0aGlzIG1h
+dHRlciwgYnkgdGVsbGluZyB5b3Ugd2hhdCBoZSANCnByZWZlcnMuDQoNClJlZ2FyZHMsDQpHdXN0
+YXZvDQoNCg0K

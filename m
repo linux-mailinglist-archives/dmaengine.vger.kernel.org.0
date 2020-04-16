@@ -2,185 +2,157 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 212141AB431
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Apr 2020 01:27:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 235A21AB5BF
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Apr 2020 04:05:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389269AbgDOX0q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 15 Apr 2020 19:26:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389251AbgDOX0n (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Apr 2020 19:26:43 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A5A8C061A0C
-        for <dmaengine@vger.kernel.org>; Wed, 15 Apr 2020 16:26:43 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id 131so4093182lfh.11
-        for <dmaengine@vger.kernel.org>; Wed, 15 Apr 2020 16:26:43 -0700 (PDT)
+        id S1730331AbgDPCFD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 15 Apr 2020 22:05:03 -0400
+Received: from mail-eopbgr1400095.outbound.protection.outlook.com ([40.107.140.95]:54694
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728397AbgDPCE6 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 15 Apr 2020 22:04:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F03LrnjyqUFuj7w8YMu8gLjJNeI4olFboE9eOg/bozVbjS8Zm2ZTQonTADXqheq+kLunJsBqdFGLpFSbVNtWILgREGuN5TC43e//T+khJh75a+ENmAZSbAOP/od/T/dFMJKiPGX0ft7Il638uhTawKZCqxUHWomQ1zVs0a9wkcuul57Fx2E5NyibRgMY7U5kGs0Im57fEZ7ItE7W3hrCCF60zBp5aoxSKH+zBER3/nxmtUsbzLhHSdzgklrTqfFZKYjxHOxCRLMJLdZcx8z6SWhemyWhLuMkVvratsqTncSh8pZ9kXh8HKBmYJouXH9NINpQt2ah/AGBD1iFzAdtqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BsXjyU3rXc6Gm5BE74SOnXHcc2MBsD59rjtt/lrbcGU=;
+ b=ArVBmxz1VFSllelmrBReu2LL8ziRy3hQAkqyAImiBkfxOdIbAmOlzW4S3/OKNd84PaKfWYDznA/+78AivbN4Inlvj/rUamYuIZzBE55i+KNy0eRe6+5K+KYPuERDCt51mBTNcdqY6Y0Dip9o3x6dT1vp8ewLw6sV9hOYSmUjp57o3/c4hu/3s7pXggVdfxeFDVHacfmbKveDYRsaPRR2qzrVhsIrcw9hfuvtqeLACoUk7S47LhNQyv/GqW1D4iuJY/N4YxmDzVXRfZM7KJzibAIjkOvJgDeFBlYiwldEeROeqsz1uD0ZXkfsORs5tRwx8A5MKFIPi8EkZEEGPE013Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L1IlX2IpSQEMdDjEJKh5CMpEL+4kcWoPfApz2jdxM08=;
-        b=Er0LS+1q+NZt2g0tIsdiUQ0aIqzQIX/d5/FQVosexWpAB2ylC02jbt5wiQStKD20Nt
-         WlSa0W7tvpOL75ueuetXJprO1qcmES76gksNQSurpvagjbP2NHp3W5sVL2qB+nr8hOn6
-         0+wLxHxtkoYcFvB4NkKiPqxWZ1omKz27UtCLOH1RDwNZCrwkQN8KpY3s9U/IBk8M+D7S
-         bcGAcyzswBqYfxArH3Pp0AppQK4Z0ocT7vqGEpd+/m+8KDoTaXFdy+/V9sSDjznXrP7f
-         sIRojXk/AhQ36ij8wJZLT7brr6d3m6HkJijaqBmnUACRKYJ2HLHopiQ/HcE3wdu0YfPD
-         yxew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L1IlX2IpSQEMdDjEJKh5CMpEL+4kcWoPfApz2jdxM08=;
-        b=r8Am+ao+yneSbwYmIUyRgDTmkQLJx0Ujn/1+FTTrq6x+eXjC06zzhCxfK6soYYTdZU
-         HLDYv/f/IMtUjgBabjGquSpFXnbWUALpz3GsLbei578wcTJ3a0OxL90ZVhTc+aVcb0Vp
-         SO0IHm7tMILEwyD93PNHoydbprmU9JPSBzmZO2yVg66r8/93moZ0/bE4GhUyjzreEp7K
-         74KlUYXoBM2ncbcHOLycxFq+hveDWf6xKBjVERrwYrtchZooL9S1HUZvMt899FqJDt2j
-         8qNOgFTNJzvA+W5OnMioVRf+0Yy04fKH+sNXbjcidHbqOodbn2QTz21Si2LDRqQ3PBAU
-         H29w==
-X-Gm-Message-State: AGi0PubhM9Ss7J/Uz/l0djlzWQiDxxdeXmf9TneeNvGGs1Hj7NoiTrdH
-        vOVF0iQWa3Fe2gJi5Blk4ocFaqZO+UIwNYx7NoHzX6n4
-X-Google-Smtp-Source: APiQypKaR4aNmabWaJXpkSEHfUib4Yuak4mqveufOwk320FKg6kY6n/SP8qHWQ52HwXA+qkOZ4P0De+awzrTbAnhEmw=
-X-Received: by 2002:a19:dc05:: with SMTP id t5mr4319328lfg.73.1586993201362;
- Wed, 15 Apr 2020 16:26:41 -0700 (PDT)
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BsXjyU3rXc6Gm5BE74SOnXHcc2MBsD59rjtt/lrbcGU=;
+ b=hS6ZVNV+7eei+AxNXym2haGltGYoPXReyajR/0Cp13xaIa8PD+fY8LAbWIcz7O6lQ1TvLUeUbbBTk4vflIQi3Y/dFD6mUJkPDzv8sQF7h6L2RVI6OYCvxAtb0RC271QXOg27H1/DY39ix0EH8rRDErFzjQ0t2FII4Q/u0HeVQMQ=
+Received: from OSAPR01MB4529.jpnprd01.prod.outlook.com (20.179.176.20) by
+ OSAPR01MB3361.jpnprd01.prod.outlook.com (20.178.103.83) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2900.15; Thu, 16 Apr 2020 02:04:51 +0000
+Received: from OSAPR01MB4529.jpnprd01.prod.outlook.com
+ ([fe80::3056:e118:8a8e:b3ad]) by OSAPR01MB4529.jpnprd01.prod.outlook.com
+ ([fe80::3056:e118:8a8e:b3ad%7]) with mapi id 15.20.2878.023; Thu, 16 Apr 2020
+ 02:04:51 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Vinod <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH 2/2] dt-bindings: dma: renesas,usb-dmac: convert bindings
+ to json-schema
+Thread-Topic: [PATCH 2/2] dt-bindings: dma: renesas,usb-dmac: convert bindings
+ to json-schema
+Thread-Index: AQHWDx8gtNeFxgyfAE26KaVsY8FTY6h6POmAgADJxGA=
+Date:   Thu, 16 Apr 2020 02:04:50 +0000
+Message-ID: <OSAPR01MB452933886B2C83A6E054AE50D8D80@OSAPR01MB4529.jpnprd01.prod.outlook.com>
+References: <1586512923-21739-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1586512923-21739-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdWziQYKFeZZt7ZOCYMEWxD8e3mjqf+x0xsAcA7XDzZHWQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdWziQYKFeZZt7ZOCYMEWxD8e3mjqf+x0xsAcA7XDzZHWQ@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: dd89c524-5792-40b2-98ca-08d7e1aa8c4c
+x-ms-traffictypediagnostic: OSAPR01MB3361:
+x-microsoft-antispam-prvs: <OSAPR01MB3361F48EF823E209B3CCE190D8D80@OSAPR01MB3361.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0375972289
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB4529.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(366004)(39860400002)(346002)(376002)(396003)(8936002)(81156014)(76116006)(55236004)(8676002)(52536014)(5660300002)(26005)(186003)(7696005)(6506007)(86362001)(6916009)(54906003)(2906002)(966005)(4326008)(66446008)(71200400001)(33656002)(66556008)(64756008)(55016002)(66946007)(66476007)(478600001)(316002)(9686003)(142933001);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: RaLQvvCTl1l9/TAkX2QEEOcyU/QGMBHtOl4ltq+6z4wON0sbQIhEE+ZhGphXV5vVoxdTnMSgwn2u/4QNvMOD1NwnUyvMrwJbZOOX06DLViqTTdZL3plNG7cM7EkKfO/l37uP2vJoRVVBJMGEyI4yuEi2MG2pVAt9UO9OHgf0CyGBQfWdPUVWOYf6P+9nElAZTyuQGWUoc8M9wgeKb2EOtnFEvWHnK+iz5/u6vQb3aUm+EQTppSnqs6pg6JdDQR20KyKF/iegn3PjBFldB1CpX4kRI4Qd0qNZVwV69VMvffLELsrVroeXXzKsxGbCidG8OtCEdRzLk6d4q7vEUVFMtAtb3Ch9U/YkZFtDyPq6B50FasqOjmquNSgORrYuG6eiaMp09hYSRl1WQz5Sc7ij1LFJ7jyNUAZdOSfGw3z6l79lFOiB9QdpZlkYHh3cxckxfS4jjeTgakj5e32Ur9d8JAw/gCKQcFg7shYmh7vxHW41SXI/lMbS8jQSTyAPoblCZMjAJqwsBwbrP12wqD2ZswfHPCJBd8EqRP2Q8HrF/N2eAmktYYd4Dk8nbzCv65po
+x-ms-exchange-antispam-messagedata: psBQ5o63KvBasq6V+iFm/No293pdosRfYZytaYhBaGh5POGyhVdoKCfWRGFD9OlP4p6a1hotv+EC/UxfTlYTJIsxfP33VGkmC1iRgN4xljrPYS6ufvTIQm5Jb4R6pcFhW2b4gbl6xVa41iqdifoPUQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1586916464-27727-1-git-send-email-alan.mikhak@sifive.com>
- <DM5PR12MB1276CB8FA4457D4CDCE3137EDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
- <CABEDWGwYmO52g6cqvQdWb6HXWEHaMA1rcf96aUqv0f32tJZT-g@mail.gmail.com>
- <DM5PR12MB1276E09460BD4DB7E70EAF91DADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
- <CABEDWGw0OyQNppLpDaNgMedfB0Ci=kZVKm+h4T-LJoZYmbSgqA@mail.gmail.com>
- <DM5PR12MB127673CFDCA38A47E6F6F4DBDADB0@DM5PR12MB1276.namprd12.prod.outlook.com>
- <CABEDWGyUfq4c65K+btmKBcGLv59h6PFVUkSD_52kOw9R0Rtynw@mail.gmail.com>
-In-Reply-To: <CABEDWGyUfq4c65K+btmKBcGLv59h6PFVUkSD_52kOw9R0Rtynw@mail.gmail.com>
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-Date:   Wed, 15 Apr 2020 16:26:30 -0700
-Message-ID: <CABEDWGz1KLGmQBWU_kcKF7zxjnP02x=0vbXghsZMKNWeExF+rA@mail.gmail.com>
-Subject: Re: [PATCH RFC] dmaengine: dw-edma: Decouple dw-edma-core.c from
- struct pci_dev
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd89c524-5792-40b2-98ca-08d7e1aa8c4c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2020 02:04:50.9215
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +voOFvZiZVcNIOx8RLXJv0Lxx3kC9k/bQmUgmK2/WLLynIhcrGI01lz5BS9S4VWTfI8j9z/rI13bKfjIZljbsh5V2jFHR3rGQi9ofiyNQQexyn01yjmdaZuXPuzD1oD4
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB3361
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Apr 15, 2020 at 2:23 PM Alan Mikhak <alan.mikhak@sifive.com> wrote:
->
-> On Wed, Apr 15, 2020 at 1:58 PM Gustavo Pimentel
-> <Gustavo.Pimentel@synopsys.com> wrote:
-> >
-> > Hi Alan,
-> >
-> > > > > At the moment, pci-epf-test grabs the first available dma channel on the
-> > > > > endpoint side and uses it for either read, write, or copy operation. it is not
-> > > > > possible at the moment to specify which dma channel to use on the pcitest
-> > > > > command line. This may be possible by modifying the command line option
-> > > > > -D to also specify the name of one or more dma channels.
-> > > >
-> > > > I'm assuming that behavior is due to your code, right? I'm not seen that
-> > > > behavior on the Kernel tree.
-> > > > Check my previous suggestion, it should be something similar to what is
-> > > > been done while you select the MSI/MSI-X interrupt to trigger.
-> > >
-> > > I believe this behavior exists in the kernel tree because the call to
-> > > dma_request_chan_by_mask() always specifies channel zero. The user
-> > > of pcitest has no way of specifying which one of the available dma channels
-> > > to use.
-> >
-> > I think we were discussing different things. I was referring to the
-> > pci-epf-test code, that I wasn't being able to find any instruction to
-> > call the DMA driver which had the described behavior.
-> >
-> > I think you can do it by doing this:
-> >
-> > Pseudo code:
-> >
-> > #define EDMA_TEST_CHANNEL_NAME                  "dma%uchan%u"
-> >
-> > static bool dw_edma_test_filter(struct dma_chan *chan, void *filter)
-> > {
-> >         if (strcmp(dev_name(chan->device->dev), EDMA_TEST_DEVICE_NAME) ||
-> > strcmp(dma_chan_name(chan), filter))
-> >                 return false;
-> >
-> >         return true;
-> > }
-> >
-> > static void dw_edma_test_thread_create(int id, int channel)
-> > {
-> >         struct dma_chan *chan;
-> >         dma_cap_mask_t mask;
-> >         char filter[20];
-> >
-> >         dma_cap_zero(mask);
-> >         dma_cap_set(DMA_SLAVE, mask);
-> >         dma_cap_set(DMA_CYCLIC, mask);
-> >
-> >         snprintf(filter, sizeof(filter), EDMA_TEST_CHANNEL_NAME, id,
-> > channel);
-> >         chan = dma_request_channel(mask, dw_edma_test_filter, filter);
-> >
-> >         [..]
-> > }
->
-> Thanks Gustavo, This pseudo code is very useful. Now I know how to do
-> that part of the change.
->
-> What I have further in mind is to enable the pcitest user to specify some
-> arbitrary string with -D option to select one or more of the dma channels
-> that are available on the endpoint side. Since the user executes pcitest
-> from host-side command prompt and pci-epf-test executes in kernel on the
-> endpoint side, the messaging between userspace pcitest and kernel-space
-> pci_endpoint_test as well as the messaging across the bus between
-> pci_endpoint_test and pci-epf-test needs to be expanded to pass the user
-> string from the host to the endpoint. Upon receiving each read, write, or
-> copy message, pci-epf-test could then try to acquire the specified dma
-> channel and execute the user command or fail it if no such channel is
-> available at that moment.
->
-> >
-> > > I believe this behavior exists in the kernel tree because the call to
-> > > dma_request_chan_by_mask() happens during the execution of
-> > > pci_epf_test_bind() and the call to dma_release_channel() happens
-> > > during the execution of pci_epf_test_unbind(). As long as pci-epf-test
-> > > is bound, I cannot use another program such as dmatest from the
-> > > endpoint-side command prompt to exercise the same channel.
-> >
-> > Ok, I understood it now. Right, you can't use the dmatest here, even
-> > because, as far as I know, it is only MEM TO MEM operations and we need
-> > DEVICE_TO_MEM and vice-versa.
-> >
-
-On the platforms that I have this in mind for, I may not only have embedded
-dma channels inside the PCIe controller but also platform dma channels. Either
-type of dma channel can be used by pcitest whereas dmatest can only use
-the type that can do MEM to MEM as you said. Either of these types can
-be used to transfer data to or from the PCIe bus. I need to use both kinds
-with pcitest to make sure the PCIe subsystem is ok.
-
-> > >
-> > > What I was suggesting is perhaps pci-epf-test can be modified to
-> > > acquire and release the channel on each call to pci_epf_test_read(),
-> > > ...write(), or ...copy() when the pcitest user specifies -D option.
-> >
-> > Right, you are on the right track.
-> > Perhaps you could take a look at patch [1] that I have done some time ago
-> > for testing the eDMA, I think you have all the tools/guideline there to
-> > do this adaption.
-> > Another thing,
-> >
-> > [1] https://patchwork.kernel.org/patch/10760521/
->
-> Thanks for the guidance and reference code patch [1]. I will definitely
-> take a close look at [1].
->
-> >
-> >
-> >
+SGkgR2VlcnQtc2FuLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgcmV2aWV3IQ0KDQo+IEZyb206IEdl
+ZXJ0IFV5dHRlcmhvZXZlbiwgU2VudDogV2VkbmVzZGF5LCBBcHJpbCAxNSwgMjAyMCAxMDo1NiBQ
+TQ0KPHNuaXA+DQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kbWEvcmVuZXNhcyx1c2ItZG1hYy55YW1sDQo+ID4gQEAgLTAsMCAr
+MSw5OSBAQA0KPiA+ICsjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiAoR1BMLTIuMC1vbmx5IE9S
+IEJTRC0yLUNsYXVzZSkNCj4gPiArJVlBTUwgMS4yDQo+ID4gKy0tLQ0KPiA+ICskaWQ6IGh0dHA6
+Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2RtYS9yZW5lc2FzLHVzYi1kbWFjLnlhbWwjDQo+ID4g
+KyRzY2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIw0K
+PiA+ICsNCj4gPiArdGl0bGU6IFJlbmVzYXMgVVNCIERNQSBDb250cm9sbGVyDQo+ID4gKw0KPiA+
+ICttYWludGFpbmVyczoNCj4gPiArICAtIFlvc2hpaGlybyBTaGltb2RhIDx5b3NoaWhpcm8uc2hp
+bW9kYS51aEByZW5lc2FzLmNvbT4NCj4gPiArDQo+ID4gK2FsbE9mOg0KPiA+ICsgIC0gJHJlZjog
+ImRtYS1jb250cm9sbGVyLnlhbWwjIg0KPiA+ICsNCj4gPiArcHJvcGVydGllczoNCj4gPiArICBj
+b21wYXRpYmxlOg0KPiA+ICsgICAgaXRlbXM6DQo+ID4gKyAgICAgIC0gZW51bToNCj4gPiArICAg
+ICAgICAgIC0gcmVuZXNhcyxyOGE3NzQzLXVzYi1kbWFjICAjIFJaL0cxTQ0KPiA+ICsgICAgICAg
+ICAgLSByZW5lc2FzLHI4YTc3NDQtdXNiLWRtYWMgICMgUlovRzFODQo+ID4gKyAgICAgICAgICAt
+IHJlbmVzYXMscjhhNzc0NS11c2ItZG1hYyAgIyBSWi9HMUUNCj4gPiArICAgICAgICAgIC0gcmVu
+ZXNhcyxyOGE3NzQ3MC11c2ItZG1hYyAjIFJaL0cxQw0KPiA+ICsgICAgICAgICAgLSByZW5lc2Fz
+LHI4YTc3NGExLXVzYi1kbWFjICMgUlovRzJNDQo+ID4gKyAgICAgICAgICAtIHJlbmVzYXMscjhh
+Nzc0YjEtdXNiLWRtYWMgIyBSWi9HMk4NCj4gPiArICAgICAgICAgIC0gcmVuZXNhcyxyOGE3NzRj
+MC11c2ItZG1hYyAjIFJaL0cyRQ0KPiA+ICsgICAgICAgICAgLSByZW5lc2FzLHI4YTc3OTAtdXNi
+LWRtYWMgICMgUi1DYXIgSDINCj4gPiArICAgICAgICAgIC0gcmVuZXNhcyxyOGE3NzkxLXVzYi1k
+bWFjICAjIFItQ2FyIE0yLVcNCj4gPiArICAgICAgICAgIC0gcmVuZXNhcyxyOGE3NzkzLXVzYi1k
+bWFjICAjIFItQ2FyIE0yLU4NCj4gPiArICAgICAgICAgIC0gcmVuZXNhcyxyOGE3Nzk0LXVzYi1k
+bWFjICAjIFItQ2FyIEUyDQo+ID4gKyAgICAgICAgICAtIHJlbmVzYXMscjhhNzc5NS11c2ItZG1h
+YyAgIyBSLUNhciBIMw0KPiA+ICsgICAgICAgICAgLSByZW5lc2FzLHI4YTc3OTYtdXNiLWRtYWMg
+ICMgUi1DYXIgTTMtVw0KPiA+ICsgICAgICAgICAgLSByZW5lc2FzLHI4YTc3OTYxLXVzYi1kbWFj
+ICMgUi1DYXIgTTMtVysNCj4gPiArICAgICAgICAgIC0gcmVuZXNhcyxyOGE3Nzk2NS11c2ItZG1h
+YyAjIFItQ2FyIE0zLU4NCj4gPiArICAgICAgICAgIC0gcmVuZXNhcyxyOGE3Nzk5MC11c2ItZG1h
+YyAjIFItQ2FyIEUzDQo+ID4gKyAgICAgICAgICAtIHJlbmVzYXMscjhhNzc5OTUtdXNiLWRtYWMg
+IyBSLUNhciBEMw0KPiA+ICsgICAgICAtIGNvbnN0OiByZW5lc2FzLHVzYi1kbWFjDQo+ID4gKw0K
+PiA+ICsgIHJlZzoNCj4gPiArICAgIG1heEl0ZW1zOiAxDQo+ID4gKw0KPiA+ICsgIGludGVycnVw
+dHM6DQo+ID4gKyAgICBtYXhJdGVtczogMg0KPiANCj4gSXMgdGhlcmUgYSB1c2UgY2FzZSBmb3Ig
+c3BlY2lmeWluZyBhIHNpbmdsZSBpbnRlcnJ1cHQ/DQoNCk5vLiBBbGwgVVNCLURNQUMgb2YgUi1D
+YXIgR2VuMi8zIGFuZCBSWi9HbiBoYXMgMiBjaGFubmVscy4NCkluIGNhc2Ugb2YgUi1DYXIgR2Vu
+MywgcGxlYXNlIHJlZmVyIHRvIHRoZSBGaWd1cmUgNzUuMSBVU0ItRE1BQyBCbG9jayBEaWFncmFt
+Lg0KVGhlc2UgVVNCLURNQUNuIGhhdmUgQ0gwIGFuZCBDSDENCg0KPiA+ICsNCj4gPiArICBpbnRl
+cnJ1cHQtbmFtZXM6DQo+ID4gKyAgICBtYXhJdGVtczogMg0KPiA+ICsgICAgaXRlbXM6DQo+ID4g
+KyAgICAgIC0gcGF0dGVybjogIl5jaFswLTFdJCINCj4gPiArICAgICAgLSBwYXR0ZXJuOiAiXmNo
+WzAtMV0kIg0KPiANCj4gV291bGQgaXQgbWFrZSBzZW5zZSB0byBsaXN0IHRoZSAodHdvKSBhY3R1
+YWwgY2hhbm5lbCBuYW1lcyBpbnN0ZWFkPw0KDQpJIGFncmVlLiBKdXN0IHVzaW5nIGNoMCBhbmQg
+Y2gxIGlzIHNpbXBsZXIuDQoNCj4gPiArDQo+ID4gKyAgY2xvY2tzOg0KPiA+ICsgICAgbWF4SXRl
+bXM6IDENCj4gPiArDQo+ID4gKyAgJyNkbWEtY2VsbHMnOg0KPiA+ICsgICAgY29uc3Q6IDENCj4g
+PiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICBUaGUgY2VsbCBzcGVjaWZpZXMgdGhlIGNo
+YW5uZWwgbnVtYmVyIG9mIHRoZSBETUFDIHBvcnQgY29ubmVjdGVkIHRvDQo+ID4gKyAgICAgIHRo
+ZSBETUEgY2xpZW50Lg0KPiA+ICsNCj4gPiArICBkbWEtY2hhbm5lbHM6DQo+ID4gKyAgICBtYXhp
+bXVtOiAyDQo+IA0KPiBJcyB0aGVyZSBhIHVzZSBjYXNlIGZvciBzcGVjaWZ5aW5nIGEgc2luZ2xl
+IGNoYW5uZWw/DQo+IA0KPiA+ICsNCj4gPiArICBpb21tdXM6DQo+ID4gKyAgICBtYXhJdGVtczog
+Mg0KPiANCj4gTGlrZXdpc2U/DQoNCkFzIEkgbWVudGlvbmVkIGFib3ZlLCB0aGVyZSBpcyBub3Qg
+YSB1c2UgY2FzZSBmb3Igc3BlY2lmeWluZyBhIHNpbmdsZSBjaGFubmVsLg0KDQo+ID4gKw0KPiA+
+ICsgIHBvd2VyLWRvbWFpbnM6DQo+ID4gKyAgICBtYXhJdGVtczogMQ0KPiA+ICsNCj4gPiArICBy
+ZXNldHM6DQo+ID4gKyAgICBtYXhJdGVtczogMQ0KPiA+ICsNCj4gPiArcmVxdWlyZWQ6DQo+ID4g
+KyAgLSBjb21wYXRpYmxlDQo+ID4gKyAgLSByZWcNCj4gPiArICAtIGludGVycnVwdHMNCj4gPiAr
+ICAtIGludGVycnVwdC1uYW1lcw0KPiA+ICsgIC0gY2xvY2tzDQo+ID4gKyAgLSAnI2RtYS1jZWxs
+cycNCj4gPiArICAtIGRtYS1jaGFubmVscw0KPiANCj4gU2hvdWxkbid0ICJwb3dlci1kb21haW5z
+IiBhbmQgInJlc2V0cyIgYmUgbWFuZGF0b3J5LCB0b28/DQo+IEFsbCBjb3ZlcmVkIFNvQ1MgaGF2
+ZSB0aGVtLg0KDQpPb3BzLiBJJ2xsIGFkZCB0aGVzZSBwcm9wZXJ0aWVzIGFzIHJlcXVpcmVkLg0K
+DQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0KDQo+IEdye29ldGplLGVldGluZ31z
+LA0KPiANCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0
+IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2Vl
+cnRAbGludXgtbTY4ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0
+ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20g
+dGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhp
+bmcgbGlrZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVz
+IFRvcnZhbGRzDQo=

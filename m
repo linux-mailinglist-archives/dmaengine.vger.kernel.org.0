@@ -2,115 +2,74 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E796A1ACE63
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Apr 2020 19:08:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A8091AD05C
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Apr 2020 21:32:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbgDPRHz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 Apr 2020 13:07:55 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:59464 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727795AbgDPRHy (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Apr 2020 13:07:54 -0400
-Received: from pps.filterd (m0170392.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GGs2AL001932;
-        Thu, 16 Apr 2020 13:07:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=smtpout1;
- bh=xN0JW61ebO1wBkMu3X1WK/Z+DIOah7AFxvr45+zINrA=;
- b=DHOTO4rDP1K8ejteq3PtNPrFhkY1acK3UUWWpGNYqUGbPAohRJYM6y1gdic1SHQKLCLb
- Sk8GJ4Fymh/74qa+MDfSPSgG6LIct2RgYZW0Y0xR+iatsK86zOy8wr+BSTm/AJg/HYPc
- naTo3xSsAYeMYUSm5GGkaJ1jrSAa+am1kBwbXAiNU2pQGck0BOVBnHE3KRzquZYWw7Ox
- SGF6U2iRWWBEF8Qg8yQS3tbV9fSVdfBZ4xwqGXqoiWyYSvbpJwi8FQt1jBNnVlg8sSm+
- 7FLhfemPwRL8Lh2D4D7V+wbMknFCSWpTDqWZvRDiOadiSirAaayoA66eBcpSMnC3ublt aA== 
-Received: from mx0a-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0a-00154904.pphosted.com with ESMTP id 30dna73bku-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Apr 2020 13:07:40 -0400
-Received: from pps.filterd (m0089484.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GGuWaH031824;
-        Thu, 16 Apr 2020 13:07:39 -0400
-Received: from mailuogwhop.emc.com (mailuogwhop-nat.lss.emc.com [168.159.213.141] (may be forged))
-        by mx0b-00154901.pphosted.com with ESMTP id 30dn7m4d4x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 16 Apr 2020 13:07:39 -0400
-Received: from emc.com (localhost [127.0.0.1])
-        by mailuogwprd05.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03GH7cpE002340;
-        Thu, 16 Apr 2020 13:07:38 -0400
-Received: from mailapphubprd03.lss.emc.com ([mailhub.lss.emc.com [10.253.24.70]]) by mailuogwprd05.lss.emc.com with ESMTP id 03GH7C9X002134 ;
-          Thu, 16 Apr 2020 13:07:13 -0400
-Received: from arwen2.xiolab.lab.emc.com. (arwen2.xiolab.lab.emc.com [10.76.211.113])
-        by mailapphubprd03.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03GH6hRw020685;
-        Thu, 16 Apr 2020 13:07:10 -0400
-From:   leonid.ravich@dell.com
-To:     dmaengine@vger.kernel.org
-Cc:     lravich@gmail.com, Leonid Ravich <Leonid.Ravich@dell.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] dmaengine: ioat: Decreasing allocation chunk size 2M->512K
-Date:   Thu, 16 Apr 2020 20:06:22 +0300
-Message-Id: <20200416170628.16196-2-leonid.ravich@dell.com>
-X-Mailer: git-send-email 2.16.2
-In-Reply-To: <20200416170628.16196-1-leonid.ravich@dell.com>
-References: <20200402163356.9029-2-leonid.ravich@dell.com>
- <20200416170628.16196-1-leonid.ravich@dell.com>
-X-Sentrion-Hostname: mailuogwprd05.lss.emc.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-16_07:2020-04-14,2020-04-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- spamscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0 adultscore=0
- malwarescore=0 mlxlogscore=588 suspectscore=13 impostorscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004160120
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015
- malwarescore=0 lowpriorityscore=0 phishscore=0 priorityscore=1501
- suspectscore=13 mlxlogscore=642 adultscore=0 spamscore=0 impostorscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004160120
+        id S1729747AbgDPTbD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 16 Apr 2020 15:31:03 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:46070 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728664AbgDPTbD (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Apr 2020 15:31:03 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k133so16854837oih.12;
+        Thu, 16 Apr 2020 12:31:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=83Bpp8uoGsIBtYSm1pLHa49KTy+QHzu3gut9+0c+dz8=;
+        b=TopJOVYfofkMbZWEQnGp6CQHzeW/Qkr2SU3dbBo5plbcWF9kGONV71XePyOyc8j04n
+         4WQANmiwCFQN+qFeaUn0GMtU+F8mgGVD16zNdaS6FQfuY+OhdnjdnvQQQ9jLXo6/7tJh
+         zLAdREQ9RGhGx3LljD/1G6zVGdeR+E9Dkg6TN/K1SG2RZDcuB5UExfqSUCYQXEzD1tME
+         M4qhdlCRN86uXWo79h/3UqwygB1qHCQqn22VExgF4bNv42/lxDqfPqEP/2OIv6Jo6hwX
+         JGEDBZuQ4bLSWmp+SX/o1wVmOOans4HTjxj5dsicl/O8KObepvlj6wo+qgx6SR01ZDF5
+         phew==
+X-Gm-Message-State: AGi0PubgDC5/SyIMJIBRD9zNa0LuS6vGNFj0zmLkbK3oJ2FPqiasA+/z
+        HMvC0jtutea40czw6qv6qZ1DRbU=
+X-Google-Smtp-Source: APiQypKtFNn7klGmlxS7O33zd15hLes5Ce7gwnHv476q+1Q8X3OSIexFGD7vX+EbNCMQi+0zLh3qvw==
+X-Received: by 2002:aca:d705:: with SMTP id o5mr4155329oig.67.1587065461930;
+        Thu, 16 Apr 2020 12:31:01 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r205sm7324602oih.47.2020.04.16.12.31.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 12:31:01 -0700 (PDT)
+Received: (nullmailer pid 19733 invoked by uid 1000);
+        Thu, 16 Apr 2020 19:31:00 -0000
+Date:   Thu, 16 Apr 2020 14:31:00 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH trivial 1/6] dt-bindings: Fix misspellings of "Analog
+ Devices"
+Message-ID: <20200416193100.GA19671@bogus>
+References: <20200416103058.15269-1-geert+renesas@glider.be>
+ <20200416103058.15269-2-geert+renesas@glider.be>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200416103058.15269-2-geert+renesas@glider.be>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Leonid Ravich <Leonid.Ravich@emc.com>
+On Thu, 16 Apr 2020 12:30:53 +0200, Geert Uytterhoeven wrote:
+> According to https://www.analog.com/, the company name is spelled
+> "Analog Devices".
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  .../devicetree/bindings/display/bridge/adi,adv7123.txt        | 4 ++--
+>  .../devicetree/bindings/display/bridge/adi,adv7511.txt        | 4 ++--
+>  Documentation/devicetree/bindings/dma/adi,axi-dmac.txt        | 2 +-
+>  Documentation/devicetree/bindings/iio/dac/ad5755.txt          | 2 +-
+>  4 files changed, 6 insertions(+), 6 deletions(-)
+> 
 
-requreing kmalloc of 2M high chance to fail in
-fragmented memory.
-IOAT ring requires 64k * 64B memory
-which will be achived by 512k * 8 allocation
-instead of 2M * 2.
+Applied, thanks.
 
-Acked-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
----
-Changing in v3:
-  - Make the commit message more clearer.
-
-
- drivers/dma/ioat/dma.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
-index 5216c6b..e6b622e 100644
---- a/drivers/dma/ioat/dma.h
-+++ b/drivers/dma/ioat/dma.h
-@@ -83,7 +83,7 @@ struct ioatdma_device {
- 
- #define IOAT_MAX_ORDER 16
- #define IOAT_MAX_DESCS (1 << IOAT_MAX_ORDER)
--#define IOAT_CHUNK_SIZE (SZ_2M)
-+#define IOAT_CHUNK_SIZE (SZ_512K)
- #define IOAT_DESCS_PER_CHUNK (IOAT_CHUNK_SIZE / IOAT_DESC_SZ)
- 
- struct ioat_descs {
--- 
-1.9.3
-
+Rob

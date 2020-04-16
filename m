@@ -2,28 +2,28 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BAEAC1ABFEF
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Apr 2020 13:44:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D40A81ABE62
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Apr 2020 12:47:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2506472AbgDPLoN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 Apr 2020 07:44:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57098 "EHLO
+        id S2505244AbgDPKrZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 16 Apr 2020 06:47:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2505206AbgDPKgS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Apr 2020 06:36:18 -0400
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF080C03C1AA
-        for <dmaengine@vger.kernel.org>; Thu, 16 Apr 2020 03:36:14 -0700 (PDT)
+        with ESMTP id S2505252AbgDPKgY (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Apr 2020 06:36:24 -0400
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A054C061A41
+        for <dmaengine@vger.kernel.org>; Thu, 16 Apr 2020 03:36:24 -0700 (PDT)
 Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:fd83:81bb:c1d7:433d])
-        by xavier.telenet-ops.be with bizsmtp
-        id TNWz2200l4dKHqf01NWzxG; Thu, 16 Apr 2020 12:31:11 +0200
+        by andre.telenet-ops.be with bizsmtp
+        id TNWz2200b4dKHqf01NX0RZ; Thu, 16 Apr 2020 12:31:23 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1jP1nP-0001cq-O4; Thu, 16 Apr 2020 12:30:59 +0200
+        id 1jP1nP-0001cw-Ou; Thu, 16 Apr 2020 12:30:59 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1jP1nP-0003zI-Me; Thu, 16 Apr 2020 12:30:59 +0200
+        id 1jP1nP-0003zL-Nb; Thu, 16 Apr 2020 12:30:59 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
         David Airlie <airlied@linux.ie>,
@@ -42,9 +42,9 @@ Cc:     devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
         alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH trivial 4/6] iio: Fix misspellings of "Analog Devices"
-Date:   Thu, 16 Apr 2020 12:30:56 +0200
-Message-Id: <20200416103058.15269-5-geert+renesas@glider.be>
+Subject: [PATCH trivial 5/6] ALSA: Fix misspellings of "Analog Devices"
+Date:   Thu, 16 Apr 2020 12:30:57 +0200
+Message-Id: <20200416103058.15269-6-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200416103058.15269-1-geert+renesas@glider.be>
 References: <20200416103058.15269-1-geert+renesas@glider.be>
@@ -58,48 +58,54 @@ According to https://www.analog.com/, the company name is spelled
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/iio/adc/ad7791.c                       | 2 +-
- drivers/iio/trigger/iio-trig-hrtimer.c         | 2 +-
- drivers/staging/iio/Documentation/overview.txt | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ sound/isa/ad1816a/ad1816a.c | 2 +-
+ sound/pci/ac97/ac97_patch.c | 2 +-
+ sound/pci/hda/Kconfig       | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/iio/adc/ad7791.c b/drivers/iio/adc/ad7791.c
-index abb2393926317087..70bfc41052db2740 100644
---- a/drivers/iio/adc/ad7791.c
-+++ b/drivers/iio/adc/ad7791.c
-@@ -444,5 +444,5 @@ static struct spi_driver ad7791_driver = {
- module_spi_driver(ad7791_driver);
+diff --git a/sound/isa/ad1816a/ad1816a.c b/sound/isa/ad1816a/ad1816a.c
+index ce4c8ba2fa9873e7..ca18fe3ff8a59a9f 100644
+--- a/sound/isa/ad1816a/ad1816a.c
++++ b/sound/isa/ad1816a/ad1816a.c
+@@ -54,7 +54,7 @@ MODULE_PARM_DESC(clockfreq, "Clock frequency for ad1816a driver (default = 0).")
+ static const struct pnp_card_device_id snd_ad1816a_pnpids[] = {
+ 	/* Analog Devices AD1815 */
+ 	{ .id = "ADS7150", .devs = { { .id = "ADS7150" }, { .id = "ADS7151" } } },
+-	/* Analog Device AD1816? */
++	/* Analog Devices AD1816? */
+ 	{ .id = "ADS7180", .devs = { { .id = "ADS7180" }, { .id = "ADS7181" } } },
+ 	/* Analog Devices AD1816A - added by Kenneth Platz <kxp@atl.hp.com> */
+ 	{ .id = "ADS7181", .devs = { { .id = "ADS7180" }, { .id = "ADS7181" } } },
+diff --git a/sound/pci/ac97/ac97_patch.c b/sound/pci/ac97/ac97_patch.c
+index ebf926728c5f84af..45ef0f52ec55b803 100644
+--- a/sound/pci/ac97/ac97_patch.c
++++ b/sound/pci/ac97/ac97_patch.c
+@@ -1356,7 +1356,7 @@ static int patch_cx20551(struct snd_ac97 *ac97)
+ }
  
- MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
--MODULE_DESCRIPTION("Analog Device AD7787/AD7788/AD7789/AD7790/AD7791 ADC driver");
-+MODULE_DESCRIPTION("Analog Devices AD7787/AD7788/AD7789/AD7790/AD7791 ADC driver");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/iio/trigger/iio-trig-hrtimer.c b/drivers/iio/trigger/iio-trig-hrtimer.c
-index a5e670726717f0d8..f59bf8d585866ea2 100644
---- a/drivers/iio/trigger/iio-trig-hrtimer.c
-+++ b/drivers/iio/trigger/iio-trig-hrtimer.c
-@@ -4,7 +4,7 @@
-  *
-  * Copyright (C) Intuitive Aerial AB
-  * Written by Marten Svanfeldt, marten@intuitiveaerial.com
-- * Copyright (C) 2012, Analog Device Inc.
-+ * Copyright (C) 2012, Analog Devices Inc.
-  *	Author: Lars-Peter Clausen <lars@metafoo.de>
-  * Copyright (C) 2015, Intel Corporation
+ /*
+- * Analog Device AD18xx, AD19xx codecs
++ * Analog Devices AD18xx, AD19xx codecs
   */
-diff --git a/drivers/staging/iio/Documentation/overview.txt b/drivers/staging/iio/Documentation/overview.txt
-index 43f92b06bc3e5574..ebdc64f451d7c798 100644
---- a/drivers/staging/iio/Documentation/overview.txt
-+++ b/drivers/staging/iio/Documentation/overview.txt
-@@ -34,7 +34,7 @@ turned on or off (if possible) via sysfs interfaces.
- fifo / ring buffers on the sensor chip.  These greatly reduce the load
- on the host CPU by buffering relatively large numbers of data samples
- based on an internal sampling clock. Examples include VTI SCA3000
--series and Analog Device ADXL345 accelerometers.  Each buffer supports
-+series and Analog Devices ADXL345 accelerometers.  Each buffer supports
- polling to establish when data is available.
+ #ifdef CONFIG_PM
+ static void ad18xx_resume(struct snd_ac97 *ac97)
+diff --git a/sound/pci/hda/Kconfig b/sound/pci/hda/Kconfig
+index e1d3082a4fe93153..7ba542e45a3d7f88 100644
+--- a/sound/pci/hda/Kconfig
++++ b/sound/pci/hda/Kconfig
+@@ -99,10 +99,10 @@ comment "Set to Y if you want auto-loading the codec driver"
+ 	depends on SND_HDA=y && SND_HDA_CODEC_REALTEK=m
  
- * Trigger and software buffer support. In many data analysis
+ config SND_HDA_CODEC_ANALOG
+-	tristate "Build Analog Device HD-audio codec support"
++	tristate "Build Analog Devices HD-audio codec support"
+ 	select SND_HDA_GENERIC
+ 	help
+-	  Say Y or M here to include Analog Device HD-audio codec support in
++	  Say Y or M here to include Analog Devices HD-audio codec support in
+ 	  snd-hda-intel driver, such as AD1986A.
+ 
+ comment "Set to Y if you want auto-loading the codec driver"
 -- 
 2.17.1
 

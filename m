@@ -2,155 +2,96 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 983C11AE062
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Apr 2020 17:03:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 383DF1AE514
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Apr 2020 20:48:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728500AbgDQPCa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 17 Apr 2020 11:02:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728466AbgDQPC3 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Apr 2020 11:02:29 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB84EC061A41
-        for <dmaengine@vger.kernel.org>; Fri, 17 Apr 2020 08:02:28 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id u13so3433532wrp.3
-        for <dmaengine@vger.kernel.org>; Fri, 17 Apr 2020 08:02:28 -0700 (PDT)
+        id S1728458AbgDQSst (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 17 Apr 2020 14:48:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726750AbgDQSss (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Apr 2020 14:48:48 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C726C061A0C
+        for <dmaengine@vger.kernel.org>; Fri, 17 Apr 2020 11:48:48 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id o15so960283pgi.1
+        for <dmaengine@vger.kernel.org>; Fri, 17 Apr 2020 11:48:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MZOx11K7BVkb9vfDngpczKG72DuQTl/mUltDtknINYM=;
-        b=Co8VCB7jRRt1O8+H04fdcxwEtJQvvJ85wW4SvxgTv/mHipUFj+ltqVgCL7M0LxDbBm
-         Pb7tEFjXMUdCDK1W7VoRTpT556UNIZvUATsFGTDHXX4ngalCQfdP4rjg3fEM8Y0uLOUu
-         QsIi+ueZ6e8w8tapH3hrUwyBDQ4rCmAD5wsU8=
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=/m8uFUPGMTXPG6uE9UPBDXEGsmlpHvFfRMPeQIRglr0=;
+        b=m55vm8qpsWewOdjKtNV9pAA/o9+H6/LdDotUxWcE6LTAdjTMH4J3LNhBIZ6wWCKmNo
+         99GRImy6d5PLzuLZIH/aZlDXNr4DtUD48apChLpnvfxnpETe7l3oPQ/WtRQkVvRbdfSu
+         skGOb/Tf+DAYWM4gntE5s80z0Yp0jHTWnqeG1ydjvMReWaJpGPGN3j/d1iPXF1Hn5uan
+         M2t5AhwXcWJNEYNQJATDZ8rLCSC+jlt2B2QpqBzhNwiOer5QagoHIXeHh6Argt7eoU4j
+         kU5xp6C9bqgXqa0hoED9I6CRFHE+bbrN49TWBqh14XXShfG5joisVXURuPXDedM/kDU7
+         Npqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=MZOx11K7BVkb9vfDngpczKG72DuQTl/mUltDtknINYM=;
-        b=IEOt8rVDp2V1lNKFlo0sDijqnWYySnj0DiqEpRjG9eCizZMPTXZBZL64s5ioedt9B3
-         Ldr5pfT3FJQOSujmJaRgwsv8ZmNof4+HXWuQaNwZKZU30+Og3cD+VT1FLd1ULbVg/O9g
-         5xrTdYp9Wec+vRsKs4SXQ+ehdXks8GaASUuqiMqaQf2uIjW1/gJHL6RDYQv9b7Hdx6be
-         Q0ITFAO00tqmj220JPr0xDFCEP6MSB4laxdEjLU2ZuYWLt4/mVCMQx28rxAylnvHqTNy
-         r952WJgfGsLsUJpDfTKfAqDrMkjwLzVL5xhk7bb7kRJTK0xAE3B6wKU5C4lzEhVCad/S
-         dycA==
-X-Gm-Message-State: AGi0PuaBpjxggwmJzyTAl85NWcJMJ3Mvu9sB3bTVWGcYtzFLnsZp/ImU
-        XmmuLPyCdodWuB0/giC0fgu2zQ==
-X-Google-Smtp-Source: APiQypJc7M6g4SJSxadMb830ZLUuNjVyEPZxJsFHSeWGeY7zkoZSsxwQWcW79Vv6OwRGwssTlFoC0w==
-X-Received: by 2002:a5d:438c:: with SMTP id i12mr4404415wrq.14.1587135747372;
-        Fri, 17 Apr 2020 08:02:27 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id e5sm33270104wru.92.2020.04.17.08.02.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2020 08:02:26 -0700 (PDT)
-Date:   Fri, 17 Apr 2020 17:02:24 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jiri Kosina <trivial@kernel.org>, devicetree@vger.kernel.org,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH trivial 3/6] drm: Fix misspellings of "Analog Devices"
-Message-ID: <20200417150224.GO3456981@phenom.ffwll.local>
-Mail-Followup-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Jiri Kosina <trivial@kernel.org>,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20200416103058.15269-1-geert+renesas@glider.be>
- <20200416103058.15269-4-geert+renesas@glider.be>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200416103058.15269-4-geert+renesas@glider.be>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/m8uFUPGMTXPG6uE9UPBDXEGsmlpHvFfRMPeQIRglr0=;
+        b=umyGGAVE7kDDO1yRxI37Ruztc4dp/o2q/VCykx543qmTsu8OLDf0NBLVmq7E826w21
+         HKCDg3m3ntbnTv5YEMsk9IJDA28CtVfUnDoR1JHwl79F7dEjKOhmT9ydcfh3NjWlKUtI
+         cwc1BSoZxRq0t4QE22RuWRlAFSjztpUYkANxMndohNjdJBj5MgpxKrsitZ7OLUOSOopn
+         LPO//qBqsVbsOPONABKVqHw+h6YD6VS2zlRPyV3UhhJAa7GhNCoB7OcA1WBminh4Avgz
+         xsdQ7OzHefZaofrV/9mz4Y+WgTNKFUFtjadqSDuHTu/SipoVQLSslYWa9VfP0ahIA/w0
+         Iirg==
+X-Gm-Message-State: AGi0PuZsjTD4OnbbjA2GB/lVETuJi/lPNIoLdXoq+hB09Eko/mEmQpPX
+        uLvlivN62L/tLKJignV0fViUzw==
+X-Google-Smtp-Source: APiQypJVSsNxOrC49Bt1KeprvKNWUF/fOBKhWHYpgHUpDM7iS/wLjotWqC0uiFeh2vhCtRy4gCIUgQ==
+X-Received: by 2002:aa7:9207:: with SMTP id 7mr4521820pfo.178.1587149327949;
+        Fri, 17 Apr 2020 11:48:47 -0700 (PDT)
+Received: from nuc7.sifive.com (c-24-5-48-146.hsd1.ca.comcast.net. [24.5.48.146])
+        by smtp.gmail.com with ESMTPSA id l185sm18924449pfl.104.2020.04.17.11.48.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 Apr 2020 11:48:46 -0700 (PDT)
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
+To:     linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org, maz@kernel.org, tglx@linutronix.de,
+        gustavo.pimentel@synopsys.com, kishon@ti.com,
+        paul.walmsley@sifive.com
+Cc:     Alan Mikhak <alan.mikhak@sifive.com>
+Subject: [PATCH] genirq/msi: Check null pointer before copying struct msi_msg
+Date:   Fri, 17 Apr 2020 11:48:42 -0700
+Message-Id: <1587149322-28104-1-git-send-email-alan.mikhak@sifive.com>
+X-Mailer: git-send-email 2.7.4
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 12:30:55PM +0200, Geert Uytterhoeven wrote:
-> According to https://www.analog.com/, the company name is spelled
-> "Analog Devices".
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Alan Mikhak <alan.mikhak@sifive.com>
 
-Queued for 5.8 in drm-misc-next, thanks for your patch.
--Daniel
+Modify __get_cached_msi_msg() to check both pointers for null before
+copying the contents from the struct msi_msg pointer to the pointer
+provided by caller.
 
-> ---
->  drivers/gpu/drm/bridge/adv7511/Kconfig | 2 +-
->  drivers/gpu/drm/drm_fb_cma_helper.c    | 2 +-
->  drivers/gpu/drm/tegra/fb.c             | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/adv7511/Kconfig b/drivers/gpu/drm/bridge/adv7511/Kconfig
-> index 47d4eb9e845d085c..f46a5e26b5dd6406 100644
-> --- a/drivers/gpu/drm/bridge/adv7511/Kconfig
-> +++ b/drivers/gpu/drm/bridge/adv7511/Kconfig
-> @@ -6,7 +6,7 @@ config DRM_I2C_ADV7511
->  	select REGMAP_I2C
->  	select DRM_MIPI_DSI
->  	help
-> -	  Support for the Analog Device ADV7511(W)/13/33/35 HDMI encoders.
-> +	  Support for the Analog Devices ADV7511(W)/13/33/35 HDMI encoders.
->  
->  config DRM_I2C_ADV7511_AUDIO
->  	bool "ADV7511 HDMI Audio driver"
-> diff --git a/drivers/gpu/drm/drm_fb_cma_helper.c b/drivers/gpu/drm/drm_fb_cma_helper.c
-> index 9801c0333eca29e9..cb2349ad338d953b 100644
-> --- a/drivers/gpu/drm/drm_fb_cma_helper.c
-> +++ b/drivers/gpu/drm/drm_fb_cma_helper.c
-> @@ -2,7 +2,7 @@
->  /*
->   * drm kms/fb cma (contiguous memory allocator) helper functions
->   *
-> - * Copyright (C) 2012 Analog Device Inc.
-> + * Copyright (C) 2012 Analog Devices Inc.
->   *   Author: Lars-Peter Clausen <lars@metafoo.de>
->   *
->   * Based on udl_fbdev.c
-> diff --git a/drivers/gpu/drm/tegra/fb.c b/drivers/gpu/drm/tegra/fb.c
-> index b8a328f538626e7a..2b0666ac681b8721 100644
-> --- a/drivers/gpu/drm/tegra/fb.c
-> +++ b/drivers/gpu/drm/tegra/fb.c
-> @@ -4,7 +4,7 @@
->   * Copyright (C) 2012 NVIDIA CORPORATION.  All rights reserved.
->   *
->   * Based on the KMS/FB CMA helpers
-> - *   Copyright (C) 2012 Analog Device Inc.
-> + *   Copyright (C) 2012 Analog Devices Inc.
->   */
->  
->  #include <linux/console.h>
-> -- 
-> 2.17.1
-> 
+Without this sanity check, __get_cached_msi_msg() crashes when invoked by
+dw_edma_irq_request() in drivers/dma/dw-edma/dw-edma-core.c running on a
+Linux-based PCIe endpoint device. MSI interrupt are not received by PCIe
+endpoint devices. As a result, irq_get_msi_desc() returns null since there
+are no cached struct msi_msg entry on the endpoint side.
 
+Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+---
+ kernel/irq/msi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+index eb95f6106a1e..f39d42ef0d50 100644
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -58,7 +58,8 @@ void free_msi_entry(struct msi_desc *entry)
+ 
+ void __get_cached_msi_msg(struct msi_desc *entry, struct msi_msg *msg)
+ {
+-	*msg = entry->msg;
++	if (entry && msg)
++		*msg = entry->msg;
+ }
+ 
+ void get_cached_msi_msg(unsigned int irq, struct msi_msg *msg)
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.7.4
+

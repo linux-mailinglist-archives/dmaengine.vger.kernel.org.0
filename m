@@ -2,50 +2,63 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A7B81ADC87
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Apr 2020 13:54:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D1D41ADC98
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Apr 2020 13:56:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730436AbgDQLxl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 17 Apr 2020 07:53:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52882 "EHLO mail.kernel.org"
+        id S1730465AbgDQL4H (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 17 Apr 2020 07:56:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730410AbgDQLxl (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 17 Apr 2020 07:53:41 -0400
+        id S1730267AbgDQL4G (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 17 Apr 2020 07:56:06 -0400
 Received: from localhost (unknown [223.235.195.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 046C920780;
-        Fri, 17 Apr 2020 11:53:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FB722078E;
+        Fri, 17 Apr 2020 11:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587124420;
-        bh=c/rbJdi4bYdAFafdhrDilNV10AtbkTU0xeSBWfYgwCk=;
+        s=default; t=1587124566;
+        bh=YuE3Ip9k8tEgEerJuZa5XVgrgjhme/xQBUVEpvc0pEE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=v5JT95G9uSRzM2zf7VY5lVEZD95zWBnXQH5XfR2a3Y6LqF/0Y7YDGMBreJtaTT8Ic
-         bjiayscEPlzYfF2mqYo7prUsQ1ry/1i8ysf3StEqOMNuEX1T7RQ3wIkuAxPIqMf65E
-         0h6ExThYl2PUDh9keQqkDPpXEP+TTe0/2z34X8kY=
-Date:   Fri, 17 Apr 2020 17:23:36 +0530
+        b=pnpOPVBdQcqTXLGxlZCLH3MbjROORZwPIvhJGNOVYJO1Bq1fdweZ4Tzj262yzPTHr
+         I7zopQnTuiYTCa08aZQp0jGiX3jNauRKVzXXPyUGGswbXRaXICoWVVYU28Uj9O09X9
+         MaG2vLlDwtoYhIDwtbmtvOJveCIM6jN5WnC7U+Vw=
+Date:   Fri, 17 Apr 2020 17:26:02 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     robh+dt@kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] dt-bindings: dma: renesas,{rcar,usb}-dmac:
- convert to json-schema
-Message-ID: <20200417115336.GN72691@vkoul-mobl>
-References: <1587110829-26609-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jiri Kosina <trivial@kernel.org>, devicetree@vger.kernel.org,
+        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-iio@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH trivial 2/6] dma: Fix misspelling of "Analog Devices"
+Message-ID: <20200417115602.GO72691@vkoul-mobl>
+References: <20200416103058.15269-1-geert+renesas@glider.be>
+ <20200416103058.15269-3-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1587110829-26609-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20200416103058.15269-3-geert+renesas@glider.be>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 17-04-20, 17:07, Yoshihiro Shimoda wrote:
-> This patch series converts rcar-dmac and usb-dmac documantation to
-> json-schema.
+On 16-04-20, 12:30, Geert Uytterhoeven wrote:
+> According to https://www.analog.com/, the company name is spelled
+> "Analog Devices".
 
-Applied, thanks
+Applied after updating the subsystem name, thanks
 
 -- 
 ~Vinod

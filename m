@@ -2,70 +2,118 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13FCA1AD862
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Apr 2020 10:16:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB90E1ADA2E
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Apr 2020 11:39:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729664AbgDQIQG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 17 Apr 2020 04:16:06 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37674 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729607AbgDQIQF (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Apr 2020 04:16:05 -0400
-Received: by mail-oi1-f194.google.com with SMTP id r25so1424909oij.4;
-        Fri, 17 Apr 2020 01:16:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OEUqvO4o4PLcUzctH8y/pHIipYkwHBkxh0sUSwqBhjI=;
-        b=KVj96e/tfUheE6ARFM2bfYhbgfdhQLyr25P7ursPxPh6duAI2Vj1fbe6WWoSlqesRr
-         +VFQKFsTo9YKte6u2iDsBv1fJyRmO1M0nsgPLXNng9kCRS9cfbBvnldfLDzDn6xbFNEu
-         LJOun/DkA/wpUZltpaorii2r48YVFOUO6ddcjrd7aV/5ZeoeHmGRvdF7y/mxrnpkAsgT
-         N8iFiUp+5AgM98Y9kOFEehKV1ZsIl1csRuwqpxR5WA/QBRKYeUcir5YMb4arC98R8vmW
-         H8CJYjv52HzqiAy8j+xT01w4PHPoktT+nMYew8Uyay0XKb0MSoQ8uDnbFcARe2y5GJ0p
-         D4DA==
-X-Gm-Message-State: AGi0PuZNLzDMWluiW1G7FuPyIHg2aIRvYKEgNL8jHWkjUnA3SFEJGDRd
-        e8d6twUqesuEeYouwY3jIqvlcbpHmvZax++9b5bgNQ==
-X-Google-Smtp-Source: APiQypLgb84lCmEkROwoYQwqq0y4HCBdGz8GOcxZq+P0iQq/kE0BDjlAwm2ypBVTzGYMRyxhyaIzk+3QcIX+GqraTH0=
-X-Received: by 2002:aca:cdd1:: with SMTP id d200mr1278264oig.153.1587111363675;
- Fri, 17 Apr 2020 01:16:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <1587110829-26609-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1587110829-26609-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1587110829-26609-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 17 Apr 2020 10:15:52 +0200
-Message-ID: <CAMuHMdX3sPAfKooRQcNBph6OWg=7OQ0g33PCTBpLRkqu5YcP-A@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] dt-bindings: dma: renesas,usb-dmac: convert
- bindings to json-schema
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Vinod <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1730397AbgDQJjE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 17 Apr 2020 05:39:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34602 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730324AbgDQJjE (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 17 Apr 2020 05:39:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4FB76B02B;
+        Fri, 17 Apr 2020 09:39:00 +0000 (UTC)
+Date:   Fri, 17 Apr 2020 11:39:00 +0200
+Message-ID: <s5hd086bgej.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jiri Kosina <trivial@kernel.org>, <devicetree@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-iio@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH trivial 5/6] ALSA: Fix misspellings of "Analog Devices"
+In-Reply-To: <20200416103058.15269-6-geert+renesas@glider.be>
+References: <20200416103058.15269-1-geert+renesas@glider.be>
+        <20200416103058.15269-6-geert+renesas@glider.be>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Apr 17, 2020 at 10:08 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> Convert Renesas R-Car USB-DMA Controller bindings documentation
-> to json-schema.
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+On Thu, 16 Apr 2020 12:30:57 +0200,
+Geert Uytterhoeven wrote:
+> 
+> According to https://www.analog.com/, the company name is spelled
+> "Analog Devices".
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Applied this patch to sound git tree for-next branch.
 
-Gr{oetje,eeting}s,
 
-                        Geert
+thanks,
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Takashi
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+> ---
+>  sound/isa/ad1816a/ad1816a.c | 2 +-
+>  sound/pci/ac97/ac97_patch.c | 2 +-
+>  sound/pci/hda/Kconfig       | 4 ++--
+>  3 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/sound/isa/ad1816a/ad1816a.c b/sound/isa/ad1816a/ad1816a.c
+> index ce4c8ba2fa9873e7..ca18fe3ff8a59a9f 100644
+> --- a/sound/isa/ad1816a/ad1816a.c
+> +++ b/sound/isa/ad1816a/ad1816a.c
+> @@ -54,7 +54,7 @@ MODULE_PARM_DESC(clockfreq, "Clock frequency for ad1816a driver (default = 0).")
+>  static const struct pnp_card_device_id snd_ad1816a_pnpids[] = {
+>  	/* Analog Devices AD1815 */
+>  	{ .id = "ADS7150", .devs = { { .id = "ADS7150" }, { .id = "ADS7151" } } },
+> -	/* Analog Device AD1816? */
+> +	/* Analog Devices AD1816? */
+>  	{ .id = "ADS7180", .devs = { { .id = "ADS7180" }, { .id = "ADS7181" } } },
+>  	/* Analog Devices AD1816A - added by Kenneth Platz <kxp@atl.hp.com> */
+>  	{ .id = "ADS7181", .devs = { { .id = "ADS7180" }, { .id = "ADS7181" } } },
+> diff --git a/sound/pci/ac97/ac97_patch.c b/sound/pci/ac97/ac97_patch.c
+> index ebf926728c5f84af..45ef0f52ec55b803 100644
+> --- a/sound/pci/ac97/ac97_patch.c
+> +++ b/sound/pci/ac97/ac97_patch.c
+> @@ -1356,7 +1356,7 @@ static int patch_cx20551(struct snd_ac97 *ac97)
+>  }
+>  
+>  /*
+> - * Analog Device AD18xx, AD19xx codecs
+> + * Analog Devices AD18xx, AD19xx codecs
+>   */
+>  #ifdef CONFIG_PM
+>  static void ad18xx_resume(struct snd_ac97 *ac97)
+> diff --git a/sound/pci/hda/Kconfig b/sound/pci/hda/Kconfig
+> index e1d3082a4fe93153..7ba542e45a3d7f88 100644
+> --- a/sound/pci/hda/Kconfig
+> +++ b/sound/pci/hda/Kconfig
+> @@ -99,10 +99,10 @@ comment "Set to Y if you want auto-loading the codec driver"
+>  	depends on SND_HDA=y && SND_HDA_CODEC_REALTEK=m
+>  
+>  config SND_HDA_CODEC_ANALOG
+> -	tristate "Build Analog Device HD-audio codec support"
+> +	tristate "Build Analog Devices HD-audio codec support"
+>  	select SND_HDA_GENERIC
+>  	help
+> -	  Say Y or M here to include Analog Device HD-audio codec support in
+> +	  Say Y or M here to include Analog Devices HD-audio codec support in
+>  	  snd-hda-intel driver, such as AD1986A.
+>  
+>  comment "Set to Y if you want auto-loading the codec driver"
+> -- 
+> 2.17.1
+> 

@@ -2,108 +2,173 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 95C1E1B432A
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Apr 2020 13:23:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 997C41B4389
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Apr 2020 13:50:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgDVLXO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 22 Apr 2020 07:23:14 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:40226 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726904AbgDVLXO (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Apr 2020 07:23:14 -0400
-Received: from pps.filterd (m0170391.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MBMBGZ018085;
-        Wed, 22 Apr 2020 07:23:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=smtpout1;
- bh=vk6WIRJbGY1Rn41lMJfqEpm0LjdRgFhX8K8ILvUyRG4=;
- b=ZcRHjcUy1ZQR7pU+RgMKHF+yIxEks/tFdUf6+UtixrxO8RFEyp/LUNJLQ9aRT/OaE9Bw
- uCyP2mbcwcY9hcq2hmISeyrS1iGyQLVdp6ygMD8404IL0GTLxgNHxuwgravesLpnv1C1
- hYWlhChqQBjIITovTAel2eq7Ak37AVgzIoIkv4i9dy8tOSUAx1QphT9J+XGYqdqPxcEX
- kd9mULOXc4Kiie4Sbdz/I4cx4l7ZB3v36QivMzj3SD9KMKqZc/MeUMPEXXHH7XoPaaG7
- GvjHPXJC24z5nT3dIB6H+5A40/04MgvoNWcTrSmrPriSi5qttKDs4pnTr89bqgYkok9h VA== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0a-00154904.pphosted.com with ESMTP id 30fvpwenyc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Apr 2020 07:23:05 -0400
-Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MBF6WC025053;
-        Wed, 22 Apr 2020 07:23:05 -0400
-Received: from mailuogwdur.emc.com (mailuogwdur-nat.lss.emc.com [128.221.224.79] (may be forged))
-        by mx0a-00154901.pphosted.com with ESMTP id 30jfxm4u1g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Apr 2020 07:23:05 -0400
-Received: from emc.com (localhost [127.0.0.1])
-        by mailuogwprd54.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03MBN4e7021409;
-        Wed, 22 Apr 2020 07:23:04 -0400
-Received: from mailsyshubprd56.lss.emc.com ([mailsyshubprd56.lss.emc.com [10.106.48.138]]) by mailuogwprd54.lss.emc.com with ESMTP id 03MBMcwh021212 ;
-          Wed, 22 Apr 2020 07:22:39 -0400
-Received: from vd-leonidr.xiolab.lab.emc.com (vd-leonidr.xiolab.lab.emc.com [10.76.212.243])
-        by mailsyshubprd56.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03MBMK2c011459;
-        Wed, 22 Apr 2020 07:22:36 -0400
-From:   leonid.ravich@dell.com
-To:     dmaengine@vger.kernel.org
-Cc:     lravich@gmail.com, Leonid Ravich <Leonid.Ravich@dell.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] dmaengine: ioat: adding missed issue_pending to timeout handler
-Date:   Wed, 22 Apr 2020 14:22:07 +0300
-Message-Id: <1587554529-29839-3-git-send-email-leonid.ravich@dell.com>
-X-Mailer: git-send-email 1.9.3
-In-Reply-To: <1587554529-29839-1-git-send-email-leonid.ravich@dell.com>
-References: <1587554529-29839-1-git-send-email-leonid.ravich@dell.com>
-X-Sentrion-Hostname: mailuogwprd54.lss.emc.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-22_03:2020-04-22,2020-04-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- bulkscore=0 adultscore=0 priorityscore=1501 spamscore=0 suspectscore=13
- lowpriorityscore=0 phishscore=0 mlxlogscore=756 clxscore=1015
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220090
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 malwarescore=0
- suspectscore=13 mlxlogscore=814 impostorscore=0 spamscore=0
- priorityscore=1501 clxscore=1015 lowpriorityscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220091
+        id S1727872AbgDVLu1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 22 Apr 2020 07:50:27 -0400
+Received: from mail-vi1eur05on2087.outbound.protection.outlook.com ([40.107.21.87]:30048
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726043AbgDVLu0 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 22 Apr 2020 07:50:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DZGYrnXj0/HRw20mrWUORIUyWru3UC6xn7kZkebNbd3MNHAwERHhJs9+WNdV1GplVMlI2gvjbPWM2ru2mfLeykIcLGhG8hHb7bEJeFPHMDKsdC/kU7/IQQpW7NrtIRKPTaRdK4w0EOmZRV3YlWXCJAT0/sMjyhr2cbE89RhXQmR2wcr3Nm8JGyg0i9p404xVD/i/6iDI31PZKOy9NDM1FFNaJgTTmmO2Ai8qGj9JIT2nVGDIeRP6/9nxRKY0NSBjmdpMJ95XRni7sRucveDF5LI+oRKmPeJwHq1Zgdc93emKON3YFqMDgQnXquvr4sfjfugagk9jQZpuPQsdnHAzXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZiHdXJZxGaInGlyTvej0EWR4G9fxBg/5DXDTQYIkFAE=;
+ b=T3jN40IN1+d6dvizvnCSSyCamGmwQD6znJGY7cQsBBTkTV0qXyqDkKwu7kAqbo1bz9C561nYSXJQpRWGh43gBiXXe30fpmdtEh1HaL2ynkq7wSkyINN5HwYYJRF/do76PRxrKfSpJBYhKEjb7eSEAHSYzpjt6qgsRSiuTVBD0hhD3AQXZ9FddwvUECkEsCGYRVp7VVT0v4m4H1rtzWMdmfmtDUbSDI4EK0rk0NwD9kRa4Gw8p7NEVQc8vEEq/lPGzueYYKY6InJtYbsO8PgBJSHdHcT6PlYhlMZ1KMsQkbdYyeLQhde45IubIc64l794CtfHu3Lh1e/t85jxnVmmUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZiHdXJZxGaInGlyTvej0EWR4G9fxBg/5DXDTQYIkFAE=;
+ b=ahOUpgrFMc0K8skWLDg/6RFm1AgTW8sBlFCAnm9Vr1h6An53igVeYH60AEFYLooUR/4T1TERAsmLRytVFKfII0rB9a30YyGf325g8tVAJl9wo4et2jAcq8dyF0S6gqJAv+z2qqAGXFRG8MZddB4sF+9EBFTDop4oQCwYvILfaxs=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR05MB6144.eurprd05.prod.outlook.com (2603:10a6:803:e8::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13; Wed, 22 Apr
+ 2020 11:50:21 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2921.030; Wed, 22 Apr 2020
+ 11:50:21 +0000
+Date:   Wed, 22 Apr 2020 08:50:17 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Message-ID: <20200422115017.GQ11945@mellanox.com>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <20200421235442.GO11945@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: MN2PR15CA0004.namprd15.prod.outlook.com
+ (2603:10b6:208:1b4::17) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR15CA0004.namprd15.prod.outlook.com (2603:10b6:208:1b4::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Wed, 22 Apr 2020 11:50:20 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jRDtR-0005Jl-6J; Wed, 22 Apr 2020 08:50:17 -0300
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b8f61273-44a1-436e-ec98-08d7e6b355c4
+X-MS-TrafficTypeDiagnostic: VI1PR05MB6144:|VI1PR05MB6144:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB61441FF49D2E8F59F8C8BA25CFD20@VI1PR05MB6144.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 03818C953D
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(376002)(396003)(39860400002)(366004)(52116002)(9746002)(186003)(9786002)(26005)(8936002)(81156014)(8676002)(478600001)(36756003)(7416002)(2906002)(54906003)(316002)(6916009)(2616005)(66556008)(66476007)(1076003)(66946007)(4326008)(33656002)(86362001)(5660300002)(24400500001);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: g2hhWJZx18CpRfjbS+Oh6BWXZ22hlU53I+inlXjFWSch6Xb/aVxhnw51PvCg5FE7NeKaY4+WFrIaoYx0Qo/rsGStrYHgAVlwtIOV21pbHTud4cse00qnagorPOv/X+NmbQg0wkn2eStUlxBFSr9sbXZLpxJQOF7M8aS3JofDenM2r//jLXo4vJMrJKgqRuJDVdfmWeU9ZWg1la/mJFqk3kTOp6TboglgVprnKhOWz9JhJNVEKQdmLgpt3mCKePLUEoyllVGeiQkJCRs3orMoAkNjBB5AdDl0v8xrGHRdPeu6daodmwuhekyUGuI5btQ1r1SrzW8eZVPr3uPoLYb7qMR4fcnbz04GxfIgoNoXbPrZJuEaGCPEDZVf4Zv7XptqdZOqelew/5pomVIwukW85FamdTckyFnFzJ2JFtfnZzl9rYLvLhZsbaL3Yb3IBIxzVzIg7LM/ZR1lTB1HQuH/MotdkCuEyQhS9cTO07W8RboCZ1YMInBBvqS3+O8SgtM4
+X-MS-Exchange-AntiSpam-MessageData: stkA1MXK4zOck7r69UNwJBGhBKDT+RMVW+XVmhpgnd60BceiJBlscBQY3/fb6i7RR5Z6n+jXEUaUjF0uJfCAojoivYwFI7n67HcSSqIhl9ofEOhj28i8xZjYTYyf9MedmTuoMlbZhvbbD+XO0HbrQw==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8f61273-44a1-436e-ec98-08d7e6b355c4
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2020 11:50:21.4944
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Xu5DnnwejPSswsnrh77OfwllhVrst09R4Fed5uZfCW4CqvD1NTjk0F4no1lnUzWgfTNqNGrFtJF6uR0+1V5k2w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6144
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Leonid Ravich <Leonid.Ravich@emc.com>
+On Wed, Apr 22, 2020 at 12:53:25AM +0000, Tian, Kevin wrote:
+> > From: Jason Gunthorpe
+> > Sent: Wednesday, April 22, 2020 7:55 AM
+> > 
+> > On Tue, Apr 21, 2020 at 04:33:46PM -0700, Dave Jiang wrote:
+> > > The actual code is independent of the stage 2 driver code submission that
+> > adds
+> > > support for SVM, ENQCMD(S), PASID, and shared workqueues. This code
+> > series will
+> > > support dedicated workqueue on a guest with no vIOMMU.
+> > >
+> > > A new device type "mdev" is introduced for the idxd driver. This allows the
+> > wq
+> > > to be dedicated to the usage of a VFIO mediated device (mdev). Once the
+> > work
+> > > queue (wq) is enabled, an uuid generated by the user can be added to the
+> > wq
+> > > through the uuid sysfs attribute for the wq.  After the association, a mdev
+> > can
+> > > be created using this UUID. The mdev driver code will associate the uuid
+> > and
+> > > setup the mdev on the driver side. When the create operation is successful,
+> > the
+> > > uuid can be passed to qemu. When the guest boots up, it should discover a
+> > DSA
+> > > device when doing PCI discovery.
+> > 
+> > I'm feeling really skeptical that adding all this PCI config space and
+> > MMIO BAR emulation to the kernel just to cram this into a VFIO
+> > interface is a good idea, that kind of stuff is much safer in
+> > userspace.
+> > 
+> > Particularly since vfio is not really needed once a driver is using
+> > the PASID stuff. We already have general code for drivers to use to
+> > attach a PASID to a mm_struct - and using vfio while disabling all the
+> > DMA/iommu config really seems like an abuse.
+> 
+> Well, this series is for virtualizing idxd device to VMs, instead of
+> supporting SVA for bare metal processes. idxd implements a
+> hardware-assisted mediated device technique called Intel Scalable
+> I/O Virtualization,
 
-completion timeout might trigger unnesesery DMA engine hw reboot
-in case of missed issue_pending() .
+I'm familiar with the intel naming scheme.
 
-Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
----
- drivers/dma/ioat/dma.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-index 55a8cf1..2ab07a3 100644
---- a/drivers/dma/ioat/dma.c
-+++ b/drivers/dma/ioat/dma.c
-@@ -955,6 +955,13 @@ void ioat_timer_event(struct timer_list *t)
- 		goto unlock_out;
- 	}
+> which allows each Assignable Device Interface (ADI, e.g. a work
+> queue) tagged with an unique PASID to ensure fine-grained DMA
+> isolation when those ADIs are assigned to different VMs. For this
+> purpose idxd utilizes the VFIO mdev framework and IOMMU aux-domain
+> extension. Bare metal SVA will be enabled for idxd later by using
+> the general SVA code that you mentioned.  Both paths will co-exist
+> in the end so there is no such case of disabling DMA/iommu config.
  
-+	/* handle missed issue pending case */
-+	if (ioat_ring_pending(ioat_chan)) {
-+		spin_lock_bh(&ioat_chan->prep_lock);
-+		__ioat_issue_pending(ioat_chan);
-+		spin_unlock_bh(&ioat_chan->prep_lock);
-+	}
-+
- 	set_bit(IOAT_COMPLETION_ACK, &ioat_chan->state);
- 	mod_timer(&ioat_chan->timer, jiffies + COMPLETION_TIMEOUT);
- unlock_out:
--- 
-1.9.3
+Again, if you will have a normal SVA interface, there is no need for a
+VFIO version, just use normal SVA for both.
 
+PCI emulation should try to be in userspace, not the kernel, for
+security.
+
+Jason

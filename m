@@ -2,158 +2,89 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 387021B342C
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Apr 2020 02:53:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC7541B3B9A
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Apr 2020 11:42:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726055AbgDVAxc convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Tue, 21 Apr 2020 20:53:32 -0400
-Received: from mga09.intel.com ([134.134.136.24]:52603 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726012AbgDVAxc (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 21 Apr 2020 20:53:32 -0400
-IronPort-SDR: EKI54qKrr30rVClxbdzn2R6r6SktghpvXfjaDFOE9vu9esEhZapSN3QL0xXG8eqRxBldXJhm/N
- OrtgV69SIJiQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2020 17:53:31 -0700
-IronPort-SDR: 6BvZNWKAkfEmtMuPX9NJM/DT2T0OL58dZHnYXUjIma0xZO8x1qj0CkCR3Q2GnadwpmmFhzZvUf
- sQJMrcy45FuQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,412,1580803200"; 
-   d="scan'208";a="334451596"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga001.jf.intel.com with ESMTP; 21 Apr 2020 17:53:30 -0700
-Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 21 Apr 2020 17:53:30 -0700
-Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
- fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 21 Apr 2020 17:53:30 -0700
-Received: from shsmsx105.ccr.corp.intel.com (10.239.4.158) by
- fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 21 Apr 2020 17:53:29 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX105.ccr.corp.intel.com ([169.254.11.213]) with mapi id 14.03.0439.000;
- Wed, 22 Apr 2020 08:53:26 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>
-CC:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: RE: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Thread-Topic: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Thread-Index: AQHWGDVStT24LxQ110qc/YDRWdRX86iDuewAgACI/wA=
-Date:   Wed, 22 Apr 2020 00:53:25 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <20200421235442.GO11945@mellanox.com>
-In-Reply-To: <20200421235442.GO11945@mellanox.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1726109AbgDVJmF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 22 Apr 2020 05:42:05 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:34701 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgDVJmE (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Apr 2020 05:42:04 -0400
+Received: from mail-qt1-f174.google.com ([209.85.160.174]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M6m5o-1jZREC3epy-008IkO; Wed, 22 Apr 2020 11:42:03 +0200
+Received: by mail-qt1-f174.google.com with SMTP id w29so1146268qtv.3;
+        Wed, 22 Apr 2020 02:42:02 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYJ4lhnKrA7GvXIQgQLSMJ+uo9r824fjRAxNy/4+YijFINlsu2W
+        47oMYVCOBwwP0MU+QRy+iM2SdDbG99cxRXwkUi8=
+X-Google-Smtp-Source: APiQypLLKi9cLhzL0W2P5kqrtwWwlXVC0xXk3CH7HLud+3whDHwkik5qt+9WUyNmxGIdtuplja/aMpGLHcNc0ejrzo8=
+X-Received: by 2002:ac8:4e2c:: with SMTP id d12mr25067709qtw.204.1587548521246;
+ Wed, 22 Apr 2020 02:42:01 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200331183844.30488-1-ulf.hansson@linaro.org> <20200331183844.30488-2-ulf.hansson@linaro.org>
+In-Reply-To: <20200331183844.30488-2-ulf.hansson@linaro.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 22 Apr 2020 11:41:45 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0Nqvho82529dAi6oZhh0PgjiRfj=NLdNkkMfZ6Tw25iw@mail.gmail.com>
+Message-ID: <CAK8P3a0Nqvho82529dAi6oZhh0PgjiRfj=NLdNkkMfZ6Tw25iw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] driver core: platform: Initialize dma_parms for
+ platform devices
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Vinod Koul <vkoul@kernel.org>, Haibo Chen <haibo.chen@nxp.com>,
+        Ludovic Barre <ludovic.barre@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        dmaengine@vger.kernel.org, "# 3.4.x" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:MMTRj86fwKfvoZWFKQYMmrK3zViJuqLn7Dx0RpoQJx1H/i3Ue5L
+ S3n12a8r6sTC8ENA+hZRDav1L1/5tawehIpFKXJE7oUHQS4e1e01pTrhziREVkndouLTy4K
+ s46ASiseUsyRfIkkJAVEnXWUd4LLoviiX6bDu2YFSerVctlW90pkLFhIH7c9buCjbAgVb5f
+ 4j/czMBojaviYlI/5vgNQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:RMEJQvaPY2c=:wFZILn3iyycMGvldA+swCI
+ M3gLjdudcxOC14+PRDD/g91GY3XGmN5h0YCuUiqSnoMv29n3/4ftiOJZVjL4PAp0eXKPZCfw9
+ F8XjcL4Ha0DtR26BaSzbrhJAdeGFysGg6L1AZ13kt/0OUiPjOyeFlGWn0ScTQG0eBIZcPV7fs
+ PDRfGY+FXCARqIyXAoKgAZXOtOZFiWn7Lv2C9qyOeF8ZeTyMT59aPc3li6u3XTnjLckD9vNRn
+ sZYbdZBmq70j8RwUpnbTLtkuETfsMhZkGGM4RXdUTk35zEQW+4jBNQEga9ee8ojL6/t8iFTOV
+ YSOBhMBr8JgTMTpSVdr17ahqvnZlg6eOTYDGIJPJZp0bE5eEwqQ765Er0bpMDQoQXYT8oeux8
+ NaYx567ZlAA4q0DDmJFIxdhW7sX7tF0/F2wqbXN2C4zfmtypWmS3fZ4wZzmoPyGq7daNPDHNz
+ UXUQlFgdMbikK/zk+H8uFvDbX67ISa1u2nkUjH9a05IkbpPyjCQ9wu9aqgVtrdlEYZ8Ee7K1I
+ xWScRxFjpSpEBlksAH10E+PpqZpSUR96q6hHCwVOrBDDEfJSYVPJVfYg66FDzgNzPqj7gMMp8
+ L12Vdv9g8NUfvQf9IcJ/4Dw/hyOXShLEecPsCyrjTaMOuCQ2455rj3n7jOMu4e9AfYgllhBRq
+ kMX/RPveshV1PYidewyJiZZ4PZzjK30YGsLcNkjd4hLJyu6qU+Twj1FXnmxg4MioAFERfok+d
+ aMEN6Wt+heJNkYehVFNLg6grpKl6jFw7V3kqL64qly9W5L+3OwLvfhqluXxfjLRGkWJlx4ER/
+ DyPXZIFZPPl1J8tazibTf1CpxUotFmZT9UIlkob0/rPktgd5EU=
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-> From: Jason Gunthorpe
-> Sent: Wednesday, April 22, 2020 7:55 AM
-> 
-> On Tue, Apr 21, 2020 at 04:33:46PM -0700, Dave Jiang wrote:
-> > The actual code is independent of the stage 2 driver code submission that
-> adds
-> > support for SVM, ENQCMD(S), PASID, and shared workqueues. This code
-> series will
-> > support dedicated workqueue on a guest with no vIOMMU.
-> >
-> > A new device type "mdev" is introduced for the idxd driver. This allows the
-> wq
-> > to be dedicated to the usage of a VFIO mediated device (mdev). Once the
-> work
-> > queue (wq) is enabled, an uuid generated by the user can be added to the
-> wq
-> > through the uuid sysfs attribute for the wq.  After the association, a mdev
-> can
-> > be created using this UUID. The mdev driver code will associate the uuid
-> and
-> > setup the mdev on the driver side. When the create operation is successful,
-> the
-> > uuid can be passed to qemu. When the guest boots up, it should discover a
-> DSA
-> > device when doing PCI discovery.
-> 
-> I'm feeling really skeptical that adding all this PCI config space and
-> MMIO BAR emulation to the kernel just to cram this into a VFIO
-> interface is a good idea, that kind of stuff is much safer in
-> userspace.
-> 
-> Particularly since vfio is not really needed once a driver is using
-> the PASID stuff. We already have general code for drivers to use to
-> attach a PASID to a mm_struct - and using vfio while disabling all the
-> DMA/iommu config really seems like an abuse.
+On Tue, Mar 31, 2020 at 8:38 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> It's currently the platform driver's responsibility to initialize the
+> pointer, dma_parms, for its corresponding struct device. The benefit with
+> this approach allows us to avoid the initialization and to not waste memory
+> for the struct device_dma_parameters, as this can be decided on a case by
+> case basis.
+>
+> However, it has turned out that this approach is not very practical.  Not
+> only does it lead to open coding, but also to real errors. In principle
+> callers of dma_set_max_seg_size() doesn't check the error code, but just
+> assumes it succeeds.
+>
+> For these reasons, let's do the initialization from the common platform bus
+> at the device registration point. This also follows the way the PCI devices
+> are being managed, see pci_device_add().
+>
+> Suggested-by: Christoph Hellwig <hch@lst.de>
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-Well, this series is for virtualizing idxd device to VMs, instead of supporting
-SVA for bare metal processes. idxd implements a hardware-assisted 
-mediated device technique called Intel Scalable I/O Virtualization, which
-allows each Assignable Device Interface (ADI, e.g. a work queue) tagged 
-with an unique PASID to ensure fine-grained DMA isolation when those 
-ADIs are assigned to different VMs. For this purpose idxd utilizes the VFIO 
-mdev framework and IOMMU aux-domain extension. Bare metal SVA will
-be enabled for idxd later by using the general SVA code that you mentioned.
-Both paths will co-exist in the end so there is no such case of disabling
-DMA/iommu config.
-
-Thanks
-Kevin
-
-> 
-> A /dev/idxd char dev that mmaps a bar page and links it to a PASID
-> seems a lot simpler and saner kernel wise.
-> 
-> > The mdev utilizes Interrupt Message Store or IMS[3] instead of MSIX for
-> > interrupts for the guest. This preserves MSIX for host usages and also
-> allows a
-> > significantly larger number of interrupt vectors for guest usage.
-> 
-> I never did get a reply to my earlier remarks on the IMS patches.
-> 
-> The concept of a device specific addr/data table format for MSI is not
-> Intel specific. This should be general code. We have a device that can
-> use this kind of kernel capability today.
-> 
-> Jason
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>

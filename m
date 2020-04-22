@@ -2,128 +2,121 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54CE41B4EF6
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Apr 2020 23:14:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A1A41B4F49
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Apr 2020 23:24:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgDVVOi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 22 Apr 2020 17:14:38 -0400
-Received: from mga04.intel.com ([192.55.52.120]:52565 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgDVVOi (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 22 Apr 2020 17:14:38 -0400
-IronPort-SDR: tR+PDkjBU/ier9SbbhN4ntD/CyWhcZBTUXplhOn4uWSNn0KtF1rrX/qqK+gg35cRxSb2YPJVMR
- vybaviIeEr5A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 14:14:37 -0700
-IronPort-SDR: 8vCw1V311yc1l9jGv5DHjLy8mjDMw8yJKPOo/IUX+/10QcFObB1zlI1It2yH/GrtMrLkWUtZui
- fmoNWkImtY8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
-   d="scan'208";a="274020861"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
-  by orsmga002.jf.intel.com with ESMTP; 22 Apr 2020 14:14:36 -0700
-Date:   Wed, 22 Apr 2020 14:14:36 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Message-ID: <20200422211436.GA103345@otc-nc-03>
+        id S1726431AbgDVVYY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 22 Apr 2020 17:24:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgDVVYY (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Apr 2020 17:24:24 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DEE9C03C1AA
+        for <dmaengine@vger.kernel.org>; Wed, 22 Apr 2020 14:24:24 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id j20so2725225edj.0
+        for <dmaengine@vger.kernel.org>; Wed, 22 Apr 2020 14:24:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yRWrSisQQpY8wbjXn0iTmjToXXRth4qPvwTQ6Ad/CXE=;
+        b=hRjZLZSP41fQmWqXoFu0uMVGr5+fbRGYYJ7JqVPFOLUI80SYtPgeBODoIP+jTzQE0A
+         LvwfljRzDnz0pqQ8XV/j4e65bWWxGRzcX9aqxFcYUyvsohgV9Mseeh1CoXzpmmoMqLm2
+         PZkr5FTjKeb2qsVvQ5ZZJ9tk212oX/dPiVnZid1lZ8QYGUa485x/l8p+YzNSfl0cfUCF
+         UeksZGJll/cGu9FFxsvnhBJGh9020ED/FIg5bq4nehIIxxUZrzvqFOc4x6/cDEaKq2uo
+         +eh7FmdGU69lMG24JYdqoMzep30dL/8nqK0gRu/ucI4iEQH2ICs8GXLYOaI5YdWaMtKV
+         G0Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yRWrSisQQpY8wbjXn0iTmjToXXRth4qPvwTQ6Ad/CXE=;
+        b=AideYSNDjBfDft2ZHBNpxHXA7a65eRjaDZ+hEi4+1ghzVKywKl0rfwdxLdp+WhdPBv
+         nkUWLKXxRez5w4aqn2oN61efYmVCPTvB6yQXC2NzYP2yzGtSBL8dZkeMmKh368MObXzn
+         8bnLM46l4BmABxjImJXKYGJ5UeEC4Z1vsI13++PeSmvGfNUvoNItfrsIikq7Ey+r6TkL
+         jPS+aBbEhbfXUVEv0pyUUD64cGwl8byiMkNLdpWyqEEbNTVBtwA0yLUjqsQxC4Rb7F7O
+         hjVvd7xVf8R8GP8D4T01F2B5/WnkDOXT7yYqMJpWNxSL0WLA42w/L6kPBZo/FykqDqNz
+         bRjw==
+X-Gm-Message-State: AGi0PuZ+wrjeZPwh6NFf7sYu07jbZvzWb/9trWoHeD/SgVPPShuSXB5+
+        LHd8zE9eGGE0O7Ou360ovYK01z8ZBeJ4h+/FNBfXqQ==
+X-Google-Smtp-Source: APiQypLVYeI+Z6fHZ231GXhNbP4EWDKpwlzMUtpHq46K+PNczHL9Qp9bLLshWMcSOuHvG1MKEBrYyZ6kugSSMSxZ3ko=
+X-Received: by 2002:a50:ee86:: with SMTP id f6mr498361edr.123.1587590662775;
+ Wed, 22 Apr 2020 14:24:22 -0700 (PDT)
+MIME-Version: 1.0
 References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
  <20200421235442.GO11945@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
- <20200422115017.GQ11945@mellanox.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422115017.GQ11945@mellanox.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200421235442.GO11945@mellanox.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 22 Apr 2020 14:24:11 -0700
+Message-ID: <CAPcyv4gMYz1wCYjfnujyGXP0jGehpb+dEYV7hJoAAsDsj9+afQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
+        Megha Dey <megha.dey@linux.intel.com>, maz@kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob jun Pan <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>, Yi L Liu <yi.l.liu@intel.com>,
+        baolu.lu@intel.com, "Tian, Kevin" <kevin.tian@intel.com>,
+        Sanjay K Kumar <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>, Jing Lin <jing.lin@intel.com>,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dmaengine@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, linux-pci@vger.kernel.org,
+        KVM list <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Jason
+On Tue, Apr 21, 2020 at 4:55 PM Jason Gunthorpe <jgg@mellanox.com> wrote:
+>
+> On Tue, Apr 21, 2020 at 04:33:46PM -0700, Dave Jiang wrote:
+> > The actual code is independent of the stage 2 driver code submission that adds
+> > support for SVM, ENQCMD(S), PASID, and shared workqueues. This code series will
+> > support dedicated workqueue on a guest with no vIOMMU.
+> >
+> > A new device type "mdev" is introduced for the idxd driver. This allows the wq
+> > to be dedicated to the usage of a VFIO mediated device (mdev). Once the work
+> > queue (wq) is enabled, an uuid generated by the user can be added to the wq
+> > through the uuid sysfs attribute for the wq.  After the association, a mdev can
+> > be created using this UUID. The mdev driver code will associate the uuid and
+> > setup the mdev on the driver side. When the create operation is successful, the
+> > uuid can be passed to qemu. When the guest boots up, it should discover a DSA
+> > device when doing PCI discovery.
+>
+> I'm feeling really skeptical that adding all this PCI config space and
+> MMIO BAR emulation to the kernel just to cram this into a VFIO
+> interface is a good idea, that kind of stuff is much safer in
+> userspace.
+>
+> Particularly since vfio is not really needed once a driver is using
+> the PASID stuff. We already have general code for drivers to use to
+> attach a PASID to a mm_struct - and using vfio while disabling all the
+> DMA/iommu config really seems like an abuse.
+>
+> A /dev/idxd char dev that mmaps a bar page and links it to a PASID
+> seems a lot simpler and saner kernel wise.
+>
+> > The mdev utilizes Interrupt Message Store or IMS[3] instead of MSIX for
+> > interrupts for the guest. This preserves MSIX for host usages and also allows a
+> > significantly larger number of interrupt vectors for guest usage.
+>
+> I never did get a reply to my earlier remarks on the IMS patches.
+>
+> The concept of a device specific addr/data table format for MSI is not
+> Intel specific. This should be general code. We have a device that can
+> use this kind of kernel capability today.
 
-> > > 
-> > > I'm feeling really skeptical that adding all this PCI config space and
-> > > MMIO BAR emulation to the kernel just to cram this into a VFIO
-> > > interface is a good idea, that kind of stuff is much safer in
-> > > userspace.
-> > > 
-> > > Particularly since vfio is not really needed once a driver is using
-> > > the PASID stuff. We already have general code for drivers to use to
-> > > attach a PASID to a mm_struct - and using vfio while disabling all the
-> > > DMA/iommu config really seems like an abuse.
-> > 
-> > Well, this series is for virtualizing idxd device to VMs, instead of
-> > supporting SVA for bare metal processes. idxd implements a
-> > hardware-assisted mediated device technique called Intel Scalable
-> > I/O Virtualization,
-> 
-> I'm familiar with the intel naming scheme.
-> 
-> > which allows each Assignable Device Interface (ADI, e.g. a work
-> > queue) tagged with an unique PASID to ensure fine-grained DMA
-> > isolation when those ADIs are assigned to different VMs. For this
-> > purpose idxd utilizes the VFIO mdev framework and IOMMU aux-domain
-> > extension. Bare metal SVA will be enabled for idxd later by using
-> > the general SVA code that you mentioned.  Both paths will co-exist
-> > in the end so there is no such case of disabling DMA/iommu config.
->  
-> Again, if you will have a normal SVA interface, there is no need for a
-> VFIO version, just use normal SVA for both.
-> 
-> PCI emulation should try to be in userspace, not the kernel, for
-> security.
-
-Not sure we completely understand your proposal. Mediated devices
-are software constructed and they have protected resources like
-interrupts and stuff and VFIO already provids abstractions to export
-to user space.
-
-Native SVA is simply passing the process CR3 handle to IOMMU so
-IOMMU knows how to walk process page tables, kernel handles things
-like page-faults, doing device tlb invalidations and such.
-
-That by itself doesn't translate to what a guest typically does
-with a VDEV. There are other control paths that need to be serviced
-from the kernel code via VFIO. For speed path operations like
-ringing doorbells and such they are directly managed from guest.
-
-How do you propose to use the existing SVA api's  to also provide 
-full device emulation as opposed to using an existing infrastructure 
-that's already in place?
-
-Perhaps Alex can ease Jason's concerns?
-
-Cheers,
-Ashok
-
+This has been my concern reviewing the implementation. IMS needs more
+than one in-tree user to validate degrees of freedom in the api. I had
+been missing a second "in-tree user" to validate the scope of the
+flexibility that was needed.

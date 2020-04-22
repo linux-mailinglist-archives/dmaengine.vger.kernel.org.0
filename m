@@ -2,113 +2,128 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D5471B4ED4
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Apr 2020 23:10:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54CE41B4EF6
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Apr 2020 23:14:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgDVVJ6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 22 Apr 2020 17:09:58 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:47448 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726068AbgDVVJ6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Apr 2020 17:09:58 -0400
-Received: from pps.filterd (m0170397.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03ML601n016046;
-        Wed, 22 Apr 2020 17:09:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=smtpout1;
- bh=ukE2xdSiAt6A5by3rnRFfTznqvxYOdBEy+mduJSX7ZI=;
- b=UuVyAcnQj4UyOCZBPwTiP6/ciFmyrKZaxl7OigD9ZWHGGg4V6UVc+y6MJ/p1FUi5bRFZ
- E4t/MAEBt3cpBOvOM1F9jxzsW5x3JgdKCozaXUsy22kAuBjoOsftEhh3Y9vDwDc1AAcr
- T4QMWI2iSOgN4epq7yNfauz6OAheDevzrYjumGRcqrXRGtXsCZ1J21tLcX7Soq/Y8lhb
- 4qkdOjZcfquwUkwf7N3s4dpNshRqGUQ34tdhLvQAx/HAYb+N7846v8xBqHMbP6UxpIj6
- JmNdMe0I+Ec2sLdiXAlspja8CNKpz371JvNs802UL/ynCgrH/RVNYhjP0I54neWNtmcK PQ== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 30ftmth40j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Apr 2020 17:09:51 -0400
-Received: from pps.filterd (m0134746.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03ML9B2K168394;
-        Wed, 22 Apr 2020 17:09:50 -0400
-Received: from mailuogwdur.emc.com (mailuogwdur-nat.lss.emc.com [128.221.224.79] (may be forged))
-        by mx0a-00154901.pphosted.com with ESMTP id 30j8e83420-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Apr 2020 17:09:50 -0400
-Received: from emc.com (localhost [127.0.0.1])
-        by mailuogwprd51.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03ML9mNw001814;
-        Wed, 22 Apr 2020 17:09:48 -0400
-Received: from mailapphubprd02.lss.emc.com ([mailapphubprd02.lss.emc.com [10.253.24.52]]) by mailuogwprd51.lss.emc.com with ESMTP id 03ML9b2Z001763 ;
-          Wed, 22 Apr 2020 17:09:38 -0400
-Received: from vd-leonidr.xiolab.lab.emc.com (vd-leonidr.xiolab.lab.emc.com [10.76.212.243])
-        by mailapphubprd02.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 03ML9NiN032414;
-        Wed, 22 Apr 2020 17:09:34 -0400
-From:   leonid.ravich@dell.com
-To:     dmaengine@vger.kernel.org
-Cc:     lravich@gmail.com, Leonid Ravich <Leonid.Ravich@dell.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] dmaengine: ioat: adding missed issue_pending to timeout handler
-Date:   Thu, 23 Apr 2020 00:09:18 +0300
-Message-Id: <1587589761-32690-3-git-send-email-leonid.ravich@dell.com>
-X-Mailer: git-send-email 1.9.3
-In-Reply-To: <1587589761-32690-1-git-send-email-leonid.ravich@dell.com>
-References: <1587583557-4113-3-git-send-email-leonid.ravich@dell.com>
- <1587589761-32690-1-git-send-email-leonid.ravich@dell.com>
-X-Sentrion-Hostname: mailuogwprd51.lss.emc.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-22_08:2020-04-22,2020-04-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 spamscore=0 adultscore=0 mlxlogscore=696 clxscore=1015
- lowpriorityscore=0 phishscore=0 malwarescore=0 suspectscore=13 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220161
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
- bulkscore=0 adultscore=0 clxscore=1015 phishscore=0 priorityscore=1501
- suspectscore=13 mlxscore=0 spamscore=0 impostorscore=0 mlxlogscore=754
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004220161
+        id S1726358AbgDVVOi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 22 Apr 2020 17:14:38 -0400
+Received: from mga04.intel.com ([192.55.52.120]:52565 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726090AbgDVVOi (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 22 Apr 2020 17:14:38 -0400
+IronPort-SDR: tR+PDkjBU/ier9SbbhN4ntD/CyWhcZBTUXplhOn4uWSNn0KtF1rrX/qqK+gg35cRxSb2YPJVMR
+ vybaviIeEr5A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 14:14:37 -0700
+IronPort-SDR: 8vCw1V311yc1l9jGv5DHjLy8mjDMw8yJKPOo/IUX+/10QcFObB1zlI1It2yH/GrtMrLkWUtZui
+ fmoNWkImtY8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
+   d="scan'208";a="274020861"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by orsmga002.jf.intel.com with ESMTP; 22 Apr 2020 14:14:36 -0700
+Date:   Wed, 22 Apr 2020 14:14:36 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Message-ID: <20200422211436.GA103345@otc-nc-03>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <20200421235442.GO11945@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
+ <20200422115017.GQ11945@mellanox.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422115017.GQ11945@mellanox.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Leonid Ravich <Leonid.Ravich@emc.com>
+Hi Jason
 
-completion timeout might trigger unnesesery DMA engine hw reboot
-in case of missed issue_pending() .
+> > > 
+> > > I'm feeling really skeptical that adding all this PCI config space and
+> > > MMIO BAR emulation to the kernel just to cram this into a VFIO
+> > > interface is a good idea, that kind of stuff is much safer in
+> > > userspace.
+> > > 
+> > > Particularly since vfio is not really needed once a driver is using
+> > > the PASID stuff. We already have general code for drivers to use to
+> > > attach a PASID to a mm_struct - and using vfio while disabling all the
+> > > DMA/iommu config really seems like an abuse.
+> > 
+> > Well, this series is for virtualizing idxd device to VMs, instead of
+> > supporting SVA for bare metal processes. idxd implements a
+> > hardware-assisted mediated device technique called Intel Scalable
+> > I/O Virtualization,
+> 
+> I'm familiar with the intel naming scheme.
+> 
+> > which allows each Assignable Device Interface (ADI, e.g. a work
+> > queue) tagged with an unique PASID to ensure fine-grained DMA
+> > isolation when those ADIs are assigned to different VMs. For this
+> > purpose idxd utilizes the VFIO mdev framework and IOMMU aux-domain
+> > extension. Bare metal SVA will be enabled for idxd later by using
+> > the general SVA code that you mentioned.  Both paths will co-exist
+> > in the end so there is no such case of disabling DMA/iommu config.
+>  
+> Again, if you will have a normal SVA interface, there is no need for a
+> VFIO version, just use normal SVA for both.
+> 
+> PCI emulation should try to be in userspace, not the kernel, for
+> security.
 
-Acked-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
----
-Changing in v2:
-  - fixing log spelling and level
- drivers/dma/ioat/dma.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Not sure we completely understand your proposal. Mediated devices
+are software constructed and they have protected resources like
+interrupts and stuff and VFIO already provids abstractions to export
+to user space.
 
-diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-index 55a8cf1..8ad0ad8 100644
---- a/drivers/dma/ioat/dma.c
-+++ b/drivers/dma/ioat/dma.c
-@@ -955,6 +955,15 @@ void ioat_timer_event(struct timer_list *t)
- 		goto unlock_out;
- 	}
- 
-+	/* handle missed issue pending case */
-+	if (ioat_ring_pending(ioat_chan)) {
-+		dev_warn(to_dev(ioat_chan),
-+			"Completion timeout with pending descriptors\n");
-+		spin_lock_bh(&ioat_chan->prep_lock);
-+		__ioat_issue_pending(ioat_chan);
-+		spin_unlock_bh(&ioat_chan->prep_lock);
-+	}
-+
- 	set_bit(IOAT_COMPLETION_ACK, &ioat_chan->state);
- 	mod_timer(&ioat_chan->timer, jiffies + COMPLETION_TIMEOUT);
- unlock_out:
--- 
-1.9.3
+Native SVA is simply passing the process CR3 handle to IOMMU so
+IOMMU knows how to walk process page tables, kernel handles things
+like page-faults, doing device tlb invalidations and such.
+
+That by itself doesn't translate to what a guest typically does
+with a VDEV. There are other control paths that need to be serviced
+from the kernel code via VFIO. For speed path operations like
+ringing doorbells and such they are directly managed from guest.
+
+How do you propose to use the existing SVA api's  to also provide 
+full device emulation as opposed to using an existing infrastructure 
+that's already in place?
+
+Perhaps Alex can ease Jason's concerns?
+
+Cheers,
+Ashok
 

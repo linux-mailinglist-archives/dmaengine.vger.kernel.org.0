@@ -2,241 +2,131 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD20C1B5D73
-	for <lists+dmaengine@lfdr.de>; Thu, 23 Apr 2020 16:17:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D1C51B6097
+	for <lists+dmaengine@lfdr.de>; Thu, 23 Apr 2020 18:20:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgDWORy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 23 Apr 2020 10:17:54 -0400
-Received: from mga09.intel.com ([134.134.136.24]:41075 "EHLO mga09.intel.com"
+        id S1729533AbgDWQUK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 23 Apr 2020 12:20:10 -0400
+Received: from mout.web.de ([212.227.15.3]:48529 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727037AbgDWORx (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 23 Apr 2020 10:17:53 -0400
-IronPort-SDR: 8GGpDQ/YIF6AXY/+uSOhO/s0RMRzK6aUoDThrnWe6bPPYcaMTXvNmCinle7U4aRwWFvsB2KV7f
- Mi3un0xxMnpg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 07:17:53 -0700
-IronPort-SDR: NOQYTzDwYIQSGVNll33ldBdM0LenKMnyypmLhML6gqlF8MAz8pKXN5TVcb2hM9Rv3HLcPOJwZJ
- 6riap+CChoXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
-   d="scan'208";a="456923832"
-Received: from jamancin-mobl.amr.corp.intel.com (HELO [10.209.98.49]) ([10.209.98.49])
-  by fmsmga005.fm.intel.com with ESMTP; 23 Apr 2020 07:17:52 -0700
-Subject: Re: [PATCH] dmaengine: fix channel index enumeration
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     "vkoul@kernel.org" <vkoul@kernel.org>
-Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
-References: <158679961260.7674.8485924270472851852.stgit@djiang5-desk3.ch.intel.com>
-Message-ID: <58fbb46c-5a54-c4b8-e4b7-3921c4d7fe9e@intel.com>
-Date:   Thu, 23 Apr 2020 07:17:51 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        id S1728865AbgDWQUJ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 23 Apr 2020 12:20:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1587658790;
+        bh=RECRnytV1hNNzxqqBoYErlLWNw+ju+rqwbUUtNMzFEU=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=nsHzWqYCJ9JWmzLJg3xkN01dlC8XAS5g3jxsO4FGhXkfUZsBZAL5pmlpxBqGWlENn
+         mYrR1w+G4zQVWIYaJSbYKUbbfpsRLp+4BcXo1Y2gzQKNBy95ptydlgYVi5+U+4qupH
+         sN5l07pfPPNkQWNwdIO1rqQxHeh0Jvqc9qk1rgjw=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.49.69.235]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MTPvz-1jbnjF1ael-00SKxc; Thu, 23
+ Apr 2020 18:19:50 +0200
+To:     Leonid Ravich <Leonid.Ravich@emc.com>, dmaengine@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, lravich@gmail.com,
+        Alexander Barabash <Alexander.Barabash@dell.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v3 2/3] dmaengine: ioat: Remove unnecessary double
+ completion timer modification
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <b1bf65c7-23ac-2ab0-32ca-1887d134c90a@web.de>
+Date:   Thu, 23 Apr 2020 18:19:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <158679961260.7674.8485924270472851852.stgit@djiang5-desk3.ch.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:yiiEBurtdl+8orrOtD9SW73tJJNLlAzXYPv5uWWM17D/qOPC7fR
+ GjDo0XMAlaDElh7w8HaYdJ4xErMp0XEZ+6EST2U6RdMnlidXaI64TnHzeXC8QpK5XP1JNxT
+ 1t6qGaeEHEr216PCLQckV/OmlzejyINnKDDLRyXvHTZ7M0G2uHVIu2cQsbRzHc1j1/IA4Cd
+ 5Le1NGevmLaGrTGzGtzbg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2rH1OeLb3Ok=:EawNNE9J0bovduALvc9Znx
+ HzIHRDG0lkkOu73YYxajwtbwIXcNdMjJiMy6eBtVOeKMZGcEnhI00ji0tES1hfzWt2fDDbYq/
+ iZ+FgZTcl5kgRSL6K5iceNQmjGsgFynMumb+KgtiiJP6WFjtBwPNhlRkQB+gCTxHfQ5q/n4CX
+ 1dHZJBzi1utkH+qP/gq4KRxB9zJg/+/8vIrmM6mjtlHNDsTdJE/knxWVnYj9eCw/dUQvFo94b
+ hMoKeHuwMj8JN7coijmuiRdJjP0mI9wpERPkIkw9CbepxmzHD7CZ6RPCwL1hhETO09EW4o4kz
+ +Fm6EoX33TuJl/fhyHANQdM4ww1U9lwUIkNZECGwZrG8pwidHlBkEWbaL/xZPb/iTUUq0wduE
+ VyxgW2SRrBSr9AzMdYZw5LogB3UpxjBDgEnp7Q5Qh39Y0BjYf3BVJplKdGz4A35m/APmRHSGE
+ szltekY1EhyccOR/EyecwVIfEaU0j02YJVceAwApYYIX54xlSuuWQ2HKYsRi0Aw/NK+7SFGhA
+ mRZDYWS0w73JNgXtlsVGgwDn+e07NeEW/oXtXqDdfaSxkBLSrrI2QdqVBTjMEeUQ8cjC5UqtH
+ E4YfEbnjMPlm+ftP16Ch+w56lLBwJ/UeSZfBa7dz0LU9kSRQyNnU7ER4bfXwUTIgBA4Z6r+Ww
+ dqCg/1s7TypoPCfiKhDQGCHxoC8yBKhP3UyEzD3WdQyXpZOAJkRBcCfQm2i3KEMrD+tCNqLVe
+ y7b5QucrvoiyX98AoipmkWTqnKAaVC0bm6+R2Pvmkv3CkVIXzQv2pRslE8lu5c/79qt8pbxbe
+ 07klnGbNRe4rgdAoR7Fxjio6DZTXk1Rjmqz0w79VQV1DvOEUeHvNdCJgSdBI+peZgMKZZdc0P
+ BnqFEo79P4lQYpXKTXllK/XdiLGCEpy75Nk1t3IYYF/CPt/r6LAnmpT1TDkcpOlEUpIGBNrZa
+ ABIy9o+ApAxlux6RtqX+f0p3iz3RUFk9vltYoR7epye7gvdTWpzDqnD56wLNPS3W/fE53JMoX
+ JFLN5WU8QpOKX9IDiQaG9yiVDrAZa7i+HvVC86Mu9ahQSFb1HnSQASoKGpFMzhwV3R3YJZoTa
+ TArI3n0PYfBKmwegR1rpGh5jUvtWxHc+MgPDsln7UHEXl+mhYjqwxYLDJ9BoI7x5skRxVFR/y
+ bN/+6SLqUlxMSJsXwn9qBBh7ezXTRlv2FMWiAMvj6irI8R8oMkYUqpTiHzy0c1Fyviny4EZqT
+ fI2FdyWco1M0AsGvS
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+> removing unnecessary mod_timer from timeout handler
+> incase of ioat_cleanup_preamble() is true  for cleaner code
 
+I suggest to improve this change description.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?id=3Dc578ddb39e565139897124e74e=
+5a43e56538cb33#n151
 
-On 4/13/2020 10:40 AM, Jiang, Dave wrote:
-> When the channel register code was changed to allow hotplug operations,
-> dynamic indexing wasn't taken into account. When channels are randomly
-> plugged and unplugged out of order, the serial indexing breaks. Convert
-> channel indexing to using IDA tracking in order to allow dynamic
-> assignment. The previous code does not cause any regression bug for
-> existing channel allocation besides idxd driver since the hotplug usage
-> case is only used by idxd at this point.
-> 
-> With this change, the chan->idr_ref is also not needed any longer. We can
-> have a device with no channels registered due to hot plug. The channel
-> device release code no longer should attempt to free the dma device id on
-> the last channel release.
+* Please avoid typos in the patch subject and commit message.
 
-Hi Vinod, just checking to see if you had time to look at this patch 
-yet. Thanks.
+* How do you think about to add the tag =E2=80=9CFixes=E2=80=9D because of=
+ adjustments
+  for the data synchronisation?
 
-> 
-> Fixes: e81274cd6b52 ("dmaengine: add support to dynamic register/unregister of channels")
-> 
-> Reported-by: Yixin Zhang <yixin.zhang@intel.com>
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> Tested-by: Yixin Zhang <yixin.zhang@intel.com>
-> ---
->   drivers/dma/dmaengine.c   |   60 ++++++++++++++++++++-------------------------
->   include/linux/dmaengine.h |    4 ++-
->   2 files changed, 28 insertions(+), 36 deletions(-)
-> 
-> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-> index 72c584f1dd26..e341f8d7ae62 100644
-> --- a/drivers/dma/dmaengine.c
-> +++ b/drivers/dma/dmaengine.c
-> @@ -151,10 +151,6 @@ static void chan_dev_release(struct device *dev)
->   	struct dma_chan_dev *chan_dev;
->   
->   	chan_dev = container_of(dev, typeof(*chan_dev), device);
-> -	if (atomic_dec_and_test(chan_dev->idr_ref)) {
-> -		ida_free(&dma_ida, chan_dev->dev_id);
-> -		kfree(chan_dev->idr_ref);
-> -	}
->   	kfree(chan_dev);
->   }
->   
-> @@ -952,27 +948,9 @@ static int get_dma_id(struct dma_device *device)
->   }
->   
->   static int __dma_async_device_channel_register(struct dma_device *device,
-> -					       struct dma_chan *chan,
-> -					       int chan_id)
-> +					       struct dma_chan *chan)
->   {
->   	int rc = 0;
-> -	int chancnt = device->chancnt;
-> -	atomic_t *idr_ref;
-> -	struct dma_chan *tchan;
-> -
-> -	tchan = list_first_entry_or_null(&device->channels,
-> -					 struct dma_chan, device_node);
-> -	if (!tchan)
-> -		return -ENODEV;
-> -
-> -	if (tchan->dev) {
-> -		idr_ref = tchan->dev->idr_ref;
-> -	} else {
-> -		idr_ref = kmalloc(sizeof(*idr_ref), GFP_KERNEL);
-> -		if (!idr_ref)
-> -			return -ENOMEM;
-> -		atomic_set(idr_ref, 0);
-> -	}
->   
->   	chan->local = alloc_percpu(typeof(*chan->local));
->   	if (!chan->local)
-> @@ -988,29 +966,36 @@ static int __dma_async_device_channel_register(struct dma_device *device,
->   	 * When the chan_id is a negative value, we are dynamically adding
->   	 * the channel. Otherwise we are static enumerating.
->   	 */
-> -	chan->chan_id = chan_id < 0 ? chancnt : chan_id;
-> +	mutex_lock(&device->chan_mutex);
-> +	chan->chan_id = ida_alloc(&device->chan_ida, GFP_KERNEL);
-> +	mutex_unlock(&device->chan_mutex);
-> +	if (chan->chan_id < 0) {
-> +		pr_err("%s: unable to alloc ida for chan: %d\n",
-> +		       __func__, chan->chan_id);
-> +		goto err_out;
-> +	}
-> +
->   	chan->dev->device.class = &dma_devclass;
->   	chan->dev->device.parent = device->dev;
->   	chan->dev->chan = chan;
-> -	chan->dev->idr_ref = idr_ref;
->   	chan->dev->dev_id = device->dev_id;
-> -	atomic_inc(idr_ref);
->   	dev_set_name(&chan->dev->device, "dma%dchan%d",
->   		     device->dev_id, chan->chan_id);
-> -
->   	rc = device_register(&chan->dev->device);
->   	if (rc)
-> -		goto err_out;
-> +		goto err_out_ida;
->   	chan->client_count = 0;
-> -	device->chancnt = chan->chan_id + 1;
-> +	device->chancnt++;
->   
->   	return 0;
->   
-> + err_out_ida:
-> +	mutex_lock(&device->chan_mutex);
-> +	ida_free(&device->chan_ida, chan->chan_id);
-> +	mutex_unlock(&device->chan_mutex);
->    err_out:
->   	free_percpu(chan->local);
->   	kfree(chan->dev);
-> -	if (atomic_dec_return(idr_ref) == 0)
-> -		kfree(idr_ref);
->   	return rc;
->   }
->   
-> @@ -1019,7 +1004,7 @@ int dma_async_device_channel_register(struct dma_device *device,
->   {
->   	int rc;
->   
-> -	rc = __dma_async_device_channel_register(device, chan, -1);
-> +	rc = __dma_async_device_channel_register(device, chan);
->   	if (rc < 0)
->   		return rc;
->   
-> @@ -1039,6 +1024,9 @@ static void __dma_async_device_channel_unregister(struct dma_device *device,
->   	device->chancnt--;
->   	chan->dev->chan = NULL;
->   	mutex_unlock(&dma_list_mutex);
-> +	mutex_lock(&device->chan_mutex);
-> +	ida_free(&device->chan_ida, chan->chan_id);
-> +	mutex_unlock(&device->chan_mutex);
->   	device_unregister(&chan->dev->device);
->   	free_percpu(chan->local);
->   }
-> @@ -1061,7 +1049,7 @@ EXPORT_SYMBOL_GPL(dma_async_device_channel_unregister);
->    */
->   int dma_async_device_register(struct dma_device *device)
->   {
-> -	int rc, i = 0;
-> +	int rc;
->   	struct dma_chan* chan;
->   
->   	if (!device)
-> @@ -1168,9 +1156,12 @@ int dma_async_device_register(struct dma_device *device)
->   	if (rc != 0)
->   		return rc;
->   
-> +	mutex_init(&device->chan_mutex);
-> +	ida_init(&device->chan_ida);
-> +
->   	/* represent channels in sysfs. Probably want devs too */
->   	list_for_each_entry(chan, &device->channels, device_node) {
-> -		rc = __dma_async_device_channel_register(device, chan, i++);
-> +		rc = __dma_async_device_channel_register(device, chan);
->   		if (rc < 0)
->   			goto err_out;
->   	}
-> @@ -1241,6 +1232,7 @@ void dma_async_device_unregister(struct dma_device *device)
->   	 */
->   	dma_cap_set(DMA_PRIVATE, device->cap_mask);
->   	dma_channel_rebalance();
-> +	ida_free(&dma_ida, device->dev_id);
->   	dma_device_put(device);
->   	mutex_unlock(&dma_list_mutex);
->   }
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index 3a43dbd5f615..e7419038d60f 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -337,13 +337,11 @@ struct dma_chan {
->    * @chan: driver channel device
->    * @device: sysfs device
->    * @dev_id: parent dma_device dev_id
-> - * @idr_ref: reference count to gate release of dma_device dev_id
->    */
->   struct dma_chan_dev {
->   	struct dma_chan *chan;
->   	struct device device;
->   	int dev_id;
-> -	atomic_t *idr_ref;
->   };
->   
->   /**
-> @@ -846,6 +844,8 @@ struct dma_device {
->   	int dev_id;
->   	struct device *dev;
->   	struct module *owner;
-> +	struct ida chan_ida;
-> +	struct mutex chan_mutex;	/* to protect chan_ida */
->   
->   	u32 src_addr_widths;
->   	u32 dst_addr_widths;
-> 
+Regards,
+Markus

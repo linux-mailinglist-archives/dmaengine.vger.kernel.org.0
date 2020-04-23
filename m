@@ -2,123 +2,151 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF4741B50A2
-	for <lists+dmaengine@lfdr.de>; Thu, 23 Apr 2020 01:04:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5D311B5231
+	for <lists+dmaengine@lfdr.de>; Thu, 23 Apr 2020 03:58:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726077AbgDVXEY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 22 Apr 2020 19:04:24 -0400
-Received: from mga07.intel.com ([134.134.136.100]:7109 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726008AbgDVXEY (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 22 Apr 2020 19:04:24 -0400
-IronPort-SDR: 3uHv/mNBS2PuxZxmApi10iGniE4BDbo7a1FVY6YBZxfcuULMNbvrESa4GCrBdBmTmCrSKD8lnI
- LSbwpX6W44QQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2020 16:04:23 -0700
-IronPort-SDR: 49PSRAP6HZ2kkUOmviJXbjwvhozsbej9LWy1KbXoOSWlD9Itl37uJJ9lcmtRvzpTqNciu0IzD/
- O+hF9jv9BXmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,304,1583222400"; 
-   d="scan'208";a="247589890"
-Received: from meghadey-mobl1.amr.corp.intel.com (HELO [10.254.185.101]) ([10.254.185.101])
-  by fmsmga008.fm.intel.com with ESMTP; 22 Apr 2020 16:04:20 -0700
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Cc:     vkoul@kernel.org, maz@kernel.org, bhelgaas@google.com,
-        rafael@kernel.org, gregkh@linuxfoundation.org, tglx@linutronix.de,
-        hpa@zytor.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
-        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <20200421235442.GO11945@mellanox.com>
-From:   "Dey, Megha" <megha.dey@linux.intel.com>
-Message-ID: <d6b3c133-ac19-21af-b7a7-b9e7166b8166@linux.intel.com>
-Date:   Wed, 22 Apr 2020 16:04:20 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200421235442.GO11945@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S1726486AbgDWB6f (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 22 Apr 2020 21:58:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbgDWB6e (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Apr 2020 21:58:34 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53D06C03C1AE
+        for <dmaengine@vger.kernel.org>; Wed, 22 Apr 2020 18:58:33 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id np7so1804748pjb.1
+        for <dmaengine@vger.kernel.org>; Wed, 22 Apr 2020 18:58:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=x5efM2ueg20lQ5Hrj0oF5TwSG9LnE5AUjxtjD5ZG32I=;
+        b=hU3LyJMKSmmn63z1aHIZgrx254yPmKYjpIvHf4WJgjn8JkXXnXca1Xfl+CZqBMzQIG
+         H/yRTQeTMWY6H7zPxIh6JIATFNMRpQvueOfcWL4+8eQcWOTt1hYO4m53l31qUbQjtw9b
+         zDLmEK4Pv7AfZPRGiLCipfcIr++IL7CNNszKTDMWUfoxT+j2cZ5XX/WYhWbuxWC+twxH
+         ujnXV3kdkca3Lnym5FOhj7no5VxVNboVTGABq64511yZkhk7ULPj8CJK66crmaA8e05W
+         6YKDG1gfWkOILOxdOD+Y9RLY4T8W4hWRwN/2X2f/xgG/NSQ+LQHeRWXxeqGcjicQXr/N
+         55hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=x5efM2ueg20lQ5Hrj0oF5TwSG9LnE5AUjxtjD5ZG32I=;
+        b=rjR3q2IdB4wK5FRmiUmgd0yT5wRxHQINKbIn4Hzy959RZdx27qGSRhfjrlX0LK7cvS
+         Mczxz5mxhPhvbLlLiBoKqfeOmOmtWabP31WMfNmPwNx7WlohSy1g5qSSEJ8/NHcCsIsr
+         MbdPIp3QY8P/d0/TGpwNdq4sZgY+ez9+hzp2hSgwswOq5IAFW2HlOuO/GdIhkX0y4Dzc
+         0e9QzfqeWPXt7Nhk6jaYmux0yajoKtheGn+iYDvLI+mj9Y4+VhxCjaAxC1vyLQk1/flJ
+         qkMiE8gKr4/taXheos6w5HYe1r55VOoombGlYacVeKW9biV+k4/p6ub++/o7i4x1BIFG
+         jewQ==
+X-Gm-Message-State: AGi0Pub8Y760UPMOUPNO3jOzBX2dfZfaO/WvuWPYdtRmqBhgNjq2y7ur
+        QjPc6rcrilwNttbwOXIv1dV+s/NKIQk=
+X-Google-Smtp-Source: APiQypIJz5F0oEVa34+/biHGG3V0VySH518Ee2vPNYVdEdRYI/SIiDdkdo857++PWW8Mye318vjMfA==
+X-Received: by 2002:a17:90a:2401:: with SMTP id h1mr1757802pje.1.1587607112389;
+        Wed, 22 Apr 2020 18:58:32 -0700 (PDT)
+Received: from nuc7.sifive.com (c-24-5-48-146.hsd1.ca.comcast.net. [24.5.48.146])
+        by smtp.gmail.com with ESMTPSA id 1sm532356pjc.32.2020.04.22.18.58.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 22 Apr 2020 18:58:31 -0700 (PDT)
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
+To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, gustavo.pimentel@synopsys.com,
+        dan.j.williams@intel.com, vkoul@kernel.org, kishon@ti.com,
+        maz@kernel.org, paul.walmsley@sifive.com
+Cc:     Alan Mikhak <alan.mikhak@sifive.com>
+Subject: [PATCH v2][next] dmaengine: dw-edma: Check MSI descriptor before copying
+Date:   Wed, 22 Apr 2020 18:58:21 -0700
+Message-Id: <1587607101-31914-1-git-send-email-alan.mikhak@sifive.com>
+X-Mailer: git-send-email 2.7.4
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+From: Alan Mikhak <alan.mikhak@sifive.com>
 
+Modify dw_edma_irq_request() to check if a struct msi_desc entry exists
+before copying the contents of its struct msi_msg pointer.
 
-On 4/21/2020 4:54 PM, Jason Gunthorpe wrote:
-> On Tue, Apr 21, 2020 at 04:33:46PM -0700, Dave Jiang wrote:
->> The actual code is independent of the stage 2 driver code submission that adds
->> support for SVM, ENQCMD(S), PASID, and shared workqueues. This code series will
->> support dedicated workqueue on a guest with no vIOMMU.
->>    
->> A new device type "mdev" is introduced for the idxd driver. This allows the wq
->> to be dedicated to the usage of a VFIO mediated device (mdev). Once the work
->> queue (wq) is enabled, an uuid generated by the user can be added to the wq
->> through the uuid sysfs attribute for the wq.  After the association, a mdev can
->> be created using this UUID. The mdev driver code will associate the uuid and
->> setup the mdev on the driver side. When the create operation is successful, the
->> uuid can be passed to qemu. When the guest boots up, it should discover a DSA
->> device when doing PCI discovery.
-> 
-> I'm feeling really skeptical that adding all this PCI config space and
-> MMIO BAR emulation to the kernel just to cram this into a VFIO
-> interface is a good idea, that kind of stuff is much safer in
-> userspace.
-> 
-> Particularly since vfio is not really needed once a driver is using
-> the PASID stuff. We already have general code for drivers to use to
-> attach a PASID to a mm_struct - and using vfio while disabling all the
-> DMA/iommu config really seems like an abuse.
-> 
-> A /dev/idxd char dev that mmaps a bar page and links it to a PASID
-> seems a lot simpler and saner kernel wise.
-> 
->> The mdev utilizes Interrupt Message Store or IMS[3] instead of MSIX for
->> interrupts for the guest. This preserves MSIX for host usages and also allows a
->> significantly larger number of interrupt vectors for guest usage.
-> 
-> I never did get a reply to my earlier remarks on the IMS patches.
-> 
-> The concept of a device specific addr/data table format for MSI is not
-> Intel specific. This should be general code. We have a device that can
-> use this kind of kernel capability today.
-> 
+Without this sanity check, __get_cached_msi_msg() crashes when invoked by
+dw_edma_irq_request() running on a Linux-based PCIe endpoint device. MSI
+interrupt are not received by PCIe endpoint devices. If irq_get_msi_desc()
+returns null, then there is no cached struct msi_msg to be copied.
 
-<resending to the mailing list, I had incorrect email options set>
+This patch depends on the following patch:
+[PATCH v2] dmaengine: dw-edma: Decouple dw-edma-core.c from struct pci_dev
+https://patchwork.kernel.org/patch/11491757/
 
-Hi Jason,
+Rebased on linux-next which has above patch applied.
 
-I am sorry if I did not address your comments earlier.
+Fixes: Build error with config x86_64-randconfig-f003-20200422
+Fixes: Build error with config s390-allmodconfig
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
+---
+ drivers/dma/dw-edma/dw-edma-core.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-The present IMS code is quite generic, most of the code is in the 
-drivers/ folder. We basically introduce 2 APIS: allocate and free IMS 
-interrupts and a IMS IRQ domain to allocate these interrupts from. These 
-APIs are architecture agnostic.
+diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+index db401eb11322..306ab50462be 100644
+--- a/drivers/dma/dw-edma/dw-edma-core.c
++++ b/drivers/dma/dw-edma/dw-edma-core.c
+@@ -13,6 +13,7 @@
+ #include <linux/dmaengine.h>
+ #include <linux/err.h>
+ #include <linux/interrupt.h>
++#include <linux/irq.h>
+ #include <linux/dma/edma.h>
+ #include <linux/dma-mapping.h>
+ 
+@@ -773,6 +774,7 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+ 	u32 rd_mask = 1;
+ 	int i, err = 0;
+ 	u32 ch_cnt;
++	int irq;
+ 
+ 	ch_cnt = dw->wr_ch_cnt + dw->rd_ch_cnt;
+ 
+@@ -781,16 +783,16 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+ 
+ 	if (dw->nr_irqs == 1) {
+ 		/* Common IRQ shared among all channels */
+-		err = request_irq(dw->ops->irq_vector(dev, 0),
+-				  dw_edma_interrupt_common,
++		irq = dw->ops->irq_vector(dev, 0);
++		err = request_irq(irq, dw_edma_interrupt_common,
+ 				  IRQF_SHARED, dw->name, &dw->irq[0]);
+ 		if (err) {
+ 			dw->nr_irqs = 0;
+ 			return err;
+ 		}
+ 
+-		get_cached_msi_msg(dw->ops->irq_vector(dev, 0),
+-				   &dw->irq[0].msi);
++		if (irq_get_msi_desc(irq))
++			get_cached_msi_msg(irq, &dw->irq[0].msi);
+ 	} else {
+ 		/* Distribute IRQs equally among all channels */
+ 		int tmp = dw->nr_irqs;
+@@ -804,7 +806,8 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+ 		dw_edma_add_irq_mask(&rd_mask, *rd_alloc, dw->rd_ch_cnt);
+ 
+ 		for (i = 0; i < (*wr_alloc + *rd_alloc); i++) {
+-			err = request_irq(dw->ops->irq_vector(dev, i),
++			irq = dw->ops->irq_vector(dev, i);
++			err = request_irq(irq,
+ 					  i < *wr_alloc ?
+ 						dw_edma_interrupt_write :
+ 						dw_edma_interrupt_read,
+@@ -815,8 +818,8 @@ static int dw_edma_irq_request(struct dw_edma_chip *chip,
+ 				return err;
+ 			}
+ 
+-			get_cached_msi_msg(dw->ops->irq_vector(dev, i),
+-					   &dw->irq[i].msi);
++			if (irq_get_msi_desc(irq))
++				get_cached_msi_msg(irq, &dw->irq[i].msi);
+ 		}
+ 
+ 		dw->nr_irqs = i;
+-- 
+2.7.4
 
-We also introduce a new IMS IRQ domain which is architecture specific. 
-This is because IMS generates interrupts only in the remappable format, 
-hence interrupt remapping should be enabled for IMS. Currently, the 
-interrupt remapping code is only available for Intel and AMD and I don’t 
-see anything for ARM.
-
-If a new architecture would want to use IMS, they must simply introduce 
-a new IMS IRQ domain. I am not sure if there is any other way around 
-this. If you have any ideas, please let me know.
-
-Also, could you give more details on the device that could use IMS? Do 
-you have some driver code already? We could then see if and how the 
-current IMS code could be made more generic.
-
-> Jason
-> 

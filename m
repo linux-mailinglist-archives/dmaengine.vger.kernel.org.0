@@ -2,188 +2,215 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 722FF1B6539
-	for <lists+dmaengine@lfdr.de>; Thu, 23 Apr 2020 22:11:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D9561B6BF1
+	for <lists+dmaengine@lfdr.de>; Fri, 24 Apr 2020 05:28:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgDWULU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 23 Apr 2020 16:11:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41066 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgDWULU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 23 Apr 2020 16:11:20 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B057C09B044
-        for <dmaengine@vger.kernel.org>; Thu, 23 Apr 2020 13:11:20 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id di6so3561175qvb.10
-        for <dmaengine@vger.kernel.org>; Thu, 23 Apr 2020 13:11:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=lWtwv24Nfi0axiyCp3rc/Sxd+Qy0bmZpIX4zlE10TGU=;
-        b=E8SsOA0QTJuBO3ylcTS2xJsVATuHuxVjAatduicQzuspBirkZTmaN7KsZ6488gy1x5
-         hVMem2vuSKMAm6WRqtcHA6AsKeB38+XVlUj65g41PzO7wqQmIkfYnc2xIFfFiCi3FR5T
-         KEIKtRoxDy1RwWlu4xSglVFmVpQaVyMah7amYQi1rnQ6+Vagd86hWwWBpsVcvLLcnf0+
-         gjs9BvZD18tfGRTrq/znf09Tpnxqx+67K7tH6cdI0WV2BACgOO+d6z10Eqk7uiRX9HaU
-         3FY1WkZCCbU6ggo/3Mj+g2XNtO0IyDlH6QN7vxfIKFJnUTzvceAGGaI7L40VJpEcn/TR
-         oq5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=lWtwv24Nfi0axiyCp3rc/Sxd+Qy0bmZpIX4zlE10TGU=;
-        b=sbpGnEaU+NL17qIvFbygRlQMQByY8TXlwjdV78jCcdRf34cFIcyKBhWfm+LmJ0rWt2
-         Ab62Fs08fybTo/3W744ZQrKhAXC0Kc3G6RGYtuldzmwJs95AR+8udvIb6ggfUVwSimRz
-         yvuWGfZKZOdyn1jcqDgUILMSOrQfSq0c3PqdCRdq8+GYe58DrF6VKJ7ZK86VNfpcq2vd
-         9M6U5iBkT2ZDuqpL5RQ/geVj/SrbiSn5GW9IZyZSy/PekJX6aAgMLXNUwS8VAivJcWj5
-         kDiVMVC8OFjbRpyN4nt+TY4Q/2YSZX47AldJxp/BZblgjJngavZdiwzwWEC+DdUKoJLD
-         i5ww==
-X-Gm-Message-State: AGi0PuYCViEGO6kUjosO6g9c/7bglYI8pNXmvmuOG3RnVzb7cEmZPz4G
-        cyfA0/0gTixkpvRckyJ5BbpKvg==
-X-Google-Smtp-Source: APiQypKuPAopgt+O2z/cQxgPn4lmcCmWiRkwb8I7ACO1Hf+8ae3BUi01fvAzpbYMvGtIS+7kz8qhyg==
-X-Received: by 2002:a0c:ed42:: with SMTP id v2mr5911795qvq.94.1587672679177;
-        Thu, 23 Apr 2020 13:11:19 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id g12sm2476558qtu.69.2020.04.23.13.11.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 23 Apr 2020 13:11:18 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jRiBq-0007lh-1P; Thu, 23 Apr 2020 17:11:18 -0300
-Date:   Thu, 23 Apr 2020 17:11:18 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     vkoul@kernel.org, megha.dey@linux.intel.com, maz@kernel.org,
-        bhelgaas@google.com, rafael@kernel.org, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, hpa@zytor.com, alex.williamson@redhat.com,
-        jacob.jun.pan@intel.com, ashok.raj@intel.com, yi.l.liu@intel.com,
-        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH RFC 04/15] drivers/base: Add support for a new IMS irq
- domain
-Message-ID: <20200423201118.GA29567@ziepe.ca>
+        id S1725888AbgDXD2u convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Thu, 23 Apr 2020 23:28:50 -0400
+Received: from mga04.intel.com ([192.55.52.120]:34397 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725884AbgDXD2u (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 23 Apr 2020 23:28:50 -0400
+IronPort-SDR: UUrLiGM9xcMsmt+QDF0ewLH8SJrQte05+qCL18uXYumBJ39SISnL4f+eaHD46rl3cQuvANqn+o
+ osttQ+guWafQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 20:28:49 -0700
+IronPort-SDR: pzl9dtMFRZhChMtwd5ukGkpNPLL/dGlp1aspkx9QDkLzpC25kdGaaoQwJAkSksEwp6WWh4y5UZ
+ elqPgn1QSPbQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,310,1583222400"; 
+   d="scan'208";a="291420455"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by fmsmga002.fm.intel.com with ESMTP; 23 Apr 2020 20:28:49 -0700
+Received: from fmsmsx111.amr.corp.intel.com (10.18.116.5) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 23 Apr 2020 20:27:46 -0700
+Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
+ fmsmsx111.amr.corp.intel.com (10.18.116.5) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 23 Apr 2020 20:27:45 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX153.ccr.corp.intel.com ([169.254.12.89]) with mapi id 14.03.0439.000;
+ Fri, 24 Apr 2020 11:27:42 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>
+CC:     "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Thread-Topic: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Thread-Index: AQHWGDVStT24LxQ110qc/YDRWdRX86iDuewAgACI/wCAAD7wgIAAnasAgAFwKICAAOPOMA==
+Date:   Fri, 24 Apr 2020 03:27:41 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D8960F9@SHSMSX104.ccr.corp.intel.com>
 References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <158751205175.36773.1874642824360728883.stgit@djiang5-desk3.ch.intel.com>
+ <20200421235442.GO11945@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
+ <20200422115017.GQ11945@mellanox.com> <20200422211436.GA103345@otc-nc-03>
+ <20200423191217.GD13640@mellanox.com>
+In-Reply-To: <20200423191217.GD13640@mellanox.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <158751205175.36773.1874642824360728883.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 04:34:11PM -0700, Dave Jiang wrote:
-> diff --git a/drivers/base/ims-msi.c b/drivers/base/ims-msi.c
-> new file mode 100644
-> index 000000000000..738f6d153155
-> +++ b/drivers/base/ims-msi.c
-> @@ -0,0 +1,100 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Support for Device Specific IMS interrupts.
-> + *
-> + * Copyright © 2019 Intel Corporation.
-> + *
-> + * Author: Megha Dey <megha.dey@intel.com>
-> + */
-> +
-> +#include <linux/dmar.h>
-> +#include <linux/irq.h>
-> +#include <linux/mdev.h>
-> +#include <linux/pci.h>
-> +
-> +/*
-> + * Determine if a dev is mdev or not. Return NULL if not mdev device.
-> + * Return mdev's parent dev if success.
-> + */
-> +static inline struct device *mdev_to_parent(struct device *dev)
-> +{
-> +	struct device *ret = NULL;
-> +	struct device *(*fn)(struct device *dev);
-> +	struct bus_type *bus = symbol_get(mdev_bus_type);
-> +
-> +	if (bus && dev->bus == bus) {
-> +		fn = symbol_get(mdev_dev_to_parent_dev);
-> +		ret = fn(dev);
-> +		symbol_put(mdev_dev_to_parent_dev);
-> +		symbol_put(mdev_bus_type);
+> From: Jason Gunthorpe <jgg@mellanox.com>
+> Sent: Friday, April 24, 2020 3:12 AM
+> 
+> On Wed, Apr 22, 2020 at 02:14:36PM -0700, Raj, Ashok wrote:
+> > Hi Jason
+> >
+> > > > >
+> > > > > I'm feeling really skeptical that adding all this PCI config space and
+> > > > > MMIO BAR emulation to the kernel just to cram this into a VFIO
+> > > > > interface is a good idea, that kind of stuff is much safer in
+> > > > > userspace.
+> > > > >
+> > > > > Particularly since vfio is not really needed once a driver is using
+> > > > > the PASID stuff. We already have general code for drivers to use to
+> > > > > attach a PASID to a mm_struct - and using vfio while disabling all the
+> > > > > DMA/iommu config really seems like an abuse.
+> > > >
+> > > > Well, this series is for virtualizing idxd device to VMs, instead of
+> > > > supporting SVA for bare metal processes. idxd implements a
+> > > > hardware-assisted mediated device technique called Intel Scalable
+> > > > I/O Virtualization,
+> > >
+> > > I'm familiar with the intel naming scheme.
+> > >
+> > > > which allows each Assignable Device Interface (ADI, e.g. a work
+> > > > queue) tagged with an unique PASID to ensure fine-grained DMA
+> > > > isolation when those ADIs are assigned to different VMs. For this
+> > > > purpose idxd utilizes the VFIO mdev framework and IOMMU aux-
+> domain
+> > > > extension. Bare metal SVA will be enabled for idxd later by using
+> > > > the general SVA code that you mentioned.  Both paths will co-exist
+> > > > in the end so there is no such case of disabling DMA/iommu config.
+> > >
+> > > Again, if you will have a normal SVA interface, there is no need for a
+> > > VFIO version, just use normal SVA for both.
+> > >
+> > > PCI emulation should try to be in userspace, not the kernel, for
+> > > security.
+> >
+> > Not sure we completely understand your proposal. Mediated devices
+> > are software constructed and they have protected resources like
+> > interrupts and stuff and VFIO already provids abstractions to export
+> > to user space.
+> >
+> > Native SVA is simply passing the process CR3 handle to IOMMU so
+> > IOMMU knows how to walk process page tables, kernel handles things
+> > like page-faults, doing device tlb invalidations and such.
+> 
+> > That by itself doesn't translate to what a guest typically does
+> > with a VDEV. There are other control paths that need to be serviced
+> > from the kernel code via VFIO. For speed path operations like
+> > ringing doorbells and such they are directly managed from guest.
+> 
+> You don't need vfio to mmap BAR pages to userspace. The unique thing
+> that vfio gives is it provides a way to program the classic non-PASID
+> iommu, which you are not using here.
 
-No, things like this are not OK in the drivers/base
+That unique thing is indeed used here. Please note sharing CPU virtual 
+address space with device (what SVA API is invented for) is not the
+purpose of this series. We still rely on classic non-PASID iommu programming, 
+i.e. mapping/unmapping IOVA->HPA per iommu_domain. Although 
+we do use PASID to tag ADI, the PASID is contained within iommu_domain 
+and invisible to VFIO. From userspace p.o.v, this is a device passthrough
+usage instead of PASID-based address space binding.
 
-Whatever this is doing needs to be properly architected in some
-generic way.
+> 
+> > How do you propose to use the existing SVA api's  to also provide
+> > full device emulation as opposed to using an existing infrastructure
+> > that's already in place?
+> 
+> You'd provide the 'full device emulation' in userspace (eg qemu),
+> along side all the other device emulation. Device emulation does not
+> belong in the kernel without a very good reason.
 
-> +static int dev_ims_prepare(struct irq_domain *domain, struct device *dev,
-> +			   int nvec, msi_alloc_info_t *arg)
-> +{
-> +	if (dev_is_mdev(dev))
-> +		dev = mdev_to_parent(dev);
+The problem is that we are not doing full device emulation. It's based
+on mediated passthrough. Some emulation logic requires close 
+engagement with kernel device driver, e.g. resource allocation, WQ 
+configuration, fault report, etc., while the detail interface is very vendor/
+device specific (just like between PF and VF). idxd is just the first 
+device that supports Scalable IOV. We have a lot more coming later, 
+in different types. Then putting such emulation in user space means 
+that Qemu needs to support all those vendor specific interfaces for 
+every new device which supports Scalable IOV. This is contrast to our 
+goal of using Scalable IOV as an alternative to SR-IOV. For SR-IOV, 
+Qemu only needs to support one VFIO API then any VF type simply 
+works. We want to sustain the same user experience through VFIO 
+mdev. 
 
-Like maybe the caller shouldn't be passing in a mdev in the first
-place, or some generic driver layer scheme is needed to go from a
-child device (eg a mdev or one of these new virtual bus things) to the
-struct device that owns the IRQ interface.
+Specifically for PCI config space emulation, now it's already done 
+in multiple kernel places, e.g. vfio-pci, kvmgt, etc. We do plan to 
+consolidate them later.
 
-> +	init_irq_alloc_info(arg, NULL);
-> +	arg->dev = dev;
-> +	arg->type = X86_IRQ_ALLOC_TYPE_IMS;
+> 
+> You get the doorbell BAR page from your own char dev
+> 
+> You setup a PASID IOMMU configuration over your own char dev
+> 
+> Interrupt delivery is triggering a generic event fd
+> 
+> What is VFIO needed for?
 
-Also very bewildering to see X86_* in drivers/base
+Based on above explanation VFIO mdev already meets all of our
+requirements then why bother inventing a new one...
 
-> +struct irq_domain *arch_create_ims_irq_domain(struct irq_domain *parent,
-> +					      const char *name)
-> +{
-> +	struct fwnode_handle *fn;
-> +	struct irq_domain *domain;
-> +
-> +	fn = irq_domain_alloc_named_fwnode(name);
-> +	if (!fn)
-> +		return NULL;
-> +
-> +	domain = msi_create_irq_domain(fn, &ims_ir_domain_info, parent);
-> +	if (!domain)
-> +		return NULL;
-> +
-> +	irq_domain_update_bus_token(domain, DOMAIN_BUS_PLATFORM_MSI);
-> +	irq_domain_free_fwnode(fn);
-> +
-> +	return domain;
-> +}
+> 
+> > Perhaps Alex can ease Jason's concerns?
+> 
+> Last we talked Alex also had doubts on what mdev should be used
+> for. It is a feature that seems to lack boundaries, and I'll note that
+> when the discussion came up for VDPA, they eventually choose not to
+> use VFIO.
+> 
 
-I'm still not really clear why all this is called IMS.. This looks
-like the normal boilerplate to setup an IRQ domain? What is actually
-'ims' in here?
+Is there a link to Alex's doubt? I'm not sure why vDPA didn't go 
+for VFIO, but imho it is a different story. vDPA is specifically for
+devices which implement standard vhost/virtio interface, thus
+it's reasonable that inventing a new mechanism might be more
+efficient for all vDPA type devices. However Scalable IOV is
+similar to SR-IOV, only for resource partitioning. It doesn't change
+the device programming interface, which could be in any vendor
+specific form. Here VFIO mdev is good for providing an unified 
+interface for managing resource multiplexing of all such devices.
 
-> diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
-> index 7d922950caaf..c21f1305a76b 100644
-> +++ b/drivers/vfio/mdev/mdev_private.h
-> @@ -36,7 +36,6 @@ struct mdev_device {
->  };
->  
->  #define to_mdev_device(dev)	container_of(dev, struct mdev_device, dev)
-> -#define dev_is_mdev(d)		((d)->bus == &mdev_bus_type)
->  
->  struct mdev_type {
->  	struct kobject kobj;
-> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-> index 0ce30ca78db0..fa2344e239ef 100644
-> +++ b/include/linux/mdev.h
-> @@ -144,5 +144,8 @@ void mdev_unregister_driver(struct mdev_driver *drv);
->  struct device *mdev_parent_dev(struct mdev_device *mdev);
->  struct device *mdev_dev(struct mdev_device *mdev);
->  struct mdev_device *mdev_from_dev(struct device *dev);
-> +struct device *mdev_dev_to_parent_dev(struct device *dev);
-> +
-> +#define dev_is_mdev(dev) ((dev)->bus == symbol_get(mdev_bus_type))
-
-NAK on the symbol_get
-
-Jason
+Thanks
+Kevin

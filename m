@@ -2,98 +2,230 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DC9F1B86A9
-	for <lists+dmaengine@lfdr.de>; Sat, 25 Apr 2020 15:01:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F90F1B8984
+	for <lists+dmaengine@lfdr.de>; Sat, 25 Apr 2020 23:14:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726073AbgDYNBE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 25 Apr 2020 09:01:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55440 "EHLO
+        id S1726234AbgDYVOK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 25 Apr 2020 17:14:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbgDYNBD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 25 Apr 2020 09:01:03 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5E9EC09B04B
-        for <dmaengine@vger.kernel.org>; Sat, 25 Apr 2020 06:01:03 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id g14so17489723otg.10
-        for <dmaengine@vger.kernel.org>; Sat, 25 Apr 2020 06:01:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=zdxUWMWXTEs/zs0LJh1bxLoOHpDg1k5nkLimqXptzik=;
-        b=HDDs7R0HjsDBBY0u6AH2K6R0+w67s79zhgIRNJ9a+TK7we4u/YK3BrrqoGY0lprFFy
-         NHYgrfWivuNupfWdsvMjkIaNg2AeIRpCLq33gg1dN0L7+KChKiI09LLGsGd/e1YrHV/F
-         6f9VXJoV/n4sJnKN5OwTiBLluHFG7cXIYUpdCGkY0BdXuGLKXpjtXa32kJ6QOHxp+Z5g
-         jveqseY8T9ejgJE+uNPBNKFGUM8yVGRqXoeChlzXhtbt56NCz1c5P9N8zbI3Njtd5jRv
-         mJua3mZaTxeQ1eRMrtv5lMyKs4diEpNlHNO16tQshgjaOxnWGENzj+0f+ZysF3DbYtMd
-         DZ1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=zdxUWMWXTEs/zs0LJh1bxLoOHpDg1k5nkLimqXptzik=;
-        b=cxleyYYUxcBhButRrzegozp9vbqGBLvwT+tgD0yhBxYk/7ewBUvU5wfI7RVsmaXilN
-         ltbSLJ1wo6cfuwEkgkb0jQjkW1cugIskiVGVry53sdupHPb2ZmnstHZZ3SZIyeqg2qCS
-         YCC3hg9RY+KZGL/MVt5EHiQv4gFmb2DSpGOW8sGIcefFr6ioAeq1pqvw+CGlyAYs4ta1
-         gsj+kMBZMkXlxFolSxGwUZL9zkgnroU6oXeSdtoXezNs58YyPciO0AAVkLRDSwSiWAjY
-         rdWSe86darG0TCwV/ZBgro0dRPnnS+kDNeeq6cN3Rhta2/fnzpN+oA4Vo1zEROZ1nL2P
-         akZQ==
-X-Gm-Message-State: AGi0PuY20JJD3UHkAn358ThC7THHP4qjd4Q2vqcIeeNI1RotRiRJZ6Yt
-        SZWByP2l+4vxFsxncXFl0Vh7SIK9r7CYcbsbsWk=
-X-Google-Smtp-Source: APiQypKv/juQ4H4fGWkbv86PmUS5xlAC5hF4XJSv3sZrsSJDy1sR9eJYY5r/m8vMMpkOxct8xLrKXr8DucrrFnVw4go=
-X-Received: by 2002:a05:6830:1be6:: with SMTP id k6mr11092289otb.299.1587819662663;
- Sat, 25 Apr 2020 06:01:02 -0700 (PDT)
+        with ESMTP id S1726232AbgDYVOJ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 25 Apr 2020 17:14:09 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BDF7C09B04D;
+        Sat, 25 Apr 2020 14:14:09 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jSS7N-0004FG-8Z; Sat, 25 Apr 2020 23:13:45 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 8643610071F; Sat, 25 Apr 2020 23:13:44 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        megha.dey@linux.intel.com, maz@kernel.org, bhelgaas@google.com,
+        rafael@kernel.org, gregkh@linuxfoundation.org, hpa@zytor.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC 02/15] drivers/base: Introduce a new platform-msi list
+In-Reply-To: <158751203902.36773.2662739280103265908.stgit@djiang5-desk3.ch.intel.com>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com> <158751203902.36773.2662739280103265908.stgit@djiang5-desk3.ch.intel.com>
+Date:   Sat, 25 Apr 2020 23:13:44 +0200
+Message-ID: <87v9lntgjb.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Received: by 2002:a8a:1011:0:0:0:0:0 with HTTP; Sat, 25 Apr 2020 06:01:01
- -0700 (PDT)
-Reply-To: ayishagddafio@mail.ru
-From:   AISHA GADDAFI <mrstevesolomonbf212@gmail.com>
-Date:   Sat, 25 Apr 2020 06:01:01 -0700
-Message-ID: <CAF3wdO2peNayR9fXuiVW_qi3TMCzcb3u-wePhzwnzpqwFvY07Q@mail.gmail.com>
-Subject: Lieber Freund (Assalamu Alaikum),?
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
---=20
-Lieber Freund (Assalamu Alaikum),
+Dave Jiang <dave.jiang@intel.com> writes:
 
-Ich bin vor einer privaten Suche auf Ihren E-Mail-Kontakt gesto=C3=9Fen
-Ihre Hilfe. Mein Name ist Aisha Al-Qaddafi, eine alleinerziehende
-Mutter und eine Witwe
-mit drei Kindern. Ich bin die einzige leibliche Tochter des Sp=C3=A4tlibysc=
-hen
-Pr=C3=A4sident (verstorbener Oberst Muammar Gaddafi).
+> From: Megha Dey <megha.dey@linux.intel.com>
+>
+> This is a preparatory patch to introduce Interrupt Message Store (IMS).
+>
+> The struct device has a linked list ('msi_list') of the MSI (msi/msi-x,
+> platform-msi) descriptors of that device. This list holds only 1 type
+> of descriptor since it is not possible for a device to support more
+> than one of these descriptors concurrently.
+>
+> However, with the introduction of IMS, a device can support IMS as well
+> as MSI-X at the same time. Instead of sharing this list between IMS (a
+> type of platform-msi) and MSI-X descriptors, introduce a new linked list,
+> platform_msi_list, which will hold all the platform-msi descriptors.
+>
+> Thus, msi_list will point to the MSI/MSIX descriptors of a device, while
+> platform_msi_list will point to the platform-msi descriptors of a
+> device.
 
-Ich habe Investmentfonds im Wert von siebenundzwanzig Millionen
-f=C3=BCnfhunderttausend
-United State Dollar ($ 27.500.000.00) und ich brauche eine
-vertrauensw=C3=BCrdige Investition
-Manager / Partner aufgrund meines aktuellen Fl=C3=BCchtlingsstatus bin ich =
-jedoch
-M=C3=B6glicherweise interessieren Sie sich f=C3=BCr die Unterst=C3=BCtzung =
-von
-Investitionsprojekten in Ihrem Land
-Von dort aus k=C3=B6nnen wir in naher Zukunft Gesch=C3=A4ftsbeziehungen auf=
-bauen.
+Will point?
 
-Ich bin bereit, mit Ihnen =C3=BCber das Verh=C3=A4ltnis zwischen Investitio=
-n und
-Unternehmensgewinn zu verhandeln
-Basis f=C3=BCr die zuk=C3=BCnftige Investition Gewinne zu erzielen.
+You're failing to explain that this actually converts the existing
+platform code over to this new list. This also lacks an explanation why
+this is not a functional change.
 
-Wenn Sie bereit sind, dieses Projekt in meinem Namen zu bearbeiten,
-antworten Sie bitte dringend
-Damit ich Ihnen mehr Informationen =C3=BCber die Investmentfonds geben kann=
-.
+> Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
 
-Ihre dringende Antwort wird gesch=C3=A4tzt. schreibe mir an diese email adr=
-esse (
-ayishagddafio@mail.ru ) zur weiteren Diskussion.
+Lacks an SOB from you.... 
 
-Freundliche Gr=C3=BC=C3=9Fe
-Frau Aisha Al-Qaddafi
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 139cdf7e7327..5a0116d1a8d0 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -1984,6 +1984,7 @@ void device_initialize(struct device *dev)
+>  	set_dev_node(dev, -1);
+>  #ifdef CONFIG_GENERIC_MSI_IRQ
+>  	INIT_LIST_HEAD(&dev->msi_list);
+> +	INIT_LIST_HEAD(&dev->platform_msi_list);
+
+> --- a/drivers/base/platform-msi.c
+> +++ b/drivers/base/platform-msi.c
+> @@ -110,7 +110,8 @@ static void platform_msi_free_descs(struct device *dev, int base, int nvec)
+>  {
+>  	struct msi_desc *desc, *tmp;
+>  
+> -	list_for_each_entry_safe(desc, tmp, dev_to_msi_list(dev), list) {
+> +	list_for_each_entry_safe(desc, tmp, dev_to_platform_msi_list(dev),
+> +				 list) {
+>  		if (desc->platform.msi_index >= base &&
+>  		    desc->platform.msi_index < (base + nvec)) {
+>  			list_del(&desc->list);
+>  	datap = kzalloc(sizeof(*datap), GFP_KERNEL);
+> @@ -255,6 +256,8 @@ int platform_msi_domain_alloc_irqs(struct device *dev, unsigned int nvec,
+>  	struct platform_msi_priv_data *priv_data;
+>  	int err;
+>  
+> +	dev->platform_msi_type = GEN_PLAT_MSI;
+
+What the heck is GEN_PLAT_MSI? Can you please use
+
+   1) A proper name space starting with PLATFORM_MSI_ or such
+
+   2) A proper suffix which is self explaining.
+
+instead of coming up with nonsensical garbage which even lacks any
+explanation at the place where it is defined.
+
+> diff --git a/include/linux/device.h b/include/linux/device.h
+> index ac8e37cd716a..cbcecb14584e 100644
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -567,6 +567,8 @@ struct device {
+>  #endif
+>  #ifdef CONFIG_GENERIC_MSI_IRQ
+>  	struct list_head	msi_list;
+> +	struct list_head	platform_msi_list;
+> +	unsigned int		platform_msi_type;
+
+You use an enum for the types so why are you not using an enum for the
+struct member which stores it?
+
+>  
+> +/**
+> + * list_entry_select - get the correct struct for this entry based on condition
+> + * @condition:	the condition to choose a particular &struct list head pointer
+> + * @ptr_a:      the &struct list_head pointer if @condition is not met.
+> + * @ptr_b:      the &struct list_head pointer if @condition is met.
+> + * @type:       the type of the struct this is embedded in.
+> + * @member:     the name of the list_head within the struct.
+> + */
+> +#define list_entry_select(condition, ptr_a, ptr_b, type, member)\
+> +	(condition) ? list_entry(ptr_a, type, member) :		\
+> +		      list_entry(ptr_b, type, member)
+
+This is related to $Subject in which way? It's not a entirely new
+process rule that infrastructure changes which touch a completely
+different subsystem have to be separate and explained and justified on
+their own.
+
+>  
+> +enum platform_msi_type {
+> +	NOT_PLAT_MSI = 0,
+
+NOT_PLAT_MSI? Not used anywhere and of course equally self explaining as
+the other one.
+
+> +	GEN_PLAT_MSI = 1,
+> +};
+> +
+>  /* Helpers to hide struct msi_desc implementation details */
+>  #define msi_desc_to_dev(desc)		((desc)->dev)
+>  #define dev_to_msi_list(dev)		(&(dev)->msi_list)
+> @@ -140,6 +145,22 @@ struct msi_desc {
+>  #define for_each_msi_entry_safe(desc, tmp, dev)	\
+>  	list_for_each_entry_safe((desc), (tmp), dev_to_msi_list((dev)), list)
+>  
+> +#define dev_to_platform_msi_list(dev)	(&(dev)->platform_msi_list)
+> +#define first_platform_msi_entry(dev)		\
+> +	list_first_entry(dev_to_platform_msi_list((dev)), struct msi_desc, list)
+> +#define for_each_platform_msi_entry(desc, dev)	\
+> +	list_for_each_entry((desc), dev_to_platform_msi_list((dev)), list)
+> +#define for_each_platform_msi_entry_safe(desc, tmp, dev)	\
+> +	list_for_each_entry_safe((desc), (tmp), dev_to_platform_msi_list((dev)), list)
+
+New lines to seperate macros are bad for readability, right? 
+
+> +#define first_msi_entry_common(dev)	\
+> +	list_first_entry_select((dev)->platform_msi_type, dev_to_platform_msi_list((dev)),	\
+> +				dev_to_msi_list((dev)), struct msi_desc, list)
+> +
+> +#define for_each_msi_entry_common(desc, dev)	\
+> +	list_for_each_entry_select((dev)->platform_msi_type, desc, dev_to_platform_msi_list((dev)), \
+> +				   dev_to_msi_list((dev)), list)	\
+> +
+>  #ifdef CONFIG_IRQ_MSI_IOMMU
+>  static inline const void *msi_desc_get_iommu_cookie(struct msi_desc *desc)
+>  {
+> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+> index eb95f6106a1e..bc5f9e32387f 100644
+> --- a/kernel/irq/msi.c
+> +++ b/kernel/irq/msi.c
+> @@ -320,7 +320,7 @@ int msi_domain_populate_irqs(struct irq_domain *domain, struct device *dev,
+>  	struct msi_desc *desc;
+>  	int ret = 0;
+>  
+> -	for_each_msi_entry(desc, dev) {
+> +	for_each_msi_entry_common(desc, dev) {
+
+This is absolutely unreadable. What's common here? You hide the decision
+which list to iterate behind a misnomed macro. 
+
+And looking at the implementation:
+
+> +#define for_each_msi_entry_common(desc, dev)	\
+> +	list_for_each_entry_select((dev)->platform_msi_type, desc, dev_to_platform_msi_list((dev)), \
+> +				   dev_to_msi_list((dev)), list)	\
+
+So you implicitely make the decision based on:
+
+   (dev)->platform_msi_type != 0
+
+What? How is that ever supposed to work? The changelog says:
+
+> However, with the introduction of IMS, a device can support IMS as well
+> as MSI-X at the same time. Instead of sharing this list between IMS (a
+> type of platform-msi) and MSI-X descriptors, introduce a new linked list,
+> platform_msi_list, which will hold all the platform-msi descriptors.
+
+So you are not serious about storing the decision in the device struct
+and then calling into common code?
+
+That's insane at best. There is absolutely ZERO explanation how this is
+supposed to work and why this could even be remotely correct and safe.
+
+Ever heard of the existance of function arguments?
+
+Sorry, this is just voodoo programming and not going anywhere.
+
+Thanks,
+
+        tglx

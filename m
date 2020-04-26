@@ -2,76 +2,112 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CAB61B8D20
-	for <lists+dmaengine@lfdr.de>; Sun, 26 Apr 2020 09:01:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8767B1B938A
+	for <lists+dmaengine@lfdr.de>; Sun, 26 Apr 2020 21:08:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726194AbgDZHBW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 26 Apr 2020 03:01:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbgDZHBW (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sun, 26 Apr 2020 03:01:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6DBD20700;
-        Sun, 26 Apr 2020 07:01:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587884481;
-        bh=gDlxekB/2N2vqpIddLrHidD79tcnpmMBQVDOhy4Z6BU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qXrgwMg0f9dUvourwVLSx7FE5mTQiqT6tSylKLvlVlbe3ywGngs9gaWmn7i+THwzG
-         tWgN29BdSYwtnemcyLmKIQcIU7ZQ3xfSYvWe9bUCL2ARAWHtzrlf6y1JVdcTICEmgA
-         qfhGACT4iidV7YzOU/OVTh6kMtavESsiZ7k7cinE=
-Date:   Sun, 26 Apr 2020 09:01:18 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     vkoul@kernel.org, megha.dey@linux.intel.com, maz@kernel.org,
-        bhelgaas@google.com, rafael@kernel.org, tglx@linutronix.de,
-        hpa@zytor.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
-        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH RFC 01/15] drivers/base: Introduce platform_msi_ops
-Message-ID: <20200426070118.GA2083720@kroah.com>
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <158751203294.36773.11436842117908325764.stgit@djiang5-desk3.ch.intel.com>
+        id S1726171AbgDZTIt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 26 Apr 2020 15:08:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726166AbgDZTIt (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 26 Apr 2020 15:08:49 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AECBC061A0F;
+        Sun, 26 Apr 2020 12:08:47 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id r17so11982806lff.2;
+        Sun, 26 Apr 2020 12:08:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=V/4kgm18MPKyif9QF7RKPNqTGNQbBIVS8DbK5GTpM+Y=;
+        b=NEYzbPbCKaVbsoswB64nzatO6wDRbdWqn7IQh9ZuWnEwcaGh/609EU7KJ0UAae1ymd
+         cBAV1IuKXEHn+cHCE2b51SzVkIj0d1zkofuQkdRWwZ5BQ6IxBX643e9n29V5p2+GpJyw
+         1jT94pNCQeMhPDoFqtk16TO7KLGvHvc1Wb9z0OJVjmUXWpY2VTZGkrXEoW3S7o8GxX+8
+         zREaXQyCJzEAI59rQNYnVStrPZKtIuvi9RcIafYxwuy/bjEw1n4FRSl9LiNKccvMdx1X
+         1HhkLjvwYtX+AGwerusZQU+CyiQft9ZhH+ZulqoDLCr2HxtxzmIaZVfv83XtZkisrU7D
+         PKUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=V/4kgm18MPKyif9QF7RKPNqTGNQbBIVS8DbK5GTpM+Y=;
+        b=Y55lRGGNBYSJ/piPsh3P9bKGfH5QBlVR1MZW+3b/UnuBB1I8AisA4ctKXH+JwyOM/Q
+         g79/yrXBtb2m71IKg4K0vrBYubKAXMmmr9thicGBYZKV7mKXPdFEtTQw2xY5mG8CKtmb
+         BEqSITlkfvnKK2UEHXhDCmZLVVTjDOi+s/eI4vuvGtmQ6dmYORclpZo4kmETW61/ORrO
+         HgNkc8x/m9N3S70WSfe7jtDfTA7k1NNJt06sCDOGmq+Apq98D4FCcAWmedU+MJDhPBw9
+         oG6GIjpM/eyHaZTzTENOT8AbZjte5AZsdNUc7RoyAYFFmTjOSP2+0dgPlKxnzftDExhD
+         GT8w==
+X-Gm-Message-State: AGi0Pub67Qy+AisSpPqAEsqsFgFRsQJTVuSsmTQXOdWhGm9jGue/+Zho
+        J/FmKSJx+PL2Heh35HtfIYg=
+X-Google-Smtp-Source: APiQypIF5PNYEJ5NTpcX4aInGwC+Ef+A12wqHzFlGoXoI+AbOjsCJZfV4gc1ewtK6Ao1r9PSEoEO9g==
+X-Received: by 2002:a19:7507:: with SMTP id y7mr13173859lfe.121.1587928126145;
+        Sun, 26 Apr 2020 12:08:46 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.gmail.com with ESMTPSA id h24sm9351933lji.99.2020.04.26.12.08.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Apr 2020 12:08:45 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1] dmaengine: tegra-apb: Ensure that clock is enabled during of DMA synchronization
+Date:   Sun, 26 Apr 2020 22:08:35 +0300
+Message-Id: <20200426190835.21950-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158751203294.36773.11436842117908325764.stgit@djiang5-desk3.ch.intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 04:33:53PM -0700, Dave Jiang wrote:
-> From: Megha Dey <megha.dey@linux.intel.com>
-> 
-> This is a preparatory patch to introduce Interrupt Message Store (IMS).
-> 
-> Until now, platform-msi.c provided a generic way to handle non-PCI MSI
-> interrupts. Platform-msi uses its parent chip's mask/unmask routines
-> and only provides a way to write the message in the generating device.
-> 
-> Newly creeping non-PCI complaint MSI-like interrupts (Intel's IMS for
-> instance) might need to provide a device specific mask and unmask callback
-> as well, apart from the write function.
-> 
-> Hence, introduce a new structure platform_msi_ops, which would provide
-> device specific write function as well as other device specific callbacks
-> (mask/unmask).
-> 
-> Signed-off-by: Megha Dey <megha.dey@linux.intel.com>
+DMA synchronization hook checks whether interrupt is raised by testing
+corresponding bit in a hardware status register, and thus, clock should
+be enabled in this case, otherwise CPU may hang if synchronization is
+invoked while Runtime PM is in suspended state. This patch resumes the RPM
+during of the DMA synchronization process in order to avoid potential
+problems. It is a minor clean up of a previous commit, no real problem is
+fixed by this patch because currently RPM is always in a resumed state
+while DMA is synchronized, although this may change in the future.
 
-As this is not following the Intel-specific rules for sending me new
-code, I am just deleting it all from my inbox.
+Fixes: 6697255f239f ("dmaengine: tegra-apb: Improve DMA synchronization")
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/dma/tegra20-apb-dma.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Please follow the rules you all have been given, they are specific and
-there for a reason.  And in looking at this code, those rules are not
-going away any time soon.
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index a42c0b4d14ac..55fc7400f717 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -816,6 +816,13 @@ static bool tegra_dma_eoc_interrupt_deasserted(struct tegra_dma_channel *tdc)
+ static void tegra_dma_synchronize(struct dma_chan *dc)
+ {
+ 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
++	int err;
++
++	err = pm_runtime_get_sync(tdc->tdma->dev);
++	if (err < 0) {
++		dev_err(tdc2dev(tdc), "Failed to synchronize DMA: %d\n", err);
++		return;
++	}
+ 
+ 	/*
+ 	 * CPU, which handles interrupt, could be busy in
+@@ -825,6 +832,8 @@ static void tegra_dma_synchronize(struct dma_chan *dc)
+ 	wait_event(tdc->wq, tegra_dma_eoc_interrupt_deasserted(tdc));
+ 
+ 	tasklet_kill(&tdc->tasklet);
++
++	pm_runtime_put(tdc->tdma->dev);
+ }
+ 
+ static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
+-- 
+2.26.0
 
-greg k-h

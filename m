@@ -2,166 +2,158 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA9F91B89C1
-	for <lists+dmaengine@lfdr.de>; Sun, 26 Apr 2020 00:14:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 210CF1B8C87
+	for <lists+dmaengine@lfdr.de>; Sun, 26 Apr 2020 07:19:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbgDYWOQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 25 Apr 2020 18:14:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726220AbgDYWOQ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 25 Apr 2020 18:14:16 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1CDAC09B04F;
-        Sat, 25 Apr 2020 15:14:15 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jST3e-0004cM-Tb; Sun, 26 Apr 2020 00:13:59 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 611E9100605; Sun, 26 Apr 2020 00:13:58 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        megha.dey@linux.intel.com, maz@kernel.org, bhelgaas@google.com,
-        rafael@kernel.org, gregkh@linuxfoundation.org, hpa@zytor.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
-        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH RFC 06/15] ims-msi: Enable IMS interrupts
-In-Reply-To: <158751206394.36773.12409950149228811741.stgit@djiang5-desk3.ch.intel.com>
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com> <158751206394.36773.12409950149228811741.stgit@djiang5-desk3.ch.intel.com>
-Date:   Sun, 26 Apr 2020 00:13:58 +0200
-Message-ID: <87imhntdqx.fsf@nanos.tec.linutronix.de>
+        id S1726135AbgDZFTF convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Sun, 26 Apr 2020 01:19:05 -0400
+Received: from mga01.intel.com ([192.55.52.88]:51368 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725765AbgDZFTE (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 26 Apr 2020 01:19:04 -0400
+IronPort-SDR: hStMhTZAkqFLa55C01+YYoGLp99FdLDXZ8kddbY0rv/j5Xk+ZJx62WhereHrmJgXp7WCdWB0so
+ /sQYssz8qgPQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2020 22:19:04 -0700
+IronPort-SDR: 7oUFACyYMaI58TCLvNzIfWtr9icVHR6F93W0fNWs0ro27ExULtxG2c/75WZ1yLrb25XmRP1XIf
+ nGedbiD9SlZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,318,1583222400"; 
+   d="scan'208";a="256851019"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by orsmga003.jf.intel.com with ESMTP; 25 Apr 2020 22:19:03 -0700
+Received: from fmsmsx119.amr.corp.intel.com (10.18.124.207) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 25 Apr 2020 22:19:03 -0700
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+ FMSMSX119.amr.corp.intel.com (10.18.124.207) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sat, 25 Apr 2020 22:19:03 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX151.ccr.corp.intel.com ([169.254.3.22]) with mapi id 14.03.0439.000;
+ Sun, 26 Apr 2020 13:18:58 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+CC:     "Raj, Ashok" <ashok.raj@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Thread-Topic: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Thread-Index: AQHWGDVStT24LxQ110qc/YDRWdRX86iDuewAgACI/wCAAD7wgIAAnasAgAFwKICAAOPOMIAAQj8AgACkdbD//7b+gIACl9WQ
+Date:   Sun, 26 Apr 2020 05:18:59 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
+References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
+ <20200421235442.GO11945@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D86EE26@SHSMSX104.ccr.corp.intel.com>
+ <20200422115017.GQ11945@mellanox.com> <20200422211436.GA103345@otc-nc-03>
+ <20200423191217.GD13640@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8960F9@SHSMSX104.ccr.corp.intel.com>
+ <20200424124444.GJ13640@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
+ <20200424181203.GU13640@mellanox.com>
+In-Reply-To: <20200424181203.GU13640@mellanox.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Dave Jiang <dave.jiang@intel.com> writes:
->  
-> +struct irq_domain *dev_get_ims_domain(struct device *dev)
-> +{
-> +	struct irq_alloc_info info;
-> +
-> +	if (dev_is_mdev(dev))
-> +		dev = mdev_to_parent(dev);
-> +
-> +	init_irq_alloc_info(&info, NULL);
-> +	info.type = X86_IRQ_ALLOC_TYPE_IMS;
+> From: Jason Gunthorpe <jgg@mellanox.com>
+> Sent: Saturday, April 25, 2020 2:12 AM
+> 
+> > > > idxd is just the first device that supports Scalable IOV. We have a
+> > > > lot more coming later, in different types. Then putting such
+> > > > emulation in user space means that Qemu needs to support all those
+> > > > vendor specific interfaces for every new device which supports
+> > >
+> > > It would be very sad to see an endless amount of device emulation code
+> > > crammed into the kernel. Userspace is where device emulation is
+> > > supposed to live. For security
+> >
+> > I think providing an unified abstraction to userspace is also important,
+> > which is what VFIO provides today. The merit of using one set of VFIO
+> > API to manage all kinds of mediated devices and VF devices is a major
+> > gain. Instead, inventing a new vDPA-like interface for every Scalable-IOV
+> > or equivalent device is just overkill and doesn't scale. Also the actual
+> > emulation code in idxd driver is actually small, if putting aside the PCI
+> > config space part for which I already explained most logic could be shared
+> > between mdev device drivers.
+> 
+> If it was just config space you might have an argument, VFIO already
+> does some config space mangling, but emulating BAR space is out of
+> scope of VFIO, IMHO.
 
-So all IMS capabale devices run on X86? I thought these things are PCIe
-cards which can be plugged into any platform which supports PCIe.
+out of scope of vfio-pci, but in scope of vfio-mdev. btw I feel that most
+of your objections are actually related to the general idea of vfio-mdev.
+Scalable IOV just uses PASID to harden DMA isolation in mediated
+pass-through usage which vfio-mdev enables. Then are you just opposing
+the whole vfio-mdev? If not, I'm curious about the criteria in your mind 
+about when using vfio-mdev is good...
 
-> +	info.dev = dev;
-> +
-> +	return irq_remapping_get_irq_domain(&info);
-> +}
-> +
->  static struct msi_domain_ops dev_ims_domain_ops = {
->  	.get_hwirq	= dev_ims_get_hwirq,
->  	.msi_prepare	= dev_ims_prepare,
-> diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
-> index 6d8840db4a85..204ce8041c17 100644
-> --- a/drivers/base/platform-msi.c
-> +++ b/drivers/base/platform-msi.c
-> @@ -118,6 +118,8 @@ static void platform_msi_free_descs(struct device *dev, int base, int nvec,
->  			kfree(platform_msi_group);
->  		}
->  	}
-> +
-> +	dev->platform_msi_type = 0;
+> 
+> I also think it is disingenuous to pretend this is similar to
+> SR-IOV. SR-IOV is self contained and the BAR does not require
+> emulation. What you have here sounds like it is just an ordinary
 
-I can clearly see the advantage of using '0' over 'NOT_PLAT_MSI'
-here. '0' is definitely more intuitive.
+technically Scalable IOV is definitely different from SR-IOV. It's 
+simpler in hardware. And we're not emulating SR-IOV. The point
+is just in usage-wise we want to present a consistent user 
+experience just like passing through a PCI endpoint (PF or VF) device
+through vfio eco-system, including various userspace VMMs (Qemu,
+firecracker, rust-vmm, etc.), middleware (Libvirt), and higher level 
+management stacks. 
 
->  }
->  
->  static int platform_msi_alloc_descs_with_irq(struct device *dev, int virq,
-> @@ -205,18 +207,22 @@ platform_msi_alloc_priv_data(struct device *dev, unsigned int nvec,
->  	 * accordingly (which would impact the max number of MSI
->  	 * capable devices).
->  	 */
-> -	if (!dev->msi_domain || !platform_ops->write_msg || !nvec ||
-> -	    nvec > MAX_DEV_MSIS)
-> +	if (!platform_ops->write_msg || !nvec || nvec > MAX_DEV_MSIS)
->  		return ERR_PTR(-EINVAL);
-> -	if (dev->msi_domain->bus_token != DOMAIN_BUS_PLATFORM_MSI) {
-> -		dev_err(dev, "Incompatible msi_domain, giving up\n");
-> -		return ERR_PTR(-EINVAL);
-> -	}
-> +	if (dev->platform_msi_type == GEN_PLAT_MSI) {
-> +		if (!dev->msi_domain)
-> +			return ERR_PTR(-EINVAL);
-> +
-> +		if (dev->msi_domain->bus_token != DOMAIN_BUS_PLATFORM_MSI) {
-> +			dev_err(dev, "Incompatible msi_domain, giving up\n");
-> +			return ERR_PTR(-EINVAL);
-> +		}
->  
-> -	/* Already had a helping of MSI? Greed... */
-> -	if (!list_empty(platform_msi_current_group_entry_list(dev)))
-> -		return ERR_PTR(-EBUSY);
-> +		/* Already had a helping of MSI? Greed... */
-> +		if (!list_empty(platform_msi_current_group_entry_list(dev)))
-> +			return ERR_PTR(-EBUSY);
-> +	}
->  
->  	datap = kzalloc(sizeof(*datap), GFP_KERNEL);
->  	if (!datap)
-> @@ -254,6 +260,7 @@ static void platform_msi_free_priv_data(struct platform_msi_priv_data *data)
->  int platform_msi_domain_alloc_irqs(struct device *dev, unsigned int nvec,
->  				   const struct platform_msi_ops *platform_ops)
->  {
-> +	dev->platform_msi_type = GEN_PLAT_MSI;
->  	return platform_msi_domain_alloc_irqs_group(dev, nvec, platform_ops,
->  									NULL);
->  }
-> @@ -265,12 +272,18 @@ int platform_msi_domain_alloc_irqs_group(struct device *dev, unsigned int nvec,
->  {
->  	struct platform_msi_group_entry *platform_msi_group;
->  	struct platform_msi_priv_data *priv_data;
-> +	struct irq_domain *domain;
->  	int err;
->  
-> -	dev->platform_msi_type = GEN_PLAT_MSI;
+> multi-queue device with the ability to PASID tag queues for IOMMU
+> handling. This is absolutely not SRIOV - it is much closer to VDPA,
+> which isn't using mdev.
+> 
+> Further, I disagree with your assessment that this doesn't scale. You
+> already said you plan a normal user interface for idxd, so instead of
+> having a single sane user interface (ala VDPA) idxd now needs *two*. If
+> this is the general pattern of things to come, it is a bad path.
+> 
+> The only thing we get out of this is someone doesn't have to write a
+> idxd emulation driver in qemu, instead they have to write it in the
+> kernel. I don't see how that is a win for the ecosystem.
+> 
 
-Groan. If you move the type assignment to the caller then do so in a
-separate patch. These all in one combo changes are simply not reviewable
-without getting nuts.
+No. The clear win is on leveraging classic VFIO iommu and its eco-system
+as explained above.
 
-> -	if (group_id)
-> +	if (!dev->platform_msi_type) {
-
-That's really consistent. If the caller does not store a type upfront
-then it becomes IMS automagically. Can you pretty please stop to think
-that this IMS stuff is the center of the universe? To be clear, it's
-just another variant of half thought out hardware design fail as all the
-other stuff we already have to support.
-
-Abusing dev->platform_msi_type to decide about the nature of the call
-and then decide that anything which does not set it upfront is IMS is
-really future proof.
-
->  		*group_id = ++dev->group_id;
-> +		dev->platform_msi_type = IMS;
-
-Oh a new type name 'IMS'. Well suited into the naming scheme. 
-
-> +		domain = dev_get_ims_domain(dev);
-
-No. This is completely inconsistent again and a blatant violation of
-layering.
-
-Thanks,
-
-        tglx
+Thanks
+Kevin

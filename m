@@ -2,46 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C27F1BA419
-	for <lists+dmaengine@lfdr.de>; Mon, 27 Apr 2020 14:55:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E25FB1BA47B
+	for <lists+dmaengine@lfdr.de>; Mon, 27 Apr 2020 15:20:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgD0MzZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 27 Apr 2020 08:55:25 -0400
-Received: from mail-eopbgr80054.outbound.protection.outlook.com ([40.107.8.54]:16686
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727006AbgD0MzZ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 27 Apr 2020 08:55:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BO2ZUI4Fe+ccSkfhzJ3pMqQaOaSgXytrhohJ6Npg8e6UIf+4PhZZCzUDm9ee/xS8qC5gU5G9yKaukvrPwoRmLT3otS4QqEfV25pUaAKpx0g2wVQxEypK/lR/yNrEeMUmX1Mn6kpZjutxj7hoxN+mMh20yk5RCEPu/dhu21sSb3YLxlLcTo3ZuoQg4LJsIw13T7Ga8/SKbEmf1j6Jd/3VOXIPi1xJKcGm1NYR+Xqdy4vk/pWAeUsBYC7iYHUNsQx1CE61yTGBGMJckD2Lki75tSknGSjU/F8VhfSSpKbffNz9d6SUkzxL82RSwrXCunU8mGvC2lb/ZbXTZvp1Q7YCOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gFImOFr9UyGnIhMldRpFm5XJ3mAWuSQNKYvtiyt4u84=;
- b=SwET2paZyfHBnFzzoDl37949PCvnDCfdCzjrWOmB9R6E7rRBXtnSIuY7vBSYtoGUfpKjuE5RwxcoY82CRI+FxQ8MvuaAjlsinCAuSD3qfrcZiIQmFAjv2X63d97wSdW6IjMuVDzNR7KnrtkkRM4N3xGxDvJo2qbWmnIt+6oMWDERqcJXOLHVoNusGf+cgj4QtMlbb+SS+f4UCFLFTfsv3B1gCHxpM/THplqQjiPFsiHRPkcqd7bZgqUeF4GHKfuiAsR5GrZWLTDH+wJyK0t6oEztgnxmvt8ThFu5r++hQx0XA50EUJCvS/7PvAOWBHcKcRYrzHpvK8elFtKxdrQk5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gFImOFr9UyGnIhMldRpFm5XJ3mAWuSQNKYvtiyt4u84=;
- b=aj8gmQmGjoCBJJEPMFR7GxW3xYYXQwYhITTcZASY/b+yp3UUjmDznZ3HK7I/LJfZl5TkuFzF/KmnC4Wt2DmetldgNL6x1gUdZ6UuwWOakADl40PHXzwpzmbM8y4PXIU/vfT29rGvF7yNzW5t0wqDyCxuVipQRJbl1BUc5eHuvfs=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB4975.eurprd05.prod.outlook.com (2603:10a6:803:5c::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Mon, 27 Apr
- 2020 12:55:21 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2937.020; Mon, 27 Apr 2020
- 12:55:21 +0000
-Date:   Mon, 27 Apr 2020 09:55:17 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
+        id S1726721AbgD0NTz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 27 Apr 2020 09:19:55 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33343 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727075AbgD0NTy (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 27 Apr 2020 09:19:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587993592;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yT6OpqrHhtjj38PhYWZNLuSW0UlygZ75Mb7wSWJbJz8=;
+        b=aPlJ/LL3xE7SQ5hbp+Gk3wIRLLtf7uRFjL2Y1W7jT4TqACGfTYmQDpjeUlW1mw+ORAofGM
+        SdEboDTyP4ahhOxBZJ8cH4+X0mGaaF40BkLkhz4px+lmhnCKhDvnrvDxAKS72pSK/Eg8qQ
+        3KKiSaY0CjR3TOdNf4XknH9fOhbOVm0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-351-6uf19V3fO6OsdruwAkISWw-1; Mon, 27 Apr 2020 09:19:49 -0400
+X-MC-Unique: 6uf19V3fO6OsdruwAkISWw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A06A31895957;
+        Mon, 27 Apr 2020 13:19:45 +0000 (UTC)
+Received: from x1.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 756BA6106A;
+        Mon, 27 Apr 2020 13:19:40 +0000 (UTC)
+Date:   Mon, 27 Apr 2020 07:19:39 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
         "Jiang, Dave" <dave.jiang@intel.com>,
         "vkoul@kernel.org" <vkoul@kernel.org>,
         "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
@@ -51,7 +47,6 @@ Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
         "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
         "tglx@linutronix.de" <tglx@linutronix.de>,
         "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
         "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
         "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
         "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
@@ -68,66 +63,95 @@ Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
         "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
  support for the idxd driver.
-Message-ID: <20200427125517.GF13640@mellanox.com>
+Message-ID: <20200427071939.06aa300e@x1.home>
+In-Reply-To: <20200427115818.GE13640@mellanox.com>
 References: <20200422115017.GQ11945@mellanox.com>
- <20200422211436.GA103345@otc-nc-03>
- <20200423191217.GD13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8960F9@SHSMSX104.ccr.corp.intel.com>
- <20200424124444.GJ13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
- <20200424181203.GU13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
- <20200426191357.GB13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8D906E@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D8D906E@SHSMSX104.ccr.corp.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: BL0PR02CA0062.namprd02.prod.outlook.com
- (2603:10b6:207:3d::39) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        <20200422211436.GA103345@otc-nc-03>
+        <20200423191217.GD13640@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8960F9@SHSMSX104.ccr.corp.intel.com>
+        <20200424124444.GJ13640@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
+        <20200424181203.GU13640@mellanox.com>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
+        <20200426191357.GB13640@mellanox.com>
+        <20200426214355.29e19d33@x1.home>
+        <20200427115818.GE13640@mellanox.com>
+Organization: Red Hat
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR02CA0062.namprd02.prod.outlook.com (2603:10b6:207:3d::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.13 via Frontend Transport; Mon, 27 Apr 2020 12:55:20 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jT3I5-0005Hr-6z; Mon, 27 Apr 2020 09:55:17 -0300
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 146a56ea-992e-4367-2ae7-08d7eaaa3e6b
-X-MS-TrafficTypeDiagnostic: VI1PR05MB4975:|VI1PR05MB4975:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB497552C365A1148018C06054CFAF0@VI1PR05MB4975.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0386B406AA
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(346002)(366004)(136003)(396003)(2906002)(54906003)(4326008)(1076003)(8676002)(316002)(5660300002)(86362001)(478600001)(2616005)(7416002)(81156014)(36756003)(66556008)(6916009)(66476007)(52116002)(4744005)(33656002)(9786002)(8936002)(186003)(26005)(9746002)(66946007)(24400500001);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: XejVNY712vCIk0Ev/gWh7uVnPvcethfJNvPGT9gHK/lhfguKsUqB5hpfvUni5OwuYDcbj0yYx32tQuZCgIkXJ4HopJhFFzD5FyPweRj94l9QempF5LFkd7y/FYdCMpkw4nuDZCb+HXNtDN5AfwWBSgOtfTvAw2PgjbWhnDfNxHuX3uG3+5ITN7aLRZjMEqSjlklJvAN/3xYHPVLCChWCf+xkg5fFP1R05Q6SfamqIl9bGvOv2OxGWfxgkNGrFM3bWpvjnVM3pNxFgNztZgyoaJXtm92H/D9aej024LKlkIwn7DExyQDOne+PwuryIxbxmo13Jbys5ALyP0jcnXImC9gGWlIaf7lEYmc5IvOb2LLEOXstN1iHfSX4QhFuWtMlUBichQ1TuQMLYzfhPrhDA7fWvOfFJv66/a9XWM6TCD1+bGEOncqWHU706AlXF3RWxgXZIKui6DmwmvKp9ApGTREeu/VGTNAywfERHv4OJiWILwj1SutN9X2yXNKqfw02
-X-MS-Exchange-AntiSpam-MessageData: Wb+LnKAz2b/UCXm8Ze2RZ8mszentTEoihPj55MozOO4y4oaxatx1ATw8PBXqHt2wJg6wOJBbxTT1rx7KD65e3Sk+n/vx7FA3sw9EbRDA0I2BrC6B5rjfWykQj2xm4Bwg4esVT18N0+jFHmCslHC4jom+/EtrsIwUuwqqpVs5uJs8WqDU07PIk+5xRBmuiw2y4cHPeHylj+EkDD7LZHw+gSUtRxslqZYkyO+hUvtxEW4MKBUFsSbMrHE38z4h5EjmXD2Qt3aG5z0AbX/rszT++AsJST7tRaYhOdsqtO8Z9Ed0GB4l+wIUJxsZo1yVIuo3lyvt4jG9dyu0cUfH8Yg9M8JK+cw91wJltRf7HoVzA/DKKxW6gVPhM9BA/wXpUdzcjgzek+TMC/G2+Dw+Bf9DLvXxN/ZstlJNpKnVwrc5bOQDLHG0E7LaRV3C/S+uz8lDpOxWDALXyRJkzRzg75IgIvehgMZugZKa+hsTsuCh4FVvXsFxESQFqPlXnGGBeaMux1UJbuvZKRp/dku59AIM3q8naCbJ/xMku7CVQiSn4D1bR6bZIL2n5schLNsruGFcmBKhO1haSWZDL+zbiofl4/I05XdiEDyyLGw/2VcZ3Wj6bO6tQJTPdNZs02YGVLGtNI09WHXnTpsORDQpgKy1rCNFZcqwMg1UiwX36qMBL/4LIhfT18v4ONnFPYos2SCkymWmx0xkjSSFFyWk8GqgCIjaPJmLcxx4+KvszQkIZqESATU6na8AKiN1ccLrIljreJXaP6A9KE5MH7qUYCOGwE7XOvcUBAT4WcFnQlKCTc0=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 146a56ea-992e-4367-2ae7-08d7eaaa3e6b
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2020 12:55:21.1793
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: y6oapRO1F5UAj+SPqquU9rblq03ImkK4vf2aaWsBp5dAsSWzR9kdYsTWrHCy1dY2JMnQ8C/JFMldHm0aOZ5aZA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4975
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 12:13:33PM +0000, Tian, Kevin wrote:
+On Mon, 27 Apr 2020 08:58:18 -0300
+Jason Gunthorpe <jgg@mellanox.com> wrote:
 
-> Then back to this context. Almost every newly-born Linux VMM
-> (firecracker, crosvm, cloud hypervisor, and some proprietary 
-> implementations) support only two types of devices: virtio and 
-> vfio, because they want to be simple and slim.
+> On Sun, Apr 26, 2020 at 09:43:55PM -0600, Alex Williamson wrote:
+> > On Sun, 26 Apr 2020 16:13:57 -0300
+> > Jason Gunthorpe <jgg@mellanox.com> wrote:
+> >   
+> > > On Sun, Apr 26, 2020 at 05:18:59AM +0000, Tian, Kevin wrote:
+> > >   
+> > > > > > I think providing an unified abstraction to userspace is also important,
+> > > > > > which is what VFIO provides today. The merit of using one set of VFIO
+> > > > > > API to manage all kinds of mediated devices and VF devices is a major
+> > > > > > gain. Instead, inventing a new vDPA-like interface for every Scalable-IOV
+> > > > > > or equivalent device is just overkill and doesn't scale. Also the actual
+> > > > > > emulation code in idxd driver is actually small, if putting aside the PCI
+> > > > > > config space part for which I already explained most logic could be shared
+> > > > > > between mdev device drivers.    
+> > > > > 
+> > > > > If it was just config space you might have an argument, VFIO already
+> > > > > does some config space mangling, but emulating BAR space is out of
+> > > > > scope of VFIO, IMHO.    
+> > > > 
+> > > > out of scope of vfio-pci, but in scope of vfio-mdev. btw I feel that most
+> > > > of your objections are actually related to the general idea of
+> > > > vfio-mdev.    
+> > > 
+> > > There have been several abusive proposals of vfio-mdev, everything
+> > > from a way to create device drivers to this kind of generic emulation
+> > > framework.
+> > >   
+> > > > Scalable IOV just uses PASID to harden DMA isolation in mediated
+> > > > pass-through usage which vfio-mdev enables. Then are you just opposing
+> > > > the whole vfio-mdev? If not, I'm curious about the criteria in your mind 
+> > > > about when using vfio-mdev is good...    
+> > > 
+> > > It is appropriate when non-PCI standard techniques are needed to do
+> > > raw device assignment, just like VFIO.
+> > > 
+> > > Basically if vfio-pci is already doing it then it seems reasonable
+> > > that vfio-mdev should do the same. This mission creep where vfio-mdev
+> > > gains functionality far beyond VFIO is the problem.  
+> > 
+> > Ehm, vfio-pci emulates BARs too.  We also emulate FLR, power
+> > management, DisINTx, and VPD.  FLR, PM, and VPD all have device
+> > specific quirks in the host kernel, and I've generally taken the stance
+> > that would should take advantage of those quirks, not duplicate them in
+> > userspace and not invent new access mechanisms/ioctls for each of them.
+> > Emulating DisINTx is convenient since we must have a mechanism to mask
+> > INTx, whether it's at the device or the APIC, so we can pretend the
+> > hardware supports it.  BAR emulation is really too trivial to argue
+> > about, the BARs mean nothing to the physical device mapping, they're
+> > simply scratch registers that we mask out the alignment bits on read.
+> > vfio-pci is a mix of things that we decide are too complicated or
+> > irrelevant to emulate in the kernel and things that take advantage of
+> > shared quirks or are just too darn easy to worry about.  BARs fall into
+> > that latter category, any sort of mapping into VM address spaces is
+> > necessarily done in userspace, but scratch registers that are masked on
+> > read, *shrug*, vfio-pci does that.  Thanks,  
+> 
+> It is not trivial masking. It is a 2000 line patch doing comprehensive
+> emulation.
 
-For security. Moving all the sketchy emulation code into the kernel
-seems like a worse security posture over all :(
+Not sure what you're referring to, I see about 30 lines of code in
+vdcm_vidxd_cfg_write() that specifically handle writes to the 4 BARs in
+config space and maybe a couple hundred lines of code in total handling
+config space emulation.  Thanks,
 
-Jason
+Alex
+

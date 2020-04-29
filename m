@@ -2,152 +2,153 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CFC71BD8E9
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Apr 2020 11:58:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB2841BDA35
+	for <lists+dmaengine@lfdr.de>; Wed, 29 Apr 2020 13:01:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgD2J6O (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 29 Apr 2020 05:58:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726516AbgD2J6O (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Apr 2020 05:58:14 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E4E1C03C1AE
-        for <dmaengine@vger.kernel.org>; Wed, 29 Apr 2020 02:58:14 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id f15so672420plr.3
-        for <dmaengine@vger.kernel.org>; Wed, 29 Apr 2020 02:58:14 -0700 (PDT)
+        id S1726516AbgD2LB7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 29 Apr 2020 07:01:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56940 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726345AbgD2LB6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 29 Apr 2020 07:01:58 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 252B9C03C1AD;
+        Wed, 29 Apr 2020 04:01:58 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id z6so1531018wml.2;
+        Wed, 29 Apr 2020 04:01:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=kQWwU0V3P2cG9Df5CLi5Aes1IF7DF82n54z1tZA0tj8=;
-        b=cQvDE5r8qFSkTrzZ4i81Gzp9dqP8ohUksJfLHUOBX+Po2pmMP1o2x1SSUZbwTC8ztO
-         zpFtzt+mwbM1zrcinR/taemda/w0yc07a72tRJ+6+0IqETkEPswX0PzdXQJA5MSkyDmy
-         bKGwQYt2bvw3qkOGUhOoR/WrST1Z0rVWR0Ba7OvU/32/ioUNtW8tLcJLNx7kKr4R5fq9
-         xr7H/GbrVerDj9h4NkOjjmltmQnAiuozN55x/j7xKkGcazgitsrOdRcgn6qX+AmsxrKA
-         bba2c5CNuwCwg+sVjBVP/Qb3NEU0bcRuttgfKRjy1jPmEEYaWLyGS5n2r52Mc3UZ4Gwv
-         K/tQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Nuf8dwcrjX3dNT8pb1qPoIHBU9UzXx/Q2WQpqmKN7MM=;
+        b=CekuV0J8SOjnr1sBAQ1Kk04qxrk1dBsmfUWYQnh2DDFeJoTaDUGViG2RIuId7BIDPe
+         XAK/kkfJlabmfZSkX/aizsmqpWeVqhkY0v9IDhhXUEzak+/LG7qeYx3EDS7OtLJ/ui02
+         rEED4HcY82oWEUuwAafPJTWsVr/tGaR5Bi8zV5X9sK3YL9mMKF5aeP/AozGA3AZff/ql
+         uPLG1JqepjJBAWMVTqoCpKqVtJ6wwlKqMxBwPdIlmUSPBixAXQ8R9n5uHo4ytoLjjRnL
+         wZOPq+XM0d9PN9nbIYqx3K3SrX5cZzQDk1goDPKSuMIaarH9D3BuOdNEc7TyJgw4egkU
+         GD0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=kQWwU0V3P2cG9Df5CLi5Aes1IF7DF82n54z1tZA0tj8=;
-        b=iFJbODCqmzzoSxsaATANtXJfed+BNmMQcRman2ETZ2DCNY2IRSZk2CCHLZwMpdZ3O9
-         je2Mr2Bjne2LKb0/+5gVwQ9KLGgTg2LuwCTTwSIDdsxswh8ZJMiuJAGCBOE93UPciJDE
-         804Q09dn1V+AFa4bJ1TD3DbgySrxXMCiTu3nIycDeDQux4LLIPgXxLd/xAm0/BiSbEg0
-         Knrh8mjT7xslLJkHiBAUgHHFLN4CDaMdS5oLZAtR6EVl74Js0zWGGkt4jGrfRcabUyPw
-         EaVPcxKdcZYqnJ7L+8N/EawWSfkKf9k6EUkH6U3TglDS6vRVb0XeDSDdah/jVLYmapIw
-         OQaQ==
-X-Gm-Message-State: AGi0PuZVaqCspDr95hJuGKKDQlf1P1qWCEMsyI38c3JjrMe3KkeUBc1J
-        oGBE8UpJpDskhYXboxzBdKoy
-X-Google-Smtp-Source: APiQypJq9Vv8kOy3qRauSuH1fn2l54cguipwDjEbc1fxWc9BOiY6PCKS0U4dHaO2yA/f4lXw0vFZ9A==
-X-Received: by 2002:a17:90a:d085:: with SMTP id k5mr2279937pju.91.1588154293427;
-        Wed, 29 Apr 2020 02:58:13 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6114:a3cc:cde9:1262:3f57:5dd])
-        by smtp.gmail.com with ESMTPSA id f99sm4493906pjg.22.2020.04.29.02.58.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 29 Apr 2020 02:58:12 -0700 (PDT)
-Date:   Wed, 29 Apr 2020 15:28:02 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Nuf8dwcrjX3dNT8pb1qPoIHBU9UzXx/Q2WQpqmKN7MM=;
+        b=fYVjUNCcHO/fVIcnT9DjEeDE4vUlTl9TGvq2E+vIz/5/bRsY/VnQ5NbDI5K/xdxlvs
+         IsxMRxxocgUelfTELtge8n/Wfw7RheLBHOe0LLWO3ddLwpfx3xTK1fOoJs5AsTaKh6om
+         7Q3ARHDyYjRL14BywW92hQa9o0Cjt7eq3KsFKBlCy/4fO1iDnTIn+EJA+y9AIS4bGQ8/
+         noTKoJNxY1jcZNuEaVKjDRfeRdGkEORfdjNQLMONXTi5Wr5tDQXsIZ51Av1K/000uqd5
+         qw4JtB6b0n9RxFVlI3f8FlYY0Ud9MnrMYnAYU4suNE+KyI47+oXgOtf7Zr4idYY554IK
+         MW8g==
+X-Gm-Message-State: AGi0PuasxeR1iDARWuaINDstPG/YrNK8yGFqstLts1kHj2VN2HwkmPYc
+        Mpox3zwf9pX1has4DYXC2uGpuR3kvWk=
+X-Google-Smtp-Source: APiQypKZIgGaeRSn1GVJlz0TSvMRo05dmppm5CI0NwQeQqOmRf6pYn7lHEQT8aCIzeE1xLleAYmW9A==
+X-Received: by 2002:a1c:6344:: with SMTP id x65mr2661658wmb.56.1588158116628;
+        Wed, 29 Apr 2020 04:01:56 -0700 (PDT)
+Received: from localhost.localdomain ([188.24.130.199])
+        by smtp.gmail.com with ESMTPSA id i4sm15334969wrp.79.2020.04.29.04.01.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2020 04:01:56 -0700 (PDT)
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Cc:     Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
-Subject: Re: [PATCH 1/1] dma: actions: Fix lockdep splat for owl-dma
-Message-ID: <20200429095802.GB6443@Mani-XPS-13-9360>
-References: <7d503c3dcac2b3ef29d4122a74eacfce142a8f98.1588069418.git.cristian.ciocaltea@gmail.com>
- <20200428164921.GC5259@Mani-XPS-13-9360>
- <20200428181115.GB26885@BV030612LT>
- <20200428181803.GD5259@Mani-XPS-13-9360>
- <a70a2352-7b22-6b85-848b-94d9ee17c022@suse.de>
+        dmaengine@vger.kernel.org, linux-actions@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/1] dma: actions: Fix lockdep splat for owl-dma
+Date:   Wed, 29 Apr 2020 14:01:54 +0300
+Message-Id: <1d77970a82cf9b7cdf9f4731439b1e58c37ca3fb.1588156137.git.cristian.ciocaltea@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a70a2352-7b22-6b85-848b-94d9ee17c022@suse.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Andreas,
+When the kernel is built with lockdep support and the owl-dma driver is
+used, the following message is shown:
 
-On Wed, Apr 29, 2020 at 10:36:01AM +0200, Andreas Färber wrote:
-> Am 28.04.20 um 20:18 schrieb Manivannan Sadhasivam:
-> > On Tue, Apr 28, 2020 at 09:11:15PM +0300, Cristian Ciocaltea wrote:
-> > > On Tue, Apr 28, 2020 at 10:19:21PM +0530, Manivannan Sadhasivam wrote:
-> > > > On Tue, Apr 28, 2020 at 01:56:12PM +0300, Cristian Ciocaltea wrote:
-> > > > > When the kernel is build with lockdep support and the owl-dma driver is
-> > > > > used, the following message is shown:
-> [...]
-> > > > > The required fix is to use spin_lock_init() on the pchan lock before
-> > > > > attempting to call any spin_lock_irqsave() in owl_dma_get_pchan().
-> > > > 
-> > > > Right, this is a bug. But while looking at the code now, I feel that we don't
-> > > > need 'pchan->lock'. The idea was to protect 'pchan->vchan', but I think
-> > > > 'od->lock' is the better candidate for that since it already protects it in
-> > > > 'owl_dma_terminate_pchan'.
-> > > > 
-> > > > So I'd be happy if you remove the lock from 'pchan' and just directly use the
-> > > > one in 'od'.
-> > > > 
-> > > > Out of curiosity, on which platform you're testing this?
-> > > 
-> > > Totally agree, I will send a new patch revision as soon as I do some
-> > > more testing.
-> > 
-> > Coo[l], thanks!
-> > 
-> > > I'm currently experimenting on an Actions S500 based board (Roseapple Pi)
-> > > trying to extend, if possible, the existing mainline support for those
-> > > SoCs.
-> > 
-> > Awesome! It's great to see that Actions platform is seeing some attention
-> > these days :)
-> > 
-> > > I don't have much progress so far, since I started quite recently
-> > > and I also lack experience in the kernel development area, but I do my
-> > > best to come back with more patches once I get a consistent functionality.
-> > 
-> > No worries. Feel free to reach out to me if you have any questions. There is
-> > a lot of work to do and for sure it will be a good learning curve.
-> > 
-> > We do have an IRC channel (##linux-actions) for quick discussions. Fee[l] free
-> > to join!
-> 
-> Please also CC the linux-actions mailing list on any patches:
-> 
-> https://lists.infradead.org/mailman/listinfo/linux-actions
-> 
-> Mani, do you have a 5.7-rc1 tree set up or should I queue patches this
-> round?
+[    2.496939] INFO: trying to register non-static key.
+[    2.501889] the code is fine but needs lockdep annotation.
+[    2.507357] turning off the locking correctness validator.
+[    2.512834] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.3+ #15
+[    2.519084] Hardware name: Generic DT based system
+[    2.523878] Workqueue: events_freezable mmc_rescan
+[    2.528681] [<801127f0>] (unwind_backtrace) from [<8010da58>] (show_stack+0x10/0x14)
+[    2.536420] [<8010da58>] (show_stack) from [<8080fbe8>] (dump_stack+0xb4/0xe0)
+[    2.543645] [<8080fbe8>] (dump_stack) from [<8017efa4>] (register_lock_class+0x6f0/0x718)
+[    2.551816] [<8017efa4>] (register_lock_class) from [<8017b7d0>] (__lock_acquire+0x78/0x25f0)
+[    2.560330] [<8017b7d0>] (__lock_acquire) from [<8017e5e4>] (lock_acquire+0xd8/0x1f4)
+[    2.568159] [<8017e5e4>] (lock_acquire) from [<80831fb0>] (_raw_spin_lock_irqsave+0x3c/0x50)
+[    2.576589] [<80831fb0>] (_raw_spin_lock_irqsave) from [<8051b5fc>] (owl_dma_issue_pending+0xbc/0x120)
+[    2.585884] [<8051b5fc>] (owl_dma_issue_pending) from [<80668cbc>] (owl_mmc_request+0x1b0/0x390)
+[    2.594655] [<80668cbc>] (owl_mmc_request) from [<80650ce0>] (mmc_start_request+0x94/0xbc)
+[    2.602906] [<80650ce0>] (mmc_start_request) from [<80650ec0>] (mmc_wait_for_req+0x64/0xd0)
+[    2.611245] [<80650ec0>] (mmc_wait_for_req) from [<8065aa10>] (mmc_app_send_scr+0x10c/0x144)
+[    2.619669] [<8065aa10>] (mmc_app_send_scr) from [<80659b3c>] (mmc_sd_setup_card+0x4c/0x318)
+[    2.628092] [<80659b3c>] (mmc_sd_setup_card) from [<80659f0c>] (mmc_sd_init_card+0x104/0x430)
+[    2.636601] [<80659f0c>] (mmc_sd_init_card) from [<8065a3e0>] (mmc_attach_sd+0xcc/0x16c)
+[    2.644678] [<8065a3e0>] (mmc_attach_sd) from [<8065301c>] (mmc_rescan+0x3ac/0x40c)
+[    2.652332] [<8065301c>] (mmc_rescan) from [<80143244>] (process_one_work+0x2d8/0x780)
+[    2.660239] [<80143244>] (process_one_work) from [<80143730>] (worker_thread+0x44/0x598)
+[    2.668323] [<80143730>] (worker_thread) from [<8014b5f8>] (kthread+0x148/0x150)
+[    2.675708] [<8014b5f8>] (kthread) from [<801010b4>] (ret_from_fork+0x14/0x20)
+[    2.682912] Exception stack(0xee8fdfb0 to 0xee8fdff8)
+[    2.687954] dfa0:                                     00000000 00000000 00000000 00000000
+[    2.696118] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[    2.704277] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
 
-I haven't set up the branch. You can do the maintainership duties for this
-cycle.
+The obvious fix would be to use 'spin_lock_init()' on 'pchan->lock'
+before attempting to call 'spin_lock_irqsave()' in 'owl_dma_get_pchan()'.
 
-> It still seems missing in MAINTAINERS, and then there's Matheus'
-> patches in review.
-> 
+However, according to Manivannan Sadhasivam, 'pchan->lock' was supposed
+to only protect 'pchan->vchan' while 'od->lock' does a similar job in
+'owl_dma_terminate_pchan'.
 
-Yeah, the MAINTAINERS patch has fallen through cracks:
+Therefore, this patch will simply substitute 'pchan->lock' with 'od->lock'
+and removes the 'lock' attribute in 'owl_dma_pchan' struct.
 
-[PATCH v2 6/6] MAINTAINERS: Add linux-actions mailing list for Actions Semi
+Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+---
+Changes in v2:
+* Improve the fix as suggested by Manivannan Sadhasivam: substitute 
+  'pchan->lock' with 'od->lock' and get rid of the 'lock' attribute in
+  'owl_dma_pchan' struct
+* Update the commit message to reflect the changes
 
-I did this as a part of S500 clk series. Feel free to pick it up.
+ drivers/dma/owl-dma.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Thanks,
-Mani
+diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
+index c683051257fd..5b1c715a56c8 100644
+--- a/drivers/dma/owl-dma.c
++++ b/drivers/dma/owl-dma.c
+@@ -181,7 +181,6 @@ struct owl_dma_pchan {
+ 	u32			id;
+ 	void __iomem		*base;
+ 	struct owl_dma_vchan	*vchan;
+-	spinlock_t		lock;
+ };
+ 
+ /**
+@@ -437,14 +436,14 @@ static struct owl_dma_pchan *owl_dma_get_pchan(struct owl_dma *od,
+ 	for (i = 0; i < od->nr_pchans; i++) {
+ 		pchan = &od->pchans[i];
+ 
+-		spin_lock_irqsave(&pchan->lock, flags);
++		spin_lock_irqsave(&od->lock, flags);
+ 		if (!pchan->vchan) {
+ 			pchan->vchan = vchan;
+-			spin_unlock_irqrestore(&pchan->lock, flags);
++			spin_unlock_irqrestore(&od->lock, flags);
+ 			break;
+ 		}
+ 
+-		spin_unlock_irqrestore(&pchan->lock, flags);
++		spin_unlock_irqrestore(&od->lock, flags);
+ 	}
+ 
+ 	return pchan;
+-- 
+2.26.2
 
-> Thanks,
-> Andreas
-> 
-> -- 
-> SUSE Software Solutions Germany GmbH
-> Maxfeldstr. 5, 90409 Nürnberg, Germany
-> GF: Felix Imendörffer
-> HRB 36809 (AG Nürnberg)

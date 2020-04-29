@@ -2,192 +2,80 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 308F61BD18B
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Apr 2020 03:11:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7205C1BD342
+	for <lists+dmaengine@lfdr.de>; Wed, 29 Apr 2020 05:53:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgD2BKq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 28 Apr 2020 21:10:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726457AbgD2BKp (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Apr 2020 21:10:45 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C29E2C03C1AE
-        for <dmaengine@vger.kernel.org>; Tue, 28 Apr 2020 18:10:45 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id mq3so87271pjb.1
-        for <dmaengine@vger.kernel.org>; Tue, 28 Apr 2020 18:10:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=+tkvHJiORDuD9q2tyEU1ZAJYf1nqy44zTSwWoOUTzwY=;
-        b=jp+A/PSmOqvf4Bh5HmmTLiDY59o40n1Ahz0ZBiYaDwWZ5nQbj3KdTnWLATLo7/0NRj
-         9c+YZqUtsJlNJKJLSOWrE4YPDqZ+VLIDjxyBXivW8B7QJZqp46ZdMNVm80la9RVXMyu/
-         z3QH8SYiqx+5gBgq9G6/bKF4BozsTevmm9eg1LLtUAKDeWm76lJiBTsjJA23kzbHMoW9
-         WkWUdCdxAF1XueXLOfY5D0nepmGdioddbBFLlIMJpXZndWIyS2pzpY/eQeRlvRnEeW1j
-         uRJgfbpYyB3IwcCT6momC2fCe0jhQ0UE1jQZT1eTlLy3wiGyojY/hFd2qUXR16xINjcw
-         sStA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=+tkvHJiORDuD9q2tyEU1ZAJYf1nqy44zTSwWoOUTzwY=;
-        b=EYHkTi0oRy8NjFt1DGn9GMFYpY8fzqlEq4ydK3Wut8Ncig7/ZpRVwcvaXpvYEnevPA
-         UtEEohegb3p/abnqnwIGG7lczwGa6uvgUSlrdLhOySfRw1kr/mB8PKMS1F2A3yOVsVcD
-         xhaa8XllZDSP2cItbmEGbpc0TnMampBjRdU+fdJ2AOZPoijMmqqzy+wlX+59gMj32IkW
-         LCPm8l/u8HeuhTrPf/n+tUafmajVRpURvWZLsQ9YluOhBG05uNBgTK3+ZvGi4vxGbAvv
-         cavKv75kAToNR47unZH4gkmPY/gz20ItwunS550NJQr/3fIcJWo+tR67QmSr6GJDzXvq
-         5c7Q==
-X-Gm-Message-State: AGi0PuZAeE1vK7hsEiZXapxl7WnZphKaDG0CbNZ8UMEMLNLNaqE4y0L5
-        n7rnrUzgVHRYUvkAIqgu1txk7auyblE=
-X-Google-Smtp-Source: APiQypLhOHgepikQE2jDvuaQt68+C/2B+QbOygZnVbwQf1VUZSTRtQckXQfUyZUYW9oYuTbwje7BZQ==
-X-Received: by 2002:a17:902:bb82:: with SMTP id m2mr10064593pls.291.1588122644708;
-        Tue, 28 Apr 2020 18:10:44 -0700 (PDT)
-Received: from nuc7.sifive.com (c-24-5-48-146.hsd1.ca.comcast.net. [24.5.48.146])
-        by smtp.gmail.com with ESMTPSA id b5sm16243391pfb.190.2020.04.28.18.10.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 28 Apr 2020 18:10:43 -0700 (PDT)
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
-To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, gustavo.pimentel@synopsys.com,
-        dan.j.williams@intel.com, vkoul@kernel.org, kishon@ti.com,
-        paul.walmsley@sifive.com
-Cc:     Alan Mikhak <alan.mikhak@sifive.com>
-Subject: [PATCH][next] dmaengine: dw-edma: support local dma device transfer semantics
-Date:   Tue, 28 Apr 2020 18:10:33 -0700
-Message-Id: <1588122633-1552-1-git-send-email-alan.mikhak@sifive.com>
-X-Mailer: git-send-email 2.7.4
+        id S1726560AbgD2DxI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 28 Apr 2020 23:53:08 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:27427 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726548AbgD2DxI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 28 Apr 2020 23:53:08 -0400
+X-UUID: b3b0f4c0bfa34ad5b826e995e7092c8a-20200429
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=OiZgzIWXliTigMWS4ngHmC2XsFCzxE9JvxbFZlR5Y5A=;
+        b=pum+Q+O5Zp2uxHclGYj9cXsT8SoFWIVRHAE44jy8rMaHtkwvzjTDHCVLKwZDxTSDb9/VXfQbXXqfMb/sFnS8IwTzQxOfFEMzLMCCbzxrLdhCmoEpAwYW4XAhWRMBQea5tVJnzld4V7EYuEZkaxp8o5jG722jRxyzcdvLg8/vvIA=;
+X-UUID: b3b0f4c0bfa34ad5b826e995e7092c8a-20200429
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <eastl.lee@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 915013963; Wed, 29 Apr 2020 11:53:05 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 29 Apr 2020 11:53:03 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 29 Apr 2020 11:53:02 +0800
+Message-ID: <1588132383.16498.2.camel@mtkswgap22>
+Subject: Re: [PATCH v3 1/2] dt-bindings: dmaengine: Add MediaTek
+ Command-Queue DMA controller bindings
+From:   EastL <EastL.Lee@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Sean Wang <sean.wang@mediatek.com>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <matthias.bgg@gmail.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>
+Date:   Wed, 29 Apr 2020 11:53:03 +0800
+In-Reply-To: <1588125274311004.11906.seg@mailgw02.mediatek.com>
+References: <1587955977-17207-1-git-send-email-EastL.Lee@mediatek.com>
+         <1587955977-17207-2-git-send-email-EastL.Lee@mediatek.com>
+         <1588125274311004.11906.seg@mailgw02.mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: EA5880C4AA2B61D894C249225ED43DB19CC852CE1078F1987B00AF67E97FC2DB2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Alan Mikhak <alan.mikhak@sifive.com>
-
-Modify dw_edma_device_transfer() to also support the semantics of dma
-device transfer for additional use cases involving pcitest utility as a
-local initiator.
-
-For its original use case, dw-edma supported the semantics of dma device
-transfer from the perspective of a remote initiator who is located across
-the PCIe bus from dma channel hardware.
-
-To a remote initiator, DMA_DEV_TO_MEM means using a remote dma WRITE
-channel to transfer from remote memory to local memory. A WRITE channel
-would be employed on the remote device in order to move the contents of
-remote memory to the bus destined for local memory.
-
-To a remote initiator, DMA_MEM_TO_DEV means using a remote dma READ
-channel to transfer from local memory to remote memory. A READ channel
-would be employed on the remote device in order to move the contents of
-local memory to the bus destined for remote memory.
-
-From the perspective of a local dma initiator who is co-located on the
-same side of the PCIe bus as the dma channel hardware, the semantics of
-dma device transfer are flipped.
-
-To a local initiator, DMA_DEV_TO_MEM means using a local dma READ channel
-to transfer from remote memory to local memory. A READ channel would be
-employed on the local device in order to move the contents of remote
-memory to the bus destined for local memory.
-
-To a local initiator, DMA_MEM_TO_DEV means using a local dma WRITE channel
-to transfer from local memory to remote memory. A WRITE channel would be
-employed on the local device in order to move the contents of local memory
-to the bus destined for remote memory.
-
-To support local dma initiators, dw_edma_device_transfer() is modified to
-now examine the direction field of struct dma_slave_config for the channel
-which initiators can configure by calling dmaengine_slave_config().
-
-If direction is configured as either DMA_DEV_TO_MEM or DMA_MEM_TO_DEV,
-local initiator semantics are used. If direction is a value other than
-DMA_DEV_TO_MEM nor DMA_MEM_TO_DEV, then remote initiator semantics are
-used. This should maintain backward compatibility with the original use
-case of dw-edma.
-
-The dw-edma-test utility is an example of a remote initiator. From reading
-its patch, dw-edma-test does not specifically set the direction field of
-struct dma_slave_config. Since dw_edma_device_transfer() also does not
-check the direction field of struct dma_slave_config, it seems safe to use
-this convention in dw-edma to support both local and remote initiator
-semantics.
-
-Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-
-This patch depends on the following patches:
-
-[PATCH v2] dmaengine: dw-edma: Decouple dw-edma-core.c from struct pci_dev
-https://patchwork.kernel.org/patch/11491757/
-
-[PATCH v2,next] dmaengine: dw-edma: Check MSI descriptor before copying
-https://patchwork.kernel.org/patch/11504849/
-
-Rebased on linux-next next-20200428 which has above patches applied.
----
- drivers/dma/dw-edma/dw-edma-core.c | 27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index 306ab50462be..ed430ad9b3dd 100644
---- a/drivers/dma/dw-edma/dw-edma-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -323,7 +323,7 @@ static struct dma_async_tx_descriptor *
- dw_edma_device_transfer(struct dw_edma_transfer *xfer)
- {
- 	struct dw_edma_chan *chan = dchan2dw_edma_chan(xfer->dchan);
--	enum dma_transfer_direction direction = xfer->direction;
-+	enum dma_transfer_direction dir = xfer->direction;
- 	phys_addr_t src_addr, dst_addr;
- 	struct scatterlist *sg = NULL;
- 	struct dw_edma_chunk *chunk;
-@@ -332,10 +332,26 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
- 	u32 cnt;
- 	int i;
- 
--	if ((direction == DMA_MEM_TO_DEV && chan->dir == EDMA_DIR_WRITE) ||
--	    (direction == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ))
-+	if (!chan->configured)
- 		return NULL;
- 
-+	switch (chan->config.direction) {
-+	case DMA_DEV_TO_MEM: /* local dma */
-+		if (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_READ)
-+			break;
-+		return NULL;
-+	case DMA_MEM_TO_DEV: /* local dma */
-+		if (dir == DMA_MEM_TO_DEV && chan->dir == EDMA_DIR_WRITE)
-+			break;
-+		return NULL;
-+	default: /* remote dma */
-+		if (dir == DMA_MEM_TO_DEV && chan->dir == EDMA_DIR_READ)
-+			break;
-+		if (dir == DMA_DEV_TO_MEM && chan->dir == EDMA_DIR_WRITE)
-+			break;
-+		return NULL;
-+	}
-+
- 	if (xfer->cyclic) {
- 		if (!xfer->xfer.cyclic.len || !xfer->xfer.cyclic.cnt)
- 			return NULL;
-@@ -344,9 +360,6 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
- 			return NULL;
- 	}
- 
--	if (!chan->configured)
--		return NULL;
--
- 	desc = dw_edma_alloc_desc(chan);
- 	if (unlikely(!desc))
- 		goto err_alloc;
-@@ -387,7 +400,7 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
- 		chunk->ll_region.sz += burst->sz;
- 		desc->alloc_sz += burst->sz;
- 
--		if (direction == DMA_DEV_TO_MEM) {
-+		if (chan->dir == EDMA_DIR_WRITE) {
- 			burst->sar = src_addr;
- 			if (xfer->cyclic) {
- 				burst->dar = xfer->xfer.cyclic.paddr;
--- 
-2.7.4
+T24gTW9uLCAyMDIwLTA0LTI3IGF0IDE2OjMyIC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gTW9uLCAyNyBBcHIgMjAyMCAxMDo1Mjo1NiArMDgwMCwgRWFzdEwgd3JvdGU6DQo+ID4gRG9j
+dW1lbnQgdGhlIGRldmljZXRyZWUgYmluZGluZ3MgZm9yIE1lZGlhVGVrIENvbW1hbmQtUXVldWUg
+RE1BIGNvbnRyb2xsZXINCj4gPiB3aGljaCBjb3VsZCBiZSBmb3VuZCBvbiBNVDY3NzkgU29DIG9y
+IG90aGVyIHNpbWlsYXIgTWVkaWF0ZWsgU29Dcy4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBF
+YXN0TCA8RWFzdEwuTGVlQG1lZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZG1hL210ay1jcWRtYS55YW1sICAgICAgICAgfCA5OCArKysrKysrKysrKysr
+KysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA5OCBpbnNlcnRpb25zKCspDQo+ID4gIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL210
+ay1jcWRtYS55YW1sDQo+ID4gDQo+IA0KPiBNeSBib3QgZm91bmQgZXJyb3JzIHJ1bm5pbmcgJ21h
+a2UgZHRfYmluZGluZ19jaGVjaycgb24geW91ciBwYXRjaDoNCj4gDQo+IC9idWlsZHMvcm9iaGVy
+cmluZy9saW51eC1kdC1yZXZpZXcvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rt
+YS9tdGstY3FkbWEuZXhhbXBsZS5kdC55YW1sOiBkbWEtY29udHJvbGxlckAxMDIxMjAwMDogaW50
+ZXJydXB0czogW1swLCAxMzksIDhdLCBbMCwgMTQwLCA4XSwgWzAsIDE0MSwgOF1dIGlzIHRvbyBz
+aG9ydA0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvbXRrLWNxZG1hLmV4YW1wbGUuZHQueWFtbDogZG1hLWNv
+bnRyb2xsZXJAMTAyMTIwMDA6IHJlZzogW1swLCAyNzA2MDYzMzYsIDAsIDEyOF0sIFswLCAyNzA2
+MDY0NjQsIDAsIDEyOF0sIFswLCAyNzA2MDY1OTIsIDAsIDEyOF1dIGlzIHRvbyBzaG9ydA0KPiAN
+Cj4gU2VlIGh0dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvMTI3NzI5Mg0KPiANCj4g
+SWYgeW91IGFscmVhZHkgcmFuICdtYWtlIGR0X2JpbmRpbmdfY2hlY2snIGFuZCBkaWRuJ3Qgc2Vl
+IHRoZSBhYm92ZQ0KPiBlcnJvcihzKSwgdGhlbiBtYWtlIHN1cmUgZHQtc2NoZW1hIGlzIHVwIHRv
+IGRhdGU6DQo+IA0KPiBwaXAzIGluc3RhbGwgZ2l0K2h0dHBzOi8vZ2l0aHViLmNvbS9kZXZpY2V0
+cmVlLW9yZy9kdC1zY2hlbWEuZ2l0QG1hc3RlciAtLXVwZ3JhZGUNCj4gDQo+IFBsZWFzZSBjaGVj
+ayBhbmQgcmUtc3VibWl0Lg0KDQpPSywgSSdsbCBmaXggaXQgaW4gbmV4dCB2ZXJzaW9uLg0KDQo=
 

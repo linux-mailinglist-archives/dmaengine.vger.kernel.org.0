@@ -2,44 +2,43 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E2E71BF90C
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Apr 2020 15:17:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6072E1BF9F3
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Apr 2020 15:49:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726577AbgD3NRP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 30 Apr 2020 09:17:15 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45616 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbgD3NRP (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Apr 2020 09:17:15 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e20so4803502otk.12;
-        Thu, 30 Apr 2020 06:17:15 -0700 (PDT)
+        id S1726832AbgD3Ntb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 30 Apr 2020 09:49:31 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39240 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726577AbgD3Nta (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Apr 2020 09:49:30 -0400
+Received: by mail-oi1-f195.google.com with SMTP id m10so5241960oie.6;
+        Thu, 30 Apr 2020 06:49:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TYuSc1eBkZJQojwW+mycEWGyCJ0BWkp4Uav1Yp+waH4=;
-        b=undtWtvT2mHdlVAjkAxpA6HjFxe07ox1UQKkExR4jfUjZIDVL1bVpAwaQiAPvL6zEk
-         EpZYpRm6vNziyuj6hmp5Rc5FEGdq8XEVZokGpVopJqdDFhA0O771cvfOuGrzE9D/hWn5
-         AEdK1zyOz/sYzMTBBoeAUj6sHYmNh7liv6lbbu1rRGiBwoRThxh3FTEVK++zPOLagWkr
-         SvxlnmOSiXt1rmd8ailRb3CB+3jf+A3OpIH9BUAFu7aFihk9ZMQ0iJxzyNW+zJ6ZFZiY
-         5qQh27i0hGWqE4E01QweWMIRp2ea6lKyqPoZaYeOjdFozX1AybtnSYqMsaw6liV8X27A
-         eWzQ==
-X-Gm-Message-State: AGi0PubbWhzngmYMl2/PR2e08Zu2FRwmwRf/l0wxx7Mim/Z+rmjo7vo5
-        2EtinPMk0SHObdbdV9fpNpzN8axcuAD0lTOpzxc=
-X-Google-Smtp-Source: APiQypIgBXU9BSTQiGJjGVpm37UKzZ3o3uIg7xCulwGQee8j0/6+X/C6FX1fA+tIeRv6xErPA9HMWzTT4VA6MAkCalo=
-X-Received: by 2002:a9d:7d85:: with SMTP id j5mr2302946otn.107.1588252634888;
- Thu, 30 Apr 2020 06:17:14 -0700 (PDT)
+        bh=rjrzO+MFhCxKv5bAtNJEkkZ3+0bygxPZ8Xsyxb6NgPo=;
+        b=mDjuEXlnoEV+mzDCJO25nafMr2d5g5Wu+2lZGKiiSoBU55DgFl92jc5iO3aQ85sMG4
+         Ti6dd24snDqO9DeWpTHgvwgTIL0QozeW5x2GsAmULoG1TR5tloMQDwX+OlqaydXJDf9a
+         jKgzsq/hy1REwN9eQW7JFjooaw93PwV8Jfoi82DOnB4FRBHRTJt3mj896qbnjUcA8ixq
+         450qaPfHtlUZOXWKv+Ol4zb+n02v2H2Se+Phq0ixsSjORkZks0nSmzfz5tKJCHO/SMPt
+         WDZZkEr++oj1IKlGa0zzj+tR9p7BglaV0yD/dbmmi7qUmUm0RgnaCwxMdt1xhcZWc4g3
+         m6CQ==
+X-Gm-Message-State: AGi0PubNweEegZZF7/K8BYd2cdBPTaBDfR2EXx63GFPTFyUs4CSsMW+W
+        Ulum02gGf/5XAEIl0f/QPUrOzpCNU4uN5G+nhZk=
+X-Google-Smtp-Source: APiQypLKYEdDONP0TBzThQv78/9Ygy1b6alSM4Yc0B+LRdJxCQZdxj0F0voJal5X/EWZDKQ3nzYUXD+H8+a8j7LvATM=
+X-Received: by 2002:aca:d50f:: with SMTP id m15mr1837989oig.54.1588254569157;
+ Thu, 30 Apr 2020 06:49:29 -0700 (PDT)
 MIME-Version: 1.0
 References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588197415-13747-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588197415-13747-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Apr 2020 15:17:03 +0200
-Message-ID: <CAMuHMdWNSgqfCd4ZGR4Y-9M_-nKH7nO9aNcQ9z-E97CB4E5Zbw@mail.gmail.com>
-Subject: Re: [PATCH 06/18] pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
+Date:   Thu, 30 Apr 2020 15:49:17 +0200
+Message-ID: <CAMuHMdU90pqCVd=jombH-JMomoCDe1tA8Lq=m0urACK67ZNYuw@mail.gmail.com>
+Subject: Re: [PATCH 07/18] ARM: dts: r8a7742: Initial SoC device tree
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Vinod Koul <vkoul@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -70,17 +69,119 @@ Thanks for your patch!
 
 On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Renesas RZ/G1H (R8A7742) is pin compatible with R-Car H2 (R8A7790).
+> Basic support for the RZ/G1H (R8A7742) SoC. Added placeholders
+> for the peripherals supported by the SoC which will be filled up
+> by incremental patches.
 
-but lacks several automotive-specific peripherals.
-So please split the pinmux groups and functions in common and automotive
-parts.  From a quick look, for now the latter is limited to MLB
-groups/functions.
+Please remove the placeholders, as there is nothing that depends on their
+presence.
 
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-The rest looks good to me.
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/r8a7742.dtsi
+> @@ -0,0 +1,715 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Device Tree Source for the r8a7742 SoC
+> + *
+> + * Copyright (C) 2020 Renesas Electronics Corp.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/clock/r8a7742-cpg-mssr.h>
+> +#include <dt-bindings/power/r8a7742-sysc.h>
+> +
+> +/ {
+> +       compatible = "renesas,r8a7742";
+> +       #address-cells = <2>;
+> +       #size-cells = <2>;
+> +
+> +       /*
+> +        * The external audio clocks are configured as 0 Hz fixed frequency
+> +        * clocks by default.
+> +        * Boards that provide audio clocks should override them.
+> +        */
+> +       audio_clk_a: audio_clk_a {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <0>;
+> +       };
+> +
+> +       audio_clk_b: audio_clk_b {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <0>;
+> +       };
+> +
+> +       audio_clk_c: audio_clk_c {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <0>;
+> +       };
+> +
+> +       /* External CAN clock */
+> +       can_clk: can {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               /* This value must be overridden by the board. */
+> +               clock-frequency = <0>;
+> +       };
+
+Please drop the audio and CAN clocks for now, as they are not used.
+
+> +       /* External root clock */
+> +       extal_clk: extal {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               /* This value must be overridden by the board. */
+> +               clock-frequency = <0>;
+> +       };
+> +
+> +       /* External PCIe clock - can be overridden by the board */
+> +       pcie_bus_clk: pcie_bus {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <0>;
+> +       };
+
+Please drop the PCI clock for now, as it is not used.
+
+> +
+> +       /* External SCIF clock */
+> +       scif_clk: scif {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               /* This value must be overridden by the board. */
+> +               clock-frequency = <0>;
+> +       };
+
+This should be used (see below).
+
+> +
+> +       /* External USB clock - can be overridden by the board */
+> +       usb_extal_clk: usb_extal {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <48000000>;
+> +       };
+> +
+> +       cpus {
+
+Please sort nodes by unit-address (if present) per type, or alphabetically.
+
+> +       soc {
+
+> +               scifa2: serial@e6c60000 {
+> +                       reg = <0 0xe6c60000 0 0x40>;
+> +                       /* placeholder */
+> +               };
+
+I prefer to see a real node for the serial console, so the system can at
+least be boot tested to a console prompt.
+Note that this requires adding a minimal board DTS, too.
 
 Gr{oetje,eeting}s,
 

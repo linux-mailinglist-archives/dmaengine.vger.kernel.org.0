@@ -2,41 +2,41 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DFB01BF89C
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Apr 2020 14:58:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5643D1BF8A1
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Apr 2020 14:58:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgD3M6G (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 30 Apr 2020 08:58:06 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34004 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgD3M6G (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Apr 2020 08:58:06 -0400
-Received: by mail-oi1-f194.google.com with SMTP id x10so5124393oie.1;
-        Thu, 30 Apr 2020 05:58:05 -0700 (PDT)
+        id S1726906AbgD3M6i (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 30 Apr 2020 08:58:38 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45956 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgD3M6i (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Apr 2020 08:58:38 -0400
+Received: by mail-ot1-f66.google.com with SMTP id e20so4752866otk.12;
+        Thu, 30 Apr 2020 05:58:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=f06O0cFyNEo5gvdIcg9Ddsp0/DFy3D1D3kCWuQbyuVo=;
-        b=gr2qjHMiU5xPcitYfVMFtXs4f9Pgv9gTTVab4u3LKNAJOh+xw8wqSoI+S1grCCQX8J
-         DDaqiWX5lhk9GQ6DnfU4ui410l2o9DWtSud4kRuPdi2W2dbxPi+7CEeTQMdBFGQuKIZ0
-         4/Xr3bhCL0sEAZf+PYpdywW++tWUBayNxUk4IKhsqFJ+Dw6Tu0Ivl/hDmNGLYMEs7qZP
-         8tJBBDh7jZ/rsyRg9RXDbyWwynTFUSt67UwkP71OXw0cyOHpMwupjB2fB+dPd6Lq/i/I
-         nU02fPSyZvR9eYzaAqUyOvOWOe49oAX4puHD7eC2RDMFqGPi9J/gwREcjFkBKMudtNT9
-         hcSQ==
-X-Gm-Message-State: AGi0PuZoT+A/oTBy+5GA7fiqYKgNQGVLO4lMgYnayVpkGF6Iw0kIfSbr
-        0IxlUSa4Y/5R6uq3srYA0Bm+LtSFZI+Rso6llxw=
-X-Google-Smtp-Source: APiQypJ96idTKZgifmCnQ6wUrxkX/7Ep3RkgKRx5bDPk1I41cxrwHGqHte5K9ORdTBr3+oxbhTyMJGSH5dmCUBLUFsQ=
-X-Received: by 2002:aca:895:: with SMTP id 143mr1527059oii.153.1588251485338;
- Thu, 30 Apr 2020 05:58:05 -0700 (PDT)
+        bh=lFd0mFF+Oi7oyBZIDq8g60aiuPWlTPswKEMj2mCEslc=;
+        b=DuVwhmd5Zp9s7G/sobWSBDcaTtggZ7jeH5XUVMHPQfLlqNBMvXG/BZaVcn0Ebl8as4
+         VopYtKuzCdMRJ9qN87b+OMnFcvE0kjzyQj3WaKV7F2xw2J6cKfOmsKTOY9ZDW2w7h5Lt
+         kqPQx7l5J58+HfpmMFDRKpf4M1JH+1oDi5ZbUHc9m7SzRADl7YGwnMhzOo20v5VvWFHv
+         vPd34K3GJ8T0IYlzqGxQkKRy0XUMunV69Ah3re9ddd85ne0vVJJIwQJ34/eiM0u/Xmzx
+         oirZAacsOiN2vh/1L8XGxUNPPTFHhnvFTTirXNrYgj55MMOu/Oo9ojHizUHk1f293nfP
+         9XTw==
+X-Gm-Message-State: AGi0PuaAedpxYpEOk8WqDCmDOUGnNwY+lite0FcJ1/mYAipftmimRzuy
+        4cz2UmvkdZFfuvp8Xs9N0snN0kDQctRLnduGWTE=
+X-Google-Smtp-Source: APiQypL1QUWjengM4Z3jBYWUfcWFClwy5vxn0vgax8kCZQ47In29GZsjXT7y/L+Zq7rD04amU+ljAIcAVBvTfNyOgXU=
+X-Received: by 2002:a9d:7d85:: with SMTP id j5mr2222464otn.107.1588251517540;
+ Thu, 30 Apr 2020 05:58:37 -0700 (PDT)
 MIME-Version: 1.0
 References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588197415-13747-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588197415-13747-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Apr 2020 14:57:54 +0200
-Message-ID: <CAMuHMdWEo9h7HxePSDXbzVvqfdCsUUgmZ3rvuYjA2g-kqJWYWw@mail.gmail.com>
-Subject: Re: [PATCH 01/18] soc: renesas: Add Renesas R8A7742 config option
+Date:   Thu, 30 Apr 2020 14:58:26 +0200
+Message-ID: <CAMuHMdXNqqBjqBCYE=2agSaH8E4AyW4ML+0H5-+5QWhXKsO8+g@mail.gmail.com>
+Subject: Re: [PATCH 02/18] ARM: shmobile: defconfig: Enable r8a7742 SoC
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Magnus Damm <magnus.damm@gmail.com>,
@@ -66,7 +66,7 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 On Wed, Apr 29, 2020 at 11:57 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add configuration option for the RZ/G1H (R8A77420) SoC.
+> Enable recently added r8a7742 (RZ/G1H) SoC.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>

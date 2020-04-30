@@ -2,42 +2,41 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 533391BFCC4
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Apr 2020 16:08:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 617B91BFB60
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Apr 2020 15:59:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbgD3Nw0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 30 Apr 2020 09:52:26 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44755 "EHLO
+        id S1728951AbgD3N7a (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 30 Apr 2020 09:59:30 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:32982 "EHLO
         mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726858AbgD3NwZ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Apr 2020 09:52:25 -0400
-Received: by mail-oi1-f195.google.com with SMTP id a2so5238016oia.11;
-        Thu, 30 Apr 2020 06:52:25 -0700 (PDT)
+        with ESMTP id S1728977AbgD3Ny3 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Apr 2020 09:54:29 -0400
+Received: by mail-oi1-f195.google.com with SMTP id o24so5296725oic.0;
+        Thu, 30 Apr 2020 06:54:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Bx1vrsVZq+IbNA++2G08z1rg1sNLX2BQVibyI5UB8Yg=;
-        b=lH0pEzPedzQYe54e/QhwJ+TjQpDzCj1O4CrBLiPR7pvi31yXn/5yCrK0K4L7ZOKiYe
-         SQC53y7lwWi14j9qc/4BJRjqsSnxPjcKfutF8HQypAQoI17Hm2q23olFmon9ctEzWfMX
-         o2oZsVxgvPoAJsghyh+3HgLrnvRRrgkAqdEj1HWB/0obrjXqWtF16S7ki5Da3tzPMPrL
-         HrihePowIK95gIE07+4Ca2Is3CX23N4nICM9jcRGwc+McScSewwEUV31FWj75C8lBNOy
-         oM80wt8eVDufCffs+h4DsnjLGwbK7WohC+z/SFG/9DzzMzaIMuDvU5nGnXyJFGoXHISI
-         awmg==
-X-Gm-Message-State: AGi0Pua9r+tfpQPyDdhMnecU2jStf9HFz5xC6zrG9pvaz5U58+HQ07Um
-        1KfeyONVCncdu859280qaEASi7UFC8jqqcPw5ms=
-X-Google-Smtp-Source: APiQypJUGpqJbnxexd7dqOJmSTBNVdW9VYTDdyYVHeV3l6YnMiahGYWRXjyWK2Vresb0767EYyF1hnGyTnD1yoW3ZW8=
-X-Received: by 2002:aca:d50f:: with SMTP id m15mr1848055oig.54.1588254742783;
- Thu, 30 Apr 2020 06:52:22 -0700 (PDT)
+        bh=Lq5yotINN5KYJUar62+nHe1UVAWw3VsyL3e2P7YS8BU=;
+        b=Fs+x95REPD9EfTrmtAphxUuSWdnK4AewafFukG28gjw6/cMXJ7SPw+K/JRXaEzDI+Q
+         xCxdviGuWsdNW5oaM6ZLrEja3DMcTLx0A0xIZiXgLz/DLhqIcJGVkRUXWEvxRNIeSEg2
+         TfitgjACuqffMU4eUtex6dZMOL2j4LyQs3zP4diaw7khFVR1wuugEk9/cPZpGKx/u3pa
+         yglXxryic2X+Y7Q7xaYhznG9EcQMB2g+wDsUwyZLo4IVmHeonmeAVY1HXPq47qqOO285
+         D61MdmfgHNdhBGk7ShmxPsM4xxThulaCyjlbwt3xbKr5muFXsUyPsRGHJBwJJJrUz9bb
+         i5Sw==
+X-Gm-Message-State: AGi0PubPicM6FM9kH8G6Eeu7uYJJpPynry7GYQ1lIHq/ZpyBkDd2fLwc
+        Mmh3CH/FwvwazzCeLcQlhgSPFQstOmPt5/x6OKE=
+X-Google-Smtp-Source: APiQypKSH2mk4TQbA0Ak5zrv/RbXfwp1aRhXDsLXfDfpPXjbsGxuhUfYCkid+vwSbm4NVFRKEn9DNNlyvrMRml/YzRI=
+X-Received: by 2002:aca:f541:: with SMTP id t62mr1735443oih.148.1588254868374;
+ Thu, 30 Apr 2020 06:54:28 -0700 (PDT)
 MIME-Version: 1.0
 References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588197415-13747-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588197415-13747-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Apr 2020 15:52:10 +0200
-Message-ID: <CAMuHMdVTwEFeRKLaK_0_xTkaTV=vVPtu7bhZPz5_UZ++L=n8rw@mail.gmail.com>
-Subject: Re: [PATCH 08/18] dt-bindings: irqchip: renesas-irqc: Document
- r8a7742 bindings
+Date:   Thu, 30 Apr 2020 15:54:16 +0200
+Message-ID: <CAMuHMdWUYU6-S+EhzTKE4JeS2ExLQcsg_Bpy7RKD+cwhg55M8g@mail.gmail.com>
+Subject: Re: [PATCH 09/18] ARM: dts: r8a7742: Add IRQC support
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Magnus Damm <magnus.damm@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -66,7 +65,7 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Document SoC specific bindings for RZ/G1H (r8a7742) SoC.
+> Describe the IRQC interrupt controller in the r8a7742 device tree.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>

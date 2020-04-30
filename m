@@ -2,41 +2,41 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A214F1BFE3C
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Apr 2020 16:29:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B2AC1BFE78
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Apr 2020 16:37:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgD3O2y (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 30 Apr 2020 10:28:54 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:42705 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgD3O2x (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Apr 2020 10:28:53 -0400
-Received: by mail-qv1-f67.google.com with SMTP id v18so3061297qvx.9;
-        Thu, 30 Apr 2020 07:28:52 -0700 (PDT)
+        id S1727859AbgD3Ohj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 30 Apr 2020 10:37:39 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:32910 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726684AbgD3Ohi (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Apr 2020 10:37:38 -0400
+Received: by mail-qk1-f195.google.com with SMTP id 23so5919136qkf.0;
+        Thu, 30 Apr 2020 07:37:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vVWzBYKJUQDuVX/btoJY+6LYMrXr1RGguk9M1fRb2Gk=;
-        b=c1Eh+42PwFYobzAMNbij4wSLEGz4vv46XYNuXdkPgCmPVjYZArbDfkK/p/YMpGFZmL
-         MXShKaudt8uvF34kkiRA/Hkqv+pgBXDbLnspBQm8cJUcki1fnNujFxU0u/97UnL+e9rs
-         8JB2WRxhq8ozW5FUMUK3p5YDesuCAwUcUftH+sWfzQU2vzA15YF98HKoe5F+cmHC2nUb
-         CpeyMPE3NstsFVrH1gyeLXTKz3Ib/h0VdLb3ohIvJbKb+UmA1Ikxa0sDWYQjYGLMVUJF
-         aB6RKfDP9JaVvXsv4StGnTYqYnrbULSkr0FK4OMjzEPDSf2LMSbHm/DXEV3+xPf1nYPX
-         oJgg==
-X-Gm-Message-State: AGi0PuZvgzW2Z058tmlVsBje3plgsNacnB2ev/8A0cPPhC8zUToYbkxQ
-        7JRw6m7hLNzvXyydQX3cJlulhHJ1OY5Tcfy7Xqo=
-X-Google-Smtp-Source: APiQypJRTf/ui9dNutw4tN535a/lPdlLEOpjjfiChGE7kI685qtINjYPuVWS/8HbqUbbyS9WsJPmByFOcVrXUvlv1Rk=
-X-Received: by 2002:a0c:ec8f:: with SMTP id u15mr3355852qvo.102.1588256932282;
- Thu, 30 Apr 2020 07:28:52 -0700 (PDT)
+        bh=vE3bI8i+KLba6V4Lh5f3hn0EFqTCTl7OhA34yJVC44g=;
+        b=n5IcWXrCP9svMDlwLPpp4GL3Za9ya8V4t69Ymx+DKQpzb3++UMMKE/hz1BLXOC3wu4
+         Pmug8P3ukZhmKEtya2W17eqSTNyR6OjQacTJ5wyEDCd6Q0bFEpe+WGCiSXkQrIzop6V8
+         AT570BqODOmC4kdffW1Z5LUtgTnJIANEvzERPt81hwaZi5AoNhD6fkVsueuX6jhWubc9
+         Hwwn2YOsenBosLtBKylpi7eeNF0oHgBJvl2KaCR1s6Xx69YM+VUA274GUrVcuwHizKDt
+         KwjKhoIIRyvr0fT2O3OGJ8Wexzw3fa15aPq43i1C11EsUCYHLnT21lBBJiBqE7hhed5X
+         8qlA==
+X-Gm-Message-State: AGi0PuZ/DmpB8MzKyDlgS6UyB0fKZBU7DeKj4L6sr14QRUUQVWgT6L99
+        0gM3ysQVUwCxieAw0unUO9eer601FwQStB2Q2/E=
+X-Google-Smtp-Source: APiQypL37xZXvZAZkCoF9EXedcHtgwTVhctRwzKsL1ZVVKLbbBWQgvPnJlTJbYuMAWHGev5mzNUqXta8lHehVpoaPJs=
+X-Received: by 2002:a37:44a:: with SMTP id 71mr3875551qke.114.1588257456479;
+ Thu, 30 Apr 2020 07:37:36 -0700 (PDT)
 MIME-Version: 1.0
 References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588197415-13747-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-19-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588197415-13747-19-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Apr 2020 16:28:40 +0200
-Message-ID: <CAMuHMdXrX-Crdgjx31LzYpGabfMcZ6GcVQuUFo64Dxd3y3orgg@mail.gmail.com>
-Subject: Re: [PATCH 17/18] dt-bindings: gpio: rcar: Add r8a7742 (RZ/G1H) support
+Date:   Thu, 30 Apr 2020 16:37:24 +0200
+Message-ID: <CAMuHMdWXaKaUkAhQFG2=AQuMZSh4jRe_Hp3L=Eyjn5af49CvOQ@mail.gmail.com>
+Subject: Re: [PATCH 18/18] ARM: dts: r8a7742: Add GPIO support
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Magnus Damm <magnus.damm@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -65,8 +65,7 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 On Wed, Apr 29, 2020 at 11:59 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Renesas RZ/G1H (R8A7742) SoC GPIO blocks are identical to the R-Car Gen2
-> family. Add support for its GPIO controllers.
+> Describe GPIO blocks in the R8A7742 device tree.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>

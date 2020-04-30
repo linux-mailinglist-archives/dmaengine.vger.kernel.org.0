@@ -2,41 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 009F81BFBCF
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Apr 2020 16:02:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CC6B1BFBFC
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Apr 2020 16:03:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729425AbgD3OCD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 30 Apr 2020 10:02:03 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40118 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729256AbgD3OB7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Apr 2020 10:01:59 -0400
-Received: by mail-ot1-f66.google.com with SMTP id i27so4963929ota.7;
-        Thu, 30 Apr 2020 07:01:59 -0700 (PDT)
+        id S1728964AbgD3OC5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 30 Apr 2020 10:02:57 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37029 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729452AbgD3OC4 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Apr 2020 10:02:56 -0400
+Received: by mail-oi1-f194.google.com with SMTP id r25so5294160oij.4;
+        Thu, 30 Apr 2020 07:02:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CVFdq6UQxDJKbsif1NQfby/13W9nh3L9S4lY7xpqo6Q=;
-        b=m9QNoe/dBuFvKS+KAVhOQqSyXFhfKnRaXxAa5VbyfPGh1Xz0O6dKnUEEO+i7Qp6P+C
-         fAjHMJckPD+0PwJPZ/4/28MwrTNzVqvmPS1p+tsSFJSBKzFRjg79hwndaRQv5bh5EiUP
-         vTDwOZLE+FLPJ7CtqpwI8P6SQvN4fLLRrAWX+jIgUge8JjBN2hreycBVEq6MkErZZ72r
-         FpH4Z5YPxWNjBCVmcQS0TyN2a5IhTL9WM7O/MdlqlKuBj4/NZBSVYWDqquoc3JSVOm0C
-         caSQU5qeSWbfrHGMY+9prdRN+S1839uk5cDqvCneEH4rJlldsRTDD+Ui0KcAJ3MGjwdT
-         giiw==
-X-Gm-Message-State: AGi0PuZxA/QzzE6rudqw6bO1bYNTxCDFq8oLuPbzH0P/aPVWQchrzaT0
-        2kJpcYnfJlPhC/2ax2ggzfYLC/SOOITuTbahxzE=
-X-Google-Smtp-Source: APiQypJUIE+IYTO5+NZ/A/sZ/oDHSxSbaWQRCNupntk+tPRhXXvE+d6x6FrwKggI4wtqfQWZDSOEK5v9pvRt9F25u+Q=
-X-Received: by 2002:a9d:7990:: with SMTP id h16mr2567757otm.145.1588255317529;
- Thu, 30 Apr 2020 07:01:57 -0700 (PDT)
+        bh=sJs/ccRnc3IpftOPmZxsp+U77POq5aMrgerBg7OaDG4=;
+        b=C6sAA3TNK9HOmmQw7lHiHuhS/WEUUHmBnOScvuDjny8G++cyYWIag1+p4NiPy6WG3P
+         1gYfqbxN81AFs4ooqm57N8efmbU6C9UJskl4+qcNm+HklRkKYDpSNyMRK16XY4FaT6nI
+         FPIQ6oIRn2iLIqMRQZ0T9y8QI1hKzEG5lq8ihPLaLOtUAKQW1bqFF0R0Tc+0Nv0f6DUI
+         LQ1FslT5nd60Y9kxFjpspqxTjCMYVXjkQF0MIx8DbkLMBBAwkeabPuzweix5Yc2Yauhl
+         bVxmtHXd4W8bqdEAnmAp/Z6MiTZDU/Neq2VT+trnfpURueKAjGWPktEQE5duQzhSrF4J
+         jOrA==
+X-Gm-Message-State: AGi0PuaGncbbJi8W0MI02FBWyPoL4N0Q7sglndjRU5SBp+8cw3v4Ae5y
+        rPuxthl0VD6vnyzPDm+lgKSzGFriPIymPAs7S+psr4rH
+X-Google-Smtp-Source: APiQypJ0gb+RTtB2XK9qYeGrvR6ZbhTKXtAi0sTZFb9b/YKzwx/yPxkzE6lCQbIOJJ/J3ynAVkE1ekKFQSCnJOLDnKM=
+X-Received: by 2002:aca:d50f:: with SMTP id m15mr1887761oig.54.1588255375518;
+ Thu, 30 Apr 2020 07:02:55 -0700 (PDT)
 MIME-Version: 1.0
 References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-13-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588197415-13747-13-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-14-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588197415-13747-14-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Apr 2020 16:01:46 +0200
-Message-ID: <CAMuHMdVzcGnSZqPx0ZXXt7yahp5app2BW=GHUxgvNgEVnamLMg@mail.gmail.com>
-Subject: Re: [PATCH 12/18] dt-bindings: serial: renesas,scif: Document r8a7742 bindings
+Date:   Thu, 30 Apr 2020 16:02:44 +0200
+Message-ID: <CAMuHMdU4zynHLhxte4gHRc=G9SvcX0ghwZtFFOdN2Vp5x1=hnw@mail.gmail.com>
+Subject: Re: [PATCH 13/18] dt-bindings: serial: renesas,scifa: Document
+ r8a7742 bindings
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Magnus Damm <magnus.damm@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -65,7 +66,7 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> RZ/G1H (R8A7742) SoC also has the R-Car gen2 compatible SCIF ports,
+> RZ/G1H (R8A7742) SoC also has the R-Car gen2 compatible SCIFA ports,
 > so document the SoC specific bindings.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>

@@ -2,94 +2,142 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA64B1C109B
-	for <lists+dmaengine@lfdr.de>; Fri,  1 May 2020 12:08:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CEB81C1947
+	for <lists+dmaengine@lfdr.de>; Fri,  1 May 2020 17:21:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbgEAKIe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 1 May 2020 06:08:34 -0400
-Received: from smtp01.smtpout.orange.fr ([80.12.242.123]:43341 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728119AbgEAKIe (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 1 May 2020 06:08:34 -0400
-Received: from localhost.localdomain ([93.22.39.103])
-        by mwinf5d48 with ME
-        id ZN8S2200X2DY6MH03N8Ti7; Fri, 01 May 2020 12:08:30 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 01 May 2020 12:08:30 +0200
-X-ME-IP: 93.22.39.103
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     green.wan@sifive.com, dan.j.williams@intel.com, vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] dmaengine: sf-pdma: Simplify the error handling path in 'sf_pdma_probe()'
-Date:   Fri,  1 May 2020 12:08:24 +0200
-Message-Id: <20200501100824.126534-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        id S1728856AbgEAPVT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 1 May 2020 11:21:19 -0400
+Received: from mga01.intel.com ([192.55.52.88]:20684 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728813AbgEAPVT (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 1 May 2020 11:21:19 -0400
+IronPort-SDR: 2tgAWDmld+EBI2UZS+Oz7dVMhxdVk/YnNZ5FeVsd4z2ctUXhAxs8xKBU4+OFlOClHCkdyC3+PK
+ 6uWEXtDBuQwg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 08:21:18 -0700
+IronPort-SDR: VOpcSf8dVEsyPrgyGKlKxjtr+ns21o/AsJiG37QkffxzYlIBI6IscXt3ZX0kITIFk36tB0+xEn
+ G2/F/FWpjejA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,339,1583222400"; 
+   d="scan'208";a="250039392"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga008.fm.intel.com with ESMTP; 01 May 2020 08:21:18 -0700
+Subject: [PATCH v2] dmaengine: idxd: fix interrupt completion after unmasking
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, sanjay.k.kumar@intel.com
+Date:   Fri, 01 May 2020 08:21:18 -0700
+Message-ID: <158834641769.35613.1341160109892008587.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-There is no need to explicitly free memory that have been 'devm_kzalloc'ed.
-Simplify the probe function accordingly.
+The current implementation may miss completions after we unmask the
+interrupt. In order to make sure we process all competions, we need to:
+1. Do an MMIO read from the device as a barrier to ensure that all PCI
+   writes for completions have arrived.
+2. Check for any additional completions that we missed.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Fixes: 8f47d1a5e545 ("dmaengine: idxd: connect idxd to dmaengine subsystem")
+
+Reported-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/dma/sf-pdma/sf-pdma.c | 25 +++++++------------------
- 1 file changed, 7 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
-index 6d0bec947636..5c118c7e02bd 100644
---- a/drivers/dma/sf-pdma/sf-pdma.c
-+++ b/drivers/dma/sf-pdma/sf-pdma.c
-@@ -506,11 +506,11 @@ static int sf_pdma_probe(struct platform_device *pdev)
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	pdma->membase = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(pdma->membase))
--		goto ERR_MEMBASE;
-+		return PTR_ERR(pdma->membase);
+v2:
+- Initialize processed counter
+
+ drivers/dma/idxd/device.c |    7 +++++++
+ drivers/dma/idxd/irq.c    |   26 +++++++++++++++++++-------
+ 2 files changed, 26 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index f6f49f0f6fae..8d79a8787104 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -62,6 +62,13 @@ int idxd_unmask_msix_vector(struct idxd_device *idxd, int vec_id)
+ 	perm.ignore = 0;
+ 	iowrite32(perm.bits, idxd->reg_base + offset);
  
- 	ret = sf_pdma_irq_init(pdev, pdma);
- 	if (ret)
--		goto ERR_INITIRQ;
-+		return ret;
- 
- 	sf_pdma_setup_chans(pdma);
- 
-@@ -544,24 +544,13 @@ static int sf_pdma_probe(struct platform_device *pdev)
- 			 "Failed to set DMA mask. Fall back to default.\n");
- 
- 	ret = dma_async_device_register(&pdma->dma_dev);
--	if (ret)
--		goto ERR_REG_DMADEVICE;
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"Can't register SiFive Platform DMA. (%d)\n", ret);
-+		return ret;
-+	}
- 
++	/*
++	 * A readback from the device ensures that any previously generated
++	 * completion record writes are visible to software based on PCI
++	 * ordering rules.
++	 */
++	perm.bits = ioread32(idxd->reg_base + offset);
++
  	return 0;
--
--ERR_MEMBASE:
--	devm_kfree(&pdev->dev, pdma);
--	return PTR_ERR(pdma->membase);
--
--ERR_INITIRQ:
--	devm_kfree(&pdev->dev, pdma);
--	return ret;
--
--ERR_REG_DMADEVICE:
--	devm_kfree(&pdev->dev, pdma);
--	dev_err(&pdev->dev,
--		"Can't register SiFive Platform DMA. (%d)\n", ret);
--	return ret;
  }
  
- static int sf_pdma_remove(struct platform_device *pdev)
--- 
-2.25.1
+diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
+index d6fcd2e60103..6510791b9921 100644
+--- a/drivers/dma/idxd/irq.c
++++ b/drivers/dma/idxd/irq.c
+@@ -173,6 +173,7 @@ static int irq_process_pending_llist(struct idxd_irq_entry *irq_entry,
+ 	struct llist_node *head;
+ 	int queued = 0;
+ 
++	*processed = 0;
+ 	head = llist_del_all(&irq_entry->pending_llist);
+ 	if (!head)
+ 		return 0;
+@@ -197,6 +198,7 @@ static int irq_process_work_list(struct idxd_irq_entry *irq_entry,
+ 	struct list_head *node, *next;
+ 	int queued = 0;
+ 
++	*processed = 0;
+ 	if (list_empty(&irq_entry->work_list))
+ 		return 0;
+ 
+@@ -218,10 +220,9 @@ static int irq_process_work_list(struct idxd_irq_entry *irq_entry,
+ 	return queued;
+ }
+ 
+-irqreturn_t idxd_wq_thread(int irq, void *data)
++static int idxd_desc_process(struct idxd_irq_entry *irq_entry)
+ {
+-	struct idxd_irq_entry *irq_entry = data;
+-	int rc, processed = 0, retry = 0;
++	int rc, processed, total = 0;
+ 
+ 	/*
+ 	 * There are two lists we are processing. The pending_llist is where
+@@ -244,15 +245,26 @@ irqreturn_t idxd_wq_thread(int irq, void *data)
+ 	 */
+ 	do {
+ 		rc = irq_process_work_list(irq_entry, &processed);
+-		if (rc != 0) {
+-			retry++;
++		total += processed;
++		if (rc != 0)
+ 			continue;
+-		}
+ 
+ 		rc = irq_process_pending_llist(irq_entry, &processed);
+-	} while (rc != 0 && retry != 10);
++		total += processed;
++	} while (rc != 0);
++
++	return total;
++}
++
++irqreturn_t idxd_wq_thread(int irq, void *data)
++{
++	struct idxd_irq_entry *irq_entry = data;
++	int processed;
+ 
++	processed = idxd_desc_process(irq_entry);
+ 	idxd_unmask_msix_vector(irq_entry->idxd, irq_entry->id);
++	/* catch anything unprocessed after unmasking */
++	processed += idxd_desc_process(irq_entry);
+ 
+ 	if (processed == 0)
+ 		return IRQ_NONE;
 

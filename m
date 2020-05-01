@@ -2,58 +2,56 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96E001C0F56
-	for <lists+dmaengine@lfdr.de>; Fri,  1 May 2020 10:20:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FC491C0F79
+	for <lists+dmaengine@lfdr.de>; Fri,  1 May 2020 10:28:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgEAIUW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 1 May 2020 04:20:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58776 "EHLO
+        id S1728347AbgEAI2G (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 1 May 2020 04:28:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728277AbgEAIUV (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 1 May 2020 04:20:21 -0400
-Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9BFBC035494;
-        Fri,  1 May 2020 01:20:21 -0700 (PDT)
-Received: by mail-oo1-xc42.google.com with SMTP id x16so560686oop.13;
-        Fri, 01 May 2020 01:20:21 -0700 (PDT)
+        with ESMTP id S1728325AbgEAI2F (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 1 May 2020 04:28:05 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35D38C035494;
+        Fri,  1 May 2020 01:28:05 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id t199so2139724oif.7;
+        Fri, 01 May 2020 01:28:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4xmDrknoIK7bXjgHNUmPbIHsbFNrCtpw+rgXposQwms=;
-        b=O5Bdg7qQzAnlPhD7xVJhnqshnj7xNmXBKRGbWbhp2T9vzzM1MpFW+E+RYCzOknKpj8
-         ky8+dFqN4sKrq5u57LLjx7VY+/3/WsZskllAALIAtybnzNJR5vjiggO1UpC+6aDbbu9t
-         kydHSvKLXU7sGWkz9y9RVKviHgYZWyYOdg2x61aI7Ws5OUMZX6mszoJOTXjCYgE1kCG3
-         YxX1fPKMUR1N/tfPH7XlGmuqZdaT3kJbh6CaQQU6+twLEmxTOFlPMFYj1ocjQyMHVXpF
-         B5EvjhnHPr8btv+Tyz5UgmMlUf682frU/Xa8+Ff2S6K0/HOvwKzJmdLj2aYf5auUrllc
-         1zXw==
+        bh=iIaRGYpAPupU8ap77mm0+hl9zSz1kLjaWyzfce1Qs3Y=;
+        b=kitVDdx/L3DP0PkMGe4nbAT/OeUb9rxLisr3H1naWl4uvidfeWv+LsXSQEgmmyc0X/
+         iLi76W4bs3UsILqhkHUgncUHqEUqeBZ807rF4XZtjj2UQ67sZ4mxfq8Rz5lTBq2RNN+v
+         9/S7EJEZh7aqpKGRbqGY8MNKVZ1kFzS8Qyhlb5ZJs4YPTpvsgZQEVgDc8FP/aj/kr24B
+         mD/lDEQb5IO+ZfE5flM5Fs50UniK7R/Y60Rs+7W7iMXftdnv38rWWXkWJdLnEIk81P8R
+         YBN1wqcVZHOU0FJbuDxdB/nALwtchR1n48YTjEaft/fGl60RWwSo7g9wzWS58jpzwAKS
+         vXIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4xmDrknoIK7bXjgHNUmPbIHsbFNrCtpw+rgXposQwms=;
-        b=hYWFBVCawSjWwMhj3q/lDfMxofxhjOEbIkJWVjFwEUC3insRhZQlVlRhYkGkLwlyku
-         TYFA93a1l4kwHrkLn1mZj5Y8v77RiURD6hILCtu/PXILTTzLzP6xYcuoC3N8xX0LqOv9
-         LKGC7lAwIPw/rlWIFWLPYNWHspWuLfqL/hgjDY+X3n+EECC7LoNjFoctbhNLhlPZ929u
-         bXQefpc3OyzoMNazJ0b/lr7QIlG30yOMVC0IASBdofqtVnduRrTxGjWHLb3+40hErQIe
-         BS0KkLFJZL88gjEPQ1RCGDcgjBW8ugTV2RkDoaBncQA4ixsGcbsdgivaZ7ampn5v1PJ4
-         AhOQ==
-X-Gm-Message-State: AGi0PuYl1v3NaMJ6XKl2nDoyJu7I3FGlF55ANp+dcz+b0xI8dQapIZY3
-        Uo8wyOeYhi1NST9m3fq106ZzpgIcwlknfJI/xhfLJMpQoZw=
-X-Google-Smtp-Source: APiQypKWRZyPptVG5tDacv48mYRSDp6n8y852TNesK+NocS5PxHwyt2eSwaWJhO2Yzy3GzH7tq6UeX5cCu+1f17mElg=
-X-Received: by 2002:a4a:a209:: with SMTP id m9mr2850194ool.62.1588321221043;
- Fri, 01 May 2020 01:20:21 -0700 (PDT)
+        bh=iIaRGYpAPupU8ap77mm0+hl9zSz1kLjaWyzfce1Qs3Y=;
+        b=t7QM5ea78ctrTVc+To8N6dmev14LODMKeYrjA8lT9sGR0t/p1KeQdjMiWzsvjq1P7f
+         iqgpZhx8EwXkdoA6ljxWXeKCpBV1mZMKc800laWio8XpNC23FtdOt0R3oMZPZSVxGoqV
+         Ml5wAm5LJIkxtnxMWMLfO2kpuELD1KavEP2zrPMws4K23IUJV/EOeJxtZhOKksEzPqiS
+         3lHTfI5bw0B7wkJ2/il+L+eOsO7gSxLrgj4jAT2FWUZl3vCUdQ+5GdQTpeX7+TFizTfv
+         JobuwdBZbKboUsy5JYU81p1GK7OTle6b4TYbdO27V/IHxv3P+gwFy1NSi4c4su5u7Kmp
+         cKEA==
+X-Gm-Message-State: AGi0PubLcHCx9uT6L7kkjRMOvX/UpQgQ5RQvqObpoCY0t+fkrn6U8CLb
+        H46LWnsSN8N6ugroEQ80TkzRA3QWKyFNSQN8AdA=
+X-Google-Smtp-Source: APiQypK7F/qXasasin7MAQYiif3YYm7Zv+A3AA59LZg9zaayKtl+Wh4ZN+37kvvRqqUEkgvPlkOR6eZ2Unj/057MAYA=
+X-Received: by 2002:a05:6808:5c5:: with SMTP id d5mr2347754oij.8.1588321684000;
+ Fri, 01 May 2020 01:28:04 -0700 (PDT)
 MIME-Version: 1.0
 References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXEu0i8APM+g3TWbkfkLbYtCzi7uJABvMscS0a_j030tg@mail.gmail.com>
-In-Reply-To: <CAMuHMdXEu0i8APM+g3TWbkfkLbYtCzi7uJABvMscS0a_j030tg@mail.gmail.com>
+In-Reply-To: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 1 May 2020 09:19:54 +0100
-Message-ID: <CA+V-a8u8r+zT-HSHqPQdRfCKOmx=-a_GrTTM1ZQueOwnvT8xeg@mail.gmail.com>
-Subject: Re: [PATCH 04/18] ARM: debug-ll: Add support for r8a7742
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 1 May 2020 09:27:37 +0100
+Message-ID: <CA+V-a8sudn9kNs0QKQP9L_GL2wo1mifjRLcbA6sYjryD9cfZMw@mail.gmail.com>
+Subject: Re: [PATCH 00/18] Add R8A7742/RZG1H board support
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
 Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
         Magnus Damm <magnus.damm@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Vinod Koul <vkoul@kernel.org>,
@@ -67,11 +65,11 @@ Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
         Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         dmaengine <dmaengine@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        LAK <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
@@ -80,47 +78,66 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 Hi Geert,
 
-On Thu, Apr 30, 2020 at 2:03 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Wed, Apr 29, 2020 at 10:57 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
 >
-> Hi Prabhakar,
+> Hi All,
 >
-> On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > Enable low-level debugging support for RZ/G1H (R8A7742). RZ/G1H uses
-> > SCIFA2 for the debug console.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> This patch set adds initial board support for R8A7742 SoC,
+> enabling R8A7742 arch in defconfigs with initial dtsi.
 >
-> Thanks for your patch!
+> Cheers,
+> --Prabhakar
 >
-> > --- a/arch/arm/Kconfig.debug
-> > +++ b/arch/arm/Kconfig.debug
-> > @@ -976,6 +976,13 @@ choice
-> >                   Say Y here if you want kernel low-level debugging support
-> >                   via SCIF4 on Renesas RZ/G1E (R8A7745).
-> >
-> > +       config DEBUG_RCAR_GEN2_SCIFA2
-> > +               bool "Kernel low-level debugging messages via SCIFA2 on ARCH_R8A7742"
+> Lad Prabhakar (18):
+>   soc: renesas: Add Renesas R8A7742 config option
+>   ARM: shmobile: defconfig: Enable r8a7742 SoC
+>   ARM: multi_v7_defconfig: Enable r8a7742 SoC
+>   ARM: debug-ll: Add support for r8a7742
+>   dt-bindings: pinctrl: sh-pfc: Document r8a7742 PFC support
+>   pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
+>   ARM: dts: r8a7742: Initial SoC device tree
+>   dt-bindings: irqchip: renesas-irqc: Document r8a7742 bindings
+>   ARM: dts: r8a7742: Add IRQC support
+>   dt-bindings: rcar-dmac: Document r8a7742 support
+>   ARM: dts: r8a7742: Add SYS-DMAC support
+>   dt-bindings: serial: renesas,scif: Document r8a7742 bindings
+>   dt-bindings: serial: renesas,scifa: Document r8a7742 bindings
+>   dt-bindings: serial: renesas,scifb: Document r8a7742 bindings
+>   dt-bindings: serial: renesas,hscif: Document r8a7742 bindings
+>   ARM: dts: r8a7742: Add [H]SCIF{A|B} support
+>   dt-bindings: gpio: rcar: Add r8a7742 (RZ/G1H) support
+>   ARM: dts: r8a7742: Add GPIO support
 >
-> R8A7742 (without "ARCH_"-prefix)
->
-> I can fix that (and the sorting issue) while applying, so
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> i.e. will queue in renesas-devel for v5.8.
->
-Thank you for taking care of that.
+Thank you for the review.
+
+For v2 ill post patches from 6-18 fixing your review comments and
+including the Acks, as patches 1-5 have been queued.
 
 Cheers,
 --Prabhakar
 
-> Gr{oetje,eeting}s,
->
->                         Geert
+>  .../devicetree/bindings/dma/renesas,rcar-dmac.txt  |   1 +
+>  .../devicetree/bindings/gpio/renesas,gpio-rcar.txt |   1 +
+>  .../interrupt-controller/renesas,irqc.yaml         |   1 +
+>  .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |   1 +
+>  .../devicetree/bindings/serial/renesas,hscif.yaml  |   1 +
+>  .../devicetree/bindings/serial/renesas,scif.yaml   |   1 +
+>  .../devicetree/bindings/serial/renesas,scifa.yaml  |   1 +
+>  .../devicetree/bindings/serial/renesas,scifb.yaml  |   1 +
+>  arch/arm/Kconfig.debug                             |  10 +
+>  arch/arm/boot/dts/r8a7742.dtsi                     | 939 +++++++++++++++++++++
+>  arch/arm/configs/multi_v7_defconfig                |   1 +
+>  arch/arm/configs/shmobile_defconfig                |   1 +
+>  drivers/pinctrl/sh-pfc/Kconfig                     |   4 +
+>  drivers/pinctrl/sh-pfc/Makefile                    |   1 +
+>  drivers/pinctrl/sh-pfc/core.c                      |   6 +
+>  drivers/pinctrl/sh-pfc/pfc-r8a7790.c               |  24 +
+>  drivers/pinctrl/sh-pfc/sh_pfc.h                    |   1 +
+>  drivers/soc/renesas/Kconfig                        |   7 +
+>  18 files changed, 1002 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/r8a7742.dtsi
 >
 > --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 2.7.4
 >
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds

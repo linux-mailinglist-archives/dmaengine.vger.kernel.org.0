@@ -2,58 +2,57 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 010A91C0F24
-	for <lists+dmaengine@lfdr.de>; Fri,  1 May 2020 10:09:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CD121C0F43
+	for <lists+dmaengine@lfdr.de>; Fri,  1 May 2020 10:15:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbgEAIJH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 1 May 2020 04:09:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56986 "EHLO
+        id S1728397AbgEAIPc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 1 May 2020 04:15:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728277AbgEAIJD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 1 May 2020 04:09:03 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C51C035494;
-        Fri,  1 May 2020 01:09:03 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id i13so2095034oie.9;
-        Fri, 01 May 2020 01:09:03 -0700 (PDT)
+        with ESMTP id S1728343AbgEAIPb (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 1 May 2020 04:15:31 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B58D2C035494;
+        Fri,  1 May 2020 01:15:31 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id r66so2137485oie.5;
+        Fri, 01 May 2020 01:15:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0pg+1ScPrEODM3uAFA9zTWu/I1ZfaUw4KVmoBAKoheA=;
-        b=YhXnbMYvvL2NERhKKxsDO4eX9F2iF5QES+58BPMPdkDa7+HWnKRPXBtihaQRlx5jhJ
-         ZJ+u6PNVJetL8DPyXrHPuRXEcd5/bi3d1s+fxldrozxvCiSxYrfbkwMuRZOHt7so1kAn
-         aiEHVbhCFKQAXa1VhD+k4dfmV7tkNmjJFq0NAXNXDGY0lueDa1Gg4pPmbic0IFrkPRlN
-         MIr4KPcfXB2XLJFMMuVotJ6iBWmim1etULPjiMGfMuxcGrgUBWdsfJIZUHIjejVd2NMD
-         zLRXjnFO6JT8OhAo0LD0S9lYl11vXLyJc2xc2LLFyC1GgYs46wc1cH263vVfeZ8MTfER
-         CRtg==
+        bh=67PD+4N6OTeLQfdVEtLP8JgZsz239nlSbqS4Vkr8Dyw=;
+        b=kLDxDqPs9e69GaVMoTLIbt5TvwRXfennTnwhak3ZePa6Iw3AisJOdncZZtD5a3g+Iz
+         YF/82TokyreEFFn60NinKIGrC0hy0MwKvtZHCwyFrC85V4U2jf51couuP4yBrXn/TQAF
+         BLDeJG+s/qPBOdTUrh7x2jcV6xVGy1+FRUZAegp4jwA+7qmCYzGGJ8QUhZmEy9zXIWNo
+         4ih3ouFd+mP1Pnx96vHgtEw/r/WzELYEDu6LsgVwa5zBqJ8pQ7R2iM4deN5x8o+RZIB7
+         SHmgCDIJ9rKhPh32VzsySTwtLpGAnFTGMg9KICJnlJ2oJyqVxCkOIRyzEPpya8Ja6m5g
+         TOMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0pg+1ScPrEODM3uAFA9zTWu/I1ZfaUw4KVmoBAKoheA=;
-        b=ParBG8551fVXdvJgmfb9CwMd5zAxRTHOSIEJZDXc/0yR8BIx1tgpm/n2L5x4R8F22L
-         3N/4vtM7rmziXk/SOshOoICm13/k4RPZ8CT9KL+lLlImInI+Lnshx5slslsS51KHdvRd
-         GMDXxbcprAB2/QXd03DEog+F14+fuGcGFuzsw9bzR/IOGf4OWt/4UctxIgEG6b/vt3RB
-         VcYSSuIY8ia9fxK+ss45xnoHiBC/9adoPUPstk+76kxLmth6kwB1Dv/f6Ee9gW1lR5Ay
-         aFLvNqLM/jfkWDBa/0fyKvOi1o7k2l0S/fRlcsfYcd+uJ1OCutVF1oy8M5wWlhRF9qyD
-         njug==
-X-Gm-Message-State: AGi0PubXLoX1c+QFSn2WFa7KR2f+6KXBjCOJAZS+DzSZ6U67UrCg6mEk
-        UnkZm6Tl066FwJoXpX+Tz/8sDrPfnN6oxktxkvs=
-X-Google-Smtp-Source: APiQypL4tkkgblP6s79WD1Ii4byJ0FZw7ndmwSXmo65KLcrLpTxyQBgTjG8TlCh5OP8wJ/Y3Cf7Oky6dSkWu7P5a6UQ=
-X-Received: by 2002:aca:b18b:: with SMTP id a133mr2294802oif.142.1588320542697;
- Fri, 01 May 2020 01:09:02 -0700 (PDT)
+        bh=67PD+4N6OTeLQfdVEtLP8JgZsz239nlSbqS4Vkr8Dyw=;
+        b=WIcdiBzxE2XIWJHgLQiPkHuf8HZ2i+gNO65heAlRZJ0ehtVSDnJc1EIRnniRNE9Qu8
+         kSmYz+7YCEnAzs6NNWrFQ3K+G/I+uyIsZMjhdtKIyBRlSyc6/GIXpg/fLTevNnGTLTjO
+         Z+6K70L7iLSyFpRqCtFjvxVBXvfyKgPhTnlSa6FjeXoZi7ST6HQty+6BcJx5NhfFRICE
+         cB2HKTZ7p2/QdKPIUht9CJUmlSAILqa+zfw3RUjc/9hc5LU0AaZkUsDjlqge9txCqTn8
+         7VgsHabVmM5O77570LF0yHQduswaDz44VpMks1DByPAOskY/uyTLb/iZqDwQMceGaZYq
+         p6kA==
+X-Gm-Message-State: AGi0PubnK+2j/xYC4PYs+LdIx9FBVkyr7fj/Yzb1znqm+hg1uoUTM2Sd
+        6a9xKLByN5Z+N4y0eVG3iPwSVH97FbJZMuaXJzI=
+X-Google-Smtp-Source: APiQypIgr6pyF8u5FiRXk8vY7iTPFETvjGXZfjd03HJ7Sse1ymzPq5v9ms+GEMVAq9d2o2xjZGdRdTbFSnFcUHZk+Yk=
+X-Received: by 2002:aca:b783:: with SMTP id h125mr2296549oif.62.1588320931075;
+ Fri, 01 May 2020 01:15:31 -0700 (PDT)
 MIME-Version: 1.0
 References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWNSgqfCd4ZGR4Y-9M_-nKH7nO9aNcQ9z-E97CB4E5Zbw@mail.gmail.com>
-In-Reply-To: <CAMuHMdWNSgqfCd4ZGR4Y-9M_-nKH7nO9aNcQ9z-E97CB4E5Zbw@mail.gmail.com>
+ <1588197415-13747-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdU90pqCVd=jombH-JMomoCDe1tA8Lq=m0urACK67ZNYuw@mail.gmail.com>
+In-Reply-To: <CAMuHMdU90pqCVd=jombH-JMomoCDe1tA8Lq=m0urACK67ZNYuw@mail.gmail.com>
 From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 1 May 2020 09:08:36 +0100
-Message-ID: <CA+V-a8s7s7=kxOp9ohrMp+o6KDuO-Vn6P7YX2L6fC1=_A9kVwg@mail.gmail.com>
-Subject: Re: [PATCH 06/18] pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
+Date:   Fri, 1 May 2020 09:15:04 +0100
+Message-ID: <CA+V-a8sMKWD_FMcEhm-gAOPx2Xdr-4wRdgaiumWLA4vRBUkMMg@mail.gmail.com>
+Subject: Re: [PATCH 07/18] ARM: dts: r8a7742: Initial SoC device tree
 To:     Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
         Magnus Damm <magnus.damm@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Vinod Koul <vkoul@kernel.org>,
@@ -82,7 +81,7 @@ Hi Geert,
 
 Thank you for the review.
 
-On Thu, Apr 30, 2020 at 2:17 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Thu, Apr 30, 2020 at 2:49 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
 > Hi Prabhakar,
 >
@@ -90,24 +89,133 @@ On Thu, Apr 30, 2020 at 2:17 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
 > On Wed, Apr 29, 2020 at 11:58 PM Lad Prabhakar
 > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > Renesas RZ/G1H (R8A7742) is pin compatible with R-Car H2 (R8A7790).
+> > Basic support for the RZ/G1H (R8A7742) SoC. Added placeholders
+> > for the peripherals supported by the SoC which will be filled up
+> > by incremental patches.
 >
-> but lacks several automotive-specific peripherals.
-> So please split the pinmux groups and functions in common and automotive
-> parts.  From a quick look, for now the latter is limited to MLB
-> groups/functions.
+> Please remove the placeholders, as there is nothing that depends on their
+> presence.
 >
-Yes I can confirm its just limited to MLBP, Ill split up into common
-and automotive parts and send v2.
-
-Cheers,
---Prabhakar
+Sure will drop that.
 
 > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 >
-> The rest looks good to me.
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/r8a7742.dtsi
+> > @@ -0,0 +1,715 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Device Tree Source for the r8a7742 SoC
+> > + *
+> > + * Copyright (C) 2020 Renesas Electronics Corp.
+> > + */
+> > +
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +#include <dt-bindings/clock/r8a7742-cpg-mssr.h>
+> > +#include <dt-bindings/power/r8a7742-sysc.h>
+> > +
+> > +/ {
+> > +       compatible = "renesas,r8a7742";
+> > +       #address-cells = <2>;
+> > +       #size-cells = <2>;
+> > +
+> > +       /*
+> > +        * The external audio clocks are configured as 0 Hz fixed frequency
+> > +        * clocks by default.
+> > +        * Boards that provide audio clocks should override them.
+> > +        */
+> > +       audio_clk_a: audio_clk_a {
+> > +               compatible = "fixed-clock";
+> > +               #clock-cells = <0>;
+> > +               clock-frequency = <0>;
+> > +       };
+> > +
+> > +       audio_clk_b: audio_clk_b {
+> > +               compatible = "fixed-clock";
+> > +               #clock-cells = <0>;
+> > +               clock-frequency = <0>;
+> > +       };
+> > +
+> > +       audio_clk_c: audio_clk_c {
+> > +               compatible = "fixed-clock";
+> > +               #clock-cells = <0>;
+> > +               clock-frequency = <0>;
+> > +       };
+> > +
+> > +       /* External CAN clock */
+> > +       can_clk: can {
+> > +               compatible = "fixed-clock";
+> > +               #clock-cells = <0>;
+> > +               /* This value must be overridden by the board. */
+> > +               clock-frequency = <0>;
+> > +       };
 >
+> Please drop the audio and CAN clocks for now, as they are not used.
+>
+OK.
+
+> > +       /* External root clock */
+> > +       extal_clk: extal {
+> > +               compatible = "fixed-clock";
+> > +               #clock-cells = <0>;
+> > +               /* This value must be overridden by the board. */
+> > +               clock-frequency = <0>;
+> > +       };
+> > +
+> > +       /* External PCIe clock - can be overridden by the board */
+> > +       pcie_bus_clk: pcie_bus {
+> > +               compatible = "fixed-clock";
+> > +               #clock-cells = <0>;
+> > +               clock-frequency = <0>;
+> > +       };
+>
+> Please drop the PCI clock for now, as it is not used.
+>
+OK
+
+> > +
+> > +       /* External SCIF clock */
+> > +       scif_clk: scif {
+> > +               compatible = "fixed-clock";
+> > +               #clock-cells = <0>;
+> > +               /* This value must be overridden by the board. */
+> > +               clock-frequency = <0>;
+> > +       };
+>
+> This should be used (see below).
+>
+> > +
+> > +       /* External USB clock - can be overridden by the board */
+> > +       usb_extal_clk: usb_extal {
+> > +               compatible = "fixed-clock";
+> > +               #clock-cells = <0>;
+> > +               clock-frequency = <48000000>;
+> > +       };
+> > +
+> > +       cpus {
+>
+> Please sort nodes by unit-address (if present) per type, or alphabetically.
+>
+Sure will take care of it.
+
+> > +       soc {
+>
+> > +               scifa2: serial@e6c60000 {
+> > +                       reg = <0 0xe6c60000 0 0x40>;
+> > +                       /* placeholder */
+> > +               };
+>
+> I prefer to see a real node for the serial console, so the system can at
+> least be boot tested to a console prompt.
+> Note that this requires adding a minimal board DTS, too.
+>
+OK so in that case Ill enable scifa2 and SDHI interface so it can be bootable.
+
+Cheers,
+--Prabhakar
+
 > Gr{oetje,eeting}s,
 >
 >                         Geert

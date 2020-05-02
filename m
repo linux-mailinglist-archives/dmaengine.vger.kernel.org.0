@@ -2,150 +2,157 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D79041C2490
-	for <lists+dmaengine@lfdr.de>; Sat,  2 May 2020 13:04:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DFA71C253C
+	for <lists+dmaengine@lfdr.de>; Sat,  2 May 2020 14:23:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgEBLEB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 2 May 2020 07:04:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37304 "EHLO mail.kernel.org"
+        id S1727114AbgEBMXr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 2 May 2020 08:23:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726764AbgEBLEB (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sat, 2 May 2020 07:04:01 -0400
+        id S1727113AbgEBMXq (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sat, 2 May 2020 08:23:46 -0400
 Received: from localhost (unknown [117.99.89.89])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AF9D216FD;
-        Sat,  2 May 2020 11:03:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84B612072E;
+        Sat,  2 May 2020 12:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588417440;
-        bh=Pg5WQCD32iVLP/ezBlUn7r2Q1U1atV4LE5nchd33Huk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=WWvPzYScb1Lp93W/bugKq64qeNjtJWcZBf/HRhBPdHmNNyf28/uSRDDPX/UnD49FJ
-         8mAn9gxHLhTftbFEvG6tRbUV20wRAeYmkI76Nss7oyzsGk5HWdf/bggBzHoVhuhvsw
-         BY7gUuU9mkS50ejPQBeTA/D26JXvlV8HCGWRM4hU=
-Date:   Sat, 2 May 2020 16:33:48 +0530
+        s=default; t=1588422225;
+        bh=VFZRfbxaSvB4UZ1zviOZTlVRbHiO20UoTo/B+qSaaG4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JpJkJ9V2yIOYst2+CnADV6vZYbBSsji5p95E18XUDniryQPcpKFxZB5djNDn5HRTZ
+         Q8T87KG0xlmNwr+jnKYaX+rWSjBxosCZnJVea4ZTG0FVprle9Ef/q0v+aarIWkqcuf
+         aqSex9O5rdCoke0a5TWf4vvQkTreuuttfb06KRh0=
+Date:   Sat, 2 May 2020 17:53:33 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL]: dmaengine fixes for v5.7-rc4
-Message-ID: <20200502110348.GM948789@vkoul-mobl.Dlink>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-actions@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] dma: actions: Fix lockdep splat for owl-dma
+Message-ID: <20200502122333.GA1375924@vkoul-mobl>
+References: <2f3e665270b8d170ea19cc66c6f0c68bf8fe97ff.1588173497.git.cristian.ciocaltea@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <2f3e665270b8d170ea19cc66c6f0c68bf8fe97ff.1588173497.git.cristian.ciocaltea@gmail.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi Cristian,
 
---ibTvN161/egqYuK8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 29-04-20, 18:28, Cristian Ciocaltea wrote:
+> When the kernel is built with lockdep support and the owl-dma driver is
+> used, the following message is shown:
 
-Hello Linus,
+First the patch title needs upate, we describe the patch in the title
+and not the cause. So use correct lock, or use od lock might be better
+titles, pls revise.
 
-Please pull to recived few fixes for dmaengine. A core fix, with
-documentation fixes as well as driver fixes:
+Second, the susbsystem is named dmaengine:... not dma:.. You can always
+check that by using git log on the respective file
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+Pls do add fixes and further acks received on next iteration.
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+> 
+> [    2.496939] INFO: trying to register non-static key.
+> [    2.501889] the code is fine but needs lockdep annotation.
+> [    2.507357] turning off the locking correctness validator.
+> [    2.512834] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.6.3+ #15
+> [    2.519084] Hardware name: Generic DT based system
+> [    2.523878] Workqueue: events_freezable mmc_rescan
+> [    2.528681] [<801127f0>] (unwind_backtrace) from [<8010da58>] (show_stack+0x10/0x14)
+> [    2.536420] [<8010da58>] (show_stack) from [<8080fbe8>] (dump_stack+0xb4/0xe0)
+> [    2.543645] [<8080fbe8>] (dump_stack) from [<8017efa4>] (register_lock_class+0x6f0/0x718)
+> [    2.551816] [<8017efa4>] (register_lock_class) from [<8017b7d0>] (__lock_acquire+0x78/0x25f0)
+> [    2.560330] [<8017b7d0>] (__lock_acquire) from [<8017e5e4>] (lock_acquire+0xd8/0x1f4)
+> [    2.568159] [<8017e5e4>] (lock_acquire) from [<80831fb0>] (_raw_spin_lock_irqsave+0x3c/0x50)
+> [    2.576589] [<80831fb0>] (_raw_spin_lock_irqsave) from [<8051b5fc>] (owl_dma_issue_pending+0xbc/0x120)
+> [    2.585884] [<8051b5fc>] (owl_dma_issue_pending) from [<80668cbc>] (owl_mmc_request+0x1b0/0x390)
+> [    2.594655] [<80668cbc>] (owl_mmc_request) from [<80650ce0>] (mmc_start_request+0x94/0xbc)
+> [    2.602906] [<80650ce0>] (mmc_start_request) from [<80650ec0>] (mmc_wait_for_req+0x64/0xd0)
+> [    2.611245] [<80650ec0>] (mmc_wait_for_req) from [<8065aa10>] (mmc_app_send_scr+0x10c/0x144)
+> [    2.619669] [<8065aa10>] (mmc_app_send_scr) from [<80659b3c>] (mmc_sd_setup_card+0x4c/0x318)
+> [    2.628092] [<80659b3c>] (mmc_sd_setup_card) from [<80659f0c>] (mmc_sd_init_card+0x104/0x430)
+> [    2.636601] [<80659f0c>] (mmc_sd_init_card) from [<8065a3e0>] (mmc_attach_sd+0xcc/0x16c)
+> [    2.644678] [<8065a3e0>] (mmc_attach_sd) from [<8065301c>] (mmc_rescan+0x3ac/0x40c)
+> [    2.652332] [<8065301c>] (mmc_rescan) from [<80143244>] (process_one_work+0x2d8/0x780)
+> [    2.660239] [<80143244>] (process_one_work) from [<80143730>] (worker_thread+0x44/0x598)
+> [    2.668323] [<80143730>] (worker_thread) from [<8014b5f8>] (kthread+0x148/0x150)
+> [    2.675708] [<8014b5f8>] (kthread) from [<801010b4>] (ret_from_fork+0x14/0x20)
+> [    2.682912] Exception stack(0xee8fdfb0 to 0xee8fdff8)
+> [    2.687954] dfa0:                                     00000000 00000000 00000000 00000000
+> [    2.696118] dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> [    2.704277] dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> 
+> The obvious fix would be to use 'spin_lock_init()' on 'pchan->lock'
+> before attempting to call 'spin_lock_irqsave()' in 'owl_dma_get_pchan()'.
+> 
+> However, according to Manivannan Sadhasivam, 'pchan->lock' was supposed
+> to only protect 'pchan->vchan' while 'od->lock' does a similar job in
+> 'owl_dma_terminate_pchan'.
+> 
+> Therefore, this patch will simply substitute 'pchan->lock' with 'od->lock'
+> and removes the 'lock' attribute in 'owl_dma_pchan' struct.
+> 
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+> Changes in v3:
+> * Get rid of the kerneldoc comment for the removed struct attribute
+> * Add the Reviewed-by tag in the commit message
+> 
+> Changes in v2:
+> * Improve the fix as suggested by Manivannan Sadhasivam: substitute
+>   'pchan->lock' with 'od->lock' and get rid of the 'lock' attribute in
+>   'owl_dma_pchan' struct
+> * Update the commit message to reflect the changes
+> 
+>  drivers/dma/owl-dma.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
+> index c683051257fd..66ef70b00ec0 100644
+> --- a/drivers/dma/owl-dma.c
+> +++ b/drivers/dma/owl-dma.c
+> @@ -175,13 +175,11 @@ struct owl_dma_txd {
+>   * @id: physical index to this channel
+>   * @base: virtual memory base for the dma channel
+>   * @vchan: the virtual channel currently being served by this physical channel
+> - * @lock: a lock to use when altering an instance of this struct
+>   */
+>  struct owl_dma_pchan {
+>  	u32			id;
+>  	void __iomem		*base;
+>  	struct owl_dma_vchan	*vchan;
+> -	spinlock_t		lock;
+>  };
+>  
+>  /**
+> @@ -437,14 +435,14 @@ static struct owl_dma_pchan *owl_dma_get_pchan(struct owl_dma *od,
+>  	for (i = 0; i < od->nr_pchans; i++) {
+>  		pchan = &od->pchans[i];
+>  
+> -		spin_lock_irqsave(&pchan->lock, flags);
+> +		spin_lock_irqsave(&od->lock, flags);
+>  		if (!pchan->vchan) {
+>  			pchan->vchan = vchan;
+> -			spin_unlock_irqrestore(&pchan->lock, flags);
+> +			spin_unlock_irqrestore(&od->lock, flags);
+>  			break;
+>  		}
+>  
+> -		spin_unlock_irqrestore(&pchan->lock, flags);
+> +		spin_unlock_irqrestore(&od->lock, flags);
+>  	}
+>  
+>  	return pchan;
+> -- 
+> 2.26.2
 
-are available in the Git repository at:
-
-  git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.7-=
-rc4
-
-for you to fetch changes up to aa72f1d20ee973d68f26d46fce5e1cf6f9b7e1ca:
-
-  dmaengine: dmatest: Fix process hang when reading 'wait' parameter (2020-=
-04-28 21:46:35 +0530)
-
-----------------------------------------------------------------
-dmaengine fixes for v5.7-rc4
-
-Core:
- - Documentation typo fixes
- - fix the channel indexes
- - Dmatest: fixes for process hang and iterations
-Drivers:
- - hisilicon: build error fix without PCI_MSI
- - ti-k3: deadlock fix
- - uniphier-xdmac: fix for reg region
- - pch: fix data race
- - tegra: fix clock state
-
-----------------------------------------------------------------
-Andy Shevchenko (2):
-      dmaengine: dmatest: Fix iteration non-stop logic
-      dmaengine: dmatest: Fix process hang when reading 'wait' parameter
-
-Dave Jiang (1):
-      dmaengine: fix channel index enumeration
-
-Dmitry Osipenko (1):
-      dmaengine: tegra-apb: Ensure that clock is enabled during of DMA sync=
-hronization
-
-Grygorii Strashko (1):
-      dmaengine: ti: k3-psil: fix deadlock on error path
-
-Lubomir Rintel (2):
-      dmaengine: mmp_tdma: Do not ignore slave config validation errors
-      dmaengine: mmp_tdma: Reset channel error on release
-
-Maciej Grochowski (1):
-      include/linux/dmaengine: Typos fixes in API documentation
-
-Madhuparna Bhowmik (1):
-      dmaengine: pch_dma.c: Avoid data race between probe and irq handler
-
-Masahiro Yamada (1):
-      dt-bindings: dma: uniphier-xdmac: switch to single reg region
-
-Sebastian von Ohr (1):
-      dmaengine: xilinx_dma: Add missing check for empty list
-
-YueHaibing (1):
-      dmaengine: hisilicon: Fix build error without PCI_MSI
-
- .../bindings/dma/socionext,uniphier-xdmac.yaml     |  7 ++-
- drivers/dma/Kconfig                                |  3 +-
- drivers/dma/dmaengine.c                            | 60 ++++++++++--------=
-----
- drivers/dma/dmatest.c                              |  6 +--
- drivers/dma/mmp_tdma.c                             |  5 +-
- drivers/dma/pch_dma.c                              |  2 +-
- drivers/dma/tegra20-apb-dma.c                      |  9 ++++
- drivers/dma/ti/k3-psil.c                           |  1 +
- drivers/dma/xilinx/xilinx_dma.c                    | 20 ++++----
- include/linux/dmaengine.h                          | 12 ++---
- 10 files changed, 65 insertions(+), 60 deletions(-)
-
---=20
+-- 
 ~Vinod
-
---ibTvN161/egqYuK8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAl6tU5QACgkQfBQHDyUj
-g0dPQRAAsR4mNVNv1eCt4LScsDT16pXID511hiFa1VIbsmA02SZBK5+RsKjGJ3bh
-pAgIvPYjbg1ijbxeE8xWlXVOgYb4jtbd4B/tbmkwT53VRhgYNiWuxC+3NtGTmobN
-XijkOpt2c0ulb8derWp4VOjcjdEzMoqVvfUE/2ENq3b7XE3ZN//JXiT9VIFGwsJv
-SjkTu4e9WDnQ+WT3kHpl+vxJmCLSxKnZ3xYE+dHFCg2decw29VT67C5MMddMEbQu
-SUI4ed20BfKF4d1R3aneHr7Hj40fa2r1Vyu+0jKDs2fNDuMIwxcVDI6V9anDDOA6
-1OnjYtnIOub4ZalVgpTvh5q5wsmnmn/KZFECcytbtgIjRYZlAtcN9JGmbuxe5tx1
-kqTsDqjqkI0pVY6B39VOMvQk52GZezXv+kJhiy88UjXjUqto1gOd3KGKGAYlCAo/
-5VlDbRWOkli6es8EgspwvHWElKS4quhNOzhkkggZb2LX7A2a55lI1YDsUVtsbFcd
-jW4Y7Gi//VEefPwcWwmGGfvHbBOQ3w54kZw5SF6g2e8nstUP2FeWSASPBCtEHgrI
-v0tguCMOYnWnX4MFgCLE9z4bmafGlye1priIQmpQ1lf8r6vQlxE4dAEHAj1Zld1E
-Ah/EUyFwQQyPihlAWTNt6QiXz10hgRSgGkp8Wbb8g29iI7qzU5E=
-=9jS/
------END PGP SIGNATURE-----
-
---ibTvN161/egqYuK8--

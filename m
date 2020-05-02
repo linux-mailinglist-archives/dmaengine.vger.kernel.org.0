@@ -2,142 +2,150 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A0531C20AC
-	for <lists+dmaengine@lfdr.de>; Sat,  2 May 2020 00:32:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D79041C2490
+	for <lists+dmaengine@lfdr.de>; Sat,  2 May 2020 13:04:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgEAWci (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 1 May 2020 18:32:38 -0400
-Received: from mga06.intel.com ([134.134.136.31]:10101 "EHLO mga06.intel.com"
+        id S1727114AbgEBLEB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 2 May 2020 07:04:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726973AbgEAWci (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 1 May 2020 18:32:38 -0400
-IronPort-SDR: 6XhZMxwOSrHnnVV+pXaZzoh111Ac1a3Fbrxa02BKsw9ff8RikcZJyGGMryLo0Yg+Zby1PzciCn
- 37BotaS1XHew==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 15:32:36 -0700
-IronPort-SDR: h0HDG6WOzMAx9Acn3e9Yz1/5hX+L6Tr04sNiBrKkZCQp2bg2OM3da5SAXcNd1kQG999b8gqGSy
- xxtLW+ogCo9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,341,1583222400"; 
-   d="scan'208";a="248657143"
-Received: from meghadey-mobl1.amr.corp.intel.com (HELO [10.251.135.85]) ([10.251.135.85])
-  by fmsmga007.fm.intel.com with ESMTP; 01 May 2020 15:32:35 -0700
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        maz@kernel.org, bhelgaas@google.com, rafael@kernel.org,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
-        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <20200421235442.GO11945@mellanox.com>
- <d6b3c133-ac19-21af-b7a7-b9e7166b8166@linux.intel.com>
- <20200423194447.GF13640@mellanox.com>
-From:   "Dey, Megha" <megha.dey@linux.intel.com>
-Message-ID: <30dadd7a-bac2-d658-c2e4-77592de6118d@linux.intel.com>
-Date:   Fri, 1 May 2020 15:32:35 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726764AbgEBLEB (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sat, 2 May 2020 07:04:01 -0400
+Received: from localhost (unknown [117.99.89.89])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AF9D216FD;
+        Sat,  2 May 2020 11:03:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588417440;
+        bh=Pg5WQCD32iVLP/ezBlUn7r2Q1U1atV4LE5nchd33Huk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WWvPzYScb1Lp93W/bugKq64qeNjtJWcZBf/HRhBPdHmNNyf28/uSRDDPX/UnD49FJ
+         8mAn9gxHLhTftbFEvG6tRbUV20wRAeYmkI76Nss7oyzsGk5HWdf/bggBzHoVhuhvsw
+         BY7gUuU9mkS50ejPQBeTA/D26JXvlV8HCGWRM4hU=
+Date:   Sat, 2 May 2020 16:33:48 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL]: dmaengine fixes for v5.7-rc4
+Message-ID: <20200502110348.GM948789@vkoul-mobl.Dlink>
 MIME-Version: 1.0
-In-Reply-To: <20200423194447.GF13640@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Disposition: inline
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
+--ibTvN161/egqYuK8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 4/23/2020 12:44 PM, Jason Gunthorpe wrote:
->>>> The mdev utilizes Interrupt Message Store or IMS[3] instead of MSIX for
->>>> interrupts for the guest. This preserves MSIX for host usages and also allows a
->>>> significantly larger number of interrupt vectors for guest usage.
->>>
->>> I never did get a reply to my earlier remarks on the IMS patches.
->>>
->>> The concept of a device specific addr/data table format for MSI is not
->>> Intel specific. This should be general code. We have a device that can
->>> use this kind of kernel capability today.
->>
->> I am sorry if I did not address your comments earlier.
-> 
-> It appears noboy from Intel bothered to answer anyone else on that RFC
-> thread:
-> 
-> https://lore.kernel.org/lkml/1568338328-22458-1-git-send-email-megha.dey@linux.intel.com/
-> 
-> However, it seems kind of moot as I see now that this verion of IMS
-> bears almost no resemblance to the original RFC.
+Hello Linus,
 
-hmm yeah, we changed most of the code after getting a lot of feedback 
-from you and folks at plumbers. But yes, I should have replied to all 
-the feedback, lesson learnt :)
+Please pull to recived few fixes for dmaengine. A core fix, with
+documentation fixes as well as driver fixes:
 
-> 
-> That said, the similiarity to platform-msi was striking, does this new
-> version harmonize with that?
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
 
-yes!
-> 
->> The present IMS code is quite generic, most of the code is in the drivers/
->> folder. We basically introduce 2 APIS: allocate and free IMS interrupts and
->> a IMS IRQ domain to allocate these interrupts from. These APIs are
->> architecture agnostic.
->>
->> We also introduce a new IMS IRQ domain which is architecture specific. This
->> is because IMS generates interrupts only in the remappable format, hence
->> interrupt remapping should be enabled for IMS. Currently, the interrupt
->> remapping code is only available for Intel and AMD and I don’t see anything
->> for ARM.
-> 
-> I don't understand these remarks though - IMS is simply the mapping of
-> a MemWr addr/data pair to a Linux IRQ number? Why does this intersect
-> with remapping?
-> 
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
 
- From your comments so far, I think your requirement is a subset of what 
-IMS is trying to do.
+are available in the Git repository at:
 
-What you want:
-have a dynamic means of allocating platform-msi interrupts
+  git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.7-=
+rc4
 
-On top of this IMS has a requirement that all of the interrupts should 
-be remapped.
+for you to fetch changes up to aa72f1d20ee973d68f26d46fce5e1cf6f9b7e1ca:
 
-So we can have tiered code: generic dynamic platform-msi infrastructure
-and add the IMS specific bits (Intel specific) on top of this.
+  dmaengine: dmatest: Fix process hang when reading 'wait' parameter (2020-=
+04-28 21:46:35 +0530)
 
-The generic code will have no reference to IMS.
+----------------------------------------------------------------
+dmaengine fixes for v5.7-rc4
 
-> AFAIK, any platform that supports MSI today should have the inherent
-> HW capability to support IMS.
-> 
->> Also, could you give more details on the device that could use IMS? Do you
->> have some driver code already? We could then see if and how the current IMS
->> code could be made more generic.
-> 
-> We have several devices of interest, our NICs have very flexible PCI,
-> so it is no problem to take the MemWR addr/data from someplace other
-> than the MSI tables.
-> 
-> For this we want to have some way to allocate Linux IRQs dynamically
-> and get a addr/data pair to trigger them.
-> 
-> Our NIC devices are also linked to our ARM SOC family, so I'd expect
-> our ARM's to also be able to provide these APIs as the platform.
+Core:
+ - Documentation typo fixes
+ - fix the channel indexes
+ - Dmatest: fixes for process hang and iterations
+Drivers:
+ - hisilicon: build error fix without PCI_MSI
+ - ti-k3: deadlock fix
+ - uniphier-xdmac: fix for reg region
+ - pch: fix data race
+ - tegra: fix clock state
 
-cool, so I will hope that you can test out the generic APIs from the ARM 
-side!
-> 
-> Jason
-> 
+----------------------------------------------------------------
+Andy Shevchenko (2):
+      dmaengine: dmatest: Fix iteration non-stop logic
+      dmaengine: dmatest: Fix process hang when reading 'wait' parameter
+
+Dave Jiang (1):
+      dmaengine: fix channel index enumeration
+
+Dmitry Osipenko (1):
+      dmaengine: tegra-apb: Ensure that clock is enabled during of DMA sync=
+hronization
+
+Grygorii Strashko (1):
+      dmaengine: ti: k3-psil: fix deadlock on error path
+
+Lubomir Rintel (2):
+      dmaengine: mmp_tdma: Do not ignore slave config validation errors
+      dmaengine: mmp_tdma: Reset channel error on release
+
+Maciej Grochowski (1):
+      include/linux/dmaengine: Typos fixes in API documentation
+
+Madhuparna Bhowmik (1):
+      dmaengine: pch_dma.c: Avoid data race between probe and irq handler
+
+Masahiro Yamada (1):
+      dt-bindings: dma: uniphier-xdmac: switch to single reg region
+
+Sebastian von Ohr (1):
+      dmaengine: xilinx_dma: Add missing check for empty list
+
+YueHaibing (1):
+      dmaengine: hisilicon: Fix build error without PCI_MSI
+
+ .../bindings/dma/socionext,uniphier-xdmac.yaml     |  7 ++-
+ drivers/dma/Kconfig                                |  3 +-
+ drivers/dma/dmaengine.c                            | 60 ++++++++++--------=
+----
+ drivers/dma/dmatest.c                              |  6 +--
+ drivers/dma/mmp_tdma.c                             |  5 +-
+ drivers/dma/pch_dma.c                              |  2 +-
+ drivers/dma/tegra20-apb-dma.c                      |  9 ++++
+ drivers/dma/ti/k3-psil.c                           |  1 +
+ drivers/dma/xilinx/xilinx_dma.c                    | 20 ++++----
+ include/linux/dmaengine.h                          | 12 ++---
+ 10 files changed, 65 insertions(+), 60 deletions(-)
+
+--=20
+~Vinod
+
+--ibTvN161/egqYuK8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAl6tU5QACgkQfBQHDyUj
+g0dPQRAAsR4mNVNv1eCt4LScsDT16pXID511hiFa1VIbsmA02SZBK5+RsKjGJ3bh
+pAgIvPYjbg1ijbxeE8xWlXVOgYb4jtbd4B/tbmkwT53VRhgYNiWuxC+3NtGTmobN
+XijkOpt2c0ulb8derWp4VOjcjdEzMoqVvfUE/2ENq3b7XE3ZN//JXiT9VIFGwsJv
+SjkTu4e9WDnQ+WT3kHpl+vxJmCLSxKnZ3xYE+dHFCg2decw29VT67C5MMddMEbQu
+SUI4ed20BfKF4d1R3aneHr7Hj40fa2r1Vyu+0jKDs2fNDuMIwxcVDI6V9anDDOA6
+1OnjYtnIOub4ZalVgpTvh5q5wsmnmn/KZFECcytbtgIjRYZlAtcN9JGmbuxe5tx1
+kqTsDqjqkI0pVY6B39VOMvQk52GZezXv+kJhiy88UjXjUqto1gOd3KGKGAYlCAo/
+5VlDbRWOkli6es8EgspwvHWElKS4quhNOzhkkggZb2LX7A2a55lI1YDsUVtsbFcd
+jW4Y7Gi//VEefPwcWwmGGfvHbBOQ3w54kZw5SF6g2e8nstUP2FeWSASPBCtEHgrI
+v0tguCMOYnWnX4MFgCLE9z4bmafGlye1priIQmpQ1lf8r6vQlxE4dAEHAj1Zld1E
+Ah/EUyFwQQyPihlAWTNt6QiXz10hgRSgGkp8Wbb8g29iI7qzU5E=
+=9jS/
+-----END PGP SIGNATURE-----
+
+--ibTvN161/egqYuK8--

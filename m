@@ -2,54 +2,97 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A9B51C27CD
-	for <lists+dmaengine@lfdr.de>; Sat,  2 May 2020 20:45:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D64861C2F89
+	for <lists+dmaengine@lfdr.de>; Sun,  3 May 2020 23:47:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728505AbgEBSpI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 2 May 2020 14:45:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728411AbgEBSpH (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sat, 2 May 2020 14:45:07 -0400
-Subject: Re: [GIT PULL]: dmaengine fixes for v5.7-rc4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588445107;
-        bh=mtYF0ENJLtrJn3/8qT2aJaeuQRMsZn+PB7dSIaTEsmI=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=dDbFoC7hH/v5RtQlLrsYHsL+eqrnQWKu4NRu+IR1/Lcso9YSXu4+vAzVABjGF4b/c
-         SprGTtgDoT57EyQTyr/pJHgE7sYh2aqnHhZHN7iy7V7xf7OF6fjjSGCYTr8ozxaoa+
-         2ucBa3ktE8n6Oq+O+VX5XyIhWvzRAyTXhn1u6CwE=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200502110348.GM948789@vkoul-mobl.Dlink>
-References: <20200502110348.GM948789@vkoul-mobl.Dlink>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200502110348.GM948789@vkoul-mobl.Dlink>
-X-PR-Tracked-Remote: git://git.infradead.org/users/vkoul/slave-dma.git
- tags/dmaengine-fix-5.7-rc4
-X-PR-Tracked-Commit-Id: aa72f1d20ee973d68f26d46fce5e1cf6f9b7e1ca
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ed6889db63d24600e523ac28fbece33201906611
-Message-Id: <158844510730.26966.6166803935500363489.pr-tracker-bot@kernel.org>
-Date:   Sat, 02 May 2020 18:45:07 +0000
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        id S1729135AbgECVrM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 3 May 2020 17:47:12 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:8668 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729104AbgECVrL (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 3 May 2020 17:47:11 -0400
+X-IronPort-AV: E=Sophos;i="5.73,349,1583161200"; 
+   d="scan'208";a="46019240"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 04 May 2020 06:47:09 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 39AB94006DF9;
+        Mon,  4 May 2020 06:47:06 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-serial@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 00/10] Add initial support for R8A7742/RZG1H SoC and iW-RainboW-G21D-Qseven development board support
+Date:   Sun,  3 May 2020 22:46:44 +0100
+Message-Id: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The pull request you sent on Sat, 2 May 2020 16:33:48 +0530:
+Hi All,
 
-> git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.7-rc4
+This patch set adds initial support for R8A7742 SoC and 
+iW-RainboW-G21D-Qseven development board.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ed6889db63d24600e523ac28fbece33201906611
+Cheers,
+--Prabhakar
 
-Thank you!
+Changes for v2:
+* Dropped patches 1-5 from v1[1] as they have been already queued.
+* Split up the pfc for r8a7790 as common and automotive.
+* Enabled dmac and scifa2 as part of initial SoC dtsi so that by default
+  board can be booted from eMMC.
+* New patches 4, 7-10
+* Dropped patches 12, 14-18 from v1[1] and will be posted after acceptance
+  of this series.
+
+[1] https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=279727
+
+Lad Prabhakar (10):
+  dt-bindings: pinctrl: sh-pfc: Document r8a7742 PFC support
+  pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
+  dt-bindings: serial: renesas,scifa: Document r8a7742 bindings
+  dt-bindings: mmc: renesas,mmcif: Document r8a7742 DT bindings
+  dt-bindings: renesas,rcar-dmac: Document r8a7742 support
+  ARM: dts: r8a7742: Initial SoC device tree
+  dt-bindings: arm: Document iW-RainboW-G21M-Qseven-RZG1H system on
+    module
+  dt-bindings: arm: Document iW-RainboW-G21D-Qseven-RZG1H board
+  ARM: dts: r8a7742-iwg21m: Add iWave RZ/G1H Qseven SOM
+  ARM: dts: r8a7742-iwg21d-q7: Add support for iWave G21D-Q7 board based
+    on RZ/G1H
+
+ .../devicetree/bindings/arm/renesas.yaml      |  10 +
+ .../bindings/dma/renesas,rcar-dmac.yaml       |   1 +
+ .../devicetree/bindings/mmc/renesas,mmcif.txt |   1 +
+ .../bindings/pinctrl/renesas,pfc-pinctrl.txt  |   1 +
+ .../bindings/serial/renesas,scifa.yaml        |   1 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/r8a7742-iwg21d-q7.dts       |  37 +
+ arch/arm/boot/dts/r8a7742-iwg21m.dtsi         |  53 ++
+ arch/arm/boot/dts/r8a7742.dtsi                | 389 +++++++++
+ drivers/pinctrl/sh-pfc/Kconfig                |   4 +
+ drivers/pinctrl/sh-pfc/Makefile               |   1 +
+ drivers/pinctrl/sh-pfc/core.c                 |   6 +
+ drivers/pinctrl/sh-pfc/pfc-r8a7790.c          | 744 +++++++++---------
+ drivers/pinctrl/sh-pfc/sh_pfc.h               |   1 +
+ 14 files changed, 898 insertions(+), 352 deletions(-)
+ create mode 100644 arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+ create mode 100644 arch/arm/boot/dts/r8a7742-iwg21m.dtsi
+ create mode 100644 arch/arm/boot/dts/r8a7742.dtsi
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.17.1
+

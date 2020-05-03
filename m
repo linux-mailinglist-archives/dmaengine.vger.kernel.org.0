@@ -2,22 +2,22 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D64861C2F89
-	for <lists+dmaengine@lfdr.de>; Sun,  3 May 2020 23:47:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FCA41C2F90
+	for <lists+dmaengine@lfdr.de>; Sun,  3 May 2020 23:47:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729135AbgECVrM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 3 May 2020 17:47:12 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:8668 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729104AbgECVrL (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 3 May 2020 17:47:11 -0400
+        id S1729177AbgECVrQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 3 May 2020 17:47:16 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:4267 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729104AbgECVrP (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 3 May 2020 17:47:15 -0400
 X-IronPort-AV: E=Sophos;i="5.73,349,1583161200"; 
-   d="scan'208";a="46019240"
+   d="scan'208";a="46232084"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 04 May 2020 06:47:09 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 04 May 2020 06:47:13 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 39AB94006DF9;
-        Mon,  4 May 2020 06:47:06 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 3F65B4006DF9;
+        Mon,  4 May 2020 06:47:10 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Magnus Damm <magnus.damm@gmail.com>,
@@ -32,67 +32,38 @@ Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-serial@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 00/10] Add initial support for R8A7742/RZG1H SoC and iW-RainboW-G21D-Qseven development board support
-Date:   Sun,  3 May 2020 22:46:44 +0100
-Message-Id: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 01/10] dt-bindings: pinctrl: sh-pfc: Document r8a7742 PFC support
+Date:   Sun,  3 May 2020 22:46:45 +0100
+Message-Id: <1588542414-14826-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi All,
+Document PFC support for the RZ/G1H (R8A7742) SoC.
 
-This patch set adds initial support for R8A7742 SoC and 
-iW-RainboW-G21D-Qseven development board.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ .../devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt          | 1 +
+ 1 file changed, 1 insertion(+)
 
-Cheers,
---Prabhakar
-
-Changes for v2:
-* Dropped patches 1-5 from v1[1] as they have been already queued.
-* Split up the pfc for r8a7790 as common and automotive.
-* Enabled dmac and scifa2 as part of initial SoC dtsi so that by default
-  board can be booted from eMMC.
-* New patches 4, 7-10
-* Dropped patches 12, 14-18 from v1[1] and will be posted after acceptance
-  of this series.
-
-[1] https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=279727
-
-Lad Prabhakar (10):
-  dt-bindings: pinctrl: sh-pfc: Document r8a7742 PFC support
-  pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
-  dt-bindings: serial: renesas,scifa: Document r8a7742 bindings
-  dt-bindings: mmc: renesas,mmcif: Document r8a7742 DT bindings
-  dt-bindings: renesas,rcar-dmac: Document r8a7742 support
-  ARM: dts: r8a7742: Initial SoC device tree
-  dt-bindings: arm: Document iW-RainboW-G21M-Qseven-RZG1H system on
-    module
-  dt-bindings: arm: Document iW-RainboW-G21D-Qseven-RZG1H board
-  ARM: dts: r8a7742-iwg21m: Add iWave RZ/G1H Qseven SOM
-  ARM: dts: r8a7742-iwg21d-q7: Add support for iWave G21D-Q7 board based
-    on RZ/G1H
-
- .../devicetree/bindings/arm/renesas.yaml      |  10 +
- .../bindings/dma/renesas,rcar-dmac.yaml       |   1 +
- .../devicetree/bindings/mmc/renesas,mmcif.txt |   1 +
- .../bindings/pinctrl/renesas,pfc-pinctrl.txt  |   1 +
- .../bindings/serial/renesas,scifa.yaml        |   1 +
- arch/arm/boot/dts/Makefile                    |   1 +
- arch/arm/boot/dts/r8a7742-iwg21d-q7.dts       |  37 +
- arch/arm/boot/dts/r8a7742-iwg21m.dtsi         |  53 ++
- arch/arm/boot/dts/r8a7742.dtsi                | 389 +++++++++
- drivers/pinctrl/sh-pfc/Kconfig                |   4 +
- drivers/pinctrl/sh-pfc/Makefile               |   1 +
- drivers/pinctrl/sh-pfc/core.c                 |   6 +
- drivers/pinctrl/sh-pfc/pfc-r8a7790.c          | 744 +++++++++---------
- drivers/pinctrl/sh-pfc/sh_pfc.h               |   1 +
- 14 files changed, 898 insertions(+), 352 deletions(-)
- create mode 100644 arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
- create mode 100644 arch/arm/boot/dts/r8a7742-iwg21m.dtsi
- create mode 100644 arch/arm/boot/dts/r8a7742.dtsi
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
+index 6eada23eaa31..b68613188c19 100644
+--- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
+@@ -13,6 +13,7 @@ Required Properties:
+     - "renesas,pfc-emev2": for EMEV2 (EMMA Mobile EV2) compatible pin-controller.
+     - "renesas,pfc-r8a73a4": for R8A73A4 (R-Mobile APE6) compatible pin-controller.
+     - "renesas,pfc-r8a7740": for R8A7740 (R-Mobile A1) compatible pin-controller.
++    - "renesas,pfc-r8a7742": for R8A7742 (RZ/G1H) compatible pin-controller.
+     - "renesas,pfc-r8a7743": for R8A7743 (RZ/G1M) compatible pin-controller.
+     - "renesas,pfc-r8a7744": for R8A7744 (RZ/G1N) compatible pin-controller.
+     - "renesas,pfc-r8a7745": for R8A7745 (RZ/G1E) compatible pin-controller.
 -- 
 2.17.1
 

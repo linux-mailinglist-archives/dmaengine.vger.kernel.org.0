@@ -2,129 +2,174 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15A521C2FF6
-	for <lists+dmaengine@lfdr.de>; Mon,  4 May 2020 00:22:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9ACBB1C2FFC
+	for <lists+dmaengine@lfdr.de>; Mon,  4 May 2020 00:25:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbgECWWi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 3 May 2020 18:22:38 -0400
-Received: from mail-eopbgr10075.outbound.protection.outlook.com ([40.107.1.75]:8865
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729151AbgECWWh (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sun, 3 May 2020 18:22:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T67+1QR/atfukvCt3OBOFoVbJZ9CTd/RwO72rL/FjKuRSscKxN0vQ4mZ9Z+Ny1ZkIAfGGgdOkJvQa4FH4qVhI7kBV3rC/d055+/0/PiMRRhfKbUq7dRFmNsXqjjEhHwP980pj/Cq5LQ5KGLxgKlFo28BY2ZdSJJO+wm3j7pUkEQ3hd4ipbCCpdMGCAYXXDMbnFf7817DDIwMr00MiZpX1RwtYh6XW3M1LSGTrqOWNoQXJ2fVdudD9sAThgz9nDi/npwTto0hDbs01IbObp10br8F5jnrJj+tBOMaYP2VHcuq6g9JtrnS2ABBpiL2cZFB4r7pP2PyiFURCy+KuadZVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W5OmvZaYe82iEsILDcpHVl6CFb4nh3Aw5jI+Ha/B+aU=;
- b=P9Y8M8WJG1hng55aZ1oLdxbQX9UKe8xyO7iOd6IAUGiYsFbzNi4BSGeLDEcbXHvUbaKgK/k8FoBGDEaX/XcJZ7M3e605UhqK/Onjm5AQNtBqPLrjGoyWI8LtSJFJoQ1T3sO1IiXpY6wsZfhmkgDKP85v/HTZ+K3J5fibio0GJnfJ10Mvq+sVhKFKZZ6qQFiPQ2ZxLOjGENzEJT/7hsuCxoW+bOpDtLWC5KTPB19AcBqYAzdhVrCBWFQ7oL37dM54g0ZyZXSigH3jBL7DaqDs1HBlaH8hofIzBW/JL5qva05wf/n/3GeIVegRyNW/2wS09lb4ZI3tcPXFGKCKgEBdSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W5OmvZaYe82iEsILDcpHVl6CFb4nh3Aw5jI+Ha/B+aU=;
- b=LIQA3qhDKreSBSl4/WjY8GavwLtGjIKgBQJhf9RekQ7WqxoPTe2IsvayA8deTLhcskm9hNO4gJBtQWI3F9DTH2/eRjohstmNFY5zRtR8mF7eD8/ATXkoU5qtb1d7+C17Y3oiw455NDVKWqx5ev7PwgWPr0QYHtwnzqbyl4vcRSU=
-Authentication-Results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none
- header.from=mellanox.com;
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB4157.eurprd05.prod.outlook.com (2603:10a6:803:4d::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.29; Sun, 3 May
- 2020 22:22:33 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2958.029; Sun, 3 May 2020
- 22:22:32 +0000
-Date:   Sun, 3 May 2020 19:22:29 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
+        id S1729200AbgECWZQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 3 May 2020 18:25:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729188AbgECWZP (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 3 May 2020 18:25:15 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D06AC061A41
+        for <dmaengine@vger.kernel.org>; Sun,  3 May 2020 15:25:15 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id i14so3644212qka.10
+        for <dmaengine@vger.kernel.org>; Sun, 03 May 2020 15:25:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=fE1DsHMLeD3vUe7bC1r7mfbyeNGV2bFbtoi5gmdBxnc=;
+        b=Iuv8uvwIEuuVEU+E9/d0lU12GRhwJXxzMOTrQ92WjdBA04tJLjmPxjp6gl1VrNZWnn
+         oMQMWjSyMu4om5lGhqyLodhcxZV4LEsdWktKi016L5V6uap1LaKTC5qqc4vxcbZAFvDM
+         bZHtM6mulmG8tAtV+/WvpEdo3YntvODOaINQ0HA9BxegSyeUbeaPrpkmsMyv2v1j4VBn
+         ut4AbaXhIdUNp+1/2wTh1OPq3A2TQiYewm3OPEC/WaQgMgxyQDaHqVDe1AkfMXpvCguz
+         L5R4vAPnsbO0bMb5A0XtxBOPspzZhnRZlXAVY9E+ZVDYwtDa1Jtuvs1FkJo/bUFrF7Ud
+         x4yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=fE1DsHMLeD3vUe7bC1r7mfbyeNGV2bFbtoi5gmdBxnc=;
+        b=DiOLexUaKf+uECvl5OzizGEzlnpnDFR5fiHCCYBrByjbYsevd65IU7fP1hP2+m6v5M
+         xNhIRBXF7omkdbpV1GiVlVFT5rjgZW086Y4rDmnvHIQ/cQC4vvA+fc4xIcz6FOV064wU
+         vvqPJyZ6M4XxAzPLzRBPYTz5DEdxq/jsckxmYmZe3CYAr3LzsS6HutsGOlG2eaKT8Wpm
+         VmcECsm4dLMev53W5OB02O+XASFiUjpX6AkAapnTCQb8toLcgaXxLhxinpNhtRNnDCTS
+         NBO0RBDp1kQGEvEQlFuZ1LSjoYAUELUYT4zUENdnuBYZ6aSRMr/EdpwburnwxCJnicLO
+         NopQ==
+X-Gm-Message-State: AGi0PuYfg6KgCabRtzNALOmH1Wd+EjbBAg5UtrD/xS7pvZNqSBIp3b0t
+        +YEOu3r0zAjQTHlgggeQl2DF/Q==
+X-Google-Smtp-Source: APiQypLo8CBxepN9L5tiMWDFp5DJImiXdhLUtRbT60zIZXhhiuntugGhkFhRsYpUPOjZpXopTs+nrg==
+X-Received: by 2002:a37:ac14:: with SMTP id e20mr12271790qkm.23.1588544714466;
+        Sun, 03 May 2020 15:25:14 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id w69sm1792213qka.75.2020.05.03.15.25.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 03 May 2020 15:25:13 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jVN2v-0002Sw-33; Sun, 03 May 2020 19:25:13 -0300
+Date:   Sun, 3 May 2020 19:25:13 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
 To:     "Dey, Megha" <megha.dey@linux.intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, maz@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob jun Pan <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>, Yi L Liu <yi.l.liu@intel.com>,
-        baolu.lu@intel.com, "Tian, Kevin" <kevin.tian@intel.com>,
-        Sanjay K Kumar <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>, Jing Lin <jing.lin@intel.com>,
+Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        maz@kernel.org, bhelgaas@google.com, rafael@kernel.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
+        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
         kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        dmaengine@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, linux-pci@vger.kernel.org,
-        KVM list <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Message-ID: <20200503222229.GE19158@mellanox.com>
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC 04/15] drivers/base: Add support for a new IMS irq
+ domain
+Message-ID: <20200503222513.GS26002@ziepe.ca>
 References: <158751095889.36773.6009825070990637468.stgit@djiang5-desk3.ch.intel.com>
- <20200421235442.GO11945@mellanox.com>
- <CAPcyv4gMYz1wCYjfnujyGXP0jGehpb+dEYV7hJoAAsDsj9+afQ@mail.gmail.com>
- <20200423191846.GE13640@mellanox.com>
- <098aef60-35a4-dc44-be07-ea43c1a726c7@linux.intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <098aef60-35a4-dc44-be07-ea43c1a726c7@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: MN2PR04CA0018.namprd04.prod.outlook.com
- (2603:10b6:208:d4::31) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+ <158751205175.36773.1874642824360728883.stgit@djiang5-desk3.ch.intel.com>
+ <20200423201118.GA29567@ziepe.ca>
+ <35f701d9-1034-09c7-8117-87fb8796a017@linux.intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR04CA0018.namprd04.prod.outlook.com (2603:10b6:208:d4::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend Transport; Sun, 3 May 2020 22:22:32 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jVN0H-0002RC-Dw; Sun, 03 May 2020 19:22:29 -0300
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 4278179e-0f57-4139-b294-08d7efb07956
-X-MS-TrafficTypeDiagnostic: VI1PR05MB4157:|VI1PR05MB4157:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB4157F88E2BC85CA94F7A8D03CFA90@VI1PR05MB4157.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0392679D18
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: P2LemrUTFqhaBidO6Ar4BRy1OXzEnJwvC5+Cv8aDhCE1rv+6IHEJPrqaHhYpilPKPd37pI2Smb0cvIFfTTsTLjMSxVKikBG7RYGd9psMh4qjfHWMKWs9ZfsvQnyA8GhGReFqY5+CCWSax904G6UlTGoL/xryu/UEhvtgDWUTYDLKHT5bT88PDWbFsR4ZxHT54RS3vmAo7xcWwxDLTD8YIGeoHbgYHU8ofiXcDa4J55a4MLZxN+fdS6f6tT2cytD4PzwdUHCKlIshgjmcfNJhumUKEekr+K3Mrz/L2RI8yREHmdHGemsav1IAFi5/FQ2xa4uzfzH4lNPdCK9T/LRFDaMRbvwSyyL0GLhmhfeyZUDPnCaL/jY91cdY2wVNzNQF8JTIIX3zPqUXTbc0RAyjblLbMgA6z5NGt6Ln3XtVntHrn/M/0U5ycLUzNkKmU2IQdzvVzWtwG6D/VBrrevsqmSHZCaoYZtE396dcMYEj7U7WnY5GZzLfV3mSYOLWhvSp
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(346002)(396003)(39860400002)(366004)(33656002)(54906003)(2906002)(9746002)(9786002)(4744005)(1076003)(478600001)(52116002)(5660300002)(36756003)(186003)(6916009)(316002)(4326008)(26005)(2616005)(86362001)(8676002)(66946007)(7416002)(8936002)(66476007)(66556008)(24400500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 9GysRJozWs3nhHCPOWWtnuLGnuIpZH7X7RP0e+/sMfY+TmNHH7cjUSTIRxmk+UHG8YSqfffpZdOupUuxIeGjAg2/c95/dSZXIvulAam/Pl5WNfWg2fMcPwNDc3NETmYtoVH5r1tshOjPigQHln1V6qqd6VohTXMvcxhLGMOvfLzEksiBC/5rMaQ/SJJkG8ORsrq+eT7U9ThUrw14qhZFNjSsGfVql2ise4VpKvx3UnK/NgRtJPAJJjwjTTbN0ExCXVE7sWI/E7iD6glU+SBbPiBD1QlUJCzCW7Pq6Jp+Ru77Ia5qdSo3yP/T1X02OsSUu3a9phqgaIbB7VkziFhpDqIg4nbjGPXg1ovY7Fn7VBMCmt5Pk8gaJCzTDOVhhVWAC23WwQAchaW9hCSDanqKWvPhBhZOfu9fx199NSFtVK1hdYxjAQd7haPR4Cq8gaqGB8gtKqoiicvrHTNfbDpWrxZCCgoX/05Maqtit0W/U0L5TGDLBHmQXa+2iCkoRKdfXreq0L3AN/bFyLWe0gudUT+xtUA3vOEDGEriH+w1OKnO56fT1sBy2XVAqATYs8l71v+3UDQ4bC2aAcx9U0H+te+aJOEsMRFq4fOQrvxJIp3S8dsiAMVHiy9ulsl5lG/TQlg8XvkTQeE0OXvjiLX1usK+yI25aRqZfHoLmsE+vdXn2WNenbN7eQ+j3LN8IRYohWdmAwqnb3lTyY7u77LMySwXzovqnu9rPmGpDbckUY/S3IhSpLUqQsK40Vt8nuiKIDz0J88F6MjEjTyqCu1I8a2LY1/bYScWHfq30UFfjhw=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4278179e-0f57-4139-b294-08d7efb07956
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2020 22:22:32.8070
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MMKu3pduSlpij2lIt6IfPRW1Ux7/NcjKZNefx/eSaxxDgm6zWMEb6fN7HljDlgjBgKtHW6gIVRvr3qo4TAFRNg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4157
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <35f701d9-1034-09c7-8117-87fb8796a017@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, May 01, 2020 at 03:31:51PM -0700, Dey, Megha wrote:
-> > > This has been my concern reviewing the implementation. IMS needs more
-> > > than one in-tree user to validate degrees of freedom in the api. I had
-> > > been missing a second "in-tree user" to validate the scope of the
-> > > flexibility that was needed.
-> > 
-> > IMS is too narrowly specified.
-> > 
-> > All platforms that support MSI today can support IMS. It is simply a
-> > way for the platform to give the driver an addr/data pair that triggers
-> > an interrupt when a posted write is performed to that pair.
-> > 
+On Fri, May 01, 2020 at 03:30:02PM -0700, Dey, Megha wrote:
+> Hi Jason,
 > 
-> Well, yes and no. IMS requires interrupt remapping in addition to the
-> dynamic nature of IRQ allocation.
+> On 4/23/2020 1:11 PM, Jason Gunthorpe wrote:
+> > On Tue, Apr 21, 2020 at 04:34:11PM -0700, Dave Jiang wrote:
+> > > diff --git a/drivers/base/ims-msi.c b/drivers/base/ims-msi.c
+> > > new file mode 100644
+> > > index 000000000000..738f6d153155
+> > > +++ b/drivers/base/ims-msi.c
+> > > @@ -0,0 +1,100 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * Support for Device Specific IMS interrupts.
+> > > + *
+> > > + * Copyright © 2019 Intel Corporation.
+> > > + *
+> > > + * Author: Megha Dey <megha.dey@intel.com>
+> > > + */
+> > > +
+> > > +#include <linux/dmar.h>
+> > > +#include <linux/irq.h>
+> > > +#include <linux/mdev.h>
+> > > +#include <linux/pci.h>
+> > > +
+> > > +/*
+> > > + * Determine if a dev is mdev or not. Return NULL if not mdev device.
+> > > + * Return mdev's parent dev if success.
+> > > + */
+> > > +static inline struct device *mdev_to_parent(struct device *dev)
+> > > +{
+> > > +	struct device *ret = NULL;
+> > > +	struct device *(*fn)(struct device *dev);
+> > > +	struct bus_type *bus = symbol_get(mdev_bus_type);
+> > > +
+> > > +	if (bus && dev->bus == bus) {
+> > > +		fn = symbol_get(mdev_dev_to_parent_dev);
+> > > +		ret = fn(dev);
+> > > +		symbol_put(mdev_dev_to_parent_dev);
+> > > +		symbol_put(mdev_bus_type);
+> > 
+> > No, things like this are not OK in the drivers/base
+> > 
+> > Whatever this is doing needs to be properly architected in some
+> > generic way.
+> 
+> Basically what I am trying to do here is to determine if the device is an
+> mdev device or not.
 
-You've mentioned remapping a few times, but I really can't understand
-why it has anything to do with platform_msi or IMS..
+Why? mdev devices are virtual they don't have HW elements.
+
+The caller should use the concrete pci_device to allocate
+platform_msi? What is preventing this?
+
+> > > +struct irq_domain *arch_create_ims_irq_domain(struct irq_domain *parent,
+> > > +					      const char *name)
+> > > +{
+> > > +	struct fwnode_handle *fn;
+> > > +	struct irq_domain *domain;
+> > > +
+> > > +	fn = irq_domain_alloc_named_fwnode(name);
+> > > +	if (!fn)
+> > > +		return NULL;
+> > > +
+> > > +	domain = msi_create_irq_domain(fn, &ims_ir_domain_info, parent);
+> > > +	if (!domain)
+> > > +		return NULL;
+> > > +
+> > > +	irq_domain_update_bus_token(domain, DOMAIN_BUS_PLATFORM_MSI);
+> > > +	irq_domain_free_fwnode(fn);
+> > > +
+> > > +	return domain;
+> > > +}
+> > 
+> > I'm still not really clear why all this is called IMS.. This looks
+> > like the normal boilerplate to setup an IRQ domain? What is actually
+> > 'ims' in here?
+> 
+> It is just a way to create a new domain specifically for IMS interrupts.
+> Although, since there is a platform_msi_create_irq_domain already, which
+> does something similar, I will use the same for IMS as well.
+
+But this is all code already intended to be used by the platform, why
+is it in drivers/base?
+
+> Also, since there is quite a stir over the name 'IMS' do you have any
+> suggestion for a more generic name for this?
+
+It seems we have a name, this is called platform_msi in Linux?
 
 Jason

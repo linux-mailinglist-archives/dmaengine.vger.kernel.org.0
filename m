@@ -2,83 +2,65 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CAE61C37EE
-	for <lists+dmaengine@lfdr.de>; Mon,  4 May 2020 13:22:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AACA51C383F
+	for <lists+dmaengine@lfdr.de>; Mon,  4 May 2020 13:34:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbgEDLWJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 4 May 2020 07:22:09 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44335 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726445AbgEDLWJ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 4 May 2020 07:22:09 -0400
-Received: by mail-oi1-f196.google.com with SMTP id a2so6258644oia.11;
-        Mon, 04 May 2020 04:22:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/jRRl/QTF62BTO0pe47y/GWsOHz0nkfjCAIUVeTbtdY=;
-        b=pGqTYZJVu37luwOmAJTxXHgZIdsFmIBbKyR7fINcZDv01N/p8pXEI5+y+HJc8qh1Oa
-         NrIEq3h8edOuezJ7CpXvTYK4O5T6ludeXXJlnhe4GZ5vUj+r7cCh2IDmWdTFtJLXKVXg
-         A65mzKssS1zTRLFwkYln+C+gK9qigaDw+F6+tU6vMohCgdnyMLEE3VPbnk7CfY5yFXpO
-         ZvxhK3FVNG/AIb/clGuNtfGJlljyiIY0aVI7ucxxg8CIGPevlv+adedbbTG68sVnl7Zb
-         O5J+7T2VMzKC3a1Ud3TpOXSWifNbLalrm4TDtsW77C7CIXKBmqR2i7ehoI0FI9MJQAwX
-         CAYw==
-X-Gm-Message-State: AGi0PuZ1yOQf0NZ3UmOvG3v0ItAclivIlF5+617XoRHZsSy2Sp9QIYGe
-        aNuGBEjZE1A1TR9fTXskkdAiMtR7beoXf2yF2/QiA5So
-X-Google-Smtp-Source: APiQypLhQa33fXpG4CJeXxg3td7a1+tJhkA8EyqpoDhMWC0c9V02ObVa3BG3J0cZD74cbBUTpHl6RscmLuTe+RiMbt4=
-X-Received: by 2002:aca:f541:: with SMTP id t62mr8163136oih.148.1588591328305;
- Mon, 04 May 2020 04:22:08 -0700 (PDT)
+        id S1728776AbgEDLey (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 4 May 2020 07:34:54 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56600 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726756AbgEDLey (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 4 May 2020 07:34:54 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 96B418D5E6CF843B1EDC;
+        Mon,  4 May 2020 19:34:52 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Mon, 4 May 2020
+ 19:34:43 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <okaya@kernel.org>, <agross@kernel.org>,
+        <bjorn.andersson@linaro.org>, <vkoul@kernel.org>,
+        <dan.j.williams@intel.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Jason Yan <yanaijie@huawei.com>
+Subject: [PATCH] dmaengine: qcom_hidma: use true,false for bool variable
+Date:   Mon, 4 May 2020 19:34:06 +0800
+Message-ID: <20200504113406.41530-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588542414-14826-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588542414-14826-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 4 May 2020 13:21:56 +0200
-Message-ID: <CAMuHMdWqD6k7-cfaZQbc2pjSuCOGL4TcKR-S6QRgVqoUHfBayQ@mail.gmail.com>
-Subject: Re: [PATCH v2 08/10] dt-bindings: arm: Document iW-RainboW-G21D-Qseven-RZG1H
- board
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sun, May 3, 2020 at 11:47 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Document the iW-RainboW-G21D-Qseven-RZG1H device tree bindings,
-> listing it as a supported board.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Fix the following coccicheck warning:
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.8.
+drivers/dma/qcom/hidma.c:553:1-17: WARNING: Assignment of 0/1 to bool
+variable
 
-Gr{oetje,eeting}s,
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+---
+ drivers/dma/qcom/hidma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-                        Geert
-
+diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
+index 87490e125bc3..0a6d3ea08c78 100644
+--- a/drivers/dma/qcom/hidma.c
++++ b/drivers/dma/qcom/hidma.c
+@@ -550,7 +550,7 @@ static void hidma_free_chan_resources(struct dma_chan *dmach)
+ 		kfree(mdesc);
+ 	}
+ 
+-	mchan->allocated = 0;
++	mchan->allocated = false;
+ 	spin_unlock_irqrestore(&mchan->lock, irqflags);
+ }
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.21.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds

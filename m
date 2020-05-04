@@ -2,143 +2,96 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E42881C3DD6
-	for <lists+dmaengine@lfdr.de>; Mon,  4 May 2020 16:59:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 422231C479A
+	for <lists+dmaengine@lfdr.de>; Mon,  4 May 2020 22:03:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgEDO7s (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 4 May 2020 10:59:48 -0400
-Received: from mga17.intel.com ([192.55.52.151]:52237 "EHLO mga17.intel.com"
+        id S1726419AbgEDUDB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 4 May 2020 16:03:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726445AbgEDO7s (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 4 May 2020 10:59:48 -0400
-IronPort-SDR: GRk+6ZL1qYTfSpKgPRppBx6rwSo8KQxedUGDj5M1jpxd6+VL3Ixf6qmKRRtWY4JLw7cZQLQE2B
- YHB68NfA8M6g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 07:59:47 -0700
-IronPort-SDR: BCzkAPXCzI1qOas20gSGlMh1vNWgPQpbvE6VN4QhUEYVTqSRajGtAdpXSfLFZ7kwhM7s4aGzcJ
- 33w5wfteVJYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,352,1583222400"; 
-   d="scan'208";a="295519559"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.251.231.155]) ([10.251.231.155])
-  by orsmga008.jf.intel.com with ESMTP; 04 May 2020 07:59:46 -0700
-Subject: Re: [PATCH] dmaengine: cookie bypass for out of order completion
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org, swathi.kovvuri@intel.com,
-        Dan Williams <dan.j.williams@intel.com>
-References: <158827174736.34343.16479132955205930987.stgit@djiang5-desk3.ch.intel.com>
- <20200504053959.GI1375924@vkoul-mobl>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <f5207da6-f54e-1402-f5b1-7f52baa58132@intel.com>
-Date:   Mon, 4 May 2020 07:59:46 -0700
+        id S1726334AbgEDUDA (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 4 May 2020 16:03:00 -0400
+Received: from [192.168.1.74] (75-58-59-55.lightspeed.rlghnc.sbcglobal.net [75.58.59.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 740C1206A5;
+        Mon,  4 May 2020 20:02:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588622580;
+        bh=GIxo0Vm+W3zux+9Tx3/1kqa1pGgR2R/67Dfb5VXJ+I4=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=mNgiZ0Kjg0wTQw/+v4PZd/EHEfwYZfOKjaavdvVX1cdSFUs0nSI5RsWlB3Wyim1z1
+         UTEXTcGq4s8dF8BOkLpNRUVGSFI9PYoN9dclXKEy+8zmvWKoS+DUut7HpN0jg64ktd
+         R0MmkOpN0+k3SM0o0VIH0qeH+ENQwfPFv8dhA4Hs=
+Subject: Re: [PATCH] dmaengine: qcom_hidma: use true,false for bool variable
+To:     Jason Yan <yanaijie@huawei.com>, agross@kernel.org,
+        bjorn.andersson@linaro.org, vkoul@kernel.org,
+        dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200504113406.41530-1-yanaijie@huawei.com>
+From:   Sinan Kaya <okaya@kernel.org>
+Autocrypt: addr=okaya@kernel.org; keydata=
+ mQENBFrnOrUBCADGOL0kF21B6ogpOkuYvz6bUjO7NU99PKhXx1MfK/AzK+SFgxJF7dMluoF6
+ uT47bU7zb7HqACH6itTgSSiJeSoq86jYoq5s4JOyaj0/18Hf3/YBah7AOuwk6LtV3EftQIhw
+ 9vXqCnBwP/nID6PQ685zl3vH68yzF6FVNwbDagxUz/gMiQh7scHvVCjiqkJ+qu/36JgtTYYw
+ 8lGWRcto6gr0eTF8Wd8f81wspmUHGsFdN/xPsZPKMw6/on9oOj3AidcR3P9EdLY4qQyjvcNC
+ V9cL9b5I/Ud9ghPwW4QkM7uhYqQDyh3SwgEFudc+/RsDuxjVlg9CFnGhS0nPXR89SaQZABEB
+ AAG0HVNpbmFuIEtheWEgPG9rYXlhQGtlcm5lbC5vcmc+iQFOBBMBCAA4FiEEYdOlMSE+a7/c
+ ckrQvGF4I+4LAFcFAlztcAoCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQvGF4I+4L
+ AFfidAf/VKHInxep0Z96iYkIq42432HTZUrxNzG9IWk4HN7c3vTJKv2W+b9pgvBF1SmkyQSy
+ 8SJ3Zd98CO6FOHA1FigFyZahVsme+T0GsS3/OF1kjrtMktoREr8t0rK0yKpCTYVdlkHadxmR
+ Qs5xLzW1RqKlrNigKHI2yhgpMwrpzS+67F1biT41227sqFzW9urEl/jqGJXaB6GV+SRKSHN+
+ ubWXgE1NkmfAMeyJPKojNT7ReL6eh3BNB/Xh1vQJew+AE50EP7o36UXghoUktnx6cTkge0ZS
+ qgxuhN33cCOU36pWQhPqVSlLTZQJVxuCmlaHbYWvye7bBOhmiuNKhOzb3FcgT7kBDQRa5zq1
+ AQgAyRq/7JZKOyB8wRx6fHE0nb31P75kCnL3oE+smKW/sOcIQDV3C7mZKLf472MWB1xdr4Tm
+ eXeL/wT0QHapLn5M5wWghC80YvjjdolHnlq9QlYVtvl1ocAC28y43tKJfklhHiwMNDJfdZbw
+ 9lQ2h+7nccFWASNUu9cqZOABLvJcgLnfdDpnSzOye09VVlKr3NHgRyRZa7me/oFJCxrJlKAl
+ 2hllRLt0yV08o7i14+qmvxI2EKLX9zJfJ2rGWLTVe3EJBnCsQPDzAUVYSnTtqELu2AGzvDiM
+ gatRaosnzhvvEK+kCuXuCuZlRWP7pWSHqFFuYq596RRG5hNGLbmVFZrCxQARAQABiQEfBBgB
+ CAAJBQJa5zq1AhsMAAoJELxheCPuCwBX2UYH/2kkMC4mImvoClrmcMsNGijcZHdDlz8NFfCI
+ gSb3NHkarnA7uAg8KJuaHUwBMk3kBhv2BGPLcmAknzBIehbZ284W7u3DT9o1Y5g+LDyx8RIi
+ e7pnMcC+bE2IJExCVf2p3PB1tDBBdLEYJoyFz/XpdDjZ8aVls/pIyrq+mqo5LuuhWfZzPPec
+ 9EiM2eXpJw+Rz+vKjSt1YIhg46YbdZrDM2FGrt9ve3YaM5H0lzJgq/JQPKFdbd5MB0X37Qc+
+ 2m/A9u9SFnOovA42DgXUyC2cSbIJdPWOK9PnzfXqF3sX9Aol2eLUmQuLpThJtq5EHu6FzJ7Y
+ L+s0nPaNMKwv/Xhhm6Y=
+Message-ID: <3d61f97c-6d7e-a0be-9986-99c09a0f896d@kernel.org>
+Date:   Mon, 4 May 2020 16:02:58 -0400
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200504053959.GI1375924@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <20200504113406.41530-1-yanaijie@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 5/3/2020 10:39 PM, Vinod Koul wrote:
-> Hi Dave,
+On 5/4/2020 7:34 AM, Jason Yan wrote:
+> Fix the following coccicheck warning:
 > 
-> On 30-04-20, 11:35, Dave Jiang wrote:
->> The cookie tracking in dmaengine expects all submissions completed in
+> drivers/dma/qcom/hidma.c:553:1-17: WARNING: Assignment of 0/1 to bool
+> variable
 > 
-> Correct and that is a *very* fundamental assumption of the cookie
-> management. Modifying this will cause impact to other as well..
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> ---
+>  drivers/dma/qcom/hidma.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
+> index 87490e125bc3..0a6d3ea08c78 100644
+> --- a/drivers/dma/qcom/hidma.c
+> +++ b/drivers/dma/qcom/hidma.c
+> @@ -550,7 +550,7 @@ static void hidma_free_chan_resources(struct dma_chan *dmach)
+>  		kfree(mdesc);
+>  	}
+>  
+> -	mchan->allocated = 0;
+> +	mchan->allocated = false;
+>  	spin_unlock_irqrestore(&mchan->lock, irqflags);
+>  }
 
-The current modification only impacts drivers that opt out of this. So 
-all existing or future driver does not return the out of order flag 
-should remain unimpacted.
+Acked By: Sinan Kaya <okaya@kernel.org>
 
-> 
->> order. Some DMA devices like Intel DSA can complete submissions out of
->> order, especially if configured with a work queue sharing multiple DMA
->> engines. Add a status DMA_OUT_OF_ORDER that tx_status can be returned for
-> 
-> We should add this as a capability in dmaengine. How else would users
-> know if they can expect out of order completion..
-
-Hmmm...this is more an attribute of the hardware rather than a 
-capability that a user would request right? Should we add a new function 
-that would provide an avenue for users to query the device on such 
-attributes and others like channel depth or SGL max size?
-
-> 
->> those DMA devices. The user should use callbacks to track the completion
->> rather than the DMA cookie. This would address the issue of dmatest
->> complaining that descriptors are "busy" when the cookie count goes
->> backwards due to out of order completion.
-> 
-> Can we add some documentation for this behaviour as well
-
-sure thing.
-
-> 
->>
->> Reported-by: Swathi Kovvuri <swathi.kovvuri@intel.com>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> Tested-by: Swathi Kovvuri <swathi.kovvuri@intel.com>
->> ---
->>   drivers/dma/dmatest.c     |    3 ++-
->>   drivers/dma/idxd/dma.c    |    2 +-
->>   include/linux/dmaengine.h |    1 +
->>   3 files changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
->> index a2cadfa2e6d7..60a4a9cec3c8 100644
->> --- a/drivers/dma/dmatest.c
->> +++ b/drivers/dma/dmatest.c
->> @@ -821,7 +821,8 @@ static int dmatest_func(void *data)
->>   			result("test timed out", total_tests, src->off, dst->off,
->>   			       len, 0);
->>   			goto error_unmap_continue;
->> -		} else if (status != DMA_COMPLETE) {
->> +		} else if (status != DMA_COMPLETE &&
->> +			   status != DMA_OUT_OF_ORDER) {
->>   			result(status == DMA_ERROR ?
->>   			       "completion error status" :
->>   			       "completion busy status", total_tests, src->off,
->> diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
->> index c64c1429d160..3f54826abc12 100644
->> --- a/drivers/dma/idxd/dma.c
->> +++ b/drivers/dma/idxd/dma.c
->> @@ -133,7 +133,7 @@ static enum dma_status idxd_dma_tx_status(struct dma_chan *dma_chan,
->>   					  dma_cookie_t cookie,
->>   					  struct dma_tx_state *txstate)
->>   {
->> -	return dma_cookie_status(dma_chan, cookie, txstate);
->> +	return DMA_OUT_OF_ORDER;
-> 
-> So you are returning out of order always?
-
-Yes. The hardware does not gaurantee in order processing at all. The 
-only way to do so is to submit a batched operation with fence set on 
-every descriptor in the batch.
-
-> 
->>   }
->>   
->>   /*
->> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
->> index 21065c04c4ac..a0c130131e45 100644
->> --- a/include/linux/dmaengine.h
->> +++ b/include/linux/dmaengine.h
->> @@ -39,6 +39,7 @@ enum dma_status {
->>   	DMA_IN_PROGRESS,
->>   	DMA_PAUSED,
->>   	DMA_ERROR,
->> +	DMA_OUT_OF_ORDER,
->>   };
->>   
->>   /**
-> 

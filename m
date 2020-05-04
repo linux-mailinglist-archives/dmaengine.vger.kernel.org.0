@@ -2,147 +2,143 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14ACA1C3D06
-	for <lists+dmaengine@lfdr.de>; Mon,  4 May 2020 16:29:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E42881C3DD6
+	for <lists+dmaengine@lfdr.de>; Mon,  4 May 2020 16:59:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728486AbgEDO3m (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 4 May 2020 10:29:42 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35423 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729060AbgEDO3m (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 4 May 2020 10:29:42 -0400
-Received: by mail-ot1-f65.google.com with SMTP id k110so4504853otc.2;
-        Mon, 04 May 2020 07:29:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4qmNWbZEWGK3APAzYwIeRF7N4Ey8Oknk1ZvcU1u1ZqU=;
-        b=N1oXyP7br7VE+24jMnpp//tEsI2I9XMyipiwrWkWyV0WlxffaFdZWcngd8JXS1pXP4
-         /6ighEpGKEP276G12e4Pu0JNaLUnWjHgTK6cbnaqvYkYNnROtka1WSFPI+u631GQpSWo
-         j/qX4TSs7AWDXwKmOOK5MCtz/OcYRe+prCpD9/QFZNd7+gcGnJfVIwENZ2Sg00uMeVzh
-         lZ2mBJ8OxZtgGMNJHj4DQxSq6Txc+7+ppz3xhoAhNlsx5Rf6YAVaxwZ/MqKzJsuEYJNX
-         5GGcBolqiK1c5HVmUvZ5chSXUv+OKPPXa1+Y5KZYL1/eEbU27l6ZKz1WvUwwQjtKjDBV
-         IvvA==
-X-Gm-Message-State: AGi0PuYY/E3WPj86DYzI8Lv6+XTmM+aw9qLH865psgy4eTdcKEb2H2hi
-        npNwSZIpNgFJft8rgPTu77NOvfq5q98kkxjqZbo=
-X-Google-Smtp-Source: APiQypIl5oeOYwC1jEI/m9PhRtWzOpl25bOP4xHlOC6xhIPb9atAy1P1nyb7qKk0U0HPJufqUAievgfEuM+jpmQcYow=
-X-Received: by 2002:a9d:7990:: with SMTP id h16mr14016322otm.145.1588602579133;
- Mon, 04 May 2020 07:29:39 -0700 (PDT)
+        id S1726913AbgEDO7s (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 4 May 2020 10:59:48 -0400
+Received: from mga17.intel.com ([192.55.52.151]:52237 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726445AbgEDO7s (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 4 May 2020 10:59:48 -0400
+IronPort-SDR: GRk+6ZL1qYTfSpKgPRppBx6rwSo8KQxedUGDj5M1jpxd6+VL3Ixf6qmKRRtWY4JLw7cZQLQE2B
+ YHB68NfA8M6g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2020 07:59:47 -0700
+IronPort-SDR: BCzkAPXCzI1qOas20gSGlMh1vNWgPQpbvE6VN4QhUEYVTqSRajGtAdpXSfLFZ7kwhM7s4aGzcJ
+ 33w5wfteVJYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,352,1583222400"; 
+   d="scan'208";a="295519559"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.251.231.155]) ([10.251.231.155])
+  by orsmga008.jf.intel.com with ESMTP; 04 May 2020 07:59:46 -0700
+Subject: Re: [PATCH] dmaengine: cookie bypass for out of order completion
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, swathi.kovvuri@intel.com,
+        Dan Williams <dan.j.williams@intel.com>
+References: <158827174736.34343.16479132955205930987.stgit@djiang5-desk3.ch.intel.com>
+ <20200504053959.GI1375924@vkoul-mobl>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <f5207da6-f54e-1402-f5b1-7f52baa58132@intel.com>
+Date:   Mon, 4 May 2020 07:59:46 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588542414-14826-10-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdXv1kW4BeEt4tGBwp9gmRUOJ1X_7-Gu2h=m+On8+RjZ2A@mail.gmail.com> <CA+V-a8vqC90BgGjZKcMArOf4-F9PS4jXoVQbNQ81V6p4knsx=A@mail.gmail.com>
-In-Reply-To: <CA+V-a8vqC90BgGjZKcMArOf4-F9PS4jXoVQbNQ81V6p4knsx=A@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 4 May 2020 16:29:28 +0200
-Message-ID: <CAMuHMdX6_zOVXStgRRCYonZF2XUowsm0T=3L3+xmqhyGCqMi6Q@mail.gmail.com>
-Subject: Re: [PATCH v2 09/10] ARM: dts: r8a7742-iwg21m: Add iWave RZ/G1H
- Qseven SOM
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200504053959.GI1375924@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Prabhakar,
 
-On Mon, May 4, 2020 at 4:20 PM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
-> On Mon, May 4, 2020 at 2:01 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Sun, May 3, 2020 at 11:48 PM Lad Prabhakar
-> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > Add support for iWave RZ/G1H Qseven System On Module.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-> > > --- /dev/null
-> > > +++ b/arch/arm/boot/dts/r8a7742-iwg21m.dtsi
-> > > @@ -0,0 +1,53 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Device Tree Source for the iWave RZ/G1H Qseven SOM
-> > > + *
-> > > + * Copyright (C) 2020 Renesas Electronics Corp.
-> > > + */
-> > > +
-> > > +#include "r8a7742.dtsi"
-> > > +#include <dt-bindings/gpio/gpio.h>
-> > > +
-> > > +/ {
-> > > +       compatible = "iwave,g21m", "renesas,r8a7742";
-> > > +
-> > > +       memory@40000000 {
-> > > +               device_type = "memory";
-> > > +               reg = <0 0x40000000 0 0x40000000>;
-> > > +       };
-> > > +
-> > > +       memory@200000000 {
-> > > +               device_type = "memory";
-> > > +               reg = <2 0x00000000 0 0x20000000>;
-> >
-> > According to the schematics, the second bank is also 1 GiB, so the
-> > reg length should be 0x40000000.
-> >
-> Agreed will fix that.
+On 5/3/2020 10:39 PM, Vinod Koul wrote:
+> Hi Dave,
+> 
+> On 30-04-20, 11:35, Dave Jiang wrote:
+>> The cookie tracking in dmaengine expects all submissions completed in
+> 
+> Correct and that is a *very* fundamental assumption of the cookie
+> management. Modifying this will cause impact to other as well..
 
-Thanks for the confirmation.  I can fix that while applying.
+The current modification only impacts drivers that opt out of this. So 
+all existing or future driver does not return the out of order flag 
+should remain unimpacted.
 
-> > > +       };
-> >
-> > > +&pfc {
-> > > +       mmc1_pins: mmc1 {
-> > > +               groups = "mmc1_data4", "mmc1_ctrl";
-> > > +               function = "mmc1";
-> > > +       };
-> > > +};
-> > > +
-> > > +&mmcif1 {
-> > > +       pinctrl-0 = <&mmc1_pins>;
-> > > +       pinctrl-names = "default";
-> > > +
-> > > +       vmmc-supply = <&reg_3p3v>;
-> > > +       bus-width = <4>;
-> > > +       non-removable;
-> > > +       status = "okay";
-> > > +};
-> >
-> > The eMMC has an 8-bit data path.  Is there any specific reason you use
-> > bus-width = <4>, and the "mmc1_data4" pin group?
-> >
-> MMC1_DATA7 is shared with VI1_CLK, so instead of limiting to only one
-> device when using 8-bit just switched to 4bit mode so that both the
-> peripherals can be used.
+> 
+>> order. Some DMA devices like Intel DSA can complete submissions out of
+>> order, especially if configured with a work queue sharing multiple DMA
+>> engines. Add a status DMA_OUT_OF_ORDER that tx_status can be returned for
+> 
+> We should add this as a capability in dmaengine. How else would users
+> know if they can expect out of order completion..
 
-OK.
+Hmmm...this is more an attribute of the hardware rather than a 
+capability that a user would request right? Should we add a new function 
+that would provide an avenue for users to query the device on such 
+attributes and others like channel depth or SGL max size?
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.8 with the above fixed.
+> 
+>> those DMA devices. The user should use callbacks to track the completion
+>> rather than the DMA cookie. This would address the issue of dmatest
+>> complaining that descriptors are "busy" when the cookie count goes
+>> backwards due to out of order completion.
+> 
+> Can we add some documentation for this behaviour as well
 
-Gr{oetje,eeting}s,
+sure thing.
 
-                        Geert
+> 
+>>
+>> Reported-by: Swathi Kovvuri <swathi.kovvuri@intel.com>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> Tested-by: Swathi Kovvuri <swathi.kovvuri@intel.com>
+>> ---
+>>   drivers/dma/dmatest.c     |    3 ++-
+>>   drivers/dma/idxd/dma.c    |    2 +-
+>>   include/linux/dmaengine.h |    1 +
+>>   3 files changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
+>> index a2cadfa2e6d7..60a4a9cec3c8 100644
+>> --- a/drivers/dma/dmatest.c
+>> +++ b/drivers/dma/dmatest.c
+>> @@ -821,7 +821,8 @@ static int dmatest_func(void *data)
+>>   			result("test timed out", total_tests, src->off, dst->off,
+>>   			       len, 0);
+>>   			goto error_unmap_continue;
+>> -		} else if (status != DMA_COMPLETE) {
+>> +		} else if (status != DMA_COMPLETE &&
+>> +			   status != DMA_OUT_OF_ORDER) {
+>>   			result(status == DMA_ERROR ?
+>>   			       "completion error status" :
+>>   			       "completion busy status", total_tests, src->off,
+>> diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
+>> index c64c1429d160..3f54826abc12 100644
+>> --- a/drivers/dma/idxd/dma.c
+>> +++ b/drivers/dma/idxd/dma.c
+>> @@ -133,7 +133,7 @@ static enum dma_status idxd_dma_tx_status(struct dma_chan *dma_chan,
+>>   					  dma_cookie_t cookie,
+>>   					  struct dma_tx_state *txstate)
+>>   {
+>> -	return dma_cookie_status(dma_chan, cookie, txstate);
+>> +	return DMA_OUT_OF_ORDER;
+> 
+> So you are returning out of order always?
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Yes. The hardware does not gaurantee in order processing at all. The 
+only way to do so is to submit a batched operation with fence set on 
+every descriptor in the batch.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+>>   }
+>>   
+>>   /*
+>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+>> index 21065c04c4ac..a0c130131e45 100644
+>> --- a/include/linux/dmaengine.h
+>> +++ b/include/linux/dmaengine.h
+>> @@ -39,6 +39,7 @@ enum dma_status {
+>>   	DMA_IN_PROGRESS,
+>>   	DMA_PAUSED,
+>>   	DMA_ERROR,
+>> +	DMA_OUT_OF_ORDER,
+>>   };
+>>   
+>>   /**
+> 

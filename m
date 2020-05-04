@@ -2,57 +2,59 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FD6F1C3B6F
-	for <lists+dmaengine@lfdr.de>; Mon,  4 May 2020 15:42:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1224A1C3B85
+	for <lists+dmaengine@lfdr.de>; Mon,  4 May 2020 15:44:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgEDNmT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 4 May 2020 09:42:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44626 "EHLO
+        id S1728110AbgEDNoB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 4 May 2020 09:44:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726915AbgEDNmS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 4 May 2020 09:42:18 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5226C061A0E;
-        Mon,  4 May 2020 06:42:17 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id o7so6654196oif.2;
-        Mon, 04 May 2020 06:42:17 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1726922AbgEDNoB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 4 May 2020 09:44:01 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AACEC061A0E;
+        Mon,  4 May 2020 06:44:01 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id g14so8849152otg.10;
+        Mon, 04 May 2020 06:44:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Yo7lqjrRpKwZ/BDaneJUKo3RvZN8MlifDNvVKAk4CjE=;
-        b=PdDZKsEBOfRt8wIQ//kOPh6kbtzz7sEyxkmzNU6WgNzHjlIkmK6ZwmCvmWHOVxlve8
-         wEBE9482HTapUUXqKsPmR+6LKSRNDKXWqiaWMOXO+3JfJS6t4VH/8IhUDToTm3SX1T2I
-         +HhlfuLbB3GnCGwDm36N+7brWKnhuUPqd48100YOvMyjCrZveHD2INxUPgO9ZQDt4nmB
-         xPA23ekvcq0Lvm0/89oy4hj4L5+4p60Pll1I2L3p4sGbepbjExnu3STQ39bcPCVdEBJn
-         GIa3kwVhp3uNoz78PZ/81SkqEpz23abJdZRpF6V9XwFqTcMJnQu/zKUnOYFDkXbk7svJ
-         X8Mw==
+        bh=hEWs1xs69QGFQT8FpFMUjbbXsqIGW+k2px0Ls7b6Oi8=;
+        b=QdrM3gPHzWbm4Ut0s77CXXuPeXeO3+pWV0ebjCCBJG+EiLxeyghlid3QCd7Um13g3Q
+         jMfneriy+x5BaIONl5wKwdXifl1ySev0gDGA0O2A6aLemvnsfCbjMxPirHTS/JOIOvtP
+         vPfTmyLF+G4kTQBg6kgc33HQ2ZKi/0rJa/kZUXKNu41yGYhZGOjWCN5t8bpmdMLx2k0t
+         rJe8rVsJGOXwZi4Gw0ty8U4DsWbSXKDKfT/rbVlDFgmPVsDhDYmevn1xfD9USEgw4xAu
+         yTEgKiIyjSji1U2sF8bmzhDWsVx8yo+sLoRKqK/5gVRibpacAxOtgwApzMIJT/fekupS
+         CnnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Yo7lqjrRpKwZ/BDaneJUKo3RvZN8MlifDNvVKAk4CjE=;
-        b=opD1H1nw+0EpvVGMSdc5dOOE4ZyZrNwb0tzcd/hUsdPFxSqqyVC+96ipC2QxGwGDSH
-         HjKiDBGKOzTpZXQ4mMJcQCG+cy2S525B1+ri6Ernl8PqekSt2awbc8XaWK4fVE2ticcY
-         pAa2crsJ9313L3d9iW1Pbg+FnTk5aY1OArhMKmDhcTt2MTKUBSEq8urw3yE4OdXSNwV8
-         10+VKc4hkFkIyreIOJnpiIsrQhCJeEM/uFkDxMY0py54UoTWS4/b4G34Lkvqjws1LhNC
-         JupQgtzUjz1UYz3WiAT+e3hzeLCPGdTxhcFlAcnFrZD1bO11N4/TQGH0s1Hy84xLPlTW
-         BZiA==
-X-Gm-Message-State: AGi0Pua2dajBjQXR8R4/f0ZKdM5cZdGdJVmtr9hgjNlqbkdX2ZqPNYmE
-        7F4IsaL2Rn1s7kh5hCZ2NR+J6glzD2qdaHkmKj4=
-X-Google-Smtp-Source: APiQypJHgNbDpSbA0xSTp85gc9Qc7Pc+YWPzbyM+2yuSgkx4lSV8mC7T8pqyRkrc84ajEaWsn122VLgXvcPK1kUETSs=
-X-Received: by 2002:a05:6808:5c5:: with SMTP id d5mr9183264oij.8.1588599736738;
- Mon, 04 May 2020 06:42:16 -0700 (PDT)
+        bh=hEWs1xs69QGFQT8FpFMUjbbXsqIGW+k2px0Ls7b6Oi8=;
+        b=YBIARUgrvamv4YPxL4WPJDCkb2/40tEkM1LDrBUwyVryz1K4mtuDAxfVO4yETIkU2B
+         Cx4Qq6LArvIljF7P8nNEnW4ipvx5KEiA/wjU0u5JXHZd/nsf3FLXMm7NXFcSRLbjaGTh
+         W5Ug45WjlI/stF1qo/vQpLQFGLwmR5YWx0EqJea7AmHTVDKfS0l9mnJVA/SpW5xbzF/s
+         mZ4ETK7A5iZHk8vH8m7wxcMz0XOrLyBUhpCIDCddoitx4bbYXBnnOEbJeCi4DK1oZsyF
+         wSkqWVrcMmtveBoVKyzplsr+j+9ONykGsP4HwEeT+rpamvIH8qht9MwTh97dqHvSfRQ0
+         KZwA==
+X-Gm-Message-State: AGi0PuaMNGX0/FnoZOd5seJ1vQLpLP+WM6ZA3MGh42gHefB6PzYklotQ
+        0b4TJqUNpYPf7Aen9PeIU6wwza2iIllsAkpdFR4=
+X-Google-Smtp-Source: APiQypLNn94uuIHxhLJOj/nbkJcX/HXrwlyBrRZSV8ynXzT8RUBOpYvtk0ulNzKDoqpofBW0lh97EwemfFvkm8NH9KE=
+X-Received: by 2002:a9d:7390:: with SMTP id j16mr13274515otk.43.1588599840793;
+ Mon, 04 May 2020 06:44:00 -0700 (PDT)
 MIME-Version: 1.0
 References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588542414-14826-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXruqw2pb3pfXNfxNgtc24FmVA376DLBQgubEYSGO7LSA@mail.gmail.com>
-In-Reply-To: <CAMuHMdXruqw2pb3pfXNfxNgtc24FmVA376DLBQgubEYSGO7LSA@mail.gmail.com>
+ <1588542414-14826-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWBp_+PAa9VNhHCxd8CwrZVeeH1swDrZhegS-7YuQaL2g@mail.gmail.com>
+In-Reply-To: <CAMuHMdWBp_+PAa9VNhHCxd8CwrZVeeH1swDrZhegS-7YuQaL2g@mail.gmail.com>
 From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 4 May 2020 14:41:50 +0100
-Message-ID: <CA+V-a8sEPsDhfEM62MGE1SL8v7ho2bbiB-t0HDYzbnTgVfOoCQ@mail.gmail.com>
-Subject: Re: [PATCH v2 02/10] pinctrl: sh-pfc: r8a7790: Add r8a7742 PFC support
+Date:   Mon, 4 May 2020 14:43:34 +0100
+Message-ID: <CA+V-a8sRtYy5VoMegnrwW535wjaSiv3YAJ=eBUAbiLiC5fu=Qg@mail.gmail.com>
+Subject: Re: [PATCH v2 04/10] dt-bindings: mmc: renesas,mmcif: Document
+ r8a7742 DT bindings
 To:     Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Magnus Damm <magnus.damm@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Vinod Koul <vkoul@kernel.org>,
@@ -77,93 +79,44 @@ Hi Geert,
 
 Thank you for the review.
 
-On Mon, May 4, 2020 at 11:20 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Mon, May 4, 2020 at 11:26 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
 > Hi Prabhakar,
 >
-> Thanks for the update!
->
 > On Sun, May 3, 2020 at 11:47 PM Lad Prabhakar
 > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > Renesas RZ/G1H (R8A7742) is pin compatible with R-Car H2 (R8A7790),
-> > however it doesn't have several automotive specific peripherals. Add
-> > a r8a7790 specific pin groups/functions along with common pin
->
-> s/a r8a7790/automotive/?
->
-> > groups/functions for supporting both r8a7790 and r8a7742 SoC.
+> > Add support for r8a7742 SoC. Renesas RZ/G1H (R8A7742) MMCIF is identical
+> > to the R-Car Gen2 family.
 > >
 > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 >
-> > --- a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
-> > +++ b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
+> Thanks for your patch!
 >
-> > @@ -5736,6 +5750,7 @@ static const struct sh_pfc_soc_operations r8a7790_pinmux_ops = {
-> >         .pin_to_pocctrl = r8a7790_pin_to_pocctrl,
-> >  };
-> >
-> > +#ifdef CONFIG_PINCTRL_PFC_R8A7790
-> >  const struct sh_pfc_soc_info r8a7790_pinmux_info = {
-> >         .name = "r8a77900_pfc",
-> >         .ops = &r8a7790_pinmux_ops,
-> > @@ -5745,13 +5760,38 @@ const struct sh_pfc_soc_info r8a7790_pinmux_info = {
-> >
-> >         .pins = pinmux_pins,
-> >         .nr_pins = ARRAY_SIZE(pinmux_pins),
-> > -       .groups = pinmux_groups,
-> > -       .nr_groups = ARRAY_SIZE(pinmux_groups),
-> > -       .functions = pinmux_functions,
-> > -       .nr_functions = ARRAY_SIZE(pinmux_functions),
-> > +       .groups = pinmux_groups.common,
-> > +       .nr_groups = ARRAY_SIZE(pinmux_groups.common) +
-> > +               ARRAY_SIZE(pinmux_groups.automotive),
-> > +       .functions = pinmux_functions.common,
-> > +       .nr_functions = ARRAY_SIZE(pinmux_functions.common) +
-> > +               ARRAY_SIZE(pinmux_functions.automotive),
-> > +
-> > +       .cfg_regs = pinmux_config_regs,
-> > +
-> > +       .pinmux_data = pinmux_data,
-> > +       .pinmux_data_size = ARRAY_SIZE(pinmux_data),
-> > +};
-> > +#endif
-> > +
-> > +#ifdef CONFIG_PINCTRL_PFC_R8A7742
-> > +const struct sh_pfc_soc_info r8a7742_pinmux_info = {
-> > +       .name = "r8a77420_pfc",
-> > +       .ops = &r8a7790_pinmux_ops,
-> > +       .unlock_reg = 0xe6060000, /* PMMR */
-> > +
-> > +       .function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-> > +
-> > +       .pins = pinmux_pins,
-> > +       .nr_pins = ARRAY_SIZE(pinmux_pins),
-> > +       .groups = pinmux_groups.common,
-> > +       .nr_groups = ARRAY_SIZE(pinmux_groups.common),
-> > +       .functions = pinmux_functions.common,
-> > +       .nr_functions = ARRAY_SIZE(pinmux_functions.common),
-> >
-> >         .cfg_regs = pinmux_config_regs,
-> >
-> >         .pinmux_data = pinmux_data,
-> >         .pinmux_data_size = ARRAY_SIZE(pinmux_data),
-> >  };
-> > +#endif
+> > --- a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> > +++ b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> > @@ -11,6 +11,7 @@ Required properties:
+> >         - "renesas,mmcif-r7s72100" for the MMCIF found in r7s72100 SoCs
+> >         - "renesas,mmcif-r8a73a4" for the MMCIF found in r8a73a4 SoCs
+> >         - "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
+> > +       - "renesas,mmcif-r8a7742" for the MMCIF found in r8a7742 SoCs
+> >         - "renesas,mmcif-r8a7743" for the MMCIF found in r8a7743 SoCs
+> >         - "renesas,mmcif-r8a7744" for the MMCIF found in r8a7744 SoCs
+> >         - "renesas,mmcif-r8a7745" for the MMCIF found in r8a7745 SoCs
 >
-> The r8a7742 section should be inserted before the r8a7790 section,
-> to preserve sort order.
+> Please also update the paragraph stating the number of interrupts
+> (1 for r8a7742).
 >
-> No need to resend, will fix up while applying.
+Oops missed that, will fixup and post a v3.
+
+> With that fixed:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 >
-Thank you for taking care of it.
+Thanks for the Ack.
 
 Cheers,
 --Prabhakar
 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> i.e. will queue in sh-pfc-for-v5.8.
->
 > Gr{oetje,eeting}s,
 >
 >                         Geert

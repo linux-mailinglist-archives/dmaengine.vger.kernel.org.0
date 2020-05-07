@@ -2,35 +2,35 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52FD01C9A11
-	for <lists+dmaengine@lfdr.de>; Thu,  7 May 2020 20:56:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8AA61C9A13
+	for <lists+dmaengine@lfdr.de>; Thu,  7 May 2020 20:56:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726367AbgEGS4N (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 7 May 2020 14:56:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57670 "EHLO mail.kernel.org"
+        id S1728364AbgEGS4V (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 7 May 2020 14:56:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727799AbgEGS4N (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 7 May 2020 14:56:13 -0400
+        id S1727799AbgEGS4U (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 7 May 2020 14:56:20 -0400
 Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24E0220575;
-        Thu,  7 May 2020 18:56:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3DC9216FD;
+        Thu,  7 May 2020 18:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588877772;
-        bh=4Vs8QxaVwzsgCZC7VZqciOtD1Lflpg1/+iLS46dpZGM=;
+        s=default; t=1588877780;
+        bh=jm3fKnCO4Xf3QTCG3k8/S+/8DNeXKLAAKD5XoFMMhyY=;
         h=Date:From:To:Cc:Subject:From;
-        b=O9847wy6gQrf3ooNlVPFe+hHKH/0f/mytZcFG+j+BNZBaXoQrvTeAEhKECvvx/DBf
-         VGlMP6sU4ne/8Ma9PawMSCVC4QG6ES2Ga9zJqGc0R671Oedp+xMhGTxiSsrKIDyibR
-         7XTe4/2TKtN2z4P6CdP26AEUsvIx7mznlhQJ1Fyc=
-Date:   Thu, 7 May 2020 14:00:38 -0500
+        b=j8F77k+hOMYWNsm4ZYGQsIc2ubNpcV2lJi+sF3xlCpyYvURINI7X9RHHgSWg7/c0j
+         k45JS4quwF/uKI6F4RcPAt11oF+N91Qn+NxJt0yJ/nN7nFfTnYIiWChCWiNAjpgmMV
+         lhfWkscvzOYaHFDVlhw9do8omT79Q0bRoM6p4Wh0=
+Date:   Thu, 7 May 2020 14:00:46 -0500
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
 To:     Ludovic Desroches <ludovic.desroches@microchip.com>
 Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: at_hdmac: Replace zero-length array with
+Subject: [PATCH] dmaengine: at_xdmac: Replace zero-length array with
  flexible-array
-Message-ID: <20200507190038.GA15272@embeddedor>
+Message-ID: <20200507190046.GA15298@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -77,20 +77,20 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/dma/at_hdmac_regs.h |    2 +-
+ drivers/dma/at_xdmac.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/at_hdmac_regs.h b/drivers/dma/at_hdmac_regs.h
-index 397692e937b3..80fc2fe8c77e 100644
---- a/drivers/dma/at_hdmac_regs.h
-+++ b/drivers/dma/at_hdmac_regs.h
-@@ -331,7 +331,7 @@ struct at_dma {
- 	struct dma_pool		*dma_desc_pool;
- 	struct dma_pool		*memset_pool;
- 	/* AT THE END channels table */
--	struct at_dma_chan	chan[0];
-+	struct at_dma_chan	chan[];
+diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+index bb0eaf38b594..fd92f048c491 100644
+--- a/drivers/dma/at_xdmac.c
++++ b/drivers/dma/at_xdmac.c
+@@ -212,7 +212,7 @@ struct at_xdmac {
+ 	struct clk		*clk;
+ 	u32			save_gim;
+ 	struct dma_pool		*at_xdmac_desc_pool;
+-	struct at_xdmac_chan	chan[0];
++	struct at_xdmac_chan	chan[];
  };
  
- #define	dma_readl(atdma, name) \
+ 
 

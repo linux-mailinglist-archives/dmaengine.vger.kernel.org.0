@@ -2,34 +2,37 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 423951C8F6E
-	for <lists+dmaengine@lfdr.de>; Thu,  7 May 2020 16:36:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FADB1C8F6A
+	for <lists+dmaengine@lfdr.de>; Thu,  7 May 2020 16:36:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgEGOb4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 7 May 2020 10:31:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58764 "EHLO mail.kernel.org"
+        id S1728101AbgEGObq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 7 May 2020 10:31:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728769AbgEGOaJ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 7 May 2020 10:30:09 -0400
+        id S1728116AbgEGOaN (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 7 May 2020 10:30:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6069E215A4;
-        Thu,  7 May 2020 14:30:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9458420870;
+        Thu,  7 May 2020 14:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861809;
-        bh=WnNstYCDUFAAXrsF4FoTE8vpCGvT/AX729NNv95uTrM=;
+        s=default; t=1588861812;
+        bh=wePsFmqJ7mZw7fVqHVy88Ek5wS2DY9kKE6u0r5yOkmc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=btVOa/Tgo+7Lg7oIsHesvEM6Ely452dUpEzWa69zSpw7VLqP2yFrYne3kdRDpUc/+
-         iKE+DAQ9BZhDbruNSVhnpmGxC+5n3wcwKf7YXIxkpUZ3Gvhxf3coQxYDXFnC8lrAuH
-         2hKAP6iVZ0dxU2Xfh/Or7owenlLbwNn8Jqk3Ty/4=
+        b=0VVcUUnUqrf5v8eEOgoPjNiaVFqLEklgEwf6GPZduD4JiQ7K2+cGDT03FP7fzZqoX
+         s4VuvAQAwVUofmA43LefElrurJNCL3++GwLqxyiQ9hvC4TCM7xlcrpI7sv158ALuWO
+         mOXkCQjAew+5eTxKxKpkXuWmiGtJ0XdXOmACfvgQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lubomir Rintel <lkundrak@v3.sk>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 04/11] dmaengine: mmp_tdma: Reset channel error on release
-Date:   Thu,  7 May 2020 10:29:56 -0400
-Message-Id: <20200507143003.27047-4-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 07/11] dmaengine: dmatest: Fix iteration non-stop logic
+Date:   Thu,  7 May 2020 10:29:59 -0400
+Message-Id: <20200507143003.27047-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200507143003.27047-1-sashal@kernel.org>
 References: <20200507143003.27047-1-sashal@kernel.org>
@@ -42,39 +45,63 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 0c89446379218698189a47871336cb30286a7197 ]
+[ Upstream commit b9f960201249f20deea586b4ec814669b4c6b1c0 ]
 
-When a channel configuration fails, the status of the channel is set to
-DEV_ERROR so that an attempt to submit it fails. However, this status
-sticks until the heat end of the universe, making it impossible to
-recover from the error.
+Under some circumstances, i.e. when test is still running and about to
+time out and user runs, for example,
 
-Let's reset it when the channel is released so that further use of the
-channel with correct configuration is not impacted.
+	grep -H . /sys/module/dmatest/parameters/*
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Link: https://lore.kernel.org/r/20200419164912.670973-5-lkundrak@v3.sk
+the iterations parameter is not respected and test is going on and on until
+user gives
+
+	echo 0 > /sys/module/dmatest/parameters/run
+
+This is not what expected.
+
+The history of this bug is interesting. I though that the commit
+  2d88ce76eb98 ("dmatest: add a 'wait' parameter")
+is a culprit, but looking closer to the code I think it simple revealed the
+broken logic from the day one, i.e. in the commit
+  0a2ff57d6fba ("dmaengine: dmatest: add a maximum number of test iterations")
+which adds iterations parameter.
+
+So, to the point, the conditional of checking the thread to be stopped being
+first part of conjunction logic prevents to check iterations. Thus, we have to
+always check both conditions to be able to stop after given iterations.
+
+Since it wasn't visible before second commit appeared, I add a respective
+Fixes tag.
+
+Fixes: 2d88ce76eb98 ("dmatest: add a 'wait' parameter")
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Link: https://lore.kernel.org/r/20200424161147.16895-1-andriy.shevchenko@linux.intel.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/mmp_tdma.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/dma/dmatest.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/mmp_tdma.c b/drivers/dma/mmp_tdma.c
-index 13c68b6434ce2..15b4a44e60069 100644
---- a/drivers/dma/mmp_tdma.c
-+++ b/drivers/dma/mmp_tdma.c
-@@ -362,6 +362,8 @@ static void mmp_tdma_free_descriptor(struct mmp_tdma_chan *tdmac)
- 		gen_pool_free(gpool, (unsigned long)tdmac->desc_arr,
- 				size);
- 	tdmac->desc_arr = NULL;
-+	if (tdmac->status == DMA_ERROR)
-+		tdmac->status = DMA_COMPLETE;
+diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
+index 7dd46cf5ed845..7a028b57a7efb 100644
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -505,8 +505,8 @@ static int dmatest_func(void *data)
+ 	flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
  
- 	return;
- }
+ 	ktime = ktime_get();
+-	while (!kthread_should_stop()
+-	       && !(params->iterations && total_tests >= params->iterations)) {
++	while (!(kthread_should_stop() ||
++	       (params->iterations && total_tests >= params->iterations))) {
+ 		struct dma_async_tx_descriptor *tx = NULL;
+ 		struct dmaengine_unmap_data *um;
+ 		dma_addr_t srcs[src_cnt];
 -- 
 2.20.1
 

@@ -2,106 +2,95 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE21F1C8F5F
-	for <lists+dmaengine@lfdr.de>; Thu,  7 May 2020 16:36:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52FD01C9A11
+	for <lists+dmaengine@lfdr.de>; Thu,  7 May 2020 20:56:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbgEGOb1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 7 May 2020 10:31:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59334 "EHLO mail.kernel.org"
+        id S1726367AbgEGS4N (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 7 May 2020 14:56:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728750AbgEGOa1 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 7 May 2020 10:30:27 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727799AbgEGS4N (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 7 May 2020 14:56:13 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F071E20936;
-        Thu,  7 May 2020 14:30:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24E0220575;
+        Thu,  7 May 2020 18:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588861826;
-        bh=SidZoqgetficBoEQ+pFJdTPueOa3f7WDXc6jNL+f5Qg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1ctMo8QDu0JxlK5stY9T5xK0LWTl5VVl/dFp0000V2uihn/8kCqsGqE27xeuH4QkT
-         YP1hghnilfiXddLHN1bRu7xNQeoMc+UI6AGVBiDXKm+p62cltq5uXBm2IWM5xf/zU4
-         +gzvoq/JS7KoyJYGhjPhEbauNPbx1ObWBMspLeMA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 7/9] dmaengine: dmatest: Fix iteration non-stop logic
-Date:   Thu,  7 May 2020 10:30:16 -0400
-Message-Id: <20200507143018.27195-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200507143018.27195-1-sashal@kernel.org>
-References: <20200507143018.27195-1-sashal@kernel.org>
+        s=default; t=1588877772;
+        bh=4Vs8QxaVwzsgCZC7VZqciOtD1Lflpg1/+iLS46dpZGM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=O9847wy6gQrf3ooNlVPFe+hHKH/0f/mytZcFG+j+BNZBaXoQrvTeAEhKECvvx/DBf
+         VGlMP6sU4ne/8Ma9PawMSCVC4QG6ES2Ga9zJqGc0R671Oedp+xMhGTxiSsrKIDyibR
+         7XTe4/2TKtN2z4P6CdP26AEUsvIx7mznlhQJ1Fyc=
+Date:   Thu, 7 May 2020 14:00:38 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: at_hdmac: Replace zero-length array with
+ flexible-array
+Message-ID: <20200507190038.GA15272@embeddedor>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-[ Upstream commit b9f960201249f20deea586b4ec814669b4c6b1c0 ]
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Under some circumstances, i.e. when test is still running and about to
-time out and user runs, for example,
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-	grep -H . /sys/module/dmatest/parameters/*
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-the iterations parameter is not respected and test is going on and on until
-user gives
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-	echo 0 > /sys/module/dmatest/parameters/run
+sizeof(flexible-array-member) triggers a warning because flexible array
+members have incomplete type[1]. There are some instances of code in
+which the sizeof operator is being incorrectly/erroneously applied to
+zero-length arrays and the result is zero. Such instances may be hiding
+some bugs. So, this work (flexible-array member conversions) will also
+help to get completely rid of those sorts of issues.
 
-This is not what expected.
+This issue was found with the help of Coccinelle.
 
-The history of this bug is interesting. I though that the commit
-  2d88ce76eb98 ("dmatest: add a 'wait' parameter")
-is a culprit, but looking closer to the code I think it simple revealed the
-broken logic from the day one, i.e. in the commit
-  0a2ff57d6fba ("dmaengine: dmatest: add a maximum number of test iterations")
-which adds iterations parameter.
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
-So, to the point, the conditional of checking the thread to be stopped being
-first part of conjunction logic prevents to check iterations. Thus, we have to
-always check both conditions to be able to stop after given iterations.
-
-Since it wasn't visible before second commit appeared, I add a respective
-Fixes tag.
-
-Fixes: 2d88ce76eb98 ("dmatest: add a 'wait' parameter")
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Link: https://lore.kernel.org/r/20200424161147.16895-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/dma/dmatest.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/at_hdmac_regs.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-index 884aecebb249b..79c131746caa6 100644
---- a/drivers/dma/dmatest.c
-+++ b/drivers/dma/dmatest.c
-@@ -491,8 +491,8 @@ static int dmatest_func(void *data)
- 	flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
+diff --git a/drivers/dma/at_hdmac_regs.h b/drivers/dma/at_hdmac_regs.h
+index 397692e937b3..80fc2fe8c77e 100644
+--- a/drivers/dma/at_hdmac_regs.h
++++ b/drivers/dma/at_hdmac_regs.h
+@@ -331,7 +331,7 @@ struct at_dma {
+ 	struct dma_pool		*dma_desc_pool;
+ 	struct dma_pool		*memset_pool;
+ 	/* AT THE END channels table */
+-	struct at_dma_chan	chan[0];
++	struct at_dma_chan	chan[];
+ };
  
- 	ktime = ktime_get();
--	while (!kthread_should_stop()
--	       && !(params->iterations && total_tests >= params->iterations)) {
-+	while (!(kthread_should_stop() ||
-+	       (params->iterations && total_tests >= params->iterations))) {
- 		struct dma_async_tx_descriptor *tx = NULL;
- 		struct dmaengine_unmap_data *um;
- 		dma_addr_t srcs[src_cnt];
--- 
-2.20.1
+ #define	dma_readl(atdma, name) \
 

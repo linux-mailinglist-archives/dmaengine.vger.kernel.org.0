@@ -2,117 +2,83 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ED931CA8BF
-	for <lists+dmaengine@lfdr.de>; Fri,  8 May 2020 12:54:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0FBA1CA949
+	for <lists+dmaengine@lfdr.de>; Fri,  8 May 2020 13:12:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgEHKxr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 8 May 2020 06:53:47 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:41862 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbgEHKxq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 8 May 2020 06:53:46 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id C9DE98030779;
-        Fri,  8 May 2020 10:53:37 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id k_ka0vsYUEeH; Fri,  8 May 2020 13:53:37 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        id S1726701AbgEHLMn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 8 May 2020 07:12:43 -0400
+Received: from mga11.intel.com ([192.55.52.93]:42358 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726618AbgEHLMm (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 8 May 2020 07:12:42 -0400
+IronPort-SDR: 0apcZ8snRwAlAt3zRBLYnEWgMaoPFwZmJpbZiEs/AhgU8VTJM+djXDrAb60Mjvl7ljbBwge0Yh
+ lCwfz3NAt2ug==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 04:12:42 -0700
+IronPort-SDR: tPHsjctFLhnpEdjqGPIIIxGggrO9E26MnEi9onjtxKSOg4ih5enAwxq/IZzB8OmVioRf/5Bojm
+ +O89XXil6fuw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,367,1583222400"; 
+   d="scan'208";a="305411701"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 08 May 2020 04:12:39 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jX0vq-005P9x-6B; Fri, 08 May 2020 14:12:42 +0300
+Date:   Fri, 8 May 2020 14:12:42 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 6/6] dmaengine: dw: Take HC_LLP flag into account for noLLP auto-config
-Date:   Fri, 8 May 2020 13:53:04 +0300
-Message-ID: <20200508105304.14065-7-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
+ length property
+Message-ID: <20200508111242.GH185537@smile.fi.intel.com>
 References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
  <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-3-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508105304.14065-3-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Full multi-block transfers functionality is enabled in DW DMA
-controller only if CHx_MULTI_BLK_EN is set. But LLP-based transfers
-can be executed only if hardcode channel x LLP register feature isn't
-enabled, which can be switched on at the IP core synthesis for
-optimization. If it's enabled then the LLP register is hardcoded to
-zero, so the blocks chaining based on the LLPs is unsupported.
+On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
+> This array property is used to indicate the maximum burst transaction
+> length supported by each DMA channel.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+> +  snps,max-burst-len:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description: |
+> +      Maximum length of burst transactions supported by hardware.
+> +      It's an array property with one cell per channel in units of
+> +      CTLx register SRC_TR_WIDTH/DST_TR_WIDTH (data-width) field.
+> +    items:
+> +      maxItems: 8
+> +      items:
 
----
+> +        enum: [4, 8, 16, 32, 64, 128, 256]
 
-Changelog v2:
-- Rearrange SoBs.
-- Add comment about why hardware accelerated LLP list support depends
-  on both MBLK_EN and HC_LLP configs setting.
-- Use explicit bits state comparison operator.
----
- drivers/dma/dw/core.c | 11 ++++++++++-
- drivers/dma/dw/regs.h |  1 +
- 2 files changed, 11 insertions(+), 1 deletion(-)
+Isn't 1 allowed?
 
-diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index 5b76ccc857fd..3179d45df662 100644
---- a/drivers/dma/dw/core.c
-+++ b/drivers/dma/dw/core.c
-@@ -1180,8 +1180,17 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 			 */
- 			dwc->block_size =
- 				(4 << ((pdata->block_size >> 4 * i) & 0xf)) - 1;
-+
-+			/*
-+			 * According to the DW DMA databook the true scatter-
-+			 * gether LLPs aren't available if either multi-block
-+			 * config is disabled (CHx_MULTI_BLK_EN == 0) or the
-+			 * LLP register is hard-coded to zeros
-+			 * (CHx_HC_LLP == 1).
-+			 */
- 			dwc->nollp =
--				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0;
-+				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0 ||
-+				(dwc_params >> DWC_PARAMS_HC_LLP & 0x1) == 1;
- 			dwc->max_burst =
- 				(0x4 << (dwc_params >> DWC_PARAMS_MSIZE & 0x7));
- 		} else {
-diff --git a/drivers/dma/dw/regs.h b/drivers/dma/dw/regs.h
-index f581d4809b71..a8af19d0eabd 100644
---- a/drivers/dma/dw/regs.h
-+++ b/drivers/dma/dw/regs.h
-@@ -126,6 +126,7 @@ struct dw_dma_regs {
- 
- /* Bitfields in DWC_PARAMS */
- #define DWC_PARAMS_MSIZE	16		/* max group transaction size */
-+#define DWC_PARAMS_HC_LLP	13		/* set LLP register to zero */
- #define DWC_PARAMS_MBLK_EN	11		/* multi block transfer */
- 
- /* bursts size */
+> +        default: 256
+
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 

@@ -2,116 +2,148 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B265E1CB7E7
-	for <lists+dmaengine@lfdr.de>; Fri,  8 May 2020 21:06:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B3BF1CB928
+	for <lists+dmaengine@lfdr.de>; Fri,  8 May 2020 22:47:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgEHTGY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 8 May 2020 15:06:24 -0400
-Received: from mga06.intel.com ([134.134.136.31]:1210 "EHLO mga06.intel.com"
+        id S1727071AbgEHUrM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 8 May 2020 16:47:12 -0400
+Received: from mga01.intel.com ([192.55.52.88]:15188 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726807AbgEHTGY (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 8 May 2020 15:06:24 -0400
-IronPort-SDR: v2gjK4RKVJ1v/sdovzL2O+wNylxbADOvG7CwVQ2mYCdz9xLJxz/HixotXkwpwCZ+kmPH0d16Cx
- 1FbYJHrKB4gw==
+        id S1726817AbgEHUrM (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 8 May 2020 16:47:12 -0400
+IronPort-SDR: DuKItoW6HSsPJmI6EKlOM9RKO+Kz3gxu7ArplrGslXFAMo/Iqwse1lpMyHjc9Ogy09IVVIB44U
+ BimMnZV9PeWQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 12:06:23 -0700
-IronPort-SDR: nTJv2Ub7B7vBvOk28P4x1cVdUZbPUuOksDDQNy7s9MtBirBS8RvT9K4KcLsZoqahFtSTTuVdmk
- 9Xl7ImcTOcnQ==
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 13:47:11 -0700
+IronPort-SDR: Ws67Aagq7YgG2snBGVk1C1ZIy3paurbwnrKJK/rpqD2iq5oG5Lx0moxzX7x1HOFOuxtYO7W/k8
+ GGimup1grgVg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
-   d="scan'208";a="462687274"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 08 May 2020 12:06:19 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jX8KE-005Sw7-9j; Fri, 08 May 2020 22:06:22 +0300
-Date:   Fri, 8 May 2020 22:06:22 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200508190622.GQ185537@smile.fi.intel.com>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
- <20200508112604.GJ185537@smile.fi.intel.com>
- <20200508115334.GE4820@sirena.org.uk>
+X-IronPort-AV: E=Sophos;i="5.73,369,1583222400"; 
+   d="scan'208";a="296258718"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by fmsmga002.fm.intel.com with ESMTP; 08 May 2020 13:47:10 -0700
+Date:   Fri, 8 May 2020 13:47:10 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     Jason Gunthorpe <jgg@mellanox.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Message-ID: <20200508204710.GA78778@otc-nc-03>
+References: <20200424124444.GJ13640@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8A808B@SHSMSX104.ccr.corp.intel.com>
+ <20200424181203.GU13640@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
+ <20200426191357.GB13640@mellanox.com>
+ <20200426214355.29e19d33@x1.home>
+ <20200427115818.GE13640@mellanox.com>
+ <20200427071939.06aa300e@x1.home>
+ <20200427132218.GG13640@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8E34AA@SHSMSX104.ccr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200508115334.GE4820@sirena.org.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D8E34AA@SHSMSX104.ccr.corp.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, May 08, 2020 at 12:53:34PM +0100, Mark Brown wrote:
-> On Fri, May 08, 2020 at 02:26:04PM +0300, Andy Shevchenko wrote:
-> > On Fri, May 08, 2020 at 01:53:02PM +0300, Serge Semin wrote:
+Hi Jason
+
+In general your idea of moving pure emulation code to user space 
+is a good strategy.
+
+
+On Wed, Apr 29, 2020 at 02:42:20AM -0700, Tian, Kevin wrote:
+> > From: Jason Gunthorpe <jgg@mellanox.com>
+> > Sent: Monday, April 27, 2020 9:22 PM
+> > 
+> > On Mon, Apr 27, 2020 at 07:19:39AM -0600, Alex Williamson wrote:
+> > 
+> > > > It is not trivial masking. It is a 2000 line patch doing comprehensive
+> > > > emulation.
+> > >
+> > > Not sure what you're referring to, I see about 30 lines of code in
+> > > vdcm_vidxd_cfg_write() that specifically handle writes to the 4 BARs in
+> > > config space and maybe a couple hundred lines of code in total handling
+> > > config space emulation.  Thanks,
+> > 
+> > Look around vidxd_do_command()
+> > 
+> > If I understand this flow properly..
+> > 
 > 
-> > > Multi-block support provides a way to map the kernel-specific SG-table so
-> > > the DW DMA device would handle it as a whole instead of handling the
-> > > SG-list items or so called LLP block items one by one. So if true LLP
-> > > list isn't supported by the DW DMA engine, then soft-LLP mode will be
-> > > utilized to load and execute each LLP-block one by one. A problem may
-> > > happen for multi-block DMA slave transfers, when the slave device buffers
-> > > (for example Tx and Rx FIFOs) depend on each other and have size smaller
-> > > than the block size. In this case writing data to the DMA slave Tx buffer
-> > > may cause the Rx buffer overflow if Rx DMA channel is paused to
-> > > reinitialize the DW DMA controller with a next Rx LLP item. In particular
-> > > We've discovered this problem in the framework of the DW APB SPI device
+> Hi, Jason,
 > 
-> > Mark, do we have any adjustment knobs in SPI core to cope with this?
+> I guess the 2000 lines mostly refer to the changes in mdev.c and vdev.c. 
+> We did a break-down among them:
 > 
-> Frankly I'm not sure I follow what the issue is - is an LLP block item
-> different from a SG list entry?  As far as I can tell the problem is
-> that the DMA controller does not support chaining transactions together
-> and possibly also has a limit on the transfer size?  Or possibly some
-> issue with the DMA controller locking the CPU out of the I/O bus for
-> noticable periods?  I can't really think what we could do about that if
-> the issue is transfer sizes, that just seems like hardware which is
-> never going to work reliably.  If the issue is not being able to chain
-> transfers then possibly an option to linearize messages into a single
-> transfer as suggested to cope with PIO devices with ill considered
-> automated chip select handling, though at some point you have to worry
-> about the cost of the memcpy() vs the cost of just doing PIO.
-
-My understanding that the programmed transfers (as separate items in SG list)
-can be desynchronized due to LLP emulation in DMA driver. And suggestion
-probably is to use only single entry (block) SG lists will do the trick (I
-guess that we can configure SPI core do or do not change CS between them).
-
-> > > working in conjunction with DW DMA. Since there is no comprehensive way to
-> > > fix it right now lets at least print a warning for the first found
-> > > multi-blockless DW DMAC channel. This shall point a developer to the
-> > > possible cause of the problem if one would experience a sudden data loss.
+> 1) ~150 LOC for vdev initialization
+> 2) ~150 LOC for cfg space emulation
+> 3) ~230 LOC for mmio r/w emulation
+> 4) ~500 LOC for controlling the work queue (vidxd_do_command), 
+> triggered by write emulation of IDXD_CMD_OFFSET register
+> 5) the remaining lines are all about vfio-mdev registration/callbacks,
+> for reporting mmio/irq resource, eventfd, mmap, etc.
 > 
-> I thought from the description of the SPI driver I just reviewed that
-> this hardware didn't have DMA?  Or are there separate blocks in the
-> hardware that have a more standard instantiation of the DesignWare SPI
-> controller with DMA attached?
+> 1/2/3) are pure device emulation, which counts for ~500 LOC. 
+> 
+> 4) needs be in the kernel regardless of which uAPI is used, because it
+> talks to the physical work queue (enable, disable, drain, abort, reset, etc.)
+> 
+> Then if just talking about ~500 LOC emulation code left in the kernel, 
+> is it still a big concern to you? 😊
 
-I speculate that the right words there should be 'we don't enable DMA right now
-due to some issues' (see above).
+Even when uaccel was under development, one of the options
+was to use VFIO as the transport, goal was the same i.e to keep
+the user space have one interface. But the needs of generic 
+user space application is significantly different from exporting
+a more functional device model to guest, which isn't full emulated
+device. which is why VFIO didn't make sense for native use.
 
--- 
-With Best Regards,
-Andy Shevchenko
+And when we move things from VFIO which is already established
+as a general device model and accepted by multiple VMM's it gives
+instant footing without a whole redesign. When we move things from 
+VFIO to uaccel to bolt on the functionality like VFIO, I suspect we 
+would be moving code/functionality from VFIO to Uaccel. I don't know
+what the net gain would be.
 
+IMS is being reworked based on your feedback. And for mdev
+since the code is minimal for emulation, and rest are control paths
+that need kernel code to deal with.
 
+For mdev, would you agree we can keep the current architecture,
+and investigate moving some emulation code to user space (say even for
+standard vfio_pci) and then expand scope later.
+
+Cheers
+Ashok

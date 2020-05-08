@@ -2,210 +2,145 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A262D1CB45C
-	for <lists+dmaengine@lfdr.de>; Fri,  8 May 2020 18:09:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A44D1CB79D
+	for <lists+dmaengine@lfdr.de>; Fri,  8 May 2020 20:49:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgEHQJx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 8 May 2020 12:09:53 -0400
-Received: from mga12.intel.com ([192.55.52.136]:12443 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727815AbgEHQJx (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 8 May 2020 12:09:53 -0400
-IronPort-SDR: 8UT+igzj6hvZZ6xJCxeMshhRJSVnzErBzP7AZUWoeooZc/mn5wfV/BQYa8rN0Pxv/5aLYhSzKw
- JZXBSNHYPHEA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 09:09:31 -0700
-IronPort-SDR: /LcJb5B4D3OkkaJbDNr8slyZZriIMPy7gDBc7aIHH+Mf52S/kJIoipWsWvdnwQ1zVg6zH9+Fos
- B+ZnNdDmSgJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
-   d="scan'208";a="296185530"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.209.47.49]) ([10.209.47.49])
-  by fmsmga002.fm.intel.com with ESMTP; 08 May 2020 09:09:30 -0700
-Subject: Re: [PATCH v3] dmaengine: cookie bypass for out of order completion
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, swathi.kovvuri@intel.com
-References: <158877653369.51303.5331705116646956272.stgit@djiang5-desk3.ch.intel.com>
- <4e9802fc-81f6-d293-99b1-8104942c5110@ti.com>
- <72b6e5c4-86fd-2c5d-9f98-506b8238fa8b@intel.com>
-Message-ID: <e6ff8018-8dbf-db2d-c031-9df0a560252f@intel.com>
-Date:   Fri, 8 May 2020 09:09:30 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1727820AbgEHSt3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 8 May 2020 14:49:29 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:46334 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726767AbgEHSt2 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 8 May 2020 14:49:28 -0400
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 65EC640170;
+        Fri,  8 May 2020 18:49:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1588963767; bh=xqwzx0B/mVGSGPJQNWge3cab2t/OCKoXwjsvVgvKMos=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=HkZcqSHQ2zz4dxHc+CITwTWRhWG/GaJrJIvcqKr9hsw8d0lJPBXjpNeN1fmsG4KJ4
+         inGWGtMlPj8r8BO1/HvgcRdBqSbVCc+i9lrpv61z/9sARWig8o5v/xl/yCfeRirdif
+         cFKhiYsAe4XvNKiEAULkhXvZwvn5A3TQj2O60c397IqJJ6eepKc6VkypESvlvKnt4Y
+         gnKj4TPJhfelfkLSotYKpwAXX30xoSSAwAfpULrdfvWC1d0T01FWxlf/R1IG3Lo7PM
+         5wlYzH8CP7nvqG4miBP8AYySnFsifG0xd8ivU14Z+zBhZcC2D7a4ju/KpOTvuUNXZB
+         FMxjEmmVjuy/g==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id EC97BA006E;
+        Fri,  8 May 2020 18:49:22 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 8 May 2020 11:49:20 -0700
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Fri, 8 May 2020 11:49:20 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nuHCu2Am/7XuZH8QAfT6p5WTtB5ktdnVO+UQ+6cqtL4buSZg3Tnjd8G4o9AIr9ekp936iBiFBrUv9bRMKZQukMpvBc09NvrBenKOOTehzH9gKzUzdUNHIbm/xJDv23sUHKzJy6R4Qti8fMgWvTgSWuIuPAm8Gl/eqrkr50LOh+KwOlBhMQ/WF5yf6H9EWz/DPAWgOE5XXxv2rNOpINUcVUfHpSVulAdQBNzJQfBH7yhiGZR4wsHoN4rSispS9RTgjrg4O6dvBpJ0deTiyjIJpBbEtCMFwjwx0zlZsrHFkQ8xlT5dcp6g5Wc104rK/YQgZ/SpsVWVvzUiUCMXAiSWRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xqwzx0B/mVGSGPJQNWge3cab2t/OCKoXwjsvVgvKMos=;
+ b=cbmiGECbDjQrdO+ST3cVp2PC585u6+VU6INOa8n3yJWPAUFPnK3h0O4ZSw2Kl+8I9aOzuYwABwSaWTAH+XiaQFxC7hOLaxZp1yuEYdzpxFpsKZ8Ezw3Ds/vFX3p0py0xXB6HZnJilcVTMbS+XSRgmx0WjdmKHo9cdWdnSmtJOuodvmkLQTI7NoAMdEAyb/YVpYTbrAEPvLw60lq6FWQnWXBTkdL/cxkqYj2y9xjnoqS48cIThCG9vsDe4wd7gVrzj0q7PwvtaICysZ0F5iK2BKCuc88olCovDuz9Gdx0HD2r5uLLQOGWHRtZ0/YQhnVI7H/d9AyraKqObfi2+b7h8A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xqwzx0B/mVGSGPJQNWge3cab2t/OCKoXwjsvVgvKMos=;
+ b=dXgkC6UMpaAkAATuU7wTnSIrcqD2aqXqq62szoPYpb5wrQ3ZENGfVqfarhalWO8hgoRloFMYdyiHw5+acUCkfcEDhU+VxqktWQb89NNDldWw65bF92fzlV6W/uuMd2mcGtakJ6LWxsqn5eg9pxd6AZbxXCfv6+FNszaObLUtCbw=
+Received: from BYAPR12MB3479.namprd12.prod.outlook.com (2603:10b6:a03:dc::26)
+ by BYAPR12MB2680.namprd12.prod.outlook.com (2603:10b6:a03:63::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26; Fri, 8 May
+ 2020 18:49:19 +0000
+Received: from BYAPR12MB3479.namprd12.prod.outlook.com
+ ([fe80::a43a:7392:6fa:c6af]) by BYAPR12MB3479.namprd12.prod.outlook.com
+ ([fe80::a43a:7392:6fa:c6af%6]) with mapi id 15.20.2979.033; Fri, 8 May 2020
+ 18:49:19 +0000
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+CC:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        "Ralf Baechle" <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>
+Subject: Re: [PATCH v2 3/6] dmaengine: dw: Set DMA device max segment size
+ parameter
+Thread-Topic: [PATCH v2 3/6] dmaengine: dw: Set DMA device max segment size
+ parameter
+Thread-Index: AQHWJSrw/8Ye7R9luE+OOOxxh6OCIqieiGqA
+Date:   Fri, 8 May 2020 18:49:18 +0000
+Message-ID: <5c83eabd-08c9-fdae-d13f-49c177b6c5bf@synopsys.com>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-4-Sergey.Semin@baikalelectronics.ru>
+ <20200508112152.GI185537@smile.fi.intel.com>
+In-Reply-To: <20200508112152.GI185537@smile.fi.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+authentication-results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none
+ header.from=synopsys.com;
+x-originating-ip: [2601:641:c100:83a0:fee2:8ed0:e900:96d1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d92a22ad-818d-4af4-f5e8-08d7f38083f7
+x-ms-traffictypediagnostic: BYAPR12MB2680:
+x-microsoft-antispam-prvs: <BYAPR12MB2680E66C4F5126BAFD44542EB6A20@BYAPR12MB2680.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 039735BC4E
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ZRJZBk0RSoMWEK/Ovbs5Hr2urzZHIBIL1n9lBq2Ibtd54PjKQRytMfN0UhZ/tbUcLnNpnNcoey7AxQhw7QCAJgOfahWbQ3WPftSK4U5IgzoWfzqTZA+3XbiupZQuqFypZLsVhQGlVwgVh9lc3JicBj+6xa6vQoZqCaal57prPr1ufSZHTDNk3AY973yl59PTlzdqaJ7vvcC+AtH/SbuE4vNtancfvh4zvl9m8xOG3mes748nO60Z3FuSf9Hxsiju2LfYzbys2M6R8xDhHGnZ6NM24wrir9vYOJSsWZ/j9jC+2E4fuRnW0JoBVc9wr0WFph5Qe0k+UZjqQ+s3TZUewD64Ms7TTrkNQsjCEU2Fo6MxNiLMhfkY4g8gRbzivwHOZ3JYigNhJmlMVbYMj+5aAT/dfq8iOVXUziJ6Gbmo0ILQv8iOmxLIm2F+W0cGQ6YndBUFq2kC7neNcZCYRlraHhQ229Em0O9iXRDH0vKbP7QjQyU/YGwyWK7DyK38OAG9PwHTsdbFwO5t9rUvU4wSfdVzMtURkJKxYl9MYLdbcx9CO5aaFpI/vKtDBCw9Qiey
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3479.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(376002)(39860400002)(396003)(136003)(346002)(33430700001)(76116006)(53546011)(31696002)(2616005)(6512007)(54906003)(8936002)(66556008)(66446008)(64756008)(66476007)(316002)(86362001)(83310400001)(83320400001)(8676002)(83280400001)(186003)(83290400001)(83300400001)(110136005)(33440700001)(6506007)(31686004)(478600001)(7416002)(4326008)(66946007)(4744005)(36756003)(2906002)(6486002)(71200400001)(5660300002)(43740500002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: /jhRnt5d92+leREvrFefCc7VDhGlvsPYPBIsZmOhGCh9UK8n80jyS5j0iR81Y3aZrZXtUzBgeCpfbbuoej7GuOMpD23g2Qv2KtkKvNYjfKqek9oReEFpm3wJ6HsyT2sg6Q8i9TKSaCZHgrtlANr8PCDbkyZ/lLVrG/f9zUpAzIItYprXL2Go7k7OlwwqXHqe3m8p8tNFZ2klEQPx6fT01giMi7Bk7XV7nnPctZvQLXEAwDZba9hm2IQh66ibwsNa3QD2lkc3AyNvNm3PHdLQFGbEeF8k31z9eK5m310tmpcBXcUKrIQjZW8TH0bPPPv54xDjgHUI6cnLCIXgzly++RWszkeB025Y8j9VUUi2redh3Watptko0139Q2TneTnuAlRXGVD2kswfBF9556aP0IZQeQF0Tpoig7D/PebminCP5RR6RA7G08t1+0qBJZPhxxEfClayDDPZNWf9M1rX+thvVsCHlC9VRRmnVfYaM4be4mdeJXFhZwgYNaqGVjtG2Cz2hlElSUGiDvDTnmRX1vTdma2Ch72XxhdBlP1URCQOC+JF4dBNEgFJ1ZbOW+6O
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AD6AF4D0863D1640A034D2357E6B3148@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <72b6e5c4-86fd-2c5d-9f98-506b8238fa8b@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: d92a22ad-818d-4af4-f5e8-08d7f38083f7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2020 18:49:18.9534
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: S6glSDpyDhtzzkvSjHzSz+0+iPDoRtYF9KXt24DdH46V6yAnZ/u9vdwMXLEAeNwKuorqg1jFOMKdU8OX+Awn6g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2680
+X-OriginatorOrg: synopsys.com
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 5/8/2020 8:30 AM, Dave Jiang wrote:
-> Hi Peter,
-> 
-> On 5/8/2020 1:10 AM, Peter Ujfalusi wrote:
->> Hi Dave,
->>
->> On 06/05/2020 17.50, Dave Jiang wrote:
->>> The cookie tracking in dmaengine expects all submissions completed in
->>> order. Some DMA devices like Intel DSA can complete submissions out of
->>> order, especially if configured with a work queue sharing multiple DMA
->>> engines. Add a status DMA_OUT_OF_ORDER that tx_status can be returned for
->>> those DMA devices. The user should use callbacks to track the completion
->>> rather than the DMA cookie. This would address the issue of dmatest
->>> complaining that descriptors are "busy" when the cookie count goes
->>> backwards due to out of order completion. Add DMA_NO_COMPLETION_ORDER
->>> DMA capability to allow the driver to flag the device's ability to complete
->>> operations out of order.
->>>
->>> Reported-by: Swathi Kovvuri <swathi.kovvuri@intel.com>
->>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>> Tested-by: Swathi Kovvuri <swathi.kovvuri@intel.com>
->>> ---
->>>
->>> v3:
->>> - v2 mailed wrong patch
->>> v2:
->>> - Add DMA capability (vinod)
->>> - Add documentation (vinod)
->>>
->>>   Documentation/driver-api/dmaengine/provider.rst |   11 +++++++++++
->>>   drivers/dma/dmatest.c                           |    5 ++++-
->>>   drivers/dma/idxd/dma.c                          |    3 ++-
->>>   include/linux/dmaengine.h                       |    2 ++
->>>   4 files changed, 19 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/driver-api/dmaengine/provider.rst 
->>> b/Documentation/driver-api/dmaengine/provider.rst
->>> index 56e5833e8a07..783ca141e147 100644
->>> --- a/Documentation/driver-api/dmaengine/provider.rst
->>> +++ b/Documentation/driver-api/dmaengine/provider.rst
->>> @@ -239,6 +239,14 @@ Currently, the types available are:
->>>       want to transfer a portion of uncompressed data directly to the
->>>       display to print it
->>> +- DMA_COMPLETION_NO_ORDER
->>> +
->>> +  - The device supports out of order completion of the operations.
->>> +
->>> +  - The driver should return DMA_OUT_OF_ORDER for device_tx_status if
->>> +    the device supports out of order completion and the completion is
->>> +    is expected to be completed out of order.
->>> +
->>>   These various types will also affect how the source and destination
->>>   addresses change over time.
->>> @@ -399,6 +407,9 @@ supported.
->>>     - In the case of a cyclic transfer, it should only take into
->>>       account the current period.
->>> +  - Should return DMA_OUT_OF_ORDER if the device supports out of order
->>> +    completion and is completing the operation out of order.
->>> +
->>>     - This function can be called in an interrupt context.
->>>   - device_config
->>> diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
->>> index a2cadfa2e6d7..8953e096a05c 100644
->>> --- a/drivers/dma/dmatest.c
->>> +++ b/drivers/dma/dmatest.c
->>> @@ -821,7 +821,10 @@ static int dmatest_func(void *data)
->>>               result("test timed out", total_tests, src->off, dst->off,
->>>                      len, 0);
->>>               goto error_unmap_continue;
->>> -        } else if (status != DMA_COMPLETE) {
->>> +        } else if (status != DMA_COMPLETE &&
->>> +               !(dma_has_cap(DMA_COMPLETION_NO_ORDER,
->>> +                     dev->cap_mask) &&
->>> +                 status == DMA_OUT_OF_ORDER)) {
->>
->> What would be the appropriate action if polled is set for dmatest? IN
->> that case it is using dma_sync_wait(), it will break out if the status
->> is != DMA_IN_PROGRESS for the cookie.
->>
->> I believe that polling mode as we know it, is incompatible with this out
->> of order completion handling.
->>
->> It should be possible to just disallow polled mode in case
->> dma_has_cap(DMA_COMPLETION_NO_ORDER, dev->cap_mask) == true
-> 
-> Ok sure. But looks like we need to come up with a way to not break your usages.
-> 
->>
->> But I have a DMA where the out of order is not in DMA level, it can be
->> achieved per channel bases if needed.
->> I can not set this flag for UDMA as it would disable the polling mode
->> for channels where it works.
-> 
-> Thoughts on introducing per channel cap mask in addition to the existing per 
-> device mask? Sounds like we already have devices with some channels having 
-> different capabilities and may expand with future devices. This way we can do 
-> this on a per channel basis?
-> 
->>
->> Yes, I'm also interested in out of order cookie completion and even
->> beyond that, when you don't really have cookies, but you have a pool
->> given to the DMA and it is going to return them back when data arrived
->> (or internally manages the pool and summons the packets out of thin air).
->>
->>>               result(status == DMA_ERROR ?
->>>                      "completion error status" :
->>>                      "completion busy status", total_tests, src->off,
->>> diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
->>> index c64c1429d160..0c892cbd72e0 100644
->>> --- a/drivers/dma/idxd/dma.c
->>> +++ b/drivers/dma/idxd/dma.c
->>> @@ -133,7 +133,7 @@ static enum dma_status idxd_dma_tx_status(struct dma_chan 
->>> *dma_chan,
->>>                         dma_cookie_t cookie,
->>>                         struct dma_tx_state *txstate)
->>>   {
->>> -    return dma_cookie_status(dma_chan, cookie, txstate);
->>> +    return DMA_OUT_OF_ORDER;
->>
->> There is no condition? It is always out of order?
-
-Sorry missed this. But there's no gaurantee from the DMA device for ordering due 
-to multi engine sharing between the work queues. The only way to enforce 
-ordering is to submit a batch operation and set fencing on each of the 
-descriptors in the batch. But the ordering is only within the batch.
-
-
->>
->>>   }
->>>   /*
->>> @@ -174,6 +174,7 @@ int idxd_register_dma_device(struct idxd_device *idxd)
->>>       INIT_LIST_HEAD(&dma->channels);
->>>       dma->dev = &idxd->pdev->dev;
->>> +    dma_cap_set(DMA_COMPLETION_NO_ORDER, dma->cap_mask);
->>>       dma->device_release = idxd_dma_release;
->>>       if (idxd->hw.opcap.bits[0] & IDXD_OPCAP_MEMMOVE) {
->>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
->>> index 21065c04c4ac..1123f4d15bae 100644
->>> --- a/include/linux/dmaengine.h
->>> +++ b/include/linux/dmaengine.h
->>> @@ -39,6 +39,7 @@ enum dma_status {
->>>       DMA_IN_PROGRESS,
->>>       DMA_PAUSED,
->>>       DMA_ERROR,
->>> +    DMA_OUT_OF_ORDER,
->>>   };
->>>   /**
->>> @@ -61,6 +62,7 @@ enum dma_transaction_type {
->>>       DMA_SLAVE,
->>>       DMA_CYCLIC,
->>>       DMA_INTERLEAVE,
->>> +    DMA_COMPLETION_NO_ORDER,
->>>   /* last transaction type for creation of the capabilities mask */
->>>       DMA_TX_TYPE_END,
->>>   };
->>>
->>
->> - Péter
->>
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->>
+T24gNS84LzIwIDQ6MjEgQU0sIEFuZHkgU2hldmNoZW5rbyB3cm90ZToNCj4gWWVhaCwgSSBoYXZl
+IGxvY2FsbHkgc29tZXRoaW5nIGxpa2UgdGhpcyBhbmQgSSBkaWRuJ3QgZGFyZSB0byB1cHN0cmVh
+bSBiZWNhdXNlDQo+IHRoZXJlIGlzIGFuIGlzc3VlLiBXZSBoYXZlIHRoaXMgaW5mb3JtYXRpb24g
+cGVyIERNQSBjb250cm9sbGVyLCB3aGlsZSB3ZQ0KPiBhY3R1YWxseSBuZWVkIHRoaXMgb24gcGVy
+IERNQSBjaGFubmVsIGJhc2lzLg0KPg0KPiBBYm92ZSB3aWxsIHdvcmsgb25seSBmb3Igc3ludGhl
+c2l6ZWQgRE1BIHdpdGggYWxsIGNoYW5uZWxzIGhhdmluZyBzYW1lIGJsb2NrDQo+IHNpemUuIFRo
+YXQncyB3aHkgYWJvdmUgY29uZGl0aW9uYWwgaXMgbm90IG5lZWRlZCBhbnl3YXkuDQo+DQo+IE9U
+T0gsIEkgbmV2ZXIgc2F3IHRoZSBEZXNpZ25XYXJlIERNQSB0byBiZSBzeW50aGVzaXplZCBkaWZm
+ZXJlbnRseSAoSSByZW1lbWJlcg0KPiB0aGF0IEludGVsIE1lZGZpZWxkIGhhcyBpbnRlcmVzdGlu
+ZyBzZXR0aW5ncywgYnV0IEkgZG9uJ3QgcmVtZW1iZXIgaWYgRE1BDQo+IGNoYW5uZWxzIGFyZSBk
+aWZmZXJlbnQgaW5zaWRlIHRoZSBzYW1lIGNvbnRyb2xsZXIpLg0KPg0KPiBWaW5lZXQsIGRvIHlv
+dSBoYXZlIGFueSBpbmZvcm1hdGlvbiB0aGF0IFN5bm9wc3lzIGN1c3RvbWVycyBzeW50aGVzaXpl
+ZCBETUENCj4gY29udHJvbGxlcnMgd2l0aCBkaWZmZXJlbnQgY2hhbm5lbCBjaGFyYWN0ZXJpc3Rp
+Y3MgaW5zaWRlIG9uZSBETUEgSVA/DQoNClRoZSBJUCBkcml2ZXJzIGFyZSBkb25lIGJ5IGRpZmZl
+cmVudCB0ZWFtcywgYnV0IEkgY2FuIHRyeSBhbmQgYXNrIGFyb3VuZC4NCg==

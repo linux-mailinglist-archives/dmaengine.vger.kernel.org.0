@@ -2,35 +2,33 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 609B71CA9D4
-	for <lists+dmaengine@lfdr.de>; Fri,  8 May 2020 13:43:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6CAC1CAA06
+	for <lists+dmaengine@lfdr.de>; Fri,  8 May 2020 13:53:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbgEHLnb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 8 May 2020 07:43:31 -0400
-Received: from mga04.intel.com ([192.55.52.120]:17037 "EHLO mga04.intel.com"
+        id S1726736AbgEHLxi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 8 May 2020 07:53:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727084AbgEHLnb (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 8 May 2020 07:43:31 -0400
-IronPort-SDR: 18nEa2Sn5Bd/naPm8YKevnHR/rG+XuZQlaqTmnjxSqOqXfRK56/Ws3p18Uf3QwiyGoAfAbzhhy
- l9g74k2mrGyQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 04:43:30 -0700
-IronPort-SDR: N520jTIwBLbQ3eYPYfqgXoYmzna7PwGI5hq/piziWOApkWt7/SY2gIpRH6PMVQ/+XaA1GoMTon
- 3aKmR+5XPkTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,367,1583222400"; 
-   d="scan'208";a="462212826"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 08 May 2020 04:43:27 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jX1Pe-005PPL-CS; Fri, 08 May 2020 14:43:30 +0300
-Date:   Fri, 8 May 2020 14:43:30 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        id S1726636AbgEHLxh (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 8 May 2020 07:53:37 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F28420708;
+        Fri,  8 May 2020 11:53:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588938816;
+        bh=jzJEqUl7O2hoMsDgMhYgkpN3Z6UxDEbLpvdrbJ3KRrI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=unZZyYdpUTKrHMtCm8KsBWR5frLQlAiisCSejaTBg+JDqqEeVcSetcJfh4htKJXWr
+         H1XUC2+vGwayrJFMuiJo6HOc/OwQPwy6RSE5unyim2rfFgJKQ9na6uaHNNjeWmlVqR
+         DxOrv4P7w22gfrFLPRfxDx3bfzuUWoLwSqiG0SlQ=
+Date:   Fri, 8 May 2020 12:53:34 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
@@ -41,102 +39,83 @@ Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
         Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
         devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/6] dmaengine: dw: Take HC_LLP flag into account for
- noLLP auto-config
-Message-ID: <20200508114330.GL185537@smile.fi.intel.com>
+Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
+ unsupported
+Message-ID: <20200508115334.GE4820@sirena.org.uk>
 References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
  <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-7-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
+ <20200508112604.GJ185537@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="N1GIdlSm9i+YlY4t"
 Content-Disposition: inline
-In-Reply-To: <20200508105304.14065-7-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200508112604.GJ185537@smile.fi.intel.com>
+X-Cookie: Give him an evasive answer.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, May 08, 2020 at 01:53:04PM +0300, Serge Semin wrote:
-> Full multi-block transfers functionality is enabled in DW DMA
-> controller only if CHx_MULTI_BLK_EN is set. But LLP-based transfers
-> can be executed only if hardcode channel x LLP register feature isn't
-> enabled, which can be switched on at the IP core synthesis for
-> optimization. If it's enabled then the LLP register is hardcoded to
-> zero, so the blocks chaining based on the LLPs is unsupported.
-> 
 
-This one is good.
+--N1GIdlSm9i+YlY4t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Fri, May 08, 2020 at 02:26:04PM +0300, Andy Shevchenko wrote:
+> On Fri, May 08, 2020 at 01:53:02PM +0300, Serge Semin wrote:
 
-Feel free to reassemble the series, so, Vinod can apply it independently.
+> > Multi-block support provides a way to map the kernel-specific SG-table so
+> > the DW DMA device would handle it as a whole instead of handling the
+> > SG-list items or so called LLP block items one by one. So if true LLP
+> > list isn't supported by the DW DMA engine, then soft-LLP mode will be
+> > utilized to load and execute each LLP-block one by one. A problem may
+> > happen for multi-block DMA slave transfers, when the slave device buffers
+> > (for example Tx and Rx FIFOs) depend on each other and have size smaller
+> > than the block size. In this case writing data to the DMA slave Tx buffer
+> > may cause the Rx buffer overflow if Rx DMA channel is paused to
+> > reinitialize the DW DMA controller with a next Rx LLP item. In particular
+> > We've discovered this problem in the framework of the DW APB SPI device
 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v2:
-> - Rearrange SoBs.
-> - Add comment about why hardware accelerated LLP list support depends
->   on both MBLK_EN and HC_LLP configs setting.
-> - Use explicit bits state comparison operator.
-> ---
->  drivers/dma/dw/core.c | 11 ++++++++++-
->  drivers/dma/dw/regs.h |  1 +
->  2 files changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-> index 5b76ccc857fd..3179d45df662 100644
-> --- a/drivers/dma/dw/core.c
-> +++ b/drivers/dma/dw/core.c
-> @@ -1180,8 +1180,17 @@ int do_dma_probe(struct dw_dma_chip *chip)
->  			 */
->  			dwc->block_size =
->  				(4 << ((pdata->block_size >> 4 * i) & 0xf)) - 1;
-> +
-> +			/*
-> +			 * According to the DW DMA databook the true scatter-
-> +			 * gether LLPs aren't available if either multi-block
-> +			 * config is disabled (CHx_MULTI_BLK_EN == 0) or the
-> +			 * LLP register is hard-coded to zeros
-> +			 * (CHx_HC_LLP == 1).
-> +			 */
->  			dwc->nollp =
-> -				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0;
-> +				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0 ||
-> +				(dwc_params >> DWC_PARAMS_HC_LLP & 0x1) == 1;
->  			dwc->max_burst =
->  				(0x4 << (dwc_params >> DWC_PARAMS_MSIZE & 0x7));
->  		} else {
-> diff --git a/drivers/dma/dw/regs.h b/drivers/dma/dw/regs.h
-> index f581d4809b71..a8af19d0eabd 100644
-> --- a/drivers/dma/dw/regs.h
-> +++ b/drivers/dma/dw/regs.h
-> @@ -126,6 +126,7 @@ struct dw_dma_regs {
->  
->  /* Bitfields in DWC_PARAMS */
->  #define DWC_PARAMS_MSIZE	16		/* max group transaction size */
-> +#define DWC_PARAMS_HC_LLP	13		/* set LLP register to zero */
->  #define DWC_PARAMS_MBLK_EN	11		/* multi block transfer */
->  
->  /* bursts size */
-> -- 
-> 2.25.1
-> 
+> Mark, do we have any adjustment knobs in SPI core to cope with this?
 
--- 
-With Best Regards,
-Andy Shevchenko
+Frankly I'm not sure I follow what the issue is - is an LLP block item
+different from a SG list entry?  As far as I can tell the problem is
+that the DMA controller does not support chaining transactions together
+and possibly also has a limit on the transfer size?  Or possibly some
+issue with the DMA controller locking the CPU out of the I/O bus for
+noticable periods?  I can't really think what we could do about that if
+the issue is transfer sizes, that just seems like hardware which is
+never going to work reliably.  If the issue is not being able to chain
+transfers then possibly an option to linearize messages into a single
+transfer as suggested to cope with PIO devices with ill considered
+automated chip select handling, though at some point you have to worry
+about the cost of the memcpy() vs the cost of just doing PIO.
 
+> > working in conjunction with DW DMA. Since there is no comprehensive way to
+> > fix it right now lets at least print a warning for the first found
+> > multi-blockless DW DMAC channel. This shall point a developer to the
+> > possible cause of the problem if one would experience a sudden data loss.
 
+I thought from the description of the SPI driver I just reviewed that
+this hardware didn't have DMA?  Or are there separate blocks in the
+hardware that have a more standard instantiation of the DesignWare SPI
+controller with DMA attached?
+
+--N1GIdlSm9i+YlY4t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl61SD0ACgkQJNaLcl1U
+h9DP6wf/dFDiSHbfTbYpSBNRkptpoGaeMDgglGVpj5gntGcn3CfTESvxjfYguuNL
+N0xgW+7ee24CfMkR02v6ZvvKavFGKggBsOw/WjyHnltNYKXiY1vfdk+bDnVLoXEM
+hq7TOqA7PZkP2ChJVoG7Vnd/WBFVpWKijUcYzv8t4T2ZaHO7tymWslrXwf0wHKgK
+z9nxZa3131s4PqJdAG6PQ7AMDiTahYC8sRV+g3Kt7sNG/Ub/TWfjS1mjJ01t7uZq
+BS6BvYsSGJgmKXqE9dqVkQMs/zttV8LFDK+ScuAArL/ReS0g1OUdNP4S8AiTUgNn
+aqIe5ALvWnDBWfIi0sP1ZYXSHWI+sA==
+=gYvy
+-----END PGP SIGNATURE-----
+
+--N1GIdlSm9i+YlY4t--

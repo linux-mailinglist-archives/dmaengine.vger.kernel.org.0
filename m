@@ -2,120 +2,205 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6CAC1CAA06
-	for <lists+dmaengine@lfdr.de>; Fri,  8 May 2020 13:53:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D0A11CB2D8
+	for <lists+dmaengine@lfdr.de>; Fri,  8 May 2020 17:30:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgEHLxi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 8 May 2020 07:53:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43806 "EHLO mail.kernel.org"
+        id S1727819AbgEHPau (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 8 May 2020 11:30:50 -0400
+Received: from mga01.intel.com ([192.55.52.88]:57612 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbgEHLxh (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 8 May 2020 07:53:37 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F28420708;
-        Fri,  8 May 2020 11:53:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588938816;
-        bh=jzJEqUl7O2hoMsDgMhYgkpN3Z6UxDEbLpvdrbJ3KRrI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=unZZyYdpUTKrHMtCm8KsBWR5frLQlAiisCSejaTBg+JDqqEeVcSetcJfh4htKJXWr
-         H1XUC2+vGwayrJFMuiJo6HOc/OwQPwy6RSE5unyim2rfFgJKQ9na6uaHNNjeWmlVqR
-         DxOrv4P7w22gfrFLPRfxDx3bfzuUWoLwSqiG0SlQ=
-Date:   Fri, 8 May 2020 12:53:34 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200508115334.GE4820@sirena.org.uk>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
- <20200508112604.GJ185537@smile.fi.intel.com>
+        id S1727030AbgEHPau (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 8 May 2020 11:30:50 -0400
+IronPort-SDR: DQ+yOgvuYWfqGi1qOqNN+B2SjrUJKttmXr1kqWuakdlzMOWTjS71gHBjHEg/qO9mv0wL5VL2ii
+ qB1pnbsTD9FQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2020 08:30:50 -0700
+IronPort-SDR: CnYmUcfZZG9SSTo/++H2UeYnYUMcsUJAk9RaDDUX47boDVludLdUKpOtaNYXti4gIKJTS3Fwjl
+ ebSucP+ZTzlQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,368,1583222400"; 
+   d="scan'208";a="296172293"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.209.47.49]) ([10.209.47.49])
+  by fmsmga002.fm.intel.com with ESMTP; 08 May 2020 08:30:49 -0700
+Subject: Re: [PATCH v3] dmaengine: cookie bypass for out of order completion
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, swathi.kovvuri@intel.com
+References: <158877653369.51303.5331705116646956272.stgit@djiang5-desk3.ch.intel.com>
+ <4e9802fc-81f6-d293-99b1-8104942c5110@ti.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <72b6e5c4-86fd-2c5d-9f98-506b8238fa8b@intel.com>
+Date:   Fri, 8 May 2020 08:30:48 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="N1GIdlSm9i+YlY4t"
-Content-Disposition: inline
-In-Reply-To: <20200508112604.GJ185537@smile.fi.intel.com>
-X-Cookie: Give him an evasive answer.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <4e9802fc-81f6-d293-99b1-8104942c5110@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi Peter,
 
---N1GIdlSm9i+YlY4t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 5/8/2020 1:10 AM, Peter Ujfalusi wrote:
+> Hi Dave,
+> 
+> On 06/05/2020 17.50, Dave Jiang wrote:
+>> The cookie tracking in dmaengine expects all submissions completed in
+>> order. Some DMA devices like Intel DSA can complete submissions out of
+>> order, especially if configured with a work queue sharing multiple DMA
+>> engines. Add a status DMA_OUT_OF_ORDER that tx_status can be returned for
+>> those DMA devices. The user should use callbacks to track the completion
+>> rather than the DMA cookie. This would address the issue of dmatest
+>> complaining that descriptors are "busy" when the cookie count goes
+>> backwards due to out of order completion. Add DMA_NO_COMPLETION_ORDER
+>> DMA capability to allow the driver to flag the device's ability to complete
+>> operations out of order.
+>>
+>> Reported-by: Swathi Kovvuri <swathi.kovvuri@intel.com>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> Tested-by: Swathi Kovvuri <swathi.kovvuri@intel.com>
+>> ---
+>>
+>> v3:
+>> - v2 mailed wrong patch
+>> v2:
+>> - Add DMA capability (vinod)
+>> - Add documentation (vinod)
+>>
+>>   Documentation/driver-api/dmaengine/provider.rst |   11 +++++++++++
+>>   drivers/dma/dmatest.c                           |    5 ++++-
+>>   drivers/dma/idxd/dma.c                          |    3 ++-
+>>   include/linux/dmaengine.h                       |    2 ++
+>>   4 files changed, 19 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
+>> index 56e5833e8a07..783ca141e147 100644
+>> --- a/Documentation/driver-api/dmaengine/provider.rst
+>> +++ b/Documentation/driver-api/dmaengine/provider.rst
+>> @@ -239,6 +239,14 @@ Currently, the types available are:
+>>       want to transfer a portion of uncompressed data directly to the
+>>       display to print it
+>>   
+>> +- DMA_COMPLETION_NO_ORDER
+>> +
+>> +  - The device supports out of order completion of the operations.
+>> +
+>> +  - The driver should return DMA_OUT_OF_ORDER for device_tx_status if
+>> +    the device supports out of order completion and the completion is
+>> +    is expected to be completed out of order.
+>> +
+>>   These various types will also affect how the source and destination
+>>   addresses change over time.
+>>   
+>> @@ -399,6 +407,9 @@ supported.
+>>     - In the case of a cyclic transfer, it should only take into
+>>       account the current period.
+>>   
+>> +  - Should return DMA_OUT_OF_ORDER if the device supports out of order
+>> +    completion and is completing the operation out of order.
+>> +
+>>     - This function can be called in an interrupt context.
+>>   
+>>   - device_config
+>> diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
+>> index a2cadfa2e6d7..8953e096a05c 100644
+>> --- a/drivers/dma/dmatest.c
+>> +++ b/drivers/dma/dmatest.c
+>> @@ -821,7 +821,10 @@ static int dmatest_func(void *data)
+>>   			result("test timed out", total_tests, src->off, dst->off,
+>>   			       len, 0);
+>>   			goto error_unmap_continue;
+>> -		} else if (status != DMA_COMPLETE) {
+>> +		} else if (status != DMA_COMPLETE &&
+>> +			   !(dma_has_cap(DMA_COMPLETION_NO_ORDER,
+>> +					 dev->cap_mask) &&
+>> +			     status == DMA_OUT_OF_ORDER)) {
+> 
+> What would be the appropriate action if polled is set for dmatest? IN
+> that case it is using dma_sync_wait(), it will break out if the status
+> is != DMA_IN_PROGRESS for the cookie.
+> 
+> I believe that polling mode as we know it, is incompatible with this out
+> of order completion handling.
+> 
+> It should be possible to just disallow polled mode in case
+> dma_has_cap(DMA_COMPLETION_NO_ORDER, dev->cap_mask) == true
 
-On Fri, May 08, 2020 at 02:26:04PM +0300, Andy Shevchenko wrote:
-> On Fri, May 08, 2020 at 01:53:02PM +0300, Serge Semin wrote:
+Ok sure. But looks like we need to come up with a way to not break your usages.
 
-> > Multi-block support provides a way to map the kernel-specific SG-table so
-> > the DW DMA device would handle it as a whole instead of handling the
-> > SG-list items or so called LLP block items one by one. So if true LLP
-> > list isn't supported by the DW DMA engine, then soft-LLP mode will be
-> > utilized to load and execute each LLP-block one by one. A problem may
-> > happen for multi-block DMA slave transfers, when the slave device buffers
-> > (for example Tx and Rx FIFOs) depend on each other and have size smaller
-> > than the block size. In this case writing data to the DMA slave Tx buffer
-> > may cause the Rx buffer overflow if Rx DMA channel is paused to
-> > reinitialize the DW DMA controller with a next Rx LLP item. In particular
-> > We've discovered this problem in the framework of the DW APB SPI device
+> 
+> But I have a DMA where the out of order is not in DMA level, it can be
+> achieved per channel bases if needed.
+> I can not set this flag for UDMA as it would disable the polling mode
+> for channels where it works.
 
-> Mark, do we have any adjustment knobs in SPI core to cope with this?
+Thoughts on introducing per channel cap mask in addition to the existing per 
+device mask? Sounds like we already have devices with some channels having 
+different capabilities and may expand with future devices. This way we can do 
+this on a per channel basis?
 
-Frankly I'm not sure I follow what the issue is - is an LLP block item
-different from a SG list entry?  As far as I can tell the problem is
-that the DMA controller does not support chaining transactions together
-and possibly also has a limit on the transfer size?  Or possibly some
-issue with the DMA controller locking the CPU out of the I/O bus for
-noticable periods?  I can't really think what we could do about that if
-the issue is transfer sizes, that just seems like hardware which is
-never going to work reliably.  If the issue is not being able to chain
-transfers then possibly an option to linearize messages into a single
-transfer as suggested to cope with PIO devices with ill considered
-automated chip select handling, though at some point you have to worry
-about the cost of the memcpy() vs the cost of just doing PIO.
-
-> > working in conjunction with DW DMA. Since there is no comprehensive way to
-> > fix it right now lets at least print a warning for the first found
-> > multi-blockless DW DMAC channel. This shall point a developer to the
-> > possible cause of the problem if one would experience a sudden data loss.
-
-I thought from the description of the SPI driver I just reviewed that
-this hardware didn't have DMA?  Or are there separate blocks in the
-hardware that have a more standard instantiation of the DesignWare SPI
-controller with DMA attached?
-
---N1GIdlSm9i+YlY4t
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl61SD0ACgkQJNaLcl1U
-h9DP6wf/dFDiSHbfTbYpSBNRkptpoGaeMDgglGVpj5gntGcn3CfTESvxjfYguuNL
-N0xgW+7ee24CfMkR02v6ZvvKavFGKggBsOw/WjyHnltNYKXiY1vfdk+bDnVLoXEM
-hq7TOqA7PZkP2ChJVoG7Vnd/WBFVpWKijUcYzv8t4T2ZaHO7tymWslrXwf0wHKgK
-z9nxZa3131s4PqJdAG6PQ7AMDiTahYC8sRV+g3Kt7sNG/Ub/TWfjS1mjJ01t7uZq
-BS6BvYsSGJgmKXqE9dqVkQMs/zttV8LFDK+ScuAArL/ReS0g1OUdNP4S8AiTUgNn
-aqIe5ALvWnDBWfIi0sP1ZYXSHWI+sA==
-=gYvy
------END PGP SIGNATURE-----
-
---N1GIdlSm9i+YlY4t--
+> 
+> Yes, I'm also interested in out of order cookie completion and even
+> beyond that, when you don't really have cookies, but you have a pool
+> given to the DMA and it is going to return them back when data arrived
+> (or internally manages the pool and summons the packets out of thin air).
+> 
+>>   			result(status == DMA_ERROR ?
+>>   			       "completion error status" :
+>>   			       "completion busy status", total_tests, src->off,
+>> diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
+>> index c64c1429d160..0c892cbd72e0 100644
+>> --- a/drivers/dma/idxd/dma.c
+>> +++ b/drivers/dma/idxd/dma.c
+>> @@ -133,7 +133,7 @@ static enum dma_status idxd_dma_tx_status(struct dma_chan *dma_chan,
+>>   					  dma_cookie_t cookie,
+>>   					  struct dma_tx_state *txstate)
+>>   {
+>> -	return dma_cookie_status(dma_chan, cookie, txstate);
+>> +	return DMA_OUT_OF_ORDER;
+> 
+> There is no condition? It is always out of order?
+> 
+>>   }
+>>   
+>>   /*
+>> @@ -174,6 +174,7 @@ int idxd_register_dma_device(struct idxd_device *idxd)
+>>   	INIT_LIST_HEAD(&dma->channels);
+>>   	dma->dev = &idxd->pdev->dev;
+>>   
+>> +	dma_cap_set(DMA_COMPLETION_NO_ORDER, dma->cap_mask);
+>>   	dma->device_release = idxd_dma_release;
+>>   
+>>   	if (idxd->hw.opcap.bits[0] & IDXD_OPCAP_MEMMOVE) {
+>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+>> index 21065c04c4ac..1123f4d15bae 100644
+>> --- a/include/linux/dmaengine.h
+>> +++ b/include/linux/dmaengine.h
+>> @@ -39,6 +39,7 @@ enum dma_status {
+>>   	DMA_IN_PROGRESS,
+>>   	DMA_PAUSED,
+>>   	DMA_ERROR,
+>> +	DMA_OUT_OF_ORDER,
+>>   };
+>>   
+>>   /**
+>> @@ -61,6 +62,7 @@ enum dma_transaction_type {
+>>   	DMA_SLAVE,
+>>   	DMA_CYCLIC,
+>>   	DMA_INTERLEAVE,
+>> +	DMA_COMPLETION_NO_ORDER,
+>>   /* last transaction type for creation of the capabilities mask */
+>>   	DMA_TX_TYPE_END,
+>>   };
+>>
+> 
+> - Péter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 

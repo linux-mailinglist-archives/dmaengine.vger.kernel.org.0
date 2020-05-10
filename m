@@ -2,164 +2,235 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF51B1CC13E
-	for <lists+dmaengine@lfdr.de>; Sat,  9 May 2020 14:21:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A71C81CCC0F
+	for <lists+dmaengine@lfdr.de>; Sun, 10 May 2020 17:52:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgEIMV3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 9 May 2020 08:21:29 -0400
-Received: from mail-eopbgr130058.outbound.protection.outlook.com ([40.107.13.58]:40515
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728326AbgEIMV2 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sat, 9 May 2020 08:21:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XkwfrgIO/jpuG7qTOq0T1o+6J0tjIzX9vKKPl7xWFefr4NMhyxhpLhD21RMVwW2oMzZktwNYuLqGK6Jcccfil1AoM4jGotE+r4tILXAoLhW3FReYKO2vvl031fj8iPUb1xFleazj3S07/rh193ndeIzOR7zaZ6H88xcx/zbafhhJMD+5F1hYF7AVQFHS0KgUVnew79lctwX4ciipSx6ayaQOSQQ5ngh2JoqVsHXRyJR1vM68UMKAutmoIJufw6LrK5z7cCxnBwlsUg8tgfA0WxaMRMOkU4mMe2f8nKwnWW7LT1JijJaeWAXjJWQCKfCO3TEcWxFZttv2W27g63gWOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4h7nCXjrl0Gr2jKC1KzAk5gAE4foOIZC/ZPgPjwkQsI=;
- b=jG55hj6rXuPoeV857R61aWxdaSrI5MwR0ffQFxiB3GLu2YW0d0reKe9/v4ZJx+mV3YcbnK/2WiCfyNmcpB970su+PXde4KTRYLOlVakmuGTvww2zQI6kQZtO5xyEmpQMdB7zZpTsEcyYmQMvRU6KXotfafy14j0GQyw7sV/q8bjx+B5Ka940UaK2+Emjf2VCOPuyOd5xZpBJB//ABu6JIsFXLYluoa+Nepa0iDhmuJ7qHJY1sSMWb09NKF9xJRv9mk2QgbCMpnKvRVLVrUwyBDCaPV+Phrh2xAPaxfh98fCKpAfgMAIDl9FG2wqfUieMdDavOpiMLQwBOwM7Odav5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4h7nCXjrl0Gr2jKC1KzAk5gAE4foOIZC/ZPgPjwkQsI=;
- b=tRwcqL0m6od7l6Uge93pKuhRjwiyI0/B7w/eNP0Cjlf389QvVV65TG+1sQGW6qxddOSlVxuKg/9Jx6Fjpa+zSktccp63t4ZVvhvq1/wemEnpFPEM4RPWAxsz9d2FBJRPW/qWX8e5TfD/1gh2UOtFn2ioVo6GDEnfz7UlS8gFUCE=
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=mellanox.com;
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB5071.eurprd05.prod.outlook.com (2603:10a6:803:52::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Sat, 9 May
- 2020 12:21:21 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::a47b:e3cd:7d6d:5d4e%6]) with mapi id 15.20.2979.033; Sat, 9 May 2020
- 12:21:20 +0000
-Date:   Sat, 9 May 2020 09:21:13 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Message-ID: <20200509122113.GP19158@mellanox.com>
-References: <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
- <20200426191357.GB13640@mellanox.com>
- <20200426214355.29e19d33@x1.home>
- <20200427115818.GE13640@mellanox.com>
- <20200427071939.06aa300e@x1.home>
- <20200427132218.GG13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8E34AA@SHSMSX104.ccr.corp.intel.com>
- <20200508204710.GA78778@otc-nc-03>
- <20200508231610.GO19158@mellanox.com>
- <20200509000909.GA79981@otc-nc-03>
+        id S1726955AbgEJPwK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 10 May 2020 11:52:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbgEJPwK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 10 May 2020 11:52:10 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB607C061A0C
+        for <dmaengine@vger.kernel.org>; Sun, 10 May 2020 08:52:09 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id b8so2836552plm.11
+        for <dmaengine@vger.kernel.org>; Sun, 10 May 2020 08:52:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wS2EF5eWwXz+epwYSR1MVGJvkvx3Tj4ljAwoZJaG55M=;
+        b=DYVAA5IrBg7w4bhkiFPd9r9cOBkHq/a6W4LMFsJZV4EwgcIEZB8HjzlYuIZ3FEgQ1w
+         lHWoSRwUlpOc1M91pVnWjkHIe0Taa28EXKsLNlo2gMYkrdgJSNjYGdeH5gHKOFJLexa5
+         7SOvugKmO06RfR5QQyaDtJPmjxPt0KDwP67FnEMiE1GJSkkCcEoYbzNoW98lVelRwkH4
+         YzxK1Zvad5dXsIzz7d4ntu1D5/FkHS1LkEsKUeuBjNuwFdEFdltSDx2i0HD7l/5qiHkZ
+         +rIobyBkkWuKUFNzmr5BhuhRfm/7ssjYoIAPsDmeVtoT9nv3zOGDguTO3xBSxzoRULou
+         kCJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wS2EF5eWwXz+epwYSR1MVGJvkvx3Tj4ljAwoZJaG55M=;
+        b=O2VHKzmlO3FRBsyxRkxNlk7vtIzoQuhdfGRFjwmpHIRma5Eh2y6ZlLOhIn3Fwxdg4V
+         2JJHrs+mIn/5ICLQw/+WTuhU/mMso5SbBvLX0pYphLEIX6r4UXtsBAtPLtrX5RQMstNt
+         zL53dLLne03x8SAhmk4IgQOvTrvaP8yBxyt0GMb7C3WLpWbds6NJB32Yt08CZSZoeSei
+         2Y+DqGNQ339/mC/y7S++tYIPKY9l+qGO+YcAOlpgGMRF4Hp50xMuWZn1dOijvg4B36dT
+         /mm6CMr0WAYJv5qP6pYRhVBPfCyra6uuxAA6AJf4iGu5NMdnvZ34cYGaEKrgiT5N3OAL
+         J5tA==
+X-Gm-Message-State: AGi0Pub2j+zDi0nPpithtsUY1Dpoejvym/ago1QKTsn4Zg9aQyeSrYxd
+        xeArjkdSEG25dqs2m13kfeVk
+X-Google-Smtp-Source: APiQypK4YyulG/WyhZuIuIVx/PuP8Uwtt8Cr4PbMU4ZfcH0wHlRtrqBR/xYBP9BGpffVNQiVTtG4tA==
+X-Received: by 2002:a17:90a:290f:: with SMTP id g15mr17028947pjd.93.1589125929067;
+        Sun, 10 May 2020 08:52:09 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6e91:c397:8daa:1f46:6608:df6c])
+        by smtp.gmail.com with ESMTPSA id go21sm7772268pjb.45.2020.05.10.08.52.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 10 May 2020 08:52:08 -0700 (PDT)
+Date:   Sun, 10 May 2020 21:21:59 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Amit Singh Tomar <amittomer25@gmail.com>
+Cc:     andre.przywara@arm.com, vkoul@kernel.org, afaerber@suse.de,
+        dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH RFC 1/8] dmaengine: Actions: get rid of bit fields from
+ dma descriptor
+Message-ID: <20200510155159.GA27924@Mani-XPS-13-9360>
+References: <1588761371-9078-1-git-send-email-amittomer25@gmail.com>
+ <1588761371-9078-2-git-send-email-amittomer25@gmail.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200509000909.GA79981@otc-nc-03>
+In-Reply-To: <1588761371-9078-2-git-send-email-amittomer25@gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: MN2PR04CA0029.namprd04.prod.outlook.com
- (2603:10b6:208:d4::42) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR04CA0029.namprd04.prod.outlook.com (2603:10b6:208:d4::42) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend Transport; Sat, 9 May 2020 12:21:19 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jXOTh-0007eZ-Ad; Sat, 09 May 2020 09:21:13 -0300
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ab269f3c-0c00-4c18-94e7-08d7f4137abd
-X-MS-TrafficTypeDiagnostic: VI1PR05MB5071:|VI1PR05MB5071:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB50719C4BEA78B5EE3FD28421CFA30@VI1PR05MB5071.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-Forefront-PRVS: 03982FDC1D
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /54wTlohEPoVrZWRnQFdIseAls0AlpkCcFTfT7w316/Qo5wDPMVS5Y43mNxDPpzWklWdv9fIm9pNYSaOkj5qYAuunzSwOtkmBbNYmyfT9PNiZHxYA4uEOOU6SygeaGiINE6VN8yTm24FrWra4dTk6WyuxVCON+fslQo0vsVRl7vdu7TM+jV5OD05frY66kP0UI6LxId7VuKj3Hin9Wz+ozkOh+sPD3vXW+V0RKITKt/3h/EqGub9nKgggeLDkwtQgf4pjpLncHzOGno8itzQlHX8YicJj6PS09zsRvTu5EpvHE8WdQrce8l3SM3gFafceG9bwU98TQAeORwAUatg4PP871S0SCaekbmc6KjRS5T/njf7waEZtqp2c2qzQpX9WIO1DsgZEHn8myyoLLoXvU8M0h21wRgnUpwG51KV/uinJTzSCPa+mVPNpRLMvxoedhdXM+KCvhi6L4F3ttzbXCDh9tjL72p1ifuuDmy/C6q59sSGwqhxvycYK+o3Q7v+2B5z7jgaMM8xOfFHiEzSS/GeOTnlKY5cLaOHdwcy/kRoYf8JVreFA6xHXt8M1MAk
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(346002)(396003)(376002)(366004)(33430700001)(478600001)(316002)(186003)(6916009)(26005)(9786002)(5660300002)(9746002)(86362001)(52116002)(4326008)(2616005)(7416002)(2906002)(54906003)(8676002)(33656002)(36756003)(8936002)(66556008)(33440700001)(66476007)(66946007)(1076003)(24400500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: HiqlSbBEHyerhLiI9HQ/nJ74piXXoOtAA7UyKaRYKbxFMHF5M1GBoRmc+iriiONqWFykuKZmXRJBbBzQG0o2K6CkusZ025YtUEBUU2yeHsQ0aL9/6iEM1tN+KRFkMchXrBaFI79jHJkZZAG+fLYoRcJXaes4i4xj7/fyZ5qYt8sYejE47P43cgkCvYVoqrMShPxFBsnwEZx0Djj58Z8FujUGtYxQa4q4N+OSxJT0BO+jmG6VGjLj5NeDnq6+T2Z6YqtGq0SQ2YhC/3sqt9qFP54hVnce/uYH8EaT0CE021jscN7SMUx3iiu3MpgCizHqvHBcd+pXex2+Lr9MUt3H6usMnMSOqvBI86Qkn7XWwu4fv0lAqm+x1ACLAfIPtIap5PZYJCo6w7V93HZClE8Bim/430VHk9cFrwlXg0B9gj4540VlXyF9NTzL8lhjleQ/FGxX+uqKDfYBi49ZYx8vNvhm7HJ09ORZUnAkMH4KBabdAA2hxDDlPZFrx1IpgazA
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab269f3c-0c00-4c18-94e7-08d7f4137abd
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2020 12:21:20.2292
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8b2sLAm7Rh4LonBwMhwRS6Kqc0HQv6NYfg3r/2N22ywtEYa15NjpgakM5yV9jj17eSayuLen1Ej7UvQLRAN4JQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5071
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, May 08, 2020 at 05:09:09PM -0700, Raj, Ashok wrote:
-> Hi Jason
-> 
-> On Fri, May 08, 2020 at 08:16:10PM -0300, Jason Gunthorpe wrote:
-> > On Fri, May 08, 2020 at 01:47:10PM -0700, Raj, Ashok wrote:
-> > 
-> > > Even when uaccel was under development, one of the options
-> > > was to use VFIO as the transport, goal was the same i.e to keep
-> > > the user space have one interface. 
-> > 
-> > I feel a bit out of the loop here, uaccel isn't in today's kernel is
-> > it? I've heard about it for a while, it sounds very similar to RDMA,
-> > so I hope they took some of my advice...
-> 
-> I think since 5.7 maybe? drivers/misc/uacce. I don't think this is like
-> RDMA, its just a plain accelerator. There is no connection management,
-> memory registration or other things.. IB was my first job at Intel,
-> but saying that i would be giving my age away :)
+Hi,
 
-rdma was the first thing to do kernel bypass, all this stuff is like
-rdma at some level.. I see this looks like the 'warp driver' stuff
-redone
-
-Wow, lots wrong here. Oh well.
-
-> > putting emulation code back into them, except in a more dangerous
-> > kernel location. This does not seem like a net win to me.
+On Wed, May 06, 2020 at 04:06:03PM +0530, Amit Singh Tomar wrote:
+> At the moment, Driver uses bit fields to describe registers of the DMA
+> descriptor structure that makes it less portable and maintainable, and
+> Andre suugested(and even sketched important bits for it) to make use of
+> array to describe this DMA descriptors instead. It gives the flexibility
+> while extending support for other platform such as Actions S700.
 > 
-> Its not a whole lot of emulation right? mdev are soft partitioned. There is
-> just a single PF, but we can create a separate partition for the guest using
-> PASID along with the normal BDF (RID). And exposing a consistent PCI like
-> interface to user space you get everything else for free.
+> This commit removes the "owl_dma_lli_hw" (that includes bit-fields) and
+> uses array to describe DMA descriptor.
 > 
-> Yes, its not SRIOV, but giving that interface to user space via VFIO, we get 
-> all of that functionality without having to reinvent a different way to do it.
+
+I'm in favor of getting rid of bitfields due to its not so defined way of
+working (and forgive me for using it in first place) but I don't quite like
+the current approach.
+
+Rather I'd like to have custom bitmasks (S900/S700/S500?) for writing to those
+fields.
+
+Thanks,
+Mani
+
+> Suggested-by: Andre Przywara <andre.przywara@arm.com>
+> Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+> ---
+>  drivers/dma/owl-dma.c | 77 ++++++++++++++++++++++-----------------------------
+>  1 file changed, 33 insertions(+), 44 deletions(-)
 > 
-> vDPA went the other way, IRC, they went and put a HW implementation of what
-> virtio is in hardware. So they sort of fit the model. Here the instance
-> looks and feels like real hardware for the setup and control aspect.
-
-VDPA and this are very similar, of course it depends on the exact HW
-implementation.
-
-Jason
+> diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
+> index c683051257fd..b0d80a2fa383 100644
+> --- a/drivers/dma/owl-dma.c
+> +++ b/drivers/dma/owl-dma.c
+> @@ -120,30 +120,18 @@
+>  #define BIT_FIELD(val, width, shift, newshift)	\
+>  		((((val) >> (shift)) & ((BIT(width)) - 1)) << (newshift))
+>  
+> -/**
+> - * struct owl_dma_lli_hw - Hardware link list for dma transfer
+> - * @next_lli: physical address of the next link list
+> - * @saddr: source physical address
+> - * @daddr: destination physical address
+> - * @flen: frame length
+> - * @fcnt: frame count
+> - * @src_stride: source stride
+> - * @dst_stride: destination stride
+> - * @ctrla: dma_mode and linklist ctrl config
+> - * @ctrlb: interrupt config
+> - * @const_num: data for constant fill
+> - */
+> -struct owl_dma_lli_hw {
+> -	u32	next_lli;
+> -	u32	saddr;
+> -	u32	daddr;
+> -	u32	flen:20;
+> -	u32	fcnt:12;
+> -	u32	src_stride;
+> -	u32	dst_stride;
+> -	u32	ctrla;
+> -	u32	ctrlb;
+> -	u32	const_num;
+> +/* Describe DMA descriptor, hardware link list for dma transfer */
+> +enum owl_dmadesc_offsets {
+> +	OWL_DMADESC_NEXT_LLI = 0,
+> +	OWL_DMADESC_SADDR,
+> +	OWL_DMADESC_DADDR,
+> +	OWL_DMADESC_FLEN,
+> +	OWL_DMADESC_SRC_STRIDE,
+> +	OWL_DMADESC_DST_STRIDE,
+> +	OWL_DMADESC_CTRLA,
+> +	OWL_DMADESC_CTRLB,
+> +	OWL_DMADESC_CONST_NUM,
+> +	OWL_DMADESC_SIZE
+>  };
+>  
+>  /**
+> @@ -153,7 +141,7 @@ struct owl_dma_lli_hw {
+>   * @node: node for txd's lli_list
+>   */
+>  struct owl_dma_lli {
+> -	struct  owl_dma_lli_hw	hw;
+> +	u32			hw[OWL_DMADESC_SIZE];
+>  	dma_addr_t		phys;
+>  	struct list_head	node;
+>  };
+> @@ -351,8 +339,9 @@ static struct owl_dma_lli *owl_dma_add_lli(struct owl_dma_txd *txd,
+>  		list_add_tail(&next->node, &txd->lli_list);
+>  
+>  	if (prev) {
+> -		prev->hw.next_lli = next->phys;
+> -		prev->hw.ctrla |= llc_hw_ctrla(OWL_DMA_MODE_LME, 0);
+> +		prev->hw[OWL_DMADESC_NEXT_LLI] = next->phys;
+> +		prev->hw[OWL_DMADESC_CTRLA] |=
+> +					llc_hw_ctrla(OWL_DMA_MODE_LME, 0);
+>  	}
+>  
+>  	return next;
+> @@ -365,8 +354,7 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+>  				  struct dma_slave_config *sconfig,
+>  				  bool is_cyclic)
+>  {
+> -	struct owl_dma_lli_hw *hw = &lli->hw;
+> -	u32 mode;
+> +	u32 mode, ctrlb;
+>  
+>  	mode = OWL_DMA_MODE_PW(0);
+>  
+> @@ -407,22 +395,22 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+>  		return -EINVAL;
+>  	}
+>  
+> -	hw->next_lli = 0; /* One link list by default */
+> -	hw->saddr = src;
+> -	hw->daddr = dst;
+> -
+> -	hw->fcnt = 1; /* Frame count fixed as 1 */
+> -	hw->flen = len; /* Max frame length is 1MB */
+> -	hw->src_stride = 0;
+> -	hw->dst_stride = 0;
+> -	hw->ctrla = llc_hw_ctrla(mode,
+> -				 OWL_DMA_LLC_SAV_LOAD_NEXT |
+> -				 OWL_DMA_LLC_DAV_LOAD_NEXT);
+> +	lli->hw[OWL_DMADESC_CTRLA] = llc_hw_ctrla(mode,
+> +						  OWL_DMA_LLC_SAV_LOAD_NEXT |
+> +						  OWL_DMA_LLC_DAV_LOAD_NEXT);
+>  
+>  	if (is_cyclic)
+> -		hw->ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_BLOCK);
+> +		ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_BLOCK);
+>  	else
+> -		hw->ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_SUPER_BLOCK);
+> +		ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_SUPER_BLOCK);
+> +
+> +	lli->hw[OWL_DMADESC_NEXT_LLI] = 0;
+> +	lli->hw[OWL_DMADESC_SADDR] = src;
+> +	lli->hw[OWL_DMADESC_DADDR] = dst;
+> +	lli->hw[OWL_DMADESC_SRC_STRIDE] = 0;
+> +	lli->hw[OWL_DMADESC_DST_STRIDE] = 0;
+> +	lli->hw[OWL_DMADESC_FLEN] = len | 1 << 20;
+> +	lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
+>  
+>  	return 0;
+>  }
+> @@ -754,7 +742,8 @@ static u32 owl_dma_getbytes_chan(struct owl_dma_vchan *vchan)
+>  			/* Start from the next active node */
+>  			if (lli->phys == next_lli_phy) {
+>  				list_for_each_entry(lli, &txd->lli_list, node)
+> -					bytes += lli->hw.flen;
+> +					bytes += lli->hw[OWL_DMADESC_FLEN] &
+> +						 GENMASK(19, 0);
+>  				break;
+>  			}
+>  		}
+> @@ -785,7 +774,7 @@ static enum dma_status owl_dma_tx_status(struct dma_chan *chan,
+>  	if (vd) {
+>  		txd = to_owl_txd(&vd->tx);
+>  		list_for_each_entry(lli, &txd->lli_list, node)
+> -			bytes += lli->hw.flen;
+> +			bytes += lli->hw[OWL_DMADESC_FLEN] & GENMASK(19, 0);
+>  	} else {
+>  		bytes = owl_dma_getbytes_chan(vchan);
+>  	}
+> -- 
+> 2.7.4
+> 

@@ -2,163 +2,240 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DDBC1CDC73
-	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2020 16:03:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75E981CDF01
+	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2020 17:29:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbgEKODZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 11 May 2020 10:03:25 -0400
-Received: from mga18.intel.com ([134.134.136.126]:54853 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729279AbgEKODZ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 11 May 2020 10:03:25 -0400
-IronPort-SDR: 7RCJqClQS0iMyozZ4jzOHea5BovwmXWCCU73IlOaDy2rXXyXFEVHyD0Bul+5yKT4xCvQndgpa4
- KoYS6llyQmgQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 07:03:24 -0700
-IronPort-SDR: 3NSeOr3axUNMFJa43fBMnWJZLOLV3u+AvSsMFb2mtSVfrXARLYZMLqMcHu4hIN/1bF5jKz2G1u
- RMxiaCP/ELbQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,380,1583222400"; 
-   d="scan'208";a="408925901"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga004.jf.intel.com with ESMTP; 11 May 2020 07:03:20 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jY91f-005zI1-3c; Mon, 11 May 2020 17:03:23 +0300
-Date:   Mon, 11 May 2020 17:03:23 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200511140323.GK185537@smile.fi.intel.com>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
- <20200508112604.GJ185537@smile.fi.intel.com>
- <20200508115334.GE4820@sirena.org.uk>
- <20200508190622.GQ185537@smile.fi.intel.com>
- <20200511031344.lnq3wesjuy5cwbfj@mobilestation>
+        id S1727093AbgEKP3l (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 11 May 2020 11:29:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726934AbgEKP3l (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 May 2020 11:29:41 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05942C061A0C
+        for <dmaengine@vger.kernel.org>; Mon, 11 May 2020 08:29:40 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id f6so4723856pgm.1
+        for <dmaengine@vger.kernel.org>; Mon, 11 May 2020 08:29:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=y/V0wcoxC/Yk3CV9Ny72KgJNadmz9KFuZ61yQV7Ioak=;
+        b=o+le0p8g5d/nvE3pzywPAZJpoIzOEmlpxN4Sow/q0VQ0QPFnUNKO3GCJZXABsT8kiu
+         45bmA1W0/PY04u/CF5DEvBlWWogZwMOD+4v5iRBJZxWW61zr5u7/t/aibMPEj0TI7Y5J
+         MGAKDOtUi35Rip0Z0Jqi5oRQBPX0mI5Ewpgiw0l6+cb72hGVJa2QS6+y8ddjJNz/UPdh
+         w9h/1eSZ7tN5++f87W+3DrlTwG7T2KKvA55KeE+piTOrAib+leIymvWshHf0bYTXWfEK
+         6y6v8OFu1YoRueD1I2O8XHyGDEmvGPtohynwLNxLB/9TX+HCMwUn1+A4nBQXWX4ynnps
+         WtQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=y/V0wcoxC/Yk3CV9Ny72KgJNadmz9KFuZ61yQV7Ioak=;
+        b=CM2bI8ey4OyrEgW1sWZE2lr/Ru2bRPDRJ6pkjzcDUSqNrx2eyvtVOfCtz54jJdaHC+
+         DPPublVimj3ZQ/XQP1Y6NKQ3GAuz0u/zv+FD/p/C1omMAOdh1yHrfA9IfNtiUgjvaXql
+         J8MKA0vWz2R5m8o80JSdxwLLfGVTatbFThpy2PRJyxiX0tow5Stbc6UA5NUlnhwHMupe
+         4fnNAAshaQ1EsU6jjK21nBmJ/y31iiZXMBsMUXM0EU5vm8r/YHQSoXKGzgEqkw26Qbpd
+         NI+Fz9ndHjuj4W1p0xl/6wqCvrycgPlarOwNk4X6Xq+ODj04GFIcWwvzmvQekRiaBPKf
+         2IlQ==
+X-Gm-Message-State: AGi0PuaEC6Wrcq/wPOwQ1Ky/utE8zUt8iz3Mvx27QsTkYSBVd0iIDyMT
+        rqOngJQbvVaWLIPe6KAoH3Iy
+X-Google-Smtp-Source: APiQypLyFwhYqdaWIHUXhMcandw2Ds1EIzw/MYLXIpDgFhOYsgqj0h7AN5YikFI6HeX1TtAh5mWmyA==
+X-Received: by 2002:a63:dd0e:: with SMTP id t14mr14918193pgg.226.1589210979329;
+        Mon, 11 May 2020 08:29:39 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:28b:647d:9464:e66e:7157:1965])
+        by smtp.gmail.com with ESMTPSA id g9sm3204412pgh.52.2020.05.11.08.29.32
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 May 2020 08:29:38 -0700 (PDT)
+Date:   Mon, 11 May 2020 20:59:29 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     =?iso-8859-1?Q?Andr=E9?= Przywara <andre.przywara@arm.com>
+Cc:     Amit Tomer <amittomer25@gmail.com>, vkoul@kernel.org,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        dmaengine@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH RFC 1/8] dmaengine: Actions: get rid of bit fields from
+ dma descriptor
+Message-ID: <20200511152929.GB6865@Mani-XPS-13-9360>
+References: <1588761371-9078-1-git-send-email-amittomer25@gmail.com>
+ <1588761371-9078-2-git-send-email-amittomer25@gmail.com>
+ <20200510155159.GA27924@Mani-XPS-13-9360>
+ <CABHD4K_h7wc1gc3wvya1PRTRjMRkDPW==yrAWSk7cCF9ghkUjg@mail.gmail.com>
+ <20200511112014.GA3322@Mani-XPS-13-9360>
+ <87569683-509e-96e6-17f9-c1734a8b32d4@arm.com>
+ <20200511120458.GB3322@Mani-XPS-13-9360>
+ <68aa739c-f2fe-a739-f8ed-5683cba90b23@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200511031344.lnq3wesjuy5cwbfj@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <68aa739c-f2fe-a739-f8ed-5683cba90b23@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, May 11, 2020 at 06:13:44AM +0300, Serge Semin wrote:
-> On Fri, May 08, 2020 at 10:06:22PM +0300, Andy Shevchenko wrote:
-> > On Fri, May 08, 2020 at 12:53:34PM +0100, Mark Brown wrote:
-> > > On Fri, May 08, 2020 at 02:26:04PM +0300, Andy Shevchenko wrote:
-> > > > On Fri, May 08, 2020 at 01:53:02PM +0300, Serge Semin wrote:
-> > > 
-> > > > > Multi-block support provides a way to map the kernel-specific SG-table so
-> > > > > the DW DMA device would handle it as a whole instead of handling the
-> > > > > SG-list items or so called LLP block items one by one. So if true LLP
-> > > > > list isn't supported by the DW DMA engine, then soft-LLP mode will be
-> > > > > utilized to load and execute each LLP-block one by one. A problem may
-> > > > > happen for multi-block DMA slave transfers, when the slave device buffers
-> > > > > (for example Tx and Rx FIFOs) depend on each other and have size smaller
-> > > > > than the block size. In this case writing data to the DMA slave Tx buffer
-> > > > > may cause the Rx buffer overflow if Rx DMA channel is paused to
-> > > > > reinitialize the DW DMA controller with a next Rx LLP item. In particular
-> > > > > We've discovered this problem in the framework of the DW APB SPI device
-> > > 
-> > > > Mark, do we have any adjustment knobs in SPI core to cope with this?
-> > > 
-> > > Frankly I'm not sure I follow what the issue is - is an LLP block item
-> > > different from a SG list entry?  As far as I can tell the problem is
-> > > that the DMA controller does not support chaining transactions together
-> > > and possibly also has a limit on the transfer size?  Or possibly some
-> > > issue with the DMA controller locking the CPU out of the I/O bus for
-> > > noticable periods?  I can't really think what we could do about that if
-> > > the issue is transfer sizes, that just seems like hardware which is
-> > > never going to work reliably.  If the issue is not being able to chain
-> > > transfers then possibly an option to linearize messages into a single
-> > > transfer as suggested to cope with PIO devices with ill considered
-> > > automated chip select handling, though at some point you have to worry
-> > > about the cost of the memcpy() vs the cost of just doing PIO.
+On Mon, May 11, 2020 at 01:48:41PM +0100, André Przywara wrote:
+> On 11/05/2020 13:04, Manivannan Sadhasivam wrote:
+> 
+> Hi,
+> 
+> > On Mon, May 11, 2020 at 12:44:26PM +0100, André Przywara wrote:
+> >> On 11/05/2020 12:20, Manivannan Sadhasivam wrote:
+> >>
+> >> Hi,
+> >>
+> >>> On Mon, May 11, 2020 at 04:15:57PM +0530, Amit Tomer wrote:
+> >>>> Hi
+> >>>>
+> >>>> Thanks for the reply.
+> >>>>
+> >>>>> I'm in favor of getting rid of bitfields due to its not so defined way of
+> >>>>> working (and forgive me for using it in first place) but I don't quite like
+> >>>>> the current approach.
+> >>>>
+> >>>> Because , its less readable the way we are writing to those different fields ?
+> >>>> But this can be made more verbose by adding some comments around .
+> >>>>
+> >>>
+> >>> I don't like the way the hw linked lists are accessed (using an array with
+> >>> enums).
+> >>
+> >> But honestly this is the most sane way of doing this, see below.
+> >>
+> >>>>> Rather I'd like to have custom bitmasks (S900/S700/S500?) for writing to those
+> >>>>> fields.
+> >>>>>
+> >>>> I think S900 and S500 are same as pointed out by Cristian. and I didn't get by
+> >>>> creating custom bitmasks for it ?
+> >>>>
+> >>>> Did you mean function like:
+> >>>>
+> >>>> lli->hw[OWL_DMADESC_FLEN]= llc_hw_FLEN(len, FCNT_VALUE, FCNT_SHIFT);
+> >>>>
+> >>>
+> >>> I meant to keep using old struct for accessing the linked list and replacing
+> >>> bitfields with masks as below:
+> >>>
+> >>> struct owl_dma_lli_hw {
+> >>> 	...
+> >>>         u32     flen;
+> >>>         u32     fcnt;
+> >>> 	...
+> >>> };
+> >>
+> >> And is think this is the wrong way of modelling hardware defined
+> >> register fields. C structs have no guarantee of not introducing padding
+> >> in between fields, the only guarantee you get is that the first member
+> >> has no padding *before* it:
+> >> C standard, section 6.7.2.1, end of paragraph 15:
+> >> "There may be unnamed padding within a structure object, but not at its
+> >> beginning."
+> >>
+> >> Arrays in C on the contrary have very much this guarantee: The members
+> >> are next to each other, no padding.
+> >>
+> >> I see that structs are sometimes used in this function, but it's much
+> >> less common in the kernel than in other projects (U-Boot comes to mind).
+> >> It typically works, because common compiler *implementations* provide
+> >> this guarantee, but we should not rely on this.
+> >>
+> >> So:
+> >> Using enums for the keys provides a natural way of increasing indices,
+> >> without gaps. Also you get this nice and automatic size value by making
+> >> this the last member of the enum.
+> >> Arrays provide the guarantee of consecutive allocation.
+> >>
 > > 
-> > My understanding that the programmed transfers (as separate items in SG list)
-> > can be desynchronized due to LLP emulation in DMA driver. And suggestion
-> > probably is to use only single entry (block) SG lists will do the trick (I
-> > guess that we can configure SPI core do or do not change CS between them).
+> > I agree with your concerns of using struct for defining registers. But we can
+> > safely live with the existing implementation since all fields are u32 and if
 > 
-> CS has nothing to do with this.
-
-I meant that when you do a single entry SG transfer, you may need to shut SPI
-core with CS toggling if needed (or otherwise).
-
-> The problem is pure in the LLP emulation and Tx
-> channel being enabled before the Rx channel initialization during the next LLP
-> reload. Yes, if we have Tx and Rx SG/LLP list consisting of a single item, then
-> there is no problem. Though it would be good to fix the issue in general instead
-> of setting such fatal restrictions. If we had some fence of blocking one channel
-> before another is reinitialized, the problem could theoretically be solved.
+> But why, actually? I can understand that this is done in existing code,
+> because this was done in the past and apparently never challenged. And
+> since it seems to work, at least, there is probably not much reason to
+> change it, just for the sake of it.
+> But if we need to rework this anyway, we should do the right thing. This
+> is especially true in the Linux kernel, which is highly critical and
+> privileged code and also aims to be very portable. We should take no
+> chances here.
 > 
-> It could be an interdependent DMA channels functionality. If two channels are
-> interdependent than the Rx channel could pause the Tx channel while it's in the
-> IRQ handling procedure (or at some other point... call a callback?). This !might!
-> fix the problem, but with no 100% guarantee of success. It will work only if IRQ
-> handler is executed with small latency, so the Tx channel is paused before the Rx
-> FIFO has been filled and overrun.
-> 
-> Another solution could be to reinitialize the interdependent channels
-> synchronously. Tx channel stops and waits until the Rx channel is finished its
-> business of data retrieval from SPI Rx FIFO. Though this solution implies
-> the Tx and Rx buffers of SG/LLP items being of the same size.
-> 
-> Although non of these solutions I really like to spend some time for its
-> development.
 
-I think you don't need go too far with it and we can get easier solution (as
-being discussed in continuation of this thread).
+I gave it a spin and I think it makes sense to stick to arrays. I do talk to
+a compiler guy internally and he recommended to not trust compilers to do the
+right thing for non standard behaviour like this.
 
-> > > > > working in conjunction with DW DMA. Since there is no comprehensive way to
-> > > > > fix it right now lets at least print a warning for the first found
-> > > > > multi-blockless DW DMAC channel. This shall point a developer to the
-> > > > > possible cause of the problem if one would experience a sudden data loss.
-> > > 
-> > > I thought from the description of the SPI driver I just reviewed that
-> > > this hardware didn't have DMA?  Or are there separate blocks in the
-> > > hardware that have a more standard instantiation of the DesignWare SPI
-> > > controller with DMA attached?
+> Honestly I don't understand the advantage of using a struct here,
+> especially if you need to play some tricks (__packed__) to make it work.
+> So why is:
+> 	hw->flen
+> so much better than
+> 	hw[DMA_FLEN]
+
+To be honest this looks ugly to me and that's why I was reluctant. But lets not
+worry about it :)
+
+> that it justifies to introduce dodgy code?
+> 
+> In think in general we should be much more careful when using C language
+> constructs to access hardware or hardware defined data structures, and
+> be it to not give people the wrong idea about this.
+> I think with the advance of more optimising compilers (and, somewhat
+> related, more out-of-order CPUs) the chance of breakage becomes much
+> higher here.
+> 
+
+Only way it can go wrong is, if a nasty compiler adds padding eventhough the
+struct is homogeneous. And yeah, let's be on the safe side.
+
+Sorry for stretching this so long!
+
+Thanks,
+Mani
+
+> Cheers,
+> Andre.
+> 
+> > needed we can also add '__packed' flag to it to avoid padding for any cases.
 > > 
-> > I speculate that the right words there should be 'we don't enable DMA right now
-> > due to some issues' (see above).
+> > The reason why I prefer to stick to this is, this is a hardware linked list and
+> > by defining it as an array and accessing the fields using enums looks awful to
+> > me. Other than that there is no real justification to shy away.
+> > 
+> > When you are modelling a plain register bank (which we are also doing in this
+> > driver), I'd prefer to use the defines directly.
+> > 
+> >> We can surely have a look at the masking problem, but this would need to
+> >> be runtime determined masks, which tend to become "wordy". There can be
+> >> simplifications, for instance I couldn't find where the frame length is
+> >> really limited for the S900 (it must be less than 1MB). Since the S700
+> >> supports *more* than that, there is no need to limit this differently.
+> > 
+> > I was just giving an example of how to handle the bitmasks for different
+> > SoCs if needed. So yeah if it can be avoided, feel free to drop it.
+> > 
+> > Thanks,
+> > Mani
+> > 
+> >>
+> >> Cheers,
+> >> Andre.
+> >>
+> >>
+> >>>
+> >>> hw->flen = len & OWL_S900_DMA_FLEN_MASK;
+> >>> hw->fcnt = 1 & OWL_S900_DMA_FCNT_MASK;
+> >>>
+> >>> Then you can use different masks for S700/S900 based on the compatible.
+> >>>
+> >>> Thanks,
+> >>> Mani
+> >>>
+> >>>> Thanks
+> >>>> -Amit
+> >>
 > 
-> It's your speculation and it's kind of offensive implicitly implying I was
-> lying.
-
-Sorry, if you think so. I didn't imply you are lying, I simple didn't get a big
-picture, but here you elaborate better, thank you.
-
-> If our System SPI controller had DMA I would have said that and would
-> have made it supported in the driver and probably wouldn't bother with a
-> dedicated driver development. Again the Baikal-T1 System Boot SPI controller
-> doesn't have DMA, doesn't have IRQ, is equipped with only 8 bytes FIFO, is
-> embedded into the Boot Controller, provides a dirmap interface to an SPI flash
-> and so on. Baikal-T1 has also got two more normal DW APB SSI interfaces with 64
-> bytes FIFO, IRQ and DMA.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-

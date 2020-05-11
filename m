@@ -2,27 +2,26 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60F351CE28E
-	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2020 20:25:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FEEE1CE2D9
+	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2020 20:32:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729747AbgEKSZl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 11 May 2020 14:25:41 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:49720 "EHLO
+        id S1729772AbgEKScv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 11 May 2020 14:32:51 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:49770 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729678AbgEKSZl (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 May 2020 14:25:41 -0400
+        with ESMTP id S1729727AbgEKScv (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 May 2020 14:32:51 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4B329803080A;
-        Mon, 11 May 2020 18:25:38 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3A2FD803088B;
+        Mon, 11 May 2020 18:32:48 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Vze97ONxmtmJ; Mon, 11 May 2020 21:25:36 +0300 (MSK)
-Date:   Mon, 11 May 2020 21:25:35 +0300
+        with ESMTP id P1N1qOkT7GET; Mon, 11 May 2020 21:32:47 +0300 (MSK)
+Date:   Mon, 11 May 2020 21:32:47 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Mark Brown <broonie@kernel.org>
 CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Vinod Koul <vkoul@kernel.org>,
         Viresh Kumar <vireshk@kernel.org>,
@@ -33,12 +32,11 @@ CC:     Serge Semin <fancer.lancer@gmail.com>,
         Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
  unsupported
-Message-ID: <20200511182535.uvijbdjreqw2zsfc@mobilestation>
+Message-ID: <20200511183247.y6cfss22pe67nouf@mobilestation>
 References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
  <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
  <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
@@ -47,45 +45,55 @@ References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
  <20200511021016.wptcgnc3iq3kadgz@mobilestation>
  <20200511115813.GG8216@sirena.org.uk>
  <20200511134502.hjbu5evkiuh75chr@mobilestation>
- <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
- <20200511174800.GM8216@sirena.org.uk>
+ <20200511174414.GL8216@sirena.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200511174800.GM8216@sirena.org.uk>
+In-Reply-To: <20200511174414.GL8216@sirena.org.uk>
 X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, May 11, 2020 at 06:48:00PM +0100, Mark Brown wrote:
-> On Mon, May 11, 2020 at 04:58:53PM +0300, Andy Shevchenko wrote:
-> > On Mon, May 11, 2020 at 4:48 PM Serge Semin
+On Mon, May 11, 2020 at 06:44:14PM +0100, Mark Brown wrote:
+> On Mon, May 11, 2020 at 04:45:02PM +0300, Serge Semin wrote:
+> > On Mon, May 11, 2020 at 12:58:13PM +0100, Mark Brown wrote:
 > 
-> > > So the question is of how to export the multi-block LLP flag from DW DMAc
-> > > driver. Andy?
+> > > That sounds like you need to also impose a limit on the maximum message
+> > > size as well then, with that you should be able to handle messages up
+> > > to whatever that limit is.  There's code for that bit already, so long
+> > > as the limit is not too low it should be fine for most devices and
+> > > client drivers can see the limit so they can be updated to work with it
+> > > if needed.
 > 
-> > I'm not sure I understand why do you need this being exported. Just
-> > always supply SG list out of single entry and define the length
-> > according to the maximum segment size (it's done IIRC in SPI core).
+> > Hmm, this might work. The problem will be with imposing such limitation through
+> > the DW APB SSI driver. In order to do this I need to know:
 > 
-> If there's a limit from the dmaengine it'd be a bit cleaner to export
-> the limit from the DMA engine (and it'd help with code reuse for clients
-> that might work with other DMA controllers without needing to add custom
-> compatibles for those instantiations).
+> > 1) Whether multi-block LLP is supported by the DW DMA controller.
+> > 2) Maximum DW DMA transfer block size.
+> 
+> There is a constraint enumeration interface in the DMA API which you
+> should be able to extend for this if it doesn't already support what you
+> need.
 
-Right. I've already posted a patch which exports the max segment size from the
-DW DMA controller driver. The SPI core will get the limit in the spi_map_buf()
-method by calling the dma_get_max_seg_size() function. The problem I
-described concerns of how to determine whether to apply the solution Andy
-suggested, since normally if DW DMA controller has true multi-block LLP
-supported the workaround isn't required. So in order to solve the problem in a
-generic way the easiest way would be to somehow get the noLLP flag from the DW
-DMAC private data and select a one-by-one SG entries submission algorithm
-instead of the normal one... On the other hand we could just implement a
-flag-based quirks in the DW APB SSI driver and determine whether the LLP
-problem exists for the platform-specific DW APB SSI controller.
+Yes, that's max segment size.
+
+> 
+> > Then I'll be able to use this information in the can_dma() callback to enable
+> > the DMA xfers only for the safe transfers. Did you mean something like this when
+> > you said "There's code for that bit already" ? If you meant the max_dma_len
+> > parameter, then setting it won't work, because it just limits the SG items size
+> > not the total length of a single transfer.
+> 
+> You can set max_transfer_size and/or max_message_size in the SPI driver
+> - you should be able to do this on probe.
+
+Thanks for the explanation. Max segment size being set to the DMA controller generic
+device should work well. There is no need in setting the transfer and messages
+size limitations. Besides I don't really see the
+max_transfer_size/max_message_size callbacks utilized in the SPI core. These
+functions are called in the spi-mem.c driver only. Do I miss something?
 
 -Sergey
 

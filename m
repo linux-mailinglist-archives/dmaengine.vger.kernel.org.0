@@ -2,27 +2,32 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAB021CE741
-	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2020 23:16:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB24A1CE77A
+	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2020 23:32:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbgEKVQ1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 11 May 2020 17:16:27 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:50200 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgEKVQ1 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 May 2020 17:16:27 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4D1C7803080A;
-        Mon, 11 May 2020 21:16:24 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id JINjVi3KOE_z; Tue, 12 May 2020 00:16:23 +0300 (MSK)
-Date:   Tue, 12 May 2020 00:16:22 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
+        id S1727030AbgEKVc0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 11 May 2020 17:32:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725895AbgEKVc0 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 11 May 2020 17:32:26 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24876206D9;
+        Mon, 11 May 2020 21:32:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589232745;
+        bh=z3P+ciZRlqvUI6Pqf8o4ovW9pXtoLRn9Wot/OO72TAo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OGUPDSMKjydMtSMfFaHrMblmqGwaDOmxz/dBFDSE1wrNvMN5tYxvuwczACX2mkq1U
+         V/DIDWiSDQk3Kn7fmFqsXbv7UXLfLf40W4nuYicxav4RWJmvvGUaGiotgM+OhdcNai
+         c2UgVM4iPCXEPSlPO14rPUyOkxgc0sF0R5XVi1Us=
+Date:   Mon, 11 May 2020 22:32:23 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Vinod Koul <vkoul@kernel.org>,
         Viresh Kumar <vireshk@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
@@ -31,159 +36,68 @@ CC:     Serge Semin <fancer.lancer@gmail.com>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/6] dmaengine: dw: Set DMA device max segment size
- parameter
-Message-ID: <20200511211622.yuh3ls2ay76yaxrf@mobilestation>
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
+ unsupported
+Message-ID: <20200511213223.GB23852@sirena.org.uk>
 References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
  <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-4-Sergey.Semin@baikalelectronics.ru>
- <20200508112152.GI185537@smile.fi.intel.com>
+ <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
+ <20200508112604.GJ185537@smile.fi.intel.com>
+ <20200508115334.GE4820@sirena.org.uk>
+ <20200511021016.wptcgnc3iq3kadgz@mobilestation>
+ <20200511115813.GG8216@sirena.org.uk>
+ <20200511134502.hjbu5evkiuh75chr@mobilestation>
+ <20200511174414.GL8216@sirena.org.uk>
+ <20200511183247.y6cfss22pe67nouf@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Yylu36WmvOXNoKYn"
 Content-Disposition: inline
-In-Reply-To: <20200508112152.GI185537@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200511183247.y6cfss22pe67nouf@mobilestation>
+X-Cookie: APL hackers do it in the quad.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, May 08, 2020 at 02:21:52PM +0300, Andy Shevchenko wrote:
-> +Cc (Vineet, for information you probably know)
-> 
-> On Fri, May 08, 2020 at 01:53:01PM +0300, Serge Semin wrote:
-> > Maximum block size DW DMAC configuration corresponds to the max segment
-> > size DMA parameter in the DMA core subsystem notation. Lets set it with a
-> > value specific to the probed DW DMA controller. It shall help the DMA
-> > clients to create size-optimized SG-list items for the controller. This in
-> > turn will cause less dw_desc allocations, less LLP reinitializations,
-> > better DMA device performance.
-> 
-> Thank you for the patch.
-> My comments below.
-> 
-> ...
-> 
-> > +		/*
-> > +		 * Find maximum block size to be set as the DMA device maximum
-> > +		 * segment size. By doing so we'll have size optimized SG-list
-> > +		 * items for the channels with biggest block size. This won't
-> > +		 * be a problem for the rest of the channels, since they will
-> > +		 * still be able to split the requests up by allocating
-> > +		 * multiple DW DMA LLP descriptors, which they would have done
-> > +		 * anyway.
-> > +		 */
-> > +		if (dwc->block_size > block_size)
-> > +			block_size = dwc->block_size;
-> >  	}
-> >  
-> >  	/* Clear all interrupts on all channels. */
-> > @@ -1220,6 +1233,10 @@ int do_dma_probe(struct dw_dma_chip *chip)
-> >  			     BIT(DMA_MEM_TO_MEM);
-> >  	dw->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
-> >  
-> > +	/* Block size corresponds to the maximum sg size */
-> > +	dw->dma.dev->dma_parms = &dw->dma_parms;
-> > +	dma_set_max_seg_size(dw->dma.dev, block_size);
-> > +
-> >  	err = dma_async_device_register(&dw->dma);
-> >  	if (err)
-> >  		goto err_dma_register;
-> 
-> Yeah, I have locally something like this and I didn't dare to upstream because
-> there is an issue. We have this information per DMA controller, while we
-> actually need this on per DMA channel basis.
-> 
-> Above will work only for synthesized DMA with all channels having same block
-> size. That's why above conditional is not needed anyway.
 
-Hm, I don't really see why the conditional isn't needed and this won't work. As
-you can see in the loop above Initially I find a maximum of all channels maximum
-block sizes and use it then as a max segment size parameter for the whole device.
-If the DW DMA controller has the same max block size of all channels, then it
-will be found. If the channels've been synthesized with different block sizes,
-then the optimization will work for the one with greatest block size. The SG
-list entries of the channels with lesser max block size will be split up
-by the DW DMAC driver, which would have been done anyway without
-max_segment_size being set. Here we at least provide the optimization for the
-channels with greatest max block size.
+--Yylu36WmvOXNoKYn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I do understand that it would be good to have this parameter setup on per generic
-DMA channel descriptor basis. But DMA core and device descriptor doesn't provide
-such facility, so setting at least some justified value is a good idea.
+On Mon, May 11, 2020 at 09:32:47PM +0300, Serge Semin wrote:
 
-> 
-> OTOH, I never saw the DesignWare DMA to be synthesized differently (I remember
-> that Intel Medfield has interesting settings, but I don't remember if DMA
-> channels are different inside the same controller).
-> 
-> Vineet, do you have any information that Synopsys customers synthesized DMA
-> controllers with different channel characteristics inside one DMA IP?
+> Thanks for the explanation. Max segment size being set to the DMA controller generic
+> device should work well. There is no need in setting the transfer and messages
+> size limitations. Besides I don't really see the
+> max_transfer_size/max_message_size callbacks utilized in the SPI core. These
+> functions are called in the spi-mem.c driver only. Do I miss something?
 
-AFAICS the DW DMAC channels can be synthesized with different max block size.
-The IP core supports such configuration. So we can't assume that such DMAC
-release can't be found in a real hardware just because we've never seen one.
-No matter what Vineet will have to say in response to your question.
+We really should validate them in the core but really they're intended
+for client drivers (like spi-mem kind of is) to allow them to adapt the
+sizes of requests they're generating so the core never sees anything
+that's too big.  For the transfers we have a spi_split_transfers_maxsize()
+helper if anything wants to use it.  Fortunately there's not that many
+controllers with low enough limits to worry about so actual usage hasn't
+been that high.
 
-> 
-> ...
-> 
-> >  #include <linux/bitops.h>
-> 
-> > +#include <linux/device.h>
-> 
-> Isn't enough to supply
-> 
-> struct device;
-> 
-> ?
+--Yylu36WmvOXNoKYn
+Content-Type: application/pgp-signature; name="signature.asc"
 
-It's "struct device_dma_parameters" and I'd prefer to include the header file.
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> >  #include <linux/interrupt.h>
-> >  #include <linux/dmaengine.h>
-> 
-> Also this change needs a separate patch I suppose.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl65xGYACgkQJNaLcl1U
+h9CMpAf/T2v9WB98ZVIJ2WXZ3oWO8rPy0Y2A3XVDzHMHMF42Arr3PBNm1h5Oar7r
+MateSJ9BBaa0GomtFvuqaY+XcTMwDXzyqqaQjdIAwc0Qoq/lk1HHJIxc3W+sSHPh
+IvczXH7NChx0jqhs7OQL6G6A5SRxDUVAUvc7cO9wyIJTPzIknKenktHxejqcaayo
+nQNuA3tnXAnRHFIJ3IyoXZECF7cYwXUoYyru14CYJ1rF4I58VfPXDf5DqdbNj5x+
+5TCcmIo0G/ZNVVWFlGgHWrceHDwS1CvHAWRji7K6jKtcHHEVfGkwUCyhnSvNWxbv
+K4lVFhkDMPb/oKCkNovArUDFcrd8gA==
+=XNTS
+-----END PGP SIGNATURE-----
 
-Ah, just discovered there is no need in adding the dma_parms here because since
-commit 7c8978c0837d ("driver core: platform: Initialize dma_parms for platform
-devices") the dma_params pointer is already initialized. The same thing is done
-for the PCI device too.
-
--Sergey
-
-> 
-> ...
-> 
-> > -	struct dma_device	dma;
-> > -	char			name[20];
-> > -	void __iomem		*regs;
-> > -	struct dma_pool		*desc_pool;
-> > -	struct tasklet_struct	tasklet;
-> > +	struct dma_device		dma;
-> > +	struct device_dma_parameters	dma_parms;
-> > +	char				name[20];
-> > +	void __iomem			*regs;
-> > +	struct dma_pool			*desc_pool;
-> > +	struct tasklet_struct		tasklet;
-> >  
-> >  	/* channels */
-> > -	struct dw_dma_chan	*chan;
-> > -	u8			all_chan_mask;
-> > -	u8			in_use;
-> > +	struct dw_dma_chan		*chan;
-> > +	u8				all_chan_mask;
-> > +	u8				in_use;
-> 
-> Please split formatting fixes into a separate patch.
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+--Yylu36WmvOXNoKYn--

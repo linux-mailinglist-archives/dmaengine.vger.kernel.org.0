@@ -2,95 +2,75 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E3A3E1CD157
-	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2020 07:48:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF1891CD485
+	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2020 11:09:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgEKFsM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 11 May 2020 01:48:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44738 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725916AbgEKFsL (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 11 May 2020 01:48:11 -0400
-Received: from sekiro (amontpellier-556-1-155-96.w109-210.abo.wanadoo.fr [109.210.131.96])
+        id S1729119AbgEKJJM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 11 May 2020 05:09:12 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:59411 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbgEKJJL (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 May 2020 05:09:11 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CDB120735;
-        Mon, 11 May 2020 05:48:08 +0000 (UTC)
-Date:   Mon, 11 May 2020 07:48:03 +0200
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: at_xdmac: Replace zero-length array with
- flexible-array
-Message-ID: <20200511054803.yrz4hc4y4z5vscpl@sekiro>
-References: <20200507190046.GA15298@embeddedor>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 3349023E50;
+        Mon, 11 May 2020 11:08:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1589188146;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nYiBpFWVppKd294LTd9vUa0KsvmfWdjfxWQ8LrUsrj4=;
+        b=f6xUb0CZa5gRppVvuuzdVssw51YwDLUpFH/2hOk7zy3nS2DkjuGw35aY4HcwiTiCA8kfj/
+        QakS1wGwxdbCdCvps1WmznVZDb41Ew5+Lt9dNoejGoj304qs5dJBxhfo5VOfncp3MUfz2e
+        dCPI1ovbk7PVarPmfEmMEdswWVgPXEA=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507190046.GA15298@embeddedor>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 11 May 2020 11:08:59 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Li Yang <leoyang.li@nxp.com>, Peng Ma <peng.ma@nxp.com>
+Subject: Re: [PATCH 1/2] dt-bindings: dma: fsl-edma: fix ls1028a-edma
+ compatible
+In-Reply-To: <20200413141830.GA4722@dragon>
+References: <20200306205403.29881-1-michael@walle.cc>
+ <20200413141830.GA4722@dragon>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <de4a40b03858930c15724302b3bf7bd0@walle.cc>
+X-Sender: michael@walle.cc
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, May 07, 2020 at 02:00:46PM -0500, Gustavo A. R. Silva wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Acked-by: Ludovic Desroches<ludovic.desroches@microchip.com>
+Hi Shawn Guo,
 
-Ludovic Desroches
-> ---
->  drivers/dma/at_xdmac.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Am 2020-04-13 16:18, schrieb Shawn Guo:
+> On Fri, Mar 06, 2020 at 09:54:02PM +0100, Michael Walle wrote:
+>> The bootloader will fix up the IOMMU entries only on nodes with the
+>> compatible "fsl,vf610-edma". Thus make this compatible string 
+>> mandatory
+>> for the ls1028a-edma.
+>> 
+>> While at it, fix the "fsl,fsl," typo.
+>> 
+>> Signed-off-by: Michael Walle <michael@walle.cc>
+>> Fixes: d8c1bdb5288d ("dt-bindings: dma: fsl-edma: add new 
+>> fsl,fsl,ls1028a-edma")
 > 
-> diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-> index bb0eaf38b594..fd92f048c491 100644
-> --- a/drivers/dma/at_xdmac.c
-> +++ b/drivers/dma/at_xdmac.c
-> @@ -212,7 +212,7 @@ struct at_xdmac {
->         struct clk              *clk;
->         u32                     save_gim;
->         struct dma_pool         *at_xdmac_desc_pool;
-> -       struct at_xdmac_chan    chan[0];
-> +       struct at_xdmac_chan    chan[];
->  };
-> 
-> 
-> 
+> Applied both.  Will try to send for 5.7-rc inclusion.
+
+Are there any news on the inclusion? Unfortunately, I also forgot the 
+fixes
+tag on patch 2/2, so it won't end up in v5.7.x.
+
+-michael

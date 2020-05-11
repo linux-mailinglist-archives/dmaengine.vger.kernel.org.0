@@ -2,75 +2,89 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF1891CD485
-	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2020 11:09:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 870DA1CD6CE
+	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2020 12:46:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbgEKJJM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 11 May 2020 05:09:12 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:59411 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbgEKJJL (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 May 2020 05:09:11 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 3349023E50;
-        Mon, 11 May 2020 11:08:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1589188146;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nYiBpFWVppKd294LTd9vUa0KsvmfWdjfxWQ8LrUsrj4=;
-        b=f6xUb0CZa5gRppVvuuzdVssw51YwDLUpFH/2hOk7zy3nS2DkjuGw35aY4HcwiTiCA8kfj/
-        QakS1wGwxdbCdCvps1WmznVZDb41Ew5+Lt9dNoejGoj304qs5dJBxhfo5VOfncp3MUfz2e
-        dCPI1ovbk7PVarPmfEmMEdswWVgPXEA=
+        id S1729546AbgEKKqh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 11 May 2020 06:46:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728209AbgEKKqh (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 May 2020 06:46:37 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD250C061A0C
+        for <dmaengine@vger.kernel.org>; Mon, 11 May 2020 03:46:35 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id g9so650434edr.8
+        for <dmaengine@vger.kernel.org>; Mon, 11 May 2020 03:46:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=urJaoEU+KjNM8t/1W6rOD5GSwCsLZCnOcRW+jTf5YXE=;
+        b=Ms5aX7PKhyl1ejvyS3mnFs2nrNI7o9KLkrVFTPKNqwRnap699bfDKc9D6s/vSUipxY
+         FcAiZPLw3t+NcJaMlBhdvTCt08tF4hqsZhyBhh1YG7SxLRFfA1Zu3YEKhkCMUMYPxI6H
+         9zmn6kQqdvWEwZ0ZGT0oWX1/cOHDbzocBIVHwwX2eKzRjLVvU2Kff77bPXeRxVkHcwq3
+         TGbBnN168spbj604i2YNRNCmZ3LREk8XX577TjlA6Ktvvs4/z5JzGIpmPRvykVGXAmxd
+         C1moJkh5Bs777C9cgkrHv+RmbCaoHSDa24U5ntO2hDwx4OshBUHLh3W31g1z1ofboKB8
+         BStg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=urJaoEU+KjNM8t/1W6rOD5GSwCsLZCnOcRW+jTf5YXE=;
+        b=lOmyHjGJiiFYyyt9KV15l9QdLPUEDYoPk+lQKu3b4LAD9JkTgQkE0WKOlxv56gR4ZJ
+         s5tw8fZtGtWBgbWw+J8vcCqUmaWC+ZmUHjvXfK0aEUE37xGArXG0wy0djQVI4k0UckT3
+         DvxkAi6gqeohG3nyLcx37NvNRVnKcsEsA7IJ/a6UpbempuL+Z687IvHyXqhYl4SfXO1N
+         7YOzFx2fGoHdIXzh3gD+Q9zNz13JhNwsnLCFs+Bo8Y7mHId98hoFeb5JE6hjWQ/d9sbx
+         8G+GFmT6spWWnidNUqAEaHzjB3AQIXK145FvEzsamFRyqOWiMbBLdUOtpIIdP/+axaax
+         WcGQ==
+X-Gm-Message-State: AGi0PuZCElcUrpe1VhSr3MCWUhJW2Lm65isy9kgXvgvqFuBVTMuijOQa
+        RB9I1lyFo54LB10AsyjL+jeyrQKB5w+59f+4l/0=
+X-Google-Smtp-Source: APiQypKHPD8WQl5PzmD5IhowpK2bhwpFyWu9KvvRIuxOVec1ue35BXCcqWpfO0EbdFjdmjdqBSG4tdgoyLg8B1+ZCyw=
+X-Received: by 2002:a05:6402:1a46:: with SMTP id bf6mr12476835edb.44.1589193994538;
+ Mon, 11 May 2020 03:46:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 11 May 2020 11:08:59 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Li Yang <leoyang.li@nxp.com>, Peng Ma <peng.ma@nxp.com>
-Subject: Re: [PATCH 1/2] dt-bindings: dma: fsl-edma: fix ls1028a-edma
- compatible
-In-Reply-To: <20200413141830.GA4722@dragon>
-References: <20200306205403.29881-1-michael@walle.cc>
- <20200413141830.GA4722@dragon>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <de4a40b03858930c15724302b3bf7bd0@walle.cc>
-X-Sender: michael@walle.cc
+References: <1588761371-9078-1-git-send-email-amittomer25@gmail.com>
+ <1588761371-9078-2-git-send-email-amittomer25@gmail.com> <20200510155159.GA27924@Mani-XPS-13-9360>
+In-Reply-To: <20200510155159.GA27924@Mani-XPS-13-9360>
+From:   Amit Tomer <amittomer25@gmail.com>
+Date:   Mon, 11 May 2020 16:15:57 +0530
+Message-ID: <CABHD4K_h7wc1gc3wvya1PRTRjMRkDPW==yrAWSk7cCF9ghkUjg@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/8] dmaengine: Actions: get rid of bit fields from
+ dma descriptor
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Andre Przywara <andre.przywara@arm.com>, vkoul@kernel.org,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        dmaengine@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Shawn Guo,
+Hi
 
-Am 2020-04-13 16:18, schrieb Shawn Guo:
-> On Fri, Mar 06, 2020 at 09:54:02PM +0100, Michael Walle wrote:
->> The bootloader will fix up the IOMMU entries only on nodes with the
->> compatible "fsl,vf610-edma". Thus make this compatible string 
->> mandatory
->> for the ls1028a-edma.
->> 
->> While at it, fix the "fsl,fsl," typo.
->> 
->> Signed-off-by: Michael Walle <michael@walle.cc>
->> Fixes: d8c1bdb5288d ("dt-bindings: dma: fsl-edma: add new 
->> fsl,fsl,ls1028a-edma")
-> 
-> Applied both.  Will try to send for 5.7-rc inclusion.
+Thanks for the reply.
 
-Are there any news on the inclusion? Unfortunately, I also forgot the 
-fixes
-tag on patch 2/2, so it won't end up in v5.7.x.
+> I'm in favor of getting rid of bitfields due to its not so defined way of
+> working (and forgive me for using it in first place) but I don't quite like
+> the current approach.
 
--michael
+Because , its less readable the way we are writing to those different fields ?
+But this can be made more verbose by adding some comments around .
+
+> Rather I'd like to have custom bitmasks (S900/S700/S500?) for writing to those
+> fields.
+>
+I think S900 and S500 are same as pointed out by Cristian. and I didn't get by
+creating custom bitmasks for it ?
+
+Did you mean function like:
+
+lli->hw[OWL_DMADESC_FLEN]= llc_hw_FLEN(len, FCNT_VALUE, FCNT_SHIFT);
+
+Thanks
+-Amit

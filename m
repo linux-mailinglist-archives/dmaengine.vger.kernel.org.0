@@ -2,179 +2,94 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66E431CD8BE
-	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2020 13:45:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D5C91CD922
+	for <lists+dmaengine@lfdr.de>; Mon, 11 May 2020 13:58:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbgEKLpV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 11 May 2020 07:45:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:58526 "EHLO foss.arm.com"
+        id S1729475AbgEKL6R (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 11 May 2020 07:58:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728531AbgEKLpV (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 11 May 2020 07:45:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15976101E;
-        Mon, 11 May 2020 04:45:18 -0700 (PDT)
-Received: from [192.168.2.22] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7A59D3F305;
-        Mon, 11 May 2020 04:45:16 -0700 (PDT)
-Subject: Re: [PATCH RFC 1/8] dmaengine: Actions: get rid of bit fields from
- dma descriptor
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Amit Tomer <amittomer25@gmail.com>
-Cc:     vkoul@kernel.org,
-        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
-        dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
-        dmaengine@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-actions@lists.infradead.org
-References: <1588761371-9078-1-git-send-email-amittomer25@gmail.com>
- <1588761371-9078-2-git-send-email-amittomer25@gmail.com>
- <20200510155159.GA27924@Mani-XPS-13-9360>
- <CABHD4K_h7wc1gc3wvya1PRTRjMRkDPW==yrAWSk7cCF9ghkUjg@mail.gmail.com>
- <20200511112014.GA3322@Mani-XPS-13-9360>
-From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
-Autocrypt: addr=andre.przywara@arm.com; prefer-encrypt=mutual; keydata=
- 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
- i4aIXCH3Wv6K
-Organization: ARM Ltd.
-Message-ID: <87569683-509e-96e6-17f9-c1734a8b32d4@arm.com>
-Date:   Mon, 11 May 2020 12:44:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726068AbgEKL6R (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 11 May 2020 07:58:17 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDFD22075E;
+        Mon, 11 May 2020 11:58:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589198296;
+        bh=I7c/5QR0NUZxXyJ3bfQU4K67hU6vugawyRi1MoWi3Ag=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hMYxExIkbBzpZ8xg1+7zwz1nUpF1p694bpxCsfJ0x+6ZYVxyIZSYhNLWVUmx5cS2U
+         U6vX1F9U22Pn8tffCzSxGDxl96iWaXHHGgGFEDuRfBzRuZP/QWtkoajrB+4xZRf+F8
+         yoXXlU4MuhX59fX9LOFqETt7nYbJLAk8zxsUReio=
+Date:   Mon, 11 May 2020 12:58:13 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
+ unsupported
+Message-ID: <20200511115813.GG8216@sirena.org.uk>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-5-Sergey.Semin@baikalelectronics.ru>
+ <20200508112604.GJ185537@smile.fi.intel.com>
+ <20200508115334.GE4820@sirena.org.uk>
+ <20200511021016.wptcgnc3iq3kadgz@mobilestation>
 MIME-Version: 1.0
-In-Reply-To: <20200511112014.GA3322@Mani-XPS-13-9360>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fwqqG+mf3f7vyBCB"
+Content-Disposition: inline
+In-Reply-To: <20200511021016.wptcgnc3iq3kadgz@mobilestation>
+X-Cookie: TANSTAAFL
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 11/05/2020 12:20, Manivannan Sadhasivam wrote:
 
-Hi,
+--fwqqG+mf3f7vyBCB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On Mon, May 11, 2020 at 04:15:57PM +0530, Amit Tomer wrote:
->> Hi
->>
->> Thanks for the reply.
->>
->>> I'm in favor of getting rid of bitfields due to its not so defined way of
->>> working (and forgive me for using it in first place) but I don't quite like
->>> the current approach.
->>
->> Because , its less readable the way we are writing to those different fields ?
->> But this can be made more verbose by adding some comments around .
->>
-> 
-> I don't like the way the hw linked lists are accessed (using an array with
-> enums).
+On Mon, May 11, 2020 at 05:10:16AM +0300, Serge Semin wrote:
 
-But honestly this is the most sane way of doing this, see below.
+> Alas linearizing the SPI messages won't help in this case because the DW DMA
+> driver will split it into the max transaction chunks anyway.
 
->>> Rather I'd like to have custom bitmasks (S900/S700/S500?) for writing to those
->>> fields.
->>>
->> I think S900 and S500 are same as pointed out by Cristian. and I didn't get by
->> creating custom bitmasks for it ?
->>
->> Did you mean function like:
->>
->> lli->hw[OWL_DMADESC_FLEN]= llc_hw_FLEN(len, FCNT_VALUE, FCNT_SHIFT);
->>
-> 
-> I meant to keep using old struct for accessing the linked list and replacing
-> bitfields with masks as below:
-> 
-> struct owl_dma_lli_hw {
-> 	...
->         u32     flen;
->         u32     fcnt;
-> 	...
-> };
+That sounds like you need to also impose a limit on the maximum message
+size as well then, with that you should be able to handle messages up
+to whatever that limit is.  There's code for that bit already, so long
+as the limit is not too low it should be fine for most devices and
+client drivers can see the limit so they can be updated to work with it
+if needed.
 
-And is think this is the wrong way of modelling hardware defined
-register fields. C structs have no guarantee of not introducing padding
-in between fields, the only guarantee you get is that the first member
-has no padding *before* it:
-C standard, section 6.7.2.1, end of paragraph 15:
-"There may be unnamed padding within a structure object, but not at its
-beginning."
+--fwqqG+mf3f7vyBCB
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Arrays in C on the contrary have very much this guarantee: The members
-are next to each other, no padding.
+-----BEGIN PGP SIGNATURE-----
 
-I see that structs are sometimes used in this function, but it's much
-less common in the kernel than in other projects (U-Boot comes to mind).
-It typically works, because common compiler *implementations* provide
-this guarantee, but we should not rely on this.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl65PdUACgkQJNaLcl1U
+h9CBqgf+PZERckWsOqLfM9GL+SqMyC0673X9Gu0EsD3d7Ew+bDzZXCP8IFVs0dXB
+kmzF1l+0PHatJ27mV6GPxEAZby+fbbxYZo7/YiDxgE5ortZH58vhYgjFf3gG6XtD
+SAsfGyowPpK+/2sIGN7pAzXyFMueva4wfHcz3Q74DiSbwc+XugWuS6yHOYsJVrdx
+8xhvwaO2S3Wq9G5yJbETpknlzXhGJgTIYF6H86fPOCkqW06c+RiWubK5c2SLj4d6
+6CQ/C0vlsL5GOgC8XcOh8EIgZ/XUfPShqn4/U/f3XotpHVmifCJzvsYB77aB7PFx
+jegHvOJtAGGNPdjuGA5MTUIkYefFYQ==
+=ko68
+-----END PGP SIGNATURE-----
 
-So:
-Using enums for the keys provides a natural way of increasing indices,
-without gaps. Also you get this nice and automatic size value by making
-this the last member of the enum.
-Arrays provide the guarantee of consecutive allocation.
-
-We can surely have a look at the masking problem, but this would need to
-be runtime determined masks, which tend to become "wordy". There can be
-simplifications, for instance I couldn't find where the frame length is
-really limited for the S900 (it must be less than 1MB). Since the S700
-supports *more* than that, there is no need to limit this differently.
-
-Cheers,
-Andre.
-
-
-> 
-> hw->flen = len & OWL_S900_DMA_FLEN_MASK;
-> hw->fcnt = 1 & OWL_S900_DMA_FCNT_MASK;
-> 
-> Then you can use different masks for S700/S900 based on the compatible.
-> 
-> Thanks,
-> Mani
-> 
->> Thanks
->> -Amit
-
+--fwqqG+mf3f7vyBCB--

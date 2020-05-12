@@ -2,81 +2,90 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB4C11CF7E6
-	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2020 16:53:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E184A1CF806
+	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2020 16:56:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbgELOxA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 12 May 2020 10:53:00 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46636 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725929AbgELOw7 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 12 May 2020 10:52:59 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z25so10672616otq.13;
-        Tue, 12 May 2020 07:52:59 -0700 (PDT)
+        id S1727978AbgELO4P (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 12 May 2020 10:56:15 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34703 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbgELO4P (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 12 May 2020 10:56:15 -0400
+Received: by mail-oi1-f193.google.com with SMTP id c12so17460328oic.1;
+        Tue, 12 May 2020 07:56:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zvQTYh4b4eUlBTZLUxX1hHRbUDU2+a4tZbKUdGnF3aw=;
-        b=SRzmVqAsJaWsfn0lMAMVnb0PLU0RsHTZJy67X/1Au9Mex2B+bRm+KCZAPJeEyDrIbk
-         98HGSWAH12RkOagZUTcS684fWBN6C8G/Yp3x86ZBdPrlIcxj/D4doL7kbW7H1PQ9qVzN
-         LRkNYVQREy+2jFeGaBMtxhu0+3dnDeYNv96lsy63IFB7ubJ1AZO5GJ22XTpII9bP4SGE
-         12zAsIEV8DvyF8PK/C7PPNNjJ0Eqcv5gpwr0lxpFIU8bS1y6tH67HHr9uSCSNs+9CVB1
-         zSwVDO4cKcQWrxitJumej3cnhYSv2As6iZMNDSQdFrNfZtsZMRLvaeFIn9B5i3R0dCkt
-         AIhQ==
-X-Gm-Message-State: AGi0PuYC9YD2cKKokLBTICeHp9YfaZ8aYYanDZ32QxRDhcChenPNE9+i
-        +tjc7nmXNm/1uph8qs2kdA==
-X-Google-Smtp-Source: APiQypIeWKML2Q2yIs+q1ZFta2wuSTpS8VDHIRQT/NP72fQGGMWPfyUkA8nAi41dFXRwTXFKKHTXJw==
-X-Received: by 2002:a9d:7e99:: with SMTP id m25mr4092098otp.45.1589295178802;
-        Tue, 12 May 2020 07:52:58 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t20sm3475826ott.51.2020.05.12.07.52.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 07:52:58 -0700 (PDT)
-Received: (nullmailer pid 25183 invoked by uid 1000);
-        Tue, 12 May 2020 14:52:56 -0000
-Date:   Tue, 12 May 2020 09:52:56 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a/N06xotf8iar1D4UgdTjomlZyumlZDa21O+nxsz7Gs=;
+        b=Bw5aMtaTY7Ai1hy3njXmlZXnmCGDgmdN/uvMraVZ6fQwIASR9Y5Qawssgs/8Mpcmh/
+         SRuGZaIKXlBrXQYAkjgBhsA8cD/JtTc1Ajt6/H22/zHebXoPQLQac9YRYSjNbu2hVu6I
+         K+WgJdcPhAgSKEhB1gB0gNVNcgOl4pOFWmS1948U5o0pbju6m7+oNESWi2ykxYg6o6+x
+         jKVTW5Gar7NU5gxKXhFg1wjXRlEkcDKs0D6VJQOiHQWa04WVOi8LWkXIRUsYfEZZByrA
+         sCPYeVuxkLQFHgWlI6nm1S3/6kU48aeY2mAbv4Xe0YC+9i7ho4wbml4gggj86G6iBS5h
+         86lw==
+X-Gm-Message-State: AGi0Pua6MeG6zKDwGy718FdSJwn7kQzinRNiAVftsrrEbCJCa8VmqcLz
+        8zbwRd7T/Pt3Pvx9XuxzUvmPUTxGIxYTo3mOXlAj1kOX
+X-Google-Smtp-Source: APiQypLPHII6upk6iNYoZD9pYfWhiPJxDNt/TH7BuAvFbVXWIAt/4KdUs8x3tA8y610NHj/T3IkbGJwtxVll7YHTVaA=
+X-Received: by 2002:aca:d50f:: with SMTP id m15mr23734306oig.54.1589295373790;
+ Tue, 12 May 2020 07:56:13 -0700 (PDT)
+MIME-Version: 1.0
+References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200512145256.GA25121@bogus>
+In-Reply-To: <20200512145256.GA25121@bogus>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 12 May 2020 16:56:01 +0200
+Message-ID: <CAMuHMdXzeJdBqjshm5eEqTF05GZC1HS02=oJ2VG+B0r16=gkeQ@mail.gmail.com>
+Subject: Re: [PATCH 17/18] dt-bindings: gpio: rcar: Add r8a7742 (RZ/G1H) support
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Vinod Koul <vkoul@kernel.org>,
         Lad Prabhakar <prabhakar.csengg@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Marc Zyngier <maz@kernel.org>, devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-serial@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Magnus Damm <magnus.damm@gmail.com>,
         Russell King <linux@armlinux.org.uk>,
-        Jason Cooper <jason@lakedaemon.net>, dmaengine@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 17/18] dt-bindings: gpio: rcar: Add r8a7742 (RZ/G1H)
- support
-Message-ID: <20200512145256.GA25121@bogus>
-References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588197415-13747-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Jason Cooper <jason@lakedaemon.net>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, 29 Apr 2020 22:56:54 +0100, Lad Prabhakar wrote:
-> Renesas RZ/G1H (R8A7742) SoC GPIO blocks are identical to the R-Car Gen2
-> family. Add support for its GPIO controllers.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Hi Rob,
 
-Acked-by: Rob Herring <robh@kernel.org>
+On Tue, May 12, 2020 at 4:53 PM Rob Herring <robh@kernel.org> wrote:
+> On Wed, 29 Apr 2020 22:56:54 +0100, Lad Prabhakar wrote:
+> > Renesas RZ/G1H (R8A7742) SoC GPIO blocks are identical to the R-Car Gen2
+> > family. Add support for its GPIO controllers.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+
+Note that you've just applied 7f7d408e5a00d515 ("dt-bindings: gpio: rcar:
+Convert to json-schema"), so this no longer applies.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds

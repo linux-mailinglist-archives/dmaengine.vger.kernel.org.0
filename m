@@ -2,46 +2,46 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 332091CF610
-	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2020 15:45:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B24A1CF611
+	for <lists+dmaengine@lfdr.de>; Tue, 12 May 2020 15:45:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729408AbgELNpC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 12 May 2020 09:45:02 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:52050 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgELNpB (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 12 May 2020 09:45:01 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04CDiw8Y099102;
-        Tue, 12 May 2020 08:44:58 -0500
+        id S1727859AbgELNpS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 12 May 2020 09:45:18 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35792 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbgELNpR (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 12 May 2020 09:45:17 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04CDjBCS039067;
+        Tue, 12 May 2020 08:45:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589291098;
-        bh=aklv9x1Vb3Ybn91wDtlirJy1TWpEFpZbHh7Wmja4jHA=;
+        s=ti-com-17Q1; t=1589291111;
+        bh=bQK2OYLVEzag0uurQVuHzfwzSL2nRgRfIJI9xmQC0j4=;
         h=From:To:CC:Subject:Date;
-        b=G62J7I/imsK19tt0LSAKTEAK1IXFVvjY1rvVneHwsHNXVvKfAzhs8zaPm5LMnRPpG
-         DV16ga1PC8ogyzjzqCMkQnrrA3wrPLM41cEEgZeEQKepqNN//XBI8c0aNNJdzsd9Ln
-         5kxPkpS+l3L1+wy69PnJOBzwI1i5D0xY/KJfCm+4=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04CDiwMY095647
+        b=IiaU3vA5uIYonmB4sJTdNVINd7vVOpUkZYtjkZHvXG6t1L9CzA66cPxdVV8SeiFOW
+         pdRrPYdXiQVn+dLbcvh4cEESlYlGIR+DrV6ANpW7VVJmC/fNz1IIvcAJGUhVtWKPqB
+         XvWmLgmTZbnP/Vrp+vttPrLgy/mKAum4pHbQGn9o=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04CDjBPB059100
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 May 2020 08:44:58 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 12 May 2020 08:45:11 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 12
- May 2020 08:44:58 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ May 2020 08:45:10 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 12 May 2020 08:44:57 -0500
+ Frontend Transport; Tue, 12 May 2020 08:45:11 -0500
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04CDiuri062493;
-        Tue, 12 May 2020 08:44:57 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04CDj92B063557;
+        Tue, 12 May 2020 08:45:10 -0500
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>
 CC:     <dmaengine@vger.kernel.org>, <dan.j.williams@intel.com>
-Subject: [PATCH] dmaengine: ti: k3-udma: Fix TR mode flags for slave_sg and memcpy
-Date:   Tue, 12 May 2020 16:45:31 +0300
-Message-ID: <20200512134531.5742-1-peter.ujfalusi@ti.com>
+Subject: [PATCH] dmaengine: ti: k3-udma: Add missing dma_sync call for rx flush descriptor
+Date:   Tue, 12 May 2020 16:45:44 +0300
+Message-ID: <20200512134544.5839-1-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -52,39 +52,28 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-cppi5_tr_csf_set() clears previously set Configuration Specific Flags.
-Setting the EOP flag clears the SUPR_EVT flag for the last TR which is not
-desirable as we do not want to have events from the TR.
+The TR mode rx flush descriptor did not had a dma_sync_single_for_device()
+call to make sure that the DMA see the correct information.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/dma/ti/k3-udma.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/dma/ti/k3-udma.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index 89d025a5c599..20b1f94de86c 100644
+index 20b1f94de86c..5afd0fde4706 100644
 --- a/drivers/dma/ti/k3-udma.c
 +++ b/drivers/dma/ti/k3-udma.c
-@@ -2157,7 +2157,8 @@ udma_prep_slave_sg_tr(struct udma_chan *uc, struct scatterlist *sgl,
- 		d->residue += sg_dma_len(sgent);
- 	}
+@@ -3472,6 +3472,9 @@ static int udma_setup_rx_flush(struct udma_dev *ud)
+ 	tr_req->icnt0 = rx_flush->buffer_size;
+ 	tr_req->icnt1 = 1;
  
--	cppi5_tr_csf_set(&tr_req[tr_idx - 1].flags, CPPI5_TR_CSF_EOP);
-+	cppi5_tr_csf_set(&tr_req[tr_idx - 1].flags,
-+			 CPPI5_TR_CSF_SUPR_EVT | CPPI5_TR_CSF_EOP);
- 
- 	return d;
- }
-@@ -2734,7 +2735,8 @@ udma_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
- 		tr_req[1].dicnt3 = 1;
- 	}
- 
--	cppi5_tr_csf_set(&tr_req[num_tr - 1].flags, CPPI5_TR_CSF_EOP);
-+	cppi5_tr_csf_set(&tr_req[num_tr - 1].flags,
-+			 CPPI5_TR_CSF_SUPR_EVT | CPPI5_TR_CSF_EOP);
- 
- 	if (uc->config.metadata_size)
- 		d->vd.tx.metadata_ops = &metadata_ops;
++	dma_sync_single_for_device(dev, hwdesc->cppi5_desc_paddr,
++				   hwdesc->cppi5_desc_size, DMA_TO_DEVICE);
++
+ 	/* Set up descriptor to be used for packet mode */
+ 	hwdesc = &rx_flush->hwdescs[1];
+ 	hwdesc->cppi5_desc_size = ALIGN(sizeof(struct cppi5_host_desc_t) +
 -- 
 Peter
 

@@ -2,28 +2,28 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 242D31D1BB4
-	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2020 18:59:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 215A91D1BB5
+	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2020 18:59:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgEMQ74 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 13 May 2020 12:59:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59994 "EHLO
+        id S2389757AbgEMQ76 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 13 May 2020 12:59:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389737AbgEMQ7z (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 13 May 2020 12:59:55 -0400
+        with ESMTP id S2389749AbgEMQ75 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 13 May 2020 12:59:57 -0400
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D5D2C061A0E
-        for <dmaengine@vger.kernel.org>; Wed, 13 May 2020 09:59:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5E1FC061A0C
+        for <dmaengine@vger.kernel.org>; Wed, 13 May 2020 09:59:56 -0700 (PDT)
 Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3DA4E541;
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DBDBCAC0;
         Wed, 13 May 2020 18:59:53 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1589389193;
-        bh=v4wjp1RRx81r3Bc5UEabhcEbCSHMbKxN79ItgVY6Xcw=;
+        s=mail; t=1589389194;
+        bh=qTOd0sh2284zibSUBDii1Qw5qeyXUcvnlZlk/n51ZCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O+BC0HlL8ru6N86PUjXlRh8yF52v9yAktjcH9GR9ggL/pJkbE47gp/5g6+bDMJCAB
-         FS5KzL7TQvXKBakdapkYUCPXRVrpgm00Dn2IlmkDAtcutja3lK7VWEORjpcLpr50eH
-         6L0F8DNpjf0F6lecozB2aHTAewDQSN4K652zsspI=
+        b=HNMbLr5nA828DKQbOy0rG/faHG4mjZ55oVVO6zmE9Xo0Fudg0RQIiqTI6sRtX4Q8P
+         nhJ9MjIPjrnW0QWv+XoW9tQrpsxajGRHGLNteyVGHwRJHK97jHk77AESmZwFTbyllc
+         K9pFjrWvoBLPxpeQOmB1dehnd0uhI04mrKcznca8=
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To:     dmaengine@vger.kernel.org
 Cc:     Michal Simek <michal.simek@xilinx.com>,
@@ -32,9 +32,9 @@ Cc:     Michal Simek <michal.simek@xilinx.com>,
         Satish Kumar Nagireddy <SATISHNA@xilinx.com>,
         Vinod Koul <vkoul@kernel.org>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v4 1/6] dt: bindings: dma: xilinx: dpdma: DT bindings for Xilinx DPDMA
-Date:   Wed, 13 May 2020 19:59:38 +0300
-Message-Id: <20200513165943.25120-2-laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v4 2/6] dmaengine: virt-dma: Use lockdep to check locking requirements
+Date:   Wed, 13 May 2020 19:59:39 +0300
+Message-Id: <20200513165943.25120-3-laurent.pinchart@ideasonboard.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513165943.25120-1-laurent.pinchart@ideasonboard.com>
 References: <20200513165943.25120-1-laurent.pinchart@ideasonboard.com>
@@ -45,149 +45,83 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The ZynqMP includes the DisplayPort subsystem with its own DMA engine
-called DPDMA. The DPDMA IP comes with 6 individual channels
-(4 for display, 2 for audio). This documentation describes DT bindings
-of DPDMA.
+A few virt-dma functions are documented as requiring the vc.lock to be
+held by the caller. Check this with lockdep.
 
-Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+The vchan_vdesc_fini() and vchan_find_desc() functions gain a lockdep
+check as well, because, even though they are not documented with this
+requirement (and not documented at all for the latter), they touch
+fields documented as protected by vc.lock. All callers have been
+manually inspected to verify they call the functions with the lock held.
+
 Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-Changes since v2:
+ drivers/dma/virt-dma.c |  2 ++
+ drivers/dma/virt-dma.h | 10 ++++++++++
+ 2 files changed, 12 insertions(+)
 
-- Fix id URL
-- Fix path to dma-controller.yaml
-- Update license to GPL-2.0-only OR BSD-2-Clause
-
-Changes since v1:
-
-- Convert the DT bindings to YAML
-- Drop the DT child nodes
----
- .../dma/xilinx/xlnx,zynqmp-dpdma.yaml         | 68 +++++++++++++++++++
- MAINTAINERS                                   |  8 +++
- include/dt-bindings/dma/xlnx-zynqmp-dpdma.h   | 16 +++++
- 3 files changed, 92 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
- create mode 100644 include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
-
-diff --git a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
-new file mode 100644
-index 000000000000..5de510f8c88c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
-@@ -0,0 +1,68 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/xilinx/xlnx,zynqmp-dpdma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Xilinx ZynqMP DisplayPort DMA Controller Device Tree Bindings
-+
-+description: |
-+  These bindings describe the DMA engine included in the Xilinx ZynqMP
-+  DisplayPort Subsystem. The DMA engine supports up to 6 DMA channels (3
-+  channels for a video stream, 1 channel for a graphics stream, and 2 channels
-+  for an audio stream).
-+
-+maintainers:
-+  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+
-+allOf:
-+  - $ref: "../dma-controller.yaml#"
-+
-+properties:
-+  "#dma-cells":
-+    const: 1
-+    description: |
-+      The cell is the DMA channel ID (see dt-bindings/dma/xlnx-zynqmp-dpdma.h
-+      for a list of channel IDs).
-+
-+  compatible:
-+    const: xlnx,zynqmp-dpdma
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    description: The AXI clock
-+    maxItems: 1
-+
-+  clock-names:
-+    const: axi_clk
-+
-+required:
-+  - "#dma-cells"
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    dma: dma-controller@fd4c0000 {
-+      compatible = "xlnx,zynqmp-dpdma";
-+      reg = <0x0 0xfd4c0000 0x0 0x1000>;
-+      interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
-+      interrupt-parent = <&gic>;
-+      clocks = <&dpdma_clk>;
-+      clock-names = "axi_clk";
-+      #dma-cells = <1>;
-+    };
-+
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0fc210d509ec..be39aab8b706 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18429,6 +18429,14 @@ F:	drivers/misc/Kconfig
- F:	drivers/misc/Makefile
- F:	include/uapi/misc/xilinx_sdfec.h
+diff --git a/drivers/dma/virt-dma.c b/drivers/dma/virt-dma.c
+index 23e33a85f033..1cb36ab3d9c1 100644
+--- a/drivers/dma/virt-dma.c
++++ b/drivers/dma/virt-dma.c
+@@ -68,6 +68,8 @@ struct virt_dma_desc *vchan_find_desc(struct virt_dma_chan *vc,
+ {
+ 	struct virt_dma_desc *vd;
  
-+XILINX ZYNQMP DPDMA DRIVER
-+M:	Hyun Kwon <hyun.kwon@xilinx.com>
-+M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+L:	dmaengine@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
-+F:	include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
++	lockdep_assert_held(&vc->lock);
 +
- XILLYBUS DRIVER
- M:	Eli Billauer <eli.billauer@gmail.com>
- L:	linux-kernel@vger.kernel.org
-diff --git a/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h b/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
-new file mode 100644
-index 000000000000..3719cda5679d
---- /dev/null
-+++ b/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-+/*
-+ * Copyright 2019 Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-+ */
+ 	list_for_each_entry(vd, &vc->desc_issued, node)
+ 		if (vd->tx.cookie == cookie)
+ 			return vd;
+diff --git a/drivers/dma/virt-dma.h b/drivers/dma/virt-dma.h
+index e9f5250fbe4d..59d9eabc8b67 100644
+--- a/drivers/dma/virt-dma.h
++++ b/drivers/dma/virt-dma.h
+@@ -81,6 +81,8 @@ static inline struct dma_async_tx_descriptor *vchan_tx_prep(struct virt_dma_chan
+  */
+ static inline bool vchan_issue_pending(struct virt_dma_chan *vc)
+ {
++	lockdep_assert_held(&vc->lock);
 +
-+#ifndef __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__
-+#define __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__
+ 	list_splice_tail_init(&vc->desc_submitted, &vc->desc_issued);
+ 	return !list_empty(&vc->desc_issued);
+ }
+@@ -96,6 +98,8 @@ static inline void vchan_cookie_complete(struct virt_dma_desc *vd)
+ 	struct virt_dma_chan *vc = to_virt_chan(vd->tx.chan);
+ 	dma_cookie_t cookie;
+ 
++	lockdep_assert_held(&vc->lock);
 +
-+#define ZYNQMP_DPDMA_VIDEO0		0
-+#define ZYNQMP_DPDMA_VIDEO1		1
-+#define ZYNQMP_DPDMA_VIDEO2		2
-+#define ZYNQMP_DPDMA_GRAPHICS		3
-+#define ZYNQMP_DPDMA_AUDIO0		4
-+#define ZYNQMP_DPDMA_AUDIO1		5
+ 	cookie = vd->tx.cookie;
+ 	dma_cookie_complete(&vd->tx);
+ 	dev_vdbg(vc->chan.device->dev, "txd %p[%x]: marked complete\n",
+@@ -146,6 +150,8 @@ static inline void vchan_terminate_vdesc(struct virt_dma_desc *vd)
+ {
+ 	struct virt_dma_chan *vc = to_virt_chan(vd->tx.chan);
+ 
++	lockdep_assert_held(&vc->lock);
 +
-+#endif /* __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__ */
+ 	list_add_tail(&vd->node, &vc->desc_terminated);
+ 
+ 	if (vc->cyclic == vd)
+@@ -160,6 +166,8 @@ static inline void vchan_terminate_vdesc(struct virt_dma_desc *vd)
+  */
+ static inline struct virt_dma_desc *vchan_next_desc(struct virt_dma_chan *vc)
+ {
++	lockdep_assert_held(&vc->lock);
++
+ 	return list_first_entry_or_null(&vc->desc_issued,
+ 					struct virt_dma_desc, node);
+ }
+@@ -177,6 +185,8 @@ static inline struct virt_dma_desc *vchan_next_desc(struct virt_dma_chan *vc)
+ static inline void vchan_get_all_descriptors(struct virt_dma_chan *vc,
+ 	struct list_head *head)
+ {
++	lockdep_assert_held(&vc->lock);
++
+ 	list_splice_tail_init(&vc->desc_allocated, head);
+ 	list_splice_tail_init(&vc->desc_submitted, head);
+ 	list_splice_tail_init(&vc->desc_issued, head);
 -- 
 Regards,
 

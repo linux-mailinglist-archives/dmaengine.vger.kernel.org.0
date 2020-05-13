@@ -2,28 +2,25 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 215A91D1BB5
+	by mail.lfdr.de (Postfix) with ESMTP id 8DF1E1D1BB6
 	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2020 18:59:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389757AbgEMQ76 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        id S2389749AbgEMQ76 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
         Wed, 13 May 2020 12:59:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60004 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389749AbgEMQ75 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 13 May 2020 12:59:57 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5E1FC061A0C
-        for <dmaengine@vger.kernel.org>; Wed, 13 May 2020 09:59:56 -0700 (PDT)
+Received: from perceval.ideasonboard.com ([213.167.242.64]:37070 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389737AbgEMQ76 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 13 May 2020 12:59:58 -0400
 Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DBDBCAC0;
-        Wed, 13 May 2020 18:59:53 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8018FD9D;
+        Wed, 13 May 2020 18:59:54 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1589389194;
-        bh=qTOd0sh2284zibSUBDii1Qw5qeyXUcvnlZlk/n51ZCk=;
+        s=mail; t=1589389195;
+        bh=+hbbt2PHJ4Bzx/QCeWIifwTcciMvD8u7nzUKHpowWsY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HNMbLr5nA828DKQbOy0rG/faHG4mjZ55oVVO6zmE9Xo0Fudg0RQIiqTI6sRtX4Q8P
-         nhJ9MjIPjrnW0QWv+XoW9tQrpsxajGRHGLNteyVGHwRJHK97jHk77AESmZwFTbyllc
-         K9pFjrWvoBLPxpeQOmB1dehnd0uhI04mrKcznca8=
+        b=kEEu895nu+XDUEBY4D5dItbEINeImKU7ZbLmnNr3+jSTMAObEvHgs1zYV9uMhQM5t
+         3GkPNlS63639nDiN44WlbxNTcAeJOaqQeEzqWDs0n/UY50HmDY17Sd8krPIiY/qO1P
+         8MZM3TrZDpdyiRhQ3ZcjZUOnuPvSzyPACQDtq000=
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To:     dmaengine@vger.kernel.org
 Cc:     Michal Simek <michal.simek@xilinx.com>,
@@ -32,9 +29,9 @@ Cc:     Michal Simek <michal.simek@xilinx.com>,
         Satish Kumar Nagireddy <SATISHNA@xilinx.com>,
         Vinod Koul <vkoul@kernel.org>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v4 2/6] dmaengine: virt-dma: Use lockdep to check locking requirements
-Date:   Wed, 13 May 2020 19:59:39 +0300
-Message-Id: <20200513165943.25120-3-laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v4 3/6] dmaengine: Add support for repeating transactions
+Date:   Wed, 13 May 2020 19:59:40 +0300
+Message-Id: <20200513165943.25120-4-laurent.pinchart@ideasonboard.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513165943.25120-1-laurent.pinchart@ideasonboard.com>
 References: <20200513165943.25120-1-laurent.pinchart@ideasonboard.com>
@@ -45,83 +42,79 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-A few virt-dma functions are documented as requiring the vc.lock to be
-held by the caller. Check this with lockdep.
+DMA engines used with displays perform 2D interleaved transfers to read
+framebuffers from memory and feed the data to the display engine. As the
+same framebuffer can be displayed for multiple frames, the DMA
+transactions need to be repeated until a new framebuffer replaces the
+current one. This feature is implemented natively by some DMA engines
+that have the ability to repeat transactions and switch to a new
+transaction at the end of a transfer without any race condition or frame
+loss.
 
-The vchan_vdesc_fini() and vchan_find_desc() functions gain a lockdep
-check as well, because, even though they are not documented with this
-requirement (and not documented at all for the latter), they touch
-fields documented as protected by vc.lock. All callers have been
-manually inspected to verify they call the functions with the lock held.
+This patch implements support for this feature in the DMA engine API. A
+new DMA_PREP_REPEAT transaction flag allows DMA clients to instruct the
+DMA channel to repeat the transaction automatically until one or more
+new transactions are issued on the channel (or until all active DMA
+transfers are explicitly terminated with the dmaengine_terminate_*()
+functions). A new DMA_REPEAT transaction type is also added for DMA
+engine drivers to report their support of the DMA_PREP_REPEAT flag.
+
+The DMA_PREP_REPEAT flag is currently supported for interleaved
+transactions only. Its usage can easily be extended to cover more
+transaction types simply by adding an appropriate check in the
+corresponding dmaengine_prep_*() function.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 ---
- drivers/dma/virt-dma.c |  2 ++
- drivers/dma/virt-dma.h | 10 ++++++++++
- 2 files changed, 12 insertions(+)
+If this approach is accepted I can send a new version that updates
+documentation in Documentation/driver-api/dmaengine/, and extend support
+of DMA_PREP_REPEAT to the other transaction types, if desired already.
 
-diff --git a/drivers/dma/virt-dma.c b/drivers/dma/virt-dma.c
-index 23e33a85f033..1cb36ab3d9c1 100644
---- a/drivers/dma/virt-dma.c
-+++ b/drivers/dma/virt-dma.c
-@@ -68,6 +68,8 @@ struct virt_dma_desc *vchan_find_desc(struct virt_dma_chan *vc,
- {
- 	struct virt_dma_desc *vd;
- 
-+	lockdep_assert_held(&vc->lock);
-+
- 	list_for_each_entry(vd, &vc->desc_issued, node)
- 		if (vd->tx.cookie == cookie)
- 			return vd;
-diff --git a/drivers/dma/virt-dma.h b/drivers/dma/virt-dma.h
-index e9f5250fbe4d..59d9eabc8b67 100644
---- a/drivers/dma/virt-dma.h
-+++ b/drivers/dma/virt-dma.h
-@@ -81,6 +81,8 @@ static inline struct dma_async_tx_descriptor *vchan_tx_prep(struct virt_dma_chan
+ include/linux/dmaengine.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 64461fc64e1b..9fa00bdbf583 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -61,6 +61,7 @@ enum dma_transaction_type {
+ 	DMA_SLAVE,
+ 	DMA_CYCLIC,
+ 	DMA_INTERLEAVE,
++	DMA_REPEAT,
+ /* last transaction type for creation of the capabilities mask */
+ 	DMA_TX_TYPE_END,
+ };
+@@ -176,6 +177,11 @@ struct dma_interleaved_template {
+  * @DMA_PREP_CMD: tell the driver that the data passed to DMA API is command
+  *  data and the descriptor should be in different format from normal
+  *  data descriptors.
++ * @DMA_PREP_REPEAT: tell the driver that the transaction shall be automatically
++ *  repeated when it ends if no other transaction has been issued on the same
++ *  channel. If other transactions have been issued, this transaction completes
++ *  normally. This flag is only applicable to interleaved transactions and is
++ *  ignored for all other transaction types.
   */
- static inline bool vchan_issue_pending(struct virt_dma_chan *vc)
+ enum dma_ctrl_flags {
+ 	DMA_PREP_INTERRUPT = (1 << 0),
+@@ -186,6 +192,7 @@ enum dma_ctrl_flags {
+ 	DMA_PREP_FENCE = (1 << 5),
+ 	DMA_CTRL_REUSE = (1 << 6),
+ 	DMA_PREP_CMD = (1 << 7),
++	DMA_PREP_REPEAT = (1 << 8),
+ };
+ 
+ /**
+@@ -967,6 +974,9 @@ static inline struct dma_async_tx_descriptor *dmaengine_prep_interleaved_dma(
  {
-+	lockdep_assert_held(&vc->lock);
-+
- 	list_splice_tail_init(&vc->desc_submitted, &vc->desc_issued);
- 	return !list_empty(&vc->desc_issued);
+ 	if (!chan || !chan->device || !chan->device->device_prep_interleaved_dma)
+ 		return NULL;
++	if (flags & DMA_PREP_REPEAT &&
++	    !test_bit(DMA_REPEAT, chan->device->cap_mask.bits))
++		return NULL;
+ 
+ 	return chan->device->device_prep_interleaved_dma(chan, xt, flags);
  }
-@@ -96,6 +98,8 @@ static inline void vchan_cookie_complete(struct virt_dma_desc *vd)
- 	struct virt_dma_chan *vc = to_virt_chan(vd->tx.chan);
- 	dma_cookie_t cookie;
- 
-+	lockdep_assert_held(&vc->lock);
-+
- 	cookie = vd->tx.cookie;
- 	dma_cookie_complete(&vd->tx);
- 	dev_vdbg(vc->chan.device->dev, "txd %p[%x]: marked complete\n",
-@@ -146,6 +150,8 @@ static inline void vchan_terminate_vdesc(struct virt_dma_desc *vd)
- {
- 	struct virt_dma_chan *vc = to_virt_chan(vd->tx.chan);
- 
-+	lockdep_assert_held(&vc->lock);
-+
- 	list_add_tail(&vd->node, &vc->desc_terminated);
- 
- 	if (vc->cyclic == vd)
-@@ -160,6 +166,8 @@ static inline void vchan_terminate_vdesc(struct virt_dma_desc *vd)
-  */
- static inline struct virt_dma_desc *vchan_next_desc(struct virt_dma_chan *vc)
- {
-+	lockdep_assert_held(&vc->lock);
-+
- 	return list_first_entry_or_null(&vc->desc_issued,
- 					struct virt_dma_desc, node);
- }
-@@ -177,6 +185,8 @@ static inline struct virt_dma_desc *vchan_next_desc(struct virt_dma_chan *vc)
- static inline void vchan_get_all_descriptors(struct virt_dma_chan *vc,
- 	struct list_head *head)
- {
-+	lockdep_assert_held(&vc->lock);
-+
- 	list_splice_tail_init(&vc->desc_allocated, head);
- 	list_splice_tail_init(&vc->desc_submitted, head);
- 	list_splice_tail_init(&vc->desc_issued, head);
 -- 
 Regards,
 

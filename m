@@ -2,182 +2,88 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18F401D1DF1
-	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2020 20:47:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C0A01D209F
+	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2020 23:05:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390258AbgEMSrv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 13 May 2020 14:47:51 -0400
-Received: from mga01.intel.com ([192.55.52.88]:26827 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390073AbgEMSrv (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 13 May 2020 14:47:51 -0400
-IronPort-SDR: jFOnoloW8x30p4z+moNLhXmepUIupYbpq/ZLu/IaYjDinBi/MfFvhVJVieqlqPk+9uz6ACwBu/
- 9+YNBF+PsF7A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 11:47:50 -0700
-IronPort-SDR: FyijA8hVzIhQ6YuuYCa+mgk0OQsmNx8h9/ZAGzFE3yvDGVE/JeN4HWtV8Odj/K4YyKzfcmGL5L
- OALkR5PkoXlg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,388,1583222400"; 
-   d="scan'208";a="298454022"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga008.jf.intel.com with ESMTP; 13 May 2020 11:47:50 -0700
-Subject: [PATCH v5] dmaengine: cookie bypass for out of order completion
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, swathi.kovvuri@intel.com,
-        peter.ujfalusi@ti.com
-Date:   Wed, 13 May 2020 11:47:49 -0700
-Message-ID: <158939557151.20335.12404113976045569870.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/unknown-version
+        id S1728015AbgEMVF2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 13 May 2020 17:05:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42072 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725952AbgEMVF1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 13 May 2020 17:05:27 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86076C061A0C;
+        Wed, 13 May 2020 14:05:27 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id x73so753975lfa.2;
+        Wed, 13 May 2020 14:05:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3mkbakP9mk6/OGVAN+zcqRwZ0mw26o2wBBxnAQMPvC8=;
+        b=ctjlYoCI2PVddAGODZeP/vCogq7hOe4qIy3ofe+sfcwAMob4gdIAaRmpXt71KXM5s0
+         elyxHk041/Ys/mtWBq743Pp3GBEijMkoEW78fXv8PSayqdtHKwTbfq5CiTzj/aX8npHq
+         nIpW0oNQefD4dLK5VkjPkyi99u89TAPjjYi2e5x6CIc1InG8WJydkkXHex9K9yLUMplm
+         ibmtJybyeiNo8Txyyh7I5F7ya12JGjK0GVwxu7OL7h1aYhPxR3uIyeoZeXqdlRZc7GQI
+         3bo80UUTP1mCHiX5NGzgD34STLlRkUqgfksgPKZFqZjDDXbntcwq7+mxNlqXS/yIYQxa
+         mq2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3mkbakP9mk6/OGVAN+zcqRwZ0mw26o2wBBxnAQMPvC8=;
+        b=n3Tpa1Q86j8TYV/bW1INe1at+kyzz9pmSgfD1bDimVui/KBKwAYSrXdZBX87ABqmMT
+         4s1+0IM7YV3d1cEAKKSGIiNRmUIWuD5wP6i/HJzgM1Sw18eqzW8ENHTbzb6TTTnI7V4K
+         HqNth89R04baCISN3oNKsf4WI6GYAJ/i4K3p8Ew4KQD8JpTOigxwVR42DjJ8GfkjhHe3
+         YaI+j/tcLmYoduRhJCEaqnANjMq2baOtQyD4K/Etdp78BWSvsFr2e/DVPuS8WR9UejWW
+         8nDnOYTXND5HdKVQf3c1vmff6XtE8YBePO1fWdsfRYp7lcRhRsOh1SBTM77zItO0Pdso
+         Fi5Q==
+X-Gm-Message-State: AOAM531aL3cjAlMiCwmJoA5J58Y0vhnC3gQ3viu9GODSyMtpm3Q0zsxo
+        E4BqVcxMOpZqFDWQGv33SMyCOgRFSGEdkpkTISQ=
+X-Google-Smtp-Source: ABdhPJylbChycIFwjIQ3xfqgQamy65iiEOk/6igXAS9L36vE1hhqtoddFFY7wG+Xod768Zt281P3JghBCeiQaKBQCYg=
+X-Received: by 2002:a19:4b4f:: with SMTP id y76mr62320lfa.7.1589403925952;
+ Wed, 13 May 2020 14:05:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <1589218356-17475-1-git-send-email-yibin.gong@nxp.com> <1589218356-17475-14-git-send-email-yibin.gong@nxp.com>
+In-Reply-To: <1589218356-17475-14-git-send-email-yibin.gong@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 13 May 2020 18:06:40 -0300
+Message-ID: <CAOMZO5BB-bnKF6fQtw+1iGmojrmNHVQqeN3Fu8tHa_09ayjCgg@mail.gmail.com>
+Subject: Re: [PATCH v7 RESEND 13/13] dmaengine: imx-sdma: add uart rom script
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>, Vinod <vkoul@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Martin Fuzzey <martin.fuzzey@flowbird.group>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        dmaengine@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The cookie tracking in dmaengine expects all submissions completed in
-order. Some DMA devices like Intel DSA can complete submissions out of
-order, especially if configured with a work queue sharing multiple DMA
-engines. Add a status DMA_OUT_OF_ORDER that tx_status can be returned for
-those DMA devices. The user should use callbacks to track the completion
-rather than the DMA cookie. This would address the issue of dmatest
-complaining that descriptors are "busy" when the cookie count goes
-backwards due to out of order completion. Add DMA_COMPLETION_NO_ORDER
-DMA capability to allow the driver to flag the device's ability to complete
-operations out of order.
+Hi Robin,
 
-Reported-by: Swathi Kovvuri <swathi.kovvuri@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Tested-by: Swathi Kovvuri <swathi.kovvuri@intel.com>
----
+On Mon, May 11, 2020 at 6:33 AM Robin Gong <yibin.gong@nxp.com> wrote:
 
-v5:
-- Additional clarification in documentation. (peter)
-v4:
-- Add block for polled in dmatest. Need better enabling in future to solve
-  per channel capability for out of order vs poll. (peter)
-v3:
-- v2 mailed wrong patch
-v2:
-- Add DMA capability (vinod)
-- Add documentation (vinod)
+> Please get latest sdma firmware from the below and put them into the path
+> (/lib/firmware/imx/sdma/):
+> https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
+> /tree/imx/sdma
 
- Documentation/driver-api/dmaengine/provider.rst |   19 +++++++++++++++++++
- drivers/dma/dmatest.c                           |   11 ++++++++++-
- drivers/dma/idxd/dma.c                          |    3 ++-
- include/linux/dmaengine.h                       |    2 ++
- 4 files changed, 33 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/driver-api/dmaengine/provider.rst b/Documentation/driver-api/dmaengine/provider.rst
-index 56e5833e8a07..ce68315482b1 100644
---- a/Documentation/driver-api/dmaengine/provider.rst
-+++ b/Documentation/driver-api/dmaengine/provider.rst
-@@ -239,6 +239,22 @@ Currently, the types available are:
-     want to transfer a portion of uncompressed data directly to the
-     display to print it
- 
-+- DMA_COMPLETION_NO_ORDER
-+
-+  - The device does not support in order completion.
-+
-+  - The driver should return DMA_OUT_OF_ORDER for device_tx_status if
-+    the device is setting this capability.
-+
-+  - All cookie tracking and checking API should be treated as invalid if
-+    the device exports this capability.
-+
-+  - At this point, this is incompatible with polling option for dmatest.
-+
-+  - If this cap is set, the user is recommended to provide an unique
-+    identifier for each descriptor sent to the DMA device in order to
-+    properly track the completion.
-+
- These various types will also affect how the source and destination
- addresses change over time.
- 
-@@ -399,6 +415,9 @@ supported.
-   - In the case of a cyclic transfer, it should only take into
-     account the current period.
- 
-+  - Should return DMA_OUT_OF_ORDER if the device does not support in order
-+    completion and is completing the operation out of order.
-+
-   - This function can be called in an interrupt context.
- 
- - device_config
-diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-index a2cadfa2e6d7..93c7c56af5f2 100644
---- a/drivers/dma/dmatest.c
-+++ b/drivers/dma/dmatest.c
-@@ -821,7 +821,10 @@ static int dmatest_func(void *data)
- 			result("test timed out", total_tests, src->off, dst->off,
- 			       len, 0);
- 			goto error_unmap_continue;
--		} else if (status != DMA_COMPLETE) {
-+		} else if (status != DMA_COMPLETE &&
-+			   !(dma_has_cap(DMA_COMPLETION_NO_ORDER,
-+					 dev->cap_mask) &&
-+			     status == DMA_OUT_OF_ORDER)) {
- 			result(status == DMA_ERROR ?
- 			       "completion error status" :
- 			       "completion busy status", total_tests, src->off,
-@@ -999,6 +1002,12 @@ static int dmatest_add_channel(struct dmatest_info *info,
- 	dtc->chan = chan;
- 	INIT_LIST_HEAD(&dtc->threads);
- 
-+	if (dma_has_cap(DMA_COMPLETION_NO_ORDER, dma_dev->cap_mask) &&
-+	    info->params.polled) {
-+		info->params.polled = false;
-+		pr_warn("DMA_COMPLETION_NO_ORDER, polled disabled\n");
-+	}
-+
- 	if (dma_has_cap(DMA_MEMCPY, dma_dev->cap_mask)) {
- 		if (dmatest == 0) {
- 			cnt = dmatest_add_threads(info, dtc, DMA_MEMCPY);
-diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
-index c64c1429d160..0c892cbd72e0 100644
---- a/drivers/dma/idxd/dma.c
-+++ b/drivers/dma/idxd/dma.c
-@@ -133,7 +133,7 @@ static enum dma_status idxd_dma_tx_status(struct dma_chan *dma_chan,
- 					  dma_cookie_t cookie,
- 					  struct dma_tx_state *txstate)
- {
--	return dma_cookie_status(dma_chan, cookie, txstate);
-+	return DMA_OUT_OF_ORDER;
- }
- 
- /*
-@@ -174,6 +174,7 @@ int idxd_register_dma_device(struct idxd_device *idxd)
- 	INIT_LIST_HEAD(&dma->channels);
- 	dma->dev = &idxd->pdev->dev;
- 
-+	dma_cap_set(DMA_COMPLETION_NO_ORDER, dma->cap_mask);
- 	dma->device_release = idxd_dma_release;
- 
- 	if (idxd->hw.opcap.bits[0] & IDXD_OPCAP_MEMMOVE) {
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 21065c04c4ac..1123f4d15bae 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -39,6 +39,7 @@ enum dma_status {
- 	DMA_IN_PROGRESS,
- 	DMA_PAUSED,
- 	DMA_ERROR,
-+	DMA_OUT_OF_ORDER,
- };
- 
- /**
-@@ -61,6 +62,7 @@ enum dma_transaction_type {
- 	DMA_SLAVE,
- 	DMA_CYCLIC,
- 	DMA_INTERLEAVE,
-+	DMA_COMPLETION_NO_ORDER,
- /* last transaction type for creation of the capabilities mask */
- 	DMA_TX_TYPE_END,
- };
-
+"latest sdma firmware" is too vague. Better specify the commit ID of
+the firmware where this is valid.

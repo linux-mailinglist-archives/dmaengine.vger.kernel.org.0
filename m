@@ -2,125 +2,143 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 566961D0A80
-	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2020 10:06:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AE381D0AB5
+	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2020 10:20:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729414AbgEMIGh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 13 May 2020 04:06:37 -0400
-Received: from mail-vi1eur05on2073.outbound.protection.outlook.com ([40.107.21.73]:6060
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        id S1732152AbgEMIUY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 13 May 2020 04:20:24 -0400
+Received: from mail-eopbgr20053.outbound.protection.outlook.com ([40.107.2.53]:10353
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726092AbgEMIGh (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 13 May 2020 04:06:37 -0400
+        id S1732121AbgEMIUY (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 13 May 2020 04:20:24 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wg7bF+gx0FCpW9wU1rX4Bb6jMS7uUu/K8h2vnzrQquFs/qtyZ0yzC8PGVckvMiLGLJK2NRu+D70N27RTRR+c4tAzgc/l9L0/KSPgJ2DtBPmz2PdqWNbxCvf8Mq/qlEnnz/82T8sLSrJW6xVS8niU1V3iAdcoDBaUqO22OmtVdTZIIWoVbhwKM35y/Y5dtyouup/5JeUXSby+/poNA6Y/IK+X5dxYCtiEvvzwjHWP6qRzVH8deO9qNFPYafaz9Fve/7iX0b/rtpYFi38qx+VH9k3eoZLHSPPF1rZIyD9A4K7ma1InWglv0qrg4yng00RQw/lnrlgiYHvhHAbo3aXvgQ==
+ b=B6Bz1p41IIUUhyaPbrgqEdl7Md9bqD/rgrR1RPB09OM6oyWugvcT/wRVWJH+RJZIq3ZicyNtMalpcYQI5V/CMB0HNGt+lGokOIP1J60A7lHbTpflS90hyy9LCPj/BkgQPoj8g07l2iyZz+8ypChEupcMiMg0CEEZFjai+lUOwG2rJCReMVfZJschQQ4gBDz+lxL5mnRCJ5CTzP4rZxijPDOnsK2dF1nxOWz6srU9WJxYGIKAWJn8m8sCAspukjSzME0wCQicItudXGJ21z0e0zxRb/Ledr2NnMj2lYClBerkWYo4SLVDCVeTwoAsYvMGST9FuQmVPTgN5WPKpw9qdQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CG/5eRAkPL0M8IFsNRjZ70jvC1+Kn6ZtS/f8mUCOUEY=;
- b=I9pA0REMaYu8/KuNvIDIV0JdHv13bkbBNO/aKOrr700sGeH+2xb7/4d6BM5lL6jWLQKSilbVlFmQ1I+AqFF+q9X3oAu1XG1n2kiFPkISNwi+95WxWl/d69JJX2ZXZ6BSsN3jl8vopaQGZZlM9RavMkGCnSzn5LVcEettkQeRzLczdFJUW3MWNPABOr+EQZSKhSqSISORDbIVHVQN4jdiGTXqvnwo662VkUls7StpNRBWDGm4Zt8uuGAQblsQ8Y8uaqhOEehf8PcKd+TXUNuvUO6RjqjLLOJzuWs67s6uaTs0QW3w1ZDH6N7epRFKfxk8rrkenr1a97oShtsl4TSmVA==
+ bh=XWEdXAhnXXeFk6WL4AWaBjGKdYGhKXzG8vgymH3/6l8=;
+ b=W7DMBcF/kVJA3/NiCurVXxNTODLAj75lOdSPYEZBEdADIO89/UTd8iEer9rgOq8cv533EDmmxGohzI84nrtzwAkzihMIhQsgDjJFJz+hchqCgcZlKN0KpZVVnfPINzkjeqnmM3bCJ1or312h6qsSCyRvFzo6pRACZ4tJlP3GlXvFt6KiFlqQi//vpxQtFnq+a1KB6sLTRIxk0rp8rcPi8BNbwwgRHZrH028ZImSQXC4vntIuWhwW0tY4PJM325oqUfsaAIQpNRMZuy54oFdk6fLlPA7aWBSrEdHyHFql3M6oepcdYox6g5wj+9IHMZQnzshhoQ3zrj909xhCphDrMA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CG/5eRAkPL0M8IFsNRjZ70jvC1+Kn6ZtS/f8mUCOUEY=;
- b=XeUplpuTi2REF84g8dYfzk8tQLmEu/pIeATeVeHmDyboDnDQ6kD3ANVCbOoFBly5oAmyWu3lOyDwBg87vaehkOyJiz9vndkUD/KutsvltNfwWaao2Ww8qzblY59nWsjN3ODoIG8P3B6sQzcA4oFp8eXCqPpvpn7gWNY+HcR75Cg=
+ bh=XWEdXAhnXXeFk6WL4AWaBjGKdYGhKXzG8vgymH3/6l8=;
+ b=mf7qLmSG0UmxNz+RHdFT37ITOKECXkXU7sDRAz6OkCLkiKigYmBc0MJklcNO75UhbblyuFE6/Yms3Npe4oyPnOoSjNerpNRLGrvSkRgxxuUhIDywCmr0F+IOiBa04RvLVYr1L9rvYfY1xXgyngrnuQu3NLacCKtgV7D6o/iVGyc=
 Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6592.eurprd04.prod.outlook.com (2603:10a6:803:124::16) with
+ by VE1PR04MB6495.eurprd04.prod.outlook.com (2603:10a6:803:11d::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Wed, 13 May
- 2020 08:06:31 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.33; Wed, 13 May
+ 2020 08:20:18 +0000
 Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
  ([fe80::d5f0:c948:6ab0:c2aa]) by VE1PR04MB6638.eurprd04.prod.outlook.com
  ([fe80::d5f0:c948:6ab0:c2aa%4]) with mapi id 15.20.3000.016; Wed, 13 May 2020
- 08:06:31 +0000
+ 08:20:18 +0000
 From:   Robin Gong <yibin.gong@nxp.com>
-To:     "Fuzzey, Martin" <martin.fuzzey@flowbird.group>,
-        Sascha Hauer <s.hauer@pengutronix.de>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
 CC:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
         "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
         "mark.rutland@arm.com" <mark.rutland@arm.com>,
         "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
         "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         dl-linux-imx <linux-imx@nxp.com>,
         "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH v7 RESEND 03/13] Revert "dmaengine: imx-sdma: fix context
- cache"
-Thread-Topic: [PATCH v7 RESEND 03/13] Revert "dmaengine: imx-sdma: fix context
- cache"
-Thread-Index: AQHWJ3caK60pir53Nk+ogIMcp5w3wKilig6AgAASqoCAAA6qQA==
-Date:   Wed, 13 May 2020 08:06:31 +0000
-Message-ID: <VE1PR04MB66381C7FAC6EA04658C3176389BF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+Subject: RE: [PATCH v7 RESEND 00/13] add ecspi ERR009165 for i.mx6/7 soc
+ family
+Thread-Topic: [PATCH v7 RESEND 00/13] add ecspi ERR009165 for i.mx6/7 soc
+ family
+Thread-Index: AQHWJ3cQF4VQAfbPY0eHwEq+VJV4M6ilnvSAgAANpiA=
+Date:   Wed, 13 May 2020 08:20:18 +0000
+Message-ID: <VE1PR04MB663826721B0720C313C3E12A89BF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
 References: <1589218356-17475-1-git-send-email-yibin.gong@nxp.com>
- <1589218356-17475-4-git-send-email-yibin.gong@nxp.com>
- <20200513060525.GJ5877@pengutronix.de>
- <CANh8QzxJg05nXasHfN2kC-G7TOKZ8trJkOP_v0KXvcy6S4df4Q@mail.gmail.com>
-In-Reply-To: <CANh8QzxJg05nXasHfN2kC-G7TOKZ8trJkOP_v0KXvcy6S4df4Q@mail.gmail.com>
+ <20200513072012.GB15934@pengutronix.de>
+In-Reply-To: <20200513072012.GB15934@pengutronix.de>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: flowbird.group; dkim=none (message not signed)
- header.d=none;flowbird.group; dmarc=none action=none header.from=nxp.com;
+authentication-results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none header.from=nxp.com;
 x-originating-ip: [119.31.174.66]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 09161746-f2ea-48e0-b444-08d7f7148bc9
-x-ms-traffictypediagnostic: VE1PR04MB6592:|VE1PR04MB6592:
+x-ms-office365-filtering-correlation-id: c6a6175a-c429-43d8-8970-08d7f7167905
+x-ms-traffictypediagnostic: VE1PR04MB6495:|VE1PR04MB6495:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6592EA6BA1F97D96928FD1A589BF0@VE1PR04MB6592.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1468;
+x-microsoft-antispam-prvs: <VE1PR04MB6495028891FE13A5A93459B489BF0@VE1PR04MB6495.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2089;
 x-forefront-prvs: 0402872DA1
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ApPW9OKxUwxbX9Tz5vIfQitGI7jRCQRMX9jM3OmFwOZaxH5PSdZvcGwF4I42FHGrv5svdtXiokSeGnOcTdLUPUt57wjugVd2Q/GXuqec/EaWz/Yv3i6XXd/obxGNtd5Xld9ENbCtTdIc1mwWKU9jUBVlibnHbtIPI2kd3JMYyd7L/QNPEnIsS+cHnQuAq36u81iV/lh010obXJ1AMyHzrZQzSH/lRfvfxgdkLVby3M4iwuhL8uDVaX3nOY3Fpm8U3Qz2P3Vwt2zxyquP50X14JF8nyoZqyUXtXtsIImUckjiGNbbPAZiknsNGrXWTDpi+h7OTcEaHae8CL2UJ45XCKEo5FFNtZClNcU63RHlgbqWX/M0XzFUiDJyu7SobrSZ8VJvWkVIdjAnWPl1SsRY2aQVe7o/XUbrficqSGvvf8NKL0xmlsL47OqyxGsvfMvlYod4bp1Z4ahLPnHslg+jjtwQQFzJK1MK40IF4y1So6j+HK1DT2rdLJjluxcmsV5p0KKjDMdBNRpRvdzYukFTow==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(366004)(396003)(136003)(39860400002)(33430700001)(64756008)(66556008)(66446008)(86362001)(54906003)(4326008)(7696005)(7416002)(5660300002)(33656002)(478600001)(8936002)(110136005)(4744005)(26005)(76116006)(71200400001)(33440700001)(8676002)(52536014)(66946007)(55016002)(66476007)(9686003)(2906002)(316002)(186003)(6506007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: rVnGgRtCpZXQwHyquhdA6CCfT40SD1YjDH/Ms+3xT43ucDkcB7UFefbxmxwE2QzIiavvKaMnUANRNB8JDGPeFwzet0QdaDgS1y/f4Fo0JNinSPWuT4XGMR6v3GBf2SnUZgWJ1f4ltChB9xWMvXjeamoIidHktoB5RZem4Es3NU7naPgMLCehchnSKYTYjrH5v0+Yf4Ax7YO9+uZFR0vPKkqpq+iCELuVChpwlw/0zYnXipWWfelVDfMYV666gmj1clpSs6NDBp5LRgu2aOnSVfHpvqx+O6vgeFx42/N6NuOFw16GhI2WpRNY2xsHVYop+hw5Bt3wa0gH+BuMT2FvIHkVDZwrKn8e6kE82Dhsz1T2fq85nmRbJomikqnFk1hA5C7XZa6N1ElXXEZ8Cl9PsLKGSFchL+DHFDEQ1WgfGIOdMr0J2Q+kDQkKAw4L/XnqMHfXT3OOyakDbpq16cq8jvSuHCceDRWurqifDhQlRy8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: 2Az6f7afz3WGTTd3KHlalP4pRyNiYet1VQlF7dMrMG8VOaXtup2no51OH5q7ezcE7S5H9U1+1xL96s+vS3/hSFXIZFbBLS8yU4cpTyEkTAeHiZZFNPJufFD5awLAtztVomOyTn/7I2iaeLRmeks+MHn10Zwigrh2so4H+Y9SDrVuVGOUpvBEbkirrruZ9yTtiH9j0I5hL+/vBPKi5lcNn0yqkI9J8vOVEjYM1eIWoQaE3mlCeyM5qFykcUXhUaGE2rEwtXIIWqm2b2l8RL6FUQ2IOxneB+ZvTu8EvDHJtu9Y0FmvpTP5yYZQOD1jCe0gSJvta1xIOS+FriAhz2KNzY9vRbuH4M7qnwl06EFTaChpU2rac47eImUdnTKxaV8wOp2RSGgC5Qvp5EMfQ5HnufIcmjbvEZ4d8ACJdpXY8dRxC3E6NrCnyTvsAtuh84Yj0tZdatyyGReJg6onKtc4HSFiP9WzYIhBr8V+rTzCALl4nuvoK3NLLSmT/mVjIcBDExOprIxBQIgN7ggKOHim/WL3JHyvQrrmUb+QZgqT20j0S/ezchVahLPR0EmJXajcFEoKZMvXxVYQqQ2r0QGRKZZfYc1hffI9etXv2tHHtEU=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(136003)(366004)(376002)(396003)(33430700001)(86362001)(7416002)(71200400001)(52536014)(316002)(66476007)(66946007)(478600001)(966005)(54906003)(45080400002)(76116006)(33656002)(5660300002)(66556008)(6916009)(66446008)(7696005)(4326008)(33440700001)(9686003)(8676002)(55016002)(6506007)(2906002)(186003)(83080400001)(26005)(8936002)(64756008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 8YXxr7GNc171Guheu4KtR5OT0vICQafNvA5L/0OLA9vIgFXFVGzX17kYc8Xfz2vggPVDf0Ih3M4xMgIiuF7vT/VQjIeXMp3DoIQHgB77Znm/XwHorxZuDJoMAdAnb6EL3lWAitrsceE8E9ySSAzspgr8bTgj1Z8xyh4HRAiRB8REo5bV1Wy/q/oesK3XEm0d/IEyByY/mHZV65LU6U8mkyVsFQHEUe3OQfHuZIbD2KtmWdLXdE5Um/NMsCXYYLrFKd/t+rDGHHmqLg8T/g87fvUMdi0RmLa4RxYtaV3AO9QBQ0vW7o3lKkGi1/d/ojEpvb2Rcfq34jyWdBz4jI0v4vApQ3IkKc7f5cuXgYTs8gn7p/Cb/Oakm2353Q1oENi6pkTiavaeSa9COdiMscEOFDEDcXuwKYcXztu/slYQn69oAfJRK6RkdWqpGaz+F0D92022YKz3CnraCtZLybpUuGE/+ZNw6jafxTzlK5DyzO8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09161746-f2ea-48e0-b444-08d7f7148bc9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2020 08:06:31.0954
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6a6175a-c429-43d8-8970-08d7f7167905
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2020 08:20:18.6012
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kMAp/rrSxe+NNwq4gPmEXt2YCS7O5cC0bMyrqCPT8zJJbXxpleIeTSESm8quSXUJwtQCfbkd4+l1eyAIFT0epQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6592
+X-MS-Exchange-CrossTenant-userprincipalname: M2wChgXBhAkbq7yo+BNwhok4GlUr1+Z0YXS0+dkM/o/LRsJD5JZjLoHKxy2pN5aKcbyDHAKEEz6GV/6/hChixw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6495
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-T24gMjAyMC8wNS8xMyBGdXp6ZXksIE1hcnRpbiA8bWFydGluLmZ1enpleUBmbG93YmlyZC5ncm91
-cD4gd3JvdGU6DQo+IE9uIFdlZCwgMTMgTWF5IDIwMjAgYXQgMDg6MDcsIFNhc2NoYSBIYXVlciA8
-cy5oYXVlckBwZW5ndXRyb25peC5kZT4NCj4gd3JvdGU6DQo+ID4NCj4gPiBPbiBUdWUsIE1heSAx
-MiwgMjAyMCBhdCAwMTozMjoyNkFNICswODAwLCBSb2JpbiBHb25nIHdyb3RlOg0KPiA+ID4gVGhp
-cyByZXZlcnRzIGNvbW1pdCBkMjg4YmRkZDgzNzRlMGEwNDNhYzlkZGU2NGExYWU2YTA5NDExZDc0
-LCBzaW5jZQ0KPiA+ID4gJ2NvbnRleHRfbG9hZGVkJyBmaW5hbGx5IHJlbW92ZWQuDQo+ID4gPg0K
-PiA+ID4gU2lnbmVkLW9mZi1ieTogUm9iaW4gR29uZyA8eWliaW4uZ29uZ0BueHAuY29tPg0KPiA+
-ID4gLS0tDQo+ID4NCj4gPiBJIHRoaW5rIHRoaXMgY2FuIHNhZmVseSBiZSBmb2xkZWQgaW50byB0
-aGUgbmV4dCBwYXRjaCB3aGljaCBtYWtlcyBpdA0KPiA+IG1vcmUgY2xlYXIgd2hhdCBpcyBoYXBw
-ZW5pbmcuDQo+ID4NCj4gDQo+IEFncmVlZCwNCj4gbm90IG9ubHkgdGhhdCBidXQgaGF2aW5nIDIg
-c2VwYXJhdGUgcGF0Y2hlcyBhbHNvIG1lYW5zIHRoYXQgdGhlIGJ1ZyB0aGF0IHdhcw0KPiBmaXhl
-ZCBieSB0aGUgY29tbWl0IGJlaW5nIHJldmVydGVkIGNvdWxkIHJlYXBwZWFyIGR1cmluZyBiaXNl
-Y3Rpb24uDQo+IA0KPiBNb3JlIGdlbmVyYWxseSBJIHRoaW5rIHJldmVydHMgc2hvdWxkIGJlIHJl
-c2VydmVkIGZvciBjb21taXRzIHRoYXQgbGF0ZXIgdHVybg0KPiBvdXQgdG8gYmUgd3Jvbmcgb3Ig
-dW5uZWVkZWQgKGllIHNob3VsZCBuZXZlciByZWFsbHkgaGF2ZSBiZWVuIGFwcGxpZWQpLg0KPiBJ
-ZiB0aGV5IHdlcmUgT0sgYXQgdGhlIHRpbWUgYnV0IGxhdGVyIGJlY29tZSB1bm5lY2Vzc2FyeSBk
-dWUgdG8gb3RoZXIgY29kZQ0KPiBjaGFuZ2VzIEkgdGhpbmsgYWxsIHRoZSByZWxhdGVkIG1vZGlm
-aWNhdGlvbnMgc2hvdWxkIGJlIGRvbmUgaW4gYSBzaW5nbGUgbm9ybWFsDQo+IG5vbiByZXZlcnQg
-cGF0Y2guDQpPa2F5LCB3aWxsIHJlbW92ZSBpdCBpbiB2OC4NCg==
+On 2020/05/13 Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> On Tue, May 12, 2020 at 01:32:23AM +0800, Robin Gong wrote:
+> > There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
+> > transfer to be send twice in DMA mode. Please get more information from=
+:
+> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fwww=
+.
+> >
+> nxp.com%2Fdocs%2Fen%2Ferrata%2FIMX6DQCE.pdf&amp;data=3D02%7C01%7C
+> yibin.g
+> >
+> ong%40nxp.com%7C4276d42955334886056508d7f70e18af%7C686ea1d3bc2b4
+> c6fa92
+> >
+> cd99c5c301635%7C0%7C1%7C637249512224944620&amp;sdata=3Dvh0e3BER01
+> 02648t9HRe14h%2BaE9m%2BAlJ5Smd6v%2B9AhM%3D&amp;reserved=3D0. The
+> workaround is adding new sdma ram script which works in XCH  mode as PIO
+> inside sdma instead of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0.
+> The issue should be exist on all legacy i.mx6/7 soc family before i.mx6ul=
+.
+> > NXP fix this design issue from i.mx6ul, so newer chips including
+> > i.mx6ul/ 6ull/6sll do not need this workaroud anymore. All other
+> > i.mx6/7/8 chips still need this workaroud. This patch set add new
+> 'fsl,imx6ul-ecspi'
+> > for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need
+> > errata or not.
+> > The first two reverted patches should be the same issue, though, it
+> > seems 'fixed' by changing to other shp script. Hope Sean or Sascha
+> > could have the chance to test this patch set if could fix their issues.
+> > Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
+> > on i.mx8mm because the event id is zero.
+>=20
+> It's not nice to break SPI support when the new firmware is not present a=
+nd I
+> think we can do better. Wouldn't it be possible to fall back to PIO in th=
+is case?
+I'm afraid that's not easy since spi driver don't know which firmware used.=
+ Could I add some comments in commit log?=20
+

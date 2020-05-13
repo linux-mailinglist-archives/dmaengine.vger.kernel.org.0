@@ -2,143 +2,222 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AE381D0AB5
-	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2020 10:20:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C6361D0AD8
+	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2020 10:30:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732152AbgEMIUY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 13 May 2020 04:20:24 -0400
-Received: from mail-eopbgr20053.outbound.protection.outlook.com ([40.107.2.53]:10353
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732121AbgEMIUY (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 13 May 2020 04:20:24 -0400
+        id S1732256AbgEMIaT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 13 May 2020 04:30:19 -0400
+Received: from mga14.intel.com ([192.55.52.115]:25584 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729189AbgEMIaS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 13 May 2020 04:30:18 -0400
+IronPort-SDR: DhfuMFUmruyOu/GusEzg74Jc3dxbb4WRHC7uO/uuV03CpuIzjw9zEg2YYp/9qPg+tlPPHRdxSB
+ PjRgit37S+hA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 01:30:17 -0700
+IronPort-SDR: O200gs2YvUbsqLEcow2csnCHluXZy6srK9Wovlmtj06/wGmgNGeyAcHfDpBuj7nz2nPPR8v6oX
+ YbMzik/HJtng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,387,1583222400"; 
+   d="scan'208";a="306724111"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by FMSMGA003.fm.intel.com with ESMTP; 13 May 2020 01:30:17 -0700
+Received: from fmsmsx120.amr.corp.intel.com (10.18.124.208) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 13 May 2020 01:30:17 -0700
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ fmsmsx120.amr.corp.intel.com (10.18.124.208) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 13 May 2020 01:30:17 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.46) by
+ edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Wed, 13 May 2020 01:30:17 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=B6Bz1p41IIUUhyaPbrgqEdl7Md9bqD/rgrR1RPB09OM6oyWugvcT/wRVWJH+RJZIq3ZicyNtMalpcYQI5V/CMB0HNGt+lGokOIP1J60A7lHbTpflS90hyy9LCPj/BkgQPoj8g07l2iyZz+8ypChEupcMiMg0CEEZFjai+lUOwG2rJCReMVfZJschQQ4gBDz+lxL5mnRCJ5CTzP4rZxijPDOnsK2dF1nxOWz6srU9WJxYGIKAWJn8m8sCAspukjSzME0wCQicItudXGJ21z0e0zxRb/Ledr2NnMj2lYClBerkWYo4SLVDCVeTwoAsYvMGST9FuQmVPTgN5WPKpw9qdQ==
+ b=j3ZjXDvLS27e6KGyYbxd4pJu9intbfNa/IqjuhoEVFWrufJyj1QJEwkLw+2nZwC/rCQEE5udPZvR5OmAmG6oisHF/b+qSn7Sug0I5nODuHDNSSVoyGSptP2exFiwrS+3kbeemfc8kyUmeJS9oiLWATrmRT3HzLrWvjELidaZiQ4ElxSFS00m636p1oWkpdZH/03IxQbYUDtWjIp/treVPB4ZC9x4Mmnjl+/gSiELRZZXR957Ix8DUxxCZPd32nsgAxpE+jHAEg79QovxS+x6rr7OaP/N4oiM9oOdLoh30tiJb8I5T4nbgxDwjYNP36uEsLlPMOtr7UPtWLoHpknFxA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XWEdXAhnXXeFk6WL4AWaBjGKdYGhKXzG8vgymH3/6l8=;
- b=W7DMBcF/kVJA3/NiCurVXxNTODLAj75lOdSPYEZBEdADIO89/UTd8iEer9rgOq8cv533EDmmxGohzI84nrtzwAkzihMIhQsgDjJFJz+hchqCgcZlKN0KpZVVnfPINzkjeqnmM3bCJ1or312h6qsSCyRvFzo6pRACZ4tJlP3GlXvFt6KiFlqQi//vpxQtFnq+a1KB6sLTRIxk0rp8rcPi8BNbwwgRHZrH028ZImSQXC4vntIuWhwW0tY4PJM325oqUfsaAIQpNRMZuy54oFdk6fLlPA7aWBSrEdHyHFql3M6oepcdYox6g5wj+9IHMZQnzshhoQ3zrj909xhCphDrMA==
+ bh=dzYAqn3JSJCdjfWXaPVuk31bs1k0XNFTW63Hk+O3h4g=;
+ b=Ss8MP33YjG5msKB6BktSU6ZS2cyyIT6IJ7otSXgzyyvJewtdXqf9pkNGogyrPQ0KDQQYKca7dbmksfhh91vzYD69QHTf1rEfrXNnNjzezu63WahWzHR6BIQuzRNiQhnpD7hJgz8Iv6CdKCKOIozzUc3vpS1N4T8P5wNXIvIpSo8mOVx2JGugt4p4A3iL/DWon+/duWRzP9fXh+1QufOScx6Uf0RHRGe/DSIXseQOTSxFkmSBI6AIj4jeXNV3fXUDJfFLrXFreRMeqFJcSzsewmvn7SWOZjbCfDwwmZIwzJ1ozxBh3CtTNa3PBW5c0/9loUgZsGrCID9PFUQD69Jiiw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XWEdXAhnXXeFk6WL4AWaBjGKdYGhKXzG8vgymH3/6l8=;
- b=mf7qLmSG0UmxNz+RHdFT37ITOKECXkXU7sDRAz6OkCLkiKigYmBc0MJklcNO75UhbblyuFE6/Yms3Npe4oyPnOoSjNerpNRLGrvSkRgxxuUhIDywCmr0F+IOiBa04RvLVYr1L9rvYfY1xXgyngrnuQu3NLacCKtgV7D6o/iVGyc=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6495.eurprd04.prod.outlook.com (2603:10a6:803:11d::10) with
+ bh=dzYAqn3JSJCdjfWXaPVuk31bs1k0XNFTW63Hk+O3h4g=;
+ b=cmoclXMDiRuARdoEuIVAMOTqLiLcqMHCldxBY0jpBbIEvdVcKvGcbfyUTzzp80lQ1F3Jpw7sipQPl8eGY3x7mw26ipTATWcxFO/hAH/88DyQYFdLijyQPokBxSwHi+OqN5p845Vxy3EpS1Tb/sWjEZBgXpUgSlVjs+l5MFtfBhk=
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com (2603:10b6:301:b::12)
+ by MWHPR11MB1280.namprd11.prod.outlook.com (2603:10b6:300:2b::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.33; Wed, 13 May
- 2020 08:20:18 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::d5f0:c948:6ab0:c2aa]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::d5f0:c948:6ab0:c2aa%4]) with mapi id 15.20.3000.016; Wed, 13 May 2020
- 08:20:18 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-CC:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.34; Wed, 13 May
+ 2020 08:30:15 +0000
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::bc06:71a6:1cdd:59be]) by MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::bc06:71a6:1cdd:59be%9]) with mapi id 15.20.2979.033; Wed, 13 May 2020
+ 08:30:15 +0000
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>
+CC:     Alex Williamson <alex.williamson@redhat.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
         "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH v7 RESEND 00/13] add ecspi ERR009165 for i.mx6/7 soc
- family
-Thread-Topic: [PATCH v7 RESEND 00/13] add ecspi ERR009165 for i.mx6/7 soc
- family
-Thread-Index: AQHWJ3cQF4VQAfbPY0eHwEq+VJV4M6ilnvSAgAANpiA=
-Date:   Wed, 13 May 2020 08:20:18 +0000
-Message-ID: <VE1PR04MB663826721B0720C313C3E12A89BF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <1589218356-17475-1-git-send-email-yibin.gong@nxp.com>
- <20200513072012.GB15934@pengutronix.de>
-In-Reply-To: <20200513072012.GB15934@pengutronix.de>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: RE: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Thread-Topic: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
+ support for the idxd driver.
+Thread-Index: AQHWGDVStT24LxQ110qc/YDRWdRX86iDuewAgACI/wCAAD7wgIAAnasAgAFwKICAAOPOMIAAQj8AgACkdbD//7b+gIACl9WQgACeIICAAI58gIAAiiEAgAAWu4CAAAC9AIADZPhQgA7nFQCAACmhAIAADs6AgADMiYCABdYv8A==
+Date:   Wed, 13 May 2020 08:30:15 +0000
+Message-ID: <MWHPR11MB1645C60468BC6C6009C3DDE28CBF0@MWHPR11MB1645.namprd11.prod.outlook.com>
+References: <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
+ <20200426191357.GB13640@mellanox.com> <20200426214355.29e19d33@x1.home>
+ <20200427115818.GE13640@mellanox.com> <20200427071939.06aa300e@x1.home>
+ <20200427132218.GG13640@mellanox.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D8E34AA@SHSMSX104.ccr.corp.intel.com>
+ <20200508204710.GA78778@otc-nc-03> <20200508231610.GO19158@mellanox.com>
+ <20200509000909.GA79981@otc-nc-03> <20200509122113.GP19158@mellanox.com>
+In-Reply-To: <20200509122113.GP19158@mellanox.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: pengutronix.de; dkim=none (message not signed)
- header.d=none;pengutronix.de; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: mellanox.com; dkim=none (message not signed)
+ header.d=none;mellanox.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.55.52.215]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c6a6175a-c429-43d8-8970-08d7f7167905
-x-ms-traffictypediagnostic: VE1PR04MB6495:|VE1PR04MB6495:
+x-ms-office365-filtering-correlation-id: 38af6b88-b2d1-4f8a-48f4-08d7f717dcaa
+x-ms-traffictypediagnostic: MWHPR11MB1280:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6495028891FE13A5A93459B489BF0@VE1PR04MB6495.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2089;
+x-microsoft-antispam-prvs: <MWHPR11MB1280E0A475FDC0DCD167E2158CBF0@MWHPR11MB1280.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
 x-forefront-prvs: 0402872DA1
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2Az6f7afz3WGTTd3KHlalP4pRyNiYet1VQlF7dMrMG8VOaXtup2no51OH5q7ezcE7S5H9U1+1xL96s+vS3/hSFXIZFbBLS8yU4cpTyEkTAeHiZZFNPJufFD5awLAtztVomOyTn/7I2iaeLRmeks+MHn10Zwigrh2so4H+Y9SDrVuVGOUpvBEbkirrruZ9yTtiH9j0I5hL+/vBPKi5lcNn0yqkI9J8vOVEjYM1eIWoQaE3mlCeyM5qFykcUXhUaGE2rEwtXIIWqm2b2l8RL6FUQ2IOxneB+ZvTu8EvDHJtu9Y0FmvpTP5yYZQOD1jCe0gSJvta1xIOS+FriAhz2KNzY9vRbuH4M7qnwl06EFTaChpU2rac47eImUdnTKxaV8wOp2RSGgC5Qvp5EMfQ5HnufIcmjbvEZ4d8ACJdpXY8dRxC3E6NrCnyTvsAtuh84Yj0tZdatyyGReJg6onKtc4HSFiP9WzYIhBr8V+rTzCALl4nuvoK3NLLSmT/mVjIcBDExOprIxBQIgN7ggKOHim/WL3JHyvQrrmUb+QZgqT20j0S/ezchVahLPR0EmJXajcFEoKZMvXxVYQqQ2r0QGRKZZfYc1hffI9etXv2tHHtEU=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(136003)(366004)(376002)(396003)(33430700001)(86362001)(7416002)(71200400001)(52536014)(316002)(66476007)(66946007)(478600001)(966005)(54906003)(45080400002)(76116006)(33656002)(5660300002)(66556008)(6916009)(66446008)(7696005)(4326008)(33440700001)(9686003)(8676002)(55016002)(6506007)(2906002)(186003)(83080400001)(26005)(8936002)(64756008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 8YXxr7GNc171Guheu4KtR5OT0vICQafNvA5L/0OLA9vIgFXFVGzX17kYc8Xfz2vggPVDf0Ih3M4xMgIiuF7vT/VQjIeXMp3DoIQHgB77Znm/XwHorxZuDJoMAdAnb6EL3lWAitrsceE8E9ySSAzspgr8bTgj1Z8xyh4HRAiRB8REo5bV1Wy/q/oesK3XEm0d/IEyByY/mHZV65LU6U8mkyVsFQHEUe3OQfHuZIbD2KtmWdLXdE5Um/NMsCXYYLrFKd/t+rDGHHmqLg8T/g87fvUMdi0RmLa4RxYtaV3AO9QBQ0vW7o3lKkGi1/d/ojEpvb2Rcfq34jyWdBz4jI0v4vApQ3IkKc7f5cuXgYTs8gn7p/Cb/Oakm2353Q1oENi6pkTiavaeSa9COdiMscEOFDEDcXuwKYcXztu/slYQn69oAfJRK6RkdWqpGaz+F0D92022YKz3CnraCtZLybpUuGE/+ZNw6jafxTzlK5DyzO8=
+x-microsoft-antispam-message-info: 0jNsMxH63xNiVQtDr9wzw7tk9uKS/4G1MhkvVaFuy4Tb+lXGI1wG+skKjg7RhRrEGnGTdZvPelI7NPlQ3ZWpAiTfsjvST7rpqKyryq42cZfpL3N8LP+Y5IUv6De7oFAJNgyzMqM3dEUSJja9fsCo8e23Dh4BfdE7nygNLAiKVUf1GhNbp9OpO3HWZhPfttz9gX3ahyiqKIzHD0Ad0I4qQCieBcc469QtO9JjaaGeUQR/z9wnZFnZFv1PCswh25sziOYDX4g2KytYa66ppP96f+UuBqnUZjQ0panR5/eYUhXh1LIB/sUNm3OEMTBUuPpeSzT+/MduOg77RS1hjjk3VljdCrjcTFk2QFBu5AmC9sAj1k4Q8N2NoXfcySAOt+hBdTrNNbzcEB2aOtGaOVTlbuTOXkfroFHChkbDiBBsQM3SU6bvQhXTH0J52I0pTuNJvYeuhDm5tuWuJQ5GNDp+3EDy/Ind78I5nT6GKOcMqLWeT1II/11Ozj9EGfXuwFUZvsacnUGsiOPos6MIW6pBCA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(39860400002)(366004)(396003)(136003)(33430700001)(8936002)(55016002)(26005)(76116006)(6506007)(316002)(33656002)(7696005)(4326008)(9686003)(52536014)(33440700001)(7416002)(64756008)(186003)(6636002)(66556008)(66476007)(8676002)(66446008)(86362001)(54906003)(5660300002)(478600001)(71200400001)(66946007)(2906002)(110136005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: RrWT69DGCK9QzfhKdGFAkfY0PRX688qN9vROMon99IEsecKbNJucTyJ4mBnP7fOVgy83+/vwTnjBwnWUK4xlcpwWi+XSvhKnnexR65/pRHzr6TzJHq99Xy6TH8UvfFEOrJvScvQdutP6Q3xkaVlMfQXDEMeQzeN6e+bCZvpvdI9pUR7fktAOoT5/P7u1/Z9XlTfFxl3d5Tv6eOXn0ZBXdTs9IswPKpkI3HBeh8oToQ0hJyQWBT2NwUjQO+uMQ5OM5IbrHmOFXWF1/+WZ+jcuFBL0hgg/eg3zrNzH3at+dqX7gd3gyxTr+7EAaewoLdvp1D9Dc4j7wo3nP7DeE9JMedFwzE0BKXSAABwt8/svn8VCHnu0U4EL4wOy97TG4WTUWCVvRUQJ8GdXQ0TPKIR02gTdzThT0ga9dpmmp4R/zkzZPnKdgqrJlO06LDGSXTL5eGmMIncfG5swSFvf1trgjO8OZU61+q9T+nJpTrfF1QQ=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6a6175a-c429-43d8-8970-08d7f7167905
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2020 08:20:18.6012
+X-MS-Exchange-CrossTenant-Network-Message-Id: 38af6b88-b2d1-4f8a-48f4-08d7f717dcaa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2020 08:30:15.1531
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: M2wChgXBhAkbq7yo+BNwhok4GlUr1+Z0YXS0+dkM/o/LRsJD5JZjLoHKxy2pN5aKcbyDHAKEEz6GV/6/hChixw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6495
+X-MS-Exchange-CrossTenant-userprincipalname: H7NPaJ3KKvx5w8I0WzkcmTdll9ceCyTjGzykTM6WAwruqtoDyFN1Wfg6Ad2dOKH5ESQZvgLTADc579Uz0qWHLg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1280
+X-OriginatorOrg: intel.com
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 2020/05/13 Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> On Tue, May 12, 2020 at 01:32:23AM +0800, Robin Gong wrote:
-> > There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
-> > transfer to be send twice in DMA mode. Please get more information from=
-:
-> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fwww=
-.
+> From: Jason Gunthorpe
+> Sent: Saturday, May 9, 2020 8:21 PM
+> > > putting emulation code back into them, except in a more dangerous
+> > > kernel location. This does not seem like a net win to me.
 > >
-> nxp.com%2Fdocs%2Fen%2Ferrata%2FIMX6DQCE.pdf&amp;data=3D02%7C01%7C
-> yibin.g
+> > Its not a whole lot of emulation right? mdev are soft partitioned. Ther=
+e is
+> > just a single PF, but we can create a separate partition for the guest =
+using
+> > PASID along with the normal BDF (RID). And exposing a consistent PCI li=
+ke
+> > interface to user space you get everything else for free.
 > >
-> ong%40nxp.com%7C4276d42955334886056508d7f70e18af%7C686ea1d3bc2b4
-> c6fa92
+> > Yes, its not SRIOV, but giving that interface to user space via VFIO, w=
+e get
+> > all of that functionality without having to reinvent a different way to=
+ do it.
 > >
-> cd99c5c301635%7C0%7C1%7C637249512224944620&amp;sdata=3Dvh0e3BER01
-> 02648t9HRe14h%2BaE9m%2BAlJ5Smd6v%2B9AhM%3D&amp;reserved=3D0. The
-> workaround is adding new sdma ram script which works in XCH  mode as PIO
-> inside sdma instead of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0.
-> The issue should be exist on all legacy i.mx6/7 soc family before i.mx6ul=
-.
-> > NXP fix this design issue from i.mx6ul, so newer chips including
-> > i.mx6ul/ 6ull/6sll do not need this workaroud anymore. All other
-> > i.mx6/7/8 chips still need this workaroud. This patch set add new
-> 'fsl,imx6ul-ecspi'
-> > for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need
-> > errata or not.
-> > The first two reverted patches should be the same issue, though, it
-> > seems 'fixed' by changing to other shp script. Hope Sean or Sascha
-> > could have the chance to test this patch set if could fix their issues.
-> > Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
-> > on i.mx8mm because the event id is zero.
+> > vDPA went the other way, IRC, they went and put a HW implementation of
+> what
+> > virtio is in hardware. So they sort of fit the model. Here the instance
+> > looks and feels like real hardware for the setup and control aspect.
 >=20
-> It's not nice to break SPI support when the new firmware is not present a=
-nd I
-> think we can do better. Wouldn't it be possible to fall back to PIO in th=
-is case?
-I'm afraid that's not easy since spi driver don't know which firmware used.=
- Could I add some comments in commit log?=20
+> VDPA and this are very similar, of course it depends on the exact HW
+> implementation.
+>=20
 
+Hi, Jason,
+
+I have more thoughts below. let's see whether making sense to you.
+
+When talking about virtualization, here the target is unmodified guest=20
+kernel driver which expects seeing the raw controllability of queues=20
+as defined by device spec. In idxd, such controllability includes enable/
+disable SVA, dedicated or shared WQ, size, threshold, privilege, fault=20
+mode, max batch size, and many other attributes. Different guest OS=20
+has its own policy of using all or partial available controllability.=20
+
+When talking about application, we care about providing an efficient
+programming interface to userspace. For example with uacce, we
+allow an application to submit vaddr-based workloads to a reserved
+WQ with kernel bypassed. But it's not necessary to export the raw
+controllability of the reserved WQ to userspace, and we still rely on
+kernel driver to configure it including bind_mm. I'm not sure whether=20
+uacce would like to evolve as a generic queue management system
+including non-SVA and all vendor specific raw capabilities as=20
+expected by all kinds of guest kernel drivers. It sounds like not=20
+worthwhile at this point, given that we already have an highly efficient=20
+SVA interface for user applications.
+
+That is why we start with mdev as an evolutionary approach. Mdev is=20
+introduced to expose raw controllability of a subdevice (WQ or ADI) to=20
+guest. It build a channel between guest kernel driver and host kernel=20
+driver and uses device spec as the uAPI by sticking to the mmio interface.
+and all virtualization related setups are just consolidated together in vfi=
+o.=20
+the drawback, as you pointed out, is putting some degree of emulation
+code in the kernel. But as explained earlier, they are only small portion o=
+f
+code. Moreover, most registers are emulated as simple memory read/
+write, while the remaining logic mostly belongs to raw controllability=20
+(e.g. cmd register) that host driver grants to the guest thus must=20
+propagate to the device. For the latter part, I would call it more as=20
+'mediation' instead of 'emulation', as required in whatever uapi would=20
+be used.
+
+If in the future, there do have such requirement of delegating raw
+WQ controllability to pure userspace applications for DMA engines,=20
+and there is be a well-defined uAPI to cover a large common set of=20
+controllability across multiple vendors, we will look at that option for
+sure.
+
+From above p.o.v, I feel vdpa is a different story. virtio/vhost has a=20
+well established eco-system between guest and host. The user
+space VMM already emulates all available controllability as defined=20
+in virtio spec. Host kernel already supports vhost uAPI for vring
+setup, iotlb management, etc. Extending that path for data path
+offloading sounds a reasonable choice for vdpa...
+
+Thanks
+Kevin

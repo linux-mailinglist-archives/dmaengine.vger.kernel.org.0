@@ -2,138 +2,71 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62A511D04E2
-	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2020 04:30:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 222E31D06D9
+	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2020 08:04:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgEMCaC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 12 May 2020 22:30:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22452 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727890AbgEMCaB (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 12 May 2020 22:30:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589337000;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iT2hW+HYXkczOFTWfJmASn4ajF5YSjXsGJSRKP6B8QY=;
-        b=CVOy29ssTBBUdBgXdE6VGpH7W+32DF86LhZcriuK6XUqjTXm0lLcpqLBfKGRGVxanBDBAP
-        M5xKKo6ucy8eMs3JiMePsGcmTRrOSBGCn9EY1prNu/9QwebPIFPE4I8JLIGRmWp0sC8DnO
-        AQGFIpIvZSkhqW9DlvuDICG8SwBEf8g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-281-EmZXlPFvPpqAhwBszIdqLA-1; Tue, 12 May 2020 22:29:56 -0400
-X-MC-Unique: EmZXlPFvPpqAhwBszIdqLA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 18B981005510;
-        Wed, 13 May 2020 02:29:53 +0000 (UTC)
-Received: from [10.72.13.188] (ovpn-13-188.pek2.redhat.com [10.72.13.188])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 189CC60BF1;
-        Wed, 13 May 2020 02:29:32 +0000 (UTC)
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
- <20200426191357.GB13640@mellanox.com> <20200426214355.29e19d33@x1.home>
- <20200427115818.GE13640@mellanox.com> <20200427071939.06aa300e@x1.home>
- <20200427132218.GG13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8E34AA@SHSMSX104.ccr.corp.intel.com>
- <20200508204710.GA78778@otc-nc-03> <20200508231610.GO19158@mellanox.com>
- <20200509000909.GA79981@otc-nc-03> <20200509122113.GP19158@mellanox.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <196b23b9-12f7-2fc2-5efb-22e0642c456a@redhat.com>
-Date:   Wed, 13 May 2020 10:29:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1729171AbgEMGEQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 13 May 2020 02:04:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42246 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726220AbgEMGEQ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 13 May 2020 02:04:16 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD477C061A0C
+        for <dmaengine@vger.kernel.org>; Tue, 12 May 2020 23:04:15 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jYkV2-0000e1-27; Wed, 13 May 2020 08:04:12 +0200
+Received: from sha by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jYkUx-0004sD-QX; Wed, 13 May 2020 08:04:07 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     dmaengine@vger.kernel.org
+Cc:     Vinod Koul <vkoul@kernel.org>, kernel@pengutronix.de,
+        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
+        Robin Gong <yibin.gong@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Subject: [PATCH] dmaengine: imx-sdma: initialize all script addresses
+Date:   Wed, 13 May 2020 08:04:05 +0200
+Message-Id: <20200513060405.18685-1-s.hauer@pengutronix.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200509122113.GP19158@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+The script addresses array increases with each new version. The driver
+initializes the array to -EINVAL initially, but only up to the size
+of the v1 array. Initialize the additional addresses for the newer
+versions as well. Without this unitialized values of the newer arrays
+are treated as valid.
 
-On 2020/5/9 下午8:21, Jason Gunthorpe wrote:
-> On Fri, May 08, 2020 at 05:09:09PM -0700, Raj, Ashok wrote:
->> Hi Jason
->>
->> On Fri, May 08, 2020 at 08:16:10PM -0300, Jason Gunthorpe wrote:
->>> On Fri, May 08, 2020 at 01:47:10PM -0700, Raj, Ashok wrote:
->>>
->>>> Even when uaccel was under development, one of the options
->>>> was to use VFIO as the transport, goal was the same i.e to keep
->>>> the user space have one interface.
->>> I feel a bit out of the loop here, uaccel isn't in today's kernel is
->>> it? I've heard about it for a while, it sounds very similar to RDMA,
->>> so I hope they took some of my advice...
->> I think since 5.7 maybe? drivers/misc/uacce. I don't think this is like
->> RDMA, its just a plain accelerator. There is no connection management,
->> memory registration or other things.. IB was my first job at Intel,
->> but saying that i would be giving my age away:)
-> rdma was the first thing to do kernel bypass, all this stuff is like
-> rdma at some level.. I see this looks like the 'warp driver' stuff
-> redone
->
-> Wow, lots wrong here. Oh well.
->
->>> putting emulation code back into them, except in a more dangerous
->>> kernel location. This does not seem like a net win to me.
->> Its not a whole lot of emulation right? mdev are soft partitioned. There is
->> just a single PF, but we can create a separate partition for the guest using
->> PASID along with the normal BDF (RID). And exposing a consistent PCI like
->> interface to user space you get everything else for free.
->>
->> Yes, its not SRIOV, but giving that interface to user space via VFIO, we get
->> all of that functionality without having to reinvent a different way to do it.
->>
->> vDPA went the other way, IRC, they went and put a HW implementation of what
->> virtio is in hardware. So they sort of fit the model. Here the instance
->> looks and feels like real hardware for the setup and control aspect.
-> VDPA and this are very similar, of course it depends on the exact HW
-> implementation.
->
-> Jason
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
+ drivers/dma/imx-sdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-Actually this is not a must. Technically we can do ring/descriptor 
-translation in the vDPA driver as what zerocopy AF_XDP did.
-
-Thanks
-
-
->
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 01422e721b26e..2ca79357f57dc 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -2080,7 +2080,7 @@ static int sdma_probe(struct platform_device *pdev)
+ 
+ 	/* initially no scripts available */
+ 	saddr_arr = (s32 *)sdma->script_addrs;
+-	for (i = 0; i < SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1; i++)
++	for (i = 0; i < sizeof(*sdma->script_addrs) / sizeof(s32); i++)
+ 		saddr_arr[i] = -EINVAL;
+ 
+ 	dma_cap_set(DMA_SLAVE, sdma->dma_device.cap_mask);
+-- 
+2.26.2
 

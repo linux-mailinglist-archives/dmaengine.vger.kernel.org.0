@@ -2,108 +2,98 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB1261D06E6
-	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2020 08:07:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C6C41D099F
+	for <lists+dmaengine@lfdr.de>; Wed, 13 May 2020 09:12:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbgEMGHN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 13 May 2020 02:07:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42700 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729395AbgEMGHN (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 13 May 2020 02:07:13 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF4FAC061A0C
-        for <dmaengine@vger.kernel.org>; Tue, 12 May 2020 23:07:12 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jYkWg-000102-4z; Wed, 13 May 2020 08:05:54 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1jYkWf-0003k4-Mm; Wed, 13 May 2020 08:05:53 +0200
-Date:   Wed, 13 May 2020 08:05:53 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     vkoul@kernel.org, shawnguo@kernel.org,
-        u.kleine-koenig@pengutronix.de, robh+dt@kernel.org,
-        festevam@gmail.com, dan.j.williams@intel.com, mark.rutland@arm.com,
-        catalin.marinas@arm.com, will.deacon@arm.com,
-        l.stach@pengutronix.de, martin.fuzzey@flowbird.group,
-        kernel@pengutronix.de, linux-spi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v7 RESEND 05/13] dmaengine: imx-sdma: remove dupilicated
- sdma_load_context
-Message-ID: <20200513060553.GK5877@pengutronix.de>
-References: <1589218356-17475-1-git-send-email-yibin.gong@nxp.com>
- <1589218356-17475-6-git-send-email-yibin.gong@nxp.com>
+        id S1731804AbgEMHM0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 13 May 2020 03:12:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730553AbgEMHM0 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 13 May 2020 03:12:26 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B17E1C061A0F
+        for <dmaengine@vger.kernel.org>; Wed, 13 May 2020 00:12:25 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id b6so888370ljj.1
+        for <dmaengine@vger.kernel.org>; Wed, 13 May 2020 00:12:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=flowbird.group; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IRFk30OEdsBaX3lNynkWDdT0LAUKPWkllb6vWrvUfFU=;
+        b=K5pzuy/Q0DbKRQJhtwBbIhHrErl3UFCylyh40MxEmVKtgp7yEA96J6jzDlnp1Z9lX3
+         L0095lu9fUxrCVlwBbN8u7k/YjU5gQNhOooEFNtUQuKet6vVAPI48KqdvwDDSoWxkmNw
+         +PylWBmbq3ADzq9SmaUFmuSSxZT6qEFLq+V/2QzC90vcKfu7ZAw7q1+eCKk985st/+rD
+         L0WnmVbg1Zay9q2IAo3SswAhLrVPrbQyjbJyS5GnZ/rQoLHTPXPjoZLTn/MHOb9BorNj
+         TxoihN27LfVVuTTxxgi5ohtgAfasA7G6w5fuCLWotsAmKVh4quhdqPwl8wkOmMx30QtM
+         4TuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IRFk30OEdsBaX3lNynkWDdT0LAUKPWkllb6vWrvUfFU=;
+        b=SpmjFN8AEqStTF0k9nJrjRVeRaXsXWjnuh9+TvJurXORFpYjDEopkevpTXKYqGytcg
+         O2VGfpl1Dsv4ND2nNy0npTK0pVBGlQlcc0vcJtPNICKDfUGh6rnhuo1tzZGS2ix/W1HM
+         Tzh00XvYgHLEfgc8kvWJC4WLF2H9MGSl4f7GMdreLVBJtkyrDMxJr9/z9gfvLE+BCMp3
+         2lg4LuHNsWJ4WfS1qi7Y0XwDFlFEp1L56ju3r+jI+8YrMq4J3YkzvHxT2Wrvr1mtRD2u
+         629I4P3qGz8YN3Vd1km5Lf/K9khqAMDfFu6GHuCnkCH03LJbHa8Wy1aKdIcIZI7YxB0G
+         cQdQ==
+X-Gm-Message-State: AOAM530eNuvbrGEdUb4M4+aAFXwEx8B6BxMZexpZ4TdZ+6Uu49TM0Spu
+        lc+Gm7ef4mNFCrPH+ImSpjqM4Reua3mqMXw0t2LzDQ==
+X-Google-Smtp-Source: ABdhPJxOVv0j3JItO5IlLO900Ue/XycQksnMkwQAPd8Io9f7MPELoXRwn0ku6xHMSL2Omjmun1aVBi7/j3xnmT3aaQ4=
+X-Received: by 2002:a2e:8e98:: with SMTP id z24mr16710225ljk.134.1589353944120;
+ Wed, 13 May 2020 00:12:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589218356-17475-6-git-send-email-yibin.gong@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:05:32 up 83 days, 13:36, 87 users,  load average: 0.39, 0.27,
- 0.19
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+References: <1589218356-17475-1-git-send-email-yibin.gong@nxp.com>
+ <1589218356-17475-4-git-send-email-yibin.gong@nxp.com> <20200513060525.GJ5877@pengutronix.de>
+In-Reply-To: <20200513060525.GJ5877@pengutronix.de>
+From:   "Fuzzey, Martin" <martin.fuzzey@flowbird.group>
+Date:   Wed, 13 May 2020 09:12:13 +0200
+Message-ID: <CANh8QzxJg05nXasHfN2kC-G7TOKZ8trJkOP_v0KXvcy6S4df4Q@mail.gmail.com>
+Subject: Re: [PATCH v7 RESEND 03/13] Revert "dmaengine: imx-sdma: fix context cache"
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Robin Gong <yibin.gong@nxp.com>, vkoul@kernel.org,
+        Shawn Guo <shawnguo@kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>, dan.j.williams@intel.com,
+        mark.rutland@arm.com, catalin.marinas@arm.com,
+        Will Deacon <will.deacon@arm.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-In the subject: s/dupilicated/duplicated/
+On Wed, 13 May 2020 at 08:07, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+>
+> On Tue, May 12, 2020 at 01:32:26AM +0800, Robin Gong wrote:
+> > This reverts commit d288bddd8374e0a043ac9dde64a1ae6a09411d74, since
+> > 'context_loaded' finally removed.
+> >
+> > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> > ---
+>
+> I think this can safely be folded into the next patch which makes it
+> more clear what is happening.
+>
 
-Sascha
+Agreed,
+not only that but having 2 separate patches also means that the bug
+that was fixed by the commit being reverted could reappear during
+bisection.
 
-On Tue, May 12, 2020 at 01:32:28AM +0800, Robin Gong wrote:
-> Since sdma_transfer_init() will do sdma_load_context before any
-> sdma transfer, no need once more in sdma_config_channel().
-> 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> Acked-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  drivers/dma/imx-sdma.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> index 397f11d..69ea44d 100644
-> --- a/drivers/dma/imx-sdma.c
-> +++ b/drivers/dma/imx-sdma.c
-> @@ -1137,7 +1137,6 @@ static void sdma_set_watermarklevel_for_p2p(struct sdma_channel *sdmac)
->  static int sdma_config_channel(struct dma_chan *chan)
->  {
->  	struct sdma_channel *sdmac = to_sdma_chan(chan);
-> -	int ret;
->  
->  	sdma_disable_channel(chan);
->  
-> @@ -1177,9 +1176,7 @@ static int sdma_config_channel(struct dma_chan *chan)
->  		sdmac->watermark_level = 0; /* FIXME: M3_BASE_ADDRESS */
->  	}
->  
-> -	ret = sdma_load_context(sdmac);
-> -
-> -	return ret;
-> +	return 0;
->  }
->  
->  static int sdma_set_channel_priority(struct sdma_channel *sdmac,
-> -- 
-> 2.7.4
-> 
-> 
+More generally I think reverts should be reserved for commits that
+later turn out to be wrong or unneeded (ie should never really have
+been applied).
+If they were OK at the time but later become unnecessary due to other
+code changes I think all the related modifications should be done in a
+single normal non revert patch.
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Martin

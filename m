@@ -2,74 +2,53 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D6361D461C
-	for <lists+dmaengine@lfdr.de>; Fri, 15 May 2020 08:48:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D4291D4688
+	for <lists+dmaengine@lfdr.de>; Fri, 15 May 2020 08:58:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbgEOGsS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 15 May 2020 02:48:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54942 "EHLO mail.kernel.org"
+        id S1726665AbgEOG5n (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 15 May 2020 02:57:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726215AbgEOGsS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 15 May 2020 02:48:18 -0400
+        id S1726623AbgEOG5n (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 15 May 2020 02:57:43 -0400
 Received: from localhost (unknown [122.178.196.30])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AFBC2065F;
-        Fri, 15 May 2020 06:48:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 504C1206F1;
+        Fri, 15 May 2020 06:57:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589525298;
-        bh=FalsbYc52oWPaMj/27MdS9atxuelk/cRSZ3Jh4sfRBY=;
+        s=default; t=1589525863;
+        bh=jnCPwiqOh+zJ3vviW4gFRvxdkVv56zAejpkrdVS/M1M=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Uy/jaJM3EKXvApRjU0S/5ZlqgyYVjxujYvnhacmOqXw9I14j6mMUyzXbV9JVAktJ2
-         4FIwyLT0o17yVn7H/ftX7VeA+GPPrCJiy6Ebh2dGvWwDzj+9MHYovuJmFK1SWK8jBC
-         Q56pnu5/30tgT0SWtRC9K6H/lT51xIPumSU+naLs=
-Date:   Fri, 15 May 2020 12:18:11 +0530
+        b=bd6FrTEISeLwQQsUio8f6e/UuDg4BLKeU+zfDaBnwZsR9usUiKyMVXo/liQopANsf
+         rSHYDVg+aMjVYbnaz/GvSxC7slHFAo960hkmom39PtNsKCqpmezYK8hOoOEaCBhznc
+         EvvpFShs8ZwXrq33PSr2H6U9Eab0qbSfvqsMroWU=
+Date:   Fri, 15 May 2020 12:27:32 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>, dmaengine@vger.kernel.org,
-        swathi.kovvuri@intel.com
-Subject: Re: [PATCH v4] dmaengine: cookie bypass for out of order completion
-Message-ID: <20200515064811.GJ333670@vkoul-mobl>
-References: <158924063387.26270.4363255780049839915.stgit@djiang5-desk3.ch.intel.com>
- <4d279eb4-baf8-f504-da30-6a6a963bc521@ti.com>
- <f63a0895-914c-3509-1521-f978f30fb39b@intel.com>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     dmaengine@vger.kernel.org, kernel@pengutronix.de,
+        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
+        Robin Gong <yibin.gong@nxp.com>
+Subject: Re: [PATCH] dmaengine: imx-sdma: initialize all script addresses
+Message-ID: <20200515065732.GK333670@vkoul-mobl>
+References: <20200513060405.18685-1-s.hauer@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f63a0895-914c-3509-1521-f978f30fb39b@intel.com>
+In-Reply-To: <20200513060405.18685-1-s.hauer@pengutronix.de>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 13-05-20, 09:35, Dave Jiang wrote:
-> 
-> 
-> On 5/13/2020 12:30 AM, Peter Ujfalusi wrote:
-> > 
-> > 
-> > On 12/05/2020 2.47, Dave Jiang wrote:
-> > > The cookie tracking in dmaengine expects all submissions completed in
-> > > order. Some DMA devices like Intel DSA can complete submissions out of
-> > > order, especially if configured with a work queue sharing multiple DMA
-> > > engines. Add a status DMA_OUT_OF_ORDER that tx_status can be returned for
-> > > those DMA devices. The user should use callbacks to track the completion
-> > > rather than the DMA cookie. This would address the issue of dmatest
-> > > complaining that descriptors are "busy" when the cookie count goes
-> > > backwards due to out of order completion. Add DMA_COMPLETION_NO_ORDER
-> > > DMA capability to allow the driver to flag the device's ability to complete
-> > > operations out of order.
-> > 
-> > I'm still a bit hesitant around this.
-> > If the DMA only support out of order completion then it is mandatory
-> > that each descriptor must have unique callback parameter in order the
-> > client could know which transfer has been completed.
+On 13-05-20, 08:04, Sascha Hauer wrote:
+> The script addresses array increases with each new version. The driver
+> initializes the array to -EINVAL initially, but only up to the size
+> of the v1 array. Initialize the additional addresses for the newer
+> versions as well. Without this unitialized values of the newer arrays
+> are treated as valid.
 
-Maybe we can still use the cookie to indicate that, or leave it to users
-to manage? They can add an id in the callback params?
-
-Using former is easy, but still user needs to keep track... later can be
-possibly more suited here?
+Applied, thanks
 
 -- 
 ~Vinod

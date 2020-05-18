@@ -2,30 +2,30 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD6B51D87AB
-	for <lists+dmaengine@lfdr.de>; Mon, 18 May 2020 20:54:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC3BE1D87AD
+	for <lists+dmaengine@lfdr.de>; Mon, 18 May 2020 20:54:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729916AbgERSyF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 18 May 2020 14:54:05 -0400
-Received: from mga12.intel.com ([192.55.52.136]:45466 "EHLO mga12.intel.com"
+        id S1729981AbgERSyP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 18 May 2020 14:54:15 -0400
+Received: from mga03.intel.com ([134.134.136.65]:11287 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729913AbgERSyE (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 18 May 2020 14:54:04 -0400
-IronPort-SDR: 4rA7Ni4me6qOl1zHyxku8e/QWEQb+8kxbCufWJA+ZZ7HdrV88ZwiaAAyi/yNOkW7s2vMkIUG+h
- +pHaoQMUS1xg==
+        id S1729960AbgERSyO (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 18 May 2020 14:54:14 -0400
+IronPort-SDR: OiqKDccjH+PEwIkMVtRKky2iNrz7FP/HC1sZ0pvAkhjwMCGl2gvWvHYX11xvuu1rPiTZobG8KQ
+ rnZ5WvaQyedg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 11:54:04 -0700
-IronPort-SDR: 3MUwujKUlwB4ZaHdE/YL026V2VXsr8wSgxrLI7OqCYf8K3l/ny3CPY4hmoL0fMpSJ4V4Fyr5em
- PqaGgGiPdYdg==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 11:54:10 -0700
+IronPort-SDR: LOCXksuhS6J3SWZox9VDZyhkSdJzbosWevFE2tmZFivn4ntaza/jI0KqzzoRGAV5CqpXY6OEKB
+ g5zWSybhRDKg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="308187851"
+   d="scan'208";a="282067521"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by FMSMGA003.fm.intel.com with ESMTP; 18 May 2020 11:54:03 -0700
-Subject: [PATCH v2 7/9] dmaengine: idxd: clean up descriptors with fault
- error
+  by orsmga002.jf.intel.com with ESMTP; 18 May 2020 11:54:09 -0700
+Subject: [PATCH v2 8/9] dmaengine: idxd: add leading / for sysfspath in ABI
+ documentation
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
         bp@alien8.de, hpa@zytor.com, bhelgaas@google.com,
@@ -34,8 +34,8 @@ Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         x86@kernel.org, dan.j.williams@intel.com, ashok.raj@intel.com,
         fenghua.yu@intel.com, tony.luck@intel.com, jing.lin@intel.com,
         sanjay.k.kumar@intel.com, dave.hansen@intel.com
-Date:   Mon, 18 May 2020 11:54:03 -0700
-Message-ID: <158982804328.37989.12023460033817186208.stgit@djiang5-desk3.ch.intel.com>
+Date:   Mon, 18 May 2020 11:54:09 -0700
+Message-ID: <158982804924.37989.17925358688258210666.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <158982749959.37989.2096629611303670415.stgit@djiang5-desk3.ch.intel.com>
 References: <158982749959.37989.2096629611303670415.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/unknown-version
@@ -47,274 +47,220 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add code to "complete" a descriptor when the descriptor or its completion
-address hit a fault error when SVA mode is being used. This error can be
-triggered due to bad programming by the user. A lock is introduced in order
-to protect the descriptor completion lists since the fault handler will run
-from the system work queue after being scheduled in the interrupt handler.
+Correct to standard convention. All sysfs paths seem to be missing leading
+/.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/dma/idxd/idxd.h |    5 ++
- drivers/dma/idxd/init.c |    1 
- drivers/dma/idxd/irq.c  |  143 +++++++++++++++++++++++++++++++++++++++++++----
- 3 files changed, 137 insertions(+), 12 deletions(-)
+ Documentation/ABI/stable/sysfs-driver-dma-idxd |   54 ++++++++++++------------
+ 1 file changed, 27 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 41b973e3b781..885f1f95a64e 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -34,6 +34,11 @@ struct idxd_irq_entry {
- 	int id;
- 	struct llist_head pending_llist;
- 	struct list_head work_list;
-+	/*
-+	 * Lock to protect access between irq thread process descriptor
-+	 * and irq thread processing error descriptor.
-+	 */
-+	spinlock_t list_lock;
- };
+diff --git a/Documentation/ABI/stable/sysfs-driver-dma-idxd b/Documentation/ABI/stable/sysfs-driver-dma-idxd
+index b5bebf642db6..2253bb1550d6 100644
+--- a/Documentation/ABI/stable/sysfs-driver-dma-idxd
++++ b/Documentation/ABI/stable/sysfs-driver-dma-idxd
+@@ -1,47 +1,47 @@
+-What:		sys/bus/dsa/devices/dsa<m>/version
++What:		/sys/bus/dsa/devices/dsa<m>/version
+ Date:		Apr 15, 2020
+ KernelVersion:	5.8.0
+ Contact:	dmaengine@vger.kernel.org
+ Description:	The hardware version number.
  
- struct idxd_group {
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 60da12fdd8c1..7884522ca418 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -94,6 +94,7 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
- 	for (i = 0; i < msixcnt; i++) {
- 		idxd->irq_entries[i].id = i;
- 		idxd->irq_entries[i].idxd = idxd;
-+		spin_lock_init(&idxd->irq_entries[i].list_lock);
- 	}
+-What:           sys/bus/dsa/devices/dsa<m>/cdev_major
++What:           /sys/bus/dsa/devices/dsa<m>/cdev_major
+ Date:           Oct 25, 2019
+ KernelVersion: 	5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:	The major number that the character device driver assigned to
+ 		this device.
  
- 	msix = &idxd->msix_entries[0];
-diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
-index 6052765ca3c8..db64bb82f17c 100644
---- a/drivers/dma/idxd/irq.c
-+++ b/drivers/dma/idxd/irq.c
-@@ -11,6 +11,24 @@
- #include "idxd.h"
- #include "registers.h"
+-What:           sys/bus/dsa/devices/dsa<m>/errors
++What:           /sys/bus/dsa/devices/dsa<m>/errors
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    The error information for this device.
  
-+enum irq_work_type {
-+	IRQ_WORK_NORMAL = 0,
-+	IRQ_WORK_PROCESS_FAULT,
-+};
-+
-+struct idxd_fault {
-+	struct work_struct work;
-+	u64 addr;
-+	struct idxd_device *idxd;
-+};
-+
-+static int irq_process_work_list(struct idxd_irq_entry *irq_entry,
-+				 enum irq_work_type wtype,
-+				 int *processed, u64 data);
-+static int irq_process_pending_llist(struct idxd_irq_entry *irq_entry,
-+				     enum irq_work_type wtype,
-+				     int *processed, u64 data);
-+
- void idxd_device_wqs_clear_state(struct idxd_device *idxd)
- {
- 	int i;
-@@ -56,6 +74,46 @@ static void idxd_device_reinit(struct work_struct *work)
- 	idxd_device_wqs_clear_state(idxd);
- }
+-What:           sys/bus/dsa/devices/dsa<m>/max_batch_size
++What:           /sys/bus/dsa/devices/dsa<m>/max_batch_size
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    The largest number of work descriptors in a batch.
  
-+static void idxd_device_fault_work(struct work_struct *work)
-+{
-+	struct idxd_fault *fault = container_of(work, struct idxd_fault, work);
-+	struct idxd_irq_entry *ie;
-+	int i;
-+	int processed;
-+	int irqcnt = fault->idxd->num_wq_irqs + 1;
-+
-+	for (i = 1; i < irqcnt; i++) {
-+		ie = &fault->idxd->irq_entries[i];
-+		irq_process_work_list(ie, IRQ_WORK_PROCESS_FAULT,
-+				      &processed, fault->addr);
-+		if (processed)
-+			break;
-+
-+		irq_process_pending_llist(ie, IRQ_WORK_PROCESS_FAULT,
-+					  &processed, fault->addr);
-+		if (processed)
-+			break;
-+	}
-+
-+	kfree(fault);
-+}
-+
-+static int idxd_device_schedule_fault_process(struct idxd_device *idxd,
-+					      u64 fault_addr)
-+{
-+	struct idxd_fault *fault;
-+
-+	fault = kmalloc(sizeof(*fault), GFP_ATOMIC);
-+	if (!fault)
-+		return -ENOMEM;
-+
-+	fault->addr = fault_addr;
-+	fault->idxd = idxd;
-+	INIT_WORK(&fault->work, idxd_device_fault_work);
-+	queue_work(idxd->wq, &fault->work);
-+	return 0;
-+}
-+
- irqreturn_t idxd_irq_handler(int vec, void *data)
- {
- 	struct idxd_irq_entry *irq_entry = data;
-@@ -137,6 +195,16 @@ irqreturn_t idxd_misc_thread(int vec, void *data)
- 	if (!err)
- 		return IRQ_HANDLED;
+-What:           sys/bus/dsa/devices/dsa<m>/max_work_queues_size
++What:           /sys/bus/dsa/devices/dsa<m>/max_work_queues_size
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    The maximum work queue size supported by this device.
  
-+	/*
-+	 * This case should rarely happen and typically is due to software
-+	 * programming error by the driver.
-+	 */
-+	if (idxd->sw_err.valid &&
-+	    idxd->sw_err.desc_valid &&
-+	    idxd->sw_err.fault_addr)
-+		idxd_device_schedule_fault_process(idxd,
-+						   idxd->sw_err.fault_addr);
-+
- 	gensts.bits = ioread32(idxd->reg_base + IDXD_GENSTATS_OFFSET);
- 	if (gensts.state == IDXD_DEVICE_STATE_HALT) {
- 		idxd->state = IDXD_DEV_HALTED;
-@@ -163,57 +231,106 @@ irqreturn_t idxd_misc_thread(int vec, void *data)
- 	return IRQ_HANDLED;
- }
+-What:           sys/bus/dsa/devices/dsa<m>/max_engines
++What:           /sys/bus/dsa/devices/dsa<m>/max_engines
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    The maximum number of engines supported by this device.
  
-+static bool process_fault(struct idxd_desc *desc, u64 fault_addr)
-+{
-+	if ((u64)desc->hw == fault_addr ||
-+	    (u64)desc->completion == fault_addr) {
-+		idxd_dma_complete_txd(desc, IDXD_COMPLETE_DEV_FAIL);
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
-+static bool complete_desc(struct idxd_desc *desc)
-+{
-+	if (desc->completion->status) {
-+		idxd_dma_complete_txd(desc, IDXD_COMPLETE_NORMAL);
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- static int irq_process_pending_llist(struct idxd_irq_entry *irq_entry,
--				     int *processed)
-+				     enum irq_work_type wtype,
-+				     int *processed, u64 data)
- {
- 	struct idxd_desc *desc, *t;
- 	struct llist_node *head;
- 	int queued = 0;
-+	bool completed = false;
-+	unsigned long flags;
+-What:           sys/bus/dsa/devices/dsa<m>/max_groups
++What:           /sys/bus/dsa/devices/dsa<m>/max_groups
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    The maximum number of groups can be created under this device.
  
- 	*processed = 0;
- 	head = llist_del_all(&irq_entry->pending_llist);
- 	if (!head)
--		return 0;
-+		goto out;
+-What:           sys/bus/dsa/devices/dsa<m>/max_tokens
++What:           /sys/bus/dsa/devices/dsa<m>/max_tokens
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+@@ -50,7 +50,7 @@ Description:    The total number of bandwidth tokens supported by this device.
+ 		implementation, and these resources are allocated by engines to
+ 		support operations.
  
- 	llist_for_each_entry_safe(desc, t, head, llnode) {
--		if (desc->completion->status) {
--			idxd_dma_complete_txd(desc, IDXD_COMPLETE_NORMAL);
-+		if (wtype == IRQ_WORK_NORMAL)
-+			completed = complete_desc(desc);
-+		else if (wtype == IRQ_WORK_PROCESS_FAULT)
-+			completed = process_fault(desc, data);
-+
-+		if (completed) {
- 			idxd_free_desc(desc->wq, desc);
- 			(*processed)++;
-+			if (wtype == IRQ_WORK_PROCESS_FAULT)
-+				break;
- 		} else {
--			list_add_tail(&desc->list, &irq_entry->work_list);
-+			spin_lock_irqsave(&irq_entry->list_lock, flags);
-+			list_add_tail(&desc->list,
-+				      &irq_entry->work_list);
-+			spin_unlock_irqrestore(&irq_entry->list_lock, flags);
- 			queued++;
- 		}
- 	}
+-What:           sys/bus/dsa/devices/dsa<m>/max_transfer_size
++What:           /sys/bus/dsa/devices/dsa<m>/max_transfer_size
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+@@ -58,57 +58,57 @@ Description:    The number of bytes to be read from the source address to
+ 		perform the operation. The maximum transfer size is dependent on
+ 		the workqueue the descriptor was submitted to.
  
-+ out:
- 	return queued;
- }
+-What:           sys/bus/dsa/devices/dsa<m>/max_work_queues
++What:           /sys/bus/dsa/devices/dsa<m>/max_work_queues
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    The maximum work queue number that this device supports.
  
- static int irq_process_work_list(struct idxd_irq_entry *irq_entry,
--				 int *processed)
-+				 enum irq_work_type wtype,
-+				 int *processed, u64 data)
- {
- 	struct list_head *node, *next;
- 	int queued = 0;
-+	bool completed = false;
-+	unsigned long flags;
+-What:           sys/bus/dsa/devices/dsa<m>/numa_node
++What:           /sys/bus/dsa/devices/dsa<m>/numa_node
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    The numa node number for this device.
  
- 	*processed = 0;
-+	spin_lock_irqsave(&irq_entry->list_lock, flags);
- 	if (list_empty(&irq_entry->work_list))
--		return 0;
-+		goto out;
+-What:           sys/bus/dsa/devices/dsa<m>/op_cap
++What:           /sys/bus/dsa/devices/dsa<m>/op_cap
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    The operation capability bit mask specify the operation types
+ 		supported by the this device.
  
- 	list_for_each_safe(node, next, &irq_entry->work_list) {
- 		struct idxd_desc *desc =
- 			container_of(node, struct idxd_desc, list);
+-What:           sys/bus/dsa/devices/dsa<m>/state
++What:           /sys/bus/dsa/devices/dsa<m>/state
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    The state information of this device. It can be either enabled
+ 		or disabled.
  
--		if (desc->completion->status) {
-+		spin_unlock_irqrestore(&irq_entry->list_lock, flags);
-+		if (wtype == IRQ_WORK_NORMAL)
-+			completed = complete_desc(desc);
-+		else if (wtype == IRQ_WORK_PROCESS_FAULT)
-+			completed = process_fault(desc, data);
-+
-+		if (completed) {
-+			spin_lock_irqsave(&irq_entry->list_lock, flags);
- 			list_del(&desc->list);
--			/* process and callback */
--			idxd_dma_complete_txd(desc, IDXD_COMPLETE_NORMAL);
-+			spin_unlock_irqrestore(&irq_entry->list_lock, flags);
- 			idxd_free_desc(desc->wq, desc);
- 			(*processed)++;
-+			if (wtype == IRQ_WORK_PROCESS_FAULT)
-+				break;
- 		} else {
- 			queued++;
- 		}
-+		spin_lock_irqsave(&irq_entry->list_lock, flags);
- 	}
+-What:           sys/bus/dsa/devices/dsa<m>/group<m>.<n>
++What:           /sys/bus/dsa/devices/dsa<m>/group<m>.<n>
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    The assigned group under this device.
  
-+ out:
-+	spin_unlock_irqrestore(&irq_entry->list_lock, flags);
- 	return queued;
- }
+-What:           sys/bus/dsa/devices/dsa<m>/engine<m>.<n>
++What:           /sys/bus/dsa/devices/dsa<m>/engine<m>.<n>
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    The assigned engine under this device.
  
-@@ -241,12 +358,14 @@ static int idxd_desc_process(struct idxd_irq_entry *irq_entry)
- 	 * 5. Repeat until no more descriptors.
- 	 */
- 	do {
--		rc = irq_process_work_list(irq_entry, &processed);
-+		rc = irq_process_work_list(irq_entry, IRQ_WORK_NORMAL,
-+					   &processed, 0);
- 		total += processed;
- 		if (rc != 0)
- 			continue;
+-What:           sys/bus/dsa/devices/dsa<m>/wq<m>.<n>
++What:           /sys/bus/dsa/devices/dsa<m>/wq<m>.<n>
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    The assigned work queue under this device.
  
--		rc = irq_process_pending_llist(irq_entry, &processed);
-+		rc = irq_process_pending_llist(irq_entry, IRQ_WORK_NORMAL,
-+					       &processed, 0);
- 		total += processed;
- 	} while (rc != 0);
+-What:           sys/bus/dsa/devices/dsa<m>/configurable
++What:           /sys/bus/dsa/devices/dsa<m>/configurable
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    To indicate if this device is configurable or not.
  
+-What:           sys/bus/dsa/devices/dsa<m>/token_limit
++What:           /sys/bus/dsa/devices/dsa<m>/token_limit
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+@@ -116,19 +116,19 @@ Description:    The maximum number of bandwidth tokens that may be in use at
+ 		one time by operations that access low bandwidth memory in the
+ 		device.
+ 
+-What:           sys/bus/dsa/devices/wq<m>.<n>/group_id
++What:           /sys/bus/dsa/devices/wq<m>.<n>/group_id
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    The group id that this work queue belongs to.
+ 
+-What:           sys/bus/dsa/devices/wq<m>.<n>/size
++What:           /sys/bus/dsa/devices/wq<m>.<n>/size
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    The work queue size for this work queue.
+ 
+-What:           sys/bus/dsa/devices/wq<m>.<n>/type
++What:           /sys/bus/dsa/devices/wq<m>.<n>/type
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+@@ -136,20 +136,20 @@ Description:    The type of this work queue, it can be "kernel" type for work
+ 		queue usages in the kernel space or "user" type for work queue
+ 		usages by applications in user space.
+ 
+-What:           sys/bus/dsa/devices/wq<m>.<n>/cdev_minor
++What:           /sys/bus/dsa/devices/wq<m>.<n>/cdev_minor
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    The minor number assigned to this work queue by the character
+ 		device driver.
+ 
+-What:           sys/bus/dsa/devices/wq<m>.<n>/mode
++What:           /sys/bus/dsa/devices/wq<m>.<n>/mode
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    The work queue mode type for this work queue.
+ 
+-What:           sys/bus/dsa/devices/wq<m>.<n>/priority
++What:           /sys/bus/dsa/devices/wq<m>.<n>/priority
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+@@ -157,20 +157,20 @@ Description:    The priority value of this work queue, it is a vlue relative to
+ 		other work queue in the same group to control quality of service
+ 		for dispatching work from multiple workqueues in the same group.
+ 
+-What:           sys/bus/dsa/devices/wq<m>.<n>/state
++What:           /sys/bus/dsa/devices/wq<m>.<n>/state
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    The current state of the work queue.
+ 
+-What:           sys/bus/dsa/devices/wq<m>.<n>/threshold
++What:           /sys/bus/dsa/devices/wq<m>.<n>/threshold
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    The number of entries in this work queue that may be filled
+ 		via a limited portal.
+ 
+-What:           sys/bus/dsa/devices/engine<m>.<n>/group_id
++What:           /sys/bus/dsa/devices/engine<m>.<n>/group_id
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
 

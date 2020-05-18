@@ -2,249 +2,158 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BBC4E1D7B4B
-	for <lists+dmaengine@lfdr.de>; Mon, 18 May 2020 16:32:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E89C1D802A
+	for <lists+dmaengine@lfdr.de>; Mon, 18 May 2020 19:30:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbgEROcV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 18 May 2020 10:32:21 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:36368 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbgEROcU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 18 May 2020 10:32:20 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 63475258;
-        Mon, 18 May 2020 16:32:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1589812337;
-        bh=58B79mQVbrAoLTAOJsYGx4PUL8lmc3pe60bTCt0AP/M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z3uOEheUcbo1ZGH7x5P5rrY70LtaLqOnWbTlrshgf8twlNjV9ESv6bkFzHOOiPoLu
-         5VUoXFoHMQ92NJyQl8wPJHh2CNuzQlRQZvgQMXAra4dEg+5WJqDcdriLxtjBfzMV9j
-         qB3Q44fKsQitqZPC+Wwk/j9jo1hLSaAbXXcNbSBM=
-Date:   Mon, 18 May 2020 17:32:08 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Tejas Upadhyay <tejasu@xilinx.com>,
-        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
-Subject: Re: [PATCH v4 3/6] dmaengine: Add support for repeating transactions
-Message-ID: <20200518143208.GD5851@pendragon.ideasonboard.com>
-References: <20200513165943.25120-1-laurent.pinchart@ideasonboard.com>
- <20200513165943.25120-4-laurent.pinchart@ideasonboard.com>
- <20200514182344.GI14092@vkoul-mobl>
- <20200514200709.GL5955@pendragon.ideasonboard.com>
- <20200515083817.GP333670@vkoul-mobl>
- <20200515141101.GA7186@pendragon.ideasonboard.com>
- <d270d4ca-1928-a11a-3186-bc118c4b8756@ti.com>
+        id S1728494AbgERRaI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 18 May 2020 13:30:08 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46463 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbgERRaI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 18 May 2020 13:30:08 -0400
+Received: by mail-io1-f65.google.com with SMTP id j8so11446468iog.13;
+        Mon, 18 May 2020 10:30:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PTOUdH5q/gBjSGJq+w1TUSNCKtr5l7RbM0PZ63Xd5j8=;
+        b=jj3lOisq5PCegWOA6FiMUZrKwJQATDBOz6vkpBd5S4JFlsjDHQ686xNk+QTQNKBDLv
+         Cje6w/ANIu06epH4y0kOk1GYOpTm6PHyWhfM/L2Me3aB+r8+D7aHgVID+y9e1IunPpo3
+         Qi7NNSJoZKwWfcAr1BIPbW14EY6BanKBnEHW1OBaB9U1hATO1F2O0hH5W8b/kLTzf43M
+         Xuv/x5DqpgkMSYXnZ9X5kQ3du87jGoXTbrBHlrubA9/KKz3YHozZpvHko+dcl7gcqiga
+         pi2wNHVeKT3KOVXrwVixHKzC4ir8z68CMSD52SassV/WDWdNoAJTRj+ZiKDkLt2lgzwc
+         0iyw==
+X-Gm-Message-State: AOAM530k5f/c1XWyy6nMk2xUn5ucrOou65rFQg0TAS3axPGCwrpdMlGn
+        AQoaDaXG5LgWIL6SVvScdA==
+X-Google-Smtp-Source: ABdhPJw0u1Q4n3Qej1lC8o9EuafyzbzxmDa15mtQHzCbN5ErWCc8HFGGdeNFMagt00jnvodcVlJewQ==
+X-Received: by 2002:a02:c959:: with SMTP id u25mr16414471jao.46.1589823006502;
+        Mon, 18 May 2020 10:30:06 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id e12sm4404457ilr.61.2020.05.18.10.30.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 10:30:05 -0700 (PDT)
+Received: (nullmailer pid 12811 invoked by uid 1000);
+        Mon, 18 May 2020 17:30:03 -0000
+Date:   Mon, 18 May 2020 11:30:03 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
+ length property
+Message-ID: <20200518173003.GA13764@bogus>
+References: <20200511210138.GN185537@smile.fi.intel.com>
+ <20200511213531.wnywlljiulvndx6s@mobilestation>
+ <20200512090804.GR185537@smile.fi.intel.com>
+ <20200512114946.x777yb6bhe22ccn5@mobilestation>
+ <20200512123840.GY185537@smile.fi.intel.com>
+ <20200515060911.GF333670@vkoul-mobl>
+ <20200515105137.GK185537@smile.fi.intel.com>
+ <20200515105658.GR333670@vkoul-mobl>
+ <20200515111112.4umynrpgzjnca223@mobilestation>
+ <20200517174739.uis3wfievdcmtsxj@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d270d4ca-1928-a11a-3186-bc118c4b8756@ti.com>
+In-Reply-To: <20200517174739.uis3wfievdcmtsxj@mobilestation>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Peter,
-
-On Mon, May 18, 2020 at 04:57:07PM +0300, Peter Ujfalusi wrote:
-> On 15/05/2020 17.11, Laurent Pinchart wrote:
-> > On Fri, May 15, 2020 at 02:08:17PM +0530, Vinod Koul wrote:
-> >> On 14-05-20, 23:07, Laurent Pinchart wrote:
-> >>> On Thu, May 14, 2020 at 11:53:44PM +0530, Vinod Koul wrote:
-> >>>> On 13-05-20, 19:59, Laurent Pinchart wrote:
-> >>>>> DMA engines used with displays perform 2D interleaved transfers to read
-> >>>>> framebuffers from memory and feed the data to the display engine. As the
-> >>>>> same framebuffer can be displayed for multiple frames, the DMA
-> >>>>> transactions need to be repeated until a new framebuffer replaces the
-> >>>>> current one. This feature is implemented natively by some DMA engines
-> >>>>> that have the ability to repeat transactions and switch to a new
-> >>>>> transaction at the end of a transfer without any race condition or frame
-> >>>>> loss.
-> >>>>>
-> >>>>> This patch implements support for this feature in the DMA engine API. A
-> >>>>> new DMA_PREP_REPEAT transaction flag allows DMA clients to instruct the
-> >>>>> DMA channel to repeat the transaction automatically until one or more
-> >>>>> new transactions are issued on the channel (or until all active DMA
-> >>>>> transfers are explicitly terminated with the dmaengine_terminate_*()
-> >>>>> functions). A new DMA_REPEAT transaction type is also added for DMA
-> >>>>> engine drivers to report their support of the DMA_PREP_REPEAT flag.
-> >>>>>
-> >>>>> The DMA_PREP_REPEAT flag is currently supported for interleaved
-> >>>>> transactions only. Its usage can easily be extended to cover more
-> >>>>> transaction types simply by adding an appropriate check in the
-> >>>>> corresponding dmaengine_prep_*() function.
-> >>>>>
-> >>>>> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> >>>>> ---
-> >>>>> If this approach is accepted I can send a new version that updates
-> >>>>> documentation in Documentation/driver-api/dmaengine/, and extend support
-> >>>>> of DMA_PREP_REPEAT to the other transaction types, if desired already.
-> >>>>>
-> >>>>>  include/linux/dmaengine.h | 10 ++++++++++
-> >>>>>  1 file changed, 10 insertions(+)
-> >>>>>
-> >>>>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> >>>>> index 64461fc64e1b..9fa00bdbf583 100644
-> >>>>> --- a/include/linux/dmaengine.h
-> >>>>> +++ b/include/linux/dmaengine.h
-> >>>>> @@ -61,6 +61,7 @@ enum dma_transaction_type {
-> >>>>>  	DMA_SLAVE,
-> >>>>>  	DMA_CYCLIC,
-> >>>>>  	DMA_INTERLEAVE,
-> >>>>> +	DMA_REPEAT,
-> >>>>>  /* last transaction type for creation of the capabilities mask */
-> >>>>>  	DMA_TX_TYPE_END,
-> >>>>>  };
-> >>>>> @@ -176,6 +177,11 @@ struct dma_interleaved_template {
-> >>>>>   * @DMA_PREP_CMD: tell the driver that the data passed to DMA API is command
-> >>>>>   *  data and the descriptor should be in different format from normal
-> >>>>>   *  data descriptors.
-> >>>>> + * @DMA_PREP_REPEAT: tell the driver that the transaction shall be automatically
-> >>>>> + *  repeated when it ends if no other transaction has been issued on the same
-> >>>>> + *  channel. If other transactions have been issued, this transaction completes
-> >>>>> + *  normally. This flag is only applicable to interleaved transactions and is
-> >>>>> + *  ignored for all other transaction types.
-> 
-> It should not be restricted to interleaved, slave_sg/memcpy/etc can be
-> repeated if the DMA driver implements it (a user on a given platform
-> needs it).
-
-As mentioned in the commit message, I plan to extend that, I just didn't
-want to add the checks to all the prepare operation wrappers until an
-agreement on the approach would be reached. I also thought it would be
-good to not allow this API for other transaction types until use cases
-arise, in order to force upstream discussions instead of silently
-abusing the API :-) I can extend the flag to all other transaction types
-(except for the cyclic transaction, as it doesn't make sense there).
-
-> >>>>>   */
-> >>>>>  enum dma_ctrl_flags {
-> >>>>>  	DMA_PREP_INTERRUPT = (1 << 0),
-> >>>>> @@ -186,6 +192,7 @@ enum dma_ctrl_flags {
-> >>>>>  	DMA_PREP_FENCE = (1 << 5),
-> >>>>>  	DMA_CTRL_REUSE = (1 << 6),
-> >>>>>  	DMA_PREP_CMD = (1 << 7),
-> >>>>> +	DMA_PREP_REPEAT = (1 << 8),
-> >>>>
-> >>>> Thanks for sending this. I think this is a good proposal which Peter
-> >>>> made for solving this issue and it has great merits, but this is
-> >>>> incomplete.
-> >>>>
-> >>>> DMA_PREP_REPEAT|RELOAD should only imply repeating of transactions,
-> >>>> nothing else. I would like to see APIs having explicit behaviour, so let
-> >>>> us also add another flag DMA_PREP_LOAD_NEXT|NEW to indicate that the
-> >>>> next transactions will replace the current one when submitted after calling
-> >>>> .issue_pending().
-> >>>>
-> >>>> Also it makes sense to explicitly specify when the transaction should be
-> >>>> reloaded. Rather than make a guesswork based on hardware support, we
-> >>>> should specify the EOB/EOT in these flags as well.
-> >>>>
-> >>>> Next is callback notification mechanism and when it should be invoked.
-> >>>> EOT is today indicated by DMA_PREP_INTERRUPT, EOB needs to be added.
-> >>>>
-> >>>> So to summarize your driver needs to invoke
-> >>>> DMA_PREP_REPEAT|DMA_PREP_LOAD_NEXT|DMA_LOAD_EOT|DMA_PREP_INTERRUPT
-> >>>> specifying that the transactions are repeated untill next one pops up
-> >>>> and replaced at EOT with callbacks being invoked at EOT boundaries.
+On Sun, May 17, 2020 at 08:47:39PM +0300, Serge Semin wrote:
+> On Fri, May 15, 2020 at 02:11:13PM +0300, Serge Semin wrote:
+> > On Fri, May 15, 2020 at 04:26:58PM +0530, Vinod Koul wrote:
+> > > On 15-05-20, 13:51, Andy Shevchenko wrote:
+> > > > On Fri, May 15, 2020 at 11:39:11AM +0530, Vinod Koul wrote:
+> > > > > On 12-05-20, 15:38, Andy Shevchenko wrote:
+> > > > > > On Tue, May 12, 2020 at 02:49:46PM +0300, Serge Semin wrote:
+> > > > > > > On Tue, May 12, 2020 at 12:08:04PM +0300, Andy Shevchenko wrote:
+> > > > > > > > On Tue, May 12, 2020 at 12:35:31AM +0300, Serge Semin wrote:
+> > > > > > > > > On Tue, May 12, 2020 at 12:01:38AM +0300, Andy Shevchenko wrote:
+> > > > > > > > > > On Mon, May 11, 2020 at 11:05:28PM +0300, Serge Semin wrote:
+> > > > > > > > > > > On Fri, May 08, 2020 at 02:12:42PM +0300, Andy Shevchenko wrote:
+> > > > > > > > > > > > On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
+> > > > 
+> > > > ...
+> > > > 
+> > > > > > I leave it to Rob and Vinod.
+> > > > > > It won't break our case, so, feel free with your approach.
+> > > > > 
+> > > > > I agree the DT is about describing the hardware and looks like value of
+> > > > > 1 is not allowed. If allowed it should be added..
+> > > > 
+> > > > It's allowed at *run time*, it's illegal in *pre-silicon stage* when
+> > > > synthesizing the IP.
+> > > 
+> > > Then it should be added ..
 > > 
-> > Peter, what do you think ?
+> > Vinod, max-burst-len is "MAXimum" burst length not "run-time or current or any
+> > other" burst length. It's a constant defined at the IP-core synthesis stage and
+> > according to the Data Book, MAX burst length can't be 1. The allowed values are
+> > exactly as I described in the binding [4, 8, 16, 32, ...]. MAX burst length
+> > defines the upper limit of the run-time burst length. So setting it to 1 isn't
+> > about describing a hardware, but using DT for the software convenience.
+> > 
+> > -Sergey
 > 
-> Well, I'm in between ;)
+> Vinod, to make this completely clear. According to the DW DMAC data book:
+> - In general, run-time parameter of the DMA transaction burst length (set in
+>   the SRC_MSIZE/DST_MSIZE fields of the channel control register) may belong
+>   to the set [1, 4, 8, 16, 32, 64, 128, 256].
+> - Actual upper limit of the burst length run-time parameter is limited by a
+>   constant defined at the IP-synthesize stage (it's called DMAH_CHx_MAX_MULT_SIZE)
+>   and this constant belongs to the set [4, 8, 16, 32, 64, 128, 256]. (See, no 1
+>   in this set).
 > 
-> You have a dedicated DMA which can do one thing - to service display.
-> DMAengine provides generic API for DMA use users.
+> So the run-time burst length in a case of particular DW DMA controller belongs
+> to the range:
+> 1 <= SRC_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
+> and
+> 1 <= DST_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
 > 
-> The DMA_PREP_REPEAT is a new flag for a descriptor, imho it can be
-> introduced without breaking anything which exists today.
+> See. No mater which DW DMA controller we get each of them will at least support
+> the burst length of 1 and 4 transfer words. This is determined by design of the
+> DW DMA controller IP since DMAH_CHx_MAX_MULT_SIZE constant set starts with 4.
 > 
-> DMA_PREP_REPEAT - the descriptor should be repeated until the channel is
-> terminated with terminate_all.
-
-No concern about DMA_PREP_REPEAT, I like the idea.
-
-> DMA_PREP_LOAD_EOT - the descriptor should be loaded at the next EOT of
-> the currently running transfer, if any, otherwise start.
-
-Why is this needed ? Why can't this be the default behaviour ? What the
-use case for queuing a descriptor with DMA_PREP_REPEAT and *not* setting
-DMA_PREP_LOAD_EOT on the next one ? If a client queues the next
-descriptor without DMA_PREP_LOAD_EOT, the DMA engine will keep repeating
-the previous one, the client will hang forever waiting for the switch to
-the new descriptor that will never happen, and no error message or other
-diagnostic information will be provided. This creates an API that as no
-purpose (or at least no specified purpose, if there's an actual use case
-for not specifying that flag, I'm willing to discuss it) and makes it
-easy to shoot oneself in the foot. A good API should be impossible to
-misuse (this can of course not always be achieved in practice, but it's
-still a good goal to aim for).
-
-And this doesn't even mention DMA_PREP_LOAD_NEXT, that seems equally
-design as a way to maximize chances that drivers will get something
-wrong :-)
-
-> DMA_PREP_INTERRUPT - as it is today. Callback at EOT (for
-> slave_sg/interleaved/memcpy/etc, cyclic interprets this differently -
-> callback at period elapse time).
+> In this patch I suggest to add the max-burst-len property, which specifies
+> the upper limit for the run-time burst length. Since the maximum burst length
+> capable to be set to the SRC_MSIZE/DST_MSIZE fields of the DMA channel control
+> register is determined by the DMAH_CHx_MAX_MULT_SIZE constant (which can't be 1
+> by the DW DMA IP design), max-burst-len property as being also responsible for
+> the maximum burst length setting should be associated with DMAH_CHx_MAX_MULT_SIZE
+> thus should belong to the same set [4, 8, 16, 32, 64, 128, 256].
 > 
-> So you would set DMA_PREP_REPEAT | DMA_PREP_LOAD_EOT (|
-> DMA_PREP_INTERRUPT if you need callbacks at EOT).
+> So 1 shouldn't be in the enum of the max-burst-len property constraint, because
+> hardware doesn't support such limitation by design, while setting 1 as
+> max-burst-len would mean incorrect description of the DMA controller.
 > 
-> The capabilities of the device/channel should tell the user if it is
-> capable of REPEAT and LOAD_EOT.
-> It is possible that a DMA can do repeat, but lacks the ability to do any
-> type of LOAD_*
+> Vinod, could you take a look at the info I provided above and say your final word
+> whether 1 should be really allowed to be in the max-burst-len enum constraints?
+> I'll do as you say in the next version of the patchset.
 
-This is the kind of information I was looking for, thanks. I agree that
-some DMA engines may not be able to replace a repeated transfer (I'm
-using the word repeated here instead of cyclic, to avoid confusion with
-the existing cyclic transfer type) at EOT. I however assume they would
-all have the ability to replace it immediately, as DMA engines are
-required to implement terminate_all(), and replacing a transfer
-immediately can then just be a combination of terminate_all() + starting
-the next transfer. Whether we want DMA engines to implement this
-internally instead of having the logical on the client side (as done
-today) is another question, and I'm not pushing in one direction or
-another here (although I think we could explore the option of
-implementing this in the DMA engine core).
+I generally think the synthesis time IP configuration should be implied 
+by the compatible string which is why we have SoC specific compatible 
+strings (Of course I dream for IP vendors to make all that discoverable 
+which is only occasionally the case). There are exceptions to this. If 
+one SoC has the same IP configured in different ways, then we'd probably 
+have properties for the differences.
 
-Having a capability flag to report if a DMA engine supports replacing a
-repeated transfer at EOT makes sense (no idea if we will have DMA
-engines supporting DMA_REPEAT but not DMA_LOAD_EOT, but that's another
-story, at least in theory it could happen). I hwoever don't see what a
-DMA_PREP_LOAD_EOT flag is needed, if this feature isn't supported,
-shouldn't tx_submit() and/or issue_pending() fail when a repeated
-transfer is queued ? Succeeding in tx_submit() and issue_pending() and
-doing nothing with the newly queued transfers is, as I explained above,
-a very good way to increase the chance of bugs. I don't see a reason why
-accepting a call that we know will not perform what the caller expects
-it to perform whould be a good idea.
+As to whether h/w configuration is okay in DT, the answer is yes. The 
+question is whether it is determined by SoC, board, OS and also who 
+would set it and how often. Something tuned per board and independent of 
+the OS/user is the ideal example. 
 
-> I think this would give a nice starting point to extend on later.
-> 
-> >>> Are you *serious* ? I feel trapped in a cross-over of Groundhog Day and
-> >>> Brazil.
-> >>
-> >> Sorry, I don't understand that reference!
-> >>
-> >> Nevertheless, you want a behaviour which is somehow defined by your use
-> >> and magically implies certain conditions. I do not want it that way.
-> >> I would rather see all the flag required.
-> >>
-> >>>> @Peter, did I miss anything else in this..? Please send the patch for
-> >>>> this (to start with just the headers so that Laurent can start
-> >>>> using them) and detailed patch with documentation as follow up, I trust
-> >>>> you two can coordinate :)
-> >>>
-> >>> I won't call that coordination, no. If you want to design something
-> >>> absurd that's your call, not mine, I don't want to get involved.
-> >>
-> >> Your wish!
-
--- 
-Regards,
-
-Laurent Pinchart
+Rob

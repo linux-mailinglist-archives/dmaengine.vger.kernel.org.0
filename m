@@ -2,29 +2,29 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F6041D87A6
-	for <lists+dmaengine@lfdr.de>; Mon, 18 May 2020 20:53:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DB641D87A8
+	for <lists+dmaengine@lfdr.de>; Mon, 18 May 2020 20:53:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729759AbgERSxr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 18 May 2020 14:53:47 -0400
-Received: from mga12.intel.com ([192.55.52.136]:45446 "EHLO mga12.intel.com"
+        id S1729860AbgERSxy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 18 May 2020 14:53:54 -0400
+Received: from mga14.intel.com ([192.55.52.115]:62847 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728402AbgERSxr (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 18 May 2020 14:53:47 -0400
-IronPort-SDR: nrGUMtweBnd0yxZVeJmxHiYQEXnNcT2Ci1p7vHxDJzHxnAffDFWJvXKR5U2PxFCzA8tFkJV5oT
- /5DhG1CgI61w==
+        id S1728402AbgERSxy (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 18 May 2020 14:53:54 -0400
+IronPort-SDR: q0jUD/OXjGupPiz85M8+KOdNyqD5ejQneUZ45UUZiaIIk3a8so1zovxv4u3gohRqgmTZW45601
+ n1+05FKaONbA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 11:53:45 -0700
-IronPort-SDR: Bg1QMARvGuzCv59H26ZP+22rmzA4DKxdSraa/tcQJTiju/ApMUvGLQyl7e+7Gguuvhptp98YTo
- Ayq8oFW6oVSA==
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2020 11:53:52 -0700
+IronPort-SDR: 2Dohkz6To4PRv8j710FsqBF2+CmtR4djVHcnH3XjbHrsZl97EkcbadFDqUnYWntE/4n6hR83Ke
+ XCLNKeIfcUJw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,407,1583222400"; 
-   d="scan'208";a="288676529"
+   d="scan'208";a="465860931"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga004.fm.intel.com with ESMTP; 18 May 2020 11:53:45 -0700
-Subject: [PATCH v2 4/9] dmaengine: idxd: add work queue drain support
+  by fmsmga006.fm.intel.com with ESMTP; 18 May 2020 11:53:51 -0700
+Subject: [PATCH v2 5/9] dmaengine: idxd: move submission to sbitmap_queue
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
         bp@alien8.de, hpa@zytor.com, bhelgaas@google.com,
@@ -33,8 +33,8 @@ Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         x86@kernel.org, dan.j.williams@intel.com, ashok.raj@intel.com,
         fenghua.yu@intel.com, tony.luck@intel.com, jing.lin@intel.com,
         sanjay.k.kumar@intel.com, dave.hansen@intel.com
-Date:   Mon, 18 May 2020 11:53:45 -0700
-Message-ID: <158982802507.37989.2046311472515318937.stgit@djiang5-desk3.ch.intel.com>
+Date:   Mon, 18 May 2020 11:53:51 -0700
+Message-ID: <158982803103.37989.17841991953662562685.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <158982749959.37989.2096629611303670415.stgit@djiang5-desk3.ch.intel.com>
 References: <158982749959.37989.2096629611303670415.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/unknown-version
@@ -46,632 +46,268 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add wq drain support. When a wq is being released, it needs to wait for
-all in-flight operation to complete.  A device control function
-idxd_wq_drain() has been added to facilitate this. A wq drain call
-is added to the char dev on release to make sure all user operations are
-complete. A wq drain is also added before the wq is being disabled.
-
-A drain command can take an unpredictable period of time. Interrupt support
-for device commands is added to allow waiting on the command to
-finish. If a previous command is in progress, the new submitter can block
-until the current command is finished before proceeding. The interrupt
-based submission will submit the command and then wait until a command
-completion interrupt happens to complete. All commands are moved to the
-interrupt based command submission except for the device reset during
-probe, which will be polled.
+Kill the percpu-rwsem for work submission in favor of an sbitmap_queue.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/dma/idxd/cdev.c   |    3 +
- drivers/dma/idxd/device.c |  156 ++++++++++++++++++++-------------------------
- drivers/dma/idxd/idxd.h   |   11 ++-
- drivers/dma/idxd/init.c   |   14 ++--
- drivers/dma/idxd/irq.c    |   41 +++++-------
- drivers/dma/idxd/sysfs.c  |   22 ++----
- 6 files changed, 115 insertions(+), 132 deletions(-)
+ drivers/dma/Kconfig       |    2 +
+ drivers/dma/idxd/device.c |   14 ++++-----
+ drivers/dma/idxd/idxd.h   |    6 +---
+ drivers/dma/idxd/init.c   |   20 ------------
+ drivers/dma/idxd/submit.c |   74 +++++++++++++++++++++++----------------------
+ 5 files changed, 46 insertions(+), 70 deletions(-)
 
-diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index ff49847e37a8..f9fc58966207 100644
---- a/drivers/dma/idxd/cdev.c
-+++ b/drivers/dma/idxd/cdev.c
-@@ -104,6 +104,9 @@ static int idxd_cdev_release(struct inode *node, struct file *filep)
- 	dev_dbg(dev, "%s called\n", __func__);
- 	filep->private_data = NULL;
- 
-+	/* Wait for in-flight operations to complete. */
-+	idxd_wq_drain(wq);
-+
- 	kfree(ctx);
- 	idxd_wq_put(wq);
- 	return 0;
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 037ada9cc056..e817781b656a 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -284,8 +284,8 @@ config INTEL_IDMA64
+ config INTEL_IDXD
+ 	tristate "Intel Data Accelerators support"
+ 	depends on PCI && X86_64
++	depends on SBITMAP
+ 	select DMA_ENGINE
+-	select SBITMAP
+ 	help
+ 	  Enable support for the Intel(R) data accelerators present
+ 	  in Intel Xeon CPU.
 diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index f4f64d4678a4..8fe344412bd9 100644
+index 8fe344412bd9..95b8820ef087 100644
 --- a/drivers/dma/idxd/device.c
 +++ b/drivers/dma/idxd/device.c
-@@ -11,8 +11,8 @@
+@@ -160,16 +160,14 @@ static int alloc_descs(struct idxd_wq *wq, int num)
+ int idxd_wq_alloc_resources(struct idxd_wq *wq)
+ {
+ 	struct idxd_device *idxd = wq->idxd;
+-	struct idxd_group *group = wq->group;
+ 	struct device *dev = &idxd->pdev->dev;
+ 	int rc, num_descs, i;
+ 
+ 	if (wq->type != IDXD_WQT_KERNEL)
+ 		return 0;
+ 
+-	num_descs = wq->size +
+-		idxd->hw.gen_cap.max_descs_per_engine * group->num_engines;
+-	wq->num_descs = num_descs;
++	wq->num_descs = wq->size;
++	num_descs = wq->size;
+ 
+ 	rc = alloc_hw_descs(wq, num_descs);
+ 	if (rc < 0)
+@@ -187,8 +185,8 @@ int idxd_wq_alloc_resources(struct idxd_wq *wq)
+ 	if (rc < 0)
+ 		goto fail_alloc_descs;
+ 
+-	rc = sbitmap_init_node(&wq->sbmap, num_descs, -1, GFP_KERNEL,
+-			       dev_to_node(dev));
++	rc = sbitmap_queue_init_node(&wq->sbq, num_descs, -1, false, GFP_KERNEL,
++				     dev_to_node(dev));
+ 	if (rc < 0)
+ 		goto fail_sbitmap_init;
+ 
+@@ -201,7 +199,7 @@ int idxd_wq_alloc_resources(struct idxd_wq *wq)
+ 			sizeof(struct dsa_completion_record) * i;
+ 		desc->id = i;
+ 		desc->wq = wq;
+-
++		desc->cpu = -1;
+ 		dma_async_tx_descriptor_init(&desc->txd, &wq->dma_chan);
+ 		desc->txd.tx_submit = idxd_dma_tx_submit;
+ 	}
+@@ -227,7 +225,7 @@ void idxd_wq_free_resources(struct idxd_wq *wq)
+ 	free_hw_descs(wq);
+ 	free_descs(wq);
+ 	dma_free_coherent(dev, wq->compls_size, wq->compls, wq->compls_addr);
+-	sbitmap_free(&wq->sbmap);
++	sbitmap_queue_free(&wq->sbq);
+ }
+ 
+ int idxd_wq_enable(struct idxd_wq *wq)
+diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+index 013d68d42bc4..0769354df4cf 100644
+--- a/drivers/dma/idxd/idxd.h
++++ b/drivers/dma/idxd/idxd.h
+@@ -104,7 +104,6 @@ struct idxd_wq {
+ 	enum idxd_wq_state state;
+ 	unsigned long flags;
+ 	union wqcfg wqcfg;
+-	atomic_t dq_count;	/* dedicated queue flow control */
+ 	u32 vec_ptr;		/* interrupt steering */
+ 	struct dsa_hw_desc **hw_descs;
+ 	int num_descs;
+@@ -112,10 +111,8 @@ struct idxd_wq {
+ 	dma_addr_t compls_addr;
+ 	int compls_size;
+ 	struct idxd_desc **descs;
+-	struct sbitmap sbmap;
++	struct sbitmap_queue sbq;
+ 	struct dma_chan dma_chan;
+-	struct percpu_rw_semaphore submit_lock;
+-	wait_queue_head_t submit_waitq;
+ 	char name[WQ_NAME_SIZE + 1];
+ };
+ 
+@@ -205,6 +202,7 @@ struct idxd_desc {
+ 	struct llist_node llnode;
+ 	struct list_head list;
+ 	int id;
++	int cpu;
+ 	struct idxd_wq *wq;
+ };
+ 
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index 51cdf77038dc..c7c61974f20f 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -141,17 +141,6 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
+ 	return rc;
+ }
+ 
+-static void idxd_wqs_free_lock(struct idxd_device *idxd)
+-{
+-	int i;
+-
+-	for (i = 0; i < idxd->max_wqs; i++) {
+-		struct idxd_wq *wq = &idxd->wqs[i];
+-
+-		percpu_free_rwsem(&wq->submit_lock);
+-	}
+-}
+-
+ static int idxd_setup_internals(struct idxd_device *idxd)
+ {
+ 	struct device *dev = &idxd->pdev->dev;
+@@ -182,19 +171,11 @@ static int idxd_setup_internals(struct idxd_device *idxd)
+ 
+ 	for (i = 0; i < idxd->max_wqs; i++) {
+ 		struct idxd_wq *wq = &idxd->wqs[i];
+-		int rc;
+ 
+ 		wq->id = i;
+ 		wq->idxd = idxd;
+ 		mutex_init(&wq->wq_lock);
+-		atomic_set(&wq->dq_count, 0);
+-		init_waitqueue_head(&wq->submit_waitq);
+ 		wq->idxd_cdev.minor = -1;
+-		rc = percpu_init_rwsem(&wq->submit_lock);
+-		if (rc < 0) {
+-			idxd_wqs_free_lock(idxd);
+-			return rc;
+-		}
+ 	}
+ 
+ 	for (i = 0; i < idxd->max_engines; i++) {
+@@ -464,7 +445,6 @@ static void idxd_remove(struct pci_dev *pdev)
+ 	dev_dbg(&pdev->dev, "%s called\n", __func__);
+ 	idxd_cleanup_sysfs(idxd);
+ 	idxd_shutdown(pdev);
+-	idxd_wqs_free_lock(idxd);
+ 	mutex_lock(&idxd_idr_lock);
+ 	idr_remove(&idxd_idrs[idxd->type], idxd->id);
+ 	mutex_unlock(&idxd_idr_lock);
+diff --git a/drivers/dma/idxd/submit.c b/drivers/dma/idxd/submit.c
+index 45a0c5869a0a..156a1ee233aa 100644
+--- a/drivers/dma/idxd/submit.c
++++ b/drivers/dma/idxd/submit.c
+@@ -8,61 +8,61 @@
  #include "idxd.h"
  #include "registers.h"
  
--static int idxd_cmd_wait(struct idxd_device *idxd, u32 *status, int timeout);
--static int idxd_cmd_send(struct idxd_device *idxd, int cmd_code, u32 operand);
-+static void idxd_cmd_exec(struct idxd_device *idxd, int cmd_code, u32 operand,
-+			  u32 *status);
- 
- /* Interrupt control bits */
- int idxd_mask_msix_vector(struct idxd_device *idxd, int vec_id)
-@@ -235,21 +235,13 @@ int idxd_wq_enable(struct idxd_wq *wq)
- 	struct idxd_device *idxd = wq->idxd;
- 	struct device *dev = &idxd->pdev->dev;
- 	u32 status;
--	int rc;
--
--	lockdep_assert_held(&idxd->dev_lock);
- 
- 	if (wq->state == IDXD_WQ_ENABLED) {
- 		dev_dbg(dev, "WQ %d already enabled\n", wq->id);
- 		return -ENXIO;
- 	}
- 
--	rc = idxd_cmd_send(idxd, IDXD_CMD_ENABLE_WQ, wq->id);
--	if (rc < 0)
--		return rc;
--	rc = idxd_cmd_wait(idxd, &status, IDXD_REG_TIMEOUT);
--	if (rc < 0)
--		return rc;
-+	idxd_cmd_exec(idxd, IDXD_CMD_ENABLE_WQ, wq->id, &status);
- 
- 	if (status != IDXD_CMDSTS_SUCCESS &&
- 	    status != IDXD_CMDSTS_ERR_WQ_ENABLED) {
-@@ -267,9 +259,7 @@ int idxd_wq_disable(struct idxd_wq *wq)
- 	struct idxd_device *idxd = wq->idxd;
- 	struct device *dev = &idxd->pdev->dev;
- 	u32 status, operand;
--	int rc;
- 
--	lockdep_assert_held(&idxd->dev_lock);
- 	dev_dbg(dev, "Disabling WQ %d\n", wq->id);
- 
- 	if (wq->state != IDXD_WQ_ENABLED) {
-@@ -278,12 +268,7 @@ int idxd_wq_disable(struct idxd_wq *wq)
- 	}
- 
- 	operand = BIT(wq->id % 16) | ((wq->id / 16) << 16);
--	rc = idxd_cmd_send(idxd, IDXD_CMD_DISABLE_WQ, operand);
--	if (rc < 0)
--		return rc;
--	rc = idxd_cmd_wait(idxd, &status, IDXD_REG_TIMEOUT);
--	if (rc < 0)
--		return rc;
-+	idxd_cmd_exec(idxd, IDXD_CMD_DISABLE_WQ, operand, &status);
- 
- 	if (status != IDXD_CMDSTS_SUCCESS) {
- 		dev_dbg(dev, "WQ disable failed: %#x\n", status);
-@@ -295,6 +280,23 @@ int idxd_wq_disable(struct idxd_wq *wq)
- 	return 0;
- }
- 
-+void idxd_wq_drain(struct idxd_wq *wq)
-+{
-+	struct idxd_device *idxd = wq->idxd;
-+	struct device *dev = &idxd->pdev->dev;
-+	u32 operand;
+-struct idxd_desc *idxd_alloc_desc(struct idxd_wq *wq, enum idxd_op_type optype)
++static struct idxd_desc *__get_desc(struct idxd_wq *wq, int idx, int cpu)
+ {
+ 	struct idxd_desc *desc;
+-	int idx;
 +
-+	if (wq->state != IDXD_WQ_ENABLED) {
-+		dev_dbg(dev, "WQ %d in wrong state: %d\n", wq->id, wq->state);
-+		return;
-+	}
-+
-+	dev_dbg(dev, "Draining WQ %d\n", wq->id);
-+	operand = BIT(wq->id % 16) | ((wq->id / 16) << 16);
-+	idxd_cmd_exec(idxd, IDXD_CMD_DRAIN_WQ, operand, NULL);
-+	dev_dbg(dev, "WQ %d drained\n", wq->id);
++	desc = wq->descs[idx];
++	memset(desc->hw, 0, sizeof(struct dsa_hw_desc));
++	memset(desc->completion, 0, sizeof(struct dsa_completion_record));
++	desc->cpu = cpu;
++	return desc;
 +}
 +
- int idxd_wq_map_portal(struct idxd_wq *wq)
- {
++struct idxd_desc *idxd_alloc_desc(struct idxd_wq *wq, enum idxd_op_type optype)
++{
++	int cpu, idx;
  	struct idxd_device *idxd = wq->idxd;
-@@ -356,66 +358,79 @@ static inline bool idxd_is_enabled(struct idxd_device *idxd)
- 	return false;
- }
++	DEFINE_SBQ_WAIT(wait);
++	struct sbq_wait_state *ws;
++	struct sbitmap_queue *sbq;
  
--static int idxd_cmd_wait(struct idxd_device *idxd, u32 *status, int timeout)
-+/*
-+ * This is function is only used for reset during probe and will
-+ * poll for completion. Once the device is setup with interrupts,
-+ * all commands will be done via interrupt completion.
-+ */
-+void idxd_device_init_reset(struct idxd_device *idxd)
- {
--	u32 sts, to = timeout;
+ 	if (idxd->state != IDXD_DEV_ENABLED)
+ 		return ERR_PTR(-EIO);
+ 
+-	if (optype == IDXD_OP_BLOCK)
+-		percpu_down_read(&wq->submit_lock);
+-	else if (!percpu_down_read_trylock(&wq->submit_lock))
+-		return ERR_PTR(-EBUSY);
 -
--	lockdep_assert_held(&idxd->dev_lock);
--	sts = ioread32(idxd->reg_base + IDXD_CMDSTS_OFFSET);
--	while (sts & IDXD_CMDSTS_ACTIVE && --to) {
--		cpu_relax();
--		sts = ioread32(idxd->reg_base + IDXD_CMDSTS_OFFSET);
--	}
-+	struct device *dev = &idxd->pdev->dev;
-+	union idxd_command_reg cmd;
-+	unsigned long flags;
- 
--	if (to == 0 && sts & IDXD_CMDSTS_ACTIVE) {
--		dev_warn(&idxd->pdev->dev, "%s timed out!\n", __func__);
--		*status = 0;
--		return -EBUSY;
--	}
-+	memset(&cmd, 0, sizeof(cmd));
-+	cmd.cmd = IDXD_CMD_RESET_DEVICE;
-+	dev_dbg(dev, "%s: sending reset for init.\n", __func__);
-+	spin_lock_irqsave(&idxd->dev_lock, flags);
-+	iowrite32(cmd.bits, idxd->reg_base + IDXD_CMD_OFFSET);
- 
--	*status = sts;
--	return 0;
-+	while (ioread32(idxd->reg_base + IDXD_CMDSTS_OFFSET) &
-+	       IDXD_CMDSTS_ACTIVE)
-+		cpu_relax();
-+	spin_unlock_irqrestore(&idxd->dev_lock, flags);
- }
- 
--static int idxd_cmd_send(struct idxd_device *idxd, int cmd_code, u32 operand)
-+static void idxd_cmd_exec(struct idxd_device *idxd, int cmd_code, u32 operand,
-+			  u32 *status)
- {
- 	union idxd_command_reg cmd;
--	int rc;
--	u32 status;
+-	if (!atomic_add_unless(&wq->dq_count, 1, wq->size)) {
+-		int rc;
 -
--	lockdep_assert_held(&idxd->dev_lock);
--	rc = idxd_cmd_wait(idxd, &status, IDXD_REG_TIMEOUT);
--	if (rc < 0)
--		return rc;
-+	DECLARE_COMPLETION_ONSTACK(done);
-+	unsigned long flags;
+-		if (optype == IDXD_OP_NONBLOCK) {
+-			percpu_up_read(&wq->submit_lock);
++	sbq = &wq->sbq;
++	idx = sbitmap_queue_get(sbq, &cpu);
++	if (idx < 0) {
++		if (optype == IDXD_OP_NONBLOCK)
+ 			return ERR_PTR(-EAGAIN);
+-		}
+-
+-		percpu_up_read(&wq->submit_lock);
+-		percpu_down_write(&wq->submit_lock);
+-		rc = wait_event_interruptible(wq->submit_waitq,
+-					      atomic_add_unless(&wq->dq_count,
+-								1, wq->size) ||
+-					       idxd->state != IDXD_DEV_ENABLED);
+-		percpu_up_write(&wq->submit_lock);
+-		if (rc < 0)
+-			return ERR_PTR(-EINTR);
+-		if (idxd->state != IDXD_DEV_ENABLED)
+-			return ERR_PTR(-EIO);
+ 	} else {
+-		percpu_up_read(&wq->submit_lock);
++		return __get_desc(wq, idx, cpu);
+ 	}
  
- 	memset(&cmd, 0, sizeof(cmd));
- 	cmd.cmd = cmd_code;
- 	cmd.operand = operand;
-+	cmd.int_req = 1;
+-	idx = sbitmap_get(&wq->sbmap, 0, false);
+-	if (idx < 0) {
+-		atomic_dec(&wq->dq_count);
+-		return ERR_PTR(-EAGAIN);
++	ws = &sbq->ws[0];
++	for (;;) {
++		sbitmap_prepare_to_wait(sbq, ws, &wait, TASK_INTERRUPTIBLE);
++		if (signal_pending_state(TASK_INTERRUPTIBLE, current))
++			break;
++		idx = sbitmap_queue_get(sbq, &cpu);
++		if (idx > 0)
++			break;
++		schedule();
+ 	}
+ 
+-	desc = wq->descs[idx];
+-	memset(desc->hw, 0, sizeof(struct dsa_hw_desc));
+-	memset(desc->completion, 0, sizeof(struct dsa_completion_record));
+-	return desc;
++	sbitmap_finish_wait(sbq, ws, &wait);
++	if (idx < 0)
++		return ERR_PTR(-EAGAIN);
 +
-+	spin_lock_irqsave(&idxd->dev_lock, flags);
-+	wait_event_lock_irq(idxd->cmd_waitq,
-+			    !test_bit(IDXD_FLAG_CMD_RUNNING, &idxd->flags),
-+			    idxd->dev_lock);
-+
- 	dev_dbg(&idxd->pdev->dev, "%s: sending cmd: %#x op: %#x\n",
- 		__func__, cmd_code, operand);
-+
-+	__set_bit(IDXD_FLAG_CMD_RUNNING, &idxd->flags);
-+	idxd->cmd_done = &done;
- 	iowrite32(cmd.bits, idxd->reg_base + IDXD_CMD_OFFSET);
- 
--	return 0;
-+	/*
-+	 * After command submitted, release lock and go to sleep until
-+	 * the command completes via interrupt.
-+	 */
-+	spin_unlock_irqrestore(&idxd->dev_lock, flags);
-+	wait_for_completion(&done);
-+	spin_lock_irqsave(&idxd->dev_lock, flags);
-+	if (status)
-+		*status = ioread32(idxd->reg_base + IDXD_CMDSTS_OFFSET);
-+	__clear_bit(IDXD_FLAG_CMD_RUNNING, &idxd->flags);
-+	/* Wake up other pending commands */
-+	wake_up(&idxd->cmd_waitq);
-+	spin_unlock_irqrestore(&idxd->dev_lock, flags);
++	return __get_desc(wq, idx, cpu);
  }
  
- int idxd_device_enable(struct idxd_device *idxd)
+ void idxd_free_desc(struct idxd_wq *wq, struct idxd_desc *desc)
  {
- 	struct device *dev = &idxd->pdev->dev;
--	int rc;
- 	u32 status;
+-	atomic_dec(&wq->dq_count);
++	int cpu = desc->cpu;
  
--	lockdep_assert_held(&idxd->dev_lock);
- 	if (idxd_is_enabled(idxd)) {
- 		dev_dbg(dev, "Device already enabled\n");
- 		return -ENXIO;
- 	}
- 
--	rc = idxd_cmd_send(idxd, IDXD_CMD_ENABLE_DEVICE, 0);
--	if (rc < 0)
--		return rc;
--	rc = idxd_cmd_wait(idxd, &status, IDXD_REG_TIMEOUT);
--	if (rc < 0)
--		return rc;
-+	idxd_cmd_exec(idxd, IDXD_CMD_ENABLE_DEVICE, 0, &status);
- 
- 	/* If the command is successful or if the device was enabled */
- 	if (status != IDXD_CMDSTS_SUCCESS &&
-@@ -431,58 +446,29 @@ int idxd_device_enable(struct idxd_device *idxd)
- int idxd_device_disable(struct idxd_device *idxd)
- {
- 	struct device *dev = &idxd->pdev->dev;
--	int rc;
- 	u32 status;
- 
--	lockdep_assert_held(&idxd->dev_lock);
- 	if (!idxd_is_enabled(idxd)) {
- 		dev_dbg(dev, "Device is not enabled\n");
- 		return 0;
- 	}
- 
--	rc = idxd_cmd_send(idxd, IDXD_CMD_DISABLE_DEVICE, 0);
--	if (rc < 0)
--		return rc;
--	rc = idxd_cmd_wait(idxd, &status, IDXD_REG_TIMEOUT);
--	if (rc < 0)
--		return rc;
-+	idxd_cmd_exec(idxd, IDXD_CMD_DISABLE_DEVICE, 0, &status);
- 
- 	/* If the command is successful or if the device was disabled */
- 	if (status != IDXD_CMDSTS_SUCCESS &&
- 	    !(status & IDXD_CMDSTS_ERR_DIS_DEV_EN)) {
- 		dev_dbg(dev, "%s: err_code: %#x\n", __func__, status);
--		rc = -ENXIO;
--		return rc;
-+		return -ENXIO;
- 	}
- 
- 	idxd->state = IDXD_DEV_CONF_READY;
- 	return 0;
+-	sbitmap_clear_bit(&wq->sbmap, desc->id);
+-	wake_up(&wq->submit_waitq);
++	desc->cpu = -1;
++	sbitmap_queue_clear(&wq->sbq, desc->id, cpu);
  }
  
--int __idxd_device_reset(struct idxd_device *idxd)
--{
--	u32 status;
--	int rc;
--
--	rc = idxd_cmd_send(idxd, IDXD_CMD_RESET_DEVICE, 0);
--	if (rc < 0)
--		return rc;
--	rc = idxd_cmd_wait(idxd, &status, IDXD_REG_TIMEOUT);
--	if (rc < 0)
--		return rc;
--
--	return 0;
--}
--
--int idxd_device_reset(struct idxd_device *idxd)
-+void idxd_device_reset(struct idxd_device *idxd)
- {
--	unsigned long flags;
--	int rc;
--
--	spin_lock_irqsave(&idxd->dev_lock, flags);
--	rc = __idxd_device_reset(idxd);
--	spin_unlock_irqrestore(&idxd->dev_lock, flags);
--	return rc;
-+	idxd_cmd_exec(idxd, IDXD_CMD_RESET_DEVICE, 0, NULL);
- }
- 
- /* Device configuration bits */
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 908c8d0ef3ab..013d68d42bc4 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -145,6 +145,7 @@ enum idxd_device_state {
- 
- enum idxd_device_flag {
- 	IDXD_FLAG_CONFIGURABLE = 0,
-+	IDXD_FLAG_CMD_RUNNING,
- };
- 
- struct idxd_device {
-@@ -161,6 +162,7 @@ struct idxd_device {
- 	void __iomem *reg_base;
- 
- 	spinlock_t dev_lock;	/* spinlock for device */
-+	struct completion *cmd_done;
- 	struct idxd_group *groups;
- 	struct idxd_wq *wqs;
- 	struct idxd_engine *engines;
-@@ -183,12 +185,14 @@ struct idxd_device {
- 	int nr_tokens;		/* non-reserved tokens */
- 
- 	union sw_err_reg sw_err;
--
-+	wait_queue_head_t cmd_waitq;
- 	struct msix_entry *msix_entries;
- 	int num_wq_irqs;
- 	struct idxd_irq_entry *irq_entries;
- 
- 	struct dma_device dma_dev;
-+	struct workqueue_struct *wq;
-+	struct work_struct work;
- };
- 
- /* IDXD software descriptor */
-@@ -275,10 +279,10 @@ int idxd_mask_msix_vector(struct idxd_device *idxd, int vec_id);
- int idxd_unmask_msix_vector(struct idxd_device *idxd, int vec_id);
- 
- /* device control */
-+void idxd_device_init_reset(struct idxd_device *idxd);
- int idxd_device_enable(struct idxd_device *idxd);
- int idxd_device_disable(struct idxd_device *idxd);
--int idxd_device_reset(struct idxd_device *idxd);
--int __idxd_device_reset(struct idxd_device *idxd);
-+void idxd_device_reset(struct idxd_device *idxd);
- void idxd_device_cleanup(struct idxd_device *idxd);
- int idxd_device_config(struct idxd_device *idxd);
- void idxd_device_wqs_clear_state(struct idxd_device *idxd);
-@@ -288,6 +292,7 @@ int idxd_wq_alloc_resources(struct idxd_wq *wq);
- void idxd_wq_free_resources(struct idxd_wq *wq);
- int idxd_wq_enable(struct idxd_wq *wq);
- int idxd_wq_disable(struct idxd_wq *wq);
-+void idxd_wq_drain(struct idxd_wq *wq);
- int idxd_wq_map_portal(struct idxd_wq *wq);
- void idxd_wq_unmap_portal(struct idxd_wq *wq);
- void idxd_wq_disable_cleanup(struct idxd_wq *wq);
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 7778c05deb5d..51cdf77038dc 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -157,6 +157,7 @@ static int idxd_setup_internals(struct idxd_device *idxd)
- 	struct device *dev = &idxd->pdev->dev;
- 	int i;
- 
-+	init_waitqueue_head(&idxd->cmd_waitq);
- 	idxd->groups = devm_kcalloc(dev, idxd->max_groups,
- 				    sizeof(struct idxd_group), GFP_KERNEL);
- 	if (!idxd->groups)
-@@ -201,6 +202,10 @@ static int idxd_setup_internals(struct idxd_device *idxd)
- 		idxd->engines[i].id = i;
- 	}
- 
-+	idxd->wq = create_workqueue(dev_name(dev));
-+	if (!idxd->wq)
-+		return -ENOMEM;
-+
- 	return 0;
- }
- 
-@@ -296,9 +301,7 @@ static int idxd_probe(struct idxd_device *idxd)
- 	int rc;
- 
- 	dev_dbg(dev, "%s entered and resetting device\n", __func__);
--	rc = idxd_device_reset(idxd);
--	if (rc < 0)
--		return rc;
-+	idxd_device_init_reset(idxd);
- 	dev_dbg(dev, "IDXD reset complete\n");
- 
- 	idxd_read_caps(idxd);
-@@ -433,11 +436,8 @@ static void idxd_shutdown(struct pci_dev *pdev)
- 	int rc, i;
- 	struct idxd_irq_entry *irq_entry;
- 	int msixcnt = pci_msix_vec_count(pdev);
--	unsigned long flags;
- 
--	spin_lock_irqsave(&idxd->dev_lock, flags);
- 	rc = idxd_device_disable(idxd);
--	spin_unlock_irqrestore(&idxd->dev_lock, flags);
- 	if (rc)
- 		dev_err(&pdev->dev, "Disabling device failed\n");
- 
-@@ -453,6 +453,8 @@ static void idxd_shutdown(struct pci_dev *pdev)
- 		idxd_flush_pending_llist(irq_entry);
- 		idxd_flush_work_list(irq_entry);
- 	}
-+
-+	destroy_workqueue(idxd->wq);
- }
- 
- static void idxd_remove(struct pci_dev *pdev)
-diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
-index 6510791b9921..6052765ca3c8 100644
---- a/drivers/dma/idxd/irq.c
-+++ b/drivers/dma/idxd/irq.c
-@@ -23,16 +23,13 @@ void idxd_device_wqs_clear_state(struct idxd_device *idxd)
- 	}
- }
- 
--static int idxd_restart(struct idxd_device *idxd)
-+static void idxd_device_reinit(struct work_struct *work)
- {
--	int i, rc;
--
--	lockdep_assert_held(&idxd->dev_lock);
--
--	rc = __idxd_device_reset(idxd);
--	if (rc < 0)
--		goto out;
-+	struct idxd_device *idxd = container_of(work, struct idxd_device, work);
-+	struct device *dev = &idxd->pdev->dev;
-+	int rc, i;
- 
-+	idxd_device_reset(idxd);
- 	rc = idxd_device_config(idxd);
- 	if (rc < 0)
- 		goto out;
-@@ -47,19 +44,16 @@ static int idxd_restart(struct idxd_device *idxd)
- 		if (wq->state == IDXD_WQ_ENABLED) {
- 			rc = idxd_wq_enable(wq);
- 			if (rc < 0) {
--				dev_warn(&idxd->pdev->dev,
--					 "Unable to re-enable wq %s\n",
-+				dev_warn(dev, "Unable to re-enable wq %s\n",
- 					 dev_name(&wq->conf_dev));
- 			}
- 		}
- 	}
- 
--	return 0;
-+	return;
- 
-  out:
- 	idxd_device_wqs_clear_state(idxd);
--	idxd->state = IDXD_DEV_HALTED;
--	return rc;
- }
- 
- irqreturn_t idxd_irq_handler(int vec, void *data)
-@@ -78,7 +72,7 @@ irqreturn_t idxd_misc_thread(int vec, void *data)
- 	struct device *dev = &idxd->pdev->dev;
- 	union gensts_reg gensts;
- 	u32 cause, val = 0;
--	int i, rc;
-+	int i;
- 	bool err = false;
- 
- 	cause = ioread32(idxd->reg_base + IDXD_INTCAUSE_OFFSET);
-@@ -117,8 +111,8 @@ irqreturn_t idxd_misc_thread(int vec, void *data)
- 	}
- 
- 	if (cause & IDXD_INTC_CMD) {
--		/* Driver does use command interrupts */
- 		val |= IDXD_INTC_CMD;
-+		complete(idxd->cmd_done);
- 	}
- 
- 	if (cause & IDXD_INTC_OCCUPY) {
-@@ -145,21 +139,24 @@ irqreturn_t idxd_misc_thread(int vec, void *data)
- 
- 	gensts.bits = ioread32(idxd->reg_base + IDXD_GENSTATS_OFFSET);
- 	if (gensts.state == IDXD_DEVICE_STATE_HALT) {
--		spin_lock_bh(&idxd->dev_lock);
-+		idxd->state = IDXD_DEV_HALTED;
- 		if (gensts.reset_type == IDXD_DEVICE_RESET_SOFTWARE) {
--			rc = idxd_restart(idxd);
--			if (rc < 0)
--				dev_err(&idxd->pdev->dev,
--					"idxd restart failed, device halt.");
-+			/*
-+			 * If we need a software reset, we will throw the work
-+			 * on a system workqueue in order to allow interrupts
-+			 * for the device command completions.
-+			 */
-+			INIT_WORK(&idxd->work, idxd_device_reinit);
-+			queue_work(idxd->wq, &idxd->work);
- 		} else {
-+			spin_lock_bh(&idxd->dev_lock);
- 			idxd_device_wqs_clear_state(idxd);
--			idxd->state = IDXD_DEV_HALTED;
- 			dev_err(&idxd->pdev->dev,
- 				"idxd halted, need %s.\n",
- 				gensts.reset_type == IDXD_DEVICE_RESET_FLR ?
- 				"FLR" : "system reset");
-+			spin_unlock_bh(&idxd->dev_lock);
- 		}
--		spin_unlock_bh(&idxd->dev_lock);
- 	}
- 
- 	idxd_unmask_msix_vector(idxd, irq_entry->id);
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index 2e2c5082f322..dcba60953217 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -118,12 +118,11 @@ static int idxd_config_bus_probe(struct device *dev)
- 		if (!try_module_get(THIS_MODULE))
- 			return -ENXIO;
- 
--		spin_lock_irqsave(&idxd->dev_lock, flags);
--
- 		/* Perform IDXD configuration and enabling */
-+		spin_lock_irqsave(&idxd->dev_lock, flags);
- 		rc = idxd_device_config(idxd);
-+		spin_unlock_irqrestore(&idxd->dev_lock, flags);
- 		if (rc < 0) {
--			spin_unlock_irqrestore(&idxd->dev_lock, flags);
- 			module_put(THIS_MODULE);
- 			dev_warn(dev, "Device config failed: %d\n", rc);
- 			return rc;
-@@ -132,18 +131,15 @@ static int idxd_config_bus_probe(struct device *dev)
- 		/* start device */
- 		rc = idxd_device_enable(idxd);
- 		if (rc < 0) {
--			spin_unlock_irqrestore(&idxd->dev_lock, flags);
- 			module_put(THIS_MODULE);
- 			dev_warn(dev, "Device enable failed: %d\n", rc);
- 			return rc;
- 		}
- 
--		spin_unlock_irqrestore(&idxd->dev_lock, flags);
- 		dev_info(dev, "Device %s enabled\n", dev_name(dev));
- 
- 		rc = idxd_register_dma_device(idxd);
- 		if (rc < 0) {
--			spin_unlock_irqrestore(&idxd->dev_lock, flags);
- 			module_put(THIS_MODULE);
- 			dev_dbg(dev, "Failed to register dmaengine device\n");
- 			return rc;
-@@ -188,8 +184,8 @@ static int idxd_config_bus_probe(struct device *dev)
- 
- 		spin_lock_irqsave(&idxd->dev_lock, flags);
- 		rc = idxd_device_config(idxd);
-+		spin_unlock_irqrestore(&idxd->dev_lock, flags);
- 		if (rc < 0) {
--			spin_unlock_irqrestore(&idxd->dev_lock, flags);
- 			mutex_unlock(&wq->wq_lock);
- 			dev_warn(dev, "Writing WQ %d config failed: %d\n",
- 				 wq->id, rc);
-@@ -198,13 +194,11 @@ static int idxd_config_bus_probe(struct device *dev)
- 
- 		rc = idxd_wq_enable(wq);
- 		if (rc < 0) {
--			spin_unlock_irqrestore(&idxd->dev_lock, flags);
- 			mutex_unlock(&wq->wq_lock);
- 			dev_warn(dev, "WQ %d enabling failed: %d\n",
- 				 wq->id, rc);
- 			return rc;
- 		}
--		spin_unlock_irqrestore(&idxd->dev_lock, flags);
- 
- 		rc = idxd_wq_map_portal(wq);
- 		if (rc < 0) {
-@@ -212,7 +206,6 @@ static int idxd_config_bus_probe(struct device *dev)
- 			rc = idxd_wq_disable(wq);
- 			if (rc < 0)
- 				dev_warn(dev, "IDXD wq disable failed\n");
--			spin_unlock_irqrestore(&idxd->dev_lock, flags);
- 			mutex_unlock(&wq->wq_lock);
- 			return rc;
- 		}
-@@ -248,7 +241,6 @@ static void disable_wq(struct idxd_wq *wq)
- {
- 	struct idxd_device *idxd = wq->idxd;
- 	struct device *dev = &idxd->pdev->dev;
--	unsigned long flags;
- 	int rc;
- 
- 	mutex_lock(&wq->wq_lock);
-@@ -269,9 +261,8 @@ static void disable_wq(struct idxd_wq *wq)
- 
- 	idxd_wq_unmap_portal(wq);
- 
--	spin_lock_irqsave(&idxd->dev_lock, flags);
-+	idxd_wq_drain(wq);
- 	rc = idxd_wq_disable(wq);
--	spin_unlock_irqrestore(&idxd->dev_lock, flags);
- 
- 	idxd_wq_free_resources(wq);
- 	wq->client_count = 0;
-@@ -287,7 +278,6 @@ static void disable_wq(struct idxd_wq *wq)
- static int idxd_config_bus_remove(struct device *dev)
- {
- 	int rc;
--	unsigned long flags;
- 
- 	dev_dbg(dev, "%s called for %s\n", __func__, dev_name(dev));
- 
-@@ -313,14 +303,14 @@ static int idxd_config_bus_remove(struct device *dev)
- 		}
- 
- 		idxd_unregister_dma_device(idxd);
--		spin_lock_irqsave(&idxd->dev_lock, flags);
- 		rc = idxd_device_disable(idxd);
- 		for (i = 0; i < idxd->max_wqs; i++) {
- 			struct idxd_wq *wq = &idxd->wqs[i];
- 
-+			mutex_lock(&wq->wq_lock);
- 			idxd_wq_disable_cleanup(wq);
-+			mutex_unlock(&wq->wq_lock);
- 		}
--		spin_unlock_irqrestore(&idxd->dev_lock, flags);
- 		module_put(THIS_MODULE);
- 		if (rc < 0)
- 			dev_warn(dev, "Device disable failed\n");
+ int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc)
 

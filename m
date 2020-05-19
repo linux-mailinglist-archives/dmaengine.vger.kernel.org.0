@@ -2,33 +2,32 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 955E81D9D69
-	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2020 19:02:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43ECE1D9D7E
+	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2020 19:07:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729317AbgESRCw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 19 May 2020 13:02:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37008 "EHLO mail.kernel.org"
+        id S1729053AbgESRHU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 19 May 2020 13:07:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729001AbgESRCw (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 19 May 2020 13:02:52 -0400
+        id S1728689AbgESRHT (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 19 May 2020 13:07:19 -0400
 Received: from localhost (unknown [122.182.207.24])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D029720708;
-        Tue, 19 May 2020 17:02:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E93C20709;
+        Tue, 19 May 2020 17:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589907771;
-        bh=dojKH/YymNvZhhrFdOuFiYo2JQyFdH5ZcVVx9Js1vek=;
+        s=default; t=1589908038;
+        bh=pw3JRnvv4LiS9CjnXT7JJ1OaHHlAgFV9RnoBXtjbSWg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xLOn2sSiWHeYkRj0PX0FYJIIMRsM5bS0psa/DzwJ4PWotpGqqYw1ASYHJNuHW8Lik
-         VNAlbnqJeznxA0R6qr9ix9IzxlfOEpKWRPYJzTg2WojYYOfQctJRM+XpZkEXPOfBl7
-         41HhouWeKDjyQsHMedfuXr6E2PNkNZwDow/wFkh0=
-Date:   Tue, 19 May 2020 22:32:46 +0530
+        b=pJKA64OLl3rmcOsYz0uFiDd5uRBE2khGJ3iiTmJfGnwypwpCn0QsgeQskAfpROgB1
+         lZTwv7Koq0c21yjJsg9H2Lv5hejl8kTK4PxYCn2FvLqQxKHw+UECWv1BLEesp2Ffem
+         aRa9AkWIFMMOJGQb8Ubw0v3hm2/TYbXzKjI6PGik=
+Date:   Tue, 19 May 2020 22:37:14 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Viresh Kumar <vireshk@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
@@ -37,152 +36,144 @@ Cc:     Serge Semin <fancer.lancer@gmail.com>,
         Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/6] dmaengine: dw: Print warning if multi-block is
- unsupported
-Message-ID: <20200519170246.GS374218@vkoul-mobl.Dlink>
-References: <20200511021016.wptcgnc3iq3kadgz@mobilestation>
- <20200511115813.GG8216@sirena.org.uk>
- <20200511134502.hjbu5evkiuh75chr@mobilestation>
- <CAHp75VdOi1rwaKjzowhj0KA-eNNL4NxpiCeqfELFgO_RcnZ-xw@mail.gmail.com>
- <20200511193255.t6orpcdz5ukmwmqo@mobilestation>
- <20200511210714.GO185537@smile.fi.intel.com>
- <20200511210800.GP185537@smile.fi.intel.com>
- <20200512124206.l3uv5hg2zimi24dq@mobilestation>
- <20200515063039.GH333670@vkoul-mobl>
- <20200517192347.h3hiibsifwfyyr7z@mobilestation>
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/6] dmaengine: dw: Introduce max burst length hw
+ config
+Message-ID: <20200519170714.GT374218@vkoul-mobl.Dlink>
+References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
+ <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508105304.14065-6-Sergey.Semin@baikalelectronics.ru>
+ <20200508114153.GK185537@smile.fi.intel.com>
+ <20200512140820.ssjv6pl7busqqi3t@mobilestation>
+ <20200512191208.GG185537@smile.fi.intel.com>
+ <20200515063950.GI333670@vkoul-mobl>
+ <20200517193818.jaiwgzgz7tutj4mk@mobilestation>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200517192347.h3hiibsifwfyyr7z@mobilestation>
+In-Reply-To: <20200517193818.jaiwgzgz7tutj4mk@mobilestation>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 17-05-20, 22:23, Serge Semin wrote:
-> On Fri, May 15, 2020 at 12:00:39PM +0530, Vinod Koul wrote:
-> > Hi Serge,
-> > 
-> > On 12-05-20, 15:42, Serge Semin wrote:
-> > > Vinod,
+On 17-05-20, 22:38, Serge Semin wrote:
+> On Fri, May 15, 2020 at 12:09:50PM +0530, Vinod Koul wrote:
+> > On 12-05-20, 22:12, Andy Shevchenko wrote:
+> > > On Tue, May 12, 2020 at 05:08:20PM +0300, Serge Semin wrote:
+> > > > On Fri, May 08, 2020 at 02:41:53PM +0300, Andy Shevchenko wrote:
+> > > > > On Fri, May 08, 2020 at 01:53:03PM +0300, Serge Semin wrote:
+> > > > > > IP core of the DW DMA controller may be synthesized with different
+> > > > > > max burst length of the transfers per each channel. According to Synopsis
+> > > > > > having the fixed maximum burst transactions length may provide some
+> > > > > > performance gain. At the same time setting up the source and destination
+> > > > > > multi size exceeding the max burst length limitation may cause a serious
+> > > > > > problems. In our case the system just hangs up. In order to fix this
+> > > > > > lets introduce the max burst length platform config of the DW DMA
+> > > > > > controller device and don't let the DMA channels configuration code
+> > > > > > exceed the burst length hardware limitation. Depending on the IP core
+> > > > > > configuration the maximum value can vary from channel to channel.
+> > > > > > It can be detected either in runtime from the DWC parameter registers
+> > > > > > or from the dedicated dts property.
+> > > > > 
+> > > > > I'm wondering what can be the scenario when your peripheral will ask something
+> > > > > which is not supported by DMA controller?
+> > > > 
+> > > > I may misunderstood your statement, because seeing your activity around my
+> > > > patchsets including the SPI patchset and sometimes very helpful comments,
+> > > > this question answer seems too obvious to see you asking it.
+> > > > 
+> > > > No need to go far for an example. See the DW APB SSI driver. Its DMA module
+> > > > specifies the burst length to be 16, while not all of ours channels supports it.
+> > > > Yes, originally it has been developed for the Intel Midfield SPI, but since I
+> > > > converted the driver into a generic code we can't use a fixed value. For instance
+> > > > in our hardware only two DMA channels of total 16 are capable of bursting up to
+> > > > 16 bytes (data items) at a time, the rest of them are limited with up to 4 bytes
+> > > > burst length. While there are two SPI interfaces, each of which need to have two
+> > > > DMA channels for communications. So I need four channels in total to allocate to
+> > > > provide the DMA capability for all interfaces. In order to set the SPI controller
+> > > > up with valid optimized parameters the max-burst-length is required. Otherwise we
+> > > > can end up with buffers overrun/underrun.
 > > > 
-> > > Could you join the discussion for a little bit?
+> > > Right, and we come to the question which channel better to be used by SPI and
+> > > the rest devices. Without specific filter function you can easily get into a
+> > > case of inverted optimizations, when SPI got channels with burst = 4, while
+> > > it's needed 16, and other hardware otherwise. Performance wise it's worse
+> > > scenario which we may avoid in the first place, right?
+> > 
+> > If one has channels which are different and described as such in DT,
+> > then I think it does make sense to specify in your board-dt about the
+> > specific channels you would require...
+> 
+> Well, we do have such hardware. Our DW DMA controller has got different max
+> burst lengths assigned to first two and the rest of the channels. But creating
+> a functionality of the individual channels assignment is a matter of different
+> patchset. Sorry. It's not one of my task at the moment.
+> 
+> My primary task is to integrate the Baikal-T1 SoC support into the kernel. I've
+> refactored a lot of code found in the Baikal-T1 SDK and currently under a pressure
+> of a lot of review. Alas there is no time to create new functionality as you
+> suggest. In future I may provide such, but not in the framework of this patchset.
+
+Well you need to tell your folks that upstreaming does not work under
+pressure and we can't put a timeline for upstreaming. It needs to do
+what is deemed the right way. Reviews can take time, that needs to be
+comprehended as well!
+
+> > > > > Peripheral needs to supply a lot of configuration parameters specific to the
+> > > > > DMA controller in use (that's why we have struct dw_dma_slave).
+> > > > > So, seems to me the feasible approach is supply correct data in the first place.
+> > > > 
+> > > > How to supply a valid data if clients don't know the DMA controller limitations
+> > > > in general?
 > > > 
-> > > In order to properly fix the problem discussed in this topic, we need to
-> > > introduce an additional capability exported by DMA channel handlers on per-channel
-> > > basis. It must be a number, which would indicate an upper limitation of the SG list
-> > > entries amount.
-> > > Something like this would do it:
-> > > struct dma_slave_caps {
-> > > ...
-> > > 	unsigned int max_sg_nents;
-> > > ...
+> > > This is a good question. DMA controllers are quite different and having unified
+> > > capabilities structure for all is almost impossible task to fulfil. That's why
+> > > custom filter function(s) can help here. Based on compatible string you can
+> > > implement whatever customized quirks like two functions, for example, to try 16
+> > > burst size first and fallback to 4 if none was previously found.
+> > > 
+> > > > > If you have specific channels to acquire then you probably need to provide a
+> > > > > custom xlate / filter functions. Because above seems a bit hackish workaround
+> > > > > of dynamic channel allocation mechanism.
+> > > > 
+> > > > No, I don't have a specific channel to acquire and in general you may use any
+> > > > returned from the DMA subsystem (though some platforms may need a dedicated
+> > > > channels to use, in this case xlate / filter is required). In our SoC any DW DMAC
+> > > > channel can be used for any DMA-capable peripherals like SPI, I2C, UART. But the
+> > > > their DMA settings must properly and optimally configured. It can be only done
+> > > > if you know the DMA controller parameters like max burst length, max block-size,
+> > > > etc.
+> > > > 
+> > > > So no. The change proposed by this patch isn't workaround, but a useful feature,
+> > > > moreover expected to be supported by the generic DMA subsystem.
+> > > 
+> > > See above.
+> > > 
+> > > > > But let's see what we can do better. Since maximum is defined on the slave side
+> > > > > device, it probably needs to define minimum as well, otherwise it's possible
+> > > > > that some hardware can't cope underrun bursts.
+> > > > 
+> > > > There is no need to define minimum if such limit doesn't exists except a
+> > > > natural 1. Moreover it doesn't exist for all DMA controllers seeing noone has
+> > > > added such capability into the generic DMA subsystem so far.
+> > > 
+> > > There is a contract between provider and consumer about DMA resource. That's
+> > > why both sides should participate in fulfilling it. Theoretically it may be a
+> > > hardware that doesn't support minimum burst available in DMA by a reason. For
+> > > such we would need minimum to be provided as well.
 > > 
-> > Looking at the discussion, I agree we should can this up in the
-> > interface. The max_dma_len suggests the length of a descriptor allowed,
-> > it does not convey the sg_nents supported which in the case of nollp is
-> > one.
-> > 
-> > Btw is this is a real hardware issue, I have found that value of such
-> > hardware is very less and people did fix it up in subsequent revs to add
-> > llp support.
+> > Agreed and if required caps should be extended to tell consumer the
+> > minimum values supported.
 > 
-> Yes, it is. My DW DMAC doesn't support LLP and there isn't going to be new SoC
-> version produced.(
+> Sorry, it's not required by our hardware. Is there any, which actually has such
+> limitation? (minimum burst length)
 
-Ouch
-
-> > Also, another question is why this cannot be handled in driver, I agree
-> > your hardware does not support llp but that does not stop you from
-> > breaking a multi_sg list into N hardware descriptors and keep submitting
-> > them (for this to work submission should be done in isr and not in bh,
-> > unfortunately very few driver take that route).
-> 
-> Current DW DMA driver does that, but this isn't enough. The problem is that
-> in order to fix the issue in the DMA hardware driver we need to introduce
-> an inter-dependent channels abstraction and synchronously feed both Tx and
-> Rx DMA channels with hardware descriptors (LLP entries) one-by-one. This hardly
-> needed by any slave device driver rather than SPI, which Tx and Rx buffers are
-> inter-dependent. So Andy's idea was to move the fix to the SPI driver (feed
-> the DMA engine channels with Tx and Rx data buffers synchronously), but DMA
-> engine would provide an info whether such fix is required. This can be
-> determined by the maximum SG entries capability.
-
-Okay but having the sw limitation removed would also be a good idea, you
-can handle any user, I will leave it upto you, either way is okay
-
-> 
-> (Note max_sg_ents isn't a limitation on the number of SG entries supported by
-> the DMA driver, but the number of SG entries handled by the DMA engine in a
-> single DMA transaction.)
-> 
-> > TBH the max_sg_nents or
-> > max_dma_len are HW restrictions and SW *can* deal with then :-)
-> 
-> Yes, it can, but it only works for the cases when individual DMA channels are
-> utilized. DMA hardware driver doesn't know that the target and source slave
-> device buffers (SPI Tx and Rx FIFOs) are inter-dependent, that writing to one
-> you will implicitly push data to another. So due to the interrupts handling
-> latency Tx DMA channel is restarted faster than Rx DMA channel is reinitialized.
-> This causes the SPI Rx FIFO overflow and data loss.
-> 
-> > 
-> > In an idea world, you should break the sw descriptor submitted into N hw
-> > descriptors and submit to hardware and let user know when the sw
-> > descriptor is completed. Of course we do not do that :(
-> 
-> Well, the current Dw DMA driver does that. But due to the two slave device
-> buffers inter-dependency this isn't enough to perform safe DMA transactions.
-> Due to the interrupts handling latency Tx DMA channel pushes data to the slave
-> device buffer faster than Rx DMA channel starts to handle incoming data. This
-> causes the SPI Rx FIFO overflow.
-> 
-> > 
-> > > };
-> > > As Andy suggested it's value should be interpreted as:
-> > > 0          - unlimited number of entries,
-> > > 1:MAX_UINT - actual limit to the number of entries.
-> > 
-> 
-> > Hmm why 0, why not MAX_UINT for unlimited?
-> 
-> 0 is much better for many reasons. First of all MAX_UINT is a lot, but it's
-> still a number. On x64 platform this might be actual limit if for instance
-> the block-size register is 32-bits wide. Secondly interpreting 0 as unlimited
-> number of entries would be more suitable since most of the drivers support
-> LLP functionality and we wouldn't need to update their code to set MAX_UINT.
-> Thirdly DMA engines, which don't support LLPs would need to set this parameter
-> as 1. So if we do as you say and interpret unlimited number of LLPs as MAX_UINT,
-> then 0 would left unused.
-> 
-> To sum up I also think that using 0 as unlimited number SG entries supported is
-> much better.
-
-ok
-
-> > > In addition to that seeing the dma_get_slave_caps() method provide the caps only
-> > > by getting them from the DMA device descriptor, while we need to have an info on
-> > > per-channel basis, it would be good to introduce a new DMA-device callback like:
-> > > struct dma_device {
-> > > ...
-> > > 	int (*device_caps)(struct dma_chan *chan,
-> > > 			   struct dma_slave_caps *caps);
-> > 
-> 
-> > Do you have a controller where channel caps are on per-channel basis?
-> 
-> Yes, I do. Our DW DMA controller has got the maximum burst length non-uniformly
-> distributed per DMA channels. There are eight channels our controller supports,
-> among which first two channels can burst up to 32 transfer words, but the rest
-> of the channels support bursting up to 4 transfer words.
-> 
-> So having such device_caps() callback to customize the device capabilities on
-> per-DMA-channel basis would be very useful! What do you think?
-
-Okay looks like per-ch basis is the way forward!
+IIUC the idea is that you will tell maximum and minimum values supported
+and client can pick the best value. Esp in case of slave transfers
+things like burst, msize are governed by client capability and usage. So
+exposing the set to pick from would make sense
 
 -- 
 ~Vinod

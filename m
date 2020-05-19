@@ -2,178 +2,146 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 43ECE1D9D7E
-	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2020 19:07:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E4161D9D9D
+	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2020 19:13:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729053AbgESRHU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 19 May 2020 13:07:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38912 "EHLO mail.kernel.org"
+        id S1729214AbgESRNK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 19 May 2020 13:13:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728689AbgESRHT (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 19 May 2020 13:07:19 -0400
+        id S1729001AbgESRNK (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 19 May 2020 13:13:10 -0400
 Received: from localhost (unknown [122.182.207.24])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E93C20709;
-        Tue, 19 May 2020 17:07:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FC9E20709;
+        Tue, 19 May 2020 17:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589908038;
-        bh=pw3JRnvv4LiS9CjnXT7JJ1OaHHlAgFV9RnoBXtjbSWg=;
+        s=default; t=1589908389;
+        bh=/cbKckJRw+86X99IGfbIbbjn7SPYk0nnauF+64dyhTU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pJKA64OLl3rmcOsYz0uFiDd5uRBE2khGJ3iiTmJfGnwypwpCn0QsgeQskAfpROgB1
-         lZTwv7Koq0c21yjJsg9H2Lv5hejl8kTK4PxYCn2FvLqQxKHw+UECWv1BLEesp2Ffem
-         aRa9AkWIFMMOJGQb8Ubw0v3hm2/TYbXzKjI6PGik=
-Date:   Tue, 19 May 2020 22:37:14 +0530
+        b=XnuuUgpPkHbs515YoNx2qtoKgkv8I7D7RRJVK+RvBJaQ1XE1UWkWRDAYiJKgiiJ7w
+         aJRYzToHQcwpgip3O/RXYyzA79TkQQBlAjMsVkzhS1+WycPuRBj+eBfLaL9EZd0GGk
+         hq/ElEZ+REU/EupZp5tbp82/qJ3benVGfBlhS83M=
+Date:   Tue, 19 May 2020 22:43:04 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc:     Serge Semin <fancer.lancer@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] dmaengine: dw: Introduce max burst length hw
- config
-Message-ID: <20200519170714.GT374218@vkoul-mobl.Dlink>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-6-Sergey.Semin@baikalelectronics.ru>
- <20200508114153.GK185537@smile.fi.intel.com>
- <20200512140820.ssjv6pl7busqqi3t@mobilestation>
- <20200512191208.GG185537@smile.fi.intel.com>
- <20200515063950.GI333670@vkoul-mobl>
- <20200517193818.jaiwgzgz7tutj4mk@mobilestation>
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
+ length property
+Message-ID: <20200519171304.GU374218@vkoul-mobl.Dlink>
+References: <20200511210138.GN185537@smile.fi.intel.com>
+ <20200511213531.wnywlljiulvndx6s@mobilestation>
+ <20200512090804.GR185537@smile.fi.intel.com>
+ <20200512114946.x777yb6bhe22ccn5@mobilestation>
+ <20200512123840.GY185537@smile.fi.intel.com>
+ <20200515060911.GF333670@vkoul-mobl>
+ <20200515105137.GK185537@smile.fi.intel.com>
+ <20200515105658.GR333670@vkoul-mobl>
+ <20200515111112.4umynrpgzjnca223@mobilestation>
+ <20200517174739.uis3wfievdcmtsxj@mobilestation>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200517193818.jaiwgzgz7tutj4mk@mobilestation>
+In-Reply-To: <20200517174739.uis3wfievdcmtsxj@mobilestation>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 17-05-20, 22:38, Serge Semin wrote:
-> On Fri, May 15, 2020 at 12:09:50PM +0530, Vinod Koul wrote:
-> > On 12-05-20, 22:12, Andy Shevchenko wrote:
-> > > On Tue, May 12, 2020 at 05:08:20PM +0300, Serge Semin wrote:
-> > > > On Fri, May 08, 2020 at 02:41:53PM +0300, Andy Shevchenko wrote:
-> > > > > On Fri, May 08, 2020 at 01:53:03PM +0300, Serge Semin wrote:
-> > > > > > IP core of the DW DMA controller may be synthesized with different
-> > > > > > max burst length of the transfers per each channel. According to Synopsis
-> > > > > > having the fixed maximum burst transactions length may provide some
-> > > > > > performance gain. At the same time setting up the source and destination
-> > > > > > multi size exceeding the max burst length limitation may cause a serious
-> > > > > > problems. In our case the system just hangs up. In order to fix this
-> > > > > > lets introduce the max burst length platform config of the DW DMA
-> > > > > > controller device and don't let the DMA channels configuration code
-> > > > > > exceed the burst length hardware limitation. Depending on the IP core
-> > > > > > configuration the maximum value can vary from channel to channel.
-> > > > > > It can be detected either in runtime from the DWC parameter registers
-> > > > > > or from the dedicated dts property.
+On 17-05-20, 20:47, Serge Semin wrote:
+> On Fri, May 15, 2020 at 02:11:13PM +0300, Serge Semin wrote:
+> > On Fri, May 15, 2020 at 04:26:58PM +0530, Vinod Koul wrote:
+> > > On 15-05-20, 13:51, Andy Shevchenko wrote:
+> > > > On Fri, May 15, 2020 at 11:39:11AM +0530, Vinod Koul wrote:
+> > > > > On 12-05-20, 15:38, Andy Shevchenko wrote:
+> > > > > > On Tue, May 12, 2020 at 02:49:46PM +0300, Serge Semin wrote:
+> > > > > > > On Tue, May 12, 2020 at 12:08:04PM +0300, Andy Shevchenko wrote:
+> > > > > > > > On Tue, May 12, 2020 at 12:35:31AM +0300, Serge Semin wrote:
+> > > > > > > > > On Tue, May 12, 2020 at 12:01:38AM +0300, Andy Shevchenko wrote:
+> > > > > > > > > > On Mon, May 11, 2020 at 11:05:28PM +0300, Serge Semin wrote:
+> > > > > > > > > > > On Fri, May 08, 2020 at 02:12:42PM +0300, Andy Shevchenko wrote:
+> > > > > > > > > > > > On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
+> > > > 
+> > > > ...
+> > > > 
+> > > > > > I leave it to Rob and Vinod.
+> > > > > > It won't break our case, so, feel free with your approach.
 > > > > > 
-> > > > > I'm wondering what can be the scenario when your peripheral will ask something
-> > > > > which is not supported by DMA controller?
+> > > > > I agree the DT is about describing the hardware and looks like value of
+> > > > > 1 is not allowed. If allowed it should be added..
 > > > > 
-> > > > I may misunderstood your statement, because seeing your activity around my
-> > > > patchsets including the SPI patchset and sometimes very helpful comments,
-> > > > this question answer seems too obvious to see you asking it.
-> > > > 
-> > > > No need to go far for an example. See the DW APB SSI driver. Its DMA module
-> > > > specifies the burst length to be 16, while not all of ours channels supports it.
-> > > > Yes, originally it has been developed for the Intel Midfield SPI, but since I
-> > > > converted the driver into a generic code we can't use a fixed value. For instance
-> > > > in our hardware only two DMA channels of total 16 are capable of bursting up to
-> > > > 16 bytes (data items) at a time, the rest of them are limited with up to 4 bytes
-> > > > burst length. While there are two SPI interfaces, each of which need to have two
-> > > > DMA channels for communications. So I need four channels in total to allocate to
-> > > > provide the DMA capability for all interfaces. In order to set the SPI controller
-> > > > up with valid optimized parameters the max-burst-length is required. Otherwise we
-> > > > can end up with buffers overrun/underrun.
+> > > > It's allowed at *run time*, it's illegal in *pre-silicon stage* when
+> > > > synthesizing the IP.
 > > > 
-> > > Right, and we come to the question which channel better to be used by SPI and
-> > > the rest devices. Without specific filter function you can easily get into a
-> > > case of inverted optimizations, when SPI got channels with burst = 4, while
-> > > it's needed 16, and other hardware otherwise. Performance wise it's worse
-> > > scenario which we may avoid in the first place, right?
+> > > Then it should be added ..
 > > 
-> > If one has channels which are different and described as such in DT,
-> > then I think it does make sense to specify in your board-dt about the
-> > specific channels you would require...
-> 
-> Well, we do have such hardware. Our DW DMA controller has got different max
-> burst lengths assigned to first two and the rest of the channels. But creating
-> a functionality of the individual channels assignment is a matter of different
-> patchset. Sorry. It's not one of my task at the moment.
-> 
-> My primary task is to integrate the Baikal-T1 SoC support into the kernel. I've
-> refactored a lot of code found in the Baikal-T1 SDK and currently under a pressure
-> of a lot of review. Alas there is no time to create new functionality as you
-> suggest. In future I may provide such, but not in the framework of this patchset.
-
-Well you need to tell your folks that upstreaming does not work under
-pressure and we can't put a timeline for upstreaming. It needs to do
-what is deemed the right way. Reviews can take time, that needs to be
-comprehended as well!
-
-> > > > > Peripheral needs to supply a lot of configuration parameters specific to the
-> > > > > DMA controller in use (that's why we have struct dw_dma_slave).
-> > > > > So, seems to me the feasible approach is supply correct data in the first place.
-> > > > 
-> > > > How to supply a valid data if clients don't know the DMA controller limitations
-> > > > in general?
-> > > 
-> > > This is a good question. DMA controllers are quite different and having unified
-> > > capabilities structure for all is almost impossible task to fulfil. That's why
-> > > custom filter function(s) can help here. Based on compatible string you can
-> > > implement whatever customized quirks like two functions, for example, to try 16
-> > > burst size first and fallback to 4 if none was previously found.
-> > > 
-> > > > > If you have specific channels to acquire then you probably need to provide a
-> > > > > custom xlate / filter functions. Because above seems a bit hackish workaround
-> > > > > of dynamic channel allocation mechanism.
-> > > > 
-> > > > No, I don't have a specific channel to acquire and in general you may use any
-> > > > returned from the DMA subsystem (though some platforms may need a dedicated
-> > > > channels to use, in this case xlate / filter is required). In our SoC any DW DMAC
-> > > > channel can be used for any DMA-capable peripherals like SPI, I2C, UART. But the
-> > > > their DMA settings must properly and optimally configured. It can be only done
-> > > > if you know the DMA controller parameters like max burst length, max block-size,
-> > > > etc.
-> > > > 
-> > > > So no. The change proposed by this patch isn't workaround, but a useful feature,
-> > > > moreover expected to be supported by the generic DMA subsystem.
-> > > 
-> > > See above.
-> > > 
-> > > > > But let's see what we can do better. Since maximum is defined on the slave side
-> > > > > device, it probably needs to define minimum as well, otherwise it's possible
-> > > > > that some hardware can't cope underrun bursts.
-> > > > 
-> > > > There is no need to define minimum if such limit doesn't exists except a
-> > > > natural 1. Moreover it doesn't exist for all DMA controllers seeing noone has
-> > > > added such capability into the generic DMA subsystem so far.
-> > > 
-> > > There is a contract between provider and consumer about DMA resource. That's
-> > > why both sides should participate in fulfilling it. Theoretically it may be a
-> > > hardware that doesn't support minimum burst available in DMA by a reason. For
-> > > such we would need minimum to be provided as well.
+> > Vinod, max-burst-len is "MAXimum" burst length not "run-time or current or any
+> > other" burst length. It's a constant defined at the IP-core synthesis stage and
+> > according to the Data Book, MAX burst length can't be 1. The allowed values are
+> > exactly as I described in the binding [4, 8, 16, 32, ...]. MAX burst length
+> > defines the upper limit of the run-time burst length. So setting it to 1 isn't
+> > about describing a hardware, but using DT for the software convenience.
 > > 
-> > Agreed and if required caps should be extended to tell consumer the
-> > minimum values supported.
+> > -Sergey
 > 
-> Sorry, it's not required by our hardware. Is there any, which actually has such
-> limitation? (minimum burst length)
+> Vinod, to make this completely clear. According to the DW DMAC data book:
+> - In general, run-time parameter of the DMA transaction burst length (set in
+>   the SRC_MSIZE/DST_MSIZE fields of the channel control register) may belong
+>   to the set [1, 4, 8, 16, 32, 64, 128, 256].
 
-IIUC the idea is that you will tell maximum and minimum values supported
-and client can pick the best value. Esp in case of slave transfers
-things like burst, msize are governed by client capability and usage. So
-exposing the set to pick from would make sense
+so 1 is valid value for msize
 
+> - Actual upper limit of the burst length run-time parameter is limited by a
+>   constant defined at the IP-synthesize stage (it's called DMAH_CHx_MAX_MULT_SIZE)
+>   and this constant belongs to the set [4, 8, 16, 32, 64, 128, 256]. (See, no 1
+>   in this set).
+
+maximum can be 4 onwards, but in my configuration I can choose 1 as
+value for msize
+
+> So the run-time burst length in a case of particular DW DMA controller belongs
+> to the range:
+> 1 <= SRC_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
+> and
+> 1 <= DST_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
+> 
+> See. No mater which DW DMA controller we get each of them will at least support
+> the burst length of 1 and 4 transfer words. This is determined by design of the
+> DW DMA controller IP since DMAH_CHx_MAX_MULT_SIZE constant set starts with 4.
+> 
+> In this patch I suggest to add the max-burst-len property, which specifies
+> the upper limit for the run-time burst length. Since the maximum burst length
+> capable to be set to the SRC_MSIZE/DST_MSIZE fields of the DMA channel control
+> register is determined by the DMAH_CHx_MAX_MULT_SIZE constant (which can't be 1
+> by the DW DMA IP design), max-burst-len property as being also responsible for
+> the maximum burst length setting should be associated with DMAH_CHx_MAX_MULT_SIZE
+> thus should belong to the same set [4, 8, 16, 32, 64, 128, 256].
+> 
+> So 1 shouldn't be in the enum of the max-burst-len property constraint, because
+> hardware doesn't support such limitation by design, while setting 1 as
+> max-burst-len would mean incorrect description of the DMA controller.
+> 
+> Vinod, could you take a look at the info I provided above and say your final word
+> whether 1 should be really allowed to be in the max-burst-len enum constraints?
+> I'll do as you say in the next version of the patchset.
+
+You are specifying the parameter which will be used to pick, i think
+starting with 4 makes sense as we are specifying maximum allowed values
+for msize. Values lesser than or equal to this would be allowed, I guess
+that should be added to documentation.
+
+thanks
 -- 
 ~Vinod

@@ -2,146 +2,237 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E4161D9D9D
-	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2020 19:13:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B72091D9F0F
+	for <lists+dmaengine@lfdr.de>; Tue, 19 May 2020 20:20:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729214AbgESRNK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 19 May 2020 13:13:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729001AbgESRNK (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 19 May 2020 13:13:10 -0400
-Received: from localhost (unknown [122.182.207.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FC9E20709;
-        Tue, 19 May 2020 17:13:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589908389;
-        bh=/cbKckJRw+86X99IGfbIbbjn7SPYk0nnauF+64dyhTU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XnuuUgpPkHbs515YoNx2qtoKgkv8I7D7RRJVK+RvBJaQ1XE1UWkWRDAYiJKgiiJ7w
-         aJRYzToHQcwpgip3O/RXYyzA79TkQQBlAjMsVkzhS1+WycPuRBj+eBfLaL9EZd0GGk
-         hq/ElEZ+REU/EupZp5tbp82/qJ3benVGfBlhS83M=
-Date:   Tue, 19 May 2020 22:43:04 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] dt-bindings: dma: dw: Add max burst transaction
- length property
-Message-ID: <20200519171304.GU374218@vkoul-mobl.Dlink>
-References: <20200511210138.GN185537@smile.fi.intel.com>
- <20200511213531.wnywlljiulvndx6s@mobilestation>
- <20200512090804.GR185537@smile.fi.intel.com>
- <20200512114946.x777yb6bhe22ccn5@mobilestation>
- <20200512123840.GY185537@smile.fi.intel.com>
- <20200515060911.GF333670@vkoul-mobl>
- <20200515105137.GK185537@smile.fi.intel.com>
- <20200515105658.GR333670@vkoul-mobl>
- <20200515111112.4umynrpgzjnca223@mobilestation>
- <20200517174739.uis3wfievdcmtsxj@mobilestation>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200517174739.uis3wfievdcmtsxj@mobilestation>
+        id S1729001AbgESSU7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 19 May 2020 14:20:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36472 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728188AbgESSU6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 19 May 2020 14:20:58 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93E1AC08C5C0;
+        Tue, 19 May 2020 11:20:58 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id p30so200398pgl.11;
+        Tue, 19 May 2020 11:20:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=zoQaFihILtKPwZMgbHdP4bf5m5RLMdG3wGV1m6Btdw0=;
+        b=FPaLyrYFsQfuy77R1zPdfN14FvIRn4VIc7JS/Bs7WyrLCYwS82KhnRUbw+79Jyy72Z
+         KImDNrfN8eCGyZN8VTB3/ho9IYc5GFbOAnR2DlDxR/6Dw6ho3JGgkMHo5wpFBSlgG5UT
+         1ihTG2d2UHMFJ8oHk35CkGGxb8KhXQk8aNsI5ZaDOETBWZNseeln2lk135fJLDSg2iMB
+         6ZaBNxhaSmvp6WzuORhrzEeGeXoZ062l0ZXgREernaRrEBA9nDutSiBekSsT1W1kCgqQ
+         BFXwJxczTxsSK9UN5zui4Htw6Bo3DLXkwi1Fm6ZZF9oNW7C+mngzgydU4Y755D7HNi+G
+         Na2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=zoQaFihILtKPwZMgbHdP4bf5m5RLMdG3wGV1m6Btdw0=;
+        b=G86ILOB5VJwzoDMLzL3V09F0db1biZDJXPyMFlb2arAbRZdQ8edwymFOQJZoLEWocV
+         w7DsP5CGUHh1zF9sayW/7PQfS7x9Km3SFnrOzVpPEh7Zb9BiP4wpYg9Rs9fwswfk+tVH
+         /jDM5VdhgMGLlVlFC2poI+ophg4Hg+5ZK8qwTv2VbOY281IBOWsxGaLBvsYodkRenpUr
+         yyJH13m/bq6ROOOVteu7+Ro/sJxuyom9fa8nxGs9seeqXVJt3eGUefFwytg60xKAXwqe
+         IzrZtVBzXyjspydnbVc2XxWapACH6jS8qVzbERUxjaMH4EpS+WHyi6NaZYtmLUbIbuY5
+         vL7g==
+X-Gm-Message-State: AOAM533+yykt1gHj6wMvTclLyI9OqwhHmFCaKhtOdwTvi8VdgEfWWpNw
+        HGcV8nIqAqW8WiiC5To+SwY=
+X-Google-Smtp-Source: ABdhPJwA2Cj9S6u0ZPXQB50/kX/b47N3rBoHaxPdSmgazULDADvZfdmLGhh5UdTuG3xy5n11NegjZQ==
+X-Received: by 2002:a05:6a00:1510:: with SMTP id q16mr322814pfu.311.1589912457993;
+        Tue, 19 May 2020 11:20:57 -0700 (PDT)
+Received: from localhost.localdomain ([223.235.145.232])
+        by smtp.gmail.com with ESMTPSA id p2sm148399pgh.25.2020.05.19.11.20.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 May 2020 11:20:57 -0700 (PDT)
+From:   Amit Singh Tomar <amittomer25@gmail.com>
+To:     andre.przywara@arm.com, vkoul@kernel.org, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org
+Cc:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org
+Subject: [PATCH v2 01/10] dmaengine: Actions: get rid of bit fields from dma descriptor
+Date:   Tue, 19 May 2020 23:49:19 +0530
+Message-Id: <1589912368-480-2-git-send-email-amittomer25@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589912368-480-1-git-send-email-amittomer25@gmail.com>
+References: <1589912368-480-1-git-send-email-amittomer25@gmail.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 17-05-20, 20:47, Serge Semin wrote:
-> On Fri, May 15, 2020 at 02:11:13PM +0300, Serge Semin wrote:
-> > On Fri, May 15, 2020 at 04:26:58PM +0530, Vinod Koul wrote:
-> > > On 15-05-20, 13:51, Andy Shevchenko wrote:
-> > > > On Fri, May 15, 2020 at 11:39:11AM +0530, Vinod Koul wrote:
-> > > > > On 12-05-20, 15:38, Andy Shevchenko wrote:
-> > > > > > On Tue, May 12, 2020 at 02:49:46PM +0300, Serge Semin wrote:
-> > > > > > > On Tue, May 12, 2020 at 12:08:04PM +0300, Andy Shevchenko wrote:
-> > > > > > > > On Tue, May 12, 2020 at 12:35:31AM +0300, Serge Semin wrote:
-> > > > > > > > > On Tue, May 12, 2020 at 12:01:38AM +0300, Andy Shevchenko wrote:
-> > > > > > > > > > On Mon, May 11, 2020 at 11:05:28PM +0300, Serge Semin wrote:
-> > > > > > > > > > > On Fri, May 08, 2020 at 02:12:42PM +0300, Andy Shevchenko wrote:
-> > > > > > > > > > > > On Fri, May 08, 2020 at 01:53:00PM +0300, Serge Semin wrote:
-> > > > 
-> > > > ...
-> > > > 
-> > > > > > I leave it to Rob and Vinod.
-> > > > > > It won't break our case, so, feel free with your approach.
-> > > > > 
-> > > > > I agree the DT is about describing the hardware and looks like value of
-> > > > > 1 is not allowed. If allowed it should be added..
-> > > > 
-> > > > It's allowed at *run time*, it's illegal in *pre-silicon stage* when
-> > > > synthesizing the IP.
-> > > 
-> > > Then it should be added ..
-> > 
-> > Vinod, max-burst-len is "MAXimum" burst length not "run-time or current or any
-> > other" burst length. It's a constant defined at the IP-core synthesis stage and
-> > according to the Data Book, MAX burst length can't be 1. The allowed values are
-> > exactly as I described in the binding [4, 8, 16, 32, ...]. MAX burst length
-> > defines the upper limit of the run-time burst length. So setting it to 1 isn't
-> > about describing a hardware, but using DT for the software convenience.
-> > 
-> > -Sergey
-> 
-> Vinod, to make this completely clear. According to the DW DMAC data book:
-> - In general, run-time parameter of the DMA transaction burst length (set in
->   the SRC_MSIZE/DST_MSIZE fields of the channel control register) may belong
->   to the set [1, 4, 8, 16, 32, 64, 128, 256].
+At the moment, Driver uses bit fields to describe registers of the DMA
+descriptor structure that makes it less portable and maintainable, and
+Andre suugested(and even sketched important bits for it) to make use of
+array to describe this DMA descriptors instead. It gives the flexibility
+while extending support for other platform such as Actions S700.
 
-so 1 is valid value for msize
+This commit removes the "owl_dma_lli_hw" (that includes bit-fields) and
+uses array to describe DMA descriptor.
 
-> - Actual upper limit of the burst length run-time parameter is limited by a
->   constant defined at the IP-synthesize stage (it's called DMAH_CHx_MAX_MULT_SIZE)
->   and this constant belongs to the set [4, 8, 16, 32, 64, 128, 256]. (See, no 1
->   in this set).
+Suggested-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+---
+Changes since v1:
+	* Defined macro for frame count value.
+	* Introduced llc_hw_flen() from patch 2/9.
+	* Removed the unnecessary line break.
+Changes since rfc:
+	* No change.
+---
+ drivers/dma/owl-dma.c | 84 ++++++++++++++++++++++++---------------------------
+ 1 file changed, 40 insertions(+), 44 deletions(-)
 
-maximum can be 4 onwards, but in my configuration I can choose 1 as
-value for msize
-
-> So the run-time burst length in a case of particular DW DMA controller belongs
-> to the range:
-> 1 <= SRC_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
-> and
-> 1 <= DST_MSIZE <= DMAH_CHx_MAX_MULT_SIZE
-> 
-> See. No mater which DW DMA controller we get each of them will at least support
-> the burst length of 1 and 4 transfer words. This is determined by design of the
-> DW DMA controller IP since DMAH_CHx_MAX_MULT_SIZE constant set starts with 4.
-> 
-> In this patch I suggest to add the max-burst-len property, which specifies
-> the upper limit for the run-time burst length. Since the maximum burst length
-> capable to be set to the SRC_MSIZE/DST_MSIZE fields of the DMA channel control
-> register is determined by the DMAH_CHx_MAX_MULT_SIZE constant (which can't be 1
-> by the DW DMA IP design), max-burst-len property as being also responsible for
-> the maximum burst length setting should be associated with DMAH_CHx_MAX_MULT_SIZE
-> thus should belong to the same set [4, 8, 16, 32, 64, 128, 256].
-> 
-> So 1 shouldn't be in the enum of the max-burst-len property constraint, because
-> hardware doesn't support such limitation by design, while setting 1 as
-> max-burst-len would mean incorrect description of the DMA controller.
-> 
-> Vinod, could you take a look at the info I provided above and say your final word
-> whether 1 should be really allowed to be in the max-burst-len enum constraints?
-> I'll do as you say in the next version of the patchset.
-
-You are specifying the parameter which will be used to pick, i think
-starting with 4 makes sense as we are specifying maximum allowed values
-for msize. Values lesser than or equal to this would be allowed, I guess
-that should be added to documentation.
-
-thanks
+diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
+index c683051257fd..dd85c205454e 100644
+--- a/drivers/dma/owl-dma.c
++++ b/drivers/dma/owl-dma.c
+@@ -120,30 +120,21 @@
+ #define BIT_FIELD(val, width, shift, newshift)	\
+ 		((((val) >> (shift)) & ((BIT(width)) - 1)) << (newshift))
+ 
+-/**
+- * struct owl_dma_lli_hw - Hardware link list for dma transfer
+- * @next_lli: physical address of the next link list
+- * @saddr: source physical address
+- * @daddr: destination physical address
+- * @flen: frame length
+- * @fcnt: frame count
+- * @src_stride: source stride
+- * @dst_stride: destination stride
+- * @ctrla: dma_mode and linklist ctrl config
+- * @ctrlb: interrupt config
+- * @const_num: data for constant fill
+- */
+-struct owl_dma_lli_hw {
+-	u32	next_lli;
+-	u32	saddr;
+-	u32	daddr;
+-	u32	flen:20;
+-	u32	fcnt:12;
+-	u32	src_stride;
+-	u32	dst_stride;
+-	u32	ctrla;
+-	u32	ctrlb;
+-	u32	const_num;
++/* Frame count value is fixed as 1 */
++#define FCNT_VAL				0x1
++
++/* Describe DMA descriptor, hardware link list for dma transfer */
++enum owl_dmadesc_offsets {
++	OWL_DMADESC_NEXT_LLI = 0,
++	OWL_DMADESC_SADDR,
++	OWL_DMADESC_DADDR,
++	OWL_DMADESC_FLEN,
++	OWL_DMADESC_SRC_STRIDE,
++	OWL_DMADESC_DST_STRIDE,
++	OWL_DMADESC_CTRLA,
++	OWL_DMADESC_CTRLB,
++	OWL_DMADESC_CONST_NUM,
++	OWL_DMADESC_SIZE
+ };
+ 
+ /**
+@@ -153,7 +144,7 @@ struct owl_dma_lli_hw {
+  * @node: node for txd's lli_list
+  */
+ struct owl_dma_lli {
+-	struct  owl_dma_lli_hw	hw;
++	u32			hw[OWL_DMADESC_SIZE];
+ 	dma_addr_t		phys;
+ 	struct list_head	node;
+ };
+@@ -320,6 +311,11 @@ static inline u32 llc_hw_ctrlb(u32 int_ctl)
+ 	return ctl;
+ }
+ 
++static u32 llc_hw_flen(struct owl_dma_lli *lli)
++{
++	return lli->hw[OWL_DMADESC_FLEN] & GENMASK(19, 0);
++}
++
+ static void owl_dma_free_lli(struct owl_dma *od,
+ 			     struct owl_dma_lli *lli)
+ {
+@@ -351,8 +347,9 @@ static struct owl_dma_lli *owl_dma_add_lli(struct owl_dma_txd *txd,
+ 		list_add_tail(&next->node, &txd->lli_list);
+ 
+ 	if (prev) {
+-		prev->hw.next_lli = next->phys;
+-		prev->hw.ctrla |= llc_hw_ctrla(OWL_DMA_MODE_LME, 0);
++		prev->hw[OWL_DMADESC_NEXT_LLI] = next->phys;
++		prev->hw[OWL_DMADESC_CTRLA] |=
++					llc_hw_ctrla(OWL_DMA_MODE_LME, 0);
+ 	}
+ 
+ 	return next;
+@@ -365,8 +362,7 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+ 				  struct dma_slave_config *sconfig,
+ 				  bool is_cyclic)
+ {
+-	struct owl_dma_lli_hw *hw = &lli->hw;
+-	u32 mode;
++	u32 mode, ctrlb;
+ 
+ 	mode = OWL_DMA_MODE_PW(0);
+ 
+@@ -407,22 +403,22 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+ 		return -EINVAL;
+ 	}
+ 
+-	hw->next_lli = 0; /* One link list by default */
+-	hw->saddr = src;
+-	hw->daddr = dst;
+-
+-	hw->fcnt = 1; /* Frame count fixed as 1 */
+-	hw->flen = len; /* Max frame length is 1MB */
+-	hw->src_stride = 0;
+-	hw->dst_stride = 0;
+-	hw->ctrla = llc_hw_ctrla(mode,
+-				 OWL_DMA_LLC_SAV_LOAD_NEXT |
+-				 OWL_DMA_LLC_DAV_LOAD_NEXT);
++	lli->hw[OWL_DMADESC_CTRLA] = llc_hw_ctrla(mode,
++						  OWL_DMA_LLC_SAV_LOAD_NEXT |
++						  OWL_DMA_LLC_DAV_LOAD_NEXT);
+ 
+ 	if (is_cyclic)
+-		hw->ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_BLOCK);
++		ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_BLOCK);
+ 	else
+-		hw->ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_SUPER_BLOCK);
++		ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_SUPER_BLOCK);
++
++	lli->hw[OWL_DMADESC_NEXT_LLI] = 0;
++	lli->hw[OWL_DMADESC_SADDR] = src;
++	lli->hw[OWL_DMADESC_DADDR] = dst;
++	lli->hw[OWL_DMADESC_SRC_STRIDE] = 0;
++	lli->hw[OWL_DMADESC_DST_STRIDE] = 0;
++	lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
++	lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
+ 
+ 	return 0;
+ }
+@@ -754,7 +750,7 @@ static u32 owl_dma_getbytes_chan(struct owl_dma_vchan *vchan)
+ 			/* Start from the next active node */
+ 			if (lli->phys == next_lli_phy) {
+ 				list_for_each_entry(lli, &txd->lli_list, node)
+-					bytes += lli->hw.flen;
++					bytes += llc_hw_flen(lli);
+ 				break;
+ 			}
+ 		}
+@@ -785,7 +781,7 @@ static enum dma_status owl_dma_tx_status(struct dma_chan *chan,
+ 	if (vd) {
+ 		txd = to_owl_txd(&vd->tx);
+ 		list_for_each_entry(lli, &txd->lli_list, node)
+-			bytes += lli->hw.flen;
++			bytes += llc_hw_flen(lli);
+ 	} else {
+ 		bytes = owl_dma_getbytes_chan(vchan);
+ 	}
 -- 
-~Vinod
+2.7.4
+

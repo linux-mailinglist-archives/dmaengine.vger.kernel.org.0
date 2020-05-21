@@ -2,64 +2,64 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 578A71DD575
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2020 20:00:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 113A31DD57F
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2020 20:01:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgEUSAM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 21 May 2020 14:00:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59796 "EHLO
+        id S1729146AbgEUSAi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 21 May 2020 14:00:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727966AbgEUSAM (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 21 May 2020 14:00:12 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CEF4C061A0F
-        for <dmaengine@vger.kernel.org>; Thu, 21 May 2020 11:00:11 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id x20so9881189ejb.11
-        for <dmaengine@vger.kernel.org>; Thu, 21 May 2020 11:00:11 -0700 (PDT)
+        with ESMTP id S1728208AbgEUSAi (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 21 May 2020 14:00:38 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EE14C061A0E
+        for <dmaengine@vger.kernel.org>; Thu, 21 May 2020 11:00:38 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id f13so6670811edr.13
+        for <dmaengine@vger.kernel.org>; Thu, 21 May 2020 11:00:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=eUkxBv6Ns+W77hPeff5W44hdx05bIoCu8Yc9VruEClw=;
-        b=n3gN3uTrWjqb1fLn/6ZcvJHfZ+UhibNTqi+TFQzDa5++14yxepDNg72N0jdZKQvpzk
-         +Tqivc/ApycVumme+U5TDTNiLJIEuNcxaE2k/eJbaotFUWnqtcAWpA6OpRZuZrPaMudw
-         UglpzEy6a284xoMYLL/NbleEm/fgvsfvVnYziBxgAdQL4rY0JmJ1Lws6TX7ZFLzgcCbe
-         0btDrVJWwUI1NZ+7z5zGgfk1siqP0m8KI6UZUxh7/c5k+Ep5m7WVpkSikXsejTDp05VP
-         r7ryRNr7cNDpSrjNs7KvBxEcE0NpC+M9w+FLFQrGBmEWkVRJ7ugVJHX+b+bn+ndZ8iR6
-         PhyA==
+        bh=pfQs+IIfcmzsYpTnjJCzMAcoRiR+Y5Dc4AXmiYBhj5s=;
+        b=lXjXE9eC0b/VQ0L4ugB6k/VUWBjctw9BRnR1tzYHIRd+k5dxWXoFYDbHSvuMjaIwA5
+         6D8i1cf3SHHn/rmUMLjOaFnJdv0b9vkCRJXHtP3AfWWr4CRIrIRBMGIRgphsGHdmVfIy
+         tejVEoriM2exRifh1+a94bcBvKhlR1O/iK6Unxh51kV1hMARstVcGxPFrTYHSzsaT1jb
+         ltirnTHYBCB8/ZcDDDiHWPJsjiG6jr9hQ27r6QGEI3WdVQFmF6r0lqihD5y6/2bTQgGE
+         shqI/RIewn/9r54YaotemLe8v6DiBN1I7ky0z3Y+o6DjegXLSLW/zaBsqLwswFz6u82r
+         0qZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:reply-to:from:date:message-id
          :subject:to;
-        bh=eUkxBv6Ns+W77hPeff5W44hdx05bIoCu8Yc9VruEClw=;
-        b=qpQrRabUeKsEzwQuATiOaTo5zlwqjh2+vlZg65FRtJysH0kqxliDEy1wH4kiRaZRhF
-         0MjAl24e4EcZ2Z+eFLakSlsIesX/EM3QDuu3D4TtXfftRWRxPMh9BMVvdXX4pkpo4BMi
-         Tt4GlnQVTpY6EcNyONkAKQaa1ip9yir7AUA4zSYL7CbxKeOAJuiYjcAHGT7fnq9TMnhg
-         lWSHZCkQ+NVwGoW4gsa3QtTHkXekjdgI5HbOyDYQFs1LiJScIjpJmr+UDJnKdng7AWcw
-         NbrILfIry/SjrXewdtk/QBjEpdV5xCNdtIoBgnkuawFQ0TwUZNbZllLNHVdJsJcIG+Qe
-         ejSg==
-X-Gm-Message-State: AOAM5311AgKcriF+wj2I1s6d+Motka5IBLcg+UTBls5bJZFUmMPUJM9h
-        m7T/pOYLgdR9ncvcTfD36JqGA9L2yjixmb2X5nM=
-X-Google-Smtp-Source: ABdhPJy8iWsEjvdoDtrHKZfvk996ZjCoPcQtT/IoTAOy/XbzvmFZ4ctt0ETlakzJVH9D87Lr4QZiGMn2I3HSGyj8MbY=
-X-Received: by 2002:a17:906:498a:: with SMTP id p10mr4844123eju.163.1590084010086;
- Thu, 21 May 2020 11:00:10 -0700 (PDT)
+        bh=pfQs+IIfcmzsYpTnjJCzMAcoRiR+Y5Dc4AXmiYBhj5s=;
+        b=RB2OExrqBnBHnpcpocyZY53ff5u7jLSamWWW5XjfrbPxoT1s2mmy57N8jHbL1Lb0Qn
+         4V9feukj4Vfa0zQWwkBh9is/x9sJZZuUoq6AVmSn+vTVPIM3HA8eQsDvv0l/9MFL7C/v
+         gKJIph+sGxJQPCxYCGdf3n+5LJntMBhfXg5QkW2p3xp5HPUZadNsDfGCrYfXHVF+AzOW
+         C/OXORl/gmnFOfS+jJeR/U+3UuhDwQoCMPl0//CBt7swKEUF1kF7oCe/oFehhd5WPKxk
+         QfL1bKhO3cMHknAGYotoMymUYYCZkdo4zk9ZQj0/OmA6kgnk6zlN91uPEOhaPU6EJVuO
+         sWHA==
+X-Gm-Message-State: AOAM530Ss2mfzSaUYOT+1VGTvzldLYhlWIEStWwCTxMRkIqusWLGyyeM
+        qCMEkbOz/6WKVyL4GWk1HXDL0HmDB/nrwm83Wto=
+X-Google-Smtp-Source: ABdhPJxYGJq6CRmNJjdX8PzASP3RTjNNFAQ/7dviQkqh7Ok3WTJuI9t7j6N9BiYZV62hDaKv2M3GCPktxxhkHYNwdnA=
+X-Received: by 2002:a50:ec0d:: with SMTP id g13mr1786275edr.296.1590084036715;
+ Thu, 21 May 2020 11:00:36 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:aa7:d7d2:0:0:0:0:0 with HTTP; Thu, 21 May 2020 11:00:09
+Received: by 2002:aa7:d7d2:0:0:0:0:0 with HTTP; Thu, 21 May 2020 11:00:36
  -0700 (PDT)
 Reply-To: jpmorganchasebanknyusa@gmail.com
 From:   Barrister Robert Richter UN-Attorney at Law Court-Benin 
         <eco.bank1204@gmail.com>
-Date:   Thu, 21 May 2020 20:00:09 +0200
-Message-ID: <CAOE+jADcrG=5WVjkdFRJcC4wAxP1EtLE-qittF47J2ksTqaJug@mail.gmail.com>
+Date:   Thu, 21 May 2020 20:00:36 +0200
+Message-ID: <CAOE+jABvXMpYFRxwYwJtyhYCU2Ep4f5uwyS+_ai2mca4mxUvtg@mail.gmail.com>
 Subject: Contact JP Morgan Chase Bank NY USA to receive your transfer
  $35.700,000Million USD Deposited this Morning
 To:     undisclosed-recipients:;
-Content-Type: multipart/mixed; boundary="00000000000096069105a62c48cd"
+Content-Type: multipart/mixed; boundary="0000000000002c27a805a62c4aa0"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
---00000000000096069105a62c48cd
+--0000000000002c27a805a62c4aa0
 Content-Type: text/plain; charset="UTF-8"
 
 Dear Friend.
@@ -79,7 +79,7 @@ God Bless you
 Barrister Robert Richter
 UN-Attorney at Law Court-Benin
 
---00000000000096069105a62c48cd
+--0000000000002c27a805a62c4aa0
 Content-Type: image/jpeg; name="Barrister  Robert Richter 2.jpg"
 Content-Disposition: attachment; filename="Barrister  Robert Richter 2.jpg"
 Content-Transfer-Encoding: base64
@@ -280,7 +280,7 @@ lEe+uk1BfQhgYIpUq7eQwQClt/apmGjjfsNNWQW0BgilSop2kwNcki2VuHI/VbkRsacbhN4bXdPj
 SpVKsKJvD+G5GW5mJdCCCTIkdx0q/Yfjou25W2Bftw5HJkHv5Ty0Ox+NKlXL+I6XFKPrOPzQ5T/r
 8Ga9NlmnsT4fZZcM6uoI1VhInsIqtcW4a2EY37P+FIzpPuzzXu7uXhsqVcfJFW0dDHJqmFMNxUMo
 PaJpUqVYmjaf/9k=
---00000000000096069105a62c48cd
+--0000000000002c27a805a62c4aa0
 Content-Type: image/jpeg; name="Barrister  Robert Richter.jpg"
 Content-Disposition: attachment; filename="Barrister  Robert Richter.jpg"
 Content-Transfer-Encoding: base64
@@ -472,4 +472,4 @@ AMmSCTl8fOgDpbwPEWcQ1y+gTOSyrmDHLJVdpA0A51qnRj+v47zX6mhz2z+/Z/cP8RoSk7/saKWv
 wZgacttTZ50pKeIGSFFdyCu26U1UQpHxDQKh3hUjG7r6/amGqU2PEkcKuQSvfqPMf7fStB4FxEDA
 iyxlRediNNyFjlJ3O9Zvgv6RfX6UadHNj++f4Vqv6fsTJ0QsW5S5NoZYYEchB5R5iizAdI/1ayVn
 ny50O8d/pF8h/EKiYj3j+eVSnD5s6ceRqKP/2Q==
---00000000000096069105a62c48cd--
+--0000000000002c27a805a62c4aa0--

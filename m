@@ -2,97 +2,84 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20FA81DC4E6
-	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2020 03:47:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 296751DC832
+	for <lists+dmaengine@lfdr.de>; Thu, 21 May 2020 10:05:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgEUBrJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 20 May 2020 21:47:09 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:34352 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbgEUBrJ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 20 May 2020 21:47:09 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id A36508030776;
-        Thu, 21 May 2020 01:47:06 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id L0UijymJus4x; Thu, 21 May 2020 04:47:06 +0300 (MSK)
-Date:   Thu, 21 May 2020 04:47:05 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <vireshk@kernel.org>,
+        id S1728436AbgEUIFz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 21 May 2020 04:05:55 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:47522 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726208AbgEUIFz (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 21 May 2020 04:05:55 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app3 (Coremail) with SMTP id cC_KCgC3WQRWNsZeXibnAA--.12357S4;
+        Thu, 21 May 2020 16:05:46 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 5/6] dmaengine: dw: Introduce max burst length hw
- config
-Message-ID: <20200521014705.ha7mpxoio4gitjox@mobilestation>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-6-Sergey.Semin@baikalelectronics.ru>
- <20200508114153.GK185537@smile.fi.intel.com>
- <20200512140820.ssjv6pl7busqqi3t@mobilestation>
- <20200512191208.GG185537@smile.fi.intel.com>
- <20200515063950.GI333670@vkoul-mobl>
- <20200517193818.jaiwgzgz7tutj4mk@mobilestation>
- <20200519170714.GT374218@vkoul-mobl.Dlink>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200519170714.GT374218@vkoul-mobl.Dlink>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+        Thierry Reding <thierry.reding@gmail.com>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: tegra210-adma: Fix runtime PM imbalance on error
+Date:   Thu, 21 May 2020 16:05:41 +0800
+Message-Id: <20200521080541.25229-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgC3WQRWNsZeXibnAA--.12357S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoWDCwb_Cr
+        18Zr97ursIkr4qvr13Gr13Zr92qF4qqFWvgr1Iv34Sg347Zwn8ArW5ZFn5Cr43Ww4UCF1q
+        yrZFgFy7ArsxujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb-xFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
+        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWU
+        AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY02Avz4vE
+        14v_GFyl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026x
+        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
+        JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
+        1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
+        Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F
+        4UJbIYCTnIWIevJa73UjIFyTuYvjfU0yxRDUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgEHBlZdtOPItAAVs3
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, May 19, 2020 at 10:37:14PM +0530, Vinod Koul wrote:
-> On 17-05-20, 22:38, Serge Semin wrote:
-> > On Fri, May 15, 2020 at 12:09:50PM +0530, Vinod Koul wrote:
-> > > On 12-05-20, 22:12, Andy Shevchenko wrote:
-> > > > On Tue, May 12, 2020 at 05:08:20PM +0300, Serge Semin wrote:
-> > > > > On Fri, May 08, 2020 at 02:41:53PM +0300, Andy Shevchenko wrote:
-> > > > > > On Fri, May 08, 2020 at 01:53:03PM +0300, Serge Semin wrote:
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-[nip]
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/dma/tegra210-adma.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> > > > > > But let's see what we can do better. Since maximum is defined on the slave side
-> > > > > > device, it probably needs to define minimum as well, otherwise it's possible
-> > > > > > that some hardware can't cope underrun bursts.
-> > > > > 
-> > > > > There is no need to define minimum if such limit doesn't exists except a
-> > > > > natural 1. Moreover it doesn't exist for all DMA controllers seeing noone has
-> > > > > added such capability into the generic DMA subsystem so far.
-> > > > 
-> > > > There is a contract between provider and consumer about DMA resource. That's
-> > > > why both sides should participate in fulfilling it. Theoretically it may be a
-> > > > hardware that doesn't support minimum burst available in DMA by a reason. For
-> > > > such we would need minimum to be provided as well.
-> > > 
-> > > Agreed and if required caps should be extended to tell consumer the
-> > > minimum values supported.
-> > 
-> > Sorry, it's not required by our hardware. Is there any, which actually has such
-> > limitation? (minimum burst length)
-> 
-> IIUC the idea is that you will tell maximum and minimum values supported
-> and client can pick the best value. Esp in case of slave transfers
-> things like burst, msize are governed by client capability and usage. So
-> exposing the set to pick from would make sense
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index c4ce5dfb149b..8f5e4949d720 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -870,7 +870,7 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ 
+ 	ret = pm_runtime_get_sync(&pdev->dev);
+ 	if (ret < 0)
+-		goto rpm_disable;
++		goto rpm_put;
+ 
+ 	ret = tegra_adma_init(tdma);
+ 	if (ret)
+@@ -921,7 +921,6 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ 	dma_async_device_unregister(&tdma->dma_dev);
+ rpm_put:
+ 	pm_runtime_put_sync(&pdev->dev);
+-rpm_disable:
+ 	pm_runtime_disable(&pdev->dev);
+ irq_dispose:
+ 	while (--i >= 0)
+-- 
+2.17.1
 
-Agreed. I'll add min_burst capability.
-
--Sergey
-
-> 
-> -- 
-> ~Vinod

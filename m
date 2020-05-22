@@ -2,96 +2,76 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D40C71DE4B5
-	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2020 12:44:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 024B11DE4B6
+	for <lists+dmaengine@lfdr.de>; Fri, 22 May 2020 12:45:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgEVKoF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 22 May 2020 06:44:05 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12462 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728640AbgEVKoF (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 22 May 2020 06:44:05 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ec7ace80001>; Fri, 22 May 2020 03:43:52 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 22 May 2020 03:44:04 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 22 May 2020 03:44:04 -0700
-Received: from [10.26.74.233] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 22 May
- 2020 10:44:02 +0000
-Subject: Re: [PATCH] dmaengine: tegra210-adma: Fix runtime PM imbalance on
- error
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, <kjlu@umn.edu>
-CC:     Laxman Dewangan <ldewangan@nvidia.com>,
+        id S1728606AbgEVKpu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 22 May 2020 06:45:50 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:61460 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728371AbgEVKpu (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 22 May 2020 06:45:50 -0400
+Received: from localhost.localdomain (unknown [222.205.77.158])
+        by mail-app3 (Coremail) with SMTP id cC_KCgD3_4tCrcdesc_xAA--.30237S4;
+        Fri, 22 May 2020 18:45:26 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Dan Williams <dan.j.williams@intel.com>,
         Vinod Koul <vkoul@kernel.org>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200522075846.30706-1-dinghao.liu@zju.edu.cn>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <967c17d2-6b57-27f0-7762-cd0835caaec9@nvidia.com>
-Date:   Fri, 22 May 2020 11:43:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200522075846.30706-1-dinghao.liu@zju.edu.cn>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590144232; bh=xtgWWsjcP6ZNZENOPLR8tiW6V23Hn5QNs7Y0J6/9PQs=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=o/MiK8V3/4ZeX7LaWuBYGUkLdr53KoorpJF8Ga2q0C69t1nVWAQqLNqN5UjFMOgUX
-         NKaMOCHW6XL+0xOPFSNzGI9mAU8VH2LDpq+bdGP3w9s40XMwKf+DELY8Q89KRmNOGI
-         FNqHcRB7ZXGHwpxV2PouIpFCQhu6n/MJ7MvQwhPh4W1zw5ztPYavzYUgJuYWtshpZW
-         vgu3vUmg/W9DMYUMT0kNhEQwsxWrCwCK2VKVeK2JrLLErms5DSBILMpIFxuOszUXiQ
-         XoGP233+Cd65c78w07gZFOctFFpDXEkmFJfEJppSuTS9z6yjqKH7C8VbEHLluJyTsd
-         YZmf4lb8bQW3A==
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: sh: usb-dmac: Fix runtime PM imbalance on error
+Date:   Fri, 22 May 2020 18:45:19 +0800
+Message-Id: <20200522104521.29409-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgD3_4tCrcdesc_xAA--.30237S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrW7ZFW3Gr18JF1xWF4UArb_yoW3Zwc_Kr
+        n8uay2gwnYgF4vvw1DCF4YvryS9ryDXw1kWr10qa4fK390vFZ8J3yUXr95Zw4fX3y7uryU
+        tFsrWF93ArW5ZjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbs8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
+        JrylYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8twCF04k20xvY0x0EwIxG
+        rwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
+        6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+        kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
+        67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43
+        ZEXa7VU8jFAJUUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUIBlZdtOQgrAAPsR
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code. Thus a pairing decrement is needed on
+the error handling path to keep the counter balanced.
 
-On 22/05/2020 08:58, Dinghao Liu wrote:
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> when it returns an error code. Thus a pairing decrement is needed on
-> the error handling path to keep the counter balanced.
-> 
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
->  drivers/dma/tegra210-adma.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-> index c4ce5dfb149b..803e1f4d5dac 100644
-> --- a/drivers/dma/tegra210-adma.c
-> +++ b/drivers/dma/tegra210-adma.c
-> @@ -658,6 +658,7 @@ static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
->  
->  	ret = pm_runtime_get_sync(tdc2dev(tdc));
->  	if (ret < 0) {
-> +		pm_runtime_put_sync(tdc2dev(tdc));
->  		free_irq(tdc->irq, tdc);
->  		return ret;
->  	}
-> 
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/dma/sh/usb-dmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-There is another place in probe that needs to be fixed as well. Can you
-correct this while you are at it?
-
-Thanks
-Jon
-
+diff --git a/drivers/dma/sh/usb-dmac.c b/drivers/dma/sh/usb-dmac.c
+index b218a013c260..1485c2fd7c85 100644
+--- a/drivers/dma/sh/usb-dmac.c
++++ b/drivers/dma/sh/usb-dmac.c
+@@ -853,8 +853,8 @@ static int usb_dmac_probe(struct platform_device *pdev)
+ 
+ error:
+ 	of_dma_controller_free(pdev->dev.of_node);
+-	pm_runtime_put(&pdev->dev);
+ error_pm:
++	pm_runtime_put(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+ 	return ret;
+ }
 -- 
-nvpublic
+2.17.1
+

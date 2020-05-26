@@ -2,157 +2,139 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A16411E1AFD
-	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2020 08:10:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76CF61E1B3D
+	for <lists+dmaengine@lfdr.de>; Tue, 26 May 2020 08:29:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgEZGK2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 26 May 2020 02:10:28 -0400
-Received: from mail-bn8nam11on2065.outbound.protection.outlook.com ([40.107.236.65]:39136
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726207AbgEZGK2 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 26 May 2020 02:10:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oVM5xHMTq7eu2xPtIBszwAdtDXd/6lMZaqrMlFJyMCVmr4vLQFPGL0T2DJ0be3TA4rNtEO0GkC4de6J8TgDEV23ak2nyF8UHY2GgZoDqU0jxCYfod5pqhFLlsxJeo9HjgDRBwhM/qi/Ggusg7VuX+cwGNMQX90QWuisZEJoFBxCWnlSaDI79FJCrjQLqoSHLUgwenGcESbmpRlMrzHtHrP0u66daZQ+GAjTSupWNddsrwO4sKPHHeRscGkBr/WS6qmG3+TOdKK+vpjWXzJ4hVUQecHw035nLUc/Eykq4x1qc+MZjsvB/oTj9b0FLdcWSsXGslP+aeku3v2y6BJ0fyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IVdE3LEia6LaEeCUMw1Ox1io46n8dusWNR4GW1NtiBM=;
- b=drTwubObJJgowZuLkVeQmBH2lQVwgxaMWHleWzEDx+6QMQCgORO9neWV6/0BbUbFg2653QKBa4i8jSXF7GltrZSNy10j1Fz6gYW1ZmdrW6faedRhx/TcXeyQWHGxGdsKoo0/6M7Jc0S3G+0KvPgJz434Hr5ppplc9B2seGLSmw2gyPmR2L3m3SKopXE3RUw7cdDx7Yvpzae0LuUJVb/YNEXcg3uLZnKv34v9ge9mvGCji/Nzrb6JruEdvBbGYtnbe9Gycd0f5F8EKT+P7w5aEH4QIAoNDKJKWXlnToACNCO6qP6C7cu/8mT6aBNH0xozMK8tIWiM0aa1eMht0Pluhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IVdE3LEia6LaEeCUMw1Ox1io46n8dusWNR4GW1NtiBM=;
- b=eqK3SQsgRZ1Me6bzbPShbipk+xmIGYvnmu5uxZbV6zaJR6Hk3kj2yVq135eXjy/RtV+n8e8SATgkt1dIyry5Qwc0aiFKbjJw0zBEfvim43NNe1hPE/qHqMEtfbLilkBpDqm5Xob1o5P7Z7RjL0m+IHkoMkB2EVMo/SHSpE9225w=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB3420.namprd12.prod.outlook.com (2603:10b6:5:3a::27) by
- DM6PR12MB3291.namprd12.prod.outlook.com (2603:10b6:5:186::32) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3021.24; Tue, 26 May 2020 06:10:24 +0000
-Received: from DM6PR12MB3420.namprd12.prod.outlook.com
- ([fe80::d007:1b50:9d7c:632f]) by DM6PR12MB3420.namprd12.prod.outlook.com
- ([fe80::d007:1b50:9d7c:632f%5]) with mapi id 15.20.3021.029; Tue, 26 May 2020
- 06:10:24 +0000
-Subject: Re: [PATCH v4 3/3] dmaengine: ptdma: Add debugfs entries for PTDMA
- information
-To:     Vinod Koul <vkoul@kernel.org>, Sanjay R Mehta <Sanju.Mehta@amd.com>
-Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
-        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
-        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
+        id S1726873AbgEZG3O (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 26 May 2020 02:29:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726750AbgEZG3O (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 26 May 2020 02:29:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16BB720776;
+        Tue, 26 May 2020 06:29:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590474553;
+        bh=1bi6tm/grFse4a4MPlt1A7X1cCrCLhJ1NkOLAEX78B4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CEuTqWd4htM5rnZTZTTs7KjKExi5VbYKBm7qjorcqYoryx9oIiphApHho10cGGRx1
+         Agdy03TJrym0qVFbxxU2kgMBIDkJOHcnJgvbjQZYdBkFwW6o+19JoZVo6t3t9emwV5
+         or6ZS+9iyvwILaw2rAQlwIx6oF1sf7bVQ4nh8a5M=
+Date:   Tue, 26 May 2020 08:29:11 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sanjay R Mehta <sanmehta@amd.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Sanjay R Mehta <Sanju.Mehta@amd.com>,
+        dan.j.williams@intel.com, Thomas.Lendacky@amd.com,
+        Shyam-sundar.S-k@amd.com, Nehal-bakulchandra.Shah@amd.com,
+        robh@kernel.org, mchehab+samsung@kernel.org, davem@davemloft.net,
         linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] dmaengine: ptdma: Initial driver for the AMD
+ PTDMA controller
+Message-ID: <20200526062911.GA2578492@kroah.com>
 References: <1588108416-49050-1-git-send-email-Sanju.Mehta@amd.com>
- <1588108416-49050-4-git-send-email-Sanju.Mehta@amd.com>
- <20200504062002.GL1375924@vkoul-mobl>
-From:   Sanjay R Mehta <sanmehta@amd.com>
-Message-ID: <280220fd-9780-e2b4-7a5a-26f3a0119c43@amd.com>
-Date:   Tue, 26 May 2020 11:40:08 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200504062002.GL1375924@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BMXPR01CA0061.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:2c::25) To DM6PR12MB3420.namprd12.prod.outlook.com
- (2603:10b6:5:3a::27)
+ <1588108416-49050-2-git-send-email-Sanju.Mehta@amd.com>
+ <20200504055539.GJ1375924@vkoul-mobl>
+ <f016a02b-ebc4-6280-dff4-25e189ff2d49@amd.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2406:7400:70:65d3::1] (2406:7400:70:65d3::1) by BMXPR01CA0061.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:2c::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.24 via Frontend Transport; Tue, 26 May 2020 06:10:18 +0000
-X-Originating-IP: [2406:7400:70:65d3::1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 0aa435aa-2cad-4522-e4e0-08d8013b7a73
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3291:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB329175B0D9E64EE28C4DD9DDE5B00@DM6PR12MB3291.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 041517DFAB
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5sqVS8LgW5zwGpRWyKjRhEF0eW8fmeVc1U2DoEvSgtLGCz/lSzpbS3yUEjGFPkey52A4FVNEfhIF33i1IVMKDdf/c7S3Fi6/kcz+2ZqghTThHPgUw7mdzC0lJB7F2tMOilwOi0BUC47a0JJCI5/qS8ohAGkDoV3QTR/8MIdcPFRjcf5WlCjAzenZ8zDZecvn7wCXegk/SrU9tECYKWyB2jEdJqqzhyaQ9D4gETD9Wh83wtI+uv2QJ7HKWTb3tD3+0INtHUnYaEcuByVteH/9TOto/lE42WSDQLS/TJYccXAHQfL/bARccoQXOL1z/BYoSCU032XQq8Unw9sYLqWnRj+7ELMHbIeK1DBMF0Hrh1Jb/sPv9N0/S7G1bclrV0oz
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3420.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(396003)(346002)(376002)(39860400002)(36756003)(8936002)(2616005)(110136005)(8676002)(316002)(4326008)(478600001)(2906002)(31696002)(6666004)(6486002)(6636002)(66556008)(66476007)(66946007)(52116002)(5660300002)(16526019)(186003)(31686004)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: roIws0FCNRzp0/2Nqt1CZTQRM2olUAatpl427LEl/5xlZoNKoJcT5zQCtLBCFWuGGRUHYsfgyQb1a94JVIQtmQ/jwbuypmSPex9Sc6mTTcHyFZ3qlMtT+uq7PkwntNht5dPDQyrJuapODiUK+5R+xqjbtaUxKb5X2SFSkjunPQLDRW0uGYlKvk+WwCtRUFtUKJRJ9jwAP/G9lD4dTpslKAKXD704ttnC9TYAJ5opD//mDQv7F7LaLgwD3M5A4cKhNrjZv0/idDF9Y8ThmuB1ryh3W6FsqXhDp95k70KB17/dVslFbtWyfZcvkUrGKp10pNCqrEabcxbkevRHUN0qAl1e4BHEdWlFfzACX8z1VNdTfkzacJcGFxmw2O3RdxOO5I8sNGmG89SYeLcExSr+DK5+BNP0S99JCeFji7VNeRdta3hzwaXVvK/cjaAOTk56y4kfSNyTaBaDRz3+q90WEdpfADlvs82FXqCFbgceqz5twuz2ZtIDEFrmZG48Jds/
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0aa435aa-2cad-4522-e4e0-08d8013b7a73
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2020 06:10:24.3188
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OjEnk7euP4VqtFCbQe5FcU5KSmYa22Nq3qEb3bnavcB/LztiakpbxmWl0Aldi1zVxuMLDTcXS3ufkDQICJlTDg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3291
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f016a02b-ebc4-6280-dff4-25e189ff2d49@amd.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
->> +static const struct file_operations pt_debugfs_info_ops = {
->> +     .owner = THIS_MODULE,
->> +     .open = simple_open,
->> +     .read = ptdma_debugfs_info_read,
->> +     .write = NULL,
->> +};
->> +
->> +static const struct file_operations pt_debugfs_queue_ops = {
->> +     .owner = THIS_MODULE,
->> +     .open = simple_open,
->> +     .read = ptdma_debugfs_queue_read,
->> +     .write = ptdma_debugfs_queue_write,
->> +};
->> +
->> +static const struct file_operations pt_debugfs_stats_ops = {
->> +     .owner = THIS_MODULE,
->> +     .open = simple_open,
->> +     .read = ptdma_debugfs_stats_read,
->> +     .write = ptdma_debugfs_stats_write,
->> +};
+On Tue, May 26, 2020 at 11:35:02AM +0530, Sanjay R Mehta wrote:
+> Apologies for my delayed response.
 > 
-> pls convert to use DEFINE_SHOW_ATTRIBUTE()
-> 
-Sure, will incorporate the changes in next version of patch.
+> >> +#include <linux/module.h>
+> >> +#include <linux/kernel.h>
+> >> +#include <linux/pci.h>
+> >> +#include <linux/dma-mapping.h>
+> >> +#include <linux/interrupt.h>
+> >> +
+> >> +#include "ptdma.h"
+> >> +
+> >> +static int cmd_queue_length = 32;
+> >> +module_param(cmd_queue_length, uint, 0644);
+> >> +MODULE_PARM_DESC(cmd_queue_length,
+> >> +              " length of the command queue, a power of 2 (2 <= val <= 128)");
+> > 
+> > Any reason for this as module param? who will configure this and how?
+> > 
+> The command queue length can be from 2 to 64K command.
+> Therefore added as module parameter to allow the length of the queue to be specified at load time.
 
->> +void ptdma_debugfs_setup(struct pt_device *pt)
->> +{
->> +     struct pt_cmd_queue *cmd_q;
->> +     char name[MAX_NAME_LEN + 1];
->> +     struct dentry *debugfs_q_instance;
->> +
->> +     if (!debugfs_initialized())
->> +             return;
->> +
->> +     mutex_lock(&pt_debugfs_lock);
->> +     if (!pt_debugfs_dir)
->> +             pt_debugfs_dir = debugfs_create_dir(KBUILD_MODNAME, NULL);
->> +     mutex_unlock(&pt_debugfs_lock);
->> +
->> +     pt->debugfs_instance = debugfs_create_dir(pt->name, pt_debugfs_dir);
->> +
->> +     debugfs_create_file("info", 0400, pt->debugfs_instance, pt,
->> +                         &pt_debugfs_info_ops);
->> +
->> +     debugfs_create_file("stats", 0600, pt->debugfs_instance, pt,
->> +                         &pt_debugfs_stats_ops);
->> +
->> +     cmd_q = &pt->cmd_q;
->> +
->> +     snprintf(name, MAX_NAME_LEN - 1, "q");
->> +
->> +     debugfs_q_instance =
->> +             debugfs_create_dir(name, pt->debugfs_instance);
->> +
->> +     debugfs_create_file("stats", 0600, debugfs_q_instance, cmd_q,
->> +                         &pt_debugfs_queue_ops);
-> 
-> Pls use dbg_dev_root in struct dma_device as root for your own debugfs
-> 
-Sure, will incorporate the changes in next version of patch.
+Please no, this is not the 1990's.  No one can use them easily, make
+this configurable on a per-device basis if you really need to be able to
+change this.
 
-> Thanks
-> --
-> ~Vinod
-> 
+But step back, why do you need to change this at all?  Why do you have a
+limit and why can you not just do this dynamically?  The goal here
+should not have any user-changable options at all, it should "just
+work".
+
+> >> + * List of PTDMAs, PTDMA count, read-write access lock, and access functions
+> >> + *
+> >> + * Lock structure: get pt_unit_lock for reading whenever we need to
+> >> + * examine the PTDMA list. While holding it for reading we can acquire
+> >> + * the RR lock to update the round-robin next-PTDMA pointer. The unit lock
+> >> + * must be acquired before the RR lock.
+> >> + *
+> >> + * If the unit-lock is acquired for writing, we have total control over
+> >> + * the list, so there's no value in getting the RR lock.
+> >> + */
+> >> +static DEFINE_RWLOCK(pt_unit_lock);
+> >> +static LIST_HEAD(pt_units);
+> >> +
+> >> +static struct pt_device *pt_rr;
+> > 
+> > why do we need these globals and not in driver context?
+> > 
+> The AMD SOC has multiple PT controller's with the same PCI device ID and hence the same driver is probed for each instance.
+> The driver stores the pt_device context of each PT controller in this global list.
+
+That's horrid and not needed at all.  No driver should have a static
+list anymore, again, this isn't the 1990's :)
+
+> >> +static void pt_add_device(struct pt_device *pt)
+> >> +{
+> >> +     unsigned long flags;
+> >> +
+> >> +     write_lock_irqsave(&pt_unit_lock, flags);
+> >> +     list_add_tail(&pt->entry, &pt_units);
+> >> +     if (!pt_rr)
+> >> +             /*
+> >> +              * We already have the list lock (we're first) so this
+> >> +              * pointer can't change on us. Set its initial value.
+> >> +              */
+> >> +             pt_rr = pt;
+> >> +     write_unlock_irqrestore(&pt_unit_lock, flags);
+> >> +}
+> > 
+> > Can you please explain what do you mean by having a list of devices and
+> > why are we adding/removing dynamically?
+> > 
+> Since AMD SOC has many PT controller's with the same PCI device ID and
+> hence the same driver probed for initialization of each PT controller device instance.
+
+That's fine, PCI drivers should all work on a per-device basis and not
+care if there are 1, or 1000 of the same device in the system.
+
+> Also, the number of PT controller varies for different AMD SOC's.
+
+Again, that's fine.
+
+> Therefore the dynamic adding/removing of each PT controller context to global device list implemented.
+
+Such a list should never be needed, unless you are doing something
+really wrong.  Please remove it and use the proper PCI device driver
+apis for your individual instances instead.
+
+thanks,
+
+greg k-h

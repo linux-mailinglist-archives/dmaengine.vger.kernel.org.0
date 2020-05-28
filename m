@@ -2,146 +2,83 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C3D41E66BF
-	for <lists+dmaengine@lfdr.de>; Thu, 28 May 2020 17:50:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 957341E6B26
+	for <lists+dmaengine@lfdr.de>; Thu, 28 May 2020 21:36:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404520AbgE1PuX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 28 May 2020 11:50:23 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:43234 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404503AbgE1PuW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 May 2020 11:50:22 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 226DD803083A;
-        Thu, 28 May 2020 15:50:19 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id scf8l9YyCqMo; Thu, 28 May 2020 18:50:18 +0300 (MSK)
-Date:   Thu, 28 May 2020 18:50:17 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
+        id S2406634AbgE1Tgs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 28 May 2020 15:36:48 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45740 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406319AbgE1Tgq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 May 2020 15:36:46 -0400
+Received: by mail-io1-f66.google.com with SMTP id y5so8596721iob.12;
+        Thu, 28 May 2020 12:36:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=anLARnrJJYeYAOB5KTKHSKOnzH0boPrtofWMELzWPU8=;
+        b=eszk8+Dr5DGsMPVkuuDZkT9s0FqOEuL1kSXDU6CHHdpAyv3w59G8WWWangxo2itI7P
+         gdqo/85HaK7KV1rX91Tm/xqSvCXUQIWJLGSWEOPsbfb9Jek0r5nY6Pd9cMomYu3b5QdG
+         TCkRoRjcXt5EzyBPYCfdagT+RCcARPRm1LhSEftBII4FSKFbwPF1ioV1QxX5kqHUsOh/
+         6BBQuE6OH7gMfQqJg965LiGH+xTj+M3aSWJKtro02rXNBHZf0eAYqhkqV3i3D2ikH2c2
+         espqQS17WeqLU0FNHkkk/Jy/i9yrNWyWmE9TOqorkJXyWlEU60T+zlJrqqdTW1NcJUUO
+         G6xA==
+X-Gm-Message-State: AOAM5331Wh+sRBbU3q3jArtjh/jDaaPjv5624qImiZdzwnCBUfJrKtjx
+        rbXVztGWDclvMpWfPr9eorkUj2k=
+X-Google-Smtp-Source: ABdhPJxAbgV9QaVK5dOC48fScjQWHA5Gld2FnTR86BVEq9Vbv9X4kGVbNWcHJZhyKd7pm6KmH4S+0Q==
+X-Received: by 2002:a5d:88d3:: with SMTP id i19mr3781474iol.194.1590694605038;
+        Thu, 28 May 2020 12:36:45 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id v2sm1938613iol.36.2020.05.28.12.36.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 12:36:44 -0700 (PDT)
+Received: (nullmailer pid 553763 invoked by uid 1000);
+        Thu, 28 May 2020 19:36:42 -0000
+Date:   Thu, 28 May 2020 13:36:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-renesas-soc@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-serial@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 10/10] dmaengine: dw: Initialize max_sg_nents with
- nollp flag
-Message-ID: <20200528155017.ayetroojyvxl74kb@mobilestation>
-References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
- <20200526225022.20405-11-Sergey.Semin@baikalelectronics.ru>
- <20200528145630.GV1634618@smile.fi.intel.com>
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 03/10] dt-bindings: serial: renesas,scifa: Document
+ r8a7742 bindings
+Message-ID: <20200528193642.GA552811@bogus>
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200512222056.GA7267@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200528145630.GV1634618@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200512222056.GA7267@bogus>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, May 28, 2020 at 05:56:30PM +0300, Andy Shevchenko wrote:
-> On Wed, May 27, 2020 at 01:50:21AM +0300, Serge Semin wrote:
-> > Multi-block support provides a way to map the kernel-specific SG-table so
-> > the DW DMA device would handle it as a whole instead of handling the
-> > SG-list items or so called LLP block items one by one. So if true LLP
-> > list isn't supported by the DW DMA engine, then soft-LLP mode will be
-> > utilized to load and execute each LLP-block one by one. The soft-LLP mode
-> > of the DMA transactions execution might not work well for some DMA
-> > consumers like SPI due to its Tx and Rx buffers inter-dependency. Let's
-> > expose the nollp flag indicating the soft-LLP mode by means of the
-> > max_sg_nents capability, so the DMA consumer would be ready to somehow
-> > workaround errors caused by such mode being utilized.
+On Tue, May 12, 2020 at 05:20:56PM -0500, Rob Herring wrote:
+> On Sun,  3 May 2020 22:46:47 +0100, Lad Prabhakar wrote:
+> > RZ/G1H (R8A7742) SoC also has the R-Car gen2 compatible SCIFA ports,
+> > so document the SoC specific bindings.
 > > 
-> 
-> In principal I agree, one nit below.
-> If you are okay with it, feel free to add my Rb tag.
-> 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: linux-mips@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > 
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > > ---
-> > 
-> > Changelog v3:
-> > - This is a new patch created as a result of the discussion with Vinud and
-> >   Andy in the framework of DW DMA burst and LLP capabilities.
-> > ---
-> >  drivers/dma/dw/core.c | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-> > index 29c4ef08311d..b850eb7fd084 100644
-> > --- a/drivers/dma/dw/core.c
-> > +++ b/drivers/dma/dw/core.c
-> > @@ -1054,6 +1054,15 @@ static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
-> >  	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
-> >  
-> >  	caps->max_burst = dwc->max_burst;
-> > +
-> > +	/*
-> > +	 * It might be crucial for some devices to have the hardware
-> > +	 * accelerated multi-block transfers supported, aka LLPs in DW DMAC
-> > +	 * notation. So if LLPs are supported then max_sg_nents is set to
-> > +	 * zero which means unlimited number of SG entries can be handled in a
-> > +	 * single DMA transaction, otherwise it's just one SG entry.
-> > +	 */
-> 
-> > +	caps->max_sg_nents = dwc->nollp;
-> 
-
-> To be on the safer side I would explicitly do it like
-> 
-> 	if (dwc->nollp)
-> 	 /* your nice comment */
-> 	 = 1;
-> 	else
-> 	 /* Unlimited */
-> 	 = 0;
-> 
-> type or content of nollp theoretically can be changed and this will affect maximum segments.
-
-Agree. Though I don't like formatting you suggested. If I add my nice comment
-between if-statement and assignment the the former will be look detached from
-the if-statement, which seems a bit ugly. So I'd leave the comment above the
-whole if-else statement, especially seeing I've already mentioned there about
-the unlimited number of SG entries there.
-
-	/*
-	 * It might be crucial for some devices to have the hardware
-	 * accelerated multi-block transfers supported, aka LLPs in DW DMAC
-	 * notation. So if LLPs are supported then max_sg_nents is set to
-	 * zero which means unlimited number of SG entries can be handled in a
-	 * single DMA transaction, otherwise it's just one SG entry.
-	 */
- 	if (dwc->nollp)
- 		caps->max_sg_nents = 1;
- 	else
- 		caps->max_sg_nents = 0;
-
--Sergey
-
-> 
-> >  }
-> >  
-> >  int do_dma_probe(struct dw_dma_chip *chip)
-> > -- 
-> > 2.26.2
+> >  Documentation/devicetree/bindings/serial/renesas,scifa.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
 > > 
 > 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+> Acked-by: Rob Herring <robh@kernel.org>
+
+Geert asked me to apply this one, so I have now.
+
+Rob

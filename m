@@ -2,210 +2,254 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 220301E4600
-	for <lists+dmaengine@lfdr.de>; Wed, 27 May 2020 16:35:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED03F1E53AE
+	for <lists+dmaengine@lfdr.de>; Thu, 28 May 2020 04:10:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389297AbgE0Ofa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 27 May 2020 10:35:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45394 "EHLO
+        id S1725896AbgE1CKX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 27 May 2020 22:10:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389152AbgE0Of3 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 May 2020 10:35:29 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12A64C05BD1E
-        for <dmaengine@vger.kernel.org>; Wed, 27 May 2020 07:35:29 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id x22so14600521lfd.4
-        for <dmaengine@vger.kernel.org>; Wed, 27 May 2020 07:35:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=FwleX6FavJvI4llVuloDJkYuBtDEYvQjFoEF0h/WDec=;
-        b=a+8Gx93zMoaKoP31Auxx1ZCXENfVQdtybaWeG6An6o03L2xviFYhvQmaVx3n9Qf76h
-         qx/+AwwewCazFRkSO3BBE7PrYPw6pATS1wyAbBu+vtHubLCyKTbHyY0Vf50j7mmeKztu
-         4H0l293gwzwh5AprG/u1RbZZUmu+93NgfZX9Jr4vey3gl9H5BCdSvN4OOMC1uCtZXB2V
-         lOHWTiPUUuvn+nqzXLyMLcG8F1+sUIHH4zy/epR0+UAzAJSJzM+jqda1EvMKzPgbtF32
-         wcOipna+/UI6va5xFK80GauG6w+c4ROJ/6qXKmPgLPHUiPOmNUGsRKPO2Bq7a6tMJBPo
-         Uesw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=FwleX6FavJvI4llVuloDJkYuBtDEYvQjFoEF0h/WDec=;
-        b=G8F6iU1unQgrVl9huMfXM2nD3k4FgSOby6i/4VgdWWOIIp83jnnfo+ubHpP+665Ajn
-         l7Q+SpQAer2DcvI+TQuJ0G6OI7UbyPfi17LXQ0l/FUHWbk1gL75DDfmH9rMttM/n8Agt
-         4kofrse+n0/VgMIKiUDhGeUNrZ3QibvOsjq8TZTAkUhJGpqj7z1t3g8Uhx1PmAltv83N
-         OxGLZxF/e0c6pl3laAdPnnO/5eGqBOxs7M8HhNV1aER6gdf3b5NUUdmjJIQy+5astDcr
-         GQl4li7NUGF+g0Ai+V/2LQ4gD71Qld2lLeNlzensrac5aCDFuIYPgM/lr0xgOjioGPTq
-         dQOg==
-X-Gm-Message-State: AOAM532ji1cl8PO3I2QyV/NJhgVdY1xZVaxGSFJnG1I25ol0rDhP/OU0
-        vvPv82yNolFrGuE7jufFyIvSoawoR4DYq9P/eLk=
-X-Google-Smtp-Source: ABdhPJwWtnlk1BBnJ6HTZolHsJ4dW8nsXclasaGEwcSknfbb428mv+5o5egf5MsG+ctEPwKCp2TceYx37a+YvFtQhq0=
-X-Received: by 2002:a05:6512:1047:: with SMTP id c7mr3332815lfb.12.1590590127368;
- Wed, 27 May 2020 07:35:27 -0700 (PDT)
+        with ESMTP id S1725849AbgE1CKW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 May 2020 22:10:22 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C9DDC05BD1E
+        for <dmaengine@vger.kernel.org>; Wed, 27 May 2020 19:10:22 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D7B932A3;
+        Thu, 28 May 2020 04:10:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1590631821;
+        bh=cbNdkJPjvsN1SEbG2Prk3NpuF2RkyMuhBgjocskL8ug=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MtMv6YAhXcT/da7iL5lT+nNv7RmSwWxBxr9vzwcLtpdInrzG0pV31lwMshQixgVjh
+         qty4PLXPff0FIWQNtPhzDPO15dkmvhYUpVRSLMnSW5W419OlSwrDhHeicxVTOuirJY
+         qxV8aW+vhV247xVqnQvCtFew5NifUf9A4NrGPPlk=
+Date:   Thu, 28 May 2020 05:10:06 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Tejas Upadhyay <tejasu@xilinx.com>,
+        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
+Subject: Re: [PATCH v4 3/6] dmaengine: Add support for repeating transactions
+Message-ID: <20200528021006.GG4670@pendragon.ideasonboard.com>
+References: <20200513165943.25120-1-laurent.pinchart@ideasonboard.com>
+ <20200513165943.25120-4-laurent.pinchart@ideasonboard.com>
+ <20200514182344.GI14092@vkoul-mobl>
+ <20200514200709.GL5955@pendragon.ideasonboard.com>
+ <20200515083817.GP333670@vkoul-mobl>
+ <20200515141101.GA7186@pendragon.ideasonboard.com>
+ <d270d4ca-1928-a11a-3186-bc118c4b8756@ti.com>
+ <20200518143208.GD5851@pendragon.ideasonboard.com>
+ <872d2f33-cdea-34c3-38b4-601d6dae7c94@ti.com>
 MIME-Version: 1.0
-Received: by 2002:ab3:4887:0:0:0:0:0 with HTTP; Wed, 27 May 2020 07:35:26
- -0700 (PDT)
-From:   Irene Kones <konesirene@gmail.com>
-Date:   Wed, 27 May 2020 07:35:26 -0700
-Message-ID: <CAPb+Zk7fpDhTRW=ugf9i0_ONNx2oUkoJqmLRDVrN=QU1RSQoVg@mail.gmail.com>
-Subject: PLEASE I NEED YOUR HELP.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <872d2f33-cdea-34c3-38b4-601d6dae7c94@ti.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-5L2g5aW9ICAuLg0KDQrkvaDpgqPovrnmgI7kuYjmoLfmiJHluIzmnJvkvaDkuIDliIfpg73lpb3l
-kJfvvJ8NCuaIkeWPq+iJvueQs+Wls+Wjq+OAgiDvvIgyOOWyge+8ie+8jOaIkeaYr+Wmu+WtkOWG
-iOavlOS6mueahOWvoeWmhw0K55qE5ZCO5pyf5bel56iL44CC5Lyv57qz5b63wrflt7TljaHph4zC
-t+aJjuWNoemHjOS6mu+8iEJlcm5hcmQgQmFrYXJ5IFpha2FyaWHvvInjgIIgQmFqYW0gRW50ZXJw
-cmlzZeS4u+euoQ0K77yI5YaI5q+U5Lqa55qE5bu6562R5YWs5Y+477yJ5Lmf5pivQmVybmFyZOea
-hOmmluW4reaJp+ihjOWumA0K6L+b5Ye65Y+j77yIR0FNQklB77yJ44CCDQoNCuS6i+WunuS4iu+8
-jOaIkeS4iOWkq+S4uuatpOatu+S6juWGoOeKtueXheavkjE5DQrku5bliY3lvoDms5Xlm73mraPl
-vI/ml4XooYzkuYvlkI7nmoTml6XmnJ/kuLoyMDE55bm0MTLmnIg15pelDQrop4HpnaLlkI7vvIzk
-u5bluKbnnYDmiJEy5bKB6Zu2NuS4quaciOeahOWls+WEv+emu+W8gOS6huaIke+8jA0K5Zyo5oiR
-5LiI5aSr5Zug5Yag54q255eF5q+SMTnmrbvkuqHlkI7vvIzku5bnmoTlhYTlvJ/vvIgNCuaIkeW3
-suaVheeahOi0remUgOmUgOWUrue7j+eQhg0K5LiI5aSr5YWs5Y+477yI6Km55aeG5pavwrfmiZjm
-mIbljZrCt+WlpemHjOS6muW+t8K35omO5Y2h6YeM5Lqa5YWI55Sf77yJ5oOz6KaBDQrlsIbmiJHl
-t7LmlYXkuIjlpKvnmoTmiYDmnInotKLkuqflkozotYTmupDovazmjaLmiJDku5bnmoQNCuW4kOaI
-t++8jOeUseS6jui/meS4quWOn+WboO+8jOaIkeehruWunuacieS4gOS4quS4juaIkeWQteaetuea
-hOeUt+WtqQ0K5LuW77yM6L+Z5L2/5LuW5a+55oiR5Y+R54GrDQrpm4fnlKjliLrlrqLmnYDmrbvm
-iJHnmoTnqIvluqbvvIzkvYbmiJHopoHojaPogIDlvZLmiJENCuWJjeW+gOWPpuS4gOS4quWQjeS4
-uuW4g+Wfuue6s+azlee0oueahOWbveWutuaIkOWKnw0K5oiR5Lus5L2P5Zyo5pWZ5aCC6YeM6L+H
-552A5oiR5Lus5Lqy54ix55qE55Sf5rS744CCDQrogIHlrp7or7TvvIzljbPkvb/lnKjluIPln7rn
-urPms5XntKLvvIzmiJHku6znmoTnoa7ov4fnnYDku6TkurrmgZDmg6fnmoTnlJ/mtLvvvIzlm6Dk
-uLoNCumCo+S6m+WIuuWuoui/veWHu+aIkeS7rOOAgg0KDQrlrp7pmYXkuIrvvIzmiJHmg7PkuI7m
-gqjorqjorrrnmoTmmK/lhbPkuo7miJHnmoTkuKrkurrpl67popgNCuWFs+azqOaIkeW3suaVheS4
-iOWkq+WtmOWFpeaIkeS7peWklumTtuihjOeahOi1hOmHkQ0K5Zu95a625Lym5pWm5Lul5oiR55qE
-5ZCN5LmJ5oiQ5Li65Lu35YC8NDUw5LiH576O5YWD55qE6L+R5LqyDQrnvo7lm73nvo7lhYPvvIwN
-CuaIkemcgOimgeaCqOeahOW4ruWKqe+8jOS7peW4ruWKqeaIkeWwhui/meS6m+mSsei9rOWFpeaC
-qOeahA0K5biQ5oi377yM5bm25bCG6L+Z5Lqb6LWE6YeR5oqV6LWE5Yiw5oKo55qE5Zu95a62L+Wc
-sOWMuu+8jOWboOS4uuaIkeaDs+imgei/meS6mw0K5rGH5YWl5Zu95aSW55qE6ZKxDQrmiJHlt7Ln
-u4/pgJrov4fpgq7ku7bpgJrnn6Xpk7booYzmiJHnmoTmrbvkuqENCuS4iOWkq+WSjOaIkeeahOeb
-ruagh+aYr+Wwhui/meS6m+i1hOmHkei9rOWFpeWPpuS4gOS4quW4kOaItw0K5LuW5Lus5Li65LuW
-55qE5q275oSf5Yiw5oOK6K6277yM5LuW5Lus5ZCR5oiR6K+B5a6e5LqG5oiR55qEDQrkuIjlpKvm
-mK/ku5bku6znmoTlpb3pob7lrqLvvIzku5bku6zkuZ/lkJHmiJHor4Hlrp4NCuacieS4gOS4quaI
-keWQjeWtl+eahOS6suaImui0puaIt++8jOS7luS7rOWRiuivieaIkQ0K5LuL57uN5LiA5Liq5Luj
-6KGo5oiR5L2c5Li65oiR55qE5Y+X5omY5Lq65ZKM5oiR55qE5Y+X5omY5Lq655qE5Lq6DQrku5bk
-u6zlsIbov5nkupvotYTph5HovazlhaXmiJHnmoTku7vkvZXluJDmiLfnmoTlkIjkvZzkvJnkvLQN
-CumAieaLqe+8jA0KDQror7forqnmiJHluK7liqnmgqjmiJDkuLrmiJHnmoTlj5fmiZjkurrlkozm
-iJHnmoTlkIjkvJnkuroNCumTtuihjOS8muWwhui/meS6m+i1hOmHkei9rOWFpeaCqOeahOW4kOaI
-t++8jOS7peS+v+aIkeS7rA0K5Y+v5Lul5p2l6LS15Zu96YeN6I636Ieq55Sx77yM6K+35LiN6KaB
-DQrmg7PopoHku7vkvZXkvJrkvKTlrrPliLDmiJHnmoTkuroNCg0K6K+35biu5Yqp5oiR77yM5oiR
-5a+55L2g5b6I55yf6K+a77yM5oiR5oOz5oiQ5Li65L2g55qE5LiA5ZGYDQrlpoLmnpzmgqjkuI3k
-u4vmhI/mjqXlj5fmiJHku6zlubbluKbpoobmiJHku6zotbDlkJHmm7Tlpb3nmoTlrrbluq0NCui0
-teWbveeahOacquadpeOAgg0KDQrlm6DmraTvvIzmiJHlsIbnu5nmgqjpk7booYzogZTns7vmlrnl
-vI/lkozlhbbku5blv4XopoHnmoQNCuWmguaenOaCqOWPquetlOW6lOaIkeWwhuWcqOaIkeeahOS4
-i+S4gOWwgeeUteWtkOmCruS7tuS4reaPkOS+m+S/oeaBr++8jA0K5LiNL+S7juacquiDjOWPm+aI
-keaIluWHuuS6juWuieWFqOebrueahOWQkeS7u+S9leS6uumAj+mcsuatpOS6iw0K5Zug5Li66L+Z
-5Lqb6ZKx5piv5oiR55Sf5a2Y55qE5ZSv5LiA5biM5pybDQroh6rku47miJHlpLHljrvkuIjlpKvk
-u6XmnaXvvIzmiJHlkozlpbPlhL/kuIDotbfmnaXliLDkuoblnLDnkIPjgIINCg0K5q2k5aSW77yM
-5Zyo5oiR5ZCR5oKo5Y+R6YCB6ZO26KGM5ZKM5biQ5oi36K+m57uG5L+h5oGv5LmL5YmN77yM5oiR
-6ZyA6KaBDQrmgqjlj6/ku6XlnKjkuIvpnaLlkJHmiJHlj5HpgIHmgqjnmoTmlbDmja7vvIzku6Xk
-vr/miJHlrozlhajnoa7lrproh6rlt7HmmK8NCuS4jeS/oeS7u+mUmeivr+eahOS6uuOAgg0K6ICM
-5LiU77yM6L+Z5Lmf5L2/5oiR6IO95aSf5Li65oKo5Y+R6YCB6ZO26KGM6IGU57O75pa55byPDQrk
-uI7ku5bku6zmsp/pgJrku6Xov5vooYzmm7TlpJrpqozor4Hlubborqnmgqjnoa7orqQNCuS7jumT
-tuihjOmCo+mHjOiOt+W+l+acieWFs+i/meeslOi1hOmHkeeahOS/oeaBr+OAguWSjA0K5pu05aW9
-5Zyw5LqG6Kej5oKo77yM5oiR5bCG57uZ5oKo5oC75pWw55qEMjXvvIUNCui9rOenu+WQjueahOmS
-seS9nOS4uuihpeWBvw0KDQoNCjEu5YWo5ZCN77yaLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uDQoy
-LuWcsOWdgO+8mi4uLi4uLi4uLi4uLi4uLi4uLg0KMy7lm73nsY3vvJouLi4uLi4uLi4uLuaAp+WI
-qy4uLi4uLi4uLi4uLi4uLi4NCjQu5bm06b6E77yaLi4uLi4uLi4u5Ye655Sf5pel5pyf77yaLi4u
-Li4NCjUu6IGM5Lia77yaLi4uLi4uLi4uLi4uLi4uLi4u44CCDQouLi4uLg0KNi7nlLXor53vvJou
-Li4uLi4uLi7kvKDnnJ/vvJouLi4uLi4uLi4uLi4uLi4uLi4uLi4NCjcu5Y6f5Lqn5Zu977yaLi4u
-Li4uLuWbveWutu+8mi4uLi4uLi4uLi4uLi4uDQo4LuiBjOS4mu+8mi4uLi4uLi4uLi4uLi4uLi4u
-LuOAgg0KLi4uLi4uLi4uLi4uLi4uLg0KOS7lqZrlp7vnirblhrUuLi4uLi4uLi4uLueUteWtkOmC
-ruS7tuWcsOWdgO+8mi4uLi4uLi4uLi4uLg0KMTAu5omr5o+P5oKo55qE6Lqr5Lu96K+B5oiW6am+
-6am25omn54WnL+eFp+eJh+eahOWJr+acrO+8mi4uLi4uLi4uLi4uLg0K5a6j6KiA77yaDQoNCuWQ
-jOaXtu+8jOaCqOWPr+S7pemAmui/h+aIkeeahOeJp+W4iOS4juaIkeiBlOezu++8jOS7lueahOWQ
-jeWtl+WPq+S/nee9l+eJp+W4iOOAgg0K5q+P5b2T5oKo5omT55S16K+d5pe277yM5ZGK6K+J5LuW
-5oKo5oOz5ZKM5oiR6K+06K+d77yM5Zug5Li6DQrnjrDlnKjmiJHkvY/lnKjluIPln7rnurPms5Xn
-tKLnmoTmlZnloILph4zvvIzmiJHkuI0NCuaDs+imgeWGjeWRhuWcqOi/memHjO+8jOS7lueahOeU
-teivneaYr+i/meS4qu+8iCsyMjYgNzUyMTM2NDbvvIkNCg0K5oiR5bCG5Zyo6L+Z6YeM5YGc5q2i
-77yM5oiR5bCG562J5b6F5oKo55qE5Zue5aSN77yM6ZqP5pe25Y+v5LulDQror6Lpl67ku7vkvZXm
-gqjmg7Pnn6XpgZPnmoTlhbPkuo7miJHnmoTkv6Hmga/vvIzlubblsIbmgqjnmoTmlbDmja7kvZzk
-uLrmiJHlj5HpgIHnu5nmiJENCuimgeaxgu+8jOS7peS+v+aIkeWPr+S7peWQkeaCqOWPkemAgeW4
-puacieivpeW4kOaIt+eahOmTtuihjOS/oeaBrw0K6K+m57uG5L+h5oGv77yM5Lul5L6/5oKo5ZCR
-6ZO26KGM56Gu6K6k77yMDQoNCuivt+W4ruWKqeaIke+8jOaIkeWwhuS4jeiDnOaEn+a/gA0K56Wd
-5L2g5pyJ576O5aW955qE5LiA5aSp44CCDQrku47oib7nkLMNCg0KDQpIZWxsbyAgLi4NCg0KSG93
-IGRvIHlvdSBkbyBvdmVyIHRoZXJlPyBJIGhvcGUgeW91IGFyZSBkb2luZyB3ZWxsPw0KTXkgbmFt
-ZSBpcyBNYWRhbSBJcmVuZS4gKDI4IHllYXJzIG9sZCApLCBpIGFtIGEgd2lkb3cgZnJvbSBHYW1i
-aWEsIHRoZSB3aWZlDQpvZiBsYXRlIEVuZy4gQmVybmFyZCBCYWthcnkgWmFrYXJpYS4gdGhlIERp
-cmVjdG9yIG9mIEJhamFtIEVudGVycHJpc2UNCihCdWlsZGluZyBDb25zdHJ1Y3Rpb24gQ29tcGFu
-eSBpbiBHYW1iaWEpIGFsc28gdGhlIENFTyBvZiBCZXJuYXJkDQpJbXBvcnQgYW5kIEV4cG9ydCAo
-R0FNQklBKS4NCg0KQXMgYSBtYXR0ZXIgb2YgZmFjdCBteSBodXNiYW5kIGRpZWQgZHVlIHRvIHRo
-ZSBDb3JvbmFsIHZpcnVzMTkgb24gdGhpcw0KZGF0ZSA1dGggb2YgRGVjZW1iZXIgMjAxOSBhZnRl
-ciBoZSB0cmF2ZWxlZCB0byBGcmFuY2UgZm9yIGFuIG9mZmljaWFsDQptZWV0aW5nIGFuZCBoZSBs
-ZWZ0IG1lIHdpdGggb3VyIDJ5ZWFycyBhbmQgNiBtb250aHMgZGF1Z2h0ZXIsDQpBZnRlciB0aGUg
-ZGVhdGggb2YgbXkgaHVzYmFuZCAgYXMgYSByZXN1bHQgb2YgQ29yb25hbC12aXJ1cyAxOSwgaGlz
-IGJyb3RoZXIgKE15DQpIdXNiYW5kIGJyb3RoZXIgKSB3aG8gaXMgdGhlIHB1cmNoYXNpbmcgYW5k
-IG1hcmtldGluZyBzYWxlIG1hbmFnZXIgb2YgbXkgbGF0ZQ0KSHVzYmFuZHMgY29tcGFueSBuYW1l
-ZCAoTXIuIEphbWVzIFRva3VuYm8gT3JpYWRlIFpha2FyaWEpIHdhbnRlZCB0bw0KY29udmVydCBh
-bGwgdGhlIHByb3BlcnRpZXMgYW5kIHJlc291cmNlcyBvZiBteSBsYXRlIEh1c2JhbmQgaW50byBo
-aXMNCmFjY291bnQgYW5kIGR1ZSB0byB0aGF0IGkgZGlkIGhhdmUgYSBtYWxlIGNoaWxkIHdoaWNo
-IGkgcXVhcnJlbGVkIHdpdGgNCmhpbSBhbmQgaXQgbWFkZSBoaW0gdG8gbGF5IGhpcyBhbmdlciBv
-biBtZSB0bw0KdGhlIGV4dGVudCBvZiBoaXJpbmcgYW4gYXNzYXNzaW5zIHRvIGtpbGwgbWUgYnV0
-IHRvIEdvZCBiZSB0aGUgZ2xvcnkgaQ0Kc3VjY2VlZGVkIGJ5IG1ha2luZyBteSB3YXkgdG8gYW5v
-dGhlciBjb3VudHJ5IGNhbGxlZCAgQnVya2luYSBmYXNvDQp3aGVyZSB3ZSBhcmUgbGl2aW5nIGlu
-IGEgY2h1cmNoICBmb3Igb3VyIGRlYXIgbGlmZS4NCkhvbmVzdGx5IHdlIGRvIGxpdmUgYSBmZWFy
-ZnVsIGxpZmUgZXZlbiBoZXJlIGluIEJ1cmtpbmEgZmFzbyBiZWNhdXNlDQpvZiB0aG9zZSBBc3Nh
-c3NpbnMgY29taW5nIGFmdGVyIHVzIC4NCg0KQWN0dWFsbHkgd2hhdCBJIHdhbnQgdG8gZGlzY3Vz
-cyB3aXRoIHlvdSBpcyBhYm91dCBteSBwZXJzb25hbCBpc3N1ZQ0KY29uY2VybiB0aGUgIGZ1bmQg
-dGhhdCAgbXkgbGF0ZSBIdXNiYW5kIGRlcG9zaXRlZCBpbiBhIGJhbmsgb3V0c2lkZSBteQ0KY291
-bnRyeSBMb25kb24gb24gbXkgbmFtZSBhcyB0aGUgbmV4dCBvZiBraW5zIHdvcnRoICQ0LjUgTWls
-bGlvbg0KdW5pdGVkIHN0YXRlIGRvbGxhcnMgLA0KSSBuZWVkIHlvdXIgYXNzaXN0YW5jZSB0byBo
-ZWxwIG1lIHRvIHRyYW5zZmVyIHRoZXNlIG1vbmV5IGludG8geW91cg0KYWNjb3VudCBhbmQgdG8g
-aW52ZXN0IHRoZXNlIGZ1bmRzIGluIHlvdXIgY291bnRyeSBhcyBpIHdhbnQgdGhlc2UNCm1vbmV5
-IHRvIGJlIHRyYW5zZmVycmVkIGludG8gZm9yZWlnbiBjb3VudHJ5DQpJICBoYXZlIGFscmVhZHkg
-IG5vdGlmaWVkICB0aGUgYmFuayBvbiBtYWlsIGFib3V0IHRoZSBkZWF0aCBvZiBteQ0KSHVzYmFu
-ZCBhbmQgbXkgYWltIHRvIHRyYW5zZmVyIHRoZXNlIGZ1bmQgaW50byBhbm90aGVyIGFjY291bnQg
-d2hpY2gNCnRoZXkgd2VyZSAgc3VycHJpc2UgZm9yIGhpcyBkZWF0aCBhbmQgdGhleSBjb25maXJt
-ZWQgdG8gbWUgdGhhdCBteQ0KSHVzYmFuZCAgd2FzIHRoZWlyIGdvb2QgY3VzdG9tZXIgYW5kIHRo
-ZXkgYWxzbyBjb25maXJtZWQgdG8gbWUgdGhhdA0KdGhlcmUgaXMgYW4gYWNjb3VudCBvbiBteSBu
-YW1lIGFzIHRoZSBuZXh0IG9mIGtpbnMgYW5kIHRoZXkgdG9sZCBtZSB0bw0KcHJlc2VudCBzb21l
-b25lIHdobyB3aWxsIHN0YW5kIG9uIG15IGJlaGFsZiBhcyBteSAgdHJ1c3RlZSBhbmQgbXkNCnBh
-cnRuZXIgZm9yIHRoZW0gdG8gdHJhbnNmZXIgdGhlc2UgbW9uZXkgaW50byBhbnkgYWNjb3VudCBv
-ZiBteQ0KY2hvaWNlLA0KDQpQbGVhc2UgaSB3YW50IHlvdSB0byBoZWxwIG1lIHRvIHN0YW5kIGFz
-IG15IHRydXN0ZWUgYW5kIG15IHBhcnRuZXIgc28NCnRoYXQgdGhlIGJhbmsgd2lsbCB0cmFuc2Zl
-ciB0aGVzZSBtb25leSBpbnRvIHlvdXIgYWNjb3VudCBzbyB0aGF0IHdlDQpjYW4gY29tZSBvdmVy
-IHRvIHlvdXIgY291bnRyeSAgdG8gcmVnYWluIG91ciBmcmVlZG9tIHBsZWFzZSBpIGRvbnQNCndh
-bnQgYW55dGhpbmcgdGhhdCB3aWxsIGhhcm0gdGhpcyBteSBkdWFnaHRlcg0KDQpQbGVhc2UgaGVs
-cCBtZSwgSSBhbSBzaW5jZXJlIHRvIHlvdSBhbmQgSSB3YW50IHRvIGJlIG1lbWJlciBvZiB5b3Vy
-DQpmYW1pbHkgYXMgd2VsbCBpZiB5b3Ugd291bGRuJ3QgbWluZCB0byBhY2NlcHQgdXMgYW5kIGxl
-YWQgdXMgIHRvIGEgIGJldHRlcg0KZnV0dXJlIGluIHlvdXIgY291bnRyeS4NCg0KVGhlcmVmb3Jl
-LCBJIHNoYWxsIGdpdmUgeW91IHRoZSBiYW5rIGNvbnRhY3QgYW5kIG90aGVyIG5lY2Vzc2FyeQ0K
-aW5mb3JtYXRpb24gaW4gbXkgbmV4dCBlbWFpbCBpZiB5b3Ugd2lsbCBvbmx5IHByb21pc2UgbWUg
-dGhhdCB5b3Ugd2lsbA0Kbm90L25ldmVyIGJldHJheSBtZSAgb3IgZGlzY2xvc2VkIHRoaXMgbWF0
-dGVyIHRvIGFueWJvZHkgZm9yIHNlY3VyaXR5DQpyZWFzb24gYmVjdWFzZSAgdGhlc2UgbW9uZXkg
-aXMgdGhlIG9ubHkgaG9wZSBpIGhhdmUgZm9yIHN1cnZpdmFsIG9uDQplYXJ0aCB3aXRoIG15IGRh
-dWdodGVyIHNpbmNlIEkgaGF2ZSBsb3N0IG15IEh1c2JhbmQuDQoNCk1vcmVvdmVyIGJlZm9yZSBp
-IHNlbmQgeW91IHRoZSBiYW5rIGFuZCBhY2NvdW50IGRldGFpbHMgaSB3aWxsIGxpa2UNCnlvdSB0
-byBzZW5kIG1lIHlvdXIgZGF0YSBiZWxvdyBzbyB0aGF0IGkgd2lsbCBiZSBmdWxseSBzdXJlIHRo
-YXQgaSBhbQ0Kbm90IHRydXN0aW5nIHRoZSB3cm9uZyBwZXJzb24uDQphbmQgaXQgd2lsbCBhbHNv
-IGdpdmUgbWUgdGhlIG1pbmQgdG8gc2VuZCB5b3UgdGhlIGJhbmsgY29udGFjdCBmb3IgeW91DQp0
-byBjb21tdW5pY2F0ZSB3aXRoIHRoZW0gZm9yIG1vcmUgdmVyaWZpY2F0aW9uIGFuZCBmb3IgeW91
-IHRvIGNvbmZpcm0NCmZyb20gdGhlIGJhbmsgYWJvdXQgdGhpcyBmdW5kLiBhbmQNCnRvIGtub3cg
-eW91IG1vcmUgYmV0dGVyIGFuZCBpIHNoYWxsIGdpdmUgeW91IDI1IHBlcmNlbnQgb2YgdGhlIHRv
-dGFsDQptb25leSBhZnRlciB0aGUgdGhlIHRyYW5zZmVyIGFzIGFzIGEgY29tcGVuc2F0aW9uDQoN
-Cg0KMS4gRnVsbCBOYW1lOiAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4NCjIuIEFkZHJlc3M6IC4u
-Li4uLi4uLi4uLi4uLi4uLg0KMy4gTmF0aW9uYWxpdHk6IC4uLi4uLi4uLi4uIFNleC4uLi4uLi4u
-Li4uLi4uLi4NCjQuIEFnZTouLi4uLi4uLi4uLiBEYXRlIG9mIEJpcnRoOi4uLi4uLi4uLi4uLi4u
-Li4NCjUuIE9jY3VwYXRpb246Li4uLi4uLi4uLi4uLi4uLi4uLg0KLi4uLi4NCjYuIFBob25lOiAu
-Li4uLi4uLi4uLiBGYXg6Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLg0KNy4gU3RhdGUgb2YgT3Jp
-Z2luOiAuLi4uLi4uQ291bnRyeTouLi4uLi4uLi4uLi4uLg0KOC4gT2NjdXBhdGlvbjouLi4uLi4u
-Li4uLi4uLi4uLi4uDQouLi4uLi4uLi4uLi4uLi4uDQo5LiBNYXJpdGFsIHN0YXR1cy4uLi4uLi4u
-Li4uIEUtbWFpbCBhZGRyZXNzJ3M6IC4uLi4uLi4uLi4uLg0KMTAuIFNjYW4gY29weSBvZiB5b3Vy
-IElEIGNhcmQgb3IgRHJpdmluZyBMaWNlbnNlL1Bob3RvOi4uLi4uLi4uLi4uLg0KREVDTEFSQVRJ
-T046DQoNCk1lYW53aGlsZSwgeW91IGNhbiByZWFjaCBtZSB0aHJvdWdoIG15IHBhc3RvcixoaXMg
-bmFtZSBpcyBQYXN0b3IgUGF1bA0KYW55IHRpbWUgeW91IGNhbGwsIHRlbGwgaGltIHRoYXQgeW91
-IHdhbnQgdG8gc3BlYWsgd2l0aCBtZSBiZWNhdXNlDQpyaWdodCBub3cgaSBhbSBsaXZpbmcgaW4g
-dGhlIGNodXJjaCBoZXJlIGluIEJ1cmtpbmEgZmFzbyBhbmQgaSBkb24ndA0Kd2FudCB0byBzdGF5
-IGhlcmUgYW55IGxvbmdlciBoaXMgcGhvbmUgbnVtYmVyIGlzIHRoaXMoKzIyNiA3NTIxMzY0NikN
-Cg0KSSB3aWxsIHN0b3AgaGVyZSBhbmQgaSB3aWxsIGJlIHdhaXRpbmcgZm9yIHlvdXIgcmVwbHkg
-YW5kIGZlZWwgZnJlZSB0bw0KYXNrIGFueSB0aGluZyB5b3Ugd2FudCB0byBrbm93IGFib3V0IG1l
-IGFuZCBzZW5kIG1lIHlvdXIgZGF0YSBhcyBpDQpyZXF1ZXN0ZWQgc28gdGhhdCBpIGNhbiBzZW5k
-IHlvdSB0aGUgYmFuayBpbmZvcm1hdGlvbiB3aXRoIHRoZSBhY2NvdW50DQpkZXRhaWxzIHNvIHRo
-YXQgeW91IHdpbGwgY29uZmlybSBmcm9tIHRoZSBiYW5rLA0KDQpQbGVhc2UgaGVscCBtZSwgSSB3
-b3VsZCBiZSBoaWdobHkgYXBwcmVjaWF0ZWQNCkhhdmUgbmljZSBkYXkuDQpGcm9tIElyZW5lDQo=
+Hi Peter,
+
+On Tue, May 19, 2020 at 03:41:17PM +0300, Peter Ujfalusi wrote:
+> On 18/05/2020 17.32, Laurent Pinchart wrote:
+> >>>>>>> @@ -176,6 +177,11 @@ struct dma_interleaved_template {
+> >>>>>>>   * @DMA_PREP_CMD: tell the driver that the data passed to DMA API is command
+> >>>>>>>   *  data and the descriptor should be in different format from normal
+> >>>>>>>   *  data descriptors.
+> >>>>>>> + * @DMA_PREP_REPEAT: tell the driver that the transaction shall be automatically
+> >>>>>>> + *  repeated when it ends if no other transaction has been issued on the same
+> >>>>>>> + *  channel. If other transactions have been issued, this transaction completes
+> >>>>>>> + *  normally. This flag is only applicable to interleaved transactions and is
+> >>>>>>> + *  ignored for all other transaction types.
+> >>
+> >> It should not be restricted to interleaved, slave_sg/memcpy/etc can be
+> >> repeated if the DMA driver implements it (a user on a given platform
+> >> needs it).
+> > 
+> > As mentioned in the commit message, I plan to extend that, I just didn't
+> > want to add the checks to all the prepare operation wrappers until an
+> > agreement on the approach would be reached. I also thought it would be
+> > good to not allow this API for other transaction types until use cases
+> > arise, in order to force upstream discussions instead of silently
+> > abusing the API :-)
+> 
+> I would not object if slave_sg and memcpy got the same treatment. If the
+> DMA driver did not set the DMA_REPEAT then clients can not use this
+> feature anyways.
+
+Would you not object, or would you prefer if it was done in v5 ? :-)
+Overall I think that enabling APIs that have no user isn't necessarily
+the best idea, as it's prone to design issues, but I don't mind doing so
+if you think it needs to be done now.
+
+> > I can extend the flag to all other transaction types
+> > (except for the cyclic transaction, as it doesn't make sense there).
+> 
+> Yep, cyclic is a different type of transfer, it is for circular buffers.
+> It could be seen as a special case of slave_sg. Some drivers actually
+> create temporary sg_list in case of cyclic and use the same setup
+> function to set up the transfer for slave_sg/cyclic...
+
+Cyclic is different for historical reasons, but if I had to redesign it
+today, I'd make it slave_sg + DMA_PREP_REPEAT. We obviously can't, and I
+have no issue with that.
+
+> >>>>>>>   */
+> >>>>>>>  enum dma_ctrl_flags {
+> >>>>>>>  	DMA_PREP_INTERRUPT = (1 << 0),
+> >>>>>>> @@ -186,6 +192,7 @@ enum dma_ctrl_flags {
+> >>>>>>>  	DMA_PREP_FENCE = (1 << 5),
+> >>>>>>>  	DMA_CTRL_REUSE = (1 << 6),
+> >>>>>>>  	DMA_PREP_CMD = (1 << 7),
+> >>>>>>> +	DMA_PREP_REPEAT = (1 << 8),
+> >>>>>>
+> >>>>>> Thanks for sending this. I think this is a good proposal which Peter
+> >>>>>> made for solving this issue and it has great merits, but this is
+> >>>>>> incomplete.
+> >>>>>>
+> >>>>>> DMA_PREP_REPEAT|RELOAD should only imply repeating of transactions,
+> >>>>>> nothing else. I would like to see APIs having explicit behaviour, so let
+> >>>>>> us also add another flag DMA_PREP_LOAD_NEXT|NEW to indicate that the
+> >>>>>> next transactions will replace the current one when submitted after calling
+> >>>>>> .issue_pending().
+> >>>>>>
+> >>>>>> Also it makes sense to explicitly specify when the transaction should be
+> >>>>>> reloaded. Rather than make a guesswork based on hardware support, we
+> >>>>>> should specify the EOB/EOT in these flags as well.
+> >>>>>>
+> >>>>>> Next is callback notification mechanism and when it should be invoked.
+> >>>>>> EOT is today indicated by DMA_PREP_INTERRUPT, EOB needs to be added.
+> >>>>>>
+> >>>>>> So to summarize your driver needs to invoke
+> >>>>>> DMA_PREP_REPEAT|DMA_PREP_LOAD_NEXT|DMA_LOAD_EOT|DMA_PREP_INTERRUPT
+> >>>>>> specifying that the transactions are repeated untill next one pops up
+> >>>>>> and replaced at EOT with callbacks being invoked at EOT boundaries.
+> >>>
+> >>> Peter, what do you think ?
+> >>
+> >> Well, I'm in between ;)
+> >>
+> >> You have a dedicated DMA which can do one thing - to service display.
+> >> DMAengine provides generic API for DMA use users.
+> >>
+> >> The DMA_PREP_REPEAT is a new flag for a descriptor, imho it can be
+> >> introduced without breaking anything which exists today.
+> >>
+> >> DMA_PREP_REPEAT - the descriptor should be repeated until the channel is
+> >> terminated with terminate_all.
+> > 
+> > No concern about DMA_PREP_REPEAT, I like the idea.
+> > 
+> >> DMA_PREP_LOAD_EOT - the descriptor should be loaded at the next EOT of
+> >> the currently running transfer, if any, otherwise start.
+> > 
+> > Why is this needed ? Why can't this be the default behaviour ? What the
+> > use case for queuing a descriptor with DMA_PREP_REPEAT and *not* setting
+> > DMA_PREP_LOAD_EOT on the next one ? If a client queues the next
+> > descriptor without DMA_PREP_LOAD_EOT, the DMA engine will keep repeating
+> > the previous one, the client will hang forever waiting for the switch to
+> > the new descriptor that will never happen, and no error message or other
+> > diagnostic information will be provided. This creates an API that as no
+> > purpose (or at least no specified purpose, if there's an actual use case
+> > for not specifying that flag, I'm willing to discuss it) and makes it
+> > easy to shoot oneself in the foot. A good API should be impossible to
+> > misuse (this can of course not always be achieved in practice, but it's
+> > still a good goal to aim for).
+> 
+> If no DMA_PRP_LOAD_EOT is set then yes, the running transfer will not
+> move towards, like how the cyclic is working.
+> and...
+> 
+> > And this doesn't even mention DMA_PREP_LOAD_NEXT, that seems equally
+> > design as a way to maximize chances that drivers will get something
+> > wrong :-)
+> > 
+> >> DMA_PREP_INTERRUPT - as it is today. Callback at EOT (for
+> >> slave_sg/interleaved/memcpy/etc, cyclic interprets this differently -
+> >> callback at period elapse time).
+> >>
+> >> So you would set DMA_PREP_REPEAT | DMA_PREP_LOAD_EOT (|
+> >> DMA_PREP_INTERRUPT if you need callbacks at EOT).
+> >>
+> >> The capabilities of the device/channel should tell the user if it is
+> >> capable of REPEAT and LOAD_EOT.
+> >> It is possible that a DMA can do repeat, but lacks the ability to do any
+> >> type of LOAD_*
+> > 
+> > This is the kind of information I was looking for, thanks. I agree that
+> > some DMA engines may not be able to replace a repeated transfer (I'm
+> > using the word repeated here instead of cyclic, to avoid confusion with
+> > the existing cyclic transfer type) at EOT. I however assume they would
+> > all have the ability to replace it immediately, as DMA engines are
+> > required to implement terminate_all(), and replacing a transfer
+> > immediately can then just be a combination of terminate_all() + starting
+> > the next transfer. Whether we want DMA engines to implement this
+> > internally instead of having the logical on the client side (as done
+> > today) is another question, and I'm not pushing in one direction or
+> > another here (although I think we could explore the option of
+> > implementing this in the DMA engine core).
+> > 
+> > Having a capability flag to report if a DMA engine supports replacing a
+> > repeated transfer at EOT makes sense (no idea if we will have DMA
+> > engines supporting DMA_REPEAT but not DMA_LOAD_EOT, but that's another
+> > story, at least in theory it could happen). I hwoever don't see what a
+> > DMA_PREP_LOAD_EOT flag is needed, if this feature isn't supported,
+> > shouldn't tx_submit() and/or issue_pending() fail when a repeated
+> > transfer is queued ? Succeeding in tx_submit() and issue_pending() and
+> > doing nothing with the newly queued transfers is, as I explained above,
+> > a very good way to increase the chance of bugs. I don't see a reason why
+> > accepting a call that we know will not perform what the caller expects
+> > it to perform whould be a good idea.
+> 
+> I would argue that the DMA_PREP_RELOAD_NOW (ASAP?) is a bit more than
+> terminate_all+issue_pending.
+> 
+> But, DMA drivers might support neither of them, either of them or both.
+> It is up to the client to pick the preferred method for it's use.
+> It is not far fetched that the next DMA the client is going to be
+> serviced will have different capabilities and the client needs to handle
+> EOT or NOW or it might even need to have fallback to case when neither
+> is supported.
+> 
+> I don't like excessive flags either, but based on my experience
+> under-flagging can bite back sooner than later.
+> 
+> I'm aware that at the moment it feels like it is too explicit, but never
+> underestimate the creativity of the design - and in some cases the
+> constraint the design must fulfill.
+
+I'm still very puzzled by why you think adding DMA_PREP_LOAD_EOT now is
+a good idea, given that there's no existing and no foreseen use case for
+not setting it. Creating an API element that is completely disconnected
+from any known use case doesn't seem like good API design to me,
+especially for an in-kernel API.
+
+> >> I think this would give a nice starting point to extend on later.
+> >>
+> >>>>> Are you *serious* ? I feel trapped in a cross-over of Groundhog Day and
+> >>>>> Brazil.
+> >>>>
+> >>>> Sorry, I don't understand that reference!
+> >>>>
+> >>>> Nevertheless, you want a behaviour which is somehow defined by your use
+> >>>> and magically implies certain conditions. I do not want it that way.
+> >>>> I would rather see all the flag required.
+> >>>>
+> >>>>>> @Peter, did I miss anything else in this..? Please send the patch for
+> >>>>>> this (to start with just the headers so that Laurent can start
+> >>>>>> using them) and detailed patch with documentation as follow up, I trust
+> >>>>>> you two can coordinate :)
+> >>>>>
+> >>>>> I won't call that coordination, no. If you want to design something
+> >>>>> absurd that's your call, not mine, I don't want to get involved.
+> >>>>
+> >>>> Your wish!
+
+-- 
+Regards,
+
+Laurent Pinchart

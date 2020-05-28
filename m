@@ -2,101 +2,100 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 601371E6BC2
-	for <lists+dmaengine@lfdr.de>; Thu, 28 May 2020 21:53:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE8701E6C83
+	for <lists+dmaengine@lfdr.de>; Thu, 28 May 2020 22:29:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406762AbgE1Txn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 28 May 2020 15:53:43 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:44018 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406687AbgE1Txm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 May 2020 15:53:42 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6A6A38030839;
-        Thu, 28 May 2020 19:53:39 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id NGsEWW3ofFNe; Thu, 28 May 2020 22:53:38 +0300 (MSK)
-Date:   Thu, 28 May 2020 22:53:38 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
+        id S2407116AbgE1U3f (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 28 May 2020 16:29:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407026AbgE1U3e (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 May 2020 16:29:34 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7014C08C5C6;
+        Thu, 28 May 2020 13:29:33 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id x18so32026pll.6;
+        Thu, 28 May 2020 13:29:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MtV5dW6W0wTHT1QljBO+2MIOLfwjQMefjp2+Ja+1XDw=;
+        b=rSeD4DNMsQ5cx/NMr/IjUmElVIIUsZGTYyg+i8h79mHu6F+pXjiselcoSQOlY0n56M
+         GjFDKMf8MMeuBGB0Kxf0Qk+Vf7CRTzFIEJjOgiXyxL1EHFDVWoE0opghUUC5bWUGLVDC
+         oynwU7aZfd2tw3eUinbMSgvOh4+r+fXV2PRkSqcRIFye48mk69IjEnM5Izt/UW4YCyhc
+         MM2cMPn1TO9QnSvIUboqDdRXgU7zUUQas7R4606Y0fzcKqya4JAqEAAG743spn5kyPj9
+         TLS6SOVAZts+wUUsuCk0TlURB8Ut63XFMCUNTWqEeV8tEB9KTODv1J/1w5M//2JdP51y
+         stEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MtV5dW6W0wTHT1QljBO+2MIOLfwjQMefjp2+Ja+1XDw=;
+        b=ckxt9F+aFS5fkSvMa9aN587hm8DYXBjHGoGvsK4l1U6o5XWUEOiNUgaBafPC49LRrO
+         OHJnfJd65i2oHXMJZAx+44ENBYKyvzlNaJidpJP0mh0fvqDZ+2mpW3frN3zTQvx9L0IS
+         lDiqkxHl84+wWxB+1DqdzukegJXa6EwwNvimSUGWe/ARZDJvu+TMmBHOiGYvGSqpBLXn
+         pgP11BKzipAXnkt5WkAucUHUS7raWsRQH+IhS2Xr0o+VwC1aS3OniYhA0n3zHbkBh7+Y
+         1HNKKokDInQU2a5Eq+8TfdFhozOasTUffX2Az3ftfdNoctW1E2oxsS51g0GzNs4ni32F
+         fkFQ==
+X-Gm-Message-State: AOAM530hEw9hYCabtprfGVswL1D7w1FDG0HtNRtdvFuTqeoCO88JQ5pR
+        8nEjbNGwUWv0QesxqsI/gO05gO84mIVUFueFatM=
+X-Google-Smtp-Source: ABdhPJzzCIEyt/HEosdWqkQyoWkR9Y1Eya0FrV5VMnEDeOInwcqhIYJGYpZrpvvY2eEIJpyLwnByYtZB0NzqCqc8Xho=
+X-Received: by 2002:a17:902:6ac2:: with SMTP id i2mr5490278plt.18.1590697773198;
+ Thu, 28 May 2020 13:29:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526225022.20405-9-Sergey.Semin@baikalelectronics.ru>
+ <20200528145303.GU1634618@smile.fi.intel.com> <20200528152740.ggld7wkmaqiq4g6o@mobilestation>
+In-Reply-To: <20200528152740.ggld7wkmaqiq4g6o@mobilestation>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 28 May 2020 23:29:16 +0300
+Message-ID: <CAHp75VdrOJF6R9YDpeV7x+9=DZJULM0hsfdr0o_Jmgf69CRKvQ@mail.gmail.com>
+Subject: Re: [PATCH v3 08/10] dmaengine: dw: Add dummy device_caps callback
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
         Vinod Koul <vkoul@kernel.org>,
         Viresh Kumar <vireshk@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 09/10] dmaengine: dw: Introduce max burst length hw
- config
-Message-ID: <20200528195338.yzl35nhogmyikv43@mobilestation>
-References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
- <20200526225022.20405-10-Sergey.Semin@baikalelectronics.ru>
- <20200528145224.GT1634618@smile.fi.intel.com>
- <20200528154022.3reghhjcd4dnsr3g@mobilestation>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200528154022.3reghhjcd4dnsr3g@mobilestation>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, May 28, 2020 at 06:40:22PM +0300, Serge Semin wrote:
-> On Thu, May 28, 2020 at 05:52:24PM +0300, Andy Shevchenko wrote:
-> > On Wed, May 27, 2020 at 01:50:20AM +0300, Serge Semin wrote:
-> > > IP core of the DW DMA controller may be synthesized with different
-> > > max burst length of the transfers per each channel. According to Synopsis
-> > > having the fixed maximum burst transactions length may provide some
-> > > performance gain. At the same time setting up the source and destination
-> > > multi size exceeding the max burst length limitation may cause a serious
-> > > problems. In our case the DMA transaction just hangs up. In order to fix
-> > > this lets introduce the max burst length platform config of the DW DMA
-> > > controller device and don't let the DMA channels configuration code
-> > > exceed the burst length hardware limitation.
-> > > 
-> > > Note the maximum burst length parameter can be detected either in runtime
-> > > from the DWC parameter registers or from the dedicated DT property.
-> > > Depending on the IP core configuration the maximum value can vary from
-> > > channel to channel so by overriding the channel slave max_burst capability
-> > > we make sure a DMA consumer will get the channel-specific max burst
-> > > length.
-> > 
-> > ...
-> > 
-> > >  static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
-> > >  {
-> > > +	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
-> > >  
-> > 
-> 
-> > Perhaps,
-> > 
-> > 	/* DesignWare DMA supports burst value from 0 */
-> > 	caps->min_burst = 0;
-> 
-> Regarding min_burst being zero. I don't fully understand what it means.
-> It means no burst or burst with minimum length or what?
-> In fact DW DMA burst length starts from 1. Remember the burst-length run-time
-> parameter we were arguing about? Anyway the driver makes sure that both
-> 0 and 1 requested burst length are setup as burst length of 1 in the
-> CTLx.SRC_MSIZE, CTLx.DST_MSIZE fields.
-> 
-> I agree with the rest of your comments below.
-> 
-> -Sergey
-> 
-> > 
+On Thu, May 28, 2020 at 6:30 PM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+>
+> On Thu, May 28, 2020 at 05:53:03PM +0300, Andy Shevchenko wrote:
+> > On Wed, May 27, 2020 at 01:50:19AM +0300, Serge Semin wrote:
+> > > Since some DW DMA controllers (like one installed on Baikal-T1 SoC) may
+> > > have non-uniform DMA capabilities per device channels, let's add
+> > > the DW DMA specific device_caps callback to expose that specifics up to
+> > > the DMA consumer. It's a dummy function for now. We'll fill it in with
+> > > capabilities overrides in the next commits.
+> >
+> > I think per se it is not worth to have it separated. Squash into the next one.
+>
+> bikeshadding?
 
-It would be also better to initialize the dw->dma.min_burst field instead
-of setting caps->min_burst in the dwc_caps callback, since the min burst length
-can't vary from channel to channel and it will be copied to the caps->min_burst
-field anyway in the dma_get_slave_caps() method.
+Actually no.
 
--Sergey
+> There is no any difference whether I add a dummy callback, then
+> fill it in in a following up patch, or have the callback added together
+> with some content. Let's see what Vinod thinks of it. Until then I'll stick with
+> the current solution.
+
+The rule of thumb that we don't add dead code or code which is useless
+per se. Go ahead and provide it with some usefulness.
+
+-- 
+With Best Regards,
+Andy Shevchenko

@@ -2,22 +2,22 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA5D01E6EB9
-	for <lists+dmaengine@lfdr.de>; Fri, 29 May 2020 00:24:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D69B11E6EE6
+	for <lists+dmaengine@lfdr.de>; Fri, 29 May 2020 00:27:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437123AbgE1WYU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 28 May 2020 18:24:20 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:44672 "EHLO
+        id S2437116AbgE1W1s (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 28 May 2020 18:27:48 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:44674 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437108AbgE1WYR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 May 2020 18:24:17 -0400
+        with ESMTP id S2437107AbgE1WYQ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 May 2020 18:24:16 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 0FE628030779;
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8DB348030778;
         Thu, 28 May 2020 22:24:14 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8P90C91H5XIH; Fri, 29 May 2020 01:24:13 +0300 (MSK)
+        with ESMTP id 5UMa74twAlQZ; Fri, 29 May 2020 01:24:14 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -30,9 +30,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 08/11] dmaengine: dw: Add dummy device_caps callback
-Date:   Fri, 29 May 2020 01:23:58 +0300
-Message-ID: <20200528222401.26941-9-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v4 09/11] dmaengine: dw: Initialize min_burst capability
+Date:   Fri, 29 May 2020 01:23:59 +0300
+Message-ID: <20200528222401.26941-10-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200528222401.26941-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200528222401.26941-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -44,11 +44,12 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Since some DW DMA controllers (like one installed on Baikal-T1 SoC) may
-have non-uniform DMA capabilities per device channels, let's add
-the DW DMA specific device_caps callback to expose that specifics up to
-the DMA consumer. It's a dummy function for now. We'll fill it in with
-capabilities overrides in the next commits.
+According to the DW APB DMAC data book the minimum burst transaction
+length is 1 and it's true for any version of the controller since
+isn't parametrised in the coreAssembler so can't be changed at the
+IP-core synthesis stage. Let's initialise the min_burst member of the
+DMA controller descriptor so the DMA clients could use it to properly
+optimize the DMA requests.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
@@ -60,37 +61,24 @@ Cc: devicetree@vger.kernel.org
 
 ---
 
-Changelog v3:
-- This is a new patch created as a result of the discussion with Vinud and
-  Andy in the framework of DW DMA burst and LLP capabilities.
+Changelog v4:
+- This is a new patch suggested by Andy.
 ---
- drivers/dma/dw/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/dma/dw/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index fb95920c429e..ceded21537e2 100644
+index ceded21537e2..a8cebb1dbb68 100644
 --- a/drivers/dma/dw/core.c
 +++ b/drivers/dma/dw/core.c
-@@ -1049,6 +1049,11 @@ static void dwc_free_chan_resources(struct dma_chan *chan)
- 	dev_vdbg(chan2dev(chan), "%s: done\n", __func__);
- }
+@@ -1229,6 +1229,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
+ 	dw->dma.device_issue_pending = dwc_issue_pending;
  
-+static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
-+{
-+
-+}
-+
- int do_dma_probe(struct dw_dma_chip *chip)
- {
- 	struct dw_dma *dw = chip->dw;
-@@ -1214,6 +1219,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 	dw->dma.device_prep_dma_memcpy = dwc_prep_dma_memcpy;
- 	dw->dma.device_prep_slave_sg = dwc_prep_slave_sg;
- 
-+	dw->dma.device_caps = dwc_caps;
- 	dw->dma.device_config = dwc_config;
- 	dw->dma.device_pause = dwc_pause;
- 	dw->dma.device_resume = dwc_resume;
+ 	/* DMA capabilities */
++	dw->dma.min_burst = 1;
+ 	dw->dma.src_addr_widths = DW_DMA_BUSWIDTHS;
+ 	dw->dma.dst_addr_widths = DW_DMA_BUSWIDTHS;
+ 	dw->dma.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV) |
 -- 
 2.26.2
 

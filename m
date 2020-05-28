@@ -2,53 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29D6F1E626E
-	for <lists+dmaengine@lfdr.de>; Thu, 28 May 2020 15:40:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 038461E6365
+	for <lists+dmaengine@lfdr.de>; Thu, 28 May 2020 16:10:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390440AbgE1Nj7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 28 May 2020 09:39:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34302 "EHLO
+        id S2390879AbgE1OKx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 28 May 2020 10:10:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390335AbgE1Nj6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 May 2020 09:39:58 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B617AC05BD1E;
-        Thu, 28 May 2020 06:39:57 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id l11so28004714wru.0;
-        Thu, 28 May 2020 06:39:57 -0700 (PDT)
+        with ESMTP id S2390727AbgE1OKv (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 28 May 2020 10:10:51 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21ED3C05BD1E;
+        Thu, 28 May 2020 07:10:50 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id v19so3328545wmj.0;
+        Thu, 28 May 2020 07:10:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=X2TSM0wUWDCE9Wu547CRwMsP8tORkyXcD0m1YqHK/wk=;
-        b=N3vLi1XUZ3OyVNOyMeeVM55MNvdSF5ZYfpxHOtupH8CsNgNUcjWPsj3hzfIlcwuA2t
-         zWi1JpgiQtSWYcPVLIq/SBfJEbJ8ASaoV8Mx6uAjiilAm6bmo/oxlE1j5VZidQ3Cire2
-         pHrfG3RdycvajfOE/H8lZ4ZjtogiAf41c7l6agADLn+TpxG4Kiy6vTo3z57VAaeZOueh
-         1Jv1EvJAXVHZay4HMPWph5BQiamzvwpBTjdpGoo3RY2LaMKlNNX4wYP1Z0lcPS5Arc6A
-         vx1xaUEmeNaGJ5+Xti1Fbi3JnOrpXtZWV0qZM3TlxfddI6MKz5UIX7FveDLAeGHf6ROb
-         arNQ==
+        bh=8ovARypadL/ZYBPm0KsZkF3DEU6tbOUy5lfVb0WIp/o=;
+        b=GZ7TdFTOB6zw5kkRCwoJJ1vJK10R9yr5ZRw+XRIBgpYs9NtAtix4scFM3+k7PAquBo
+         lBbUHUaljxQejoXN++bnFoimAtWw7+SR9jVtKfSpgAC8oTbnjwFcbkiFDxGmroO00y74
+         yN7HFftzmKKpN7BYXcuEZ6duWOqXd33TN1SPh4XVokO4IJGTCQKXUfvc/BNIVfd+JtFk
+         /b+a+6yto/oShznbZ00InvCx8ZRToNk4mv78bkwKUFFYm4kINcEtEhNbGguKO/RNEdHt
+         rI6iXiF68kxXKKG+5+y+206rlgNT78fs8XhDcVRD22CCcQhTB4Z9kp3IB0InRnNJe8pE
+         JoYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=X2TSM0wUWDCE9Wu547CRwMsP8tORkyXcD0m1YqHK/wk=;
-        b=BYCceFKf67v6xheGxkKNnfIxOIWLHkDfl+CkTxw4KucjpFlE0nVENjoQVviON9ZJiE
-         0hRCvKllHlPP+IW1X9ZWSbG7Bdk93uDJUMWADMdTQWd0zcos3NykG9wEcScwrZY7WhPa
-         1Ph6GI8OIxtchUvA/QxGF6qyHTpaFdpgj1rEfBMOiP5Gkdio2CvmFY53RG0DLZVve/cS
-         mUGKl4gBZkOE70J4WA8c1h1pO9tEO+VkmmRyegElk1GdXbcnqszGPrYNaHLgeKXiMi1Y
-         l7Xn7y/6d+IvdD49CIi7Ao1tV7b6uXUgJKkW0ENo10UpkoPEX6AI34nXyCUJZ5cc3MtK
-         4oLg==
-X-Gm-Message-State: AOAM532ejJgK5yrUFIAH6GHCmsBKzFbDMXaJcErtMYR5Pl06nu4aJKAZ
-        vImQnzL3RPlwB7trwq8YqCGybb3W
-X-Google-Smtp-Source: ABdhPJzodkN5nb3hkEWC6XdwTEd4HeNimxbaXDEKtOaQssnJ5Er3DA9+yyo9hB34f8wbyY+RGdLciQ==
-X-Received: by 2002:a5d:5585:: with SMTP id i5mr3562739wrv.112.1590673196254;
-        Thu, 28 May 2020 06:39:56 -0700 (PDT)
+        bh=8ovARypadL/ZYBPm0KsZkF3DEU6tbOUy5lfVb0WIp/o=;
+        b=ZfpkjYdgGIC3Pf4aeEksEbfGXaGEho/xWg7GiQAOWbvjD5VWeXdXepztWMECz+wl1r
+         69maypZEUUL7JAgwbCg74Hpj7QmuqHSYspW9M2yR8vS6LhJMrCXpB9ESKVC5/NlRawDd
+         OzPwJCv0e+pTEyQuUIanmatDRYs4bEf2mO7cPmeKYSFN10DzQxqjQgoUv7VzVbp6bUBt
+         +xXkR99mnCQUZPoNla7O2cJ3jTqCB6lSUpCZOPqVUjbnOwkMMKALAscGtyVr1T/uA2Mv
+         hpw3cZ4c6T+3uNRPXRh6i3IGQ4w+Jh55FDnxPM32eZAz1HmwfhJGirSgsX1yjxH677ox
+         BqPw==
+X-Gm-Message-State: AOAM531NomR7Yr9KsXxDMRjT/jfyPFAuFvYnjeqoYp15X06LjZh0QumQ
+        2mekLF1j2LVhx7/fVXERuZg=
+X-Google-Smtp-Source: ABdhPJyfmwT6bu0XzTg7BOfXbPsxinfsn0I7VdYmhbwakBJQ6sin+5o9AkS/XwdDYLBmApRy16Uwlw==
+X-Received: by 2002:a1c:2183:: with SMTP id h125mr2015266wmh.88.1590675048753;
+        Thu, 28 May 2020 07:10:48 -0700 (PDT)
 Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id z22sm6129525wmf.9.2020.05.28.06.39.54
+        by smtp.gmail.com with ESMTPSA id w10sm6124957wrp.16.2020.05.28.07.10.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 06:39:55 -0700 (PDT)
-Subject: Re: [PATCH v4 3/4] dmaengine: mediatek-cqdma: fix compatible
+        Thu, 28 May 2020 07:10:48 -0700 (PDT)
+Subject: Re: [PATCH v4 4/4] dmaengine: mediatek-cqdma: add dma mask for
+ capability
 To:     EastL <EastL.Lee@mediatek.com>, Sean Wang <sean.wang@mediatek.com>
 Cc:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -56,7 +57,7 @@ Cc:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
         linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
         wsd_upstream@mediatek.com
 References: <1590659832-31476-1-git-send-email-EastL.Lee@mediatek.com>
- <1590659832-31476-4-git-send-email-EastL.Lee@mediatek.com>
+ <1590659832-31476-5-git-send-email-EastL.Lee@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -132,15 +133,15 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <b96e9b4d-880d-885e-fc2e-56e5618eb014@gmail.com>
-Date:   Thu, 28 May 2020 15:39:54 +0200
+Message-ID: <ea26fb2c-aec0-c031-ac30-9e5099943d9c@gmail.com>
+Date:   Thu, 28 May 2020 16:10:46 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <1590659832-31476-4-git-send-email-EastL.Lee@mediatek.com>
+In-Reply-To: <1590659832-31476-5-git-send-email-EastL.Lee@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
@@ -149,37 +150,83 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 
 On 28/05/2020 11:57, EastL wrote:
-> This patch fixes mediatek-cqdma compatible to common.
+> This patch add dma mask for capability.
 > 
+> Change-Id: I31f4622f9541d769702029532e5f5f185815dda2
+
+No Change-Id in the commit message please.
+
 > Signed-off-by: EastL <EastL.Lee@mediatek.com>
 > ---
->  drivers/dma/mediatek/mtk-cqdma.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/dma/mediatek/mtk-cqdma.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
 > diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
-> index 905bbcb..bca7118 100644
+> index bca7118..1805a76 100644
 > --- a/drivers/dma/mediatek/mtk-cqdma.c
 > +++ b/drivers/dma/mediatek/mtk-cqdma.c
-> @@ -544,7 +544,7 @@ static void mtk_cqdma_hw_deinit(struct mtk_cqdma_device *cqdma)
->  }
+> @@ -117,6 +117,7 @@ struct mtk_cqdma_vchan {
+>   * @clk:                    The clock that device internal is using
+>   * @dma_requests:           The number of VCs the device supports to
+>   * @dma_channels:           The number of PCs the device supports to
+> + * @dma_mask:               A mask for DMA capability
+>   * @vc:                     The pointer to all available VCs
+>   * @pc:                     The pointer to all the underlying PCs
+>   */
+> @@ -126,6 +127,7 @@ struct mtk_cqdma_device {
 >  
->  static const struct of_device_id mtk_cqdma_match[] = {
-> -	{ .compatible = "mediatek,mt6765-cqdma" },
-> +	{ .compatible = "mediatek,cqdma" },
-
-We can't just delete and old compatible. If other cqdma IP blocks are the same
-as mt6795, we should instead add entries in the binding description with
-fallback compatible. For example for mt6779 the DTS would look like this:
-compatible = "mediatek,mt6779-cqdma", "mediatek,mt6765-cqdma";
-
-This way we the kernel will take care to bind the device against the driver with
-mt7665-cqdma, but leaves us the posibillity to add any changes to the driver in
-the future if we find some bugs/features for mt6779 that are not present in mt6765.
-
-Regards,
-Matthias
-
->  	{ /* sentinel */ }
+>  	u32 dma_requests;
+>  	u32 dma_channels;
+> +	u32 dma_mask;
+>  	struct mtk_cqdma_vchan *vc;
+>  	struct mtk_cqdma_pchan **pc;
+>  };
+> @@ -549,6 +551,7 @@ static void mtk_cqdma_hw_deinit(struct mtk_cqdma_device *cqdma)
 >  };
 >  MODULE_DEVICE_TABLE(of, mtk_cqdma_match);
+>  
+> +static u64 cqdma_dmamask;
+>  static int mtk_cqdma_probe(struct platform_device *pdev)
+>  {
+>  	struct mtk_cqdma_device *cqdma;
+> @@ -607,6 +610,16 @@ static int mtk_cqdma_probe(struct platform_device *pdev)
+>  		cqdma->dma_channels = MTK_CQDMA_NR_PCHANS;
+>  	}
+>  
+> +	if (pdev->dev.of_node && of_property_read_u32(pdev->dev.of_node,
+> +						      "dma-channel-mask",
+> +						      &cqdma->dma_mask)) {
+
+I'd prefer:
+
+if (pdev->dev.of_node)
+    ret = of_property_read_u32(pdev->dev.of_node,
+                               "dma-channel-mask",
+                               &cqdma->dma_mask))
+if (ret) {
+    dev_warn(&pdev->dev,
+             "Using 0 as missing dma-channel-mask
+              property\n");
+    cqdma->dma_mask = 0;
+}
+
+> +		dev_info(&pdev->dev,
+> +			 "Using 0 as missing dma-channel-mask property\n");
+
+dev_warn should be OK.
+
+> +	} else {
+> +		cqdma_dmamask = DMA_BIT_MASK(cqdma->dma_mask);
+> +		pdev->dev.dma_mask = &cqdma_dmamask;
+
+if (dma_set_mask(&pdev->dev,
+    DMA_BIT_MASK(cqdma->dma_mask)) {
+         /* error out */
+}
+
+> +	}
+> +
+>  	cqdma->pc = devm_kcalloc(&pdev->dev, cqdma->dma_channels,
+>  				 sizeof(*cqdma->pc), GFP_KERNEL);
+>  	if (!cqdma->pc)
 > 

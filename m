@@ -2,22 +2,22 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05B801E80A4
-	for <lists+dmaengine@lfdr.de>; Fri, 29 May 2020 16:41:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 401701E8097
+	for <lists+dmaengine@lfdr.de>; Fri, 29 May 2020 16:41:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgE2Olg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 29 May 2020 10:41:36 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:48900 "EHLO
+        id S1727092AbgE2Olb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 29 May 2020 10:41:31 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48934 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbgE2OlF (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 29 May 2020 10:41:05 -0400
+        with ESMTP id S1727112AbgE2OlH (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 29 May 2020 10:41:07 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id C93A08030778;
-        Fri, 29 May 2020 14:41:02 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6B708803079C;
+        Fri, 29 May 2020 14:41:03 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 3OtGVrrvXh79; Fri, 29 May 2020 17:41:02 +0300 (MSK)
+        with ESMTP id rTz8utg0toc4; Fri, 29 May 2020 17:41:02 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -30,9 +30,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 06/11] dmaengine: dw: Take HC_LLP flag into account for noLLP auto-config
-Date:   Fri, 29 May 2020 17:40:49 +0300
-Message-ID: <20200529144054.4251-7-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v5 07/11] dmaengine: dw: Set DMA device max segment size parameter
+Date:   Fri, 29 May 2020 17:40:50 +0300
+Message-ID: <20200529144054.4251-8-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -44,12 +44,12 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Full multi-block transfers functionality is enabled in DW DMA
-controller only if CHx_MULTI_BLK_EN is set. But LLP-based transfers
-can be executed only if hardcode channel x LLP register feature isn't
-enabled, which can be switched on at the IP core synthesis for
-optimization. If it's enabled then the LLP register is hardcoded to
-zero, so the blocks chaining based on the LLPs is unsupported.
+Maximum block size DW DMAC configuration corresponds to the max segment
+size DMA parameter in the DMA core subsystem notation. Lets set it with a
+value specific to the probed DW DMA controller. It shall help the DMA
+clients to create size-optimized SG-list items for the controller. This in
+turn will cause less dw_desc allocations, less LLP reinitializations,
+better DMA device performance.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
@@ -63,53 +63,36 @@ Cc: devicetree@vger.kernel.org
 ---
 
 Changelog v2:
-- Rearrange SoBs.
-- Add comment about why hardware accelerated LLP list support depends
-  on both MBLK_EN and HC_LLP configs setting.
-- Use explicit bits state comparison operator.
+- This is a new patch created in place of the dropped one:
+  "dmaengine: dw: Add LLP and block size config accessors".
 
 Changelog v3:
-- Move the patch to the head of the series.
+- Use the block_size found for the very first channel instead of looking for
+  the maximum of maximum block sizes.
+- Don't define device-specific device_dma_parameters object, since it has
+  already been defined by the platform device core.
 ---
- drivers/dma/dw/core.c | 11 ++++++++++-
- drivers/dma/dw/regs.h |  1 +
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ drivers/dma/dw/core.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index 21cb2a58dbd2..33e99d95b3d3 100644
+index 33e99d95b3d3..fb95920c429e 100644
 --- a/drivers/dma/dw/core.c
 +++ b/drivers/dma/dw/core.c
-@@ -1178,8 +1178,17 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 			 */
- 			dwc->block_size =
- 				(4 << ((pdata->block_size >> 4 * i) & 0xf)) - 1;
+@@ -1229,6 +1229,13 @@ int do_dma_probe(struct dw_dma_chip *chip)
+ 			     BIT(DMA_MEM_TO_MEM);
+ 	dw->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+ 
++	/*
++	 * For now there is no hardware with non uniform maximum block size
++	 * across all of the device channels, so we set the maximum segment
++	 * size as the block size found for the very first channel.
++	 */
++	dma_set_max_seg_size(dw->dma.dev, dw->chan[0].block_size);
 +
-+			/*
-+			 * According to the DW DMA databook the true scatter-
-+			 * gether LLPs aren't available if either multi-block
-+			 * config is disabled (CHx_MULTI_BLK_EN == 0) or the
-+			 * LLP register is hard-coded to zeros
-+			 * (CHx_HC_LLP == 1).
-+			 */
- 			dwc->nollp =
--				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0;
-+				(dwc_params >> DWC_PARAMS_MBLK_EN & 0x1) == 0 ||
-+				(dwc_params >> DWC_PARAMS_HC_LLP & 0x1) == 1;
- 		} else {
- 			dwc->block_size = pdata->block_size;
- 			dwc->nollp = !pdata->multi_block[i];
-diff --git a/drivers/dma/dw/regs.h b/drivers/dma/dw/regs.h
-index 3fce66ecee7a..1ab840b06e79 100644
---- a/drivers/dma/dw/regs.h
-+++ b/drivers/dma/dw/regs.h
-@@ -125,6 +125,7 @@ struct dw_dma_regs {
- 
- /* Bitfields in DWC_PARAMS */
- #define DWC_PARAMS_MBLK_EN	11		/* multi block transfer */
-+#define DWC_PARAMS_HC_LLP	13		/* set LLP register to zero */
- 
- /* bursts size */
- enum dw_dma_msize {
+ 	err = dma_async_device_register(&dw->dma);
+ 	if (err)
+ 		goto err_dma_register;
 -- 
 2.26.2
 

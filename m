@@ -2,128 +2,210 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B9BB81E826E
-	for <lists+dmaengine@lfdr.de>; Fri, 29 May 2020 17:48:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89BDC1E87AC
+	for <lists+dmaengine@lfdr.de>; Fri, 29 May 2020 21:24:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgE2Ps2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 29 May 2020 11:48:28 -0400
-Received: from mga17.intel.com ([192.55.52.151]:9070 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726838AbgE2Ps2 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 29 May 2020 11:48:28 -0400
-IronPort-SDR: sOnZYYRLdCtMp3MPBKDg/eThkYEZopM5VtRKbFg6g0ZBuc86wgUF3s6WWrBlwg/Xm+BxIESxJN
- 03yU10PkQCLA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2020 08:48:27 -0700
-IronPort-SDR: 8rg70f1m/iIwW8+EDUPTct8YHZ43T8EY1iyW9lBF7nyta2UH/zf11NB6nAF3S6iy4FrDiciOm3
- SK5FxgETFldQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,449,1583222400"; 
-   d="scan'208";a="311277341"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 29 May 2020 08:48:24 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jehFD-009dqd-LX; Fri, 29 May 2020 18:48:27 +0300
-Date:   Fri, 29 May 2020 18:48:27 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 09/11] dmaengine: dw: Initialize min and max burst DMA
- device capability
-Message-ID: <20200529154827.GT1634618@smile.fi.intel.com>
-References: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
- <20200529144054.4251-10-Sergey.Semin@baikalelectronics.ru>
+        id S1726829AbgE2TYt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 29 May 2020 15:24:49 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42083 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbgE2TYs (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 29 May 2020 15:24:48 -0400
+Received: by mail-io1-f66.google.com with SMTP id d5so525166ios.9;
+        Fri, 29 May 2020 12:24:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ncA1UY1KFuVSo+dgrM2Ia9S54/5AbQa0Xrtk2pQ7Rpg=;
+        b=DLT4H/LSWVg2mTX7Y+mE4Y/8D5y/55HG57jnAOsyG7x6noAZ12PuXyjn/S0fsrZTjc
+         tW6KzfUuCxSfHcT24u7o5D55Ys+CV+0Gg6wtvPDVXMviESeyHCKChLxIeQnMWfGQ3+yn
+         TW3AUYfxF+3mb5h2qhsvNjbsBOpnNXfMXQ83tAh3YIkVNIEg2zOBH1eKudLYEh81RZ8S
+         J0fjO3xyGbKWjI+Q632KQiHUewke0SztrmCaH6VRLip5htsR+pMpe+A9b9Ts8xi0yL2F
+         rdSKu8+rKeYCqrop5SlwfzMFQz8smko9AOml3x/noF0HETxtpJDkNU7azNhtPAf6GQQ3
+         ZwFQ==
+X-Gm-Message-State: AOAM533blsyuCW2O07s1eAqgYADCocUA7rFUelNaUBMg4avnfqo1yfU8
+        4z8WjAarNbDQ1tOQXAXdWA==
+X-Google-Smtp-Source: ABdhPJwqvXK5Nh8UeEPtncN2XbompTf/OSEA4G54suYQIG3STlJL/YnP452nV6nfPe4nUqyJuC6XDw==
+X-Received: by 2002:a6b:e714:: with SMTP id b20mr8135145ioh.195.1590780287110;
+        Fri, 29 May 2020 12:24:47 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id p3sm4241556iog.31.2020.05.29.12.24.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 12:24:45 -0700 (PDT)
+Received: (nullmailer pid 2795396 invoked by uid 1000);
+        Fri, 29 May 2020 19:24:43 -0000
+Date:   Fri, 29 May 2020 13:24:43 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     EastL <EastL.Lee@mediatek.com>
+Cc:     Sean Wang <sean.wang@mediatek.com>, vkoul@kernel.org,
+        mark.rutland@arm.com, matthias.bgg@gmail.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        wsd_upstream@mediatek.com
+Subject: Re: [PATCH v4 1/4] dt-bindings: dmaengine: Add MediaTek
+ Command-Queue DMA controller bindings
+Message-ID: <20200529192443.GA2785767@bogus>
+References: <1590659832-31476-1-git-send-email-EastL.Lee@mediatek.com>
+ <1590659832-31476-2-git-send-email-EastL.Lee@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200529144054.4251-10-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1590659832-31476-2-git-send-email-EastL.Lee@mediatek.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, May 29, 2020 at 05:40:52PM +0300, Serge Semin wrote:
-> According to the DW APB DMAC data book the minimum burst transaction
-> length is 1 and it's true for any version of the controller since
-> isn't parametrised in the coreAssembler so can't be changed at the
-> IP-core synthesis stage. The maximum burst transaction can vary from
-> channel to channel and from controller to controller depending on a
-> IP-core parameter the system engineer activated during the IP-core
-> synthesis. Let's initialise both min_burst and max_burst members of the
-> DMA controller descriptor with extreme values so the DMA clients could
-> use them to properly optimize the DMA requests. The channels and
-> controller-specific max_burst length initialization will be introduced
-> by the follow-up patches.
+On Thu, May 28, 2020 at 05:57:09PM +0800, EastL wrote:
+> Document the devicetree bindings for MediaTek Command-Queue DMA controller
+> which could be found on MT6779 SoC or other similar Mediatek SoCs.
+> 
+> Signed-off-by: EastL <EastL.Lee@mediatek.com>
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Need a full name.
 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> 
 > ---
+>  .../devicetree/bindings/dma/mtk-cqdma.yaml         | 100 +++++++++++++++++++++
+>  1 file changed, 100 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
 > 
-> Changelog v4:
-> - This is a new patch suggested by Andy.
-> 
-> Changelog v5:
-> - Introduce macro with extreme min and max burst length supported by the
->   DW DMA controller.
-> - Initialize max_burst length capability with extreme burst length supported
->   by the DW DMAC IP-core.
-> ---
->  drivers/dma/dw/core.c                | 2 ++
->  include/linux/platform_data/dma-dw.h | 2 ++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-> index ceded21537e2..4887aa2fc73c 100644
-> --- a/drivers/dma/dw/core.c
-> +++ b/drivers/dma/dw/core.c
-> @@ -1229,6 +1229,8 @@ int do_dma_probe(struct dw_dma_chip *chip)
->  	dw->dma.device_issue_pending = dwc_issue_pending;
->  
->  	/* DMA capabilities */
-> +	dw->dma.min_burst = DW_DMA_MIN_BURST;
-> +	dw->dma.max_burst = DW_DMA_MAX_BURST;
->  	dw->dma.src_addr_widths = DW_DMA_BUSWIDTHS;
->  	dw->dma.dst_addr_widths = DW_DMA_BUSWIDTHS;
->  	dw->dma.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV) |
-> diff --git a/include/linux/platform_data/dma-dw.h b/include/linux/platform_data/dma-dw.h
-> index f3eaf9ec00a1..369e41e9dcc9 100644
-> --- a/include/linux/platform_data/dma-dw.h
-> +++ b/include/linux/platform_data/dma-dw.h
-> @@ -12,6 +12,8 @@
->  
->  #define DW_DMA_MAX_NR_MASTERS	4
->  #define DW_DMA_MAX_NR_CHANNELS	8
-> +#define DW_DMA_MIN_BURST	1
-> +#define DW_DMA_MAX_BURST	256
->  
->  /**
->   * struct dw_dma_slave - Controller-specific information about a slave
+> diff --git a/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml b/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
+> new file mode 100644
+> index 0000000..045aa0c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
+> @@ -0,0 +1,100 @@
+> +# SPDX-License-Identifier: GPL-2.0
+
+Dual license new bindings:
+
+(GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/mtk-cqdma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MediaTek Command-Queue DMA controller Device Tree Binding
+> +
+> +maintainers:
+> +  - EastL <EastL.Lee@mediatek.com>
+> +
+> +description:
+> +  MediaTek Command-Queue DMA controller (CQDMA) on Mediatek SoC
+> +  is dedicated to memory-to-memory transfer through queue based
+> +  descriptor management.
+> +
+
+Need a $ref to dma-controller.yaml
+
+> +properties:
+> +  "#dma-cells":
+> +    minimum: 1
+> +    # Should be enough
+> +    maximum: 255
+> +    description:
+> +      Used to provide DMA controller specific information.
+> +
+> +  compatible:
+> +    const: mediatek,cqdma
+
+Needs SoC specific compatible string(s).
+
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 255
+
+You can have 255 register regions?
+
+You need to define what each region is if more than 1.
+
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 255
+
+255 interrupts?
+
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: cqdma
+> +
+> +  dma-channel-mask:
+> +    description:
+> +      Bitmask of available DMA channels in ascending order that are
+> +      not reserved by firmware and are available to the
+> +      kernel. i.e. first channel corresponds to LSB.
+> +      The first item in the array is for channels 0-31, the second is for
+> +      channels 32-63, etc.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    items:
+> +      minItems: 1
+> +      # Should be enough
+> +      maxItems: 255
+
+This already has a definition in dma-common.yaml. Don't copy-n-paste 
+it. Just add any constraints you have. Like what is the max number of 
+channels?
+
+> +
+> +  dma-channels:
+> +    $ref: /schemas/types.yaml#definitions/uint32
+> +    description:
+> +      Number of DMA channels supported by the controller.
+> +
+> +  dma-requests:
+> +    $ref: /schemas/types.yaml#definitions/uint32
+> +    description:
+> +      Number of DMA request signals supported by the controller.
+
+Same comment on these 2.
+
+> +
+> +required:
+> +  - "#dma-cells"
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - dma-channel-mask
+> +  - dma-channels
+> +  - dma-requests
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/mt6779-clk.h>
+> +    cqdma: dma-controller@10212000 {
+> +        compatible = "mediatek,cqdma";
+> +        reg = <0 0x10212000 0 0x80>,
+> +            <0 0x10212080 0 0x80>,
+> +            <0 0x10212100 0 0x80>;
+
+Examples default to 1 cell each for address and size.
+
+> +        interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_LOW>,
+> +            <GIC_SPI 140 IRQ_TYPE_LEVEL_LOW>,
+> +            <GIC_SPI 141 IRQ_TYPE_LEVEL_LOW>;
+> +        clocks = <&infracfg_ao CLK_INFRA_CQ_DMA>;
+> +        clock-names = "cqdma";
+> +        dma-channel-mask = <63>;
+> +        dma-channels = <3>;
+> +        dma-requests = <32>;
+> +        #dma-cells = <1>;
+> +    };
+> +
+> +...
 > -- 
-> 2.26.2
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> 1.9.1

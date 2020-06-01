@@ -2,90 +2,81 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EE531E89F5
-	for <lists+dmaengine@lfdr.de>; Fri, 29 May 2020 23:24:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3157D1E9BC9
+	for <lists+dmaengine@lfdr.de>; Mon,  1 Jun 2020 04:43:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbgE2VYU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 29 May 2020 17:24:20 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:40789 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727879AbgE2VYU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 29 May 2020 17:24:20 -0400
-Received: by mail-il1-f195.google.com with SMTP id t8so3376693ilm.7;
-        Fri, 29 May 2020 14:24:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uowho2igbLeYdvcPX3pvLRT9zcMohs3wO1m6OZGWISE=;
-        b=ay2ADklElmDDyXLi5yyOTViBj6iRx8/zrpc2D5rhziKm75c7+aIfclTiT2LVzJVbKt
-         BfUB2H4CEDK0Xqt1Bx184YmLotCyOfF03p+jB2QPEwrHvtSH1PlxZmofSbBQP8XoOFrm
-         qRPq+w1J8ppBqx3p1tg4enaBAUcAof0rbzgLmZwg58/02YFjiYnwMddMv+ZHaSNpWKlx
-         lfRXkZSORAYeMdwuinzSIN6Rk4UpXIdsDuqRz7ovp8R8bXKhpAh5KIKKzIELgT0RChEt
-         tk3mB09X48eaj4ykyBbCKpAW7PRhvCa9BeUlcyrIVHFsuKGsmlvvduUIMswO/Gd3Kl1J
-         N7JA==
-X-Gm-Message-State: AOAM530tSpBWNyPkpiNPIcnFxjBV5pXzQZDa+jhfVLxVK4cLIqqwE1PB
-        PVXgKJ/71zwlNQP9WaJdug==
-X-Google-Smtp-Source: ABdhPJz/qLHW9IoKyI+iX/bqpRWeziSYW8gFNNZGjEIqFx7OXO5F0hX1+RCCulHWqGa35KT8U1Cm4g==
-X-Received: by 2002:a92:5fda:: with SMTP id i87mr7186744ill.292.1590787459003;
-        Fri, 29 May 2020 14:24:19 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id i10sm5312514ilp.28.2020.05.29.14.24.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 14:24:18 -0700 (PDT)
-Received: (nullmailer pid 2994336 invoked by uid 1000);
-        Fri, 29 May 2020 21:24:13 -0000
-Date:   Fri, 29 May 2020 15:24:13 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     linux-mips@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
-        dmaengine@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v5 02/11] dt-bindings: dma: dw: Add max burst transaction
- length property
-Message-ID: <20200529212413.GA2994283@bogus>
-References: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
- <20200529144054.4251-3-Sergey.Semin@baikalelectronics.ru>
+        id S1726860AbgFACnt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 31 May 2020 22:43:49 -0400
+Received: from hs-162.6.buanalintas.co.id ([223.165.6.162]:46886 "EHLO
+        mx.bestprofit-futures.co.id" rhost-flags-OK-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S1726218AbgFACnt (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 31 May 2020 22:43:49 -0400
+X-Greylist: delayed 6874 seconds by postgrey-1.27 at vger.kernel.org; Sun, 31 May 2020 22:43:48 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mx.bestprofit-futures.co.id (Postfix) with ESMTP id 04FF05246E8;
+        Mon,  1 Jun 2020 07:27:54 +0700 (WIB)
+Received: from mx.bestprofit-futures.co.id ([127.0.0.1])
+        by localhost (mx.bestprofit-futures.co.id [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id wCNcp_4Q-z4G; Mon,  1 Jun 2020 07:27:53 +0700 (WIB)
+Received: from localhost (localhost [127.0.0.1])
+        by mx.bestprofit-futures.co.id (Postfix) with ESMTP id 773C0524A74;
+        Mon,  1 Jun 2020 07:27:53 +0700 (WIB)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mx.bestprofit-futures.co.id 773C0524A74
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bestprofit-futures.co.id; s=4D3D1390-5211-11EA-8C0C-8C41A122B001;
+        t=1590971273; bh=zLTonXbKn6LYrnOZVETw9C2bepTvRzI70GQOlIiRCC0=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=teIfFi8HymS/DRHy/ArCvtcIeEmDouUpcK0udfCuSgE/4wQ2BYe5YXd4RN3UdHwbJ
+         bHXdnppuCkW4fuIzfDJv+gkbV6jRxI3XWwfvqdvkJedUjgPOHDqCuK6zM0kLEmMHBB
+         L1qPANuOE1RGZ9awvHyORDcV2OUgauqixigdBtpffp0w6y8mO2eQBuCHfH9QcsepT5
+         a6Co9ZdEMJFcG2VzTqEyEsUxlrpSf82ubXI7lIYr3o7jr1mv7JvfRPh++iPCivK/Ih
+         VDOoAduSEXy6wageJLZMdiubd/mRMQsPhuoETUeHmY1KUHjYZNW0qVPlOO0eP5gx+X
+         SP0pmYBFdX2Cw==
+X-Virus-Scanned: amavisd-new at mx.bestprofit-futures.co.id
+Received: from mx.bestprofit-futures.co.id ([127.0.0.1])
+        by localhost (mx.bestprofit-futures.co.id [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 87zFy3kj16Cj; Mon,  1 Jun 2020 07:27:53 +0700 (WIB)
+Received: from [10.81.249.6] (unknown [105.8.6.41])
+        by mx.bestprofit-futures.co.id (Postfix) with ESMTPSA id D60CD524AA5;
+        Mon,  1 Jun 2020 07:27:45 +0700 (WIB)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200529144054.4251-3-Sergey.Semin@baikalelectronics.ru>
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: =?utf-8?q?Wohlt=C3=A4tigkeitsspende_von_2=2E000=2E000_Millionen_Euro?=
+To:     Recipients <yoshi@bestprofit-futures.co.id>
+From:   ''Tayeb Souami'' <yoshi@bestprofit-futures.co.id>
+Date:   Mon, 01 Jun 2020 02:27:37 +0200
+Reply-To: Tayebsouam.spende@gmail.com
+Message-Id: <20200601002745.D60CD524AA5@mx.bestprofit-futures.co.id>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, 29 May 2020 17:40:45 +0300, Serge Semin wrote:
-> This array property is used to indicate the maximum burst transaction
-> length supported by each DMA channel.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: linux-mips@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v2:
-> - Rearrange SoBs.
-> - Move $ref to the root level of the properties. So do with the
->   constraints.
-> - Set default max-burst-len to 256 TR-WIDTH words.
-> 
-> Changelog v3:
-> - Add more details into the property description about what limitations
->   snps,max-burst-len defines.
-> ---
->  .../bindings/dma/snps,dma-spear1340.yaml          | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
+Lieber Freund,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Ich bin Herr Tayeb Souami, New Jersey, Vereinigte Staaten von Amerika, der =
+Mega-Gewinner von $ 315million In Mega Millions Jackpot, spende ich an 5 zu=
+f=C3=A4llige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Ma=
+il nach einem Spinball ausgew=C3=A4hlt.Ich habe den gr=C3=B6=C3=9Ften Teil =
+meines Verm=C3=B6gens auf eine Reihe von Wohlt=C3=A4tigkeitsorganisationen =
+und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die =
+Summe von =E2=82=AC 2.000.000,00 an Sie als eine der ausgew=C3=A4hlten 5 zu=
+ spenden, um meine Gewinne zu =C3=BCberpr=C3=BCfen, sehen Sie bitte meine Y=
+ou Tube Seite unten.
+
+UHR MICH HIER: https://www.youtube.com/watch?v=3DZ6ui8ZDQ6Ks
+
+
+Das ist dein Spendencode: [TS530342018]
+
+
+Antworten Sie mit dem SPENDE-CODE an diese
+
+ E-Mail:Tayebsouam.spende@gmail.com
+
+Ich hoffe, Sie und Ihre Familie gl=C3=BCcklich zu machen.
+
+Gr=C3=BC=C3=9Fe
+Herr Tayeb Souami

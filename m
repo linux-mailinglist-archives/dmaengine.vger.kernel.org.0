@@ -2,81 +2,94 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3157D1E9BC9
-	for <lists+dmaengine@lfdr.de>; Mon,  1 Jun 2020 04:43:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64F831E9C79
+	for <lists+dmaengine@lfdr.de>; Mon,  1 Jun 2020 06:20:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgFACnt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 31 May 2020 22:43:49 -0400
-Received: from hs-162.6.buanalintas.co.id ([223.165.6.162]:46886 "EHLO
-        mx.bestprofit-futures.co.id" rhost-flags-OK-FAIL-OK-OK)
-        by vger.kernel.org with ESMTP id S1726218AbgFACnt (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 31 May 2020 22:43:49 -0400
-X-Greylist: delayed 6874 seconds by postgrey-1.27 at vger.kernel.org; Sun, 31 May 2020 22:43:48 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mx.bestprofit-futures.co.id (Postfix) with ESMTP id 04FF05246E8;
-        Mon,  1 Jun 2020 07:27:54 +0700 (WIB)
-Received: from mx.bestprofit-futures.co.id ([127.0.0.1])
-        by localhost (mx.bestprofit-futures.co.id [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id wCNcp_4Q-z4G; Mon,  1 Jun 2020 07:27:53 +0700 (WIB)
-Received: from localhost (localhost [127.0.0.1])
-        by mx.bestprofit-futures.co.id (Postfix) with ESMTP id 773C0524A74;
-        Mon,  1 Jun 2020 07:27:53 +0700 (WIB)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mx.bestprofit-futures.co.id 773C0524A74
+        id S1725283AbgFAEUw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 1 Jun 2020 00:20:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgFAEUv (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 1 Jun 2020 00:20:51 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8C5CC08C5C9
+        for <dmaengine@vger.kernel.org>; Sun, 31 May 2020 21:20:51 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x11so3710207plv.9
+        for <dmaengine@vger.kernel.org>; Sun, 31 May 2020 21:20:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bestprofit-futures.co.id; s=4D3D1390-5211-11EA-8C0C-8C41A122B001;
-        t=1590971273; bh=zLTonXbKn6LYrnOZVETw9C2bepTvRzI70GQOlIiRCC0=;
-        h=MIME-Version:To:From:Date:Message-Id;
-        b=teIfFi8HymS/DRHy/ArCvtcIeEmDouUpcK0udfCuSgE/4wQ2BYe5YXd4RN3UdHwbJ
-         bHXdnppuCkW4fuIzfDJv+gkbV6jRxI3XWwfvqdvkJedUjgPOHDqCuK6zM0kLEmMHBB
-         L1qPANuOE1RGZ9awvHyORDcV2OUgauqixigdBtpffp0w6y8mO2eQBuCHfH9QcsepT5
-         a6Co9ZdEMJFcG2VzTqEyEsUxlrpSf82ubXI7lIYr3o7jr1mv7JvfRPh++iPCivK/Ih
-         VDOoAduSEXy6wageJLZMdiubd/mRMQsPhuoETUeHmY1KUHjYZNW0qVPlOO0eP5gx+X
-         SP0pmYBFdX2Cw==
-X-Virus-Scanned: amavisd-new at mx.bestprofit-futures.co.id
-Received: from mx.bestprofit-futures.co.id ([127.0.0.1])
-        by localhost (mx.bestprofit-futures.co.id [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 87zFy3kj16Cj; Mon,  1 Jun 2020 07:27:53 +0700 (WIB)
-Received: from [10.81.249.6] (unknown [105.8.6.41])
-        by mx.bestprofit-futures.co.id (Postfix) with ESMTPSA id D60CD524AA5;
-        Mon,  1 Jun 2020 07:27:45 +0700 (WIB)
-Content-Type: text/plain; charset="utf-8"
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hMKh+B5RDPq+o7Oive8w/r87Zbfpk7DQQkXRUfW4IOg=;
+        b=yEeMkr8V1c7yN+4qOTxaNQ2aaHNewu0hEjwsE4ztlBYLaxeAoUTDgbzHG/eNwqpA/P
+         ADC6E0J1xwDpDPCI3hzLDl7hJc3DjP2FcwWAMTtAChrAFq2fzvIp6o2P4yHYNjEucjby
+         2aa/lx1bNvFNzOasCR3b6SXbaqGnLqDHgqMDqKGnpAx0iCGMUcM+C54w12zv1ywDzbpB
+         ZZGv6z+3pmzCiZplGNcXZZUySenCxB2gXecX/wJxb49TcOM+nyCZJwij1F0qCVM5mb/d
+         wYMIC57zxKxJQp58gqL7cVOXdtkGbfVuvswMC8yXpR865usDWXl7UpqwjCLkn1J1mOSh
+         PvMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hMKh+B5RDPq+o7Oive8w/r87Zbfpk7DQQkXRUfW4IOg=;
+        b=ObbOBKdqEj9VLcTdDEXq6AB/S7YZ6f46D7+V9hDwczEvIld5DU3Rsks9vMIFW2/eOh
+         Ob1ghA67fgAgCiZVbDhP1Wfx7VgRAeFdRQ1J3ihPh4zu/kBuLTVkr1/KG/BI2wEHpDiF
+         jBE4mebopljVxsjaqCwesIwcMMCjc8lD8ywykvsZu/hrQqN2fLnwLgRKAU4/5Z0cinwU
+         mMvo9bLf96Gw4oR+QcgpDM9Pj+5Az6o9WmWs7GTEp+5aqJtngX3Sv//BQ9HrN3BeCeJ8
+         5FXP9o7wTqEZJwJ2V/KjJmDAbcIuqDCRo4r2ee+ju9pf28ZROD0JX+6nptPWwDhSCPuM
+         iFNg==
+X-Gm-Message-State: AOAM531c5y24NY8utd6Fl2wcJ5OBv8eaR+2F40kUnRkqCwWeQoiQqI8A
+        b/ymCfOhEs0NeslRH6jatA08yQ==
+X-Google-Smtp-Source: ABdhPJyaIPN0AabB07SDvg8FYmCd2w+PPO/BCoqJqMkvufUjUsRbWQviG1tVmqdXzOsE/DE1c0k1RA==
+X-Received: by 2002:a17:90b:888:: with SMTP id bj8mr21322762pjb.148.1590985251318;
+        Sun, 31 May 2020 21:20:51 -0700 (PDT)
+Received: from localhost ([122.172.62.209])
+        by smtp.gmail.com with ESMTPSA id x132sm12983751pfd.214.2020.05.31.21.20.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 31 May 2020 21:20:50 -0700 (PDT)
+Date:   Mon, 1 Jun 2020 09:50:48 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>, linux-mips@vger.kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 01/11] dt-bindings: dma: dw: Convert DW DMAC to DT
+ binding
+Message-ID: <20200601042048.hk73khbz4wipevct@vireshk-i7>
+References: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
+ <20200529144054.4251-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: =?utf-8?q?Wohlt=C3=A4tigkeitsspende_von_2=2E000=2E000_Millionen_Euro?=
-To:     Recipients <yoshi@bestprofit-futures.co.id>
-From:   ''Tayeb Souami'' <yoshi@bestprofit-futures.co.id>
-Date:   Mon, 01 Jun 2020 02:27:37 +0200
-Reply-To: Tayebsouam.spende@gmail.com
-Message-Id: <20200601002745.D60CD524AA5@mx.bestprofit-futures.co.id>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529144054.4251-2-Sergey.Semin@baikalelectronics.ru>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Lieber Freund,
+On 29-05-20, 17:40, Serge Semin wrote:
+> Modern device tree bindings are supposed to be created as YAML-files
+> in accordance with dt-schema. This commit replaces the Synopsis
+> Designware DMA controller legacy bare text bindings with YAML file.
+> The only required prorties are "compatible", "reg", "#dma-cells" and
+> "interrupts", which will be used by the driver to correctly find the
+> controller memory region and handle its events. The rest of the properties
+> are optional, since in case if either "dma-channels" or "dma-masters" isn't
+> specified, the driver will attempt to auto-detect the IP core
+> configuration.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Ich bin Herr Tayeb Souami, New Jersey, Vereinigte Staaten von Amerika, der =
-Mega-Gewinner von $ 315million In Mega Millions Jackpot, spende ich an 5 zu=
-f=C3=A4llige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Ma=
-il nach einem Spinball ausgew=C3=A4hlt.Ich habe den gr=C3=B6=C3=9Ften Teil =
-meines Verm=C3=B6gens auf eine Reihe von Wohlt=C3=A4tigkeitsorganisationen =
-und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die =
-Summe von =E2=82=AC 2.000.000,00 an Sie als eine der ausgew=C3=A4hlten 5 zu=
- spenden, um meine Gewinne zu =C3=BCberpr=C3=BCfen, sehen Sie bitte meine Y=
-ou Tube Seite unten.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-UHR MICH HIER: https://www.youtube.com/watch?v=3DZ6ui8ZDQ6Ks
-
-
-Das ist dein Spendencode: [TS530342018]
-
-
-Antworten Sie mit dem SPENDE-CODE an diese
-
- E-Mail:Tayebsouam.spende@gmail.com
-
-Ich hoffe, Sie und Ihre Familie gl=C3=BCcklich zu machen.
-
-Gr=C3=BC=C3=9Fe
-Herr Tayeb Souami
+-- 
+viresh

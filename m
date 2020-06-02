@@ -2,214 +2,239 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BAD21EB87F
-	for <lists+dmaengine@lfdr.de>; Tue,  2 Jun 2020 11:28:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C5721EC0FD
+	for <lists+dmaengine@lfdr.de>; Tue,  2 Jun 2020 19:34:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgFBJ1o (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 2 Jun 2020 05:27:44 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:54554 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbgFBJ1n (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 2 Jun 2020 05:27:43 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id B98AD8030808;
-        Tue,  2 Jun 2020 09:27:36 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id gapecbd4HlkQ; Tue,  2 Jun 2020 12:27:35 +0300 (MSK)
-Date:   Tue, 2 Jun 2020 12:27:34 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 00/11] dmaengine: dw: Take Baikal-T1 SoC DW DMAC
- peculiarities into account
-Message-ID: <20200602092734.6oekfmilbpx54y64@mobilestation>
-References: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+        id S1726019AbgFBRen (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 2 Jun 2020 13:34:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725969AbgFBRen (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 2 Jun 2020 13:34:43 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 247CFC05BD1E;
+        Tue,  2 Jun 2020 10:34:43 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 64so5359041pfg.8;
+        Tue, 02 Jun 2020 10:34:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=cBGTL0Kxil03wrOoJRMt6TMIwoGa3DB2H5rd4f8PV6E=;
+        b=sunS1w+poDICRs3zo89HpSDwh6tZFdEEorDFokhLApGSY+eAgsTuY5ihiawbv6LYfl
+         4rqLqsu2lj8JCnVOAzLipxY/W65sW1CSdwjewerypOxhiYVDAS+a8CjuNmQUwr1iwH7B
+         BGBXZTs1KGJN54uoh5Zg/X9nMEuoN4WVT8Y5JryUF2scp7ChOguenNmgsdy0zZ3gRoO5
+         isOHfjgMT1yroaGBDNLeoWXj0ieyozP3ELXhClVnDLN/aUtG+Ctoq25M+5ncf7m5/uWK
+         2EDjfR7YOERitUp+D6lONcnEkQufGPn8e6lwE+Mpqhv4FIIWci4oT1MQJv0rLFT8NEe/
+         yroA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=cBGTL0Kxil03wrOoJRMt6TMIwoGa3DB2H5rd4f8PV6E=;
+        b=ldGEcBWaZdPIpGyFjVdV0hl1dWbgb3JBTt4ZkoM6BHvprGxF3WK+IpV4Q66x3awTbh
+         7KyJXxGLt6K0AGotuZsf8vgDXEVqXhtUof6iJiTIIFKQIYZrRbZSUBht81BupkC+llkN
+         N8Z1ZSQSc0MUJ7PfJ23GvJokJU8bDEEprOMMBC0165SVCMyFiTbCVux1DC3A81UwVMZj
+         lSt2pkYS8q5XzZrucaoUZL9Tha7Svf07G4p3m4BYiniwEYsPFNLHoICqUmJrG6q7xTjq
+         0LTVNObbinKgdGduflB7AAUsWSw6BUV2jgAJVGmw5QrVznQgjnzr+v56hdU9mCFnagGj
+         FwzQ==
+X-Gm-Message-State: AOAM530EeC2R4aP3h2RBNXcB840X9rRoHnkzX1wFcREdSl+9jbw22vKX
+        OvOgTIfSv3HpGi7MTTgN97Q=
+X-Google-Smtp-Source: ABdhPJxJfcpUCO4Ac0cThh8vLKYp+JQMtsJURxW+S959oJ+ye+zp5ColFIesFxVG+CoWuBPqxri8Kw==
+X-Received: by 2002:a05:6a00:2c5:: with SMTP id b5mr4605461pft.41.1591119282604;
+        Tue, 02 Jun 2020 10:34:42 -0700 (PDT)
+Received: from localhost.localdomain ([223.235.152.125])
+        by smtp.gmail.com with ESMTPSA id i22sm2864382pfo.92.2020.06.02.10.34.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jun 2020 10:34:41 -0700 (PDT)
+From:   Amit Singh Tomar <amittomer25@gmail.com>
+To:     andre.przywara@arm.com, vkoul@kernel.org, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org
+Cc:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org
+Subject: [PATCH v3 01/10] dmaengine: Actions: get rid of bit fields from dma descriptor
+Date:   Tue,  2 Jun 2020 23:03:03 +0530
+Message-Id: <1591119192-18538-2-git-send-email-amittomer25@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1591119192-18538-1-git-send-email-amittomer25@gmail.com>
+References: <1591119192-18538-1-git-send-email-amittomer25@gmail.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Vinod, Viresh
+At the moment, Driver uses bit fields to describe registers of the DMA
+descriptor structure that makes it less portable and maintainable, and
+Andre suugested(and even sketched important bits for it) to make use of
+array to describe this DMA descriptors instead. It gives the flexibility
+while extending support for other platform such as Actions S700.
 
-Andy's finished his review. So all the patches of the series (except one rather
-decorative, which we have different opinion of) are tagged by him. Since merge
-window is about to be opened please consider to merge the series in. I'll really
-need it to be in the kernel to provide the noLLP-problem fix for the Dw APB SSI
-in 5.8.
+This commit removes the "owl_dma_lli_hw" (that includes bit-fields) and
+uses array to describe DMA descriptor.
 
--Sergey
+Suggested-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
+---
+Changes since v2:
+	* No change.
+Changes since v1:
+        * Defined macro for frame count value.
+        * Introduced llc_hw_flen() from patch 2/9.
+        * Removed the unnecessary line break.
+Changes since rfc:
+        * No change.
+---
+ drivers/dma/owl-dma.c | 84 ++++++++++++++++++++++++---------------------------
+ 1 file changed, 40 insertions(+), 44 deletions(-)
 
-On Fri, May 29, 2020 at 05:40:43PM +0300, Serge Semin wrote:
-> Baikal-T1 SoC has an DW DMAC on-board to provide a Mem-to-Mem, low-speed
-> peripherals Dev-to-Mem and Mem-to-Dev functionality. Mostly it's compatible
-> with currently implemented in the kernel DW DMAC driver, but there are some
-> peculiarities which must be taken into account in order to have the device
-> fully supported.
-> 
-> First of all traditionally we replaced the legacy plain text-based dt-binding
-> file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
-> channels, which alas have different max burst length configuration.
-> In particular first two channels may burst up to 128 bits (16 bytes) at a time
-> while the rest of them just up to 32 bits. We must make sure that the DMA
-> subsystem doesn't set values exceeding these limitations otherwise the
-> controller will hang up. In third currently we discovered the problem in using
-> the DW APB SPI driver together with DW DMAC. The problem happens if there is no
-> natively implemented multi-block LLP transfers support and the SPI-transfer
-> length exceeds the max lock size. In this case due to asynchronous handling of
-> Tx- and Rx- SPI transfers interrupt we might end up with Dw APB SSI Rx FIFO
-> overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
-> the DMAC to asynchronously execute the transfers we'd have to at least warn
-> the user of the possible errors. In forth it's worth to set the DMA device max
-> segment size with max block size config specific to the DW DMA controller. It
-> shall help the DMA clients to create size-optimized SG-list items for the
-> controller. This in turn will cause less dw_desc allocations, less LLP
-> reinitializations, better DMA device performance.
-> 
-> Finally there is a bug in the algorithm of the nollp flag detection.
-> In particular even if DW DMAC parameters state the multi-block transfers
-> support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
-> by the driver true multi-block LLP functionality unusable. This happens cause'
-> if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
-> contiguous multi-block transfers will be only supported. We must take the
-> flag into account when detecting the LLP support otherwise the driver just
-> won't work correctly.
-> 
-> This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
-> 0e698dfa2822 ("Linux 5.7-rc4")
-> tag: v5.7-rc4
-> 
-> Changelog v2:
-> - Rearrange SoBs.
-> - Move $ref to the root level of the properties. So do do with the
->   constraints in the DT binding.
-> - Replace "additionalProperties: false" with "unevaluatedProperties: false"
->   property in the DT binding file.
-> - Discard default settings defined out of property enum constraint.
-> - Set default max-burst-len to 256 TR-WIDTH words in the DT binding.
-> - Discard noLLP and block_size accessors.
-> - Set max segment size of the DMA device structure with the DW DMA block size
->   config.
-> - Print warning if noLLP flag is set.
-> - Discard max burst length accessor.
-> - Add comment about why hardware accelerated LLP list support depends
->   on both MBLK_EN and HC_LLP configs setting.
-> - Use explicit bits state comparison operator in noLLP flag setting.
-> 
-> Link: https://lore.kernel.org/dmaengine/20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru/
-> Changelog v3:
-> - Use the block_size found for the very first channel instead of looking for
->   the maximum of maximum block sizes.
-> - Don't define device-specific device_dma_parameters object, since it has
->   already been defined by the platform device core.
-> - Add more details into the property description about what limitations
->   snps,max-burst-len defines.
-> - Move commit fb7e3bbfc830 ("dmaengine: dw: Take HC_LLP flag into account for
->   noLLP auto-config") to the head of the series.
-> - Add a new patch "dmaengine: Introduce min burst length capability" as a
->   result of the discussion with Vinod and Andy regarding the burst length
->   capability.
-> - Add a new patch "dmaengine: Introduce max SG list entries capability"
->   suggested by Andy.
-> - Add a new patch "dmaengine: Introduce DMA-device device_caps callback" as
->   a result of the discussion with Vinud and Andy in the framework of DW DMA
->   burst and LLP capabilities.
-> - Add a new patch "dmaengine: dw: Add dummy device_caps callback" as a
->   preparation commit before setting the max_burst and max_sg_nents
->   DW DMA capabilities.
-> - Override the slave channel max_burst capability instead of calculating
->   the minimum value of max burst lengths and setting the DMA-device
->   generic capability.
-> - Add a new patch "dmaengine: dw: Initialize max_sg_nents with nollp flag".
->   This is required to fix the DW APB SSI issue of the Tx and Rx DMA
->   channels de-synchronization.
-> 
-> Link: https://lore.kernel.org/dmaengine/20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru/
-> Changelog v4:
-> - Use explicit if-else statement when assigning the max_sg_nents field.
-> - Clamp the dst and src burst lengths in the generic dwc_config() method
->   instead of doing that in the encode_maxburst() callback.
-> - Define max_burst with u32 type in struct dw_dma_platform_data.
-> - Perform of_property_read_u32_array() with the platform data
->   max_burst member passed directly.
-> - Add a new patch "dmaengine: dw: Initialize min_burst capability",
->   which initializes the min_burst capability with 1.
-> - Fix of->if typo. It should be definitely "of" in the max_sg_list
->   capability description.
-> 
-> Link: https://lore.kernel.org/dmaengine/20200528222401.26941-1-Sergey.Semin@baikalelectronics.ru
-> Changelog v5:
-> - Introduce macro with extreme min and max burst lengths supported by the
->   DW DMA controller. Define them in the patch with default min and max burst
->   length iintializations.
-> - Initialize max_burst length capability with extreme burst length supported
->   by the DW DMAC IP-core.
-> - Move DW_DMA_MAX_BURST macro definition to the patch "dmaengine: dw:
->   Initialize min and max burst DMA device capability".
-> - Add in-line comment at the point of the device_caps callback invocation.
-> - Add doc-comment for the device_caps member of struct dma_device
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
-> Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
-> Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: dmaengine@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Serge Semin (11):
->   dt-bindings: dma: dw: Convert DW DMAC to DT binding
->   dt-bindings: dma: dw: Add max burst transaction length property
->   dmaengine: Introduce min burst length capability
->   dmaengine: Introduce max SG list entries capability
->   dmaengine: Introduce DMA-device device_caps callback
->   dmaengine: dw: Take HC_LLP flag into account for noLLP auto-config
->   dmaengine: dw: Set DMA device max segment size parameter
->   dmaengine: dw: Add dummy device_caps callback
->   dmaengine: dw: Initialize min and max burst DMA device capability
->   dmaengine: dw: Introduce max burst length hw config
->   dmaengine: dw: Initialize max_sg_nents capability
-> 
->  .../bindings/dma/snps,dma-spear1340.yaml      | 176 ++++++++++++++++++
->  .../devicetree/bindings/dma/snps-dma.txt      |  69 -------
->  drivers/dma/dmaengine.c                       |  12 ++
->  drivers/dma/dw/core.c                         |  48 ++++-
->  drivers/dma/dw/of.c                           |   5 +
->  drivers/dma/dw/regs.h                         |   3 +
->  include/linux/dmaengine.h                     |  16 ++
->  include/linux/platform_data/dma-dw.h          |   5 +
->  8 files changed, 264 insertions(+), 70 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
->  delete mode 100644 Documentation/devicetree/bindings/dma/snps-dma.txt
-> 
-> -- 
-> 2.26.2
-> 
+diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
+index c683051257fd..dd85c205454e 100644
+--- a/drivers/dma/owl-dma.c
++++ b/drivers/dma/owl-dma.c
+@@ -120,30 +120,21 @@
+ #define BIT_FIELD(val, width, shift, newshift)	\
+ 		((((val) >> (shift)) & ((BIT(width)) - 1)) << (newshift))
+ 
+-/**
+- * struct owl_dma_lli_hw - Hardware link list for dma transfer
+- * @next_lli: physical address of the next link list
+- * @saddr: source physical address
+- * @daddr: destination physical address
+- * @flen: frame length
+- * @fcnt: frame count
+- * @src_stride: source stride
+- * @dst_stride: destination stride
+- * @ctrla: dma_mode and linklist ctrl config
+- * @ctrlb: interrupt config
+- * @const_num: data for constant fill
+- */
+-struct owl_dma_lli_hw {
+-	u32	next_lli;
+-	u32	saddr;
+-	u32	daddr;
+-	u32	flen:20;
+-	u32	fcnt:12;
+-	u32	src_stride;
+-	u32	dst_stride;
+-	u32	ctrla;
+-	u32	ctrlb;
+-	u32	const_num;
++/* Frame count value is fixed as 1 */
++#define FCNT_VAL				0x1
++
++/* Describe DMA descriptor, hardware link list for dma transfer */
++enum owl_dmadesc_offsets {
++	OWL_DMADESC_NEXT_LLI = 0,
++	OWL_DMADESC_SADDR,
++	OWL_DMADESC_DADDR,
++	OWL_DMADESC_FLEN,
++	OWL_DMADESC_SRC_STRIDE,
++	OWL_DMADESC_DST_STRIDE,
++	OWL_DMADESC_CTRLA,
++	OWL_DMADESC_CTRLB,
++	OWL_DMADESC_CONST_NUM,
++	OWL_DMADESC_SIZE
+ };
+ 
+ /**
+@@ -153,7 +144,7 @@ struct owl_dma_lli_hw {
+  * @node: node for txd's lli_list
+  */
+ struct owl_dma_lli {
+-	struct  owl_dma_lli_hw	hw;
++	u32			hw[OWL_DMADESC_SIZE];
+ 	dma_addr_t		phys;
+ 	struct list_head	node;
+ };
+@@ -320,6 +311,11 @@ static inline u32 llc_hw_ctrlb(u32 int_ctl)
+ 	return ctl;
+ }
+ 
++static u32 llc_hw_flen(struct owl_dma_lli *lli)
++{
++	return lli->hw[OWL_DMADESC_FLEN] & GENMASK(19, 0);
++}
++
+ static void owl_dma_free_lli(struct owl_dma *od,
+ 			     struct owl_dma_lli *lli)
+ {
+@@ -351,8 +347,9 @@ static struct owl_dma_lli *owl_dma_add_lli(struct owl_dma_txd *txd,
+ 		list_add_tail(&next->node, &txd->lli_list);
+ 
+ 	if (prev) {
+-		prev->hw.next_lli = next->phys;
+-		prev->hw.ctrla |= llc_hw_ctrla(OWL_DMA_MODE_LME, 0);
++		prev->hw[OWL_DMADESC_NEXT_LLI] = next->phys;
++		prev->hw[OWL_DMADESC_CTRLA] |=
++					llc_hw_ctrla(OWL_DMA_MODE_LME, 0);
+ 	}
+ 
+ 	return next;
+@@ -365,8 +362,7 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+ 				  struct dma_slave_config *sconfig,
+ 				  bool is_cyclic)
+ {
+-	struct owl_dma_lli_hw *hw = &lli->hw;
+-	u32 mode;
++	u32 mode, ctrlb;
+ 
+ 	mode = OWL_DMA_MODE_PW(0);
+ 
+@@ -407,22 +403,22 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+ 		return -EINVAL;
+ 	}
+ 
+-	hw->next_lli = 0; /* One link list by default */
+-	hw->saddr = src;
+-	hw->daddr = dst;
+-
+-	hw->fcnt = 1; /* Frame count fixed as 1 */
+-	hw->flen = len; /* Max frame length is 1MB */
+-	hw->src_stride = 0;
+-	hw->dst_stride = 0;
+-	hw->ctrla = llc_hw_ctrla(mode,
+-				 OWL_DMA_LLC_SAV_LOAD_NEXT |
+-				 OWL_DMA_LLC_DAV_LOAD_NEXT);
++	lli->hw[OWL_DMADESC_CTRLA] = llc_hw_ctrla(mode,
++						  OWL_DMA_LLC_SAV_LOAD_NEXT |
++						  OWL_DMA_LLC_DAV_LOAD_NEXT);
+ 
+ 	if (is_cyclic)
+-		hw->ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_BLOCK);
++		ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_BLOCK);
+ 	else
+-		hw->ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_SUPER_BLOCK);
++		ctrlb = llc_hw_ctrlb(OWL_DMA_INTCTL_SUPER_BLOCK);
++
++	lli->hw[OWL_DMADESC_NEXT_LLI] = 0;
++	lli->hw[OWL_DMADESC_SADDR] = src;
++	lli->hw[OWL_DMADESC_DADDR] = dst;
++	lli->hw[OWL_DMADESC_SRC_STRIDE] = 0;
++	lli->hw[OWL_DMADESC_DST_STRIDE] = 0;
++	lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
++	lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
+ 
+ 	return 0;
+ }
+@@ -754,7 +750,7 @@ static u32 owl_dma_getbytes_chan(struct owl_dma_vchan *vchan)
+ 			/* Start from the next active node */
+ 			if (lli->phys == next_lli_phy) {
+ 				list_for_each_entry(lli, &txd->lli_list, node)
+-					bytes += lli->hw.flen;
++					bytes += llc_hw_flen(lli);
+ 				break;
+ 			}
+ 		}
+@@ -785,7 +781,7 @@ static enum dma_status owl_dma_tx_status(struct dma_chan *chan,
+ 	if (vd) {
+ 		txd = to_owl_txd(&vd->tx);
+ 		list_for_each_entry(lli, &txd->lli_list, node)
+-			bytes += lli->hw.flen;
++			bytes += llc_hw_flen(lli);
+ 	} else {
+ 		bytes = owl_dma_getbytes_chan(vchan);
+ 	}
+-- 
+2.7.4
+

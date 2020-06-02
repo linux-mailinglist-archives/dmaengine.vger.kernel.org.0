@@ -2,170 +2,128 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F4341EB185
-	for <lists+dmaengine@lfdr.de>; Tue,  2 Jun 2020 00:09:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62CF01EB831
+	for <lists+dmaengine@lfdr.de>; Tue,  2 Jun 2020 11:17:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbgFAWJt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 1 Jun 2020 18:09:49 -0400
-Received: from mga11.intel.com ([192.55.52.93]:14332 "EHLO mga11.intel.com"
+        id S1726371AbgFBJRH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 2 Jun 2020 05:17:07 -0400
+Received: from mga09.intel.com ([134.134.136.24]:47446 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728216AbgFAWJt (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 1 Jun 2020 18:09:49 -0400
-IronPort-SDR: OmzUdPgYKxV0cdIpmpnSPx5NitXXJUsmh39dcJLgI91vZJUSzLAukjCruhjNJlHe6/dOhODcQO
- 2pgo7/5+DQMA==
+        id S1726139AbgFBJRH (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 2 Jun 2020 05:17:07 -0400
+IronPort-SDR: 2mN2UP+5DYwxn5upqVhb2xj1+l3/5I5dEv3Qz6GydjAMPEi0vdAQuUMo8RT+ZT+/C3OurkGVJa
+ ZXmEr/uWWLwA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2020 15:09:48 -0700
-IronPort-SDR: sUumJ0VgGRtZTVt9P3HLsMnP6pZDuBTCtCYYDqxkNxI9Y5oEam8LIoybQoiyNdSRvyOZSHIZq4
- 44bOdemssgYQ==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2020 02:17:05 -0700
+IronPort-SDR: x/s6TqMkfFCMf6Elj0L0Y8lX5QW2JWx9MUk5QQCfVZssNH9dEg0ZyETqw7Bb3OWNT1BFwpyD/P
+ Tvjal8T4d0iQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,462,1583222400"; 
-   d="scan'208";a="347190913"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.251.235.125]) ([10.251.235.125])
-  by orsmga001.jf.intel.com with ESMTP; 01 Jun 2020 15:09:45 -0700
-Subject: Re: [PATCH v2 0/9] Add shared workqueue support for idxd driver
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, bhelgaas@google.com,
-        gregkh@linuxfoundation.org, arnd@arndb.de
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, dan.j.williams@intel.com, ashok.raj@intel.com,
-        fenghua.yu@intel.com, tony.luck@intel.com, jing.lin@intel.com,
-        sanjay.k.kumar@intel.com, dave.hansen@intel.com
-References: <158982749959.37989.2096629611303670415.stgit@djiang5-desk3.ch.intel.com>
-Message-ID: <95eb8203-a332-37ae-28fb-5a2af4d1daba@intel.com>
-Date:   Mon, 1 Jun 2020 15:09:45 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <158982749959.37989.2096629611303670415.stgit@djiang5-desk3.ch.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+X-IronPort-AV: E=Sophos;i="5.73,463,1583222400"; 
+   d="scan'208";a="416118065"
+Received: from gklab-125-110.igk.intel.com ([10.91.125.110])
+  by orsmga004.jf.intel.com with ESMTP; 02 Jun 2020 02:16:55 -0700
+From:   Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Brian King <brking@us.ibm.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Jim Gill <jgill@vmware.com>,
+        VMware PV-Drivers <pv-drivers@vmware.com>
+Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+Subject: [PATCH 00/15] forward MSIx vector enable error code in pci_alloc_irq_vectors_affinity
+Date:   Tue,  2 Jun 2020 11:16:17 +0200
+Message-Id: <20200602091617.31395-1-piotr.stankiewicz@intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Vinod,
-Obviously this series won't make it for 5.8 due to being blocked by Fenghua's 
-PASID series. Do you think you can take patches 4 and 5 independently? I think 
-these can go into 5.8 and is not dependent on anything. Thanks.
+The primary objective of this patch series is to change the behaviour
+of pci_alloc_irq_vectors_affinity such that it forwards the MSI-X enable
+error code when appropriate. In the process, though, it was pointed out
+that there are multiple places in the kernel which check/ask for message
+signalled interrupts (MSI or MSI-X), which spawned the first patch adding
+PCI_IRQ_MSI_TYPES. Finally the rest of the chain converts all users to
+take advantage of PCI_IRQ_MSI_TYPES or PCI_IRQ_ALL_TYPES, as
+appropriate.
 
-On 5/18/2020 11:53 AM, Dave Jiang wrote:
-> v2:
-> - Dropped device feature enabling (GregKH)
-> - Dropped PCI device feature enabling (Bjorn)
-> 	- https://members.pcisig.com/wg/PCI-SIG/document/14237
-> 	- After some internal discussion, we have decided to hold off on the
-> 	  enabling of DMWR due to the following reasons. 1. Most first gen hw
-> 	  will not have the feature bits. 2. First gen hw that support the
-> 	  feature are all Root Complex integrated endpoints. 3. PCI devices
-> 	  that are not RCiEP’s with this capability won’t surface for a few
-> 	  years so we can wait until we can test the full code.
-> - Dropped special ioremap (hch)
-> - Added proper support for WQ flush (tony, dan)
-> - Changed descriptor submission to use sbitmap_queue for blocking. (dan)
-> - Split out MOBDIR64B to right location for ENQCMDS placement. (daveh)
-> - Split out SVM kernel dependencies for driver. (daveh)
-> - Call enqcmds() directly (daveh)
-> - Fix enqcmds() commit log (daveh)
-> - Split out fault processing code (tony)
-> 
-> Driver stage 1 postings for context: [1]
-> 
-> The patch series has functionality dependency on Fenghua's "Tag application
-> address space for devices" patch series for the ENQCMD CPU command enumeration
-> and the PASID MSR support. [2]
-> 
-> The first patch enumerating ENQCMD is lifted from Fenghua's patch series. It
-> removes the compilation dependency for the driver. It can be dropped by the
-> maintainer merging the driver patch series once Fenghua's patch series is
-> merged.
-> 
-> == Background ==
-> A typical DMA device requires the driver to translate application buffers to
-> hardware addresses, and a kernel-user transition to notify the hardware of new
-> work. Shared Virtual Addressing (SVA) allows the processor and device to use the
-> same virtual addresses without requiring software to translate between the
-> address spaces. ENQCMD is a new instruction on Intel Platforms that allows user
-> applications to directly notify hardware of new work, much like how doorbells
-> are used in some hardware, but it carries a payload along with it. ENQCMDS is
-> the supervisor version (ring0) of ENQCMD.
-> 
-> == ENQCMDS ==
-> Introduce iosubmit_cmd512_sync(), a common wrapper that copies an input payload
-> to a 64B aligned destination and confirms whether the payload was accepted by
-> the device or not. iosubmit_cmd512_sync() wraps the new ENQCMDS CPU instruction.
-> The ENQCMDS is a ring 0 CPU instruction that performs similar to the ENQCMD
-> instruction. Descriptor submission must use ENQCMD(S) for shared workqueues
-> (swq) on an Intel DSA device.
-> 
-> == Shared WQ support ==
-> Introduce shared workqueue (swq) support for the idxd driver. The current idxd
-> driver contains dedicated workqueue (dwq) support only. A dwq accepts
-> descriptors from a MOVDIR64B instruction. MOVDIR64B is a posted instruction on
-> the PCIe bus, it does not wait for any response from the device. If the wq is
-> full, submitted descriptors are dropped. A swq utilizes the ENQCMDS in ring 0,
-> which is a non-posted instruction. The zero flag would be set to 1 if the device
-> rejects the descriptor or if the wq is full. A swq can be shared between
-> multiple users (kernel or userspace) due to not having to keep track of the wq
-> full condition for submission. A swq requires PASID and can only run with SVA
-> support.
-> 
-> == IDXD SVA support ==
-> Add utilization of PASID to support Shared Virtual Addressing (SVA). With PASID
-> support, the descriptors can be programmed with host virtual address (HVA)
-> rather than IOVA. The hardware will work with the IOMMU in fulfilling page
-> requests. With SVA support, a user app using the char device interface can now
-> submit descriptors without having to pin the virtual memory range it wants to
-> DMA in its own address space.
-> 
-> The series does not add SVA support for the dmaengine subsystem. That support
-> is coming at a later time.
-> 
-> [1]: https://lore.kernel.org/lkml/157965011794.73301.15960052071729101309.stgit@djiang5-desk3.ch.intel.com/
-> [2]: https://lore.kernel.org/lkml/1585596788-193989-1-git-send-email-fenghua.yu@intel.com/
-> [3]: https://software.intel.com/en-us/articles/intel-sdm
-> [4]: https://software.intel.com/en-us/download/intel-scalable-io-virtualization-technical-specification
-> [5]: https://software.intel.com/en-us/download/intel-data-streaming-accelerator-preliminary-architecture-specification
-> [6]: https://01.org/blogs/2019/introducing-intel-data-streaming-accelerator
-> [7]: https://intel.github.io/idxd/
-> [8]: https://github.com/intel/idxd-driver idxd-stage2
-> 
-> ---
-> 
-> Dave Jiang (8):
->        x86/asm: move the raw asm in iosubmit_cmds512() to special_insns.h
->        x86/asm: add enqcmds() to support ENQCMDS instruction
->        dmaengine: idxd: add work queue drain support
->        dmaengine: idxd: move submission to sbitmap_queue
->        dmaengine: idxd: add shared workqueue support
->        dmaengine: idxd: clean up descriptors with fault error
->        dmaengine: idxd: add leading / for sysfspath in ABI documentation
->        dmaengine: idxd: add ABI documentation for shared wq
-> 
-> Fenghua Yu (1):
->        x86/cpufeatures: Enumerate ENQCMD and ENQCMDS instructions
-> 
-> 
->   Documentation/ABI/stable/sysfs-driver-dma-idxd |   68 ++++--
->   arch/x86/include/asm/cpufeatures.h             |    1
->   arch/x86/include/asm/io.h                      |   43 +++-
->   arch/x86/include/asm/special_insns.h           |   17 ++
->   arch/x86/kernel/cpu/cpuid-deps.c               |    1
->   drivers/dma/Kconfig                            |   15 +
->   drivers/dma/idxd/cdev.c                        |   38 ++++
->   drivers/dma/idxd/device.c                      |  252 +++++++++++++++---------
->   drivers/dma/idxd/dma.c                         |    9 -
->   drivers/dma/idxd/idxd.h                        |   32 ++-
->   drivers/dma/idxd/init.c                        |  122 +++++++-----
->   drivers/dma/idxd/irq.c                         |  184 ++++++++++++++----
->   drivers/dma/idxd/registers.h                   |   14 +
->   drivers/dma/idxd/submit.c                      |  105 ++++++----
->   drivers/dma/idxd/sysfs.c                       |  150 +++++++++++++-
->   15 files changed, 758 insertions(+), 293 deletions(-)
-> 
-> --
-> 
+Piotr Stankiewicz (15):
+  PCI: add shorthand define for message signalled interrupt types
+  PCI/MSI: forward MSIx vector enable error code in
+    pci_alloc_irq_vectors_affinity
+  PCI: use PCI_IRQ_MSI_TYPES where appropriate
+  ahci: use PCI_IRQ_MSI_TYPES where appropriate
+  crypto: inside-secure - use PCI_IRQ_MSI_TYPES where appropriate
+  dmaengine: dw-edma: use PCI_IRQ_MSI_TYPES  where appropriate
+  drm/amdgpu: use PCI_IRQ_MSI_TYPES where appropriate
+  IB/qib: Use PCI_IRQ_MSI_TYPES where appropriate
+  media: ddbridge: use PCI_IRQ_MSI_TYPES where appropriate
+  vmw_vmci: use PCI_IRQ_ALL_TYPES where appropriate
+  mmc: sdhci: use PCI_IRQ_MSI_TYPES where appropriate
+  amd-xgbe: use PCI_IRQ_MSI_TYPES where appropriate
+  aquantia: atlantic: use PCI_IRQ_ALL_TYPES where appropriate
+  net: hns3: use PCI_IRQ_MSI_TYPES where appropriate
+  scsi: use PCI_IRQ_MSI_TYPES and PCI_IRQ_ALL_TYPES where appropriate
+
+ Documentation/PCI/msi-howto.rst                           | 5 +++--
+ drivers/ata/ahci.c                                        | 2 +-
+ drivers/crypto/inside-secure/safexcel.c                   | 2 +-
+ drivers/dma/dw-edma/dw-edma-pcie.c                        | 2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c                   | 8 ++++----
+ drivers/infiniband/hw/qib/qib_pcie.c                      | 2 +-
+ drivers/media/pci/ddbridge/ddbridge-main.c                | 2 +-
+ drivers/misc/vmw_vmci/vmci_guest.c                        | 3 +--
+ drivers/mmc/host/sdhci-pci-gli.c                          | 3 +--
+ drivers/mmc/host/sdhci-pci-o2micro.c                      | 3 +--
+ drivers/net/ethernet/amd/xgbe/xgbe-pci.c                  | 2 +-
+ drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c      | 4 +---
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 3 +--
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 2 +-
+ drivers/pci/msi.c                                         | 4 ++--
+ drivers/pci/pcie/portdrv_core.c                           | 4 ++--
+ drivers/pci/switch/switchtec.c                            | 3 +--
+ drivers/scsi/ipr.c                                        | 2 +-
+ drivers/scsi/vmw_pvscsi.c                                 | 2 +-
+ include/linux/pci.h                                       | 4 ++--
+ 20 files changed, 28 insertions(+), 34 deletions(-)
+
+-- 
+2.17.2
+

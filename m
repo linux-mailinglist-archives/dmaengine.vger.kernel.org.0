@@ -2,268 +2,298 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71CC41ECA70
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Jun 2020 09:22:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D35E71ECDCE
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Jun 2020 12:50:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726093AbgFCHWp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 3 Jun 2020 03:22:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46392 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgFCHWn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 3 Jun 2020 03:22:43 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86050C05BD1E
-        for <dmaengine@vger.kernel.org>; Wed,  3 Jun 2020 00:22:43 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id n23so1123941pgb.12
-        for <dmaengine@vger.kernel.org>; Wed, 03 Jun 2020 00:22:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=Mzj+4P6YyUKaBzY1zA3s1gowMthiSgt2iJhCfK00k6U=;
-        b=BI37NIjki97mugGeK1q+0eA7Eji/emfrsOW1ZVQTClNqQnE19bN/1NLfQB6cPnzfIk
-         MKYGRayBRabq++g1ta+9aWqvSYrJiSrGtme18cwBnQC7RR0oyh5pt7PqUiAEvSlHZiIQ
-         hHQBIQcrDOiNerVjDjUJbOS5YF0kl+D3bVezLHDVNei9ZzRNaIlU+dySK+J50hGDv9O1
-         bbcwG2bUdUdU4LDGaCebfuwroDDx2qcFizQWvv51kOy8EVmO0Ok/ylisI2R/MGZWY3Gd
-         NfJt/vA6M7DE/AqGOauvk53ennY/56r5jVbvoHUmqALEuKyGl63s628txi8+rvI92pnj
-         asvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=Mzj+4P6YyUKaBzY1zA3s1gowMthiSgt2iJhCfK00k6U=;
-        b=El+of7oulC5M0gicWei/GlObHSoDR3y6dOdWoZtyQGfnXVVJsIG6y43bWJLkMrvMDm
-         /tNtdeIwhOFjw2e9MplhZova5jOSHgQDzHNXP6c8EmrVJJSRF/jmS5hQLo1DAKg/KCFs
-         znJwFvQKea2NVUfyPW2aDjmammNQa0kj0nJiMiVErSJp5Ke3Lszz1KOYYHWH3hcISyUw
-         a+WgmewdQm9leWcrSQanLhqvbxvy4uieSGR9vFNQcAtZmkzi8UW9deCXevvGp/rOTEEU
-         ZkCuBgE8r1rlT/EIX9Tw/b3R3cpCmfxf2JL+0WDhfOgPvnQrKsXEytgZHKaRxMZLRI6A
-         BVSA==
-X-Gm-Message-State: AOAM530DtLPMCohU6El687aWPqN8kPTLoS+NDIj3TEs+4uXr3CJAsP+A
-        iQJACHDAozK4uBnrsdTDF3H1
-X-Google-Smtp-Source: ABdhPJw0Nlb30CTkhejSyv5b3Dz1LVDkw16PIbLMhaRIvo/aZfuJmqJZ8VUvExleC4lztiNntV6U/w==
-X-Received: by 2002:a17:90a:e2c4:: with SMTP id fr4mr4063507pjb.32.1591168962855;
-        Wed, 03 Jun 2020 00:22:42 -0700 (PDT)
-Received: from ?IPv6:2409:4072:6e19:d568:fc3d:9e72:444d:f928? ([2409:4072:6e19:d568:fc3d:9e72:444d:f928])
-        by smtp.gmail.com with ESMTPSA id ev20sm1500940pjb.8.2020.06.03.00.22.37
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 03 Jun 2020 00:22:41 -0700 (PDT)
-Date:   Wed, 03 Jun 2020 12:52:34 +0530
-User-Agent: K-9 Mail for Android
-In-Reply-To: <1591119192-18538-2-git-send-email-amittomer25@gmail.com>
-References: <1591119192-18538-1-git-send-email-amittomer25@gmail.com> <1591119192-18538-2-git-send-email-amittomer25@gmail.com>
+        id S1725836AbgFCKuc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 3 Jun 2020 06:50:32 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:46228 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725828AbgFCKub (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 3 Jun 2020 06:50:31 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 053AoQFm045272;
+        Wed, 3 Jun 2020 05:50:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1591181426;
+        bh=TiVCOp709YcsjGuUWwkymuPMKR4kk7kp7KafVJPZxlI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ldrgrAvDdcI3v6YarR2imN9ZAXFS9N89eHJr83Em4zZcBQcnDYyTIRNPkhOrambb4
+         hS7np10OvTRBWDAVRFqFVnAs8HLGCraCkER7/2MNlDOSLC94bhyiyOSxs8dAf5qeXR
+         unqFhGI2pAl1i1pMtEn17v323lZORf302361rElI=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 053AoPV9109130
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 3 Jun 2020 05:50:26 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 3 Jun
+ 2020 05:50:25 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 3 Jun 2020 05:50:25 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 053AoNHg095201;
+        Wed, 3 Jun 2020 05:50:24 -0500
+Subject: Re: [PATCH v4 3/6] dmaengine: Add support for repeating transactions
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     <dmaengine@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Tejas Upadhyay <tejasu@xilinx.com>,
+        Satish Kumar Nagireddy <SATISHNA@xilinx.com>
+References: <20200513165943.25120-4-laurent.pinchart@ideasonboard.com>
+ <20200514182344.GI14092@vkoul-mobl>
+ <20200514200709.GL5955@pendragon.ideasonboard.com>
+ <20200515083817.GP333670@vkoul-mobl>
+ <20200515141101.GA7186@pendragon.ideasonboard.com>
+ <d270d4ca-1928-a11a-3186-bc118c4b8756@ti.com>
+ <20200518143208.GD5851@pendragon.ideasonboard.com>
+ <872d2f33-cdea-34c3-38b4-601d6dae7c94@ti.com>
+ <20200528021006.GG4670@pendragon.ideasonboard.com>
+ <23b26252-eb7b-f918-759d-0ccda90586b0@ti.com>
+ <20200601114937.GC5886@pendragon.ideasonboard.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <00b39de6-58e5-b86b-8d20-e0451be45b15@ti.com>
+Date:   Wed, 3 Jun 2020 13:51:06 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 01/10] dmaengine: Actions: get rid of bit fields from dma descriptor
-To:     Amit Singh Tomar <amittomer25@gmail.com>, andre.przywara@arm.com,
-        vkoul@kernel.org, afaerber@suse.de
-CC:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Message-ID: <3D3E2940-11E3-4093-8F60-82EB2C11B617@linaro.org>
+In-Reply-To: <20200601114937.GC5886@pendragon.ideasonboard.com>
+Content-Type: multipart/mixed;
+        boundary="------------7619E07F09B757501AEC3CBD"
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+--------------7619E07F09B757501AEC3CBD
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
 
-On 2 June 2020 11:03:03 PM IST, Amit Singh Tomar <amittomer25@gmail=2Ecom>=
- wrote:
->At the moment, Driver uses bit fields to describe registers of the DMA
->descriptor structure that makes it less portable and maintainable, and
->Andre suugested(and even sketched important bits for it) to make use of
->array to describe this DMA descriptors instead=2E It gives the
->flexibility
->while extending support for other platform such as Actions S700=2E
->
->This commit removes the "owl_dma_lli_hw" (that includes bit-fields) and
->uses array to describe DMA descriptor=2E
->
->Suggested-by: Andre Przywara <andre=2Eprzywara@arm=2Ecom>
->Signed-off-by: Amit Singh Tomar <amittomer25@gmail=2Ecom>
->---
->Changes since v2:
->	* No change=2E
->Changes since v1:
->        * Defined macro for frame count value=2E
->        * Introduced llc_hw_flen() from patch 2/9=2E
->        * Removed the unnecessary line break=2E
->Changes since rfc:
->        * No change=2E
->---
->drivers/dma/owl-dma=2Ec | 84
->++++++++++++++++++++++++---------------------------
-> 1 file changed, 40 insertions(+), 44 deletions(-)
->
->diff --git a/drivers/dma/owl-dma=2Ec b/drivers/dma/owl-dma=2Ec
->index c683051257fd=2E=2Edd85c205454e 100644
->--- a/drivers/dma/owl-dma=2Ec
->+++ b/drivers/dma/owl-dma=2Ec
->@@ -120,30 +120,21 @@
-> #define BIT_FIELD(val, width, shift, newshift)	\
-> 		((((val) >> (shift)) & ((BIT(width)) - 1)) << (newshift))
->=20
->-/**
->- * struct owl_dma_lli_hw - Hardware link list for dma transfer
->- * @next_lli: physical address of the next link list
->- * @saddr: source physical address
->- * @daddr: destination physical address
->- * @flen: frame length
->- * @fcnt: frame count
->- * @src_stride: source stride
->- * @dst_stride: destination stride
->- * @ctrla: dma_mode and linklist ctrl config
->- * @ctrlb: interrupt config
->- * @const_num: data for constant fill
->- */
->-struct owl_dma_lli_hw {
->-	u32	next_lli;
->-	u32	saddr;
->-	u32	daddr;
->-	u32	flen:20;
->-	u32	fcnt:12;
->-	u32	src_stride;
->-	u32	dst_stride;
->-	u32	ctrla;
->-	u32	ctrlb;
->-	u32	const_num;
->+/* Frame count value is fixed as 1 */
->+#define FCNT_VAL				0x1
->+
->+/* Describe DMA descriptor, hardware link list for dma transfer */
 
-Individual comments for these enums?=20
+On 01/06/2020 14.49, Laurent Pinchart wrote:
+> Hi Peter,
+>=20
+> On Mon, Jun 01, 2020 at 02:14:03PM +0300, Peter Ujfalusi wrote:
+>> On 28/05/2020 5.10, Laurent Pinchart wrote:
+>>>>> As mentioned in the commit message, I plan to extend that, I just d=
+idn't
+>>>>> want to add the checks to all the prepare operation wrappers until =
+an
+>>>>> agreement on the approach would be reached. I also thought it would=
+ be
+>>>>> good to not allow this API for other transaction types until use ca=
+ses
+>>>>> arise, in order to force upstream discussions instead of silently
+>>>>> abusing the API :-)
+>>>>
+>>>> I would not object if slave_sg and memcpy got the same treatment. If=
+ the
+>>>> DMA driver did not set the DMA_REPEAT then clients can not use this
+>>>> feature anyways.
+>>>
+>>> Would you not object, or would you prefer if it was done in v5 ? :-)
+>>
+>> DMA_REPEAT is a generic flag, not limited to only interleaved, but you=
 
->+enum owl_dmadesc_offsets {
->+	OWL_DMADESC_NEXT_LLI =3D 0,
->+	OWL_DMADESC_SADDR,
->+	OWL_DMADESC_DADDR,
->+	OWL_DMADESC_FLEN,
->+	OWL_DMADESC_SRC_STRIDE,
->+	OWL_DMADESC_DST_STRIDE,
->+	OWL_DMADESC_CTRLA,
->+	OWL_DMADESC_CTRLB,
->+	OWL_DMADESC_CONST_NUM,
->+	OWL_DMADESC_SIZE
-> };
->=20
-> /**
->@@ -153,7 +144,7 @@ struct owl_dma_lli_hw {
->  * @node: node for txd's lli_list
->  */
-> struct owl_dma_lli {
->-	struct  owl_dma_lli_hw	hw;
->+	u32			hw[OWL_DMADESC_SIZE];
-> 	dma_addr_t		phys;
-> 	struct list_head	node;
-> };
->@@ -320,6 +311,11 @@ static inline u32 llc_hw_ctrlb(u32 int_ctl)
-> 	return ctl;
-> }
->=20
->+static u32 llc_hw_flen(struct owl_dma_lli *lli)
->+{
->+	return lli->hw[OWL_DMADESC_FLEN] & GENMASK(19, 0);
->+}
->+
-> static void owl_dma_free_lli(struct owl_dma *od,
-> 			     struct owl_dma_lli *lli)
-> {
->@@ -351,8 +347,9 @@ static struct owl_dma_lli *owl_dma_add_lli(struct
->owl_dma_txd *txd,
-> 		list_add_tail(&next->node, &txd->lli_list);
->=20
-> 	if (prev) {
->-		prev->hw=2Enext_lli =3D next->phys;
->-		prev->hw=2Ectrla |=3D llc_hw_ctrla(OWL_DMA_MODE_LME, 0);
->+		prev->hw[OWL_DMADESC_NEXT_LLI] =3D next->phys;
->+		prev->hw[OWL_DMADESC_CTRLA] |=3D
->+					llc_hw_ctrla(OWL_DMA_MODE_LME, 0);
-> 	}
->=20
-> 	return next;
->@@ -365,8 +362,7 @@ static inline int owl_dma_cfg_lli(struct
->owl_dma_vchan *vchan,
-> 				  struct dma_slave_config *sconfig,
-> 				  bool is_cyclic)
-> {
->-	struct owl_dma_lli_hw *hw =3D &lli->hw;
->-	u32 mode;
->+	u32 mode, ctrlb;
->=20
-> 	mode =3D OWL_DMA_MODE_PW(0);
->=20
->@@ -407,22 +403,22 @@ static inline int owl_dma_cfg_lli(struct
->owl_dma_vchan *vchan,
-> 		return -EINVAL;
-> 	}
->=20
->-	hw->next_lli =3D 0; /* One link list by default */
->-	hw->saddr =3D src;
->-	hw->daddr =3D dst;
->-
->-	hw->fcnt =3D 1; /* Frame count fixed as 1 */
->-	hw->flen =3D len; /* Max frame length is 1MB */
->-	hw->src_stride =3D 0;
->-	hw->dst_stride =3D 0;
->-	hw->ctrla =3D llc_hw_ctrla(mode,
->-				 OWL_DMA_LLC_SAV_LOAD_NEXT |
->-				 OWL_DMA_LLC_DAV_LOAD_NEXT);
->+	lli->hw[OWL_DMADESC_CTRLA] =3D llc_hw_ctrla(mode,
->+						  OWL_DMA_LLC_SAV_LOAD_NEXT |
->+						  OWL_DMA_LLC_DAV_LOAD_NEXT);
->=20
-> 	if (is_cyclic)
->-		hw->ctrlb =3D llc_hw_ctrlb(OWL_DMA_INTCTL_BLOCK);
->+		ctrlb =3D llc_hw_ctrlb(OWL_DMA_INTCTL_BLOCK);
-> 	else
->-		hw->ctrlb =3D llc_hw_ctrlb(OWL_DMA_INTCTL_SUPER_BLOCK);
->+		ctrlb =3D llc_hw_ctrlb(OWL_DMA_INTCTL_SUPER_BLOCK);
->+
->+	lli->hw[OWL_DMADESC_NEXT_LLI] =3D 0;
+>> are going to be the first user of it with interleaved.
+>>
+>>> Overall I think that enabling APIs that have no user isn't necessaril=
+y
+>>> the best idea, as it's prone to design issues, but I don't mind doing=
+ so
+>>> if you think it needs to be done now.
+>>
+>> We would get the support in one go with the same commit. I don't think=
 
-Again, please preserve the old comments=2E=20
-
->+	lli->hw[OWL_DMADESC_SADDR] =3D src;
->+	lli->hw[OWL_DMADESC_DADDR] =3D dst;
->+	lli->hw[OWL_DMADESC_SRC_STRIDE] =3D 0;
->+	lli->hw[OWL_DMADESC_DST_STRIDE] =3D 0;
->+	lli->hw[OWL_DMADESC_FLEN] =3D len | FCNT_VAL << 20;
-
-Please explain what you're doing here=2E=20
-
-Thanks,=20
-Mani
-
->+	lli->hw[OWL_DMADESC_CTRLB] =3D ctrlb;
+>> it makes much sense to add slave_sg later, then memcpy another time.
+>> True, there might be no users for them for some time, but their presen=
+ts
+>> might invite users?
 >=20
-> 	return 0;
-> }
->@@ -754,7 +750,7 @@ static u32 owl_dma_getbytes_chan(struct
->owl_dma_vchan *vchan)
-> 			/* Start from the next active node */
-> 			if (lli->phys =3D=3D next_lli_phy) {
-> 				list_for_each_entry(lli, &txd->lli_list, node)
->-					bytes +=3D lli->hw=2Eflen;
->+					bytes +=3D llc_hw_flen(lli);
-> 				break;
-> 			}
-> 		}
->@@ -785,7 +781,7 @@ static enum dma_status owl_dma_tx_status(struct
->dma_chan *chan,
-> 	if (vd) {
-> 		txd =3D to_owl_txd(&vd->tx);
-> 		list_for_each_entry(lli, &txd->lli_list, node)
->-			bytes +=3D lli->hw=2Eflen;
->+			bytes +=3D llc_hw_flen(lli);
-> 	} else {
-> 		bytes =3D owl_dma_getbytes_chan(vchan);
-> 	}
+> My approach to API design is that an API designed without (at least) on=
+e
+> user is very prone to be a bad API. As I said before I don't mind
+> enabling support for slave_sg and memcpy today already, even if I don't=
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+> think it's a good idea. I want to get my use case supported, and I've
+> given up on what I would consider a good API :-) That's fine,
+> maintainers are the ones who have to support APIs and the design choice=
+s
+> behind them in the longer term, and I'm not a subsystem maintainer here=
+=2E
+> I tried to prevent what I think may become a case of shooting in the
+> foot, but I could be wrong. Only the future will tell.
+
+Yes, we will see in the longer run.
+
+>>>>> I can extend the flag to all other transaction types
+>>>>> (except for the cyclic transaction, as it doesn't make sense there)=
+=2E
+>>>>
+>>>> Yep, cyclic is a different type of transfer, it is for circular buff=
+ers.
+>>>> It could be seen as a special case of slave_sg. Some drivers actuall=
+y
+>>>> create temporary sg_list in case of cyclic and use the same setup
+>>>> function to set up the transfer for slave_sg/cyclic...
+>>>
+>>> Cyclic is different for historical reasons, but if I had to redesign =
+it
+>>> today, I'd make it slave_sg + DMA_PREP_REPEAT. We obviously can't, an=
+d I
+>>> have no issue with that.
+>>
+>> Which should be accompanied with a flag to tell that the sg_list is
+>> covering a circular buffer to save all drivers to check the sg_list th=
+at
+>> it is circular buffer (current cyclic) or really sg.
+>> Some DMA can only do repeat on circular buffers (omap-dma, tegra, etc)=
+=2E
+>=20
+> Isn't DMA_PREP_REPEAT that flag ?
+
+Not really. It tells that the descriptor should be repeated. In case of
+slave_sg the list could describe one block of memory, split up to
+'periods' or it could be a list scattered chunks all over the place.
+
+circular buffer can be described with sg_list.
+sg_list is not necessary describes a circular buffer.
+
+>>>> But, DMA drivers might support neither of them, either of them or bo=
+th.
+>>>> It is up to the client to pick the preferred method for it's use.
+>>>> It is not far fetched that the next DMA the client is going to be
+>>>> serviced will have different capabilities and the client needs to ha=
+ndle
+>>>> EOT or NOW or it might even need to have fallback to case when neith=
+er
+>>>> is supported.
+>>>>
+>>>> I don't like excessive flags either, but based on my experience
+>>>> under-flagging can bite back sooner than later.
+>>>>
+>>>> I'm aware that at the moment it feels like it is too explicit, but n=
+ever
+>>>> underestimate the creativity of the design - and in some cases the
+>>>> constraint the design must fulfill.
+>>>
+>>> I'm still very puzzled by why you think adding DMA_PREP_LOAD_EOT now =
+is
+>>> a good idea, given that there's no existing and no foreseen use case =
+for
+>>> not setting it. Creating an API element that is completely disconnect=
+ed
+>>> from any known use case doesn't seem like good API design to me,
+>>> especially for an in-kernel API.
+>>
+>> If we document that DMA_REPEAT covers REPEAT _and_ LOAD_EOT with one
+>> flag then how would other drivers can implement REPEAT if they can not=
+
+>> support LOAD_EOT?
+>> They should do DMA_REPEAT | NOT_LOAD_EOT | LOAD_ASAP?
+>=20
+> As stated before, I think a DMA_LOAD_EOT capability is useful. My
+> concern is about DMA_PREP_LOAD_EOT for which I can't see use cases. I'v=
+e
+> added DMA_PREP_LOAD_EOT in the last patch series, and my DMA engine
+> driver ignores the transaction when DMA_PREP_LOAD_EOT is not set, as
+> required. It works fine as the my client always sets it.
+
+Thanks.
+
+> I'd expect Vinod or you to write the documentation though, as writing
+> code for an API I don't believe in is one thing, writing documentation
+> to explain the rationale behind the API design will be more complex
+
+Vinod can correct me, but for the capabilities:
+DMA_REPEAT: the controller (and driver) supports repeating the
+	descriptor. It can be terminated with terminate_all
+DMA_LOAD_EOT: the controller (and driver) supports loading the next
+	issued transfer on a channel which is running DMA_REPEAT
+	descriptor. Iow, instead of reloading the running transfer, it
+	moves to the next one.
+DMA_LOAD_NOW: the controller (and driver) supports aborting the
+	active descriptor (either DMA_REPEAT or non repeated one) and
+	moving to the next issued transfer without clients needing to
+	use terminate_all.
+
+> when I don't believe there's any rationale :-)
+
+Sure, you have a specific DMA, which does one thing and one thing only.
+When a subsystem decides to create a generic DMA layer on top of
+DMAengine for example to get rid of the duplicated code in the drivers
+then this generic code does need information to decide how the servicing
+DMA should be used for optimal performance and quality.
+Some DMAs (and drivers) might have slightly different capabilities.
+
+>> LOAD_EOT is a feature the HW can or can not support and it is an
+>> operation mode that you want to use or do not want to use.
+>=20
+> DMA_PREP_REPEAT for the EOT mode, DRM_PREP_REPEAT | DMA_PREP_LOAD_NOW
+> for the immediate mode would work too, and wouldn't have the drawback o=
+f
+> artificially creating a case (!EOT && !NOW) that would fail.
+
+But if a DMA does not support LOAD_EOT at all? If it did not support
+LOAD_NOW either?
+But if anything the LOAD_NOW sounds more of a default expectation than
+LOAD_EOT.
+Yes, I know. The display use case needs LOAD_EOT to avoid artifacts on
+screen, but DMA_REPEAT is not only for displays.
+
+> I'm tired of arguing about this and trying to prevent mistakes from
+> being made, so could you please review the latest patch series, and tel=
+l
+> me if there's anything missing for the implementation ? Feel free to
+> provide that feedback as patches on top.
+>=20
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+--------------7619E07F09B757501AEC3CBD
+Content-Type: application/pgp-keys; name="pEpkey.asc"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment; filename="pEpkey.asc"
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mQENBFki4nsBCAD3BM+Ogt951JlaDloruEjoZk/Z+/37CjP0fY2mqLhBOzkpx95u
+X1Fquf0KfVk+ZzCd25XGOZEtpZNlXfbxRr2iRWPS5RW2FeLYGvg2TTJCpSr+ugKu
+OOec6KECCUotGbGhpYwBrbarJNEwDcAzPK7UJYa1rhWOmkpZJ1hXF1hUghB84q35
+8DmN4sGLcsIbVdRFZ1tWFh4vGBFV9LsoDZIrnnANb6/XMX78s+tr3RG3GZBaFPl8
+jO5IIv0UIGNUKaYlNVFYthjGCzOqtstHchWuK9eQkR7m1+Vc+ezh1qK0VJydIcjn
+OtoMZZL7RAz13LB9vmcJjbQPnI7dJojz/M7zABEBAAG0JlBldGVyIFVqZmFsdXNp
+IDxwZXRlci51amZhbHVzaUB0aS5jb20+iQFOBBMBCAA4FiEE+dBcpRFvJjZw+uta
+LCayis85LN4FAlki4nsCGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQLCay
+is85LN4QjggAzxxxXqiWpA3vuj9yrlGLft3BeGKWqF8+RzdeRvshtNdpGeIFf+r5
+AJVR71R1w89Qeb4DGXus7qsKiafdFGG7yxbuhw8a5wUm+ZncBXA+ETn3OyVtl8g8
+r/ZcPX420jClBNTVuL0sSnyqDFDrt5f+uAFOIwsnHdpns174Zu9QhgYxdvdZ+jMh
+Psb745O9EVeNvdfUIRdrVjb4IhJKNIzkb0Tulsz5xeCJReUYpxZU1jzEq3YZqIou
++fi+oS4wlJuSoxKKTmIXtSeEy/weStF1XHMo6vLYqzaK4FyIuclqeuYUYSVy2425
+7TMXugaI+O85AEI6KW8MCcu1NucSfAWUabkBDQRZIuJ7AQgAypKq8iIugpHxWA2c
+Ck6MQdPBT6cOEVK0tjeHaHAVOUPiw9Pq+ssMifdIkDdqXNZ3RLH/X2svYvd8c81C
+egqshfB8nkJ5EKmQc9d7s0EwnYT8OwsoVb3c2WXnsdcKEyu2nHgyeJEUpPpMPyLc
++PWhoREifttab4sOPktepdnUbvrDK/gkjHmiG6+L2owSn637N+Apo3/eQuDajfEu
+kybxK19ReRcp6dbqWSBGSeNB32c/zv1ka37bTMNVUY39Rl+/8lA/utLfrMeACHRO
+FGO1BexMASKUdmlB0v9n4BaJFGrAJYAFJBNHLCDemqkU7gjaiimuHSjwuP0Wk7Ct
+KQJfVQARAQABiQE2BBgBCAAgFiEE+dBcpRFvJjZw+utaLCayis85LN4FAlki4nsC
+GwwACgkQLCayis85LN7kCwgAoy9r3ZQfJNOXO1q/YQfpEELHn0p8LpwliSDUS1xL
+sswyxtZS8LlW8PjlTXuBLu38Vfr0vGav7oyV7TkhnKT3oBOLXanyZqwgyZSKNEGB
+PB4v3Fo7YTzpfSofiwuz03uyfjTxiMGjonxSb+YxM7HBHfzjrOKKlg02fK+lWNZo
+m5lXugeWD7U6JJguNdYfr+U4zYIblelUImcIE+wnR0oLzUEVDIWSpVrl/OqS3Rzo
+mw8wBsHksTHrbgUnKL0SCzYc90BTeKbyjEBnVDr+dlfbxRxkB8h9RMPMdjodvXzS
+Gfsa9V/k4XAsh7iX9EUVBbnmjA61ySxU/w98h96jMuteTg=3D=3D
+=3DeQmw
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------7619E07F09B757501AEC3CBD--

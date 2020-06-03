@@ -2,103 +2,101 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A6821ED69A
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Jun 2020 21:17:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2882E1ED6F2
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Jun 2020 21:36:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgFCTRU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 3 Jun 2020 15:17:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44582 "EHLO
+        id S1726087AbgFCTg5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 3 Jun 2020 15:36:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgFCTRU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 3 Jun 2020 15:17:20 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B1AEC08C5C0;
-        Wed,  3 Jun 2020 12:17:20 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id s18so3602292ioe.2;
-        Wed, 03 Jun 2020 12:17:20 -0700 (PDT)
+        with ESMTP id S1726086AbgFCTg5 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 3 Jun 2020 15:36:57 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48ABBC08C5C0;
+        Wed,  3 Jun 2020 12:36:57 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id l6so3749950ilo.2;
+        Wed, 03 Jun 2020 12:36:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6d7NwLsGT9XBwpif8ssbO5j7lS7Uj+B9cyPHxQfDOJc=;
-        b=ADCpHKoU8KPg9vkQLXJpeR2WvdNX3yale3lmsNmB/MlAT85XGugfW6Lj0JQIuZBniy
-         pQhMCZLP6wlhfgTC5gyglucH2XVir347K8atgenZhITjMWwV9H9/FwzDEgYd/1YM9O3e
-         A/5oqkqKVDG+XvOnHRH4owoIxfCtewEsQ7GGcKqrkVYiBhThb0Q/wzmL+Xhr/MVq2CNd
-         /lmNCqfogZR2eRo2oDHe2UGsyCbvTIH13ZQYfXGfDPdPnBu6L4wBqGJFfVIv7dXtGBEG
-         8mbWK69KdDvbTbmX5/BgzPHcEdTQaYVxjxlVv+Id4Dzo3tsflxDTgn6MnBaoVQEfc4M+
-         xvhw==
+        h=from:to:cc:subject:date:message-id;
+        bh=dIAMuCC/A5PYohN0KXICQjv0ipT40UQi12lhKqfFpJg=;
+        b=EhDZIgQUvtrVrX2ZzQDg0eOdeeEkvuoFE2dur2qomJ21YzFSR0zSu+QXLEie+QcWcI
+         pqtiRkz0H+cuDyQ7YndIF05da+Uys1LWhKYpHa1/BAQkpxvAUQYuqXR2QNg4ST5lkWjU
+         9eTM1MGOQQps6R7rkQUn9PJ8RWxhNIUrSXrAvF1Y54VrRe/WxXMjTUA6/eEklUBoJY79
+         tDBNgLnsoaVHFh3lWGZIWv1e+ktDp52tXFkcBjGINC6k3FMwLIO9srj7HwNBAG7A44wx
+         kZvMrd/1VaWheADlWPfTFeNq/dy3U19Gi2bSjlTSury3yuen+OXHF6ZOmYfpc8FkI66X
+         iFOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6d7NwLsGT9XBwpif8ssbO5j7lS7Uj+B9cyPHxQfDOJc=;
-        b=qpQ3viO/UlUZ/h620nVTWxGpZ7Q0w2kvkx7Tg2anAxBnG5MLcpPKE2bbcTv676iZlo
-         7++xLy/xkt5bDVDmOYtZ7ZAkz1Np9WOajvb1niWwLelMuhpZj1ONSB/ZhYGGndbabZL8
-         1SQvG/vckETrsOWxRpfQkOsVGrM932IvHvULek/Kz8LgaAnvP4h/v/IB1gZkFJe+7pBn
-         C1zS18Qu6tYRAqOOKr7K6gV+m9EhpwrKRjFdKhNFF/FYKsUcM4UZCouQKiZV96AFgoog
-         ToR6+mMuJgkLBKeWMOqoUqMpT0mdhZ01A3kOe1U35GAj7Dz0HJeT+hxQRymMOzfVUIzK
-         Ed8g==
-X-Gm-Message-State: AOAM532RmFYiZFyL4T3jK8pqg0VptaOTul0luYfOUvNnEaToc29p6brT
-        QvylMvNkVFxbYrucrZH8Gko/wOJqRr1QhhyUfHQ=
-X-Google-Smtp-Source: ABdhPJzEkWwXprp+yt91ZkoWfd2FIUCPSY9OM5q2dRIJlmJE+OxklnUcJjSB4jVOukPnhdXpz7ftkqgqD+u6aFWPSPM=
-X-Received: by 2002:a02:dc8:: with SMTP id 191mr1279079jax.95.1591211839673;
- Wed, 03 Jun 2020 12:17:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <873bfb31-52d8-7c9b-5480-4a94dc945307@web.de>
-In-Reply-To: <873bfb31-52d8-7c9b-5480-4a94dc945307@web.de>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dIAMuCC/A5PYohN0KXICQjv0ipT40UQi12lhKqfFpJg=;
+        b=NqpQ59RFnJfaNAba8bFpJpcOkHEa7VZTlXwTDGL8wSD2JaP3p726uJbs4zfiYBWDZh
+         mpm+ys+ABW9ecxBuQcxehSsHaf0xudkGl+lR+jyfgbRTWZUvq8RtfGP5KB6V2aMW0Nbi
+         xdq8fNmDKs24epK6wnNAbEzv5yeZdM6bmNZpRS3YzvHoWgYM5hHu/7vL2A9peu6dzDVD
+         MQUO1ibiixABSk6AlcPoYKT+OfqLdeI2wDhHxydRokgFOaOhuDyPGfyCa++RhUUlRWKN
+         6eom8iHj+kmgU8jqLTWg6/0YOQamHGyIHjUWmy6G9g20kgQxzdpVyNKAoIqOBrjh7V/R
+         ft7g==
+X-Gm-Message-State: AOAM533JLIdrz+uWvrV738ze5EI5rrQz8gnYst0AhdDiJXnfyPleex43
+        X4LpAID6jeTiZw93Aip6S6c=
+X-Google-Smtp-Source: ABdhPJyXUGwqgUh5G3Ykal7smWbXFaRo45kJz9GNEN8Kg5jD5/5LxA9AaMhMWGkRoSpvtuiq4hihOA==
+X-Received: by 2002:a92:9e5a:: with SMTP id q87mr1083431ili.84.1591213016646;
+        Wed, 03 Jun 2020 12:36:56 -0700 (PDT)
+Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
+        by smtp.googlemail.com with ESMTPSA id s71sm256585ilc.32.2020.06.03.12.36.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2020 12:36:55 -0700 (PDT)
 From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Wed, 3 Jun 2020 14:17:08 -0500
-Message-ID: <CAEkB2ET_gfNUAuoZHxiGWZX7d3CQaJYJJqS2Fspif5mFq4-xfA@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: stm32-mdma: call pm_runtime_put if
- pm_runtime_get_sync fails
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Alexandre Torgue <alexandre.torgue@st.com>,
+To:     Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>, Vinod Koul <vkoul@kernel.org>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>
+Subject: [PATCH] dmaengine: stm32-dmamux: fix pm_runtime_get_sync fialure cases
+Date:   Wed,  3 Jun 2020 14:36:48 -0500
+Message-Id: <20200603193648.19190-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Jun 3, 2020 at 1:52 PM Markus Elfring <Markus.Elfring@web.de> wrote=
-:
->
-> > Calling pm_runtime_get_sync increments the counter even in case of
-> > failure, causing incorrect ref count. Call pm_runtime_put if
-> > pm_runtime_get_sync fails.
->
-> Is it appropriate to copy a sentence from the change description
-> into the patch subject?
->
-> How do you think about a wording variant like the following?
-Please stop proposing rewording on my patches!
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count. Call pm_runtime_put_sync if
+pm_runtime_get_sync fails.
 
-I will consider updating my patches only if a maintainer asks for it.
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/dma/stm32-dmamux.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
->
->    The PM runtime reference counter is generally incremented by a call of
->    the function =E2=80=9Cpm_runtime_get_sync=E2=80=9D.
->    Thus call the function =E2=80=9Cpm_runtime_put=E2=80=9D also in two er=
-ror cases
->    to keep the reference counting consistent.
->
->
-> Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit messa=
-ge?
->
-> Regards,
-> Markus
+diff --git a/drivers/dma/stm32-dmamux.c b/drivers/dma/stm32-dmamux.c
+index 12f7637e13a1..ab250d7eed29 100644
+--- a/drivers/dma/stm32-dmamux.c
++++ b/drivers/dma/stm32-dmamux.c
+@@ -140,6 +140,7 @@ static void *stm32_dmamux_route_allocate(struct of_phandle_args *dma_spec,
+ 	ret = pm_runtime_get_sync(&pdev->dev);
+ 	if (ret < 0) {
+ 		spin_unlock_irqrestore(&dmamux->lock, flags);
++		pm_runtime_put_sync(&pdev->dev);
+ 		goto error;
+ 	}
+ 	spin_unlock_irqrestore(&dmamux->lock, flags);
+@@ -340,8 +341,10 @@ static int stm32_dmamux_suspend(struct device *dev)
+ 	int i, ret;
+ 
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_sync(dev);
+ 		return ret;
++	}
+ 
+ 	for (i = 0; i < stm32_dmamux->dma_requests; i++)
+ 		stm32_dmamux->ccr[i] = stm32_dmamux_read(stm32_dmamux->iomem,
+-- 
+2.17.1
 
-
-
---=20
-Navid.

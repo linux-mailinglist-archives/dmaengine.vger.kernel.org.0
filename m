@@ -2,63 +2,61 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 546B71EEC18
-	for <lists+dmaengine@lfdr.de>; Thu,  4 Jun 2020 22:34:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 806DC1EEC22
+	for <lists+dmaengine@lfdr.de>; Thu,  4 Jun 2020 22:39:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729824AbgFDUer (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 4 Jun 2020 16:34:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53704 "EHLO
+        id S1729073AbgFDUjD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 4 Jun 2020 16:39:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728800AbgFDUer (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 4 Jun 2020 16:34:47 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 155A0C08C5C0;
-        Thu,  4 Jun 2020 13:34:46 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id o5so7843631iow.8;
-        Thu, 04 Jun 2020 13:34:46 -0700 (PDT)
+        with ESMTP id S1728721AbgFDUjD (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 4 Jun 2020 16:39:03 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03A4EC08C5C0;
+        Thu,  4 Jun 2020 13:39:03 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id v11so7449430ilh.1;
+        Thu, 04 Jun 2020 13:39:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=M7Q89Pnob7mEEdbxzMTbqBnOtmvjG5A2VHrtAnUPQ0w=;
-        b=bBRY4reOSBUGrcq3vOy11xefFwhEVWnsHPTs6UL45SJsQt2Z4zYs2OaYLIy5CcxW6U
-         XITN+hrws3EspCgRH69VuwulRjE3KEIh2IUY9jiUwnmE+Crv0oet1XmSl/PmMU8h2oCu
-         ZXijTnx8wBQlWU65Ia77+IsWascrMrNbSpRai2DWD0mMEaqmO7OJXkOLD0pQUsrcl2NL
-         h4v+Z06cNVIhKlUT3egIeOX02c+ij+RHGNSsry6Z8vQwYcYWL5RpkvDSXZAkt/sS0kpf
-         kNJJqbeM1DPUvIZsOlUvLNah0TpQ5rYT8RoALhHkxWrnn71wFwu7702plDhU4fPY8J4f
-         Wqiw==
+        bh=Xy6WhYHrZaTBlBCQYphldIVHuAQk5+ZidfmsU27NTQc=;
+        b=rsTC7PTQdxeCF9bdVVUKmgWUrBXkrL8mSJIFlZiAgKOs2S+4GGfRL22H2uVLsAWxeH
+         YiKgG8Lsw/cFCfCAI2hbNM80EIg0ZfMt5gmILrNIEndmnL9uAo1oW1A0321onLpwL88D
+         AQCckdtG7XEKrttga2RCL6zDWEw3IGLJqvir/MQb1dbe70HmfZSnIwvIcUL7kFqySuFy
+         Q6bd+MolP8YfxNkWRxcnSUQPP4lOM6b5b/al3f6SZynvR+sM3CNATmcBpOnMMg3PiGaO
+         lENLvHMCTS5VApDzXjsvFeaxkxL31XqiNcA/5O2a6W+6QHl+eqfC9S+56qLIUunh0X/D
+         a+4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=M7Q89Pnob7mEEdbxzMTbqBnOtmvjG5A2VHrtAnUPQ0w=;
-        b=eUolNRs8fINYWqR6uSSMBB8j0LVV41pmhle0JTQ1MygI9RZXNCQgiM+CCWsjFueFZm
-         x2fXd+14egrrzjDDIDWDVIRBighqqgEDTwSObK56UESxDdVs72QDI4dVEZzqbkyDVy/m
-         NCPm1kg0x4oQA/tCYNSkG9Hynm2DytSvMlcRZTDCLaE8yRQZ8P3q1/hythLSv5torQHJ
-         CllLVuwxVgUUQMz7M04fXr13eJdUUuRnaqj7YB/0QYGnY3QmB3Gm21UC1igslsulMflZ
-         m8Hc5Xl2AvWe/HZenoP4B05SjyYEEfW8nC8gUEkF06VaA8jnAxZ9juOcoFJFcXZCq1LP
-         D9Xg==
-X-Gm-Message-State: AOAM533x8o2sG85TlwOER2j7Z03dOMd2eN/uir/EKxjKA3D1DIfa9bbx
-        9LXTO47T0UZZxUEUycosc4M=
-X-Google-Smtp-Source: ABdhPJxuiZNAGq4D5Ba7EcCoWNGdaXWUKTsNjJghu9K8SoGaGdY5dQ4nTUo3EBGE5nnTuEd5VnkZug==
-X-Received: by 2002:a02:94e6:: with SMTP id x93mr6062206jah.116.1591302885465;
-        Thu, 04 Jun 2020 13:34:45 -0700 (PDT)
+        bh=Xy6WhYHrZaTBlBCQYphldIVHuAQk5+ZidfmsU27NTQc=;
+        b=rBOWEuGbi7P+XPB6xvUPy/L6ne6DM4BpVG+EL5RuMyJLB0xudM4JyaWRut0hgZ46ac
+         V5DK3QbLbBS5q8OTLAEMsRHT+U9gfJqhV9TJNg38ZE/HOBWlxFHXV9REk6BwA2/2gvht
+         0LdxrFG5cun2XMzbFos66ux6DamAzMayGrcO0nhHUpWC71qNWW6PQaZTSnecTl0diaVR
+         SNEI9po+kbUX+q265VnnmgC43ZXW02iBuxXmDLjvMee5M/bsri1nH3VZxXg7Pjg+jpa4
+         u/EFgte6aKB081iF8n/y60aCLv5Gq28RTNNj3/WncwV1c8Y3iJOHQspSmpY9skENc8wD
+         yGNg==
+X-Gm-Message-State: AOAM532fZ6og6fOJaUUAsWATt9KIsw6S7IbF5iSC74DeDGeCDjCVrm9A
+        qk8ruuszFyRdkmrH8xGA3Lw=
+X-Google-Smtp-Source: ABdhPJx+wodiLLrkKDg3ha+a9NBtWbzHQmztrwc5GTaxABEAFKKibyP4WD7RjgCj+7p3tMqE7yZOUg==
+X-Received: by 2002:a92:9fd1:: with SMTP id z78mr5279766ilk.221.1591303142416;
+        Thu, 04 Jun 2020 13:39:02 -0700 (PDT)
 Received: from cs-u-kase.dtc.umn.edu (cs-u-kase.cs.umn.edu. [160.94.64.2])
-        by smtp.googlemail.com with ESMTPSA id p10sm992141ilm.32.2020.06.04.13.34.44
+        by smtp.googlemail.com with ESMTPSA id y23sm321642ior.38.2020.06.04.13.39.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jun 2020 13:34:45 -0700 (PDT)
+        Thu, 04 Jun 2020 13:39:01 -0700 (PDT)
 From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu
-Subject: [PATCH] dmaengine: rcar-dmac: handle pm_runtime_get_sync failure
-Date:   Thu,  4 Jun 2020 15:34:30 -0500
-Message-Id: <20200604203432.12082-1-navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>
+Subject: [PATCH] dmaengine: sprd: handle the failure cases of pm_runtime_get_sync
+Date:   Thu,  4 Jun 2020 15:38:54 -0500
+Message-Id: <20200604203854.23106-1-navid.emamdoost@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
@@ -71,21 +69,37 @@ pm_runtime_get_sync fails.
 
 Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
- drivers/dma/sh/rcar-dmac.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/sprd-dma.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
-index 59b36ab5d684..dd7ca67c93ed 100644
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -1879,6 +1879,7 @@ static int rcar_dmac_probe(struct platform_device *pdev)
- 	ret = pm_runtime_get_sync(&pdev->dev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "runtime PM get sync failed (%d)\n", ret);
-+		pm_runtime_put(&pdev->dev);
- 		return ret;
- 	}
+diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+index 0ef5ca81ba4d..0ba4fe1a1905 100644
+--- a/drivers/dma/sprd-dma.c
++++ b/drivers/dma/sprd-dma.c
+@@ -1204,8 +1204,10 @@ static int sprd_dma_probe(struct platform_device *pdev)
+ 	pm_runtime_enable(&pdev->dev);
  
+ 	ret = pm_runtime_get_sync(&pdev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_noidle(&pdev->dev);
+ 		goto err_rpm;
++	}
+ 
+ 	ret = dma_async_device_register(&sdev->dma_dev);
+ 	if (ret < 0) {
+@@ -1239,8 +1241,10 @@ static int sprd_dma_remove(struct platform_device *pdev)
+ 	int ret;
+ 
+ 	ret = pm_runtime_get_sync(&pdev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_noidle(&pdev->dev);
+ 		return ret;
++	}
+ 
+ 	/* explicitly free the irq */
+ 	if (sdev->irq > 0)
 -- 
 2.17.1
 

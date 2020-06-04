@@ -2,41 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EAF611EDCBA
-	for <lists+dmaengine@lfdr.de>; Thu,  4 Jun 2020 07:43:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E59C1EE169
+	for <lists+dmaengine@lfdr.de>; Thu,  4 Jun 2020 11:37:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbgFDFnu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 4 Jun 2020 01:43:50 -0400
-Received: from mout.web.de ([212.227.17.11]:48187 "EHLO mout.web.de"
+        id S1727879AbgFDJhV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 4 Jun 2020 05:37:21 -0400
+Received: from mout.web.de ([217.72.192.78]:40895 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726003AbgFDFnu (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 4 Jun 2020 01:43:50 -0400
+        id S1726469AbgFDJhV (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 4 Jun 2020 05:37:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1591249403;
-        bh=3MkFD5u516RHMXs9tkq7u9K3YawNQbXNaeFLtPqnKtQ=;
+        s=dbaedf251592; t=1591263415;
+        bh=LJN3Kf4vQsasf3c2M0JNJOkqWVCOQTQQEFF500nJIbM=;
         h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=I3ELH3x/3D6qSmpDrl6cD8y2KG2tp5tbMj+Qfv9YpzGMIIwVe972QmH57+VgAQkYh
-         bSCsyUCtVOO20dU4qAnDsGWf8YOojtRy7uyVToqZY814GDfKw/j5Yupune1uBzydMm
-         mKUa10L1rXvME15InwNqd8ht3s2Kue7pi/iIvULA=
+        b=q0b+yMclK9v1qNZ9aVOp1gbpfRs6a3LbUH/nffGnDaWZCXRFIzJYDOnfgseyZiixP
+         35s3nqIetyAwQdqbrYBh3FJE5FQ8xtHPWjPseP7B9xZqlkN1jVDRL63znhCxGHOK5p
+         RX86hAw3Uzu6KFDPgMsg9ki6griWjxQRPteHCviM=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.132.94.220]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mhnw2-1j307X1kG0-00drys; Thu, 04
- Jun 2020 07:43:23 +0200
-Subject: Re: dmaengine: stm32-mdma: call pm_runtime_put if pm_runtime_get_sync
- fails
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
+Received: from [192.168.1.2] ([93.132.94.220]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mmymz-1jICyv3DZH-00jw0c; Thu, 04
+ Jun 2020 11:36:54 +0200
+Subject: Re: [PATCH] dmaengine: stm32-dmamux: Fix pm_runtime_get_sync()
+ failure cases
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>,
         dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-stm32@st-md-mailman.stormreply.com
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
+Cc:     Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
         Stephen McCamant <smccaman@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>, Vinod Koul <vkoul@kernel.org>,
+        Qiushi Wu <wu000273@umn.edu>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+        Vinod Koul <vkoul@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
 References: <873bfb31-52d8-7c9b-5480-4a94dc945307@web.de>
- <CAMuHMdU3wMT_pnh4NE9W9Su6qip_oObgd6OiRCwfuvouqjXKHA@mail.gmail.com>
+ <CAEkB2ET_gfNUAuoZHxiGWZX7d3CQaJYJJqS2Fspif5mFq4-xfA@mail.gmail.com>
 From:   Markus Elfring <Markus.Elfring@web.de>
 Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
@@ -81,70 +82,56 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <3eca8df2-22ae-06e0-5809-c11e459915d5@web.de>
-Date:   Thu, 4 Jun 2020 07:43:14 +0200
+Message-ID: <f21a82e5-810e-b153-651a-9f347dfe0216@web.de>
+Date:   Thu, 4 Jun 2020 11:36:52 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdU3wMT_pnh4NE9W9Su6qip_oObgd6OiRCwfuvouqjXKHA@mail.gmail.com>
+In-Reply-To: <CAEkB2ET_gfNUAuoZHxiGWZX7d3CQaJYJJqS2Fspif5mFq4-xfA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:KynnLDi6KBJoEMNje4oN1eTT3NNOBiFU90Q69446fFG5stNUo72
- FmPpM60Wdq/d742po5l185fsNTdEDnhKVsx7aalLxglMhzAV90r4HJIuNIXyDynopO8z3cO
- rSQX0gMpluWTpgfluIkxagVEvTHi5/jehR6PUJ27joHQ+P/nnEHIVLBgzdLIdNjGirWpTop
- L+EIi5rZtfUcE6YQgH6lA==
+X-Provags-ID: V03:K1:N3PPV2/zDO+XFyf+JdBnUlRlfc+sl+YC3VoGzVNwgF6oOISqYp0
+ N/B7w2TFwK+uJeBNhNE7BkKl12aa7AM1nyeCOtZLDtPyUIr8XNfQm/PTWxyJpeaFqR+So1W
+ Q0J4BAgPlSlhhfYcYbvSLbW8OPrPAsbEYbHtYAgNH75ry2HZYqAZlsfqhdTpfia9193H9V+
+ zo741yPmncRrz1pf838Gw==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qeH4pHbZvq8=:jmti1En2s8gckqqZeTZkwb
- S2shioru5R/hBxKDoGZEIcnMw/SwoBEyEPX059DjUeanDvCc7Fac9WiLMWPBD8AJQUSPGuKCk
- CDDxPa8qm2v90HBzoLF92WP64GNbts+YMlr8bjCcCdh695FEjG1lIiVC3sRvPiWn0+Du931ui
- Fc93bAeZ1RJKoEa+eXUzqCihuCA2Qz5ztiEE33lsfWcp7K+yQqeSxf7VlIlfOkLJTeRuzQwW8
- OStLEkZ9W5WOYscIZs8ETeG4nO9ydJWWU1btmxy4Ec7tZ4VPSAQMg2sFUET7c7ET0TgDZq7xf
- I0eZTkLk5qMx8LBtCHqZpK+1pTBEJQ/rqdhncwjgpdN95tCJMYGg+ShhPZbHtIe2V7c8Suka6
- Dm9jvBe8SPEhv3eI3JLAFf6jdnk5KcWsNzfPGqVKaar+/u9j1Y6JYyQ5bbJNxP6IcUpdWwnZ9
- cTG7tXpX4GjH5ZTGzHbLt4Qv7ZWRxT4y9OEeqiaDBXGLMMU+Q0JUxv+4WaVg1NDHX0zl3MTtn
- RLeV8vsBuIoaqOyowaC0eRaDtK87AbVtNxMl3JUZDzSVRB2CrK44HXXaufPqxYNmBspRqRRIH
- E9PzeatfbiLycom1n9IsyDLiTtDoIB5aX+OmRtwlCoN5HgfVKQL8qYDJ+fVcJI8kmaKRzI+Re
- Bx336G8dL+2iEjO7QoK5OtoEpmP9raxiivSBRUjTlDG7bfjs9G8QcMOWWApTMU8JoXtC2ItFi
- RcdPdFbO8Ire1AXb5qsh9qkouwcYqNv5s0Nz0B/71LCAsOP2vHlo9HYEtrwtNWNmvwhU1jNf8
- vm+Q/EEBUHuNZ8FIZhFM0+fyve7dLAoCyTyWvMgSd3C7LoeEsd28BlF+H+ubwTlzuQ7sv6x1D
- cFUF/gaF/PqL13J78WEXIu/OzIHvEhkXZqCT5gksVHT2c9d+qKgwXXwSt4NQMqj1rPavqqEMG
- yCHyi4RAyQ0ODjosyaRSavc60sRq95c5pmzfrEKKIP6pJ7uMFZsY7dolAPSF2b/M9K9zd2+I7
- UgzRX06sH1ZCiGQBTju0A4P04qVZjnnZyF1R9B/eE45meR+AgcQQb3c94sKFLloRj7MW+ac6Y
- /Q10piqqruZ/1Z7ae91DnKbn7gGsUnqQl+vC1yj2Gh1uvQFeNUXKA9zOYH3xPpA+8EHBi/c/8
- jinOPQC/S4lk4yUyY20RCgt3WNwTDlc+RAwzuBVvezI38NmgmZ1I+iE2zC0969K48rC+WTY04
- 0PvWapH4m8KRnD3AY
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9z9yiXxRKJI=:I4PDmBw3lL71NuE6T+52vB
+ Iz9oaE11/xW0K9GQt7GJUPUVMLMFw3U+LiRYsXwCtPuONMFFyqRZVK+P6yhzQikx+oBlJRWwJ
+ H2TDZiERzlTMQAA+O86CVSpKQvxxDi9cJZ+hMmT0psW3SYX4ZCnQXS1lQP0jYFfq0cztOpF7G
+ 2d4sFWX9vOGMS0KrZHlPsHejrqNGS0icLC0T8ZC+eXEv3Ynro5RNduwgxQ+D7Iejebmm7OQ+2
+ f3ihgRQTiPOuFJEZ5AQfyc6VcO5dZsBs2ZgTNFpu37nlIxUluphnAmT2+sEO0me7PoVvzkTGj
+ +LRkaiK3ezT7643nOde+LhooQv/av9RdSw0s5ktCsB2/SXMMqyFGuZCMU6yg2tnoy/Uv8LqLu
+ 8Idmf73FJ/eDCDifWWA31hu+2/E8IqRnIplDfoRvmvlUDUVySIYhw9jKd8vQUW7FJMsVu6Xtw
+ 7Za3ONLGcWK0o5j0piIUuSi9q9mGVfXXnRuhJ4zLHhCJYxJweBEi4wmVbUbJqhiBWwCto5t/b
+ J61kG1gPgSGf/t66clKrv7E6UVjH6IftFr2BMQ1VGeauZemB/Jq9YxTZDrEGJjGF25g1ZElvQ
+ pTL4yxSnkFpBZoX+EugOUGsiERCGOvxOuUZgXKk7MpeyjPHqARoo5qSOFDTZ2WxIftMTSbsgr
+ RErZlQYEK3fcboVDm9SDxMtWqIKv1qBhpdbu99ChSIMK39/Ylb6++pqw3M7NvEpZToRBHWQiU
+ SQ0rKKi6ffFlPhSTWsE/WT0+awQ0ChDCEOsnOlWMUNmiuE581MIwUlhb1oWwdSgr1yUu5bU0b
+ Ub1yJVtL0rcTNzlmWvQbPiEjo7w+USU1jLzhykShUvWBX0YU6cqBW17GiFmLHZ1e+QL8+TxHM
+ sGHUgy2JNR6RUDQpZw4HyXkVf9SjYFS9vZpoAim5neE2jzUgM+l3VDmDMqJGuOu8wPHJVTtP5
+ F4AzsC1095kDq7Njhb9TO9g2v75mc4VM8XFLxedOI46ryJDujTtEHLrq81R/RSdo28baYafzn
+ Jik/EM3sjzoSD6kPpWdiLwOH3Cz6/Ax8wIsE+cXsfQDjustFC8lBc3v4J/0zCfqcLmxXXV99R
+ gi5yb1OR5vlXz79TZC/b60zV51OAytbgK0vhZIQfnyaHbGwp1cSLTzNmOpBH6PjobTycmmIC3
+ VueyrS6Ia3EQk4A46Tx/gwJM9os6+24HN7OYmwpu/a7fS0Yz/GHEF9L63iqXa3xPykw+pvjxG
+ yBahHtqgG/BbwTCE3
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
->>> Calling pm_runtime_get_sync increments the counter even in case of
->>> failure, causing incorrect ref count. Call pm_runtime_put if
->>> pm_runtime_get_sync fails.
->>
->> Is it appropriate to copy a sentence from the change description
->> into the patch subject?
->>
->> How do you think about a wording variant like the following?
->>
->>    The PM runtime reference counter is generally incremented by a call =
-of
->>    the function =E2=80=9Cpm_runtime_get_sync=E2=80=9D.
->>    Thus call the function =E2=80=9Cpm_runtime_put=E2=80=9D also in two =
-error cases
->>    to keep the reference counting consistent.
->
-> IMHO the important part is "even in case of failure", which you dropped.
-> Missing that point was the root cause of the issue being fixed.
-> Hence I prefer the original description, FWIW.
+> Please stop proposing rewording on my patches!
 
-Would you like to comment any more of the presented patch review concerns?
+I find it interesting that you got into the mood to choose
+another patch subject variant.
+https://lore.kernel.org/patchwork/patch/1252131/
+https://lore.kernel.org/dmaengine/20200603193648.19190-1-navid.emamdoost@gmail.com/
 
-Can it make sense to combine any adjustments into a single patch
-according to the discussed software transformation pattern?
-https://lore.kernel.org/patchwork/project/lkml/list/?submitter=3D26544&sta=
-te=3D*&q=3Dengine%3A+stm32&archive=3Dboth
+
+> I will consider updating my patches only if a maintainer asks for it.
+
+Now I am curious if you would like take my patch review request into account
+to avoid a typo there.
+How will the quality evolve for such commit messages?
 
 Regards,
 Markus

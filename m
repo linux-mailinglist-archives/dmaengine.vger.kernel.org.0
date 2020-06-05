@@ -2,82 +2,309 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52DB91EFC0F
-	for <lists+dmaengine@lfdr.de>; Fri,  5 Jun 2020 17:01:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E01F1F0020
+	for <lists+dmaengine@lfdr.de>; Fri,  5 Jun 2020 20:59:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgFEPBG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 5 Jun 2020 11:01:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58854 "EHLO mail.kernel.org"
+        id S1726958AbgFES7B (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 5 Jun 2020 14:59:01 -0400
+Received: from mga04.intel.com ([192.55.52.120]:9676 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbgFEPBG (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 5 Jun 2020 11:01:06 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83F232065C;
-        Fri,  5 Jun 2020 15:01:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591369266;
-        bh=atSo0Qb+rMrsZv5QANKFcbcUcwoez30MfjPtT8ppNS8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iNOTh3GVfGr8Oi8u3jquG56gWGC7TwnPsXkrbsAbPb8no4OYQZMIe9uExtbQjaTy9
-         gN0gj1O7xUzlW4M5FuRDzTu1MTHRk5b2MVEdO6hxErTu4/ctKjd4fisO4gD4RRctgv
-         mk+YqE/s7yEhcLm0OsNy9zGIzVtS6bdm06fJsPTI=
-Date:   Fri, 5 Jun 2020 16:01:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Robin Gong <yibin.gong@nxp.com>
-Cc:     mark.rutland@arm.com, robh+dt@kernel.org, catalin.marinas@arm.com,
-        vkoul@kernel.org, will.deacon@arm.com, shawnguo@kernel.org,
-        festevam@gmail.com, s.hauer@pengutronix.de,
-        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
-        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de, linux-imx@nxp.com, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v9 05/14] spi: imx: fallback to PIO if dma setup failure
-Message-ID: <20200605150103.GG5413@sirena.org.uk>
-References: <1591392755-19136-1-git-send-email-yibin.gong@nxp.com>
- <1591392755-19136-6-git-send-email-yibin.gong@nxp.com>
+        id S1726846AbgFES7B (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 5 Jun 2020 14:59:01 -0400
+IronPort-SDR: sPLpDxErgFeVjvsmONzaRgoLgdb5NFUsEbcRw+PVG8FVQx9NO1I/nLeJKy78bL0DEzWg7AMI5j
+ 4XJ8D5TPC+BQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 11:59:01 -0700
+IronPort-SDR: cmj0aDA99QRJxhPqymvSvdYiSMJ8md1Zy7ANh23GK88c9A+znNrMWM6XKMBbXfIrWjK0ltj0Uy
+ FU/draWWiJXA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,477,1583222400"; 
+   d="scan'208";a="348524871"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.135.42.8]) ([10.135.42.8])
+  by orsmga001.jf.intel.com with ESMTP; 05 Jun 2020 11:59:00 -0700
+Subject: Re: [PATCH] dmaengine: check device and channel list for empty
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, swathi.kovvuri@intel.com
+References: <158957055210.11529.14023177009907426289.stgit@djiang5-desk3.ch.intel.com>
+Message-ID: <448ecefc-7977-4fc4-768f-9b9ce3cfd05d@intel.com>
+Date:   Fri, 5 Jun 2020 11:58:59 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="+sHJum3is6Tsg7/J"
-Content-Disposition: inline
-In-Reply-To: <1591392755-19136-6-git-send-email-yibin.gong@nxp.com>
-X-Cookie: Air is water with holes in it.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <158957055210.11529.14023177009907426289.stgit@djiang5-desk3.ch.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
---+sHJum3is6Tsg7/J
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Sat, Jun 06, 2020 at 05:32:26AM +0800, Robin Gong wrote:
-> Fallback to PIO in case dma setup failed. For example, sdma firmware not
-> updated but ERR009165 workaroud added in kernel.
+On 5/15/2020 12:22 PM, Dave Jiang wrote:
+> Check dma device list and channel list for empty before iterate as the
+> iteration function assume the list to be not empty. With devices and
+> channels now being hot pluggable this is a condition that needs to be
+> checked. Otherwise it can cause the iterator to spin forever.
+> 
+> Fixes: e81274cd6b52 ("dmaengine: add support to dynamic register/unregister of channels")
+> 
+> Reported-by: Swathi Kovvuri <swathi.kovvuri@intel.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Tested-by: Swathi Kovvuri <swathi.kovvuri@intel.com>
 
-Please do not submit new versions of already applied patches, please
-submit incremental updates to the existing code.  Modifying existing
-commits creates problems for other users building on top of those
-commits so it's best practice to only change pubished git commits if
-absolutely essential.
+Hi Vinod. Ping on this submit.
 
---+sHJum3is6Tsg7/J
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7aXi8ACgkQJNaLcl1U
-h9ACrwf/RD2Rv/jpt2YPaf64q5u9KvPJTvEmVU5U5Bntbxu4kMr9w/H6cT0QyhUg
-pfOGftQDcUXm9x+HC0Q+xC3+bPmgzzzbjGZLxMfVfgvpyV6JJ+GhTVX/LjR6Jpi+
-eyVMWffvIVKSZH8PO+nymh1/fcrOLbz3g+6D7fQJ+XNh7XmJJV0ysIpE/43KLvZs
-X4netF+zcPwX2jBYdDpP0WRi+yzBDaJSNv3rV2AJgxO0Yug7d31On8HkRYxCoMaz
-q0RJ/8s/ol2Pv0uT8GaVF7wJbDLA4XKhR53l4EeaBluFn9bh9lLYf9i3Mi53mbJQ
-2XlQLzL/GxTo2szSSv9mBII/D6nXaA==
-=LU0r
------END PGP SIGNATURE-----
-
---+sHJum3is6Tsg7/J--
+> ---
+>   drivers/dma/dmaengine.c |  119 +++++++++++++++++++++++++++++++++++++----------
+>   1 file changed, 94 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index d31076d9ef25..4d29c5f2fcfd 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -83,6 +83,9 @@ static void dmaengine_dbg_summary_show(struct seq_file *s,
+>   {
+>   	struct dma_chan *chan;
+>   
+> +	if (list_empty(&dma_dev->channels))
+> +		return;
+> +
+>   	list_for_each_entry(chan, &dma_dev->channels, device_node) {
+>   		if (chan->client_count) {
+>   			seq_printf(s, " %-13s| %s", dma_chan_name(chan),
+> @@ -102,6 +105,11 @@ static int dmaengine_summary_show(struct seq_file *s, void *data)
+>   	struct dma_device *dma_dev = NULL;
+>   
+>   	mutex_lock(&dma_list_mutex);
+> +	if (list_empty(&dma_device_list)) {
+> +		mutex_unlock(&dma_list_mutex);
+> +		return 0;
+> +	}
+> +
+>   	list_for_each_entry(dma_dev, &dma_device_list, global_node) {
+>   		seq_printf(s, "dma%d (%s): number of channels: %u\n",
+>   			   dma_dev->dev_id, dev_name(dma_dev->dev),
+> @@ -323,10 +331,15 @@ static struct dma_chan *min_chan(enum dma_transaction_type cap, int cpu)
+>   	struct dma_chan *min = NULL;
+>   	struct dma_chan *localmin = NULL;
+>   
+> +	if (list_empty(&dma_device_list))
+> +		return NULL;
+> +
+>   	list_for_each_entry(device, &dma_device_list, global_node) {
+>   		if (!dma_has_cap(cap, device->cap_mask) ||
+>   		    dma_has_cap(DMA_PRIVATE, device->cap_mask))
+>   			continue;
+> +		if (list_empty(&device->channels))
+> +			continue;
+>   		list_for_each_entry(chan, &device->channels, device_node) {
+>   			if (!chan->client_count)
+>   				continue;
+> @@ -363,6 +376,9 @@ static void dma_channel_rebalance(void)
+>   	int cpu;
+>   	int cap;
+>   
+> +	if (list_empty(&dma_device_list))
+> +		return;
+> +
+>   	/* undo the last distribution */
+>   	for_each_dma_cap_mask(cap, dma_cap_mask_all)
+>   		for_each_possible_cpu(cpu)
+> @@ -371,6 +387,8 @@ static void dma_channel_rebalance(void)
+>   	list_for_each_entry(device, &dma_device_list, global_node) {
+>   		if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
+>   			continue;
+> +		if (list_empty(&device->channels))
+> +			continue;
+>   		list_for_each_entry(chan, &device->channels, device_node)
+>   			chan->table_count = 0;
+>   	}
+> @@ -554,6 +572,10 @@ void dma_issue_pending_all(void)
+>   	struct dma_chan *chan;
+>   
+>   	rcu_read_lock();
+> +	if (list_empty(&dma_device_list)) {
+> +		rcu_read_unlock();
+> +		return;
+> +	}
+>   	list_for_each_entry_rcu(device, &dma_device_list, global_node) {
+>   		if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
+>   			continue;
+> @@ -611,6 +633,10 @@ static struct dma_chan *private_candidate(const dma_cap_mask_t *mask,
+>   		dev_dbg(dev->dev, "%s: wrong capabilities\n", __func__);
+>   		return NULL;
+>   	}
+> +
+> +	if (list_empty(&dev->channels))
+> +		return NULL;
+> +
+>   	/* devices with multiple channels need special handling as we need to
+>   	 * ensure that all channels are either private or public.
+>   	 */
+> @@ -747,6 +773,11 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
+>   
+>   	/* Find a channel */
+>   	mutex_lock(&dma_list_mutex);
+> +	if (list_empty(&dma_device_list)) {
+> +		mutex_unlock(&dma_list_mutex);
+> +		return NULL;
+> +	}
+> +
+>   	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
+>   		/* Finds a DMA controller with matching device node */
+>   		if (np && device->dev->of_node && np != device->dev->of_node)
+> @@ -817,6 +848,11 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
+>   
+>   	/* Try to find the channel via the DMA filter map(s) */
+>   	mutex_lock(&dma_list_mutex);
+> +	if (list_empty(&dma_device_list)) {
+> +		mutex_unlock(&dma_list_mutex);
+> +		return NULL;
+> +	}
+> +
+>   	list_for_each_entry_safe(d, _d, &dma_device_list, global_node) {
+>   		dma_cap_mask_t mask;
+>   		const struct dma_slave_map *map = dma_filter_match(d, name, dev);
+> @@ -940,10 +976,17 @@ void dmaengine_get(void)
+>   	mutex_lock(&dma_list_mutex);
+>   	dmaengine_ref_count++;
+>   
+> +	if (list_empty(&dma_device_list)) {
+> +		mutex_unlock(&dma_list_mutex);
+> +		return;
+> +	}
+> +
+>   	/* try to grab channels */
+>   	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
+>   		if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
+>   			continue;
+> +		if (list_empty(&device->channels))
+> +			continue;
+>   		list_for_each_entry(chan, &device->channels, device_node) {
+>   			err = dma_chan_get(chan);
+>   			if (err == -ENODEV) {
+> @@ -978,10 +1021,17 @@ void dmaengine_put(void)
+>   	mutex_lock(&dma_list_mutex);
+>   	dmaengine_ref_count--;
+>   	BUG_ON(dmaengine_ref_count < 0);
+> +	if (list_empty(&dma_device_list)) {
+> +		mutex_unlock(&dma_list_mutex);
+> +		return;
+> +	}
+> +
+>   	/* drop channel references */
+>   	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
+>   		if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
+>   			continue;
+> +		if (list_empty(&device->channels))
+> +			continue;
+>   		list_for_each_entry(chan, &device->channels, device_node)
+>   			dma_chan_put(chan);
+>   	}
+> @@ -1130,6 +1180,39 @@ void dma_async_device_channel_unregister(struct dma_device *device,
+>   }
+>   EXPORT_SYMBOL_GPL(dma_async_device_channel_unregister);
+>   
+> +static int dma_channel_enumeration(struct dma_device *device)
+> +{
+> +	struct dma_chan *chan;
+> +	int rc;
+> +
+> +	if (list_empty(&device->channels))
+> +		return 0;
+> +
+> +	/* represent channels in sysfs. Probably want devs too */
+> +	list_for_each_entry(chan, &device->channels, device_node) {
+> +		rc = __dma_async_device_channel_register(device, chan);
+> +		if (rc < 0)
+> +			return rc;
+> +	}
+> +
+> +	/* take references on public channels */
+> +	if (dmaengine_ref_count && !dma_has_cap(DMA_PRIVATE, device->cap_mask))
+> +		list_for_each_entry(chan, &device->channels, device_node) {
+> +			/* if clients are already waiting for channels we need
+> +			 * to take references on their behalf
+> +			 */
+> +			if (dma_chan_get(chan) == -ENODEV) {
+> +				/* note we can only get here for the first
+> +				 * channel as the remaining channels are
+> +				 * guaranteed to get a reference
+> +				 */
+> +				return -ENODEV;
+> +			}
+> +		}
+> +
+> +	return 0;
+> +}
+> +
+>   /**
+>    * dma_async_device_register - registers DMA devices found
+>    * @device: &dma_device
+> @@ -1245,33 +1328,15 @@ int dma_async_device_register(struct dma_device *device)
+>   	if (rc != 0)
+>   		return rc;
+>   
+> +	mutex_lock(&dma_list_mutex);
+>   	mutex_init(&device->chan_mutex);
+>   	ida_init(&device->chan_ida);
+> -
+> -	/* represent channels in sysfs. Probably want devs too */
+> -	list_for_each_entry(chan, &device->channels, device_node) {
+> -		rc = __dma_async_device_channel_register(device, chan);
+> -		if (rc < 0)
+> -			goto err_out;
+> +	rc = dma_channel_enumeration(device);
+> +	if (rc < 0) {
+> +		mutex_unlock(&dma_list_mutex);
+> +		goto err_out;
+>   	}
+>   
+> -	mutex_lock(&dma_list_mutex);
+> -	/* take references on public channels */
+> -	if (dmaengine_ref_count && !dma_has_cap(DMA_PRIVATE, device->cap_mask))
+> -		list_for_each_entry(chan, &device->channels, device_node) {
+> -			/* if clients are already waiting for channels we need
+> -			 * to take references on their behalf
+> -			 */
+> -			if (dma_chan_get(chan) == -ENODEV) {
+> -				/* note we can only get here for the first
+> -				 * channel as the remaining channels are
+> -				 * guaranteed to get a reference
+> -				 */
+> -				rc = -ENODEV;
+> -				mutex_unlock(&dma_list_mutex);
+> -				goto err_out;
+> -			}
+> -		}
+>   	list_add_tail_rcu(&device->global_node, &dma_device_list);
+>   	if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
+>   		device->privatecnt++;	/* Always private */
+> @@ -1289,6 +1354,9 @@ int dma_async_device_register(struct dma_device *device)
+>   		return rc;
+>   	}
+>   
+> +	if (list_empty(&device->channels))
+> +		return rc;
+> +
+>   	list_for_each_entry(chan, &device->channels, device_node) {
+>   		if (chan->local == NULL)
+>   			continue;
+> @@ -1315,8 +1383,9 @@ void dma_async_device_unregister(struct dma_device *device)
+>   
+>   	dmaengine_debug_unregister(device);
+>   
+> -	list_for_each_entry_safe(chan, n, &device->channels, device_node)
+> -		__dma_async_device_channel_unregister(device, chan);
+> +	if (!list_empty(&device->channels))
+> +		list_for_each_entry_safe(chan, n, &device->channels, device_node)
+> +			__dma_async_device_channel_unregister(device, chan);
+>   
+>   	mutex_lock(&dma_list_mutex);
+>   	/*
+> 

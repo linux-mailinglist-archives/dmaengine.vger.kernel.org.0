@@ -2,41 +2,41 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA4F61EF92F
-	for <lists+dmaengine@lfdr.de>; Fri,  5 Jun 2020 15:33:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F6061EF932
+	for <lists+dmaengine@lfdr.de>; Fri,  5 Jun 2020 15:33:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbgFENdD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 5 Jun 2020 09:33:03 -0400
+        id S1727116AbgFENdJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 5 Jun 2020 09:33:09 -0400
 Received: from mail-db8eur05on2051.outbound.protection.outlook.com ([40.107.20.51]:9557
         "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727116AbgFENdA (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 5 Jun 2020 09:33:00 -0400
+        id S1727788AbgFENdG (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 5 Jun 2020 09:33:06 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GKaQ2sClz7OW801SDgJ8S3C8Kpno+KPy/2rBVdWzojSJVLnJ4bX7B9QTeJUuj0QAbSLp35b0SNilNQJTgzUMDcCn76YYtHNg0uya4mnX8HjdBdW0kITMonbUjpxkd2iwz8sXeu7Q9rgAVgJC2BsLQ0paVPbwgLyIUK3wesTidZZzaV45bBc/8U/vSUw7Q3Km8i9+egKcW6KUlFJ/uDmcT6i4+WgzA+3kNhJQRTsCmKrYPV34sDPLuHN0Azx4XVwpKWmGbxv5gMPFpzi1s33uEwu10u2rdmRCN61RoOymwh2zgQ6+8Z9f6iSRP7MvmMQ3k/rpXurI1v+oISraAnVhIA==
+ b=f9lZWfZxJ2/XVLwyfyTomm6E7PRmaGaNADsPHRrAU48T/Y1c9X/fSb8wREbluRnf3FqdML/cKEBSMu6upQZaJaFPJVH/Q2D9gcD/9la2m85RYhSypEsQI6cCBXzbou1Ufdd5PCXuEHKhOWI0trLhpzSj7nzsMEdgqXDClRc8oF4bEQP1NiqQq75Jo+D+Ra/374X+YmDcmhvmZncr7yLeB20uQCwuvcb6tWMaQ3be+ySrwQvzGWZA8MGB0PKgHE7e9mvSN7G3OSTIzXPXQiW4ilu5as3EI+CS2ZGC7p+DIeWbhJs/MrLuzHaYaOeDSlk3BLr6J2MbHlGb4xwj8PiEhA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oiPkcC3B+QkXtXP3K0ZodSEVT1VTh7f/2ZXBFmj8Rpc=;
- b=lK/hr3GRANSuEGrB5lbJd5ZcNJrjUTVCmDu95hHGxF+K7AnLHCoCDMCcU0r2znbYV+4FClH2fi4TvXyKI2TmshEWvpdcKmkEThwLPw8Ql6ox3WO87xUPyhyiXPhB7dIfK1mh+hsepgRSXeLQ1DljWJ1adMdW+t3/ZYXCkqZvmaJ4UOwoYMcomKclE9RKKBkHuQLx0ossjtDICoyhlFQY2Xxzeklv6qRuQINIgnoMC1wlVyuxDHeJtO6MAEUrklZcNXEov2NLbcwv2LmjU48AchBhfWjWBtaIWW9YvBdqnG4XJa6Ozc6KBNn88vo5BCog36PgQaj3Uif3ITN4tCFBag==
+ bh=M/ck4AeCjwv1t+XcVanhhgxvuofHKawX2tqytLZ7Mxg=;
+ b=Iv0snFVJREnr1gk02Exxno2DFiVdHkdz3ds94PPnN4gv4v4qBCcUDULHqdBlIcnMXid9eKSvYlqq54mG8RJgt0lVZVPSUcTVtxq7FB2JtUSRJFJrIwk124rWPIVVPpyKvvaN4kXlsOhKH3+8dHC9pFn8znAPDSr7+QsudK58lX/rrUGeXRfTu/bDq7UK/Sbfvf1B3FA/7u2Kl4BM59oykzv7Sl6uE7YSqyX6/l5JA761hhZXEzFvRZVwicHpM4n2cfvpkBZ6C9EqGj3GeMdt0mRKnfXafW8Y5jIbnBhId9J087bujRX3dl25H73l4cu268/PgbxD76M6SPIgnKpd3g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oiPkcC3B+QkXtXP3K0ZodSEVT1VTh7f/2ZXBFmj8Rpc=;
- b=jKTgdvhJmmJaCnMdG6QBvCXGZx1FNRMpj/EYRAXlN0g8IkOdQ5ZL2mdZG033MF/reyIMPmd2YPl4v49wYYfR7sqA0RqSVJHjuikjhw4A+s57sT3zZnKS9ul9iYPDAuGgeqxFXANOWO+7EwDAiXrvEuR5mE7dz+Bm8ZCNcIclR1c=
+ bh=M/ck4AeCjwv1t+XcVanhhgxvuofHKawX2tqytLZ7Mxg=;
+ b=eYLh1GfHovD4TSmmQiutschCRfXGqCWYqvv42YTQVzX609pbDRDvWMxVZBx7qWAkxXNHKVoWW7XDcjLNy6kiEqbQrQg+p8aMA54ZoSCg0lzSXLvc15OcWcbkrHdKFWNT+FwXjjYygoVpDFeY7ku5cyvXo73oQz2Dlk2MXi/jwWw=
 Authentication-Results: arm.com; dkim=none (message not signed)
  header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
 Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
  by VE1PR04MB6702.eurprd04.prod.outlook.com (2603:10a6:803:123::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Fri, 5 Jun
- 2020 13:32:54 +0000
+ 2020 13:33:00 +0000
 Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
  ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
  ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3066.019; Fri, 5 Jun 2020
- 13:32:54 +0000
+ 13:33:00 +0000
 From:   Robin Gong <yibin.gong@nxp.com>
 To:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
         catalin.marinas@arm.com, vkoul@kernel.org, will.deacon@arm.com,
@@ -46,9 +46,9 @@ To:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
 Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         kernel@pengutronix.de, linux-imx@nxp.com, dmaengine@vger.kernel.org
-Subject: [PATCH v9 05/14] spi: imx: fallback to PIO if dma setup failure
-Date:   Sat,  6 Jun 2020 05:32:26 +0800
-Message-Id: <1591392755-19136-6-git-send-email-yibin.gong@nxp.com>
+Subject: [PATCH v9 06/14] spi: imx: add dma_sync_sg_for_device after fallback from dma
+Date:   Sat,  6 Jun 2020 05:32:27 +0800
+Message-Id: <1591392755-19136-7-git-send-email-yibin.gong@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1591392755-19136-1-git-send-email-yibin.gong@nxp.com>
 References: <1591392755-19136-1-git-send-email-yibin.gong@nxp.com>
@@ -58,129 +58,82 @@ X-ClientProxiedBy: SG2PR02CA0048.apcprd02.prod.outlook.com
  (2603:10a6:803:119::15)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SG2PR02CA0048.apcprd02.prod.outlook.com (2603:1096:3:18::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3066.20 via Frontend Transport; Fri, 5 Jun 2020 13:32:48 +0000
+Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.66) by SG2PR02CA0048.apcprd02.prod.outlook.com (2603:1096:3:18::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3066.20 via Frontend Transport; Fri, 5 Jun 2020 13:32:54 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [119.31.174.66]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 9c13fa9e-b9ee-4196-ec12-08d80954f39e
+X-MS-Office365-Filtering-Correlation-Id: ef92f22b-cb60-418a-ec2a-08d80954f71f
 X-MS-TrafficTypeDiagnostic: VE1PR04MB6702:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VE1PR04MB6702808873A575B61CF9A1BD89860@VE1PR04MB6702.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Microsoft-Antispam-PRVS: <VE1PR04MB67026E0815F502FE1EBD54A589860@VE1PR04MB6702.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
 X-Forefront-PRVS: 0425A67DEF
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1RX7E8PMQTLOkbIDIA8401CAsT1/XPa4w1G/CYtJ9KG3tYtbVb8d6aUh3indOe3Po9BQg83bFknM0eXDfSmStNszrgXanGJhaYyvxIfl/boKsbsMssTZn2C8Ip9eq9dOONRw5IFpCDfrMV6IBYEYnstAdkHHqP2ruQ9TdG+9hO5gze8uDw4oiMpH481Jci8HHigstokbx6TaCe/TvdoMp6OsU7ey0zJId/CRtExEnbytRMR18/3Vrg++GEOvFymnA7/4gwzjWf94OyAMjHe7Kd961yo70zoDjogF2kFMr2IdBil4/PsENMAiWBeylSCxN9nGB5wBuEvyMRAEBs8kBE4MlNJ6k/MQUTChTdZMq+LcLGaOBQRbTRuxYS44wf/K
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(376002)(396003)(136003)(366004)(6486002)(52116002)(2906002)(316002)(4326008)(6506007)(5660300002)(26005)(66946007)(2616005)(956004)(478600001)(66556008)(186003)(8676002)(16526019)(7416002)(6512007)(6666004)(36756003)(8936002)(83380400001)(86362001)(66476007)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: vRHsGZwqU5Tzi2JLdLnOX6SBAPY40Dm4E3I6j9rTjd4WdG0a/3uo4dmbYtixfxI0cVaSeh1p16hHN+bNNwnbBPETpQg3j3fg4A+50+2JSnNFB9ZYaycuXxIQXP2wlV/24xZLvkC1GIEp+RHlz86kbBV9hROtvJcNE9vTT9HC5ER3Qx2U+Df6uwVOOpWkzubmqX7znzSBuddtkWQi8DivcB7sjfi3OcKGXFhIIPG3Qq3IJqAe/7Y9+KesOcdRLixqIxrXQQytcfmRAaIAPbpVmeHCrjzDYDZ8VCjAlnaH8jkHlGNgXOwwIhwlcAkO4ue0cjY7avq+u3AL+mxQwmPnslA8GRv19GFRqWPzlo9itU2H14VuDKB/+dPLLg8HT+/52t2ROBQveEAMQMskMHKzfIE/5MtQfN7l58rvZmj1dmZ0lteYfV//ssBBB9l8vPr7XaxGKW4ha0/K0y/5q2d/Jn7nOQKBOXoVmrI+OY9LZvw=
+X-Microsoft-Antispam-Message-Info: Z/7KydArBbKRDJmPebLnAqWRm0aKCED73I/8TUjY9Cv8zhcjNkeTSs5iruOV4zDJSdps2FJO1TRgRazrxVHZo5V4Nuwgw1kZdHiTA4JcLO1SB0seyZZxLwJuc/kE6+wW4QYpNtZP59ROKYyWwqLAAFT7SJjYOY49gARJw0O5MjupPkrB1Z7TCq818cWF5l/9lEaBEWd4rmUaSXDfaCHmddf0ZW+Zy58QwjSrDNBnK0rxuHvbEBKQD+t8bc5V1yekaazMJ8PLs9hSLkOlKdbuSAaoHs/7cyYgKzOTdi/4gky9bY7x7dxZ405v5UAguLTyiSXyySmpo+Y0nOvQgmq9WLMZRV4g8jx/NRE3Ykj2zAOmpEmyYb3oyMO3qpYp2hl7jl4Q02iYTOUCTDSdpJw5+MjsNtoA1as70hQbEs2p0PC0M4p+MjxOw/rEr4JPk4B5
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(376002)(396003)(136003)(366004)(6486002)(52116002)(2906002)(316002)(4326008)(6506007)(966005)(5660300002)(26005)(66946007)(2616005)(956004)(478600001)(66556008)(186003)(8676002)(16526019)(7416002)(6512007)(6666004)(36756003)(8936002)(83380400001)(86362001)(66476007)(921003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: Hh6PGbtUz2rL+Ln3aj2ndN+rzl8fBl9pPtiCkH70bOfoDxXAvdL0MxW2oX/6wUHL9QY34xRlumSf1a1ucjS/SRS+lWeOZRCSSorQMNRPB/r6nZ4DuVJXWFMLqCPcgHA9vavXM/XQpE5FwT2KczHlxXTUWqDl/uqeDtpObdhM3oPX5zpLGr6cbrKoe31Hf8d3yXcFP87aIMhhUpKVseGTV+Ov89zRXa2/7W7GnWgJhb0GAoIcMxcl5TQcHJwa18wRcVndidhUFt3waMkKYyd0LrrnIlYRUUv2Tmda4jvH9I0Y5c6StUQGouG3i0g+UzbWg9S/O7p0rhcMm/YRocqIfQ+BALrAglu1bSYAgSFi0MWO2LNQt3sLD/s/z+XnvR6+31jsCA8GyNtX1l3bkS4HiYpWny7eO2S71flcnqPltcNgIlXsiQ+XYzGCKPYeyQ43RT3cJ0ZmE+UpQSaT3zznSWt6Nb13bf/hUr5HXFk5zZQ=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c13fa9e-b9ee-4196-ec12-08d80954f39e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2020 13:32:54.4465
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef92f22b-cb60-418a-ec2a-08d80954f71f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2020 13:33:00.3191
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qSgdExW8Uw3Kw3JqTNXgVx61OtD7Jh2u/pnJSFopXunrjuPZNEJt94C07//FJ0fbNs9fSYlZ3BgdTz+5MQ9/wQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: JJNnO7AWZxSbkmOoPB8LtIWpdssbbHnD6IJ9kl0Ay4k6HdvSZ0dPr3EzeYnHvT4ZRSSFq6xIdWy6+NZYGuNeqg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6702
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Fallback to PIO in case dma setup failed. For example, sdma firmware not
-updated but ERR009165 workaroud added in kernel.
+In case dma transfer failed and fallback to pio, tx_buf/rx_buf need to be
+taken care cache since they have already been maintained by spi.c
 
+Fixes: bcd8e7761ec9("spi: imx: fallback to PIO if dma setup failure")
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
+Reported-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Link: https://lore.kernel.org/linux-arm-kernel/5d246dd81607bb6e5cb9af86ad4e53f7a7a99c50.camel@ew.tq-group.com/
+
 ---
- drivers/spi/spi-imx.c | 31 +++++++++++++++++++++++++++----
- 1 file changed, 27 insertions(+), 4 deletions(-)
+ drivers/spi/spi-imx.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-index f4f28a4..b7a85e3 100644
+index b7a85e3..c51cd3a 100644
 --- a/drivers/spi/spi-imx.c
 +++ b/drivers/spi/spi-imx.c
-@@ -71,6 +71,7 @@ struct spi_imx_devtype_data {
- 	void (*reset)(struct spi_imx_data *);
- 	void (*setup_wml)(struct spi_imx_data *);
- 	void (*disable)(struct spi_imx_data *);
-+	void (*disable_dma)(struct spi_imx_data *);
- 	bool has_dmamode;
- 	bool has_slavemode;
- 	unsigned int fifo_size;
-@@ -485,6 +486,11 @@ static void mx51_ecspi_trigger(struct spi_imx_data *spi_imx)
- 	writel(reg, spi_imx->base + MX51_ECSPI_CTRL);
- }
- 
-+static void mx51_disable_dma(struct spi_imx_data *spi_imx)
-+{
-+	writel(0, spi_imx->base + MX51_ECSPI_DMA);
-+}
-+
- static void mx51_ecspi_disable(struct spi_imx_data *spi_imx)
- {
- 	u32 ctrl;
-@@ -987,6 +993,7 @@ static struct spi_imx_devtype_data imx51_ecspi_devtype_data = {
- 	.rx_available = mx51_ecspi_rx_available,
- 	.reset = mx51_ecspi_reset,
- 	.setup_wml = mx51_setup_wml,
-+	.disable_dma = mx51_disable_dma,
- 	.fifo_size = 64,
- 	.has_dmamode = true,
- 	.dynamic_burst = true,
-@@ -1001,6 +1008,7 @@ static struct spi_imx_devtype_data imx53_ecspi_devtype_data = {
- 	.prepare_transfer = mx51_ecspi_prepare_transfer,
- 	.trigger = mx51_ecspi_trigger,
- 	.rx_available = mx51_ecspi_rx_available,
-+	.disable_dma = mx51_disable_dma,
- 	.reset = mx51_ecspi_reset,
- 	.fifo_size = 64,
- 	.has_dmamode = true,
-@@ -1385,6 +1393,7 @@ static int spi_imx_dma_transfer(struct spi_imx_data *spi_imx,
- 				DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
- 	if (!desc_tx) {
- 		dmaengine_terminate_all(master->dma_tx);
-+		dmaengine_terminate_all(master->dma_rx);
- 		return -EINVAL;
+@@ -1456,6 +1456,13 @@ static int spi_imx_pio_transfer(struct spi_device *spi,
+ 		return -ETIMEDOUT;
  	}
  
-@@ -1498,6 +1507,7 @@ static int spi_imx_transfer(struct spi_device *spi,
- 				struct spi_transfer *transfer)
- {
- 	struct spi_imx_data *spi_imx = spi_master_get_devdata(spi->master);
-+	int ret;
- 
- 	/* flush rxfifo before transfer */
- 	while (spi_imx->devtype_data->rx_available(spi_imx))
-@@ -1506,10 +1516,23 @@ static int spi_imx_transfer(struct spi_device *spi,
- 	if (spi_imx->slave_mode)
- 		return spi_imx_pio_transfer_slave(spi, transfer);
- 
--	if (spi_imx->usedma)
--		return spi_imx_dma_transfer(spi_imx, transfer);
--	else
--		return spi_imx_pio_transfer(spi, transfer);
-+	/*
-+	 * fallback PIO mode if dma setup error happen, for example sdma
-+	 * firmware may not be updated as ERR009165 required.
-+	 */
-+	if (spi_imx->usedma) {
-+		ret = spi_imx_dma_transfer(spi_imx, transfer);
-+		if (ret != -EINVAL)
-+			return ret;
++	if (transfer->rx_sg.sgl) {
++		struct device *rx_dev = spi->controller->dma_rx->device->dev;
 +
-+		spi_imx->devtype_data->disable_dma(spi_imx);
-+
-+		spi_imx->usedma = false;
-+		spi_imx->dynamic_burst = spi_imx->devtype_data->dynamic_burst;
-+		dev_dbg(&spi->dev, "Fallback to PIO mode\n");
++		dma_sync_sg_for_device(rx_dev, transfer->rx_sg.sgl,
++				       transfer->rx_sg.nents, DMA_TO_DEVICE);
 +	}
 +
-+	return spi_imx_pio_transfer(spi, transfer);
+ 	return transfer->len;
  }
  
- static int spi_imx_setup(struct spi_device *spi)
+@@ -1521,10 +1528,15 @@ static int spi_imx_transfer(struct spi_device *spi,
+ 	 * firmware may not be updated as ERR009165 required.
+ 	 */
+ 	if (spi_imx->usedma) {
++		struct device *tx_dev = spi->controller->dma_tx->device->dev;
++
+ 		ret = spi_imx_dma_transfer(spi_imx, transfer);
+ 		if (ret != -EINVAL)
+ 			return ret;
+ 
++		dma_sync_sg_for_cpu(tx_dev, transfer->tx_sg.sgl,
++				    transfer->tx_sg.nents, DMA_FROM_DEVICE);
++
+ 		spi_imx->devtype_data->disable_dma(spi_imx);
+ 
+ 		spi_imx->usedma = false;
 -- 
 2.7.4
 

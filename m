@@ -2,35 +2,38 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39A081F2E09
-	for <lists+dmaengine@lfdr.de>; Tue,  9 Jun 2020 02:38:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 986661F2D45
+	for <lists+dmaengine@lfdr.de>; Tue,  9 Jun 2020 02:33:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729678AbgFIAis (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 8 Jun 2020 20:38:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33320 "EHLO mail.kernel.org"
+        id S1730274AbgFIAcF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 8 Jun 2020 20:32:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727872AbgFHXNb (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:13:31 -0400
+        id S1728834AbgFHXPT (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:15:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B24E521527;
-        Mon,  8 Jun 2020 23:13:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF36B2076C;
+        Mon,  8 Jun 2020 23:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658011;
-        bh=oeO3JbRNlXL4jdzpWTfG5jkpwsKeAcZJoppud5H82L0=;
+        s=default; t=1591658118;
+        bh=QkkKrfXIqBTewevv8yU5ylGQpIpEznDfIwmX3poadq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xZUjzrbr7MdhLg80t2akgpSvhK/nJRCvSms7yhenVHt2LgL0Jh9NIVzVlcsHoZ5Mu
-         YY4EuukTidnAteP0dS155WoD0EA+l43EVDczCzcsHZPP5T86xBGzhTi4nZmSA2YbUw
-         7GQXN2UmYWOAlpRVPCpumGmHyYQtx5T/BLNvYL14=
+        b=cUJsubXgLnxli/j2JGKMhkNVdw5Jltwh4jQHWGf7awAruTrtAfbaM5xoUAOuSyYQA
+         cfdfKL6MmHW/Y4+OiNawgAxAa/NNnr9oml1USzj7HlwfFZXdhsY/iW1Lvk70uk6wUg
+         0m1cZfgn5VSz7Fmv8Sz1RY7hVnUml+gCLk3HN5kw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Walle <michael@walle.cc>, Shawn Guo <shawnguo@kernel.org>,
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 066/606] dt-bindings: dma: fsl-edma: fix ls1028a-edma compatible
-Date:   Mon,  8 Jun 2020 19:03:11 -0400
-Message-Id: <20200608231211.3363633-66-sashal@kernel.org>
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 156/606] dmaengine: tegra210-adma: Fix an error handling path in 'tegra_adma_probe()'
+Date:   Mon,  8 Jun 2020 19:04:41 -0400
+Message-Id: <20200608231211.3363633-156-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -43,38 +46,42 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Michael Walle <michael@walle.cc>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit d94a05f87327143f94f67dd256932163ac2bcd65 upstream.
+commit 3a5fd0dbd87853f8bd2ea275a5b3b41d6686e761 upstream.
 
-The bootloader will fix up the IOMMU entries only on nodes with the
-compatible "fsl,vf610-edma". Thus make this compatible string mandatory
-for the ls1028a-edma.
+Commit b53611fb1ce9 ("dmaengine: tegra210-adma: Fix crash during probe")
+has moved some code in the probe function and reordered the error handling
+path accordingly.
+However, a goto has been missed.
 
-While at it, fix the "fsl,fsl," typo.
+Fix it and goto the right label if 'dma_async_device_register()' fails, so
+that all resources are released.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
-Fixes: d8c1bdb5288d ("dt-bindings: dma: fsl-edma: add new fsl,fsl,ls1028a-edma")
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: b53611fb1ce9 ("dmaengine: tegra210-adma: Fix crash during probe")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Link: https://lore.kernel.org/r/20200516214205.276266-1-christophe.jaillet@wanadoo.fr
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- Documentation/devicetree/bindings/dma/fsl-edma.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/dma/tegra210-adma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl-edma.txt b/Documentation/devicetree/bindings/dma/fsl-edma.txt
-index e77b08ebcd06..ee1754739b4b 100644
---- a/Documentation/devicetree/bindings/dma/fsl-edma.txt
-+++ b/Documentation/devicetree/bindings/dma/fsl-edma.txt
-@@ -10,7 +10,8 @@ Required properties:
- - compatible :
- 	- "fsl,vf610-edma" for eDMA used similar to that on Vybrid vf610 SoC
- 	- "fsl,imx7ulp-edma" for eDMA2 used similar to that on i.mx7ulp
--	- "fsl,fsl,ls1028a-edma" for eDMA used similar to that on Vybrid vf610 SoC
-+	- "fsl,ls1028a-edma" followed by "fsl,vf610-edma" for eDMA used on the
-+	  LS1028A SoC.
- - reg : Specifies base physical address(s) and size of the eDMA registers.
- 	The 1st region is eDMA control register's address and size.
- 	The 2nd and the 3rd regions are programmable channel multiplexing
+diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+index 6e1268552f74..914901a680c8 100644
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -900,7 +900,7 @@ static int tegra_adma_probe(struct platform_device *pdev)
+ 	ret = dma_async_device_register(&tdma->dma_dev);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "ADMA registration failed: %d\n", ret);
+-		goto irq_dispose;
++		goto rpm_put;
+ 	}
+ 
+ 	ret = of_dma_controller_register(pdev->dev.of_node,
 -- 
 2.25.1
 

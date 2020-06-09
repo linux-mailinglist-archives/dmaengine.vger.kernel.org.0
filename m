@@ -2,61 +2,46 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FB331F37A1
-	for <lists+dmaengine@lfdr.de>; Tue,  9 Jun 2020 12:09:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 815E41F37AA
+	for <lists+dmaengine@lfdr.de>; Tue,  9 Jun 2020 12:11:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgFIKJU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 9 Jun 2020 06:09:20 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:40127 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728247AbgFIKJT (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 9 Jun 2020 06:09:19 -0400
-IronPort-SDR: jErgPSIB/WSiH+a1Hq3pftnMY6r1FcRF2ElYPKPuTxNAL4T+rIrm63FXJtd8VaWQvXYiNJOkmK
- GtMMkWEkh3lc17sCykdwIjxBqQbGwbIx57MbTntVjEvSbMK/LPIKSeqvly7GZl8wG3fXJ0rChQ
- 5PTRNvTtOzNy/MY6ftbgH8H6lWPsbDsxfognad+WoWL35VvueL0kZPClQqTsT8iix0PJ5RpOtu
- yj5mbJ3qv0T296MYuMq7QDuHNSEhE8STGq+EX0WVMT4UAB7l+I2r7Aqwqkpet85ymu5yUsok7y
- E6o=
-X-IronPort-AV: E=Sophos;i="5.73,491,1583190000"; 
-   d="scan'208";a="12612833"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 09 Jun 2020 12:09:12 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Tue, 09 Jun 2020 12:09:12 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Tue, 09 Jun 2020 12:09:12 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1591697352; x=1623233352;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=MtHoMJGjG11zHUOCfPMyUFC2SmxvJOGVvGMQIDbciW0=;
-  b=HYPb0tzsXEpnqbEPGGQjjMyVPiIhr/AWFfp0EFW7jfQ1nf2BBCVrxys3
-   ywHQ7VGkxVd4caxR8WVZs+Sw1vIGI8TAAcUV/VA9pKlp84HRGieyNqwad
-   Fu7XdnwIimoJkDdp1Bm7Aw+1+VbZkOM8hA/dcyt14fE9NWUnj+GpIsJMn
-   b5EwDAQeHXgPcu+v2AGbRxPw249Xt3oYJQtrOSFjr+mR6Qv50AL7zdl12
-   E0f8CKRLlAXm+I4nwsswBy6dArjEya/L5pVY6HHrj962Ig0UnsibkMXLn
-   CqVO61q6fiYBvN1V7H+7Mmq5LJpewYuaYxSF4Q9i5OrYqn/ng8+6QpKwy
-   g==;
-IronPort-SDR: KCraRdimNvw/UGtgYO/E9pVrjS0c7g0UfkmuCv8NnFRstj3BPvALb83QZGeoOI7RK4NJTNYfCI
- WSZvS9Rb/HjuoWsiJArNnpbQjviseAg6htmr0Forqf+UPOPXYP0a1BOqw7fSyiC4FW5yBJU2sK
- 8ZrGJFge7359WBHeN3e1lj5hSa5XzIqbUDZ6pCphnpsOQxFMdLMdJjqiZECQARu1Y5YNkGVG/v
- VJaN/gOddTLvlTfLOrPnfI414HITUvJfj4waT0W0G9N2RrpXwCpAbJA2evU5FSm1jf8KOfE4G5
- JvQ=
-X-IronPort-AV: E=Sophos;i="5.73,491,1583190000"; 
-   d="scan'208";a="12612832"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 09 Jun 2020 12:09:12 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id CC0B8280065;
-        Tue,  9 Jun 2020 12:09:18 +0200 (CEST)
-Message-ID: <4a663b38fe5c6b2ee37049fb0dcd88b70dbf232e.camel@ew.tq-group.com>
-Subject: Re: (EXT) Re: [PATCH v9 RESEND 01/13] spi: imx: add
- dma_sync_sg_for_device after fallback from dma
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        id S1727831AbgFIKK4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 9 Jun 2020 06:10:56 -0400
+Received: from mail-eopbgr20070.outbound.protection.outlook.com ([40.107.2.70]:51679
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726286AbgFIKKz (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 9 Jun 2020 06:10:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I2G1THQLh4pVb2o6066X0SAl4vi/OAVSGIe2ICkTjwQV+VXHcp7EVwzToFTdFw53bv9EoRH80Bchf9k4cbqxlLzQy8gZLbr+WcxPDXX4Mg9xJjSQ4k6b3q7NglUUgkoIjqZLMFVFbdChud/R7aHFyKcx0V5iTAeGCic9gckmpkOkd5W7n7PBUoVAK7EL910z/4boZ0kH3zAVGUq8YNRQqfOTNYALNXW6aSSdHZAOG3NADtJVFyIgh5L0XA4mlRcuNDCJ4ny5tAVpTOFiqu+8eV/F+JOAyMIKI9z7f87pDBR11/2xeGa3KCgI+XEXvABePAdFqh8U2HOX5UfSLHST8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QSGNTfCiTWhQa2GVPp0vAi0AnCFRCFK/kvfJhrciEX8=;
+ b=hq93VmZmhhIrpRypduLI7EKuA+f0uKXxCwu0qT9a73qN4FM2gGY5Un9O+fxl4+2qZvUIv0ih6/0OpD66KcWt3UkAvVPnqIZ9TRjlv57yhq0bWLDA3Tc1g2uT1ovy31DYaDkHZZV9KSQDZ8B53on2IvlWieegk9IFtLyvAmU1ibAq0UI6LTIuH7zw1qi6gDAFll9xwLW1JnUUD9j6ZphieB4/ceKBuQH9nxOtKl/2UrpqIP+jS63ZU3940rSDQo1Vl6Q0DxPBbnwJPZL2lmf2BYBMmIXwt/HgtmXBQOamxIXDZB2m3rTMYqNWzipZyNeepKkY/+Dmq4Y4Bb1CkiW1mg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QSGNTfCiTWhQa2GVPp0vAi0AnCFRCFK/kvfJhrciEX8=;
+ b=L2Ni22/Jnv2mr+XdxdHUAVgD5RW4x4U2AcvBH/xSODDl/L8TRQ95FCu5KAMq4cCo2b/S8tBTFt7xnK93TSSiTJQYYpz/dFK3bWOg9CuXAAOARE3C8gV6sC7UobfJLDJuvcRqQH+IDkfOvIXE9liKBCm8JRsi2UaR3c8T+QmH6QA=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6381.eurprd04.prod.outlook.com (2603:10a6:803:119::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Tue, 9 Jun
+ 2020 10:10:47 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3066.023; Tue, 9 Jun 2020
+ 10:10:47 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Mark Brown <broonie@kernel.org>
+CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "matthias.schiffer@ew.tq-group.com" 
+        <matthias.schiffer@ew.tq-group.com>,
         "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
         "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
         "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
@@ -73,130 +58,119 @@ Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
         "shawnguo@kernel.org" <shawnguo@kernel.org>,
         "kernel@pengutronix.de" <kernel@pengutronix.de>,
         "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Robin Gong <yibin.gong@nxp.com>,
-        Mark Brown <broonie@kernel.org>
-Date:   Tue, 09 Jun 2020 12:09:09 +0200
-In-Reply-To: <bcfc3637-65af-577a-ddbd-890b6c83a6e6@arm.com>
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v9 RESEND 01/13] spi: imx: add dma_sync_sg_for_device
+ after fallback from dma
+Thread-Topic: [PATCH v9 RESEND 01/13] spi: imx: add dma_sync_sg_for_device
+ after fallback from dma
+Thread-Index: AQHWPBYcMy4ZpJEEjkym0JBjSJknZajOy8sAgAABToCAAA6IgIAAFFCAgACn/7CAAHmEgIAAASqw
+Date:   Tue, 9 Jun 2020 10:10:47 +0000
+Message-ID: <VE1PR04MB663812B887A6D8DDCE75399B89820@VE1PR04MB6638.eurprd04.prod.outlook.com>
 References: <1591485677-20533-1-git-send-email-yibin.gong@nxp.com>
-         <1591485677-20533-2-git-send-email-yibin.gong@nxp.com>
-         <20200608143458.GH4593@sirena.org.uk>
-         <VE1PR04MB66388F89015F774EE3FFF69D89850@VE1PR04MB6638.eurprd04.prod.outlook.com>
-         <20200608153139.GI4593@sirena.org.uk>
-         <59ce3620-00b9-bac1-30e1-011a29583642@arm.com>
-         <VE1PR04MB6638B1EC49D295C64292B7BD89820@VE1PR04MB6638.eurprd04.prod.outlook.com>
-         <bcfc3637-65af-577a-ddbd-890b6c83a6e6@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+ <1591485677-20533-2-git-send-email-yibin.gong@nxp.com>
+ <20200608143458.GH4593@sirena.org.uk>
+ <VE1PR04MB66388F89015F774EE3FFF69D89850@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20200608153139.GI4593@sirena.org.uk>
+ <59ce3620-00b9-bac1-30e1-011a29583642@arm.com>
+ <VE1PR04MB6638B1EC49D295C64292B7BD89820@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <bcfc3637-65af-577a-ddbd-890b6c83a6e6@arm.com>
+In-Reply-To: <bcfc3637-65af-577a-ddbd-890b6c83a6e6@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [101.224.33.92]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 14abfe5a-99a8-4d03-abba-08d80c5d6113
+x-ms-traffictypediagnostic: VE1PR04MB6381:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB63814D75066B6743393EF09289820@VE1PR04MB6381.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 042957ACD7
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YcFK6y5UHwkvpiiUBT50qAPBFydJtiQ0rxfHFI0DPjTKykAAVs2vGXa2C95X2xCWrKEnSuUngxfYTym45z2QVs1JL94r9iKomhIHKtDPDHO+YeX2WdFhzkGoRMvPvFPS+zo6CrZi+uoZBCN4/Ks8rh1vUvCXNs09xRAHXPpDW6k6ye4oB/HHNq+Z/u8QQ4rkP/A4jDuQltbBx/opoQIrxYQhVr/7R0NOIL2r5J4RID99AzG5iAt7ex/l3l+xquCOcU74eeGOg94aNAmBrk85iNSk4zmWpK/7/s4cZoWVrWTSDMmKQdTQOzQ4+yyeUHsCJTQKG9eK3MBb4uO5XvuMnw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(376002)(366004)(136003)(396003)(26005)(186003)(7416002)(52536014)(8676002)(8936002)(4326008)(83380400001)(478600001)(86362001)(66556008)(71200400001)(5660300002)(9686003)(76116006)(110136005)(54906003)(316002)(7696005)(33656002)(53546011)(6506007)(2906002)(66946007)(66446008)(66476007)(64756008)(55016002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 95JuDsLEkvjLI4wvtIJU80R/BHJhM4NZ4B18Rvxi39hsYD5EAHotX/N3apXHt7jCGCw6ok39GNji1XoYZxODNEBu+R0zurJn/UXnkimOcRyFAWiEs5MLpf1bB6bsXsCaE1n3OppLicQ3H6xl+7/dv6yq0GymmSySnftA4xIbhnsHO3r0hDPOi5/GIE6IBg59ywbfm2jTwlkJFlPw8hopBLt2UPvgiKJ2vCii6GxY/trndTQLXlk4aT3IuWDFrxYFNc0GPcNq9hBPWNDE5L42/VDZSkVi9VLhsfllJ14fPWn6Kp7FlyYPb/1MO9i6x2IktZJdxMKicS9VFeSyxMC5a5AqxzLdD6NIyam1t5HrJrs+aOhzxjgmBv+Ja19Kqv1wRd4UuHk5QmDYe2FpXQW8sVQ/5c0iGCBvpljyzzzuKOyMgRKN5bhUGb1wVP7dtKPiVJSILX/Kvz3ETjuHf4DpdJnb1793wE5XYGlFnjN3sqQ=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 14abfe5a-99a8-4d03-abba-08d80c5d6113
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2020 10:10:47.1557
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: x2y48SDOenvVl8pwttcut9c722kV3kvVPVaBoOuy/C5fEJq1/GHZVOfHMDsSnz+qgT5BI8DSv/9UEW8g9Qd1ng==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6381
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, 2020-06-09 at 11:00 +0100, Robin Murphy wrote:
-> On 2020-06-09 06:21, Robin Gong wrote:
-> > On 2020/06/09 0:44 Robin Murphy <robin.murphy@arm.com> wrote:
-> > > On 2020-06-08 16:31, Mark Brown wrote:
-> > > > On Mon, Jun 08, 2020 at 03:08:45PM +0000, Robin Gong wrote:
-> > > > 
-> > > > > > > +	if (transfer->rx_sg.sgl) {
-> > > > > > > +		struct device *rx_dev = spi->controller-
-> > > > > > > >dma_rx->device->dev;
-> > > > > > > +
-> > > > > > > +		dma_sync_sg_for_device(rx_dev, transfer-
-> > > > > > > >rx_sg.sgl,
-> > > > > > > +				       transfer->rx_sg.nents,
-> > > > > > > DMA_TO_DEVICE);
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > This is confusing - why are we DMA mapping to the device
-> > > > > > after doing
-> > > > > > a PIO transfer?
-> > > > > 'transfer->rx_sg.sgl' condition check that's the case
-> > > > > fallback PIO
-> > > > > after DMA transfer failed. But the spi core still think the
-> > > > > buffer
-> > > > > should be in 'device' while spi driver touch it by PIO(CPU),
-> > > > > so sync it back to
-> > > 
-> > > device to ensure all received data flush to DDR.
-> > > > 
-> > > > So we sync it back to the device so that we can then do another
-> > > > sync
-> > > > to CPU?  TBH I'm a bit surprised that there's a requirement
-> > > > that we
-> > > > explicitly undo a sync and that a redundant double sync in the
-> > > > same
-> > > > direction might be an issue but I've not had a need to care so
-> > > > I'm
-> > > > perfectly prepared to believe there is.
-> > > > 
-> > > > At the very least this needs a comment.
-> > > 
-> > > Yeah, something's off here - at the very least, syncing with
-> > > DMA_TO_DEVICE on
-> > > the Rx buffer that was mapped with DMA_FROM_DEVICE is clearly
-> > > wrong.
-> > > CONFIG_DMA_API_DEBUG should scream about that.
-> > > 
-> > > If the device has written to the buffer at all since dma_map_sg()
-> > > was called
-> > > then you do need a dma_sync_sg_for_cpu() call before touching it
-> > > from a CPU
-> > > fallback path, but if nobody's going to touch it from that point
-> > > until it's
-> > > unmapped then there's no point syncing it again. The
-> > > my_card_interrupt_handler() example in DMA-API_HOWTO.txt
-> > > demonstrates
-> > > this.
-> > 
-> > Thanks for you post, but sorry, that's not spi-imx case now,
-> > because the rx data in device memory is not truly updated from
-> > 'device'/DMA, but from PIO, so that dma_sync_sg_for_cpu with
-> > DMA_FROM_DEVICE can't be used, otherwise the fresh data in cache
-> > will be invalidated.
-> > But you're right, kernel warning comes out if CONFIG_DMA_API_DEBUG
-> > enabled...
-> 
-> Ah, I think I understand what's going on now. That's... really ugly
-> :(
-> 
-> Looking at the SPI core code, I think a better way to handle this
-> would 
-> be to have your fallback path call spi_unmap_buf() directly (or
-> perform 
-> the same actions, if exporting that to drivers is unacceptable),
-> then 
-> make sure ->can_dma() returns false after that such that
-> spi_unmap_msg() 
-> won't try to unmap it again. That's a lot more reasonable than trying
-> to 
-> fake up a DMA_TO_DEVICE transfer in the middle of a DMA_FROM_DEVICE 
-> operation on the same buffer.
-> 
-> Alternatively, is it feasible to initiate a dummy DMA request during 
-> probe, such that you can detect the failure condition and give up on
-> the 
-> DMA channel early, and not have to deal with it during a real SPI
-> transfer?
-> 
-> Robin.
-
-
-Would this cover the transient DMA failure that is happening between
-SDMA registration and firmware load? This is exactly the case for which
-the PIO fallback is triggered for us: As soon as the SDMA driver is
-registered, the SPI driver can be probed as well, usually failing its
-first DMA transfer, as the SDMA firmware is not loaded yet. We would
-still like the SPI controller to use DMA as soon as it's actually
-available.
-
-I assume the actual issue is that the SDMA controller is considered
-registered before the firmware load has finished, but I have no idea
-how feasible it would be to change that (some comments in the code
-explain why this currently isn't the case).
-
-Matthias
-
+T24gMjAyMC8wNi8wOSBSb2JpbiBNdXJwaHkgPHJvYmluLm11cnBoeUBhcm0uY29tPiB3cm90ZTog
+DQo+IE9uIDIwMjAtMDYtMDkgMDY6MjEsIFJvYmluIEdvbmcgd3JvdGU6DQo+ID4gT24gMjAyMC8w
+Ni8wOSAwOjQ0IFJvYmluIE11cnBoeSA8cm9iaW4ubXVycGh5QGFybS5jb20+IHdyb3RlOg0KPiA+
+PiBPbiAyMDIwLTA2LTA4IDE2OjMxLCBNYXJrIEJyb3duIHdyb3RlOg0KPiA+Pj4gT24gTW9uLCBK
+dW4gMDgsIDIwMjAgYXQgMDM6MDg6NDVQTSArMDAwMCwgUm9iaW4gR29uZyB3cm90ZToNCj4gPj4+
+DQo+ID4+Pj4+PiArCWlmICh0cmFuc2Zlci0+cnhfc2cuc2dsKSB7DQo+ID4+Pj4+PiArCQlzdHJ1
+Y3QgZGV2aWNlICpyeF9kZXYgPSBzcGktPmNvbnRyb2xsZXItPmRtYV9yeC0+ZGV2aWNlLT5kZXY7
+DQo+ID4+Pj4+PiArDQo+ID4+Pj4+PiArCQlkbWFfc3luY19zZ19mb3JfZGV2aWNlKHJ4X2Rldiwg
+dHJhbnNmZXItPnJ4X3NnLnNnbCwNCj4gPj4+Pj4+ICsJCQkJICAgICAgIHRyYW5zZmVyLT5yeF9z
+Zy5uZW50cywgRE1BX1RPX0RFVklDRSk7DQo+ID4+Pj4+PiArCX0NCj4gPj4+Pj4+ICsNCj4gPj4+
+DQo+ID4+Pj4+IFRoaXMgaXMgY29uZnVzaW5nIC0gd2h5IGFyZSB3ZSBETUEgbWFwcGluZyB0byB0
+aGUgZGV2aWNlIGFmdGVyDQo+ID4+Pj4+IGRvaW5nIGEgUElPIHRyYW5zZmVyPw0KPiA+Pj4NCj4g
+Pj4+PiAndHJhbnNmZXItPnJ4X3NnLnNnbCcgY29uZGl0aW9uIGNoZWNrIHRoYXQncyB0aGUgY2Fz
+ZSBmYWxsYmFjayBQSU8NCj4gPj4+PiBhZnRlciBETUEgdHJhbnNmZXIgZmFpbGVkLiBCdXQgdGhl
+IHNwaSBjb3JlIHN0aWxsIHRoaW5rIHRoZSBidWZmZXINCj4gPj4+PiBzaG91bGQgYmUgaW4gJ2Rl
+dmljZScgd2hpbGUgc3BpIGRyaXZlciB0b3VjaCBpdCBieSBQSU8oQ1BVKSwgc28NCj4gPj4+PiBz
+eW5jIGl0IGJhY2sgdG8NCj4gPj4gZGV2aWNlIHRvIGVuc3VyZSBhbGwgcmVjZWl2ZWQgZGF0YSBm
+bHVzaCB0byBERFIuDQo+ID4+Pg0KPiA+Pj4gU28gd2Ugc3luYyBpdCBiYWNrIHRvIHRoZSBkZXZp
+Y2Ugc28gdGhhdCB3ZSBjYW4gdGhlbiBkbyBhbm90aGVyIHN5bmMNCj4gPj4+IHRvIENQVT8gIFRC
+SCBJJ20gYSBiaXQgc3VycHJpc2VkIHRoYXQgdGhlcmUncyBhIHJlcXVpcmVtZW50IHRoYXQgd2UN
+Cj4gPj4+IGV4cGxpY2l0bHkgdW5kbyBhIHN5bmMgYW5kIHRoYXQgYSByZWR1bmRhbnQgZG91Ymxl
+IHN5bmMgaW4gdGhlIHNhbWUNCj4gPj4+IGRpcmVjdGlvbiBtaWdodCBiZSBhbiBpc3N1ZSBidXQg
+SSd2ZSBub3QgaGFkIGEgbmVlZCB0byBjYXJlIHNvIEknbQ0KPiA+Pj4gcGVyZmVjdGx5IHByZXBh
+cmVkIHRvIGJlbGlldmUgdGhlcmUgaXMuDQo+ID4+Pg0KPiA+Pj4gQXQgdGhlIHZlcnkgbGVhc3Qg
+dGhpcyBuZWVkcyBhIGNvbW1lbnQuDQo+ID4+DQo+ID4+IFllYWgsIHNvbWV0aGluZydzIG9mZiBo
+ZXJlIC0gYXQgdGhlIHZlcnkgbGVhc3QsIHN5bmNpbmcgd2l0aA0KPiA+PiBETUFfVE9fREVWSUNF
+IG9uIHRoZSBSeCBidWZmZXIgdGhhdCB3YXMgbWFwcGVkIHdpdGgNCj4gRE1BX0ZST01fREVWSUNF
+IGlzIGNsZWFybHkgd3JvbmcuDQo+ID4+IENPTkZJR19ETUFfQVBJX0RFQlVHIHNob3VsZCBzY3Jl
+YW0gYWJvdXQgdGhhdC4NCj4gPj4NCj4gPj4gSWYgdGhlIGRldmljZSBoYXMgd3JpdHRlbiB0byB0
+aGUgYnVmZmVyIGF0IGFsbCBzaW5jZSBkbWFfbWFwX3NnKCkgd2FzDQo+ID4+IGNhbGxlZCB0aGVu
+IHlvdSBkbyBuZWVkIGEgZG1hX3N5bmNfc2dfZm9yX2NwdSgpIGNhbGwgYmVmb3JlIHRvdWNoaW5n
+DQo+ID4+IGl0IGZyb20gYSBDUFUgZmFsbGJhY2sgcGF0aCwgYnV0IGlmIG5vYm9keSdzIGdvaW5n
+IHRvIHRvdWNoIGl0IGZyb20NCj4gPj4gdGhhdCBwb2ludCB1bnRpbCBpdCdzIHVubWFwcGVkIHRo
+ZW4gdGhlcmUncyBubyBwb2ludCBzeW5jaW5nIGl0DQo+ID4+IGFnYWluLiBUaGUNCj4gPj4gbXlf
+Y2FyZF9pbnRlcnJ1cHRfaGFuZGxlcigpIGV4YW1wbGUgaW4gRE1BLUFQSV9IT1dUTy50eHQNCj4g
+ZGVtb25zdHJhdGVzDQo+ID4+IHRoaXMuDQo+ID4gVGhhbmtzIGZvciB5b3UgcG9zdCwgYnV0IHNv
+cnJ5LCB0aGF0J3Mgbm90IHNwaS1pbXggY2FzZSBub3csIGJlY2F1c2UgdGhlIHJ4DQo+IGRhdGEg
+aW4gZGV2aWNlIG1lbW9yeSBpcyBub3QgdHJ1bHkgdXBkYXRlZCBmcm9tICdkZXZpY2UnL0RNQSwg
+YnV0IGZyb20gUElPLA0KPiBzbyB0aGF0IGRtYV9zeW5jX3NnX2Zvcl9jcHUgd2l0aCBETUFfRlJP
+TV9ERVZJQ0UgY2FuJ3QgYmUgdXNlZCwNCj4gb3RoZXJ3aXNlIHRoZSBmcmVzaCBkYXRhIGluIGNh
+Y2hlIHdpbGwgYmUgaW52YWxpZGF0ZWQuDQo+ID4gQnV0IHlvdSdyZSByaWdodCwga2VybmVsIHdh
+cm5pbmcgY29tZXMgb3V0IGlmIENPTkZJR19ETUFfQVBJX0RFQlVHDQo+IGVuYWJsZWQuLi4NCj4g
+DQo+IEFoLCBJIHRoaW5rIEkgdW5kZXJzdGFuZCB3aGF0J3MgZ29pbmcgb24gbm93LiBUaGF0J3Mu
+Li4gcmVhbGx5IHVnbHkgOigNClllYWguLi5UaGUgb25seSByZWFzb24gaXMgdG8gYXZvaWQgdG91
+Y2ggYW55IHNwaSBjb3JlIGNvZGUuLi5JJ20gdHJ5aW5nIHRvIGltcGxlbWVudCBmYWxsYmFjayBh
+dCBzcGkgY29yZSBzbyB0aGF0IGNhbiBzcGlfdW5tYXBfYnVmIGRpcmVjdGx5IGlmIGRtYSB0cmFu
+c2ZlciBlcnJvciBhbmQgbm8gbmVlZA0Kc3VjaCBkbWFfc3luY18qIGluIHNwaSBjbGllbnQgZHJp
+dmVyLiBOb3Qgc3VyZSBpZiBNYXJrIGNvdWxkIGFjY2VwdCBpdC4gVGhhbmtzIGZvciB5b3VyIGJl
+bG93IGdyZWF0IHRob3VnaHRzIDopIA0KPiANCj4gTG9va2luZyBhdCB0aGUgU1BJIGNvcmUgY29k
+ZSwgSSB0aGluayBhIGJldHRlciB3YXkgdG8gaGFuZGxlIHRoaXMgd291bGQgYmUgdG8NCj4gaGF2
+ZSB5b3VyIGZhbGxiYWNrIHBhdGggY2FsbCBzcGlfdW5tYXBfYnVmKCkgZGlyZWN0bHkgKG9yIHBl
+cmZvcm0gdGhlIHNhbWUNCj4gYWN0aW9ucywgaWYgZXhwb3J0aW5nIHRoYXQgdG8gZHJpdmVycyBp
+cyB1bmFjY2VwdGFibGUpLCB0aGVuIG1ha2Ugc3VyZQ0KPiAtPmNhbl9kbWEoKSByZXR1cm5zIGZh
+bHNlIGFmdGVyIHRoYXQgc3VjaCB0aGF0IHNwaV91bm1hcF9tc2coKSB3b24ndCB0cnkgdG8NCj4g
+dW5tYXAgaXQgYWdhaW4uIFRoYXQncyBhIGxvdCBtb3JlIHJlYXNvbmFibGUgdGhhbiB0cnlpbmcg
+dG8gZmFrZSB1cCBhDQo+IERNQV9UT19ERVZJQ0UgdHJhbnNmZXIgaW4gdGhlIG1pZGRsZSBvZiBh
+IERNQV9GUk9NX0RFVklDRSBvcGVyYXRpb24gb24NCj4gdGhlIHNhbWUgYnVmZmVyLg0KPiANCj4g
+QWx0ZXJuYXRpdmVseSwgaXMgaXQgZmVhc2libGUgdG8gaW5pdGlhdGUgYSBkdW1teSBETUEgcmVx
+dWVzdCBkdXJpbmcgcHJvYmUsIHN1Y2gNCj4gdGhhdCB5b3UgY2FuIGRldGVjdCB0aGUgZmFpbHVy
+ZSBjb25kaXRpb24gYW5kIGdpdmUgdXAgb24gdGhlIERNQSBjaGFubmVsIGVhcmx5LA0KPiBhbmQg
+bm90IGhhdmUgdG8gZGVhbCB3aXRoIGl0IGR1cmluZyBhIHJlYWwgU1BJIHRyYW5zZmVyPw0KPiAN
+Cj4gUm9iaW4uDQo=

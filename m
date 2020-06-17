@@ -2,42 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9368C1FC33A
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Jun 2020 03:12:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F5081FC33B
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Jun 2020 03:12:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbgFQBMA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 16 Jun 2020 21:12:00 -0400
+        id S1725894AbgFQBME (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 16 Jun 2020 21:12:04 -0400
 Received: from mail-dm6nam11on2044.outbound.protection.outlook.com ([40.107.223.44]:9056
         "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725894AbgFQBL7 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 16 Jun 2020 21:11:59 -0400
+        id S1726253AbgFQBMD (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 16 Jun 2020 21:12:03 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EbQUlGqiWg42EJuF3pKSP+7V9iEI2jSTECmphCivyhkHzv0lUso7K/UfsxhVqVo4lPeGHnurUk9YU7x60kcG7o0KQhwvHCC3c/SfLcD5Yd6vA1AiOkoUpcSM752iHvupjFgUI+qfulo2X28nn+7egjp6YkAUXTNHgRb7EhY7pNiHbg3Me6Pbf3U2IQ4LqBFyiYtg1ITsyfanwbKiH9PUecpcZbE/lz7IGyDUqJwWVHjWxTqh1jv/QA+pencVL4QMt/8o0GcSykI4o+Z5oA1ZoaC+alCiKoVD0ON3k0eeMyirchgFz2c5EyZ/eVplVwXuxLlnhmIDBvxcz68i0fyKbQ==
+ b=Ze27qjkeVe5H3CMJIPx3yJFTeh10DoyiCxNf4xAoOyGmxr3hiCB/3Pkg/Ax+XMBSMpSVc2EayU4VuucpPea0uN9MhRHUEkOCWHY0aCWpMoQQ6kyvw2HV886mhemhrizITANySr81JuwnfUrMcdMfZ75Tex9tfDyfZpJGotW//pY8GA/yiMcE94SaG432+WlJIrjwoL/HUv5LCdQO2L2QVmp6Nc5YLn+Vy0ivyV1NA2SI5S/d7ZfWmhphNAhvCH7VawX7V042EgYTL1SlbJCalCOkFmI+NmEV+EnniJAe07WepOM9yFQ5BG9TQbOpMTVXVue3/HcNhN+CwZ/ZRu0j4Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n64RbZJwqrNprmf103lbZxNErWAPwm4y0OB+QOqWy9E=;
- b=JNSzbtyanxIkWtOmJXmLuX+vthN9rNcqDliDIsQoRmYwhCYgdLN8weyUHSvZqw3LE/Pn/JqRSC+Jap5Id10gTQvC6Kerh73jLTobRZPEVHWpYUs+UvjfSmmC+Cw2/H0iBPlF+t01zOICkUrV74cR9/EniAohTP+fym7KvR7E5h3PkqP1lP8BR5u0OxKTdQZtaWO7ZGT8BHqqyVFdDb3br9GDbARXlSyIi/8zFDFxy3/8cRQXj1QWp13pZWIk1oD0ffuakTX058DGGjp1CdBIPDwi8U3W8k12S2YoJnLdLwknkM6jb7D7Do/ZHUFUXrdEC4uqvyn01r2qKIE8+KjyMQ==
+ bh=wsxrxLWCFa/tISfesWANnOtPQvn2g4fpUGhW586XZOY=;
+ b=i4yoi6U4nCBxLjFrcCx+72w9SwcGjNb8F3nTAgc1uILC6/QSmvcDjAKjctPf6JZ/X3DYkiuI7UpgQDoiC0btXNAhmHBZjDb6uPP9wQ3K9xXSbN4lB23uK8GlaqOHTxNCVeF4akqSeEPBYWAtfOBuSLJtpEJPZ+poWYIm4kEwe4lNlgJORH8QSU3HWLrbJsY16E+RhzHGPhQPvyMPDquQP3KKx4AnR4RFC09CwWOKdQq3oMwufIwG1JHjR3zKrEQdHPIGAt5fJP/zVb5b+EAOUnjFhJOo0z8LcqZE+cquftYIKEVCAD9DEVWy+ZZLEu2tUgjEKQrcHH4OoAyCWGq9fA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n64RbZJwqrNprmf103lbZxNErWAPwm4y0OB+QOqWy9E=;
- b=MhAcN0t1UUeoY9125J4VUUWdCM9p9PJOTJa4B227MUCaeIET8YXcENZOm26b5/79rWzXtQwgR09FGEE5KR4Ootq+8xOb21DiLB0T0ErqrVz7GgZS59FzYwF5lkp3dzg8vYnu3ys3a6RN5Ku/u0bJnx8l3enWP6UAxTvIvpxnYRQ=
+ bh=wsxrxLWCFa/tISfesWANnOtPQvn2g4fpUGhW586XZOY=;
+ b=vnfdrZxRclL7aeQkWKu+cs/sqb9i6UwHBuh+PbK0jfL6TQjnPTzDs2A8yRWpcwzBKmGafWrVPxZMIGqXELVC4EDHqgZkqbocHr5f8s6r2Luia7eJUf7qDEZOOMp4HnBhztgYmNtDEWsBGQGrRxtOYXa9dGWwIv13ngWrKNF14VQ=
 Authentication-Results: kernel.org; dkim=none (message not signed)
  header.d=none;kernel.org; dmarc=none action=none header.from=amd.com;
 Received: from MN2PR12MB3421.namprd12.prod.outlook.com (2603:10b6:208:cd::24)
  by MN2PR12MB3502.namprd12.prod.outlook.com (2603:10b6:208:c9::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.25; Wed, 17 Jun
- 2020 01:11:53 +0000
+ 2020 01:11:58 +0000
 Received: from MN2PR12MB3421.namprd12.prod.outlook.com
  ([fe80::956f:e98c:37b4:25aa]) by MN2PR12MB3421.namprd12.prod.outlook.com
  ([fe80::956f:e98c:37b4:25aa%7]) with mapi id 15.20.3088.029; Wed, 17 Jun 2020
- 01:11:53 +0000
+ 01:11:58 +0000
 From:   Sanjay R Mehta <Sanju.Mehta@amd.com>
 To:     vkoul@kernel.org
 Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
@@ -46,9 +46,9 @@ Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
         mchehab+samsung@kernel.org, davem@davemloft.net,
         linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
         Sanjay R Mehta <sanju.mehta@amd.com>
-Subject: [PATCH v5 1/3] dmaengine: ptdma: Initial driver for the AMD PTDMA controller
-Date:   Tue, 16 Jun 2020 20:11:26 -0500
-Message-Id: <1592356288-42064-2-git-send-email-Sanju.Mehta@amd.com>
+Subject: [PATCH v5 2/3] dmaengine: ptdma: register PTDMA controller as a DMA resource
+Date:   Tue, 16 Jun 2020 20:11:27 -0500
+Message-Id: <1592356288-42064-3-git-send-email-Sanju.Mehta@amd.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1592356288-42064-1-git-send-email-Sanju.Mehta@amd.com>
 References: <1592356288-42064-1-git-send-email-Sanju.Mehta@amd.com>
@@ -59,30 +59,30 @@ X-ClientProxiedBy: MA1PR0101CA0003.INDPRD01.PROD.OUTLOOK.COM
  (2603:10b6:208:cd::24)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from sanjuamdntb2.amd.com (165.204.156.251) by MA1PR0101CA0003.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:21::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3109.21 via Frontend Transport; Wed, 17 Jun 2020 01:11:49 +0000
+Received: from sanjuamdntb2.amd.com (165.204.156.251) by MA1PR0101CA0003.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:21::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3109.21 via Frontend Transport; Wed, 17 Jun 2020 01:11:55 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [165.204.156.251]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ff7ea492-e7c1-4275-a607-08d8125b6b86
+X-MS-Office365-Filtering-Correlation-Id: a971a229-ba2a-4ff4-50de-08d8125b6f0b
 X-MS-TrafficTypeDiagnostic: MN2PR12MB3502:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB3502FD49061029700DF0FC5AE59A0@MN2PR12MB3502.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:61;
+X-Microsoft-Antispam-PRVS: <MN2PR12MB3502FAB8AE6CD536C3F6DD85E59A0@MN2PR12MB3502.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:95;
 X-Forefront-PRVS: 04371797A5
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hlnNRXmSqx681AAcKgMgh0tMuARuiA7gxUrHDzAaclxK1+9tWsBvDh183hu9ToWcnDAozpMzXkYLEgsRMYbqob2463tw/qW7fm7uG8BxKLgRz1FQckBFA20YWI3qYkX3sjyVGhN2QhW1AUXcnd8eHQ9XiC+IdFSJHy8DFccPtH5Uo7vnOXDyXG0d5mitFKax2n4y12uefAweZx01Vzc3rnnFfnlq7hdk37XCYYFGqhJJ/qcnhiuOfvfS4rkOAH/J6PIRIlnPCj7AlMY1LKvYjQTdHJXzhhtze4r+1SeqH2EbMlcWsFcglnhTW7q7eU2dp059MjsN5haBN4cKKBD+Ig==
+X-Microsoft-Antispam-Message-Info: JeBJ38jFVfJR3OOScAVoE5ZOQTdUwt23ZUldst+GXj/x7YgA+w1nzLYjiDYPNxRQnAqRNEu8nCo+SFumFw4EBLlJOLgCyGnMEg9Nvz4XBh5uChipZEscL4MUzvkg+4HDXg/c1+EIgA46OsP1PZ/aiXtROYeq6e+UY0sDIGv/eww6xQhjgI+Ac8XFm/fDhXoJzbFaXI+fcIGtDjmZ8gyV/FoBKnuZA0hUqY2MtH/tjGN4ex6VvrKPRrAvgYfIqbEQDWsa/YSs0cOTuuxtCczO896ZRcV4ytR53o40Nwgolr4RJVADuJK6f03oWxkRfEOt
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3421.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(39860400002)(346002)(376002)(396003)(30864003)(5660300002)(4326008)(36756003)(66476007)(956004)(86362001)(7696005)(52116002)(2906002)(6916009)(2616005)(66556008)(66946007)(6666004)(83380400001)(16526019)(316002)(6486002)(478600001)(8676002)(8936002)(26005)(186003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: pgX4EqKeuOBhkSk+Z8zHLKexw+QvRH67cj4f4PYWo5qLzUJ6GH2KyU2GmasFOR5OsTyl89yePmXXBaRW1XXDbUQdKRjMTFbGxV6Qda6kQnu8OCoJUumGhUwEUTsAPTM1ixV0rj5f3dUtQGbk4jctA686Bn80CYOha35WR6wkLlPgMdKk5FDZ671qI+7FJgBGoBWgKHSpqLyW5BE3uHleNh6LSWpgfe5PvG1oy2dPlmKZDhQM6u3GknBTXgzgzjxbPBBVkLB7lFYjnza/RHXW09yj/fArSw7rQv+VK4T8vdDh8+yeMCa0EhIx+leKIgX9QcWH4rNdUQp8ofUL7ACc4p6BK+yDB7rtwd2z6ARIFkG9Utwhbs1o7FIAwvFXUloZCTU/M3Dk9P96b0qR7BFr5lkwqjN58tpFSHiYnRWWnRjdaruEpv03aXCf0VD9YLmizYFFZmrsa3zFWl+nUt6rQT1xFODlCnPD7VvwvMUSj/Id64NvlBIFdvSZlixLgCCO
+X-MS-Exchange-AntiSpam-MessageData: nwc877ipLbtpK3P5pyDKuB+8t9SN86QeRRExCuKIyql3p+DrpLri5UvyjJKn3ZJ68j8sEIEgrHfmPaLmpBm9xHqOKMe9RI7Nx3+FsVDwmqr4ebpj+cvP08cvKVJ0EpeVusKudFb6IDJHX/Z5QuQ32sDuJ+s49ihFF476sQgk77jIeV+IY6E+k0HWXYCIX13JTz5qjQQtfG5QyVjen/ZYXw7LiayCqZxmNnBOYI3QECHJ3021t21tJ/3gIWeW2mq+uC+I/CuLwxcLvx5ywntvfa1NtLbwxWOnMMtIBZPqzCOwJ8BWKnR3NhpFpkaMYtr0PLooRMHzyZ5Cfbk4utDcMd5QMfPBfYVCeC6P5nTT4FYgg9E5vLVXL03z8Sy0Uo+zDqMzCB1kI5ESt/00kQk03RZv7AYcNkYrgsU4LFA35V7a5XqxhqP2BoJGwuJMGrwOYQE8wuspDkK2IHY32BGvdWLATuk8/XPzff5X8BlVFA0lEuUL4hS7rJ0/fHQZoae3
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff7ea492-e7c1-4275-a607-08d8125b6b86
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2020 01:11:53.2283
+X-MS-Exchange-CrossTenant-Network-Message-Id: a971a229-ba2a-4ff4-50de-08d8125b6f0b
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2020 01:11:58.9150
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 968oi+DKU1rbh9x3IWKzE720zOS1nHhwFhK2jIhAtcnT9N9sqDL+1JfyOJk9C4zFLUBxpEARbObcCyYYDEcKxw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: GEGe3r9zE6oBSrilmGo0dPr62viCRIAYWKBDpBXY0pmVFqK5l10S2Bk1l2Yq4DKUMxiYAHnQVEgtEhM4oEmDFA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3502
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
@@ -91,1005 +91,781 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Sanjay R Mehta <sanju.mehta@amd.com>
 
-This driver add support for AMD PTDMA controller.  This device
-performs high-bandwidth memory to memory and IO copy operation.
-Device commands are managed via a circular queue of 'descriptors',
-each of which specifies source and destination addresses for copying
-a single buffer of data.
+This registers the ptdma queue to Linux dmaengine framework
+as general-purpose DMA channels.
 
 Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
 ---
- MAINTAINERS                   |   6 +
- drivers/dma/Kconfig           |   2 +
- drivers/dma/Makefile          |   1 +
- drivers/dma/ptdma/Kconfig     |  11 ++
- drivers/dma/ptdma/Makefile    |  10 ++
- drivers/dma/ptdma/ptdma-dev.c | 306 +++++++++++++++++++++++++++++++++++++++
- drivers/dma/ptdma/ptdma-pci.c | 253 +++++++++++++++++++++++++++++++++
- drivers/dma/ptdma/ptdma.h     | 324 ++++++++++++++++++++++++++++++++++++++++++
- 8 files changed, 913 insertions(+)
- create mode 100644 drivers/dma/ptdma/Kconfig
- create mode 100644 drivers/dma/ptdma/Makefile
- create mode 100644 drivers/dma/ptdma/ptdma-dev.c
- create mode 100644 drivers/dma/ptdma/ptdma-pci.c
- create mode 100644 drivers/dma/ptdma/ptdma.h
+ drivers/dma/ptdma/Kconfig           |   2 +
+ drivers/dma/ptdma/Makefile          |   3 +-
+ drivers/dma/ptdma/ptdma-dev.c       |  33 ++
+ drivers/dma/ptdma/ptdma-dmaengine.c | 600 ++++++++++++++++++++++++++++++++++++
+ drivers/dma/ptdma/ptdma.h           |  31 ++
+ 5 files changed, 668 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/dma/ptdma/ptdma-dmaengine.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 68f21d4..8396e92 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -934,6 +934,12 @@ S:	Supported
- F:	arch/arm64/boot/dts/amd/amd-seattle-xgbe*.dtsi
- F:	drivers/net/ethernet/amd/xgbe/
- 
-++AMD PTDMA DRIVER
-++M:	Sanjay R Mehta <sanju.mehta@amd.com>
-++L:	dmaengine@vger.kernel.org
-++S:	Maintained
-++F:	drivers/dma/ptdma/
-+
- ANALOG DEVICES INC AD5686 DRIVER
- M:	Michael Hennerich <Michael.Hennerich@analog.com>
- L:	linux-pm@vger.kernel.org
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index de41d79..8f661ff 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -737,6 +737,8 @@ source "drivers/dma/ti/Kconfig"
- 
- source "drivers/dma/fsl-dpaa2-qdma/Kconfig"
- 
-+source "drivers/dma/ptdma/Kconfig"
-+
- # clients
- comment "DMA Clients"
- 	depends on DMA_ENGINE
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index e60f813..2785756 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -83,6 +83,7 @@ obj-$(CONFIG_XGENE_DMA) += xgene-dma.o
- obj-$(CONFIG_ZX_DMA) += zx_dma.o
- obj-$(CONFIG_ST_FDMA) += st_fdma.o
- obj-$(CONFIG_FSL_DPAA2_QDMA) += fsl-dpaa2-qdma/
-+obj-$(CONFIG_AMD_PTDMA) += ptdma/
- 
- obj-y += mediatek/
- obj-y += qcom/
 diff --git a/drivers/dma/ptdma/Kconfig b/drivers/dma/ptdma/Kconfig
-new file mode 100644
-index 0000000..f93f9c2
---- /dev/null
+index f93f9c2..694ed27 100644
+--- a/drivers/dma/ptdma/Kconfig
 +++ b/drivers/dma/ptdma/Kconfig
-@@ -0,0 +1,11 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+config AMD_PTDMA
-+	tristate  "AMD PassThru DMA Engine"
-+	depends on X86_64 && PCI
-+	help
-+	  Enable support for the AMD PTDMA controller.  This controller
-+	  provides DMA capabilities & performs high bandwidth memory to
-+	  memory and IO copy operation and performs DMA transfer through
-+	  queue based descriptor management. This DMA controller is intended
-+	  to use with AMD Non-Transparent Bridge devices and not for general
-+	  purpose slave DMA.
+@@ -2,6 +2,8 @@
+ config AMD_PTDMA
+ 	tristate  "AMD PassThru DMA Engine"
+ 	depends on X86_64 && PCI
++	select DMA_ENGINE
++	select DMA_VIRTUAL_CHANNELS
+ 	help
+ 	  Enable support for the AMD PTDMA controller.  This controller
+ 	  provides DMA capabilities & performs high bandwidth memory to
 diff --git a/drivers/dma/ptdma/Makefile b/drivers/dma/ptdma/Makefile
-new file mode 100644
-index 0000000..320fa82
---- /dev/null
+index 320fa82..6fcb4ad 100644
+--- a/drivers/dma/ptdma/Makefile
 +++ b/drivers/dma/ptdma/Makefile
-@@ -0,0 +1,10 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# AMD Passthru DMA driver
-+#
-+
-+obj-$(CONFIG_AMD_PTDMA) += ptdma.o
-+
-+ptdma-objs := ptdma-dev.o
-+
-+ptdma-$(CONFIG_PCI) += ptdma-pci.o
+@@ -5,6 +5,7 @@
+ 
+ obj-$(CONFIG_AMD_PTDMA) += ptdma.o
+ 
+-ptdma-objs := ptdma-dev.o
++ptdma-objs := ptdma-dev.o \
++	      ptdma-dmaengine.o
+ 
+ ptdma-$(CONFIG_PCI) += ptdma-pci.o
 diff --git a/drivers/dma/ptdma/ptdma-dev.c b/drivers/dma/ptdma/ptdma-dev.c
-new file mode 100644
-index 0000000..d6dca5a
---- /dev/null
+index d6dca5a..ef10be5 100644
+--- a/drivers/dma/ptdma/ptdma-dev.c
 +++ b/drivers/dma/ptdma/ptdma-dev.c
-@@ -0,0 +1,306 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * AMD Passthru DMA device driver
-+ * -- Based on the CCP driver
-+ *
-+ * Copyright (C) 2016,2020 Advanced Micro Devices, Inc.
-+ *
-+ * Author: Sanjay R Mehta <sanju.mehta@amd.com>
-+ * Author: Gary R Hook <gary.hook@amd.com>
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/pci.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/interrupt.h>
-+
-+#include "ptdma.h"
-+
-+/* Human-readable error strings */
-+static char *pt_error_codes[] = {
-+	"",
-+	"ERR 01: ILLEGAL_ENGINE",
-+	"ERR 03: ILLEGAL_FUNCTION_TYPE",
-+	"ERR 04: ILLEGAL_FUNCTION_MODE",
-+	"ERR 06: ILLEGAL_FUNCTION_SIZE",
-+	"ERR 08: ILLEGAL_FUNCTION_RSVD",
-+	"ERR 09: ILLEGAL_BUFFER_LENGTH",
-+	"ERR 10: VLSB_FAULT",
-+	"ERR 11: ILLEGAL_MEM_ADDR",
-+	"ERR 12: ILLEGAL_MEM_SEL",
-+	"ERR 13: ILLEGAL_CONTEXT_ID",
-+	"ERR 15: 0xF Reserved",
-+	"ERR 18: CMD_TIMEOUT",
-+	"ERR 19: IDMA0_AXI_SLVERR",
-+	"ERR 20: IDMA0_AXI_DECERR",
-+	"ERR 21: 0x15 Reserved",
-+	"ERR 22: IDMA1_AXI_SLAVE_FAULT",
-+	"ERR 23: IDMA1_AIXI_DECERR",
-+	"ERR 24: 0x18 Reserved",
-+	"ERR 27: 0x1B Reserved",
-+	"ERR 38: ODMA0_AXI_SLVERR",
-+	"ERR 39: ODMA0_AXI_DECERR",
-+	"ERR 40: 0x28 Reserved",
-+	"ERR 41: ODMA1_AXI_SLVERR",
-+	"ERR 42: ODMA1_AXI_DECERR",
-+	"ERR 43: LSB_PARITY_ERR",
-+};
-+
-+static void pt_log_error(struct pt_device *d, int e)
+@@ -132,6 +132,26 @@ static inline void pt_core_enable_queue_interrupts(struct pt_device *pt)
+ 	iowrite32(SUPPORTED_INTERRUPTS, pt->cmd_q.reg_int_enable);
+ }
+ 
++static void pt_do_cmd_complete(unsigned long data)
 +{
-+	dev_err(d->dev, "PTDMA error: %s (0x%x)\n", pt_error_codes[e], e);
-+}
-+
-+void pt_start_queue(struct pt_cmd_queue *cmd_q)
-+{
-+	/* Turn on the run bit */
-+	iowrite32(cmd_q->qcontrol | CMD_Q_RUN, cmd_q->reg_control);
-+}
-+
-+void pt_stop_queue(struct pt_cmd_queue *cmd_q)
-+{
-+	/* Turn off the run bit */
-+	iowrite32(cmd_q->qcontrol & ~CMD_Q_RUN, cmd_q->reg_control);
-+}
-+
-+static int pt_core_execute_cmd(struct ptdma_desc *desc,
-+			       struct pt_cmd_queue *cmd_q)
-+{
-+	__le32 *mp;
-+	u32 *dp;
++	struct pt_tasklet_data *tdata = (struct pt_tasklet_data *)data;
++	struct pt_cmd *cmd = tdata->cmd;
++	struct pt_cmd_queue *cmd_q = &cmd->pt->cmd_q;
 +	u32 tail;
-+	int	i;
-+	int ret = 0;
 +
-+	if (desc->dw0.soc) {
-+		desc->dw0.ioc = 1;
-+		desc->dw0.soc = 0;
-+	}
-+	mutex_lock(&cmd_q->q_mutex);
-+
-+	mp = (__le32 *)&cmd_q->qbase[cmd_q->qidx];
-+	dp = (u32 *)desc;
-+	for (i = 0; i < 8; i++)
-+		mp[i] = cpu_to_le32(dp[i]); /* handle endianness */
-+
-+	cmd_q->qidx = (cmd_q->qidx + 1) % CMD_Q_LEN;
-+
-+	/* The data used by this command must be flushed to memory */
-+	wmb();
-+
-+	/* Write the new tail address back to the queue register */
 +	tail = lower_32_bits(cmd_q->qdma_tail + cmd_q->qidx * Q_DESC_SIZE);
-+	iowrite32(tail, cmd_q->reg_tail_lo);
-+
-+	/* Turn the queue back on using our cached control register */
-+	pt_start_queue(cmd_q);
-+	mutex_unlock(&cmd_q->q_mutex);
-+
-+	return ret;
-+}
-+
-+int pt_core_perform_passthru(struct pt_cmd_queue *cmd_q,
-+			     struct pt_passthru_engine *pt_engine)
-+{
-+	struct ptdma_desc desc;
-+
-+	cmd_q->cmd_error = 0;
-+
-+	memset(&desc, 0, Q_DESC_SIZE);
-+
-+	desc.dw0.val = CMD_DESC_DW0_VAL;
-+
-+	desc.length = pt_engine->src_len;
-+
-+	desc.src_lo = lower_32_bits(pt_engine->src_dma);
-+	desc.dw3.src_hi = upper_32_bits(pt_engine->src_dma);
-+
-+	desc.dst_lo = lower_32_bits(pt_engine->dst_dma);
-+	desc.dw5.dst_hi = upper_32_bits(pt_engine->dst_dma);
-+
-+	return pt_core_execute_cmd(&desc, cmd_q);
-+}
-+
-+static inline void pt_core_disable_queue_interrupts(struct pt_device *pt)
-+{
-+	iowrite32(0x0, pt->cmd_q.reg_int_enable);
-+}
-+
-+static inline void pt_core_enable_queue_interrupts(struct pt_device *pt)
-+{
-+	iowrite32(SUPPORTED_INTERRUPTS, pt->cmd_q.reg_int_enable);
-+}
-+
-+static irqreturn_t pt_core_irq_handler(int irq, void *data)
-+{
-+	struct pt_device *pt = (struct pt_device *)data;
-+	struct pt_cmd_queue *cmd_q = &pt->cmd_q;
-+	u32 status;
-+
-+	pt_core_disable_queue_interrupts(pt);
-+
-+	status = ioread32(cmd_q->reg_interrupt_status);
-+	if (status) {
-+		cmd_q->int_status = status;
-+		cmd_q->q_status = ioread32(cmd_q->reg_status);
-+		cmd_q->q_int_status = ioread32(cmd_q->reg_int_status);
-+
-+		/* On error, only save the first error value */
-+		if ((status & INT_ERROR) && !cmd_q->cmd_error)
-+			cmd_q->cmd_error = CMD_Q_ERROR(cmd_q->q_status);
-+
-+		/* Acknowledge the interrupt */
-+		iowrite32(status, cmd_q->reg_interrupt_status);
++	if (cmd_q->cmd_error) {
++	       /*
++		* Log the error and flush the queue by
++		* moving the head pointer
++		*/
++		pt_log_error(cmd_q->pt, cmd_q->cmd_error);
++		iowrite32(tail, cmd_q->reg_head_lo);
 +	}
 +
-+	pt_core_enable_queue_interrupts(pt);
-+
-+	return IRQ_HANDLED;
++	cmd->pt_cmd_callback(cmd->data, cmd->ret);
 +}
 +
-+static void pt_init_cmdq_regs(struct pt_cmd_queue *cmd_q)
-+{
-+	void __iomem *io_regs = cmd_q->reg_control;
+ static irqreturn_t pt_core_irq_handler(int irq, void *data)
+ {
+ 	struct pt_device *pt = (struct pt_device *)data;
+@@ -156,6 +176,8 @@ static irqreturn_t pt_core_irq_handler(int irq, void *data)
+ 
+ 	pt_core_enable_queue_interrupts(pt);
+ 
++	pt_do_cmd_complete((ulong)&pt->tdata);
 +
-+	cmd_q->reg_tail_lo = io_regs + CMD_Q_TAIL_LO_BASE;
-+	cmd_q->reg_head_lo = io_regs + CMD_Q_HEAD_LO_BASE;
-+	cmd_q->reg_status = io_regs + CMD_Q_STATUS_BASE;
-+	cmd_q->reg_int_enable = io_regs + CMD_Q_INT_ENABLE_BASE;
-+	cmd_q->reg_int_status = io_regs + CMD_Q_INT_STATUS_BASE;
-+	cmd_q->reg_dma_status = io_regs + CMD_Q_DMA_STATUS_BASE;
-+	cmd_q->reg_dma_read_status = io_regs + CMD_Q_DMA_READ_STATUS_BASE;
-+	cmd_q->reg_dma_write_status = io_regs + CMD_Q_DMA_WRITE_STATUS_BASE;
-+	cmd_q->reg_interrupt_status = io_regs + CMD_Q_INTERRUPT_STATUS_BASE;
-+}
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -263,8 +285,16 @@ int pt_core_init(struct pt_device *pt)
+ 
+ 	dev_dbg(dev, "PTDMA device %s registration successful...\n", pt->name);
+ 
++	/* Register the DMA engine support */
++	ret = pt_dmaengine_register(pt);
++	if (ret)
++		goto e_dmaengine;
 +
-+int pt_core_init(struct pt_device *pt)
-+{
-+	struct device *dev = pt->dev;
-+	struct pt_cmd_queue *cmd_q = &pt->cmd_q;
-+	struct dma_pool *dma_pool;
-+	char dma_pool_name[MAX_DMAPOOL_NAME_LEN];
-+	int ret;
-+	u32 dma_addr_lo, dma_addr_hi;
-+
-+	/* Allocate a dma pool for the queue */
-+	snprintf(dma_pool_name, sizeof(dma_pool_name), "%s_q", pt->name);
-+
-+	dma_pool = dma_pool_create(dma_pool_name, dev,
-+				   PT_DMAPOOL_MAX_SIZE,
-+				   PT_DMAPOOL_ALIGN, 0);
-+	if (!dma_pool) {
-+		dev_err(dev, "unable to allocate dma pool\n");
-+		ret = -ENOMEM;
-+		return ret;
-+	}
-+
-+	/* ptdma core initialisation */
-+	iowrite32(CMD_CONFIG_VHB_EN, pt->io_regs + CMD_CONFIG_OFFSET);
-+	iowrite32(CMD_QUEUE_PRIO, pt->io_regs + CMD_QUEUE_PRIO_OFFSET);
-+	iowrite32(CMD_TIMEOUT_DISABLE, pt->io_regs + CMD_TIMEOUT_OFFSET);
-+	iowrite32(CMD_CLK_GATE_CONFIG, pt->io_regs + CMD_CLK_GATE_CTL_OFFSET);
-+	iowrite32(CMD_CONFIG_REQID, pt->io_regs + CMD_REQID_CONFIG_OFFSET);
-+
-+	cmd_q->pt = pt;
-+	cmd_q->dma_pool = dma_pool;
-+	mutex_init(&cmd_q->q_mutex);
-+
-+	/* Page alignment satisfies our needs for N <= 128 */
-+	cmd_q->qsize = Q_SIZE(Q_DESC_SIZE);
-+	cmd_q->qbase = dma_alloc_coherent(dev, cmd_q->qsize,
-+					  &cmd_q->qbase_dma,
-+					   GFP_KERNEL);
-+	if (!cmd_q->qbase) {
-+		dev_err(dev, "unable to allocate command queue\n");
-+		ret = -ENOMEM;
-+		goto e_dma_alloc;
-+	}
-+
-+	cmd_q->qidx = 0;
-+
-+	/* Preset some register values */
-+	cmd_q->reg_control = pt->io_regs + CMD_Q_STATUS_INCR;
-+	pt_init_cmdq_regs(cmd_q);
-+
-+	dev_dbg(dev, "queue available\n");
-+
-+	/* Turn off the queues and disable interrupts until ready */
-+	pt_core_disable_queue_interrupts(pt);
-+
-+	cmd_q->qcontrol = 0; /* Start with nothing */
-+	iowrite32(cmd_q->qcontrol, cmd_q->reg_control);
-+
-+	ioread32(cmd_q->reg_int_status);
-+	ioread32(cmd_q->reg_status);
-+
-+	/* Clear the interrupt status */
-+	iowrite32(SUPPORTED_INTERRUPTS, cmd_q->reg_interrupt_status);
-+
-+	/* Request an irq */
-+	ret = request_irq(pt->pt_irq, pt_core_irq_handler, 0, pt->name, pt);
-+	if (ret) {
-+		dev_err(dev, "unable to allocate an IRQ\n");
-+		goto e_pool;
-+	}
-+
-+	/* Update the device registers with queue information.  */
-+
-+	cmd_q->qcontrol &= ~(CMD_Q_SIZE << CMD_Q_SHIFT);
-+	cmd_q->qcontrol |= QUEUE_SIZE_VAL << CMD_Q_SHIFT;
-+
-+	cmd_q->qdma_tail = cmd_q->qbase_dma;
-+	dma_addr_lo = lower_32_bits(cmd_q->qdma_tail);
-+	iowrite32((u32)dma_addr_lo, cmd_q->reg_tail_lo);
-+	iowrite32((u32)dma_addr_lo, cmd_q->reg_head_lo);
-+
-+	dma_addr_hi = upper_32_bits(cmd_q->qdma_tail);
-+	cmd_q->qcontrol |= (dma_addr_hi << 16);
-+	iowrite32(cmd_q->qcontrol, cmd_q->reg_control);
-+
-+	dev_dbg(dev, "Enabling interrupts...\n");
-+	pt_core_enable_queue_interrupts(pt);
-+
-+	dev_dbg(dev, "PTDMA device %s registration successful...\n", pt->name);
-+
-+	return 0;
-+
-+e_dma_alloc:
-+	dma_free_coherent(dev, cmd_q->qsize, cmd_q->qbase, cmd_q->qbase_dma);
-+
-+e_pool:
-+	dma_pool_destroy(pt->cmd_q.dma_pool);
-+
-+	return ret;
-+}
-+
-+void pt_core_destroy(struct pt_device *pt)
-+{
-+	struct device *dev = pt->dev;
-+	struct pt_cmd_queue *cmd_q = &pt->cmd_q;
-+	struct pt_cmd *cmd;
-+
-+	/* Disable and clear interrupts */
-+	pt_core_disable_queue_interrupts(pt);
-+
-+	/* Turn off the run bit */
-+	pt_stop_queue(cmd_q);
-+
-+	/* Clear the interrupt status */
-+	iowrite32(SUPPORTED_INTERRUPTS, cmd_q->reg_interrupt_status);
-+	ioread32(cmd_q->reg_int_status);
-+	ioread32(cmd_q->reg_status);
-+
+ 	return 0;
+ 
++e_dmaengine:
 +	free_irq(pt->pt_irq, pt);
 +
-+	dma_free_coherent(dev, cmd_q->qsize, cmd_q->qbase,
-+			  cmd_q->qbase_dma);
+ e_dma_alloc:
+ 	dma_free_coherent(dev, cmd_q->qsize, cmd_q->qbase, cmd_q->qbase_dma);
+ 
+@@ -280,6 +310,9 @@ void pt_core_destroy(struct pt_device *pt)
+ 	struct pt_cmd_queue *cmd_q = &pt->cmd_q;
+ 	struct pt_cmd *cmd;
+ 
++	/* Unregister the DMA engine */
++	pt_dmaengine_unregister(pt);
 +
-+	/* Flush the cmd queue */
-+	while (!list_empty(&pt->cmd)) {
-+		/* Invoke the callback directly with an error code */
-+		cmd = list_first_entry(&pt->cmd, struct pt_cmd, entry);
-+		list_del(&cmd->entry);
-+		cmd->pt_cmd_callback(cmd->data, -ENODEV);
-+	}
-+}
-diff --git a/drivers/dma/ptdma/ptdma-pci.c b/drivers/dma/ptdma/ptdma-pci.c
+ 	/* Disable and clear interrupts */
+ 	pt_core_disable_queue_interrupts(pt);
+ 
+diff --git a/drivers/dma/ptdma/ptdma-dmaengine.c b/drivers/dma/ptdma/ptdma-dmaengine.c
 new file mode 100644
-index 0000000..11b5e2a
+index 0000000..f1faba6
 --- /dev/null
-+++ b/drivers/dma/ptdma/ptdma-pci.c
-@@ -0,0 +1,253 @@
++++ b/drivers/dma/ptdma/ptdma-dmaengine.c
+@@ -0,0 +1,600 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * AMD Passthru DMA device driver
++ * AMD Passthrough DMA device driver
 + * -- Based on the CCP driver
 + *
 + * Copyright (C) 2016,2020 Advanced Micro Devices, Inc.
 + *
 + * Author: Sanjay R Mehta <sanju.mehta@amd.com>
-+ * Author: Tom Lendacky <thomas.lendacky@amd.com>
 + * Author: Gary R Hook <gary.hook@amd.com>
 + */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/device.h>
-+#include <linux/pci.h>
-+#include <linux/pci_ids.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/kthread.h>
-+#include <linux/sched.h>
-+#include <linux/interrupt.h>
-+#include <linux/spinlock.h>
-+#include <linux/delay.h>
 +
 +#include "ptdma.h"
++#include "../dmaengine.h"
++#include "../virt-dma.h"
 +
-+/* Ever-increasing value to produce unique unit numbers */
-+static atomic_t pt_ordinal;
++#define PT_DMA_WIDTH(_mask)		\
++({					\
++	u64 mask = (_mask) + 1;		\
++	(mask == 0) ? 64 : fls64(mask);	\
++})
 +
-+struct pt_msix {
-+	int msix_count;
-+	struct msix_entry msix_entry;
-+};
-+
-+/*
-+ * pt_alloc_struct - allocate and initialize the pt_device struct
-+ *
-+ * @dev: device struct of the PTDMA
-+ */
-+static struct pt_device *pt_alloc_struct(struct device *dev)
++static void pt_free_cmd_resources(struct pt_device *pt,
++				  struct list_head *list)
 +{
++	struct pt_dma_cmd *cmd, *ctmp;
++
++	list_for_each_entry_safe(cmd, ctmp, list, entry) {
++		list_del(&cmd->entry);
++		kmem_cache_free(pt->dma_cmd_cache, cmd);
++	}
++}
++
++static void pt_free_chan_resources(struct dma_chan *dma_chan)
++{
++	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
++						 vc.chan);
++
++	dev_dbg(chan->pt->dev, "%s - chan=%p\n", __func__, chan);
++
++	vchan_free_chan_resources(&chan->vc);
++}
++
++static void pt_synchronize(struct dma_chan *dma_chan)
++{
++	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
++						 vc.chan);
++	dev_dbg(chan->pt->dev, "%s\n", __func__);
++
++	vchan_synchronize(&chan->vc);
++}
++
++static void pt_do_cleanup(struct virt_dma_desc	*vd)
++
++{
++	struct pt_dma_desc *desc = container_of(vd, struct pt_dma_desc, vd);
++	struct pt_device *pt = desc->pt;
++	struct pt_dma_chan *chan;
++
++	chan = container_of(desc->vd.tx.chan, struct pt_dma_chan,
++			    vc.chan);
++
++	pt_free_cmd_resources(pt, &desc->cmdlist);
++	kmem_cache_free(pt->dma_desc_cache, desc);
++}
++
++static int pt_issue_next_cmd(struct pt_dma_desc *desc)
++{
++	struct pt_passthru_engine *pt_engine;
++	struct pt_dma_cmd *cmd;
 +	struct pt_device *pt;
++	struct pt_cmd *pt_cmd;
++	struct pt_cmd_queue *cmd_q;
 +
-+	pt = devm_kzalloc(dev, sizeof(*pt), GFP_KERNEL);
-+	if (!pt)
-+		return NULL;
-+	pt->dev = dev;
-+	pt->ord = atomic_inc_return(&pt_ordinal);
++	cmd = list_first_entry(&desc->cmdlist, struct pt_dma_cmd, entry);
++	desc->actv = 1;
 +
-+	INIT_LIST_HEAD(&pt->cmd);
++	dev_dbg(desc->pt->dev, "%s - tx %d, cmd=%p\n", __func__,
++		desc->vd.tx.cookie, cmd);
 +
-+	snprintf(pt->name, MAX_PT_NAME_LEN, "pt-%u", pt->ord);
++	pt_cmd = &cmd->pt_cmd;
++	pt = pt_cmd->pt;
++	cmd_q = &pt->cmd_q;
++	pt_engine = &pt_cmd->passthru;
 +
-+	return pt;
-+}
++	if (!pt_engine->final)
++		return -EINVAL;
 +
-+static int pt_get_msix_irqs(struct pt_device *pt)
-+{
-+	struct pt_msix *pt_msix = pt->pt_msix;
-+	struct device *dev = pt->dev;
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	int ret;
++	if (!pt_engine->src_dma || !pt_engine->dst_dma)
++		return -EINVAL;
 +
-+	pt_msix->msix_entry.entry = 0;
++	pt->tdata.cmd = pt_cmd;
 +
-+	ret = pci_enable_msix_range(pdev, &pt_msix->msix_entry, 1, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	pt_msix->msix_count = ret;
-+
-+	pt->pt_irq = pt_msix->msix_entry.vector;
++	/* Execute the command */
++	pt_cmd->ret = pt_core_perform_passthru(cmd_q, pt_engine);
 +
 +	return 0;
 +}
 +
-+static int pt_get_msi_irq(struct pt_device *pt)
++static void pt_free_active_cmd(struct pt_dma_desc *desc)
 +{
-+	struct device *dev = pt->dev;
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	int ret;
++	struct pt_dma_cmd *cmd = NULL;
 +
-+	ret = pci_enable_msi(pdev);
-+	if (ret)
-+		return ret;
-+
-+	pt->pt_irq = pdev->irq;
-+
-+	return 0;
-+}
-+
-+static int pt_get_irqs(struct pt_device *pt)
-+{
-+	struct device *dev = pt->dev;
-+	int ret;
-+
-+	ret = pt_get_msix_irqs(pt);
-+	if (!ret)
-+		return 0;
-+
-+	/* Couldn't get MSI-X vectors, try MSI */
-+	dev_notice(dev, "could not enable MSI-X (%d), trying MSI\n", ret);
-+	ret = pt_get_msi_irq(pt);
-+	if (!ret)
-+		return 0;
-+
-+	/* Couldn't get MSI interrupt */
-+	dev_notice(dev, "could not enable MSI (%d)\n", ret);
-+
-+	return ret;
-+}
-+
-+static void pt_free_irqs(struct pt_device *pt)
-+{
-+	struct pt_msix *pt_msix = pt->pt_msix;
-+	struct device *dev = pt->dev;
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+
-+	if (pt_msix->msix_count)
-+		pci_disable_msix(pdev);
-+	else if (pt->pt_irq)
-+		pci_disable_msi(pdev);
-+
-+	pt->pt_irq = 0;
-+}
-+
-+static int pt_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-+{
-+	struct pt_device *pt;
-+	struct pt_msix *pt_msix;
-+	struct device *dev = &pdev->dev;
-+	void __iomem * const *iomap_table;
-+	int bar_mask;
-+	int ret = -ENOMEM;
-+
-+	pt = pt_alloc_struct(dev);
-+	if (!pt)
-+		goto e_err;
-+
-+	pt_msix = devm_kzalloc(dev, sizeof(*pt_msix), GFP_KERNEL);
-+	if (!pt_msix)
-+		goto e_err;
-+
-+	pt->pt_msix = pt_msix;
-+	pt->dev_vdata = (struct pt_dev_vdata *)id->driver_data;
-+	if (!pt->dev_vdata) {
-+		ret = -ENODEV;
-+		dev_err(dev, "missing driver data\n");
-+		goto e_err;
-+	}
-+
-+	ret = pcim_enable_device(pdev);
-+	if (ret) {
-+		dev_err(dev, "pcim_enable_device failed (%d)\n", ret);
-+		goto e_err;
-+	}
-+
-+	bar_mask = pci_select_bars(pdev, IORESOURCE_MEM);
-+	ret = pcim_iomap_regions(pdev, bar_mask, "ptdma");
-+	if (ret) {
-+		dev_err(dev, "pcim_iomap_regions failed (%d)\n", ret);
-+		goto e_err;
-+	}
-+
-+	iomap_table = pcim_iomap_table(pdev);
-+	if (!iomap_table) {
-+		dev_err(dev, "pcim_iomap_table failed\n");
-+		ret = -ENOMEM;
-+		goto e_err;
-+	}
-+
-+	pt->io_regs = iomap_table[pt->dev_vdata->bar];
-+	if (!pt->io_regs) {
-+		dev_err(dev, "ioremap failed\n");
-+		ret = -ENOMEM;
-+		goto e_err;
-+	}
-+
-+	ret = pt_get_irqs(pt);
-+	if (ret)
-+		goto e_err;
-+
-+	pci_set_master(pdev);
-+
-+	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(48));
-+	if (ret) {
-+		ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
-+		if (ret) {
-+			dev_err(dev, "dma_set_mask_and_coherent failed (%d)\n",
-+				ret);
-+			goto e_err;
-+		}
-+	}
-+
-+	dev_set_drvdata(dev, pt);
-+
-+	if (pt->dev_vdata)
-+		ret = pt_core_init(pt);
-+
-+	if (ret) {
-+		dev_notice(dev, "PTDMA initialization failed\n");
-+		goto e_err;
-+	}
-+
-+	dev_notice(dev, "PTDMA enabled\n");
-+
-+	return 0;
-+
-+e_err:
-+	dev_notice(dev, "initialization failed\n");
-+	return ret;
-+}
-+
-+static void pt_pci_remove(struct pci_dev *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct pt_device *pt = dev_get_drvdata(dev);
-+
-+	if (!pt)
++	if (desc->actv)
++		cmd = list_first_entry_or_null(&desc->cmdlist, struct pt_dma_cmd,
++					       entry);
++	if (!cmd)
 +		return;
 +
-+	if (pt->dev_vdata)
-+		pt_core_destroy(pt);
++	dev_dbg(desc->pt->dev, "%s - freeing tx %d cmd=%p\n",
++		__func__, desc->vd.tx.cookie, cmd);
 +
-+	pt_free_irqs(pt);
++	list_del(&cmd->entry);
++	kmem_cache_free(desc->pt->dma_cmd_cache, cmd);
 +}
 +
-+static const struct pt_dev_vdata dev_vdata[] = {
-+	{
-+		.bar = 2,
-+		.version = PT_VERSION(5, 0),
-+	},
-+};
++static struct pt_dma_desc *pt_next_dma_desc(struct pt_dma_chan *chan)
++{
++	/* Get the next DMA descriptor on the active list */
++	struct virt_dma_desc *vd = vchan_next_desc(&chan->vc);
 +
-+static const struct pci_device_id pt_pci_table[] = {
-+	{ PCI_VDEVICE(AMD, 0x1498), (kernel_ulong_t)&dev_vdata[0] },
-+	/* Last entry must be zero */
-+	{ 0, }
-+};
-+MODULE_DEVICE_TABLE(pci, pt_pci_table);
++	return vd ? container_of(vd, struct pt_dma_desc, vd) : NULL;
++}
 +
-+static struct pci_driver pt_pci_driver = {
-+	.name = "ptdma",
-+	.id_table = pt_pci_table,
-+	.probe = pt_pci_probe,
-+	.remove = pt_pci_remove,
-+};
++static struct pt_dma_desc *__pt_next_dma_desc(struct pt_dma_chan *chan)
++{
++	/* Get the next DMA descriptor on the active list */
++	struct virt_dma_desc *vd = vchan_next_desc(&chan->vc);
 +
-+module_pci_driver(pt_pci_driver);
++	if (list_empty(&chan->vc.desc_submitted))
++		return NULL;
 +
-+MODULE_AUTHOR("Sanjay R Mehta <sanju.mehta@amd.com>");
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("AMD PassThru DMA driver");
-diff --git a/drivers/dma/ptdma/ptdma.h b/drivers/dma/ptdma/ptdma.h
-new file mode 100644
-index 0000000..6b3b3cc
---- /dev/null
-+++ b/drivers/dma/ptdma/ptdma.h
-@@ -0,0 +1,324 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * AMD Passthru DMA device driver
-+ * -- Based on the CCP driver
-+ *
-+ * Copyright (C) 2016,2020 Advanced Micro Devices, Inc.
-+ *
-+ * Author: Sanjay R Mehta <sanju.mehta@amd.com>
-+ * Author: Tom Lendacky <thomas.lendacky@amd.com>
-+ * Author: Gary R Hook <gary.hook@amd.com>
-+ */
++	vd = list_empty(&chan->vc.desc_issued) ?
++		  list_first_entry(&chan->vc.desc_submitted,
++				   struct virt_dma_desc, node) : NULL;
 +
-+#ifndef __PT_DEV_H__
-+#define __PT_DEV_H__
++	vchan_issue_pending(&chan->vc);
 +
-+#include <linux/device.h>
-+#include <linux/pci.h>
-+#include <linux/spinlock.h>
-+#include <linux/mutex.h>
-+#include <linux/list.h>
-+#include <linux/wait.h>
-+#include <linux/dmapool.h>
++	return vd ? container_of(vd, struct pt_dma_desc, vd) : NULL;
++}
 +
-+#define MAX_PT_NAME_LEN			16
-+#define MAX_DMAPOOL_NAME_LEN		32
++static struct pt_dma_desc *pt_handle_active_desc(struct pt_dma_chan *chan,
++						 struct pt_dma_desc *desc)
++{
++	struct dma_async_tx_descriptor *tx_desc;
++	struct virt_dma_desc *vd;
++	unsigned long flags;
 +
-+#define MAX_HW_QUEUES			1
-+#define MAX_CMD_QLEN			100
++	/* Loop over descriptors until one is found with commands */
++	do {
++		if (desc) {
++			/* Remove the DMA command from the list and free it */
++			pt_free_active_cmd(desc);
++			if (!desc->actv) {
++				/* No errors, keep going */
++				if (desc->status != DMA_ERROR)
++					return desc;
++				/* Error, free remaining commands and move on */
++				pt_free_cmd_resources(desc->pt,
++						      &desc->cmdlist);
++			}
 +
-+#define PT_ENGINE_PASSTHRU		5
-+#define PT_OFFSET			0x0
++			tx_desc = &desc->vd.tx;
++			vd = &desc->vd;
++		} else {
++			tx_desc = NULL;
++		}
 +
-+#define	PT_VSIZE			16
-+#define	PT_VMASK			((unsigned int)((1 << PT_VSIZE) - 1))
-+#define	PT_VERSION(v, r)		((unsigned int)(((v) << PT_VSIZE) \
-+						       | ((r) & PT_VMASK)))
++		spin_lock_irqsave(&chan->vc.lock, flags);
 +
-+/* Register Mappings */
-+#define IRQ_MASK_REG			0x040
-+#define IRQ_STATUS_REG			0x200
++		if (desc) {
++			if (desc->status != DMA_ERROR)
++				desc->status = DMA_COMPLETE;
 +
-+#define CMD_Q_ERROR(__qs)		((__qs) & 0x0000003f)
++			dev_dbg(desc->pt->dev,
++				"%s - tx %d complete, status=%u\n", __func__,
++				desc->vd.tx.cookie, desc->status);
 +
-+#define	CMD_QUEUE_PRIO_OFFSET		0x00
-+#define	CMD_REQID_CONFIG_OFFSET		0x04
-+#define	CMD_TIMEOUT_OFFSET		0x08
++			dma_cookie_complete(tx_desc);
++			dma_descriptor_unmap(tx_desc);
++			list_del(&desc->vd.node);
++		}
 +
-+#define CMD_Q_CONTROL_BASE		0x0000
-+#define CMD_Q_TAIL_LO_BASE		0x0004
-+#define CMD_Q_HEAD_LO_BASE		0x0008
-+#define CMD_Q_INT_ENABLE_BASE		0x000C
-+#define CMD_Q_INTERRUPT_STATUS_BASE	0x0010
++		desc = pt_next_dma_desc(chan);
 +
-+#define CMD_Q_STATUS_BASE		0x0100
-+#define CMD_Q_INT_STATUS_BASE		0x0104
-+#define CMD_Q_DMA_STATUS_BASE		0x0108
-+#define CMD_Q_DMA_READ_STATUS_BASE	0x010C
-+#define CMD_Q_DMA_WRITE_STATUS_BASE	0x0110
-+#define CMD_Q_ABORT_BASE		0x0114
-+#define CMD_Q_AX_CACHE_BASE		0x0118
++		spin_unlock_irqrestore(&chan->vc.lock, flags);
 +
-+#define	CMD_CONFIG_OFFSET		0x1120
-+#define	CMD_CLK_GATE_CTL_OFFSET		0x6004
++		if (tx_desc) {
++			dmaengine_desc_get_callback_invoke(tx_desc, NULL);
++			dma_run_dependencies(tx_desc);
++			vchan_vdesc_fini(vd);
++		}
++	} while (desc);
 +
-+#define	CMD_DESC_DW0_VAL		0x500012
++	return NULL;
++}
 +
-+/* Address offset for virtual queue registers */
-+#define CMD_Q_STATUS_INCR		0x1000
-+
-+/* Bit masks */
-+#define	CMD_CONFIG_REQID		0
-+#define	CMD_TIMEOUT_DISABLE		0
-+#define	CMD_CLK_DYN_GATING_DIS		0
-+#define	CMD_CLK_SW_GATE_MODE		0
-+#define	CMD_CLK_GATE_CTL		0
-+#define	CMD_QUEUE_PRIO			GENMASK(2, 1)
-+#define	CMD_CONFIG_VHB_EN		BIT(0)
-+#define	CMD_CLK_DYN_GATING_EN		BIT(0)
-+#define	CMD_CLK_HW_GATE_MODE		BIT(0)
-+#define	CMD_CLK_GATE_ON_DELAY		BIT(12)
-+#define	CMD_CLK_GATE_OFF_DELAY		BIT(12)
-+
-+#define CMD_CLK_GATE_CONFIG		(CMD_CLK_GATE_CTL | \
-+					CMD_CLK_HW_GATE_MODE | \
-+					CMD_CLK_GATE_ON_DELAY | \
-+					CMD_CLK_DYN_GATING_EN | \
-+					CMD_CLK_GATE_OFF_DELAY)
-+
-+#define CMD_Q_LEN			32
-+#define CMD_Q_RUN			BIT(0)
-+#define CMD_Q_HALT			BIT(1)
-+#define CMD_Q_MEM_LOCATION		BIT(2)
-+#define CMD_Q_SIZE			GENMASK(4, 0)
-+#define CMD_Q_SHIFT			GENMASK(1, 0)
-+#define QUEUE_SIZE_VAL			((ffs(CMD_Q_LEN) - 2) & \
-+								  CMD_Q_SIZE)
-+#define Q_PTR_MASK			(2 << (QUEUE_SIZE_VAL + 5) - 1)
-+#define Q_DESC_SIZE			sizeof(struct ptdma_desc)
-+#define Q_SIZE(n)			(CMD_Q_LEN * (n))
-+
-+#define INT_COMPLETION			BIT(0)
-+#define INT_ERROR			BIT(1)
-+#define INT_QUEUE_STOPPED		BIT(2)
-+#define	INT_EMPTY_QUEUE			BIT(3)
-+#define SUPPORTED_INTERRUPTS		(INT_COMPLETION | INT_ERROR)
-+
-+/****** Local Storage Block ******/
-+#define LSB_START			0
-+#define LSB_END				127
-+#define LSB_COUNT			(LSB_END - LSB_START + 1)
-+
-+#define PT_DMAPOOL_MAX_SIZE		64
-+#define PT_DMAPOOL_ALIGN		BIT(5)
-+
-+#define PT_PASSTHRU_BLOCKSIZE		512
-+
-+struct pt_device;
-+
-+struct pt_tasklet_data {
-+	struct completion completion;
-+	struct pt_cmd *cmd;
-+};
-+
-+/*
-+ * struct pt_passthru_engine - pass-through operation
-+ *   without performing DMA mapping
-+ * @mask: mask to be applied to data
-+ * @mask_len: length in bytes of mask
-+ * @src: data to be used for this operation
-+ * @dst: data produced by this operation
-+ * @src_len: length in bytes of data used for this operation
-+ * @final: indicate final pass-through operation
-+ *
-+ * Variables required to be set when calling pt_enqueue_cmd():
-+ *   - bit_mod, byte_swap, src, dst, src_len
-+ *   - mask, mask_len if bit_mod is not PT_PASSTHRU_BITWISE_NOOP
-+ */
-+struct pt_passthru_engine {
-+	dma_addr_t mask;
-+	u32 mask_len;		/* In bytes */
-+
-+	dma_addr_t src_dma, dst_dma;
-+	u64 src_len;		/* In bytes */
-+
-+	u32 final;
-+};
-+
-+/*
-+ * struct pt_cmd - PTDMA operation request
-+ * @entry: list element
-+ * @work: work element used for callbacks
-+ * @pt: PT device to be run on
-+ * @ret: operation return code
-+ * @flags: cmd processing flags
-+ * @engine: PTDMA operation to perform (passthru)
-+ * @engine_error: PT engine return code
-+ * @passthru: engine specific structures, refer to specific engine struct below
-+ * @callback: operation completion callback function
-+ * @data: parameter value to be supplied to the callback function
-+ *
-+ * Variables required to be set when calling pt_enqueue_cmd():
-+ *   - engine, callback
-+ *   - See the operation structures below for what is required for each
-+ *     operation.
-+ */
-+struct pt_cmd {
-+	struct list_head entry;
-+	struct work_struct work;
-+	struct pt_device *pt;
++static void pt_cmd_callback(void *data, int err)
++{
++	struct pt_dma_desc *desc = data;
++	struct pt_dma_chan *chan;
 +	int ret;
 +
-+	u32 engine;
-+	u32 engine_error;
++	if (err == -EINPROGRESS)
++		return;
 +
-+	struct pt_passthru_engine passthru;
++	chan = container_of(desc->vd.tx.chan, struct pt_dma_chan,
++			    vc.chan);
 +
-+	/* Completion callback support */
-+	void (*pt_cmd_callback)(void *data, int err);
-+	void *data;
-+};
++	dev_dbg(chan->pt->dev, "%s - tx %d callback, err=%d\n",
++		__func__, desc->vd.tx.cookie, err);
 +
-+struct pt_cmd_queue {
-+	struct pt_device *pt;
++	if (err)
++		desc->status = DMA_ERROR;
 +
-+	/* Queue dma pool */
-+	struct dma_pool *dma_pool;
++	while (true) {
++		/* Check for DMA descriptor completion */
++		desc = pt_handle_active_desc(chan, desc);
 +
-+	/* Queue base address (not neccessarily aligned)*/
-+	struct ptdma_desc *qbase;
++		/* Don't submit cmd if no descriptor or DMA is paused */
++		if (!desc)
++			break;
 +
-+	/* Aligned queue start address (per requirement) */
-+	struct mutex q_mutex ____cacheline_aligned;
-+	unsigned int qidx;
++		ret = pt_issue_next_cmd(desc);
++		if (!ret)
++			break;
 +
-+	unsigned int qsize;
-+	dma_addr_t qbase_dma;
-+	dma_addr_t qdma_tail;
++		desc->status = DMA_ERROR;
++	}
++}
 +
-+	unsigned int active;
-+	unsigned int suspended;
++static struct pt_dma_cmd *pt_alloc_dma_cmd(struct pt_dma_chan *chan)
++{
++	struct pt_dma_cmd *cmd;
 +
-+	/* Register addresses for queue */
-+	void __iomem *reg_control;
-+	void __iomem *reg_tail_lo;
-+	void __iomem *reg_head_lo;
-+	void __iomem *reg_int_enable;
-+	void __iomem *reg_interrupt_status;
-+	void __iomem *reg_status;
-+	void __iomem *reg_int_status;
-+	void __iomem *reg_dma_status;
-+	void __iomem *reg_dma_read_status;
-+	void __iomem *reg_dma_write_status;
-+	u32 qcontrol; /* Cached control register */
++	cmd = kmem_cache_zalloc(chan->pt->dma_cmd_cache, GFP_NOWAIT);
 +
-+	/* Status values from job */
-+	u32 int_status;
-+	u32 q_status;
-+	u32 q_int_status;
-+	u32 cmd_error;
-+} ____cacheline_aligned;
++	return cmd;
++}
 +
-+struct pt_device {
++static struct pt_dma_desc *pt_alloc_dma_desc(struct pt_dma_chan *chan,
++					     unsigned long flags)
++{
++	struct pt_dma_desc *desc;
++
++	desc = kmem_cache_zalloc(chan->pt->dma_desc_cache, GFP_NOWAIT);
++	if (!desc)
++		return NULL;
++
++	vchan_tx_prep(&chan->vc, &desc->vd, flags);
++
++	desc->pt = chan->pt;
++	desc->actv = 0;
++	INIT_LIST_HEAD(&desc->cmdlist);
++	desc->status = DMA_IN_PROGRESS;
++
++	return desc;
++}
++
++static struct pt_dma_desc *pt_create_desc(struct dma_chan *dma_chan,
++					  struct scatterlist *dst_sg,
++					  unsigned int dst_nents,
++					  struct scatterlist *src_sg,
++					  unsigned int src_nents,
++					  unsigned long flags)
++{
++	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
++						 vc.chan);
++	struct pt_device *pt = chan->pt;
++	struct pt_dma_desc *desc;
++	struct pt_dma_cmd *cmd;
++	struct pt_cmd *pt_cmd;
++	struct pt_passthru_engine *pt_engine;
++	unsigned int src_offset, src_len;
++	unsigned int dst_offset, dst_len;
++	unsigned int len;
++	size_t total_len;
++
++	if (!dst_sg || !src_sg)
++		return NULL;
++
++	if (!dst_nents || !src_nents)
++		return NULL;
++
++	desc = pt_alloc_dma_desc(chan, flags);
++	if (!desc)
++		return NULL;
++
++	total_len = 0;
++
++	src_len = sg_dma_len(src_sg);
++	src_offset = 0;
++
++	dst_len = sg_dma_len(dst_sg);
++	dst_offset = 0;
++
++	while (true) {
++		if (!src_len) {
++			src_nents--;
++			if (!src_nents)
++				break;
++
++			src_sg = sg_next(src_sg);
++			if (!src_sg)
++				break;
++
++			src_len = sg_dma_len(src_sg);
++			src_offset = 0;
++			continue;
++		}
++
++		if (!dst_len) {
++			dst_nents--;
++			if (!dst_nents)
++				break;
++
++			dst_sg = sg_next(dst_sg);
++			if (!dst_sg)
++				break;
++
++			dst_len = sg_dma_len(dst_sg);
++			dst_offset = 0;
++			continue;
++		}
++
++		len = min(dst_len, src_len);
++
++		cmd = pt_alloc_dma_cmd(chan);
++		if (!cmd)
++			goto err;
++
++		pt_cmd = &cmd->pt_cmd;
++		pt_cmd->pt = chan->pt;
++		pt_engine = &pt_cmd->passthru;
++		pt_cmd->engine = PT_ENGINE_PASSTHRU;
++		pt_engine->src_dma = sg_dma_address(src_sg) + src_offset;
++		pt_engine->dst_dma = sg_dma_address(dst_sg) + dst_offset;
++		pt_engine->src_len = len;
++		pt_engine->final = 1;
++		pt_cmd->pt_cmd_callback = pt_cmd_callback;
++		pt_cmd->data = desc;
++
++		list_add_tail(&cmd->entry, &desc->cmdlist);
++
++		dev_dbg(pt->dev,
++			"%s - cmd=%p, src=%pad, dst=%pad, len=%llu\n", __func__,
++			cmd, &pt_engine->src_dma,
++			&pt_engine->dst_dma, pt_engine->src_len);
++
++		total_len += len;
++
++		src_len -= len;
++		src_offset += len;
++
++		dst_len -= len;
++		dst_offset += len;
++	}
++
++	desc->len = total_len;
++
++	if (list_empty(&desc->cmdlist))
++		goto err;
++
++	return desc;
++
++err:
++	pt_free_cmd_resources(pt, &desc->cmdlist);
++	kmem_cache_free(pt->dma_desc_cache, desc);
++
++	return NULL;
++}
++
++static struct dma_async_tx_descriptor *
++pt_prep_dma_memcpy(struct dma_chan *dma_chan, dma_addr_t dst,
++		   dma_addr_t src, size_t len, unsigned long flags)
++{
++	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
++						 vc.chan);
++	struct pt_dma_desc *desc;
++	struct scatterlist dst_sg, src_sg;
++
++	dev_dbg(chan->pt->dev,
++		"%s - src=%pad, dst=%pad, len=%zu, flags=%#lx\n",
++		__func__, &src, &dst, len, flags);
++
++	sg_init_table(&dst_sg, 1);
++	sg_dma_address(&dst_sg) = dst;
++	sg_dma_len(&dst_sg) = len;
++
++	sg_init_table(&src_sg, 1);
++	sg_dma_address(&src_sg) = src;
++	sg_dma_len(&src_sg) = len;
++
++	desc = pt_create_desc(dma_chan, &dst_sg, 1, &src_sg, 1, flags);
++	if (!desc)
++		return NULL;
++
++	return &desc->vd.tx;
++}
++
++static struct dma_async_tx_descriptor *
++pt_prep_dma_interrupt(struct dma_chan *dma_chan, unsigned long flags)
++{
++	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
++						 vc.chan);
++	struct pt_dma_desc *desc;
++
++	desc = pt_alloc_dma_desc(chan, flags);
++	if (!desc)
++		return NULL;
++
++	return &desc->vd.tx;
++}
++
++static void pt_issue_pending(struct dma_chan *dma_chan)
++{
++	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
++						 vc.chan);
++	struct pt_dma_desc *desc;
++	unsigned long flags;
++
++	dev_dbg(chan->pt->dev, "%s\n", __func__);
++
++	spin_lock_irqsave(&chan->vc.lock, flags);
++
++	desc = __pt_next_dma_desc(chan);
++
++	spin_unlock_irqrestore(&chan->vc.lock, flags);
++
++	/* If there was nothing active, start processing */
++	if (desc)
++		pt_cmd_callback(desc, 0);
++}
++
++static enum dma_status pt_tx_status(struct dma_chan *dma_chan,
++				    dma_cookie_t cookie,
++				    struct dma_tx_state *state)
++{
++	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
++						 vc.chan);
++	struct pt_dma_desc *desc;
++	enum dma_status ret;
++	unsigned long flags;
++	struct virt_dma_desc *vd;
++
++	ret = dma_cookie_status(dma_chan, cookie, state);
++	if (ret == DMA_COMPLETE)
++		return ret;
++
++	spin_lock_irqsave(&chan->vc.lock, flags);
++	vd = vchan_find_desc(&chan->vc, cookie);
++	desc = vd ? container_of(vd, struct pt_dma_desc, vd) : NULL;
++	ret = desc->status;
++	spin_unlock_irqrestore(&chan->vc.lock, flags);
++
++	dev_dbg(chan->pt->dev, "%s - %u\n", __func__, ret);
++
++	return ret;
++}
++
++static int pt_pause(struct dma_chan *dma_chan)
++{
++	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
++						 vc.chan);
++	unsigned long flags;
++
++	spin_lock_irqsave(&chan->vc.lock, flags);
++	pt_stop_queue(&chan->pt->cmd_q);
++	spin_unlock_irqrestore(&chan->vc.lock, flags);
++
++	return 0;
++}
++
++static int pt_resume(struct dma_chan *dma_chan)
++{
++	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
++						 vc.chan);
++	struct pt_dma_desc *desc = NULL;
++	unsigned long flags;
++
++	spin_lock_irqsave(&chan->vc.lock, flags);
++	pt_start_queue(&chan->pt->cmd_q);
++	desc = __pt_next_dma_desc(chan);
++	spin_unlock_irqrestore(&chan->vc.lock, flags);
++
++	/* If there was something active, re-start */
++	if (desc)
++		pt_cmd_callback(desc, 0);
++
++	return 0;
++}
++
++static int pt_terminate_all(struct dma_chan *dma_chan)
++{
++	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
++						 vc.chan);
++
++	dev_dbg(chan->pt->dev, "%s\n", __func__);
++
++	vchan_free_chan_resources(&chan->vc);
++
++	return 0;
++}
++
++int pt_dmaengine_register(struct pt_device *pt)
++{
++	struct pt_dma_chan *chan;
++	struct dma_device *dma_dev = &pt->dma_dev;
++	struct dma_chan *dma_chan;
++	char *dma_cmd_cache_name;
++	char *dma_desc_cache_name;
++	int ret;
++
++	pt->pt_dma_chan = devm_kcalloc(pt->dev, 1,
++				       sizeof(*pt->pt_dma_chan),
++				       GFP_KERNEL);
++	if (!pt->pt_dma_chan)
++		return -ENOMEM;
++
++	dma_cmd_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
++					    "%s-dmaengine-cmd-cache",
++					    pt->name);
++	if (!dma_cmd_cache_name)
++		return -ENOMEM;
++
++	pt->dma_cmd_cache = kmem_cache_create(dma_cmd_cache_name,
++					      sizeof(struct pt_dma_cmd),
++					      sizeof(void *),
++					      SLAB_HWCACHE_ALIGN, NULL);
++	if (!pt->dma_cmd_cache)
++		return -ENOMEM;
++
++	dma_desc_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
++					     "%s-dmaengine-desc-cache",
++					     pt->name);
++	if (!dma_desc_cache_name) {
++		ret = -ENOMEM;
++		goto err_cache;
++	}
++
++	pt->dma_desc_cache = kmem_cache_create(dma_desc_cache_name,
++					       sizeof(struct pt_dma_desc),
++					       sizeof(void *),
++					       SLAB_HWCACHE_ALIGN, NULL);
++	if (!pt->dma_desc_cache) {
++		ret = -ENOMEM;
++		goto err_cache;
++	}
++
++	dma_dev->dev = pt->dev;
++	dma_dev->src_addr_widths = PT_DMA_WIDTH(dma_get_mask(pt->dev));
++	dma_dev->dst_addr_widths = PT_DMA_WIDTH(dma_get_mask(pt->dev));
++	dma_dev->directions = DMA_MEM_TO_MEM;
++	dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
++	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
++	dma_cap_set(DMA_INTERRUPT, dma_dev->cap_mask);
++	dma_cap_set(DMA_PRIVATE, dma_dev->cap_mask);
++
++	INIT_LIST_HEAD(&dma_dev->channels);
++
++	chan = pt->pt_dma_chan;
++	chan->pt = pt;
++	dma_chan = &chan->vc.chan;
++
++	dma_dev->device_free_chan_resources = pt_free_chan_resources;
++	dma_dev->device_prep_dma_memcpy = pt_prep_dma_memcpy;
++	dma_dev->device_prep_dma_interrupt = pt_prep_dma_interrupt;
++	dma_dev->device_issue_pending = pt_issue_pending;
++	dma_dev->device_tx_status = pt_tx_status;
++	dma_dev->device_pause = pt_pause;
++	dma_dev->device_resume = pt_resume;
++	dma_dev->device_terminate_all = pt_terminate_all;
++	dma_dev->device_synchronize = pt_synchronize;
++
++	chan->vc.desc_free = pt_do_cleanup;
++	vchan_init(&chan->vc, dma_dev);
++
++	ret = dma_async_device_register(dma_dev);
++	if (ret)
++		goto err_reg;
++
++	return 0;
++
++err_reg:
++	kmem_cache_destroy(pt->dma_desc_cache);
++
++err_cache:
++	kmem_cache_destroy(pt->dma_cmd_cache);
++
++	return ret;
++}
++
++void pt_dmaengine_unregister(struct pt_device *pt)
++{
++	struct dma_device *dma_dev = &pt->dma_dev;
++
++	dma_async_device_unregister(dma_dev);
++
++	kmem_cache_destroy(pt->dma_desc_cache);
++	kmem_cache_destroy(pt->dma_cmd_cache);
++}
+diff --git a/drivers/dma/ptdma/ptdma.h b/drivers/dma/ptdma/ptdma.h
+index 6b3b3cc..661be6b 100644
+--- a/drivers/dma/ptdma/ptdma.h
++++ b/drivers/dma/ptdma/ptdma.h
+@@ -20,6 +20,9 @@
+ #include <linux/list.h>
+ #include <linux/wait.h>
+ #include <linux/dmapool.h>
++#include <linux/dmaengine.h>
++
++#include "../virt-dma.h"
+ 
+ #define MAX_PT_NAME_LEN			16
+ #define MAX_DMAPOOL_NAME_LEN		32
+@@ -179,6 +182,25 @@ struct pt_cmd {
+ 	void *data;
+ };
+ 
++struct pt_dma_cmd {
 +	struct list_head entry;
-+
-+	unsigned int ord;
-+	char name[MAX_PT_NAME_LEN];
-+
-+	struct device *dev;
-+
-+	/* Bus specific device information */
-+	struct pt_msix *pt_msix;
-+
-+	struct pt_dev_vdata *dev_vdata;
-+
-+	unsigned int pt_irq;
-+
-+	/* I/O area used for device communication */
-+	void __iomem *io_regs;
-+
-+	spinlock_t cmd_lock ____cacheline_aligned;
-+	unsigned int cmd_count;
-+	struct list_head cmd;
-+
-+	/*
-+	 * The command queue. This represent the queue available on the
-+	 * PTDMA that are available for processing cmds
-+	 */
-+	struct pt_cmd_queue cmd_q;
-+
-+	wait_queue_head_t lsb_queue;
-+
-+	struct pt_tasklet_data tdata;
++	struct pt_cmd pt_cmd;
 +};
 +
-+/*
-+ * descriptor for PTDMA commands
-+ * 8 32-bit words:
-+ * word 0: function; engine; control bits
-+ * word 1: length of source data
-+ * word 2: low 32 bits of source pointer
-+ * word 3: upper 16 bits of source pointer; source memory type
-+ * word 4: low 32 bits of destination pointer
-+ * word 5: upper 16 bits of destination pointer; destination memory type
-+ * word 6: reserved 32 bits
-+ * word 7: reserved 32 bits
-+ */
-+
-+union dword0 {
-+	struct {
-+		unsigned int soc:1;
-+		unsigned int ioc:1;
-+		unsigned int rsvd1:1;
-+		unsigned int init:1;
-+		unsigned int eom:1;
-+		unsigned int function:15;
-+		unsigned int engine:4;
-+		unsigned int prot:1;
-+		unsigned int rsvd2:7;
-+	};
-+	u32 val;
++struct pt_dma_desc {
++	struct virt_dma_desc vd;
++	struct pt_device *pt;
++	struct list_head cmdlist;
++	enum dma_status status;
++	size_t len;
++	bool actv;
 +};
 +
-+struct dword3 {
-+	unsigned int  src_hi:16;
-+	unsigned int  src_mem:2;
-+	unsigned int  lsb_cxt_id:8;
-+	unsigned int  rsvd1:5;
-+	unsigned int  fixed:1;
++struct pt_dma_chan {
++	struct virt_dma_chan vc;
++	struct pt_device *pt;
 +};
 +
-+struct dword5 {
-+	unsigned int  dst_hi:16;
-+	unsigned int  dst_mem:2;
-+	unsigned int  rsvd1:13;
-+	unsigned int  fixed:1;
-+};
+ struct pt_cmd_queue {
+ 	struct pt_device *pt;
+ 
+@@ -247,6 +269,12 @@ struct pt_device {
+ 	 */
+ 	struct pt_cmd_queue cmd_q;
+ 
++	/* Support for the DMA Engine capabilities */
++	struct dma_device dma_dev;
++	struct pt_dma_chan *pt_dma_chan;
++	struct kmem_cache *dma_cmd_cache;
++	struct kmem_cache *dma_desc_cache;
 +
-+struct ptdma_desc {
-+	union dword0 dw0;
-+	u32 length;
-+	u32 src_lo;
-+	struct dword3 dw3;
-+	u32 dst_lo;
-+	struct dword5 dw5;
-+	__le32 rsvd1;
-+	__le32 rsvd2;
-+};
+ 	wait_queue_head_t lsb_queue;
+ 
+ 	struct pt_tasklet_data tdata;
+@@ -312,6 +340,9 @@ struct pt_dev_vdata {
+ 	const unsigned int version;
+ };
+ 
++int pt_dmaengine_register(struct pt_device *pt);
++void pt_dmaengine_unregister(struct pt_device *pt);
 +
-+/* Structure to hold PT device data */
-+struct pt_dev_vdata {
-+	const unsigned int bar;
-+	const unsigned int version;
-+};
-+
-+int pt_core_init(struct pt_device *pt);
-+void pt_core_destroy(struct pt_device *pt);
-+
-+int pt_core_perform_passthru(struct pt_cmd_queue *cmd_q,
-+			     struct pt_passthru_engine *pt_engine);
-+
-+void pt_start_queue(struct pt_cmd_queue *cmd_q);
-+void pt_stop_queue(struct pt_cmd_queue *cmd_q);
-+
-+#endif
+ int pt_core_init(struct pt_device *pt);
+ void pt_core_destroy(struct pt_device *pt);
+ 
 -- 
 2.7.4
 

@@ -2,102 +2,131 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BED8E1FF00D
-	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2020 12:57:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68C541FF0C0
+	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2020 13:36:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbgFRK5r (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 18 Jun 2020 06:57:47 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:5264 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727805AbgFRK5q (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 18 Jun 2020 06:57:46 -0400
-Received: from localhost.localdomain (unknown [210.32.144.65])
-        by mail-app4 (Coremail) with SMTP id cS_KCgB3f0uXSOtekaC0AQ--.18905S4;
-        Thu, 18 Jun 2020 18:57:31 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [v3] dmaengine: tegra210-adma: Fix runtime PM imbalance on error
-Date:   Thu, 18 Jun 2020 18:57:27 +0800
-Message-Id: <20200618105727.14669-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cS_KCgB3f0uXSOtekaC0AQ--.18905S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZrWkur1fury5tFWrWr4rXwb_yoW8XFW3pF
-        48Wa45KFW0qw4fKFyDZr1DZFy5u343t3yfK3y8C3ZxZan8Aa4Utr1rXry2vF48ZFWkAF4j
-        y3s8t3y3AF10vFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9v1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
-        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
-        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
-        6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxE
-        wVAFwVW8twCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I
-        0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-        GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-        0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
-        rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
-        0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoNBlZdtOqmPwAIsH
+        id S1729501AbgFRLgE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 18 Jun 2020 07:36:04 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:40520 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727825AbgFRLgC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 18 Jun 2020 07:36:02 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05IBZxPM048674;
+        Thu, 18 Jun 2020 06:35:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1592480159;
+        bh=kSYJjlw8+DJVBxfj+7egszQXQsCmWblTSs7qw30kf0U=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=d7fFOhzuGGJk5CRNt+H8DEs5AyXkmKf7LOvPJpd6A9KJsoeJU8GrFbe3dFIhuBHOq
+         8xTKqZdmuxONXlOzc59EO3GDpMYei/Nj053vh5oAINvmxwKvfDfCbQ+9Y7V3srMxvf
+         Fs0w9jN6UoK99GpxUz5t9Vy1YK4E7kQ2G62QA3fs=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05IBZxe0066798
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 18 Jun 2020 06:35:59 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 18
+ Jun 2020 06:35:59 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 18 Jun 2020 06:35:59 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05IBZv1E021871;
+        Thu, 18 Jun 2020 06:35:58 -0500
+Subject: Re: [PATCH] dmaengine: ti: k3-udma: Fix delayed_work usage for tx
+ drain workaround
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <tomi.valkeinen@ti.com>
+References: <20200520112233.26807-1-peter.ujfalusi@ti.com>
+ <20200617135528.GT2324254@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <cf2d48c6-16e9-4494-2e5d-c3349f507870@ti.com>
+Date:   Thu, 18 Jun 2020 14:36:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200617135528.GT2324254@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
 
-Changelog:
+On 17/06/2020 16.55, Vinod Koul wrote:
+> On 20-05-20, 14:22, Peter Ujfalusi wrote:
+>> INIT_DELAYED_WORK_ONSTACK() must be used with on-stack delayed work, w=
+hich
+>> is not the case here.
+>> Use normal delayed_work for the channels instead.
+>>
+>> Fixes: 25dcb5dd7b7c ("dmaengine: ti: New driver for K3 UDMA")
+>=20
+> Is this a fix or an optimization?
 
-v2: - Merge two patches that fix runtime PM imbalance in
-      tegra_adma_probe() and tegra_adma_alloc_chan_resources()
-      respectively.
+It is a fix.
 
-v3: - Use pm_runtime_put_noidle() instead of pm_runtime_put_sync()
-      in tegra_adma_alloc_chan_resources().
----
- drivers/dma/tegra210-adma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+>> Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>=20
+> No sob!
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index db58d7e4f9fe..bfa8800dfb4c 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -658,6 +658,7 @@ static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
- 
- 	ret = pm_runtime_get_sync(tdc2dev(tdc));
- 	if (ret < 0) {
-+		pm_runtime_put_noidle(tdc2dev(tdc));
- 		free_irq(tdc->irq, tdc);
- 		return ret;
- 	}
-@@ -870,7 +871,7 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 
- 	ret = pm_runtime_get_sync(&pdev->dev);
- 	if (ret < 0)
--		goto rpm_disable;
-+		goto rpm_put;
- 
- 	ret = tegra_adma_init(tdma);
- 	if (ret)
-@@ -921,7 +922,6 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 	dma_async_device_unregister(&tdma->dma_dev);
- rpm_put:
- 	pm_runtime_put_sync(&pdev->dev);
--rpm_disable:
- 	pm_runtime_disable(&pdev->dev);
- irq_dispose:
- 	while (--i >= 0)
--- 
-2.17.1
+Oops. I'll resend in a second
+
+>=20
+>> ---
+>>  drivers/dma/ti/k3-udma.c | 4 +---
+>>  1 file changed, 1 insertion(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+>> index c91e2dc1bb72..87554e093a3b 100644
+>> --- a/drivers/dma/ti/k3-udma.c
+>> +++ b/drivers/dma/ti/k3-udma.c
+>> @@ -1906,8 +1906,6 @@ static int udma_alloc_chan_resources(struct dma_=
+chan *chan)
+>> =20
+>>  	udma_reset_rings(uc);
+>> =20
+>> -	INIT_DELAYED_WORK_ONSTACK(&uc->tx_drain.work,
+>> -				  udma_check_tx_completion);
+>>  	return 0;
+>> =20
+>>  err_irq_free:
+>> @@ -3019,7 +3017,6 @@ static void udma_free_chan_resources(struct dma_=
+chan *chan)
+>>  	}
+>> =20
+>>  	cancel_delayed_work_sync(&uc->tx_drain.work);
+>> -	destroy_delayed_work_on_stack(&uc->tx_drain.work);
+>> =20
+>>  	if (uc->irq_num_ring > 0) {
+>>  		free_irq(uc->irq_num_ring, uc);
+>> @@ -3711,6 +3708,7 @@ static int udma_probe(struct platform_device *pd=
+ev)
+>>  		tasklet_init(&uc->vc.task, udma_vchan_complete,
+>>  			     (unsigned long)&uc->vc);
+>>  		init_completion(&uc->teardown_completed);
+>> +		INIT_DELAYED_WORK(&uc->tx_drain.work, udma_check_tx_completion);
+>>  	}
+>> =20
+>>  	ret =3D dma_async_device_register(&ud->ddev);
+>> --=20
+>> Peter
+>>
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>=20
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 

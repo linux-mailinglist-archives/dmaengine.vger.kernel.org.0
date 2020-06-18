@@ -2,76 +2,61 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D125F1FF13B
-	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2020 14:08:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5794C1FF282
+	for <lists+dmaengine@lfdr.de>; Thu, 18 Jun 2020 15:00:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728519AbgFRMHr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 18 Jun 2020 08:07:47 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:14448 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727922AbgFRMHq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 18 Jun 2020 08:07:46 -0400
-X-IronPort-AV: E=Sophos;i="5.73,526,1583161200"; 
-   d="scan'208";a="50015174"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 18 Jun 2020 21:07:44 +0900
-Received: from localhost.localdomain (unknown [10.166.252.89])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id B8CA0400C75C;
-        Thu, 18 Jun 2020 21:07:44 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2] dmaengine: sh: usb-dmac: set tx_result parameters
-Date:   Thu, 18 Jun 2020 21:07:33 +0900
-Message-Id: <1592482053-19433-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.7.4
+        id S1725953AbgFRNAH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 18 Jun 2020 09:00:07 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:47972 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725898AbgFRNAH (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 18 Jun 2020 09:00:07 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1BF1FF9C323EE1E6F0DE;
+        Thu, 18 Jun 2020 21:00:05 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Thu, 18 Jun 2020
+ 20:59:53 +0800
+From:   Yu Kuai <yukuai3@huawei.com>
+To:     <vkoul@kernel.org>, <dan.j.williams@intel.com>,
+        <peter.ujfalusi@ti.com>, <grygorii.strashko@ti.com>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yukuai3@huawei.com>, <yi.zhang@huawei.com>
+Subject: [PATCH] dmaengine: ti: k3-udma: add missing put_device() call in of_xudma_dev_get()
+Date:   Thu, 18 Jun 2020 21:01:10 +0800
+Message-ID: <20200618130110.582543-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.25.4
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-CFilter-Loop: Reflected
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-A client driver (renesas_usbhs) assumed that
-dmaengine_tx_status() could return the residue even if
-the transfer was completed. However, this was not correct
-usage [1] and this caused to break getting the residue after
-the commit 24461d9792c2 ("dmaengine: virt-dma: Fix access after
-free in vchan_complete()") actually. So, this is possible to get
-wrong received size if the usb controller gets a short packet.
-For example, g_zero driver causes "bad OUT byte" errors.
+if of_find_device_by_node() succeed and platform_get_drvdata() failed,
+of_xudma_dev_get() will return without put_device(), which will leak
+the memory.
 
-To use the tx_result from the renesas_usbhs driver when
-the transfer is completed, set the tx_result parameters.
-
-Notes that the renesas_usbhs driver needs to update for it.
-
-[1]
-https://lore.kernel.org/dmaengine/20200616165550.GP2324254@vkoul-mobl/
-
-Reported-by: Hien Dang <hien.dang.eb@renesas.com>
-Fixes: 24461d9792c2 ("dmaengine: virt-dma: Fix access after free in vchan_complete()")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- Changes from v1:
- - Set tx_result parameters, not change the dmaengine_tx_status behavior.
- https://patchwork.kernel.org/patch/11562783/
+ drivers/dma/ti/k3-udma-private.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- drivers/dma/sh/usb-dmac.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/dma/sh/usb-dmac.c b/drivers/dma/sh/usb-dmac.c
-index b218a01..8f7ceb6 100644
---- a/drivers/dma/sh/usb-dmac.c
-+++ b/drivers/dma/sh/usb-dmac.c
-@@ -586,6 +586,8 @@ static void usb_dmac_isr_transfer_end(struct usb_dmac_chan *chan)
- 		desc->residue = usb_dmac_get_current_residue(chan, desc,
- 							desc->sg_index - 1);
- 		desc->done_cookie = desc->vd.tx.cookie;
-+		desc->vd.tx_result.result = DMA_TRANS_NOERROR;
-+		desc->vd.tx_result.residue = desc->residue;
- 		vchan_cookie_complete(&desc->vd);
+diff --git a/drivers/dma/ti/k3-udma-private.c b/drivers/dma/ti/k3-udma-private.c
+index 0b8f3dd6b146..77e8e67d995b 100644
+--- a/drivers/dma/ti/k3-udma-private.c
++++ b/drivers/dma/ti/k3-udma-private.c
+@@ -42,6 +42,7 @@ struct udma_dev *of_xudma_dev_get(struct device_node *np, const char *property)
+ 	ud = platform_get_drvdata(pdev);
+ 	if (!ud) {
+ 		pr_debug("UDMA has not been probed\n");
++		put_device(&pdev->dev);
+ 		return ERR_PTR(-EPROBE_DEFER);
+ 	}
  
- 		/* Restart the next transfer if this driver has a next desc */
 -- 
-2.7.4
+2.25.4
 

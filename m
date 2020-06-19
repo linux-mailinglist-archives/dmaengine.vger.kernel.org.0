@@ -2,54 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB78A200553
-	for <lists+dmaengine@lfdr.de>; Fri, 19 Jun 2020 11:37:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CF41200573
+	for <lists+dmaengine@lfdr.de>; Fri, 19 Jun 2020 11:40:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729709AbgFSJgq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 19 Jun 2020 05:36:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34008 "EHLO
+        id S1726196AbgFSJjs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 19 Jun 2020 05:39:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729195AbgFSJgm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 19 Jun 2020 05:36:42 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15663C06174E;
-        Fri, 19 Jun 2020 02:36:42 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id f185so8502627wmf.3;
-        Fri, 19 Jun 2020 02:36:42 -0700 (PDT)
+        with ESMTP id S1731780AbgFSJjr (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 19 Jun 2020 05:39:47 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDA7DC06174E;
+        Fri, 19 Jun 2020 02:39:46 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id b6so9005201wrs.11;
+        Fri, 19 Jun 2020 02:39:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=X346gl6qUr+JPksABE0FeDNnu4zF3ZXSV/9V0jSqwbk=;
-        b=ekYXc26nnRt/qz4tkvcRMvyBOGp0+WG0cA6vU5nqX5KCxE06cdRsv7pGvyZR2vIs88
-         PFwvPAO9XYlNZXMjWSprsCvtrPBls/ZzuAkLq2nLOkhunIJ7mwUO3EJFwx7MmZp1OvWA
-         Ll10ThicO5XmhLchMGDyoTjNly2fZ4OVsXFGgc+0ku5j2p5+cM2eXPwgqdWfdQAtmRCK
-         KJOAuTBJBT/8jP6CfU27RAZftR/EZO8s/lHo+mH4D7Nvg1bsKkY4lOaLxEZ5AbR06I3u
-         /Q14vxAOQJaQQtDpH6yyGuVqLeoWCTkJw+FlAtZVsQShsUQRDJ6S1XznjKxtknAMqb9i
-         ii3Q==
+        bh=LC8E3Y9/cZsWTCk2xE83iqpOMxdGPU0RIo/1PT/NfBY=;
+        b=JM9nN6h3Wf+VZr59ZKO/S7Aa0zYO5zeeRus67B+Bdowk//H1aFgC4E0+ZKl438x++w
+         RcTppmWDewOSBCbw7aFkl/TVmPxswrTYM2LJ9gsW+s23qQgZe8bsx71INvJKct4du/IO
+         pLcMUJObKkVf4rntxyV0q7xd4CTZbyL7csRiZul5dHGJKWVFjSwyVkM24IrWriji74gf
+         4FKf6NVfK5sQKQCTshEe7tux//pnXD0cb7fCTSG+aFtS23XIZOn+q9aCd4h197q37pAd
+         CY4LErY1fF1gtTKgm493z7nWNF0HUcnJZBoWdoV0eowGp/dNfOV4hBQ1bHVC9xirArWi
+         vanA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=X346gl6qUr+JPksABE0FeDNnu4zF3ZXSV/9V0jSqwbk=;
-        b=pka7xQqjY+vWO3FUTou0oZtihMgsjSdMxX+9zcCVU/RBWh7yHK84Dh+0+HFTXbtvF1
-         n4HgPqyPITQhPBVwvFsdRU9cz5UeLE2RW69qdRMB1JhtPZC01erF4YgoRrAZkBBHaQiD
-         zb/fEsAVMxf/9Y5ZUwKAHjdNTM4ipQQeGfqAWsT07RcQ0CCvYhtYieKToquDmAyDl1aa
-         bCPxNpNIsSAG/4TB+ynVKi/xJFcI4aWO1fRrsLR/jPLhR7oDwGQu5aA/4R5/PfVESg/1
-         yhAmq0hEuVS4G4rUBSQLF4d8yPHQuddlDGVrOHxzz4iYikN8HTXwWbjsVDD2c6W0uZ7L
-         L2gA==
-X-Gm-Message-State: AOAM532DWWHCY16ofFC3NW+Iy8kj8sNgIGvpM9VZSP7i2cfMR22vVYAw
-        TNYMjVma/mT6Pc03ZmJmLwY=
-X-Google-Smtp-Source: ABdhPJyJVWCHhjgnbDXIWqtQXlqpmRt3cHLLrUBsb+sBgeDue/2WJ7oee3Fxoj+NTCzp+vurSg7I6A==
-X-Received: by 2002:a1c:143:: with SMTP id 64mr2946548wmb.182.1592559400712;
-        Fri, 19 Jun 2020 02:36:40 -0700 (PDT)
+        bh=LC8E3Y9/cZsWTCk2xE83iqpOMxdGPU0RIo/1PT/NfBY=;
+        b=M26jF5+icWWCywrnauGT/RJSMiw0+wQqL/p018f7ELfZsCVq6ahGBEazB/hXT9QVAD
+         8XnRqv5hobvRpci8Fan3SDZTo1i8cPOhG/kg/vMh0JY7wm3FBXUQhqsSjddc7UcigA2r
+         DGsAUZ16FbCx63wipsq/psVr8tl8lRh9XhdzaMZoMw9aCvszW3wb0qq2diCdjhLfK8zZ
+         c1/II0CRw5tNv9kyQOgqmIj6u7yswlW26Pz7pBziL7sQpWV4sGy8UIDYxObOhEzm8AWP
+         AD3eXZ+YEvzppw1n2dpPRYSQfJsYlBQkCGjMmSnvx57EzjYhh3KAvTuY5Pe+4uUNeFgN
+         hU+Q==
+X-Gm-Message-State: AOAM531kBqXAGYL0FX7qvQJ54o7dzsK/y/FH9kUj2hgAa2yQ+PzSP05J
+        vmPGqTCPdLZbDXPJp0TwuZAGU4OF
+X-Google-Smtp-Source: ABdhPJzkSKEI/EM49nWUYP2hvrla2WBTJ/Lj59062jge03SvRmfJcJwGnAVaLEh8n3dN2jkyMOwo0g==
+X-Received: by 2002:a5d:5483:: with SMTP id h3mr3217410wrv.10.1592559585720;
+        Fri, 19 Jun 2020 02:39:45 -0700 (PDT)
 Received: from ziggy.stardust ([213.195.114.138])
-        by smtp.gmail.com with ESMTPSA id j41sm6974322wre.12.2020.06.19.02.36.39
+        by smtp.gmail.com with ESMTPSA id v27sm7123851wrv.81.2020.06.19.02.39.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Jun 2020 02:36:40 -0700 (PDT)
-Subject: Re: [PATCH v5 1/4] dt-bindings: dmaengine: Add MediaTek Command-Queue
- DMA controller bindings
+        Fri, 19 Jun 2020 02:39:45 -0700 (PDT)
+Subject: Re: [PATCH v5 3/4] dmaengine: mediatek-cqdma: add dma mask for
+ capability
 To:     EastL <EastL.Lee@mediatek.com>, Sean Wang <sean.wang@mediatek.com>
 Cc:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -57,7 +57,7 @@ Cc:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
         linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
         wsd_upstream@mediatek.com
 References: <1592553902-30592-1-git-send-email-EastL.Lee@mediatek.com>
- <1592553902-30592-2-git-send-email-EastL.Lee@mediatek.com>
+ <1592553902-30592-4-git-send-email-EastL.Lee@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -133,15 +133,15 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <4fc5f4b9-8f03-74b4-8bc9-bf86a6246ff0@gmail.com>
-Date:   Fri, 19 Jun 2020 11:36:38 +0200
+Message-ID: <54703443-fb01-5aa2-089c-5c7616404b7a@gmail.com>
+Date:   Fri, 19 Jun 2020 11:39:44 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <1592553902-30592-2-git-send-email-EastL.Lee@mediatek.com>
+In-Reply-To: <1592553902-30592-4-git-send-email-EastL.Lee@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
@@ -149,148 +149,60 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 
 
-On 19/06/2020 10:04, EastL wrote:
-> Document the devicetree bindings for MediaTek Command-Queue DMA controller
-> which could be found on MT6779 SoC or other similar Mediatek SoCs.
+On 19/06/2020 10:05, EastL wrote:
+> This patch add dma mask for capability.
 > 
 > Signed-off-by: EastL <EastL.Lee@mediatek.com>
-
-Still missing the full name.
-
 > ---
->  .../devicetree/bindings/dma/mtk-cqdma.yaml         | 114 +++++++++++++++++++++
->  1 file changed, 114 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
+>  drivers/dma/mediatek/mtk-cqdma.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml b/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
-> new file mode 100644
-> index 0000000..e6fdf05
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
-> @@ -0,0 +1,114 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
+> index 905bbcb..ed33c64 100644
+> --- a/drivers/dma/mediatek/mtk-cqdma.c
+> +++ b/drivers/dma/mediatek/mtk-cqdma.c
+> @@ -117,6 +117,7 @@ struct mtk_cqdma_vchan {
+>   * @clk:                    The clock that device internal is using
+>   * @dma_requests:           The number of VCs the device supports to
+>   * @dma_channels:           The number of PCs the device supports to
+> + * @dma_mask:               A mask for DMA capability
+>   * @vc:                     The pointer to all available VCs
+>   * @pc:                     The pointer to all the underlying PCs
+>   */
+> @@ -126,6 +127,7 @@ struct mtk_cqdma_device {
+>  
+>  	u32 dma_requests;
+>  	u32 dma_channels;
+> +	u32 dma_mask;
+>  	struct mtk_cqdma_vchan *vc;
+>  	struct mtk_cqdma_pchan **pc;
+>  };
+> @@ -607,6 +609,21 @@ static int mtk_cqdma_probe(struct platform_device *pdev)
+>  		cqdma->dma_channels = MTK_CQDMA_NR_PCHANS;
+>  	}
+>  
+> +	if (pdev->dev.of_node)
+> +		err = of_property_read_u32(pdev->dev.of_node,
+> +					   "dma-channel-mask",
+> +					   &cqdma->dma_mask);
+> +	if (err) {
+> +		dev_warn(&pdev->dev,
+> +			 "Using 0 as missing dma-channel-mask property\n");
+> +		cqdma->dma_mask = 0;
+> +	}
+> +
+> +	if (dma_set_mask(&pdev->dev, DMA_BIT_MASK(cqdma->dma_mask))) {
+> +		dev_warn(&pdev->dev, "DMA set mask fail\n");
 
-You missed the brackets ().
+fail -> failed
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/mtk-cqdma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MediaTek Command-Queue DMA controller Device Tree Binding
-> +
-> +maintainers:
-> +  - EastL Lee <EastL.Lee@mediatek.com>
-> +
-> +description:
-> +  MediaTek Command-Queue DMA controller (CQDMA) on Mediatek SoC
-> +  is dedicated to memory-to-memory transfer through queue based
-> +  descriptor management.
-> +
-> +allOf:
-> +  - $ref: "dma-controller.yaml#"
-> +
-> +properties:
-> +  "#dma-cells":
-> +    minimum: 1
-> +    maximum: 255
-> +    description:
-> +      Used to provide DMA controller specific information.
-> +
-> +  compatible:
-> +    oneOf:
-> +      - const: mediatek,common-cqdma
+With this:
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 
-What is the common-cqdma for if we have only one compatible specifying the SoC.
-Actually I'm not a great fan of the common-cqdma thing. I'd prefer a fallback
-compatible that has the name of the first SoC implementing the same device.
-
-Regards,
-Matthias
-
-> +      - const: mediatek,mt6765-cqdma
-> +      - const: mediatek,mt6779-cqdma
+> +		return -EINVAL;
+> +	}
 > +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 5
-> +    description:
-> +        A base address of MediaTek Command-Queue DMA controller,
-> +        a channel will have a set of base address.
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    maxItems: 5
-> +    description:
-> +        A interrupt number of MediaTek Command-Queue DMA controller,
-> +        one interrupt number per dma-channels.
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: cqdma
-> +
-> +  dma-channel-mask:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description:
-> +       For DMA capability, We will know the addressing capability of
-> +       MediaTek Command-Queue DMA controller through dma-channel-mask.
-> +    items:
-> +      minItems: 1
-> +      maxItems: 63
-> +
-> +  dma-channels:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description:
-> +      Number of DMA channels supported by MediaTek Command-Queue DMA
-> +      controller, support up to five.
-> +    items:
-> +      minItems: 1
-> +      maxItems: 5
-> +
-> +  dma-requests:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description:
-> +      Number of DMA request (virtual channel) supported by MediaTek
-> +      Command-Queue DMA controller, support up to 32.
-> +    items:
-> +      minItems: 1
-> +      maxItems: 32
-> +
-> +required:
-> +  - "#dma-cells"
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - dma-channel-mask
-> +  - dma-channels
-> +  - dma-requests
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/mt6779-clk.h>
-> +    cqdma: dma-controller@10212000 {
-> +        compatible = "mediatek,mt6779-cqdma";
-> +        reg = <0x10212000 0x80>,
-> +            <0x10212080 0x80>,
-> +            <0x10212100 0x80>;
-> +        interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_LOW>,
-> +            <GIC_SPI 140 IRQ_TYPE_LEVEL_LOW>,
-> +            <GIC_SPI 141 IRQ_TYPE_LEVEL_LOW>;
-> +        clocks = <&infracfg_ao CLK_INFRA_CQ_DMA>;
-> +        clock-names = "cqdma";
-> +        dma-channel-mask = <63>;
-> +        dma-channels = <3>;
-> +        dma-requests = <32>;
-> +        #dma-cells = <1>;
-> +    };
-> +
-> +...
+>  	cqdma->pc = devm_kcalloc(&pdev->dev, cqdma->dma_channels,
+>  				 sizeof(*cqdma->pc), GFP_KERNEL);
+>  	if (!cqdma->pc)
 > 

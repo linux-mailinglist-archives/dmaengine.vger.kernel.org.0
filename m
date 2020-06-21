@@ -2,80 +2,67 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BA9C20230C
-	for <lists+dmaengine@lfdr.de>; Sat, 20 Jun 2020 11:53:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 55BC32028D1
+	for <lists+dmaengine@lfdr.de>; Sun, 21 Jun 2020 07:27:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgFTJx3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 20 Jun 2020 05:53:29 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9331 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727861AbgFTJx3 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 20 Jun 2020 05:53:29 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eeddc8c0000>; Sat, 20 Jun 2020 02:53:16 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 20 Jun 2020 02:53:28 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 20 Jun 2020 02:53:28 -0700
-Received: from [10.26.73.131] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 20 Jun
- 2020 09:53:22 +0000
-Subject: Re: [PATCH] [v3] dmaengine: tegra210-adma: Fix runtime PM imbalance
- on error
-To:     <dinghao.liu@zju.edu.cn>
-CC:     <kjlu@umn.edu>, Laxman Dewangan <ldewangan@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
+        id S1729265AbgFUF1k (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 21 Jun 2020 01:27:40 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:58734 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726015AbgFUF1k (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 21 Jun 2020 01:27:40 -0400
+Received: by ajax-webmail-mail-app3 (Coremail) ; Sun, 21 Jun 2020 13:27:24
+ +0800 (GMT+08:00)
+X-Originating-IP: [210.32.144.65]
+Date:   Sun, 21 Jun 2020 13:27:24 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Jon Hunter" <jonathanh@nvidia.com>
+Cc:     kjlu@umn.edu, "Laxman Dewangan" <ldewangan@nvidia.com>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        "Vinod Koul" <vkoul@kernel.org>,
+        "Thierry Reding" <thierry.reding@gmail.com>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] [v3] dmaengine: tegra210-adma: Fix runtime PM
+ imbalance on error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <f4034e16-e720-57c4-eb9d-733786212a4a@nvidia.com>
 References: <20200618105727.14669-1-dinghao.liu@zju.edu.cn>
  <9f7684d9-7a75-497d-db1c-75cf0991a072@nvidia.com>
  <24ea1ef1.10213.172ca4d45be.Coremail.dinghao.liu@zju.edu.cn>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <f4034e16-e720-57c4-eb9d-733786212a4a@nvidia.com>
-Date:   Sat, 20 Jun 2020 10:53:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ <f4034e16-e720-57c4-eb9d-733786212a4a@nvidia.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-In-Reply-To: <24ea1ef1.10213.172ca4d45be.Coremail.dinghao.liu@zju.edu.cn>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1592646796; bh=skDQ77maO2GC7cm4xW7BXoWafTy1w2SK+o9txAtL5SE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=UimnWIqpRJy7kUAKmx0otVxsMGTTOcIcq44DP2Q5g9xTeWqUH6NSnNDqR6hnTZ/mO
-         RW22vRCa6BZ6k/TDgdYcAmeWCLgM+1gQHulmACKUapQXyooMt7XRyx/UKASP+XhFBB
-         XN1AXJtTB3koVzlED+vKIUKDGJkEGtjP+AdLktNtOINJfFLMTafwfYGt0AfZZlTZ5C
-         djhZUysytC6torZrMRhRcjfHk3IpOnp9GURpLmvi5AdwIVa4HsC5C3j09ZMBbrOv3L
-         tHH7g9g8VZfW89oOtP94NLhHaSV7L3E0wlc1z0QcQ29SDRUIF9HOklT6Kc/rjqDeFN
-         E+L169HQ1F3xQ==
+Message-ID: <711c004d.1832d.172d55876c5.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cC_KCgDX3uK87+5evJH9AA--.17515W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgcQBlZdtOvMDgADsG
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbX0S07vEb7Iv0x
+        C_Xr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
+        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
+        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
+        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
+        6r4UMIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwVW8WwCS07vEc2IjII80xcxEwVAKI48JMI
+        AIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCF
+        s4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwV
+        AFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_Jw0_GFylV2xY6IIF0xvE2Ix0cI8IcVAF
+        wI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCS07vEIxAIcVCF04
+        k26cxKx2IYs7xG6rW3Jr0E3s1lV2xY6IIF0xvEx4A2jsIE14v26r1j6r4UMIAIbVCI42IY
+        6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU=
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-On 19/06/2020 02:59, dinghao.liu@zju.edu.cn wrote:
->>
->> Why noidle?
->>
-> 
-> _noidle is enough for fixing this bug. _sync may suspend
-> the device beyond expectation.
-
-In that case, then the other instance you are fixing with this patch is
-not correct.
-
-Jon
-
--- 
-nvpublic
+Cgo+ID4+Cj4gPj4gV2h5IG5vaWRsZT8KPiA+Pgo+ID4gCj4gPiBfbm9pZGxlIGlzIGVub3VnaCBm
+b3IgZml4aW5nIHRoaXMgYnVnLiBfc3luYyBtYXkgc3VzcGVuZAo+ID4gdGhlIGRldmljZSBiZXlv
+bmQgZXhwZWN0YXRpb24uCj4gCj4gSW4gdGhhdCBjYXNlLCB0aGVuIHRoZSBvdGhlciBpbnN0YW5j
+ZSB5b3UgYXJlIGZpeGluZyB3aXRoIHRoaXMgcGF0Y2ggaXMKPiBub3QgY29ycmVjdC4KPiAKCkZp
+bmUuIEkgd2lsbCBmaXggdGhpcyBzb29uLgoKUmVnYXJkcywKRGluZ2hhbwo=

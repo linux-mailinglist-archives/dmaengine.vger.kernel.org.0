@@ -2,73 +2,73 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CCAB20292F
-	for <lists+dmaengine@lfdr.de>; Sun, 21 Jun 2020 08:57:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9904202954
+	for <lists+dmaengine@lfdr.de>; Sun, 21 Jun 2020 09:25:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729355AbgFUG5U (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 21 Jun 2020 02:57:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56876 "EHLO mail.kernel.org"
+        id S1729415AbgFUHZD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 21 Jun 2020 03:25:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729346AbgFUG5U (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sun, 21 Jun 2020 02:57:20 -0400
+        id S1729410AbgFUHZC (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 21 Jun 2020 03:25:02 -0400
 Received: from localhost (unknown [171.61.66.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23EDD24829;
-        Sun, 21 Jun 2020 06:57:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81CF724861;
+        Sun, 21 Jun 2020 07:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592722640;
-        bh=1T7L5CYvUKOKzOtIc26JQy8rVEfP3d+xIeZ+Bdc/yoQ=;
+        s=default; t=1592724302;
+        bh=O+HtJYaaPHUMFJE4t1nnQ2MuJq56zD7rjTetemmt5lM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=x9wNna9zcmMSycjgIfDwYG8a5e4EUUpQTRcMcb8cykAi3DpSzpDCDgv+wBQFVi6zs
-         krO2qNzYx/C6ReVZrJKjaZmPFAGxqpsWFjMXidlnQHiSfn0pm1GA1qiJ9GO7kKfBlh
-         hsAKaDkP+UgSf/mxX/7YoSJwIaalQg75WLzPQVvU=
-Date:   Sun, 21 Jun 2020 12:27:15 +0530
+        b=unppcI2Q4B6j3eqWu1fxtJn6mxib5JV88n8S/w4kYFhB91e+KoQgufAF8fYFoQQkd
+         RETm3PEbbTdzQI8VfTSirlfGcaXH4kpaHzrAqmM8DHjaZLVCt4qmn0s0a80ejOWAIe
+         MbJwa3BZrkhyI/8HjGnjVKmKWntVRLEWAsiIlwjo=
+Date:   Sun, 21 Jun 2020 12:54:57 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     dmaengine@vger.kernel.org, swathi.kovvuri@intel.com,
-        peter.ujfalusi@ti.com
-Subject: Re: [PATCH v5] dmaengine: cookie bypass for out of order completion
-Message-ID: <20200621065715.GZ2324254@vkoul-mobl>
-References: <158939557151.20335.12404113976045569870.stgit@djiang5-desk3.ch.intel.com>
- <20200617141526.GV2324254@vkoul-mobl>
- <7cf3f322-787b-1aaa-227c-11c603e6d663@intel.com>
+Cc:     Federico Vaga <federico.vaga@cern.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: DMA Engine: Transfer From Userspace
+Message-ID: <20200621072457.GA2324254@vkoul-mobl>
+References: <5614531.lOV4Wx5bFT@harkonnen>
+ <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7cf3f322-787b-1aaa-227c-11c603e6d663@intel.com>
+In-Reply-To: <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 19-06-20, 11:15, Dave Jiang wrote:
+On 19-06-20, 16:31, Dave Jiang wrote:
 > 
 > 
-> On 6/17/2020 7:15 AM, Vinod Koul wrote:
-> > On 13-05-20, 11:47, Dave Jiang wrote:
-> > > The cookie tracking in dmaengine expects all submissions completed in
-> > > order. Some DMA devices like Intel DSA can complete submissions out of
-> > > order, especially if configured with a work queue sharing multiple DMA
-> > > engines. Add a status DMA_OUT_OF_ORDER that tx_status can be returned for
-> > > those DMA devices. The user should use callbacks to track the completion
-> > > rather than the DMA cookie. This would address the issue of dmatest
-> > > complaining that descriptors are "busy" when the cookie count goes
-> > > backwards due to out of order completion. Add DMA_COMPLETION_NO_ORDER
-> > > DMA capability to allow the driver to flag the device's ability to complete
-> > > operations out of order.
+> On 6/19/2020 3:47 PM, Federico Vaga wrote:
+> > Hello,
 > > 
-> > Applied, thanks
+> > is there the possibility of using a DMA engine channel from userspace?
+> > 
+> > Something like:
+> > - configure DMA using ioctl() (or whatever configuration mechanism)
+> > - read() or write() to trigger the transfer
 > > 
 > 
-> Thanks Vinod. I'm trying to find your branch that has this commit so I can
-> rebase against it, and I can't seem to find it.
+> I may have supposedly promised Vinod to look into possibly providing
+> something like this in the future. But I have not gotten around to do that
+> yet. Currently, no such support.
 
-Urgh, infradead seems to have some issues and my push had failed, sorry I
-should have noticed. It is failing again for me, meanwhile use below
-mirror:
-git.kernel.org:pub/scm/linux/kernel/git/vkoul/slave-dma.git
+And I do still have serious reservations about this topic :) Opening up
+userspace access to DMA does not sound very great from security point of
+view.
 
-Thanks
+Federico, what use case do you have in mind?
+
+We should keep in mind dmaengine is an in-kernel interface providing
+services to various subsystems, so you go thru the respective subsystem
+kernel interface (network, display, spi, audio etc..) which would in
+turn use dmaengine.
+
 -- 
 ~Vinod

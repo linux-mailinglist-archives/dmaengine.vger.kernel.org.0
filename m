@@ -2,140 +2,114 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B0F4202A24
-	for <lists+dmaengine@lfdr.de>; Sun, 21 Jun 2020 12:51:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA8E2202B80
+	for <lists+dmaengine@lfdr.de>; Sun, 21 Jun 2020 17:57:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729819AbgFUKvA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 21 Jun 2020 06:51:00 -0400
-Received: from mout.web.de ([212.227.15.4]:55685 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729732AbgFUKu7 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sun, 21 Jun 2020 06:50:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1592736632;
-        bh=Wj8AhURSu8ZdiqHj5psl8WKn69m8ifdUO5XC5WxJu3g=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=JuMY4xTyQjp7BcuJonC17iIVuKFHEntb6CDH9NiCKZshfM5wzhVFqU3hpYPACllz0
-         0X9cYzRpFZIclSmJVnFdzzSv1HvsNBG8nSDuV8212b3YfNgSeksry0tpW8J1UTZ0gZ
-         YdT7kb0I1g8T3LFExONDX+OlewU5BDkCBUfrO1ys=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.145.213]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MdLsp-1jUbKF1w5j-00IVan; Sun, 21
- Jun 2020 12:50:32 +0200
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, dmaengine@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Aditya Pakki <pakki001@umn.edu>,
-        Kangjie Lu <kjlu@umn.edu>, Navid Emamdoost <emamd001@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>
-Subject: Re: [PATCH v4] dmaengine: tegra210-adma: Fix runtime PM imbalance on
- error
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <d1872c79-7998-46cd-a7b6-6c5715391ca3@web.de>
-Date:   Sun, 21 Jun 2020 12:50:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:hBYZbG8mu/yTwWJG3VF02nIiNzUXCn5mMMRLOeAcFB0MV8Xz1bo
- gcfh+362dwfqEoU5t+QeyWYH/wZyVqVm9WQaH2Gtkj+Oww7h1gAXE4lCDTdU6fI6QDOLXqV
- 4XK7sAVJwvIbbWnT3M8lG0t2Mf8I2d9QKSzUdFK5C1H01qQ7lajCvdgbkn9GvNlCKOo+dbA
- o3xQOGilO+4mQJRyJ7wlQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AhhKcWlaN4M=:DsQ9y0bJQUoH7PWJWLW3b5
- pfe5fjZJUhzgM3m0UYg6GwzYO8PlHrNCfw0tFvnW4O39su/TLcRVDcPYSqMUQxxxbE9Lt74fy
- yeCmc1fJrCo8a3/8mfjr/baEIcMAQLBacmZj4ZnfsBepLXtPxrT5GnurGwpmNaQGT+2iaRXlZ
- rM2FK2iZrwGOR0KHRObMuQq71FufFVF29qeajoCirYWnt7d4+U6n6IQIipCfMxw6s6rc8sy0o
- QxgPK0j3RUlOJjWrkvcX8T87eG2C+/Uj38vrlcrxxnODUnXXT3oIuZQVs/3qPsoLDc8U9n9tH
- DjlrVx/MeWJgn+muo/zgw/1v6vvn44SaRfb6WyqMrgNeYHLZ1NxglYREYx958IR3G1XcqD7c+
- 0dGEln4Y6nruCVf9wZwC2ariL4MyW2PYzEHW2srqGutziETXui+TbzqIzHNzp+ABYyz7GLddG
- yXRnpXAm7p379ZeHjV1T0B/vjqcR08agea6a++Cary0QS/9L8HkOjTQLPcyfoD7F5mIDaFoUi
- 3vyqZulkz+ORk9QWYQzCJLINlKp2/wr8Qv9GC5JIp9nXP0WZb5XFlpLD5wpBZCAEW5pBHLBiU
- w8v+eiln2awS1hTkA6WnVPH/2BB+Wbukk+LNCtFQ+pM0VXOsU/wQsSr0GTVG8R8RWcFgSi0Tf
- qu4CBkYarKQT9OgPGXstf/GbFnALmtivSe5Vrw7fMiVekkgbhuKjACNUulTpAIbAnyFVoOQIR
- L/UJbkLKlvF3JGbZJko980I0THufZIweV85DLV1RLaRVZTl5T/mmTdJtcLboc884mmJjk4on5
- SUqfib6twZIIPLstLSdZ9v/eV3G/lvIlc5p284bxMkHjyjHUVMGjxydWIwxgVimsRycVCXeeE
- hsZpLZRbX91tq7FveP4wJgUenvFIn3I12hOLgHznO/QIS8Hs6Rymwzg5euoZ4TnhtIv9ihLcx
- jLYstd/l/WnS5GoSGk2QecYrfkv145r+5FbmR3iQYTeuZmyGhkRnTkpKUaN4kxvLi4o0T/iZS
- kkgZKVjclMV4zgJjwms1b6j5PzhL5VUmuJoxzCkU3bgZtZ4GrIOcZy+CdXr+voxUp+KYokuuo
- bcb9t34FIPLlOEQbpgP/qudbPtWlzn1o3EARwXQNH4a5/IZcdFDoZ7emEpR1O2Rq5B9m618Ja
- k9Yp2rwVQbTj26Qa3iriyYqhp+sCFg88fo6NUV4avUHwQre7tjp+UswS5IGyDykYhNPzqL8S4
- Jc/9KPkNWHE1dUylL
+        id S1730423AbgFUP5u (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 21 Jun 2020 11:57:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730390AbgFUP5u (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 21 Jun 2020 11:57:50 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AB83C061794
+        for <dmaengine@vger.kernel.org>; Sun, 21 Jun 2020 08:57:50 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id b4so13440692qkn.11
+        for <dmaengine@vger.kernel.org>; Sun, 21 Jun 2020 08:57:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=kb5+aZrzNx6tSI6L/Ms1DanPrl0vUL+IeDMeU6prOnU=;
+        b=ZO1+qIyH0nQp/ljo0rnCFrFsFc4WQdkD+czFD0nuKMTgFIjbIq9vrCc6VVyXKWOf2B
+         xTUygwZtr1j5jQhA/IuOQoTmrwGyUZNQE4Ynl4JuwBdOWxswhEwyS/WuoRTtt/MuCjDS
+         OSDHF9uvbYGoejYse9YG/iZj1Ra6TQ3ApgSau5M2TjWKaAVOOmoxubv3HZXEz5rNKpBl
+         6Czk8TArS/X2STiaKWuFCGY0j8hyCgapra8xKC4f6IiugwC8NbjpwBHdydITQ5zraUkH
+         Vdv6rcgsTOieuDj+Ru+UoRVqbGjKdzx90xNh1LNIPmS+I9mvJOWpO8MjoPdUOFBkMDwK
+         6qGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kb5+aZrzNx6tSI6L/Ms1DanPrl0vUL+IeDMeU6prOnU=;
+        b=FTujdCydQTRnAeLytFGvBTWW5q4yLuSmcgBDM+oFJ2RscKvtCrGaCywjteP/EJ+10o
+         u+9gnBkpY0F5M5yAA58YaehFugu6Eni/jh5q7IOy4JCCakGZhjsD1qRzrPJGoUerBgvY
+         H5GnS/KHQArxSAMdxgvmobNi9l8se3suRZChwtpmpLahT6h0SUd0jH7yRorJ6tNYyo8d
+         Guac/PKK1ArotDQbuDgLbmyuoruV+4SLQik7H3hnsVvKOlHWDdvWSAKb2753w8uil4ck
+         n6mgW8VXv6397NPaPTZau5p17J0LVzMHhacDaGMZslKlCO1Pb3asnBOUzszKAOHCZK/3
+         iDog==
+X-Gm-Message-State: AOAM533rYAmi+cqabmAIc7ojIJmdu8oNxgdj63pADHG5xSLWT+uD5Byz
+        Gb1KvB9kh1rnVIdAu1xI1Qs=
+X-Google-Smtp-Source: ABdhPJx2WRPW9tE6une1UHHm2fK5tgAIYrpxF822hRAJ7Milj37p+bvnUpDBQ+1VEvPrvg5lbocRyw==
+X-Received: by 2002:a37:e30a:: with SMTP id y10mr12167937qki.151.1592755069422;
+        Sun, 21 Jun 2020 08:57:49 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14c:482:92b:9524:444f:ca0e:d637])
+        by smtp.gmail.com with ESMTPSA id e11sm2267qtp.67.2020.06.21.08.57.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Jun 2020 08:57:48 -0700 (PDT)
+From:   Fabio Estevam <festevam@gmail.com>
+To:     vkoul@kernel.org
+Cc:     frieder.schrempf@kontron.de, dmaengine@vger.kernel.org,
+        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
+        Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH] dmaengine: imx-sdma: Fix: Remove 'always true' comparison
+Date:   Sun, 21 Jun 2020 12:57:30 -0300
+Message-Id: <20200621155730.28766-1-festevam@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-I propose to combine two tags in the previous patch subject.
+event_id0 is defined as 'unsigned int', so it is always greater or
+equal to zero.
 
+Remove the unneeded comparisons to fix the following W=1 build
+warning:
 
-> pm_runtime_get_sync() increments the runtime PM usage counter even
-> when it returns an error code. Thus a pairing decrement is needed on
-> the error handling path to keep the counter balanced.
+drivers/dma/imx-sdma.c: In function 'sdma_free_chan_resources':
+drivers/dma/imx-sdma.c:1334:23: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+1334 |  if (sdmac->event_id0 >= 0)
+|                       ^~
+drivers/dma/imx-sdma.c: In function 'sdma_config':
+drivers/dma/imx-sdma.c:1635:23: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+1635 |  if (sdmac->event_id0 >= 0) {
+|               
 
-* Can an imperative wording be nicer for the change description?
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
-Documentation/process/submitting-patches.rst?id=3D64677779e8962c20b580b471=
-790fe42367750599#n151
+Fixes: 25962e1a7f1d ("dmaengine: imx-sdma: Fix the event id check to include RX event for UART6")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+---
+ drivers/dma/imx-sdma.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-* Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the commit mess=
-age?
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index 91774039ae5d..270992c4fe47 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -1331,8 +1331,7 @@ static void sdma_free_chan_resources(struct dma_chan *chan)
+ 
+ 	sdma_channel_synchronize(chan);
+ 
+-	if (sdmac->event_id0 >= 0)
+-		sdma_event_disable(sdmac, sdmac->event_id0);
++	sdma_event_disable(sdmac, sdmac->event_id0);
+ 	if (sdmac->event_id1)
+ 		sdma_event_disable(sdmac, sdmac->event_id1);
+ 
+@@ -1632,11 +1631,9 @@ static int sdma_config(struct dma_chan *chan,
+ 	memcpy(&sdmac->slave_config, dmaengine_cfg, sizeof(*dmaengine_cfg));
+ 
+ 	/* Set ENBLn earlier to make sure dma request triggered after that */
+-	if (sdmac->event_id0 >= 0) {
+-		if (sdmac->event_id0 >= sdmac->sdma->drvdata->num_events)
+-			return -EINVAL;
+-		sdma_event_enable(sdmac, sdmac->event_id0);
+-	}
++	if (sdmac->event_id0 >= sdmac->sdma->drvdata->num_events)
++		return -EINVAL;
++	sdma_event_enable(sdmac, sdmac->event_id0);
+ 
+ 	if (sdmac->event_id1) {
+ 		if (sdmac->event_id1 >= sdmac->sdma->drvdata->num_events)
+-- 
+2.17.1
 
-
-> ---
-> drivers/dma/tegra210-adma.c | 5 ++++-
-
-I find it nicer to replace the triple dashes before this diffstat
-by a blank line.
-
-Regards,
-Markus

@@ -2,118 +2,65 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BDBB9203B97
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2020 17:54:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 720BB203BAD
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2020 17:58:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbgFVPyr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 22 Jun 2020 11:54:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726328AbgFVPyq (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 22 Jun 2020 11:54:46 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53FBF2074D;
-        Mon, 22 Jun 2020 15:54:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592841286;
-        bh=oRJB6h/bS+tqbd9R39cS2329vCq3WIUuVv0P5qICFUs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1rAAOtWug0zRuuAKt9uYzXZhuiodYywEsoqay8UQK3SGp4XmBOkmVS428PppVFfJK
-         y+vATJ5E/6KVsCPPVP8gJwSOqDwxnogBkP0VDTbYzkWSkddu19cGnxO7R8uK4BKSly
-         uwZBbjQd5lWiKAzjITZLVpbTBPJ4a2wHK2HK2n10=
-Date:   Mon, 22 Jun 2020 21:24:40 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Thomas Ruf <freelancer@rufusul.de>
-Cc:     Federico Vaga <federico.vaga@cern.ch>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: DMA Engine: Transfer From Userspace
-Message-ID: <20200622155440.GM2324254@vkoul-mobl>
-References: <5614531.lOV4Wx5bFT@harkonnen>
- <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
- <20200621072457.GA2324254@vkoul-mobl>
- <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
- <20200622044733.GB2324254@vkoul-mobl>
- <419762761.402939.1592827272368@mailbusiness.ionos.de>
+        id S1729358AbgFVP6g (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 22 Jun 2020 11:58:36 -0400
+Received: from sonic302-21.consmr.mail.ne1.yahoo.com ([66.163.186.147]:44705
+        "EHLO sonic302-21.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729250AbgFVP6g (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 22 Jun 2020 11:58:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1592841515; bh=ac0sCjJUI93cXt8Ne4UV+BUmdTO8c8UeaDLEdPti3zY=; h=Date:From:Reply-To:Subject:References:From:Subject; b=scCB+Q6Gjf0KzflGkUiiHnirxZPhUadIbQy4yqWUwgd55dcbqJHRgQGLKmTmzqJRp9B2jypnIKM0+UPee5Qdin17acYTeNSrZNUWc6b8oFHl1JV6YKexGdFVS+/g68rZoDDx9kHpElPAxiEVNlQC8DiI6l9b0bVmEziivC8tnStES7wQyJe+E5PdVac/SOi9fBmvp+eAJtQBd8y/Fgr2PCNau4wnbAY64iunL4XaQjLCqJ139Y7RY8FW2N+MyDAiVOai0ceUcO2kUiFo4FiBwCBNMJq9ytN3HTe7p8faMG9+6vDMjF/bPQnwGRC3YsYHGGXB+LMYsdqWdmJRLW/Axw==
+X-YMail-OSG: Dx4DwhEVM1nMKsfl753AL1pa_1MAl8PfB8S1hTI6fa0HXgcVGSu063xlTclFjGM
+ Tws5nt5YK7rscRG_1mkppPcX.Erbobn8VyUscr9DzjmOdR1UzLYgvXUvwhaZ7ryd1WNLUxbzGTWZ
+ KbS4DctdPNI3mv1hwwM_UZnyBQvKFBybprZU35c3IxT4Lyw41JmhXjAi784Nn2ypycxtE8eKgoW1
+ L41NbW6aZHZvtjCd5OZ1YuuIsrybZOWnlx2YD9JufWql.U0.H4v8oIuuL5ePMzn8ubBi49QDnv.k
+ YWliC2QYR8SeTaHA1giR.cczaM4SDsn.6AG2OqP38l4y.ANQ3RhADP6n3fsDMIgVAqwC4lQFXuH4
+ 8mslR4RB8TxntYo8eTAVJj_yMmLP7hEkTBa.ovdicFbV00z4EfmVLkHPi971cPA59HIf1fTiu5EY
+ hkoJhl2Ss1sDmzehldZhUO_zbjfWoO0J_ar5mrHAdQrZl8XBanSCqVUAUj13U88AjW3UthilWyZB
+ gdhHlDgfsV6hdx51ZsdEgrNGnND41QNriAPwC2X4LADhjlssDD0ll2zrYI8xS0_uRi3rgaNXa_qx
+ .qhLlOqvP5BlTMHWYE_A6aka2RWQ9Ge6dfqtZfecpiBoI684jYmkMa4s7SIJ6Xie.RCfp4s82uJa
+ a7ah.2fuCxJnxTVL8g9.uCLWZjhj_l7sZzzc99TTa0_U5r5Iu_MIK7midAJA27doj1Mh3gECuy_u
+ EUwWWBkn6PsZMHiFM9DtKhLHunaHNxtIJYqynw6_V8nJOMKaFJc6lUxXPbGZzolNX3R5My4wimNw
+ 3zCYTc1boqkUzSaUoKws_OgOHDPCd7p_T0pME_PS.gkwTdScv.ZvvUviqwp4ZXwW8Gv8HvdzK_3T
+ RgctJIfLBUlvQd94oTCmBfbQjgtMK8iDI2fG0tGIqt54fchCYNZWvsjm2p1_zsqIoCzVCuIhQRxP
+ IPUIc45AD_PHDPYsVAf2WbjRu2z4bM_yPsp3z28AcqdCSGZZg0bCPVWWyRdwnyymN9GJFlBarMeC
+ bimltNJ2B5bQG36hI9AyJDXtfqoK89rSiGL_HdR.kfXEb88dpSQ3tA8rrw5mnWKH6l_UR8kZcYav
+ N1lVsOwcwlkyi4sjcUs9P4AYeu.TBh1WZuj89heu5qvwpFQSOsjpoKN5u.y0QEpabN9EnLs_kiaL
+ OUVmoS1GwABBJSEmGcKs0iRrnpw55fDV1OvEmMwWjEz6pkcOoxSaAtsUPwlpKW9KohCdEOZqTedT
+ 3mLuj4Wab9.aQVB8jP_uJLcIpaZbaGBDIKk9ZuTtW8zpp9lm8y5PcigeF3iSLLUJXXixKbJDhRw-
+ -
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.ne1.yahoo.com with HTTP; Mon, 22 Jun 2020 15:58:35 +0000
+Date:   Mon, 22 Jun 2020 15:58:31 +0000 (UTC)
+From:   Karim Zakari <kariim1960z@gmail.com>
+Reply-To: kzakari04@gmail.com
+Message-ID: <823920628.1857692.1592841511779@mail.yahoo.com>
+Subject: URGENT REPLY.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <419762761.402939.1592827272368@mailbusiness.ionos.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+References: <823920628.1857692.1592841511779.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16138 YMailNodin Mozilla/5.0 (Windows NT 6.1; ) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36
+To:     unlisted-recipients:; (no To-header on input)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 22-06-20, 14:01, Thomas Ruf wrote:
-> > On 22 June 2020 at 06:47 Vinod Koul <vkoul@kernel.org> wrote:
-> > 
-> > On 21-06-20, 22:36, Federico Vaga wrote:
-> > > On Sun, Jun 21, 2020 at 12:54:57PM +0530, Vinod Koul wrote:
-> > > > On 19-06-20, 16:31, Dave Jiang wrote:
-> > > > > 
-> > > > > 
-> > > > > On 6/19/2020 3:47 PM, Federico Vaga wrote:
-> > > > > > Hello,
-> > > > > >
-> > > > > > is there the possibility of using a DMA engine channel from userspace?
-> > > > > >
-> > > > > > Something like:
-> > > > > > - configure DMA using ioctl() (or whatever configuration mechanism)
-> > > > > > - read() or write() to trigger the transfer
-> > > > > >
-> > > > > 
-> > > > > I may have supposedly promised Vinod to look into possibly providing
-> > > > > something like this in the future. But I have not gotten around to do that
-> > > > > yet. Currently, no such support.
-> > > > 
-> > > > And I do still have serious reservations about this topic :) Opening up
-> > > > userspace access to DMA does not sound very great from security point of
-> > > > view.
-> > > 
-> > > I was thinking about a dedicated module, and not something that the DMA engine
-> > > offers directly. You load the module only if you need it (like the test module)
-> > 
-> > But loading that module would expose dma to userspace. 
-> > > 
-> > > > Federico, what use case do you have in mind?
-> > > 
-> > > Userspace drivers
-> > 
-> > more the reason not do do so, why cant a kernel driver be added for your
-> > usage?
-> 
-> by chance i have written a driver allowing dma from user space using a memcpy like interface ;-)
-> now i am trying to get this code upstream but was hit by the fact that DMA_SG is gone since Aug 2017 :-(
-> 
-> just let me introduce myself and the project:
-> - coding in C since '91
-> - coding in C++ since '98
-> - a lot of stuff not relevant for this ;-)
-> - working as a freelancer since Nov '19
-> - implemented a "dma-sg-proxy" driver for my client in Mar/Apr '20 to copy camera frames from uncached memory to cached memory using a second dma on a Zynq platform
-> - last week we figured out that we can not upgrade from "Xilinx 2019.2" (kernel 4.19.x) to "2020.1" (kernel 5.4.x) because the DMA_SG interface is gone
-> - subscribed to dmaengine on friday, saw the start of this discussion on saturday
-> - talked to my client today if it is ok to try to revive DMA_SG and get our driver upstream to avoid such problems in future
 
-DMA_SG was removed as it had no users, if we have a user (in-kernel) we
-can certainly revert that removal patch.
-> 
-> here the struct for the ioctl:
-> 
-> typedef struct {
->   unsigned int struct_size;
->   const void *src_user_ptr;
->   void *dst_user_ptr;
->   unsigned long length;
->   unsigned int timeout_in_ms;
-> } dma_sg_proxy_arg_t;
 
-Again, am not convinced opening DMA to userspace like this is a great
-idea. Why not have Xilinx camera driver invoke the dmaengine and do
-DMA_SG ?
+Good-Day=C2=A0Friend,
 
--- 
-~Vinod
+=C2=A0Hope=C2=A0you=C2=A0are=C2=A0doing=C2=A0great=C2=A0Today.=C2=A0I=C2=A0=
+have=C2=A0a=C2=A0proposed=C2=A0business=C2=A0deal=C2=A0worthy=C2=A0(US$16.5=
+=C2=A0Million=C2=A0Dollars)=C2=A0that=C2=A0will=C2=A0benefit=C2=A0both=C2=
+=A0parties.=C2=A0This=C2=A0is=C2=A0legitimate'=C2=A0legal=C2=A0and=C2=A0you=
+r=C2=A0personality=C2=A0will=C2=A0not=C2=A0be=C2=A0compromised.
+
+Waiting=C2=A0for=C2=A0your=C2=A0response=C2=A0for=C2=A0more=C2=A0details,=
+=C2=A0As=C2=A0you=C2=A0are=C2=A0willing=C2=A0to=C2=A0execute=C2=A0this=C2=
+=A0business=C2=A0opportunity=C2=A0with=C2=A0me.
+
+Sincerely=C2=A0Yours,
+Mr.=C2=A0Karim=C2=A0Zakari.

@@ -2,82 +2,83 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 330BB202F55
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2020 06:47:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 185F0202F76
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2020 07:24:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbgFVErj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 22 Jun 2020 00:47:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbgFVErj (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 22 Jun 2020 00:47:39 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76426251D9;
-        Mon, 22 Jun 2020 04:47:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592801259;
-        bh=QP/FvS/+xhPIsPI6044PsAdG4oIimgoqOisNnpUKF54=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QjJssGyFpc0E8B+/mIdlFlKCQ4FNVFcefjeHVZgjbHADCfFq27dJMLEPyMkSAhRLM
-         6VYsWAiAceTcr04HNb6hcjgoVPiNWpOsqROLXcITJiSUvh1IjCejv6pBODOVy2VLGM
-         lSH/QLSOzS9q8KkQ4soGDR/BMVPXn2qwb56PX7RM=
-Date:   Mon, 22 Jun 2020 10:17:33 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Federico Vaga <federico.vaga@cern.ch>
-Cc:     Dave Jiang <dave.jiang@intel.com>,
+        id S1726604AbgFVFYU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 22 Jun 2020 01:24:20 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6380 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725934AbgFVFYU (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 22 Jun 2020 01:24:20 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9F0D935380A6FDC61A87;
+        Mon, 22 Jun 2020 13:24:16 +0800 (CST)
+Received: from [10.63.139.185] (10.63.139.185) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 22 Jun 2020 13:24:13 +0800
+Subject: Re: [PATCH][next] dmaengine: hisilicon: Use struct_size() in
+ devm_kzalloc()
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: DMA Engine: Transfer From Userspace
-Message-ID: <20200622044733.GB2324254@vkoul-mobl>
-References: <5614531.lOV4Wx5bFT@harkonnen>
- <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
- <20200621072457.GA2324254@vkoul-mobl>
- <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
+        Vinod Koul <vkoul@kernel.org>
+References: <20200617211135.GA8660@embeddedor>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From:   Zhou Wang <wangzhou1@hisilicon.com>
+Message-ID: <5EF0407D.2050007@hisilicon.com>
+Date:   Mon, 22 Jun 2020 13:24:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
+In-Reply-To: <20200617211135.GA8660@embeddedor>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.63.139.185]
+X-CFilter-Loop: Reflected
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 21-06-20, 22:36, Federico Vaga wrote:
-> On Sun, Jun 21, 2020 at 12:54:57PM +0530, Vinod Koul wrote:
-> > On 19-06-20, 16:31, Dave Jiang wrote:
-> > > 
-> > > 
-> > > On 6/19/2020 3:47 PM, Federico Vaga wrote:
-> > > > Hello,
-> > > >
-> > > > is there the possibility of using a DMA engine channel from userspace?
-> > > >
-> > > > Something like:
-> > > > - configure DMA using ioctl() (or whatever configuration mechanism)
-> > > > - read() or write() to trigger the transfer
-> > > >
-> > > 
-> > > I may have supposedly promised Vinod to look into possibly providing
-> > > something like this in the future. But I have not gotten around to do that
-> > > yet. Currently, no such support.
-> > 
-> > And I do still have serious reservations about this topic :) Opening up
-> > userspace access to DMA does not sound very great from security point of
-> > view.
+On 2020/6/18 5:11, Gustavo A. R. Silva wrote:
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes.
 > 
-> I was thinking about a dedicated module, and not something that the DMA engine
-> offers directly. You load the module only if you need it (like the test module)
-
-But loading that module would expose dma to userspace. 
+> This code was detected with the help of Coccinelle and, audited and
+> fixed manually.
 > 
-> > Federico, what use case do you have in mind?
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Looks good to me, thanks!
+
+Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
+
+> ---
+>  drivers/dma/hisi_dma.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
 > 
-> Userspace drivers
-
-more the reason not do do so, why cant a kernel driver be added for your
-usage?
-
--- 
-~Vinod
+> diff --git a/drivers/dma/hisi_dma.c b/drivers/dma/hisi_dma.c
+> index ed3619266a48..e1a958ae7925 100644
+> --- a/drivers/dma/hisi_dma.c
+> +++ b/drivers/dma/hisi_dma.c
+> @@ -511,7 +511,6 @@ static int hisi_dma_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	struct device *dev = &pdev->dev;
+>  	struct hisi_dma_dev *hdma_dev;
+>  	struct dma_device *dma_dev;
+> -	size_t dev_size;
+>  	int ret;
+>  
+>  	ret = pcim_enable_device(pdev);
+> @@ -534,9 +533,7 @@ static int hisi_dma_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>  	if (ret)
+>  		return ret;
+>  
+> -	dev_size = sizeof(struct hisi_dma_chan) * HISI_DMA_CHAN_NUM +
+> -		   sizeof(*hdma_dev);
+> -	hdma_dev = devm_kzalloc(dev, dev_size, GFP_KERNEL);
+> +	hdma_dev = devm_kzalloc(dev, struct_size(hdma_dev, chan, HISI_DMA_CHAN_NUM), GFP_KERNEL);
+>  	if (!hdma_dev)
+>  		return -EINVAL;
+>  
+> 

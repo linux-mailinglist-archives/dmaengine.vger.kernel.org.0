@@ -2,118 +2,84 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2F4220420A
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Jun 2020 22:38:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20672204DCC
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2020 11:22:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbgFVUii (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 22 Jun 2020 16:38:38 -0400
-Received: from mga07.intel.com ([134.134.136.100]:63493 "EHLO mga07.intel.com"
+        id S1732151AbgFWJWG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 23 Jun 2020 05:22:06 -0400
+Received: from mga04.intel.com ([192.55.52.120]:51683 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728336AbgFVUih (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 22 Jun 2020 16:38:37 -0400
-IronPort-SDR: obvhFr+Y3HyJjqA6JcSDduzaagjXkg2DCWH2KYou555Vli4XQK4K2NO6kpbxIPHz076q6omEJq
- NF8MuQ93OHSQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="209061904"
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="209061904"
+        id S1732134AbgFWJWG (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 23 Jun 2020 05:22:06 -0400
+IronPort-SDR: 7SzKYa+qnAO/NiXss/OBe9KtEBI08DecJHxU44g5ZvtTrfyjZDii8wGSOQhIGOUKRqWczRqdiD
+ UKiDZHH/GtaQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9660"; a="141517189"
+X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
+   d="scan'208";a="141517189"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2020 13:38:35 -0700
-IronPort-SDR: b9uDrulWsyEMjOxz9tP/+Q2io3zVm4u8wrmFQTGn9vDa/i1H8acvZ/cNFOtqc1aOrNvEfn/K7b
- VTtJ/jjP+Q4A==
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2020 02:22:05 -0700
+IronPort-SDR: cYBGZ+tJ+b20SzoiRWtVFn+m4nc9i0aYDmjQGbler+JuRvhBUDZMQF4g2RS6gWx/uVdo8xS7Ac
+ iJKAnNDKwyOg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,268,1589266800"; 
-   d="scan'208";a="451965409"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga005.jf.intel.com with ESMTP; 22 Jun 2020 13:38:34 -0700
-Subject: [PATCH v3] dmaengine: idxd: fix cdev locking for open and release
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     Nikhil Rao <nikhil.rao@intel.com>, dmaengine@vger.kernel.org
-Date:   Mon, 22 Jun 2020 13:38:34 -0700
-Message-ID: <159285824892.64944.2905413694915141834.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/unknown-version
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-IronPort-AV: E=Sophos;i="5.75,270,1589266800"; 
+   d="scan'208";a="478685778"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by fmsmga006.fm.intel.com with ESMTP; 23 Jun 2020 02:22:01 -0700
+From:   Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>
+To:     dmaengine@vger.kernel.org, vkoul@kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        chuanhua.lei@linux.intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, malliamireddy009@gmail.com,
+        Amireddy Mallikarjuna reddy 
+        <mallikarjunax.reddy@linux.intel.com>
+Subject: [PATCH v3 0/2] Add Intel LGM soc DMA support
+Date:   Tue, 23 Jun 2020 17:20:10 +0800
+Message-Id: <cover.1592895906.git.mallikarjunax.reddy@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Nikhil Rao <nikhil.rao@intel.com>
+Add DMA controller driver for Lightning Mountain(LGM) family of SoCs.
 
-add the wq lock in cdev open and release call. This fixes
-race conditions observed in the open and close routines.
+The main function of the DMA controller is the transfer of data from/to any
+DPlus compliant peripheral to/from the memory. A memory to memory copy
+capability can also be configured.
+This ldma driver is used for configure the device and channnels for data
+and control paths.
 
-Fixes: 42d279f9137a ("dmaengine: idxd: add char driver to expose submission portal to userland")
+These controllers provide DMA capabilities for a variety of on-chip
+devices such as SSC, HSNAND and GSWIP.
 
-Signed-off-by: Nikhil Rao <nikhil.rao@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v3:
-- Caught uninit rc variable.
+-------------
+Future Plans:
+-------------
+LGM SOC also supports Hardware Memory Copy engine.
+The role of the HW Memory copy engine is to offload memory copy operations
+from the CPU.
 
-v2:
-- Added kbuild fix from Dan Carpenter re:
-smatch warnings:
-drivers/dma/idxd/cdev.c:106 idxd_cdev_open() error: uninitialized symbol 'ctx'.
+Amireddy Mallikarjuna reddy (2):
+  dt-bindings: dma: Add bindings for intel LGM SOC
+  Add Intel LGM soc DMA support.
 
- drivers/dma/idxd/cdev.c |   19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/dma/intel,ldma.yaml        |  428 +++++
+ drivers/dma/Kconfig                                |    2 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/lgm/Kconfig                            |    9 +
+ drivers/dma/lgm/Makefile                           |    2 +
+ drivers/dma/lgm/lgm-dma.c                          | 1956 ++++++++++++++++++++
+ include/linux/dma/lgm_dma.h                        |   27 +
+ 7 files changed, 2425 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/intel,ldma.yaml
+ create mode 100644 drivers/dma/lgm/Kconfig
+ create mode 100644 drivers/dma/lgm/Makefile
+ create mode 100644 drivers/dma/lgm/lgm-dma.c
+ create mode 100644 include/linux/dma/lgm_dma.h
 
-diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index ff49847e37a8..cb376cf6a2d2 100644
---- a/drivers/dma/idxd/cdev.c
-+++ b/drivers/dma/idxd/cdev.c
-@@ -74,6 +74,7 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
- 	struct idxd_device *idxd;
- 	struct idxd_wq *wq;
- 	struct device *dev;
-+	int rc = 0;
- 
- 	wq = inode_wq(inode);
- 	idxd = wq->idxd;
-@@ -81,17 +82,27 @@ static int idxd_cdev_open(struct inode *inode, struct file *filp)
- 
- 	dev_dbg(dev, "%s called: %d\n", __func__, idxd_wq_refcount(wq));
- 
--	if (idxd_wq_refcount(wq) > 0 && wq_dedicated(wq))
--		return -EBUSY;
--
- 	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
- 	if (!ctx)
- 		return -ENOMEM;
- 
-+	mutex_lock(&wq->wq_lock);
-+
-+	if (idxd_wq_refcount(wq) > 0 && wq_dedicated(wq)) {
-+		rc = -EBUSY;
-+		goto failed;
-+	}
-+
- 	ctx->wq = wq;
- 	filp->private_data = ctx;
- 	idxd_wq_get(wq);
-+	mutex_unlock(&wq->wq_lock);
- 	return 0;
-+
-+ failed:
-+	mutex_unlock(&wq->wq_lock);
-+	kfree(ctx);
-+	return rc;
- }
- 
- static int idxd_cdev_release(struct inode *node, struct file *filep)
-@@ -105,7 +116,9 @@ static int idxd_cdev_release(struct inode *node, struct file *filep)
- 	filep->private_data = NULL;
- 
- 	kfree(ctx);
-+	mutex_lock(&wq->wq_lock);
- 	idxd_wq_put(wq);
-+	mutex_unlock(&wq->wq_lock);
- 	return 0;
- }
- 
+-- 
+2.11.0
 

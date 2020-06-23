@@ -2,65 +2,115 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 247BD2051DC
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2020 14:09:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16B83205265
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Jun 2020 14:25:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732489AbgFWMJQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 23 Jun 2020 08:09:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60992 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732471AbgFWMJP (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 23 Jun 2020 08:09:15 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59717C061573
-        for <dmaengine@vger.kernel.org>; Tue, 23 Jun 2020 05:09:15 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id e2so9500598qvw.7
-        for <dmaengine@vger.kernel.org>; Tue, 23 Jun 2020 05:09:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=7fNnQnFssZCc2Jtw2cUlJB4v7zrpRiQS682aXMZO9+Q=;
-        b=o9Cejo90AbjcV+1x5hk0Ngs15ObZoKyJ9b+63RFFtAkD7GhBXrYPXJ0hygPe3ooeyV
-         bWtf0YQCoUBSbq5teqeoBkOr3/TeIpPxvOPJHvRRfJmnrtoW9mGUxjG0VXc61VtjwOVK
-         02KYMk+XOQLeeraqxM6fFfKVVb3XklLj9GAsmwLp8G+S87wOgVxCVy0wtgt9ZN7aEoNf
-         68vVI/u6S429kfF+FO0QSYX7C1OSYlu5aC+Fmqtky4pbuoziTRo1XT3uGmYQ4AIE4FTe
-         xmRvgSVaZd4ZREl5468aSvaZzCLtE31sAd9FhNzYYOuOoydb3DCg00FB86U3eUYX9pPk
-         78pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=7fNnQnFssZCc2Jtw2cUlJB4v7zrpRiQS682aXMZO9+Q=;
-        b=uTpcRVRQ8fkCGgZF6b2d+HDvTEXj8r6rly/bMyxxaXo6gfL+mT/6u1KqIdXh9pEm5s
-         bypajhn1vG8toFbAjqOLCtvYSU+08TRawWMd7SKaomqDlBNxX92e+im+T+PLdm6cjEk/
-         bt6qxFwRDCQTvV5h0coCtyvBxZzU8AJczYt3PDEJ+21XgqdLIdfXKjAv+NiSKGhQSrRQ
-         1F71VFTn7R9iPTR5bS7VlT8KcQ1ZnC8giZ3u84Gw+Gfd/nuMnupb5TYGNIMA+sFXt8ja
-         GMZl1OXNdlujgQ7srsx02kjUTRhvCrbEbV+HXJm6SKsZ6uTxyGCOv9I0xPp67T8tr1Jd
-         VZPw==
-X-Gm-Message-State: AOAM530ZRKVQcQKh2iaS4Cx46qHQIL+3aa0k93DK+E21ckSK1UOMploA
-        jbl3hJ/M2CdEqOtmOclyZK7Wv63sAhxYtuuXHE8=
-X-Google-Smtp-Source: ABdhPJz9LMZDsSS2pS6SZav2zjdmTuN/Edc+h/ZrzrKzortfY8zyrqcDl2jL6fvMYB8AGZNj9T136bxw2h1oA8LRijs=
-X-Received: by 2002:ad4:4e14:: with SMTP id dl20mr26712978qvb.101.1592914154681;
- Tue, 23 Jun 2020 05:09:14 -0700 (PDT)
+        id S1732584AbgFWMZ1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 23 Jun 2020 08:25:27 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8027 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732511AbgFWMZ0 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 23 Jun 2020 08:25:26 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ef1f4880001>; Tue, 23 Jun 2020 05:24:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 23 Jun 2020 05:25:26 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 23 Jun 2020 05:25:26 -0700
+Received: from [10.26.75.236] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 23 Jun
+ 2020 12:25:22 +0000
+Subject: Re: [PATCH] [v4] dmaengine: tegra210-adma: Fix runtime PM imbalance
+ on error
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Dinghao Liu <dinghao.liu@zju.edu.cn>, Kangjie Lu <kjlu@umn.edu>,
+        "Laxman Dewangan" <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200621054710.9915-1-dinghao.liu@zju.edu.cn>
+ <44d7771e-5600-19c2-888a-dd226cbc4b50@nvidia.com>
+ <CAMuHMdVu=Tm4UTN1GAc3_uy00UhYYJ7ZPyq1qPCXQ+iP3hksfg@mail.gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <a1357f1f-63d9-93e9-ea7d-e594ba9fc219@nvidia.com>
+Date:   Tue, 23 Jun 2020 13:25:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Received: by 2002:ac8:47c2:0:0:0:0:0 with HTTP; Tue, 23 Jun 2020 05:09:14
- -0700 (PDT)
-Reply-To: bektery@outlook.com
-From:   YAVUZ BEKTER <bakert.jg@gmail.com>
-Date:   Tue, 23 Jun 2020 05:09:14 -0700
-Message-ID: <CAAUSuTV2v-PB6ocMk_Pwv+hh9OxFEUfn-NKZmyu5ifRBqD=Yrw@mail.gmail.com>
-Subject: Hello.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAMuHMdVu=Tm4UTN1GAc3_uy00UhYYJ7ZPyq1qPCXQ+iP3hksfg@mail.gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1592915080; bh=/mxJgXkpwkrXVLzjqF5kjYdPo9eAp3xBgryscNpKjzY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=aHCKS8W1gQCRe/AiErUzoJZrnE0vCWXqCiwH4pFs66T0K2DzlrPKMR5pIWRC+Nf7C
+         +hVYiGlYPUipQ8Rvy7CnyPGW2RtyCaLbiKZUCbrQGaEuxUDthj0xBZCRo97Aq0YpiD
+         QZV0zj6V8/TfDTfk2FZp0I2mpeSVg5fsFYTOYeocVkhzvUArcMPuBmd87Y7dzmJzpS
+         tP9QWwSHEg1gfd7D/S/av6Z/7+k/O/54nvTUyebvv76/3R+XEosfOLJzZnNAUh4DqZ
+         0JFvG1Bq77fr74oJAY6eV5DPUQsQhuL6ocIsLwU2xFhX3h6eJ+Np2FN2GiJVBtkAiZ
+         IZ6+6wHXOJpDA==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-I am the foreign operations director of Bank of Turkey.
-My name is Mr, Yavuz. I have a sensitive investment project to discuss
-with you, please reply now.
-________________________
-Ik ben de directeur buitenlandse activiteiten van de Bank of Turkey.
-Mijn naam is meneer Yavuz. Ik moet een gevoelig investeringsproject bespreken
-met u, antwoord dan nu.
+Hi Geert,
+
+On 23/06/2020 13:08, Geert Uytterhoeven wrote:
+> Hi Jon,
+> 
+> More stirring in the cesspool ;-)
+
+Ha! Indeed.
+
+> On Tue, Jun 23, 2020 at 12:13 PM Jon Hunter <jonathanh@nvidia.com> wrote:
+>> On 21/06/2020 06:47, Dinghao Liu wrote:
+>>> pm_runtime_get_sync() increments the runtime PM usage counter even
+>>> when it returns an error code. Thus a pairing decrement is needed on
+>>> the error handling path to keep the counter balanced.
+>>
+>> So you have not mentioned here why you are using _noidle and not _put.
+>> Furthermore, in this patch [0] you are not using _noidle to fix the same
+>> problem in another driver. We should fix this in a consistent manner
+>> across all drivers, otherwise it leads to more confusion.
+>>
+>> Finally, Rafael mentions we should just use _put [0] and so I think we
+>> should follow his recommendation.
+>>
+>> Jon
+>>
+>> [0] https://lkml.org/lkml/2020/5/21/601
+> 
+> "_noidle() is the simplest one and it is sufficient."
+> https://lore.kernel.org/linux-i2c/CAJZ5v0i87NGcy9+kxubScdPDyByr8ypQWcGgBFn+V-wDd69BHQ@mail.gmail.com/
+
+Good to know. This detail should be spelled out in the changelog so that
+it is clear why we are using _noidle and not _put. I did take a look and
+it did seem to handle the usage_count OK, but I was concerned if there
+could be something else in the _put path that may get missed.
+
+Anyway, I am fine with the change, but with an updated changelog on why
+_noidle is being used.
+
+> You never know what additional things the other put* variants
+> will start doing in the future...
+
+Hopefully not, as that would be a breakage of the API itself. From what
+Rafael said that all _put calls should work and if at some point in the
+future they don't, then that seems like a regression.
+
+Jon
+
+-- 
+nvpublic

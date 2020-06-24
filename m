@@ -2,152 +2,182 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD3A320700D
-	for <lists+dmaengine@lfdr.de>; Wed, 24 Jun 2020 11:30:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB18C207020
+	for <lists+dmaengine@lfdr.de>; Wed, 24 Jun 2020 11:36:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389330AbgFXJar (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 24 Jun 2020 05:30:47 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:51329 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388336AbgFXJaq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 Jun 2020 05:30:46 -0400
-Received: from oxbsgw03.schlund.de ([172.19.248.4]) by
- mrelayeu.kundenserver.de (mreue010 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MA7X0-1jguBi1Qz4-00Bbjz; Wed, 24 Jun 2020 11:30:36 +0200
-Date:   Wed, 24 Jun 2020 11:30:35 +0200 (CEST)
-From:   Thomas Ruf <freelancer@rufusul.de>
-Reply-To: Thomas Ruf <freelancer@rufusul.de>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Federico Vaga <federico.vaga@cern.ch>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <2077253476.601371.1592991035969@mailbusiness.ionos.de>
-In-Reply-To: <1835214773.354594.1592843644540@mailbusiness.ionos.de>
-References: <5614531.lOV4Wx5bFT@harkonnen>
- <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
- <20200621072457.GA2324254@vkoul-mobl>
- <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
- <20200622044733.GB2324254@vkoul-mobl>
- <419762761.402939.1592827272368@mailbusiness.ionos.de>
- <20200622155440.GM2324254@vkoul-mobl>
- <1835214773.354594.1592843644540@mailbusiness.ionos.de>
-Subject: Re: DMA Engine: Transfer From Userspace
+        id S2389667AbgFXJgX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 24 Jun 2020 05:36:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:53316 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389647AbgFXJgW (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 24 Jun 2020 05:36:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6B961FB;
+        Wed, 24 Jun 2020 02:36:20 -0700 (PDT)
+Received: from [192.168.2.22] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 719873F73C;
+        Wed, 24 Jun 2020 02:36:19 -0700 (PDT)
+Subject: Re: [PATCH v4 02/10] dmaengine: Actions: Add support for S700 DMA
+ engine
+To:     Vinod Koul <vkoul@kernel.org>,
+        Amit Singh Tomar <amittomer25@gmail.com>
+Cc:     afaerber@suse.de, manivannan.sadhasivam@linaro.org,
+        dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org
+References: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
+ <1591697830-16311-3-git-send-email-amittomer25@gmail.com>
+ <20200624061529.GF2324254@vkoul-mobl>
+From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Autocrypt: addr=andre.przywara@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ i4aIXCH3Wv6K
+Organization: ARM Ltd.
+Message-ID: <75d154d0-2962-99e6-a7c7-bf0928ec8b2a@arm.com>
+Date:   Wed, 24 Jun 2020 10:35:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200624061529.GF2324254@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-Mailer: Open-Xchange Mailer v7.10.1-Rev31
-X-Originating-Client: open-xchange-appsuite
-X-Provags-ID: V03:K1:JkjbXB6gIjXfWDHn+zaE2EgMRkWzkoxUNZFoGem1EWo9Jk0UvLN
- nz1KSGrDEbmmEuVy4jD516504w4qAR+6Ld0pxsBJrF6us2/oyChcD+QWH7co+Fm1ygXhq3w
- ncW/Us9qaI2sTfEHiyjwfLaNlLZOuA9vMQe5UvGXd6mP/M98NMYijYKIOAaSg8R557NjLIX
- zWOeOsFuqG9aLvupjWOIw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:H4Cu/Gae8GU=:QRgYdJ56wIDVlNDJg1/hua
- 1J5QhHWN8CLVGd6NKOSSDAN7YTt2zEgMC+b3Dbrz+nsHfRO13lRRrTE5bYmdW3I6adYIyIS8y
- LOogwO3axds+sqr/OllgiSnCHfKLKI9tCkECZ9o/h9VtLtS88obxdGBXsMP5saL9ik8mfjeIm
- mDO1akk0JBMdsxu7Q0SeeYRemCZVHqGY2CO3ArxsGxqd0D+MGu769WZXDNYyXxSzYM+djwEN0
- 67rGEigJL74clXe2DoLYz5uc48GTBtIJ5K1/BowUhV/B5hppdzzGy2PXZ1Q8Tr55RHD2IzbPG
- lUvP3//QtuqazlpGna3xqRzW67u3BUuYD6CurhyoT0XOWXV7OdfB4bP9sPMB7nZSBEEJ3e1Br
- o7X29erl3KBGJJDZC9ZvHSjivv/TKIuguPEm/HzlYG8R6KLAObsNamQWmInhErAytHyxDgF9t
- qlhWjEJI8Gg96X5p1v7og5OZjL2ePrGb1d0F0puVNX9iupZrkSVviSUGauPKansENqdBBEMwS
- vAbb1d4xsjm/E5fZY7hdCNMtb+ULljPefOHS5AGDyveb59538j8gTlw3yXOsUoTSkwpiVvPbV
- P0PaYYz2BEFhpQgSmKUK09qMFhPS3trrJmTJQPwU9Y2X6ttr6Za7WpNuksLTqbtB1R803gvwN
- W7dvglY3iW2xyrYT6iDuUCz6ixq/MFfZhmTEKfY1J+ABScCKmZGGSRFeTYsH3oVNCzrHnvqFD
- K0g3iGb2AtoNTqyMqJWuWNJbRtaLzNDPjI+PTSaSqED49b1O0qI1U403pVyLx51JeJZNqnjxt
- 8tJa48rSKmq9sy4cxe3SG/1fiijYIt8O+hA4HXzeMWJY+7rKQI=
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On 24/06/2020 07:15, Vinod Koul wrote:
 
-> On 22 June 2020 at 18:34 Thomas Ruf <freelancer@rufusul.de> wrote:
-> 
-> 
-> 
-> > On 22 June 2020 at 17:54 Vinod Koul <vkoul@kernel.org> wrote:
-> > 
-> > 
-> > On 22-06-20, 14:01, Thomas Ruf wrote:
-> > > > On 22 June 2020 at 06:47 Vinod Koul <vkoul@kernel.org> wrote:
-> > > > 
-> > > > On 21-06-20, 22:36, Federico Vaga wrote:
-> > > > > On Sun, Jun 21, 2020 at 12:54:57PM +0530, Vinod Koul wrote:
-> > > > > > On 19-06-20, 16:31, Dave Jiang wrote:
-> > > > > > > 
-> > > > > > > 
-> > > > > > > On 6/19/2020 3:47 PM, Federico Vaga wrote:
-> > > > > > > > Hello,
-> > > > > > > >
-> > > > > > > > is there the possibility of using a DMA engine channel from userspace?
-> > > > > > > >
-> > > > > > > > Something like:
-> > > > > > > > - configure DMA using ioctl() (or whatever configuration mechanism)
-> > > > > > > > - read() or write() to trigger the transfer
-> > > > > > > >
-> > > > > > > 
-> > > > > > > I may have supposedly promised Vinod to look into possibly providing
-> > > > > > > something like this in the future. But I have not gotten around to do that
-> > > > > > > yet. Currently, no such support.
-> > > > > > 
-> > > > > > And I do still have serious reservations about this topic :) Opening up
-> > > > > > userspace access to DMA does not sound very great from security point of
-> > > > > > view.
-> > > > > 
-> > > > > I was thinking about a dedicated module, and not something that the DMA engine
-> > > > > offers directly. You load the module only if you need it (like the test module)
-> > > > 
-> > > > But loading that module would expose dma to userspace. 
-> > > > > 
-> > > > > > Federico, what use case do you have in mind?
-> > > > > 
-> > > > > Userspace drivers
-> > > > 
-> > > > more the reason not do do so, why cant a kernel driver be added for your
-> > > > usage?
-> > > 
-> > > by chance i have written a driver allowing dma from user space using a memcpy like interface ;-)
-> > > now i am trying to get this code upstream but was hit by the fact that DMA_SG is gone since Aug 2017 :-(
-> > > 
-> > > just let me introduce myself and the project:
-> > > - coding in C since '91
-> > > - coding in C++ since '98
-> > > - a lot of stuff not relevant for this ;-)
-> > > - working as a freelancer since Nov '19
-> > > - implemented a "dma-sg-proxy" driver for my client in Mar/Apr '20 to copy camera frames from uncached memory to cached memory using a second dma on a Zynq platform
-> > > - last week we figured out that we can not upgrade from "Xilinx 2019.2" (kernel 4.19.x) to "2020.1" (kernel 5.4.x) because the DMA_SG interface is gone
-> > > - subscribed to dmaengine on friday, saw the start of this discussion on saturday
-> > > - talked to my client today if it is ok to try to revive DMA_SG and get our driver upstream to avoid such problems in future
-> > 
-> > DMA_SG was removed as it had no users, if we have a user (in-kernel) we
-> > can certainly revert that removal patch.
-> 
-> yeah, already understood that.
-> 
-> > > 
-> > > here the struct for the ioctl:
-> > > 
-> > > typedef struct {
-> > >   unsigned int struct_size;
-> > >   const void *src_user_ptr;
-> > >   void *dst_user_ptr;
-> > >   unsigned long length;
-> > >   unsigned int timeout_in_ms;
-> > > } dma_sg_proxy_arg_t;
-> > 
-> > Again, am not convinced opening DMA to userspace like this is a great
-> > idea. Why not have Xilinx camera driver invoke the dmaengine and do
-> > DMA_SG ?
-> 
-> In our case we have several camera pipelines, in some cases uncached memory is okay (e. g. image goes directly to display framebuffer), in some cases not because we need to process the images on cpu or gpu and we for that need to copy to oridinary user memoy first. This seems easier to do by decoupling the driver code.
-> And one more thing: in case we engage the dma memcpy we want to copy to target memory which is prepared for IPC because we want to share these images with another process. The v4l2 interface did not look to be made for such cases but is possible by this "memcpy" approach.
+Hi,
 
-To make it short - i have two questions:
-- what are the chances to revive DMA_SG?
-- what are the chances to get my driver for memcpy like transfers from user space using DMA_SG upstream? ("dma-sg-proxy")
+> On 09-06-20, 15:47, Amit Singh Tomar wrote:
+> 
+>> @@ -372,6 +383,7 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+>>  				  struct dma_slave_config *sconfig,
+>>  				  bool is_cyclic)
+>>  {
+>> +	struct owl_dma *od = to_owl_dma(vchan->vc.chan.device);
+>>  	u32 mode, ctrlb;
+>>  
+>>  	mode = OWL_DMA_MODE_PW(0);
+>> @@ -427,14 +439,26 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+>>  	lli->hw[OWL_DMADESC_DADDR] = dst;
+>>  	lli->hw[OWL_DMADESC_SRC_STRIDE] = 0;
+>>  	lli->hw[OWL_DMADESC_DST_STRIDE] = 0;
+>> -	/*
+>> -	 * Word starts from offset 0xC is shared between frame length
+>> -	 * (max frame length is 1MB) and frame count, where first 20
+>> -	 * bits are for frame length and rest of 12 bits are for frame
+>> -	 * count.
+>> -	 */
+>> -	lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
+>> -	lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
+>> +
+>> +	if (od->devid == S700_DMA) {
+>> +		/* Max frame length is 1MB */
+>> +		lli->hw[OWL_DMADESC_FLEN] = len;
+>> +		/*
+>> +		 * On S700, word starts from offset 0x1C is shared between
+>> +		 * frame count and ctrlb, where first 12 bits are for frame
+>> +		 * count and rest of 20 bits are for ctrlb.
+>> +		 */
+>> +		lli->hw[OWL_DMADESC_CTRLB] = FCNT_VAL | ctrlb;
+>> +	} else {
+>> +		/*
+>> +		 * On S900, word starts from offset 0xC is shared between
+>> +		 * frame length (max frame length is 1MB) and frame count,
+>> +		 * where first 20 bits are for frame length and rest of
+>> +		 * 12 bits are for frame count.
+>> +		 */
+>> +		lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
+>> +		lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
+> 
+> Unfortunately this wont scale, we will keep adding new conditions for
+> newer SoC's! So rather than this why not encode max frame length in
+> driver_data rather than S900_DMA/S700_DMA.. In future one can add values
+> for newer SoC and not code above logic again.
 
-Best regards,
-Thomas
+What newer SoCs? I don't think we should try to guess the future here.
+We can always introduce further abstractions later, once we actually
+*know* what we are looking at.
+
+Besides, I don't understand what you are after. The max frame length is
+1MB in both cases, it's just a matter of where to put FCNT_VAL, either
+in FLEN or in CTRLB. And having an extra flag for that in driver data
+sounds a bit over the top at the moment.
+
+Cheers,
+Andre.
+
+> 
+>> +static const struct of_device_id owl_dma_match[] = {
+>> +	{ .compatible = "actions,s900-dma", .data = (void *)S900_DMA,},
+>> +	{ .compatible = "actions,s700-dma", .data = (void *)S700_DMA,},
+> 
+> Is the .compatible documented, Documentation patch should come before
+> the driver use patch in a series
+> 
+>>  static int owl_dma_probe(struct platform_device *pdev)
+>>  {
+>>  	struct device_node *np = pdev->dev.of_node;
+>>  	struct owl_dma *od;
+>>  	int ret, i, nr_channels, nr_requests;
+>> +	const struct of_device_id *of_id =
+>> +				of_match_device(owl_dma_match, &pdev->dev);
+> 
+> You care about driver_data rather than of_id, so using
+> of_device_get_match_data() would be better..
+> 
+>>  	od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
+>>  	if (!od)
+>> @@ -1083,6 +1116,8 @@ static int owl_dma_probe(struct platform_device *pdev)
+>>  	dev_info(&pdev->dev, "dma-channels %d, dma-requests %d\n",
+>>  		 nr_channels, nr_requests);
+>>  
+>> +	od->devid = (enum owl_dma_id)(uintptr_t)of_id->data;
+> 
+> Funny casts, I dont think you need uintptr_t!
+> 
+

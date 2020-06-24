@@ -2,182 +2,65 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB18C207020
-	for <lists+dmaengine@lfdr.de>; Wed, 24 Jun 2020 11:36:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B913207024
+	for <lists+dmaengine@lfdr.de>; Wed, 24 Jun 2020 11:38:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389667AbgFXJgX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 24 Jun 2020 05:36:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:53316 "EHLO foss.arm.com"
+        id S2389015AbgFXJiH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 24 Jun 2020 05:38:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389647AbgFXJgW (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 24 Jun 2020 05:36:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6B961FB;
-        Wed, 24 Jun 2020 02:36:20 -0700 (PDT)
-Received: from [192.168.2.22] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 719873F73C;
-        Wed, 24 Jun 2020 02:36:19 -0700 (PDT)
-Subject: Re: [PATCH v4 02/10] dmaengine: Actions: Add support for S700 DMA
- engine
-To:     Vinod Koul <vkoul@kernel.org>,
-        Amit Singh Tomar <amittomer25@gmail.com>
-Cc:     afaerber@suse.de, manivannan.sadhasivam@linaro.org,
-        dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org
-References: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
- <1591697830-16311-3-git-send-email-amittomer25@gmail.com>
- <20200624061529.GF2324254@vkoul-mobl>
-From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
-Autocrypt: addr=andre.przywara@arm.com; prefer-encrypt=mutual; keydata=
- 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
- i4aIXCH3Wv6K
-Organization: ARM Ltd.
-Message-ID: <75d154d0-2962-99e6-a7c7-bf0928ec8b2a@arm.com>
-Date:   Wed, 24 Jun 2020 10:35:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S2388998AbgFXJiH (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 24 Jun 2020 05:38:07 -0400
+Received: from localhost (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA8D720885;
+        Wed, 24 Jun 2020 09:38:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592991486;
+        bh=M17U8InxXE8LD18Sq7wr8yn7Yy1fVJiTNteQrj4tOC8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X3Qh6RONQSKJIXovrL6/xEMD1+9sjPy3PjDngBbFY878WMHZ7n0WhKV9ICBsPQeBx
+         cK+gzDnn044pdcWiud7CZ0NGtQwTEOA+2mh/XxGezkceR5PZUvu5RlkSbmAuSXRtve
+         zLowjzeJdIz7m2kL/u5QyQoQRJjcRl08OvsDqYmc=
+Date:   Wed, 24 Jun 2020 15:08:00 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Thomas Ruf <freelancer@rufusul.de>
+Cc:     Federico Vaga <federico.vaga@cern.ch>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: DMA Engine: Transfer From Userspace
+Message-ID: <20200624093800.GV2324254@vkoul-mobl>
+References: <5614531.lOV4Wx5bFT@harkonnen>
+ <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
+ <20200621072457.GA2324254@vkoul-mobl>
+ <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
+ <20200622044733.GB2324254@vkoul-mobl>
+ <419762761.402939.1592827272368@mailbusiness.ionos.de>
+ <20200622155440.GM2324254@vkoul-mobl>
+ <1835214773.354594.1592843644540@mailbusiness.ionos.de>
+ <2077253476.601371.1592991035969@mailbusiness.ionos.de>
 MIME-Version: 1.0
-In-Reply-To: <20200624061529.GF2324254@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2077253476.601371.1592991035969@mailbusiness.ionos.de>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 24/06/2020 07:15, Vinod Koul wrote:
+On 24-06-20, 11:30, Thomas Ruf wrote:
 
-Hi,
+> To make it short - i have two questions:
+> - what are the chances to revive DMA_SG?
 
-> On 09-06-20, 15:47, Amit Singh Tomar wrote:
-> 
->> @@ -372,6 +383,7 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
->>  				  struct dma_slave_config *sconfig,
->>  				  bool is_cyclic)
->>  {
->> +	struct owl_dma *od = to_owl_dma(vchan->vc.chan.device);
->>  	u32 mode, ctrlb;
->>  
->>  	mode = OWL_DMA_MODE_PW(0);
->> @@ -427,14 +439,26 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
->>  	lli->hw[OWL_DMADESC_DADDR] = dst;
->>  	lli->hw[OWL_DMADESC_SRC_STRIDE] = 0;
->>  	lli->hw[OWL_DMADESC_DST_STRIDE] = 0;
->> -	/*
->> -	 * Word starts from offset 0xC is shared between frame length
->> -	 * (max frame length is 1MB) and frame count, where first 20
->> -	 * bits are for frame length and rest of 12 bits are for frame
->> -	 * count.
->> -	 */
->> -	lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
->> -	lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
->> +
->> +	if (od->devid == S700_DMA) {
->> +		/* Max frame length is 1MB */
->> +		lli->hw[OWL_DMADESC_FLEN] = len;
->> +		/*
->> +		 * On S700, word starts from offset 0x1C is shared between
->> +		 * frame count and ctrlb, where first 12 bits are for frame
->> +		 * count and rest of 20 bits are for ctrlb.
->> +		 */
->> +		lli->hw[OWL_DMADESC_CTRLB] = FCNT_VAL | ctrlb;
->> +	} else {
->> +		/*
->> +		 * On S900, word starts from offset 0xC is shared between
->> +		 * frame length (max frame length is 1MB) and frame count,
->> +		 * where first 20 bits are for frame length and rest of
->> +		 * 12 bits are for frame count.
->> +		 */
->> +		lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
->> +		lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
-> 
-> Unfortunately this wont scale, we will keep adding new conditions for
-> newer SoC's! So rather than this why not encode max frame length in
-> driver_data rather than S900_DMA/S700_DMA.. In future one can add values
-> for newer SoC and not code above logic again.
+100%, if we have a in-kernel user
 
-What newer SoCs? I don't think we should try to guess the future here.
-We can always introduce further abstractions later, once we actually
-*know* what we are looking at.
+> - what are the chances to get my driver for memcpy like transfers from
+> user space using DMA_SG upstream? ("dma-sg-proxy")
 
-Besides, I don't understand what you are after. The max frame length is
-1MB in both cases, it's just a matter of where to put FCNT_VAL, either
-in FLEN or in CTRLB. And having an extra flag for that in driver data
-sounds a bit over the top at the moment.
+pretty bleak IMHO.
 
-Cheers,
-Andre.
-
-> 
->> +static const struct of_device_id owl_dma_match[] = {
->> +	{ .compatible = "actions,s900-dma", .data = (void *)S900_DMA,},
->> +	{ .compatible = "actions,s700-dma", .data = (void *)S700_DMA,},
-> 
-> Is the .compatible documented, Documentation patch should come before
-> the driver use patch in a series
-> 
->>  static int owl_dma_probe(struct platform_device *pdev)
->>  {
->>  	struct device_node *np = pdev->dev.of_node;
->>  	struct owl_dma *od;
->>  	int ret, i, nr_channels, nr_requests;
->> +	const struct of_device_id *of_id =
->> +				of_match_device(owl_dma_match, &pdev->dev);
-> 
-> You care about driver_data rather than of_id, so using
-> of_device_get_match_data() would be better..
-> 
->>  	od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
->>  	if (!od)
->> @@ -1083,6 +1116,8 @@ static int owl_dma_probe(struct platform_device *pdev)
->>  	dev_info(&pdev->dev, "dma-channels %d, dma-requests %d\n",
->>  		 nr_channels, nr_requests);
->>  
->> +	od->devid = (enum owl_dma_id)(uintptr_t)of_id->data;
-> 
-> Funny casts, I dont think you need uintptr_t!
-> 
-
+-- 
+~Vinod

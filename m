@@ -2,128 +2,151 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 90615206E2B
-	for <lists+dmaengine@lfdr.de>; Wed, 24 Jun 2020 09:49:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5678206E4A
+	for <lists+dmaengine@lfdr.de>; Wed, 24 Jun 2020 09:54:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390014AbgFXHtK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 24 Jun 2020 03:49:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390013AbgFXHtK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 Jun 2020 03:49:10 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33646C061573;
-        Wed, 24 Jun 2020 00:49:10 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id o5so1106836iow.8;
-        Wed, 24 Jun 2020 00:49:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IMLtUyyLaeGE1Rn+RkOTJ2DJsfDwk7l2d3YRRlgm31o=;
-        b=GMOEE2Aka1QlX9FIQVJl66QctjiCb0XiJacypZj3tcoGy1G9k9XfYETKKmM1a/oj7o
-         xdGpc2tIhuF+bDtUMn9f8Yw/dFmzQ/YFNp3xIurzF3JwwJ0qdhGdgf0H8hOW+DPyzg6K
-         7fRNcnLdA5L730dHt0w4xejiidfHS++GxJqx3O1eirdtCZMUXTslm8ddsiHsBiy9deA+
-         1gkReav+ZWgFcvQ1bgt3sWUxdR7vjndM71DYbx3YZ+QZj2SADIGwsRmegJNuOHhOsgCg
-         aCGoSXZmXE8nsKCgozBPX9phPtcxkDDPjN1vkX+Xsg0uKkEtZfWCmoNv1oHhLayoZkOl
-         VfUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IMLtUyyLaeGE1Rn+RkOTJ2DJsfDwk7l2d3YRRlgm31o=;
-        b=To3tb4MlecFyJbjr6Gd6hPgzFs/oGwHyL+QgGaM19Ze0ETbkeel6xyzziTdIVO4/u7
-         4MXYNzwKlpCeVOgRQYmI1VlBgzKfJXFxCZz7y4omD2zfE6nngZD6Mjwhr/we4ZZdsU8N
-         F/M7IC14U9fIm6CU8kyGbi1SmiFEIBka6ddwANGoU0hGwVrErage5sGCIoJPIfbFT/Kh
-         7LdiTvl2g775HytbAvujcSDQ8SE9DLZXJXEE+lKBErOU5/VmPcxtAOB3HfX4fbQwHVuJ
-         2OMBgY7LtpcgGzJeu75AwLS4cdO2Mn7Qt6kDwIF88aK/xUsL8KIxJrTIc8B0zW53QaSM
-         GZPg==
-X-Gm-Message-State: AOAM533SqDx0BAXqStVf9LDXcTPiZF26bI9n9/PePF3gIAByUbdBcAgK
-        3HthgsWhMR1heJi9HsGFBAe6MbwWTAIFOAJv8pE=
-X-Google-Smtp-Source: ABdhPJxbMiUffQwZWQ2UYDzKfRDx3+8H0TxEgs2Hi4DaFt/LCSVVqMasK98uer8zv/ZRuV7r2kzL7kWtnNEiZIzxaCs=
-X-Received: by 2002:a5e:8d15:: with SMTP id m21mr4447306ioj.60.1592984949433;
- Wed, 24 Jun 2020 00:49:09 -0700 (PDT)
+        id S2389961AbgFXHym (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 24 Jun 2020 03:54:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53082 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388655AbgFXHym (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 24 Jun 2020 03:54:42 -0400
+Received: from localhost (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6D0E2085B;
+        Wed, 24 Jun 2020 07:54:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592985281;
+        bh=u5bGPxHpfck/MVpaAVun2T5RtLrj3PWfCkxiaVjC2tE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jUbxlwf7G39+dXkwsQB9wAmXBVX/OxV4FMeuXH3pSxehhaFfL6ituJFd22m2SfM7M
+         kRNaK0kf1iLgAqLaX7GPsuQyJ0p3YY/4TWG69FbrQcfSOIPU9VXYI0pgt5cz86VfB0
+         14aLRMW8mG2ApfRAs08FVZyiLKjDvj769xv+UN2M=
+Date:   Wed, 24 Jun 2020 13:24:37 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Sugar Zhang <sugar.zhang@rock-chips.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 01/13] dmaengine: pl330: Remove the burst limit for
+ quirk 'NO-FLUSHP'
+Message-ID: <20200624075437.GT2324254@vkoul-mobl>
+References: <1591665267-37713-1-git-send-email-sugar.zhang@rock-chips.com>
+ <1591665267-37713-2-git-send-email-sugar.zhang@rock-chips.com>
 MIME-Version: 1.0
-References: <20200603183410.76764-1-navid.emamdoost@gmail.com> <20200624073932.GO2324254@vkoul-mobl>
-In-Reply-To: <20200624073932.GO2324254@vkoul-mobl>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Wed, 24 Jun 2020 02:48:58 -0500
-Message-ID: <CAEkB2EQ6AquKCexaaauHcsQXP4Y5hsri5FqehKqiw7deex5kQw@mail.gmail.com>
-Subject: Re: [PATCH] engine: stm32-dma: call pm_runtime_put if
- pm_runtime_get_sync fails
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        dmaengine@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Qiushi Wu <wu000273@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1591665267-37713-2-git-send-email-sugar.zhang@rock-chips.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi,
+On 09-06-20, 09:14, Sugar Zhang wrote:
+> There is no reason to limit the performance on the 'NO-FLUSHP' SoCs,
+> cuz these platforms are just that the 'FLUSHP' instruction is broken.
 
-On Wed, Jun 24, 2020 at 2:39 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 03-06-20, 13:34, Navid Emamdoost wrote:
-> > Calling pm_runtime_get_sync increments the counter even in case of
-> > failure, causing incorrect ref count. Call pm_runtime_put if
-> > pm_runtime_get_sync fails.
->
-> pls fix subsystem name as dmaengine: ...
-> >
-> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> > ---
-> >  drivers/dma/stm32-dma.c | 8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-> > index 0ddbaa4b4f0b..0aab86bd97fe 100644
-> > --- a/drivers/dma/stm32-dma.c
-> > +++ b/drivers/dma/stm32-dma.c
-> > @@ -1169,8 +1169,10 @@ static int stm32_dma_alloc_chan_resources(struct dma_chan *c)
-> >       chan->config_init = false;
-> >
-> >       ret = pm_runtime_get_sync(dmadev->ddev.dev);
-> > -     if (ret < 0)
-> > +     if (ret < 0) {
-> > +             pm_runtime_put(dmadev->ddev.dev);
-> >               return ret;
-> > +     }
-> >
-> >       ret = stm32_dma_disable_chan(chan);
-> >       if (ret < 0)
-> > @@ -1439,8 +1441,10 @@ static int stm32_dma_suspend(struct device *dev)
-> >       int id, ret, scr;
-> >
-> >       ret = pm_runtime_get_sync(dev);
-> > -     if (ret < 0)
-> > +     if (ret < 0) {
-> > +             pm_runtime_put_sync(dev);
->
-> why put_sync()
+Lets not use terms like cuz... 'because' is perfect term :)
 
-My bad! I will fix it.
-
-> >               return ret;
-> > +     }
-> >
-> >       for (id = 0; id < STM32_DMA_MAX_CHANNELS; id++) {
-> >               scr = stm32_dma_read(dmadev, STM32_DMA_SCR(id));
-> > --
-> > 2.17.1
->
-> --
-> ~Vinod
+It can rephrased to:
+There is no reason to limit the performance on the 'NO-FLUSHP' SoCs
+beacuse 'FLUSHP' instruction is broken on these platforms, so remove the
+limit to improve the efficiency
 
 
+> so, remove the limit to improve the efficiency.
+> 
+> Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+> ---
+> 
+> Changes in v2: None
+> 
+>  drivers/dma/pl330.c | 34 ++++++++++++++++++++++------------
+>  1 file changed, 22 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+> index 6a158ee..ff0a91f 100644
+> --- a/drivers/dma/pl330.c
+> +++ b/drivers/dma/pl330.c
+> @@ -1183,9 +1183,6 @@ static inline int _ldst_peripheral(struct pl330_dmac *pl330,
+>  {
+>  	int off = 0;
+>  
+> -	if (pl330->quirks & PL330_QUIRK_BROKEN_NO_FLUSHP)
+> -		cond = BURST;
+> -
+>  	/*
+>  	 * do FLUSHP at beginning to clear any stale dma requests before the
+>  	 * first WFP.
+> @@ -1231,8 +1228,9 @@ static int _bursts(struct pl330_dmac *pl330, unsigned dry_run, u8 buf[],
+>  }
+>  
+>  /*
+> - * transfer dregs with single transfers to peripheral, or a reduced size burst
+> - * for mem-to-mem.
+> + * only the unaligned bursts transfers have the dregs.
+> + * transfer dregs with a reduced size burst to peripheral,
+> + * or a reduced size burst for mem-to-mem.
+
+This is not related to broken flush and should be a different patch
+explaining why this changes were done
+
+>   */
+>  static int _dregs(struct pl330_dmac *pl330, unsigned int dry_run, u8 buf[],
+>  		const struct _xfer_spec *pxs, int transfer_length)
+> @@ -1247,8 +1245,23 @@ static int _dregs(struct pl330_dmac *pl330, unsigned int dry_run, u8 buf[],
+>  	case DMA_MEM_TO_DEV:
+>  		/* fall through */
+>  	case DMA_DEV_TO_MEM:
+> -		off += _ldst_peripheral(pl330, dry_run, &buf[off], pxs,
+> -			transfer_length, SINGLE);
+> +		/*
+> +		 * dregs_len = (total bytes - BURST_TO_BYTE(bursts, ccr)) /
+> +		 *             BRST_SIZE(ccr)
+> +		 * the dregs len must be smaller than burst len,
+> +		 * so, for higher efficiency, we can modify CCR
+> +		 * to use a reduced size burst len for the dregs.
+> +		 */
+> +		dregs_ccr = pxs->ccr;
+> +		dregs_ccr &= ~((0xf << CC_SRCBRSTLEN_SHFT) |
+> +			(0xf << CC_DSTBRSTLEN_SHFT));
+> +		dregs_ccr |= (((transfer_length - 1) & 0xf) <<
+> +			CC_SRCBRSTLEN_SHFT);
+> +		dregs_ccr |= (((transfer_length - 1) & 0xf) <<
+> +			CC_DSTBRSTLEN_SHFT);
+> +		off += _emit_MOV(dry_run, &buf[off], CCR, dregs_ccr);
+> +		off += _ldst_peripheral(pl330, dry_run, &buf[off], pxs, 1,
+> +					BURST);
+>  		break;
+>  
+>  	case DMA_MEM_TO_MEM:
+> @@ -2221,9 +2234,7 @@ static bool pl330_prep_slave_fifo(struct dma_pl330_chan *pch,
+>  
+>  static int fixup_burst_len(int max_burst_len, int quirks)
+>  {
+> -	if (quirks & PL330_QUIRK_BROKEN_NO_FLUSHP)
+> -		return 1;
+> -	else if (max_burst_len > PL330_MAX_BURST)
+> +	if (max_burst_len > PL330_MAX_BURST)
+>  		return PL330_MAX_BURST;
+>  	else if (max_burst_len < 1)
+>  		return 1;
+> @@ -3128,8 +3139,7 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+>  	pd->dst_addr_widths = PL330_DMA_BUSWIDTHS;
+>  	pd->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+>  	pd->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+> -	pd->max_burst = ((pl330->quirks & PL330_QUIRK_BROKEN_NO_FLUSHP) ?
+> -			 1 : PL330_MAX_BURST);
+> +	pd->max_burst = PL330_MAX_BURST;
+>  
+>  	ret = dma_async_device_register(pd);
+>  	if (ret) {
+> -- 
+> 2.7.4
+> 
+> 
 
 -- 
-Navid.
+~Vinod

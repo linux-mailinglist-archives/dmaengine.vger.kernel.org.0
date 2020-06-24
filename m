@@ -2,121 +2,152 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68F64206FC9
-	for <lists+dmaengine@lfdr.de>; Wed, 24 Jun 2020 11:14:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD3A320700D
+	for <lists+dmaengine@lfdr.de>; Wed, 24 Jun 2020 11:30:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389095AbgFXJOW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 24 Jun 2020 05:14:22 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53436 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387970AbgFXJOS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 Jun 2020 05:14:18 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05O9E4no119939;
-        Wed, 24 Jun 2020 04:14:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1592990045;
-        bh=+U9mzYjHXvzQcKQ8zAR2Rl0V4zJPMHqdfZnHwYl51KE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=NGT7+V58MqwR78RadLUNojxEoPh5W+sm16OU/EMx8sWnj8LbRXkAfZs9Eln6tzgAt
-         IYFyiE0imKDk4SH6pv41DbSdY0l123owgB99SGQjRVF0eLjh76B/6+YcPfDMklIgHP
-         /Xp6RtDvnGeWHBbO+WqsAzMgQK24Fyhm4jX1io20=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05O9E4vd127560;
-        Wed, 24 Jun 2020 04:14:04 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 24
- Jun 2020 04:14:04 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 24 Jun 2020 04:14:04 -0500
-Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05O9E25P006129;
-        Wed, 24 Jun 2020 04:14:03 -0500
-Subject: Re: [PATCH][next] dmaengine: ti: k3-udma: Use struct_size() in
- kzalloc()
-To:     Vinod Koul <vkoul@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-References: <20200619224334.GA7857@embeddedor>
- <20200624055535.GX2324254@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <22b95e2d-dbe0-6d17-3085-2f363cd4d889@ti.com>
-Date:   Wed, 24 Jun 2020 12:14:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S2389330AbgFXJar (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 24 Jun 2020 05:30:47 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:51329 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388336AbgFXJaq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 Jun 2020 05:30:46 -0400
+Received: from oxbsgw03.schlund.de ([172.19.248.4]) by
+ mrelayeu.kundenserver.de (mreue010 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1MA7X0-1jguBi1Qz4-00Bbjz; Wed, 24 Jun 2020 11:30:36 +0200
+Date:   Wed, 24 Jun 2020 11:30:35 +0200 (CEST)
+From:   Thomas Ruf <freelancer@rufusul.de>
+Reply-To: Thomas Ruf <freelancer@rufusul.de>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Federico Vaga <federico.vaga@cern.ch>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <2077253476.601371.1592991035969@mailbusiness.ionos.de>
+In-Reply-To: <1835214773.354594.1592843644540@mailbusiness.ionos.de>
+References: <5614531.lOV4Wx5bFT@harkonnen>
+ <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
+ <20200621072457.GA2324254@vkoul-mobl>
+ <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
+ <20200622044733.GB2324254@vkoul-mobl>
+ <419762761.402939.1592827272368@mailbusiness.ionos.de>
+ <20200622155440.GM2324254@vkoul-mobl>
+ <1835214773.354594.1592843644540@mailbusiness.ionos.de>
+Subject: Re: DMA Engine: Transfer From Userspace
 MIME-Version: 1.0
-In-Reply-To: <20200624055535.GX2324254@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Normal
+X-Mailer: Open-Xchange Mailer v7.10.1-Rev31
+X-Originating-Client: open-xchange-appsuite
+X-Provags-ID: V03:K1:JkjbXB6gIjXfWDHn+zaE2EgMRkWzkoxUNZFoGem1EWo9Jk0UvLN
+ nz1KSGrDEbmmEuVy4jD516504w4qAR+6Ld0pxsBJrF6us2/oyChcD+QWH7co+Fm1ygXhq3w
+ ncW/Us9qaI2sTfEHiyjwfLaNlLZOuA9vMQe5UvGXd6mP/M98NMYijYKIOAaSg8R557NjLIX
+ zWOeOsFuqG9aLvupjWOIw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:H4Cu/Gae8GU=:QRgYdJ56wIDVlNDJg1/hua
+ 1J5QhHWN8CLVGd6NKOSSDAN7YTt2zEgMC+b3Dbrz+nsHfRO13lRRrTE5bYmdW3I6adYIyIS8y
+ LOogwO3axds+sqr/OllgiSnCHfKLKI9tCkECZ9o/h9VtLtS88obxdGBXsMP5saL9ik8mfjeIm
+ mDO1akk0JBMdsxu7Q0SeeYRemCZVHqGY2CO3ArxsGxqd0D+MGu769WZXDNYyXxSzYM+djwEN0
+ 67rGEigJL74clXe2DoLYz5uc48GTBtIJ5K1/BowUhV/B5hppdzzGy2PXZ1Q8Tr55RHD2IzbPG
+ lUvP3//QtuqazlpGna3xqRzW67u3BUuYD6CurhyoT0XOWXV7OdfB4bP9sPMB7nZSBEEJ3e1Br
+ o7X29erl3KBGJJDZC9ZvHSjivv/TKIuguPEm/HzlYG8R6KLAObsNamQWmInhErAytHyxDgF9t
+ qlhWjEJI8Gg96X5p1v7og5OZjL2ePrGb1d0F0puVNX9iupZrkSVviSUGauPKansENqdBBEMwS
+ vAbb1d4xsjm/E5fZY7hdCNMtb+ULljPefOHS5AGDyveb59538j8gTlw3yXOsUoTSkwpiVvPbV
+ P0PaYYz2BEFhpQgSmKUK09qMFhPS3trrJmTJQPwU9Y2X6ttr6Za7WpNuksLTqbtB1R803gvwN
+ W7dvglY3iW2xyrYT6iDuUCz6ixq/MFfZhmTEKfY1J+ABScCKmZGGSRFeTYsH3oVNCzrHnvqFD
+ K0g3iGb2AtoNTqyMqJWuWNJbRtaLzNDPjI+PTSaSqED49b1O0qI1U403pVyLx51JeJZNqnjxt
+ 8tJa48rSKmq9sy4cxe3SG/1fiijYIt8O+hA4HXzeMWJY+7rKQI=
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
+> On 22 June 2020 at 18:34 Thomas Ruf <freelancer@rufusul.de> wrote:
+> 
+> 
+> 
+> > On 22 June 2020 at 17:54 Vinod Koul <vkoul@kernel.org> wrote:
+> > 
+> > 
+> > On 22-06-20, 14:01, Thomas Ruf wrote:
+> > > > On 22 June 2020 at 06:47 Vinod Koul <vkoul@kernel.org> wrote:
+> > > > 
+> > > > On 21-06-20, 22:36, Federico Vaga wrote:
+> > > > > On Sun, Jun 21, 2020 at 12:54:57PM +0530, Vinod Koul wrote:
+> > > > > > On 19-06-20, 16:31, Dave Jiang wrote:
+> > > > > > > 
+> > > > > > > 
+> > > > > > > On 6/19/2020 3:47 PM, Federico Vaga wrote:
+> > > > > > > > Hello,
+> > > > > > > >
+> > > > > > > > is there the possibility of using a DMA engine channel from userspace?
+> > > > > > > >
+> > > > > > > > Something like:
+> > > > > > > > - configure DMA using ioctl() (or whatever configuration mechanism)
+> > > > > > > > - read() or write() to trigger the transfer
+> > > > > > > >
+> > > > > > > 
+> > > > > > > I may have supposedly promised Vinod to look into possibly providing
+> > > > > > > something like this in the future. But I have not gotten around to do that
+> > > > > > > yet. Currently, no such support.
+> > > > > > 
+> > > > > > And I do still have serious reservations about this topic :) Opening up
+> > > > > > userspace access to DMA does not sound very great from security point of
+> > > > > > view.
+> > > > > 
+> > > > > I was thinking about a dedicated module, and not something that the DMA engine
+> > > > > offers directly. You load the module only if you need it (like the test module)
+> > > > 
+> > > > But loading that module would expose dma to userspace. 
+> > > > > 
+> > > > > > Federico, what use case do you have in mind?
+> > > > > 
+> > > > > Userspace drivers
+> > > > 
+> > > > more the reason not do do so, why cant a kernel driver be added for your
+> > > > usage?
+> > > 
+> > > by chance i have written a driver allowing dma from user space using a memcpy like interface ;-)
+> > > now i am trying to get this code upstream but was hit by the fact that DMA_SG is gone since Aug 2017 :-(
+> > > 
+> > > just let me introduce myself and the project:
+> > > - coding in C since '91
+> > > - coding in C++ since '98
+> > > - a lot of stuff not relevant for this ;-)
+> > > - working as a freelancer since Nov '19
+> > > - implemented a "dma-sg-proxy" driver for my client in Mar/Apr '20 to copy camera frames from uncached memory to cached memory using a second dma on a Zynq platform
+> > > - last week we figured out that we can not upgrade from "Xilinx 2019.2" (kernel 4.19.x) to "2020.1" (kernel 5.4.x) because the DMA_SG interface is gone
+> > > - subscribed to dmaengine on friday, saw the start of this discussion on saturday
+> > > - talked to my client today if it is ok to try to revive DMA_SG and get our driver upstream to avoid such problems in future
+> > 
+> > DMA_SG was removed as it had no users, if we have a user (in-kernel) we
+> > can certainly revert that removal patch.
+> 
+> yeah, already understood that.
+> 
+> > > 
+> > > here the struct for the ioctl:
+> > > 
+> > > typedef struct {
+> > >   unsigned int struct_size;
+> > >   const void *src_user_ptr;
+> > >   void *dst_user_ptr;
+> > >   unsigned long length;
+> > >   unsigned int timeout_in_ms;
+> > > } dma_sg_proxy_arg_t;
+> > 
+> > Again, am not convinced opening DMA to userspace like this is a great
+> > idea. Why not have Xilinx camera driver invoke the dmaengine and do
+> > DMA_SG ?
+> 
+> In our case we have several camera pipelines, in some cases uncached memory is okay (e. g. image goes directly to display framebuffer), in some cases not because we need to process the images on cpu or gpu and we for that need to copy to oridinary user memoy first. This seems easier to do by decoupling the driver code.
+> And one more thing: in case we engage the dma memcpy we want to copy to target memory which is prepared for IPC because we want to share these images with another process. The v4l2 interface did not look to be made for such cases but is possible by this "memcpy" approach.
 
-On 24/06/2020 8.55, Vinod Koul wrote:
-> On 19-06-20, 17:43, Gustavo A. R. Silva wrote:
->> Make use of the struct_size() helper instead of an open-coded version
->> in order to avoid any potential type mistakes.
->>
->> This code was detected with the help of Coccinelle and, audited and
->> fixed manually.
->>
->> Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>  drivers/dma/ti/k3-udma.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
->> index 0d5fb154b8e2..411c54b86ba8 100644
->> --- a/drivers/dma/ti/k3-udma.c
->> +++ b/drivers/dma/ti/k3-udma.c
->> @@ -2209,7 +2209,7 @@ udma_prep_slave_sg_pkt(struct udma_chan *uc, str=
-uct scatterlist *sgl,
->>  	u32 ring_id;
->>  	unsigned int i;
->> =20
->> -	d =3D kzalloc(sizeof(*d) + sglen * sizeof(d->hwdesc[0]), GFP_NOWAIT)=
-;
->> +	d =3D kzalloc(struct_size(d, hwdesc, sglen), GFP_NOWAIT);
->=20
-> struct_size() is a * b + c but here we need, a + b * c.. the trailing
-> struct is N times here..
+To make it short - i have two questions:
+- what are the chances to revive DMA_SG?
+- what are the chances to get my driver for memcpy like transfers from user space using DMA_SG upstream? ("dma-sg-proxy")
 
-Yes, that's correct.
-
->=20
->=20
->>  	if (!d)
->>  		return NULL;
->> =20
->> @@ -2525,7 +2525,7 @@ udma_prep_dma_cyclic_pkt(struct udma_chan *uc, d=
-ma_addr_t buf_addr,
->>  	if (period_len >=3D SZ_4M)
->>  		return NULL;
->> =20
->> -	d =3D kzalloc(sizeof(*d) + periods * sizeof(d->hwdesc[0]), GFP_NOWAI=
-T);
->> +	d =3D kzalloc(struct_size(d, hwdesc, periods), GFP_NOWAIT);
->>  	if (!d)
->>  		return NULL;
->> =20
->> --=20
->> 2.27.0
->=20
-
-- P=C3=A9ter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Best regards,
+Thomas

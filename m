@@ -2,94 +2,91 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 695BE206DFB
-	for <lists+dmaengine@lfdr.de>; Wed, 24 Jun 2020 09:44:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C0D7206E1E
+	for <lists+dmaengine@lfdr.de>; Wed, 24 Jun 2020 09:47:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389929AbgFXHoL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 24 Jun 2020 03:44:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44088 "EHLO mail.kernel.org"
+        id S2390133AbgFXHqR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 24 Jun 2020 03:46:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389583AbgFXHoL (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 24 Jun 2020 03:44:11 -0400
+        id S2389948AbgFXHqR (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 24 Jun 2020 03:46:17 -0400
 Received: from localhost (unknown [171.61.66.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9EB320768;
-        Wed, 24 Jun 2020 07:44:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DFFF20874;
+        Wed, 24 Jun 2020 07:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592984650;
-        bh=1nYDddP44y5PFslcfyEtsRL/mtIUGOtw9RDYWyquThA=;
+        s=default; t=1592984777;
+        bh=Pqvog+kc4WzGeG+jHR1QQdfOtKiGAH+Ios6F59XvbQY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k/Yl39q0+YR74/Rc62+9Gw14cIUQAJaPubtTITJoLEYiBRvSLKpXCarJfCHvL8U5d
-         5d9fw0tSXtVLLmf4o/wGlI/G3sAEYOtH+gkUjtdN43fu0VUiPrNU7PNuK6pKI6eBDR
-         iJrnJVPsa4qcmOd3GH+eNUFi2aIzFYNxg3MGud58=
-Date:   Wed, 24 Jun 2020 13:14:06 +0530
+        b=TZsT3ySZDW0LMtJpGzvg+4Fl8S+NyPsoQC/i70Ntirwdan/z//IH8ph1ANhyMctlG
+         NFo04JeMLcMP2Apt1SAHCWUy2OdGFs8rlqcWmhqJoHvQVQGU46XpUdWwA36LzEfyBQ
+         ANtdxTKJU7fH9TZ99SaTNnEg2mBG52JQIggjrgSI=
+Date:   Wed, 24 Jun 2020 13:16:13 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     gaurav singh <gaurav1086@gmail.com>
-Cc:     green.wan@sifive.com, dan.j.williams@intel.com, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dma_async_tx_descriptor: Fix null pointer dereference
-Message-ID: <20200624074406.GR2324254@vkoul-mobl>
-References: <CAFAFadDGQusosHzwqY18bYWF8a3a1OK1+Sr_NtWMOvpFnpmgqA@mail.gmail.com>
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        emamd001@umn.edu, wu000273@umn.edu, kjlu@umn.edu, smccaman@umn.edu
+Subject: Re: [PATCH] dmaengine: stm32-mdma: call pm_runtime_put if
+ pm_runtime_get_sync fails
+Message-ID: <20200624074613.GS2324254@vkoul-mobl>
+References: <20200603182850.66692-1-navid.emamdoost@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFAFadDGQusosHzwqY18bYWF8a3a1OK1+Sr_NtWMOvpFnpmgqA@mail.gmail.com>
+In-Reply-To: <20200603182850.66692-1-navid.emamdoost@gmail.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 03-06-20, 22:59, gaurav singh wrote:
-> The check: if (chan && (!len || !dest || !src)) indicates that chan can be
-> NULL, however chan is dereferenced in multiple locations later without
-> check. In the function: sf_pdma_alloc_desc() and later: chan->desc = desc;
-> This can cause segmentation fault if chan is NULL and it doesn't return in
-> the first check. To fix, this: add the check for chan right in the
-> beginning.
+On 03-06-20, 13:28, Navid Emamdoost wrote:
+> Calling pm_runtime_get_sync increments the counter even in case of
+> failure, causing incorrect ref count. Call pm_runtime_put if
+> pm_runtime_get_sync fails.
 > 
-> Please find the patch below. Let me know if there's any issue.
-
-1. please send using git-send-email
-2. pls run checkpatch, below formatting is crap
-
-> 
-> Thank you.
-> Gaurav.
-> 
-> >From a2f18613751b4ce5b0dba3a273a75957d872ccd3 Mon Sep 17 00:00:00 2001
-> From: Gaurav Singh <gaurav1086@gmail.com>
-> Date: Wed, 3 Jun 2020 22:52:31 -0400
-> Subject: [PATCH] dma_async_tx_descriptor: Fix null pointer dereference
-
-Care to explain which null pointer dereference?
-Also reread Documentation/process/submitting-patches.rst esp word about
-subject lines
-
-> 
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 > ---
->  drivers/dma/sf-pdma/sf-pdma.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+>  drivers/dma/stm32-mdma.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
-> index 6d0bec947636..0cbc7b379d11 100644
-> --- a/drivers/dma/sf-pdma/sf-pdma.c
-> +++ b/drivers/dma/sf-pdma/sf-pdma.c
-> @@ -94,7 +94,11 @@ sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,
-> dma_addr_t dest, dma_addr_t src,
->   struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
->   struct sf_pdma_desc *desc;
-> 
-> - if (chan && (!len || !dest || !src)) {
-> + if (!chan) {
-> + return NULL;
-> + }
-> +
-> + if (!len || !dest || !src) {
->   dev_err(chan->pdma->dma_dev.dev,
->   "Please check dma len, dest, src!\n");
->   return NULL;
+> diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
+> index 5469563703d1..79bee1bb73f6 100644
+> --- a/drivers/dma/stm32-mdma.c
+> +++ b/drivers/dma/stm32-mdma.c
+> @@ -1449,8 +1449,10 @@ static int stm32_mdma_alloc_chan_resources(struct dma_chan *c)
+>  	}
+>  
+>  	ret = pm_runtime_get_sync(dmadev->ddev.dev);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		pm_runtime_put(dmadev->ddev.dev);
+>  		return ret;
+> +	}
+>  
+>  	ret = stm32_mdma_disable_chan(chan);
+>  	if (ret < 0)
+> @@ -1718,8 +1720,10 @@ static int stm32_mdma_pm_suspend(struct device *dev)
+>  	int ret;
+>  
+>  	ret = pm_runtime_get_sync(dev);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		pm_runtime_put_sync(dev);
+
+Not put_sync()...
+
+>  		return ret;
+> +	}
+>  
+>  	for (id = 0; id < dmadev->nr_channels; id++) {
+>  		ccr = stm32_mdma_read(dmadev, STM32_MDMA_CCR(id));
 > -- 
 > 2.17.1
 

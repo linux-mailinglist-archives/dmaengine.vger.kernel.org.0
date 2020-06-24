@@ -2,97 +2,83 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA733206C1A
-	for <lists+dmaengine@lfdr.de>; Wed, 24 Jun 2020 08:03:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1EB2206C18
+	for <lists+dmaengine@lfdr.de>; Wed, 24 Jun 2020 08:02:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388307AbgFXGDx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 24 Jun 2020 02:03:53 -0400
-Received: from smtprelay0133.hostedemail.com ([216.40.44.133]:47660 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388164AbgFXGDx (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 Jun 2020 02:03:53 -0400
-X-Greylist: delayed 437 seconds by postgrey-1.27 at vger.kernel.org; Wed, 24 Jun 2020 02:03:53 EDT
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave02.hostedemail.com (Postfix) with ESMTP id 6248B18009133
-        for <dmaengine@vger.kernel.org>; Wed, 24 Jun 2020 05:56:36 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id EF110837F24A;
-        Wed, 24 Jun 2020 05:56:34 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 50,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:800:960:967:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:2198:2199:2393:2525:2560:2563:2682:2685:2731:2828:2859:2933:2937:2939:2942:2945:2947:2951:2954:3022:3138:3139:3140:3141:3142:3353:3622:3865:3866:3867:3868:3870:3871:3934:3936:3938:3941:3944:3947:3950:3953:3956:3959:4321:5007:7904:9025:10004:10400:10848:11026:11232:11658:11914:12043:12296:12297:12438:12555:12740:12760:12895:13069:13153:13228:13311:13357:13439:14181:14659:14721:21080:21451:21627:21990:30012:30054:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:2,LUA_SUMMARY:none
-X-HE-Tag: cap36_5b0ffc026e41
-X-Filterd-Recvd-Size: 2586
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 24 Jun 2020 05:56:33 +0000 (UTC)
-Message-ID: <fa304f0ef1dba4fcf5e495f3c2feb4d3816f20ac.camel@perches.com>
-Subject: Re: [PATCH][next] dmaengine: ti: k3-udma: Use struct_size() in
- kzalloc()
-From:   Joe Perches <joe@perches.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Date:   Tue, 23 Jun 2020 22:56:32 -0700
-In-Reply-To: <20200624055535.GX2324254@vkoul-mobl>
-References: <20200619224334.GA7857@embeddedor>
-         <20200624055535.GX2324254@vkoul-mobl>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        id S2388632AbgFXGCV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 24 Jun 2020 02:02:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388307AbgFXGCV (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 24 Jun 2020 02:02:21 -0400
+Received: from localhost (unknown [171.61.66.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EA6C2085B;
+        Wed, 24 Jun 2020 06:02:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592978541;
+        bh=3XIvBjkB95tczXXLOOekIN2aQotuf3cKPQMbiB6HV6Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IjhSCyMuB3rM0xwChkv+9A+AuPl9xC4GkRdkMnur7/Pt6eCop4sgEbEKgFTZyNNa0
+         GlMeak4GnJ9q8InUQViPJz8mZayO7OUuACPfpYtBe8rNH08yXPiUWSZbEYmvTTxtAq
+         /uPRWDVDh6Lyyb3nM0veO1ZBL7tEsQpOkz5ZY290=
+Date:   Wed, 24 Jun 2020 11:32:17 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH] dma: sh: usb-dmac: Fix residue after the commit
+ 24461d9792c2
+Message-ID: <20200624060217.GA2324254@vkoul-mobl>
+References: <1590061573-12576-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20200616165550.GP2324254@vkoul-mobl>
+ <TY2PR01MB3692283C5F3695033D20A7AFD89B0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TY2PR01MB3692283C5F3695033D20A7AFD89B0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, 2020-06-24 at 11:25 +0530, Vinod Koul wrote:
-> On 19-06-20, 17:43, Gustavo A. R. Silva wrote:
-> > Make use of the struct_size() helper instead of an open-coded version
-> > in order to avoid any potential type mistakes.
-> > 
-> > This code was detected with the help of Coccinelle and, audited and
-> > fixed manually.
-> > 
-> > Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
-
-Is this odd tag really useful?
-
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > ---
-> >  drivers/dma/ti/k3-udma.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-> > index 0d5fb154b8e2..411c54b86ba8 100644
-> > --- a/drivers/dma/ti/k3-udma.c
-> > +++ b/drivers/dma/ti/k3-udma.c
-> > @@ -2209,7 +2209,7 @@ udma_prep_slave_sg_pkt(struct udma_chan *uc, struct scatterlist *sgl,
-> >  	u32 ring_id;
-> >  	unsigned int i;
-> >  
-> > -	d = kzalloc(sizeof(*d) + sglen * sizeof(d->hwdesc[0]), GFP_NOWAIT);
-> > +	d = kzalloc(struct_size(d, hwdesc, sglen), GFP_NOWAIT);
+On 18-06-20, 00:56, Yoshihiro Shimoda wrote:
+> Hi Vinod,
 > 
-> struct_size() is a * b + c but here we need, a + b * c.. the trailing
-> struct is N times here..
+> > From: Vinod Koul, Sent: Wednesday, June 17, 2020 1:56 AM
+> > 
+> > On 21-05-20, 20:46, Yoshihiro Shimoda wrote:
+> > > This driver assumed that freed descriptors have "done_cookie".
+> > > But, after the commit 24461d9792c2 ("dmaengine: virt-dma: Fix
+> > > access after free in vchan_complete()"), since the desc is freed
+> > > after callback function was called, this driver could not
+> > > match any done_cookie when a client driver (renesas_usbhs driver)
+> > > calls dmaengine_tx_status() in the callback function.
+> > 
+> > Hmmm, I am not sure about this, why should we try to match! cookie is
+> > monotonically increasing number so if you see that current cookie
+> > completed is > requested you should return DMA_COMPLETE
 > 
-> 
-> >  	if (!d)
-> >  		return NULL;
-> >  
-> > @@ -2525,7 +2525,7 @@ udma_prep_dma_cyclic_pkt(struct udma_chan *uc, dma_addr_t buf_addr,
-> >  	if (period_len >= SZ_4M)
-> >  		return NULL;
-> >  
-> > -	d = kzalloc(sizeof(*d) + periods * sizeof(d->hwdesc[0]), GFP_NOWAIT);
-> > +	d = kzalloc(struct_size(d, hwdesc, periods), GFP_NOWAIT);
-> >  	if (!d)
-> >  		return NULL;
-> >  
-> > -- 
-> > 2.27.0
+> The reason is this hardware is possible to stop the transfer even if
+> all transfer length is not received. This is related to one of USB
+> specification which allows to stop when getting a short packet.
+> So, a client driver has to get residue even if DMA_COMPLETE.
 
+We have additional dma_async_tx_callback_result callback to indicate the
+residue in these cases, please use that
+
+> > The below case of checking residue should not even get executed
+> 
+> I see...
+> So, I'm thinking the current implementation was a tricky because we didn't
+> have dma_async_tx_callback_result when I wrote this usb-dmac driver.
+> I'll try this to fix the issue.
+
+Right :)
+
+Also please use tag dmaengine: .. for these patches
+
+-- 
+~Vinod

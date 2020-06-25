@@ -2,280 +2,98 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E93EE20985F
-	for <lists+dmaengine@lfdr.de>; Thu, 25 Jun 2020 04:05:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD2B9209B1C
+	for <lists+dmaengine@lfdr.de>; Thu, 25 Jun 2020 10:11:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389070AbgFYCFO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 24 Jun 2020 22:05:14 -0400
-Received: from mga05.intel.com ([192.55.52.43]:17499 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389136AbgFYCFN (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 24 Jun 2020 22:05:13 -0400
-IronPort-SDR: mK5VHYsLkpSpdBg2bI2L5WE8BKqBWQV/bC54wjMqhg9Gq29rQKa0odCpr+roDa769BqWFIP+x2
- obhbXIv8g0qQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9662"; a="229418954"
-X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
-   d="scan'208";a="229418954"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2020 19:05:05 -0700
-IronPort-SDR: 8NgWKPwsAPf6h/00mFxqZB733Ob673C61Tu5v6mqWdViNfDwHJtzo+5BjDvlWT9RierD5pBv4E
- JPp6nKhIvALQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,277,1589266800"; 
-   d="scan'208";a="265231801"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.251.31.242]) ([10.251.31.242])
-  by fmsmga008.fm.intel.com with ESMTP; 24 Jun 2020 19:05:05 -0700
-Subject: Re: [PATCH] dmaengine: idxd: add work queue drain support
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Tony Luck <tony.luck@intel.com>,
+        id S2390403AbgFYILj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 25 Jun 2020 04:11:39 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:52457 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726930AbgFYILi (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 25 Jun 2020 04:11:38 -0400
+Received: from oxbsgw03.schlund.de ([172.19.248.4]) by
+ mrelayeu.kundenserver.de (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1Mq33i-1j2gDL1V58-00n5Wr; Thu, 25 Jun 2020 10:11:29 +0200
+Date:   Thu, 25 Jun 2020 10:11:28 +0200 (CEST)
+From:   Thomas Ruf <freelancer@rufusul.de>
+Reply-To: Thomas Ruf <freelancer@rufusul.de>
+To:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>
+Cc:     Federico Vaga <federico.vaga@cern.ch>,
         Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org
-References: <159225446067.68253.17223041454769518550.stgit@djiang5-desk3.ch.intel.com>
- <20200624071021.GH2324254@vkoul-mobl>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <3e7e4d8c-3f74-326b-ff3d-f1ec4542817f@intel.com>
-Date:   Wed, 24 Jun 2020 19:05:05 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>
+Message-ID: <84270660.632865.1593072688966@mailbusiness.ionos.de>
+In-Reply-To: <581f1761-e582-c770-169a-ee3374baf25c@intel.com>
+References: <5614531.lOV4Wx5bFT@harkonnen>
+ <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
+ <20200621072457.GA2324254@vkoul-mobl>
+ <581f1761-e582-c770-169a-ee3374baf25c@intel.com>
+Subject: Re: DMA Engine: Transfer From Userspace
 MIME-Version: 1.0
-In-Reply-To: <20200624071021.GH2324254@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Normal
+X-Mailer: Open-Xchange Mailer v7.10.1-Rev31
+X-Originating-Client: open-xchange-appsuite
+X-Provags-ID: V03:K1:HRzZ5peGV0s505yrNUmy14wLZnN+vfwR82ESXZO9Xn8IosI2Nhb
+ tS27+7lVHfyqGmG1X4PlBHEF7VEIRakVZt++yNkg3elhFmdOok/ghZSucGsZ7cEc/CXZi68
+ yrGkoR1jdBuNeaYRi52VBN3HGODudojDMPoitdQSngxITKvUATEWz0FTY1iNbmfQfj+sNhx
+ Ph+4shDH6JvSWaA/2Ixdw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Wc8ojQSYAcE=:agm+E9A9YdkiLYUwIfZEsU
+ P5e+UVwhMxR2FkAyYvkjGEVfNUIxDvaAqnhIM/rd8I3pYLWL/WrQdsgFTh4nrKnx8L5p5M8Ma
+ tTp+qSxmmRaFACz134/c0gcsXWDpOOw/ejBiqQAdAWcYkn08CwSN/UPeGNkOYeZ8F7sR+Ut5J
+ hGKBX6n9xT9T0JJfptJQpc5gsMlImiW1ixgNsu90X/M90uW/qVgiKn/yJl9NgNk6kqGzcDnVX
+ pobN2gS9pL/pDgbjYrDoQIO6ZCBtu466N2PUvYKL/sfgqNevpEX71LNJ+t8C7EyAamCB/4d+p
+ o+KCthWANWuASXEOTzG17H3YNwPG+O4de+iCepWXFF2vWMYnZk0HKhFecMC6qhE4AyE9vrsHN
+ Wi6isW8yJqmBYLFPaoi4tjhhwY1r7DfBbQ7fklCJl7g5jgk2wwwwVY5SLhIuW7MhdGgKO4RyX
+ LCZZpRms2z9S3tPY6w0D5/hXxZ4nERr8091PUGhjLc1RcKUJtypMI+4hq5QGWUagHPBVJfI1f
+ eadrp2Y+YQNTXWLz3yQYSR+5EgfU/AHffU8XkJTif4YtANAToU/8douLYqgbnxk1adSySKadb
+ k43cJykTNmWJ5Dnd9S8219J8NsuK2fX4ciTeRNY24bm2kZMnAaBVq/YYRQwz/2UQxr9enluZ2
+ e8wXzVRi/luspXO2u+1xdBUa1J2B+7Kz12nVhccnXGa92q7Ou7YMq/+2HS/fO6OuTac5xvKtM
+ yrEYVgeDU6BvYaYONSBb8mxPkIEfoQcDfWxD0IVipnhtaOju+zCtrJXPFNNPKlEWjARLv7BC1
+ hKjo1LZjZv4LrnnXSMEbztwgrQyR4Rjxbb0eUr7iVDjyAtOnFE=
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-
-On 6/24/2020 12:10 AM, Vinod Koul wrote:
-> On 15-06-20, 13:54, Dave Jiang wrote:
->> Add wq drain support. When a wq is being released, it needs to wait for
->> all in-flight operation to complete.  A device control function
->> idxd_wq_drain() has been added to facilitate this. A wq drain call
->> is added to the char dev on release to make sure all user operations are
->> complete. A wq drain is also added before the wq is being disabled.
->>
->> A drain command can take an unpredictable period of time. Interrupt support
->> for device commands is added to allow waiting on the command to
->> finish. If a previous command is in progress, the new submitter can block
->> until the current command is finished before proceeding. The interrupt
->> based submission will submit the command and then wait until a command
->> completion interrupt happens to complete. All commands are moved to the
->> interrupt based command submission except for the device reset during
->> probe, which will be polled.
->>
->> Fixes: 42d279f9137a ("dmaengine: idxd: add char driver to expose submission portal to userland")
->>
+> On 25 June 2020 at 02:42 Dave Jiang <dave.jiang@intel.com> wrote:
 > 
-> no empty line here
 > 
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> Reviewed-by: Tony Luck <tony.luck@intel.com>
->> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
->> ---
->>   drivers/dma/idxd/cdev.c   |    3 +
->>   drivers/dma/idxd/device.c |  156 ++++++++++++++++++++-------------------------
->>   drivers/dma/idxd/idxd.h   |   11 ++-
->>   drivers/dma/idxd/init.c   |   14 ++--
->>   drivers/dma/idxd/irq.c    |   41 +++++-------
->>   drivers/dma/idxd/sysfs.c  |   22 ++----
->>   6 files changed, 115 insertions(+), 132 deletions(-)
->>
->> diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
->> index 207555296913..cd9f01134fd3 100644
->> --- a/drivers/dma/idxd/cdev.c
->> +++ b/drivers/dma/idxd/cdev.c
->> @@ -117,6 +117,9 @@ static int idxd_cdev_release(struct inode *node, struct file *filep)
->>   	dev_dbg(dev, "%s called\n", __func__);
->>   	filep->private_data = NULL;
->>   
->> +	/* Wait for in-flight operations to complete. */
->> +	idxd_wq_drain(wq);
->> +
->>   	kfree(ctx);
->>   	mutex_lock(&wq->wq_lock);
->>   	idxd_wq_put(wq);
->> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
->> index f4f64d4678a4..8fe344412bd9 100644
->> --- a/drivers/dma/idxd/device.c
->> +++ b/drivers/dma/idxd/device.c
->> @@ -11,8 +11,8 @@
->>   #include "idxd.h"
->>   #include "registers.h"
->>   
->> -static int idxd_cmd_wait(struct idxd_device *idxd, u32 *status, int timeout);
->> -static int idxd_cmd_send(struct idxd_device *idxd, int cmd_code, u32 operand);
->> +static void idxd_cmd_exec(struct idxd_device *idxd, int cmd_code, u32 operand,
->> +			  u32 *status);
->>   
->>   /* Interrupt control bits */
->>   int idxd_mask_msix_vector(struct idxd_device *idxd, int vec_id)
->> @@ -235,21 +235,13 @@ int idxd_wq_enable(struct idxd_wq *wq)
->>   	struct idxd_device *idxd = wq->idxd;
->>   	struct device *dev = &idxd->pdev->dev;
->>   	u32 status;
->> -	int rc;
->> -
->> -	lockdep_assert_held(&idxd->dev_lock);
->>   
->>   	if (wq->state == IDXD_WQ_ENABLED) {
->>   		dev_dbg(dev, "WQ %d already enabled\n", wq->id);
->>   		return -ENXIO;
->>   	}
->>   
->> -	rc = idxd_cmd_send(idxd, IDXD_CMD_ENABLE_WQ, wq->id);
->> -	if (rc < 0)
->> -		return rc;
->> -	rc = idxd_cmd_wait(idxd, &status, IDXD_REG_TIMEOUT);
->> -	if (rc < 0)
->> -		return rc;
->> +	idxd_cmd_exec(idxd, IDXD_CMD_ENABLE_WQ, wq->id, &status);
->>   
->>   	if (status != IDXD_CMDSTS_SUCCESS &&
->>   	    status != IDXD_CMDSTS_ERR_WQ_ENABLED) {
->> @@ -267,9 +259,7 @@ int idxd_wq_disable(struct idxd_wq *wq)
->>   	struct idxd_device *idxd = wq->idxd;
->>   	struct device *dev = &idxd->pdev->dev;
->>   	u32 status, operand;
->> -	int rc;
->>   
->> -	lockdep_assert_held(&idxd->dev_lock);
->>   	dev_dbg(dev, "Disabling WQ %d\n", wq->id);
->>   
->>   	if (wq->state != IDXD_WQ_ENABLED) {
->> @@ -278,12 +268,7 @@ int idxd_wq_disable(struct idxd_wq *wq)
->>   	}
->>   
->>   	operand = BIT(wq->id % 16) | ((wq->id / 16) << 16);
->> -	rc = idxd_cmd_send(idxd, IDXD_CMD_DISABLE_WQ, operand);
->> -	if (rc < 0)
->> -		return rc;
->> -	rc = idxd_cmd_wait(idxd, &status, IDXD_REG_TIMEOUT);
->> -	if (rc < 0)
->> -		return rc;
->> +	idxd_cmd_exec(idxd, IDXD_CMD_DISABLE_WQ, operand, &status);
->>   
->>   	if (status != IDXD_CMDSTS_SUCCESS) {
->>   		dev_dbg(dev, "WQ disable failed: %#x\n", status);
->> @@ -295,6 +280,23 @@ int idxd_wq_disable(struct idxd_wq *wq)
->>   	return 0;
->>   }
->>   
->> +void idxd_wq_drain(struct idxd_wq *wq)
->> +{
->> +	struct idxd_device *idxd = wq->idxd;
->> +	struct device *dev = &idxd->pdev->dev;
->> +	u32 operand;
->> +
->> +	if (wq->state != IDXD_WQ_ENABLED) {
->> +		dev_dbg(dev, "WQ %d in wrong state: %d\n", wq->id, wq->state);
->> +		return;
->> +	}
->> +
->> +	dev_dbg(dev, "Draining WQ %d\n", wq->id);
->> +	operand = BIT(wq->id % 16) | ((wq->id / 16) << 16);
->> +	idxd_cmd_exec(idxd, IDXD_CMD_DRAIN_WQ, operand, NULL);
->> +	dev_dbg(dev, "WQ %d drained\n", wq->id);
 > 
-> too much debug artifacts, pls remove
-
-Will fix
-
 > 
->> +}
->> +
->>   int idxd_wq_map_portal(struct idxd_wq *wq)
->>   {
->>   	struct idxd_device *idxd = wq->idxd;
->> @@ -356,66 +358,79 @@ static inline bool idxd_is_enabled(struct idxd_device *idxd)
->>   	return false;
->>   }
->>   
->> -static int idxd_cmd_wait(struct idxd_device *idxd, u32 *status, int timeout)
->> +/*
->> + * This is function is only used for reset during probe and will
->> + * poll for completion. Once the device is setup with interrupts,
->> + * all commands will be done via interrupt completion.
->> + */
->> +void idxd_device_init_reset(struct idxd_device *idxd)
->>   {
->> -	u32 sts, to = timeout;
->> -
->> -	lockdep_assert_held(&idxd->dev_lock);
->> -	sts = ioread32(idxd->reg_base + IDXD_CMDSTS_OFFSET);
->> -	while (sts & IDXD_CMDSTS_ACTIVE && --to) {
->> -		cpu_relax();
->> -		sts = ioread32(idxd->reg_base + IDXD_CMDSTS_OFFSET);
->> -	}
->> +	struct device *dev = &idxd->pdev->dev;
->> +	union idxd_command_reg cmd;
->> +	unsigned long flags;
->>   
->> -	if (to == 0 && sts & IDXD_CMDSTS_ACTIVE) {
->> -		dev_warn(&idxd->pdev->dev, "%s timed out!\n", __func__);
->> -		*status = 0;
->> -		return -EBUSY;
->> -	}
->> +	memset(&cmd, 0, sizeof(cmd));
->> +	cmd.cmd = IDXD_CMD_RESET_DEVICE;
->> +	dev_dbg(dev, "%s: sending reset for init.\n", __func__);
->> +	spin_lock_irqsave(&idxd->dev_lock, flags);
->> +	iowrite32(cmd.bits, idxd->reg_base + IDXD_CMD_OFFSET);
->>   
->> -	*status = sts;
->> -	return 0;
->> +	while (ioread32(idxd->reg_base + IDXD_CMDSTS_OFFSET) &
->> +	       IDXD_CMDSTS_ACTIVE)
->> +		cpu_relax();
->> +	spin_unlock_irqrestore(&idxd->dev_lock, flags);
->>   }
->>   
->> -static int idxd_cmd_send(struct idxd_device *idxd, int cmd_code, u32 operand)
->> +static void idxd_cmd_exec(struct idxd_device *idxd, int cmd_code, u32 operand,
->> +			  u32 *status)
->>   {
->>   	union idxd_command_reg cmd;
->> -	int rc;
->> -	u32 status;
->> -
->> -	lockdep_assert_held(&idxd->dev_lock);
->> -	rc = idxd_cmd_wait(idxd, &status, IDXD_REG_TIMEOUT);
->> -	if (rc < 0)
->> -		return rc;
->> +	DECLARE_COMPLETION_ONSTACK(done);
->> +	unsigned long flags;
->>   
->>   	memset(&cmd, 0, sizeof(cmd));
->>   	cmd.cmd = cmd_code;
->>   	cmd.operand = operand;
->> +	cmd.int_req = 1;
->> +
->> +	spin_lock_irqsave(&idxd->dev_lock, flags);
->> +	wait_event_lock_irq(idxd->cmd_waitq,
->> +			    !test_bit(IDXD_FLAG_CMD_RUNNING, &idxd->flags),
->> +			    idxd->dev_lock);
->> +
->>   	dev_dbg(&idxd->pdev->dev, "%s: sending cmd: %#x op: %#x\n",
->>   		__func__, cmd_code, operand);
->> +
->> +	__set_bit(IDXD_FLAG_CMD_RUNNING, &idxd->flags);
->> +	idxd->cmd_done = &done;
->>   	iowrite32(cmd.bits, idxd->reg_base + IDXD_CMD_OFFSET);
->>   
->> -	return 0;
->> +	/*
->> +	 * After command submitted, release lock and go to sleep until
->> +	 * the command completes via interrupt.
->> +	 */
->> +	spin_unlock_irqrestore(&idxd->dev_lock, flags);
->> +	wait_for_completion(&done);
+> On 6/21/2020 12:24 AM, Vinod Koul wrote:
+> > On 19-06-20, 16:31, Dave Jiang wrote:
+> >>
+> >>
+> >> On 6/19/2020 3:47 PM, Federico Vaga wrote:
+> >>> Hello,
+> >>>
+> >>> is there the possibility of using a DMA engine channel from userspace?
+> >>>
+> >>> Something like:
+> >>> - configure DMA using ioctl() (or whatever configuration mechanism)
+> >>> - read() or write() to trigger the transfer
+> >>>
+> >>
+> >> I may have supposedly promised Vinod to look into possibly providing
+> >> something like this in the future. But I have not gotten around to do that
+> >> yet. Currently, no such support.
+> > 
+> > And I do still have serious reservations about this topic :) Opening up
+> > userspace access to DMA does not sound very great from security point of
+> > view.
 > 
-> waiting with locks held and interrupts disabled? >
+> What about doing it with DMA engine that supports PASID? That way the user can 
+> really only trash its own address space and kernel is protected.
 
-No we release lock here before we wait. And it gets re-acquired once we are 
-woken up.
+Sounds interesting! Not sure if this is really needed in that case...
+I have already implemented checks of vm_area_struct for contiguous memory or even do a get_user_pages_fast for user memory to pin it (hope that is the correct term here). Of course i have to do that for every involved page.
+But i will do some checks if my code is really suitable to avoid misusage.
 
+Best regards,
+Thomas

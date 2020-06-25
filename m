@@ -2,98 +2,74 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AD2B9209B1C
-	for <lists+dmaengine@lfdr.de>; Thu, 25 Jun 2020 10:11:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1FA620A502
+	for <lists+dmaengine@lfdr.de>; Thu, 25 Jun 2020 20:31:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390403AbgFYILj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 25 Jun 2020 04:11:39 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:52457 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbgFYILi (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 25 Jun 2020 04:11:38 -0400
-Received: from oxbsgw03.schlund.de ([172.19.248.4]) by
- mrelayeu.kundenserver.de (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1Mq33i-1j2gDL1V58-00n5Wr; Thu, 25 Jun 2020 10:11:29 +0200
-Date:   Thu, 25 Jun 2020 10:11:28 +0200 (CEST)
-From:   Thomas Ruf <freelancer@rufusul.de>
-Reply-To: Thomas Ruf <freelancer@rufusul.de>
-To:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>
-Cc:     Federico Vaga <federico.vaga@cern.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>
-Message-ID: <84270660.632865.1593072688966@mailbusiness.ionos.de>
-In-Reply-To: <581f1761-e582-c770-169a-ee3374baf25c@intel.com>
-References: <5614531.lOV4Wx5bFT@harkonnen>
- <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
- <20200621072457.GA2324254@vkoul-mobl>
- <581f1761-e582-c770-169a-ee3374baf25c@intel.com>
-Subject: Re: DMA Engine: Transfer From Userspace
+        id S2404154AbgFYSbd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 25 Jun 2020 14:31:33 -0400
+Received: from mga07.intel.com ([134.134.136.100]:22875 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403987AbgFYSbd (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 25 Jun 2020 14:31:33 -0400
+IronPort-SDR: HEoZPNrwPao21UOJynUmVElvGsIWIgW8Iy3hxVjaXVUkP+uM+CeGmHUiPt48wkONVKTjjxC3Nx
+ uTVH8WG/dj0A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9663"; a="210114961"
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="210114961"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2020 11:31:30 -0700
+IronPort-SDR: N1Pr7RhiT2oy2S4TNslCFDR4V/euo2peFHl8T1ULtTQ+KTjnmQiJmBLMJRYW4fF1xTcBVhxcG9
+ EqEiXTPcJ9FQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,280,1589266800"; 
+   d="scan'208";a="298216436"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.209.91.227]) ([10.209.91.227])
+  by orsmga007.jf.intel.com with ESMTP; 25 Jun 2020 11:31:29 -0700
+Subject: Re: [PATCH] dmaengine: check device and channel list for empty
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, swathi.kovvuri@intel.com
+References: <158957055210.11529.14023177009907426289.stgit@djiang5-desk3.ch.intel.com>
+ <20200624072911.GL2324254@vkoul-mobl>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <c27b6058-a406-e6bd-55cd-15b67ab89f48@intel.com>
+Date:   Thu, 25 Jun 2020 11:31:27 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200624072911.GL2324254@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-Mailer: Open-Xchange Mailer v7.10.1-Rev31
-X-Originating-Client: open-xchange-appsuite
-X-Provags-ID: V03:K1:HRzZ5peGV0s505yrNUmy14wLZnN+vfwR82ESXZO9Xn8IosI2Nhb
- tS27+7lVHfyqGmG1X4PlBHEF7VEIRakVZt++yNkg3elhFmdOok/ghZSucGsZ7cEc/CXZi68
- yrGkoR1jdBuNeaYRi52VBN3HGODudojDMPoitdQSngxITKvUATEWz0FTY1iNbmfQfj+sNhx
- Ph+4shDH6JvSWaA/2Ixdw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Wc8ojQSYAcE=:agm+E9A9YdkiLYUwIfZEsU
- P5e+UVwhMxR2FkAyYvkjGEVfNUIxDvaAqnhIM/rd8I3pYLWL/WrQdsgFTh4nrKnx8L5p5M8Ma
- tTp+qSxmmRaFACz134/c0gcsXWDpOOw/ejBiqQAdAWcYkn08CwSN/UPeGNkOYeZ8F7sR+Ut5J
- hGKBX6n9xT9T0JJfptJQpc5gsMlImiW1ixgNsu90X/M90uW/qVgiKn/yJl9NgNk6kqGzcDnVX
- pobN2gS9pL/pDgbjYrDoQIO6ZCBtu466N2PUvYKL/sfgqNevpEX71LNJ+t8C7EyAamCB/4d+p
- o+KCthWANWuASXEOTzG17H3YNwPG+O4de+iCepWXFF2vWMYnZk0HKhFecMC6qhE4AyE9vrsHN
- Wi6isW8yJqmBYLFPaoi4tjhhwY1r7DfBbQ7fklCJl7g5jgk2wwwwVY5SLhIuW7MhdGgKO4RyX
- LCZZpRms2z9S3tPY6w0D5/hXxZ4nERr8091PUGhjLc1RcKUJtypMI+4hq5QGWUagHPBVJfI1f
- eadrp2Y+YQNTXWLz3yQYSR+5EgfU/AHffU8XkJTif4YtANAToU/8douLYqgbnxk1adSySKadb
- k43cJykTNmWJ5Dnd9S8219J8NsuK2fX4ciTeRNY24bm2kZMnAaBVq/YYRQwz/2UQxr9enluZ2
- e8wXzVRi/luspXO2u+1xdBUa1J2B+7Kz12nVhccnXGa92q7Ou7YMq/+2HS/fO6OuTac5xvKtM
- yrEYVgeDU6BvYaYONSBb8mxPkIEfoQcDfWxD0IVipnhtaOju+zCtrJXPFNNPKlEWjARLv7BC1
- hKjo1LZjZv4LrnnXSMEbztwgrQyR4Rjxbb0eUr7iVDjyAtOnFE=
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-> On 25 June 2020 at 02:42 Dave Jiang <dave.jiang@intel.com> wrote:
-> 
-> 
-> 
-> 
-> On 6/21/2020 12:24 AM, Vinod Koul wrote:
-> > On 19-06-20, 16:31, Dave Jiang wrote:
-> >>
-> >>
-> >> On 6/19/2020 3:47 PM, Federico Vaga wrote:
-> >>> Hello,
-> >>>
-> >>> is there the possibility of using a DMA engine channel from userspace?
-> >>>
-> >>> Something like:
-> >>> - configure DMA using ioctl() (or whatever configuration mechanism)
-> >>> - read() or write() to trigger the transfer
-> >>>
-> >>
-> >> I may have supposedly promised Vinod to look into possibly providing
-> >> something like this in the future. But I have not gotten around to do that
-> >> yet. Currently, no such support.
-> > 
-> > And I do still have serious reservations about this topic :) Opening up
-> > userspace access to DMA does not sound very great from security point of
-> > view.
-> 
-> What about doing it with DMA engine that supports PASID? That way the user can 
-> really only trash its own address space and kernel is protected.
 
-Sounds interesting! Not sure if this is really needed in that case...
-I have already implemented checks of vm_area_struct for contiguous memory or even do a get_user_pages_fast for user memory to pin it (hope that is the correct term here). Of course i have to do that for every involved page.
-But i will do some checks if my code is really suitable to avoid misusage.
+On 6/24/2020 12:29 AM, Vinod Koul wrote:
+> On 15-05-20, 12:22, Dave Jiang wrote:
+>> Check dma device list and channel list for empty before iterate as the
+>> iteration function assume the list to be not empty. With devices and
+>> channels now being hot pluggable this is a condition that needs to be
+>> checked. Otherwise it can cause the iterator to spin forever.
+> 
+> Can you rebase and resend, they dont apply on next
 
-Best regards,
-Thomas
+Hi Vinod. I'm trying to figure out how to do all the patches outstanding to 
+avoid conflicts for you. Some will go to your fixes branch and some will go to 
+the next branch. But next doesn't have the patches in fixes. So when you merge 
+next later for 5.9, you are going to hit conflict from my patches that went in 
+through the fixes branch for 5.8.
+
+> 
+>>
+>> Fixes: e81274cd6b52 ("dmaengine: add support to dynamic register/unregister of channels")
+> 
+> Pls drop this empty line
+>>
+>> Reported-by: Swathi Kovvuri <swathi.kovvuri@intel.com>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> Tested-by: Swathi Kovvuri <swathi.kovvuri@intel.com>

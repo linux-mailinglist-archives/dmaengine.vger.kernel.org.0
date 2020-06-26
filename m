@@ -2,172 +2,280 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AEFE920B7DC
-	for <lists+dmaengine@lfdr.de>; Fri, 26 Jun 2020 20:13:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D90F420B8AB
+	for <lists+dmaengine@lfdr.de>; Fri, 26 Jun 2020 20:52:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726080AbgFZSNB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 26 Jun 2020 14:13:01 -0400
-Received: from mga14.intel.com ([192.55.52.115]:18953 "EHLO mga14.intel.com"
+        id S1725768AbgFZSwG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 26 Jun 2020 14:52:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726060AbgFZSNB (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 26 Jun 2020 14:13:01 -0400
-IronPort-SDR: E2KWhEoFRYnZjwLKvmyq6xf1CbDKMosbzaC4UenZPnbVkkorg+8uegweO2+Yqly+4mE+fFdxTf
- qcOTZHInNPGQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="144513621"
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="144513621"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 11:12:57 -0700
-IronPort-SDR: hAXmvbsfB4BgqQqVwwWgiw/nJqHrjna1mWWqSOZm/yzmAY1aSMJLWvwptswcMZBB4OXymKPFsa
- 5hw1LBbq8dsw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
-   d="scan'208";a="311470526"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga008.jf.intel.com with ESMTP; 26 Jun 2020 11:12:56 -0700
-Subject: [PATCH] dmaengine: idxd: move idxd interrupt handling to mask
- instead of ignore
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     Ashok Raj <ashok.raj@intel.com>, dmaengine@vger.kernel.org
-Date:   Fri, 26 Jun 2020 11:12:56 -0700
-Message-ID: <159319517621.70410.11816465052708900506.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/unknown-version
+        id S1725283AbgFZSwF (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 26 Jun 2020 14:52:05 -0400
+Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDAD02075A;
+        Fri, 26 Jun 2020 18:52:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593197524;
+        bh=E5ZeGIaQ4TvxmK01qXTN6ia+aVwiHoFFaYZso3L47YA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=n790PbLzROZKWoZhFf+3iV0hWLyb/W4bEQ791+kAAwLaVp5omcjYgtmZzdRV/vQeO
+         QC8lhrpHholCaSmgheL1iCtiGerP/zLk6/3Qqyo8gLLZtwT+jHx0pydM3LZfATP8MY
+         GQG89aRpEKi6nyQJjU12vDJcIx8SPa8rhTc3PTCw=
+Date:   Fri, 26 Jun 2020 13:52:02 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     refactormyself@gmail.com
+Cc:     bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-pci@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        dmaengine@vger.kernel.org,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        Don Brace <don.brace@microsemi.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        esc.storagedev@microsemi.com, linux-scsi@vger.kernel.org,
+        Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/8 v2] PCI: Align return values of PCIe capability and
+ PCI accessors
+Message-ID: <20200626185202.GA2923565@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200615073225.24061-1-refactormyself@gmail.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Switch driver to use MSIX mask and unmask instead of the ignore bit.
-When ignore bit is cleared, we must issue an MMIO read to ensure writes
-have all arrived and check and process any additional completions. The
-ignore bit does not queue up any pending MSIX interrupts. The mask bit
-however does. Use API call from interrupt subsystem to mask MSIX
-interrupt since the hardware does not have convenient mask bit register.
+On Mon, Jun 15, 2020 at 09:32:17AM +0200, refactormyself@gmail.com wrote:
+> From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+> 
+> 
+> PATCH 1/8 to 7/8:
+> PCIBIOS_ error codes have positive values and they are passed down the
+> call heirarchy from accessors. For functions which are meant to return
+> only a negative value on failure, passing on this value is a bug.
+> To mitigate this, call pcibios_err_to_errno() before passing on return
+> value from PCIe capability accessors call heirarchy. This function
+> converts any positive PCIBIOS_ error codes to negative generic error
+> values.
+> 
+> PATCH 8/8:
+> The PCIe capability accessors can return 0, -EINVAL, or any PCIBIOS_ error
+> code. The pci accessor on the other hand can only return 0 or any PCIBIOS_
+> error code.This inconsistency among these accessor makes it harder for
+> callers to check for errors.
+> Return PCIBIOS_BAD_REGISTER_NUMBER instead of -EINVAL in all PCIe
+> capability accessors.
+> 
+> MERGING:
+> These may all be merged via the PCI tree, since it is a collection of
+> similar fixes. This way they all get merged at once.
+> 
+> Version 2:
+> * cc to maintainers and mailing lists
+> * Edit the Subject to conform with previous style
+> * reorder "Signed by" and "Suggested by"
+> * made spelling corrections
+> * fixed redundant initialisation in PATCH 3/8
+> * include missing call to pcibios_err_to_errno() in PATCH 6/8 and 7/8
+> 
+> 
+> Bolarinwa Olayemi Saheed (8):
+>   dmaengine: ioatdma: Convert PCIBIOS_* errors to generic -E* errors
+>   IB/hfi1: Convert PCIBIOS_* errors to generic -E* errors
+>   IB/hfi1: Convert PCIBIOS_* errors to generic -E* errors
+>   PCI: Convert PCIBIOS_* errors to generic -E* errors
+>   scsi: smartpqi: Convert PCIBIOS_* errors to generic -E* errors
+>   PCI/AER: Convert PCIBIOS_* errors to generic -E* errors
+>   PCI/AER: Convert PCIBIOS_* errors to generic -E* errors
+>   PCI: Align return values of PCIe capability and PCI accessorss
+> 
+>  drivers/dma/ioat/init.c               |  4 ++--
+>  drivers/infiniband/hw/hfi1/pcie.c     | 18 +++++++++++++-----
+>  drivers/pci/access.c                  |  8 ++++----
+>  drivers/pci/pci.c                     | 10 ++++++++--
+>  drivers/pci/pcie/aer.c                | 12 ++++++++++--
+>  drivers/scsi/smartpqi/smartpqi_init.c |  6 +++++-
+>  6 files changed, 42 insertions(+), 16 deletions(-)
 
-Suggested-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/dma/idxd/device.c |   53 +++++++++------------------------------------
- drivers/dma/idxd/idxd.h   |    4 ++-
- drivers/dma/idxd/irq.c    |    2 --
- 3 files changed, 13 insertions(+), 46 deletions(-)
+Since these are really fixing a single PCI API problem, not individual
+driver-related problems, I squashed the pcibios_err_to_errno() patches
+together (except IB/hfi1, since Jason will take those separately) and
+applied them to pci/misc, thanks!
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 1d8d64508a28..26e9a51de94e 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -6,6 +6,8 @@
- #include <linux/pci.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
- #include <linux/dmaengine.h>
-+#include <linux/irq.h>
-+#include <linux/msi.h>
- #include <uapi/linux/idxd.h>
- #include "../dmaengine.h"
- #include "idxd.h"
-@@ -15,61 +17,28 @@ static void idxd_cmd_exec(struct idxd_device *idxd, int cmd_code, u32 operand,
- 			  u32 *status);
+The squashed patch as applied is:
+
+commit d20df83b66cc ("PCI: Convert PCIe capability PCIBIOS errors to errno")
+Author: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+Date:   Mon Jun 15 09:32:18 2020 +0200
+
+    PCI: Convert PCIe capability PCIBIOS errors to errno
+    
+    The PCI config accessors (pci_read_config_word(), et al) return
+    PCIBIOS_SUCCESSFUL (zero) or positive error values like
+    PCIBIOS_FUNC_NOT_SUPPORTED.
+    
+    The PCIe capability accessors (pcie_capability_read_word(), et al)
+    similarly return PCIBIOS errors, but some callers assume they return
+    generic errno values like -EINVAL.
+    
+    For example, the Myri-10G probe function returns a positive PCIBIOS error
+    if the pcie_capability_clear_and_set_word() in pcie_set_readrq() fails:
+    
+      myri10ge_probe
+        status = pcie_set_readrq
+          return pcie_capability_clear_and_set_word
+        if (status)
+          return status
+    
+    A positive return from a PCI driver probe function would cause a "Driver
+    probe function unexpectedly returned" warning from local_pci_probe()
+    instead of the desired probe failure.
+    
+    Convert PCIBIOS errors to generic errno for all callers of:
+    
+      pcie_capability_read_word
+      pcie_capability_read_dword
+      pcie_capability_write_word
+      pcie_capability_write_dword
+      pcie_capability_set_word
+      pcie_capability_set_dword
+      pcie_capability_clear_word
+      pcie_capability_clear_dword
+      pcie_capability_clear_and_set_word
+      pcie_capability_clear_and_set_dword
+    
+    that check the return code for anything other than zero.
+    
+    [bhelgaas: commit log, squash together]
+    Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+    Link: https://lore.kernel.org/r/20200615073225.24061-1-refactormyself@gmail.com
+    Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+diff --git a/drivers/dma/ioat/init.c b/drivers/dma/ioat/init.c
+index 58d13564f88b..9a6a9ec3cf48 100644
+--- a/drivers/dma/ioat/init.c
++++ b/drivers/dma/ioat/init.c
+@@ -1195,13 +1195,13 @@ static int ioat3_dma_probe(struct ioatdma_device *ioat_dma, int dca)
+ 	/* disable relaxed ordering */
+ 	err = pcie_capability_read_word(pdev, IOAT_DEVCTRL_OFFSET, &val16);
+ 	if (err)
+-		return err;
++		return pcibios_err_to_errno(err);
  
- /* Interrupt control bits */
--int idxd_mask_msix_vector(struct idxd_device *idxd, int vec_id)
-+void idxd_mask_msix_vector(struct idxd_device *idxd, int vec_id)
+ 	/* clear relaxed ordering enable */
+ 	val16 &= ~IOAT_DEVCTRL_ROE;
+ 	err = pcie_capability_write_word(pdev, IOAT_DEVCTRL_OFFSET, val16);
+ 	if (err)
+-		return err;
++		return pcibios_err_to_errno(err);
+ 
+ 	if (ioat_dma->cap & IOAT_CAP_DPS)
+ 		writeb(ioat_pending_level + 1,
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index ce096272f52b..45c51aff9c03 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5688,6 +5688,7 @@ EXPORT_SYMBOL(pcie_get_readrq);
+ int pcie_set_readrq(struct pci_dev *dev, int rq)
  {
--	struct pci_dev *pdev = idxd->pdev;
--	int msixcnt = pci_msix_vec_count(pdev);
--	union msix_perm perm;
--	u32 offset;
--
--	if (vec_id < 0 || vec_id >= msixcnt)
--		return -EINVAL;
--
--	offset = idxd->msix_perm_offset + vec_id * 8;
--	perm.bits = ioread32(idxd->reg_base + offset);
--	perm.ignore = 1;
--	iowrite32(perm.bits, idxd->reg_base + offset);
-+	struct irq_data *data = irq_get_irq_data(idxd->msix_entries[vec_id].vector);
+ 	u16 v;
++	int ret;
  
--	return 0;
-+	pci_msi_mask_irq(data);
+ 	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
+ 		return -EINVAL;
+@@ -5706,8 +5707,10 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+ 
+ 	v = (ffs(rq) - 8) << 12;
+ 
+-	return pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
++	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
+ 						  PCI_EXP_DEVCTL_READRQ, v);
++
++	return pcibios_err_to_errno(ret);
+ }
+ EXPORT_SYMBOL(pcie_set_readrq);
+ 
+@@ -5738,6 +5741,7 @@ EXPORT_SYMBOL(pcie_get_mps);
+ int pcie_set_mps(struct pci_dev *dev, int mps)
+ {
+ 	u16 v;
++	int ret;
+ 
+ 	if (mps < 128 || mps > 4096 || !is_power_of_2(mps))
+ 		return -EINVAL;
+@@ -5747,8 +5751,10 @@ int pcie_set_mps(struct pci_dev *dev, int mps)
+ 		return -EINVAL;
+ 	v <<= 5;
+ 
+-	return pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
++	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
+ 						  PCI_EXP_DEVCTL_PAYLOAD, v);
++
++	return pcibios_err_to_errno(ret);
+ }
+ EXPORT_SYMBOL(pcie_set_mps);
+ 
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 3acf56683915..2dbc1fd2910b 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -224,20 +224,25 @@ int pcie_aer_is_native(struct pci_dev *dev)
+ 
+ int pci_enable_pcie_error_reporting(struct pci_dev *dev)
+ {
++	int rc;
++
+ 	if (!pcie_aer_is_native(dev))
+ 		return -EIO;
+ 
+-	return pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_AER_FLAGS);
++	rc = pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_AER_FLAGS);
++	return pcibios_err_to_errno(rc);
+ }
+ EXPORT_SYMBOL_GPL(pci_enable_pcie_error_reporting);
+ 
+ int pci_disable_pcie_error_reporting(struct pci_dev *dev)
+ {
++	int rc;
++
+ 	if (!pcie_aer_is_native(dev))
+ 		return -EIO;
+ 
+-	return pcie_capability_clear_word(dev, PCI_EXP_DEVCTL,
+-					  PCI_EXP_AER_FLAGS);
++	rc = pcie_capability_clear_word(dev, PCI_EXP_DEVCTL, PCI_EXP_AER_FLAGS);
++	return pcibios_err_to_errno(rc);
+ }
+ EXPORT_SYMBOL_GPL(pci_disable_pcie_error_reporting);
+ 
+diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
+index cd157f11eb22..bd38c8cea56e 100644
+--- a/drivers/scsi/smartpqi/smartpqi_init.c
++++ b/drivers/scsi/smartpqi/smartpqi_init.c
+@@ -7423,8 +7423,12 @@ static int pqi_ctrl_init_resume(struct pqi_ctrl_info *ctrl_info)
+ static inline int pqi_set_pcie_completion_timeout(struct pci_dev *pci_dev,
+ 	u16 timeout)
+ {
+-	return pcie_capability_clear_and_set_word(pci_dev, PCI_EXP_DEVCTL2,
++	int rc;
++
++	rc = pcie_capability_clear_and_set_word(pci_dev, PCI_EXP_DEVCTL2,
+ 		PCI_EXP_DEVCTL2_COMP_TIMEOUT, timeout);
++
++	return pcibios_err_to_errno(rc);
  }
  
- void idxd_mask_msix_vectors(struct idxd_device *idxd)
- {
- 	struct pci_dev *pdev = idxd->pdev;
- 	int msixcnt = pci_msix_vec_count(pdev);
--	int i, rc;
-+	int i;
- 
--	for (i = 0; i < msixcnt; i++) {
--		rc = idxd_mask_msix_vector(idxd, i);
--		if (rc < 0)
--			dev_warn(&pdev->dev,
--				 "Failed disabling msix vec %d\n", i);
--	}
-+	for (i = 0; i < msixcnt; i++)
-+		idxd_mask_msix_vector(idxd, i);
- }
- 
--int idxd_unmask_msix_vector(struct idxd_device *idxd, int vec_id)
-+void idxd_unmask_msix_vector(struct idxd_device *idxd, int vec_id)
- {
--	struct pci_dev *pdev = idxd->pdev;
--	int msixcnt = pci_msix_vec_count(pdev);
--	union msix_perm perm;
--	u32 offset;
--
--	if (vec_id < 0 || vec_id >= msixcnt)
--		return -EINVAL;
--
--	offset = idxd->msix_perm_offset + vec_id * 8;
--	perm.bits = ioread32(idxd->reg_base + offset);
--	perm.ignore = 0;
--	iowrite32(perm.bits, idxd->reg_base + offset);
-+	struct irq_data *data = irq_get_irq_data(idxd->msix_entries[vec_id].vector);
- 
--	/*
--	 * A readback from the device ensures that any previously generated
--	 * completion record writes are visible to software based on PCI
--	 * ordering rules.
--	 */
--	perm.bits = ioread32(idxd->reg_base + offset);
--
--	return 0;
-+	pci_msi_unmask_irq(data);
- }
- 
- void idxd_unmask_error_interrupts(struct idxd_device *idxd)
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 83214e902dd2..5f50bb830ca4 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -273,8 +273,8 @@ irqreturn_t idxd_wq_thread(int irq, void *data);
- void idxd_mask_error_interrupts(struct idxd_device *idxd);
- void idxd_unmask_error_interrupts(struct idxd_device *idxd);
- void idxd_mask_msix_vectors(struct idxd_device *idxd);
--int idxd_mask_msix_vector(struct idxd_device *idxd, int vec_id);
--int idxd_unmask_msix_vector(struct idxd_device *idxd, int vec_id);
-+void idxd_mask_msix_vector(struct idxd_device *idxd, int vec_id);
-+void idxd_unmask_msix_vector(struct idxd_device *idxd, int vec_id);
- 
- /* device control */
- void idxd_device_init_reset(struct idxd_device *idxd);
-diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
-index 6052765ca3c8..f3c1d9ae8b56 100644
---- a/drivers/dma/idxd/irq.c
-+++ b/drivers/dma/idxd/irq.c
-@@ -260,8 +260,6 @@ irqreturn_t idxd_wq_thread(int irq, void *data)
- 
- 	processed = idxd_desc_process(irq_entry);
- 	idxd_unmask_msix_vector(irq_entry->idxd, irq_entry->id);
--	/* catch anything unprocessed after unmasking */
--	processed += idxd_desc_process(irq_entry);
- 
- 	if (processed == 0)
- 		return IRQ_NONE;
+ static int pqi_pci_init(struct pqi_ctrl_info *ctrl_info)
+
 

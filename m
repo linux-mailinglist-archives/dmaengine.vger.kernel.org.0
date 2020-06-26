@@ -2,65 +2,169 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 98FD320AC6F
-	for <lists+dmaengine@lfdr.de>; Fri, 26 Jun 2020 08:39:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5847520AD24
+	for <lists+dmaengine@lfdr.de>; Fri, 26 Jun 2020 09:30:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgFZGjV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 26 Jun 2020 02:39:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40058 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727960AbgFZGjV (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 26 Jun 2020 02:39:21 -0400
-Received: from localhost (unknown [171.61.66.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE4372076E;
-        Fri, 26 Jun 2020 06:39:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593153560;
-        bh=Vk4Dd6jWDlWznC6TYCEqsWbJ8Ixro9RHg/d75xZ29DA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iajXq+mP7K8oNQ33XvOdkHJKqHvEr8u8oLdJJblBj6CczYbagVRP9D+kLVKUT8epC
-         aSp4eRp/nX5x6wvUVUjnQuqcwN9sHj7neNyLUwhKigkNlAQh0yPoY5b8rKKiSu8yqZ
-         0k6YhLqP4q50G+gC5tAHkoU3zdSdpdizVpDCJ5zw=
-Date:   Fri, 26 Jun 2020 12:09:15 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     dmaengine@vger.kernel.org, swathi.kovvuri@intel.com
-Subject: Re: [PATCH] dmaengine: check device and channel list for empty
-Message-ID: <20200626063915.GF6228@vkoul-mobl>
-References: <158957055210.11529.14023177009907426289.stgit@djiang5-desk3.ch.intel.com>
- <20200624072911.GL2324254@vkoul-mobl>
- <c27b6058-a406-e6bd-55cd-15b67ab89f48@intel.com>
+        id S1728168AbgFZHaA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 26 Jun 2020 03:30:00 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35844 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgFZHaA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 26 Jun 2020 03:30:00 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05Q7TiKO110026;
+        Fri, 26 Jun 2020 02:29:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593156584;
+        bh=H7Sye2F6KYJGyt86hcv78Gg9uUrflv9GgwpNcNmMWqA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=qmi8KBoS3LJBml2lCLL+R4h2DzChe0sIGuMZoPXycfI9jeo8yaJtuxe5BVmJYgjh1
+         PZbDJ06D6FPBdVDAXOWcdrx7wGJdEzrQNZIv6mRUkyzyhxSvVxawabrhynKB4K8yya
+         9kmXrg5m5Jp1qmBMC9DbdyU2WsdK0LxNWSUUBbjU=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05Q7TimS099997
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 26 Jun 2020 02:29:44 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 26
+ Jun 2020 02:29:43 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 26 Jun 2020 02:29:43 -0500
+Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05Q7Tgwm111765;
+        Fri, 26 Jun 2020 02:29:42 -0500
+Subject: Re: [PATCH][next] dmaengine: ti: k3-udma: Use struct_size() in
+ kzalloc()
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200619224334.GA7857@embeddedor>
+ <20200624055535.GX2324254@vkoul-mobl>
+ <3a5514c9-d966-c332-84ba-f418c26fa74c@embeddedor.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <98426221-8bff-25df-a062-9ec1ca4e8f26@ti.com>
+Date:   Fri, 26 Jun 2020 10:30:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c27b6058-a406-e6bd-55cd-15b67ab89f48@intel.com>
+In-Reply-To: <3a5514c9-d966-c332-84ba-f418c26fa74c@embeddedor.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 25-06-20, 11:31, Dave Jiang wrote:
-> 
-> 
-> On 6/24/2020 12:29 AM, Vinod Koul wrote:
-> > On 15-05-20, 12:22, Dave Jiang wrote:
-> > > Check dma device list and channel list for empty before iterate as the
-> > > iteration function assume the list to be not empty. With devices and
-> > > channels now being hot pluggable this is a condition that needs to be
-> > > checked. Otherwise it can cause the iterator to spin forever.
-> > 
-> > Can you rebase and resend, they dont apply on next
-> 
-> Hi Vinod. I'm trying to figure out how to do all the patches outstanding to
-> avoid conflicts for you. Some will go to your fixes branch and some will go
-> to the next branch. But next doesn't have the patches in fixes. So when you
-> merge next later for 5.9, you are going to hit conflict from my patches that
-> went in through the fixes branch for 5.8.
 
-I dont typically merge fixes, unless we have a conflicts. I can merge if
-there are conflicts, just let me know :-)
 
--- 
-~Vinod
+On 24/06/2020 20.12, Gustavo A. R. Silva wrote:
+> Hi Vinod,
+>=20
+> On 6/24/20 00:55, Vinod Koul wrote:
+>> On 19-06-20, 17:43, Gustavo A. R. Silva wrote:
+>>> Make use of the struct_size() helper instead of an open-coded version=
+
+>>> in order to avoid any potential type mistakes.
+>>>
+>>> This code was detected with the help of Coccinelle and, audited and
+>>> fixed manually.
+>>>
+>>> Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
+>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>> ---
+>>>  drivers/dma/ti/k3-udma.c | 4 ++--
+>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+>>> index 0d5fb154b8e2..411c54b86ba8 100644
+>>> --- a/drivers/dma/ti/k3-udma.c
+>>> +++ b/drivers/dma/ti/k3-udma.c
+>>> @@ -2209,7 +2209,7 @@ udma_prep_slave_sg_pkt(struct udma_chan *uc, st=
+ruct scatterlist *sgl,
+>>>  	u32 ring_id;
+>>>  	unsigned int i;
+>>> =20
+>>> -	d =3D kzalloc(sizeof(*d) + sglen * sizeof(d->hwdesc[0]), GFP_NOWAIT=
+);
+>>> +	d =3D kzalloc(struct_size(d, hwdesc, sglen), GFP_NOWAIT);
+>>
+>> struct_size() is a * b + c but here we need, a + b * c.. the trailing
+>> struct is N times here..
+>>
+>=20
+> struct_size() works exactly as expected in this case. :)
+> Please, see:
+>=20
+> include/linux/overflow.h:314:
+> 314 #define struct_size(p, member, count)                              =
+     \
+> 315         __ab_c_size(count,                                         =
+     \
+> 316                     sizeof(*(p)->member) + __must_be_array((p)->mem=
+ber),\
+> 317                     sizeof(*(p)))
+
+True, struct_size is for this sort of things.
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+
+While looking it up in include/linux/overflow.h I have noticed your
+commit in linux-next, which adds flex_array_size()
+
+The example in the commit message contradicts with what the helper
+does imho. To be correct it should have been:
+
+struct something {
+	size_t count;
+	struct foo items[];
+};
+
+- struct something *instance;
++ struct something instance;
+
+- instance =3D kmalloc(struct_size(instance, items, count), GFP_KERNEL);
++ instance.items =3D kmalloc(struct_size(instance, items, count), GFP_KER=
+NEL);
+instance->count =3D count;
+memcpy(instance->items, src, flex_array_size(instance, items, instance->c=
+ount));
+
+If I'm not mistaken..
+
+
+>=20
+> Thanks
+> --
+> Gustavo
+>=20
+>>>  	if (!d)
+>>>  		return NULL;
+>>> =20
+>>> @@ -2525,7 +2525,7 @@ udma_prep_dma_cyclic_pkt(struct udma_chan *uc, =
+dma_addr_t buf_addr,
+>>>  	if (period_len >=3D SZ_4M)
+>>>  		return NULL;
+>>> =20
+>>> -	d =3D kzalloc(sizeof(*d) + periods * sizeof(d->hwdesc[0]), GFP_NOWA=
+IT);
+>>> +	d =3D kzalloc(struct_size(d, hwdesc, periods), GFP_NOWAIT);
+>>>  	if (!d)
+>>>  		return NULL;
+>>> =20
+>>> --=20
+>>> 2.27.0
+>>
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/=
+Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+

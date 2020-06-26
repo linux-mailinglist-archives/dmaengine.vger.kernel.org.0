@@ -2,150 +2,306 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5EA620B272
-	for <lists+dmaengine@lfdr.de>; Fri, 26 Jun 2020 15:24:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FC0220B7D2
+	for <lists+dmaengine@lfdr.de>; Fri, 26 Jun 2020 20:09:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbgFZNYc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 26 Jun 2020 09:24:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35328 "EHLO mail.kernel.org"
+        id S1725836AbgFZSJm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 26 Jun 2020 14:09:42 -0400
+Received: from mga18.intel.com ([134.134.136.126]:64247 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728012AbgFZNYb (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 26 Jun 2020 09:24:31 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DAD62075D;
-        Fri, 26 Jun 2020 13:24:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593177871;
-        bh=/EUxyCyPVfvVOBq8FVj7Lzb1Feg675LVd6REFNzxA2Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lUQdPr/BUuMqYXe8r9nhip2IX12AYbzTXzkUAxwJL5FE60nIhfMu2DKFa+LbyIYP7
-         ZdsFqpQ8cHDvUJMUuhBPcG5PUTvVN99Zef36yIJqeMWGkiW5D6DCNvVlxhINT+3nsg
-         HyJ3UXX2scv/Q608VIWJuTgZyM466GVNGOJXy6UE=
-Date:   Fri, 26 Jun 2020 08:29:44 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] dmaengine: ti: k3-udma: Use struct_size() in
- kzalloc()
-Message-ID: <20200626132944.GA26003@embeddedor>
-References: <20200619224334.GA7857@embeddedor>
- <20200624055535.GX2324254@vkoul-mobl>
- <3a5514c9-d966-c332-84ba-f418c26fa74c@embeddedor.com>
- <98426221-8bff-25df-a062-9ec1ca4e8f26@ti.com>
+        id S1725768AbgFZSJm (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 26 Jun 2020 14:09:42 -0400
+IronPort-SDR: wn9b7cabwtKqx0SXWXBUEXrpzPsJRiSWis87Yw6jQZBIuImsU/4SE8RcyELNLTvG+Yk2Vw6513
+ 4hv0266mh41g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9664"; a="132841972"
+X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
+   d="scan'208";a="132841972"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2020 11:09:41 -0700
+IronPort-SDR: A80tZ12i1vD9d018j6NzWohb/Qq58JQSI6NrFaMPOYeh5N2PMF/bPNr5YU9giNgac7uQWIPoEz
+ 6bK1XfBVS64g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,284,1589266800"; 
+   d="scan'208";a="453441015"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga005.jf.intel.com with ESMTP; 26 Jun 2020 11:09:41 -0700
+Subject: [PATCH v2] dmaengine: check device and channel list for empty
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     Swathi Kovvuri <swathi.kovvuri@intel.com>,
+        Swathi Kovvuri <swathi.kovvuri@intel.com>,
+        dmaengine@vger.kernel.org
+Date:   Fri, 26 Jun 2020 11:09:41 -0700
+Message-ID: <159319496403.69045.16298280729899651363.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <98426221-8bff-25df-a062-9ec1ca4e8f26@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Peter,
+Check dma device list and channel list for empty before iterate as the
+iteration function assume the list to be not empty. With devices and
+channels now being hot pluggable this is a condition that needs to be
+checked. Otherwise it can cause the iterator to spin forever.
 
-Please, see my comments below...
+Fixes: e81274cd6b52 ("dmaengine: add support to dynamic register/unregister of channels")
+Reported-by: Swathi Kovvuri <swathi.kovvuri@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Tested-by: Swathi Kovvuri <swathi.kovvuri@intel.com>
+---
 
-On Fri, Jun 26, 2020 at 10:30:37AM +0300, Peter Ujfalusi wrote:
-> 
-> 
-> On 24/06/2020 20.12, Gustavo A. R. Silva wrote:
-> > Hi Vinod,
-> > 
-> > On 6/24/20 00:55, Vinod Koul wrote:
-> >> On 19-06-20, 17:43, Gustavo A. R. Silva wrote:
-> >>> Make use of the struct_size() helper instead of an open-coded version
-> >>> in order to avoid any potential type mistakes.
-> >>>
-> >>> This code was detected with the help of Coccinelle and, audited and
-> >>> fixed manually.
-> >>>
-> >>> Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
-> >>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> >>> ---
-> >>>  drivers/dma/ti/k3-udma.c | 4 ++--
-> >>>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-> >>> index 0d5fb154b8e2..411c54b86ba8 100644
-> >>> --- a/drivers/dma/ti/k3-udma.c
-> >>> +++ b/drivers/dma/ti/k3-udma.c
-> >>> @@ -2209,7 +2209,7 @@ udma_prep_slave_sg_pkt(struct udma_chan *uc, struct scatterlist *sgl,
-> >>>  	u32 ring_id;
-> >>>  	unsigned int i;
-> >>>  
-> >>> -	d = kzalloc(sizeof(*d) + sglen * sizeof(d->hwdesc[0]), GFP_NOWAIT);
-> >>> +	d = kzalloc(struct_size(d, hwdesc, sglen), GFP_NOWAIT);
-> >>
-> >> struct_size() is a * b + c but here we need, a + b * c.. the trailing
-> >> struct is N times here..
-> >>
-> > 
-> > struct_size() works exactly as expected in this case. :)
-> > Please, see:
-> > 
-> > include/linux/overflow.h:314:
-> > 314 #define struct_size(p, member, count)                                   \
-> > 315         __ab_c_size(count,                                              \
-> > 316                     sizeof(*(p)->member) + __must_be_array((p)->member),\
-> > 317                     sizeof(*(p)))
-> 
-> True, struct_size is for this sort of things.
-> 
-> Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> 
-> While looking it up in include/linux/overflow.h I have noticed your
-> commit in linux-next, which adds flex_array_size()
-> 
-> The example in the commit message contradicts with what the helper
+Rebased to dmaengine next tree
 
-There is no contradiction here.
+ drivers/dma/dmaengine.c |  119 +++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 94 insertions(+), 25 deletions(-)
 
-> does imho. To be correct it should have been:
-> 
-> struct something {
-> 	size_t count;
-> 	struct foo items[];
-> };
-> 
-> - struct something *instance;
-> + struct something instance;
-> 
-> - instance = kmalloc(struct_size(instance, items, count), GFP_KERNEL);
-> + instance.items = kmalloc(struct_size(instance, items, count), GFP_KERNEL);
-> instance->count = count;
-> memcpy(instance->items, src, flex_array_size(instance, items, instance->count));
-> 
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index 2b06a7a8629d..0d6529eff66f 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -85,6 +85,9 @@ static void dmaengine_dbg_summary_show(struct seq_file *s,
+ {
+ 	struct dma_chan *chan;
+ 
++	if (list_empty(&dma_dev->channels))
++		return;
++
+ 	list_for_each_entry(chan, &dma_dev->channels, device_node) {
+ 		if (chan->client_count) {
+ 			seq_printf(s, " %-13s| %s", dma_chan_name(chan),
+@@ -104,6 +107,11 @@ static int dmaengine_summary_show(struct seq_file *s, void *data)
+ 	struct dma_device *dma_dev = NULL;
+ 
+ 	mutex_lock(&dma_list_mutex);
++	if (list_empty(&dma_device_list)) {
++		mutex_unlock(&dma_list_mutex);
++		return 0;
++	}
++
+ 	list_for_each_entry(dma_dev, &dma_device_list, global_node) {
+ 		seq_printf(s, "dma%d (%s): number of channels: %u\n",
+ 			   dma_dev->dev_id, dev_name(dma_dev->dev),
+@@ -324,10 +332,15 @@ static struct dma_chan *min_chan(enum dma_transaction_type cap, int cpu)
+ 	struct dma_chan *min = NULL;
+ 	struct dma_chan *localmin = NULL;
+ 
++	if (list_empty(&dma_device_list))
++		return NULL;
++
+ 	list_for_each_entry(device, &dma_device_list, global_node) {
+ 		if (!dma_has_cap(cap, device->cap_mask) ||
+ 		    dma_has_cap(DMA_PRIVATE, device->cap_mask))
+ 			continue;
++		if (list_empty(&device->channels))
++			continue;
+ 		list_for_each_entry(chan, &device->channels, device_node) {
+ 			if (!chan->client_count)
+ 				continue;
+@@ -365,6 +378,9 @@ static void dma_channel_rebalance(void)
+ 	int cpu;
+ 	int cap;
+ 
++	if (list_empty(&dma_device_list))
++		return;
++
+ 	/* undo the last distribution */
+ 	for_each_dma_cap_mask(cap, dma_cap_mask_all)
+ 		for_each_possible_cpu(cpu)
+@@ -373,6 +389,8 @@ static void dma_channel_rebalance(void)
+ 	list_for_each_entry(device, &dma_device_list, global_node) {
+ 		if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
+ 			continue;
++		if (list_empty(&device->channels))
++			continue;
+ 		list_for_each_entry(chan, &device->channels, device_node)
+ 			chan->table_count = 0;
+ 	}
+@@ -556,6 +574,10 @@ void dma_issue_pending_all(void)
+ 	struct dma_chan *chan;
+ 
+ 	rcu_read_lock();
++	if (list_empty(&dma_device_list)) {
++		rcu_read_unlock();
++		return;
++	}
+ 	list_for_each_entry_rcu(device, &dma_device_list, global_node) {
+ 		if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
+ 			continue;
+@@ -613,6 +635,10 @@ static struct dma_chan *private_candidate(const dma_cap_mask_t *mask,
+ 		dev_dbg(dev->dev, "%s: wrong capabilities\n", __func__);
+ 		return NULL;
+ 	}
++
++	if (list_empty(&dev->channels))
++		return NULL;
++
+ 	/* devices with multiple channels need special handling as we need to
+ 	 * ensure that all channels are either private or public.
+ 	 */
+@@ -749,6 +775,11 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
+ 
+ 	/* Find a channel */
+ 	mutex_lock(&dma_list_mutex);
++	if (list_empty(&dma_device_list)) {
++		mutex_unlock(&dma_list_mutex);
++		return NULL;
++	}
++
+ 	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
+ 		/* Finds a DMA controller with matching device node */
+ 		if (np && device->dev->of_node && np != device->dev->of_node)
+@@ -819,6 +850,11 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
+ 
+ 	/* Try to find the channel via the DMA filter map(s) */
+ 	mutex_lock(&dma_list_mutex);
++	if (list_empty(&dma_device_list)) {
++		mutex_unlock(&dma_list_mutex);
++		return NULL;
++	}
++
+ 	list_for_each_entry_safe(d, _d, &dma_device_list, global_node) {
+ 		dma_cap_mask_t mask;
+ 		const struct dma_slave_map *map = dma_filter_match(d, name, dev);
+@@ -942,10 +978,17 @@ void dmaengine_get(void)
+ 	mutex_lock(&dma_list_mutex);
+ 	dmaengine_ref_count++;
+ 
++	if (list_empty(&dma_device_list)) {
++		mutex_unlock(&dma_list_mutex);
++		return;
++	}
++
+ 	/* try to grab channels */
+ 	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
+ 		if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
+ 			continue;
++		if (list_empty(&device->channels))
++			continue;
+ 		list_for_each_entry(chan, &device->channels, device_node) {
+ 			err = dma_chan_get(chan);
+ 			if (err == -ENODEV) {
+@@ -980,10 +1023,17 @@ void dmaengine_put(void)
+ 	mutex_lock(&dma_list_mutex);
+ 	dmaengine_ref_count--;
+ 	BUG_ON(dmaengine_ref_count < 0);
++	if (list_empty(&dma_device_list)) {
++		mutex_unlock(&dma_list_mutex);
++		return;
++	}
++
+ 	/* drop channel references */
+ 	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
+ 		if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
+ 			continue;
++		if (list_empty(&device->channels))
++			continue;
+ 		list_for_each_entry(chan, &device->channels, device_node)
+ 			dma_chan_put(chan);
+ 	}
+@@ -1132,6 +1182,39 @@ void dma_async_device_channel_unregister(struct dma_device *device,
+ }
+ EXPORT_SYMBOL_GPL(dma_async_device_channel_unregister);
+ 
++static int dma_channel_enumeration(struct dma_device *device)
++{
++	struct dma_chan *chan;
++	int rc;
++
++	if (list_empty(&device->channels))
++		return 0;
++
++	/* represent channels in sysfs. Probably want devs too */
++	list_for_each_entry(chan, &device->channels, device_node) {
++		rc = __dma_async_device_channel_register(device, chan);
++		if (rc < 0)
++			return rc;
++	}
++
++	/* take references on public channels */
++	if (dmaengine_ref_count && !dma_has_cap(DMA_PRIVATE, device->cap_mask))
++		list_for_each_entry(chan, &device->channels, device_node) {
++			/* if clients are already waiting for channels we need
++			 * to take references on their behalf
++			 */
++			if (dma_chan_get(chan) == -ENODEV) {
++				/* note we can only get here for the first
++				 * channel as the remaining channels are
++				 * guaranteed to get a reference
++				 */
++				return -ENODEV;
++			}
++		}
++
++	return 0;
++}
++
+ /**
+  * dma_async_device_register - registers DMA devices found
+  * @device:	pointer to &struct dma_device
+@@ -1247,33 +1330,15 @@ int dma_async_device_register(struct dma_device *device)
+ 	if (rc != 0)
+ 		return rc;
+ 
++	mutex_lock(&dma_list_mutex);
+ 	mutex_init(&device->chan_mutex);
+ 	ida_init(&device->chan_ida);
+-
+-	/* represent channels in sysfs. Probably want devs too */
+-	list_for_each_entry(chan, &device->channels, device_node) {
+-		rc = __dma_async_device_channel_register(device, chan);
+-		if (rc < 0)
+-			goto err_out;
++	rc = dma_channel_enumeration(device);
++	if (rc < 0) {
++		mutex_unlock(&dma_list_mutex);
++		goto err_out;
+ 	}
+ 
+-	mutex_lock(&dma_list_mutex);
+-	/* take references on public channels */
+-	if (dmaengine_ref_count && !dma_has_cap(DMA_PRIVATE, device->cap_mask))
+-		list_for_each_entry(chan, &device->channels, device_node) {
+-			/* if clients are already waiting for channels we need
+-			 * to take references on their behalf
+-			 */
+-			if (dma_chan_get(chan) == -ENODEV) {
+-				/* note we can only get here for the first
+-				 * channel as the remaining channels are
+-				 * guaranteed to get a reference
+-				 */
+-				rc = -ENODEV;
+-				mutex_unlock(&dma_list_mutex);
+-				goto err_out;
+-			}
+-		}
+ 	list_add_tail_rcu(&device->global_node, &dma_device_list);
+ 	if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
+ 		device->privatecnt++;	/* Always private */
+@@ -1291,6 +1356,9 @@ int dma_async_device_register(struct dma_device *device)
+ 		return rc;
+ 	}
+ 
++	if (list_empty(&device->channels))
++		return rc;
++
+ 	list_for_each_entry(chan, &device->channels, device_node) {
+ 		if (chan->local == NULL)
+ 			continue;
+@@ -1317,8 +1385,9 @@ void dma_async_device_unregister(struct dma_device *device)
+ 
+ 	dmaengine_debug_unregister(device);
+ 
+-	list_for_each_entry_safe(chan, n, &device->channels, device_node)
+-		__dma_async_device_channel_unregister(device, chan);
++	if (!list_empty(&device->channels))
++		list_for_each_entry_safe(chan, n, &device->channels, device_node)
++			__dma_async_device_channel_unregister(device, chan);
+ 
+ 	mutex_lock(&dma_list_mutex);
+ 	/*
 
-This is all wrong. Please, double check how struct_size() works.
-
-Thanks
---
-Gustavo
-
-> >>>  	if (!d)
-> >>>  		return NULL;
-> >>>  
-> >>> @@ -2525,7 +2525,7 @@ udma_prep_dma_cyclic_pkt(struct udma_chan *uc, dma_addr_t buf_addr,
-> >>>  	if (period_len >= SZ_4M)
-> >>>  		return NULL;
-> >>>  
-> >>> -	d = kzalloc(sizeof(*d) + periods * sizeof(d->hwdesc[0]), GFP_NOWAIT);
-> >>> +	d = kzalloc(struct_size(d, hwdesc, periods), GFP_NOWAIT);
-> >>>  	if (!d)
-> >>>  		return NULL;
-> >>>  
-> >>> -- 
-> >>> 2.27.0
-> >>
-> 
-> - Péter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 

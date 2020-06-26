@@ -2,196 +2,150 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B926020AFAB
-	for <lists+dmaengine@lfdr.de>; Fri, 26 Jun 2020 12:28:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5EA620B272
+	for <lists+dmaengine@lfdr.de>; Fri, 26 Jun 2020 15:24:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbgFZK2l (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 26 Jun 2020 06:28:41 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56474 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbgFZK2l (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 26 Jun 2020 06:28:41 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05QASVew022878;
-        Fri, 26 Jun 2020 05:28:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593167311;
-        bh=2sgKdorcdIQb8LjqWsTteHIxdXbBN5knpabZ6nwoafs=;
-        h=From:Subject:To:CC:References:Date:In-Reply-To;
-        b=D3PCkC1/VCfGCD7k/3eOdi9XGaQscK+5RKsXGCQwKgc18gfb/qtqLxLEhVuo87ntD
-         8Q/f2KiCp8r5Fkd/fUBgJYArIraq+uQ66acSlePF8scpaxkK7Iujpx+YnOIlj2xFP2
-         drC+ABBiCI3WUm0LOWrC1OrGP065xYDhI7WX5c9I=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05QASVRs104244
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 26 Jun 2020 05:28:31 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 26
- Jun 2020 05:28:31 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 26 Jun 2020 05:28:31 -0500
-Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05QASSYD018142;
-        Fri, 26 Jun 2020 05:28:29 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: DMA Engine: Transfer From Userspace
-To:     Thomas Ruf <freelancer@rufusul.de>, Vinod Koul <vkoul@kernel.org>
-CC:     Federico Vaga <federico.vaga@cern.ch>,
-        Dave Jiang <dave.jiang@intel.com>,
+        id S1728361AbgFZNYc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 26 Jun 2020 09:24:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35328 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728012AbgFZNYb (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 26 Jun 2020 09:24:31 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DAD62075D;
+        Fri, 26 Jun 2020 13:24:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593177871;
+        bh=/EUxyCyPVfvVOBq8FVj7Lzb1Feg675LVd6REFNzxA2Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lUQdPr/BUuMqYXe8r9nhip2IX12AYbzTXzkUAxwJL5FE60nIhfMu2DKFa+LbyIYP7
+         ZdsFqpQ8cHDvUJMUuhBPcG5PUTvVN99Zef36yIJqeMWGkiW5D6DCNvVlxhINT+3nsg
+         HyJ3UXX2scv/Q608VIWJuTgZyM466GVNGOJXy6UE=
+Date:   Fri, 26 Jun 2020 08:29:44 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <5614531.lOV4Wx5bFT@harkonnen>
- <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
- <20200621072457.GA2324254@vkoul-mobl>
- <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
- <20200622044733.GB2324254@vkoul-mobl>
- <419762761.402939.1592827272368@mailbusiness.ionos.de>
- <20200622155440.GM2324254@vkoul-mobl>
- <1835214773.354594.1592843644540@mailbusiness.ionos.de>
- <2077253476.601371.1592991035969@mailbusiness.ionos.de>
- <20200624093800.GV2324254@vkoul-mobl>
- <3a4b1b55-7bce-2c48-b897-51e23e850127@ti.com>
- <1666251320.1024432.1593007095381@mailbusiness.ionos.de>
-X-Pep-Version: 2.0
-Message-ID: <1a610c67-73a4-f66d-877a-5c4d35cbf76a@ti.com>
-Date:   Fri, 26 Jun 2020 13:29:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] dmaengine: ti: k3-udma: Use struct_size() in
+ kzalloc()
+Message-ID: <20200626132944.GA26003@embeddedor>
+References: <20200619224334.GA7857@embeddedor>
+ <20200624055535.GX2324254@vkoul-mobl>
+ <3a5514c9-d966-c332-84ba-f418c26fa74c@embeddedor.com>
+ <98426221-8bff-25df-a062-9ec1ca4e8f26@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <1666251320.1024432.1593007095381@mailbusiness.ionos.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <98426221-8bff-25df-a062-9ec1ca4e8f26@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi Peter,
 
+Please, see my comments below...
 
-On 24/06/2020 16.58, Thomas Ruf wrote:
->=20
->> On 24 June 2020 at 14:07 Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:=
+On Fri, Jun 26, 2020 at 10:30:37AM +0300, Peter Ujfalusi wrote:
+> 
+> 
+> On 24/06/2020 20.12, Gustavo A. R. Silva wrote:
+> > Hi Vinod,
+> > 
+> > On 6/24/20 00:55, Vinod Koul wrote:
+> >> On 19-06-20, 17:43, Gustavo A. R. Silva wrote:
+> >>> Make use of the struct_size() helper instead of an open-coded version
+> >>> in order to avoid any potential type mistakes.
+> >>>
+> >>> This code was detected with the help of Coccinelle and, audited and
+> >>> fixed manually.
+> >>>
+> >>> Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
+> >>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> >>> ---
+> >>>  drivers/dma/ti/k3-udma.c | 4 ++--
+> >>>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >>>
+> >>> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+> >>> index 0d5fb154b8e2..411c54b86ba8 100644
+> >>> --- a/drivers/dma/ti/k3-udma.c
+> >>> +++ b/drivers/dma/ti/k3-udma.c
+> >>> @@ -2209,7 +2209,7 @@ udma_prep_slave_sg_pkt(struct udma_chan *uc, struct scatterlist *sgl,
+> >>>  	u32 ring_id;
+> >>>  	unsigned int i;
+> >>>  
+> >>> -	d = kzalloc(sizeof(*d) + sglen * sizeof(d->hwdesc[0]), GFP_NOWAIT);
+> >>> +	d = kzalloc(struct_size(d, hwdesc, sglen), GFP_NOWAIT);
+> >>
+> >> struct_size() is a * b + c but here we need, a + b * c.. the trailing
+> >> struct is N times here..
+> >>
+> > 
+> > struct_size() works exactly as expected in this case. :)
+> > Please, see:
+> > 
+> > include/linux/overflow.h:314:
+> > 314 #define struct_size(p, member, count)                                   \
+> > 315         __ab_c_size(count,                                              \
+> > 316                     sizeof(*(p)->member) + __must_be_array((p)->member),\
+> > 317                     sizeof(*(p)))
+> 
+> True, struct_size is for this sort of things.
+> 
+> Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> 
+> While looking it up in include/linux/overflow.h I have noticed your
+> commit in linux-next, which adds flex_array_size()
+> 
+> The example in the commit message contradicts with what the helper
 
->> On 24/06/2020 12.38, Vinod Koul wrote:
->>> On 24-06-20, 11:30, Thomas Ruf wrote:
->>>
->>>> To make it short - i have two questions:
->>>> - what are the chances to revive DMA_SG?
->>>
->>> 100%, if we have a in-kernel user
->>
->> Most DMAs can not handle differently provisioned sg_list for src and d=
-st.
->> Even if they could handle non symmetric SG setup it requires entirely
->> different setup (two independent channels sending the data to each
->> other, one reads, the other writes?).
->=20
-> Ok, i implemented that using zynqmp_dma on a Xilinx Zynq platform (obvi=
-ously ;-) and it works nicely for us.
+There is no contradiction here.
 
-I see, if the HW does not support it then something along the lines of
-what the atc_prep_dma_sg did can be implemented for most engines.
+> does imho. To be correct it should have been:
+> 
+> struct something {
+> 	size_t count;
+> 	struct foo items[];
+> };
+> 
+> - struct something *instance;
+> + struct something instance;
+> 
+> - instance = kmalloc(struct_size(instance, items, count), GFP_KERNEL);
+> + instance.items = kmalloc(struct_size(instance, items, count), GFP_KERNEL);
+> instance->count = count;
+> memcpy(instance->items, src, flex_array_size(instance, items, instance->count));
+> 
 
-In essence: create a new set of sg_list which is symmetric.
+This is all wrong. Please, double check how struct_size() works.
 
-> Don't think that it uses two channels from what a saw in their implemen=
-tation.
+Thanks
+--
+Gustavo
 
-I believe it was breaking it up like atc_prep_dma_sg did.
-
-> Of course that was on kernel 4.19.x where DMA_SG was still available.
->=20
->>>> - what are the chances to get my driver for memcpy like transfers fr=
-om
->>>> user space using DMA_SG upstream? ("dma-sg-proxy")
->>>
->>> pretty bleak IMHO.
->>
->> fwiw, I also get requests time-to-time to DMA memcpy support from user=
-
->> space from companies trying to move from bare-metal code to Linux.
->>
->> What could be plausible is a generic dmabuf-to-dmabuf copy driver (V4L=
-2
->> can provide dma-buf, DRM can also).
->> If there is a DMA memcpy channel available, use that, otherwise use so=
-me
->> method to do the copy, user space should not care how it is done.
->=20
-> Yes, i'm using it together with a v4l2 capture driver and also saw the =
-dma-buf thing but did not find a way how to bring this together with "ord=
-inary user memory".
-
-One of the aim of dma-buf is to share buffers between drivers and user
-space (among drivers and/or drivers and userspace), but I might be
-missing something.
-
-> For me the root of my problem seems to be that dma_alloc_coherent leads=
- to uncached memory on ARM platforms.
-
-It depends, but in most cases that is true.
-
-> But maybe i am doing it all wrong ;-)
->=20
->> Where things are going to get a bit more trickier is when the copy nee=
-ds
->> to be triggered by other DMA channel (completion of a frame reception
->> triggering an interleaved sub-frame extraction copy).
->> You don't want to extract from a buffer which can be modified while th=
-e
->> other channel is writing to it.
->=20
-> I think that would be no problem in case of our v4l2 capture driver doi=
-ng both DMAs:
-> Framebuffer DMA for streaming and Zynqmp DMA (using DMA_SG) to get it t=
-o "ordinary user memory".
-> But as i wrote before i prefer to do the "logic and management" in user=
-space so the capture driver is just using the first DMA and the "dma-sg-p=
-roxy" driver is only used as a memcpy replacement.
-> As said this is all working fine with kernel 4.19.x but now we are stuc=
-k :-(
->=20
->> In Linux the DMA is used for kernel and user space can only use it
->> implicitly via standard subsystems.
->> Misused DMA can be very dangerous and giving full access to program a
->> transfer can open a can of worms.
->=20
-> Fully understand that!
-> But i also hope you understand that we are developing a "closed system"=
- and do not have a problem with that at all.
-> We are also willing to bring that driver upstream for anyone doing the =
-same but of course this should not affect security of any desktop or serv=
-er systems.
-> Maybe we just need the right place for that driver?!
-
-What might be plausible is to introduce hw offloading support for memcpy
-type of operations in a similar fashion how for example crypto does it?
-
-The issue with a user space implemented logic is that it is not portable
-between systems with different DMAs. It might be that on one DMA the
-setup takes longer than do a CPU copy of X bytes, on the other DMA it
-might be significantly less or higher.
-
-Using CPU vs DMA for a copy in certain lengths and setups should not be
-a concern of the user space.
-Yes, you have a closed system with controlled parameters, but a generic
-mem2mem_offload framework should be usable on other setups and the same
-binary should be working on different DMAs where one is not efficient
-for <512 bytes, the other shows benefits under 128bytes.
-
-> Not sure if staging would change your concerns.
->=20
-> Thanks and best regards,
-> Thomas
->=20
-
-- P=C3=A9ter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+> >>>  	if (!d)
+> >>>  		return NULL;
+> >>>  
+> >>> @@ -2525,7 +2525,7 @@ udma_prep_dma_cyclic_pkt(struct udma_chan *uc, dma_addr_t buf_addr,
+> >>>  	if (period_len >= SZ_4M)
+> >>>  		return NULL;
+> >>>  
+> >>> -	d = kzalloc(sizeof(*d) + periods * sizeof(d->hwdesc[0]), GFP_NOWAIT);
+> >>> +	d = kzalloc(struct_size(d, hwdesc, periods), GFP_NOWAIT);
+> >>>  	if (!d)
+> >>>  		return NULL;
+> >>>  
+> >>> -- 
+> >>> 2.27.0
+> >>
+> 
+> - Péter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 

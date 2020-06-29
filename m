@@ -2,165 +2,180 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B9EEB20CB78
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Jun 2020 03:39:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2E4720D88A
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Jun 2020 22:09:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbgF2BjF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 28 Jun 2020 21:39:05 -0400
-Received: from regular1.263xmail.com ([211.150.70.198]:58234 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbgF2BjF (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 28 Jun 2020 21:39:05 -0400
-Received: from localhost (unknown [192.168.167.69])
-        by regular1.263xmail.com (Postfix) with ESMTP id AA9956C9;
-        Mon, 29 Jun 2020 09:38:55 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.12.19] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P31014T140189206046464S1593394734261642_;
-        Mon, 29 Jun 2020 09:38:54 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <2727d7686c637f3bd7561c7dd98d7f80>
-X-RL-SENDER: sugar.zhang@rock-chips.com
-X-SENDER: zxg@rock-chips.com
-X-LOGIN-NAME: sugar.zhang@rock-chips.com
-X-FST-TO: linux-kernel@vger.kernel.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-Subject: Re: [PATCH v2 01/13] dmaengine: pl330: Remove the burst limit for
- quirk 'NO-FLUSHP'
+        id S1729476AbgF2TkB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 29 Jun 2020 15:40:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:41798 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732999AbgF2Tj4 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:39:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1254E13FD;
+        Mon, 29 Jun 2020 04:20:36 -0700 (PDT)
+Received: from [192.168.2.22] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B30A83F73C;
+        Mon, 29 Jun 2020 04:20:34 -0700 (PDT)
+Subject: Re: [PATCH v4 02/10] dmaengine: Actions: Add support for S700 DMA
+ engine
 To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1591665267-37713-1-git-send-email-sugar.zhang@rock-chips.com>
- <1591665267-37713-2-git-send-email-sugar.zhang@rock-chips.com>
- <20200624075437.GT2324254@vkoul-mobl>
-From:   sugar zhang <sugar.zhang@rock-chips.com>
-Message-ID: <879c88ef-1d74-26d5-1641-efeb450362fa@rock-chips.com>
-Date:   Mon, 29 Jun 2020 09:38:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+Cc:     Amit Singh Tomar <amittomer25@gmail.com>, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org, dan.j.williams@intel.com,
+        cristian.ciocaltea@gmail.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org
+References: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
+ <1591697830-16311-3-git-send-email-amittomer25@gmail.com>
+ <20200624061529.GF2324254@vkoul-mobl>
+ <75d154d0-2962-99e6-a7c7-bf0928ec8b2a@arm.com>
+ <20200629095446.GH2599@vkoul-mobl>
+From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Autocrypt: addr=andre.przywara@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ i4aIXCH3Wv6K
+Organization: ARM Ltd.
+Message-ID: <36274785-f400-4d69-deed-b7d545718d40@arm.com>
+Date:   Mon, 29 Jun 2020 12:19:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200624075437.GT2324254@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200629095446.GH2599@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On 29/06/2020 10:54, Vinod Koul wrote:
 
-On 2020/6/24 15:54, Vinod Koul wrote:
-> On 09-06-20, 09:14, Sugar Zhang wrote:
->> There is no reason to limit the performance on the 'NO-FLUSHP' SoCs,
->> cuz these platforms are just that the 'FLUSHP' instruction is broken.
-> Lets not use terms like cuz... 'because' is perfect term :)
->
-> It can rephrased to:
-> There is no reason to limit the performance on the 'NO-FLUSHP' SoCs
-> beacuse 'FLUSHP' instruction is broken on these platforms, so remove the
-> limit to improve the efficiency
-Thanks, I will send a v3 including these.
->
->> so, remove the limit to improve the efficiency.
->>
->> Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
->> ---
->>
->> Changes in v2: None
->>
->>   drivers/dma/pl330.c | 34 ++++++++++++++++++++++------------
->>   1 file changed, 22 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
->> index 6a158ee..ff0a91f 100644
->> --- a/drivers/dma/pl330.c
->> +++ b/drivers/dma/pl330.c
->> @@ -1183,9 +1183,6 @@ static inline int _ldst_peripheral(struct pl330_dmac *pl330,
->>   {
->>   	int off = 0;
->>   
->> -	if (pl330->quirks & PL330_QUIRK_BROKEN_NO_FLUSHP)
->> -		cond = BURST;
->> -
->>   	/*
->>   	 * do FLUSHP at beginning to clear any stale dma requests before the
->>   	 * first WFP.
->> @@ -1231,8 +1228,9 @@ static int _bursts(struct pl330_dmac *pl330, unsigned dry_run, u8 buf[],
->>   }
->>   
->>   /*
->> - * transfer dregs with single transfers to peripheral, or a reduced size burst
->> - * for mem-to-mem.
->> + * only the unaligned bursts transfers have the dregs.
->> + * transfer dregs with a reduced size burst to peripheral,
->> + * or a reduced size burst for mem-to-mem.
-> This is not related to broken flush and should be a different patch
-> explaining why this changes were done
-ok, I will split this patch in v3.
->>    */
->>   static int _dregs(struct pl330_dmac *pl330, unsigned int dry_run, u8 buf[],
->>   		const struct _xfer_spec *pxs, int transfer_length)
->> @@ -1247,8 +1245,23 @@ static int _dregs(struct pl330_dmac *pl330, unsigned int dry_run, u8 buf[],
->>   	case DMA_MEM_TO_DEV:
->>   		/* fall through */
->>   	case DMA_DEV_TO_MEM:
->> -		off += _ldst_peripheral(pl330, dry_run, &buf[off], pxs,
->> -			transfer_length, SINGLE);
->> +		/*
->> +		 * dregs_len = (total bytes - BURST_TO_BYTE(bursts, ccr)) /
->> +		 *             BRST_SIZE(ccr)
->> +		 * the dregs len must be smaller than burst len,
->> +		 * so, for higher efficiency, we can modify CCR
->> +		 * to use a reduced size burst len for the dregs.
->> +		 */
->> +		dregs_ccr = pxs->ccr;
->> +		dregs_ccr &= ~((0xf << CC_SRCBRSTLEN_SHFT) |
->> +			(0xf << CC_DSTBRSTLEN_SHFT));
->> +		dregs_ccr |= (((transfer_length - 1) & 0xf) <<
->> +			CC_SRCBRSTLEN_SHFT);
->> +		dregs_ccr |= (((transfer_length - 1) & 0xf) <<
->> +			CC_DSTBRSTLEN_SHFT);
->> +		off += _emit_MOV(dry_run, &buf[off], CCR, dregs_ccr);
->> +		off += _ldst_peripheral(pl330, dry_run, &buf[off], pxs, 1,
->> +					BURST);
->>   		break;
->>   
->>   	case DMA_MEM_TO_MEM:
->> @@ -2221,9 +2234,7 @@ static bool pl330_prep_slave_fifo(struct dma_pl330_chan *pch,
->>   
->>   static int fixup_burst_len(int max_burst_len, int quirks)
->>   {
->> -	if (quirks & PL330_QUIRK_BROKEN_NO_FLUSHP)
->> -		return 1;
->> -	else if (max_burst_len > PL330_MAX_BURST)
->> +	if (max_burst_len > PL330_MAX_BURST)
->>   		return PL330_MAX_BURST;
->>   	else if (max_burst_len < 1)
->>   		return 1;
->> @@ -3128,8 +3139,7 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
->>   	pd->dst_addr_widths = PL330_DMA_BUSWIDTHS;
->>   	pd->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
->>   	pd->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
->> -	pd->max_burst = ((pl330->quirks & PL330_QUIRK_BROKEN_NO_FLUSHP) ?
->> -			 1 : PL330_MAX_BURST);
->> +	pd->max_burst = PL330_MAX_BURST;
->>   
->>   	ret = dma_async_device_register(pd);
->>   	if (ret) {
->> -- 
->> 2.7.4
->>
->>
--- 
+Hi Vinod,
 
+> On 24-06-20, 10:35, Andrï¿½ Przywara wrote:
+>> On 24/06/2020 07:15, Vinod Koul wrote:
+>>> On 09-06-20, 15:47, Amit Singh Tomar wrote:
+>>>
+>>>> @@ -372,6 +383,7 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+>>>>  				  struct dma_slave_config *sconfig,
+>>>>  				  bool is_cyclic)
+>>>>  {
+>>>> +	struct owl_dma *od = to_owl_dma(vchan->vc.chan.device);
+>>>>  	u32 mode, ctrlb;
+>>>>  
+>>>>  	mode = OWL_DMA_MODE_PW(0);
+>>>> @@ -427,14 +439,26 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+>>>>  	lli->hw[OWL_DMADESC_DADDR] = dst;
+>>>>  	lli->hw[OWL_DMADESC_SRC_STRIDE] = 0;
+>>>>  	lli->hw[OWL_DMADESC_DST_STRIDE] = 0;
+>>>> -	/*
+>>>> -	 * Word starts from offset 0xC is shared between frame length
+>>>> -	 * (max frame length is 1MB) and frame count, where first 20
+>>>> -	 * bits are for frame length and rest of 12 bits are for frame
+>>>> -	 * count.
+>>>> -	 */
+>>>> -	lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
+>>>> -	lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
+>>>> +
+>>>> +	if (od->devid == S700_DMA) {
+>>>> +		/* Max frame length is 1MB */
+>>>> +		lli->hw[OWL_DMADESC_FLEN] = len;
+>>>> +		/*
+>>>> +		 * On S700, word starts from offset 0x1C is shared between
+>>>> +		 * frame count and ctrlb, where first 12 bits are for frame
+>>>> +		 * count and rest of 20 bits are for ctrlb.
+>>>> +		 */
+>>>> +		lli->hw[OWL_DMADESC_CTRLB] = FCNT_VAL | ctrlb;
+>>>> +	} else {
+>>>> +		/*
+>>>> +		 * On S900, word starts from offset 0xC is shared between
+>>>> +		 * frame length (max frame length is 1MB) and frame count,
+>>>> +		 * where first 20 bits are for frame length and rest of
+>>>> +		 * 12 bits are for frame count.
+>>>> +		 */
+>>>> +		lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
+>>>> +		lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
+>>>
+>>> Unfortunately this wont scale, we will keep adding new conditions for
+>>> newer SoC's! So rather than this why not encode max frame length in
+>>> driver_data rather than S900_DMA/S700_DMA.. In future one can add values
+>>> for newer SoC and not code above logic again.
+>>
+>> What newer SoCs? I don't think we should try to guess the future here.
+> 
+> In a patch for adding new SoC, quite ironical I would say!
 
+S700 is not a new SoC, it's just this driver didn't support it yet. What
+I meant is that I don't even know about the existence of upcoming SoCs
+(Google seems clueless), not to speak of documentation to assess which
+DMA controller they use.
 
+>> We can always introduce further abstractions later, once we actually
+>> *know* what we are looking at.
+> 
+> Rather if we know we are adding abstractions, why not add in a way that
+> makes it scale better rather than rework again
+
+I appreciate the effort, but this really tapping around in the dark,
+since we don't know which direction any new DMA controller is taking. I
+might not even be similar.
+
+>> Besides, I don't understand what you are after. The max frame length is
+>> 1MB in both cases, it's just a matter of where to put FCNT_VAL, either
+>> in FLEN or in CTRLB. And having an extra flag for that in driver data
+>> sounds a bit over the top at the moment.
+> 
+> Maybe, maybe not. I would rather make it support N SoC when adding
+> support for second one rather than keep adding everytime a new SoC is
+> added...
+
+Well, what do you suggest, specifically? At the moment we have two
+*slightly* different DMA controllers, so we differentiate between the
+two based on the model. Do you want to introduce an extra flag like
+FRAME_CNT_IN_CTRLB? That seems to be a bit over the top here, since we
+don't know if a future DMA controller is still compatible, or introduces
+completely new differences.
+
+Cheers,
+Andre

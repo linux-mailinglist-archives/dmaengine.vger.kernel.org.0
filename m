@@ -2,50 +2,55 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59A4B210902
-	for <lists+dmaengine@lfdr.de>; Wed,  1 Jul 2020 12:11:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E364C210946
+	for <lists+dmaengine@lfdr.de>; Wed,  1 Jul 2020 12:30:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729803AbgGAKLm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 1 Jul 2020 06:11:42 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:35204 "EHLO
+        id S1729683AbgGAKas (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 1 Jul 2020 06:30:48 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:37104 "EHLO
         lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729856AbgGAKLm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 1 Jul 2020 06:11:42 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 061ABSnh084771;
-        Wed, 1 Jul 2020 05:11:28 -0500
+        with ESMTP id S1729226AbgGAKas (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 1 Jul 2020 06:30:48 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 061AUidM089307;
+        Wed, 1 Jul 2020 05:30:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593598288;
-        bh=agoOl62X5kjJPhyzlY82tgWIM3qgGNUjrKwRVHPlzF8=;
+        s=ti-com-17Q1; t=1593599444;
+        bh=NP0JdMLh+U0vhC5zO7pOJizvlOHIeJNO1xQ5Cl4Bwr0=;
         h=From:To:CC:Subject:Date;
-        b=jAFzfVo3DUJdZ8jYscNme/PpgRWladXNIHkrXS973wcWFsWpD2ikU4R8kSpufz2Hw
-         u7dG5xEDTyU4TDOPNCxXMP6WJINbaVTrhes1J281LqVhm6m4hC/0RZhUW4HV/xZ9PH
-         noWNn4H8nz1F54dBkqKoJlb3kKXgRRWoH+55S7RA=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 061ABSnV065295
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 1 Jul 2020 05:11:28 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+        b=oXpShRAxFqaCNVB/c7L3+0JwhpPIzkbFTYQPUNyDqqVeLegEwsTFNYZEiY31npCLr
+         s9DLS63f5Xtut3LyQxEhchDWoiJOcw5uXuqYrEBwc3wle8KmFolFOP9UkHXO7kXmaz
+         nwkvP75jp6rHaKw0GEWGaEskc9IPIXHOFLK+Sk0w=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061AUiID055689;
+        Wed, 1 Jul 2020 05:30:44 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 1 Jul
- 2020 05:11:28 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 05:30:44 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 1 Jul 2020 05:11:28 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061ABQDJ045392;
-        Wed, 1 Jul 2020 05:11:27 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <dan.j.williams@intel.com>,
-        <grygorii.strashko@ti.com>, <vladimir.murzin@arm.com>
-Subject: [PATCH] dmaengine: dmatest: stop completed threads when running without set channel
-Date:   Wed, 1 Jul 2020 13:12:25 +0300
-Message-ID: <20200701101225.8607-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.27.0
+ Frontend Transport; Wed, 1 Jul 2020 05:30:44 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 061AUgWi081763;
+        Wed, 1 Jul 2020 05:30:43 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        <dmaengine@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH next 0/6] soc: ti: k3-ringacc: updates
+Date:   Wed, 1 Jul 2020 13:30:24 +0300
+Message-ID: <20200701103030.29684-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
@@ -53,57 +58,36 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The completed threads were not cleared and consequent run would result
-threads accumulating:
+Hi Santosh,
 
-echo 800000 > /sys/module/dmatest/parameters/test_buf_size
-echo 2000 > /sys/module/dmatest/parameters/timeout
-echo 50 > /sys/module/dmatest/parameters/iterations
-echo 1 > /sys/module/dmatest/parameters/max_channels
-echo "" > /sys/module/dmatest/parameters/channel
-[  237.507265] dmatest: Added 1 threads using dma1chan2
-echo 1 > /sys/module/dmatest/parameters/run
-[  244.713360] dmatest: Started 1 threads using dma1chan2
-[  246.117680] dmatest: dma1chan2-copy0: summary 50 tests, 0 failures 2437.47 iops 977623 KB/s (0)
+This series is a set of non critical  updates for The TI K3 AM654x/J721E
+Ring Accelerator driver.
 
-echo 1 > /sys/module/dmatest/parameters/run
-[  292.381471] dmatest: No channels configured, continue with any
-[  292.389307] dmatest: Added 1 threads using dma1chan3
-[  292.394302] dmatest: Started 1 threads using dma1chan2
-[  292.399454] dmatest: Started 1 threads using dma1chan3
-[  293.800835] dmatest: dma1chan3-copy0: summary 50 tests, 0 failures 2624.53 iops 975014 KB/s (0)
+Patch 1 - convert bindings to json-schema
+Patches 2,3,5 - code reworking
+Patch 4 - adds new API to request pair of rings k3_ringacc_request_rings_pair()
+Patch 6 - updates K3 UDMA to use new API
 
-echo 1 > /sys/module/dmatest/parameters/run
-[  307.301429] dmatest: No channels configured, continue with any
-[  307.309212] dmatest: Added 1 threads using dma1chan4
-[  307.314197] dmatest: Started 1 threads using dma1chan2
-[  307.319343] dmatest: Started 1 threads using dma1chan3
-[  307.324492] dmatest: Started 1 threads using dma1chan4
-[  308.730773] dmatest: dma1chan4-copy0: summary 50 tests, 0 failures 2390.28 iops 965436 KB/s (0)
+Grygorii Strashko (4):
+  dt-bindings: soc: ti: k3-ringacc: convert bindings to json-schema
+  soc: ti: k3-ringacc: add ring's flags to dump
+  soc: ti: k3-ringacc: add request pair of rings api.
+  soc: ti: k3-ringacc: separate soc specific initialization
 
-Fixes: 6b41030fdc79 ("dmaengine: dmatest: Restore default for channel")
-Reported-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/dma/dmatest.c | 2 ++
- 1 file changed, 2 insertions(+)
+Peter Ujfalusi (2):
+  soc: ti: k3-ringacc: Move state tracking variables under a struct
+  dmaengine: ti: k3-udma: Switch to k3_ringacc_request_rings_pair
 
-diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-index 18f10154ba19..45d4d92e91db 100644
---- a/drivers/dma/dmatest.c
-+++ b/drivers/dma/dmatest.c
-@@ -1185,6 +1185,8 @@ static int dmatest_run_set(const char *val, const struct kernel_param *kp)
- 	} else if (dmatest_run) {
- 		if (!is_threaded_test_pending(info)) {
- 			pr_info("No channels configured, continue with any\n");
-+			if (!is_threaded_test_run(info))
-+				stop_threaded_test(info);
- 			add_threaded_test(info);
- 		}
- 		start_threaded_tests(info);
+ .../devicetree/bindings/soc/ti/k3-ringacc.txt |  59 ------
+ .../bindings/soc/ti/k3-ringacc.yaml           | 102 +++++++++
+ drivers/dma/ti/k3-udma-glue.c                 |  40 ++--
+ drivers/dma/ti/k3-udma.c                      |  34 +--
+ drivers/soc/ti/k3-ringacc.c                   | 194 ++++++++++++------
+ include/linux/soc/ti/k3-ringacc.h             |   4 +
+ 6 files changed, 261 insertions(+), 172 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.yaml
+
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.17.1
 

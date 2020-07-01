@@ -2,109 +2,145 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CF5F211334
-	for <lists+dmaengine@lfdr.de>; Wed,  1 Jul 2020 21:04:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B174C211630
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Jul 2020 00:40:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725875AbgGATEl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 1 Jul 2020 15:04:41 -0400
-Received: from mga14.intel.com ([192.55.52.115]:2061 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725915AbgGATEl (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 1 Jul 2020 15:04:41 -0400
-IronPort-SDR: YivStrRSMl8pcRhYApL9o/UJ4FoQjxZxrw94Qaz6UOD22z9WCH7WIW9auuidlkYUlpj5f32QLc
- 2bPsRdXOhyOQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9669"; a="145770791"
-X-IronPort-AV: E=Sophos;i="5.75,301,1589266800"; 
-   d="scan'208";a="145770791"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2020 12:04:40 -0700
-IronPort-SDR: TmYcEGuJoZOZhWXu8giYBKcgpObZcCVPphl14dwMkc43f9cLplBsWFvwcwUfa/J0W+nVScd4+V
- GRDeLKYUlt5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,301,1589266800"; 
-   d="scan'208";a="481404699"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.209.136.35]) ([10.209.136.35])
-  by fmsmga006.fm.intel.com with ESMTP; 01 Jul 2020 12:04:39 -0700
-Subject: Re: [PATCH v2] dmaengine: ioat setting ioat timeout as module
- parameter
-To:     leonid.ravich@dell.com, dmaengine@vger.kernel.org
-Cc:     lravich@gmail.com, Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
-        linux-kernel@vger.kernel.org
-References: <20200701140849.8828-1-leonid.ravich@dell.com>
- <20200701184816.29138-1-leonid.ravich@dell.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <5c19ef4f-21ce-04ec-0ea9-685a1885a50a@intel.com>
-Date:   Wed, 1 Jul 2020 12:04:38 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1726121AbgGAWk4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 1 Jul 2020 18:40:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbgGAWk4 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 1 Jul 2020 18:40:56 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56555C08C5C1
+        for <dmaengine@vger.kernel.org>; Wed,  1 Jul 2020 15:40:56 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id g13so19783404qtv.8
+        for <dmaengine@vger.kernel.org>; Wed, 01 Jul 2020 15:40:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=timesys-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oBo8xy4ydTY3CUuRue4PEYfhF7EozU+5QzAOQrR51DE=;
+        b=UKY29/dDYl6GDa7f+eWwC1ZjeB1AHyLc7F2QikCQVlpd6K8tsypWmk+f8WDI5hgvBv
+         f9nhBSfUTeNxaccdF6DnXWIwyisi1A9nc1V4YwK2SLiPzNHxZoV+4HXYACEHMEfkPlHZ
+         7JqGL4g8W37mG1UTMnHgQiDDlQnlgP6FTRkFcHlu18XDP7oiCdR+DRfAKhIGXoFzDKsp
+         cjRI3oY6y8JFdnEfoThjqsqkt7Po9ZM9Pegh57V78X85zYSI6jjtb80t0Y+QiL5v8O79
+         N/YpLX/E47KBVbz1La/BKtyiURY1fDNKPxEe25ZS41dGYUqsf/frpYCZtY66DhSroVb5
+         P0PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oBo8xy4ydTY3CUuRue4PEYfhF7EozU+5QzAOQrR51DE=;
+        b=PPb1M+0SlzLgi5TF+2SDhy2L3c+RM1SDNX1OuikQLMcxUZecmp0kk9d0hXrbfET5DZ
+         qbLu62oyG0iqOECd7xisiAnJzHlLtbnBfBcSgtStuz7lUixRclpkipHJxqzWA1y2VCBu
+         VWRiafp7m91IMEv7JJKs5ADIr3fx0bRvckI8+B9yx+Iz9qpa0rd/bARWtipcFej5rGuN
+         sfoiXweunLzutSqYirPZ0kIoYQ+Nh4h/8Bdj4XywYPC5oppin+jX5EyxGGNg7r+gTeOW
+         gLsqGOWevTiugbVfEQ2DRcT8HINDphGcsrbuhj1It/lT1UAiAopGT85Ju/oHOTE8421F
+         AQUw==
+X-Gm-Message-State: AOAM5330vpaJfl3NSM0SMXwhvkex98EKg1vlrHk+4zTOuyA+JHbjL1co
+        1FwUzAfXhfm0o7gqQuJjmaiYhg==
+X-Google-Smtp-Source: ABdhPJzvcRuooctl8K6lDKRIiKyw7xQkvXXUszAq84eTWOuzHk1hyBKhMj+2al27O02IYbazODRgwg==
+X-Received: by 2002:ac8:18a5:: with SMTP id s34mr27557206qtj.210.1593643255518;
+        Wed, 01 Jul 2020 15:40:55 -0700 (PDT)
+Received: from dfj.bfc.timesys.com (host-79-30-36-203.retail.telecomitalia.it. [79.30.36.203])
+        by smtp.gmail.com with ESMTPSA id o50sm7404982qtc.64.2020.07.01.15.40.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 15:40:54 -0700 (PDT)
+From:   Angelo Dureghello <angelo.dureghello@timesys.com>
+To:     vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, peng.ma@nxp.com, maowenan@huawei.com,
+        yibin.gong@nxp.com, festevam@gmail.com,
+        Angelo Dureghello <angelo.dureghello@timesys.com>,
+        kbuild test robot <lkp@intel.com>
+Subject: [PATCH v2] dmaengine: fsl-edma: fix wrong tcd endianness for big-endian cpu
+Date:   Thu,  2 Jul 2020 00:47:40 +0200
+Message-Id: <20200701224740.1672903-1-angelo.dureghello@timesys.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200701184816.29138-1-leonid.ravich@dell.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Due to recent fixes in m68k arch-specific I/O accessor macros, this
+driver is not working anymore for ColdFire. Fix wrong tcd endianness
+removing additional swaps, since edma_writex() functions should already
+take care of any eventual swap if needed.
 
+Note, i could only test the change in ColdFire mcf54415 and Vybrid
+vf50 / Colibri where i don't see any issue. So, every feedback and
+test for all other SoCs involved is really appreciated.
+---
+Changes for v2:
+- fix build robot (sparse) wrong endianness warnings
 
-On 7/1/2020 11:48 AM, leonid.ravich@dell.com wrote:
-> From: Leonid Ravich <Leonid.Ravich@emc.com>
-> 
-> DMA transaction time to completion  is a function of
-> PCI bandwidth,transaction size and a queue depth.
-> So hard coded value for timeouts might be wrong
-> for some scenarios.
-> 
-> Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Angelo Dureghello <angelo.dureghello@timesys.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+---
+ drivers/dma/fsl-edma-common.c | 26 ++++++++++++++------------
+ drivers/spi/spi-fsl-dspi.c    |  2 +-
+ 2 files changed, 15 insertions(+), 13 deletions(-)
 
-> ---
-> Changing in v2
->    - misspelling of completion
->   drivers/dma/ioat/dma.c | 12 ++++++++++++
->   drivers/dma/ioat/dma.h |  2 --
->   2 files changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-> index 8ad0ad861c86..fd782aee02d9 100644
-> --- a/drivers/dma/ioat/dma.c
-> +++ b/drivers/dma/ioat/dma.c
-> @@ -26,6 +26,18 @@
->   
->   #include "../dmaengine.h"
->   
-> +int completion_timeout = 200;
-> +module_param(completion_timeout, int, 0644);
-> +MODULE_PARM_DESC(completion_timeout,
-> +		"set ioat completion timeout [msec] (default 200 [msec])");
-> +int idle_timeout = 2000;
-> +module_param(idle_timeout, int, 0644);
-> +MODULE_PARM_DESC(idle_timeout,
-> +		"set ioat idel timeout [msec] (default 2000 [msec])");
-> +
-> +#define IDLE_TIMEOUT msecs_to_jiffies(idle_timeout)
-> +#define COMPLETION_TIMEOUT msecs_to_jiffies(completion_timeout)
-> +
->   static char *chanerr_str[] = {
->   	"DMA Transfer Source Address Error",
->   	"DMA Transfer Destination Address Error",
-> diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
-> index e6b622e1ba92..f7f31fdf14cf 100644
-> --- a/drivers/dma/ioat/dma.h
-> +++ b/drivers/dma/ioat/dma.h
-> @@ -104,8 +104,6 @@ struct ioatdma_chan {
->   	#define IOAT_RUN 5
->   	#define IOAT_CHAN_ACTIVE 6
->   	struct timer_list timer;
-> -	#define COMPLETION_TIMEOUT msecs_to_jiffies(100)
-> -	#define IDLE_TIMEOUT msecs_to_jiffies(2000)
->   	#define RESET_DELAY msecs_to_jiffies(100)
->   	struct ioatdma_device *ioat_dma;
->   	dma_addr_t completion_dma;
-> 
+diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+index 5697c3622699..8570e122e61e 100644
+--- a/drivers/dma/fsl-edma-common.c
++++ b/drivers/dma/fsl-edma-common.c
+@@ -352,26 +352,28 @@ static void fsl_edma_set_tcd_regs(struct fsl_edma_chan *fsl_chan,
+ 	/*
+ 	 * TCD parameters are stored in struct fsl_edma_hw_tcd in little
+ 	 * endian format. However, we need to load the TCD registers in
+-	 * big- or little-endian obeying the eDMA engine model endian.
++	 * big- or little-endian obeying the eDMA engine model endian,
++	 * and this is performed from specific edma_write functions
+ 	 */
+ 	edma_writew(edma, 0,  &regs->tcd[ch].csr);
+-	edma_writel(edma, le32_to_cpu(tcd->saddr), &regs->tcd[ch].saddr);
+-	edma_writel(edma, le32_to_cpu(tcd->daddr), &regs->tcd[ch].daddr);
+ 
+-	edma_writew(edma, le16_to_cpu(tcd->attr), &regs->tcd[ch].attr);
+-	edma_writew(edma, le16_to_cpu(tcd->soff), &regs->tcd[ch].soff);
++	edma_writel(edma, (s32)tcd->saddr, &regs->tcd[ch].saddr);
++	edma_writel(edma, (s32)tcd->daddr, &regs->tcd[ch].daddr);
+ 
+-	edma_writel(edma, le32_to_cpu(tcd->nbytes), &regs->tcd[ch].nbytes);
+-	edma_writel(edma, le32_to_cpu(tcd->slast), &regs->tcd[ch].slast);
++	edma_writew(edma, (s16)tcd->attr, &regs->tcd[ch].attr);
++	edma_writew(edma, (s16)tcd->soff, &regs->tcd[ch].soff);
+ 
+-	edma_writew(edma, le16_to_cpu(tcd->citer), &regs->tcd[ch].citer);
+-	edma_writew(edma, le16_to_cpu(tcd->biter), &regs->tcd[ch].biter);
+-	edma_writew(edma, le16_to_cpu(tcd->doff), &regs->tcd[ch].doff);
++	edma_writel(edma, (s32)tcd->nbytes, &regs->tcd[ch].nbytes);
++	edma_writel(edma, (s32)tcd->slast, &regs->tcd[ch].slast);
+ 
+-	edma_writel(edma, le32_to_cpu(tcd->dlast_sga),
++	edma_writew(edma, (s16)tcd->citer, &regs->tcd[ch].citer);
++	edma_writew(edma, (s16)tcd->biter, &regs->tcd[ch].biter);
++	edma_writew(edma, (s16)tcd->doff, &regs->tcd[ch].doff);
++
++	edma_writel(edma, (s32)tcd->dlast_sga,
+ 			&regs->tcd[ch].dlast_sga);
+ 
+-	edma_writew(edma, le16_to_cpu(tcd->csr), &regs->tcd[ch].csr);
++	edma_writew(edma, (s16)tcd->csr, &regs->tcd[ch].csr);
+ }
+ 
+ static inline
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 58190c94561f..2a2bc7ae8e02 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -189,7 +189,7 @@ static const struct fsl_dspi_devtype_data devtype_data[] = {
+ 		.fifo_size		= 4,
+ 	},
+ 	[MCF5441X] = {
+-		.trans_mode		= DSPI_EOQ_MODE,
++		.trans_mode		= DSPI_DMA_MODE,
+ 		.max_clock_factor	= 8,
+ 		.fifo_size		= 16,
+ 	},
+-- 
+2.26.2
+

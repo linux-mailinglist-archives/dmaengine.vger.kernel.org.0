@@ -2,174 +2,128 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37265211056
-	for <lists+dmaengine@lfdr.de>; Wed,  1 Jul 2020 18:13:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED2A6211310
+	for <lists+dmaengine@lfdr.de>; Wed,  1 Jul 2020 20:49:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731894AbgGAQN5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 1 Jul 2020 12:13:57 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:38169 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730645AbgGAQN5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 1 Jul 2020 12:13:57 -0400
-Received: from oxbagw00.schlund.de ([172.19.245.10]) by
- mrelayeu.kundenserver.de (mreue012 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MOm9H-1jSFQC0Orf-00Q878; Wed, 01 Jul 2020 18:13:47 +0200
-Date:   Wed, 1 Jul 2020 18:13:46 +0200 (CEST)
-From:   Thomas Ruf <freelancer@rufusul.de>
-Reply-To: Thomas Ruf <freelancer@rufusul.de>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     Federico Vaga <federico.vaga@cern.ch>,
-        Dave Jiang <dave.jiang@intel.com>,
+        id S1726009AbgGAStN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 1 Jul 2020 14:49:13 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:28636 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725862AbgGAStN (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 1 Jul 2020 14:49:13 -0400
+Received: from pps.filterd (m0170394.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061IjZ4V028641;
+        Wed, 1 Jul 2020 14:49:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=smtpout1;
+ bh=01wzLlnS9Alodrwi62enE4ckPXy9EPiT2tEmF2vgiQs=;
+ b=G9wUH1mOJ/nE9u6R94xFCCGqZ97dq0RnHUuT7HFfIkc/9yExmFjGUHU/we6enJv7rJgX
+ o/Z4vY9nwkPjm0CigHiRvOzE043iugvtrbpwJOKIU/gOAMXY4O8kGipIREH3a8xVNdel
+ WA17KXIT5sYNCn217AtyJENPlzP8bp7JuBqJFt3POkeprc/T/UpQRhRZgkKTCPzZ+ZMt
+ DifeMJmHwjvBLGhTUpAg7YPaKmPfugNxwaI6AVURcB92XWLV7fcmmBO+lgMsohMKD+e3
+ DSEm0R1tvtsNpDSMyZdAxVp3jag5HuySCXHk6FlnuVINOEzX2bTzCaLKT3EH0iuB0slp kA== 
+Received: from mx0a-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0b-00154904.pphosted.com with ESMTP id 31x0p6f7dw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 14:49:09 -0400
+Received: from pps.filterd (m0089484.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061IjP28146588;
+        Wed, 1 Jul 2020 14:49:08 -0400
+Received: from mailuogwhop.emc.com (mailuogwhop-nat.lss.emc.com [168.159.213.141] (may be forged))
+        by mx0b-00154901.pphosted.com with ESMTP id 32101w0267-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 01 Jul 2020 14:49:08 -0400
+Received: from emc.com (localhost [127.0.0.1])
+        by mailuogwprd03.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 061In7gI002425;
+        Wed, 1 Jul 2020 14:49:07 -0400
+Received: from mailsyshubprd08.lss.emc.com ([mailsyshubprd08.lss.emc.com [10.253.24.64]]) by mailuogwprd03.lss.emc.com with ESMTP id 061Imcrf002194 ;
+          Wed, 1 Jul 2020 14:48:38 -0400
+Received: from arwen6.xiolab.lab.emc.com (arwen6.xiolab.lab.emc.com [10.76.217.138])
+        by mailsyshubprd08.lss.emc.com (Sentrion-MTA-4.3.1/Sentrion-MTA-4.3.0) with ESMTP id 061ImZxm020271;
+        Wed, 1 Jul 2020 14:48:36 -0400
+From:   leonid.ravich@dell.com
+To:     dmaengine@vger.kernel.org
+Cc:     lravich@gmail.com, Leonid Ravich <Leonid.Ravich@dell.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <449688975.51579.1593620026422@mailbusiness.ionos.de>
-In-Reply-To: <391e0aee-e35b-fa39-ab86-18fe33a776ee@ti.com>
-References: <5614531.lOV4Wx5bFT@harkonnen>
- <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
- <20200621072457.GA2324254@vkoul-mobl>
- <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
- <20200622044733.GB2324254@vkoul-mobl>
- <419762761.402939.1592827272368@mailbusiness.ionos.de>
- <20200622155440.GM2324254@vkoul-mobl>
- <1835214773.354594.1592843644540@mailbusiness.ionos.de>
- <2077253476.601371.1592991035969@mailbusiness.ionos.de>
- <20200624093800.GV2324254@vkoul-mobl>
- <3a4b1b55-7bce-2c48-b897-51e23e850127@ti.com>
- <1666251320.1024432.1593007095381@mailbusiness.ionos.de>
- <1a610c67-73a4-f66d-877a-5c4d35cbf76a@ti.com>
- <1819433567.1017000.1593443883087@mailbusiness.ionos.de>
- <391e0aee-e35b-fa39-ab86-18fe33a776ee@ti.com>
-Subject: Re: DMA Engine: Transfer From Userspace
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-Mailer: Open-Xchange Mailer v7.10.1-Rev31
-X-Originating-Client: open-xchange-appsuite
-X-Provags-ID: V03:K1:YQ5W6ylaeMA5dpF4vIOq0nmsJPbv1263ZseTm3PhFbiJmwULMMT
- IEZxVJDQ3Kwfvod9HAi/AKOf+oU2R7UMuvc/hqKbBOaEhPsJDlEDzZkaoHaxHdydawJD2rA
- YAPeKtNyniqcyKpXurj+2hck3sUacedn75dEMDep35rfIb+9MFg5JXa3ktbV1W5wKwZh2oe
- SEuV2CUHS09+3AO56qT2w==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TpkBnOBjGNo=:USjjnKpSjvo9B9ZKzStK5p
- 0Elll93db5KN903n/ukfvmjOwVnYHV1ET2opJX0iKCBcfEFgFYN6wJ4eUYNzPuLPUFpc9AzsD
- fQ+D8ffj7xjoIExEFEZaAJPW+k5iasYzIBpnrf9XpNT2Y7e4MyUFP2hUOEFzlTFeoj8etXsGG
- HDM1GQ+cppDk4vzAdqLg4pHnhs9YfG44HmCE2irT14CxiDZp4KQfpibxeRLWJu2mgpLY3FzUY
- KkCuRHsFmE7h+JIUsm3T7g7AJM09N2Wji0AkMdxrVt76jfX/i741WA4l6fPtIEXrxcqxo9cD8
- eTHRMlcA18XAHbOCidvSsTgChuDDJgE0uXJ4nzKecdcod3ZgLkjqikdK86ua5qBDyvYg9AhGh
- aKd4wC2aRZeiFtqaukVU4ZJmobEFrf0T+5AhbCwId9En/763kFaWma8lTJHWi5tGWzqEdcXfL
- kikpsFIERzv8OLnrWfO0JTGroqTMw/HR4PAc34jYRaZGywfxlOg5YgY3tBnWGK4GX0uQlauA8
- pDv4rmaCZv4eqAgFOlcSsF/4Z+EVMHAYcD6KIfelRk122loItQ6wTJmyfBu7aI2cJcWPFj/Em
- O0VjNLB9y9/cSiAZYEvDRxPNLrveQGV6Dq2pwDTsEAfnw+K0nNcNRtAy8DAtDKgQpz+iHRgcq
- 9UF89357FfvZ0XNdZ2ZbFk2hH5NtevyYKVNB8EvYqXwUBb+G+/s+xKu0JDrmNP6HXQXguurHg
- Llzukc15plkBXhFFLLYC9uz0FtPNey75bm+x2ARs9vkCM57EQqr0fpkXwBf4K/fW8INGWopH1
- 5FvlTwlCJhki7fYfrb5UbjzAKVLTlXiegjTRv3uhhLRHDyI/98=
+        Vinod Koul <vkoul@kernel.org>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] dmaengine: ioat setting ioat timeout as module parameter
+Date:   Wed,  1 Jul 2020 21:48:12 +0300
+Message-Id: <20200701184816.29138-1-leonid.ravich@dell.com>
+X-Mailer: git-send-email 2.16.2
+In-Reply-To: <20200701140849.8828-1-leonid.ravich@dell.com>
+References: <20200701140849.8828-1-leonid.ravich@dell.com>
+X-Sentrion-Hostname: mailuogwprd03.lss.emc.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-01_10:2020-07-01,2020-07-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 mlxlogscore=918 clxscore=1015 adultscore=0
+ impostorscore=0 suspectscore=13 priorityscore=1501 bulkscore=0 mlxscore=0
+ spamscore=0 malwarescore=0 cotscore=-2147483648 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007010130
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=941
+ spamscore=0 bulkscore=0 mlxscore=0 malwarescore=0 phishscore=0
+ suspectscore=13 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2007010130
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+From: Leonid Ravich <Leonid.Ravich@emc.com>
 
-> On 30 June 2020 at 14:31 Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> 
-> 
-> 
-> 
-> On 29/06/2020 18.18, Thomas Ruf wrote:
-> > 
-> >> On 26 June 2020 at 12:29 Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> >>
-> >> On 24/06/2020 16.58, Thomas Ruf wrote:
-> >>>
-> >>>> On 24 June 2020 at 14:07 Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> >>>> On 24/06/2020 12.38, Vinod Koul wrote:
-> >>>>> On 24-06-20, 11:30, Thomas Ruf wrote:
-> >>>>>
-> >>>>>> To make it short - i have two questions:
-> >>>>>> - what are the chances to revive DMA_SG?
-> >>>>>
-> >>>>> 100%, if we have a in-kernel user
-> >>>>
-> >>>> Most DMAs can not handle differently provisioned sg_list for src and dst.
-> >>>> Even if they could handle non symmetric SG setup it requires entirely
-> >>>> different setup (two independent channels sending the data to each
-> >>>> other, one reads, the other writes?).
-> >>>
-> >>> Ok, i implemented that using zynqmp_dma on a Xilinx Zynq platform (obviously ;-) and it works nicely for us.
-> >>
-> >> I see, if the HW does not support it then something along the lines of
-> >> what the atc_prep_dma_sg did can be implemented for most engines.
-> >>
-> >> In essence: create a new set of sg_list which is symmetric.
-> > 
-> > Sorry, not sure if i understand you right?
-> > You suggest that in case DMA_SG gets revived we should restrict the support to symmetric sg_lists?
-> 
-> No, not at all. That would not make much sense.
+DMA transaction time to completion  is a function of
+PCI bandwidth,transaction size and a queue depth.
+So hard coded value for timeouts might be wrong
+for some scenarios.
 
-Glad that this was just a misunderstanding.
+Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
+---
+Changing in v2
+  - misspelling of completion
+ drivers/dma/ioat/dma.c | 12 ++++++++++++
+ drivers/dma/ioat/dma.h |  2 --
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-> > Just had a glance at the deleted code and the *_prep_dma_sg of these drivers had code to support asymmetric lists and by that "unaligend" memory (relative to page start):
-> > at_hdmac.c         
-> > dmaengine.c        
-> > dmatest.c          
-> > fsldma.c           
-> > mv_xor.c           
-> > nbpfaxi.c          
-> > ste_dma40.c        
-> > xgene-dma.c        
-> > xilinx/zynqmp_dma.c
-> > 
-> > Why not just revive that and keep this nice functionality? ;-)
-> 
-> What I'm saying is that the drivers (at least at_hdmac) in essence
-> creates aligned sg_list out from the received non aligned ones.
-> It does this w/o actually creating the sg_list itself, but that's just a
-> small detail.
-> 
-> In a longer run what might make sense is to have a helper function to
-> convert two non symmetric sg_list into two symmetric ones so drivers
-> will not have to re-implement the same code and they will only need to
-> care about symmetric sg lists.
-
-Sounds like a superb idea!
-
-> Note, some DMAs can actually handle non symmetric src and dst lists, but
-> I believe it is rare.
-
-So i was a bit lucky that the zynqmp_dma is one of them.
+diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
+index 8ad0ad861c86..fd782aee02d9 100644
+--- a/drivers/dma/ioat/dma.c
++++ b/drivers/dma/ioat/dma.c
+@@ -26,6 +26,18 @@
  
-> >> What might be plausible is to introduce hw offloading support for memcpy
-> >> type of operations in a similar fashion how for example crypto does it?
-> > 
-> > Sounds good to me, my proxy driver implementation could be a good start for that, too!
-> 
-> It needs to find it's place as well... I'm not sure where that would be.
-> Simple block-copy offload, sg copy offload, interleaved offload (frame
-> extraction) offload, dmabuf copy offload comes to mind as candidates.
+ #include "../dmaengine.h"
+ 
++int completion_timeout = 200;
++module_param(completion_timeout, int, 0644);
++MODULE_PARM_DESC(completion_timeout,
++		"set ioat completion timeout [msec] (default 200 [msec])");
++int idle_timeout = 2000;
++module_param(idle_timeout, int, 0644);
++MODULE_PARM_DESC(idle_timeout,
++		"set ioat idel timeout [msec] (default 2000 [msec])");
++
++#define IDLE_TIMEOUT msecs_to_jiffies(idle_timeout)
++#define COMPLETION_TIMEOUT msecs_to_jiffies(completion_timeout)
++
+ static char *chanerr_str[] = {
+ 	"DMA Transfer Source Address Error",
+ 	"DMA Transfer Destination Address Error",
+diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
+index e6b622e1ba92..f7f31fdf14cf 100644
+--- a/drivers/dma/ioat/dma.h
++++ b/drivers/dma/ioat/dma.h
+@@ -104,8 +104,6 @@ struct ioatdma_chan {
+ 	#define IOAT_RUN 5
+ 	#define IOAT_CHAN_ACTIVE 6
+ 	struct timer_list timer;
+-	#define COMPLETION_TIMEOUT msecs_to_jiffies(100)
+-	#define IDLE_TIMEOUT msecs_to_jiffies(2000)
+ 	#define RESET_DELAY msecs_to_jiffies(100)
+ 	struct ioatdma_device *ioat_dma;
+ 	dma_addr_t completion_dma;
+-- 
+2.16.2
 
-And who would decide that...
-
-> >> The issue with a user space implemented logic is that it is not portable
-> >> between systems with different DMAs. It might be that on one DMA the
-> >> setup takes longer than do a CPU copy of X bytes, on the other DMA it
-> >> might be significantly less or higher.
-> > 
-> > Fully agree with that!
-> > I was also unsure how my approach will perform but in our case the latency was increased by ~20%, cpu load roughly stayed the same, of course this was the benchmark from user memory to user memory.
-> > From uncached to user memory the DMA was around 15 times faster.
-> 
-> It depends on the size of the transfer. Lots of small individual
-> transfers might be worst via DMA do the the setup time, completion
-> handling, etc.
-
-Yes, exactly.
-
-Thanks again for your great input!
-
-best regards,
-Thomas
-
-PS: I am on vacation for the next two weaks and probably will not check this mailing list till 20.7. But will fetch later.

@@ -2,64 +2,95 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13E97211C68
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Jul 2020 09:06:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2475211F09
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Jul 2020 10:41:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbgGBHGZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 2 Jul 2020 03:06:25 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:57893 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727016AbgGBHGV (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 2 Jul 2020 03:06:21 -0400
-X-UUID: d6f753b21deb476b9fcd800fd475d515-20200702
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=z5va3/AjR9BOKysLPqHUxTjjVWjXMnzJGleraFtyTOA=;
-        b=jS/zaYTuSwEvykbYduS/AgreawYnnkxhIYe99Gt8MrILpo9aYFPugiW2cSQC7WqTIPmNpmfF6hoMifhsSFYFpVq8tfw9JbUB1364LYpC9c/rW57Z37K6tovXF9Q6XjHTDRJyQbqxpfWm0U4Tsd3GqipLY/7lpJgWHtoaUS+4SMg=;
-X-UUID: d6f753b21deb476b9fcd800fd475d515-20200702
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <eastl.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 672093118; Thu, 02 Jul 2020 15:06:19 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 2 Jul 2020 15:06:15 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 2 Jul 2020 15:06:17 +0800
-From:   EastL Lee <EastL.Lee@mediatek.com>
-To:     Sean Wang <sean.wang@mediatek.com>
-CC:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <matthias.bgg@gmail.com>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, <cc.hwang@mediatek.com>,
-        EastL Lee <EastL.Lee@mediatek.com>
-Subject: [PATCH v6 4/4] dmaengine: mediatek-cqdma: fix compatible
-Date:   Thu, 2 Jul 2020 15:06:04 +0800
-Message-ID: <1593673564-4425-5-git-send-email-EastL.Lee@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
-References: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
+        id S1726630AbgGBIl2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 2 Jul 2020 04:41:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:54194 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726475AbgGBIl2 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 2 Jul 2020 04:41:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9574131B;
+        Thu,  2 Jul 2020 01:41:27 -0700 (PDT)
+Received: from [10.57.4.63] (unknown [10.57.4.63])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 608233F68F;
+        Thu,  2 Jul 2020 01:41:26 -0700 (PDT)
+Subject: Re: [PATCH] dmaengine: dmatest: stop completed threads when running
+ without set channel
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, dan.j.williams@intel.com,
+        grygorii.strashko@ti.com
+References: <20200701101225.8607-1-peter.ujfalusi@ti.com>
+From:   Vladimir Murzin <vladimir.murzin@arm.com>
+Message-ID: <7b0a12bc-7c3e-69c1-f589-a8aa16d109c3@arm.com>
+Date:   Thu, 2 Jul 2020 09:41:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200701101225.8607-1-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGRzIG10Njc3OSBjb21wYXRpYmxlLg0KDQpTaWduZWQtb2ZmLWJ5OiBFYXN0
-TCBMZWUgPEVhc3RMLkxlZUBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL2RtYS9tZWRpYXRl
-ay9tdGstY3FkbWEuYyB8IDEgKw0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KDQpk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9kbWEvbWVkaWF0ZWsvbXRrLWNxZG1hLmMgYi9kcml2ZXJzL2Rt
-YS9tZWRpYXRlay9tdGstY3FkbWEuYw0KaW5kZXggMTYxMDYzMi4uMTdiM2FiOSAxMDA2NDQNCi0t
-LSBhL2RyaXZlcnMvZG1hL21lZGlhdGVrL210ay1jcWRtYS5jDQorKysgYi9kcml2ZXJzL2RtYS9t
-ZWRpYXRlay9tdGstY3FkbWEuYw0KQEAgLTU0Nyw2ICs1NDcsNyBAQCBzdGF0aWMgdm9pZCBtdGtf
-Y3FkbWFfaHdfZGVpbml0KHN0cnVjdCBtdGtfY3FkbWFfZGV2aWNlICpjcWRtYSkNCiANCiBzdGF0
-aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBtdGtfY3FkbWFfbWF0Y2hbXSA9IHsNCiAJeyAu
-Y29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3NjUtY3FkbWEiIH0sDQorCXsgLmNvbXBhdGlibGUg
-PSAibWVkaWF0ZWssbXQ2Nzc5LWNxZG1hIiB9LA0KIAl7IC8qIHNlbnRpbmVsICovIH0NCiB9Ow0K
-IE1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIG10a19jcWRtYV9tYXRjaCk7DQotLSANCjEuOS4xDQo=
+On 7/1/20 11:12 AM, Peter Ujfalusi wrote:
+> The completed threads were not cleared and consequent run would result
+> threads accumulating:
+> 
+> echo 800000 > /sys/module/dmatest/parameters/test_buf_size
+> echo 2000 > /sys/module/dmatest/parameters/timeout
+> echo 50 > /sys/module/dmatest/parameters/iterations
+> echo 1 > /sys/module/dmatest/parameters/max_channels
+> echo "" > /sys/module/dmatest/parameters/channel
+> [  237.507265] dmatest: Added 1 threads using dma1chan2
+> echo 1 > /sys/module/dmatest/parameters/run
+> [  244.713360] dmatest: Started 1 threads using dma1chan2
+> [  246.117680] dmatest: dma1chan2-copy0: summary 50 tests, 0 failures 2437.47 iops 977623 KB/s (0)
+> 
+> echo 1 > /sys/module/dmatest/parameters/run
+> [  292.381471] dmatest: No channels configured, continue with any
+> [  292.389307] dmatest: Added 1 threads using dma1chan3
+> [  292.394302] dmatest: Started 1 threads using dma1chan2
+> [  292.399454] dmatest: Started 1 threads using dma1chan3
+> [  293.800835] dmatest: dma1chan3-copy0: summary 50 tests, 0 failures 2624.53 iops 975014 KB/s (0)
+> 
+> echo 1 > /sys/module/dmatest/parameters/run
+> [  307.301429] dmatest: No channels configured, continue with any
+> [  307.309212] dmatest: Added 1 threads using dma1chan4
+> [  307.314197] dmatest: Started 1 threads using dma1chan2
+> [  307.319343] dmatest: Started 1 threads using dma1chan3
+> [  307.324492] dmatest: Started 1 threads using dma1chan4
+> [  308.730773] dmatest: dma1chan4-copy0: summary 50 tests, 0 failures 2390.28 iops 965436 KB/s (0)
+> 
+> Fixes: 6b41030fdc79 ("dmaengine: dmatest: Restore default for channel")
+> Reported-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  drivers/dma/dmatest.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
+> index 18f10154ba19..45d4d92e91db 100644
+> --- a/drivers/dma/dmatest.c
+> +++ b/drivers/dma/dmatest.c
+> @@ -1185,6 +1185,8 @@ static int dmatest_run_set(const char *val, const struct kernel_param *kp)
+>  	} else if (dmatest_run) {
+>  		if (!is_threaded_test_pending(info)) {
+>  			pr_info("No channels configured, continue with any\n");
+> +			if (!is_threaded_test_run(info))
+> +				stop_threaded_test(info);
+>  			add_threaded_test(info);
+>  		}
+>  		start_threaded_tests(info);
+> 
 
+I should admit I did not run dmatest back to back. Unfortunately, I do not have access to hardware to
+give it a try nor I have enough confidence to review the change :( Sorry for the bug!
+
+Cheers
+Vladimir

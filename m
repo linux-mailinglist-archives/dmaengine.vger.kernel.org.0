@@ -2,82 +2,58 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 911C62121EA
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Jul 2020 13:15:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7459D2123C6
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Jul 2020 14:57:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbgGBLPU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 2 Jul 2020 07:15:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgGBLPU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 2 Jul 2020 07:15:20 -0400
-X-Greylist: delayed 695 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 02 Jul 2020 04:15:19 PDT
-Received: from forward500j.mail.yandex.net (forward500j.mail.yandex.net [IPv6:2a02:6b8:0:801:2::110])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40DC2C08C5C1;
-        Thu,  2 Jul 2020 04:15:19 -0700 (PDT)
-Received: from mxback8j.mail.yandex.net (mxback8j.mail.yandex.net [IPv6:2a02:6b8:0:1619::111])
-        by forward500j.mail.yandex.net (Yandex) with ESMTP id 177EE11C1A12;
-        Thu,  2 Jul 2020 14:15:17 +0300 (MSK)
-Received: from localhost (localhost [::1])
-        by mxback8j.mail.yandex.net (mxback/Yandex) with ESMTP id zy2fKpYmZG-FFjm119q;
-        Thu, 02 Jul 2020 14:15:16 +0300
-Received: by iva2-13089525268d.qloud-c.yandex.net with HTTP;
-        Thu, 02 Jul 2020 14:15:15 +0300
-From:   Angelo Dureghello <angelo@sysam.it>
-To:     Robin Gong <yibin.gong@nxp.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
-Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>
-References: <1593449998-32091-1-git-send-email-yibin.gong@nxp.com>
-Subject: Re: [PATCH v1] dmaengine: fsl-edma-common: correct DSIZE_32BYTE
+        id S1728979AbgGBM5K (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 2 Jul 2020 08:57:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51690 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728808AbgGBM5J (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 2 Jul 2020 08:57:09 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8994E20772;
+        Thu,  2 Jul 2020 12:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593694629;
+        bh=6HAK3qHSIcna6sA8s3JCC4sdkipPIpcQVvedZolZ6N0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SS6m+TFQ+N0ptvONAjRaIIHM1ONObKIwCYCWRGIVJyIr+Wqa0NmW4co2Sd5fsxyJj
+         YL+r14zbOFWhVyPSl6zJM2FuOIsJJtM0EShKHn9nKVVLsThqQoq7xEP/YCDm4x42pN
+         LddZfrGkRb5dx3hyZV6p2H1RH+nLnHsFEDsrwJqY=
+Date:   Thu, 2 Jul 2020 18:27:05 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        dmaengine@vger.kernel.org
+Subject: Re: [PATCH next 6/6] dmaengine: ti: k3-udma: Switch to
+ k3_ringacc_request_rings_pair
+Message-ID: <20200702125705.GB273932@vkoul-mobl>
+References: <20200701103030.29684-1-grygorii.strashko@ti.com>
+ <20200701103030.29684-7-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Thu, 02 Jul 2020 13:15:15 +0200
-Message-Id: <979851593688387@mail.yandex.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200701103030.29684-7-grygorii.strashko@ti.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Robin,
+On 01-07-20, 13:30, Grygorii Strashko wrote:
+> From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> 
+> We only request ring pairs via K3 DMA driver, switch to use the new
+> k3_ringacc_request_rings_pair() to simplify the code.
 
-29.06.2020, 10:53, "Robin Gong" <yibin.gong@nxp.com>:
-> Correct EDMA_TCD_ATTR_DSIZE_32BYTE define since it's broken by the below:
-> '0x0005 --> BIT(3) | BIT(0))'
->
-> Fixes: 4d6d3a90e4ac ("dmaengine: fsl-edma: fix macros")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> ---
->  drivers/dma/fsl-edma-common.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
-> index 67e4225..ec11697 100644
-> --- a/drivers/dma/fsl-edma-common.h
-> +++ b/drivers/dma/fsl-edma-common.h
-> @@ -33,7 +33,7 @@
->  #define EDMA_TCD_ATTR_DSIZE_16BIT BIT(0)
->  #define EDMA_TCD_ATTR_DSIZE_32BIT BIT(1)
->  #define EDMA_TCD_ATTR_DSIZE_64BIT (BIT(0) | BIT(1))
-> -#define EDMA_TCD_ATTR_DSIZE_32BYTE (BIT(3) | BIT(0))
-> +#define EDMA_TCD_ATTR_DSIZE_32BYTE (BIT(2) | BIT(0))
+Acked-By: Vinod Koul <vkoul@kernel.org>
 
-looks like i need some glasses. Thanks a lot for the fix.
-I probably missed it since not using 16bytes transfers.
-
-Tested-by: Angelo Dureghello <angelo@sysam.it>
-
-
-Regards,
-angelo
-
->  #define EDMA_TCD_ATTR_SSIZE_8BIT 0
->  #define EDMA_TCD_ATTR_SSIZE_16BIT (EDMA_TCD_ATTR_DSIZE_16BIT << 8)
->  #define EDMA_TCD_ATTR_SSIZE_32BIT (EDMA_TCD_ATTR_DSIZE_32BIT << 8)
-> --
-> 2.7.4
+-- 
+~Vinod

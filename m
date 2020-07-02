@@ -2,232 +2,88 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E64E21270B
-	for <lists+dmaengine@lfdr.de>; Thu,  2 Jul 2020 16:54:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D295212E63
+	for <lists+dmaengine@lfdr.de>; Thu,  2 Jul 2020 23:01:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730007AbgGBOxd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 2 Jul 2020 10:53:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729724AbgGBOxd (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 2 Jul 2020 10:53:33 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F177EC08C5C1;
-        Thu,  2 Jul 2020 07:53:32 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id t6so13602427pgq.1;
-        Thu, 02 Jul 2020 07:53:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=49MprcVWYXlJmcv1kQyU4bVdCGEwvkFjiB4F6qiWmVw=;
-        b=Czgpfxph4TFgGFUBAzbjmratM2tricsBOHy8FGujFawPyqRg5O4XKof9/ut19YBPYp
-         2DS3M4z9HTL8vbOPh+u06rgQJvXqbLVHHKp2iSbol+h1/QWJwc5SBCKuGbGKsLzjHF3j
-         NUV7HURLFYRaua/ECnE2Jm6s9BDDND8azhTljv6R8i3Yfdk2sPk9dLOdXijAF10BAOFs
-         MDfETd1+eq2i3sEhRfysdx5oLoVdVreRH7jK1AD09UCW0MUfmWwQ/wL/YGNDxaQkqGLC
-         turu7SSsqHdGkBdqfNIiAPaiQHrrCuvGK49zs9twzdmPxio2sQcKcxaEpFKR7mMwShMx
-         MNFQ==
+        id S1726033AbgGBVBM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 2 Jul 2020 17:01:12 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:37639 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbgGBVBL (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 2 Jul 2020 17:01:11 -0400
+Received: by mail-il1-f193.google.com with SMTP id r12so18254962ilh.4;
+        Thu, 02 Jul 2020 14:01:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=49MprcVWYXlJmcv1kQyU4bVdCGEwvkFjiB4F6qiWmVw=;
-        b=p7ebqJn3f6ieYVhPdGvCXWYEkB3YGYybqgIWqVWQBDy7j+yYUF92XofwXOlbJhhUxO
-         JjLI5axrBgM3KhhbeORqP2h2R6ciHlAXhOLY+qsd4cDvmGUAdzMrp/pzCP7ITWmwEOBz
-         lMOe/uGfGG30K6RpqJ4Z5ZPhK/iTKJVUoIrLnxxkuwF+OUQjZ9ER3g3K2B7n4pVyYfzo
-         iAKd0PhwV4Jkq7bwIvYfK3ehJZy5QEfjoVGRYfWCiabSzQoRBUCSlOqcWOttIr7MYor0
-         JoFPIpR6aPIqmM6LKx4mfISD0mhHmcLsd/5bySoqKV+TrnKti2xOEsakkp8LXAaR+TCU
-         F5Rg==
-X-Gm-Message-State: AOAM530cIyINZLHwWWYds7QhF7HZgk4LiRG0nJTptVm9G1IT5rKH+/Tw
-        sjYyH8ui73y7+8LZdwXkHG6/Ka1akVFx1w==
-X-Google-Smtp-Source: ABdhPJyt17IMg6K5OC0h119pc6K3FK3gPubYByCw+6DgtF2PMZTAY2bNWi1aHhDdSYVpXUlrQWM0XQ==
-X-Received: by 2002:a63:3308:: with SMTP id z8mr24322009pgz.409.1593701612381;
-        Thu, 02 Jul 2020 07:53:32 -0700 (PDT)
-Received: from localhost.localdomain ([223.190.0.253])
-        by smtp.gmail.com with ESMTPSA id 204sm9487891pfc.18.2020.07.02.07.53.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 02 Jul 2020 07:53:31 -0700 (PDT)
-From:   Amit Singh Tomar <amittomer25@gmail.com>
-To:     andre.przywara@arm.com, vkoul@kernel.org, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org
-Cc:     dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org
-Subject: [PATCH v5 03/10] dmaengine: Actions: Add support for S700 DMA engine
-Date:   Thu,  2 Jul 2020 20:22:49 +0530
-Message-Id: <1593701576-28580-4-git-send-email-amittomer25@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
-References: <1593701576-28580-1-git-send-email-amittomer25@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pscTNcsjG1XyDNybUCclf+10YKpfbDpJLW+4tpO0I0g=;
+        b=DscBjMpD5Esl9EJdSnGB+jxWPVxUupU/DRz/J7S4i4zrlgVnHykRrkVbK4lRO0se79
+         YWzS41bQ3PNw2s1BqlerVl7QjqfpPCajAaAvefQpYcyx9pkMSwRW0K8ixousiD542EuO
+         6qpeHBgcDNkkUwiBPhUKhQQ5dxVkjF9KxIxV1D/1+tR5fDLih+uYI20JjJ+DqM1QScfR
+         q9NSu3mGbitNGtEcRhzQtM+wD3GIsK+BkiuIsrDHF6CH7fBe5BstWW+3ZPm9nDTw/i3C
+         and4x7nfY5nEFhA9aJ+qMq1KumI4YgE/mNGwHERdJPUQjl4NV0iMociAkt0tWhzbVyq9
+         0m4g==
+X-Gm-Message-State: AOAM531cc+JpmZwbYUUgWVFjWhZA1UNpBjDiIxyhE15US+fi/YZ11ECs
+        ZEHrIySGT7ryG76vRglTLw==
+X-Google-Smtp-Source: ABdhPJx8jwlcMouahR/BuXTgcuLkyDO9yZTlxRTMKgJ5NjIwLEuwuuawN9mS4qRzGHIaU+GVKuFSmg==
+X-Received: by 2002:a05:6e02:1043:: with SMTP id p3mr13788707ilj.245.1593723670409;
+        Thu, 02 Jul 2020 14:01:10 -0700 (PDT)
+Received: from xps15 ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id q15sm5487720ilt.60.2020.07.02.14.01.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 14:01:09 -0700 (PDT)
+Received: (nullmailer pid 1687042 invoked by uid 1000);
+        Thu, 02 Jul 2020 21:01:07 -0000
+Date:   Thu, 2 Jul 2020 15:01:07 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     will@kernel.org, festevam@gmail.com, vkoul@kernel.org,
+        dan.j.williams@intel.com, kernel@pengutronix.de,
+        catalin.marinas@arm.com, robh+dt@kernel.org, linux-imx@nxp.com,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, angelo@sysam.it, devicetree@vger.kernel.org
+Subject: Re: [PATCH v1 6/9] dt-bindings: dma: add fsl-edma3 yaml
+Message-ID: <20200702210107.GA1686199@bogus>
+References: <1593702489-21648-1-git-send-email-yibin.gong@nxp.com>
+ <1593702489-21648-7-git-send-email-yibin.gong@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1593702489-21648-7-git-send-email-yibin.gong@nxp.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-DMA controller present on S700 SoC is compatible with the one on S900
-(as most of registers are same), but it has different DMA descriptor
-structure where registers "fcnt" and "ctrlb" uses different encoding.
+On Thu, 02 Jul 2020 23:08:06 +0800, Robin Gong wrote:
+> Add device binding doc for fsl-edma3 driver.
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> ---
+>  .../devicetree/bindings/dma/nxp,fsl-edma3.yaml     | 129 +++++++++++++++++++++
+>  1 file changed, 129 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/nxp,fsl-edma3.yaml
+> 
 
-For instance, on S900 "fcnt" starts at offset 0x0c and uses upper 12
-bits whereas on S700, it starts at offset 0x1c and uses lower 12 bits.
 
-This commit adds support for DMA controller present on S700.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Signed-off-by: Amit Singh Tomar <amittomer25@gmail.com>
----
-Changes since v4:
-	* Reordered it from 02/10 to 03/10.
-	* Used of_device_get_match_data() instead of
-          of_match_device().
-	* Removed the uintptr_t used for typecast.
-Changes since v3:
-        * Added description for enum fields.
-        * Restored the old comment.
-        * Added detailed comment about, the way FLEN
-          and FCNT values are filled.
-Changes since v2:
-        * No change.
-Changes since v1:
-        * Defined macro for frame count value.
-        * Introduced llc_hw_flen() from patch 2/9.
-        * Removed the unnecessary line break.
-Changes since rfc:
-	* No change.
----
- drivers/dma/owl-dma.c | 57 +++++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 42 insertions(+), 15 deletions(-)
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/nxp,fsl-edma3.example.dt.yaml: dma-controller@5a1f0000: 'power-domain-names' does not match any of the regexes: 'pinctrl-[0-9]+'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/nxp,fsl-edma3.example.dt.yaml: dma-controller@5a1f0000: interrupt-names:1: 'edma2-chan9-tx' does not match '^edma[0-2]-chan[0-31]-tx|rx+$'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/nxp,fsl-edma3.example.dt.yaml: dma-controller@5a1f0000: interrupt-names:3: 'edma2-chan11-tx' does not match '^edma[0-2]-chan[0-31]-tx|rx+$'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/nxp,fsl-edma3.example.dt.yaml: dma-controller@5a1f0000: interrupt-names:5: 'edma2-chan13-tx' does not match '^edma[0-2]-chan[0-31]-tx|rx+$'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/nxp,fsl-edma3.example.dt.yaml: dma-controller@5a1f0000: interrupt-names:7: 'edma2-chan15-tx' does not match '^edma[0-2]-chan[0-31]-tx|rx+$'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/nxp,fsl-edma3.example.dt.yaml: dma-controller@5a1f0000: reg: [[1512570880, 65536], [1512636416, 65536], [1512701952, 65536], [1512767488, 65536], [1512833024, 65536], [1512898560, 65536], [1512964096, 65536], [1513029632, 65536]] is too long
 
-diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
-index 948d1bead860..331c8d8b10a3 100644
---- a/drivers/dma/owl-dma.c
-+++ b/drivers/dma/owl-dma.c
-@@ -149,6 +149,11 @@ enum owl_dmadesc_offsets {
- 	OWL_DMADESC_SIZE
- };
- 
-+enum owl_dma_id {
-+	S900_DMA,
-+	S700_DMA,
-+};
-+
- /**
-  * struct owl_dma_lli - Link list for dma transfer
-  * @hw: hardware link list
-@@ -213,6 +218,7 @@ struct owl_dma_vchan {
-  * @pchans: array of data for the physical channels
-  * @nr_vchans: the number of physical channels
-  * @vchans: array of data for the physical channels
-+ * @devid: device id based on OWL SoC
-  */
- struct owl_dma {
- 	struct dma_device	dma;
-@@ -227,6 +233,7 @@ struct owl_dma {
- 
- 	unsigned int		nr_vchans;
- 	struct owl_dma_vchan	*vchans;
-+	enum owl_dma_id		devid;
- };
- 
- static void pchan_update(struct owl_dma_pchan *pchan, u32 reg,
-@@ -316,6 +323,10 @@ static inline u32 llc_hw_ctrlb(u32 int_ctl)
- {
- 	u32 ctl;
- 
-+	/*
-+	 * Irrespective of the SoC, ctrlb value starts filling from
-+	 * bit 18.
-+	 */
- 	ctl = BIT_FIELD(int_ctl, 7, 0, 18);
- 
- 	return ctl;
-@@ -372,6 +383,7 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
- 				  struct dma_slave_config *sconfig,
- 				  bool is_cyclic)
- {
-+	struct owl_dma *od = to_owl_dma(vchan->vc.chan.device);
- 	u32 mode, ctrlb;
- 
- 	mode = OWL_DMA_MODE_PW(0);
-@@ -427,14 +439,26 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
- 	lli->hw[OWL_DMADESC_DADDR] = dst;
- 	lli->hw[OWL_DMADESC_SRC_STRIDE] = 0;
- 	lli->hw[OWL_DMADESC_DST_STRIDE] = 0;
--	/*
--	 * Word starts from offset 0xC is shared between frame length
--	 * (max frame length is 1MB) and frame count, where first 20
--	 * bits are for frame length and rest of 12 bits are for frame
--	 * count.
--	 */
--	lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
--	lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
-+
-+	if (od->devid == S700_DMA) {
-+		/* Max frame length is 1MB */
-+		lli->hw[OWL_DMADESC_FLEN] = len;
-+		/*
-+		 * On S700, word starts from offset 0x1C is shared between
-+		 * frame count and ctrlb, where first 12 bits are for frame
-+		 * count and rest of 20 bits are for ctrlb.
-+		 */
-+		lli->hw[OWL_DMADESC_CTRLB] = FCNT_VAL | ctrlb;
-+	} else {
-+		/*
-+		 * On S900, word starts from offset 0xC is shared between
-+		 * frame length (max frame length is 1MB) and frame count,
-+		 * where first 20 bits are for frame length and rest of
-+		 * 12 bits are for frame count.
-+		 */
-+		lli->hw[OWL_DMADESC_FLEN] = len | FCNT_VAL << 20;
-+		lli->hw[OWL_DMADESC_CTRLB] = ctrlb;
-+	}
- 
- 	return 0;
- }
-@@ -596,7 +620,7 @@ static irqreturn_t owl_dma_interrupt(int irq, void *dev_id)
- 
- 		global_irq_pending = dma_readl(od, OWL_DMA_IRQ_PD0);
- 
--		if (chan_irq_pending && !(global_irq_pending & BIT(i)))	{
-+		if (chan_irq_pending && !(global_irq_pending & BIT(i))) {
- 			dev_dbg(od->dma.dev,
- 				"global and channel IRQ pending match err\n");
- 
-@@ -1054,6 +1078,13 @@ static struct dma_chan *owl_dma_of_xlate(struct of_phandle_args *dma_spec,
- 	return chan;
- }
- 
-+static const struct of_device_id owl_dma_match[] = {
-+	{ .compatible = "actions,s900-dma", .data = (void *)S900_DMA,},
-+	{ .compatible = "actions,s700-dma", .data = (void *)S700_DMA,},
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, owl_dma_match);
-+
- static int owl_dma_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
-@@ -1083,6 +1114,8 @@ static int owl_dma_probe(struct platform_device *pdev)
- 	dev_info(&pdev->dev, "dma-channels %d, dma-requests %d\n",
- 		 nr_channels, nr_requests);
- 
-+	od->devid = (enum owl_dma_id)of_device_get_match_data(&pdev->dev);
-+
- 	od->nr_pchans = nr_channels;
- 	od->nr_vchans = nr_requests;
- 
-@@ -1215,12 +1248,6 @@ static int owl_dma_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id owl_dma_match[] = {
--	{ .compatible = "actions,s900-dma", },
--	{ /* sentinel */ }
--};
--MODULE_DEVICE_TABLE(of, owl_dma_match);
--
- static struct platform_driver owl_dma_driver = {
- 	.probe	= owl_dma_probe,
- 	.remove	= owl_dma_remove,
--- 
-2.7.4
+
+See https://patchwork.ozlabs.org/patch/1321003
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
 

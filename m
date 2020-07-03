@@ -2,106 +2,281 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 780A7213471
-	for <lists+dmaengine@lfdr.de>; Fri,  3 Jul 2020 08:47:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 432442134C9
+	for <lists+dmaengine@lfdr.de>; Fri,  3 Jul 2020 09:18:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726035AbgGCGrO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 3 Jul 2020 02:47:14 -0400
-Received: from mail-vi1eur05on2084.outbound.protection.outlook.com ([40.107.21.84]:6241
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725764AbgGCGrN (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 3 Jul 2020 02:47:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=II7a2vlWQcU+ZUWRluVqXpAPPzgy3Z/XITI0IWMr1bFFD8bpSIODrX+Z9nxABWrFUMqCfu9H0YtsKDLC8nRTf0w4MUw7QvdzkaXUABB9tDrXZmpJA2ZCHYa7FYOq//DD/n3+E8s8sWpWA5txX67M9RfuYKUl1/FHXDPSdb2hSJLLuMNTZydenGDzzs6AgJNSmQsapPfyCArHyFIgUUVgZUXZ+xwm+4T609/a5oD9/ZU5fqPFXR+KqYPjDfStU9nAChnZapFbKRUg/jPKxRggP6agk/ChSgWsaKHInmGz3Hh0PXyFEkWitDbLYq6+bxKr4cbBmH8QsUB024lBp/BV8g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pcn6Lfo7GXue8Y2EOlEaGzd/6dT6auoOqa2D5NYPT88=;
- b=jWuMtDYJU7CGe+xYW/5WPXlrZpMzPuN/86HIo4ET0b7N4ZqoLWZsyqM3DY+L9DSIvwb0OQ0lML7mzVlU1o7f46Pq6HKd7n23fCp4wqcFYXjDQ+E/QvmRfG3mbiHv26DK3zFRkmvyxVrRkWADWNeJnjXOqmvzfi/AE1OP0gZN8lEA4371BxVtm54V1LmQmzDw+KGfUggrfQY6ppHfFE93oY0cT4ZUmZKvlHMLQCQWxTAsfDXecBJDyLqZFic5sw823ExdINyy0aFISnrvp52wXidPYWBYWqPY4U+2cxI4m5Y4axrek+xq/D0i046V0S6dJ3xK29aZWbEL2wDD3YB8xA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pcn6Lfo7GXue8Y2EOlEaGzd/6dT6auoOqa2D5NYPT88=;
- b=IjuaE0NiKkACVF+3G2EKc3iPT2tRjPoegRATElxrNB5myA0gv5pQbPFQX9eeCNh6AwxuukHA+9CeDojTX/PE2tJ2zVMAvPV+kQTILQpg7//rWdPLLI65CHmhFTr304ZV+0qV5G6IVa2cz0B7Hf+WWJquUBhWVO9k4ZDUYXPi0cE=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VI1PR04MB6944.eurprd04.prod.outlook.com (2603:10a6:803:133::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.22; Fri, 3 Jul
- 2020 06:47:10 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3153.028; Fri, 3 Jul 2020
- 06:47:10 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "will@kernel.org" <will@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "angelo@sysam.it" <angelo@sysam.it>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH v1 6/9] dt-bindings: dma: add fsl-edma3 yaml
-Thread-Topic: [PATCH v1 6/9] dt-bindings: dma: add fsl-edma3 yaml
-Thread-Index: AQHWUD2UfgY/OyAFWEGPjxgSWoXDgqj0x1SAgACjMWA=
-Date:   Fri, 3 Jul 2020 06:47:10 +0000
-Message-ID: <VE1PR04MB66381237ABA9F1D7FBCD8C83896A0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <1593702489-21648-1-git-send-email-yibin.gong@nxp.com>
- <1593702489-21648-7-git-send-email-yibin.gong@nxp.com>
- <20200702210107.GA1686199@bogus>
-In-Reply-To: <20200702210107.GA1686199@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 2ea73f79-081e-4119-972d-08d81f1ce90d
-x-ms-traffictypediagnostic: VI1PR04MB6944:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB6944A979E5A6D23DD59DF70D896A0@VI1PR04MB6944.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 045315E1EE
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rWHvEqeYTYCJPPEsKssPl2NGE25gv7uzJTMjYDhHuzya4hJ+xEjeTDGWooMcaVKkabfRwTkrSSc/41Io1Pv2FpjSWdFOZhBCWCRNUdefPG/GYqEGP2KsE0GLB8XWY+TYWLUmjCBMUczigb5/dTAOgFvYWm9/85mk99nphwoLnJNkdw6V2NGzdO2FHG5Z2bi6wplM+hoz5OxuQZe/RzmL9ejcpCobwPGxDMTtr/EN/bL01K3aGSbj3a08s5aNBqSoij1o47DnL44+NwiAOllZxKbnmAkUTwizYb57B3msty645P0NEsKDcXaXsWNhNtaA
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(376002)(39860400002)(366004)(346002)(4326008)(316002)(55016002)(478600001)(9686003)(33656002)(71200400001)(54906003)(66476007)(66446008)(66946007)(8936002)(7696005)(64756008)(66556008)(186003)(5660300002)(76116006)(7416002)(2906002)(86362001)(26005)(558084003)(8676002)(52536014)(6916009)(6506007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: XabqiBPbVR10jvr0ZkxELefNiNybKuJs1+Dfk3xRwz3jRuq0eGbNVybCYwveUs6RR1tmL6ylttwDCz3Nb8JQBT/7teO/RXS+7jL8q3xCIvqFliawqsc/Y1fnyuIWbbLVHWHXyXFnl5iP7t8DbJ/a2QE0ovDX3Oz844BBXkDlCVSztWEVG+udk/GXHOU9DGDiA7dII5tG4sYUXWR7RKjPige2wnCJPlpcqz3LcR2oii6CVOrZ+Ef96xsF6DOIElnegW56w3ffI9JNcNMjCytNEPxf27BDHOeRsEZ3h7G48+YnZ+Eh7TDLw4HOkw7gixmHEd1PVBA7dQl4IsgJVms3bgTEO75GL2kOeoCGb6w2G+7lcf9C734/VFK4MYwufMDemQBPUbOIGxp+13CFTCy3B9SI7hjNvI5vIvzpP9AGrH22SYOc9hyBE4DOfBX0WrYtNUtrvQwaEyOgJE4iYGfcQX+xe1GtpUbISovdBoAzkLQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1725891AbgGCHSq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 3 Jul 2020 03:18:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54238 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725779AbgGCHSq (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 3 Jul 2020 03:18:46 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 805D62088E;
+        Fri,  3 Jul 2020 07:18:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593760725;
+        bh=q2B3lnfM/DwL4HaE9L7hqetjkT0SRbnWQrIyGxtzCu0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JWss+/2BfnU0BubfCD6CTXV7nP5QSOYbFhcRQ7yE7SM6q1YF9Y/8/En2cyjlBT85D
+         Shu0NYTOA2BUecDDg3egGC0Zhjty7g8MyqbzgX07Es2ey5tlP62Qaq76WH5NkGK+z3
+         rL+YWlBW7w3I9PE+RuxxOApAbGqewZFxx0P/bLqU=
+Date:   Fri, 3 Jul 2020 12:48:41 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Sanjay R Mehta <Sanju.Mehta@amd.com>
+Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
+        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
+        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v5 1/3] dmaengine: ptdma: Initial driver for the AMD
+ PTDMA controller
+Message-ID: <20200703071841.GJ273932@vkoul-mobl>
+References: <1592356288-42064-1-git-send-email-Sanju.Mehta@amd.com>
+ <1592356288-42064-2-git-send-email-Sanju.Mehta@amd.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ea73f79-081e-4119-972d-08d81f1ce90d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jul 2020 06:47:10.0693
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6oIWcoycRDBB/BYph5TIx3Mzabh8LQtLxZj7cd4G4xG469uCWQfPjUIzI7mcaTsgcfB9qm04nzk1RNUAHlGEyg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6944
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592356288-42064-2-git-send-email-Sanju.Mehta@amd.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 2020/07/03 5:01 Rob Herring <robh@kernel.org>
->=20
-> Please check and re-submit.
-Thanks, will fix it in v2.
+On 16-06-20, 20:11, Sanjay R Mehta wrote:
+
+> +static int pt_core_execute_cmd(struct ptdma_desc *desc,
+> +			       struct pt_cmd_queue *cmd_q)
+> +{
+> +	__le32 *mp;
+> +	u32 *dp;
+> +	u32 tail;
+> +	int	i;
+
+no tabs, spaces pls
+
+> +	int ret = 0;
+
+ret is initialized to 0
+> +
+> +	if (desc->dw0.soc) {
+> +		desc->dw0.ioc = 1;
+> +		desc->dw0.soc = 0;
+> +	}
+> +	mutex_lock(&cmd_q->q_mutex);
+> +
+> +	mp = (__le32 *)&cmd_q->qbase[cmd_q->qidx];
+> +	dp = (u32 *)desc;
+> +	for (i = 0; i < 8; i++)
+> +		mp[i] = cpu_to_le32(dp[i]); /* handle endianness */
+> +
+> +	cmd_q->qidx = (cmd_q->qidx + 1) % CMD_Q_LEN;
+> +
+> +	/* The data used by this command must be flushed to memory */
+> +	wmb();
+> +
+> +	/* Write the new tail address back to the queue register */
+> +	tail = lower_32_bits(cmd_q->qdma_tail + cmd_q->qidx * Q_DESC_SIZE);
+> +	iowrite32(tail, cmd_q->reg_tail_lo);
+> +
+> +	/* Turn the queue back on using our cached control register */
+> +	pt_start_queue(cmd_q);
+> +	mutex_unlock(&cmd_q->q_mutex);
+> +
+> +	return ret;
+
+and returned here!, why not return 0, or even do void return here
+
+> +int pt_core_perform_passthru(struct pt_cmd_queue *cmd_q,
+> +			     struct pt_passthru_engine *pt_engine)
+> +{
+> +	struct ptdma_desc desc;
+> +
+> +	cmd_q->cmd_error = 0;
+> +
+> +	memset(&desc, 0, Q_DESC_SIZE);
+
+why not sizeof(desc) insteadof Q_DESC_SIZE, this makes code harder to
+look to check what this is defined to
+
+> +int pt_core_init(struct pt_device *pt)
+> +{
+> +	struct device *dev = pt->dev;
+> +	struct pt_cmd_queue *cmd_q = &pt->cmd_q;
+> +	struct dma_pool *dma_pool;
+> +	char dma_pool_name[MAX_DMAPOOL_NAME_LEN];
+> +	int ret;
+> +	u32 dma_addr_lo, dma_addr_hi;
+
+reverse christmas tree please
+
+> +
+> +	/* Allocate a dma pool for the queue */
+> +	snprintf(dma_pool_name, sizeof(dma_pool_name), "%s_q", pt->name);
+> +
+> +	dma_pool = dma_pool_create(dma_pool_name, dev,
+> +				   PT_DMAPOOL_MAX_SIZE,
+> +				   PT_DMAPOOL_ALIGN, 0);
+> +	if (!dma_pool) {
+> +		dev_err(dev, "unable to allocate dma pool\n");
+> +		ret = -ENOMEM;
+> +		return ret;
+> +	}
+> +
+> +	/* ptdma core initialisation */
+> +	iowrite32(CMD_CONFIG_VHB_EN, pt->io_regs + CMD_CONFIG_OFFSET);
+> +	iowrite32(CMD_QUEUE_PRIO, pt->io_regs + CMD_QUEUE_PRIO_OFFSET);
+> +	iowrite32(CMD_TIMEOUT_DISABLE, pt->io_regs + CMD_TIMEOUT_OFFSET);
+> +	iowrite32(CMD_CLK_GATE_CONFIG, pt->io_regs + CMD_CLK_GATE_CTL_OFFSET);
+> +	iowrite32(CMD_CONFIG_REQID, pt->io_regs + CMD_REQID_CONFIG_OFFSET);
+> +
+> +	cmd_q->pt = pt;
+> +	cmd_q->dma_pool = dma_pool;
+> +	mutex_init(&cmd_q->q_mutex);
+> +
+> +	/* Page alignment satisfies our needs for N <= 128 */
+> +	cmd_q->qsize = Q_SIZE(Q_DESC_SIZE);
+> +	cmd_q->qbase = dma_alloc_coherent(dev, cmd_q->qsize,
+> +					  &cmd_q->qbase_dma,
+> +					   GFP_KERNEL);
+
+last line seems misaligned, please run checkpatch with --strict options
+to find these.
+
+> +	if (!cmd_q->qbase) {
+> +		dev_err(dev, "unable to allocate command queue\n");
+> +		ret = -ENOMEM;
+> +		goto e_dma_alloc;
+> +	}
+> +
+> +	cmd_q->qidx = 0;
+> +
+> +	/* Preset some register values */
+> +	cmd_q->reg_control = pt->io_regs + CMD_Q_STATUS_INCR;
+> +	pt_init_cmdq_regs(cmd_q);
+> +
+> +	dev_dbg(dev, "queue available\n");
+
+debug artifacts, pls remove this and others
+
+> +static int pt_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> +{
+> +	struct pt_device *pt;
+> +	struct pt_msix *pt_msix;
+> +	struct device *dev = &pdev->dev;
+> +	void __iomem * const *iomap_table;
+> +	int bar_mask;
+> +	int ret = -ENOMEM;
+> +
+> +	pt = pt_alloc_struct(dev);
+> +	if (!pt)
+> +		goto e_err;
+> +
+> +	pt_msix = devm_kzalloc(dev, sizeof(*pt_msix), GFP_KERNEL);
+> +	if (!pt_msix)
+> +		goto e_err;
+> +
+> +	pt->pt_msix = pt_msix;
+> +	pt->dev_vdata = (struct pt_dev_vdata *)id->driver_data;
+> +	if (!pt->dev_vdata) {
+> +		ret = -ENODEV;
+> +		dev_err(dev, "missing driver data\n");
+> +		goto e_err;
+> +	}
+> +
+> +	ret = pcim_enable_device(pdev);
+> +	if (ret) {
+> +		dev_err(dev, "pcim_enable_device failed (%d)\n", ret);
+> +		goto e_err;
+> +	}
+> +
+> +	bar_mask = pci_select_bars(pdev, IORESOURCE_MEM);
+> +	ret = pcim_iomap_regions(pdev, bar_mask, "ptdma");
+> +	if (ret) {
+> +		dev_err(dev, "pcim_iomap_regions failed (%d)\n", ret);
+> +		goto e_err;
+> +	}
+> +
+> +	iomap_table = pcim_iomap_table(pdev);
+> +	if (!iomap_table) {
+> +		dev_err(dev, "pcim_iomap_table failed\n");
+> +		ret = -ENOMEM;
+> +		goto e_err;
+> +	}
+> +
+> +	pt->io_regs = iomap_table[pt->dev_vdata->bar];
+> +	if (!pt->io_regs) {
+> +		dev_err(dev, "ioremap failed\n");
+> +		ret = -ENOMEM;
+> +		goto e_err;
+> +	}
+> +
+> +	ret = pt_get_irqs(pt);
+> +	if (ret)
+> +		goto e_err;
+> +
+> +	pci_set_master(pdev);
+> +
+> +	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(48));
+> +	if (ret) {
+> +		ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+> +		if (ret) {
+> +			dev_err(dev, "dma_set_mask_and_coherent failed (%d)\n",
+> +				ret);
+> +			goto e_err;
+> +		}
+> +	}
+> +
+> +	dev_set_drvdata(dev, pt);
+> +
+> +	if (pt->dev_vdata)
+> +		ret = pt_core_init(pt);
+> +
+> +	if (ret) {
+> +		dev_notice(dev, "PTDMA initialization failed\n");
+> +		goto e_err;
+> +	}
+> +
+> +	dev_notice(dev, "PTDMA enabled\n");
+
+dev_dbg?
+
+> +
+> +	return 0;
+> +
+> +e_err:
+> +	dev_notice(dev, "initialization failed\n");
+
+dev_err? Also no rollback?
+
+> +	return ret;
+> +}
+> +
+> +static void pt_pci_remove(struct pci_dev *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct pt_device *pt = dev_get_drvdata(dev);
+> +
+> +	if (!pt)
+> +		return;
+> +
+> +	if (pt->dev_vdata)
+> +		pt_core_destroy(pt);
+> +
+> +	pt_free_irqs(pt);
+> +}
+> +
+> +static const struct pt_dev_vdata dev_vdata[] = {
+> +	{
+> +		.bar = 2,
+
+Is this PCI bars?
+
+> +		.version = PT_VERSION(5, 0),
+
+Hw doesn't tell that?
+
+-- 
+~Vinod

@@ -2,28 +2,28 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 432442134C9
-	for <lists+dmaengine@lfdr.de>; Fri,  3 Jul 2020 09:18:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28F2021352A
+	for <lists+dmaengine@lfdr.de>; Fri,  3 Jul 2020 09:37:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725891AbgGCHSq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 3 Jul 2020 03:18:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54238 "EHLO mail.kernel.org"
+        id S1725779AbgGCHhK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 3 Jul 2020 03:37:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbgGCHSq (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:18:46 -0400
+        id S1725764AbgGCHhK (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 3 Jul 2020 03:37:10 -0400
 Received: from localhost (unknown [122.182.251.219])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 805D62088E;
-        Fri,  3 Jul 2020 07:18:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 309E6206B6;
+        Fri,  3 Jul 2020 07:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593760725;
-        bh=q2B3lnfM/DwL4HaE9L7hqetjkT0SRbnWQrIyGxtzCu0=;
+        s=default; t=1593761829;
+        bh=1yqL2vPpVRdmj46GQEhej6JgtMfURcJom8VgYKkP6Vw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JWss+/2BfnU0BubfCD6CTXV7nP5QSOYbFhcRQ7yE7SM6q1YF9Y/8/En2cyjlBT85D
-         Shu0NYTOA2BUecDDg3egGC0Zhjty7g8MyqbzgX07Es2ey5tlP62Qaq76WH5NkGK+z3
-         rL+YWlBW7w3I9PE+RuxxOApAbGqewZFxx0P/bLqU=
-Date:   Fri, 3 Jul 2020 12:48:41 +0530
+        b=T2YhTkTZXBmEbVmczcUd0EmkoJbx3/h8OSrLros3IJrWKi5oBzDaKwoZDWbP88p7t
+         mJ9bgILACRoz0w+08uunNB0P3qD83hkhGUnGBX6SLLD3mvmIJAMvNDuIiklDIBmwit
+         fpSND3PKVISSwUUANeE8f28/JH9PvDH60wV/NQgM=
+Date:   Fri, 3 Jul 2020 13:07:04 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Sanjay R Mehta <Sanju.Mehta@amd.com>
 Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
@@ -31,15 +31,15 @@ Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
         Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
         mchehab+samsung@kernel.org, davem@davemloft.net,
         linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v5 1/3] dmaengine: ptdma: Initial driver for the AMD
- PTDMA controller
-Message-ID: <20200703071841.GJ273932@vkoul-mobl>
+Subject: Re: [PATCH v5 2/3] dmaengine: ptdma: register PTDMA controller as a
+ DMA resource
+Message-ID: <20200703073704.GK273932@vkoul-mobl>
 References: <1592356288-42064-1-git-send-email-Sanju.Mehta@amd.com>
- <1592356288-42064-2-git-send-email-Sanju.Mehta@amd.com>
+ <1592356288-42064-3-git-send-email-Sanju.Mehta@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1592356288-42064-2-git-send-email-Sanju.Mehta@amd.com>
+In-Reply-To: <1592356288-42064-3-git-send-email-Sanju.Mehta@amd.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
@@ -47,236 +47,181 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 On 16-06-20, 20:11, Sanjay R Mehta wrote:
 
-> +static int pt_core_execute_cmd(struct ptdma_desc *desc,
-> +			       struct pt_cmd_queue *cmd_q)
+> --- a/drivers/dma/ptdma/Makefile
+> +++ b/drivers/dma/ptdma/Makefile
+> @@ -5,6 +5,7 @@
+>  
+>  obj-$(CONFIG_AMD_PTDMA) += ptdma.o
+>  
+> -ptdma-objs := ptdma-dev.o
+> +ptdma-objs := ptdma-dev.o \
+> +	      ptdma-dmaengine.o
+
+Single line?
+
+> +static void pt_free_chan_resources(struct dma_chan *dma_chan)
 > +{
-> +	__le32 *mp;
-> +	u32 *dp;
-> +	u32 tail;
-> +	int	i;
+> +	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
+> +						 vc.chan);
+> +
+> +	dev_dbg(chan->pt->dev, "%s - chan=%p\n", __func__, chan);
 
-no tabs, spaces pls
+drop the dbg artifacts here and other places in this and other patches
 
-> +	int ret = 0;
-
-ret is initialized to 0
+> +static void pt_do_cleanup(struct virt_dma_desc	*vd)
 > +
-> +	if (desc->dw0.soc) {
-> +		desc->dw0.ioc = 1;
-> +		desc->dw0.soc = 0;
-> +	}
-> +	mutex_lock(&cmd_q->q_mutex);
-> +
-> +	mp = (__le32 *)&cmd_q->qbase[cmd_q->qidx];
-> +	dp = (u32 *)desc;
-> +	for (i = 0; i < 8; i++)
-> +		mp[i] = cpu_to_le32(dp[i]); /* handle endianness */
-> +
-> +	cmd_q->qidx = (cmd_q->qidx + 1) % CMD_Q_LEN;
-> +
-> +	/* The data used by this command must be flushed to memory */
-> +	wmb();
-> +
-> +	/* Write the new tail address back to the queue register */
-> +	tail = lower_32_bits(cmd_q->qdma_tail + cmd_q->qidx * Q_DESC_SIZE);
-> +	iowrite32(tail, cmd_q->reg_tail_lo);
-> +
-> +	/* Turn the queue back on using our cached control register */
-> +	pt_start_queue(cmd_q);
-> +	mutex_unlock(&cmd_q->q_mutex);
-> +
-> +	return ret;
-
-and returned here!, why not return 0, or even do void return here
-
-> +int pt_core_perform_passthru(struct pt_cmd_queue *cmd_q,
-> +			     struct pt_passthru_engine *pt_engine)
 > +{
-> +	struct ptdma_desc desc;
+> +	struct pt_dma_desc *desc = container_of(vd, struct pt_dma_desc, vd);
+> +	struct pt_device *pt = desc->pt;
+> +	struct pt_dma_chan *chan;
 > +
-> +	cmd_q->cmd_error = 0;
-> +
-> +	memset(&desc, 0, Q_DESC_SIZE);
+> +	chan = container_of(desc->vd.tx.chan, struct pt_dma_chan,
+> +			    vc.chan);
 
-why not sizeof(desc) insteadof Q_DESC_SIZE, this makes code harder to
-look to check what this is defined to
+add a to_pt_chan() macro for this?
 
-> +int pt_core_init(struct pt_device *pt)
+> +static int pt_issue_next_cmd(struct pt_dma_desc *desc)
 > +{
-> +	struct device *dev = pt->dev;
-> +	struct pt_cmd_queue *cmd_q = &pt->cmd_q;
-> +	struct dma_pool *dma_pool;
-> +	char dma_pool_name[MAX_DMAPOOL_NAME_LEN];
-> +	int ret;
-> +	u32 dma_addr_lo, dma_addr_hi;
-
-reverse christmas tree please
-
-> +
-> +	/* Allocate a dma pool for the queue */
-> +	snprintf(dma_pool_name, sizeof(dma_pool_name), "%s_q", pt->name);
-> +
-> +	dma_pool = dma_pool_create(dma_pool_name, dev,
-> +				   PT_DMAPOOL_MAX_SIZE,
-> +				   PT_DMAPOOL_ALIGN, 0);
-> +	if (!dma_pool) {
-> +		dev_err(dev, "unable to allocate dma pool\n");
-> +		ret = -ENOMEM;
-> +		return ret;
-> +	}
-> +
-> +	/* ptdma core initialisation */
-> +	iowrite32(CMD_CONFIG_VHB_EN, pt->io_regs + CMD_CONFIG_OFFSET);
-> +	iowrite32(CMD_QUEUE_PRIO, pt->io_regs + CMD_QUEUE_PRIO_OFFSET);
-> +	iowrite32(CMD_TIMEOUT_DISABLE, pt->io_regs + CMD_TIMEOUT_OFFSET);
-> +	iowrite32(CMD_CLK_GATE_CONFIG, pt->io_regs + CMD_CLK_GATE_CTL_OFFSET);
-> +	iowrite32(CMD_CONFIG_REQID, pt->io_regs + CMD_REQID_CONFIG_OFFSET);
-> +
-> +	cmd_q->pt = pt;
-> +	cmd_q->dma_pool = dma_pool;
-> +	mutex_init(&cmd_q->q_mutex);
-> +
-> +	/* Page alignment satisfies our needs for N <= 128 */
-> +	cmd_q->qsize = Q_SIZE(Q_DESC_SIZE);
-> +	cmd_q->qbase = dma_alloc_coherent(dev, cmd_q->qsize,
-> +					  &cmd_q->qbase_dma,
-> +					   GFP_KERNEL);
-
-last line seems misaligned, please run checkpatch with --strict options
-to find these.
-
-> +	if (!cmd_q->qbase) {
-> +		dev_err(dev, "unable to allocate command queue\n");
-> +		ret = -ENOMEM;
-> +		goto e_dma_alloc;
-> +	}
-> +
-> +	cmd_q->qidx = 0;
-> +
-> +	/* Preset some register values */
-> +	cmd_q->reg_control = pt->io_regs + CMD_Q_STATUS_INCR;
-> +	pt_init_cmdq_regs(cmd_q);
-> +
-> +	dev_dbg(dev, "queue available\n");
-
-debug artifacts, pls remove this and others
-
-> +static int pt_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> +{
+> +	struct pt_passthru_engine *pt_engine;
+> +	struct pt_dma_cmd *cmd;
 > +	struct pt_device *pt;
-> +	struct pt_msix *pt_msix;
-> +	struct device *dev = &pdev->dev;
-> +	void __iomem * const *iomap_table;
-> +	int bar_mask;
-> +	int ret = -ENOMEM;
+> +	struct pt_cmd *pt_cmd;
+> +	struct pt_cmd_queue *cmd_q;
 > +
-> +	pt = pt_alloc_struct(dev);
-> +	if (!pt)
-> +		goto e_err;
-> +
-> +	pt_msix = devm_kzalloc(dev, sizeof(*pt_msix), GFP_KERNEL);
-> +	if (!pt_msix)
-> +		goto e_err;
-> +
-> +	pt->pt_msix = pt_msix;
-> +	pt->dev_vdata = (struct pt_dev_vdata *)id->driver_data;
-> +	if (!pt->dev_vdata) {
-> +		ret = -ENODEV;
-> +		dev_err(dev, "missing driver data\n");
-> +		goto e_err;
-> +	}
-> +
-> +	ret = pcim_enable_device(pdev);
-> +	if (ret) {
-> +		dev_err(dev, "pcim_enable_device failed (%d)\n", ret);
-> +		goto e_err;
-> +	}
-> +
-> +	bar_mask = pci_select_bars(pdev, IORESOURCE_MEM);
-> +	ret = pcim_iomap_regions(pdev, bar_mask, "ptdma");
-> +	if (ret) {
-> +		dev_err(dev, "pcim_iomap_regions failed (%d)\n", ret);
-> +		goto e_err;
-> +	}
-> +
-> +	iomap_table = pcim_iomap_table(pdev);
-> +	if (!iomap_table) {
-> +		dev_err(dev, "pcim_iomap_table failed\n");
-> +		ret = -ENOMEM;
-> +		goto e_err;
-> +	}
-> +
-> +	pt->io_regs = iomap_table[pt->dev_vdata->bar];
-> +	if (!pt->io_regs) {
-> +		dev_err(dev, "ioremap failed\n");
-> +		ret = -ENOMEM;
-> +		goto e_err;
-> +	}
-> +
-> +	ret = pt_get_irqs(pt);
-> +	if (ret)
-> +		goto e_err;
-> +
-> +	pci_set_master(pdev);
-> +
-> +	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(48));
-> +	if (ret) {
-> +		ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
-> +		if (ret) {
-> +			dev_err(dev, "dma_set_mask_and_coherent failed (%d)\n",
-> +				ret);
-> +			goto e_err;
-> +		}
-> +	}
-> +
-> +	dev_set_drvdata(dev, pt);
-> +
-> +	if (pt->dev_vdata)
-> +		ret = pt_core_init(pt);
-> +
-> +	if (ret) {
-> +		dev_notice(dev, "PTDMA initialization failed\n");
-> +		goto e_err;
-> +	}
-> +
-> +	dev_notice(dev, "PTDMA enabled\n");
+> +	cmd = list_first_entry(&desc->cmdlist, struct pt_dma_cmd, entry);
+> +	desc->actv = 1;
 
-dev_dbg?
+active?
 
 > +
-> +	return 0;
+> +	dev_dbg(desc->pt->dev, "%s - tx %d, cmd=%p\n", __func__,
+> +		desc->vd.tx.cookie, cmd);
 > +
-> +e_err:
-> +	dev_notice(dev, "initialization failed\n");
-
-dev_err? Also no rollback?
-
-> +	return ret;
-> +}
+> +	pt_cmd = &cmd->pt_cmd;
+> +	pt = pt_cmd->pt;
+> +	cmd_q = &pt->cmd_q;
+> +	pt_engine = &pt_cmd->passthru;
 > +
-> +static void pt_pci_remove(struct pci_dev *pdev)
+> +	if (!pt_engine->final)
+> +		return -EINVAL;
+
+what does final mean here?
+> +
+> +	if (!pt_engine->src_dma || !pt_engine->dst_dma)
+> +		return -EINVAL;
+
+what does this check do? we have a valid cmd which IIUC implies a valid
+dma txn so why would one of this be invalid?
+
+> +static struct pt_dma_desc *__pt_next_dma_desc(struct pt_dma_chan *chan)
 > +{
-> +	struct device *dev = &pdev->dev;
-> +	struct pt_device *pt = dev_get_drvdata(dev);
+> +	/* Get the next DMA descriptor on the active list */
+> +	struct virt_dma_desc *vd = vchan_next_desc(&chan->vc);
 > +
-> +	if (!pt)
-> +		return;
+> +	if (list_empty(&chan->vc.desc_submitted))
+> +		return NULL;
 > +
-> +	if (pt->dev_vdata)
-> +		pt_core_destroy(pt);
-> +
-> +	pt_free_irqs(pt);
-> +}
-> +
-> +static const struct pt_dev_vdata dev_vdata[] = {
-> +	{
-> +		.bar = 2,
+> +	vd = list_empty(&chan->vc.desc_issued) ?
+> +		  list_first_entry(&chan->vc.desc_submitted,
+> +				   struct virt_dma_desc, node) : NULL;
 
-Is this PCI bars?
+Always remember there might already be a macro, so check. In this case
+use of list_first_entry_or_null() looks apt
 
-> +		.version = PT_VERSION(5, 0),
+> +static struct pt_dma_desc *pt_handle_active_desc(struct pt_dma_chan *chan,
+> +						 struct pt_dma_desc *desc)
+> +{
+> +	struct dma_async_tx_descriptor *tx_desc;
+> +	struct virt_dma_desc *vd;
+> +	unsigned long flags;
+> +
+> +	/* Loop over descriptors until one is found with commands */
 
-Hw doesn't tell that?
+This bit is strange, am not sure I follow. The fn name tell me it would
+handle and active descriptor which is passed as an arg, so why do you
+loop?
+
+Can you explain this?
+
+> +static void pt_issue_pending(struct dma_chan *dma_chan)
+> +{
+> +	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
+> +						 vc.chan);
+> +	struct pt_dma_desc *desc;
+> +	unsigned long flags;
+> +
+> +	dev_dbg(chan->pt->dev, "%s\n", __func__);
+> +
+> +	spin_lock_irqsave(&chan->vc.lock, flags);
+> +
+> +	desc = __pt_next_dma_desc(chan);
+> +
+> +	spin_unlock_irqrestore(&chan->vc.lock, flags);
+> +
+> +	/* If there was nothing active, start processing */
+
+What if channel is already active and doing a transaction? This should
+check it first..
+
+> +int pt_dmaengine_register(struct pt_device *pt)
+> +{
+> +	struct pt_dma_chan *chan;
+> +	struct dma_device *dma_dev = &pt->dma_dev;
+> +	struct dma_chan *dma_chan;
+> +	char *dma_cmd_cache_name;
+> +	char *dma_desc_cache_name;
+> +	int ret;
+> +
+> +	pt->pt_dma_chan = devm_kcalloc(pt->dev, 1,
+> +				       sizeof(*pt->pt_dma_chan),
+> +				       GFP_KERNEL);
+
+If n is 1, why you kcalloc, why not devm_kzalloc()?
+
+> +	if (!pt->pt_dma_chan)
+> +		return -ENOMEM;
+> +
+> +	dma_cmd_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
+> +					    "%s-dmaengine-cmd-cache",
+> +					    pt->name);
+> +	if (!dma_cmd_cache_name)
+> +		return -ENOMEM;
+> +
+> +	pt->dma_cmd_cache = kmem_cache_create(dma_cmd_cache_name,
+> +					      sizeof(struct pt_dma_cmd),
+> +					      sizeof(void *),
+> +					      SLAB_HWCACHE_ALIGN, NULL);
+> +	if (!pt->dma_cmd_cache)
+> +		return -ENOMEM;
+> +
+> +	dma_desc_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
+> +					     "%s-dmaengine-desc-cache",
+> +					     pt->name);
+> +	if (!dma_desc_cache_name) {
+> +		ret = -ENOMEM;
+> +		goto err_cache;
+> +	}
+> +
+> +	pt->dma_desc_cache = kmem_cache_create(dma_desc_cache_name,
+> +					       sizeof(struct pt_dma_desc),
+> +					       sizeof(void *),
+> +					       SLAB_HWCACHE_ALIGN, NULL);
+> +	if (!pt->dma_desc_cache) {
+> +		ret = -ENOMEM;
+> +		goto err_cache;
+> +	}
+> +
+> +	dma_dev->dev = pt->dev;
+> +	dma_dev->src_addr_widths = PT_DMA_WIDTH(dma_get_mask(pt->dev));
+> +	dma_dev->dst_addr_widths = PT_DMA_WIDTH(dma_get_mask(pt->dev));
+> +	dma_dev->directions = DMA_MEM_TO_MEM;
+> +	dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
+> +	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
+> +	dma_cap_set(DMA_INTERRUPT, dma_dev->cap_mask);
+> +	dma_cap_set(DMA_PRIVATE, dma_dev->cap_mask);
+
+Why DMA_PRIVATE if it supports only memcpy? Also have you tested this
+with dmatest?
 
 -- 
 ~Vinod

@@ -2,28 +2,28 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28F2021352A
-	for <lists+dmaengine@lfdr.de>; Fri,  3 Jul 2020 09:37:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35010213540
+	for <lists+dmaengine@lfdr.de>; Fri,  3 Jul 2020 09:42:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725779AbgGCHhK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 3 Jul 2020 03:37:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59650 "EHLO mail.kernel.org"
+        id S1726336AbgGCHmF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 3 Jul 2020 03:42:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725764AbgGCHhK (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 3 Jul 2020 03:37:10 -0400
+        id S1725779AbgGCHmF (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 3 Jul 2020 03:42:05 -0400
 Received: from localhost (unknown [122.182.251.219])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 309E6206B6;
-        Fri,  3 Jul 2020 07:37:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65FAC206B6;
+        Fri,  3 Jul 2020 07:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593761829;
-        bh=1yqL2vPpVRdmj46GQEhej6JgtMfURcJom8VgYKkP6Vw=;
+        s=default; t=1593762124;
+        bh=ytBBrNASNi4lreEswlKiG9zTyR8nMpCN2T+EsIZP4dM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T2YhTkTZXBmEbVmczcUd0EmkoJbx3/h8OSrLros3IJrWKi5oBzDaKwoZDWbP88p7t
-         mJ9bgILACRoz0w+08uunNB0P3qD83hkhGUnGBX6SLLD3mvmIJAMvNDuIiklDIBmwit
-         fpSND3PKVISSwUUANeE8f28/JH9PvDH60wV/NQgM=
-Date:   Fri, 3 Jul 2020 13:07:04 +0530
+        b=jSvUHUNUrEn20qbxTBkbQKP8JuGvidWsl2Fl6NBxcgYKzCUJdDWKbEi2qRwY/eRdi
+         Q1NWFV03GfuUnjoLSd5LJGzQAtutF3HcoM5FzbdNUo9P8RAXB08ZYtRIDtKJc2dfaZ
+         xMB30M/w863jvJLhtwefYHdd2R8yKZ3aAIcGpGww=
+Date:   Fri, 3 Jul 2020 13:12:00 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Sanjay R Mehta <Sanju.Mehta@amd.com>
 Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
@@ -31,197 +31,169 @@ Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
         Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
         mchehab+samsung@kernel.org, davem@davemloft.net,
         linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH v5 2/3] dmaengine: ptdma: register PTDMA controller as a
- DMA resource
-Message-ID: <20200703073704.GK273932@vkoul-mobl>
+Subject: Re: [PATCH v5 3/3] dmaengine: ptdma: Add debugfs entries for PTDMA
+ information
+Message-ID: <20200703074200.GL273932@vkoul-mobl>
 References: <1592356288-42064-1-git-send-email-Sanju.Mehta@amd.com>
- <1592356288-42064-3-git-send-email-Sanju.Mehta@amd.com>
+ <1592356288-42064-4-git-send-email-Sanju.Mehta@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1592356288-42064-3-git-send-email-Sanju.Mehta@amd.com>
+In-Reply-To: <1592356288-42064-4-git-send-email-Sanju.Mehta@amd.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 On 16-06-20, 20:11, Sanjay R Mehta wrote:
-
+> From: Sanjay R Mehta <sanju.mehta@amd.com>
+> 
+> Expose data about the configuration and operation of the
+> PTDMA through debugfs entries: device name, capabilities,
+> configuration, statistics.
+> 
+> Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
+> ---
+>  drivers/dma/ptdma/Makefile        |   3 +-
+>  drivers/dma/ptdma/ptdma-debugfs.c | 130 ++++++++++++++++++++++++++++++++++++++
+>  drivers/dma/ptdma/ptdma-dev.c     |   8 +++
+>  drivers/dma/ptdma/ptdma.h         |   9 +++
+>  4 files changed, 149 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/dma/ptdma/ptdma-debugfs.c
+> 
+> diff --git a/drivers/dma/ptdma/Makefile b/drivers/dma/ptdma/Makefile
+> index 6fcb4ad..60e7c10 100644
 > --- a/drivers/dma/ptdma/Makefile
 > +++ b/drivers/dma/ptdma/Makefile
-> @@ -5,6 +5,7 @@
->  
+> @@ -6,6 +6,7 @@
 >  obj-$(CONFIG_AMD_PTDMA) += ptdma.o
 >  
-> -ptdma-objs := ptdma-dev.o
-> +ptdma-objs := ptdma-dev.o \
-> +	      ptdma-dmaengine.o
-
-Single line?
-
-> +static void pt_free_chan_resources(struct dma_chan *dma_chan)
-> +{
-> +	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
-> +						 vc.chan);
+>  ptdma-objs := ptdma-dev.o \
+> -	      ptdma-dmaengine.o
+> +	      ptdma-dmaengine.o \
+> +	      ptdma-debugfs.o
+>  
+>  ptdma-$(CONFIG_PCI) += ptdma-pci.o
+> diff --git a/drivers/dma/ptdma/ptdma-debugfs.c b/drivers/dma/ptdma/ptdma-debugfs.c
+> new file mode 100644
+> index 0000000..506c148b
+> --- /dev/null
+> +++ b/drivers/dma/ptdma/ptdma-debugfs.c
+> @@ -0,0 +1,130 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * AMD Passthrough DMA device driver
+> + * -- Based on the CCP driver
+> + *
+> + * Copyright (C) 2016,2020 Advanced Micro Devices, Inc.
+> + *
+> + * Author: Sanjay R Mehta <sanju.mehta@amd.com>
+> + * Author: Gary R Hook <gary.hook@amd.com>
+> + */
 > +
-> +	dev_dbg(chan->pt->dev, "%s - chan=%p\n", __func__, chan);
-
-drop the dbg artifacts here and other places in this and other patches
-
-> +static void pt_do_cleanup(struct virt_dma_desc	*vd)
+> +#include <linux/debugfs.h>
+> +#include <linux/seq_file.h>
+> +
+> +#include "ptdma.h"
+> +
+> +/* DebugFS helpers */
+> +#define	MAX_NAME_LEN	20
+> +#define	RI_VERSION_NUM	0x0000003F
+> +
+> +#define	RI_NUM_VQM	0x00078000
+> +#define	RI_NVQM_SHIFT	15
+> +
+> +static struct dentry *pt_debugfs_dir;
+> +static DEFINE_MUTEX(pt_debugfs_lock);
+> +
+> +static int pt_debugfs_info_show(struct seq_file *s, void *p)
+> +{
+> +	struct pt_device *pt = s->private;
+> +	unsigned int regval;
+> +
+> +	if (!pt)
+> +		return 0;
+> +
+> +	seq_printf(s, "Device name: %s\n", pt->name);
+> +	seq_printf(s, "   # Queues: %d\n", 1);
+> +	seq_printf(s, "     # Cmds: %d\n", pt->cmd_count);
+> +
+> +	regval = ioread32(pt->io_regs + CMD_PT_VERSION);
+> +
+> +	seq_printf(s, "    Version: %d\n", regval & RI_VERSION_NUM);
+> +	seq_puts(s, "    Engines:");
+> +	seq_puts(s, "\n");
+> +	seq_printf(s, "     Queues: %d\n", (regval & RI_NUM_VQM) >> RI_NVQM_SHIFT);
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Return a formatted buffer containing the current
+> + * statistics of queue for PTDMA
+> + */
+> +static int pt_debugfs_stats_show(struct seq_file *s, void *p)
+> +{
+> +	struct pt_device *pt = s->private;
+> +
+> +	seq_printf(s, "Total Interrupts Handled: %ld\n", pt->total_interrupts);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pt_debugfs_queue_show(struct seq_file *s, void *p)
 > +
 > +{
-> +	struct pt_dma_desc *desc = container_of(vd, struct pt_dma_desc, vd);
-> +	struct pt_device *pt = desc->pt;
-> +	struct pt_dma_chan *chan;
+> +	struct pt_cmd_queue *cmd_q = s->private;
+> +	unsigned int regval;
 > +
-> +	chan = container_of(desc->vd.tx.chan, struct pt_dma_chan,
-> +			    vc.chan);
-
-add a to_pt_chan() macro for this?
-
-> +static int pt_issue_next_cmd(struct pt_dma_desc *desc)
+> +	if (!cmd_q)
+> +		return 0;
+> +
+> +	seq_printf(s, "               Pass-Thru: %ld\n", cmd_q->total_pt_ops);
+> +
+> +	regval = ioread32(cmd_q->reg_int_enable);
+> +
+> +	seq_puts(s, "      Enabled Interrupts:");
+> +	if (regval & INT_EMPTY_QUEUE)
+> +		seq_puts(s, " EMPTY");
+> +	if (regval & INT_QUEUE_STOPPED)
+> +		seq_puts(s, " STOPPED");
+> +	if (regval & INT_ERROR)
+> +		seq_puts(s, " ERROR");
+> +	if (regval & INT_COMPLETION)
+> +		seq_puts(s, " COMPLETION");
+> +	seq_puts(s, "\n");
+> +
+> +	return 0;
+> +}
+> +
+> +DEFINE_SHOW_ATTRIBUTE(pt_debugfs_info);
+> +DEFINE_SHOW_ATTRIBUTE(pt_debugfs_queue);
+> +DEFINE_SHOW_ATTRIBUTE(pt_debugfs_stats);
+> +
+> +void ptdma_debugfs_setup(struct pt_device *pt)
 > +{
-> +	struct pt_passthru_engine *pt_engine;
-> +	struct pt_dma_cmd *cmd;
-> +	struct pt_device *pt;
-> +	struct pt_cmd *pt_cmd;
 > +	struct pt_cmd_queue *cmd_q;
+> +	char name[MAX_NAME_LEN + 1];
+> +	struct dentry *debugfs_q_instance;
 > +
-> +	cmd = list_first_entry(&desc->cmdlist, struct pt_dma_cmd, entry);
-> +	desc->actv = 1;
+> +	if (!debugfs_initialized())
+> +		return;
+> +
+> +	mutex_lock(&pt_debugfs_lock);
+> +	if (!pt_debugfs_dir)
+> +		pt_debugfs_dir = debugfs_create_dir(KBUILD_MODNAME, NULL);
 
-active?
+please do not create your own, you already have one under
+/sys/kernel/debug/dmaengine/<>/ use that :)
 
+> +	mutex_unlock(&pt_debugfs_lock);
 > +
-> +	dev_dbg(desc->pt->dev, "%s - tx %d, cmd=%p\n", __func__,
-> +		desc->vd.tx.cookie, cmd);
-> +
-> +	pt_cmd = &cmd->pt_cmd;
-> +	pt = pt_cmd->pt;
-> +	cmd_q = &pt->cmd_q;
-> +	pt_engine = &pt_cmd->passthru;
-> +
-> +	if (!pt_engine->final)
-> +		return -EINVAL;
+> +	pt->dma_dev.dbg_dev_root = debugfs_create_dir(pt->name, pt_debugfs_dir);
 
-what does final mean here?
-> +
-> +	if (!pt_engine->src_dma || !pt_engine->dst_dma)
-> +		return -EINVAL;
-
-what does this check do? we have a valid cmd which IIUC implies a valid
-dma txn so why would one of this be invalid?
-
-> +static struct pt_dma_desc *__pt_next_dma_desc(struct pt_dma_chan *chan)
-> +{
-> +	/* Get the next DMA descriptor on the active list */
-> +	struct virt_dma_desc *vd = vchan_next_desc(&chan->vc);
-> +
-> +	if (list_empty(&chan->vc.desc_submitted))
-> +		return NULL;
-> +
-> +	vd = list_empty(&chan->vc.desc_issued) ?
-> +		  list_first_entry(&chan->vc.desc_submitted,
-> +				   struct virt_dma_desc, node) : NULL;
-
-Always remember there might already be a macro, so check. In this case
-use of list_first_entry_or_null() looks apt
-
-> +static struct pt_dma_desc *pt_handle_active_desc(struct pt_dma_chan *chan,
-> +						 struct pt_dma_desc *desc)
-> +{
-> +	struct dma_async_tx_descriptor *tx_desc;
-> +	struct virt_dma_desc *vd;
-> +	unsigned long flags;
-> +
-> +	/* Loop over descriptors until one is found with commands */
-
-This bit is strange, am not sure I follow. The fn name tell me it would
-handle and active descriptor which is passed as an arg, so why do you
-loop?
-
-Can you explain this?
-
-> +static void pt_issue_pending(struct dma_chan *dma_chan)
-> +{
-> +	struct pt_dma_chan *chan = container_of(dma_chan, struct pt_dma_chan,
-> +						 vc.chan);
-> +	struct pt_dma_desc *desc;
-> +	unsigned long flags;
-> +
-> +	dev_dbg(chan->pt->dev, "%s\n", __func__);
-> +
-> +	spin_lock_irqsave(&chan->vc.lock, flags);
-> +
-> +	desc = __pt_next_dma_desc(chan);
-> +
-> +	spin_unlock_irqrestore(&chan->vc.lock, flags);
-> +
-> +	/* If there was nothing active, start processing */
-
-What if channel is already active and doing a transaction? This should
-check it first..
-
-> +int pt_dmaengine_register(struct pt_device *pt)
-> +{
-> +	struct pt_dma_chan *chan;
-> +	struct dma_device *dma_dev = &pt->dma_dev;
-> +	struct dma_chan *dma_chan;
-> +	char *dma_cmd_cache_name;
-> +	char *dma_desc_cache_name;
-> +	int ret;
-> +
-> +	pt->pt_dma_chan = devm_kcalloc(pt->dev, 1,
-> +				       sizeof(*pt->pt_dma_chan),
-> +				       GFP_KERNEL);
-
-If n is 1, why you kcalloc, why not devm_kzalloc()?
-
-> +	if (!pt->pt_dma_chan)
-> +		return -ENOMEM;
-> +
-> +	dma_cmd_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
-> +					    "%s-dmaengine-cmd-cache",
-> +					    pt->name);
-> +	if (!dma_cmd_cache_name)
-> +		return -ENOMEM;
-> +
-> +	pt->dma_cmd_cache = kmem_cache_create(dma_cmd_cache_name,
-> +					      sizeof(struct pt_dma_cmd),
-> +					      sizeof(void *),
-> +					      SLAB_HWCACHE_ALIGN, NULL);
-> +	if (!pt->dma_cmd_cache)
-> +		return -ENOMEM;
-> +
-> +	dma_desc_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
-> +					     "%s-dmaengine-desc-cache",
-> +					     pt->name);
-> +	if (!dma_desc_cache_name) {
-> +		ret = -ENOMEM;
-> +		goto err_cache;
-> +	}
-> +
-> +	pt->dma_desc_cache = kmem_cache_create(dma_desc_cache_name,
-> +					       sizeof(struct pt_dma_desc),
-> +					       sizeof(void *),
-> +					       SLAB_HWCACHE_ALIGN, NULL);
-> +	if (!pt->dma_desc_cache) {
-> +		ret = -ENOMEM;
-> +		goto err_cache;
-> +	}
-> +
-> +	dma_dev->dev = pt->dev;
-> +	dma_dev->src_addr_widths = PT_DMA_WIDTH(dma_get_mask(pt->dev));
-> +	dma_dev->dst_addr_widths = PT_DMA_WIDTH(dma_get_mask(pt->dev));
-> +	dma_dev->directions = DMA_MEM_TO_MEM;
-> +	dma_dev->residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
-> +	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
-> +	dma_cap_set(DMA_INTERRUPT, dma_dev->cap_mask);
-> +	dma_cap_set(DMA_PRIVATE, dma_dev->cap_mask);
-
-Why DMA_PRIVATE if it supports only memcpy? Also have you tested this
-with dmatest?
+argh, this is already created by core and you leaked that one and added
+your own!
 
 -- 
 ~Vinod

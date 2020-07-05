@@ -2,88 +2,112 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E0BF21474D
-	for <lists+dmaengine@lfdr.de>; Sat,  4 Jul 2020 18:09:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 934A2214C3B
+	for <lists+dmaengine@lfdr.de>; Sun,  5 Jul 2020 13:56:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgGDQJM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 4 Jul 2020 12:09:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55050 "EHLO mail.kernel.org"
+        id S1726692AbgGEL4Z (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 5 Jul 2020 07:56:25 -0400
+Received: from mga14.intel.com ([192.55.52.115]:57570 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726682AbgGDQJM (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sat, 4 Jul 2020 12:09:12 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDA2B20739;
-        Sat,  4 Jul 2020 16:09:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593878951;
-        bh=X+m5w31XgirTMtq+0fLAVoWC/VZ/4PksqUd3bRP4osw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PBrbiXvDtehCfX5k4RSS1bunkU9TjzLHpz75ntSnDLev19/7BPsM8T2FwwUBkb8GX
-         BgT16U9iJujXeGG4tieMLxIgRkWiZo7qej694rBvYa31S5rjRhuhwxpPyBz5yq1h1+
-         cCyJ/oei5B7r6m0I06g/K/Mn5qcrUcLIdnvEYixY=
-Date:   Sat, 4 Jul 2020 17:09:05 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-doc@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        dmaengine@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        linux-iio@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, linux-nvdimm@lists.01.org,
-        linux-usb@vger.kernel.org, Eli Billauer <eli.billauer@gmail.com>
-Subject: Re: [PATCH 07/17] Documentation/driver-api: iio/buffers: drop
- doubled word
-Message-ID: <20200704170905.7e596707@archlinux>
-In-Reply-To: <20200704034502.17199-8-rdunlap@infradead.org>
-References: <20200704034502.17199-1-rdunlap@infradead.org>
-        <20200704034502.17199-8-rdunlap@infradead.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726454AbgGEL4Y (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 5 Jul 2020 07:56:24 -0400
+IronPort-SDR: 3PS5WPU84g3JO775UZgcvqomYzGXZ7C+rULJ7Uq8h8c3Vl1Zs3DE2Lju40s2RLd9euHSgQWIbf
+ awtaf5iPmxtg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9672"; a="146390843"
+X-IronPort-AV: E=Sophos;i="5.75,314,1589266800"; 
+   d="scan'208";a="146390843"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2020 04:56:23 -0700
+IronPort-SDR: OrudrtlZ52+F3ldPEh4BsprSq/UACtcmCa5awxb68LmjRK+MVHoBLFzNF+vrom6Etky6IfS02F
+ H89kDCM2mgzQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,314,1589266800"; 
+   d="scan'208";a="313695947"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga008.jf.intel.com with ESMTP; 05 Jul 2020 04:56:21 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id DACCA21D; Sun,  5 Jul 2020 14:56:20 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Viresh Kumar <vireshk@kernel.org>, dmaengine@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tsuchiya Yuto <kitakar@gmail.com>
+Subject: [PATCH v1] dmaengine: dw: Initialize channel before each transfer
+Date:   Sun,  5 Jul 2020 14:56:20 +0300
+Message-Id: <20200705115620.51929-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri,  3 Jul 2020 20:44:52 -0700
-Randy Dunlap <rdunlap@infradead.org> wrote:
+In some cases DMA can be used only with a consumer which does runtime power
+management and on the platforms, that have DMA auto power gating logic
+(see comments in the drivers/acpi/acpi_lpss.c), may result in DMA losing
+its context. Simple mitigation of this issue is to initialize channel
+each time the consumer initiates a transfer.
 
-> Drop the doubled word "struct".
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> Cc: William Breathitt Gray <vilhelm.gray@gmail.com>
-> Cc: linux-iio@vger.kernel.org
-Applied to the togreg branch of iio.git.
+Fixes: cfdf5b6cc598 ("dw_dmac: add support for Lynxpoint DMA controllers")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206403
+Reported-by: Tsuchiya Yuto <kitakar@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/dma/dw/core.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-Thanks,
-
-Jonathan
-
-> ---
->  Documentation/driver-api/iio/buffers.rst |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- linux-next-20200701.orig/Documentation/driver-api/iio/buffers.rst
-> +++ linux-next-20200701/Documentation/driver-api/iio/buffers.rst
-> @@ -88,7 +88,7 @@ fields in iio_chan_spec definition::
->  The driver implementing the accelerometer described above will have the
->  following channel definition::
->  
-> -   struct struct iio_chan_spec accel_channels[] = {
-> +   struct iio_chan_spec accel_channels[] = {
->             {
->                     .type = IIO_ACCEL,
->  		   .modified = 1,
+diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+index 21cb2a58dbd2..a1b56f52db2f 100644
+--- a/drivers/dma/dw/core.c
++++ b/drivers/dma/dw/core.c
+@@ -118,16 +118,11 @@ static void dwc_initialize(struct dw_dma_chan *dwc)
+ {
+ 	struct dw_dma *dw = to_dw_dma(dwc->chan.device);
+ 
+-	if (test_bit(DW_DMA_IS_INITIALIZED, &dwc->flags))
+-		return;
+-
+ 	dw->initialize_chan(dwc);
+ 
+ 	/* Enable interrupts */
+ 	channel_set_bit(dw, MASK.XFER, dwc->mask);
+ 	channel_set_bit(dw, MASK.ERROR, dwc->mask);
+-
+-	set_bit(DW_DMA_IS_INITIALIZED, &dwc->flags);
+ }
+ 
+ /*----------------------------------------------------------------------*/
+@@ -954,8 +949,6 @@ static void dwc_issue_pending(struct dma_chan *chan)
+ 
+ void do_dw_dma_off(struct dw_dma *dw)
+ {
+-	unsigned int i;
+-
+ 	dma_writel(dw, CFG, 0);
+ 
+ 	channel_clear_bit(dw, MASK.XFER, dw->all_chan_mask);
+@@ -966,9 +959,6 @@ void do_dw_dma_off(struct dw_dma *dw)
+ 
+ 	while (dma_readl(dw, CFG) & DW_CFG_DMA_EN)
+ 		cpu_relax();
+-
+-	for (i = 0; i < dw->dma.chancnt; i++)
+-		clear_bit(DW_DMA_IS_INITIALIZED, &dw->chan[i].flags);
+ }
+ 
+ void do_dw_dma_on(struct dw_dma *dw)
+@@ -1032,8 +1022,6 @@ static void dwc_free_chan_resources(struct dma_chan *chan)
+ 	/* Clear custom channel configuration */
+ 	memset(&dwc->dws, 0, sizeof(struct dw_dma_slave));
+ 
+-	clear_bit(DW_DMA_IS_INITIALIZED, &dwc->flags);
+-
+ 	/* Disable interrupts */
+ 	channel_clear_bit(dw, MASK.XFER, dwc->mask);
+ 	channel_clear_bit(dw, MASK.BLOCK, dwc->mask);
+-- 
+2.27.0
 

@@ -2,120 +2,91 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0B31215F19
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Jul 2020 20:57:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43F332161AF
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Jul 2020 00:46:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbgGFS5e (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 6 Jul 2020 14:57:34 -0400
-Received: from mga14.intel.com ([192.55.52.115]:26885 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729569AbgGFS5e (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 6 Jul 2020 14:57:34 -0400
-IronPort-SDR: 105EM1kqwYxoDWJshYhFTXr/A41btxnEadUfkV8JbsXAKzF4ZMDbZbdwGFqWseoN9c89lDMKLF
- 2I41llygswLw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="146555908"
-X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
-   d="scan'208";a="146555908"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 11:57:33 -0700
-IronPort-SDR: SECpC06f7sleVuqjbYi+UhOG9+iSnjgs7OK+Salkc5hC6hqYL4Ic7TvxsQaYMCWcU8u6CShoGI
- 2P3FCU1ONBeA==
-X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
-   d="scan'208";a="456835188"
-Received: from tcramer-mobl.amr.corp.intel.com (HELO [10.255.2.114]) ([10.255.2.114])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 11:57:31 -0700
-Subject: Re: [PATCH v3 6/6] dmaengine: idxd: add ABI documentation for shared
- wq
-To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
-Cc:     Jing Lin <jing.lin@intel.com>, Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, ashok.raj@intel.com, fenghua.yu@intel.com
-References: <159405827797.19216.15283540319201919054.stgit@djiang5-desk3.ch.intel.com>
- <159405972142.19216.202541495863164149.stgit@djiang5-desk3.ch.intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <6dbaf551-125e-bc7f-0b5f-655b48432ab2@intel.com>
-Date:   Mon, 6 Jul 2020 11:57:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726681AbgGFWq2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 6 Jul 2020 18:46:28 -0400
+Received: from mail172.e-lietuva.lt ([213.197.180.172]:53815 "EHLO
+        s1v4.e-lietuva.lt" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726540AbgGFWq2 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 Jul 2020 18:46:28 -0400
+X-Greylist: delayed 582 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 Jul 2020 18:46:26 EDT
+Received: from s1v4 (localhost [IPv6:::1])
+        by s1v4.e-lietuva.lt (Postfix) with ESMTPSA id 317856060D25;
+        Tue,  7 Jul 2020 01:36:42 +0300 (EEST)
+Authentication-Results: s1v4;
+        spf=pass (sender IP is ::1) smtp.mailfrom=vincent.vn345@gmail.com smtp.helo=s1v4
+Received-SPF: pass (s1v4: connection is authenticated)
+Received: from [175.136.187.147] ([175.136.187.147]) by webmail.e-lietuva.lt
+ (Horde Framework) with HTTP; Tue, 07 Jul 2020 01:36:42 +0300
+Date:   Tue, 07 Jul 2020 01:36:42 +0300
+Message-ID: <20200707013642.Horde._W9Tavk_vfeDKU9bRxchgek@webmail.e-lietuva.lt>
+From:   Vincent Brooks <vincent.vn345@gmail.com>
+Subject: Vincent Brooks
+User-Agent: Horde Application Framework 5
+Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
 MIME-Version: 1.0
-In-Reply-To: <159405972142.19216.202541495863164149.stgit@djiang5-desk3.ch.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <20200706223642.18569.72240@s1v4.e-lietuva.lt>
+X-PPP-Vhost: damsa.lt
+To:     unlisted-recipients:; (no To-header on input)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 7/6/20 11:22 AM, Dave Jiang wrote:
-> +What:		/sys/bus/dsa/devices/dsa<m>/pasid_enabled
-> +Date:		Jul 5, 2020
-> +KernelVersion:	5.9.0
-> +Contact:	dmaengine@vger.kernel.org
-> +Description:	To indicate if PASID (process address space identifier) is
-> +		enabled or not for this device.
-> +
->  What:           /sys/bus/dsa/devices/dsa<m>/state
->  Date:           Oct 25, 2019
->  KernelVersion:  5.6.0
-> @@ -116,6 +123,13 @@ Description:    The maximum number of bandwidth tokens that may be in use at
->  		one time by operations that access low bandwidth memory in the
->  		device.
->  
-> +What:		/sys/bus/dsa/devices/wq<m>.<n>/block_on_fault
-> +Date:		Jul 5, 2020
-> +KernelVersion:	5.9.0
-> +Contact:	dmaengine@vger.kernel.org
-> +Description:	To indicate block on fault is allowed or not for the work queue
-> +		to support on demand paging.
 
-I'd also really appreciate some more "why" in addition to the "what" in
-the documentation.  Why would a program or end user care that PASIDs are
-enabled or that on-demand paging is supported?
+Majoittaja: Vincent Brooks
+Rakas ystävä.
+
+Olen Vincent Brooks Brondesburysta, Luoteis-Lontoosta, täältä  
+Englannista. Työskentelen UBS INVESTMENT Bank London -konttorissa.  
+Kirjoitan teille toimistostani, josta on valtava hyöty molemmille.  
+Oman osastoni ryhmän toimeenpanevan komitean jäsenenä ja  
+riskienjohtajana (Suur-Lontoon aluetoimisto) löysin hylätyn summan,  
+joka oli 15 miljoonaa Englannin puntaa (viisitoista miljoonaa Ison  
+Britannian puntaa) yhdelle kuuluvalle tilille. ulkomaisista  
+asiakkaistamme myöhässä herra Steve Allen, joka valitettavasti menetti  
+henkensä auto-onnettomuudessa, mukaan lukien vaimo ja ainoa tytär.
+
+Valinta ottaa sinuun yhteyttä johtuu asuinpaikan maantieteellisestä  
+luonteesta, etenkin tämän tapahtuman herkkyyden vuoksi. Pankin  
+virkamiehet ovat odottaneet, että joku sukulaisista tulee esittämään  
+tätä vaatimusta, mutta kukaan ei ole tehnyt sitä. Olen  
+henkilökohtaisesti epäonnistunut paikallistamaan sukulaisia. Pyydän  
+suostumustasi esitellä sinua seuraavana sukulaisina / avustuksen  
+saajana tämän rahaston kuolleelle, jotta tämän tilin tuotot, joiden  
+arvo on 15 miljoonaa puntaa, siirretään pankkiisi. tili seuraavana  
+sukulaisena myöhäiselle herra Steve Allenille.
+
+Se maksetaan tai jaetaan näissä prosentteissa, 60% minulle ja 40%  
+sinulle. Olen turvannut kaikki tarvittavat oikeudelliset asiakirjat,  
+joita käytetään tämän vaatimuksen varmuuskopiointiin. Ainoa mitä minun  
+on tehtävä, on täyttää nimesi asiakirjoihin ja laillistaa se täällä  
+tuomioistuimessa todistaaksesi sinut rahaston laillisena edunsaajana.
+
+Tarvitsen nyt vain rehellistä yhteistyötä, luottamuksellisuutta ja  
+luottamusta, jotta voimme nähdä tämän tapahtuman. Takaan, että tämä  
+toteutetaan laillisella järjestelyllä, joka suojaa sinua kaikilta  
+lakien rikkomuksilta. Haluan sinun ymmärtävän, että olen työskennellyt  
+tässä pankissa 17 vuotta ja olen voinut suojata kaikki lailliset  
+asiakirjat, jotta voit periä tämän rahaston
+
+Antakaa minulle seuraava: Koska meillä on muutama päivä kestää se  
+läpi, tämä on erittäin kiireellistä.
+
+1. Koko nimi
+2. Suora matkapuhelinnumerosi
+3. Olet yhteysosoite
+4. Syntymäaika
+
+Tutkittuani metodisen haun päätin ottaa sinuun yhteyttä toivoen, että  
+löydät tämän kaupan mielenkiintoiseksi. Antakaa sinulle lisätietoja,  
+kun vahvistat tämän viestin ja ilmoitat kiinnostuksestasi. Yritä  
+ilmoittaa päätöksestäsi mahdollisimman pian.
+
+Parhain terveisin,
+Vincent Brooks
+

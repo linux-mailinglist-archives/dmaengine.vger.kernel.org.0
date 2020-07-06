@@ -2,86 +2,84 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9898C21511F
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Jul 2020 04:14:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF7602151E0
+	for <lists+dmaengine@lfdr.de>; Mon,  6 Jul 2020 06:48:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728591AbgGFCOm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 5 Jul 2020 22:14:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728579AbgGFCOm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 5 Jul 2020 22:14:42 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EEA4C061794
-        for <dmaengine@vger.kernel.org>; Sun,  5 Jul 2020 19:14:42 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k4so562067pld.12
-        for <dmaengine@vger.kernel.org>; Sun, 05 Jul 2020 19:14:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oLTQP4cUCuEsMBI82hi/oQxEN4jd8ZtJRuhidca0ZB0=;
-        b=i7fzIayRESckHSUc+DK0nM1GF3b6hq12XHg4W7Q/ks/ZQ1ANRariJwQMImF0jWjJe9
-         740apl/Q5IJAvUMQ6SoJz4AaPDjm03F/711W5uWC+jNqeRN9SwmYTVPSbNFYCtnFLwJU
-         k9JP1zTRkaZMbjpz+W9D/9mEECjpgh3wjaJXg/GUhd0BAqANlGlmq0qKoEUDPvgbOvJ2
-         qy87doAAlgUxrqJh5khjUmgA7r5RBbyCyqTPCsN9TJfcWgG14psToLJ6kpbf7wBgalRY
-         l+mm1w/HhItUGoOy9zCO8VXJ+v3/4u1sK7tqsdhoQItVxkYS63jbEm0uLXuTkvjuvxhB
-         2RVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oLTQP4cUCuEsMBI82hi/oQxEN4jd8ZtJRuhidca0ZB0=;
-        b=itliwLOIUXs1i6iFW/zBmYhL3KaRgaIJuG459I11HW8TiGr7uKga1zNFA3u8AvQugo
-         QxqsxaUii0T+hALR2imCfeRB19GqYxzsTIF2cIoPHiGG4tHYQPDlE6HpfJn9P2ouMrQk
-         z1zJccZmS6P3lO5mAmIxVtGPv8eoKZyG4tjPpei+NoMYcgjPCwz8yhS+6XPwjoOkLcV+
-         iCw/a07aDK92nap5ySzwAqDFNAi138Ix7Ccvw8tdd8ypQUY8Ao13ZRWGVDArywUHEJGu
-         R9DPTRv3DzeOxhrlaGUiEVFJLWoLf+C/BSODSdE1t1dpv58vLWfpunsDxbA7ZIWL9l/V
-         zGZQ==
-X-Gm-Message-State: AOAM5309M3WivvbGfkq35DTOeJnpAWQufuNc2fnR0D5gc+U7o96OZtkR
-        b4Y40fQ9i6FNrtS5ELnQCkVznQ==
-X-Google-Smtp-Source: ABdhPJy5c1MEqfFkRrsXN7sSMwIPzQ2CsCSHXuYckncz/LyQHXpP+A6v8rkv90lLrAuMHIFWK7MkSQ==
-X-Received: by 2002:a17:90b:4d10:: with SMTP id mw16mr49011738pjb.143.1594001681860;
-        Sun, 05 Jul 2020 19:14:41 -0700 (PDT)
-Received: from localhost ([122.172.40.201])
-        by smtp.gmail.com with ESMTPSA id b21sm17672431pfp.172.2020.07.05.19.14.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 05 Jul 2020 19:14:40 -0700 (PDT)
-Date:   Mon, 6 Jul 2020 07:44:38 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Viresh Kumar <vireshk@kernel.org>, dmaengine@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>,
-        Tsuchiya Yuto <kitakar@gmail.com>
-Subject: Re: [PATCH v1] dmaengine: dw: Initialize channel before each transfer
-Message-ID: <20200706021438.vdlb6pqgxjb3hht4@vireshk-i7>
-References: <20200705115620.51929-1-andriy.shevchenko@linux.intel.com>
+        id S1727857AbgGFEsb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 6 Jul 2020 00:48:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43206 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726001AbgGFEsa (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 6 Jul 2020 00:48:30 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F0A420720;
+        Mon,  6 Jul 2020 04:48:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594010910;
+        bh=saajXkjFZV5Ysay/V5yS2+LctG2zyPPXgCNYyixmBgI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A8QMvTN/gVISdfC7gmwMxMOxgudEVlVFrB9e4xhjcdL6RTBc/mgQM7pZj72Gtycmv
+         ohIo6GAY8xfkvM0ae8iHztQNqQL9SJopoEchCTMXAx+6NrAxmWhxIHuEb3w7k8MNZl
+         ObXOA/9Fe0bv3YA6Qd3KXpJCm1Yzo6/moH2aUJ+k=
+Date:   Mon, 6 Jul 2020 10:18:24 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org, dmaengine@vger.kernel.org,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        linux-iio@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-nvdimm@lists.01.org,
+        linux-usb@vger.kernel.org, Eli Billauer <eli.billauer@gmail.com>
+Subject: Re: [PATCH 01/17] Documentation/driver-api: dmaengine/provider: drop
+ doubled word
+Message-ID: <20200706044824.GB633187@vkoul-mobl>
+References: <20200704034502.17199-1-rdunlap@infradead.org>
+ <20200704034502.17199-2-rdunlap@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200705115620.51929-1-andriy.shevchenko@linux.intel.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20200704034502.17199-2-rdunlap@infradead.org>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 05-07-20, 14:56, Andy Shevchenko wrote:
-> In some cases DMA can be used only with a consumer which does runtime power
-> management and on the platforms, that have DMA auto power gating logic
-> (see comments in the drivers/acpi/acpi_lpss.c), may result in DMA losing
-> its context. Simple mitigation of this issue is to initialize channel
-> each time the consumer initiates a transfer.
-> 
-> Fixes: cfdf5b6cc598 ("dw_dmac: add support for Lynxpoint DMA controllers")
-> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206403
-> Reported-by: Tsuchiya Yuto <kitakar@gmail.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/dma/dw/core.c | 12 ------------
->  1 file changed, 12 deletions(-)
+On 03-07-20, 20:44, Randy Dunlap wrote:
+> Drop the doubled word "has".
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Applied, thanks
+
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: linux-doc@vger.kernel.org
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: dmaengine@vger.kernel.org
+> ---
+>  Documentation/driver-api/dmaengine/provider.rst |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- linux-next-20200701.orig/Documentation/driver-api/dmaengine/provider.rst
+> +++ linux-next-20200701/Documentation/driver-api/dmaengine/provider.rst
+> @@ -507,7 +507,7 @@ dma_cookie_t
+>  DMA_CTRL_ACK
+>  
+>  - If clear, the descriptor cannot be reused by provider until the
+> -  client acknowledges receipt, i.e. has has a chance to establish any
+> +  client acknowledges receipt, i.e. has a chance to establish any
+>    dependency chains
+>  
+>  - This can be acked by invoking async_tx_ack()
 
 -- 
-viresh
+~Vinod

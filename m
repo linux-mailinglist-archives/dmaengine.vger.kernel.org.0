@@ -2,400 +2,120 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC0DD215EFC
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Jul 2020 20:48:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D0B31215F19
+	for <lists+dmaengine@lfdr.de>; Mon,  6 Jul 2020 20:57:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729695AbgGFSsC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 6 Jul 2020 14:48:02 -0400
-Received: from mga04.intel.com ([192.55.52.120]:49907 "EHLO mga04.intel.com"
+        id S1729753AbgGFS5e (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 6 Jul 2020 14:57:34 -0400
+Received: from mga14.intel.com ([192.55.52.115]:26885 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729569AbgGFSsC (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 6 Jul 2020 14:48:02 -0400
-IronPort-SDR: s+we0hs7npyXQsbX5Qk6/t4HpI049QBYH6Y1XGai/fe1HisXHbncf3kA0nMpEt8phmRA82JwrQ
- DNO6+oniMwIQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="144980520"
+        id S1729569AbgGFS5e (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 6 Jul 2020 14:57:34 -0400
+IronPort-SDR: 105EM1kqwYxoDWJshYhFTXr/A41btxnEadUfkV8JbsXAKzF4ZMDbZbdwGFqWseoN9c89lDMKLF
+ 2I41llygswLw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9674"; a="146555908"
 X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
-   d="scan'208";a="144980520"
+   d="scan'208";a="146555908"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 11:47:58 -0700
-IronPort-SDR: 68nKHoO+/jn5zpi8BLo6t1b1CThbr+Sma4IkCNsEaXB2m/248YD+VcFgwwO578IhnQF9z1nY5G
- 1rq4wiLkd49Q==
-X-ExtLoop1: 1
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 11:57:33 -0700
+IronPort-SDR: SECpC06f7sleVuqjbYi+UhOG9+iSnjgs7OK+Salkc5hC6hqYL4Ic7TvxsQaYMCWcU8u6CShoGI
+ 2P3FCU1ONBeA==
 X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
-   d="scan'208";a="314042249"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.168.148]) ([10.212.168.148])
-  by orsmga008.jf.intel.com with ESMTP; 06 Jul 2020 11:47:54 -0700
-Subject: Re: next/master bisection: baseline.login on qemu_arm64-virt-gicv3
-To:     "kernelci.org bot" <bot@kernelci.org>,
-        Swathi Kovvuri <swathi.kovvuri@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, kernelci-results@groups.io,
-        gtucker@collabora.com
-Cc:     linux-kernel@vger.kernel.org,
+   d="scan'208";a="456835188"
+Received: from tcramer-mobl.amr.corp.intel.com (HELO [10.255.2.114]) ([10.255.2.114])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 11:57:31 -0700
+Subject: Re: [PATCH v3 6/6] dmaengine: idxd: add ABI documentation for shared
+ wq
+To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
+Cc:     Jing Lin <jing.lin@intel.com>, Tony Luck <tony.luck@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org
-References: <5f036d83.1c69fb81.10199.06d0@mx.google.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <64f1ab9a-2390-5b42-4e57-2a4f78db94c4@intel.com>
-Date:   Mon, 6 Jul 2020 11:47:52 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, ashok.raj@intel.com, fenghua.yu@intel.com
+References: <159405827797.19216.15283540319201919054.stgit@djiang5-desk3.ch.intel.com>
+ <159405972142.19216.202541495863164149.stgit@djiang5-desk3.ch.intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <6dbaf551-125e-bc7f-0b5f-655b48432ab2@intel.com>
+Date:   Mon, 6 Jul 2020 11:57:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <5f036d83.1c69fb81.10199.06d0@mx.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <159405972142.19216.202541495863164149.stgit@djiang5-desk3.ch.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On 7/6/20 11:22 AM, Dave Jiang wrote:
+> +What:		/sys/bus/dsa/devices/dsa<m>/pasid_enabled
+> +Date:		Jul 5, 2020
+> +KernelVersion:	5.9.0
+> +Contact:	dmaengine@vger.kernel.org
+> +Description:	To indicate if PASID (process address space identifier) is
+> +		enabled or not for this device.
+> +
+>  What:           /sys/bus/dsa/devices/dsa<m>/state
+>  Date:           Oct 25, 2019
+>  KernelVersion:  5.6.0
+> @@ -116,6 +123,13 @@ Description:    The maximum number of bandwidth tokens that may be in use at
+>  		one time by operations that access low bandwidth memory in the
+>  		device.
+>  
+> +What:		/sys/bus/dsa/devices/wq<m>.<n>/block_on_fault
+> +Date:		Jul 5, 2020
+> +KernelVersion:	5.9.0
+> +Contact:	dmaengine@vger.kernel.org
+> +Description:	To indicate block on fault is allowed or not for the work queue
+> +		to support on demand paging.
 
-
-On 7/6/2020 11:29 AM, kernelci.org bot wrote:
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> * This automated bisection report was sent to you on the basis  *
-> * that you may be involved with the breaking commit it has      *
-> * found.  No manual investigation has been done to verify it,   *
-> * and the root cause of the problem may be somewhere else.      *
-> *                                                               *
-> * If you do send a fix, please include this trailer:            *
-> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-> *                                                               *
-> * Hope this helps!                                              *
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> 
-> next/master bisection: baseline.login on qemu_arm64-virt-gicv3
-> 
-> Summary:
->    Start:      5680d14d59bd Add linux-next specific files for 20200706
->    Plain log:  https://storage.kernelci.org/next/master/next-20200706/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-collabora/baseline-qemu_arm64-virt-gicv3.txt
->    HTML log:   https://storage.kernelci.org/next/master/next-20200706/arm64/defconfig+CONFIG_RANDOMIZE_BASE=y/gcc-8/lab-collabora/baseline-qemu_arm64-virt-gicv3.html
->    Result:     deb9541f5052 dmaengine: check device and channel list for empty
-> 
-> Checks:
->    revert:     PASS
->    verify:     PASS
-> 
-> Parameters:
->    Tree:       next
->    URL:        https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
->    Branch:     master
->    Target:     qemu_arm64-virt-gicv3
->    CPU arch:   arm64
->    Lab:        lab-collabora
->    Compiler:   gcc-8
->    Config:     defconfig+CONFIG_RANDOMIZE_BASE=y
->    Test case:  baseline.login
-
-
-This should be already fixed. Same issue that Naresh reported and Arnd bisected.
-https://www.spinics.net/lists/dmaengine/msg22787.html
-
-> 
-> Breaking commit found:
-> 
-> -------------------------------------------------------------------------------
-> commit deb9541f5052b2f93bd51cb263d9035bfd89fa96
-> Author: Dave Jiang <dave.jiang@intel.com>
-> Date:   Fri Jun 26 11:09:41 2020 -0700
-> 
->      dmaengine: check device and channel list for empty
->      
->      Check dma device list and channel list for empty before iterate as the
->      iteration function assume the list to be not empty. With devices and
->      channels now being hot pluggable this is a condition that needs to be
->      checked. Otherwise it can cause the iterator to spin forever.
->      
->      Fixes: e81274cd6b52 ("dmaengine: add support to dynamic register/unregister of channels")
->      Reported-by: Swathi Kovvuri <swathi.kovvuri@intel.com>
->      Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->      Tested-by: Swathi Kovvuri <swathi.kovvuri@intel.com>
->      Link: https://lore.kernel.org/r/159319496403.69045.16298280729899651363.stgit@djiang5-desk3.ch.intel.com
->      Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> 
-> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-> index 2b06a7a8629d..0d6529eff66f 100644
-> --- a/drivers/dma/dmaengine.c
-> +++ b/drivers/dma/dmaengine.c
-> @@ -85,6 +85,9 @@ static void dmaengine_dbg_summary_show(struct seq_file *s,
->   {
->   	struct dma_chan *chan;
->   
-> +	if (list_empty(&dma_dev->channels))
-> +		return;
-> +
->   	list_for_each_entry(chan, &dma_dev->channels, device_node) {
->   		if (chan->client_count) {
->   			seq_printf(s, " %-13s| %s", dma_chan_name(chan),
-> @@ -104,6 +107,11 @@ static int dmaengine_summary_show(struct seq_file *s, void *data)
->   	struct dma_device *dma_dev = NULL;
->   
->   	mutex_lock(&dma_list_mutex);
-> +	if (list_empty(&dma_device_list)) {
-> +		mutex_unlock(&dma_list_mutex);
-> +		return 0;
-> +	}
-> +
->   	list_for_each_entry(dma_dev, &dma_device_list, global_node) {
->   		seq_printf(s, "dma%d (%s): number of channels: %u\n",
->   			   dma_dev->dev_id, dev_name(dma_dev->dev),
-> @@ -324,10 +332,15 @@ static struct dma_chan *min_chan(enum dma_transaction_type cap, int cpu)
->   	struct dma_chan *min = NULL;
->   	struct dma_chan *localmin = NULL;
->   
-> +	if (list_empty(&dma_device_list))
-> +		return NULL;
-> +
->   	list_for_each_entry(device, &dma_device_list, global_node) {
->   		if (!dma_has_cap(cap, device->cap_mask) ||
->   		    dma_has_cap(DMA_PRIVATE, device->cap_mask))
->   			continue;
-> +		if (list_empty(&device->channels))
-> +			continue;
->   		list_for_each_entry(chan, &device->channels, device_node) {
->   			if (!chan->client_count)
->   				continue;
-> @@ -365,6 +378,9 @@ static void dma_channel_rebalance(void)
->   	int cpu;
->   	int cap;
->   
-> +	if (list_empty(&dma_device_list))
-> +		return;
-> +
->   	/* undo the last distribution */
->   	for_each_dma_cap_mask(cap, dma_cap_mask_all)
->   		for_each_possible_cpu(cpu)
-> @@ -373,6 +389,8 @@ static void dma_channel_rebalance(void)
->   	list_for_each_entry(device, &dma_device_list, global_node) {
->   		if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
->   			continue;
-> +		if (list_empty(&device->channels))
-> +			continue;
->   		list_for_each_entry(chan, &device->channels, device_node)
->   			chan->table_count = 0;
->   	}
-> @@ -556,6 +574,10 @@ void dma_issue_pending_all(void)
->   	struct dma_chan *chan;
->   
->   	rcu_read_lock();
-> +	if (list_empty(&dma_device_list)) {
-> +		rcu_read_unlock();
-> +		return;
-> +	}
->   	list_for_each_entry_rcu(device, &dma_device_list, global_node) {
->   		if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
->   			continue;
-> @@ -613,6 +635,10 @@ static struct dma_chan *private_candidate(const dma_cap_mask_t *mask,
->   		dev_dbg(dev->dev, "%s: wrong capabilities\n", __func__);
->   		return NULL;
->   	}
-> +
-> +	if (list_empty(&dev->channels))
-> +		return NULL;
-> +
->   	/* devices with multiple channels need special handling as we need to
->   	 * ensure that all channels are either private or public.
->   	 */
-> @@ -749,6 +775,11 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
->   
->   	/* Find a channel */
->   	mutex_lock(&dma_list_mutex);
-> +	if (list_empty(&dma_device_list)) {
-> +		mutex_unlock(&dma_list_mutex);
-> +		return NULL;
-> +	}
-> +
->   	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
->   		/* Finds a DMA controller with matching device node */
->   		if (np && device->dev->of_node && np != device->dev->of_node)
-> @@ -819,6 +850,11 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
->   
->   	/* Try to find the channel via the DMA filter map(s) */
->   	mutex_lock(&dma_list_mutex);
-> +	if (list_empty(&dma_device_list)) {
-> +		mutex_unlock(&dma_list_mutex);
-> +		return NULL;
-> +	}
-> +
->   	list_for_each_entry_safe(d, _d, &dma_device_list, global_node) {
->   		dma_cap_mask_t mask;
->   		const struct dma_slave_map *map = dma_filter_match(d, name, dev);
-> @@ -942,10 +978,17 @@ void dmaengine_get(void)
->   	mutex_lock(&dma_list_mutex);
->   	dmaengine_ref_count++;
->   
-> +	if (list_empty(&dma_device_list)) {
-> +		mutex_unlock(&dma_list_mutex);
-> +		return;
-> +	}
-> +
->   	/* try to grab channels */
->   	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
->   		if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
->   			continue;
-> +		if (list_empty(&device->channels))
-> +			continue;
->   		list_for_each_entry(chan, &device->channels, device_node) {
->   			err = dma_chan_get(chan);
->   			if (err == -ENODEV) {
-> @@ -980,10 +1023,17 @@ void dmaengine_put(void)
->   	mutex_lock(&dma_list_mutex);
->   	dmaengine_ref_count--;
->   	BUG_ON(dmaengine_ref_count < 0);
-> +	if (list_empty(&dma_device_list)) {
-> +		mutex_unlock(&dma_list_mutex);
-> +		return;
-> +	}
-> +
->   	/* drop channel references */
->   	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
->   		if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
->   			continue;
-> +		if (list_empty(&device->channels))
-> +			continue;
->   		list_for_each_entry(chan, &device->channels, device_node)
->   			dma_chan_put(chan);
->   	}
-> @@ -1132,6 +1182,39 @@ void dma_async_device_channel_unregister(struct dma_device *device,
->   }
->   EXPORT_SYMBOL_GPL(dma_async_device_channel_unregister);
->   
-> +static int dma_channel_enumeration(struct dma_device *device)
-> +{
-> +	struct dma_chan *chan;
-> +	int rc;
-> +
-> +	if (list_empty(&device->channels))
-> +		return 0;
-> +
-> +	/* represent channels in sysfs. Probably want devs too */
-> +	list_for_each_entry(chan, &device->channels, device_node) {
-> +		rc = __dma_async_device_channel_register(device, chan);
-> +		if (rc < 0)
-> +			return rc;
-> +	}
-> +
-> +	/* take references on public channels */
-> +	if (dmaengine_ref_count && !dma_has_cap(DMA_PRIVATE, device->cap_mask))
-> +		list_for_each_entry(chan, &device->channels, device_node) {
-> +			/* if clients are already waiting for channels we need
-> +			 * to take references on their behalf
-> +			 */
-> +			if (dma_chan_get(chan) == -ENODEV) {
-> +				/* note we can only get here for the first
-> +				 * channel as the remaining channels are
-> +				 * guaranteed to get a reference
-> +				 */
-> +				return -ENODEV;
-> +			}
-> +		}
-> +
-> +	return 0;
-> +}
-> +
->   /**
->    * dma_async_device_register - registers DMA devices found
->    * @device:	pointer to &struct dma_device
-> @@ -1247,33 +1330,15 @@ int dma_async_device_register(struct dma_device *device)
->   	if (rc != 0)
->   		return rc;
->   
-> +	mutex_lock(&dma_list_mutex);
->   	mutex_init(&device->chan_mutex);
->   	ida_init(&device->chan_ida);
-> -
-> -	/* represent channels in sysfs. Probably want devs too */
-> -	list_for_each_entry(chan, &device->channels, device_node) {
-> -		rc = __dma_async_device_channel_register(device, chan);
-> -		if (rc < 0)
-> -			goto err_out;
-> +	rc = dma_channel_enumeration(device);
-> +	if (rc < 0) {
-> +		mutex_unlock(&dma_list_mutex);
-> +		goto err_out;
->   	}
->   
-> -	mutex_lock(&dma_list_mutex);
-> -	/* take references on public channels */
-> -	if (dmaengine_ref_count && !dma_has_cap(DMA_PRIVATE, device->cap_mask))
-> -		list_for_each_entry(chan, &device->channels, device_node) {
-> -			/* if clients are already waiting for channels we need
-> -			 * to take references on their behalf
-> -			 */
-> -			if (dma_chan_get(chan) == -ENODEV) {
-> -				/* note we can only get here for the first
-> -				 * channel as the remaining channels are
-> -				 * guaranteed to get a reference
-> -				 */
-> -				rc = -ENODEV;
-> -				mutex_unlock(&dma_list_mutex);
-> -				goto err_out;
-> -			}
-> -		}
->   	list_add_tail_rcu(&device->global_node, &dma_device_list);
->   	if (dma_has_cap(DMA_PRIVATE, device->cap_mask))
->   		device->privatecnt++;	/* Always private */
-> @@ -1291,6 +1356,9 @@ int dma_async_device_register(struct dma_device *device)
->   		return rc;
->   	}
->   
-> +	if (list_empty(&device->channels))
-> +		return rc;
-> +
->   	list_for_each_entry(chan, &device->channels, device_node) {
->   		if (chan->local == NULL)
->   			continue;
-> @@ -1317,8 +1385,9 @@ void dma_async_device_unregister(struct dma_device *device)
->   
->   	dmaengine_debug_unregister(device);
->   
-> -	list_for_each_entry_safe(chan, n, &device->channels, device_node)
-> -		__dma_async_device_channel_unregister(device, chan);
-> +	if (!list_empty(&device->channels))
-> +		list_for_each_entry_safe(chan, n, &device->channels, device_node)
-> +			__dma_async_device_channel_unregister(device, chan);
->   
->   	mutex_lock(&dma_list_mutex);
->   	/*
-> -------------------------------------------------------------------------------
-> 
-> 
-> Git bisection log:
-> 
-> -------------------------------------------------------------------------------
-> git bisect start
-> # good: [bb5a93aaf25261321db0c499cde7da6ee9d8b164] x86/ldt: use "pr_info_once()" instead of open-coding it badly
-> git bisect good bb5a93aaf25261321db0c499cde7da6ee9d8b164
-> # bad: [5680d14d59bddc8bcbc5badf00dbbd4374858497] Add linux-next specific files for 20200706
-> git bisect bad 5680d14d59bddc8bcbc5badf00dbbd4374858497
-> # good: [2549a884c8373a109a93521bf806cc523c92340b] Merge remote-tracking branch 'crypto/master'
-> git bisect good 2549a884c8373a109a93521bf806cc523c92340b
-> # good: [f94ee8e6645aadfc1e80c2a5fe5fb07841526610] Merge remote-tracking branch 'selinux/next'
-> git bisect good f94ee8e6645aadfc1e80c2a5fe5fb07841526610
-> # good: [16d4f454c697a796cfac0af2b5ab39bedf71f4fe] Merge remote-tracking branch 'thunderbolt/next'
-> git bisect good 16d4f454c697a796cfac0af2b5ab39bedf71f4fe
-> # bad: [2c43abadd30bab02d2a94b5aa72a7eb6edbe6b96] Merge remote-tracking branch 'nvdimm/libnvdimm-for-next'
-> git bisect bad 2c43abadd30bab02d2a94b5aa72a7eb6edbe6b96
-> # bad: [d5a942e3894462eb44f6bb51dde5b5b481ba355a] Merge remote-tracking branch 'scsi/for-next'
-> git bisect bad d5a942e3894462eb44f6bb51dde5b5b481ba355a
-> # good: [bd7a168a024dcfbc4db7fb79a51c8b574f55b527] staging: rtl8712: use common ieee80211 constants
-> git bisect good bd7a168a024dcfbc4db7fb79a51c8b574f55b527
-> # good: [28ed7374401b20915bf980fdf2d3ac80f8c2945d] scsi: lpfc: Fix language in 0373 message to reflect non-error message
-> git bisect good 28ed7374401b20915bf980fdf2d3ac80f8c2945d
-> # good: [198d6cb9263bb25156132d87babfe6e6506a4c88] Merge remote-tracking branch 'icc/icc-next'
-> git bisect good 198d6cb9263bb25156132d87babfe6e6506a4c88
-> # good: [7244068998c8266300c48f1a3af7b237446de885] Merge branch 'misc' into for-next
-> git bisect good 7244068998c8266300c48f1a3af7b237446de885
-> # good: [999a32efed09d724c426568731c5691233d3a680] dmaengine: hisilicon: Use struct_size() in devm_kzalloc()
-> git bisect good 999a32efed09d724c426568731c5691233d3a680
-> # good: [d12ea5591eddf625b7707c018b72e46e8674c3c2] dmaengine: pl330: Make sure the debug is idle before doing DMAGO
-> git bisect good d12ea5591eddf625b7707c018b72e46e8674c3c2
-> # bad: [f50b150e315ed133b74a75e3c71864fb2cd4cece] dmaengine: idxd: add work queue drain support
-> git bisect bad f50b150e315ed133b74a75e3c71864fb2cd4cece
-> # bad: [deb9541f5052b2f93bd51cb263d9035bfd89fa96] dmaengine: check device and channel list for empty
-> git bisect bad deb9541f5052b2f93bd51cb263d9035bfd89fa96
-> # first bad commit: [deb9541f5052b2f93bd51cb263d9035bfd89fa96] dmaengine: check device and channel list for empty
-> -------------------------------------------------------------------------------
-> 
+I'd also really appreciate some more "why" in addition to the "what" in
+the documentation.  Why would a program or end user care that PASIDs are
+enabled or that on-demand paging is supported?

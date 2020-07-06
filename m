@@ -2,75 +2,153 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F917215B59
-	for <lists+dmaengine@lfdr.de>; Mon,  6 Jul 2020 17:59:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74F20215E35
+	for <lists+dmaengine@lfdr.de>; Mon,  6 Jul 2020 20:21:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbgGFP71 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 6 Jul 2020 11:59:27 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:34019 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729358AbgGFP71 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 6 Jul 2020 11:59:27 -0400
-Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MFsd7-1k8CB82qdD-00HRQF for <dmaengine@vger.kernel.org>; Mon, 06 Jul 2020
- 17:59:25 +0200
-Received: by mail-qt1-f182.google.com with SMTP id u12so29305137qth.12
-        for <dmaengine@vger.kernel.org>; Mon, 06 Jul 2020 08:59:25 -0700 (PDT)
-X-Gm-Message-State: AOAM531nRSJAV+hKcFE3VXoXGsGFgm2yHUE7+aUlRY5AUMhWyBrj/Ivv
-        YXbVFKr67oe4o3l4FzfrCvbizTbm08LMLFjCMTc=
-X-Google-Smtp-Source: ABdhPJy72KKn9lEHo71+M+KcayPfcOlEiOKfWw2IMDVPgYwy8BUhbaHeQ5yZLOYxgenAlVaWQOhWKmuga8Mn4wVmNxQ=
-X-Received: by 2002:ac8:7587:: with SMTP id s7mr50313847qtq.304.1594051164619;
- Mon, 06 Jul 2020 08:59:24 -0700 (PDT)
+        id S1729797AbgGFSV2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 6 Jul 2020 14:21:28 -0400
+Received: from mga17.intel.com ([192.55.52.151]:28389 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729647AbgGFSV2 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 6 Jul 2020 14:21:28 -0400
+IronPort-SDR: F0OSj33hXCgrOeqV2rZBzt/C1UxPOoE0Ytfj7fPFv73SDi56mjlbEg0DUFZ76Ae1g853pQ4LOL
+ kmU4hNOywF9A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9673"; a="127556108"
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="127556108"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2020 11:21:27 -0700
+IronPort-SDR: ev0ZP96hyj6TSPU1iQaQWf9863WfkMZYRXDmWmbC817FNQLYu5HwBPuZVt8ybvKtqlr7G8hDZu
+ KRDwRvq9DGMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,320,1589266800"; 
+   d="scan'208";a="427187265"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga004.jf.intel.com with ESMTP; 06 Jul 2020 11:21:26 -0700
+Subject: [PATCH v3 0/6] Add shared workqueue support for idxd driver
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>, Jing Lin <jing.lin@intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, dan.j.williams@intel.com, ashok.raj@intel.com,
+        fenghua.yu@intel.com, tony.luck@intel.com, jing.lin@intel.com
+Date:   Mon, 06 Jul 2020 11:21:26 -0700
+Message-ID: <159405827797.19216.15283540319201919054.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-References: <159404871194.45151.3076873396834992441.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <159404871194.45151.3076873396834992441.stgit@djiang5-desk3.ch.intel.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 6 Jul 2020 17:59:08 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3uYEQRjQHdZy__rJ5MTmD_CA3EUcbV8sQoLE4sMRp9Rg@mail.gmail.com>
-Message-ID: <CAK8P3a3uYEQRjQHdZy__rJ5MTmD_CA3EUcbV8sQoLE4sMRp9Rg@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: fix incorrect return value for dma_request_chan()
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:B5QndL8FF2LqctMjqZCtBGh5VqVWEKjXN3dtjYqePwzQTIIJp3k
- GUpdhlv5Wp9kVPsQ6UYTcuEjTvZbW7whspTHm5bpjJXLGBqiGDAGnOD1yWcRYmmnjRY/eUc
- FxBwLZie68vOkc4FMZD7/bnCoZIKNULF5EtrlFvQPEMKgRgvT7RM7MGXwwNWc6PrS0k1OWF
- mtUXjyd0q3t5TGp8hrSUA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:griokQB9GvE=:WryOUFWOBU9sYagzv7ICWU
- KP2kBfnbIBqOWrqYebdWIJsmn7AwjbZ7WhhTKOr3c7Nc17pOg0CSAtu5fjIbvVlTZHS9VCtFl
- N3lwHMM7Heq8HWX2bNpejAe5vabrzUV1EXYtMZIhJCer/3ulEuFmMQJsir+hjAWhElcg59tHX
- 7z0oyHlLsP++zIGPsyo/XpQF0Me9RcdtEDMP0B2uABOoF5qjrr4JgMTYV0cBQQ/BIkK9bSr5D
- rTmJVGWEARdYfknReS7ZrVNWcQ/h31x7weZnKxEi/Pwlyw2bxj50j/rd5UVUfx7gpkKsQwH4b
- ZsdjxfctiWCVjv+mOU/93z41pHOCEUcjs5+mVuzrVI3GYH1JP/6A26/+IClTPSh2lOopS+mHf
- ERQeI7vfKJfjz+AbMiUppFhQLL13GEWHovFKmqOh8Rv7CrXYxEaUgdWQo7Q/AnAFp8igai0pT
- AqZPZ/IxmrffY6Zt8+enI+W0vwvrjN4pkHNjZn9MYJqBOT0FeRfZNXrDgioYVoSsuHRm7HkWO
- wTvcMB957NGHdY6S0GJvp0GSHr7Tq036EiVyHg7h6iheS+TziCO2bRU7L43o5GXfTWmiT+dhK
- eQ1Cy+fqIBmYJ1eRk6lkgHMB7RbG0WA8cc1SZmQjFRUO0Agspag2E81A50lCnaCw7oDB2Sk76
- gzxiyVNLnu5/NHytfq306DtYA1t15aHlPnLHKtckhsM63aVSV+I9HGtibrd/xxxLzPI8EH8gA
- kdA4c60e8myWw+ZpAHTUz9Jh5Jbg4y6K3X51/4M29N51x/QdhLoxlVvvtlnPpN3sQK8pRAsTI
- LonDaGHmunhEiPWIVhl+B1fvBqatTJOZMhSCZY9KtOkSDJG4N8l6T0XenI6v0KUnhDVdEuBWh
- LeaXZDoV7p/kkxmyjRT8V3oSrXWlKwjxmqIDpxaW8xsAsDRqHCKAKR4ayRUmVpy1sYmoco9Wc
- zCeF4mG4DgIdgoxEnj9GnR2cZGBDhhD3tAZt9fqlg43qcF5gRCf5F
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Jul 6, 2020 at 5:18 PM Dave Jiang <dave.jiang@intel.com> wrote:
->
-> dma_request_chan() is expected to return ERR_PTR rather than NULL. This
-> triggered a crash in pl011_dma_probe() when dma_device_list is empty
-> and returning NULL. Fix return of NULL ptr to ERR_PTR(-ENODEV).
->
-> Fixes: deb9541f5052 ("dmaengine: check device and channel list for empty")
-> Reported-by: Arnd Bergmann <arnd@arndb.de>
+V3:
+- Rebased against latest dmaengine/next tree.
+- Updated API doc with new kernel version and dates.
+- Changed to allow driver to load without ENQCMD support.
+- Break out some patches that can be sent ahead of this series for inclusion.
 
-It was really
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Though I did the analysis and found what caused the problem.
+v2:
+- Dropped device feature enabling (GregKH)
+- Dropped PCI device feature enabling (Bjorn)
+	- https://members.pcisig.com/wg/PCI-SIG/document/14237
+- After some internal discussion, we have decided to hold off on the enabling of DMWR due to the
+  following reasons. 1. Most first gen hw will not have the feature bits. 2. First gen hw that
+  support the feature are all Root Complex integrated endpoints. 3. PCI devices that are not
+  RCiEP’s with this capability won’t surface for a few years so we can wait until we can test the
+  full code.
+- Dropped special ioremap (hch)
+- Added proper support for WQ flush (tony, dan)
+- Changed descriptor submission to use sbitmap_queue for blocking. (dan)
 
-The fix looks good,
+Driver stage 1 postings for context: [1]
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+The patch series has compilation and functional dependency on Fenghua's "Tag application
+address space for devices" patch series for the ENQCMD CPU command enumeration and the PASID MSR
+support. [2] 
+
+First patch in the series is only there to assist with compilation. Can be dropped once Fenghua’s
+series is accepted by the x86 maintainers.
+
+== Background ==
+A typical DMA device requires the driver to translate application buffers to hardware addresses,
+and a kernel-user transition to notify the hardware of new work. Shared Virtual Addressing (SVA)
+allows the processor and device to use the same virtual addresses without requiring software to
+translate between the address spaces. ENQCMD is a new instruction on Intel Platforms that allows
+user applications to directly notify hardware of new work, much like how doorbells are used in
+some hardware, but it carries a payload along with it. ENQCMDS is the supervisor version (ring0)
+of ENQCMD.
+
+== ENQCMDS ==
+Introduce enqcmds(), a helper funciton that copies an input payload to a 64B aligned
+destination and confirms whether the payload was accepted by the device or not.
+enqcmds() wraps the new ENQCMDS CPU instruction. The ENQCMDS is a ring 0 CPU instruction that
+performs similar to the ENQCMD instruction. Descriptor submission must use ENQCMD(S) for shared
+workqueues (swq) on an Intel DSA device. 
+
+== Shared WQ support ==
+Introduce shared workqueue (swq) support for the idxd driver. The current idxd driver contains
+dedicated workqueue (dwq) support only. A dwq accepts descriptors from a MOVDIR64B instruction.
+MOVDIR64B is a posted instruction on the PCIe bus, it does not wait for any response from the
+device. If the wq is full, submitted descriptors are dropped. A swq utilizes the ENQCMDS in
+ring 0, which is a non-posted instruction. The zero flag would be set to 1 if the device rejects
+the descriptor or if the wq is full. A swq can be shared between multiple users
+(kernel or userspace) due to not having to keep track of the wq full condition for submission.
+A swq requires PASID and can only run with SVA support. 
+
+== IDXD SVA support ==
+Add utilization of PASID to support Shared Virtual Addressing (SVA). With PASID support,
+the descriptors can be programmed with host virtual address (HVA) rather than IOVA.
+The hardware will work with the IOMMU in fulfilling page requests. With SVA support,
+a user app using the char device interface can now submit descriptors without having to pin the
+virtual memory range it wants to DMA in its own address space. 
+
+The series does not add SVA support for the dmaengine subsystem. That support is coming at a
+later time.
+
+[1]: https://lore.kernel.org/lkml/157965011794.73301.15960052071729101309.stgit@djiang5-desk3.ch.intel.com/
+[2]: https://lkml.org/lkml/2020/6/30/1266
+[3]: https://software.intel.com/en-us/articles/intel-sdm
+[4]: https://software.intel.com/en-us/download/intel-scalable-io-virtualization-technical-specification
+[5]: https://software.intel.com/en-us/download/intel-data-streaming-accelerator-preliminary-architecture-specification
+[6]: https://01.org/blogs/2019/introducing-intel-data-streaming-accelerator
+[7]: https://intel.github.io/idxd/
+[8]: https://github.com/intel/idxd-driver idxd-stage2
+
+---
+
+Dave Jiang (5):
+      x86/asm: move the raw asm in iosubmit_cmds512() to special_insns.h
+      x86/asm: add enqcmds() to support ENQCMDS instruction
+      dmaengine: idxd: add shared workqueue support
+      dmaengine: idxd: clean up descriptors with fault error
+      dmaengine: idxd: add ABI documentation for shared wq
+
+Fenghua Yu (1):
+      x86/cpufeatures: Enumerate ENQCMD and ENQCMDS instructions
+
+
+ Documentation/ABI/stable/sysfs-driver-dma-idxd |   14 ++
+ arch/x86/include/asm/cpufeatures.h             |    1 
+ arch/x86/include/asm/io.h                      |   45 +++++---
+ arch/x86/include/asm/special_insns.h           |   17 +++
+ arch/x86/kernel/cpu/cpuid-deps.c               |    1 
+ drivers/dma/Kconfig                            |   13 ++
+ drivers/dma/idxd/cdev.c                        |   47 ++++++++
+ drivers/dma/idxd/device.c                      |   91 ++++++++++++++-
+ drivers/dma/idxd/dma.c                         |    9 --
+ drivers/dma/idxd/idxd.h                        |   26 ++++
+ drivers/dma/idxd/init.c                        |   91 ++++++++++++---
+ drivers/dma/idxd/irq.c                         |  143 ++++++++++++++++++++++--
+ drivers/dma/idxd/registers.h                   |   14 ++
+ drivers/dma/idxd/submit.c                      |   33 +++++-
+ drivers/dma/idxd/sysfs.c                       |  127 +++++++++++++++++++++
+ 15 files changed, 602 insertions(+), 70 deletions(-)
+
+--

@@ -2,101 +2,157 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A64E216D41
-	for <lists+dmaengine@lfdr.de>; Tue,  7 Jul 2020 14:57:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81780216D6F
+	for <lists+dmaengine@lfdr.de>; Tue,  7 Jul 2020 15:07:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgGGM5X (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 7 Jul 2020 08:57:23 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:46158 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbgGGM5W (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Jul 2020 08:57:22 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 067CvJNo023236;
-        Tue, 7 Jul 2020 07:57:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594126639;
-        bh=XL8Adktr4+l9LEfgRz84PfAGMebahASmc5meg1ybQkY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=RsasZyhLO9IYvjNb3cUyJ6JaaShTu0XM62CAknC6MHJDokWYpFIZO+xMBtXnA3GQq
-         4EGPYaWLdqN3stHCycr40f/cmKR2Q3msuvFEz+0s9liw9qe+j0hJQ3mbRs6bNQX7nh
-         rgbB7gjBdS07tEaUoKEHKPTHypiwkrplIDUl+fag=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 067CvJEF083013
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 7 Jul 2020 07:57:19 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 7 Jul
- 2020 07:57:19 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 7 Jul 2020 07:57:19 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 067CvHXL055502;
-        Tue, 7 Jul 2020 07:57:18 -0500
-Subject: Re: [PATCH v2 0/5] dmaengine: ti: k3-udma: cleanups for 5.8
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <dan.j.williams@intel.com>
-References: <20200707102352.28773-1-peter.ujfalusi@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <559a6306-27b7-cbed-ca55-60709a94744e@ti.com>
-Date:   Tue, 7 Jul 2020 15:57:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200707102352.28773-1-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        id S1727886AbgGGNHJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 7 Jul 2020 09:07:09 -0400
+Received: from de-out1.bosch-org.com ([139.15.230.186]:58556 "EHLO
+        de-out1.bosch-org.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgGGNHI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 7 Jul 2020 09:07:08 -0400
+Received: from fe0vm1649.rbesz01.com (lb41g3-ha-dmz-psi-sl1-mailout.fe.ssn.bosch.com [139.15.230.188])
+        by si0vms0216.rbdmz01.com (Postfix) with ESMTPS id 4B1N4l75p7z1XLm4N;
+        Tue,  7 Jul 2020 15:07:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=etas.com;
+        s=key1-intmail; t=1594127224;
+        bh=/rfClegd/oGVTBzykNlL7JmX2W+X4Ern425stX9PzYE=; l=10;
+        h=From:Subject:From:Reply-To:Sender;
+        b=e6gIQrrq3BbYywXPemwE5LxYEcnk5ILESa4ulDZGLPc1WFvKwAGNET5Z1YWdoELjb
+         tpSvjNAmnm5UJOxDOjLkgdCuGqmKt2oFzPQaV7Qy1qiKNf2vYciBF9xV3hJ3rg9roG
+         GCcPNll7MZRh8Sg6CK3VaSRMmOBYLR0t3tzvKhqE=
+Received: from fe0vm1740.rbesz01.com (unknown [10.58.172.176])
+        by fe0vm1649.rbesz01.com (Postfix) with ESMTPS id 4B1N4l6mVWz3L7;
+        Tue,  7 Jul 2020 15:07:03 +0200 (CEST)
+X-AuditID: 0a3aad14-df9ff70000003b75-43-5f0473770d49
+Received: from fe0vm1652.rbesz01.com ( [10.58.173.29])
+        (using TLS with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by fe0vm1740.rbesz01.com (SMG Outbound) with SMTP id 64.A8.15221.773740F5; Tue,  7 Jul 2020 15:07:03 +0200 (CEST)
+Received: from FE-MBX2012.de.bosch.com (fe-mbx2012.de.bosch.com [10.3.231.18])
+        by fe0vm1652.rbesz01.com (Postfix) with ESMTPS id 4B1N4l4TtZzB1K;
+        Tue,  7 Jul 2020 15:07:03 +0200 (CEST)
+Received: from FE-MBX2012.de.bosch.com (10.3.231.18) by
+ FE-MBX2012.de.bosch.com (10.3.231.18) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.1979.3; Tue, 7 Jul 2020 15:07:03 +0200
+Received: from FE-MBX2012.de.bosch.com ([fe80::e9da:da62:f945:1619]) by
+ FE-MBX2012.de.bosch.com ([fe80::e9da:da62:f945:1619%5]) with mapi id
+ 15.01.1979.003; Tue, 7 Jul 2020 15:07:03 +0200
+From:   "Koehrer Mathias (ETAS/EES-SL)" <mathias.koehrer@etas.com>
+To:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>
+Subject: [PATCH] dmaengine: Extend NXP QDMA driver to check transmission
+ errors
+Thread-Topic: [PATCH] dmaengine: Extend NXP QDMA driver to check transmission
+ errors
+Thread-Index: AQHWVF+BUVYGSnNVLkq0FdZIzCSGZw==
+Date:   Tue, 7 Jul 2020 13:07:03 +0000
+Message-ID: <ae2bc2811ba9ae595d74d3bc443c4d9fb1fe6800.camel@bosch.com>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+x-originating-ip: [10.14.52.194]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <165AD1E984534F45958F46C460B78D3A@bosch.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmkeLIzCtJLcpLzFFi42Lhslorq1tezBJvsO63mcXqqX9ZLXbeOcHs
+        wOSxaVUnm8fnTXIBTFFcNimpOZllqUX6dglcGVveLmArmKBf0f4xrIHxi24XIyeHhICJxLzz
+        r1m6GLk4hARmMEn0X+5jhHB2M0pseribDcJ5wyjx+OoXqLL9jBJbpnWygPSzCThIzFuwnh3E
+        FhFIkTj1/ztrFyMHh7BAoMSDZXoQ4TCJS3/OMELYehJXDk5iAylhEVCR+LbXDyTMK+AmMfH8
+        D7CJjAKyEhs2nGcGsZkFxCVuPZnPBHGpgMSSPRBxCQFRiZeP/7FC2DoStz5NZQIZKSGgIPGt
+        pRLEZBbQlFi/Sx9iioXEsvedjBC2osSU7ofsEFsFJU7OfMIygVFsFpJlsxC6ZyHpnoWkexaS
+        7gWMrKsYRdNSDcpyDc1NDPSKklKLqwwM9ZLzczcxQuJJZAfjyZ4PeocYmTgYDzFKcDArifD2
+        ajPGC/GmJFZWpRblxxeV5qQWH2KU5mBREudV4dkYJySQnliSmp2aWpBaBJNl4uCUamCa5tNx
+        kylq2cc58+07rK7fNj4Vdtbv6mTv8gvrZKQelK863BX09fv9tJI1fNvTUiMXCs5sf/VVQp/r
+        Znyt9dyKpfqevsqc7Wprsqrja4y+7czYsOL965u2brrb8t8XfU1dEPq2UOrizBaZhu6aPOYt
+        Ucx3jGZnfZq71lAtcpk+y/tbdzQFcp9F7+kt9J0c93M62/sr17+v3CBz32ZJxK2Fsmcarr37
+        efvt1FnXOgpYLjT7B0RIbtn3/3uYtPPsjP4tq4QXtWvl+3zmamILDDi6bvnBm7UtS2T3rmRf
+        Jf4nR8lj1mu+O5c/Gr9nPbEmq0bu6JRYzg/aoec6nt67cUtD22Ziln2p1IEp1msLvL5KKLEU
+        ZyQaajEXFScCAHW/LpQWAwAA
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 07/07/2020 13:23, Peter Ujfalusi wrote:
-> Hi Vinod,
-> 
-> Changes since v1:
-> - drop the check against NULL for uc in the IO functions as pointed out by
->    Grygorii
-> 
-> Tested on top of linux-next, but they apply (with offsets) on top of
-> dmaengine/next.
-> 
-> Few patches to clean up the code mostly with the exception of removing the use
-> of ring_get_occ() from udma_pop_from_ring().
-> 
-> This series should not conflict with Grygorii's ringacc update patch, they touch
-> the code in different areas.
-> 
-> Regards,
-> Peter
-> ---
-> Peter Ujfalusi (5):
->    dmaengine: ti: k3-udma: Remove dma_sync_single calls for descriptors
->    dmaengine: ti: k3-udma: Do not use ring_get_occ in udma_pop_from_ring
->    dmaengine: ti: k3-udma: Use common defines for TCHANRT/RCHANRT
->      registers
->    dmaengine: ti: k3-udma-private: Use udma_read/write for register
->      access
->    dmaengine: ti: k3-udma: Use udma_chan instead of tchan/rchan for IO
->      functions
-> 
->   drivers/dma/ti/k3-udma-glue.c    |  79 +++++------
->   drivers/dma/ti/k3-udma-private.c |   8 +-
->   drivers/dma/ti/k3-udma.c         | 236 +++++++++++++------------------
->   drivers/dma/ti/k3-udma.h         |  61 +++-----
->   4 files changed, 161 insertions(+), 223 deletions(-)
-> 
-
-Thank you
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-
--- 
-Best regards,
-grygorii
+RXh0ZW5kIE5YUCBRRE1BIGRyaXZlciB0byBjaGVjayB0cmFuc21pc3Npb24gZXJyb3JzDQoNClRo
+ZSBOWFAgUURNQSBkcml2ZXIgKGZzbC1xZG1hLmMpIGRvZXMgbm90IGNoZWNrIHRoZSBzdGF0dXMg
+Yml0cw0KdGhhdCBpbmRpY2F0ZSBpZiBhIERNQSB0cmFuc2ZlciBoYXMgYmVlbiBjb21wbGV0ZWQg
+c3VjY2Vzc2Z1bGx5Lg0KVGhpcyBwYXRjaCBleHRlbmRzIHRoZSBkcml2ZXIgdG8gZG8gZXhhY3Rs
+eSB0aGlzLg0KDQpTaWduZWQtb2ZmLWJ5OiBNYXRoaWFzIEtvZWhyZXIgPG1hdGhpYXMua29laHJl
+ckBldGFzLmNvbT4NCi0tLQ0KSW5kZXg6IGxpbnV4LTUuNC9kcml2ZXJzL2RtYS9mc2wtcWRtYS5j
+DQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09DQotLS0gbGludXgtNS40Lm9yaWcvZHJpdmVycy9kbWEvZnNsLXFkbWEuYw0K
+KysrIGxpbnV4LTUuNC9kcml2ZXJzL2RtYS9mc2wtcWRtYS5jDQpAQCAtNTYsNyArNTYsNyBAQA0K
+IA0KIC8qIFJlZ2lzdGVycyBmb3IgYml0IGFuZCBnZW5tYXNrICovDQogI2RlZmluZSBGU0xfUURN
+QV9DUUlEUl9TUVQJCUJJVCgxNSkNCi0jZGVmaW5lIFFETUFfQ0NERl9GT1RNQVQJCUJJVCgyOSkN
+CisjZGVmaW5lIFFETUFfQ0NERl9GT1JNQVQJCUJJVCgyOSkNCiAjZGVmaW5lIFFETUFfQ0NERl9T
+RVIJCQlCSVQoMzApDQogI2RlZmluZSBRRE1BX1NHX0ZJTgkJCUJJVCgzMCkNCiAjZGVmaW5lIFFE
+TUFfU0dfTEVOX01BU0sJCUdFTk1BU0soMjksIDApDQpAQCAtMTEwLDExICsxMTAsMjMgQEANCiAj
+ZGVmaW5lIEZTTF9RRE1BX0NNRF9EU0VOX09GRlNFVAkxOQ0KICNkZWZpbmUgRlNMX1FETUFfQ01E
+X0xXQ19PRkZTRVQJCTE2DQogDQorLyogRmllbGQgZGVmaW5pdGlvbiBmb3IgRGVzY3JpcHRvciBz
+dGF0dXMgKi8NCisjZGVmaW5lIFFETUFfQ0NERl9TVEFUVVNfUlRFCQlCSVQoNSkNCisjZGVmaW5l
+IFFETUFfQ0NERl9TVEFUVVNfV1RFCQlCSVQoNCkNCisjZGVmaW5lIFFETUFfQ0NERl9TVEFUVVNf
+Q0RFCQlCSVQoMikNCisjZGVmaW5lIFFETUFfQ0NERl9TVEFUVVNfU0RFCQlCSVQoMSkNCisjZGVm
+aW5lIFFETUFfQ0NERl9TVEFUVVNfRERFCQlCSVQoMCkNCisjZGVmaW5lIFFETUFfQ0NERl9TVEFU
+VVNfTUFTSwkJUURNQV9DQ0RGX1NUQVRVU19SVEUgfCBcDQorCQkJCQlRRE1BX0NDREZfU1RBVFVT
+X1dURSB8IFwNCisJCQkJCVFETUFfQ0NERl9TVEFUVVNfQ0RFIHwgXA0KKwkJCQkJUURNQV9DQ0RG
+X1NUQVRVU19TREUgfCBcDQorCQkJCQlRRE1BX0NDREZfU1RBVFVTX0RERQ0KKw0KIC8qIEZpZWxk
+IGRlZmluaXRpb24gZm9yIERlc2NyaXB0b3Igb2Zmc2V0ICovDQotI2RlZmluZSBRRE1BX0NDREZf
+U1RBVFVTCQkyMA0KICNkZWZpbmUgUURNQV9DQ0RGX09GRlNFVAkJMjANCiAjZGVmaW5lIFFETUFf
+U0RERl9DTUQoeCkJCSgoKHU2NCkoeCkpIDw8IDMyKQ0KIA0KKw0KIC8qIEZpZWxkIGRlZmluaXRp
+b24gZm9yIHNhZmUgbG9vcCBjb3VudCovDQogI2RlZmluZSBGU0xfUURNQV9IQUxUX0NPVU5UCQkx
+NTAwDQogI2RlZmluZSBGU0xfUURNQV9NQVhfU0laRQkJMTYzODUNCkBAIC0yNDMsMTMgKzI1NSwx
+MyBAQCBxZG1hX2NjZGZfZ2V0X29mZnNldChjb25zdCBzdHJ1Y3QgZnNsX3FkDQogc3RhdGljIGlu
+bGluZSB2b2lkDQogcWRtYV9jY2RmX3NldF9mb3JtYXQoc3RydWN0IGZzbF9xZG1hX2Zvcm1hdCAq
+Y2NkZiwgaW50IG9mZnNldCkNCiB7DQotCWNjZGYtPmNmZyA9IGNwdV90b19sZTMyKFFETUFfQ0NE
+Rl9GT1RNQVQgfCBvZmZzZXQpOw0KKwljY2RmLT5jZmcgPSBjcHVfdG9fbGUzMihRRE1BX0NDREZf
+Rk9STUFUIHwgKG9mZnNldCA8PA0KUURNQV9DQ0RGX09GRlNFVCkpOw0KIH0NCiANCiBzdGF0aWMg
+aW5saW5lIGludA0KIHFkbWFfY2NkZl9nZXRfc3RhdHVzKGNvbnN0IHN0cnVjdCBmc2xfcWRtYV9m
+b3JtYXQgKmNjZGYpDQogew0KLQlyZXR1cm4gKGxlMzJfdG9fY3B1KGNjZGYtPnN0YXR1cykgJiBR
+RE1BX0NDREZfTUFTSykgPj4NClFETUFfQ0NERl9TVEFUVVM7DQorCXJldHVybiAobGUzMl90b19j
+cHUoY2NkZi0+c3RhdHVzKSAmIFFETUFfQ0NERl9TVEFUVVNfTUFTSyk7DQogfQ0KIA0KIHN0YXRp
+YyBpbmxpbmUgdm9pZA0KQEAgLTYxOCw2ICs2MzAsNyBAQCBmc2xfcWRtYV9xdWV1ZV90cmFuc2Zl
+cl9jb21wbGV0ZShzdHJ1Y3QNCiB7DQogCWJvb2wgZHVwbGljYXRlOw0KIAl1MzIgcmVnLCBpLCBj
+b3VudDsNCisJdTggY29tcGxldGlvbl9zdGF0dXM7DQogCXN0cnVjdCBmc2xfcWRtYV9xdWV1ZSAq
+dGVtcF9xdWV1ZTsNCiAJc3RydWN0IGZzbF9xZG1hX2Zvcm1hdCAqc3RhdHVzX2FkZHI7DQogCXN0
+cnVjdCBmc2xfcWRtYV9jb21wICpmc2xfY29tcCA9IE5VTEw7DQpAQCAtNjc3LDYgKzY5MCw4IEBA
+IGZzbF9xZG1hX3F1ZXVlX3RyYW5zZmVyX2NvbXBsZXRlKHN0cnVjdA0KIAkJfQ0KIAkJbGlzdF9k
+ZWwoJmZzbF9jb21wLT5saXN0KTsNCiANCisJCWNvbXBsZXRpb25fc3RhdHVzID0gcWRtYV9jY2Rm
+X2dldF9zdGF0dXMoc3RhdHVzX2FkZHIpOw0KKw0KIAkJcmVnID0gcWRtYV9yZWFkbChmc2xfcWRt
+YSwgYmxvY2sgKyBGU0xfUURNQV9CU1FNUik7DQogCQlyZWcgfD0gRlNMX1FETUFfQlNRTVJfREk7
+DQogCQlxZG1hX2Rlc2NfYWRkcl9zZXQ2NChzdGF0dXNfYWRkciwgMHgwKTsNCkBAIC02ODYsNiAr
+NzAxLDI0IEBAIGZzbF9xZG1hX3F1ZXVlX3RyYW5zZmVyX2NvbXBsZXRlKHN0cnVjdA0KIAkJcWRt
+YV93cml0ZWwoZnNsX3FkbWEsIHJlZywgYmxvY2sgKyBGU0xfUURNQV9CU1FNUik7DQogCQlzcGlu
+X3VubG9jaygmdGVtcF9xdWV1ZS0+cXVldWVfbG9jayk7DQogDQorCQkvKiBUaGUgY29tcGxldGlv
+bl9zdGF0dXMgaXMgZXZhbHVhdGVkIGhlcmUgKG91dHNpZGUgb2YNCnNwaW4gbG9jaykgKi8NCisJ
+CWlmIChjb21wbGV0aW9uX3N0YXR1cykgew0KKwkJCWlmIChjb21wbGV0aW9uX3N0YXR1cyAmIFFE
+TUFfQ0NERl9TVEFUVVNfV1RFKSB7DQorCQkJCS8qIFdyaXRlIHRyYW5zYWN0aW9uIGVycm9yICov
+DQorCQkJCWZzbF9jb21wLT52ZGVzYy50eF9yZXN1bHQucmVzdWx0ID0NCkRNQV9UUkFOU19XUklU
+RV9GQUlMRUQ7DQorCQkJfQ0KKwkJCWVsc2UgaWYgKGNvbXBsZXRpb25fc3RhdHVzICYNClFETUFf
+Q0NERl9TVEFUVVNfUlRFKSB7DQorCQkJCS8qIFJlYWQgdHJhbnNhY3Rpb24gZXJyb3IgKi8NCisJ
+CQkJZnNsX2NvbXAtPnZkZXNjLnR4X3Jlc3VsdC5yZXN1bHQgPQ0KRE1BX1RSQU5TX1JFQURfRkFJ
+TEVEOw0KKwkJCX0NCisJCQllbHNlIHsNCisJCQkJLyogQ29tbWFuZC9zb3VyY2UvZGVzdGluYXRp
+b24NCmRlc2NyaXB0aW9uIGVycm9yICovDQorCQkJCWZzbF9jb21wLT52ZGVzYy50eF9yZXN1bHQu
+cmVzdWx0ID0NCkRNQV9UUkFOU19BQk9SVEVEOw0KKwkJCQlkZXZfZXJyKGZzbF9xZG1hLT5kbWFf
+ZGV2LmRldiwgIkRNQQ0Kc3RhdHVzIGRlc2NyaXB0b3IgZXJyb3IgJXhcbiIsDQorCQkJCQkJY29t
+cGxldGlvbl9zdGF0dXMpOw0KKwkJCX0NCisJCX0NCisNCiAJCXNwaW5fbG9jaygmZnNsX2NvbXAt
+PnFjaGFuLT52Y2hhbi5sb2NrKTsNCiAJCXZjaGFuX2Nvb2tpZV9jb21wbGV0ZSgmZnNsX2NvbXAt
+PnZkZXNjKTsNCiAJCWZzbF9jb21wLT5xY2hhbi0+c3RhdHVzID0gRE1BX0NPTVBMRVRFOw0KQEAg
+LTcwNCw3ICs3MzcsMTQgQEAgc3RhdGljIGlycXJldHVybl90IGZzbF9xZG1hX2Vycm9yX2hhbmRs
+ZQ0KIAlpbnRyID0gcWRtYV9yZWFkbChmc2xfcWRtYSwgc3RhdHVzICsgRlNMX1FETUFfREVEUik7
+DQogDQogCWlmIChpbnRyKQ0KLQkJZGV2X2Vycihmc2xfcWRtYS0+ZG1hX2Rldi5kZXYsICJETUEg
+dHJhbnNhY3Rpb24NCmVycm9yIVxuIik7DQorCXsNCisJCXVuc2lnbmVkIGludCBkZWNmZHcwciA9
+IHFkbWFfcmVhZGwoZnNsX3FkbWEsIHN0YXR1cyArDQpGU0xfUURNQV9ERUNGRFcwUik7DQorCQl1
+bnNpZ25lZCBpbnQgZGVjZmR3MXIgPSBxZG1hX3JlYWRsKGZzbF9xZG1hLCBzdGF0dXMgKw0KRlNM
+X1FETUFfREVDRkRXMVIpOw0KKwkJdW5zaWduZWQgaW50IGRlY2ZkdzJyID0gcWRtYV9yZWFkbChm
+c2xfcWRtYSwgc3RhdHVzICsNCkZTTF9RRE1BX0RFQ0ZEVzJSKTsNCisJCXVuc2lnbmVkIGludCBk
+ZWNmZHczciA9IHFkbWFfcmVhZGwoZnNsX3FkbWEsIHN0YXR1cyArDQpGU0xfUURNQV9ERUNGRFcz
+Uik7DQorCQlkZXZfZXJyKGZzbF9xZG1hLT5kbWFfZGV2LmRldiwgIkRNQSB0cmFuc2FjdGlvbiBl
+cnJvciENCigleDogJXgtJXgtJXgtJXgpXG4iLA0KKwkJCQlpbnRyLCBkZWNmZHcwciwgZGVjZmR3
+MXIsIGRlY2ZkdzJyLA0KZGVjZmR3M3IpOw0KKwl9DQogDQogCXFkbWFfd3JpdGVsKGZzbF9xZG1h
+LCBGU0xfUURNQV9ERURSX0NMRUFSLCBzdGF0dXMgKw0KRlNMX1FETUFfREVEUik7DQogCXJldHVy
+biBJUlFfSEFORExFRDsNCg0K

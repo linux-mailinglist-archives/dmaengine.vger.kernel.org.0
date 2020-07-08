@@ -2,84 +2,111 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C0BA218202
-	for <lists+dmaengine@lfdr.de>; Wed,  8 Jul 2020 10:07:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 952B521828A
+	for <lists+dmaengine@lfdr.de>; Wed,  8 Jul 2020 10:33:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgGHIHD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 8 Jul 2020 04:07:03 -0400
-Received: from mail.elsol.com.pe ([170.231.82.35]:56670 "EHLO
-        mail.elsol.com.pe" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726285AbgGHIHD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 8 Jul 2020 04:07:03 -0400
-X-Greylist: delayed 3437 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Jul 2020 04:07:02 EDT
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.elsol.com.pe (Postfix) with ESMTP id A83C560747D;
-        Wed,  8 Jul 2020 02:04:29 -0500 (-05)
-Received: from mail.elsol.com.pe ([127.0.0.1])
-        by localhost (mail.elsol.com.pe [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Jj93Gy9ZrAVl; Wed,  8 Jul 2020 02:04:29 -0500 (-05)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.elsol.com.pe (Postfix) with ESMTP id 031B4607471;
-        Wed,  8 Jul 2020 02:04:28 -0500 (-05)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.elsol.com.pe 031B4607471
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=elsol.com.pe;
-        s=17F39D2A-FFD0-11E7-BCBF-081969246B0E; t=1594191869;
-        bh=7Y6RtNhSVAIVHdJEU2gHHWYvaP8LRgEAhMNj0EoKaAA=;
-        h=MIME-Version:To:From:Date:Message-Id;
-        b=H9HeLGn7CXTRTypN71fwjivm5WjPjQs/ugswBtLIVfcxDLLlCLtEtRw6niUzXYbJi
-         2Uq2oVzHY9wosxLf2wQTC+m4UtFtIgNbt7dOZ1B/bHq7WPtCGjJw04ueWo6ryJZQ/0
-         ruqnczWcB+WD3GFdFUruUPPXxKJLYoGozE2IQtYuhBfv/ehRE6cUiVeKrULmsE15Qq
-         N+iTkjOqcM9jCpEcRY8k+bCi2j7Q7nRznHSwCsC9+aYv1kqSLl/OLfN51MvIisPbnf
-         jiXwbbBmR+rI7HV6u+9vTfsuOCTyFQ0JVZhjVMoLLHcidnHsKmdzr/NgoESI98uW80
-         pyMLKxyTGixZA==
-X-Virus-Scanned: amavisd-new at elsol.com.pe
-Received: from mail.elsol.com.pe ([127.0.0.1])
-        by localhost (mail.elsol.com.pe [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id GMS6aNIhC_8H; Wed,  8 Jul 2020 02:04:28 -0500 (-05)
-Received: from [10.86.65.172] (unknown [105.8.7.225])
-        by mail.elsol.com.pe (Postfix) with ESMTPSA id 29247607309;
-        Wed,  8 Jul 2020 02:04:18 -0500 (-05)
-Content-Type: text/plain; charset="utf-8"
+        id S1725789AbgGHIc4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 8 Jul 2020 04:32:56 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:48568 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbgGHIc4 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 8 Jul 2020 04:32:56 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0688Wjrg052399;
+        Wed, 8 Jul 2020 03:32:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1594197166;
+        bh=im48yA+Olpa0PxVY1qxOgHlM9ULgxzinTKCtMKJsIRM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=HxawSnpd0qA2WEzkWEjO+vSQPr2aYWM5RkDw8OZvq1IK8Uc72dYdqjt71qknpM0uG
+         ORM7v6ehUlxb7AX/cBAx73xdBZu0UDy4xpt5XB0XoJReGJ+yF7mlZGVqTv2Iede7cS
+         3iHgolg+qxlIsNcsnI3jjecK4Zajs+1E8ikeYekg=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0688WjpO088024
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 8 Jul 2020 03:32:45 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 8 Jul
+ 2020 03:32:45 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 8 Jul 2020 03:32:45 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0688WhqR095672;
+        Wed, 8 Jul 2020 03:32:43 -0500
+Subject: Re: [PATCH next 0/6] soc: ti: k3-ringacc: updates
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        <dmaengine@vger.kernel.org>
+References: <20200701103030.29684-1-grygorii.strashko@ti.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <c281a799-6a56-ff1d-fb87-a54f85fa125a@ti.com>
+Date:   Wed, 8 Jul 2020 11:33:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200701103030.29684-1-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: =?utf-8?q?Covid_19_Wohlt=C3=A4tigkeitsfonds?=
-To:     Recipients <dreyes@elsol.com.pe>
-From:   ''Tayeb Souami'' <dreyes@elsol.com.pe>
-Date:   Wed, 08 Jul 2020 09:00:32 +0200
-Reply-To: Tayebsouam.spende@gmail.com
-Message-Id: <20200708070419.29247607309@mail.elsol.com.pe>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Lieber Freund,
-
-Ich bin Herr Tayeb Souami, New Jersey, Vereinigte Staaten von Amerika, der =
-Mega-Gewinner von $ 315million In Mega Millions Jackpot, spende ich an 5 zu=
-f=C3=A4llige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Ma=
-il nach einem Spinball ausgew=C3=A4hlt.Ich habe den gr=C3=B6=C3=9Ften Teil =
-meines Verm=C3=B6gens auf eine Reihe von Wohlt=C3=A4tigkeitsorganisationen =
-und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die =
-Summe von =E2=82=AC 2.000.000,00 an Sie als eine der ausgew=C3=A4hlten 5 zu=
- spenden, um meine Gewinne zu =C3=BCberpr=C3=BCfen, sehen Sie bitte meine Y=
-ou Tube Seite unten.
-
-UHR MICH HIER: https://www.youtube.com/watch?v=3DZ6ui8ZDQ6Ks
 
 
+On 01/07/2020 13.30, Grygorii Strashko wrote:
+> Hi Santosh,
+>=20
+> This series is a set of non critical  updates for The TI K3 AM654x/J721=
+E
+> Ring Accelerator driver.
+>=20
+> Patch 1 - convert bindings to json-schema
+> Patches 2,3,5 - code reworking
+> Patch 4 - adds new API to request pair of rings k3_ringacc_request_ring=
+s_pair()
+> Patch 6 - updates K3 UDMA to use new API
 
-Das ist dein Spendencode: [TS530342018]
+Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
+> Grygorii Strashko (4):
+>   dt-bindings: soc: ti: k3-ringacc: convert bindings to json-schema
+>   soc: ti: k3-ringacc: add ring's flags to dump
+>   soc: ti: k3-ringacc: add request pair of rings api.
+>   soc: ti: k3-ringacc: separate soc specific initialization
+>=20
+> Peter Ujfalusi (2):
+>   soc: ti: k3-ringacc: Move state tracking variables under a struct
+>   dmaengine: ti: k3-udma: Switch to k3_ringacc_request_rings_pair
+>=20
+>  .../devicetree/bindings/soc/ti/k3-ringacc.txt |  59 ------
+>  .../bindings/soc/ti/k3-ringacc.yaml           | 102 +++++++++
+>  drivers/dma/ti/k3-udma-glue.c                 |  40 ++--
+>  drivers/dma/ti/k3-udma.c                      |  34 +--
+>  drivers/soc/ti/k3-ringacc.c                   | 194 ++++++++++++------=
 
+>  include/linux/soc/ti/k3-ringacc.h             |   4 +
+>  6 files changed, 261 insertions(+), 172 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc=
+=2Etxt
+>  create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc=
+=2Eyaml
+>=20
 
-Antworten Sie mit dem SPENDE-CODE an diese
+- P=C3=A9ter
 
-E-Mail:Tayebsouam.spende@gmail.com
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-
-Ich hoffe, Sie und Ihre Familie gl=C3=BCcklich zu machen.
-
-Gr=C3=BC=C3=9Fe
-Herr Tayeb Souami

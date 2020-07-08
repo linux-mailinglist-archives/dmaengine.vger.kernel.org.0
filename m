@@ -2,157 +2,84 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B7F4D217F33
-	for <lists+dmaengine@lfdr.de>; Wed,  8 Jul 2020 07:45:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C0BA218202
+	for <lists+dmaengine@lfdr.de>; Wed,  8 Jul 2020 10:07:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgGHFpe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 8 Jul 2020 01:45:34 -0400
-Received: from de-out1.bosch-org.com ([139.15.230.186]:33558 "EHLO
-        de-out1.bosch-org.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgGHFpe (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 8 Jul 2020 01:45:34 -0400
-Received: from fe0vm1649.rbesz01.com (lb41g3-ha-dmz-psi-sl1-mailout.fe.ssn.bosch.com [139.15.230.188])
-        by si0vms0216.rbdmz01.com (Postfix) with ESMTPS id 4B1pDn0jf5z1XLm47;
-        Wed,  8 Jul 2020 07:45:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=etas.com;
-        s=key1-intmail; t=1594187129;
-        bh=/rfClegd/oGVTBzykNlL7JmX2W+X4Ern425stX9PzYE=; l=10;
-        h=From:Subject:From:Reply-To:Sender;
-        b=ZUxO34LlzPJ60UuKKC/XbkkQxMgQbOYta9PbNKntZZRn35JFBhIA1OLHHQBtEKa3Z
-         r1wfXbSQNnijlh1ohTc1+W2svtA3PavKLFKlhL507zAXbOt5hZk6w/VXHLnDRMpIyn
-         BEPLNlOY8tXKlhiBhYxn5qc/EV8PX6SroyapvX3A=
-Received: from si0vm4642.rbesz01.com (unknown [10.58.172.176])
-        by fe0vm1649.rbesz01.com (Postfix) with ESMTPS id 4B1pDn0PCLz2Jf;
-        Wed,  8 Jul 2020 07:45:29 +0200 (CEST)
-X-AuditID: 0a3aad12-24bff700000028b1-49-5f055d78c728
-Received: from fe0vm1652.rbesz01.com ( [10.58.173.29])
-        (using TLS with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by si0vm4642.rbesz01.com (SMG Outbound) with SMTP id 18.F1.10417.87D550F5; Wed,  8 Jul 2020 07:45:28 +0200 (CEST)
-Received: from FE-MBX2013.de.bosch.com (fe-mbx2013.de.bosch.com [10.3.231.19])
-        by fe0vm1652.rbesz01.com (Postfix) with ESMTPS id 4B1pDm6QclzB18;
-        Wed,  8 Jul 2020 07:45:28 +0200 (CEST)
-Received: from FE-MBX2012.de.bosch.com (10.3.231.18) by
- FE-MBX2013.de.bosch.com (10.3.231.19) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.1979.3; Wed, 8 Jul 2020 07:45:28 +0200
-Received: from FE-MBX2012.de.bosch.com ([fe80::e9da:da62:f945:1619]) by
- FE-MBX2012.de.bosch.com ([fe80::e9da:da62:f945:1619%5]) with mapi id
- 15.01.1979.003; Wed, 8 Jul 2020 07:45:28 +0200
-From:   "Koehrer Mathias (ETAS/EES-SL)" <mathias.koehrer@etas.com>
-To:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>
-Subject: [PATCH v3] dmaengine: Extend NXP QDMA driver to check transmission
- errors
-Thread-Topic: [PATCH v3] dmaengine: Extend NXP QDMA driver to check
- transmission errors
-Thread-Index: AQHWVOr8eL+EGTAjsUizVFTcztexnw==
-Date:   Wed, 8 Jul 2020 05:45:28 +0000
-Message-ID: <bf1a0d5294d06c7c83533997eec25b0b6b536c85.camel@bosch.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-x-originating-ip: [10.14.52.194]
+        id S1726385AbgGHIHD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 8 Jul 2020 04:07:03 -0400
+Received: from mail.elsol.com.pe ([170.231.82.35]:56670 "EHLO
+        mail.elsol.com.pe" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726285AbgGHIHD (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 8 Jul 2020 04:07:03 -0400
+X-Greylist: delayed 3437 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Jul 2020 04:07:02 EDT
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.elsol.com.pe (Postfix) with ESMTP id A83C560747D;
+        Wed,  8 Jul 2020 02:04:29 -0500 (-05)
+Received: from mail.elsol.com.pe ([127.0.0.1])
+        by localhost (mail.elsol.com.pe [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Jj93Gy9ZrAVl; Wed,  8 Jul 2020 02:04:29 -0500 (-05)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.elsol.com.pe (Postfix) with ESMTP id 031B4607471;
+        Wed,  8 Jul 2020 02:04:28 -0500 (-05)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.elsol.com.pe 031B4607471
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=elsol.com.pe;
+        s=17F39D2A-FFD0-11E7-BCBF-081969246B0E; t=1594191869;
+        bh=7Y6RtNhSVAIVHdJEU2gHHWYvaP8LRgEAhMNj0EoKaAA=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=H9HeLGn7CXTRTypN71fwjivm5WjPjQs/ugswBtLIVfcxDLLlCLtEtRw6niUzXYbJi
+         2Uq2oVzHY9wosxLf2wQTC+m4UtFtIgNbt7dOZ1B/bHq7WPtCGjJw04ueWo6ryJZQ/0
+         ruqnczWcB+WD3GFdFUruUPPXxKJLYoGozE2IQtYuhBfv/ehRE6cUiVeKrULmsE15Qq
+         N+iTkjOqcM9jCpEcRY8k+bCi2j7Q7nRznHSwCsC9+aYv1kqSLl/OLfN51MvIisPbnf
+         jiXwbbBmR+rI7HV6u+9vTfsuOCTyFQ0JVZhjVMoLLHcidnHsKmdzr/NgoESI98uW80
+         pyMLKxyTGixZA==
+X-Virus-Scanned: amavisd-new at elsol.com.pe
+Received: from mail.elsol.com.pe ([127.0.0.1])
+        by localhost (mail.elsol.com.pe [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id GMS6aNIhC_8H; Wed,  8 Jul 2020 02:04:28 -0500 (-05)
+Received: from [10.86.65.172] (unknown [105.8.7.225])
+        by mail.elsol.com.pe (Postfix) with ESMTPSA id 29247607309;
+        Wed,  8 Jul 2020 02:04:18 -0500 (-05)
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <47EF5B56794E0F4C98F80C400ED615E8@bosch.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjkeLIzCtJLcpLzFFi42Lhslorq1sRyxpvcGWxtcXqqX9ZLXbeOcHs
-        wOSxaVUnm8fnTXIBTFFcNimpOZllqUX6dglcGSvaXrMV/NGrOHpgNlMD4wPdLkZODgkBE4ne
-        UwtZuxi5OIQEZjBJNL27wgzh7GaUODv/FCOE84ZR4uXTDqiy/YwSr5snsYP0swk4SMxbsB7M
-        FhFIkTj1/zsriC0sECJxbtcuJoh4pMS8N6fYIGw9iXnnfoDFWQRUJFrOTQPr5RVwk3i9az1Y
-        DaOArMSGDeeZQWxmAXGJW0/mM0HcKiCxZA9EXEJAVOLl43+sELaOxK1PU4FqOIBsBYlvLZUg
-        JrOApsT6XfoQUywken6sY4GwFSWmdD+E2ioocXLmE5YJjGKzkCybhdA9C0n3LCTds5B0L2Bk
-        XcUoWpxpUJZrYmZipFeUlFpcZWCol5yfu4kRElVCOxh/dXzQO8TIxMF4iFGCg1lJhNdAkTVe
-        iDclsbIqtSg/vqg0J7X4EKM0B4uSOK8Kz8Y4IYH0xJLU7NTUgtQimCwTB6dUAxPD0zfLZvrP
-        2HLygZ7xwb9RL/Vjmu5KlnTs+tLxav+BLnG2LdmNl7eoivxZ/9Y3897C3HUW9Q9mxfPvarF+
-        9krbX3Ya77y6MoZPUbzOOpYLXD5eY05gkVWwPi9+Z+7V2w67W+exPwjfL3i8mf9KzP/Z7uFZ
-        j05IxB1Zm5LkfdiqIdeG5fi8j/+cKx6KFnDz3v5x496SFRdWM5yzzOXwLZa9pHrMZJnCXbWl
-        HPdf7Tuk8CIsO2xy+Sm1sndvm7IsGnb2/nh3a5P9Z8XdW5dG/uoSqunZdPX5mTsPLJKk1CIO
-        zTi/4lfG6tofM9K05eeKWs3O0vPwli2vC3r/8HKJVZbYep+s5FOHYtSlTa9qv2ZQYinOSDTU
-        Yi4qTgQAGGTbbhkDAAA=
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: =?utf-8?q?Covid_19_Wohlt=C3=A4tigkeitsfonds?=
+To:     Recipients <dreyes@elsol.com.pe>
+From:   ''Tayeb Souami'' <dreyes@elsol.com.pe>
+Date:   Wed, 08 Jul 2020 09:00:32 +0200
+Reply-To: Tayebsouam.spende@gmail.com
+Message-Id: <20200708070419.29247607309@mail.elsol.com.pe>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-RXh0ZW5kIE5YUCBRRE1BIGRyaXZlciB0byBjaGVjayB0cmFuc21pc3Npb24gZXJyb3JzDQoNClRo
-ZSBOWFAgUURNQSBkcml2ZXIgKGZzbC1xZG1hLmMpIGRvZXMgbm90IGNoZWNrIHRoZSBzdGF0dXMg
-Yml0cw0KdGhhdCBpbmRpY2F0ZSBpZiBhIERNQSB0cmFuc2ZlciBoYXMgYmVlbiBjb21wbGV0ZWQg
-c3VjY2Vzc2Z1bGx5Lg0KVGhpcyBwYXRjaCBleHRlbmRzIHRoZSBkcml2ZXIgdG8gZG8gZXhhY3Rs
-eSB0aGlzLg0KDQpTaWduZWQtb2ZmLWJ5OiBNYXRoaWFzIEtvZWhyZXIgPG1hdGhpYXMua29laHJl
-ckBldGFzLmNvbT4NCi0tLQ0KSW5kZXg6IGxpbnV4LTUuNC9kcml2ZXJzL2RtYS9mc2wtcWRtYS5j
-DQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09DQotLS0gbGludXgtNS40Lm9yaWcvZHJpdmVycy9kbWEvZnNsLXFkbWEuYw0K
-KysrIGxpbnV4LTUuNC9kcml2ZXJzL2RtYS9mc2wtcWRtYS5jDQpAQCAtNTYsNyArNTYsNyBAQA0K
-IA0KIC8qIFJlZ2lzdGVycyBmb3IgYml0IGFuZCBnZW5tYXNrICovDQogI2RlZmluZSBGU0xfUURN
-QV9DUUlEUl9TUVQJCUJJVCgxNSkNCi0jZGVmaW5lIFFETUFfQ0NERl9GT1RNQVQJCUJJVCgyOSkN
-CisjZGVmaW5lIFFETUFfQ0NERl9GT1JNQVQJCUJJVCgyOSkNCiAjZGVmaW5lIFFETUFfQ0NERl9T
-RVIJCQlCSVQoMzApDQogI2RlZmluZSBRRE1BX1NHX0ZJTgkJCUJJVCgzMCkNCiAjZGVmaW5lIFFE
-TUFfU0dfTEVOX01BU0sJCUdFTk1BU0soMjksIDApDQpAQCAtMTEwLDExICsxMTAsMjMgQEANCiAj
-ZGVmaW5lIEZTTF9RRE1BX0NNRF9EU0VOX09GRlNFVAkxOQ0KICNkZWZpbmUgRlNMX1FETUFfQ01E
-X0xXQ19PRkZTRVQJCTE2DQogDQorLyogRmllbGQgZGVmaW5pdGlvbiBmb3IgRGVzY3JpcHRvciBz
-dGF0dXMgKi8NCisjZGVmaW5lIFFETUFfQ0NERl9TVEFUVVNfUlRFCQlCSVQoNSkNCisjZGVmaW5l
-IFFETUFfQ0NERl9TVEFUVVNfV1RFCQlCSVQoNCkNCisjZGVmaW5lIFFETUFfQ0NERl9TVEFUVVNf
-Q0RFCQlCSVQoMikNCisjZGVmaW5lIFFETUFfQ0NERl9TVEFUVVNfU0RFCQlCSVQoMSkNCisjZGVm
-aW5lIFFETUFfQ0NERl9TVEFUVVNfRERFCQlCSVQoMCkNCisjZGVmaW5lIFFETUFfQ0NERl9TVEFU
-VVNfTUFTSwkJKFFETUFfQ0NERl9TVEFUVVNfUlRFIHwgXA0KKwkJCQkJUURNQV9DQ0RGX1NUQVRV
-U19XVEUgfCBcDQorCQkJCQlRRE1BX0NDREZfU1RBVFVTX0NERSB8IFwNCisJCQkJCVFETUFfQ0NE
-Rl9TVEFUVVNfU0RFIHwgXA0KKwkJCQkJUURNQV9DQ0RGX1NUQVRVU19EREUpDQorDQogLyogRmll
-bGQgZGVmaW5pdGlvbiBmb3IgRGVzY3JpcHRvciBvZmZzZXQgKi8NCi0jZGVmaW5lIFFETUFfQ0NE
-Rl9TVEFUVVMJCTIwDQogI2RlZmluZSBRRE1BX0NDREZfT0ZGU0VUCQkyMA0KICNkZWZpbmUgUURN
-QV9TRERGX0NNRCh4KQkJKCgodTY0KSh4KSkgPDwgMzIpDQogDQorDQogLyogRmllbGQgZGVmaW5p
-dGlvbiBmb3Igc2FmZSBsb29wIGNvdW50Ki8NCiAjZGVmaW5lIEZTTF9RRE1BX0hBTFRfQ09VTlQJ
-CTE1MDANCiAjZGVmaW5lIEZTTF9RRE1BX01BWF9TSVpFCQkxNjM4NQ0KQEAgLTI0MywxMyArMjU1
-LDEzIEBAIHFkbWFfY2NkZl9nZXRfb2Zmc2V0KGNvbnN0IHN0cnVjdCBmc2xfcWQNCiBzdGF0aWMg
-aW5saW5lIHZvaWQNCiBxZG1hX2NjZGZfc2V0X2Zvcm1hdChzdHJ1Y3QgZnNsX3FkbWFfZm9ybWF0
-ICpjY2RmLCBpbnQgb2Zmc2V0KQ0KIHsNCi0JY2NkZi0+Y2ZnID0gY3B1X3RvX2xlMzIoUURNQV9D
-Q0RGX0ZPVE1BVCB8IG9mZnNldCk7DQorCWNjZGYtPmNmZyA9IGNwdV90b19sZTMyKFFETUFfQ0NE
-Rl9GT1JNQVQgfCAob2Zmc2V0IDw8IFFETUFfQ0NERl9PRkZTRVQpKTsNCiB9DQogDQogc3RhdGlj
-IGlubGluZSBpbnQNCiBxZG1hX2NjZGZfZ2V0X3N0YXR1cyhjb25zdCBzdHJ1Y3QgZnNsX3FkbWFf
-Zm9ybWF0ICpjY2RmKQ0KIHsNCi0JcmV0dXJuIChsZTMyX3RvX2NwdShjY2RmLT5zdGF0dXMpICYg
-UURNQV9DQ0RGX01BU0spID4+IFFETUFfQ0NERl9TVEFUVVM7DQorCXJldHVybiAobGUzMl90b19j
-cHUoY2NkZi0+c3RhdHVzKSAmIFFETUFfQ0NERl9TVEFUVVNfTUFTSyk7DQogfQ0KIA0KIHN0YXRp
-YyBpbmxpbmUgdm9pZA0KQEAgLTYxOCw2ICs2MzAsNyBAQCBmc2xfcWRtYV9xdWV1ZV90cmFuc2Zl
-cl9jb21wbGV0ZShzdHJ1Y3QNCiB7DQogCWJvb2wgZHVwbGljYXRlOw0KIAl1MzIgcmVnLCBpLCBj
-b3VudDsNCisJdTggY29tcGxldGlvbl9zdGF0dXM7DQogCXN0cnVjdCBmc2xfcWRtYV9xdWV1ZSAq
-dGVtcF9xdWV1ZTsNCiAJc3RydWN0IGZzbF9xZG1hX2Zvcm1hdCAqc3RhdHVzX2FkZHI7DQogCXN0
-cnVjdCBmc2xfcWRtYV9jb21wICpmc2xfY29tcCA9IE5VTEw7DQpAQCAtNjc3LDYgKzY5MCw4IEBA
-IGZzbF9xZG1hX3F1ZXVlX3RyYW5zZmVyX2NvbXBsZXRlKHN0cnVjdA0KIAkJfQ0KIAkJbGlzdF9k
-ZWwoJmZzbF9jb21wLT5saXN0KTsNCiANCisJCWNvbXBsZXRpb25fc3RhdHVzID0gcWRtYV9jY2Rm
-X2dldF9zdGF0dXMoc3RhdHVzX2FkZHIpOw0KKw0KIAkJcmVnID0gcWRtYV9yZWFkbChmc2xfcWRt
-YSwgYmxvY2sgKyBGU0xfUURNQV9CU1FNUik7DQogCQlyZWcgfD0gRlNMX1FETUFfQlNRTVJfREk7
-DQogCQlxZG1hX2Rlc2NfYWRkcl9zZXQ2NChzdGF0dXNfYWRkciwgMHgwKTsNCkBAIC02ODYsNiAr
-NzAxLDI0IEBAIGZzbF9xZG1hX3F1ZXVlX3RyYW5zZmVyX2NvbXBsZXRlKHN0cnVjdA0KIAkJcWRt
-YV93cml0ZWwoZnNsX3FkbWEsIHJlZywgYmxvY2sgKyBGU0xfUURNQV9CU1FNUik7DQogCQlzcGlu
-X3VubG9jaygmdGVtcF9xdWV1ZS0+cXVldWVfbG9jayk7DQogDQorCQkvKiBUaGUgY29tcGxldGlv
-bl9zdGF0dXMgaXMgZXZhbHVhdGVkIGhlcmUgKG91dHNpZGUgb2Ygc3BpbiBsb2NrKSAqLw0KKwkJ
-aWYgKGNvbXBsZXRpb25fc3RhdHVzKSB7DQorCQkJaWYgKGNvbXBsZXRpb25fc3RhdHVzICYgUURN
-QV9DQ0RGX1NUQVRVU19XVEUpIHsNCisJCQkJLyogV3JpdGUgdHJhbnNhY3Rpb24gZXJyb3IgKi8N
-CisJCQkJZnNsX2NvbXAtPnZkZXNjLnR4X3Jlc3VsdC5yZXN1bHQgPSBETUFfVFJBTlNfV1JJVEVf
-RkFJTEVEOw0KKwkJCX0NCisJCQllbHNlIGlmIChjb21wbGV0aW9uX3N0YXR1cyAmIFFETUFfQ0NE
-Rl9TVEFUVVNfUlRFKSB7DQorCQkJCS8qIFJlYWQgdHJhbnNhY3Rpb24gZXJyb3IgKi8NCisJCQkJ
-ZnNsX2NvbXAtPnZkZXNjLnR4X3Jlc3VsdC5yZXN1bHQgPSBETUFfVFJBTlNfUkVBRF9GQUlMRUQ7
-DQorCQkJfQ0KKwkJCWVsc2Ugew0KKwkJCQkvKiBDb21tYW5kL3NvdXJjZS9kZXN0aW5hdGlvbiBk
-ZXNjcmlwdGlvbiBlcnJvciAqLw0KKwkJCQlmc2xfY29tcC0+dmRlc2MudHhfcmVzdWx0LnJlc3Vs
-dCA9IERNQV9UUkFOU19BQk9SVEVEOw0KKwkJCQlkZXZfZXJyKGZzbF9xZG1hLT5kbWFfZGV2LmRl
-diwgIkRNQSBzdGF0dXMgZGVzY3JpcHRvciBlcnJvciAleFxuIiwNCisJCQkJCQljb21wbGV0aW9u
-X3N0YXR1cyk7DQorCQkJfQ0KKwkJfQ0KKw0KIAkJc3Bpbl9sb2NrKCZmc2xfY29tcC0+cWNoYW4t
-PnZjaGFuLmxvY2spOw0KIAkJdmNoYW5fY29va2llX2NvbXBsZXRlKCZmc2xfY29tcC0+dmRlc2Mp
-Ow0KIAkJZnNsX2NvbXAtPnFjaGFuLT5zdGF0dXMgPSBETUFfQ09NUExFVEU7DQpAQCAtNzA0LDcg
-KzczNywxNCBAQCBzdGF0aWMgaXJxcmV0dXJuX3QgZnNsX3FkbWFfZXJyb3JfaGFuZGxlDQogCWlu
-dHIgPSBxZG1hX3JlYWRsKGZzbF9xZG1hLCBzdGF0dXMgKyBGU0xfUURNQV9ERURSKTsNCiANCiAJ
-aWYgKGludHIpDQotCQlkZXZfZXJyKGZzbF9xZG1hLT5kbWFfZGV2LmRldiwgIkRNQSB0cmFuc2Fj
-dGlvbiBlcnJvciFcbiIpOw0KKwl7DQorCQl1bnNpZ25lZCBpbnQgZGVjZmR3MHIgPSBxZG1hX3Jl
-YWRsKGZzbF9xZG1hLCBzdGF0dXMgKyBGU0xfUURNQV9ERUNGRFcwUik7DQorCQl1bnNpZ25lZCBp
-bnQgZGVjZmR3MXIgPSBxZG1hX3JlYWRsKGZzbF9xZG1hLCBzdGF0dXMgKyBGU0xfUURNQV9ERUNG
-RFcxUik7DQorCQl1bnNpZ25lZCBpbnQgZGVjZmR3MnIgPSBxZG1hX3JlYWRsKGZzbF9xZG1hLCBz
-dGF0dXMgKyBGU0xfUURNQV9ERUNGRFcyUik7DQorCQl1bnNpZ25lZCBpbnQgZGVjZmR3M3IgPSBx
-ZG1hX3JlYWRsKGZzbF9xZG1hLCBzdGF0dXMgKyBGU0xfUURNQV9ERUNGRFczUik7DQorCQlkZXZf
-ZXJyKGZzbF9xZG1hLT5kbWFfZGV2LmRldiwgIkRNQSB0cmFuc2FjdGlvbiBlcnJvciEgKCV4OiAl
-eC0leC0leC0leClcbiIsDQorCQkJCWludHIsIGRlY2ZkdzByLCBkZWNmZHcxciwgZGVjZmR3MnIs
-IGRlY2ZkdzNyKTsNCisJfQ0KIA0KIAlxZG1hX3dyaXRlbChmc2xfcWRtYSwgRlNMX1FETUFfREVE
-Ul9DTEVBUiwgc3RhdHVzICsgRlNMX1FETUFfREVEUik7DQogCXJldHVybiBJUlFfSEFORExFRDsN
-Cg==
+Lieber Freund,
+
+Ich bin Herr Tayeb Souami, New Jersey, Vereinigte Staaten von Amerika, der =
+Mega-Gewinner von $ 315million In Mega Millions Jackpot, spende ich an 5 zu=
+f=C3=A4llige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Ma=
+il nach einem Spinball ausgew=C3=A4hlt.Ich habe den gr=C3=B6=C3=9Ften Teil =
+meines Verm=C3=B6gens auf eine Reihe von Wohlt=C3=A4tigkeitsorganisationen =
+und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die =
+Summe von =E2=82=AC 2.000.000,00 an Sie als eine der ausgew=C3=A4hlten 5 zu=
+ spenden, um meine Gewinne zu =C3=BCberpr=C3=BCfen, sehen Sie bitte meine Y=
+ou Tube Seite unten.
+
+UHR MICH HIER: https://www.youtube.com/watch?v=3DZ6ui8ZDQ6Ks
+
+
+
+Das ist dein Spendencode: [TS530342018]
+
+
+
+Antworten Sie mit dem SPENDE-CODE an diese
+
+E-Mail:Tayebsouam.spende@gmail.com
+
+
+Ich hoffe, Sie und Ihre Familie gl=C3=BCcklich zu machen.
+
+Gr=C3=BC=C3=9Fe
+Herr Tayeb Souami

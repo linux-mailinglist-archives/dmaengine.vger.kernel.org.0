@@ -2,111 +2,110 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 952B521828A
-	for <lists+dmaengine@lfdr.de>; Wed,  8 Jul 2020 10:33:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABBB5219150
+	for <lists+dmaengine@lfdr.de>; Wed,  8 Jul 2020 22:19:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725789AbgGHIc4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 8 Jul 2020 04:32:56 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48568 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbgGHIc4 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 8 Jul 2020 04:32:56 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0688Wjrg052399;
-        Wed, 8 Jul 2020 03:32:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594197166;
-        bh=im48yA+Olpa0PxVY1qxOgHlM9ULgxzinTKCtMKJsIRM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=HxawSnpd0qA2WEzkWEjO+vSQPr2aYWM5RkDw8OZvq1IK8Uc72dYdqjt71qknpM0uG
-         ORM7v6ehUlxb7AX/cBAx73xdBZu0UDy4xpt5XB0XoJReGJ+yF7mlZGVqTv2Iede7cS
-         3iHgolg+qxlIsNcsnI3jjecK4Zajs+1E8ikeYekg=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0688WjpO088024
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Jul 2020 03:32:45 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 8 Jul
- 2020 03:32:45 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 8 Jul 2020 03:32:45 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0688WhqR095672;
-        Wed, 8 Jul 2020 03:32:43 -0500
-Subject: Re: [PATCH next 0/6] soc: ti: k3-ringacc: updates
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        id S1725964AbgGHUTU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 8 Jul 2020 16:19:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726122AbgGHUTU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 8 Jul 2020 16:19:20 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7CFCC08C5C1
+        for <dmaengine@vger.kernel.org>; Wed,  8 Jul 2020 13:19:19 -0700 (PDT)
+Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5E748543;
+        Wed,  8 Jul 2020 22:19:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1594239555;
+        bh=7eQEZAgBXD4bDmlhlWvWPECpEiOtm2wXUYrOY+bHBWw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cHjU7YeWDu3qR5PFoZ5Ob/pU/qM1IOeesJfH/3xbGMU0Ws88keIbPwVlNwJRKfNH5
+         SvasXRyYDtHR58n5U8Vw/oY4H0/G0GEDdtVyNFkFPL9dk7BWP/hxyjLsBS1WZk1qBD
+         Dlj4cTbNJCgkurnZij0tUOPcUTQKYcRRM3/TRS/Y=
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     dmaengine@vger.kernel.org
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Tejas Upadhyay <tejasu@xilinx.com>,
+        Satish Kumar Nagireddy <SATISHNA@xilinx.com>,
         Vinod Koul <vkoul@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-CC:     Sekhar Nori <nsekhar@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <dmaengine@vger.kernel.org>
-References: <20200701103030.29684-1-grygorii.strashko@ti.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <c281a799-6a56-ff1d-fb87-a54f85fa125a@ti.com>
-Date:   Wed, 8 Jul 2020 11:33:47 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH v6 0/6] dma: Add Xilinx ZynqMP DPDMA driver
+Date:   Wed,  8 Jul 2020 23:19:00 +0300
+Message-Id: <20200708201906.4546-1-laurent.pinchart@ideasonboard.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200701103030.29684-1-grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hello,
 
+This patch series adds a new driver for the DPDMA engine found in the
+Xilinx ZynqMP.
 
-On 01/07/2020 13.30, Grygorii Strashko wrote:
-> Hi Santosh,
->=20
-> This series is a set of non critical  updates for The TI K3 AM654x/J721=
-E
-> Ring Accelerator driver.
->=20
-> Patch 1 - convert bindings to json-schema
-> Patches 2,3,5 - code reworking
-> Patch 4 - adds new API to request pair of rings k3_ringacc_request_ring=
-s_pair()
-> Patch 6 - updates K3 UDMA to use new API
+The previous version can be found at [1]. All review comments have been
+taken into account. The main change is the addition of documentation.
 
-Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+The driver has been successfully tested with the ZynqMP DisplayPort
+subsystem DRM driver.
 
-> Grygorii Strashko (4):
->   dt-bindings: soc: ti: k3-ringacc: convert bindings to json-schema
->   soc: ti: k3-ringacc: add ring's flags to dump
->   soc: ti: k3-ringacc: add request pair of rings api.
->   soc: ti: k3-ringacc: separate soc specific initialization
->=20
-> Peter Ujfalusi (2):
->   soc: ti: k3-ringacc: Move state tracking variables under a struct
->   dmaengine: ti: k3-udma: Switch to k3_ringacc_request_rings_pair
->=20
->  .../devicetree/bindings/soc/ti/k3-ringacc.txt |  59 ------
->  .../bindings/soc/ti/k3-ringacc.yaml           | 102 +++++++++
->  drivers/dma/ti/k3-udma-glue.c                 |  40 ++--
->  drivers/dma/ti/k3-udma.c                      |  34 +--
->  drivers/soc/ti/k3-ringacc.c                   | 194 ++++++++++++------=
+As I would like to merge both this series and the DRM driver that
+depends on it for v5.9, I have based those patches on top of v5.8-rc1
+and pushed a tag to
 
->  include/linux/soc/ti/k3-ringacc.h             |   4 +
->  6 files changed, 261 insertions(+), 172 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc=
-=2Etxt
->  create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc=
-=2Eyaml
->=20
+	git://linuxtv.org/pinchartl/media.git dma-zynqmp-20200708-base
 
-- P=C3=A9ter
+to be merged in both the dmaengine and DRM tree (Daniel and Dave on CC).
+There's unfortunately a conflict with the DMA engine next branch, which
+I have resolved and pushed to
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+	git://linuxtv.org/pinchartl/media.git dma-zynqmp-20200708-resolved
+
+The first tag would thus be merged in the DRM tree, while the second tag
+would be merged in the DMA engine tree (unless Vinod would prefer
+merging the first tag and resolving the conflict himself). Vinod, could
+you please confirm that this is OK with you ? I'll create new signed
+tags with your Acked-by/Reviewed-by tags once you finish reviewing the
+series (unless you prefer applying the patches yourself and provide a
+base branch on top of v5.8-rc1 as I've done).
+
+[1] https://lore.kernel.org/dmaengine/20200528025228.31638-1-laurent.pinchart@ideasonboard.com/
+
+Hyun Kwon (1):
+  dmaengine: xilinx: dpdma: Add the Xilinx DisplayPort DMA engine driver
+
+Laurent Pinchart (5):
+  dt: bindings: dma: xilinx: dpdma: DT bindings for Xilinx DPDMA
+  dmaengine: virt-dma: Use lockdep to check locking requirements
+  dmaengine: Add support for repeating transactions
+  dmaengine: xilinx: dpdma: Add debugfs support
+  arm64: dts: zynqmp: Add DPDMA node
+
+ .../dma/xilinx/xlnx,zynqmp-dpdma.yaml         |   68 +
+ Documentation/driver-api/dmaengine/client.rst |    4 +-
+ .../driver-api/dmaengine/provider.rst         |   49 +
+ MAINTAINERS                                   |    9 +
+ .../arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi |    4 +
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi        |   10 +
+ drivers/dma/Kconfig                           |   10 +
+ drivers/dma/virt-dma.c                        |    2 +
+ drivers/dma/virt-dma.h                        |   10 +
+ drivers/dma/xilinx/Makefile                   |    1 +
+ drivers/dma/xilinx/xilinx_dpdma.c             | 1771 +++++++++++++++++
+ include/dt-bindings/dma/xlnx-zynqmp-dpdma.h   |   16 +
+ include/linux/dmaengine.h                     |   17 +
+ 13 files changed, 1970 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+ create mode 100644 drivers/dma/xilinx/xilinx_dpdma.c
+ create mode 100644 include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
+
+-- 
+Regards,
+
+Laurent Pinchart
 

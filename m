@@ -2,220 +2,236 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2563021A970
-	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2020 22:59:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0334121AADA
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2020 00:46:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbgGIU7T (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 9 Jul 2020 16:59:19 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36025 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgGIU7S (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Jul 2020 16:59:18 -0400
-Received: by mail-io1-f67.google.com with SMTP id y2so3825941ioy.3;
-        Thu, 09 Jul 2020 13:59:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=59KG2c36B73L5TCxEaW5iyr7aT9GnhJz2toja/ityzo=;
-        b=A1DDDAX8Of3VAYBaf5twc9L3XAzTOwb8mXv8uAzBCMGPIAuz7djXDfiiweblJOExEA
-         kPUbdFROFs7zMbzXJQRskMPGTuo9r2RYTePoC938ZqEzIj9e2yPYJucnQKWtzOJ5Rs0e
-         r14HuxWiZ/Kvg95r0FACgJQCkKCt03d/xUd/omx8m4k+pmMB17b4idrkVJzi+qHXvTji
-         m3DX6qgsSBc5y2wqsxXLT7SP0EdbovAt9QfUZM9jYqMSd5Jfc4Bno6Ug+DKS9EDij/w2
-         m7j81Q8Di84WXWOngb/VaQ5Gt4dx50TLwHrdMeUUCfod2M/5sO/zliVjNPU81l8iuxVi
-         ScdA==
-X-Gm-Message-State: AOAM5337FGLQV5VppFRuB+Qpjt6U9OCctpV1r4plx0bIYI1p6K69xziu
-        +XjP7a/VfPcTszb9Go906g==
-X-Google-Smtp-Source: ABdhPJz1XtipgZZTRvbo4upYYiZEu374WcNQ5YcX9yvzP6F343WQAYYz7MPsvmWiJt7sYOukO69ulw==
-X-Received: by 2002:a05:6638:2591:: with SMTP id s17mr23248116jat.23.1594328357549;
-        Thu, 09 Jul 2020 13:59:17 -0700 (PDT)
-Received: from xps15 ([64.188.179.254])
-        by smtp.gmail.com with ESMTPSA id h11sm2372624ilh.69.2020.07.09.13.59.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 13:59:16 -0700 (PDT)
-Received: (nullmailer pid 875925 invoked by uid 1000);
-        Thu, 09 Jul 2020 20:59:15 -0000
-Date:   Thu, 9 Jul 2020 14:59:15 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     EastL Lee <EastL.Lee@mediatek.com>
-Cc:     Sean Wang <sean.wang@mediatek.com>, vkoul@kernel.org,
-        mark.rutland@arm.com, matthias.bgg@gmail.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        wsd_upstream@mediatek.com, cc.hwang@mediatek.com
-Subject: Re: [PATCH v6 1/4] dt-bindings: dmaengine: Add MediaTek
- Command-Queue DMA controller bindings
-Message-ID: <20200709205915.GA865123@bogus>
-References: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
- <1593673564-4425-2-git-send-email-EastL.Lee@mediatek.com>
+        id S1726773AbgGIWqR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 9 Jul 2020 18:46:17 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48058 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726856AbgGIWqQ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Jul 2020 18:46:16 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 18E80803202B;
+        Thu,  9 Jul 2020 22:46:09 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id btefBCv6s2ER; Fri, 10 Jul 2020 01:46:07 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH RESEND v7 00/11] dmaengine: dw: Take Baikal-T1 SoC DW DMAC peculiarities into account
+Date:   Fri, 10 Jul 2020 01:45:39 +0300
+Message-ID: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593673564-4425-2-git-send-email-EastL.Lee@mediatek.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 03:06:01PM +0800, EastL Lee wrote:
-> Document the devicetree bindings for MediaTek Command-Queue DMA controller
-> which could be found on MT6779 SoC or other similar Mediatek SoCs.
-> 
-> Signed-off-by: EastL Lee <EastL.Lee@mediatek.com>
-> ---
->  .../devicetree/bindings/dma/mtk-cqdma.yaml         | 113 +++++++++++++++++++++
->  1 file changed, 113 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml b/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
-> new file mode 100644
-> index 0000000..83ed742
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
-> @@ -0,0 +1,113 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/mtk-cqdma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MediaTek Command-Queue DMA controller Device Tree Binding
-> +
-> +maintainers:
-> +  - EastL Lee <EastL.Lee@mediatek.com>
-> +
-> +description:
-> +  MediaTek Command-Queue DMA controller (CQDMA) on Mediatek SoC
-> +  is dedicated to memory-to-memory transfer through queue based
-> +  descriptor management.
-> +
-> +allOf:
-> +  - $ref: "dma-controller.yaml#"
-> +
-> +properties:
-> +  "#dma-cells":
-> +    minimum: 1
-> +    maximum: 255
-> +    description:
-> +      Used to provide DMA controller specific information.
+In the previous patchset I've written the next message:
 
-No, for a specific binding like this, it should be 1 defined value.
+> Folks, note I've removed the next patches from the series:
+> [PATCH v7 04/11] dmaengine: Introduce max SG list entries capability
+> [PATCH v7 11/11] dmaengine: dw: Initialize max_sg_nents capability
+> It turns out the problem with the asynchronous handling of Tx- and Rx-
+> SPI transfers interrupts is more complex than I expected. So in order to
+> solve the problem it isn't enough to split the SG list entries submission
+> up based on the max_sg_nents capability setting (though the synchronous
+> one-by-one SG list entries handling does fix a part of the problem). So
+> if and when I get to find a comprehensive solution for it I'll submit a
+> new series with fixups. Until then please consider to merge the patchset
+> in without those patches.
 
-> +
-> +  compatible:
-> +    oneOf:
-> +      - const: mediatek,mt6765-cqdma
-> +      - const: mediatek,mt6779-cqdma
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 5
-> +    description:
-> +        A base address of MediaTek Command-Queue DMA controller,
-> +        a channel will have a set of base address.
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    maxItems: 5
-> +    description:
-> +        A interrupt number of MediaTek Command-Queue DMA controller,
-> +        one interrupt number per dma-channels.
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: cqdma
-> +
-> +  dma-channel-mask:
-> +    $ref: /schemas/types.yaml#definitions/uint32
+Those patches are returned back to the series. I've found a solution, which
+fixes the problem for our hardware. A new patchset with several fixes for the
+DW DMAC driver will be sent shortly after this one is merged in. Note the same
+concerns the DW APB SPI driver. So please review and merge in as soon as
+possible.
 
-Alreay has a type, don't redefine it here.
+Regarding the patchset. Baikal-T1 SoC has an DW DMAC on-board to provide a
+Mem-to-Mem, low-speed peripherals Dev-to-Mem and Mem-to-Dev functionality.
+Mostly it's compatible with currently implemented in the kernel DW DMAC
+driver, but there are some peculiarities which must be taken into account
+in order to have the device fully supported.
 
-> +    description:
-> +       For DMA capability, We will know the addressing capability of
-> +       MediaTek Command-Queue DMA controller through dma-channel-mask.
+First of all traditionally we replaced the legacy plain text-based dt-binding
+file with yaml-based one. Secondly Baikal-T1 DW DMA Controller provides eight
+channels, which alas have different max burst length configuration.
+In particular first two channels may burst up to 128 bits (16 bytes) at a time
+while the rest of them just up to 32 bits. We must make sure that the DMA
+subsystem doesn't set values exceeding these limitations otherwise the
+controller will hang up. In third currently we discovered the problem in using
+the DW APB SPI driver together with DW DMAC. The problem happens if there is no
+natively implemented multi-block LLP transfers support and the SPI-transfer
+length exceeds the max lock size. In this case due to asynchronous handling of
+Tx- and Rx- SPI transfers interrupt we might end up with DW APB SSI Rx FIFO
+overflow. So if DW APB SSI (or any other DMAC service consumer) intends to use
+the DMAC to asynchronously execute the transfers we'd have to at least warn
+the user of the possible errors. In forth it's worth to set the DMA device max
+segment size with max block size config specific to the DW DMA controller. It
+shall help the DMA clients to create size-optimized SG-list items for the
+controller. This in turn will cause less dw_desc allocations, less LLP
+reinitializations, better DMA device performance.
 
-This sounds like the kernel's DMA masks which is not what this property 
-is.
+Finally there is a bug in the algorithm of the nollp flag detection.
+In particular even if DW DMAC parameters state the multi-block transfers
+support there is still HC_LLP (hardcode LLP) flag, which if set makes expected
+by the driver true multi-block LLP functionality unusable. This happens cause'
+if HC_LLP flag is set the LLP registers will be hardcoded to zero so the
+contiguous multi-block transfers will be only supported. We must take the
+flag into account when detecting the LLP support otherwise the driver just
+won't work correctly.
 
-> +    items:
-> +      minItems: 1
-> +      maxItems: 63
+This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
+base-commit: 0e698dfa2822 ("Linux 5.7-rc4")
+tag: v5.7-rc4
 
-An array of 63 elements?
+Changelog v2:
+- Rearrange SoBs.
+- Move $ref to the root level of the properties. So do do with the
+  constraints in the DT binding.
+- Replace "additionalProperties: false" with "unevaluatedProperties: false"
+  property in the DT binding file.
+- Discard default settings defined out of property enum constraint.
+- Set default max-burst-len to 256 TR-WIDTH words in the DT binding.
+- Discard noLLP and block_size accessors.
+- Set max segment size of the DMA device structure with the DW DMA block size
+  config.
+- Print warning if noLLP flag is set.
+- Discard max burst length accessor.
+- Add comment about why hardware accelerated LLP list support depends
+  on both MBLK_EN and HC_LLP configs setting.
+- Use explicit bits state comparison operator in noLLP flag setting.
 
-I think you want:
+Link: https://lore.kernel.org/dmaengine/20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v3:
+- Use the block_size found for the very first channel instead of looking for
+  the maximum of maximum block sizes.
+- Don't define device-specific device_dma_parameters object, since it has
+  already been defined by the platform device core.
+- Add more details into the property description about what limitations
+  snps,max-burst-len defines.
+- Move commit fb7e3bbfc830 ("dmaengine: dw: Take HC_LLP flag into account for
+  noLLP auto-config") to the head of the series.
+- Add a new patch "dmaengine: Introduce min burst length capability" as a
+  result of the discussion with Vinod and Andy regarding the burst length
+  capability.
+- Add a new patch "dmaengine: Introduce max SG list entries capability"
+  suggested by Andy.
+- Add a new patch "dmaengine: Introduce DMA-device device_caps callback" as
+  a result of the discussion with Vinud and Andy in the framework of DW DMA
+  burst and LLP capabilities.
+- Add a new patch "dmaengine: dw: Add dummy device_caps callback" as a
+  preparation commit before setting the max_burst and max_sg_nents
+  DW DMA capabilities.
+- Override the slave channel max_burst capability instead of calculating
+  the minimum value of max burst lengths and setting the DMA-device
+  generic capability.
+- Add a new patch "dmaengine: dw: Initialize max_sg_nents with nollp flag".
+  This is required to fix the DW APB SSI issue of the Tx and Rx DMA
+  channels de-synchronization.
 
-minimum: 1
-maximum: 63
+Link: https://lore.kernel.org/dmaengine/20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v4:
+- Use explicit if-else statement when assigning the max_sg_nents field.
+- Clamp the dst and src burst lengths in the generic dwc_config() method
+  instead of doing that in the encode_maxburst() callback.
+- Define max_burst with u32 type in struct dw_dma_platform_data.
+- Perform of_property_read_u32_array() with the platform data
+  max_burst member passed directly.
+- Add a new patch "dmaengine: dw: Initialize min_burst capability",
+  which initializes the min_burst capability with 1.
+- Fix of->if typo. It should be definitely "of" in the max_sg_list
+  capability description.
 
-Or:
+Link: https://lore.kernel.org/dmaengine/20200528222401.26941-1-Sergey.Semin@baikalelectronics.ru
+Changelog v5:
+- Introduce macro with extreme min and max burst lengths supported by the
+  DW DMA controller. Define them in the patch with default min and max burst
+  length iintializations.
+- Initialize max_burst length capability with extreme burst length supported
+  by the DW DMAC IP-core.
+- Move DW_DMA_MAX_BURST macro definition to the patch "dmaengine: dw:
+  Initialize min and max burst DMA device capability".
+- Add in-line comment at the point of the device_caps callback invocation.
+- Add doc-comment for the device_caps member of struct dma_device
 
-enum: [ 1, 3, 7, 0xf, 0x1f, 0x3f ]
+Link: https://lore.kernel.org/dmaengine/20200529144054.4251-1-Sergey.Semin@baikalelectronics.ru
+Changelog v6:
+- Discard patches:
+  [PATCH v5 04/11] dmaengine: Introduce max SG list entries capability
+  [PATCH v5 11/11] dmaengine: dw: Initialize max_sg_nents capability
+  since for now it's not enough to have them merged in to provide the SPI
+  Rx FIFO overrun error fix. They will be included into another series.
 
-(Though if this works, then just 'dma-channels' is enough.)
+Link: https://lore.kernel.org/dmaengine/20200617234028.25808-1-Sergey.Semin@baikalelectronics.ru
+Changelog v7:
+- Get the patches:
+  [PATCH v5 04/11] dmaengine: Introduce max SG list entries capability
+  [PATCH v5 11/11] dmaengine: dw: Initialize max_sg_nents capability
+  back.
 
-> +
-> +  dma-channels:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description:
-> +      Number of DMA channels supported by MediaTek Command-Queue DMA
-> +      controller, support up to five.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: dmaengine@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-Is it 5 or 6 channels? You're off by one somewhere.
+Serge Semin (11):
+  dt-bindings: dma: dw: Convert DW DMAC to DT binding
+  dt-bindings: dma: dw: Add max burst transaction length property
+  dmaengine: Introduce min burst length capability
+  dmaengine: Introduce max SG list entries capability
+  dmaengine: Introduce DMA-device device_caps callback
+  dmaengine: dw: Take HC_LLP flag into account for noLLP auto-config
+  dmaengine: dw: Set DMA device max segment size parameter
+  dmaengine: dw: Add dummy device_caps callback
+  dmaengine: dw: Initialize min and max burst DMA device capability
+  dmaengine: dw: Introduce max burst length hw config
+  dmaengine: dw: Initialize max_sg_nents capability
 
-> +    items:
-> +      minItems: 1
-> +      maxItems: 5
-> +
-> +  dma-requests:
-> +    $ref: /schemas/types.yaml#definitions/uint32
-> +    description:
-> +      Number of DMA request (virtual channel) supported by MediaTek
-> +      Command-Queue DMA controller, support up to 32.
-> +    items:
-> +      minItems: 1
-> +      maxItems: 32
+ .../bindings/dma/snps,dma-spear1340.yaml      | 176 ++++++++++++++++++
+ .../devicetree/bindings/dma/snps-dma.txt      |  69 -------
+ drivers/dma/dmaengine.c                       |  12 ++
+ drivers/dma/dw/core.c                         |  48 ++++-
+ drivers/dma/dw/of.c                           |   5 +
+ drivers/dma/dw/regs.h                         |   3 +
+ include/linux/dmaengine.h                     |  16 ++
+ include/linux/platform_data/dma-dw.h          |   5 +
+ 8 files changed, 264 insertions(+), 70 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/snps-dma.txt
 
-You are describing how many elements in an array and this is a scalar.
+-- 
+2.26.2
 
-> +
-> +required:
-> +  - "#dma-cells"
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - dma-channel-mask
-> +  - dma-channels
-> +  - dma-requests
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/mt6779-clk.h>
-> +    cqdma: dma-controller@10212000 {
-> +        compatible = "mediatek,mt6779-cqdma";
-> +        reg = <0x10212000 0x80>,
-> +            <0x10212080 0x80>,
-> +            <0x10212100 0x80>;
-> +        interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_LOW>,
-> +            <GIC_SPI 140 IRQ_TYPE_LEVEL_LOW>,
-> +            <GIC_SPI 141 IRQ_TYPE_LEVEL_LOW>;
-> +        clocks = <&infracfg_ao CLK_INFRA_CQ_DMA>;
-> +        clock-names = "cqdma";
-> +        dma-channel-mask = <63>;
-> +        dma-channels = <3>;
-> +        dma-requests = <32>;
-> +        #dma-cells = <1>;
-> +    };
-> +
-> +...
-> -- 
-> 1.9.1

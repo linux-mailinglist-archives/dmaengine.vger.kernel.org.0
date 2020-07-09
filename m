@@ -2,22 +2,22 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FD6221AADD
-	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2020 00:47:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69FA921AAD2
+	for <lists+dmaengine@lfdr.de>; Fri, 10 Jul 2020 00:46:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgGIWqv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 9 Jul 2020 18:46:51 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:48236 "EHLO
+        id S1727849AbgGIWqm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 9 Jul 2020 18:46:42 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48234 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727067AbgGIWqT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Jul 2020 18:46:19 -0400
+        with ESMTP id S1727066AbgGIWqU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Jul 2020 18:46:20 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3C5FA8040A6C;
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id BB18D8040A69;
         Thu,  9 Jul 2020 22:46:14 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id NrafgdSSK6TI; Fri, 10 Jul 2020 01:46:13 +0300 (MSK)
+        with ESMTP id yPXxnBfw2rZ6; Fri, 10 Jul 2020 01:46:14 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -30,9 +30,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7 07/11] dmaengine: dw: Set DMA device max segment size parameter
-Date:   Fri, 10 Jul 2020 01:45:46 +0300
-Message-ID: <20200709224550.15539-8-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v7 08/11] dmaengine: dw: Add dummy device_caps callback
+Date:   Fri, 10 Jul 2020 01:45:47 +0300
+Message-ID: <20200709224550.15539-9-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -44,15 +44,13 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Maximum block size DW DMAC configuration corresponds to the max segment
-size DMA parameter in the DMA core subsystem notation. Lets set it with a
-value specific to the probed DW DMA controller. It shall help the DMA
-clients to create size-optimized SG-list items for the controller. This in
-turn will cause less dw_desc allocations, less LLP reinitializations,
-better DMA device performance.
+Since some DW DMA controllers (like one installed on Baikal-T1 SoC) may
+have non-uniform DMA capabilities per device channels, let's add
+the DW DMA specific device_caps callback to expose that specifics up to
+the DMA consumer. It's a dummy function for now. We'll fill it in with
+capabilities overrides in the next commits.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Arnd Bergmann <arnd@arndb.de>
@@ -62,37 +60,37 @@ Cc: devicetree@vger.kernel.org
 
 ---
 
-Changelog v2:
-- This is a new patch created in place of the dropped one:
-  "dmaengine: dw: Add LLP and block size config accessors".
-
 Changelog v3:
-- Use the block_size found for the very first channel instead of looking for
-  the maximum of maximum block sizes.
-- Don't define device-specific device_dma_parameters object, since it has
-  already been defined by the platform device core.
+- This is a new patch created as a result of the discussion with Vinud and
+  Andy in the framework of DW DMA burst and LLP capabilities.
 ---
- drivers/dma/dw/core.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/dma/dw/core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
-index 33e99d95b3d3..fb95920c429e 100644
+index fb95920c429e..ceded21537e2 100644
 --- a/drivers/dma/dw/core.c
 +++ b/drivers/dma/dw/core.c
-@@ -1229,6 +1229,13 @@ int do_dma_probe(struct dw_dma_chip *chip)
- 			     BIT(DMA_MEM_TO_MEM);
- 	dw->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+@@ -1049,6 +1049,11 @@ static void dwc_free_chan_resources(struct dma_chan *chan)
+ 	dev_vdbg(chan2dev(chan), "%s: done\n", __func__);
+ }
  
-+	/*
-+	 * For now there is no hardware with non uniform maximum block size
-+	 * across all of the device channels, so we set the maximum segment
-+	 * size as the block size found for the very first channel.
-+	 */
-+	dma_set_max_seg_size(dw->dma.dev, dw->chan[0].block_size);
++static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
++{
 +
- 	err = dma_async_device_register(&dw->dma);
- 	if (err)
- 		goto err_dma_register;
++}
++
+ int do_dma_probe(struct dw_dma_chip *chip)
+ {
+ 	struct dw_dma *dw = chip->dw;
+@@ -1214,6 +1219,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
+ 	dw->dma.device_prep_dma_memcpy = dwc_prep_dma_memcpy;
+ 	dw->dma.device_prep_slave_sg = dwc_prep_slave_sg;
+ 
++	dw->dma.device_caps = dwc_caps;
+ 	dw->dma.device_config = dwc_config;
+ 	dw->dma.device_pause = dwc_pause;
+ 	dw->dma.device_resume = dwc_resume;
 -- 
 2.26.2
 

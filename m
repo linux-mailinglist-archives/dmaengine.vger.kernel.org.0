@@ -2,41 +2,41 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66B6021A076
-	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2020 15:06:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EE3A21A0B2
+	for <lists+dmaengine@lfdr.de>; Thu,  9 Jul 2020 15:20:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbgGINGm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 9 Jul 2020 09:06:42 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35906 "EHLO
+        id S1726517AbgGINUk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 9 Jul 2020 09:20:40 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:37682 "EHLO
         lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbgGINGm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Jul 2020 09:06:42 -0400
+        with ESMTP id S1726575AbgGINUk (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 9 Jul 2020 09:20:40 -0400
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 069D6aOG118789;
-        Thu, 9 Jul 2020 08:06:36 -0500
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 069DKaB7122231;
+        Thu, 9 Jul 2020 08:20:36 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594299996;
-        bh=wf4821EC69+aP0BKeLO1uHp0gJaat/DBIbUWaN80s/M=;
+        s=ti-com-17Q1; t=1594300836;
+        bh=JoZGlv3UsIhKnKWzUWths0Er0fErfodjyWI5xdkZkuc=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=drJdZ8WKHTmcxG5IWmoty0GKKU9v48Qb0rKjiFQYkolKQFyOvf1hsg3cQ0QnAIJR7
-         AjEG/U9Cbx2MAQ1BWQi30s8yrLYi6roh3wXTJqB85JR7xc1IrmVoFpjS0KEPMVoQPv
-         hEzNe8z5YzLi9KNbHLNvw+wyuP9lXI2dMyPU4ujs=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 069D6aPm015214;
-        Thu, 9 Jul 2020 08:06:36 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+        b=rSFRzfuubsBBCkPy+npFmwFGd8RE803M8xvtT9clca0pkStFVVytZK72qa3lFE/MF
+         1jaBVViMxIExofSUtzzzCia4M1vqEPlFQdElbWUu3E4luc0/vOMM8EBz9FkmyAFQJr
+         FVyajfsdKxS5Zqy92IRRLm0HXyOL0tqF9BGHllEw=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 069DKaqi037003;
+        Thu, 9 Jul 2020 08:20:36 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 9 Jul
- 2020 08:06:36 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 08:20:36 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 9 Jul 2020 08:06:36 -0500
+ Frontend Transport; Thu, 9 Jul 2020 08:20:36 -0500
 Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 069D6YBD090529;
-        Thu, 9 Jul 2020 08:06:34 -0500
-Subject: Re: [PATCH v6 2/6] dmaengine: virt-dma: Use lockdep to check locking
- requirements
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 069DKYDK005048;
+        Thu, 9 Jul 2020 08:20:35 -0500
+Subject: Re: [PATCH v6 4/6] dmaengine: xilinx: dpdma: Add the Xilinx
+ DisplayPort DMA engine driver
 To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         <dmaengine@vger.kernel.org>
 CC:     Michal Simek <michal.simek@xilinx.com>,
@@ -45,15 +45,15 @@ CC:     Michal Simek <michal.simek@xilinx.com>,
         Satish Kumar Nagireddy <SATISHNA@xilinx.com>,
         Vinod Koul <vkoul@kernel.org>
 References: <20200708201906.4546-1-laurent.pinchart@ideasonboard.com>
- <20200708201906.4546-3-laurent.pinchart@ideasonboard.com>
+ <20200708201906.4546-5-laurent.pinchart@ideasonboard.com>
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 X-Pep-Version: 2.0
-Message-ID: <c4ae1bd2-eafd-136e-71f6-1d85149d776a@ti.com>
-Date:   Thu, 9 Jul 2020 16:07:38 +0300
+Message-ID: <64817596-1ba2-97d7-1dde-600eead16b05@ti.com>
+Date:   Thu, 9 Jul 2020 16:21:38 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200708201906.4546-3-laurent.pinchart@ideasonboard.com>
+In-Reply-To: <20200708201906.4546-5-laurent.pinchart@ideasonboard.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
@@ -66,101 +66,99 @@ X-Mailing-List: dmaengine@vger.kernel.org
 Hi Laurent,
 
 On 08/07/2020 23.19, Laurent Pinchart wrote:
-> A few virt-dma functions are documented as requiring the vc.lock to be
-> held by the caller. Check this with lockdep.
+> From: Hyun Kwon <hyun.kwon@xilinx.com>
 >=20
-> The vchan_vdesc_fini() and vchan_find_desc() functions gain a lockdep
+> The ZynqMP DisplayPort subsystem includes a DMA engine called DPDMA wit=
+h
+> 6 DMa channels (4 for display and 2 for audio). This driver exposes the=
 
-vchan_vdesc_fini() is used outside of held vc->lock via vchan_complete()
-and the customized local re-implementation of it in ti/k3-udma.c
+> DPDMA through the dmaengine API, to be used by audio (ALSA) and display=
 
-This patch did not adds the lockdep_assert_held() to the _fini.
-The vchan_complete() can be issue only in  case when the descriptor is
-set to DMA_CTRL_REUSE.
-
-> check as well, because, even though they are not documented with this
-> requirement (and not documented at all for the latter), they touch
-> fields documented as protected by vc.lock. All callers have been
-> manually inspected to verify they call the functions with the lock held=
-=2E
+> (DRM) drivers for the DisplayPort subsystem.
 >=20
+> Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
+> Signed-off-by: Tejas Upadhyay <tejasu@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> ---
->  drivers/dma/virt-dma.c |  2 ++
->  drivers/dma/virt-dma.h | 10 ++++++++++
->  2 files changed, 12 insertions(+)
->=20
-> diff --git a/drivers/dma/virt-dma.c b/drivers/dma/virt-dma.c
-> index 23e33a85f033..1cb36ab3d9c1 100644
-> --- a/drivers/dma/virt-dma.c
-> +++ b/drivers/dma/virt-dma.c
-> @@ -68,6 +68,8 @@ struct virt_dma_desc *vchan_find_desc(struct virt_dma=
-_chan *vc,
->  {
->  	struct virt_dma_desc *vd;
-> =20
-> +	lockdep_assert_held(&vc->lock);
-> +
->  	list_for_each_entry(vd, &vc->desc_issued, node)
->  		if (vd->tx.cookie =3D=3D cookie)
->  			return vd;
-> diff --git a/drivers/dma/virt-dma.h b/drivers/dma/virt-dma.h
-> index e9f5250fbe4d..59d9eabc8b67 100644
-> --- a/drivers/dma/virt-dma.h
-> +++ b/drivers/dma/virt-dma.h
-> @@ -81,6 +81,8 @@ static inline struct dma_async_tx_descriptor *vchan_t=
-x_prep(struct virt_dma_chan
->   */
->  static inline bool vchan_issue_pending(struct virt_dma_chan *vc)
->  {
-> +	lockdep_assert_held(&vc->lock);
-> +
->  	list_splice_tail_init(&vc->desc_submitted, &vc->desc_issued);
->  	return !list_empty(&vc->desc_issued);
->  }
-> @@ -96,6 +98,8 @@ static inline void vchan_cookie_complete(struct virt_=
-dma_desc *vd)
->  	struct virt_dma_chan *vc =3D to_virt_chan(vd->tx.chan);
->  	dma_cookie_t cookie;
-> =20
-> +	lockdep_assert_held(&vc->lock);
-> +
->  	cookie =3D vd->tx.cookie;
->  	dma_cookie_complete(&vd->tx);
->  	dev_vdbg(vc->chan.device->dev, "txd %p[%x]: marked complete\n",
-> @@ -146,6 +150,8 @@ static inline void vchan_terminate_vdesc(struct vir=
-t_dma_desc *vd)
->  {
->  	struct virt_dma_chan *vc =3D to_virt_chan(vd->tx.chan);
-> =20
-> +	lockdep_assert_held(&vc->lock);
-> +
->  	list_add_tail(&vd->node, &vc->desc_terminated);
-> =20
->  	if (vc->cyclic =3D=3D vd)
-> @@ -160,6 +166,8 @@ static inline void vchan_terminate_vdesc(struct vir=
-t_dma_desc *vd)
->   */
->  static inline struct virt_dma_desc *vchan_next_desc(struct virt_dma_ch=
-an *vc)
->  {
-> +	lockdep_assert_held(&vc->lock);
-> +
->  	return list_first_entry_or_null(&vc->desc_issued,
->  					struct virt_dma_desc, node);
->  }
-> @@ -177,6 +185,8 @@ static inline struct virt_dma_desc *vchan_next_desc=
-(struct virt_dma_chan *vc)
->  static inline void vchan_get_all_descriptors(struct virt_dma_chan *vc,=
 
->  	struct list_head *head)
->  {
-> +	lockdep_assert_held(&vc->lock);
+=2E..
+
+> +static void xilinx_dpdma_chan_queue_transfer(struct xilinx_dpdma_chan =
+*chan)
+> +{
+> +	struct xilinx_dpdma_device *xdev =3D chan->xdev;
+> +	struct xilinx_dpdma_sw_desc *sw_desc;
+> +	struct xilinx_dpdma_tx_desc *desc;
+> +	struct virt_dma_desc *vdesc;
+> +	u32 reg, channels;
 > +
->  	list_splice_tail_init(&vc->desc_allocated, head);
->  	list_splice_tail_init(&vc->desc_submitted, head);
->  	list_splice_tail_init(&vc->desc_issued, head);
->=20
+> +	lockdep_assert_held(&chan->lock);
+> +
+> +	if (chan->desc.pending)
+> +		return;
+> +
+> +	if (!chan->running) {
+> +		xilinx_dpdma_chan_unpause(chan);
+> +		xilinx_dpdma_chan_enable(chan);
+> +		chan->first_frame =3D true;
+> +		chan->running =3D true;
+> +	}
+> +
+> +	if (chan->video_group)
+> +		channels =3D xilinx_dpdma_chan_video_group_ready(chan);
+> +	else
+> +		channels =3D BIT(chan->id);
+> +
+> +	if (!channels)
+> +		return;
+> +
+> +	vdesc =3D vchan_next_desc(&chan->vchan);
+> +	if (!vdesc)
+> +		return;
+> +
+> +	if (!chan->first_frame && !(vdesc->tx.flags & DMA_PREP_LOAD_EOT)) {
+> +		/*
+> +		 * The client forgot to set the DMA_PREP_LOAD_EOT flag. The DMA
+> +		 * engine API requires the channel to silently ignore the
+> +		 * descriptor, leaving the client waiting forever for the new
+> +		 * descriptor to be processed.
+> +		 */
+
+This hardly going to happen. But if it does, a gentle dev_dbg() might
+save some time for the user on debugging?
+
+> +		return;
+> +	}
+> +
+> +	desc =3D to_dpdma_tx_desc(vdesc);
+> +	chan->desc.pending =3D desc;
+> +	list_del(&desc->vdesc.node);
+> +
+> +	/*
+> +	 * Assign the cookie to descriptors in this transaction. Only 16 bit
+> +	 * will be used, but it should be enough.
+> +	 */
+> +	list_for_each_entry(sw_desc, &desc->descriptors, node)
+> +		sw_desc->hw.desc_id =3D desc->vdesc.tx.cookie;
+> +
+> +	sw_desc =3D list_first_entry(&desc->descriptors,
+> +				   struct xilinx_dpdma_sw_desc, node);
+> +	dpdma_write(chan->reg, XILINX_DPDMA_CH_DESC_START_ADDR,
+> +		    lower_32_bits(sw_desc->dma_addr));
+> +	if (xdev->ext_addr)
+> +		dpdma_write(chan->reg, XILINX_DPDMA_CH_DESC_START_ADDRE,
+> +			    FIELD_PREP(XILINX_DPDMA_CH_DESC_START_ADDRE_MASK,
+> +				       upper_32_bits(sw_desc->dma_addr)));
+> +
+> +	if (chan->first_frame)
+> +		reg =3D XILINX_DPDMA_GBL_TRIG_MASK(channels);
+> +	else
+> +		reg =3D XILINX_DPDMA_GBL_RETRIG_MASK(channels);
+> +
+> +	chan->first_frame =3D false;
+> +
+> +	dpdma_write(xdev->reg, XILINX_DPDMA_GBL, reg);
+> +}
 
 - P=C3=A9ter
 

@@ -2,41 +2,41 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DF0821ECB9
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2020 11:27:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA43921ECBB
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2020 11:27:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgGNJ1a (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 14 Jul 2020 05:27:30 -0400
-Received: from mail-eopbgr50047.outbound.protection.outlook.com ([40.107.5.47]:59355
+        id S1726855AbgGNJ1f (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 14 Jul 2020 05:27:35 -0400
+Received: from mail-eopbgr50069.outbound.protection.outlook.com ([40.107.5.69]:40878
         "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726803AbgGNJ13 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 14 Jul 2020 05:27:29 -0400
+        id S1725955AbgGNJ1d (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 14 Jul 2020 05:27:33 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dTx/eoPZCh2578MJsi5A3/nuG4Kyq6XY9sTF4tH24ldBml/9CY6RpanynQyCwSO+Rm9H0R0225WhoYdhekW2TT8qsQOx9aw52nYxSe4xxNJ2GF44JnzxeXxPF12UsPTyvzrc4LbmPkeFVCYS7EdeWn4U6LAdqC4C9ECSH/pyIS6aMSaTavT+fE772OLAYDmiFnhl4Bnrhsg1YEoYmC0rW3AlZXNr2AJuE550RqfPxGUAiicBVeoQ2jMgBlFNX02waiW65yZ+BABRl2GRumy/SgGYBXnM+8D2ImrpDoifqbfRTRl2cMTTXTL7NUabeIie5X494uRdpzhHpvqMs4P14g==
+ b=IIdVnGZyUxjb9JIbM9K+RAGayJaKxnHoq4/1vAic08St/3SvG/v9u1jDmy3sVuDCv+h0kD+GvpcyGBFIvS1vWx9JM/fJM+a+IK4zYunVvnaohHPnWapOa/nC1H9ewqvEYSt57oBGBuzfHyFmawK7C575sAKDjGFFpNcqir2t8okV9hziEwYMtM1i5RCQz//S/2+iU1vxsb7lcLNR5VkgobWdHtOllFIfnPQYcqQX51wuOuJqJXk6GjDg9N/1Z77+Kg++iECIjyghF24bzaeZHFwKRjhPlVf9+eiiDDnt5kyGM8Fp8MhWjS2+FDaN3JDzFfAOukfW/wbIgZVJVdwF3w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wnGtdIP/hbdfvrIHlyCNUJzLtnZLrNC7lK23LHA+0xg=;
- b=htrvTrztdXOvCY93YBf7Rci9+6XTiDhVkhrHuRl6gqUnixiZ8nBC77qH9ce/YZSObBeVubeHJaov1IEZ78169M1jlYw1npVb+cHZ0czYXUPN5NKxtiYyEFZfKsPCWXe2G/reqTR90hPkHlvn2mvE4SFdBY4LAOhfNkrLdRYLXJjOKPwHj+8Nr9bufHfFUqonOvFdG3SCiRn3ecqlCOum8eGAu4466flxRisxfo/6Olx1vXLGV/QCORrQ2yXO89YXNwEV/lULVDJ6/apaqKEOYZ5TFCvCXBY+bh4ZfE/I5Wxr4eAzT85jPoNvhYFs346okCGMHvyuJU9HjwIMwyoWrQ==
+ bh=jlMSjTLc9bPxAbh3RbYyMXN3owo0JtZ3jcwGfsNozXA=;
+ b=NOqVFa1jLtIM5lr6MJXuS28HV0BWs/xERzJ+Jibp0NXYL7owfnwqQtwWPbWxvwabwmgGAM1DfoDHjuyF5LOgC//aIYyQZSkYCG6DOtamd/irKaWzfuYDYoNhE8H+7KdBVZkA/uKpDy5wk64zp+kCFxnfg6jIk3+ouAxa9b5KdeYqpt4zE+CQGIoFSBa3qhKIfIJfMEC5+g5clw0cuqrwMt4agX8PTwndOslJQiZ5sqFXkU3IHHukdWvXYgs0/mbb+9VvFZA8UJ1wxcqJpB6HZulYVCN5D3WJc5fq6YRX3ZdYAkPgjnT865FEm7T9GWXzrfzYuSrfInNmFKRdBP+XUA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wnGtdIP/hbdfvrIHlyCNUJzLtnZLrNC7lK23LHA+0xg=;
- b=JiK/CXhOTvgX9Uea14OMuHKqbxwszv0SccJBtg/RNfbYxoYFxnIRu/wVFzEVyGdf/eSVmXU5b6z6DeeGkqNhVqQkdPHCvLzU+oeoZ+Lq4iLs77oPwBdmqe6osWqP7iDBGWZaviVgt7mF0ikk0OdSXT6UypOdk3fQLpd9Hy6xQDs=
+ bh=jlMSjTLc9bPxAbh3RbYyMXN3owo0JtZ3jcwGfsNozXA=;
+ b=hETJGMTPJZNg/c7VdkopKrzU7KW8vYBv3R8R26XaYp51DFOYtIfhnt6rC6FYkxECFHEb28Ec0G0qQOMenuCQZwZRKUO10xdUs9ekmHI7OrGKMI5IzH5VIWeAeMjOqH6XH9IwroBY3iFIRr1tFVxgOmZOcI3nlgQK+QL+YTjjjEc=
 Authentication-Results: kernel.org; dkim=none (message not signed)
  header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
 Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
  by VI1PR04MB6270.eurprd04.prod.outlook.com (2603:10a6:803:fb::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.21; Tue, 14 Jul
- 2020 09:27:26 +0000
+ 2020 09:27:30 +0000
 Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
  ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
  ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3174.025; Tue, 14 Jul 2020
- 09:27:26 +0000
+ 09:27:30 +0000
 From:   Robin Gong <yibin.gong@nxp.com>
 To:     vkoul@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
         s.hauer@pengutronix.de, festevam@gmail.com,
@@ -45,9 +45,9 @@ To:     vkoul@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
 Cc:     kernel@pengutronix.de, linux-imx@nxp.com,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 2/9] dmaengine: fsl-edma-common: add condition check for fsl_edma_chan_mux
-Date:   Wed, 15 Jul 2020 01:41:41 +0800
-Message-Id: <1594748508-22179-3-git-send-email-yibin.gong@nxp.com>
+Subject: [PATCH v2 3/9] dmaengine: fsl-edma-common: add fsl_chan into fsl_edma_fill_tcd
+Date:   Wed, 15 Jul 2020 01:41:42 +0800
+Message-Id: <1594748508-22179-4-git-send-email-yibin.gong@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1594748508-22179-1-git-send-email-yibin.gong@nxp.com>
 References: <1594748508-22179-1-git-send-email-yibin.gong@nxp.com>
@@ -57,61 +57,97 @@ X-ClientProxiedBy: SG2PR01CA0092.apcprd01.prod.exchangelabs.com
  (2603:10a6:803:119::15)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2PR01CA0092.apcprd01.prod.exchangelabs.com (2603:1096:3:15::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3195.17 via Frontend Transport; Tue, 14 Jul 2020 09:27:21 +0000
+Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2PR01CA0092.apcprd01.prod.exchangelabs.com (2603:1096:3:15::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3195.17 via Frontend Transport; Tue, 14 Jul 2020 09:27:26 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [119.31.174.67]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: fb5e9702-7499-4f20-d669-08d827d81ec9
+X-MS-Office365-Filtering-Correlation-Id: fbb510bc-7135-4206-a49e-08d827d82199
 X-MS-TrafficTypeDiagnostic: VI1PR04MB6270:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB62704B3CF5559E05C51D7C4F89610@VI1PR04MB6270.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1247;
+X-Microsoft-Antispam-PRVS: <VI1PR04MB6270E3C2B9CD7A775282F66689610@VI1PR04MB6270.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: L533UtPFavhICK6QmU/qzjQ1iG8tSfx4y8g9XNGmBtNnXiUzK87GcZFfyoHWbqxM2zz1G0tY3dm8MXFpmYYTBhdXeVyEUcGnDHp/tTs0Ya2mI0s6+dFtvURLyhw9e3eOHJe2v/rEdfSufLa7QRqMlzVnADFTN/6F9UdxsTL73Et+LssYYOkJejV8UuszRPNSSVmjks7nwmZC7q1LJbeWnDy2hyl8tX3Fj9g1G+Te2EUK+k/xOIAyjTD9rY44gvvQImL39bUeBSZFfvXWCrpmrYpBv4i6ntVdUnfQZFCSoTXlfA9OqZ9cRFyUf60d+inYjfJ3uFzc4F6i8EiVrrc6MQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(396003)(136003)(346002)(376002)(66946007)(6486002)(6512007)(66476007)(66556008)(8936002)(4326008)(86362001)(2906002)(6506007)(83380400001)(478600001)(36756003)(16526019)(956004)(2616005)(186003)(6666004)(26005)(5660300002)(8676002)(52116002)(7416002)(4744005)(316002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: EJcZ/kVzw9XOTuPR0JgQp8oa2OqWsHucD5ursn9j9PDkg4qY5dtJ7swtuXSu8khih8/zJzi/t2PVIRwPCBhpnTMClRRjVTR+r0ZdDVUaRY3HIj/3uOSKTlItwu2kfLtrBkSLYzYHPairTjtswN94i/brdHpilzd0IFqfMCLTMIGOfcBBtYP2lvkqSDzmloK76vdzfCcaZdgm0BhwjGq9E7SZHnSWLdpPqtNQcRfZOC7FPX7vDMymYmsepJYv5brFeHxgxdYJIQ5PF3AfTRXg7Zqjb5VuiuxzhsM0O3LlvUFeTJdWMckLgsSlZNxFxZErLDT6n5p+mgvXP7r6mNFhOLni+cUeW0zL0mbx8O/wNFpG/TDJu8eh6fu2rPsTNV3ZMsePjpDAdMss4MDj5bOdwKIhcE6lJeY6e0YJ005acXEetIqHrgrFPoKZTAt7f92aRfvQAkbsUK54fAA7rA44//Wy68VRG4SwTeSx1Fn1e2A=
+X-Microsoft-Antispam-Message-Info: jVTtIiUX3NUYaMbNmv55bRMhz7Xr1MJFckRHdyjitnr4p7mV8n/68KcV8l5bdTq/YRqEi+Jdz7Jy+nZKhJDkcM6PJUTx1QtOXf+m0dZh+wjiYYN7zkCIZL9CrYCukutA9dVdTEEHk63yQXYgK/5Ez1ztHTDWZoaWw2KS8un3ORGH0V84Ag95tCOxXfhsT8JViaQAbYeaLe5Lnhpmbmvcui2MnQ5QO1OJasvlhuNLMBcLnLU38bk9Z9NIkTEGt3aIbP0wulrryf3wirGHb9zEh1b4FyTRCpzF1n2PpMYEQqwfsQkX9WO0Z8g2jkCNm+cAnV+KLYJnHv8HNVUDxW/USg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(66946007)(6486002)(6512007)(66476007)(66556008)(8936002)(4326008)(86362001)(2906002)(6506007)(83380400001)(498600001)(36756003)(16526019)(956004)(2616005)(186003)(6666004)(26005)(5660300002)(8676002)(52116002)(7416002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: /KJv6eYtuapuibIKZsoADYCvrgGKCBCcHDQkYH1v61VD1Ru3J81CC5jM7WvtTnAJDVw9YjCSVhDNmBpLQecyQC1nWFKTIqJC2pgZOQ4CqbRrlVyfZH62Vy4rp+9uXIELUNdwMHsSByPrhCmzZIzMB3aTWjbe2+QcC/MgsVHhkWoMRnjRmhFEs7Br/1R8T8pNvpG8sM0yaUQZLYy2CVEUr5mrXQlSKuLrmQi2hnkrmiQ6zRP8S+8Bq7xlRLa5d3SrAKhof6FNHQlCFZEfPnbzS9b3PzaRMJxt+r4xsaDpTqqIxZDIUCdM5e3z0KEUPVBPJE6uUFMH9lfmhdl7YXlngldotBnwQXNKyhqDfSSikkJDNWW6ey/vuN4/dMqQLYTaH6zfbyqi324QnAo02JtFpxKWbxplovBCje8o5EgOhenzlA/fC2ES+tr6DHu0TkXN+jqxbMmlGLT+ffyeKNQktrljpUWdIjY8ou5ZCzGcjxU=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb5e9702-7499-4f20-d669-08d827d81ec9
+X-MS-Exchange-CrossTenant-Network-Message-Id: fbb510bc-7135-4206-a49e-08d827d82199
 X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2020 09:27:25.9416
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2020 09:27:30.6929
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: M79X/HIBQBV/gYIGKIHEpXsFbm+oPKKnyStug9p4z417miw4H4uJOLD/3N2cBeykudUA9wDNyvgZPjVr+UiSyg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: wefrXcgCPNtuf9NZmb/XMMQPIR23mw5AJMO2XT2FiD6VxRq5fZl+ONB/KjwI7Bl3Xng8LjaFt/AJTswtXyxeoA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6270
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Since next edma3 don't have dmamux, add condition check in the common
-fsl_edma_free_chan_resources().
+For preparing for next edma3 merged so that any member of 'struct fsl_chan'
+could be used in fsl_edma_fill_tcd.
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 ---
- drivers/dma/fsl-edma-common.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/dma/fsl-edma-common.c | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
-index ef5294f0..d19e8a8 100644
+index d19e8a8..6ef083c 100644
 --- a/drivers/dma/fsl-edma-common.c
 +++ b/drivers/dma/fsl-edma-common.c
-@@ -642,7 +642,10 @@ void fsl_edma_free_chan_resources(struct dma_chan *chan)
+@@ -376,7 +376,8 @@ static void fsl_edma_set_tcd_regs(struct fsl_edma_chan *fsl_chan,
+ }
  
- 	spin_lock_irqsave(&fsl_chan->vchan.lock, flags);
- 	fsl_chan->edma->drvdata->dis_req(fsl_chan);
--	fsl_edma_chan_mux(fsl_chan, 0, false);
-+
-+	if (fsl_chan->edma->drvdata->dmamuxs)
-+		fsl_edma_chan_mux(fsl_chan, 0, false);
-+
- 	fsl_chan->edesc = NULL;
- 	vchan_get_all_descriptors(&fsl_chan->vchan, &head);
- 	fsl_edma_unprep_slave_dma(fsl_chan);
+ static inline
+-void fsl_edma_fill_tcd(struct fsl_edma_hw_tcd *tcd, u32 src, u32 dst,
++void fsl_edma_fill_tcd(struct fsl_edma_chan *fsl_chan,
++		       struct fsl_edma_hw_tcd *tcd, u32 src, u32 dst,
+ 		       u16 attr, u16 soff, u32 nbytes, u32 slast, u16 citer,
+ 		       u16 biter, u16 doff, u32 dlast_sga, bool major_int,
+ 		       bool disable_req, bool enable_sg)
+@@ -504,9 +505,9 @@ struct dma_async_tx_descriptor *fsl_edma_prep_dma_cyclic(
+ 			doff = fsl_chan->cfg.src_addr_width;
+ 		}
+ 
+-		fsl_edma_fill_tcd(fsl_desc->tcd[i].vtcd, src_addr, dst_addr,
+-				  fsl_chan->attr, soff, nbytes, 0, iter,
+-				  iter, doff, last_sg, true, false, true);
++		fsl_edma_fill_tcd(fsl_chan, fsl_desc->tcd[i].vtcd, src_addr,
++				  dst_addr, fsl_chan->attr, soff, nbytes, 0,
++				  iter, iter, doff, last_sg, true, false, true);
+ 		dma_buf_next += period_len;
+ 	}
+ 
+@@ -569,16 +570,16 @@ struct dma_async_tx_descriptor *fsl_edma_prep_slave_sg(
+ 		iter = sg_dma_len(sg) / nbytes;
+ 		if (i < sg_len - 1) {
+ 			last_sg = fsl_desc->tcd[(i + 1)].ptcd;
+-			fsl_edma_fill_tcd(fsl_desc->tcd[i].vtcd, src_addr,
+-					  dst_addr, fsl_chan->attr, soff,
+-					  nbytes, 0, iter, iter, doff, last_sg,
+-					  false, false, true);
++			fsl_edma_fill_tcd(fsl_chan, fsl_desc->tcd[i].vtcd,
++					  src_addr, dst_addr, fsl_chan->attr,
++					  soff, nbytes, 0, iter, iter, doff,
++					  last_sg, false, false, true);
+ 		} else {
+ 			last_sg = 0;
+-			fsl_edma_fill_tcd(fsl_desc->tcd[i].vtcd, src_addr,
+-					  dst_addr, fsl_chan->attr, soff,
+-					  nbytes, 0, iter, iter, doff, last_sg,
+-					  true, true, false);
++			fsl_edma_fill_tcd(fsl_chan, fsl_desc->tcd[i].vtcd,
++					  src_addr, dst_addr, fsl_chan->attr,
++					  soff, nbytes, 0, iter, iter, doff,
++					  last_sg, true, true, false);
+ 		}
+ 	}
+ 
 -- 
 2.7.4
 

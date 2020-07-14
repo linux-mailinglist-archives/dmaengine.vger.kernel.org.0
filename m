@@ -2,116 +2,89 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0693C21F193
-	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2020 14:40:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A077A21F59F
+	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2020 17:02:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728411AbgGNMjx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 14 Jul 2020 08:39:53 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33142 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726041AbgGNMjv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Jul 2020 08:39:51 -0400
-Received: by mail-ot1-f68.google.com with SMTP id h13so12929224otr.0;
-        Tue, 14 Jul 2020 05:39:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1gkM+uPTnitshLBuV08goagb6Ra5DyU+s9EwRHXtZeQ=;
-        b=mfkgj4eGLF/mS6HqwU2jRhvquP2KbIWOqQVHucEbNhtAlIGrgbXdXbsPnTkayf14FE
-         oQg/z0nbq0N+stgN7htDaEcBL5b8DITSlN2vdoPC/vnB3zkOh6sRIKIDyXcD/1Lhgpx7
-         m+8MBQqD39qOni3D0FQ2zPI0yLuLo/dvpXpuVO8fTJCWIv33HKy4tP1k5rwtAIhtdVpv
-         UaVqpCj6ZFTqN4K68xtGjsnmaVhCwf5aMHL/Xha/LRqNAcGfXsOX9uM8yCjmJAKJPaH9
-         5/ifjivkwWjaZvYMaZXQ2q80AIvuA3d9wqLnZCear2qONGYWSW+PuDfaQGwbDI7nK4AI
-         Mg4A==
-X-Gm-Message-State: AOAM5326I/hh7zqgBgwJ88VvQbW6sEr26AX/NfYV4yASaSuSSOLlPDNM
-        yHg8earbspn+2BzeO70WnYQNYum9VJMV/FRyviQ=
-X-Google-Smtp-Source: ABdhPJwQEGIYICCEl9+rMfVmtnnA3KEy1Oav7DAM0WyYTDfpBWgrg5GEkZrfN+c/weUUf5GnvXRjVxzrNetFysb/vow=
-X-Received: by 2002:a9d:2646:: with SMTP id a64mr3637009otb.107.1594730390491;
- Tue, 14 Jul 2020 05:39:50 -0700 (PDT)
+        id S1725955AbgGNPCg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 14 Jul 2020 11:02:36 -0400
+Received: from mga09.intel.com ([134.134.136.24]:40152 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbgGNPCg (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 14 Jul 2020 11:02:36 -0400
+IronPort-SDR: MuQtLfp5wUQR8AQ+Xzhkgxy18QVAH6s/W6u4B+UEFAcNkJLAiD7Lh+kmr2MscKWDChvmjigKqU
+ aqA55BMtpkfg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9681"; a="150342742"
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="150342742"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2020 07:58:10 -0700
+IronPort-SDR: vSELINP7Oka841b1XQ5v0T1yejLWoHKcTeuMZInm+KpwF7plU6OAN89HR0vw7g7DJV83rweBeN
+ 1ZmvFmAmP9oQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,350,1589266800"; 
+   d="scan'208";a="307898089"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.209.140.223]) ([10.209.140.223])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Jul 2020 07:58:09 -0700
+Subject: Re: [PATCH -next] dmaengine: idxd: fix PCI_MSI build errors
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+References: <9dee3f46-70d9-ea75-10cb-5527ab297d1d@infradead.org>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <46ae481e-3213-f1e0-604b-177bc876bb93@intel.com>
+Date:   Tue, 14 Jul 2020 07:58:09 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594676120-5862-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdV4zzrk_=-2Cmgq8=PKTeU457iveJ58gYekJ-Z8SXqaCQ@mail.gmail.com>
- <CA+V-a8tB0mA17f51GMQQ-Cj_CUXze_JjTahrpoAtmwuOFHQV6g@mail.gmail.com>
- <CAMuHMdXM3qf266exJtJrN0XAogEsJoM-k3FON9CjX+stLpuMFA@mail.gmail.com> <TY2PR01MB3692A868DD4E67D770C610E3D8610@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY2PR01MB3692A868DD4E67D770C610E3D8610@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 14 Jul 2020 14:39:39 +0200
-Message-ID: <CAMuHMdUry12MnLvVgmd7NJ+Gv4mA86qKKfsQobP1o-ohzKm=RQ@mail.gmail.com>
-Subject: Re: [PATCH 2/9] iommu/ipmmu-vmsa: Hook up R8A774E1 DT matching code
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9dee3f46-70d9-ea75-10cb-5527ab297d1d@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Shimoda-san,
 
-On Tue, Jul 14, 2020 at 1:42 PM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> > From: Geert Uytterhoeven, Sent: Tuesday, July 14, 2020 5:42 PM
-> > On Tue, Jul 14, 2020 at 10:30 AM Lad, Prabhakar
-> > <prabhakar.csengg@gmail.com> wrote:
-> > > On Tue, Jul 14, 2020 at 9:09 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > On Mon, Jul 13, 2020 at 11:35 PM Lad Prabhakar
-> > > Also the recent patch to add
-> > > "r8a77961" just adds to soc_rcar_gen3_whitelist.
-> >
-> > Oops, commit 17fe16181639801b ("iommu/renesas: Add support for r8a77961")
-> > did it wrong, too.
->
-> Thank you for the point it out. We should add r8a77961 to the soc_rcar_gen3[].
-> However, I don't know why I could not realize this issue...
-> So, I investigated this a little and then, IIUC, glob_match() which
-> soc_device_match() uses seems to return true, if *pat = "r8a7796" and *str = "r8a77961".
 
-Are you sure about this?
-I enabled CONFIG_GLOB_SELFTEST, and globtest succeeded.
-It does test glob_match("a", "aa"), which is a similar test.
+On 7/13/2020 11:35 PM, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Fix build errors when CONFIG_PCI_MSI is not enabled by making the
+> driver depend on PCI_MSI:
+> 
+> ld: drivers/dma/idxd/device.o: in function `idxd_mask_msix_vector':
+> device.c:(.text+0x26f): undefined reference to `pci_msi_mask_irq'
+> ld: drivers/dma/idxd/device.o: in function `idxd_unmask_msix_vector':
+> device.c:(.text+0x2af): undefined reference to `pci_msi_unmask_irq'
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: dmaengine@vger.kernel.org
+> Cc: Vinod Koul <vkoul@kernel.org>
 
-To be 100% sure, I added:
+Vinod, I submitted this fix patch last week:
+https://patchwork.kernel.org/patch/11649231/
 
---- a/lib/globtest.c
-+++ b/lib/globtest.c
-@@ -59,6 +59,7 @@ static char const glob_tests[] __initconst =
-        "1" "a\0" "a\0"
-        "0" "a\0" "b\0"
-        "0" "a\0" "aa\0"
-+       "0" "r8a7796\0" "r8a77961\0"
-        "0" "a\0" "\0"
-        "1" "\0" "\0"
-        "0" "\0" "a\0"
+But I think maybe Randy's patch may be more preferable? You can apply this one 
+and ignore my submission.
 
-and it still succeeded.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> ---
+>   drivers/dma/Kconfig |    1 +
+>   1 file changed, 1 insertion(+)
+> 
+> --- mmotm-2020-0713-1949.orig/drivers/dma/Kconfig
+> +++ mmotm-2020-0713-1949/drivers/dma/Kconfig
+> @@ -285,6 +285,7 @@ config INTEL_IDMA64
+>   config INTEL_IDXD
+>   	tristate "Intel Data Accelerators support"
+>   	depends on PCI && X86_64
+> +	depends on PCI_MSI
+>   	depends on SBITMAP
+>   	select DMA_ENGINE
+>   	help
+> 
+> 

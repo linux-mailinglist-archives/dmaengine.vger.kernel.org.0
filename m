@@ -2,59 +2,58 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC6DA21EF17
+	by mail.lfdr.de (Postfix) with ESMTP id 4DD5D21EF16
 	for <lists+dmaengine@lfdr.de>; Tue, 14 Jul 2020 13:21:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgGNLUT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        id S1727989AbgGNLUT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
         Tue, 14 Jul 2020 07:20:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52268 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727971AbgGNLSm (ORCPT
+        with ESMTP id S1728144AbgGNLSm (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Tue, 14 Jul 2020 07:18:42 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0D82C08E886
-        for <dmaengine@vger.kernel.org>; Tue, 14 Jul 2020 04:16:06 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id 17so5003771wmo.1
-        for <dmaengine@vger.kernel.org>; Tue, 14 Jul 2020 04:16:06 -0700 (PDT)
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 531D2C08E8A0
+        for <dmaengine@vger.kernel.org>; Tue, 14 Jul 2020 04:16:08 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j4so20884339wrp.10
+        for <dmaengine@vger.kernel.org>; Tue, 14 Jul 2020 04:16:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tHvsPtXMawqhgTlXf8i2jhQs/B2cBsj2Ks/fZJOcmHY=;
-        b=Fqu+JGaFSRh7vRRPgR/HabR8IBZaeLvvr2EcwSrSv7QCI/6fOnODRUdqwt90J3g5C8
-         0s7/ZkCY/MC07cLGz5P6eZPk8H0sOh7MIQCT3wT/fmUP0dZZvRlB6+ROihSuNTcRcnrn
-         3f/KQJT0rXlJvq27p2T59AjfgIz20tp6gxCQwiRj2g3DFceT0HNj5P5tLxs2F3WUfGUr
-         BCztbiua/SQvCo0rqC98vsPQJ6hLsJvnB5rS2qxatc4pm34FHMoA/X6H2H78RvRzapwC
-         7c22y4tqYny0qVqhSNYiSLAngITlsOr2bNM3rVNtPcNOiSxaFmQjsg/AEf1VCrEiPz2W
-         p5Bg==
+        bh=ewSSWUW/45nS/yx3Bple4Rafu63cuthV60wjjsFm31o=;
+        b=r07S7f0JSGNo1Nt9IZFRGGvi9Lp2WCC0rUzVkAvOq5O5uuetYvLH26mbxDtnyAveOz
+         frcZe2zibwjQUBdEtszl73MgfdEyhSWZPApwvfZbtovOiVCL+WQ62RhmhxnQcZamm8Xu
+         3/+y9QgaGUFjp0zbF74w49tY4gMxtfrYEhyvpwi1E5zAnvOXnxeahcfETAjZ8zxWDFQR
+         y8d4IbJ64kqiAxtEplpKCvRtSMPMDLwDzaSZYdo7ZjIcV83l6ES2n2CSsfPa7S0tsFm2
+         WaARQ9l+CbHGQ1v3IShviPOp0RquLwYS1UYGGtDANowawECxzEayp2QTi3YOTEl+9InD
+         KT1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tHvsPtXMawqhgTlXf8i2jhQs/B2cBsj2Ks/fZJOcmHY=;
-        b=HPJryujxIm0l8lVQG2WqWsfKeRaLAKj3mj1TzKBeqUTbk5JJgBnFucjXUycMa829Qo
-         pl0A6iEPt/u6CW9q8v73/S9fJrwj7Zhq93fnoikCzq/WLo+EG35+YyRjBdRiFRfyq91G
-         XDtLO3QRsHUHgoCsId8Q1UNXgDbJKIKIhUxcHJMaZmMmEuayyC75Reqg67Utp2VQbBMK
-         wNS5LXrAX3JPVqPI3HGCfZyPr5LQyoVKeNe5Wcg6+HLbRmofXySftLrwFaIRzYJ7juNn
-         bhYDHaBZls4b20BeADXXvzaJa/GdoKkOYh1qHeoSr/UnmKUSjAMKO5O/SUOHj/FW2bdH
-         7YPg==
-X-Gm-Message-State: AOAM531SJR9bDT5MZNhozF6FRCaxEL3m0lhrkLrA5ZK14Zjgua15XP7s
-        JwBky/6S8euPlftS4kw66I5Zhw==
-X-Google-Smtp-Source: ABdhPJxVoSxX2N3tawtWC/yLdMqtT4pktyn2twbJ8qTyWyZpqmkc6sC5zihRJLY5WtskmmQJi5EWrw==
-X-Received: by 2002:a05:600c:2116:: with SMTP id u22mr3778571wml.82.1594725365560;
-        Tue, 14 Jul 2020 04:16:05 -0700 (PDT)
+        bh=ewSSWUW/45nS/yx3Bple4Rafu63cuthV60wjjsFm31o=;
+        b=s2QVfiZAZwghiNqiH1t4UCpFZN/UAuRmr0vLqDmv12mqlSAzyvRoLiRph1AYWDThq+
+         fUJYzpkKxd4KN2CvTX1ZhKNVsOPqg6Tq9kzp4RJMA8mqCbVjeExbDHP4ausgVI6qHABT
+         wMBFcYoOYG3ZhLahyyIBVUH1TSWtGTi7Wetos0nYwHtA4lBISmmN3NGP0+53z9z4BXyv
+         j6+ceZbqEILkwMdkdoqs3864EpFJvdVuZ94tnpi22H82sT5lJt9ep4oighTaOcCrfFU5
+         ZnXsj6+7iYVDknNitk9L6bEDaqr0smy8EY4+NTKd9eF0tKb/UKwqj0j8Fj7nyC7ArspE
+         Uu0g==
+X-Gm-Message-State: AOAM532n6xJIrHpoc46cxyLZq2Ixmy07zlEsp6ZCP78NBvIPphg1kSZK
+        tIkCVIAu7uvxukjQ/fenfADh8A==
+X-Google-Smtp-Source: ABdhPJwOpZLkCp6n4syZLc9H9p9CNZPkWXr22M9kvz71NJK/JQzp8BLfmFRHWp3bAZgklkl2RAAp0Q==
+X-Received: by 2002:a5d:4a42:: with SMTP id v2mr4330551wrs.33.1594725367098;
+        Tue, 14 Jul 2020 04:16:07 -0700 (PDT)
 Received: from localhost.localdomain ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id l8sm28566052wrq.15.2020.07.14.04.16.04
+        by smtp.gmail.com with ESMTPSA id l8sm28566052wrq.15.2020.07.14.04.16.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 04:16:05 -0700 (PDT)
+        Tue, 14 Jul 2020 04:16:06 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     dan.j.williams@intel.com, vkoul@kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Prasad Sahu <rsahu@apm.com>, Loc Ho <lho@apm.com>
-Subject: [PATCH 14/17] dma: xgene-dma: Provide descriptions for 'dev' and 'clk' in device's ddata
-Date:   Tue, 14 Jul 2020 12:15:43 +0100
-Message-Id: <20200714111546.1755231-15-lee.jones@linaro.org>
+        dmaengine@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 15/17] dma: mv_xor_v2: Supply some missing 'struct mv_xor_v2_device' attribute docs
+Date:   Tue, 14 Jul 2020 12:15:44 +0100
+Message-Id: <20200714111546.1755231-16-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200714111546.1755231-1-lee.jones@linaro.org>
 References: <20200714111546.1755231-1-lee.jones@linaro.org>
@@ -67,29 +66,43 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/dma/xgene-dma.c:310: warning: Function parameter or member 'dev' not described in 'xgene_dma'
- drivers/dma/xgene-dma.c:310: warning: Function parameter or member 'clk' not described in 'xgene_dma'
+ drivers/dma/mv_xor_v2.c:168: warning: Function parameter or member 'clk' not described in 'mv_xor_v2_device'
+ drivers/dma/mv_xor_v2.c:168: warning: Function parameter or member 'reg_clk' not described in 'mv_xor_v2_device'
+ drivers/dma/mv_xor_v2.c:168: warning: Function parameter or member 'irq_tasklet' not described in 'mv_xor_v2_device'
+ drivers/dma/mv_xor_v2.c:168: warning: Function parameter or member 'hw_queue_idx' not described in 'mv_xor_v2_device'
+ drivers/dma/mv_xor_v2.c:168: warning: Function parameter or member 'msi_desc' not described in 'mv_xor_v2_device'
 
-Cc: Prasad Sahu <rsahu@apm.com>
-Cc: Loc Ho <lho@apm.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/dma/xgene-dma.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/dma/mv_xor_v2.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/xgene-dma.c b/drivers/dma/xgene-dma.c
-index cd60fa6d67501..4f733d37a22e2 100644
---- a/drivers/dma/xgene-dma.c
-+++ b/drivers/dma/xgene-dma.c
-@@ -287,6 +287,8 @@ struct xgene_dma_chan {
- 
+diff --git a/drivers/dma/mv_xor_v2.c b/drivers/dma/mv_xor_v2.c
+index 157c959311eaf..9225f08dfee92 100644
+--- a/drivers/dma/mv_xor_v2.c
++++ b/drivers/dma/mv_xor_v2.c
+@@ -135,9 +135,11 @@ struct mv_xor_v2_descriptor {
  /**
-  * struct xgene_dma - internal representation of an X-Gene DMA device
-+ * @dev: reference to this device's struct device
-+ * @clk: reference to this device's clock
-  * @err_irq: DMA error irq number
-  * @ring_num: start id number for DMA ring
-  * @csr_dma: base for DMA register access
+  * struct mv_xor_v2_device - implements a xor device
+  * @lock: lock for the engine
++ * @clk: reference to the 'core' clock
++ * @reg_clk: reference to the 'reg' clock
+  * @dma_base: memory mapped DMA register base
+  * @glob_base: memory mapped global register base
+- * @irq_tasklet:
++ * @irq_tasklet: tasklet used for IRQ handling call-backs
+  * @free_sw_desc: linked list of free SW descriptors
+  * @dmadev: dma device
+  * @dmachan: dma channel
+@@ -146,6 +148,8 @@ struct mv_xor_v2_descriptor {
+  * @sw_desq: SW descriptors queue
+  * @desc_size: HW descriptor size
+  * @npendings: number of pending descriptors (for which tx_submit has
++ * @hw_queue_idx: HW queue index
++ * @msi_desc: local interrupt descriptor information
+  * been called, but not yet issue_pending)
+  */
+ struct mv_xor_v2_device {
 -- 
 2.25.1
 

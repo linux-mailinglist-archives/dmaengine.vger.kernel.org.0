@@ -2,92 +2,115 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 497E1221141
-	for <lists+dmaengine@lfdr.de>; Wed, 15 Jul 2020 17:37:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5B4B22133B
+	for <lists+dmaengine@lfdr.de>; Wed, 15 Jul 2020 19:10:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725907AbgGOPh3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 15 Jul 2020 11:37:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgGOPh3 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Jul 2020 11:37:29 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D917AC08C5DB
-        for <dmaengine@vger.kernel.org>; Wed, 15 Jul 2020 08:37:28 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id f18so6255857wml.3
-        for <dmaengine@vger.kernel.org>; Wed, 15 Jul 2020 08:37:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=2Je4T8z/w322fxOUCkiwVBCB1R8T4g7KUgJ9ivXdC54=;
-        b=mV2pcg1F1aIcUk+DLzQEo+MAWNQ+9PrKfD0mHv/xMs+Zo3xFO7vnIzCL2hx3luthr9
-         E19+CaAT6rzLFbghnD1ivXmqYl00TBVPWlUCNVzNzqyEJ0OhdLAz57AHmXwmAYgYQulz
-         yKH++yAHrFj2LNcT+D/wGA9BbLXjODS3ipwCSqZxfoNy95RGooNgSkRMmHk4zCZXj2MH
-         MI7pA8lUosPGjIw6voiU/tjOj1LqD8tULchQBDWmI8x1kiz/FIHp0ZGR9eCWUd5bp9ow
-         LJSV6ApJuAXQRzIZHkxfmL5WAh21DPvwdKG3pDxSntkZ7drWyoWmRteWcQ4Sk9oDO/Lp
-         CKvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=2Je4T8z/w322fxOUCkiwVBCB1R8T4g7KUgJ9ivXdC54=;
-        b=BlH52563eXIOsBUEiA6bPpwDMtpxlC/Y42ZYeh/5BjV4IlHihr3r4HFKMrGXgX3H0I
-         WQPP/pZS+9bZtdRjNA4ksvH1AIR3IIArnxTIamDUgvNjwivsoE3HXQ53e7URUgsuo6QT
-         7kfShph0L/IiHDNz183IabHVLQtQIB6Puj6l1Us26movHEJxr50HJNrVRqfYCvgVebn2
-         4f+WgLWVnNKopBtKIG8nEro7O09tYX7gKo4gF5bK9aOCWT3vNvIwagk3Ony8/x5iur9a
-         /kkEpmhKeIivI6a1SsvOnEoJuhxf0jqJqWexWkOdVntBB5w9jSoNswtjTFRPc0Ea6FJ8
-         nw1A==
-X-Gm-Message-State: AOAM5322Ug6rom1+OQAxrDZLxA8bVo2aWcNQr9DxZps/x96MIVPd58ln
-        kHHqI0VM7NBzv7Az/A1/ctwH+g==
-X-Google-Smtp-Source: ABdhPJwFsRC9h0/qpemmdCtzkg1WNsyzY0pDmoXoAcVsFn3mA3VMdNn/N97b8wMFmFHTu+Eh1VAQsg==
-X-Received: by 2002:a1c:3dc3:: with SMTP id k186mr95213wma.66.1594827447500;
-        Wed, 15 Jul 2020 08:37:27 -0700 (PDT)
-Received: from dell ([2.31.163.61])
-        by smtp.gmail.com with ESMTPSA id r1sm4073872wrt.73.2020.07.15.08.37.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2020 08:37:26 -0700 (PDT)
-Date:   Wed, 15 Jul 2020 16:37:25 +0100
-From:   Lee Jones <lee.jones@linaro.org>
+        id S1725867AbgGORIt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 15 Jul 2020 13:08:49 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:38260 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbgGORIt (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 15 Jul 2020 13:08:49 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id A28E5803202D;
+        Wed, 15 Jul 2020 17:08:45 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id u5_RIfGIlZua; Wed, 15 Jul 2020 20:08:45 +0300 (MSK)
+Date:   Wed, 15 Jul 2020 20:08:43 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Vinod Koul <vkoul@kernel.org>
-Cc:     dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH 00/17] Rid W=1 warnings in DMA
-Message-ID: <20200715153725.GJ3165313@dell>
-References: <20200714111546.1755231-1-lee.jones@linaro.org>
- <20200715152923.GB52592@vkoul-mobl>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 04/11] dmaengine: Introduce max SG list entries
+ capability
+Message-ID: <20200715170843.w4rwl7zjwfcr7rg2@mobilestation>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-5-Sergey.Semin@baikalelectronics.ru>
+ <d667adda-6576-623d-6976-30f60ab3c3dc@ti.com>
+ <20200710092738.z7zyywe46mp7uuf3@mobilestation>
+ <427bc5c8-0325-bc25-8637-a7627bcac26f@ti.com>
+ <20200710161445.t6eradkgt4terdr3@mobilestation>
+ <20200715111315.GK34333@vkoul-mobl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200715152923.GB52592@vkoul-mobl>
+In-Reply-To: <20200715111315.GK34333@vkoul-mobl>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, 15 Jul 2020, Vinod Koul wrote:
-
-> Hi Lee,
+On Wed, Jul 15, 2020 at 04:43:15PM +0530, Vinod Koul wrote:
+> On 10-07-20, 19:14, Serge Semin wrote:
+> > On Fri, Jul 10, 2020 at 02:51:33PM +0300, Peter Ujfalusi wrote:
 > 
-> On 14-07-20, 12:15, Lee Jones wrote:
-> > This set is part of a larger effort attempting to clean-up W=1
-> > kernel builds, which are currently overwhelmingly riddled with
-> > niggly little warnings.
+> > > Since we should be able to handle longer lists and this is kind of a
+> > > hint for clients that above this number of nents the list will be broken
+> > > up to smaller 'bursts', which when traversing could cause latency.
+> > > 
+> > > sg_chunk_len might be another candidate.
 > > 
-> > After these patches are applied, the build system no longer
-> > complains about any W=0 nor W=1 level warnings in drivers/dma.
+> > Ok. We've got four candidates:
+> > - max_sg_nents_burst
+> > - max_sg_burst
+> > - max_sg_chain
+> > - sg_chunk_len
 > > 
-> > Hurrah!
+> > @Vinod, @Andy, what do you think?
 > 
-> Yes indeed, thanks for fixing these up. I have changed the subsystem
-> name to dmaengine: and applied all
 
-Much obliged.  Thank you Vinod.
+> So IIUC your hw supports single sg and in that you would like to publish
+> the length of each chunk, is that correct?
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+No. My DMA engine does support only a single-entry SG-list, but the new DMA
+{~~slave~~,channel,device,peripheral,...} capability isn't about the length, but
+is about the maximum number of SG-list entries a DMA engine is able to
+automatically/"without software help" walk through and execute. In this thread
+we are debating about that new capability naming.
+
+The name suggested in this patch: max_sg_nents. Peter noted (I mostly agree with
+him), that it might be ambiguous, since from it (without looking into the
+dma_slave_caps structure comment) a user might think that it's a maximum number of
+SG-entries, which can be submitted for the DMA engine execution, while in fact it's
+about the DMA engine capability of automatic/burst/"without software intervention"
+SG-list entries walking through. (Such information will be helpful to solve a
+problem discussed in this mailing thread, and described in the cover-letter to
+this patchset. We also discussed it with you and Andy in the framework of this
+patchset many times.)
+
+As an alternative Peter suggested: max_sg_nents_burst. I also think it's better
+than "max_sg_nents" but for me it seems a bit long. max_sg_burst seems better.
+There is no need in having the "nents" in the name, since SG-list implies a list,
+which main parameter (if not to say only parameter) is the number of entries.
+"burst" is pointing out to the automatic/accelerated/"without software intervention"
+SG-list entries walking through.
+
+On the second thought suggested by me "max_sg_chain" sounds worse than "max_sg_burst",
+because it also might be perceived as a parameter limiting the number of SG-list
+entries is able to be submitted for the DMA engine execution, while in fact it
+describes another matter.
+
+Regarding "sg_chunk_len". I think it's ambiguous too, since the "chunk
+length" might be referred to both the entries length and to the sub-SG-list
+length.
+
+So what do you think? What name is better describing the new DMA capability?
+
+-Sergey
+
+> If so sg_chunk_len seems apt..
+> 
+> -- 
+> ~Vinod

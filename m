@@ -2,413 +2,236 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 36748222949
-	for <lists+dmaengine@lfdr.de>; Thu, 16 Jul 2020 19:20:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CF81222C22
+	for <lists+dmaengine@lfdr.de>; Thu, 16 Jul 2020 21:47:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729330AbgGPRUd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 Jul 2020 13:20:33 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:48874 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728949AbgGPRUc (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Jul 2020 13:20:32 -0400
-X-IronPort-AV: E=Sophos;i="5.75,360,1589209200"; 
-   d="scan'208";a="52107540"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 17 Jul 2020 02:20:30 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 5C98840B5998;
-        Fri, 17 Jul 2020 02:20:25 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org
-Cc:     linux-ide@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-renesas-soc@vger.kernel.org,
-        linux-usb@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 20/20] arm64: dts: renesas: r8a774e1: Add VIN and CSI-2 nodes
-Date:   Thu, 16 Jul 2020 18:18:35 +0100
-Message-Id: <1594919915-5225-21-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        id S1729490AbgGPTru (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 16 Jul 2020 15:47:50 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41930 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728788AbgGPTru (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Jul 2020 15:47:50 -0400
+Received: by mail-io1-f66.google.com with SMTP id p205so7303345iod.8;
+        Thu, 16 Jul 2020 12:47:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JhCyixCktHEpyKaSj8J8HBrewJpvrxr4Dobi9P1P5eg=;
+        b=eWeQt50AI0ovORy09vCEUPrLeoRo1dgKTcRP4zZUHc4OLFmKDKiVjKawplydYMvd+6
+         70EJQty7vJpNbIw17epGsrgOO7T0NA5QWXN6C9bacXY1YkfAgqApKjkBCRU4KVjFS4tG
+         mxZHJepg6huB2cVFugJvMO4N/GvWtv9FR+B8JAgHh/+47RC7YAKCjYJ2zDUukcSzS7oz
+         p+QfgKxalPkfnw7M9lmPAG9LG9BsfailvjjZI/Un2sc3qrnBy8KXcQ7vS3uQDmGAJpHS
+         5xZ8ikJNzBoI+FAJCO5ryBUeirNd5wU+gSHQKSZcyxHGBIPKDrsJFXavj0//Rukuaw3h
+         XmNg==
+X-Gm-Message-State: AOAM530VaHqA5TmLqdJ4koOgHjwReQy6u8PNO/Okfbc7azIkeyboE28f
+        KakDDDVZ34h74ZKt4QIf5w==
+X-Google-Smtp-Source: ABdhPJzNpwEG5H8u/oWt6PabRVpHiT4bMEtqypidWvr8oM/6+PNVOrAOA5uh9w5O8XFY9KPSmwmwTQ==
+X-Received: by 2002:a02:5e88:: with SMTP id h130mr7093109jab.116.1594928868688;
+        Thu, 16 Jul 2020 12:47:48 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id v13sm3195024iox.12.2020.07.16.12.47.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jul 2020 12:47:48 -0700 (PDT)
+Received: (nullmailer pid 2731552 invoked by uid 1000);
+        Thu, 16 Jul 2020 19:47:46 -0000
+Date:   Thu, 16 Jul 2020 13:47:46 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     vkoul@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, catalin.marinas@arm.com, will@kernel.org,
+        dan.j.williams@intel.com, angelo@sysam.it, kernel@pengutronix.de,
+        linux-imx@nxp.com, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 6/9] dt-bindings: dma: add fsl-edma3 yaml
+Message-ID: <20200716194746.GA2716872@bogus>
+References: <1594748508-22179-1-git-send-email-yibin.gong@nxp.com>
+ <1594748508-22179-7-git-send-email-yibin.gong@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1594748508-22179-7-git-send-email-yibin.gong@nxp.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add VIN and CSI-2 nodes to RZ/G2H (R8A774E1) SoC dtsi.
+On Wed, Jul 15, 2020 at 01:41:45AM +0800, Robin Gong wrote:
+> Add device binding doc for fsl-edma3 driver.
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> ---
+>  .../devicetree/bindings/dma/nxp,fsl-edma3.yaml     | 134 +++++++++++++++++++++
+>  1 file changed, 134 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/nxp,fsl-edma3.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/nxp,fsl-edma3.yaml b/Documentation/devicetree/bindings/dma/nxp,fsl-edma3.yaml
+> new file mode 100644
+> index 00000000..ebdad90
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/nxp,fsl-edma3.yaml
+> @@ -0,0 +1,134 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/nxp,fsl-edma3.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP eDMA3 Controller
+> +
+> +maintainers:
+> +  - Robin Gong <yibin.gong@nxp.com>
+> +
+> +allOf:
+> +  - $ref: "dma-controller.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - fsl,imx8qm-edma  # i.mx8qm/qxp
+> +
+> +  reg:
+> +    minItems: 2
+> +    maxItems: 32
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a774e1.dtsi | 334 ++++++++++++++++++++++
- 1 file changed, 334 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-index ce9e5615b932..bd87c4c4dcaf 100644
---- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-@@ -1415,6 +1415,246 @@
- 			status = "disabled";
- 		};
+Needs some sort of description as to what each region is.
  
-+		vin0: video@e6ef0000 {
-+			compatible = "renesas,vin-r8a774e1";
-+			reg = <0 0xe6ef0000 0 0x1000>;
-+			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 811>;
-+			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-+			resets = <&cpg 811>;
-+			renesas,id = <0>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					reg = <1>;
-+
-+					vin0csi20: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&csi20vin0>;
-+					};
-+					vin0csi40: endpoint@2 {
-+						reg = <2>;
-+						remote-endpoint = <&csi40vin0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		vin1: video@e6ef1000 {
-+			compatible = "renesas,vin-r8a774e1";
-+			reg = <0 0xe6ef1000 0 0x1000>;
-+			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 810>;
-+			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-+			resets = <&cpg 810>;
-+			renesas,id = <1>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					reg = <1>;
-+
-+					vin1csi20: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&csi20vin1>;
-+					};
-+					vin1csi40: endpoint@2 {
-+						reg = <2>;
-+						remote-endpoint = <&csi40vin1>;
-+					};
-+				};
-+			};
-+		};
-+
-+		vin2: video@e6ef2000 {
-+			compatible = "renesas,vin-r8a774e1";
-+			reg = <0 0xe6ef2000 0 0x1000>;
-+			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 809>;
-+			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-+			resets = <&cpg 809>;
-+			renesas,id = <2>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					reg = <1>;
-+
-+					vin2csi20: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&csi20vin2>;
-+					};
-+					vin2csi40: endpoint@2 {
-+						reg = <2>;
-+						remote-endpoint = <&csi40vin2>;
-+					};
-+				};
-+			};
-+		};
-+
-+		vin3: video@e6ef3000 {
-+			compatible = "renesas,vin-r8a774e1";
-+			reg = <0 0xe6ef3000 0 0x1000>;
-+			interrupts = <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 808>;
-+			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-+			resets = <&cpg 808>;
-+			renesas,id = <3>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					reg = <1>;
-+
-+					vin3csi20: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&csi20vin3>;
-+					};
-+					vin3csi40: endpoint@2 {
-+						reg = <2>;
-+						remote-endpoint = <&csi40vin3>;
-+					};
-+				};
-+			};
-+		};
-+
-+		vin4: video@e6ef4000 {
-+			compatible = "renesas,vin-r8a774e1";
-+			reg = <0 0xe6ef4000 0 0x1000>;
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 807>;
-+			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-+			resets = <&cpg 807>;
-+			renesas,id = <4>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					reg = <1>;
-+
-+					vin4csi20: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&csi20vin4>;
-+					};
-+				};
-+			};
-+		};
-+
-+		vin5: video@e6ef5000 {
-+			compatible = "renesas,vin-r8a774e1";
-+			reg = <0 0xe6ef5000 0 0x1000>;
-+			interrupts = <GIC_SPI 175 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 806>;
-+			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-+			resets = <&cpg 806>;
-+			renesas,id = <5>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					reg = <1>;
-+
-+					vin5csi20: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&csi20vin5>;
-+					};
-+				};
-+			};
-+		};
-+
-+		vin6: video@e6ef6000 {
-+			compatible = "renesas,vin-r8a774e1";
-+			reg = <0 0xe6ef6000 0 0x1000>;
-+			interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 805>;
-+			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-+			resets = <&cpg 805>;
-+			renesas,id = <6>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					reg = <1>;
-+
-+					vin6csi20: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&csi20vin6>;
-+					};
-+				};
-+			};
-+		};
-+
-+		vin7: video@e6ef7000 {
-+			compatible = "renesas,vin-r8a774e1";
-+			reg = <0 0xe6ef7000 0 0x1000>;
-+			interrupts = <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 804>;
-+			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-+			resets = <&cpg 804>;
-+			renesas,id = <7>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					reg = <1>;
-+
-+					vin7csi20: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&csi20vin7>;
-+					};
-+				};
-+			};
-+		};
-+
- 		rcar_sound: sound@ec500000 {
- 			/*
- 			 * #sound-dai-cells is required
-@@ -2136,6 +2376,100 @@
- 			status = "disabled";
- 		};
- 
-+		csi20: csi2@fea80000 {
-+			compatible = "renesas,r8a774e1-csi2";
-+			reg = <0 0xfea80000 0 0x10000>;
-+			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 714>;
-+			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-+			resets = <&cpg 714>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					reg = <1>;
-+
-+					csi20vin0: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&vin0csi20>;
-+					};
-+					csi20vin1: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&vin1csi20>;
-+					};
-+					csi20vin2: endpoint@2 {
-+						reg = <2>;
-+						remote-endpoint = <&vin2csi20>;
-+					};
-+					csi20vin3: endpoint@3 {
-+						reg = <3>;
-+						remote-endpoint = <&vin3csi20>;
-+					};
-+					csi20vin4: endpoint@4 {
-+						reg = <4>;
-+						remote-endpoint = <&vin4csi20>;
-+					};
-+					csi20vin5: endpoint@5 {
-+						reg = <5>;
-+						remote-endpoint = <&vin5csi20>;
-+					};
-+					csi20vin6: endpoint@6 {
-+						reg = <6>;
-+						remote-endpoint = <&vin6csi20>;
-+					};
-+					csi20vin7: endpoint@7 {
-+						reg = <7>;
-+						remote-endpoint = <&vin7csi20>;
-+					};
-+				};
-+			};
-+		};
-+
-+		csi40: csi2@feaa0000 {
-+			compatible = "renesas,r8a774e1-csi2";
-+			reg = <0 0xfeaa0000 0 0x10000>;
-+			interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 716>;
-+			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-+			resets = <&cpg 716>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					reg = <1>;
-+
-+					csi40vin0: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&vin0csi40>;
-+					};
-+					csi40vin1: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&vin1csi40>;
-+					};
-+					csi40vin2: endpoint@2 {
-+						reg = <2>;
-+						remote-endpoint = <&vin2csi40>;
-+					};
-+					csi40vin3: endpoint@3 {
-+						reg = <3>;
-+						remote-endpoint = <&vin3csi40>;
-+					};
-+				};
-+			};
-+		};
-+
- 		hdmi0: hdmi@fead0000 {
- 			reg = <0 0xfead0000 0 0x10000>;
- 			status = "disabled";
--- 
-2.17.1
+> +
+> +  interrupts:
+> +    minItems: 2
+> +    maxItems: 32
 
+ditto
+
+> +
+> +  interrupt-names:
+> +    minItems: 2
+> +    maxItems: 32
+> +    items:
+> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
+> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
+> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
+> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
+> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
+> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
+> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
+> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
+
+What about interrupts 8-31? If you want a pattern for all entries, you 
+do:
+
+items:
+  pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])-tx|rx+$"
+
+(If 'items' is a schema instead of a list, then it applies to all 
+entries.)
+
+What does edma[0-2] correspond to? The names should be local to the 
+instance.
+
+Really, what's the point of names that just have the channel number in 
+them? The driver can create names dynamically if needed. We already have 
+properties to define how many channels and a mask of present channels.
+
+> +
+> +  '#dma-cells':
+> +    const: 3
+> +    description: |
+> +      The 1st cell specifies the channel ID.
+> +
+> +      The 2nd cell specifies the channel priority.
+> +
+> +      The 3rd cell specifies the channel attributes:
+> +        bit0 transmit or receive.
+> +          0 = transmit
+> +          1 = receive
+> +        bit1 local or remote access.
+> +          0 = local
+> +          1 = remote
+> +        bit2 dualfifo case or not(only in Audio cyclic now).
+> +          0 = not dual fifo case
+> +          1 =  dualfifo case.
+> +
+> +  dma-channels:
+> +    minimum: 2
+> +    maximum: 32
+> +
+> +  power-domains:
+> +    minItems: 2
+> +    maxItems: 32
+> +
+> +  power-domain-names:
+> +    minItems: 2
+> +    maxItems: 32
+> +    items:
+> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
+> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
+> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
+> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
+> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
+> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
+> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
+> +      - pattern: "^edma[0-2]-chan([0-9]|[1-2][0-9]|3[0-1])+$"
+
+Again, why do you need names here?
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-names
+> +  - '#dma-cells'
+> +  - dma-channels
+> +  - power-domains
+> +  - power-domain-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/firmware/imx/rsrc.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    edma2: dma-controller@5a1f0000 {
+> +        compatible = "fsl,imx8qm-edma";
+> +        reg = <0x5a280000 0x10000>, /* channel8 UART0 rx */
+> +              <0x5a290000 0x10000>, /* channel9 UART0 tx */
+> +              <0x5a2a0000 0x10000>, /* channel10 UART1 rx */
+> +              <0x5a2b0000 0x10000>, /* channel11 UART1 tx */
+> +              <0x5a2c0000 0x10000>, /* channel12 UART2 rx */
+> +              <0x5a2d0000 0x10000>, /* channel13 UART2 tx */
+> +              <0x5a2e0000 0x10000>, /* channel14 UART3 rx */
+> +              <0x5a2f0000 0x10000>; /* channel15 UART3 tx */
+> +        #dma-cells = <3>;
+> +        dma-channels = <8>;
+> +        interrupts = <GIC_SPI 434 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 435 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 436 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 437 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 438 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 439 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 440 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 441 IRQ_TYPE_LEVEL_HIGH>;
+> +       interrupt-names = "edma2-chan8-rx", "edma2-chan9-tx",
+> +                         "edma2-chan10-rx", "edma2-chan11-tx",
+> +                         "edma2-chan12-rx", "edma2-chan13-tx",
+> +                         "edma2-chan14-rx", "edma2-chan15-tx";
+> +       power-domains = <&pd IMX_SC_R_DMA_2_CH8>,
+> +                       <&pd IMX_SC_R_DMA_2_CH9>,
+> +                       <&pd IMX_SC_R_DMA_2_CH10>,
+> +                       <&pd IMX_SC_R_DMA_2_CH11>,
+> +                       <&pd IMX_SC_R_DMA_2_CH12>,
+> +                       <&pd IMX_SC_R_DMA_2_CH13>,
+> +                       <&pd IMX_SC_R_DMA_2_CH14>,
+> +                       <&pd IMX_SC_R_DMA_2_CH15>;
+> +       power-domain-names = "edma2-chan8", "edma2-chan9",
+> +                            "edma2-chan10", "edma2-chan11",
+> +                            "edma2-chan12", "edma2-chan13",
+> +                            "edma2-chan14", "edma2-chan15";
+> +    };
+> -- 
+> 2.7.4
+> 

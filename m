@@ -2,25 +2,25 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71A74223054
+	by mail.lfdr.de (Postfix) with ESMTP id 033F0223056
 	for <lists+dmaengine@lfdr.de>; Fri, 17 Jul 2020 03:34:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgGQBdx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        id S1726138AbgGQBdx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
         Thu, 16 Jul 2020 21:33:53 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:41662 "EHLO
+Received: from perceval.ideasonboard.com ([213.167.242.64]:41672 "EHLO
         perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbgGQBdx (ORCPT
+        with ESMTP id S1726780AbgGQBdx (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Jul 2020 21:33:53 -0400
 Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 17E892B7;
-        Fri, 17 Jul 2020 03:33:49 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C745C71D;
+        Fri, 17 Jul 2020 03:33:50 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1594949629;
-        bh=g89E7lXxeRsbGlTknoXrwEpehj/Bnwy80mqtm68Hv+Q=;
-        h=From:To:Cc:Subject:Date:From;
-        b=rsPBKlRkPGHh/Uj7Z3jv6JuWlK+8OFnlKHiVGrhet2HObd6BArEEyJsGVxd5EP71D
-         kFcPqKaHUHX0LKLRpZN6Rx+mYcQN/0b3NsBiX5HASbM06xs0j1xOzgnViAPkFQweyB
-         bAorYZLYIgULzFvTPH+kVgljcAp0V1QZrVVFtT4U=
+        s=mail; t=1594949631;
+        bh=cpucIY7jody2CRvnutkZeEThx5BZUhRDM8Me+WqyTlE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UQHLETVpWnpyBTYW5qs4J/SBkrCfqguZ3Z0E0cjDSAnnZ6yN+z3E4Eb6q07KE3kut
+         FUDPPEuHaFZiIqZQZvq1Xz876c5pn/SF9f8tCECIohYBajGgoq7JvVN7AHtmIpihcS
+         4JlwtH7b9JlQyiI43oxZ3Icd9futaA+hXNjtmLZE=
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To:     dmaengine@vger.kernel.org
 Cc:     Michal Simek <michal.simek@xilinx.com>,
@@ -29,10 +29,12 @@ Cc:     Michal Simek <michal.simek@xilinx.com>,
         Satish Kumar Nagireddy <SATISHNA@xilinx.com>,
         Vinod Koul <vkoul@kernel.org>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v7 0/5] dma: Add Xilinx ZynqMP DPDMA driver
-Date:   Fri, 17 Jul 2020 04:33:32 +0300
-Message-Id: <20200717013337.24122-1-laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v7 1/5] dt: bindings: dma: xilinx: dpdma: DT bindings for Xilinx DPDMA
+Date:   Fri, 17 Jul 2020 04:33:33 +0300
+Message-Id: <20200717013337.24122-2-laurent.pinchart@ideasonboard.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200717013337.24122-1-laurent.pinchart@ideasonboard.com>
+References: <20200717013337.24122-1-laurent.pinchart@ideasonboard.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
@@ -40,65 +42,149 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello,
+The ZynqMP includes the DisplayPort subsystem with its own DMA engine
+called DPDMA. The DPDMA IP comes with 6 individual channels
+(4 for display, 2 for audio). This documentation describes DT bindings
+of DPDMA.
 
-This patch series adds a new driver for the DPDMA engine found in the
-Xilinx ZynqMP.
+Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes since v2:
 
-The previous version can be found at [1]. All review comments have been
-taken into account. The main changes are in the DPDMA driver, with
-cleanups in the debugfs support, and handling of the !LOAD_EOT case when
-preparing transactions.
+- Fix id URL
+- Fix path to dma-controller.yaml
+- Update license to GPL-2.0-only OR BSD-2-Clause
 
-The driver has been successfully tested with the ZynqMP DisplayPort
-subsystem DRM driver.
+Changes since v1:
 
-As I would like to merge both this series and the DRM driver that
-depends on it for v5.9 (if still possible), I have based those patches
-on top of v5.8-rc1. There's unfortunately a conflict with the DMA engine
-next branch, which is easy to resolve.
-
-Vinod, if you're fine with the series, I can propose two ways forward:
-
-- You can apply the patches on top of v5.8-rc1, push that to a base
-  branch, merge it into the dmaengine -next branch, and push the base
-  branch to a public git tree to let me base the DRM driver on it.
-
-- I can perform that work if you give me a Reviewed-by tag for the
-  series (at for patches 2/5 to 4/5), providing you with two signed
-  tags, one for the base branch and one for the merged branch. You could
-  then just pull the merged branch (please make sure not to rebase it or
-  otherwise modify it in that case).
-
-What's your preference ?
-
-[1] https://lore.kernel.org/dmaengine/20200708201906.4546-1-laurent.pinchart@ideasonboard.com/
-
-Hyun Kwon (1):
-  dmaengine: xilinx: dpdma: Add the Xilinx DisplayPort DMA engine driver
-
-Laurent Pinchart (4):
-  dt: bindings: dma: xilinx: dpdma: DT bindings for Xilinx DPDMA
-  dmaengine: Add support for repeating transactions
-  dmaengine: xilinx: dpdma: Add debugfs support
-  arm64: dts: zynqmp: Add DPDMA node
-
- .../dma/xilinx/xlnx,zynqmp-dpdma.yaml         |   68 +
- Documentation/driver-api/dmaengine/client.rst |    4 +-
- .../driver-api/dmaengine/provider.rst         |   49 +
- MAINTAINERS                                   |    9 +
- .../arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi |    4 +
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi        |   10 +
- drivers/dma/Kconfig                           |   10 +
- drivers/dma/xilinx/Makefile                   |    1 +
- drivers/dma/xilinx/xilinx_dpdma.c             | 1771 +++++++++++++++++
- include/dt-bindings/dma/xlnx-zynqmp-dpdma.h   |   16 +
- include/linux/dmaengine.h                     |   17 +
- 11 files changed, 1958 insertions(+), 1 deletion(-)
+- Convert the DT bindings to YAML
+- Drop the DT child nodes
+---
+ .../dma/xilinx/xlnx,zynqmp-dpdma.yaml         | 68 +++++++++++++++++++
+ MAINTAINERS                                   |  8 +++
+ include/dt-bindings/dma/xlnx-zynqmp-dpdma.h   | 16 +++++
+ 3 files changed, 92 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
- create mode 100644 drivers/dma/xilinx/xilinx_dpdma.c
  create mode 100644 include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
 
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+new file mode 100644
+index 000000000000..5de510f8c88c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+@@ -0,0 +1,68 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/xilinx/xlnx,zynqmp-dpdma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Xilinx ZynqMP DisplayPort DMA Controller Device Tree Bindings
++
++description: |
++  These bindings describe the DMA engine included in the Xilinx ZynqMP
++  DisplayPort Subsystem. The DMA engine supports up to 6 DMA channels (3
++  channels for a video stream, 1 channel for a graphics stream, and 2 channels
++  for an audio stream).
++
++maintainers:
++  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
++
++allOf:
++  - $ref: "../dma-controller.yaml#"
++
++properties:
++  "#dma-cells":
++    const: 1
++    description: |
++      The cell is the DMA channel ID (see dt-bindings/dma/xlnx-zynqmp-dpdma.h
++      for a list of channel IDs).
++
++  compatible:
++    const: xlnx,zynqmp-dpdma
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    description: The AXI clock
++    maxItems: 1
++
++  clock-names:
++    const: axi_clk
++
++required:
++  - "#dma-cells"
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    dma: dma-controller@fd4c0000 {
++      compatible = "xlnx,zynqmp-dpdma";
++      reg = <0x0 0xfd4c0000 0x0 0x1000>;
++      interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
++      interrupt-parent = <&gic>;
++      clocks = <&dpdma_clk>;
++      clock-names = "axi_clk";
++      #dma-cells = <1>;
++    };
++
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 68f21d46614c..fa52d4f9f8c8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18852,6 +18852,14 @@ F:	Documentation/devicetree/bindings/media/xilinx/
+ F:	drivers/media/platform/xilinx/
+ F:	include/uapi/linux/xilinx-v4l2-controls.h
+ 
++XILINX ZYNQMP DPDMA DRIVER
++M:	Hyun Kwon <hyun.kwon@xilinx.com>
++M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
++L:	dmaengine@vger.kernel.org
++S:	Supported
++F:	Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
++F:	include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
++
+ XILLYBUS DRIVER
+ M:	Eli Billauer <eli.billauer@gmail.com>
+ L:	linux-kernel@vger.kernel.org
+diff --git a/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h b/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
+new file mode 100644
+index 000000000000..3719cda5679d
+--- /dev/null
++++ b/include/dt-bindings/dma/xlnx-zynqmp-dpdma.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
++/*
++ * Copyright 2019 Laurent Pinchart <laurent.pinchart@ideasonboard.com>
++ */
++
++#ifndef __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__
++#define __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__
++
++#define ZYNQMP_DPDMA_VIDEO0		0
++#define ZYNQMP_DPDMA_VIDEO1		1
++#define ZYNQMP_DPDMA_VIDEO2		2
++#define ZYNQMP_DPDMA_GRAPHICS		3
++#define ZYNQMP_DPDMA_AUDIO0		4
++#define ZYNQMP_DPDMA_AUDIO1		5
++
++#endif /* __DT_BINDINGS_DMA_XLNX_ZYNQMP_DPDMA_H__ */
 -- 
 Regards,
 

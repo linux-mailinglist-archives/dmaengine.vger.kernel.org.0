@@ -2,84 +2,120 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 933E5223B87
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Jul 2020 14:41:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2888D223BF1
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Jul 2020 15:07:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgGQMlp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 17 Jul 2020 08:41:45 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53994 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726113AbgGQMlp (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Jul 2020 08:41:45 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HCfcjF100377;
-        Fri, 17 Jul 2020 07:41:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594989699;
-        bh=vj22npkLr4ycyFgGKzlLVt7vMVT8zWr/amI8H6iFZQI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=NogMo+o2HUFESCsoW02P3oYMBGyiHhXx6KiFlXK35lo78CA6oTVTAgT3gtcK/GylT
-         SNgoUt8ibP4N2ywHMwhnHKy5sIb0NU1vWM+xa18XnCNvHG+9IV+QRIZ+VRCkSMrvJX
-         Wm4bi60O94NDgqc3oi35+yTTrXvdpS0tMqke2mA0=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06HCfcY1091351
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jul 2020 07:41:38 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
- Jul 2020 07:41:38 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 17 Jul 2020 07:41:38 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HCfZup023969;
-        Fri, 17 Jul 2020 07:41:36 -0500
-Subject: Re: [PATCH next 6/6] dmaengine: ti: k3-udma: Switch to
- k3_ringacc_request_rings_pair
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <dmaengine@vger.kernel.org>
-References: <20200701103030.29684-1-grygorii.strashko@ti.com>
- <20200701103030.29684-7-grygorii.strashko@ti.com>
- <20200702125705.GB273932@vkoul-mobl>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <43ea4163-e477-ba55-9da0-c438fd46833b@ti.com>
-Date:   Fri, 17 Jul 2020 15:41:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726424AbgGQNHl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 17 Jul 2020 09:07:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59554 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbgGQNHg (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Jul 2020 09:07:36 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAFF1C08C5DD
+        for <dmaengine@vger.kernel.org>; Fri, 17 Jul 2020 06:07:34 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id q7so12584981ljm.1
+        for <dmaengine@vger.kernel.org>; Fri, 17 Jul 2020 06:07:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=a1qhOLKVmgbDxWR7DsBGPKppiVIcs98dPPN7Z4vRK7U=;
+        b=ZcpCVdZKMBTqfoayJtQADEX4zVTHWV2yxNakXh3yLSNrzebl3aH9tjryPIXyI3pz6I
+         E2E3jnn6/nLLS3nE0S8SBL5EhIZybuDyrLJ8SHFAg3d1SuO6BRbnY4H8ODY14ZMIU6aa
+         bmcXjLAzlncoRVHBH7XYqCt9t74/Qwj97l1fL/lhjkcXd/1k+4HwapoaSSbtq8rreAwQ
+         WqOP7vcgpQxfnV7i318A74jitSFLb1wO1WK01FmDR/P5sCd/VDuBBd+k8ePw7372X/j7
+         NIMH0Ym89cWouqdU8y2johbuaT26g3FYSTo0/3PXJ0Rfvj5tHrIEK1PSDeOM+hO3S/s6
+         CNNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=a1qhOLKVmgbDxWR7DsBGPKppiVIcs98dPPN7Z4vRK7U=;
+        b=JVG61eNXE3Mv+pauqjMxUmYQWnIihtFcD3epJLn3k5kiR3utfc5Ju5j3VXeZzFlOa+
+         xXI9PGaiFJfh3Vhh74m/NhSm2tpivvM77Z4QJu71tiZqJQNkDC9z2uzb1k8o4Le6tyYb
+         KJgCE1v6kzFQAvbPGF1i9Rdgzpp6kuauCwcxMaYqx5xHKp56zsb1c69cFCC8ydXKYL2/
+         kQQNyCXvszrk1ZarMb8FB2G6ZIw9/pCD4sp8VzteuDLYq2co3rSBPbUrw/866AgDTAwY
+         8TQVWZepZAD4NhhS+S8N0Q8HmN87rVCTmfhrt32enwaDCPkII5WUEo6s97zF3bNWY9z2
+         g7Cw==
+X-Gm-Message-State: AOAM5308F5g3s6KBE9BC1onzTcpwyTZbAIMPY0kMjLOKhccQfbQn171f
+        M6oumCMdT1QEXsfrVGevM+EFhg==
+X-Google-Smtp-Source: ABdhPJzV0BbOtpw7WhJztEZ51jWAX1HJ1JFIJz6hmBPOoJG/oR+b2KfjYZfEVEra0G7K6n1rrFZL3Q==
+X-Received: by 2002:a2e:8047:: with SMTP id p7mr4660529ljg.414.1594991252832;
+        Fri, 17 Jul 2020 06:07:32 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id k25sm1651300ljk.87.2020.07.17.06.07.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jul 2020 06:07:31 -0700 (PDT)
+Date:   Fri, 17 Jul 2020 15:07:30 +0200
+From:   Niklas <niklas.soderlund@ragnatech.se>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 17/20] dt-bindings: media: renesas,vin: Add R8A774E1
+ support
+Message-ID: <20200717130730.GA3976796@oden.dyn.berto.se>
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <20200702125705.GB273932@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1594919915-5225-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Hi Lad,
 
+Thanks for your work.
 
-On 02/07/2020 15:57, Vinod Koul wrote:
-> On 01-07-20, 13:30, Grygorii Strashko wrote:
->> From: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>
->> We only request ring pairs via K3 DMA driver, switch to use the new
->> k3_ringacc_request_rings_pair() to simplify the code.
+On 2020-07-16 18:18:32 +0100, Lad Prabhakar wrote:
+> Document support for the VIN module in the Renesas RZ/G2H (R8A774E1) SoC.
 > 
-> Acked-By: Vinod Koul <vkoul@kernel.org>
-> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-There is build warn with this patch - sending v2.
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
+> ---
+>  Documentation/devicetree/bindings/media/renesas,vin.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/renesas,vin.yaml b/Documentation/devicetree/bindings/media/renesas,vin.yaml
+> index 53c0a7238bac..4e0de280c1e5 100644
+> --- a/Documentation/devicetree/bindings/media/renesas,vin.yaml
+> +++ b/Documentation/devicetree/bindings/media/renesas,vin.yaml
+> @@ -40,6 +40,7 @@ properties:
+>                - renesas,vin-r8a774a1 # RZ/G2M
+>                - renesas,vin-r8a774b1 # RZ/G2N
+>                - renesas,vin-r8a774c0 # RZ/G2E
+> +              - renesas,vin-r8a774e1 # RZ/G2H
+>                - renesas,vin-r8a7778  # R-Car M1
+>                - renesas,vin-r8a7779  # R-Car H1
+>                - renesas,vin-r8a7795  # R-Car H3
+> -- 
+> 2.17.1
+> 
 
 -- 
-Best regards,
-grygorii
+Regards,
+Niklas Söderlund

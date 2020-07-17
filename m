@@ -2,94 +2,117 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD7FF223FC8
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Jul 2020 17:40:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E6D42240E9
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Jul 2020 18:57:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgGQPkC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 17 Jul 2020 11:40:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726256AbgGQPkC (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 17 Jul 2020 11:40:02 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D94742076A;
-        Fri, 17 Jul 2020 15:40:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595000401;
-        bh=oUWXy3XEEdACj4VXB3S0A8gloCT8UAGtaaANZlTOhcY=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=egmxPzhCJaO5Pklo2wFUgCisrdBaL7j2ncVrgoys66Ov9LXhgVzxXGFqIlODz/BYm
-         SBeDYsmknwq4gkwP74D2/j5goaQrPlJbtdJY2ErVv8nPqEDRjP6D+aAJZpnM8njnoZ
-         FRAkq9i/JLIztXRgN6hLt6p5JYwLKxyZ+Mt0PWp4=
-Date:   Fri, 17 Jul 2020 16:39:50 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>
-Cc:     linux-usb@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-pci@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-ide@vger.kernel.org
-In-Reply-To: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 00/20] Add support for SATA/PCIe/USB2[3]/VIN/CSI on R8A774E1
-Message-Id: <159500037996.27597.9512992990495217445.b4-ty@kernel.org>
+        id S1727085AbgGQQ4Q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 17 Jul 2020 12:56:16 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:54418 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727771AbgGQQ4P (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Jul 2020 12:56:15 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06HGqCCF046351;
+        Fri, 17 Jul 2020 16:56:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=fLmOz9fa5tkZPauy96fKApcAsnRfqNPHJeke51o8554=;
+ b=bDyrWIp/MIvJTnKUArQMkGBw2wsmKqli2CkEVRFLjZev3bD+y9zMlP9BYEMj+4b5oiHX
+ +HmMNV9gOz8wtsBDB5wDD3i65dL2CnNBZslNTjIst4RN+nhT+AR/Wh/M6PQS92415ZCM
+ KXhZ69teIkuQqhMgetUSmcpX2HHA6S599UVCx8Z5ZQebCiQXwymmVqLfd2pRFXlbunSE
+ GMdzGAgwKfo6P4wcxdR5aa89KkagMEZSayG9UoOlc8LTn7Rw1FcDIbAkmKiuEpsXWRt+
+ nZOjqycFxzPOESvy+UEuC/DjZJzwbktCNBuv85M+9B8xL16PLAnvrEBiigK7Y4Y4iMQ7 Gg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 327s65xpge-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Jul 2020 16:56:04 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06HGsEdZ085892;
+        Fri, 17 Jul 2020 16:56:03 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 32bbk0qsw4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 Jul 2020 16:56:03 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06HGu2Cb002404;
+        Fri, 17 Jul 2020 16:56:02 GMT
+Received: from [10.74.105.138] (/10.74.105.138)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 17 Jul 2020 09:56:02 -0700
+Subject: Re: [PATCH next v2 0/6] soc: ti: k3-ringacc: updates
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        dmaengine@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>
+References: <20200717132019.20427-1-grygorii.strashko@ti.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <1da72ba7-3ef1-9182-d577-c38d24a79296@oracle.com>
+Date:   Fri, 17 Jul 2020 09:55:58 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200717132019.20427-1-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=100 suspectscore=0 mlxscore=100
+ adultscore=0 spamscore=100 mlxlogscore=-1000 malwarescore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007170118
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9685 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=100 adultscore=0 malwarescore=0
+ phishscore=0 mlxscore=100 priorityscore=1501 lowpriorityscore=0
+ spamscore=100 clxscore=1011 bulkscore=0 mlxlogscore=-1000 impostorscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007170118
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, 16 Jul 2020 18:18:15 +0100, Lad Prabhakar wrote:
-> This patch series adds support for the following peripherals on RZ/G2H SoC
->  * PCIe
->  * SATA
->  * USB2
->  * USB3
->  * Audio
->  * VIN
->  * CSI
+On 7/17/20 6:20 AM, Grygorii Strashko wrote:
+> Hi Santosh,
 > 
-> [...]
+> This series is a set of non critical  updates for The TI K3 AM654x/J721E
+> Ring Accelerator driver.
+>
+Thanks. Will have a look and if all looks good, add it to next.
 
-Applied to
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-
-Thanks!
-
-[1/1] dt-bindings: sound: renesas, rsnd: Document r8a774e1 bindings
-      commit: 92e37407811b98a7eb54eb6a6b3d65847a46e0e6
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+> Patch 1 - convert bindings to json-schema
+> Patches 2,3,5 - code reworking
+> Patch 4 - adds new API to request pair of rings k3_ringacc_request_rings_pair()
+> Patch 6 - updates K3 UDMA to use new API
+> 
+> Changes in v2:
+> - fixed build warning with patch 6
+> - added "Reviewed-by:" and "Acked-by:" tags.
+> 
+> v1: https://lore.kernel.org/patchwork/cover/1266231/
+> 
+> Grygorii Strashko (4):
+>    dt-bindings: soc: ti: k3-ringacc: convert bindings to json-schema
+>    soc: ti: k3-ringacc: add ring's flags to dump
+>    soc: ti: k3-ringacc: add request pair of rings api.
+>    soc: ti: k3-ringacc: separate soc specific initialization
+> 
+> Peter Ujfalusi (2):
+>    soc: ti: k3-ringacc: Move state tracking variables under a struct
+>    dmaengine: ti: k3-udma: Switch to k3_ringacc_request_rings_pair
+> 
+>   .../devicetree/bindings/soc/ti/k3-ringacc.txt |  59 ------
+>   .../bindings/soc/ti/k3-ringacc.yaml           | 102 +++++++++
+>   drivers/dma/ti/k3-udma-glue.c                 |  42 ++--
+>   drivers/dma/ti/k3-udma.c                      |  34 +--
+>   drivers/soc/ti/k3-ringacc.c                   | 194 ++++++++++++------
+>   include/linux/soc/ti/k3-ringacc.h             |   4 +
+>   6 files changed, 261 insertions(+), 174 deletions(-)
+>   delete mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+>   create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.yaml
+> 

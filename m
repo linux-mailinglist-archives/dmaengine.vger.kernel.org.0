@@ -2,224 +2,139 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55725223B21
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Jul 2020 14:08:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03FD8223B74
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Jul 2020 14:37:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgGQMIF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 17 Jul 2020 08:08:05 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49382 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbgGQMIE (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Jul 2020 08:08:04 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 06HC80M5091212;
-        Fri, 17 Jul 2020 07:08:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1594987680;
-        bh=vx0I9HtZhwY/uU0ejTh9MR36PqE14Scc3wFhUPNqLQs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=hT4CaL3/URZUyy8Mn62QWuMa+Lsn9jSZ2iIxVkf2h8BoiYopxqVPPV7XbDDGdn6Q5
-         krye3ppHftO4QN25lFAwmkOglg4L47prDx3d+BmzrjOZP/RvEnHxG/5VrdAyphvS4a
-         1zLkMJye4yhd0ZdSyoWzjTLxKKbqNLY/kXBcLHos=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 06HC80mU108073
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jul 2020 07:08:00 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 17
- Jul 2020 07:07:59 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 17 Jul 2020 07:07:59 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 06HC7t1Y043751;
-        Fri, 17 Jul 2020 07:07:58 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <dan.j.williams@intel.com>
-Subject: [PATCH 2/2] dmaengine: ti: k3-udma: Query throughput level information from hardware
-Date:   Fri, 17 Jul 2020 15:09:03 +0300
-Message-ID: <20200717120903.8774-3-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200717120903.8774-1-peter.ujfalusi@ti.com>
-References: <20200717120903.8774-1-peter.ujfalusi@ti.com>
+        id S1726056AbgGQMgc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 17 Jul 2020 08:36:32 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:44278 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgGQMgc (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Jul 2020 08:36:32 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id E09AB8030802;
+        Fri, 17 Jul 2020 12:36:23 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id eSiPeAhr9U96; Fri, 17 Jul 2020 15:36:23 +0300 (MSK)
+Date:   Fri, 17 Jul 2020 15:36:21 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 04/11] dmaengine: Introduce max SG list entries
+ capability
+Message-ID: <20200717123621.6aphtbohvb3l42jc@mobilestation>
+References: <20200709224550.15539-1-Sergey.Semin@baikalelectronics.ru>
+ <20200709224550.15539-5-Sergey.Semin@baikalelectronics.ru>
+ <d667adda-6576-623d-6976-30f60ab3c3dc@ti.com>
+ <20200710092738.z7zyywe46mp7uuf3@mobilestation>
+ <427bc5c8-0325-bc25-8637-a7627bcac26f@ti.com>
+ <20200710161445.t6eradkgt4terdr3@mobilestation>
+ <20200715111315.GK34333@vkoul-mobl>
+ <20200715170843.w4rwl7zjwfcr7rg2@mobilestation>
+ <20200717081403.GL82923@vkoul-mobl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200717081403.GL82923@vkoul-mobl>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The CAP3 register contains information about the number of
-HCHAN (High Capacity) and UCHAN (Ultra High Capacity) channels in UDMAP.
+On Fri, Jul 17, 2020 at 01:44:03PM +0530, Vinod Koul wrote:
+> On 15-07-20, 20:08, Serge Semin wrote:
+> > On Wed, Jul 15, 2020 at 04:43:15PM +0530, Vinod Koul wrote:
+> > > On 10-07-20, 19:14, Serge Semin wrote:
+> > > > On Fri, Jul 10, 2020 at 02:51:33PM +0300, Peter Ujfalusi wrote:
+> > > 
+> > > > > Since we should be able to handle longer lists and this is kind of a
+> > > > > hint for clients that above this number of nents the list will be broken
+> > > > > up to smaller 'bursts', which when traversing could cause latency.
+> > > > > 
+> > > > > sg_chunk_len might be another candidate.
+> > > > 
+> > > > Ok. We've got four candidates:
+> > > > - max_sg_nents_burst
+> > > > - max_sg_burst
+> > > > - max_sg_chain
+> > > > - sg_chunk_len
+> > > > 
+> > > > @Vinod, @Andy, what do you think?
+> > > 
+> > 
+> > > So IIUC your hw supports single sg and in that you would like to publish
+> > > the length of each chunk, is that correct?
+> > 
+> > No. My DMA engine does support only a single-entry SG-list, but the new DMA
+> > {~~slave~~,channel,device,peripheral,...} capability isn't about the length, but
+> > is about the maximum number of SG-list entries a DMA engine is able to
+> > automatically/"without software help" walk through and execute. In this thread
+> > we are debating about that new capability naming.
+> > 
+> > The name suggested in this patch: max_sg_nents. Peter noted (I mostly agree with
+> > him), that it might be ambiguous, since from it (without looking into the
+> > dma_slave_caps structure comment) a user might think that it's a maximum number of
+> > SG-entries, which can be submitted for the DMA engine execution, while in fact it's
+> > about the DMA engine capability of automatic/burst/"without software intervention"
+> > SG-list entries walking through. (Such information will be helpful to solve a
+> > problem discussed in this mailing thread, and described in the cover-letter to
+> > this patchset. We also discussed it with you and Andy in the framework of this
+> > patchset many times.)
+> > 
+> > As an alternative Peter suggested: max_sg_nents_burst. I also think it's better
+> > than "max_sg_nents" but for me it seems a bit long. max_sg_burst seems better.
+> > There is no need in having the "nents" in the name, since SG-list implies a list,
+> > which main parameter (if not to say only parameter) is the number of entries.
+> > "burst" is pointing out to the automatic/accelerated/"without software intervention"
+> > SG-list entries walking through.
+> > 
+> > On the second thought suggested by me "max_sg_chain" sounds worse than "max_sg_burst",
+> > because it also might be perceived as a parameter limiting the number of SG-list
+> > entries is able to be submitted for the DMA engine execution, while in fact it
+> > describes another matter.
+> > 
+> > Regarding "sg_chunk_len". I think it's ambiguous too, since the "chunk
+> > length" might be referred to both the entries length and to the sub-SG-list
+> > length.
+> > 
+> > So what do you think? What name is better describing the new DMA capability?
+> 
 
-Based on this information the start indexes of the levels can be calculated
-without a need of a table in the match data.
+> How about max_nents_per_sg or max_nents_sg to signify that this implies
+> max nents for sg not sg entries.
 
-On am654 the CAP3 does not contain information about the number different
-channels. Set up the tpl information based on the available documentation.
+Well, as I see it those versions are no better than "max_sg_nents" suggested
+in this patch, which Peter and me considered ambiguous. By reading just
+capability name all "max_sg_nents" and "max_nents_per_sg" and "max_nents_sg"
+seem like describing a hard limitation of the number of SG-list entries, but
+in fact they should merely mean a maximum number of entries executed in a single
+DMA engine transaction without software intervention. We need to have some new
+word which would define that "automatic/accelerated/burst/chained/etc." DMA
+transaction.
 
-This change will allow to use the same compatible for different SoCs where
-the only difference is the number of channel types.
+> IMO Burst/chain are not better than max_sg_nents.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/dma/ti/k3-udma.c | 57 ++++++++++++++++++++--------------------
- drivers/dma/ti/k3-udma.h |  2 ++
- 2 files changed, 30 insertions(+), 29 deletions(-)
+Could you elaborate why? In case of having "max_sg_burst" we could give to a
+user an impression of this capability describing something similar to the
+"max_burst" (maximum burst transaction length), but in application to the
+SG-list. The main SG-list parameter is the number of entries, so having the
+"burst" word in the capability name we'd imply the bursted number of entries
+instead of the total number of entries if the "nents" word would have been used.
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index 0ac6c440f536..d159c793d625 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -92,9 +92,6 @@ struct udma_match_data {
- 	u32 flags;
- 	u32 statictr_z_mask;
- 	u32 rchan_oes_offset;
--
--	u8 tpl_levels;
--	u32 level_start_idx[];
- };
- 
- struct udma_hwdesc {
-@@ -121,6 +118,9 @@ struct udma_dev {
- 	void __iomem *mmrs[MMR_LAST];
- 	const struct udma_match_data *match_data;
- 
-+	u8 tpl_levels;
-+	u32 tpl_start_idx[3];
-+
- 	size_t desc_align; /* alignment to use for descriptors */
- 
- 	struct udma_tisci_rm tisci_rm;
-@@ -1210,10 +1210,10 @@ static struct udma_##res *__udma_reserve_##res(struct udma_dev *ud,	\
- 	} else {							\
- 		int start;						\
- 									\
--		if (tpl >= ud->match_data->tpl_levels)			\
--			tpl = ud->match_data->tpl_levels - 1;		\
-+		if (tpl >= ud->tpl_levels)				\
-+			tpl = ud->tpl_levels - 1;			\
- 									\
--		start = ud->match_data->level_start_idx[tpl];		\
-+		start = ud->tpl_start_idx[tpl];				\
- 									\
- 		id = find_next_zero_bit(ud->res##_map, ud->res##_cnt,	\
- 					start);				\
-@@ -1262,7 +1262,6 @@ static int udma_get_rchan(struct udma_chan *uc)
- static int udma_get_chan_pair(struct udma_chan *uc)
- {
- 	struct udma_dev *ud = uc->ud;
--	const struct udma_match_data *match_data = ud->match_data;
- 	int chan_id, end;
- 
- 	if ((uc->tchan && uc->rchan) && uc->tchan->id == uc->rchan->id) {
-@@ -1284,7 +1283,7 @@ static int udma_get_chan_pair(struct udma_chan *uc)
- 	/* Can be optimized, but let's have it like this for now */
- 	end = min(ud->tchan_cnt, ud->rchan_cnt);
- 	/* Try to use the highest TPL channel pair for MEM_TO_MEM channels */
--	chan_id = match_data->level_start_idx[match_data->tpl_levels - 1];
-+	chan_id = ud->tpl_start_idx[ud->tpl_levels - 1];
- 	for (; chan_id < end; chan_id++) {
- 		if (!test_bit(chan_id, ud->tchan_map) &&
- 		    !test_bit(chan_id, ud->rchan_map))
-@@ -3115,11 +3114,6 @@ static struct udma_match_data am654_main_data = {
- 	.enable_memcpy_support = true,
- 	.statictr_z_mask = GENMASK(11, 0),
- 	.rchan_oes_offset = 0x2000,
--	.tpl_levels = 2,
--	.level_start_idx = {
--		[0] = 8, /* Normal channels */
--		[1] = 0, /* High Throughput channels */
--	},
- };
- 
- static struct udma_match_data am654_mcu_data = {
-@@ -3127,11 +3121,6 @@ static struct udma_match_data am654_mcu_data = {
- 	.enable_memcpy_support = false,
- 	.statictr_z_mask = GENMASK(11, 0),
- 	.rchan_oes_offset = 0x2000,
--	.tpl_levels = 2,
--	.level_start_idx = {
--		[0] = 2, /* Normal channels */
--		[1] = 0, /* High Throughput channels */
--	},
- };
- 
- static struct udma_match_data j721e_main_data = {
-@@ -3140,12 +3129,6 @@ static struct udma_match_data j721e_main_data = {
- 	.flags = UDMA_FLAG_PDMA_ACC32 | UDMA_FLAG_PDMA_BURST,
- 	.statictr_z_mask = GENMASK(23, 0),
- 	.rchan_oes_offset = 0x400,
--	.tpl_levels = 3,
--	.level_start_idx = {
--		[0] = 16, /* Normal channels */
--		[1] = 4, /* High Throughput channels */
--		[2] = 0, /* Ultra High Throughput channels */
--	},
- };
- 
- static struct udma_match_data j721e_mcu_data = {
-@@ -3154,11 +3137,6 @@ static struct udma_match_data j721e_mcu_data = {
- 	.flags = UDMA_FLAG_PDMA_ACC32 | UDMA_FLAG_PDMA_BURST,
- 	.statictr_z_mask = GENMASK(23, 0),
- 	.rchan_oes_offset = 0x400,
--	.tpl_levels = 2,
--	.level_start_idx = {
--		[0] = 2, /* Normal channels */
--		[1] = 0, /* High Throughput channels */
--	},
- };
- 
- static const struct of_device_id udma_of_match[] = {
-@@ -3216,6 +3194,27 @@ static int udma_setup_resources(struct udma_dev *ud)
- 	ud->rchan_cnt = UDMA_CAP2_RCHAN_CNT(cap2);
- 	ch_count  = ud->tchan_cnt + ud->rchan_cnt;
- 
-+	/* Set up the throughput level start indexes */
-+	if (of_device_is_compatible(dev->of_node,
-+				    "ti,am654-navss-main-udmap")) {
-+		ud->tpl_levels = 2;
-+		ud->tpl_start_idx[0] = 8;
-+	} else if (of_device_is_compatible(dev->of_node,
-+					   "ti,am654-navss-mcu-udmap")) {
-+		ud->tpl_levels = 2;
-+		ud->tpl_start_idx[0] = 2;
-+	} else if (UDMA_CAP3_UCHAN_CNT(cap3)) {
-+		ud->tpl_levels = 3;
-+		ud->tpl_start_idx[1] = UDMA_CAP3_UCHAN_CNT(cap3);
-+		ud->tpl_start_idx[0] = ud->tpl_start_idx[1] +
-+				       UDMA_CAP3_HCHAN_CNT(cap3);
-+	} else if (UDMA_CAP3_HCHAN_CNT(cap3)) {
-+		ud->tpl_levels = 2;
-+		ud->tpl_start_idx[0] = UDMA_CAP3_HCHAN_CNT(cap3);
-+	} else {
-+		ud->tpl_levels = 1;
-+	}
-+
- 	ud->tchan_map = devm_kmalloc_array(dev, BITS_TO_LONGS(ud->tchan_cnt),
- 					   sizeof(unsigned long), GFP_KERNEL);
- 	ud->tchans = devm_kcalloc(dev, ud->tchan_cnt, sizeof(*ud->tchans),
-diff --git a/drivers/dma/ti/k3-udma.h b/drivers/dma/ti/k3-udma.h
-index 9534f0ca29f4..09c4529e013d 100644
---- a/drivers/dma/ti/k3-udma.h
-+++ b/drivers/dma/ti/k3-udma.h
-@@ -42,6 +42,8 @@
- #define UDMA_CAP2_ECHAN_CNT(val)	(((val) >> 9) & 0x1ff)
- #define UDMA_CAP2_RCHAN_CNT(val)	(((val) >> 18) & 0x1ff)
- #define UDMA_CAP3_RFLOW_CNT(val)	((val) & 0x3fff)
-+#define UDMA_CAP3_HCHAN_CNT(val)	(((val) >> 14) & 0x1ff)
-+#define UDMA_CAP3_UCHAN_CNT(val)	(((val) >> 23) & 0x1ff)
- 
- /* UDMA_CHAN_RT_CTL_REG */
- #define UDMA_CHAN_RT_CTL_EN		BIT(31)
--- 
-Peter
+-Sergey
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+> 
+> -- 
+> ~Vinod

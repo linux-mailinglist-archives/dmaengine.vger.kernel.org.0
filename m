@@ -2,96 +2,63 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37AA822305A
-	for <lists+dmaengine@lfdr.de>; Fri, 17 Jul 2020 03:34:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 769B3223332
+	for <lists+dmaengine@lfdr.de>; Fri, 17 Jul 2020 07:59:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgGQBeD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 16 Jul 2020 21:34:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37522 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbgGQBeD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 16 Jul 2020 21:34:03 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63F46C061755
-        for <dmaengine@vger.kernel.org>; Thu, 16 Jul 2020 18:34:03 -0700 (PDT)
-Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C01121027;
-        Fri, 17 Jul 2020 03:33:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1594949634;
-        bh=xak74DmKv7tAKISbdXyZAbebmfILiJAsK6+garSD+jk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=otDFtAopSaJ7IkYbWJPG7EGjWLoHPoBH5Nrwvt5VoU7o7yQU++QJ0yrOGZYtcSICP
-         CcK9Idj0DDesBnywghVPdCmxeGE11cUAPTOz99JOu5ViljbGp48Dg3OdIttRM0GYPa
-         TNlq5mZ9Zla4qwsWZAMWiG2POiGP285z0EGQdGQM=
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     dmaengine@vger.kernel.org
-Cc:     Michal Simek <michal.simek@xilinx.com>,
+        id S1725864AbgGQF7W (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 17 Jul 2020 01:59:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725811AbgGQF7W (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 17 Jul 2020 01:59:22 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53FC02071A;
+        Fri, 17 Jul 2020 05:59:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594965562;
+        bh=Xk1yjDo8ZBe6RHRNCMTYO9zRRFOmWNNg8pXktDqA1Gg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fJSCc/FKMsMzC8rLHLDb8RUb60FJYVYaVmSo7FDsWCk6Hkz4S3pIETKdQHR3PmGXS
+         j2Y6gBetr7+on9DKGVCD0jDYzAdwakLpMoexnXbi2bGlZA1U27IRdVPHw7XoZAuTdA
+         HuhHMIyviJemTL6IO8mT7AiFw4Xf5h0YSktqSsGU=
+Date:   Fri, 17 Jul 2020 11:29:18 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     dmaengine@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
         Hyun Kwon <hyun.kwon@xilinx.com>,
         Tejas Upadhyay <tejasu@xilinx.com>,
         Satish Kumar Nagireddy <SATISHNA@xilinx.com>,
-        Vinod Koul <vkoul@kernel.org>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v7 5/5] arm64: dts: zynqmp: Add DPDMA node
-Date:   Fri, 17 Jul 2020 04:33:37 +0300
-Message-Id: <20200717013337.24122-6-laurent.pinchart@ideasonboard.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200717013337.24122-1-laurent.pinchart@ideasonboard.com>
-References: <20200717013337.24122-1-laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v6 4/6] dmaengine: xilinx: dpdma: Add the Xilinx
+ DisplayPort DMA engine driver
+Message-ID: <20200717055918.GC82923@vkoul-mobl>
+References: <20200708201906.4546-1-laurent.pinchart@ideasonboard.com>
+ <20200708201906.4546-5-laurent.pinchart@ideasonboard.com>
+ <20200715105906.GI34333@vkoul-mobl>
+ <20200716004140.GN6144@pendragon.ideasonboard.com>
+ <20200716052107.GC55478@vkoul-mobl>
+ <20200716134625.GC5960@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200716134625.GC5960@pendragon.ideasonboard.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add a DT node for the DisplayPort DMA engine (DPDMA).
+On 16-07-20, 16:46, Laurent Pinchart wrote:
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Acked-by: Michal Simek <michal.simek@xilinx.com>
----
- arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi |  4 ++++
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi         | 10 ++++++++++
- 2 files changed, 14 insertions(+)
+> > Yes that is only thing atm. Also I think we should rethink how we are
+> > tying the channels and can we do a better way to handle that
+> 
+> Thanks. I'll make the necessary changes and submit a new version. If you
+> think a new API is needed to tie channels together, can it be developed
+> on top ?
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
-index 9868ca15dfc5..32c4914738d9 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
-@@ -57,6 +57,10 @@ &cpu0 {
- 	clocks = <&zynqmp_clk ACPU>;
- };
- 
-+&dpdma {
-+	clocks = <&zynqmp_clk DPDMA_REF>;
-+};
-+
- &fpd_dma_chan1 {
- 	clocks = <&zynqmp_clk GDMA_REF>, <&zynqmp_clk LPD_LSBUS>;
- };
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index 9174ddc76bdc..d2554640db57 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -250,6 +250,16 @@ pmu@9000 {
- 			};
- 		};
- 
-+		dpdma: dma-controller@fd4c0000 {
-+			compatible = "xlnx,zynqmp-dpdma";
-+			status = "disabled";
-+			reg = <0x0 0xfd4c0000 0x0 0x1000>;
-+			interrupts = <0 122 4>;
-+			interrupt-parent = <&gic>;
-+			clock-names = "axi_clk";
-+			#dma-cells = <1>;
-+		};
-+
- 		/* GDMA */
- 		fpd_dma_chan1: dma@fd500000 {
- 			status = "disabled";
+Sure, that is entirely reasonable
+
 -- 
-Regards,
-
-Laurent Pinchart
-
+~Vinod

@@ -2,80 +2,69 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E3A48224773
-	for <lists+dmaengine@lfdr.de>; Sat, 18 Jul 2020 02:24:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 282B2224815
+	for <lists+dmaengine@lfdr.de>; Sat, 18 Jul 2020 04:51:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgGRAY1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 17 Jul 2020 20:24:27 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:38286 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727946AbgGRAY1 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Jul 2020 20:24:27 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CCCD471D;
-        Sat, 18 Jul 2020 02:24:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1595031865;
-        bh=XFqAobomhursN/um5vLhkR2zQB6iwoMPxBhk5EDHbWM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Fo2Rxc+Vl4+NmFsQdtTvcoCNaMKeWd1az7ImIlY1Z4/GJSC6DLz4MTiWbM0KJDpvW
-         2C3AmjQfGhEhW3dr4evSr7p8HhzSqZJBraKSyESFHY/3gTu0eQOh+atqDaiWCvNJaN
-         RjibJP09Gk5vOKcId8vgy1hrXuJ707t/lHV/eHnE=
-Date:   Sat, 18 Jul 2020 03:24:16 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Tejas Upadhyay <tejasu@xilinx.com>,
-        Satish Kumar Nagireddy <SATISHNA@xilinx.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v7 0/5] dma: Add Xilinx ZynqMP DPDMA driver
-Message-ID: <20200718002416.GC5962@pendragon.ideasonboard.com>
-References: <20200717013337.24122-1-laurent.pinchart@ideasonboard.com>
- <20200717061120.GE82923@vkoul-mobl>
+        id S1726742AbgGRCv0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 17 Jul 2020 22:51:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45458 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726262AbgGRCvZ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 17 Jul 2020 22:51:25 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F2DDC0619D2;
+        Fri, 17 Jul 2020 19:51:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:To:Subject:From:Sender:Reply-To:Cc:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=znSOR8L1efmHagHYjpsDkEAzj1cWC+5PCZ7ny1eb2x4=; b=wvST1GHyTKY74+2AAGY/DWUHx5
+        MczVZOPhc2lPPVn8vK5l9QOMasS7ITz5KQA87PXRDOeA+6NIhqMoTZkcIA7QxoMdU2ckD6rylAPSK
+        3eoRswbGhPVIGv/32ia9zO+UD1N6qNyd7OkhmLvHPXh30ODpAwKYORoJB71lMRWijekcgnTbs2iuD
+        /d5Ijk6QLxHFbAr3ck72tbNN3NXPmsRzS/E819oaPMOujUJCqiKdygvOfcvgEA0GB8WgBAwwUSFGO
+        oJoFqgn9dj5xdhbyr0FsQzceD/noDIblGamzONzvg8URscfQIQSTBjjxqF5p9WkQBx8DKhxVR43oo
+        OKGbcgNA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jwcwc-0006fx-La; Sat, 18 Jul 2020 02:51:23 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] dmaengine: linux/dmaengine.h: drop duplicated word in a
+ comment
+To:     LKML <linux-kernel@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+Message-ID: <06e64046-ebf1-15db-dbaf-73698de3b493@infradead.org>
+Date:   Fri, 17 Jul 2020 19:51:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200717061120.GE82923@vkoul-mobl>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vinod,
+From: Randy Dunlap <rdunlap@infradead.org>
 
-On Fri, Jul 17, 2020 at 11:41:20AM +0530, Vinod Koul wrote:
-> On 17-07-20, 04:33, Laurent Pinchart wrote:
-> > Hello,
-> > 
-> > This patch series adds a new driver for the DPDMA engine found in the
-> > Xilinx ZynqMP.
-> > 
-> > The previous version can be found at [1]. All review comments have been
-> > taken into account. The main changes are in the DPDMA driver, with
-> > cleanups in the debugfs support, and handling of the !LOAD_EOT case when
-> > preparing transactions.
-> > 
-> > The driver has been successfully tested with the ZynqMP DisplayPort
-> > subsystem DRM driver.
-> > 
-> > As I would like to merge both this series and the DRM driver that
-> > depends on it for v5.9 (if still possible), I have based those patches
-> > on top of v5.8-rc1. There's unfortunately a conflict with the DMA engine
-> > next branch, which is easy to resolve.
-> > 
-> > Vinod, if you're fine with the series, I can propose two ways forward:
-> > 
-> > - You can apply the patches on top of v5.8-rc1, push that to a base
-> >   branch, merge it into the dmaengine -next branch, and push the base
-> >   branch to a public git tree to let me base the DRM driver on it.
-> 
-> Applied 1-3 to dmaengine.git topic/xilinx, it should show up in -next
-> later in the day
+Drop the doubled word "has" in a comment.
 
-Thank you!
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org
+---
+ include/linux/dmaengine.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
--- 
-Regards,
+--- linux-next-20200714.orig/include/linux/dmaengine.h
++++ linux-next-20200714/include/linux/dmaengine.h
+@@ -164,7 +164,7 @@ struct dma_interleaved_template {
+  * @DMA_PREP_INTERRUPT - trigger an interrupt (callback) upon completion of
+  *  this transaction
+  * @DMA_CTRL_ACK - if clear, the descriptor cannot be reused until the client
+- *  acknowledges receipt, i.e. has has a chance to establish any dependency
++ *  acknowledges receipt, i.e. has a chance to establish any dependency
+  *  chains
+  * @DMA_PREP_PQ_DISABLE_P - prevent generation of P while generating Q
+  * @DMA_PREP_PQ_DISABLE_Q - prevent generation of Q while generating P
 
-Laurent Pinchart

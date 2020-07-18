@@ -2,71 +2,78 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 168A0224BA5
-	for <lists+dmaengine@lfdr.de>; Sat, 18 Jul 2020 15:52:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35283224BEE
+	for <lists+dmaengine@lfdr.de>; Sat, 18 Jul 2020 16:41:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgGRNwX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 18 Jul 2020 09:52:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53042 "EHLO mail.kernel.org"
+        id S1727795AbgGROky (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 18 Jul 2020 10:40:54 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:38918 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726569AbgGRNwW (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sat, 18 Jul 2020 09:52:22 -0400
-Received: from localhost.localdomain (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0B6E20684;
-        Sat, 18 Jul 2020 13:52:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595080342;
-        bh=u9Upr7Cditq41YfgIAZXfUwHFBvS8KDwmmsKJQE8Zxg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DjgOIGQJmvrIK7utA7B+DXNyou5ywpPsze+kPPorEkc/sm9Em+6Z/uDH4CbxbeL1K
-         +LGwdoKb2PqUYMBJny7xrUkUoYd7Xoy9wuBgzJDnfIyeGuca61jNVdEzpTzT7WSu7O
-         S6QcPeBBZRpJKN4TkzBtn3f8+OpMGAz5g5wG4DoE=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     dmaengine@vger.kernel.org
-Cc:     Vinod Koul <vkoul@kernel.org>, Hyun Kwon <hyun.kwon@xilinx.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 3/3] dmaengine: xilinx: dpdma: fix kernel doc format
-Date:   Sat, 18 Jul 2020 19:22:01 +0530
-Message-Id: <20200718135201.191881-3-vkoul@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200718135201.191881-1-vkoul@kernel.org>
-References: <20200718135201.191881-1-vkoul@kernel.org>
+        id S1726798AbgGROkx (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sat, 18 Jul 2020 10:40:53 -0400
+Received: from x2f7f83e.dyn.telefonica.de ([2.247.248.62] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1jwo0t-0007Eg-A6; Sat, 18 Jul 2020 16:40:31 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Sugar Zhang <sugar.zhang@rock-chips.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Johan Jonker <jbx6244@gmail.com>, linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-rockchip@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Carlos de Paula <me@carlosedp.com>,
+        dmaengine@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 0/14] Patches to improve transfer efficiency for Rockchip SoCs.
+Date:   Sat, 18 Jul 2020 16:40:29 +0200
+Message-ID: <1883465.KieDo6KLrp@phil>
+In-Reply-To: <1593439555-68130-1-git-send-email-sugar.zhang@rock-chips.com>
+References: <1593439555-68130-1-git-send-email-sugar.zhang@rock-chips.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-xilinx_dpdma_chan structure documents 'desc' members, but that leads
-to warnings, so split that up and describe members
+Am Montag, 29. Juni 2020, 16:05:41 CEST schrieb Sugar Zhang:
+> Changes in v3:
+> - rephrase commit message
+> - fix typos in commit message
+> - split the patch for [PATCH V2 1/14]
+> - reorder the patch series
+> 
+> Changes in v2:
+> - fix FATAL ERROR: Unable to parse input tree
+> 
+> Sugar Zhang (14):
+>   dmaengine: pl330: Remove the burst limit for quirk 'NO-FLUSHP'
+>   dmaengine: pl330: Improve transfer efficiency for the dregs
+>   dt-bindings: dma: pl330: Document the quirk 'arm,pl330-periph-burst'
+>   dmaengine: pl330: Add quirk 'arm,pl330-periph-burst'
+>   ARM: dts: rk3036: Add 'arm,pl330-periph-burst' for dmac
+>   ARM: dts: rk322x: Add 'arm,pl330-periph-burst' for dmac
+>   ARM: dts: rk3288: Add 'arm,pl330-periph-burst' for dmac
+>   ARM: dts: rk3xxx: Add 'arm,pl330-periph-burst' for dmac
+>   ARM: dts: rv1108: Add 'arm,pl330-periph-burst' for dmac
+>   arm64: dts: px30: Add 'arm,pl330-periph-burst' for dmac
+>   arm64: dts: rk3308: Add 'arm,pl330-periph-burst' for dmac
+>   arm64: dts: rk3328: Add 'arm,pl330-periph-burst' for dmac
+>   arm64: dts: rk3368: Add 'arm,pl330-periph-burst' for dmac
+>   arm64: dts: rk3399: Add 'arm,pl330-periph-burst' for dmac
 
-drivers/dma/xilinx/xilinx_dpdma.c:241: warning: Function parameter or
-member 'desc' not described in 'xilinx_dpdma_chan'
+applied the patches 5-14 but merged them into one for arm32
+and one for arm64 and did some slight reordering when the new
+property was added at the bottom of the node.
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/dma/xilinx/xilinx_dpdma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks
+Heiko
 
-diff --git a/drivers/dma/xilinx/xilinx_dpdma.c b/drivers/dma/xilinx/xilinx_dpdma.c
-index 430f3714f6a3..d94c75a842f8 100644
---- a/drivers/dma/xilinx/xilinx_dpdma.c
-+++ b/drivers/dma/xilinx/xilinx_dpdma.c
-@@ -214,8 +214,8 @@ struct xilinx_dpdma_tx_desc {
-  * @lock: lock to access struct xilinx_dpdma_chan
-  * @desc_pool: descriptor allocation pool
-  * @err_task: error IRQ bottom half handler
-- * @desc.pending: Descriptor schedule to the hardware, pending execution
-- * @desc.active: Descriptor being executed by the hardware
-+ * @desc: pending: Descriptor schedule to the hardware, pending execution
-+ *        active: Descriptor being executed by the hardware
-  * @xdev: DPDMA device
-  */
- struct xilinx_dpdma_chan {
--- 
-2.26.2
 

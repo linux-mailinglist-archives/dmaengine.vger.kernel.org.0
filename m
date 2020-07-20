@@ -2,66 +2,60 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2907E2257E5
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Jul 2020 08:37:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C6A52258B8
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Jul 2020 09:37:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgGTGga (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 20 Jul 2020 02:36:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbgGTGg3 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 20 Jul 2020 02:36:29 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C195920709;
-        Mon, 20 Jul 2020 06:36:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595226988;
-        bh=G8QKIIPp5D4K8kA/4r2aQzDTcpoqiOLy2Z0bz9pLapc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nBFRWN4wCbNdNNdFP/mf6w4VUKv5HBcMFBn5nomZjwH+fumLcehyvFrJ6jH9JQvHR
-         JxFsvy4D00XgAwF0QS/XApUT+dv74ujDXrAukRJo3IeT3yyY2TpWTHco5oBmJ9MuDz
-         1+QKf3jQpAbOuSmZbWpaisjBmBLnXMbycc7bj4oQ=
-Date:   Mon, 20 Jul 2020 12:06:25 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        devicetree@vger.kernel.org, linux-ide@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-pci@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-renesas-soc@vger.kernel.org, linux-usb@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 12/20] dt-bindings: dma: renesas,usb-dmac: Add binding
- for r8a774e1
-Message-ID: <20200720063625.GG12965@vkoul-mobl>
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-13-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        id S1725845AbgGTHhu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 20 Jul 2020 03:37:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgGTHhu (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 20 Jul 2020 03:37:50 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05DB9C061794
+        for <dmaengine@vger.kernel.org>; Mon, 20 Jul 2020 00:37:50 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id 88so6477884wrh.3
+        for <dmaengine@vger.kernel.org>; Mon, 20 Jul 2020 00:37:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=XLtoxN+6vHX0zfdEPtwAs1ONyP8Idy9auw92J07kUpc=;
+        b=HCaAemIJKDeU/5JndwpDDq8VpK6KZmT10J8v5QA/bXiFgDelBIgQnkX58K+QQYQu6s
+         gPr+CrlTrWy9pATuONFl+IAVBWBLIloDneSWHBbQiYBngMVYt2cQMDE7X+h6riQH+uRO
+         3wgz2s7RQefcIYXM0dO78eayu3uz7otzMax8vBGXizWF8EmSuYu9iJbW9fQRxtj/rN3R
+         fPxK0sAktXPX6MAnxA0Vbuw3AnpCp/NKe2fWL/p8kc6n63lbEMqcae/lh8HYq9Yahmf7
+         JnhEdBhpWw1jUCtZf1/VmaOqt9hxxAWo8BfRrtlgsyGG8vFS2Rc7R6fGBjlNyBbHu5sN
+         /cBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=XLtoxN+6vHX0zfdEPtwAs1ONyP8Idy9auw92J07kUpc=;
+        b=WEIEiKIZGrYB+9BDkfeD8xByVfWMtOayQaxPZcDUtucgFAx1mJw4QsDOk9uUhapvj+
+         LJ/FAx/1T2lyyvN1f8NuKfkSw55V+zvM4zcaZqmTJn74wyJ5WRSf1VX5S7cduhHxAPN7
+         liWEEZ+26iQSHRR3UEwRB4m4cu4xvVBXPeS+6gTRcd2canWtSz8xBPC8RhcVcKL0n6wA
+         5OOWtEMrNnJWUC+HMarwfeTM1eEi5J/14vSrghay0S1Zcl8Vt/bIVZayX/nIew9CleYk
+         gsgmJur/qrdbUpgptVS9dRCXrHg3iwcsdeNCJhyTJP/CASji48oSNfi11p7HEsQ6mG1Y
+         yKMA==
+X-Gm-Message-State: AOAM531l5knhdHCspHtiSU2V79fc5dyB+ZKM5WQzPv9rrhlbU2iCVPzX
+        lGwwCa2IIugNvtHcRLFJXo/nfO523CdH35d5Up8=
+X-Google-Smtp-Source: ABdhPJzDmChfNOwqDBgwgoI84QWQLOlP2QyrrEP6eWmnpoBJeNR9bkD4EajW51cZgEkTX8+n/5UrXG27IuDRjV2OGkQ=
+X-Received: by 2002:adf:ec88:: with SMTP id z8mr20832306wrn.395.1595230668772;
+ Mon, 20 Jul 2020 00:37:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1594919915-5225-13-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Received: by 2002:adf:f38e:0:0:0:0:0 with HTTP; Mon, 20 Jul 2020 00:37:48
+ -0700 (PDT)
+From:   Martins William <martins.legitfundss@gmail.com>
+Date:   Mon, 20 Jul 2020 10:37:48 +0300
+Message-ID: <CAOCxaaaSiRyWw9AQug5cozbYEVYpqipJjMNJFM3oD7j8Riqqkw@mail.gmail.com>
+Subject: Brauchen Sie einen Kredit?
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 16-07-20, 18:18, Lad Prabhakar wrote:
-> Add binding for R8A774E1 SoC (RZ/G2H).
-
-Applied, thanks
-
 -- 
-~Vinod
+Brauchen Sie einen Kredit?
+
+Do you need a Loan?

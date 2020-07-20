@@ -2,36 +2,36 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D47A522718E
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Jul 2020 23:44:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09C1822717D
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Jul 2020 23:44:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgGTVoH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 20 Jul 2020 17:44:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56610 "EHLO mail.kernel.org"
+        id S1727885AbgGTVny (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 20 Jul 2020 17:43:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727914AbgGTViO (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:38:14 -0400
+        id S1728106AbgGTViW (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:38:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0958F22CB2;
-        Mon, 20 Jul 2020 21:38:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA95222D03;
+        Mon, 20 Jul 2020 21:38:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281093;
-        bh=tH+bZieuhKiCAe1crHPmNpD1ivBEEIf7aWZ7DUPOZ+k=;
+        s=default; t=1595281101;
+        bh=cJk9fZrndJKKdWnZeYkDDzEpUUE2wUwx9/n+2luZ4lk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D1sPmJVPabbygoj7HaDZpmJnr+92bWi/Gsbe5KI+ttpYcFs7cxM6oFpn9Ta4c6a77
-         a2/MGPSOGsm4VvBxjKRZYdJX8xxWWGblQ6+t9RY8eQ1K8zRqRuV71qxVx7qJtm90rR
-         9zuWKGVVYIhRqPG6RNH2q+tSWKYLkVPnUrP7tsys=
+        b=yJ4mleQxjCEen9imlbmARUzQEFgOyKgMxnWAbuf5j+IPtOFDyf5a9DGvxju6w6Kai
+         wvOxivGvPFoVeTBEfh2RZF6UwbajKAulgIHqOP5I09g2isMLrZoqr5nQXas+fzHT1X
+         igZW2LF8Aib80fz3M16GRZQMp3RLNyg8JOW9veBk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Jon Hunter <jonathanh@nvidia.com>,
+Cc:     Angelo Dureghello <angelo.dureghello@timesys.com>,
+        kbuild test robot <lkp@intel.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 05/34] dmaengine: tegra210-adma: Fix runtime PM imbalance on error
-Date:   Mon, 20 Jul 2020 17:37:38 -0400
-Message-Id: <20200720213807.407380-5-sashal@kernel.org>
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 11/34] dmaengine: fsl-edma: fix wrong tcd endianness for big-endian cpu
+Date:   Mon, 20 Jul 2020 17:37:44 -0400
+Message-Id: <20200720213807.407380-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213807.407380-1-sashal@kernel.org>
 References: <20200720213807.407380-1-sashal@kernel.org>
@@ -44,47 +44,73 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Angelo Dureghello <angelo.dureghello@timesys.com>
 
-[ Upstream commit 5b78fac4b1ba731cf4177fdbc1e3a4661521bcd0 ]
+[ Upstream commit 8678c71c17721e0f771f135967ef0cce8f69ce9a ]
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+Due to recent fixes in m68k arch-specific I/O accessor macros, this
+driver is not working anymore for ColdFire. Fix wrong tcd endianness
+removing additional swaps, since edma_writex() functions should already
+take care of any eventual swap if needed.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Link: https://lore.kernel.org/r/20200624064626.19855-1-dinghao.liu@zju.edu.cn
+Note, i could only test the change in ColdFire mcf54415 and Vybrid
+vf50 / Colibri where i don't see any issue. So, every feedback and
+test for all other SoCs involved is really appreciated.
+
+Signed-off-by: Angelo Dureghello <angelo.dureghello@timesys.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Link: https://lore.kernel.org/r/20200701225205.1674463-1-angelo.dureghello@timesys.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra210-adma.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/dma/fsl-edma-common.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index 914901a680c8a..9068591bd684b 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -658,6 +658,7 @@ static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
+diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+index b1a7ca91701a8..d6010486ee502 100644
+--- a/drivers/dma/fsl-edma-common.c
++++ b/drivers/dma/fsl-edma-common.c
+@@ -347,26 +347,28 @@ static void fsl_edma_set_tcd_regs(struct fsl_edma_chan *fsl_chan,
+ 	/*
+ 	 * TCD parameters are stored in struct fsl_edma_hw_tcd in little
+ 	 * endian format. However, we need to load the TCD registers in
+-	 * big- or little-endian obeying the eDMA engine model endian.
++	 * big- or little-endian obeying the eDMA engine model endian,
++	 * and this is performed from specific edma_write functions
+ 	 */
+ 	edma_writew(edma, 0,  &regs->tcd[ch].csr);
+-	edma_writel(edma, le32_to_cpu(tcd->saddr), &regs->tcd[ch].saddr);
+-	edma_writel(edma, le32_to_cpu(tcd->daddr), &regs->tcd[ch].daddr);
  
- 	ret = pm_runtime_get_sync(tdc2dev(tdc));
- 	if (ret < 0) {
-+		pm_runtime_put_noidle(tdc2dev(tdc));
- 		free_irq(tdc->irq, tdc);
- 		return ret;
- 	}
-@@ -869,8 +870,10 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 	pm_runtime_enable(&pdev->dev);
+-	edma_writew(edma, le16_to_cpu(tcd->attr), &regs->tcd[ch].attr);
+-	edma_writew(edma, le16_to_cpu(tcd->soff), &regs->tcd[ch].soff);
++	edma_writel(edma, (s32)tcd->saddr, &regs->tcd[ch].saddr);
++	edma_writel(edma, (s32)tcd->daddr, &regs->tcd[ch].daddr);
  
- 	ret = pm_runtime_get_sync(&pdev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(&pdev->dev);
- 		goto rpm_disable;
-+	}
+-	edma_writel(edma, le32_to_cpu(tcd->nbytes), &regs->tcd[ch].nbytes);
+-	edma_writel(edma, le32_to_cpu(tcd->slast), &regs->tcd[ch].slast);
++	edma_writew(edma, (s16)tcd->attr, &regs->tcd[ch].attr);
++	edma_writew(edma, tcd->soff, &regs->tcd[ch].soff);
  
- 	ret = tegra_adma_init(tdma);
- 	if (ret)
+-	edma_writew(edma, le16_to_cpu(tcd->citer), &regs->tcd[ch].citer);
+-	edma_writew(edma, le16_to_cpu(tcd->biter), &regs->tcd[ch].biter);
+-	edma_writew(edma, le16_to_cpu(tcd->doff), &regs->tcd[ch].doff);
++	edma_writel(edma, (s32)tcd->nbytes, &regs->tcd[ch].nbytes);
++	edma_writel(edma, (s32)tcd->slast, &regs->tcd[ch].slast);
+ 
+-	edma_writel(edma, le32_to_cpu(tcd->dlast_sga),
++	edma_writew(edma, (s16)tcd->citer, &regs->tcd[ch].citer);
++	edma_writew(edma, (s16)tcd->biter, &regs->tcd[ch].biter);
++	edma_writew(edma, (s16)tcd->doff, &regs->tcd[ch].doff);
++
++	edma_writel(edma, (s32)tcd->dlast_sga,
+ 			&regs->tcd[ch].dlast_sga);
+ 
+-	edma_writew(edma, le16_to_cpu(tcd->csr), &regs->tcd[ch].csr);
++	edma_writew(edma, (s16)tcd->csr, &regs->tcd[ch].csr);
+ }
+ 
+ static inline
 -- 
 2.25.1
 

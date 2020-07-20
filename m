@@ -2,36 +2,36 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC06022710C
-	for <lists+dmaengine@lfdr.de>; Mon, 20 Jul 2020 23:41:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C5FC227108
+	for <lists+dmaengine@lfdr.de>; Mon, 20 Jul 2020 23:41:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbgGTVji (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 20 Jul 2020 17:39:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59448 "EHLO mail.kernel.org"
+        id S1728731AbgGTVlH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 20 Jul 2020 17:41:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728515AbgGTVjg (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 20 Jul 2020 17:39:36 -0400
+        id S1728533AbgGTVjj (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 20 Jul 2020 17:39:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1D5322BF5;
-        Mon, 20 Jul 2020 21:39:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1358D22CAF;
+        Mon, 20 Jul 2020 21:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595281176;
-        bh=9JKDfUhdeddyJ9Fqh2SV91QEs3A3JERW2Zy48paEr1M=;
+        s=default; t=1595281178;
+        bh=vaM/NckY/1bulk+3pEPHiNnLx88iOZqkYgq2IUR8Qtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NhU1n7ifpEfNuKClFm4Eypgk4YgwtHJN6UTCuwoo3KDQvjiiMhQCw6qMV9DT6sHVY
-         Zea9hyTO/VC9b4X8yW+oglLOVzJALHozaulfGPeasWsTy/r8wwc2K3wIO9PKDGN6yP
-         KR/IkF87KusVLEsDnAF7XSRsoDQful7WLkSSKPdU=
+        b=TTS3L4lsPxPy+3Q6uh46s79q7NNrwsOYTxUgDund37/q4f43OVE0q/YGBajgQdJX/
+         5czt1yTm23TmzUctAP+zbwD5LRtqMob3ZiMB8wPTDnfrEbmED7pLLvn1dJe4NDlFoF
+         ep4cHgNWW39j07Q5FpX1s5jD8C/vI7VXQyJrkElM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Jon Hunter <jonathanh@nvidia.com>,
+Cc:     Leonid Ravich <Leonid.Ravich@emc.com>,
+        Dave Jiang <dave.jiang@intel.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 3/9] dmaengine: tegra210-adma: Fix runtime PM imbalance on error
-Date:   Mon, 20 Jul 2020 17:39:26 -0400
-Message-Id: <20200720213932.408089-3-sashal@kernel.org>
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 5/9] dmaengine: ioat setting ioat timeout as module parameter
+Date:   Mon, 20 Jul 2020 17:39:28 -0400
+Message-Id: <20200720213932.408089-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200720213932.408089-1-sashal@kernel.org>
 References: <20200720213932.408089-1-sashal@kernel.org>
@@ -44,47 +44,60 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Leonid Ravich <Leonid.Ravich@emc.com>
 
-[ Upstream commit 5b78fac4b1ba731cf4177fdbc1e3a4661521bcd0 ]
+[ Upstream commit 87730ccbddcb48478b1b88e88b14e73424130764 ]
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code. Thus a pairing decrement is needed on
-the error handling path to keep the counter balanced.
+DMA transaction time to completion is a function of PCI bandwidth,
+transaction size and a queue depth.  So hard coded value for timeouts
+might be wrong for some scenarios.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Link: https://lore.kernel.org/r/20200624064626.19855-1-dinghao.liu@zju.edu.cn
+Signed-off-by: Leonid Ravich <Leonid.Ravich@emc.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Link: https://lore.kernel.org/r/20200701184816.29138-1-leonid.ravich@dell.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra210-adma.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/dma/ioat/dma.c | 12 ++++++++++++
+ drivers/dma/ioat/dma.h |  2 --
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index c16c06b3dd2f4..54296e262deab 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -583,6 +583,7 @@ static int tegra_adma_alloc_chan_resources(struct dma_chan *dc)
+diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
+index 1389f0582e29b..c5a45c57b8b8d 100644
+--- a/drivers/dma/ioat/dma.c
++++ b/drivers/dma/ioat/dma.c
+@@ -38,6 +38,18 @@
  
- 	ret = pm_runtime_get_sync(tdc2dev(tdc));
- 	if (ret < 0) {
-+		pm_runtime_put_noidle(tdc2dev(tdc));
- 		free_irq(tdc->irq, tdc);
- 		return ret;
- 	}
-@@ -764,8 +765,10 @@ static int tegra_adma_probe(struct platform_device *pdev)
- 	pm_runtime_enable(&pdev->dev);
+ #include "../dmaengine.h"
  
- 	ret = pm_runtime_get_sync(&pdev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(&pdev->dev);
- 		goto rpm_disable;
-+	}
- 
- 	ret = tegra_adma_init(tdma);
- 	if (ret)
++int completion_timeout = 200;
++module_param(completion_timeout, int, 0644);
++MODULE_PARM_DESC(completion_timeout,
++		"set ioat completion timeout [msec] (default 200 [msec])");
++int idle_timeout = 2000;
++module_param(idle_timeout, int, 0644);
++MODULE_PARM_DESC(idle_timeout,
++		"set ioat idel timeout [msec] (default 2000 [msec])");
++
++#define IDLE_TIMEOUT msecs_to_jiffies(idle_timeout)
++#define COMPLETION_TIMEOUT msecs_to_jiffies(completion_timeout)
++
+ static char *chanerr_str[] = {
+ 	"DMA Transfer Destination Address Error",
+ 	"Next Descriptor Address Error",
+diff --git a/drivers/dma/ioat/dma.h b/drivers/dma/ioat/dma.h
+index a9bc1a15b0d16..b0152288983bc 100644
+--- a/drivers/dma/ioat/dma.h
++++ b/drivers/dma/ioat/dma.h
+@@ -111,8 +111,6 @@ struct ioatdma_chan {
+ 	#define IOAT_RUN 5
+ 	#define IOAT_CHAN_ACTIVE 6
+ 	struct timer_list timer;
+-	#define COMPLETION_TIMEOUT msecs_to_jiffies(100)
+-	#define IDLE_TIMEOUT msecs_to_jiffies(2000)
+ 	#define RESET_DELAY msecs_to_jiffies(100)
+ 	struct ioatdma_device *ioat_dma;
+ 	dma_addr_t completion_dma;
 -- 
 2.25.1
 

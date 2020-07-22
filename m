@@ -2,150 +2,96 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F1F08229744
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Jul 2020 13:19:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1328A22986B
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Jul 2020 14:45:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgGVLTc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 22 Jul 2020 07:19:32 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:46218 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726028AbgGVLTb (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Jul 2020 07:19:31 -0400
-X-UUID: f4eacbf9b29f4c2ca118753468804077-20200722
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=RSwgljTRgkEcHXir5exEiZR1FuMb9nTNQg3w4yYtvsM=;
-        b=Btsx+F+KyUSA8K3exfGSEFiLNCxRXvx4B6aMA5/yeyPYKcEg4b5yzxLhruNrmujxi0pusrprDcOYbLc6363LRL90YAbfQN49UgtCNIC4Dl0pjGkyjXR/gybKNTIJH/aLtIrt5y5w2hR/jOXGKRzb3zRmKnNexPA7cgBfNsPDW6g=;
-X-UUID: f4eacbf9b29f4c2ca118753468804077-20200722
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <eastl.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1247376614; Wed, 22 Jul 2020 19:19:24 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 22 Jul 2020 19:19:21 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 22 Jul 2020 19:19:22 +0800
-Message-ID: <1595416762.22392.5.camel@mtkswgap22>
-Subject: Re: [PATCH v6 1/4] dt-bindings: dmaengine: Add MediaTek
- Command-Queue DMA controller bindings
-From:   EastL <EastL.Lee@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Sean Wang <sean.wang@mediatek.com>, <vkoul@kernel.org>,
-        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, <cc.hwang@mediatek.com>
-Date:   Wed, 22 Jul 2020 19:19:22 +0800
-In-Reply-To: <20200709205915.GA865123@bogus>
-References: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
-         <1593673564-4425-2-git-send-email-EastL.Lee@mediatek.com>
-         <20200709205915.GA865123@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        id S1726503AbgGVMpG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 22 Jul 2020 08:45:06 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:48830 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbgGVMpG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Jul 2020 08:45:06 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id F2933329;
+        Wed, 22 Jul 2020 14:45:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1595421904;
+        bh=GGD1Wv2NYThYs0C95Sh9D/1gBBDQmKtWeCHsy+e8F8I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XaJFFu2Dh/bl7KtPpO8KngKAcWCPFC+LmOqPSmeSS+kEwpMa2iHaFIdThzxY1VlD3
+         qmG0FNZ/AKJGKTY+19S84Wyhv4lM/RVR8XmlQCpGPg8W0VBxUylYwDPI+3gQJapl1S
+         /NWZ/+SEAMa5JC/ya9m4tfY4Q4riBQa/8ztGWz4o=
+Date:   Wed, 22 Jul 2020 15:44:58 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, Hyun Kwon <hyun.kwon@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH 1/3] dmaengine: xilinx: dpdma: remove comparison of
+ unsigned expression
+Message-ID: <20200722124458.GF5833@pendragon.ideasonboard.com>
+References: <20200718135201.191881-1-vkoul@kernel.org>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 64B4CD0E11C60C63EEBAC5E16AB7A324C9F7C8C5961F0971A8F21997C7A4088F2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200718135201.191881-1-vkoul@kernel.org>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA3LTA5IGF0IDE0OjU5IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gVGh1LCBKdWwgMDIsIDIwMjAgYXQgMDM6MDY6MDFQTSArMDgwMCwgRWFzdEwgTGVlIHdyb3Rl
-Og0KPiA+IERvY3VtZW50IHRoZSBkZXZpY2V0cmVlIGJpbmRpbmdzIGZvciBNZWRpYVRlayBDb21t
-YW5kLVF1ZXVlIERNQSBjb250cm9sbGVyDQo+ID4gd2hpY2ggY291bGQgYmUgZm91bmQgb24gTVQ2
-Nzc5IFNvQyBvciBvdGhlciBzaW1pbGFyIE1lZGlhdGVrIFNvQ3MuDQo+ID4gDQo+ID4gU2lnbmVk
-LW9mZi1ieTogRWFzdEwgTGVlIDxFYXN0TC5MZWVAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+
-ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvbXRrLWNxZG1hLnlhbWwgICAgICAgICB8IDEx
-MyArKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDExMyBpbnNlcnRp
-b25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZG1hL210ay1jcWRtYS55YW1sDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvbXRrLWNxZG1hLnlhbWwgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL210ay1jcWRtYS55YW1sDQo+ID4gbmV3IGZp
-bGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi44M2VkNzQyDQo+ID4gLS0tIC9kZXYv
-bnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvbXRr
-LWNxZG1hLnlhbWwNCj4gPiBAQCAtMCwwICsxLDExMyBAQA0KPiA+ICsjIFNQRFgtTGljZW5zZS1J
-ZGVudGlmaWVyOiAoR1BMLTIuMC1vbmx5IE9SIEJTRC0yLUNsYXVzZSkNCj4gPiArJVlBTUwgMS4y
-DQo+ID4gKy0tLQ0KPiA+ICskaWQ6IGh0dHBzOi8vdXJsZGVmZW5zZS5jb20vdjMvX19odHRwOi8v
-ZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9kbWEvbXRrLWNxZG1hLnlhbWwqX187SXchIUNUUk5LQTl3
-TWcwQVJidyExUF9pZjNSaVpPVnB6TjhuNEVRSTBJeFpxMGQwN1Vrc1NnZUhZQTBoNkhMeWxVOWw0
-cHUyZWdncTdlZVZzRjJIJCANCj4gPiArJHNjaGVtYTogaHR0cHM6Ly91cmxkZWZlbnNlLmNvbS92
-My9fX2h0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sKl9fO0l3ISFD
-VFJOS0E5d01nMEFSYnchMVBfaWYzUmlaT1Zwek44bjRFUUkwSXhacTBkMDdVa3NTZ2VIWUEwaDZI
-THlsVTlsNHB1MmVnZ3E3Wk1Qb3cyMyQgDQo+ID4gKw0KPiA+ICt0aXRsZTogTWVkaWFUZWsgQ29t
-bWFuZC1RdWV1ZSBETUEgY29udHJvbGxlciBEZXZpY2UgVHJlZSBCaW5kaW5nDQo+ID4gKw0KPiA+
-ICttYWludGFpbmVyczoNCj4gPiArICAtIEVhc3RMIExlZSA8RWFzdEwuTGVlQG1lZGlhdGVrLmNv
-bT4NCj4gPiArDQo+ID4gK2Rlc2NyaXB0aW9uOg0KPiA+ICsgIE1lZGlhVGVrIENvbW1hbmQtUXVl
-dWUgRE1BIGNvbnRyb2xsZXIgKENRRE1BKSBvbiBNZWRpYXRlayBTb0MNCj4gPiArICBpcyBkZWRp
-Y2F0ZWQgdG8gbWVtb3J5LXRvLW1lbW9yeSB0cmFuc2ZlciB0aHJvdWdoIHF1ZXVlIGJhc2VkDQo+
-ID4gKyAgZGVzY3JpcHRvciBtYW5hZ2VtZW50Lg0KPiA+ICsNCj4gPiArYWxsT2Y6DQo+ID4gKyAg
-LSAkcmVmOiAiZG1hLWNvbnRyb2xsZXIueWFtbCMiDQo+ID4gKw0KPiA+ICtwcm9wZXJ0aWVzOg0K
-PiA+ICsgICIjZG1hLWNlbGxzIjoNCj4gPiArICAgIG1pbmltdW06IDENCj4gPiArICAgIG1heGlt
-dW06IDI1NQ0KPiA+ICsgICAgZGVzY3JpcHRpb246DQo+ID4gKyAgICAgIFVzZWQgdG8gcHJvdmlk
-ZSBETUEgY29udHJvbGxlciBzcGVjaWZpYyBpbmZvcm1hdGlvbi4NCj4gDQo+IE5vLCBmb3IgYSBz
-cGVjaWZpYyBiaW5kaW5nIGxpa2UgdGhpcywgaXQgc2hvdWxkIGJlIDEgZGVmaW5lZCB2YWx1ZS4N
-Ck9LLkknbGwgZml4IGl0IHRvIGNvbnN0IDENCj4gDQo+ID4gKw0KPiA+ICsgIGNvbXBhdGlibGU6
-DQo+ID4gKyAgICBvbmVPZjoNCj4gPiArICAgICAgLSBjb25zdDogbWVkaWF0ZWssbXQ2NzY1LWNx
-ZG1hDQo+ID4gKyAgICAgIC0gY29uc3Q6IG1lZGlhdGVrLG10Njc3OS1jcWRtYQ0KPiA+ICsNCj4g
-PiArICByZWc6DQo+ID4gKyAgICBtaW5JdGVtczogMQ0KPiA+ICsgICAgbWF4SXRlbXM6IDUNCj4g
-PiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICAgIEEgYmFzZSBhZGRyZXNzIG9mIE1lZGlh
-VGVrIENvbW1hbmQtUXVldWUgRE1BIGNvbnRyb2xsZXIsDQo+ID4gKyAgICAgICAgYSBjaGFubmVs
-IHdpbGwgaGF2ZSBhIHNldCBvZiBiYXNlIGFkZHJlc3MuDQo+ID4gKw0KPiA+ICsgIGludGVycnVw
-dHM6DQo+ID4gKyAgICBtaW5JdGVtczogMQ0KPiA+ICsgICAgbWF4SXRlbXM6IDUNCj4gPiArICAg
-IGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICAgIEEgaW50ZXJydXB0IG51bWJlciBvZiBNZWRpYVRl
-ayBDb21tYW5kLVF1ZXVlIERNQSBjb250cm9sbGVyLA0KPiA+ICsgICAgICAgIG9uZSBpbnRlcnJ1
-cHQgbnVtYmVyIHBlciBkbWEtY2hhbm5lbHMuDQo+ID4gKw0KPiA+ICsgIGNsb2NrczoNCj4gPiAr
-ICAgIG1heEl0ZW1zOiAxDQo+ID4gKw0KPiA+ICsgIGNsb2NrLW5hbWVzOg0KPiA+ICsgICAgY29u
-c3Q6IGNxZG1hDQo+ID4gKw0KPiA+ICsgIGRtYS1jaGFubmVsLW1hc2s6DQo+ID4gKyAgICAkcmVm
-OiAvc2NoZW1hcy90eXBlcy55YW1sI2RlZmluaXRpb25zL3VpbnQzMg0KPiANCj4gQWxyZWF5IGhh
-cyBhIHR5cGUsIGRvbid0IHJlZGVmaW5lIGl0IGhlcmUuDQpPSw0KPiANCj4gPiArICAgIGRlc2Ny
-aXB0aW9uOg0KPiA+ICsgICAgICAgRm9yIERNQSBjYXBhYmlsaXR5LCBXZSB3aWxsIGtub3cgdGhl
-IGFkZHJlc3NpbmcgY2FwYWJpbGl0eSBvZg0KPiA+ICsgICAgICAgTWVkaWFUZWsgQ29tbWFuZC1R
-dWV1ZSBETUEgY29udHJvbGxlciB0aHJvdWdoIGRtYS1jaGFubmVsLW1hc2suDQo+IA0KPiBUaGlz
-IHNvdW5kcyBsaWtlIHRoZSBrZXJuZWwncyBETUEgbWFza3Mgd2hpY2ggaXMgbm90IHdoYXQgdGhp
-cyBwcm9wZXJ0eSANCj4gaXMuDQpZZXMsIHRoaXMgaXMgZm9yIGtlcm5lbCdzIERNQSBtYXNrLg0K
-RG8gSSBuZWVkIHRvIGRlY2xhcmUgdGhpcyBtZW1iZXIgYWdhaW4/DQo+IA0KPiA+ICsgICAgaXRl
-bXM6DQo+ID4gKyAgICAgIG1pbkl0ZW1zOiAxDQo+ID4gKyAgICAgIG1heEl0ZW1zOiA2Mw0KPiAN
-Cj4gQW4gYXJyYXkgb2YgNjMgZWxlbWVudHM/DQo+IA0KPiBJIHRoaW5rIHlvdSB3YW50Og0KPiAN
-Cj4gbWluaW11bTogMQ0KPiBtYXhpbXVtOiA2Mw0KPiANCj4gT3I6DQo+IA0KPiBlbnVtOiBbIDEs
-IDMsIDcsIDB4ZiwgMHgxZiwgMHgzZiBdDQo+IA0KPiAoVGhvdWdoIGlmIHRoaXMgd29ya3MsIHRo
-ZW4ganVzdCAnZG1hLWNoYW5uZWxzJyBpcyBlbm91Z2guKQ0KPiANCj4gPiArDQo+ID4gKyAgZG1h
-LWNoYW5uZWxzOg0KPiA+ICsgICAgJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCNkZWZpbml0aW9u
-cy91aW50MzINCj4gPiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICBOdW1iZXIgb2YgRE1B
-IGNoYW5uZWxzIHN1cHBvcnRlZCBieSBNZWRpYVRlayBDb21tYW5kLVF1ZXVlIERNQQ0KPiA+ICsg
-ICAgICBjb250cm9sbGVyLCBzdXBwb3J0IHVwIHRvIGZpdmUuDQo+IA0KPiBJcyBpdCA1IG9yIDYg
-Y2hhbm5lbHM/IFlvdSdyZSBvZmYgYnkgb25lIHNvbWV3aGVyZS4NCkN1cnJlbnRseSBjaGlwIENR
-RE1BIG9ubHkgaGFzIHRocmVlIGNoYW5uZWxzIGF0IG1vc3QsIEknbGwgZml4IGl0IHRvDQptYXhu
-dW0gMw0KPiA+ICsgICAgaXRlbXM6DQo+ID4gKyAgICAgIG1pbkl0ZW1zOiAxDQo+ID4gKyAgICAg
-IG1heEl0ZW1zOiA1DQo+ID4gKw0KPiA+ICsgIGRtYS1yZXF1ZXN0czoNCj4gPiArICAgICRyZWY6
-IC9zY2hlbWFzL3R5cGVzLnlhbWwjZGVmaW5pdGlvbnMvdWludDMyDQo+ID4gKyAgICBkZXNjcmlw
-dGlvbjoNCj4gPiArICAgICAgTnVtYmVyIG9mIERNQSByZXF1ZXN0ICh2aXJ0dWFsIGNoYW5uZWwp
-IHN1cHBvcnRlZCBieSBNZWRpYVRlaw0KPiA+ICsgICAgICBDb21tYW5kLVF1ZXVlIERNQSBjb250
-cm9sbGVyLCBzdXBwb3J0IHVwIHRvIDMyLg0KPiA+ICsgICAgaXRlbXM6DQo+ID4gKyAgICAgIG1p
-bkl0ZW1zOiAxDQo+ID4gKyAgICAgIG1heEl0ZW1zOiAzMg0KPiANCj4gWW91IGFyZSBkZXNjcmli
-aW5nIGhvdyBtYW55IGVsZW1lbnRzIGluIGFuIGFycmF5IGFuZCB0aGlzIGlzIGEgc2NhbGFyLg0K
-T0sgSTtsbCBmaXggdG8gbWlubnVtICYgbWF4bnVtDQo+IA0KPiA+ICsNCj4gPiArcmVxdWlyZWQ6
-DQo+ID4gKyAgLSAiI2RtYS1jZWxscyINCj4gPiArICAtIGNvbXBhdGlibGUNCj4gPiArICAtIHJl
-Zw0KPiA+ICsgIC0gaW50ZXJydXB0cw0KPiA+ICsgIC0gY2xvY2tzDQo+ID4gKyAgLSBjbG9jay1u
-YW1lcw0KPiA+ICsgIC0gZG1hLWNoYW5uZWwtbWFzaw0KPiA+ICsgIC0gZG1hLWNoYW5uZWxzDQo+
-ID4gKyAgLSBkbWEtcmVxdWVzdHMNCj4gPiArDQo+ID4gK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBm
-YWxzZQ0KPiA+ICsNCj4gPiArZXhhbXBsZXM6DQo+ID4gKyAgLSB8DQo+ID4gKyAgICAjaW5jbHVk
-ZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvaXJxLmg+DQo+ID4gKyAgICAjaW5j
-bHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPg0KPiA+ICsg
-ICAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2Nsb2NrL210Njc3OS1jbGsuaD4NCj4gPiArICAgIGNx
-ZG1hOiBkbWEtY29udHJvbGxlckAxMDIxMjAwMCB7DQo+ID4gKyAgICAgICAgY29tcGF0aWJsZSA9
-ICJtZWRpYXRlayxtdDY3NzktY3FkbWEiOw0KPiA+ICsgICAgICAgIHJlZyA9IDwweDEwMjEyMDAw
-IDB4ODA+LA0KPiA+ICsgICAgICAgICAgICA8MHgxMDIxMjA4MCAweDgwPiwNCj4gPiArICAgICAg
-ICAgICAgPDB4MTAyMTIxMDAgMHg4MD47DQo+ID4gKyAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNf
-U1BJIDEzOSBJUlFfVFlQRV9MRVZFTF9MT1c+LA0KPiA+ICsgICAgICAgICAgICA8R0lDX1NQSSAx
-NDAgSVJRX1RZUEVfTEVWRUxfTE9XPiwNCj4gPiArICAgICAgICAgICAgPEdJQ19TUEkgMTQxIElS
-UV9UWVBFX0xFVkVMX0xPVz47DQo+ID4gKyAgICAgICAgY2xvY2tzID0gPCZpbmZyYWNmZ19hbyBD
-TEtfSU5GUkFfQ1FfRE1BPjsNCj4gPiArICAgICAgICBjbG9jay1uYW1lcyA9ICJjcWRtYSI7DQo+
-ID4gKyAgICAgICAgZG1hLWNoYW5uZWwtbWFzayA9IDw2Mz47DQo+ID4gKyAgICAgICAgZG1hLWNo
-YW5uZWxzID0gPDM+Ow0KPiA+ICsgICAgICAgIGRtYS1yZXF1ZXN0cyA9IDwzMj47DQo+ID4gKyAg
-ICAgICAgI2RtYS1jZWxscyA9IDwxPjsNCj4gPiArICAgIH07DQo+ID4gKw0KPiA+ICsuLi4NCj4g
-PiAtLSANCj4gPiAxLjkuMQ0KDQo=
+Hi Vinod,
 
+Thank you for the patch.
+
+On Sat, Jul 18, 2020 at 07:21:59PM +0530, Vinod Koul wrote:
+> xilinx_dpdma_config() channel id is unsigned int and compares with
+> ZYNQMP_DPDMA_VIDEO0 which is zero, so remove this comparison
+> 
+> drivers/dma/xilinx/xilinx_dpdma.c:1073:15: warning: comparison of
+> unsigned expression in ‘>= 0’ is always true [-Wtype-limits] if
+> 	(chan->id >= ZYNQMP_DPDMA_VIDEO0 && chan->id <= ZYNQMP_DPDMA_VIDEO2)
+
+I didn't see that warning, how do you produce it ?
+
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  drivers/dma/xilinx/xilinx_dpdma.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/xilinx/xilinx_dpdma.c b/drivers/dma/xilinx/xilinx_dpdma.c
+> index af88a6762ef4..8e602378f2dc 100644
+> --- a/drivers/dma/xilinx/xilinx_dpdma.c
+> +++ b/drivers/dma/xilinx/xilinx_dpdma.c
+> @@ -1070,7 +1070,7 @@ static int xilinx_dpdma_config(struct dma_chan *dchan,
+>  	 * Abuse the slave_id to indicate that the channel is part of a video
+>  	 * group.
+>  	 */
+> -	if (chan->id >= ZYNQMP_DPDMA_VIDEO0 && chan->id <= ZYNQMP_DPDMA_VIDEO2)
+> +	if (chan->id <= ZYNQMP_DPDMA_VIDEO2)
+
+While this doesn't affect the behaviour, I'm worried about the risk of
+introducing bugs in the future if the ZYNQMP_DPDMA_VIDEO0 becomes
+non-zero. On the other hand, that's part of the DT ABI, so it shouldn't
+change. How about
+
+	switch (chan->id) {
+	case ZYNQMP_DPDMA_VIDEO0:
+	case ZYNQMP_DPDMA_VIDEO1:
+	case ZYNQMP_DPDMA_VIDEO2:
+  		chan->video_group = config->slave_id != 0;
+		break;
+	}
+
+instead ?
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+>  		chan->video_group = config->slave_id != 0;
+>  
+>  	spin_unlock_irqrestore(&chan->lock, flags);
+
+-- 
+Regards,
+
+Laurent Pinchart

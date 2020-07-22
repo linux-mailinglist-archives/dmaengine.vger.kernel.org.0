@@ -2,60 +2,66 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5708E229AB5
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Jul 2020 16:54:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A188229CF2
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Jul 2020 18:18:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731566AbgGVOyk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 22 Jul 2020 10:54:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730465AbgGVOyk (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 22 Jul 2020 10:54:40 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47C7620787;
-        Wed, 22 Jul 2020 14:54:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1595429680;
-        bh=UsbJ/WPuFJeHoZ5MA/QB0f3jjziZ+fYgz8kZDhezwwU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UpD2FNh+502O1/QZ8nqCh2HgpAFa1vWvWHR7r9I8uCWxS34WkOBYv0NrtjKydDCHf
-         CZxxjFVZUWcM30Aqunl8RYvbDDO5jn6NcK9ThW+odPYrX2KU6rKlpinbGabkvprIcT
-         aXXJbbSR6SbhDNq4PyyimhoxI3Qw6NgaD8VDweyc=
-Date:   Wed, 22 Jul 2020 20:24:35 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     dmaengine@vger.kernel.org, Hyun Kwon <hyun.kwon@xilinx.com>,
+        id S1726711AbgGVQSA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 22 Jul 2020 12:18:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726685AbgGVQSA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 22 Jul 2020 12:18:00 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ECDBC0619DC
+        for <dmaengine@vger.kernel.org>; Wed, 22 Jul 2020 09:18:00 -0700 (PDT)
+Received: from pendragon.bb.dnainternet.fi (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8E729329;
+        Wed, 22 Jul 2020 18:17:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1595434677;
+        bh=VWOdb3OMhgJUj9Vg0H541Md5v46RytKjb8SwIOE/vhg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HI7KRf41sKXWFGe0PafjEorZ6tnQGgXEWo1uxlQAHccv5z3vT03jgyqhwQWc1J76F
+         flj+Rm6TzrBeSR+l2v24fLS5s6vZyr37jlJJSlV5nEMx77hQaWhsfqYdFVZURTsPzz
+         YFpflhudhHhrYJEkNbq2eNVkmNb/p/RBIZfMBbow=
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     dmaengine@vger.kernel.org
+Cc:     Vinod Koul <vkoul@kernel.org>, Hyun Kwon <hyun.kwon@xilinx.com>,
         Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH 3/3] dmaengine: xilinx: dpdma: fix kernel doc format
-Message-ID: <20200722145435.GS12965@vkoul-mobl>
-References: <20200718135201.191881-1-vkoul@kernel.org>
- <20200718135201.191881-3-vkoul@kernel.org>
- <20200722131119.GH5833@pendragon.ideasonboard.com>
- <20200722142608.GR12965@vkoul-mobl>
- <20200722145127.GC29813@pendragon.ideasonboard.com>
+Subject: [PATCH] dmaengine: xilinx: dpdma: Fix kerneldoc warning
+Date:   Wed, 22 Jul 2020 19:17:47 +0300
+Message-Id: <20200722161747.30048-1-laurent.pinchart@ideasonboard.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722145127.GC29813@pendragon.ideasonboard.com>
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 22-07-20, 17:51, Laurent Pinchart wrote:
+Document the struct xilinx_dpdma_chan desc field to fix a kerneldoc
+undocumented member warning (which can be reproduced by compiling with
+W=1).
 
-> > W=1 build again..
-> 
-> I get the same when plumbing the source file into the kerneldoc build.
-> The generated documentation however contains the description of both
-> desc.pending and desc.active. If you want to fix the warning, I think
-> you should instead add a line to document @desc, but without removing
-> the existing @desc.pending and @desc.active lines.
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ drivers/dma/xilinx/xilinx_dpdma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I would like to see clean build with W=1, helps to find other issues :)
-So do feel free to send the patch to fix this, i will swap them..
-
+diff --git a/drivers/dma/xilinx/xilinx_dpdma.c b/drivers/dma/xilinx/xilinx_dpdma.c
+index 47c9bb02ce3c..b8edd5bc065a 100644
+--- a/drivers/dma/xilinx/xilinx_dpdma.c
++++ b/drivers/dma/xilinx/xilinx_dpdma.c
+@@ -215,6 +215,7 @@ struct xilinx_dpdma_tx_desc {
+  * @lock: lock to access struct xilinx_dpdma_chan
+  * @desc_pool: descriptor allocation pool
+  * @err_task: error IRQ bottom half handler
++ * @desc: References to descriptors being processed
+  * @desc.pending: Descriptor schedule to the hardware, pending execution
+  * @desc.active: Descriptor being executed by the hardware
+  * @xdev: DPDMA device
 -- 
-~Vinod
+Regards,
+
+Laurent Pinchart
+

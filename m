@@ -2,36 +2,35 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6332229D81
-	for <lists+dmaengine@lfdr.de>; Wed, 22 Jul 2020 18:50:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DFC6229DBA
+	for <lists+dmaengine@lfdr.de>; Wed, 22 Jul 2020 19:03:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgGVQuy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 22 Jul 2020 12:50:54 -0400
-Received: from mga07.intel.com ([134.134.136.100]:12009 "EHLO mga07.intel.com"
+        id S1731332AbgGVRDt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 22 Jul 2020 13:03:49 -0400
+Received: from mga07.intel.com ([134.134.136.100]:13584 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbgGVQux (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 22 Jul 2020 12:50:53 -0400
-IronPort-SDR: yiVEIujHbbYbaMEjiDiNcyTh5qmSgLPkrBiPOSmYpj6la6z/3lzSMs9ZwvI9PzJlF9sItzlAOc
- b/rp1EmHkp+A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="215002841"
+        id S1726717AbgGVRDt (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 22 Jul 2020 13:03:49 -0400
+IronPort-SDR: WncTuVHB6W+2q2Dku1w0kCI1soF6shXjWgHmIwAdhIj3Q62ob4p49w+dH2m3rXas8o6Bwj5EFo
+ 2k6EqhezeyNQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9690"; a="215007242"
 X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="215002841"
+   d="scan'208";a="215007242"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 09:50:51 -0700
-IronPort-SDR: L+8m7J8RWmfQdUFP7nNVsRis/hvFKPt3CUmzdUuG4sPpU5xSTU/i5zwca/aG50/A9u2+9/d4gx
- vrvmDvcVD7gw==
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2020 10:03:48 -0700
+IronPort-SDR: kZ7E+EWBoHhQmGLIn6X8M9EMk6wAI4cZKfcD9O1Bld2YtAg/0tt7cAw/BySjHNbl5PjqTD9eQJ
+ zNMN1KUY8iRw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,383,1589266800"; 
-   d="scan'208";a="462526859"
+   d="scan'208";a="328275881"
 Received: from orsmsx101.amr.corp.intel.com ([10.22.225.128])
-  by orsmga005.jf.intel.com with ESMTP; 22 Jul 2020 09:50:50 -0700
+  by orsmga007.jf.intel.com with ESMTP; 22 Jul 2020 10:03:48 -0700
 Received: from [10.254.181.38] (10.254.181.38) by ORSMSX101.amr.corp.intel.com
  (10.22.225.128) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 22 Jul
- 2020 09:50:50 -0700
-Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
- irq domain
+ 2020 10:03:48 -0700
+Subject: Re: [PATCH RFC v2 03/18] irq/dev-msi: Create IR-DEV-MSI irq domain
 To:     Jason Gunthorpe <jgg@mellanox.com>,
         Dave Jiang <dave.jiang@intel.com>
 CC:     <vkoul@kernel.org>, <maz@kernel.org>, <bhelgaas@google.com>,
@@ -50,15 +49,15 @@ CC:     <vkoul@kernel.org>, <maz@kernel.org>, <bhelgaas@google.com>,
         <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
         <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>
 References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com>
- <20200721161344.GA2021248@mellanox.com>
+ <159534735519.28840.10435935598386192252.stgit@djiang5-desk3.ch.intel.com>
+ <20200721162104.GB2021248@mellanox.com>
 From:   "Dey, Megha" <megha.dey@intel.com>
-Message-ID: <a99af84f-f3ef-ee3c-1f94-680909e97868@intel.com>
-Date:   Wed, 22 Jul 2020 09:50:47 -0700
+Message-ID: <84fd4ae2-e7ee-4f9d-7686-6a034f3e2614@intel.com>
+Date:   Wed, 22 Jul 2020 10:03:45 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200721161344.GA2021248@mellanox.com>
+In-Reply-To: <20200721162104.GB2021248@mellanox.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -68,117 +67,80 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Jason,
+Hi Dan,
 
-On 7/21/2020 9:13 AM, Jason Gunthorpe wrote:
-> On Tue, Jul 21, 2020 at 09:02:28AM -0700, Dave Jiang wrote:
+On 7/21/2020 9:21 AM, Jason Gunthorpe wrote:
+> On Tue, Jul 21, 2020 at 09:02:35AM -0700, Dave Jiang wrote:
 >> From: Megha Dey <megha.dey@intel.com>
 >>
->> Add support for the creation of a new DEV_MSI irq domain. It creates a
->> new irq chip associated with the DEV_MSI domain and adds the necessary
->> domain operations to it.
+>> When DEV_MSI is enabled, the dev_msi_default_domain is updated to the
+>> base DEV-MSI irq  domain. If interrupt remapping is enabled, we create
+>> a new IR-DEV-MSI irq domain and update the dev_msi_default domain to
+>> the same.
 >>
->> Add a new config option DEV_MSI which must be enabled by any
->> driver that wants to support device-specific message-signaled-interrupts
->> outside of PCI-MSI(-X).
->>
->> Lastly, add device specific mask/unmask callbacks in addition to a write
->> function to the platform_msi_ops.
->>
->> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
->> Signed-off-by: Megha Dey <megha.dey@intel.com>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>   arch/x86/include/asm/hw_irq.h |    5 ++
->>   drivers/base/Kconfig          |    7 +++
->>   drivers/base/Makefile         |    1
->>   drivers/base/dev-msi.c        |   95 +++++++++++++++++++++++++++++++++++++++++
->>   drivers/base/platform-msi.c   |   45 +++++++++++++------
->>   drivers/base/platform-msi.h   |   23 ++++++++++
->>   include/linux/msi.h           |    8 +++
->>   7 files changed, 168 insertions(+), 16 deletions(-)
->>   create mode 100644 drivers/base/dev-msi.c
->>   create mode 100644 drivers/base/platform-msi.h
->>
->> diff --git a/arch/x86/include/asm/hw_irq.h b/arch/x86/include/asm/hw_irq.h
->> index 74c12437401e..8ecd7570589d 100644
->> +++ b/arch/x86/include/asm/hw_irq.h
->> @@ -61,6 +61,11 @@ struct irq_alloc_info {
->>   			irq_hw_number_t	msi_hwirq;
->>   		};
->>   #endif
->> +#ifdef CONFIG_DEV_MSI
->> +		struct {
->> +			irq_hw_number_t hwirq;
->> +		};
->> +#endif
+>> For X86, introduce a new irq_alloc_type which will be used by the
+>> interrupt remapping driver.
 > 
-> Why is this in this patch? I didn't see an obvious place where it is
-> used?
+> Why? Shouldn't this by symmetrical with normal MSI? Does MSI do this?
 
-Since I have introduced the DEV-MSI domain and related ops, this is 
-required in the dev_msi_set_hwirq and dev_msi_set_desc in this patch.
+Since I am introducing the new dev msi domain for the case when IR_REMAP 
+is turned on, I have introduced the new type in this patch.
 
->>   
->> +static void __platform_msi_desc_mask_unmask_irq(struct msi_desc *desc, u32 mask)
+MSI/MSIX have their own irq alloc types which are also only used by the 
+intel remapping driver..
+
+> 
+> I would have thought you'd want to switch to this remapping mode as
+> part of vfio or something like current cases.
+
+Can you let me know what current case you are referring to?
+> 
+>> +struct irq_domain *create_remap_dev_msi_irq_domain(struct irq_domain *parent,
+>> +						   const char *name)
 >> +{
->> +	const struct platform_msi_ops *ops;
+>> +	struct fwnode_handle *fn;
+>> +	struct irq_domain *domain;
 >> +
->> +	ops = desc->platform.msi_priv_data->ops;
->> +	if (!ops)
->> +		return;
+>> +	fn = irq_domain_alloc_named_fwnode(name);
+>> +	if (!fn)
+>> +		return NULL;
 >> +
->> +	if (mask) {
->> +		if (ops->irq_mask)
->> +			ops->irq_mask(desc);
->> +	} else {
->> +		if (ops->irq_unmask)
->> +			ops->irq_unmask(desc);
+>> +	domain = msi_create_irq_domain(fn, &dev_msi_ir_domain_info, parent);
+>> +	if (!domain) {
+>> +		pr_warn("failed to initialize irqdomain for IR-DEV-MSI.\n");
+>> +		return ERR_PTR(-ENXIO);
 >> +	}
->> +}
 >> +
->> +void platform_msi_mask_irq(struct irq_data *data)
->> +{
->> +	__platform_msi_desc_mask_unmask_irq(irq_data_get_msi_desc(data), 1);
->> +}
+>> +	irq_domain_update_bus_token(domain, DOMAIN_BUS_PLATFORM_MSI);
 >> +
->> +void platform_msi_unmask_irq(struct irq_data *data)
->> +{
->> +	__platform_msi_desc_mask_unmask_irq(irq_data_get_msi_desc(data), 0);
+>> +	if (!dev_msi_default_domain)
+>> +		dev_msi_default_domain = domain;
+>> +
+>> +	return domain;
 >> +}
 > 
-> This is a bit convoluted, just call the op directly:
-> 
-> void platform_msi_unmask_irq(struct irq_data *data)
-> {
-> 	const struct platform_msi_ops *ops = desc->platform.msi_priv_data->ops;
-> 
-> 	if (ops->irq_unmask)
-> 		ops->irq_unmask(desc);
-> }
->
+> What about this code creates a "remap" ? ie why is the function called
+> "create_remap" ?
 
-Sure, I will update this.
+Well, this function creates a new domain for the case when IR_REMAP is 
+enabled, hence I called it create_remap...
 
+> 
 >> diff --git a/include/linux/msi.h b/include/linux/msi.h
->> index 7f6a8eb51aca..1da97f905720 100644
+>> index 1da97f905720..7098ba566bcd 100644
 >> +++ b/include/linux/msi.h
->> @@ -323,9 +323,13 @@ enum {
->>   
->>   /*
->>    * platform_msi_ops - Callbacks for platform MSI ops
->> + * @irq_mask:   mask an interrupt source
->> + * @irq_unmask: unmask an interrupt source
->>    * @write_msg:	write message content
->>    */
->>   struct platform_msi_ops {
->> +	unsigned int            (*irq_mask)(struct msi_desc *desc);
->> +	unsigned int            (*irq_unmask)(struct msi_desc *desc);
+>> @@ -378,6 +378,9 @@ void *platform_msi_get_host_data(struct irq_domain *domain);
+>>   void platform_msi_write_msg(struct irq_data *data, struct msi_msg *msg);
+>>   void platform_msi_unmask_irq(struct irq_data *data);
+>>   void platform_msi_mask_irq(struct irq_data *data);
+>> +
+>> +int dev_msi_prepare(struct irq_domain *domain, struct device *dev,
+>> +                           int nvec, msi_alloc_info_t *arg);
 > 
-> Why do these functions return things if the only call site throws it
-> away?
+> I wonder if this should use the popular #ifdef dev_msi_prepare scheme
+> instead of a weak symbol?
 
-Hmmm, fair enough, I will change it to void.
-
+Ok, I will look into the #ifdef option.
 > 
 > Jason
 > 

@@ -2,138 +2,141 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 991F422B10F
-	for <lists+dmaengine@lfdr.de>; Thu, 23 Jul 2020 16:11:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35F1A22BAD8
+	for <lists+dmaengine@lfdr.de>; Fri, 24 Jul 2020 02:16:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729269AbgGWOL1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 23 Jul 2020 10:11:27 -0400
-Received: from mail-am6eur05on2078.outbound.protection.outlook.com ([40.107.22.78]:9697
+        id S1728208AbgGXAQR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 23 Jul 2020 20:16:17 -0400
+Received: from mail-am6eur05on2065.outbound.protection.outlook.com ([40.107.22.65]:5600
         "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726089AbgGWOLZ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 23 Jul 2020 10:11:25 -0400
+        id S1728065AbgGXAQQ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 23 Jul 2020 20:16:16 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h+wG1p/ijGdgOJW2qmFMkNYZ4X2ZBBEMZeZNv3fxvv7Ef8th4PgbBAExm6FkmWApdB/BxKd98gaQa2i6X/aBryRgtJFh16vcWX3K+LxgoR9Owa9Z/3xRTbZyo6tXPXap7v5Qm4Y5TGFV1A63YCjMXNbb1IqnmbshO36byicUIPzXsxKNsx9hOPSncM+Z4grkt9HjTJ5SF9C64CpJPsINuJYZ8PtwhFyomC1+niFxTnVQKK+Oohl62uRCCtDnRF4p6QtQTjVBAzJ5O09H+SR50IPvOR4rbMmZ+J98cE09+R+uM1EYyot+d1J8pWCJwr656dNVaVIq0vONP/xN40YqfQ==
+ b=R5H4bU0JHrdvsYO6/mwtdx0jvp9ZedCGUhJDljlLObu0ArtejZj+Yj52q6o9rk3oymsSjXMb15ecskS18sXuOY/Wc+PSTLEkJMbI74WLIeUr2JapkuLzbojjaXVkHPDVtiPNo93LcuIS+jlTC+qLwgWQgpbJCicL8dWVVbThLGLAuwHOcT6EsjYettfNKwNo8Ex1XaFNtGWoPX5ZXkd4ifKuHvX2ts6cNMoXWx4xVUsqDptuFCuI6ppjdHijx3B76S2imWsOj7jSPMx1ADYk5Z2lNsA1AbELfA6kxWCaAl+GDgU7d7tykQ2l5pL5ke6lZpyGPj0aB00MExgJ4do6TQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TpClA+EViGrEPTaSmvfJxJ1mrmCFpz3tfA0TYhDTxVk=;
- b=TuglgvNlAl+Kh81ai5Mun9Jlb0L6cgZLluhnfB0pieDW1OR+VHnwJYHLYloLddr5KgF7FgRjVtCx47ja0ZlVeChFXjSYgin93Av5orwZjrN70UN+nZFUU45prKKGIS0kOYb6XMaKp2bvNj8HBoBABtCOkl8PA383aRHecXL9uvDg7Zll5WuwMDoCjfguKhL+73We2iY4U89Sb+q9rNOTEMF6iKdRXEz+CMFmfUPWYGXOni0jA4uVs5px4m5vS2gT/e2QklAbbpPhOBkxpVfyLpNVFLQcZfPkkqCUIsnrxYfFq3XhB/uVJFccbWQqyLD6lk1+Ktp14x8OW/jFANAJyQ==
+ bh=7+PR5UqQ3rGDrRjplhGOc1b+DhQdOrbdEJMuAg0qOrI=;
+ b=PwvLbDZHP6qK5U6oDfchaKagiPLBWBWSCxyc2MA9W/wNjGS9yFqLPzANSzr60RscWrb4vrxq6szWLYnDGOi3KoJi3xMnp7JzwXxpAjw53QSL3PqRTpPbn8qJY3vm6gKa19M1S8ph+sv4VFyriyXhMTBHLj7IZDf/3ez0/D+guYvEpjjv8Qh4wjZSl2N0H5nHICXn0lxKJG8+o5HSbOjemYebCR2TdY5f2vBcxmTAk7paC32WZ1rYVFw5Ks95GhCOJYux2NknyXy109YEF/hWZa0jvxCCWnXSVXxojBdQ4/xJHiH2QZjmqLH4FL6ZhCb5liwl92r47Z7sFZuw/nhPQA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TpClA+EViGrEPTaSmvfJxJ1mrmCFpz3tfA0TYhDTxVk=;
- b=TVPUQGzctYiRmkRe7XztPjbMC043Vo4FIc3gvLPPLg8x+x+uXQhUu7KnIBv4P130L1dWU33qU2EObMsIEsE9pPkYVPFKxuGUwll7ieKgs9fmrmKekxN4slevt/VOOd2rVRvVWqDqxdRg843PkR3c4q9l6XyFzYSbEZQJp89ns1I=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6511.eurprd04.prod.outlook.com (2603:10a6:803:11f::33) with
+ bh=7+PR5UqQ3rGDrRjplhGOc1b+DhQdOrbdEJMuAg0qOrI=;
+ b=lxxpDkojMmiALczhMfZ3eC2wd+QfXdtHuTjcUJThJL/z84id2o+TtwD8Em+FdJTcMwNVQnJklQrisAVCVqNBwJHVTaQo3RLzUmyXnzRt27EyAGbtDZYdTctHhsqhFGUz1kjmJrro6GUEiV8U6prezjx4rB/PhwPVIXFlDVxfHC8=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=mellanox.com;
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
+ by VI1PR0502MB3951.eurprd05.prod.outlook.com (2603:10a6:803:17::26) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.23; Thu, 23 Jul
- 2020 14:11:19 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3195.028; Thu, 23 Jul 2020
- 14:11:19 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Frieder Schrempf <frieder.schrempf@kontron.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "matthias.schiffer@ew.tq-group.com" 
-        <matthias.schiffer@ew.tq-group.com>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH v10 05/12] dmaengine: dma: imx-sdma: add fw_loaded and
- is_ram_script
-Thread-Topic: [PATCH v10 05/12] dmaengine: dma: imx-sdma: add fw_loaded and
- is_ram_script
-Thread-Index: AQHWTp7JbcJo/3lJ0kuBP+xQgJ1yA6kVAw+AgAAOScCAAAwKMIAAFKYAgAAgFWA=
-Date:   Thu, 23 Jul 2020 14:11:19 +0000
-Message-ID: <VE1PR04MB6638FFA76076ECCA9CE8F2C289760@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <1593523876-22387-1-git-send-email-yibin.gong@nxp.com>
- <1593523876-22387-6-git-send-email-yibin.gong@nxp.com>
- <1b04e4e6-ca26-3f45-e353-af81e03f85a7@kontron.de>
- <VE1PR04MB66385FC4FE591EAFA8CB7D8289760@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <VE1PR04MB6638BEA5C2594FEBFDE9318589760@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <22e53878-42e2-78ed-c460-3fa339c306ad@kontron.de>
-In-Reply-To: <22e53878-42e2-78ed-c460-3fa339c306ad@kontron.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kontron.de; dkim=none (message not signed)
- header.d=none;kontron.de; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [183.192.236.25]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: cbb2c035-07c4-4709-ef1c-08d82f124556
-x-ms-traffictypediagnostic: VE1PR04MB6511:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6511D0BECC90D5027EECAA6B89760@VE1PR04MB6511.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PoZ28h6ZHrhUV39FpcC+9olHZhRbH2Ngx42zJ86BzRwa27fUVbtR8MR5kKE0zSUdFFU1f9lLtg468qUFeJwDCpEiGfSTH00jlkyFXuLuTnd63OwHawVESn6domOoewOAp73oiZTzi8ny7HHMDDksQNRi3yZJ+1HQY8M/KsKFj6XDymh7BKKT8zJl7/hYXMQUxY1N7yIi9wioCo9NATsARaRtzawVY3teKSM9H/LTL5mZuTDTsEFl+0Lv/J+olNZCsKwYS4mmRMC2U4wihfJvOnx+9PEo3GxF3OTKcj6ogJr7roPUUP2HCs3AEs+Y68wLcq5UxkVmGKqN4G0aYZVcy3uI8Wp81e9BMUPv4JzQMj/CVlIPhvAeitgJdlarmaQ7
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(366004)(39860400002)(346002)(136003)(396003)(52536014)(8936002)(76116006)(66946007)(64756008)(110136005)(66446008)(7416002)(8676002)(5660300002)(33656002)(2906002)(54906003)(7696005)(66476007)(66556008)(478600001)(4326008)(53546011)(316002)(26005)(71200400001)(6506007)(186003)(55016002)(83380400001)(9686003)(86362001)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: uG4N8KATOS5JiRifBeIMlKLNlJAqZcDEah669+VtTdQshQsouejIPJpV0JPHidLmcsLgTvrJ/ZP4R5MKboFPOsqeusDeZ3hys5YQ/yPFgP0+bRY62LV9NEjUY20KPVmad2ewSoOaESOhVZIqhodmZ537WZv7jUsCJZDOugpkAl1UlKCdLUnZ/aVhghWiVzaH35vIU1dRWjhHVo2rF9OTMgLF4/wgZRrnGMW6cWiQ9zr4hlFaJ5zzVX/9Iil/MIbOM8i4w6QA/m/jAi4Xnyk8A6zBFWs1FeZ/TLFraEwWjMyufsxZI5H7QKQGY431Ju9LTZqtkGaRYeYjafwIXlfgc82JxZHeFft5PX8hrApr6Wgd7Hf+4sw6RgbSL9TtiZf9JIJPgEnweN8wL2r+GaOWkjjh8JV26vexV5fnTss7mPrfn00RDBF/6vV9dS+ohtMB9jJY6bLbisZpu/wuTZpdgKI8Rl0GzW6tvRT0hhN0Pu6c3g3+dHysVa7W3uvMhrzC
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Fri, 24 Jul
+ 2020 00:16:12 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::252e:52c7:170b:35d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::252e:52c7:170b:35d%5]) with mapi id 15.20.3195.028; Fri, 24 Jul 2020
+ 00:16:12 +0000
+Date:   Thu, 23 Jul 2020 21:16:06 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        megha.dey@intel.com, bhelgaas@google.com, rafael@kernel.org,
+        gregkh@linuxfoundation.org, tglx@linutronix.de, hpa@zytor.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
+        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        dave.hansen@intel.com, netanelg@mellanox.com, shahafs@mellanox.com,
+        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
+        samuel.ortiz@intel.com, mona.hossain@intel.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
+ irq domain
+Message-ID: <20200724001606.GR2021248@mellanox.com>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+ <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com>
+ <878sfbxtzi.wl-maz@kernel.org>
+ <20200722195928.GN2021248@mellanox.com>
+ <cfb8191e364e77f352b1483c415a83a5@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cfb8191e364e77f352b1483c415a83a5@kernel.org>
+X-ClientProxiedBy: YTBPR01CA0016.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:14::29) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by YTBPR01CA0016.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:14::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.22 via Frontend Transport; Fri, 24 Jul 2020 00:16:10 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@mellanox.com>)      id 1jylNe-00Eb0e-EY; Thu, 23 Jul 2020 21:16:06 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: ff3eac2d-469b-4e6e-e4cb-08d82f66c4ec
+X-MS-TrafficTypeDiagnostic: VI1PR0502MB3951:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0502MB3951FAC71A330F1FE38A6E08CF770@VI1PR0502MB3951.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:546;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TbglQy6WjAPpYzORnQQaSnrvt/ZRToAcv7EDaiKZS3s4imbFLTAVUNMAUloVSM9JneFEz5fS6qLF3cmVU/yB0xOuevmwd/gRUvpbD5+OcufxLtT0jvUUIjsHH+Oesca7BZXXCVrwS2Ux4d+Cv+TQCwXsYMtUW1Iv+yxEgMpB6SMk0LcQZYS+jiBMxVxAR2XbuTOgBbPH6E06Xr0uWSnid/dUeO8uKnE7ICf1atC8jRhbfd3lGiKSfgM+R0Eaj3DVyr5lROsDPpLD8iJrxWZ7c3yNPSSdTFJa8qUDld5hCDFTKtUKXJSAqFHDzXBpB7wflNFNBrMB5LqzVIYDSdmeoQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(366004)(346002)(136003)(39860400002)(33656002)(26005)(6916009)(83380400001)(5660300002)(4326008)(36756003)(9746002)(9786002)(1076003)(7406005)(66476007)(186003)(7416002)(478600001)(2906002)(2616005)(426003)(86362001)(8676002)(66946007)(66556008)(316002)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: pkzJzh3rwgcfpE4ScO4MbqywNt5vXhI9fEv/u0aPI+/4pFIJm0dcn4NDJ/TVlAREUCS5zfHKQbjZocROdeLuuwxnTW1g5AzcI54td018hHrZ/q4rqCOZnLkCHYh+JK4KLoZLceV7S8eH7/Y2uCXFXejsOLwjFUo4Mdl9fZzYK4Su64V2ltODTkY4zPWTPVmUgWRs78dN651J8ueKya/H1PfTnqApMH4sKnencO1OHvzCeBAUM1Fva5ge7mmBOVVi163rtC4eufK/GhY+IKslTDo5Llnudq2aup+Fsn/jYN0mr1rrE56FGHa7Y5A4WEENoimnlpgyQ9bCZ1JPOvWqfE3tgfxmp3irVM8ZEoixDITWsOx2z31b4urCDNjJ5ZBEmT9jGC4ue+5Gh2Y4QsoXiJAbNlCHym4YLrmjYARvNxJNNDMznxamAPIKDSPw70aAg+kkbW2VqD4rKb/4pdZVLX2PN+ujrWkQHCZAZZxE7IQ=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff3eac2d-469b-4e6e-e4cb-08d82f66c4ec
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR05MB4141.eurprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cbb2c035-07c4-4709-ef1c-08d82f124556
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jul 2020 14:11:19.0448
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2020 00:16:11.8499
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FDqm/PiPSYaqxMG9/DLr6jloqxMppLV0b+tHIJbATe/VV5g3w2bw1bEJtVbFk1FFaDYtF7aoBESDae137VIXUQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6511
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: b+7rmQRxImwF/MP1RFEgQ6cHT+P0QvQ9Ve3pWRFXBW/esOE41L5SQDb4+ctdQ7XpnBjaRr0DfNs6aJMwvTvang==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3951
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-T24gMjAyMC8wNy8yMyAxOTo1MiBGcmllZGVyIFNjaHJlbXBmIDxmcmllZGVyLnNjaHJlbXBmQGtv
-bnRyb24uZGU+IHdyb3RlOg0KPiANCj4gPiBUaGUgd2FybmluZyBsb2cgY29tZXMgb3V0IGR1cmlu
-ZyBzcGkNCj4gPiB0cmFuc2ZlciBzdGFydCBhbmQgc2RtYSBmaXJtd2FyZSBsb2FkaW5nIGRvbmUs
-IGJ1dCBpZiBzZG1hIGRyaXZlcg0KPiA+IGJ1aWxkaW5nIGFzIG1vZHVsZSBjb3VsZCBlbnN1cmUg
-ZmlybXdhcmUgbG9hZGluZyBkb25lIGluDQo+ID4gc2RtYV9kcml2ZXJfcHJvYmVfcGhhc2UtPiBz
-cGlfaW14X3Byb2JlX3BoYXNlLCB3aGljaCBtZWFucyBzZG1hDQo+ID4gZmlybXdhcmUgbG9hZGlu
-ZyBoYXMgYmVlbiByZWFkeSBiZWZvcmUgc3BpIHRyYW5zZmVyIHN0YXJ0LCBoZW5jZSBubyBzdWNo
-DQo+IHdhcm5pbmcgbWVzc2FnZS4NCj4gPg0KPiA+IEJ1dCBJIGFtIG5vdCBzdXJlIGlmIGFsbCBj
-bGllbnQgZHJpdmVycyBleGNlcHQgc3BpIGFyZSBpbiBnb29kIHNoYXBlDQo+ID4gdG8gc3VwcG9y
-dCAnIENPTkZJR19JTVhfU0RNQT1tICcuDQo+IA0KPiBJJ20gcHJldHR5IHN1cmUgdGhhdCBDT05G
-SUdfSU1YX1NETUE9bSBpcyBzdXBwb3J0ZWQgYW5kIGNvbW1vbi4NCj4gT3RoZXJ3aXNlIGl0IHdv
-dWxkbid0IGJlIGFuIG9wdGlvbiBpbiBLY29uZmlnLg0KU29ycnksIEkgbWVhbiBvdGhlciBkcml2
-ZXJzIHVzaW5nIHNkbWEgc3VjaCBhcyBhdWRpby91YXJ0Li5ldGMsIEkga25vdw0Kc2RtYSBkcml2
-ZXIgc3VwcG9ydCB0byBidWlsZCBhcyBtb2R1bGUuIEJ1dCBJJ20gbm90IHN1cmUgaWYgdGhlcmUg
-YXJlIHNvbWUNCnBvdGVudGlhbCBpc3N1ZXMgaGVyZSB3aXRoIGNoYW5naW5nIHRvIHNkbWEgbW9k
-dWxlLiBGb3Igbm93LCBjb3VsZCB3ZQ0KanVzdCBsZWF2ZSBpdCBmb3IgYW5vdGhlciBwYXRjaCB3
-aGF0ZXZlciBpdCdzIGJldHRlciBzb2x1dGlvbiBvciBub3Q/DQo+IA0KPiA+IEJlc2lkZXMsIGRv
-IHlvdSB0aGluayAnZGV2X2Vycl9vbmNlICcgaW5zdGVhZCBvZiAnZGV2X2VycicgaXMgb2theSBm
-b3IgeW91Pw0KPiANCj4gSSBjYW4ndCByZWFsbHkganVkZ2UgaWYgdGhpcyBpcyBhIHByb3BlciBm
-aXggYXMgSSBoYXZlbid0IGxvb2tlZCBhdCB0aGUgY29kZSBpbiBkZXRhaWwsDQo+IGJ1dCBpZiB5
-b3Ugd2FudCB0byB1c2UgZGV2X2Vycl9vbmNlKCksIHRoYXQgd291bGQgYmUgb2sgZm9yIG1lLCBt
-YXliZSBldmVuDQo+IGJldHRlciBkZXZfd2Fybl9vbmNlKCkuDQo+IEFzIGNoYW5jZXMgYXJlIHRo
-YXQgZXZlbiB3aXRob3V0IGZpcm13YXJlIHRyYW5zZmVycyB3aWxsIHdvcmsgYSB3YXJuaW5nDQo+
-IGluc3RlYWQgb2YgYW4gZXJyb3IgbWFrZXMgbW9yZSBzZW5zZSB0byBtZS4NCk9rYXksIEknbGwg
-Y2hhbmdlIGl0IGluIGxhdGVyIHZlcnNpb24uIEFueXdheSwgdGhhbmtzIGZvciB5b3VyIHRlc3Qu
-DQo=
+On Thu, Jul 23, 2020 at 09:51:52AM +0100, Marc Zyngier wrote:
+
+> > IIRC on Intel/AMD at least once a MSI is launched it is not maskable.
+> 
+> Really? So you can't shut a device with a screaming interrupt,
+> for example, should it become otherwise unresponsive?
+
+Well, it used to be like that in the APICv1 days. I suppose modern
+interrupt remapping probably changes things.
+
+> > So the model for MSI is always "mask at source". The closest mapping
+> > to the Linux IRQ model is to say the end device has a irqchip that
+> > encapsulates the ability of the device to generate the MSI in the
+> > first place.
+> 
+> This is an x86'ism, I'm afraid. Systems I deal with can mask any
+> interrupt at the interrupt controller level, MSI or not.
+
+Sure. However it feels like a bad practice to leave the source
+unmasked and potentially continuing to generate messages if the
+intention was to disable the IRQ that was assigned to it - even if the
+messages do not result in CPU interrupts they will still consume
+system resources.
+
+> > I suppose the motivation to make it explicit is related to vfio using
+> > the generic mask/unmask functionality?
+> > 
+> > Explicit seems better, IMHO.
+> 
+> If masking at the source is the only way to shut the device up,
+> and assuming that the device provides the expected semantics
+> (a MSI raised by the device while the interrupt is masked
+> isn't lost and gets sent when unmasked), that's fair enough.
+> It's just ugly.
+
+It makes sense that the masking should follow the same semantics for
+PCI MSI masking.
+
+Jason

@@ -2,102 +2,57 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5106722D78C
-	for <lists+dmaengine@lfdr.de>; Sat, 25 Jul 2020 14:38:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B846822E83C
+	for <lists+dmaengine@lfdr.de>; Mon, 27 Jul 2020 10:53:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbgGYMiV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 25 Jul 2020 08:38:21 -0400
-Received: from crapouillou.net ([89.234.176.41]:42190 "EHLO crapouillou.net"
+        id S1726838AbgG0IxR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 27 Jul 2020 04:53:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726583AbgGYMiV (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sat, 25 Jul 2020 08:38:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1595680698; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7/K1S5tO51vq/D+dmrYz3As5SIimWsQTOvR+jAS/StA=;
-        b=ghKqg4gz7SdSK24i50kGFGHfl0MbRKgPV2np40eRUeza0f0TdUyz45XbZpXG5OlPfgznXU
-        sG6U+iHaq0jl/vWp1adyDthxFqD1UGwCDFSZLJjhHYIUrHRgNmqW4KcWGUvsmphNv0mMtZ
-        prdsEhlSIza2jpawcun6cR9uVHf9VnU=
-Date:   Sat, 25 Jul 2020 14:38:07 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] MAINTAINERS: Add linux-mips mailing list to JZ47xx
- entries
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Harvey Hunt <harveyhuntnexus@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org
-Message-Id: <J3Z0EQ.V70YLMM6L6RR2@crapouillou.net>
-In-Reply-To: <20200724155816.8125-1-krzk@kernel.org>
-References: <20200724155816.8125-1-krzk@kernel.org>
+        id S1726701AbgG0IxR (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 27 Jul 2020 04:53:17 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6610820719;
+        Mon, 27 Jul 2020 08:53:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595839997;
+        bh=va0aIl9wCbBDl+QAAonRZejZr/UBGIItQ+XxDiXf+OU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PiAfnr0pA4oT7XOukrOPAMJ1NkUVdvUMDMQWMRXHDehK/YKTIXJuS5M+8RVDML2PM
+         blXAa9P+YDuXPZ7M0eEu3OhHAtusQfoeQv5PMycQglNfS7AG1Ewi6bi7maTlMhWrGW
+         Nr7B6XY3JJUvqsYd3JuEksQfL/qVSubqK6hv12n0=
+Date:   Mon, 27 Jul 2020 14:23:13 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     dmaengine@vger.kernel.org, dan.j.williams@intel.com
+Subject: Re: [PATCH 0/2] dmaengine: ti: k3-udma: Get supported throughput
+ levels from hardware
+Message-ID: <20200727085313.GK12965@vkoul-mobl>
+References: <20200717120903.8774-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200717120903.8774-1-peter.ujfalusi@ti.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Krzysztof,
+On 17-07-20, 15:09, Peter Ujfalusi wrote:
+> Hi,
+> 
+> Newer versions of UDMAP have information on the number of different throughput
+> channels in it's CAP registers.
+> 
+> The driver can auto configure based on the information from the hardware isntead
+> a table within the match_data.
+> 
+> With this change we can use the same compatible string for identical versions of
+> UDMAP when only the number of UHCHAN and HCHAN is different.
 
-Le ven. 24 juil. 2020 =E0 17:58, Krzysztof Kozlowski <krzk@kernel.org> a=20
-=E9crit :
-> The entries for JZ47xx SoCs and its drivers lacked MIPS mailing list.
-> Only MTD NAND driver pointed linux-mtd.  Add linux-mips so the=20
-> relevant
-> patches will get attention of MIPS developers.
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  MAINTAINERS | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index cba0ed77775b..f41fc775a3c9 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8543,17 +8543,20 @@ F:	samples/bpf/ibumad_user.c
->=20
->  INGENIC JZ4780 DMA Driver
->  M:	Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-> +L:	linux-mips@vger.kernel.org
->  S:	Maintained
->  F:	drivers/dma/dma-jz4780.c
+Applied, thanks
 
-This entry can be removed completely, Zubair specified that he does not=20
-maintain this driver anymore. Besides this e-mail address is no more=20
-valid.
-
-With that said:
-Acked-by: Paul Cercueil <paul@crapouillou.net>
-
->=20
->  INGENIC JZ4780 NAND DRIVER
->  M:	Harvey Hunt <harveyhuntnexus@gmail.com>
->  L:	linux-mtd@lists.infradead.org
-> +L:	linux-mips@vger.kernel.org
->  S:	Maintained
->  F:	drivers/mtd/nand/raw/ingenic/
->=20
->  INGENIC JZ47xx SoCs
->  M:	Paul Cercueil <paul@crapouillou.net>
-> +L:	linux-mips@vger.kernel.org
->  S:	Maintained
->  F:	arch/mips/boot/dts/ingenic/
->  F:	arch/mips/include/asm/mach-jz4740/
-> --
-> 2.17.1
->=20
-
-
+-- 
+~Vinod

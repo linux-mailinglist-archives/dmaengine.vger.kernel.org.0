@@ -2,75 +2,73 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62A9B231EC7
-	for <lists+dmaengine@lfdr.de>; Wed, 29 Jul 2020 14:49:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E740023220A
+	for <lists+dmaengine@lfdr.de>; Wed, 29 Jul 2020 17:57:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgG2MtB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 29 Jul 2020 08:49:01 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33144 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726353AbgG2MtB (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 29 Jul 2020 08:49:01 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id E8ADCA9AF417740682EA;
-        Wed, 29 Jul 2020 20:48:56 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Wed, 29 Jul 2020
- 20:48:47 +0800
-From:   Yu Kuai <yukuai3@huawei.com>
-To:     <dan.j.williams@intel.com>, <vkoul@kernel.org>,
-        <anup.patel@broadcom.com>, <ray.jui@broadcom.com>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yi.zhang@huawei.com>, <yukuai3@huawei.com>
-Subject: [PATCH V2] dmaengine: bcm-sba-raid: add missing put_device() call in sba_probe()
-Date:   Wed, 29 Jul 2020 20:49:04 +0800
-Message-ID: <20200729124904.2541801-1-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.25.4
+        id S1726365AbgG2P52 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 29 Jul 2020 11:57:28 -0400
+Received: from mga01.intel.com ([192.55.52.88]:41244 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726341AbgG2P51 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 29 Jul 2020 11:57:27 -0400
+IronPort-SDR: yoPNbm3ZvIHjhacJ5w0FVf403Vio28WWqGgQ4iPK0dVxhp4qtL3D46QvI6u8uWX3iJv36ejsgl
+ W27eeDkyZXDg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9697"; a="169564460"
+X-IronPort-AV: E=Sophos;i="5.75,410,1589266800"; 
+   d="scan'208";a="169564460"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2020 08:57:27 -0700
+IronPort-SDR: QEZyMpxGUINfBLwfGprKm6qeOaQ7+szO3i/czkK80JHdDxJi5/A9Z6eEj7DFwgVMXX8HGFjoOn
+ U2q39SYfB7lQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,410,1589266800"; 
+   d="scan'208";a="304264541"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga002.jf.intel.com with ESMTP; 29 Jul 2020 08:57:26 -0700
+Subject: [PATCH] dmaengine: idxd: clear misc interrupt cause after read
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     Nikhil Rao <nikhil.rao@intel.com>, dmaengine@vger.kernel.org
+Date:   Wed, 29 Jul 2020 08:57:26 -0700
+Message-ID: <159603824665.28647.5344356370364397996.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-if of_find_device_by_node() succeed, sba_probe() doesn't have a
-corresponding put_device(). Thus add a jump target to fix the
-exception handling for this function implementation.
+Move the clearing of misc interrupt cause to immediately after reading the
+register in order to allow the next interrupt to be asserted.
 
-Fixes: 743e1c8ffe4e ("dmaengine: Add Broadcom SBA RAID driver")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Suggested-by: Nikhil Rao <nikhil.rao@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
-changes from V1:
--forgot to add params in put_device(), sorry about that.
+ drivers/dma/idxd/irq.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/dma/bcm-sba-raid.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/dma/bcm-sba-raid.c b/drivers/dma/bcm-sba-raid.c
-index 64239da02e74..322d48b397e7 100644
---- a/drivers/dma/bcm-sba-raid.c
-+++ b/drivers/dma/bcm-sba-raid.c
-@@ -1707,7 +1707,7 @@ static int sba_probe(struct platform_device *pdev)
- 	/* Prealloc channel resource */
- 	ret = sba_prealloc_channel_resources(sba);
- 	if (ret)
--		goto fail_free_mchan;
-+		goto put_device;
+diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
+index 1e9e6991f543..17a65a13fb64 100644
+--- a/drivers/dma/idxd/irq.c
++++ b/drivers/dma/idxd/irq.c
+@@ -64,6 +64,7 @@ irqreturn_t idxd_misc_thread(int vec, void *data)
+ 	bool err = false;
  
- 	/* Check availability of debugfs */
- 	if (!debugfs_initialized())
-@@ -1737,6 +1737,8 @@ static int sba_probe(struct platform_device *pdev)
- fail_free_resources:
- 	debugfs_remove_recursive(sba->root);
- 	sba_freeup_channel_resources(sba);
-+put_device:
-+	put_device(&mbox_pdev->dev);
- fail_free_mchan:
- 	mbox_free_channel(sba->mchan);
- 	return ret;
--- 
-2.25.4
+ 	cause = ioread32(idxd->reg_base + IDXD_INTCAUSE_OFFSET);
++	iowrite32(cause, idxd->reg_base + IDXD_INTCAUSE_OFFSET);
+ 
+ 	if (cause & IDXD_INTC_ERR) {
+ 		spin_lock_bh(&idxd->dev_lock);
+@@ -121,7 +122,6 @@ irqreturn_t idxd_misc_thread(int vec, void *data)
+ 		dev_warn_once(dev, "Unexpected interrupt cause bits set: %#x\n",
+ 			      val);
+ 
+-	iowrite32(cause, idxd->reg_base + IDXD_INTCAUSE_OFFSET);
+ 	if (!err)
+ 		goto out;
+ 
 

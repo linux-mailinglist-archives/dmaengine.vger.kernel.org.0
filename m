@@ -2,22 +2,22 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACBCE2335E4
-	for <lists+dmaengine@lfdr.de>; Thu, 30 Jul 2020 17:46:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30BE42335F7
+	for <lists+dmaengine@lfdr.de>; Thu, 30 Jul 2020 17:46:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729975AbgG3Pp5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 30 Jul 2020 11:45:57 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57362 "EHLO
+        id S1730011AbgG3PqR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 30 Jul 2020 11:46:17 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57382 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726581AbgG3Pp5 (ORCPT
+        with ESMTP id S1729777AbgG3Pp5 (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Thu, 30 Jul 2020 11:45:57 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id E541B8030866;
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id F22EE8040A6A;
         Thu, 30 Jul 2020 15:45:54 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ubn64PjSapSu; Thu, 30 Jul 2020 18:45:53 +0300 (MSK)
+        with ESMTP id 79Cw5IwDZWQc; Thu, 30 Jul 2020 18:45:54 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -30,9 +30,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Rob Herring <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/5] dmaengine: dw: Activate FIFO-mode for memory peripherals only
-Date:   Thu, 30 Jul 2020 18:45:42 +0300
-Message-ID: <20200730154545.3965-3-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH 3/5] dmaengine: dw: Discard dlen from the dev-to-mem xfer width calculation
+Date:   Thu, 30 Jul 2020 18:45:43 +0300
+Message-ID: <20200730154545.3965-4-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -44,60 +44,48 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-CFGx.FIFO_MODE field controls a DMA-controller "FIFO readiness" criterion.
-In other words it determines when to start pushing data out of a DW
-DMAC channel FIFO to a destination peripheral or from a source
-peripheral to the DW DMAC channel FIFO. Currently FIFO-mode is set to one
-for all DW DMAC channels. It means they are tuned to flush data out of
-FIFO (to a memory peripheral or by accepting the burst transaction
-requests) when FIFO is at least half-full (except at the end of the block
-transfer, when FIFO-flush mode is activated) and are configured to get
-data to the FIFO when it's at least half-empty.
+Indeed in case of the DMA_DEV_TO_MEM DMA transfers it's enough to take the
+destination memory address and the destination master data width into
+account to calculate the CTLx.DST_TR_WIDTH setting of the memory
+peripheral. According to the DW DMAC IP-core Databook (page 66, Example 5)
+at the and of a DMA transfer when the DMA-channel internal FIFO is left
+with data less than for a single destination burst transaction, the
+destination peripheral will enter the Single Transaction Region where the
+DW DMA controller can complete a block transfer to the destination using
+single transactions (non-burst transaction of CTLx.DST_TR_WIDTH bytes). If
+there is no enough data in the DMA-channel internal FIFO for even a single
+non-burst transaction of CTLx.DST_TR_WIDTH bytes, then the channel enters
+"FIFO flush mode". That mode is activated to empty the FIFO and flush the
+leftovers out to the memory peripheral. The flushing procedure is simple.
+The data is sent to the memory by means of a set of single transaction of
+CTLx.SRC_TR_WIDTH bytes. To sum up it's redundant to use the LLPs length
+to find out the CTLx.DST_TR_WIDTH parameter value, since each DMA transfer
+will be completed with the CTLx.SRC_TR_WIDTH bytes transaction if it is
+required.
 
-Such configuration is a good choice when there is no slave device involved
-in the DMA transfers. In that case the number of bursts per block is less
-than when CFGx.FIFO_MODE = 0 and, hence, the bus utilization will improve.
-But the latency of DMA transfers may increase when CFGx.FIFO_MODE = 1,
-since DW DMAC will wait for the channel FIFO contents to be either
-half-full or half-empty depending on having the destination or the source
-transfers. Such latencies might be dangerous in case if the DMA transfers
-are expected to be performed from/to a slave device. Since normally
-peripheral devices keep data in internal FIFOs, any latency at some
-critical moment may cause one being overflown and consequently losing
-data. This especially concerns a case when either a peripheral device is
-relatively fast or the DW DMAC engine is relatively slow with respect to
-the incoming data pace.
-
-In order to solve problems, which might be caused by the latencies
-described above, let's enable the FIFO half-full/half-empty "FIFO
-readiness" criterion only for DMA transfers with no slave device involved.
-Thanks to the commit ???????????? ("dmaengine: dw: Initialize channel
-before each transfer") we can freely do that in the generic
-dw_dma_initialize_chan() method.
+In this commit we remove the LLP entry length from the statement which
+calculates the memory peripheral DMA transaction width since it's
+redundant due to the feature described above. By doing so we'll improve
+the memory bus utilization and speed up the DMA-channel performance for
+DMA_DEV_TO_MEM DMA-transfers.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-
 ---
-
-Note the DMA-engine repository git.infradead.org/users/vkoul/slave-dma.git
-isn't accessible. So I couldn't find out the Andy' commit hash to use it in
-the log.
----
- drivers/dma/dw/dw.c | 2 +-
+ drivers/dma/dw/core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/dw/dw.c b/drivers/dma/dw/dw.c
-index 7a085b3c1854..d9810980920a 100644
---- a/drivers/dma/dw/dw.c
-+++ b/drivers/dma/dw/dw.c
-@@ -14,7 +14,7 @@
- static void dw_dma_initialize_chan(struct dw_dma_chan *dwc)
- {
- 	struct dw_dma *dw = to_dw_dma(dwc->chan.device);
--	u32 cfghi = DWC_CFGH_FIFO_MODE;
-+	u32 cfghi = is_slave_direction(dwc->direction) ? 0 : DWC_CFGH_FIFO_MODE;
- 	u32 cfglo = DWC_CFGL_CH_PRIOR(dwc->priority);
- 	bool hs_polarity = dwc->dws.hs_polarity;
+diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+index 4700f2e87a62..3da0aea9fe25 100644
+--- a/drivers/dma/dw/core.c
++++ b/drivers/dma/dw/core.c
+@@ -723,7 +723,7 @@ dwc_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+ 			lli_write(desc, sar, reg);
+ 			lli_write(desc, dar, mem);
+ 			lli_write(desc, ctlhi, ctlhi);
+-			mem_width = __ffs(data_width | mem | dlen);
++			mem_width = __ffs(data_width | mem);
+ 			lli_write(desc, ctllo, ctllo | DWC_CTLL_DST_WIDTH(mem_width));
+ 			desc->len = dlen;
  
 -- 
 2.27.0

@@ -2,28 +2,28 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8617234B59
-	for <lists+dmaengine@lfdr.de>; Fri, 31 Jul 2020 20:55:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 944CB234B5C
+	for <lists+dmaengine@lfdr.de>; Fri, 31 Jul 2020 20:55:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387838AbgGaSzA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 31 Jul 2020 14:55:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53234 "EHLO mail.kernel.org"
+        id S2387899AbgGaSzZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 31 Jul 2020 14:55:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387798AbgGaSy7 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 31 Jul 2020 14:54:59 -0400
+        id S2387897AbgGaSzY (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 31 Jul 2020 14:55:24 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB7232076B;
-        Fri, 31 Jul 2020 18:54:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7395822BF5;
+        Fri, 31 Jul 2020 18:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596221698;
-        bh=jS1U4zFDamDkVxZwKJMZWoe2ooesb2SZQVbitfvRu1I=;
+        s=default; t=1596221724;
+        bh=nUOUGxAYjfPAHHoeEEsLHJs20XIL9pXPoCLX1bjL5Po=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=ln8yi3GE3vhvcFG2k8S9Qjp3IZpII2VUpDPaxJMt85QZbFtefUTPoh4c0W3r4L6u6
-         LEFS0v4TnWyC7TkC3a7BVRgu6VNZBTWuzWD+9X+QJmyxEiH2FTesoleWY1/3vjBt2C
-         87g5UvNf8U3KZsdN2cuUhVd1L5RBM22z7eURZ89w=
-Date:   Fri, 31 Jul 2020 19:54:38 +0100
+        b=jYdTi6uPWxT4EShIFZjJhuqh5KXQ/rOVhaDyoKihD1XYy01iLpr9HPeJ5yIdNzMuT
+         JHrFlYEN4bl6332pCt4WG2OtjSJxnIM5eCsOLBSe/2zmXfX/gnY7v9HnhJmlOkkZdR
+         A7GduGAtoaWFl/55toSNuMS3SmiO++kpJsa3HlxQ=
+Date:   Fri, 31 Jul 2020 19:55:04 +0100
 From:   Mark Brown <broonie@kernel.org>
 To:     alsa-devel@alsa-project.org,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
@@ -34,34 +34,34 @@ Cc:     Hyun Kwon <hyun.kwon@xilinx.com>, Vinod Koul <vkoul@kernel.org>,
         Alexandre Bounine <alex.bou9@gmail.com>,
         Michal Simek <michal.simek@xilinx.com>,
         Matt Porter <mporter@kernel.crashing.org>
-In-Reply-To: <20200729162910.13196-1-laurent.pinchart@ideasonboard.com>
-References: <20200729162910.13196-1-laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 0/3] Fix Kconfig dependency issue with DMAENGINES selection
-Message-Id: <159622167149.22822.4163044113413538310.b4-ty@kernel.org>
+In-Reply-To: <20200731152433.1297-1-laurent.pinchart@ideasonboard.com>
+References: <20200731152433.1297-1-laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 0/3] Fix Kconfig dependency issue with DMAENGINES selection
+Message-Id: <159622167150.22822.5591654578876381807.b4-ty@kernel.org>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, 29 Jul 2020 19:29:07 +0300, Laurent Pinchart wrote:
+On Fri, 31 Jul 2020 18:24:30 +0300, Laurent Pinchart wrote:
 > This small series fixes a Kconfig dependency issue with the recently
 > merged Xilixn DPSUB DRM/KMS driver. The fix is in patch 3/3, but
 > requires a separate fixes in patches 1/3 and 2/3 to avoid circular
 > dependencies:
 > 
-> 	drivers/i2c/Kconfig:8:error: recursive dependency detected!
-> 	drivers/i2c/Kconfig:8:  symbol I2C is selected by FB_DDC
-> 	drivers/video/fbdev/Kconfig:63: symbol FB_DDC depends on FB
-> 	drivers/video/fbdev/Kconfig:12: symbol FB is selected by DRM_KMS_FB_HELPER
-> 	drivers/gpu/drm/Kconfig:80:     symbol DRM_KMS_FB_HELPER depends on DRM_KMS_HELPER
-> 	drivers/gpu/drm/Kconfig:74:     symbol DRM_KMS_HELPER is selected by DRM_ZYNQMP_DPSUB
-> 	drivers/gpu/drm/xlnx/Kconfig:1: symbol DRM_ZYNQMP_DPSUB depends on DMA_ENGINE
-> 	drivers/dma/Kconfig:44: symbol DMA_ENGINE depends on DMADEVICES
-> 	drivers/dma/Kconfig:6:  symbol DMADEVICES is selected by SND_SOC_SH4_SIU
-> 	sound/soc/sh/Kconfig:30:        symbol SND_SOC_SH4_SIU is selected by SND_SIU_MIGOR
-> 	sound/soc/sh/Kconfig:60:        symbol SND_SIU_MIGOR depends on I2C
-> 	For a resolution refer to Documentation/kbuild/kconfig-language.rst
-> 	subsection "Kconfig recursive dependency limitations"
+>         drivers/i2c/Kconfig:8:error: recursive dependency detected!
+>         drivers/i2c/Kconfig:8:  symbol I2C is selected by FB_DDC
+>         drivers/video/fbdev/Kconfig:63: symbol FB_DDC depends on FB
+>         drivers/video/fbdev/Kconfig:12: symbol FB is selected by DRM_KMS_FB_HELPER
+>         drivers/gpu/drm/Kconfig:80:     symbol DRM_KMS_FB_HELPER depends on DRM_KMS_HELPER
+>         drivers/gpu/drm/Kconfig:74:     symbol DRM_KMS_HELPER is selected by DRM_ZYNQMP_DPSUB
+>         drivers/gpu/drm/xlnx/Kconfig:1: symbol DRM_ZYNQMP_DPSUB depends on DMA_ENGINE
+>         drivers/dma/Kconfig:44: symbol DMA_ENGINE depends on DMADEVICES
+>         drivers/dma/Kconfig:6:  symbol DMADEVICES is selected by SND_SOC_SH4_SIU
+>         sound/soc/sh/Kconfig:30:        symbol SND_SOC_SH4_SIU is selected by SND_SIU_MIGOR
+>         sound/soc/sh/Kconfig:60:        symbol SND_SIU_MIGOR depends on I2C
+>         For a resolution refer to Documentation/kbuild/kconfig-language.rst
+>         subsection "Kconfig recursive dependency limitations"
 > 
 > [...]
 

@@ -2,36 +2,39 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B620234BF5
-	for <lists+dmaengine@lfdr.de>; Fri, 31 Jul 2020 22:09:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F46B234BF1
+	for <lists+dmaengine@lfdr.de>; Fri, 31 Jul 2020 22:09:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727824AbgGaUJA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 31 Jul 2020 16:09:00 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:33422 "EHLO
+        id S1726981AbgGaUIo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 31 Jul 2020 16:08:44 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:33400 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbgGaUIo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 31 Jul 2020 16:08:44 -0400
+        with ESMTP id S1726821AbgGaUIn (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 31 Jul 2020 16:08:43 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id B1008803202D;
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 54B3A8040A6A;
         Fri, 31 Jul 2020 20:08:40 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id dTHP2IOxhPcs; Fri, 31 Jul 2020 23:08:39 +0300 (MSK)
+        with ESMTP id 5FUthJxAUr7r; Fri, 31 Jul 2020 23:08:39 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 0/5] dmaengine: dw: Introduce non-mem peripherals optimizations
-Date:   Fri, 31 Jul 2020 23:08:21 +0300
-Message-ID: <20200731200826.9292-1-Sergey.Semin@baikalelectronics.ru>
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/5] dt-bindings: dma: dw: Add optional DMA-channels mask cell support
+Date:   Fri, 31 Jul 2020 23:08:22 +0300
+Message-ID: <20200731200826.9292-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200731200826.9292-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200731200826.9292-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -41,75 +44,50 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-After a lot of tests and thorough DW DMAC databook studying we've
-discovered that the driver can be optimized especially when it comes to
-working with non-memory peripherals.
+Each DW DMA controller channel can be synthesized with different
+parameters like maximum burst-length, multi-block support, maximum data
+width, etc. Most of these parameters determine the DW DMAC channels
+performance in its own aspect. On the other hand these parameters can
+be implicitly responsible for the channels performance degradation
+(for instance multi-block support is a very useful feature, but having
+it disabled during the DW DMAC synthesize will provide a more optimized
+core). Since DMA slave devices may have critical dependency on the DMA
+engine performance, let's provide a way for the slave devices to have
+the DMA-channels allocated from a pool of the channels, which according
+to the system engineer fulfill their performance requirements.
 
-First of all we've found out that since each DW DMAC channel can
-be synthesized with different parameters, then even when two of them
-are configured to perform the same DMA transactions they may execute them
-with different performance. Since some DMA client devices might be
-sensitive to such important parameter as performance, then it is a good
-idea to let them request only suitable DMA channels. In this patchset we
-introduce a functionality, which makes it possible by passing the DMA
-channels mask either over the "dmas" DT property or in the dw_dma_slave
-platform data descriptor.
-
-Secondly FIFO-mode of the "FIFO readiness" criterion is more suitable for
-the pure memory DMA transfers, since it minimizes the system bus
-utilization, but causes some performance drop. When it comes to working with
-non-memory peripherals the DMA engine performance comes to the first
-place. Since normally DMA client devices keep data in internal FIFOs, any
-latency at some critical moment may cause a FIFO being overflown and
-consequently losing data. So in order to minimize a chance of the DW DMAC
-internal FIFO being a bottle neck during the DMA transfers to and from
-non-memory peripherals we propose not to use FIFO-mode for them.
-
-Thirdly it has been discovered that using a DMA transaction length is
-redundant when calculating the destination transfer width for the
-dev-to-mem DMA communications. That shall increase performance of the DMA
-transfers with unaligned data length.
-
-Finally there is a small optimization in the burst length setting. In
-particular we've found out, that according to the DW DMAC databoot it's
-pointless to set one for the memory peripherals since they don't have
-handshaking interface connected to the DMA controller. So we suggest to
-just ignore the burst length config when it comes to setting the memory
-peripherals up.
-
-Link: https://lore.kernel.org/dmaengine/20200730154545.3965-1-Sergey.Semin@baikalelectronics.ru
-Changelog v2:
-- Add Databook version to the commits log.
-- Use the statement "slave.channels >= BIT(dw->pdata->nr_channels)" to
-  make sure the permitted DMA-channels pool is valid.
-- Describe new DW DMAC "channels" mask in a single line even though it
-  gets out of 80 columns limit.
+The pool is determined by a mask optionally specified in the fifth
+DMA-cell of the DMA DT-property. If the fifth cell is omitted from the
+phandle arguments or the mask is zero, then the allocation will be
+performed from a set of all channels provided by the DMA controller.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: dmaengine@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-
-Serge Semin (5):
-  dt-bindings: dma: dw: Add optional DMA-channels mask cell support
-  dmaengine: dw: Activate FIFO-mode for memory peripherals only
-  dmaengine: dw: Discard dlen from the dev-to-mem xfer width calculation
-  dmaengine: dw: Ignore burst setting for memory peripherals
-  dmaengine: dw: Add DMA-channels mask cell support
-
+---
  .../devicetree/bindings/dma/snps,dma-spear1340.yaml        | 7 +++++--
- drivers/dma/dw/core.c                                      | 6 +++++-
- drivers/dma/dw/dw.c                                        | 7 +++----
- drivers/dma/dw/idma32.c                                    | 5 ++---
- drivers/dma/dw/of.c                                        | 7 +++++--
- include/linux/platform_data/dma-dw.h                       | 2 ++
- 6 files changed, 22 insertions(+), 12 deletions(-)
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+index 20870f5c14dd..ef1d6879c158 100644
+--- a/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
++++ b/Documentation/devicetree/bindings/dma/snps,dma-spear1340.yaml
+@@ -18,12 +18,15 @@ properties:
+     const: snps,dma-spear1340
+ 
+   "#dma-cells":
+-    const: 3
++    minimum: 3
++    maximum: 4
+     description: |
+       First cell is a phandle pointing to the DMA controller. Second one is
+       the DMA request line number. Third cell is the memory master identifier
+       for transfers on dynamically allocated channel. Fourth cell is the
+-      peripheral master identifier for transfers on an allocated channel.
++      peripheral master identifier for transfers on an allocated channel. Fifth
++      cell is an optional mask of the DMA channels permitted to be allocated
++      for the corresponding client device.
+ 
+   reg:
+     maxItems: 1
 -- 
 2.27.0
 

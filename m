@@ -2,99 +2,89 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C48423A818
-	for <lists+dmaengine@lfdr.de>; Mon,  3 Aug 2020 16:11:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EE8623AFD4
+	for <lists+dmaengine@lfdr.de>; Mon,  3 Aug 2020 23:52:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbgHCOLF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 3 Aug 2020 10:11:05 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9322 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728258AbgHCOLE (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 3 Aug 2020 10:11:04 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5974070981FE9D8A1FCC;
-        Mon,  3 Aug 2020 22:10:58 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Mon, 3 Aug 2020
- 22:10:48 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <dan.j.williams@intel.com>, <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] dmaengine: iop-adma: Fix -Wint-to-pointer-cast build warning
-Date:   Mon, 3 Aug 2020 22:10:35 +0800
-Message-ID: <20200803141035.45284-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S1725863AbgHCVvv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 3 Aug 2020 17:51:51 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43107 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgHCVvv (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 3 Aug 2020 17:51:51 -0400
+Received: by mail-io1-f65.google.com with SMTP id k23so40077726iom.10;
+        Mon, 03 Aug 2020 14:51:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rTTd0JLEQIircW3THThScxa603LDzD4tC7cJBVnxw/8=;
+        b=PS9Vc/RaXghQo6qgZra6AA1HZaUeqqdzy5Sh+gGZDDLwLd3xw0hXBc2A9kgZ/p+kD3
+         CxamUkzPr2Zak69584gWpoPi9bHPd6T9g72y66RME3WGe88T/Kh56wOcNmPXqT8gWhPv
+         5Im1tAD/UlEefCQKXdrge5C73h1hnM0VY3cDkQ+o9vCylwNZaGvbI5PLwz+/m451yFcf
+         oNkSvqUHFncWrRWYCmRRpW+tz9Af23KH0RlIlcbNgs+TGoAQiE3GUjAYsuIZCp+g0Qg1
+         VoyIwUKcoZ4t7wN5Bs9uFL6sJd1MDBwzDXBwAkL7Thw87/1uHBONB7VHcXfgIptX6hnD
+         QJRA==
+X-Gm-Message-State: AOAM5300fO1gBZf1ZnUCqVxG8GxXcmb2qCFUISiVFzUjAB0gUBUsN0y5
+        cl3PoegjrrHTgpDYSZst3Q==
+X-Google-Smtp-Source: ABdhPJwk9JxW57b/cc2Ai3TSARPfqnml762G9Vu/UjF/k0tep6wviRYkAv+/P4mTcChWZ7hQ2RQBRg==
+X-Received: by 2002:a6b:dd12:: with SMTP id f18mr1938079ioc.109.1596491510169;
+        Mon, 03 Aug 2020 14:51:50 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id v63sm5891342ilk.67.2020.08.03.14.51.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 14:51:49 -0700 (PDT)
+Received: (nullmailer pid 3201910 invoked by uid 1000);
+        Mon, 03 Aug 2020 21:51:47 -0000
+Date:   Mon, 3 Aug 2020 15:51:47 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Subject: Re: [PATCH v2 1/5] dt-bindings: dma: dw: Add optional DMA-channels
+ mask cell support
+Message-ID: <20200803215147.GA3201744@bogus>
+References: <20200731200826.9292-1-Sergey.Semin@baikalelectronics.ru>
+ <20200731200826.9292-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.179.108]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200731200826.9292-2-Sergey.Semin@baikalelectronics.ru>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-drivers/dma/iop-adma.c:447:13: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-drivers/dma/iop-adma.c:449:4: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-drivers/dma/iop-adma.c:1301:3: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+On Fri, 31 Jul 2020 23:08:22 +0300, Serge Semin wrote:
+> Each DW DMA controller channel can be synthesized with different
+> parameters like maximum burst-length, multi-block support, maximum data
+> width, etc. Most of these parameters determine the DW DMAC channels
+> performance in its own aspect. On the other hand these parameters can
+> be implicitly responsible for the channels performance degradation
+> (for instance multi-block support is a very useful feature, but having
+> it disabled during the DW DMAC synthesize will provide a more optimized
+> core). Since DMA slave devices may have critical dependency on the DMA
+> engine performance, let's provide a way for the slave devices to have
+> the DMA-channels allocated from a pool of the channels, which according
+> to the system engineer fulfill their performance requirements.
+> 
+> The pool is determined by a mask optionally specified in the fifth
+> DMA-cell of the DMA DT-property. If the fifth cell is omitted from the
+> phandle arguments or the mask is zero, then the allocation will be
+> performed from a set of all channels provided by the DMA controller.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> ---
+>  .../devicetree/bindings/dma/snps,dma-spear1340.yaml        | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
 
-Use void* for dma_desc_pool_virt, dma_addr_t for dma_desc_pool,
-and use %pad to print dma_addr_t.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/dma/iop-adma.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/dma/iop-adma.c b/drivers/dma/iop-adma.c
-index 3350bffb2e93..8e17e4405959 100644
---- a/drivers/dma/iop-adma.c
-+++ b/drivers/dma/iop-adma.c
-@@ -415,7 +415,8 @@ static void iop_chan_start_null_xor(struct iop_adma_chan *iop_chan);
-  * */
- static int iop_adma_alloc_chan_resources(struct dma_chan *chan)
- {
--	char *hw_desc;
-+	void *hw_desc;
-+	dma_addr_t dma_desc;
- 	int idx;
- 	struct iop_adma_chan *iop_chan = to_iop_adma_chan(chan);
- 	struct iop_adma_desc_slot *slot = NULL;
-@@ -436,17 +437,16 @@ static int iop_adma_alloc_chan_resources(struct dma_chan *chan)
- 				" %d descriptor slots", idx);
- 			break;
- 		}
--		hw_desc = (char *) iop_chan->device->dma_desc_pool_virt;
--		slot->hw_desc = (void *) &hw_desc[idx * IOP_ADMA_SLOT_SIZE];
-+		hw_desc = iop_chan->device->dma_desc_pool_virt;
-+		slot->hw_desc = hw_desc + idx * IOP_ADMA_SLOT_SIZE;
- 
- 		dma_async_tx_descriptor_init(&slot->async_tx, chan);
- 		slot->async_tx.tx_submit = iop_adma_tx_submit;
- 		INIT_LIST_HEAD(&slot->tx_list);
- 		INIT_LIST_HEAD(&slot->chain_node);
- 		INIT_LIST_HEAD(&slot->slot_node);
--		hw_desc = (char *) iop_chan->device->dma_desc_pool;
--		slot->async_tx.phys =
--			(dma_addr_t) &hw_desc[idx * IOP_ADMA_SLOT_SIZE];
-+		dma_desc = iop_chan->device->dma_desc_pool;
-+		slot->async_tx.phys = dma_desc + idx * IOP_ADMA_SLOT_SIZE;
- 		slot->idx = idx;
- 
- 		spin_lock_bh(&iop_chan->lock);
-@@ -1296,9 +1296,8 @@ static int iop_adma_probe(struct platform_device *pdev)
- 		goto err_free_adev;
- 	}
- 
--	dev_dbg(&pdev->dev, "%s: allocated descriptor pool virt %p phys %p\n",
--		__func__, adev->dma_desc_pool_virt,
--		(void *) adev->dma_desc_pool);
-+	dev_dbg(&pdev->dev, "%s: allocated descriptor pool virt %p phys %pad\n",
-+		__func__, adev->dma_desc_pool_virt, &adev->dma_desc_pool);
- 
- 	adev->id = plat_data->hw_id;
- 
--- 
-2.17.1
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>

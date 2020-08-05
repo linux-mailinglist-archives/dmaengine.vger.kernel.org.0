@@ -2,42 +2,44 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A9C923CAF5
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Aug 2020 15:27:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD50A23CD35
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Aug 2020 19:22:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbgHENMx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 5 Aug 2020 09:12:53 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:44959 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728182AbgHEMfk (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Aug 2020 08:35:40 -0400
-Received: by mail-ua1-f68.google.com with SMTP id x19so7653932uap.11;
-        Wed, 05 Aug 2020 05:35:20 -0700 (PDT)
+        id S1728787AbgHERWj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 5 Aug 2020 13:22:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728148AbgHERVU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Aug 2020 13:21:20 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88BA4C0086B0;
+        Wed,  5 Aug 2020 07:50:47 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id v13so23186635oiv.13;
+        Wed, 05 Aug 2020 07:50:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TiO7nzmTLhp/HssO4wueBR+pe6NyyJ3Wi4fmHclssB0=;
-        b=LBg+QNCOfml/osTc4ClibeS1wZAy99kRrbDkKMLWs58Wr3uooJ6eaifgdM3l6aEkxe
-         mZhYMMbPwOBn/XFE++nMivEqdLcBt4aWH+yuHsvnLfRbTIo6s0FKJA3zEIrUPOF5wsKr
-         AWAq1Em05wmu4PNN6eMaK0BZZZ1FZOveFsyWPRlsQ5gIWay+Z3h3M/5KC58MYlaoGF1n
-         V9OIvBtF/cOKd6+uqDjb9nPWHFYMCaOaytm9HGTdrvJzljN1XN+vWjDCRJ8+B1C68k8x
-         sKqKxfWkR3GByGhSkpynGBASAZjerV1kvzjGpzAQP8LsWGvASO0WairA2tnuzRSEyXTy
-         /CGg==
-X-Gm-Message-State: AOAM530ZpRRFvqSNeDnNV6VcRXm0cMt0KjGy0gjge+N7xZsKgDkjn3O1
-        UdaRM4kNkvfhibNFosWztj0vDCVgQnILJ5r5JqyR52Wp
-X-Google-Smtp-Source: ABdhPJwK6o7b8lq3G6CAJpeeN/eYVnhyuuPm34lifo/8pWI+ku4U2jyzPQkSzpymHd67QjfIjokNuU68r0XO2FkgnuU=
-X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr2044718ote.107.1596626105327;
- Wed, 05 Aug 2020 04:15:05 -0700 (PDT)
+        bh=5lnCZoNdrZNQbQaV/iF1DKtpBff6Ck+1xozm4eqaEmw=;
+        b=p+jlcQHBqr0FBki7hCBNWHPJ/hWFZrwga7NmQDaDGOIgnf2c+20Begp0wNRxZJkIWH
+         Ex+VyXmuD34hri9YsT48xhntbdkHS+2WOyzX/X2cpbM79wbvuH6FHlx/S10vmtILLW9R
+         xAmOWDgxN+J03mi2Qo9jM7ptSngvD5bqL+wyWVST0Zn2cgaRz7lH9rV2FaeI0Ml7HWuS
+         cuXEy+u7LJ3/kdywifRuMnseOTbmHhe5IKiYJEtk1wCg1jaA0atFTT9OjzCdOWd6+PT+
+         mQv8J1mAjz1Jbm3EkIdkYl9WEDW55j2SmdJMXB280MYlvfbNO4qfYXTbPyk7EO3q3Oec
+         kS9A==
+X-Gm-Message-State: AOAM531OT4CMd+P7TZx1NJNkek7bjLSqS6uLK5tKKcmsxwWf6f0u12eV
+        aNh+hepY96KHqiQuS8BM/CvOscD68y6A7SiHpH+X1nah
+X-Google-Smtp-Source: ABdhPJwhUm4QHaZz7xbR+lTUoUQuyCH4le0QF/k75iMvl2tButnuNI7+iEhEoJyqrnRXlecEQMMJHtDC6cCth7F51hU=
+X-Received: by 2002:aca:4b54:: with SMTP id y81mr2275594oia.54.1596626072299;
+ Wed, 05 Aug 2020 04:14:32 -0700 (PDT)
 MIME-Version: 1.0
 References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-14-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594919915-5225-14-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594919915-5225-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 5 Aug 2020 13:14:54 +0200
-Message-ID: <CAMuHMdWU1UaL8B4EqA3qS3vebOZWL69uHMgkTBwUnoUz=z_p7Q@mail.gmail.com>
-Subject: Re: [PATCH 13/20] arm64: dts: renesas: r8a774e1: Add USB-DMAC and
- HSUSB device nodes
+Date:   Wed, 5 Aug 2020 13:14:20 +0200
+Message-ID: <CAMuHMdW5_yBdEidPiVNeQO0QwuJfTe0kSiHLg4hkQLzVuRM7VA@mail.gmail.com>
+Subject: Re: [PATCH 10/20] arm64: dts: renesas: r8a774e1: Add USB3.0 device nodes
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
         Vinod Koul <vkoul@kernel.org>,
@@ -70,7 +72,7 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 On Thu, Jul 16, 2020 at 7:19 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add usb dmac and hsusb device nodes to the RZ/G2H SoC dtsi.
+> Add usb3.0 phy, host and function device nodes on RZ/G2H SoC dtsi.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>

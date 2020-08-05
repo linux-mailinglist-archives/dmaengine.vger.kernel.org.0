@@ -2,55 +2,116 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 761C923CFAC
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Aug 2020 21:24:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5914E23CED9
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Aug 2020 21:07:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgHER36 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 5 Aug 2020 13:29:58 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52026 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728754AbgHER1q (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Aug 2020 13:27:46 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 075BQODj042353;
-        Wed, 5 Aug 2020 06:26:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596626784;
-        bh=ptD3hGzWwT8Vq2gSquJN4k9oJHMA8CvoI0Kiq0So7lw=;
-        h=From:To:CC:Subject:Date;
-        b=rWRwla7T/new3KgGWmbnNQqJZngYGytA2IVU4/3oUmp0CNNi6zALaUaoK+GEEBGSH
-         x3lyNisfVC4liC0+qf/jb4j14wFX8WYk4NxXicaL0YvVy0sz9ItDBRWKd/q1TP5WGG
-         GAOx6UqOG3Q0NOkJV5aWqDRAjLDe6RhEU55fQ6vI=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 075BQOJE114460;
-        Wed, 5 Aug 2020 06:26:24 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 5 Aug
- 2020 06:26:23 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 5 Aug 2020 06:26:23 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 075BQL5i053178;
-        Wed, 5 Aug 2020 06:26:22 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <ssantosh@kernel.org>, <santosh.shilimkar@oracle.com>
-CC:     <linux-arm-kernel@lists.infradead.org>, <grygorii.strashko@ti.com>,
-        <linux-kernel@vger.kernel.org>, <vkoul@kernel.org>,
-        <dmaengine@vger.kernel.org>
-Subject: [PATCH] dmaengine: ti: k3-udma-glue: Fix parameters for rx ring pair request
-Date:   Wed, 5 Aug 2020 14:27:46 +0300
-Message-ID: <20200805112746.15475-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.28.0
+        id S1728387AbgHETG6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 5 Aug 2020 15:06:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41956 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728234AbgHES6m (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 5 Aug 2020 14:58:42 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BEA822D75;
+        Wed,  5 Aug 2020 13:19:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596633566;
+        bh=3MsIB79zBI0fO6hFED+2PELXN5lzdVBWP95KH0wBH9I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RZK5/PZXQyb5E2xDXei3LEsgNsjsWbhsLQmYNpOCHlPpt0GCwrSwYNqCYvD4kfeIP
+         Hbpk+HWDzMbC0+cK8xnUE31SqMuhCjoSMDTuv+MHlP37YeDKS4CJVRAzciNnNhNaCk
+         ptJnG0ENBNRlSaZjIhOZo9NHqiG1R18UllMX4O+k=
+Date:   Wed, 5 Aug 2020 18:49:22 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Li Yang <leoyang.li@nxp.com>, Zhang Wei <zw@zh-kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH][next] dmaengine: Use fallthrough pseudo-keyword
+Message-ID: <20200805131922.GZ12965@vkoul-mobl>
+References: <20200727203413.GA6245@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200727203413.GA6245@embeddedor>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On 27-07-20, 15:34, Gustavo A. R. Silva wrote:
 
+> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+> index 2c508ee672b9..9b69716172a4 100644
+> --- a/drivers/dma/pl330.c
+> +++ b/drivers/dma/pl330.c
+> @@ -1061,16 +1061,16 @@ static bool _start(struct pl330_thread *thrd)
+>  
+>  		if (_state(thrd) == PL330_STATE_KILLING)
+>  			UNTIL(thrd, PL330_STATE_STOPPED)
+> -		/* fall through */
+> +		fallthrough;
+>  
+>  	case PL330_STATE_FAULTING:
+>  		_stop(thrd);
+> -		/* fall through */
+> +		fallthrough;
+>  
+>  	case PL330_STATE_KILLING:
+>  	case PL330_STATE_COMPLETING:
+>  		UNTIL(thrd, PL330_STATE_STOPPED)
+> -		/* fall through */
+> +		fallthrough;
+>  
+>  	case PL330_STATE_STOPPED:
+>  		return _trigger(thrd);
+> @@ -1121,7 +1121,6 @@ static u32 _emit_load(unsigned int dry_run, u8 buf[],
+>  
+>  	switch (direction) {
+>  	case DMA_MEM_TO_MEM:
+> -		/* fall through */
+>  	case DMA_MEM_TO_DEV:
+>  		off += _emit_LD(dry_run, &buf[off], cond);
+>  		break;
+> @@ -1155,7 +1154,6 @@ static inline u32 _emit_store(unsigned int dry_run, u8 buf[],
+>  
+>  	switch (direction) {
+>  	case DMA_MEM_TO_MEM:
+> -		/* fall through */
+>  	case DMA_DEV_TO_MEM:
+>  		off += _emit_ST(dry_run, &buf[off], cond);
+>  		break;
+> @@ -1216,7 +1214,6 @@ static int _bursts(struct pl330_dmac *pl330, unsigned dry_run, u8 buf[],
+>  
+>  	switch (pxs->desc->rqtype) {
+>  	case DMA_MEM_TO_DEV:
+> -		/* fall through */
+>  	case DMA_DEV_TO_MEM:
+>  		off += _ldst_peripheral(pl330, dry_run, &buf[off], pxs, cyc,
+>  			cond);
+> @@ -1266,7 +1263,6 @@ static int _dregs(struct pl330_dmac *pl330, unsigned int dry_run, u8 buf[],
+>  
+>  	switch (pxs->desc->rqtype) {
+>  	case DMA_MEM_TO_DEV:
+> -		/* fall through */
+
+replacement missed here and above few
+
+-- 
+~Vinod

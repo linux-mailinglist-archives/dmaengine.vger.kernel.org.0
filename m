@@ -2,64 +2,86 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D7AC023C618
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Aug 2020 08:39:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D403C23C81D
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Aug 2020 10:49:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgHEGjd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 5 Aug 2020 02:39:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbgHEGjc (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Aug 2020 02:39:32 -0400
-Received: from dockerbox (unknown [IPv6:2001:4800:7817:101:be76:4eff:fe04:a215])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 813E6C06174A
-        for <dmaengine@vger.kernel.org>; Tue,  4 Aug 2020 23:39:32 -0700 (PDT)
-Received: from 127.0.0.1 (localhost [127.0.0.1])
-        by dockerbox (Postfix) with SMTP id 4D11C778B1;
-        Wed,  9 Oct 2019 23:23:31 -0500 (CDT)
-Received: from [232.65.177.177] by 127.0.0.1; Thu, 10 Oct 2019 04:17:37 +0000
-Message-ID: <1bes8z9f0-3kzl87aza9p-39-4$wb@pf6.aee.dl>
-From:   "Mr Barrister Hans Erich" <dave@dbsoundfactory.com>
-Reply-To: "Mr Barrister Hans Erich" <dave@dbsoundfactory.com>
-To:     dl-mptfusionlinux@lsi.com
-Subject: RE:PERSONAL LETTER FROM MRS RASHIA AMIRA
-Date:   Thu, 10 Oct 19 04:17:37 GMT
-X-Mailer: Microsoft Outlook IMO, Build 9.0.2416 (9.0.2910.0)
+        id S1728193AbgHEIso (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 5 Aug 2020 04:48:44 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41326 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbgHEIsm (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Aug 2020 04:48:42 -0400
+Received: by mail-oi1-f193.google.com with SMTP id b22so12986544oic.8;
+        Wed, 05 Aug 2020 01:48:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1mrXzxi9uxOAW3sW2InYWxrD30ehGwVVOP3HqfzhRdk=;
+        b=ac8PtcXxGfZXOJRiBTYhlU1K0kRNtHc9Qpq2jv81kcZYZwgoljWqD+/7yrmxToLqCG
+         Sy7TBdKOMG99Q6tDrTbr4Yj+oF4elOTvyd2nv6mNBxkWs9wxyyjKYddVuNNa0qNoh0/Y
+         LdoveLh1tS52S0r/4qTehIuqF8O2qsUg/KD5KvMAI5EH1X3NdkFISVT6aZz9ls+IWa97
+         RYTyiSa7kO0Z7F9O4iY2q3yPhNi4RvyFTdmzHNQneE9w66n74Ztv33aVB6/XmUzpQbB/
+         s5Ispt87lxXU0w+dWKderoL4i8R8fRiCDaZ1FRsjuJ3ZzNtiiK2iy0k2HrTNumgIF1Km
+         Z8ig==
+X-Gm-Message-State: AOAM531Eem8/H2sOCSKCvuFcP+2uMJIWfhjwzR70cXCfQzI8KQEuyuUf
+        XFiFKJKXoaxA52F99mdxHyNpuvyIbm+sowZfUrs=
+X-Google-Smtp-Source: ABdhPJytnGMFscI/4Vj10JBqUQ7Wgi/Lqycodf6cBlV8PTnw+Znw95/OXOULRQVW5Ng30YOlYqbpGAXWXSVGKdV5pP0=
+X-Received: by 2002:aca:adc4:: with SMTP id w187mr1785208oie.153.1596617320906;
+ Wed, 05 Aug 2020 01:48:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-        boundary="7FE33.7_8EAEF6982F"
-X-Priority: 3
-X-MSMail-Priority: Normal
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594919915-5225-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 5 Aug 2020 10:48:29 +0200
+Message-ID: <CAMuHMdXOvVkbhXXmaugHe4fo5vUK3x7bYFHPYHESPWqVdDJBjg@mail.gmail.com>
+Subject: Re: [PATCH 03/20] dt-bindings: ata: renesas,rcar-sata: Add r8a774e1 support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On Thu, Jul 16, 2020 at 7:19 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Document SATA support for the RZ/G2H, no driver change required.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
---7FE33.7_8EAEF6982F
-Content-Type: text/plain;
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Greetings
+Gr{oetje,eeting}s,
 
-My name is Barrister Hans Erich.
+                        Geert
 
-I have a client who is interested to invest in your country, she is a well=
- known politician in her country and deserve a lucrative investment partne=
-rship with you outside her country without any delay   Please can you mana=
-ge such investment please Kindly reply for further details.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Your full nameS -----------
-
-
-Your urgent response will be appreciated
-
-Thank you and God bless you.
-
-Barrister Hans Erich
-
-Yours sincerely,
-Barrister Hans Erich
-
---7FE33.7_8EAEF6982F--
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds

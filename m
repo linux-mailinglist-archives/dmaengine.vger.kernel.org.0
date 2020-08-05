@@ -2,86 +2,114 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B26F623D255
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Aug 2020 22:11:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A433A23D21D
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Aug 2020 22:09:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729653AbgHEULj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 5 Aug 2020 16:11:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49486 "EHLO mail.kernel.org"
+        id S1727001AbgHEUJD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 5 Aug 2020 16:09:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726393AbgHEQ1m (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:27:42 -0400
+        id S1726676AbgHEQce (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:32:34 -0400
 Received: from localhost (unknown [122.171.202.192])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1699E22D06;
-        Wed,  5 Aug 2020 11:32:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D03A322D71;
+        Wed,  5 Aug 2020 13:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596627161;
-        bh=UmJlgXnRIbkpWEb4+GJWusTxQMcaZd+VjLiPMxf0RoE=;
+        s=default; t=1596633130;
+        bh=sLKCC1QjgtJmAuERFbBWWP9fB/9Lhbpc7SgboYEp2z8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bKfYLGeL4sk3PaNTyYcFVHFQJ1R5LtEjDS+g5xCfn8oIH1gcjpsfcxSdctodlhZVV
-         SLRSKAGz2ZtLWVabntzLUhnn0sjLlBfo+0MQlBqq+ITL/t48N86l3vymtRCPsUSAMC
-         msElrEF7e9enPeNSNKvrmqKdS3g0NSNrW9SNYw7o=
-Date:   Wed, 5 Aug 2020 17:02:37 +0530
+        b=qa76cu0k9JFT6Ep1vcMTDDSxNDUx8rkcmQTEoTyj2Yfn3MNeejXJcDLWqLr/2eprq
+         LWlVGdOpwZX00VbkLmmoD0MsamOzJ0N9d1L6XIzhRmpVPel5+M9VurA4NaX0HJsSdU
+         Vt1+jO3PBNqZWNu5eQAt9Hp5muY6A1tka5hysA3E=
+Date:   Wed, 5 Aug 2020 18:42:05 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     ssantosh@kernel.org, santosh.shilimkar@oracle.com,
-        linux-arm-kernel@lists.infradead.org, grygorii.strashko@ti.com,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: ti: k3-udma-glue: Fix parameters for rx ring
- pair request
-Message-ID: <20200805113237.GX12965@vkoul-mobl>
-References: <20200805112746.15475-1-peter.ujfalusi@ti.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] dmaengine: iop-adma: Fix -Wint-to-pointer-cast
+ build warning
+Message-ID: <20200805131205.GY12965@vkoul-mobl>
+References: <20200803141035.45284-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200805112746.15475-1-peter.ujfalusi@ti.com>
+In-Reply-To: <20200803141035.45284-1-yuehaibing@huawei.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 05-08-20, 14:27, Peter Ujfalusi wrote:
-> The original commit mixed up the forward and completion ring IDs for the
-> rx flow configuration.
-
-Acked-By: Vinod Koul <vkoul@kernel.org>
-
+On 03-08-20, 22:10, YueHaibing wrote:
+> drivers/dma/iop-adma.c:447:13: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+> drivers/dma/iop-adma.c:449:4: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+> drivers/dma/iop-adma.c:1301:3: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
 > 
-> Fixes: 4927b1ab2047 ("dmaengine: ti: k3-udma: Switch to k3_ringacc_request_rings_pair")
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Use void* for dma_desc_pool_virt, dma_addr_t for dma_desc_pool,
+> and use %pad to print dma_addr_t.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
-> Hi Santosh, Vinod,
+>  drivers/dma/iop-adma.c | 17 ++++++++---------
+>  1 file changed, 8 insertions(+), 9 deletions(-)
 > 
-> the offending patch was queued via ti SoC tree.
-> Santosh, can you pick up this fix also?
-> 
-> Regards,
-> Peter
-> 
->  drivers/dma/ti/k3-udma-glue.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
-> index 3a5d33ea5ebe..12da38a92218 100644
-> --- a/drivers/dma/ti/k3-udma-glue.c
-> +++ b/drivers/dma/ti/k3-udma-glue.c
-> @@ -579,8 +579,8 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+> diff --git a/drivers/dma/iop-adma.c b/drivers/dma/iop-adma.c
+> index 3350bffb2e93..8e17e4405959 100644
+> --- a/drivers/dma/iop-adma.c
+> +++ b/drivers/dma/iop-adma.c
+> @@ -415,7 +415,8 @@ static void iop_chan_start_null_xor(struct iop_adma_chan *iop_chan);
+>   * */
+>  static int iop_adma_alloc_chan_resources(struct dma_chan *chan)
+>  {
+> -	char *hw_desc;
+> +	void *hw_desc;
+> +	dma_addr_t dma_desc;
+>  	int idx;
+>  	struct iop_adma_chan *iop_chan = to_iop_adma_chan(chan);
+>  	struct iop_adma_desc_slot *slot = NULL;
+> @@ -436,17 +437,16 @@ static int iop_adma_alloc_chan_resources(struct dma_chan *chan)
+>  				" %d descriptor slots", idx);
+>  			break;
+>  		}
+> -		hw_desc = (char *) iop_chan->device->dma_desc_pool_virt;
+> -		slot->hw_desc = (void *) &hw_desc[idx * IOP_ADMA_SLOT_SIZE];
+> +		hw_desc = iop_chan->device->dma_desc_pool_virt;
+> +		slot->hw_desc = hw_desc + idx * IOP_ADMA_SLOT_SIZE;
+
+So you want to pointer arithmetic on a void pointer !
+
+Are you sure math is correct here and will work on different compilers?
+
 >  
->  	/* request and cfg rings */
->  	ret =  k3_ringacc_request_rings_pair(rx_chn->common.ringacc,
-> -					     flow_cfg->ring_rxq_id,
->  					     flow_cfg->ring_rxfdq0_id,
-> +					     flow_cfg->ring_rxq_id,
->  					     &flow->ringrxfdq,
->  					     &flow->ringrx);
->  	if (ret) {
+>  		dma_async_tx_descriptor_init(&slot->async_tx, chan);
+>  		slot->async_tx.tx_submit = iop_adma_tx_submit;
+>  		INIT_LIST_HEAD(&slot->tx_list);
+>  		INIT_LIST_HEAD(&slot->chain_node);
+>  		INIT_LIST_HEAD(&slot->slot_node);
+> -		hw_desc = (char *) iop_chan->device->dma_desc_pool;
+> -		slot->async_tx.phys =
+> -			(dma_addr_t) &hw_desc[idx * IOP_ADMA_SLOT_SIZE];
+> +		dma_desc = iop_chan->device->dma_desc_pool;
+> +		slot->async_tx.phys = dma_desc + idx * IOP_ADMA_SLOT_SIZE;
+>  		slot->idx = idx;
+>  
+>  		spin_lock_bh(&iop_chan->lock);
+> @@ -1296,9 +1296,8 @@ static int iop_adma_probe(struct platform_device *pdev)
+>  		goto err_free_adev;
+>  	}
+>  
+> -	dev_dbg(&pdev->dev, "%s: allocated descriptor pool virt %p phys %p\n",
+> -		__func__, adev->dma_desc_pool_virt,
+> -		(void *) adev->dma_desc_pool);
+> +	dev_dbg(&pdev->dev, "%s: allocated descriptor pool virt %p phys %pad\n",
+> +		__func__, adev->dma_desc_pool_virt, &adev->dma_desc_pool);
+>  
+>  	adev->id = plat_data->hw_id;
+>  
 > -- 
-> Peter
+> 2.17.1
 > 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
 -- 
 ~Vinod

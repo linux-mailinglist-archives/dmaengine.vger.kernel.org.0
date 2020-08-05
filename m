@@ -2,44 +2,41 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD50A23CD35
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Aug 2020 19:22:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8E7623CD54
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Aug 2020 19:24:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbgHERWj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 5 Aug 2020 13:22:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52194 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728148AbgHERVU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Aug 2020 13:21:20 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88BA4C0086B0;
-        Wed,  5 Aug 2020 07:50:47 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id v13so23186635oiv.13;
-        Wed, 05 Aug 2020 07:50:47 -0700 (PDT)
+        id S1728621AbgHERXm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 5 Aug 2020 13:23:42 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:45990 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728524AbgHERQJ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Aug 2020 13:16:09 -0400
+Received: by mail-ua1-f66.google.com with SMTP id p27so9758806uaa.12;
+        Wed, 05 Aug 2020 10:16:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5lnCZoNdrZNQbQaV/iF1DKtpBff6Ck+1xozm4eqaEmw=;
-        b=p+jlcQHBqr0FBki7hCBNWHPJ/hWFZrwga7NmQDaDGOIgnf2c+20Begp0wNRxZJkIWH
-         Ex+VyXmuD34hri9YsT48xhntbdkHS+2WOyzX/X2cpbM79wbvuH6FHlx/S10vmtILLW9R
-         xAmOWDgxN+J03mi2Qo9jM7ptSngvD5bqL+wyWVST0Zn2cgaRz7lH9rV2FaeI0Ml7HWuS
-         cuXEy+u7LJ3/kdywifRuMnseOTbmHhe5IKiYJEtk1wCg1jaA0atFTT9OjzCdOWd6+PT+
-         mQv8J1mAjz1Jbm3EkIdkYl9WEDW55j2SmdJMXB280MYlvfbNO4qfYXTbPyk7EO3q3Oec
-         kS9A==
-X-Gm-Message-State: AOAM531OT4CMd+P7TZx1NJNkek7bjLSqS6uLK5tKKcmsxwWf6f0u12eV
-        aNh+hepY96KHqiQuS8BM/CvOscD68y6A7SiHpH+X1nah
-X-Google-Smtp-Source: ABdhPJwhUm4QHaZz7xbR+lTUoUQuyCH4le0QF/k75iMvl2tButnuNI7+iEhEoJyqrnRXlecEQMMJHtDC6cCth7F51hU=
-X-Received: by 2002:aca:4b54:: with SMTP id y81mr2275594oia.54.1596626072299;
- Wed, 05 Aug 2020 04:14:32 -0700 (PDT)
+        bh=AXKpgsbLcw7z2C6ljXHBYtvVN+NDPtHizk0roOICInI=;
+        b=HDxvQeBHBH6wHy2UhDpdh7Ye5pVuATgudTrV0WGoTKTtsB3KmrmihTUKbNbD0yrdDO
+         dHVa3LL4WMOVGQA52EuDPmV6DSLYnCHQHie11WNUCa523R2vtlAY3QCvzd1MkEHJTrkv
+         2DunOy3wZpxELNXhwogS+tMhpNgkznSi4FYNuP01t5INSR+nrzI9ay6aahOW4VN0mTVi
+         xIGVm1agQrl0VdPuKd6SccG/1OGT4MdFbbztZmJqeVsYnSLpoul3oRmY7TQi8C8ltqFo
+         DKn2AxAOyG37mcw1iV3mNalzmTa22t/ipLkSLfpcNlnJOuXqWN8UBPGVutfCUMcQ3VnE
+         YJPg==
+X-Gm-Message-State: AOAM530DutCgMwXmD0tg9LxU/xBiukDGat3oRtPSkCwIz6TjfKhV20Pm
+        QzJrAvBOTfTj+UvCIbucaEXV4vKNPPV4ixWH7bPld1gx
+X-Google-Smtp-Source: ABdhPJwV3n8tOAcfpMHynj9j+mQfpTpf9DYt0YtMCyg/CBd6L07ZVwpSWSi6SSwkA6/AmBSX9QS/9q9S3w/0cDUPDdY=
+X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr2057730ote.107.1596626350552;
+ Wed, 05 Aug 2020 04:19:10 -0700 (PDT)
 MIME-Version: 1.0
 References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594919915-5225-11-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-21-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594919915-5225-21-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 5 Aug 2020 13:14:20 +0200
-Message-ID: <CAMuHMdW5_yBdEidPiVNeQO0QwuJfTe0kSiHLg4hkQLzVuRM7VA@mail.gmail.com>
-Subject: Re: [PATCH 10/20] arm64: dts: renesas: r8a774e1: Add USB3.0 device nodes
+Date:   Wed, 5 Aug 2020 13:18:59 +0200
+Message-ID: <CAMuHMdVriWnPK8-=w=0mq8yj9+1jbsg9yH8aV=ygyHsQ0f-CQQ@mail.gmail.com>
+Subject: Re: [PATCH 20/20] arm64: dts: renesas: r8a774e1: Add VIN and CSI-2 nodes
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
         Vinod Koul <vkoul@kernel.org>,
@@ -70,21 +67,63 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 7:19 PM Lad Prabhakar
+Hi Prabhakar,
+
+On Thu, Jul 16, 2020 at 7:20 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add usb3.0 phy, host and function device nodes on RZ/G2H SoC dtsi.
+> Add VIN and CSI-2 nodes to RZ/G2H (R8A774E1) SoC dtsi.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10.
+
+However, before I queue this in renesas-devel for v5.10, I'd like to
+have some clarification about the issue below.
+
+> --- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+
+> +               vin4: video@e6ef4000 {
+> +                       compatible = "renesas,vin-r8a774e1";
+> +                       reg = <0 0xe6ef4000 0 0x1000>;
+> +                       interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&cpg CPG_MOD 807>;
+> +                       power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
+> +                       resets = <&cpg 807>;
+> +                       renesas,id = <4>;
+> +                       status = "disabled";
+> +
+> +                       ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               port@1 {
+> +                                       #address-cells = <1>;
+> +                                       #size-cells = <0>;
+
+"make dtbs W=1" says:
+
+    arch/arm64/boot/dts/renesas/r8a774e1.dtsi:1562.12-1572.7: Warning
+(graph_child_address): /soc/video@e6ef4000/ports/port@1: graph node
+has single child node 'endpoint@0', #address-cells/#size-cells are not
+necessary
+
+(same for vin5-7 below)
+
+> +
+> +                                       reg = <1>;
+> +
+> +                                       vin4csi20: endpoint@0 {
+> +                                               reg = <0>;
+> +                                               remote-endpoint = <&csi20vin4>;
+> +                                       };
 
 Gr{oetje,eeting}s,
 
                         Geert
 
--- 
+--
 Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
 In personal conversations with technical people, I call myself a hacker. But

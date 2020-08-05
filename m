@@ -2,41 +2,41 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D403C23C81D
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Aug 2020 10:49:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEDCD23C841
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Aug 2020 10:54:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbgHEIso (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 5 Aug 2020 04:48:44 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41326 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbgHEIsm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Aug 2020 04:48:42 -0400
-Received: by mail-oi1-f193.google.com with SMTP id b22so12986544oic.8;
-        Wed, 05 Aug 2020 01:48:41 -0700 (PDT)
+        id S1728160AbgHEIyP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 5 Aug 2020 04:54:15 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33874 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbgHEIyO (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Aug 2020 04:54:14 -0400
+Received: by mail-oi1-f196.google.com with SMTP id z22so8349748oid.1;
+        Wed, 05 Aug 2020 01:54:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1mrXzxi9uxOAW3sW2InYWxrD30ehGwVVOP3HqfzhRdk=;
-        b=ac8PtcXxGfZXOJRiBTYhlU1K0kRNtHc9Qpq2jv81kcZYZwgoljWqD+/7yrmxToLqCG
-         Sy7TBdKOMG99Q6tDrTbr4Yj+oF4elOTvyd2nv6mNBxkWs9wxyyjKYddVuNNa0qNoh0/Y
-         LdoveLh1tS52S0r/4qTehIuqF8O2qsUg/KD5KvMAI5EH1X3NdkFISVT6aZz9ls+IWa97
-         RYTyiSa7kO0Z7F9O4iY2q3yPhNi4RvyFTdmzHNQneE9w66n74Ztv33aVB6/XmUzpQbB/
-         s5Ispt87lxXU0w+dWKderoL4i8R8fRiCDaZ1FRsjuJ3ZzNtiiK2iy0k2HrTNumgIF1Km
-         Z8ig==
-X-Gm-Message-State: AOAM531Eem8/H2sOCSKCvuFcP+2uMJIWfhjwzR70cXCfQzI8KQEuyuUf
-        XFiFKJKXoaxA52F99mdxHyNpuvyIbm+sowZfUrs=
-X-Google-Smtp-Source: ABdhPJytnGMFscI/4Vj10JBqUQ7Wgi/Lqycodf6cBlV8PTnw+Znw95/OXOULRQVW5Ng30YOlYqbpGAXWXSVGKdV5pP0=
-X-Received: by 2002:aca:adc4:: with SMTP id w187mr1785208oie.153.1596617320906;
- Wed, 05 Aug 2020 01:48:40 -0700 (PDT)
+        bh=o0Tmid+tnSvnAJzyNVALQOzFYE2lj4sH4UY2VIcOcWw=;
+        b=evPoqX7eLG1mRt4koFTUvjnzAIFzDLe1bmplBva7C2fYQ7MaTka1iYdpHfkHxQf3WN
+         5hJzboRrBjKRWzr+pNki8T0qfoDhghIuR/JUO+xkaqFJtNF0xxpQT4yTXrsqNg1k5FgY
+         UK/QTBBTgsKbFKbGr97V7L+1WmC46206kuqMeXDvGLcCYyLID4Gm+poz4IzRrwrdSbIW
+         WihGhuAVKNJ9oW8Ly1e+wgPGD8tCUuFr8D0WFppvz4q2C2fixbmm7FVj52oGbbvGhBch
+         0OuGalGMCVtZmcNy8av9Yt6kSHtXkPtD0prfipbbdD5DVty0m6YCdwTkgmMHFdt8BCi4
+         N4OQ==
+X-Gm-Message-State: AOAM533clIkVIDNYM7TamPpI0ofGD6MtboMC55H9LCAGjUKHr7BEwpFl
+        qzNAFweShSfyFF7H4RqnKGx8wuabt9PqzgQLlYU=
+X-Google-Smtp-Source: ABdhPJyljuIryu/u0UTk9F1+3SAnb1XU9mLUVZAv+khu6lPUjs8xyfZNkmrvKtA0yRGPniH4ZpNEEROFWOcNB2m+oEA=
+X-Received: by 2002:aca:adc4:: with SMTP id w187mr1794266oie.153.1596617653246;
+ Wed, 05 Aug 2020 01:54:13 -0700 (PDT)
 MIME-Version: 1.0
 References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594919915-5225-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594919915-5225-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 5 Aug 2020 10:48:29 +0200
-Message-ID: <CAMuHMdXOvVkbhXXmaugHe4fo5vUK3x7bYFHPYHESPWqVdDJBjg@mail.gmail.com>
-Subject: Re: [PATCH 03/20] dt-bindings: ata: renesas,rcar-sata: Add r8a774e1 support
+Date:   Wed, 5 Aug 2020 10:54:02 +0200
+Message-ID: <CAMuHMdWebnd8yxLccaQtfaz8UJW3vkTr==2n_ZxT_tjYkBMSiA@mail.gmail.com>
+Subject: Re: [PATCH 05/20] dt-bindings: phy: renesas,usb2-phy: Add r8a774e1 support
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
         Vinod Koul <vkoul@kernel.org>,
@@ -53,6 +53,7 @@ Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
         dmaengine <dmaengine@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linux Media Mailing List <linux-media@vger.kernel.org>,
         linux-pci <linux-pci@vger.kernel.org>,
@@ -68,7 +69,7 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 On Thu, Jul 16, 2020 at 7:19 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Document SATA support for the RZ/G2H, no driver change required.
+> Document SoC specific bindings for RZ/G2H (r8a774e1) SoC.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>

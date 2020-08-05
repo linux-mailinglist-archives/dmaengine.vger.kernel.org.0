@@ -2,114 +2,165 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A433A23D21D
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Aug 2020 22:09:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2887123D2E4
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Aug 2020 22:19:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgHEUJD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 5 Aug 2020 16:09:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49488 "EHLO mail.kernel.org"
+        id S1726399AbgHEUTj convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Wed, 5 Aug 2020 16:19:39 -0400
+Received: from mga12.intel.com ([192.55.52.136]:63556 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726676AbgHEQce (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:32:34 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D03A322D71;
-        Wed,  5 Aug 2020 13:12:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596633130;
-        bh=sLKCC1QjgtJmAuERFbBWWP9fB/9Lhbpc7SgboYEp2z8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qa76cu0k9JFT6Ep1vcMTDDSxNDUx8rkcmQTEoTyj2Yfn3MNeejXJcDLWqLr/2eprq
-         LWlVGdOpwZX00VbkLmmoD0MsamOzJ0N9d1L6XIzhRmpVPel5+M9VurA4NaX0HJsSdU
-         Vt1+jO3PBNqZWNu5eQAt9Hp5muY6A1tka5hysA3E=
-Date:   Wed, 5 Aug 2020 18:42:05 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] dmaengine: iop-adma: Fix -Wint-to-pointer-cast
- build warning
-Message-ID: <20200805131205.GY12965@vkoul-mobl>
-References: <20200803141035.45284-1-yuehaibing@huawei.com>
+        id S1726128AbgHEUTi (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 5 Aug 2020 16:19:38 -0400
+IronPort-SDR: jRg6g+aihljhKVo7IYgeHbtq/vxkD9PLlw7GqoDD5LgS2Pxs/4edTf5QWjmOs6aOllXRuZDjeL
+ k0x+5YqCH5Cw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="132211385"
+X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
+   d="scan'208";a="132211385"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 13:19:38 -0700
+IronPort-SDR: w9VSCNrISXm96GGjOlNyk4yJ4AZEqjxtdap/DxRUPdcHd6GR7/SdzO2DGKE9Nih3CrBJdlNu3m
+ RCa+339YsD3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
+   d="scan'208";a="467585502"
+Received: from orsmsx604.amr.corp.intel.com ([10.22.229.17])
+  by orsmga005.jf.intel.com with ESMTP; 05 Aug 2020 13:19:37 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 5 Aug 2020 13:19:37 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 5 Aug 2020 13:19:36 -0700
+Received: from orsmsx612.amr.corp.intel.com ([10.22.229.25]) by
+ ORSMSX612.amr.corp.intel.com ([10.22.229.25]) with mapi id 15.01.1713.004;
+ Wed, 5 Aug 2020 13:19:36 -0700
+From:   "Dey, Megha" <megha.dey@intel.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+CC:     "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [PATCH RFC v2 04/18] irq/dev-msi: Introduce APIs to allocate/free
+ dev-msi interrupts
+Thread-Topic: [PATCH RFC v2 04/18] irq/dev-msi: Introduce APIs to
+ allocate/free dev-msi interrupts
+Thread-Index: AQHWX3heqXf8B+7kfUafGS9cbpYfH6kSrV6AgAExB0iAFi3TEA==
+Date:   Wed, 5 Aug 2020 20:19:36 +0000
+Message-ID: <8cdfef10438047f5ae7fc81770d32351@intel.com>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+ <159534736176.28840.5547007059232964457.stgit@djiang5-desk3.ch.intel.com>
+ <20200721162501.GC2021248@mellanox.com>
+ <b3bc68b3-937e-4b64-e1c7-84942d7ba60c@intel.com>
+ <20200722173515.GL2021248@mellanox.com>
+In-Reply-To: <20200722173515.GL2021248@mellanox.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.5.1.3
+x-originating-ip: [10.22.254.132]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200803141035.45284-1-yuehaibing@huawei.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 03-08-20, 22:10, YueHaibing wrote:
-> drivers/dma/iop-adma.c:447:13: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-> drivers/dma/iop-adma.c:449:4: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-> drivers/dma/iop-adma.c:1301:3: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-> 
-> Use void* for dma_desc_pool_virt, dma_addr_t for dma_desc_pool,
-> and use %pad to print dma_addr_t.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/dma/iop-adma.c | 17 ++++++++---------
->  1 file changed, 8 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/dma/iop-adma.c b/drivers/dma/iop-adma.c
-> index 3350bffb2e93..8e17e4405959 100644
-> --- a/drivers/dma/iop-adma.c
-> +++ b/drivers/dma/iop-adma.c
-> @@ -415,7 +415,8 @@ static void iop_chan_start_null_xor(struct iop_adma_chan *iop_chan);
->   * */
->  static int iop_adma_alloc_chan_resources(struct dma_chan *chan)
->  {
-> -	char *hw_desc;
-> +	void *hw_desc;
-> +	dma_addr_t dma_desc;
->  	int idx;
->  	struct iop_adma_chan *iop_chan = to_iop_adma_chan(chan);
->  	struct iop_adma_desc_slot *slot = NULL;
-> @@ -436,17 +437,16 @@ static int iop_adma_alloc_chan_resources(struct dma_chan *chan)
->  				" %d descriptor slots", idx);
->  			break;
->  		}
-> -		hw_desc = (char *) iop_chan->device->dma_desc_pool_virt;
-> -		slot->hw_desc = (void *) &hw_desc[idx * IOP_ADMA_SLOT_SIZE];
-> +		hw_desc = iop_chan->device->dma_desc_pool_virt;
-> +		slot->hw_desc = hw_desc + idx * IOP_ADMA_SLOT_SIZE;
+Hi Jason,
 
-So you want to pointer arithmetic on a void pointer !
-
-Are you sure math is correct here and will work on different compilers?
-
->  
->  		dma_async_tx_descriptor_init(&slot->async_tx, chan);
->  		slot->async_tx.tx_submit = iop_adma_tx_submit;
->  		INIT_LIST_HEAD(&slot->tx_list);
->  		INIT_LIST_HEAD(&slot->chain_node);
->  		INIT_LIST_HEAD(&slot->slot_node);
-> -		hw_desc = (char *) iop_chan->device->dma_desc_pool;
-> -		slot->async_tx.phys =
-> -			(dma_addr_t) &hw_desc[idx * IOP_ADMA_SLOT_SIZE];
-> +		dma_desc = iop_chan->device->dma_desc_pool;
-> +		slot->async_tx.phys = dma_desc + idx * IOP_ADMA_SLOT_SIZE;
->  		slot->idx = idx;
->  
->  		spin_lock_bh(&iop_chan->lock);
-> @@ -1296,9 +1296,8 @@ static int iop_adma_probe(struct platform_device *pdev)
->  		goto err_free_adev;
->  	}
->  
-> -	dev_dbg(&pdev->dev, "%s: allocated descriptor pool virt %p phys %p\n",
-> -		__func__, adev->dma_desc_pool_virt,
-> -		(void *) adev->dma_desc_pool);
-> +	dev_dbg(&pdev->dev, "%s: allocated descriptor pool virt %p phys %pad\n",
-> +		__func__, adev->dma_desc_pool_virt, &adev->dma_desc_pool);
->  
->  	adev->id = plat_data->hw_id;
->  
-> -- 
-> 2.17.1
+> -----Original Message-----
+> From: Jason Gunthorpe <jgg@mellanox.com>
+> Sent: Wednesday, July 22, 2020 10:35 AM
+> To: Dey, Megha <megha.dey@intel.com>
+> Cc: Jiang, Dave <dave.jiang@intel.com>; vkoul@kernel.org; maz@kernel.org;
+> bhelgaas@google.com; rafael@kernel.org; gregkh@linuxfoundation.org;
+> tglx@linutronix.de; hpa@zytor.com; alex.williamson@redhat.com; Pan, Jacob
+> jun <jacob.jun.pan@intel.com>; Raj, Ashok <ashok.raj@intel.com>; Liu, Yi L
+> <yi.l.liu@intel.com>; Lu, Baolu <baolu.lu@intel.com>; Tian, Kevin
+> <kevin.tian@intel.com>; Kumar, Sanjay K <sanjay.k.kumar@intel.com>; Luck,
+> Tony <tony.luck@intel.com>; Lin, Jing <jing.lin@intel.com>; Williams, Dan J
+> <dan.j.williams@intel.com>; kwankhede@nvidia.com; eric.auger@redhat.com;
+> parav@mellanox.com; Hansen, Dave <dave.hansen@intel.com>;
+> netanelg@mellanox.com; shahafs@mellanox.com; yan.y.zhao@linux.intel.com;
+> pbonzini@redhat.com; Ortiz, Samuel <samuel.ortiz@intel.com>; Hossain, Mona
+> <mona.hossain@intel.com>; dmaengine@vger.kernel.org; linux-
+> kernel@vger.kernel.org; x86@kernel.org; linux-pci@vger.kernel.org;
+> kvm@vger.kernel.org
+> Subject: Re: [PATCH RFC v2 04/18] irq/dev-msi: Introduce APIs to allocate/free
+> dev-msi interrupts
 > 
+> On Wed, Jul 22, 2020 at 10:05:52AM -0700, Dey, Megha wrote:
+> >
+> >
+> > On 7/21/2020 9:25 AM, Jason Gunthorpe wrote:
+> > > On Tue, Jul 21, 2020 at 09:02:41AM -0700, Dave Jiang wrote:
+> > > > From: Megha Dey <megha.dey@intel.com>
+> > > >
+> > > > The dev-msi interrupts are to be allocated/freed only for custom
+> > > > devices, not standard PCI-MSIX devices.
+> > > >
+> > > > These interrupts are device-defined and they are distinct from the
+> > > > already existing msi interrupts:
+> > > > pci-msi: Standard PCI MSI/MSI-X setup format
+> > > > platform-msi: Platform custom, but device-driver opaque MSI
+> > > > setup/control
+> > > > arch-msi: fallback for devices not assigned to the generic PCI
+> > > > domain
+> > > > dev-msi: device defined IRQ domain for ancillary devices. For e.g.
+> > > > DSA portal devices use device specific IMS(Interrupt message store)
+> interrupts.
+> > > >
+> > > > dev-msi interrupts are represented by their own device-type. That
+> > > > means
+> > > > dev->msi_list is never contended for different interrupt types. It
+> > > > will either be all PCI-MSI or all device-defined.
+> > >
+> > > Not sure I follow this, where is the enforcement that only dev-msi
+> > > or normal MSI is being used at one time on a single struct device?
+> > >
+> >
+> > So, in the dev_msi_alloc_irqs, I first check if the dev_is_pci..
+> > If it is a pci device, it is forbidden to use dev-msi and must use the
+> > pci subsystem calls. dev-msi is to be used for all other custom
+> > devices, mdev or otherwise.
+> 
+> What prevents creating a dev-msi directly on the struct pci_device ?
 
--- 
-~Vinod
+In the next patchset, I have explicitly added code which denies PCI devices from using the dev_msi alloc/free APIS
+> 
+> Jason

@@ -2,41 +2,42 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F20A723C89E
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Aug 2020 11:06:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A9C923CAF5
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Aug 2020 15:27:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbgHEJGQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 5 Aug 2020 05:06:16 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36616 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbgHEJGK (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Aug 2020 05:06:10 -0400
-Received: by mail-oi1-f195.google.com with SMTP id l204so10202536oib.3;
-        Wed, 05 Aug 2020 02:06:08 -0700 (PDT)
+        id S1728659AbgHENMx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 5 Aug 2020 09:12:53 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:44959 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728182AbgHEMfk (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Aug 2020 08:35:40 -0400
+Received: by mail-ua1-f68.google.com with SMTP id x19so7653932uap.11;
+        Wed, 05 Aug 2020 05:35:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=D07PzLwIuFejcUZp+bYFZxntk7CBayvGPwvJsW9xBn4=;
-        b=L7106/Lr7REd9y04sPvcAzK1RzPAbPheJTiDwpqUmZvWwNlJzblUIuHLUUbcUGknM5
-         IqefdJdZnBsWiYCfM8Pv10JnK9ZxW9NAG5kDeUYyz/dupPbQFGNZfwGur5XYBxq9gID7
-         AWBT6EwQ6ED0k4XmYtJvruq9Ye9x9n/7H+FoDGwi9vVJ2RgHhpic8UP1hwLciCQ3ls5z
-         tJGP54hySjSZn3YEpCJTI1Wv3pAtos62rb0Hpb2lD/NGKTOglS6fwUjMFep7kav0foZV
-         4NOQ9OSGUuoWtjll01X2sNy7gn+Fv1nrst3cdJaxobZ3VjtwDg4JFmkpqcpa1aJx8cUH
-         o/sQ==
-X-Gm-Message-State: AOAM532mEh058UDJYYGE8x28mbmR0sj9w3SyUSbEwNoSkW/yYcbdJzpS
-        8IMP+2MXsMChGKv0xrDkA55UBmaU3MSAuQkhpTY=
-X-Google-Smtp-Source: ABdhPJzz2NPen+t9h7xbgmWFxKtxUGXZqxyqaY54ABg+DdffRiydd+UVAEPN4Grk6agAIWY5npdm1cM/UkLjxYDZp8Q=
-X-Received: by 2002:aca:adc4:: with SMTP id w187mr1824467oie.153.1596618368307;
- Wed, 05 Aug 2020 02:06:08 -0700 (PDT)
+        bh=TiO7nzmTLhp/HssO4wueBR+pe6NyyJ3Wi4fmHclssB0=;
+        b=LBg+QNCOfml/osTc4ClibeS1wZAy99kRrbDkKMLWs58Wr3uooJ6eaifgdM3l6aEkxe
+         mZhYMMbPwOBn/XFE++nMivEqdLcBt4aWH+yuHsvnLfRbTIo6s0FKJA3zEIrUPOF5wsKr
+         AWAq1Em05wmu4PNN6eMaK0BZZZ1FZOveFsyWPRlsQ5gIWay+Z3h3M/5KC58MYlaoGF1n
+         V9OIvBtF/cOKd6+uqDjb9nPWHFYMCaOaytm9HGTdrvJzljN1XN+vWjDCRJ8+B1C68k8x
+         sKqKxfWkR3GByGhSkpynGBASAZjerV1kvzjGpzAQP8LsWGvASO0WairA2tnuzRSEyXTy
+         /CGg==
+X-Gm-Message-State: AOAM530ZpRRFvqSNeDnNV6VcRXm0cMt0KjGy0gjge+N7xZsKgDkjn3O1
+        UdaRM4kNkvfhibNFosWztj0vDCVgQnILJ5r5JqyR52Wp
+X-Google-Smtp-Source: ABdhPJwK6o7b8lq3G6CAJpeeN/eYVnhyuuPm34lifo/8pWI+ku4U2jyzPQkSzpymHd67QjfIjokNuU68r0XO2FkgnuU=
+X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr2044718ote.107.1596626105327;
+ Wed, 05 Aug 2020 04:15:05 -0700 (PDT)
 MIME-Version: 1.0
 References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-15-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594919915-5225-15-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-14-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594919915-5225-14-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 5 Aug 2020 11:05:57 +0200
-Message-ID: <CAMuHMdWobsLUQ_Oa7i3zOMKw8XOWeVsOTrg8GF9iFaqKZQW_nw@mail.gmail.com>
-Subject: Re: [PATCH 14/20] dt-bindings: sound: renesas,rsnd: Document r8a774e1 bindings
+Date:   Wed, 5 Aug 2020 13:14:54 +0200
+Message-ID: <CAMuHMdWU1UaL8B4EqA3qS3vebOZWL69uHMgkTBwUnoUz=z_p7Q@mail.gmail.com>
+Subject: Re: [PATCH 13/20] arm64: dts: renesas: r8a774e1: Add USB-DMAC and
+ HSUSB device nodes
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
         Vinod Koul <vkoul@kernel.org>,
@@ -67,14 +68,15 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 7:20 PM Lad Prabhakar
+On Thu, Jul 16, 2020 at 7:19 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Document SoC specific bindings for RZ/G2H (r8a774e1) SoC.
+> Add usb dmac and hsusb device nodes to the RZ/G2H SoC dtsi.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.10.
 
 Gr{oetje,eeting}s,
 

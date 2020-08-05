@@ -2,15 +2,15 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 450DB23CCD6
-	for <lists+dmaengine@lfdr.de>; Wed,  5 Aug 2020 19:08:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC89A23CD19
+	for <lists+dmaengine@lfdr.de>; Wed,  5 Aug 2020 19:20:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgHERFP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 5 Aug 2020 13:05:15 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48988 "EHLO
+        id S1728743AbgHERUD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 5 Aug 2020 13:20:03 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:51030 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728433AbgHERDD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Aug 2020 13:03:03 -0400
+        with ESMTP id S1728714AbgHERSk (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Aug 2020 13:18:40 -0400
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
         by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 075DHV9M072287;
         Wed, 5 Aug 2020 08:17:31 -0500
@@ -62,3 +62,29 @@ List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
+
+On 05/08/2020 14:32, Vinod Koul wrote:
+> On 05-08-20, 14:27, Peter Ujfalusi wrote:
+>> The original commit mixed up the forward and completion ring IDs for the
+>> rx flow configuration.
+> 
+> Acked-By: Vinod Koul <vkoul@kernel.org>
+> 
+>>
+>> Fixes: 4927b1ab2047 ("dmaengine: ti: k3-udma: Switch to k3_ringacc_request_rings_pair")
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>> Hi Santosh, Vinod,
+>>
+>> the offending patch was queued via ti SoC tree.
+>> Santosh, can you pick up this fix also?
+
+Thank you Peter for catching this - it's valid issue.
+but I'd like to note that issue was discovered with private code and
+nothing is broken in Master.
+
+Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+
+-- 
+Best regards,
+grygorii

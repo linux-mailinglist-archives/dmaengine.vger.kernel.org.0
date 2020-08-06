@@ -2,142 +2,88 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C11123DBB2
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Aug 2020 18:30:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3A4023DCB8
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Aug 2020 18:56:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgHFQaK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 6 Aug 2020 12:30:10 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41904 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgHFQ3Z (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Aug 2020 12:29:25 -0400
-Received: by mail-ot1-f68.google.com with SMTP id a65so27461392otc.8;
-        Thu, 06 Aug 2020 09:28:59 -0700 (PDT)
+        id S1729649AbgHFQz0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 6 Aug 2020 12:55:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729759AbgHFQzU (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Aug 2020 12:55:20 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B7F8C0A889D;
+        Thu,  6 Aug 2020 07:50:05 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id i80so26235480lfi.13;
+        Thu, 06 Aug 2020 07:50:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Q+Uq8k5re7cUqp6WIZR8xEDOrcjWzDvNdEqOcxf2ZGk=;
+        b=YSuw0JUD4BI9mDqWniQI7oBkON85+Hily9832Miaihip0RlifaExWnpi46k72Ylx/0
+         j8dBhGbQtkX23MvMAlBA1VcS6Er1XNDPV8EThtSUBYVSUhGp9LIWaD3ne1uwJiyqBXw1
+         D5nGpPcknk3s4yzbaepxnRvrXbtI3MQYlZhj+YMBawEoaiPHRu5D5fDv0ORa5GEPxNy+
+         TEPhCrzev0zQKsSKVx4MVxamstlMxS7DGaUkHQbmcfS5aju9oQpDxX9yxs81BgmeUJUc
+         lT2FfL7PXRm8I8Im19vcypzAr8t0DyX0QiTF28F1RqyMcZybK2R5+weOFDGowmeYHxJn
+         NusQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GfRNKclYJY9TFgLDludWTlpzguMceCfSaUZal/qDN6s=;
-        b=mucsV4XvZdLPQxIuifzETBesBUCVGlX5wh10vA6hs7DMJcqfZEeJRoYFy0Qstdp26z
-         dWDzFflwqajIGQk9ckIz++zQujOWL7HagizIRPK2zskVRYX9S8qqvgysDqX0acWwFpjP
-         hM/jzjBXUwNTLWPdPzBJTJ6l7lQL7hNVZ3Fbtf5AfmuPebkufn5i5pHbj0bdfsf9hFEC
-         zOg5SGURrR9Are5To1UFdHcB8modghHZmbkHjTIYClw4lhRXBgk22yR6A4lfHpkDMElN
-         FVmBpqqNdfcDvQiSH/rARb8NlhDS96slJgFrXwuPOVYHJF5QBkHNGAcqETd2PunleUAf
-         X+Fg==
-X-Gm-Message-State: AOAM533oCfizdYpwXQIXOZH0VxdJFyWGAcA1wczlg6qDS29Nn2k77/DE
-        7yWF52kGbJXnYuU+mOG4a/gvI3L46lf74I7tARo8Euib
-X-Google-Smtp-Source: ABdhPJxsjDZTTqPo+9e6awj5yV1LG1Imzyw5Civ8gt7ap18JuUVGKty3JozPE/qiMGjuARTMT9EOZFY2swizOMfqf1E=
-X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr6431613ote.107.1596714489705;
- Thu, 06 Aug 2020 04:48:09 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Q+Uq8k5re7cUqp6WIZR8xEDOrcjWzDvNdEqOcxf2ZGk=;
+        b=AKt7yYQTc0AJTJrtAuxJ0IyyhOBvkwbCfuwP/EFdLmYnvnQmr9FE7hv/fTmZGGIyWL
+         qvDfEyvbkzHFEcE5UlItPdM5o7Mz2Vj6LgOQIo/EVvUfLWjqnCm2HlWSvBHTIMM4kgcz
+         VNmFhH9mvw2z/9X3UEe/OVwF7aQjd8Z3dT3GdkqonHtUKR5HDKtpeFMGIlG254R7zQES
+         /icejXIVDAxy2lbbQQk6FJxtYM97jLfydzQ5mQv1d/onZkltegY7ipQFudFX6hPVl1Oa
+         g/Y+yfVhIMkvw6QLWa743AvxAjjZBo9xE5pePbHwVilzMHxEV7yrJ7dHdxj9B+iPdl3M
+         ssjw==
+X-Gm-Message-State: AOAM530pM2j2Bg5TwrfrypyWNnkzDvp+0qe/EN1MX8voytv2hghEnHCu
+        QD/unB4/fO6lZni3VIDDf1w=
+X-Google-Smtp-Source: ABdhPJzWUE2bNkTWRtmo+gsMb7ug+grnXRR4hPLQdhUh80mdWnmTJ62sNdD6tPJa0sgHU3CrS+mq1Q==
+X-Received: by 2002:a19:457:: with SMTP id 84mr4141422lfe.191.1596725401282;
+        Thu, 06 Aug 2020 07:50:01 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
+        by smtp.googlemail.com with ESMTPSA id a16sm2739927ljj.108.2020.08.06.07.49.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Aug 2020 07:50:00 -0700 (PDT)
+Subject: Re: [Patch v2 2/4] dmaengine: tegra: Add Tegra GPC DMA driver
+To:     Rajesh Gumasta <rgumasta@nvidia.com>, ldewangan@nvidia.com,
+        jonathanh@nvidia.com, vkoul@kernel.org, dan.j.williams@intel.com,
+        thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     kyarlagadda@nvidia.com, Pavan Kunapuli <pkunapuli@nvidia.com>
+References: <1596699006-9934-1-git-send-email-rgumasta@nvidia.com>
+ <1596699006-9934-3-git-send-email-rgumasta@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <93b20bf7-1cb8-c8cf-06ef-1c15b7ce7ff2@gmail.com>
+Date:   Thu, 6 Aug 2020 17:49:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-21-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdVriWnPK8-=w=0mq8yj9+1jbsg9yH8aV=ygyHsQ0f-CQQ@mail.gmail.com> <CA+V-a8vXjhV-EeQb=bBhoRmuVA=0GSuFiV33N9nkhi39VNN6oA@mail.gmail.com>
-In-Reply-To: <CA+V-a8vXjhV-EeQb=bBhoRmuVA=0GSuFiV33N9nkhi39VNN6oA@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 6 Aug 2020 13:47:58 +0200
-Message-ID: <CAMuHMdXie+GfKBO22mFrn4oG_y7YUxU9ekQdWnp1hn-6z2mLuQ@mail.gmail.com>
-Subject: Re: [PATCH 20/20] arm64: dts: renesas: r8a774e1: Add VIN and CSI-2 nodes
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1596699006-9934-3-git-send-email-rgumasta@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Prabhakar,
+06.08.2020 10:30, Rajesh Gumasta пишет:
+> +static struct dma_async_tx_descriptor *tegra_dma_prep_dma_memset(
+> +	struct dma_chan *dc, dma_addr_t dest, int value, size_t len,
+> +	unsigned long flags)
+> +{
 
-On Thu, Aug 6, 2020 at 1:17 PM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
-> On Wed, Aug 5, 2020 at 12:19 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Thu, Jul 16, 2020 at 7:20 PM Lad Prabhakar
-> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > Add VIN and CSI-2 nodes to RZ/G2H (R8A774E1) SoC dtsi.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > However, before I queue this in renesas-devel for v5.10, I'd like to
-> > have some clarification about the issue below.
-> >
-> > > --- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-> > > +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-> >
-> > > +               vin4: video@e6ef4000 {
-> > > +                       compatible = "renesas,vin-r8a774e1";
-> > > +                       reg = <0 0xe6ef4000 0 0x1000>;
-> > > +                       interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> > > +                       clocks = <&cpg CPG_MOD 807>;
-> > > +                       power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-> > > +                       resets = <&cpg 807>;
-> > > +                       renesas,id = <4>;
-> > > +                       status = "disabled";
-> > > +
-> > > +                       ports {
-> > > +                               #address-cells = <1>;
-> > > +                               #size-cells = <0>;
-> > > +
-> > > +                               port@1 {
-> > > +                                       #address-cells = <1>;
-> > > +                                       #size-cells = <0>;
-> >
-> > "make dtbs W=1" says:
-> >
-> >     arch/arm64/boot/dts/renesas/r8a774e1.dtsi:1562.12-1572.7: Warning
-> > (graph_child_address): /soc/video@e6ef4000/ports/port@1: graph node
-> > has single child node 'endpoint@0', #address-cells/#size-cells are not
-> > necessary
-> >
-> > (same for vin5-7 below)
-> >
-> Referring to commit 5e53dbf4edb4d ("arm64: dts: renesas: r8a77990: Fix
-> VIN endpoint numbering") we definitely need endpoint numbering.
-> Probably the driver needs to be fixed to handle such cases.
+This looks and reads okay, although the following style of code's
+formatting is a bit more common for the kernel:
 
-> > > +
-> > > +                                       reg = <1>;
-> > > +
-> > > +                                       vin4csi20: endpoint@0 {
-> > > +                                               reg = <0>;
-> > > +                                               remote-endpoint = <&csi20vin4>;
+static struct dma_async_tx_descriptor *
+tegra_dma_prep_dma_memset(struct dma_chan *dc, dma_addr_t dest,
+			  int value, size_t len, unsigned long flags)
 
-On R-Car E3, the single endpoint is at address 2, so "make dtbs W=1"doesn't
-complain. Here it is at address 0.
-
-Niklas?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+You could make this small improvement in a v3. Same for all similar
+cases in the code.

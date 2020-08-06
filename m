@@ -2,108 +2,212 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 764FF23E005
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Aug 2020 19:58:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01A7623E00A
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Aug 2020 19:59:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgHFR6w (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 6 Aug 2020 13:58:52 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:50140 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbgHFR6v (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Aug 2020 13:58:51 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076HqMx9104451;
-        Thu, 6 Aug 2020 17:58:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=GWGjS1okergUbUW1f9Q9NaiNB9H9selvvFJ3V+2VHMM=;
- b=I33yC6oSful38sp4NtJLagmNfQV7JDBMd+pei8BruFXnjxz+1VmgzeyAxtdgnh2nJCnc
- x7ix7+R6u3Ox38n4EBAul91XFP4gzq/TlDw5lJ3gOzEr17XYsSBIVrOz0DLoJgHjkWgR
- TZeDBJ4dDaFbyTqT2q8sJLXdAx+U1sk6b/zfHWX05NfBVtSCgceBNNdCW4oIf7r5GXXt
- h+k3V+X7ueBkiM5usoTcMQHpSIzKOHSXfpmQBaIoj+ssDXreQ8dkHgspjptjA+rWk/tt
- SikPnCoqjIOafVW+dxP7z8AggVQrz3ciZ5MrQ2chDiQFNGBQskOwaNCE96z3Zq8IPXK6 Vw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 32r6ep4gv0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 06 Aug 2020 17:58:39 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076HrP7g168276;
-        Thu, 6 Aug 2020 17:58:38 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 32qy8nu4r7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 06 Aug 2020 17:58:38 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 076Hwab6013255;
-        Thu, 6 Aug 2020 17:58:36 GMT
-Received: from [10.74.109.129] (/10.74.109.129)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Aug 2020 10:58:36 -0700
-Subject: Re: [PATCH] dmaengine: ti: k3-udma-glue: Fix parameters for rx ring
- pair request
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-References: <20200805112746.15475-1-peter.ujfalusi@ti.com>
- <20200805113237.GX12965@vkoul-mobl>
- <3eea63fe-88f5-d6b6-433a-bb15495a839d@ti.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <83ffe78c-3c3b-a1a3-ae17-90a0a1f4da93@oracle.com>
-Date:   Thu, 6 Aug 2020 10:58:34 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        id S1728297AbgHFR66 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 6 Aug 2020 13:58:58 -0400
+Received: from mga11.intel.com ([192.55.52.93]:7694 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728048AbgHFR65 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 6 Aug 2020 13:58:57 -0400
+IronPort-SDR: O/lRraiyaKOXjbXN4gVQdD8iXhurgoeaW2HABq2qiGhBadVHmmNsvtOJK3A6Zcq7fYzKuChkf7
+ q+7+fAigCzyQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9705"; a="150621974"
+X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
+   d="scan'208";a="150621974"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 10:58:49 -0700
+IronPort-SDR: WGC3D4nlVaLzrgypDWqqH6llZx5zTDC+SVvJHPfD0SSKh3/DpUU4NyjMhoZCXTcJkIstz1mvQy
+ lsjwZ+NcGrcw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
+   d="scan'208";a="367666761"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orsmga001.jf.intel.com with ESMTP; 06 Aug 2020 10:58:49 -0700
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 6 Aug 2020 10:58:49 -0700
+Received: from orsmsx101.amr.corp.intel.com (10.22.225.128) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 6 Aug 2020 10:58:49 -0700
+Received: from [10.212.134.149] (10.212.134.149) by
+ ORSMSX101.amr.corp.intel.com (10.22.225.128) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 6 Aug 2020 10:58:48 -0700
+Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
+ irq domain
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Gunthorpe <jgg@mellanox.com>
+CC:     Marc Zyngier <maz@kernel.org>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+ <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com>
+ <878sfbxtzi.wl-maz@kernel.org> <20200722195928.GN2021248@mellanox.com>
+ <96a1eb5ccc724790b5404a642583919d@intel.com>
+ <20200805221548.GK19097@mellanox.com>
+ <70465fd3a7ae428a82e19f98daa779e8@intel.com>
+ <20200805225330.GL19097@mellanox.com>
+ <630e6a4dc17b49aba32675377f5a50e0@intel.com>
+ <20200806001927.GM19097@mellanox.com>
+ <c6a1c065ab9b46bbaf9f5713462085a5@intel.com>
+ <87tuxfhf9u.fsf@nanos.tec.linutronix.de>
+From:   "Dey, Megha" <megha.dey@intel.com>
+Message-ID: <014ffe59-38d3-b770-e065-dfa2d589adc6@intel.com>
+Date:   Thu, 6 Aug 2020 10:58:45 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <3eea63fe-88f5-d6b6-433a-bb15495a839d@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <87tuxfhf9u.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9705 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- spamscore=0 bulkscore=0 mlxscore=0 mlxlogscore=999 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008060119
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9705 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
- malwarescore=0 clxscore=1015 mlxscore=0 priorityscore=1501 adultscore=0
- impostorscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008060119
+Content-Language: en-US
+X-Originating-IP: [10.212.134.149]
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 8/5/20 6:17 AM, Grygorii Strashko wrote:
-> 
-> 
-> On 05/08/2020 14:32, Vinod Koul wrote:
->> On 05-08-20, 14:27, Peter Ujfalusi wrote:
->>> The original commit mixed up the forward and completion ring IDs for the
->>> rx flow configuration.
->>
->> Acked-By: Vinod Koul <vkoul@kernel.org>
->>
->>>
->>> Fixes: 4927b1ab2047 ("dmaengine: ti: k3-udma: Switch to 
->>> k3_ringacc_request_rings_pair")
->>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>> ---
->>> Hi Santosh, Vinod,
->>>
->>> the offending patch was queued via ti SoC tree.
->>> Santosh, can you pick up this fix also?
-> 
-> Thank you Peter for catching this - it's valid issue.
-> but I'd like to note that issue was discovered with private code and
-> nothing is broken in Master.
-> 
-> Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> 
-Will queue this up for next merge window.
+Hi Thomas,
 
-regards,
-Santosh
+On 8/6/2020 10:10 AM, Thomas Gleixner wrote:
+> Megha,
+>
+> "Dey, Megha" <megha.dey@intel.com> writes:
+>
+>>> -----Original Message-----
+>>> From: Jason Gunthorpe <jgg@mellanox.com>
+> <SNIP>
+>>> Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
+>>> irq domain
+> can you please fix your mail client not to copy the whole header of the
+> mail you are replying to into the mail body?
+
+oops, i hope i have fixed it now..
+
+>
+>>>>> Well, I had suggested to pass in the parent struct device, but it
+>>> Oops, I was thinking of platform_msi_domain_alloc_irqs() not
+>>> create_device_domain()
+>>>
+>>> ie call it in the device driver that wishes to consume the extra MSIs.
+>>>
+>>> Is there a harm if each device driver creates a new irq_domain for its use?
+>> Well, the only harm is if we want to reuse the irq domain.
+> You cannot reuse the irq domain if you create a domain per driver. The
+> way how hierarchical domains work is:
+>
+> vector --- DMAR-MSI
+>         |
+>         |-- ....
+>         |
+>         |-- IR-0 --- IO/APIC-0
+>         |        |
+>         |        |-- IO/APIC-1
+>         |        |
+>         |        |-- PCI/MSI-0
+>         |        |
+>         |        |-- HPET/MSI-0
+>         |
+>         |-- IR-1 --- PCI/MSI-1
+>         |        |
+>
+> The outermost domain is what the actual device driver uses. I.e. for
+> PCI-MSI it's the msi domain which is associated to the bus the device is
+> connected to. Each domain has its own interrupt chip instance and its
+> own data set.
+>
+> Domains of the same type share the code, but neither the data nor the
+> interrupt chip instance.
+>
+> Also there is a strict parent child relationship in terms of resources.
+> Let's look at PCI.
+>
+> PCI/MSI-0 depends on IR-0 which depends on the vector domain. That's
+> reflecting both the flow of the interrupt and the steps required for
+> various tasks, e.g. allocation/deallocation and also interrupt chip
+> operations. In order to allocate a PCI/MSI interrupt in domain PCI/MSI-0
+> a slot in the remapping unit and a vector needs to be allocated.
+>
+> If you disable interrupt remapping all the outermost domains in the
+> scheme above become childs of the vector domain.
+>
+> So if we look at DEV/MSI as a infrastructure domain then the scheme
+> looks like this:
+>
+> vector --- DMAR-MSI
+>         |
+>         |-- ....
+>         |
+>         |-- IR-0 --- IO/APIC-0
+>         |        |
+>         |        |-- IO/APIC-1
+>         |        |
+>         |        |-- PCI/MSI-0
+>         |        |
+>         |        |-- HPET/MSI-0
+>         |        |
+>         |        |-- DEV/MSI-0
+>         |
+>         |-- IR-1 --- PCI/MSI-1
+>         |        |
+>         |        |-- DEV/MSI-1
+>
+>
+> But if you make it per device then you have multiple DEV/MSI domains per
+> IR unit.
+>
+> What's the right thing to do?
+>
+> If the DEV/MSI domain has it's own per IR unit resource management, then
+> you need one per IR unit.
+>
+> If the resource management is solely per device then having a domain per
+> device is the right choice.
+
+Thanks a lot Thomas for this detailed explanation!!
+
+The dev-msi domain can be used by other devices if they too would want 
+to follow the
+vector->intel IR->dev-msi IRQ hierarchy.
+I do create one dev-msi IRQ domain instance per IR unit. So I guess for 
+this case,
+it makes most sense to have a dev-msi IRQ domain per IR unit as opposed 
+to create one
+per individual driver..
+>
+> Thanks,
+>
+>          tglx

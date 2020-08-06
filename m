@@ -2,68 +2,76 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C59BE23DE37
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Aug 2020 19:24:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2B8123DE4E
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Aug 2020 19:25:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbgHFRXc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 6 Aug 2020 13:23:32 -0400
+        id S1728860AbgHFRYY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 6 Aug 2020 13:24:24 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729799AbgHFRFG (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Aug 2020 13:05:06 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7139EC08E835;
-        Thu,  6 Aug 2020 06:46:28 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id c15so8840938lfi.3;
-        Thu, 06 Aug 2020 06:46:28 -0700 (PDT)
+        with ESMTP id S1729929AbgHFREn (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Aug 2020 13:04:43 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A516C03460C;
+        Thu,  6 Aug 2020 07:22:50 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id 185so41736659ljj.7;
+        Thu, 06 Aug 2020 07:22:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VZnlZHi2pNVM/YMIfXvf/UHbjwYhQmIPewxedOf93xI=;
-        b=obXR+Nn3YxEJAFYj9GjuuDHfWohVA8Ko2EZOZhRZLysgDkBB/zbNM9sFGHsyIalrV4
-         nhWnw+C8JYCh/hhgGGIK+A5QVPoC1u2W0DMy+tbkWLsBhKev24yAyy/CXHDYX/0qelNI
-         H6YkD+SM7NZszlsAWXR0/CDbstrY4mr0yoePvmsFTURovar9kWBpSeOCu85MkyANy7Q6
-         X4JL+qn9lAkd1xlNmY8vQw+M3hRVSK0hzPO5pygND0gWt0pA/NN4wVcb9XGxq5RBRpYe
-         JTk404spywnd3PhejTaIe4KjNw4tEZhg2KJpTx5y2qHI6RDSdq4QOTyX16Kdx2IGoBvo
-         VChg==
+        bh=XByk4zQLeWdVJ99jAPoK52EaFY9Nq96sXFd7ZxTXSZs=;
+        b=T0JlCXRlEg1AKCwQb1Q6HbT/3xfXPI1KwN7z3+S4H2XdoJf5sckRXpOd32Vj99hdZL
+         37mV132mg68iZ3zO5YvGKQBpF4ZmLRSkbzl9rdYzDZZDGFw8O8b+S0Uq9Vq50z6pIVR+
+         7zD4im9G8SYACEta3zEIjft/lAZB1aTVdYmJ+L3Y0S34NidBHYZ7yh9ee/J2ye9CgA3P
+         /lJ5WIpzDneUNMyM1VHVqjwIAPrL0Pxab33D5KBqnh67nkkXTXcLe+46/lNeUrb+LrsA
+         5VQFpXLPhIINuM8eV5bGVSYNijh7laO+zCxpNisCSy8HwtoQkSIowyDIIujk9DMonPW4
+         gdow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=VZnlZHi2pNVM/YMIfXvf/UHbjwYhQmIPewxedOf93xI=;
-        b=tagaIIRLTt86ZBnBqxL3EzA8poZDsNq1p8gZniw42b//dzB1EnGM2vXudxtyv6Kyvx
-         yvKseGSwmx74kpcgcnsyi06EVjQBa2q45jEfF861Dum6KEK/Y5CGgzATUo7R+phsY1Ev
-         /zF70lW2ufQFP4Y4BO0eeAuIdVQYj6e16YKEipjBVedxM+1OFx5ySmUlIuSvDsibao4I
-         jAdBcf7rPcIAJZTp6xvW2KzwBRkFhYhyvddQtWDcBhlo65eBiTZTmpID0jx54ilP6wXb
-         9tZfOH1Znq6vXKSg2ZyUQAvEVJHG1UvlJaxigwUNDejzi3l3gItK33wWhqhDS3/GYKUr
-         DKNg==
-X-Gm-Message-State: AOAM531EdD8H/9ojGlu3d0RoFXiU+9BxYCphRcMy3YRZpl4ls2ZKoG5i
-        jm011Wmdb8Qbup8XcevxWnw0KwJi
-X-Google-Smtp-Source: ABdhPJw4moAXUF/I/3kTkOQE43bGzwcBxEGZxvffHv+O3d1addRnPEos3MVbxYnblMoeVEBo8DGHhg==
-X-Received: by 2002:a19:4f01:: with SMTP id d1mr3959771lfb.159.1596721576594;
-        Thu, 06 Aug 2020 06:46:16 -0700 (PDT)
+        bh=XByk4zQLeWdVJ99jAPoK52EaFY9Nq96sXFd7ZxTXSZs=;
+        b=LsiPdCSSIGezBLwLMm67zLU5h4j/XH/3HNXICixllh2bQwJih88B/4+HMoie+FYAat
+         kPjz35npSDaoyd0v+njcqFdK7FXP4c/n/piP7hjvYU/R8/003cKpo6CPdP0m3MBa4hT5
+         IXQd23k6FVopVTHZLxo/1OmVhuq+qhgrEJ05UxYUjsLpR6gLwEwX48wqfZkmsl2H9dlz
+         2O8v++SH54T/V18McZQLjyYb57U+QAWH7vMGywHMTFPypa0MRncRtStop/lNR7EzBY+5
+         41HU8jmRsd9FL4PjGSZmCpLdwlCLpLD2bZ2Mjmh3dTBlcw/twNkkXB2NRhbc0gAYTXqd
+         CS6Q==
+X-Gm-Message-State: AOAM532aEAxUGSRASymmXM040IztMx4Ikt5XrnZEAokGqrhrYKUTAvvN
+        dbfjGgo1untPtR7UEDivDrA=
+X-Google-Smtp-Source: ABdhPJxA2Tkfxwf/RHpIug+GOl8r/RwGGUhTAJxYzx5jCzoXQ539huOTFz7Djjq2XQjHvs9c2QBk/Q==
+X-Received: by 2002:a2e:3c03:: with SMTP id j3mr3998129lja.397.1596723767006;
+        Thu, 06 Aug 2020 07:22:47 -0700 (PDT)
 Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
-        by smtp.googlemail.com with ESMTPSA id z18sm2402757lja.55.2020.08.06.06.46.15
+        by smtp.googlemail.com with ESMTPSA id h17sm2479535ljj.118.2020.08.06.07.22.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Aug 2020 06:46:15 -0700 (PDT)
+        Thu, 06 Aug 2020 07:22:45 -0700 (PDT)
 Subject: Re: [Patch v2 2/4] dmaengine: tegra: Add Tegra GPC DMA driver
-To:     Rajesh Gumasta <rgumasta@nvidia.com>, ldewangan@nvidia.com,
-        jonathanh@nvidia.com, vkoul@kernel.org, dan.j.williams@intel.com,
-        thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     kyarlagadda@nvidia.com, Pavan Kunapuli <pkunapuli@nvidia.com>
+To:     Rajesh Gumasta <rgumasta@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Krishna Yarlagadda <kyarlagadda@nvidia.com>,
+        Pavan Kunapuli <pkunapuli@nvidia.com>
 References: <1596699006-9934-1-git-send-email-rgumasta@nvidia.com>
  <1596699006-9934-3-git-send-email-rgumasta@nvidia.com>
+ <bc7d0d9d-ac7f-b720-64f5-63e0c76e6786@gmail.com>
+ <CH2PR12MB41350E273B36463F9B372A52A2480@CH2PR12MB4135.namprd12.prod.outlook.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <bc7d0d9d-ac7f-b720-64f5-63e0c76e6786@gmail.com>
-Date:   Thu, 6 Aug 2020 16:46:14 +0300
+Message-ID: <8fa139f2-685e-9e19-df55-bc7f84ec9a4c@gmail.com>
+Date:   Thu, 6 Aug 2020 17:22:45 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <1596699006-9934-3-git-send-email-rgumasta@nvidia.com>
+In-Reply-To: <CH2PR12MB41350E273B36463F9B372A52A2480@CH2PR12MB4135.namprd12.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -72,58 +80,17 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-06.08.2020 10:30, Rajesh Gumasta пишет:
+06.08.2020 16:56, Rajesh Gumasta пишет:
 ...
-> +/*
-> + * Save and restore csr and channel register on pm_suspend
-> + * and pm_resume respectively
-> + */
-> +static int __maybe_unused tegra_dma_pm_suspend(struct device *dev)
-> +{
-> +	struct tegra_dma *tdma = dev_get_drvdata(dev);
-> +	int i;
-> +
-> +	for (i = 0; i < tdma->chip_data->nr_channels; i++) {
-> +		struct tegra_dma_channel *tdc = &tdma->channels[i];
-> +		struct tegra_dma_channel_regs *ch_reg = &tdc->channel_reg;
-> +
-> +		ch_reg->csr = tdc_read(tdc, TEGRA_GPCDMA_CHAN_CSR);
-> +		ch_reg->src_ptr = tdc_read(tdc, TEGRA_GPCDMA_CHAN_SRC_PTR);
-> +		ch_reg->dst_ptr = tdc_read(tdc, TEGRA_GPCDMA_CHAN_DST_PTR);
-> +		ch_reg->high_addr_ptr = tdc_read(tdc,
-> +						 TEGRA_GPCDMA_CHAN_HIGH_ADDR_PTR);
-> +		ch_reg->mc_seq = tdc_read(tdc, TEGRA_GPCDMA_CHAN_MCSEQ);
-> +		ch_reg->mmio_seq = tdc_read(tdc, TEGRA_GPCDMA_CHAN_MMIOSEQ);
-> +		ch_reg->wcount = tdc_read(tdc, TEGRA_GPCDMA_CHAN_WCOUNT);
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused tegra_dma_pm_resume(struct device *dev)
-> +{
-> +	struct tegra_dma *tdma = dev_get_drvdata(dev);
-> +	int i;
-> +
-> +	for (i = 0; i < tdma->chip_data->nr_channels; i++) {
-> +		struct tegra_dma_channel *tdc = &tdma->channels[i];
-> +		struct tegra_dma_channel_regs *ch_reg = &tdc->channel_reg;
-> +
-> +		tdc_write(tdc, TEGRA_GPCDMA_CHAN_WCOUNT, ch_reg->wcount);
-> +		tdc_write(tdc, TEGRA_GPCDMA_CHAN_DST_PTR, ch_reg->dst_ptr);
-> +		tdc_write(tdc, TEGRA_GPCDMA_CHAN_SRC_PTR, ch_reg->src_ptr);
-> +		tdc_write(tdc, TEGRA_GPCDMA_CHAN_HIGH_ADDR_PTR,
-> +			  ch_reg->high_addr_ptr);
-> +		tdc_write(tdc, TEGRA_GPCDMA_CHAN_MMIOSEQ, ch_reg->mmio_seq);
-> +		tdc_write(tdc, TEGRA_GPCDMA_CHAN_MCSEQ, ch_reg->mc_seq);
-> +		tdc_write(tdc, TEGRA_GPCDMA_CHAN_CSR,
-> +			  (ch_reg->csr & ~TEGRA_GPCDMA_CSR_ENB));
-> +	}
-> +	return 0;
-> +}
-> +
-> +static const struct __maybe_unused dev_pm_ops tegra_dma_dev_pm_ops = {
-> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(tegra_dma_pm_suspend, tegra_dma_pm_resume)
-> +};
+>>> +static const struct __maybe_unused dev_pm_ops
+>> tegra_dma_dev_pm_ops = {
+>>> +     SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(tegra_dma_pm_suspend,
+>>> +tegra_dma_pm_resume) };
+>>
+>> Please explain why this is needed. All DMA should be stopped (not
+>> paused) on system's suspend, shouldn't it?
+> I have rechecked with HW verification team and they confirmed that after suspend, csr and channel registers will get reset hence on resume we need to restore back.
+> Also GPCDMA does not support power gate as a unit.
 
-Please explain why this is needed. All DMA should be stopped (not
-paused) on system's suspend, shouldn't it?
+But all registers are re-programmed on starting a DMA transfer, hence
+why do you need to save-restore them on suspend-resume?

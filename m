@@ -2,198 +2,157 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE20D23D75E
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Aug 2020 09:31:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E88123DA15
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Aug 2020 13:46:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgHFHbc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 6 Aug 2020 03:31:32 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19127 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727829AbgHFHah (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Aug 2020 03:30:37 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2bb1390000>; Thu, 06 Aug 2020 00:28:57 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 06 Aug 2020 00:30:37 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 06 Aug 2020 00:30:37 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Aug
- 2020 07:30:35 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 6 Aug 2020 07:30:35 +0000
-Received: from rgumasta-linux.nvidia.com (Not Verified[10.19.66.108]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f2bb1970001>; Thu, 06 Aug 2020 00:30:34 -0700
-From:   Rajesh Gumasta <rgumasta@nvidia.com>
-To:     <ldewangan@nvidia.com>, <jonathanh@nvidia.com>, <vkoul@kernel.org>,
-        <dan.j.williams@intel.com>, <thierry.reding@gmail.com>,
-        <p.zabel@pengutronix.de>, <dmaengine@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <kyarlagadda@nvidia.com>, <rgumasta@nvidia.com>
-Subject: [Patch v2 4/4] arm64: tegra: Add GPCDMA node in dt
-Date:   Thu, 6 Aug 2020 13:00:06 +0530
-Message-ID: <1596699006-9934-5-git-send-email-rgumasta@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596699006-9934-1-git-send-email-rgumasta@nvidia.com>
-References: <1596699006-9934-1-git-send-email-rgumasta@nvidia.com>
-X-NVConfidentiality: public
+        id S1725812AbgHFLl4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 6 Aug 2020 07:41:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48376 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbgHFLSd (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Aug 2020 07:18:33 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B16F0C0617A4;
+        Thu,  6 Aug 2020 04:17:31 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id v89so11271403ybi.8;
+        Thu, 06 Aug 2020 04:17:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IkZFSPvcY5I31SF4ovGBrfHT1rxg0M171V/0SMIVx2k=;
+        b=W1T7PMyTGM7VIbxN0FUlHyTKpaK0nw8VbeY8YI4ksk9CWWKzLOGNJsuFVpAeVzqEDQ
+         l5jy7ReADQ2WPptC19aMYCiHXKqdoGibvICjZi24Fx59vEVwEvfL4yZTHGzKYmCRL03U
+         RVTRjFq4TV8+2/gTNJkJ/Htgj1Fhq5P1qcxe/eQL/FoLz9bwZG6KJsHhvjn7+xr/6u/A
+         ZwyurJY9E7i7o/VwJb0vYHsxFh1fqfcI6q3MWsQ7MjEBH949S7NP+IoE180+3rUUw9UI
+         +/+wKAisrtczBHnl7YHt8MqtQz67j1T9EoVK3At6moXH+T7btd80HOMRDedl6B5O04Fc
+         C4rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IkZFSPvcY5I31SF4ovGBrfHT1rxg0M171V/0SMIVx2k=;
+        b=g67kPD/j95qTl+nSE82sBYDekoxbS1PiK2Tg09FZoroG9kInTPi/m/ggaM4nk9P9CC
+         iSnd0fPe+8394pPmMrq6GNs8+scxrtN8VyiLjMNFXulPSXoe5KORzJ3zGp3cpIuUiXEC
+         zepQ0ZkznvpuUvLmULR0+Bv5rSUSUejjz6SwMWuA2DKS7B96KlGvchGWcM6HPf+qZIvn
+         AlNWx1iUxAQp1s6JmbdIEFXXwUi2p3RDKrqzNbyW18TGybaFfbuVWz2pabsraTzrSrek
+         nMok3hQbEk44a9wlxHprIzAZvGHtNt3pWgqGwo95Ftofql4Wo6agwTLMeR256HhTh4Tm
+         0WRQ==
+X-Gm-Message-State: AOAM532SNiuhML1IP3RP2/AkmTWejLC4WI6F7qE3KRIy7Cs+sP9H+6rA
+        JYtYPHOnlsV3ojMSpRKIcVpsFUnL7aqd/hl33yA=
+X-Google-Smtp-Source: ABdhPJxC1QZwDQjfBbSfcHd9+nWr/d1KIV+hOzv93X+1QoDGFFoAz1yykeKI4ZMC4cs50cyA5iK5Orky9ZbUh/KQlXM=
+X-Received: by 2002:a25:c743:: with SMTP id w64mr11132228ybe.127.1596712641618;
+ Thu, 06 Aug 2020 04:17:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596698937; bh=tc/XzjGQyzMqGlRhGZ2uP3xW0f0gkcCZd8iJhKBcbso=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=P7SeteD/QGAjy+rbn2b6p2uoyBqw5wmePGRGMbyMxhZ5ekn6hLdDX/LtLLxlQYEST
-         kuf9ws+x6Om5IHJTfb3BMuOD/dvnHxVx9MLkoHK4KOUJKsxVbTIniWF01Nh9PNfkZc
-         URIxXDD86tMaCDdmg9+hZClmFRe7FaZKwnvpXsiN7nzy+lC1zhyAQRqh/ESGqlgmlA
-         KCRbkdNUmOjDQBbZw5l9/H1TsAv0RHrtibPj6XH8JQBPfgUvL58N7XqQpyKUQIli3k
-         C9fwYTfJ1u8Dt9ZzoS+GgDcM7eaVCqv6SXVZJ73Xuga3CHn7lMqpLFL4z/kg81szVX
-         5pnB8XAS6+b1w==
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-21-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVriWnPK8-=w=0mq8yj9+1jbsg9yH8aV=ygyHsQ0f-CQQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdVriWnPK8-=w=0mq8yj9+1jbsg9yH8aV=ygyHsQ0f-CQQ@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 6 Aug 2020 12:16:55 +0100
+Message-ID: <CA+V-a8vXjhV-EeQb=bBhoRmuVA=0GSuFiV33N9nkhi39VNN6oA@mail.gmail.com>
+Subject: Re: [PATCH 20/20] arm64: dts: renesas: r8a774e1: Add VIN and CSI-2 nodes
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add device tree node for GPCDMA controller on Tegra186 target
-and Tegra194 target.
+Hi Geert,
 
-Signed-off-by: Rajesh Gumasta <rgumasta@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi |  4 +++
- arch/arm64/boot/dts/nvidia/tegra186.dtsi       | 46 ++++++++++++++++++++++++++
- arch/arm64/boot/dts/nvidia/tegra194.dtsi       | 44 ++++++++++++++++++++++++
- 3 files changed, 94 insertions(+)
+Thank you for the review.
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi b/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi
-index 2fcaa2e..56ed8d8 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi
-@@ -54,6 +54,10 @@
- 		};
- 	};
- 
-+	dma@2600000 {
-+		status = "okay";
-+	};
-+
- 	memory-controller@2c00000 {
- 		status = "okay";
- 	};
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-index 58100fb..91bb17e 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-@@ -70,6 +70,52 @@
- 		snps,rxpbl = <8>;
- 	};
- 
-+	gpcdma: dma@2600000 {
-+			compatible = "nvidia,tegra186-gpcdma";
-+			reg = <0x0 0x2600000 0x0 0x210000>;
-+			resets = <&bpmp TEGRA186_RESET_GPCDMA>;
-+			reset-names = "gpcdma";
-+			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-+			#dma-cells = <1>;
-+			iommus = <&smmu TEGRA186_SID_GPCDMA_0>;
-+			dma-coherent;
-+			nvidia,start-dma-channel-index = <1>;
-+			dma-channels = <31>;
-+			status = "disabled";
-+		};
-+
- 	aconnect {
- 		compatible = "nvidia,tegra186-aconnect",
- 			     "nvidia,tegra210-aconnect";
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index 4bc187a..0bd67bd 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -68,6 +68,50 @@
- 			snps,rxpbl = <8>;
- 		};
- 
-+	gpcdma: dma@2600000 {
-+			compatible = "nvidia,tegra194-gpcdma";
-+			reg = <0x0 0x2600000 0x0 0x210000>;
-+			resets = <&bpmp TEGRA194_RESET_GPCDMA>;
-+			reset-names = "gpcdma";
-+			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-+				      <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
-+			#dma-cells = <1>;
-+			nvidia,start-dma-channel-index = <1>;
-+			dma-channels = <31>;
-+			status = "disabled";
-+		};
-+
- 		aconnect@2900000 {
- 			compatible = "nvidia,tegra194-aconnect",
- 				     "nvidia,tegra210-aconnect";
--- 
-2.7.4
+On Wed, Aug 5, 2020 at 12:19 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Thu, Jul 16, 2020 at 7:20 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Add VIN and CSI-2 nodes to RZ/G2H (R8A774E1) SoC dtsi.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> However, before I queue this in renesas-devel for v5.10, I'd like to
+> have some clarification about the issue below.
+>
+> > --- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+>
+> > +               vin4: video@e6ef4000 {
+> > +                       compatible = "renesas,vin-r8a774e1";
+> > +                       reg = <0 0xe6ef4000 0 0x1000>;
+> > +                       interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       clocks = <&cpg CPG_MOD 807>;
+> > +                       power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
+> > +                       resets = <&cpg 807>;
+> > +                       renesas,id = <4>;
+> > +                       status = "disabled";
+> > +
+> > +                       ports {
+> > +                               #address-cells = <1>;
+> > +                               #size-cells = <0>;
+> > +
+> > +                               port@1 {
+> > +                                       #address-cells = <1>;
+> > +                                       #size-cells = <0>;
+>
+> "make dtbs W=1" says:
+>
+>     arch/arm64/boot/dts/renesas/r8a774e1.dtsi:1562.12-1572.7: Warning
+> (graph_child_address): /soc/video@e6ef4000/ports/port@1: graph node
+> has single child node 'endpoint@0', #address-cells/#size-cells are not
+> necessary
+>
+> (same for vin5-7 below)
+>
+Referring to commit 5e53dbf4edb4d ("arm64: dts: renesas: r8a77990: Fix
+VIN endpoint numbering") we definitely need endpoint numbering.
+Probably the driver needs to be fixed to handle such cases.
 
+Cheers,
+Prabhakar
+
+> > +
+> > +                                       reg = <1>;
+> > +
+> > +                                       vin4csi20: endpoint@0 {
+> > +                                               reg = <0>;
+> > +                                               remote-endpoint = <&csi20vin4>;
+> > +                                       };
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds

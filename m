@@ -2,212 +2,150 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01A7623E00A
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Aug 2020 19:59:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D13E923E312
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Aug 2020 22:21:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgHFR66 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 6 Aug 2020 13:58:58 -0400
-Received: from mga11.intel.com ([192.55.52.93]:7694 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728048AbgHFR65 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:58:57 -0400
-IronPort-SDR: O/lRraiyaKOXjbXN4gVQdD8iXhurgoeaW2HABq2qiGhBadVHmmNsvtOJK3A6Zcq7fYzKuChkf7
- q+7+fAigCzyQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9705"; a="150621974"
-X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
-   d="scan'208";a="150621974"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2020 10:58:49 -0700
-IronPort-SDR: WGC3D4nlVaLzrgypDWqqH6llZx5zTDC+SVvJHPfD0SSKh3/DpUU4NyjMhoZCXTcJkIstz1mvQy
- lsjwZ+NcGrcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,441,1589266800"; 
-   d="scan'208";a="367666761"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orsmga001.jf.intel.com with ESMTP; 06 Aug 2020 10:58:49 -0700
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 6 Aug 2020 10:58:49 -0700
-Received: from orsmsx101.amr.corp.intel.com (10.22.225.128) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 6 Aug 2020 10:58:49 -0700
-Received: from [10.212.134.149] (10.212.134.149) by
- ORSMSX101.amr.corp.intel.com (10.22.225.128) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 6 Aug 2020 10:58:48 -0700
-Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
- irq domain
-To:     Thomas Gleixner <tglx@linutronix.de>,
+        id S1726186AbgHFUVS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 6 Aug 2020 16:21:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726058AbgHFUVS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Aug 2020 16:21:18 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFF37C061574;
+        Thu,  6 Aug 2020 13:21:16 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596745273;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xtHNLCxJfzsiJSCp6/W+TfOKxP2aJ6UgREgy+loBHMI=;
+        b=R6Q0ESn3y1nFnbdCuyGK0a83rqiXG8o7/o8w7zgwZPTxcrxycOlwCP9+kCI/nt8ak7n7Mg
+        g6Fgmkcr/k7pm/ulgLm4xEo+wxRiaRf5Ov3SHz1fIwIeAt+frnBgPWY1ZpLV0T0Gh4mWMx
+        lxTmOBiTx4Zt4fkY9zIv8/dbw0BUyPXIIbKc/W7VT8dguTXihqNIaqifWjlr3dkYQwPPy7
+        4E9Xj5KIHhrChnRxs5vRovcAPlvzVFcp2d1fZGEI5bZKDaPtFiVQcKpSvVSF+17+JTdpq9
+        TQmnaTen4VK/BEvUBXUp3A2OX2nGzdAwUhLJmPo6skT+IToB1D95OLH0712vUA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596745273;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xtHNLCxJfzsiJSCp6/W+TfOKxP2aJ6UgREgy+loBHMI=;
+        b=fXJRubCjssIpQgTtL/ZduGNhVfFn7HZPRc8hhVtuSscb+ctPyf0CnqZPYi2XebcAC4VBfm
+        OwvT7Zfw9fXJ0vCQ==
+To:     "Dey\, Megha" <megha.dey@intel.com>,
         Jason Gunthorpe <jgg@mellanox.com>
-CC:     Marc Zyngier <maz@kernel.org>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com>
- <878sfbxtzi.wl-maz@kernel.org> <20200722195928.GN2021248@mellanox.com>
- <96a1eb5ccc724790b5404a642583919d@intel.com>
- <20200805221548.GK19097@mellanox.com>
- <70465fd3a7ae428a82e19f98daa779e8@intel.com>
- <20200805225330.GL19097@mellanox.com>
- <630e6a4dc17b49aba32675377f5a50e0@intel.com>
- <20200806001927.GM19097@mellanox.com>
- <c6a1c065ab9b46bbaf9f5713462085a5@intel.com>
- <87tuxfhf9u.fsf@nanos.tec.linutronix.de>
-From:   "Dey, Megha" <megha.dey@intel.com>
-Message-ID: <014ffe59-38d3-b770-e065-dfa2d589adc6@intel.com>
-Date:   Thu, 6 Aug 2020 10:58:45 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+Cc:     Marc Zyngier <maz@kernel.org>,
+        "Jiang\, Dave" <dave.jiang@intel.com>,
+        "vkoul\@kernel.org" <vkoul@kernel.org>,
+        "bhelgaas\@google.com" <bhelgaas@google.com>,
+        "rafael\@kernel.org" <rafael@kernel.org>,
+        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "hpa\@zytor.com" <hpa@zytor.com>,
+        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
+        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj\, Ashok" <ashok.raj@intel.com>,
+        "Liu\, Yi L" <yi.l.liu@intel.com>,
+        "Lu\, Baolu" <baolu.lu@intel.com>,
+        "Tian\, Kevin" <kevin.tian@intel.com>,
+        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck\, Tony" <tony.luck@intel.com>,
+        "Lin\, Jing" <jing.lin@intel.com>,
+        "Williams\, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
+        "parav\@mellanox.com" <parav@mellanox.com>,
+        "Hansen\, Dave" <dave.hansen@intel.com>,
+        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain\, Mona" <mona.hossain@intel.com>,
+        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI irq domain
+In-Reply-To: <014ffe59-38d3-b770-e065-dfa2d589adc6@intel.com>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com> <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com> <878sfbxtzi.wl-maz@kernel.org> <20200722195928.GN2021248@mellanox.com> <96a1eb5ccc724790b5404a642583919d@intel.com> <20200805221548.GK19097@mellanox.com> <70465fd3a7ae428a82e19f98daa779e8@intel.com> <20200805225330.GL19097@mellanox.com> <630e6a4dc17b49aba32675377f5a50e0@intel.com> <20200806001927.GM19097@mellanox.com> <c6a1c065ab9b46bbaf9f5713462085a5@intel.com> <87tuxfhf9u.fsf@nanos.tec.linutronix.de> <014ffe59-38d3-b770-e065-dfa2d589adc6@intel.com>
+Date:   Thu, 06 Aug 2020 22:21:11 +0200
+Message-ID: <87h7tfh6fc.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <87tuxfhf9u.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.212.134.149]
+Content-Type: text/plain
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Thomas,
+Megha,
 
-On 8/6/2020 10:10 AM, Thomas Gleixner wrote:
-> Megha,
+"Dey, Megha" <megha.dey@intel.com> writes:
+> On 8/6/2020 10:10 AM, Thomas Gleixner wrote:
+>> If the DEV/MSI domain has it's own per IR unit resource management, then
+>> you need one per IR unit.
+>>
+>> If the resource management is solely per device then having a domain per
+>> device is the right choice.
 >
-> "Dey, Megha" <megha.dey@intel.com> writes:
->
->>> -----Original Message-----
->>> From: Jason Gunthorpe <jgg@mellanox.com>
-> <SNIP>
->>> Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
->>> irq domain
-> can you please fix your mail client not to copy the whole header of the
-> mail you are replying to into the mail body?
+> The dev-msi domain can be used by other devices if they too would want
+> to follow the vector->intel IR->dev-msi IRQ hierarchy.  I do create
+> one dev-msi IRQ domain instance per IR unit. So I guess for this case,
+> it makes most sense to have a dev-msi IRQ domain per IR unit as
+> opposed to create one per individual driver..
 
-oops, i hope i have fixed it now..
+I'm not really convinced. I looked at the idxd driver and that has it's
+own interrupt related resource management for the IMS slots and provides
+the mask,unmask callbacks for the interrupt chip via this crude platform
+data indirection.
 
->
->>>>> Well, I had suggested to pass in the parent struct device, but it
->>> Oops, I was thinking of platform_msi_domain_alloc_irqs() not
->>> create_device_domain()
->>>
->>> ie call it in the device driver that wishes to consume the extra MSIs.
->>>
->>> Is there a harm if each device driver creates a new irq_domain for its use?
->> Well, the only harm is if we want to reuse the irq domain.
-> You cannot reuse the irq domain if you create a domain per driver. The
-> way how hierarchical domains work is:
->
-> vector --- DMAR-MSI
->         |
->         |-- ....
->         |
->         |-- IR-0 --- IO/APIC-0
->         |        |
->         |        |-- IO/APIC-1
->         |        |
->         |        |-- PCI/MSI-0
->         |        |
->         |        |-- HPET/MSI-0
->         |
->         |-- IR-1 --- PCI/MSI-1
->         |        |
->
-> The outermost domain is what the actual device driver uses. I.e. for
-> PCI-MSI it's the msi domain which is associated to the bus the device is
-> connected to. Each domain has its own interrupt chip instance and its
-> own data set.
->
-> Domains of the same type share the code, but neither the data nor the
-> interrupt chip instance.
->
-> Also there is a strict parent child relationship in terms of resources.
-> Let's look at PCI.
->
-> PCI/MSI-0 depends on IR-0 which depends on the vector domain. That's
-> reflecting both the flow of the interrupt and the steps required for
-> various tasks, e.g. allocation/deallocation and also interrupt chip
-> operations. In order to allocate a PCI/MSI interrupt in domain PCI/MSI-0
-> a slot in the remapping unit and a vector needs to be allocated.
->
-> If you disable interrupt remapping all the outermost domains in the
-> scheme above become childs of the vector domain.
->
-> So if we look at DEV/MSI as a infrastructure domain then the scheme
-> looks like this:
->
-> vector --- DMAR-MSI
->         |
->         |-- ....
->         |
->         |-- IR-0 --- IO/APIC-0
->         |        |
->         |        |-- IO/APIC-1
->         |        |
->         |        |-- PCI/MSI-0
->         |        |
->         |        |-- HPET/MSI-0
->         |        |
->         |        |-- DEV/MSI-0
->         |
->         |-- IR-1 --- PCI/MSI-1
->         |        |
->         |        |-- DEV/MSI-1
->
->
-> But if you make it per device then you have multiple DEV/MSI domains per
-> IR unit.
->
-> What's the right thing to do?
->
-> If the DEV/MSI domain has it's own per IR unit resource management, then
-> you need one per IR unit.
->
-> If the resource management is solely per device then having a domain per
-> device is the right choice.
+So I don't see the value of the dev-msi domain per IR unit. The domain
+itself does not provide much functionality other than indirections and
+you clearly need per device interrupt resource management on the side
+and a customized irq chip. I rather see it as a plain layering
+violation.
 
-Thanks a lot Thomas for this detailed explanation!!
+The point is that your IDXD driver manages the per device IMS slots
+which is a interrupt related resource. The story would be different if
+the IMS slots would be managed by some central or per IR unit entity,
+but in that case you'd need IMS specific domain(s).
 
-The dev-msi domain can be used by other devices if they too would want 
-to follow the
-vector->intel IR->dev-msi IRQ hierarchy.
-I do create one dev-msi IRQ domain instance per IR unit. So I guess for 
-this case,
-it makes most sense to have a dev-msi IRQ domain per IR unit as opposed 
-to create one
-per individual driver..
->
-> Thanks,
->
->          tglx
+So the obvious consequence of the hierarchical irq design is:
+
+   vector -> IR -> IDXD
+
+which makes the control flow of allocating an interrupt for a subdevice
+straight forward following the irq hierarchy rules.
+
+This still wants to inherit the existing msi domain functionality, but
+the amount of code required is small and removes all these pointless
+indirections and integrates the slot management naturally.
+
+If you expect or know that there are other devices coming up with IMS
+integrated then most of that code can be made a common library. But for
+this to make sense, you really want to make sure that these other
+devices do not require yet another horrible layer of indirection.
+
+A side note: I just read back on the specification and stumbled over
+the following gem:
+
+ "IMS may also optionally support per-message masking and pending bit
+  status, similar to the per-vector mask and pending bit array in the
+  PCI Express MSI-X capability."
+
+Optionally? Please tell the hardware folks to make this mandatory. We
+have enough pain with non maskable MSI interrupts already so introducing
+yet another non maskable interrupt trainwreck is not an option.
+
+It's more than a decade now that I tell HW people not to repeat the
+non-maskable MSI failure, but obviously they still think that
+non-maskable interrupts are a brilliant idea. I know that HW folks
+believe that everything they omit can be fixed in software, but they
+have to finally understand that this particular issue _cannot_ be fixed
+at all.
+
+Thanks,
+
+        tglx

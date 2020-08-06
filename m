@@ -2,146 +2,80 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE7DB23D503
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Aug 2020 03:23:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3448423D6CA
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Aug 2020 08:27:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726005AbgHFBXP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 5 Aug 2020 21:23:15 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52317 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725998AbgHFBXN (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 Aug 2020 21:23:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596676991;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6UMQQrEZ+Nh2Ng/k4GnJLH3osJ2CLCkGK7FDHnj5N9Y=;
-        b=XJXXIKg6ompKt+iu/UjvY9yQS8z6YW8nS1ZhVeoeRrwCQ5rYImj7cnrowr0jnpzlMe39tc
-        L3WgKUJwuf/hH18i2aZyT5HnicSC9lBkp4Ns0zlgNj0FB9vFNNkrnGLM0twfDfbsxXHUYf
-        yDlatuRI9qeeQHmOHMDek7ist/At0iw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-114-hlfFQIgrNMqgf_91JPS2og-1; Wed, 05 Aug 2020 21:23:09 -0400
-X-MC-Unique: hlfFQIgrNMqgf_91JPS2og-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9A77180046B;
-        Thu,  6 Aug 2020 01:23:05 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AA47910013D7;
-        Thu,  6 Aug 2020 01:22:59 +0000 (UTC)
-Date:   Wed, 5 Aug 2020 19:22:58 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and
- DEV-MSI support for the idxd driver
-Message-ID: <20200805192258.5ee7a05b@x1.home>
-In-Reply-To: <20200724001930.GS2021248@mellanox.com>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <20200721164527.GD2021248@mellanox.com>
- <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
- <20200724001930.GS2021248@mellanox.com>
-Organization: Red Hat
+        id S1727990AbgHFG10 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 6 Aug 2020 02:27:26 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:65192 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726051AbgHFG10 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Aug 2020 02:27:26 -0400
+X-UUID: 2fc2f2a842ec4c078ca32d6b7ed97daf-20200806
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=0AEHGNsfy4Kowym5Y/9MX+FAdIMhxa+q99bMpmtdLlk=;
+        b=SmiOYQX5nyus4h0miAuTv0wdQMYEQaHIIwRMlc3P5i506JhUbx5z30hsDOB89C96iB3eHHb5Qc770W0lXJTvqw4ggj9gtm6OdEaIFxOd1+8gHq0siEBivLLJ6SvSaNQ0ZoZ8Msp7vo3D7iBGOgHaitPGIcCOmK8Y1UWdERXj+/w=;
+X-UUID: 2fc2f2a842ec4c078ca32d6b7ed97daf-20200806
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <eastl.lee@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1876968445; Thu, 06 Aug 2020 14:27:21 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 6 Aug 2020 14:27:18 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 6 Aug 2020 14:27:18 +0800
+Message-ID: <1596695238.26800.4.camel@mtkswgap22>
+Subject: Re: [PATCH v6 2/4] dmaengine: mediatek-cqdma: remove redundant
+ queue structure
+From:   EastL <EastL.Lee@mediatek.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Sean Wang <sean.wang@mediatek.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>, <cc.hwang@mediatek.com>
+Date:   Thu, 6 Aug 2020 14:27:18 +0800
+In-Reply-To: <20200727094458.GU12965@vkoul-mobl>
+References: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
+         <1593673564-4425-3-git-send-email-EastL.Lee@mediatek.com>
+         <20200715061957.GA34333@vkoul-mobl> <1595471650.22392.12.camel@mtkswgap22>
+         <20200727094458.GU12965@vkoul-mobl>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-TM-SNTS-SMTP: F4B7DC2C1D8B20EE4F229651815F3A8E35BCF4AAA4E64D95EAC95B78FBFF707C2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, 23 Jul 2020 21:19:30 -0300
-Jason Gunthorpe <jgg@mellanox.com> wrote:
-
-> On Tue, Jul 21, 2020 at 11:54:49PM +0000, Tian, Kevin wrote:
-> > In a nutshell, applications don't require raw WQ controllability as guest
-> > kernel drivers may expect. Extending DSA user space interface to be another
-> > passthrough interface just for virtualization needs is less compelling than
-> > leveraging established VFIO/mdev framework (with the major merit that
-> > existing user space VMMs just work w/o any change as long as they already
-> > support VFIO uAPI).  
-> 
-> Sure, but the above is how the cover letter should have summarized
-> that discussion, not as "it is not much code difference"
-> 
-> > In last review you said that you didn't hard nak this approach and would
-> > like to hear opinion from virtualization guys. In this version we CCed KVM
-> > mailing list, Paolo (VFIO/Qemu), Alex (VFIO), Samuel (Rust-VMM/Cloud
-> > hypervisor), etc. Let's see how they feel about this approach.  
-> 
-> Yes, the VFIO community should decide.
-> 
-> If we are doing emulation tasks in the kernel now, then I can think of
-> several nice semi-emulated mdevs to propose.
-> 
-> This will not be some one off, but the start of a widely copied
-> pattern.
-
-And that's definitely a concern, there should be a reason for
-implementing device emulation in the kernel beyond an easy path to get
-a device exposed up through a virtualization stack.  The entire idea of
-mdev is the mediation of access to a device to make it safe for a user
-and to fit within the vfio device API.  Mediation, emulation, and
-virtualization can be hard to differentiate, and there is some degree of
-emulation required to fill out the device API, for vfio-pci itself
-included.  So I struggle with a specific measure of where to draw the
-line, and also whose authority it is to draw that line.  I don't think
-it's solely mine, that's something we need to decide as a community.
-
-If you see this as an abuse of the framework, then let's identify those
-specific issues and come up with a better approach.  As we've discussed
-before, things like basic PCI config space emulation are acceptable
-overhead and low risk (imo) and some degree of register emulation is
-well within the territory of an mdev driver.  Drivers are accepting
-some degree of increased attack surface by each addition of a uAPI and
-the complexity of those uAPIs, but it seems largely a decision for
-those drivers whether they're willing to take on that responsibility
-and burden.
-
-At some point, possibly in the near-ish future, we might have a
-vfio-user interface with userspace vfio-over-socket servers that might
-be able to consume existing uAPIs and offload some of this complexity
-and emulation to userspace while still providing an easy path to insert
-devices into the virtualization stack.  Hopefully if/when that comes
-along, it would provide these sorts of drivers an opportunity to
-offload some of the current overhead out to userspace, but I'm not sure
-it's worth denying a mainline implementation now.  Thanks,
-
-Alex
+T24gTW9uLCAyMDIwLTA3LTI3IGF0IDE1OjE0ICswNTMwLCBWaW5vZCBLb3VsIHdyb3RlOg0KPiBP
+biAyMy0wNy0yMCwgMTA6MzQsIEVhc3RMIHdyb3RlOg0KPiA+IE9uIFdlZCwgMjAyMC0wNy0xNSBh
+dCAxMTo0OSArMDUzMCwgVmlub2QgS291bCB3cm90ZToNCj4gPiA+IE9uIDAyLTA3LTIwLCAxNTow
+NiwgRWFzdEwgTGVlIHdyb3RlOg0KPiA+ID4gDQo+ID4gPiA+ICBzdGF0aWMgZW51bSBkbWFfc3Rh
+dHVzIG10a19jcWRtYV90eF9zdGF0dXMoc3RydWN0IGRtYV9jaGFuICpjLA0KPiA+ID4gPiAgCQkJ
+CQkgICBkbWFfY29va2llX3QgY29va2llLA0KPiA+ID4gPiAgCQkJCQkgICBzdHJ1Y3QgZG1hX3R4
+X3N0YXRlICp0eHN0YXRlKQ0KPiA+ID4gPiAgew0KPiA+ID4gPiAtCXN0cnVjdCBtdGtfY3FkbWFf
+dmNoYW4gKmN2YyA9IHRvX2NxZG1hX3ZjaGFuKGMpOw0KPiA+ID4gPiAtCXN0cnVjdCBtdGtfY3Fk
+bWFfdmRlc2MgKmN2ZDsNCj4gPiA+ID4gLQlzdHJ1Y3QgdmlydF9kbWFfZGVzYyAqdmQ7DQo+ID4g
+PiA+IC0JZW51bSBkbWFfc3RhdHVzIHJldDsNCj4gPiA+ID4gLQl1bnNpZ25lZCBsb25nIGZsYWdz
+Ow0KPiA+ID4gPiAtCXNpemVfdCBieXRlcyA9IDA7DQo+ID4gPiA+IC0NCj4gPiA+ID4gLQlyZXQg
+PSBkbWFfY29va2llX3N0YXR1cyhjLCBjb29raWUsIHR4c3RhdGUpOw0KPiA+ID4gPiAtCWlmIChy
+ZXQgPT0gRE1BX0NPTVBMRVRFIHx8ICF0eHN0YXRlKQ0KPiA+ID4gPiAtCQlyZXR1cm4gcmV0Ow0K
+PiA+ID4gPiAtDQo+ID4gPiA+IC0Jc3Bpbl9sb2NrX2lycXNhdmUoJmN2Yy0+dmMubG9jaywgZmxh
+Z3MpOw0KPiA+ID4gPiAtCXZkID0gbXRrX2NxZG1hX2ZpbmRfYWN0aXZlX2Rlc2MoYywgY29va2ll
+KTsNCj4gPiA+ID4gLQlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZjdmMtPnZjLmxvY2ssIGZsYWdz
+KTsNCj4gPiA+ID4gLQ0KPiA+ID4gPiAtCWlmICh2ZCkgew0KPiA+ID4gPiAtCQljdmQgPSB0b19j
+cWRtYV92ZGVzYyh2ZCk7DQo+ID4gPiA+IC0JCWJ5dGVzID0gY3ZkLT5yZXNpZHVlOw0KPiA+ID4g
+PiAtCX0NCj4gPiA+ID4gLQ0KPiA+ID4gPiAtCWRtYV9zZXRfcmVzaWR1ZSh0eHN0YXRlLCBieXRl
+cyk7DQo+ID4gPiANCj4gPiA+IGFueSByZWFzb24gd2h5IHlvdSB3YW50IHRvIHJlbW92ZSBzZXR0
+aW5nIHJlc2lkdWU/DQo+ID4gQmVjYXVzZSBNZWRpYXRlayBDUURNQSBIVyBjYW4ndCBzdXBwb3J0
+IHJlc2lkdWUuDQo+IA0KPiBBbmQgcHJldmlvdXNseSBpdCBkaWQ/DQpObywgSXQgd2FzIGNhbGN1
+bGF0ZWQgYnkgc3cgYmVmb3JlLg0KV2UgZm91bmQgdGhhdCB0aGUgcmVzaWR1ZSB3YXMgbm90IG5l
+Y2Vzc2FyeSwgc28gd2UgcmVtb3ZlZCBpdC4NCg0K
 

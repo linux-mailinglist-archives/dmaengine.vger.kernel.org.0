@@ -2,80 +2,81 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3448423D6CA
-	for <lists+dmaengine@lfdr.de>; Thu,  6 Aug 2020 08:27:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 723C523D750
+	for <lists+dmaengine@lfdr.de>; Thu,  6 Aug 2020 09:31:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgHFG10 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 6 Aug 2020 02:27:26 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:65192 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726051AbgHFG10 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Aug 2020 02:27:26 -0400
-X-UUID: 2fc2f2a842ec4c078ca32d6b7ed97daf-20200806
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=0AEHGNsfy4Kowym5Y/9MX+FAdIMhxa+q99bMpmtdLlk=;
-        b=SmiOYQX5nyus4h0miAuTv0wdQMYEQaHIIwRMlc3P5i506JhUbx5z30hsDOB89C96iB3eHHb5Qc770W0lXJTvqw4ggj9gtm6OdEaIFxOd1+8gHq0siEBivLLJ6SvSaNQ0ZoZ8Msp7vo3D7iBGOgHaitPGIcCOmK8Y1UWdERXj+/w=;
-X-UUID: 2fc2f2a842ec4c078ca32d6b7ed97daf-20200806
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <eastl.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1876968445; Thu, 06 Aug 2020 14:27:21 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 6 Aug 2020 14:27:18 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 6 Aug 2020 14:27:18 +0800
-Message-ID: <1596695238.26800.4.camel@mtkswgap22>
-Subject: Re: [PATCH v6 2/4] dmaengine: mediatek-cqdma: remove redundant
- queue structure
-From:   EastL <EastL.Lee@mediatek.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Sean Wang <sean.wang@mediatek.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, <cc.hwang@mediatek.com>
-Date:   Thu, 6 Aug 2020 14:27:18 +0800
-In-Reply-To: <20200727094458.GU12965@vkoul-mobl>
-References: <1593673564-4425-1-git-send-email-EastL.Lee@mediatek.com>
-         <1593673564-4425-3-git-send-email-EastL.Lee@mediatek.com>
-         <20200715061957.GA34333@vkoul-mobl> <1595471650.22392.12.camel@mtkswgap22>
-         <20200727094458.GU12965@vkoul-mobl>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        id S1728721AbgHFHa5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 6 Aug 2020 03:30:57 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19117 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728334AbgHFHah (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 6 Aug 2020 03:30:37 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2bb12c0000>; Thu, 06 Aug 2020 00:28:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Aug 2020 00:30:24 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Aug 2020 00:30:24 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 6 Aug
+ 2020 07:30:20 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 6 Aug 2020 07:30:20 +0000
+Received: from rgumasta-linux.nvidia.com (Not Verified[10.19.66.108]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f2bb18a0000>; Thu, 06 Aug 2020 00:30:20 -0700
+From:   Rajesh Gumasta <rgumasta@nvidia.com>
+To:     <ldewangan@nvidia.com>, <jonathanh@nvidia.com>, <vkoul@kernel.org>,
+        <dan.j.williams@intel.com>, <thierry.reding@gmail.com>,
+        <p.zabel@pengutronix.de>, <dmaengine@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <kyarlagadda@nvidia.com>, <rgumasta@nvidia.com>
+Subject: [Patch v2 0/4] Add Nvidia Tegra GPC-DMA driver
+Date:   Thu, 6 Aug 2020 13:00:02 +0530
+Message-ID: <1596699006-9934-1-git-send-email-rgumasta@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: F4B7DC2C1D8B20EE4F229651815F3A8E35BCF4AAA4E64D95EAC95B78FBFF707C2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596698924; bh=u+0W6SZXb/LajUYA9wa7E3PiZkZWCN+UvtS0dN5ZjdE=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=loTbWmRlrXOWgKq0pPbJxhNdkgBNYIll808WjD64C65nHl5r+fUPcSprZEHKoDFXB
+         31wPOTsW3LQNwRsn2rWGhabI42i/zv5zE/nKrPGY0QmR0VTQhnqjZycbwZJEWF/g1j
+         C6areVyVWTakcJCtKxm/GzcbvJGREQQpohtDSL4CN9jykR0AubXAjL9f4dF1ToGExG
+         wh8haEd8u95Ga0wVdyOthjVDw9aH+Sav3rwjmFqFT/nhwHgPN7nSXo5Og0ELgIZmMT
+         KNpnSTUBCDcGbVJ6jTh2y4F400YeG0kcObf5MhIl5wM1Cfg7i95ZYfj1tpnEUEe0YT
+         Hftid7PoDmgsA==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA3LTI3IGF0IDE1OjE0ICswNTMwLCBWaW5vZCBLb3VsIHdyb3RlOg0KPiBP
-biAyMy0wNy0yMCwgMTA6MzQsIEVhc3RMIHdyb3RlOg0KPiA+IE9uIFdlZCwgMjAyMC0wNy0xNSBh
-dCAxMTo0OSArMDUzMCwgVmlub2QgS291bCB3cm90ZToNCj4gPiA+IE9uIDAyLTA3LTIwLCAxNTow
-NiwgRWFzdEwgTGVlIHdyb3RlOg0KPiA+ID4gDQo+ID4gPiA+ICBzdGF0aWMgZW51bSBkbWFfc3Rh
-dHVzIG10a19jcWRtYV90eF9zdGF0dXMoc3RydWN0IGRtYV9jaGFuICpjLA0KPiA+ID4gPiAgCQkJ
-CQkgICBkbWFfY29va2llX3QgY29va2llLA0KPiA+ID4gPiAgCQkJCQkgICBzdHJ1Y3QgZG1hX3R4
-X3N0YXRlICp0eHN0YXRlKQ0KPiA+ID4gPiAgew0KPiA+ID4gPiAtCXN0cnVjdCBtdGtfY3FkbWFf
-dmNoYW4gKmN2YyA9IHRvX2NxZG1hX3ZjaGFuKGMpOw0KPiA+ID4gPiAtCXN0cnVjdCBtdGtfY3Fk
-bWFfdmRlc2MgKmN2ZDsNCj4gPiA+ID4gLQlzdHJ1Y3QgdmlydF9kbWFfZGVzYyAqdmQ7DQo+ID4g
-PiA+IC0JZW51bSBkbWFfc3RhdHVzIHJldDsNCj4gPiA+ID4gLQl1bnNpZ25lZCBsb25nIGZsYWdz
-Ow0KPiA+ID4gPiAtCXNpemVfdCBieXRlcyA9IDA7DQo+ID4gPiA+IC0NCj4gPiA+ID4gLQlyZXQg
-PSBkbWFfY29va2llX3N0YXR1cyhjLCBjb29raWUsIHR4c3RhdGUpOw0KPiA+ID4gPiAtCWlmIChy
-ZXQgPT0gRE1BX0NPTVBMRVRFIHx8ICF0eHN0YXRlKQ0KPiA+ID4gPiAtCQlyZXR1cm4gcmV0Ow0K
-PiA+ID4gPiAtDQo+ID4gPiA+IC0Jc3Bpbl9sb2NrX2lycXNhdmUoJmN2Yy0+dmMubG9jaywgZmxh
-Z3MpOw0KPiA+ID4gPiAtCXZkID0gbXRrX2NxZG1hX2ZpbmRfYWN0aXZlX2Rlc2MoYywgY29va2ll
-KTsNCj4gPiA+ID4gLQlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZjdmMtPnZjLmxvY2ssIGZsYWdz
-KTsNCj4gPiA+ID4gLQ0KPiA+ID4gPiAtCWlmICh2ZCkgew0KPiA+ID4gPiAtCQljdmQgPSB0b19j
-cWRtYV92ZGVzYyh2ZCk7DQo+ID4gPiA+IC0JCWJ5dGVzID0gY3ZkLT5yZXNpZHVlOw0KPiA+ID4g
-PiAtCX0NCj4gPiA+ID4gLQ0KPiA+ID4gPiAtCWRtYV9zZXRfcmVzaWR1ZSh0eHN0YXRlLCBieXRl
-cyk7DQo+ID4gPiANCj4gPiA+IGFueSByZWFzb24gd2h5IHlvdSB3YW50IHRvIHJlbW92ZSBzZXR0
-aW5nIHJlc2lkdWU/DQo+ID4gQmVjYXVzZSBNZWRpYXRlayBDUURNQSBIVyBjYW4ndCBzdXBwb3J0
-IHJlc2lkdWUuDQo+IA0KPiBBbmQgcHJldmlvdXNseSBpdCBkaWQ/DQpObywgSXQgd2FzIGNhbGN1
-bGF0ZWQgYnkgc3cgYmVmb3JlLg0KV2UgZm91bmQgdGhhdCB0aGUgcmVzaWR1ZSB3YXMgbm90IG5l
-Y2Vzc2FyeSwgc28gd2UgcmVtb3ZlZCBpdC4NCg0K
+Changes in patch v2:
+Addressed review comments in patch v1
+
+v1 - https://lkml.org/lkml/2020/7/20/96
+
+Rajesh Gumasta (4):
+  dt-bindings: dma: Add DT binding document
+  dmaengine: tegra: Add Tegra GPC DMA driver
+  arm64: configs: enable tegra gpc dma
+  arm64: tegra: Add GPCDMA node in dt
+
+ .../bindings/dma/nvidia,tegra-gpc-dma.yaml         |   99 ++
+ arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi     |    4 +
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi           |   46 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi           |   44 +
+ arch/arm64/configs/defconfig                       |    1 +
+ drivers/dma/Kconfig                                |   12 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/tegra-gpc-dma.c                        | 1472 ++++++++++++++++++++
+ 8 files changed, 1679 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra-gpc-dma.yaml
+ create mode 100644 drivers/dma/tegra-gpc-dma.c
+
+-- 
+2.7.4
 

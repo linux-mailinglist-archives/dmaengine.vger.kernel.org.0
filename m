@@ -2,64 +2,65 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4A1623ED18
-	for <lists+dmaengine@lfdr.de>; Fri,  7 Aug 2020 14:07:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D3E623ED3A
+	for <lists+dmaengine@lfdr.de>; Fri,  7 Aug 2020 14:20:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbgHGMHM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 7 Aug 2020 08:07:12 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:10879 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726940AbgHGMHB (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 7 Aug 2020 08:07:01 -0400
-Received: from hkpgpgate101.nvidia.com (Not Verified[10.18.92.77]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2d43e10002>; Fri, 07 Aug 2020 20:06:57 +0800
-Received: from HKMAIL103.nvidia.com ([10.18.16.12])
-  by hkpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 07 Aug 2020 05:06:57 -0700
+        id S1728320AbgHGMUE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 7 Aug 2020 08:20:04 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:13193 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728207AbgHGMUD (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 7 Aug 2020 08:20:03 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2d46e50003>; Fri, 07 Aug 2020 05:19:49 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 07 Aug 2020 05:20:02 -0700
 X-PGP-Universal: processed;
-        by hkpgpgate101.nvidia.com on Fri, 07 Aug 2020 05:06:57 -0700
-Received: from HKMAIL102.nvidia.com (10.18.16.11) by HKMAIL103.nvidia.com
- (10.18.16.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Aug
- 2020 12:06:54 +0000
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.172)
- by HKMAIL102.nvidia.com (10.18.16.11) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Fri, 7 Aug 2020 12:06:54 +0000
+        by hqpgpgate102.nvidia.com on Fri, 07 Aug 2020 05:20:02 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Aug
+ 2020 12:19:58 +0000
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.177)
+ by HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Fri, 7 Aug 2020 12:19:58 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dIv4xpPg4Br912Ed3lZ+k9RFOkWKDXgb0CDU3y4sZGNWh53wXZ0bvnS/BdY7oEKJMUosZrKYX4zhtX/Fhd1sycXrakbBSv9FiPy8SPe+YqbjDfRHMBZUBSEo5bqHhmILTnvILG5AkUqIp886I/FfPOtCgQItRbaFor+pUnuGC+Y1EazoagBv8litlfI28iPxgyRNIP5a/JZZOLTNiC4xKRGY00OS454tROdHkbSr8DR/spgyJgS905tKVM1ZpZzsAhKkNOX2yfEFWy2OG4/x5Mx2OhBmKCblB/dWExcwlbYSSxJRp0iNIM0+6B3J4pogasqPGCNvgC07wM/B0LPCwQ==
+ b=NPrkW53YUMLKOOWBR8QFZxmCT3PyvMzHZdQjXAxCuT+OxUyalQGY/5Il9Gm4ULZCj8IJ67IpRn9SagyGaS3qVSA3aXVUTVGN1AuyM+ZYeZi8HVxJuJeghK9dgrezQ9oYWK/DegEwVa671Azrpv/8QwNbb9kAH+9U1THTWuFBqs2l3hJPNycZvHRjZYrP2Aho9NK8+rRfvezHrfttqHG/vwyvWzi79Bl5NNp9lcRAtG3XpMfnC4PuICqRYCjpo1eXVyD6cJYvgK2gEHMD2bQ3NaMidHeAHA6CzfZIu/2WJ8LOKLMilCeNM1ws+RQk7Q0esLrP2JPg3WQu8Od7LXb22A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FA5i77KQ9ekFUbbxsuLCWszZ/MINCIcRJhq0r4T+d6o=;
- b=DHgnyeLS3XBY2gz4nakp3Sj37tljxF6xnxpu3MrcezxAQs+W2GsEazTOxKdqeYj1eTTuGHUOrWUPZSMKzdgPBtBG7GVBLItZk4fVIdxDtDTacMgfiDqx3B3EmlaZfmwzK18FNoypzSj/44RA0FOO+xAs83z9WnMyW+YD2OzueRylaajJfuaKhJRWphh5z23G5GCiS+Nc1oaUy46iPn7Uwh3mO7Pj7WHMy0BGn4SuNw79y2joO1ni7eLKAVA+Ee5fGL5k2bzM8vo0IMd78iPeQuSFbDMA35wi09cqi27mM6dcvcfdeaZm96yAWlGu0lCuISMGz8h67K8VrLjLSsnFSQ==
+ bh=9nPGeq/CB4zb5MsgRTO9HHv5loEEdmISFZjlsqVKXIU=;
+ b=UC/P8ldrsHCyZbtRy2UB/UxiG6rscyDGHhDiKWBAToXdiHuc+oNIah/G+4saFAgvrWUAdWyM70uqvHIrS+7mbiIkGrGPwn1qkC2phwHsNOx6lLRW7R1QsrdWCXVc3f1NxFnoPIZBRkSI6VY6HL9ZiO7rxSpSJwEPlhgO8xQHBQ0gqrdOYCdCh9+YLklT8ME/Rk12PFLRgqFvXWYRZAvcT+DsTOnZrVz07sBD1gOSqMqzepc5IfUilijzMCP80zGVq/B1/cuWE1QCSwhkZiCHj1tcSPJtHVUTYn79PnREboqxUHrCQNFdfpc7aWk9T5Ts6MrMaoIRq8otm9pfBjcSfg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: linutronix.de; dkim=none (message not signed)
- header.d=none;linutronix.de; dmarc=none action=none header.from=nvidia.com;
+Authentication-Results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=nvidia.com;
 Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB3515.namprd12.prod.outlook.com (2603:10b6:5:15f::30) with
+ by DM6PR12MB4057.namprd12.prod.outlook.com (2603:10b6:5:213::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19; Fri, 7 Aug
- 2020 12:06:51 +0000
+ 2020 12:19:57 +0000
 Received: from DM6PR12MB3834.namprd12.prod.outlook.com
  ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
  ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3239.024; Fri, 7 Aug 2020
- 12:06:51 +0000
-Date:   Fri, 7 Aug 2020 09:06:50 -0300
+ 12:19:57 +0000
+Date:   Fri, 7 Aug 2020 09:19:55 -0300
 From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     "Dey, Megha" <megha.dey@intel.com>, Marc Zyngier <maz@kernel.org>,
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "Tian, Kevin" <kevin.tian@intel.com>,
         "Jiang, Dave" <dave.jiang@intel.com>,
         "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
         "bhelgaas@google.com" <bhelgaas@google.com>,
         "rafael@kernel.org" <rafael@kernel.org>,
         "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
         "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
         "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
         "Raj, Ashok" <ashok.raj@intel.com>,
         "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
         "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
         "Luck, Tony" <tony.luck@intel.com>,
         "Lin, Jing" <jing.lin@intel.com>,
@@ -79,55 +80,49 @@ CC:     "Dey, Megha" <megha.dey@intel.com>, Marc Zyngier <maz@kernel.org>,
         "x86@kernel.org" <x86@kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
- irq domain
-Message-ID: <20200807120650.GR16789@nvidia.com>
-References: <96a1eb5ccc724790b5404a642583919d@intel.com>
- <20200805221548.GK19097@mellanox.com>
- <70465fd3a7ae428a82e19f98daa779e8@intel.com>
- <20200805225330.GL19097@mellanox.com>
- <630e6a4dc17b49aba32675377f5a50e0@intel.com>
- <20200806001927.GM19097@mellanox.com>
- <c6a1c065ab9b46bbaf9f5713462085a5@intel.com>
- <87tuxfhf9u.fsf@nanos.tec.linutronix.de>
- <014ffe59-38d3-b770-e065-dfa2d589adc6@intel.com>
- <87h7tfh6fc.fsf@nanos.tec.linutronix.de>
+Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and
+ DEV-MSI support for the idxd driver
+Message-ID: <20200807121955.GS16789@nvidia.com>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+ <20200721164527.GD2021248@mellanox.com>
+ <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
+ <20200724001930.GS2021248@mellanox.com> <20200805192258.5ee7a05b@x1.home>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <87h7tfh6fc.fsf@nanos.tec.linutronix.de>
-X-ClientProxiedBy: MN2PR20CA0043.namprd20.prod.outlook.com
- (2603:10b6:208:235::12) To DM6PR12MB3834.namprd12.prod.outlook.com
+In-Reply-To: <20200805192258.5ee7a05b@x1.home>
+X-ClientProxiedBy: MN2PR20CA0042.namprd20.prod.outlook.com
+ (2603:10b6:208:235::11) To DM6PR12MB3834.namprd12.prod.outlook.com
  (2603:10b6:5:14a::12)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR20CA0043.namprd20.prod.outlook.com (2603:10b6:208:235::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend Transport; Fri, 7 Aug 2020 12:06:51 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k4198-004gcU-2d; Fri, 07 Aug 2020 09:06:50 -0300
+Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR20CA0042.namprd20.prod.outlook.com (2603:10b6:208:235::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend Transport; Fri, 7 Aug 2020 12:19:57 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k41Ln-004gmL-8u; Fri, 07 Aug 2020 09:19:55 -0300
 X-Originating-IP: [156.34.48.30]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 31593619-ea0c-4b64-da6f-08d83aca5e58
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3515:
+X-MS-Office365-Filtering-Correlation-Id: af605af6-1cf6-4273-3ed5-08d83acc32ad
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4057:
 X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB35159C3C2458095E38D6D0FCC2490@DM6PR12MB3515.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Microsoft-Antispam-PRVS: <DM6PR12MB4057027899426B9FA34A2354C2490@DM6PR12MB4057.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: r4BPTTtoPnpI4hycj/0AG2JkcjoumFjNZ5XkI30JUUH6UQUxthc5Bopz7v+fUBeKFL3xJge7gluMcj8IuqZ6AOgr3pIyk7NgsO+GwmiLEGPjUvw6rLpARjNyW9EtOOA8HaEcWT6hr9ECMl5PLzdgVSuNULJWLt/+6lqUO0UStoNX3kz2UX6kq40yAioeQNungx420YIGACXKzrTfcfOeAq9/a3+cEhh//FNbC1uqAUp9MJdPiqq88TrH5PnKAs16HJ2Crw3w8eThgr5QUGH0qOMFk4fR9mOqsuYhqkC0j4XwA/O+SnddsncAad+Y3OqrGvioN3JkUkhJGgdM2D5b1g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(366004)(396003)(136003)(376002)(316002)(9746002)(8936002)(2906002)(66476007)(7416002)(66556008)(5660300002)(36756003)(9786002)(66946007)(7406005)(186003)(1076003)(2616005)(54906003)(426003)(26005)(83380400001)(33656002)(86362001)(6916009)(478600001)(4326008)(8676002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: ctP9XOdsD+1ANNsN2eTa3ucLJfN1lTRFNzyotm57CT0EF/lODwZUBIVXCTKK1OcuVYXLf+ImfP8JoKk2eO7ELwYMLasZLp7UP5trOQMrWhz2ttvzQzxgobcEhjc1yQIZz9+/tUk73BZFNjbNL+1wgGWrRp1C1IoVEvqxHIxrDAuDjSKGOycRew62+OG/N2lQkYZuch75VxS08eE1aqHWN2jdEVWXIUwY3h/+WpOLwydokXMaFy+6uO+Cojscpupwlf2cu8bp08mNs4JYjFDKC3tPkzBPvTiGVyOP0WSrkGOW7pxzF3YQfVgywe9ybl9f9+n5DDrhnKgK9eGcgjqoacTJZuujjDZZC3D9c+GRD5LaV6GM+1+fkmdc9sSpF40MhNAcOy0RteDGZqq0k2B5IyW4hH3HG/1ZTwuzQkblw9ZGEwCfGxEUL+pq49D3sJP0LdgigPpQ0szhmYG0YCVjbaqqSWVPCIXFPEBhHk1/RSv0QWajgP60TmCC6UEOMxWXgRdV52QngZJD3clK9qIoCd3bkFJTb78Fiv4KI6DTD+g/6mixjt/N6tdeNhOAlMKUizjDgNzz+CVgJPehCkze1Ly0gxok1+5N8lJ0dd4oXJAHd5JZ8cmw2V5q3Js6hrU4fqHfntHgdp6PPScefgDAMg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31593619-ea0c-4b64-da6f-08d83aca5e58
+X-Microsoft-Antispam-Message-Info: sT45pI/EJqwMs9Mo6bZvV6h+QRUVvyxudav8zLhJWxHdXgD5Puz5hxXTnCvr5NoYsCBTA3gWZcNcwdjg/lYmo2kSvCzZoW2I/zMOEy9DEcGmGh0cTlRvhFBqtRAcUo6jVkoT9xUx/FdmwZArNsPfGfDvU6Hlb5U/Fag/ELh2A5uZnwfSNCwQ76/HlnZg4KZrbxZaoZykuoHXWyDax78sVd7qtv4JvkzxixV+ZXILaxb0OMdCksUc6MmOO5pV8EFyob3IFlhA474LYoxDlv0N6XLvrKd2d0axKfih4gZi93Kd3TNEVia3Rqt+dACR7FOYdk6CfL35aHOAsAK+2gyMHA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(346002)(366004)(136003)(39860400002)(5660300002)(83380400001)(8676002)(4326008)(7406005)(9746002)(9786002)(7416002)(8936002)(426003)(26005)(478600001)(1076003)(186003)(316002)(2906002)(54906003)(6916009)(33656002)(66476007)(86362001)(2616005)(66556008)(36756003)(66946007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: HSkanueyqJR0VTKI4xknqDy8RBXTzzr2HM9WS12KUYpB7YZPbtp89UlRFxEBHOdRxrsZXe/cp+G7gRH5gS3U5Y4U1Oc6ZM/rl0+n/VC+e7HC8irsOsKOmJWgyhjKNz1rgJ5D24e8Vb99XjdRIyy9kFuKhGWZHaX5UXL7yKfFfalzidUMfqXRrACYOds2XJTEs7a+My8xLdTqLbZz6DS9cL3hhFo7ljmr/j4AOInr9NBOF/GINkS6STYgkzfKPSSpRx8a7ifRN0PbQ0FS0ID10RsvmeBw2D1fPWHuQfUQFMDCx6A0QT3zbm3Ailb6rvt/8wTezQqoUDdrSIbEsliVjGmi4+pZc1qN+eDXi3KVOzva2osuZLY5K7iG1nMhr2UJqtxnM2Kz2CmqA3KIu8rDJ4mVWp+yyyBgynY73w4XdojFrw0CBqHwyD8NvK0AO2G980DuctUu1jg1TtaJ3ow4ME3O7KoXkpmSJXTfzazqG5jIHjEnCRJdihxsh5SxsdwnGcmCzTOir+rintg974r7/xgHyiG7XvfzXGM4lb+2kKHRdzOiGfBHPz8yIUB3Y/AVPopY8RtT7ErMDXMdHsbAmO6WbA0XiPcmghmd5fYLr/X+bO1lL05GFXqrM1NGhLyhv6QtJ/lfHVwak37P/RRjTw==
+X-MS-Exchange-CrossTenant-Network-Message-Id: af605af6-1cf6-4273-3ed5-08d83acc32ad
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2020 12:06:51.7069
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2020 12:19:57.5566
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cBn4LeXMoL6d4KkfWcdn/dzRXuh3Jf2nNrmupbZ9azvxkTGmMvkmrhsf04KDD2Em
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3515
+X-MS-Exchange-CrossTenant-UserPrincipalName: FdDxPLIVMvJekn9xpXy9KxRXok4TRFeo45ViOc0ojwy2Vn7LXR0vlzz38BgiY3qb
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4057
 X-OriginatorOrg: Nvidia.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596802017; bh=FA5i77KQ9ekFUbbxsuLCWszZ/MINCIcRJhq0r4T+d6o=;
+        t=1596802789; bh=9nPGeq/CB4zb5MsgRTO9HHv5loEEdmISFZjlsqVKXIU=;
         h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
          ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
          Subject:Message-ID:References:Content-Type:Content-Disposition:
@@ -147,58 +142,41 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
          X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
          X-MS-Exchange-CrossTenant-UserPrincipalName:
          X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=jR9JqQGvPWqQcPi5PLWGWqU6twVWqkvoQGR2jHFw4FWk6n/CbsQqE/17h2ne43WdF
-         qhZbQII7+Nz/denkH9FCvwCV49Riz4FWwOojKI7r+vApwAJKFcon/6+5aA20mGfQwH
-         qGrarW8MX5kVcBbettYVKm4D2S0uqo2bvZa5a2fWoyUR93BYVUrjq2MozW4nxxBpbL
-         ceEAd8qL3IIHbpNqC9sY+TKA1rqVPDPQ5fuuPqkYiuikDMVhpnDmfrvLexqQCn1q4y
-         Hh0jkXHkGu33Gv00/DuLz4BHMKAAhxQ94djZqcwnvPz1qDzU4bJctDvSVfbwlMzF0g
-         IxNUc4KudD6Rg==
+        b=Al/+sp1GjB/okQPNn3uj47BXS5mklUjTT9NxEzq5NjhoOP3iY0Cuptglk0X3w711E
+         xdOtG62TOELtj1wpI81WqPKXbw5nOaKJnXrkCWF9pjRgarC8R1ixNyd5klsxp0RJYT
+         NU6DwbLyJHJKJK1mV+CXaUb+3zqTW0GMdDf1MTGlWmSbt/D1i/GAClsQ7mCH/S6x5I
+         oI3Tvmke5LX+/FXMEloGQeBvMHkAX1N48CT/qZf0C1ibYlzxygY5i+9ILz7J3Ny32O
+         gYoGqrJPXDSd9TwVJIJkWajV6FPpNXBi1ajgUPc9Tw9Ti/6uX4Nx1oWPfjFW77KRmx
+         XHY8poriRFaeg==
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Aug 06, 2020 at 10:21:11PM +0200, Thomas Gleixner wrote:
+On Wed, Aug 05, 2020 at 07:22:58PM -0600, Alex Williamson wrote:
 
-> Optionally? Please tell the hardware folks to make this mandatory. We
-> have enough pain with non maskable MSI interrupts already so introducing
-> yet another non maskable interrupt trainwreck is not an option.
+> If you see this as an abuse of the framework, then let's identify those
+> specific issues and come up with a better approach.  As we've discussed
+> before, things like basic PCI config space emulation are acceptable
+> overhead and low risk (imo) and some degree of register emulation is
+> well within the territory of an mdev driver.  
 
-Can you elaborate on the flows where Linux will need to trigger
-masking?
+What troubles me is that idxd already has a direct userspace interface
+to its HW, and does userspace DMA. The purpose of this mdev is to
+provide a second direct userspace interface that is a little different
+and trivially plugs into the virtualization stack.
 
-I expect that masking will be available in our NIC HW too - but it
-will require a spin loop if masking has to be done in an atomic
-context.
+I don't think VFIO should be the only entry point to
+virtualization. If we say the universe of devices doing user space DMA
+must also implement a VFIO mdev to plug into virtualization then it
+will be alot of mdevs.
 
-> It's more than a decade now that I tell HW people not to repeat the
-> non-maskable MSI failure, but obviously they still think that
-> non-maskable interrupts are a brilliant idea. I know that HW folks
-> believe that everything they omit can be fixed in software, but they
-> have to finally understand that this particular issue _cannot_ be fixed
-> at all.
+I would prefer to see that the existing userspace interface have the
+extra needed bits for virtualization (eg by having appropriate
+internal kernel APIs to make this easy) and all the emulation to build
+the synthetic PCI device be done in userspace.
 
-Sure, the CPU should always be able to shut off an interrupt!
-
-Maybe explaining the goals would help understand the HW perspective.
-
-Today HW can process > 100k queues of work at once. Interrupt delivery
-works by having a MSI index in each queue's metadata and the interrupt
-indirects through a MSI-X table on-chip which has the
-addr/data/mask/etc.
-
-What IMS proposes is that the interrupt data can move into the queue
-meta data (which is not required to be on-chip), eg along side the
-producer/consumer pointers, and the central MSI-X table is not
-needed. This is necessary because the PCI spec has very harsh design
-requirements for a MSI-X table that make scaling it prohibitive.
-
-So an IRQ can be silenced by deleting or stopping the queue(s)
-triggering it. It can be masked by including masking in the queue
-metadata. We can detect pending by checking the producer/consumer
-values.
-
-However synchronizing all the HW and all the state is now more
-complicated than just writing a mask bit via MMIO to an on-die memory.
+Not only is it better for security, it keeps things to one device
+driver per device..
 
 Jason

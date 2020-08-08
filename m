@@ -2,215 +2,336 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E55A123F6DA
-	for <lists+dmaengine@lfdr.de>; Sat,  8 Aug 2020 09:48:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8912F23F8A3
+	for <lists+dmaengine@lfdr.de>; Sat,  8 Aug 2020 21:47:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725764AbgHHHsW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 8 Aug 2020 03:48:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35468 "EHLO
+        id S1726291AbgHHTrq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 8 Aug 2020 15:47:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725853AbgHHHsU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 8 Aug 2020 03:48:20 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A920C061A27
-        for <dmaengine@vger.kernel.org>; Sat,  8 Aug 2020 00:48:19 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id z14so4532373ljm.1
-        for <dmaengine@vger.kernel.org>; Sat, 08 Aug 2020 00:48:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=TLcg4skVrYQV7y3Fp8lGIPLLhHgq3utx3e26pLPa0Zw=;
-        b=1VzsDiFwx3l4LbKM/adAoH2A5LXc8uTDm51hB67MB1DJvEWnbiUdZNnlk/zqW1rXSg
-         e84S+Nl/AciZotRytrok/YlrcU/uiDU1/77EXZK77pT6Q1oC5xrOJvfLcVhpUqE98khz
-         6kTVv/T8M1DZVlE+3yMPlWUbNv3pfTNYDdvwHeR5NreLP+hgq/2HDHCW9MFGvqOReLCc
-         2eP5+ic5f/8mKBztlQVtF3jMIMGyQywRBgosNIzttuxZzA6TQNn9uiVR0bbgnDa6HZle
-         DPPPCBx6a+HQgGGayBbSWTf2mDUUjjNMxEx9zwDmzxCXS51qFl126b0ccUDbq3JU/9Vo
-         rIwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=TLcg4skVrYQV7y3Fp8lGIPLLhHgq3utx3e26pLPa0Zw=;
-        b=rs7osXNjyy3fzMVuqCc8WLgNe92kVjq9zdO7u1W3Pz2FKeLsyVoMJYr/YsmiXBEk36
-         TKtofTO8Sq3NXaVb2f37Hl6Olu97ZhXwAEKLL7MvRwHTPoeORxz7Tx4/E+td+UC/Lpxy
-         npDILYO6aXrS4j/xPQoHYA6kat4a3IXfg9W2h480jQ6jjo9WIBugefnK1KGeFZwMa1LS
-         wk01h4iXWPNB7v/lIa5DomFMuc6iDQSUuGkudLmvr+q9PdkXbOWA3YD+ojq2RFF8zRjh
-         814itTB2HPqkQFJekYQJSzWg/jYZP1vb++xNVmq5kfvhISU2y95qPNcWmEF5Jbw/FdNt
-         pbsg==
-X-Gm-Message-State: AOAM5314b82Hnwr0WZHCFHOmPvg8NOE3iTQXODVDmIcNEtCSYcdBq25q
-        LoZ85EB/9mYnk9VqlT82d+2INA==
-X-Google-Smtp-Source: ABdhPJyzPqtbc6UrehHkmR4Cf0yev8vWKE8xcenwd+6WhMYR2wiWLxsRKUzx4J4XCGaANv0EYiKsqQ==
-X-Received: by 2002:a2e:b8cf:: with SMTP id s15mr8289054ljp.166.1596872895201;
-        Sat, 08 Aug 2020 00:48:15 -0700 (PDT)
-Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
-        by smtp.gmail.com with ESMTPSA id o68sm5341891lff.57.2020.08.08.00.48.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Aug 2020 00:48:14 -0700 (PDT)
-Date:   Sat, 8 Aug 2020 09:48:12 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH 20/20] arm64: dts: renesas: r8a774e1: Add VIN and CSI-2
- nodes
-Message-ID: <20200808074812.GD3387836@oden.dyn.berto.se>
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-21-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdVriWnPK8-=w=0mq8yj9+1jbsg9yH8aV=ygyHsQ0f-CQQ@mail.gmail.com>
- <CA+V-a8vXjhV-EeQb=bBhoRmuVA=0GSuFiV33N9nkhi39VNN6oA@mail.gmail.com>
- <CAMuHMdXie+GfKBO22mFrn4oG_y7YUxU9ekQdWnp1hn-6z2mLuQ@mail.gmail.com>
- <20200807112754.GC3387836@oden.dyn.berto.se>
- <CAMuHMdW1Ofjouj4P+bdg2VWmYohD73=si8R6ivZ4QiZps6=HAQ@mail.gmail.com>
+        with ESMTP id S1726242AbgHHTrq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 8 Aug 2020 15:47:46 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BC0CC061756;
+        Sat,  8 Aug 2020 12:47:45 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596916062;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  in-reply-to:in-reply-to;
+        bh=TMFNd+tjZMXixAkWUStcncKE1XyE4sSf2aVhVeLRkek=;
+        b=35ZF4w5r4z5UG4qKXGB0o2j49veY6EaCkQvBtleVsMQlOhLVc6yOOzAalBYot6kTmDkXcw
+        Jnd77aNeR+WfO0lhDCueoq0ORCOeHfa3UBBSS4VUZn0yZNzhTKUYKgBRVFnqqevdWvQmfO
+        rKgmEXDoeZ/I7T2WqAVGBTcxcTa5WojcP3j5tOyGVkBB2rgjDry3xVgSHHbQcUdewwZugh
+        SlBCbk9WCYcqNPtk6TAAPS5tG7ga+iXU7jFhRinx9D2LcCzyMtm0blNqRP8BtlwUQUA7/R
+        jEkkBll7/caVZ5XtDICrQuWZjAgNjmqcB2caErJmH8yzm/2F9dnABtb9l9xBjQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596916062;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  in-reply-to:in-reply-to;
+        bh=TMFNd+tjZMXixAkWUStcncKE1XyE4sSf2aVhVeLRkek=;
+        b=GJgq0c03zQjEGbURgcXjJLSKYAOOJP3Z7b24bTvq4zepF3Bwq3wZmOU8ZsUdv/wXfmKN8r
+        1q9+WRvECkRUqHBQ==
+To:     "Dey\, Megha" <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        "Jiang\, Dave" <dave.jiang@intel.com>,
+        "vkoul\@kernel.org" <vkoul@kernel.org>,
+        "bhelgaas\@google.com" <bhelgaas@google.com>,
+        "rafael\@kernel.org" <rafael@kernel.org>,
+        "hpa\@zytor.com" <hpa@zytor.com>,
+        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
+        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj\, Ashok" <ashok.raj@intel.com>,
+        "Liu\, Yi L" <yi.l.liu@intel.com>,
+        "Lu\, Baolu" <baolu.lu@intel.com>,
+        "Tian\, Kevin" <kevin.tian@intel.com>,
+        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck\, Tony" <tony.luck@intel.com>,
+        "Lin\, Jing" <jing.lin@intel.com>,
+        "Williams\, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
+        "parav\@mellanox.com" <parav@mellanox.com>,
+        "Hansen\, Dave" <dave.hansen@intel.com>,
+        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain\, Mona" <mona.hossain@intel.com>,
+        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI irq domain
+In-Reply-To: <d4e3ce5a-c138-2ebb-06d1-52ef57d987e6@intel.com>
+Date:   Sat, 08 Aug 2020 21:47:41 +0200
+Message-ID: <87h7tcgbs2.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdW1Ofjouj4P+bdg2VWmYohD73=si8R6ivZ4QiZps6=HAQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Geert and Lad,
+Megha,
 
-On 2020-08-07 13:36:46 +0200, Geert Uytterhoeven wrote:
-> Hi Niklas,
-> 
-> On Fri, Aug 7, 2020 at 1:27 PM Niklas Söderlund
-> <niklas.soderlund@ragnatech.se> wrote:
-> > On 2020-08-06 13:47:58 +0200, Geert Uytterhoeven wrote:
-> > > On Thu, Aug 6, 2020 at 1:17 PM Lad, Prabhakar
-> > > <prabhakar.csengg@gmail.com> wrote:
-> > > > On Wed, Aug 5, 2020 at 12:19 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > > On Thu, Jul 16, 2020 at 7:20 PM Lad Prabhakar
-> > > > > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > > > > Add VIN and CSI-2 nodes to RZ/G2H (R8A774E1) SoC dtsi.
-> > > > > >
-> > > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > > > >
-> > > > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > > >
-> > > > > However, before I queue this in renesas-devel for v5.10, I'd like to
-> > > > > have some clarification about the issue below.
-> > > > >
-> > > > > > --- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-> > > > > > +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-> > > > >
-> > > > > > +               vin4: video@e6ef4000 {
-> > > > > > +                       compatible = "renesas,vin-r8a774e1";
-> > > > > > +                       reg = <0 0xe6ef4000 0 0x1000>;
-> > > > > > +                       interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> > > > > > +                       clocks = <&cpg CPG_MOD 807>;
-> > > > > > +                       power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-> > > > > > +                       resets = <&cpg 807>;
-> > > > > > +                       renesas,id = <4>;
-> > > > > > +                       status = "disabled";
-> > > > > > +
-> > > > > > +                       ports {
-> > > > > > +                               #address-cells = <1>;
-> > > > > > +                               #size-cells = <0>;
-> > > > > > +
-> > > > > > +                               port@1 {
-> > > > > > +                                       #address-cells = <1>;
-> > > > > > +                                       #size-cells = <0>;
-> > > > >
-> > > > > "make dtbs W=1" says:
-> > > > >
-> > > > >     arch/arm64/boot/dts/renesas/r8a774e1.dtsi:1562.12-1572.7: Warning
-> > > > > (graph_child_address): /soc/video@e6ef4000/ports/port@1: graph node
-> > > > > has single child node 'endpoint@0', #address-cells/#size-cells are not
-> > > > > necessary
-> > > > >
-> > > > > (same for vin5-7 below)
-> > > > >
-> > > > Referring to commit 5e53dbf4edb4d ("arm64: dts: renesas: r8a77990: Fix
-> > > > VIN endpoint numbering") we definitely need endpoint numbering.
-> > > > Probably the driver needs to be fixed to handle such cases.
-> > >
-> > > > > > +
-> > > > > > +                                       reg = <1>;
-> > > > > > +
-> > > > > > +                                       vin4csi20: endpoint@0 {
-> > > > > > +                                               reg = <0>;
-> > > > > > +                                               remote-endpoint = <&csi20vin4>;
-> > >
-> > > On R-Car E3, the single endpoint is at address 2, so "make dtbs W=1"doesn't
-> > > complain. Here it is at address 0.
-> > >
-> > > Niklas?
-> >
-> > First the R-Car VIN driver makes decisions based on which endpoint is
-> > described, each endpoint 0-3 represents a different CSI-2 block on the
-> > other end (0: CSI20, 1: CSI21, 2: CSI40 and 3: CSI41).
-> 
-> That's my understanding, too.
-> 
-> > Then how to handle the warning I'm not sure. I can only really see 2
-> > options.
-> >
-> > 1. Ignore the warning.
-> > 2. Remove #address-cells, #size-cells and reg properties from port@ if
-> >    the only endpoint described is endpoint@0.
-> >
-> > I would prefers option 2. that is what we do in other cases (for example
-> > on Gen2 boards that only have a single parallel sensor in some early DTS
-> > files we don't have the ports node and just describe a single port with
-> > the same reasoning.
-> >
-> > We are not at risk at someone describing a second CSI-2 bock as an
-> > overlay so I see no real harm in option 2.
-> 
-> Yeah, no overlay possible for on-SoC wiring ;-)
-> 
-> > What are your thoughts Geert?
-> > You know more about DT then me.
-> 
-> You have too much faith in me ;-)
-> 
-> AFAIK we don't get this warning for e.g. SPI buses, which can have a
-> single device at address 0, and #{address,size}-cells is mandatory
-> there. So endpoints (or SPI?) are treated special?
+"Dey, Megha" <megha.dey@intel.com> writes:
+> On 8/7/2020 9:47 AM, Thomas Gleixner wrote:
+>> I'm all for sharing code and making the life of driver writers simple
+>> because that makes my life simple as well, but not by creating a layer
+>> at the wrong level and then hacking it into submission until it finally
+>> collapses.
+>>
+>> Designing the infrastructure following the clear layering rules of
+>> hierarchical domains so it works for IMS and also replaces the platform
+>> MSI hack is the only sane way to go forward, not the other way round.
+>  From what I've gathered, I need to:
+>
+> 1. Get rid of the mantra that "IMS" is an extension of platform-msi.
+> 2. Make this new infra devoid of any platform-msi references
 
-That is a good question, I don't know if either of those are treated 
-special. Lad could you look into this?
+See below.
 
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+> 3. Come up with a ground up approach which adheres to the layering=20
+> constraints of the IRQ subsystem
 
--- 
-Regards,
-Niklas Söderlund
+Yes. It's something which can be used by all devices which have:
+
+   1) A device specific irq chip implementation including a msi write funct=
+ion
+   2) Device specific resource management (slots in the IMS case)
+
+The infrastructure you need is basically a wrapper around the core MSI
+domain (similar to PCI, platform-MSI etc,) which provides the specific
+functionality to handle the above.
+
+> 4. Have common code (drivers/irqchip maybe??) where we put in all the=20
+> generic ims-specific bits for the IRQ chip and domain
+> which can be used by all device drivers belonging to this "IMS"class.
+
+Yes, you can provide a common implementation for devices which share the
+same irq chip and domain (slot management functionality)
+
+> 5. Have the device driver do the rest:
+>  =C2=A0=C2=A0=C2=A0 create the chip/domain (one chip/domain per device?)
+>  =C2=A0=C2=A0=C2=A0 provide device specific callbacks for masking, unmask=
+ing, write
+>  message
+
+Correct, but you don't need any magic new data structures for that, the
+existing msi_domain_info/msi_domain_ops and related structures are
+either sufficient or can be extended when necessary.
+
+So for the IDXD case you need:
+
+  1) An irq chip with mask/unmask callbacks and a write msg function
+  2) A slot allocation or association function and their 'free'
+     counterpart (irq_domain_ops)
+
+The function and struct pointers go into the appropriate
+msi_info/msi_ops structures along with the correct flags to set up the
+whole thing and then the infrastructure creates your domain, fills in
+the shared functions and sets the whole thing up.
+
+That's all what a device driver needs to provide, i.e. stick the device
+specific functionality into right data structures and let the common
+infrastructure deal with it. The rest just works and the device specific
+functions are invoked from the right places when required.
+
+> So from the hierarchical domain standpoint, we will have:
+> - For DSA device: vector->intel-IR->IDXD
+> - For Jason's device: root domain-> domain A-> Jason's device's IRQ domain
+> - For any other intel IMS device in the future which
+>  =C2=A0=C2=A0=C2=A0 does not require interrupt remapping: vector->new dev=
+ice IRQ domain
+>  =C2=A0=C2=A0=C2=A0 requires interrupt remapping: vector->intel-IR->new d=
+evice IRQ=20
+> domain (i.e. create a new domain even though IDXD is already present?)
+
+What's special about IDXD? It's just one specific implementation of IMS
+and any other device implementing IMS is completely independent and as
+documented in the specification the IMS slot management and therefore
+the mask/unmask functionality can and will be completely different. IDXD
+has a storage array with slots, Jason's hardware puts the IMS slot into
+the queue storage.
+
+It does not matter whether a device comes from Intel or any other vendor,
+it does neither matter whether the device works with direct vector
+delivery or interrupt remapping.
+
+IDXD is not any different from any other IMS capable device when you
+look at it from the interrupt hierarchy. It's either:
+
+     vector -> IR -> device
+or
+     vector -> device
+
+The only point where this is differentiated is when the irq domain is
+created. Anything else just falls into place.
+
+To answer Jason's question: No, the parent is never the PCI/MSI irq
+domain because that sits at the same level as that device
+domain. Remember the scheme:
+
+   vector --- DMAR-MSI
+	  |
+	  |-- ....
+	  |
+	  |-- IR-0 --- IO/APIC-0
+	  |        |=20
+	  |        |-- IO/APIC-1
+	  |        |
+	  |        |-- PCI/MSI-0
+	  |        |
+	  |        |-- HPET/MSI-0
+	  |        |
+	  |        |-- DEV-A/MSI-0
+	  |        |-- DEV-A/MSI-1
+	  |        |-- DEV-B/MSI-2
+	  |
+	  |-- IR-1 --- PCI/MSI-1
+	  |        |
+	  |        |-- DEV-C/MSI-3
+
+The PCI/MSI domain(s) are dealing solely with PCI standard compliant
+MSI/MSI-X. IMS or similar (platform-MSI being one variant) sit at the
+same level as the PCI/MSI domains.
+
+Why? It's how the hardware operates.
+
+The PCI/MSI "irq chip" is configured by the PCI/MSI domain level and it
+sends its message to the interrupt parent in the hierarchy, i.e. either
+to the Interrupt Remap unit or to the configured vector of the target
+CPU.
+
+IMS does not send it to some magic PCI layer first at least not at the
+conceptual level. The fact that the message is transported by PCIe does
+not change that at all. PCIe in that case is solely the transport, but
+the "irq chip" at the PCI/MSI level of the device is not involved at
+all. If it were that would be a different story.
+
+So now you might ask why we have a single PCI/MSI domain per IR unit and
+why I want seperate IMS domains.
+
+The answer is in the hardware again. PCI/MSI is uniform accross devices
+so the irq chip and all of the domain functionality can be shared. But
+then we have two PCI/MSI domains in the above example because again the
+hardware has one connected to IR unit 0 and the other to IR unit 1.
+IR 0 and IR 1 manage different resources (remap tables) so PCI/MSI-0
+depends on IR-0 and PCI/MSI-1 on IR-1 which is reflected in the
+parent/child relation ship of the domains.
+
+There is another reason why we can spawn a single PCI/MSI domain per
+root complex / IR unit. The PCI/MSI domains are not doing any resource
+management at all. The resulting message is created from the allocated
+vector (direct CPU delivery) or from the allocated Interrupt remapping
+slot information. The domain just deals with the logic required to
+handle PCI/MSI(X) and the necessary resources are provided by the parent
+interrupt layers.
+
+IMS is different. It needs device specific resource management to
+allocate an IMS slot which is clearly part of the "irq chip" management
+layer, aka. irq domain. If the IMS slot management would happen in a
+global or per IR unit table and as a consequence the management, layout,
+mask/unmask operations would be uniform then an IMS domain per system or
+IR unit would be the right choice, but that's not how the hardware is
+specified and implemented.
+
+Now coming back to platform MSI. The way it looks is:
+
+ CPU --- (IR) ---- PLATFORM-MSI  --- PLATFORM-DEVICE-MSI-0
+                                 |-- PLATFORM-DEVICE-MSI-1
+                                 |...
+
+PLATFORM-MSI is a common resource management which also provides a
+shared interrupt chip which operates at the PLATFORM-MSI level with one
+exception:
+
+  The irq_msi_write_msg() callback has an indirection so the actual
+  devices can provide their device specific msi_write_msg() function.
+
+That's a borderline abuse of the hierarchy, but it makes sense to some
+extent as the actual PLATFORM-MSI domain is a truly shared resource and
+the only device specific functionality required is the message
+write. But that message write is not something which has it's own
+resource management, it's just a non uniform storage accessor. IOW, the
+underlying PLATFORM-MSI domain does all resource management including
+message creation and the quirk allows to write the message in the device
+specific way. Not that I love it, but ...
+
+That is the main difference between platform MSI and IMS. IMS is
+completely non uniform and the devices do not share any common resource
+or chip functionality. Each device has its own message store management,
+slot allocation/assignment and a device specifc interrupt chip
+functionality which goes way beyond the nasty write msg quirk.
+
+> What I still don't understand fully is what if all the IMS devices
+> need the same domain ops and chip callbacks, we will be creating
+> various instances of the same IRQ chip and domain right? Is that ok?
+
+Why would it be not ok? Are you really worried about a few hundred bytes
+of memory required for this?=20
+
+Sharing an instance only makes sense if the instance handles a shared or
+uniform resource space, which is clearly not the case with IMS.
+
+We create several PCI/MSI domains and several IO/APIC domains on larger
+systems. They all share the code, but they are dealing with seperate
+resources so they have seperate storage.=20
+
+> Currently the creation of the IRQ domain happens at the IR level so that=
+=20
+> we can reuse the same domain but if it advisable to have a per device=20
+> interrupt domain, I will shift this to the device driver.
+
+Again. Look at the layering. What you created now is a pseudo shared
+domain which needs
+
+   1) An indirection layer for providing device specific functions
+
+   2) An extra allocation layer in the device specific driver to assign
+      IMS slots completely outside of the domain allocation mechanism.
+
+   In other words you try to make things which are neither uniform nor
+   share a resource space look the same way. That's the "all I have is a
+   hammer so everything is a nail" approach. That never worked out well.
+
+With a per device domain/chip approach you get one consistent domain
+per device which provides
+
+   1) The device specific resource management (i.e. slot allocation
+      becomes part of the irq domain operations)
+
+   2) The device specific irq chip functions at the correct point in the
+      layering without the horrid indirections
+
+   3) Consolidated data storage at the device level where the actual
+      data is managed.
+
+   This is of course sharing as much code as possible with the MSI core
+   implementation.
+
+   As a side effect any extension of this be it on the domain or the irq
+   chip side is just a matter of adding the functionality to that
+   particular incarnation and not by having yet another indirection
+   logic at the wrong place.
+
+The price you pay is a bit of memory but you get a clean layering and
+seperation of functionality as a reward. The amount of code in the
+actual IMS device driver is not going to be much more than with the
+approach you have now.
+
+The infrastructure itself is not more than a thin wrapper around the
+existing msi domain infrastructure and might even share code with
+platform-msi.
+
+Thanks,
+
+        tglx

@@ -2,60 +2,109 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4A822418F9
-	for <lists+dmaengine@lfdr.de>; Tue, 11 Aug 2020 11:35:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92AB1241922
+	for <lists+dmaengine@lfdr.de>; Tue, 11 Aug 2020 11:53:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbgHKJf5 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Tue, 11 Aug 2020 05:35:57 -0400
-Received: from mx01.imigrasi.go.id ([36.91.73.239]:46430 "EHLO
-        pfp2-psdkmjkt.imigrasi.go.id" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728409AbgHKJf5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Aug 2020 05:35:57 -0400
-X-Greylist: delayed 2245 seconds by postgrey-1.27 at vger.kernel.org; Tue, 11 Aug 2020 05:35:56 EDT
-Received: from pps.filterd (pfp2-psdkmjkt.imigrasi.go.id [127.0.0.1])
-        by pfp2-psdkmjkt.imigrasi.go.id (8.16.0.27/8.16.0.27) with SMTP id 07B8PWkf094466;
-        Tue, 11 Aug 2020 15:26:12 +0700
-Received: from mta02.imigrasi.go.id ([10.0.49.130])
-        by pfp2-psdkmjkt.imigrasi.go.id with ESMTP id 32scdu9fd7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 11 Aug 2020 15:26:12 +0700
-Received: from localhost (localhost [127.0.0.1])
-        by mta02.imigrasi.go.id (Postfix) with ESMTP id C44323006E9D9;
-        Tue, 11 Aug 2020 15:26:03 +0700 (WIB)
-Received: from mta02.imigrasi.go.id ([127.0.0.1])
-        by localhost (mta02.imigrasi.go.id [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id MRIYLzcjPwPQ; Tue, 11 Aug 2020 15:26:03 +0700 (WIB)
-Received: from localhost (localhost [127.0.0.1])
-        by mta02.imigrasi.go.id (Postfix) with ESMTP id 5C81630086BE1;
-        Tue, 11 Aug 2020 15:25:34 +0700 (WIB)
-X-Virus-Scanned: amavisd-new at 
-Received: from mta02.imigrasi.go.id ([127.0.0.1])
-        by localhost (mta02.imigrasi.go.id [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id immoho4GxlLT; Tue, 11 Aug 2020 15:25:34 +0700 (WIB)
-Received: from [192.168.100.12] (unknown [175.100.60.226])
-        by mta02.imigrasi.go.id (Postfix) with ESMTPSA id E6C1A30086BEE;
-        Tue, 11 Aug 2020 15:25:10 +0700 (WIB)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1728377AbgHKJxf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 11 Aug 2020 05:53:35 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56888 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728274AbgHKJxf (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Aug 2020 05:53:35 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597139612;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=34NxuTHuuaxlTrp0QBpYwXdJxhoYhWgkXsT79ACXhBI=;
+        b=yXFv45j/NkN12I89hPKrRRt3y6IsbXp2z30BW9LR1+SIMEFThp1pdeaQ4LM9L9tiAa69no
+        OxF24BGPWPyOplVt5AYdHm0lzBQPC7WqiZBg7GprfATjSKTVoHqu7aZNMhwmN8VMuE7VzF
+        PU4DBYxA9+atj4AOLidlBQ71941w/45ny6a9eL9yMvPKZHRm08ocVrwOr4tN6lc2EbCfi2
+        dFobLLI83Tl6TLwvgx01ezVcJ6H2SRevkfo3LB4VAsKYpsUY5bPf3nqv2pfT6ZqSxqVVCZ
+        MUc+cyl80tzreWSxW2glFKK9WZ4rsz6Zwwl0yY+5FvSLfHBKxEcOyFg3+KRE+g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597139612;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=34NxuTHuuaxlTrp0QBpYwXdJxhoYhWgkXsT79ACXhBI=;
+        b=neMWOMBKOlsGBQxKGobT2vLvpDelklSE+tFhByonXtY94FggYvZ0ZvmMgZA35XKqEp1WwM
+        Hbwv0AiwaKv3KDAA==
+To:     "Dey\, Megha" <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        "Jiang\, Dave" <dave.jiang@intel.com>,
+        "vkoul\@kernel.org" <vkoul@kernel.org>,
+        "bhelgaas\@google.com" <bhelgaas@google.com>,
+        "rafael\@kernel.org" <rafael@kernel.org>,
+        "hpa\@zytor.com" <hpa@zytor.com>,
+        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
+        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj\, Ashok" <ashok.raj@intel.com>,
+        "Liu\, Yi L" <yi.l.liu@intel.com>,
+        "Lu\, Baolu" <baolu.lu@intel.com>,
+        "Tian\, Kevin" <kevin.tian@intel.com>,
+        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck\, Tony" <tony.luck@intel.com>,
+        "Lin\, Jing" <jing.lin@intel.com>,
+        "Williams\, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
+        "parav\@mellanox.com" <parav@mellanox.com>,
+        "Hansen\, Dave" <dave.hansen@intel.com>,
+        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain\, Mona" <mona.hossain@intel.com>,
+        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
+        xen-devel@lists.xenproject.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>
+Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI irq domain
+In-Reply-To: <87ft8uxjga.fsf@nanos>
+References: <87h7tcgbs2.fsf@nanos.tec.linutronix.de> <87ft8uxjga.fsf@nanos>
+Date:   Tue, 11 Aug 2020 11:53:31 +0200
+Message-ID: <87d03x5x0k.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: Good Day
-To:     Recipients <portal@imigrasi.go.id>
-From:   "Maggie Wang" <portal@imigrasi.go.id>
-Date:   Tue, 11 Aug 2020 15:25:08 +0700
-Reply-To: maggiemwang777@gmail.com
-Message-Id: <20200811082510.E6C1A30086BEE@mta02.imigrasi.go.id>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2020-01-03_04:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Greetings My Dear Friend,
+Thomas Gleixner <tglx@linutronix.de> writes:
 
-I have a business proposal to share with you. 
+CC+: XEN folks
 
-Kind Regards,
-Maggie Wang
+> Thomas Gleixner <tglx@linutronix.de> writes:
+>> The infrastructure itself is not more than a thin wrapper around the
+>> existing msi domain infrastructure and might even share code with
+>> platform-msi.
+>
+> And the annoying fact that you need XEN support which opens another can
+> of worms...
+
+which needs some real cleanup first.
+
+x86 still does not associate the irq domain to devices at device
+discovery time, i.e. the device::msi_domain pointer is never populated.
+
+So to support this new fangled device MSI stuff we'd need yet more
+x86/xen specific arch_*msi_irqs() indirection and hackery, which is not
+going to happen.
+
+The right thing to do is to convert XEN MSI support over to proper irq
+domains. This allows to populate device::msi_domain which makes a lot of
+things simpler and also more consistent.
+
+Thanks,
+
+        tglx

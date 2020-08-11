@@ -2,35 +2,35 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C2F42421EB
-	for <lists+dmaengine@lfdr.de>; Tue, 11 Aug 2020 23:25:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD35D24228E
+	for <lists+dmaengine@lfdr.de>; Wed, 12 Aug 2020 00:39:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgHKVZZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 11 Aug 2020 17:25:25 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47830 "EHLO
+        id S1726235AbgHKWjO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 11 Aug 2020 18:39:14 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48250 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbgHKVZZ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Aug 2020 17:25:25 -0400
+        with ESMTP id S1726143AbgHKWjO (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 11 Aug 2020 18:39:14 -0400
 From:   Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597181121;
+        s=2020; t=1597185551;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=m7u9iZM4bgu8PK3FkxHuv+64l2WKnfoRB2cXVRaJnw4=;
-        b=hHMPyBCCFhlvypwiG0tlGoOocC/6/w0Nr1YrzlsbqBj4aPtPO/SivNrJhDJEsTmJyGBIdn
-        wK0wPPSyrn7SNhuGozY7SxeMQGtH3iWuZKg1GkBrbc8IlgZ2Gx3o6VXa3NqbhOwIfzBaRX
-        DDw0wFU1fbPEzxG7beKNyXGeTrMpfuk2yUHezKaaKjlqKA7w5mpEXFXBx76TWqQTGw4fVl
-        ChhvpDvDISgZQd4H5KwPka7VdwhciDFvo1qFJDfsKn/qZvzrO8XXhGQCqQFRBZ2c1Gi7gs
-        3EM4eZN6+l+aw+/4T6WNsCaZ0eoOLyv/0QwkRGu2PU270twsSL5THasIK9zWdw==
+        bh=b/XIyCsraF0XDGxNSIkgMuCOFCu+n+fIBiRqibux3Wc=;
+        b=oUCmqHFSzGzni1o6gpYc6yml07aT0CEIi015tYdVAgMTHwNDT5PN7prv4h7APKms8DJiEF
+        Qn1l16O5xvmJNDeiGSWNbc2Av++opG9Ipda2xxueEgI1aa9ZO3qGMJnlS8Y71aplCnGJXr
+        apfXKVatTYXxYTZXa6N7knbFbs4BT+y2tZi4G81tq1kQdHiBX1qkbnZ2iVhGxwTuit5HJ3
+        kcJIdbxbmJF4kMVC1Z4qWf2qoPEtF0N7poTP5OsmmRLzaY2uvNtrBREkR3Ki2fvF4V0X9o
+        SwEB6l5/MJ6Be6+Q0IjRyq4r4jtSkHdVWpF1FAfwDETSckytOOeUZ0vtA/zHTQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597181121;
+        s=2020e; t=1597185551;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=m7u9iZM4bgu8PK3FkxHuv+64l2WKnfoRB2cXVRaJnw4=;
-        b=ELIHt1uF/dwRXMv9lB5SfQSoe8rLSoQwm3SbukE5hxSYXAPouA1PkOj1GSCxGPJ4+5QGfT
-        SzYNpK6OM0WGwOBw==
+        bh=b/XIyCsraF0XDGxNSIkgMuCOFCu+n+fIBiRqibux3Wc=;
+        b=bwYqv+uHfJFpFgqEXz6cu4pwyFOjfsGUOz0wb8CCBhky4vKUVECRl8RVLFpMaQsOMJOfUk
+        4a+Py/p+A2duoBBw==
 To:     "Dey\, Megha" <megha.dey@intel.com>,
         Jason Gunthorpe <jgg@nvidia.com>,
         "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>
@@ -64,15 +64,12 @@ Cc:     Marc Zyngier <maz@kernel.org>,
         "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "x86\@kernel.org" <x86@kernel.org>,
         "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
-        xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>
+        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>
 Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI irq domain
-In-Reply-To: <8a8a853c-cbe6-b19c-f6ba-c8cdeda84a36@intel.com>
-References: <87h7tcgbs2.fsf@nanos.tec.linutronix.de> <87ft8uxjga.fsf@nanos> <87d03x5x0k.fsf@nanos.tec.linutronix.de> <8a8a853c-cbe6-b19c-f6ba-c8cdeda84a36@intel.com>
-Date:   Tue, 11 Aug 2020 23:25:20 +0200
-Message-ID: <87bljg7u4f.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <996854e7-ab11-b76b-64dc-b760b3ad2365@intel.com>
+References: <87h7tcgbs2.fsf@nanos.tec.linutronix.de> <996854e7-ab11-b76b-64dc-b760b3ad2365@intel.com>
+Date:   Wed, 12 Aug 2020 00:39:10 +0200
+Message-ID: <878sek7qpd.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: dmaengine-owner@vger.kernel.org
@@ -80,151 +77,220 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Megha.
+
 "Dey, Megha" <megha.dey@intel.com> writes:
-> On 8/11/2020 2:53 AM, Thomas Gleixner wrote:
->>> And the annoying fact that you need XEN support which opens another can
->>> of worms...
+> On 8/8/2020 12:47 PM, Thomas Gleixner wrote:
+>>> 3. Come up with a ground up approach which adheres to the layering
+>>> constraints of the IRQ subsystem
+>> Yes. It's something which can be used by all devices which have:
+>>
+>>     1) A device specific irq chip implementation including a msi write function
+>>     2) Device specific resource management (slots in the IMS case)
+>>
+>> The infrastructure you need is basically a wrapper around the core MSI
+>> domain (similar to PCI, platform-MSI etc,) which provides the specific
+>> functionality to handle the above.
 >
-> hmm I am not sure why we need Xen support... are you referring to idxd 
-> using xen?
-
-What about using IDXD when you are running on XEN? I might be missing
-something and IDXD/IMS is hypervisor only, but that still does not solve
-this problem on bare metal:
-
->> x86 still does not associate the irq domain to devices at device
->> discovery time, i.e. the device::msi_domain pointer is never
->> populated.
-
-We can't do that right now due to the way how X86 PCI/MSI allocation
-works and being able to do so would make things consistent and way
-simpler even for your stuff.
-
->> The right thing to do is to convert XEN MSI support over to proper irq
->> domains. This allows to populate device::msi_domain which makes a lot of
->> things simpler and also more consistent.
+> ok, i will create a per device irq chip which will directly have the 
+> device specific callbacks instead of another layer of redirection.
 >
-> do you think this cleanup is to be a precursor to my patches? I could 
-> look into it but I am not familiar with the background of Xen
+> This way i will get rid of the 'platform_msi_ops' data structure.
 >
-> and this stuff. Can you please provide further guidance on where to
-> look
+> I am not sure what you mean by device specific resource management, are 
+> you referring to dev_msi_alloc/free_irqs?
 
-As I said:
+I think I gave you a hint:
 
->> So to support this new fangled device MSI stuff we'd need yet more
->> x86/xen specific arch_*msi_irqs() indirection and hackery, which is not
->> going to happen.
+>>     2) Device specific resource management (slots in the IMS case)
 
-  git grep arch_.*msi_irq arch/x86
+The IMS storage is an array with slots in the IDXD case and these slots
+are assigned at interrupt allocation time, right? In other cases where
+the IMS storage is in some other place, e.g. queue memory, then this
+still needs to associated to the interrupt at allocation time.
 
-This indirection prevents storing the irq_domain pointer in the device
-at probe/detection time. Native code already uses irq domains for
-PCI/MSI but we can't exploit the full potential because then
-pci_msi_setup_msi_irqs() would never end up in arch_setup_msi_irqs()
-which breaks XEN.
+But of course because you create some disconnected irqdomain you have to
+do that assignment seperately on the side and then stick this
+information into msi_desc after the fact.
 
-I was reminded of that nastiness when I was looking at sensible ways to
-integrate this device MSI maze proper.
+And as this is device specific every device driver which utilizes IMS
+has to do that which is bonkers at best.
 
-From a conceptual POV this stuff, which is not restricted to IDXD at all,
-looks like this:
+>>    2) A slot allocation or association function and their 'free'
+>>       counterpart (irq_domain_ops)
+>
+> This is one part I didn't understand.
+>
+> Currently my dev_msi_alloc_irqs is simply a wrapper over 
+> platform_msi_domain_alloc_irqs which again mostly calls 
+> msi_domain_alloc_irqs.
+>
+> When you say add a .alloc, .free, does this mean we should add a device 
+> specific alloc/free and not use the default 
+> msi_domain_alloc/msi_domain_free?
+>
+> I don't see anything device specific to be done for IDXD atleast, can 
+> you please let me know?
 
-           ]-------------------------------------------|
-PCI BUS -- | PCI device                                |
-           ]-------------------|                       |
-           | Physical function |                       |
-           ]-------------------|                       |
-           ]-------------------|----------|            |
-           | Control block for subdevices |            |
-           ]------------------------------|            |
-           |            | <- "Subdevice BUS"           |
-           |            |                              |
-           |            |-- Subddevice 0               | 
-           |            |-- Subddevice 1               | 
-           |            |-- ...                        | 
-           |            |-- Subddevice N               | 
-           ]-------------------------------------------|
+Each and every time I mentioned this, I explicitely mentioned "slot
+allocation (array) or slot association (IMS store is not in an
+array)".
 
-It does not matter whether this is IDXD with it's magic devices or a
-network card with a gazillion of queues. Conceptually we need to look at
-them as individual subdevices.
+But you keep asking what's device specific over and over and where
+resource management is?
 
-And obviously the above picture gives you the topology. The physical
-function device belongs to PCI in all aspects including the MSI
-interrupt control. The control block is part of the PCI device as well
-and it even can have regular PCI/MSI interrupts for its own
-purposes. There might be devices where the Physical function device does
-not exist at all and the only true PCI functionality is the control
-block to manage subdevices. That does not matter and does not change the
-concept.
+The storage slot array is a resoruce which needs to be managed and it is
+device specific by specification. And it's part of the interrupt
+allocation obviously because without a place to store the MSI message
+the whole thing would not work. This slot does not come out of thin air,
+right?
 
-Now the subdevices belong topology wise NOT to the PCI part. PCI is just
-the transport they utilize. And their irq domain is distinct from the
-PCI/MSI domain for reasons I explained before.
+https://github.com/intel/idxd-driver/commit/fb9a2f4e36525a1f18d9e654d472aa87a9adcb30
 
-So looking at it from a Linux perspective:
+int vidxd_setup_ims_entries(struct vdcm_idxd *vidxd)
+{
+	struct idxd_device *idxd = vidxd->idxd;
+	struct ims_irq_entry *irq_entry;
+	struct mdev_device *mdev = vidxd->vdev.mdev;
+	struct device *dev = mdev_dev(mdev);
+	struct msi_desc *desc;
+	int err, i = 0;
+	int index;
 
-  pci-bus -> PCI device (managed by PCI/MSI domain)
-               - PF device
-               - CB device (hosts DEVMSI domain)
-                    | "Subdevice bus"
-                    | - subdevice
-                    | - subdevice
-                    | - subdevice
+	/*
+	 * MSIX vec 0 is emulated by the vdcm and does not take up an IMS. The total MSIX vecs used
+	 * by the mdev will be total IMS + 1. vec 0 is used for misc interrupts such as command
+	 * completion, error notification, PMU, etc. The other vectors are used for descriptor
+	 * completion. Thus only the number of IMS vectors need to be allocated, which is
+	 * VIDXD_MAX_MSIX_VECS - 1.
+	 */
+	err = dev_msi_domain_alloc_irqs(dev, VIDXD_MAX_MSIX_VECS - 1, &idxd_ims_ops);
+	if (err < 0) {
+		dev_dbg(dev, "Enabling IMS entry! %d\n", err);
+		return err;
+	}
 
-Now you would assume that figuring out the irq domain which the DEVMSI
-domain serving the subdevices on the subdevice bus should take as parent
-is pretty trivial when looking at the topology, right?
+	i = 0;
+	for_each_msi_entry(desc, dev) {
+		index = idxd_alloc_ims_index(idxd);
+		if (index < 0) {
+			err = index;
+			break;
+		}
+		vidxd->ims_index[i] = index;
 
-CB device's parent is PCI device and we know that PCI device MSI is
-handled by the PCI/MSI domain which is either system wide or per IR
-unit.
+		irq_entry = &vidxd->irq_entries[i];
+		irq_entry->vidxd = vidxd;
+		irq_entry->int_src = i;
+		irq_entry->irq = desc->irq;
+		i++;
+	}
 
-So getting the relevant PCI/MSI irq domain is as simple as doing:
+	if (err)
+		vidxd_free_ims_entries(vidxd);
 
-   pcimsi_domain = pcidevice->device->msi_domain;
+	return 0;
+}
 
-and then because we know that this is a hierarchy the parent domain of
-pcimsi_domain is the one which is the parent of our DEVMSI domain, i.e.:
+idxd_alloc_ims_index() is an allocation, right? And the above aside of
+having 3 redundant levels of storage for exactly the same information is
+just a violation of all layering concepts at once.
 
-   parent = pcmsi_domain->parent;
+I just wish I've never seen that code.
 
-Obvious, right?
+>> Again. Look at the layering. What you created now is a pseudo shared
+>> domain which needs
+>>
+>>     1) An indirection layer for providing device specific functions
+>>
+>>     2) An extra allocation layer in the device specific driver to assign
+>>        IMS slots completely outside of the domain allocation mechanism.
+> hmmm, again I am not sure of which extra allocation layer you are 
+> referring to..
 
-What's not so obvious is that pcidevice->device->msi_domain is not
-populated on x86 and trying to get the parent from there is a NULL
-pointer dereference which does not work well.
+See above.
 
-So you surely can hack up some workaround for this, but that's just
-proliferating crap. We want this to be consistent and there is
-absolutely no reason why that network card with the MSI storage in the
-queue data should not work on any other architecture.
+>> The infrastructure itself is not more than a thin wrapper around the
+>> existing msi domain infrastructure and might even share code with
+>> platform-msi.
+>
+>  From your explanation:
+>
+> In the device driver:
+>
+> static const struct irq_domain_ops idxd_irq_domain_ops = {
+>
+> .alloc= idxd_domain_alloc, //not sure what this should do
 
-We do the correct association already for IOMMU and whatever topological
-stuff is attached to (PCI) devices on probe/detection time so making it
-consistent for irq domains is just a logical consequence and matter of
-consistency.
+You might know by now. Also it's not necessarily the .alloc callback
+which needs to be implemented. As I said we can add ops if necessary and
+if it makes sense. This needs some thoughts to provide proper layering
+and for sharing as much code as possible.
 
-Back in the days when x86 was converted to hierarchical irq domains in
-order to support I/O APIC hotplug this workaround was accepted to make
-progress and it was meant as a transitional step. Of course after the
-goal was achieved nobody @Intel cared anymore and so far this did not
-cause big problems. But now it does and we really want to make this
-consistent first.
+> except the alloc/free irq_domain_ops, does this look fine to you?
 
-And no we are not making an exception for IDXD either just because
-that's Intel only. Intel is not special and not exempt from cleaning
-stuff up before adding new features especially not when the stuff to
-cleanup is a leftover from Intel itself. IOW, we are not adding more
-crap on top of crap which should not exists anymore.
+It's at least heading into the right direction.
 
-It's not rocket science to fix this. All it needs is to let XEN create
-irq domains and populate them during init.
+But before we talk about the details at this level the
+device::msi_domain pointer issue wants to be resolved. It's part of the
+solution to share code at various levels and to make utilization of this
+technology as simple as possible for driver writers.
 
-On device detection/probe the proper domain needs to be determined which
-is trivial and then stored in device->msi_domain. That makes
-arch_.*_msi_irq() go away and a lot of code just simpler.
+We need to think about infrastructure which can be used by various types
+of IMS devices, e.g. those with storage arrays and this with storage in
+random places, like the network card Jason was talking about. And to get
+there we need to do the house cleaning first.
+
+Also if you do a proper infrastructure then you need exactly ONE
+implementation of an irqdomain and an irqchip for devices which have a
+IMS slot storage array. Every driver for a device which has this kind of
+storage can reuse that even with different array sizes.
+
+If done right then your IDXD driver needs:
+
+   idxd->domain = create_ims_array_domain(...., basepointer, max_slots);
+
+in the init function of the control block. create_ims_array_domain() is
+not part of IDXD, it's a common irq domain/irq chip implementation which
+deals with IMS slot storage arrays of arbitrary size. 
+
+And then when creating a subdevice you do:
+
+    subdevice->msi_domain = idxd->domain;
+
+and to allocate the interrupts you just do:
+
+    device_msi_alloc_irqs(subdevice, nrirqs);
+
+and device_msi_alloc_irqs() is shared infrastructure which has nothing
+to do with idxd or the ims array domain.
+
+The same can be done for devices which have their storage embedded into
+whatever other data structure on the device, e.g. queue memory, and
+share the same message storage layout.
+
+And we need to put thoughts into the shared infrastructure upfront
+because all of this can also be used on bare metal.
+
+The next thing you completely missed is to think about the ability to
+support managed interrupts which we have in PCI/MSIX today. Its just a
+matter of time that a IMS device comes along which want's it's subdevice
+interrupts managed properly when running on bare metal.
+
+Can we please just go back to proper engineering and figure out how to
+create something which is not just yet another half baken works for IDXD
+"solution"? 
+
+This means we need a proper decription of possible IMS usage scenarios
+and the foreseeable storage scenarios (arrays, queue data, ....). Along
+with requirement like managed interrupts etc. I'm sure quite some of
+this information is scattered over a wide range of mail threads, but
+it's not my job to hunt it down.
+
+Without consistent information at least to the point which is available
+today this is going to end up in a major tinkering trainwreck. I have
+zero interest in dealing with those especially if the major pain can be
+avoided by doing proper analysis and design upfront.
 
 Thanks,
 

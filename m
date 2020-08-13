@@ -2,143 +2,108 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E5C8243957
-	for <lists+dmaengine@lfdr.de>; Thu, 13 Aug 2020 13:30:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 963BF243B4B
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Aug 2020 16:14:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgHMLaP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 13 Aug 2020 07:30:15 -0400
-Received: from mail2.skidata.com ([91.230.2.91]:34726 "EHLO mail2.skidata.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgHMLaO (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 13 Aug 2020 07:30:14 -0400
-X-Greylist: delayed 430 seconds by postgrey-1.27 at vger.kernel.org; Thu, 13 Aug 2020 07:30:12 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
-  t=1597318212; x=1628854212;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=89bAGdQq58IWsLtFPLh9wpw9ICJ6Mc83yC/h2CpVF7Y=;
-  b=gmiIs9xB40mH5A5EZR2XIW6s9njJ+NmW1Jbq8TKZrHpuAX42r+Qo2ETa
-   MEkO42ZuX6gv+G+6Dt7Zk68YEc836Z4GbWXRS8+7emfWPQKZ54ThPsLBL
-   cNORA9GoL4kI1YtlLLMEl8KS4d82vdXrwZiRSt6uOJSgAknvzTBHDgzeQ
-   GlXOrV2WmuYbi+UNI/BrybRyWROEvHqKzGIjdfCJRe9vPHiPvgVhtqwYQ
-   xS64s8kIFaZZOAmNcXl01Ewkci2pB5eZcsSYk/KOsJ/1eRuxK4iKQyfr1
-   H/XLIFePptK55urI2+7zpSuugKYtVo0GjQpw9Cx0zzyVhu1Xd9caC+SMn
-   w==;
-IronPort-SDR: g2o/GJDhU0h+zjPmQsuKI9ODAT/nVkeCiipCpG2uwpWm3Ae9iIIdcYGq0fMra8Ta3DFaRKw9EN
- QHBiww9oRQd1JARQBabv+Mtm/liFgUXSvJNk1lVA4Sn+BgZlk68O6Yp7I/qdZbSH89QuUn4G8p
- bHRgOEaC8nffSuA5+pzf4rHSs7uX7mvkRpbaWzW3tNAD61xzP6sUICpmgLgiQ3BHpmpR4MGc0n
- Z3a5yxwqqljYiuMXgJWpi4RtTZw/LJi7D9uHi++qB7ptZ6mu0pQJA9I0ZlmGWFaIjYC/4aIRDr
- TJ4=
-X-IronPort-AV: E=Sophos;i="5.76,308,1592863200"; 
-   d="scan'208";a="2640424"
-Date:   Thu, 13 Aug 2020 13:22:58 +0200
-From:   Richard Leitner <richard.leitner@skidata.com>
-To:     <dmaengine@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <timur@kernel.org>, <nicoleotsuka@gmail.com>, <vkoul@kernel.org>,
-        <dan.j.williams@intel.com>, <linux-imx@nxp.com>,
-        <shawnguo@kernel.org>, <kernel@pengutronix.de>,
-        Benjamin Bara <benjamin.bara@skidata.com>
-Subject: pcm|dmaengine|imx-sdma race condition on i.MX6
-Message-ID: <20200813112258.GA327172@pcleri>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-X-Originating-IP: [192.168.111.252]
-X-ClientProxiedBy: sdex6srv.skidata.net (192.168.111.84) To
- sdex5srv.skidata.net (192.168.111.83)
+        id S1726568AbgHMOOA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 13 Aug 2020 10:14:00 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:36522 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726564AbgHMON7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 13 Aug 2020 10:13:59 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 217C1C0780;
+        Thu, 13 Aug 2020 14:13:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1597328039; bh=yzjZZtMtuF3mfdo4BcXeAnAhpbUKkg7eDAotsYFaYds=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Z2Pg7Xw1FxhAhZLM9tMD8dZk4ay7EV3+oZowfNa3X1TEMa38sVTO/txYmEGm2Vwa9
+         cSHcBAWpzN7NB8NRHXOTFsCdm3jYhosnCB7z/2vGBnrylYeKzHIgaYsNsSSqgPi8Bn
+         ns/ZSo7ZuOoSlaPnBWftYo7yVGHWb8E5SYOOKrKgySKz65jNWsewLpu0frIhbeSGbW
+         0mNfxhTaFsTozWBySFGiTDF7/nlQl0XMW2BxFTOo1pr1KoOCvKbDXMdEaL9oBwbEqz
+         VWT9uc18vc4LvWFmzZ0x4bHoW1uB67nLKCF2ICLrTXAWgIOyF4jHn1b8g0+HkhOqvA
+         80RJwwoibeT2g==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 831D4A005A;
+        Thu, 13 Aug 2020 14:13:57 +0000 (UTC)
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     vkoul@kernel.org, dmaengine@vger.kernel.org
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>, stable@vger.kernel.org
+Subject: [PATCH] dmaengine: dw-edma: Fix linked list physical address calculation on non-64 bits architectures
+Date:   Thu, 13 Aug 2020 16:13:54 +0200
+Message-Id: <9d92b3c0f9304e3f2892833a70c726b911b29fd8.1597327637.git.gustavo.pimentel@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi,
-we've found a race condition with the PCM on the i.MX6 which results in
-an -EIO for the SNDRV_PCM_IOCTL_READI_FRAMES ioctl after an -EPIPE (XRUN).
+Fix linked list physical address calculation on non-64 bits architectures.
 
-A possible reproduction may look like the following reduced call graph
-during a PCM capture:
+The paddr variable is phys_addr_t type, which can assume a different
+type (u64 or u32) depending on the conditional compilation flag
+CONFIG_PHYS_ADDR_T_64BIT.
 
-us -> ioctl(SNDRV_PCM_IOCTL_READI_FRAMES)
-      - wait_for_avail()
-        - schedule_timeout()
-   -> snd_pcm_update_hw_ptr0()
-      - snd_pcm_update_state: EPIPE (XRUN)
-      - sdma_disable_channel_async() # get's scheduled away due to sleep
-us <- ioctl(SNDRV_PCM_IOCTL_READI_FRAMES) returns -EPIPE
-us -> ioctl(SNDRV_PCM_IOCTL_PREPARE) # as reaction to the EPIPE (XRUN)
-us -> ioctl(SNDRV_PCM_IOCTL_READI_FRAMES) # next try to capture frames
-      - sdma_prep_dma_cyclic()
-        - sdma_load_context() # not loaded as context_loaded is 1
-      - wait_for_avail()
-        - schedule_timeout()
-# now the sdma_channel_terminate_work() comes back and sets
-# context_loaded = false and frees in vchan_dma_desc_free_list().
-us <- ioctl returns -EIO (capture write error (DMA or IRQ trouble?))
+Since this variable is used in with upper_32 bits() macro to get the
+value from 32 to 63 bits, on a non-64 bits architecture this variable
+will assume a u32 type, it can cause a compilation warning.
 
+This issue was reported by a Coverity analysis.
 
-What we have found out, based on our understanding:
-The dmaengine docu states that a dmaengine_terminate_async() must be
-followed by a dmaengine_synchronize().
-However, in the pcm_dmaengine.c, only dmaengine_terminate_async() is
-called (for performance reasons and because it might be called from an
-interrupt handler).
+Fixes: 7e4b8a4fbe2c ("dmaengine: Add Synopsys eDMA IP version 0 support")
 
-In our tests, we saw that the user-space immediately calls
-ioctl(SNDRV_PCM_IOCTL_PREPARE) as a handler for the happened xrun
-(previous ioctl(SNDRV_PCM_IOCTL_READI_FRAMES) returns with -EPIPE). In
-our case (imx-sdma.c), the terminate really happens asynchronously with
-a worker thread which is not awaited/synchronized by the
-ioctl(SNDRV_PCM_IOCTL_PREPARE) call.
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+---
+ drivers/dma/dw-edma/dw-edma-v0-core.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-Since the syscall immediately enters an atomic context
-(snd_pcm_stream_lock_irq()), we are not able to flush the work of the
-termination worker from within the DMA context. This leads to an
-unterminated DMA getting re-initialized and then terminated.
+diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
+index 692de47..cfabbf5 100644
+--- a/drivers/dma/dw-edma/dw-edma-v0-core.c
++++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
+@@ -229,8 +229,13 @@ static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
+ 	/* Channel control */
+ 	SET_LL(&llp->control, control);
+ 	/* Linked list  - low, high */
+-	SET_LL(&llp->llp_low, lower_32_bits(chunk->ll_region.paddr));
+-	SET_LL(&llp->llp_high, upper_32_bits(chunk->ll_region.paddr));
++	#ifdef CONFIG_PHYS_ADDR_T_64BIT
++		SET_LL(&llp->llp_low, lower_32_bits(chunk->ll_region.paddr));
++		SET_LL(&llp->llp_high, upper_32_bits(chunk->ll_region.paddr));
++	#else /* CONFIG_PHYS_ADDR_T_64BIT */
++		SET_LL(&llp->llp_low, chunk->ll_region.paddr);
++		SET_LL(&llp->llp_high, 0x0);
++	#endif /* CONFIG_PHYS_ADDR_T_64BIT */
+ }
+ 
+ void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+@@ -257,10 +262,16 @@ void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+ 		SET_CH(dw, chan->dir, chan->id, ch_control1,
+ 		       (DW_EDMA_V0_CCS | DW_EDMA_V0_LLE));
+ 		/* Linked list - low, high */
+-		SET_CH(dw, chan->dir, chan->id, llp_low,
+-		       lower_32_bits(chunk->ll_region.paddr));
+-		SET_CH(dw, chan->dir, chan->id, llp_high,
+-		       upper_32_bits(chunk->ll_region.paddr));
++		#ifdef CONFIG_PHYS_ADDR_T_64BIT
++			SET_CH(dw, chan->dir, chan->id, llp_low,
++			       lower_32_bits(chunk->ll_region.paddr));
++			SET_CH(dw, chan->dir, chan->id, llp_high,
++			       upper_32_bits(chunk->ll_region.paddr));
++		#else /* CONFIG_PHYS_ADDR_T_64BIT */
++			SET_CH(dw, chan->dir, chan->id, llp_low,
++			       chunk->ll_region.paddr);
++			SET_CH(dw, chan->dir, chan->id, llp_high, 0x0);
++		#endif /* CONFIG_PHYS_ADDR_T_64BIT*/
+ 	}
+ 	/* Doorbell */
+ 	SET_RW(dw, chan->dir, doorbell,
+-- 
+2.7.4
 
-On the i.MX6 platform the problem is (if I got it correctly) that the
-sdma_channel_terminate_work() called after the -EPIPE gets scheduled
-away (for the 1-2ms sleep [1]). During that time the userspace already
-sends in the ioctl(SNDRV_PCM_IOCTL_PREPARE) and
-ioctl(SNDRV_PCM_IOCTL_READI_FRAMES).
-As none of them are anyhow synchronized to the terminate_worker the
-vchan_dma_desc_free_list() [2] and "sdmac->context_loaded = false;" [3]
-are executed during the wait_for_avail() [4] of the
-ioctl(SNDRV_PCM_IOCTL_READI_FRAMES).
-
-To make sure we identified the problem correctly we've tested to add a
-"dmaengine_synchronize()" before the snd_pcm_prepare() in [5]. This
-fixed the race condition in all our tests. (Before we were able to
-reproduce it in 100% of the test runs).
-
-Based on our understanding, there are two different points to ensure
-the termination:
-Either ensure that the termination is finished within the previous
-SNDRV_PCM_IOCTL_READI_FRAMES call (inside the DMA context) or finishing
-it in the SNDRV_PCM_IOCTL_PREPARE call (and all other applicable ioclts)
-before entering the atomic context (from the PCM context).
-
-We initially thought about implementing the first approach, basically
-splitting up the dma_device terminate_all operation into a sync
-(busy-wait) and a async one. This would align the operations with the
-DMAengine interface and would enable a sync termination variant from
-atomic contexts.
-However, we saw that the dma_free_attrs() function has a WARN_ON on irqs
-disabled, which would be the case for the sync variant.
-
-Side note: We found this issue on the current v5.4.y LTS branch,
-but it also affects v5.8.y.
-
-Any feedback or pointers how we may fix the problem are warmly welcome!
-If anything is unclear please just ask :-)
-
-regards;
-Richard Leitner
-Benjamin Bara
-
-[1]https://elixir.bootlin.com/linux/v5.8/source/drivers/dma/imx-sdma.c#L1066
-[2]https://elixir.bootlin.com/linux/v5.8/source/drivers/dma/imx-sdma.c#L1071
-[3]https://elixir.bootlin.com/linux/v5.8/source/drivers/dma/imx-sdma.c#L1072
-[4]https://elixir.bootlin.com/linux/v5.8/source/sound/core/pcm_lib.c#L1825
-[5]https://elixir.bootlin.com/linux/v5.8/source/sound/core/pcm_native.c#L3226

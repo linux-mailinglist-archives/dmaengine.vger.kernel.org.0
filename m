@@ -2,311 +2,147 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26B3C242DDE
-	for <lists+dmaengine@lfdr.de>; Wed, 12 Aug 2020 19:12:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35FD024335E
+	for <lists+dmaengine@lfdr.de>; Thu, 13 Aug 2020 06:34:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726013AbgHLRMw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 12 Aug 2020 13:12:52 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:54712 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgHLRMv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 Aug 2020 13:12:51 -0400
-Received: from pendragon.lan (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 590A49E7;
-        Wed, 12 Aug 2020 19:12:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597252368;
-        bh=QoKbFMycp/gY2/n2EwpisDURT2EHGgua9YLB785v7O4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=tpU3TZgu08QaYdjnLXvGPtf9kYWvjzQ5KRms2QPcQupZqods2EoFLxsOzy1ypOOS4
-         ZVc2LMcJTEdphc4UR3oSbClStV1eNWrujM/zwyvSI3wHGNkhDWQ1k9YOdjrg8lEv5o
-         Y885RNhpzigeTsxurGC/9sgefmeterVvfiZ5RNJc=
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     dmaengine@vger.kernel.org
-Cc:     Vinod Koul <vkoul@kernel.org>, Hyun Kwon <hyun.kwon@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] dmaengine: xilinx: dpdma: Add debugfs support
-Date:   Wed, 12 Aug 2020 20:12:28 +0300
-Message-Id: <20200812171228.9751-1-laurent.pinchart@ideasonboard.com>
-X-Mailer: git-send-email 2.27.0
+        id S1725298AbgHMEeX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 13 Aug 2020 00:34:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21158 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725848AbgHMEeW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 13 Aug 2020 00:34:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597293261;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qvrNz4SFjTzW3E/xjnyIB3Qq4CFTBccMTkHV2o/Wvns=;
+        b=DGuz8A8zQHPu4cXN/GV0rvNMMGd9XKevQFRRs1IfAAJ1G1VpMGuTA9MVGBcapxk4VK557s
+        xtZwwcx2nZmBn+dcT/b94PCQ+4q9NTizfCZVJubx6zV56U/WKFgsjpzzqYkZsT+mJ/HQ1Z
+        VczV2qmcbIngNjfXmW7jjjxqUS6WC00=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-392-vQ5TZQD_Mw6U0R6mxvcHsw-1; Thu, 13 Aug 2020 00:34:16 -0400
+X-MC-Unique: vQ5TZQD_Mw6U0R6mxvcHsw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A7D651005504;
+        Thu, 13 Aug 2020 04:34:12 +0000 (UTC)
+Received: from [10.72.13.44] (ovpn-13-44.pek2.redhat.com [10.72.13.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9BE435DA30;
+        Thu, 13 Aug 2020 04:33:54 +0000 (UTC)
+Subject: Re: [PATCH RFC v2 00/18] Add VFIO mediated device support and DEV-MSI
+ support for the idxd driver
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
+ <20200721164527.GD2021248@mellanox.com>
+ <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
+ <20200724001930.GS2021248@mellanox.com> <20200805192258.5ee7a05b@x1.home>
+ <20200807121955.GS16789@nvidia.com>
+ <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <b59ce5b0-5530-1f30-9852-409f7c9f630a@redhat.com>
+ <MWHPR11MB1645DDC2C87D533B2A09A2D58C420@MWHPR11MB1645.namprd11.prod.outlook.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <ecc76dfb-7047-c1ab-e244-d73f05688f20@redhat.com>
+Date:   Thu, 13 Aug 2020 12:33:52 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <MWHPR11MB1645DDC2C87D533B2A09A2D58C420@MWHPR11MB1645.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Expose statistics to debugfs when available. This helps debugging issues
-with the DPDMA driver.
 
-Signed-off-by: Hyun Kwon <hyun.kwon@xilinx.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
-Changes since v7:
+On 2020/8/12 下午12:05, Tian, Kevin wrote:
+>> The problem is that if we tie all controls via VFIO uAPI, the other
+>> subsystem like vDPA is likely to duplicate them. I wonder if there is a
+>> way to decouple the vSVA out of VFIO uAPI?
+> vSVA is a per-device (either pdev or mdev) feature thus naturally should
+> be managed by its device driver (VFIO or vDPA). From this angle some
+> duplication is inevitable given VFIO and vDPA are orthogonal passthrough
+> frameworks. Within the kernel the majority of vSVA handling is done by
+> IOMMU and IOASID modules thus most logic are shared.
 
-- Don't cerate dpdma debugfs subdirectory
-- Don't consider debugfs initialization error as a failure
 
-Changes since v6:
+So why not introduce vSVA uAPI at IOMMU or IOASID layer?
 
-- Move debugfs node to the dmaengine directory
-- Destroy debugfs directory upon removal
 
-Changes since v3:
+>
+>>>    If an userspace DMA interface can be easily
+>>> adapted to be a passthrough one, it might be the choice.
+>> It's not that easy even for VFIO which requires a lot of new uAPIs and
+>> infrastructures(e.g mdev) to be invented.
+>>
+>>
+>>> But for idxd,
+>>> we see mdev a much better fit here, given the big difference between
+>>> what userspace DMA requires and what guest driver requires in this hw.
+>> A weak point for mdev is that it can't serve kernel subsystem other than
+>> VFIO. In this case, you need some other infrastructures (like [1]) to do
+>> this.
+> mdev is not exclusive from kernel usages. It's perfectly fine for a driver
+> to reserve some work queues for host usages, while wrapping others
+> into mdevs.
 
-- Return -EFAULT instead of bytes remaining after copy_to_user()
 
-Changes since v2:
+I meant you may want slices to be an independent device from the kernel 
+point of view:
 
-- Refactor debugfs code
----
- drivers/dma/xilinx/xilinx_dpdma.c | 209 ++++++++++++++++++++++++++++++
- 1 file changed, 209 insertions(+)
+E.g for ethernet devices, you may want 10K mdevs to be passed to guest.
 
-diff --git a/drivers/dma/xilinx/xilinx_dpdma.c b/drivers/dma/xilinx/xilinx_dpdma.c
-index b37197c772aa..7db70d226e89 100644
---- a/drivers/dma/xilinx/xilinx_dpdma.c
-+++ b/drivers/dma/xilinx/xilinx_dpdma.c
-@@ -10,6 +10,7 @@
- #include <linux/bitfield.h>
- #include <linux/bits.h>
- #include <linux/clk.h>
-+#include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/dmaengine.h>
- #include <linux/dmapool.h>
-@@ -266,6 +267,210 @@ struct xilinx_dpdma_device {
- 	bool ext_addr;
- };
- 
-+/* -----------------------------------------------------------------------------
-+ * DebugFS
-+ */
-+
-+#ifdef CONFIG_DEBUG_FS
-+
-+#define XILINX_DPDMA_DEBUGFS_READ_MAX_SIZE	32
-+#define XILINX_DPDMA_DEBUGFS_UINT16_MAX_STR	"65535"
-+
-+/* Match xilinx_dpdma_testcases vs dpdma_debugfs_reqs[] entry */
-+enum xilinx_dpdma_testcases {
-+	DPDMA_TC_INTR_DONE,
-+	DPDMA_TC_NONE
-+};
-+
-+struct xilinx_dpdma_debugfs {
-+	enum xilinx_dpdma_testcases testcase;
-+	u16 xilinx_dpdma_irq_done_count;
-+	unsigned int chan_id;
-+};
-+
-+static struct xilinx_dpdma_debugfs dpdma_debugfs;
-+struct xilinx_dpdma_debugfs_request {
-+	const char *name;
-+	enum xilinx_dpdma_testcases tc;
-+	ssize_t (*read)(char *buf);
-+	int (*write)(char *args);
-+};
-+
-+static void xilinx_dpdma_debugfs_desc_done_irq(struct xilinx_dpdma_chan *chan)
-+{
-+	if (chan->id == dpdma_debugfs.chan_id)
-+		dpdma_debugfs.xilinx_dpdma_irq_done_count++;
-+}
-+
-+static ssize_t xilinx_dpdma_debugfs_desc_done_irq_read(char *buf)
-+{
-+	size_t out_str_len;
-+
-+	dpdma_debugfs.testcase = DPDMA_TC_NONE;
-+
-+	out_str_len = strlen(XILINX_DPDMA_DEBUGFS_UINT16_MAX_STR);
-+	out_str_len = min_t(size_t, XILINX_DPDMA_DEBUGFS_READ_MAX_SIZE,
-+			    out_str_len);
-+	snprintf(buf, out_str_len, "%d",
-+		 dpdma_debugfs.xilinx_dpdma_irq_done_count);
-+
-+	return 0;
-+}
-+
-+static int xilinx_dpdma_debugfs_desc_done_irq_write(char *args)
-+{
-+	char *arg;
-+	int ret;
-+	u32 id;
-+
-+	arg = strsep(&args, " ");
-+	if (!arg || strncasecmp(arg, "start", 5))
-+		return -EINVAL;
-+
-+	arg = strsep(&args, " ");
-+	if (!arg)
-+		return -EINVAL;
-+
-+	ret = kstrtou32(arg, 0, &id);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (id < ZYNQMP_DPDMA_VIDEO0 || id > ZYNQMP_DPDMA_AUDIO1)
-+		return -EINVAL;
-+
-+	dpdma_debugfs.testcase = DPDMA_TC_INTR_DONE;
-+	dpdma_debugfs.xilinx_dpdma_irq_done_count = 0;
-+	dpdma_debugfs.chan_id = id;
-+
-+	return 0;
-+}
-+
-+/* Match xilinx_dpdma_testcases vs dpdma_debugfs_reqs[] entry */
-+struct xilinx_dpdma_debugfs_request dpdma_debugfs_reqs[] = {
-+	{
-+		.name = "DESCRIPTOR_DONE_INTR",
-+		.tc = DPDMA_TC_INTR_DONE,
-+		.read = xilinx_dpdma_debugfs_desc_done_irq_read,
-+		.write = xilinx_dpdma_debugfs_desc_done_irq_write,
-+	},
-+};
-+
-+static ssize_t xilinx_dpdma_debugfs_read(struct file *f, char __user *buf,
-+					 size_t size, loff_t *pos)
-+{
-+	enum xilinx_dpdma_testcases testcase;
-+	char *kern_buff;
-+	int ret = 0;
-+
-+	if (*pos != 0 || size <= 0)
-+		return -EINVAL;
-+
-+	kern_buff = kzalloc(XILINX_DPDMA_DEBUGFS_READ_MAX_SIZE, GFP_KERNEL);
-+	if (!kern_buff) {
-+		dpdma_debugfs.testcase = DPDMA_TC_NONE;
-+		return -ENOMEM;
-+	}
-+
-+	testcase = READ_ONCE(dpdma_debugfs.testcase);
-+	if (testcase != DPDMA_TC_NONE) {
-+		ret = dpdma_debugfs_reqs[testcase].read(kern_buff);
-+		if (ret < 0)
-+			goto done;
-+	} else {
-+		strlcpy(kern_buff, "No testcase executed",
-+			XILINX_DPDMA_DEBUGFS_READ_MAX_SIZE);
-+	}
-+
-+	size = min(size, strlen(kern_buff));
-+	if (copy_to_user(buf, kern_buff, size))
-+		ret = -EFAULT;
-+
-+done:
-+	kfree(kern_buff);
-+	if (ret)
-+		return ret;
-+
-+	*pos = size + 1;
-+	return size;
-+}
-+
-+static ssize_t xilinx_dpdma_debugfs_write(struct file *f,
-+					  const char __user *buf, size_t size,
-+					  loff_t *pos)
-+{
-+	char *kern_buff, *kern_buff_start;
-+	char *testcase;
-+	unsigned int i;
-+	int ret;
-+
-+	if (*pos != 0 || size <= 0)
-+		return -EINVAL;
-+
-+	/* Supporting single instance of test as of now. */
-+	if (dpdma_debugfs.testcase != DPDMA_TC_NONE)
-+		return -EBUSY;
-+
-+	kern_buff = kzalloc(size, GFP_KERNEL);
-+	if (!kern_buff)
-+		return -ENOMEM;
-+	kern_buff_start = kern_buff;
-+
-+	ret = strncpy_from_user(kern_buff, buf, size);
-+	if (ret < 0)
-+		goto done;
-+
-+	/* Read the testcase name from a user request. */
-+	testcase = strsep(&kern_buff, " ");
-+
-+	for (i = 0; i < ARRAY_SIZE(dpdma_debugfs_reqs); i++) {
-+		if (!strcasecmp(testcase, dpdma_debugfs_reqs[i].name))
-+			break;
-+	}
-+
-+	if (i == ARRAY_SIZE(dpdma_debugfs_reqs)) {
-+		ret = -EINVAL;
-+		goto done;
-+	}
-+
-+	ret = dpdma_debugfs_reqs[i].write(kern_buff);
-+	if (ret < 0)
-+		goto done;
-+
-+	ret = size;
-+
-+done:
-+	kfree(kern_buff_start);
-+	return ret;
-+}
-+
-+static const struct file_operations fops_xilinx_dpdma_dbgfs = {
-+	.owner = THIS_MODULE,
-+	.read = xilinx_dpdma_debugfs_read,
-+	.write = xilinx_dpdma_debugfs_write,
-+};
-+
-+static void xilinx_dpdma_debugfs_init(struct xilinx_dpdma_device *xdev)
-+{
-+	struct dentry *dent;
-+
-+	dpdma_debugfs.testcase = DPDMA_TC_NONE;
-+
-+	dent = debugfs_create_file("testcase", 0444, xdev->common.dbg_dev_root,
-+				   NULL, &fops_xilinx_dpdma_dbgfs);
-+	if (IS_ERR(dent))
-+		dev_err(xdev->dev, "Failed to create debugfs testcase file\n");
-+}
-+
-+#else
-+static void xilinx_dpdma_debugfs_init(struct xilinx_dpdma_device *xdev)
-+{
-+}
-+
-+static void xilinx_dpdma_debugfs_desc_done_irq(struct xilinx_dpdma_chan *chan)
-+{
-+}
-+#endif /* CONFIG_DEBUG_FS */
-+
- /* -----------------------------------------------------------------------------
-  * I/O Accessors
-  */
-@@ -842,6 +1047,8 @@ static void xilinx_dpdma_chan_done_irq(struct xilinx_dpdma_chan *chan)
- 
- 	spin_lock_irqsave(&chan->lock, flags);
- 
-+	xilinx_dpdma_debugfs_desc_done_irq(chan);
-+
- 	if (active)
- 		vchan_cyclic_callback(&active->vdesc);
- 	else
-@@ -1477,6 +1684,8 @@ static int xilinx_dpdma_probe(struct platform_device *pdev)
- 
- 	xilinx_dpdma_enable_irq(xdev);
- 
-+	xilinx_dpdma_debugfs_init(xdev);
-+
- 	dev_info(&pdev->dev, "Xilinx DPDMA engine is probed\n");
- 
- 	return 0;
--- 
-Regards,
+Similarly, you may want 10K net devices which is connected to the kernel 
+networking subsystems.
 
-Laurent Pinchart
+In this case it's not simply reserving queues but you need some other 
+type of device abstraction. There could be some kind of duplication 
+between this and mdev.
+
+Thanks
+
+
+>
+> Thanks
+> Kevin
+>
 

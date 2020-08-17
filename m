@@ -2,58 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 281DD245C0B
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Aug 2020 07:46:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB204245C15
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Aug 2020 07:46:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbgHQFpd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 17 Aug 2020 01:45:33 -0400
-Received: from mail2.skidata.com ([91.230.2.91]:36143 "EHLO mail2.skidata.com"
+        id S1726681AbgHQFpx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 17 Aug 2020 01:45:53 -0400
+Received: from mail1.skidata.com ([91.230.2.99]:13573 "EHLO mail1.skidata.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726308AbgHQFpd (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 17 Aug 2020 01:45:33 -0400
+        id S1726645AbgHQFpu (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 17 Aug 2020 01:45:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
-  t=1597643132; x=1629179132;
+  t=1597643148; x=1629179148;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=iq6E0tROTvyWLYPqPO1Jep0gNCBrkGzldGCPeMg+7YQ=;
-  b=TiQa2LaC6eg/8+EgVhdWz+/BS136xFBuZa7mM9clCoGr+VaF0NJ81RC6
-   l1YY4PERPYIct8aW7qt60fHqYW77KzNLZCkr1RONk1befRqCcXmOQhqst
-   rynS6YSA7V4SIMCbyTPi5Hc+Xg+aYA5QZ5Kmv+BvmckHPo2p0j17CMwNo
-   ESf+24whxtcLrLALVFu7c3P//l2A0VY5gLtcwZqiGBulWLJIOIu3cZq1k
-   LqRRe2KXSgIWwzRZ22Itv976yeYXlp9DnpHVhCY199+vBibkeyI6SYacT
-   A4tOFYCCu5SMRN35loVB7RnW23pqNHCFtc/ee+JDyr9dTO3yB7EjntMqI
-   g==;
-IronPort-SDR: rZkcM47agA66V7rz7feaMdOluzUqk0bpZwPNFBS4nRIuINpiwtoyuu5PvhKvd7GxTCNDYB6kXY
- q+8aPl4488YU/sH1xOfKWdB3CMlyy7Wmb9WhpewAqI8mDDklAMKIou3zPjCur2Svcz1ng1Oj8Z
- Zy7WxGnwP3YJWucu6wpo6YHFvYGa5JHGgsVwTkK/rDs/Q9q8+zXUyPiuiSF72FTDQ+I8JVsk45
- na+58Ifn3fOwiZaehwKqTEjAYKrWjacs9o1T8V1VGA9ce2sOYhvzzUx0Gd/5S3O54kP7NGQAU7
- SbE=
+   mime-version:in-reply-to;
+  bh=nC3QtiPkc2ash+7NhCkNY1Q6+j1FJN1xDaKIPykDIQE=;
+  b=snSaim4MyjjKLZX3jWEe33Gahv/MJHf1llcgkhiDZqhoX+FP0fEXSaMU
+   dOcTrj3pqWJGcrdoWj2QpqMaFFWRx9athoJQs8XaijFCv9ZkGoxeE9yX4
+   X5i4ra6JFa5HUeOlWTX48+cIvSzcBk4AMYsytEG5MJi3b2dBuGD72DnLU
+   y586m8PnqBCWThnVN4ZPWmDeRil3gxLSdvngA4ipcv2QgRg5Mq/MCvPzu
+   8foGPropu2Nu+dV/7vU6EqcqImmI0CKXL86Re7mspL4ylEUjba0uZUme1
+   gyM4X8hTGytmtGDJTJNvLZAc2lchxCww1dUTll9TiU90VqjCM1n4AnT2U
+   A==;
+IronPort-SDR: Cyb4DgRj+rCeSt/lc6ca/UWAxILZY3BwglmUQTpWJKQHBZEMAjDzPsI/XWGEqNlWzWLVt2G5t0
+ ftCvLYazD3V9kXiumE7Dl9j53lr16eEt+XMB1S73ckdJQOEgch5Laa9QH2iMy1OOOEVG94MmRg
+ eI1QfaSCRzXL/yYa0rMlnC+FXRsAypoOJKqbBx9YX3zNK5O6JBvu19RU57ttVdjfR64ruRgtyz
+ DC2rVUWr89IXhyUIsDZjAO5qfLdU7CDpruLk5D66jwnhCxXbO6t/cAHKtunyJaZMyvRnOESEV4
+ fkA=
 X-IronPort-AV: E=Sophos;i="5.76,322,1592863200"; 
-   d="scan'208";a="2642498"
-Date:   Mon, 17 Aug 2020 07:38:20 +0200
+   d="scan'208";a="26161395"
+Date:   Mon, 17 Aug 2020 07:38:36 +0200
 From:   Richard Leitner <richard.leitner@skidata.com>
 To:     Robin Gong <yibin.gong@nxp.com>
-CC:     <mark.rutland@arm.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
-        <catalin.marinas@arm.com>, <vkoul@kernel.org>,
-        <will.deacon@arm.com>, <shawnguo@kernel.org>, <festevam@gmail.com>,
-        <s.hauer@pengutronix.de>, <martin.fuzzey@flowbird.group>,
-        <u.kleine-koenig@pengutronix.de>, <dan.j.williams@intel.com>,
-        <matthias.schiffer@ew.tq-group.com>, <frieder.schrempf@kontron.de>,
-        <r.schwebel@pengutronix.de>, <linux-spi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kernel@pengutronix.de>,
-        <dmaengine@vger.kernel.org>, <linux-imx@nxp.com>
-Subject: Re: [PATCH v12 04/12] dmaengine: imx-sdma: remove duplicated
- sdma_load_context
-Message-ID: <20200817053820.GB551027@pcleri>
-References: <1597161231-32303-1-git-send-email-yibin.gong@nxp.com>
- <1597161231-32303-5-git-send-email-yibin.gong@nxp.com>
+CC:     <dmaengine@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <timur@kernel.org>,
+        <nicoleotsuka@gmail.com>, <vkoul@kernel.org>,
+        <dan.j.williams@intel.com>, dl-linux-imx <linux-imx@nxp.com>,
+        <shawnguo@kernel.org>, <kernel@pengutronix.de>,
+        Benjamin Bara - SKIDATA <Benjamin.Bara@skidata.com>
+Subject: Re: pcm|dmaengine|imx-sdma race condition on i.MX6
+Message-ID: <20200817053836.GC551027@pcleri>
+References: <20200813112258.GA327172@pcleri>
+ <VE1PR04MB6638EE5BDBE2C65FF50B7DB889400@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <7f98cd6d30404e4d9d621f57f45ae441@skidata.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1597161231-32303-5-git-send-email-yibin.gong@nxp.com>
+In-Reply-To: <7f98cd6d30404e4d9d621f57f45ae441@skidata.com>
 X-Originating-IP: [192.168.111.252]
 X-ClientProxiedBy: sdex6srv.skidata.net (192.168.111.84) To
  sdex5srv.skidata.net (192.168.111.83)
@@ -62,62 +58,107 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 11:53:43PM +0800, Robin Gong wrote:
-> Since sdma_transfer_init() will do sdma_load_context before any
-> sdma transfer, no need once more in sdma_config_channel().
+On Fri, Aug 14, 2020 at 11:18:10AM +0200, Robin Gong wrote:
 > 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> Acked-by: Vinod Koul <vkoul@kernel.org>
+> On 2020/08/13 19:23: Richard Leitner <richard.leitner@skidata.com> wrote:
+> > Hi,
+> > we've found a race condition with the PCM on the i.MX6 which results 
+> > in an -EIO for the SNDRV_PCM_IOCTL_READI_FRAMES ioctl after an -EPIPE (XRUN).
+> > 
+> > A possible reproduction may look like the following reduced call graph 
+> > during a PCM capture:
+> > 
+> > us -> ioctl(SNDRV_PCM_IOCTL_READI_FRAMES)
+> >       - wait_for_avail()
+> >         - schedule_timeout()
+> >    -> snd_pcm_update_hw_ptr0()
+> >       - snd_pcm_update_state: EPIPE (XRUN)
+> >       - sdma_disable_channel_async() # get's scheduled away due to sleep us
+> > <- ioctl(SNDRV_PCM_IOCTL_READI_FRAMES) returns -EPIPE
+> > us -> ioctl(SNDRV_PCM_IOCTL_PREPARE) # as reaction to the EPIPE (XRUN)
+> > us -> ioctl(SNDRV_PCM_IOCTL_READI_FRAMES) # next try to capture frames
+> >       - sdma_prep_dma_cyclic()
+> >         - sdma_load_context() # not loaded as context_loaded is 1
+> >       - wait_for_avail()
+> >         - schedule_timeout()
+> > # now the sdma_channel_terminate_work() comes back and sets # 
+> > context_loaded = false and frees in vchan_dma_desc_free_list().
+> > us <- ioctl returns -EIO (capture write error (DMA or IRQ trouble?))
+>
+> Seems the write error caused by context_loaded not set to false before
+> next transfer start? If yes, please have a try with the 03/04 of the below
+> patch set, anyway, could you post your failure log?
+> https://lkml.org/lkml/2020/8/11/111
 
-Hi Robin,
-thanks for the pointer to this patch.
+Thanks for the pointer to those patches. I've tested them on top of the
+v5.8 tag during the weekend. It seems those patches are mitigiating
+the described EIO issue.
 
-As you suggested I've tested the two patches on my custom i.MX6DL
-board. Therefore please feel free to add:
-
-Tested-by: Richard Leitner <richard.leitner@skidata.com>
+Nonetheless IMHO this patches are not fixing the root cause of the
+problem (unsynchronized sdma_disable_channel_async / sdma_prep_dma_cyclic).
+Do you (or somebody else) have any suggestions/comments/objections on that?
 
 regards;rl
 
-> ---
->  drivers/dma/imx-sdma.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
 > 
-> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> index d305b80..5411e01e 100644
-> --- a/drivers/dma/imx-sdma.c
-> +++ b/drivers/dma/imx-sdma.c
-> @@ -1137,7 +1137,6 @@ static void sdma_set_watermarklevel_for_p2p(struct sdma_channel *sdmac)
->  static int sdma_config_channel(struct dma_chan *chan)
->  {
->  	struct sdma_channel *sdmac = to_sdma_chan(chan);
-> -	int ret;
->  
->  	sdma_disable_channel(chan);
->  
-> @@ -1177,9 +1176,7 @@ static int sdma_config_channel(struct dma_chan *chan)
->  		sdmac->watermark_level = 0; /* FIXME: M3_BASE_ADDRESS */
->  	}
->  
-> -	ret = sdma_load_context(sdmac);
-> -
-> -	return ret;
-> +	return 0;
->  }
->  
->  static int sdma_set_channel_priority(struct sdma_channel *sdmac,
-> -- 
-> 2.7.4
-> 
-> 
-
--- 
-Richard Leitner
-Hardware R&D / Senior Embedded Linux Engineer
-
-SKIDATA | Driving Your Digital Future
-
-SKIDATA GmbH
-Untersbergstraße 40 | 5083 Grödig/Salzburg | Austria
-[t] +43-6246-888-4245 | [m] +43-664-88616370
-[w] www.skidata.com
+> > 
+> > 
+> > What we have found out, based on our understanding:
+> > The dmaengine docu states that a dmaengine_terminate_async() must be 
+> > followed by a dmaengine_synchronize().
+> > However, in the pcm_dmaengine.c, only dmaengine_terminate_async() is 
+> > called (for performance reasons and because it might be called from an 
+> > interrupt handler).
+> > 
+> > In our tests, we saw that the user-space immediately calls
+> > ioctl(SNDRV_PCM_IOCTL_PREPARE) as a handler for the happened xrun 
+> > (previous ioctl(SNDRV_PCM_IOCTL_READI_FRAMES) returns with -EPIPE). In 
+> > our case (imx-sdma.c), the terminate really happens asynchronously 
+> > with a worker thread which is not awaited/synchronized by the
+> > ioctl(SNDRV_PCM_IOCTL_PREPARE) call.
+> > 
+> > Since the syscall immediately enters an atomic context 
+> > (snd_pcm_stream_lock_irq()), we are not able to flush the work of the 
+> > termination worker from within the DMA context. This leads to an 
+> > unterminated DMA getting re-initialized and then terminated.
+> > 
+> > On the i.MX6 platform the problem is (if I got it correctly) that the
+> > sdma_channel_terminate_work() called after the -EPIPE gets scheduled 
+> > away (for the 1-2ms sleep [1]). During that time the userspace already 
+> > sends in the
+> > ioctl(SNDRV_PCM_IOCTL_PREPARE) and
+> > ioctl(SNDRV_PCM_IOCTL_READI_FRAMES).
+> > As none of them are anyhow synchronized to the terminate_worker the
+> > vchan_dma_desc_free_list() [2] and "sdmac->context_loaded = false;" 
+> > [3] are executed during the wait_for_avail() [4] of the 
+> > ioctl(SNDRV_PCM_IOCTL_READI_FRAMES).
+> > 
+> > To make sure we identified the problem correctly we've tested to add a 
+> > "dmaengine_synchronize()" before the snd_pcm_prepare() in [5]. This 
+> > fixed the race condition in all our tests. (Before we were able to 
+> > reproduce it in 100% of the test runs).
+> > 
+> > Based on our understanding, there are two different points to ensure 
+> > the
+> > termination:
+> > Either ensure that the termination is finished within the previous 
+> > SNDRV_PCM_IOCTL_READI_FRAMES call (inside the DMA context) or 
+> > finishing it in the SNDRV_PCM_IOCTL_PREPARE call (and all other 
+> > applicable ioclts) before entering the atomic context (from the PCM context).
+> > 
+> > We initially thought about implementing the first approach, basically 
+> > splitting up the dma_device terminate_all operation into a sync
+> > (busy-wait) and a async one. This would align the operations with the 
+> > DMAengine interface and would enable a sync termination variant from 
+> > atomic contexts.
+> > However, we saw that the dma_free_attrs() function has a WARN_ON on 
+> > irqs disabled, which would be the case for the sync variant.
+> > Side note: We found this issue on the current v5.4.y LTS branch, but 
+> > it also affects v5.8.y.
+> > 
+> > Any feedback or pointers how we may fix the problem are warmly welcome!
+> > If anything is unclear please just ask :-)
+> > 
+> > regards;
+> > Richard Leitner
+> > Benjamin Bara

@@ -2,37 +2,36 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DE9B245C0E
-	for <lists+dmaengine@lfdr.de>; Mon, 17 Aug 2020 07:46:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 281DD245C0B
+	for <lists+dmaengine@lfdr.de>; Mon, 17 Aug 2020 07:46:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgHQFpg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 17 Aug 2020 01:45:36 -0400
-Received: from mail1.skidata.com ([91.230.2.99]:13562 "EHLO mail1.skidata.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbgHQFpd (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        id S1726381AbgHQFpd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
         Mon, 17 Aug 2020 01:45:33 -0400
-X-Greylist: delayed 435 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Aug 2020 01:45:30 EDT
+Received: from mail2.skidata.com ([91.230.2.91]:36143 "EHLO mail2.skidata.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726308AbgHQFpd (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 17 Aug 2020 01:45:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
-  t=1597643131; x=1629179131;
+  t=1597643132; x=1629179132;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:content-transfer-encoding:in-reply-to;
-  bh=VYLBjYz9lx/nrXI3opLlz8j0PHFlXG1/ZEX5YI80V6Y=;
-  b=WtYTGKnTmQpZ5x95Mjrtm4Z+2r4cq1cDd4zgMaFbUmYw5ZqfFVAKLzsI
-   qFMORePP4Gm3U+CNyiGicy7oL6ogX3Shsjcl+URUA6xGu8mcbahuL4oRU
-   fdgjOu+5nNVI7245a8TPs2fM4UieXVIEjfi4AE/b0FdGAqsqe8NYmkJUA
-   nthQDLkrZxTZRGIEMZtFqJBToNg7WTfD0bkcCUFGarDQUC0RzjpGkOC7O
-   KXoRR04L6AuDM8ODMnRS3mS2OTjVYsB03pJj3UZ4XOhPeDu9QO4hs1gvC
-   N/49SAq8YcLIyBj61grb/nqm4tfYDqlxVljsYtJAjXneGA++SmP9ykayO
-   Q==;
-IronPort-SDR: svI9QV3IU5oopAVv5yamxDgdlocA1iJY3YSUF4EoHghv0pgx7rr8qYaXkKz5Omkxq2uybaSfdj
- 1dD7IDxYChlmXsW52gUikLfeYy0fDPtToSUvTzOiSLEDrAr1H5ycWGdiqrHMmlVmzVGFcjGjCn
- vyiYzbUfXj4k21HYamaZ92VvdFf1lutJUyxZ0kD6RwOaFA6yq59RZ3P9gLdmKUd6AbU7Ummw4D
- Y2lkzlC6cjdyZtDG5ddHSKZVBFRj2gbaypEpl+VvtyBmVS+EJKOQQZ0r5NVceKThI+XQuyf8Qn
- 3/U=
+  bh=iq6E0tROTvyWLYPqPO1Jep0gNCBrkGzldGCPeMg+7YQ=;
+  b=TiQa2LaC6eg/8+EgVhdWz+/BS136xFBuZa7mM9clCoGr+VaF0NJ81RC6
+   l1YY4PERPYIct8aW7qt60fHqYW77KzNLZCkr1RONk1befRqCcXmOQhqst
+   rynS6YSA7V4SIMCbyTPi5Hc+Xg+aYA5QZ5Kmv+BvmckHPo2p0j17CMwNo
+   ESf+24whxtcLrLALVFu7c3P//l2A0VY5gLtcwZqiGBulWLJIOIu3cZq1k
+   LqRRe2KXSgIWwzRZ22Itv976yeYXlp9DnpHVhCY199+vBibkeyI6SYacT
+   A4tOFYCCu5SMRN35loVB7RnW23pqNHCFtc/ee+JDyr9dTO3yB7EjntMqI
+   g==;
+IronPort-SDR: rZkcM47agA66V7rz7feaMdOluzUqk0bpZwPNFBS4nRIuINpiwtoyuu5PvhKvd7GxTCNDYB6kXY
+ q+8aPl4488YU/sH1xOfKWdB3CMlyy7Wmb9WhpewAqI8mDDklAMKIou3zPjCur2Svcz1ng1Oj8Z
+ Zy7WxGnwP3YJWucu6wpo6YHFvYGa5JHGgsVwTkK/rDs/Q9q8+zXUyPiuiSF72FTDQ+I8JVsk45
+ na+58Ifn3fOwiZaehwKqTEjAYKrWjacs9o1T8V1VGA9ce2sOYhvzzUx0Gd/5S3O54kP7NGQAU7
+ SbE=
 X-IronPort-AV: E=Sophos;i="5.76,322,1592863200"; 
-   d="scan'208";a="26161391"
-Date:   Mon, 17 Aug 2020 07:38:13 +0200
+   d="scan'208";a="2642498"
+Date:   Mon, 17 Aug 2020 07:38:20 +0200
 From:   Richard Leitner <richard.leitner@skidata.com>
 To:     Robin Gong <yibin.gong@nxp.com>
 CC:     <mark.rutland@arm.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
@@ -45,16 +44,16 @@ CC:     <mark.rutland@arm.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <kernel@pengutronix.de>,
         <dmaengine@vger.kernel.org>, <linux-imx@nxp.com>
-Subject: Re: [PATCH v12 03/12] Revert "dmaengine: imx-sdma: refine to load
- context only once"
-Message-ID: <20200817053813.GA551027@pcleri>
+Subject: Re: [PATCH v12 04/12] dmaengine: imx-sdma: remove duplicated
+ sdma_load_context
+Message-ID: <20200817053820.GB551027@pcleri>
 References: <1597161231-32303-1-git-send-email-yibin.gong@nxp.com>
- <1597161231-32303-4-git-send-email-yibin.gong@nxp.com>
+ <1597161231-32303-5-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1597161231-32303-4-git-send-email-yibin.gong@nxp.com>
+In-Reply-To: <1597161231-32303-5-git-send-email-yibin.gong@nxp.com>
 X-Originating-IP: [192.168.111.252]
 X-ClientProxiedBy: sdex6srv.skidata.net (192.168.111.84) To
  sdex5srv.skidata.net (192.168.111.83)
@@ -63,12 +62,12 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 11:53:42PM +0800, Robin Gong wrote:
-> This reverts commit ad0d92d7ba6aecbe2705907c38ff8d8be4da1e9c, because
-> in spi-imx case, burst length may be changed dynamically.
+On Tue, Aug 11, 2020 at 11:53:43PM +0800, Robin Gong wrote:
+> Since sdma_transfer_init() will do sdma_load_context before any
+> sdma transfer, no need once more in sdma_config_channel().
 > 
 > Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
+> Acked-by: Vinod Koul <vkoul@kernel.org>
 
 Hi Robin,
 thanks for the pointer to this patch.
@@ -81,56 +80,32 @@ Tested-by: Richard Leitner <richard.leitner@skidata.com>
 regards;rl
 
 > ---
->  drivers/dma/imx-sdma.c | 8 --------
->  1 file changed, 8 deletions(-)
+>  drivers/dma/imx-sdma.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
 > 
 > diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> index 270992c..d305b80 100644
+> index d305b80..5411e01e 100644
 > --- a/drivers/dma/imx-sdma.c
 > +++ b/drivers/dma/imx-sdma.c
-> @@ -377,7 +377,6 @@ struct sdma_channel {
->  	unsigned long			watermark_level;
->  	u32				shp_addr, per_addr;
->  	enum dma_status			status;
-> -	bool				context_loaded;
->  	struct imx_dma_data		data;
->  	struct work_struct		terminate_worker;
->  };
-> @@ -984,9 +983,6 @@ static int sdma_load_context(struct sdma_channel *sdmac)
->  	int ret;
->  	unsigned long flags;
+> @@ -1137,7 +1137,6 @@ static void sdma_set_watermarklevel_for_p2p(struct sdma_channel *sdmac)
+>  static int sdma_config_channel(struct dma_chan *chan)
+>  {
+>  	struct sdma_channel *sdmac = to_sdma_chan(chan);
+> -	int ret;
 >  
-> -	if (sdmac->context_loaded)
-> -		return 0;
+>  	sdma_disable_channel(chan);
+>  
+> @@ -1177,9 +1176,7 @@ static int sdma_config_channel(struct dma_chan *chan)
+>  		sdmac->watermark_level = 0; /* FIXME: M3_BASE_ADDRESS */
+>  	}
+>  
+> -	ret = sdma_load_context(sdmac);
 > -
->  	if (sdmac->direction == DMA_DEV_TO_MEM)
->  		load_address = sdmac->pc_from_device;
->  	else if (sdmac->direction == DMA_DEV_TO_DEV)
-> @@ -1029,8 +1025,6 @@ static int sdma_load_context(struct sdma_channel *sdmac)
->  
->  	spin_unlock_irqrestore(&sdma->channel_0_lock, flags);
->  
-> -	sdmac->context_loaded = true;
-> -
->  	return ret;
+> -	return ret;
+> +	return 0;
 >  }
 >  
-> @@ -1069,7 +1063,6 @@ static void sdma_channel_terminate_work(struct work_struct *work)
->  	vchan_get_all_descriptors(&sdmac->vc, &head);
->  	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
->  	vchan_dma_desc_free_list(&sdmac->vc, &head);
-> -	sdmac->context_loaded = false;
->  }
->  
->  static int sdma_terminate_all(struct dma_chan *chan)
-> @@ -1337,7 +1330,6 @@ static void sdma_free_chan_resources(struct dma_chan *chan)
->  
->  	sdmac->event_id0 = 0;
->  	sdmac->event_id1 = 0;
-> -	sdmac->context_loaded = false;
->  
->  	sdma_set_channel_priority(sdmac, 0);
->  
+>  static int sdma_set_channel_priority(struct sdma_channel *sdmac,
 > -- 
 > 2.7.4
 > 

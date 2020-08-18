@@ -2,50 +2,50 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4560A248174
-	for <lists+dmaengine@lfdr.de>; Tue, 18 Aug 2020 11:08:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09D3D248175
+	for <lists+dmaengine@lfdr.de>; Tue, 18 Aug 2020 11:08:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbgHRJIa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 18 Aug 2020 05:08:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57480 "EHLO
+        id S1726451AbgHRJIf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 18 Aug 2020 05:08:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbgHRJI3 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Aug 2020 05:08:29 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BAB1C061389
-        for <dmaengine@vger.kernel.org>; Tue, 18 Aug 2020 02:08:29 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x25so9667129pff.4
-        for <dmaengine@vger.kernel.org>; Tue, 18 Aug 2020 02:08:29 -0700 (PDT)
+        with ESMTP id S1726341AbgHRJIe (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Aug 2020 05:08:34 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A146C061389
+        for <dmaengine@vger.kernel.org>; Tue, 18 Aug 2020 02:08:34 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id d188so9657836pfd.2
+        for <dmaengine@vger.kernel.org>; Tue, 18 Aug 2020 02:08:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2u/40339c50ypFs7M618Prb7hCf6hscGSknPACX7w9w=;
-        b=dKQ7XOywsUCd+xNSMZnHL1zymT5h8KFhNeJoIrRuOCAR97LGhBfeJ9OyvcraJ8J77d
-         IJNO/uqepQLdfDg1QJAgiA3fdamFNek/blMR4yLTWxWHIAC6XRQf+heaUbbhvauW5ZBa
-         4MMn2ew6fscwJDbkCVKMwsKflXAkogTgmazyI2H63DBt8C1Pox0sUOO/+ZAzIMaEuU3l
-         t2X/L72i+S7yigfMwOBAgZkGozfa2Ji/bBWEUOSJf8WC1OpFg0LXhRLhVspVAgDGPvzp
-         egJVUGARHGV0P6HzwxMGu53JZ8Zt6QtxUTwW98HnuHFh/AmxWw7W1vu57A8epgMWQJWF
-         8zKQ==
+        bh=y9TFyb5YPU9meSmmE+/B5Cy2MtU4Ivp78FeC1LNG7+4=;
+        b=CkkBQIatZUceRWcF/t0p9T/hy51Fl7sYx4b7Svr20wyB5LX0Y81XNm6Tpr8WgQN2x/
+         14xEI260gAvzaTfJuVT/etOB45KivGtxRraH3NAbJHpFe/RbSH6/Vns0JqzgyRFhzgsS
+         cS1KSX61SkLmRJoRN4zQNX4CLoQ/3/gNV7ekLr66wRfSaXpretBZoIGy1h1cjUkxoWBU
+         7oY27jL0o+RM6FY4CxPjROqqCbFmI3amH/dCNk07H/A89YNapaUbVBuW9Bkrt2HbPExl
+         b/GXjY7dXplZ+lWOlEKxNdxn9TSCJqxJm3rv/76YLTQguyfDCp/0fM05X7gOZ3NgpVqv
+         0lag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=2u/40339c50ypFs7M618Prb7hCf6hscGSknPACX7w9w=;
-        b=H7NBFTHmHSed9H9c0TICed1AGOOBBDqgaQKts4lHIA8GULKAYczT+MLz4/I1BLuYxS
-         951IUOxutHof151dvX7hsgrI4c4TQb/TdTC9YbcdZZ3Bycwvl6I+Xmgfas9KfqW+x+yS
-         V7sPA3VWixJSEUlYu4YkBioy6922KLTMzT+gXyu8+QQpHlZNCc3L0IGC+v/+2YrJDGGz
-         CSrxUeX/viCzSSLfa1zKJ1GV9RunDztLAjlAVgSXhPaGFX6BvIDh4r9QPBigyHxJiyKv
-         dROQglSNh/26QdiszNcZ42A5VyWvmH3udBFM7044FQJGx0EsJm/SWSQ0Mg2fpMi2ENuA
-         V2QQ==
-X-Gm-Message-State: AOAM530/sTMrbA68alC7saBWTANGiDuW2OmTnkCvfRV/yivC2CsaeO/Q
-        bzukV2sWpZHJMNQO4OLmSlM=
-X-Google-Smtp-Source: ABdhPJzE+qzdxh+5Xj5ZSZ2Il5hxsrRssw2KakhpWCwcLgdyePxwEz6ZyXBfpcHqjJ+oX9pBV7cMKA==
-X-Received: by 2002:aa7:980f:: with SMTP id e15mr14443865pfl.194.1597741708699;
-        Tue, 18 Aug 2020 02:08:28 -0700 (PDT)
+        bh=y9TFyb5YPU9meSmmE+/B5Cy2MtU4Ivp78FeC1LNG7+4=;
+        b=ppekX+sat43nuN379ELcUeQTeSrgQVdcFeRTbPGsjkMhRppveh5aAGywZRtIH7AhrF
+         W6uVXwxgNM/KuRIILe3O/SpRct9YhOBwpmLppN97lKtVXwls5aqxn8KCFYyGiCZPPhhl
+         P1pPMeh6i5e+MimS+SpvG9QL/9h3hfJFP83dUJxjcXXKFF9c6kFYKI88PASmseJQaSKp
+         WvFe4WScK/y+ZGxy5vqms9AQzMJurkc4bkLOTSpOZ8vQufSbQkV+LOCxAZsMo09CIKjG
+         qDSzesO8zjI802hSP+CrTlVRRcwujpmN4naYwKCLZrIbDC+4jK7e4/+8d0TU1HMtW5M3
+         qe2g==
+X-Gm-Message-State: AOAM532rMpMRFbMeqR+XyLMXZckY+eCGn31YwQ4L8bv2Nvx4AIWjp1Qn
+        tVewZpMcucdsI7kn+RmZi4A=
+X-Google-Smtp-Source: ABdhPJyf++SOpjAgflml2CZzAn1c0a5I6Od0Tk3xNXRLgcm63H27ZkKZtQDIX0s76WN2+xAin9RzuQ==
+X-Received: by 2002:a63:a84b:: with SMTP id i11mr12645660pgp.79.1597741713722;
+        Tue, 18 Aug 2020 02:08:33 -0700 (PDT)
 Received: from localhost.localdomain ([49.207.196.79])
-        by smtp.gmail.com with ESMTPSA id na14sm20280788pjb.6.2020.08.18.02.08.24
+        by smtp.gmail.com with ESMTPSA id na14sm20280788pjb.6.2020.08.18.02.08.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 02:08:28 -0700 (PDT)
+        Tue, 18 Aug 2020 02:08:33 -0700 (PDT)
 From:   Allen Pais <allen.lkml@gmail.com>
 To:     vkoul@kernel.org, linus.walleij@linaro.org, vireshk@kernel.org,
         leoyang.li@nxp.com, zw@zh-kernel.org, shawnguo@kernel.org,
@@ -53,9 +53,9 @@ To:     vkoul@kernel.org, linus.walleij@linaro.org, vireshk@kernel.org,
         bjorn.andersson@linaro.org, baohua@kernel.org, wens@csie.org
 Cc:     dmaengine@vger.kernel.org, Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 20/35] dma: pl330: convert tasklets to use new tasklet_setup() API
-Date:   Tue, 18 Aug 2020 14:36:23 +0530
-Message-Id: <20200818090638.26362-21-allen.lkml@gmail.com>
+Subject: [PATCH 21/35] dma: ppc4xx: convert tasklets to use new tasklet_setup() API
+Date:   Tue, 18 Aug 2020 14:36:24 +0530
+Message-Id: <20200818090638.26362-22-allen.lkml@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200818090638.26362-1-allen.lkml@gmail.com>
 References: <20200818090638.26362-1-allen.lkml@gmail.com>
@@ -72,55 +72,35 @@ and from_tasklet() to pass the tasklet pointer explicitly.
 Signed-off-by: Romain Perier <romain.perier@gmail.com>
 Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 ---
- drivers/dma/pl330.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/dma/ppc4xx/adma.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index 2c508ee672b9..5599d350ec79 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -1580,9 +1580,9 @@ static void dma_pl330_rqcb(struct dma_pl330_desc *desc, enum pl330_op_err err)
- 	tasklet_schedule(&pch->task);
- }
- 
--static void pl330_dotask(unsigned long data)
-+static void pl330_dotask(struct tasklet_struct *t)
+diff --git a/drivers/dma/ppc4xx/adma.c b/drivers/dma/ppc4xx/adma.c
+index 4db000d5f01c..71cdaaa8134c 100644
+--- a/drivers/dma/ppc4xx/adma.c
++++ b/drivers/dma/ppc4xx/adma.c
+@@ -1660,9 +1660,9 @@ static void __ppc440spe_adma_slot_cleanup(struct ppc440spe_adma_chan *chan)
+ /**
+  * ppc440spe_adma_tasklet - clean up watch-dog initiator
+  */
+-static void ppc440spe_adma_tasklet(unsigned long data)
++static void ppc440spe_adma_tasklet(struct tasklet_struct *t)
  {
--	struct pl330_dmac *pl330 = (struct pl330_dmac *) data;
-+	struct pl330_dmac *pl330 = from_tasklet(pl330, t, tasks);
- 	unsigned long flags;
- 	int i;
+-	struct ppc440spe_adma_chan *chan = (struct ppc440spe_adma_chan *) data;
++	struct ppc440spe_adma_chan *chan = from_tasklet(chan, t, irq_tasklet);
  
-@@ -1986,7 +1986,7 @@ static int pl330_add(struct pl330_dmac *pl330)
- 		return ret;
- 	}
+ 	spin_lock_nested(&chan->lock, SINGLE_DEPTH_NESTING);
+ 	__ppc440spe_adma_slot_cleanup(chan);
+@@ -4141,8 +4141,7 @@ static int ppc440spe_adma_probe(struct platform_device *ofdev)
+ 	chan->common.device = &adev->common;
+ 	dma_cookie_init(&chan->common);
+ 	list_add_tail(&chan->common.device_node, &adev->common.channels);
+-	tasklet_init(&chan->irq_tasklet, ppc440spe_adma_tasklet,
+-		     (unsigned long)chan);
++	tasklet_setup(&chan->irq_tasklet, ppc440spe_adma_tasklet);
  
--	tasklet_init(&pl330->tasks, pl330_dotask, (unsigned long) pl330);
-+	tasklet_setup(&pl330->tasks, pl330_dotask);
- 
- 	pl330->state = INIT;
- 
-@@ -2069,9 +2069,9 @@ static inline void fill_queue(struct dma_pl330_chan *pch)
- 	}
- }
- 
--static void pl330_tasklet(unsigned long data)
-+static void pl330_tasklet(struct tasklet_struct *t)
- {
--	struct dma_pl330_chan *pch = (struct dma_pl330_chan *)data;
-+	struct dma_pl330_chan *pch = from_tasklet(pch, t, task);
- 	struct dma_pl330_desc *desc, *_dt;
- 	unsigned long flags;
- 	bool power_down = false;
-@@ -2179,7 +2179,7 @@ static int pl330_alloc_chan_resources(struct dma_chan *chan)
- 		return -ENOMEM;
- 	}
- 
--	tasklet_init(&pch->task, pl330_tasklet, (unsigned long) pch);
-+	tasklet_setup(&pch->task, pl330_tasklet);
- 
- 	spin_unlock_irqrestore(&pl330->lock, flags);
- 
+ 	/* allocate and map helper pages for async validation or
+ 	 * async_mult/async_sum_product operations on DMA0/1.
 -- 
 2.17.1
 

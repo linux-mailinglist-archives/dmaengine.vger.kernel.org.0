@@ -2,50 +2,50 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09D3D248175
-	for <lists+dmaengine@lfdr.de>; Tue, 18 Aug 2020 11:08:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 436EA248176
+	for <lists+dmaengine@lfdr.de>; Tue, 18 Aug 2020 11:08:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgHRJIf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 18 Aug 2020 05:08:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57498 "EHLO
+        id S1726341AbgHRJIl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 18 Aug 2020 05:08:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbgHRJIe (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Aug 2020 05:08:34 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A146C061389
-        for <dmaengine@vger.kernel.org>; Tue, 18 Aug 2020 02:08:34 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d188so9657836pfd.2
-        for <dmaengine@vger.kernel.org>; Tue, 18 Aug 2020 02:08:34 -0700 (PDT)
+        with ESMTP id S1726043AbgHRJIj (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Aug 2020 05:08:39 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD131C061389
+        for <dmaengine@vger.kernel.org>; Tue, 18 Aug 2020 02:08:38 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id c6so9137951pje.1
+        for <dmaengine@vger.kernel.org>; Tue, 18 Aug 2020 02:08:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=y9TFyb5YPU9meSmmE+/B5Cy2MtU4Ivp78FeC1LNG7+4=;
-        b=CkkBQIatZUceRWcF/t0p9T/hy51Fl7sYx4b7Svr20wyB5LX0Y81XNm6Tpr8WgQN2x/
-         14xEI260gAvzaTfJuVT/etOB45KivGtxRraH3NAbJHpFe/RbSH6/Vns0JqzgyRFhzgsS
-         cS1KSX61SkLmRJoRN4zQNX4CLoQ/3/gNV7ekLr66wRfSaXpretBZoIGy1h1cjUkxoWBU
-         7oY27jL0o+RM6FY4CxPjROqqCbFmI3amH/dCNk07H/A89YNapaUbVBuW9Bkrt2HbPExl
-         b/GXjY7dXplZ+lWOlEKxNdxn9TSCJqxJm3rv/76YLTQguyfDCp/0fM05X7gOZ3NgpVqv
-         0lag==
+        bh=dvX6FlWRqibGpy5qHiY9CD/HZDa4GdoItaD6hrOhnJQ=;
+        b=a7lYhqZoZTu2DttvB82PncAAs5gccT68nypV7myi/GwOwO8C3o/YF73D1rChw+UglH
+         pv7u/XxdAyZ4pEZUcmJde9sG38aUNhVBkkvO2E082Fn0YRlGLp7pw450NkQZqlQqwcqo
+         tj4Jdpb4l/0zTWbclhWzEFS8wfiw9kAldBv5brThWEBp1SPidZ7H8meb3DrNbC1iKjqI
+         Pd8ieLNa3Gb2Ffx5UEjKuBvhIPcGvjkMQ9aYYlvIiKRC6/jELxw48AEUr5fpVMZKAY7l
+         FOHMFZQhb0Lc/WMvFDB+XLAs2oWIMHua0lwKP1/Oe2osNRKLnm1+t0ERtnGUVxle7klA
+         wsAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=y9TFyb5YPU9meSmmE+/B5Cy2MtU4Ivp78FeC1LNG7+4=;
-        b=ppekX+sat43nuN379ELcUeQTeSrgQVdcFeRTbPGsjkMhRppveh5aAGywZRtIH7AhrF
-         W6uVXwxgNM/KuRIILe3O/SpRct9YhOBwpmLppN97lKtVXwls5aqxn8KCFYyGiCZPPhhl
-         P1pPMeh6i5e+MimS+SpvG9QL/9h3hfJFP83dUJxjcXXKFF9c6kFYKI88PASmseJQaSKp
-         WvFe4WScK/y+ZGxy5vqms9AQzMJurkc4bkLOTSpOZ8vQufSbQkV+LOCxAZsMo09CIKjG
-         qDSzesO8zjI802hSP+CrTlVRRcwujpmN4naYwKCLZrIbDC+4jK7e4/+8d0TU1HMtW5M3
-         qe2g==
-X-Gm-Message-State: AOAM532rMpMRFbMeqR+XyLMXZckY+eCGn31YwQ4L8bv2Nvx4AIWjp1Qn
-        tVewZpMcucdsI7kn+RmZi4A=
-X-Google-Smtp-Source: ABdhPJyf++SOpjAgflml2CZzAn1c0a5I6Od0Tk3xNXRLgcm63H27ZkKZtQDIX0s76WN2+xAin9RzuQ==
-X-Received: by 2002:a63:a84b:: with SMTP id i11mr12645660pgp.79.1597741713722;
-        Tue, 18 Aug 2020 02:08:33 -0700 (PDT)
+        bh=dvX6FlWRqibGpy5qHiY9CD/HZDa4GdoItaD6hrOhnJQ=;
+        b=ewq/svfGhO6b26JxqtdasQbGYyjmrEx40Uhky1wshA+JU8Psku44AolLs3KQCu0jm9
+         XLOf+FnMawpx5wo6ykRPCJcshz0WRMwbH8Tc0tJyFShu+piaSnc0a+MbdZlXJIwVBzqw
+         wDZTMyrDuM+wtyqfJJIk8yKi5vqootIecvHGHOHJo5RKDDz31/797O+mvLfFaZjzsn1n
+         +7Kb8OIPdBes5GZksnP1SiCu+gFZN5htaCIWu4HSlBouLNKD1XBmqLoOaTl1xW4j56b0
+         btcHI9Nj1g4Emx4YTITVk5KnncYySdAj3u1QQJBrKca8ErP/q/C3xR8t0epfE9M4xGlk
+         Hbcw==
+X-Gm-Message-State: AOAM5322Phdc0nQb/u0i2RBeL+hIVnXiTLM/WrLXWmmlGcMntkRUTcvk
+        QkjnkR7M35ZUhqgoGgFl6tM=
+X-Google-Smtp-Source: ABdhPJxgr46jnUzVzPR2mtBi5iXY00fYhmsiWSaOK0CEENEs1jzeU6bRtLX3bCCaWGy1Ptn0lHcZRQ==
+X-Received: by 2002:a17:902:ed4a:: with SMTP id y10mr14740037plb.106.1597741718239;
+        Tue, 18 Aug 2020 02:08:38 -0700 (PDT)
 Received: from localhost.localdomain ([49.207.196.79])
-        by smtp.gmail.com with ESMTPSA id na14sm20280788pjb.6.2020.08.18.02.08.29
+        by smtp.gmail.com with ESMTPSA id na14sm20280788pjb.6.2020.08.18.02.08.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 02:08:33 -0700 (PDT)
+        Tue, 18 Aug 2020 02:08:37 -0700 (PDT)
 From:   Allen Pais <allen.lkml@gmail.com>
 To:     vkoul@kernel.org, linus.walleij@linaro.org, vireshk@kernel.org,
         leoyang.li@nxp.com, zw@zh-kernel.org, shawnguo@kernel.org,
@@ -53,9 +53,9 @@ To:     vkoul@kernel.org, linus.walleij@linaro.org, vireshk@kernel.org,
         bjorn.andersson@linaro.org, baohua@kernel.org, wens@csie.org
 Cc:     dmaengine@vger.kernel.org, Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 21/35] dma: ppc4xx: convert tasklets to use new tasklet_setup() API
-Date:   Tue, 18 Aug 2020 14:36:24 +0530
-Message-Id: <20200818090638.26362-22-allen.lkml@gmail.com>
+Subject: [PATCH 22/35] dma: qcom: convert tasklets to use new tasklet_setup() API
+Date:   Tue, 18 Aug 2020 14:36:25 +0530
+Message-Id: <20200818090638.26362-23-allen.lkml@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200818090638.26362-1-allen.lkml@gmail.com>
 References: <20200818090638.26362-1-allen.lkml@gmail.com>
@@ -72,35 +72,86 @@ and from_tasklet() to pass the tasklet pointer explicitly.
 Signed-off-by: Romain Perier <romain.perier@gmail.com>
 Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 ---
- drivers/dma/ppc4xx/adma.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/dma/qcom/bam_dma.c  | 6 +++---
+ drivers/dma/qcom/hidma.c    | 6 +++---
+ drivers/dma/qcom/hidma_ll.c | 6 +++---
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/dma/ppc4xx/adma.c b/drivers/dma/ppc4xx/adma.c
-index 4db000d5f01c..71cdaaa8134c 100644
---- a/drivers/dma/ppc4xx/adma.c
-+++ b/drivers/dma/ppc4xx/adma.c
-@@ -1660,9 +1660,9 @@ static void __ppc440spe_adma_slot_cleanup(struct ppc440spe_adma_chan *chan)
- /**
-  * ppc440spe_adma_tasklet - clean up watch-dog initiator
+diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+index 5a08dd0d3388..8ba7a8f089c8 100644
+--- a/drivers/dma/qcom/bam_dma.c
++++ b/drivers/dma/qcom/bam_dma.c
+@@ -1075,9 +1075,9 @@ static void bam_start_dma(struct bam_chan *bchan)
+  *
+  * Sets up next DMA operation and then processes all completed transactions
   */
--static void ppc440spe_adma_tasklet(unsigned long data)
-+static void ppc440spe_adma_tasklet(struct tasklet_struct *t)
+-static void dma_tasklet(unsigned long data)
++static void dma_tasklet(struct tasklet_struct *t)
  {
--	struct ppc440spe_adma_chan *chan = (struct ppc440spe_adma_chan *) data;
-+	struct ppc440spe_adma_chan *chan = from_tasklet(chan, t, irq_tasklet);
+-	struct bam_device *bdev = (struct bam_device *)data;
++	struct bam_device *bdev = from_tasklet(bdev, t, task);
+ 	struct bam_chan *bchan;
+ 	unsigned long flags;
+ 	unsigned int i;
+@@ -1293,7 +1293,7 @@ static int bam_dma_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_disable_clk;
  
- 	spin_lock_nested(&chan->lock, SINGLE_DEPTH_NESTING);
- 	__ppc440spe_adma_slot_cleanup(chan);
-@@ -4141,8 +4141,7 @@ static int ppc440spe_adma_probe(struct platform_device *ofdev)
- 	chan->common.device = &adev->common;
- 	dma_cookie_init(&chan->common);
- 	list_add_tail(&chan->common.device_node, &adev->common.channels);
--	tasklet_init(&chan->irq_tasklet, ppc440spe_adma_tasklet,
--		     (unsigned long)chan);
-+	tasklet_setup(&chan->irq_tasklet, ppc440spe_adma_tasklet);
+-	tasklet_init(&bdev->task, dma_tasklet, (unsigned long)bdev);
++	tasklet_setup(&bdev->task, dma_tasklet);
  
- 	/* allocate and map helper pages for async validation or
- 	 * async_mult/async_sum_product operations on DMA0/1.
+ 	bdev->channels = devm_kcalloc(bdev->dev, bdev->num_channels,
+ 				sizeof(*bdev->channels), GFP_KERNEL);
+diff --git a/drivers/dma/qcom/hidma.c b/drivers/dma/qcom/hidma.c
+index 0a6d3ea08c78..6c0f9eb8ecc6 100644
+--- a/drivers/dma/qcom/hidma.c
++++ b/drivers/dma/qcom/hidma.c
+@@ -224,9 +224,9 @@ static int hidma_chan_init(struct hidma_dev *dmadev, u32 dma_sig)
+ 	return 0;
+ }
+ 
+-static void hidma_issue_task(unsigned long arg)
++static void hidma_issue_task(struct tasklet_struct *t)
+ {
+-	struct hidma_dev *dmadev = (struct hidma_dev *)arg;
++	struct hidma_dev *dmadev = from_tasklet(dmadev, t, task);
+ 
+ 	pm_runtime_get_sync(dmadev->ddev.dev);
+ 	hidma_ll_start(dmadev->lldev);
+@@ -885,7 +885,7 @@ static int hidma_probe(struct platform_device *pdev)
+ 		goto uninit;
+ 
+ 	dmadev->irq = chirq;
+-	tasklet_init(&dmadev->task, hidma_issue_task, (unsigned long)dmadev);
++	tasklet_setup(&dmadev->task, hidma_issue_task);
+ 	hidma_debug_init(dmadev);
+ 	hidma_sysfs_init(dmadev);
+ 	dev_info(&pdev->dev, "HI-DMA engine driver registration complete\n");
+diff --git a/drivers/dma/qcom/hidma_ll.c b/drivers/dma/qcom/hidma_ll.c
+index bb4471e84e48..53244e0e34a3 100644
+--- a/drivers/dma/qcom/hidma_ll.c
++++ b/drivers/dma/qcom/hidma_ll.c
+@@ -173,9 +173,9 @@ int hidma_ll_request(struct hidma_lldev *lldev, u32 sig, const char *dev_name,
+ /*
+  * Multiple TREs may be queued and waiting in the pending queue.
+  */
+-static void hidma_ll_tre_complete(unsigned long arg)
++static void hidma_ll_tre_complete(struct tasklet_struct *t)
+ {
+-	struct hidma_lldev *lldev = (struct hidma_lldev *)arg;
++	struct hidma_lldev *lldev = from_tasklet(lldev, t, task);
+ 	struct hidma_tre *tre;
+ 
+ 	while (kfifo_out(&lldev->handoff_fifo, &tre, 1)) {
+@@ -792,7 +792,7 @@ struct hidma_lldev *hidma_ll_init(struct device *dev, u32 nr_tres,
+ 		return NULL;
+ 
+ 	spin_lock_init(&lldev->lock);
+-	tasklet_init(&lldev->task, hidma_ll_tre_complete, (unsigned long)lldev);
++	tasklet_setup(&lldev->task, hidma_ll_tre_complete);
+ 	lldev->initialized = 1;
+ 	writel(ENABLE_IRQS, lldev->evca + HIDMA_EVCA_IRQ_EN_REG);
+ 	return lldev;
 -- 
 2.17.1
 

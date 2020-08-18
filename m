@@ -2,50 +2,50 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D65B24815F
-	for <lists+dmaengine@lfdr.de>; Tue, 18 Aug 2020 11:07:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B842B248160
+	for <lists+dmaengine@lfdr.de>; Tue, 18 Aug 2020 11:07:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726624AbgHRJHN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 18 Aug 2020 05:07:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57252 "EHLO
+        id S1726398AbgHRJHU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 18 Aug 2020 05:07:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgHRJHN (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Aug 2020 05:07:13 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F8FDC061389
-        for <dmaengine@vger.kernel.org>; Tue, 18 Aug 2020 02:07:13 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id v15so9467954pgh.6
-        for <dmaengine@vger.kernel.org>; Tue, 18 Aug 2020 02:07:13 -0700 (PDT)
+        with ESMTP id S1726043AbgHRJHS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 Aug 2020 05:07:18 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19E73C061389
+        for <dmaengine@vger.kernel.org>; Tue, 18 Aug 2020 02:07:18 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id mw10so8959466pjb.2
+        for <dmaengine@vger.kernel.org>; Tue, 18 Aug 2020 02:07:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=aYKSRTuJVIPdNCr61TO9wwSP37OM1E0JoVpfKCdbfwU=;
-        b=J1kg8BHuCaeqt6FywppmHSu/99JqDjIiSQns65xaA8Eg6IAjGW3kLZIcLgfEEcHu5A
-         ZLwJjhkl0yPtpdaRNLCbXu4+7qGdO1410ypZRdnTpgVfPbKKYNJEU+zI+iUi9raLc6VR
-         Xq4nLU0jtOggMBEz8QVZyUg2lD7JRC37UShIxKWGr4TrAPH8Jvk9Iarl2Hnf136LG6NO
-         s6C3dqI9qowUrS7Q73y0ZO36MhuAiBaClm10xfkSWNBOI1375CDvjGkaoKtMwyXNynoe
-         dLNY47HWm0bilEoj6+k6l4sK6o/zDVvPGWPPUac+cQzBwsMDCmrWtDC0suFQcgWdYGrH
-         80Gw==
+        bh=McUFqZfFTy7mHwbw8y2LjePaGU9tqMqaDH3Woad5dgY=;
+        b=quNcD+REfHJUFKr1UWIDaKLWMjbfeaClExyKApE6diSHw9g3sLeJ0e1QtbrpzfSvNB
+         VxE/kfzViOqrRaiEpuxL/wptS2hykDn7TsfrRhgNvjq3P6XCcB1K+nTHiqpHheSZJP4z
+         SpPAKzSRRWD9fudar2YsEgwvj0YDoLC1mGZrbCeMcrIuj/sBYv7XySnnth2vdD8gSanw
+         Ly/ieR8FT1+ZGXj1yvrhBz2zqIQMO14JMDpdfgnkcQnfaLDZ9qJshZdKACnO2bGoMYlg
+         ZeNhNuREZQsZqsKml/UO4cBdtGDV1bq/yr+oIO78+/gJcfS/FSJET5HklkO/l5lBGADh
+         N++Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=aYKSRTuJVIPdNCr61TO9wwSP37OM1E0JoVpfKCdbfwU=;
-        b=X/Mtbt6JkS+PorKKVHtxcErjc1L3UJJ5tY3Sk2ae7XqSKJwONwhoDA3+jnawrRBZmZ
-         fqgTtVFZPBlL2c/fY3brfw1eEACPTYz8zisK4HNJYWcc8DINY3UYi3RRQtpkpGuc7Tec
-         LY+unIiVA3uCoBffDu2IPjBQW/DSOap/zOvs/hFEmflKowsZErVmbO0ni3a6+kIIYFNR
-         2kP2S/ajmkqhviKlu1ilLFgUMQ+GV5/inytxj+OzpKJDuOEAwxmZUzDc2Wa6PX4qLOQ4
-         apicCjYLcFEUN8eIFnn8oIC/3KY6AOYYmb8uerIZmDrCafBYdfE67h+lmPD1qKWV3+BB
-         adAA==
-X-Gm-Message-State: AOAM531aX5Qe/1d5jUwPy2Cv9GQiVvgnPO8AgixE9dQ8A3yLXXPHbRMa
-        uwTJQ45dEiyt5CgXfZ89Xcs=
-X-Google-Smtp-Source: ABdhPJxYyv8O5wuqmMkTxsrAvZ1bfDdZhIaKkaBGrsmxrH9/gsyc3biYt5aVPH4XmR7vl+Vn/RJ8RA==
-X-Received: by 2002:aa7:9f92:: with SMTP id z18mr14477383pfr.260.1597741632837;
-        Tue, 18 Aug 2020 02:07:12 -0700 (PDT)
+        bh=McUFqZfFTy7mHwbw8y2LjePaGU9tqMqaDH3Woad5dgY=;
+        b=lttSeonbkAiCRCg5OmafR2ekOXaCpHnYvR4CPPzZzr+fQJjqxPw+SOLJes1KntMGYg
+         lP0PEQGz+yHlqjIEHq9I1UbrhI0HYB+37fCjfVuNCTC+YC/Pvkw4OHuU2/Jd/O8mO5im
+         iPgjf//nVRLhHS9WLDriL2cyMS7z7yBW057J7baLuDHj6lZm5PnXiTUhr4KqT3svKQBa
+         CJYw7mTmGYSFfsUeKD0FmxaLkHzx1MoJmuXm+K/QRzEWl8CKIIbULMvd3WjQIcF9nmLm
+         xYnP/2xbW+G+N5ll2lN++l3oaf+dFIiT8j4yg9HYDytgTVFlDtorakrNB7xOZukk0FGR
+         QBvg==
+X-Gm-Message-State: AOAM533i4LnCPONUs9Ry470U1ciJw1RhNj6kdeoNxEbSPZOa5gBRy2uG
+        vosY1tJvhGELg0kPgWSwRSIQNols+Hy4JQ==
+X-Google-Smtp-Source: ABdhPJyZE7x4dcA/z+FxL1FbWSqlcbvgk8DSy8tNHw3q7FrBsXW0sFAw2IApNRHmrJ3msU/8XEoUHQ==
+X-Received: by 2002:a17:90a:9b88:: with SMTP id g8mr15970074pjp.143.1597741637715;
+        Tue, 18 Aug 2020 02:07:17 -0700 (PDT)
 Received: from localhost.localdomain ([49.207.196.79])
-        by smtp.gmail.com with ESMTPSA id na14sm20280788pjb.6.2020.08.18.02.07.08
+        by smtp.gmail.com with ESMTPSA id na14sm20280788pjb.6.2020.08.18.02.07.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 02:07:12 -0700 (PDT)
+        Tue, 18 Aug 2020 02:07:17 -0700 (PDT)
 From:   Allen Pais <allen.lkml@gmail.com>
 To:     vkoul@kernel.org, linus.walleij@linaro.org, vireshk@kernel.org,
         leoyang.li@nxp.com, zw@zh-kernel.org, shawnguo@kernel.org,
@@ -53,9 +53,9 @@ To:     vkoul@kernel.org, linus.walleij@linaro.org, vireshk@kernel.org,
         bjorn.andersson@linaro.org, baohua@kernel.org, wens@csie.org
 Cc:     dmaengine@vger.kernel.org, Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 04/35] dma: coh901318: convert tasklets to use new tasklet_setup() API
-Date:   Tue, 18 Aug 2020 14:36:07 +0530
-Message-Id: <20200818090638.26362-5-allen.lkml@gmail.com>
+Subject: [PATCH 05/35] dma: dw: convert tasklets to use new tasklet_setup() API
+Date:   Tue, 18 Aug 2020 14:36:08 +0530
+Message-Id: <20200818090638.26362-6-allen.lkml@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200818090638.26362-1-allen.lkml@gmail.com>
 References: <20200818090638.26362-1-allen.lkml@gmail.com>
@@ -72,35 +72,34 @@ and from_tasklet() to pass the tasklet pointer explicitly.
 Signed-off-by: Romain Perier <romain.perier@gmail.com>
 Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 ---
- drivers/dma/coh901318.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/dma/dw/core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/coh901318.c b/drivers/dma/coh901318.c
-index 1092d4ce723e..95b9b2f5358e 100644
---- a/drivers/dma/coh901318.c
-+++ b/drivers/dma/coh901318.c
-@@ -1868,9 +1868,9 @@ static struct coh901318_desc *coh901318_queue_start(struct coh901318_chan *cohc)
-  * This tasklet is called from the interrupt handler to
-  * handle each descriptor (DMA job) that is sent to a channel.
-  */
--static void dma_tasklet(unsigned long data)
-+static void dma_tasklet(struct tasklet_struct *t)
+diff --git a/drivers/dma/dw/core.c b/drivers/dma/dw/core.c
+index 4700f2e87a62..022ddc4d3af5 100644
+--- a/drivers/dma/dw/core.c
++++ b/drivers/dma/dw/core.c
+@@ -463,9 +463,9 @@ static void dwc_handle_error(struct dw_dma *dw, struct dw_dma_chan *dwc)
+ 	dwc_descriptor_complete(dwc, bad_desc, true);
+ }
+ 
+-static void dw_dma_tasklet(unsigned long data)
++static void dw_dma_tasklet(struct tasklet_struct *t)
  {
--	struct coh901318_chan *cohc = (struct coh901318_chan *) data;
-+	struct coh901318_chan *cohc = from_tasklet(cohc, t, tasklet);
- 	struct coh901318_desc *cohd_fin;
- 	unsigned long flags;
- 	struct dmaengine_desc_callback cb;
-@@ -2615,8 +2615,7 @@ static void coh901318_base_init(struct dma_device *dma, const int *pick_chans,
- 			INIT_LIST_HEAD(&cohc->active);
- 			INIT_LIST_HEAD(&cohc->queue);
+-	struct dw_dma *dw = (struct dw_dma *)data;
++	struct dw_dma *dw = from_tasklet(dw, t, tasklet);
+ 	struct dw_dma_chan *dwc;
+ 	u32 status_xfer;
+ 	u32 status_err;
+@@ -1138,7 +1138,7 @@ int do_dma_probe(struct dw_dma_chip *chip)
+ 		goto err_pdata;
+ 	}
  
--			tasklet_init(&cohc->tasklet, dma_tasklet,
--				     (unsigned long) cohc);
-+			tasklet_setup(&cohc->tasklet, dma_tasklet);
+-	tasklet_init(&dw->tasklet, dw_dma_tasklet, (unsigned long)dw);
++	tasklet_setup(&dw->tasklet, dw_dma_tasklet);
  
- 			list_add_tail(&cohc->chan.device_node,
- 				      &dma->channels);
+ 	err = request_irq(chip->irq, dw_dma_interrupt, IRQF_SHARED,
+ 			  dw->name, dw);
 -- 
 2.17.1
 

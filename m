@@ -2,133 +2,104 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 230D8249BD5
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Aug 2020 13:31:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85B8024A13F
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Aug 2020 16:08:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgHSLbd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 19 Aug 2020 07:31:33 -0400
-Received: from www381.your-server.de ([78.46.137.84]:55420 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727102AbgHSLb1 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 19 Aug 2020 07:31:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID;
-        bh=Yizu0B+kldphRZQIsd5F3k8rBmn/SxqZl5tpjkKKWuU=; b=V9m5ZcC+q6oJS018Hh+tssQ+Vg
-        ZvJc6AT32vijPRa8TOeZ5l1EEeGNXvnp2gcM2kiKaf+/GKuCPcSzAdD8UiHZQb0J9J9mnZSsh5naR
-        CyfJOIqVcbanGG5qBTTJQghzBVsHA9/yiWDivmVsjq/2hSK7QGtgsjVyd6qtQgvaWkSbydYT25p7o
-        e9I5uZx4NIQR+WppTKQJzq9tR2vUFvFMQKG5cTJOBarH5oBA3MiGykeh9YiUXGYO7+jGTgSepyche
-        YUE6jKt/4qsj6KbMUlJTEZBmxMjGGkWsG9oPMfVlzIjJDK6GAs5ZYleLgXs6K+Ln4tfLu6/rKRvrP
-        qGVNvJ5g==;
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-        by www381.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <lars@metafoo.de>)
-        id 1k8LxG-0007cU-PW; Wed, 19 Aug 2020 13:08:31 +0200
-Received: from [2001:a61:25dc:8101:9e5c:8eff:fe01:8578]
-        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1k8LxG-0009JP-HA; Wed, 19 Aug 2020 13:08:30 +0200
-Subject: Re: pcm|dmaengine|imx-sdma race condition on i.MX6
-To:     Benjamin Bara - SKIDATA <Benjamin.Bara@skidata.com>,
-        Robin Gong <yibin.gong@nxp.com>
-Cc:     "timur@kernel.org" <timur@kernel.org>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Richard Leitner - SKIDATA <Richard.Leitner@skidata.com>
-References: <20200813112258.GA327172@pcleri>
- <VE1PR04MB6638EE5BDBE2C65FF50B7DB889400@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <61498763c60e488a825e8dd270732b62@skidata.com>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <16942794-1e03-6da0-b8e5-c82332a217a5@metafoo.de>
-Date:   Wed, 19 Aug 2020 13:08:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1728600AbgHSOFx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 19 Aug 2020 10:05:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728203AbgHSOCt (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 19 Aug 2020 10:02:49 -0400
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BF03204FD;
+        Wed, 19 Aug 2020 14:02:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597845769;
+        bh=hIHLV4cOF8AgV5MQLy5f4Vy87/PZEGKL0hxscBGc+gU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FIKLAputS/I4c2U1zr0YJRhToTkWAF4Wgaxd9YkGul9N09Xcq/NqL2KS7Q4wHdH3Z
+         7sDTFe2XNYlIN8PpjxE2jjEzmAMbvADRRfYr1l0bSvd87yUSErDcbQWU7vc9Xutzmf
+         HABBiDY93Nwm4rZQ+3gn1fe3Xwr4XvaQkLJKEK3w=
+Received: by mail-oi1-f169.google.com with SMTP id u24so19947017oic.7;
+        Wed, 19 Aug 2020 07:02:49 -0700 (PDT)
+X-Gm-Message-State: AOAM531YoGmOwtO5RnxnDTwwRjHxPMImpG2J0gKfqk7S6anjZOGsU2S8
+        KwXf6H273xqETsSExvWHGyjwEw3McJg+cXDl8w==
+X-Google-Smtp-Source: ABdhPJwEuXEemEZiUqYvno+DnR9HNhcBW8VWF3alaPB45jQ7e8T7cLXTiuC51U+Q1kwMXOw6ubpK4QLrTvpO4SI7asQ=
+X-Received: by 2002:aca:90a:: with SMTP id 10mr3316933oij.106.1597845768614;
+ Wed, 19 Aug 2020 07:02:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <61498763c60e488a825e8dd270732b62@skidata.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.4/25904/Mon Aug 17 15:02:24 2020)
+References: <20200731200826.9292-1-Sergey.Semin@baikalelectronics.ru>
+ <20200731200826.9292-2-Sergey.Semin@baikalelectronics.ru> <20200803215147.GA3201744@bogus>
+ <20200817100014.GG1891694@smile.fi.intel.com>
+In-Reply-To: <20200817100014.GG1891694@smile.fi.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 19 Aug 2020 08:02:37 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKGqRs7DGiBcy-Ta_WkajGv-xg8GYMiDe13nQiyLj2VfA@mail.gmail.com>
+Message-ID: <CAL_JsqKGqRs7DGiBcy-Ta_WkajGv-xg8GYMiDe13nQiyLj2VfA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: dma: dw: Add optional DMA-channels
+ mask cell support
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>, devicetree@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 8/17/20 9:28 AM, Benjamin Bara - SKIDATA wrote:
-> We think this is not an i.MX6-specific problem, but a problem of the DMAengine usage from the PCM.
-> In case of a XRUN, the DMA channel is never closed but first a SNDRV_PCM_TRIGGER_STOP next a
-> SNDRV_PCM_TRIGGER_START is triggered.
-> The SNDRV_PCM_TRIGGER_STOP simply executes a dmaengine_terminate_async() [1]
-> but does not await the termination by calling dmaengine_synchronize(),
-> which is required as stated by the docu [2].
-> Anyways, we are not able to fix it in the pcm_dmaengine layer either at the end of
-> SNDRV_PCM_TRIGGER_STOP (called from the DMA on complete interrupt handler)
-> or at the beginning of SNDRV_PCM_TRIGGER_START (called from a PCM ioctl),
-> since the dmaengine_synchronize() requires a non-atomic context.
-
-I think this might be an sdma specific problem after all. 
-dmaengine_terminate_async() will issue a request to stop the DMA. But it 
-is still safe to issue the next transfer, even without calling 
-dmaengine_synchronize(). The DMA should start the new transfer at its 
-earliest convenience in that case.
-
-dmaegine_synchronize() is so that the consumer has a guarantee that the 
-DMA is finished using the resources (e.g. the memory buffers) associated 
-with the DMA transfer so it can safely free them.
-
+On Mon, Aug 17, 2020 at 4:17 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> Based on my understanding, most of the DMA implementations don't even implement device_synchronize
-> and if they do, it might not really be necessary since the terminate_all operation is synchron.
-There are a lot of buggy DMAengine drivers :) Pretty much all of them 
-need device_synchronize() to get this right.
+> On Mon, Aug 03, 2020 at 03:51:47PM -0600, Rob Herring wrote:
+> > On Fri, 31 Jul 2020 23:08:22 +0300, Serge Semin wrote:
+> > > Each DW DMA controller channel can be synthesized with different
+> > > parameters like maximum burst-length, multi-block support, maximum data
+> > > width, etc. Most of these parameters determine the DW DMAC channels
+> > > performance in its own aspect. On the other hand these parameters can
+> > > be implicitly responsible for the channels performance degradation
+> > > (for instance multi-block support is a very useful feature, but having
+> > > it disabled during the DW DMAC synthesize will provide a more optimized
+> > > core). Since DMA slave devices may have critical dependency on the DMA
+> > > engine performance, let's provide a way for the slave devices to have
+> > > the DMA-channels allocated from a pool of the channels, which according
+> > > to the system engineer fulfill their performance requirements.
+> > >
+> > > The pool is determined by a mask optionally specified in the fifth
+> > > DMA-cell of the DMA DT-property. If the fifth cell is omitted from the
+> > > phandle arguments or the mask is zero, then the allocation will be
+> > > performed from a set of all channels provided by the DMA controller.
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
 >
-> With the i.MX6, it looks a bit different:
-> Since [4], the terminate_all operation really schedules a worker which waits the required ~1ms and
-> then does the context freeing.
-> Now, the ioctl(SNDRV_PCM_IOCTL_PREPARE) and the following ioctl(SNDRV_PCM_IOCTL_READI_FRAMES),
-> which are called from US to handle/recover from a XRUN, are in a race with the terminate_worker.
-> If the terminate_worker finishes earlier, everything is fine.
-> Otherwise, the sdma_prep_dma_cyclic() is called, sets up everything and
-> as soon as it is scheduled out to wait for data, the terminate_worker is scheduled and kills it.
-> In this case, we wait in [5] until the timeout is reached and return with -EIO.
+> Rob, I have a question to clarify (it's not directly related to the series,
+> but to this schema and property names).
 >
-> Based on our understanding, there exist two different fixing approaches:
-> We thought that the pcm_dmaengine should handle this by either synchronizing the DMA on a trigger or
-> terminating it synchronously.
-> However, as we are in an atomic context, we either have to give up the atomic context of the PCM
-> to finish the termination or we have to design a synchronous terminate variant which is callable
-> from an atomic context.
+> We have two drivers for DMA controllers from Synopsys (they are different)
+> where properties with the same semantics (like block_size or data-width) have
+> different pattern of naming (okay, block_size for older driver even has _
+> instead of -), i.e. block_size vs. snps,block-size and data-width vs.
+> snps,data-width.
 >
-> For the first option, which is potentially more performant, we have to leave the atomic PCM context
-> and we are not sure if we are allowed to.
-> For the second option, we would have to divide the dma_device terminate_all into an atomic sync and
-> an async one, which would align with the dmaengine API, giving it the option to ensure termination
-> in an atomic context.
-> Based on my understanding, most of them are synchronous anyways, for the currently async ones we
-> would have to implement busy waits.
-> However, with this approach, we reach the WARN_ON [6] inside of an atomic context,
-> indicating we might not do the right thing.
+> I would like to unify them (*) in both drivers and would like to know which
+> naming pattern is preferred in such case?
 
-I don't know how feasible this is to implement in the SDMA dmaengine 
-driver. But I think what is should do is to have some flag to indicate 
-if a terminate is in progress. If a new transfer is issued while 
-terminate is in progress the transfer should go on a list. Once 
-terminate finishes it should check the list and start the transfer if 
-there are any on the list.
+Unless there's some sign we'd use it with other vendors, I'd generally
+keep the vendor prefix. But I don't think it's worth supporting 3
+variants of 'data-width' in the name of unification.
 
-- Lars
+Also, if they don't have a vendor prefix, then they should be in some
+standard units rather than an encoded register value. (Which seems to
+be the case here).
 
+Rob

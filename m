@@ -2,187 +2,211 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A2A62496E5
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Aug 2020 09:16:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C319249761
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Aug 2020 09:30:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726585AbgHSHQO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 19 Aug 2020 03:16:14 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:31834 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726711AbgHSHQL (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 19 Aug 2020 03:16:11 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07J7DqbN023277;
-        Wed, 19 Aug 2020 03:15:58 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 3304kcmfu5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Aug 2020 03:15:58 -0400
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 07J7FuDc031747
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 19 Aug 2020 03:15:57 -0400
-Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
- SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+        id S1726806AbgHSH35 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 19 Aug 2020 03:29:57 -0400
+Received: from mga03.intel.com ([134.134.136.65]:25275 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727011AbgHSH3y (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 19 Aug 2020 03:29:54 -0400
+IronPort-SDR: YLKm1efn5xwNBaPTBVAhf7RJDCA7sY1d8D84DmwvjW3UUm2U6Ao+dPVMA01xR8pWkLjD+5ot53
+ zbw8eh2nhojw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="155032359"
+X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
+   d="scan'208";a="155032359"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 00:29:53 -0700
+IronPort-SDR: NJUtkLg0HgKlVcWiCGIswdwlYrCgo3+PvldB23TW1KukMOkbjRsON1SPb8rZFJjyfO1cm0es2G
+ dzod5EKk6RqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
+   d="scan'208";a="293032181"
+Received: from orsmsx601-2.jf.intel.com (HELO ORSMSX601.amr.corp.intel.com) ([10.22.229.81])
+  by orsmga003.jf.intel.com with ESMTP; 19 Aug 2020 00:29:53 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 19 Aug 2020 00:15:55 -0700
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 19 Aug 2020 00:15:55 -0700
-Received: from zeus.spd.analog.com (10.66.68.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 19 Aug 2020 00:15:55 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07J7Fg90020449;
-        Wed, 19 Aug 2020 03:15:51 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <vkoul@kernel.org>, <lars@metafoo.de>, <dan.j.williams@intel.com>,
-        <ardeleanalex@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 5/5] dmaengine: axi-dmac: add support for reading bus attributes from registers
-Date:   Wed, 19 Aug 2020 10:16:33 +0300
-Message-ID: <20200819071633.76494-5-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200819071633.76494-1-alexandru.ardelean@analog.com>
-References: <20200819071633.76494-1-alexandru.ardelean@analog.com>
+ 15.1.1713.5; Wed, 19 Aug 2020 00:29:52 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 19 Aug 2020 00:29:52 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (104.47.37.57) by
+ edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Wed, 19 Aug 2020 00:29:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bA+Zw5J2Y3UMT1+7U85WKKzN3rJ0tmSNJHmQJmWU5hQx87/H7raiChdsSADxI5kgFvt/RqV2RcLu5qnorP2XLH7pH6fjOxZZ1QoTl+C08MLzNdYKlytdEw7nLPEkIXR4HoJ4B6Z8wPUR2+wOWB5zFIl/FZQ/9xsXc2LSI9cdJwYiewoWvigAywpzjNOgWmjixbgL1UNJNeH68eJKIU4X+wTsW2NUf4bxlWbN21nng09fv6x635Ixp69sL+mahsVee0UwNAwjaYEGrRanBrJl2FKDtxgfoEDS+IlyqoeuRpVvwGNgrQiiaOg6szbXDbzae+3jU9e556vUL8lgvDmBKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OsnPIgZe3ByZJjaLyfB3d3pyBbJ5gZBVExNiaU/Nt94=;
+ b=i6iHXJ80j0sABrjBOopYC+BvRLKqyKdVPPiZzzDIcRNKS68nGBMwatp6QZQEZvfA+NWaUWL6QvQoz1wQJaeorYoEmpXAvP7wvXoxe/H0uUWBGOxtsB4V7Rg5JqAKAgKE8cylybN/Tkl3ds1b4smXlh37Hw+ZHpbqN+pE0ujup+BGM91+vZRZVjpNdzhadfEWO+eUlwGI3lKoSXLPsFS0/2tmlrB2pmOPF2gHsfWuKq5Y+l/NW+/XcqnOXBBP/CxHkLBiI3l39Ka3uhAVyCYxbF5HTXjcOSfA8dx3+GHxQylfaiqN2mbOMnk9AHmHsc/OpAd19jRMoufOI/t36wYqWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OsnPIgZe3ByZJjaLyfB3d3pyBbJ5gZBVExNiaU/Nt94=;
+ b=FXLM4z1m8jhTYQLigO8ACKrEZvOpvUQm4KKqnct1RaEuQwEvTNG6PFyGq0YC1Kch0jizpgp0YvpIAUgXRzDCQNGyASlR3BTGAhPtlgRCmWejXsdLMaVOHi+Rekw8LqhZOykYGddNIpMcdZ3vzKrPTemfrLV7q/WPMv3b4eemHLk=
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com (2603:10b6:301:b::12)
+ by MWHPR11MB1710.namprd11.prod.outlook.com (2603:10b6:300:26::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Wed, 19 Aug
+ 2020 07:29:49 +0000
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::6dfe:feb8:25f1:ac9c]) by MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::6dfe:feb8:25f1:ac9c%7]) with mapi id 15.20.3283.028; Wed, 19 Aug 2020
+ 07:29:49 +0000
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+CC:     Alex Williamson <alex.williamson@redhat.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [PATCH RFC v2 00/18] Add VFIO mediated device support and DEV-MSI
+ support for the idxd driver
+Thread-Topic: [PATCH RFC v2 00/18] Add VFIO mediated device support and
+ DEV-MSI support for the idxd driver
+Thread-Index: AQHWX3hut2htBlMVB0qfW0Pa+gZbC6kSPbuAgABwW8CAAzMrAIAUgAoAgAJJ4oCABDO9YIAG4akAgAPzRxCAAX50gIAAAjDAgAC3+4CAATW4oA==
+Date:   Wed, 19 Aug 2020 07:29:49 +0000
+Message-ID: <MWHPR11MB1645FC76A1866EA6A7C9DA6F8C5D0@MWHPR11MB1645.namprd11.prod.outlook.com>
+References: <20200721164527.GD2021248@mellanox.com>
+ <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
+ <20200724001930.GS2021248@mellanox.com> <20200805192258.5ee7a05b@x1.home>
+ <20200807121955.GS16789@nvidia.com>
+ <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20200814133522.GE1152540@nvidia.com>
+ <MWHPR11MB16456D49F2F2E9646F0841488C5F0@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20200818004343.GG1152540@nvidia.com>
+ <MWHPR11MB164579D1BBBB0F7164B07A228C5C0@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20200818115003.GM1152540@nvidia.com>
+In-Reply-To: <20200818115003.GM1152540@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: nvidia.com; dkim=none (message not signed)
+ header.d=none;nvidia.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.200]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2ce6a325-c078-45be-1d2d-08d84411a819
+x-ms-traffictypediagnostic: MWHPR11MB1710:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR11MB1710B7813EB6D51D7381A5CF8C5D0@MWHPR11MB1710.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vrFrot8wT3Yu5hh8VSn8ZdTZ7ojQsGuy+2ZIFXN+4nxHQv+Ifrq+rYj/s62u/9J2JGwX8cE6V34bGrSF801vaw4RW/Olj5hd6e9asZkH1b+TzMEn8XqO833u0UCcZC0cGx2rzcCJLdtAV9f0cGCXIuEmQkEok8xx4YqS4Jhzjitvdk1rAfFnlmcju6DjXJ69T+nhOOhe9s2jLUgx9QH2Ec+7+RwptYJfWBdBMX6yao0Lb9DjCA4CkfumOCnuz3dbpu+SZ/NrupRy9k1zKmQ9inPowb844g/ccP35ptetVmRv+wQgs4I0bTbyR8b0akcl1f04rXtDMJfA1HZGkP67+g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(396003)(346002)(366004)(136003)(39860400002)(5660300002)(66556008)(66476007)(52536014)(83380400001)(7416002)(6506007)(26005)(66946007)(8676002)(316002)(64756008)(66446008)(54906003)(9686003)(76116006)(7696005)(55016002)(4326008)(186003)(478600001)(6916009)(86362001)(8936002)(2906002)(71200400001)(33656002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: muCPMC/4aG6qvOza8gaVDkJo30FcCmsOjAtOKJaCf3srlBU8QUwLoiJMDMmw2LkfgSUIKaoikljI1y349VJgexz2r5MfEZJuo8GY4TwQWha+iZuOcvuTYtWfikUqJP0EXK4FqGAZAVbIUlAlDanNFh9NYS98It8bbAO7M1ePjvfSrmjsxPmn0j3NxzwvYmNKXEO6GfwUEh/+1OCb7mS71NYGltWMnCiDG4/ncdaiR0BvC6ag+hvs19ERimBbL3OOla6v6iHXbke5NFK7aX56ytnxN8oVmPgXQgkPQAk/K4LajB8nkEi1efu5XO9u1Dk0ezpfWyMlWgfXM4g00HwQ5M3+l9IZ28cxJIUMUtrh9MS6nmzkqQKE/aQdPoCKteK+I8ghEDYNqSt0Orb+TjSn229gRHRDraTfS8a60KLGb4XKeApen6KYeNs9VtXZjDx5kdzSlOXZAaXNj/7Xc6CTBtaqwCDbH2ACElVglg0rh9W0bY7ep8EQTFWoqhgeRMKxv4TaPwIsfL/IuZ391nggZa8MKKOZvdq6ph81qWdapWBQQAtpbl/IYjjddhVNBdgAXezUSiQktMiVT1g+O8ievYINWhL/pl0egnGqONb8iPFX9zHjYBnL7D53Z8A1afEK/Ul16VDK5jrJCpqNMWohlQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-19_04:2020-08-18,2020-08-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 adultscore=0 clxscore=1015 suspectscore=25 phishscore=0
- impostorscore=0 priorityscore=1501 bulkscore=0 mlxlogscore=999 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008190060
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1645.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ce6a325-c078-45be-1d2d-08d84411a819
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2020 07:29:49.3628
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CDGtMIkovCwhYlRPI8N0nvjsBtx2AaDFlTG65ZanhxMcFpOqEAJKP08BCShRHW4AQwjQE24V60Wtdj81yyu1mw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1710
+X-OriginatorOrg: intel.com
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Starting with core version 4.3.a the DMA bus attributes can (and should) be
-read from the INTERFACE_DESCRIPTION (0x10) register.
+> From: Jason Gunthorpe <jgg@nvidia.com>
+> Sent: Tuesday, August 18, 2020 7:50 PM
+>=20
+> On Tue, Aug 18, 2020 at 01:09:01AM +0000, Tian, Kevin wrote:
+> > The difference in my reply is not just about the implementation gap
+> > of growing a userspace DMA framework to a passthrough framework.
+> > My real point is about the different goals that each wants to achieve.
+> > Userspace DMA is purely about allowing userspace to directly access
+> > the portal and do DMA, but the wq configuration is always under kernel
+> > driver's control. On the other hand, passthrough means delegating full
+> > control of the wq to the guest and then associated mock-up (live migrat=
+ion,
+> > vSVA, posted interrupt, etc.) for that to work. I really didn't see the
+> > value of mixing them together when there is already a good candidate
+> > to handle passthrough...
+>=20
+> In Linux a 'VM' and virtualization has always been a normal system
+> process that uses a few extra kernel features. This has been more or
+> less the cornerstone of that design since the start.
+>=20
+> In that view it doesn't make any sense to say that uAPI from idxd that
+> is useful for virtualization somehow doesn't belong as part of the
+> standard uAPI.
 
-For older core versions, this will still need to be provided from the
-device-tree.
+The point is that we already have a more standard uAPI (VFIO) which
+is unified and vendor-agnostic to userspace. Creating a idxd specific
+uAPI to absorb similar requirements that VFIO already does is not=20
+compelling and instead causes more trouble to Qemu or other VMMs=20
+as they need to deal with every such driver uAPI even when Qemu=20
+itself has no interest in the device detail (since the real user is inside=
+=20
+guest).=20
 
-The bus-type values are identical to the ones stored in the device-trees,
-so we just need to read them. Bus-width values are stored in log2 values,
-so we just need to use them as shift values to make them equivalent to the
-current format.
+>=20
+> Especially when it is such a small detail like what APIs are used to
+> configure the wq.
+>=20
+> For instance, what about suspend/resume of containers using idxd?
+> Wouldn't you want to have the same basic approach of controlling the
+> wq from userspace that virtualization uses?
+>=20
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/dma/dma-axi-dmac.c | 66 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 63 insertions(+), 3 deletions(-)
+I'm not familiar with how container suspend/resume is done today.
+But my gut-feeling is that it's different from virtualization. For=20
+virtualization, the whole wq is assigned to the guest thus the uAPI
+must provide a way to save the wq state including its configuration=20
+at suspsend, and then restore the state to what guest expects when
+resume. However in container case which does userspace DMA, the
+wq is managed by host kernel and could be shared between multiple
+containers. So the wq state is irrelevant to container. The only relevant
+state is the in-fly workloads which needs a draining interface. In this
+view I think the two have a major difference.
 
-diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-index 95aea2b423ac..417735b6e97b 100644
---- a/drivers/dma/dma-axi-dmac.c
-+++ b/drivers/dma/dma-axi-dmac.c
-@@ -6,6 +6,7 @@
-  *  Author: Lars-Peter Clausen <lars@metafoo.de>
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/clk.h>
- #include <linux/device.h>
- #include <linux/dma-mapping.h>
-@@ -45,6 +46,16 @@
-  * there is no address than can or needs to be configured for the device side.
-  */
- 
-+#define AXI_DMAC_REG_INTERFACE_DESC	0x10
-+#define   AXI_DMAC_DMA_SRC_TYPE_MSK	GENMASK(13, 12)
-+#define   AXI_DMAC_DMA_SRC_TYPE_GET(x)	FIELD_GET(AXI_DMAC_DMA_SRC_TYPE_MSK, x)
-+#define   AXI_DMAC_DMA_SRC_WIDTH_MSK	GENMASK(11, 8)
-+#define   AXI_DMAC_DMA_SRC_WIDTH_GET(x)	FIELD_GET(AXI_DMAC_DMA_SRC_WIDTH_MSK, x)
-+#define   AXI_DMAC_DMA_DST_TYPE_MSK	GENMASK(5, 4)
-+#define   AXI_DMAC_DMA_DST_TYPE_GET(x)	FIELD_GET(AXI_DMAC_DMA_DST_TYPE_MSK, x)
-+#define   AXI_DMAC_DMA_DST_WIDTH_MSK	GENMASK(3, 0)
-+#define   AXI_DMAC_DMA_DST_WIDTH_GET(x)	FIELD_GET(AXI_DMAC_DMA_DST_WIDTH_MSK, x)
-+
- #define AXI_DMAC_REG_IRQ_MASK		0x80
- #define AXI_DMAC_REG_IRQ_PENDING	0x84
- #define AXI_DMAC_REG_IRQ_SOURCE		0x88
-@@ -801,6 +812,51 @@ static int axi_dmac_parse_dt(struct device *dev, struct axi_dmac *dmac)
- 	return 0;
- }
- 
-+static int axi_dmac_read_chan_config(struct device *dev, struct axi_dmac *dmac)
-+{
-+	struct axi_dmac_chan *chan = &dmac->chan;
-+	unsigned int val, desc;
-+
-+	desc = axi_dmac_read(dmac, AXI_DMAC_REG_INTERFACE_DESC);
-+	if (desc == 0) {
-+		dev_err(dev, "DMA interface register reads zero\n");
-+		return -EFAULT;
-+	}
-+
-+	val = AXI_DMAC_DMA_SRC_TYPE_GET(desc);
-+	if (val > AXI_DMAC_BUS_TYPE_FIFO) {
-+		dev_err(dev, "Invalid source bus type read: %d\n", val);
-+		return -EINVAL;
-+	}
-+	chan->src_type = val;
-+
-+	val = AXI_DMAC_DMA_DST_TYPE_GET(desc);
-+	if (val > AXI_DMAC_BUS_TYPE_FIFO) {
-+		dev_err(dev, "Invalid destination bus type read: %d\n", val);
-+		return -EINVAL;
-+	}
-+	chan->dest_type = val;
-+
-+	val = AXI_DMAC_DMA_SRC_WIDTH_GET(desc);
-+	if (val == 0) {
-+		dev_err(dev, "Source bus width is zero\n");
-+		return -EINVAL;
-+	}
-+	/* widths are stored in log2 */
-+	chan->src_width = 1 << val;
-+
-+	val = AXI_DMAC_DMA_DST_WIDTH_GET(desc);
-+	if (val == 0) {
-+		dev_err(dev, "Destination bus width is zero\n");
-+		return -EINVAL;
-+	}
-+	chan->dest_width = 1 << val;
-+
-+	axi_dmac_adjust_chan_params(chan);
-+
-+	return 0;
-+}
-+
- static int axi_dmac_detect_caps(struct axi_dmac *dmac, unsigned int version)
- {
- 	struct axi_dmac_chan *chan = &dmac->chan;
-@@ -882,7 +938,13 @@ static int axi_dmac_probe(struct platform_device *pdev)
- 
- 	INIT_LIST_HEAD(&dmac->chan.active_descs);
- 
--	ret = axi_dmac_parse_dt(&pdev->dev, dmac);
-+	version = axi_dmac_read(dmac, ADI_AXI_REG_VERSION);
-+
-+	if (version >= ADI_AXI_PCORE_VER(4, 3, 'a'))
-+		ret = axi_dmac_read_chan_config(&pdev->dev, dmac);
-+	else
-+		ret = axi_dmac_parse_dt(&pdev->dev, dmac);
-+
- 	if (ret < 0)
- 		return ret;
- 
-@@ -912,8 +974,6 @@ static int axi_dmac_probe(struct platform_device *pdev)
- 	dmac->chan.vchan.desc_free = axi_dmac_desc_free;
- 	vchan_init(&dmac->chan.vchan, dma_dev);
- 
--	version = axi_dmac_read(dmac, ADI_AXI_REG_VERSION);
--
- 	ret = axi_dmac_detect_caps(dmac, version);
- 	if (ret)
- 		goto err_clk_disable;
--- 
-2.17.1
-
+Thanks
+Kevin

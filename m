@@ -2,75 +2,70 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E8128249402
-	for <lists+dmaengine@lfdr.de>; Wed, 19 Aug 2020 06:26:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59BB024941B
+	for <lists+dmaengine@lfdr.de>; Wed, 19 Aug 2020 06:29:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725883AbgHSE0F (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 19 Aug 2020 00:26:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34220 "EHLO mail.kernel.org"
+        id S1725601AbgHSE3b (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 19 Aug 2020 00:29:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725275AbgHSE0F (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 19 Aug 2020 00:26:05 -0400
+        id S1725306AbgHSE33 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 19 Aug 2020 00:29:29 -0400
 Received: from localhost (unknown [122.171.38.130])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6DD420772;
-        Wed, 19 Aug 2020 04:26:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92DB020772;
+        Wed, 19 Aug 2020 04:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597811164;
-        bh=Nt5fvzaUfAQQHR+uBcTqixdF6Qgj4u2fQgrV8+YVptM=;
+        s=default; t=1597811369;
+        bh=yZCa1YE/YNd1E5AUvE8c/6qe+ChwGp2Dizx/VHpBxUI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eTT8NCK5BBZKAcTdsIyUcBBVLfak93LlgZ99seQ5oODuO3la6Iqt48gIPN5pdB614
-         53R0avWN4i9W28gBL7t+ypPODwX/GbhNer/vEQc0GjvikdnozNf3BebfHtHVt+pT9W
-         46bWH5O9VeLg0DIkfFRV/toZsE/y2cA7ngZ1gTJE=
-Date:   Wed, 19 Aug 2020 09:56:01 +0530
+        b=mY+oDC8FnwqCbFUslcsKZZWYmn5dArjnpojyMev05c9N0UbhAAE28IJNi7TuEU1Qs
+         OnauKYb7oH+ox4MpnlD1HFDimRdWOe7SfN9Mfp0udCvy15FSRXPMGNk+wVgv/GN8hM
+         W5CF7hTLEvGrZifbeFUC5ebOwjo8Z2j87Yt29mX4=
+Date:   Wed, 19 Aug 2020 09:59:25 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Hyun Kwon <hyun.kwon@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH -next] dmaengine: xilinx: dpdma: Make symbol
- 'dpdma_debugfs_reqs' static
-Message-ID: <20200819042601.GB2639@vkoul-mobl>
-References: <20200818112217.43816-1-weiyongjun1@huawei.com>
- <20200818234107.GC2360@pendragon.ideasonboard.com>
+To:     Yu Kuai <yukuai3@huawei.com>
+Cc:     ludovic.desroches@microchip.com, tudor.ambarus@microchip.com,
+        dan.j.williams@intel.com, nicolas.ferre@microchip.com,
+        plagnioj@jcrosoft.com, arnd@arndb.de,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
+Subject: Re: [PATCH V2 0/3] do exception handling appropriately in
+ at_dma_xlate()
+Message-ID: <20200819042925.GC2639@vkoul-mobl>
+References: <20200817115728.1706719-1-yukuai3@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200818234107.GC2360@pendragon.ideasonboard.com>
+In-Reply-To: <20200817115728.1706719-1-yukuai3@huawei.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 19-08-20, 02:41, Laurent Pinchart wrote:
-> Hi Wei,
-> 
-> Thank you for the patch.
-> 
-> On Tue, Aug 18, 2020 at 07:22:17PM +0800, Wei Yongjun wrote:
-> > The sparse tool complains as follows:
-> > 
-> > drivers/dma/xilinx/xilinx_dpdma.c:349:37: warning:
-> >  symbol 'dpdma_debugfs_reqs' was not declared. Should it be static?
-> > 
-> > This variable is not used outside of xilinx_dpdma.c, so this commit
-> > marks it static.
-> > 
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Fixes: 1d220435cab3 ("dmaengine: xilinx: dpdma: Add debugfs support")
-> > Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-> 
-> Looks good to me.
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> Vinod, could you pick this up as a v5.9 fix ?
+On 17-08-20, 19:57, Yu Kuai wrote:
+> changes from V1:
+> -separate different changes to different patches, as suggested by Vinod.
 
-This is not 5.9 fix. The debugfs patch will go into next for 5.10 so
-this is applied to next as well
+Please write proper cover letter explaining the patch series and also
+the changes from v1..
+
+I have applied the patches.
+
+Thanks
+
+> Yu Kuai (3):
+>   dmaengine: at_hdmac: check return value of of_find_device_by_node() in
+>     at_dma_xlate()
+>   dmaengine: at_hdmac: add missing put_device() call in at_dma_xlate()
+>   dmaengine: at_hdmac: add missing kfree() call in at_dma_xlate()
+> 
+>  drivers/dma/at_hdmac.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> -- 
+> 2.25.4
 
 -- 
 ~Vinod

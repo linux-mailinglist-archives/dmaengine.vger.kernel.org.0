@@ -2,107 +2,144 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 46ABC24AF97
-	for <lists+dmaengine@lfdr.de>; Thu, 20 Aug 2020 09:10:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC43324BA12
+	for <lists+dmaengine@lfdr.de>; Thu, 20 Aug 2020 13:59:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725916AbgHTHK2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 20 Aug 2020 03:10:28 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:32849 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725819AbgHTHK1 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 Aug 2020 03:10:27 -0400
-Received: from [2001:67c:670:100:1d::c0] (helo=ptx.hi.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1k8eQz-0000f8-L0; Thu, 20 Aug 2020 08:52:25 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1k8eQv-0003ht-Hg; Thu, 20 Aug 2020 08:52:21 +0200
-Date:   Thu, 20 Aug 2020 08:52:21 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Lars-Peter Clausen <lars@metafoo.de>
-Cc:     Benjamin Bara - SKIDATA <Benjamin.Bara@skidata.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "timur@kernel.org" <timur@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Richard Leitner - SKIDATA <Richard.Leitner@skidata.com>
-Subject: Re: pcm|dmaengine|imx-sdma race condition on i.MX6
-Message-ID: <20200820065221.GF19745@pengutronix.de>
-References: <20200813112258.GA327172@pcleri>
- <VE1PR04MB6638EE5BDBE2C65FF50B7DB889400@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <61498763c60e488a825e8dd270732b62@skidata.com>
- <16942794-1e03-6da0-b8e5-c82332a217a5@metafoo.de>
+        id S1726983AbgHTL7x (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 20 Aug 2020 07:59:53 -0400
+Received: from crapouillou.net ([89.234.176.41]:45940 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730471AbgHTL7h (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 20 Aug 2020 07:59:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1597924774; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kB2wGLDuU6aSHvN4xthqcKsE4uQqughcC0pSUs3BWBU=;
+        b=prx1avjqa0Ec51djNOI7gQDIPqvrOlAPUI7yPDnkvY580F1LFMbGawsak00Ou/nO9a0UWN
+        3d3DtzU5B+oepNoiQrT4clwIKAnw4yO/pMifbAFDcAFpXOvjJHAPknTYYFM6wOlYa5kq+P
+        NdU8DgqFntO9IBnHFyjFnr+Qa13EEtk=
+Date:   Thu, 20 Aug 2020 13:59:23 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] drivers/dma/dma-jz4780: Fix race condition between probe
+ and irq handler
+To:     madhuparnabhowmik10@gmail.com
+Cc:     dan.j.williams@intel.com, vkoul@kernel.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andrianov@ispras.ru, ldv-project@linuxtesting.org
+Message-Id: <ZM2DFQ.KQQJYLJ02WTD3@crapouillou.net>
+In-Reply-To: <20200816072253.13817-1-madhuparnabhowmik10@gmail.com>
+References: <20200816072253.13817-1-madhuparnabhowmik10@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <16942794-1e03-6da0-b8e5-c82332a217a5@metafoo.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:19:09 up 182 days, 13:49, 135 users,  load average: 0.10, 0.14,
- 0.14
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 01:08:29PM +0200, Lars-Peter Clausen wrote:
-> > For the first option, which is potentially more performant, we have to leave the atomic PCM context
-> > and we are not sure if we are allowed to.
-> > For the second option, we would have to divide the dma_device terminate_all into an atomic sync and
-> > an async one, which would align with the dmaengine API, giving it the option to ensure termination
-> > in an atomic context.
-> > Based on my understanding, most of them are synchronous anyways, for the currently async ones we
-> > would have to implement busy waits.
-> > However, with this approach, we reach the WARN_ON [6] inside of an atomic context,
-> > indicating we might not do the right thing.
-> 
-> I don't know how feasible this is to implement in the SDMA dmaengine driver.
-> But I think what is should do is to have some flag to indicate if a
-> terminate is in progress. If a new transfer is issued while terminate is in
-> progress the transfer should go on a list. Once terminate finishes it should
-> check the list and start the transfer if there are any on the list.
+Hi,
 
-The list is already there in form of the vchan helpers the driver uses.
+Le dim. 16 ao=FBt 2020 =E0 12:52, madhuparnabhowmik10@gmail.com a =E9crit :
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+>=20
+> In probe IRQ is requested before zchan->id is initialized which can be
+> read in the irq handler. Hence, shift request irq and enable clock=20
+> after
+> other initializations complete. Here, enable clock part is not part of
+> the race, it is just shifted down after request_irq to keep the error
+> path same as before.
+>=20
+> Found by Linux Driver Verification project (linuxtesting.org).
+>=20
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-I think the big mistake the driver makes is to configure fields in
-struct sdma_channel and also the hardware directly in
-sdma_prep_memcpy(), sdma_prep_slave_sg() and sdma_prep_dma_cyclic(). All
-information should be stored in the struct sdma_desc allocated in the
-prep functions and only be used when it's time to fire that specific
-descriptor.
+I don't think there is a race at all, the interrupt handler won't be=20
+called before the DMA is registered.
 
-More specifically sdma_config_write() may not be called from
-sdma_prep_slave_sg() or sdma_prep_dma_cyclic(), but instead must be
-called from sdma_start_desc().  sdma_config_ownership() also must be
-called later in sdma_start_desc(). 'direction' must be a member of
-struct sdma_desc, not of struct sdma_channel.
+More importantly, this patch will break things, as there are now=20
+register writes in the probe before the clock is enabled.
 
-Overall this sounds like a fair amount of work to do, but should be
-feasible and IMO is a step in the right direction.
+Cheers,
+-Paul
 
-Sascha
+> ---
+>  drivers/dma/dma-jz4780.c | 44=20
+> ++++++++++++++++++++--------------------
+>  1 file changed, 22 insertions(+), 22 deletions(-)
+>=20
+> diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+> index 448f663da89c..5cbc8c3bd6c7 100644
+> --- a/drivers/dma/dma-jz4780.c
+> +++ b/drivers/dma/dma-jz4780.c
+> @@ -879,28 +879,6 @@ static int jz4780_dma_probe(struct=20
+> platform_device *pdev)
+>  		return -EINVAL;
+>  	}
+>=20
+> -	ret =3D platform_get_irq(pdev, 0);
+> -	if (ret < 0)
+> -		return ret;
+> -
+> -	jzdma->irq =3D ret;
+> -
+> -	ret =3D request_irq(jzdma->irq, jz4780_dma_irq_handler, 0,=20
+> dev_name(dev),
+> -			  jzdma);
+> -	if (ret) {
+> -		dev_err(dev, "failed to request IRQ %u!\n", jzdma->irq);
+> -		return ret;
+> -	}
+> -
+> -	jzdma->clk =3D devm_clk_get(dev, NULL);
+> -	if (IS_ERR(jzdma->clk)) {
+> -		dev_err(dev, "failed to get clock\n");
+> -		ret =3D PTR_ERR(jzdma->clk);
+> -		goto err_free_irq;
+> -	}
+> -
+> -	clk_prepare_enable(jzdma->clk);
+> -
+>  	/* Property is optional, if it doesn't exist the value will remain=20
+> 0. */
+>  	of_property_read_u32_index(dev->of_node,=20
+> "ingenic,reserved-channels",
+>  				   0, &jzdma->chan_reserved);
+> @@ -949,6 +927,28 @@ static int jz4780_dma_probe(struct=20
+> platform_device *pdev)
+>  		jzchan->vchan.desc_free =3D jz4780_dma_desc_free;
+>  	}
+>=20
+> +	ret =3D platform_get_irq(pdev, 0);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	jzdma->irq =3D ret;
+> +
+> +	ret =3D request_irq(jzdma->irq, jz4780_dma_irq_handler, 0,=20
+> dev_name(dev),
+> +			  jzdma);
+> +	if (ret) {
+> +		dev_err(dev, "failed to request IRQ %u!\n", jzdma->irq);
+> +		return ret;
+> +	}
+> +
+> +	jzdma->clk =3D devm_clk_get(dev, NULL);
+> +	if (IS_ERR(jzdma->clk)) {
+> +		dev_err(dev, "failed to get clock\n");
+> +		ret =3D PTR_ERR(jzdma->clk);
+> +		goto err_free_irq;
+> +	}
+> +
+> +	clk_prepare_enable(jzdma->clk);
+> +
+>  	ret =3D dmaenginem_async_device_register(dd);
+>  	if (ret) {
+>  		dev_err(dev, "failed to register device\n");
+> --
+> 2.17.1
+>=20
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+

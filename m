@@ -2,114 +2,89 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEB2325189F
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Aug 2020 14:34:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20EFF2518F7
+	for <lists+dmaengine@lfdr.de>; Tue, 25 Aug 2020 14:49:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgHYMeu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 25 Aug 2020 08:34:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726609AbgHYMes (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Aug 2020 08:34:48 -0400
-Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7878AC061574;
-        Tue, 25 Aug 2020 05:34:48 -0700 (PDT)
-Received: by mail-oo1-xc42.google.com with SMTP id a6so2654088oog.9;
-        Tue, 25 Aug 2020 05:34:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8STidKdjB3IAsSg9qwMG6/fnbTG9ueb7BIUx1fPaPdM=;
-        b=EkXhmIeyqrFX4pTjEOdzP/jGeBGkdRMiIPackjwd0wko0Uj4wDHsnTqJgmE/DUMoOC
-         7UM2Ma7p67yIwuDuwdq0mgDsKjxEhDGZMd3UWwWr9xXzO3XiFPdfZsfq+Ybu18CJpCmv
-         sXA6HfyteNRB35O6jz+EhrtqehZZxQofMP/ar5YWVagBCdMGwjiqJ6yJ6q1Hp0knCTct
-         aFtdRkXwm9KZexzNqUipJ2ymmG0sdCjJldCZKNtdIkR85mQeiCYyMmw5x/pJdFJ1VjcP
-         rCPFgsIJBtyhUZXXDg+oIHHSImxO+1/EvkVPy+bXhZ9PRswqPxoROp7rklfG/xgMCD4C
-         G+wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8STidKdjB3IAsSg9qwMG6/fnbTG9ueb7BIUx1fPaPdM=;
-        b=n1cnoctdPTt2h7EUXpW/J0FqOsXO5gJ1amXYZj7qdw8KQaWjkIYn0irRYjbLTV5o2u
-         VsMCAw7A1B+UN6Z33RlsBz3wHo8K5JW6irqQlqNoMOYg23QJFcDq8BHQxT9ZpOJ2RVhK
-         mDvJRrWtPIsup6lyYvFS8NkvEwBW/zxJpH4RP7m27abAArG0c7Me02xOkMCJUawXAMaS
-         ZnQeK6hdhSSlBMYHkPAVvjscdimqIZHbBglGZUtrzb3TgIzNARzqAKuitzoYHBHZa2re
-         vFs8X7qNB9HhR3K4AsU9GvAMQn6I0IoRvD0zk/nAb560Ats/NK6gFpHBFxbsL2ykK4H1
-         iexA==
-X-Gm-Message-State: AOAM530Gu6OVnrEVQX6FV4QZgHiDdKLmk0EHVRVkKZWRADy5rRjUSN+c
-        eA/OvCk9m4qpQzZNJOT1t5J5yHziLGRiTp/z2rw=
-X-Google-Smtp-Source: ABdhPJyaNv6o4uVnFGumvl1cK7gZdIPeLXqVmwVKwDEiu2FCFHEKUVACuI2WumJhRdItKWAqsIjyLUZJMeK+/egbH10=
-X-Received: by 2002:a4a:380b:: with SMTP id c11mr6876012ooa.17.1598358887626;
- Tue, 25 Aug 2020 05:34:47 -0700 (PDT)
+        id S1729469AbgHYMtd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 25 Aug 2020 08:49:33 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:16326 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727941AbgHYMsY (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Aug 2020 08:48:24 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PCeAmt017797;
+        Tue, 25 Aug 2020 08:48:06 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 332w761k67-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 08:48:06 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 07PCm4jg034775
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 25 Aug 2020 08:48:05 -0400
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 25 Aug 2020 05:48:03 -0700
+Received: from zeus.spd.analog.com (10.66.68.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 25 Aug 2020 05:48:03 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07PCm0jH001781;
+        Tue, 25 Aug 2020 08:48:00 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <vkoul@kernel.org>, <lars@metafoo.de>, <dan.j.williams@intel.com>,
+        <ardeleanalex@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v2 0/6] dmaengine: axi-dmac: add support for reading bus attributes from register
+Date:   Tue, 25 Aug 2020 15:48:27 +0300
+Message-ID: <20200825124840.43664-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200819071633.76494-1-alexandru.ardelean@analog.com>
- <20200819071633.76494-2-alexandru.ardelean@analog.com> <20200825112435.GO2639@vkoul-mobl>
-In-Reply-To: <20200825112435.GO2639@vkoul-mobl>
-From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-Date:   Tue, 25 Aug 2020 15:34:36 +0300
-Message-ID: <CA+U=DspxU+Fo3Ynwr0ST2pyNW8Hrie=r0N2QZGrgiEqMvpicuA@mail.gmail.com>
-Subject: Re: [PATCH 2/5] dmaengine: axi-dmac: move clock enable earlier
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        dmaengine@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>, dan.j.williams@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-25_04:2020-08-25,2020-08-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=8
+ mlxlogscore=943 spamscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0
+ malwarescore=0 priorityscore=1501 bulkscore=0 clxscore=1015
+ impostorscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008250096
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 2:24 PM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 19-08-20, 10:16, Alexandru Ardelean wrote:
-> > The clock may also be required to read registers from the IP core (if it is
-> > provided and the driver needs to control it).
-> > So, move it earlier in the probe.
-> >
-> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > ---
-> >  drivers/dma/dma-axi-dmac.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-> > index 088c79137398..07665c60c21b 100644
-> > --- a/drivers/dma/dma-axi-dmac.c
-> > +++ b/drivers/dma/dma-axi-dmac.c
-> > @@ -850,6 +850,10 @@ static int axi_dmac_probe(struct platform_device *pdev)
-> >       if (IS_ERR(dmac->clk))
-> >               return PTR_ERR(dmac->clk);
-> >
-> > +     ret = clk_prepare_enable(dmac->clk);
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> >       INIT_LIST_HEAD(&dmac->chan.active_descs);
->
-> Change is fine, but then you need to jump to err_clk_disable in few
-> place below this and not return error
+The series adds support for reading the DMA bus attributes from the
+INTERFACE_DESCRIPTION (0x10) register.
 
-oops;
-thanks for catching this;
-will send a v2
+The first 5 changes are a bit of rework prior to adding the actual
+change in patch 6, as things need to be shifted around a bit, to enable 
+the clock to be enabled earlier, to be able to read the version
+register.
 
->
-> >
-> >       of_channels = of_get_child_by_name(pdev->dev.of_node, "adi,channels");
-> > @@ -892,10 +896,6 @@ static int axi_dmac_probe(struct platform_device *pdev)
-> >       dmac->chan.vchan.desc_free = axi_dmac_desc_free;
-> >       vchan_init(&dmac->chan.vchan, dma_dev);
-> >
-> > -     ret = clk_prepare_enable(dmac->clk);
-> > -     if (ret < 0)
-> > -             return ret;
-> > -
-> >       version = axi_dmac_read(dmac, ADI_AXI_REG_VERSION);
-> >
-> >       ret = axi_dmac_detect_caps(dmac, version);
-> > --
-> > 2.17.1
->
-> --
-> ~Vinod
+Changelog v1 -> v2:
+* fixed error-exit paths for the clock move patch
+  i.e. 'dmaengine: axi-dmac: move clock enable earlier'
+* fixed error-exit path for patch
+  'axi-dmac: wrap channel parameter adjust into function'
+* added patch 'dmaengine: axi-dmac: move active_descs list init after device-tree init'
+  the list of active_descs can be moved a bit lower in the init/probe
+
+Alexandru Ardelean (6):
+  dmaengine: axi-dmac: move version read in probe
+  dmaengine: axi-dmac: move active_descs list init after device-tree
+    init
+  dmaengine: axi-dmac: move clock enable earlier
+  dmaengine: axi-dmac: wrap entire dt parse in a function
+  dmaengine: axi-dmac: wrap channel parameter adjust into function
+  dmaengine: axi-dmac: add support for reading bus attributes from
+    registers
+
+ drivers/dma/dma-axi-dmac.c | 138 ++++++++++++++++++++++++++++---------
+ 1 file changed, 107 insertions(+), 31 deletions(-)
+
+-- 
+2.17.1
+

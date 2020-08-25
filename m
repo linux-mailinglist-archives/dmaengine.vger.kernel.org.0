@@ -2,48 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB50C2518EF
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Aug 2020 14:49:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 239CD2518E8
+	for <lists+dmaengine@lfdr.de>; Tue, 25 Aug 2020 14:48:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729215AbgHYMsk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 25 Aug 2020 08:48:40 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:39530 "EHLO
+        id S1729217AbgHYMsn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 25 Aug 2020 08:48:43 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:41966 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729108AbgHYMsj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Aug 2020 08:48:39 -0400
+        by vger.kernel.org with ESMTP id S1729203AbgHYMsl (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Aug 2020 08:48:41 -0400
 Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PCeFUs018019;
-        Tue, 25 Aug 2020 08:48:26 -0400
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PCeAmx017797;
+        Tue, 25 Aug 2020 08:48:29 -0400
 Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 332w761k7a-1
+        by mx0a-00128a01.pphosted.com with ESMTP id 332w761k7e-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 08:48:26 -0400
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 07PCmPI6034893
+        Tue, 25 Aug 2020 08:48:28 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 07PCmR97034904
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 25 Aug 2020 08:48:25 -0400
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+        Tue, 25 Aug 2020 08:48:27 -0400
+Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 25 Aug 2020 08:48:24 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ 15.1.1779.2; Tue, 25 Aug 2020 05:48:26 -0700
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
+ SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 25 Aug 2020 08:48:24 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 25 Aug 2020 08:48:24 -0400
+ 15.1.1779.2; Tue, 25 Aug 2020 05:48:26 -0700
+Received: from zeus.spd.analog.com (10.66.68.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 25 Aug 2020 05:48:25 -0700
 Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07PCm0jS001781;
-        Tue, 25 Aug 2020 08:48:21 -0400
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07PCm0jT001781;
+        Tue, 25 Aug 2020 08:48:22 -0400
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     <vkoul@kernel.org>, <lars@metafoo.de>, <dan.j.williams@intel.com>,
         <ardeleanalex@gmail.com>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2 4/6] dmaengine: axi-dmac: wrap entire dt parse in a function
-Date:   Tue, 25 Aug 2020 15:48:38 +0300
-Message-ID: <20200825124840.43664-12-alexandru.ardelean@analog.com>
+Subject: [PATCH v2 5/6] dmaengine: axi-dmac: wrap channel parameter adjust into function
+Date:   Tue, 25 Aug 2020 15:48:39 +0300
+Message-ID: <20200825124840.43664-13-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200825124840.43664-1-alexandru.ardelean@analog.com>
 References: <20200825124840.43664-1-alexandru.ardelean@analog.com>
@@ -62,80 +62,61 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-All these attributes will be read from registers in newer core versions, so
-just wrap the logic into a function.
+The channel parameters (which are read from the device-tree) are adjusted
+for the DMAEngine framework in the axi_dmac_parse_chan_dt() function, after
+they are read from the device-tree.
+
+When we want to read these from registers, we will need to use the same
+logic, so this change splits the logic into a separate function.
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/dma/dma-axi-dmac.c | 40 +++++++++++++++++++++++---------------
- 1 file changed, 24 insertions(+), 16 deletions(-)
+ drivers/dma/dma-axi-dmac.c | 25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-index f4b17b5e3914..1a1e227fa935 100644
+index 1a1e227fa935..7ee56ae60093 100644
 --- a/drivers/dma/dma-axi-dmac.c
 +++ b/drivers/dma/dma-axi-dmac.c
-@@ -774,6 +774,28 @@ static int axi_dmac_parse_chan_dt(struct device_node *of_chan,
- 	return 0;
- }
+@@ -717,6 +717,20 @@ static const struct regmap_config axi_dmac_regmap_config = {
+ 	.writeable_reg = axi_dmac_regmap_rdwr,
+ };
  
-+static int axi_dmac_parse_dt(struct device *dev, struct axi_dmac *dmac)
++static void axi_dmac_adjust_chan_params(struct axi_dmac_chan *chan)
 +{
-+	struct device_node *of_channels, *of_chan;
-+	int ret;
++	chan->address_align_mask = max(chan->dest_width, chan->src_width) - 1;
 +
-+	of_channels = of_get_child_by_name(dev->of_node, "adi,channels");
-+	if (of_channels == NULL)
-+		return -ENODEV;
-+
-+	for_each_child_of_node(of_channels, of_chan) {
-+		ret = axi_dmac_parse_chan_dt(of_chan, &dmac->chan);
-+		if (ret) {
-+			of_node_put(of_chan);
-+			of_node_put(of_channels);
-+			return -EINVAL;
-+		}
-+	}
-+	of_node_put(of_channels);
-+
-+	return 0;
++	if (axi_dmac_dest_is_mem(chan) && axi_dmac_src_is_mem(chan))
++		chan->direction = DMA_MEM_TO_MEM;
++	else if (!axi_dmac_dest_is_mem(chan) && axi_dmac_src_is_mem(chan))
++		chan->direction = DMA_MEM_TO_DEV;
++	else if (axi_dmac_dest_is_mem(chan) && !axi_dmac_src_is_mem(chan))
++		chan->direction = DMA_DEV_TO_MEM;
++	else
++		chan->direction = DMA_DEV_TO_DEV;
 +}
 +
- static int axi_dmac_detect_caps(struct axi_dmac *dmac, unsigned int version)
- {
- 	struct axi_dmac_chan *chan = &dmac->chan;
-@@ -823,7 +845,6 @@ static int axi_dmac_detect_caps(struct axi_dmac *dmac, unsigned int version)
- 
- static int axi_dmac_probe(struct platform_device *pdev)
- {
--	struct device_node *of_channels, *of_chan;
- 	struct dma_device *dma_dev;
- 	struct axi_dmac *dmac;
- 	struct resource *res;
-@@ -854,22 +875,9 @@ static int axi_dmac_probe(struct platform_device *pdev)
- 	if (ret < 0)
+ /*
+  * The configuration stored in the devicetree matches the configuration
+  * parameters of the peripheral instance and allows the driver to know which
+@@ -760,16 +774,7 @@ static int axi_dmac_parse_chan_dt(struct device_node *of_chan,
  		return ret;
+ 	chan->dest_width = val / 8;
  
--	of_channels = of_get_child_by_name(pdev->dev.of_node, "adi,channels");
--	if (of_channels == NULL) {
--		ret = -ENODEV;
-+	ret = axi_dmac_parse_dt(&pdev->dev, dmac);
-+	if (ret < 0)
- 		goto err_clk_disable;
--	}
+-	chan->address_align_mask = max(chan->dest_width, chan->src_width) - 1;
 -
--	for_each_child_of_node(of_channels, of_chan) {
--		ret = axi_dmac_parse_chan_dt(of_chan, &dmac->chan);
--		if (ret) {
--			of_node_put(of_chan);
--			of_node_put(of_channels);
--			ret = -EINVAL;
--			goto err_clk_disable;
--		}
--	}
--	of_node_put(of_channels);
+-	if (axi_dmac_dest_is_mem(chan) && axi_dmac_src_is_mem(chan))
+-		chan->direction = DMA_MEM_TO_MEM;
+-	else if (!axi_dmac_dest_is_mem(chan) && axi_dmac_src_is_mem(chan))
+-		chan->direction = DMA_MEM_TO_DEV;
+-	else if (axi_dmac_dest_is_mem(chan) && !axi_dmac_src_is_mem(chan))
+-		chan->direction = DMA_DEV_TO_MEM;
+-	else
+-		chan->direction = DMA_DEV_TO_DEV;
++	axi_dmac_adjust_chan_params(chan);
  
- 	INIT_LIST_HEAD(&dmac->chan.active_descs);
- 
+ 	return 0;
+ }
 -- 
 2.17.1
 

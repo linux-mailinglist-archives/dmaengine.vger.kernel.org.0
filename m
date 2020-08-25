@@ -2,132 +2,210 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA9F825124B
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Aug 2020 08:46:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D4DA251260
+	for <lists+dmaengine@lfdr.de>; Tue, 25 Aug 2020 08:50:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729186AbgHYGq1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 25 Aug 2020 02:46:27 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:46235 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729184AbgHYGq0 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Aug 2020 02:46:26 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200825064624euoutp0231a950c2f4b40aa4ea824650617366c7~ub_2u3Xbk1675216752euoutp021
-        for <dmaengine@vger.kernel.org>; Tue, 25 Aug 2020 06:46:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200825064624euoutp0231a950c2f4b40aa4ea824650617366c7~ub_2u3Xbk1675216752euoutp021
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598337984;
-        bh=Lh/NX7H67LjExdxCrMRZFUhDLwhDWtl4bmR0W/2GllE=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=VOlHxOPgcX+KErzihGNWlF8ipv9SJ7pujBaBg9JJSF/dxm7KmI8umHEC1kwB4Vz5D
-         +BZQ3B+X8W3xGVlOkxkPAgUjaJbK+8eIdN5MuMXE+N4ZvGDWXbj8E2Ef5NoSCChw8V
-         uW/LZBcm92Yohb9hpVAeTgXmKcjcuocxHDM4nGD8=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200825064624eucas1p25bac963c6430e2b93d120898d19c9b43~ub_2hQKDe1600416004eucas1p2V;
-        Tue, 25 Aug 2020 06:46:24 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 23.D7.05997.0C3B44F5; Tue, 25
-        Aug 2020 07:46:24 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200825064623eucas1p2d8ba8813794fe18ddd246b9a4789ed93~ub_2GeBz11611216112eucas1p2Q;
-        Tue, 25 Aug 2020 06:46:23 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200825064623eusmtrp26e0d4580d320c9920045f7c5f825c012~ub_2Fd1lX0265402654eusmtrp2p;
-        Tue, 25 Aug 2020 06:46:23 +0000 (GMT)
-X-AuditID: cbfec7f4-677ff7000000176d-53-5f44b3c0fb3a
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id B6.46.06314.FB3B44F5; Tue, 25
-        Aug 2020 07:46:23 +0100 (BST)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200825064623eusmtip1b86b15e1292343a8f0f5986031386bd5~ub_1pgKgi1291312913eusmtip1z;
-        Tue, 25 Aug 2020 06:46:23 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Sugar Zhang <sugar.zhang@rock-chips.com>, lkp@intel.com
-Subject: [PATCH] dmaengine: pl330: Fix burst length if burst size is smaller
- than bus width
-Date:   Tue, 25 Aug 2020 08:46:17 +0200
-Message-Id: <20200825064617.16193-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSbUhTYRTHeXa3u+tqdZsDD5Yag6KCNDXoYi+kCY4gMD/0wTCb8+bEbdq9
-        OjUFl8bQTcVEaZmRVJBMljqXL1NMZ7hAUlHQiC1JkZwgQlppabbbtfr2O8///M6Bw0Ngsm/C
-        UCJbn08zepVWgUuE3aObEyeHuhLTT/naCarT2i6i2hq3RZRjYUZETbuacWq5Yh6n7G98Ysr7
-        YVBA9XnfYhcJ5bMBv0DpsFXhyq7nZcrtptdCZa3ThpRrjvBkPFVyLpPWZhtoJurCTYnG37wk
-        zpuQFPlGFsVGtESYEUEAeRo2vkeYkYSQka0IGvwWEV+sI3DOzQrMKChQrCGwTrEcc4KzdnK3
-        6UXA2PIK+aaA4djQc4yT0WBeMeMcy0k1zIyacE7AyGEEbpcZcUEwmQZzLquYYyF5BOyvjH8G
-        ScnzsDnKbwYyAto6hjBOBvIzDvZyy26QCK7VRcRzMCx7nGKeD8FO3xMBL1Qg+DRuF/NFNYLp
-        cuuucRa84z9w7gIYeRzaXVH8MeKhZzWJx33wfuUA14wFsL77AcY/S6HSJONnHIUmz8t/W4cn
-        pzCelfClsgXjb5IGE85+cR0Kb/q/qgUhGwqhC1hdFs3G6OnCSFalYwv0WZHqXJ0DBX7D2C/P
-        ei9ybWW4EUkgxV6pcfBSukykMrDFOjcCAlPIpQnvxm7IpJmq4js0k5vOFGhp1o0OEkJFiDT2
-        qT9NRmap8ukcms6jmb+pgAgKNSKm30R/LLtSk6KOTW2eUefYkus8GyU5YSs79XtaNY90kSno
-        ZylzZjOp7lZjyVJGrKUzbFZOdzfs1/Q9vHs4Lt+wFTp8WYNV97p9A60wf70h4Wrh42OoMGbk
-        69za7UOYKa7smjxbW91zr6iqpvQ+LBR7kuINO3hEhyWzcsiMK4SsRhV9AmNY1W9JwYAeCQMA
-        AA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrLLMWRmVeSWpSXmKPExsVy+t/xu7r7N7vEGxx5r2qxccZ6VovVU/+y
-        Wmx6fI3V4vKuOWwWr5ofsVmsPXKX3eLOrX1MFjvvnGB24PBYvOclk8emVZ1sHpuX1Hv8nbWf
-        xaNvyypGj8+b5ALYovRsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJz
-        MstSi/TtEvQyXs55wV5wnqvi7uGn7A2MLzi6GDk5JARMJLb0XWDtYuTiEBJYyigxc+EzVoiE
-        jMTJaQ1QtrDEn2tdbBBFnxglfrZfYgJJsAkYSnS9BUlwcogIpEpMXHSJEcRmFjjKKPFlk1cX
-        IweHsEC0xLumJJAwi4CqxNqtDSwgNq+ArcTPY9eZIObLS6zecIB5AiPPAkaGVYwiqaXFuem5
-        xYZ6xYm5xaV56XrJ+bmbGIFBue3Yz807GC9tDD7EKMDBqMTD27DPOV6INbGsuDL3EKMEB7OS
-        CK/T2dNxQrwpiZVVqUX58UWlOanFhxhNgZZPZJYSTc4HRkxeSbyhqaG5haWhubG5sZmFkjhv
-        h8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQZG7kqFtKpdM42eSh203pb0fP2E4rsevnE2/4yv/NvS
-        MWlLFsMl8epIPp5zdi9cd7DvZT0VtPmm/neGuFIZpztx6vNu3ggPu9pX+42xw5Mnekfh0rf7
-        P17J9ev8oTv3u2B04quTggfNOPuUL/xXlNW1frVd3KNnS4oiq8GctKRlV9cJG23ZFyulxFKc
-        kWioxVxUnAgAuVWFuWACAAA=
-X-CMS-MailID: 20200825064623eucas1p2d8ba8813794fe18ddd246b9a4789ed93
-X-Msg-Generator: CA
+        id S1729179AbgHYGuf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 25 Aug 2020 02:50:35 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50768 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729079AbgHYGue (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Aug 2020 02:50:34 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07P6oUbp069409;
+        Tue, 25 Aug 2020 01:50:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598338230;
+        bh=tdz2P7L4M7GY6138AgTYwy06Fxammm7gnj52s0oLfW4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=NqErmEm2w2etd7BIyxArIlTF1/OHd3NZ8hLCT4WyEwurZ/3kXmoU/WuOeBk7MezRU
+         Ofhv7ZVbaxJWvQldcjndPLJ+e4bwXQY168W3YdkcZTiVAxX/lIXJw7Xb9Z8GAoHQ29
+         PTewyxZX+rXuWSaZZ3wogFB7ojZx4FDpsU/OXwfg=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07P6oUCX054547
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Aug 2020 01:50:30 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 25
+ Aug 2020 01:50:30 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 25 Aug 2020 01:50:30 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07P6oRlL124533;
+        Tue, 25 Aug 2020 01:50:28 -0500
+Subject: Re: [RFC PATCH 2/3] dmaengine: add peripheral configuration
+To:     Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200824084712.2526079-1-vkoul@kernel.org>
+ <20200824084712.2526079-3-vkoul@kernel.org>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <50ed780f-4c1a-2da2-71e4-423f3b224e25@ti.com>
+Date:   Tue, 25 Aug 2020 09:52:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <20200824084712.2526079-3-vkoul@kernel.org>
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200825064623eucas1p2d8ba8813794fe18ddd246b9a4789ed93
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200825064623eucas1p2d8ba8813794fe18ddd246b9a4789ed93
-References: <CGME20200825064623eucas1p2d8ba8813794fe18ddd246b9a4789ed93@eucas1p2.samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Move the burst len fixup after setting the generic value for it. This
-finally enables the fixup introduced by commit 137bd11090d8 ("dmaengine:
-pl330: Align DMA memcpy operations to MFIFO width"), which otherwise was
-overwritten by the generic value.
+Hi Vinod,
 
-Reported-by: kernel test robot <lkp@intel.com>
-Fixes: 137bd11090d8 ("dmaengine: pl330: Align DMA memcpy operations to MFIFO width")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- drivers/dma/pl330.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 24/08/2020 11.47, Vinod Koul wrote:
+> Some complex dmaengine controllers have capability to program the
+> peripheral device, so pass on the peripheral configuration as part of
+> dma_slave_config
+>=20
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  include/linux/dmaengine.h | 75 +++++++++++++++++++++++++++++++++++++++=
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index 2c508ee672b9..e010064d8846 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -2801,6 +2801,7 @@ pl330_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dst,
- 	while (burst != (1 << desc->rqcfg.brst_size))
- 		desc->rqcfg.brst_size++;
- 
-+	desc->rqcfg.brst_len = get_burst_len(desc, len);
- 	/*
- 	 * If burst size is smaller than bus width then make sure we only
- 	 * transfer one at a time to avoid a burst stradling an MFIFO entry.
-@@ -2808,7 +2809,6 @@ pl330_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dst,
- 	if (desc->rqcfg.brst_size * 8 < pl330->pcfg.data_bus_width)
- 		desc->rqcfg.brst_len = 1;
- 
--	desc->rqcfg.brst_len = get_burst_len(desc, len);
- 	desc->bytes_requested = len;
- 
- 	desc->txd.flags = flags;
--- 
-2.17.1
+>  1 file changed, 75 insertions(+)
+>=20
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index 6fbd5c99e30c..264643ca9209 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -380,6 +380,73 @@ enum dma_slave_buswidth {
+>  	DMA_SLAVE_BUSWIDTH_64_BYTES =3D 64,
+>  };
+> =20
+> +/**
+> + * enum spi_transfer_cmd - spi transfer commands
+> + */
+> +enum spi_transfer_cmd {
+> +	SPI_TX =3D 1,
+> +	SPI_RX,
+> +	SPI_DUPLEX,
+> +};
+> +
+> +/**
+> + * struct dmaengine_spi_config - spi config for peripheral
+> + *
+> + * @loopback_en: spi loopback enable when set
+> + * @clock_pol: clock polarity
+> + * @data_pol: data polarity
+> + * @pack_en: process tx/rx buffers as packed
+> + * @word_len: spi word length
+> + * @clk_div: source clock divider
+> + * @clk_src: serial clock
+> + * @cmd: spi cmd
+> + * @cs: chip select toggle
+> + * @rx_len: receive length for spi buffer
+> + */
+> +struct dmaengine_spi_config {
+> +	u8 loopback_en;
+> +	u8 clock_pol;
+> +	u8 data_pol;
+> +	u8 pack_en;
+> +	u8 word_len;
+> +	u32 clk_div;
+> +	u32 clk_src;
+> +	u8 fragmentation;
+> +	enum spi_transfer_cmd cmd;
+> +	u8 cs;
+> +	u32 rx_len;
+> +};
+> +
+> +/**
+> + * struct dmaengine_i2c_config - i2c config for peripheral
+> + *
+> + * @pack_enable: process tx/rx buffers as packed
+> + * @cycle_count: clock cycles to be sent
+> + * @high_count: high period of clock
+> + * @low_count: low period of clock
+> + * @clk_div: source clock divider
+> + * @addr: i2c bus address
+> + * @strech: strech the clock at eot
+> + * @op: i2c cmd
+> + */
+> +struct dmaengine_i2c_config {
+> +	u8 pack_enable;
+> +	u8 cycle_count;
+> +	u8 high_count;
+> +	u8 low_count;
+> +	u16 clk_div;
+> +	u8 addr;
+> +	u8 strech;
+> +	u8 op;
+> +};
+> +
+> +enum dmaengine_peripheral {
+> +	DMAENGINE_PERIPHERAL_SPI,
+> +	DMAENGINE_PERIPHERAL_I2C,
+> +	DMAENGINE_PERIPHERAL_UART,
+> +	DMAENGINE_PERIPHERAL_LAST =3D DMAENGINE_PERIPHERAL_UART,
+> +};
+> +
+>  /**
+>   * struct dma_slave_config - dma slave channel runtime config
+>   * @direction: whether the data shall go in or out on this slave
+> @@ -418,6 +485,10 @@ enum dma_slave_buswidth {
+>   * @slave_id: Slave requester id. Only valid for slave channels. The d=
+ma
+>   * slave peripheral will have unique id as dma requester which need to=
+ be
+>   * pass as slave config.
+> + * @peripheral: type of peripheral to DMA to/from
+> + * @set_config: set peripheral config
+> + * @spi: peripheral config for spi
+> + * @:i2c peripheral config for i2c
+>   *
+>   * This struct is passed in as configuration data to a DMA engine
+>   * in order to set up a certain channel for DMA transport at runtime.
+> @@ -443,6 +514,10 @@ struct dma_slave_config {
+>  	u32 dst_port_window_size;
+>  	bool device_fc;
+>  	unsigned int slave_id;
+> +	enum dmaengine_peripheral peripheral;
+> +	u8 set_config;
+> +	struct dmaengine_spi_config spi;
+> +	struct dmaengine_i2c_config i2c;
+
+Would it be possible to reuse one of the existing feature already
+supported by DMAengine?
+We have DMA_PREP_CMD to give a command instead of a real transfer:
+dmaengine_prep_slave_single(tx_chan, config_data, config_len,
+			    DMA_MEM_TO_DEV, DMA_PREP_CMD);
+dmaengine_prep_slave_single(tx_chan, tx_buff, tx_len, DMA_MEM_TO_DEV,
+			    DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+dma_async_issue_pending(tx_chan);
+
+or the metadata support:
+tx =3D dmaengine_prep_slave_single(tx_chan, tx_buff, tx_len,
+				 DMA_MEM_TO_DEV,
+				 DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+dmaengine_desc_attach_metadata(tx, config_data, config_len);
+dma_async_issue_pending(tx_chan);
+
+By reading the driver itself, it is not clear if you always need to send
+the config for TX, or only when the config is changing and what happens
+if the first transfer (for SPI, since that is the only implemented one)
+is RX, when you don't send config at all...
+
+I'm concerned about the size increase of dma_slave_config (it grows by
+>30 bytes) and for DMAs with hundreds of channels (UDMA) it will add up
+to a sizeable amount.
+
+>  };
+> =20
+>  /**
+>=20
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 

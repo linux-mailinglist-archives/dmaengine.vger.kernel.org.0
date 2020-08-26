@@ -2,153 +2,182 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 856F82521F5
-	for <lists+dmaengine@lfdr.de>; Tue, 25 Aug 2020 22:25:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E3332524EF
+	for <lists+dmaengine@lfdr.de>; Wed, 26 Aug 2020 03:11:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgHYUZJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 25 Aug 2020 16:25:09 -0400
-Received: from mga02.intel.com ([134.134.136.20]:61548 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgHYUZJ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 25 Aug 2020 16:25:09 -0400
-IronPort-SDR: PmSsSGFxWX0IQd9HSFhLr4KPG55LeFpDHZ/B1IXl8MJyqnhlJs3miYm+TpntnfaId+uUT6q2nD
- TFHawQCQhYAg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="143966328"
-X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
-   d="scan'208";a="143966328"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 13:25:08 -0700
-IronPort-SDR: Ji7GbzIizgSWMEBMekqQJYIW4FZ2aiDj7mkw3o5pG30B56t6mjt3bkSRmvo5U8H4xWm5dPzZbi
- IORqHLefiJUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
-   d="scan'208";a="338918192"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga007.jf.intel.com with ESMTP; 25 Aug 2020 13:25:07 -0700
-Subject: [PATCH 2/2] dmaengine: idxd: add support for configurable max wq
- batch size
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org
-Date:   Tue, 25 Aug 2020 13:25:07 -0700
-Message-ID: <159838710759.14812.4195210748462962591.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <159838710214.14812.7574610309412397859.stgit@djiang5-desk3.ch.intel.com>
-References: <159838710214.14812.7574610309412397859.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/unknown-version
+        id S1726798AbgHZBLn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 25 Aug 2020 21:11:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48366 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbgHZBLl (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 25 Aug 2020 21:11:41 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08525C061574
+        for <dmaengine@vger.kernel.org>; Tue, 25 Aug 2020 18:11:41 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id n23so191266otq.11
+        for <dmaengine@vger.kernel.org>; Tue, 25 Aug 2020 18:11:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KlAlC0zWlvlcip1yPeOIjVGEV2NwRo1ZMC1lvDQyYTo=;
+        b=AULby94oUcfqeriwlTiz1Yx4ajB/Df33m3gqCmjDG44yekGGE+RhVbuP6CB4NaBWqd
+         +I8SdhylH7tXdjtWXAfBLp1bA0WL2vXPuHh4MWHXXbrxXyw5itUU8/vi4YTbRCx9zg3z
+         ney8MdhHVtiWGhxJeYh/xPmyi5dLTGVmHIflzhzEtyElXZQSmxejzj96rmZ1u3k3B92n
+         pTdupKoLLOsDyF4AXUDlXL6aj0600uT+N7lTWVmmGtuMd0QLmZ3P4etnqADhWEWUAOD0
+         vX4LBqSFZagZfR6Fhy07rRUXZshmRKlPW5jZ87JVVuo22uCibrvetk+rRE9nAnhBBPcg
+         YWvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KlAlC0zWlvlcip1yPeOIjVGEV2NwRo1ZMC1lvDQyYTo=;
+        b=TFeiZM1kmHn88v2LujkIw2lHKs6F7SjzbOnwDkKoEdR2oz1T4WgesRY25QHxm0txAX
+         n/3JHXwD0QSp2d+O05eyA1uE9EuzgyCQ0RatA8KqMbNrBAoMrR0ptgsWXZlJMhABrFmd
+         kiB+sHMnmfbsg55XR9qMJBKMSLjWeoXAVfM54w1qayZgwWCOuQjvzQfpxuWZeIh28cmy
+         uwr7OBVll86L9OxUHOkuq3dNc783MC5IxJUcuzgedmcW0Rty/cyDRMCIh4dc1i0geGw4
+         xqV76chADyOsKiKKpmqF+dEprMetPKQhGHbwCuDcIhbUkqT1VN+Cztm/xYw1qNcWEG0O
+         I3ew==
+X-Gm-Message-State: AOAM531YYxGHn/3YUmaBaIBfYTif1prpV69aS+VuIzAbJBQfsofW0SvX
+        v8WTQ0TEvZ9cpvTyLqJt9KwoFEQoPVbFPSfQ7hI=
+X-Google-Smtp-Source: ABdhPJzN2sDV1aZG82JvEUNpf9sb8BHW2vA4Xv0eS3E8svhrElq99l9p4ZOTyMU/8YRj94VXbezAeRlDJEe3+BkxQ38=
+X-Received: by 2002:a05:6830:15d0:: with SMTP id j16mr6253266otr.242.1598404300210;
+ Tue, 25 Aug 2020 18:11:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20200818090638.26362-1-allen.lkml@gmail.com> <20200825110331.GG2639@vkoul-mobl>
+In-Reply-To: <20200825110331.GG2639@vkoul-mobl>
+From:   Allen <allen.lkml@gmail.com>
+Date:   Wed, 26 Aug 2020 06:41:28 +0530
+Message-ID: <CAOMdWSKvj9Bwt_JpJ072c-LYKRO4aA+vEPyJLZSYgMvuXhTBmQ@mail.gmail.com>
+Subject: Re: [PATCH 00/35] dma: convert tasklets to use new tasklet_setup()
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>, vireshk@kernel.org,
+        leoyang.li@nxp.com, zw@zh-kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, matthias.bgg@gmail.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, baohua@kernel.org, wens@csie.org,
+        dmaengine@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add sysfs attribute max_batch_size to wq in order to allow the max batch
-size configured on a per wq basis. Add support code to configure
-the valid user input on wq enable. This is a performance tuning
-parameter.
+Vinod,
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/dma/idxd/device.c |    2 +-
- drivers/dma/idxd/idxd.h   |    1 +
- drivers/dma/idxd/init.c   |    1 +
- drivers/dma/idxd/sysfs.c  |   38 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 41 insertions(+), 1 deletion(-)
+> > Commit 12cc923f1ccc ("tasklet: Introduce new initialization API")'
+> > introduced a new tasklet initialization API. This series converts
+> > all the dma drivers to use the new tasklet_setup() API
+> >
+> > This is based on 5.9-rc1.
+> >
+> > Please pick this series, as I missed updating a couple of fixes and marking
+> > the correct mailing list.
+>
+> The patches should have been tagged "dmaengine: ...".
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index b8dbb7001933..00dab1465ca3 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -530,7 +530,7 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
- 
- 	/* bytes 12-15 */
- 	wq->wqcfg.max_xfer_shift = ilog2(wq->max_xfer_bytes);
--	wq->wqcfg.max_batch_shift = idxd->hw.gen_cap.max_batch_shift;
-+	wq->wqcfg.max_batch_shift = ilog2(wq->max_batch_size);
- 
- 	dev_dbg(dev, "WQ %d CFGs\n", wq->id);
- 	for (i = 0; i < 8; i++) {
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 81db2a472822..e8bec6eb9f7e 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -115,6 +115,7 @@ struct idxd_wq {
- 	struct dma_chan dma_chan;
- 	char name[WQ_NAME_SIZE + 1];
- 	u64 max_xfer_bytes;
-+	u32 max_batch_size;
- };
- 
- struct idxd_engine {
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index e5ed5750a6d0..11e5ce168177 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -177,6 +177,7 @@ static int idxd_setup_internals(struct idxd_device *idxd)
- 		mutex_init(&wq->wq_lock);
- 		wq->idxd_cdev.minor = -1;
- 		wq->max_xfer_bytes = idxd->max_xfer_bytes;
-+		wq->max_batch_size = idxd->max_batch_size;
- 	}
- 
- 	for (i = 0; i < idxd->max_engines; i++) {
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index 26b3ace66782..c5f19802cb9e 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -1103,6 +1103,43 @@ static struct device_attribute dev_attr_wq_max_transfer_size =
- 		__ATTR(max_transfer_size, 0644,
- 		       wq_max_transfer_size_show, wq_max_transfer_size_store);
- 
-+static ssize_t wq_max_batch_size_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct idxd_wq *wq = container_of(dev, struct idxd_wq, conf_dev);
-+
-+	return sprintf(buf, "%u\n", wq->max_batch_size);
-+}
-+
-+static ssize_t wq_max_batch_size_store(struct device *dev, struct device_attribute *attr,
-+				       const char *buf, size_t count)
-+{
-+	struct idxd_wq *wq = container_of(dev, struct idxd_wq, conf_dev);
-+	struct idxd_device *idxd = wq->idxd;
-+	u32 batch_size;
-+	int rc;
-+
-+	if (wq->state != IDXD_WQ_DISABLED)
-+		return -EPERM;
-+
-+	rc = kstrtou32(buf, 10, &batch_size);
-+	if (rc < 0)
-+		return -EINVAL;
-+
-+	if (batch_size == 0)
-+		return -EINVAL;
-+
-+	batch_size = roundup_pow_of_two(batch_size);
-+	if (batch_size > idxd->max_batch_size)
-+		return -EINVAL;
-+
-+	wq->max_batch_size = batch_size;
-+
-+	return count;
-+}
-+
-+static struct device_attribute dev_attr_wq_max_batch_size =
-+		__ATTR(max_batch_size, 0644, wq_max_batch_size_show, wq_max_batch_size_store);
-+
- static struct attribute *idxd_wq_attributes[] = {
- 	&dev_attr_wq_clients.attr,
- 	&dev_attr_wq_state.attr,
-@@ -1114,6 +1151,7 @@ static struct attribute *idxd_wq_attributes[] = {
- 	&dev_attr_wq_name.attr,
- 	&dev_attr_wq_cdev_minor.attr,
- 	&dev_attr_wq_max_transfer_size.attr,
-+	&dev_attr_wq_max_batch_size.attr,
- 	NULL,
- };
- 
+ My bad, Will have it fixed.
 
+>
+> What is the status of this API conversion, I think I saw some
+> discussions on API change, what is the conclusion?
+
+ Yes, the updated API should land into Linus's tree shortly.
+Will send out V2 with the new API soon.
+
+Thanks.
+
+> Thanks
+>
+> >
+> > Allen Pais (35):
+> >   dma: altera-msgdma: convert tasklets to use new tasklet_setup() API
+> >   dma: at_hdmac: convert tasklets to use new tasklet_setup() API
+> >   dma: at_xdmac: convert tasklets to use new tasklet_setup() API
+> >   dma: coh901318: convert tasklets to use new tasklet_setup() API
+> >   dma: dw: convert tasklets to use new tasklet_setup() API
+> >   dma: ep93xx: convert tasklets to use new tasklet_setup() API
+> >   dma: fsl: convert tasklets to use new tasklet_setup() API
+> >   dma: imx-dma: convert tasklets to use new tasklet_setup() API
+> >   dma: ioat: convert tasklets to use new tasklet_setup() API
+> >   dma: iop_adma: convert tasklets to use new tasklet_setup() API
+> >   dma: ipu: convert tasklets to use new tasklet_setup() API
+> >   dma: k3dma: convert tasklets to use new tasklet_setup() API
+> >   dma: mediatek: convert tasklets to use new tasklet_setup() API
+> >   dma: mmp: convert tasklets to use new tasklet_setup() API
+> >   dma: mpc512x: convert tasklets to use new tasklet_setup() API
+> >   dma: mv_xor: convert tasklets to use new tasklet_setup() API
+> >   dma: mxs-dma: convert tasklets to use new tasklet_setup() API
+> >   dma: nbpfaxi: convert tasklets to use new tasklet_setup() API
+> >   dma: pch_dma: convert tasklets to use new tasklet_setup() API
+> >   dma: pl330: convert tasklets to use new tasklet_setup() API
+> >   dma: ppc4xx: convert tasklets to use new tasklet_setup() API
+> >   dma: qcom: convert tasklets to use new tasklet_setup() API
+> >   dma: sa11x0: convert tasklets to use new tasklet_setup() API
+> >   dma: sirf-dma: convert tasklets to use new tasklet_setup() API
+> >   dma: ste_dma40: convert tasklets to use new tasklet_setup() API
+> >   dma: sun6i: convert tasklets to use new tasklet_setup() API
+> >   dma: tegra20: convert tasklets to use new tasklet_setup() API
+> >   dma: timb_dma: convert tasklets to use new tasklet_setup() API
+> >   dma: txx9dmac: convert tasklets to use new tasklet_setup() API
+> >   dma: virt-dma: convert tasklets to use new tasklet_setup() API
+> >   dma: xgene: convert tasklets to use new tasklet_setup() API
+> >   dma: xilinx: convert tasklets to use new tasklet_setup() API
+> >   dma: plx_dma: convert tasklets to use new tasklet_setup() API
+> >   dma: sf-pdma: convert tasklets to use new tasklet_setup() API
+> >   dma: k3-udma: convert tasklets to use new tasklet_setup() API
+> >
+> >  drivers/dma/altera-msgdma.c      |  6 +++---
+> >  drivers/dma/at_hdmac.c           |  7 +++----
+> >  drivers/dma/at_xdmac.c           |  7 +++----
+> >  drivers/dma/coh901318.c          |  7 +++----
+> >  drivers/dma/dw/core.c            |  6 +++---
+> >  drivers/dma/ep93xx_dma.c         |  7 +++----
+> >  drivers/dma/fsl_raid.c           |  6 +++---
+> >  drivers/dma/fsldma.c             |  6 +++---
+> >  drivers/dma/imx-dma.c            |  7 +++----
+> >  drivers/dma/ioat/dma.c           |  6 +++---
+> >  drivers/dma/ioat/dma.h           |  2 +-
+> >  drivers/dma/ioat/init.c          |  4 +---
+> >  drivers/dma/iop-adma.c           |  8 ++++----
+> >  drivers/dma/ipu/ipu_idmac.c      |  6 +++---
+> >  drivers/dma/k3dma.c              |  6 +++---
+> >  drivers/dma/mediatek/mtk-cqdma.c |  7 +++----
+> >  drivers/dma/mmp_pdma.c           |  6 +++---
+> >  drivers/dma/mmp_tdma.c           |  6 +++---
+> >  drivers/dma/mpc512x_dma.c        |  6 +++---
+> >  drivers/dma/mv_xor.c             |  7 +++----
+> >  drivers/dma/mv_xor_v2.c          |  8 ++++----
+> >  drivers/dma/mxs-dma.c            |  7 +++----
+> >  drivers/dma/nbpfaxi.c            |  6 +++---
+> >  drivers/dma/pch_dma.c            |  7 +++----
+> >  drivers/dma/pl330.c              | 12 ++++++------
+> >  drivers/dma/plx_dma.c            |  7 +++----
+> >  drivers/dma/ppc4xx/adma.c        |  7 +++----
+> >  drivers/dma/qcom/bam_dma.c       |  6 +++---
+> >  drivers/dma/qcom/hidma.c         |  6 +++---
+> >  drivers/dma/qcom/hidma_ll.c      |  6 +++---
+> >  drivers/dma/sa11x0-dma.c         |  6 +++---
+> >  drivers/dma/sf-pdma/sf-pdma.c    | 14 ++++++--------
+> >  drivers/dma/sirf-dma.c           |  6 +++---
+> >  drivers/dma/ste_dma40.c          |  7 +++----
+> >  drivers/dma/sun6i-dma.c          |  6 +++---
+> >  drivers/dma/tegra20-apb-dma.c    |  7 +++----
+> >  drivers/dma/ti/k3-udma.c         |  7 +++----
+> >  drivers/dma/timb_dma.c           |  6 +++---
+> >  drivers/dma/txx9dmac.c           | 14 ++++++--------
+> >  drivers/dma/virt-dma.c           |  6 +++---
+> >  drivers/dma/xgene-dma.c          |  7 +++----
+> >  drivers/dma/xilinx/xilinx_dma.c  |  7 +++----
+> >  drivers/dma/xilinx/zynqmp_dma.c  |  6 +++---
+> >  43 files changed, 136 insertions(+), 158 deletions(-)
+> >
+> > --
+> > 2.17.1
+>
+> --
+> ~Vinod
+
+
+
+-- 
+       - Allen

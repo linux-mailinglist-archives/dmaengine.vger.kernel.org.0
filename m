@@ -2,100 +2,93 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0EA42543B5
-	for <lists+dmaengine@lfdr.de>; Thu, 27 Aug 2020 12:29:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFC4F2544AD
+	for <lists+dmaengine@lfdr.de>; Thu, 27 Aug 2020 13:59:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbgH0K3F (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 27 Aug 2020 06:29:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48598 "EHLO
+        id S1728967AbgH0L6r (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 27 Aug 2020 07:58:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727911AbgH0K3F (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 27 Aug 2020 06:29:05 -0400
+        with ESMTP id S1728957AbgH0L4i (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 27 Aug 2020 07:56:38 -0400
 Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6A8BC061264;
-        Thu, 27 Aug 2020 03:29:04 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id h20so2264757ybj.8;
-        Thu, 27 Aug 2020 03:29:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C332C06123E;
+        Thu, 27 Aug 2020 04:08:34 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id q16so2729576ybk.6;
+        Thu, 27 Aug 2020 04:08:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9p4OFhVWpfoFModMO68JgN4kLUfWn4ZrdXLtONTzats=;
-        b=cfWl0T/uduUii6AXuAat69qCUSaqTEdxBOxERMz8xs9hUTeNu4BCzoJcLPwR00qgaV
-         e3eVum1dak1LKAu6424cfl806r5wrJQjNM2K8QVrKluzB3jgu6C3boB0V2FEr9rrfxL7
-         lIXQPqg7SeiBTIppjggaUv9YEH/mBrPYIKUDHoeO8TO3qeIdPjYyO2uLYq/c0tLtyZgK
-         yTMSksf7A3iJiUAafJDVQbjzP3gldibdgWZtol3EGo79vI2HpSRKC9BWaG4o7nGdFQOD
-         HB/hCPrmJJLgxvzee4ibdYUvgpLcL+vEmQ0FoV3MwVvx1Psro+P6iikMcwUAL/H1Qp5J
-         Xz8Q==
+        bh=4AC1iNQgWZrkBSCQYpKpySGolDqTh2HDf1hkAeZFNb4=;
+        b=T+RtF9WlK+QYlzaFRforZObowt16Z/icVvaSdm1jjwL0BDGUHQxVhiDeSCIDIn/cF4
+         +Jfk9BSyfhzclpoE+pdql83jioly+c2MdVx6NLOqCLqCWsfKn3Ao1cjYW7XGKcbi7b+U
+         lMPm9mwtitTgaESAs6c79YF6oXOk0GFbAjfy2CbREnXE5LP9HiOSzDqqm6SpSwKIwp78
+         jol6U5yB2v5SJpmbkCRsn9lIz1UpWha3gERsgWwwi0BiYzt2T8ctaMSbXxTOd937vCr6
+         +e/ereWKyJnAtDM99NFXloqA5EQ1i1oc8Q08QBJG2EdSdwUiYA2aTShsnaRZ5mV5pyJT
+         LM7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9p4OFhVWpfoFModMO68JgN4kLUfWn4ZrdXLtONTzats=;
-        b=qQmoppeR/Hb/vgPdSB9ZJAmNDP/BPZ/frZVFavedzCRF6UVTM3E+xw9r3zY9/WW/mS
-         3dTb17GXYSNl3HsyQcj01RJoASsQsnNdFGPctCNs6CQz3JknG3FesM2S4hpj92TLMXKU
-         6BuzGoEE34dZB/QLls8ICd2zuj9BJP2X6wp/CEhGJQuB6IOO+lRLijYrdrDEZWvI4EPp
-         MLGkK2srGLTy+5dC3QCVmK38Cffd6zhaCEQb+t8pXKZAw7d5uhij0wJXu+brxhNaZm9z
-         u20LCMy55n16mGaoaMGYLdAtm3xgVM4Ue/ja2GheLuaF276DmOj0k+6mgxpnmGEKLuB0
-         uz0A==
-X-Gm-Message-State: AOAM533iQo7THlZdajGH/PrFmrkBVEOACl5BtTPP7g5nwtQTk4aJnrSw
-        FX6vPL7FiSFNgvEIVAMHTXV1i/jHuPrMRCnw3+4=
-X-Google-Smtp-Source: ABdhPJx324llbhik3pGqUwsEqNwv5W5jnr6M095ctSXSrBgZc/2KENC6v9kVZnh8wCEtOOI2vH7CQaoNO4SKSVMh3Go=
-X-Received: by 2002:a25:8149:: with SMTP id j9mr28778381ybm.214.1598524144200;
- Thu, 27 Aug 2020 03:29:04 -0700 (PDT)
+        bh=4AC1iNQgWZrkBSCQYpKpySGolDqTh2HDf1hkAeZFNb4=;
+        b=r04hRvZH6rcwvRX+/cRGvUFv/2GkV3XgabSorz8yILWPdCehOTI2OO+ohm+29kz8H2
+         /IJFFb9afn0OBe4o/xBJnn9EeN012EA2Yb31d5oPwYacFBRxGKfFnwA+COBEFRgZrRON
+         y47z4xOva9+tJNnKIhrxOjlqB4494nnY0iOYi/pIT02T9X+TlLciJlT8YWhyZWoPUL/U
+         1yqG3SPPMWegXE0/M0UKPIepbIQiOK/M3GW1nJKr/6djtdwuB1RHSQEh+CgKl/LfwwZr
+         PztxWNgFgyeQI1EtM2ouNM+X2cIVoahXLkdOtRjRR9K7CqfSsQzx/fNzhyFz8pkYYijW
+         Lbww==
+X-Gm-Message-State: AOAM5307fAgGfz9DoT3BBnMCsuWPXrf4iuHC+A55rVifiBN0DL2MD9q/
+        8ZYokM/uCiAn6XVYB64uIid7qAKWbddK5RCXWaY=
+X-Google-Smtp-Source: ABdhPJxqcVtXp1n3gyHbu5k3vj5n974w3z1wdNTj6pVg7CQ0rfbSLCDrB4IgRwp3FjMCjoGv8C0ToybrrjeIiLUlXDE=
+X-Received: by 2002:a25:8149:: with SMTP id j9mr28989594ybm.214.1598526513604;
+ Thu, 27 Aug 2020 04:08:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594676120-5862-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594676120-5862-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588542414-14826-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 27 Aug 2020 11:28:37 +0100
-Message-ID: <CA+V-a8voHnHdmSBmewE3BStksxE4dEM1CtE7KwPZ5dn6PmV_0A@mail.gmail.com>
-Subject: Re: [PATCH 8/9] dt-bindings: net: renesas,ravb: Add support for
- r8a774e1 SoC
-To:     "David S. Miller" <davem@davemloft.net>
+Date:   Thu, 27 Aug 2020 12:08:07 +0100
+Message-ID: <CA+V-a8v5CtxJQxjSWcvJrPtf9JyYKZeACdc3as_hjM710pk1AQ@mail.gmail.com>
+Subject: Re: [PATCH v2 05/10] dt-bindings: renesas,rcar-dmac: Document r8a7742 support
+To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
         Magnus Damm <magnus.damm@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi David,
+Hi Vinod,
 
-On Mon, Jul 13, 2020 at 10:36 PM Lad Prabhakar
+On Sun, May 3, 2020 at 10:47 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
 >
-> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Renesas RZ/G SoC also have the R-Car gen2/3 compatible DMA controllers.
+> Document RZ/G1H (also known as R8A7742) SoC bindings.
 >
-> Document RZ/G2H (R8A774E1) SoC bindings.
->
-> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  Documentation/devicetree/bindings/net/renesas,ravb.txt | 1 +
+>  Documentation/devicetree/bindings/dma/renesas,rcar-dmac.yaml | 1 +
 >  1 file changed, 1 insertion(+)
 >
-Gentle ping, this patch is not queued up yet at [1].
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/log/
+This patch is not present in linux-next yet, could you please take care of it.
 
 Cheers,
 Prabhakar

@@ -2,101 +2,151 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2206253D16
-	for <lists+dmaengine@lfdr.de>; Thu, 27 Aug 2020 07:10:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 394692542C7
+	for <lists+dmaengine@lfdr.de>; Thu, 27 Aug 2020 11:54:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726058AbgH0FKy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 27 Aug 2020 01:10:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36862 "EHLO mail.kernel.org"
+        id S1726851AbgH0Jye (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 27 Aug 2020 05:54:34 -0400
+Received: from mga18.intel.com ([134.134.136.126]:16855 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbgH0FKx (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 27 Aug 2020 01:10:53 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A55020639;
-        Thu, 27 Aug 2020 05:10:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598505052;
-        bh=tX7GZOO7LfjDunkhw2PIoOqNvJKif05ZX2TOPHyhupM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FjjbDbdsYHnLDl0CQ5pU+jRifCcfbvDbCxZFXrsq6A7zq688yS/KXlrt6oLhr1nsU
-         tmr9cfHpiy6ZjRuoYtpIHTEqzEBFIF0+9SEbtR7nACEMY8K+X3iAe8g3KYfYV2I89B
-         xKmpPIPBuqOGBs91wRWxCAjUXtuv853Utx4BE1Ww=
-Date:   Thu, 27 Aug 2020 10:40:48 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] dmaengine: dw-edma: Fix linked list physical address
- calculation on non-64 bits architectures
-Message-ID: <20200827051048.GH2639@vkoul-mobl>
-References: <9d92b3c0f9304e3f2892833a70c726b911b29fd8.1597327637.git.gustavo.pimentel@synopsys.com>
- <20200825110937.GI2639@vkoul-mobl>
- <DM5PR12MB127696E920BD51BA1788CDE0DA540@DM5PR12MB1276.namprd12.prod.outlook.com>
+        id S1726157AbgH0Jyd (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 27 Aug 2020 05:54:33 -0400
+IronPort-SDR: 6EwFLcfDa5CTaAAAoeSmLGZM+7jAd3C26xcXhdrNTckPT3UkVvFRCjpqc5SdFA3a00UkencRMv
+ O8aQQsooodjg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="144131056"
+X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
+   d="scan'208";a="144131056"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 02:54:32 -0700
+IronPort-SDR: zzFZZKfiIYitmUmayPFZKycyu6m5slei8hD8mOAqFMwUJjwnmBW+VS3KvVoctozMoVYE2ERCii
+ 5ywYwjjnQX8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
+   d="scan'208";a="295672250"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 27 Aug 2020 02:54:32 -0700
+Received: from [10.255.146.64] (mreddy3x-MOBL.gar.corp.intel.com [10.255.146.64])
+        by linux.intel.com (Postfix) with ESMTP id ABFFA5806C6;
+        Thu, 27 Aug 2020 02:54:29 -0700 (PDT)
+Subject: Re: [PATCH v5 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, chuanhua.lei@linux.intel.com,
+        malliamireddy009@gmail.com
+References: <cover.1597381889.git.mallikarjunax.reddy@linux.intel.com>
+ <68c77fd2ffb477aa4a52a58f8a26bfb191d3c5d1.1597381889.git.mallikarjunax.reddy@linux.intel.com>
+ <20200814203222.GA2674896@bogus>
+ <7cdc0587-8b4f-4360-a303-1541c9ad57b2@linux.intel.com>
+ <20200825112107.GN2639@vkoul-mobl>
+From:   "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
+Message-ID: <ffa5ba4d-f1b2-6a30-f2f1-f4578a77bce2@linux.intel.com>
+Date:   Thu, 27 Aug 2020 17:54:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM5PR12MB127696E920BD51BA1788CDE0DA540@DM5PR12MB1276.namprd12.prod.outlook.com>
+In-Reply-To: <20200825112107.GN2639@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 26-08-20, 12:31, Gustavo Pimentel wrote:
-> On Tue, Aug 25, 2020 at 12:9:37, Vinod Koul <vkoul@kernel.org> wrote:
-> 
-> > On 13-08-20, 16:13, Gustavo Pimentel wrote:
-> > > Fix linked list physical address calculation on non-64 bits architectures.
-> > > 
-> > > The paddr variable is phys_addr_t type, which can assume a different
-> > > type (u64 or u32) depending on the conditional compilation flag
-> > > CONFIG_PHYS_ADDR_T_64BIT.
-> > > 
-> > > Since this variable is used in with upper_32 bits() macro to get the
-> > > value from 32 to 63 bits, on a non-64 bits architecture this variable
-> > > will assume a u32 type, it can cause a compilation warning.
-> > > 
-> > > This issue was reported by a Coverity analysis.
-> > > 
-> > > Fixes: 7e4b8a4fbe2c ("dmaengine: Add Synopsys eDMA IP version 0 support")
-> > > 
-> > > Cc: Joao Pinto <jpinto@synopsys.com>
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> > > ---
-> > >  drivers/dma/dw-edma/dw-edma-v0-core.c | 23 +++++++++++++++++------
-> > >  1 file changed, 17 insertions(+), 6 deletions(-)
-> > > 
-> > > diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > > index 692de47..cfabbf5 100644
-> > > --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > > +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > > @@ -229,8 +229,13 @@ static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
-> > >  	/* Channel control */
-> > >  	SET_LL(&llp->control, control);
-> > >  	/* Linked list  - low, high */
-> > > -	SET_LL(&llp->llp_low, lower_32_bits(chunk->ll_region.paddr));
-> > > -	SET_LL(&llp->llp_high, upper_32_bits(chunk->ll_region.paddr));
-> > > +	#ifdef CONFIG_PHYS_ADDR_T_64BIT
-> > > +		SET_LL(&llp->llp_low, lower_32_bits(chunk->ll_region.paddr));
-> > > +		SET_LL(&llp->llp_high, upper_32_bits(chunk->ll_region.paddr));
-> > > +	#else /* CONFIG_PHYS_ADDR_T_64BIT */
-> > > +		SET_LL(&llp->llp_low, chunk->ll_region.paddr);
-> > > +		SET_LL(&llp->llp_high, 0x0);
-> > 
-> > Shouldn't upper_32_bits(chunk->ll_region.paddr) return zero for non
-> > 64bit archs?
-> 
-> At the time when I made this patch, I got a compiler warning about the 
-> u32 vs u64 type mixing (phys_addr_t) and the macro usage upper_32 bits() 
-> on non-64 bits architectures. That's why I made this patch, but now I 
-> don't see this warning anymore.
-> 
-> Vinod, please disregard this patch.
+Hi Vinod,
+Thanks for the review comments.
 
-Ok dropped
-
--- 
-~Vinod
+On 8/25/2020 7:21 PM, Vinod Koul wrote:
+> On 18-08-20, 15:00, Reddy, MallikarjunaX wrote:
+>
+>>>> +
+>>>> +            intel,chans:
+>>>> +              $ref: /schemas/types.yaml#/definitions/uint32-array
+>>>> +              description:
+>>>> +                 The channels included on this port. Format is channel start
+>>>> +                 number and how many channels on this port.
+>>> Why does this need to be in DT? This all seems like it can be in the dma
+>>> cells for each client.
+>> (*ABC)
+>> Yes. We need this.
+>> for dma0(lgm-cdma) old SOC supports 16 channels and the new SOC supports 22
+>> channels. and the logical channel mapping for the peripherals also differ
+>> b/w old and new SOCs.
+>>
+>> Because of this hardware limitation we are trying to configure the total
+>> channels and port-channel mapping dynamically from device tree.
+>>
+>> based on port name we are trying to configure the default values for
+>> different peripherals(ports).
+>> Example: burst length is not same for all ports, so using port name to do
+>> default configurations.
+> Sorry that does not make sense to me, why not specify the values to be
+> used here instead of defining your own name scheme!
+OK. Agreed. I will remove port name from DT and only use intel,chans
+>
+> Only older soc it should create 16 channels and new 22 (hint this is hw
+> description so perfectly okay to specify in DT or in using driver_data
+> and compatible for each version
+>
+>>>> +
+>>>> +          required:
+>>>> +            - reg
+>>>> +            - intel,name
+>>>> +            - intel,chans
+>>>> +
+>>>> +
+>>>> + ldma-channels:
+>>>> +    type: object
+>>>> +    description:
+>>>> +       This sub-node must contain a sub-node for each DMA channel.
+>>>> +    properties:
+>>>> +      '#address-cells':
+>>>> +        const: 1
+>>>> +      '#size-cells':
+>>>> +        const: 0
+>>>> +
+>>>> +    patternProperties:
+>>>> +      "^ldma-channels@[0-15]+$":
+>>>> +          type: object
+>>>> +
+>>>> +          properties:
+>>>> +            reg:
+>>>> +              items:
+>>>> +                - enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+>>>> +              description:
+>>>> +                 Which channel this node refers to.
+>>>> +
+>>>> +            intel,desc_num:
+>>>> +              $ref: /schemas/types.yaml#/definitions/uint32
+>>>> +              description:
+>>>> +                 Per channel maximum descriptor number. The max value is 255.
+>>>> +
+>>>> +            intel,hdr-mode:
+>>>> +              $ref: /schemas/types.yaml#/definitions/uint32-array
+>>>> +              description:
+>>>> +                 The first parameter is header mode size, the second
+>>>> +                 parameter is checksum enable or disable. If enabled,
+>>>> +                 header mode size is ignored. If disabled, header mode
+>>>> +                 size must be provided.
+>>>> +
+>>>> +            intel,hw-desc:
+>>>> +              $ref: /schemas/types.yaml#/definitions/uint32-array
+>>>> +              description:
+>>>> +                 Per channel dma hardware descriptor configuration.
+>>>> +                 The first parameter is descriptor physical address and the
+>>>> +                 second parameter hardware descriptor number.
+>>> Again, this all seems like per client information for dma cells.
+>>   Ok, if we move all these attributes to 'dmas' then 'dma-channels' child
+>> node is not needed in dtsi.
+>> #dma-cells number i am already using 7. If we move all these attributes to
+>> 'dmas' then integer cells will increase.
+>>
+>> Is there any limitation in using a number of integer cells & as determined
+>> by the #dma-cells property?
+> No I dont think there is but it needs to make sense :-)
+OK.
+>

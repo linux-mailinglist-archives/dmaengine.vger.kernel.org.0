@@ -2,93 +2,107 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFC4F2544AD
-	for <lists+dmaengine@lfdr.de>; Thu, 27 Aug 2020 13:59:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E52842545FE
+	for <lists+dmaengine@lfdr.de>; Thu, 27 Aug 2020 15:33:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728967AbgH0L6r (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 27 Aug 2020 07:58:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34042 "EHLO
+        id S1727924AbgH0Ndg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 27 Aug 2020 09:33:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728957AbgH0L4i (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 27 Aug 2020 07:56:38 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C332C06123E;
-        Thu, 27 Aug 2020 04:08:34 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id q16so2729576ybk.6;
-        Thu, 27 Aug 2020 04:08:34 -0700 (PDT)
+        with ESMTP id S1728139AbgH0Nd2 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 27 Aug 2020 09:33:28 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2EE4C061264
+        for <dmaengine@vger.kernel.org>; Thu, 27 Aug 2020 06:33:19 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id s2so2015328pjr.4
+        for <dmaengine@vger.kernel.org>; Thu, 27 Aug 2020 06:33:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4AC1iNQgWZrkBSCQYpKpySGolDqTh2HDf1hkAeZFNb4=;
-        b=T+RtF9WlK+QYlzaFRforZObowt16Z/icVvaSdm1jjwL0BDGUHQxVhiDeSCIDIn/cF4
-         +Jfk9BSyfhzclpoE+pdql83jioly+c2MdVx6NLOqCLqCWsfKn3Ao1cjYW7XGKcbi7b+U
-         lMPm9mwtitTgaESAs6c79YF6oXOk0GFbAjfy2CbREnXE5LP9HiOSzDqqm6SpSwKIwp78
-         jol6U5yB2v5SJpmbkCRsn9lIz1UpWha3gERsgWwwi0BiYzt2T8ctaMSbXxTOd937vCr6
-         +e/ereWKyJnAtDM99NFXloqA5EQ1i1oc8Q08QBJG2EdSdwUiYA2aTShsnaRZ5mV5pyJT
-         LM7A==
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=+qrEHr0zTCzeXf8VFLq2nBPA0b+vvbkTtN5icyLM91U=;
+        b=FvLds+qTqQy0s/keU5Aqbn9ch+Oh7dDoPonDYGzVROvEkGFAPIPDIrhpjmpL/rZ80F
+         6AXCbM02dVFnf5v51a/7JBCyLrdlJ613TEsw+/1DucsgX3K+DfEgP2c2IO8rLdz1PYFC
+         +ZWRyRm8+Xig1/5YvC//DjPtOblsMEEhJWJcaPSMXEZSbASKHz5bOPJ4xVrpico8g5j7
+         h4RRyMD+BX1EDg63Scog5MwGzo8c1LKZnBDVCNoIa56zxIq8yrAErRmL+H3O2hrsxn9m
+         VOtOGG9mSXiNEnFb7jUysf6n89QLqVdzA92RHremC4uj5lW/FL5pzbbDMYWm0iF82e8X
+         jj5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4AC1iNQgWZrkBSCQYpKpySGolDqTh2HDf1hkAeZFNb4=;
-        b=r04hRvZH6rcwvRX+/cRGvUFv/2GkV3XgabSorz8yILWPdCehOTI2OO+ohm+29kz8H2
-         /IJFFb9afn0OBe4o/xBJnn9EeN012EA2Yb31d5oPwYacFBRxGKfFnwA+COBEFRgZrRON
-         y47z4xOva9+tJNnKIhrxOjlqB4494nnY0iOYi/pIT02T9X+TlLciJlT8YWhyZWoPUL/U
-         1yqG3SPPMWegXE0/M0UKPIepbIQiOK/M3GW1nJKr/6djtdwuB1RHSQEh+CgKl/LfwwZr
-         PztxWNgFgyeQI1EtM2ouNM+X2cIVoahXLkdOtRjRR9K7CqfSsQzx/fNzhyFz8pkYYijW
-         Lbww==
-X-Gm-Message-State: AOAM5307fAgGfz9DoT3BBnMCsuWPXrf4iuHC+A55rVifiBN0DL2MD9q/
-        8ZYokM/uCiAn6XVYB64uIid7qAKWbddK5RCXWaY=
-X-Google-Smtp-Source: ABdhPJxqcVtXp1n3gyHbu5k3vj5n974w3z1wdNTj6pVg7CQ0rfbSLCDrB4IgRwp3FjMCjoGv8C0ToybrrjeIiLUlXDE=
-X-Received: by 2002:a25:8149:: with SMTP id j9mr28989594ybm.214.1598526513604;
- Thu, 27 Aug 2020 04:08:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588542414-14826-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588542414-14826-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 27 Aug 2020 12:08:07 +0100
-Message-ID: <CA+V-a8v5CtxJQxjSWcvJrPtf9JyYKZeACdc3as_hjM710pk1AQ@mail.gmail.com>
-Subject: Re: [PATCH v2 05/10] dt-bindings: renesas,rcar-dmac: Document r8a7742 support
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+qrEHr0zTCzeXf8VFLq2nBPA0b+vvbkTtN5icyLM91U=;
+        b=pM4/LksoHYieBz59WbxqfgQCHJHgcClhWDiJAu8MeykR1Af1dvwprrsr39EEig1TFe
+         CLckw0mcKaxlsTmTq1qZuAPPlpPLJa8h1P0KtMe3MigrsB8JUI8gPheFMelzBkj9KnrG
+         +thGoAMTX2MXRC3rQ0UVyPKf6p0/Y6YGVMSpiSM1mBobOGmNcpRi0jC7qlgftbwXovgB
+         SHCH4P+3+SZQOPHdKRZxEmuq6wanGImSK4rZlgkcr07Xn2OB12JHQPDMTWeEVgqQIuZC
+         csrwNqT7LAlQokDox+brVIBpWWV3fb0OBTCAooUimxAPA1r1jUB3GLWtfU8ag67JS4sY
+         rsOw==
+X-Gm-Message-State: AOAM530VlOy95GpbPoPxjooNcx/jlo1tcJtrCoGoX09qU8UeAAQG/fyv
+        0BsU+xx3zp4lOqsVZpxOO88OkxzLsDrZX7K3
+X-Google-Smtp-Source: ABdhPJyt7oKbO29cbXVPwqA/1kn9r7o+oxCSnwws8fr+DfNMUQ0NmXBE2OvvORK7ZZuHi6AiQrlPbg==
+X-Received: by 2002:a17:90b:60f:: with SMTP id gb15mr10323039pjb.38.1598535199468;
+        Thu, 27 Aug 2020 06:33:19 -0700 (PDT)
+Received: from localhost.localdomain ([210.91.70.133])
+        by smtp.gmail.com with ESMTPSA id t25sm2901680pfe.51.2020.08.27.06.33.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 06:33:18 -0700 (PDT)
+From:   Brad Kim <brad.kim@sifive.com>
+X-Google-Original-From: Brad Kim <brad.kim@semifive.com>
+To:     green.wan@sifive.com, vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, Brad Kim <brad.kim@semifive.com>
+Subject: [PATCH] dmaengine: sf-pdma: Fix an error that calls callback twice
+Date:   Thu, 27 Aug 2020 22:33:09 +0900
+Message-Id: <20200827133309.17362-1-brad.kim@semifive.com>
+X-Mailer: git-send-email 2.17.1
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vinod,
+Because a callback is called twice when DMA transfer complete
+the second callback may be possible to access a freed memory
+if the first callback routines perform the dma_release_channel function.
+So this patch serialized the callback functions
 
-On Sun, May 3, 2020 at 10:47 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
->
-> Renesas RZ/G SoC also have the R-Car gen2/3 compatible DMA controllers.
-> Document RZ/G1H (also known as R8A7742) SoC bindings.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  Documentation/devicetree/bindings/dma/renesas,rcar-dmac.yaml | 1 +
->  1 file changed, 1 insertion(+)
->
-This patch is not present in linux-next yet, could you please take care of it.
+Signed-off-by: Brad Kim <brad.kim@semifive.com>
+---
+ drivers/dma/sf-pdma/sf-pdma.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Cheers,
-Prabhakar
+diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
+index 6e530dca6d9e..754994087e5f 100644
+--- a/drivers/dma/sf-pdma/sf-pdma.c
++++ b/drivers/dma/sf-pdma/sf-pdma.c
+@@ -295,7 +295,10 @@ static void sf_pdma_donebh_tasklet(unsigned long arg)
+ 	}
+ 	spin_unlock_irqrestore(&chan->lock, flags);
+ 
+-	dmaengine_desc_get_callback_invoke(desc->async_tx, NULL);
++	spin_lock_irqsave(&chan->vchan.lock, flags);
++	list_del(&chan->desc->vdesc.node);
++	vchan_cookie_complete(&chan->desc->vdesc);
++	spin_unlock_irqrestore(&chan->vchan.lock, flags);
+ }
+ 
+ static void sf_pdma_errbh_tasklet(unsigned long arg)
+@@ -332,8 +335,7 @@ static irqreturn_t sf_pdma_done_isr(int irq, void *dev_id)
+ 	residue = readq(regs->residue);
+ 
+ 	if (!residue) {
+-		list_del(&chan->desc->vdesc.node);
+-		vchan_cookie_complete(&chan->desc->vdesc);
++		tasklet_hi_schedule(&chan->done_tasklet);
+ 	} else {
+ 		/* submit next trascatioin if possible */
+ 		struct sf_pdma_desc *desc = chan->desc;
+@@ -347,8 +349,6 @@ static irqreturn_t sf_pdma_done_isr(int irq, void *dev_id)
+ 
+ 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
+ 
+-	tasklet_hi_schedule(&chan->done_tasklet);
+-
+ 	return IRQ_HANDLED;
+ }
+ 
+-- 
+2.17.1
+

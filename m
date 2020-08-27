@@ -2,110 +2,101 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F03A3253CE8
-	for <lists+dmaengine@lfdr.de>; Thu, 27 Aug 2020 06:50:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2206253D16
+	for <lists+dmaengine@lfdr.de>; Thu, 27 Aug 2020 07:10:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgH0Eu6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 27 Aug 2020 00:50:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53292 "EHLO mail.kernel.org"
+        id S1726058AbgH0FKy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 27 Aug 2020 01:10:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725909AbgH0Eu6 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 27 Aug 2020 00:50:58 -0400
+        id S1726028AbgH0FKx (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 27 Aug 2020 01:10:53 -0400
 Received: from localhost (unknown [122.171.38.130])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83FFD2078A;
-        Thu, 27 Aug 2020 04:50:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A55020639;
+        Thu, 27 Aug 2020 05:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598503857;
-        bh=+cpPEpRHrWea3EaXA37NXtLOxUHiIVISGIFqHu9YHYw=;
+        s=default; t=1598505052;
+        bh=tX7GZOO7LfjDunkhw2PIoOqNvJKif05ZX2TOPHyhupM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ogmDvo7BcJBBKkhGnmqRFROqzQy/a8OAbIU8Iwychd6fiwTamTOOyJ5pOmAz9VL1d
-         PHwNdUTwTLuxlEeq7iry4xV7gpWBBxdiOdkqhPv6lSekSwSkiOuQzcuJZ0eNpSCW2X
-         3A6FtZqYGw5wuC2xzTv6uBJ5/DgOUPY3laT9jRSs=
-Date:   Thu, 27 Aug 2020 10:20:53 +0530
+        b=FjjbDbdsYHnLDl0CQ5pU+jRifCcfbvDbCxZFXrsq6A7zq688yS/KXlrt6oLhr1nsU
+         tmr9cfHpiy6ZjRuoYtpIHTEqzEBFIF0+9SEbtR7nACEMY8K+X3iAe8g3KYfYV2I89B
+         xKmpPIPBuqOGBs91wRWxCAjUXtuv853Utx4BE1Ww=
+Date:   Thu, 27 Aug 2020 10:40:48 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Document qcom,gpi dma binding
-Message-ID: <20200827045053.GG2639@vkoul-mobl>
-References: <20200824084712.2526079-1-vkoul@kernel.org>
- <20200824084712.2526079-2-vkoul@kernel.org>
- <20200824174009.GA2948650@bogus>
- <20200825145131.GS2639@vkoul-mobl>
- <20200826063246.GW2639@vkoul-mobl>
- <CAL_JsqKwwirYhrQxCkoUCVnZa_7yNsBDaqgc5TWbLLpeGv17Zw@mail.gmail.com>
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] dmaengine: dw-edma: Fix linked list physical address
+ calculation on non-64 bits architectures
+Message-ID: <20200827051048.GH2639@vkoul-mobl>
+References: <9d92b3c0f9304e3f2892833a70c726b911b29fd8.1597327637.git.gustavo.pimentel@synopsys.com>
+ <20200825110937.GI2639@vkoul-mobl>
+ <DM5PR12MB127696E920BD51BA1788CDE0DA540@DM5PR12MB1276.namprd12.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqKwwirYhrQxCkoUCVnZa_7yNsBDaqgc5TWbLLpeGv17Zw@mail.gmail.com>
+In-Reply-To: <DM5PR12MB127696E920BD51BA1788CDE0DA540@DM5PR12MB1276.namprd12.prod.outlook.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 26-08-20, 08:35, Rob Herring wrote:
-> On Wed, Aug 26, 2020 at 12:32 AM Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > On 25-08-20, 20:21, Vinod Koul wrote:
-> > > Hey Rob,
-> > >
-> > > On 24-08-20, 11:40, Rob Herring wrote:
-> > > > On Mon, 24 Aug 2020 14:17:10 +0530, Vinod Koul wrote:
-> > > > > Add devicetree binding documentation for GPI DMA controller
-> > > > > implemented on Qualcomm SoCs
-> > > > >
-> > > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > > > > ---
-> > > > >  .../devicetree/bindings/dma/qcom-gpi.yaml     | 87 +++++++++++++++++++
-> > > > >  1 file changed, 87 insertions(+)
-> > > > >  create mode 100644 Documentation/devicetree/bindings/dma/qcom-gpi.yaml
-> > > > >
-> > > >
-> > > >
-> > > > My bot found errors running 'make dt_binding_check' on your patch:
-> > > >
-> > > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: {'description': 'Event ring transfer size compare to channel transfer ring. Event ring length = ev-factor * transfer ring size', 'maxItems': 1} is not valid under any of the given schemas (Possible causes of the failure):
-> > > >     /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: 'not' is a required property
-> > >
-> > > Okay updating dt-schema I do see this, now the question is what is this
-> > > and what does it mean ;-) I am not sure I comprehend the error message.
-> > > I see this for all the new properties I added as required for this
-> > > device node
-> >
-> > Okay I think I have figured it out, I need to provide ref to
-> > /schemas/types.yaml#definitions/uint32 for this to work, which does
-> > makes sense to me.
-> >
-> >   qcom,max-num-gpii:
-> >     $ref: /schemas/types.yaml#definitions/uint32
-> >     maxItems: 1
+On 26-08-20, 12:31, Gustavo Pimentel wrote:
+> On Tue, Aug 25, 2020 at 12:9:37, Vinod Koul <vkoul@kernel.org> wrote:
 > 
-> uint32 is always 1 item, so drop. Is there a max value you can define?
+> > On 13-08-20, 16:13, Gustavo Pimentel wrote:
+> > > Fix linked list physical address calculation on non-64 bits architectures.
+> > > 
+> > > The paddr variable is phys_addr_t type, which can assume a different
+> > > type (u64 or u32) depending on the conditional compilation flag
+> > > CONFIG_PHYS_ADDR_T_64BIT.
+> > > 
+> > > Since this variable is used in with upper_32 bits() macro to get the
+> > > value from 32 to 63 bits, on a non-64 bits architecture this variable
+> > > will assume a u32 type, it can cause a compilation warning.
+> > > 
+> > > This issue was reported by a Coverity analysis.
+> > > 
+> > > Fixes: 7e4b8a4fbe2c ("dmaengine: Add Synopsys eDMA IP version 0 support")
+> > > 
+> > > Cc: Joao Pinto <jpinto@synopsys.com>
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > > ---
+> > >  drivers/dma/dw-edma/dw-edma-v0-core.c | 23 +++++++++++++++++------
+> > >  1 file changed, 17 insertions(+), 6 deletions(-)
+> > > 
+> > > diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > > index 692de47..cfabbf5 100644
+> > > --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > > +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > > @@ -229,8 +229,13 @@ static void dw_edma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
+> > >  	/* Channel control */
+> > >  	SET_LL(&llp->control, control);
+> > >  	/* Linked list  - low, high */
+> > > -	SET_LL(&llp->llp_low, lower_32_bits(chunk->ll_region.paddr));
+> > > -	SET_LL(&llp->llp_high, upper_32_bits(chunk->ll_region.paddr));
+> > > +	#ifdef CONFIG_PHYS_ADDR_T_64BIT
+> > > +		SET_LL(&llp->llp_low, lower_32_bits(chunk->ll_region.paddr));
+> > > +		SET_LL(&llp->llp_high, upper_32_bits(chunk->ll_region.paddr));
+> > > +	#else /* CONFIG_PHYS_ADDR_T_64BIT */
+> > > +		SET_LL(&llp->llp_low, chunk->ll_region.paddr);
+> > > +		SET_LL(&llp->llp_high, 0x0);
+> > 
+> > Shouldn't upper_32_bits(chunk->ll_region.paddr) return zero for non
+> > 64bit archs?
+> 
+> At the time when I made this patch, I got a compiler warning about the 
+> u32 vs u64 type mixing (phys_addr_t) and the macro usage upper_32 bits() 
+> on non-64 bits architectures. That's why I made this patch, but now I 
+> don't see this warning anymore.
+> 
+> Vinod, please disregard this patch.
 
-Sorry not sure I follow, to clarify you mean drop uint32, if so which
-type to use u8? I can use u8 as max wont be beyond 255.
-
-Yes I will define min as well max values too.
-
-> Otherwise, up to 2^32 - 1 is valid.
-
-I see one more warning given by your bot which I am able to reproduce as
-well:
-Documentation/devicetree/bindings/dma/qcom,gpi.example.dt.yaml: example-0: dma-controller@800000:reg:0: [0, 8388608, 0, 393216] is too long
-
-So to fix this I added the #address-cells and #size-cells
-
-        #address-cells = <2>;
-        #size-cells = <2>;
-        reg = <0x0 0x00800000 0x0 0x60000>;
-
-But I am getting the warning, what am I doing incorrect
+Ok dropped
 
 -- 
 ~Vinod

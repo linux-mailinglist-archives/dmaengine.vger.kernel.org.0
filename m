@@ -2,137 +2,107 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ECD822546A1
-	for <lists+dmaengine@lfdr.de>; Thu, 27 Aug 2020 16:17:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85D2F25478F
+	for <lists+dmaengine@lfdr.de>; Thu, 27 Aug 2020 16:51:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgH0OFs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 27 Aug 2020 10:05:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42550 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727103AbgH0OFj (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:05:39 -0400
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1C5322BEB;
-        Thu, 27 Aug 2020 14:04:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598537073;
-        bh=1Q7icZS15ds10bV/JJK72QK64oZ3hVx5Gs5UoRmJ98Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tl+yRPpvVOC0YrftA4sgCJVWFb/LkR2nLxpNX/VePMfSIVcRbEGhau8fsoeZ/d0OI
-         xZVlxtTFY0i9XDknPddK0qCJFqCIZIVnM5Jy8AdvN+sYQySrA7Gyqi1qPPd0cpud5u
-         A+WpomofAz4jpRAwffXZ2g9Nlh3BGC56idJL5K74=
-Received: by mail-oi1-f176.google.com with SMTP id u24so4683389oic.7;
-        Thu, 27 Aug 2020 07:04:33 -0700 (PDT)
-X-Gm-Message-State: AOAM532y2h6usRQxL5jap9cB06BgUtqUreMOzehGtv0elTye4BBOOhZ8
-        Cp/nc3r64PSAj4oZfD9CHL1abLAc0Pa+uze9tQ==
-X-Google-Smtp-Source: ABdhPJySPH2tJLgDSKWk2U/55xGLS0GwXwFCXhvqFf81XQitZVSXlRxK+ZH8toMGrmTkit0oRI8rP5SnLYAKkUAuRpc=
-X-Received: by 2002:aca:e1d6:: with SMTP id y205mr7123657oig.152.1598537073171;
- Thu, 27 Aug 2020 07:04:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200824084712.2526079-1-vkoul@kernel.org> <20200824084712.2526079-2-vkoul@kernel.org>
- <20200824174009.GA2948650@bogus> <20200825145131.GS2639@vkoul-mobl>
- <20200826063246.GW2639@vkoul-mobl> <CAL_JsqKwwirYhrQxCkoUCVnZa_7yNsBDaqgc5TWbLLpeGv17Zw@mail.gmail.com>
- <20200827045053.GG2639@vkoul-mobl>
-In-Reply-To: <20200827045053.GG2639@vkoul-mobl>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 27 Aug 2020 08:04:21 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJw0q4QLGr+Akaxm8YUnLMnUtgJdO5uMqJF7yKuSrX_YA@mail.gmail.com>
-Message-ID: <CAL_JsqJw0q4QLGr+Akaxm8YUnLMnUtgJdO5uMqJF7yKuSrX_YA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Document qcom,gpi dma binding
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        id S1728061AbgH0OvX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 27 Aug 2020 10:51:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727939AbgH0N2S (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 27 Aug 2020 09:28:18 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17017C061264
+        for <dmaengine@vger.kernel.org>; Thu, 27 Aug 2020 06:28:16 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ds1so2634495pjb.1
+        for <dmaengine@vger.kernel.org>; Thu, 27 Aug 2020 06:28:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=+qrEHr0zTCzeXf8VFLq2nBPA0b+vvbkTtN5icyLM91U=;
+        b=IhgkZQ6y0Njxu1Iu8jk8jvm+r075xrVo7JM6srWU6dPjUzU/fFR1tR9NmdBrWP4JxB
+         tlZraI6C33yMOP43RxMggSt4u1mYeNNpFeZuyh7AprGUaKX0daV8RLaLue3+AoR0/UtQ
+         jf0LBekJM09TkKnee2/7AnVGhMpKS05ykdfm6vge6uKMHKz4ezWy/EfMmrMo3ubr1XmB
+         CWUuVmeH9iM4KWK1+FdsJsqiDLdO/XBHPWZve8hnVx6C0pXYfpnJ+5HrF1hhdZueOiiE
+         +EqRK/vTPID8jgq6IBO+LBaAHErCWaw0yE/IikRnsHZYWA8UZNcPxgQpTTfPYLcq/JZo
+         daMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+qrEHr0zTCzeXf8VFLq2nBPA0b+vvbkTtN5icyLM91U=;
+        b=oi0KfqwJXPQnN8eVDHOrtxREuSJuyIW7l1OLOyUdZV9IOWhDViWaqGaTPlFE2mPnYt
+         zHDrH2KGm9UdszUyBXvyrqRI3xOe/0CfI/qrOti0c7IorjJqAIkeOYeldpxgr13JEOnS
+         gizogaAM/MAVQu7EwAxHl6xkvVGsg2CYxMig0Emkv4Enj4dl91SzOFYjwTBddbeIT/Ke
+         5sRokaZ/XkGd5mIddHkeJYuNrJVoMBAhpHZV2i1OmltebN6RK/rj3e5Ayvh0ScHnLJcW
+         zTAna2tMPzl/VRyWjWk7jamuaD4g125oCjWdYEGyGXRMiEeUbxqpvTLm+nwwkfMLHWzH
+         jz5g==
+X-Gm-Message-State: AOAM533m4wfJpeiRDch72OjGddci9UTG8Uh61q2ZPbKrM7OQx/E2LqpD
+        CrZGL5C1m4scimTivXKI9Fk6og==
+X-Google-Smtp-Source: ABdhPJzvSj0UZI8tXiF6fV2xhoJMXviX5pNLRRCVI22EgnbDbkVEmTKfRv01FjBHLxjYO2G2t9CUCQ==
+X-Received: by 2002:a17:90a:a792:: with SMTP id f18mr11144061pjq.65.1598534894383;
+        Thu, 27 Aug 2020 06:28:14 -0700 (PDT)
+Received: from localhost.localdomain ([210.91.70.133])
+        by smtp.gmail.com with ESMTPSA id p11sm2815313pfn.109.2020.08.27.06.28.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 06:28:13 -0700 (PDT)
+From:   Brad Kim <brad.kim@sifive.com>
+X-Google-Original-From: Brad Kim <brad.kim@semifive.com>
+To:     green.wan@sifive.com, koul@kernel.org
+Cc:     dmaengine@vger.kernel.org, Brad Kim <brad.kim@semifive.com>
+Subject: [PATCH] dmaengine: sf-pdma: Fix an error that calls callback twice
+Date:   Thu, 27 Aug 2020 22:27:49 +0900
+Message-Id: <20200827132749.17259-1-brad.kim@semifive.com>
+X-Mailer: git-send-email 2.17.1
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 10:50 PM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 26-08-20, 08:35, Rob Herring wrote:
-> > On Wed, Aug 26, 2020 at 12:32 AM Vinod Koul <vkoul@kernel.org> wrote:
-> > >
-> > > On 25-08-20, 20:21, Vinod Koul wrote:
-> > > > Hey Rob,
-> > > >
-> > > > On 24-08-20, 11:40, Rob Herring wrote:
-> > > > > On Mon, 24 Aug 2020 14:17:10 +0530, Vinod Koul wrote:
-> > > > > > Add devicetree binding documentation for GPI DMA controller
-> > > > > > implemented on Qualcomm SoCs
-> > > > > >
-> > > > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > > > > > ---
-> > > > > >  .../devicetree/bindings/dma/qcom-gpi.yaml     | 87 +++++++++++=
-++++++++
-> > > > > >  1 file changed, 87 insertions(+)
-> > > > > >  create mode 100644 Documentation/devicetree/bindings/dma/qcom-=
-gpi.yaml
-> > > > > >
-> > > > >
-> > > > >
-> > > > > My bot found errors running 'make dt_binding_check' on your patch=
-:
-> > > > >
-> > > > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindi=
-ngs/dma/qcom-gpi.yaml: properties:qcom,ev-factor: {'description': 'Event ri=
-ng transfer size compare to channel transfer ring. Event ring length =3D ev=
--factor * transfer ring size', 'maxItems': 1} is not valid under any of the=
- given schemas (Possible causes of the failure):
-> > > > >     /builds/robherring/linux-dt-review/Documentation/devicetree/b=
-indings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: 'not' is a required p=
-roperty
-> > > >
-> > > > Okay updating dt-schema I do see this, now the question is what is =
-this
-> > > > and what does it mean ;-) I am not sure I comprehend the error mess=
-age.
-> > > > I see this for all the new properties I added as required for this
-> > > > device node
-> > >
-> > > Okay I think I have figured it out, I need to provide ref to
-> > > /schemas/types.yaml#definitions/uint32 for this to work, which does
-> > > makes sense to me.
-> > >
-> > >   qcom,max-num-gpii:
-> > >     $ref: /schemas/types.yaml#definitions/uint32
-> > >     maxItems: 1
-> >
-> > uint32 is always 1 item, so drop. Is there a max value you can define?
->
-> Sorry not sure I follow, to clarify you mean drop uint32, if so which
-> type to use u8? I can use u8 as max wont be beyond 255.
+Because a callback is called twice when DMA transfer complete
+the second callback may be possible to access a freed memory
+if the first callback routines perform the dma_release_channel function.
+So this patch serialized the callback functions
 
-maxItems applies to arrays. A uint32 is not an array, so drop 'maxItems'.
+Signed-off-by: Brad Kim <brad.kim@semifive.com>
+---
+ drivers/dma/sf-pdma/sf-pdma.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
->
-> Yes I will define min as well max values too.
->
-> > Otherwise, up to 2^32 - 1 is valid.
->
-> I see one more warning given by your bot which I am able to reproduce as
-> well:
-> Documentation/devicetree/bindings/dma/qcom,gpi.example.dt.yaml: example-0=
-: dma-controller@800000:reg:0: [0, 8388608, 0, 393216] is too long
->
-> So to fix this I added the #address-cells and #size-cells
->
->         #address-cells =3D <2>;
->         #size-cells =3D <2>;
->         reg =3D <0x0 0x00800000 0x0 0x60000>;
->
-> But I am getting the warning, what am I doing incorrect
+diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
+index 6e530dca6d9e..754994087e5f 100644
+--- a/drivers/dma/sf-pdma/sf-pdma.c
++++ b/drivers/dma/sf-pdma/sf-pdma.c
+@@ -295,7 +295,10 @@ static void sf_pdma_donebh_tasklet(unsigned long arg)
+ 	}
+ 	spin_unlock_irqrestore(&chan->lock, flags);
+ 
+-	dmaengine_desc_get_callback_invoke(desc->async_tx, NULL);
++	spin_lock_irqsave(&chan->vchan.lock, flags);
++	list_del(&chan->desc->vdesc.node);
++	vchan_cookie_complete(&chan->desc->vdesc);
++	spin_unlock_irqrestore(&chan->vchan.lock, flags);
+ }
+ 
+ static void sf_pdma_errbh_tasklet(unsigned long arg)
+@@ -332,8 +335,7 @@ static irqreturn_t sf_pdma_done_isr(int irq, void *dev_id)
+ 	residue = readq(regs->residue);
+ 
+ 	if (!residue) {
+-		list_del(&chan->desc->vdesc.node);
+-		vchan_cookie_complete(&chan->desc->vdesc);
++		tasklet_hi_schedule(&chan->done_tasklet);
+ 	} else {
+ 		/* submit next trascatioin if possible */
+ 		struct sf_pdma_desc *desc = chan->desc;
+@@ -347,8 +349,6 @@ static irqreturn_t sf_pdma_done_isr(int irq, void *dev_id)
+ 
+ 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
+ 
+-	tasklet_hi_schedule(&chan->done_tasklet);
+-
+ 	return IRQ_HANDLED;
+ }
+ 
+-- 
+2.17.1
 
-The cell sizes for reg come from the parent node. The default for
-examples is 1 cell each. The easiest thing to do is change reg to
-'<0x00800000 0x60000>'. Otherwise, you'd need to define a parent bus
-node.
-
-Rob

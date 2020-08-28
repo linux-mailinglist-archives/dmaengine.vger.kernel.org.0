@@ -2,121 +2,176 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B9A7255DD0
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Aug 2020 17:27:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D53C42562D3
+	for <lists+dmaengine@lfdr.de>; Sat, 29 Aug 2020 00:12:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbgH1P05 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 28 Aug 2020 11:26:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37800 "EHLO mail.kernel.org"
+        id S1726379AbgH1WMM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 28 Aug 2020 18:12:12 -0400
+Received: from mga12.intel.com ([192.55.52.136]:1966 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728204AbgH1P0v (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 28 Aug 2020 11:26:51 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58223208D5;
-        Fri, 28 Aug 2020 15:26:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598628411;
-        bh=24sRIQKF90KGrD04GnXmBdm+l+GRCZb8x1J9A9FTPeM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jKrormv2PQjSm9o8tVds65EgrQucz2shYLT66nj51TKUuwiPpsLW0VKYWYP51XrAp
-         bGqKIcVfGm5mJ8YD6y46HGXEzgyV25eiiFwG6Y4hvRcIctqvHJ1RW1iY7Y+pyr591J
-         SMCbRcCe1VsXP0c1oiOU2WSMc15wnNsgcyqMa4y0=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Nicholas Graumann <nick.graumann@gmail.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 3/3] dmaengine: xilinx: Simplify with dev_err_probe()
-Date:   Fri, 28 Aug 2020 17:26:37 +0200
-Message-Id: <20200828152637.16903-3-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200828152637.16903-1-krzk@kernel.org>
-References: <20200828152637.16903-1-krzk@kernel.org>
+        id S1726338AbgH1WMM (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 28 Aug 2020 18:12:12 -0400
+IronPort-SDR: 4EcHNwk51KpiM0Y2e2CxhSxJvTP541d4D6nk+hgK49tCtwsCHamlaDemA6eH1dWQTec0wyphXq
+ CglPerTm0nnQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="136296890"
+X-IronPort-AV: E=Sophos;i="5.76,365,1592895600"; 
+   d="scan'208";a="136296890"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 15:12:11 -0700
+IronPort-SDR: /k4RU2039CSnmIQRtgk6uWAjK7nENUdbE3/ZXXIemGHnsgLLOKUttcqyR6JQY+eNX9p4VCFjxr
+ 3gUm615OzJgw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,365,1592895600"; 
+   d="scan'208";a="340022276"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga007.jf.intel.com with ESMTP; 28 Aug 2020 15:12:10 -0700
+Subject: [PATCH v2 1/2] dmaengine: idxd: add support for configurable max wq
+ xfer size
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org
+Date:   Fri, 28 Aug 2020 15:12:10 -0700
+Message-ID: <159865265404.29141.3049399618578194052.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/unknown-version
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and the error value gets printed.
+Add sysfs attribute max_xfer_size to wq in order to allow the max xfer
+size configured on a per wq basis. Add support code to configure
+the valid user input on wq enable. This is a performance tuning
+parameter.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/dma/xilinx/xilinx_dma.c | 36 ++++++++-------------------------
- 1 file changed, 8 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 5429497d3560..286cf94a950d 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -2536,13 +2536,8 @@ static int axidma_clk_init(struct platform_device *pdev, struct clk **axi_clk,
- 	*tmp_clk = NULL;
+v2:
+- Added ABI documentation (Vinod)
+
+ Documentation/ABI/stable/sysfs-driver-dma-idxd |    7 ++++
+ drivers/dma/idxd/device.c                      |    2 +
+ drivers/dma/idxd/idxd.h                        |    1 +
+ drivers/dma/idxd/init.c                        |    1 +
+ drivers/dma/idxd/sysfs.c                       |   40 ++++++++++++++++++++++++
+ 5 files changed, 50 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/ABI/stable/sysfs-driver-dma-idxd b/Documentation/ABI/stable/sysfs-driver-dma-idxd
+index 1af9c4175213..452f353b4748 100644
+--- a/Documentation/ABI/stable/sysfs-driver-dma-idxd
++++ b/Documentation/ABI/stable/sysfs-driver-dma-idxd
+@@ -170,6 +170,13 @@ Contact:        dmaengine@vger.kernel.org
+ Description:    The number of entries in this work queue that may be filled
+ 		via a limited portal.
  
- 	*axi_clk = devm_clk_get(&pdev->dev, "s_axi_lite_aclk");
--	if (IS_ERR(*axi_clk)) {
--		err = PTR_ERR(*axi_clk);
--		if (err != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "failed to get axi_aclk (%d)\n",
--				err);
--		return err;
--	}
-+	if (IS_ERR(*axi_clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(*axi_clk), "failed to get axi_aclk\n");
++What:		/sys/bus/dsa/devices/wq<m>.<n>/max_transfer_size
++Date:		Aug 28, 2020
++KernelVersion:	5.10.0
++Contact:	dmaengine@vger.kernel.org
++Description:	The max transfer sized for this workqueue. Cannot exceed device
++		max transfer size. Configurable parameter.
++
+ What:           /sys/bus/dsa/devices/engine<m>.<n>/group_id
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index 14b45853aa5f..b8dbb7001933 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -529,7 +529,7 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
+ 	wq->wqcfg.priority = wq->priority;
  
- 	*tx_clk = devm_clk_get(&pdev->dev, "m_axi_mm2s_aclk");
- 	if (IS_ERR(*tx_clk))
-@@ -2603,22 +2598,12 @@ static int axicdma_clk_init(struct platform_device *pdev, struct clk **axi_clk,
- 	*tmp2_clk = NULL;
+ 	/* bytes 12-15 */
+-	wq->wqcfg.max_xfer_shift = idxd->hw.gen_cap.max_xfer_shift;
++	wq->wqcfg.max_xfer_shift = ilog2(wq->max_xfer_bytes);
+ 	wq->wqcfg.max_batch_shift = idxd->hw.gen_cap.max_batch_shift;
  
- 	*axi_clk = devm_clk_get(&pdev->dev, "s_axi_lite_aclk");
--	if (IS_ERR(*axi_clk)) {
--		err = PTR_ERR(*axi_clk);
--		if (err != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "failed to get axi_clk (%d)\n",
--				err);
--		return err;
--	}
-+	if (IS_ERR(*axi_clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(*axi_clk), "failed to get axi_aclk\n");
+ 	dev_dbg(dev, "WQ %d CFGs\n", wq->id);
+diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+index e62b4799d189..81db2a472822 100644
+--- a/drivers/dma/idxd/idxd.h
++++ b/drivers/dma/idxd/idxd.h
+@@ -114,6 +114,7 @@ struct idxd_wq {
+ 	struct sbitmap_queue sbq;
+ 	struct dma_chan dma_chan;
+ 	char name[WQ_NAME_SIZE + 1];
++	u64 max_xfer_bytes;
+ };
  
- 	*dev_clk = devm_clk_get(&pdev->dev, "m_axi_aclk");
--	if (IS_ERR(*dev_clk)) {
--		err = PTR_ERR(*dev_clk);
--		if (err != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "failed to get dev_clk (%d)\n",
--				err);
--		return err;
--	}
-+	if (IS_ERR(*dev_clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(*dev_clk), "failed to get dev_clk\n");
+ struct idxd_engine {
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index c7c61974f20f..e5ed5750a6d0 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -176,6 +176,7 @@ static int idxd_setup_internals(struct idxd_device *idxd)
+ 		wq->idxd = idxd;
+ 		mutex_init(&wq->wq_lock);
+ 		wq->idxd_cdev.minor = -1;
++		wq->max_xfer_bytes = idxd->max_xfer_bytes;
+ 	}
  
- 	err = clk_prepare_enable(*axi_clk);
- 	if (err) {
-@@ -2647,13 +2632,8 @@ static int axivdma_clk_init(struct platform_device *pdev, struct clk **axi_clk,
- 	int err;
+ 	for (i = 0; i < idxd->max_engines; i++) {
+diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+index dcba60953217..a3bac7285975 100644
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@ -1064,6 +1064,45 @@ static ssize_t wq_cdev_minor_show(struct device *dev,
+ static struct device_attribute dev_attr_wq_cdev_minor =
+ 		__ATTR(cdev_minor, 0444, wq_cdev_minor_show, NULL);
  
- 	*axi_clk = devm_clk_get(&pdev->dev, "s_axi_lite_aclk");
--	if (IS_ERR(*axi_clk)) {
--		err = PTR_ERR(*axi_clk);
--		if (err != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "failed to get axi_aclk (%d)\n",
--				err);
--		return err;
--	}
-+	if (IS_ERR(*axi_clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(*axi_clk), "failed to get axi_aclk\n");
++static ssize_t wq_max_transfer_size_show(struct device *dev, struct device_attribute *attr,
++					 char *buf)
++{
++	struct idxd_wq *wq = container_of(dev, struct idxd_wq, conf_dev);
++
++	return sprintf(buf, "%llu\n", wq->max_xfer_bytes);
++}
++
++static ssize_t wq_max_transfer_size_store(struct device *dev, struct device_attribute *attr,
++					  const char *buf, size_t count)
++{
++	struct idxd_wq *wq = container_of(dev, struct idxd_wq, conf_dev);
++	struct idxd_device *idxd = wq->idxd;
++	u64 xfer_size;
++	int rc;
++
++	if (wq->state != IDXD_WQ_DISABLED)
++		return -EPERM;
++
++	rc = kstrtou64(buf, 0, &xfer_size);
++	if (rc < 0)
++		return -EINVAL;
++
++	if (xfer_size == 0)
++		return -EINVAL;
++
++	xfer_size = roundup_pow_of_two(xfer_size);
++	if (xfer_size > idxd->max_xfer_bytes)
++		return -EINVAL;
++
++	wq->max_xfer_bytes = xfer_size;
++
++	return count;
++}
++
++static struct device_attribute dev_attr_wq_max_transfer_size =
++		__ATTR(max_transfer_size, 0644,
++		       wq_max_transfer_size_show, wq_max_transfer_size_store);
++
+ static struct attribute *idxd_wq_attributes[] = {
+ 	&dev_attr_wq_clients.attr,
+ 	&dev_attr_wq_state.attr,
+@@ -1074,6 +1113,7 @@ static struct attribute *idxd_wq_attributes[] = {
+ 	&dev_attr_wq_type.attr,
+ 	&dev_attr_wq_name.attr,
+ 	&dev_attr_wq_cdev_minor.attr,
++	&dev_attr_wq_max_transfer_size.attr,
+ 	NULL,
+ };
  
- 	*tx_clk = devm_clk_get(&pdev->dev, "m_axi_mm2s_aclk");
- 	if (IS_ERR(*tx_clk))
--- 
-2.17.1
 

@@ -2,120 +2,80 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 919C82555B4
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Aug 2020 09:52:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E81A8255699
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Aug 2020 10:40:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbgH1Hwg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 28 Aug 2020 03:52:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50576 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727971AbgH1Hwg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Aug 2020 03:52:36 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4D0AC061264;
-        Fri, 28 Aug 2020 00:52:35 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id e14so52432ybf.4;
-        Fri, 28 Aug 2020 00:52:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=03SA6QLBtK3IQ4zuCDRLpEPFR1JjLUS7ypF2jRpTUus=;
-        b=Ce1e8K/caM4JvW4I6IlYWAdAdDrcDJjdidgiSSw3u1U2l7HQ3a2kOmczvvbkYGVOq4
-         erB9J73UZGJvV7XHy/RkrrCUhQw7V1lydp0AdbQo+pNvzOBgNLswc2RgdPqsMF58aheA
-         9Lrv0ex7Uj91QMqENp5Yv4cuToIFPSGWs2lkiKSxnpsSTe7Eq5ZlVjBnVhNFGFh4cIr2
-         jpoD9oU/YgAXieicPCZprdmCdMY/V0jc1YbWHaplTsQgOGXc03HEMZkGKzhEBMjjUyat
-         1huT8whAgyVZhNrXbK4bevxXwjsD6gaR28Big84Mi8vP/bi7JfPYO85puDNU0UBxCGih
-         WPdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=03SA6QLBtK3IQ4zuCDRLpEPFR1JjLUS7ypF2jRpTUus=;
-        b=EX4UI+f/S84rGP2WHMLxM04koDaErZ9EPWQ5qOUoJclQtR2QI0O5Q//jDGUd6nqcnS
-         V1gJGij/1W0ILzC8lwwYZvKQhxBrSpHG5TOdXb93Aeo8RnLenRphVgVQQ/iDAnS4Q7dO
-         ZyQW+qCWl/n1l7r5/83xDdn4HYF83xAh/gVkTesWaaLP3xo97H+otrQIZn8BI3f3pvZD
-         8WI16IcR7knuyNBT2YKoVqdqYOOGiEr9ZChfkbTlkJmK0FUvja2mmmz42rVhoJ+IIuZp
-         5XlCvQx6Q7eZt57nk6hhy7wtYPGRQF4qmRa2qfJlIKw601eF+mF7vCslyMPe8sq59XA3
-         i1rw==
-X-Gm-Message-State: AOAM533xsc1R/mFDOL702DqBJ59U3h2gmJkARR833VqNC7Wifg1I9O3H
-        BmrOAtYSEtPpa/igou+OzMr0YIavOypV8x70Ios=
-X-Google-Smtp-Source: ABdhPJxKaH3Rnxdft6nzQd34AAzAxueOyLTpZiz6Sebv+w7rBi0ECVdDr/vmwjJ5qeTeRA2GnUZW3Taq1UeJFdtPzj4=
-X-Received: by 2002:a25:2f4d:: with SMTP id v74mr720966ybv.401.1598601154899;
- Fri, 28 Aug 2020 00:52:34 -0700 (PDT)
+        id S1728274AbgH1IkH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 28 Aug 2020 04:40:07 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:38468 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgH1IkG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Aug 2020 04:40:06 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07S8e2gW069898;
+        Fri, 28 Aug 2020 03:40:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598604002;
+        bh=OidMWMav238pDStqzzJV7Lh67PqN4gvpiR7Kj9YEOls=;
+        h=From:To:CC:Subject:Date;
+        b=pJv2eeNC6z4zKgZ74YpR1URNRwVljhDxFVHrQjFhr6ytCmuI2DiYM2whyjT4bBVkt
+         b/REzAepa5AAOVPnK3uR29wB2SmhMvG/Jj8mDqE5ITuJwuiBtM2B8zZ1XiB5hatTb9
+         KeIuRdS57FzVqSN88HVpdBJUwltOtja6DGDPUBxQ=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07S8e2Ns009875
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 28 Aug 2020 03:40:02 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 28
+ Aug 2020 03:40:01 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 28 Aug 2020 03:40:01 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07S8dxhB065831;
+        Fri, 28 Aug 2020 03:40:00 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] dmaengine: Remove unused define for dma_request_slave_channel_reason()
+Date:   Fri, 28 Aug 2020 11:41:41 +0300
+Message-ID: <20200828084141.14902-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CA+V-a8t-HHWeo4zwnTuyZHnhc8u_aXqt_KZHr1trnXQB15Jj6A@mail.gmail.com> <TY2PR01MB36923A0548AAE7E0249042AFD8520@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY2PR01MB36923A0548AAE7E0249042AFD8520@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 28 Aug 2020 08:52:08 +0100
-Message-ID: <CA+V-a8v5sFVGVxNKDXvg8w=FeZnGdyV8q9deBuAaVMsx0bDcwg@mail.gmail.com>
-Subject: Re: [PATCH 08/20] dt-bindings: usb: usb-xhci: Document r8a774e1 support
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        alsa-devel <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Shimoda-san
+No users left in the kernel, it can be removed.
 
-On Fri, Aug 28, 2020 at 2:11 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
->
-> Hi Lad-san,
->
-> > From: Lad, Prabhakar, Sent: Friday, August 28, 2020 2:15 AM
-> >
-> > Hi Greg,
-> >
-> > On Thu, Jul 16, 2020 at 6:19 PM Lad Prabhakar
-> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > >
-> > > Document r8a774e1 xhci support. The driver will use the fallback
-> > > compatible string "renesas,rcar-gen3-xhci", therefore no driver
-> > > change is needed.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > Gentle ping.
->
-> Thank you for the ping. However, since the latest kernel has renesas,usb-xhci.yaml,
-> would you fix the patch?
->
-Thank you for pointing out, I have now posted a v2 [1] now. (I missed
-out Geert's comment earlier for this patch)
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ include/linux/dmaengine.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-[1] https://patchwork.kernel.org/patch/11742289/
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 6fbd5c99e30c..011371b7f081 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -1527,8 +1527,6 @@ static inline int dma_get_slave_caps(struct dma_chan *chan,
+ }
+ #endif
+ 
+-#define dma_request_slave_channel_reason(dev, name) dma_request_chan(dev, name)
+-
+ static inline int dmaengine_desc_set_reuse(struct dma_async_tx_descriptor *tx)
+ {
+ 	struct dma_slave_caps caps;
+-- 
+Peter
 
-Cheers,
-Prabhakar
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+

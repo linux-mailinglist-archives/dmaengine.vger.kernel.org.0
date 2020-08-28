@@ -2,80 +2,83 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E81A8255699
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Aug 2020 10:40:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63D0C255753
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Aug 2020 11:16:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgH1IkH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 28 Aug 2020 04:40:07 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38468 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgH1IkG (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Aug 2020 04:40:06 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07S8e2gW069898;
-        Fri, 28 Aug 2020 03:40:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598604002;
-        bh=OidMWMav238pDStqzzJV7Lh67PqN4gvpiR7Kj9YEOls=;
-        h=From:To:CC:Subject:Date;
-        b=pJv2eeNC6z4zKgZ74YpR1URNRwVljhDxFVHrQjFhr6ytCmuI2DiYM2whyjT4bBVkt
-         b/REzAepa5AAOVPnK3uR29wB2SmhMvG/Jj8mDqE5ITuJwuiBtM2B8zZ1XiB5hatTb9
-         KeIuRdS57FzVqSN88HVpdBJUwltOtja6DGDPUBxQ=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07S8e2Ns009875
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 28 Aug 2020 03:40:02 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 28
- Aug 2020 03:40:01 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 28 Aug 2020 03:40:01 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07S8dxhB065831;
-        Fri, 28 Aug 2020 03:40:00 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <dan.j.williams@intel.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] dmaengine: Remove unused define for dma_request_slave_channel_reason()
-Date:   Fri, 28 Aug 2020 11:41:41 +0300
-Message-ID: <20200828084141.14902-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.28.0
+        id S1728269AbgH1JQa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 28 Aug 2020 05:16:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728016AbgH1JQ3 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Aug 2020 05:16:29 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9C37C061264
+        for <dmaengine@vger.kernel.org>; Fri, 28 Aug 2020 02:16:28 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id m22so517839ljj.5
+        for <dmaengine@vger.kernel.org>; Fri, 28 Aug 2020 02:16:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pKFJMoSxuyl3FtpyG3za89A+6HJOtqb0zpDXKQ3YceE=;
+        b=oSuh+KVA1QqyDt+NYhMBQwSr5/J5KGR0j1ucQow6astjiAhAAO+ObvKja/88I65hY6
+         DmsS5DiMPFh/PEcB0Eljlo98tiSkkSPHnqdqzGcohc74gNtnzvQjCBZtL3rcf+/maAxJ
+         wBkjb6x95FnkCej9BuTPDYEKi7oUi6D8vgeB41VyOL5cZPczjIo2RYcWi+Zp9QIfX9gu
+         4Ubj/sAtZLXdfBGY+UrETAg/vhXiYjXb1rF0kI0BOB5Jj9/bKOqQi9+nTBKfoRXbYwd9
+         Aa0lk3Lho0JoHXuy4K2k2QXQP7woxvaEhEg2bMgy/2XJbodumpjEjtqm1lym07FGimvV
+         HeHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pKFJMoSxuyl3FtpyG3za89A+6HJOtqb0zpDXKQ3YceE=;
+        b=CbGGp1C7f4zFXElevivUEUSUOGK4VYIk9BouuNHdRgsbprGn5kyb8mB7zYIovpI91T
+         xqAsdd4OJBEeezmCvKBkw8mhq0ahEP8xB5e5vglevqvoqsUKle1hS/OYn07xkqJ80nLP
+         IJlXnk1i7IPMQFCkQx5b0qvbiMBXO77Z6ugXTOaLdlmISs8gMPgarsZ4fGAGocW/O9cN
+         TUVsTQSd2Sm4h1YrH691vhlfZK45S6Ous0m7RaWgbDQ0k+ydltzGZp97aVB2N4/PiPp7
+         w/94owKBr2xPJPPjmOjJzPX8yLBbGjoNAhZcMLbDDSanhcO3s3vkOiWWP+pb9HoB+MZ4
+         69QQ==
+X-Gm-Message-State: AOAM533KvxvHVel2wvOm7gQDKAQITNz4wdjiwDiFipwHMPUyplqC/K6i
+        doXhsR/PPs8a0+Taa0hfMphmVE/a51Rot/saZcBZbQ==
+X-Google-Smtp-Source: ABdhPJy04VyxZx3txP7+IeTirbRIphU4vSee7yqZ8kOAK3kqG8P/99IeJzff4HHj24Ix/kSIjEwFohUj4vrKS8tRZeU=
+X-Received: by 2002:a2e:b80b:: with SMTP id u11mr472055ljo.286.1598606187298;
+ Fri, 28 Aug 2020 02:16:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200818090638.26362-1-allen.lkml@gmail.com> <20200818090638.26362-5-allen.lkml@gmail.com>
+In-Reply-To: <20200818090638.26362-5-allen.lkml@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 Aug 2020 11:16:15 +0200
+Message-ID: <CACRpkda6BdFrpzHefCfM_hfEho9tCOVextXSMwMvavTtPHP8vg@mail.gmail.com>
+Subject: Re: [PATCH 04/35] dma: coh901318: convert tasklets to use new
+ tasklet_setup() API
+To:     Allen Pais <allen.lkml@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, Zhang Wei <zw@zh-kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Barry Song <baohua@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Romain Perier <romain.perier@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-No users left in the kernel, it can be removed.
+On Tue, Aug 18, 2020 at 11:07 AM Allen Pais <allen.lkml@gmail.com> wrote:
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- include/linux/dmaengine.h | 2 --
- 1 file changed, 2 deletions(-)
+> In preparation for unconditionally passing the
+> struct tasklet_struct pointer to all tasklet
+> callbacks, switch to using the new tasklet_setup()
+> and from_tasklet() to pass the tasklet pointer explicitly.
+>
+> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 6fbd5c99e30c..011371b7f081 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -1527,8 +1527,6 @@ static inline int dma_get_slave_caps(struct dma_chan *chan,
- }
- #endif
- 
--#define dma_request_slave_channel_reason(dev, name) dma_request_chan(dev, name)
--
- static inline int dmaengine_desc_set_reuse(struct dma_async_tx_descriptor *tx)
- {
- 	struct dma_slave_caps caps;
--- 
-Peter
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Yours,
+Linus Walleij

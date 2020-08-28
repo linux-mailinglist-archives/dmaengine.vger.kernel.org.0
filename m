@@ -2,152 +2,145 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC8E925591A
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Aug 2020 13:07:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4161D255910
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Aug 2020 13:03:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbgH1LGi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 28 Aug 2020 07:06:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47758 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729146AbgH1LF3 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 28 Aug 2020 07:05:29 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0084B208CA;
-        Fri, 28 Aug 2020 10:54:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598612090;
-        bh=3CKsivbRub545FembOVMv1q87p5F6oratk+HzV+HsYU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rEpSZ8i5dRVYfZcudFrTIDjKF5nq6b60Jx6XjczlXifwxEMeH5llwDCujanZ0fj55
-         +WwBNnFACgZs/+kpMIUGJXKq25r0zc4UKbLEqhkkCrheiMp0bpFe2N+Z8APluuT+l+
-         wObeyL/BGXrzux8tULVfXKimfD5kNRJHY93z19ek=
-Date:   Fri, 28 Aug 2020 16:24:45 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     dmaengine@vger.kernel.org
-Subject: Re: [PATCH 1/2] dmaengine: idxd: add support for configurable max wq
- xfer size
-Message-ID: <20200828105445.GU2639@vkoul-mobl>
-References: <159838710214.14812.7574610309412397859.stgit@djiang5-desk3.ch.intel.com>
+        id S1728936AbgH1LDt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 28 Aug 2020 07:03:49 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:52338 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729150AbgH1LDd (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Aug 2020 07:03:33 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07SB3SHf010025;
+        Fri, 28 Aug 2020 06:03:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598612608;
+        bh=Ht/kpmfFKKAmBLtxYmnb3a0fKfLy/bJ2ohoyyGN62fI=;
+        h=From:To:CC:Subject:Date;
+        b=lJklyuEmEg0ftZAPvTCVT7ipc+wvIBXH4IJghDVOomz5BdvT0w4ic7Swno4kTYFY5
+         GsO32P4IFyA/VIE1o2vx7K0OuIFbEgEjcaBGFnpevNcmhliFQMbUrmKzz4F0wnOKMk
+         4E1JHK/pe6pbsqWfeVcUDputRhLnV/vKTkv+KtXo=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07SB3S3t055872
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 28 Aug 2020 06:03:28 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 28
+ Aug 2020 06:03:27 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 28 Aug 2020 06:03:27 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07SB3Po4020682;
+        Fri, 28 Aug 2020 06:03:26 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <linux-kernel@vger.kernel.org>, <andy.shevchenko@gmail.com>
+Subject: [PATCH] dmaengine: Mark dma_request_slave_channel() deprecated
+Date:   Fri, 28 Aug 2020 14:05:07 +0300
+Message-ID: <20200828110507.22407-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159838710214.14812.7574610309412397859.stgit@djiang5-desk3.ch.intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 25-08-20, 13:25, Dave Jiang wrote:
-> Add sysfs attribute max_xfer_size to wq in order to allow the max xfer
-> size configured on a per wq basis. Add support code to configure
-> the valid user input on wq enable. This is a performance tuning
-> parameter.
-> 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/dma/idxd/device.c |    2 +-
->  drivers/dma/idxd/idxd.h   |    1 +
->  drivers/dma/idxd/init.c   |    1 +
->  drivers/dma/idxd/sysfs.c  |   40 ++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 43 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-> index 14b45853aa5f..b8dbb7001933 100644
-> --- a/drivers/dma/idxd/device.c
-> +++ b/drivers/dma/idxd/device.c
-> @@ -529,7 +529,7 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
->  	wq->wqcfg.priority = wq->priority;
->  
->  	/* bytes 12-15 */
-> -	wq->wqcfg.max_xfer_shift = idxd->hw.gen_cap.max_xfer_shift;
-> +	wq->wqcfg.max_xfer_shift = ilog2(wq->max_xfer_bytes);
->  	wq->wqcfg.max_batch_shift = idxd->hw.gen_cap.max_batch_shift;
->  
->  	dev_dbg(dev, "WQ %d CFGs\n", wq->id);
-> diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-> index e62b4799d189..81db2a472822 100644
-> --- a/drivers/dma/idxd/idxd.h
-> +++ b/drivers/dma/idxd/idxd.h
-> @@ -114,6 +114,7 @@ struct idxd_wq {
->  	struct sbitmap_queue sbq;
->  	struct dma_chan dma_chan;
->  	char name[WQ_NAME_SIZE + 1];
-> +	u64 max_xfer_bytes;
->  };
->  
->  struct idxd_engine {
-> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-> index c7c61974f20f..e5ed5750a6d0 100644
-> --- a/drivers/dma/idxd/init.c
-> +++ b/drivers/dma/idxd/init.c
-> @@ -176,6 +176,7 @@ static int idxd_setup_internals(struct idxd_device *idxd)
->  		wq->idxd = idxd;
->  		mutex_init(&wq->wq_lock);
->  		wq->idxd_cdev.minor = -1;
-> +		wq->max_xfer_bytes = idxd->max_xfer_bytes;
->  	}
->  
->  	for (i = 0; i < idxd->max_engines; i++) {
-> diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-> index dcba60953217..26b3ace66782 100644
-> --- a/drivers/dma/idxd/sysfs.c
-> +++ b/drivers/dma/idxd/sysfs.c
-> @@ -1064,6 +1064,45 @@ static ssize_t wq_cdev_minor_show(struct device *dev,
->  static struct device_attribute dev_attr_wq_cdev_minor =
->  		__ATTR(cdev_minor, 0444, wq_cdev_minor_show, NULL);
->  
-> +static ssize_t wq_max_transfer_size_show(struct device *dev, struct device_attribute *attr,
-> +					 char *buf)
-> +{
-> +	struct idxd_wq *wq = container_of(dev, struct idxd_wq, conf_dev);
-> +
-> +	return sprintf(buf, "%llu\n", wq->max_xfer_bytes);
-> +}
-> +
-> +static ssize_t wq_max_transfer_size_store(struct device *dev, struct device_attribute *attr,
-> +					  const char *buf, size_t count)
-> +{
-> +	struct idxd_wq *wq = container_of(dev, struct idxd_wq, conf_dev);
-> +	struct idxd_device *idxd = wq->idxd;
-> +	u64 xfer_size;
-> +	int rc;
-> +
-> +	if (wq->state != IDXD_WQ_DISABLED)
-> +		return -EPERM;
-> +
-> +	rc = kstrtou64(buf, 10, &xfer_size);
-> +	if (rc < 0)
-> +		return -EINVAL;
-> +
-> +	if (xfer_size == 0)
-> +		return -EINVAL;
-> +
-> +	xfer_size = roundup_pow_of_two(xfer_size);
-> +	if (xfer_size > idxd->max_xfer_bytes)
-> +		return -EINVAL;
-> +
-> +	wq->max_xfer_bytes = xfer_size;
-> +
-> +	return count;
-> +}
-> +
-> +static struct device_attribute dev_attr_wq_max_transfer_size =
-> +		__ATTR(max_transfer_size, 0644,
-> +		       wq_max_transfer_size_show, wq_max_transfer_size_store);
-> +
->  static struct attribute *idxd_wq_attributes[] = {
->  	&dev_attr_wq_clients.attr,
->  	&dev_attr_wq_state.attr,
-> @@ -1074,6 +1113,7 @@ static struct attribute *idxd_wq_attributes[] = {
->  	&dev_attr_wq_type.attr,
->  	&dev_attr_wq_name.attr,
->  	&dev_attr_wq_cdev_minor.attr,
-> +	&dev_attr_wq_max_transfer_size.attr,
+New drivers should use dma_request_chan() instead
+dma_request_slave_channel()
 
-ABI update for this?
+dma_request_slave_channel() is a simple wrapper for dma_request_chan()
+eating up the error code for channel request failure and makes deferred
+probing impossible.
 
+Move the dma_request_slave_channel() into the header as inline function,
+mark it as deprecated.
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ drivers/dma/dmaengine.c   | 18 ------------------
+ include/linux/dmaengine.h | 15 +++++++++------
+ 2 files changed, 9 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index a53e71d2bbd4..ac8ef6cf7626 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -871,24 +871,6 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
+ }
+ EXPORT_SYMBOL_GPL(dma_request_chan);
+ 
+-/**
+- * dma_request_slave_channel - try to allocate an exclusive slave channel
+- * @dev:	pointer to client device structure
+- * @name:	slave channel name
+- *
+- * Returns pointer to appropriate DMA channel on success or NULL.
+- */
+-struct dma_chan *dma_request_slave_channel(struct device *dev,
+-					   const char *name)
+-{
+-	struct dma_chan *ch = dma_request_chan(dev, name);
+-	if (IS_ERR(ch))
+-		return NULL;
+-
+-	return ch;
+-}
+-EXPORT_SYMBOL_GPL(dma_request_slave_channel);
+-
+ /**
+  * dma_request_chan_by_mask - allocate a channel satisfying certain capabilities
+  * @mask:	capabilities that the channel must satisfy
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 011371b7f081..dd357a747780 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -1472,7 +1472,6 @@ void dma_issue_pending_all(void);
+ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
+ 				       dma_filter_fn fn, void *fn_param,
+ 				       struct device_node *np);
+-struct dma_chan *dma_request_slave_channel(struct device *dev, const char *name);
+ 
+ struct dma_chan *dma_request_chan(struct device *dev, const char *name);
+ struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
+@@ -1502,11 +1501,6 @@ static inline struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
+ {
+ 	return NULL;
+ }
+-static inline struct dma_chan *dma_request_slave_channel(struct device *dev,
+-							 const char *name)
+-{
+-	return NULL;
+-}
+ static inline struct dma_chan *dma_request_chan(struct device *dev,
+ 						const char *name)
+ {
+@@ -1575,6 +1569,15 @@ void dma_run_dependencies(struct dma_async_tx_descriptor *tx);
+ #define dma_request_channel(mask, x, y) \
+ 	__dma_request_channel(&(mask), x, y, NULL)
+ 
++/* Deprecated, please use dma_request_chan() directly */
++static inline struct dma_chan * __deprecated
++dma_request_slave_channel(struct device *dev, const char *name)
++{
++	struct dma_chan *ch = dma_request_chan(dev, name);
++
++	return IS_ERR(ch) ? NULL : ch;
++}
++
+ static inline struct dma_chan
+ *dma_request_slave_channel_compat(const dma_cap_mask_t mask,
+ 				  dma_filter_fn fn, void *fn_param,
 -- 
-~Vinod
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+

@@ -2,54 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 63D0C255753
-	for <lists+dmaengine@lfdr.de>; Fri, 28 Aug 2020 11:16:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 342F4255769
+	for <lists+dmaengine@lfdr.de>; Fri, 28 Aug 2020 11:18:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbgH1JQa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 28 Aug 2020 05:16:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35426 "EHLO
+        id S1728946AbgH1JSM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 28 Aug 2020 05:18:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728016AbgH1JQ3 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Aug 2020 05:16:29 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9C37C061264
-        for <dmaengine@vger.kernel.org>; Fri, 28 Aug 2020 02:16:28 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id m22so517839ljj.5
-        for <dmaengine@vger.kernel.org>; Fri, 28 Aug 2020 02:16:28 -0700 (PDT)
+        with ESMTP id S1726010AbgH1JSJ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 28 Aug 2020 05:18:09 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8462C061264
+        for <dmaengine@vger.kernel.org>; Fri, 28 Aug 2020 02:18:08 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id t6so504044ljk.9
+        for <dmaengine@vger.kernel.org>; Fri, 28 Aug 2020 02:18:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pKFJMoSxuyl3FtpyG3za89A+6HJOtqb0zpDXKQ3YceE=;
-        b=oSuh+KVA1QqyDt+NYhMBQwSr5/J5KGR0j1ucQow6astjiAhAAO+ObvKja/88I65hY6
-         DmsS5DiMPFh/PEcB0Eljlo98tiSkkSPHnqdqzGcohc74gNtnzvQjCBZtL3rcf+/maAxJ
-         wBkjb6x95FnkCej9BuTPDYEKi7oUi6D8vgeB41VyOL5cZPczjIo2RYcWi+Zp9QIfX9gu
-         4Ubj/sAtZLXdfBGY+UrETAg/vhXiYjXb1rF0kI0BOB5Jj9/bKOqQi9+nTBKfoRXbYwd9
-         Aa0lk3Lho0JoHXuy4K2k2QXQP7woxvaEhEg2bMgy/2XJbodumpjEjtqm1lym07FGimvV
-         HeHw==
+        bh=Ng+zCbzwfJ99Zi5YpVRlQp3k3cpjfXZ+POmPrePE0RU=;
+        b=KEAkDHlRUnW3W9yDLAnCQRnhwWX8omBTM5vKubwi60uQytYGZ9hoYSnvbQ44Um4+Ox
+         WjyhUSqTUWAS9+Dyow0lGaPweYIPREi+76YsIN6PQgWUeRbqGI94TI+daqMtBgy4n9O8
+         ASMpC3Gx4mAjhEGFrMAqRdLrOCODtqoULu1ye2cuENsU0f7KDAlzYkUaGTWjIP7/ycaT
+         iueLbFjW3AoUA6o61hJkWkds4lM/al9CKnvnrUrYM6gOIWakSTt4QtEIPtqrqxQkAtN+
+         jUK2wTZpFhxQpRAirYTgWqeYhNKFikf3j6199UZPK/GXwkzciMIqKCIGYpZEoOVf5Q3k
+         141g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pKFJMoSxuyl3FtpyG3za89A+6HJOtqb0zpDXKQ3YceE=;
-        b=CbGGp1C7f4zFXElevivUEUSUOGK4VYIk9BouuNHdRgsbprGn5kyb8mB7zYIovpI91T
-         xqAsdd4OJBEeezmCvKBkw8mhq0ahEP8xB5e5vglevqvoqsUKle1hS/OYn07xkqJ80nLP
-         IJlXnk1i7IPMQFCkQx5b0qvbiMBXO77Z6ugXTOaLdlmISs8gMPgarsZ4fGAGocW/O9cN
-         TUVsTQSd2Sm4h1YrH691vhlfZK45S6Ous0m7RaWgbDQ0k+ydltzGZp97aVB2N4/PiPp7
-         w/94owKBr2xPJPPjmOjJzPX8yLBbGjoNAhZcMLbDDSanhcO3s3vkOiWWP+pb9HoB+MZ4
-         69QQ==
-X-Gm-Message-State: AOAM533KvxvHVel2wvOm7gQDKAQITNz4wdjiwDiFipwHMPUyplqC/K6i
-        doXhsR/PPs8a0+Taa0hfMphmVE/a51Rot/saZcBZbQ==
-X-Google-Smtp-Source: ABdhPJy04VyxZx3txP7+IeTirbRIphU4vSee7yqZ8kOAK3kqG8P/99IeJzff4HHj24Ix/kSIjEwFohUj4vrKS8tRZeU=
-X-Received: by 2002:a2e:b80b:: with SMTP id u11mr472055ljo.286.1598606187298;
- Fri, 28 Aug 2020 02:16:27 -0700 (PDT)
+        bh=Ng+zCbzwfJ99Zi5YpVRlQp3k3cpjfXZ+POmPrePE0RU=;
+        b=Pmyb2HNAfKg2UVs79L76rHw+ULm/ktYgSAoa0Cyj0wXLLWJ+uTIVwHFisHbw12tjPr
+         YIk2djACrW6cC3liulznlimmeNWGZQO5TfrcAplV7kFy2pS1JuOR4fmFMnxWeXCad9H9
+         IE52AS84n4/wKkPd9NoACFNO59wqZMar/ox0Sg032Ezif+Sw+RtJjaf09c4VwBFF4xYC
+         JBCoJt8/o03uK7rBqNEXP8q7lwv7XohaWUdvrvmhc1iOltV6pr3R7SaLhbigXZ8eZvyL
+         j8AwtAZdxZEyVXwKkM99Ew/ThXVKUZgrnULGN87XHGWId7WZFfJIkwZwgsHA6IIQ3o3z
+         WCPg==
+X-Gm-Message-State: AOAM532UWCaduFhyWxUS4eyf/2/3OWBd5XeeYBIJsaNRr8L5ICsL7F+G
+        DL/tfPaR4eqfetOT1Y78YqnsL2A97/rc2ibKzX2+Mw==
+X-Google-Smtp-Source: ABdhPJxlVxDc4hE7VLarR2Wagnz5G/n+w7UrHgzDIOZD2zhORW3JV51IzmopPxvJKjbz4+x2tYeQKLEevol5bYpfJHQ=
+X-Received: by 2002:a2e:8144:: with SMTP id t4mr499148ljg.100.1598606287121;
+ Fri, 28 Aug 2020 02:18:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200818090638.26362-1-allen.lkml@gmail.com> <20200818090638.26362-5-allen.lkml@gmail.com>
-In-Reply-To: <20200818090638.26362-5-allen.lkml@gmail.com>
+References: <20200818090638.26362-1-allen.lkml@gmail.com> <20200818090638.26362-26-allen.lkml@gmail.com>
+In-Reply-To: <20200818090638.26362-26-allen.lkml@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 11:16:15 +0200
-Message-ID: <CACRpkda6BdFrpzHefCfM_hfEho9tCOVextXSMwMvavTtPHP8vg@mail.gmail.com>
-Subject: Re: [PATCH 04/35] dma: coh901318: convert tasklets to use new
+Date:   Fri, 28 Aug 2020 11:17:56 +0200
+Message-ID: <CACRpkdbRuAdF-Q1K4wd4OXCpL4VKfqLYOZi+Gvh==Pgo7dG03g@mail.gmail.com>
+Subject: Re: [PATCH 25/35] dma: ste_dma40: convert tasklets to use new
  tasklet_setup() API
 To:     Allen Pais <allen.lkml@gmail.com>
 Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
@@ -68,7 +68,7 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 11:07 AM Allen Pais <allen.lkml@gmail.com> wrote:
+On Tue, Aug 18, 2020 at 11:08 AM Allen Pais <allen.lkml@gmail.com> wrote:
 
 > In preparation for unconditionally passing the
 > struct tasklet_struct pointer to all tasklet

@@ -2,123 +2,97 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86B77256A54
-	for <lists+dmaengine@lfdr.de>; Sat, 29 Aug 2020 23:20:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFF36256D8E
+	for <lists+dmaengine@lfdr.de>; Sun, 30 Aug 2020 14:12:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgH2VUi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 29 Aug 2020 17:20:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59572 "EHLO
+        id S1726404AbgH3MMC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 30 Aug 2020 08:12:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726944AbgH2VUg (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 29 Aug 2020 17:20:36 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E17CC061575
-        for <dmaengine@vger.kernel.org>; Sat, 29 Aug 2020 14:20:34 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id y2so2647144ljc.1
-        for <dmaengine@vger.kernel.org>; Sat, 29 Aug 2020 14:20:34 -0700 (PDT)
+        with ESMTP id S1726130AbgH3MMB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 30 Aug 2020 08:12:01 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77905C061573;
+        Sun, 30 Aug 2020 05:12:00 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id q13so1413346ejo.9;
+        Sun, 30 Aug 2020 05:12:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tZQqP/9kQfBYLXOwwY2/9XmqjIYfArF6oBpsrKgPoWk=;
-        b=AbmLqUhkivcRKLvSZehoY6HsfcHP75SHwBbGTVYqRQmORnoNriFSmxObwU2VmHmy63
-         E4Vz99EJMsmm7F9WygW1iy4/YZzTwxsfG/d5H+d6vMGaF7dADK4foWIt+zXy2W9YpTq+
-         RCbxEzNzwxpfl9Mn69NXw7mfFaxWWWF27/u6A=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qshWuo/PMDUT2LJmbVBMnw6b8Zf9zlNuTmEls1ekJ0U=;
+        b=UsFqJfCX0P9KcqTkG3XSmY1iuH1x9+PnaSu9U6Nvjs7U+EWRLwOvUb5HJ9uHPkx2uc
+         mN5Pt5hsv1IXTgEzHKqU7hXwsatu87CTl/FxsIfWfmRxjxe4KatgxXytg4OC/G36GbUu
+         GGSMDgk8/+OHRuAatveS9SjHVLWS1LAa7xwUo0MQN5t6Hc7rmAxtewtb8DkAawb8ek+x
+         2T/AvMyCvQ+NF79DFOBVCEkx+JEjTE7DXPZAGR8JS8zHjnUWptodtPW8I9TJIUg050io
+         vpbUKkHBs6vTuRA7AxST1ivHK0GscrNxLNNBozlZ+LtOTn1ghlLYLqKerzDBHadHxFyY
+         T4iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tZQqP/9kQfBYLXOwwY2/9XmqjIYfArF6oBpsrKgPoWk=;
-        b=bLe2PqOw99Mh3eNvZfE/Rr/xB12dqTKl29XYHRfZrQhtIXO6XB44KysjBSjjiHKKMk
-         LYk4FwWkL/huyOAt8PLUi0tgYJP2MTpKNZyQDd0Wzkf+DazrmUBL3/+xaNRqWXsxraWx
-         865uW4TWvSwSTldt8Mew+A5JzoHGchekwqFRRH0QbGGmdI0zKvZnLGrp0s/uW1WZ6gVo
-         XKbeYX3myIW3gFJpxFLXOugxnmxGgtfXC00OAgSFvUnFjJKXUxyWNu9ATmGaANmoJVYC
-         4j0tX498H+WDSYSMkUk5/et+G6uaS2ZRCiDdDvNr17kBsnkNdNDkfRBBKOw8B25g8B44
-         9d+g==
-X-Gm-Message-State: AOAM533DzjW+2DIJiQVr2D/6H5AbYKwiq/OJjIW4cLy/8LzGa7EnovsZ
-        5Bk5q+bSTOnaol5bjLE1BnSJZdhvmvtPew==
-X-Google-Smtp-Source: ABdhPJyUJjbfb4//2watZtynnSQqUWdKAxK7x3gSwetamHuEGv/vW1j8e2n57z6iqJSvBxIbLJ6eGQ==
-X-Received: by 2002:a2e:970a:: with SMTP id r10mr2062705lji.453.1598736032452;
-        Sat, 29 Aug 2020 14:20:32 -0700 (PDT)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id t16sm689079ljo.27.2020.08.29.14.20.30
-        for <dmaengine@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Aug 2020 14:20:31 -0700 (PDT)
-Received: by mail-lj1-f174.google.com with SMTP id g6so2585301ljn.11
-        for <dmaengine@vger.kernel.org>; Sat, 29 Aug 2020 14:20:30 -0700 (PDT)
-X-Received: by 2002:a2e:b5a3:: with SMTP id f3mr1027329ljn.70.1598736030159;
- Sat, 29 Aug 2020 14:20:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200829105116.GA246533@roeck-us.net> <20200829124538.7475-1-luc.vanoostenryck@gmail.com>
- <CAHk-=whH0ApHy0evN0q6AwQ+-a5RK56oMkYkkCJtTMnaq4FrNQ@mail.gmail.com> <59cc6c99-9894-08b3-1075-2156e39bfc8e@roeck-us.net>
-In-Reply-To: <59cc6c99-9894-08b3-1075-2156e39bfc8e@roeck-us.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 29 Aug 2020 14:20:14 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjDEiWF_DsCVFPFqNa+JCS5SkOygbqeq8_=ZNOrFt7-rg@mail.gmail.com>
-Message-ID: <CAHk-=wjDEiWF_DsCVFPFqNa+JCS5SkOygbqeq8_=ZNOrFt7-rg@mail.gmail.com>
-Subject: Re: [PATCH] fsldma: fsl_ioread64*() do not need lower_32_bits()
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joerg Roedel <joerg.roedel@amd.com>,
-        Li Yang <leoyang.li@nxp.com>, Zhang Wei <zw@zh-kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qshWuo/PMDUT2LJmbVBMnw6b8Zf9zlNuTmEls1ekJ0U=;
+        b=HaUH4rIDvJe0UBa9manaOgF+eW9KY/FQZJkGK/Y8WmnBmvs8YmQ99abplwm3jgtCP3
+         jbcDAxBZEU8RhuAYaIfqJQkWMCILf7WwwAAV+E+p2ni4h8HRuHFZLeCPCYnPyoFu4/u8
+         tEv0B3MxyO3yF41aqAGgbTK6P/V+G9vk5S9qKIWfbKcEo5kthQhyMGBng14Iy2IsKMfo
+         Ms+n81mPuTe6W5vLpbEPEc/HTDQUoVlKw9gjj9tLGMFIiJASx+IYlJHWgLTHBp5iSfv0
+         Glk33H5IJYjfGysV9RXXsjwvJ8rzQNM5tvXkqjWLyLBioZSg9qupBIJIBCteK7TgLxPn
+         nk7g==
+X-Gm-Message-State: AOAM532KTmxvbk1xebYv7ZVGSVUsDLX7hux5R/G/xuCCbke0o2q7I7Bd
+        BUqN9M5SJKqeRFcp3O25Xf1IncgR5bo=
+X-Google-Smtp-Source: ABdhPJxOJA5wZn5NrOfMFMOv1nhwV+b9MWXiMCq2DdY4+4H8iKGf7KEA59WSNTM7XyEIxhZtsuU0Qw==
+X-Received: by 2002:a17:906:d182:: with SMTP id c2mr7289675ejz.378.1598789517357;
+        Sun, 30 Aug 2020 05:11:57 -0700 (PDT)
+Received: from ltop.local ([2a02:a03f:a7fb:e200:64d5:3b87:7078:3025])
+        by smtp.gmail.com with ESMTPSA id bn14sm5115767ejb.115.2020.08.30.05.11.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Aug 2020 05:11:56 -0700 (PDT)
+Date:   Sun, 30 Aug 2020 14:11:54 +0200
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Guenter Roeck <linux@roeck-us.net>,
         linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         dma <dmaengine@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] fsldma: fsl_ioread64*() do not need lower_32_bits()
+Message-ID: <20200830121154.zo54k5ywpdk2rw4m@ltop.local>
+References: <20200829105116.GA246533@roeck-us.net>
+ <20200829124538.7475-1-luc.vanoostenryck@gmail.com>
+ <CAHk-=whH0ApHy0evN0q6AwQ+-a5RK56oMkYkkCJtTMnaq4FrNQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whH0ApHy0evN0q6AwQ+-a5RK56oMkYkkCJtTMnaq4FrNQ@mail.gmail.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 1:40 PM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> Except for
->
-> CHECK: spaces preferred around that '+' (ctx:VxV)
-> #29: FILE: drivers/dma/fsldma.h:223:
-> +       u32 val_lo = in_be32((u32 __iomem *)addr+1);
+On Sat, Aug 29, 2020 at 10:29:55AM -0700, Linus Torvalds wrote:
+> On Sat, Aug 29, 2020 at 5:46 AM Luc Van Oostenryck
+> <luc.vanoostenryck@gmail.com> wrote:
+> >
+> > But the pointer is already 32-bit, so simply cast the pointer to u32.
+> 
+> Yeah, that code was completely pointless. If the pointer had actually
+> been 64-bit, the old code would have warned too.
+> 
+> The odd thing is that the fsl_iowrite64() functions make sense. It's
+> only the fsl_ioread64() functions that seem to be written by somebody
+> who is really confused.
+> 
+> That said, this patch only humors the confusion. The cast to 'u32' is
+> completely pointless. In fact, it seems to be actively wrong, because
+> it means that the later "fsl_addr + 1" is done entirely incorrectly -
+> it now literally adds "1" to an integer value, while the iowrite()
+> functions will add one to a "u32 __iomem *" pointer (so will do
+> pointer arithmetic, and add 4).
+> 
+My bad. I had noticed the '+ 1' and so automatically assumed
+'OK, pointer arithmetic now' without noticing that the cast was
+done only after the addition. Grrr.
 
-Added spaces.
+FWIW, the version you committed looks much better to me.
 
-> I don't see anything wrong with it either, so
->
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
->
-> Since I didn't see the real problem with the original code,
-> I'd take that with a grain of salt, though.
-
-Well, honestly, the old code was so confused that just making it build
-is clearly already an improvement even if everything else were to be
-wrong.
-
-So I committed my "fix". If it turns out there's more wrong in there
-and somebody tests it, we can fix it again. But now it hopefully
-compiles, at least.
-
-My bet is that if that driver ever worked on ppc32, it will continue
-to work whatever we do to that function.
-
-I _think_ the old code happened to - completely by mistake - get the
-value right for the case of "little endian access, with dma_addr_t
-being 32-bit". Because then it would still read the upper bits wrong,
-but the cast to dma_addr_t would then throw those bits away. And the
-lower bits would be right.
-
-But for big-endian accesses or for ARCH_DMA_ADDR_T_64BIT it really
-looks like it always returned a completely incorrect value.
-
-And again - the driver may have worked even with that completely
-incorrect value, since the use of it seems to be very incidental.
-
-In either case ("it didn't work before" or "it worked because the
-value doesn't really matter"), I don't think I could possibly have
-made things worse.
-
-Famous last words.
-
-                Linus
+-- Luc

@@ -2,121 +2,96 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ABA5257D2F
-	for <lists+dmaengine@lfdr.de>; Mon, 31 Aug 2020 17:36:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EC2B257DE0
+	for <lists+dmaengine@lfdr.de>; Mon, 31 Aug 2020 17:47:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgHaPfI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 31 Aug 2020 11:35:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728830AbgHaPbR (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:31:17 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 832A321707;
-        Mon, 31 Aug 2020 15:31:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887876;
-        bh=ZjKWjBFa8jx2a1LkBVVi50zo2hxUJAg7OKt/hGAhRLg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PuoAeAil8Y4zzuBODnsoaCqvLj2gf+B/QIn9aHT765aodtkdI4qsPZCYzNpS/CLIK
-         XwnwJQfhFlj8fmad0Ezh/ndlrX89SQrU9WHbvrixP6Y1jUCp0eWA+BdwMEOmDNjnxq
-         ubB40tarI7PmgTCzXQzb+UYVHt4ctZOeYYrb2hJ4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 23/23] fsldma: fix very broken 32-bit ppc ioread64 functionality
-Date:   Mon, 31 Aug 2020 11:30:39 -0400
-Message-Id: <20200831153039.1024302-23-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200831153039.1024302-1-sashal@kernel.org>
-References: <20200831153039.1024302-1-sashal@kernel.org>
+        id S1727046AbgHaPr1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 31 Aug 2020 11:47:27 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:51046 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbgHaPr0 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 31 Aug 2020 11:47:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=JRbfWDvjuTAK2WjTBlVMadPW+0e3TpcbGs2uUIirJf0=; b=kPg8mEga5geILpa9w5blNWD+fp
+        mF/Nldo9L/IFYrBzKS7G9DTCt9Q+a7rmV0K5sEVVEjeHLqsQFKB4VOLusoH3vcD5tEitgq6+wN+o4
+        9ulU+Qa8CzazyvImHZnrnOlVVwB1WBu4y3C+2BYcQG99Q6MwwPvp8bjieXzTKeaTE5rB/NXCveewF
+        IKP5KBkbAoFrjamJBzWaIUs1oe0B0OEyLrEMqaDrxgA5UBpA9mXkLu7hMix2VE/uM2/2DlJ2Am3Fe
+        DCpJKixv9LKp3RvolvkMjjg5nqmDoK1NmxAl+fIrFFBcbx29Cp0DcB7/VPNfMenjqM2Id018O2xVb
+        RDhNqOxg==;
+Received: from [172.16.1.162]
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1kCm1j-00067l-Vb; Mon, 31 Aug 2020 09:47:24 -0600
+To:     Allen Pais <allen.lkml@gmail.com>, vkoul@kernel.org
+Cc:     linus.walleij@linaro.org, vireshk@kernel.org, leoyang.li@nxp.com,
+        zw@zh-kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        sean.wang@mediatek.com, matthias.bgg@gmail.com, agross@kernel.org,
+        jorn.andersson@linaro.org, green.wan@sifive.com, baohua@kernel.org,
+        mripard@kernel.org, wens@csie.org, dmaengine@vger.kernel.org
+References: <20200831103542.305571-1-allen.lkml@gmail.com>
+ <20200831103542.305571-34-allen.lkml@gmail.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <9368c823-4240-4d86-879c-6dae662a36e4@deltatee.com>
+Date:   Mon, 31 Aug 2020 09:47:10 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200831103542.305571-34-allen.lkml@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: dmaengine@vger.kernel.org, wens@csie.org, mripard@kernel.org, baohua@kernel.org, green.wan@sifive.com, jorn.andersson@linaro.org, agross@kernel.org, matthias.bgg@gmail.com, sean.wang@mediatek.com, s.hauer@pengutronix.de, shawnguo@kernel.org, zw@zh-kernel.org, leoyang.li@nxp.com, vireshk@kernel.org, linus.walleij@linaro.org, vkoul@kernel.org, allen.lkml@gmail.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-9.0 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        NICE_REPLY_A autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [PATCH v3 33/35] dmaengine: plx_dma: convert tasklets to use new
+ tasklet_setup() API
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 0a4c56c80f90797e9b9f8426c6aae4c0cf1c9785 ]
 
-Commit ef91bb196b0d ("kernel.h: Silence sparse warning in
-lower_32_bits") caused new warnings to show in the fsldma driver, but
-that commit was not to blame: it only exposed some very incorrect code
-that tried to take the low 32 bits of an address.
+On 2020-08-31 4:35 a.m., Allen Pais wrote:
+> In preparation for unconditionally passing the
+> struct tasklet_struct pointer to all tasklet
+> callbacks, switch to using the new tasklet_setup()
+> and from_tasklet() to pass the tasklet pointer explicitly.
+> 
+> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+> ---
+>  drivers/dma/plx_dma.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/dma/plx_dma.c b/drivers/dma/plx_dma.c
+> index db4c5fd453a9..f387c5bbc170 100644
+> --- a/drivers/dma/plx_dma.c
+> +++ b/drivers/dma/plx_dma.c
+> @@ -241,9 +241,9 @@ static void plx_dma_stop(struct plx_dma_dev *plxdev)
+>  	rcu_read_unlock();
+>  }
+>  
+> -static void plx_dma_desc_task(unsigned long data)
+> +static void plx_dma_desc_task(struct tasklet_struct *t)
+>  {
+> -	struct plx_dma_dev *plxdev = (void *)data;
+> +	struct plx_dma_dev *plxdev = from_tasklet(plxdev, t, desc_task);
 
-That made no sense for multiple reasons, the most notable one being that
-that code was intentionally limited to only 32-bit ppc builds, so "only
-low 32 bits of an address" was completely nonsensical.  There were no
-high bits to mask off to begin with.
+The discussion I saw on another thread suggested the private macro
+from_tasklet() would be replaced with something generic. So isn't this
+patchset a bit premature?
 
-But even more importantly fropm a correctness standpoint, turning the
-address into an integer then caused the subsequent address arithmetic to
-be completely wrong too, and the "+1" actually incremented the address
-by one, rather than by four.
+Thanks,
 
-Which again was incorrect, since the code was reading two 32-bit values
-and trying to make a 64-bit end result of it all.  Surprisingly, the
-iowrite64() did not suffer from the same odd and incorrect model.
-
-This code has never worked, but it's questionable whether anybody cared:
-of the two users that actually read the 64-bit value (by way of some C
-preprocessor hackery and eventually the 'get_cdar()' inline function),
-one of them explicitly ignored the value, and the other one might just
-happen to work despite the incorrect value being read.
-
-This patch at least makes it not fail the build any more, and makes the
-logic superficially sane.  Whether it makes any difference to the code
-_working_ or not shall remain a mystery.
-
-Compile-tested-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/dma/fsldma.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
-index 56f18ae992332..308bed0a560ac 100644
---- a/drivers/dma/fsldma.h
-+++ b/drivers/dma/fsldma.h
-@@ -205,10 +205,10 @@ struct fsldma_chan {
- #else
- static u64 fsl_ioread64(const u64 __iomem *addr)
- {
--	u32 fsl_addr = lower_32_bits(addr);
--	u64 fsl_addr_hi = (u64)in_le32((u32 *)(fsl_addr + 1)) << 32;
-+	u32 val_lo = in_le32((u32 __iomem *)addr);
-+	u32 val_hi = in_le32((u32 __iomem *)addr + 1);
- 
--	return fsl_addr_hi | in_le32((u32 *)fsl_addr);
-+	return ((u64)val_hi << 32) + val_lo;
- }
- 
- static void fsl_iowrite64(u64 val, u64 __iomem *addr)
-@@ -219,10 +219,10 @@ static void fsl_iowrite64(u64 val, u64 __iomem *addr)
- 
- static u64 fsl_ioread64be(const u64 __iomem *addr)
- {
--	u32 fsl_addr = lower_32_bits(addr);
--	u64 fsl_addr_hi = (u64)in_be32((u32 *)fsl_addr) << 32;
-+	u32 val_hi = in_be32((u32 __iomem *)addr);
-+	u32 val_lo = in_be32((u32 __iomem *)addr + 1);
- 
--	return fsl_addr_hi | in_be32((u32 *)(fsl_addr + 1));
-+	return ((u64)val_hi << 32) + val_lo;
- }
- 
- static void fsl_iowrite64be(u64 val, u64 __iomem *addr)
--- 
-2.25.1
-
+Logan

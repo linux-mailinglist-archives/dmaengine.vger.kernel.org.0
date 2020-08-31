@@ -2,41 +2,41 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 778CA2574AA
-	for <lists+dmaengine@lfdr.de>; Mon, 31 Aug 2020 09:52:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5C8B2574B6
+	for <lists+dmaengine@lfdr.de>; Mon, 31 Aug 2020 09:53:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbgHaHwp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 31 Aug 2020 03:52:45 -0400
+        id S1728220AbgHaHw6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 31 Aug 2020 03:52:58 -0400
 Received: from mail-eopbgr140050.outbound.protection.outlook.com ([40.107.14.50]:27033
         "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728220AbgHaHwW (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 31 Aug 2020 03:52:22 -0400
+        id S1727844AbgHaHwm (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 31 Aug 2020 03:52:42 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UIyq0PoZF8UO38Qs4+Hg9ecBK7Db65MYvSPfJix7COpetZlK4odIHg6LHYsnI06tCEd3QGI6Hq+O398XpyleMGflOWrhj1ZyFyac/hLHJ3JKub21dPFETi5mN3FXgIYCrADLHuOPFWjNdFJx2WitGBvm8icamfZHQ9NkhZZBE+uLtVASbCH9LD+uVkxAresxI0Nbwiv2rBAu13PqSH26NcIc5qWI/bWaChcXBgbEHBiXHsrG3nLVwrxxJmGwgU8FOs23WwUeKdAfxcJZB/8D+qMvxIFKHZEv3u7h0iFmNHUZiedOYkPuSF/M9PYUF+ROjWralY767nafoiC4t00sjA==
+ b=ehHMzt5WjanCjqIR9KoRfN5e1q8UGRdYlTDbLYugKpxCy4CYiwczQpsacP4c96t2Ubdj1CUsJm8ItX5FaJZeSzFTv7H4wxdOfjwRYknm/H8rYf664LRKUU2zV8d65KH/wD9PTqsC2Fc3u759Wv7w27jCsiq+Z3AOaq0NsZlsFngVAhhzuHkT39RUdOAzzj8X8BUBQtk9jfUdRhPtSyXZ7jeiGqUAUMmW+SJusQGj+kSFxaDNKXtGICCU1ru3UNARIECMcSv2fh9JchCRdHm+iGHr68nXOVoSeRHgB1h9Pn4ResgadT8eAZEpdIavTz3oUneArFT77ZoFIeCKZa0yNA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fw6vTorR3E3XAElDzrUJJdF1wDmUb3tjnC2gzeCv5cg=;
- b=oHFWbLMcq0/3wVlLN5e8zp15cQJyS2fAT1+/cyzy6gT/FyYlRKO157mSlY26jmST58AFze6jeKBgrrZf8vmsxJWWZgGg/DuqW3AA1U7oAbAqSUBXURGiF+SDk3C3lQy1vrFDP4gjqT4Y4bFMMP1v/0L/drt2oKPB2F5VzPO6bzvvuLFN2pKrL1U59NBSIPsoST9z+sejV4u8nZgyi1o7ecslfRmx6JTGA4p8gVViIknGexQ6RbEz0CyZDMgwoliYqY+M87rzp/vkAnENpB8aPBLkHhfU3EmqiO6bWIK708GminltYSC2QljXaBOjJ0mpJ0hWLjDqfpC5D8lQ4gw0CA==
+ bh=LsjAevpr1iYIElTQ5w3YAoNPjTaoMSMAT5iDRdSZtzU=;
+ b=fwOw6B6S1XQEfO8YkUl4WSpGLJAYTJ+0xVw46geNAA0RRej5z4rgUl68KDTj+vsjcd8yYCKn+bG8+6pdmNDx1XoNS4a6Mri1sllIVb5y+DDpX4XU0eXxmNP3RzzwQNlcFmRnzNeKqDBRxlGOEE//YlHJv1k0WHnbjaSk5Ls+ayTV9lWDqEmHyBoaaxsNpZGA3aOH7YgAuX5Lc4Uku+TAbpVgL/MHIp6W30xzmqqtfmVPpNC6Ib7r+FBjNbodQTKwVOPFdk0iBL80IMraMElZTvTRjzO8dS56pnXpAf153IQErHA0x26SlpysHfCedqMQw3mn5DTzV1KlHAW1mPZPGw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fw6vTorR3E3XAElDzrUJJdF1wDmUb3tjnC2gzeCv5cg=;
- b=K1V5nrkcBWboGff3e5pMS43OznJIVHy+EG+ZAbvNqAL44kxPIZLqoCuM7r8UgoyfFmrnRXGMDXkpfSywd05TVT4PYKz8cAAoeLVxreNdZQkuVWgZH92ePf7lz/atS+JsF/aF72Y52+mF9oxpE0c02OsNtblx5HeP/pJ6rnEDkfM=
+ bh=LsjAevpr1iYIElTQ5w3YAoNPjTaoMSMAT5iDRdSZtzU=;
+ b=kvs/V/OfsnQbAR9A01oUPIziikFos5BWkHokcX835axt3vXgGPcwDhEvYobmP0OtQR8eQ5kH/yHYb0OPPCVhrSDOxf19eG7qGqjtXVRRvqSxURCXknEd6iUO/KJ66Sac80rI10Quv+IxWajikbpuII1S16us8tEyngFJfXLgFB0=
 Authentication-Results: arm.com; dkim=none (message not signed)
  header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
 Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
  by VI1PR04MB5694.eurprd04.prod.outlook.com (2603:10a6:803:e0::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Mon, 31 Aug
- 2020 07:51:43 +0000
+ 2020 07:51:49 +0000
 Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
  ([fe80::ad7f:d95a:5413:a950]) by VE1PR04MB6638.eurprd04.prod.outlook.com
  ([fe80::ad7f:d95a:5413:a950%3]) with mapi id 15.20.3326.025; Mon, 31 Aug 2020
- 07:51:43 +0000
+ 07:51:49 +0000
 From:   Robin Gong <yibin.gong@nxp.com>
 To:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
         catalin.marinas@arm.com, vkoul@kernel.org, will.deacon@arm.com,
@@ -48,9 +48,9 @@ To:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
 Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         kernel@pengutronix.de, dmaengine@vger.kernel.org, linux-imx@nxp.com
-Subject: [PATCH v13 11/12] dmaengine: imx-sdma: add uart rom script
-Date:   Tue,  1 Sep 2020 00:03:24 +0800
-Message-Id: <1598889805-30399-12-git-send-email-yibin.gong@nxp.com>
+Subject: [PATCH v13 12/12] dmaengine: imx-sdma: add terminated list for freed descriptor in worker
+Date:   Tue,  1 Sep 2020 00:03:25 +0800
+Message-Id: <1598889805-30399-13-git-send-email-yibin.gong@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1598889805-30399-1-git-send-email-yibin.gong@nxp.com>
 References: <1598889805-30399-1-git-send-email-yibin.gong@nxp.com>
@@ -60,129 +60,108 @@ X-ClientProxiedBy: SG2PR02CA0104.apcprd02.prod.outlook.com
  (2603:10a6:803:119::15)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2PR02CA0104.apcprd02.prod.outlook.com (2603:1096:4:92::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3326.20 via Frontend Transport; Mon, 31 Aug 2020 07:51:36 +0000
+Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2PR02CA0104.apcprd02.prod.outlook.com (2603:1096:4:92::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3326.20 via Frontend Transport; Mon, 31 Aug 2020 07:51:43 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [119.31.174.67]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: e0dee2dd-8ed5-49b8-0097-08d84d82b3a8
+X-MS-Office365-Filtering-Correlation-Id: adaeed96-9aeb-4452-bbca-08d84d82b795
 X-MS-TrafficTypeDiagnostic: VI1PR04MB5694:
 X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB56949392AA245AEC0A0BCAF589510@VI1PR04MB5694.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Microsoft-Antispam-PRVS: <VI1PR04MB5694FE09B1B5FF206A9A872C89510@VI1PR04MB5694.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MotlVVHVIQfpLzvRn8u+dlo3WVEKGXCAr9B7QpMVtvK2bc72AY1xjHrPs9Is7jg4OUw0dJC0B4AbBn/RTWqMy25A2azEhpgEtMzCwsAmJwH2tCCfXlbV8x+wHV5S4IhBXCtUOXwyQQE7QjjLLaMPFhZwjs+MUEI8HLWIQ0wxfwEt0H+h08l99Afa+Nd6GQTPgvNLgf3ER8Wz6DB5zbivXVg2Ear8dXmhpR1jaQOoYVdFFEPROufpQ6WMLD3aHTp0GxZ+P5u/EYN++N7tw+e+M0myk1FF/rCmtnlkLs1Fc9V9Q7NqM9Tmsq8GB/yy++Lu2y9uKDRVxhzvZS8F4SZPkrPyt3fXyh42K7x/2mR4mx7IfrPA7N9lpW+6KKT/BZG4t8c6LhAdjkJHCvGuKnGSeLzIMQAoff3eXv1UC8QYk3JGNL89jzB0q/9t3b279o7TNGpoYlg98H+j0GLPP4wi8A==
+X-Microsoft-Antispam-Message-Info: o6ChJwAur8QXQvhl13MRCwfhTrONR+ywP0D7vUZvXeBHDpPjIIaBBuX6TA+L1maB5D4dnud9mhjV3bSh82JGITYTc106iTlJ72VrvcopOOB0pS7qTrlhcYbBz7zfd7HvAEDO0r+zSh2aYrcZXh4F85Snxjl8G19bKNCYGd/1GTHiUQxxYgpo4b4xWnyJ1xbA3szVhGE3ZB/cc/6q82sMD9qV8XMH5WmFyZI/Om9n/1AXnMn/ekNqyuIwz4IOfdfzoJX6zdw2IaM4Yq6cSIhiYyEQbUqat6o1N/j/s5uuBMs3UtpJlWXx8clyKivqsRa3RNcFchpqDmxpgoFLPPnWS2EqlcV/vKdVzJzDN63spJoNCciBegJlrB1Tf2NGrrxABSdMn36YjaQ+AEJBfhctxhcVca8VmdmvT61kIBO/9a3RDmaKeBl9E/tYa9fhSwv8JEOGuZYnHWVOOx2W2AOgqw==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(346002)(376002)(39860400002)(136003)(8676002)(2616005)(2906002)(36756003)(8936002)(86362001)(5660300002)(956004)(316002)(26005)(6506007)(478600001)(6666004)(83380400001)(6486002)(7416002)(66476007)(66946007)(66556008)(4326008)(186003)(16526019)(966005)(6512007)(52116002)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: oeaPZilblcZQXXjAt7cNuIHTEgnjrmlXDNkXdFXDin6xcik4FqvGyYpKdc4eieMmOWfUlhb+hVFXZsDfPZdV1IIhxJ8zUztXqjTHz3AjsVLZ38UvqRdax6ljnW/MvJQ1rN1/HiraM6ywm6edrUfr8wfOGF4VGa5ONoR/qF6JZ0Df8zctjx5CgFW6aYEtiLlDOkDqxWU3o4MhEBAcpMTbY2QSqCgAW9QdKiQkfBS0Ojtzw45x16nQJR1HYOByCt9wxvlD4EfUEV5/oMrwW2Z62uO0DnMzgeYGmlNxYIqwdyZcRHKPLZtU2CtUx1dSUYFt4+rR+bJ4uBxSkUqWcAEglIj++bUQgZwVQgGs8GWc+z9vOvpoKb4G0T3Js+42DBKd5Q3atqkPBc5dY55KbzS/+XZTTB4olBCiDdiYoyesK8XSXfEv8FIQoZU0LVPBVwYOljP81u5LiE1wc1szB0F+YUUQHkZXJdFaiSv3lLBj77wlxjbk7cNQPLRBJnOPczelb6JV3/AA4dReYAHOscOl3CUu51QX2If70qCm8A67Pi9F1bAdvT38YU5HqjtqWWdBikhzNncgCeP4s9LLhQrcfOreuByIYxIsNYJPqEh2N36KHcVblPLuxhK4ObtbqFhihbX2KuDbHC1djFOJh6LxtA==
+X-MS-Exchange-AntiSpam-MessageData: 1+ZqAqunm5qB0NJM/BPQBTk5Gvg1htuu1OluJOS9W0rnrvm+pQ5k67+rRx0ELQPDFJ6p7Z2GrgQcaceMDNN6dvlZwZt40fu6OAHhL2T63fEnseVHSaH2QSnblciM3tJtaz7bgOwEY3OZG+OPVrnVXVPeYa5x62IJg+DRDqcj62S4ret/zRVZyxVKunAPHn74IXYk9uIRl/qJspHbu1KvzH4LYNwtA3zT2gYxowFV6gCNmsmYlg31xJiF1Dq+Q6lOsIQiGKCx54Rj9sFiPri9DJe/L7/oR/7ZkU0bm+Q2bVcTR+JpTgn0fzebX1MeOh6vl5p132lAJ/fJ810tbW2I99eFNQOEf+EmOLQT7A50BR7g0kqlaJcB1uIpBbfUcR8Ofvpwdj5EEb6/d1fgREhTvG/WC5ZBvmPv44nHeFxhkjJTwnxaMqVlg6h0F/GUw6ZWOaUJDR+u5tLVelCbecsAOztMtdzrg/ppmWgFPEbXxwl5DjAimPFcPhzHr8hKBHCt/spQc7VqvWveAxD2DnPhSQs6oJ4flDVCZBiSAoqeXSILdVAPXBNlP/dphA6xaqyVc/sYFddb8qeYF/lVNYHzwh60UDOPsCetitl9r8xkCeUkV8DyfJ3KY6P8G+2dvkUiF1DFQJKggljb/2f8xxbNiQ==
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e0dee2dd-8ed5-49b8-0097-08d84d82b3a8
+X-MS-Exchange-CrossTenant-Network-Message-Id: adaeed96-9aeb-4452-bbca-08d84d82b795
 X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2020 07:51:43.0782
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2020 07:51:49.6804
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tNVcKIutGIZCD2bxfsAln95SsrEoZaFlHWHzeBcGgGC4ipHvZsrg5SIBR+WjeC49w2osbeYPvDfuvZMGm7p7uQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: xFcnaYsfq+DCRL7/qC2/tBTOohst/Kzd95qHwHa1NyUW8fqs98b/oRVFE2ijCKCWsxDJ+fdf7qCH0d0wRIoXIQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5694
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-For the compatibility of NXP internal legacy kernel before 4.19 which
-is based on uart ram script and upstreaming kernel based on uart rom
-script, add both uart ram/rom script in latest sdma firmware. By default
-uart rom script used.
-Besides, add two multi-fifo scripts for SAI/PDM on i.mx8m/8mm and add
-back qspi script miss for v4(i.mx7d/8m/8mm family, but v3 is for i.mx6).
-
-rom script:
-        uart_2_mcu_addr
-	uartsh_2_mcu_addr /* through spba bus */
-am script:
-	uart_2_mcu_ram_addr
-	uartsh_2_mcu_ram_addr /* through spba bus */
-
-Please get latest sdma firmware from the below and put them into the path
-(/lib/firmware/imx/sdma/):
-https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
-/tree/imx/sdma
+Add terminated list for keeping descriptor so that it could be freed in
+worker without any potential involving next descriptor raised up before
+this descriptor freed, because vchan_get_all_descriptors get all
+descriptors including the last terminated descriptor and the next
+descriptor, hence, the next descriptor maybe freed unexpectly when it's
+done in worker without this patch.
+https://www.spinics.net/lists/dmaengine/msg23367.html
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
+Reported-by: Richard Leitner <richard.leitner@skidata.com>
 ---
- drivers/dma/imx-sdma.c                     | 17 +++++++++++++++--
- include/linux/platform_data/dma-imx-sdma.h |  8 ++++++--
- 2 files changed, 21 insertions(+), 4 deletions(-)
+ drivers/dma/imx-sdma.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 147ea88..9bb6270 100644
+index 9bb6270..2fa8733 100644
 --- a/drivers/dma/imx-sdma.c
 +++ b/drivers/dma/imx-sdma.c
-@@ -1731,8 +1731,8 @@ static void sdma_issue_pending(struct dma_chan *chan)
+@@ -381,6 +381,7 @@ struct sdma_channel {
+ 	enum dma_status			status;
+ 	struct imx_dma_data		data;
+ 	struct work_struct		terminate_worker;
++	struct list_head                terminated;
+ 	bool				is_ram_script;
+ };
  
- #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	34
- #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2	38
--#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	41
--#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	42
-+#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	45
-+#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	46
+@@ -1076,9 +1077,6 @@ static void sdma_channel_terminate_work(struct work_struct *work)
+ {
+ 	struct sdma_channel *sdmac = container_of(work, struct sdma_channel,
+ 						  terminate_worker);
+-	unsigned long flags;
+-	LIST_HEAD(head);
+-
+ 	/*
+ 	 * According to NXP R&D team a delay of one BD SDMA cost time
+ 	 * (maximum is 1ms) should be added after disable of the channel
+@@ -1087,10 +1085,7 @@ static void sdma_channel_terminate_work(struct work_struct *work)
+ 	 */
+ 	usleep_range(1000, 2000);
  
- static void sdma_add_scripts(struct sdma_engine *sdma,
- 		const struct sdma_script_start_addrs *addr)
-@@ -1756,6 +1756,19 @@ static void sdma_add_scripts(struct sdma_engine *sdma,
- 	for (i = 0; i < sdma->script_number; i++)
- 		if (addr_arr[i] > 0)
- 			saddr_arr[i] = addr_arr[i];
-+
-+	/*
-+	 * get uart_2_mcu_addr/uartsh_2_mcu_addr rom script specially because
-+	 * they are now replaced by uart_2_mcu_ram_addr/uartsh_2_mcu_ram_addr
-+	 * to be compatible with legacy freescale/nxp sdma firmware, and they
-+	 * are located in the bottom part of sdma_script_start_addrs which are
-+	 * beyond the SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1.
-+	 */
-+	if (addr->uart_2_mcu_addr)
-+		sdma->script_addrs->uart_2_mcu_addr = addr->uart_2_mcu_addr;
-+	if (addr->uartsh_2_mcu_addr)
-+		sdma->script_addrs->uartsh_2_mcu_addr = addr->uartsh_2_mcu_addr;
-+
+-	spin_lock_irqsave(&sdmac->vc.lock, flags);
+-	vchan_get_all_descriptors(&sdmac->vc, &head);
+-	spin_unlock_irqrestore(&sdmac->vc.lock, flags);
+-	vchan_dma_desc_free_list(&sdmac->vc, &head);
++	vchan_dma_desc_free_list(&sdmac->vc, &sdmac->terminated);
  }
  
- static void sdma_load_firmware(const struct firmware *fw, void *context)
-diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
-index 30e676b..e12d2e8 100644
---- a/include/linux/platform_data/dma-imx-sdma.h
-+++ b/include/linux/platform_data/dma-imx-sdma.h
-@@ -20,12 +20,12 @@ struct sdma_script_start_addrs {
- 	s32 per_2_firi_addr;
- 	s32 mcu_2_firi_addr;
- 	s32 uart_2_per_addr;
--	s32 uart_2_mcu_addr;
-+	s32 uart_2_mcu_ram_addr;
- 	s32 per_2_app_addr;
- 	s32 mcu_2_app_addr;
- 	s32 per_2_per_addr;
- 	s32 uartsh_2_per_addr;
--	s32 uartsh_2_mcu_addr;
-+	s32 uartsh_2_mcu_ram_addr;
- 	s32 per_2_shp_addr;
- 	s32 mcu_2_shp_addr;
- 	s32 ata_2_mcu_addr;
-@@ -52,6 +52,10 @@ struct sdma_script_start_addrs {
- 	s32 zcanfd_2_mcu_addr;
- 	s32 zqspi_2_mcu_addr;
- 	s32 mcu_2_ecspi_addr;
-+	s32 mcu_2_sai_addr;
-+	s32 sai_2_mcu_addr;
-+	s32 uart_2_mcu_addr;
-+	s32 uartsh_2_mcu_addr;
- 	/* End of v3 array */
- 	s32 mcu_2_zqspi_addr;
- 	/* End of v4 array */
+ static int sdma_terminate_all(struct dma_chan *chan)
+@@ -1104,6 +1099,13 @@ static int sdma_terminate_all(struct dma_chan *chan)
+ 
+ 	if (sdmac->desc) {
+ 		vchan_terminate_vdesc(&sdmac->desc->vd);
++		/*
++		 * move out current descriptor into terminated list so that
++		 * it could be free in sdma_channel_terminate_work alone
++		 * later without potential involving next descriptor raised
++		 * up before the last descriptor terminated.
++		 */
++		vchan_get_all_descriptors(&sdmac->vc, &sdmac->terminated);
+ 		sdmac->desc = NULL;
+ 		schedule_work(&sdmac->terminate_worker);
+ 	}
+@@ -2124,6 +2126,7 @@ static int sdma_probe(struct platform_device *pdev)
+ 
+ 		sdmac->channel = i;
+ 		sdmac->vc.desc_free = sdma_desc_free;
++		INIT_LIST_HEAD(&sdmac->terminated);
+ 		INIT_WORK(&sdmac->terminate_worker,
+ 				sdma_channel_terminate_work);
+ 		/*
 -- 
 2.7.4
 

@@ -2,39 +2,39 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B088A257D5A
-	for <lists+dmaengine@lfdr.de>; Mon, 31 Aug 2020 17:37:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7ABA5257D2F
+	for <lists+dmaengine@lfdr.de>; Mon, 31 Aug 2020 17:36:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729299AbgHaPgf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 31 Aug 2020 11:36:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40404 "EHLO mail.kernel.org"
+        id S1729037AbgHaPfI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 31 Aug 2020 11:35:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728596AbgHaPaj (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:30:39 -0400
+        id S1728830AbgHaPbR (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:31:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20EF021527;
-        Mon, 31 Aug 2020 15:30:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 832A321707;
+        Mon, 31 Aug 2020 15:31:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887838;
+        s=default; t=1598887876;
         bh=ZjKWjBFa8jx2a1LkBVVi50zo2hxUJAg7OKt/hGAhRLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pIpne26ARZRZ1AzeM8M0zger2+AVlH4O8PX24rUlBFVrGl7DB/dAV1jTo6aibOdDA
-         QQQzu5B90zyWkeiSHLm7dUeSl2dMxsWR9klHLApnW9VdHyw7XV1FDYsfkLcVLmFiGz
-         Tebz7Lu7gCii7HAATY6CoTg3QzLfTUFMt8gVkFnw=
+        b=PuoAeAil8Y4zzuBODnsoaCqvLj2gf+B/QIn9aHT765aodtkdI4qsPZCYzNpS/CLIK
+         XwnwJQfhFlj8fmad0Ezh/ndlrX89SQrU9WHbvrixP6Y1jUCp0eWA+BdwMEOmDNjnxq
+         ubB40tarI7PmgTCzXQzb+UYVHt4ctZOeYYrb2hJ4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
         dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 42/42] fsldma: fix very broken 32-bit ppc ioread64 functionality
-Date:   Mon, 31 Aug 2020 11:29:34 -0400
-Message-Id: <20200831152934.1023912-42-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 23/23] fsldma: fix very broken 32-bit ppc ioread64 functionality
+Date:   Mon, 31 Aug 2020 11:30:39 -0400
+Message-Id: <20200831153039.1024302-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200831152934.1023912-1-sashal@kernel.org>
-References: <20200831152934.1023912-1-sashal@kernel.org>
+In-Reply-To: <20200831153039.1024302-1-sashal@kernel.org>
+References: <20200831153039.1024302-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore

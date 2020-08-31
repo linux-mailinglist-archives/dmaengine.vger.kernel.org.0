@@ -2,51 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B177125775B
-	for <lists+dmaengine@lfdr.de>; Mon, 31 Aug 2020 12:36:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5E4B25775C
+	for <lists+dmaengine@lfdr.de>; Mon, 31 Aug 2020 12:36:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgHaKgK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 31 Aug 2020 06:36:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37256 "EHLO
+        id S1726472AbgHaKgP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 31 Aug 2020 06:36:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgHaKgJ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 31 Aug 2020 06:36:09 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDCF1C061573
-        for <dmaengine@vger.kernel.org>; Mon, 31 Aug 2020 03:36:07 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id l191so377629pgd.5
-        for <dmaengine@vger.kernel.org>; Mon, 31 Aug 2020 03:36:07 -0700 (PDT)
+        with ESMTP id S1726081AbgHaKgO (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 31 Aug 2020 06:36:14 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B352C061573
+        for <dmaengine@vger.kernel.org>; Mon, 31 Aug 2020 03:36:13 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id g6so2748417pjl.0
+        for <dmaengine@vger.kernel.org>; Mon, 31 Aug 2020 03:36:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=JUgypnrklX+WS7+RXf4i6hKrqncDmin14CiCTmnSXgY=;
-        b=INHVEXyGK3jfZBuTZCRxHjaIQ0jdu/qreXdbfEw77K6rJLJjftkKE3Qmh3ICSuzXQm
-         IXKoZka8AOBaJPjsP8zcDRWfBn7so3C6OxccPq1bEwifXjoIW0mZO4K62oySFzsiR6tQ
-         q6axvu8cGLbdR+hKhgskCViG3JMiezK7ZrZNaSNl1PMaDjdMBrbiCGFAA0ojNsf2Ke6t
-         Z/pqH2YRipFEDC4TRZS+tDV+SEdY+L4SsMOMz4WWxh/56AR+mBrgsqq+EYLAfrrmvJCB
-         IfCIV9+EEWwp66htX3ccBNrgZUxWsEEtQmXpKcOeQ/gBLcYIwpJ8w5etY7mNsXhTTW01
-         Oj4g==
+        bh=aTuqGydsLjCuiYOr0kdtMvVN8c3zKMVJf/5YH2LpKyw=;
+        b=IVJAEmUq+LOciB2x676YkDyPKLszYWKVMgGx9bHF2JVbhg4ylw0hh/XiI/MyV4ms+6
+         78oaxzmyjNr7uURby8spcUPui2UssM4MeUq6G7hjXjV+1tjUnug2OSUcvk7DR1603iDw
+         fjXSdoBc3YRJacTF0Xh3sSIWk95NiXEzYWi0roEl0pwibVi4eQq3cs+5PWT21ej3CfZ2
+         xiXyScJF5VI70EkYq9kZMy+0Wkbt2w9ZG8uga47ZP10FCouOAmbkokYtdKwFRgpLVziw
+         l42gqFkSGlwb566FQLMnGSm2XCzlzgC3XaG+HbOtONN+ZPGjZ26iZnBJtIzkV9uSMtZI
+         zfFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JUgypnrklX+WS7+RXf4i6hKrqncDmin14CiCTmnSXgY=;
-        b=sVN8hG8j1b360Qt6vtoMfbGodx2UNJPkzkv5bJsoTlSX0FEIgvhpdVkbHVwtvfZSWU
-         8M2IeX0gA+aNZWar/rPRmggGasW6gki5E8Bz36vI2G2l2wQG2MwtjRQI5I0awASVaXa4
-         3c9aDgwvis9MNrZhnP2oq8pjbWr73UjnsOBcdhWZptxvxGQIDkClrb1vJOQ9+8KB/iJc
-         xtSA5O4x96A1GTggQBwYaKGzdZS09/V71NrQnc/vwyE9W7nz2jG6ezuwnSyPZgf8uWsu
-         4DsNWAkc8xbGia6ExO2rN4czsLPJGAuYOUod5nld2LNCCzdlHl9bdMU7IlrXlHvnJohM
-         VO7g==
-X-Gm-Message-State: AOAM533oGrMUMVGeOR5UQ4cVQ/7z5msrTeFz5ySjL35btieO8CcPUISW
-        aZ8hxlqTjKsiTWcpeYHf1oQ=
-X-Google-Smtp-Source: ABdhPJyVbV4zVpFb9T/9pZB7C0Kz/GFw8J6lyPf8XSBAB0LLLvoR59uQ/U5Gp/AdEI6+VMeH2RhEJw==
-X-Received: by 2002:a63:1b65:: with SMTP id b37mr763669pgm.453.1598870167423;
-        Mon, 31 Aug 2020 03:36:07 -0700 (PDT)
+        bh=aTuqGydsLjCuiYOr0kdtMvVN8c3zKMVJf/5YH2LpKyw=;
+        b=WCvM5UQa3yUMdA/MiNToR/HujIJv+dKyF8eGP1A20bdTe41KN/jJOOM6p5pLWvnwyv
+         oLX9Svz6UFw5cxnZm0TQOvMqlyVW2tbOkckgSH7JjVBm8mWkoSKqQcYDNHygRDzvFHpV
+         qcDfPlI6ynjigxEtK1sg/UX47t0VMkHOd+39ijXvY3FBv4EskOsYe5JlkQG2/1uK6bDY
+         cn7bOuO5r1S31fE6muVzlxGwo5IrhnzwXvGsvmPm31jX908tuz9KWf+vUKG5j4C959eC
+         v4NPl4WXbcshg+/hi/3BsT6iMfaLz09jABKMgywBpGxtZyyU45UKXaglRiuCW2dYCUrz
+         fNrA==
+X-Gm-Message-State: AOAM530OYDFWRVS4sm7eXE0OxmeMEUYu+I+pEgY6vsqKBELHthTxzYbv
+        WinLn/qNsEZxk8/VfFnSJXM=
+X-Google-Smtp-Source: ABdhPJwWs1TaeZptDBNq+I0CH5fJ1zZtTF1avr4rwgFesSK46dFFy0fRoc0a0ydm+NQw5XdtIRNUzQ==
+X-Received: by 2002:a17:902:b7cc:: with SMTP id v12mr582507plz.105.1598870172755;
+        Mon, 31 Aug 2020 03:36:12 -0700 (PDT)
 Received: from localhost.localdomain ([49.207.204.90])
-        by smtp.gmail.com with ESMTPSA id x6sm6895449pge.61.2020.08.31.03.36.02
+        by smtp.gmail.com with ESMTPSA id x6sm6895449pge.61.2020.08.31.03.36.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 03:36:06 -0700 (PDT)
+        Mon, 31 Aug 2020 03:36:12 -0700 (PDT)
 From:   Allen Pais <allen.lkml@gmail.com>
 To:     vkoul@kernel.org
 Cc:     linus.walleij@linaro.org, vireshk@kernel.org, leoyang.li@nxp.com,
@@ -57,9 +57,9 @@ Cc:     linus.walleij@linaro.org, vireshk@kernel.org, leoyang.li@nxp.com,
         wens@csie.org, dmaengine@vger.kernel.org,
         Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH v3 01/35] dmaengine: altera-msgdma: convert tasklets to use new tasklet_setup() API
-Date:   Mon, 31 Aug 2020 16:05:08 +0530
-Message-Id: <20200831103542.305571-2-allen.lkml@gmail.com>
+Subject: [PATCH v3 02/35] dmaengine: at_hdmac: convert tasklets to use new tasklet_setup() API
+Date:   Mon, 31 Aug 2020 16:05:09 +0530
+Message-Id: <20200831103542.305571-3-allen.lkml@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200831103542.305571-1-allen.lkml@gmail.com>
 References: <20200831103542.305571-1-allen.lkml@gmail.com>
@@ -78,33 +78,34 @@ and from_tasklet() to pass the tasklet pointer explicitly.
 Signed-off-by: Romain Perier <romain.perier@gmail.com>
 Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 ---
- drivers/dma/altera-msgdma.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/dma/at_hdmac.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/altera-msgdma.c b/drivers/dma/altera-msgdma.c
-index 321ac3a7aa41..4d6751bf6f11 100644
---- a/drivers/dma/altera-msgdma.c
-+++ b/drivers/dma/altera-msgdma.c
-@@ -680,9 +680,9 @@ static int msgdma_alloc_chan_resources(struct dma_chan *dchan)
-  * msgdma_tasklet - Schedule completion tasklet
-  * @data: Pointer to the Altera sSGDMA channel structure
-  */
--static void msgdma_tasklet(unsigned long data)
-+static void msgdma_tasklet(struct tasklet_struct *t)
+diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
+index 45bbcd6146fd..4162c9a177e0 100644
+--- a/drivers/dma/at_hdmac.c
++++ b/drivers/dma/at_hdmac.c
+@@ -598,9 +598,9 @@ static void atc_handle_cyclic(struct at_dma_chan *atchan)
+ 
+ /*--  IRQ & Tasklet  ---------------------------------------------------*/
+ 
+-static void atc_tasklet(unsigned long data)
++static void atc_tasklet(struct tasklet_struct *t)
  {
--	struct msgdma_device *mdev = (struct msgdma_device *)data;
-+	struct msgdma_device *mdev = from_tasklet(mdev, t, irq_tasklet);
- 	u32 count;
- 	u32 __maybe_unused size;
- 	u32 __maybe_unused status;
-@@ -830,7 +830,7 @@ static int msgdma_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
+-	struct at_dma_chan *atchan = (struct at_dma_chan *)data;
++	struct at_dma_chan *atchan = from_tasklet(atchan, t, tasklet);
  
--	tasklet_init(&mdev->irq_tasklet, msgdma_tasklet, (unsigned long)mdev);
-+	tasklet_setup(&mdev->irq_tasklet, msgdma_tasklet);
+ 	if (test_and_clear_bit(ATC_IS_ERROR, &atchan->status))
+ 		return atc_handle_error(atchan);
+@@ -1885,8 +1885,7 @@ static int __init at_dma_probe(struct platform_device *pdev)
+ 		INIT_LIST_HEAD(&atchan->queue);
+ 		INIT_LIST_HEAD(&atchan->free_list);
  
- 	dma_cookie_init(&mdev->dmachan);
+-		tasklet_init(&atchan->tasklet, atc_tasklet,
+-				(unsigned long)atchan);
++		tasklet_setup(&atchan->tasklet, atc_tasklet);
+ 		atc_enable_chan_irq(atdma, i);
+ 	}
  
 -- 
 2.25.1

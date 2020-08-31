@@ -2,116 +2,134 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFB1125787C
-	for <lists+dmaengine@lfdr.de>; Mon, 31 Aug 2020 13:30:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE759257ABC
+	for <lists+dmaengine@lfdr.de>; Mon, 31 Aug 2020 15:48:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgHaLac (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 31 Aug 2020 07:30:32 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55038 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727901AbgHaL3l (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 31 Aug 2020 07:29:41 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07VBTJcD015316;
-        Mon, 31 Aug 2020 06:29:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598873359;
-        bh=pBxOxoVcwH4Btp/suFr+N7QvOsXbt61+DBoaWxdHKRU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=jXL6FMkZkpwLoFjiRG9GpQB/BMWCQbmqTUi5dFHyCCOhGDMPD6RW1TQKYWe4269OK
-         q8BFMxCkbPMDXm/91dWg10P/SWrsmsPNhGUaSqGkaFvGShSXBB4AA/qwzOlDpr5+1I
-         YwM8jqLe9Ky5lMcnWLgbqcyVQVfgsOkNowD9XtxQ=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07VBTJ3V116399
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 31 Aug 2020 06:29:19 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 31
- Aug 2020 06:29:19 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 31 Aug 2020 06:29:19 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07VBTEox056410;
-        Mon, 31 Aug 2020 06:29:15 -0500
-Subject: Re: [PATCH v3 30/35] dmaengine: virt-dma: convert tasklets to use new
- tasklet_setup() API
-To:     Allen Pais <allen.lkml@gmail.com>, <vkoul@kernel.org>
-CC:     <linus.walleij@linaro.org>, <vireshk@kernel.org>,
-        <leoyang.li@nxp.com>, <zw@zh-kernel.org>, <shawnguo@kernel.org>,
-        <s.hauer@pengutronix.de>, <sean.wang@mediatek.com>,
-        <matthias.bgg@gmail.com>, <logang@deltatee.com>,
-        <agross@kernel.org>, <jorn.andersson@linaro.org>,
-        <green.wan@sifive.com>, <baohua@kernel.org>, <mripard@kernel.org>,
-        <wens@csie.org>, <dmaengine@vger.kernel.org>,
+        id S1727019AbgHaNsI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 31 Aug 2020 09:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727783AbgHaNsA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 31 Aug 2020 09:48:00 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45265C061573
+        for <dmaengine@vger.kernel.org>; Mon, 31 Aug 2020 06:48:00 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id bh1so3035531plb.12
+        for <dmaengine@vger.kernel.org>; Mon, 31 Aug 2020 06:48:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vywUkL7JCdzm/J9Nqy3BgvINYlUhWd5GM04GnOGUXjw=;
+        b=UCSzd5JE+lKwVHezyPrOPW57as/Lqr+V8c0GQSaeIeSJ2Yu8wmX+SPCNtTPYK9vzFl
+         Viqin2z2tO7XOdnUS8nIr5bMDtXXldRWzcNe471tW/Wb9sasBOb4G4mjY26vk1Qw6cl/
+         K6mGFvNVBfBAcbfva6u3KKVKtwOLheV0k+XKuqxnc3WFbg7dg1H+xryU/f5kDstg7qSf
+         SUrHXz81ekaJYNNnNXqz5Y6A1FRfBd8Ky17CrWjeWhODK6nBgI+ihaxFuIyj4pW6iNJ4
+         Sd5eWHgAvlai7uqNPv6k+bptuwXHE31yb/mrtrYnf9wIM1gFIhjvYFbKFuesbHWPWxcH
+         vPIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vywUkL7JCdzm/J9Nqy3BgvINYlUhWd5GM04GnOGUXjw=;
+        b=XqPyakl1oXc2c9oWYh+8Mzk4qAMn3AINelRm+aABMTIJJCljBHIS9jPnb+VYkViQ7z
+         ydHhxkWOh+t1ZYTBFUy5CzJUeci9m9xPD+HCR1C1B+wJbhCmV1d3YMZPrKT89Es73WcJ
+         MthZ+AgmYBv+bKafEW9A0WZz7if5oI6NZC4Z2R/Qf924l++TcEgjPZFQkNC+GQU++Quk
+         RAf3VhPWUjjzOhsTLlpX+jf5rvAOPbewzV+s7MfDGcfwaP/yxGbNJlDIoR9kryoAotZJ
+         zUY0qP132VOKw/qYfooqa3ySTgQ3glLL9+t7lds10C9ENmGzDstG5E7+rSEu3ATnHi7g
+         vRWw==
+X-Gm-Message-State: AOAM531vRa6hNakdYnGLAaJRG3well3zcpuP5Z3S2I+qDs3Kc7krMfKY
+        OMWlJNE07YcbVSjepE6GYIY=
+X-Google-Smtp-Source: ABdhPJyZveZKvpDHUJNBLOzGWIzYjmY+FOwDNsDmKsAJWJhPkP0vCDbdDbPqU+lRQSfUKVREh7gMHA==
+X-Received: by 2002:a17:902:42:: with SMTP id 60mr581497pla.277.1598881679862;
+        Mon, 31 Aug 2020 06:47:59 -0700 (PDT)
+Received: from localhost.localdomain ([49.207.204.90])
+        by smtp.gmail.com with ESMTPSA id d4sm7367038pju.56.2020.08.31.06.47.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 06:47:59 -0700 (PDT)
+From:   Allen Pais <allen.lkml@gmail.com>
+To:     vkoul@kernel.org
+Cc:     linus.walleij@linaro.org, vireshk@kernel.org, leoyang.li@nxp.com,
+        zw@zh-kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        sean.wang@mediatek.com, matthias.bgg@gmail.com,
+        logang@deltatee.com, agross@kernel.org, jorn.andersson@linaro.org,
+        green.wan@sifive.com, baohua@kernel.org, mripard@kernel.org,
+        wens@csie.org, dmaengine@vger.kernel.org,
+        Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>
-References: <20200831103542.305571-1-allen.lkml@gmail.com>
- <20200831103542.305571-31-allen.lkml@gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <84ceeee1-bd19-b2a7-f969-fb96c10a1297@ti.com>
-Date:   Mon, 31 Aug 2020 14:30:59 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+Subject: [PATCH] [RESEND]dmaengine: fsl: convert tasklets to use new tasklet_setup() API
+Date:   Mon, 31 Aug 2020 19:17:45 +0530
+Message-Id: <20200831134745.314945-1-allen.lkml@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200831103542.305571-31-allen.lkml@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+In preparation for unconditionally passing the
+struct tasklet_struct pointer to all tasklet
+callbacks, switch to using the new tasklet_setup()
+and from_tasklet() to pass the tasklet pointer explicitly.
 
+Signed-off-by: Romain Perier <romain.perier@gmail.com>
+Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+---
+ drivers/dma/fsl_raid.c | 6 +++---
+ drivers/dma/fsldma.c   | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-On 31/08/2020 13.35, Allen Pais wrote:
-> In preparation for unconditionally passing the
-> struct tasklet_struct pointer to all tasklet
-> callbacks, switch to using the new tasklet_setup()
-> and from_tasklet() to pass the tasklet pointer explicitly.
-
-Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-
-> Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
-> ---
->  drivers/dma/virt-dma.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/dma/virt-dma.c b/drivers/dma/virt-dma.c
-> index 23e33a85f033..a6f4265be0c9 100644
-> --- a/drivers/dma/virt-dma.c
-> +++ b/drivers/dma/virt-dma.c
-> @@ -80,9 +80,9 @@ EXPORT_SYMBOL_GPL(vchan_find_desc);
->   * This tasklet handles the completion of a DMA descriptor by
->   * calling its callback and freeing it.
->   */
-> -static void vchan_complete(unsigned long arg)
-> +static void vchan_complete(struct tasklet_struct *t)
->  {
-> -	struct virt_dma_chan *vc =3D (struct virt_dma_chan *)arg;
-> +	struct virt_dma_chan *vc =3D from_tasklet(vc, t, task);
->  	struct virt_dma_desc *vd, *_vd;
->  	struct dmaengine_desc_callback cb;
->  	LIST_HEAD(head);
-> @@ -131,7 +131,7 @@ void vchan_init(struct virt_dma_chan *vc, struct dm=
-a_device *dmadev)
->  	INIT_LIST_HEAD(&vc->desc_completed);
->  	INIT_LIST_HEAD(&vc->desc_terminated);
-> =20
-> -	tasklet_init(&vc->task, vchan_complete, (unsigned long)vc);
-> +	tasklet_setup(&vc->task, vchan_complete);
-> =20
->  	vc->chan.device =3D dmadev;
->  	list_add_tail(&vc->chan.device_node, &dmadev->channels);
->=20
-
-- P=C3=A9ter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+diff --git a/drivers/dma/fsl_raid.c b/drivers/dma/fsl_raid.c
+index 493dc6c59d1d..1ddd7cee2e7a 100644
+--- a/drivers/dma/fsl_raid.c
++++ b/drivers/dma/fsl_raid.c
+@@ -154,9 +154,9 @@ static void fsl_re_cleanup_descs(struct fsl_re_chan *re_chan)
+ 	fsl_re_issue_pending(&re_chan->chan);
+ }
+ 
+-static void fsl_re_dequeue(unsigned long data)
++static void fsl_re_dequeue(struct tasklet_struct *t)
+ {
+-	struct fsl_re_chan *re_chan;
++	struct fsl_re_chan *re_chan = from_tasklet(re_chan, t, irqtask);
+ 	struct fsl_re_desc *desc, *_desc;
+ 	struct fsl_re_hw_desc *hwdesc;
+ 	unsigned long flags;
+@@ -671,7 +671,7 @@ static int fsl_re_chan_probe(struct platform_device *ofdev,
+ 	snprintf(chan->name, sizeof(chan->name), "re_jr%02d", q);
+ 
+ 	chandev = &chan_ofdev->dev;
+-	tasklet_init(&chan->irqtask, fsl_re_dequeue, (unsigned long)chandev);
++	tasklet_setup(&chan->irqtask, fsl_re_dequeue);
+ 
+ 	ret = request_irq(chan->irq, fsl_re_isr, 0, chan->name, chandev);
+ 	if (ret) {
+diff --git a/drivers/dma/fsldma.c b/drivers/dma/fsldma.c
+index e342cf52d296..0feb323bae1e 100644
+--- a/drivers/dma/fsldma.c
++++ b/drivers/dma/fsldma.c
+@@ -976,9 +976,9 @@ static irqreturn_t fsldma_chan_irq(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static void dma_do_tasklet(unsigned long data)
++static void dma_do_tasklet(struct tasklet_struct *t)
+ {
+-	struct fsldma_chan *chan = (struct fsldma_chan *)data;
++	struct fsldma_chan *chan = from_tasklet(chan, t, tasklet);
+ 
+ 	chan_dbg(chan, "tasklet entry\n");
+ 
+@@ -1151,7 +1151,7 @@ static int fsl_dma_chan_probe(struct fsldma_device *fdev,
+ 	}
+ 
+ 	fdev->chan[chan->id] = chan;
+-	tasklet_init(&chan->tasklet, dma_do_tasklet, (unsigned long)chan);
++	tasklet_setup(&chan->tasklet, dma_do_tasklet);
+ 	snprintf(chan->name, sizeof(chan->name), "chan%d", chan->id);
+ 
+ 	/* Initialize the channel */
+-- 
+2.25.1
 

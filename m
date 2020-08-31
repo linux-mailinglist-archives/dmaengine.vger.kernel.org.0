@@ -2,109 +2,142 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6535F257783
-	for <lists+dmaengine@lfdr.de>; Mon, 31 Aug 2020 12:39:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0607E2577E7
+	for <lists+dmaengine@lfdr.de>; Mon, 31 Aug 2020 13:06:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbgHaKjJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 31 Aug 2020 06:39:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgHaKjI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 31 Aug 2020 06:39:08 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CDCEC061573
-        for <dmaengine@vger.kernel.org>; Mon, 31 Aug 2020 03:39:06 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id np15so1130221pjb.0
-        for <dmaengine@vger.kernel.org>; Mon, 31 Aug 2020 03:39:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GU6do3Sc3Sg8QHCo09pkp5nNRZOgCilbwfzX8rZjCSE=;
-        b=bJTBsVRkrm7GUSLuaGwEjeX/BEz6SEWm8uBe4l121B6oW8E4z+5ISU3DsP/HSA3L1z
-         GoXfOjEy2VimPUybsOLmDlcavQCkdF2O3fV6a1Hfi+//pa4IH4w9Zn/qHG6ewk5F9N1c
-         gV71IVoLDI5Qz5Eeq0vlA9N7grEpD0PNqGHO5vEDiODlxtFcWobFOAWulbRvVUDqng0p
-         Kry4qi7wYgM0uDIVyxD5ggfXjYO5HYOYOJM7XmoYnRB17UlKpxjGic9b/4txKhzWiG//
-         6DxfsEolGsrKu8TJRCFZD5aGTboVfLDwa0YN9snV0atLSo3ljZg2pLcyCLJHQJlRNxLG
-         tE9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GU6do3Sc3Sg8QHCo09pkp5nNRZOgCilbwfzX8rZjCSE=;
-        b=jW9Uh1S5XlIHeUNHRk3rTjdW7depaVdR1ZQPRTxN6TcEuIWG0jR34J6HLYksJOWRri
-         pKn3HVDrchrQYHL7ZB2uXUyfRr4ef8Nm9HH0hlEJzAMa0QlroRBEMP//wN8cx2gadoiL
-         kHGwFC4DGuxhMTG0Z3uSqK7RtS6CQD34krkQ6D+1FSDcH1Kemz4bumgDH4t5aSnPI/pA
-         sq5XTtmwtziXYPmwnzIyzju/0l8e6YAvXxC7aEGhM1VqBmOTgsC8hc68Kj1V9A/2KrzX
-         ShGIzzdpZZ4mF9E6vBIDSOyws6p3B3GMC+ZEyWEAHVXRI5ohRIuQk1ggrivQqQxXQXm9
-         Am0Q==
-X-Gm-Message-State: AOAM5319nrL3m41w7hRjFMGUsmK3B+jPHNTr1rAajw255j9iFjpA3Wba
-        67JPs3b/7B6ESXP0fHRFF1E=
-X-Google-Smtp-Source: ABdhPJxIMjt9L3JdQX3FYOOGQGqny0jKO9qzlQJ9XZbDDUfStrKbyaZnSk/4Xg0fmzRTKSzy6F6FkQ==
-X-Received: by 2002:a17:90a:a101:: with SMTP id s1mr720573pjp.205.1598870346142;
-        Mon, 31 Aug 2020 03:39:06 -0700 (PDT)
-Received: from localhost.localdomain ([49.207.204.90])
-        by smtp.gmail.com with ESMTPSA id x6sm6895449pge.61.2020.08.31.03.39.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 03:39:05 -0700 (PDT)
-From:   Allen Pais <allen.lkml@gmail.com>
-To:     vkoul@kernel.org
-Cc:     linus.walleij@linaro.org, vireshk@kernel.org, leoyang.li@nxp.com,
-        zw@zh-kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        sean.wang@mediatek.com, matthias.bgg@gmail.com,
-        logang@deltatee.com, agross@kernel.org, jorn.andersson@linaro.org,
-        green.wan@sifive.com, baohua@kernel.org, mripard@kernel.org,
-        wens@csie.org, dmaengine@vger.kernel.org,
-        Allen Pais <allen.lkml@gmail.com>
-Subject: [PATCH v3 35/35] dmaengine: k3-udma: convert tasklets to use new tasklet_setup() API
-Date:   Mon, 31 Aug 2020 16:05:42 +0530
-Message-Id: <20200831103542.305571-36-allen.lkml@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200831103542.305571-1-allen.lkml@gmail.com>
-References: <20200831103542.305571-1-allen.lkml@gmail.com>
+        id S1726427AbgHaLEc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 31 Aug 2020 07:04:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54562 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726224AbgHaLBT (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 31 Aug 2020 07:01:19 -0400
+Received: from localhost (unknown [122.171.38.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6F482072D;
+        Mon, 31 Aug 2020 11:00:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598871636;
+        bh=C+1fKhJBNw/Y3PJKxGvNWyUc7dhncI98yBJO4d14IJo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WfQm7zL27aM+2aGqyAcsedQ8Dko+y1Kwvx25LUAl+6/suNTRdkCJhJbgYopap3ZIR
+         uScl0ijE0IlvZu3amNL60oaIxi7/6b1o5xnnK/lj5pIGpgjIGR+Bo76uf7Uw2xT3Hu
+         3jo3iO1ofbIm0W3j2MhexTl2pwXlZqHridtCUqQM=
+Date:   Mon, 31 Aug 2020 16:30:32 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
+Cc:     Rob Herring <robh@kernel.org>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, chuanhua.lei@linux.intel.com,
+        malliamireddy009@gmail.com
+Subject: Re: [PATCH v5 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
+Message-ID: <20200831110032.GN2639@vkoul-mobl>
+References: <cover.1597381889.git.mallikarjunax.reddy@linux.intel.com>
+ <68c77fd2ffb477aa4a52a58f8a26bfb191d3c5d1.1597381889.git.mallikarjunax.reddy@linux.intel.com>
+ <20200814203222.GA2674896@bogus>
+ <7cdc0587-8b4f-4360-a303-1541c9ad57b2@linux.intel.com>
+ <20200825112107.GN2639@vkoul-mobl>
+ <ffa5ba4d-f1b2-6a30-f2f1-f4578a77bce2@linux.intel.com>
+ <20200828104530.GT2639@vkoul-mobl>
+ <09547b0e-1c2e-d916-d4c0-f66b0110e173@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <09547b0e-1c2e-d916-d4c0-f66b0110e173@linux.intel.com>
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-In preparation for unconditionally passing the
-struct tasklet_struct pointer to all tasklet
-callbacks, switch to using the new tasklet_setup()
-and from_tasklet() to pass the tasklet pointer explicitly.
+On 31-08-20, 16:06, Reddy, MallikarjunaX wrote:
+> Hi Vinod,
+> 
+> Thanks for the review. Please see my comment inline.
+> 
+> On 8/28/2020 6:45 PM, Vinod Koul wrote:
+> > On 27-08-20, 17:54, Reddy, MallikarjunaX wrote:
+> > > Hi Vinod,
+> > > Thanks for the review comments.
+> > > 
+> > > On 8/25/2020 7:21 PM, Vinod Koul wrote:
+> > > > On 18-08-20, 15:00, Reddy, MallikarjunaX wrote:
+> > > > 
+> > > > > > > +
+> > > > > > > +            intel,chans:
+> > > > > > > +              $ref: /schemas/types.yaml#/definitions/uint32-array
+> > > > > > > +              description:
+> > > > > > > +                 The channels included on this port. Format is channel start
+> > > > > > > +                 number and how many channels on this port.
+> > > > > > Why does this need to be in DT? This all seems like it can be in the dma
+> > > > > > cells for each client.
+> > > > > (*ABC)
+> > > > > Yes. We need this.
+> > > > > for dma0(lgm-cdma) old SOC supports 16 channels and the new SOC supports 22
+> > > > > channels. and the logical channel mapping for the peripherals also differ
+> > > > > b/w old and new SOCs.
+> > > > > 
+> > > > > Because of this hardware limitation we are trying to configure the total
+> > > > > channels and port-channel mapping dynamically from device tree.
+> > > > > 
+> > > > > based on port name we are trying to configure the default values for
+> > > > > different peripherals(ports).
+> > > > > Example: burst length is not same for all ports, so using port name to do
+> > > > > default configurations.
+> > > > Sorry that does not make sense to me, why not specify the values to be
+> > > > used here instead of defining your own name scheme!
+> > > OK. Agreed. I will remove port name from DT and only use intel,chans
+> > what is intel,chans, why not use dma-channels?
+>  The intel,chans says about the channels included on the correspondng port.
 
-Signed-off-by: Allen Pais <allen.lkml@gmail.com>
----
- drivers/dma/ti/k3-udma.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+What do you mean by a port here?
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index c14e6cb105cd..59cd8770334c 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -2914,9 +2914,9 @@ static void udma_desc_pre_callback(struct virt_dma_chan *vc,
-  * This tasklet handles the completion of a DMA descriptor by
-  * calling its callback and freeing it.
-  */
--static void udma_vchan_complete(unsigned long arg)
-+static void udma_vchan_complete(struct tasklet_struct *t)
- {
--	struct virt_dma_chan *vc = (struct virt_dma_chan *)arg;
-+	struct virt_dma_chan *vc = from_tasklet(vc, t, task);
- 	struct virt_dma_desc *vd, *_vd;
- 	struct dmaengine_desc_callback cb;
- 	LIST_HEAD(head);
-@@ -3649,8 +3649,7 @@ static int udma_probe(struct platform_device *pdev)
- 
- 		vchan_init(&uc->vc, &ud->ddev);
- 		/* Use custom vchan completion handling */
--		tasklet_init(&uc->vc.task, udma_vchan_complete,
--			     (unsigned long)&uc->vc);
-+		tasklet_setup(&uc->vc.task, udma_vchan_complete);
- 		init_completion(&uc->teardown_completed);
- 		INIT_DELAYED_WORK(&uc->tx_drain.work, udma_check_tx_completion);
- 	}
+> Format is channel start number and how many channels on this port.
+
+It is perfectly reasonable to have 16 channels but linux not use use all, lets
+say from 5th channel channel onwards
+
+So you need to use standard dma-channels also with dma-channel-mask to
+specify which channels linux can use
+
+>  The reasong behind using this attribute instead of standrad dma-channels
+> is...
+> 
+> 
+> DMA_VER22 HW supports 22 channels. But there is a hole in HW, total it can
+> use only 16.
+> 
+> Old soc supports 4ports and 16 channels.
+> New soc supports 6ports and 22 channels.
+> (old and new soc carry the same version VER22)
+> 
+> port channel mapping for the old and new soc also not the same.
+> old soc: logical channels:(Rx, Tx)
+> 0, 1 - SPI0
+> 2, 3 - SPI1
+> 4, 5 - HSNAND
+> 12, 14, 13, 15 - Memcopy
+> 
+> New soc: Logical channels(Rx, Tx)
+> 0, 1 - SPI0
+> 2, 3 - SPI1
+> 4, 5 - SPI2
+> 6, 7 - SPI3
+> 8, 9 - HSNAND
+> 10 to 21 - Mcopy
+
+Mapping is different, client can set that channel required in dmas
+property and use a specific required channel.
+
+> Because of these reasons we are trying to use "intel,chans" attribute, and
+> reading then number of channels from the dt.
+> Advantaage:
+> 1. we can map the channels correspondign to port
+> 2. Dynamically configure the channels (due to hw limitation)
+> 
+> If this is not ok, please suggest us the better way to handle this.
+> > 
+
 -- 
-2.25.1
-
+~Vinod

@@ -2,27 +2,27 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87B9025CA28
-	for <lists+dmaengine@lfdr.de>; Thu,  3 Sep 2020 22:26:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CD4325CA2A
+	for <lists+dmaengine@lfdr.de>; Thu,  3 Sep 2020 22:26:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgICU0T (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 3 Sep 2020 16:26:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:40178 "EHLO foss.arm.com"
+        id S1729042AbgICU0V (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 3 Sep 2020 16:26:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:40182 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729036AbgICU0T (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 3 Sep 2020 16:26:19 -0400
+        id S1729036AbgICU0U (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 3 Sep 2020 16:26:20 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3127D1396;
-        Thu,  3 Sep 2020 13:26:19 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6BD251424;
+        Thu,  3 Sep 2020 13:26:20 -0700 (PDT)
 Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4618D3F71F;
-        Thu,  3 Sep 2020 13:26:18 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 80E363F71F;
+        Thu,  3 Sep 2020 13:26:19 -0700 (PDT)
 From:   Robin Murphy <robin.murphy@arm.com>
 To:     vkoul@kernel.org
 Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 4/9] dmaengine: imx-sdma: Drop local dma_parms
-Date:   Thu,  3 Sep 2020 21:25:48 +0100
-Message-Id: <d9b551dcf712a91860af3c5dd01a31b9b97ac1c5.1599164692.git.robin.murphy@arm.com>
+Subject: [PATCH 5/9] dmaengine: mxs: Drop local dma_parms
+Date:   Thu,  3 Sep 2020 21:25:49 +0100
+Message-Id: <dc0fb6963067b9c799873d761661ed6dce1426ec.1599164692.git.robin.murphy@arm.com>
 X-Mailer: git-send-email 2.28.0.dirty
 In-Reply-To: <cover.1599164692.git.robin.murphy@arm.com>
 References: <cover.1599164692.git.robin.murphy@arm.com>
@@ -39,29 +39,29 @@ dma_parms structure, so we can save allocating another one.
 
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
- drivers/dma/imx-sdma.c | 2 --
+ drivers/dma/mxs-dma.c | 2 --
  1 file changed, 2 deletions(-)
 
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 4f8d8f5e1132..16b908c77db3 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -426,7 +426,6 @@ struct sdma_driver_data {
- 
- struct sdma_engine {
- 	struct device			*dev;
+diff --git a/drivers/dma/mxs-dma.c b/drivers/dma/mxs-dma.c
+index 3039bba0e4d5..eb60eb72632e 100644
+--- a/drivers/dma/mxs-dma.c
++++ b/drivers/dma/mxs-dma.c
+@@ -141,7 +141,6 @@ struct mxs_dma_engine {
+ 	void __iomem			*base;
+ 	struct clk			*clk;
+ 	struct dma_device		dma_device;
 -	struct device_dma_parameters	dma_parms;
- 	struct sdma_channel		channel[MAX_DMA_CHANNELS];
- 	struct sdma_channel_control	*channel_control;
- 	void __iomem			*regs;
-@@ -2118,7 +2117,6 @@ static int sdma_probe(struct platform_device *pdev)
- 	sdma->dma_device.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
- 	sdma->dma_device.device_prep_dma_memcpy = sdma_prep_memcpy;
- 	sdma->dma_device.device_issue_pending = sdma_issue_pending;
--	sdma->dma_device.dev->dma_parms = &sdma->dma_parms;
- 	sdma->dma_device.copy_align = 2;
- 	dma_set_max_seg_size(sdma->dma_device.dev, SDMA_BD_MAX_CNT);
+ 	struct mxs_dma_chan		mxs_chans[MXS_DMA_CHANNELS];
+ 	struct platform_device		*pdev;
+ 	unsigned int			nr_channels;
+@@ -829,7 +828,6 @@ static int __init mxs_dma_probe(struct platform_device *pdev)
+ 	mxs_dma->dma_device.dev = &pdev->dev;
  
+ 	/* mxs_dma gets 65535 bytes maximum sg size */
+-	mxs_dma->dma_device.dev->dma_parms = &mxs_dma->dma_parms;
+ 	dma_set_max_seg_size(mxs_dma->dma_device.dev, MAX_XFER_BYTES);
+ 
+ 	mxs_dma->dma_device.device_alloc_chan_resources = mxs_dma_alloc_chan_resources;
 -- 
 2.28.0.dirty
 

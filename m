@@ -2,106 +2,81 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A3F125FA1E
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Sep 2020 14:06:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A1DE25FF81
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Sep 2020 18:33:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729211AbgIGMFi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 7 Sep 2020 08:05:38 -0400
-Received: from mga02.intel.com ([134.134.136.20]:56261 "EHLO mga02.intel.com"
+        id S1730693AbgIGQdi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 7 Sep 2020 12:33:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729033AbgIGMFA (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 7 Sep 2020 08:05:00 -0400
-IronPort-SDR: AElRPog+9iygThtvvQJWeFnXHbG1+jdav1IEyqluyoVDW7z/WUMcoNcoXKVwYVsX08yQ8ojhIj
- HQjyZGt3yLjA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9736"; a="145720906"
-X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
-   d="scan'208";a="145720906"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 05:04:48 -0700
-IronPort-SDR: FIufuOdyessBy11mg2+nioCP7rJNjJg6dWhEj59B/8SR9cQR+6cr0iJoCKG/BJOmJjUHqdoNoT
- DhBCF6bziTGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
-   d="scan'208";a="333145464"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 07 Sep 2020 05:04:44 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kFFt2-00EwVi-1p; Mon, 07 Sep 2020 15:04:40 +0300
-Date:   Mon, 7 Sep 2020 15:04:40 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Vladimir Murzin <vladimir.murzin@arm.com>
-Cc:     dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: 6b41030fdc790 broke dmatest badly
-Message-ID: <20200907120440.GC1891694@smile.fi.intel.com>
-References: <20200904173401.GH1891694@smile.fi.intel.com>
- <d95f1b54-2a62-7b79-c53c-c8179324e935@arm.com>
+        id S1729815AbgIGQdc (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:33:32 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9761E21941;
+        Mon,  7 Sep 2020 16:33:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599496412;
+        bh=nEKjW6rYP6qA3oTip1YczSNAMKPIAvulBqSmtTcH6zg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UQRmA94GV1VtWfTbt+GTPm2KZZOJVWXm4OyCgoJ5TDh3qab8MDDZU6J7298R1ykgy
+         OfOXnK+4ibQ7C+PSgbdR5v+8ozAi3WnnEi8hfHdbZNBAr7H6nfLzzAyK77MlPH0Io9
+         HcZlWXASyfq6uYRqkjfTdL26v8tGpLup6k86uEms=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Hanjun Guo <guohanjun@huawei.com>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 02/43] dmaengine: acpi: Put the CSRT table after using it
+Date:   Mon,  7 Sep 2020 12:32:48 -0400
+Message-Id: <20200907163329.1280888-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
+References: <20200907163329.1280888-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d95f1b54-2a62-7b79-c53c-c8179324e935@arm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 12:03:26PM +0100, Vladimir Murzin wrote:
-> On 9/4/20 6:34 PM, Andy Shevchenko wrote:
-> > It becomes a bit annoying to fix dmatest after almost each release.
-> > The commit 6b41030fdc79 ("dmaengine: dmatest: Restore default for channel")
-> > broke my use case when I tried to start busy channel.
-> > 
-> > So, before this patch
-> > 	...
-> > 	echo "busy_chan" > channel
-> > 	echo 1 > run
-> > 	sh: write error: Device or resource busy
-> > 	[ 1013.868313] dmatest: Could not start test, no channels configured
-> > 
-> > After I have got it run on *ALL* available channels.
-> 
-> Is not that controlled with max_channels? 
+From: Hanjun Guo <guohanjun@huawei.com>
 
-How? I would like to run the test against specific channel. That channel is
-occupied and thus I should get an error. This is how it suppose to work and
-actually did before your patch.
+[ Upstream commit 7eb48dd094de5fe0e216b550e73aa85257903973 ]
 
-> > dmatest compiled as a module.
-> > 
-> > Fix this ASAP, otherwise I will send revert of this and followed up patch next
-> > week.
-> 
-> I don't quite get it, you are sending revert and then a fix rather then helping
-> with a fix?
+The acpi_get_table() should be coupled with acpi_put_table() if
+the mapped table is not used at runtime to release the table
+mapping, put the CSRT table buf after using it.
 
-Correct.
+Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
+Link: https://lore.kernel.org/r/1595411661-15936-1-git-send-email-guohanjun@huawei.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/dma/acpi-dma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> What is reason for such extreme (and non-cooperative) flow?
-
-There are few reasons:
- - the patch made a clear regression
- - I do not understand what that patch is doing and how
- - I do not have time to look at it
- - we are now at v5.9-rc4 and it seems like one or two weeks time to get it
-   into v5.9 release
- - and I'm annoyed by breaking this module not the first time for the last
-   couple of years
-
-And on top of that it's not how OSS community works. Since you replied, I give
-you time to figure out what's going on and provide necessary testing if needed.
-
-> P.S.
-> Unfortunately, I do not have access to hardware to run reproducer.
-
-So, please, propose a fix without it. I will test myself.
-
+diff --git a/drivers/dma/acpi-dma.c b/drivers/dma/acpi-dma.c
+index 8a05db3343d39..dcbcb712de6e8 100644
+--- a/drivers/dma/acpi-dma.c
++++ b/drivers/dma/acpi-dma.c
+@@ -135,11 +135,13 @@ static void acpi_dma_parse_csrt(struct acpi_device *adev, struct acpi_dma *adma)
+ 		if (ret < 0) {
+ 			dev_warn(&adev->dev,
+ 				 "error in parsing resource group\n");
+-			return;
++			break;
+ 		}
+ 
+ 		grp = (struct acpi_csrt_group *)((void *)grp + grp->length);
+ 	}
++
++	acpi_put_table((struct acpi_table_header *)csrt);
+ }
+ 
+ /**
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 

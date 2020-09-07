@@ -2,81 +2,216 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9225E260078
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Sep 2020 18:50:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48D5126009A
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Sep 2020 18:51:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730940AbgIGQtx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 7 Sep 2020 12:49:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48954 "EHLO mail.kernel.org"
+        id S1731040AbgIGQvu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 7 Sep 2020 12:51:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:41198 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730805AbgIGQfE (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:35:04 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BD8F221E8;
-        Mon,  7 Sep 2020 16:35:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496504;
-        bh=3st5nF5UcQ80yr/lcX3pOnZPlbiq4npcK9jsNL3vzmI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jNKeG+tbQ6pSx1yLiBAMqUyKxYuazzMdUPI9oG5thndPUtREwh0N4+eSqliqbFE1a
-         cWGU1XAlDYAk5CCn9FHPmIqP61OWt3Fap9DxF3AvubV+CpcQlZnqeOtpkTVN/sAzcN
-         wKmIXT/2lvvd2llbFnBzu059YKD+jbWW0LxtprrM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hanjun Guo <guohanjun@huawei.com>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 02/17] dmaengine: acpi: Put the CSRT table after using it
-Date:   Mon,  7 Sep 2020 12:34:45 -0400
-Message-Id: <20200907163500.1281543-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200907163500.1281543-1-sashal@kernel.org>
-References: <20200907163500.1281543-1-sashal@kernel.org>
+        id S1731021AbgIGQvr (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:51:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86E5831B;
+        Mon,  7 Sep 2020 09:51:46 -0700 (PDT)
+Received: from [10.57.13.150] (unknown [10.57.13.150])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D6DC3F66E;
+        Mon,  7 Sep 2020 09:51:44 -0700 (PDT)
+Subject: Re: 6b41030fdc790 broke dmatest badly
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+References: <20200904173401.GH1891694@smile.fi.intel.com>
+ <d95f1b54-2a62-7b79-c53c-c8179324e935@arm.com>
+ <20200907120440.GC1891694@smile.fi.intel.com>
+ <004640d8-e236-4b75-1bfd-cc386bbf08a6@arm.com>
+ <20200907140502.GK1891694@smile.fi.intel.com>
+From:   Vladimir Murzin <vladimir.murzin@arm.com>
+Message-ID: <54ba60c3-9a04-51ac-688c-425b85202b18@arm.com>
+Date:   Mon, 7 Sep 2020 17:52:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200907140502.GK1891694@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Hanjun Guo <guohanjun@huawei.com>
+On 9/7/20 3:05 PM, Andy Shevchenko wrote:
+> On Mon, Sep 07, 2020 at 02:06:23PM +0100, Vladimir Murzin wrote:
+>> On 9/7/20 1:06 PM, Andy Shevchenko wrote:
+>>> On Mon, Sep 07, 2020 at 12:03:26PM +0100, Vladimir Murzin wrote:
+>>>> On 9/4/20 6:34 PM, Andy Shevchenko wrote:
+>>>>> It becomes a bit annoying to fix dmatest after almost each release.
+>>>>> The commit 6b41030fdc79 ("dmaengine: dmatest: Restore default for channel")
+>>>>> broke my use case when I tried to start busy channel.
+>>>>>
+>>>>> So, before this patch
+>>>>> 	...
+>>>>> 	echo "busy_chan" > channel
+>>>>> 	echo 1 > run
+>>>>> 	sh: write error: Device or resource busy
+>>>>> 	[ 1013.868313] dmatest: Could not start test, no channels configured
+>>>>>
+>>>>> After I have got it run on *ALL* available channels.
+>>>>
+>>>> Is not that controlled with max_channels? 
+>>>
+>>> How? I would like to run the test against specific channel. That channel is
+>>> occupied and thus I should get an error. This is how it suppose to work and
+>>> actually did before your patch.
+>>
+>> Since you highlighted "ALL" I though that was an issue, yet looks like you
+>> expect run command would do nothing, correct?
+> 
+> Yes!
+> 
+>> IIUC attempt to add already occupied channel is producing error regardless of
+>> my patch and I do not see how error could come from run command.
+> 
+> We need to save the status somewhere that the channel setter has been called
+> unsuccessfully. And propagate an error to the run routine.
 
-[ Upstream commit 7eb48dd094de5fe0e216b550e73aa85257903973 ]
+I'm not familiar with the code to propose nice and elegant solution, but for the
+start (build only)
 
-The acpi_get_table() should be coupled with acpi_put_table() if
-the mapped table is not used at runtime to release the table
-mapping, put the CSRT table buf after using it.
-
-Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
-Link: https://lore.kernel.org/r/1595411661-15936-1-git-send-email-guohanjun@huawei.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/dma/acpi-dma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/dma/acpi-dma.c b/drivers/dma/acpi-dma.c
-index 4a748c3435d7d..8d99c84361cbb 100644
---- a/drivers/dma/acpi-dma.c
-+++ b/drivers/dma/acpi-dma.c
-@@ -131,11 +131,13 @@ static void acpi_dma_parse_csrt(struct acpi_device *adev, struct acpi_dma *adma)
- 		if (ret < 0) {
- 			dev_warn(&adev->dev,
- 				 "error in parsing resource group\n");
--			return;
-+			break;
+diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
+index 45d4d92..40dba6b 100644
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -129,6 +129,7 @@ struct dmatest_params {
+  * @nr_channels:	number of channels under test
+  * @lock:		access protection to the fields of this structure
+  * @did_init:		module has been initialized completely
++ * @misconfig:		test has faced configuration issues
+  */
+ static struct dmatest_info {
+ 	/* Test parameters */
+@@ -139,6 +140,7 @@ static struct dmatest_info {
+ 	unsigned int		nr_channels;
+ 	struct mutex		lock;
+ 	bool			did_init;
++	bool			misconfig;
+ } test_info = {
+ 	.channels = LIST_HEAD_INIT(test_info.channels),
+ 	.lock = __MUTEX_INITIALIZER(test_info.lock),
+@@ -1184,16 +1186,26 @@ static int dmatest_run_set(const char *val, const struct kernel_param *kp)
+ 		return ret;
+ 	} else if (dmatest_run) {
+ 		if (!is_threaded_test_pending(info)) {
+-			pr_info("No channels configured, continue with any\n");
+-			if (!is_threaded_test_run(info))
+-				stop_threaded_test(info);
+-			add_threaded_test(info);
++			/*
++			 * We have nothing to run. This can be due to:
++			 */
++			if (info->misconfig) {
++				/* 1) Mis-configuration */
++				pr_warn("Channels mis-configured, could not continue\n");
++				goto out;
++			} else {
++				/* 2) We rely on defaults */
++				pr_info("No channels configured, continue with any\n");
++				if (!is_threaded_test_run(info))
++					stop_threaded_test(info);
++				add_threaded_test(info);
++			}
  		}
- 
- 		grp = (struct acpi_csrt_group *)((void *)grp + grp->length);
+ 		start_threaded_tests(info);
+ 	} else {
+ 		stop_threaded_test(info);
  	}
-+
-+	acpi_put_table((struct acpi_table_header *)csrt);
- }
+-
++out:
+ 	mutex_unlock(&info->lock);
  
- /**
--- 
-2.25.1
+ 	return ret;
+@@ -1226,6 +1238,7 @@ static int dmatest_chan_set(const char *val, const struct kernel_param *kp)
+ 				strlcpy(chan_reset_val,
+ 					dma_chan_name(dtc->chan),
+ 					sizeof(chan_reset_val));
++				info->misconfig = true;
+ 				ret = -EBUSY;
+ 				goto add_chan_err;
+ 			}
+@@ -1246,6 +1259,7 @@ static int dmatest_chan_set(const char *val, const struct kernel_param *kp)
+ 		 */
+ 		if ((strcmp(dma_chan_name(dtc->chan), strim(test_channel)) != 0)
+ 		    && (strcmp("", strim(test_channel)) != 0)) {
++			info->misconfig = true;
+ 			ret = -EINVAL;
+ 			strlcpy(chan_reset_val, dma_chan_name(dtc->chan),
+ 				sizeof(chan_reset_val));
+@@ -1255,6 +1269,7 @@ static int dmatest_chan_set(const char *val, const struct kernel_param *kp)
+ 	} else {
+ 		/* Clear test_channel if no channels were added successfully */
+ 		strlcpy(chan_reset_val, "", sizeof(chan_reset_val));
++		info->misconfig = true;
+ 		ret = -EBUSY;
+ 		goto add_chan_err;
+ 	}
+
+> 
+>> As for my patch it restores behaviour of how it supposed to work prior d53513d5dc28
+>> where run command would execute with default settings if under-configured.
+> 
+> Yeah, yet another breaking patch series (I have fixed one bug in that) which
+> has been dumped and someone disappeared...
+> 
+> Yes, and here is a corner case. I have batch script which fills sysfs
+> parameters with something meaningful. However, when error happens in channel
+> setter the run kick off, luckily, b/c of regression you have noticed, doesn't
+> happen.
+> 
+> And this behaviour as far as I remember was previously before the d53513d5dc28.
+> At least I remember that I wrote my scripts few years ago and they worked.
+
+Can we actually confirm behaviour before d53513d5dc28? That would add confidence
+that we are doing right thing.
+
+As for scripts it looks like folk have them covering different cases yet seems
+not something run regularly, so should not we cooperate with kernel CI team or its
+equivalent and try to get (some of?) them into their environment?
+
+Cheers
+Vladimir 
+
+> 
+>>>>> dmatest compiled as a module.
+>>>>>
+>>>>> Fix this ASAP, otherwise I will send revert of this and followed up patch next
+>>>>> week.
+>>>>
+>>>> I don't quite get it, you are sending revert and then a fix rather then helping
+>>>> with a fix?
+>>>
+>>> Correct.
+>>>
+>>>> What is reason for such extreme (and non-cooperative) flow?
+>>>
+>>> There are few reasons:
+>>>  - the patch made a clear regression
+>>>  - I do not understand what that patch is doing and how
+>>>  - I do not have time to look at it
+>>>  - we are now at v5.9-rc4 and it seems like one or two weeks time to get it
+>>>    into v5.9 release
+>>>  - and I'm annoyed by breaking this module not the first time for the last
+>>>    couple of years
+>>>
+>>> And on top of that it's not how OSS community works. Since you replied, I give
+>>> you time to figure out what's going on and provide necessary testing if needed.
+>>>
+>>>> P.S.
+>>>> Unfortunately, I do not have access to hardware to run reproducer.
+>>>
+>>> So, please, propose a fix without it. I will test myself.
+>>>
+>>
+> 
 

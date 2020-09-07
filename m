@@ -2,39 +2,39 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A4E92601C1
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Sep 2020 19:12:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D5B426012F
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Sep 2020 19:01:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729843AbgIGRLy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 7 Sep 2020 13:11:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46526 "EHLO mail.kernel.org"
+        id S1730705AbgIGQdp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 7 Sep 2020 12:33:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729847AbgIGQck (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:32:40 -0400
+        id S1730473AbgIGQdn (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:33:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE56821556;
-        Mon,  7 Sep 2020 16:32:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 551BF21974;
+        Mon,  7 Sep 2020 16:33:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496357;
-        bh=FHTcrPnwNgdAZABEN21HVNkT3V+T3gP6yMDMA/0pYuA=;
+        s=default; t=1599496423;
+        bh=b8RGyXcP6g9WqOwCH5gMQQmDdR7oyUfGaniALTLI0+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HHoci7QySEdpYa8Ne/qnSi9sXQGRcqWhh5Sl40UWOnwW3mafxZFfy9TwzCGk1zha5
-         /VsrhAnm0exAESggc98MVokTQoWZigsGdbXZ1rs5P530/EaXFwUZUYamw7o2vQfGip
-         /tGRtAX7mDqGU7J2sYxNQ0uWdYaMLaySsDU4zDMw=
+        b=MFVHHJRGHPbs94InQYz+yvj16Xih48GqhLRibkDFd4T1O2N/chDEwR426szcpbTZt
+         hXFTtwwNJwW639qW1eC6/C3bfecRojKBHp/1grHbPHbM9TywLuEcPPCgh9pR3mcI7L
+         rGV8TL1z5S/DOQnHuIYhZEtZExkqKdKf/YHMxG7I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
         Paul Cercueil <paul@crapouillou.net>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
         dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 13/53] drivers/dma/dma-jz4780: Fix race condition between probe and irq handler
-Date:   Mon,  7 Sep 2020 12:31:39 -0400
-Message-Id: <20200907163220.1280412-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 10/43] drivers/dma/dma-jz4780: Fix race condition between probe and irq handler
+Date:   Mon,  7 Sep 2020 12:32:56 -0400
+Message-Id: <20200907163329.1280888-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200907163220.1280412-1-sashal@kernel.org>
-References: <20200907163220.1280412-1-sashal@kernel.org>
+In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
+References: <20200907163329.1280888-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -64,10 +64,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 19 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 448f663da89c6..8beed91428bd6 100644
+index bf95f1d551c51..0ecb724b394f5 100644
 --- a/drivers/dma/dma-jz4780.c
 +++ b/drivers/dma/dma-jz4780.c
-@@ -879,24 +879,11 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+@@ -885,24 +885,11 @@ static int jz4780_dma_probe(struct platform_device *pdev)
  		return -EINVAL;
  	}
  
@@ -93,7 +93,7 @@ index 448f663da89c6..8beed91428bd6 100644
  	}
  
  	clk_prepare_enable(jzdma->clk);
-@@ -949,10 +936,23 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+@@ -955,10 +942,23 @@ static int jz4780_dma_probe(struct platform_device *pdev)
  		jzchan->vchan.desc_free = jz4780_dma_desc_free;
  	}
  
@@ -118,7 +118,7 @@ index 448f663da89c6..8beed91428bd6 100644
  	}
  
  	/* Register with OF DMA helpers. */
-@@ -960,17 +960,17 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+@@ -966,17 +966,17 @@ static int jz4780_dma_probe(struct platform_device *pdev)
  					 jzdma);
  	if (ret) {
  		dev_err(dev, "failed to register OF DMA controller\n");

@@ -2,144 +2,73 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D5B426012F
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Sep 2020 19:01:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FB782603F0
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Sep 2020 19:56:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730705AbgIGQdp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 7 Sep 2020 12:33:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47458 "EHLO mail.kernel.org"
+        id S1730123AbgIGR4y (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 7 Sep 2020 13:56:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:33116 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730473AbgIGQdn (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:33:43 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 551BF21974;
-        Mon,  7 Sep 2020 16:33:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496423;
-        bh=b8RGyXcP6g9WqOwCH5gMQQmDdR7oyUfGaniALTLI0+A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MFVHHJRGHPbs94InQYz+yvj16Xih48GqhLRibkDFd4T1O2N/chDEwR426szcpbTZt
-         hXFTtwwNJwW639qW1eC6/C3bfecRojKBHp/1grHbPHbM9TywLuEcPPCgh9pR3mcI7L
-         rGV8TL1z5S/DOQnHuIYhZEtZExkqKdKf/YHMxG7I=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        id S1728622AbgIGLUG (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 7 Sep 2020 07:20:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A055712FC;
+        Mon,  7 Sep 2020 04:02:57 -0700 (PDT)
+Received: from [10.57.13.150] (unknown [10.57.13.150])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7EAD53F66E;
+        Mon,  7 Sep 2020 04:02:56 -0700 (PDT)
+Subject: Re: 6b41030fdc790 broke dmatest badly
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 10/43] drivers/dma/dma-jz4780: Fix race condition between probe and irq handler
-Date:   Mon,  7 Sep 2020 12:32:56 -0400
-Message-Id: <20200907163329.1280888-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
-References: <20200907163329.1280888-1-sashal@kernel.org>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+References: <20200904173401.GH1891694@smile.fi.intel.com>
+From:   Vladimir Murzin <vladimir.murzin@arm.com>
+Message-ID: <d95f1b54-2a62-7b79-c53c-c8179324e935@arm.com>
+Date:   Mon, 7 Sep 2020 12:03:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200904173401.GH1891694@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Hi,
 
-[ Upstream commit 6d6018fc30bee67290dbed2fa51123f7c6f3d691 ]
+On 9/4/20 6:34 PM, Andy Shevchenko wrote:
+> It becomes a bit annoying to fix dmatest after almost each release.
+> The commit 6b41030fdc79 ("dmaengine: dmatest: Restore default for channel")
+> broke my use case when I tried to start busy channel.
+> 
+> So, before this patch
+> 	...
+> 	echo "busy_chan" > channel
+> 	echo 1 > run
+> 	sh: write error: Device or resource busy
+> 	[ 1013.868313] dmatest: Could not start test, no channels configured
+> 
+> After I have got it run on *ALL* available channels.
 
-In probe, IRQ is requested before zchan->id is initialized which can be
-read in the irq handler. Hence, shift request irq after other initializations
-complete.
+Is not that controlled with max_channels? 
 
-Found by Linux Driver Verification project (linuxtesting.org).
+> 
+> dmatest compiled as a module.
+> 
+> Fix this ASAP, otherwise I will send revert of this and followed up patch next
+> week.
+>
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
-Link: https://lore.kernel.org/r/20200821034423.12713-1-madhuparnabhowmik10@gmail.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/dma/dma-jz4780.c | 38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+I don't quite get it, you are sending revert and then a fix rather then helping
+with a fix? What is reason for such extreme (and non-cooperative) flow?
 
-diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index bf95f1d551c51..0ecb724b394f5 100644
---- a/drivers/dma/dma-jz4780.c
-+++ b/drivers/dma/dma-jz4780.c
-@@ -885,24 +885,11 @@ static int jz4780_dma_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	ret = platform_get_irq(pdev, 0);
--	if (ret < 0)
--		return ret;
--
--	jzdma->irq = ret;
--
--	ret = request_irq(jzdma->irq, jz4780_dma_irq_handler, 0, dev_name(dev),
--			  jzdma);
--	if (ret) {
--		dev_err(dev, "failed to request IRQ %u!\n", jzdma->irq);
--		return ret;
--	}
--
- 	jzdma->clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(jzdma->clk)) {
- 		dev_err(dev, "failed to get clock\n");
- 		ret = PTR_ERR(jzdma->clk);
--		goto err_free_irq;
-+		return ret;
- 	}
- 
- 	clk_prepare_enable(jzdma->clk);
-@@ -955,10 +942,23 @@ static int jz4780_dma_probe(struct platform_device *pdev)
- 		jzchan->vchan.desc_free = jz4780_dma_desc_free;
- 	}
- 
-+	ret = platform_get_irq(pdev, 0);
-+	if (ret < 0)
-+		goto err_disable_clk;
-+
-+	jzdma->irq = ret;
-+
-+	ret = request_irq(jzdma->irq, jz4780_dma_irq_handler, 0, dev_name(dev),
-+			  jzdma);
-+	if (ret) {
-+		dev_err(dev, "failed to request IRQ %u!\n", jzdma->irq);
-+		goto err_disable_clk;
-+	}
-+
- 	ret = dmaenginem_async_device_register(dd);
- 	if (ret) {
- 		dev_err(dev, "failed to register device\n");
--		goto err_disable_clk;
-+		goto err_free_irq;
- 	}
- 
- 	/* Register with OF DMA helpers. */
-@@ -966,17 +966,17 @@ static int jz4780_dma_probe(struct platform_device *pdev)
- 					 jzdma);
- 	if (ret) {
- 		dev_err(dev, "failed to register OF DMA controller\n");
--		goto err_disable_clk;
-+		goto err_free_irq;
- 	}
- 
- 	dev_info(dev, "JZ4780 DMA controller initialised\n");
- 	return 0;
- 
--err_disable_clk:
--	clk_disable_unprepare(jzdma->clk);
--
- err_free_irq:
- 	free_irq(jzdma->irq, jzdma);
-+
-+err_disable_clk:
-+	clk_disable_unprepare(jzdma->clk);
- 	return ret;
- }
- 
--- 
-2.25.1
+P.S.
+Unfortunately, I do not have access to hardware to run reproducer.
 
+Cheers
+Vladimir

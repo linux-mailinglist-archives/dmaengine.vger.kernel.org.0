@@ -2,34 +2,36 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1424D2601D8
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Sep 2020 19:13:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A4E92601C1
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Sep 2020 19:12:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729843AbgIGRNi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 7 Sep 2020 13:13:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46282 "EHLO mail.kernel.org"
+        id S1729843AbgIGRLy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 7 Sep 2020 13:11:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730498AbgIGQcX (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:32:23 -0400
+        id S1729847AbgIGQck (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:32:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E80B21556;
-        Mon,  7 Sep 2020 16:32:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE56821556;
+        Mon,  7 Sep 2020 16:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496343;
-        bh=nEKjW6rYP6qA3oTip1YczSNAMKPIAvulBqSmtTcH6zg=;
+        s=default; t=1599496357;
+        bh=FHTcrPnwNgdAZABEN21HVNkT3V+T3gP6yMDMA/0pYuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hwk/upZWCtM7jTL/6BRxp4ilaoeth1q+NF4OvH99GpKuisj4GtvG4WuLLMD3h0N2l
-         aTQ8/Ulyctzn77W3srlNhET+OqLAx7jDtJCTdNEtKVFIIxHjVOdgcS7AFfJefSlXnU
-         beojGLk6AB1VDpnh5SqOfziuwSIG4IvCP78Izhvk=
+        b=HHoci7QySEdpYa8Ne/qnSi9sXQGRcqWhh5Sl40UWOnwW3mafxZFfy9TwzCGk1zha5
+         /VsrhAnm0exAESggc98MVokTQoWZigsGdbXZ1rs5P530/EaXFwUZUYamw7o2vQfGip
+         /tGRtAX7mDqGU7J2sYxNQ0uWdYaMLaySsDU4zDMw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hanjun Guo <guohanjun@huawei.com>, Vinod Koul <vkoul@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 02/53] dmaengine: acpi: Put the CSRT table after using it
-Date:   Mon,  7 Sep 2020 12:31:28 -0400
-Message-Id: <20200907163220.1280412-2-sashal@kernel.org>
+Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 13/53] drivers/dma/dma-jz4780: Fix race condition between probe and irq handler
+Date:   Mon,  7 Sep 2020 12:31:39 -0400
+Message-Id: <20200907163220.1280412-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163220.1280412-1-sashal@kernel.org>
 References: <20200907163220.1280412-1-sashal@kernel.org>
@@ -42,41 +44,102 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Hanjun Guo <guohanjun@huawei.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-[ Upstream commit 7eb48dd094de5fe0e216b550e73aa85257903973 ]
+[ Upstream commit 6d6018fc30bee67290dbed2fa51123f7c6f3d691 ]
 
-The acpi_get_table() should be coupled with acpi_put_table() if
-the mapped table is not used at runtime to release the table
-mapping, put the CSRT table buf after using it.
+In probe, IRQ is requested before zchan->id is initialized which can be
+read in the irq handler. Hence, shift request irq after other initializations
+complete.
 
-Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
-Link: https://lore.kernel.org/r/1595411661-15936-1-git-send-email-guohanjun@huawei.com
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+Link: https://lore.kernel.org/r/20200821034423.12713-1-madhuparnabhowmik10@gmail.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/acpi-dma.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/dma/dma-jz4780.c | 38 +++++++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/dma/acpi-dma.c b/drivers/dma/acpi-dma.c
-index 8a05db3343d39..dcbcb712de6e8 100644
---- a/drivers/dma/acpi-dma.c
-+++ b/drivers/dma/acpi-dma.c
-@@ -135,11 +135,13 @@ static void acpi_dma_parse_csrt(struct acpi_device *adev, struct acpi_dma *adma)
- 		if (ret < 0) {
- 			dev_warn(&adev->dev,
- 				 "error in parsing resource group\n");
--			return;
-+			break;
- 		}
- 
- 		grp = (struct acpi_csrt_group *)((void *)grp + grp->length);
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index 448f663da89c6..8beed91428bd6 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -879,24 +879,11 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+ 		return -EINVAL;
  	}
+ 
+-	ret = platform_get_irq(pdev, 0);
+-	if (ret < 0)
+-		return ret;
+-
+-	jzdma->irq = ret;
+-
+-	ret = request_irq(jzdma->irq, jz4780_dma_irq_handler, 0, dev_name(dev),
+-			  jzdma);
+-	if (ret) {
+-		dev_err(dev, "failed to request IRQ %u!\n", jzdma->irq);
+-		return ret;
+-	}
+-
+ 	jzdma->clk = devm_clk_get(dev, NULL);
+ 	if (IS_ERR(jzdma->clk)) {
+ 		dev_err(dev, "failed to get clock\n");
+ 		ret = PTR_ERR(jzdma->clk);
+-		goto err_free_irq;
++		return ret;
+ 	}
+ 
+ 	clk_prepare_enable(jzdma->clk);
+@@ -949,10 +936,23 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+ 		jzchan->vchan.desc_free = jz4780_dma_desc_free;
+ 	}
+ 
++	ret = platform_get_irq(pdev, 0);
++	if (ret < 0)
++		goto err_disable_clk;
 +
-+	acpi_put_table((struct acpi_table_header *)csrt);
++	jzdma->irq = ret;
++
++	ret = request_irq(jzdma->irq, jz4780_dma_irq_handler, 0, dev_name(dev),
++			  jzdma);
++	if (ret) {
++		dev_err(dev, "failed to request IRQ %u!\n", jzdma->irq);
++		goto err_disable_clk;
++	}
++
+ 	ret = dmaenginem_async_device_register(dd);
+ 	if (ret) {
+ 		dev_err(dev, "failed to register device\n");
+-		goto err_disable_clk;
++		goto err_free_irq;
+ 	}
+ 
+ 	/* Register with OF DMA helpers. */
+@@ -960,17 +960,17 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+ 					 jzdma);
+ 	if (ret) {
+ 		dev_err(dev, "failed to register OF DMA controller\n");
+-		goto err_disable_clk;
++		goto err_free_irq;
+ 	}
+ 
+ 	dev_info(dev, "JZ4780 DMA controller initialised\n");
+ 	return 0;
+ 
+-err_disable_clk:
+-	clk_disable_unprepare(jzdma->clk);
+-
+ err_free_irq:
+ 	free_irq(jzdma->irq, jzdma);
++
++err_disable_clk:
++	clk_disable_unprepare(jzdma->clk);
+ 	return ret;
  }
  
- /**
 -- 
 2.25.1
 

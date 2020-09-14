@@ -2,44 +2,44 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 865B6268CFF
-	for <lists+dmaengine@lfdr.de>; Mon, 14 Sep 2020 16:11:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88C4C268D04
+	for <lists+dmaengine@lfdr.de>; Mon, 14 Sep 2020 16:12:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbgINOL0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 14 Sep 2020 10:11:26 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:6850 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgINOKS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 14 Sep 2020 10:10:18 -0400
+        id S1726772AbgINOLZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 14 Sep 2020 10:11:25 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:19529 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726812AbgINOKX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 14 Sep 2020 10:10:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1600092618; x=1631628618;
+  t=1600092623; x=1631628623;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=qoBNbkKAab5vCz1WzJd2Q0kui0rzQACYA42GOpjUIoU=;
-  b=sqFtk4vZ1mR9Zup6N6O2zXLo4NazmweOXkXU6W+bxcIURXY4GEb0Tfuz
-   dWAnBCg8pinUooFZthNnWFV4pd/b7FK4PB8uVvdxzeNrmK2KywSQbtI95
-   YFvZJRcdEtLid8CO3UlYEN8aveMjmpDpahAPbFlH/6QfIOjRB1Yu/KMMD
-   lZfGOmyA4GbdCN1ib8WcWD03h1JqTMn6zdaL/7E478iBqluoMOaZIYoBm
-   CtGD1nMxFtcUPzmBi0+m8rW+0a2yz+alFT5HxBUPRpIa24i5ovB9911XC
-   RCfPzfO0tc9uR6HNVJHC8x2H0TG7yUw18HyewDcWFS6VDBtoRJMTf/cqI
+  bh=sYRccNXwySLX58revlIKoNQBOK8H5HsF57JSqx1w6TE=;
+  b=IV9DwHGW+4lUCFNx8JdaHcrZ/sEve19OE75+gx/o+w22/B7sY4cQcAXO
+   I7eGaF65qtxZCTxe3Y5I055Qu2BCgsfF+MpWK2uRQBdVE3Jz9sg7jgXuA
+   ASW53T5FhlNO9VzLGU4yVMs9WpVogGmaA0rJ10Ce5GyHN5+iqg73oT8b+
+   ouxdNINpH0ORrCwt8MA+gnyypscruhyBGQ6b2BrKMVdT9nVvD8W8RBsOw
+   ZaVrkPy3xbeBJZBajBh7pTKwd0pJKAcGBq12ut4fc+imfWMkVMvbWI04S
+   YXqQEiNOOAqzfUgYT4V0qTQ0AuPHiTzLi3AmA++9tJZyXfYW3p9qhsVmU
    g==;
-IronPort-SDR: 7oIQZaexsHimlVNbzcxjtkuhCzaBKIp8DHYo+1Cl4koOINEVVpTpio8OvfzfbuYE06Knkw9LIU
- 8rJ9ewawn/oSznX4Zn2ihrZyikJDyBrLOVLe4wDhibgPv4zV6N+tb5KCGUuPGGkjaubiQurP+S
- 74Vmo9VgswC+2n80uOLfftzu7RdnfXj0RssSmfAEzwEkBd4aNUNS+zovXQGBjV4Vl97o3GshDc
- zSy31tM4fXiDv5pMY4c0jgdzDIcRgKgLEz2je4riqroz9ZDPFau4Gq/V+R/xOAoRJsRoFgSohf
- jhw=
+IronPort-SDR: eojmRW+qCHdtuviNt2OGagycY38wXXA8TVYNr0bbaqWQLX6sYBFgbjhIlLCgdfsOCdFclaps7W
+ Eff3f4PgTA68HcVGIpaJeL0xjO5/8KwFpNYHlI2WT/TNvosjn5ObXkwjNsJiGzSJrg50sJaCDP
+ o9A/pn98aA6/rQVea5/A90ekUDHAq/an2f2wPn8zG0lggk5jaONeeiP+oYDs7LkDGXdpCc18vr
+ /Rc1z43ABisgnLDzxx6FeH8gTI20zAo5PRY6c8d5NFVbVLYkAweyzq9sjrjeKSrFvYs9aCK53U
+ TfY=
 X-IronPort-AV: E=Sophos;i="5.76,426,1592895600"; 
-   d="scan'208";a="88993937"
+   d="scan'208";a="90900801"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Sep 2020 07:10:17 -0700
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Sep 2020 07:10:23 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 14 Sep 2020 07:10:14 -0700
+ 15.1.1979.3; Mon, 14 Sep 2020 07:10:19 -0700
 Received: from ROB-ULT-M18282.microchip.com (10.10.115.15) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Mon, 14 Sep 2020 07:10:11 -0700
+ 15.1.1979.3 via Frontend Transport; Mon, 14 Sep 2020 07:10:15 -0700
 From:   Eugen Hristev <eugen.hristev@microchip.com>
 To:     <vkoul@kernel.org>, <robh+dt@kernel.org>,
         <tudor.ambarus@microchip.com>, <ludovic.desroches@microchip.com>
@@ -47,9 +47,9 @@ CC:     <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <nicolas.ferre@microchip.com>,
         Eugen Hristev <eugen.hristev@microchip.com>
-Subject: [PATCH 3/7] dt-bindings: dmaengine: at_xdmac: add compatible with microchip,sama7g5
-Date:   Mon, 14 Sep 2020 17:09:52 +0300
-Message-ID: <20200914140956.221432-4-eugen.hristev@microchip.com>
+Subject: [PATCH 4/7] dmaengine: at_xdmac: adapt perid for mem2mem operations
+Date:   Mon, 14 Sep 2020 17:09:53 +0300
+Message-ID: <20200914140956.221432-5-eugen.hristev@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200914140956.221432-1-eugen.hristev@microchip.com>
 References: <20200914140956.221432-1-eugen.hristev@microchip.com>
@@ -61,27 +61,49 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add compatible to sama7g5 SoC.
+The PERID in the CC register for mem2mem operations must match an unused
+PERID.
+The PERID field is 7 bits, but the selected value is 0x3f.
+On later products we can have more reserved PERIDs for actual peripherals,
+thus this needs to be increased to maximum size.
+Changing the value to 0x7f, which is the maximum for 7 bits field.
 
 Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
 ---
- Documentation/devicetree/bindings/dma/atmel-xdma.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/dma/at_xdmac.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/atmel-xdma.txt b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
-index 4dc398e1a371..510b7f25ba24 100644
---- a/Documentation/devicetree/bindings/dma/atmel-xdma.txt
-+++ b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
-@@ -2,7 +2,8 @@
- 
- * XDMA Controller
- Required properties:
--- compatible: Should be "atmel,sama5d4-dma" or "microchip,sam9x60-dma".
-+- compatible: Should be "atmel,sama5d4-dma", "microchip,sam9x60-dma" or
-+  "microchip,sama7g5-dma".
- - reg: Should contain DMA registers location and length.
- - interrupts: Should contain DMA interrupt.
- - #dma-cells: Must be <1>, used to represent the number of integer cells in
+diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+index fab19e00a7be..81bb90206092 100644
+--- a/drivers/dma/at_xdmac.c
++++ b/drivers/dma/at_xdmac.c
+@@ -726,7 +726,7 @@ at_xdmac_interleaved_queue_desc(struct dma_chan *chan,
+ 	 * match the one of another channel. If not, it could lead to spurious
+ 	 * flag status.
+ 	 */
+-	u32			chan_cc = AT_XDMAC_CC_PERID(0x3f)
++	u32			chan_cc = AT_XDMAC_CC_PERID(0x7f)
+ 					| AT_XDMAC_CC_DIF(0)
+ 					| AT_XDMAC_CC_SIF(0)
+ 					| AT_XDMAC_CC_MBSIZE_SIXTEEN
+@@ -908,7 +908,7 @@ at_xdmac_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
+ 	 * match the one of another channel. If not, it could lead to spurious
+ 	 * flag status.
+ 	 */
+-	u32			chan_cc = AT_XDMAC_CC_PERID(0x3f)
++	u32			chan_cc = AT_XDMAC_CC_PERID(0x7f)
+ 					| AT_XDMAC_CC_DAM_INCREMENTED_AM
+ 					| AT_XDMAC_CC_SAM_INCREMENTED_AM
+ 					| AT_XDMAC_CC_DIF(0)
+@@ -1014,7 +1014,7 @@ static struct at_xdmac_desc *at_xdmac_memset_create_desc(struct dma_chan *chan,
+ 	 * match the one of another channel. If not, it could lead to spurious
+ 	 * flag status.
+ 	 */
+-	u32			chan_cc = AT_XDMAC_CC_PERID(0x3f)
++	u32			chan_cc = AT_XDMAC_CC_PERID(0x7f)
+ 					| AT_XDMAC_CC_DAM_UBS_AM
+ 					| AT_XDMAC_CC_SAM_INCREMENTED_AM
+ 					| AT_XDMAC_CC_DIF(0)
 -- 
 2.25.1
 

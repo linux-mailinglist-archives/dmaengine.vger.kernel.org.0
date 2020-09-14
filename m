@@ -2,77 +2,68 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF2AB267942
-	for <lists+dmaengine@lfdr.de>; Sat, 12 Sep 2020 11:43:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 572EC268443
+	for <lists+dmaengine@lfdr.de>; Mon, 14 Sep 2020 07:53:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725832AbgILJnp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 12 Sep 2020 05:43:45 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11822 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725820AbgILJnp (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sat, 12 Sep 2020 05:43:45 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 01879FBF42DAF4F7A8DB;
-        Sat, 12 Sep 2020 17:43:43 +0800 (CST)
-Received: from SWX921481.china.huawei.com (10.126.202.134) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Sat, 12 Sep 2020 17:43:34 +0800
-From:   Barry Song <song.bao.hua@hisilicon.com>
-To:     <dmaengine@vger.kernel.org>
-CC:     <linuxarm@huawei.com>, Barry Song <song.bao.hua@hisilicon.com>,
-        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH] dmaengine: zx: remove redundant irqsave in hardIRQ
-Date:   Sat, 12 Sep 2020 21:40:36 +1200
-Message-ID: <20200912094036.32112-1-song.bao.hua@hisilicon.com>
-X-Mailer: git-send-email 2.21.0.windows.1
+        id S1726056AbgINFxH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 14 Sep 2020 01:53:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726035AbgINFxE (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 14 Sep 2020 01:53:04 -0400
+Received: from localhost.localdomain (unknown [122.171.195.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC93821548;
+        Mon, 14 Sep 2020 05:53:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600062800;
+        bh=hlGqel7p8xW9ykeELpNGI2jnINIqXQtf7fPGszvl2vI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TTfdGxzUskZq/pm5SqpBeVBa+Tj2rP+6bJwt4nFuyCoBZjDIi5ZwrQ7M1pygI69Ww
+         CrawKN2hJehBpPOoVn4Krn1KF5XoTCMI2KE0F/Th/fQbJQEiGxgnqMz12eHNcyUG5b
+         jl+phuQM6MDtNPdka/aANvE8lvHiY5Ju6fkOTUos=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     dmaengine@vger.kernel.org, Green Wan <green.wan@sifive.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH] dmaengine: sf-pdma: remove unused 'desc'
+Date:   Mon, 14 Sep 2020 11:23:02 +0530
+Message-Id: <20200914055302.22962-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.126.202.134]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Running in hardIRQ context, disabling IRQ is redundant.
+'desc' variable is now defined but not used in sf_pdma_donebh_tasklet(),
+causing this warning:
 
-Cc: Jun Nie <jun.nie@linaro.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+drivers/dma/sf-pdma/sf-pdma.c: In function 'sf_pdma_donebh_tasklet':
+drivers/dma/sf-pdma/sf-pdma.c:287:23: warning: unused variable 'desc' [-Wunused-variable]
+
+Remove this unused variable
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/dma/zx_dma.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/dma/sf-pdma/sf-pdma.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/dma/zx_dma.c b/drivers/dma/zx_dma.c
-index 5fe2e8b9a7b8..b057582b2fac 100644
---- a/drivers/dma/zx_dma.c
-+++ b/drivers/dma/zx_dma.c
-@@ -285,9 +285,7 @@ static irqreturn_t zx_dma_int_handler(int irq, void *dev_id)
- 		p = &d->phy[i];
- 		c = p->vchan;
- 		if (c) {
--			unsigned long flags;
--
--			spin_lock_irqsave(&c->vc.lock, flags);
-+			spin_lock(&c->vc.lock);
- 			if (c->cyclic) {
- 				vchan_cyclic_callback(&p->ds_run->vd);
- 			} else {
-@@ -295,7 +293,7 @@ static irqreturn_t zx_dma_int_handler(int irq, void *dev_id)
- 				p->ds_done = p->ds_run;
- 				task = 1;
- 			}
--			spin_unlock_irqrestore(&c->vc.lock, flags);
-+			spin_unlock(&c->vc.lock);
- 			irq_chan |= BIT(i);
- 		}
- 	}
+diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
+index 754994087e5f..1e66c6990d81 100644
+--- a/drivers/dma/sf-pdma/sf-pdma.c
++++ b/drivers/dma/sf-pdma/sf-pdma.c
+@@ -284,7 +284,6 @@ static void sf_pdma_free_desc(struct virt_dma_desc *vdesc)
+ static void sf_pdma_donebh_tasklet(unsigned long arg)
+ {
+ 	struct sf_pdma_chan *chan = (struct sf_pdma_chan *)arg;
+-	struct sf_pdma_desc *desc = chan->desc;
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&chan->lock, flags);
 -- 
-2.25.1
-
+2.26.2
 

@@ -2,96 +2,100 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2900326B4BC
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Sep 2020 01:30:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0DCA26B647
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Sep 2020 02:01:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbgIOXaa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 15 Sep 2020 19:30:30 -0400
-Received: from mga18.intel.com ([134.134.136.126]:59908 "EHLO mga18.intel.com"
+        id S1727198AbgIPABv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 15 Sep 2020 20:01:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:36958 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727232AbgIOX31 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 15 Sep 2020 19:29:27 -0400
-IronPort-SDR: 6WUEQ+pPJrTJW16WmztSGy3dbfBg2+goEAFsNm+KF2PDuLZGt5kTxXhHkjSu0HJ5UjkqFmNxNd
- gPBZtE9wVY2A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9745"; a="147120160"
-X-IronPort-AV: E=Sophos;i="5.76,430,1592895600"; 
-   d="scan'208";a="147120160"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2020 16:29:26 -0700
-IronPort-SDR: EAu9yNq+VH45IieXXe+oaFmwbky6X7Vd9Y6W2Fb1GLbSz/u9fj/tlipxM08N6PvN9cFwKCRf9e
- 1pKj0B6TfO1A==
-X-IronPort-AV: E=Sophos;i="5.76,430,1592895600"; 
-   d="scan'208";a="319642576"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2020 16:29:24 -0700
-Subject: [PATCH v3 16/18] dmaengine: idxd: add ABI documentation for
- mediated device support
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org, megha.dey@intel.com, maz@kernel.org,
-        bhelgaas@google.com, tglx@linutronix.de,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
-        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        jgg@mellanox.com, rafael@kernel.org, netanelg@mellanox.com,
-        shahafs@mellanox.com, yan.y.zhao@linux.intel.com,
-        pbonzini@redhat.com, samuel.ortiz@intel.com, mona.hossain@intel.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Date:   Tue, 15 Sep 2020 16:29:24 -0700
-Message-ID: <160021256431.67751.2268297306094926564.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com>
-References: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/unknown-version
+        id S1727007AbgIOOaQ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 15 Sep 2020 10:30:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A74F231B;
+        Tue, 15 Sep 2020 07:19:37 -0700 (PDT)
+Received: from [10.57.18.138] (unknown [10.57.18.138])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9727A3F68F;
+        Tue, 15 Sep 2020 07:19:36 -0700 (PDT)
+Subject: Re: 6b41030fdc790 broke dmatest badly
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+References: <20200904173401.GH1891694@smile.fi.intel.com>
+ <d95f1b54-2a62-7b79-c53c-c8179324e935@arm.com>
+ <20200907120440.GC1891694@smile.fi.intel.com>
+ <004640d8-e236-4b75-1bfd-cc386bbf08a6@arm.com>
+ <20200907140502.GK1891694@smile.fi.intel.com>
+ <54ba60c3-9a04-51ac-688c-425b85202b18@arm.com>
+ <578f9c4d-3d29-d1f3-17f7-94dfe24403c4@arm.com>
+ <20200915123537.GU3956970@smile.fi.intel.com>
+ <d2d43434-d75a-a6cd-c6f9-daaa20260e58@arm.com>
+ <20200915134625.GZ3956970@smile.fi.intel.com>
+ <20200915135659.GA3956970@smile.fi.intel.com>
+From:   Vladimir Murzin <vladimir.murzin@arm.com>
+Message-ID: <63be07b9-721b-44fe-14f5-a52ab36ce954@arm.com>
+Date:   Tue, 15 Sep 2020 15:20:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200915135659.GA3956970@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: dmaengine-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Jing Lin <jing.lin@intel.com>
+On 9/15/20 2:56 PM, Andy Shevchenko wrote:
+> On Tue, Sep 15, 2020 at 04:46:25PM +0300, Andy Shevchenko wrote:
+>> On Tue, Sep 15, 2020 at 01:46:12PM +0100, Vladimir Murzin wrote:
+>>> On 9/15/20 1:35 PM, Andy Shevchenko wrote:
+>>>> On Fri, Sep 11, 2020 at 09:34:04AM +0100, Vladimir Murzin wrote:
+>>>>> On 9/7/20 5:52 PM, Vladimir Murzin wrote:
+>>
+>> ...
+>>
+>>>>> An update on this?
+>>>>
+>>>> Sorry for delay. I have tested your patch and it works for my case. Though I
+>>>> would amend it a bit (commit message is still a due).
+>>>
+>>>
+>>> That's good, but what about behaviour prior d53513d5dc28? Did you (or somebody
+>>> else) have a chance to confirm that it won't run with plain defaults?
+> 
+> Yes, I may confirm this. I have taken dmatest just before that commit as of
+>   % git checkout 3f3c75541ffe -- drivers/dma/dmatest.c
+> and it simple returns 0 and nothing happens.
 
-Add the sysfs attribute bits in ABI/stable for mediated device and guest
-support.
+Thanks a lot for confirmation!
 
-Signed-off-by: Jing Lin <jing.lin@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- Documentation/ABI/stable/sysfs-driver-dma-idxd |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> So, please provide a commit message to your fix, I'll incorporate it and send as a part of the series.
+> 
 
-diff --git a/Documentation/ABI/stable/sysfs-driver-dma-idxd b/Documentation/ABI/stable/sysfs-driver-dma-idxd
-index b44183880935..6bb925b55027 100644
---- a/Documentation/ABI/stable/sysfs-driver-dma-idxd
-+++ b/Documentation/ABI/stable/sysfs-driver-dma-idxd
-@@ -77,6 +77,12 @@ Contact:        dmaengine@vger.kernel.org
- Description:    The operation capability bit mask specify the operation types
- 		supported by the this device.
- 
-+What:           /sys/bus/dsa/devices/dsa<m>/ims_size
-+Date:           Sep 8, 2020
-+KernelVersion:  5.10.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:	Number of entries in the interrupt message storage table.
-+
- What:           /sys/bus/dsa/devices/dsa<m>/state
- Date:           Oct 25, 2019
- KernelVersion:  5.6.0
-@@ -139,8 +145,9 @@ Date:           Oct 25, 2019
- KernelVersion:  5.6.0
- Contact:        dmaengine@vger.kernel.org
- Description:    The type of this work queue, it can be "kernel" type for work
--		queue usages in the kernel space or "user" type for work queue
--		usages by applications in user space.
-+		queue usages in the kernel space, "user" type for work queue
-+		usages by applications in user space, or "mdev" type for
-+		VFIO mediated devices.
- 
- What:           /sys/bus/dsa/devices/wq<m>.<n>/cdev_minor
- Date:           Oct 25, 2019
+dmaengine: dmatest: Fix regression in run command with mis-configured channel
+
+Andy reported that commit 6b41030fdc79 ("dmaengine: dmatest:
+Restore default for channel") broke his scripts for the case
+where "busy" channel is used for configuration with expectation
+that run command would do nothing (and return 0). Instead,
+behavior was (unintentionally) changed to treat such case as
+under-configuration and progress with defaults, i.e. run command
+would start a test with default setting for channel (which would
+use all channels).
+
+Restore original behavior with tracking status of channel setter
+so we can distinguish between mis-configured and under-configured
+cases in run command and act accordingly.
+
+Fixes: 6b41030fdc79086db5d673c5ed7169f3ee8c13b9 ("dmaengine: dmatest: Restore default for channel")
+Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
+
+Cheers
+Vladimir
 

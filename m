@@ -2,32 +2,32 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EEA1426B4BB
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Sep 2020 01:30:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2900326B4BC
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Sep 2020 01:30:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbgIOXab (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 15 Sep 2020 19:30:31 -0400
-Received: from mga14.intel.com ([192.55.52.115]:1337 "EHLO mga14.intel.com"
+        id S1727192AbgIOXaa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 15 Sep 2020 19:30:30 -0400
+Received: from mga18.intel.com ([134.134.136.126]:59908 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727413AbgIOX3Y (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 15 Sep 2020 19:29:24 -0400
-IronPort-SDR: c5CYUpBXcMGvcRAcmH6DFwvTTrMRj3lo8uNT5xentpQbhb5cR+J7xvYE0UgH5UnZN8afLssxUR
- Ct0qgqsWbXqQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9745"; a="158647438"
+        id S1727232AbgIOX31 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 15 Sep 2020 19:29:27 -0400
+IronPort-SDR: 6WUEQ+pPJrTJW16WmztSGy3dbfBg2+goEAFsNm+KF2PDuLZGt5kTxXhHkjSu0HJ5UjkqFmNxNd
+ gPBZtE9wVY2A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9745"; a="147120160"
 X-IronPort-AV: E=Sophos;i="5.76,430,1592895600"; 
-   d="scan'208";a="158647438"
+   d="scan'208";a="147120160"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2020 16:29:19 -0700
-IronPort-SDR: Wi6xhsSDxbd+zDpjEtWs1fQNfQEstja/dGnHtkNTPfdWsa6cmNibpeaGPiTaUjBtABaEOx6EIO
- u6CZf5jHPtUQ==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2020 16:29:26 -0700
+IronPort-SDR: EAu9yNq+VH45IieXXe+oaFmwbky6X7Vd9Y6W2Fb1GLbSz/u9fj/tlipxM08N6PvN9cFwKCRf9e
+ 1pKj0B6TfO1A==
 X-IronPort-AV: E=Sophos;i="5.76,430,1592895600"; 
-   d="scan'208";a="346035920"
+   d="scan'208";a="319642576"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2020 16:29:17 -0700
-Subject: [PATCH v3 15/18] dmaengine: idxd: add error notification from host
- driver to mediated device
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2020 16:29:24 -0700
+Subject: [PATCH v3 16/18] dmaengine: idxd: add ABI documentation for
+ mediated device support
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     vkoul@kernel.org, megha.dey@intel.com, maz@kernel.org,
         bhelgaas@google.com, tglx@linutronix.de,
@@ -41,8 +41,8 @@ To:     vkoul@kernel.org, megha.dey@intel.com, maz@kernel.org,
         pbonzini@redhat.com, samuel.ortiz@intel.com, mona.hossain@intel.com
 Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Date:   Tue, 15 Sep 2020 16:29:17 -0700
-Message-ID: <160021255739.67751.18063125769657114052.stgit@djiang5-desk3.ch.intel.com>
+Date:   Tue, 15 Sep 2020 16:29:24 -0700
+Message-ID: <160021256431.67751.2268297306094926564.stgit@djiang5-desk3.ch.intel.com>
 In-Reply-To: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com>
 References: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/unknown-version
@@ -54,111 +54,44 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-When a device error occurs, the mediated device need to be notified in
-order to notify the guest of device error. Add support to notify the
-specific mdev when an error is wq specific and broadcast errors to all mdev
-when it's a generic device error.
+From: Jing Lin <jing.lin@intel.com>
 
+Add the sysfs attribute bits in ABI/stable for mediated device and guest
+support.
+
+Signed-off-by: Jing Lin <jing.lin@intel.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/dma/idxd/idxd.h |   12 ++++++++++++
- drivers/dma/idxd/irq.c  |    4 ++++
- drivers/dma/idxd/vdev.c |   32 ++++++++++++++++++++++++++++++++
- drivers/dma/idxd/vdev.h |    1 +
- 4 files changed, 49 insertions(+)
+ Documentation/ABI/stable/sysfs-driver-dma-idxd |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index f67c0036f968..07e1e3fcd4aa 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -359,4 +359,16 @@ void idxd_wq_del_cdev(struct idxd_wq *wq);
- int idxd_mdev_host_init(struct idxd_device *idxd);
- void idxd_mdev_host_release(struct idxd_device *idxd);
+diff --git a/Documentation/ABI/stable/sysfs-driver-dma-idxd b/Documentation/ABI/stable/sysfs-driver-dma-idxd
+index b44183880935..6bb925b55027 100644
+--- a/Documentation/ABI/stable/sysfs-driver-dma-idxd
++++ b/Documentation/ABI/stable/sysfs-driver-dma-idxd
+@@ -77,6 +77,12 @@ Contact:        dmaengine@vger.kernel.org
+ Description:    The operation capability bit mask specify the operation types
+ 		supported by the this device.
  
-+#ifdef CONFIG_INTEL_IDXD_MDEV
-+void idxd_vidxd_send_errors(struct idxd_device *idxd);
-+void idxd_wq_vidxd_send_errors(struct idxd_wq *wq);
-+#else
-+static inline void idxd_vidxd_send_errors(struct idxd_device *idxd)
-+{
-+}
-+static inline void idxd_wq_vidxd_send_errors(struct idxd_wq *wq)
-+{
-+}
-+#endif /* CONFIG_INTEL_IDXD_MDEV */
++What:           /sys/bus/dsa/devices/dsa<m>/ims_size
++Date:           Sep 8, 2020
++KernelVersion:  5.10.0
++Contact:        dmaengine@vger.kernel.org
++Description:	Number of entries in the interrupt message storage table.
 +
- #endif
-diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
-index 04f00255dae0..f9df0910b799 100644
---- a/drivers/dma/idxd/irq.c
-+++ b/drivers/dma/idxd/irq.c
-@@ -79,6 +79,8 @@ irqreturn_t idxd_misc_thread(int vec, void *data)
+ What:           /sys/bus/dsa/devices/dsa<m>/state
+ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+@@ -139,8 +145,9 @@ Date:           Oct 25, 2019
+ KernelVersion:  5.6.0
+ Contact:        dmaengine@vger.kernel.org
+ Description:    The type of this work queue, it can be "kernel" type for work
+-		queue usages in the kernel space or "user" type for work queue
+-		usages by applications in user space.
++		queue usages in the kernel space, "user" type for work queue
++		usages by applications in user space, or "mdev" type for
++		VFIO mediated devices.
  
- 			if (wq->type == IDXD_WQT_USER)
- 				wake_up_interruptible(&wq->idxd_cdev.err_queue);
-+			else if (wq->type == IDXD_WQT_MDEV)
-+				idxd_wq_vidxd_send_errors(wq);
- 		} else {
- 			int i;
- 
-@@ -87,6 +89,8 @@ irqreturn_t idxd_misc_thread(int vec, void *data)
- 
- 				if (wq->type == IDXD_WQT_USER)
- 					wake_up_interruptible(&wq->idxd_cdev.err_queue);
-+				else if (wq->type == IDXD_WQT_MDEV)
-+					idxd_wq_vidxd_send_errors(wq);
- 			}
- 		}
- 
-diff --git a/drivers/dma/idxd/vdev.c b/drivers/dma/idxd/vdev.c
-index fa7c27d746cc..ce2f19b9b860 100644
---- a/drivers/dma/idxd/vdev.c
-+++ b/drivers/dma/idxd/vdev.c
-@@ -978,3 +978,35 @@ void vidxd_do_command(struct vdcm_idxd *vidxd, u32 val)
- 		break;
- 	}
- }
-+
-+static void vidxd_send_errors(struct vdcm_idxd *vidxd)
-+{
-+	struct idxd_device *idxd = vidxd->idxd;
-+	u8 *bar0 = vidxd->bar0;
-+	union sw_err_reg *swerr = (union sw_err_reg *)(bar0 + IDXD_SWERR_OFFSET);
-+	union genctrl_reg *genctrl = (union genctrl_reg *)(bar0 + IDXD_GENCTRL_OFFSET);
-+	int i;
-+
-+	if (swerr->valid) {
-+		if (!swerr->overflow)
-+			swerr->overflow = 1;
-+		return;
-+	}
-+
-+	lockdep_assert_held(&idxd->dev_lock);
-+	for (i = 0; i < 4; i++) {
-+		swerr->bits[i] = idxd->sw_err.bits[i];
-+		swerr++;
-+	}
-+
-+	if (genctrl->softerr_int_en)
-+		vidxd_send_interrupt(vidxd, 0);
-+}
-+
-+void idxd_wq_vidxd_send_errors(struct idxd_wq *wq)
-+{
-+	struct vdcm_idxd *vidxd;
-+
-+	list_for_each_entry(vidxd, &wq->vdcm_list, list)
-+		vidxd_send_errors(vidxd);
-+}
-diff --git a/drivers/dma/idxd/vdev.h b/drivers/dma/idxd/vdev.h
-index e04c92c432d8..1bfdcdeed8e7 100644
---- a/drivers/dma/idxd/vdev.h
-+++ b/drivers/dma/idxd/vdev.h
-@@ -25,5 +25,6 @@ int vidxd_send_interrupt(struct vdcm_idxd *vidxd, int msix_idx);
- void vidxd_free_ims_entries(struct vdcm_idxd *vidxd);
- int vidxd_setup_ims_entries(struct vdcm_idxd *vidxd);
- void vidxd_do_command(struct vdcm_idxd *vidxd, u32 val);
-+void idxd_wq_vidxd_send_errors(struct idxd_wq *wq);
- 
- #endif
+ What:           /sys/bus/dsa/devices/wq<m>.<n>/cdev_minor
+ Date:           Oct 25, 2019
 

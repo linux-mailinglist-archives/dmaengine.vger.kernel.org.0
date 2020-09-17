@@ -2,82 +2,65 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A5C826CBCD
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Sep 2020 22:35:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C850926D450
+	for <lists+dmaengine@lfdr.de>; Thu, 17 Sep 2020 09:11:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgIPUfK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 16 Sep 2020 16:35:10 -0400
-Received: from mga05.intel.com ([192.55.52.43]:18480 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726901AbgIPRMy (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 16 Sep 2020 13:12:54 -0400
-IronPort-SDR: c29paDL3xnb/xiJg2wNG0e5D3Boo3kmO2cSxkT0kcueqxSpNXvL0lIuX9xhtX0mR+G4Kc65xPE
- peZ+tDeFqV5g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9745"; a="244296443"
-X-IronPort-AV: E=Sophos;i="5.76,432,1592895600"; 
-   d="scan'208";a="244296443"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2020 06:34:59 -0700
-IronPort-SDR: yd7ldFaLa1khZrsvdCfN5gzu/BkiRi0IEruFAoO/TCjvQOpXXZLgZQ9nZ4X90dk7qANNr/YfXu
- rM3046Z1S0Qw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,432,1592895600"; 
-   d="scan'208";a="451855525"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 16 Sep 2020 06:34:57 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id AABDB2E0; Wed, 16 Sep 2020 16:34:56 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>
-Subject: [PATCH v1 3/3] dmaengine: dmatest: Return boolean result directly in filter()
-Date:   Wed, 16 Sep 2020 16:34:56 +0300
-Message-Id: <20200916133456.79280-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200916133456.79280-1-andriy.shevchenko@linux.intel.com>
-References: <20200916133456.79280-1-andriy.shevchenko@linux.intel.com>
+        id S1726273AbgIQHLZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 17 Sep 2020 03:11:25 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12816 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726299AbgIQHLY (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 17 Sep 2020 03:11:24 -0400
+X-Greylist: delayed 948 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Sep 2020 03:11:22 EDT
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D5AEC96FAD640423BE27;
+        Thu, 17 Sep 2020 14:55:32 +0800 (CST)
+Received: from huawei.com (10.175.113.32) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Thu, 17 Sep 2020
+ 14:55:23 +0800
+From:   Liu Shixin <liushixin2@huawei.com>
+To:     Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>,
+        "Dan Williams" <dan.j.williams@intel.com>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Liu Shixin <liushixin2@huawei.com>
+Subject: [PATCH -next] dmaengine: sf-pdma: Remove set but not used variable "desc"
+Date:   Thu, 17 Sep 2020 15:17:56 +0800
+Message-ID: <20200917071756.1915449-1-liushixin2@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: dmaengine-owner@vger.kernel.org
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.32]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-There is no need to have a conditional for boolean expression when
-function returns bool. Drop unnecessary code and return boolean
-result directly.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-While at it, drop unneeded casting from void *.
+drivers/dma/sf-pdma/sf-pdma.c: In function 'sf_pdma_donebh_tasklet':
+drivers/dma/sf-pdma/sf-pdma.c:287:23: warning: unused variable 'desc' [-Wunused-variable]
 
-Cc: Vladimir Murzin <vladimir.murzin@arm.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+After commit 8f6b6d060602 ("dmaengine: sf-pdma: Fix an error that calls callback twice"),
+variable 'desc' is never used. Remove it to avoid build warning.
+
+Signed-off-by: Liu Shixin <liushixin2@huawei.com>
 ---
- drivers/dma/dmatest.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/dma/sf-pdma/sf-pdma.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-index 757eb1727a04..cf1379189316 100644
---- a/drivers/dma/dmatest.c
-+++ b/drivers/dma/dmatest.c
-@@ -1070,13 +1070,7 @@ static int dmatest_add_channel(struct dmatest_info *info,
- 
- static bool filter(struct dma_chan *chan, void *param)
+diff --git a/drivers/dma/sf-pdma/sf-pdma.c b/drivers/dma/sf-pdma/sf-pdma.c
+index 754994087e5f..1e66c6990d81 100644
+--- a/drivers/dma/sf-pdma/sf-pdma.c
++++ b/drivers/dma/sf-pdma/sf-pdma.c
+@@ -284,7 +284,6 @@ static void sf_pdma_free_desc(struct virt_dma_desc *vdesc)
+ static void sf_pdma_donebh_tasklet(unsigned long arg)
  {
--	struct dmatest_params *params = param;
--
--	if (!dmatest_match_channel(params, chan) ||
--	    !dmatest_match_device(params, chan->device))
--		return false;
--	else
--		return true;
-+	return dmatest_match_channel(param, chan) && dmatest_match_device(param, chan->device);
- }
+ 	struct sf_pdma_chan *chan = (struct sf_pdma_chan *)arg;
+-	struct sf_pdma_desc *desc = chan->desc;
+ 	unsigned long flags;
  
- static void request_channels(struct dmatest_info *info,
+ 	spin_lock_irqsave(&chan->lock, flags);
 -- 
-2.28.0
+2.25.1
 

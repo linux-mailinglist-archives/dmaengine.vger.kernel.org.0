@@ -2,144 +2,128 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D5EB26E731
-	for <lists+dmaengine@lfdr.de>; Thu, 17 Sep 2020 23:15:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C18AD26E733
+	for <lists+dmaengine@lfdr.de>; Thu, 17 Sep 2020 23:15:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725874AbgIQVPQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 17 Sep 2020 17:15:16 -0400
-Received: from mga02.intel.com ([134.134.136.20]:49526 "EHLO mga02.intel.com"
+        id S1726244AbgIQVPW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 17 Sep 2020 17:15:22 -0400
+Received: from mga07.intel.com ([134.134.136.100]:2663 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbgIQVPQ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 17 Sep 2020 17:15:16 -0400
-IronPort-SDR: oo4HCNJy8bCdH1N7ajAzxGUYVZy8otkcc2kGq8tw3ICCTPgKcyiKWOcWBxRCMrto5uN1G1Djgi
- 9jQkV6yO7NqQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9747"; a="147482221"
+        id S1725882AbgIQVPW (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 17 Sep 2020 17:15:22 -0400
+IronPort-SDR: iXQDXbaET1tn5QLY1YjlbeNoE20iryi24WRUZ7JzJ/W5j5Bf+txZp+KuSWtpwD3pXtBL0G4p3Q
+ SDJy4pWZ2R5w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9747"; a="223966023"
 X-IronPort-AV: E=Sophos;i="5.77,272,1596524400"; 
-   d="scan'208";a="147482221"
+   d="scan'208";a="223966023"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 14:15:11 -0700
-IronPort-SDR: 3SlFe7dPrSedK6ReDX9jb77NrQiJecgcjsIrY7x6a1t4u54R6spD11FPfO/2lG60zcbaB+sM6S
- l2yNTgmGYRwQ==
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 14:15:18 -0700
+IronPort-SDR: QjZkLlL+BWh4ysl4CEu7/0e8OWxF50gSe+5SdpW8qJHjAFvvI6GW35VmIKtCWqjxKvqR4NaTSL
+ v9ZOxt7ZI7AA==
 X-IronPort-AV: E=Sophos;i="5.77,272,1596524400"; 
-   d="scan'208";a="452477797"
+   d="scan'208";a="483910059"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 14:15:10 -0700
-Subject: [PATCH v4 0/5] Add shared workqueue support for idxd driver
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 14:15:17 -0700
+Subject: [PATCH v4 1/5] x86/asm: move the raw asm in iosubmit_cmds512() to
+ special_insns.h
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
         bp@alien8.de, dan.j.williams@intel.com, tony.luck@intel.com,
         jing.lin@intel.com, ashok.raj@intel.com, sanjay.k.kumar@intel.com,
         fenghua.yu@intel.com, kevin.tian@intel.com
 Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 17 Sep 2020 14:15:10 -0700
-Message-ID: <160037680630.3777.16356270178889649944.stgit@djiang5-desk3.ch.intel.com>
+Date:   Thu, 17 Sep 2020 14:15:16 -0700
+Message-ID: <160037731654.3777.18071122574577972463.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <160037680630.3777.16356270178889649944.stgit@djiang5-desk3.ch.intel.com>
+References: <160037680630.3777.16356270178889649944.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/unknown-version
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-v4:
-- Rebased against latest dmaengine/next tree
-- Split out enqcmd and pasid dependency.
+The MOVDIR64B instruction can be used by other wrapper instructions. Move
+the core asm code to special_insns.h and have iosubmit_cmds512() call the
+core asm function.
 
-V3:
-- Rebased against latest dmaengine/next tree.
-- Updated API doc with new kernel version and dates.
-- Changed to allow driver to load without ENQCMD support.
-- Break out some patches that can be sent ahead of this series for inclusion.
-
-v2:
-- Dropped device feature enabling (GregKH)
-- Dropped PCI device feature enabling (Bjorn)
-	- https://members.pcisig.com/wg/PCI-SIG/document/14237
-- After some internal discussion, we have decided to hold off on the enabling of DMWR due to the
-  following reasons. 1. Most first gen hw will not have the feature bits. 2. First gen hw that
-  support the feature are all Root Complex integrated endpoints. 3. PCI devices that are not
-  RCiEP’s with this capability won’t surface for a few years so we can wait until we can test the
-  full code.
-- Dropped special ioremap (hch)
-- Added proper support for WQ flush (tony, dan)
-- Changed descriptor submission to use sbitmap_queue for blocking. (dan)
-
-Driver stage 1 postings for context: [1]
-
-The patch series has compilation and functional dependency on Fenghua's "Tag application
-address space for devices" patch series for the ENQCMD CPU command enumeration and the PASID MSR
-support. [2] 
-
-== Background ==
-A typical DMA device requires the driver to translate application buffers to hardware addresses,
-and a kernel-user transition to notify the hardware of new work. Shared Virtual Addressing (SVA)
-allows the processor and device to use the same virtual addresses without requiring software to
-translate between the address spaces. ENQCMD is a new instruction on Intel Platforms that allows
-user applications to directly notify hardware of new work, much like how doorbells are used in
-some hardware, but it carries a payload along with it. ENQCMDS is the supervisor version (ring0)
-of ENQCMD.
-
-== ENQCMDS ==
-Introduce enqcmds(), a helper funciton that copies an input payload to a 64B aligned
-destination and confirms whether the payload was accepted by the device or not.
-enqcmds() wraps the new ENQCMDS CPU instruction. The ENQCMDS is a ring 0 CPU instruction that
-performs similar to the ENQCMD instruction. Descriptor submission must use ENQCMD(S) for shared
-workqueues (swq) on an Intel DSA device. 
-
-== Shared WQ support ==
-Introduce shared workqueue (swq) support for the idxd driver. The current idxd driver contains
-dedicated workqueue (dwq) support only. A dwq accepts descriptors from a MOVDIR64B instruction.
-MOVDIR64B is a posted instruction on the PCIe bus, it does not wait for any response from the
-device. If the wq is full, submitted descriptors are dropped. A swq utilizes the ENQCMDS in
-ring 0, which is a non-posted instruction. The zero flag would be set to 1 if the device rejects
-the descriptor or if the wq is full. A swq can be shared between multiple users
-(kernel or userspace) due to not having to keep track of the wq full condition for submission.
-A swq requires PASID and can only run with SVA support. 
-
-== IDXD SVA support ==
-Add utilization of PASID to support Shared Virtual Addressing (SVA). With PASID support,
-the descriptors can be programmed with host virtual address (HVA) rather than IOVA.
-The hardware will work with the IOMMU in fulfilling page requests. With SVA support,
-a user app using the char device interface can now submit descriptors without having to pin the
-virtual memory range it wants to DMA in its own address space. 
-
-The series does not add SVA support for the dmaengine subsystem. That support is coming at a
-later time.
-
-[1]: https://lore.kernel.org/lkml/157965011794.73301.15960052071729101309.stgit@djiang5-desk3.ch.intel.com/
-[2]: https://lore.kernel.org/lkml/20200916080510.GA32552@8bytes.org/
-[3]: https://software.intel.com/en-us/articles/intel-sdm
-[4]: https://software.intel.com/en-us/download/intel-scalable-io-virtualization-technical-specification
-[5]: https://software.intel.com/en-us/download/intel-data-streaming-accelerator-preliminary-architecture-specification
-[6]: https://01.org/blogs/2019/introducing-intel-data-streaming-accelerator
-[7]: https://intel.github.io/idxd/
-[8]: https://github.com/intel/idxd-driver idxd-stage2
-
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
+ arch/x86/include/asm/io.h            |   17 +++--------------
+ arch/x86/include/asm/special_insns.h |   17 +++++++++++++++++
+ 2 files changed, 20 insertions(+), 14 deletions(-)
 
-Dave Jiang (5):
-      x86/asm: move the raw asm in iosubmit_cmds512() to special_insns.h
-      x86/asm: add enqcmds() to support ENQCMDS instruction
-      dmaengine: idxd: add shared workqueue support
-      dmaengine: idxd: clean up descriptors with fault error
-      dmaengine: idxd: add ABI documentation for shared wq
+diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
+index e1aa17a468a8..d726459d08e5 100644
+--- a/arch/x86/include/asm/io.h
++++ b/arch/x86/include/asm/io.h
+@@ -401,7 +401,7 @@ extern bool phys_mem_access_encrypted(unsigned long phys_addr,
+ 
+ /**
+  * iosubmit_cmds512 - copy data to single MMIO location, in 512-bit units
+- * @__dst: destination, in MMIO space (must be 512-bit aligned)
++ * @dst: destination, in MMIO space (must be 512-bit aligned)
+  * @src: source
+  * @count: number of 512 bits quantities to submit
+  *
+@@ -412,25 +412,14 @@ extern bool phys_mem_access_encrypted(unsigned long phys_addr,
+  * Warning: Do not use this helper unless your driver has checked that the CPU
+  * instruction is supported on the platform.
+  */
+-static inline void iosubmit_cmds512(void __iomem *__dst, const void *src,
++static inline void iosubmit_cmds512(void __iomem *dst, const void *src,
+ 				    size_t count)
+ {
+-	/*
+-	 * Note that this isn't an "on-stack copy", just definition of "dst"
+-	 * as a pointer to 64-bytes of stuff that is going to be overwritten.
+-	 * In the MOVDIR64B case that may be needed as you can use the
+-	 * MOVDIR64B instruction to copy arbitrary memory around. This trick
+-	 * lets the compiler know how much gets clobbered.
+-	 */
+-	volatile struct { char _[64]; } *dst = __dst;
+ 	const u8 *from = src;
+ 	const u8 *end = from + count * 64;
+ 
+ 	while (from < end) {
+-		/* MOVDIR64B [rdx], rax */
+-		asm volatile(".byte 0x66, 0x0f, 0x38, 0xf8, 0x02"
+-			     : "=m" (dst)
+-			     : "d" (from), "a" (dst));
++		movdir64b(dst, from);
+ 		from += 64;
+ 	}
+ }
+diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+index 59a3e13204c3..7bc8e714f37e 100644
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -234,6 +234,23 @@ static inline void clwb(volatile void *__p)
+ 
+ #define nop() asm volatile ("nop")
+ 
++static inline void movdir64b(void *__dst, const void *src)
++{
++	/*
++	 * Note that this isn't an "on-stack copy", just definition of "dst"
++	 * as a pointer to 64-bytes of stuff that is going to be overwritten.
++	 * In the MOVDIR64B case that may be needed as you can use the
++	 * MOVDIR64B instruction to copy arbitrary memory around. This trick
++	 * lets the compiler know how much gets clobbered.
++	 */
++	volatile struct { char _[64]; } *dst = __dst;
++
++	/* MOVDIR64B [rdx], rax */
++	asm volatile(".byte 0x66, 0x0f, 0x38, 0xf8, 0x02"
++		     : "=m" (dst)
++		     : "d" (src), "a" (dst));
++}
++
+ #endif /* __KERNEL__ */
+ 
+ #endif /* _ASM_X86_SPECIAL_INSNS_H */
 
-
- Documentation/ABI/stable/sysfs-driver-dma-idxd |   14 ++
- arch/x86/include/asm/io.h                      |   46 +++++---
- arch/x86/include/asm/special_insns.h           |   17 +++
- drivers/dma/Kconfig                            |   10 ++
- drivers/dma/idxd/cdev.c                        |   49 ++++++++
- drivers/dma/idxd/device.c                      |   91 ++++++++++++++-
- drivers/dma/idxd/dma.c                         |    9 --
- drivers/dma/idxd/idxd.h                        |   33 +++++-
- drivers/dma/idxd/init.c                        |   92 ++++++++++++---
- drivers/dma/idxd/irq.c                         |  143 ++++++++++++++++++++++--
- drivers/dma/idxd/registers.h                   |   14 ++
- drivers/dma/idxd/submit.c                      |   33 +++++-
- drivers/dma/idxd/sysfs.c                       |  127 +++++++++++++++++++++
- 13 files changed, 608 insertions(+), 70 deletions(-)
-
---

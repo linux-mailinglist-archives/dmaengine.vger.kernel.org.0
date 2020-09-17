@@ -2,147 +2,144 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2057026E577
-	for <lists+dmaengine@lfdr.de>; Thu, 17 Sep 2020 21:54:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D5EB26E731
+	for <lists+dmaengine@lfdr.de>; Thu, 17 Sep 2020 23:15:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgIQQMy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 17 Sep 2020 12:12:54 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:14651 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727992AbgIQPOj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 17 Sep 2020 11:14:39 -0400
-X-Greylist: delayed 316 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Sep 2020 11:13:04 EDT
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f637b320000>; Thu, 17 Sep 2020 08:05:22 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 17 Sep 2020 08:06:51 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 17 Sep 2020 08:06:51 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 17 Sep
- 2020 15:06:46 +0000
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.171)
- by HQMAIL109.nvidia.com (172.20.187.15) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Thu, 17 Sep 2020 15:06:46 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PaouiH4n4ErE8MgvABbxLCQ8NNZs8aSo4+tV8bhHZOaJB0s4LjB/570uBuE/fmfMxHH3ZmduM5khcoY31WjUMV1N44LjcCo9pYdfSHVK9Ln9y/k2MjZdNNr5jduPSWgU2/hqCw3B+mPQdeUOOOaZm/t2JVcPuojcYIrYHrlUSQ+DjA6R/1jhWThc6raOsaxiPli8lrIJkBX+yVupOO6SI0Qz37B6YdTojhUP73ou9wQwON1O4PzEShGxEqFm5OigcJhuI4GcB5Bep+GXu50v7An3T8T6zNTDkzWGVzFgkF60R8ni3yGkTG5pO6Xg3F0cDODOXC0MbrHIdn3VbJ+6wQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=114Y2T88q57MBNudUVjmRHVj56PrRbxje7YL3eLOgpc=;
- b=itUv+b9inYpmbtDitHrXGJNyv/upb/FlC+5QezbRKFRPWKaqQeDZotU7rCyHYjjeAqgNVR2PmQzCzy62xIsreZKRM4IymrOraaRVHpV4Q1Vjr1zpyF4e+8CTx4P9+8+W/eHHjp7ufRwVSUHj3Mf6hjhJUrDGmLQ6VOGg/xdVlra8RZbPcJMNdTbd59ZrX24CPJ8lfuFnqx99Yju3Yq8OTGPJArstX4KDPWzFpXJ3DIUbM7a2NluG5jEl5fDTAUP/GaP0va0FphGUUOyJrN6EGBgOPiNnarQTvy9TASVV+44sthf6MrTVvOoPk2khdPa7ZsMb42DyJfHPjddELy9JUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM5PR1201MB2491.namprd12.prod.outlook.com (2603:10b6:3:eb::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.11; Thu, 17 Sep
- 2020 15:06:43 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78%7]) with mapi id 15.20.3391.011; Thu, 17 Sep 2020
- 15:06:43 +0000
-Date:   Thu, 17 Sep 2020 12:06:41 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-CC:     <vkoul@kernel.org>, <megha.dey@intel.com>, <maz@kernel.org>,
-        <bhelgaas@google.com>, <tglx@linutronix.de>,
-        <alex.williamson@redhat.com>, <jacob.jun.pan@intel.com>,
-        <ashok.raj@intel.com>, <yi.l.liu@intel.com>, <baolu.lu@intel.com>,
-        <kevin.tian@intel.com>, <sanjay.k.kumar@intel.com>,
-        <tony.luck@intel.com>, <jing.lin@intel.com>,
-        <dan.j.williams@intel.com>, <kwankhede@nvidia.com>,
-        <eric.auger@redhat.com>, <parav@mellanox.com>, <rafael@kernel.org>,
-        <netanelg@mellanox.com>, <shahafs@mellanox.com>,
-        <yan.y.zhao@linux.intel.com>, <pbonzini@redhat.com>,
-        <samuel.ortiz@intel.com>, <mona.hossain@intel.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <x86@kernel.org>, <linux-pci@vger.kernel.org>,
-        <kvm@vger.kernel.org>
-Subject: Re: [PATCH v3 00/18] Add VFIO mediated device support and DEV-MSI
- support for the idxd driver
-Message-ID: <20200917150641.GM3699@nvidia.com>
-References: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com>
-X-ClientProxiedBy: MN2PR20CA0007.namprd20.prod.outlook.com
- (2603:10b6:208:e8::20) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        id S1725874AbgIQVPQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 17 Sep 2020 17:15:16 -0400
+Received: from mga02.intel.com ([134.134.136.20]:49526 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725882AbgIQVPQ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 17 Sep 2020 17:15:16 -0400
+IronPort-SDR: oo4HCNJy8bCdH1N7ajAzxGUYVZy8otkcc2kGq8tw3ICCTPgKcyiKWOcWBxRCMrto5uN1G1Djgi
+ 9jQkV6yO7NqQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9747"; a="147482221"
+X-IronPort-AV: E=Sophos;i="5.77,272,1596524400"; 
+   d="scan'208";a="147482221"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 14:15:11 -0700
+IronPort-SDR: 3SlFe7dPrSedK6ReDX9jb77NrQiJecgcjsIrY7x6a1t4u54R6spD11FPfO/2lG60zcbaB+sM6S
+ l2yNTgmGYRwQ==
+X-IronPort-AV: E=Sophos;i="5.77,272,1596524400"; 
+   d="scan'208";a="452477797"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 14:15:10 -0700
+Subject: [PATCH v4 0/5] Add shared workqueue support for idxd driver
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dan.j.williams@intel.com, tony.luck@intel.com,
+        jing.lin@intel.com, ashok.raj@intel.com, sanjay.k.kumar@intel.com,
+        fenghua.yu@intel.com, kevin.tian@intel.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 17 Sep 2020 14:15:10 -0700
+Message-ID: <160037680630.3777.16356270178889649944.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR20CA0007.namprd20.prod.outlook.com (2603:10b6:208:e8::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.11 via Frontend Transport; Thu, 17 Sep 2020 15:06:43 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kIvUf-000Vd8-NX; Thu, 17 Sep 2020 12:06:41 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: bccbaf2a-957d-4e09-50a0-08d85b1b49c8
-X-MS-TrafficTypeDiagnostic: DM5PR1201MB2491:
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR1201MB2491721156D926F5F4B89FB6C23E0@DM5PR1201MB2491.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6yAtT1XdRgC4Tr2yBdCiSdlwK98sT3HL/OctJNRgtMYihmDURcWZ4RNMrTxoNGaQoVdOgUPkgBvuLfE7bR5t3ixiNubzyesqalZF0YZKMKUIT4q6lCLl9yY3MMXooZefKcDP7/N4bUs62zdi2qETEoUzGhanFo9g6Jz1LQCLLXWgv8qCWg2y6JcePH7JQXKOvcj/CUkmE3Zny/nxQESZSyezdZVXK2LmmGC9mXPpReD7UMobrw7GV0cB+JDAGh/IYNeDRP0owMC+L5uQssMHOgsTDmA9fjMGNZjPuxRC8vFf7589r7zGVeIRI5PXCzV2ACwY4WI9Hn3XAfE9bEaouQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(376002)(39860400002)(346002)(136003)(2616005)(4326008)(26005)(478600001)(426003)(9746002)(8936002)(316002)(9786002)(66946007)(36756003)(66476007)(6916009)(66556008)(186003)(86362001)(5660300002)(2906002)(7416002)(1076003)(4744005)(8676002)(33656002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: wz44S5/4xKHMatAoEOzW6QLXSoBHGQ6KPpg1nZx2Pg357zehDRqnMSHCVsZJtW02/X6re0FFsXw1SNBnZlHV/PviCVoAAceZTfuGGipRRWTMjurYzbMN5J8inDJ1kMilri6rR+lPJXLLV+504aomDMhg/Mhsz7RVb7BpGL6NvR8MRbTLyPglkwdHeuzeyOMMk/ua9x/4EfO1Ru+ZZ3ksUVnD083nGihrXbGnzAyPOV/aNyhR9nzR+IDZbfLGmr+T0jpQm7BzvOY+KkeX+xzpbCm+Af/l6YMmyoCadYboe1Ps5oimKXld0jwRy76WtBAbnxu59ZbBL7oDdwMRM7c6Tp0zmP2lTi4gHU1sHo0xCng5Vp0PeazJ6zDB+PhJYkIu1VVoxy6H96ggsleOS7MBgLEuO5oWWtG/H39mRV9xHfy7qk8PKTdBIpopjiyovUiRxv7aED9BePZxnEFNNYefVpOXLbQbcJtzzPpOnrnWMiaEptg/yUq5PYV+6rxkbAytTLUMF5IJwS98cqvjrcweGUvsUrV1GaoWeYg+6dKJty/oa6jaOZo+rJnkjmyc41fycGEhI62jxzRi1p29acXYr69GUK9WE1cAPQQs+zZqWt8FoZOhaTt4Gsb68JZg6m4MR50f6iNusS84+5c0B4CINg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: bccbaf2a-957d-4e09-50a0-08d85b1b49c8
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Sep 2020 15:06:43.5812
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dlEWRP432d/DwfghM1HLQebsf3OoblkOq7294K2KiaIYQjAu7w1tX7oJD9P+3vI1
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB2491
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1600355122; bh=114Y2T88q57MBNudUVjmRHVj56PrRbxje7YL3eLOgpc=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-LD-Processed:
-         X-MS-Exchange-Transport-Forked:X-Microsoft-Antispam-PRVS:
-         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
-         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=OK4zWo/8KihA2516nS+iwg45+PxYr80VnS+otJWUh0qRbJjkc2cJaMws8USTtE4NZ
-         AveRUHeC+Dn3Luw444tLUUvGUr5sncuBRrzUfJa8woLOquO1gLA8vejIrRFfy61o2Q
-         ZgR4SDH+NCBSRtSTNNPYOkJwTE7IvvmjwPHIV1d4ND3B3skMkWI+IQdo77BqOOP+Bx
-         B5KUaIJfOrFTYWO7puimsDFAh+EXzDvz+cYzkqGhpbcM1mEW0p65vDMgRyE/GqGnHv
-         W8zfDNztMIn3jTcVnBarHTMQG2KJ//KFkJikKYelyPAXIM69hB5WJ1V/FY9/yyV6Nc
-         O5dSbo7ehvRLg==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Sep 15, 2020 at 04:27:35PM -0700, Dave Jiang wrote:
->  drivers/dma/idxd/idxd.h                            |   65 +
->  drivers/dma/idxd/init.c                            |  100 ++
->  drivers/dma/idxd/irq.c                             |    6 
->  drivers/dma/idxd/mdev.c                            | 1089 ++++++++++++++++++++
->  drivers/dma/idxd/mdev.h                            |  118 ++
+v4:
+- Rebased against latest dmaengine/next tree
+- Split out enqcmd and pasid dependency.
 
-It is common that drivers of a subsystem will be under that
-subsystem's directory tree. This allows the subsystem community to
-manage pages related to their subsystem and it's drivers.
+V3:
+- Rebased against latest dmaengine/next tree.
+- Updated API doc with new kernel version and dates.
+- Changed to allow driver to load without ENQCMD support.
+- Break out some patches that can be sent ahead of this series for inclusion.
 
-Should the mdev parts be moved there?
+v2:
+- Dropped device feature enabling (GregKH)
+- Dropped PCI device feature enabling (Bjorn)
+	- https://members.pcisig.com/wg/PCI-SIG/document/14237
+- After some internal discussion, we have decided to hold off on the enabling of DMWR due to the
+  following reasons. 1. Most first gen hw will not have the feature bits. 2. First gen hw that
+  support the feature are all Root Complex integrated endpoints. 3. PCI devices that are not
+  RCiEP’s with this capability won’t surface for a few years so we can wait until we can test the
+  full code.
+- Dropped special ioremap (hch)
+- Added proper support for WQ flush (tony, dan)
+- Changed descriptor submission to use sbitmap_queue for blocking. (dan)
 
-Jason
+Driver stage 1 postings for context: [1]
+
+The patch series has compilation and functional dependency on Fenghua's "Tag application
+address space for devices" patch series for the ENQCMD CPU command enumeration and the PASID MSR
+support. [2] 
+
+== Background ==
+A typical DMA device requires the driver to translate application buffers to hardware addresses,
+and a kernel-user transition to notify the hardware of new work. Shared Virtual Addressing (SVA)
+allows the processor and device to use the same virtual addresses without requiring software to
+translate between the address spaces. ENQCMD is a new instruction on Intel Platforms that allows
+user applications to directly notify hardware of new work, much like how doorbells are used in
+some hardware, but it carries a payload along with it. ENQCMDS is the supervisor version (ring0)
+of ENQCMD.
+
+== ENQCMDS ==
+Introduce enqcmds(), a helper funciton that copies an input payload to a 64B aligned
+destination and confirms whether the payload was accepted by the device or not.
+enqcmds() wraps the new ENQCMDS CPU instruction. The ENQCMDS is a ring 0 CPU instruction that
+performs similar to the ENQCMD instruction. Descriptor submission must use ENQCMD(S) for shared
+workqueues (swq) on an Intel DSA device. 
+
+== Shared WQ support ==
+Introduce shared workqueue (swq) support for the idxd driver. The current idxd driver contains
+dedicated workqueue (dwq) support only. A dwq accepts descriptors from a MOVDIR64B instruction.
+MOVDIR64B is a posted instruction on the PCIe bus, it does not wait for any response from the
+device. If the wq is full, submitted descriptors are dropped. A swq utilizes the ENQCMDS in
+ring 0, which is a non-posted instruction. The zero flag would be set to 1 if the device rejects
+the descriptor or if the wq is full. A swq can be shared between multiple users
+(kernel or userspace) due to not having to keep track of the wq full condition for submission.
+A swq requires PASID and can only run with SVA support. 
+
+== IDXD SVA support ==
+Add utilization of PASID to support Shared Virtual Addressing (SVA). With PASID support,
+the descriptors can be programmed with host virtual address (HVA) rather than IOVA.
+The hardware will work with the IOMMU in fulfilling page requests. With SVA support,
+a user app using the char device interface can now submit descriptors without having to pin the
+virtual memory range it wants to DMA in its own address space. 
+
+The series does not add SVA support for the dmaengine subsystem. That support is coming at a
+later time.
+
+[1]: https://lore.kernel.org/lkml/157965011794.73301.15960052071729101309.stgit@djiang5-desk3.ch.intel.com/
+[2]: https://lore.kernel.org/lkml/20200916080510.GA32552@8bytes.org/
+[3]: https://software.intel.com/en-us/articles/intel-sdm
+[4]: https://software.intel.com/en-us/download/intel-scalable-io-virtualization-technical-specification
+[5]: https://software.intel.com/en-us/download/intel-data-streaming-accelerator-preliminary-architecture-specification
+[6]: https://01.org/blogs/2019/introducing-intel-data-streaming-accelerator
+[7]: https://intel.github.io/idxd/
+[8]: https://github.com/intel/idxd-driver idxd-stage2
+
+---
+
+Dave Jiang (5):
+      x86/asm: move the raw asm in iosubmit_cmds512() to special_insns.h
+      x86/asm: add enqcmds() to support ENQCMDS instruction
+      dmaengine: idxd: add shared workqueue support
+      dmaengine: idxd: clean up descriptors with fault error
+      dmaengine: idxd: add ABI documentation for shared wq
+
+
+ Documentation/ABI/stable/sysfs-driver-dma-idxd |   14 ++
+ arch/x86/include/asm/io.h                      |   46 +++++---
+ arch/x86/include/asm/special_insns.h           |   17 +++
+ drivers/dma/Kconfig                            |   10 ++
+ drivers/dma/idxd/cdev.c                        |   49 ++++++++
+ drivers/dma/idxd/device.c                      |   91 ++++++++++++++-
+ drivers/dma/idxd/dma.c                         |    9 --
+ drivers/dma/idxd/idxd.h                        |   33 +++++-
+ drivers/dma/idxd/init.c                        |   92 ++++++++++++---
+ drivers/dma/idxd/irq.c                         |  143 ++++++++++++++++++++++--
+ drivers/dma/idxd/registers.h                   |   14 ++
+ drivers/dma/idxd/submit.c                      |   33 +++++-
+ drivers/dma/idxd/sysfs.c                       |  127 +++++++++++++++++++++
+ 13 files changed, 608 insertions(+), 70 deletions(-)
+
+--

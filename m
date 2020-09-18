@@ -2,98 +2,70 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6B1526F363
-	for <lists+dmaengine@lfdr.de>; Fri, 18 Sep 2020 05:06:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32ACC26F5E5
+	for <lists+dmaengine@lfdr.de>; Fri, 18 Sep 2020 08:30:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727410AbgIRDGe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 17 Sep 2020 23:06:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50936 "EHLO mail.kernel.org"
+        id S1726218AbgIRGaR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 18 Sep 2020 02:30:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727210AbgIRCEC (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 17 Sep 2020 22:04:02 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725886AbgIRGaR (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 18 Sep 2020 02:30:17 -0400
+Received: from localhost.localdomain (unknown [136.185.124.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 250CE23600;
-        Fri, 18 Sep 2020 02:04:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0D2E20DD4;
+        Fri, 18 Sep 2020 06:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600394641;
-        bh=66wCMHHAgYvFPF/NiM4KDxXT/ObaN+P40iilFXq/40w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zegF19mH9Col/8Ty8e6K90Zjg7UkDgUKAGm4aitD3lIl9rp/Amd4ECPWs/fubWXnE
-         K8wXXWwyGpR0cXPt4k2WTIg4sxDlUMNgNnUTtZXKIkbJCOWG1lz1Db6zGkNpl+VOhn
-         BWsag8LBmEjnfXv+Gn8tYdKIQ4WpIjA3Qx4RyLwE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amelie Delaunay <amelie.delaunay@st.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 140/330] dmaengine: stm32-dma: use vchan_terminate_vdesc() in .terminate_all
-Date:   Thu, 17 Sep 2020 21:58:00 -0400
-Message-Id: <20200918020110.2063155-140-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200918020110.2063155-1-sashal@kernel.org>
-References: <20200918020110.2063155-1-sashal@kernel.org>
+        s=default; t=1600410616;
+        bh=f+UJt77FBOV84lPqPvwhu9odrmdgbM8zk/JtwKt07OY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=trVJbqszaKuIBUzrb1htkXECCg/C4bCqnlp8I5XWN493UuKcIlx9WF6MZfouw4Rtg
+         D6vfqDHqP3ynJBdQC1zqwuXiuqGqRLMFwRLAbcvsoc0p7hg9AFgphvA1lrJVdMcqbz
+         m3nXpJ/DoLgV/Dzz8CwCIyE7CdDi7cWWjTmTDjzI=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     dmaengine@vger.kernel.org
+Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH v2 0/3] dmaengine: Add support for QCOM GSI dma controller
+Date:   Fri, 18 Sep 2020 11:59:52 +0530
+Message-Id: <20200918062955.2095156-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Amelie Delaunay <amelie.delaunay@st.com>
+This series adds support for Qcom GSI dma controller found on Qualcomm SoCs.
+This controller can program the peripheral configuration so we add
+additional parameters in dma_slave_config for configuring the peripherals
+like spi and i2c.
 
-[ Upstream commit d80cbef35bf89b763f06e03bb4ff8f933bf012c5 ]
+Changes in v2:
+ - Update the binding and drop qcom specific properties
+ - Move peripheral configuration as a pointer
+ - Move submit queue for transactions to issue_pending
 
-To avoid race with vchan_complete, use the race free way to terminate
-running transfer.
+Vinod Koul (3):
+  dt-bindings: dmaengine: Document qcom,gpi dma binding
+  dmaengine: add peripheral configuration
+  dmaengine: qcom: Add GPI dma driver
 
-Move vdesc->node list_del in stm32_dma_start_transfer instead of in
-stm32_mdma_chan_complete to avoid another race in vchan_dma_desc_free_list.
+ .../devicetree/bindings/dma/qcom,gpi.yaml     |   86 +
+ drivers/dma/qcom/Kconfig                      |   12 +
+ drivers/dma/qcom/Makefile                     |    1 +
+ drivers/dma/qcom/gpi.c                        | 2280 +++++++++++++++++
+ include/dt-bindings/dma/qcom-gpi.h            |   11 +
+ include/linux/dmaengine.h                     |   90 +
+ 6 files changed, 2480 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+ create mode 100644 drivers/dma/qcom/gpi.c
+ create mode 100644 include/dt-bindings/dma/qcom-gpi.h
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Link: https://lore.kernel.org/r/20200129153628.29329-9-amelie.delaunay@st.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/dma/stm32-dma.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index 5989b08935211..6c5771de32c67 100644
---- a/drivers/dma/stm32-dma.c
-+++ b/drivers/dma/stm32-dma.c
-@@ -488,8 +488,10 @@ static int stm32_dma_terminate_all(struct dma_chan *c)
- 
- 	spin_lock_irqsave(&chan->vchan.lock, flags);
- 
--	if (chan->busy) {
--		stm32_dma_stop(chan);
-+	if (chan->desc) {
-+		vchan_terminate_vdesc(&chan->desc->vdesc);
-+		if (chan->busy)
-+			stm32_dma_stop(chan);
- 		chan->desc = NULL;
- 	}
- 
-@@ -545,6 +547,8 @@ static void stm32_dma_start_transfer(struct stm32_dma_chan *chan)
- 		if (!vdesc)
- 			return;
- 
-+		list_del(&vdesc->node);
-+
- 		chan->desc = to_stm32_dma_desc(vdesc);
- 		chan->next_sg = 0;
- 	}
-@@ -622,7 +626,6 @@ static void stm32_dma_handle_chan_done(struct stm32_dma_chan *chan)
- 		} else {
- 			chan->busy = false;
- 			if (chan->next_sg == chan->desc->num_sgs) {
--				list_del(&chan->desc->vdesc.node);
- 				vchan_cookie_complete(&chan->desc->vdesc);
- 				chan->desc = NULL;
- 			}
 -- 
-2.25.1
+2.26.2
 

@@ -2,378 +2,146 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C24226FB92
-	for <lists+dmaengine@lfdr.de>; Fri, 18 Sep 2020 13:35:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E56E26FC6A
+	for <lists+dmaengine@lfdr.de>; Fri, 18 Sep 2020 14:24:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgIRLet (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 18 Sep 2020 07:34:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57044 "EHLO mail.kernel.org"
+        id S1726121AbgIRMY5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 18 Sep 2020 08:24:57 -0400
+Received: from mga05.intel.com ([192.55.52.43]:55411 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726397AbgIRLet (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 18 Sep 2020 07:34:49 -0400
-Received: from localhost (unknown [136.185.124.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E161F22208;
-        Fri, 18 Sep 2020 11:34:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600428888;
-        bh=hvbmsfwPi5LAx2FgLYSC6xzMj7RwwMQh4CaU5M7j/8A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vey5lMVK8fs639QubwCa5+8QCpvnDdNrx9POdpYhosFotS30oDLdXo2vGF5c/GM6c
-         gTj+lH5ZJL3fThln0mT5G4JVXOrLhBq/XwVO5hZuNx1ugEXWKw7g84w6BwdC4HEX/3
-         oDI/MI7wAeD4qaBsmxaRcFYufFJk3L1mhrJZs+lw=
-Date:   Fri, 18 Sep 2020 17:04:43 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Jonathan McDowell <noodles@earth.li>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Thomas Pedersen <twp@codeaurora.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dmaengine@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: qcom: Add ADM driver
-Message-ID: <20200918113443.GN2968@vkoul-mobl>
-References: <20200916064326.GA13963@earth.li>
+        id S1725955AbgIRMY5 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 18 Sep 2020 08:24:57 -0400
+IronPort-SDR: +Em5LBh7D+Ae3TkVqFnjFKRCspsw6mzjK2Bv0+VCTlB+n2UzgvwbuzRqOyRGA2dkP/oJnPvR3O
+ J4Z+egc3mYzQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9747"; a="244758112"
+X-IronPort-AV: E=Sophos;i="5.77,274,1596524400"; 
+   d="scan'208";a="244758112"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2020 05:24:56 -0700
+IronPort-SDR: Su8fdFmcA3/oHfW7dwfrBVBZ5nPDpHh2UfBATeDBd5RZdgyftr9w2pkedjNDSbwRoeTSm7Zxfy
+ /wLgwMkP6GbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,274,1596524400"; 
+   d="scan'208";a="336787905"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 18 Sep 2020 05:24:53 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1kJFNN-00HZtB-Sl; Fri, 18 Sep 2020 15:20:29 +0300
+Date:   Fri, 18 Sep 2020 15:20:29 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
+Cc:     dmaengine@vger.kernel.org, vkoul@kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, chuanhua.lei@linux.intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        malliamireddy009@gmail.com, peter.ujfalusi@ti.com
+Subject: Re: [PATCH v6 2/2] Add Intel LGM soc DMA support.
+Message-ID: <20200918122029.GX3956970@smile.fi.intel.com>
+References: <cover.1599605765.git.mallikarjunax.reddy@linux.intel.com>
+ <748370a51af0ab768e542f1537d1aa3aeefebe8a.1599605765.git.mallikarjunax.reddy@linux.intel.com>
+ <20200909111424.GQ1891694@smile.fi.intel.com>
+ <36a42016-3260-3933-bbf9-9203c4124115@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200916064326.GA13963@earth.li>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <36a42016-3260-3933-bbf9-9203c4124115@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello Jonathan
+On Fri, Sep 18, 2020 at 11:42:54AM +0800, Reddy, MallikarjunaX wrote:
+> On 9/9/2020 7:14 PM, Andy Shevchenko wrote:
+> > On Wed, Sep 09, 2020 at 07:07:34AM +0800, Amireddy Mallikarjuna reddy wrote:
 
-On 16-09-20, 07:43, Jonathan McDowell wrote:
-> From: Andy Gross <agross@codeaurora.org>
+...
+
+> > > +	help
+> > > +	  Enable support for intel Lightning Mountain SOC DMA controllers.
+> > > +	  These controllers provide DMA capabilities for a variety of on-chip
+> > > +	  devices such as SSC, HSNAND and GSWIP.
+> > And how module will be called?
+>  are you expecting to include 'default y' ?
+
+I'm expecting to see something like "if you choose M the module will be called
+bla-foo-bar." Look at the existing examples in the kernel.
+
+...
+
+> > > +ldma_update_bits(struct ldma_dev *d, u32 mask, u32 val, u32 ofs)
+> > > +{
+> > > +	u32 old_val, new_val;
+> > > +
+> > > +	old_val = readl(d->base +  ofs);
+> > > +	new_val = (old_val & ~mask) | (val & mask);
+> > With bitfield.h you will have this as u32_replace_bits().
+> -  new_val = (old_val & ~mask) | (val & mask);
+> + new_val = old_val;
+> + u32_replace_bits(new_val, val, mask);
 > 
-> (I'm not sure how best to attribute this. It's originally from Andy
-> Gross, the version I picked up was a later version from Thomas Pedersen,
-> and I can't find clear indication of why the latest version wasn't
-> applied. The device tree details were added back in September 2014. The
-> driver is the missing piece in mainline for IPQ8064 NAND support and
-> I've been using it successfully with my RB3011 device on 5.8+)
-
-Yeah not sure why the driver was missed :(
-Btw this note is helpful but not great for log, you should add it after
-sob lines.
-
-> Add the DMA engine driver for the QCOM Application Data Mover (ADM) DMA
-> controller found in the MSM8x60 and IPQ/APQ8064 platforms.
+> I think in this function we cant use this because of compilation issues
+> thrown by bitfield.h . Expecting 2nd and 3rd arguments as constant numbers
+> not as type variables.
 > 
-> The ADM supports both memory to memory transactions and memory
-> to/from peripheral device transactions.  The controller also provides
-> flow control capabilities for transactions to/from peripheral devices.
+> ex:
+> 	u32_replace_bits(val, 0, IPA_REG_ENDP_ROUTER_HASH_MSK_ALL);
+
+How comes these are constants? In the above you have a function which does
+r-m-w approach to the register. It should be something like
+
+	old = read();
+	new = u32_replace_bits(old, ...);
+	write(new);
+
+> ./include/linux/bitfield.h:131:3: error: call to '__field_overflow' declared
+> with attribute error: value doesn't fit into mask
+>    __field_overflow();     \
+>    ^~~~~~~~~~~~~~~~~~
 > 
-> The initial release of this driver supports slave transfers to/from
-> peripherals and also incorporates CRCI (client rate control interface)
-> flow control.
+> ./include/linux/bitfield.h:119:3: error: call to '__bad_mask' declared with
+> attribute error: bad bitfield mask
+>    __bad_mask();
+>    ^~~~~~~~~~~~
+
+So, even with constants u32_replace_bits() must work. Maybe you didn't get how?
+
+> > > +	if (new_val != old_val)
+> > > +		writel(new_val, d->base + ofs);
+> > > +}
+
+...
+
+> > > +	/* High 4 bits */
+> > Why only 4?
+> this is higher 4 bits of 36 bit addressing..
+
+Make it clear in the comment.
+
+...
+
+> > > +device_initcall(intel_ldma_init);
+> > Each _initcall() in general should be explained.
+> ok. is it fine?
 > 
-> Signed-off-by: Andy Gross <agross@codeaurora.org>
-> Signed-off-by: Thomas Pedersen <twp@codeaurora.org>
-> Signed-off-by: Jonathan McDowell <noodles@earth.li>
-> 
-> diff --git a/drivers/dma/qcom/Kconfig b/drivers/dma/qcom/Kconfig
-> index 3bcb689162c6..75ee112ccea9 100644
-> --- a/drivers/dma/qcom/Kconfig
-> +++ b/drivers/dma/qcom/Kconfig
-> @@ -28,3 +28,13 @@ config QCOM_HIDMA
->  	  (user to kernel, kernel to kernel, etc.).  It only supports
->  	  memcpy interface. The core is not intended for general
->  	  purpose slave DMA.
-> +
-> +config QCOM_ADM
+> /* Perform this driver as device_initcall to make sure initialization
+> happens
+>  * before its dma clients of some are platform specific. make sure to
+> provice
+>  * registered dma channels and dma capabilities to client before their
+>  * initialization.
+>  */
 
-alphabetical sort please
-
-> +	tristate "Qualcomm ADM support"
-> +	depends on ARCH_QCOM || (COMPILE_TEST && OF && ARM)
-
-Why COMPILE_TEST && OF? just COMPILE_TEST should be fine
-
-
-> +	select DMA_ENGINE
-> +	select DMA_VIRTUAL_CHANNELS
-> +	---help---
-> +	  Enable support for the Qualcomm ADM DMA controller.  This controller
-> +	  provides DMA capabilities for both general purpose and on-chip
-> +	  peripheral devices.
-> diff --git a/drivers/dma/qcom/Makefile b/drivers/dma/qcom/Makefile
-> index 1ae92da88b0c..98a021fc6fe5 100644
-> --- a/drivers/dma/qcom/Makefile
-> +++ b/drivers/dma/qcom/Makefile
-> @@ -4,3 +4,4 @@ obj-$(CONFIG_QCOM_HIDMA_MGMT) += hdma_mgmt.o
->  hdma_mgmt-objs	 := hidma_mgmt.o hidma_mgmt_sys.o
->  obj-$(CONFIG_QCOM_HIDMA) +=  hdma.o
->  hdma-objs        := hidma_ll.o hidma.o hidma_dbg.o
-> +obj-$(CONFIG_QCOM_ADM) += qcom_adm.o
-
-alphabetical sort please
-
-> diff --git a/drivers/dma/qcom/qcom_adm.c b/drivers/dma/qcom/qcom_adm.c
-> new file mode 100644
-> index 000000000000..36d16c5e1515
-> --- /dev/null
-> +++ b/drivers/dma/qcom/qcom_adm.c
-> @@ -0,0 +1,914 @@
-> +/*
-> + * Copyright (c) 2013-2015, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-
-SPDX tags please
-
-> +/* channel status */
-> +#define ADM_CH_STATUS_VALID	BIT(1)
-> +
-> +/* channel result */
-> +#define ADM_CH_RSLT_VALID	BIT(31)
-> +#define ADM_CH_RSLT_ERR		BIT(3)
-> +#define ADM_CH_RSLT_FLUSH	BIT(2)
-> +#define ADM_CH_RSLT_TPD		BIT(1)
-> +
-> +/* channel conf */
-> +#define ADM_CH_CONF_SHADOW_EN		BIT(12)
-> +#define ADM_CH_CONF_MPU_DISABLE		BIT(11)
-> +#define ADM_CH_CONF_PERM_MPU_CONF	BIT(9)
-> +#define ADM_CH_CONF_FORCE_RSLT_EN	BIT(7)
-> +#define ADM_CH_CONF_SEC_DOMAIN(ee)	(((ee & 0x3) << 4) | ((ee & 0x4) << 11))
-
-USE FIELD_PREP for this?
-
-> +/* channel result conf */
-> +#define ADM_CH_RSLT_CONF_FLUSH_EN	BIT(1)
-> +#define ADM_CH_RSLT_CONF_IRQ_EN		BIT(0)
-> +
-> +/* CRCI CTL */
-> +#define ADM_CRCI_CTL_MUX_SEL	BIT(18)
-> +#define ADM_CRCI_CTL_RST	BIT(17)
-> +
-> +/* CI configuration */
-> +#define ADM_CI_RANGE_END(x)	(x << 24)
-> +#define ADM_CI_RANGE_START(x)	(x << 16)
-> +#define ADM_CI_BURST_4_WORDS	BIT(2)
-> +#define ADM_CI_BURST_8_WORDS	BIT(3)
-> +
-> +/* GP CTL */
-> +#define ADM_GP_CTL_LP_EN	BIT(12)
-> +#define ADM_GP_CTL_LP_CNT(x)	(x << 8)
-> +
-> +/* Command pointer list entry */
-> +#define ADM_CPLE_LP		BIT(31)
-> +#define ADM_CPLE_CMD_PTR_LIST	BIT(29)
-> +
-> +/* Command list entry */
-> +#define ADM_CMD_LC		BIT(31)
-> +#define ADM_CMD_DST_CRCI(n)	(((n) & 0xf) << 7)
-> +#define ADM_CMD_SRC_CRCI(n)	(((n) & 0xf) << 3)
-> +
-> +#define ADM_CMD_TYPE_SINGLE	0x0
-> +#define ADM_CMD_TYPE_BOX	0x3
-> +
-> +#define ADM_CRCI_MUX_SEL	BIT(4)
-> +#define ADM_DESC_ALIGN		8
-> +#define ADM_MAX_XFER		(SZ_64K-1)
-> +#define ADM_MAX_ROWS		(SZ_64K-1)
-
-space around -  please
-
-> +/**
-> + * adm_process_fc_descriptors - Process descriptors for flow controlled xfers
-> + *
-> + * @achan: ADM channel
-> + * @desc: Descriptor memory pointer
-> + * @sg: Scatterlist entry
-> + * @crci: CRCI value
-> + * @burst: Burst size of transaction
-> + * @direction: DMA transfer direction
-> + */
-> +static void *adm_process_fc_descriptors(struct adm_chan *achan,
-> +	void *desc, struct scatterlist *sg, u32 crci, u32 burst,
-> +	enum dma_transfer_direction direction)
-
-please align these to preceding parenthesis. Note checkpatch with
---strict option will tell you about the style issues
-
-> +static struct dma_async_tx_descriptor *adm_prep_slave_sg(struct dma_chan *chan,
-> +	struct scatterlist *sgl, unsigned int sg_len,
-> +	enum dma_transfer_direction direction, unsigned long flags,
-> +	void *context)
-> +{
-> +	struct adm_chan *achan = to_adm_chan(chan);
-> +	struct adm_device *adev = achan->adev;
-> +	struct adm_async_desc *async_desc;
-> +	struct scatterlist *sg;
-> +	dma_addr_t cple_addr;
-> +	u32 i, burst;
-> +	u32 single_count = 0, box_count = 0, crci = 0;
-> +	void *desc;
-> +	u32 *cple;
-> +	int blk_size = 0;
-> +
-> +	if (!is_slave_direction(direction)) {
-> +		dev_err(adev->dev, "invalid dma direction\n");
-> +		return NULL;
-> +	}
-> +
-> +	/*
-> +	 * get burst value from slave configuration
-> +	 */
-> +	burst = (direction == DMA_MEM_TO_DEV) ?
-> +		achan->slave.dst_maxburst :
-> +		achan->slave.src_maxburst;
-> +
-> +	/* if using flow control, validate burst and crci values */
-> +	if (achan->slave.device_fc) {
-> +
-> +		blk_size = adm_get_blksize(burst);
-> +		if (blk_size < 0) {
-> +			dev_err(adev->dev, "invalid burst value: %d\n",
-> +				burst);
-> +			return ERR_PTR(-EINVAL);
-> +		}
-> +
-> +		crci = achan->slave.slave_id & 0xf;
-> +		if (!crci || achan->slave.slave_id > 0x1f) {
-> +			dev_err(adev->dev, "invalid crci value\n");
-> +			return ERR_PTR(-EINVAL);
-> +		}
-> +	}
-> +
-> +	/* iterate through sgs and compute allocation size of structures */
-> +	for_each_sg(sgl, sg, sg_len, i) {
-> +		if (achan->slave.device_fc) {
-> +			box_count += DIV_ROUND_UP(sg_dma_len(sg) / burst,
-> +						  ADM_MAX_ROWS);
-> +			if (sg_dma_len(sg) % burst)
-> +				single_count++;
-> +		} else {
-> +			single_count += DIV_ROUND_UP(sg_dma_len(sg),
-> +						     ADM_MAX_XFER);
-> +		}
-> +	}
-> +
-> +	async_desc = kzalloc(sizeof(*async_desc), GFP_ATOMIC);
-
-GFP_NOWAIT please
-
-> +static int adm_dma_probe(struct platform_device *pdev)
-> +{
-> +	struct adm_device *adev;
-> +	struct resource *iores;
-> +	int ret;
-> +	u32 i;
-> +
-> +	adev = devm_kzalloc(&pdev->dev, sizeof(*adev), GFP_KERNEL);
-> +	if (!adev)
-> +		return -ENOMEM;
-> +
-> +	adev->dev = &pdev->dev;
-> +
-> +	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	adev->regs = devm_ioremap_resource(&pdev->dev, iores);
-
-devm_platform_ioremap_resource() pls
-
-> +	if (IS_ERR(adev->regs))
-> +		return PTR_ERR(adev->regs);
-> +
-> +	adev->irq = platform_get_irq(pdev, 0);
-> +	if (adev->irq < 0)
-> +		return adev->irq;
-> +
-> +	ret = of_property_read_u32(pdev->dev.of_node, "qcom,ee", &adev->ee);
-> +	if (ret) {
-> +		dev_err(adev->dev, "Execution environment unspecified\n");
-> +		return ret;
-> +	}
-> +
-> +	adev->core_clk = devm_clk_get(adev->dev, "core");
-> +	if (IS_ERR(adev->core_clk))
-> +		return PTR_ERR(adev->core_clk);
-> +
-> +	ret = clk_prepare_enable(adev->core_clk);
-> +	if (ret) {
-> +		dev_err(adev->dev, "failed to prepare/enable core clock\n");
-> +		return ret;
-> +	}
-> +
-> +	adev->iface_clk = devm_clk_get(adev->dev, "iface");
-> +	if (IS_ERR(adev->iface_clk)) {
-> +		ret = PTR_ERR(adev->iface_clk);
-> +		goto err_disable_core_clk;
-> +	}
-> +
-> +	ret = clk_prepare_enable(adev->iface_clk);
-> +	if (ret) {
-> +		dev_err(adev->dev, "failed to prepare/enable iface clock\n");
-> +		goto err_disable_core_clk;
-> +	}
-> +
-> +	adev->clk_reset = devm_reset_control_get(&pdev->dev, "clk");
-> +	if (IS_ERR(adev->clk_reset)) {
-> +		dev_err(adev->dev, "failed to get ADM0 reset\n");
-> +		ret = PTR_ERR(adev->clk_reset);
-> +		goto err_disable_clks;
-> +	}
-> +
-> +	adev->c0_reset = devm_reset_control_get(&pdev->dev, "c0");
-> +	if (IS_ERR(adev->c0_reset)) {
-> +		dev_err(adev->dev, "failed to get ADM0 C0 reset\n");
-> +		ret = PTR_ERR(adev->c0_reset);
-> +		goto err_disable_clks;
-> +	}
-> +
-> +	adev->c1_reset = devm_reset_control_get(&pdev->dev, "c1");
-> +	if (IS_ERR(adev->c1_reset)) {
-> +		dev_err(adev->dev, "failed to get ADM0 C1 reset\n");
-> +		ret = PTR_ERR(adev->c1_reset);
-> +		goto err_disable_clks;
-> +	}
-> +
-> +	adev->c2_reset = devm_reset_control_get(&pdev->dev, "c2");
-> +	if (IS_ERR(adev->c2_reset)) {
-> +		dev_err(adev->dev, "failed to get ADM0 C2 reset\n");
-> +		ret = PTR_ERR(adev->c2_reset);
-> +		goto err_disable_clks;
-> +	}
-> +
-> +	reset_control_assert(adev->clk_reset);
-> +	reset_control_assert(adev->c0_reset);
-> +	reset_control_assert(adev->c1_reset);
-> +	reset_control_assert(adev->c2_reset);
-> +
-
-No delay?
-
-> +static int adm_dma_remove(struct platform_device *pdev)
-> +{
-> +	struct adm_device *adev = platform_get_drvdata(pdev);
-> +	struct adm_chan *achan;
-> +	u32 i;
-> +
-> +	of_dma_controller_free(pdev->dev.of_node);
-> +	dma_async_device_unregister(&adev->common);
-> +
-> +	for (i = 0; i < ADM_MAX_CHANNELS; i++) {
-> +		achan = &adev->channels[i];
-> +
-> +		/* mask IRQs for this channel/EE pair */
-> +		writel(0, adev->regs + ADM_CH_RSLT_CONF(achan->id, adev->ee));
-> +
-> +		adm_terminate_all(&adev->channels[i].vc.chan);
-> +	}
-> +
-vchan_tasklet needs to be killed here
+/*
+ * Just follow proper multi-line comment style.
+ * And use dma -> DMA.
+ */
 
 -- 
-~Vinod
+With Best Regards,
+Andy Shevchenko
+
+

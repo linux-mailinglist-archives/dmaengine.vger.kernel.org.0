@@ -2,51 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FAEC26F684
-	for <lists+dmaengine@lfdr.de>; Fri, 18 Sep 2020 09:12:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D695026F6D0
+	for <lists+dmaengine@lfdr.de>; Fri, 18 Sep 2020 09:24:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgIRHM4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 18 Sep 2020 03:12:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47704 "EHLO mail.kernel.org"
+        id S1726577AbgIRHYj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 18 Sep 2020 03:24:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726281AbgIRHM4 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 18 Sep 2020 03:12:56 -0400
+        id S1726250AbgIRHYb (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 18 Sep 2020 03:24:31 -0400
 Received: from localhost (unknown [136.185.124.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C95C9214D8;
-        Fri, 18 Sep 2020 07:12:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29BCC20C56;
+        Fri, 18 Sep 2020 07:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600413175;
-        bh=+mcKGaRIHRgzkR2y8o71owNlJFDkesVTMde4xFq6i1Y=;
+        s=default; t=1600413871;
+        bh=8meyM5JPwDLD84IHJZCFpl/oVfrFbNqq0LWxt6fn+Rc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HOOz3Xeh0xooGWC8ULM0LTLPQzvQ5rU57lcJ4pq4cpfkqYMs3BKHzOaC4ecCJPCkd
-         TRJ9czp7V/ZXnADNweK/b7L+82t87C59cjGI2l3tT1WpO/ExN1pqm+k38Gr4E4S2Nv
-         u8Ton6GuDxqeNeK9bhx/CfBKSKNmmy0cLW+TcwI8=
-Date:   Fri, 18 Sep 2020 12:42:51 +0530
+        b=Ugi2a+somLS2TIwv7Z9+c/H/xJ5cwy9UI0BEMi6UAt1vRdCIaVlZ3LaPvUfAWBk37
+         huJZ45n+HO8RMpxyb+JMQGdrJIuJqzdbI4ZQ6j3gSPXF0MAYDxTtsy1zGNKT4wHKhW
+         0niqOsHVjZR7QSREvhV3CQuchFYUop39a6hK/Xhc=
+Date:   Fri, 18 Sep 2020 12:54:26 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     dmaengine@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH] dmaengine: dw-edma: Fix Using plain integer as NULL
- pointer in dw-edma-v0-debugfs.c
-Message-ID: <20200918071251.GJ2968@vkoul-mobl>
-References: <6569fd8ca5ddaa73afef1241ad7978c2a1fae0c7.1600206938.git.gustavo.pimentel@synopsys.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v1] dmaengine: virt-dma: convert tasklets to use new
+ tasklet_setup() API
+Message-ID: <20200918072426.GK2968@vkoul-mobl>
+References: <20200819095950.59157-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6569fd8ca5ddaa73afef1241ad7978c2a1fae0c7.1600206938.git.gustavo.pimentel@synopsys.com>
+In-Reply-To: <20200819095950.59157-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 15-09-20, 23:56, Gustavo Pimentel wrote:
-> Fixes warning given by executing "make C=2 drivers/dma/dw-edma/"
-> 
-> Sparse output:
-> drivers/dma/dw-edma/dw-edma-v0-debugfs.c:296:49: warning:
->  Using plain integer as NULL pointer
+On 19-08-20, 12:59, Andy Shevchenko wrote:
+> In preparation for unconditionally passing the struct tasklet_struct
+> pointer to all tasklet callbacks, switch to using the new tasklet_setup()
+> and from_tasklet() to pass the tasklet pointer explicitly.
 
-Applied, thanks
+Andy,
+
+Allen had already sent this in the pile of patches, I have applied that
+one
 
 -- 
 ~Vinod

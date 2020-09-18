@@ -2,105 +2,86 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCC2226E9A6
-	for <lists+dmaengine@lfdr.de>; Fri, 18 Sep 2020 01:56:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7EDA26EAEA
+	for <lists+dmaengine@lfdr.de>; Fri, 18 Sep 2020 04:02:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbgIQX4J (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 17 Sep 2020 19:56:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbgIQX4J (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 17 Sep 2020 19:56:09 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 677EAC06174A;
-        Thu, 17 Sep 2020 16:56:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=qLkUz/wGrNt/88Ha+h+Kz8s+E0LsPfpK9gkn8CAhG28=; b=odxn3Jaa81ConedWtWX7gdVN8z
-        VL91AOAkk0TdCauhiahDnRxGk10Q+ek3WaMdS51moylz1ydynS9FGNOiAFx5xumowvw3rheys09kP
-        /AvtTIVO/8GJNIzrLYDCwCPKeGXB++Hk20GoU83/DviUTWgEUGmduDdKg6nleyT/a/vTR0sBd562E
-        HRyLQpae0LmYyq9Lng2mAU8K5ICzmjmulSLVirIXDazw5jDiQkOgDrMD/T44JJPhTRTSDiGfWy7Cg
-        AXS06m3/e5wniZbCH9jA29z8FRduT9p7L7l+8zueolDJyNVNGJSAmWqW++3FPitks9hKX+97KAbpm
-        TxSO3ogg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kJ3l1-0001jZ-EL; Thu, 17 Sep 2020 23:56:07 +0000
-Subject: Re: [PATCH v4 0/5] Add shared workqueue support for idxd driver
-To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
-        ashok.raj@intel.com, sanjay.k.kumar@intel.com,
-        fenghua.yu@intel.com, kevin.tian@intel.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <160037680630.3777.16356270178889649944.stgit@djiang5-desk3.ch.intel.com>
- <e178a1ae-0ce2-70bc-54b9-9e2fae837f06@infradead.org>
- <84e1ec28-4a89-963a-49f6-3bbf1d276603@intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <3b4d8c50-8a82-9110-bc6c-ffb6b50e6c0c@infradead.org>
-Date:   Thu, 17 Sep 2020 16:56:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1726621AbgIRCCG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 17 Sep 2020 22:02:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726618AbgIRCCF (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 17 Sep 2020 22:02:05 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69EE8235F9;
+        Fri, 18 Sep 2020 02:02:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600394525;
+        bh=S2yWY6GVlUKNXC6TiofSvJRC76+LiIQlEzBMael9vcE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PSulnH6vMTx/LJPCmJlPhlvYmnYCu9u/EWTO4EIksc0dYOcfYZTnVPU0PuCzM9yB9
+         mCDGRDCGkEhxi52rywR5qyMWLRpaRAWuYbkMLlz2IqhFufFZOcGmL94YOyvdEdzkbD
+         i9q94qXWU4qFuxJGaiGdhWO2FY/7CLAG1ZDH5b7g=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Satendra Singh Thakur <sst2005@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 046/330] dmaengine: mediatek: hsdma_probe: fixed a memory leak when devm_request_irq fails
+Date:   Thu, 17 Sep 2020 21:56:26 -0400
+Message-Id: <20200918020110.2063155-46-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200918020110.2063155-1-sashal@kernel.org>
+References: <20200918020110.2063155-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <84e1ec28-4a89-963a-49f6-3bbf1d276603@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 9/17/20 4:51 PM, Dave Jiang wrote:
-> 
-> 
-> On 9/17/2020 4:43 PM, Randy Dunlap wrote:
->> Hi,
->>
->> On 9/17/20 2:15 PM, Dave Jiang wrote:
->>>
->>> ---
->>>
->>> Dave Jiang (5):
->>>        x86/asm: move the raw asm in iosubmit_cmds512() to special_insns.h
->>>        x86/asm: add enqcmds() to support ENQCMDS instruction
->>>        dmaengine: idxd: add shared workqueue support
->>>        dmaengine: idxd: clean up descriptors with fault error
->>>        dmaengine: idxd: add ABI documentation for shared wq
->>>
->>
->> I don't see patch 3/5 in my inbox nor at https://lore.kernel.org/dmaengine/
->>
->> Did the email monster eat it?
-> 
-> Grrrrrr looks like Intel email server ate it. Everyone on cc list got it. But does not look like it made it to any of the mailing lists. I'll resend 3/5.
+From: Satendra Singh Thakur <sst2005@gmail.com>
 
-Got it. Thanks.
+[ Upstream commit 1ff95243257fad07290dcbc5f7a6ad79d6e703e2 ]
 
->>
->> thanks.
->>
->>>
->>>   Documentation/ABI/stable/sysfs-driver-dma-idxd |   14 ++
->>>   arch/x86/include/asm/io.h                      |   46 +++++---
->>>   arch/x86/include/asm/special_insns.h           |   17 +++
->>>   drivers/dma/Kconfig                            |   10 ++
->>>   drivers/dma/idxd/cdev.c                        |   49 ++++++++
->>>   drivers/dma/idxd/device.c                      |   91 ++++++++++++++-
->>>   drivers/dma/idxd/dma.c                         |    9 --
->>>   drivers/dma/idxd/idxd.h                        |   33 +++++-
->>>   drivers/dma/idxd/init.c                        |   92 ++++++++++++---
->>>   drivers/dma/idxd/irq.c                         |  143 ++++++++++++++++++++++--
->>>   drivers/dma/idxd/registers.h                   |   14 ++
->>>   drivers/dma/idxd/submit.c                      |   33 +++++-
->>>   drivers/dma/idxd/sysfs.c                       |  127 +++++++++++++++++++++
->>>   13 files changed, 608 insertions(+), 70 deletions(-)
->>>
->>> -- 
->>>
->>
+When devm_request_irq fails, currently, the function
+dma_async_device_unregister gets called. This doesn't free
+the resources allocated by of_dma_controller_register.
+Therefore, we have called of_dma_controller_free for this purpose.
 
+Signed-off-by: Satendra Singh Thakur <sst2005@gmail.com>
+Link: https://lore.kernel.org/r/20191109113523.6067-1-sst2005@gmail.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/dma/mediatek/mtk-hsdma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/dma/mediatek/mtk-hsdma.c b/drivers/dma/mediatek/mtk-hsdma.c
+index 1a2028e1c29e9..4c58da7421432 100644
+--- a/drivers/dma/mediatek/mtk-hsdma.c
++++ b/drivers/dma/mediatek/mtk-hsdma.c
+@@ -997,7 +997,7 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
+ 	if (err) {
+ 		dev_err(&pdev->dev,
+ 			"request_irq failed with err %d\n", err);
+-		goto err_unregister;
++		goto err_free;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, hsdma);
+@@ -1006,6 +1006,8 @@ static int mtk_hsdma_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
++err_free:
++	of_dma_controller_free(pdev->dev.of_node);
+ err_unregister:
+ 	dma_async_device_unregister(dd);
+ 
 -- 
-~Randy
+2.25.1
 

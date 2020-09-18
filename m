@@ -2,38 +2,38 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C79826EC04
-	for <lists+dmaengine@lfdr.de>; Fri, 18 Sep 2020 04:10:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6304526EC8F
+	for <lists+dmaengine@lfdr.de>; Fri, 18 Sep 2020 04:15:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgIRCJI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 17 Sep 2020 22:09:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60822 "EHLO mail.kernel.org"
+        id S1728848AbgIRCM4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 17 Sep 2020 22:12:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728232AbgIRCJG (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 17 Sep 2020 22:09:06 -0400
+        id S1728382AbgIRCMz (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 17 Sep 2020 22:12:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 416102395C;
-        Fri, 18 Sep 2020 02:09:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A20252388D;
+        Fri, 18 Sep 2020 02:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600394946;
-        bh=sCoAx39mIBIVh/PE74tXUB9qDhusIuNAtGdVETuLA5c=;
+        s=default; t=1600395174;
+        bh=+bQuNrwBC+2CCwgy9Vn+XlWdoQkontIttZ1dYvINHiU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q700KzYRjDjG0Cfo2tzpLN3jKVEk/MiI1MRWdaGa31G60ji2nfEpRE1EuMoPuCnAF
-         ya1FIu3NGtq0P0we/IBrMHCfJojKme2rS7K5TBlhqJst6R54kChcNorjhPR7R8xnVG
-         XQ6md0uf8v97asJMXLCOqYCFyvCxE9Wp3H94xfdI=
+        b=n2+3s9oPL7ZzWKUt5a8q//Q1tNZfCplvPCZX+AkGS1+GIVCXDduJCp4Aw9nEVoGUI
+         zpprunLXscb8NNJzSa7bj7DC8syUfll36lk5B2cEAtKARbMvEAV3rPHUhFb+O1EIve
+         nlpyhzsUhHEBbAyylF7KvbupnL3iw6HtiuTpvoAM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Matthias Fend <matthias.fend@wolfvision.net>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
         dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 053/206] dmaengine: zynqmp_dma: fix burst length configuration
-Date:   Thu, 17 Sep 2020 22:05:29 -0400
-Message-Id: <20200918020802.2065198-53-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 030/127] dmaengine: zynqmp_dma: fix burst length configuration
+Date:   Thu, 17 Sep 2020 22:10:43 -0400
+Message-Id: <20200918021220.2066485-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200918020802.2065198-1-sashal@kernel.org>
-References: <20200918020802.2065198-1-sashal@kernel.org>
+In-Reply-To: <20200918021220.2066485-1-sashal@kernel.org>
+References: <20200918021220.2066485-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,10 +60,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 15 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
-index 73de6a6179fcd..e002ff8413e2a 100644
+index 6d86d05e53aa1..66d6640766ed8 100644
 --- a/drivers/dma/xilinx/zynqmp_dma.c
 +++ b/drivers/dma/xilinx/zynqmp_dma.c
-@@ -127,10 +127,12 @@
+@@ -125,10 +125,12 @@
  /* Max transfer size per descriptor */
  #define ZYNQMP_DMA_MAX_TRANS_LEN	0x40000000
  
@@ -78,7 +78,7 @@ index 73de6a6179fcd..e002ff8413e2a 100644
  
  #define ZYNQMP_DMA_SRC_ISSUE_RST_VAL	0x1F
  
-@@ -536,17 +538,19 @@ static void zynqmp_dma_handle_ovfl_int(struct zynqmp_dma_chan *chan, u32 status)
+@@ -527,17 +529,19 @@ static void zynqmp_dma_handle_ovfl_int(struct zynqmp_dma_chan *chan, u32 status)
  
  static void zynqmp_dma_config(struct zynqmp_dma_chan *chan)
  {
@@ -101,7 +101,7 @@ index 73de6a6179fcd..e002ff8413e2a 100644
  	writel(val, chan->regs + ZYNQMP_DMA_DATA_ATTR);
  }
  
-@@ -562,8 +566,10 @@ static int zynqmp_dma_device_config(struct dma_chan *dchan,
+@@ -551,8 +555,10 @@ static int zynqmp_dma_device_config(struct dma_chan *dchan,
  {
  	struct zynqmp_dma_chan *chan = to_chan(dchan);
  
@@ -114,7 +114,7 @@ index 73de6a6179fcd..e002ff8413e2a 100644
  
  	return 0;
  }
-@@ -884,8 +890,8 @@ static int zynqmp_dma_chan_probe(struct zynqmp_dma_device *zdev,
+@@ -873,8 +879,8 @@ static int zynqmp_dma_chan_probe(struct zynqmp_dma_device *zdev,
  		return PTR_ERR(chan->regs);
  
  	chan->bus_width = ZYNQMP_DMA_BUS_WIDTH_64;

@@ -2,76 +2,95 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6240A272FB8
-	for <lists+dmaengine@lfdr.de>; Mon, 21 Sep 2020 18:59:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FB9D2735BA
+	for <lists+dmaengine@lfdr.de>; Tue, 22 Sep 2020 00:26:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbgIUQ7Z (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 21 Sep 2020 12:59:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40096 "EHLO mail.kernel.org"
+        id S1727742AbgIUW0D (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 21 Sep 2020 18:26:03 -0400
+Received: from mail.rusoil.net ([188.128.114.25]:45077 "EHLO mail.rusoil.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730308AbgIUQ7O (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 21 Sep 2020 12:59:14 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CAA5235FD;
-        Mon, 21 Sep 2020 16:59:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600707553;
-        bh=ilYPXYXOrK02dbgWO785dFtleHl2+7nPjk6K0R/PBvw=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=yyPOpwzx1pKltzf4H+v0LidZoBubumrt/74zHAY5TzeAVoIQ8re/YX4A1pDxLKPo6
-         Vv1/tJnpF8BhoP6or7Ck079oNkAaG4N9D7DU/T8PUoATLp0KQqEJ2DLkYD20jr0P0O
-         GwH9D2LvhnnnkrNBzbXQKA7gy9dil44xEFwmKaEQ=
-Date:   Mon, 21 Sep 2020 17:58:21 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     linux-spi@vger.kernel.org, Julia Lawall <Julia.Lawall@inria.fr>
-Cc:     linux-serial@vger.kernel.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-block@vger.kernel.org,
-        Yossi Leybovich <sleybo@amazon.com>,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-rdma@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        rds-devel@oss.oracle.com
-In-Reply-To: <1600601186-7420-1-git-send-email-Julia.Lawall@inria.fr>
-References: <1600601186-7420-1-git-send-email-Julia.Lawall@inria.fr>
-Subject: Re: [PATCH 00/14] drop double zeroing
-Message-Id: <160070750168.56292.17961674601916397869.b4-ty@kernel.org>
+        id S1726457AbgIUW0D (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 21 Sep 2020 18:26:03 -0400
+X-Greylist: delayed 400 seconds by postgrey-1.27 at vger.kernel.org; Mon, 21 Sep 2020 18:26:01 EDT
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.rusoil.net (Postfix) with ESMTP id 2ABC7408F9;
+        Tue, 22 Sep 2020 03:22:28 +0500 (YEKT)
+Received: from mail.rusoil.net ([127.0.0.1])
+        by localhost (mail.rusoil.net [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 4pPPl3fAkQzb; Tue, 22 Sep 2020 03:22:27 +0500 (YEKT)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.rusoil.net (Postfix) with ESMTP id 916FE40913;
+        Tue, 22 Sep 2020 03:22:26 +0500 (YEKT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rusoil.net 916FE40913
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rusoil.net;
+        s=maildkim; t=1600726946;
+        bh=6R3BgBYiA7fkqGiiNDuwPskBnpH9JXyNAW/l3ZEA+wY=;
+        h=Date:From:Message-ID:MIME-Version;
+        b=1ctHA/JHpi415R2YD+YVaHQ3CnCKHd2Aki1rdpl4AIQ2PrfIczq9dnu0vQ6Bl1sO+
+         9kImF2Paac/L/G+EB4eE9xh9b6POf8ijKeUecdYVhwKUK/JJSYor35/t58LM3j6C8A
+         3yFdazUerjIxXqt+4JMwMLO1/hhe69yS7gYxy2Wc=
+X-Virus-Scanned: amavisd-new at mail.rusoil.net
+Received: from mail.rusoil.net ([127.0.0.1])
+        by localhost (mail.rusoil.net [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 4XAT8uD0oL6y; Tue, 22 Sep 2020 03:22:26 +0500 (YEKT)
+Received: from mail.rusoil.net (mail.rusoil.net [172.16.7.34])
+        by mail.rusoil.net (Postfix) with ESMTP id 7D00840676;
+        Tue, 22 Sep 2020 03:22:24 +0500 (YEKT)
+Date:   Tue, 22 Sep 2020 03:22:24 +0500 (YEKT)
+From:   Blue Oak Mortgage and Loans <em@rusoil.net>
+Reply-To: Blue Oak Mortgage and Loans <info@bluelmtg.net>
+Message-ID: <1480524145.904787.1600726944446.JavaMail.zimbra@rusoil.net>
+Subject: Wir finanzieren Projekte und Unternehmen
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [192.210.183.69]
+X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF79 (Win)/8.8.12_GA_3794)
+Thread-Index: AObtMTgp+2KO2xoY9GcAzKpeUZ45jQ==
+Thread-Topic: Wir finanzieren Projekte und Unternehmen
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sun, 20 Sep 2020 13:26:12 +0200, Julia Lawall wrote:
-> sg_init_table zeroes its first argument, so the allocation of that argument
-> doesn't have to.
 
-Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+Dies ist ein Newsletter von Blue Oak Mortgage and Loans. Bitte melden Sie s=
+ich ab, wenn Sie keine E-Mail mehr von uns erhalten m=C3=B6chten.
 
-Thanks!
 
-[1/1] spi/topcliff-pch: drop double zeroing
-      commit: ca03dba30f2b8ff45a2972c6691e4c96d8c52b3b
+Eine kurze Einf=C3=BChrung.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+Wir sind ein f=C3=BChrendes Finanzierungsunternehmen in Europa. Wir finanzi=
+eren Startups / etablierte Unternehmen, finanzieren Gro=C3=9Fprojekte (Bau,=
+ Landwirtschaft, Immobilien und dergleichen) zu einem niedrigen Zinssatz vo=
+n 2% pro Jahr.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Darlehensverfahren
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+1. Sie m=C3=BCssen das Online-Bewerbungsformular ausf=C3=BCllen und eine or=
+dnungsgem=C3=A4=C3=9F unterschriebene Kopie an uns zur=C3=BCcksenden.
 
-Thanks,
-Mark
+2. M=C3=B6glicherweise m=C3=BCssen Sie Finanzdokumente als unterst=C3=BCtze=
+nden Nachweis f=C3=BCr die F=C3=A4higkeit zur R=C3=BCckzahlung von Krediten=
+ vorlegen.
+
+3. Wenn Ihr Darlehen genehmigt wurde, m=C3=BCssen Sie eine Versicherungsgar=
+antie f=C3=BCr die Darlehenssicherheit vorlegen. Wir empfehlen eine Versich=
+erungsgesellschaft. Sie sind allein verantwortlich f=C3=BCr die Zahlung und=
+ den Erwerb der Anleihe, die als Sicherheit dienen. Die H=C3=B6he der Anlei=
+he h=C3=A4ngt von Ihrem Darlehensbetrag ab. Die Versicherungsgesellschaft w=
+ird Sie durch den Prozess f=C3=BChren. (F=C3=BCr Gro=C3=9Fprojekte)
+
+4. Ihr =C3=9Cberweisungsprozess wird eingeleitet, sobald die Versicherungsa=
+nleihe =C3=BCberpr=C3=BCft wurde. Ihr Darlehensr=C3=BCckzahlungsplan wird i=
+m NC-Darlehensvertragsformular aufgef=C3=BChrt.
+
+Wenn die Bedingungen Sie beruhigen, k=C3=B6nnen Sie uns =C3=BCber die Whats=
+App-Nummer / E-Mail kontaktieren und auch unsere Website besuchen, um weite=
+re Informationen zu erhalten. Wir freuen uns darauf, von Ihnen zu h=C3=B6re=
+n.
+
+WhatsApp: + 90-552-365-3483
+E-Mail: info@bluelmtg.net

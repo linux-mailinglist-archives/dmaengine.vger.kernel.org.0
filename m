@@ -2,145 +2,94 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 199EA2741AC
+	by mail.lfdr.de (Postfix) with ESMTP id A57FA2741AD
 	for <lists+dmaengine@lfdr.de>; Tue, 22 Sep 2020 13:58:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgIVL6v (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        id S1726541AbgIVL6v (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
         Tue, 22 Sep 2020 07:58:51 -0400
-Received: from mga04.intel.com ([192.55.52.120]:58620 "EHLO mga04.intel.com"
+Received: from mga14.intel.com ([192.55.52.115]:20059 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726522AbgIVL6v (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        id S1726531AbgIVL6v (ORCPT <rfc822;dmaengine@vger.kernel.org>);
         Tue, 22 Sep 2020 07:58:51 -0400
-IronPort-SDR: oJP2D4efvVCZLKsu3qsVNGnz+1r8Ri5pHSmISo2eqElPqEF/FJC5gELiymT+IZJYABR1+kJJkk
- bUDJ/2kyWGsQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9751"; a="157968422"
+IronPort-SDR: JT9PJXv5re1V3eJckSRu+JEGHFL5lv1sFeU5+upCqjLfxdUi46TC2NVNjmZ7onZBpXC08StL0q
+ ppTRausYvwtQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9751"; a="159875893"
 X-IronPort-AV: E=Sophos;i="5.77,290,1596524400"; 
-   d="scan'208";a="157968422"
+   d="scan'208";a="159875893"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2020 04:58:50 -0700
-IronPort-SDR: 6rfafxLQRTt4LA9nzFMH+dcjJb/VjG1ACLwz2T27x1Y196QbCXu3Lh6fHXJuPKPKxizk3Mv0G9
- xmprAb9MZThA==
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2020 04:58:50 -0700
+IronPort-SDR: oaKOA+gkeR7ZpAhstnw7PKP0VdMyT29fgWeqY8p7iXfFxjh30M/tbIE2FBtUDCVK++FppYPAV7
+ 3la+DtsQzf7Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,290,1596524400"; 
-   d="scan'208";a="322191425"
+   d="scan'208";a="341995095"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 22 Sep 2020 04:58:49 -0700
+  by fmsmga002.fm.intel.com with ESMTP; 22 Sep 2020 04:58:49 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 25237166; Tue, 22 Sep 2020 14:58:47 +0300 (EEST)
+        id 30C77161; Tue, 22 Sep 2020 14:58:48 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
         Vinod Koul <vkoul@kernel.org>
-Cc:     Vladimir Murzin <vladimir.murzin@arm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v2 1/3] dmaengine: dmatest: Prevent to run on misconfigured channel
-Date:   Tue, 22 Sep 2020 14:58:45 +0300
-Message-Id: <20200922115847.30100-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 2/3] dmaengine: dmatest: Check list for emptiness before access its last entry
+Date:   Tue, 22 Sep 2020 14:58:46 +0300
+Message-Id: <20200922115847.30100-2-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200922115847.30100-1-andriy.shevchenko@linux.intel.com>
+References: <20200922115847.30100-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Vladimir Murzin <vladimir.murzin@arm.com>
+After writing a garbage to the channel we get an Oops in dmatest_chan_set()
+due to access to last entry in the empty list.
 
-Andy reported that commit 6b41030fdc79 ("dmaengine: dmatest:
-Restore default for channel") broke his scripts for the case
-where "busy" channel is used for configuration with expectation
-that run command would do nothing. Instead, behavior was
-(unintentionally) changed to treat such case as under-configuration
-and progress with defaults, i.e. run command would start a test
-with default setting for channel (which would use all channels).
+[  212.670672] BUG: unable to handle page fault for address: fffffff000000020
+[  212.677562] #PF: supervisor read access in kernel mode
+[  212.682702] #PF: error_code(0x0000) - not-present page
+...
+[  212.710074] RIP: 0010:dmatest_chan_set+0x149/0x2d0 [dmatest]
+[  212.715739] Code: e8 cc f9 ff ff 48 8b 1d 0d 55 00 00 48 83 7b 10 00 0f 84 63 01 00 00 48 c7 c7 d0 65 4d c0 e8 ee 4a f5 e1 48 89 c6 48 8b 43 10 <48> 8b 40 20 48 8b 78 58 48 85 ff 0f 84 f5 00 00 00 e8 b1 41 f5 e1
 
-Restore original behavior with tracking status of channel setter
-so we can distinguish between misconfigured and under-configured
-cases in run command and act accordingly.
+Fix this by checking list for emptiness before accessing its last entry.
 
-Fixes: 6b41030fdc79 ("dmaengine: dmatest: Restore default for channel")
-Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
-Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Fixes: d53513d5dc28 ("dmaengine: dmatest: Add support for multi channel testing")
+Cc: Vladimir Murzin <vladimir.murzin@arm.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
-v2: improve title and the commit message (Vinod), added tag (Peter)
- drivers/dma/dmatest.c | 26 +++++++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
+v2: added tag (Peter)
+ drivers/dma/dmatest.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-index b2790641370a..ac28d5eea913 100644
+index ac28d5eea913..f04f32bdf8f7 100644
 --- a/drivers/dma/dmatest.c
 +++ b/drivers/dma/dmatest.c
-@@ -129,6 +129,7 @@ struct dmatest_params {
-  * @nr_channels:	number of channels under test
-  * @lock:		access protection to the fields of this structure
-  * @did_init:		module has been initialized completely
-+ * @last_error:		test has faced configuration issues
-  */
- static struct dmatest_info {
- 	/* Test parameters */
-@@ -137,6 +138,7 @@ static struct dmatest_info {
- 	/* Internal state */
- 	struct list_head	channels;
- 	unsigned int		nr_channels;
-+	int			last_error;
- 	struct mutex		lock;
- 	bool			did_init;
- } test_info = {
-@@ -1202,10 +1204,22 @@ static int dmatest_run_set(const char *val, const struct kernel_param *kp)
- 		return ret;
- 	} else if (dmatest_run) {
- 		if (!is_threaded_test_pending(info)) {
--			pr_info("No channels configured, continue with any\n");
--			if (!is_threaded_test_run(info))
--				stop_threaded_test(info);
--			add_threaded_test(info);
-+			/*
-+			 * We have nothing to run. This can be due to:
-+			 */
-+			ret = info->last_error;
-+			if (ret) {
-+				/* 1) Misconfiguration */
-+				pr_err("Channel misconfigured, can't continue\n");
-+				mutex_unlock(&info->lock);
-+				return ret;
-+			} else {
-+				/* 2) We rely on defaults */
-+				pr_info("No channels configured, continue with any\n");
-+				if (!is_threaded_test_run(info))
-+					stop_threaded_test(info);
-+				add_threaded_test(info);
-+			}
- 		}
- 		start_threaded_tests(info);
- 	} else {
-@@ -1222,7 +1236,7 @@ static int dmatest_chan_set(const char *val, const struct kernel_param *kp)
- 	struct dmatest_info *info = &test_info;
- 	struct dmatest_chan *dtc;
- 	char chan_reset_val[20];
--	int ret = 0;
-+	int ret;
+@@ -1267,15 +1267,14 @@ static int dmatest_chan_set(const char *val, const struct kernel_param *kp)
+ 	add_threaded_test(info);
  
- 	mutex_lock(&info->lock);
- 	ret = param_set_copystring(val, kp);
-@@ -1277,12 +1291,14 @@ static int dmatest_chan_set(const char *val, const struct kernel_param *kp)
- 		goto add_chan_err;
- 	}
- 
-+	info->last_error = ret;
- 	mutex_unlock(&info->lock);
- 
- 	return ret;
- 
- add_chan_err:
- 	param_set_copystring(chan_reset_val, kp);
-+	info->last_error = ret;
- 	mutex_unlock(&info->lock);
- 
- 	return ret;
+ 	/* Check if channel was added successfully */
+-	dtc = list_last_entry(&info->channels, struct dmatest_chan, node);
+-
+-	if (dtc->chan) {
++	if (!list_empty(&info->channels)) {
+ 		/*
+ 		 * if new channel was not successfully added, revert the
+ 		 * "test_channel" string to the name of the last successfully
+ 		 * added channel. exception for when users issues empty string
+ 		 * to channel parameter.
+ 		 */
++		dtc = list_last_entry(&info->channels, struct dmatest_chan, node);
+ 		if ((strcmp(dma_chan_name(dtc->chan), strim(test_channel)) != 0)
+ 		    && (strcmp("", strim(test_channel)) != 0)) {
+ 			ret = -EINVAL;
 -- 
 2.28.0
 

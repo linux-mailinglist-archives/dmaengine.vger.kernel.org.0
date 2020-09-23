@@ -2,136 +2,103 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 833982756D7
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Sep 2020 13:08:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 915A9275BA3
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Sep 2020 17:22:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgIWLIq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 23 Sep 2020 07:08:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbgIWLIp (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 23 Sep 2020 07:08:45 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 909BFC0613CE;
-        Wed, 23 Sep 2020 04:08:45 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0d13006bfbbaac21a5376c.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:1300:6bfb:baac:21a5:376c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DBF6C1EC0445;
-        Wed, 23 Sep 2020 13:08:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1600859324;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=v8IZo3CWRXJtiTiLfrNSgkG9waQamx4FDxHZUEDGYM8=;
-        b=Vz2sK9dO9MXnh7NRaaeCAITabzPj8R505yEKcROShGBtiARdVsSwwW3dAGYhGDD6gXqcY0
-        aRxFYByKrTAWcwOGM8rur0sqoMNQwDqoJEpyodRqRsE+X6kFHZydPkkI28Ej0kD3PvNads
-        k6/KOxg37lv62T7IZFbAEDvjq3O5DEE=
-Date:   Wed, 23 Sep 2020 13:08:37 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
-        ashok.raj@intel.com, sanjay.k.kumar@intel.com,
-        fenghua.yu@intel.com, kevin.tian@intel.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/5] x86/asm: add enqcmds() to support ENQCMDS
- instruction
-Message-ID: <20200923110837.GH28545@zn.tnic>
-References: <160037680630.3777.16356270178889649944.stgit@djiang5-desk3.ch.intel.com>
- <160037732334.3777.8083106831110728138.stgit@djiang5-desk3.ch.intel.com>
+        id S1726647AbgIWPWm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 23 Sep 2020 11:22:42 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:34512 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbgIWPWm (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 23 Sep 2020 11:22:42 -0400
+X-Greylist: delayed 713 seconds by postgrey-1.27 at vger.kernel.org; Wed, 23 Sep 2020 11:22:39 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1600874558;
+        s=strato-dkim-0002; d=reintjes.nrw;
+        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=R7hI6d/NmZuNcg1vUXN4expafaD5dS9k1NOlJgVsfQ0=;
+        b=mKq3yxzIBoK6eXKDjSaCRr3BwBIqpDKeJr75f5YQmPBPRRn9qdkRISKeudlw+eJUaN
+        i9j0YoD7Nd07ieGLh8UqSmYZ1Ccml4PGsZ2Mglopdz9Hz5rLCJkN670J1l7AKyk9w16x
+        a5x5cVcgZWQk6FXpa0G8mlW7WSJEKPFpozzrnE9Mqlay09jPyJDrOXyUKIYtt6nlhpnO
+        Iws66XTKRoaWIH3voDt0xHa2loKeKKkr2KuI9gRfjll43rW7LApn0Q1chdN5eLyO3daW
+        Z1KVrRhdU65Y8/6yfAJtnadI1+vhAkdCKhH0qGquacG5znElBXtRT3qPa76R5ygpIUbq
+        FhJQ==
+X-RZG-AUTH: ":IGUXYVP6Ne1lB7nQNv+YSUx4qaxF0YAcTeeZr8criwvl+4OoAsy1YB7b8FzONHo5ckdw3KGGkZZ/Zu8="
+X-RZG-CLASS-ID: mo00
+Received: from [192.168.0.198]
+        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
+        with ESMTPSA id Y04b60w8NFAYy22
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 23 Sep 2020 17:10:34 +0200 (CEST)
+Subject: Re: [PATCH 00/14] drop double zeroing
+To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        Julia Lawall <Julia.Lawall@inria.fr>
+Cc:     linux-serial@vger.kernel.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-block@vger.kernel.org,
+        Yossi Leybovich <sleybo@amazon.com>,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-rdma@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        rds-devel@oss.oracle.com
+References: <1600601186-7420-1-git-send-email-Julia.Lawall@inria.fr>
+ <160070750168.56292.17961674601916397869.b4-ty@kernel.org>
+From:   Rolf Reintjes <lists2.rolf@reintjes.nrw>
+Message-ID: <c3b33526-936d-ffa4-c301-4d0485822be1@reintjes.nrw>
+Date:   Wed, 23 Sep 2020 17:10:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <160037732334.3777.8083106831110728138.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <160070750168.56292.17961674601916397869.b4-ty@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Sep 17, 2020 at 02:15:23PM -0700, Dave Jiang wrote:
-> Add enqcmds() in x86 io.h instead of special_insns.h.
+Hello Mark,
 
-Why? It is an asm wrapper for a special instruction.
-
-> MOVDIR64B
-> instruction can be used for other purposes. A wrapper was introduced
-> in io.h for its command submission usage. ENQCMDS has a single
-> purpose of submit 64-byte commands to supported devices and should
-> be called directly.
+On 21.09.20 18:58, Mark Brown wrote:
+> On Sun, 20 Sep 2020 13:26:12 +0200, Julia Lawall wrote:
+>> sg_init_table zeroes its first argument, so the allocation of that argument
+>> doesn't have to.
 > 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> ---
->  arch/x86/include/asm/io.h |   29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
+> Applied to
 > 
-> diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
-> index d726459d08e5..b7af0bf8a018 100644
-> --- a/arch/x86/include/asm/io.h
-> +++ b/arch/x86/include/asm/io.h
-> @@ -424,4 +424,33 @@ static inline void iosubmit_cmds512(void __iomem *dst, const void *src,
->  	}
->  }
->  
-> +/**
-> + * enqcmds - copy a 512 bits data unit to single MMIO location
+>     https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+> 
+> Thanks!
 
-Your #319433 doc says
+I do not understand which of the 14 patches you applied. Your mail 
+responds to the 00/14 mail.
 
-"ENQCMDS — Enqueue Command Supervisor"
+Rolf
 
-Now *how* that enqueueing is done you can explain in the comment below.
+> 
+> [1/1] spi/topcliff-pch: drop double zeroing
+>        commit: ca03dba30f2b8ff45a2972c6691e4c96d8c52b3b
+> 
+> All being well this means that it will be integrated into the linux-next
+> tree (usually sometime in the next 24 hours) and sent to Linus during
+> the next merge window (or sooner if it is a bug fix), however if
+> problems are discovered then the patch may be dropped or reverted.
+> 
+> You may get further e-mails resulting from automated or manual testing
+> and review of the tree, please engage with people reporting problems and
+> send followup patches addressing any issues that are reported if needed.
+> 
+> If any updates are required or you are submitting further changes they
+> should be sent as incremental updates against current git, existing
+> patches will not be replaced.
+> 
+> Please add any relevant lists and maintainers to the CCs when replying
+> to this mail.
+> 
+> Thanks,
+> Mark
+> 
 
-> + * @dst: destination, in MMIO space (must be 512-bit aligned)
-> + * @src: source
-> + *
-> + * Submit data from kernel space to MMIO space, in a unit of 512 bits.
-> + * Order of data access is not guaranteed, nor is a memory barrier
-> + * performed afterwards. The command returns false (0) on failure, and true (1)
-> + * on success.
-
-The command or the function?
-
-From what I see below, the instruction sets ZF=1 to denote that it needs
-to be retried and ZF=0 means success, as the doc says. And in good UNIX
-tradition, 0 means usually success and !0 failure.
-
-So why are you flipping that?
-
-> + * Warning: Do not use this helper unless your driver has checked that the CPU
-> + * instruction is supported on the platform.
-> + */
-> +static inline bool enqcmds(void __iomem *dst, const void *src)
-> +{
-> +	bool retry;
-> +
-> +	/* ENQCMDS [rdx], rax */
-> +	asm volatile(".byte 0xf3, 0x0f, 0x38, 0xf8, 0x02, 0x66, 0x90\t\n"
-								    ^^^^
-No need for those last two chars.
-
-> +		     CC_SET(z)
-> +		     : CC_OUT(z) (retry)
-> +		     : "a" (dst), "d" (src));
-
-<---- newline here.
-
-> +	/* Submission failure is indicated via EFLAGS.ZF=1 */
-> +	if (retry)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
->  #endif /* _ASM_X86_IO_H */
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette

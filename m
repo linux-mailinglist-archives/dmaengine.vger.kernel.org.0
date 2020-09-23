@@ -2,86 +2,102 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2B6B275B62
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Sep 2020 17:17:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11A1F275C3F
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Sep 2020 17:43:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgIWPRP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 23 Sep 2020 11:17:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60766 "EHLO mail.kernel.org"
+        id S1726504AbgIWPnQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 23 Sep 2020 11:43:16 -0400
+Received: from mga02.intel.com ([134.134.136.20]:1063 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726156AbgIWPRP (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 23 Sep 2020 11:17:15 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6077C2075B;
-        Wed, 23 Sep 2020 15:17:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600874234;
-        bh=/QQofHRADGAYxOtJIce3d38QkMvme+6u661AK0sTIww=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qaL+99AxNSM+PUkApT/4Pupcbe3cWXnIOAQs/ZT35oiBfgpa53MHX/m6TMpBock3a
-         fQSnODIgnUVdnSkWJ0pBplNyHoTqkHuo7hhaFUgOEQ4u+Awe/y3f+CYmaRRBSsJrRv
-         ycipz9I2nQvfISAkNRMDRLNIxu8SAq09SP1ymhKs=
-Date:   Wed, 23 Sep 2020 16:16:20 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rolf Reintjes <lists2.rolf@reintjes.nrw>
-Cc:     linux-spi@vger.kernel.org, Julia Lawall <Julia.Lawall@inria.fr>,
-        linux-serial@vger.kernel.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-block@vger.kernel.org,
-        Yossi Leybovich <sleybo@amazon.com>,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-rdma@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        rds-devel@oss.oracle.com
-Subject: Re: [PATCH 00/14] drop double zeroing
-Message-ID: <20200923151620.GC5707@sirena.org.uk>
-References: <1600601186-7420-1-git-send-email-Julia.Lawall@inria.fr>
- <160070750168.56292.17961674601916397869.b4-ty@kernel.org>
- <c3b33526-936d-ffa4-c301-4d0485822be1@reintjes.nrw>
+        id S1726156AbgIWPnN (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 23 Sep 2020 11:43:13 -0400
+IronPort-SDR: Dt5xNlbbQCH4XqrBZziEIPiHRifNNRg9bZwDqXVp9AUPg9joRUBK71fYiWpuz4y6AxXnke+1qf
+ JGj8jzOqp3rQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9753"; a="148579461"
+X-IronPort-AV: E=Sophos;i="5.77,293,1596524400"; 
+   d="scan'208";a="148579461"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2020 08:43:13 -0700
+IronPort-SDR: 2AZ0m9Y2dPtWynb9Gm8YNyv4Ff5NKf4Ice95TNKKFoyEmiLaf1Xakefnk5FaCt2nZ19EOCjGdU
+ K3HQV1dscf3A==
+X-IronPort-AV: E=Sophos;i="5.77,293,1596524400"; 
+   d="scan'208";a="486484542"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.218.1]) ([10.212.218.1])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2020 08:43:12 -0700
+Subject: Re: [PATCH v4 1/5] x86/asm: move the raw asm in iosubmit_cmds512() to
+ special_insns.h
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
+        ashok.raj@intel.com, sanjay.k.kumar@intel.com,
+        fenghua.yu@intel.com, kevin.tian@intel.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <160037680630.3777.16356270178889649944.stgit@djiang5-desk3.ch.intel.com>
+ <160037731654.3777.18071122574577972463.stgit@djiang5-desk3.ch.intel.com>
+ <20200923104158.GG28545@zn.tnic>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <c38406b7-f1d1-35d8-8015-bacce7a52226@intel.com>
+Date:   Wed, 23 Sep 2020 08:43:11 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="NU0Ex4SbNnrxsi6C"
-Content-Disposition: inline
-In-Reply-To: <c3b33526-936d-ffa4-c301-4d0485822be1@reintjes.nrw>
-X-Cookie: This report is filled with omissions.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200923104158.GG28545@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
---NU0Ex4SbNnrxsi6C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Wed, Sep 23, 2020 at 05:10:33PM +0200, Rolf Reintjes wrote:
-> On 21.09.20 18:58, Mark Brown wrote:
+On 9/23/2020 3:41 AM, Borislav Petkov wrote:
+>> Subject: Re: [PATCH v4 1/5] x86/asm: move the raw asm in iosubmit_cmds512() to special_insns.h
+> 
+> Start patch name with a capital letter: "Move the asm definition.."
+> 
+> Also, calling stuff "raw" and "core" is misleading in the kernel context
+> - you wanna say simply: "Carve out a generic movdir64b() helper... "
 
-> I do not understand which of the 14 patches you applied. Your mail responds
-> to the 00/14 mail.
+Ok I will update
 
-As the mail you're replying to says:
+> 
+> On Thu, Sep 17, 2020 at 02:15:16PM -0700, Dave Jiang wrote:
+>> diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+>> index 59a3e13204c3..7bc8e714f37e 100644
+>> --- a/arch/x86/include/asm/special_insns.h
+>> +++ b/arch/x86/include/asm/special_insns.h
+>> @@ -234,6 +234,23 @@ static inline void clwb(volatile void *__p)
+>>   
+>>   #define nop() asm volatile ("nop")
+>>   
+>> +static inline void movdir64b(void *__dst, const void *src)
+> 
+> Make __dst be the function local variable name and keep "dst", i.e.,
+> without the underscores, the function parameter name.
 
-> > [1/1] spi/topcliff-pch: drop double zeroing
-> >        commit: ca03dba30f2b8ff45a2972c6691e4c96d8c52b3b
+Ok will fix
 
---NU0Ex4SbNnrxsi6C
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9rZsMACgkQJNaLcl1U
-h9AxAgf/UlZBlBEQmArmMghyqM+HNmgNqZcFWWNnNQSmBBrgl8128+pLwAgIeZLw
-0l6J3hL0JAr1ozAMpm1RGS/xj2CD8a6QFiRw+9wAgL9eY3DAdognRwtwLJlW6zq3
-nj2VF+7+R6LhZGxqub8TnxUZLSdlop3wn9ZuAnTRZjjhPq2iidr4iYPWYsGqo+j5
-svVy+eYILC3/Y6X31PpT2OXujQXkrrCGlONZz2ieOMTLSLNQhL8pZh8tkJB9s/F5
-U60+SPDeI7yrVh6k5/iCldI5JHQyjXAmHza4R6BzKTc6kgSDvUlzrVOZxw1aaGy+
-EFLE4qdwQYEPaeRMZ+XVpSUbf3dGUw==
-=Rrao
------END PGP SIGNATURE-----
-
---NU0Ex4SbNnrxsi6C--
+> 
+>> +	/*
+>> +	 * Note that this isn't an "on-stack copy", just definition of "dst"
+>> +	 * as a pointer to 64-bytes of stuff that is going to be overwritten.
+>> +	 * In the MOVDIR64B case that may be needed as you can use the
+>> +	 * MOVDIR64B instruction to copy arbitrary memory around. This trick
+>> +	 * lets the compiler know how much gets clobbered.
+>> +	 */
+>> +	volatile struct { char _[64]; } *dst = __dst;
+>> +
+>> +	/* MOVDIR64B [rdx], rax */
+>> +	asm volatile(".byte 0x66, 0x0f, 0x38, 0xf8, 0x02"
+>> +		     : "=m" (dst)
+>> +		     : "d" (src), "a" (dst));
+>> +}
+>> +
+>>   #endif /* __KERNEL__ */
+>>   
+>>   #endif /* _ASM_X86_SPECIAL_INSNS_H */
+>>
+> 

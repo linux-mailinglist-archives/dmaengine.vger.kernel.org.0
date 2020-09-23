@@ -2,33 +2,34 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57DB2275688
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Sep 2020 12:42:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 833982756D7
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Sep 2020 13:08:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgIWKmI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 23 Sep 2020 06:42:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54932 "EHLO
+        id S1726420AbgIWLIq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 23 Sep 2020 07:08:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgIWKmD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 23 Sep 2020 06:42:03 -0400
+        with ESMTP id S1726332AbgIWLIp (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 23 Sep 2020 07:08:45 -0400
 Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CBB6C0613CE
-        for <dmaengine@vger.kernel.org>; Wed, 23 Sep 2020 03:42:03 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0d1300e5068c8a3292d31d.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:1300:e506:8c8a:3292:d31d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 909BFC0613CE;
+        Wed, 23 Sep 2020 04:08:45 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0d13006bfbbaac21a5376c.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:1300:6bfb:baac:21a5:376c])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 925411EC0409;
-        Wed, 23 Sep 2020 12:42:00 +0200 (CEST)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DBF6C1EC0445;
+        Wed, 23 Sep 2020 13:08:43 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1600857720;
+        t=1600859324;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=mZ44VK00oyAW9zTeN7/p+FrZ3CRlHQjymafdlc3xK8o=;
-        b=L/wQbhB7bwaUyRmOBDJhYFkrEnTmEvJQum8y3w4RbwnwF1lUFwzQvniPc8VfMiKuxAQV2V
-        /XJKOThKGtI4/rULGRA/QkKkOb0m2riO8fblOBba5KY6U9AMFKN9TE2Z1VJz0IpK4DpEWM
-        9WsSq/09TLxvAqYmpYTfBsVr6qOiH2Q=
-Date:   Wed, 23 Sep 2020 12:41:58 +0200
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=v8IZo3CWRXJtiTiLfrNSgkG9waQamx4FDxHZUEDGYM8=;
+        b=Vz2sK9dO9MXnh7NRaaeCAITabzPj8R505yEKcROShGBtiARdVsSwwW3dAGYhGDD6gXqcY0
+        aRxFYByKrTAWcwOGM8rur0sqoMNQwDqoJEpyodRqRsE+X6kFHZydPkkI28Ej0kD3PvNads
+        k6/KOxg37lv62T7IZFbAEDvjq3O5DEE=
+Date:   Wed, 23 Sep 2020 13:08:37 +0200
 From:   Borislav Petkov <bp@alien8.de>
 To:     Dave Jiang <dave.jiang@intel.com>
 Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
@@ -36,59 +37,98 @@ Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
         ashok.raj@intel.com, sanjay.k.kumar@intel.com,
         fenghua.yu@intel.com, kevin.tian@intel.com,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] x86/asm: move the raw asm in iosubmit_cmds512()
- to special_insns.h
-Message-ID: <20200923104158.GG28545@zn.tnic>
+Subject: Re: [PATCH v4 2/5] x86/asm: add enqcmds() to support ENQCMDS
+ instruction
+Message-ID: <20200923110837.GH28545@zn.tnic>
 References: <160037680630.3777.16356270178889649944.stgit@djiang5-desk3.ch.intel.com>
- <160037731654.3777.18071122574577972463.stgit@djiang5-desk3.ch.intel.com>
+ <160037732334.3777.8083106831110728138.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <160037731654.3777.18071122574577972463.stgit@djiang5-desk3.ch.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <160037732334.3777.8083106831110728138.stgit@djiang5-desk3.ch.intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-> Subject: Re: [PATCH v4 1/5] x86/asm: move the raw asm in iosubmit_cmds512() to special_insns.h
+On Thu, Sep 17, 2020 at 02:15:23PM -0700, Dave Jiang wrote:
+> Add enqcmds() in x86 io.h instead of special_insns.h.
 
-Start patch name with a capital letter: "Move the asm definition.."
+Why? It is an asm wrapper for a special instruction.
 
-Also, calling stuff "raw" and "core" is misleading in the kernel context
-- you wanna say simply: "Carve out a generic movdir64b() helper... "
-
-On Thu, Sep 17, 2020 at 02:15:16PM -0700, Dave Jiang wrote:
-> diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
-> index 59a3e13204c3..7bc8e714f37e 100644
-> --- a/arch/x86/include/asm/special_insns.h
-> +++ b/arch/x86/include/asm/special_insns.h
-> @@ -234,6 +234,23 @@ static inline void clwb(volatile void *__p)
+> MOVDIR64B
+> instruction can be used for other purposes. A wrapper was introduced
+> in io.h for its command submission usage. ENQCMDS has a single
+> purpose of submit 64-byte commands to supported devices and should
+> be called directly.
+> 
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> ---
+>  arch/x86/include/asm/io.h |   29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
+> index d726459d08e5..b7af0bf8a018 100644
+> --- a/arch/x86/include/asm/io.h
+> +++ b/arch/x86/include/asm/io.h
+> @@ -424,4 +424,33 @@ static inline void iosubmit_cmds512(void __iomem *dst, const void *src,
+>  	}
+>  }
 >  
->  #define nop() asm volatile ("nop")
->  
-> +static inline void movdir64b(void *__dst, const void *src)
+> +/**
+> + * enqcmds - copy a 512 bits data unit to single MMIO location
 
-Make __dst be the function local variable name and keep "dst", i.e.,
-without the underscores, the function parameter name.
+Your #319433 doc says
 
-> +	/*
-> +	 * Note that this isn't an "on-stack copy", just definition of "dst"
-> +	 * as a pointer to 64-bytes of stuff that is going to be overwritten.
-> +	 * In the MOVDIR64B case that may be needed as you can use the
-> +	 * MOVDIR64B instruction to copy arbitrary memory around. This trick
-> +	 * lets the compiler know how much gets clobbered.
-> +	 */
-> +	volatile struct { char _[64]; } *dst = __dst;
+"ENQCMDS — Enqueue Command Supervisor"
+
+Now *how* that enqueueing is done you can explain in the comment below.
+
+> + * @dst: destination, in MMIO space (must be 512-bit aligned)
+> + * @src: source
+> + *
+> + * Submit data from kernel space to MMIO space, in a unit of 512 bits.
+> + * Order of data access is not guaranteed, nor is a memory barrier
+> + * performed afterwards. The command returns false (0) on failure, and true (1)
+> + * on success.
+
+The command or the function?
+
+From what I see below, the instruction sets ZF=1 to denote that it needs
+to be retried and ZF=0 means success, as the doc says. And in good UNIX
+tradition, 0 means usually success and !0 failure.
+
+So why are you flipping that?
+
+> + * Warning: Do not use this helper unless your driver has checked that the CPU
+> + * instruction is supported on the platform.
+> + */
+> +static inline bool enqcmds(void __iomem *dst, const void *src)
+> +{
+> +	bool retry;
 > +
-> +	/* MOVDIR64B [rdx], rax */
-> +	asm volatile(".byte 0x66, 0x0f, 0x38, 0xf8, 0x02"
-> +		     : "=m" (dst)
-> +		     : "d" (src), "a" (dst));
+> +	/* ENQCMDS [rdx], rax */
+> +	asm volatile(".byte 0xf3, 0x0f, 0x38, 0xf8, 0x02, 0x66, 0x90\t\n"
+								    ^^^^
+No need for those last two chars.
+
+> +		     CC_SET(z)
+> +		     : CC_OUT(z) (retry)
+> +		     : "a" (dst), "d" (src));
+
+<---- newline here.
+
+> +	/* Submission failure is indicated via EFLAGS.ZF=1 */
+> +	if (retry)
+> +		return false;
+> +
+> +	return true;
 > +}
 > +
->  #endif /* __KERNEL__ */
->  
->  #endif /* _ASM_X86_SPECIAL_INSNS_H */
-> 
+>  #endif /* _ASM_X86_IO_H */
+
+Thx.
 
 -- 
 Regards/Gruss,

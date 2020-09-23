@@ -2,82 +2,72 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FD23274EE7
-	for <lists+dmaengine@lfdr.de>; Wed, 23 Sep 2020 04:19:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3B09274FC6
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Sep 2020 06:18:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgIWCTA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 22 Sep 2020 22:19:00 -0400
-Received: from mga05.intel.com ([192.55.52.43]:35873 "EHLO mga05.intel.com"
+        id S1726832AbgIWESK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 23 Sep 2020 00:18:10 -0400
+Received: from hermes.cta.br ([161.24.235.5]:59276 "EHLO hermes.cta.br"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727032AbgIWCTA (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 22 Sep 2020 22:19:00 -0400
-IronPort-SDR: AvQELZt6Pqboxlg3fCSkjJ9qI7PTEt5t+aCUepr/+GdhWNE7KvSCeYkDuOcysCrW/ng4NFNhrF
- yNWPaNP2Pxsw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9752"; a="245592619"
-X-IronPort-AV: E=Sophos;i="5.77,292,1596524400"; 
-   d="scan'208";a="245592619"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2020 19:18:59 -0700
-IronPort-SDR: X/LPQXKVl1RCBoj+7HpbXxnvDLRkutEO5WLKtk7OmldHkKfUpUW2F41eLgRAvP9VYfaF6cEYu4
- l3DdlIPU+eQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,292,1596524400"; 
-   d="scan'208";a="511453312"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by fmsmga005.fm.intel.com with ESMTP; 22 Sep 2020 19:18:56 -0700
-From:   Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>
-To:     dmaengine@vger.kernel.org, vkoul@kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        chuanhua.lei@linux.intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, peter.ujfalusi@ti.com,
-        mallikarjunax.reddy@linux.intel.com, malliamireddy009@gmail.com
-Subject: [PATCH v7 0/2] Add Intel LGM soc DMA support
-Date:   Wed, 23 Sep 2020 10:18:43 +0800
-Message-Id: <cover.1600827061.git.mallikarjunax.reddy@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
+        id S1726448AbgIWESK (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 23 Sep 2020 00:18:10 -0400
+X-Greylist: delayed 606 seconds by postgrey-1.27 at vger.kernel.org; Wed, 23 Sep 2020 00:18:09 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by hermes.cta.br (Postfix) with ESMTP id C453C16E62C6;
+        Wed, 23 Sep 2020 01:04:23 -0300 (-03)
+Received: from hermes.cta.br ([127.0.0.1])
+        by localhost (hermes.cta.br [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Rj8JgIFaeCRt; Wed, 23 Sep 2020 01:04:23 -0300 (-03)
+Received: from localhost (localhost [127.0.0.1])
+        by hermes.cta.br (Postfix) with ESMTP id 7485916E6117;
+        Wed, 23 Sep 2020 01:03:28 -0300 (-03)
+DKIM-Filter: OpenDKIM Filter v2.10.3 hermes.cta.br 7485916E6117
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cta.br;
+        s=50824260-A46F-11E8-B5E3-16F5207DEC71; t=1600833809;
+        bh=PEgy+RpcsckcVXxslQn6d+tc//P81+6V7lvSU9dRFp0=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=HTgOn+uK8zfNicsq4WziFqRjAck5JI3qPYA1tSXn6CKXVAKc1agN0Fj/wKsIw4Lml
+         2KUWYZ0GQYqVVLoJjIRKa1e4Aj0+4mqtUFBgPj5h6gvKX3EYmTT7UrfsFlAT8B70HJ
+         fIOKiK6Co6aRQMgxT15Y9TNHapp+Fum2HenmrSSxORHU1apYyQMNHjsBZpSxW0G/Bv
+         uoqoKUUMJbqNwQfnHSaNdGvSEmEzbrf+Lz/j2uKMkIAhADfn4DCk8p7YmolezE9WSO
+         BPUWIf7dosfU+0PtSccNSjfr5Oa0+jA4hQBfGfs+t/Y0gBoXWsbckij+6B73KyS+QN
+         YzCPC0abnNNmQ==
+X-Virus-Scanned: amavisd-new at cta.br
+Received: from hermes.cta.br ([127.0.0.1])
+        by localhost (hermes.cta.br [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id lit_jsJrkW5a; Wed, 23 Sep 2020 01:03:28 -0300 (-03)
+Received: from [10.120.212.214] (unknown [105.12.3.179])
+        by hermes.cta.br (Postfix) with ESMTPSA id 122F716E5DAF;
+        Wed, 23 Sep 2020 01:02:42 -0300 (-03)
+Content-Type: text/plain; charset="iso-8859-1"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: spende von 2,000,000 euro
+To:     Recipients <scco@cta.br>
+From:   ''Tayeb souami'' <scco@cta.br>
+Date:   Wed, 23 Sep 2020 06:04:57 +0200
+Reply-To: Tayebsouam.spende@gmail.com
+Message-Id: <20200923040243.122F716E5DAF@hermes.cta.br>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add DMA controller driver for Lightning Mountain(LGM) family of SoCs.
+Hallo mein lieber Freund
+                                  Mein Name ist Tayeb Souami aus New Jersey=
+ in Amerika und ich habe den America Lottery Jackpot von 315 Millionen Euro=
+ gewonnen. Ich habe mich entschlossen, die Summe von 2.000.000 Euro an f=FC=
+nf gl=FCckliche Personen zu spenden, und Sie wurden als einer der Beg=FCnst=
+igten ausgew=E4hlt. Bitte klicken Sie auf diesen Link, um mehr =FCber meine=
+n Gewinn zu erfahren.
 
-The main function of the DMA controller is the transfer of data from/to any
-DPlus compliant peripheral to/from the memory. A memory to memory copy
-capability can also be configured.
-This ldma driver is used for configure the device and channnels for data
-and control paths.
 
-These controllers provide DMA capabilities for a variety of on-chip
-devices such as SSC, HSNAND and GSWIP.
+UHR MICH HIER: https://www.youtube.com/watch?v=3DZ6ui8ZDQ6Ks
 
--------------
-Future Plans:
--------------
-LGM SOC also supports Hardware Memory Copy engine.
-The role of the HW Memory copy engine is to offload memory copy operations
-from the CPU.
+Bitte kontaktieren Sie mich =FCber diese E-Mail: Tayebsouam.spende@gmail.com
 
-Amireddy Mallikarjuna reddy (2):
-  dt-bindings: dma: Add bindings for intel LGM SOC
-  Add Intel LGM soc DMA support.
 
- .../devicetree/bindings/dma/intel,ldma.yaml        |  135 ++
- drivers/dma/Kconfig                                |    2 +
- drivers/dma/Makefile                               |    1 +
- drivers/dma/lgm/Kconfig                            |    9 +
- drivers/dma/lgm/Makefile                           |    2 +
- drivers/dma/lgm/lgm-dma.c                          | 1765 ++++++++++++++++++++
- include/linux/dma/lgm_dma.h                        |   27 +
- 7 files changed, 1941 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/intel,ldma.yaml
- create mode 100644 drivers/dma/lgm/Kconfig
- create mode 100644 drivers/dma/lgm/Makefile
- create mode 100644 drivers/dma/lgm/lgm-dma.c
- create mode 100644 include/linux/dma/lgm_dma.h
+Ich hoffe, Sie und Ihre Familie gl=FCcklich zu machen.
 
--- 
-2.11.0
-
+Gr=FC=DFe
+Herr Tayeb Souami

@@ -2,66 +2,71 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B49F277B47
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Sep 2020 23:51:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C28E4277B78
+	for <lists+dmaengine@lfdr.de>; Fri, 25 Sep 2020 00:05:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbgIXVvq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 24 Sep 2020 17:51:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbgIXVvq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 24 Sep 2020 17:51:46 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1995CC0613CE;
-        Thu, 24 Sep 2020 14:51:46 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0c9500ccec5e13992ce18c.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:9500:ccec:5e13:992c:e18c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5DFE31EC02C1;
-        Thu, 24 Sep 2020 23:51:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1600984304;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=1OtBo2GUZiV4IvRElli6mq7TFUHXkk4b+JcoVE16cQY=;
-        b=MC8WjBiSQ2rcKUMU/3mYOsJ2nFzPcP7LEts4DD7pxQjBCQgK0zySG51ZPhlseH7Af0YFEF
-        hseoFbHwM5UWF+mtvFmYsQrVhI1cAlMvobSbjI+OvwbdoeuPfVRRV7Uw+bX1xr9WhhXPNv
-        krhkIU2rr/SJgMCsFifgIvY1M/mkYJM=
-Date:   Thu, 24 Sep 2020 23:51:36 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dave Jiang <dave.jiang@intel.com>
+        id S1726662AbgIXWFy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 24 Sep 2020 18:05:54 -0400
+Received: from mga06.intel.com ([134.134.136.31]:46631 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726702AbgIXWFw (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 24 Sep 2020 18:05:52 -0400
+IronPort-SDR: FGmcqjYZTPQ1qH/MCUqmH8gCgVQD3NjaiNhZQatO93qpCDKsUQAZV5J9gUKz6h2lSEGGqgE92J
+ iGgmME5krYxA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9754"; a="222952993"
+X-IronPort-AV: E=Sophos;i="5.77,299,1596524400"; 
+   d="scan'208";a="222952993"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2020 15:05:51 -0700
+IronPort-SDR: Oezyrdj/M3l0gJXPKkRKciKgrwvoJBY2QePT600tfvRabNY+6iI7vPej8IgrW/DHLoq49L+HGR
+ IxzFX0ltXvrA==
+X-IronPort-AV: E=Sophos;i="5.77,299,1596524400"; 
+   d="scan'208";a="336185644"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.218.169]) ([10.212.218.169])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2020 15:05:50 -0700
+Subject: Re: [PATCH v6 0/5] Add shared workqueue support for idxd driver
+To:     Borislav Petkov <bp@alien8.de>
 Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
         dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
         ashok.raj@intel.com, fenghua.yu@intel.com, kevin.tian@intel.com,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/5] Add shared workqueue support for idxd driver
-Message-ID: <20200924215136.GS5030@zn.tnic>
 References: <20200924180041.34056-1-dave.jiang@intel.com>
  <a2a6f147-c4ad-a225-e348-b074a8017a10@intel.com>
+ <20200924215136.GS5030@zn.tnic>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <71a1831b-b57f-610f-70b6-7d42cb889f20@intel.com>
+Date:   Thu, 24 Sep 2020 15:05:49 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <a2a6f147-c4ad-a225-e348-b074a8017a10@intel.com>
+In-Reply-To: <20200924215136.GS5030@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Sep 24, 2020 at 02:32:35PM -0700, Dave Jiang wrote:
-> Hi Vinod,
-> Looks like we are cleared on the x86 patches for this series with sign offs
-> from maintainer Boris. Please consider the series for 5.10 inclusion. Thank
-> you!
 
-As I said here, I'd strongly suggest we do this:
 
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org/thread/5FKNWNCCRV3AXUAEXUGQFF4EDQNANF3F/
+On 9/24/2020 2:51 PM, Borislav Petkov wrote:
+> On Thu, Sep 24, 2020 at 02:32:35PM -0700, Dave Jiang wrote:
+>> Hi Vinod,
+>> Looks like we are cleared on the x86 patches for this series with sign offs
+>> from maintainer Boris. Please consider the series for 5.10 inclusion. Thank
+>> you!
+> 
+> As I said here, I'd strongly suggest we do this:
+> 
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org/thread/5FKNWNCCRV3AXUAEXUGQFF4EDQNANF3F/
+> 
+> and Vinod should merge the x86/pasid branch. Otherwise is his branch
+> and incomplete you could not have tested it properly.
+> 
 
-and Vinod should merge the x86/pasid branch. Otherwise is his branch
-and incomplete you could not have tested it properly.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks Boris. Locally I have based on the latest dmaengine/next branch, merged 
+in the x86/pasid branch, and then applied the series on top for testing. But 
+yes, if Vinod accepts the series into his dmaengine/next tree, we will need all 
+the parts for testing.

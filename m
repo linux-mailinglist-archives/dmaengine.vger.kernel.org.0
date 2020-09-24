@@ -2,48 +2,44 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F1BD277AF5
-	for <lists+dmaengine@lfdr.de>; Thu, 24 Sep 2020 23:15:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A1C8277B13
+	for <lists+dmaengine@lfdr.de>; Thu, 24 Sep 2020 23:32:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbgIXVPO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 24 Sep 2020 17:15:14 -0400
-Received: from mga06.intel.com ([134.134.136.31]:42526 "EHLO mga06.intel.com"
+        id S1726205AbgIXVci (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 24 Sep 2020 17:32:38 -0400
+Received: from mga05.intel.com ([192.55.52.43]:59500 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725208AbgIXVPO (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 24 Sep 2020 17:15:14 -0400
-IronPort-SDR: 9/EG00OT+djQ0vQV9pP7pX4ag7yPfhYjjtMBnfYq8HbG0yfgJbjrmK8Du6xAH4yhC8i62mSSXl
- NMSL2P4p4ZxQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9754"; a="222942021"
+        id S1725208AbgIXVci (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 24 Sep 2020 17:32:38 -0400
+IronPort-SDR: ZKQQDHyhOmo6VO7wNhwnep4n8s/yVNUqPhK+b5KvLCdjbPqJcKcSv6pYYFr9klVe1dAVmdAwYq
+ rg8lBq8FsA+g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9754"; a="246150586"
 X-IronPort-AV: E=Sophos;i="5.77,299,1596524400"; 
-   d="scan'208";a="222942021"
+   d="scan'208";a="246150586"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2020 14:15:13 -0700
-IronPort-SDR: WcKeJWQzcoUExwCtjl7mZnHmD3aR88prAjCiW9aGwma3Ahaup+b48hXP1DiCsD9AN63FdO1abM
- wOTM0z8bwGbA==
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2020 14:32:37 -0700
+IronPort-SDR: 3ZJGcaa431+DmuUcQ953BK0e+97sFa0a6BkSvvaMtw72ZXnxE0z9M0WtQNYz+cGGFVZVsl2Ssb
+ wHX1ygha7vdw==
 X-IronPort-AV: E=Sophos;i="5.77,299,1596524400"; 
-   d="scan'208";a="383207219"
+   d="scan'208";a="383213104"
 Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.218.169]) ([10.212.218.169])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2020 14:15:12 -0700
-Subject: Re: [PATCH v6 2/5] x86/asm: Add enqcmds() to support ENQCMDS
- instruction
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     vkoul@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
-        ashok.raj@intel.com, sanjay.k.kumar@intel.com,
-        fenghua.yu@intel.com, kevin.tian@intel.com,
-        David.Laight@ACULAB.COM, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200924180041.34056-1-dave.jiang@intel.com>
- <20200924180041.34056-3-dave.jiang@intel.com> <20200924185822.GQ5030@zn.tnic>
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Sep 2020 14:32:36 -0700
+Subject: Re: [PATCH v6 0/5] Add shared workqueue support for idxd driver
 From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <e9687687-b748-6d38-2ce4-14507b513259@intel.com>
-Date:   Thu, 24 Sep 2020 14:14:14 -0700
+To:     vkoul@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
+        ashok.raj@intel.com, fenghua.yu@intel.com, kevin.tian@intel.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200924180041.34056-1-dave.jiang@intel.com>
+Message-ID: <a2a6f147-c4ad-a225-e348-b074a8017a10@intel.com>
+Date:   Thu, 24 Sep 2020 14:32:35 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <20200924185822.GQ5030@zn.tnic>
+In-Reply-To: <20200924180041.34056-1-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -53,150 +49,123 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 
 
-On 9/24/2020 11:58 AM, Borislav Petkov wrote:
-> On Thu, Sep 24, 2020 at 11:00:38AM -0700, Dave Jiang wrote:
->> +/**
->> + * enqcmds - copy a 512 bits data unit to single MMIO location
-> 
-> You forgot to fix this.
-> 
->> + * @dst: destination, in MMIO space (must be 512-bit aligned)
->> + * @src: source
->> + *
->> + * The ENQCMDS instruction allows software to write a 512 bits command to
->> + * a 512 bits aligned special MMIO region that supports the instruction.
->> + * A return status is loaded into the ZF flag in the RFLAGS register.
->> + * ZF = 0 equates to success, and ZF = 1 indicates retry or error.
->> + *
->> + * The enqcmds() function uses the ENQCMDS instruction to submit data from
->> + * kernel space to MMIO space, in a unit of 512 bits. Order of data access
->> + * is not guaranteed, nor is a memory barrier performed afterwards. The
->> + * function returns 0 on success and -EAGAIN on failure.
->> + *
->> + * Warning: Do not use this helper unless your driver has checked that the CPU
->> + * instruction is supported on the platform and the device accepts ENQCMDS.
->> + */
->> +static inline int enqcmds(void __iomem *dst, const void *src)
->> +{
->> +	int zf;
->> +
->> +	/* ENQCMDS [rdx], rax */
->> +	asm volatile(".byte 0xf3, 0x0f, 0x38, 0xf8, 0x02, 0x66, 0x90"
->> +		     CC_SET(z)
->> +		     : CC_OUT(z) (zf)
->> +		     : "a" (dst), "d" (src));
-> 
-> Those operands need to be specified the same way as for movdir64b.
-> 
-> I've done that to save roundtrip time - simply replace yours with this
-> one after having tested it on actual hardware, of course.
+On 9/24/2020 11:00 AM, Dave Jiang wrote:
+> v6:
+> Boris:
+> - Fixup MOBDIR64B inline asm input/output constraints
 
-Thanks Boris! Very much appreciate this. I have tested and everything is good.
+Hi Vinod,
+Looks like we are cleared on the x86 patches for this series with sign offs from 
+maintainer Boris. Please consider the series for 5.10 inclusion. Thank you!
+
 
 > 
+> v5:
+> Boris:
+> - Fixup commit headers
+> - Fixup var names for movdir64b()
+> - Move enqcmds() to special_insns.h
+> - Fix up comments for enqcmds()
+> - Change enqcmds() to reflect instruction return. 0 as success, -EAGAIN for fail.
+> 
+> DavidL:
+> - Fixup enqcmds() gas constraints
+> 
+> v4:
+> - Rebased against latest dmaengine/next tree
+> - Split out enqcmd and pasid dependency.
+> 
+> V3:
+> - Rebased against latest dmaengine/next tree.
+> - Updated API doc with new kernel version and dates.
+> - Changed to allow driver to load without ENQCMD support.
+> - Break out some patches that can be sent ahead of this series for inclusion.
+> 
+> v2:
+> - Dropped device feature enabling (GregKH)
+> - Dropped PCI device feature enabling (Bjorn)
+> 	- https://members.pcisig.com/wg/PCI-SIG/document/14237
+> - After some internal discussion, we have decided to hold off on the enabling of DMWR due to the
+>    following reasons. 1. Most first gen hw will not have the feature bits. 2. First gen hw that
+>    support the feature are all Root Complex integrated endpoints. 3. PCI devices that are not
+>    RCiEP’s with this capability won’t surface for a few years so we can wait until we can test the
+>    full code.
+> - Dropped special ioremap (hch)
+> - Added proper support for WQ flush (tony, dan)
+> - Changed descriptor submission to use sbitmap_queue for blocking. (dan)
+> 
+> Driver stage 1 postings for context: [1]
+> 
+> The patch series has compilation and functional dependency on Fenghua's "Tag application
+> address space for devices" patch series for the ENQCMD CPU command enumeration and the PASID MSR
+> support. [2]
+> 
+> == Background ==
+> A typical DMA device requires the driver to translate application buffers to hardware addresses,
+> and a kernel-user transition to notify the hardware of new work. Shared Virtual Addressing (SVA)
+> allows the processor and device to use the same virtual addresses without requiring software to
+> translate between the address spaces. ENQCMD is a new instruction on Intel Platforms that allows
+> user applications to directly notify hardware of new work, much like how doorbells are used in
+> some hardware, but it carries a payload along with it. ENQCMDS is the supervisor version (ring0)
+> of ENQCMD.
+> 
+> == ENQCMDS ==
+> Introduce enqcmds(), a helper funciton that copies an input payload to a 64B aligned
+> destination and confirms whether the payload was accepted by the device or not.
+> enqcmds() wraps the new ENQCMDS CPU instruction. The ENQCMDS is a ring 0 CPU instruction that
+> performs similar to the ENQCMD instruction. Descriptor submission must use ENQCMD(S) for shared
+> workqueues (swq) on an Intel DSA device.
+> 
+> == Shared WQ support ==
+> Introduce shared workqueue (swq) support for the idxd driver. The current idxd driver contains
+> dedicated workqueue (dwq) support only. A dwq accepts descriptors from a MOVDIR64B instruction.
+> MOVDIR64B is a posted instruction on the PCIe bus, it does not wait for any response from the
+> device. If the wq is full, submitted descriptors are dropped. A swq utilizes the ENQCMDS in
+> ring 0, which is a non-posted instruction. The zero flag would be set to 1 if the device rejects
+> the descriptor or if the wq is full. A swq can be shared between multiple users
+> (kernel or userspace) due to not having to keep track of the wq full condition for submission.
+> A swq requires PASID and can only run with SVA support.
+> 
+> == IDXD SVA support ==
+> Add utilization of PASID to support Shared Virtual Addressing (SVA). With PASID support,
+> the descriptors can be programmed with host virtual address (HVA) rather than IOVA.
+> The hardware will work with the IOMMU in fulfilling page requests. With SVA support,
+> a user app using the char device interface can now submit descriptors without having to pin the
+> virtual memory range it wants to DMA in its own address space.
+> 
+> The series does not add SVA support for the dmaengine subsystem. That support is coming at a
+> later time.
+> 
+> [1]: https://lore.kernel.org/lkml/157965011794.73301.15960052071729101309.stgit@djiang5-desk3.ch.intel.com/
+> [2]: https://lore.kernel.org/lkml/20200916080510.GA32552@8bytes.org/
+> [3]: https://software.intel.com/en-us/articles/intel-sdm
+> [4]: https://software.intel.com/en-us/download/intel-scalable-io-virtualization-technical-specification
+> [5]: https://software.intel.com/en-us/download/intel-data-streaming-accelerator-preliminary-architecture-specification
+> [6]: https://01.org/blogs/2019/introducing-intel-data-streaming-accelerator
+> [7]: https://intel.github.io/idxd/
+> [8]: https://github.com/intel/idxd-driver idxd-stage2
+> 
 > ---
->  From 39cbdc81d657efcb73c0f7d7ab5e5c53f439f267 Mon Sep 17 00:00:00 2001
-> From: Dave Jiang <dave.jiang@intel.com>
-> Date: Thu, 24 Sep 2020 11:00:38 -0700
-> Subject: [PATCH] x86/asm: Add an enqcmds() wrapper for the ENQCMDS instruction
-> MIME-Version: 1.0
-> Content-Type: text/plain; charset=UTF-8
-> Content-Transfer-Encoding: 8bit
 > 
-> Currently, the MOVDIR64B instruction is used to atomically submit
-> 64-byte work descriptors to devices. Although it can encounter errors
-> like device queue full, command not accepted, device not ready, etc when
-> writing to a device MMIO, MOVDIR64B can not report back on errors from
-> the device itself. This means that MOVDIR64B users need to separately
-> interact with a device to see if a descriptor was successfully queued,
-> which slows down device interactions.
+> Dave Jiang (5):
+>    x86/asm: Carve out a generic movdir64b() helper for general usage
+>    x86/asm: Add enqcmds() to support ENQCMDS instruction
+>    dmaengine: idxd: Add shared workqueue support
+>    dmaengine: idxd: Clean up descriptors with fault error
+>    dmaengine: idxd: Add ABI documentation for shared wq
 > 
-> ENQCMD and ENQCMDS also atomically submit 64-byte work descriptors
-> to devices. But, they *can* report back errors directly from the
-> device, such as if the device was busy, or device not enabled or does
-> not support the command. This immediate feedback from the submission
-> instruction itself reduces the number of interactions with the device
-> and can greatly increase efficiency.
-> 
-> ENQCMD can be used at any privilege level, but can effectively only
-> submit work on behalf of the current process. ENQCMDS is a ring0-only
-> instruction and can explicitly specify a process context instead of
-> being tied to the current process or needing to reprogram the IA32_PASID
-> MSR.
-> 
-> Use ENQCMDS for work submission within the kernel because a Process
-> Address ID (PASID) is setup to translate the kernel virtual address
-> space. This PASID is provided to ENQCMDS from the descriptor structure
-> submitted to the device and not retrieved from IA32_PASID MSR, which is
-> setup for the current user address space.
-> 
-> See Intel Software Developer’s Manual for more information on the
-> instructions.
-> 
->   [ bp:
->     - Make operand constraints like movdir64b() because both insns are
->       basically doing the same thing, more or less.
->     - Fixup comments and cleanup. ]
-> 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> Link: https://lkml.kernel.org/r/20200924180041.34056-3-dave.jiang@intel.com
-> ---
->   arch/x86/include/asm/special_insns.h | 42 ++++++++++++++++++++++++++++
->   1 file changed, 42 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
-> index 2f0c8a39c796..2c18c780b2d5 100644
-> --- a/arch/x86/include/asm/special_insns.h
-> +++ b/arch/x86/include/asm/special_insns.h
-> @@ -262,6 +262,48 @@ static inline void movdir64b(void *dst, const void *src)
->   		     :  "m" (*__src), "a" (__dst), "d" (__src));
->   }
->   
-> +/**
-> + * enqcmds - Enqueue a command in supervisor (CPL0) mode
-> + * @dst: destination, in MMIO space (must be 512-bit aligned)
-> + * @src: 512 bits memory operand
-> + *
-> + * The ENQCMDS instruction allows software to write a 512-bit command to
-> + * a 512-bit-aligned special MMIO region that supports the instruction.
-> + * A return status is loaded into the ZF flag in the RFLAGS register.
-> + * ZF = 0 equates to success, and ZF = 1 indicates retry or error.
-> + *
-> + * This function issues the ENQCMDS instruction to submit data from
-> + * kernel space to MMIO space, in a unit of 512 bits. Order of data access
-> + * is not guaranteed, nor is a memory barrier performed afterwards. It
-> + * returns 0 on success and -EAGAIN on failure.
-> + *
-> + * Warning: Do not use this helper unless your driver has checked that the
-> + * ENQCMDS instruction is supported on the platform and the device accepts
-> + * ENQCMDS.
-> + */
-> +static inline int enqcmds(void __iomem *dst, const void *src)
-> +{
-> +	const struct { char _[64]; } *__src = src;
-> +	struct { char _[64]; } *__dst = dst;
-> +	int zf;
-> +
-> +	/*
-> +	 * ENQCMDS %(rdx), rax
-> +	 *
-> +	 * See movdir64b()'s comment on operand specification.
-> +	 */
-> +	asm volatile(".byte 0xf3, 0x0f, 0x38, 0xf8, 0x02, 0x66, 0x90"
-> +		     CC_SET(z)
-> +		     : CC_OUT(z) (zf), "+m" (*__dst)
-> +		     : "m" (*__src), "a" (__dst), "d" (__src));
-> +
-> +	/* Submission failure is indicated via EFLAGS.ZF=1 */
-> +	if (zf)
-> +		return -EAGAIN;
-> +
-> +	return 0;
-> +}
-> +
->   #endif /* __KERNEL__ */
->   
->   #endif /* _ASM_X86_SPECIAL_INSNS_H */
+>   .../ABI/stable/sysfs-driver-dma-idxd          |  14 ++
+>   arch/x86/include/asm/io.h                     |  17 +--
+>   arch/x86/include/asm/special_insns.h          |  56 +++++++
+>   drivers/dma/Kconfig                           |  10 ++
+>   drivers/dma/idxd/cdev.c                       |  49 +++++-
+>   drivers/dma/idxd/device.c                     |  91 ++++++++++-
+>   drivers/dma/idxd/dma.c                        |   9 --
+>   drivers/dma/idxd/idxd.h                       |  33 +++-
+>   drivers/dma/idxd/init.c                       |  92 ++++++++---
+>   drivers/dma/idxd/irq.c                        | 143 ++++++++++++++++--
+>   drivers/dma/idxd/registers.h                  |  14 ++
+>   drivers/dma/idxd/submit.c                     |  35 ++++-
+>   drivers/dma/idxd/sysfs.c                      | 127 ++++++++++++++++
+>   13 files changed, 620 insertions(+), 70 deletions(-)
 > 

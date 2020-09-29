@@ -2,102 +2,125 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0861227CFB0
-	for <lists+dmaengine@lfdr.de>; Tue, 29 Sep 2020 15:44:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EBAF27D1F5
+	for <lists+dmaengine@lfdr.de>; Tue, 29 Sep 2020 16:56:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730001AbgI2Nox (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 29 Sep 2020 09:44:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33304 "EHLO mail.kernel.org"
+        id S1729934AbgI2Oz5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 29 Sep 2020 10:55:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728346AbgI2Nox (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 29 Sep 2020 09:44:53 -0400
-Received: from localhost (unknown [122.171.202.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728599AbgI2Oz4 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 29 Sep 2020 10:55:56 -0400
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7C08207C4;
-        Tue, 29 Sep 2020 13:44:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0239F20759;
+        Tue, 29 Sep 2020 14:55:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601387092;
-        bh=zQe71h3hMDkcO3lGqxJ6ObZpKisB/OGPDNWyeteTzEo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=zKdfmLXthdd+oLmftCSbCbxhfOLhsGSNcw0PY/0onUdGAWgf7vmQV1gAiPoxKXCs1
-         AN225AEUu6F5OqndkeHblPeNk7gue/vYI/epseg56m3/7+gR0Q4+l1e2j5RVRLIgoW
-         IbZgBxVL2jikaV+LjNHDz03zRgJjNRGBhWlWLoho=
-Date:   Tue, 29 Sep 2020 19:14:43 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dma <dmaengine@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL]: dmaengine late fixes for v5.9
-Message-ID: <20200929134443.GL2968@vkoul-mobl>
+        s=default; t=1601391356;
+        bh=rRoIRoEtvKiTxqLBDCdJgd1vsV6WDXH8vqiw37EJFYA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dPznjLDIaJpJChnMBlyMr9U65GihWzprmxsqEfcFO6syoe1QeDYMdtdEY24nUv6C5
+         G2+T7OTTyY2TfxrA0rzNaNVd352e42a+G/Czw8N9a9xSMAjByfzDW58Jy8TSGQykHx
+         OJAXVbqztgfMHk3ZclOgvMcOMFd5hKjEBfuJHDPs=
+Received: by mail-oi1-f179.google.com with SMTP id v20so5783384oiv.3;
+        Tue, 29 Sep 2020 07:55:55 -0700 (PDT)
+X-Gm-Message-State: AOAM532Rxdd7QaO2xxh59pn4ZQU3Ig+Q6tlx64Z9RxtIxnBnyx1riLf6
+        ZLlDaV/L6ovDrfnn+mrtwcyilLkxaZzzpPg+zA==
+X-Google-Smtp-Source: ABdhPJyUldfh8e5nBb7FCRtHZXShFRNUVuLZZfubdhoGCMHltLk6gRwvdq1tHkbGaKdvxwT4Kr+Mf9uzd0Eu9PdR/KQ=
+X-Received: by 2002:aca:fc07:: with SMTP id a7mr2845041oii.106.1601391354877;
+ Tue, 29 Sep 2020 07:55:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3Gf/FFewwPeBMqCJ"
-Content-Disposition: inline
+References: <20200928155953.2819930-1-robh@kernel.org> <68d57be8-c2e9-4bfd-4f7f-041aa3ce2e92@xilinx.com>
+In-Reply-To: <68d57be8-c2e9-4bfd-4f7f-041aa3ce2e92@xilinx.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 29 Sep 2020 09:55:43 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqL6z5zarTv4e1aWCi0rVoyoDOvZYpYLEuxMJF5a1i7yHQ@mail.gmail.com>
+Message-ID: <CAL_JsqL6z5zarTv4e1aWCi0rVoyoDOvZYpYLEuxMJF5a1i7yHQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Fix 'reg' size issues in zynqmp examples
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On Tue, Sep 29, 2020 at 1:55 AM Michal Simek <michal.simek@xilinx.com> wrote:
+>
+> Hi Rob,
+>
+> On 28. 09. 20 17:59, Rob Herring wrote:
+> > The default sizes in examples for 'reg' are 1 cell each. Fix the
+> > incorrect sizes in zynqmp examples:
+> >
+> > Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.example.dt.yaml: example-0: dma-controller@fd4c0000:reg:0: [0, 4249616384, 0, 4096] is too long
+> >       From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
+> > Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.example.dt.yaml: example-0: display@fd4a0000:reg:0: [0, 4249485312, 0, 4096] is too long
+> >       From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
+> > Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.example.dt.yaml: example-0: display@fd4a0000:reg:1: [0, 4249526272, 0, 4096] is too long
+> >       From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
+> > Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.example.dt.yaml: example-0: display@fd4a0000:reg:2: [0, 4249530368, 0, 4096] is too long
+> >       From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
+> > Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.example.dt.yaml: example-0: display@fd4a0000:reg:3: [0, 4249534464, 0, 4096] is too long
+> >       From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
+> >
+> > Cc: Hyun Kwon <hyun.kwon@xilinx.com>
+> > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Cc: Michal Simek <michal.simek@xilinx.com>
+> > Cc: Vinod Koul <vkoul@kernel.org>
+> > Cc: dri-devel@lists.freedesktop.org
+> > Cc: dmaengine@vger.kernel.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml          | 8 ++++----
+> >  .../devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml | 2 +-
+> >  2 files changed, 5 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
+> > index 52a939cade3b..7b9d468c3e52 100644
+> > --- a/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
+> > +++ b/Documentation/devicetree/bindings/display/xlnx/xlnx,zynqmp-dpsub.yaml
+> > @@ -145,10 +145,10 @@ examples:
+> >
+> >      display@fd4a0000 {
+> >          compatible = "xlnx,zynqmp-dpsub-1.7";
+> > -        reg = <0x0 0xfd4a0000 0x0 0x1000>,
+> > -              <0x0 0xfd4aa000 0x0 0x1000>,
+> > -              <0x0 0xfd4ab000 0x0 0x1000>,
+> > -              <0x0 0xfd4ac000 0x0 0x1000>;
+> > +        reg = <0xfd4a0000 0x1000>,
+> > +              <0xfd4aa000 0x1000>,
+> > +              <0xfd4ab000 0x1000>,
+> > +              <0xfd4ac000 0x1000>;
+> >          reg-names = "dp", "blend", "av_buf", "aud";
+> >          interrupts = <0 119 4>;
+> >          interrupt-parent = <&gic>;
+> > diff --git a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+> > index 5de510f8c88c..2a595b18ff6c 100644
+> > --- a/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+> > +++ b/Documentation/devicetree/bindings/dma/xilinx/xlnx,zynqmp-dpdma.yaml
+> > @@ -57,7 +57,7 @@ examples:
+> >
+> >      dma: dma-controller@fd4c0000 {
+> >        compatible = "xlnx,zynqmp-dpdma";
+> > -      reg = <0x0 0xfd4c0000 0x0 0x1000>;
+> > +      reg = <0xfd4c0000 0x1000>;
+> >        interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
+> >        interrupt-parent = <&gic>;
+> >        clocks = <&dpdma_clk>;
+> >
+>
+> I would prefer to keep 64bit version.
+> I use this style.
 
---3Gf/FFewwPeBMqCJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I prefer to keep the examples simple. The address size is outside the
+scope of the binding.
 
-Hi Linus,
-
-Please consider pulling to receive one small fix for dmatest module
-misconfigured channels
-
-The following changes since commit f4d51dffc6c01a9e94650d95ce0104964f8ae822:
-
-  Linux 5.9-rc4 (2020-09-06 17:11:40 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dm=
-aengine-fix-5.9
-
-for you to fetch changes up to ce65d55f92a67e247f4d799e581cf9fed677871c:
-
-  dmaengine: dmatest: Prevent to run on misconfigured channel (2020-09-22 2=
-0:18:05 +0530)
-
-----------------------------------------------------------------
-dmaengine fixes for v5.9
-
-Dmatest:
- - Fix for misconfigured channel
-
-----------------------------------------------------------------
-Vladimir Murzin (1):
-      dmaengine: dmatest: Prevent to run on misconfigured channel
-
- drivers/dma/dmatest.c | 26 +++++++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
-
-Thanks
---=20
-~Vinod
-
---3Gf/FFewwPeBMqCJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAl9zOksACgkQfBQHDyUj
-g0c27g/9HPauEG6SSsu72bsK6e/AogG2ppsRpaIUT01nJ444k4zB5YKS3eD7B7g9
-c/iuEALJ/62aBDzWQVwxI5o0HS6oz8fDJ7bKhx7VZ2W5qSGVVqDeZs89qBam48XA
-NmDFo12jFp4Jx/ClPRvh7O2pSY9o/RyxkUVa4XOTqAp1+2Wd03699ovuxFOY5mFq
-q3AtfxLbeuXbAu2+AzNl9910ln5L4S53zaAFYxTR2ZKsHEcysotx0f1CzS7n4ZoS
-R9GVjMaSvdcyKV1a9/2LhqHJ5tpiN/n57ehwkd/jWH9X5KAW6Z/ofge9XIynDPwI
-0+RLkiCwym7NK3G72lO7+tECivy0sulqX6pOc9rEwJIYyFOxBd7TqpCPgxxMJtdB
-uZ72yKabO8AdGNUa1DbujYRwk7g+39pkEdOjRYyzaiTg7xWfqrrw/SDncNkr8ROk
-xF3N3DEiKP78FevpWgwsV+b/NZA3uwxQIBF4uqOoYu7a4qhmhdS7iPgmkD3Td6qr
-5hpnEU+Z7YkOZ699zeEDgVMyMkD5f0RjTxBZniwhaJ59hE1jZptygptpvcR+iZRW
-BLjGtwn8XG06W4Va4NVtyR7g0RBBFxkJ+bWADqZ4YZ7JhPjJxyBG0CWsgd7wDOy1
-14mMoUrETbYwx2r9/Gz10AbR4RDIxo9vOEDC5j0QUEjiIJgLpso=
-=bVYi
------END PGP SIGNATURE-----
-
---3Gf/FFewwPeBMqCJ--
+Rob

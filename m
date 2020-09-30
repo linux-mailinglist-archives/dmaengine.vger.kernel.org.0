@@ -2,154 +2,181 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 988BA27E090
-	for <lists+dmaengine@lfdr.de>; Wed, 30 Sep 2020 07:46:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6FA627E4A4
+	for <lists+dmaengine@lfdr.de>; Wed, 30 Sep 2020 11:14:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725779AbgI3Fqu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 30 Sep 2020 01:46:50 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38628 "EHLO
+        id S1728709AbgI3JOK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 30 Sep 2020 05:14:10 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:52980 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgI3Fqu (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 30 Sep 2020 01:46:50 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08U5kldp121649;
-        Wed, 30 Sep 2020 00:46:47 -0500
+        with ESMTP id S1725823AbgI3JOI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 30 Sep 2020 05:14:08 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08U9DxCh067227;
+        Wed, 30 Sep 2020 04:13:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1601444807;
-        bh=IcGXwcmno1GcBhj0sPJ2RIbIjTWcrrKuQT9aId1ObFU=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=SMtFQgid/ACN2r2E6N9nXv45AdHeDw6Vzts/AsWt3j1DwBMmskpNtdPaGGIum2CCl
-         /SruN+o0/yy97tiTQ16PZFZ51ROV6VycRgECT97f5XMrp2lyZSvY/Yt4BLuLmvedDt
-         llBFlIhf3Xq/H0NtTBZAzZIIdU/lxob9tKZ2E/lE=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08U5klFl036470
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 30 Sep 2020 00:46:47 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+        s=ti-com-17Q1; t=1601457239;
+        bh=oKsXoQZi1nap+gl1sJcH20iCneZiV9es7DXpO/QdHuU=;
+        h=From:To:CC:Subject:Date;
+        b=VSGFYCSUIw9KWEYc+xkCDWAbRqPXiXb+xRJG3Lw0oSkHy/UWvgTKlZlORBLz6J++o
+         nvmGjG3JKFHRL28Y2ZdLFqbYeAKbkiQ/vbwFxvHacjZZBTJWrVbls4tKE5SJAqpXdM
+         JqPwvvOl5lgqrivTBPZ6Q0Ti2yEu9CxT7bm4C3aw=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08U9DxQD121247;
+        Wed, 30 Sep 2020 04:13:59 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 30
- Sep 2020 00:46:47 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2020 04:13:59 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 30 Sep 2020 00:46:47 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08U5kjjQ047716;
-        Wed, 30 Sep 2020 00:46:45 -0500
-Subject: Re: [PATCH v3 2/3] dmaengine: add peripheral configuration
+ Frontend Transport; Wed, 30 Sep 2020 04:13:59 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08U9DuJX116385;
+        Wed, 30 Sep 2020 04:13:56 -0500
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200923063410.3431917-1-vkoul@kernel.org>
- <20200923063410.3431917-3-vkoul@kernel.org>
- <29f95fff-c484-0131-d1fe-b06e3000fb9f@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <aaa3f7df-3625-1b65-aeaa-33dc43566c99@ti.com>
-Date:   Wed, 30 Sep 2020 08:47:01 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+To:     <vkoul@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
+        <robh+dt@kernel.org>, <vigneshr@ti.com>
+CC:     <dan.j.williams@intel.com>, <t-kristo@ti.com>,
+        <lokeshvutla@ti.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>
+Subject: [PATCH 00/18] dmaengine/soc: k3-udma: Add support for BCDMA and PKTDMA
+Date:   Wed, 30 Sep 2020 12:13:54 +0300
+Message-ID: <20200930091412.8020-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <29f95fff-c484-0131-d1fe-b06e3000fb9f@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vinod,
+Hi,
 
-On 29/09/2020 11.06, Peter Ujfalusi wrote:
->=20
-> I know that you want this to be as generic as much as it is possible,
-> but do we really want to?
-> GPIv2 will also handle I2S peripheral, other vendor's similar solution
-> would require different sets of parameters unique to their IPs?
->=20
-> How we are going to handle similar setups for DMA which is used for
-> networking, SPI/I2C/I2S/NAND/display/capture, etc?
->=20
-> Imho these settings are really part of the peripheral's domain and not
-> the DMA. It is just a small detail that instead of direct register
-> writes, your setup is using the DMA descriptors to write.
-> It is similar to what I use as metadata (part of the descriptor belongs=
+The series have build dependency on ti_sci/soc series (v1):
+https://lore.kernel.org/lkml/20200928083429.17390-1-peter.ujfalusi@ti.com/
 
-> and owned by the client driver).
->=20
-> I think it would be better to have:
->=20
-> enum dmaengine_peripheral {
-> 	DMAENGINE_PERIPHERAL_GPI_SPI =3D 1,
-> 	DMAENGINE_PERIPHERAL_GPI_UART,
-> 	DMAENGINE_PERIPHERAL_GPI_I2C,
-> 	DMAENGINE_PERIPHERAL_XYZ_SPI,
-> 	DMAENGINE_PERIPHERAL_XYZ_AASRC,
-> 	DMAENGINE_PERIPHERAL_ABC_CAM,
-> 	...
-> 	DMAENGINE_PERIPHERAL_LAST,
-> };
->=20
-> enum dmaengine_peripheral peripheral_type;
-> void *peripheral_config;
+The unmapped event handling in INTA is also needed, but it is not a build
+dependency (v2):
+https://lore.kernel.org/lkml/20200930074559.18028-1-peter.ujfalusi@ti.com/
 
-TI have an AASRC (Audio Asynchronous Sample Rate Converted) in j721e and
-to configure the DMA side (AASRC_PDMA) we need special configuration
-parameters passed from the AASRC driver to the DMA channel.
-This peripheral config extension would be perfect for it, but the
-parameters I would need is not generic in any ways.
+The DMSS introduced within AM64 as a simplified Data movement engine is built
+on similar grounds as the K3 NAVSS and UDMAP, but with significant architectural
+changes.
 
-The other thing which might need to be considered is to have src/dst
-pair of this. When we do DMA_DEV_TO_DEV, it would help to figure out
-which side we should apply which config (if you have the same type of
-device on both ends with different config?).
+- Rings are built into the DMAs
+The DMAs no longer use the general purpose ringacc, all rings has been moved
+inside of the DMAs. The new rings within the DMAs are simplified to be dual
+directional compared to the uni-directional rings in ringacc.
+There is no more of a concept of generic purpose rings, all rings are assigned
+to specific channels or flows.
 
+- Per channel coherency support
+The DMAs use the 'ASEL' bits to select data and configuration fetch path. The
+ASEL bits are placed at the unused parts of any address field used by the
+DMAs (pointers to descriptors, addresses in descriptors, ring base addresses).
+The ASEL is not part of the address (the DMAs can address 48bits).
+Individual channels can be configured to be coherent (via ACP port) or non
+coherent individually by configuring the ASEL to appropriate value.
 
-> and that's it. The set_config is specific to GPI.
-> It can be debated where the structs should be defined, in the generic
-> dmaengine.h or in include/linux/dma/ as controller specific
-> (gpi_peripheral.h) or a generic one, like dmaengine_peripheral.h
->=20
-> The SPI/I2C/UART client of yours would pass the GPI specific struct as
-> in any case it has to know what is the DMA it is serviced by.
->=20
->> +};
->>  /**
->>   * struct dma_slave_config - dma slave channel runtime config
->>   * @direction: whether the data shall go in or out on this slave
->> @@ -418,6 +506,8 @@ enum dma_slave_buswidth {
->>   * @slave_id: Slave requester id. Only valid for slave channels. The =
-dma
->>   * slave peripheral will have unique id as dma requester which need t=
-o be
->>   * pass as slave config.
->> + * @peripheral: peripheral configuration for programming peripheral f=
-or
->> + * dmaengine transfer
->>   *
->>   * This struct is passed in as configuration data to a DMA engine
->>   * in order to set up a certain channel for DMA transport at runtime.=
+- Two different DMAs (well, three actually)
+PKTDMA
+Similar to UDMAP channels configured in packet mode.
+The flow configuration of the channels has changed significantly in a way that
+each channel have at least one flow assigned at design time and each flow is
+directly mapped to corresponding ring.
+When multiple flows are set, the channel can only use the flows within it's
+assigned range.
+PKTDMA also introduced multiple tflows which did not existed in UDMAP.
 
->> @@ -443,6 +533,7 @@ struct dma_slave_config {
->>  	u32 dst_port_window_size;
->>  	bool device_fc;
->>  	unsigned int slave_id;
->> +	struct dmaengine_peripheral_config *peripheral;
->>  };
->> =20
->>  /**
->>
->=20
-> - P=C3=A9ter
->=20
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->=20
+BCDMA
+It has two types of channels:
+- split channels (tchan/rchan): Similar to UDMAP channels configured in TR mode.
+- Block copy channels (bchan): Similar to EDMA or traditional DMA channels, they
+  can be used for mem2mem type of transfers or to service peripherals not
+  accessible via PSI-L by using external triggers for the TR.
+BCDMA channels do not have support for multiple flows
 
-- P=C3=A9ter
+With the introduction of the new DMAs (especially the BCDMA) we also need to
+update the resource manager code to support the second range from sysfw for
+UDMA channels.
+
+The two outstanding change in the series in my view is
+the handling of the DMAs sideband signal of ASEL to select path to provide
+coherency or non coherency.
+
+the smaller one is the device_router_config callback to allow the configuration
+of the triggers when BCDMA is servicing a triggering peripheral to solve a
+chicken-egg situation:
+The router needs to know the event number to send which in turn depends on the
+channel we got for servicing the peripheral.
+
+I'm sending this series as early as possible to have time for review and
+changes.
+
+When all things resolved, it would be nice if Santosh could create an immutable
+branch with the ti_sci/soc patches for Vinod to use for this series.
+
+Regards,
+Peter
+---
+Grygorii Strashko (1):
+  soc: ti: k3-ringacc: add AM64 DMA rings support.
+
+Peter Ujfalusi (16):
+  dmaengine: of-dma: Add support for optional router configuration
+    callback
+  dmaengine: Add support for per channel coherency handling
+  dmaengine: doc: client: Update for dmaengine_get_dma_device() usage
+  dmaengine: dmatest: Use dmaengine_get_dma_device
+  dmaengine: ti: k3-udma: Wait for peer teardown completion if supported
+  dmaengine: ti: k3-udma: Add support for second resource range from
+    sysfw
+  dmaengine: ti: k3-udma-glue: Add function to get device pointer for
+    DMA API
+  dmaengine: ti: k3-udma-glue: Configure the dma_dev for rings
+  dt-bindings: dma: ti: Add document for K3 BCDMA
+  dt-bindings: dma: ti: Add document for K3 PKTDMA
+  dmaengine: ti: k3-psil: Extend psil_endpoint_config for K3 PKTDMA
+  dmaengine: ti: k3-psil: Add initial map for AM64
+  dmaengine: ti: Add support for k3 event routers
+  dmaengine: ti: k3-udma: Initial support for K3 BCDMA
+  dmaengine: ti: k3-udma: Add support for BCDMA channel TPL handling
+  dmaengine: ti: k3-udma: Initial support for K3 PKTDMA
+
+Vignesh Raghavendra (1):
+  dmaengine: ti: k3-udma-glue: Add support for K3 PKTDMA
+
+ .../devicetree/bindings/dma/ti/k3-bcdma.yaml  |  183 ++
+ .../devicetree/bindings/dma/ti/k3-pktdma.yaml |  189 ++
+ Documentation/driver-api/dmaengine/client.rst |    4 +-
+ drivers/dma/dmatest.c                         |   13 +-
+ drivers/dma/of-dma.c                          |   10 +
+ drivers/dma/ti/Makefile                       |    3 +-
+ drivers/dma/ti/k3-psil-am64.c                 |   75 +
+ drivers/dma/ti/k3-psil-priv.h                 |    1 +
+ drivers/dma/ti/k3-psil.c                      |    1 +
+ drivers/dma/ti/k3-udma-glue.c                 |  294 ++-
+ drivers/dma/ti/k3-udma-private.c              |   39 +
+ drivers/dma/ti/k3-udma.c                      | 1975 +++++++++++++++--
+ drivers/dma/ti/k3-udma.h                      |   27 +-
+ drivers/soc/ti/k3-ringacc.c                   |  325 ++-
+ include/linux/dma/k3-event-router.h           |   16 +
+ include/linux/dma/k3-psil.h                   |   16 +
+ include/linux/dma/k3-udma-glue.h              |   12 +
+ include/linux/dmaengine.h                     |   14 +
+ include/linux/soc/ti/k3-ringacc.h             |   17 +
+ 19 files changed, 2994 insertions(+), 220 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
+ create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-pktdma.yaml
+ create mode 100644 drivers/dma/ti/k3-psil-am64.c
+ create mode 100644 include/linux/dma/k3-event-router.h
+
+-- 
+Peter
 
 Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
 Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

@@ -2,39 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BDE627E4C0
-	for <lists+dmaengine@lfdr.de>; Wed, 30 Sep 2020 11:15:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B5FE27E4CA
+	for <lists+dmaengine@lfdr.de>; Wed, 30 Sep 2020 11:15:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgI3JOe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 30 Sep 2020 05:14:34 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35120 "EHLO
+        id S1729068AbgI3JPW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 30 Sep 2020 05:15:22 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:35132 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgI3JO2 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 30 Sep 2020 05:14:28 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08U9ENoI035023;
-        Wed, 30 Sep 2020 04:14:23 -0500
+        with ESMTP id S1729038AbgI3JOb (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 30 Sep 2020 05:14:31 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08U9EQdL035044;
+        Wed, 30 Sep 2020 04:14:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1601457263;
-        bh=F1UBBxuJBBt4i9B5EabYSjDpVXsLLY8WCh/WDwvs4ko=;
+        s=ti-com-17Q1; t=1601457266;
+        bh=pcsvG8Wes2t4bU1KP19bSuHVD+XfFqvrO0hd8Cj0z4U=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=YXaWa3Jf0MhiprwqLEwVg4A5Jr59PfudNiFSsnKL52m5t8a+SG3ZT/iRpyL3wHQbc
-         64hQangtImQ41T/BPQuDQ1BxfbQx7mwO4GyFz9gdqTOJTtEzot4b55cd9hfyfYmFbL
-         wO6Be1UVoG0OBfYQ5BE/r/wtcGGiIB8hl0JudUAQ=
+        b=RfwzJkNpPssNDkanfcY42/t66tnWUa7mRrhWRncw3Ew6NNWZDhenUa9uxzBbyBAZd
+         CAPRv5WiaxySFS3t3C1Pwk0XBHhN9HTRDb34LEQNotdqL45x8adl0YvL59p/u/7O+2
+         PXqt3fQRZZfeuTjmaJNKYRd7LDmgeUzLu/SRWe2c=
 Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08U9EN6X122184;
-        Wed, 30 Sep 2020 04:14:23 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE104.ent.ti.com
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08U9EQfa111915
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 30 Sep 2020 04:14:26 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE104.ent.ti.com
  (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 30
- Sep 2020 04:14:22 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ Sep 2020 04:14:25 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 30 Sep 2020 04:14:22 -0500
+ Frontend Transport; Wed, 30 Sep 2020 04:14:25 -0500
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08U9DuJf116385;
-        Wed, 30 Sep 2020 04:14:20 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08U9DuJg116385;
+        Wed, 30 Sep 2020 04:14:23 -0500
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
         <robh+dt@kernel.org>, <vigneshr@ti.com>
@@ -42,9 +43,9 @@ CC:     <dan.j.williams@intel.com>, <t-kristo@ti.com>,
         <lokeshvutla@ti.com>, <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <dmaengine@vger.kernel.org>
-Subject: [PATCH 08/18] dmaengine: ti: k3-udma-glue: Configure the dma_dev for rings
-Date:   Wed, 30 Sep 2020 12:14:02 +0300
-Message-ID: <20200930091412.8020-9-peter.ujfalusi@ti.com>
+Subject: [PATCH 09/18] dt-bindings: dma: ti: Add document for K3 BCDMA
+Date:   Wed, 30 Sep 2020 12:14:03 +0300
+Message-ID: <20200930091412.8020-10-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200930091412.8020-1-peter.ujfalusi@ti.com>
 References: <20200930091412.8020-1-peter.ujfalusi@ti.com>
@@ -56,44 +57,206 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Rings in RING mode should be using the DMA device for DMA API as in this
-mode the ringacc will not access the ring memory in any ways, but the DMA
-is.
+New binding document for
+Texas Instruments K3 Block Copy DMA (BCDMA).
 
-Fix up the ring configuration and set the dma_dev unconditionally and let
-the ringacc driver to select the correct device to use for DMA API.
+BCDMA is introduced as part of AM64.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/dma/ti/k3-udma-glue.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../devicetree/bindings/dma/ti/k3-bcdma.yaml  | 183 ++++++++++++++++++
+ 1 file changed, 183 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
 
-diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
-index a53bc4707ae8..f39825ce288a 100644
---- a/drivers/dma/ti/k3-udma-glue.c
-+++ b/drivers/dma/ti/k3-udma-glue.c
-@@ -280,6 +280,10 @@ struct k3_udma_glue_tx_channel *k3_udma_glue_request_tx_chn(struct device *dev,
- 		goto err;
- 	}
- 
-+	/* Set the dma_dev for the rings to be configured */
-+	cfg->tx_cfg.dma_dev = k3_udma_glue_tx_get_dma_device(tx_chn);
-+	cfg->txcq_cfg.dma_dev = cfg->tx_cfg.dma_dev;
+diff --git a/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml b/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
+new file mode 100644
+index 000000000000..c84fb641738f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
+@@ -0,0 +1,183 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/ti/k3-bcdma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	ret = k3_ringacc_ring_cfg(tx_chn->ringtx, &cfg->tx_cfg);
- 	if (ret) {
- 		dev_err(dev, "Failed to cfg ringtx %d\n", ret);
-@@ -589,6 +593,10 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
- 		goto err_rflow_put;
- 	}
- 
-+	/* Set the dma_dev for the rings to be configured */
-+	flow_cfg->rx_cfg.dma_dev = k3_udma_glue_rx_get_dma_device(rx_chn);
-+	flow_cfg->rxfdq_cfg.dma_dev = flow_cfg->rx_cfg.dma_dev;
++title: Texas Instruments K3 DMSS BCDMA Device Tree Bindings
 +
- 	ret = k3_ringacc_ring_cfg(flow->ringrx, &flow_cfg->rx_cfg);
- 	if (ret) {
- 		dev_err(dev, "Failed to cfg ringrx %d\n", ret);
++maintainers:
++  - Peter Ujfalusi <peter.ujfalusi@ti.com>
++
++description: |
++  The Block Copy DMA (BCDMA) is intended to perform similar functions as the TR
++  mode channels of K3 UDMA-P.
++  BCDMA includes block copy channels and Split channels.
++
++  Block copy channels mainly used for memory to memory transfers, but with
++  optional triggers a block copy channel can service peripherals by accessing
++  directly to memory mapped registers or area.
++
++  Split channels can be used to service PSI-L based peripherals.
++  The peripherals can be PSI-L native or legacy, non PSI-L native peripherals
++  with PDMAs. PDMA is tasked to act as a bridge between the PSI-L fabric and the
++  legacy peripheral.
++
++  PDMAs can be configured via BCDMA split channel's peer registers to match with
++  the configuration of the legacy peripheral.
++
++allOf:
++  - $ref: /schemas/dma/dma-controller.yaml#
++
++properties:
++  "#dma-cells":
++    const: 3
++    description: |
++      cell 1: type of the BCDMA channel to be used to service the peripheral:
++        0 - split channel
++        1 - block copy channel using global trigger 1
++        2 - block copy channel using global trigger 2
++        3 - block copy channel using local trigger
++
++      cell 2: parameter for the channel:
++        if cell 1 is 0 (split channel):
++          PSI-L thread ID of the remote (to BCDMA) end.
++          Valid ranges for thread ID depends on the data movement direction:
++          for source thread IDs (rx): 0 - 0x7fff
++          for destination thread IDs (tx): 0x8000 - 0xffff
++
++          Please refer to the device documentation for the PSI-L thread map and
++          also the PSI-L peripheral chapter for the correct thread ID.
++        if cell 1 is 1 or 2 (block copy channel using global trigger):
++          Unused, ignored
++
++          The trigger must be configured for the channel externally to BCDMA,
++          channels using global triggers should not be requested directly, but
++          via DMA event router.
++        if cell 1 is 3 (block copy channel using local trigger):
++          bchan number of the locally triggered channel
++
++      cell 3: ASEL value for the channel
++
++  compatible:
++    enum:
++      - ti,am64-dmss-bcdma
++
++  "#address-cells":
++    const: 2
++
++  "#size-cells":
++    const: 2
++
++  reg:
++    maxItems: 5
++
++  reg-names:
++   items:
++     - const: gcfg
++     - const: bchanrt
++     - const: rchanrt
++     - const: tchanrt
++     - const: ringrt
++
++  msi-parent: true
++
++  ti,sci:
++    description: phandle to TI-SCI compatible System controller node
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/phandle
++
++  ti,sci-dev-id:
++    description: TI-SCI device id of BCDMA
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++
++  ti,asel:
++    description: ASEL value for non slave channels
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++
++  ti,sci-rm-range-bchan:
++    description: |
++      Array of BCDMA block-copy channel resource subtypes for resource
++      allocation for this host
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++    minItems: 1
++    # Should be enough
++    maxItems: 255
++
++  ti,sci-rm-range-tchan:
++    description: |
++      Array of BCDMA split tx channel resource subtypes for resource allocation
++      for this host
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++    minItems: 1
++    # Should be enough
++    maxItems: 255
++
++  ti,sci-rm-range-rchan:
++    description: |
++      Array of BCDMA split rx channel resource subtypes for resource allocation
++      for this host
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++    minItems: 1
++    # Should be enough
++    maxItems: 255
++
++required:
++  - compatible
++  - "#address-cells"
++  - "#size-cells"
++  - "#dma-cells"
++  - reg
++  - reg-names
++  - msi-parent
++  - ti,sci
++  - ti,sci-dev-id
++  - ti,sci-rm-range-bchan
++  - ti,sci-rm-range-tchan
++  - ti,sci-rm-range-rchan
++
++additionalProperties: false
++
++examples:
++  - |+
++    cbass_main {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        main_dmss {
++            compatible = "simple-mfd";
++            #address-cells = <2>;
++            #size-cells = <2>;
++            dma-ranges;
++            ranges;
++
++            ti,sci-dev-id = <25>;
++
++            main_bcdma: dma-controller@485c0100 {
++                compatible = "ti,am64-dmss-bcdma";
++                #address-cells = <2>;
++                #size-cells = <2>;
++
++                reg = <0x0 0x485c0100 0x0 0x100>,
++                      <0x0 0x4c000000 0x0 0x20000>,
++                      <0x0 0x4a820000 0x0 0x20000>,
++                      <0x0 0x4aa40000 0x0 0x20000>,
++                      <0x0 0x4bc00000 0x0 0x100000>;
++                reg-names = "gcfg", "bchanrt", "rchanrt", "tchanrt", "ringrt";
++                msi-parent = <&inta_main_dmss>;
++                #dma-cells = <3>;
++
++                ti,sci = <&dmsc>;
++                ti,sci-dev-id = <26>;
++
++                ti,sci-rm-range-bchan = <0x20>; /* BLOCK_COPY_CHAN */
++                ti,sci-rm-range-rchan = <0x21>; /* SPLIT_TR_RX_CHAN */
++                ti,sci-rm-range-tchan = <0x22>; /* SPLIT_TR_TX_CHAN */
++            };
++        };
++    };
 -- 
 Peter
 

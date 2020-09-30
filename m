@@ -2,193 +2,155 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D89527D5FB
-	for <lists+dmaengine@lfdr.de>; Tue, 29 Sep 2020 20:44:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 988BA27E090
+	for <lists+dmaengine@lfdr.de>; Wed, 30 Sep 2020 07:46:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgI2So1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 29 Sep 2020 14:44:27 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:37982 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728166AbgI2So1 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 29 Sep 2020 14:44:27 -0400
-Received: by mail-oo1-f66.google.com with SMTP id r10so1542225oor.5;
-        Tue, 29 Sep 2020 11:44:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nY9+4lqo0MEowM9x/sIa8yC+J2rLn2r05J1zX+4+m4s=;
-        b=aQGDDNzbxJz6kJs4B5rEjz7c6L1ZXJJ/j6wLnid8JQpx6N5nkgsm+VMC/MFD/Dxuji
-         vcWM5bQNkZQL+yvswZ87m6dK2nPz9IXWBFKVao1xqpZ5Zs23kz9jO9ACzQHbag7BGjBA
-         kivhfTMxo2ugH3Tnqq6SXtj9ZoxenhxHHaATEv8EeIYCoEBKuEZfvXMi9CoBkKIXu5nY
-         bHv9FpLrRWPkT6A8wvLhmu6ueEWH658XAd7Unyr5wUsLM6kgCsTa09lIpS8YZ+pMS6ta
-         nFysqxc9M5+tsPU8ylVg4R8J9+yLx5OH/PyKMoinvgwmToMFmJmJ7iolqM9Y/24wqpAg
-         7g1Q==
-X-Gm-Message-State: AOAM5320QOcPIfVaMyyCf+XrarlA84PGCEzJ09TcCPGOn66ZbJZl6As9
-        VEcaZtXsIOecJZGAdYZ+FA==
-X-Google-Smtp-Source: ABdhPJxBmQ/k0EOFw/H4LYM2itNduFhHNo8ttvEQXf2Wi/Nv6QTqhg0BflBo9p1gchQuzxE/ckBrvg==
-X-Received: by 2002:a4a:d80a:: with SMTP id f10mr5709037oov.76.1601405065955;
-        Tue, 29 Sep 2020 11:44:25 -0700 (PDT)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f94sm1180147otb.29.2020.09.29.11.44.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Sep 2020 11:44:25 -0700 (PDT)
-Received: (nullmailer pid 940845 invoked by uid 1000);
-        Tue, 29 Sep 2020 18:44:24 -0000
-Date:   Tue, 29 Sep 2020 13:44:24 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org,
+        id S1725779AbgI3Fqu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 30 Sep 2020 01:46:50 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:38628 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbgI3Fqu (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 30 Sep 2020 01:46:50 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 08U5kldp121649;
+        Wed, 30 Sep 2020 00:46:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1601444807;
+        bh=IcGXwcmno1GcBhj0sPJ2RIbIjTWcrrKuQT9aId1ObFU=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=SMtFQgid/ACN2r2E6N9nXv45AdHeDw6Vzts/AsWt3j1DwBMmskpNtdPaGGIum2CCl
+         /SruN+o0/yy97tiTQ16PZFZ51ROV6VycRgECT97f5XMrp2lyZSvY/Yt4BLuLmvedDt
+         llBFlIhf3Xq/H0NtTBZAzZIIdU/lxob9tKZ2E/lE=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 08U5klFl036470
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 30 Sep 2020 00:46:47 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 30
+ Sep 2020 00:46:47 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 30 Sep 2020 00:46:47 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 08U5kjjQ047716;
+        Wed, 30 Sep 2020 00:46:45 -0500
+Subject: Re: [PATCH v3 2/3] dmaengine: add peripheral configuration
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: dmaengine: Document qcom,gpi dma
- binding
-Message-ID: <20200929184424.GA935309@bogus>
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
 References: <20200923063410.3431917-1-vkoul@kernel.org>
- <20200923063410.3431917-2-vkoul@kernel.org>
+ <20200923063410.3431917-3-vkoul@kernel.org>
+ <29f95fff-c484-0131-d1fe-b06e3000fb9f@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <aaa3f7df-3625-1b65-aeaa-33dc43566c99@ti.com>
+Date:   Wed, 30 Sep 2020 08:47:01 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200923063410.3431917-2-vkoul@kernel.org>
+In-Reply-To: <29f95fff-c484-0131-d1fe-b06e3000fb9f@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Sep 23, 2020 at 12:04:08PM +0530, Vinod Koul wrote:
-> Add devicetree binding documentation for GPI DMA controller
-> implemented on Qualcomm SoCs
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  .../devicetree/bindings/dma/qcom,gpi.yaml     | 86 +++++++++++++++++++
->  include/dt-bindings/dma/qcom-gpi.h            | 11 +++
->  2 files changed, 97 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/qcom,gpi.yaml
->  create mode 100644 include/dt-bindings/dma/qcom-gpi.h
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-> new file mode 100644
-> index 000000000000..82f404bc8745
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
-> @@ -0,0 +1,86 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/qcom,gpi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies Inc GPI DMA controller
-> +
-> +maintainers:
-> +  - Vinod Koul <vkoul@kernel.org>
-> +
-> +description: |
-> +  QCOM GPI DMA controller provides DMA capabilities for
-> +  peripheral buses such as I2C, UART, and SPI.
-> +
-> +allOf:
-> +  - $ref: "dma-controller.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,gpi-dma
+Hi Vinod,
 
-Should be SoC specific.
+On 29/09/2020 11.06, Peter Ujfalusi wrote:
+>=20
+> I know that you want this to be as generic as much as it is possible,
+> but do we really want to?
+> GPIv2 will also handle I2S peripheral, other vendor's similar solution
+> would require different sets of parameters unique to their IPs?
+>=20
+> How we are going to handle similar setups for DMA which is used for
+> networking, SPI/I2C/I2S/NAND/display/capture, etc?
+>=20
+> Imho these settings are really part of the peripheral's domain and not
+> the DMA. It is just a small detail that instead of direct register
+> writes, your setup is using the DMA descriptors to write.
+> It is similar to what I use as metadata (part of the descriptor belongs=
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description:
-> +      Interrupt lines for each GPII instance
+> and owned by the client driver).
+>=20
+> I think it would be better to have:
+>=20
+> enum dmaengine_peripheral {
+> 	DMAENGINE_PERIPHERAL_GPI_SPI =3D 1,
+> 	DMAENGINE_PERIPHERAL_GPI_UART,
+> 	DMAENGINE_PERIPHERAL_GPI_I2C,
+> 	DMAENGINE_PERIPHERAL_XYZ_SPI,
+> 	DMAENGINE_PERIPHERAL_XYZ_AASRC,
+> 	DMAENGINE_PERIPHERAL_ABC_CAM,
+> 	...
+> 	DMAENGINE_PERIPHERAL_LAST,
+> };
+>=20
+> enum dmaengine_peripheral peripheral_type;
+> void *peripheral_config;
 
-GPII or GPI?
+TI have an AASRC (Audio Asynchronous Sample Rate Converted) in j721e and
+to configure the DMA side (AASRC_PDMA) we need special configuration
+parameters passed from the AASRC driver to the DMA channel.
+This peripheral config extension would be perfect for it, but the
+parameters I would need is not generic in any ways.
 
-> +    maxItems: 13
-> +
-> +  "#dma-cells":
-> +    const: 3
-> +    description: >
-> +      DMA clients must use the format described in dma.txt, giving a phandle
-> +      to the DMA controller plus the following 3 integer cells:
-> +      - channel: if set to 0xffffffff, any available channel will be allocated
-> +        for the client. Otherwise, the exact channel specified will be used.
-> +      - seid: serial id of the client as defined in the SoC documentation.
-> +      - client: type of the client as defined in dt-bindings/dma/qcom-gpi.h
-> +
-> +  iommus:
-> +    maxItems: 1
-> +
-> +  dma-channels:
-> +    maxItems: 1
+The other thing which might need to be considered is to have src/dst
+pair of this. When we do DMA_DEV_TO_DEV, it would help to figure out
+which side we should apply which config (if you have the same type of
+device on both ends with different config?).
 
-Not an array. Is there a maximum number of channels or 2^32 is valid?
 
-> +
-> +  dma-channel-mask:
-> +    maxItems: 1
+> and that's it. The set_config is specific to GPI.
+> It can be debated where the structs should be defined, in the generic
+> dmaengine.h or in include/linux/dma/ as controller specific
+> (gpi_peripheral.h) or a generic one, like dmaengine_peripheral.h
+>=20
+> The SPI/I2C/UART client of yours would pass the GPI specific struct as
+> in any case it has to know what is the DMA it is serviced by.
+>=20
+>> +};
+>>  /**
+>>   * struct dma_slave_config - dma slave channel runtime config
+>>   * @direction: whether the data shall go in or out on this slave
+>> @@ -418,6 +506,8 @@ enum dma_slave_buswidth {
+>>   * @slave_id: Slave requester id. Only valid for slave channels. The =
+dma
+>>   * slave peripheral will have unique id as dma requester which need t=
+o be
+>>   * pass as slave config.
+>> + * @peripheral: peripheral configuration for programming peripheral f=
+or
+>> + * dmaengine transfer
+>>   *
+>>   * This struct is passed in as configuration data to a DMA engine
+>>   * in order to set up a certain channel for DMA transport at runtime.=
 
-So up to 32 channels?
+>> @@ -443,6 +533,7 @@ struct dma_slave_config {
+>>  	u32 dst_port_window_size;
+>>  	bool device_fc;
+>>  	unsigned int slave_id;
+>> +	struct dmaengine_peripheral_config *peripheral;
+>>  };
+>> =20
+>>  /**
+>>
+>=20
+> - P=C3=A9ter
+>=20
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>=20
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - "#dma-cells"
-> +  - iommus
-> +  - dma-channels
-> +  - dma-channel-mask
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/dma/qcom-gpi.h>
-> +    gpi_dma0: dma-controller@800000 {
-> +        compatible = "qcom,gpi-dma";
-> +        #dma-cells = <3>;
-> +        reg = <0x00800000 0x60000>;
-> +        iommus = <&apps_smmu 0x0016 0x0>;
-> +        dma-channels = <13>;
-> +        dma-channel-mask = <0xfa>;
-> +        interrupts = <GIC_SPI 244 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 245 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 247 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 248 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 249 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 250 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 251 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 252 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 253 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 254 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 255 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
-> +    };
-> +
-> +...
-> diff --git a/include/dt-bindings/dma/qcom-gpi.h b/include/dt-bindings/dma/qcom-gpi.h
-> new file mode 100644
-> index 000000000000..71f79eb7614c
-> --- /dev/null
-> +++ b/include/dt-bindings/dma/qcom-gpi.h
-> @@ -0,0 +1,11 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/* Copyright (c) 2020, Linaro Ltd.  */
-> +
-> +#ifndef __DT_BINDINGS_DMA_QCOM_GPI_H__
-> +#define __DT_BINDINGS_DMA_QCOM_GPI_H__
-> +
-> +#define QCOM_GPI_SPI		1
-> +#define QCOM_GPI_UART		2
-> +#define QCOM_GPI_I2C		3
-> +
-> +#endif /* __DT_BINDINGS_DMA_QCOM_GPI_H__ */
-> -- 
-> 2.26.2
-> 
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+

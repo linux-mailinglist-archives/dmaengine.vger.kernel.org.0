@@ -2,67 +2,121 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EFB727E856
-	for <lists+dmaengine@lfdr.de>; Wed, 30 Sep 2020 14:17:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BD3727F140
+	for <lists+dmaengine@lfdr.de>; Wed, 30 Sep 2020 20:23:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgI3MR5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 30 Sep 2020 08:17:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48332 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727997AbgI3MR5 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 30 Sep 2020 08:17:57 -0400
-Received: from localhost.localdomain (unknown [122.179.64.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32FBF20789;
-        Wed, 30 Sep 2020 12:17:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601468276;
-        bh=JWcEpWeXXDgFpiksI0O40lx3I8r1hrk6QQ6Dic1xlCo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=EES+uOEo4PNouoawDgHJhLVFLBfnodhcQIRvne5YTTc4tD1MWS421Kquo1AoLw8Zh
-         OevMWBCeoG4hxNWuUy8sMwOqggdwh/gSqKjXS+FUWIdR1jVTDV3UTkUnuWAcG1hux0
-         /GbWTClxlDPOJDxYwxB26d/6VCdmbeW6BW5NDmkY=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     dmaengine@vger.kernel.org
-Cc:     Vinod Koul <vkoul@kernel.org>, kernel test robot <lkp@intel.com>,
-        Allen Pais <allen.lkml@gmail.com>
-Subject: [PATCH] dmaengine: pl330: fix argument for tasklet
-Date:   Wed, 30 Sep 2020 17:47:35 +0530
-Message-Id: <20200930121735.49699-1-vkoul@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        id S1725799AbgI3SXo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 30 Sep 2020 14:23:44 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58588 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725355AbgI3SXo (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 30 Sep 2020 14:23:44 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1601490221;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=zv5Q1ba8TbOELbdMrEkMwGbKwuz8jmeM2ai9GDgQ4g4=;
+        b=GCGx1kVYZarkqULAtHVwWVwnv0pl+M5q3t1Y1ARNVfKPRTLk3UFyJ55q95VPGg2D7fbhwd
+        Qo8cMD8/u7FmEcQdTnW41WnXb0xWGKLc+bw6Nz4OilYJAhk0B55n4474eO3MG6l7Xlddlz
+        LDHYHvnpTBfUWwUNWsBxmD7KxCwntJYggpftckj2eLf9Qugao0J1txzI7RrHwojbeycTYE
+        uEmn+c1ups5j4qADXQ6fACRmBek6RnbGEAo7rBIhFwNCsOOcNPjr0JDpnlRJhPlexZB/kc
+        bloBH5nyFveZmZkg3K1EMmpZ+YKFMgerJN1u8cdP2TmIsf/Xd1atmZxKaxzsGQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1601490221;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=zv5Q1ba8TbOELbdMrEkMwGbKwuz8jmeM2ai9GDgQ4g4=;
+        b=Q0kMIcA38boIwN2hq3Syg841q4Z2+uzcUk9bLGxhtqgNZ1nviKoFQzPUJMnZDjs2wXgmuG
+        ahQ4C/EPXH5SgLBw==
+To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
+        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
+        jgg@mellanox.com, rafael@kernel.org, netanelg@mellanox.com,
+        shahafs@mellanox.com, yan.y.zhao@linux.intel.com,
+        pbonzini@redhat.com, samuel.ortiz@intel.com, mona.hossain@intel.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v3 01/18] irqchip: Add IMS (Interrupt Message Storage) driver
+In-Reply-To: <160021246221.67751.16280230469654363209.stgit@djiang5-desk3.ch.intel.com>
+References: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com> <160021246221.67751.16280230469654363209.stgit@djiang5-desk3.ch.intel.com>
+Date:   Wed, 30 Sep 2020 20:23:36 +0200
+Message-ID: <87362zi0nr.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Commit 59cd818763e8 ("dmaengine: fsl: convert tasklets to use new
-tasklet_setup() API") converted the pl330 driver to use new tasklet
-functions but missed that driver calls the tasklet function directly as
-well, so update it.
+On Tue, Sep 15 2020 at 16:27, Dave Jiang wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
+> +config IMS_MSI_ARRAY
+> +	bool "IMS Interrupt Message Storm MSI controller for device memory storage arrays"
 
-Fixes: 59cd818763e8 ("dmaengine: fsl: convert tasklets to use new tasklet_setup() API")
-Reported-by: kernel test robot <lkp@intel.com>
-Cc: Allen Pais <allen.lkml@gmail.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/dma/pl330.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hehe, you missed a Message Storm :)
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index d98fb318dd2d..e9f0101d92fa 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -2484,7 +2484,7 @@ static void pl330_issue_pending(struct dma_chan *chan)
- 	list_splice_tail_init(&pch->submitted_list, &pch->work_list);
- 	spin_unlock_irqrestore(&pch->lock, flags);
- 
--	pl330_tasklet((unsigned long)pch);
-+	pl330_tasklet(&pch->task);
- }
- 
- /*
--- 
-2.26.2
+> +	depends on PCI
+> +	select IMS_MSI
+> +	select GENERIC_MSI_IRQ_DOMAIN
+> +	help
+> +	  Support for IMS Interrupt Message Storm MSI controller
 
+and another one.
+
+> +	  with IMS slot storage in a slot array in device memory
+> +
+> +static void ims_array_mask_irq(struct irq_data *data)
+> +{
+> +	struct msi_desc *desc = irq_data_get_msi_desc(data);
+> +	struct ims_slot __iomem *slot = desc->device_msi.priv_iomem;
+> +	u32 __iomem *ctrl = &slot->ctrl;
+> +
+> +	iowrite32(ioread32(ctrl) | IMS_VECTOR_CTRL_MASK, ctrl);
+> +	ioread32(ctrl); /* Flush write to device */
+
+Bah, I fundamentaly hate tail comments. They are a distraction and
+disturb the reading flow. Put it above the ioread32() please.
+
+> +static void ims_array_unmask_irq(struct irq_data *data)
+> +{
+> +	struct msi_desc *desc = irq_data_get_msi_desc(data);
+> +	struct ims_slot __iomem *slot = desc->device_msi.priv_iomem;
+> +	u32 __iomem *ctrl = &slot->ctrl;
+> +
+> +	iowrite32(ioread32(ctrl) & ~IMS_VECTOR_CTRL_MASK, ctrl);
+
+Why is this one not flushed?
+
+> +}
+> +
+> +static void ims_array_write_msi_msg(struct irq_data *data, struct msi_msg *msg)
+> +{
+> +	struct msi_desc *desc = irq_data_get_msi_desc(data);
+> +	struct ims_slot __iomem *slot = desc->device_msi.priv_iomem;
+> +
+> +	iowrite32(msg->address_lo, &slot->address_lo);
+> +	iowrite32(msg->address_hi, &slot->address_hi);
+> +	iowrite32(msg->data, &slot->data);
+> +	ioread32(slot);
+
+Yuck? slot points to the struct and just because ioread32() accepts a
+void pointer does not make it any more readable.
+
+> +static void ims_array_reset_slot(struct ims_slot __iomem *slot)
+> +{
+> +	iowrite32(0, &slot->address_lo);
+> +	iowrite32(0, &slot->address_hi);
+> +	iowrite32(0, &slot->data);
+> +	iowrite32(0, &slot->ctrl);
+
+Flush?
+
+Thanks,
+
+        tglx

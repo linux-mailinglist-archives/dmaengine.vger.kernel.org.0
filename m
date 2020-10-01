@@ -2,101 +2,73 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EEED827F9A3
-	for <lists+dmaengine@lfdr.de>; Thu,  1 Oct 2020 08:49:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9869E27FA4A
+	for <lists+dmaengine@lfdr.de>; Thu,  1 Oct 2020 09:31:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgJAGth (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 1 Oct 2020 02:49:37 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:56170 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbgJAGth (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 1 Oct 2020 02:49:37 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0916nUF5115339;
-        Thu, 1 Oct 2020 01:49:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1601534970;
-        bh=f39Tm9PGnT5Kb0GT6JYUCDYVTa14cU//tN6YQOFFebI=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=st8gO3sABqq7+kizVNNxkEYJQ1ZwW9CLDWe175b9z+pqhimCnX55ne98V5ZjTCF0l
-         quqRD5yjS7Revhh915W2t1J8+JHBK/KFl4aF+wkIaZjG30J9vna/ACNbNeBQ0KnzHx
-         +TSuM33rmYMQGZgGcwvKFerY/CtLAh/GOPKdgdck=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0916nUkb050443;
-        Thu, 1 Oct 2020 01:49:30 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 1 Oct
- 2020 01:49:30 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 1 Oct 2020 01:49:29 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0916nRJL084046;
-        Thu, 1 Oct 2020 01:49:27 -0500
-Subject: Re: [PATCH 09/18] dt-bindings: dma: ti: Add document for K3 BCDMA
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
-        <robh+dt@kernel.org>, <vigneshr@ti.com>
-CC:     <dan.j.williams@intel.com>, <t-kristo@ti.com>,
-        <lokeshvutla@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>
-References: <20200930091412.8020-1-peter.ujfalusi@ti.com>
- <20200930091412.8020-10-peter.ujfalusi@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <9b0cea1e-c9c3-b38f-2bf1-1501133c16ae@ti.com>
-Date:   Thu, 1 Oct 2020 09:49:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1725938AbgJAHbB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 1 Oct 2020 03:31:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49868 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbgJAHbB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 1 Oct 2020 03:31:01 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1701C0613D0;
+        Thu,  1 Oct 2020 00:31:00 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f089d0019d474baa5172353.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:9d00:19d4:74ba:a517:2353])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2C4651EC0494;
+        Thu,  1 Oct 2020 09:30:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1601537459;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=0ShZgFz8rfNSDpK4iRIk/0isFaGhmqt+3jT+eWbAhU4=;
+        b=LXiDUti1s1cZbUpgXSmi22Aoltb7aTl3wewWWkhNh4qVthMnpdy8c6PSw9gTOXo2Ej34CF
+        kLVb/oB8j0ir+N7UKZfSwX7vD/4LAs3RMzU32rYuy60qdGbNaOk0l57a8DinUa1/BRO3j3
+        4jNxS2XrNfm7FCnWfx72fhlis14KFHA=
+Date:   Thu, 1 Oct 2020 09:30:49 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Dave Jiang <dave.jiang@intel.com>, dan.j.williams@intel.com,
+        tony.luck@intel.com, jing.lin@intel.com, ashok.raj@intel.com,
+        fenghua.yu@intel.com, kevin.tian@intel.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/5] Add shared workqueue support for idxd driver
+Message-ID: <20201001073049.GA17683@zn.tnic>
+References: <20200924180041.34056-1-dave.jiang@intel.com>
+ <a2a6f147-c4ad-a225-e348-b074a8017a10@intel.com>
+ <20200924215136.GS5030@zn.tnic>
+ <4d857287-c751-8b37-d067-b471014c3b73@intel.com>
+ <20201001042908.GO2968@vkoul-mobl>
 MIME-Version: 1.0
-In-Reply-To: <20200930091412.8020-10-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20201001042908.GO2968@vkoul-mobl>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Rob,
+On Thu, Oct 01, 2020 at 09:59:08AM +0530, Vinod Koul wrote:
+> I was out for last few days, so haven't checked on this yet, but given
+> that we are very close to merge widow I fear it is bit late to merge
+> this late.
 
-On 30/09/2020 12.14, Peter Ujfalusi wrote:
-> New binding document for
-> Texas Instruments K3 Block Copy DMA (BCDMA).
->=20
-> BCDMA is introduced as part of AM64.
->=20
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  .../devicetree/bindings/dma/ti/k3-bcdma.yaml  | 183 ++++++++++++++++++=
+There is time because we will have -rc8 so you have an additional week.
 
->  1 file changed, 183 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-bcdma.y=
-aml
->=20
-> diff --git a/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml b/D=
-ocumentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
-> new file mode 100644
-> index 000000000000..c84fb641738f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
-> @@ -0,0 +1,183 @@
+> I will go thru the series today though..
 
-=2E..
+If you do and you wanna take them, I'd suggest this:
 
-> +  compatible:
-> +    enum:
-> +      - ti,am64-dmss-bcdma
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org/message/P4TZ4AU6MBIPT2OROPDOKEN7U2QCS7FX/
 
-Would it be OK if I use ti,am64x-dmss-bcdma or should I stick with
-am64-dmss-bcdma.
-The TRM refers to the family as AM64x, but having the 'x' in the
-compatible did not sounded right.
+(it's on the same thread).
 
-- P=C3=A9ter
+Thx.
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-- 
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette

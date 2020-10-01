@@ -2,112 +2,117 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B3C027F53D
-	for <lists+dmaengine@lfdr.de>; Thu,  1 Oct 2020 00:39:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CAC927F6FF
+	for <lists+dmaengine@lfdr.de>; Thu,  1 Oct 2020 03:07:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731632AbgI3WjF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 30 Sep 2020 18:39:05 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:11318 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730876AbgI3WjE (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 30 Sep 2020 18:39:04 -0400
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5f7508d50000>; Wed, 30 Sep 2020 15:38:13 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 30 Sep
- 2020 22:39:00 +0000
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.175)
- by HQMAIL101.nvidia.com (172.20.187.10) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Wed, 30 Sep 2020 22:39:00 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HHNjCtTX3mFHtyiYBu1pC8WPH2ZOYRD2I7AeraUzrwSBbwzNRMZ8jKFBx7q7V/H+KZ77qvtq/0NhvH8M/SUR6LdJFrkjFlA4bAF7ooiBgsYb/cbVqeQys9pQludF3au1VuiuB2lG4Ywpgk3DblkJEHjn5MCBW92+c0NBi/7VxSMvpmAmWDPDjYg4r1xA31nLB4UqtYXghgoX/J2POZwTQQrG0+kcCUSjhcwsVMRCm62QjXuV6ikKIoWsP/LR2HpCXxsA2ASop0gyvhZR/HU5fSczFkCyyrc6WvViOXITDH+s98WbaCw072frdCn/FuE3E/DGWgtbIFroi7I10ChiOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6ai6Omny5JKBWcNpwYiVu/UDutJhsSBmTMmzj6la7f8=;
- b=gCmSolI0LabELxiEp1s3gqmB33cMmz79abHorzvJzV2VyMgM4MAhZ8oE+olL2TmUVfJZmk3+4aAsO18d3iEQN/A+eEH4QKtXRAgfmJE2AaULbhxHadR/zWUqT5h9sMXOPpw931Bls5wyCDdIaxnjfK5k2oBIPsIVZAKCiUIDaVb9t6FKTtPZDeMraEHDciv2Xo4oR/ccgvq1ClJ1gmgTSmnk4Ls5RWs4JBnwi9MhvvoBLR/+/kWaHfdAmMBvvZd3roOt1L4EcfAdB3nHBQFYtimX9wZD0fDAMJveTKKWJ9uKy3GoLPMjbN3dWDfxZpbtPrqHax+LLzpXYfCJF1eSag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM5PR12MB1548.namprd12.prod.outlook.com (2603:10b6:4:a::23) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3433.35; Wed, 30 Sep 2020 22:38:59 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78%7]) with mapi id 15.20.3433.032; Wed, 30 Sep 2020
- 22:38:59 +0000
-Date:   Wed, 30 Sep 2020 19:38:57 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Dave Jiang <dave.jiang@intel.com>, <vkoul@kernel.org>,
-        <megha.dey@intel.com>, <maz@kernel.org>, <bhelgaas@google.com>,
-        <alex.williamson@redhat.com>, <jacob.jun.pan@intel.com>,
-        <yi.l.liu@intel.com>, <baolu.lu@intel.com>, <kevin.tian@intel.com>,
-        <sanjay.k.kumar@intel.com>, <tony.luck@intel.com>,
-        <jing.lin@intel.com>, <dan.j.williams@intel.com>,
-        <kwankhede@nvidia.com>, <eric.auger@redhat.com>,
-        <parav@mellanox.com>, <rafael@kernel.org>, <netanelg@mellanox.com>,
-        <shahafs@mellanox.com>, <yan.y.zhao@linux.intel.com>,
-        <pbonzini@redhat.com>, <samuel.ortiz@intel.com>,
-        <mona.hossain@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
-        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>
+        id S1730534AbgJABHU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 30 Sep 2020 21:07:20 -0400
+Received: from mga09.intel.com ([134.134.136.24]:58575 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728660AbgJABHT (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 30 Sep 2020 21:07:19 -0400
+IronPort-SDR: ZmMO062tAYveuLdPZkJMMX8Bh/Ot+hgYSTKkgsGbGq6PpBvtDPuDRTNVKXYZp+8aVjRL9vxwUi
+ y6qjUipihZCA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9760"; a="163448273"
+X-IronPort-AV: E=Sophos;i="5.77,322,1596524400"; 
+   d="scan'208";a="163448273"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2020 18:07:09 -0700
+IronPort-SDR: mMnIrO7b8wP6KqVofoHDTHCZSjzenL4Bd4WKXBQTZfFg32rXdJ4WGHlQIgxq++fYLqgTSe3ozB
+ s2F4M+5EmKcw==
+X-IronPort-AV: E=Sophos;i="5.77,322,1596524400"; 
+   d="scan'208";a="312802720"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2020 18:07:07 -0700
+Date:   Wed, 30 Sep 2020 18:07:06 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        yi.l.liu@intel.com, baolu.lu@intel.com, kevin.tian@intel.com,
+        sanjay.k.kumar@intel.com, tony.luck@intel.com, jing.lin@intel.com,
+        dan.j.williams@intel.com, kwankhede@nvidia.com,
+        eric.auger@redhat.com, parav@mellanox.com, rafael@kernel.org,
+        netanelg@mellanox.com, shahafs@mellanox.com,
+        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
+        samuel.ortiz@intel.com, mona.hossain@intel.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        Ashok Raj <ashok.raj@intel.com>
 Subject: Re: [PATCH v3 05/18] dmaengine: idxd: add IMS support in base driver
-Message-ID: <20200930223857.GV816047@nvidia.com>
+Message-ID: <20201001010706.GD26492@otc-nc-03>
 References: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com>
  <160021248979.67751.3799965857372703876.stgit@djiang5-desk3.ch.intel.com>
- <87sgazgl0b.fsf@nanos.tec.linutronix.de> <20200930185103.GT816047@nvidia.com>
+ <87sgazgl0b.fsf@nanos.tec.linutronix.de>
+ <20200930185103.GT816047@nvidia.com>
  <20200930214941.GB26492@otc-nc-03>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200930214941.GB26492@otc-nc-03>
-X-ClientProxiedBy: MN2PR14CA0025.namprd14.prod.outlook.com
- (2603:10b6:208:23e::30) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+ <87d023gc71.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR14CA0025.namprd14.prod.outlook.com (2603:10b6:208:23e::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.36 via Frontend Transport; Wed, 30 Sep 2020 22:38:58 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kNkkT-004OLW-IM; Wed, 30 Sep 2020 19:38:57 -0300
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1601505493; bh=6ai6Omny5JKBWcNpwYiVu/UDutJhsSBmTMmzj6la7f8=;
-        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
-         From:To:CC:Subject:Message-ID:References:Content-Type:
-         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-LD-Processed;
-        b=ChI8qzlu7isZS2cgzXXjWILwfGDRYNyLmuP91JcxzU8ptCIBFxhVd79xfGmSLKsWt
-         q7PGrzqPo8Xd+XK0joJnkA/iYk66b8VdM+bLOaG4WUZOkcDDdLjfOGdf6/ijxq6+y5
-         UwqeHXrJBzT029P+eVfHXlpgIwVfV0ifPiN5Cpely9zUH5n69YU3o8WZvIm4oOPWpK
-         du4lZhBYJV56C4qgDxvmuLabhYNMnn2LqTBzMwzT02auQu4qz2Uf1sGye15Z6I3POk
-         tFKu7md7l1eDhoDbW4y/tYK/Bcdg62fc6F9CA/5j1Hvne33gIh94Epz5KMRkVwJekp
-         /hk2RK1hQ7h/w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87d023gc71.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Sep 30, 2020 at 02:49:41PM -0700, Raj, Ashok wrote:
+Hi Thomas,
 
-> One of the parameters it has is the "supported system page-sizes" which is
-> usually there in the SRIOV properties. So it needed a place holder for
-> that. 
+On Wed, Sep 30, 2020 at 11:57:22PM +0200, Thomas Gleixner wrote:
+> On Wed, Sep 30 2020 at 14:49, Ashok Raj wrote:
+> >> It is the weirdest thing, IMHO. Intel defined a dvsec cap in their
+> >> SIOV cookbook, but as far as I can see it serves no purpose at
+> >> all.
+> >> 
+> >> Last time I asked I got some unclear mumbling about "OEMs".
+> >> 
+> > One of the parameters it has is the "supported system page-sizes" which is
+> > usually there in the SRIOV properties. So it needed a place holder for
+> > that. 
+> >
+> > IMS is a device specific capability, and I almost forgot why we needed
+> > until I had to checking internally. Remember when a device is given to a
+> > guest, MSIX routing via Interrupt Remapping is automatic via the VFIO/IRQFD
+> > and such.
+> 
+> -ENOPARSE
 
-No idea why this would be a PCI cap. It is certainly not something so
-universal it needs standardizing. There are many ways a device can
-manage a BAR to match a required protection granularity.
+Let me try again to see if this will turn into ESUCCESS :-)
 
-> When we provision an entire PCI device that is IMS capable. The guest
-> driver does know it can update the IMS entries directly without going to
-> the host. But in order to do remapping we need something like how we manage
-> PASID allocation from guest, so an IRTE entry can be allocated and the host
-> driver can write the proper values for IMS.
+Devices exposed to guest need host OS support for programming interrupt
+entries in the IOMMU interrupt remapping table. VFIO provides those 
+services for standard interrupt schemes like MSI/MSIx for instance. 
+Since IMS is device specific VFIO can't provide an intercept when 
+IMS entries are programmed by the guest OS. 
 
-Look at the architecture we ended up with.
+If the virtualisation software doesn't expose vIOMMU with virtual
+capabilities to allocate IRTE entries and support for vIRTE in guest
+then its expected to turn off the IMS capability. Hence driver running 
+in guest will not enable IMS.
 
-You need to make pci_subdevice_msi_create_irq_domain() fail if the
-platform can't provide the functionality.
+> 
+> > When we provision an entire PCI device that is IMS capable. The guest
+> > driver does know it can update the IMS entries directly without going to
+> > the host. But in order to do remapping we need something like how we manage
+> > PASID allocation from guest, so an IRTE entry can be allocated and the host
+> > driver can write the proper values for IMS.
+> 
+> And how is that related to that capbility thing?
+> 
+> Also this stuff is host side and not guest side. I seriously doubt that
+> you want to hand in the whole PCI device which contains the IMS
 
-Working around that with PCI caps is pretty gross.
+You are right, but nothing prevents a user from simply taking a full PCI
+device and assign to guest. 
 
-Jason
+> thing. The whole point of IMS was as far as I was told that you can
+> create gazillions of subdevices and have seperate MSI interrupts for
+> each of them.
+
+
+Cheers,
+Ashok

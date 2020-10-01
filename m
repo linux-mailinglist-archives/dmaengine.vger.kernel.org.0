@@ -2,73 +2,94 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9869E27FA4A
-	for <lists+dmaengine@lfdr.de>; Thu,  1 Oct 2020 09:31:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90DDD27FBBE
+	for <lists+dmaengine@lfdr.de>; Thu,  1 Oct 2020 10:45:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725938AbgJAHbB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 1 Oct 2020 03:31:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49868 "EHLO
+        id S1725938AbgJAIpA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 1 Oct 2020 04:45:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbgJAHbB (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 1 Oct 2020 03:31:01 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1701C0613D0;
-        Thu,  1 Oct 2020 00:31:00 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f089d0019d474baa5172353.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:9d00:19d4:74ba:a517:2353])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2C4651EC0494;
-        Thu,  1 Oct 2020 09:30:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1601537459;
+        with ESMTP id S1725921AbgJAIpA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 1 Oct 2020 04:45:00 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37F75C0613D0;
+        Thu,  1 Oct 2020 01:45:00 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1601541898;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=0ShZgFz8rfNSDpK4iRIk/0isFaGhmqt+3jT+eWbAhU4=;
-        b=LXiDUti1s1cZbUpgXSmi22Aoltb7aTl3wewWWkhNh4qVthMnpdy8c6PSw9gTOXo2Ej34CF
-        kLVb/oB8j0ir+N7UKZfSwX7vD/4LAs3RMzU32rYuy60qdGbNaOk0l57a8DinUa1/BRO3j3
-        4jNxS2XrNfm7FCnWfx72fhlis14KFHA=
-Date:   Thu, 1 Oct 2020 09:30:49 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Dave Jiang <dave.jiang@intel.com>, dan.j.williams@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, ashok.raj@intel.com,
-        fenghua.yu@intel.com, kevin.tian@intel.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/5] Add shared workqueue support for idxd driver
-Message-ID: <20201001073049.GA17683@zn.tnic>
-References: <20200924180041.34056-1-dave.jiang@intel.com>
- <a2a6f147-c4ad-a225-e348-b074a8017a10@intel.com>
- <20200924215136.GS5030@zn.tnic>
- <4d857287-c751-8b37-d067-b471014c3b73@intel.com>
- <20201001042908.GO2968@vkoul-mobl>
+         in-reply-to:in-reply-to:references:references;
+        bh=WhgkxnVG6EstNwK8jxm1/YLBRim7CJx8RIxGbHgpesE=;
+        b=Q8Qs9jym5ynC/704Uq2IQI6/1oYa47l84PMVz6tUMORy3MFidPn6AWF6IBiUFI0pgWsyEZ
+        tB9FFHPGtY2sLpx34+7q88vtshPa4h42Wjq1GaysJhxSMvfjqWLYHy6PCE06Iz/Hith+4S
+        EuGPWmn4Wc6dTq2S2KDrU2VCxsPa+2siQ1fct65OIXg5J57ZN0cTdTRYl+1rgDjS2OuvuG
+        T9t90uUzLUuH3z2ZGt4vfkopIkJPU6esKme9wmFrnm9zLj9PFOaszT4DF9nxWwg1jw2U0U
+        +/qxULKJwssMdJoVMZG47wO8VzmDNHs7q9x4tnIyDcRi9uRclAhRbExk5kbUHA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1601541898;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WhgkxnVG6EstNwK8jxm1/YLBRim7CJx8RIxGbHgpesE=;
+        b=jrYH8mVSQWYuXAIhGVLDIV7y7akwWVshLZI6MLB7OMFtMmRfcv8ht7eEA0VTuxFJiRjLS/
+        yU8lgbbdnUtS+QDQ==
+To:     "Raj\, Ashok" <ashok.raj@intel.com>
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        yi.l.liu@intel.com, baolu.lu@intel.com, kevin.tian@intel.com,
+        sanjay.k.kumar@intel.com, tony.luck@intel.com, jing.lin@intel.com,
+        dan.j.williams@intel.com, kwankhede@nvidia.com,
+        eric.auger@redhat.com, parav@mellanox.com, rafael@kernel.org,
+        netanelg@mellanox.com, shahafs@mellanox.com,
+        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
+        samuel.ortiz@intel.com, mona.hossain@intel.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v3 05/18] dmaengine: idxd: add IMS support in base driver
+In-Reply-To: <20201001010706.GD26492@otc-nc-03>
+References: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com> <160021248979.67751.3799965857372703876.stgit@djiang5-desk3.ch.intel.com> <87sgazgl0b.fsf@nanos.tec.linutronix.de> <20200930185103.GT816047@nvidia.com> <20200930214941.GB26492@otc-nc-03> <87d023gc71.fsf@nanos.tec.linutronix.de> <20201001010706.GD26492@otc-nc-03>
+Date:   Thu, 01 Oct 2020 10:44:58 +0200
+Message-ID: <87y2kqfi7p.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20201001042908.GO2968@vkoul-mobl>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Oct 01, 2020 at 09:59:08AM +0530, Vinod Koul wrote:
-> I was out for last few days, so haven't checked on this yet, but given
-> that we are very close to merge widow I fear it is bit late to merge
-> this late.
+On Wed, Sep 30 2020 at 18:07, Ashok Raj wrote:
+> On Wed, Sep 30, 2020 at 11:57:22PM +0200, Thomas Gleixner wrote:
+>
+> Devices exposed to guest need host OS support for programming interrupt
+> entries in the IOMMU interrupt remapping table. VFIO provides those 
+> services for standard interrupt schemes like MSI/MSIx for instance. 
+> Since IMS is device specific VFIO can't provide an intercept when 
+> IMS entries are programmed by the guest OS.
 
-There is time because we will have -rc8 so you have an additional week.
+Why is IMS exposed to the guest in the first place? You expose a
+subdevice to a guest, right? And that subdevice should not even know
+that IMS exists simply because IMS is strictly host specific.
 
-> I will go thru the series today though..
+The obvious emulation here is to make the subdevice look like a PCI
+device and expose emulated MSIX (not MSI) which is intercepted when
+accessing the MSIX table and then redirected to the proper place along
+with IRTE and PASID and whatever.
 
-If you do and you wanna take them, I'd suggest this:
+>> Also this stuff is host side and not guest side. I seriously doubt that
+>> you want to hand in the whole PCI device which contains the IMS
+>
+> You are right, but nothing prevents a user from simply taking a full PCI
+> device and assign to guest. 
 
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org/message/P4TZ4AU6MBIPT2OROPDOKEN7U2QCS7FX/
+You surely can and should prevent that because it makes no sense and
+cannot work.
 
-(it's on the same thread).
+That's why you want a generic check for 'this device is magic SIOV or
+whatever' and not something burried deep into a driver..
 
-Thx.
+Thanks,
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+        tglx

@@ -2,113 +2,94 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C5B427FE43
-	for <lists+dmaengine@lfdr.de>; Thu,  1 Oct 2020 13:23:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9547A27FEDA
+	for <lists+dmaengine@lfdr.de>; Thu,  1 Oct 2020 14:18:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731877AbgJALXS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 1 Oct 2020 07:23:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52692 "EHLO mail.kernel.org"
+        id S1731846AbgJAMSM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 1 Oct 2020 08:18:12 -0400
+Received: from mga04.intel.com ([192.55.52.120]:19934 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731134AbgJALXM (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 1 Oct 2020 07:23:12 -0400
-Received: from localhost (unknown [122.167.37.56])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3332208B6;
-        Thu,  1 Oct 2020 11:23:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601551392;
-        bh=bUHEd1e9zOHwRPVq02x/79Y7+fidiGQpvPe4mV0kfTw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1n8NslubAAO20XWnkYQbenY2slljF1Rf26iLMA9V/lrhfSmrpnPIWCVARWNm0Kpdg
-         07OpUmM3bik9PVYwCu2L7XeEMkqBBs8ZOZsdvOUfNpHCdH+GVZKd7V2dhT32v/SEsS
-         CYbzEexUe9pQPk4C4gayFBYjdZ0fAvmvDJ3lae00=
-Date:   Thu, 1 Oct 2020 16:53:07 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] dmaengine: add peripheral configuration
-Message-ID: <20201001112307.GX2968@vkoul-mobl>
-References: <20200923063410.3431917-1-vkoul@kernel.org>
- <20200923063410.3431917-3-vkoul@kernel.org>
- <29f95fff-c484-0131-d1fe-b06e3000fb9f@ti.com>
+        id S1731839AbgJAMSM (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 1 Oct 2020 08:18:12 -0400
+IronPort-SDR: RqY7Ggu2UsAS0fwWzLWD3KAahO4EhOxw1tC/kVcIYjLIuNXxioGTImuvG5oKCE4Vb+j8Vhjqf8
+ KG+Cwfn+Sgkg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9760"; a="160111634"
+X-IronPort-AV: E=Sophos;i="5.77,323,1596524400"; 
+   d="scan'208";a="160111634"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Oct 2020 05:18:10 -0700
+IronPort-SDR: UhmPryEsZv0v47Sz5+2Tmji8P36b74PgFGZqIanh2oKhivbsl8zhQ+OaFcsasu6HzOLrS4W/yx
+ azUCZVY5PSSQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,323,1596524400"; 
+   d="scan'208";a="308611690"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orsmga003.jf.intel.com with ESMTP; 01 Oct 2020 05:18:09 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 1 Oct 2020 05:18:09 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 1 Oct 2020 05:18:08 -0700
+Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
+ fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
+ Thu, 1 Oct 2020 05:18:08 -0700
+From:   "Jiang, Dave" <dave.jiang@intel.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Borislav Petkov <bp@alien8.de>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 0/5] Add shared workqueue support for idxd driver
+Thread-Topic: [PATCH v6 0/5] Add shared workqueue support for idxd driver
+Thread-Index: AQHWkpywf1ThYVfa9k6EQSVI71gKlKl4TzaAgAB6qACACQB3AIAA3JgAgAANsZc=
+Date:   Thu, 1 Oct 2020 12:18:08 +0000
+Message-ID: <2D7025CD-00D4-4D68-98D3-17AD4B0D65EE@intel.com>
+References: <20200924180041.34056-1-dave.jiang@intel.com>
+ <a2a6f147-c4ad-a225-e348-b074a8017a10@intel.com>
+ <20200924215136.GS5030@zn.tnic>
+ <4d857287-c751-8b37-d067-b471014c3b73@intel.com>,<20201001042908.GO2968@vkoul-mobl>
+In-Reply-To: <20201001042908.GO2968@vkoul-mobl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <29f95fff-c484-0131-d1fe-b06e3000fb9f@ti.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Peter,
-
-On 29-09-20, 11:06, Peter Ujfalusi wrote:
-
-> > + * @spi: peripheral config for spi
-> > + * @i2c: peripheral config for i2c
-> > + */
-> > +struct dmaengine_peripheral_config {
-> > +	enum dmaengine_peripheral peripheral;
-> > +	u8 set_config;
-> > +	u32 rx_len;
-> > +	struct dmaengine_spi_config spi;
-> > +	struct dmaengine_i2c_config i2c;
-> 
-> I know that you want this to be as generic as much as it is possible,
-> but do we really want to?
-
-That is really a good question ;-)
-
-> GPIv2 will also handle I2S peripheral, other vendor's similar solution
-
-Not I2S, but yes but additional peripherals is always a question
-
-> would require different sets of parameters unique to their IPs?
-> 
-> How we are going to handle similar setups for DMA which is used for
-> networking, SPI/I2C/I2S/NAND/display/capture, etc?
-> 
-> Imho these settings are really part of the peripheral's domain and not
-> the DMA. It is just a small detail that instead of direct register
-> writes, your setup is using the DMA descriptors to write.
-> It is similar to what I use as metadata (part of the descriptor belongs
-> and owned by the client driver).
-> 
-> I think it would be better to have:
-> 
-> enum dmaengine_peripheral {
-> 	DMAENGINE_PERIPHERAL_GPI_SPI = 1,
-> 	DMAENGINE_PERIPHERAL_GPI_UART,
-> 	DMAENGINE_PERIPHERAL_GPI_I2C,
-> 	DMAENGINE_PERIPHERAL_XYZ_SPI,
-> 	DMAENGINE_PERIPHERAL_XYZ_AASRC,
-> 	DMAENGINE_PERIPHERAL_ABC_CAM,
-> 	...
-> 	DMAENGINE_PERIPHERAL_LAST,
-> };
-> 
-> enum dmaengine_peripheral peripheral_type;
-> void *peripheral_config;
-> 
-> 
-> and that's it. The set_config is specific to GPI.
-> It can be debated where the structs should be defined, in the generic
-> dmaengine.h or in include/linux/dma/ as controller specific
-> (gpi_peripheral.h) or a generic one, like dmaengine_peripheral.h
-> 
-> The SPI/I2C/UART client of yours would pass the GPI specific struct as
-> in any case it has to know what is the DMA it is serviced by.
-
-If we want to take that approach, I can actually move the whole logic of
-creating the specific TREs from DMA to clients and they pass on TRE
-values and driver adds to ring after appending DMA TREs
-
-Question is how should this interface look like? reuse metadata or add a
-new API which sets the txn specific data (void pointer and size) to the
-txn.. 
-
--- 
-~Vinod
+DQoNCj4gT24gU2VwIDMwLCAyMDIwLCBhdCA5OjI5IFBNLCBWaW5vZCBLb3VsIDx2a291bEBrZXJu
+ZWwub3JnPiB3cm90ZToNCj4gDQo+IO+7v0hpIERhdmUsDQo+IA0KPj4gT24gMzAtMDktMjAsIDE1
+OjE5LCBEYXZlIEppYW5nIHdyb3RlOg0KPj4gDQo+PiANCj4+PiBPbiA5LzI0LzIwMjAgMjo1MSBQ
+TSwgQm9yaXNsYXYgUGV0a292IHdyb3RlOg0KPj4+IE9uIFRodSwgU2VwIDI0LCAyMDIwIGF0IDAy
+OjMyOjM1UE0gLTA3MDAsIERhdmUgSmlhbmcgd3JvdGU6DQo+Pj4+IEhpIFZpbm9kLA0KPj4+PiBM
+b29rcyBsaWtlIHdlIGFyZSBjbGVhcmVkIG9uIHRoZSB4ODYgcGF0Y2hlcyBmb3IgdGhpcyBzZXJp
+ZXMgd2l0aCBzaWduIG9mZnMNCj4+Pj4gZnJvbSBtYWludGFpbmVyIEJvcmlzLiBQbGVhc2UgY29u
+c2lkZXIgdGhlIHNlcmllcyBmb3IgNS4xMCBpbmNsdXNpb24uIFRoYW5rDQo+Pj4+IHlvdSENCj4+
+PiANCj4+PiBBcyBJIHNhaWQgaGVyZSwgSSdkIHN0cm9uZ2x5IHN1Z2dlc3Qgd2UgZG8gdGhpczoN
+Cj4+PiANCj4+PiBodHRwczovL2xpc3RzLjAxLm9yZy9oeXBlcmtpdHR5L2xpc3Qva2J1aWxkLWFs
+bEBsaXN0cy4wMS5vcmcvdGhyZWFkLzVGS05XTkNDUlYzQVhVQUVYVUdRRkY0RURRTkFORjNGLw0K
+Pj4+IA0KPj4+IGFuZCBWaW5vZCBzaG91bGQgbWVyZ2UgdGhlIHg4Ni9wYXNpZCBicmFuY2guIE90
+aGVyd2lzZSBpcyBoaXMgYnJhbmNoDQo+Pj4gYW5kIGluY29tcGxldGUgeW91IGNvdWxkIG5vdCBo
+YXZlIHRlc3RlZCBpdCBwcm9wZXJseS4NCj4+PiANCj4+IA0KPj4gSGkgVmlub2QsDQo+PiBKdXN0
+IGNoZWNraW5nIHRvIHNlZSBpZiB5b3UgaGF2ZSBhbnkgb2JqZWN0aW9ucyBvciBjb25jZXJucyB3
+aXRoIHJlc3BlY3QgdG8NCj4+IHRoaXMgc2VyaWVzLiBXZSBhcmUgaG9waW5nIGl0IGNhbiBiZSBx
+dWV1ZWQgZm9yIHRoZSA1LjEwIG1lcmdlIGlmIHRoZXJlIGFyZQ0KPj4gbm8gb2JqZWN0aW9ucy4g
+VGhhbmtzIQ0KPiANCj4gSSB3YXMgb3V0IGZvciBsYXN0IGZldyBkYXlzLCBzbyBoYXZlbid0IGNo
+ZWNrZWQgb24gdGhpcyB5ZXQsIGJ1dCBnaXZlbg0KPiB0aGF0IHdlIGFyZSB2ZXJ5IGNsb3NlIHRv
+IG1lcmdlIHdpZG93IEkgZmVhciBpdCBpcyBiaXQgbGF0ZSB0byBtZXJnZQ0KPiB0aGlzIGxhdGUu
+IEkgd2lsbCBnbyB0aHJ1IHRoZSBzZXJpZXMgdG9kYXkgdGhvdWdoLi4NCg0KVGhhbmtzIFZpbm9k
+LiBWZXJ5IG11Y2ggYXBwcmVjaWF0ZSBpdCBlaXRoZXIgd2F5LiANCg0KDQo+IFRoYW5rcw0KPiAt
+LSANCj4gflZpbm9kDQo=

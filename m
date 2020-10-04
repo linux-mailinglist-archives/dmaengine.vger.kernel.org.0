@@ -2,64 +2,83 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 43251281BC9
-	for <lists+dmaengine@lfdr.de>; Fri,  2 Oct 2020 21:23:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4271D282B16
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Oct 2020 16:03:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388576AbgJBTXM convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Fri, 2 Oct 2020 15:23:12 -0400
-Received: from mx.metalurgs.lv ([81.198.125.103]:65054 "EHLO mx.metalurgs.lv"
+        id S1725934AbgJDODT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 4 Oct 2020 10:03:19 -0400
+Received: from crapouillou.net ([89.234.176.41]:51496 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388556AbgJBTXM (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 2 Oct 2020 15:23:12 -0400
-X-Greylist: delayed 470 seconds by postgrey-1.27 at vger.kernel.org; Fri, 02 Oct 2020 15:23:12 EDT
-Received: from mx.metalurgs.lv (localhost [127.0.0.1])
-        by mx.metalurgs.lv (Postfix) with ESMTP id CF50D5E37E
-        for <dmaengine@vger.kernel.org>; Fri,  2 Oct 2020 22:15:21 +0300 (EEST)
-Received: from kas30pipe.localhost (localhost [127.0.0.1])
-        by mx.metalurgs.lv (Postfix) with ESMTP id 7D5D95D690
-        for <dmaengine@vger.kernel.org>; Fri,  2 Oct 2020 22:15:21 +0300 (EEST)
-Received: by mx.metalurgs.lv (Postfix, from userid 1005)
-        id 10C5862B88; Fri,  2 Oct 2020 22:15:20 +0300 (EEST)
-Received: from [100.64.1.74] (unknown [190.15.125.50])
-        (Authenticated sender: admin)
-        by mx.metalurgs.lv (Postfix) with ESMTPA id C849862B9C;
-        Fri,  2 Oct 2020 22:15:14 +0300 (EEST)
+        id S1725832AbgJDODS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 4 Oct 2020 10:03:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1601820194; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=+kBvwShC4Gx7sin5hKSSdtMTenpa8TP0h/xGioxBnLU=;
+        b=se7uaughVO3b0Yn++zNO3uN1hAslCP79XvqWIrpU4Q7rBSPw4aoqr32279BSvkdv3L8dIH
+        YLShPmrrkMf60HvOyhfzGVtCxTLvuX3QNtmoyc4mWDwbSxjzoDN/xhGvdqYn5ZIbBJ/n3f
+        /CGr5TTBBch5sFtpzJ/kn7Gz6BsntHI=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     od@zcrc.me, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        stable@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
+Subject: [PATCH] dma: dma-jz4780: Fix race in jz4780_dma_tx_status
+Date:   Sun,  4 Oct 2020 16:03:07 +0200
+Message-Id: <20201004140307.885556-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Description: Mail message body
-To:     Recipients <financialcapability6@gmail.com>
-From:   "Mr. Hashim Bin" <financialcapability6@gmail.com>
-Date:   Fri, 02 Oct 2020 16:15:08 -0300
-Reply-To: binmurrah@gmail.com
-X-SpamTest-Envelope-From: financialcapability6@gmail.com
-X-SpamTest-Group-ID: 00000000
-X-SpamTest-Info: Profiles 71303 [Jan 01 2015]
-X-SpamTest-Info: {TO: forged address, i.e. recipient, investors, public, etc.}
-X-SpamTest-Info: {DATE: unreal year}
-X-SpamTest-Method: none
-X-SpamTest-Rate: 55
-X-SpamTest-Status: Not detected
-X-SpamTest-Status-Extended: not_detected
-X-SpamTest-Version: SMTP-Filter Version 3.0.0 [0284], KAS30/Release
-Message-ID: <20201002191521.10C5862B88@mx.metalurgs.lv>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Subject: Low Rate Loan.
-X-Anti-Virus: Kaspersky Anti-Virus for Linux Mail Server 5.6.39/RELEASE,
-         bases: 20140401 #7726142, check: 20201002 notchecked
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello Dear,
+The jz4780_dma_tx_status() function would check if a channel's cookie
+state was set to 'completed', and if not, it would enter the critical
+section. However, in that time frame, the jz4780_dma_chan_irq() function
+was able to set the cookie to 'completed', and clear the jzchan->vchan
+pointer, which was deferenced in the critical section of the first
+function.
 
-We are Investment Company offering Corporate and Personal
-Loan at 3% Interest Rate for a duration of 10Years.
+Fix this race by checking the channel's cookie state after entering the
+critical function and not before.
 
-We also pay 1% commission to brokers, who introduce project
-owners for finance or other opportunities.
+Fixes: d894fc6046fe ("dmaengine: jz4780: add driver for the Ingenic JZ4780 DMA controller")
+Cc: stable@vger.kernel.org # v4.0
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reported-by: Artur Rojek <contact@artur-rojek.eu>
+Tested-by: Artur Rojek <contact@artur-rojek.eu>
+---
+ drivers/dma/dma-jz4780.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Please get back to me if you are interested for more
-details.
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index 8beed91428bd..a608efaa435f 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -639,11 +639,11 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
+ 	unsigned long flags;
+ 	unsigned long residue = 0;
+ 
++	spin_lock_irqsave(&jzchan->vchan.lock, flags);
++
+ 	status = dma_cookie_status(chan, cookie, txstate);
+ 	if ((status == DMA_COMPLETE) || (txstate == NULL))
+-		return status;
+-
+-	spin_lock_irqsave(&jzchan->vchan.lock, flags);
++		goto out_unlock_irqrestore;
+ 
+ 	vdesc = vchan_find_desc(&jzchan->vchan, cookie);
+ 	if (vdesc) {
+@@ -660,6 +660,7 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
+ 	    && jzchan->desc->status & (JZ_DMA_DCS_AR | JZ_DMA_DCS_HLT))
+ 		status = DMA_ERROR;
+ 
++out_unlock_irqrestore:
+ 	spin_unlock_irqrestore(&jzchan->vchan.lock, flags);
+ 	return status;
+ }
+-- 
+2.28.0
 
-Yours faithfully,
-Hashim Bin 

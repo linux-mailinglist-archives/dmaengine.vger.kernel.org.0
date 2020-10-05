@@ -2,54 +2,50 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24966282F9B
-	for <lists+dmaengine@lfdr.de>; Mon,  5 Oct 2020 06:27:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EFD15282F9E
+	for <lists+dmaengine@lfdr.de>; Mon,  5 Oct 2020 06:29:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725844AbgJEE1x (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 5 Oct 2020 00:27:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45558 "EHLO mail.kernel.org"
+        id S1725844AbgJEE3j (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 5 Oct 2020 00:29:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbgJEE1x (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 5 Oct 2020 00:27:53 -0400
+        id S1725267AbgJEE3i (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 5 Oct 2020 00:29:38 -0400
 Received: from localhost (unknown [171.61.67.142])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C78A72080C;
-        Mon,  5 Oct 2020 04:27:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1F092080C;
+        Mon,  5 Oct 2020 04:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601872072;
-        bh=81ofi23+2Bd24RjsNBYMAaXLsVa+v1UhZoVfpnrdcyM=;
+        s=default; t=1601872178;
+        bh=TTebaQ0BqbFl5Dz2cFAe1np5j2lZu7ai/obAxyVWTko=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BNx3Ocj5WDaaZsMjKvtb6KlkmixkUJ14/GXWbyKKCH/4pTnbzFJ5dPDN4f3g3ObMy
-         2VaV8Hy/UMfsS2oBfOwNMuR32OTAV0qcLrukURh/fTctwNXUt7LcKcyizhVCd5UE/Q
-         xq7mCIF+m8/a+jPtywoOIIeZx2SIJYSiS7OpdLwE=
-Date:   Mon, 5 Oct 2020 09:57:47 +0530
+        b=BfcIA3mjxwbCuClZAjwwCN28GhRML6d4KIr/gOejWYmLxZDVJSVWxKemFZbMRWWmF
+         0jjhMPQZuBMBcmGgYQvzGjBYn2p5QlooBrFz8P9KYy21pRbkg+ThLFt96VShhxVFrT
+         M8B3fI5+1ny1IsOu4QR6eIWEGijg+qmCGdvVVoOY=
+Date:   Mon, 5 Oct 2020 09:59:34 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     od@zcrc.me, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: Re: [PATCH] dma: dma-jz4780: Fix race in jz4780_dma_tx_status
-Message-ID: <20201005042747.GC2968@vkoul-mobl>
-References: <20201004140307.885556-1-paul@crapouillou.net>
+To:     dmaengine@vger.kernel.org
+Cc:     Romain Perier <romain.perier@gmail.com>,
+        Allen Pais <allen.lkml@gmail.com>
+Subject: Re: [PATCH] dmaengine: fsl: remove bad channel update
+Message-ID: <20201005042934.GD2968@vkoul-mobl>
+References: <20201001164740.178977-1-vkoul@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201004140307.885556-1-paul@crapouillou.net>
+In-Reply-To: <20201001164740.178977-1-vkoul@kernel.org>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 04-10-20, 16:03, Paul Cercueil wrote:
-> The jz4780_dma_tx_status() function would check if a channel's cookie
-> state was set to 'completed', and if not, it would enter the critical
-> section. However, in that time frame, the jz4780_dma_chan_irq() function
-> was able to set the cookie to 'completed', and clear the jzchan->vchan
-> pointer, which was deferenced in the critical section of the first
-> function.
+On 01-10-20, 22:17, Vinod Koul wrote:
+> Commit 59cd818763e8 ("dmaengine: fsl: convert tasklets to use new
+> tasklet_setup() API") broke this driver by not removing the old channel
+> update method.
 > 
-> Fix this race by checking the channel's cookie state after entering the
-> critical function and not before.
+> Fix this by remove the offending call as channel is queried from
+> tasklet structure.
 
 Applied, thanks
 

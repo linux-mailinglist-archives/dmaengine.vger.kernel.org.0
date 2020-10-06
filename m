@@ -2,114 +2,115 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 409FA284530
-	for <lists+dmaengine@lfdr.de>; Tue,  6 Oct 2020 07:06:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9829C28455C
+	for <lists+dmaengine@lfdr.de>; Tue,  6 Oct 2020 07:30:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgJFFFT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 6 Oct 2020 01:05:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbgJFFFT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 6 Oct 2020 01:05:19 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AE3FC0613A7
-        for <dmaengine@vger.kernel.org>; Mon,  5 Oct 2020 22:05:19 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id a1so1042092pjd.1
-        for <dmaengine@vger.kernel.org>; Mon, 05 Oct 2020 22:05:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=BfRnwGdRrJS2YZh4CD27w2xAtyshOOYj96RvXpFQA9k=;
-        b=p56CP2HRP6w1yFamtE9CBFfr+QX4dje4VVorXCXKzmqwgxCCv+WI+gxlQ0DIjmkVqW
-         a3y259MxumajuGvwlMY4Yf0L6TO6LgM5MAFSym5v7bqMq3N0/m5C79gnPu0yzni/nbdt
-         6x0oOMYEi1G9dHclDWibx62i9Eazsr5gLRvVqH3MXUOWMi0VDU89Eux/MXlftx2XLqwo
-         vXeBz9D+j+UgetCGjlfZokj2V3zq50hyvlaUWoJiyyqoxgUgsygiYjCsJBxpj6YghnoN
-         iaJM5KMj683cY67Dycy+RBrRuwfGhA2wLAV+MO7JArWcPqC+CeZV8UDUcNfcsjsZY3nA
-         9yqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BfRnwGdRrJS2YZh4CD27w2xAtyshOOYj96RvXpFQA9k=;
-        b=oqeo3fjZkssEUZdjUAxEzVI9TO8+QTvI3ornVc8sIC9Fn4ZjkK6ZSMReF4ODQVHBnH
-         ebC8WvVCLN66HCst0p9c3tbBjECLPJ1t0IroluS5zbm4ztV/E2XqqRBLisyzoBSNbR1P
-         fxbeBbnyK+SJyFQPMuw0XuoGsCtZGfMHqcLekv3Ghss0E41B+bT6d/vQDiHWJe7JmFc7
-         mbBHyQBjVSvvZbbYHdJ88NmuwYlh+RMuZLmYoZNdvPF9HnovG3kux2/15vWUYlH11qOO
-         3/Lqi6FfTH5232d4ayxWYkHBon2KWD/J7fKzOhFIVX33Zpm6Yc0QU4AME2qx1GCQuuUz
-         MziQ==
-X-Gm-Message-State: AOAM530eGa4n1cwb26jX/mOdhM/UBz/KFn+fD2mW0nbblAnkFab2wSP4
-        +SumAQOGsoBUpO6eKgJajJA=
-X-Google-Smtp-Source: ABdhPJwguNBz1IBXU8XS+BaELGVnikZyPkwLEY38SAi6oF0+eTcGBq8QoppJWxFpBpGQmtV63N9Ryw==
-X-Received: by 2002:a17:90b:795:: with SMTP id l21mr2696387pjz.130.1601960718784;
-        Mon, 05 Oct 2020 22:05:18 -0700 (PDT)
-Received: from localhost.localdomain ([49.207.197.157])
-        by smtp.gmail.com with ESMTPSA id e196sm1755437pfh.128.2020.10.05.22.05.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Oct 2020 22:05:18 -0700 (PDT)
-From:   Allen Pais <allen.lkml@gmail.com>
-To:     vkoul@kernel.org
-Cc:     green.wan@sifive.com, hyun.kwon@xilinx.com,
-        dmaengine@vger.kernel.org, Allen Pais <apais@linux.microsoft.com>,
-        Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH 2/2] dmaengine: xilinx: dpdma: convert tasklets to use new tasklet_setup() API
-Date:   Tue,  6 Oct 2020 10:34:58 +0530
-Message-Id: <20201006050458.221329-2-allen.lkml@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201006050458.221329-1-allen.lkml@gmail.com>
-References: <20201006050458.221329-1-allen.lkml@gmail.com>
+        id S1726875AbgJFF3r (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 6 Oct 2020 01:29:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50050 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbgJFF3q (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 6 Oct 2020 01:29:46 -0400
+Received: from localhost (unknown [122.167.144.92])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C34120870;
+        Tue,  6 Oct 2020 05:29:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601962185;
+        bh=IqVDArZkdO/B6tbx3G9IqtpqMW94z4IPv/01HlGFHyY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XJYtCNTyvx3ozaL1aRMYZGV+bTbvDa3P+1vHmIpIZkmMpy/W3RdFSo1VlEtqd2ZwS
+         VXm0e3hsDFIgJyUblJEaSpP3cJaPtrtrYpgunMrPuk68lEyTmKEkfZetm3/aycx6/+
+         f5jbT6MC2Pw1++qOdAXkqzyJva8aLdhWHo97xSwA=
+Date:   Tue, 6 Oct 2020 10:59:40 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>, dmaengine@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Jens Axboe <axboe@kernel.dk>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Richard Weinberger <richard@nod.at>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: Add missing 'unevaluatedProperties'
+Message-ID: <20201006052940.GO2968@vkoul-mobl>
+References: <20201005183830.486085-1-robh@kernel.org>
+ <20201005183830.486085-2-robh@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201005183830.486085-2-robh@kernel.org>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Allen Pais <apais@linux.microsoft.com>
+On 05-10-20, 13:38, Rob Herring wrote:
+> This doesn't yet do anything in the tools, but make it explicit so we can
+> check either 'unevaluatedProperties' or 'additionalProperties' is present
+> in schemas.
+> 
+> 'unevaluatedProperties' is appropriate when including another schema (via
+> '$ref') and all possible properties and/or child nodes are not
+> explicitly listed in the schema with the '$ref'.
+> 
+> This is in preparation to add a meta-schema to check for missing
+> 'unevaluatedProperties' or 'additionalProperties'. This has been a
+> constant source of review issues.
 
-In preparation for unconditionally passing the
-struct tasklet_struct pointer to all tasklet
-callbacks, switch to using the new tasklet_setup()
-and from_tasklet() to pass the tasklet pointer explicitly.
+Acked-By: Vinod Koul <vkoul@kernel.org>
 
-Signed-off-by: Romain Perier <romain.perier@gmail.com>
-Signed-off-by: Allen Pais <apais@linux.microsoft.com>
----
- drivers/dma/xilinx/xilinx_dpdma.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/dma/xilinx/xilinx_dpdma.c b/drivers/dma/xilinx/xilinx_dpdma.c
-index 81ed1e482..55df63dea 100644
---- a/drivers/dma/xilinx/xilinx_dpdma.c
-+++ b/drivers/dma/xilinx/xilinx_dpdma.c
-@@ -1458,15 +1458,15 @@ static void xilinx_dpdma_disable_irq(struct xilinx_dpdma_device *xdev)
- 
- /**
-  * xilinx_dpdma_chan_err_task - Per channel tasklet for error handling
-- * @data: tasklet data to be casted to DPDMA channel structure
-+ * @t: pointer to the tasklet associated with this handler
-  *
-  * Per channel error handling tasklet. This function waits for the outstanding
-  * transaction to complete and triggers error handling. After error handling,
-  * re-enable channel error interrupts, and restart the channel if needed.
-  */
--static void xilinx_dpdma_chan_err_task(unsigned long data)
-+static void xilinx_dpdma_chan_err_task(struct tasklet_struct *t)
- {
--	struct xilinx_dpdma_chan *chan = (struct xilinx_dpdma_chan *)data;
-+	struct xilinx_dpdma_chan *chan = from_tasklet(chan, t, err_task);
- 	struct xilinx_dpdma_device *xdev = chan->xdev;
- 	unsigned long flags;
- 
-@@ -1555,8 +1555,7 @@ static int xilinx_dpdma_chan_init(struct xilinx_dpdma_device *xdev,
- 	spin_lock_init(&chan->lock);
- 	init_waitqueue_head(&chan->wait_to_stop);
- 
--	tasklet_init(&chan->err_task, xilinx_dpdma_chan_err_task,
--		     (unsigned long)chan);
-+	tasklet_setup(&chan->err_task, xilinx_dpdma_chan_err_task);
- 
- 	chan->vchan.desc_free = xilinx_dpdma_chan_free_tx_desc;
- 	vchan_init(&chan->vchan, &xdev->common);
 -- 
-2.25.1
-
+~Vinod

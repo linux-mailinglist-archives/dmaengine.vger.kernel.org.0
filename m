@@ -2,23 +2,23 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1004285A95
-	for <lists+dmaengine@lfdr.de>; Wed,  7 Oct 2020 10:36:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A46D285A98
+	for <lists+dmaengine@lfdr.de>; Wed,  7 Oct 2020 10:37:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgJGIgz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 7 Oct 2020 04:36:55 -0400
-Received: from mail-mw2nam10on2056.outbound.protection.outlook.com ([40.107.94.56]:24289
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        id S1727561AbgJGIhG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 7 Oct 2020 04:37:06 -0400
+Received: from mail-eopbgr690043.outbound.protection.outlook.com ([40.107.69.43]:39650
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726041AbgJGIgy (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 7 Oct 2020 04:36:54 -0400
+        id S1727536AbgJGIhG (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 7 Oct 2020 04:37:06 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lb4G5z/AcTQv03XqIvmMwMQTzdzHNmh0+xNGbwNWmqOxv8+eB5uLHZ43vKHh//vNuVyIX4pTSkOy5NkIy7VjrUy4LQ227TusX2690KMu+Sgmk2J7VkDbi2EsI3hy+LCy4aXD/N5eKqARIw/c2U7U8wNVyfkQuwttD6rwxZsykqB2hQ7UNUhwmnNb51X7SDIwzYLTlcjByObQa3WrQ1l9QgvPn9XMpYrODXZ8HHO3HwTVkeaQOf3QXQvGp/L2n/nWbwboWN+5DMSbjotTM9xaeJjplkv0r7ds1yobSLGZO1/DI414ZNDk7USLc0kyFlzw2o+MnZfa0JrHvs9VZoIe2A==
+ b=jwpCAHE3YNGF9LWO1lIX2CtGRUnimJIcr3Nze12+cC2TrQg1OL81dWfuN/Aia3w67I0VplfXzU5obxStNK3E2qhYPo7EixyTuV8RM95VfXpkOX8eC1vdt59rtwjLT3sSuMuIcEWAPqwRleSJ23eSpcsPnmfZljxeGkmtOTkgQi11rEYoHyYP/gSozT6yaAqmVA8rKW4omVIAH4KQTlGHveKL+qPZZHtg5Jqc57SD8YaeSwai1Kzl4ZCr1iLROqeRLctdy0nJXOIfLc1kKFjH+noV2rZLil214+OI8DxmDMl3VWNM77+Mg+782HZ2XTDtGFbtNJSy9jXz+T7EZetjww==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=35NLQA4njFrN5OOww/xPYrCKJlbL/ltNWcwQJIVBog0=;
- b=SP9lRRl98t7pblE/R/otX/YNbS4vi1AsVeBl7ApeO5qU8JneXkAKx1aeC7tuyoQvmj/5oWKEQazBfE63aGQZmfTgAhxsnmX+O7PO2ikm2qQO+V6QGikygKsV9yGWUVoYtN6AueQvap7TX07axWQ68drvIdK0DDMqn3adwIHdfFCc/jCpjyibCWa4iEUdeJQbmL7OSibak9PvAeJwoP5O1uo3hvTJEdmz3y1PoN/aS7/pyke5oA0ci+t1xVx5pMqagnUGWWz8sO1HBx506JtKVTr69KVlAm8S5GNdyOcT+ySWcFtosgHSGHb3C2ZHX+4NTqDQHeWC7Cdz/IkaGg5T3g==
+ bh=f8L2t3l4MriicJT6FJxMYCG1iCh9r4l4RPLuHE716zk=;
+ b=LLd5faZibKSGZFOqlY6u9ec9LZ1uSShMJWu/+Eaq5I13VZ8sv9FMXaXpsABeplN5LCJE1nmbYAD2AlNLh6MxtJPJhMwuVVd5Ny9IUnQmn8OA5hlGyHh3QHHP614EoVu7ZtmXfrUFk8nzRg7ut0SlmqX07LCbpQFHPbjoRVyFXbaAUhhzTSynuCOEzEsQFj3bJmkOzKzxz8QlNrLo0s66+xdZ0xvlGqSI1TCfS36oE37v2q8X0C+V8wNQWoL1GXUgIeweziebfqq3pz3PTY3LzqaDnr1DvAc3lLSPeADHCqSKliWILE9CbOhoaArQboNEmNzw3CfMI+RXGMYGX6SABw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=kernel.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -26,17 +26,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=35NLQA4njFrN5OOww/xPYrCKJlbL/ltNWcwQJIVBog0=;
- b=dKzWcUt+l5PQxlTFAVQ9VOV1oheWilbqTtMSq5sn7rgd1+sWo4tgi4b6FPRROK+MN9GYvoTXGWZlYgr6FJcfGYRfSxK6eC9JVGgQAJo+ZIobOGJlzO1Z3csieljfOnQHtQg1U80+rWlytIEdowZPcPEil/Kbr8+Ze+wHhEbjEvE=
-Received: from MN2PR01CA0036.prod.exchangelabs.com (2603:10b6:208:10c::49) by
- DM6PR02MB5786.namprd02.prod.outlook.com (2603:10b6:5:17d::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3433.39; Wed, 7 Oct 2020 08:36:51 +0000
-Received: from BL2NAM02FT011.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:10c:cafe::31) by MN2PR01CA0036.outlook.office365.com
- (2603:10b6:208:10c::49) with Microsoft SMTP Server (version=TLS1_2,
+ bh=f8L2t3l4MriicJT6FJxMYCG1iCh9r4l4RPLuHE716zk=;
+ b=nj4R2gRbnuixam32Lf85/4RqkB4C25R1aALlGC2Bvqre2SAn9tmy3Sx7VwxULFKZbiPEdSO/njeBEm80HujOO6H2iSAm4mMeRwANHllzrV63iY+H+WP6lu76uLE6rOmZKw/chxrkzu6Qq0R/4fLnyGFiqdQaPu36qOUAS44+X9E=
+Received: from CY4PR03CA0005.namprd03.prod.outlook.com (2603:10b6:903:33::15)
+ by BL0PR02MB4899.namprd02.prod.outlook.com (2603:10b6:208:53::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3433.38; Wed, 7 Oct
+ 2020 08:37:02 +0000
+Received: from CY1NAM02FT061.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:903:33:cafe::90) by CY4PR03CA0005.outlook.office365.com
+ (2603:10b6:903:33::15) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3455.21 via Frontend
- Transport; Wed, 7 Oct 2020 08:36:51 +0000
+ Transport; Wed, 7 Oct 2020 08:37:01 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
  header.d=none;kernel.org; dmarc=bestguesspass action=none
@@ -45,34 +46,36 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT011.mail.protection.outlook.com (10.152.77.5) with Microsoft SMTP
- Server id 15.20.3433.39 via Frontend Transport; Wed, 7 Oct 2020 08:36:51
+ CY1NAM02FT061.mail.protection.outlook.com (10.152.75.30) with Microsoft SMTP
+ Server id 15.20.3433.39 via Frontend Transport; Wed, 7 Oct 2020 08:37:01
  +0000
-Received: from [149.199.38.66] (port=38790 helo=smtp.xilinx.com)
+Received: from [149.199.38.66] (port=39214 helo=smtp.xilinx.com)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
         (envelope-from <michal.simek@xilinx.com>)
-        id 1kQ4vn-0001GM-Dl; Wed, 07 Oct 2020 01:36:15 -0700
+        id 1kQ4vx-0001GY-MC; Wed, 07 Oct 2020 01:36:25 -0700
 Received: from [127.0.0.1] (helo=localhost)
         by smtp.xilinx.com with smtp (Exim 4.63)
         (envelope-from <michal.simek@xilinx.com>)
-        id 1kQ4wN-0004nC-4C; Wed, 07 Oct 2020 01:36:51 -0700
-Received: from xsj-pvapsmtp01 (xsj-mail.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 0978afAx006867;
-        Wed, 7 Oct 2020 01:36:41 -0700
+        id 1kQ4wX-0004uE-D9; Wed, 07 Oct 2020 01:37:01 -0700
+Received: from xsj-pvapsmtp01 (smtp3.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 0978apSL007060;
+        Wed, 7 Oct 2020 01:36:51 -0700
 Received: from [172.30.17.110]
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <michals@xilinx.com>)
-        id 1kQ4wD-0004gd-6W; Wed, 07 Oct 2020 01:36:41 -0700
-Subject: Re: [PATCH 4/5] dmaengine: zynqmp_dma: fix kernel-doc style for
+        id 1kQ4wM-0004lc-QM; Wed, 07 Oct 2020 01:36:51 -0700
+Subject: Re: [PATCH 3/5] dmaengine: xilinx_dma: fix kernel-doc style for
  tasklet
 To:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
 Cc:     Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>,
         linux-kernel@vger.kernel.org,
         Michal Simek <michal.simek@xilinx.com>,
-        =?UTF-8?Q?Rafa=c5=82_Hibner?= <rafal.hibner@secom.com.pl>
+        =?UTF-8?Q?Rafa=c5=82_Hibner?= <rafal.hibner@secom.com.pl>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+        Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
 References: <20201007083113.567559-1-vkoul@kernel.org>
- <20201007083113.567559-5-vkoul@kernel.org>
+ <20201007083113.567559-4-vkoul@kernel.org>
 From:   Michal Simek <michal.simek@xilinx.com>
 Autocrypt: addr=michals@xilinx.com; keydata=
  xsFNBFFuvDEBEAC9Amu3nk79+J+4xBOuM5XmDmljuukOc6mKB5bBYOa4SrWJZTjeGRf52VMc
@@ -136,12 +139,12 @@ Autocrypt: addr=michals@xilinx.com; keydata=
  oa0OZXydlVP7wrnJdi3m8DnljxyInPxbxdKGN5XnMq/r9Y70uRVyeqwp97sKLXd9GsxuaSg7
  QJKUaltvN/i7ng1UOT/xsKeVdfXuqDIIElZ+dyEVTweDM011Zv0NN3OWFz6oD+GzyBetuBwD
  0Z1MQlmNcq2bhOMzTxuXX2NDzUZs4aqEyZQ=
-Message-ID: <e472ef15-4877-b839-c149-6d6750b5b6b7@xilinx.com>
-Date:   Wed, 7 Oct 2020 10:36:38 +0200
+Message-ID: <e7877311-d880-0215-b77b-82b7c62b05f8@xilinx.com>
+Date:   Wed, 7 Oct 2020 10:36:47 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.12.1
 MIME-Version: 1.0
-In-Reply-To: <20201007083113.567559-5-vkoul@kernel.org>
+In-Reply-To: <20201007083113.567559-4-vkoul@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -151,25 +154,25 @@ X-TM-AS-User-Approved-Sender: Yes;Yes
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 336fb0f6-34f9-4b4d-79df-08d86a9c2372
-X-MS-TrafficTypeDiagnostic: DM6PR02MB5786:
-X-Microsoft-Antispam-PRVS: <DM6PR02MB57869D5D8591E200720A0796C60A0@DM6PR02MB5786.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: fc602732-818d-4c23-e39d-08d86a9c2981
+X-MS-TrafficTypeDiagnostic: BL0PR02MB4899:
+X-Microsoft-Antispam-PRVS: <BL0PR02MB4899B94C117F0B42BB835E7FC60A0@BL0PR02MB4899.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
 X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hBFym15gCYbGDtQ9K/vzQ6++fdp49Nv1vKqG0LuRbjZmmpcLnGWFwPEptYUBaWptVRo7IrJ6+HU9PgjxWNR6Fyw1sDe+bn4ktVI5+12Vqg0lVK7C5QBKEv6rI8gSw7Azj92q2AXrHhj8VjuAEYL0GBr6H1Q4ZVpQggWPf56ksYdGphoIZaXA7InjCpva7FlR2X9/mOti6QH568GdGblhp/wLq+u28gSSTGGWOfLA5d05yrZwbJks+QzOGDnGUqs+TwgEL8ScOLyhwpwz1CcTUyYdcK0BFbcNpbOoPmCU9rc1JmasovSdK9lGQ6fBpTWvx7HjSHVem+nfZ8iwcVIvmkJuULnuOU76trqiPCzwU1mi9qDgH1XvAZtCiUaFy3f98YpFWQqRgu43kRBZI3H8d9mbpQSUkc0PORMnu4EtTItBrQEQMixm1uPz7d/pirWD
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(39850400004)(396003)(136003)(346002)(376002)(46966005)(336012)(426003)(26005)(44832011)(2616005)(186003)(4326008)(2906002)(316002)(54906003)(36756003)(9786002)(8676002)(31696002)(478600001)(356005)(70586007)(83380400001)(81166007)(70206006)(82740400003)(5660300002)(8936002)(47076004)(82310400003)(6666004)(31686004)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: fZAKgo8NpLwv2fjGyO5Da/ZkUa8YSikHg7WfnhLihNM2rtX2mfqD12f0JPAsg5PZyXHVdXlpagbh6qemXoI0ZNeFkLjq6eKFH0GKk70N6qLBRndmnoKfmYACrx+GA609rrjXQ2vpfkAfFAJFSpvUyus6Kf0bxjjNxpS4fcCGzD5rMSbdn2zgDMU+NhIQea5DxFvDVMIFkUrzn7MAmZ63zh2m5uHWwbdCYFoJ3KetTnyYBbXBFWB7sZGUkLW+Jt+1kY86qcOJXXTWZeBqks7/COywrOeZn47KfcfIUIdbAzeqJBPCYIkL9fiA8LkylHXIzIEJcEBkKBUilQZZ+psmC7//CPhkJb0b1hjWIO2YuhOK3rVRrP2Iqg6DtJJ4gJKI1iFU2GXOCZK5odVClOX+T74BH1OZqpcf5qEsVLw2gjp8AIt5z8WaAcu7/bCJyozi
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(396003)(39850400004)(136003)(346002)(376002)(46966005)(426003)(54906003)(81166007)(8676002)(107886003)(82310400003)(356005)(36756003)(82740400003)(186003)(47076004)(9786002)(316002)(8936002)(83380400001)(5660300002)(4326008)(2906002)(26005)(6666004)(31696002)(478600001)(31686004)(70586007)(70206006)(44832011)(336012)(2616005)(43740500002);DIR:OUT;SFP:1101;
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Oct 2020 08:36:51.4992
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Oct 2020 08:37:01.6665
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 336fb0f6-34f9-4b4d-79df-08d86a9c2372
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc602732-818d-4c23-e39d-08d86a9c2981
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: BL2NAM02FT011.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: CY1NAM02FT061.eop-nam02.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5786
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB4899
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -184,21 +187,21 @@ On 07. 10. 20 10:31, Vinod Koul wrote:
 > Fixes: f19a11d40a78 ("dmaengine: xilinx: convert tasklets to use new tasklet_setup() API")
 > Signed-off-by: Vinod Koul <vkoul@kernel.org>
 > ---
->  drivers/dma/xilinx/zynqmp_dma.c | 2 +-
+>  drivers/dma/xilinx/xilinx_dma.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
-> index 15b0f961fdf8..d8419565b92c 100644
-> --- a/drivers/dma/xilinx/zynqmp_dma.c
-> +++ b/drivers/dma/xilinx/zynqmp_dma.c
-> @@ -742,7 +742,7 @@ static irqreturn_t zynqmp_dma_irq_handler(int irq, void *data)
+> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+> index a9eb85ee6daf..ecff35402860 100644
+> --- a/drivers/dma/xilinx/xilinx_dma.c
+> +++ b/drivers/dma/xilinx/xilinx_dma.c
+> @@ -1044,7 +1044,7 @@ static void xilinx_dma_chan_desc_cleanup(struct xilinx_dma_chan *chan)
 >  
 >  /**
->   * zynqmp_dma_do_tasklet - Schedule completion tasklet
-> - * @data: Pointer to the ZynqMP DMA channel structure
-> + * @t: Pointer to the ZynqMP DMA channel structure
+>   * xilinx_dma_do_tasklet - Schedule completion tasklet
+> - * @data: Pointer to the Xilinx DMA channel structure
+> + * @t: Pointer to the Xilinx DMA channel structure
 >   */
->  static void zynqmp_dma_do_tasklet(struct tasklet_struct *t)
+>  static void xilinx_dma_do_tasklet(struct tasklet_struct *t)
 >  {
 > 
 

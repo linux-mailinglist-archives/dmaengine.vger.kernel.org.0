@@ -2,198 +2,84 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 815FA286285
-	for <lists+dmaengine@lfdr.de>; Wed,  7 Oct 2020 17:46:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D1472862B7
+	for <lists+dmaengine@lfdr.de>; Wed,  7 Oct 2020 17:55:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728785AbgJGPqi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 7 Oct 2020 11:46:38 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46136 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728019AbgJGPqi (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 7 Oct 2020 11:46:38 -0400
-Received: by mail-oi1-f193.google.com with SMTP id u126so2853351oif.13;
-        Wed, 07 Oct 2020 08:46:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rQHCXCV/i+kaGlmPVLS4FFOvSgdOWuMGT9TwEXcskOQ=;
-        b=Hz2Ok0HWgjcwr+A0z3oh4o8Kk3xAFFUiDs9FngHt6CgjJ5uCrGbzUBCJ1VoNpFgiJ7
-         cQRnBxtK5xZfErIqmswT6b0wy4H0npMcWgVBQidegV/axs7O1PC/PTye8wuIFqviDl/L
-         tOWzgimciWNBW8S77IPYIARwgHcCkmQeHtbu32DtLw5coIGk72HoDiHmam3w1TLkQUXg
-         vgd8GQdx/7EBDIrj7wPzadl/aZQVInxUh0JEJ/yE6TA8NsgU1ZOhDRmDJQQth77kxx6u
-         Tna/LgytbApc32uNM+Y/BdlIj0Cv5ziW/HB4MTN1P9BgZOrtA0r3EIHWZVJj3Uv0JQML
-         +llA==
-X-Gm-Message-State: AOAM5323B9sNKrINnaVKEmyM3xrEFgYBiQSBwSjTL/UTd+oDa5AXjerb
-        TDmAp3qdDuOQpV1unGcJUw==
-X-Google-Smtp-Source: ABdhPJzDk8KVgVgZu26G0OLEbj+MCjqT8zp2WyE6DHWNle1MsgOmCTzlodkyKJvl4XZQhj7iUJBhxw==
-X-Received: by 2002:aca:bc8b:: with SMTP id m133mr2436812oif.10.1602085597093;
-        Wed, 07 Oct 2020 08:46:37 -0700 (PDT)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o9sm2452289oop.1.2020.10.07.08.46.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Oct 2020 08:46:36 -0700 (PDT)
-Received: (nullmailer pid 278714 invoked by uid 1000);
-        Wed, 07 Oct 2020 15:46:35 -0000
-Date:   Wed, 7 Oct 2020 10:46:35 -0500
-From:   Rob Herring <robh@kernel.org>
+        id S1728862AbgJGPzj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 7 Oct 2020 11:55:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42834 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728039AbgJGPzi (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 7 Oct 2020 11:55:38 -0400
+Received: from localhost (unknown [122.171.222.162])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28A1A20789;
+        Wed,  7 Oct 2020 15:55:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602086138;
+        bh=BwlW5lM9IzbCgjSoHneqUDGEskMzMU8oFit0dRom6qQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Mn22y7qe1QHoIEmqTpxMYG9HpGyBe8aHPMOUHwXhWa4NPtifJ64ZVnq4fOsrMMqr9
+         7qarzrTuzl4U9wJ+hHvxIu+OrHmrSRrvaS/Cs/yehGegZAPojCHLw8ixU567cU8QDQ
+         7Rk39hq40P2dq69R8WE+Lq01fdYQAYYlQrdWUyYM=
+Date:   Wed, 7 Oct 2020 21:25:33 +0530
+From:   Vinod Koul <vkoul@kernel.org>
 To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     vkoul@kernel.org, nm@ti.com, ssantosh@kernel.org, vigneshr@ti.com,
-        dan.j.williams@intel.com, t-kristo@ti.com, lokeshvutla@ti.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH 09/18] dt-bindings: dma: ti: Add document for K3 BCDMA
-Message-ID: <20201007154635.GA273523@bogus>
+Cc:     nm@ti.com, ssantosh@kernel.org, robh+dt@kernel.org,
+        vigneshr@ti.com, dan.j.williams@intel.com, t-kristo@ti.com,
+        lokeshvutla@ti.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        dmaengine@vger.kernel.org
+Subject: Re: [PATCH 01/18] dmaengine: of-dma: Add support for optional router
+ configuration callback
+Message-ID: <20201007155533.GZ2968@vkoul-mobl>
 References: <20200930091412.8020-1-peter.ujfalusi@ti.com>
- <20200930091412.8020-10-peter.ujfalusi@ti.com>
- <20201006192909.GA2679155@bogus>
- <bc054ef7-dcd7-dde2-13f8-4900a33b1377@ti.com>
+ <20200930091412.8020-2-peter.ujfalusi@ti.com>
+ <20201007054404.GR2968@vkoul-mobl>
+ <be615881-1eb4-f8fe-a32d-04fabb6cb27b@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bc054ef7-dcd7-dde2-13f8-4900a33b1377@ti.com>
+In-Reply-To: <be615881-1eb4-f8fe-a32d-04fabb6cb27b@ti.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Oct 07, 2020 at 12:09:06PM +0300, Peter Ujfalusi wrote:
-> 
-> 
-> On 06/10/2020 22.29, Rob Herring wrote:
-> > On Wed, Sep 30, 2020 at 12:14:03PM +0300, Peter Ujfalusi wrote:
-> >> New binding document for
-> >> Texas Instruments K3 Block Copy DMA (BCDMA).
-> >>
-> >> BCDMA is introduced as part of AM64.
-> >>
-> 
-> ...
-> 
-> > 
-> >> +  ti,sci:
-> >> +    description: phandle to TI-SCI compatible System controller node
-> >> +    allOf:
-> >> +      - $ref: /schemas/types.yaml#/definitions/phandle
-> >> +
-> >> +  ti,sci-dev-id:
-> >> +    description: TI-SCI device id of BCDMA
-> >> +    allOf:
-> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > 
-> > We have a common definition for these.
-> 
-> Yes, in arm/keystone/ti,k3-sci-common.yaml, but I could not get to use
-> that as reference.
-> 
-> I can not list it under the topmost allOf and drop the ti,sci and
-> ti,sci-dev-id like this:
-> 
-> allOf:
->   - $ref: /schemas/dma/dma-controller.yaml#
->   - $ref: /schemas/arm/keystone/ti,k3-sci-common.yaml#
-> 
-> It results:
->   CHKDT   Documentation/devicetree/bindings/processed-schema-examples.json
->   DTEX    Documentation/devicetree/bindings/dma/ti/k3-bcdma.example.dts
->   SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.json
->   DTC     Documentation/devicetree/bindings/dma/ti/k3-bcdma.example.dt.yaml
->   CHECK   Documentation/devicetree/bindings/dma/ti/k3-bcdma.example.dt.yaml
-> Documentation/devicetree/bindings/dma/ti/k3-bcdma.example.dt.yaml:
-> dma-controller@485c0100: 'ti,sci', 'ti,sci-dev-id' do not match any of
-> the regexes: 'pinctrl-[0-9]+'
->         From schema: Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
-> 
-> If I remove the "additionalProperties: false" from the schema file, then
-> it compiles fine.
+On 07-10-20, 11:08, Peter Ujfalusi wrote:
 
-Yeah, you have to do 'unevaluatedProperties: false' which doesn't 
-actually do anything yet, but can 'see' into $ref's.
-
-
-> >> +  ti,asel:
-> >> +    description: ASEL value for non slave channels
-> >> +    allOf:
-> > 
-> > You no longer need 'allOf' here.
+> Not really. In DT an event triggered channel can be requested via router
+> (when this is used) for example:
 > 
-> OK, I changed it in all instances.
+> dmas = <&inta_l2g a b c>;
+> a - the input number of the DMA request in l2g
+> b - edge or level trigger to be selected
+> c - ASEL number for the channel for coherency
 > 
-> > 
-> >> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> >> +
-> >> +  ti,sci-rm-range-bchan:
-> >> +    description: |
-> >> +      Array of BCDMA block-copy channel resource subtypes for resource
-> >> +      allocation for this host
-> >> +    allOf:
-> >> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> >> +    minItems: 1
-> >> +    # Should be enough
-> >> +    maxItems: 255
-> > 
-> > Are there constraints for the individual elements?
+> The l2g router driver then translate this to:
+> <&main_bcdma 1 0 c>
+> 1 - Global trigger 0 is used by the DMA
+> 0 - ignored
+> c - ASEL number.
 > 
-> In practice the subtype ID is 6bits number.
-> Should I add limits to individual elements?
-
-Yes:
-
-items:
-  maximum: 0x3f
-
+> The router needs to send an event which is going to be received by the
+> channel we have picked up, this event number can only be known when we
+> do have the channel.
 > 
-> >> +
-> >> +  ti,sci-rm-range-tchan:
-> >> +    description: |
-> >> +      Array of BCDMA split tx channel resource subtypes for resource allocation
-> >> +      for this host
-> >> +    allOf:
-> >> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> >> +    minItems: 1
-> >> +    # Should be enough
-> >> +    maxItems: 255
-> >> +
-> >> +  ti,sci-rm-range-rchan:
-> >> +    description: |
-> >> +      Array of BCDMA split rx channel resource subtypes for resource allocation
-> >> +      for this host
-> >> +    allOf:
-> >> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> >> +    minItems: 1
-> >> +    # Should be enough
-> >> +    maxItems: 255
-> >> +
-> >> +required:
-> >> +  - compatible
-> >> +  - "#address-cells"
-> >> +  - "#size-cells"
-> >> +  - "#dma-cells"
-> >> +  - reg
-> >> +  - reg-names
-> >> +  - msi-parent
-> >> +  - ti,sci
-> >> +  - ti,sci-dev-id
-> >> +  - ti,sci-rm-range-bchan
-> >> +  - ti,sci-rm-range-tchan
-> >> +  - ti,sci-rm-range-rchan
-> >> +
-> >> +additionalProperties: false
-> >> +
-> >> +examples:
-> >> +  - |+
-> >> +    cbass_main {
-> >> +        #address-cells = <2>;
-> >> +        #size-cells = <2>;
-> >> +
-> >> +        main_dmss {
-> >> +            compatible = "simple-mfd";
-> > 
-> > IMO, if it is memory-mapped, then you should be using 'simple-bus'.
-> 
-> We had the same discussion when I introduced the k3-udma binding and we
-> have concluded on the simple-mfd as DMSS is not a bus, but contains
-> different peripherals.
+> So the flow in this case:
+> router converts the dma_spec for the DMA, but it does not yet know what
+> is the event number it has to use.
+> The BCDMA driver will pick an available bchan and notes that the
+> transfers will be triggered by global event 0.
+> When we have the channel, the core saves the router information and
+> calls the device_router_config of BCDMA.
+> In there we call back to the router and give the event number it has to
+> use to send the trigger for the channel.
 
-Ok.
+Ah that is intresting, so you would call router driver foo_set_event()
+and would send the event number, why not call that API from alloc
+channel or even xlate? Why do you need new callback?
+Or did i miss something..
 
-Rob
+-- 
+~Vinod

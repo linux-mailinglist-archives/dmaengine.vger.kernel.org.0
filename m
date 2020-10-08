@@ -2,98 +2,208 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61A49287A5C
-	for <lists+dmaengine@lfdr.de>; Thu,  8 Oct 2020 18:51:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6885287C45
+	for <lists+dmaengine@lfdr.de>; Thu,  8 Oct 2020 21:16:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730896AbgJHQvt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 8 Oct 2020 12:51:49 -0400
-Received: from mga03.intel.com ([134.134.136.65]:24713 "EHLO mga03.intel.com"
+        id S1729579AbgJHTQA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 8 Oct 2020 15:16:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730603AbgJHQvt (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 8 Oct 2020 12:51:49 -0400
-IronPort-SDR: AxZOlscEOQr32isxFdBagw2mwUOnsRxFy2QqXnFsTQNpLyRbTvzEGahCB13T9rKbOwxZZDqDs2
- d6F4VcOFURTA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9768"; a="165431166"
-X-IronPort-AV: E=Sophos;i="5.77,351,1596524400"; 
-   d="scan'208";a="165431166"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2020 09:51:48 -0700
-IronPort-SDR: 8g4elyEY4dvLDkfzobNzjsd5vTBGnbZXOG7JjFRYCji6enAQFQOit7Ynlp5mtLGuPy3pz6LU8Z
- FddJo+2zjmUQ==
-X-IronPort-AV: E=Sophos;i="5.77,351,1596524400"; 
-   d="scan'208";a="528563332"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.209.50.136]) ([10.209.50.136])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Oct 2020 09:51:46 -0700
-Subject: Re: [PATCH v3 11/18] dmaengine: idxd: ims setup for the vdcm
-To:     Thomas Gleixner <tglx@linutronix.de>, vkoul@kernel.org,
-        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
-        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        rafael@kernel.org, netanelg@mellanox.com, shahafs@mellanox.com,
-        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
-        samuel.ortiz@intel.com, mona.hossain@intel.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-References: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com>
- <160021253189.67751.12686144284999931703.stgit@djiang5-desk3.ch.intel.com>
- <87mu17ghr1.fsf@nanos.tec.linutronix.de>
- <0f9bdae0-73d7-1b4e-b478-3cbd05c095f4@intel.com>
- <87r1q92mkx.fsf@nanos.tec.linutronix.de>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <44e19c5d-a0d2-0ade-442c-61727701f4d8@intel.com>
-Date:   Thu, 8 Oct 2020 09:51:44 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        id S1726469AbgJHTP7 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 8 Oct 2020 15:15:59 -0400
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5397121789;
+        Thu,  8 Oct 2020 19:15:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602184558;
+        bh=VG9NJtGD0MJxDwq5ZtXgpvCKEMD4VJh0wRib10rKuNY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rESrq1PokkafTsfbUWJb7IMjDXZ0uIPoXf0bU1kU/SxPRmf3Mx+4vdeKcKwpA26kP
+         CeGBBUnvCaGWf1s+jlMczL3iVZx4vVY0XtWmgafwj84ZMNs9nOI6nQ22/UnCj11kYP
+         WhEhzD2ura/vORCbHsVuzrkuJi7jkWm64Rme6TA0=
+Received: by mail-oi1-f171.google.com with SMTP id 16so7473623oix.9;
+        Thu, 08 Oct 2020 12:15:58 -0700 (PDT)
+X-Gm-Message-State: AOAM531qXa1MfEskESYa+XOYo3FVjpRgNtilsngBwnbjmE8zPg6tyacs
+        T67VVdrrrRfg1YHDB+hRAfg6rU3TT37KBHOC/A==
+X-Google-Smtp-Source: ABdhPJx9mwBGCS5pg5vdbXELgG+z/CjSjP8/1RkXvGfiZcZ9cqHR2t/HzXodxvJsAbiYVlOJ3SXm2cJhKjn6TIasIZk=
+X-Received: by 2002:aca:4c52:: with SMTP id z79mr202300oia.147.1602184557422;
+ Thu, 08 Oct 2020 12:15:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87r1q92mkx.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200930091412.8020-1-peter.ujfalusi@ti.com> <20200930091412.8020-10-peter.ujfalusi@ti.com>
+ <20201006192909.GA2679155@bogus> <bc054ef7-dcd7-dde2-13f8-4900a33b1377@ti.com>
+ <20201007154635.GA273523@bogus> <d5746fca-bbdd-0fd1-cbcb-21b6269c39ac@ti.com>
+In-Reply-To: <d5746fca-bbdd-0fd1-cbcb-21b6269c39ac@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 8 Oct 2020 14:15:45 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJnk=ycRurUTBwWgX1+vOq_MZuevegvK2MwGJHkHW50mg@mail.gmail.com>
+Message-ID: <CAL_JsqJnk=ycRurUTBwWgX1+vOq_MZuevegvK2MwGJHkHW50mg@mail.gmail.com>
+Subject: Re: [PATCH 09/18] dt-bindings: dma: ti: Add document for K3 BCDMA
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Vignesh R <vigneshr@ti.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On Thu, Oct 8, 2020 at 3:40 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>
+>
+>
+> On 07/10/2020 18.46, Rob Herring wrote:
+> > On Wed, Oct 07, 2020 at 12:09:06PM +0300, Peter Ujfalusi wrote:
+> >>
+> >>
+> >> On 06/10/2020 22.29, Rob Herring wrote:
+> >>> On Wed, Sep 30, 2020 at 12:14:03PM +0300, Peter Ujfalusi wrote:
+> >>>> New binding document for
+> >>>> Texas Instruments K3 Block Copy DMA (BCDMA).
+> >>>>
+> >>>> BCDMA is introduced as part of AM64.
+> >>>>
+> >>
+> >> ...
+> >>
+> >>>
+> >>>> +  ti,sci:
+> >>>> +    description: phandle to TI-SCI compatible System controller node
+> >>>> +    allOf:
+> >>>> +      - $ref: /schemas/types.yaml#/definitions/phandle
+> >>>> +
+> >>>> +  ti,sci-dev-id:
+> >>>> +    description: TI-SCI device id of BCDMA
+> >>>> +    allOf:
+> >>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> >>>
+> >>> We have a common definition for these.
+> >>
+> >> Yes, in arm/keystone/ti,k3-sci-common.yaml, but I could not get to use
+> >> that as reference.
+> >>
+> >> I can not list it under the topmost allOf and drop the ti,sci and
+> >> ti,sci-dev-id like this:
+> >>
+> >> allOf:
+> >>   - $ref: /schemas/dma/dma-controller.yaml#
+> >>   - $ref: /schemas/arm/keystone/ti,k3-sci-common.yaml#
+> >>
+> >> It results:
+> >>   CHKDT   Documentation/devicetree/bindings/processed-schema-examples.json
+> >>   DTEX    Documentation/devicetree/bindings/dma/ti/k3-bcdma.example.dts
+> >>   SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.json
+> >>   DTC     Documentation/devicetree/bindings/dma/ti/k3-bcdma.example.dt.yaml
+> >>   CHECK   Documentation/devicetree/bindings/dma/ti/k3-bcdma.example.dt.yaml
+> >> Documentation/devicetree/bindings/dma/ti/k3-bcdma.example.dt.yaml:
+> >> dma-controller@485c0100: 'ti,sci', 'ti,sci-dev-id' do not match any of
+> >> the regexes: 'pinctrl-[0-9]+'
+> >>         From schema: Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
+> >>
+> >> If I remove the "additionalProperties: false" from the schema file, then
+> >> it compiles fine.
+> >
+> > Yeah, you have to do 'unevaluatedProperties: false' which doesn't
+> > actually do anything yet, but can 'see' into $ref's.
+>
+> I see, but even if I add the unevaluatedProperties: false I will have
+> the same error as long as I have additionalProperties: false
 
+Yes. I meant unevaluatedProperties instead of additionalProperties.
 
-On 10/8/2020 12:39 AM, Thomas Gleixner wrote:
-> On Wed, Oct 07 2020 at 14:54, Dave Jiang wrote:
->> On 9/30/2020 12:57 PM, Thomas Gleixner wrote:
->>> Aside of that this is fiddling in the IMS storage array behind the irq
->>> chips back without any comment here and a big fat comment about the
->>> shared usage of ims_slot::ctrl in the irq chip driver.
->>>
->> This is to program the pasid fields in the IMS table entry. Was
->> thinking the pasid fields may be considered device specific so didn't
->> attempt to add the support to the core code.
-> 
-> Well, the problem is that this is not really irq chip functionality.
-> 
-> But the PASID programming needs to touch the IMS storage which is also
-> touched by the irq chip.
-> 
-> This might be correct as is, but without a big fat comment explaining
-> WHY it is safe to do so without any form of serialization this is just
-> voodoo and unreviewable.
-> 
-> Can you please explain when the PASID is programmed and what the state
-> of the interrupt is at that point? Is this a one off setup operation or
-> does this happen dynamically at random points during runtime?
+> If I remove the additionalProperties then it makes no difference if I
+> have the unevaluatedProperties: false or I don't.
 
-I will put in comments for the function to explain why and when we modify the 
-pasid field for the IMS entry. Programming of the pasid is done right before we 
-request irq. And the clearing is done after we free the irq. We will not be 
-touching the IMS field at runtime. So the touching of the entry should be safe.
+Not yet, but it will soon. Once I have the tree in a consistent state
+in 5.10-rc1, there will be a meta-schema to check all this (which is
+one of those must always be present).
 
-> 
-> This needs to be clarified first.
-> 
-> Thanks,
-> 
->          tglx
-> 
-> 
+Though, as of now 'unevaluatedProperties' doesn't do anything because
+the underlying json-schema tool doesn't yet support it.
+
+> >>>> +  ti,sci-rm-range-bchan:
+> >>>> +    description: |
+> >>>> +      Array of BCDMA block-copy channel resource subtypes for resource
+> >>>> +      allocation for this host
+> >>>> +    allOf:
+> >>>> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> >>>> +    minItems: 1
+> >>>> +    # Should be enough
+> >>>> +    maxItems: 255
+> >>>
+> >>> Are there constraints for the individual elements?
+> >>
+> >> In practice the subtype ID is 6bits number.
+> >> Should I add limits to individual elements?
+> >
+> > Yes:
+> >
+> > items:
+> >   maximum: 0x3f
+>
+> Right, I can just omit the minimum.
+>
+> It would be nice if I could use definitions for these ranges to avoid
+> duplicated lines by adding
+>
+> definitions:
+>   ti,rm-range:
+>     $ref: /schemas/types.yaml#/definitions/uint32-array
+>     minItems: 1
+>     # Should be enough
+>     maxItems: 255
+>     items:
+>       minimum: 0
+>       maximum: 0x3f
+>
+> to schemas/arm/keystone/ti,k3-sci-common.yaml
+>
+> and only have:
+>
+>   ti,sci-rm-range-bchan:
+>     $ref:
+> /schemas/arm/keystone/ti,k3-sci-common.yaml#/definitions/ti,rm-range
+>     description: |
+>       Array of BCDMA block-copy channel resource subtypes for resource
+>       allocation for this host
+
+Just do:
+
+patternProperties:
+  "^ti,sci-rm-range-[btr]chan$":
+    ...
+
+If this is common for other bindings, then you can put it in
+ti,k3-sci-common.yaml.
+
+> but it results:
+> Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml:
+> properties:ti,sci-rm-range-bchan: {'$ref':
+> '/schemas/arm/keystone/ti,k3-sci-common.yaml#/definitions/ti,rm-range',
+> 'description': 'Array of BCDMA block-copy channel resource subtypes for
+> resource\nallocation for this host\n'} is not valid under any of the
+> given schemas (Possible causes of the failure):
+>         Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml:
+> properties:ti,sci-rm-range-bchan: 'not' is a required property
+>         Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml:
+> properties:ti,sci-rm-range-bchan:$ref:
+> '/schemas/arm/keystone/ti,k3-sci-common.yaml#/definitions/ti,rm-range'
+> does not match 'types.yaml#[/]{0,1}definitions/.*'
+
+We probably should allow for using 'definitions' which is pretty
+common json-schema practice, but don't primarily in order to keep
+folks within the lines. Things are optimized for not knowing
+json-schema and trying to minimize errors I have to check for.
+Supporting it would complicate the meta-schema and the tools' fixup
+code. So far, the need for it has been pretty infrequent.
+
+Rob

@@ -2,89 +2,61 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E3188288D9C
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Oct 2020 18:03:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0DCF2890B0
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Oct 2020 20:23:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389443AbgJIQCy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 9 Oct 2020 12:02:54 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58854 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389135AbgJIQCx (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 9 Oct 2020 12:02:53 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1602259371;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZHt8XKpvOg8gA4nFcOb4ywxF5VhRSTiXsFiBgkwu8B8=;
-        b=PZXU42J+noDD0cxK0VwzkFTB1O1ZMlVR4ciJrWmGNNjCW7z+U6/fPdM/VrIK5jn891zfRF
-        zsZySS/8mYik/JuGzKmmWWbEya2Zwm3ZS4siFcm+rWM0kbLOX2SVR0ClM3ytOeJvQr7QZh
-        dAcxQ5R6F6FknxrG9JuOt07A8eUCSza53Cv5AuC+hlpDhlrxB51jXTgZVtlzqteqGKToAP
-        AP/Y2z83BB+TMGZL6Bs2yRDuYy581E6ItMpfV1UcXhLxmcNOEf/iGEWUwFN4Cxv135AYmk
-        FTgQgJNVyUhJD+vIFuFMk2+g0f9SGIOwu6wLNAJ/T5b2Qfyths1T+PSzw1DNXw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1602259371;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZHt8XKpvOg8gA4nFcOb4ywxF5VhRSTiXsFiBgkwu8B8=;
-        b=w1fJ/MJLSeMBuSGG0nDlKWfzrPoFMaZhljKfwDjF06uVySTctoTPsdDTaJTQNfblBx2kFS
-        umsjrxsBGffaBqDw==
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        ashok.raj@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
-        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
-        tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
-        kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        rafael@kernel.org, netanelg@mellanox.com, shahafs@mellanox.com,
-        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
-        samuel.ortiz@intel.com, mona.hossain@intel.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-pci@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v3 11/18] dmaengine: idxd: ims setup for the vdcm
-In-Reply-To: <20201009145236.GM4734@nvidia.com>
-References: <160021207013.67751.8220471499908137671.stgit@djiang5-desk3.ch.intel.com> <160021253189.67751.12686144284999931703.stgit@djiang5-desk3.ch.intel.com> <87mu17ghr1.fsf@nanos.tec.linutronix.de> <0f9bdae0-73d7-1b4e-b478-3cbd05c095f4@intel.com> <87r1q92mkx.fsf@nanos.tec.linutronix.de> <44e19c5d-a0d2-0ade-442c-61727701f4d8@intel.com> <87y2kgux2l.fsf@nanos.tec.linutronix.de> <20201008233210.GH4734@nvidia.com> <87v9fjtq5w.fsf@nanos.tec.linutronix.de> <20201009145236.GM4734@nvidia.com>
-Date:   Fri, 09 Oct 2020 18:02:51 +0200
-Message-ID: <87d01rtmj8.fsf@nanos.tec.linutronix.de>
+        id S2390337AbgJISXE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 9 Oct 2020 14:23:04 -0400
+Received: from mail.csu.ru ([195.54.14.68]:37389 "HELO mail.csu.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with SMTP
+        id S1731198AbgJISXE (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 9 Oct 2020 14:23:04 -0400
+X-Greylist: delayed 623 seconds by postgrey-1.27 at vger.kernel.org; Fri, 09 Oct 2020 14:22:54 EDT
+Received: from webmail.csu.ru (webmail.csu.ru [195.54.14.80])
+        (Authenticated sender: gmu)
+        by mail.csu.ru (Postfix) with ESMTPA id 9EA00146ADD;
+        Fri,  9 Oct 2020 23:12:05 +0500 (+05)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.csu.ru 9EA00146ADD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=csu.ru; s=lso;
+        t=1602267137; bh=EHyoM7tvrYOQrxF04FX0pRVRvphefdiNsT3iXJDpiBo=;
+        h=Date:Subject:From:Reply-To:From;
+        b=JgmKnEwUa2H4guTvvGXcm+G0tbE8hRVj91/tN+idLHyOF4wk0A535Uc522g7yzONB
+         11lBhJi20Vs8vlWrJJV7umqCG8m0/gP1SytymOM2p1mcuAg1yXTqpi9wyLu/L2WMA4
+         Yf/FY5XfgqaHX1mVolq5iOGoKO0tcHkLI3aRlaVQ=
+Received: from 156.146.59.22
+        (SquirrelMail authenticated user gmu)
+        by webmail.csu.ru with HTTP;
+        Fri, 9 Oct 2020 23:12:08 +0500
+Message-ID: <3714bded3cc624bd8ed00fd6a579589c.squirrel@webmail.csu.ru>
+Date:   Fri, 9 Oct 2020 23:12:08 +0500
+Subject: Vorschlag
+From:   "Yi Huiman" <info@csu.ru>
+Reply-To: info@huiman.cf
+User-Agent: SquirrelMail/1.4.22
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain;charset=iso-8859-1
+X-Priority: 3 (Normal)
+Importance: Normal
+X-KLMS-Rule-ID: 1
+X-KLMS-Message-Action: clean
+X-KLMS-AntiSpam-Lua-Profiles: 159051 [Oct 09 2020]
+X-KLMS-AntiSpam-Version: 5.9.11.0
+X-KLMS-AntiSpam-Envelope-From: info@csu.ru
+X-KLMS-AntiSpam-Auth: dmarc=none header.from=csu.ru;spf=softfail smtp.mailfrom=csu.ru;dkim=none
+X-KLMS-AntiSpam-Rate: 70
+X-KLMS-AntiSpam-Status: not_detected
+X-KLMS-AntiSpam-Method: none
+X-KLMS-AntiSpam-Info: LuaCore: 381 381 faef97d3f9d8f5dd6a9feadc50ba5b34b9486c58, {rep_avail}, {Tracking_content_type, plain}, {Prob_reply_not_match_from}, {Prob_to_header_missing}, {Prob_Reply_to_without_To}, {Tracking_susp_macro_from_formal}, csu.ru:7.1.1;huiman.cf:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;webmail.csu.ru:7.1.1;127.0.0.199:7.1.2;195.54.14.80:7.1.2, ApMailHostAddress: 195.54.14.80
+X-MS-Exchange-Organization-SCL: -1
+X-KLMS-AntiSpam-Interceptor-Info: scan successful
+X-KLMS-AntiPhishing: Clean, bases: 2020/10/09 16:54:00
+X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, bases: 2020/10/09 00:29:00 #15463494
+X-KLMS-AntiVirus-Status: Clean, skipped
+Content-Transfer-Encoding: quoted-printable
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Oct 09 2020 at 11:52, Jason Gunthorpe wrote:
-> On Fri, Oct 09, 2020 at 04:44:27PM +0200, Thomas Gleixner wrote:
->> > This is really not that different from what I was describing for queue
->> > contexts - the queue context needs to be assigned to the irq # before
->> > it can be used in the irq chip other wise there is no idea where to
->> > write the msg to. Just like pasid here.
->> 
->> Not really. In the IDXD case the storage is known when the host device
->> and the irq domain is initialized which is not the case for your variant
->> and it neither needs to send a magic command to the device to update the
->> data.
->
-> I mean, needing the PASID vs needing the memory address before the IRQ
-> can be use are basically the same issue. Data needs to be attached to
-> the IRQ before it can be programmed.. In this case programming with
-> the wrong PASID could lead to a security issue.
+ich habe ein Gesch=E4ft Vorschlag f=FCr dich.
 
-Yeah. I looked at doing it similar to the callback I added for
-retrieving the shadow storage pointer, but the PASID is not necessarily
-established at that point.
-
->> I agree that irq_set_auxdata() is not the most elegant thing, but the
->> alternative solutions I looked at are just worse.
->
-> It seems reasonable, but quite an obfuscated way to tell a driver they
-> need to hold irq_get_desc_buslock() when touching data shared with the
-> irqchip ops.. Not that I have a better suggestion
-
-It's an obfuscated way to make obfuscated hardware supported :)
-
-Thanks,
-
-        tglx

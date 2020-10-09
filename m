@@ -2,63 +2,196 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 32BC4288116
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Oct 2020 06:18:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A3D22884E0
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Oct 2020 10:06:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729655AbgJIES2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 9 Oct 2020 00:18:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60036 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725900AbgJIES2 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 9 Oct 2020 00:18:28 -0400
-Received: from localhost (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3F6322227;
-        Fri,  9 Oct 2020 04:18:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1602217107;
-        bh=PnFnJOf9+5DLfEfUAdKBJ/7+3TNHhSqul2nI4kiD7gs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mKvvbufcBaL632eNjLw6EHox+m2lGwZweAkLYSpeBGcsKI+dP+MagI+vXkeNnFpn1
-         nqN8RIZqOTQijT6z5br9m9CVNi4E3+z248Uo17EbYeUo+HVj78cdyhGpIHePBk1O/J
-         +Ghg9ygCJ8nvmpFp0ESqxWazMIciKN8/aaKOu2JY=
-Date:   Fri, 9 Oct 2020 09:48:22 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     dmaengine@vger.kernel.org, Allen Pais <allen.lkml@gmail.com>,
-        Romain Perier <romain.perier@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 5/5] dmaengine: owl-dma: fix kernel-doc style for enum
-Message-ID: <20201009041822.GC2968@vkoul-mobl>
-References: <20201007083113.567559-1-vkoul@kernel.org>
- <20201007083113.567559-6-vkoul@kernel.org>
- <20201008140403.GB23649@linux>
+        id S1732529AbgJIIGn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 9 Oct 2020 04:06:43 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:42386 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732337AbgJIIGm (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 9 Oct 2020 04:06:42 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 09986VA4111967;
+        Fri, 9 Oct 2020 03:06:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1602230791;
+        bh=BHTrCfkiTOmXAou93T2ihLIRlwCwPpMEKu1ad7VxsbA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=G+b6W2PG2fdRqSHgCyBL7rYoIjHLHbnG3bjeh7mXe863YM0jen/l3tk+KAsw58rKm
+         PuEN40yCkC631DMp4/fZBfTxl29L8HCpfHwnfmGWDNrNKSSgdzwvoqVJ9n/ekmn5dt
+         L3r35sJjDI0bwNBKZw740t7LXTNIMzHB+ArBlw6M=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 09986V0w091492
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 9 Oct 2020 03:06:31 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 9 Oct
+ 2020 03:06:30 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 9 Oct 2020 03:06:30 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 09986R0G066243;
+        Fri, 9 Oct 2020 03:06:28 -0500
+Subject: Re: [PATCH 09/18] dt-bindings: dma: ti: Add document for K3 BCDMA
+To:     Rob Herring <robh@kernel.org>
+CC:     Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Vignesh R <vigneshr@ti.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>
+References: <20200930091412.8020-1-peter.ujfalusi@ti.com>
+ <20200930091412.8020-10-peter.ujfalusi@ti.com>
+ <20201006192909.GA2679155@bogus>
+ <bc054ef7-dcd7-dde2-13f8-4900a33b1377@ti.com> <20201007154635.GA273523@bogus>
+ <d5746fca-bbdd-0fd1-cbcb-21b6269c39ac@ti.com>
+ <CAL_JsqJnk=ycRurUTBwWgX1+vOq_MZuevegvK2MwGJHkHW50mg@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <1f532784-c46d-6746-2511-466fd82c0809@ti.com>
+Date:   Fri, 9 Oct 2020 11:06:49 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201008140403.GB23649@linux>
+In-Reply-To: <CAL_JsqJnk=ycRurUTBwWgX1+vOq_MZuevegvK2MwGJHkHW50mg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 08-10-20, 19:34, Manivannan Sadhasivam wrote:
-> On Wed, Oct 07, 2020 at 02:01:13PM +0530, Vinod Koul wrote:
-> > Driver doesn't use keyword enum for enum owl_dmadesc_offsets resulting
-> > in warning:
-> > 
-> > drivers/dma/owl-dma.c:139: warning: cannot understand function prototype:
-> > 'enum owl_dmadesc_offsets '
-> > 
-> > So add the keyword to fix it and also add documentation for missing
-> > OWL_DMADESC_SIZE
-> > 
+
+
+On 08/10/2020 22.15, Rob Herring wrote:
+> On Thu, Oct 8, 2020 at 3:40 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+
+>>> Yeah, you have to do 'unevaluatedProperties: false' which doesn't
+>>> actually do anything yet, but can 'see' into $ref's.
+>>
+>> I see, but even if I add the unevaluatedProperties: false I will have
+>> the same error as long as I have additionalProperties: false
 > 
-> Do we really need to document the max value? Does it produce any warning?
+> Yes. I meant unevaluatedProperties instead of additionalProperties.
 
-It does.. Once you add the enum, it will treat is as such and look at
-members and complain that the OWL_DMADESC_SIZE is not documented ;)
+OK, changed it to unevaluatedProperties.
 
--- 
-~Vinod
+>> If I remove the additionalProperties then it makes no difference if I
+>> have the unevaluatedProperties: false or I don't.
+> 
+> Not yet, but it will soon. Once I have the tree in a consistent state
+> in 5.10-rc1, there will be a meta-schema to check all this (which is
+> one of those must always be present).
+> 
+> Though, as of now 'unevaluatedProperties' doesn't do anything because
+> the underlying json-schema tool doesn't yet support it.
+
+Understand, thanks for the details.
+
+>>>>>> +  ti,sci-rm-range-bchan:
+>>>>>> +    description: |
+>>>>>> +      Array of BCDMA block-copy channel resource subtypes for resource
+>>>>>> +      allocation for this host
+>>>>>> +    allOf:
+>>>>>> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+>>>>>> +    minItems: 1
+>>>>>> +    # Should be enough
+>>>>>> +    maxItems: 255
+>>>>>
+>>>>> Are there constraints for the individual elements?
+>>>>
+>>>> In practice the subtype ID is 6bits number.
+>>>> Should I add limits to individual elements?
+>>>
+>>> Yes:
+>>>
+>>> items:
+>>>   maximum: 0x3f
+>>
+>> Right, I can just omit the minimum.
+>>
+>> It would be nice if I could use definitions for these ranges to avoid
+>> duplicated lines by adding
+>>
+>> definitions:
+>>   ti,rm-range:
+>>     $ref: /schemas/types.yaml#/definitions/uint32-array
+>>     minItems: 1
+>>     # Should be enough
+>>     maxItems: 255
+>>     items:
+>>       minimum: 0
+>>       maximum: 0x3f
+>>
+>> to schemas/arm/keystone/ti,k3-sci-common.yaml
+>>
+>> and only have:
+>>
+>>   ti,sci-rm-range-bchan:
+>>     $ref:
+>> /schemas/arm/keystone/ti,k3-sci-common.yaml#/definitions/ti,rm-range
+>>     description: |
+>>       Array of BCDMA block-copy channel resource subtypes for resource
+>>       allocation for this host
+> 
+> Just do:
+> 
+> patternProperties:
+>   "^ti,sci-rm-range-[btr]chan$":
+>     ...
+> 
+> If this is common for other bindings, then you can put it in
+> ti,k3-sci-common.yaml.
+
+Similar property (for RM ranges) also used by the ringacc, I have tried
+to standardize us to use: ti,sci-rm-range-* in DT.
+
+I will leave it as it is now for this series and we can simplify it
+later with a wider series touching all involved yaml files.
+
+>> but it results:
+>> Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml:
+>> properties:ti,sci-rm-range-bchan: {'$ref':
+>> '/schemas/arm/keystone/ti,k3-sci-common.yaml#/definitions/ti,rm-range',
+>> 'description': 'Array of BCDMA block-copy channel resource subtypes for
+>> resource\nallocation for this host\n'} is not valid under any of the
+>> given schemas (Possible causes of the failure):
+>>         Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml:
+>> properties:ti,sci-rm-range-bchan: 'not' is a required property
+>>         Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml:
+>> properties:ti,sci-rm-range-bchan:$ref:
+>> '/schemas/arm/keystone/ti,k3-sci-common.yaml#/definitions/ti,rm-range'
+>> does not match 'types.yaml#[/]{0,1}definitions/.*'
+> 
+> We probably should allow for using 'definitions' which is pretty
+> common json-schema practice, but don't primarily in order to keep
+> folks within the lines. Things are optimized for not knowing
+> json-schema and trying to minimize errors I have to check for.
+
+I agree on these.
+
+> Supporting it would complicate the meta-schema and the tools' fixup
+> code. So far, the need for it has been pretty infrequent.
+
+Sure, for the couple of duplication I have it is manageable without
+sacrificing readability.
+
+btw: I have made the similar changes to the k3-pktdma schema.
+
+> 
+> Rob
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

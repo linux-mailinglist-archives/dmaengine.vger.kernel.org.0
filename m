@@ -2,96 +2,95 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E8F4628AD32
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Oct 2020 06:39:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A20B28AE10
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Oct 2020 08:09:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726724AbgJLEjp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 12 Oct 2020 00:39:45 -0400
-Received: from mga14.intel.com ([192.55.52.115]:21641 "EHLO mga14.intel.com"
+        id S1726719AbgJLGJV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 12 Oct 2020 02:09:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726597AbgJLEjd (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 12 Oct 2020 00:39:33 -0400
-IronPort-SDR: qCCKuPqLN5Tl+MNEuXF1KK7hNQhA9AAf73dX57SQkkUdPM7kWh7+gPDaQg8JRcE4Q7XmD/RF8l
- X3kAtmBVtTlA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9771"; a="164903203"
-X-IronPort-AV: E=Sophos;i="5.77,365,1596524400"; 
-   d="scan'208";a="164903203"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2020 21:39:33 -0700
-IronPort-SDR: 0rP98mTaKoR2gYOBrqwRzr81na+FSbHFY8f5UrUSOuRHsNGNScGV/FStzbn4Z6Tz0NriDGwIGN
- 4Jb9cmBHvADw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,365,1596524400"; 
-   d="scan'208";a="313321391"
-Received: from unknown (HELO jsia-HP-Z620-Workstation.png.intel.com) ([10.221.118.135])
-  by orsmga003.jf.intel.com with ESMTP; 11 Oct 2020 21:39:32 -0700
-From:   Sia Jee Heng <jee.heng.sia@intel.com>
-To:     vkoul@kernel.org, Eugeniy.Paltsev@synopsys.com
-Cc:     andriy.shevchenko@linux.intel.com, dmaengine@vger.kernel.org,
+        id S1726337AbgJLGJV (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 12 Oct 2020 02:09:21 -0400
+Received: from localhost (unknown [122.182.245.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BDB920757;
+        Mon, 12 Oct 2020 06:09:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602482961;
+        bh=GPU8CP6xKnWURBquscB890UF3K7DVSENbbTjU0EOU3A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=prFNN/Lgyqvvw6oyH5tHsdNyhvz7J9fnspEpav3BNtPSmXWEHte305llkJ9+etXiM
+         2Zvxj4RuV2Vc2NenmjoWKYzrHqTVnxkWVhxw/itvpB+3ymUqEHmZrdEcQkX6oU8+VR
+         1Gai7wI58vNqj1NZZm/xU2I3LEScUvfdsyQb0lLk=
+Date:   Mon, 12 Oct 2020 11:39:16 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 15/15] dmaengine: dw-axi-dmac: Set constraint to the Max segment size
-Date:   Mon, 12 Oct 2020 12:22:00 +0800
-Message-Id: <20201012042200.29787-16-jee.heng.sia@intel.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20201012042200.29787-1-jee.heng.sia@intel.com>
-References: <20201012042200.29787-1-jee.heng.sia@intel.com>
+Subject: Re: [PATCH v4 2/3] dmaengine: add peripheral configuration
+Message-ID: <20201012060916.GI2968@vkoul-mobl>
+References: <20201008123151.764238-1-vkoul@kernel.org>
+ <20201008123151.764238-3-vkoul@kernel.org>
+ <e2c0323b-4f41-1926-5930-c63624fe1dd1@ti.com>
+ <20201009103019.GD2968@vkoul-mobl>
+ <a44af464-7d13-1254-54dd-f7783ccfaa0f@ti.com>
+ <20201009111515.GF2968@vkoul-mobl>
+ <13fdee71-5060-83fc-d69d-8ec73f82fac4@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <13fdee71-5060-83fc-d69d-8ec73f82fac4@ti.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add support for DMA Scatter-Gather (SG) constraint so that DMA clients can
-handle the AxiDMA limitation.
+On 09-10-20, 14:29, Peter Ujfalusi wrote:
+> 
+> 
+> On 09/10/2020 14.15, Vinod Koul wrote:
+> >>> If for any any reason subsequent txn is for different direction, I would
+> >>> expect that parameters are set again before prep_ calls
+> >>
+> >> But in DEV_TO_DEV?
+> > 
+> > Do we support that :D
+> > 
+> >> If we have two peripherals, both needs config:
+> >> p1_config and p2_config
+> >>
+> >> What and how would one use the single peripheral_config?
+> > 
+> > Since the config is implementation specific, I do not think it limits.
+> > You may create
+> > 
+> > struct peter_config {
+> >         struct p1_config;
+> >         struct p2_config;
+> > };
+> 
+> The use case is:
+> MEM -DMA-> P1 -DMA-> P2
+> or
+> P2 -DMA-> P1 -DMA-> MEM
+> or
+> MEM -DMA-> P2
+> or
+> P2 -DMA-> MEM
+> or
+> MEM -DMA-> P1 -DMA-> MEM
+> 
+> How would the DMA guess what it should do? How would the independent P1
+> and P2 would know how to set up the config?
 
-Without supporting DMA constraint the default Max segment size reported by
-dmaengine is 64KB, which is not supported by Intel KeemBay AxiDMA.
+As I said, we do not support DEV_TO_DEV yet :)
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sia Jee Heng <jee.heng.sia@intel.com>
----
- drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 8 ++++++++
- drivers/dma/dw-axi-dmac/dw-axi-dmac.h          | 1 +
- 2 files changed, 9 insertions(+)
+Question is how would p1<-->p2 look, will p1 initiate a DMA txn or p2..?
+who will configure these..
 
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index d4fca3ffe67f..bd56e21663c3 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -12,6 +12,7 @@
- #include <linux/device.h>
- #include <linux/dmaengine.h>
- #include <linux/dmapool.h>
-+#include <linux/dma-mapping.h>
- #include <linux/err.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-@@ -1407,6 +1408,13 @@ static int dw_probe(struct platform_device *pdev)
- 	dw->dma.device_prep_slave_sg = dw_axi_dma_chan_prep_slave_sg;
- 	dw->dma.device_prep_dma_cyclic = dw_axi_dma_chan_prep_cyclic;
- 
-+	/*
-+	 * Synopsis DesignWare AxiDMA datasheet mentioned Maximum
-+	 * supported blocks is 1024. Device register width is 4 bytes.
-+	 * Therefore, set constraint to 1024 * 4.
-+	 */
-+	dw->dma.dev->dma_parms = &dw->dma_parms;
-+	dma_set_max_seg_size(&pdev->dev, MAX_BLOCK_SIZE);
- 	platform_set_drvdata(pdev, chip);
- 
- 	pm_runtime_enable(chip->dev);
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-index f64e8d33b127..67669049cead 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-@@ -54,6 +54,7 @@ struct axi_dma_chan {
- struct dw_axi_dma {
- 	struct dma_device	dma;
- 	struct dw_axi_dma_hcfg	*hdata;
-+	struct device_dma_parameters	dma_parms;
- 
- 	/* channels */
- 	struct axi_dma_chan	*chan;
+Do you have a real world example in horizon...
+
 -- 
-2.18.0
-
+~Vinod

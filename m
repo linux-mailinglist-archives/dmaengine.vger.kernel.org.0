@@ -2,116 +2,188 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3AEF28B93E
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Oct 2020 16:01:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C777528C01F
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Oct 2020 20:57:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730800AbgJLN6r (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 12 Oct 2020 09:58:47 -0400
-Received: from mga06.intel.com ([134.134.136.31]:29346 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731602AbgJLN6E (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 12 Oct 2020 09:58:04 -0400
-IronPort-SDR: 2iSXIHzNz1joRimgWc/dfunJJG6YjUa9q8c9FPPAOwCNNs7nXprrCMlC2S9/cDPo+zY7sWGpLt
- 53850SBbvzMA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9771"; a="227387865"
-X-IronPort-AV: E=Sophos;i="5.77,366,1596524400"; 
-   d="scan'208";a="227387865"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2020 06:58:03 -0700
-IronPort-SDR: m4+dQVmhOc5UinBrvlXKAPxQG1V3XuyJr3v3C00yoZ7lZsQm92/o9IYAtXU9pQYmEwfnFyQyQ4
- XnyTJOg7w7nA==
-X-IronPort-AV: E=Sophos;i="5.77,366,1596524400"; 
-   d="scan'208";a="344893017"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2020 06:58:02 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kRyLx-0053H0-2r; Mon, 12 Oct 2020 16:59:05 +0300
-Date:   Mon, 12 Oct 2020 16:59:05 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sia Jee Heng <jee.heng.sia@intel.com>
-Cc:     vkoul@kernel.org, Eugeniy.Paltsev@synopsys.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/15] dmaengine: dw-axi-dmac: support Intel KeemBay
- AxiDMA
-Message-ID: <20201012135905.GX4077@smile.fi.intel.com>
-References: <20201012042200.29787-1-jee.heng.sia@intel.com>
+        id S1730782AbgJLS5k (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 12 Oct 2020 14:57:40 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35964 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727115AbgJLS5k (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 12 Oct 2020 14:57:40 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 32so3598551otm.3;
+        Mon, 12 Oct 2020 11:57:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ddIV4HQN24CafNYgtjScHKXn58YYBc4ENbBdZztl7Po=;
+        b=hW7NKjPA9XmDVlbiDZ1SzZSr2fz9arPeXwoM6C4WyojbDOlmGpgEnA9bH+EOF2CZl6
+         1rOP+iwS24Wz6dH22xVMUXMi+06Qzwzg3LL1YXv6hf5nLc9nuXTSO2QhO/A3tG/Wl+kK
+         qVOjp2W03a1DJTWfRv58rYuj6iDXMICFyEPZigqFCVVoZpYmmQB7eb8/DB0P/eLAhBrx
+         OSDMbGqMAkoIXaTu+LEBCzkY4aq5gOSG9mGeEvG4VaNzaAHwPDTghPTHp1NpO5DLivl2
+         KKGZ7rflgmGEay4FjBYZ+6v8nafGaLbqlw8itWDqQCKj3mEwmIVIr3+gzwGp8j6N6v6F
+         FxHQ==
+X-Gm-Message-State: AOAM532LzNDepTE0LNhwz8YUoHqXm50RSD6bb5hbLOr2O8d5EwkgcMKE
+        H9RxgiFMKF48/kztPruufe/aPS5RBbFO
+X-Google-Smtp-Source: ABdhPJw4IVll4ULsuJ5LXi+mVD/6wjOwgXKHePUC517QdcqQleAXdmNv1FWoCkkbRyTDphEGrvoV1g==
+X-Received: by 2002:a05:6830:1e19:: with SMTP id s25mr18618580otr.294.1602529058807;
+        Mon, 12 Oct 2020 11:57:38 -0700 (PDT)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 81sm9006727oti.79.2020.10.12.11.57.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Oct 2020 11:57:38 -0700 (PDT)
+Received: (nullmailer pid 1908487 invoked by uid 1000);
+        Mon, 12 Oct 2020 18:57:37 -0000
+Date:   Mon, 12 Oct 2020 13:57:37 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: dmaengine: Document qcom,gpi dma
+ binding
+Message-ID: <20201012185737.GA1905980@bogus>
+References: <20201008123151.764238-1-vkoul@kernel.org>
+ <20201008123151.764238-2-vkoul@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201012042200.29787-1-jee.heng.sia@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20201008123151.764238-2-vkoul@kernel.org>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Oct 12, 2020 at 12:21:45PM +0800, Sia Jee Heng wrote:
-> The below patch series are to support AxiDMA running on Intel KeemBay SoC.
-> The base driver is dw-axi-dmac but code refactoring is needed, for example:
-> - Support YAML Schemas DT binding.
-> - Replacing Linked List with virtual descriptor management.
-> - Remove unrelated hw desc stuff from dma memory pool.
-> - Manage dma memory pool alloc/destroy based on channel activity.
-> - Support dmaengine device_sync() callback.
-> - Support dmaengine device_config().
-> - Support dmaegnine device_prep_slave_sg().
-> - Support dmaengine device_prep_dma_cyclic().
-> - Support of_dma_controller_register().
-> - Support burst residue granularity.
-> - Support Intel KeemBay AxiDMA registers.
-> - Support Intel KeemBay AxiDMA device handshake.
-> - Support Intel KeemBay AxiDMA BYTE and HALFWORD device operation.
-> - Add constraint to Max segment size.
+On Thu, Oct 08, 2020 at 06:01:49PM +0530, Vinod Koul wrote:
+> Add devicetree binding documentation for GPI DMA controller
+> implemented on Qualcomm SoCs
 > 
-> This patch set is to replace the patch series submitted at:
-> https://lore.kernel.org/dmaengine/1599213094-30144-1-git-send-email-jee.heng.sia@intel.com/
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  .../devicetree/bindings/dma/qcom,gpi.yaml     | 86 +++++++++++++++++++
+>  include/dt-bindings/dma/qcom-gpi.h            | 11 +++
+>  2 files changed, 97 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+>  create mode 100644 include/dt-bindings/dma/qcom-gpi.h
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/qcom,gpi.yaml b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+> new file mode 100644
+> index 000000000000..4470c1b2fd6c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/qcom,gpi.yaml
+> @@ -0,0 +1,86 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/qcom,gpi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies Inc GPI DMA controller
+> +
+> +maintainers:
+> +  - Vinod Koul <vkoul@kernel.org>
+> +
+> +description: |
+> +  QCOM GPI DMA controller provides DMA capabilities for
+> +  peripheral buses such as I2C, UART, and SPI.
+> +
+> +allOf:
+> +  - $ref: "dma-controller.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,sdm845-gpi-dma
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description:
+> +      Interrupt lines for each GPI instance
+> +    maxItems: 13
+> +
+> +  "#dma-cells":
+> +    const: 3
+> +    description: >
+> +      DMA clients must use the format described in dma.txt, giving a phandle
+> +      to the DMA controller plus the following 3 integer cells:
+> +      - channel: if set to 0xffffffff, any available channel will be allocated
+> +        for the client. Otherwise, the exact channel specified will be used.
+> +      - seid: serial id of the client as defined in the SoC documentation.
+> +      - client: type of the client as defined in dt-bindings/dma/qcom-gpi.h
+> +
+> +  iommus:
+> +    maxItems: 1
+> +
+> +  dma-channels:
+> +    maximum: 31
+> +
+> +  dma-channel-mask:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - "#dma-cells"
+> +  - iommus
+> +  - dma-channels
+> +  - dma-channel-mask
 
-And it means effectively the bumped version, besides the fact that you double
-sent this one...
+additionalProperties: false
 
+With that,
 
-Please fix and resend. Note, now is merge window is open. Depends on
-maintainer's flow it may be good or bad time to resend with properly formed
-changelog and version of the series.
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-> This patch series are tested on Intel KeemBay platform.
-> 
-> 
-> Sia Jee Heng (15):
->   dt-bindings: dma: Add YAML schemas for dw-axi-dmac
->   dmaengine: dw-axi-dmac: simplify descriptor management
->   dmaengine: dw-axi-dmac: move dma_pool_create() to
->     alloc_chan_resources()
->   dmaengine: dw-axi-dmac: Add device_synchronize() callback
->   dmaengine: dw-axi-dmac: Add device_config operation
->   dmaengine: dw-axi-dmac: Support device_prep_slave_sg
->   dmaegine: dw-axi-dmac: Support device_prep_dma_cyclic()
->   dmaengine: dw-axi-dmac: Support of_dma_controller_register()
->   dmaengine: dw-axi-dmac: Support burst residue granularity
->   dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA support
->   dt-binding: dma: dw-axi-dmac: Add support for Intel KeemBay AxiDMA
->   dmaengine: dw-axi-dmac: Add Intel KeemBay DMA register fields
->   dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA handshake
->   dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA BYTE and HALFWORD
->     registers
->   dmaengine: dw-axi-dmac: Set constraint to the Max segment size
-> 
->  .../bindings/dma/snps,dw-axi-dmac.txt         |  39 -
->  .../bindings/dma/snps,dw-axi-dmac.yaml        | 149 ++++
->  .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 696 +++++++++++++++---
->  drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  33 +-
->  4 files changed, 783 insertions(+), 134 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
->  create mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-> 
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/dma/qcom-gpi.h>
+> +    gpi_dma0: dma-controller@800000 {
+> +        compatible = "qcom,gpi-dma";
+> +        #dma-cells = <3>;
+> +        reg = <0x00800000 0x60000>;
+> +        iommus = <&apps_smmu 0x0016 0x0>;
+> +        dma-channels = <13>;
+> +        dma-channel-mask = <0xfa>;
+> +        interrupts = <GIC_SPI 244 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 245 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 247 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 248 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 249 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 250 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 251 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 252 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 253 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 254 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 255 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
+> +    };
+> +
+> +...
+> diff --git a/include/dt-bindings/dma/qcom-gpi.h b/include/dt-bindings/dma/qcom-gpi.h
+> new file mode 100644
+> index 000000000000..71f79eb7614c
+> --- /dev/null
+> +++ b/include/dt-bindings/dma/qcom-gpi.h
+> @@ -0,0 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/* Copyright (c) 2020, Linaro Ltd.  */
+> +
+> +#ifndef __DT_BINDINGS_DMA_QCOM_GPI_H__
+> +#define __DT_BINDINGS_DMA_QCOM_GPI_H__
+> +
+> +#define QCOM_GPI_SPI		1
+> +#define QCOM_GPI_UART		2
+> +#define QCOM_GPI_I2C		3
+> +
+> +#endif /* __DT_BINDINGS_DMA_QCOM_GPI_H__ */
 > -- 
-> 2.18.0
+> 2.26.2
 > 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-

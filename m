@@ -2,61 +2,93 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A0DCF2890B0
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Oct 2020 20:23:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD7BF28AD15
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Oct 2020 06:38:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390337AbgJISXE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 9 Oct 2020 14:23:04 -0400
-Received: from mail.csu.ru ([195.54.14.68]:37389 "HELO mail.csu.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with SMTP
-        id S1731198AbgJISXE (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 9 Oct 2020 14:23:04 -0400
-X-Greylist: delayed 623 seconds by postgrey-1.27 at vger.kernel.org; Fri, 09 Oct 2020 14:22:54 EDT
-Received: from webmail.csu.ru (webmail.csu.ru [195.54.14.80])
-        (Authenticated sender: gmu)
-        by mail.csu.ru (Postfix) with ESMTPA id 9EA00146ADD;
-        Fri,  9 Oct 2020 23:12:05 +0500 (+05)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.csu.ru 9EA00146ADD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=csu.ru; s=lso;
-        t=1602267137; bh=EHyoM7tvrYOQrxF04FX0pRVRvphefdiNsT3iXJDpiBo=;
-        h=Date:Subject:From:Reply-To:From;
-        b=JgmKnEwUa2H4guTvvGXcm+G0tbE8hRVj91/tN+idLHyOF4wk0A535Uc522g7yzONB
-         11lBhJi20Vs8vlWrJJV7umqCG8m0/gP1SytymOM2p1mcuAg1yXTqpi9wyLu/L2WMA4
-         Yf/FY5XfgqaHX1mVolq5iOGoKO0tcHkLI3aRlaVQ=
-Received: from 156.146.59.22
-        (SquirrelMail authenticated user gmu)
-        by webmail.csu.ru with HTTP;
-        Fri, 9 Oct 2020 23:12:08 +0500
-Message-ID: <3714bded3cc624bd8ed00fd6a579589c.squirrel@webmail.csu.ru>
-Date:   Fri, 9 Oct 2020 23:12:08 +0500
-Subject: Vorschlag
-From:   "Yi Huiman" <info@csu.ru>
-Reply-To: info@huiman.cf
-User-Agent: SquirrelMail/1.4.22
-MIME-Version: 1.0
-Content-Type: text/plain;charset=iso-8859-1
-X-Priority: 3 (Normal)
-Importance: Normal
-X-KLMS-Rule-ID: 1
-X-KLMS-Message-Action: clean
-X-KLMS-AntiSpam-Lua-Profiles: 159051 [Oct 09 2020]
-X-KLMS-AntiSpam-Version: 5.9.11.0
-X-KLMS-AntiSpam-Envelope-From: info@csu.ru
-X-KLMS-AntiSpam-Auth: dmarc=none header.from=csu.ru;spf=softfail smtp.mailfrom=csu.ru;dkim=none
-X-KLMS-AntiSpam-Rate: 70
-X-KLMS-AntiSpam-Status: not_detected
-X-KLMS-AntiSpam-Method: none
-X-KLMS-AntiSpam-Info: LuaCore: 381 381 faef97d3f9d8f5dd6a9feadc50ba5b34b9486c58, {rep_avail}, {Tracking_content_type, plain}, {Prob_reply_not_match_from}, {Prob_to_header_missing}, {Prob_Reply_to_without_To}, {Tracking_susp_macro_from_formal}, csu.ru:7.1.1;huiman.cf:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;webmail.csu.ru:7.1.1;127.0.0.199:7.1.2;195.54.14.80:7.1.2, ApMailHostAddress: 195.54.14.80
-X-MS-Exchange-Organization-SCL: -1
-X-KLMS-AntiSpam-Interceptor-Info: scan successful
-X-KLMS-AntiPhishing: Clean, bases: 2020/10/09 16:54:00
-X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, bases: 2020/10/09 00:29:00 #15463494
-X-KLMS-AntiVirus-Status: Clean, skipped
-Content-Transfer-Encoding: quoted-printable
-To:     unlisted-recipients:; (no To-header on input)
+        id S1726130AbgJLEiT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 12 Oct 2020 00:38:19 -0400
+Received: from mga14.intel.com ([192.55.52.115]:21513 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725941AbgJLEiT (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 12 Oct 2020 00:38:19 -0400
+IronPort-SDR: 6Kene1N9kHGpDkOZ3uIjzPhXPGn7uic1qFJGPFmWzphyguEL1+AtBagmLRZMtVU8ZutciHWE1L
+ l1dcqnb7HFQg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9771"; a="164903132"
+X-IronPort-AV: E=Sophos;i="5.77,365,1596524400"; 
+   d="scan'208";a="164903132"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Oct 2020 21:38:17 -0700
+IronPort-SDR: 2RtJkiEYP4oqc/OHa2AdFzu946jGikQAqm6ihRt1VhNWO1Qy6wXeKdrWPMBWk4xEN+PDC6T61d
+ BphOttrHWhqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,365,1596524400"; 
+   d="scan'208";a="313321163"
+Received: from unknown (HELO jsia-HP-Z620-Workstation.png.intel.com) ([10.221.118.135])
+  by orsmga003.jf.intel.com with ESMTP; 11 Oct 2020 21:38:16 -0700
+From:   Sia Jee Heng <jee.heng.sia@intel.com>
+To:     vkoul@kernel.org, Eugeniy.Paltsev@synopsys.com
+Cc:     andriy.shevchenko@linux.intel.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 00/15] dmaengine: dw-axi-dmac: support Intel KeemBay AxiDMA
+Date:   Mon, 12 Oct 2020 12:21:45 +0800
+Message-Id: <20201012042200.29787-1-jee.heng.sia@intel.com>
+X-Mailer: git-send-email 2.18.0
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-ich habe ein Gesch=E4ft Vorschlag f=FCr dich.
+The below patch series are to support AxiDMA running on Intel KeemBay SoC.
+The base driver is dw-axi-dmac but code refactoring is needed, for example:
+- Support YAML Schemas DT binding.
+- Replacing Linked List with virtual descriptor management.
+- Remove unrelated hw desc stuff from dma memory pool.
+- Manage dma memory pool alloc/destroy based on channel activity.
+- Support dmaengine device_sync() callback.
+- Support dmaengine device_config().
+- Support dmaegnine device_prep_slave_sg().
+- Support dmaengine device_prep_dma_cyclic().
+- Support of_dma_controller_register().
+- Support burst residue granularity.
+- Support Intel KeemBay AxiDMA registers.
+- Support Intel KeemBay AxiDMA device handshake.
+- Support Intel KeemBay AxiDMA BYTE and HALFWORD device operation.
+- Add constraint to Max segment size.
+
+This patch set is to replace the patch series submitted at:
+https://lore.kernel.org/dmaengine/1599213094-30144-1-git-send-email-jee.heng.sia@intel.com/
+
+This patch series are tested on Intel KeemBay platform.
+
+
+Sia Jee Heng (15):
+  dt-bindings: dma: Add YAML schemas for dw-axi-dmac
+  dmaengine: dw-axi-dmac: simplify descriptor management
+  dmaengine: dw-axi-dmac: move dma_pool_create() to
+    alloc_chan_resources()
+  dmaengine: dw-axi-dmac: Add device_synchronize() callback
+  dmaengine: dw-axi-dmac: Add device_config operation
+  dmaengine: dw-axi-dmac: Support device_prep_slave_sg
+  dmaegine: dw-axi-dmac: Support device_prep_dma_cyclic()
+  dmaengine: dw-axi-dmac: Support of_dma_controller_register()
+  dmaengine: dw-axi-dmac: Support burst residue granularity
+  dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA support
+  dt-binding: dma: dw-axi-dmac: Add support for Intel KeemBay AxiDMA
+  dmaengine: dw-axi-dmac: Add Intel KeemBay DMA register fields
+  dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA handshake
+  dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA BYTE and HALFWORD
+    registers
+  dmaengine: dw-axi-dmac: Set constraint to the Max segment size
+
+ .../bindings/dma/snps,dw-axi-dmac.txt         |  39 -
+ .../bindings/dma/snps,dw-axi-dmac.yaml        | 149 ++++
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 696 +++++++++++++++---
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  33 +-
+ 4 files changed, 783 insertions(+), 134 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+
+-- 
+2.18.0
 

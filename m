@@ -2,117 +2,90 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B708928CE41
-	for <lists+dmaengine@lfdr.de>; Tue, 13 Oct 2020 14:23:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CB0928D698
+	for <lists+dmaengine@lfdr.de>; Wed, 14 Oct 2020 00:44:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgJMMXl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 13 Oct 2020 08:23:41 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:18807 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbgJMMXk (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 13 Oct 2020 08:23:40 -0400
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20201013122337epoutp02fc2cd9993bf175fbbd3ebf8a66f1663b~9jMRTJMaI1299012990epoutp02d
-        for <dmaengine@vger.kernel.org>; Tue, 13 Oct 2020 12:23:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20201013122337epoutp02fc2cd9993bf175fbbd3ebf8a66f1663b~9jMRTJMaI1299012990epoutp02d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1602591817;
-        bh=vhCHSTYT3RjO1E7ie1Ctba4Syv1zYIq8jW2a+IGfhFw=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=ZeUXEF8wTCbkqrIOFEs7EKOvLPN0uBc97xTJj7h66RHoc+b19b7ENFAdgPDT5tVCy
-         UdlHMXqqa3WCsTdXF5wF+y68JSeptrQd4+NfY0w/kLIdEes+iXnqw6XtQmZh6exCsZ
-         tTewiGrW+oN4mvjSV93ANt6lJrbJmXKSQgTzN89A=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20201013122336epcas5p1207c78dbfb3458cff07ebe7febdfa637~9jMQgruBJ2857928579epcas5p1O;
-        Tue, 13 Oct 2020 12:23:36 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        51.73.09567.84C958F5; Tue, 13 Oct 2020 21:23:36 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20201013122030epcas5p2e576d5a2ebfaf9df8078e6ee70f3765c~9jJjDcHse2423824238epcas5p2y;
-        Tue, 13 Oct 2020 12:20:30 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20201013122030epsmtrp23b07696b12b136a6399a2d5972823c3a~9jJjCwY370338303383epsmtrp2-;
-        Tue, 13 Oct 2020 12:20:30 +0000 (GMT)
-X-AuditID: b6c32a4b-2f3ff7000000255f-60-5f859c48e880
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E0.15.08604.D8B958F5; Tue, 13 Oct 2020 21:20:29 +0900 (KST)
-Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
-        [107.108.73.139]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20201013122028epsmtip1ce5d5d13b962ec5603d315ed66872cce~9jJh4bzSe2620526205epsmtip1j;
-        Tue, 13 Oct 2020 12:20:28 +0000 (GMT)
-From:   Surendran K <surendran.k@samsung.com>
-To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     vkoul@kernel.org, shaik.ameer@samsung.com, alim.akhtar@samsung.com,
-        pankaj.dubey@samsung.com, Surendran K <surendran.k@samsung.com>
-Subject: [PATCH] DMA: PL330: Remove unreachable code
-Date:   Tue, 13 Oct 2020 17:17:13 +0530
-Message-Id: <20201013114713.28754-1-surendran.k@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDIsWRmVeSWpSXmKPExsWy7bCmhq7HnNZ4g7sLhC0ezNvGZrF66l9W
-        i8u75rBZLNr6hd3iyMPd7Babd0xht9h55wSzA7vHplWdbB59W1YxenzeJBfAHMVlk5Kak1mW
-        WqRvl8CVsXzjM+aCQ6wVrz6lNDDuZeli5OCQEDCROH42vIuRi0NIYDejRMe/l6wQzidGiekH
-        J7BAON8YJe79/MUO03HzuT1EfC+jxM+v99ggnBYmicmdS4EcTg42AW2JD73b2UFsEQFriUcH
-        p4CNZRboZJQ4dqmdGSQhDDTp3uxFjCA2i4CqxKeGdawgNq+AjUTPx89gcQkBeYnVGw4wQ9iL
-        2CU6r9tA2C4S7ydPYYGwhSVeHd/CDmFLSXx+t5cNws6WuPGhnxXCrpCYd+MeVNxe4sCVOWD/
-        MwtoSqzfpQ8RlpWYemodE4jNLMAn0fv7CRNEnFdixzwYW1Xi5P8fUOdIS1xZtx9qvIfE9OaZ
-        YHEhgViJ7Sdfs0xglJ2FsGEBI+MqRsnUguLc9NRi0wLjvNRyveLE3OLSvHS95PzcTYzgCNfy
-        3sH46MEHvUOMTByMhxglOJiVRHjPqTfFC/GmJFZWpRblxxeV5qQWH2KU5mBREudV+nEmTkgg
-        PbEkNTs1tSC1CCbLxMEp1cDUstH7bEDCYvknj4s21u+SWyV5+vZilntKMlfvvzM32BEyZ9Hz
-        GaVtKa8Fza+Fi59nsb9UsGe6W8M8rrPfol8+dtkYobBO897WPeUP1heXPrwRFcO6ZHG1+l/x
-        6eEyq5Zq3ZYpzuDdv/xPRYi1Ajvb8ZmfN4kXXuxSyOG8sJTf1fSPS9Gegh9tU0+e31ATPfnT
-        okq2ZsWzS1blaia/3mAzY9GcJdGa350/s14zX1u73PxSm3sS6+r0x+ozfx/l7si8UXr33ybX
-        vMrJQkkfk3y+BGieMK1L8PPnjVqYHF+k4LoxmsNkfYbWSz9F/dgNUnrLUmSq90X7Sgi1hV8v
-        27r+yasO1r5ZBaZl/lFJz8SVWIozEg21mIuKEwECwMOyXwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMJMWRmVeSWpSXmKPExsWy7bCSnG7v7NZ4g/tLbSwezNvGZrF66l9W
-        i8u75rBZLNr6hd3iyMPd7Babd0xht9h55wSzA7vHplWdbB59W1YxenzeJBfAHMVlk5Kak1mW
-        WqRvl8CVsXzjM+aCQ6wVrz6lNDDuZeli5OCQEDCRuPncvouRi0NIYDejRPPVmUBxTqC4tMTH
-        87uZIWxhiZX/nrOD2EICTUwSbz6agdhsAtoSH3q3g8VFBGwlpiw7zgQyiFmgn1Fi/fl5rCAJ
-        YaAF92YvYgSxWQRUJT41rAOL8wrYSPR8/MwIsUBeYvWGA8wTGHkWMDKsYpRMLSjOTc8tNiww
-        zEst1ytOzC0uzUvXS87P3cQIDhctzR2M21d90DvEyMTBeIhRgoNZSYT3nHpTvBBvSmJlVWpR
-        fnxRaU5q8SFGaQ4WJXHeG4UL44QE0hNLUrNTUwtSi2CyTBycUg1MNQ+TJxq83hhb5x/W9zB6
-        Ns+qqG/mnJmvGldNmNH3deXt2c/MTNpvCu1MmPNxP5Nw3z3+a9F/m4q+3X+ov+rS68zZLzvE
-        wh09NSYEv7wj7L7eubNt/pTZzVPFVjHNCZk7b/JmL65db468SW92bqlfWF1ueNq36dRqj9C0
-        hrraBqaCjeHSkxqcuGyeJPqdu8V2Yv7q/NCP/i1W5zozVzx9s+KX+V3PLNsYywu6++y11Ll+
-        LPqx/d+JJu3v2Vfqz76b8bdyv5XjOl/5T7detL5b++S/xrM/WULHtE4tqxTtd0j9mlgQwHt4
-        8RL1nTlLf3oIpjr9Yctu+Gl3US/O6/Uq9p/Rh3c7X3ztLGKp79D7SImlOCPRUIu5qDgRACvm
-        y5+GAgAA
-X-CMS-MailID: 20201013122030epcas5p2e576d5a2ebfaf9df8078e6ee70f3765c
-X-Msg-Generator: CA
+        id S1728971AbgJMWne (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 13 Oct 2020 18:43:34 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34364 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728931AbgJMWnZ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 13 Oct 2020 18:43:25 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09DMYHRI023311;
+        Tue, 13 Oct 2020 22:43:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=BPXVhR8Zcz1sWINwPPKI15oRrSSfJmS7Dk7t6k2FBvc=;
+ b=X98OMsUEJ6iXi28jlvGzIuUNtCUPCHKr9Y26mlldDvGV1tVg0rW4+z19ERv9nUm05fW2
+ 7uLfRfkQC87plb6dqK0JgwDllNVeWHEr4KuohBovrquRB4Wp8Fn55mzzRhERGk86b1R8
+ IUAHuFALM9P0nzG0SMad9VRc3S4BqwSCpX9uXbI7E8E4JWNs+M489BfaOy69s9tMy36o
+ WsDINZk0QvR9KX7AD1uVtYIm858Ec1rCBrQM2cWhu74pWwQ4sERB2XP+p4QlG2a3ov36
+ KsDceZW1Gf6MViMvswmWBcHmPujmAKdJrQLwx9ihpq7sGfN7gk8NuWumGIvUgBivX+8I Nw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 3434wkmr7r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 13 Oct 2020 22:43:19 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09DMZeSv129581;
+        Tue, 13 Oct 2020 22:43:18 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 343phntsx7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 13 Oct 2020 22:43:18 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 09DMhIGo146795;
+        Tue, 13 Oct 2020 22:43:18 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 343phntswf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Oct 2020 22:43:18 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09DMhFrt005717;
+        Tue, 13 Oct 2020 22:43:16 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 13 Oct 2020 15:43:15 -0700
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     linux-spi@vger.kernel.org, Julia Lawall <Julia.Lawall@inria.fr>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        dmaengine@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-media@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        linux-serial@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-scsi@vger.kernel.org, Yossi Leybovich <sleybo@amazon.com>,
+        linux-block@vger.kernel.org, rds-devel@oss.oracle.com
+Subject: Re: [PATCH 00/14] drop double zeroing
+Date:   Tue, 13 Oct 2020 18:42:52 -0400
+Message-Id: <160262862433.3018.13907233755506910409.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <1600601186-7420-1-git-send-email-Julia.Lawall@inria.fr>
+References: <1600601186-7420-1-git-send-email-Julia.Lawall@inria.fr>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20201013122030epcas5p2e576d5a2ebfaf9df8078e6ee70f3765c
-References: <CGME20201013122030epcas5p2e576d5a2ebfaf9df8078e6ee70f3765c@epcas5p2.samsung.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9773 signatures=668681
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxscore=0
+ malwarescore=0 phishscore=0 suspectscore=0 impostorscore=0 clxscore=1011
+ spamscore=0 priorityscore=1501 bulkscore=0 adultscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010130158
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-_setup_req(..) never returns negative value.
-Hence the condition ret < 0 is never met
+On Sun, 20 Sep 2020 13:26:12 +0200, Julia Lawall wrote:
 
-Signed-off-by: Surendran K <surendran.k@samsung.com>
----
- drivers/dma/pl330.c | 2 --
- 1 file changed, 2 deletions(-)
+> sg_init_table zeroes its first argument, so the allocation of that argument
+> doesn't have to.
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index e9f0101d92fa..8355586c9788 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -1527,8 +1527,6 @@ static int pl330_submit_req(struct pl330_thread *thrd,
- 
- 	/* First dry run to check if req is acceptable */
- 	ret = _setup_req(pl330, 1, thrd, idx, &xs);
--	if (ret < 0)
--		goto xfer_exit;
- 
- 	if (ret > pl330->mcbufsz / 2) {
- 		dev_info(pl330->ddma.dev, "%s:%d Try increasing mcbufsz (%i/%i)\n",
+Applied to 5.10/scsi-queue, thanks!
+
+[02/14] scsi: target: rd: Drop double zeroing
+        https://git.kernel.org/mkp/scsi/c/4b217e015b75
+
 -- 
-2.17.1
-
+Martin K. Petersen	Oracle Linux Engineering

@@ -2,27 +2,28 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B80428FBD9
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Oct 2020 02:03:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC80628FBDD
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Oct 2020 02:03:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730801AbgJPADG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 15 Oct 2020 20:03:06 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:15225 "EHLO huawei.com"
+        id S1730479AbgJPADM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 15 Oct 2020 20:03:12 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:15301 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730192AbgJPADG (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 15 Oct 2020 20:03:06 -0400
+        id S1733025AbgJPADM (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 15 Oct 2020 20:03:12 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 52067F9ED85C372DF79C;
-        Fri, 16 Oct 2020 08:03:05 +0800 (CST)
+        by Forcepoint Email with ESMTP id 645AE8E014E53068E64F;
+        Fri, 16 Oct 2020 08:03:10 +0800 (CST)
 Received: from SWX921481.china.huawei.com (10.126.203.187) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 16 Oct 2020 08:02:58 +0800
+ 14.3.487.0; Fri, 16 Oct 2020 08:03:00 +0800
 From:   Barry Song <song.bao.hua@hisilicon.com>
 To:     <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
-CC:     Barry Song <song.bao.hua@hisilicon.com>
-Subject: [PATCH 06/10] dmaengine: k3dma: remove redundant irqsave and irqrestore in hardIRQ
-Date:   Fri, 16 Oct 2020 12:59:17 +1300
-Message-ID: <20201015235921.21224-7-song.bao.hua@hisilicon.com>
+CC:     Barry Song <song.bao.hua@hisilicon.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>
+Subject: [PATCH 07/10] dmaengine: hisi_dma: remove redundant irqsave and irqrestore in hardIRQ
+Date:   Fri, 16 Oct 2020 12:59:18 +1300
+Message-ID: <20201015235921.21224-8-song.bao.hua@hisilicon.com>
 X-Mailer: git-send-email 2.21.0.windows.1
 In-Reply-To: <20201015235921.21224-1-song.bao.hua@hisilicon.com>
 References: <20201015235921.21224-1-song.bao.hua@hisilicon.com>
@@ -37,44 +38,36 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 Running in hardIRQ, disabling IRQ is redundant.
 
+Cc: Zhou Wang <wangzhou1@hisilicon.com>
 Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
 ---
- drivers/dma/k3dma.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/dma/hisi_dma.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/k3dma.c b/drivers/dma/k3dma.c
-index f609a84c493c..d0b2e601e3e5 100644
---- a/drivers/dma/k3dma.c
-+++ b/drivers/dma/k3dma.c
-@@ -223,24 +223,23 @@ static irqreturn_t k3_dma_int_handler(int irq, void *dev_id)
- 		i = __ffs(stat);
- 		stat &= ~BIT(i);
- 		if (likely(tc1 & BIT(i)) || (tc2 & BIT(i))) {
--			unsigned long flags;
+diff --git a/drivers/dma/hisi_dma.c b/drivers/dma/hisi_dma.c
+index e1a958ae7925..a259ee010e9b 100644
+--- a/drivers/dma/hisi_dma.c
++++ b/drivers/dma/hisi_dma.c
+@@ -431,9 +431,8 @@ static irqreturn_t hisi_dma_irq(int irq, void *data)
+ 	struct hisi_dma_dev *hdma_dev = chan->hdma_dev;
+ 	struct hisi_dma_desc *desc;
+ 	struct hisi_dma_cqe *cqe;
+-	unsigned long flags;
  
- 			p = &d->phy[i];
- 			c = p->vchan;
- 			if (c && (tc1 & BIT(i))) {
--				spin_lock_irqsave(&c->vc.lock, flags);
-+				spin_lock(&c->vc.lock);
- 				if (p->ds_run != NULL) {
- 					vchan_cookie_complete(&p->ds_run->vd);
- 					p->ds_done = p->ds_run;
- 					p->ds_run = NULL;
- 				}
--				spin_unlock_irqrestore(&c->vc.lock, flags);
-+				spin_unlock(&c->vc.lock);
- 			}
- 			if (c && (tc2 & BIT(i))) {
--				spin_lock_irqsave(&c->vc.lock, flags);
-+				spin_lock(&c->vc.lock);
- 				if (p->ds_run != NULL)
- 					vchan_cyclic_callback(&p->ds_run->vd);
--				spin_unlock_irqrestore(&c->vc.lock, flags);
-+				spin_unlock(&c->vc.lock);
- 			}
- 			irq_chan |= BIT(i);
- 		}
+-	spin_lock_irqsave(&chan->vc.lock, flags);
++	spin_lock(&chan->vc.lock);
+ 
+ 	desc = chan->desc;
+ 	cqe = chan->cq + chan->cq_head;
+@@ -452,7 +451,7 @@ static irqreturn_t hisi_dma_irq(int irq, void *data)
+ 		chan->desc = NULL;
+ 	}
+ 
+-	spin_unlock_irqrestore(&chan->vc.lock, flags);
++	spin_unlock(&chan->vc.lock);
+ 
+ 	return IRQ_HANDLED;
+ }
 -- 
 2.25.1
 

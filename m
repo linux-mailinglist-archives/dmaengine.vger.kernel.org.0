@@ -2,82 +2,64 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EAE028FBE0
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Oct 2020 02:03:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E7BB290243
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Oct 2020 11:53:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733031AbgJPADR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 15 Oct 2020 20:03:17 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:59416 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1733029AbgJPADR (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 15 Oct 2020 20:03:17 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 75BA9A75DA9B081B831B;
-        Fri, 16 Oct 2020 08:03:15 +0800 (CST)
-Received: from SWX921481.china.huawei.com (10.126.203.187) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 16 Oct 2020 08:03:05 +0800
-From:   Barry Song <song.bao.hua@hisilicon.com>
-To:     <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
-CC:     Barry Song <song.bao.hua@hisilicon.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH 10/10] dmaengine: pxa_dma: remove redundant irqsave and irqrestore in hardIRQ
-Date:   Fri, 16 Oct 2020 12:59:21 +1300
-Message-ID: <20201015235921.21224-11-song.bao.hua@hisilicon.com>
-X-Mailer: git-send-email 2.21.0.windows.1
-In-Reply-To: <20201015235921.21224-1-song.bao.hua@hisilicon.com>
-References: <20201015235921.21224-1-song.bao.hua@hisilicon.com>
+        id S2406414AbgJPJxg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 16 Oct 2020 05:53:36 -0400
+Received: from cpanel.giganet.cl ([190.96.78.139]:59354 "EHLO
+        cpanel.giganet.cl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405485AbgJPJxg (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 16 Oct 2020 05:53:36 -0400
+X-Greylist: delayed 13053 seconds by postgrey-1.27 at vger.kernel.org; Fri, 16 Oct 2020 05:53:34 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=dplgrout.cl
+        ; s=default; h=Content-Transfer-Encoding:Content-Type:Message-ID:Reply-To:
+        Subject:To:From:Date:MIME-Version:Sender:Cc:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=fAA24DCNzcxd2rW6V/x2RpzvwUTDpj5k4CJDMsJM84M=; b=Ux6BxIT0nASCdw9lDy+jrkGawm
+        I5zi5yFPGDHDyvDtkfmzgydxcFCppD/8UEWwNgr0uwO1856vPap0vkgz4l3Km46KrifYCVkFIF1YO
+        MIXe7/TBuekzD+NSu4g3lQDSOvYPD8vCd0JU63f9zL6MqXaojs6pCwW/Ho3J2U6EKuQkeMCUqWoxI
+        z73dYuKQEDdik8RE1EX96KDi/hh3luSNE7hMT+aFigcy/VsE7/EFl+C1ezxYlZrDJhPrKtlhHRlOq
+        CpSj9XsUONd68K2s5HleVXHPe3E1s8PJMJx++UQWbfyYq8/MGjS06m/InTa0+IMUuzFHTfpEXyh6X
+        uTU9Oa6A==;
+Received: from [::1] (port=33348 helo=cpanel.giganet.cl)
+        by cpanel.giganet.cl with esmtpa (Exim 4.93)
+        (envelope-from <info@controlypotencia.com>)
+        id 1kTIpP-0007Jv-L1; Fri, 16 Oct 2020 03:02:59 -0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.126.203.187]
-X-CFilter-Loop: Reflected
+Date:   Fri, 16 Oct 2020 03:02:58 -0300
+From:   Ying Chongan <info@controlypotencia.com>
+To:     undisclosed-recipients:;
+Subject: Investment opportunity
+Reply-To: yingchongan@zohomail.com
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <1f2288a87f28dc8a6c8e4f3ff69e0f26@controlypotencia.com>
+X-Sender: info@controlypotencia.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cpanel.giganet.cl
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - controlypotencia.com
+X-Get-Message-Sender-Via: cpanel.giganet.cl: authenticated_id: mariapaz.lopez@dplgrout.cl
+X-Authenticated-Sender: cpanel.giganet.cl: mariapaz.lopez@dplgrout.cl
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Running in hardIRQ, disabling IRQ is redundant.
+Greetings,
 
-Cc: Daniel Mack <daniel@zonque.org>
-Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
-Cc: Robert Jarzmik <robert.jarzmik@free.fr>
-Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
----
- drivers/dma/pxa_dma.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+I am contact you for an opportunity to invest in any lucrative business 
+in your country.
 
-diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
-index 349fb312c872..4a2a796e348c 100644
---- a/drivers/dma/pxa_dma.c
-+++ b/drivers/dma/pxa_dma.c
-@@ -606,7 +606,6 @@ static irqreturn_t pxad_chan_handler(int irq, void *dev_id)
- 	struct pxad_chan *chan = phy->vchan;
- 	struct virt_dma_desc *vd, *tmp;
- 	unsigned int dcsr;
--	unsigned long flags;
- 	bool vd_completed;
- 	dma_cookie_t last_started = 0;
- 
-@@ -616,7 +615,7 @@ static irqreturn_t pxad_chan_handler(int irq, void *dev_id)
- 	if (dcsr & PXA_DCSR_RUN)
- 		return IRQ_NONE;
- 
--	spin_lock_irqsave(&chan->vc.lock, flags);
-+	spin_lock(&chan->vc.lock);
- 	list_for_each_entry_safe(vd, tmp, &chan->vc.desc_issued, node) {
- 		vd_completed = is_desc_completed(vd);
- 		dev_dbg(&chan->vc.chan.dev->device,
-@@ -658,7 +657,7 @@ static irqreturn_t pxad_chan_handler(int irq, void *dev_id)
- 			pxad_launch_chan(chan, to_pxad_sw_desc(vd));
- 		}
- 	}
--	spin_unlock_irqrestore(&chan->vc.lock, flags);
-+	spin_unlock(&chan->vc.lock);
- 	wake_up(&chan->wq_state);
- 
- 	return IRQ_HANDLED;
--- 
-2.25.1
+We offer a quick loan at low interest rate, if you are interested, 
+please reply to yingchongan@gmail.com for more details.
 
+Sincerely: Ying Chongan

@@ -2,238 +2,96 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FA05292479
-	for <lists+dmaengine@lfdr.de>; Mon, 19 Oct 2020 11:16:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5A1F2925B3
+	for <lists+dmaengine@lfdr.de>; Mon, 19 Oct 2020 12:24:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbgJSJQh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 19 Oct 2020 05:16:37 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:54536 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729941AbgJSJQh (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 19 Oct 2020 05:16:37 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 09J9GYnG086235;
-        Mon, 19 Oct 2020 04:16:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1603098994;
-        bh=vcVzVk/88At+m/5nPg0GX7nj7jgpu933yKxAb5W9Qv8=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=ZJ16jNVqbS5X3ehIgMhfU19KBzGP1Kv7Os1GdqReEvrIUE/rAcstykljFdXMP/NKX
-         3jXfEqtmcNssef+t9hScU4E2qLI1o7G7xItAX+gHfEFC/nDHW/LF1EJO21Ro0SnBN/
-         o2qj2aquXFd5IsZCpN0LUlDy58Lv7MeE+X64KFNU=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 09J9GYIb099011
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 19 Oct 2020 04:16:34 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 19
- Oct 2020 04:16:33 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 19 Oct 2020 04:16:33 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 09J9GWsi128096;
-        Mon, 19 Oct 2020 04:16:33 -0500
-Subject: Re: [PATCH 3/4] dmaengine: move APIs in interface to use peripheral
- term
-To:     Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
-References: <20201015073132.3571684-1-vkoul@kernel.org>
- <20201015073132.3571684-4-vkoul@kernel.org>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <18d27d30-c6c4-51f6-b361-6bf0be1a34b5@ti.com>
-Date:   Mon, 19 Oct 2020 12:17:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.3
+        id S1726612AbgJSKYn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 19 Oct 2020 06:24:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbgJSKYn (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 19 Oct 2020 06:24:43 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CD23C0613CE;
+        Mon, 19 Oct 2020 03:24:43 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id d3so12217813wma.4;
+        Mon, 19 Oct 2020 03:24:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DMW0yCt5PBQfW3WFVdC3B0AANBzYHJJxzkQs00mLzDU=;
+        b=LKKgD50zTmIM0cMSAE/AvUDkwu/kdSsZ0L95UgKa3KWLBAjnaSiWy1XHl+SdcRqEV3
+         IQE/moIhIeabtBKHMoROAOuKwuPkgmFo0f8fwML+IguoHnBOiuyuv+mQ2N28vq+7hO0z
+         1bA/5KGrtkXxRzGVQmzHYNj+YDoAnbUhDK5vTJDwEYvTfrucI1LrYns1/fES2K5VyN48
+         YTzw572i9QZEsNGaJMd0/NwKZqNde/TgGQ68LcbQEsJoJUs3bpaReIvTrIRsvloxsORF
+         o3Qa9GlsO0fooOT2rs6I6fPRmEpx/Ky7xtBbaa0CqwskxUSg0U2rwHmlbHfuFQNrPxT6
+         BwTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DMW0yCt5PBQfW3WFVdC3B0AANBzYHJJxzkQs00mLzDU=;
+        b=MKFVDSZckfZYGcxnZOk2j5RhuCFxXsZjAHaWe5oFFKap8RwBOjiJjL9lIFfzslYLut
+         /ezJmyega3F2I8lVsTtHv103UnsPf6YXbyG7EsGzA2cZPMMv7FydVEtT0olTHaalJnXA
+         0azJgrQuiFE1OzrjKKUO3MiKv/aopHpoiU2kZvZgwaNrwzrBSRFAC83MOFkxyZTY8XHg
+         AJZQFr5I1bc2UceHdVKfr4R7h6ZCL3fqWcFHYuTDZjPXF34NDNcFfA2oq/D6hzJ3X0zo
+         2RNJeHcI4B9fGgVAbuuJQsgGIrWU3S/NvxieJhDiujF4gqznbYlkRP8wX0hGC5TqJSA6
+         x77w==
+X-Gm-Message-State: AOAM531dY4yXBQJJAhwtKHw33ireCknPOHLy1ZviX23Gc6wub1MsqFE6
+        zEP0CQGCq9qP7I0GRJhAI7o=
+X-Google-Smtp-Source: ABdhPJxbSA06zBvEt/c3tORxcj/AmyLbEGYsK6l2y/z5MVdKIojHim9Mbimp5qDS8XKjW333ug8wiw==
+X-Received: by 2002:a7b:cc89:: with SMTP id p9mr17644734wma.4.1603103082028;
+        Mon, 19 Oct 2020 03:24:42 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.119.110])
+        by smtp.gmail.com with ESMTPSA id t13sm15863863wmj.15.2020.10.19.03.24.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Oct 2020 03:24:41 -0700 (PDT)
+Subject: Re: [PATCH 1/2] dt-bindings: dma: mtk-apdma: add bindings for MT8516
+ SOC
+To:     Fabien Parent <fparent@baylibre.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
+Cc:     robh+dt@kernel.org, vkoul@kernel.org, sean.wang@mediatek.com
+References: <20201015123315.334919-1-fparent@baylibre.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <9308a487-ed84-6112-d612-a8a777ee0dee@gmail.com>
+Date:   Mon, 19 Oct 2020 12:24:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <20201015073132.3571684-4-vkoul@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20201015123315.334919-1-fparent@baylibre.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vinod,
 
-On 15/10/2020 10.31, Vinod Koul wrote:
-> dmaengine history has a non inclusive terminology of dmaengine slave, I
-> feel it is time to replace that.
+
+On 15/10/2020 14:33, Fabien Parent wrote:
+> Add bindings to APDMA for MT8516 SoC. MT8516 is compatible with MT6577.
 > 
-> This moves APIs in dmaengine interface with replacement of slave
-> to peripheral which is an appropriate term for dmaengine peripheral
-> devices
-> 
-> Since the change of name can break users, the new names have been added
-> with old APIs kept as macro define for new names. Once the users have
-> been migrated, these macros will be dropped.
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
+
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
 > ---
->  include/linux/dmaengine.h | 46 +++++++++++++++++++++++++++------------
->  1 file changed, 32 insertions(+), 14 deletions(-)
+>   Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt | 1 +
+>   1 file changed, 1 insertion(+)
 > 
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index 04b993a5373c..d8dce3cdfdd4 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -923,6 +923,10 @@ struct dma_device {
->  	struct dma_async_tx_descriptor *(*device_prep_dma_interrupt)(
->  		struct dma_chan *chan, unsigned long flags);
->  
-> +	struct dma_async_tx_descriptor *(*device_prep_peripheral_sg)(
-> +		struct dma_chan *chan, struct scatterlist *sgl,
-> +		unsigned int sg_len, enum dma_transfer_direction direction,
-> +		unsigned long flags, void *context);
->  	struct dma_async_tx_descriptor *(*device_prep_slave_sg)(
->  		struct dma_chan *chan, struct scatterlist *sgl,
->  		unsigned int sg_len, enum dma_transfer_direction direction,
-> @@ -959,8 +963,8 @@ struct dma_device {
->  #endif
->  };
->  
-> -static inline int dmaengine_slave_config(struct dma_chan *chan,
-> -					  struct dma_slave_config *config)
-> +static inline int dmaengine_peripheral_config(struct dma_chan *chan,
-> +					  struct dma_peripheral_config *config)
->  {
->  	if (chan->device->device_config)
->  		return chan->device->device_config(chan, config);
-> @@ -968,12 +972,16 @@ static inline int dmaengine_slave_config(struct dma_chan *chan,
->  	return -ENOSYS;
->  }
->  
-> -static inline bool is_slave_direction(enum dma_transfer_direction direction)
-> +#define dmaengine_slave_config dmaengine_peripheral_config
-> +
-> +static inline bool is_peripheral_direction(enum dma_transfer_direction direction)
->  {
->  	return (direction == DMA_MEM_TO_DEV) || (direction == DMA_DEV_TO_MEM);
->  }
->  
-> -static inline struct dma_async_tx_descriptor *dmaengine_prep_slave_single(
-> +#define is_slave_direction is_peripheral_direction
-> +
-> +static inline struct dma_async_tx_descriptor *dmaengine_prep_peripheral_single(
->  	struct dma_chan *chan, dma_addr_t buf, size_t len,
->  	enum dma_transfer_direction dir, unsigned long flags)
->  {
-> @@ -989,7 +997,9 @@ static inline struct dma_async_tx_descriptor *dmaengine_prep_slave_single(
->  						  dir, flags, NULL);
->  }
->  
-> -static inline struct dma_async_tx_descriptor *dmaengine_prep_slave_sg(
-> +#define dmaengine_prep_slave_single dmaengine_prep_peripheral_single
-> +
-> +static inline struct dma_async_tx_descriptor *dmaengine_prep_peripheral_sg(
->  	struct dma_chan *chan, struct scatterlist *sgl,	unsigned int sg_len,
->  	enum dma_transfer_direction dir, unsigned long flags)
->  {
-> @@ -1000,6 +1010,8 @@ static inline struct dma_async_tx_descriptor *dmaengine_prep_slave_sg(
->  						  dir, flags, NULL);
->  }
->  
-> +#define dmaengine_prep_slave_sg dmaengine_prep_peripheral_sg
-> +
-
-If you do similar changes to _single() then DMA drivers can migrate to
-the new device_prep_peripheral_sg in their own pace:
-
-static inline struct dma_async_tx_descriptor *dmaengine_prep_peripheral_sg(
-	struct dma_chan *chan, struct scatterlist *sgl,	unsigned int sg_len,
-	enum dma_transfer_direction dir, unsigned long flags)
-{
-	if (!chan || !chan->device)
-		return NULL;
-
-	if (chan->device->device_prep_peripheral_sg)
-		return chan->device->device_prep_peripheral_sg(chan, sgl, sg_len,
-							       dir, flags, NULL);
-
-	if (chan->device->device_prep_slave_sg)
-		return chan->device->device_prep_slave_sg(chan, sgl, sg_len,
-							  dir, flags, NULL);
-	return NULL;
-}
-
-
-
->  #ifdef CONFIG_RAPIDIO_DMA_ENGINE
->  struct rio_dma_ext;
->  static inline struct dma_async_tx_descriptor *dmaengine_prep_rio_sg(
-> @@ -1498,7 +1510,7 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name);
->  struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
->  
->  void dma_release_channel(struct dma_chan *chan);
-> -int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps);
-> +int dma_get_peripheral_caps(struct dma_chan *chan, struct dma_peripheral_caps *caps);
->  #else
->  static inline struct dma_chan *dma_find_channel(enum dma_transaction_type tx_type)
->  {
-> @@ -1535,19 +1547,21 @@ static inline struct dma_chan *dma_request_chan_by_mask(
->  static inline void dma_release_channel(struct dma_chan *chan)
->  {
->  }
-> -static inline int dma_get_slave_caps(struct dma_chan *chan,
-> -				     struct dma_slave_caps *caps)
-> +static inline int dma_get_peripheral_caps(struct dma_chan *chan,
-> +				     struct dma_peripheral_caps *caps)
->  {
->  	return -ENXIO;
->  }
->  #endif
->  
-> +#define dma_get_slave_caps dma_get_peripheral_caps
-> +
->  static inline int dmaengine_desc_set_reuse(struct dma_async_tx_descriptor *tx)
->  {
-> -	struct dma_slave_caps caps;
-> +	struct dma_peripheral_caps caps;
->  	int ret;
->  
-> -	ret = dma_get_slave_caps(tx->chan, &caps);
-> +	ret = dma_get_peripheral_caps(tx->chan, &caps);
->  	if (ret)
->  		return ret;
->  
-> @@ -1592,17 +1606,19 @@ void dma_run_dependencies(struct dma_async_tx_descriptor *tx);
->  
->  /* Deprecated, please use dma_request_chan() directly */
->  static inline struct dma_chan * __deprecated
-> -dma_request_slave_channel(struct device *dev, const char *name)
-> +dma_request_peripheral_channel(struct device *dev, const char *name)
->  {
->  	struct dma_chan *ch = dma_request_chan(dev, name);
->  
->  	return IS_ERR(ch) ? NULL : ch;
->  }
->  
-> +#define dma_request_slave_channel dma_request_peripheral_channel
-> +
->  static inline struct dma_chan
-> -*dma_request_slave_channel_compat(const dma_cap_mask_t mask,
-> -				  dma_filter_fn fn, void *fn_param,
-> -				  struct device *dev, const char *name)
-> +*dma_request_peripheral_channel_compat(const dma_cap_mask_t mask,
-> +				       dma_filter_fn fn, void *fn_param,
-> +				       struct device *dev, const char *name)
->  {
->  	struct dma_chan *chan;
->  
-> @@ -1616,6 +1632,8 @@ static inline struct dma_chan
->  	return __dma_request_channel(&mask, fn, fn_param, NULL);
->  }
->  
-> +#define dma_request_slave_channel_compat dma_request_peripheral_channel_compat
-> +
->  static inline char *
->  dmaengine_get_direction_text(enum dma_transfer_direction dir)
->  {
+> diff --git a/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt b/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
+> index 2117db0ce4f2..fef9c1eeb264 100644
+> --- a/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
+> +++ b/Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
+> @@ -4,6 +4,7 @@ Required properties:
+>   - compatible should contain:
+>     * "mediatek,mt2712-uart-dma" for MT2712 compatible APDMA
+>     * "mediatek,mt6577-uart-dma" for MT6577 and all of the above
+> +  * "mediatek,mt8516-uart-dma", "mediatek,mt6577" for MT8516 SoC
+>   
+>   - reg: The base address of the APDMA register bank.
+>   
 > 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

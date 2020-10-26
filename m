@@ -2,78 +2,81 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 08C6829854B
-	for <lists+dmaengine@lfdr.de>; Mon, 26 Oct 2020 02:24:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7086B2991AD
+	for <lists+dmaengine@lfdr.de>; Mon, 26 Oct 2020 17:02:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1421124AbgJZBYB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 25 Oct 2020 21:24:01 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2680 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1419390AbgJZBYB (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 25 Oct 2020 21:24:01 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4CKHDM0xlXz15LBQ;
-        Mon, 26 Oct 2020 09:24:03 +0800 (CST)
-Received: from [10.63.139.185] (10.63.139.185) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 26 Oct 2020 09:23:47 +0800
-Subject: Re: [PATCH 07/10] dmaengine: hisi_dma: remove redundant irqsave and
- irqrestore in hardIRQ
-To:     Barry Song <song.bao.hua@hisilicon.com>, <vkoul@kernel.org>,
-        <dmaengine@vger.kernel.org>
-References: <20201015235921.21224-1-song.bao.hua@hisilicon.com>
- <20201015235921.21224-8-song.bao.hua@hisilicon.com>
-From:   Zhou Wang <wangzhou1@hisilicon.com>
-Message-ID: <5F962523.9040802@hisilicon.com>
-Date:   Mon, 26 Oct 2020 09:23:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        id S1784678AbgJZQCK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 26 Oct 2020 12:02:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1773879AbgJZQBa (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 26 Oct 2020 12:01:30 -0400
+Received: from localhost.localdomain (unknown [192.30.34.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DA9320706;
+        Mon, 26 Oct 2020 16:01:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603728089;
+        bh=hxlUO93iSjn7XTJn8G5zlplf5TFU5wC+vKL/JdLpdZg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QLYhQreuUHpvopmb0mcrEkGGLQ/WrGUmEBVyHVGkdBSH6N0QSvomVc41jGf7bgU2f
+         UzfajfszhEm/uMC5WNHdyzgQQBfodG4c2glo6HZyREDOLqphwMuqRUE/CzfSbdOV3V
+         TAGcMhdf7bVSqBvpaBk55+J0POu6c7hDOrQhYv5o=
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Yu Kuai <yukuai3@huawei.com>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: ti: k3-udma: fix -Wenum-conversion warning
+Date:   Mon, 26 Oct 2020 17:01:15 +0100
+Message-Id: <20201026160123.3704531-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20201015235921.21224-8-song.bao.hua@hisilicon.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.63.139.185]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 2020/10/16 7:59, Barry Song wrote:
-> Running in hardIRQ, disabling IRQ is redundant.
-> 
-> Cc: Zhou Wang <wangzhou1@hisilicon.com>
-> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-Thanks for fixing this :)
+gcc warns about a mismatch argument type when passing
+'false' into a function that expects an enum:
 
-Acked-by: Zhou Wang <wangzhou1@hisilicon.com>
+drivers/dma/ti/k3-udma-private.c: In function 'xudma_tchan_get':
+drivers/dma/ti/k3-udma-private.c:86:34: warning: implicit conversion from 'enum <anonymous>' to 'enum udma_tp_level' [-Wenum-conversion]
+  86 |  return __udma_reserve_##res(ud, false, id);   \
+     |                                  ^~~~~
+drivers/dma/ti/k3-udma-private.c:95:1: note: in expansion of macro 'XUDMA_GET_PUT_RESOURCE'
+   95 | XUDMA_GET_PUT_RESOURCE(tchan);
+      | ^~~~~~~~~~~~~~~~~~~~~~
 
-> ---
->  drivers/dma/hisi_dma.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/dma/hisi_dma.c b/drivers/dma/hisi_dma.c
-> index e1a958ae7925..a259ee010e9b 100644
-> --- a/drivers/dma/hisi_dma.c
-> +++ b/drivers/dma/hisi_dma.c
-> @@ -431,9 +431,8 @@ static irqreturn_t hisi_dma_irq(int irq, void *data)
->  	struct hisi_dma_dev *hdma_dev = chan->hdma_dev;
->  	struct hisi_dma_desc *desc;
->  	struct hisi_dma_cqe *cqe;
-> -	unsigned long flags;
->  
-> -	spin_lock_irqsave(&chan->vc.lock, flags);
-> +	spin_lock(&chan->vc.lock);
->  
->  	desc = chan->desc;
->  	cqe = chan->cq + chan->cq_head;
-> @@ -452,7 +451,7 @@ static irqreturn_t hisi_dma_irq(int irq, void *data)
->  		chan->desc = NULL;
->  	}
->  
-> -	spin_unlock_irqrestore(&chan->vc.lock, flags);
-> +	spin_unlock(&chan->vc.lock);
->  
->  	return IRQ_HANDLED;
->  }
-> 
+In this case, false has the same numerical value as
+UDMA_TP_NORMAL, so passing that is most likely the correct
+way to avoid the warning without changing the behavior.
+
+Fixes: d70241913413 ("dmaengine: ti: k3-udma: Add glue layer for non DMAengine users")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/dma/ti/k3-udma-private.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/dma/ti/k3-udma-private.c b/drivers/dma/ti/k3-udma-private.c
+index aa24e554f7b4..8563a392f30b 100644
+--- a/drivers/dma/ti/k3-udma-private.c
++++ b/drivers/dma/ti/k3-udma-private.c
+@@ -83,7 +83,7 @@ EXPORT_SYMBOL(xudma_rflow_is_gp);
+ #define XUDMA_GET_PUT_RESOURCE(res)					\
+ struct udma_##res *xudma_##res##_get(struct udma_dev *ud, int id)	\
+ {									\
+-	return __udma_reserve_##res(ud, false, id);			\
++	return __udma_reserve_##res(ud, UDMA_TP_NORMAL, id);		\
+ }									\
+ EXPORT_SYMBOL(xudma_##res##_get);					\
+ 									\
+-- 
+2.27.0
+

@@ -2,81 +2,113 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7086B2991AD
-	for <lists+dmaengine@lfdr.de>; Mon, 26 Oct 2020 17:02:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 040A729A4E9
+	for <lists+dmaengine@lfdr.de>; Tue, 27 Oct 2020 07:55:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1784678AbgJZQCK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 26 Oct 2020 12:02:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47090 "EHLO mail.kernel.org"
+        id S2442388AbgJ0GzR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 27 Oct 2020 02:55:17 -0400
+Received: from mga02.intel.com ([134.134.136.20]:42071 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1773879AbgJZQBa (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 26 Oct 2020 12:01:30 -0400
-Received: from localhost.localdomain (unknown [192.30.34.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DA9320706;
-        Mon, 26 Oct 2020 16:01:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603728089;
-        bh=hxlUO93iSjn7XTJn8G5zlplf5TFU5wC+vKL/JdLpdZg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=QLYhQreuUHpvopmb0mcrEkGGLQ/WrGUmEBVyHVGkdBSH6N0QSvomVc41jGf7bgU2f
-         UzfajfszhEm/uMC5WNHdyzgQQBfodG4c2glo6HZyREDOLqphwMuqRUE/CzfSbdOV3V
-         TAGcMhdf7bVSqBvpaBk55+J0POu6c7hDOrQhYv5o=
-From:   Arnd Bergmann <arnd@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Yu Kuai <yukuai3@huawei.com>, dmaengine@vger.kernel.org,
+        id S1730066AbgJ0GzR (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 27 Oct 2020 02:55:17 -0400
+IronPort-SDR: CnqeuU1IAO68juSbJ6c8yWrE2j6GbEa+Z4UO4h3f6O3GGPIlcMg5TVmEwAym8Fzd7u2ByYqbG5
+ /1/Ller578aQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9786"; a="155004131"
+X-IronPort-AV: E=Sophos;i="5.77,422,1596524400"; 
+   d="scan'208";a="155004131"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2020 23:55:16 -0700
+IronPort-SDR: r5b9KK5mMqBwRyNx1spZ3aDIP+kDSopJF4M2eRAcEYuRAcwbWcXXxNpnfuTSFsEc1EAKgJTRS2
+ ozGvLTfjGrvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,422,1596524400"; 
+   d="scan'208";a="350175819"
+Received: from jsia-hp-z620-workstation.png.intel.com ([10.221.118.135])
+  by orsmga008.jf.intel.com with ESMTP; 26 Oct 2020 23:55:14 -0700
+From:   Sia Jee Heng <jee.heng.sia@intel.com>
+To:     vkoul@kernel.org, Eugeniy.Paltsev@synopsys.com
+Cc:     andriy.shevchenko@linux.intel.com, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: ti: k3-udma: fix -Wenum-conversion warning
-Date:   Mon, 26 Oct 2020 17:01:15 +0100
-Message-Id: <20201026160123.3704531-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH v2 00/15] dmaengine: dw-axi-dmac: support Intel KeemBay AxiDMA
+Date:   Tue, 27 Oct 2020 14:38:43 +0800
+Message-Id: <20201027063858.4877-1-jee.heng.sia@intel.com>
+X-Mailer: git-send-email 2.18.0
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+The below patch series are to support AxiDMA running on Intel KeemBay SoC.
+The base driver is dw-axi-dmac. This driver only support DMA memory copy
+transfers. Code refactoring is needed so that additional features can be
+supported.
 
-gcc warns about a mismatch argument type when passing
-'false' into a function that expects an enum:
+The features added in this patch series are:
+- Replacing Linked List with virtual descriptor management.
+- Remove unrelated hw desc stuff from dma memory pool.
+- Manage dma memory pool alloc/destroy based on channel activity.
+- Support dmaengine device_sync() callback.
+- Support dmaengine device_config().
+- Support dmaengine device_prep_slave_sg().
+- Support dmaengine device_prep_dma_cyclic().
+- Support of_dma_controller_register().
+- Support burst residue granularity.
+- Support Intel KeemBay AxiDMA registers.
+- Support Intel KeemBay AxiDMA device handshake.
+- Support Intel KeemBay AxiDMA BYTE and HALFWORD device operation.
+- Add constraint to Max segment size.
 
-drivers/dma/ti/k3-udma-private.c: In function 'xudma_tchan_get':
-drivers/dma/ti/k3-udma-private.c:86:34: warning: implicit conversion from 'enum <anonymous>' to 'enum udma_tp_level' [-Wenum-conversion]
-  86 |  return __udma_reserve_##res(ud, false, id);   \
-     |                                  ^~~~~
-drivers/dma/ti/k3-udma-private.c:95:1: note: in expansion of macro 'XUDMA_GET_PUT_RESOURCE'
-   95 | XUDMA_GET_PUT_RESOURCE(tchan);
-      | ^~~~~~~~~~~~~~~~~~~~~~
+This patch series are tested on Intel KeemBay platform.
 
-In this case, false has the same numerical value as
-UDMA_TP_NORMAL, so passing that is most likely the correct
-way to avoid the warning without changing the behavior.
+v2:
+- Rebased to v5.10-rc1 kernel.
+- Added support for dmaengine device_config().
+- Added support for dmaengine device_prep_slave_sg().
+- Added support for dmaengine device_prep_dma_cyclic().
+- Added support for of_dma_controller_register().
+- Added support for burst residue granularity.
+- Added support for Intel KeemBay AxiDMA registers.
+- Added support for Intel KeemBay AxiDMA device handshake.
+- Added support for Intel KeemBay AxiDMA BYTE and HALFWORD device operation.
+- Added constraint to Max segment size.
 
-Fixes: d70241913413 ("dmaengine: ti: k3-udma: Add glue layer for non DMAengine users")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/dma/ti/k3-udma-private.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v1:
+- Initial version. Patch on top of dw-axi-dma driver. This version improve
+  the descriptor management by replacing Linked List Item (LLI) with
+  virtual descriptor management, only allocate hardware LLI memories from
+  DMA memory pool, manage DMA memory pool alloc/destroy based on channel
+  activity and to support device_sync callback.
 
-diff --git a/drivers/dma/ti/k3-udma-private.c b/drivers/dma/ti/k3-udma-private.c
-index aa24e554f7b4..8563a392f30b 100644
---- a/drivers/dma/ti/k3-udma-private.c
-+++ b/drivers/dma/ti/k3-udma-private.c
-@@ -83,7 +83,7 @@ EXPORT_SYMBOL(xudma_rflow_is_gp);
- #define XUDMA_GET_PUT_RESOURCE(res)					\
- struct udma_##res *xudma_##res##_get(struct udma_dev *ud, int id)	\
- {									\
--	return __udma_reserve_##res(ud, false, id);			\
-+	return __udma_reserve_##res(ud, UDMA_TP_NORMAL, id);		\
- }									\
- EXPORT_SYMBOL(xudma_##res##_get);					\
- 									\
+Sia Jee Heng (15):
+  dt-bindings: dma: Add YAML schemas for dw-axi-dmac
+  dmaengine: dw-axi-dmac: simplify descriptor management
+  dmaengine: dw-axi-dmac: move dma_pool_create() to
+    alloc_chan_resources()
+  dmaengine: dw-axi-dmac: Add device_synchronize() callback
+  dmaengine: dw-axi-dmac: Add device_config operation
+  dmaengine: dw-axi-dmac: Support device_prep_slave_sg
+  dmaegine: dw-axi-dmac: Support device_prep_dma_cyclic()
+  dmaengine: dw-axi-dmac: Support of_dma_controller_register()
+  dmaengine: dw-axi-dmac: Support burst residue granularity
+  dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA support
+  dt-binding: dma: dw-axi-dmac: Add support for Intel KeemBay AxiDMA
+  dmaengine: dw-axi-dmac: Add Intel KeemBay DMA register fields
+  dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA handshake
+  dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA BYTE and HALFWORD
+    registers
+  dmaengine: dw-axi-dmac: Set constraint to the Max segment size
+
+ .../bindings/dma/snps,dw-axi-dmac.txt         |  39 -
+ .../bindings/dma/snps,dw-axi-dmac.yaml        | 149 ++++
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 696 +++++++++++++++---
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  33 +-
+ 4 files changed, 783 insertions(+), 134 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+
+
+base-commit: 4525c8781ec0701ce824e8bd379ae1b129e26568
 -- 
-2.27.0
+2.18.0
 

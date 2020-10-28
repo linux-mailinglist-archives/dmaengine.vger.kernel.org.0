@@ -2,84 +2,141 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FA9429CBA3
-	for <lists+dmaengine@lfdr.de>; Tue, 27 Oct 2020 22:57:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70E4D29D3E9
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Oct 2020 22:48:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S374677AbgJ0V5B (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 27 Oct 2020 17:57:01 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6182 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S374679AbgJ0V5B (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 27 Oct 2020 17:57:01 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4CLQXZ5BvSz15NHN;
-        Wed, 28 Oct 2020 05:57:02 +0800 (CST)
-Received: from SWX921481.china.huawei.com (10.126.200.153) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 28 Oct 2020 05:56:52 +0800
-From:   Barry Song <song.bao.hua@hisilicon.com>
-To:     <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
-CC:     <linuxarm@huawei.com>, Barry Song <song.bao.hua@hisilicon.com>,
-        "Daniel Mack" <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        "Robert Jarzmik" <robert.jarzmik@free.fr>
-Subject: [PATCH v2 10/10] dmaengine: pxa_dma: remove redundant irqsave and irqrestore in hardIRQ
-Date:   Wed, 28 Oct 2020 10:52:52 +1300
-Message-ID: <20201027215252.25820-11-song.bao.hua@hisilicon.com>
-X-Mailer: git-send-email 2.21.0.windows.1
-In-Reply-To: <20201027215252.25820-1-song.bao.hua@hisilicon.com>
-References: <20201027215252.25820-1-song.bao.hua@hisilicon.com>
+        id S1726942AbgJ1VrK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 28 Oct 2020 17:47:10 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:32967 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbgJ1VrG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 28 Oct 2020 17:47:06 -0400
+Received: by mail-ua1-f66.google.com with SMTP id x26so155321uau.0;
+        Wed, 28 Oct 2020 14:47:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3s41M7Z72fcMkRDw2yDndUowlojinGmdtRTwp5CyZB8=;
+        b=o/ALox162e6y48vAeVYnNHRbbAJcz3CbM499XO2eFK3mWp7Oga60iEv6bduhOoOwh8
+         JaIbFMqGPBOSzd5so5TbNLSkClydL/6N9+23wU74f8AblxTnSu4MX6rERPyt5Um75y9G
+         dV5j5UZTR1hZDmxeZTs3iAN7yTYwR/2M9LB/oJ4TJ3EUkxycOj/LNAcXvbuTw1PTRku8
+         Y2ZvhcN3cWbyTFDJjgEun+ayeFu4X/t3RLAefmA9qYd9vSNJ+Krd0NAioALsu0Obsfvc
+         mys30E42DD8mIICxi4VSNIUotnE/wq/UuxOHu5s1pIUe26bJPcdfaqpmd7BckVftcKiI
+         sBpA==
+X-Gm-Message-State: AOAM533s3ehqTgekIPGlJfXvugj6Sr7FjYUY2N/UX6rKSlCU0Y88Hujf
+        XFuVuAJ65Z8CmTZyCt5pOksk2hGzJQ==
+X-Google-Smtp-Source: ABdhPJz4x4atsHhf7/cg2rc9KcKS2aCuYGJ1v/d9sMbHOXkRqMIjahEQXle3dQvvZLWlBjDyR0m67A==
+X-Received: by 2002:a4a:b503:: with SMTP id r3mr5955627ooo.28.1603896221095;
+        Wed, 28 Oct 2020 07:43:41 -0700 (PDT)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id b125sm2683484oii.19.2020.10.28.07.43.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Oct 2020 07:43:40 -0700 (PDT)
+Received: (nullmailer pid 3993648 invoked by uid 1000);
+        Wed, 28 Oct 2020 14:43:39 -0000
+Date:   Wed, 28 Oct 2020 09:43:39 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, peter.ujfalusi@ti.com,
+        dmaengine@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, malliamireddy009@gmail.com,
+        vkoul@kernel.org, qi-ming.wu@intel.com,
+        chuanhua.lei@linux.intel.com
+Subject: Re: [PATCH v7 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
+Message-ID: <20201028144339.GA3992990@bogus>
+References: <cover.1600827061.git.mallikarjunax.reddy@linux.intel.com>
+ <f298715ab197ae72ab9b33caee2a19cc3e8be3f5.1600827061.git.mallikarjunax.reddy@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.126.200.153]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f298715ab197ae72ab9b33caee2a19cc3e8be3f5.1600827061.git.mallikarjunax.reddy@linux.intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Running in hardIRQ, disabling IRQ is redundant since hardIRQ has disabled
-IRQ. This patch removes the irqsave and irqstore to save some instruction
-cycles.
+On Tue, 27 Oct 2020 16:03:06 +0800, Amireddy Mallikarjuna reddy wrote:
+> Add DT bindings YAML schema for DMA controller driver
+> of Lightning Mountain(LGM) SoC.
+> 
+> Signed-off-by: Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>
+> ---
+> v1:
+> - Initial version.
+> 
+> v2:
+> - Fix bot errors.
+> 
+> v3:
+> - No change.
+> 
+> v4:
+> - Address Thomas langer comments
+>   - use node name pattern as dma-controller as in common binding.
+>   - Remove "_" (underscore) in instance name.
+>   - Remove "port-" and "chan-" in attribute name for both 'dma-ports' & 'dma-channels' child nodes.
+> 
+> v5:
+> - Moved some of the attributes in 'dma-ports' & 'dma-channels' child nodes to dma client/consumer side as cells in 'dmas' properties.
+> 
+> v6:
+> - Add additionalProperties: false
+> - completely removed 'dma-ports' and 'dma-channels' child nodes.
+> - Moved channel dt properties to client side dmas.
+> - Use standard dma-channels and dma-channel-mask properties.
+> - Documented reset-names
+> - Add description for dma-cells
+> 
+> v7:
+> - modified compatible to oneof
+> - Reduced number of dma-cells to 3
+> - Fine tune the description of some properties.
+> ---
+>  .../devicetree/bindings/dma/intel,ldma.yaml        | 135 +++++++++++++++++++++
+>  1 file changed, 135 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/intel,ldma.yaml
+> 
 
-Cc: Daniel Mack <daniel@zonque.org>
-Cc: Haojian Zhuang <haojian.zhuang@gmail.com>
-Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
-Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
----
- drivers/dma/pxa_dma.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/pxa_dma.c b/drivers/dma/pxa_dma.c
-index 349fb312c872..4a2a796e348c 100644
---- a/drivers/dma/pxa_dma.c
-+++ b/drivers/dma/pxa_dma.c
-@@ -606,7 +606,6 @@ static irqreturn_t pxad_chan_handler(int irq, void *dev_id)
- 	struct pxad_chan *chan = phy->vchan;
- 	struct virt_dma_desc *vd, *tmp;
- 	unsigned int dcsr;
--	unsigned long flags;
- 	bool vd_completed;
- 	dma_cookie_t last_started = 0;
- 
-@@ -616,7 +615,7 @@ static irqreturn_t pxad_chan_handler(int irq, void *dev_id)
- 	if (dcsr & PXA_DCSR_RUN)
- 		return IRQ_NONE;
- 
--	spin_lock_irqsave(&chan->vc.lock, flags);
-+	spin_lock(&chan->vc.lock);
- 	list_for_each_entry_safe(vd, tmp, &chan->vc.desc_issued, node) {
- 		vd_completed = is_desc_completed(vd);
- 		dev_dbg(&chan->vc.chan.dev->device,
-@@ -658,7 +657,7 @@ static irqreturn_t pxad_chan_handler(int irq, void *dev_id)
- 			pxad_launch_chan(chan, to_pxad_sw_desc(vd));
- 		}
- 	}
--	spin_unlock_irqrestore(&chan->vc.lock, flags);
-+	spin_unlock(&chan->vc.lock);
- 	wake_up(&chan->wq_state);
- 
- 	return IRQ_HANDLED;
--- 
-2.25.1
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:17:2: [warning] wrong indentation: expected 2 but found 1 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:21:3: [warning] wrong indentation: expected 3 but found 2 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:22:4: [warning] wrong indentation: expected 4 but found 3 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:32:3: [warning] wrong indentation: expected 3 but found 2 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:35:3: [warning] wrong indentation: expected 3 but found 2 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:37:6: [warning] wrong indentation: expected 4 but found 5 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:42:3: [warning] wrong indentation: expected 3 but found 2 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:46:3: [warning] wrong indentation: expected 3 but found 2 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:50:3: [warning] wrong indentation: expected 3 but found 2 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:53:3: [warning] wrong indentation: expected 3 but found 2 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:56:3: [warning] wrong indentation: expected 3 but found 2 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:60:3: [warning] wrong indentation: expected 3 but found 2 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:76:5: [warning] wrong indentation: expected 3 but found 4 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:81:5: [warning] wrong indentation: expected 3 but found 4 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:83:8: [warning] wrong indentation: expected 6 but found 7 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:87:5: [warning] wrong indentation: expected 3 but found 4 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:89:8: [warning] wrong indentation: expected 6 but found 7 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:93:5: [warning] wrong indentation: expected 3 but found 4 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:95:8: [warning] wrong indentation: expected 6 but found 7 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:100:2: [warning] wrong indentation: expected 2 but found 1 (indentation)
+./Documentation/devicetree/bindings/dma/intel,ldma.yaml:107:2: [warning] wrong indentation: expected 2 but found 1 (indentation)
+
+dtschema/dtc warnings/errors:
+
+
+See https://patchwork.ozlabs.org/patch/1388332
+
+The base for the patch is generally the last rc1. Any dependencies
+should be noted.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
 

@@ -2,96 +2,72 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 025BD29E2D1
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Oct 2020 03:38:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E10429EDF0
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Oct 2020 15:11:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbgJ2CWp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 28 Oct 2020 22:22:45 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:54084 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726732AbgJ2CWd (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 28 Oct 2020 22:22:33 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 09S9tXta013681;
-        Wed, 28 Oct 2020 04:55:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1603878933;
-        bh=WpuJwseW9Svtj2469VNX15rvKbOCv8Gz8AEwmGmjtCs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=BvLZx2fanDkinac8xdr0njtShv+mu4FLt05OMKwhH25MI1cVVvM0ZBtbL7nxS7Ck3
-         UI5r0Mp2NJcmBGuh9J1AIQNTbxT5+3ZQeIjIagBISC2NKZMY/6dlDhnylFmCNYwsYe
-         xxSipmfFNMOkPK3+2DhOQpd98Xxtajm4MGHDx0N4=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 09S9tXtE062968
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 28 Oct 2020 04:55:33 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 28
- Oct 2020 04:55:33 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 28 Oct 2020 04:55:33 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 09S9tUVg061254;
-        Wed, 28 Oct 2020 04:55:31 -0500
-Subject: Re: [PATCH 01/18] dmaengine: of-dma: Add support for optional router
- configuration callback
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <nm@ti.com>, <ssantosh@kernel.org>, <robh+dt@kernel.org>,
-        <vigneshr@ti.com>, <dan.j.williams@intel.com>, <t-kristo@ti.com>,
-        <lokeshvutla@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>
-References: <20200930091412.8020-1-peter.ujfalusi@ti.com>
- <20200930091412.8020-2-peter.ujfalusi@ti.com>
- <20201007054404.GR2968@vkoul-mobl>
- <be615881-1eb4-f8fe-a32d-04fabb6cb27b@ti.com>
- <20201007155533.GZ2968@vkoul-mobl>
- <45adb88b-1ef8-1fbf-08c1-9afc6ea4c6f0@ti.com>
- <20201028055531.GH3550@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <cf3d3de0-223b-4846-bd9f-b78654ae2d08@ti.com>
-Date:   Wed, 28 Oct 2020 11:56:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        id S1725848AbgJ2OLA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 29 Oct 2020 10:11:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34048 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbgJ2OK7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 29 Oct 2020 10:10:59 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92AF2C0613CF
+        for <dmaengine@vger.kernel.org>; Thu, 29 Oct 2020 07:01:23 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id y184so1477032lfa.12
+        for <dmaengine@vger.kernel.org>; Thu, 29 Oct 2020 07:01:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=95HeKCn+TfhWEiTegQHXoVSM/UiLgPAdPOfyVlofGBU=;
+        b=TDtQqBoOQ68czQwv//+iamNfo75F/MXJDYym4U25MS87Yq6AsJtZi97nAT635wXrKW
+         3Zw2Vaje0DgL5Zq/qltYuuXMChJx+3ihTnXaSZAGzZltxaUL8ukdkfEF1DZpfQTgIyGJ
+         4EEQpmTeOtEBlRr2M1bZCA1YYW78vOhZHJ01V/TvJKInXcckRfePr04EYErSi/VpHKHK
+         Ucq3oxOx2T0coPTOkbvW7YZ6RpjFnRxVtjTriWXEF9nnF1xF4dqbMdq0DdK5rwb2Tzlh
+         V1j1HpYxwNOUr6nz94ZEn0PwQAD1QVW7nhDh4Xb/l2ZamWR/jjqGkZ9Bpv1NoaHrYIQj
+         hyXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=95HeKCn+TfhWEiTegQHXoVSM/UiLgPAdPOfyVlofGBU=;
+        b=Ps9JXAvYIeg1ONqouH18rTrGQS1sSyWXV5Y6vlG7OpwST7A8zxOfSzXbf6jWfZ9gMl
+         vjy/EkZd86cdmR2EGZzTGcLfBkUr3sXekgl5TbtYxSlQhCcmFJM60JOb37oCCSVn2Wic
+         abmAwbG/Lli7nbg80bMPEnbSZRjmtEzCfGOONvIxOe8hLu1H1X46poR3gzCujDePdP20
+         6vYcvsSHp4ZT79lwphVOkT2ChHMn/DwgpaSxf+8njI95l0vYPebnfqLGR2NZazd1YB/H
+         nBlNrwLS32IrWeoXTDLDZlwopaxKOiqxv8QamERyGvT5mLI/jpDgDLiessSRkGXudH6q
+         eIWg==
+X-Gm-Message-State: AOAM532puVlqx3Pg6Ea/n2hslXXhThvuM3/q17xBcSLiWMiCAS8MCeOO
+        bmR5CGW6bnkeEM7/U4Bzy/Rc9de7H2fx8HXurS9CTQ==
+X-Google-Smtp-Source: ABdhPJy3Qfa6BNrx80kSw90r8AxDR1WwJkenII0MpeFrhEsGEiAHS2cGc2iwLtElj5Km8A1uVl/lll4gH9htM8/Cd8k=
+X-Received: by 2002:a05:6512:3225:: with SMTP id f5mr1544531lfe.441.1603980082022;
+ Thu, 29 Oct 2020 07:01:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20201028055531.GH3550@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20201015235921.21224-1-song.bao.hua@hisilicon.com> <20201015235921.21224-10-song.bao.hua@hisilicon.com>
+In-Reply-To: <20201015235921.21224-10-song.bao.hua@hisilicon.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 29 Oct 2020 15:01:11 +0100
+Message-ID: <CACRpkdYObFW77kCv5sRb+Dx_Gxfvw+YkPB5joYXTw_i-ag34kQ@mail.gmail.com>
+Subject: Re: [PATCH 09/10] dmaengine: ste_dma40: remove redundant irqsave and
+ irqrestore in hardIRQ
+To:     Barry Song <song.bao.hua@hisilicon.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vinod,
+On Fri, Oct 16, 2020 at 2:03 AM Barry Song <song.bao.hua@hisilicon.com> wrote:
 
-On 28/10/2020 7.55, Vinod Koul wrote:
+> Running in hardIRQ, disabling IRQ is redundant.
+>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
 
->> To summarize:
->> In of_dma_route_allocate() the router does not yet know the channel we
->> are going to get.
->> In of_dma_xlate() the DMA driver does not yet know if the channel will
->> use router or not.
->> I need to tell the router the event number it has to send, which is
->> based on the channel number I got.
-> 
-> Sounds reasonable, btw why not pass this information in xlate. Router
-> will have a different xlate rather than non router right, or is it same.
+That's right!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Yes, the router's have their separate xlate, but in that xlate we do not
-yet have a channel. I don't know what is the event I need to send from
-the router to trigger the channel.
-
-> If this information is anyway available in DT might be better to get it
-> and use from DT
-
-Without a channel number I can not do anything.
-It is close to a chicken and egg problem.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Yours,
+Linus Walleij

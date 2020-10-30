@@ -2,83 +2,113 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 214322A07B9
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Oct 2020 15:21:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9007E2A0A43
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Oct 2020 16:49:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725975AbgJ3OVc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 30 Oct 2020 10:21:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33272 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbgJ3OVc (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 30 Oct 2020 10:21:32 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C79C0613CF
-        for <dmaengine@vger.kernel.org>; Fri, 30 Oct 2020 07:21:32 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id o3so5312487pgr.11
-        for <dmaengine@vger.kernel.org>; Fri, 30 Oct 2020 07:21:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=9fkQXWnoPSypfyxvIrXWSyd1r4Ua0eeDJczOBpIf/BU=;
-        b=agA7Qm7B3XqP7YizLK+ZYueOTiRr3QUylkPG92jMay4dUOVIZkEP8CK6mvYNHAL6df
-         Mpq0+b+y9pkwKoKKp5p9iSImhyrJVzBDtTGEcPDD9vju0Af0+rk8LLeK1pm5cBixqYEq
-         6dAAB+LtDUvYSegY/S/eV6v7EeHd8ZsfV7MUyz8F/kbXXiljCFfnpGqXRFEZntsIapZp
-         mSmGMGDB/CRhfjxaikVy7T1o8c3wGyeXsdnDPOqVs5Em3dNX00poF8vNDYl4/bwhSxhx
-         6CUVqbySfaHrmHgvbyXEvuNXGdR4Ob8li1M0OqBrgFe3vmLwY0VXAyxFx9uosikYwgpS
-         xCpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=9fkQXWnoPSypfyxvIrXWSyd1r4Ua0eeDJczOBpIf/BU=;
-        b=crK7HmFW0BACUWxF//zc/KCbathlkYZZ5JEEr0LXue03LIchLg+T5lLpxe3IiyUMDE
-         3xLsTkt2hmn3zb4mxJiV55WYs9/fR7RzngxCRrx8lfJWLSlktyc1fasxZ6ucvqEPCu7+
-         TsDFoO0z3kWhnApCYvBC5GAXvWup1EUiCl/1ZepD5s9toeKdxvngMmUFkxKLgG5Zqk7I
-         y77guMkrFbPKEd8oWSBvEu7sE7I2TQimTf+dO3f2qtI2Eel86HT31H55z6DXBC71aGSR
-         sXkEcoGUgDttx3fss91BcJsTa9/DtGAyzhHKu4mjvYqL58TlMI0ZeT3BCZAhbUg+90ml
-         UZfQ==
-X-Gm-Message-State: AOAM533BN4K4iqTaqaM5t7QR2QUJq9J1AsrX9hUUXMB5LNKKEUdZu08U
-        MTC9Sna2tOdme5av5gGMWnS7TA3uOV3Pq4TY8E8=
-X-Google-Smtp-Source: ABdhPJx0pOpVzX0r1xsnKJmBUI12kPkRLNOL/zPSk7dsM5HwW51DETDiOlejO+LNyGwfmR33xUBKSVHgH70LaFQ/Z4s=
-X-Received: by 2002:a62:1b0e:0:b029:164:228b:f063 with SMTP id
- b14-20020a621b0e0000b0290164228bf063mr9309533pfb.75.1604067691852; Fri, 30
- Oct 2020 07:21:31 -0700 (PDT)
+        id S1727165AbgJ3PtJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 30 Oct 2020 11:49:09 -0400
+Received: from mga02.intel.com ([134.134.136.20]:53025 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727164AbgJ3PtI (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 30 Oct 2020 11:49:08 -0400
+IronPort-SDR: DzgPRznBFrkw8TiPBMYo+tbNCIm/0RinWCZWLwSXVsEz1cnCr0r4L9fabyT2nELaeqvvKomO1d
+ tk3JrDjY5oXQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9790"; a="155600055"
+X-IronPort-AV: E=Sophos;i="5.77,433,1596524400"; 
+   d="scan'208";a="155600055"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2020 08:49:07 -0700
+IronPort-SDR: FsUT04zulXywCZ2g8JjlUsRTJr0KnxbjQvZTvO1EtZ2OFywKQaRDRGTFoBPFrXF6q88pU/q4bB
+ zNiBd3kYE3Yg==
+X-IronPort-AV: E=Sophos;i="5.77,433,1596524400"; 
+   d="scan'208";a="537107551"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2020 08:49:07 -0700
+Subject: [PATCH] dmaengine: idxd: Update calculation of group offset to be
+ more readable
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org
+Date:   Fri, 30 Oct 2020 08:49:06 -0700
+Message-ID: <160407294683.839093.10740868559754142070.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
-Received: by 2002:a17:90b:517:0:0:0:0 with HTTP; Fri, 30 Oct 2020 07:21:31
- -0700 (PDT)
-Reply-To: li.anable85@gmail.com
-From:   Liliane Abel <drolandchango@gmail.com>
-Date:   Fri, 30 Oct 2020 15:21:31 +0100
-Message-ID: <CAL+D-7gDRKsSSb+NFeOYtSMUMRkopKrTt=5bzzyL+CQXNjEmZw@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Dearest
+Create helper macros to make group offset calculation more readable.
 
-Greeting my dear, I am Liliane Abel by name, The only daughter of late
-Mr.Benson Abel. My father is one of the top Politician in our country
-and my mother is a farmers and cocoa merchant when they were both
-alive. After the death of my mother, long ago, my father was
-controlling their business until he was poisoned by his business
-associates which he suffered and died.
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/dma/idxd/device.c    |   12 +++++-------
+ drivers/dma/idxd/registers.h |   18 ++++++++++++++++++
+ 2 files changed, 23 insertions(+), 7 deletions(-)
 
-Before the death of my father, He told me about (two million five
-hundred thousand united states dollars) which he deposited in the bank
-in Lome-Togo, It was the money he intended to transfer overseas for
-investment before he was poisoned. He also instructed me that I should
-seek for foreign partners in any country of my choice who will assist
-me transfer this money in overseas account where the money will be
-wisely invested.
-I am seeking for your kind assistance in the following ways:  (1) to
-provide a safe bank account into where the money will be transferred
-for investment. (2) To serve as a guardian of this fund since I am a
-girl of 19 years old. (3) To make arrangement for me to come over to
-your country to further my education. This is my reason for writing to
-you. Please if you are willing to assist me I will offer you 25% of
-the total money. Reply if  you are interested
-Best regards.
-Liliane Abel.
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index 2f09eb89a906..d6f551dcbcb6 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -543,24 +543,22 @@ static void idxd_group_config_write(struct idxd_group *group)
+ 	dev_dbg(dev, "Writing group %d cfg registers\n", group->id);
+ 
+ 	/* setup GRPWQCFG */
+-	for (i = 0; i < 4; i++) {
+-		grpcfg_offset = idxd->grpcfg_offset +
+-			group->id * 64 + i * sizeof(u64);
+-		iowrite64(group->grpcfg.wqs[i],
+-			  idxd->reg_base + grpcfg_offset);
++	for (i = 0; i < GRPWQCFG_STRIDES; i++) {
++		grpcfg_offset = GRPWQCFG_OFFSET(idxd, group->id, i);
++		iowrite64(group->grpcfg.wqs[i], idxd->reg_base + grpcfg_offset);
+ 		dev_dbg(dev, "GRPCFG wq[%d:%d: %#x]: %#llx\n",
+ 			group->id, i, grpcfg_offset,
+ 			ioread64(idxd->reg_base + grpcfg_offset));
+ 	}
+ 
+ 	/* setup GRPENGCFG */
+-	grpcfg_offset = idxd->grpcfg_offset + group->id * 64 + 32;
++	grpcfg_offset = GRPENGCFG_OFFSET(idxd, group->id);
+ 	iowrite64(group->grpcfg.engines, idxd->reg_base + grpcfg_offset);
+ 	dev_dbg(dev, "GRPCFG engs[%d: %#x]: %#llx\n", group->id,
+ 		grpcfg_offset, ioread64(idxd->reg_base + grpcfg_offset));
+ 
+ 	/* setup GRPFLAGS */
+-	grpcfg_offset = idxd->grpcfg_offset + group->id * 64 + 40;
++	grpcfg_offset = GRPFLGCFG_OFFSET(idxd, group->id);
+ 	iowrite32(group->grpcfg.flags.bits, idxd->reg_base + grpcfg_offset);
+ 	dev_dbg(dev, "GRPFLAGS flags[%d: %#x]: %#x\n",
+ 		group->id, grpcfg_offset,
+diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
+index 1041c2779f9b..6f2f736097e5 100644
+--- a/drivers/dma/idxd/registers.h
++++ b/drivers/dma/idxd/registers.h
+@@ -356,4 +356,22 @@ union wqcfg {
+ 
+ #define WQCFG_STRIDES(_idxd_dev) ((_idxd_dev)->wqcfg_size / sizeof(u32))
+ 
++#define GRPCFG_SIZE		64
++#define GRPWQCFG_STRIDES	4
++
++/*
++ * This macro calculates the offset into the GRPCFG register
++ * idxd - struct idxd *
++ * n - wq id
++ * ofs - the index of the 32b dword for the config register
++ *
++ * The WQCFG register block is divided into groups per each wq. The n index
++ * allows us to move to the register group that's for that particular wq.
++ * Each register is 32bits. The ofs gives us the number of register to access.
++ */
++#define GRPWQCFG_OFFSET(idxd_dev, n, ofs) ((idxd_dev)->grpcfg_offset +\
++					   (n) * GRPCFG_SIZE + sizeof(u64) * (ofs))
++#define GRPENGCFG_OFFSET(idxd_dev, n) ((idxd_dev)->grpcfg_offset + (n) * GRPCFG_SIZE + 32)
++#define GRPFLGCFG_OFFSET(idxd_dev, n) ((idxd_dev)->grpcfg_offset + (n) * GRPCFG_SIZE + 40)
++
+ #endif
+
+

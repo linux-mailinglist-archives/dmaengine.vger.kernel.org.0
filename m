@@ -2,141 +2,72 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A0272A0FAB
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Oct 2020 21:43:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B3392A0FB5
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Oct 2020 21:48:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbgJ3UnM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 30 Oct 2020 16:43:12 -0400
-Received: from mga11.intel.com ([192.55.52.93]:37411 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726917AbgJ3UnL (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 30 Oct 2020 16:43:11 -0400
-IronPort-SDR: pQFSjbidw7tmoGouIlf2OCtGGAG+xdDDfE2R4nd813O6cAOALjaxKlHq1mnG/nvj9dx94922d4
- 8BCGzh9BWH+Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9790"; a="165165885"
-X-IronPort-AV: E=Sophos;i="5.77,434,1596524400"; 
-   d="scan'208";a="165165885"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2020 13:43:11 -0700
-IronPort-SDR: 8VRd2G1+PEMMJU6CwFHYHQ46/+LDRIzmfAhkPV/csStSRz6ri7gJfEJcIVTCost1HGQkCPTVmX
- iPvNArqO/AlA==
-X-IronPort-AV: E=Sophos;i="5.77,434,1596524400"; 
-   d="scan'208";a="469634855"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2020 13:43:08 -0700
-Date:   Fri, 30 Oct 2020 13:43:07 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        id S1726625AbgJ3Usd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 30 Oct 2020 16:48:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgJ3Usd (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 30 Oct 2020 16:48:33 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E87FFC0613CF;
+        Fri, 30 Oct 2020 13:48:32 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1604090911;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JZfJWaG7ev2qljT+ieaDGxkIgb/WuF3LfKzynT9foX4=;
+        b=ByevYznDMYjqf6G6Sn/uMI4O7DCIqkUWI0YsOR+hfYSMxatcuy1GmtKyPMu2eTlP34IyBE
+        L8l2qK8sIF90ikzPnMm5I2frtqCYc9AKswrydfEtLRARdjDVReDB5bREBgwdz7C/Pat1Dt
+        cLE9eI/HYBbjxkck9XHaS0xlF/m0IfqF6bZ83PwtGVMGAtut2Ad+IMmQCOuOhGxFR6euZ2
+        9kZfnj5oV1Y99y3rf7PrQAlWq4A3xU9369tIhMBd8+/k6YEHuHDdGymQcRIzpPrQL2Na74
+        gt18OhJ1nc5e6Nb6EXM7RKiDfxJw25CfnGFP2ryNuUeiasWCsmBtT5xeFP07wQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1604090911;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JZfJWaG7ev2qljT+ieaDGxkIgb/WuF3LfKzynT9foX4=;
+        b=Q4y0lhQ3OUOqktMxgvHMiRHWLGed8ooMTumCvJK1rrh1JDG3fBrxqZn0VyEfUfjO3V2mq1
+        xRjKR1MDUOXHr4AA==
+To:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
         megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
-        tglx@linutronix.de, alex.williamson@redhat.com,
-        jacob.jun.pan@intel.com, yi.l.liu@intel.com, baolu.lu@intel.com,
-        kevin.tian@intel.com, sanjay.k.kumar@intel.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        ashok.raj@intel.com, jgg@mellanox.com, yi.l.liu@intel.com,
+        baolu.lu@intel.com, kevin.tian@intel.com, sanjay.k.kumar@intel.com,
         tony.luck@intel.com, jing.lin@intel.com, dan.j.williams@intel.com,
         kwankhede@nvidia.com, eric.auger@redhat.com, parav@mellanox.com,
-        rafael@kernel.org, netanelg@mellanox.com, shahafs@mellanox.com,
-        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
-        samuel.ortiz@intel.com, mona.hossain@intel.com,
-        Megha Dey <megha.dey@linux.intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v4 00/17] Add VFIO mediated device support and DEV-MSI
- support for the idxd driver
-Message-ID: <20201030204307.GA683@otc-nc-03>
+        jgg@mellanox.com, rafael@kernel.org, netanelg@mellanox.com,
+        shahafs@mellanox.com, yan.y.zhao@linux.intel.com,
+        pbonzini@redhat.com, samuel.ortiz@intel.com, mona.hossain@intel.com
+Cc:     Megha Dey <megha.dey@linux.intel.com>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v4 00/17] Add VFIO mediated device support and DEV-MSI support for the idxd driver
+In-Reply-To: <160408357912.912050.17005584526266191420.stgit@djiang5-desk3.ch.intel.com>
 References: <160408357912.912050.17005584526266191420.stgit@djiang5-desk3.ch.intel.com>
- <20201030185858.GI2620339@nvidia.com>
- <c9303df4-3e57-6959-a89c-5fc98397ac70@intel.com>
- <20201030191706.GK2620339@nvidia.com>
- <20201030192325.GA105832@otc-nc-03>
- <20201030193045.GM2620339@nvidia.com>
+Date:   Fri, 30 Oct 2020 21:48:30 +0100
+Message-ID: <878sbnmodd.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201030193045.GM2620339@nvidia.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Oct 30, 2020 at 04:30:45PM -0300, Jason Gunthorpe wrote:
-> On Fri, Oct 30, 2020 at 12:23:25PM -0700, Raj, Ashok wrote:
-> > On Fri, Oct 30, 2020 at 04:17:06PM -0300, Jason Gunthorpe wrote:
-> > > On Fri, Oct 30, 2020 at 12:13:48PM -0700, Dave Jiang wrote:
-> > > > 
-> > > > 
-> > > > On 10/30/2020 11:58 AM, Jason Gunthorpe wrote:
-> > > > > On Fri, Oct 30, 2020 at 11:50:47AM -0700, Dave Jiang wrote:
-> > > > > >   .../ABI/stable/sysfs-driver-dma-idxd          |    6 +
-> > > > > >   Documentation/driver-api/vfio/mdev-idxd.rst   |  404 ++++++
-> > > > > >   MAINTAINERS                                   |    1 +
-> > > > > >   drivers/dma/Kconfig                           |    9 +
-> > > > > >   drivers/dma/idxd/Makefile                     |    2 +
-> > > > > >   drivers/dma/idxd/cdev.c                       |    6 +-
-> > > > > >   drivers/dma/idxd/device.c                     |  294 ++++-
-> > > > > >   drivers/dma/idxd/idxd.h                       |   67 +-
-> > > > > >   drivers/dma/idxd/init.c                       |   86 ++
-> > > > > >   drivers/dma/idxd/irq.c                        |    6 +-
-> > > > > >   drivers/dma/idxd/mdev.c                       | 1121 +++++++++++++++++
-> > > > > >   drivers/dma/idxd/mdev.h                       |  116 ++
-> > > > > 
-> > > > > Again, a subsytem driver belongs in the directory hierarchy of the
-> > > > > subsystem, not in other random places. All this mdev stuff belongs
-> > > > > under drivers/vfio
-> > > > 
-> > > > Alex seems to have disagreed last time....
-> > > > https://lore.kernel.org/dmaengine/20200917113016.425dcde7@x1.home/
-> > > 
-> > > Nobody else in the kernel is splitting subsystems up anymore
-> > >  
-> > > > And I do agree with his perspective. The mdev is an extension of the PF
-> > > > driver. It's a bit awkward to be a stand alone mdev driver under vfio/mdev/.
-> > > 
-> > > By this logic we'd have giagantic drivers under drivers/ethernet
-> > > touching netdev, rdma, scsi, vdpa, etc just because that is where the
-> > > PF driver came from.
-> > 
-> > What makes you think this is providing services like scsi/rdma/vdpa etc.. ?
-> > 
-> > for DSA this playes the exact same role, not a different function 
-> > as you highlight above. these mdev's are creating DSA for virtualization
-> > use. They aren't providing a completely different role or subsystem per-se.
-> 
-> It is a different subsystem, different maintainer, and different
-> reviewers.
-> 
-> It is a development process problem, it doesn't matter what it is
-> doing.
+On Fri, Oct 30 2020 at 11:50, Dave Jiang wrote:
+> The code has dependency on Thomas=E2=80=99s MSI restructuring patch serie=
+s:
+> https://lore.kernel.org/lkml/20200826111628.794979401@linutronix.de/
 
-So drawing that parallel, do you expect all drivers that call
-pci_register_driver() to be located in drivers/pci? Aren't they scattered
-all over the place ata,scsi, platform drivers and such?
+which is outdated and not longer applicable.
 
-As Alex pointed out, i915 and handful of s390 drivers that are mdev users
-are not in drivers/vfio. Are you sayint those drivers don't get reviewed? 
+Thanks,
 
-This is no different than PF driver offering VF services. Its a logical
-extension. 
-
-Reviews happen for mdev users today. What you suggest seems like cutting 
-the feet to fit the shoe. Unless the maintainers are asking things 
-to be split just because its calling mdev_register_device() that practice 
-doesn't exist and would be totally weird if you want to move all callers of
-pci_register_driver(). 
-
-Your argument seems interesting even entertaining :-). But honestly i'm not finding it
-practical :-). So every caller of mmu_register_notifier() needs to be in
-mm? 
-
-What you mention for different functions make absolute sense, not arguing
-against that.  but this ain't that. 
-
-And we just follow the asks of the maintainer. 
-
-I know you aren't going to give up, but there is little we can do. I want
-the maintainers to make that call and I'm not add more noise to this.
-
-Cheers,
-Ashok
+        tglx

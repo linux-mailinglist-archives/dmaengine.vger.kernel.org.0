@@ -2,106 +2,85 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B73F2A1325
-	for <lists+dmaengine@lfdr.de>; Sat, 31 Oct 2020 03:50:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ADFB22A1A31
+	for <lists+dmaengine@lfdr.de>; Sat, 31 Oct 2020 20:01:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbgJaCur (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 30 Oct 2020 22:50:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36998 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbgJaCuq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 30 Oct 2020 22:50:46 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98468C0613D5;
-        Fri, 30 Oct 2020 19:50:46 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1604112643;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uApMClh8LgUA9+nJd9aotz4iVU4rrDChpNyqFIsKvVA=;
-        b=BTy3lFhBX7sA4VCntMKiVzzwk15jABSRHtryuyJx0+un+EmAEDlvBnsxWJN/WlLwW0AZtf
-        dgIPedgj2GGEjgGyhDuEhVmXnVNwJ6R2nQaqLpM2oQSdZsNeRblLHWV1fRJeXgirvSE5Cz
-        M/U9x6HLsQuAd7grINFE+wXsybNOiFGqeZ4aI6wY5qOnfcZanCDX3DbFOa8b/cHiCtwGnJ
-        QEbUT+UuCjF76GX1Eku7Ndj/2ocNBLRt5PYkolws6PuXIWsQylQzhlESmrDBr3VijobWxB
-        NSMTVPCrpbQzkdGGnAWLN4CHPuD1EQy3J/h0xxtVJ008KaTYvoCn0wcg1FwESA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1604112643;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uApMClh8LgUA9+nJd9aotz4iVU4rrDChpNyqFIsKvVA=;
-        b=A819AejM97rPxCwoMXgGJd+KHw/MTmbonbj8ZqfBkpxDATgoUcgnpq0ENP6nnXI3x/A5+P
-        UiUnecA3TerRblAA==
-To:     "Raj\, Ashok" <ashok.raj@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
-        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
-        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
-        yi.l.liu@intel.com, baolu.lu@intel.com, kevin.tian@intel.com,
-        sanjay.k.kumar@intel.com, tony.luck@intel.com, jing.lin@intel.com,
-        dan.j.williams@intel.com, kwankhede@nvidia.com,
-        eric.auger@redhat.com, parav@mellanox.com, rafael@kernel.org,
-        netanelg@mellanox.com, shahafs@mellanox.com,
-        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
-        samuel.ortiz@intel.com, mona.hossain@intel.com,
-        Megha Dey <megha.dey@linux.intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v4 00/17] Add VFIO mediated device support and DEV-MSI support for the idxd driver
-In-Reply-To: <20201030204307.GA683@otc-nc-03>
-References: <160408357912.912050.17005584526266191420.stgit@djiang5-desk3.ch.intel.com> <20201030185858.GI2620339@nvidia.com> <c9303df4-3e57-6959-a89c-5fc98397ac70@intel.com> <20201030191706.GK2620339@nvidia.com> <20201030192325.GA105832@otc-nc-03> <20201030193045.GM2620339@nvidia.com> <20201030204307.GA683@otc-nc-03>
-Date:   Sat, 31 Oct 2020 03:50:43 +0100
-Message-ID: <87h7qbkt18.fsf@nanos.tec.linutronix.de>
+        id S1728367AbgJaTBa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 31 Oct 2020 15:01:30 -0400
+Received: from mail-wr1-f46.google.com ([209.85.221.46]:44374 "EHLO
+        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726627AbgJaTBa (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 31 Oct 2020 15:01:30 -0400
+Received: by mail-wr1-f46.google.com with SMTP id b3so4092138wrx.11;
+        Sat, 31 Oct 2020 12:01:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=fo1vLw7uqzM0/HVmudKwwfC5LAehVsjoosFf5UWA8y0=;
+        b=uAzRAJdvrzSFruVaBlWcp+QtmdOAo4cIHTy2W6P6A1PJTkgkizaIzzNYKnKg8+wbo7
+         Omchg07xbP/KJzAtjBmN0Kg9lLSYON0WUeqUjGBbc02Vs4im631BJlkN8IEENCKrXQzU
+         hJjH/nQimpOade3cg7wSfJQaoMxc16vImF42xcI+2hrQ5Brgw2lh0uT1PG14IHnNOAET
+         A0YTkd2YVVIma8D4pxTi0fXVggIMgUXZ/p5RUNE/GfFLrembKykis+gJI9tdTI7+OeJm
+         X/KWWJFACSECoSkznafUF8oikmUyDSnwOD5ens7yVa+wDQh2y/fuDwSCcmUuCIsaL7za
+         tCsA==
+X-Gm-Message-State: AOAM531Ypw7Xo2F+qTnvZjAk0sIuQ4xV5he17IsiZ9XbtKcUGOES1/YI
+        VsJSyHZV9wwq2IxZeidJaAp4hgqzvccs+w==
+X-Google-Smtp-Source: ABdhPJxAoD+lJVSovF6LGZWjGAOGZSs5Ew9Xk7ScBo+AW4SrynsiHyTcb0Qsb6SAn5qAndIgOwcexg==
+X-Received: by 2002:adf:fc8b:: with SMTP id g11mr10785093wrr.300.1604170887339;
+        Sat, 31 Oct 2020 12:01:27 -0700 (PDT)
+Received: from kozik-lap (adsl-84-226-167-205.adslplus.ch. [84.226.167.205])
+        by smtp.googlemail.com with ESMTPSA id e7sm15597705wrm.6.2020.10.31.12.01.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 31 Oct 2020 12:01:26 -0700 (PDT)
+Date:   Sat, 31 Oct 2020 20:01:24 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-samsung-soc@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Subject: dmaengine: pl330 rare NULL pointer dereference in pl330_tasklet
+Message-ID: <20201031190124.GA486187@kozik-lap>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Ashok,
+Hi all,
 
-On Fri, Oct 30 2020 at 13:43, Ashok Raj wrote:
-> On Fri, Oct 30, 2020 at 04:30:45PM -0300, Jason Gunthorpe wrote:
->> On Fri, Oct 30, 2020 at 12:23:25PM -0700, Raj, Ashok wrote:
->> It is a different subsystem, different maintainer, and different
->> reviewers.
->> 
->> It is a development process problem, it doesn't matter what it is
->> doing.
+I hit quite rare issue with pl330 DMA driver, difficult to reproduce
+(actually failed to do so):
 
-< skip a lot of non-sensical arguments>
+Happened during early reboot
 
-> I know you aren't going to give up, but there is little we can do. I want
-> the maintainers to make that call and I'm not add more noise to this.
+[  OK  ] Stopped target Graphical Interface.
+[  OK  ] Stopped target Multi-User System.
+[  OK  ] Stopped target RPC Port Mapper.
+         Stopping OpenSSH Daemonti[   75.447904] 8<--- cut here ---
+[   75.449506] Unable to handle kernel NULL pointer dereference at virtual address 0000000c
+...
+[   75.690850] [<c0902f70>] (pl330_tasklet) from [<c034d460>] (tasklet_action_common+0x88/0x1f4)
+[   75.699340] [<c034d460>] (tasklet_action_common) from [<c03013f8>] (__do_softirq+0x108/0x428)
+[   75.707850] [<c03013f8>] (__do_softirq) from [<c034dadc>] (run_ksoftirqd+0x2c/0x4c)
+[   75.715486] [<c034dadc>] (run_ksoftirqd) from [<c036fbfc>] (smpboot_thread_fn+0x13c/0x24c)
+[   75.723693] [<c036fbfc>] (smpboot_thread_fn) from [<c036c18c>] (kthread+0x13c/0x16c)
+[   75.731390] [<c036c18c>] (kthread) from [<c03001a8>] (ret_from_fork+0x14/0x2c)
 
-Jason is absolutely right.
+Full log:
+https://krzk.eu/#/builders/20/builds/954/steps/22/logs/serial0
 
-Just because there is historical precendence which does not care about
-the differentiation of subsystems is not an argument at all to make the
-same mistakes which have been made years ago.
+1. Arch ARM Linux
+2. multi_v7_defconfig
+3. Odroid HC1, ARMv7, octa-core (Cortex-A7+A15), Exynos5422 SoC
+4. systemd, boot up with static IP set in kernel command line
+5. No swap
+6. Kernel, DTB and initramfs are downloaded with TFTP
+7. NFS root (NFS client) mounted from a NFSv4 server
 
-IDXD is just infrastructure which provides the base for a variety of
-different functionalities. Very similar to what multi function devices
-provide. In fact IDXD is pretty much a MFD facility.
+Since I was not able to reproduce it, obviously I did not run bisect. If
+anyone has ideas, please share.
 
-Sticking all of it into dmaengine is sloppy at best. The dma engine
-related part of IDXD is only a part of the overall functionality.
+Best regards,
+Krzysztof
 
-I'm well aware that it is conveniant to just throw everything into
-drivers/myturf/ but that does neither make it reviewable nor
-maintainable.
-
-What's the problem with restructuring your code in a way which makes it
-fit into existing subsystems?
-
-The whole thing - as I pointed out to Dave earlier - is based on 'works
-for me' wishful thinking with a blissful ignorance of the development
-process and the requirement to split a large problem into the proper
-bits and pieces aka. engineering 101.
-
-Thanks,
-
-        tglx

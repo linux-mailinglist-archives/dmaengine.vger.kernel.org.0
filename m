@@ -2,86 +2,106 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A4A222A130E
-	for <lists+dmaengine@lfdr.de>; Sat, 31 Oct 2020 03:39:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B73F2A1325
+	for <lists+dmaengine@lfdr.de>; Sat, 31 Oct 2020 03:50:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725856AbgJaCjJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 30 Oct 2020 22:39:09 -0400
-Received: from server.msgroupspa.com ([185.149.113.111]:35286 "EHLO
-        server.msgroupspa.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725536AbgJaCjI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 30 Oct 2020 22:39:08 -0400
-X-Greylist: delayed 66465 seconds by postgrey-1.27 at vger.kernel.org; Fri, 30 Oct 2020 22:38:58 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=msgroupspa.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        Message-ID:Reply-To:Subject:To:From:Date:MIME-Version:Sender:Cc:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=gOeEglh1DIJatPKqyvOsPs4e0Zw8Lzg9wwjnNfQdiM8=; b=nK3IDYT+DT+afspoRk1vnh030x
-        JBANriWCpwGFqkJTHXsxgXz4zPu7XOm+ROYW+1LhSp6Xws1Wm9Gxv0Soi++3fpbt9358vEM1Vilpv
-        5xlCNIs/Y8Yak5vs3SvhE9OTE/TC6Vf04ze0iphAaRgUliWRhAsWS8s68bwFyUv4tdChHxOH/JwR2
-        Vv+jWIv637j1UH3aZ6QLvXZrjdEmRucUTVxZtH4VnCDjrc4XZi9EwE5rzVsYDmyiNG+eYB+1QY+/8
-        bPWWeacOm9DyYRD9g3bLyiVv0uincEH4/sdJ6fuUSabQfGsi095GX6rsmNCONVo4/rhE4INecsjOZ
-        9QdrBN4A==;
-Received: from [::1] (port=55352 helo=server.msgroupspa.com)
-        by server.msgroupspa.com with esmtpa (Exim 4.93)
-        (envelope-from <no-reply@msgroupspa.com>)
-        id 1kYPRU-0006Ky-OT; Fri, 30 Oct 2020 16:07:24 +0800
+        id S1726243AbgJaCur (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 30 Oct 2020 22:50:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36998 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbgJaCuq (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 30 Oct 2020 22:50:46 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98468C0613D5;
+        Fri, 30 Oct 2020 19:50:46 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1604112643;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uApMClh8LgUA9+nJd9aotz4iVU4rrDChpNyqFIsKvVA=;
+        b=BTy3lFhBX7sA4VCntMKiVzzwk15jABSRHtryuyJx0+un+EmAEDlvBnsxWJN/WlLwW0AZtf
+        dgIPedgj2GGEjgGyhDuEhVmXnVNwJ6R2nQaqLpM2oQSdZsNeRblLHWV1fRJeXgirvSE5Cz
+        M/U9x6HLsQuAd7grINFE+wXsybNOiFGqeZ4aI6wY5qOnfcZanCDX3DbFOa8b/cHiCtwGnJ
+        QEbUT+UuCjF76GX1Eku7Ndj/2ocNBLRt5PYkolws6PuXIWsQylQzhlESmrDBr3VijobWxB
+        NSMTVPCrpbQzkdGGnAWLN4CHPuD1EQy3J/h0xxtVJ008KaTYvoCn0wcg1FwESA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1604112643;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uApMClh8LgUA9+nJd9aotz4iVU4rrDChpNyqFIsKvVA=;
+        b=A819AejM97rPxCwoMXgGJd+KHw/MTmbonbj8ZqfBkpxDATgoUcgnpq0ENP6nnXI3x/A5+P
+        UiUnecA3TerRblAA==
+To:     "Raj\, Ashok" <ashok.raj@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Dave Jiang <dave.jiang@intel.com>, vkoul@kernel.org,
+        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        yi.l.liu@intel.com, baolu.lu@intel.com, kevin.tian@intel.com,
+        sanjay.k.kumar@intel.com, tony.luck@intel.com, jing.lin@intel.com,
+        dan.j.williams@intel.com, kwankhede@nvidia.com,
+        eric.auger@redhat.com, parav@mellanox.com, rafael@kernel.org,
+        netanelg@mellanox.com, shahafs@mellanox.com,
+        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
+        samuel.ortiz@intel.com, mona.hossain@intel.com,
+        Megha Dey <megha.dey@linux.intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v4 00/17] Add VFIO mediated device support and DEV-MSI support for the idxd driver
+In-Reply-To: <20201030204307.GA683@otc-nc-03>
+References: <160408357912.912050.17005584526266191420.stgit@djiang5-desk3.ch.intel.com> <20201030185858.GI2620339@nvidia.com> <c9303df4-3e57-6959-a89c-5fc98397ac70@intel.com> <20201030191706.GK2620339@nvidia.com> <20201030192325.GA105832@otc-nc-03> <20201030193045.GM2620339@nvidia.com> <20201030204307.GA683@otc-nc-03>
+Date:   Sat, 31 Oct 2020 03:50:43 +0100
+Message-ID: <87h7qbkt18.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Date:   Fri, 30 Oct 2020 16:07:24 +0800
-From:   "Mr. John Galvan" <no-reply@msgroupspa.com>
-To:     undisclosed-recipients:;
-Subject: Hello/Hallo
-Reply-To: galvan.johnny@outlook.com
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <8970d4ac30f8022b0ae628d9b69a2d43@msgroupspa.com>
-X-Sender: no-reply@msgroupspa.com
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.msgroupspa.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - msgroupspa.com
-X-Get-Message-Sender-Via: server.msgroupspa.com: authenticated_id: no-reply@msgroupspa.com
-X-Authenticated-Sender: server.msgroupspa.com: no-reply@msgroupspa.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Ashok,
 
+On Fri, Oct 30 2020 at 13:43, Ashok Raj wrote:
+> On Fri, Oct 30, 2020 at 04:30:45PM -0300, Jason Gunthorpe wrote:
+>> On Fri, Oct 30, 2020 at 12:23:25PM -0700, Raj, Ashok wrote:
+>> It is a different subsystem, different maintainer, and different
+>> reviewers.
+>> 
+>> It is a development process problem, it doesn't matter what it is
+>> doing.
 
--- 
-Sir/Madam,
+< skip a lot of non-sensical arguments>
 
-I have access to very vital information that can be used to move a huge 
-amount of money. I have done my homework very well and I have the 
-machineries in place to get it done since I am still in active service. 
-If it was possible for me to do it alone I would not have bothered 
-contacting you. Ultimately I need an honest foreigner to play an 
-important role in the completion of this business transaction. Send 
-responds to this email: galvan.johnny@outlook.com
+> I know you aren't going to give up, but there is little we can do. I want
+> the maintainers to make that call and I'm not add more noise to this.
 
-Regards,
-John Galvan
+Jason is absolutely right.
 
----------------------------------------------------------------
+Just because there is historical precendence which does not care about
+the differentiation of subsystems is not an argument at all to make the
+same mistakes which have been made years ago.
 
-Sir / Madam,
+IDXD is just infrastructure which provides the base for a variety of
+different functionalities. Very similar to what multi function devices
+provide. In fact IDXD is pretty much a MFD facility.
 
-Ich habe Zugang zu sehr wichtigen Informationen, mit denen ich eine 
-große Menge Geld bewegen kann. Ich habe meine Hausaufgaben sehr gut 
-gemacht und ich habe die Maschinen, um sie zu erledigen, da ich immer 
-noch im aktiven Dienst bin. Wenn es mir möglich gewesen wäre, es alleine 
-zu tun, hätte ich mich nicht darum gekümmert, Sie zu kontaktieren. 
-Letztendlich brauche ich einen ehrlichen Ausländer, der eine wichtige 
-Rolle beim Abschluss dieses Geschäftsvorgangs spielt. Senden Sie 
-Antworten auf diese E-Mail: galvan.johnny@outlook.com
+Sticking all of it into dmaengine is sloppy at best. The dma engine
+related part of IDXD is only a part of the overall functionality.
 
-Grüße,
-John Galvan
+I'm well aware that it is conveniant to just throw everything into
+drivers/myturf/ but that does neither make it reviewable nor
+maintainable.
+
+What's the problem with restructuring your code in a way which makes it
+fit into existing subsystems?
+
+The whole thing - as I pointed out to Dave earlier - is based on 'works
+for me' wishful thinking with a blissful ignorance of the development
+process and the requirement to split a large problem into the proper
+bits and pieces aka. engineering 101.
+
+Thanks,
+
+        tglx

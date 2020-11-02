@@ -2,203 +2,107 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EC122A2582
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Nov 2020 08:45:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CC2F2A264B
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Nov 2020 09:41:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbgKBHpn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 2 Nov 2020 02:45:43 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59160 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbgKBHpn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 2 Nov 2020 02:45:43 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0A27jeoa072868;
-        Mon, 2 Nov 2020 01:45:40 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1604303140;
-        bh=bvTTRAAP9RQc259vTbJiO3bSZW1rYmd9CwlKoSzaKJw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=BYcYXit935f9TFyZ/ciWNV/6Qfj1TQEpi4KepiGl07Wm4LwlQoCXVkv82ljmYvH2D
-         w6luUIB2mCFCgl2DEtl+OaoJL8hIg0TmMjQ2/18JbXG8ZPBHbq/MPCJaUKq+WjHXw0
-         2kPFqpN8ajb5y3w+I3egaSS2803NOSp4UFHE95qo=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0A27jexf111792
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 2 Nov 2020 01:45:40 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 2 Nov
- 2020 01:45:40 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 2 Nov 2020 01:45:40 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0A27jcHQ046900;
-        Mon, 2 Nov 2020 01:45:39 -0600
-Subject: Re: [PATCH] dmaengine: ti: k3-udma-glue: move psi-l pairing in
- channel en/dis functions
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
-CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-References: <20201030203000.4281-1-grygorii.strashko@ti.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <62a8dc0b-821d-c3a6-279c-97b3082b898c@ti.com>
-Date:   Mon, 2 Nov 2020 09:46:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        id S1727902AbgKBIl3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 2 Nov 2020 03:41:29 -0500
+Received: from mail-wr1-f47.google.com ([209.85.221.47]:38415 "EHLO
+        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727806AbgKBIl2 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 2 Nov 2020 03:41:28 -0500
+Received: by mail-wr1-f47.google.com with SMTP id n18so13515447wrs.5;
+        Mon, 02 Nov 2020 00:41:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LE6jfeBaedNtUOiZilvHvmLOozgEEEYdnPDcbbq+vus=;
+        b=my/WtJycsWZ9yj1SIHdsdh1NQZ813UEVAITpjlOVN6D15ldRlpigzUqfsBAbd7c2Gx
+         O/2Dc5GlWY8q7yQi8lwiZQ94fM+NiXWDf+xH4g+5xZ7m4wOAzpR7toYedk7THcUyrEGg
+         TXeyMGhzbtKSjJkFEse8RJBKJFD91aDMHkd5nsDimtnuNBG3nqAoeGJr50JztBimxQHz
+         8A8ouMAhxclU3g1Me+Hrp8loDG0CgnI61s4HEGI4fd1ubsqdkVVvZqkHJPIyy6mJsgj8
+         l5GC8cJZ6+ljgubXhWQV5FGMk1PxWOX7XGUZPNnWJMwGsvLGwwZH+mI9y5wMSMQqz6Z0
+         nlDg==
+X-Gm-Message-State: AOAM532Eqh9Nf9wF3LOge+vwd/+13JtcGUOmsuSsNmoVG7Xapl2Zfz+3
+        lnm8q99rM3LEdCq7VOOXBrANwHzn+A26ZQ==
+X-Google-Smtp-Source: ABdhPJxEntbrtRvffSWB2E3xhXP8aL9tfpqwwm0A3s92KIa06PgNflQihgMrxmliDhgFc5ONdad7cg==
+X-Received: by 2002:a5d:5106:: with SMTP id s6mr18215180wrt.51.1604306485033;
+        Mon, 02 Nov 2020 00:41:25 -0800 (PST)
+Received: from kozik-lap (adsl-84-226-167-205.adslplus.ch. [84.226.167.205])
+        by smtp.googlemail.com with ESMTPSA id n8sm1907613wmc.11.2020.11.02.00.41.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Nov 2020 00:41:23 -0800 (PST)
+Date:   Mon, 2 Nov 2020 09:41:22 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Subject: Re: dmaengine: pl330 rare NULL pointer dereference in pl330_tasklet
+Message-ID: <20201102084122.GA7331@kozik-lap>
+References: <CGME20201031190133eucas1p2a90b3a7a1e39f4e778e288bb11a3ff9d@eucas1p2.samsung.com>
+ <20201031190124.GA486187@kozik-lap>
+ <a4bbe5e8-dd3d-d66f-a9fe-012bf7910943@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20201030203000.4281-1-grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <a4bbe5e8-dd3d-d66f-a9fe-012bf7910943@samsung.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 30/10/2020 22.30, Grygorii Strashko wrote:
-> The NAVSS UDMA will stuck if target IP module is disabled by PM while PSI-L
-> threads are paired UDMA<->IP and no further transfers is possible. This
-> could be the case for IPs J721E Main CPSW (cpsw9g).
+On Mon, Nov 02, 2020 at 08:38:14AM +0100, Marek Szyprowski wrote:
+> Hi Krzysztof,
 > 
-> Hence, to avoid such situation do PSI-L threads pairing only when UDMA
-> channel is going to be enabled as at this time DMA consumer module expected
-> to be active already.
-
-Is this patch on top of the AM64 (BCDMA/PKTDMA) series or not?
-Will it cause any conflict?
-
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-
-
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> ---
->  drivers/dma/ti/k3-udma-glue.c | 64 +++++++++++++++++++++--------------
->  1 file changed, 38 insertions(+), 26 deletions(-)
+> On 31.10.2020 20:01, Krzysztof Kozlowski wrote:
+> > I hit quite rare issue with pl330 DMA driver, difficult to reproduce
+> > (actually failed to do so):
+> >
+> > Happened during early reboot
+> >
+> > [  OK  ] Stopped target Graphical Interface.
+> > [  OK  ] Stopped target Multi-User System.
+> > [  OK  ] Stopped target RPC Port Mapper.
+> >           Stopping OpenSSH Daemonti[   75.447904] 8<--- cut here ---
+> > [   75.449506] Unable to handle kernel NULL pointer dereference at virtual address 0000000c
+> > ...
+> > [   75.690850] [<c0902f70>] (pl330_tasklet) from [<c034d460>] (tasklet_action_common+0x88/0x1f4)
+> > [   75.699340] [<c034d460>] (tasklet_action_common) from [<c03013f8>] (__do_softirq+0x108/0x428)
+> > [   75.707850] [<c03013f8>] (__do_softirq) from [<c034dadc>] (run_ksoftirqd+0x2c/0x4c)
+> > [   75.715486] [<c034dadc>] (run_ksoftirqd) from [<c036fbfc>] (smpboot_thread_fn+0x13c/0x24c)
+> > [   75.723693] [<c036fbfc>] (smpboot_thread_fn) from [<c036c18c>] (kthread+0x13c/0x16c)
+> > [   75.731390] [<c036c18c>] (kthread) from [<c03001a8>] (ret_from_fork+0x14/0x2c)
+> >
+> > Full log:
+> > https://protect2.fireeye.com/v1/url?k=7445a1ab-2bde98a7-74442ae4-000babff3563-a368d542db0c5500&q=1&e=62e4887b-e224-48e5-80a2-71163caeeec8&u=https%3A%2F%2Fkrzk.eu%2F%23%2Fbuilders%2F20%2Fbuilds%2F954%2Fsteps%2F22%2Flogs%2Fserial0
+> >
+> > 1. Arch ARM Linux
+> > 2. multi_v7_defconfig
+> > 3. Odroid HC1, ARMv7, octa-core (Cortex-A7+A15), Exynos5422 SoC
+> > 4. systemd, boot up with static IP set in kernel command line
+> > 5. No swap
+> > 6. Kernel, DTB and initramfs are downloaded with TFTP
+> > 7. NFS root (NFS client) mounted from a NFSv4 server
+> >
+> > Since I was not able to reproduce it, obviously I did not run bisect. If
+> > anyone has ideas, please share.
 > 
-> diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
-> index a367584f0d7b..dfb65e382ab9 100644
-> --- a/drivers/dma/ti/k3-udma-glue.c
-> +++ b/drivers/dma/ti/k3-udma-glue.c
-> @@ -303,19 +303,6 @@ struct k3_udma_glue_tx_channel *k3_udma_glue_request_tx_chn(struct device *dev,
->  		goto err;
->  	}
->  
-> -	ret = xudma_navss_psil_pair(tx_chn->common.udmax,
-> -				    tx_chn->common.src_thread,
-> -				    tx_chn->common.dst_thread);
-> -	if (ret) {
-> -		dev_err(dev, "PSI-L request err %d\n", ret);
-> -		goto err;
-> -	}
-> -
-> -	tx_chn->psil_paired = true;
-> -
-> -	/* reset TX RT registers */
-> -	k3_udma_glue_disable_tx_chn(tx_chn);
-> -
->  	k3_udma_glue_dump_tx_chn(tx_chn);
->  
->  	return tx_chn;
-> @@ -378,6 +365,18 @@ EXPORT_SYMBOL_GPL(k3_udma_glue_pop_tx_chn);
->  
->  int k3_udma_glue_enable_tx_chn(struct k3_udma_glue_tx_channel *tx_chn)
->  {
-> +	int ret;
-> +
-> +	ret = xudma_navss_psil_pair(tx_chn->common.udmax,
-> +				    tx_chn->common.src_thread,
-> +				    tx_chn->common.dst_thread);
-> +	if (ret) {
-> +		dev_err(tx_chn->common.dev, "PSI-L request err %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	tx_chn->psil_paired = true;
-> +
->  	xudma_tchanrt_write(tx_chn->udma_tchanx, UDMA_CHAN_RT_PEER_RT_EN_REG,
->  			    UDMA_PEER_RT_EN_ENABLE);
->  
-> @@ -398,6 +397,13 @@ void k3_udma_glue_disable_tx_chn(struct k3_udma_glue_tx_channel *tx_chn)
->  	xudma_tchanrt_write(tx_chn->udma_tchanx,
->  			    UDMA_CHAN_RT_PEER_RT_EN_REG, 0);
->  	k3_udma_glue_dump_tx_rt_chn(tx_chn, "txchn dis2");
-> +
-> +	if (tx_chn->psil_paired) {
-> +		xudma_navss_psil_unpair(tx_chn->common.udmax,
-> +					tx_chn->common.src_thread,
-> +					tx_chn->common.dst_thread);
-> +		tx_chn->psil_paired = false;
-> +	}
->  }
->  EXPORT_SYMBOL_GPL(k3_udma_glue_disable_tx_chn);
->  
-> @@ -815,19 +821,6 @@ k3_udma_glue_request_rx_chn_priv(struct device *dev, const char *name,
->  			goto err;
->  	}
->  
-> -	ret = xudma_navss_psil_pair(rx_chn->common.udmax,
-> -				    rx_chn->common.src_thread,
-> -				    rx_chn->common.dst_thread);
-> -	if (ret) {
-> -		dev_err(dev, "PSI-L request err %d\n", ret);
-> -		goto err;
-> -	}
-> -
-> -	rx_chn->psil_paired = true;
-> -
-> -	/* reset RX RT registers */
-> -	k3_udma_glue_disable_rx_chn(rx_chn);
-> -
->  	k3_udma_glue_dump_rx_chn(rx_chn);
->  
->  	return rx_chn;
-> @@ -1052,12 +1045,24 @@ EXPORT_SYMBOL_GPL(k3_udma_glue_rx_flow_disable);
->  
->  int k3_udma_glue_enable_rx_chn(struct k3_udma_glue_rx_channel *rx_chn)
->  {
-> +	int ret;
-> +
->  	if (rx_chn->remote)
->  		return -EINVAL;
->  
->  	if (rx_chn->flows_ready < rx_chn->flow_num)
->  		return -EINVAL;
->  
-> +	ret = xudma_navss_psil_pair(rx_chn->common.udmax,
-> +				    rx_chn->common.src_thread,
-> +				    rx_chn->common.dst_thread);
-> +	if (ret) {
-> +		dev_err(rx_chn->common.dev, "PSI-L request err %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	rx_chn->psil_paired = true;
-> +
->  	xudma_rchanrt_write(rx_chn->udma_rchanx, UDMA_CHAN_RT_CTL_REG,
->  			    UDMA_CHAN_RT_CTL_EN);
->  
-> @@ -1078,6 +1083,13 @@ void k3_udma_glue_disable_rx_chn(struct k3_udma_glue_rx_channel *rx_chn)
->  	xudma_rchanrt_write(rx_chn->udma_rchanx, UDMA_CHAN_RT_CTL_REG, 0);
->  
->  	k3_udma_glue_dump_rx_rt_chn(rx_chn, "rxrt dis2");
-> +
-> +	if (rx_chn->psil_paired) {
-> +		xudma_navss_psil_unpair(rx_chn->common.udmax,
-> +					rx_chn->common.src_thread,
-> +					rx_chn->common.dst_thread);
-> +		rx_chn->psil_paired = false;
-> +	}
->  }
->  EXPORT_SYMBOL_GPL(k3_udma_glue_disable_rx_chn);
->  
-> 
+> Well, I've also observed it a few times. IMHO it is related to the 
+> broken UART (in DMA mode) shutdown procedure. Usually it can be easily 
+> observed by flushing some random parts of the previously transmitted 
+> data to the UART console during the system shutdown. This also depends 
+> on the board and used system (especially the presence of systemd, which 
+> plays with UART differently than the old sysv init). IMHO there is a 
+> kind of use-after-free issue there, so the above pl330 stacktrace can be 
+> also observed depending on the timing and system load. This issue is 
+> there from the beginning of the DMA support. I have it on my todo list, 
+> but it had too low priority to take a look into it. I only briefly 
+> checked the related code a few years ago and noticed that the UART 
+> shutdown is not really synchronized with DMA. However that time I didn't 
+> find any simple fix, so I gave up.
 
-- Péter
+Thanks for the explanation.
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Best regards,
+Krzysztof
+

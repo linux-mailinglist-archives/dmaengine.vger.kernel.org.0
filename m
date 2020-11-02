@@ -2,62 +2,47 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9CA12A314D
-	for <lists+dmaengine@lfdr.de>; Mon,  2 Nov 2020 18:19:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 92E482A32BC
+	for <lists+dmaengine@lfdr.de>; Mon,  2 Nov 2020 19:18:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgKBRTO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 2 Nov 2020 12:19:14 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4603 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727835AbgKBRTO (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 2 Nov 2020 12:19:14 -0500
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5fa03f950000>; Mon, 02 Nov 2020 09:19:17 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 2 Nov
- 2020 17:19:12 +0000
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.175)
- by HQMAIL109.nvidia.com (172.20.187.15) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Mon, 2 Nov 2020 17:19:12 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VBofhKrYw67gYuIQcYel+JBrz6r6Pt9hJDUnJrk/IPRP8GRXV6Mnr+zYOCWMs7kZz7xjeML9UKtLmbpyuA2G5xaWBGfc177JQMUivcK71Kdk4E6Soch9rblLy6gOjCH4jh9kW0yIPg0pA4v7ZfW/4Muq0BWOnt19OWcgul9X5qC99u9jQvtirKIZ5a/5Acc4rRwwXNe18yGB3WCocLSzt8vixs130c0J7OKN9H0hKAvmnNrpBtFVV5dV0hDqb+Y5iTIJgBZm2Kpm2jII5PprSMUx22tR414Q59aKWdnWHr0Lx0w9oHhc0eihpxya2y+tXdkVUqLuvgXvnkXeQabtQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CUGbF3EC9mhBBWFzgbgI8Z1POjSmtFvbIupe/xRP6Ok=;
- b=HlY6lkBSB3nHcHvH4tw3mmDpfSgjXHRwO1PMY3Fy2kn+rIvl6qHdgWS3c9tJpKvdGnpTWp125urfDkj2Urwc+quXUy08iurzesLS6liXd+OLPsunoISoa/WdC0UVt93PPW/KGqkT0KQP0BlcKXKICp96XamcZmDZ13dQ58Iq0JrNmx3a/sTK/k94qhszgWOTWlpTrhSD7BDF2D9OhOqvMXDi9J6zvc6RUAKAROMo+D1QTphjSQdUMzR1LbMgUx4pGHaskF7xM7Uj3Dn86qIEsLyXem6Xhqn/9zd1v1rVeOF2qH/q/D3BnO2oP7j/ClJC2/GqsjvbwGONvknt2l+BzQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB3113.namprd12.prod.outlook.com (2603:10b6:5:11b::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18; Mon, 2 Nov
- 2020 17:19:11 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78%7]) with mapi id 15.20.3499.030; Mon, 2 Nov 2020
- 17:19:11 +0000
-Date:   Mon, 2 Nov 2020 13:19:09 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Dave Jiang <dave.jiang@intel.com>, <vkoul@kernel.org>,
-        <megha.dey@intel.com>, <maz@kernel.org>, <bhelgaas@google.com>,
-        <alex.williamson@redhat.com>, <jacob.jun.pan@intel.com>,
-        <yi.l.liu@intel.com>, <baolu.lu@intel.com>, <kevin.tian@intel.com>,
-        <sanjay.k.kumar@intel.com>, <tony.luck@intel.com>,
-        <jing.lin@intel.com>, <dan.j.williams@intel.com>,
-        <kwankhede@nvidia.com>, <eric.auger@redhat.com>,
-        <parav@mellanox.com>, <rafael@kernel.org>, <netanelg@mellanox.com>,
-        <shahafs@mellanox.com>, <yan.y.zhao@linux.intel.com>,
-        <pbonzini@redhat.com>, <samuel.ortiz@intel.com>,
-        <mona.hossain@intel.com>, Megha Dey <megha.dey@linux.intel.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <kvm@vger.kernel.org>
+        id S1725882AbgKBSSj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 2 Nov 2020 13:18:39 -0500
+Received: from mga03.intel.com ([134.134.136.65]:63800 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725801AbgKBSSj (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 2 Nov 2020 13:18:39 -0500
+IronPort-SDR: xY1G/DZLIXKRoMPcAdqRbHuosu0AV3eybq/tXjhiWxU/vp41MCqHnowrHEoomex8b+WoYSlzik
+ f3mQv6QVBk3w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9793"; a="169031274"
+X-IronPort-AV: E=Sophos;i="5.77,445,1596524400"; 
+   d="scan'208";a="169031274"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2020 10:18:38 -0800
+IronPort-SDR: oF/i1SsSGRxUOiA/dJwiaQ613OylcyOSVl+zRFb5481okUHsRV9ukA6+E8pJLLe59VdJEhq+iD
+ ILHDq33gOVfw==
+X-IronPort-AV: E=Sophos;i="5.77,445,1596524400"; 
+   d="scan'208";a="336254810"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.251.132.252]) ([10.251.132.252])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2020 10:18:36 -0800
 Subject: Re: [PATCH v4 00/17] Add VFIO mediated device support and DEV-MSI
  support for the idxd driver
-Message-ID: <20201102171909.GF2620339@nvidia.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, vkoul@kernel.org,
+        megha.dey@intel.com, maz@kernel.org, bhelgaas@google.com,
+        alex.williamson@redhat.com, jacob.jun.pan@intel.com,
+        yi.l.liu@intel.com, baolu.lu@intel.com, kevin.tian@intel.com,
+        sanjay.k.kumar@intel.com, tony.luck@intel.com, jing.lin@intel.com,
+        dan.j.williams@intel.com, kwankhede@nvidia.com,
+        eric.auger@redhat.com, parav@mellanox.com, rafael@kernel.org,
+        netanelg@mellanox.com, shahafs@mellanox.com,
+        yan.y.zhao@linux.intel.com, pbonzini@redhat.com,
+        samuel.ortiz@intel.com, mona.hossain@intel.com,
+        Megha Dey <megha.dey@linux.intel.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, kvm@vger.kernel.org
 References: <20201030185858.GI2620339@nvidia.com>
  <c9303df4-3e57-6959-a89c-5fc98397ac70@intel.com>
  <20201030191706.GK2620339@nvidia.com> <20201030192325.GA105832@otc-nc-03>
@@ -65,37 +50,38 @@ References: <20201030185858.GI2620339@nvidia.com>
  <87h7qbkt18.fsf@nanos.tec.linutronix.de>
  <20201031235359.GA23878@araj-mobl1.jf.intel.com>
  <20201102132036.GX2620339@nvidia.com> <20201102162043.GB20783@otc-nc-03>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20201102162043.GB20783@otc-nc-03>
-X-ClientProxiedBy: MN2PR01CA0012.prod.exchangelabs.com (2603:10b6:208:10c::25)
- To DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ <20201102171909.GF2620339@nvidia.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <20d7c5fc-91b0-d673-d41a-335d91ca2dce@intel.com>
+Date:   Mon, 2 Nov 2020 11:18:33 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR01CA0012.prod.exchangelabs.com (2603:10b6:208:10c::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18 via Frontend Transport; Mon, 2 Nov 2020 17:19:10 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kZdU5-00FIC9-Gk; Mon, 02 Nov 2020 13:19:09 -0400
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1604337557; bh=CUGbF3EC9mhBBWFzgbgI8Z1POjSmtFvbIupe/xRP6Ok=;
-        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
-         From:To:CC:Subject:Message-ID:References:Content-Type:
-         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-LD-Processed;
-        b=XBStnYkfy12+iKEesNZouO20IlKli4THIMphcLNCXQJIgU3A0rE1O2wkzbsC4j44K
-         Bi5aXfTpGs+1LuGVf/pEixXJvE6LvMskHLP8hykMW13jKCu/EoPg+4lN4duxD3P/Z8
-         0/v8kc77C2VOtvc9be/A81ORRIQSDWfY3tgZZDhjesBxRc4pIHGOyVi+sd1ak9MsgO
-         BeA2DmYpR79+aVStH1cw0gGvQMs8WG3dSLSBEwWuh1zPHWPXiP6qMP3prJh0DH00jd
-         NX4t36t40qhuZkztB1AcbyRFyxO6vX63EmeY2jB5Phvja86gxz86Q4gGjyBfLlqOAJ
-         Lqp8tBkgKDUOQ==
+In-Reply-To: <20201102171909.GF2620339@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Nov 02, 2020 at 08:20:43AM -0800, Raj, Ashok wrote:
-> Creating these private interfaces for intra-module are just 1-1 and not
-> general purpose and every accelerator needs to create these instances.
 
-This is where we are going, auxillary bus should be merged soon which
-is specifically to connect these kinds of devices across subsystems
 
-Jason
+On 11/2/2020 10:19 AM, Jason Gunthorpe wrote:
+> On Mon, Nov 02, 2020 at 08:20:43AM -0800, Raj, Ashok wrote:
+>> Creating these private interfaces for intra-module are just 1-1 and not
+>> general purpose and every accelerator needs to create these instances.
+> 
+> This is where we are going, auxillary bus should be merged soon which
+> is specifically to connect these kinds of devices across subsystems
+
+I think this resolves the aux device probe/remove issue via a common bus. But it 
+does not help with the mdev device needing a lot of the device handling calls 
+from the parent driver as it share the same handling as the parent device. My 
+plan is to export all the needed call via EXPORT_SYMBOL_NS() so the calls can be 
+shared in its own namespace between the modules. Do you have any objection with 
+that?
+
+> 
+> Jason
+> 

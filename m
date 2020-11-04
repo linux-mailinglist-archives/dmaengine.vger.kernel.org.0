@@ -2,45 +2,73 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 180532A648D
-	for <lists+dmaengine@lfdr.de>; Wed,  4 Nov 2020 13:40:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 432DD2A654C
+	for <lists+dmaengine@lfdr.de>; Wed,  4 Nov 2020 14:34:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729227AbgKDMk1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 4 Nov 2020 07:40:27 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17461 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729089AbgKDMk0 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 4 Nov 2020 07:40:26 -0500
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5fa2a13d0002>; Wed, 04 Nov 2020 04:40:29 -0800
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 4 Nov
- 2020 12:40:22 +0000
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.172)
- by HQMAIL101.nvidia.com (172.20.187.10) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Wed, 4 Nov 2020 12:40:22 +0000
+        id S1729630AbgKDNeU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 4 Nov 2020 08:34:20 -0500
+Received: from mga05.intel.com ([192.55.52.43]:9177 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726350AbgKDNeT (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 4 Nov 2020 08:34:19 -0500
+IronPort-SDR: Nkjtov1G33QmxJcb4rMZM88Hab5SSV5cSTG/i4DaiIHx2E/Y3m8mOPO+yGoGWzLxeHBj9euly0
+ RC1oilHyJ9xA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9794"; a="253925571"
+X-IronPort-AV: E=Sophos;i="5.77,451,1596524400"; 
+   d="scan'208";a="253925571"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2020 05:34:16 -0800
+IronPort-SDR: NgmbVQYUcA3bunZ2Xc8+nvxnfoCDayXtqYHuae/pzxuOoFu0y+Gbn5LRMbre0iqteDSQUBsP/K
+ NeZSVjum2iLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,451,1596524400"; 
+   d="scan'208";a="396904957"
+Received: from fmsmsx606.amr.corp.intel.com ([10.18.126.86])
+  by orsmga001.jf.intel.com with ESMTP; 04 Nov 2020 05:34:16 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 4 Nov 2020 05:34:15 -0800
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 4 Nov 2020 05:34:14 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 4 Nov 2020 05:34:14 -0800
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.106)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.1713.5; Wed, 4 Nov 2020 05:34:14 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cmYAVJO2QrUxvwSNB19uV80Hi88BnFcjbTNHj0sLwe5IpaUJIg207TunnEz00GO/Lv9id6/cu08pPZH7WTE5vFnNGvRDoeMEw1J5ZgMRKOIkz9F8BAggDCDzXArq5b2kNvLW9Ihi00jrUdwrJsobhfoWPCHcRFH5DCmptZbzBUNineEp3pLpKnL0s0RN05+HHBPit4KbruW6G/11iIQZboNcl9s6HqtbEr9c1o+6V9aClv8fKZpYOwBkgOg5He0aT661WhWhrjRwRZdR4D8Bc393NTG90aIQrmP+1QH6HZaXflLwWEVMr72wMc5tMXMqR2VWT0cmkqwdaW9xhZZesA==
+ b=C7lGj3ng95F/4jAOdI6SbCwhFd1kkBaoRFqH8kBKqhKeWaUXqH9AYgtKq9xT82qaSeMoYueG/X8rjCeAtPrZDj2Wu/+qES97zS2gc0skNp5WX9ltSCZUi3jmPr5DqSZfIZMiqVH8rpu40cdUekgs7cfeP5z88bQF5W+u1SkWJX4mIJqj3hqsaUKIgc++QqMR4JZDC5cQ75EC0D6FxXTxm0q1kydPEAvZhox3khPfU7kScbnrIwlUW59T/7XBrB6FVzsviVyNcIi3KgBKLwqUyfnnNMS6kpoCnOoeQm29Gwjf4Qix82MaN0Q7vwV0/3eKanCoHdGpDorfAXlBouwNqA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ly2oeyLHt+9xgCf6InlNFupONQhHnN+seyBdY1snqFM=;
- b=odlSa3ap+GvgJ5VD0+NueY8IyQVMLmhW8cDIN+TvMnn6YiyxUEXw0uVwDyv0/6LC6kirk9yfbExq3n8kmIYsWfX4qf16/CQAh4cJmnGq/ohh+jfjlEhsemAOHlE1K16HPXyPQLnNMEuFNuEKPnVDqT+m0x+cWp8FILeNIC4sFngfoFKsNY5gkGUuOPes2GEDc5sLnfc6wy6o6Ljz5xjPGbSo/+yrU6LQ/SQ0wLfzH7ZRDUiQ76xbzd/nc6GdurQHy9cwBnMWRfn3BrS1G090nZIntiuLScaO6UdKW3W+2eT0Yj+pmQXsj6SeZDnbhtmIE9e/wZbVdQnIBLdM5Cu7gA==
+ bh=bUa7URo6e3RjfsFpxP1bfWc/ExA9aIlFv0nuCFFkhms=;
+ b=UZztkX4aPrZGgzMdovmUeDO0Cr+g/ANnFtzZ1GXmvMluH2PYfoNJqe4Sj1Y6PZxzLhz6XCGxcOmJ/P1IkIzFEHW7x9AAZft3VPad0X6UHUoPvUsyP8QWO2lAHlfG6NvLFStn19XXX43tS3WaneuR9hss0bIt7RiywNOX/OMzwr7C15W02K0LDPuwuByPEB8/2IJ23I4+brk/jWq3ZQN0rNxy0xZxxSrSCNdxgWphBtqlLjCdsLmnM+mMXqZcbGZGodUovPh47PkV+DzVjMEJ0wyA08QIqlJR0MO2cTU0LRp/lNcmVSZkijjchxQ++3ZHxM5eaDpyh9OKvIWo0FNCHQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM5PR12MB2439.namprd12.prod.outlook.com (2603:10b6:4:b4::32) with
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bUa7URo6e3RjfsFpxP1bfWc/ExA9aIlFv0nuCFFkhms=;
+ b=d23bIfTr6KtnC3/cvJSM3nX04l52RBX8a89ORgWYAg7xAog+nOb9Gv025G8oBnuqgaKMJf0Dr4axNPKE60Zlb1f8xxC2DqOitIYjCEXmQEQVNLvbSwrKHcZs9sLL98qfWyu4Hzo0PO/EW5mIZ9Vms5hAh+AmyLLF++YlJPphMMo=
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com (2603:10b6:301:b::12)
+ by MWHPR11MB1501.namprd11.prod.outlook.com (2603:10b6:301:d::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18; Wed, 4 Nov
- 2020 12:40:19 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78%7]) with mapi id 15.20.3499.032; Wed, 4 Nov 2020
- 12:40:19 +0000
-Date:   Wed, 4 Nov 2020 08:40:17 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.29; Wed, 4 Nov
+ 2020 13:34:08 +0000
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::f8e3:1ce2:fcb2:29b5]) by MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::f8e3:1ce2:fcb2:29b5%8]) with mapi id 15.20.3499.032; Wed, 4 Nov 2020
+ 13:34:08 +0000
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
 CC:     "Jiang, Dave" <dave.jiang@intel.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
         "vkoul@kernel.org" <vkoul@kernel.org>,
@@ -70,8 +98,11 @@ CC:     "Jiang, Dave" <dave.jiang@intel.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-Message-ID: <20201104124017.GW2620339@nvidia.com>
+Subject: RE: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+Thread-Topic: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+Thread-Index: AQHWru26nCdjGLbk80+ZhPfx8iZ806mwjmaAgAAYm4CAABfkAIAAARAAgAQYdwCAAOAGcIAAp6mAgAD1diCAAJvfgIAADi9A
+Date:   Wed, 4 Nov 2020 13:34:08 +0000
+Message-ID: <MWHPR11MB1645862A8F7CF7FB8DD011778CEF0@MWHPR11MB1645.namprd11.prod.outlook.com>
 References: <20201030195159.GA589138@bjorn-Precision-5520>
  <71da5f66-e929-bab1-a1c6-a9ac9627a141@intel.com>
  <20201030224534.GN2620339@nvidia.com>
@@ -80,62 +111,92 @@ References: <20201030195159.GA589138@bjorn-Precision-5520>
  <MWHPR11MB1645675ED03E23674A705DF68C110@MWHPR11MB1645.namprd11.prod.outlook.com>
  <20201103124351.GM2620339@nvidia.com>
  <MWHPR11MB164544C9CFCC3F162C1C6FC18CEF0@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20201104124017.GW2620339@nvidia.com>
+In-Reply-To: <20201104124017.GW2620339@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: nvidia.com; dkim=none (message not signed)
+ header.d=none;nvidia.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.219]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ba2cfe07-fa35-4f43-679a-08d880c64ed2
+x-ms-traffictypediagnostic: MWHPR11MB1501:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR11MB150197347199261FA0C393058CEF0@MWHPR11MB1501.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ELV7a3eHNrew57SRPctC2SPDJZ7zwyrej5vUSFXV3/os3621UoKtAwKQQvH02rXjLeLoAbFnr5ngk+waCeHL6kXehdpLFMb8P7CtemYhNCuADlAPbC5EOCvP6A0Pofs+QMFonruQ1MfEl938mEep/mKwlzHmIonH6+Zu2K5wD4IrkifkiFjuktgVlc0B3Ar48pMB7a+3QFlGpXfxOi+1r+ks3Y8QCsJEZHbgFKywQhLhaMIGs71B4iT32E7bWv1H6AozHGnUuBqzILbYsQSOONwufpsVh2EXbCNEHfMqw4L7s799vbR3AFDCYX4BGOZ6SQxR8tB/PkWs8OPPeMqB5w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(136003)(346002)(39860400002)(366004)(66446008)(316002)(66476007)(66556008)(478600001)(71200400001)(7416002)(186003)(64756008)(76116006)(6916009)(33656002)(66946007)(83380400001)(52536014)(4326008)(54906003)(8936002)(2906002)(55016002)(9686003)(6506007)(86362001)(7696005)(26005)(5660300002)(8676002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 3Gtsv0aj1tzjidZXSbjBmciVWHedcUpD1/C/cO8vmwFhNsLep0qU3Zc5dbgZvMuw6lTntFdgDQRdAFQsk25NXkk1NVP62BqULj3nRyL2y4lc6BnkiXsje//RRhh9jhJvsTA47eLy+arQyjmYTIhiy+NlM/JXqvfKOv+WNT+mao3jip7eLohL6Wm1BVV9STx2qD4f9T9oZRrQkc1j5uZtxgZeW+C6ZScBlhP2bEdk8jGeEF5AqUEfuu6cHdzaS/ZJ/VpsGKWGqx2tfK1Z9ESRQXKvBFCNoA6dzbIraZR/gr7GAKkEgPgaTG9DdoS8HWkfk5qs3IR9Po45IkoR+6OsHmRetsNgdEWSIJQZr6G7ujibSg7Kub1W91ldXM2MifP+BYIymSZfYnA0FHNB8GN43QxfnmbuoaM01NSgIIETVCGHgge0AkkbSANO4jbRSMYyaGiMvICdb6mwq0yT//uL48TJihkKMoaTM8NsnKLJj/sBYpUqMk0EzShbN5q4Tf4OpBqt8EfTXAERfzJ+jnZBfZl00crLpMxKSLL17jHJZI1In/dlTFKT2j3DyrAwRnC8XePSroYlthEdYtzeGh1PqmEfgZ7B4W79xnE7y3p35VRL+szgU+QCIo3rIYA234xLpxAwvzqhThteTMOGGFOBuQ==
 Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <MWHPR11MB164544C9CFCC3F162C1C6FC18CEF0@MWHPR11MB1645.namprd11.prod.outlook.com>
-X-ClientProxiedBy: MN2PR22CA0003.namprd22.prod.outlook.com
- (2603:10b6:208:238::8) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR22CA0003.namprd22.prod.outlook.com (2603:10b6:208:238::8) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18 via Frontend Transport; Wed, 4 Nov 2020 12:40:18 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kaI5J-00GU44-LN; Wed, 04 Nov 2020 08:40:17 -0400
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1604493629; bh=ly2oeyLHt+9xgCf6InlNFupONQhHnN+seyBdY1snqFM=;
-        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
-         From:To:CC:Subject:Message-ID:References:Content-Type:
-         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-LD-Processed;
-        b=Fodb48BRizFtyLLl2nCM6FAknIzBy0v3MMHEJlFDmeQJ7Rtru0ycAtDwJX/1RS688
-         H3EQrsy4oQQtO9OPvoO230V97TPEYgWwHlr2PMnDcXCD6Z8XvsALcnuMh6hWKm1YgO
-         Wa/lad7AY3njLf81mp1fVFjaJ6BjucLUhowWxGAaxyZLJzVDj1QjlQTN65ZTQeYILP
-         JCZmC92zcdbMXDxpeZB6I6k/5SRBBSNtVX10O6lPLizqit+kMBx+NUtZYFzCwCkkXO
-         VFxuEOHN/l3lSa8SWiVsyzV9kO6V4X0blymDK65UmdUoPGKfTw5DelnufLrUfeV0na
-         CHmR8JyLD9/RA==
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1645.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba2cfe07-fa35-4f43-679a-08d880c64ed2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Nov 2020 13:34:08.5377
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LimQEMCOO3PQMLGD50oBf+/+4bWtCtLJztiu75NAxbG4dyL8h1Cb0NTcAtJ7wbssxZCnlbVJXcwu7k6ELuunjA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1501
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Nov 04, 2020 at 03:41:33AM +0000, Tian, Kevin wrote:
-> > From: Jason Gunthorpe <jgg@nvidia.com>
-> > Sent: Tuesday, November 3, 2020 8:44 PM
-> > 
-> > On Tue, Nov 03, 2020 at 02:49:27AM +0000, Tian, Kevin wrote:
-> > 
-> > > > There is a missing hypercall to allow the guest to do this on its own,
-> > > > presumably it will someday be fixed so IMS can work in guests.
+> From: Jason Gunthorpe <jgg@nvidia.com>
+> Sent: Wednesday, November 4, 2020 8:40 PM
+>=20
+> On Wed, Nov 04, 2020 at 03:41:33AM +0000, Tian, Kevin wrote:
+> > > From: Jason Gunthorpe <jgg@nvidia.com>
+> > > Sent: Tuesday, November 3, 2020 8:44 PM
 > > >
-> > > Hypercall is VMM specific, while IMS cap provides a VMM-agnostic
-> > > interface so any guest driver (if following the spec) can seamlessly
-> > > work on all hypervisors.
-> > 
-> > It is a *VMM* issue, not PCI. Adding a PCI cap to describe a VMM issue
-> > is architecturally wrong.
-> > 
-> > IMS *can not work* in any hypervsior without some special
-> > hypercall. Just block it in the platform code and forget about the PCI
-> > cap.
-> > 
-> 
-> It's per-device thing instead of platform thing. If the VMM understands
-> the IMS format of a specific device and virtualize it to the guest,
+> > > On Tue, Nov 03, 2020 at 02:49:27AM +0000, Tian, Kevin wrote:
+> > >
+> > > > > There is a missing hypercall to allow the guest to do this on its=
+ own,
+> > > > > presumably it will someday be fixed so IMS can work in guests.
+> > > >
+> > > > Hypercall is VMM specific, while IMS cap provides a VMM-agnostic
+> > > > interface so any guest driver (if following the spec) can seamlessl=
+y
+> > > > work on all hypervisors.
+> > >
+> > > It is a *VMM* issue, not PCI. Adding a PCI cap to describe a VMM issu=
+e
+> > > is architecturally wrong.
+> > >
+> > > IMS *can not work* in any hypervsior without some special
+> > > hypercall. Just block it in the platform code and forget about the PC=
+I
+> > > cap.
+> > >
+> >
+> > It's per-device thing instead of platform thing. If the VMM understands
+> > the IMS format of a specific device and virtualize it to the guest,
+>=20
+> Please no! Adding device specific emulation is just going down deeper
+> into this bad architecture.
+>=20
+> Interrupts is a platform issue. Using emulation of MSI to dynamically
 
-Please no! Adding device specific emulation is just going down deeper
-into this bad architecture.
+Interrupt controller is a platform issue. Interrupt source is about device.
 
-Interrupts is a platform issue. Using emulation of MSI to dynamically
-insert vectors to a VM was a reasonable, but hacky thing. Now it needs
-proper platform support.
+> insert vectors to a VM was a reasonable, but hacky thing. Now it needs
+> proper platform support.
+>=20
 
-Jason
+why is MSI emulation a hacky thing? isn't it defined by PCISIG? I guess
+that I must misunderstand your real point here...
+
+Thanks
+Kevin

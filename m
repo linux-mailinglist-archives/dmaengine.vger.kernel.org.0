@@ -2,74 +2,94 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47F322A7FE6
-	for <lists+dmaengine@lfdr.de>; Thu,  5 Nov 2020 14:48:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 857BA2A866C
+	for <lists+dmaengine@lfdr.de>; Thu,  5 Nov 2020 19:50:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730200AbgKENsj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 5 Nov 2020 08:48:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbgKENsj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 5 Nov 2020 08:48:39 -0500
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC37EC0613CF
-        for <dmaengine@vger.kernel.org>; Thu,  5 Nov 2020 05:48:38 -0800 (PST)
-Received: by mail-lf1-x141.google.com with SMTP id b1so2359195lfp.11
-        for <dmaengine@vger.kernel.org>; Thu, 05 Nov 2020 05:48:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2fVeXIJ0876AEfr9hIKe+DXuB9n1FMNqvYDL5m03TSw=;
-        b=SxOVA+TBJpL1xCpTZUu8dNY0KGk0MQXvOP4ST3EmrSDZciLFq78pE0zHOuXxTqANbb
-         5uslBzv5xQiwqNtpRMHSh4/pDauV/VsA3YBWAE28d7c7cZaR1c6ZIEa9otrx21/Adwrt
-         KxzxCOaWFecAgzWhJ53j0P11RBREjdUEah9dc6iAqNtHMS2M/tT1TMjGkS86aqHIGvgf
-         GuJcQQEgI3Hu2pvjf2Emyl72vOB6UHkaSWSq7Xe3Ur5V0tTFPcC3wfexMEVwVI+U8hFm
-         +MKS3SoS1Q5mFhOgAw60z57rRFo/Pw3w7BTR28q6dQOFMVlaBsY6nqQlH5iludv6zzYE
-         95Sg==
+        id S1731955AbgKESuV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 5 Nov 2020 13:50:21 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35309 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727017AbgKESuV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 5 Nov 2020 13:50:21 -0500
+Received: by mail-ot1-f66.google.com with SMTP id n11so2409442ota.2;
+        Thu, 05 Nov 2020 10:50:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2fVeXIJ0876AEfr9hIKe+DXuB9n1FMNqvYDL5m03TSw=;
-        b=p4yBZE0WX3lzlR6mHXN9Xq6IgokveTeanwqyyhg1NIjyfOZc095D8P48vydF9yRh48
-         3CTJxC3vTC6onfdkumswrwzxhImqKIR2iWiP8Ng0/n17MxiupqRMlO1sRk4ZtzfbDuRh
-         TzTdPumiv6DfuoyHIOL3mDhHXiNunXUOuIbD4hVsB2YUaW1rkd+V+eyCjzYpVgGlaCdz
-         VtE2y4eCzsaiMstuYOpRbmmhBhF+qrV/NebwJq6hLh6IEMIG2PTqCadgIZIGZSKrtbK3
-         enzsKqoVwkz8xXwpO5lUhKy0ZcR9KppQvmAKZ44ntJpwuEhmOulnumVVNBDnSFcVLqq3
-         3EHw==
-X-Gm-Message-State: AOAM530DhG+lEbc/NywQw538MDVUk9Luc0ip/baJIorf8oRrw4mcdw8O
-        l35UntONLVVZ7fb801UEHTmffGeO0j6iy1NJeQuKHA==
-X-Google-Smtp-Source: ABdhPJwzjs5syk0dfgzFhFDFIHEl82EjRYEROHavZW2jlq8edIhNPMsAJQtKh4SOBOD3NAEGz/2ZCWsFEbGDYhrkygU=
-X-Received: by 2002:a19:824f:: with SMTP id e76mr964964lfd.572.1604584117393;
- Thu, 05 Nov 2020 05:48:37 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=79BiO/+iVQS5f4JE7+Ah5lxHJdkoQWGAWwcqZ3jscHY=;
+        b=TxyGoGBFhVomn80aU+ndXWvvcuVsNq5+RZULh7qRi6I7iYENrlnkYAWTysIhBwqDh4
+         0txfCqqG5uFEuinMKCjNpHRQ7KOVAM45FjeKyYEdlAlfI3BnbKn+UrOs0vGzf2zv6Fko
+         uAKrSYcUTuSs7uhqpwxugChGxpvRbz1Mahk4Q7mSqQuTk4uBtjySKP42THR6Bjw3E6iR
+         Rt+fVJbDh5k1/dhFjdUsZsPa4z4x5PFmxUObY0Xagm1uuiQISvNfgL7u3tgasTxR7AIj
+         37Ky6sAVGhwqdYxkb6svDx2pCQCDGvSlL02HcsX3aeCfWiIFcQYDkN6WNYQp0C6yns5a
+         y0Aw==
+X-Gm-Message-State: AOAM531IEiZiEzvYavUpymFoDfvVDGKnR5fu/4uAPLVp0bAy/EuI/gUg
+        OvCQwj7MaepAxf+H0CzDKQ==
+X-Google-Smtp-Source: ABdhPJz/r3pC7uBbHrTvEghjoX8aLJu/enMy0f17YIwn0JhZKzcM8bcgybDTg2FSAW72nR++OLr4zg==
+X-Received: by 2002:a9d:ae7:: with SMTP id 94mr2509229otq.159.1604602220001;
+        Thu, 05 Nov 2020 10:50:20 -0800 (PST)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d64sm553166oia.11.2020.11.05.10.50.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Nov 2020 10:50:19 -0800 (PST)
+Received: (nullmailer pid 1623074 invoked by uid 1000);
+        Thu, 05 Nov 2020 18:50:18 -0000
+Date:   Thu, 5 Nov 2020 12:50:18 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     vkoul@kernel.org, jonathanh@nvidia.com, devicetree@vger.kernel.org,
+        thierry.reding@gmail.com, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, jason@lakedaemon.net,
+        linux-tegra@vger.kernel.org, tglx@linutronix.de,
+        robh+dt@kernel.org, maz@kernel.org
+Subject: Re: [PATCH 2/4] dt-bindings: dma: Convert ADMA doc to json-schema
+Message-ID: <20201105185018.GA1622537@bogus>
+References: <1604571846-14037-1-git-send-email-spujar@nvidia.com>
+ <1604571846-14037-3-git-send-email-spujar@nvidia.com>
 MIME-Version: 1.0
-References: <20201027215252.25820-1-song.bao.hua@hisilicon.com> <20201027215252.25820-10-song.bao.hua@hisilicon.com>
-In-Reply-To: <20201027215252.25820-10-song.bao.hua@hisilicon.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 5 Nov 2020 14:48:26 +0100
-Message-ID: <CACRpkdZKdtiJA4aDYhRfZBXhFeVfZEnoZfQ+xA+pSQtjMOfbGQ@mail.gmail.com>
-Subject: Re: [PATCH v2 09/10] dmaengine: ste_dma40: remove redundant irqsave
- and irqrestore in hardIRQ
-To:     Barry Song <song.bao.hua@hisilicon.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1604571846-14037-3-git-send-email-spujar@nvidia.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Oct 27, 2020 at 10:57 PM Barry Song <song.bao.hua@hisilicon.com> wrote:
+On Thu, 05 Nov 2020 15:54:04 +0530, Sameer Pujar wrote:
+> Move ADMA documentation to YAML format.
+> 
+> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+> ---
+>  .../bindings/dma/nvidia,tegra210-adma.txt          | 56 -------------
+>  .../bindings/dma/nvidia,tegra210-adma.yaml         | 95 ++++++++++++++++++++++
+>  2 files changed, 95 insertions(+), 56 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.txt
+>  create mode 100644 Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.yaml
+> 
 
-> Running in hardIRQ, disabling IRQ is redundant since hardIRQ has disabled
-> IRQ. This patch removes the irqsave and irqstore to save some instruction
-> cycles.
->
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Yours,
-Linus Walleij
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.yaml: 'oneOf' conditional failed, one must be fixed:
+	'unevaluatedProperties' is a required property
+	'additionalProperties' is a required property
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.yaml: ignoring, error in schema: 
+warning: no schema found in file: ./Documentation/devicetree/bindings/dma/nvidia,tegra210-adma.yaml
+
+
+See https://patchwork.ozlabs.org/patch/1394859
+
+The base for the patch is generally the last rc1. Any dependencies
+should be noted.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+

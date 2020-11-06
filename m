@@ -2,34 +2,46 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EA8A2A99D1
-	for <lists+dmaengine@lfdr.de>; Fri,  6 Nov 2020 17:49:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F5B22A9B37
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Nov 2020 18:51:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbgKFQsw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 6 Nov 2020 11:48:52 -0500
-Received: from mga12.intel.com ([192.55.52.136]:25696 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726408AbgKFQsw (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 6 Nov 2020 11:48:52 -0500
-IronPort-SDR: /y4p+dqCDj282iZCsJvvA6ICQBsHsQ+HUgVSSwtVZiesckMzn4/tEjHWbm8VTBYUHrYadlmgo+
- n1LRdkFuaK+w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9797"; a="148848426"
-X-IronPort-AV: E=Sophos;i="5.77,457,1596524400"; 
-   d="scan'208";a="148848426"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2020 08:48:52 -0800
-IronPort-SDR: 142GO92Vb+KLu0rbvEYCKskGFKEK8ve/xYgrfu3PQd+4h7o0L3YSVU/i/sS+JIPGNqpvg1W0BY
- T7ImiiDSixQQ==
-X-IronPort-AV: E=Sophos;i="5.77,457,1596524400"; 
-   d="scan'208";a="364225272"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2020 08:48:51 -0800
-Date:   Fri, 6 Nov 2020 08:48:50 -0800
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        id S1726034AbgKFRvk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 6 Nov 2020 12:51:40 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3612 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgKFRvk (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 6 Nov 2020 12:51:40 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5fa58d2f0000>; Fri, 06 Nov 2020 09:51:43 -0800
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Nov
+ 2020 17:51:37 +0000
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.173)
+ by HQMAIL101.nvidia.com (172.20.187.10) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Fri, 6 Nov 2020 17:51:37 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gDIrYVgm+MI5AhY6JoZ/CjXaSW5z1rp6bx1ieH0iRvO52D0b8E0LsmuvN4RX6Ia0rbTaNxsnfJudfsYieErKHuLsTAmf/g0FGAs/1tAIHoo0DsthdLkaP7ARb/glC3T3OXqMLQXqEdIj2/RzZyPz4WuaCJCJujphWcY9suScOPtLdF3qEoTpgA8M/qn2I1/XQEBWrx/Jn0qdc+GV08uMdOSePtqNr4ntDExsBf8mkDCp3yXcq/HYXdQRFilwHFdFlos+hxIGOWp2XU6K5bm9cCcHSjzOFFs8V95M0viy/fGntQwyDF4KDIhQ2TGRpSChEfiSLzagixV/Fkfiv2JFbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8DSePUoQ6vl4qfuoUwGYHLoD0BveDxxjeobSHmvrAAY=;
+ b=Zeb53IRgPsYILnrkU5QkyEeAJ08R80xcc4idFDTBgv1P32YVlsApD9qzFHHWHFAdBEZIVJHQ+1e7UlTm5el9AHxKCIVDje+FgJOSprM8wgMe6VccpqL+yVaUorEEmU5m8ZZpHrwcnUAIV37I8XVTS7JLCLFEYwt9Wal4N/cDNfsnzqtWJW5NbNqZqpffzfDC2hCbPS164TQ4iSYbAWbJzgq+TeF4oj2ruyWVru7ghkZBHtviTMPjdErArbOSkTCAoo5kxnC4imkOo7SDzWKre4tIzVOV9YZO+yyM0QrHzL7oLou9ZYbSyNvKYV2s9W2ZUBT1AxtoJiNyU+qnkHlHQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR12MB1145.namprd12.prod.outlook.com (2603:10b6:3:77::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18; Fri, 6 Nov
+ 2020 17:51:33 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::cdbe:f274:ad65:9a78]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::cdbe:f274:ad65:9a78%7]) with mapi id 15.20.3499.032; Fri, 6 Nov 2020
+ 17:51:33 +0000
+Date:   Fri, 6 Nov 2020 13:51:31 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     "Raj, Ashok" <ashok.raj@intel.com>
+CC:     "Tian, Kevin" <kevin.tian@intel.com>,
         "Jiang, Dave" <dave.jiang@intel.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
         "vkoul@kernel.org" <vkoul@kernel.org>,
@@ -57,12 +69,10 @@ Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
         "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-Message-ID: <20201106164850.GA85879@otc-nc-03>
-References: <ec52cedf-3a99-5ca1-ffbb-d8f8c4f62395@intel.com>
- <20201102132158.GA3352700@nvidia.com>
+Message-ID: <20201106175131.GW2620339@nvidia.com>
+References: <20201102132158.GA3352700@nvidia.com>
  <MWHPR11MB1645675ED03E23674A705DF68C110@MWHPR11MB1645.namprd11.prod.outlook.com>
  <20201103124351.GM2620339@nvidia.com>
  <MWHPR11MB164544C9CFCC3F162C1C6FC18CEF0@MWHPR11MB1645.namprd11.prod.outlook.com>
@@ -70,115 +80,90 @@ References: <ec52cedf-3a99-5ca1-ffbb-d8f8c4f62395@intel.com>
  <MWHPR11MB1645862A8F7CF7FB8DD011778CEF0@MWHPR11MB1645.namprd11.prod.outlook.com>
  <20201104135415.GX2620339@nvidia.com>
  <MWHPR11MB1645524BDEDF8899914F32AE8CED0@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20201106131415.GT2620339@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+ <20201106131415.GT2620339@nvidia.com> <20201106164850.GA85879@otc-nc-03>
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20201106131415.GT2620339@nvidia.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20201106164850.GA85879@otc-nc-03>
+X-ClientProxiedBy: BL0PR05CA0021.namprd05.prod.outlook.com
+ (2603:10b6:208:91::31) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by BL0PR05CA0021.namprd05.prod.outlook.com (2603:10b6:208:91::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.10 via Frontend Transport; Fri, 6 Nov 2020 17:51:33 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kb5tb-000zdx-Vk; Fri, 06 Nov 2020 13:51:32 -0400
+X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1604685103; bh=8DSePUoQ6vl4qfuoUwGYHLoD0BveDxxjeobSHmvrAAY=;
+        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
+         From:To:CC:Subject:Message-ID:References:Content-Type:
+         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-LD-Processed;
+        b=qjaWebqqfQ87Xcu9Gsl7Z8tT1Mk/2+WDlzwkefsGy0vRjJh5BsXW5elfSz6TMyVC+
+         TN0Vg+YB3W6avTOX+ONRFKqMJQtw6hhrNsH4ietTaGR9ph3j7UeY1erMrLgRpWZusw
+         P5SHq+5n2z/GONY3KgZZQgqyLOv8O7QNrCVIhAQF6SDacC0BtSrVccbI/2Q/P+EPf4
+         yJ3bBFlGAgoUgwCTeQZwywB4fgvWTFyIdIdr6T67zmvV403n0brsv7AcJt4iwezHsv
+         xTuXMsmMfiSOTBn8LdNTbzSZiCF07ieuPDig7v6YbgX9ynFGMC7kI5y/yo00C8gOxv
+         4PfjKf0RxG40Q==
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Jason
+On Fri, Nov 06, 2020 at 08:48:50AM -0800, Raj, Ashok wrote:
+> > The IMS flag belongs in the platform not in the devices.
+> 
+> This support is mostly a SW thing right? we don't need to muck with
+> platform/ACPI for that matter. 
 
-On Fri, Nov 06, 2020 at 09:14:15AM -0400, Jason Gunthorpe wrote:
-> On Fri, Nov 06, 2020 at 09:48:34AM +0000, Tian, Kevin wrote:
-> > > The interrupt controller is responsible to create an addr/data pair
-> > > for an interrupt message. It sets the message format and ensures it
-> > > routes to the proper CPU interrupt handler. Everything about the
-> > > addr/data pair is owned by the platform interrupt controller.
-> > > 
-> > > Devices do not create interrupts. They only trigger the addr/data pair
-> > > the platform gives them.
+Something needs to tell the guest OS platform what to do, so you need
+a place to put it.
+
+Putting it in a per-device PCI cap is horrible and hacky from an
+architectural perspective.
+
+> I missed why ACPI tables should carry such information. If kernel doesn't
+> want to support those devices its within kernel control. Which means kernel
+> will only use the available MSIx interfaces. This is legacy support.
+
+The platform flag tells the guest that it can (or can't) support IMS
+*at all*
+
+Primarily a guest would be blocked because the VMM provides no way for
+the guest to create addr/data pairs.
+
+Has nothing to do with individual devices.
+
+ 
+> > The OS logic would be
+> >  - If no IMS information found then use IMS (Bare metal)
+> >  - If the IMS disable flag is found then
+> >    - If (future) hypercall available and the OS knows how to use it
+> >      then use IMS
+> >    - If no hypercall found, or no OS knowledge, fail IMS
 > > 
-> > I guess that we may just view it from different angles. On x86 platform,
-> > a MSI/IMS capable device directly composes interrupt messages, with 
-> > addr/data pair filled by OS.
+> > Our devices can use IMS even in a pure no-emulation
 > 
-> Yes, all platforms work like that. The addr/data pair is *opaque* to
-> the device. Only the platform interrupt controller component
-> understands how to form those values.
+> This is true for IMS as well. But probably not implemented in the kernel as
+> such. From a HW point of view (take idxd for instance) the facility is
+> available to native OS as well. The early RFC supported this for native.
 
-True, the addr/data pair is opaque. IMS doesn't dictate what the contents
-of addr/data pair is made of. That is still a platform attribute. IMS simply 
-controls where the pair is physically stored. Which only the device dictates.
+I can't follow what you are trying to say here.
 
-> 
-> > If there is no IOMMU remapping enabled in the middle, the message
-> > just hits the CPU. Your description possibly is from software side,
-> > e.g. describing the hierarchical IRQ domain concept?
-> 
-> I suppose you could say that. Technically the APIC doesn't form any
-> addr/data pairs, but the configuration of the APIC, IOMMU and other
-> platform components define what addr/data pairs are acceptable.
-> 
-> The IRQ domain stuff broadly puts responsibilty to form these values
-> in the IRQ layer which abstracts all the platform detatils. In Linux
-> we expect the platform to provide the IRQ Domain tha can specify
-> working addr/data pairs.
-> 
-> > I agree with this point, just as how pci-hyperv.c works. In concept Linux
-> > guest driver should be able to use IMS when running on Hyper-v. There
-> > is no such thing for KVM, but possibly one day we will need similar stuff.
-> > Before that happens the guest could choose to simply disallow devmsi
-> > by default in the platform code (inventing a hypercall just for 'disable' 
-> > doesn't make sense) and ignore the IMS cap. One small open is whether
-> > this can be done in one central-place. The detection of running as guest
-> > is done in arch-specific code. Do we need disabling devmsi for every arch?
-> >
-> > But when talking about virtualization it's not good to assume the guest
-> > behavior. It's perfectly sane to run a guest OS which doesn't implement 
-> > any PV stuff (thus don't know running in a VM) but do support IMS. In 
-> > such scenario the IMS cap allows the hypervisor to educate the guest 
-> > driver to use MSI instead of IMS, as long as the driver follows the device 
-> > spec. In this regard I don't think that the IMS cap will be a short-term 
-> > thing, although Linux may choose to not use it.
-> 
-> The IMS flag belongs in the platform not in the devices.
+Dave said the IMS cap was to indicate that the VMM supported emulation
+of IMS so that the VMM can do the MSI addr/data translation as part of
+the emulation.
 
-This support is mostly a SW thing right? we don't need to muck with
-platform/ACPI for that matter. 
+I'm saying emulation will be too horrible for our devices that don't
+require *any* emulation.
 
-> 
-> For instance you could put a "disable IMS" flag in the ACPI tables, in
-> the config space of the emuulated root port, or any other areas that
-> clearly belong to the platform.
+It is a bad architecture. The platform needs to handle this globally
+for all devices, not special hacky emulations things custom made for
+every device out there.
 
-Maybe there is a different interpretation for IMS that I'm missing. Devices
-that need more interrupt support than supported by PCIe standards, and how
-device has grouped the storage needs for the addr/data pair is a device
-attribute.
+> Native devices can have both MSIx and IMS capability. But as I
+> understand this isn't how we have partitioned things in SW today. We
+> left IMS only for mdev's. And I agree this would be very useful.
 
-I missed why ACPI tables should carry such information. If kernel doesn't
-want to support those devices its within kernel control. Which means kernel
-will only use the available MSIx interfaces. This is legacy support.
+That split is just some decision idxd did, we are thinking about doing
+other things in our devices.
 
-> 
-> The OS logic would be
->  - If no IMS information found then use IMS (Bare metal)
->  - If the IMS disable flag is found then
->    - If (future) hypercall available and the OS knows how to use it
->      then use IMS
->    - If no hypercall found, or no OS knowledge, fail IMS
-> 
-> Our devices can use IMS even in a pure no-emulation
-
-This is true for IMS as well. But probably not implemented in the kernel as
-such. From a HW point of view (take idxd for instance) the facility is
-available to native OS as well. The early RFC supported this for native.
-
-Native devices can have both MSIx and IMS capability. But as I understand this
-isn't how we have partitioned things in SW today. We left IMS only for
-mdev's. And I agree this would be very useful.
-
-In cases where we want to support interrupt handles for user space
-notification (when application specifies that in the descriptor). Those
-could be IMS. The device HW has support for it.
-
-Remember the "Why PASID in IMS entry" discussion?
-
-https://lore.kernel.org/lkml/20201008233210.GH4734@nvidia.com/
-
-Cheers,
-Ashok
+Jason

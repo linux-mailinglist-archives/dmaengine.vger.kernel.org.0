@@ -2,184 +2,164 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D36B82A96C1
-	for <lists+dmaengine@lfdr.de>; Fri,  6 Nov 2020 14:14:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2128E2A97BE
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Nov 2020 15:37:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbgKFNOW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 6 Nov 2020 08:14:22 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9967 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727287AbgKFNOV (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 6 Nov 2020 08:14:21 -0500
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5fa54c2b0000>; Fri, 06 Nov 2020 05:14:19 -0800
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Nov
- 2020 13:14:18 +0000
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.172)
- by HQMAIL101.nvidia.com (172.20.187.10) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Fri, 6 Nov 2020 13:14:18 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bwUztPW7pqhIdD09v5kGJFlHA0hULgxn4XRfWab4OSo9yZ3pRIktbxDugCOVUzSNBV2DekHPJYzJv5SxiN/RjszZyLCS+rXZcbAqOSzSiRzrMaj78Ew0G9MY6xeC12wj/N7uUbT7uY9qfUMBh9apR38kkCwH4pyZKqml6IB7nrGr07nRinoszYbuz0/pdhWAAFavME0SlUZEtWQMWQgGdaOucNwcszBWXluNyg++qH0sJT6d2wRpxHigLGN0p8Klv7LeM8bmEwf8N+fiJcoO57NeKjP4k5suGN1Em3K6l8PeeAE+jbAjOb+8sC9RuokDB38hZA2YNTDWnGV5ZnZj3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yU3SYmiJaE5H4ciitO/MVwxvXeRoZLRHePyN2XxzayM=;
- b=JwMckCmehmFazFPhc10ZzYOiW7BNmflYLtuR7iWzqeacRJgz10BT+nziaKmMbo91pBoShyPNta90hvYfID7qZ3K4FzdlvvGOR2y+6Ia8AB9MoIXZkEj8CZHoSJY8KAbBgkD/e+CehHcMkDlicZkhPkO2kiQQm6/5kcjndnf1H94HRErzmcgvF3zncgXtTu5LNhrd/C0vMYMlHUpvFq6Nn+k48AulgFS3N4AhDJ5yx+K3dnpY6uVPyZzMBNdcq/Nk16DcJQfdRz5VTj0uVQMqwaooy7NQfoDO/EuE2huCh3z6cZEBONVvPiJ3nmZrYnjXyiBM2gRnRbKPtgI/7IO3uw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB4041.namprd12.prod.outlook.com (2603:10b6:5:210::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.21; Fri, 6 Nov
- 2020 13:14:16 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::cdbe:f274:ad65:9a78%7]) with mapi id 15.20.3499.032; Fri, 6 Nov 2020
- 13:14:16 +0000
-Date:   Fri, 6 Nov 2020 09:14:15 -0400
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-CC:     "Jiang, Dave" <dave.jiang@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "jing.lin@intel.com" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-Message-ID: <20201106131415.GT2620339@nvidia.com>
-References: <20201030224534.GN2620339@nvidia.com>
- <ec52cedf-3a99-5ca1-ffbb-d8f8c4f62395@intel.com>
- <20201102132158.GA3352700@nvidia.com>
- <MWHPR11MB1645675ED03E23674A705DF68C110@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20201103124351.GM2620339@nvidia.com>
- <MWHPR11MB164544C9CFCC3F162C1C6FC18CEF0@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20201104124017.GW2620339@nvidia.com>
- <MWHPR11MB1645862A8F7CF7FB8DD011778CEF0@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20201104135415.GX2620339@nvidia.com>
- <MWHPR11MB1645524BDEDF8899914F32AE8CED0@MWHPR11MB1645.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <MWHPR11MB1645524BDEDF8899914F32AE8CED0@MWHPR11MB1645.namprd11.prod.outlook.com>
-X-ClientProxiedBy: MN2PR10CA0030.namprd10.prod.outlook.com
- (2603:10b6:208:120::43) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        id S1727053AbgKFOhZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 6 Nov 2020 09:37:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726694AbgKFOhY (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 6 Nov 2020 09:37:24 -0500
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38A242087E;
+        Fri,  6 Nov 2020 14:37:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604673444;
+        bh=dP1smmwQqynJW8vqD8NP9VQ8DjeVdrZFyK1+gpVNs88=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=U+yhaa1ufK/Bal1EEGDAUH6VBZFtPDGfg+7LEzts9I8SAmMYlEfUfpJnOOQQ0pH+e
+         LnmXN29eHhv/sVqU/id9Zkkc9eRzLVFrSFTyeCm3UbWpQQI1xdKVuvQpyb4TYziVl4
+         BBQGR6gYHvv/mGlNZ6ElQBa5pbHGV0yIfgUZa4uc=
+Received: by mail-oi1-f177.google.com with SMTP id t143so1508414oif.10;
+        Fri, 06 Nov 2020 06:37:24 -0800 (PST)
+X-Gm-Message-State: AOAM5306Kv0KvE9jEXn6oxy3h1lbF+kVCz3YhN8LLJNGsgM6zfmSuCL4
+        umGNrXfLmHMhhbfy3iiAJfSsmMHjVc5JDQSM7g==
+X-Google-Smtp-Source: ABdhPJw3cWhsCZcPNg4IJyWZN2TL+gofqSa0ncDGvUn4Sw/pJiYFSswPV7OqbFYXSIMNVivDFm7jQfekowUsKhXPfkc=
+X-Received: by 2002:aca:5dc2:: with SMTP id r185mr1333493oib.106.1604673443324;
+ Fri, 06 Nov 2020 06:37:23 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR10CA0030.namprd10.prod.outlook.com (2603:10b6:208:120::43) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.21 via Frontend Transport; Fri, 6 Nov 2020 13:14:16 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kb1ZH-000m0q-6P; Fri, 06 Nov 2020 09:14:15 -0400
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1604668459; bh=yU3SYmiJaE5H4ciitO/MVwxvXeRoZLRHePyN2XxzayM=;
-        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
-         From:To:CC:Subject:Message-ID:References:Content-Type:
-         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-LD-Processed;
-        b=WcXCdQgvHtFRxCAkbzgmDijav3mHjHMD+MMRDEDM1eI09+T/7TgU46yK5DAgrDK34
-         AvTzeYe4416ttDHdL5++xWzgLzXm70Zfp2Wz0g0GOwtdRNVx6LE8AijqGjhYknYrgi
-         OZAVusrp1aSY2k5R9g3erv3gZSPW4i8/J6+yhNu4c0LpkFhHj3B0hOQT/JBI0SPTN+
-         qbQ6fbOIvDfEUizV6cvpPPEK5XPvhPs7NIr7oMgAX7vt0p97vzFkDypvdugz9tmz3J
-         uYkxZ6WZyiw2LmCl4NU1pte7dvRprQisih1Xi9XgmhSRlrNGX5SYbQixJQxcwUI0aD
-         Ycfqrzo11UaAw==
+References: <1604571846-14037-1-git-send-email-spujar@nvidia.com>
+ <1604571846-14037-5-git-send-email-spujar@nvidia.com> <20201105190508.GB1633758@bogus>
+ <8c8c7cc0-881f-5542-f23f-238e5d8608d3@nvidia.com>
+In-Reply-To: <8c8c7cc0-881f-5542-f23f-238e5d8608d3@nvidia.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 6 Nov 2020 08:37:12 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKkB03L=jFXTTecpbjS8FqtO72V9EJAWszR12CM4EQChg@mail.gmail.com>
+Message-ID: <CAL_JsqKkB03L=jFXTTecpbjS8FqtO72V9EJAWszR12CM4EQChg@mail.gmail.com>
+Subject: Re: [PATCH 4/4] dt-bindings: bus: Convert ACONNECT doc to json-schema
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     devicetree@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>, Vinod <vkoul@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Nov 06, 2020 at 09:48:34AM +0000, Tian, Kevin wrote:
-> > The interrupt controller is responsible to create an addr/data pair
-> > for an interrupt message. It sets the message format and ensures it
-> > routes to the proper CPU interrupt handler. Everything about the
-> > addr/data pair is owned by the platform interrupt controller.
-> > 
-> > Devices do not create interrupts. They only trigger the addr/data pair
-> > the platform gives them.
-> 
-> I guess that we may just view it from different angles. On x86 platform,
-> a MSI/IMS capable device directly composes interrupt messages, with 
-> addr/data pair filled by OS.
-
-Yes, all platforms work like that. The addr/data pair is *opaque* to
-the device. Only the platform interrupt controller component
-understands how to form those values.
-
-> If there is no IOMMU remapping enabled in the middle, the message
-> just hits the CPU. Your description possibly is from software side,
-> e.g. describing the hierarchical IRQ domain concept?
-
-I suppose you could say that. Technically the APIC doesn't form any
-addr/data pairs, but the configuration of the APIC, IOMMU and other
-platform components define what addr/data pairs are acceptable.
-
-The IRQ domain stuff broadly puts responsibilty to form these values
-in the IRQ layer which abstracts all the platform detatils. In Linux
-we expect the platform to provide the IRQ Domain tha can specify
-working addr/data pairs.
-
-> I agree with this point, just as how pci-hyperv.c works. In concept Linux
-> guest driver should be able to use IMS when running on Hyper-v. There
-> is no such thing for KVM, but possibly one day we will need similar stuff.
-> Before that happens the guest could choose to simply disallow devmsi
-> by default in the platform code (inventing a hypercall just for 'disable' 
-> doesn't make sense) and ignore the IMS cap. One small open is whether
-> this can be done in one central-place. The detection of running as guest
-> is done in arch-specific code. Do we need disabling devmsi for every arch?
+On Fri, Nov 6, 2020 at 12:44 AM Sameer Pujar <spujar@nvidia.com> wrote:
 >
-> But when talking about virtualization it's not good to assume the guest
-> behavior. It's perfectly sane to run a guest OS which doesn't implement 
-> any PV stuff (thus don't know running in a VM) but do support IMS. In 
-> such scenario the IMS cap allows the hypervisor to educate the guest 
-> driver to use MSI instead of IMS, as long as the driver follows the device 
-> spec. In this regard I don't think that the IMS cap will be a short-term 
-> thing, although Linux may choose to not use it.
+>
+> >> Move ACONNECT documentation to YAML format.
+> >>
+> >> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+> >> ---
+> >>   .../bindings/bus/nvidia,tegra210-aconnect.txt      | 44 -----------
+> >>   .../bindings/bus/nvidia,tegra210-aconnect.yaml     | 86 ++++++++++++++++++++++
+> >>   2 files changed, 86 insertions(+), 44 deletions(-)
+> >>   delete mode 100644 Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.txt
+> >>   create mode 100644 Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.yaml
+> >>
+>
+> ...
+>
+> >> diff --git a/Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.yaml b/Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.yaml
+> >> new file mode 100644
+> >> index 0000000..f0161bc
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.yaml
+> >> @@ -0,0 +1,86 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/bus/nvidia,tegra210-aconnect.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: NVIDIA Tegra ACONNECT Bus
+> >> +
+> >> +description: |
+> >> +  The Tegra ACONNECT bus is an AXI switch which is used to connnect various
+> >> +  components inside the Audio Processing Engine (APE). All CPU accesses to
+> >> +  the APE subsystem go through the ACONNECT via an APB to AXI wrapper. All
+> >> +  devices accessed via the ACONNNECT are described by child-nodes.
+> >> +
+>
+> ...
+>
+> >> +
+> >> +patternProperties:
+> >> +  "^dma-controller(@[0-9a-f]+)?$":
+> >> +    $ref: /schemas/dma/nvidia,tegra210-adma.yaml#
+> >> +  "^interrupt-controller(@[0-9a-f]+)?$":
+> >> +    $ref: /schemas/interrupt-controller/arm,gic.yaml#
+> >> +  "^ahub(@[0-9a-f]+)?$":
+> >> +    $ref: /schemas/sound/nvidia,tegra210-ahub.yaml#
+> > These all get applied already since they match on compatible strings. So
+> > having them here means the schema is applied twice. There's maybe some
+> > value to this if it's always going to be these 3 nodes.
+>
+> 1) May be this could be dropped with "additionalProperties = true", but
+> that allows any arbitary property to be added for the device. Without
+> this 'make dtbs_check' complains about not matching properties in DT files.
 
-The IMS flag belongs in the platform not in the devices.
+Not if you do what I suggested below. Then only arbitrary nodes can be added.
 
-For instance you could put a "disable IMS" flag in the ACPI tables, in
-the config space of the emuulated root port, or any other areas that
-clearly belong to the platform.
-
-The OS logic would be
- - If no IMS information found then use IMS (Bare metal)
- - If the IMS disable flag is found then
-   - If (future) hypercall available and the OS knows how to use it
-     then use IMS
-   - If no hypercall found, or no OS knowledge, fail IMS
-
-Our devices can use IMS even in a pure no-emulation
-configurations. Saying that we need to insert complicated security
-sensitive emulation just to get IMS in the guest is absolutely crazy.
-
-> Do you mind providing the link? There were lots of discussions between
-> you and Thomas. I failed to locate the exact mail when searching above
-> keywords. 
-
-Read through these two threads:
-
-https://lore.kernel.org/linux-hyperv/20200821002949.049867339@linutronix.de/
-https://lore.kernel.org/dmaengine/159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com/
-
-Jason
+>
+> 2) These may not be the final list of nodes this device can have. In
+> future if any new device support gets added under this, above needs to
+> be updated. But it will be limited number of devices.
+>
+> So is [2] fine or you would suggest [1] would be good enough?
+>
+> >
+> > Also, the unit-addresses shouldn't be optional.
+> >
+> > I'd just do:
+> >
+> > "@[0-9a-f]+$":
+> >    type: object
+> >
+> >> +
+> >> +required:
+> >> +  - compatible
+> >> +  - clocks
+> >> +  - clock-names
+> >> +  - power-domains
+> >> +  - "#address-cells"
+> >> +  - "#size-cells"
+> >> +  - ranges
+> >> +
+> >> +additionalProperties: false
+> >> +
+> >> +examples:
+> >> +  - |
+> >> +    #include<dt-bindings/clock/tegra210-car.h>
+> >> +
+> >> +    aconnect@702c0000 {
+> >> +        compatible = "nvidia,tegra210-aconnect";
+> >> +        clocks = <&tegra_car TEGRA210_CLK_APE>,
+> >> +                 <&tegra_car TEGRA210_CLK_APB2APE>;
+> >> +        clock-names = "ape", "apb2ape";
+> >> +        power-domains = <&pd_audio>;
+> >> +
+> >> +        #address-cells = <1>;
+> >> +        #size-cells = <1>;
+> >> +        ranges = <0x702c0000 0x702c0000 0x00040000>;
+> >> +
+> >> +        // Child device nodes follow ...
+> >> +    };
+> >> +
+> >> +...
+> >> --
+> >> 2.7.4
+> >>
+>

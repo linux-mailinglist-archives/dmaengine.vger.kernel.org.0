@@ -2,200 +2,183 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE5BA2A98C0
-	for <lists+dmaengine@lfdr.de>; Fri,  6 Nov 2020 16:44:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EA8A2A99D1
+	for <lists+dmaengine@lfdr.de>; Fri,  6 Nov 2020 17:49:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbgKFPoA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 6 Nov 2020 10:44:00 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3046 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727686AbgKFPn4 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 6 Nov 2020 10:43:56 -0500
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5fa56f3a0000>; Fri, 06 Nov 2020 07:43:54 -0800
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 6 Nov
- 2020 15:43:56 +0000
-Received: from audio.nvidia.com (10.124.1.5) by mail.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
- Transport; Fri, 6 Nov 2020 15:43:52 +0000
-From:   Sameer Pujar <spujar@nvidia.com>
-To:     <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <vkoul@kernel.org>, <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <maz@kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH v2 4/4] dt-bindings: bus: Convert ACONNECT doc to json-schema
-Date:   Fri, 6 Nov 2020 21:13:33 +0530
-Message-ID: <1604677413-20411-5-git-send-email-spujar@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1604677413-20411-1-git-send-email-spujar@nvidia.com>
-References: <1604677413-20411-1-git-send-email-spujar@nvidia.com>
+        id S1726415AbgKFQsw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 6 Nov 2020 11:48:52 -0500
+Received: from mga12.intel.com ([192.55.52.136]:25696 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726408AbgKFQsw (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 6 Nov 2020 11:48:52 -0500
+IronPort-SDR: /y4p+dqCDj282iZCsJvvA6ICQBsHsQ+HUgVSSwtVZiesckMzn4/tEjHWbm8VTBYUHrYadlmgo+
+ n1LRdkFuaK+w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9797"; a="148848426"
+X-IronPort-AV: E=Sophos;i="5.77,457,1596524400"; 
+   d="scan'208";a="148848426"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2020 08:48:52 -0800
+IronPort-SDR: 142GO92Vb+KLu0rbvEYCKskGFKEK8ve/xYgrfu3PQd+4h7o0L3YSVU/i/sS+JIPGNqpvg1W0BY
+ T7ImiiDSixQQ==
+X-IronPort-AV: E=Sophos;i="5.77,457,1596524400"; 
+   d="scan'208";a="364225272"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2020 08:48:51 -0800
+Date:   Fri, 6 Nov 2020 08:48:50 -0800
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "jing.lin@intel.com" <jing.lin@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+Message-ID: <20201106164850.GA85879@otc-nc-03>
+References: <ec52cedf-3a99-5ca1-ffbb-d8f8c4f62395@intel.com>
+ <20201102132158.GA3352700@nvidia.com>
+ <MWHPR11MB1645675ED03E23674A705DF68C110@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20201103124351.GM2620339@nvidia.com>
+ <MWHPR11MB164544C9CFCC3F162C1C6FC18CEF0@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20201104124017.GW2620339@nvidia.com>
+ <MWHPR11MB1645862A8F7CF7FB8DD011778CEF0@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20201104135415.GX2620339@nvidia.com>
+ <MWHPR11MB1645524BDEDF8899914F32AE8CED0@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20201106131415.GT2620339@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1604677434; bh=Amkm6DFy5rI3OSnRYMFKFpVcUEVgnJCg7eNoSxyRuYk=;
-        h=From:To:CC:Subject:Date:Message-ID:X-Mailer:In-Reply-To:
-         References:MIME-Version:Content-Type;
-        b=XWj+0CS72t9DNtJrchSHkA/bYdVWq7agEiDWXbdSDaMwQV9p42obcEIQtQ+li+HNs
-         I4S1L9DpQaOZH+8n+pRihvfui1JZI4dXR+EhhoIst0zN87X2uSm+Zlk0jB7OyPImCv
-         5bnnj1JF+65oQgO2BkXDayQ1+GrKh4Z9VseL67sV7f2X4dhfD1lkhlhSnGOWrasqs3
-         DigYoVTCH9fQ+Wmd1CE/H4VZC6mVC/H/nxYKX6RxCy2hFBNN7QAVs2A6sf3cFt5iKt
-         upYn2PLiL53y2q2KCurqbXedTASP7lraArKp3z4TLhMulrGYfQ9R6+35Uykz2vcqGL
-         G34Gy8zc34rWQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201106131415.GT2620339@nvidia.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Move ACONNECT documentation to YAML format.
+Hi Jason
 
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
----
- .../bindings/bus/nvidia,tegra210-aconnect.txt      | 44 ------------
- .../bindings/bus/nvidia,tegra210-aconnect.yaml     | 82 ++++++++++++++++++++++
- 2 files changed, 82 insertions(+), 44 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.txt
- create mode 100644 Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.yaml
+On Fri, Nov 06, 2020 at 09:14:15AM -0400, Jason Gunthorpe wrote:
+> On Fri, Nov 06, 2020 at 09:48:34AM +0000, Tian, Kevin wrote:
+> > > The interrupt controller is responsible to create an addr/data pair
+> > > for an interrupt message. It sets the message format and ensures it
+> > > routes to the proper CPU interrupt handler. Everything about the
+> > > addr/data pair is owned by the platform interrupt controller.
+> > > 
+> > > Devices do not create interrupts. They only trigger the addr/data pair
+> > > the platform gives them.
+> > 
+> > I guess that we may just view it from different angles. On x86 platform,
+> > a MSI/IMS capable device directly composes interrupt messages, with 
+> > addr/data pair filled by OS.
+> 
+> Yes, all platforms work like that. The addr/data pair is *opaque* to
+> the device. Only the platform interrupt controller component
+> understands how to form those values.
 
-diff --git a/Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.txt b/Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.txt
-deleted file mode 100644
-index 3108d03..0000000
---- a/Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.txt
-+++ /dev/null
-@@ -1,44 +0,0 @@
--NVIDIA Tegra ACONNECT Bus
--
--The Tegra ACONNECT bus is an AXI switch which is used to connnect various
--components inside the Audio Processing Engine (APE). All CPU accesses to
--the APE subsystem go through the ACONNECT via an APB to AXI wrapper.
--
--Required properties:
--- compatible: Must be "nvidia,tegra210-aconnect".
--- clocks: Must contain the entries for the APE clock (TEGRA210_CLK_APE),
--  and APE interface clock (TEGRA210_CLK_APB2APE).
--- clock-names: Must contain the names "ape" and "apb2ape" for the corresponding
--  'clocks' entries.
--- power-domains: Must contain a phandle that points to the audio powergate
--  (namely 'aud') for Tegra210.
--- #address-cells: The number of cells used to represent physical base addresses
--  in the aconnect address space. Should be 1.
--- #size-cells: The number of cells used to represent the size of an address
--  range in the aconnect address space. Should be 1.
--- ranges: Mapping of the aconnect address space to the CPU address space.
--
--All devices accessed via the ACONNNECT are described by child-nodes.
--
--Example:
--
--	aconnect@702c0000 {
--		compatible = "nvidia,tegra210-aconnect";
--		clocks = <&tegra_car TEGRA210_CLK_APE>,
--			 <&tegra_car TEGRA210_CLK_APB2APE>;
--		clock-names = "ape", "apb2ape";
--		power-domains = <&pd_audio>;
--
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges = <0x702c0000 0x0 0x702c0000 0x00040000>;
--
--
--		child1 {
--			...
--		};
--
--		child2 {
--			...
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.yaml b/Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.yaml
-new file mode 100644
-index 0000000..7b1a08c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.yaml
-@@ -0,0 +1,82 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bus/nvidia,tegra210-aconnect.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NVIDIA Tegra ACONNECT Bus
-+
-+description: |
-+  The Tegra ACONNECT bus is an AXI switch which is used to connnect various
-+  components inside the Audio Processing Engine (APE). All CPU accesses to
-+  the APE subsystem go through the ACONNECT via an APB to AXI wrapper. All
-+  devices accessed via the ACONNNECT are described by child-nodes.
-+
-+maintainers:
-+  - Jon Hunter <jonathanh@nvidia.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: nvidia,tegra210-aconnect
-+      - items:
-+          - enum:
-+              - nvidia,tegra186-aconnect
-+              - nvidia,tegra194-aconnect
-+          - const: nvidia,tegra210-aconnect
-+
-+  clocks:
-+    items:
-+      - description: Must contain the entry for APE clock
-+      - description: Must contain the entry for APE interface clock
-+
-+  clock-names:
-+    items:
-+      - const: ape
-+      - const: apb2ape
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 1
-+
-+  ranges: true
-+
-+patternProperties:
-+  "@[0-9a-f]+$":
-+    type: object
-+
-+required:
-+  - compatible
-+  - clocks
-+  - clock-names
-+  - power-domains
-+  - "#address-cells"
-+  - "#size-cells"
-+  - ranges
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include<dt-bindings/clock/tegra210-car.h>
-+
-+    aconnect@702c0000 {
-+        compatible = "nvidia,tegra210-aconnect";
-+        clocks = <&tegra_car TEGRA210_CLK_APE>,
-+                 <&tegra_car TEGRA210_CLK_APB2APE>;
-+        clock-names = "ape", "apb2ape";
-+        power-domains = <&pd_audio>;
-+
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges = <0x702c0000 0x702c0000 0x00040000>;
-+
-+        // Child device nodes follow ...
-+    };
-+
-+...
--- 
-2.7.4
+True, the addr/data pair is opaque. IMS doesn't dictate what the contents
+of addr/data pair is made of. That is still a platform attribute. IMS simply 
+controls where the pair is physically stored. Which only the device dictates.
 
+> 
+> > If there is no IOMMU remapping enabled in the middle, the message
+> > just hits the CPU. Your description possibly is from software side,
+> > e.g. describing the hierarchical IRQ domain concept?
+> 
+> I suppose you could say that. Technically the APIC doesn't form any
+> addr/data pairs, but the configuration of the APIC, IOMMU and other
+> platform components define what addr/data pairs are acceptable.
+> 
+> The IRQ domain stuff broadly puts responsibilty to form these values
+> in the IRQ layer which abstracts all the platform detatils. In Linux
+> we expect the platform to provide the IRQ Domain tha can specify
+> working addr/data pairs.
+> 
+> > I agree with this point, just as how pci-hyperv.c works. In concept Linux
+> > guest driver should be able to use IMS when running on Hyper-v. There
+> > is no such thing for KVM, but possibly one day we will need similar stuff.
+> > Before that happens the guest could choose to simply disallow devmsi
+> > by default in the platform code (inventing a hypercall just for 'disable' 
+> > doesn't make sense) and ignore the IMS cap. One small open is whether
+> > this can be done in one central-place. The detection of running as guest
+> > is done in arch-specific code. Do we need disabling devmsi for every arch?
+> >
+> > But when talking about virtualization it's not good to assume the guest
+> > behavior. It's perfectly sane to run a guest OS which doesn't implement 
+> > any PV stuff (thus don't know running in a VM) but do support IMS. In 
+> > such scenario the IMS cap allows the hypervisor to educate the guest 
+> > driver to use MSI instead of IMS, as long as the driver follows the device 
+> > spec. In this regard I don't think that the IMS cap will be a short-term 
+> > thing, although Linux may choose to not use it.
+> 
+> The IMS flag belongs in the platform not in the devices.
+
+This support is mostly a SW thing right? we don't need to muck with
+platform/ACPI for that matter. 
+
+> 
+> For instance you could put a "disable IMS" flag in the ACPI tables, in
+> the config space of the emuulated root port, or any other areas that
+> clearly belong to the platform.
+
+Maybe there is a different interpretation for IMS that I'm missing. Devices
+that need more interrupt support than supported by PCIe standards, and how
+device has grouped the storage needs for the addr/data pair is a device
+attribute.
+
+I missed why ACPI tables should carry such information. If kernel doesn't
+want to support those devices its within kernel control. Which means kernel
+will only use the available MSIx interfaces. This is legacy support.
+
+> 
+> The OS logic would be
+>  - If no IMS information found then use IMS (Bare metal)
+>  - If the IMS disable flag is found then
+>    - If (future) hypercall available and the OS knows how to use it
+>      then use IMS
+>    - If no hypercall found, or no OS knowledge, fail IMS
+> 
+> Our devices can use IMS even in a pure no-emulation
+
+This is true for IMS as well. But probably not implemented in the kernel as
+such. From a HW point of view (take idxd for instance) the facility is
+available to native OS as well. The early RFC supported this for native.
+
+Native devices can have both MSIx and IMS capability. But as I understand this
+isn't how we have partitioned things in SW today. We left IMS only for
+mdev's. And I agree this would be very useful.
+
+In cases where we want to support interrupt handles for user space
+notification (when application specifies that in the descriptor). Those
+could be IMS. The device HW has support for it.
+
+Remember the "Why PASID in IMS entry" discussion?
+
+https://lore.kernel.org/lkml/20201008233210.GH4734@nvidia.com/
+
+Cheers,
+Ashok

@@ -2,31 +2,31 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CB2E2ABE54
-	for <lists+dmaengine@lfdr.de>; Mon,  9 Nov 2020 15:14:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48FB62ABE5B
+	for <lists+dmaengine@lfdr.de>; Mon,  9 Nov 2020 15:14:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730782AbgKIOOg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 9 Nov 2020 09:14:36 -0500
-Received: from mga01.intel.com ([192.55.52.88]:51663 "EHLO mga01.intel.com"
+        id S1730937AbgKIOOn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 9 Nov 2020 09:14:43 -0500
+Received: from mga18.intel.com ([134.134.136.126]:14004 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730204AbgKIOOg (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 9 Nov 2020 09:14:36 -0500
-IronPort-SDR: F9NhAy30VITp2OG4xHmJuTWljUKBMvBffKeC7nuZGYC+BpIVf6Hkdp9orBnxquX9FHp/+T5Lu1
- gzG96c5Csffg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9799"; a="187758536"
+        id S1730467AbgKIOOm (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 9 Nov 2020 09:14:42 -0500
+IronPort-SDR: ySar3eR25WsrZOAnTd0EW/80EVpIxdX6yb34hp1jl43BafvkudaibfCukKT5hVhK4snNgz3+ch
+ 77b9RCcc52Mg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9799"; a="157590822"
 X-IronPort-AV: E=Sophos;i="5.77,463,1596524400"; 
-   d="scan'208";a="187758536"
+   d="scan'208";a="157590822"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2020 06:14:35 -0800
-IronPort-SDR: oVPDxXTl7XKMRwAgHLPDMFqDcDF7oSficSto+ZaxiE83zM4CeJn8Wx+mpbNp56OmvI8kXYS8EE
- otq2NAYse63A==
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2020 06:14:39 -0800
+IronPort-SDR: PW3SEDo23cj3da7IQW8Mk+eB3iZDMuKOi2NOa7zMoC24WxWkgpG3QpVQ6dX3tsvFvP+1seOi5/
+ jzu8557jhwqg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,463,1596524400"; 
-   d="scan'208";a="307996353"
+   d="scan'208";a="365062439"
 Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by fmsmga007.fm.intel.com with ESMTP; 09 Nov 2020 06:14:32 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 09 Nov 2020 06:14:36 -0800
 From:   Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>
 To:     dmaengine@vger.kernel.org, vkoul@kernel.org,
         devicetree@vger.kernel.org, robh+dt@kernel.org
@@ -34,9 +34,9 @@ Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
         chuanhua.lei@linux.intel.com, cheol.yong.kim@intel.com,
         qi-ming.wu@intel.com, mallikarjunax.reddy@linux.intel.com,
         malliamireddy009@gmail.com, peter.ujfalusi@ti.com
-Subject: [PATCH v8 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
-Date:   Mon,  9 Nov 2020 22:14:24 +0800
-Message-Id: <b06793aa409d05ac7e0729bcd2002c43ff25d48b.1604930089.git.mallikarjunax.reddy@linux.intel.com>
+Subject: [PATCH v8 2/2] Add Intel LGM soc DMA support.
+Date:   Mon,  9 Nov 2020 22:14:25 +0800
+Message-Id: <f2cfdc1effac0eb80e65c0cacce028534bc4b972.1604930089.git.mallikarjunax.reddy@linux.intel.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <cover.1604930089.git.mallikarjunax.reddy@linux.intel.com>
 References: <cover.1604930089.git.mallikarjunax.reddy@linux.intel.com>
@@ -46,8 +46,14 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add DT bindings YAML schema for DMA controller driver
-of Lightning Mountain(LGM) SoC.
+Add DMA controller driver for Lightning Mountain(LGM) family of SoCs.
+
+The main function of the DMA controller is the transfer of data from/to any
+peripheral to/from the memory. A memory to memory copy capability can also
+be configured.
+
+This ldma driver is used for configure the device and channnels for data
+and control paths.
 
 Signed-off-by: Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>
 ---
@@ -55,184 +61,1914 @@ v1:
 - Initial version.
 
 v2:
-- Fix bot errors.
+- Fix device tree bot issues, correspondign driver changes done.
+- Fix kerntel test robot warnings.
+  --------------------------------------------------------
+  >> drivers/dma/lgm/lgm-dma.c:729:5: warning: no previous prototype for function 'intel_dma_chan_desc_cfg' [-Wmissing-prototypes]
+  int intel_dma_chan_desc_cfg(struct dma_chan *chan, dma_addr_t desc_base,
+  ^
+  drivers/dma/lgm/lgm-dma.c:729:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  int intel_dma_chan_desc_cfg(struct dma_chan *chan, dma_addr_t desc_base,
+  ^
+  static
+  1 warning generated.
+
+  vim +/intel_dma_chan_desc_cfg +729 drivers/dma/lgm/lgm-dma.c
+
+    728
+  > 729 int intel_dma_chan_desc_cfg(struct dma_chan *chan, dma_addr_t desc_base,
+    730                             int desc_num)
+    731 {
+    732         return ldma_chan_desc_cfg(to_ldma_chan(chan), desc_base, desc_num);
+    733 }
+    734 EXPORT_SYMBOL_GPL(intel_dma_chan_desc_cfg);
+    735
+
+   Reported-by: kernel test robot <lkp@intel.com>
+   ---------------------------------------------------------------
 
 v3:
-- No change.
+- Fix smatch warning.
+  ----------------------------------------------------------------
+  smatch warnings:
+  drivers/dma/lgm/lgm-dma.c:1306 ldma_cfg_init() error: uninitialized symbol 'ret'.
+
+  Reported-by: kernel test robot <lkp@intel.com>
+  Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+  ----------------------------------------------------------------
 
 v4:
-- Address Thomas langer comments
-  - use node name pattern as dma-controller as in common binding.
-  - Remove "_" (underscore) in instance name.
-  - Remove "port-" and "chan-" in attribute name for both 'dma-ports' & 'dma-channels' child nodes.
+- Address Thomas Langer comments in dtbinding and corresponding driver side changes.
+- Driver side changes to corresponding device tree changes.
 
 v5:
-- Moved some of the attributes in 'dma-ports' & 'dma-channels' child nodes to dma client/consumer side as cells in 'dmas' properties.
+- Add changes to read 'dmas' properties and update the config properties driver side.
+- Add virt_dma_desc utilizes virt-dma API.
 
 v6:
-- Add additionalProperties: false
-- completely removed 'dma-ports' and 'dma-channels' child nodes.
-- Moved channel dt properties to client side dmas.
-- Use standard dma-channels and dma-channel-mask properties.
-- Documented reset-names
-- Add description for dma-cells
+- Driver changes corresponding to the device tree changes.
+- Restructure things to have less activity with the spinlock.
+- Save the slave config in dma_slave_config() and used in prepare time.
+- Addressed & fixed issues related to desc_free callback _free_ up the memory.
+- Addressed peter review comments.
 
 v7:
-- modified compatible to oneof
-- Reduced number of dma-cells to 3
-- Fine tune the description of some properties.
+- Change bool to tristate in Kconfig
+- Explained the _initcall()
+- change of_property*() to device_property_*()
+- split the code to functions at version checks
+- Remove the dma caller capability restrictions
+- used for_each_set_bit()
+- Addressed minor comments and fine tune the code.
 
 v7-resend:
 - rebase to 5.10-rc1
 
 v8:
-- rebased to 5.10-rc3
-- Fixing the bot issues (wrong indentation)
+- rebase to 5.10-rc3
+- Addressed structural things and fine tune the code.
 ---
- .../devicetree/bindings/dma/intel,ldma.yaml        | 134 +++++++++++++++++++++
- 1 file changed, 134 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/intel,ldma.yaml
+ drivers/dma/Kconfig         |    2 +
+ drivers/dma/Makefile        |    1 +
+ drivers/dma/lgm/Kconfig     |    9 +
+ drivers/dma/lgm/Makefile    |    2 +
+ drivers/dma/lgm/lgm-dma.c   | 1742 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/dma/lgm_dma.h |   27 +
+ 6 files changed, 1783 insertions(+)
+ create mode 100644 drivers/dma/lgm/Kconfig
+ create mode 100644 drivers/dma/lgm/Makefile
+ create mode 100644 drivers/dma/lgm/lgm-dma.c
+ create mode 100644 include/linux/dma/lgm_dma.h
 
-diff --git a/Documentation/devicetree/bindings/dma/intel,ldma.yaml b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 90284ffda58a..34c78e4255d8 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -730,6 +730,8 @@ source "drivers/dma/ti/Kconfig"
+ 
+ source "drivers/dma/fsl-dpaa2-qdma/Kconfig"
+ 
++source "drivers/dma/lgm/Kconfig"
++
+ # clients
+ comment "DMA Clients"
+ 	depends on DMA_ENGINE
+diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
+index 948a8da05f8b..649a4f95ea4b 100644
+--- a/drivers/dma/Makefile
++++ b/drivers/dma/Makefile
+@@ -82,6 +82,7 @@ obj-$(CONFIG_XGENE_DMA) += xgene-dma.o
+ obj-$(CONFIG_ZX_DMA) += zx_dma.o
+ obj-$(CONFIG_ST_FDMA) += st_fdma.o
+ obj-$(CONFIG_FSL_DPAA2_QDMA) += fsl-dpaa2-qdma/
++obj-$(CONFIG_INTEL_LDMA) += lgm/
+ 
+ obj-y += mediatek/
+ obj-y += qcom/
+diff --git a/drivers/dma/lgm/Kconfig b/drivers/dma/lgm/Kconfig
 new file mode 100644
-index 000000000000..7cf0eab1a703
+index 000000000000..bdb5b0d91afb
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
-@@ -0,0 +1,134 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/intel,ldma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/dma/lgm/Kconfig
+@@ -0,0 +1,9 @@
++# SPDX-License-Identifier: GPL-2.0-only
++config INTEL_LDMA
++	bool "Lightning Mountain centralized low speed DMA and high speed DMA controllers"
++	select DMA_ENGINE
++	select DMA_VIRTUAL_CHANNELS
++	help
++	  Enable support for intel Lightning Mountain SOC DMA controllers.
++	  These controllers provide DMA capabilities for a variety of on-chip
++	  devices such as SSC, HSNAND and GSWIP.
+diff --git a/drivers/dma/lgm/Makefile b/drivers/dma/lgm/Makefile
+new file mode 100644
+index 000000000000..f318a8eff464
+--- /dev/null
++++ b/drivers/dma/lgm/Makefile
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_INTEL_LDMA)	+= lgm-dma.o
+diff --git a/drivers/dma/lgm/lgm-dma.c b/drivers/dma/lgm/lgm-dma.c
+new file mode 100644
+index 000000000000..0e2f908f57f1
+--- /dev/null
++++ b/drivers/dma/lgm/lgm-dma.c
+@@ -0,0 +1,1742 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Lightning Mountain centralized low speed and high speed DMA controller driver
++ *
++ * Copyright (c) 2016 ~ 2020 Intel Corporation.
++ */
 +
-+title: Lightning Mountain centralized low speed DMA and high speed DMA controllers.
++#include <linux/bitfield.h>
++#include <linux/clk.h>
++#include <linux/dma-mapping.h>
++#include <linux/dmapool.h>
++#include <linux/dma/lgm_dma.h>
++#include <linux/err.h>
++#include <linux/export.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/iopoll.h>
++#include <linux/of_dma.h>
++#include <linux/of_irq.h>
++#include <linux/platform_device.h>
++#include <linux/reset.h>
 +
-+maintainers:
-+  - chuanhua.lei@intel.com
-+  - mallikarjunax.reddy@intel.com
++#include "../dmaengine.h"
++#include "../virt-dma.h"
 +
-+allOf:
-+  - $ref: "dma-controller.yaml#"
++#define DRIVER_NAME			"lgm-dma"
 +
-+properties:
-+  $nodename:
-+    pattern: "^dma-controller(@.*)?$"
++#define DMA_ID				0x0008
++#define DMA_ID_REV			GENMASK(7, 0)
++#define DMA_ID_PNR			GENMASK(19, 16)
++#define DMA_ID_CHNR			GENMASK(26, 20)
++#define DMA_ID_DW_128B			BIT(27)
++#define DMA_ID_AW_36B			BIT(28)
++#define DMA_VER32			0x32
++#define DMA_VER31			0x31
++#define DMA_VER22			0x0A
 +
-+  compatible:
-+    oneOf:
-+      - const: intel,lgm-cdma
-+      - const: intel,lgm-dma2tx
-+      - const: intel,lgm-dma1rx
-+      - const: intel,lgm-dma1tx
-+      - const: intel,lgm-dma0tx
-+      - const: intel,lgm-dma3
-+      - const: intel,lgm-toe-dma30
-+      - const: intel,lgm-toe-dma31
++#define DMA_CTRL			0x0010
++#define DMA_CTRL_RST			BIT(0)
++#define DMA_CTRL_DSRAM_PATH		BIT(1)
++#define DMA_CTRL_DBURST_WR		BIT(3)
++#define DMA_CTRL_VLD_DF_ACK		BIT(4)
++#define DMA_CTRL_CH_FL			BIT(6)
++#define DMA_CTRL_DS_FOD			BIT(7)
++#define DMA_CTRL_DRB			BIT(8)
++#define DMA_CTRL_ENBE			BIT(9)
++#define DMA_CTRL_DESC_TMOUT_CNT_V31	GENMASK(27, 16)
++#define DMA_CTRL_DESC_TMOUT_EN_V31	BIT(30)
++#define DMA_CTRL_PKTARB			BIT(31)
 +
-+  reg:
-+    maxItems: 1
++#define DMA_CPOLL			0x0014
++#define DMA_CPOLL_CNT			GENMASK(15, 4)
++#define DMA_CPOLL_EN			BIT(31)
 +
-+  "#dma-cells":
-+    const: 3
-+    description:
-+      The first cell is the peripheral's DMA request line.
-+      The second cell is the peripheral's (port) number corresponding to the channel.
-+      The third cell is the burst length of the channel.
++#define DMA_CS				0x0018
++#define DMA_CS_MASK			GENMASK(5, 0)
 +
-+  dma-channels:
-+    minimum: 1
-+    maximum: 16
++#define DMA_CCTRL			0x001C
++#define DMA_CCTRL_ON			BIT(0)
++#define DMA_CCTRL_RST			BIT(1)
++#define DMA_CCTRL_CH_POLL_EN		BIT(2)
++#define DMA_CCTRL_CH_ABC		BIT(3) /* Adaptive Burst Chop */
++#define DMA_CDBA_MSB			GENMASK(7, 4)
++#define DMA_CCTRL_DIR_TX		BIT(8)
++#define DMA_CCTRL_CLASS			GENMASK(11, 9)
++#define DMA_CCTRL_CLASSH		GENMASK(19, 18)
++#define DMA_CCTRL_WR_NP_EN		BIT(21)
++#define DMA_CCTRL_PDEN			BIT(23)
++#define DMA_MAX_CLASS			(SZ_32 - 1)
 +
-+  dma-channel-mask:
-+    items:
-+      minItems: 1
++#define DMA_CDBA			0x0020
++#define DMA_CDLEN			0x0024
++#define DMA_CIS				0x0028
++#define DMA_CIE				0x002C
++#define DMA_CI_EOP			BIT(1)
++#define DMA_CI_DUR			BIT(2)
++#define DMA_CI_DESCPT			BIT(3)
++#define DMA_CI_CHOFF			BIT(4)
++#define DMA_CI_RDERR			BIT(5)
++#define DMA_CI_ALL							\
++	(DMA_CI_EOP | DMA_CI_DUR | DMA_CI_DESCPT | DMA_CI_CHOFF | DMA_CI_RDERR)
 +
-+  clocks:
-+    maxItems: 1
++#define DMA_PS				0x0040
++#define DMA_PCTRL			0x0044
++#define DMA_PCTRL_RXBL16		BIT(0)
++#define DMA_PCTRL_TXBL16		BIT(1)
++#define DMA_PCTRL_RXBL			GENMASK(3, 2)
++#define DMA_PCTRL_RXBL_8		3
++#define DMA_PCTRL_TXBL			GENMASK(5, 4)
++#define DMA_PCTRL_TXBL_8		3
++#define DMA_PCTRL_PDEN			BIT(6)
++#define DMA_PCTRL_RXBL32		BIT(7)
++#define DMA_PCTRL_RXENDI		GENMASK(9, 8)
++#define DMA_PCTRL_TXENDI		GENMASK(11, 10)
++#define DMA_PCTRL_TXBL32		BIT(15)
++#define DMA_PCTRL_MEM_FLUSH		BIT(16)
 +
-+  resets:
-+    maxItems: 1
++#define DMA_IRNEN1			0x00E8
++#define DMA_IRNCR1			0x00EC
++#define DMA_IRNEN			0x00F4
++#define DMA_IRNCR			0x00F8
++#define DMA_C_DP_TICK			0x100
++#define DMA_C_DP_TICK_TIKNARB		GENMASK(15, 0)
++#define DMA_C_DP_TICK_TIKARB		GENMASK(31, 16)
 +
-+  reset-names:
-+    items:
-+      - const: ctrl
++#define DMA_C_HDRM			0x110
++/*
++ * If header mode is set in DMA descriptor,
++ *   If bit 30 is disabled, HDR_LEN must be configured according to channel
++ *     requirement.
++ *   If bit 30 is enabled(checksum with heade mode), HDR_LEN has no need to
++ *     be configured. It will enable check sum for switch
++ * If header mode is not set in DMA descriptor,
++ *   This register setting doesn't matter
++ */
++#define DMA_C_HDRM_HDR_SUM		BIT(30)
 +
-+  interrupts:
-+    maxItems: 1
++#define DMA_C_BOFF			0x120
++#define DMA_C_BOFF_BOF_LEN		GENMASK(7, 0)
++#define DMA_C_BOFF_EN			BIT(31)
 +
-+  intel,dma-poll-cnt:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description:
-+      DMA descriptor polling counter is used to control the poling mechanism
-+      for the descriptor fetching for all channels.
++#define DMA_ORRC			0x190
++#define DMA_ORRC_ORRCNT			GENMASK(8, 4)
++#define DMA_ORRC_EN			BIT(31)
 +
-+  intel,dma-byte-en:
-+    type: boolean
-+    description:
-+      DMA byte enable is only valid for DMA write(RX).
-+      Byte enable(1) means DMA write will be based on the number of dwords
-+      instead of the whole burst.
++#define DMA_C_ENDIAN			0x200
++#define DMA_C_END_DATAENDI		GENMASK(1, 0)
++#define DMA_C_END_DE_EN			BIT(7)
++#define DMA_C_END_DESENDI		GENMASK(9, 8)
++#define DMA_C_END_DES_EN		BIT(16)
 +
-+  intel,dma-drb:
-+    type: boolean
-+    description:
-+      DMA descriptor read back to make sure data and desc synchronization.
++/* DMA controller capability */
++#define DMA_ADDR_36BIT			BIT(0)
++#define DMA_DATA_128BIT			BIT(1)
++#define DMA_CHAN_FLOW_CTL		BIT(2)
++#define DMA_DESC_FTOD			BIT(3)
++#define DMA_DESC_IN_SRAM		BIT(4)
++#define DMA_EN_BYTE_EN			BIT(5)
++#define DMA_DBURST_WR			BIT(6)
++#define DMA_VLD_FETCH_ACK		BIT(7)
++#define DMA_DFT_DRB			BIT(8)
 +
-+  intel,dma-desc-in-sram:
-+    type: boolean
-+    description:
-+      DMA descritpors in SRAM or not. Some old controllers descriptors
-+      can be in DRAM or SRAM. The new ones are all in SRAM.
++#define DMA_ORRC_MAX_CNT		(SZ_32 - 1)
++#define DMA_DFT_POLL_CNT		SZ_4
++#define DMA_DFT_BURST_V22		SZ_2
++#define DMA_BURSTL_8DW			SZ_8
++#define DMA_BURSTL_16DW			SZ_16
++#define DMA_BURSTL_32DW			SZ_32
++#define DMA_DFT_BURST			DMA_BURSTL_16DW
++#define DMA_MAX_DESC_NUM		(SZ_8K - 1)
++#define DMA_CHAN_BOFF_MAX		(SZ_256 - 1)
++#define DMA_DFT_ENDIAN			0
 +
-+  intel,dma-orrc:
-+    $ref: /schemas/types.yaml#definitions/uint32
-+    description:
-+      DMA outstanding read counter value determine the number of
-+      ORR-Outstanding Read Request. The maximum value is 16.
-+  intel,dma-dburst-wr:
-+    type: boolean
-+    description:
-+      Enable RX dynamic burst write. When it is enabled, the DMA does RX dynamic burst;
-+      if it is disabled, the DMA RX will still support programmable fixed burst size of 2,4,8,16.
-+      It only applies to RX DMA and memcopy DMA.
++#define DMA_DFT_DESC_TCNT		50
++#define DMA_HDR_LEN_MAX			(SZ_16K - 1)
 +
-+required:
-+  - compatible
-+  - reg
-+  - '#dma-cells'
++/* DMA flags */
++#define DMA_TX_CH			BIT(0)
++#define DMA_RX_CH			BIT(1)
++#define DEVICE_ALLOC_DESC		BIT(2)
++#define CHAN_IN_USE			BIT(3)
++#define DMA_HW_DESC			BIT(4)
 +
-+additionalProperties: false
++#define DMA_CHAN_RST			1
++#define DMA_MAX_SIZE			(BIT(16) - 1)
++#define MAX_LOWER_CHANS			32
++#define MASK_LOWER_CHANS		GENMASK(4, 0)
++#define DMA_OWN				1
++#define HIGH_4_BITS			GENMASK(3, 0)
++#define DMA_DFT_DESC_NUM		1
++#define DMA_PKT_DROP_DIS		0
 +
-+examples:
-+  - |
-+    dma0: dma-controller@e0e00000 {
-+      compatible = "intel,lgm-cdma";
-+      reg = <0xe0e00000 0x1000>;
-+      #dma-cells = <3>;
-+      dma-channels = <16>;
-+      dma-channel-mask = <0xFFFF>;
-+      interrupt-parent = <&ioapic1>;
-+      interrupts = <82 1>;
-+      resets = <&rcu0 0x30 0>;
-+      reset-names = "ctrl";
-+      clocks = <&cgu0 80>;
-+      intel,dma-poll-cnt = <4>;
-+      intel,dma-byte-en;
-+      intel,dma-drb;
-+    };
-+  - |
-+    dma3: dma-controller@ec800000 {
-+      compatible = "intel,lgm-dma3";
-+      reg = <0xec800000 0x1000>;
-+      clocks = <&cgu0 71>;
-+      resets = <&rcu0 0x10 9>;
-+      #dma-cells = <3>;
-+      intel,dma-poll-cnt = <16>;
-+      intel,dma-desc-in-sram;
-+      intel,dma-orrc = <16>;
-+      intel,dma-byte-en;
-+      intel,dma-dburst-wr;
-+    };
++enum ldma_chan_on_off {
++	DMA_CH_OFF = 0,
++	DMA_CH_ON = 1,
++};
++
++enum {
++	DMA_TYPE_TX = 0,
++	DMA_TYPE_RX,
++	DMA_TYPE_MCPY,
++};
++
++struct ldma_dev;
++struct ldma_port;
++
++struct ldma_chan {
++	struct virt_dma_chan	vchan;
++	struct ldma_port	*port; /* back pointer */
++	char			name[8]; /* Channel name */
++	int			nr; /* Channel id in hardware */
++	u32			flags; /* central way or channel based way */
++	enum ldma_chan_on_off	onoff;
++	dma_addr_t		desc_phys;
++	void			*desc_base; /* Virtual address */
++	u32			desc_cnt; /* Number of descriptors */
++	int			rst;
++	u32			hdrm_len;
++	bool			hdrm_csum;
++	u32			boff_len;
++	u32			data_endian;
++	u32			desc_endian;
++	bool			pden;
++	bool			desc_rx_np;
++	bool			data_endian_en;
++	bool			desc_endian_en;
++	bool			abc_en;
++	bool			desc_init;
++	struct dma_pool		*desc_pool; /* Descriptors pool */
++	u32			desc_num;
++	struct dw2_desc_sw	*ds;
++	struct work_struct	work;
++	struct dma_slave_config config;
++};
++
++struct ldma_port {
++	struct ldma_dev		*ldev; /* back pointer */
++	u32			portid;
++	u32			rxbl;
++	u32			txbl;
++	u32			rxendi;
++	u32			txendi;
++	u32			pkt_drop;
++};
++
++/* Instance specific data */
++struct ldma_inst_data {
++	struct dma_dev_ops	*ops;
++	const char		*name;
++	u32			type;
++};
++
++struct ldma_dev {
++	struct device		*dev;
++	void __iomem		*base;
++	struct reset_control	*rst;
++	struct clk		*core_clk;
++	struct dma_device	dma_dev;
++	u32			ver;
++	int			irq;
++	struct ldma_port	*ports;
++	struct ldma_chan	*chans; /* channel list on this DMA or port */
++	spinlock_t		dev_lock; /* Controller register exclusive */
++	u32			chan_nrs;
++	u32			port_nrs;
++	u32			channels_mask;
++	u32			flags;
++	u32			pollcnt;
++	u32			orrc; /* Outstanding read count */
++	const struct ldma_inst_data *inst;
++	struct workqueue_struct *wq;
++};
++
++struct dw2_desc {
++	struct {
++		u32 len		:16;
++		u32 res0	:7;
++		u32 bofs	:2;
++		u32 res1	:3;
++		u32 eop		:1;
++		u32 sop		:1;
++		u32 c		:1;
++		u32 own		:1;
++	} __packed field;
++	u32 addr;
++} __packed __aligned(8);
++
++struct dw2_desc_sw {
++	struct virt_dma_desc	vdesc;
++	struct ldma_chan	*chan;
++	dma_addr_t		desc_phys;
++	size_t			desc_cnt;
++	size_t			size;
++	struct dw2_desc		*desc_hw;
++};
++
++struct dma_dev_ops {
++	int (*device_alloc_chan_resources)(struct dma_chan *chan);
++	void (*device_free_chan_resources)(struct dma_chan *chan);
++	int (*device_config)(struct dma_chan *chan,
++			     struct dma_slave_config *config);
++	int (*device_pause)(struct dma_chan *chan);
++	int (*device_resume)(struct dma_chan *chan);
++	int (*device_terminate_all)(struct dma_chan *chan);
++	void (*device_synchronize)(struct dma_chan *chan);
++	enum dma_status (*device_tx_status)(struct dma_chan *chan,
++					    dma_cookie_t cookie,
++					    struct dma_tx_state *txstate);
++	struct dma_async_tx_descriptor *(*device_prep_slave_sg)
++		(struct dma_chan *chan, struct scatterlist *sgl,
++		unsigned int sg_len, enum dma_transfer_direction direction,
++		unsigned long flags, void *context);
++	void (*device_issue_pending)(struct dma_chan *chan);
++};
++
++static inline void
++ldma_update_bits(struct ldma_dev *d, u32 mask, u32 val, u32 ofs)
++{
++	u32 old_val, new_val;
++
++	old_val = readl(d->base +  ofs);
++	new_val = (old_val & ~mask) | (val & mask);
++
++	if (new_val != old_val)
++		writel(new_val, d->base + ofs);
++}
++
++static inline struct ldma_chan *to_ldma_chan(struct dma_chan *chan)
++{
++	return container_of(chan, struct ldma_chan, vchan.chan);
++}
++
++static inline struct ldma_dev *to_ldma_dev(struct dma_device *dma_dev)
++{
++	return container_of(dma_dev, struct ldma_dev, dma_dev);
++}
++
++static inline struct dw2_desc_sw *to_lgm_dma_desc(struct virt_dma_desc *vdesc)
++{
++	return container_of(vdesc, struct dw2_desc_sw, vdesc);
++}
++
++static inline bool ldma_chan_tx(struct ldma_chan *c)
++{
++	return !!(c->flags & DMA_TX_CH);
++}
++
++static inline bool ldma_chan_is_hw_desc(struct ldma_chan *c)
++{
++	return !!(c->flags & DMA_HW_DESC);
++}
++
++static void ldma_dev_reset(struct ldma_dev *d)
++
++{
++	unsigned long flags;
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	ldma_update_bits(d, DMA_CTRL_RST, DMA_CTRL_RST, DMA_CTRL);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++}
++
++static void ldma_dev_pkt_arb_cfg(struct ldma_dev *d, bool enable)
++{
++	unsigned long flags;
++	u32 mask = DMA_CTRL_PKTARB;
++	u32 val = enable ? DMA_CTRL_PKTARB : 0;
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	ldma_update_bits(d, mask, val, DMA_CTRL);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++}
++
++static void ldma_dev_sram_desc_cfg(struct ldma_dev *d, bool enable)
++{
++	unsigned long flags;
++	u32 mask = DMA_CTRL_DSRAM_PATH;
++	u32 val = enable ? DMA_CTRL_DSRAM_PATH : 0;
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	ldma_update_bits(d, mask, val, DMA_CTRL);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++}
++
++static void ldma_dev_chan_flow_ctl_cfg(struct ldma_dev *d, bool enable)
++{
++	unsigned long flags;
++	u32 mask, val;
++
++	if (d->inst->type != DMA_TYPE_TX)
++		return;
++
++	mask = DMA_CTRL_CH_FL;
++	val = enable ? DMA_CTRL_CH_FL : 0;
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	ldma_update_bits(d, mask, val, DMA_CTRL);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++}
++
++static void ldma_dev_global_polling_enable(struct ldma_dev *d)
++{
++	unsigned long flags;
++	u32 mask = DMA_CPOLL_EN | DMA_CPOLL_CNT;
++	u32 val = DMA_CPOLL_EN;
++
++	val |= FIELD_PREP(DMA_CPOLL_CNT, d->pollcnt);
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	ldma_update_bits(d, mask, val, DMA_CPOLL);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++}
++
++static void ldma_dev_desc_fetch_on_demand_cfg(struct ldma_dev *d, bool enable)
++{
++	unsigned long flags;
++	u32 mask, val;
++
++	if (d->inst->type == DMA_TYPE_MCPY)
++		return;
++
++	mask = DMA_CTRL_DS_FOD;
++	val = enable ? DMA_CTRL_DS_FOD : 0;
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	ldma_update_bits(d, mask, val, DMA_CTRL);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++}
++
++static void ldma_dev_byte_enable_cfg(struct ldma_dev *d, bool enable)
++{
++	unsigned long flags;
++	u32 mask = DMA_CTRL_ENBE;
++	u32 val = enable ? DMA_CTRL_ENBE : 0;
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	ldma_update_bits(d, mask, val, DMA_CTRL);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++}
++
++/*
++ * orr_cnt >= 16, it will be 16
++ * 4 <= orr_cnt < 16, it ill be orr_cnt
++ * orr_cnt < 4, it will be 3. Minimum 3 orr supported
++ */
++static void ldma_dev_orrc_cfg(struct ldma_dev *d)
++{
++	unsigned long flags;
++	u32 val = 0;
++	u32 mask;
++
++	if (d->inst->type == DMA_TYPE_RX)
++		return;
++
++	mask = DMA_ORRC_EN | DMA_ORRC_ORRCNT;
++	if (d->orrc > 0 && d->orrc <= DMA_ORRC_MAX_CNT)
++		val = DMA_ORRC_EN | FIELD_PREP(DMA_ORRC_ORRCNT, d->orrc);
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	ldma_update_bits(d, mask, val, DMA_ORRC);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++}
++
++static void ldma_dev_df_tout_cfg(struct ldma_dev *d, bool enable, int tcnt)
++{
++	u32 mask = DMA_CTRL_DESC_TMOUT_CNT_V31;
++	unsigned long flags;
++	u32 val;
++
++	if (enable)
++		val = DMA_CTRL_DESC_TMOUT_EN_V31 | FIELD_PREP(DMA_CTRL_DESC_TMOUT_CNT_V31, tcnt);
++	else
++		val = 0;
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	ldma_update_bits(d, mask, val, DMA_CTRL);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++}
++
++static void ldma_dev_dburst_wr_cfg(struct ldma_dev *d, bool enable)
++{
++	unsigned long flags;
++	u32 mask, val;
++
++	if (d->inst->type != DMA_TYPE_RX && d->inst->type != DMA_TYPE_MCPY)
++		return;
++
++	mask = DMA_CTRL_DBURST_WR;
++	val = enable ? DMA_CTRL_DBURST_WR : 0;
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	ldma_update_bits(d, mask, val, DMA_CTRL);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++}
++
++static void ldma_dev_vld_fetch_ack_cfg(struct ldma_dev *d, bool enable)
++{
++	unsigned long flags;
++	u32 mask, val;
++
++	if (d->inst->type != DMA_TYPE_TX)
++		return;
++
++	mask = DMA_CTRL_VLD_DF_ACK;
++	val = enable ? DMA_CTRL_VLD_DF_ACK : 0;
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	ldma_update_bits(d, mask, val, DMA_CTRL);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++}
++
++static void ldma_dev_drb_cfg(struct ldma_dev *d, int enable)
++{
++	unsigned long flags;
++	u32 mask = DMA_CTRL_DRB;
++	u32 val = enable ? DMA_CTRL_DRB : 0;
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	ldma_update_bits(d, mask, val, DMA_CTRL);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++}
++
++static int ldma_dev_cfg(struct ldma_dev *d)
++{
++	bool enable;
++
++	ldma_dev_pkt_arb_cfg(d, true);
++	ldma_dev_global_polling_enable(d);
++
++	enable = !!(d->flags & DMA_DFT_DRB);
++	ldma_dev_drb_cfg(d, enable);
++
++	enable = !!(d->flags & DMA_EN_BYTE_EN);
++	ldma_dev_byte_enable_cfg(d, enable);
++
++	enable = !!(d->flags & DMA_CHAN_FLOW_CTL);
++	ldma_dev_chan_flow_ctl_cfg(d, enable);
++
++	enable = !!(d->flags & DMA_DESC_FTOD);
++	ldma_dev_desc_fetch_on_demand_cfg(d, enable);
++
++	enable = !!(d->flags & DMA_DESC_IN_SRAM);
++	ldma_dev_sram_desc_cfg(d, enable);
++
++	enable = !!(d->flags & DMA_DBURST_WR);
++	ldma_dev_dburst_wr_cfg(d, enable);
++
++	enable = !!(d->flags & DMA_VLD_FETCH_ACK);
++	ldma_dev_vld_fetch_ack_cfg(d, enable);
++
++	if (d->ver > DMA_VER22) {
++		ldma_dev_orrc_cfg(d);
++		ldma_dev_df_tout_cfg(d, true, DMA_DFT_DESC_TCNT);
++	}
++
++	dev_dbg(d->dev, "%s Controller 0x%08x configuration done\n",
++		d->inst->name, readl(d->base + DMA_CTRL));
++
++	return 0;
++}
++
++static int ldma_chan_cctrl_cfg(struct ldma_chan *c, u32 val)
++{
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++	u32 class_low, class_high;
++	unsigned long flags;
++	u32 reg;
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	ldma_update_bits(d, DMA_CS_MASK, c->nr, DMA_CS);
++	reg = readl(d->base + DMA_CCTRL);
++	/* Read from hardware */
++	if (reg & DMA_CCTRL_DIR_TX)
++		c->flags |= DMA_TX_CH;
++	else
++		c->flags |= DMA_RX_CH;
++
++	/* Keep the class value unchanged */
++	class_low = FIELD_GET(DMA_CCTRL_CLASS, reg);
++	class_high = FIELD_GET(DMA_CCTRL_CLASSH, reg);
++	val &= ~DMA_CCTRL_CLASS;
++	val |= FIELD_PREP(DMA_CCTRL_CLASS, class_low);
++	val &= ~DMA_CCTRL_CLASSH;
++	val |= FIELD_PREP(DMA_CCTRL_CLASSH, class_high);
++	writel(val, d->base + DMA_CCTRL);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++
++	return 0;
++}
++
++static void ldma_chan_irq_init(struct ldma_chan *c)
++{
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++	unsigned long flags;
++	u32 enofs, crofs;
++	u32 cn_bit;
++
++	if (c->nr < MAX_LOWER_CHANS) {
++		enofs = DMA_IRNEN;
++		crofs = DMA_IRNCR;
++	} else {
++		enofs = DMA_IRNEN1;
++		crofs = DMA_IRNCR1;
++	}
++
++	cn_bit = BIT(c->nr & MASK_LOWER_CHANS);
++	spin_lock_irqsave(&d->dev_lock, flags);
++	ldma_update_bits(d, DMA_CS_MASK, c->nr, DMA_CS);
++
++	/* Clear all interrupts and disabled it */
++	writel(0, d->base + DMA_CIE);
++	writel(DMA_CI_ALL, d->base + DMA_CIS);
++
++	ldma_update_bits(d, cn_bit, 0, enofs);
++	writel(cn_bit, d->base + crofs);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++}
++
++static void ldma_chan_set_class(struct ldma_chan *c, u32 val)
++{
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++	u32 class_val;
++
++	if (d->inst->type == DMA_TYPE_MCPY || val > DMA_MAX_CLASS)
++		return;
++
++	/* 3 bits low */
++	class_val = FIELD_PREP(DMA_CCTRL_CLASS, val & 0x7);
++	/* 2 bits high */
++	class_val |= FIELD_PREP(DMA_CCTRL_CLASSH, (val >> 3) & 0x3);
++
++	ldma_update_bits(d, DMA_CS_MASK, c->nr, DMA_CS);
++	ldma_update_bits(d, DMA_CCTRL_CLASS | DMA_CCTRL_CLASSH, class_val,
++			 DMA_CCTRL);
++}
++
++static int ldma_chan_on(struct ldma_chan *c)
++{
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++	unsigned long flags;
++
++	/* If descriptors not configured, not allow to turn on channel */
++	if (WARN_ON(!c->desc_init))
++		return -EINVAL;
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	ldma_update_bits(d, DMA_CS_MASK, c->nr, DMA_CS);
++	ldma_update_bits(d, DMA_CCTRL_ON, DMA_CCTRL_ON, DMA_CCTRL);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++
++	c->onoff = DMA_CH_ON;
++
++	return 0;
++}
++
++static int ldma_chan_off(struct ldma_chan *c)
++{
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++	unsigned long flags;
++	u32 val;
++	int ret;
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	ldma_update_bits(d, DMA_CS_MASK, c->nr, DMA_CS);
++	ldma_update_bits(d, DMA_CCTRL_ON, 0, DMA_CCTRL);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++
++	ret = readl_poll_timeout_atomic(d->base + DMA_CCTRL, val,
++					!(val & DMA_CCTRL_ON), 0, 10000);
++	if (ret)
++		return ret;
++
++	c->onoff = DMA_CH_OFF;
++
++	return 0;
++}
++
++static void ldma_chan_desc_hw_cfg(struct ldma_chan *c, dma_addr_t desc_base,
++				  int desc_num)
++{
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++	unsigned long flags;
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	ldma_update_bits(d, DMA_CS_MASK, c->nr, DMA_CS);
++	writel(lower_32_bits(desc_base), d->base + DMA_CDBA);
++
++	/* Higher 4 bits of 36 bit addressing */
++	if (IS_ENABLED(CONFIG_64BIT)) {
++		u32 hi = upper_32_bits(desc_base) & HIGH_4_BITS;
++
++		ldma_update_bits(d, DMA_CDBA_MSB,
++				 FIELD_PREP(DMA_CDBA_MSB, hi), DMA_CCTRL);
++	}
++	writel(desc_num, d->base + DMA_CDLEN);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++
++	c->desc_init = true;
++}
++
++/*
++ * Descriptor base address and data pointer must be physical address when
++ * writen to the register.
++ * This API will be used by CBM which configure hardware descriptor.
++ */
++static int ldma_chan_desc_cfg(struct ldma_chan *c, dma_addr_t desc_base,
++			      int desc_num)
++{
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++
++	if (!desc_num) {
++		dev_err(d->dev, "Channel %d must allocate descriptor first\n",
++			c->nr);
++		return -EINVAL;
++	}
++
++	if (desc_num > DMA_MAX_DESC_NUM) {
++		dev_err(d->dev, "Channel %d descriptor number out of range %d\n",
++			c->nr, desc_num);
++		return -EINVAL;
++	}
++
++	ldma_chan_desc_hw_cfg(c, desc_base, desc_num);
++
++	c->flags |= DMA_HW_DESC;
++	c->desc_cnt = desc_num;
++	c->desc_phys = desc_base;
++
++	return 0;
++}
++
++int intel_dma_chan_desc_cfg(struct dma_chan *chan, dma_addr_t desc_base,
++			    int desc_num)
++{
++	return ldma_chan_desc_cfg(to_ldma_chan(chan), desc_base, desc_num);
++}
++EXPORT_SYMBOL_GPL(intel_dma_chan_desc_cfg);
++
++static int ldma_chan_reset(struct ldma_chan *c)
++{
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++	unsigned long flags;
++	u32 val;
++	int ret;
++
++	ret = ldma_chan_off(c);
++	if (ret)
++		return ret;
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	ldma_update_bits(d, DMA_CS_MASK, c->nr, DMA_CS);
++	ldma_update_bits(d, DMA_CCTRL_RST, DMA_CCTRL_RST, DMA_CCTRL);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++
++	ret = readl_poll_timeout_atomic(d->base + DMA_CCTRL, val,
++					!(val & DMA_CCTRL_RST), 0, 10000);
++	if (ret)
++		return ret;
++
++	c->rst = 1;
++	c->desc_init = false;
++
++	return 0;
++}
++
++static void ldma_chan_byte_offset_cfg(struct ldma_chan *c, u32 boff_len)
++{
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++	u32 mask = DMA_C_BOFF_EN | DMA_C_BOFF_BOF_LEN;
++	u32 val;
++
++	if (boff_len > 0 && boff_len <= DMA_CHAN_BOFF_MAX)
++		val = FIELD_PREP(DMA_C_BOFF_BOF_LEN, boff_len) | DMA_C_BOFF_EN;
++	else
++		val = 0;
++
++	ldma_update_bits(d, DMA_CS_MASK, c->nr, DMA_CS);
++	ldma_update_bits(d, mask, val, DMA_C_BOFF);
++}
++
++static void ldma_chan_data_endian_cfg(struct ldma_chan *c, bool enable,
++				      u32 endian_type)
++{
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++	u32 mask = DMA_C_END_DE_EN | DMA_C_END_DATAENDI;
++	u32 val;
++
++	if (enable)
++		val = DMA_C_END_DE_EN | FIELD_PREP(DMA_C_END_DATAENDI, endian_type);
++	else
++		val = 0;
++
++	ldma_update_bits(d, DMA_CS_MASK, c->nr, DMA_CS);
++	ldma_update_bits(d, mask, val, DMA_C_ENDIAN);
++}
++
++static void ldma_chan_desc_endian_cfg(struct ldma_chan *c, bool enable,
++				      u32 endian_type)
++{
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++	u32 mask = DMA_C_END_DES_EN | DMA_C_END_DESENDI;
++	u32 val;
++
++	if (enable)
++		val = DMA_C_END_DES_EN | FIELD_PREP(DMA_C_END_DESENDI, endian_type);
++	else
++		val = 0;
++
++	ldma_update_bits(d, DMA_CS_MASK, c->nr, DMA_CS);
++	ldma_update_bits(d, mask, val, DMA_C_ENDIAN);
++}
++
++static void ldma_chan_hdr_mode_cfg(struct ldma_chan *c, u32 hdr_len, bool csum)
++{
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++	u32 mask, val;
++
++	/* NB, csum disabled, hdr length must be provided */
++	if (!csum && (!hdr_len || hdr_len > DMA_HDR_LEN_MAX))
++		return;
++
++	mask = DMA_C_HDRM_HDR_SUM;
++	val = DMA_C_HDRM_HDR_SUM;
++
++	if (!csum && hdr_len)
++		val = hdr_len;
++
++	ldma_update_bits(d, DMA_CS_MASK, c->nr, DMA_CS);
++	ldma_update_bits(d, mask, val, DMA_C_HDRM);
++}
++
++static void ldma_chan_rxwr_np_cfg(struct ldma_chan *c, bool enable)
++{
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++	u32 mask, val;
++
++	/* Only valid for RX channel */
++	if (ldma_chan_tx(c))
++		return;
++
++	mask = DMA_CCTRL_WR_NP_EN;
++	val = enable ? DMA_CCTRL_WR_NP_EN : 0;
++
++	ldma_update_bits(d, DMA_CS_MASK, c->nr, DMA_CS);
++	ldma_update_bits(d, mask, val, DMA_CCTRL);
++}
++
++static void ldma_chan_abc_cfg(struct ldma_chan *c, bool enable)
++{
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++	u32 mask, val;
++
++	if (d->ver < DMA_VER32 || ldma_chan_tx(c))
++		return;
++
++	mask = DMA_CCTRL_CH_ABC;
++	val = enable ? DMA_CCTRL_CH_ABC : 0;
++
++	ldma_update_bits(d, DMA_CS_MASK, c->nr, DMA_CS);
++	ldma_update_bits(d, mask, val, DMA_CCTRL);
++}
++
++static int ldma_port_cfg(struct ldma_port *p)
++{
++	unsigned long flags;
++	struct ldma_dev *d;
++	u32 reg;
++
++	d = p->ldev;
++	reg = FIELD_PREP(DMA_PCTRL_TXENDI, p->txendi);
++	reg |= FIELD_PREP(DMA_PCTRL_RXENDI, p->rxendi);
++
++	if (d->ver == DMA_VER22) {
++		reg |= FIELD_PREP(DMA_PCTRL_TXBL, p->txbl);
++		reg |= FIELD_PREP(DMA_PCTRL_RXBL, p->rxbl);
++	} else {
++		reg |= FIELD_PREP(DMA_PCTRL_PDEN, p->pkt_drop);
++
++		if (p->txbl == DMA_BURSTL_32DW)
++			reg |= DMA_PCTRL_TXBL32;
++		else if (p->txbl == DMA_BURSTL_16DW)
++			reg |= DMA_PCTRL_TXBL16;
++		else
++			reg |= FIELD_PREP(DMA_PCTRL_TXBL, DMA_PCTRL_TXBL_8);
++
++		if (p->rxbl == DMA_BURSTL_32DW)
++			reg |= DMA_PCTRL_RXBL32;
++		else if (p->rxbl == DMA_BURSTL_16DW)
++			reg |= DMA_PCTRL_RXBL16;
++		else
++			reg |= FIELD_PREP(DMA_PCTRL_RXBL, DMA_PCTRL_RXBL_8);
++	}
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	writel(p->portid, d->base + DMA_PS);
++	writel(reg, d->base + DMA_PCTRL);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++
++	reg = readl(d->base + DMA_PCTRL); /* read back */
++	dev_dbg(d->dev, "Port Control 0x%08x configuration done\n", reg);
++
++	return 0;
++}
++
++static int ldma_chan_cfg(struct ldma_chan *c)
++{
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++	unsigned long flags;
++	u32 reg;
++
++	reg = c->pden ? DMA_CCTRL_PDEN : 0;
++	reg |= c->onoff ? DMA_CCTRL_ON : 0;
++	reg |= c->rst ? DMA_CCTRL_RST : 0;
++
++	ldma_chan_cctrl_cfg(c, reg);
++	ldma_chan_irq_init(c);
++
++	if (d->ver <= DMA_VER22)
++		return 0;
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	ldma_chan_set_class(c, c->nr);
++	ldma_chan_byte_offset_cfg(c, c->boff_len);
++	ldma_chan_data_endian_cfg(c, c->data_endian_en, c->data_endian);
++	ldma_chan_desc_endian_cfg(c, c->desc_endian_en, c->desc_endian);
++	ldma_chan_hdr_mode_cfg(c, c->hdrm_len, c->hdrm_csum);
++	ldma_chan_rxwr_np_cfg(c, c->desc_rx_np);
++	ldma_chan_abc_cfg(c, c->abc_en);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++
++	if (ldma_chan_is_hw_desc(c))
++		ldma_chan_desc_hw_cfg(c, c->desc_phys, c->desc_cnt);
++
++	return 0;
++}
++
++static void ldma_dev_init(struct ldma_dev *d)
++{
++	unsigned long ch_mask = (unsigned long)d->channels_mask;
++	struct ldma_port *p;
++	struct ldma_chan *c;
++	int i;
++	u32 j;
++
++	spin_lock_init(&d->dev_lock);
++	ldma_dev_reset(d);
++	ldma_dev_cfg(d);
++
++	/* DMA port initialization */
++	for (i = 0; i < d->port_nrs; i++) {
++		p = &d->ports[i];
++		ldma_port_cfg(p);
++	}
++
++	/* DMA channel initialization */
++	for_each_set_bit(j, &ch_mask, d->chan_nrs) {
++		c = &d->chans[j];
++		ldma_chan_cfg(c);
++	}
++}
++
++static int ldma_cfg_init(struct ldma_dev *d)
++{
++	struct fwnode_handle *fwnode = dev_fwnode(d->dev);
++	struct ldma_port *p;
++	u32 val;
++	int i;
++
++	if (fwnode_property_read_bool(fwnode, "intel,dma-chan-fc"))
++		d->flags |= DMA_CHAN_FLOW_CTL;
++
++	if (fwnode_property_read_bool(fwnode, "intel,dma-desc-fod"))
++		d->flags |= DMA_DESC_FTOD;
++
++	if (fwnode_property_read_bool(fwnode, "intel,dma-desc-in-sram"))
++		d->flags |= DMA_DESC_IN_SRAM;
++
++	if (fwnode_property_read_bool(fwnode, "intel,dma-byte-en"))
++		d->flags |= DMA_EN_BYTE_EN;
++
++	if (fwnode_property_read_bool(fwnode, "intel,dma-dfetch-ack"))
++		d->flags |= DMA_VLD_FETCH_ACK;
++
++	if (fwnode_property_read_bool(fwnode, "intel,dma-dburst-wr"))
++		d->flags |= DMA_DBURST_WR;
++
++	if (fwnode_property_read_bool(fwnode, "intel,dma-drb"))
++		d->flags |= DMA_DFT_DRB;
++
++	if (fwnode_property_read_u32(fwnode, "intel,dma-poll-cnt",
++				     &d->pollcnt))
++		d->pollcnt = DMA_DFT_POLL_CNT;
++
++	if (!fwnode_property_read_u32(fwnode, "intel,dma-orrc", &val)) {
++		if (val > DMA_ORRC_MAX_CNT)
++			return -EINVAL;
++		d->orrc = val;
++	}
++
++	if (d->ver > DMA_VER22) {
++		if (!d->port_nrs)
++			return -EINVAL;
++
++		for (i = 0; i < d->port_nrs; i++) {
++			p = &d->ports[i];
++			p->rxendi = DMA_DFT_ENDIAN;
++			p->txendi = DMA_DFT_ENDIAN;
++			p->rxbl = DMA_DFT_BURST;
++			p->txbl = DMA_DFT_BURST;
++			p->pkt_drop = DMA_PKT_DROP_DIS;
++		}
++	}
++
++	return 0;
++}
++
++static void dma_free_desc_resource(struct virt_dma_desc *vdesc)
++{
++	struct dw2_desc_sw *ds = to_lgm_dma_desc(vdesc);
++	struct ldma_chan *c = ds->chan;
++
++	dma_pool_free(c->desc_pool, ds->desc_hw, ds->desc_phys);
++	kfree(ds);
++}
++
++static struct dw2_desc_sw *
++dma_alloc_desc_resource(int num, struct ldma_chan *c)
++{
++	struct device *dev = c->vchan.chan.device->dev;
++	struct dw2_desc_sw *ds;
++
++	if (num > c->desc_num) {
++		dev_err(dev, "sg num %d exceed max %d\n", num, c->desc_num);
++		return NULL;
++	}
++
++	ds = kzalloc(sizeof(*ds), GFP_NOWAIT);
++	if (!ds)
++		return NULL;
++
++	ds->chan = c;
++	ds->desc_hw = dma_pool_zalloc(c->desc_pool, GFP_ATOMIC,
++				      &ds->desc_phys);
++	if (!ds->desc_hw) {
++		dev_dbg(dev, "out of memory for link descriptor\n");
++		kfree(ds);
++		return NULL;
++	}
++	ds->desc_cnt = num;
++
++	return ds;
++}
++
++static void ldma_chan_irq_en(struct ldma_chan *c)
++{
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++	unsigned long flags;
++
++	spin_lock_irqsave(&d->dev_lock, flags);
++	writel(c->nr, d->base + DMA_CS);
++	writel(DMA_CI_EOP, d->base + DMA_CIE);
++	writel(BIT(c->nr), d->base + DMA_IRNEN);
++	spin_unlock_irqrestore(&d->dev_lock, flags);
++}
++
++static void dma_issue_pending(struct dma_chan *chan)
++{
++	struct ldma_chan *c = to_ldma_chan(chan);
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++	unsigned long flags;
++
++	if (d->ver == DMA_VER22) {
++		spin_lock_irqsave(&c->vchan.lock, flags);
++		if (vchan_issue_pending(&c->vchan)) {
++			struct virt_dma_desc *vdesc;
++
++			/* Get the next descriptor */
++			vdesc = vchan_next_desc(&c->vchan);
++			if (!vdesc) {
++				c->ds = NULL;
++				spin_unlock_irqrestore(&c->vchan.lock, flags);
++				return;
++			}
++			list_del(&vdesc->node);
++			c->ds = to_lgm_dma_desc(vdesc);
++			ldma_chan_desc_hw_cfg(c, c->ds->desc_phys, c->ds->desc_cnt);
++			ldma_chan_irq_en(c);
++		}
++		spin_unlock_irqrestore(&c->vchan.lock, flags);
++	}
++	ldma_chan_on(c);
++}
++
++static void dma_synchronize(struct dma_chan *chan)
++{
++	struct ldma_chan *c = to_ldma_chan(chan);
++
++	/*
++	 * clear any pending work if any. In that
++	 * case the resource needs to be free here.
++	 */
++	cancel_work_sync(&c->work);
++	vchan_synchronize(&c->vchan);
++	if (c->ds)
++		dma_free_desc_resource(&c->ds->vdesc);
++}
++
++static int dma_terminate_all(struct dma_chan *chan)
++{
++	struct ldma_chan *c = to_ldma_chan(chan);
++	unsigned long flags;
++	LIST_HEAD(head);
++
++	spin_lock_irqsave(&c->vchan.lock, flags);
++	vchan_get_all_descriptors(&c->vchan, &head);
++	spin_unlock_irqrestore(&c->vchan.lock, flags);
++	vchan_dma_desc_free_list(&c->vchan, &head);
++
++	return ldma_chan_reset(c);
++}
++
++static int dma_resume_chan(struct dma_chan *chan)
++{
++	struct ldma_chan *c = to_ldma_chan(chan);
++
++	ldma_chan_on(c);
++
++	return 0;
++}
++
++static int dma_pause_chan(struct dma_chan *chan)
++{
++	struct ldma_chan *c = to_ldma_chan(chan);
++
++	return ldma_chan_off(c);
++}
++
++static enum dma_status
++dma_tx_status(struct dma_chan *chan, dma_cookie_t cookie,
++	      struct dma_tx_state *txstate)
++{
++	struct ldma_chan *c = to_ldma_chan(chan);
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++	enum dma_status status = DMA_COMPLETE;
++
++	if (d->ver == DMA_VER22)
++		status = dma_cookie_status(chan, cookie, txstate);
++
++	return status;
++}
++
++static void dma_chan_irq(int irq, void *data)
++{
++	struct ldma_chan *c = data;
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++	u32 stat;
++
++	/* Disable channel interrupts  */
++	writel(c->nr, d->base + DMA_CS);
++	stat = readl(d->base + DMA_CIS);
++	if (!stat)
++		return;
++
++	writel(readl(d->base + DMA_CIE) & ~DMA_CI_ALL, d->base + DMA_CIE);
++	writel(stat, d->base + DMA_CIS);
++	queue_work(d->wq, &c->work);
++}
++
++static irqreturn_t dma_interrupt(int irq, void *dev_id)
++{
++	struct ldma_dev *d = dev_id;
++	struct ldma_chan *c;
++	unsigned long irncr;
++	u32 cid;
++
++	irncr = readl(d->base + DMA_IRNCR);
++	if (!irncr) {
++		dev_err(d->dev, "dummy interrupt\n");
++		return IRQ_NONE;
++	}
++
++	for_each_set_bit(cid, &irncr, d->chan_nrs) {
++		/* Mask */
++		writel(readl(d->base + DMA_IRNEN) & ~BIT(cid), d->base + DMA_IRNEN);
++		/* Ack */
++		writel(readl(d->base + DMA_IRNCR) | BIT(cid), d->base + DMA_IRNCR);
++
++		c = &d->chans[cid];
++		dma_chan_irq(irq, c);
++	}
++
++	return IRQ_HANDLED;
++}
++
++static void prep_slave_burst_len(struct ldma_chan *c)
++{
++	struct ldma_port *p = c->port;
++	struct dma_slave_config *cfg = &c->config;
++
++	if (cfg->dst_maxburst)
++		cfg->src_maxburst = cfg->dst_maxburst;
++
++	/* TX and RX has the same burst length */
++	p->txbl = ilog2(cfg->src_maxburst);
++	p->rxbl = p->txbl;
++}
++
++static struct dma_async_tx_descriptor *
++dma_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
++		  unsigned int sglen, enum dma_transfer_direction dir,
++		  unsigned long flags, void *context)
++{
++	struct ldma_chan *c = to_ldma_chan(chan);
++	size_t len, avail, total = 0;
++	struct dw2_desc *hw_ds;
++	struct dw2_desc_sw *ds;
++	struct scatterlist *sg;
++	int num = sglen, i;
++	dma_addr_t addr;
++
++	if (!sgl)
++		return NULL;
++
++	for_each_sg(sgl, sg, sglen, i) {
++		avail = sg_dma_len(sg);
++		if (avail > DMA_MAX_SIZE)
++			num += DIV_ROUND_UP(avail, DMA_MAX_SIZE) - 1;
++	}
++
++	ds = dma_alloc_desc_resource(num, c);
++	if (!ds)
++		return NULL;
++
++	c->ds = ds;
++
++	num = 0;
++	/* sop and eop has to be handled nicely */
++	for_each_sg(sgl, sg, sglen, i) {
++		addr = sg_dma_address(sg);
++		avail = sg_dma_len(sg);
++		total += avail;
++
++		do {
++			len = min_t(size_t, avail, DMA_MAX_SIZE);
++
++			hw_ds = &ds->desc_hw[num];
++			switch (sglen) {
++			case 1:
++				hw_ds->field.sop = 1;
++				hw_ds->field.eop = 1;
++				break;
++			default:
++				if (num == 0) {
++					hw_ds->field.sop = 1;
++					hw_ds->field.eop = 0;
++				} else if (num == (sglen - 1)) {
++					hw_ds->field.sop = 0;
++					hw_ds->field.eop = 1;
++				} else {
++					hw_ds->field.sop = 0;
++					hw_ds->field.eop = 0;
++				}
++				break;
++			}
++
++			/* Only 32 bit address supported */
++			hw_ds->addr = (u32)addr;
++			hw_ds->field.len = len;
++			hw_ds->field.c = 0;
++			hw_ds->field.bofs = addr & 0x3;
++			/* Ensure data ready before ownership change */
++			wmb();
++			hw_ds->field.own = DMA_OWN;
++			/* Ensure ownership changed before moving forward */
++			wmb();
++			num++;
++			addr += len;
++			avail -= len;
++		} while (avail);
++	}
++
++	ds->size = total;
++	prep_slave_burst_len(c);
++
++	return vchan_tx_prep(&c->vchan, &ds->vdesc, DMA_CTRL_ACK);
++}
++
++static int
++dma_slave_config(struct dma_chan *chan, struct dma_slave_config *cfg)
++{
++	struct ldma_chan *c = to_ldma_chan(chan);
++
++	memcpy(&c->config, cfg, sizeof(c->config));
++
++	return 0;
++}
++
++static int dma_alloc_chan_resources(struct dma_chan *chan)
++{
++	struct ldma_chan *c = to_ldma_chan(chan);
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++	struct device *dev = c->vchan.chan.device->dev;
++	size_t	desc_sz;
++
++	if (d->ver > DMA_VER22) {
++		c->flags |= CHAN_IN_USE;
++		return 0;
++	}
++
++	if (c->desc_pool)
++		return c->desc_num;
++
++	desc_sz = c->desc_num * sizeof(struct dw2_desc);
++	c->desc_pool = dma_pool_create(c->name, dev, desc_sz,
++				       __alignof__(struct dw2_desc), 0);
++
++	if (!c->desc_pool) {
++		dev_err(dev, "unable to allocate descriptor pool\n");
++		return -ENOMEM;
++	}
++
++	return c->desc_num;
++}
++
++static void dma_free_chan_resources(struct dma_chan *chan)
++{
++	struct ldma_chan *c = to_ldma_chan(chan);
++	struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
++
++	if (d->ver == DMA_VER22) {
++		dma_pool_destroy(c->desc_pool);
++		c->desc_pool = NULL;
++		vchan_free_chan_resources(to_virt_chan(chan));
++		ldma_chan_reset(c);
++	} else {
++		c->flags &= ~CHAN_IN_USE;
++	}
++}
++
++static void dma_work(struct work_struct *work)
++{
++	struct ldma_chan *c = container_of(work, struct ldma_chan, work);
++	struct dma_async_tx_descriptor *tx = &c->ds->vdesc.tx;
++	struct virt_dma_chan *vc = &c->vchan;
++	struct dmaengine_desc_callback cb;
++	struct virt_dma_desc *vd, *_vd;
++	unsigned long flags;
++	LIST_HEAD(head);
++
++	spin_lock_irqsave(&c->vchan.lock, flags);
++	list_splice_tail_init(&vc->desc_completed, &head);
++	spin_unlock_irqrestore(&c->vchan.lock, flags);
++	dmaengine_desc_get_callback(tx, &cb);
++	dma_cookie_complete(tx);
++	dmaengine_desc_callback_invoke(&cb, NULL);
++
++	list_for_each_entry_safe(vd, _vd, &head, node) {
++		dmaengine_desc_get_callback(tx, &cb);
++		dma_cookie_complete(tx);
++		list_del(&vd->node);
++		dmaengine_desc_callback_invoke(&cb, NULL);
++
++		vchan_vdesc_fini(vd);
++	}
++	c->ds = NULL;
++}
++
++static void
++update_burst_len_v22(struct ldma_chan *c, struct ldma_port *p, u32 burst)
++{
++	if (ldma_chan_tx(c))
++		p->txbl = ilog2(burst);
++	else
++		p->rxbl = ilog2(burst);
++}
++
++static void
++update_burst_len_v3X(struct ldma_chan *c, struct ldma_port *p, u32 burst)
++{
++	if (ldma_chan_tx(c))
++		p->txbl = burst;
++	else
++		p->rxbl = burst;
++}
++
++static int
++update_client_configs(struct of_dma *ofdma, struct of_phandle_args *spec)
++{
++	struct ldma_dev *d = ofdma->of_dma_data;
++	u32 chan_id =  spec->args[0];
++	u32 port_id =  spec->args[1];
++	u32 burst = spec->args[2];
++	struct ldma_port *p;
++	struct ldma_chan *c;
++
++	if (chan_id >= d->chan_nrs || port_id >= d->port_nrs)
++		return 0;
++
++	p = &d->ports[port_id];
++	c = &d->chans[chan_id];
++	c->port = p;
++
++	if (d->ver == DMA_VER22)
++		update_burst_len_v22(c, p, burst);
++	else
++		update_burst_len_v3X(c, p, burst);
++
++	ldma_port_cfg(p);
++
++	return 1;
++}
++
++static struct dma_chan *ldma_xlate(struct of_phandle_args *spec,
++				   struct of_dma *ofdma)
++{
++	struct ldma_dev *d = ofdma->of_dma_data;
++	u32 chan_id =  spec->args[0];
++	int ret;
++
++	if (!spec->args_count)
++		return NULL;
++
++	/* if args_count is 1 driver use default settings */
++	if (spec->args_count > 1) {
++		ret = update_client_configs(ofdma, spec);
++		if (!ret)
++			return NULL;
++	}
++
++	return dma_get_slave_channel(&d->chans[chan_id].vchan.chan);
++}
++
++static void ldma_dma_init_v22(int i, struct ldma_dev *d)
++{
++	struct ldma_chan *c;
++
++	c = &d->chans[i];
++	c->nr = i; /* Real channel number */
++	c->rst = DMA_CHAN_RST;
++	c->desc_num = DMA_DFT_DESC_NUM;
++	snprintf(c->name, sizeof(c->name), "chan%d", c->nr);
++	INIT_WORK(&c->work, dma_work);
++	c->vchan.desc_free = dma_free_desc_resource;
++	vchan_init(&c->vchan, &d->dma_dev);
++}
++
++static void ldma_dma_init_v3X(int i, struct ldma_dev *d)
++{
++	struct ldma_chan *c;
++
++	c = &d->chans[i];
++	c->data_endian = DMA_DFT_ENDIAN;
++	c->desc_endian = DMA_DFT_ENDIAN;
++	c->data_endian_en = false;
++	c->desc_endian_en = false;
++	c->desc_rx_np = false;
++	c->flags |= DEVICE_ALLOC_DESC;
++	c->onoff = DMA_CH_OFF;
++	c->rst = DMA_CHAN_RST;
++	c->abc_en = true;
++	c->hdrm_csum = false;
++	c->boff_len = 0;
++	c->nr = i;
++	c->vchan.desc_free = dma_free_desc_resource;
++	vchan_init(&c->vchan, &d->dma_dev);
++}
++
++static int ldma_init_v22(struct ldma_dev *d, struct platform_device *pdev)
++{
++	int ret;
++
++	ret = device_property_read_u32(d->dev, "dma-channels", &d->chan_nrs);
++	if (ret < 0) {
++		dev_err(d->dev, "unable to read dma-channels property\n");
++		return ret;
++	}
++
++	d->irq = platform_get_irq(pdev, 0);
++	if (d->irq < 0)
++		return d->irq;
++
++	ret = devm_request_irq(&pdev->dev, d->irq, dma_interrupt, 0,
++			       DRIVER_NAME, d);
++	if (ret)
++		return ret;
++
++	d->wq = alloc_ordered_workqueue("dma_wq", WQ_MEM_RECLAIM |
++			WQ_HIGHPRI);
++	if (!d->wq)
++		return -ENOMEM;
++
++	return 0;
++}
++
++static void ldma_clk_disable(void *data)
++{
++	struct ldma_dev *d = data;
++
++	clk_disable_unprepare(d->core_clk);
++	reset_control_assert(d->rst);
++}
++
++static struct dma_dev_ops dma0_ops = {
++	.device_alloc_chan_resources = dma_alloc_chan_resources,
++	.device_free_chan_resources = dma_free_chan_resources,
++	.device_config = dma_slave_config,
++	.device_prep_slave_sg = dma_prep_slave_sg,
++	.device_tx_status = dma_tx_status,
++	.device_pause = dma_pause_chan,
++	.device_resume = dma_resume_chan,
++	.device_terminate_all = dma_terminate_all,
++	.device_synchronize = dma_synchronize,
++	.device_issue_pending = dma_issue_pending,
++};
++
++static struct dma_dev_ops hdma_ops = {
++	.device_alloc_chan_resources = dma_alloc_chan_resources,
++	.device_free_chan_resources = dma_free_chan_resources,
++	.device_terminate_all = dma_terminate_all,
++	.device_issue_pending = dma_issue_pending,
++	.device_tx_status = dma_tx_status,
++	.device_resume = dma_resume_chan,
++	.device_pause = dma_pause_chan,
++};
++
++static const struct ldma_inst_data dma0 = {
++	.name = "dma0",
++	.ops = &dma0_ops,
++};
++
++static const struct ldma_inst_data dma2tx = {
++	.name = "dma2tx",
++	.type = DMA_TYPE_TX,
++	.ops = &hdma_ops,
++};
++
++static const struct ldma_inst_data dma1rx = {
++	.name = "dma1rx",
++	.type = DMA_TYPE_RX,
++	.ops = &hdma_ops,
++};
++
++static const struct ldma_inst_data dma1tx = {
++	.name = "dma1tx",
++	.type = DMA_TYPE_TX,
++	.ops = &hdma_ops,
++};
++
++static const struct ldma_inst_data dma0tx = {
++	.name = "dma0tx",
++	.type = DMA_TYPE_TX,
++	.ops = &hdma_ops,
++};
++
++static const struct ldma_inst_data dma3 = {
++	.name = "dma3",
++	.type = DMA_TYPE_MCPY,
++	.ops = &hdma_ops,
++};
++
++static const struct ldma_inst_data toe_dma30 = {
++	.name = "toe_dma30",
++	.type = DMA_TYPE_MCPY,
++	.ops = &hdma_ops,
++};
++
++static const struct ldma_inst_data toe_dma31 = {
++	.name = "toe_dma31",
++	.type = DMA_TYPE_MCPY,
++	.ops = &hdma_ops,
++};
++
++static const struct of_device_id intel_ldma_match[] = {
++	{ .compatible = "intel,lgm-cdma", .data = &dma0},
++	{ .compatible = "intel,lgm-dma2tx", .data = &dma2tx},
++	{ .compatible = "intel,lgm-dma1rx", .data = &dma1rx},
++	{ .compatible = "intel,lgm-dma1tx", .data = &dma1tx},
++	{ .compatible = "intel,lgm-dma0tx", .data = &dma0tx},
++	{ .compatible = "intel,lgm-dma3", .data = &dma3},
++	{ .compatible = "intel,lgm-toe-dma30", .data = &toe_dma30},
++	{ .compatible = "intel,lgm-toe-dma31", .data = &toe_dma31},
++	{}
++};
++
++static int intel_ldma_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct dma_device *dma_dev;
++	unsigned long ch_mask;
++	struct ldma_chan *c;
++	struct ldma_port *p;
++	struct ldma_dev *d;
++	u32 id, bitn = 32, j;
++	int i, ret;
++
++	d = devm_kzalloc(dev, sizeof(*d), GFP_KERNEL);
++	if (!d)
++		return -ENOMEM;
++
++	/* Link controller to platform device */
++	d->dev = &pdev->dev;
++
++	d->inst = device_get_match_data(dev);
++	if (!d->inst) {
++		dev_err(dev, "No device match found\n");
++		return -ENODEV;
++	}
++
++	d->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(d->base))
++		return PTR_ERR(d->base);
++
++	/* Power up and reset the dma engine, some DMAs always on?? */
++	d->core_clk = devm_clk_get_optional(dev, NULL);
++	if (IS_ERR(d->core_clk))
++		return PTR_ERR(d->core_clk);
++	clk_prepare_enable(d->core_clk);
++
++	d->rst = devm_reset_control_get_optional(dev, NULL);
++	if (IS_ERR(d->rst))
++		return PTR_ERR(d->rst);
++	reset_control_deassert(d->rst);
++
++	ret = devm_add_action_or_reset(dev, ldma_clk_disable, d);
++	if (ret) {
++		dev_err(dev, "Failed to devm_add_action_or_reset, %d\n", ret);
++		return ret;
++	}
++
++	id = readl(d->base + DMA_ID);
++	d->chan_nrs = FIELD_GET(DMA_ID_CHNR, id);
++	d->port_nrs = FIELD_GET(DMA_ID_PNR, id);
++	d->ver = FIELD_GET(DMA_ID_REV, id);
++
++	if (id & DMA_ID_AW_36B)
++		d->flags |= DMA_ADDR_36BIT;
++
++	if (IS_ENABLED(CONFIG_64BIT) && (id & DMA_ID_AW_36B))
++		bitn = 36;
++
++	if (id & DMA_ID_DW_128B)
++		d->flags |= DMA_DATA_128BIT;
++
++	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(bitn));
++	if (ret) {
++		dev_err(dev, "No usable DMA configuration\n");
++		return ret;
++	}
++
++	if (d->ver == DMA_VER22) {
++		ret = ldma_init_v22(d, pdev);
++		if (ret)
++			return ret;
++	}
++
++	ret = device_property_read_u32(dev, "dma-channel-mask", &d->channels_mask);
++	if (ret < 0)
++		d->channels_mask = GENMASK(d->chan_nrs - 1, 0);
++
++	dma_dev = &d->dma_dev;
++
++	dma_cap_zero(dma_dev->cap_mask);
++	dma_cap_set(DMA_SLAVE, dma_dev->cap_mask);
++
++	/* Channel initializations */
++	INIT_LIST_HEAD(&dma_dev->channels);
++
++	/* Port Initializations */
++	d->ports = devm_kcalloc(dev, d->port_nrs, sizeof(*p), GFP_KERNEL);
++	if (!d->ports)
++		return -ENOMEM;
++
++	/* Channels Initializations */
++	d->chans = devm_kcalloc(d->dev, d->chan_nrs, sizeof(*c), GFP_KERNEL);
++	if (!d->chans)
++		return -ENOMEM;
++
++	for (i = 0; i < d->port_nrs; i++) {
++		p = &d->ports[i];
++		p->portid = i;
++		p->ldev = d;
++	}
++
++	ret = ldma_cfg_init(d);
++	if (ret)
++		return ret;
++
++	dma_dev->dev = &pdev->dev;
++
++	ch_mask = (unsigned long)d->channels_mask;
++	for_each_set_bit(j, &ch_mask, d->chan_nrs) {
++		if (d->ver == DMA_VER22)
++			ldma_dma_init_v22(j, d);
++		else
++			ldma_dma_init_v3X(j, d);
++	}
++
++	dma_dev->device_alloc_chan_resources =
++		d->inst->ops->device_alloc_chan_resources;
++	dma_dev->device_free_chan_resources =
++		d->inst->ops->device_free_chan_resources;
++	dma_dev->device_terminate_all = d->inst->ops->device_terminate_all;
++	dma_dev->device_issue_pending = d->inst->ops->device_issue_pending;
++	dma_dev->device_tx_status = d->inst->ops->device_tx_status;
++	dma_dev->device_resume = d->inst->ops->device_resume;
++	dma_dev->device_pause = d->inst->ops->device_pause;
++	dma_dev->device_config = d->inst->ops->device_config;
++	dma_dev->device_prep_slave_sg = d->inst->ops->device_prep_slave_sg;
++	dma_dev->device_synchronize = d->inst->ops->device_synchronize;
++
++	if (d->ver == DMA_VER22) {
++		dma_dev->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
++		dma_dev->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
++		dma_dev->directions = BIT(DMA_MEM_TO_DEV) |
++				      BIT(DMA_DEV_TO_MEM);
++		dma_dev->residue_granularity =
++					DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
++	}
++
++	platform_set_drvdata(pdev, d);
++
++	ldma_dev_init(d);
++
++	ret = dma_async_device_register(dma_dev);
++	if (ret) {
++		dev_err(dev, "Failed to register slave DMA engine device\n");
++		return ret;
++	}
++
++	ret = of_dma_controller_register(pdev->dev.of_node, ldma_xlate, d);
++	if (ret) {
++		dev_err(dev, "Failed to register of DMA controller\n");
++		dma_async_device_unregister(dma_dev);
++		return ret;
++	}
++
++	dev_info(dev, "Init done - rev: %x, ports: %d channels: %d\n", d->ver,
++		 d->port_nrs, d->chan_nrs);
++
++	return 0;
++}
++
++static struct platform_driver intel_ldma_driver = {
++	.probe = intel_ldma_probe,
++	.driver = {
++		.name = DRIVER_NAME,
++		.of_match_table = intel_ldma_match,
++	},
++};
++
++/*
++ * Perform this driver as device_initcall to make sure initialization happens
++ * before its DMA clients of some are platform specific and also to provide
++ * registered DMA channels and DMA capabilities to clients before their
++ * initialization.
++ */
++static int __init intel_ldma_init(void)
++{
++	return platform_driver_register(&intel_ldma_driver);
++}
++
++device_initcall(intel_ldma_init);
+diff --git a/include/linux/dma/lgm_dma.h b/include/linux/dma/lgm_dma.h
+new file mode 100644
+index 000000000000..6942e0ef0977
+--- /dev/null
++++ b/include/linux/dma/lgm_dma.h
+@@ -0,0 +1,27 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2016 ~ 2020 Intel Corporation.
++ */
++#ifndef LGM_DMA_H
++#define LGM_DMA_H
++
++#include <linux/types.h>
++#include <linux/dmaengine.h>
++
++/*!
++ * \fn int intel_dma_chan_desc_cfg(struct dma_chan *chan, dma_addr_t desc_base,
++ *                                 int desc_num)
++ * \brief Configure low level channel descriptors
++ * \param[in] chan   pointer to DMA channel that the client is using
++ * \param[in] desc_base   descriptor base physical address
++ * \param[in] desc_num   number of descriptors
++ * \return   0 on success
++ * \return   kernel bug reported on failure
++ *
++ * This function configure the low level channel descriptors. It will be
++ * used by CBM whose descriptor is not DDR, actually some registers.
++ */
++int intel_dma_chan_desc_cfg(struct dma_chan *chan, dma_addr_t desc_base,
++			    int desc_num);
++
++#endif /* LGM_DMA_H */
 -- 
 2.11.0
 

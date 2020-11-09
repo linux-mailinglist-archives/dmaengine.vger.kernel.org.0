@@ -2,110 +2,155 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BF252AC011
-	for <lists+dmaengine@lfdr.de>; Mon,  9 Nov 2020 16:40:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2592C2AC133
+	for <lists+dmaengine@lfdr.de>; Mon,  9 Nov 2020 17:47:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgKIPkR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 9 Nov 2020 10:40:17 -0500
-Received: from muru.com ([72.249.23.125]:47548 "EHLO muru.com"
+        id S1730450AbgKIQqV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 9 Nov 2020 11:46:21 -0500
+Received: from nat-hk.nvidia.com ([203.18.50.4]:2175 "EHLO nat-hk.nvidia.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726410AbgKIPkR (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 9 Nov 2020 10:40:17 -0500
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 80B8B80CD;
-        Mon,  9 Nov 2020 15:40:22 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     linux-omap@vger.kernel.org
-Cc:     Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH] dmaengine: ti: omap-dma: Block PM if SDMA is busy to fix audio
-Date:   Mon,  9 Nov 2020 17:40:13 +0200
-Message-Id: <20201109154013.11950-1-tony@atomide.com>
-X-Mailer: git-send-email 2.29.2
+        id S1726410AbgKIQqV (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 9 Nov 2020 11:46:21 -0500
+Received: from HKMAIL103.nvidia.com (Not Verified[10.18.92.77]) by nat-hk.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5fa9725a0001>; Tue, 10 Nov 2020 00:46:18 +0800
+Received: from HKMAIL102.nvidia.com (10.18.16.11) by HKMAIL103.nvidia.com
+ (10.18.16.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Nov
+ 2020 16:46:14 +0000
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.170)
+ by HKMAIL102.nvidia.com (10.18.16.11) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Mon, 9 Nov 2020 16:46:13 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HpHuuuKU3GbdZOzlQUgXrdLgqvH7JSlBF9gromn7ypaxbSYvMmHMhxkhX5Sc4/4kq0TF6P7jsSfqUnKOSOojZsZr2cEY7egcprbSKnukGtvQ3IpMS9bMTjVuLGqT5FINkzM/NrqQcqLJezkGwcrpsMFFIfP9p2Yi6M2/asS701siO4NGmSbQcfs+eM3G0dqnPmRRjcrZ+OBWHQWu8/HOenPhsWlZVvWFc94yDSfkjLl/7s9qJ29PNRIfeFPlzfBNW1aLeL6+PL5j3LjPM/QgMof9oZwIUCfVqSaMJEQsOJTaWY/jESDCdtLidL+xGBMKMzuvZzSGJKsyiuaIhUTijg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=277rR03Fmd1c1EPd3wl3XEAXUDcur6tnQke8sHJIKgU=;
+ b=KaKpxJhNa+NR74Bj5t+nGkkFu4+h0Yslk9fuCC247yIBui/BolHGv9aoXlPsMxm20He3CPALG2AKVBlZJNH/PcXEg4ztQ8BBd7/ao3isCgPIkcejB3brU1/AWD4TZueRhV63Zckygam1edItlUptGQ8BW6LzPtsFUWKbkOGz+wEfk6+Ks6VHrMzOfQ1ARvOVWnr0F81EI91zJ66Cj8U4ZUNTCKL94UZZOQyQKispyI0KIMk5J2qo/mR1qKobj3hR3EyusE3eOjgyOgCmrkPl93eQZpuEWPRXS2njwa3zht3NoyYWU9Y/ykgYf4/94NK6MkgiCGHt3yACRE3meLZs/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM6PR12MB3401.namprd12.prod.outlook.com (2603:10b6:5:39::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.22; Mon, 9 Nov
+ 2020 16:46:11 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::cdbe:f274:ad65:9a78]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::cdbe:f274:ad65:9a78%7]) with mapi id 15.20.3499.032; Mon, 9 Nov 2020
+ 16:46:11 +0000
+Date:   Mon, 9 Nov 2020 12:46:08 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+Message-ID: <20201109164608.GF2620339@nvidia.com>
+References: <20201104135415.GX2620339@nvidia.com>
+ <MWHPR11MB1645524BDEDF8899914F32AE8CED0@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20201106131415.GT2620339@nvidia.com> <20201106164850.GA85879@otc-nc-03>
+ <20201106175131.GW2620339@nvidia.com>
+ <CAPcyv4iYHA1acfo=+fTk+U_TrLbSWJjA6v4oeTXgVYDTrnCoGw@mail.gmail.com>
+ <20201107001207.GA2620339@nvidia.com>
+ <87pn4nk7nn.fsf@nanos.tec.linutronix.de>
+ <20201108232341.GB2620339@nvidia.com>
+ <MWHPR11MB164578A1CC38EB28F6EA8F918CEA0@MWHPR11MB1645.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <MWHPR11MB164578A1CC38EB28F6EA8F918CEA0@MWHPR11MB1645.namprd11.prod.outlook.com>
+X-ClientProxiedBy: BL1PR13CA0112.namprd13.prod.outlook.com
+ (2603:10b6:208:2b9::27) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by BL1PR13CA0112.namprd13.prod.outlook.com (2603:10b6:208:2b9::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.13 via Frontend Transport; Mon, 9 Nov 2020 16:46:10 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kcAIy-00200t-Kf; Mon, 09 Nov 2020 12:46:08 -0400
+X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1604940378; bh=277rR03Fmd1c1EPd3wl3XEAXUDcur6tnQke8sHJIKgU=;
+        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
+         From:To:CC:Subject:Message-ID:References:Content-Type:
+         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-LD-Processed;
+        b=PsjoQMAkqijoe2iem/o0wve7NJ74DR06EK6R+8CyyhzugI8aKrLJThOIYFKZ+nEbm
+         3L4E8hq/PfBX8lmqQaJyXaGasE5/jmmrAawRHteN3sMIF1ucaKOQy37UttiK19Ccyg
+         Nbt3SNLGayHK/O8DQU/Az7tPDWNdRM3bxiVZbKkBgOMOBsCdWd83ZvLkA2sFzfRoPE
+         e2lqw7Sx0RCfsO0BZPaROqsZYaQYpZuhODrzBVb8UVzYXWgblsMD3Q2D9EUaILNTKA
+         Mt/VnM1499XV25YmAm98ZLslPoOZQ7XUdKuhdRcBsdpW4zJKND7knR+tThZlwJNyhL
+         7O79HXUOe7c8Q==
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-We now use cpu_pm for saving and restoring device context for deeper SoC
-idle states. But for omap3, we must also block idle if SDMA is busy.
+On Mon, Nov 09, 2020 at 07:37:03AM +0000, Tian, Kevin wrote:
+> >  3) SIOV sub device assigned to the guest.
+> > 
+> >     The difference between SIOV and SRIOV is the device must attach a
+> >     PASID to every TLP triggered by the guest. Logically we'd expect
+> >     when IMS is used in this situation the interrupt MemWr is tagged
+> >     with bus/device/function/PASID to uniquly ID the guest and the same
+> >     security protection scheme from #2 applies.
+> 
+> Unfortunately no. Intel VT-d only treats MemWr w/o PASID to 0xFEExxxxx
+> as interrupt request. MemWr w/ PASID, even to 0xFEE, is translated
+> normally through DMA remapping page table. 
 
-If we don't block idle when SDMA is busy, we eventually end up saving and
-restoring SDMA register state on PER domain idle while SDMA is active and
-that causes at least audio playback to fail.
+I've heard that current IOMMUs are limited as well, but IMHO, as I
+describe, if you want full symmetry then you want to route interrupts
+via PASID for SIOV. Otherwise the architecture is incomplete.
 
-Fixes: 4c74ecf79227 ("dmaengine: ti: omap-dma: Add device tree match data and use it for cpu_pm")
-Reported-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/dma/ti/omap-dma.c | 37 ++++++++++++++++++++++++-------------
- 1 file changed, 24 insertions(+), 13 deletions(-)
+At least from a Linux and VMM perspective this should be planned
+for. It is the only generic way to have a sub device assigned to a
+guest and still have access to IMS.
 
-diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
---- a/drivers/dma/ti/omap-dma.c
-+++ b/drivers/dma/ti/omap-dma.c
-@@ -1522,29 +1522,38 @@ static void omap_dma_free(struct omap_dmadev *od)
- 	}
- }
- 
-+/* Currently used by omap2 & 3 to block deeper SoC idle states */
-+static bool omap_dma_busy(struct omap_dmadev *od)
-+{
-+	struct omap_chan *c;
-+	int lch = -1;
-+
-+	while (1) {
-+		lch = find_next_bit(od->lch_bitmap, od->lch_count, lch + 1);
-+		if (lch >= od->lch_count)
-+			break;
-+		c = od->lch_map[lch];
-+		if (!c)
-+			continue;
-+		if (omap_dma_chan_read(c, CCR) & CCR_ENABLE)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- /* Currently only used for omap2. For omap1, also a check for lcd_dma is needed */
- static int omap_dma_busy_notifier(struct notifier_block *nb,
- 				  unsigned long cmd, void *v)
- {
- 	struct omap_dmadev *od;
--	struct omap_chan *c;
--	int lch = -1;
- 
- 	od = container_of(nb, struct omap_dmadev, nb);
- 
- 	switch (cmd) {
- 	case CPU_CLUSTER_PM_ENTER:
--		while (1) {
--			lch = find_next_bit(od->lch_bitmap, od->lch_count,
--					    lch + 1);
--			if (lch >= od->lch_count)
--				break;
--			c = od->lch_map[lch];
--			if (!c)
--				continue;
--			if (omap_dma_chan_read(c, CCR) & CCR_ENABLE)
--				return NOTIFY_BAD;
--		}
-+		if (omap_dma_busy(od))
-+			return NOTIFY_BAD;
- 		break;
- 	case CPU_CLUSTER_PM_ENTER_FAILED:
- 	case CPU_CLUSTER_PM_EXIT:
-@@ -1595,6 +1604,8 @@ static int omap_dma_context_notifier(struct notifier_block *nb,
- 
- 	switch (cmd) {
- 	case CPU_CLUSTER_PM_ENTER:
-+		if (omap_dma_busy(od))
-+			return NOTIFY_BAD;
- 		omap_dma_context_save(od);
- 		break;
- 	case CPU_CLUSTER_PM_ENTER_FAILED:
--- 
-2.29.2
+> Does your device already implement such capability? We can bring this 
+> request back to the hardware team. 
+
+In some cases we can generate PASID tagged TLPs for interrupt
+messages, if there was a reason to do that.
+
+> Yes, this is the main worry here. While all agree that using hypercall is 
+> the proper way to virtualize IMS, how to disable it when hypercall is
+> not available is a more urgent demand at current stage.
+
+Hopefully Thomas's note about checking for virtualization will help..
+
+> btw in reality such ACPI extension doesn't exist yet, which likely will
+> take some time. In the meantime we already have pending usages 
+> like IDXD. Do you suggest holding these patches until we get ASWG 
+> to accept the extension, or accept using Intel IMS cap as a vendor
+> specific mitigation to move forward while the platform flag is being 
+> worked on? Anyway the IMS cap is already defined and can help fix 
+> some broken cases.
+
+I think you need to sort something generic out, these half baked
+architectures just make it some other teams problem.
+
+Thomas's suggestion to check cpuid seems reasonably workable
+
+Jason

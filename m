@@ -2,70 +2,107 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 305582AC791
-	for <lists+dmaengine@lfdr.de>; Mon,  9 Nov 2020 22:46:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 40D052AC8BA
+	for <lists+dmaengine@lfdr.de>; Mon,  9 Nov 2020 23:40:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731122AbgKIVpx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 9 Nov 2020 16:45:53 -0500
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:33133 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729247AbgKIVpw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 9 Nov 2020 16:45:52 -0500
-Received: by mail-oo1-f65.google.com with SMTP id f8so2072853oou.0;
-        Mon, 09 Nov 2020 13:45:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=d6PCW2KOH0KDLqsVM+6AHC+5drSfLm/w4ypsxg3tiJA=;
-        b=c2+fSU8i6WHN/axX8yU7lf5G8CO4K/YfLwEg2DAhqRybQXhldBVaBGqupjtnCywtpt
-         chj220z0EyIpit/NSgts3vayyXimzOmZ8ptcDOMtknR79Nozrwx7cAYkpM2Nt+F/iR6B
-         KZWDrA9FXYCsr4d6MFW1cHOQSB96fJddfNYB0b6IZX0UOb7SWSwsjKE9r7rB2inniaNq
-         34hjqEOTBYSa2DLWZnFJ58N3fUvsLfJA8W3i39AW3cOfmsWmzslgMga8I4KQYWufGVRo
-         53Ez8uIJ28dUqN7YbMntlLwE4/Dn2tMD3U2qbatzYr9gPZRg6lfY8W6b7tuzi22uVASo
-         2sTg==
-X-Gm-Message-State: AOAM533+3d78v6R2W58v3+8zsBCrYoHEVlfSTHV0WdmoDogyePiF6H8j
-        7NmPo9RnZDQ5w5as9Rxnyw==
-X-Google-Smtp-Source: ABdhPJwsz1sxFO5IB6M0mkPCFruDjPSsYHpFhyA2CUxctoSVTH1f9ZqjFBpNjgMqk/akx34sIhRS8A==
-X-Received: by 2002:a4a:d63a:: with SMTP id n26mr7290006oon.38.1604958352169;
-        Mon, 09 Nov 2020 13:45:52 -0800 (PST)
-Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d22sm2653060oij.53.2020.11.09.13.45.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Nov 2020 13:45:51 -0800 (PST)
-Received: (nullmailer pid 1811549 invoked by uid 1000);
-        Mon, 09 Nov 2020 21:45:50 -0000
-Date:   Mon, 9 Nov 2020 15:45:50 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jonathanh@nvidia.com,
-        vkoul@kernel.org, dmaengine@vger.kernel.org, tglx@linutronix.de,
-        linux-tegra@vger.kernel.org, jason@lakedaemon.net,
-        thierry.reding@gmail.com, maz@kernel.org
-Subject: Re: [PATCH v2 4/4] dt-bindings: bus: Convert ACONNECT doc to
- json-schema
-Message-ID: <20201109214550.GA1811494@bogus>
-References: <1604677413-20411-1-git-send-email-spujar@nvidia.com>
- <1604677413-20411-5-git-send-email-spujar@nvidia.com>
+        id S1729585AbgKIWku (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 9 Nov 2020 17:40:50 -0500
+Received: from mga09.intel.com ([134.134.136.24]:3676 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725946AbgKIWkt (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 9 Nov 2020 17:40:49 -0500
+IronPort-SDR: RSulfA1agBDOXZEhDSwRm7C7IriKNIW048m0e4s28XXJ0mfGecLMpDT9b6F83CCiYDZNEGb93O
+ ySb6yVjI0yrw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9800"; a="170035060"
+X-IronPort-AV: E=Sophos;i="5.77,464,1596524400"; 
+   d="scan'208";a="170035060"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2020 14:40:49 -0800
+IronPort-SDR: Cv8lyot3eC1rIUslcTCTK2JUHpBULMi6Ojq14stslcyguMCY+Lg2b+Dvp8U0InQlTdaiUB9t4N
+ aBmxu3yh4dug==
+X-IronPort-AV: E=Sophos;i="5.77,464,1596524400"; 
+   d="scan'208";a="530939080"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2020 14:40:47 -0800
+Date:   Mon, 9 Nov 2020 14:40:46 -0800
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+Message-ID: <20201109224046.GA18348@otc-nc-03>
+References: <MWHPR11MB1645524BDEDF8899914F32AE8CED0@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20201106131415.GT2620339@nvidia.com>
+ <20201106164850.GA85879@otc-nc-03>
+ <20201106175131.GW2620339@nvidia.com>
+ <CAPcyv4iYHA1acfo=+fTk+U_TrLbSWJjA6v4oeTXgVYDTrnCoGw@mail.gmail.com>
+ <20201107001207.GA2620339@nvidia.com>
+ <87pn4nk7nn.fsf@nanos.tec.linutronix.de>
+ <20201108235852.GC32074@araj-mobl1.jf.intel.com>
+ <874klykc7h.fsf@nanos.tec.linutronix.de>
+ <20201109173034.GG2620339@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1604677413-20411-5-git-send-email-spujar@nvidia.com>
+In-Reply-To: <20201109173034.GG2620339@nvidia.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, 06 Nov 2020 21:13:33 +0530, Sameer Pujar wrote:
-> Move ACONNECT documentation to YAML format.
+On Mon, Nov 09, 2020 at 01:30:34PM -0400, Jason Gunthorpe wrote:
 > 
-> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-> ---
->  .../bindings/bus/nvidia,tegra210-aconnect.txt      | 44 ------------
->  .../bindings/bus/nvidia,tegra210-aconnect.yaml     | 82 ++++++++++++++++++++++
->  2 files changed, 82 insertions(+), 44 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.txt
->  create mode 100644 Documentation/devicetree/bindings/bus/nvidia,tegra210-aconnect.yaml
+> > Again, trap emulate does not work for IMS when the IMS store is software
+> > managed guest memory and not part of the device. And that's the whole
+> > reason why we are discussing this.
 > 
+> With PASID tagged interrupts and a IOMMU interrupt remapping
+> capability that can trigger on PASID, then the platform can provide
+> the same level of security as SRIOV - the above is no problem.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+You mean even if its stored in memory, as long as the MemWr comes with
+PASID, and the hypercall has provisioned the IRTE properly?
+
+that seems like a possiblity.
+
+> 
+> The device ensures that all DMAs and all interrupts program by the
+> guest are PASID tagged and the platform provides security by checking
+> the PASID when delivering the interrupt. Intel IOMMU doesn't work this
+> way today, but it makes alot of design sense.
+> 
+> Otherwise the interrupt is effectively delivered to the hypervisor. A
+> secure device can *never* allow a guest to specify an addr/data pair
+> for a non-PASID tagged TLP, so the device cannot offer IMS to the
+> guest.
+
+Right, it seems like that's a limitation today. 

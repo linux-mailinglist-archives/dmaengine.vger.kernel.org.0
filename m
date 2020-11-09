@@ -2,51 +2,127 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E8A32AB828
-	for <lists+dmaengine@lfdr.de>; Mon,  9 Nov 2020 13:25:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7058A2AB85B
+	for <lists+dmaengine@lfdr.de>; Mon,  9 Nov 2020 13:36:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729516AbgKIMZM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 9 Nov 2020 07:25:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729507AbgKIMZL (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 9 Nov 2020 07:25:11 -0500
-Received: from localhost (unknown [122.171.147.34])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 876D5206CB;
-        Mon,  9 Nov 2020 12:25:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604924711;
-        bh=8G7ghePS1bDlhikQ1xbvG/dT3rCGlTM8MU7CGtiAtGk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bdrmEmW/TOwd9Vp5f9Z8aACcGKEn9UgLO++CcWphKmoQMPaJ4Wt74vYnxHNkzY/OB
-         nzK9aCeOdfGtPDtTm3GlmjSCeZvLSeDTqLxthVUhbojJVHWz5BW1lgFZa1kX1I1dSJ
-         vTmiQVm1H4evMaL6QLugW9ZvriN7h18GD6vPNpcw=
-Date:   Mon, 9 Nov 2020 17:55:07 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Cc:     dan.j.williams@intel.com, michal.simek@xilinx.com,
-        nick.graumann@gmail.com, andrea.merello@gmail.com,
-        appana.durga.rao@xilinx.com, mcgrof@kernel.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        git@xilinx.com
-Subject: Re: [PATCH 0/3] dmaengine: xilinx_dma: mcdma fixes
-Message-ID: <20201109122507.GP3171@vkoul-mobl>
-References: <1604473206-32573-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+        id S1729697AbgKIMgP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 9 Nov 2020 07:36:15 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:51170 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729693AbgKIMgN (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 9 Nov 2020 07:36:13 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0A9Ca6jS002188;
+        Mon, 9 Nov 2020 06:36:06 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1604925366;
+        bh=95DTtXkfRsBVcuCi7o8HWOM6vEleEq3iPsJLfzylSFw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=cABhk27F9dcCrPbnbsUSmtQl5A3/oVFXPewl4+t8S5gnSmitofhnmOy/K6HkUt8Qc
+         vOUeYUqSvL22k+HVYDS3WRKq4+fO7Zr8h+WNhp/bkMsCmUOOR5/PgIB9I0qeYGLVNT
+         FdHsapsUQNBx/ETdJeDCzo7klRTHzyGHOhrB7pSI=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0A9Ca6Gn069552
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 9 Nov 2020 06:36:06 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 9 Nov
+ 2020 06:36:06 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 9 Nov 2020 06:36:06 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0A9Ca3s9035270;
+        Mon, 9 Nov 2020 06:36:03 -0600
+Subject: Re: [PATCH 01/18] dmaengine: of-dma: Add support for optional router
+ configuration callback
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <nm@ti.com>, <ssantosh@kernel.org>, <robh+dt@kernel.org>,
+        <vigneshr@ti.com>, <dan.j.williams@intel.com>, <t-kristo@ti.com>,
+        <lokeshvutla@ti.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>
+References: <20200930091412.8020-1-peter.ujfalusi@ti.com>
+ <20200930091412.8020-2-peter.ujfalusi@ti.com>
+ <20201007054404.GR2968@vkoul-mobl>
+ <be615881-1eb4-f8fe-a32d-04fabb6cb27b@ti.com>
+ <20201007155533.GZ2968@vkoul-mobl>
+ <45adb88b-1ef8-1fbf-08c1-9afc6ea4c6f0@ti.com>
+ <20201028055531.GH3550@vkoul-mobl>
+ <cf3d3de0-223b-4846-bd9f-b78654ae2d08@ti.com>
+ <20201109114534.GH3171@vkoul-mobl>
+ <7a7cb455-dd09-b71f-6ecc-fd6108d37051@ti.com>
+ <20201109122306.GO3171@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <dffd3284-de4c-eb27-b6cf-1b4acc3cb79d@ti.com>
+Date:   Mon, 9 Nov 2020 14:36:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1604473206-32573-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+In-Reply-To: <20201109122306.GO3171@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 04-11-20, 12:30, Radhey Shyam Pandey wrote:
-> This patchset fixes usage of mcdma tx segment and SG capability.
-> It also make use of readl_poll_timeout_atomic variant.
 
-Applied, thanks
 
--- 
-~Vinod
+On 09/11/2020 14.23, Vinod Koul wrote:
+> HI Peter,
+> 
+> On 09-11-20, 14:09, Peter Ujfalusi wrote:
+>> Hi Vinod,
+>>
+>> On 09/11/2020 13.45, Vinod Koul wrote:
+>>>> Without a channel number I can not do anything.
+>>>> It is close to a chicken and egg problem.
+>>>
+>>> We get 'channel' in xlate, so wont that help? I think I am still missing
+>>> something here :(
+>>
+>> Yes, we get channel in xlate, but we get the channel after
+>> ofdma->of_dma_route_allocate()
+> 
+> That is correct, so you need this info in allocate somehow..
+
+To know the event number the router must send to trigger the channel I
+need the router to 'craft' the dmaspec which can be used to request the
+channel.
+
+To request a bcdma channel to be triggered by global trigger 0:
+
+[A]
+<&main_bcdma 1 0 15>
+
+main_bcdma - phandle to BCDMA
+1 - triggered by global trigger0
+0 - ignored
+15 - ASEL value
+
+A peripheral can not really use this binding directly as we need to
+configure the get the event to be sent to the given channel's trigger0.
+The binding for the router (l2g if INTA in this case):
+
+[B]
+<&inta_l2g 21 0 15>
+
+inta_l2g - phandle to therouter
+21 - local event index (input event/signal)
+0 - event detection mode (pulsed/rising)
+15 - ASEL value
+
+The of_dma_router_xlate() receives the dmaspec for [B}, the router
+driver creates the dmaspec for [A].
+
+The xlate can not request the channel first as it needs the dmaspec from
+the router to do so.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki

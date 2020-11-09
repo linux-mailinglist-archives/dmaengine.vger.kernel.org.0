@@ -2,48 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2592C2AC133
-	for <lists+dmaengine@lfdr.de>; Mon,  9 Nov 2020 17:47:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A8A02AC24A
+	for <lists+dmaengine@lfdr.de>; Mon,  9 Nov 2020 18:30:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730450AbgKIQqV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 9 Nov 2020 11:46:21 -0500
-Received: from nat-hk.nvidia.com ([203.18.50.4]:2175 "EHLO nat-hk.nvidia.com"
+        id S1731715AbgKIRar (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 9 Nov 2020 12:30:47 -0500
+Received: from nat-hk.nvidia.com ([203.18.50.4]:44483 "EHLO nat-hk.nvidia.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726410AbgKIQqV (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 9 Nov 2020 11:46:21 -0500
-Received: from HKMAIL103.nvidia.com (Not Verified[10.18.92.77]) by nat-hk.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5fa9725a0001>; Tue, 10 Nov 2020 00:46:18 +0800
-Received: from HKMAIL102.nvidia.com (10.18.16.11) by HKMAIL103.nvidia.com
- (10.18.16.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Nov
- 2020 16:46:14 +0000
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.170)
+        id S1730827AbgKIRaq (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 9 Nov 2020 12:30:46 -0500
+Received: from HKMAIL101.nvidia.com (Not Verified[10.18.92.77]) by nat-hk.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5fa97cc50000>; Tue, 10 Nov 2020 01:30:45 +0800
+Received: from HKMAIL102.nvidia.com (10.18.16.11) by HKMAIL101.nvidia.com
+ (10.18.16.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 9 Nov
+ 2020 17:30:42 +0000
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
  by HKMAIL102.nvidia.com (10.18.16.11) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Mon, 9 Nov 2020 16:46:13 +0000
+ 15.0.1473.3 via Frontend Transport; Mon, 9 Nov 2020 17:30:42 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HpHuuuKU3GbdZOzlQUgXrdLgqvH7JSlBF9gromn7ypaxbSYvMmHMhxkhX5Sc4/4kq0TF6P7jsSfqUnKOSOojZsZr2cEY7egcprbSKnukGtvQ3IpMS9bMTjVuLGqT5FINkzM/NrqQcqLJezkGwcrpsMFFIfP9p2Yi6M2/asS701siO4NGmSbQcfs+eM3G0dqnPmRRjcrZ+OBWHQWu8/HOenPhsWlZVvWFc94yDSfkjLl/7s9qJ29PNRIfeFPlzfBNW1aLeL6+PL5j3LjPM/QgMof9oZwIUCfVqSaMJEQsOJTaWY/jESDCdtLidL+xGBMKMzuvZzSGJKsyiuaIhUTijg==
+ b=SUDuqGUh4jwTr8MJovYxIRlVGT1rUbf0F20d4sa1VAnNqzM+006kjcbkS+9ljlOZYHXYDpUpMiR1b+KRzMN6yTm6NBRqkR+aHJf/aryROApAJrxnK4HoGtO/MjQbZDyrckwqUb7MZLWoUBtdn7JYDUzdzE3uwN5Nho69ZG3+SeuBiZR6IJ95oGQsn7ZZANvat+4Oj5XJ/kHgVKDl/rH869jXZnRqCmjHL5+gZCPoXVFTb0ZyG9ln4V1lFaIXch9sVVJT2mdLgLnaSC0n7L2WWQ8QX7hNpLqitSfZaYiKRVHgobrIO4d8FtQSVERo05LDIYzUQiORDjUw6me+3Kl2BA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=277rR03Fmd1c1EPd3wl3XEAXUDcur6tnQke8sHJIKgU=;
- b=KaKpxJhNa+NR74Bj5t+nGkkFu4+h0Yslk9fuCC247yIBui/BolHGv9aoXlPsMxm20He3CPALG2AKVBlZJNH/PcXEg4ztQ8BBd7/ao3isCgPIkcejB3brU1/AWD4TZueRhV63Zckygam1edItlUptGQ8BW6LzPtsFUWKbkOGz+wEfk6+Ks6VHrMzOfQ1ARvOVWnr0F81EI91zJ66Cj8U4ZUNTCKL94UZZOQyQKispyI0KIMk5J2qo/mR1qKobj3hR3EyusE3eOjgyOgCmrkPl93eQZpuEWPRXS2njwa3zht3NoyYWU9Y/ykgYf4/94NK6MkgiCGHt3yACRE3meLZs/w==
+ bh=0OOhT3z29bMPnKfH6ci/B4Z/dybfwXtgbGNCrwV+kgg=;
+ b=mNG/vzYafn4qBGDjiX67SiI8ymbrWEj2UcqsUhWOvgx+GgZfu1AP1iuP5r8YnOnjFYznbTFo6xqeTGBJ5TLrIcngDpkl7/Gfn9GVbOgbZ3ZWVkJnP1OUNHfxL1FFPSRVU8RKNw92kpzF0F65dAr90f6mLbVN6KN0TeW4IrxrVmfrC+t8M2sge+6zsB865udp7JPcQG/UwxIcO6mzl/dyT6B1mg8T9ExL6S27Oj3L/pk+bWuIlvVmAYjwrJyQ25lNmWOVLlhU2tmSCfjt61NsMT8d947HzJHAdOGoaRCWclz+HXS45aXWLmxk9QWnrTNxOZ2Dl4onB4dTq/MB2pxAzQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB3401.namprd12.prod.outlook.com (2603:10b6:5:39::32) with
+ by DM6PR12MB3307.namprd12.prod.outlook.com (2603:10b6:5:15d::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.22; Mon, 9 Nov
- 2020 16:46:11 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.24; Mon, 9 Nov
+ 2020 17:30:36 +0000
 Received: from DM6PR12MB3834.namprd12.prod.outlook.com
  ([fe80::cdbe:f274:ad65:9a78]) by DM6PR12MB3834.namprd12.prod.outlook.com
  ([fe80::cdbe:f274:ad65:9a78%7]) with mapi id 15.20.3499.032; Mon, 9 Nov 2020
- 16:46:11 +0000
-Date:   Mon, 9 Nov 2020 12:46:08 -0400
+ 17:30:36 +0000
+Date:   Mon, 9 Nov 2020 13:30:34 -0400
 From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     "Raj, Ashok" <ashok.raj@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
         "Jiang, Dave" <dave.jiang@intel.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
         "vkoul@kernel.org" <vkoul@kernel.org>,
@@ -70,7 +70,7 @@ CC:     Thomas Gleixner <tglx@linutronix.de>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-Message-ID: <20201109164608.GF2620339@nvidia.com>
+Message-ID: <20201109173034.GG2620339@nvidia.com>
 References: <20201104135415.GX2620339@nvidia.com>
  <MWHPR11MB1645524BDEDF8899914F32AE8CED0@MWHPR11MB1645.namprd11.prod.outlook.com>
  <20201106131415.GT2620339@nvidia.com> <20201106164850.GA85879@otc-nc-03>
@@ -78,79 +78,83 @@ References: <20201104135415.GX2620339@nvidia.com>
  <CAPcyv4iYHA1acfo=+fTk+U_TrLbSWJjA6v4oeTXgVYDTrnCoGw@mail.gmail.com>
  <20201107001207.GA2620339@nvidia.com>
  <87pn4nk7nn.fsf@nanos.tec.linutronix.de>
- <20201108232341.GB2620339@nvidia.com>
- <MWHPR11MB164578A1CC38EB28F6EA8F918CEA0@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20201108235852.GC32074@araj-mobl1.jf.intel.com>
+ <874klykc7h.fsf@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <MWHPR11MB164578A1CC38EB28F6EA8F918CEA0@MWHPR11MB1645.namprd11.prod.outlook.com>
-X-ClientProxiedBy: BL1PR13CA0112.namprd13.prod.outlook.com
- (2603:10b6:208:2b9::27) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+In-Reply-To: <874klykc7h.fsf@nanos.tec.linutronix.de>
+X-ClientProxiedBy: BL0PR01CA0028.prod.exchangelabs.com (2603:10b6:208:71::41)
+ To DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by BL1PR13CA0112.namprd13.prod.outlook.com (2603:10b6:208:2b9::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.13 via Frontend Transport; Mon, 9 Nov 2020 16:46:10 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kcAIy-00200t-Kf; Mon, 09 Nov 2020 12:46:08 -0400
+Received: from mlx.ziepe.ca (156.34.48.30) by BL0PR01CA0028.prod.exchangelabs.com (2603:10b6:208:71::41) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.21 via Frontend Transport; Mon, 9 Nov 2020 17:30:35 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kcAzy-0020eX-2p; Mon, 09 Nov 2020 13:30:34 -0400
 X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1604940378; bh=277rR03Fmd1c1EPd3wl3XEAXUDcur6tnQke8sHJIKgU=;
+        t=1604943045; bh=0OOhT3z29bMPnKfH6ci/B4Z/dybfwXtgbGNCrwV+kgg=;
         h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
          From:To:CC:Subject:Message-ID:References:Content-Type:
          Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
          X-MS-Exchange-MessageSentRepresentingType:X-LD-Processed;
-        b=PsjoQMAkqijoe2iem/o0wve7NJ74DR06EK6R+8CyyhzugI8aKrLJThOIYFKZ+nEbm
-         3L4E8hq/PfBX8lmqQaJyXaGasE5/jmmrAawRHteN3sMIF1ucaKOQy37UttiK19Ccyg
-         Nbt3SNLGayHK/O8DQU/Az7tPDWNdRM3bxiVZbKkBgOMOBsCdWd83ZvLkA2sFzfRoPE
-         e2lqw7Sx0RCfsO0BZPaROqsZYaQYpZuhODrzBVb8UVzYXWgblsMD3Q2D9EUaILNTKA
-         Mt/VnM1499XV25YmAm98ZLslPoOZQ7XUdKuhdRcBsdpW4zJKND7knR+tThZlwJNyhL
-         7O79HXUOe7c8Q==
+        b=DVCYdcX9eTQs7bknwYVC62MXUw+VWAiH7QP0ejvm58/+wMVDN0K3kxOo8ArHl5AZk
+         9j/V2dg4OyglIeBrwOkHwsykBzJX884Kmv8jxVRhp7cfmxyNpdRSaLDWA5ljHpjXDO
+         6ZviwZntmKGI5F2xc7BNCyYzVtKRnZpR9E3yVZvAb3xmyX8X8JWkimJMcdbSM5oXVm
+         nUHd1sCYu8UtUoOeU4qFWe0pJJr3liOoKyb+se9Tb4VZUo+GVkhbRIHdcGIrgIS8a3
+         X/s+/fX6Tj9nswENmaLYSeOrMRhI1/KntZN7brU6qeDaVRkWbpBjUou6uJAppDQlHf
+         rMFkpQ4dyIZgw==
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Nov 09, 2020 at 07:37:03AM +0000, Tian, Kevin wrote:
-> >  3) SIOV sub device assigned to the guest.
-> > 
-> >     The difference between SIOV and SRIOV is the device must attach a
-> >     PASID to every TLP triggered by the guest. Logically we'd expect
-> >     when IMS is used in this situation the interrupt MemWr is tagged
-> >     with bus/device/function/PASID to uniquly ID the guest and the same
-> >     security protection scheme from #2 applies.
+On Mon, Nov 09, 2020 at 12:21:22PM +0100, Thomas Gleixner wrote:
+
+> >> Is the IOMMU/Interrupt remapping unit able to catch such messages which
+> >> go outside the space to which the guest is allowed to signal to? If yes,
+> >> problem solved. If no, then IMS storage in guest memory can't ever work.
+> >
+> > This can probably work for SRIOV devices where guest owns the entire device.
+> > interrupt remap does have RID checks if interrupt arrives at an Interrupt handle
+> > not allocated for that BDF.
+> >
+> > But for SIOV devices there is no PASID filtering at the remap level since
+> > interrupt messages don't carry PASID in the TLP.
 > 
-> Unfortunately no. Intel VT-d only treats MemWr w/o PASID to 0xFEExxxxx
-> as interrupt request. MemWr w/ PASID, even to 0xFEE, is translated
-> normally through DMA remapping page table. 
+> PASID is irrelevant here.
+> 
+> If the device sends a message then the remap unit will see the requester
+> ID of the device and if the message it sends is not matching the remap
+> tables then it's caught and the guest is terminated. At least that's how
+> it should be.
 
-I've heard that current IOMMUs are limited as well, but IMHO, as I
-describe, if you want full symmetry then you want to route interrupts
-via PASID for SIOV. Otherwise the architecture is incomplete.
+The SIOV case is to take a single RID and split it to multiple
+VMs and also to the hypervisor. All these things concurrently use the
+same RID, and the IOMMU can't tell them apart.
 
-At least from a Linux and VMM perspective this should be planned
-for. It is the only generic way to have a sub device assigned to a
-guest and still have access to IMS.
+The hypervisor security domain owns TLPs with no PASID. Each PASID is
+assigned to a VM.
 
-> Does your device already implement such capability? We can bring this 
-> request back to the hardware team. 
+For interrupts, today, they are all generated, with no PASID, to the
+same RID. There is no way for remapping to protect against a guest
+without checking also PASID.
 
-In some cases we can generate PASID tagged TLPs for interrupt
-messages, if there was a reason to do that.
+The relavance of PASID is this:
 
-> Yes, this is the main worry here. While all agree that using hypercall is 
-> the proper way to virtualize IMS, how to disable it when hypercall is
-> not available is a more urgent demand at current stage.
+> Again, trap emulate does not work for IMS when the IMS store is software
+> managed guest memory and not part of the device. And that's the whole
+> reason why we are discussing this.
 
-Hopefully Thomas's note about checking for virtualization will help..
+With PASID tagged interrupts and a IOMMU interrupt remapping
+capability that can trigger on PASID, then the platform can provide
+the same level of security as SRIOV - the above is no problem.
 
-> btw in reality such ACPI extension doesn't exist yet, which likely will
-> take some time. In the meantime we already have pending usages 
-> like IDXD. Do you suggest holding these patches until we get ASWG 
-> to accept the extension, or accept using Intel IMS cap as a vendor
-> specific mitigation to move forward while the platform flag is being 
-> worked on? Anyway the IMS cap is already defined and can help fix 
-> some broken cases.
+The device ensures that all DMAs and all interrupts program by the
+guest are PASID tagged and the platform provides security by checking
+the PASID when delivering the interrupt. Intel IOMMU doesn't work this
+way today, but it makes alot of design sense.
 
-I think you need to sort something generic out, these half baked
-architectures just make it some other teams problem.
-
-Thomas's suggestion to check cpuid seems reasonably workable
+Otherwise the interrupt is effectively delivered to the hypervisor. A
+secure device can *never* allow a guest to specify an addr/data pair
+for a non-PASID tagged TLP, so the device cannot offer IMS to the
+guest.
 
 Jason

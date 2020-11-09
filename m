@@ -2,96 +2,118 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 574932AC361
-	for <lists+dmaengine@lfdr.de>; Mon,  9 Nov 2020 19:11:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 916C12AC48C
+	for <lists+dmaengine@lfdr.de>; Mon,  9 Nov 2020 20:04:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730214AbgKISKq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 9 Nov 2020 13:10:46 -0500
-Received: from mga11.intel.com ([192.55.52.93]:20845 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729426AbgKISKo (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 9 Nov 2020 13:10:44 -0500
-IronPort-SDR: jliq5B+3ehTwhREM/Mn/PpRYCDSFMOkdT49LbDCg0u0rM7x5CblXbqcMaXwXKf09g0OThMdGy+
- qRJ+LiXI+NPQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9800"; a="166337354"
-X-IronPort-AV: E=Sophos;i="5.77,464,1596524400"; 
-   d="scan'208";a="166337354"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2020 10:10:41 -0800
-IronPort-SDR: tuCvzS3iY3cpdxhXWsvyXZgcwAFdYuomVJ3Zu2pC/uILoxhmsT+axEq93WFuPDPjeW0G5GEjd+
- BZOWkmWRC4Cw==
-X-IronPort-AV: E=Sophos;i="5.77,464,1596524400"; 
-   d="scan'208";a="327354691"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2020 10:10:41 -0800
-Date:   Mon, 9 Nov 2020 10:10:39 -0800
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        id S1729320AbgKITEY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 9 Nov 2020 14:04:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729302AbgKITEY (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 9 Nov 2020 14:04:24 -0500
+Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BFB7C0613CF;
+        Mon,  9 Nov 2020 11:04:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
+         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
+        :Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=TFKGo0xpBOEg+T74W7oI6xqQWy9esM9XTIUlQGEd/Mk=; b=wALVIypO2VnSRap5o/l6oiHbAt
+        AWYe1Cr7+RyhGemq7Gt6n3sNZczEifqAsATj0BcxYu1Ha7VMZIdEnvTtT3Tl4/nDo3HiJhgoaY9pm
+        WK6v4K0BPkNIeJn5Yp9ldU/hcCz3HPNAZ24HsMMJ7ppWj7NmuhlqE4hOuCXGjnlfzoMnPL/PpMYSW
+        dtbhiMVZ2jLxl7tQOqo/+gyunJyP92tp2me0rwINApgdyFeoegQczdTY2K8/An2UKoBcDXOKpBmah
+        L0VyEre/Wh+XvUAy54r4q7R7w/SVKjj42E3N87BoDHEvJn6WPod7+lL9qfdOciKXHMDF4E24ioclD
+        eY1N8PsQ==;
+Received: from noodles by the.earth.li with local (Exim 4.92)
+        (envelope-from <noodles@earth.li>)
+        id 1kcCSe-0002ic-8z; Mon, 09 Nov 2020 19:04:16 +0000
+Date:   Mon, 9 Nov 2020 19:04:16 +0000
+From:   Jonathan McDowell <noodles@earth.li>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-Message-ID: <20201109181039.GA15472@otc-nc-03>
-References: <draft-875z6ekcj5.fsf@nanos.tec.linutronix.de>
- <87y2jaipwu.fsf@nanos.tec.linutronix.de>
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Thomas Pedersen <twp@codeaurora.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dmaengine@vger.kernel.org
+Subject: Re: [PATCH v4] dmaengine: qcom: Add ADM driver
+Message-ID: <20201109190416.GF32650@earth.li>
+References: <20200916064326.GA13963@earth.li>
+ <20200919185739.GS3411@earth.li>
+ <20200920181204.GT3411@earth.li>
+ <20200923194056.GY3411@earth.li>
+ <20201109114121.GG3171@vkoul-mobl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87y2jaipwu.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20201109114121.GG3171@vkoul-mobl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Nov 09, 2020 at 03:08:17PM +0100, Thomas Gleixner wrote:
-> On Mon, Nov 09 2020 at 12:14, Thomas Gleixner wrote:
-> > On Sun, Nov 08 2020 at 15:58, Ashok Raj wrote:
-> >> On Sun, Nov 08, 2020 at 07:47:24PM +0100, Thomas Gleixner wrote:
-> >> But for SIOV devices there is no PASID filtering at the remap level since
-> >> interrupt messages don't carry PASID in the TLP.
-> >
-> > Why do we need PASID for VMM integrity?
-> >
-> > If the device sends a message then the remap unit will see the requester
-> > ID of the device and if the message it sends is not 
+On Mon, Nov 09, 2020 at 05:11:21PM +0530, Vinod Koul wrote:
+> HI Jonathan,
 > 
-> That made me look at patch 4/17 which adds DEVMSI support to the
-> remap code:
+> On 23-09-20, 20:40, Jonathan McDowell wrote:
+> > Add the DMA engine driver for the QCOM Application Data Mover (ADM) DMA
+> > controller found in the MSM8x60 and IPQ/APQ8064 platforms.
 > 
-> > +       case X86_IRQ_ALLOC_TYPE_DEV_MSI:
-> > +              irte_prepare_msg(msg, index, sub_handle);
-> >                break;
+> Mostly it looks good, some nitpicks
 > 
-> It does not setup any requester-id filter in IRTE. How is that supposed
-> to be correct?
+> > The ADM supports both memory to memory transactions and memory
+> > to/from peripheral device transactions.  The controller also provides
+> > flow control capabilities for transactions to/from peripheral devices.
+> > 
+> > The initial release of this driver supports slave transfers to/from
+> > peripherals and also incorporates CRCI (client rate control interface)
+> > flow control.
 > 
+> Can you also convert the binding from txt to yaml?
 
-Its missing a set_msi_sid() equivalent for the DEV_MSI type.
+Seems like that can be a separate patch, but sure, I'll give it a whirl.
+
+> > diff --git a/drivers/dma/qcom/Kconfig b/drivers/dma/qcom/Kconfig
+> > index 3bcb689162c6..0389d60d2604 100644
+> > --- a/drivers/dma/qcom/Kconfig
+> > +++ b/drivers/dma/qcom/Kconfig
+> > @@ -1,4 +1,15 @@
+> >  # SPDX-License-Identifier: GPL-2.0-only
+> > +config QCOM_ADM
+> > +	tristate "Qualcomm ADM support"
+> > +	depends on (ARCH_QCOM || COMPILE_TEST) && !PHYS_ADDR_T_64BIT
+> 
+> why !PHYS_ADDR_T_64BIT ..?
+
+The hardware only supports a 32 bit physical address, so specifying
+!PHYS_ADDR_T_64BIT gives maximum COMPILE_TEST coverage without having to
+spend effort on kludging things in the code that will never actually be
+needed on real hardware.
+
+> > +	select DMA_ENGINE
+> > +	select DMA_VIRTUAL_CHANNELS
+> > +	help
+> > +	  Enable support for the Qualcomm Application Data Mover (ADM) DMA
+> > +	  controller, as present on MSM8x60, APQ8064, and IPQ8064 devices.
+> > +	  This controller provides DMA capabilities for both general purpose
+> > +	  and on-chip peripheral devices.
+> 
+> > +static const struct of_device_id adm_of_match[] = {
+> > +	{ .compatible = "qcom,adm", },
+> 
+> I know we have merged the binding, but should we not have a soc specific
+> compatible?
+
+Which soc? Looking at the other QCOM DMA drivers they mostly have
+versioned compatibles and I can't find any indication there are multiple
+variants of this block out there.
+
+J.
+
+-- 
+Web [ Every program is either trivial or it contains at least one  ]
+site: https:// [                   bug.                   ]      Made by
+www.earth.li/~noodles/  [                      ]         HuggieTag 0.0.24

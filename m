@@ -2,75 +2,77 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D8792AB0CA
-	for <lists+dmaengine@lfdr.de>; Mon,  9 Nov 2020 06:25:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 508392AB1C9
+	for <lists+dmaengine@lfdr.de>; Mon,  9 Nov 2020 08:37:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbgKIFZf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 9 Nov 2020 00:25:35 -0500
-Received: from mga14.intel.com ([192.55.52.115]:23293 "EHLO mga14.intel.com"
+        id S1729601AbgKIHhO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 9 Nov 2020 02:37:14 -0500
+Received: from mga02.intel.com ([134.134.136.20]:60401 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbgKIFZe (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 9 Nov 2020 00:25:34 -0500
-IronPort-SDR: POOO1aYOvuxm2e4feuYJH1aCp5OF6e3f6e+U+now6fNagf4nG9cwDT1WaqF5MDjy+978BE0WON
- et+c/gAB4/NQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9799"; a="168968185"
-X-IronPort-AV: E=Sophos;i="5.77,462,1596524400"; 
-   d="scan'208";a="168968185"
+        id S1728038AbgKIHhN (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 9 Nov 2020 02:37:13 -0500
+IronPort-SDR: DDxMAX7p85ha4DKze4wObul6eyDSgftOjXFLMsw+pTkfcPg3ewqXt8ZpJf7uOQYcL7OoQKGakb
+ y/ZwFFKUwnXQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9799"; a="156770217"
+X-IronPort-AV: E=Sophos;i="5.77,463,1596524400"; 
+   d="scan'208";a="156770217"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2020 21:25:33 -0800
-IronPort-SDR: 47M7yD1sDctCmzkKiJjjVitGQzGYxSmA+VbhnX57JiNvGNMLLKiyjJOfApcTFTTNh0BUmnThRE
- /9MhrM5El5pg==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2020 23:37:12 -0800
+IronPort-SDR: PWAe3ffPVTDN3tiiaKcWeEZdPRC3dLxWuE9FNmMgWda29KaKmdxnly4CwMxnyQCIxO2dY/7ngb
+ U9E+WmWTaK/A==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,462,1596524400"; 
-   d="scan'208";a="540693622"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga005.jf.intel.com with ESMTP; 08 Nov 2020 21:25:33 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+X-IronPort-AV: E=Sophos;i="5.77,463,1596524400"; 
+   d="scan'208";a="355564601"
+Received: from fmsmsx606.amr.corp.intel.com ([10.18.126.86])
+  by fmsmga004.fm.intel.com with ESMTP; 08 Nov 2020 23:37:12 -0800
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sun, 8 Nov 2020 21:25:32 -0800
+ 15.1.1713.5; Sun, 8 Nov 2020 23:37:11 -0800
 Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sun, 8 Nov 2020 21:25:32 -0800
+ 15.1.1713.5; Sun, 8 Nov 2020 23:37:11 -0800
 Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
  fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Sun, 8 Nov 2020 21:25:32 -0800
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.50) by
+ via Frontend Transport; Sun, 8 Nov 2020 23:37:10 -0800
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.36.53) by
  edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.1713.5; Sun, 8 Nov 2020 21:25:31 -0800
+ 15.1.1713.5; Sun, 8 Nov 2020 23:37:08 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FTZCGqbQQ4aRLAAy4jmhDIqeRur3qF6eUT5p3nWEySYql4SoE1DcaDBcsTKzeXTExs+EHpIAziggICma6dr3CcFLqKecIZ1kYtzX8wwI7/fyu2x8mIGBX8b7GVE/AJWeBiocuGILxEKsIABECPfG6qrQLzU7/c5TKVHXO4t/DnhMpNX8hXP02wYMYULFO58FSw74MdDpJ2kipmb4widEZ6luBN8a6Zgc6/bHpeTW6uKE/IKW99yys2ub1J80Ijn9YYuBqSXjMZrqWJAxMXOpMEI2SW6m2sX1Hu7PdXlwscIzw7KoIDYMMHLMmVPiTVJmPCtrXSXnvRp2yAj1hAYnRg==
+ b=n1fsAFoUU9faETcCEEqnF0cIAcQjRJRt6XULY+wYx9fcYJVtQ8lS42Qvq1QFs+Gy/QOIqt5AhvKuXn2Z+cdq2JGrX0v1xAeb2CLArdKYbRDEq5DFG/Ae/g4Trn6tC7RG46szhRathd0aUb9zUENpvJ0ZJtYLfUqPu7yKNqkgt1pS66j3Pcbmp0CT6j43TMUxEWbKwSlvhQYX0pFvwm592xEsUB/eFbsLJu+mmYsZOmFp9BmvwhKOtRJqQI7hh9lIF0NfUVnFKk4+SMkolIYuKfZ7d4lk2k2T6FUEVnKwT+5ygK9xNzf0RmmCW9lI7NjkEqY4AJTYTnfGkqOh/+rxtA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=luN/CyLxMJyT/ZKjUfMmIFep0vCgTMlteAB/fWTd0+k=;
- b=lsgeHQYjW1Aw+MV7GvlrZeODo4JWjSh16zjLE0Y2VZOMkYcWvWzUFNMlAN2hwzxPTuesHCKTICeLXR9NTtn12X6PvT9LwEeMIS8zEbJXPAwkzsJyPaCKKndKcs0AObcTt5rpht0EyEywJkcpZ0zrIl+VhFdaNPeobQRJaf9sryJw++u4Z5ZTJL3Hbj6jsFl5eYvEOuIbhGcsAquFR+O877Qd5ucMJKIWbOuj7h4S6n8SPNF5VNKg0v+Fkgo8L4cCprSeSH88VqRh76ZTUIQzk9PmJxIjv5sVYveBrqLJIaAuqj7KtjWlM6u+dr/kk4W/bS97rz9ctdgUh/M6CLX8aQ==
+ bh=Gqbyd1Ks5S1emA/nt56/BlcjAjc/gZbLlUcxTonyIY8=;
+ b=h4dIyoX6LJPEOBe0+rDkNZxUDgo+32X4ZgtZEK5scOZ3fVeJ5EZSzRb4X9LkWLN31yNZM8b7Pwr9Uflnsq2qiw0qJvU6zmLiEZkK7uDkSkZ6ZRHctDlwUqohU8m/ae2S4MdtfPNzyn9jl6w3MvlueJ9LVe0kDv311+BV22+FrFsbMKm6syMeV/7/kEGJkgD2lf44Gd43VRMRn4CmDbUYFNwRE0igUhCYu3uLM6jtbi9ioXn2x4a9NXhdUIQUWXEG0GnKH3M6uK5viXAscfIi/mh1zMh48AXjhLIL6JO4bS3fhhyLIJdjiKlxx4BSYaLDvjR2hFcPvztZI+wV21cZfQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
  s=selector2-intel-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=luN/CyLxMJyT/ZKjUfMmIFep0vCgTMlteAB/fWTd0+k=;
- b=fI62dAGMOXa6asiVel1niBl8l/ivQ1kMzLrZwoDYVM65+hrPFOHYAFxCiD5QpyDcAeZN7oLUlmOrQ/84/N/eLekDmyFUKdap/n74V8pB48nXMJ5rAvsN945cCJ9TvAe1EGyPzfJWbrdPQ4vJaUowA1fWJHx9hW9jn+p4mHD154A=
+ bh=Gqbyd1Ks5S1emA/nt56/BlcjAjc/gZbLlUcxTonyIY8=;
+ b=FgM22fXbZr7q/dz6my4DntEPO12RdeqOZSfLKltL7PROCCG5D//8CJxFiq07jnAiVG2q6NimNlzHfwmdsj9jnz/GtRChXuGb657oZm3Karaiybg/tFOKZvsqv8ZsPQBNtd6O5wezxDPunFYGbjq2HVvSozehFmt9V7yTcekK15U=
 Received: from MWHPR11MB1645.namprd11.prod.outlook.com (2603:10b6:301:b::12)
- by MW3PR11MB4748.namprd11.prod.outlook.com (2603:10b6:303:2e::9) with
+ by MWHPR1101MB2206.namprd11.prod.outlook.com (2603:10b6:301:51::23) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.23; Mon, 9 Nov
- 2020 05:25:28 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.24; Mon, 9 Nov
+ 2020 07:37:04 +0000
 Received: from MWHPR11MB1645.namprd11.prod.outlook.com
  ([fe80::7ccb:c84d:5042:b50e]) by MWHPR11MB1645.namprd11.prod.outlook.com
  ([fe80::7ccb:c84d:5042:b50e%10]) with mapi id 15.20.3541.023; Mon, 9 Nov 2020
- 05:25:28 +0000
+ 07:37:04 +0000
 From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Gunthorpe <jgg@nvidia.com>
-CC:     "Jiang, Dave" <dave.jiang@intel.com>,
+To:     Jason Gunthorpe <jgg@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
         Bjorn Helgaas <helgaas@kernel.org>,
         "vkoul@kernel.org" <vkoul@kernel.org>,
         "Dey, Megha" <megha.dey@intel.com>,
@@ -78,12 +80,9 @@ CC:     "Jiang, Dave" <dave.jiang@intel.com>,
         "bhelgaas@google.com" <bhelgaas@google.com>,
         "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
         "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
         "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
         "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
         "Luck, Tony" <tony.luck@intel.com>,
-        "jing.lin@intel.com" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
         "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
         "eric.auger@redhat.com" <eric.auger@redhat.com>,
         "parav@mellanox.com" <parav@mellanox.com>,
@@ -100,23 +99,20 @@ CC:     "Jiang, Dave" <dave.jiang@intel.com>,
         "kvm@vger.kernel.org" <kvm@vger.kernel.org>
 Subject: RE: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
 Thread-Topic: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-Thread-Index: AQHWru26nCdjGLbk80+ZhPfx8iZ806mwjmaAgAAYm4CAABfkAIAAARAAgAQYdwCAAOAGcIAAp6mAgAD1diCAAJvfgIAADi9AgAAGfICAArW6cIABITqAgAM2ylA=
-Date:   Mon, 9 Nov 2020 05:25:28 +0000
-Message-ID: <MWHPR11MB164544DAA22DCC1AE77EE44D8CEA0@MWHPR11MB1645.namprd11.prod.outlook.com>
-References: <20201030195159.GA589138@bjorn-Precision-5520>
- <71da5f66-e929-bab1-a1c6-a9ac9627a141@intel.com>
- <20201030224534.GN2620339@nvidia.com>
- <ec52cedf-3a99-5ca1-ffbb-d8f8c4f62395@intel.com>
- <20201102132158.GA3352700@nvidia.com>
- <MWHPR11MB1645675ED03E23674A705DF68C110@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20201103124351.GM2620339@nvidia.com>
- <MWHPR11MB164544C9CFCC3F162C1C6FC18CEF0@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20201104124017.GW2620339@nvidia.com>
+Thread-Index: AQHWru26nCdjGLbk80+ZhPfx8iZ806mwjmaAgAAYm4CAABfkAIAAARAAgAQYdwCAAOAGcIAAp6mAgAD1diCAAJvfgIAADi9AgAAGfICAArW6cIAAY8KAgAA79QCAABGDgIAAY1IAgAAHBYCAAsnwAIAATTGAgABlZPA=
+Date:   Mon, 9 Nov 2020 07:37:03 +0000
+Message-ID: <MWHPR11MB164578A1CC38EB28F6EA8F918CEA0@MWHPR11MB1645.namprd11.prod.outlook.com>
+References: <20201104124017.GW2620339@nvidia.com>
  <MWHPR11MB1645862A8F7CF7FB8DD011778CEF0@MWHPR11MB1645.namprd11.prod.outlook.com>
  <20201104135415.GX2620339@nvidia.com>
  <MWHPR11MB1645524BDEDF8899914F32AE8CED0@MWHPR11MB1645.namprd11.prod.outlook.com>
- <871rh6knvs.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <871rh6knvs.fsf@nanos.tec.linutronix.de>
+ <20201106131415.GT2620339@nvidia.com> <20201106164850.GA85879@otc-nc-03>
+ <20201106175131.GW2620339@nvidia.com>
+ <CAPcyv4iYHA1acfo=+fTk+U_TrLbSWJjA6v4oeTXgVYDTrnCoGw@mail.gmail.com>
+ <20201107001207.GA2620339@nvidia.com>
+ <87pn4nk7nn.fsf@nanos.tec.linutronix.de>
+ <20201108232341.GB2620339@nvidia.com>
+In-Reply-To: <20201108232341.GB2620339@nvidia.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -124,124 +120,199 @@ X-MS-TNEF-Correlator:
 dlp-version: 11.5.1.3
 dlp-product: dlpe-windows
 dlp-reaction: no-action
-authentication-results: linutronix.de; dkim=none (message not signed)
- header.d=none;linutronix.de; dmarc=none action=none header.from=intel.com;
+authentication-results: nvidia.com; dkim=none (message not signed)
+ header.d=none;nvidia.com; dmarc=none action=none header.from=intel.com;
 x-originating-ip: [192.198.147.194]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5ce42165-d99b-45d5-0f68-08d8846fdecd
-x-ms-traffictypediagnostic: MW3PR11MB4748:
+x-ms-office365-filtering-correlation-id: 6d73305a-59ab-4642-5b27-08d8848240e4
+x-ms-traffictypediagnostic: MWHPR1101MB2206:
 x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW3PR11MB4748ABAAF12150E0A0DC3E048CEA0@MW3PR11MB4748.namprd11.prod.outlook.com>
+x-microsoft-antispam-prvs: <MWHPR1101MB2206806E51BF9827DAF82BA38CEA0@MWHPR1101MB2206.namprd11.prod.outlook.com>
 x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: FbrZPdi5jbWNPxhwabpl6dqblt5AWgCYRpOR43qPV08kn/isrXc8p8ND8Nzgo1nWKeaXMx47TyUPm6ASYKzO80fHxKgnEbnQUVOnqx7c4ZKQQOnzQahwitB/iXQgGIfYi7u6ek0Ax3+NI81PizhED4mwpMfxaAZR937DYfQzSgscZ09q/1ArFMLVQgc2Olxu7j3QBNoh4gvO7XlEWk/q+28tP0xBCsxIfgBilsuyf3WBCwLlD/8EdZXKSFoa0igytPZgDiphoLXjKoy6ccC2SVVJg9imqEG6mdMfx7XOooGg/CgfzTq1C4D2LxUk3+SbrpA/Sbpe1Xqm5MmB6un71Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(39860400002)(346002)(376002)(366004)(136003)(54906003)(86362001)(9686003)(55016002)(8676002)(83380400001)(2906002)(71200400001)(7416002)(33656002)(7696005)(26005)(66446008)(64756008)(53546011)(66556008)(66476007)(478600001)(6506007)(66946007)(5660300002)(8936002)(186003)(110136005)(76116006)(52536014)(316002)(4326008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 3DuBUt4s/A7VWPULekptUBFB6d5l1BGP3u3xXVNLK3PEPdx+oy8JdW/cJRuWCRC8pEWSrHZfMXtVBdWBQxvHaA339gn2yLtvqbSQsEZfuVrNcYHG11MnNZZ80nMCklXPqH7CaNt47gLrYxgdiM7VyVyJE1JyykDpUgSxLpFd/rk5hIf2X7yAT1JaX3aYWW84ZPc9yl+6i/dLdQmRRDM8Je6DX25rWzAhWdBU9lEW6l78TWxr8j+bnX8KwEe9c500nxqFhc7euuffsKFhI633Ilx2gM/+3y5n475eT96ZfjeY1XOCDgPli0Upj7PO8ORbR8oXGj/LDxlgiEUeyXqsig/Guj4EKEpoDGEo1rsZKcHcOxlUCOjMx3BWgqRpwN9rZ7hunKz7Wkgoj1wWI7a0JRD5LJ4u5H57BnheGIYGbt02kkiNBo514L+l/bLetMNJiWbIy5TcR94AegbqKD49Odw5qKvZ28H8u8uSGeBCGLcC9ZQSgFUp3vxFfQB5cIxNDAV9GUhAQ+iuxRIfD80PAaq1w3wTIi73RivmCsiHz3QSpxWllfSPlU+1+MpKzyWO7o6dwz0pSNhF1C26vEYGbROCbgXqD3voMyXdBsOjuUZKy1BufI6Itfj1cl8H481C5WpGSR9pNQuLYoKRIykiAA==
+x-microsoft-antispam-message-info: WIyELlJpcnC1XAVr4hAAlBGzSHn+xN1mrvdRH3kGJ3Vsafe67V3FlM3OnwW3KOYhoTxhPuTI6dz/ijiTkuqH1V01XdKYeqFbeZJqCuA3Oe4670zQ33fS7PaCGHg2j+b/yxlt/NXpkU8wFc5+eb6jyB56k4H4PoEKw6zcgO4FGgYuHbOKJgcFvNHSSsPc2lX6MYHsMHPS/fLJ2A1J/ZAYzWRXFVJ48l+I19kwyuqSZSQ2m5JnZaRLAyzqBDx1FUxAmTb0+e0f/l1+6VtScCxOx3NMC0AeFhsQX5WEkVDaxiAZ4yP//qMB5FSMFH2dUFKeSOzRWzYHQHAndQwlf3fqzA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(346002)(39860400002)(366004)(376002)(8676002)(7696005)(52536014)(71200400001)(6506007)(316002)(4326008)(86362001)(5660300002)(64756008)(66476007)(8936002)(66556008)(66946007)(66446008)(76116006)(26005)(9686003)(110136005)(478600001)(33656002)(7416002)(83380400001)(2906002)(55016002)(54906003)(186003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: v35ow8Y2eEEHKQqj3nBITSkJKQ83xmP3JoGEvZNuV9t9HH6ovUgFWWosb0bqqlfzzxqJhdbd1gMto1w/wna8VACxcgemto/LkImk8dienGQwsN3bk6y7nTApquSy+a7710ldub0Y4orliVdiUgKxsqQwjx0WhYmq3a38knSmXGwbawgaJ6gKyRdFPjKAuvIMqgGD/78Zl8PkbOtHI11w5p6SLs5C2wMnNGYMqi1FTSaZc4ybtNQRGD0T/kf3Kj4HCtkNYTpZBzoy9T/7bu1WGcw1hkO8jpx4t5mEMMD37hH+tVshPi+lfQzYYD+lT8ig8uk3xgdbKuA4gbSX52pmkdAvGtXYggncTC8f0+Zfr11flRAP86JtnQ7nIQ0gUkuXCAYsGF+pOuEjVhUWav/Vy34HXi4nWbvpT1MsckmE2xswdNgRPBJPf6Nj5jP1t6Iv5fkPt3aW/88FAG6LB23+pjJIU7pUqecz48/mf2Ne0QAiF1fUh9nYuuhqyy5ipcjPEgz7nhn4LhoeTZlmYdVEFM1MsNXEzFkyOEXP5bJVkicpbnkjgvFzjDP+XZPoK7OB4zeG3cxf1f8IOqJOE2pi35foDnhG0JMIxT8biKVQcKb2KYCgS3anCXTWyXtNhSik4Ge3CzClJZdMgHeUz+kI8g==
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1645.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ce42165-d99b-45d5-0f68-08d8846fdecd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Nov 2020 05:25:28.4923
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d73305a-59ab-4642-5b27-08d8848240e4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Nov 2020 07:37:03.9778
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: T+Gy/jcLw+nI2TL3qh/29svEl1jafkxWRrMbWpt37LS9cogpSNE9b8kict4zhZjg2505MtNK1Ih4wx/+6maQCw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4748
+X-MS-Exchange-CrossTenant-userprincipalname: 6f030XVkADOJW8aQjimoULpF8tEw6FVWeoNcHyrONJ3vyp+tpipirKi1M+4T9eO4uRfTSe4K9XK7qnXdZp53HQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1101MB2206
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Thomas Gleixner <tglx@linutronix.de>
-> Sent: Saturday, November 7, 2020 8:32 AM
-> To: Tian, Kevin <kevin.tian@intel.com>; Jason Gunthorpe <jgg@nvidia.com>
-> Cc: Jiang, Dave <dave.jiang@intel.com>; Bjorn Helgaas <helgaas@kernel.org=
->;
-> vkoul@kernel.org; Dey, Megha <megha.dey@intel.com>; maz@kernel.org;
-> bhelgaas@google.com; alex.williamson@redhat.com; Pan, Jacob jun
-> <jacob.jun.pan@intel.com>; Raj, Ashok <ashok.raj@intel.com>; Liu, Yi L
-> <yi.l.liu@intel.com>; Lu, Baolu <baolu.lu@intel.com>; Kumar, Sanjay K
-> <sanjay.k.kumar@intel.com>; Luck, Tony <tony.luck@intel.com>;
-> jing.lin@intel.com; Williams, Dan J <dan.j.williams@intel.com>;
-> kwankhede@nvidia.com; eric.auger@redhat.com; parav@mellanox.com;
-> rafael@kernel.org; netanelg@mellanox.com; shahafs@mellanox.com;
-> yan.y.zhao@linux.intel.com; pbonzini@redhat.com; Ortiz, Samuel
-> <samuel.ortiz@intel.com>; Hossain, Mona <mona.hossain@intel.com>;
-> dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> pci@vger.kernel.org; kvm@vger.kernel.org
-> Subject: RE: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+> From: Jason Gunthorpe <jgg@nvidia.com>
+> Sent: Monday, November 9, 2020 7:24 AM
 >=20
-> On Fri, Nov 06 2020 at 09:48, Kevin Tian wrote:
-> >> From: Jason Gunthorpe <jgg@nvidia.com>
-> >> On Wed, Nov 04, 2020 at 01:34:08PM +0000, Tian, Kevin wrote:
-> >> The interrupt controller is responsible to create an addr/data pair
-> >> for an interrupt message. It sets the message format and ensures it
-> >> routes to the proper CPU interrupt handler. Everything about the
-> >> addr/data pair is owned by the platform interrupt controller.
-> >>
-> >> Devices do not create interrupts. They only trigger the addr/data pair
-> >> the platform gives them.
+> On Sun, Nov 08, 2020 at 07:47:24PM +0100, Thomas Gleixner wrote:
 > >
-> > I guess that we may just view it from different angles. On x86 platform=
-,
-> > a MSI/IMS capable device directly composes interrupt messages, with
-> > addr/data pair filled by OS. If there is no IOMMU remapping enabled in
-> > the middle, the message just hits the CPU. Your description possibly
-> > is from software side, e.g. describing the hierarchical IRQ domain
-> > concept?
+> > That means the guest needs a way to ask the hypervisor for a proper
+> > translation, i.e. a hypercall. Now where to do that? Looking at the
+> > above remapping case it's pretty obvious:
+> >
+> >
+> >                      |
+> >                      |
+> >   [CPU]       -- [VI | RT]  -- [Bridge] --    Bus    -- [Device]
+> >                      |
+> >   Alloc          "Compose"                   Store         Use
+> >
+> >   Vectordomain   HCALLdomain                Busdomain
+> >                  |        ^
+> >                  |        |
+> >                  v        |
+> >             Hypervisor
+> >                Alloc + Compose
 >=20
-> No. The device composes nothing. If the interrupt is raised in the
-> device then the MSI block sends the message which was composed by the OS
-> and stored in the device's message store. For PCI/MSI that's the MSI or
-> MSIX table and for IMS that's either on device memory (as IDXD uses) or
-> some completely different location which Jason described.
+> Yes, this will describes what I have been thinking
 
-Sorry being inaccurate here. I actually meant the same thing as
-you described since I did mention addr/data pair filled by OS.=20
-Unfortunately I mistakenly thought that 'compose' has similar
-meaning to 'send' in English but clearly it's not and instead it's
-just about the message content. and for sure I also agree with your
-other clarifications regarding to architecture independent  manner.
+Agree
+
+>=20
+> > Now the question which I can't answer is whether this can work correctl=
+y
+> > in terms of isolation. If the IMS storage is in guest memory (queue
+> > storage) then the guest driver can obviously write random crap into it
+> > which the device will happily send. (For MSI and IDXD style IMS it
+> > still can trap the store).
+>=20
+> There are four cases of interest here:
+>=20
+>  1) Bare metal, PF and VF devices just deliver whatever addr/data pairs
+>     to the APIC. IMS works perfectly with
+> pci_subdevice_msi_create_irq_domain()
+>=20
+>  2) SRIOV VF assigned to the guest.
+>=20
+>     The guest can cause any MemWr TLP to any addr/data pair
+>     and the iommu/platform/vmm is supposed to use the
+>     Bus/device/function to isolate & secure the interrupt address
+>     range.
+>=20
+>     IMS can work in the guest if the guest knows the details of the
+>     address range and can make hypercalls to setup routing. So
+>     pci_subdevice_msi_create_irq_domain() works if the hypercalls
+>     exist and fails if they don't.
+>=20
+>  3) SIOV sub device assigned to the guest.
+>=20
+>     The difference between SIOV and SRIOV is the device must attach a
+>     PASID to every TLP triggered by the guest. Logically we'd expect
+>     when IMS is used in this situation the interrupt MemWr is tagged
+>     with bus/device/function/PASID to uniquly ID the guest and the same
+>     security protection scheme from #2 applies.
+
+Unfortunately no. Intel VT-d only treats MemWr w/o PASID to 0xFEExxxxx
+as interrupt request. MemWr w/ PASID, even to 0xFEE, is translated
+normally through DMA remapping page table. I don't know other IOMMU
+vendors. But at least on Intel platform such device would not get the=20
+desired effect, since the IOMMU only guarantees interrupt isolation in=20
+BDF-level.
+
+Does your device already implement such capability? We can bring this=20
+request back to the hardware team.=20
+
+>=20
+>  4) SIOV sub device assigned to the guest, but with emulation.
+>=20
+>     This SIOV device cannot tag interrupts with PASID so cannot do #2
+>     (or the platform cannot recieve a PASID tagged interrupt message).
+>=20
+>     Since the interrupts are being delivered with TLPs pointing at the
+>     hypervisor the only solution is for the hypervisor to exclusively
+>     control the interrupt table. MSI table like emulation for IMS is
+>     needed and the hypervisor will use
+> pci_subdevice_msi_create_irq_domain()
+>     to get the real interrupts.
+>=20
+>     pci_subdevice_msi_create_irq_domain() needs to return the 'fake'
+>     addr/data pairs which are actually an ABI between the guest and
+>     hypervisor carried in the hidden hypercall of the emulation.
+>     (ie it works like MSI works today)
+>=20
+> IDXD is worring about case #4, I think, but I didn't follow in that
+> whole discussion about the IMS table layout if they PASID tag the IMS
+> MemWr or not?? Ashok can you clarify?
+>=20
+> > Is the IOMMU/Interrupt remapping unit able to catch such messages which
+> > go outside the space to which the guest is allowed to signal to? If yes=
+,
+> > problem solved. If no, then IMS storage in guest memory can't ever work=
+.
+>=20
+> Right. Only PASID on the interrupt messages can resolve this securely.
+>=20
+> > So in case that the HCALL domain is missing, the Vector domain needs
+> > return an error code on domain creation. If the HCALL domain is there
+> > then the domain creation works and in case of actual interrupt
+> > allocation the hypercall either returns a valid composed message or an
+> > appropriate error code.
+>=20
+> Yes
+>=20
+> > But there's a catch:
+> >
+> > This only works when the guest OS actually knows that it runs in a
+> > VM. If the guest can't figure that out, i.e. via CPUID, this cannot be
+> > solved because from the guest OS view that's the same as running on bar=
+e
+> > metal. Obviously on bare metal the Vector domain can and must handle
+> > this.
+>=20
+> Yes
+>=20
+> The flip side is today, the way pci_subdevice_msi_create_irq_domain()
+> works a VF using it on baremetal will succeed and if that same VF is
+> assigned to a guest then pci_subdevice_msi_create_irq_domain()
+> succeeds but the interrupt never comes - so the driver is broken.
+
+Yes, this is the main worry here. While all agree that using hypercall is=20
+the proper way to virtualize IMS, how to disable it when hypercall is
+not available is a more urgent demand at current stage.
+
+>=20
+> Yes, if we add some ACPI/etc flag that is not going to magically fix
+> old kvm's, but at least *something* exists that works right and
+> generically.
+
+Agree. We can work together on this definition.=20
+
+btw in reality such ACPI extension doesn't exist yet, which likely will
+take some time. In the meantime we already have pending usages=20
+like IDXD. Do you suggest holding these patches until we get ASWG=20
+to accept the extension, or accept using Intel IMS cap as a vendor
+specific mitigation to move forward while the platform flag is being=20
+worked on? Anyway the IMS cap is already defined and can help fix=20
+some broken cases.
+
+>=20
+> If we follow Intel's path then we need special KVM level support for
+> *every* device, PCI cap mangling and so on. Forever. Sounds horrible
+> to me..
+>=20
+> This feels like one of these things where no matter what we do
+> something is broken. Picking the least breakage is the challenge here.
+>=20
+> > So this needs some thought.
+>=20
+> I think your HAOLL diagram is the only sane architecture.
+>=20
+> If go that way then case #4 will still work, in this case the HCALL
+> will return addr/data pairs that conform to what the emulation
+> expects. Or fail if the VMM can't do emulation for the device.
+>=20
 
 Thanks
 Kevin
-
->=20
-> This has absolutely nothing to do with the X86 platform. MSI is a
-> architecture independent mechanism: Send whatever the OS put into the
-> storage to raise an interrupt in the CPU. The device does neither know
-> whether that message is going to be intercepted by an interrupt
-> remapping unit or not.
->=20
-> Stop claiming that any of this has anything to do with x86. It has
-> absolutely nothing to do with x86 and looking at MSI from an x86
-> perspective instead of looking at it from the architecture agnostic
-> technical reality of MSI is the reason why we have this discussion at
-> all.
->=20
-> We had a similar discussion vs. the way how IMS interrupts have to be
-> dealt with in terms of irq domains. Can you finally stop looking at
-> everything as a big x86/intel/platform lump and understand that things
-> are very well structured and seperated both at the hardware and at the
-> software level?
->=20
-> > Do you mind providing the link? There were lots of discussions between
-> > you and Thomas. I failed to locate the exact mail when searching above
-> > keywords.
->=20
-> In this thread: 20200821002424.119492231@linutronix.de and you were on
-> Cc
->=20
-> Thanks,
->=20
->         tglx
->=20
-

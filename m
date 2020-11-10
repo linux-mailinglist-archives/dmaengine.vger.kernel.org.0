@@ -2,19 +2,19 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E666F2ACE07
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Nov 2020 05:06:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C2862ACE17
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Nov 2020 05:07:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387555AbgKJEGa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 9 Nov 2020 23:06:30 -0500
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:33742 "EHLO
+        id S1732288AbgKJEGy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 9 Nov 2020 23:06:54 -0500
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:53880 "EHLO
         smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387518AbgKJEGa (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 9 Nov 2020 23:06:30 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3740237|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0519488-8.64106e-05-0.947965;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047207;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=28;RT=28;SR=0;TI=SMTPD_---.IulFdj5_1604981159;
+        by vger.kernel.org with ESMTP id S2387513AbgKJEG3 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 9 Nov 2020 23:06:29 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1478366|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0231434-0.00763199-0.969225;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047199;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=28;RT=28;SR=0;TI=SMTPD_---.IulFdj5_1604981159;
 Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.IulFdj5_1604981159)
           by smtp.aliyun-inc.com(10.147.42.135);
-          Tue, 10 Nov 2020 12:06:19 +0800
+          Tue, 10 Nov 2020 12:06:22 +0800
 From:   Frank Lee <frank@allwinnertech.com>
 To:     vkoul@kernel.org, robh+dt@kernel.org, mripard@kernel.org,
         wens@csie.org, ulf.hansson@linaro.org, kishon@ti.com,
@@ -29,9 +29,9 @@ To:     vkoul@kernel.org, robh+dt@kernel.org, mripard@kernel.org,
         linux-watchdog@vger.kernel.org, linux-gpio@vger.kernel.org,
         tiny.windzz@gmail.com
 Cc:     Yangtao Li <frank@allwinnertech.com>
-Subject: [PATCH 05/19] dmaengine: sun6i: Add support for A100 DMA
-Date:   Tue, 10 Nov 2020 12:05:39 +0800
-Message-Id: <20201110040553.1381-6-frank@allwinnertech.com>
+Subject: [PATCH 06/19] arm64: allwinner: a100: Add device node for DMA controller
+Date:   Tue, 10 Nov 2020 12:05:40 +0800
+Message-Id: <20201110040553.1381-7-frank@allwinnertech.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201110040553.1381-1-frank@allwinnertech.com>
 References: <20201110040553.1381-1-frank@allwinnertech.com>
@@ -43,59 +43,39 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Yangtao Li <frank@allwinnertech.com>
 
-The dma of a100 is similar to h6, with some minor changes to
-support greater addressing capabilities.
+The A100 SoC has a DMA controller that supports 8 DMA channels
+to and from various peripherals.
 
-Add support for it.
+Add a device node for it.
 
 Signed-off-by: Yangtao Li <frank@allwinnertech.com>
 ---
- drivers/dma/sun6i-dma.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-index f5f9c86c50bc..5cadd4d2b824 100644
---- a/drivers/dma/sun6i-dma.c
-+++ b/drivers/dma/sun6i-dma.c
-@@ -1173,6 +1173,30 @@ static struct sun6i_dma_config sun50i_a64_dma_cfg = {
- 			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
- };
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+index cc321c04f121..c34ed8045363 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
+@@ -101,6 +101,18 @@ ccu: clock@3001000 {
+ 			#reset-cells = <1>;
+ 		};
  
-+/*
-+ * TODO: Add support for more than 4g physical addressing.
-+ *
-+ * The A100 binding uses the number of dma channels from the
-+ * device tree node.
-+ */
-+static struct sun6i_dma_config sun50i_a100_dma_cfg = {
-+	.clock_autogate_enable = sun6i_enable_clock_autogate_h3,
-+	.set_burst_length = sun6i_set_burst_length_h3,
-+	.set_drq          = sun6i_set_drq_h6,
-+	.set_mode         = sun6i_set_mode_h6,
-+	.src_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
-+	.dst_burst_lengths = BIT(1) | BIT(4) | BIT(8) | BIT(16),
-+	.src_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
-+	.dst_addr_widths   = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
-+			     BIT(DMA_SLAVE_BUSWIDTH_8_BYTES),
-+	.has_mbus_clk = true,
-+};
++		dma: dma-controller@3002000 {
++			compatible = "allwinner,sun50i-a100-dma";
++			reg = <0x03002000 0x1000>;
++			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_DMA>, <&ccu CLK_MBUS_DMA>;
++			clock-names = "bus", "mbus";
++			dma-channels = <8>;
++			dma-requests = <51>;
++			resets = <&ccu RST_BUS_DMA>;
++			#dma-cells = <1>;
++		};
 +
- /*
-  * The H6 binding uses the number of dma channels from the
-  * device tree node.
-@@ -1225,6 +1249,7 @@ static const struct of_device_id sun6i_dma_match[] = {
- 	{ .compatible = "allwinner,sun8i-h3-dma", .data = &sun8i_h3_dma_cfg },
- 	{ .compatible = "allwinner,sun8i-v3s-dma", .data = &sun8i_v3s_dma_cfg },
- 	{ .compatible = "allwinner,sun50i-a64-dma", .data = &sun50i_a64_dma_cfg },
-+	{ .compatible = "allwinner,sun50i-a100-dma", .data = &sun50i_a100_dma_cfg },
- 	{ .compatible = "allwinner,sun50i-h6-dma", .data = &sun50i_h6_dma_cfg },
- 	{ /* sentinel */ }
- };
+ 		gic: interrupt-controller@3021000 {
+ 			compatible = "arm,gic-400";
+ 			reg = <0x03021000 0x1000>, <0x03022000 0x2000>,
 -- 
 2.28.0
 

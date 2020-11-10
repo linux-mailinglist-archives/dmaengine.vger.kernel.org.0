@@ -2,19 +2,19 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C2862ACE17
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Nov 2020 05:07:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 08D8B2ACE05
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Nov 2020 05:06:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732288AbgKJEGy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 9 Nov 2020 23:06:54 -0500
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:53880 "EHLO
+        id S2387489AbgKJEGp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 9 Nov 2020 23:06:45 -0500
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:41716 "EHLO
         smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387513AbgKJEG3 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 9 Nov 2020 23:06:29 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1478366|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0231434-0.00763199-0.969225;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047199;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=28;RT=28;SR=0;TI=SMTPD_---.IulFdj5_1604981159;
+        by vger.kernel.org with ESMTP id S1733073AbgKJEGc (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 9 Nov 2020 23:06:32 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1456938|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.446168-0.0014012-0.552431;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047201;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=28;RT=28;SR=0;TI=SMTPD_---.IulFdj5_1604981159;
 Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.IulFdj5_1604981159)
           by smtp.aliyun-inc.com(10.147.42.135);
-          Tue, 10 Nov 2020 12:06:22 +0800
+          Tue, 10 Nov 2020 12:06:24 +0800
 From:   Frank Lee <frank@allwinnertech.com>
 To:     vkoul@kernel.org, robh+dt@kernel.org, mripard@kernel.org,
         wens@csie.org, ulf.hansson@linaro.org, kishon@ti.com,
@@ -29,9 +29,9 @@ To:     vkoul@kernel.org, robh+dt@kernel.org, mripard@kernel.org,
         linux-watchdog@vger.kernel.org, linux-gpio@vger.kernel.org,
         tiny.windzz@gmail.com
 Cc:     Yangtao Li <frank@allwinnertech.com>
-Subject: [PATCH 06/19] arm64: allwinner: a100: Add device node for DMA controller
-Date:   Tue, 10 Nov 2020 12:05:40 +0800
-Message-Id: <20201110040553.1381-7-frank@allwinnertech.com>
+Subject: [PATCH 07/19] arm64: dts: allwinner: A100: Add PMU mode
+Date:   Tue, 10 Nov 2020 12:05:41 +0800
+Message-Id: <20201110040553.1381-8-frank@allwinnertech.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201110040553.1381-1-frank@allwinnertech.com>
 References: <20201110040553.1381-1-frank@allwinnertech.com>
@@ -43,39 +43,60 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Yangtao Li <frank@allwinnertech.com>
 
-The A100 SoC has a DMA controller that supports 8 DMA channels
-to and from various peripherals.
-
-Add a device node for it.
+Add the Performance Monitoring Unit (PMU) device tree node to the A100
+.dtsi, which tells DT users which interrupts are triggered by PMU overflow
+events on each core.
 
 Signed-off-by: Yangtao Li <frank@allwinnertech.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
-index cc321c04f121..c34ed8045363 100644
+index c34ed8045363..01ff53b5a7a8 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-a100.dtsi
-@@ -101,6 +101,18 @@ ccu: clock@3001000 {
- 			#reset-cells = <1>;
+@@ -25,21 +25,21 @@ cpu0: cpu@0 {
+ 			enable-method = "psci";
  		};
  
-+		dma: dma-controller@3002000 {
-+			compatible = "allwinner,sun50i-a100-dma";
-+			reg = <0x03002000 0x1000>;
-+			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_DMA>, <&ccu CLK_MBUS_DMA>;
-+			clock-names = "bus", "mbus";
-+			dma-channels = <8>;
-+			dma-requests = <51>;
-+			resets = <&ccu RST_BUS_DMA>;
-+			#dma-cells = <1>;
-+		};
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			compatible = "arm,cortex-a53";
+ 			device_type = "cpu";
+ 			reg = <0x1>;
+ 			enable-method = "psci";
+ 		};
+ 
+-		cpu@2 {
++		cpu2: cpu@2 {
+ 			compatible = "arm,cortex-a53";
+ 			device_type = "cpu";
+ 			reg = <0x2>;
+ 			enable-method = "psci";
+ 		};
+ 
+-		cpu@3 {
++		cpu3: cpu@3 {
+ 			compatible = "arm,cortex-a53";
+ 			device_type = "cpu";
+ 			reg = <0x3>;
+@@ -47,6 +47,15 @@ cpu@3 {
+ 		};
+ 	};
+ 
++	pmu {
++		compatible = "arm,cortex-a53-pmu";
++		interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
++	};
 +
- 		gic: interrupt-controller@3021000 {
- 			compatible = "arm,gic-400";
- 			reg = <0x03021000 0x1000>, <0x03022000 0x2000>,
+ 	psci {
+ 		compatible = "arm,psci-1.0";
+ 		method = "smc";
 -- 
 2.28.0
 

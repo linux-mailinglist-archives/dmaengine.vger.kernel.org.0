@@ -2,193 +2,88 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CD6B2AC8C0
-	for <lists+dmaengine@lfdr.de>; Mon,  9 Nov 2020 23:42:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C585B2ACE1D
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Nov 2020 05:07:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbgKIWmd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 9 Nov 2020 17:42:33 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:54086 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgKIWmd (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 9 Nov 2020 17:42:33 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1604961750;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1z9VVm4SXFnU2lDoSHTfhVj4WS02FXiBfM7TibPl7tM=;
-        b=gv6V9waMvfQvNDKvhhA3p1Jhiex5y9NA8ZsEEZ1sbUrMZigd3WeMwV1gW0WUeiOgxD7FM6
-        GFtvGUGHSSFJHAC+LCM5baXBjwRvq1v/Hf7sV+yHGkhkmtIcgq1fYAWSZfBa/JT8Y9Zlkt
-        C2+7KgPDA4w7dwsXUwbua6kspktrNPuSl02ukjUfm1jp8yFrVnSSg11qb8BdH7kZHQcJJK
-        Mwc9mBi4AApzBznXZqBKN/HNzqOsO42HIiJ1h8UJwMdfonjZ2gUkVQZcVRHOTIF8KBwPvV
-        ZX/SDZkS3eJiC+XZjoDl+efXN/AViWOu6D86FAQU/p8Kp15igsdcVgx7foK0WQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1604961750;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1z9VVm4SXFnU2lDoSHTfhVj4WS02FXiBfM7TibPl7tM=;
-        b=PGZ6AIOpNGkeoLmMZtTwEYJNEluUtRndUUua0A9Ig+sMIdYS4ym6WC/DtX5XCmbXt+IbQX
-        IUOxmz2U79FQy+DA==
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     "Raj\, Ashok" <ashok.raj@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Tian\, Kevin" <kevin.tian@intel.com>,
-        "Jiang\, Dave" <dave.jiang@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "vkoul\@kernel.org" <vkoul@kernel.org>,
-        "Dey\, Megha" <megha.dey@intel.com>,
-        "maz\@kernel.org" <maz@kernel.org>,
-        "bhelgaas\@google.com" <bhelgaas@google.com>,
-        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
-        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu\, Yi L" <yi.l.liu@intel.com>,
-        "Lu\, Baolu" <baolu.lu@intel.com>,
-        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck\, Tony" <tony.luck@intel.com>,
-        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
-        "parav\@mellanox.com" <parav@mellanox.com>,
-        "rafael\@kernel.org" <rafael@kernel.org>,
-        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain\, Mona" <mona.hossain@intel.com>,
-        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-In-Reply-To: <20201109173034.GG2620339@nvidia.com>
-References: <20201104135415.GX2620339@nvidia.com> <MWHPR11MB1645524BDEDF8899914F32AE8CED0@MWHPR11MB1645.namprd11.prod.outlook.com> <20201106131415.GT2620339@nvidia.com> <20201106164850.GA85879@otc-nc-03> <20201106175131.GW2620339@nvidia.com> <CAPcyv4iYHA1acfo=+fTk+U_TrLbSWJjA6v4oeTXgVYDTrnCoGw@mail.gmail.com> <20201107001207.GA2620339@nvidia.com> <87pn4nk7nn.fsf@nanos.tec.linutronix.de> <20201108235852.GC32074@araj-mobl1.jf.intel.com> <874klykc7h.fsf@nanos.tec.linutronix.de> <20201109173034.GG2620339@nvidia.com>
-Date:   Mon, 09 Nov 2020 23:42:29 +0100
-Message-ID: <87pn4mi23u.fsf@nanos.tec.linutronix.de>
+        id S1733224AbgKJEGP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 9 Nov 2020 23:06:15 -0500
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:40664 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728403AbgKJEGM (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 9 Nov 2020 23:06:12 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1739784|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0582695-0.00106321-0.940667;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047199;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=28;RT=28;SR=0;TI=SMTPD_---.IulFdj5_1604981159;
+Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.IulFdj5_1604981159)
+          by smtp.aliyun-inc.com(10.147.42.135);
+          Tue, 10 Nov 2020 12:06:04 +0800
+From:   Frank Lee <frank@allwinnertech.com>
+To:     vkoul@kernel.org, robh+dt@kernel.org, mripard@kernel.org,
+        wens@csie.org, ulf.hansson@linaro.org, kishon@ti.com,
+        wim@linux-watchdog.org, linux@roeck-us.net,
+        dan.j.williams@intel.com, linus.walleij@linaro.org,
+        wsa+renesas@sang-engineering.com, dianders@chromium.org,
+        marex@denx.de, colin.king@canonical.com, rdunlap@infradead.org,
+        krzk@kernel.org, gregkh@linuxfoundation.org, megous@megous.com,
+        rikard.falkeborn@gmail.com, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-gpio@vger.kernel.org,
+        tiny.windzz@gmail.com
+Cc:     Frank Lee <frank@allwinnertech.com>
+Subject: [PATCH 00/19] Second step support for A100
+Date:   Tue, 10 Nov 2020 12:05:34 +0800
+Message-Id: <20201110040553.1381-1-frank@allwinnertech.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Nov 09 2020 at 13:30, Jason Gunthorpe wrote:
-> On Mon, Nov 09, 2020 at 12:21:22PM +0100, Thomas Gleixner wrote:
->> >> Is the IOMMU/Interrupt remapping unit able to catch such messages whi=
-ch
->> >> go outside the space to which the guest is allowed to signal to? If y=
-es,
->> >> problem solved. If no, then IMS storage in guest memory can't ever
->> >> work.
+Hi,
 
-> The SIOV case is to take a single RID and split it to multiple
-> VMs and also to the hypervisor. All these things concurrently use the
-> same RID, and the IOMMU can't tell them apart.
->
-> The hypervisor security domain owns TLPs with no PASID. Each PASID is
-> assigned to a VM.
->
-> For interrupts, today, they are all generated, with no PASID, to the
-> same RID. There is no way for remapping to protect against a guest
-> without checking also PASID.
->
-> The relavance of PASID is this:
->
->> Again, trap emulate does not work for IMS when the IMS store is software
->> managed guest memory and not part of the device. And that's the whole
->> reason why we are discussing this.
->
-> With PASID tagged interrupts and a IOMMU interrupt remapping
-> capability that can trigger on PASID, then the platform can provide
-> the same level of security as SRIOV - the above is no problem.
->
-> The device ensures that all DMAs and all interrupts program by the
-> guest are PASID tagged and the platform provides security by checking
-> the PASID when delivering the interrupt.
+Let's add watchdog, arm-pmu, dma, usb, mmc..... support for allwinner
+a100 soc.
 
-Correct.
+Yangtao Li (19):
+  pinctrl: sunxi: fix irq bank map for the Allwinner A100 pin controller
+  pinctrl: sunxi: Mark the irq bank not found in
+    sunxi_pinctrl_irq_handler() with WARN_ON
+  pinctrl: sunxi: Always call chained_irq_{enter, exit} in
+    sunxi_pinctrl_irq_handler
+  dt-bindings: dma: allwinner,sun50i-a64-dma: Add A100 compatible
+  dmaengine: sun6i: Add support for A100 DMA
+  arm64: allwinner: a100: Add device node for DMA controller
+  arm64: dts: allwinner: A100: Add PMU mode
+  phy: sun4i-usb: remove enable_pmu_unk1 from sun50i_h6_cfg
+  phy: allwinner: Convert to devm_platform_ioremap_* API
+  dt-bindings: watchdog: sun4i: Add A100 compatible
+  arm64: dts: allwinner: a100: add watchdog node
+  dt-bindings: Add bindings for USB phy on Allwinner A100
+  phy: sun4i-usb: add support for A100 USB PHY
+  arm64: dts: allwinner: a100: add usb related nodes
+  arm64: allwinner: A100: enable EHCI, OHCI and USB PHY nodes in Perf1
+  dt-bindings: mmc: sunxi: Add A100 compatibles
+  mmc: sunxi: add support for A100 mmc controller
+  arm64: allwinner: a100: Add MMC related nodes
+  arm64: dts: allwinner: a100: perf1: Add eMMC and MMC node
 
-> Intel IOMMU doesn't work this way today, but it makes alot of design
-> sense.
+ .../dma/allwinner,sun50i-a64-dma.yaml         |   5 +-
+ .../bindings/mmc/allwinner,sun4i-a10-mmc.yaml |   2 +
+ .../phy/allwinner,sun50i-a100-usb-phy.yaml    | 105 ++++++++++
+ .../watchdog/allwinner,sun4i-a10-wdt.yaml     |   3 +
+ .../allwinner/sun50i-a100-allwinner-perf1.dts |  54 +++++
+ .../arm64/boot/dts/allwinner/sun50i-a100.dtsi | 197 +++++++++++++++++-
+ drivers/dma/sun6i-dma.c                       |  25 +++
+ drivers/mmc/host/sunxi-mmc.c                  |  28 ++-
+ drivers/phy/allwinner/phy-sun4i-usb.c         |  29 ++-
+ drivers/phy/allwinner/phy-sun50i-usb3.c       |   4 +-
+ drivers/phy/allwinner/phy-sun6i-mipi-dphy.c   |   4 +-
+ drivers/phy/allwinner/phy-sun9i-usb.c         |   4 +-
+ drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c   |   2 +-
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c         |   9 +-
+ 14 files changed, 443 insertions(+), 28 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun50i-a100-usb-phy.yaml
 
-Right.
-
-> Otherwise the interrupt is effectively delivered to the hypervisor. A
-> secure device can *never* allow a guest to specify an addr/data pair
-> for a non-PASID tagged TLP, so the device cannot offer IMS to the
-> guest.
-
-Ok. Let me summarize the current state of supported scenarios:
-
- 1) SRIOV works with any form of IMS storage because it does not require
-    PASID and the VF devices have unique requester ids, which allows the
-    remap unit to sanity check the message.
-
- 2) SIOV with IMS when the hypervisor can manage the IMS store
-    exclusively.
-
-So #2 prevents a device which handles IMS storage in queue memory to
-utilize IMS for SIOV in a guest because the hypervisor cannot manage the
-IMS message store and the guest can write arbitrary crap to it which
-violates the isolation principle.
-
-And here is the relevant part of the SIOV spec:
-
- "IMS is managed by host driver software and is not accessible directly
-  from guest or user-mode drivers.
-
-  Within the device, IMS storage is not accessible from the ADIs. ADIs
-  can request interrupt generation only through the device=E2=80=99s =E2=80=
-=98Interrupt
-  Message Generation Logic=E2=80=99, which allows an ADI to only generate
-  interrupt messages that are associated with that specific ADI. These
-  restrictions ensure that the host driver has complete control over
-  which interrupt messages can be generated by each ADI.
-
-  On Intel 64 architecture platforms, message signaled interrupts are
-  issued as DWORD size untranslated memory writes without a PASID TLP
-  Prefix, to address range 0xFEExxxxx. Since all memory requests
-  generated by ADIs include a PASID TLP Prefix, it is not possible for
-  an ADI to generate a DMA write that would be interpreted by the
-  platform as an interrupt message."
-
-That's the reductio ad absurdum for this sentence in the first paragraph
-of the preceding chapter describing the concept of IMS:
-
-  "IMS enables devices to store the interrupt messages for ADIs in a
-   device-specific optimized manner without the scalability restrictions
-   of the PCI Express defined MSI-X capability."
-
-"Device-specific optimized manner" is either wishful thinking or
-marketing induced verbal diarrhoea.
-
-The current specification puts massive restrictions on IMS storage which
-are _not_ allowing to optimize it in a device specific manner as
-demonstrated in this discussion.
-
-It also precludes obvious use cases like passing a full device to a
-guest and let the guest manage SIOV subdevices for containers or nested
-guests.
-
-TBH, to me this is just another hastily cobbled together half thought
-out misfeature cast in silicon. The proposed software support is
-following the exactly same principle.
-
-So before we go anywhere with this, I want to see a proper way forward
-to support _all_ sensible use cases and to fulfil the promise of
-"device-specific optimized manner" at the conceptual and specification
-and also at the code level.
-
-I'm not at all interested to rush in support for a half baken Intel
-centric solution which other people have to clean up after the fact
-(again).
-
-IOW, it's time to go back to the drawing board.
-
-Thanks,
-
-        tglx
+-- 
+2.28.0
 

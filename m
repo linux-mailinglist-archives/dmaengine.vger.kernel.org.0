@@ -2,19 +2,19 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 72A752ACE0B
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Nov 2020 05:07:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 39B182ACE11
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Nov 2020 05:07:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731366AbgKJEGU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 9 Nov 2020 23:06:20 -0500
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:48822 "EHLO
+        id S1733294AbgKJEGZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 9 Nov 2020 23:06:25 -0500
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:50000 "EHLO
         smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733277AbgKJEGU (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 9 Nov 2020 23:06:20 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1946372|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.00566465-0.00129434-0.993041;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047202;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=28;RT=28;SR=0;TI=SMTPD_---.IulFdj5_1604981159;
+        by vger.kernel.org with ESMTP id S2387433AbgKJEGX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 9 Nov 2020 23:06:23 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2995258|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.00377925-0.00159346-0.994627;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047188;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=29;RT=29;SR=0;TI=SMTPD_---.IulFdj5_1604981159;
 Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.IulFdj5_1604981159)
           by smtp.aliyun-inc.com(10.147.42.135);
-          Tue, 10 Nov 2020 12:06:13 +0800
+          Tue, 10 Nov 2020 12:06:15 +0800
 From:   Frank Lee <frank@allwinnertech.com>
 To:     vkoul@kernel.org, robh+dt@kernel.org, mripard@kernel.org,
         wens@csie.org, ulf.hansson@linaro.org, kishon@ti.com,
@@ -28,10 +28,10 @@ To:     vkoul@kernel.org, robh+dt@kernel.org, mripard@kernel.org,
         linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
         linux-watchdog@vger.kernel.org, linux-gpio@vger.kernel.org,
         tiny.windzz@gmail.com
-Cc:     Yangtao Li <frank@allwinnertech.com>
-Subject: [PATCH 02/19] pinctrl: sunxi: Mark the irq bank not found in sunxi_pinctrl_irq_handler() with WARN_ON
-Date:   Tue, 10 Nov 2020 12:05:36 +0800
-Message-Id: <20201110040553.1381-3-frank@allwinnertech.com>
+Cc:     Yangtao Li <frank@allwinnertech.com>, stable@vger.kernel.org
+Subject: [PATCH 03/19] pinctrl: sunxi: Always call chained_irq_{enter, exit} in sunxi_pinctrl_irq_handler
+Date:   Tue, 10 Nov 2020 12:05:37 +0800
+Message-Id: <20201110040553.1381-4-frank@allwinnertech.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201110040553.1381-1-frank@allwinnertech.com>
 References: <20201110040553.1381-1-frank@allwinnertech.com>
@@ -43,31 +43,48 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Yangtao Li <frank@allwinnertech.com>
 
-The interrupt descriptor cannot be found in the interrupt processing
-function, and this situation cannot happen when the system is running
-normally. It doesn't seem right to return directly to the status of not
-handling gic. In this case, it must be a bug, let's mark it with
-BUG_ON.
+It is found on many allwinner soc that there is a low probability that
+the interrupt status cannot be read in sunxi_pinctrl_irq_handler. This
+will cause the interrupt status of a gpio bank to always be active on
+gic, preventing gic from responding to other spi interrupts correctly.
 
+So we should call the chained_irq_* each time enter sunxi_pinctrl_irq_handler().
+
+Cc: stable@vger.kernel.org
 Signed-off-by: Yangtao Li <frank@allwinnertech.com>
 ---
- drivers/pinctrl/sunxi/pinctrl-sunxi.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index 8e792f8e2dc9..9d8b59dafa4b 100644
+index 9d8b59dafa4b..dc8d39ae045b 100644
 --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
 +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -1139,8 +1139,7 @@ static void sunxi_pinctrl_irq_handler(struct irq_desc *desc)
- 		if (irq == pctl->irq[bank])
- 			break;
+@@ -1141,20 +1141,22 @@ static void sunxi_pinctrl_irq_handler(struct irq_desc *desc)
  
--	if (bank == pctl->desc->irq_banks)
--		return;
-+	WARN_ON(bank == pctl->desc->irq_banks);
+ 	WARN_ON(bank == pctl->desc->irq_banks);
  
++	chained_irq_enter(chip, desc);
++
  	reg = sunxi_irq_status_reg_from_bank(pctl->desc, bank);
  	val = readl(pctl->membase + reg);
+ 
+ 	if (val) {
+ 		int irqoffset;
+ 
+-		chained_irq_enter(chip, desc);
+ 		for_each_set_bit(irqoffset, &val, IRQ_PER_BANK) {
+ 			int pin_irq = irq_find_mapping(pctl->domain,
+ 						       bank * IRQ_PER_BANK + irqoffset);
+ 			generic_handle_irq(pin_irq);
+ 		}
+-		chained_irq_exit(chip, desc);
+ 	}
++
++	chained_irq_exit(chip, desc);
+ }
+ 
+ static int sunxi_pinctrl_add_function(struct sunxi_pinctrl *pctl,
 -- 
 2.28.0
 

@@ -2,267 +2,79 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2CA92ACEDC
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Nov 2020 06:14:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6142A2ACF57
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Nov 2020 07:00:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729454AbgKJFOZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 10 Nov 2020 00:14:25 -0500
-Received: from mga11.intel.com ([192.55.52.93]:50519 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726006AbgKJFOW (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 10 Nov 2020 00:14:22 -0500
-IronPort-SDR: A0Nt0IJCqueT/d5rEN/ttVzKAkgHriI6tbVFEhAs2qfV891QMCABHUyPc6Dhivr759kC5k8TEF
- bHN/5Uvj9fVA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9800"; a="166410249"
-X-IronPort-AV: E=Sophos;i="5.77,465,1596524400"; 
-   d="scan'208";a="166410249"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2020 21:14:19 -0800
-IronPort-SDR: oLC35wWWu15JI6PyQf8P3zUdEWA8iek1uSCNXBapomLEwjvN6X21M3e8Xs4WEGPPaA6gmpnXXQ
- 82I3I/1E1ToA==
-X-IronPort-AV: E=Sophos;i="5.77,465,1596524400"; 
-   d="scan'208";a="473287046"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2020 21:14:19 -0800
-Date:   Mon, 9 Nov 2020 21:14:12 -0800
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jason Gunthorpe <jgg@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-Message-ID: <20201110051412.GA20147@otc-nc-03>
-References: <20201106131415.GT2620339@nvidia.com>
- <20201106164850.GA85879@otc-nc-03>
- <20201106175131.GW2620339@nvidia.com>
- <CAPcyv4iYHA1acfo=+fTk+U_TrLbSWJjA6v4oeTXgVYDTrnCoGw@mail.gmail.com>
- <20201107001207.GA2620339@nvidia.com>
- <87pn4nk7nn.fsf@nanos.tec.linutronix.de>
- <20201108235852.GC32074@araj-mobl1.jf.intel.com>
- <874klykc7h.fsf@nanos.tec.linutronix.de>
- <20201109173034.GG2620339@nvidia.com>
- <87pn4mi23u.fsf@nanos.tec.linutronix.de>
+        id S1731947AbgKJGAn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 10 Nov 2020 01:00:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731049AbgKJGAl (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 10 Nov 2020 01:00:41 -0500
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 198A4C0613CF;
+        Mon,  9 Nov 2020 22:00:41 -0800 (PST)
+Received: by mail-ej1-x641.google.com with SMTP id oq3so15755689ejb.7;
+        Mon, 09 Nov 2020 22:00:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bE8WeeYQEHFtF17RNP5Oxj6GxutlBisvy7hbOEQf1Ak=;
+        b=OR07CcuVrCF6wYXaQDqlo/K8SH9Dw4xZULiQzKDVeg7I2cRTq9QNjisDaOAgFX7MfG
+         ef4T9zjaSnxv/bbLbrScydAvkL7BjpinwWjJwvr35EYzojjVRrt96iEiWYH8H24miseF
+         /0t+KZpK7HL7kihrBQF3skChsuuB081Fy5UQWnzSRWbkX8z5cq6JWgTXLtMs0+sL8nJp
+         pJ/QPgquVxPVkAAfcU1cUCgbh/55gVopB+l+ZWO+bt7Hc90ztbv4Mc/0NG0jDHSoPtmJ
+         lbfc3qzLnVmEpZqa8oIieKnK+k0FViYNrDT6XD/3eVm2YMVq5qH6gWHn0Wukcfx6nRyx
+         VHSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bE8WeeYQEHFtF17RNP5Oxj6GxutlBisvy7hbOEQf1Ak=;
+        b=ScfotcBJV3RdvcFybovgu6LX6ZoMhaElIhAnIdP0N0TtC345y2qm9o1++zjQGrOyOV
+         WitK8Ddf6+pDRgvCi8P7kSuxcCpahAr3+6vBC0NcoWr0htNtppnInKuqy3xPptpi4r1x
+         fNj3ZE5I2udUwR6uAvh7Gr/hWeaTAhiwq99aASrNXXLybsbr4CA23Jly1DwSOKXw200f
+         hdidN0mYjx5b1ZEcNJW6pGlpsi9Xz8VWddHKt0UcgvepdibVkti/gs0umyRRIOo0j4No
+         jcp6xUcA8sua9KhYlxPLDLdU4whhkgGLhqyemFlzbaqTlT9xy4WkzpZX72EmxUjhezMQ
+         bd8A==
+X-Gm-Message-State: AOAM531LZmRqm3K8FW/n36rWoEicijCeUXzs7OTOq1sutGF4cvHlGv61
+        dLG0yGLIkrAs0WDYe2VsNyQZNFHrfR0IxGccBjQ=
+X-Google-Smtp-Source: ABdhPJz4mf96R6on9ZrpE6+hnIU7ZS3/XWcV1xcgyurHVQJVJmer6zC2N74MUy8lKIxMalPHU5n5gkdaU/rcrB/Uir8=
+X-Received: by 2002:a17:906:5a97:: with SMTP id l23mr18192217ejq.232.1604988039859;
+ Mon, 09 Nov 2020 22:00:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87pn4mi23u.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20201110040553.1381-1-frank@allwinnertech.com>
+In-Reply-To: <20201110040553.1381-1-frank@allwinnertech.com>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Tue, 10 Nov 2020 14:00:28 +0800
+Message-ID: <CAEExFWsc4Rx2U+BVuqTJkL0wj-gdNcF=emJRcStQ2Uq=FQEx1g@mail.gmail.com>
+Subject: Re: [PATCH 00/19] Second step support for A100
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     vkoul@kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>, kishon@ti.com,
+        wim@linux-watchdog.org, Guenter Roeck <linux@roeck-us.net>,
+        dan.j.williams@intel.com, Linus Walleij <linus.walleij@linaro.org>,
+        wsa+renesas@sang-engineering.com, dianders@chromium.org,
+        marex@denx.de, Colin King <colin.king@canonical.com>,
+        rdunlap@infradead.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        rikard.falkeborn@gmail.com, dmaengine@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:SECURE DIGITAL HO..." <linux-mmc@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Thomas,
+It seems that sending too many e-mails at one time will cause some
+emails to fail to be sent out. I will try again.
 
-On Mon, Nov 09, 2020 at 11:42:29PM +0100, Thomas Gleixner wrote:
-> On Mon, Nov 09 2020 at 13:30, Jason Gunthorpe wrote:
-> >
-> > The relavance of PASID is this:
-> >
-> >> Again, trap emulate does not work for IMS when the IMS store is software
-> >> managed guest memory and not part of the device. And that's the whole
-> >> reason why we are discussing this.
-> >
-> > With PASID tagged interrupts and a IOMMU interrupt remapping
-> > capability that can trigger on PASID, then the platform can provide
-> > the same level of security as SRIOV - the above is no problem.
-> >
-> > The device ensures that all DMAs and all interrupts program by the
-> > guest are PASID tagged and the platform provides security by checking
-> > the PASID when delivering the interrupt.
-> 
-> Correct.
-> 
-> > Intel IOMMU doesn't work this way today, but it makes alot of design
-> > sense.
-
-Approach to IMS is more of a phased approach. 
-
-#1 Allow physical device to scale beyond limits of PCIe MSIx
-   Follows current methodology for guest interrupt programming and
-   evolutionary changes rather than drastic.
-#2 Long term we should work together on enabling IMS in guest which
-   requires changes in both HW and SW eco-system.
-
-For #1, the immediate need is to find a way to limit guest from using IMS
-due to current limitations. We have couple options.
-
-a) CPUID based method to disallow IMS when running in a guest OS. Limiting
-   use to existing virtual MSIx to guest devices. (Both you/Jason alluded)
-b) We can extend DMAR table to have a flag for opt-out. So in real platform
-   this flag is clear and in guest VMM will ensure vDMAR will have this flag
-   set. Along the lines as Jason alluded, platform level and via ACPI
-   methods. We have similar use for x2apic_optout today.
-
-Think a) is probably more generic.
-
-For #2 Long term goal of allowing IMS in guest for devices that require
-them. This requires some extensive eco-system enabling. 
-
-- Extending HW to understand PASID-tagged interrupt messages.
-- Appropriate extensions to IOMMU to enforce such PASID based isolation.
-
-From SW improvements:
-
-- Hypercall to retrieve addr/data from host
-- Ensure SW can provide guarantee that the interrupt address range will not
-  be mapped in process space when SVM is in play. Otherwise its hard to
-  distinguish between DMA and Interrupt. OS needs to opt-in to this
-  behavior. Today we ensure IOVA space has this 0xFEExxxxx range carve out
-  of the IOVA space.
-
-
-Devices such as idxd that do not have these entries on page-boundaries for
-isolation to permit direct programming from GuestOS will continue to use
-trap-emulate as used today.
-
-In the end, virtualizing IMS requires eco-system collaboration, and we are
-very open to change hw when all the relevant pieces are in place.
-
-Until then, IMS will be restricted to host VMM only, and we can use the
-methods above to prevent IMS in guest and continue to use the legacy
-virtual MSIx.
-
-> 
-> Right.
-> 
-> > Otherwise the interrupt is effectively delivered to the hypervisor. A
-> > secure device can *never* allow a guest to specify an addr/data pair
-> > for a non-PASID tagged TLP, so the device cannot offer IMS to the
-> > guest.
-> 
-> Ok. Let me summarize the current state of supported scenarios:
-> 
->  1) SRIOV works with any form of IMS storage because it does not require
->     PASID and the VF devices have unique requester ids, which allows the
->     remap unit to sanity check the message.
-> 
->  2) SIOV with IMS when the hypervisor can manage the IMS store
->     exclusively.
-
-Today this is true for all interrupt types, MSI/MSIx/IMS.
-
-> 
-> So #2 prevents a device which handles IMS storage in queue memory to
-> utilize IMS for SIOV in a guest because the hypervisor cannot manage the
-> IMS message store and the guest can write arbitrary crap to it which
-> violates the isolation principle.
-> 
-> And here is the relevant part of the SIOV spec:
-> 
->  "IMS is managed by host driver software and is not accessible directly
->   from guest or user-mode drivers.
-> 
->   Within the device, IMS storage is not accessible from the ADIs. ADIs
->   can request interrupt generation only through the device’s ‘Interrupt
->   Message Generation Logic’, which allows an ADI to only generate
->   interrupt messages that are associated with that specific ADI. These
->   restrictions ensure that the host driver has complete control over
->   which interrupt messages can be generated by each ADI.
-> 
->   On Intel 64 architecture platforms, message signaled interrupts are
->   issued as DWORD size untranslated memory writes without a PASID TLP
->   Prefix, to address range 0xFEExxxxx. Since all memory requests
->   generated by ADIs include a PASID TLP Prefix, it is not possible for
->   an ADI to generate a DMA write that would be interpreted by the
->   platform as an interrupt message."
-> 
-> That's the reductio ad absurdum for this sentence in the first paragraph
-> of the preceding chapter describing the concept of IMS:
-> 
->   "IMS enables devices to store the interrupt messages for ADIs in a
->    device-specific optimized manner without the scalability restrictions
->    of the PCI Express defined MSI-X capability."
-> 
-> "Device-specific optimized manner" is either wishful thinking or
-> marketing induced verbal diarrhoea.
-
-No comment on the adjectives above :-)
-
-> 
-> The current specification puts massive restrictions on IMS storage which
-> are _not_ allowing to optimize it in a device specific manner as
-> demonstrated in this discussion.
-
-IMS doesn't restrict this optimization, but to allow it requires more OS support as
-you had mentioned.
-
-> 
-> It also precludes obvious use cases like passing a full device to a
-> guest and let the guest manage SIOV subdevices for containers or nested
-> guests.
-> 
-> TBH, to me this is just another hastily cobbled together half thought
-> out misfeature cast in silicon. The proposed software support is
-> following the exactly same principle.
-
-Current IMS support adds incremental feature capability. Works pretty much
-following everything that was created for MSIx, but just adds some device
-flexibility. 
-
-Here are some reasons why PASID isn't used today for tagging interrupts.
-
-Interrupt messages (as specified by MSI/MSI-X in PCI specification) are 
-currently defined as DWORD DMA writes to a platform/architecture specific 
-address (0xFEExxxxx on Intel platforms). Existing root-complexes detect
-DWORD writes to 0xFEExxxxx (without a PASID in the transaction) as interrupt 
-messages and route them to interrupt-remapping logic (as opposed to other 
-DMA requests that are routed to IOMMU's DMA remapping logic). 
-
-There are multiple tools (such as logic analyzers) and OEM test validation 
-harnesses that depend on such DWORD sized DMA writes with no PASID as interrupt
-messages. One of the feedback we had received in the development of the
-specification was to avoid impacting such tools irrespective of MSI-X or IMS 
-was used for interrupt message storage (on the wire they follow the same format), 
-and also to ensure interoperability of devices supporting IMS across CPU vendors 
-(who may not support PASID TLP prefix).  This is one reason that led to interrupts 
-from IMS to not use PASID (and match the wire format of MSI/MSI-X generated interrupts). 
-The other problem was disambiguation between DMA to SVM v/s interrupts.
-
-> 
-> So before we go anywhere with this, I want to see a proper way forward
-> to support _all_ sensible use cases and to fulfil the promise of
-> "device-specific optimized manner" at the conceptual and specification
-> and also at the code level.
-> 
-> I'm not at all interested to rush in support for a half baken Intel
-> centric solution which other people have to clean up after the fact
-> (again).
-
-Intel had published the specification almost 2 years back and have
-comprehended all the feedback received from the ecosystem 
-(both open-source and others), along with offering the specification 
-to be implemented by any vendors (both device and CPU vendors). 
-There are few device vendors who are implementing to the spec already and 
-are being explored for support by other CPU vendors
-
-Cheers,
-Ashok
+BR / Yangtao

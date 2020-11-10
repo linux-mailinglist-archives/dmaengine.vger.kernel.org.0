@@ -2,157 +2,122 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 712802ACDF9
-	for <lists+dmaengine@lfdr.de>; Tue, 10 Nov 2020 05:06:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9291F2ACEA9
+	for <lists+dmaengine@lfdr.de>; Tue, 10 Nov 2020 05:54:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733086AbgKJEGg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 9 Nov 2020 23:06:36 -0500
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:60098 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387574AbgKJEGf (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 9 Nov 2020 23:06:35 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436289|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.019185-0.0136594-0.967156;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047193;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=28;RT=28;SR=0;TI=SMTPD_---.IulFdj5_1604981159;
-Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.IulFdj5_1604981159)
-          by smtp.aliyun-inc.com(10.147.42.135);
-          Tue, 10 Nov 2020 12:06:29 +0800
-From:   Frank Lee <frank@allwinnertech.com>
-To:     vkoul@kernel.org, robh+dt@kernel.org, mripard@kernel.org,
-        wens@csie.org, ulf.hansson@linaro.org, kishon@ti.com,
-        wim@linux-watchdog.org, linux@roeck-us.net,
-        dan.j.williams@intel.com, linus.walleij@linaro.org,
-        wsa+renesas@sang-engineering.com, dianders@chromium.org,
-        marex@denx.de, colin.king@canonical.com, rdunlap@infradead.org,
-        krzk@kernel.org, gregkh@linuxfoundation.org, megous@megous.com,
-        rikard.falkeborn@gmail.com, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-gpio@vger.kernel.org,
-        tiny.windzz@gmail.com
-Cc:     Yangtao Li <frank@allwinnertech.com>
-Subject: [PATCH 09/19] phy: allwinner: Convert to devm_platform_ioremap_* API
-Date:   Tue, 10 Nov 2020 12:05:43 +0800
-Message-Id: <20201110040553.1381-10-frank@allwinnertech.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201110040553.1381-1-frank@allwinnertech.com>
-References: <20201110040553.1381-1-frank@allwinnertech.com>
+        id S1730198AbgKJEyK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 9 Nov 2020 23:54:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729454AbgKJEyK (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 9 Nov 2020 23:54:10 -0500
+Received: from localhost (unknown [122.179.121.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6643C206D8;
+        Tue, 10 Nov 2020 04:54:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604984049;
+        bh=L7LJEeDj/UFpunPZD6f0tbSvytpg5gu8KTCCVrRrV8Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=togUYxvmaizJLL2oqHWZk4B85aDVYa4/hX2kxMY+xZV3+Nd/VlqHziEVqq2BGnui/
+         WMIrK6Ccy9v1nOJ9aAYGfecl3YGN28LuF+qbfK5TpmmTrvzp47uTJP9+J7EbOQMrje
+         2gIG+eNvggY+n0DBexQdA3XoX4ENmyuXP+b1dER4=
+Date:   Tue, 10 Nov 2020 10:24:02 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Jonathan McDowell <noodles@earth.li>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Thomas Pedersen <twp@codeaurora.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dmaengine@vger.kernel.org
+Subject: Re: [PATCH v4] dmaengine: qcom: Add ADM driver
+Message-ID: <20201110045402.GR3171@vkoul-mobl>
+References: <20200916064326.GA13963@earth.li>
+ <20200919185739.GS3411@earth.li>
+ <20200920181204.GT3411@earth.li>
+ <20200923194056.GY3411@earth.li>
+ <20201109114121.GG3171@vkoul-mobl>
+ <20201109190416.GF32650@earth.li>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201109190416.GF32650@earth.li>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Yangtao Li <frank@allwinnertech.com>
+On 09-11-20, 19:04, Jonathan McDowell wrote:
+> On Mon, Nov 09, 2020 at 05:11:21PM +0530, Vinod Koul wrote:
+> > HI Jonathan,
+> > 
+> > On 23-09-20, 20:40, Jonathan McDowell wrote:
+> > > Add the DMA engine driver for the QCOM Application Data Mover (ADM) DMA
+> > > controller found in the MSM8x60 and IPQ/APQ8064 platforms.
+> > 
+> > Mostly it looks good, some nitpicks
+> > 
+> > > The ADM supports both memory to memory transactions and memory
+> > > to/from peripheral device transactions.  The controller also provides
+> > > flow control capabilities for transactions to/from peripheral devices.
+> > > 
+> > > The initial release of this driver supports slave transfers to/from
+> > > peripherals and also incorporates CRCI (client rate control interface)
+> > > flow control.
+> > 
+> > Can you also convert the binding from txt to yaml?
+> 
+> Seems like that can be a separate patch, but sure, I'll give it a whirl.
 
-Use the devm_platform_ioremap_resource_byname() and
-devm_platform_ioremap_resource helper to simplify the code.
+Yup a different patch, thanks for looking into that
 
-Signed-off-by: Yangtao Li <frank@allwinnertech.com>
----
- drivers/phy/allwinner/phy-sun4i-usb.c       | 9 +++------
- drivers/phy/allwinner/phy-sun50i-usb3.c     | 4 +---
- drivers/phy/allwinner/phy-sun6i-mipi-dphy.c | 4 +---
- drivers/phy/allwinner/phy-sun9i-usb.c       | 4 +---
- 4 files changed, 6 insertions(+), 15 deletions(-)
+> > > diff --git a/drivers/dma/qcom/Kconfig b/drivers/dma/qcom/Kconfig
+> > > index 3bcb689162c6..0389d60d2604 100644
+> > > --- a/drivers/dma/qcom/Kconfig
+> > > +++ b/drivers/dma/qcom/Kconfig
+> > > @@ -1,4 +1,15 @@
+> > >  # SPDX-License-Identifier: GPL-2.0-only
+> > > +config QCOM_ADM
+> > > +	tristate "Qualcomm ADM support"
+> > > +	depends on (ARCH_QCOM || COMPILE_TEST) && !PHYS_ADDR_T_64BIT
+> > 
+> > why !PHYS_ADDR_T_64BIT ..?
+> 
+> The hardware only supports a 32 bit physical address, so specifying
+> !PHYS_ADDR_T_64BIT gives maximum COMPILE_TEST coverage without having to
+> spend effort on kludging things in the code that will never actually be
+> needed on real hardware.
 
-diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
-index 0f1888b55dbd..a6900495baa5 100644
---- a/drivers/phy/allwinner/phy-sun4i-usb.c
-+++ b/drivers/phy/allwinner/phy-sun4i-usb.c
-@@ -686,7 +686,6 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
- 	struct phy_provider *phy_provider;
--	struct resource *res;
- 	int i, ret;
- 
- 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-@@ -700,8 +699,7 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
- 	if (!data->cfg)
- 		return -EINVAL;
- 
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy_ctrl");
--	data->base = devm_ioremap_resource(dev, res);
-+	data->base = devm_platform_ioremap_resource_byname(pdev, "phy_ctrl");
- 	if (IS_ERR(data->base))
- 		return PTR_ERR(data->base);
- 
-@@ -796,9 +794,8 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
- 
- 		if (i || data->cfg->phy0_dual_route) { /* No pmu for musb */
- 			snprintf(name, sizeof(name), "pmu%d", i);
--			res = platform_get_resource_byname(pdev,
--							IORESOURCE_MEM, name);
--			phy->pmu = devm_ioremap_resource(dev, res);
-+			phy->pmu = devm_platform_ioremap_resource_byname(pdev,
-+									 name);
- 			if (IS_ERR(phy->pmu))
- 				return PTR_ERR(phy->pmu);
- 		}
-diff --git a/drivers/phy/allwinner/phy-sun50i-usb3.c b/drivers/phy/allwinner/phy-sun50i-usb3.c
-index b1c04f71a31d..84055b720016 100644
---- a/drivers/phy/allwinner/phy-sun50i-usb3.c
-+++ b/drivers/phy/allwinner/phy-sun50i-usb3.c
-@@ -134,7 +134,6 @@ static int sun50i_usb3_phy_probe(struct platform_device *pdev)
- 	struct sun50i_usb3_phy *phy;
- 	struct device *dev = &pdev->dev;
- 	struct phy_provider *phy_provider;
--	struct resource *res;
- 
- 	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
- 	if (!phy)
-@@ -153,8 +152,7 @@ static int sun50i_usb3_phy_probe(struct platform_device *pdev)
- 		return PTR_ERR(phy->reset);
- 	}
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	phy->regs = devm_ioremap_resource(dev, res);
-+	phy->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(phy->regs))
- 		return PTR_ERR(phy->regs);
- 
-diff --git a/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c b/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
-index 1fa761ba6cbb..f0bc87d654d4 100644
---- a/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
-+++ b/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
-@@ -253,15 +253,13 @@ static int sun6i_dphy_probe(struct platform_device *pdev)
- {
- 	struct phy_provider *phy_provider;
- 	struct sun6i_dphy *dphy;
--	struct resource *res;
- 	void __iomem *regs;
- 
- 	dphy = devm_kzalloc(&pdev->dev, sizeof(*dphy), GFP_KERNEL);
- 	if (!dphy)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	regs = devm_ioremap_resource(&pdev->dev, res);
-+	regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(regs)) {
- 		dev_err(&pdev->dev, "Couldn't map the DPHY encoder registers\n");
- 		return PTR_ERR(regs);
-diff --git a/drivers/phy/allwinner/phy-sun9i-usb.c b/drivers/phy/allwinner/phy-sun9i-usb.c
-index fc6784dd7fa0..2f9e60c188b8 100644
---- a/drivers/phy/allwinner/phy-sun9i-usb.c
-+++ b/drivers/phy/allwinner/phy-sun9i-usb.c
-@@ -117,7 +117,6 @@ static int sun9i_usb_phy_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
- 	struct phy_provider *phy_provider;
--	struct resource *res;
- 
- 	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
- 	if (!phy)
-@@ -156,8 +155,7 @@ static int sun9i_usb_phy_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	phy->pmu = devm_ioremap_resource(dev, res);
-+	phy->pmu = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(phy->pmu))
- 		return PTR_ERR(phy->pmu);
- 
+Can we mention that in the log please
+
+> 
+> > > +	select DMA_ENGINE
+> > > +	select DMA_VIRTUAL_CHANNELS
+> > > +	help
+> > > +	  Enable support for the Qualcomm Application Data Mover (ADM) DMA
+> > > +	  controller, as present on MSM8x60, APQ8064, and IPQ8064 devices.
+> > > +	  This controller provides DMA capabilities for both general purpose
+> > > +	  and on-chip peripheral devices.
+> > 
+> > > +static const struct of_device_id adm_of_match[] = {
+> > > +	{ .compatible = "qcom,adm", },
+> > 
+> > I know we have merged the binding, but should we not have a soc specific
+> > compatible?
+> 
+> Which soc? Looking at the other QCOM DMA drivers they mostly have
+> versioned compatibles and I can't find any indication there are multiple
+> variants of this block out there.
+
+So even though ip block can remain same for few versions, we should
+trust hw folks enough to give us spicy flavours in next revs :-) so
+adding a compatible here like qcom,msm8x60-adm would help us.
+
+BUT, looking at the QC documentation I dont see it being used in recent
+chips so ok to go with qcom,adm
+
+Thanks
 -- 
-2.28.0
-
+~Vinod

@@ -2,67 +2,67 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FFAE2AE5E3
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Nov 2020 02:36:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 06D9D2AE5F1
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Nov 2020 02:38:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732357AbgKKBgv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 10 Nov 2020 20:36:51 -0500
-Received: from mga09.intel.com ([134.134.136.24]:7621 "EHLO mga09.intel.com"
+        id S1731746AbgKKBig (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 10 Nov 2020 20:38:36 -0500
+Received: from mga14.intel.com ([192.55.52.115]:44126 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731657AbgKKBgv (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 10 Nov 2020 20:36:51 -0500
-IronPort-SDR: 5uExQCmq21NZSjhGuXSTUMFv6KXbj9Z6n+1deuTYaJ1a3s+uOiGbslXDtAtLoLaIkyMrjqXucc
- YIayPIlYzAIw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9801"; a="170236267"
+        id S1732564AbgKKBig (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 10 Nov 2020 20:38:36 -0500
+IronPort-SDR: rhkNJ16n39RfQQ3rVSwMRqIWWmyu0+vVxDm8gLJkIKon4vnqY/WW4CD5OddtKJ5OhtZI6SGSg9
+ Iyy4FW4VW8xA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9801"; a="169295576"
 X-IronPort-AV: E=Sophos;i="5.77,468,1596524400"; 
-   d="scan'208";a="170236267"
+   d="scan'208";a="169295576"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2020 17:36:50 -0800
-IronPort-SDR: V75zVzrxZflfjwgblQfn1EFEnFo3u+k7+4UeEUR5DF1GEe7rFuI4dOogDF8MPWZo9kifP4Klt2
- J1E2zd0b/nfg==
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2020 17:38:34 -0800
+IronPort-SDR: xbS+36t5bYkJ7JvknkIxNYX9q3vs2QSllbBiEdPv5/RRvXG9EJYADc2WkD7NnTZawAFYiDj5aQ
+ 6oJeC00s2jqQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,468,1596524400"; 
-   d="scan'208";a="327907542"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orsmga006.jf.intel.com with ESMTP; 10 Nov 2020 17:36:50 -0800
-Received: from fmsmsx606.amr.corp.intel.com (10.18.126.86) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+   d="scan'208";a="308644001"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmsmga007.fm.intel.com with ESMTP; 10 Nov 2020 17:38:34 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 10 Nov 2020 17:36:49 -0800
+ 15.1.1713.5; Tue, 10 Nov 2020 17:38:34 -0800
 Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 10 Nov 2020 17:36:49 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.44) by
+ via Frontend Transport; Tue, 10 Nov 2020 17:38:34 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
  edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.1713.5; Tue, 10 Nov 2020 17:36:49 -0800
+ 15.1.1713.5; Tue, 10 Nov 2020 17:38:34 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aqPhvmb9e63L1d7/d0tBmAUL725mwhu3tei8iP5ePomCbPBEpgiolLAge3ZRavnkD2pC9oVbZiAb4UaSGbCczdWL/UR/uq4A+aOeE2qukEIVWOSmoDo5bbi8dbes4ylh/lcaVhcrhHU/2CWX1PdVTBaTnhAm//4An0pBqctgm8G01EMnPkVwBBURPz3TT2yjHG3XN/xKDc8E9hW4eWuIqqhLrPGce7NNLd+yYB1+hIOm4+WWWW/HhTo1FVdAsQ1beejZD4bhj+70LBIZFPWjbeZP+eHh2o5VxZJDW2MTY43qYDSl4QeomkGlXNTHgyOU5Y/jyYkAAbPfja7w0gK02w==
+ b=NpTQj1XoNAohUzSX0ybGObohWk/QS7uWys/8hPgA8ZGKXjthwIUIE0xG48B2juZVooOlcSfZffqnslPVVttwZUH8jqaoSsVDdjascilZmmwKdSOxEKJTRyKvrVsj42BFc2FXf1CbSytNGjGLjdeHFcjTtiwfT09QpEKrUHUvb7e5D+Nl3i26dtpUmmjByDU7x6g90L0CcPgmr+JsWP1vsEi71gfKKVlsJqcc4gukRIG8+VGdfzMqafmvoISCWPRPFjzCrdVrMmhQ7pSfD4nlyYOy5COcakpGWzc735gtdc2iBi+z/o/aFNOz3W1SN/Uj8K0fsSz6jaxwluMvzZuuig==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5+IsKPvNjerszLwlCqGA355Xu+TbMJgXxyEgKQDIgmY=;
- b=WLIuvnPUw4O8jVUxFNhkpo4ZeHI2DofsEDTMYOp8pl3TTRazJBfsQDm+jKdS9/NWkixZk/HTh6oCr4+MQXgHUAwWVkPHF3wci/oO9L4J+RNgcmwYWNHCc8pR8lF5hMaMLOsM1+O7RGk5hIItxONAJ9bTLPAqu1vs+LTmvTnb3Y5s8BA0vr/Rdx81JES9RUoeZLTgoKpKJwNfiboxPnbIjxEM5vRMUtRIDZlvRiz827OvGws0SZJcM3c0u2NcwcGS6fBF4751456l0zC4smoN9guRB/beGR+o/cAIP7OSm7By5M/BwFtxpccHICPZ9jGsqY3IkVW7DBW7yhbCzzFOCA==
+ bh=1hLHpV34Llxvv4gUDZWeZX5s13m71eNfsAIcjaakwbQ=;
+ b=XI3HVhcrkhGcAFqaWDx9WfYNen+x3zAp0DLRWCEXb2cJT07Ie4yT/Tpb5uKm5ZBB/HwZeoCkKE06yIHOUIfv32e8W+xgdry+SiedGA0JR0UZOWnTeStVwqbib82AHd7ndn0tBTxRt9/uJ7Kf5cvt79/IuVCKJIBze0c7DIWbz0XhsLwf1gYGaIajsKaMamfZ7f3tJPueIc0zm86Jr/UrveOJvjotjjvdVhOFo5p+tcAwrdIXcIER8YTEYC2vReue4dWC/aYg53Y99Pnifu0CVEAP0t1t/it12/sddTY7CyuLs5hX9qMBan+ZCN3+FV87IWRDK7/UPRPT7F01nelFuA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
  s=selector2-intel-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5+IsKPvNjerszLwlCqGA355Xu+TbMJgXxyEgKQDIgmY=;
- b=is2/zpgrYTcN5pYUXmooD/WfMfsLotFrMhK1KpL+HEMlrEXckJPP98K5qPoXbZoOC7H7PIS/OfqQBgyEeXTu9wD0owR11RA4l4aDSvbvYpkTKIHxweY9+BegjhIsOjHavgX0ppQD5AKsRBYK5m8fbnyYfWGafj/4QP0jlyKBQ8w=
+ bh=1hLHpV34Llxvv4gUDZWeZX5s13m71eNfsAIcjaakwbQ=;
+ b=Jlv4Ylf+JkvMCqRy5Po/0vx4BXjgz1t+JL7Z4YxJQXEgzhiTCcdCsW1avbU/bIWPyfNSc7dxxi4qdylfGOzVi9gxwRtpVlE0ClkHzPZaguthbwpwFDaQPSmTpL71teK2jPmi2nnCCOiRWCevBSppev7sbJomqr22Y3bfI88QGuk=
 Received: from CO1PR11MB5026.namprd11.prod.outlook.com (2603:10b6:303:9c::13)
  by MWHPR11MB1806.namprd11.prod.outlook.com (2603:10b6:300:10e::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.21; Wed, 11 Nov
- 2020 01:36:47 +0000
+ 2020 01:38:33 +0000
 Received: from CO1PR11MB5026.namprd11.prod.outlook.com
  ([fe80::40d9:aa4b:73e7:3d60]) by CO1PR11MB5026.namprd11.prod.outlook.com
  ([fe80::40d9:aa4b:73e7:3d60%3]) with mapi id 15.20.3499.032; Wed, 11 Nov 2020
- 01:36:47 +0000
+ 01:38:33 +0000
 From:   "Sia, Jee Heng" <jee.heng.sia@intel.com>
 To:     Vinod Koul <vkoul@kernel.org>
 CC:     "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>,
@@ -70,17 +70,17 @@ CC:     "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>,
         <andriy.shevchenko@linux.intel.com>,
         "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 01/15] dt-bindings: dma: Add YAML schemas for
- dw-axi-dmac
-Thread-Topic: [PATCH v2 01/15] dt-bindings: dma: Add YAML schemas for
- dw-axi-dmac
-Thread-Index: AQHWtnp3naUJQzS9J0iOWt5vJAFyWKnCKP8A
-Date:   Wed, 11 Nov 2020 01:36:47 +0000
-Message-ID: <CO1PR11MB5026F31F062C12D3358B2288DAE80@CO1PR11MB5026.namprd11.prod.outlook.com>
+Subject: RE: [PATCH v2 07/15] dmaegine: dw-axi-dmac: Support
+ device_prep_dma_cyclic()
+Thread-Topic: [PATCH v2 07/15] dmaegine: dw-axi-dmac: Support
+ device_prep_dma_cyclic()
+Thread-Index: AQHWtnynUP/bz1/OVU2QzISZuNMgjKnCKU2A
+Date:   Wed, 11 Nov 2020 01:38:32 +0000
+Message-ID: <CO1PR11MB5026FE7E33170CA8C639D204DAE80@CO1PR11MB5026.namprd11.prod.outlook.com>
 References: <20201027063858.4877-1-jee.heng.sia@intel.com>
- <20201027063858.4877-2-jee.heng.sia@intel.com>
- <20201109092640.GB3171@vkoul-mobl>
-In-Reply-To: <20201109092640.GB3171@vkoul-mobl>
+ <20201027063858.4877-8-jee.heng.sia@intel.com>
+ <20201109094216.GC3171@vkoul-mobl>
+In-Reply-To: <20201109094216.GC3171@vkoul-mobl>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -92,28 +92,28 @@ authentication-results: kernel.org; dkim=none (message not signed)
  header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
 x-originating-ip: [175.142.41.19]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b7488085-7aff-4f76-797d-08d885e24110
+x-ms-office365-filtering-correlation-id: 5ae4ae52-63c4-456a-217d-08d885e28018
 x-ms-traffictypediagnostic: MWHPR11MB1806:
-x-microsoft-antispam-prvs: <MWHPR11MB18066F3D2CF0B7ED9F61DA67DAE80@MWHPR11MB1806.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-microsoft-antispam-prvs: <MWHPR11MB1806CBF27FC306269227E4D9DAE80@MWHPR11MB1806.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HUp0JkV7SAr2Qatss5SVAzxUYjeXk0t7dyDAEQigumOxNeeKm85+oy/zRLLiyFTAzN+J/cAD4swsdIeaoXi/BpYc32dpPO9hh8s7EFzabRfncKjqcmBbQlxdy4THKzsZ/W6j9VbY5OeIXyzRqp9mhJNW6BO3GKgOho3VULCbQrmhdwH45fcJ0gI8YsSEGOwJzcX9PVZmEgn56o3itbBvDB/mUsyi5EZcZHqJ5SAYsoFPhmBqXRqujxWvrhD/Kb7XTOGxHZlRgxQzwlTF95jZGEeyFv8vCuqP2TUABLCQvxGkMpxdbw7TdfQGUnHC/e+u79Q6+C9sFe9eQwBW8ym9YzCTzBF+unSWoxre1ZJ17kXg9nV83pHkc8qcYDrbH+YkBnwRpO1h0A7cZye3AxxPHw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5026.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(366004)(136003)(39860400002)(376002)(396003)(186003)(55016002)(4326008)(9686003)(52536014)(316002)(64756008)(66476007)(966005)(66946007)(66446008)(71200400001)(66556008)(76116006)(54906003)(33656002)(26005)(8936002)(6916009)(8676002)(7696005)(5660300002)(478600001)(6506007)(53546011)(83380400001)(86362001)(2906002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: lMGxxXNZ5ey3FBsTUYVXep5H1cwL10ug/RGqSWTFiahfyzD9W/t5CaPQ8Ugzmry+MjSJr6JRa08mCaYn4l/f8bn641VWUpIZExtKqrym2F2hMCz/zMGdL+1wLBLQ96Pa/jYzsB5MSS3JL1sT6kfy9Y3i9wxmpks96W2jyIa5tas8FeoV8p+D8hW1cI95RdJUko3LY1CBB2pgP2UBeyaZFq0QNv24kBInCEIgahHyZiJy2yEtyyBGczIz+YoPdb2PkhlQD7vfDV3UYL5PPw53uyIDitsXTinchHxQe2Ri3f04vGBlUJ0/yQun1ot5gCV/dRtNh8CzMxU32oy0jOvQPahCo/utQQhVo3NYErpthCTgHqohm9lQejDqnfcnoBbBNJbrt/iNkrqQFcLfM69JJu3ZdXRpH3ALgt1wtCaetGV16bihLZjWSIZD3eijhH3YmoV7cx4A9vrA9cNWmcGzk0uiAN+GABctmYnUKlMNuqSok1hUsVW/782xkeetrVCqlVEh1r7s04aSvxE4N4xKAGIESWzxxDfzUfmUugvopfxSYoE9/R4a9dysFPve67e4SwXbnc4C7sJrGtdWIO2rVuCvmvgJUtLDrzc+4ZenPWgh5vAwMJH/qwWbQOSs68I+qeWZ2SHQqWiZOacqpKvp2Q==
+x-microsoft-antispam-message-info: uTXgEJgtPcLxx4geFr85/OaiXK6b3Dmoq7aK41P9vWbRyGm+4mMCO/KsEopXFSI2BRrY0I/wEPCfamKT/YftEISsdbh30kulYtAgRE3CkEHEMbo9O24JMOZ0Ykxx8M+v2WSqYGUPykRsHvwkBarjDiozmGXS8KIaMQ/fHJbLuzeONOCVX5g5lDcGCrol0uVqFUaYO62Wr/kcmU4iXwRZu2qmQuCkFqkOxxU9SWPjQKseSV2LMiApAYdtLbyfqrkixAbDDccdfFFU4O5Xf/PLe/pWnBrjdniTCgVatDiI1iyvA32PNGfaSzMJior2MjOKLte11nO6nM3BSiJTlNv0CQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5026.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(366004)(136003)(39860400002)(376002)(396003)(186003)(55016002)(4326008)(9686003)(52536014)(316002)(64756008)(66476007)(66946007)(66446008)(71200400001)(66556008)(76116006)(54906003)(33656002)(26005)(8936002)(6916009)(8676002)(7696005)(5660300002)(478600001)(6506007)(53546011)(83380400001)(86362001)(2906002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: xWOczmcrlQHfkhogOY/l8yOUQ+JtDoPymQSoY8uasO5QW0s+6u4K79O04m/1I7MhPh7r7zzZCIlU0P0XOk1iLFdSflEXfpZVM/6U/LkvSCR7MwncG8dks5zBvTzGbLSXEezNe/gjy0iIjyr/+50RXuhM89ILjC4KzpCGZXw3HDYCKYE57xSk5AIGQ6n36BxAtsZodi+zJhvGtb7VTMa396VmshmpzE7dcxBL4kEH5aXs/3qCiDMsTE+156lef5hrAOSnFpqvBWCjyB4sMKnHvM9bDVxcyS5TDB9NWAjWYxc4BJQAHP4QsRbVq2WUe1U6c/uIKkXqh8Gdx/tBRisLqSdUtpFO56oMRkb4t2XgJqJA5Yzee+kxM0/estQlTcZlt6jmSoThsuhtF23lutrDj3XaM4TcDAWGqtnHUPqxG6idzL4V1iaZfl6JhM9X5UbPvTh+rU1suiGSM9uoIDuGA0UGakG64KfBxtutfXyoIwNsI90DM+pXyDmAOzyfcoUDnIJ/0EeCmVXvMfQj2bHZJn8xjWsNCK/gNkFLdZzdtsRcWalrVF4Ek9w8Gkt4TwJY01NoCkfYSQm3v13TUTyS/+ibcZrxg3O+z9hQNCjfv6jX0upOwzIeVopJ4jOEmSRqowzsMDpjNr4FO0OHhcQ8xQ==
 x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5026.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7488085-7aff-4f76-797d-08d885e24110
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2020 01:36:47.1068
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ae4ae52-63c4-456a-217d-08d885e28018
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2020 01:38:32.9958
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bYnv03Vq24Z5d5hOwOrI9PhSQVLXzdrHVLhXCmENESRadVClE0c0V98xI/v1e+TltOIFiV7Yg7xRHpYrF3MsUQ==
+X-MS-Exchange-CrossTenant-userprincipalname: B/iklbGccIbOGgU8DI3/yXBkDeqyQGLdQ9oq0mKUPB1mWQlYW1+XluJDgp6Ke9QcTcFKVnebmJ4DncPTmfchjA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1806
 X-OriginatorOrg: intel.com
 Precedence: bulk
@@ -124,200 +124,170 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 > -----Original Message-----
 > From: Vinod Koul <vkoul@kernel.org>
-> Sent: 09 November 2020 5:27 PM
+> Sent: 09 November 2020 5:42 PM
 > To: Sia, Jee Heng <jee.heng.sia@intel.com>
 > Cc: Eugeniy.Paltsev@synopsys.com; andriy.shevchenko@linux.intel.com;
 > dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v2 01/15] dt-bindings: dma: Add YAML schemas for dw-a=
-xi-
-> dmac
+> Subject: Re: [PATCH v2 07/15] dmaegine: dw-axi-dmac: Support
+> device_prep_dma_cyclic()
 >=20
 > On 27-10-20, 14:38, Sia Jee Heng wrote:
-> > YAML schemas Device Tree (DT) binding is the new format for DT to
-> > replace the old format. Introduce YAML schemas DT binding for
-> > dw-axi-dmac and remove the old version.
->=20
-> I see that Rob and DT folks have not been cced, please do so
-[>>] ok, I will add them starting v3.
->=20
+> > Add support for device_prep_dma_cyclic() callback function to benefit
+> > DMA cyclic client, for example ALSA.
 > >
+> > Existing AxiDMA driver only support data transfer between memory to
+> memory.
+> > Data transfer between device to memory and memory to device in cyclic
+> > mode would failed if this interface is not supported by the AxiDMA driv=
+er.
+> >
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > > Signed-off-by: Sia Jee Heng <jee.heng.sia@intel.com>
 > > ---
-> >  .../bindings/dma/snps,dw-axi-dmac.txt         |  39 ------
-> >  .../bindings/dma/snps,dw-axi-dmac.yaml        | 124 ++++++++++++++++++
-> >  2 files changed, 124 insertions(+), 39 deletions(-)  delete mode
-> > 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
-> >  create mode 100644
-> > Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+> >  .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 182 +++++++++++++++++-
+> >  drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |   2 +
+> >  2 files changed, 177 insertions(+), 7 deletions(-)
 > >
-> > diff --git
-> > a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
-> > b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
-> > deleted file mode 100644
-> > index dbe160400adc..000000000000
-> > --- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
-> > +++ /dev/null
-> > @@ -1,39 +0,0 @@
-> > -Synopsys DesignWare AXI DMA Controller
-> > -
-> > -Required properties:
-> > -- compatible: "snps,axi-dma-1.01a"
-> > -- reg: Address range of the DMAC registers. This should include
-> > -  all of the per-channel registers.
-> > -- interrupt: Should contain the DMAC interrupt number.
-> > -- dma-channels: Number of channels supported by hardware.
-> > -- snps,dma-masters: Number of AXI masters supported by the hardware.
-> > -- snps,data-width: Maximum AXI data width supported by hardware.
-> > -  (0 - 8bits, 1 - 16bits, 2 - 32bits, ..., 6 - 512bits)
-> > -- snps,priority: Priority of channel. Array size is equal to the
-> > number of
-> > -  dma-channels. Priority value must be programmed within
-> > [0:dma-channels-1]
-> > -  range. (0 - minimum priority)
-> > -- snps,block-size: Maximum block size supported by the controller chan=
-nel.
-> > -  Array size is equal to the number of dma-channels.
-> > -
-> > -Optional properties:
-> > -- snps,axi-max-burst-len: Restrict master AXI burst length by value
-> > specified
-> > -  in this property. If this property is missing the maximum AXI burst
-> > length
-> > -  supported by DMAC is used. [1:256]
-> > -
-> > -Example:
-> > -
-> > -dmac: dma-controller@80000 {
-> > -	compatible =3D "snps,axi-dma-1.01a";
-> > -	reg =3D <0x80000 0x400>;
-> > -	clocks =3D <&core_clk>, <&cfgr_clk>;
-> > -	clock-names =3D "core-clk", "cfgr-clk";
-> > -	interrupt-parent =3D <&intc>;
-> > -	interrupts =3D <27>;
-> > -
-> > -	dma-channels =3D <4>;
-> > -	snps,dma-masters =3D <2>;
-> > -	snps,data-width =3D <3>;
-> > -	snps,block-size =3D <4096 4096 4096 4096>;
-> > -	snps,priority =3D <0 1 2 3>;
-> > -	snps,axi-max-burst-len =3D <16>;
-> > -};
-> > diff --git
-> > a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-> > b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-> > new file mode 100644
-> > index 000000000000..e688d25864bc
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-> > @@ -0,0 +1,124 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) %YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/dma/snps,dw-axi-dmac.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> > b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> > index 1124c97025f2..9e574753aaf0 100644
+> > --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> > +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> > @@ -15,6 +15,8 @@
+> >  #include <linux/err.h>
+> >  #include <linux/interrupt.h>
+> >  #include <linux/io.h>
+> > +#include <linux/iopoll.h>
+> > +#include <linux/io-64-nonatomic-lo-hi.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/module.h>
+> >  #include <linux/of.h>
+> > @@ -575,6 +577,135 @@ dma_chan_prep_dma_memcpy(struct dma_chan
+> *dchan, dma_addr_t dst_adr,
+> >  	return NULL;
+> >  }
+> >
+> > +static struct dma_async_tx_descriptor *
+> > +dw_axi_dma_chan_prep_cyclic(struct dma_chan *dchan, dma_addr_t
+> dma_addr,
+> > +			    size_t buf_len, size_t period_len,
+> > +			    enum dma_transfer_direction direction,
+> > +			    unsigned long flags)
+> > +{
+> > +	struct axi_dma_chan *chan =3D dchan_to_axi_dma_chan(dchan);
+> > +	u32 data_width =3D BIT(chan->chip->dw->hdata->m_data_width);
+> > +	struct axi_dma_hw_desc *hw_desc =3D NULL;
+> > +	struct axi_dma_desc *desc =3D NULL;
+> > +	dma_addr_t src_addr =3D dma_addr;
+> > +	u32 num_periods =3D buf_len / period_len;
+> > +	unsigned int reg_width;
+> > +	unsigned int mem_width;
+> > +	dma_addr_t reg;
+> > +	unsigned int i;
+> > +	u32 ctllo, ctlhi;
+> > +	size_t block_ts;
+> > +	u64 llp =3D 0;
+> > +	u8 lms =3D 0; /* Select AXI0 master for LLI fetching */
 > > +
-> > +title: Synopsys DesignWare AXI DMA Controller
+> > +	block_ts =3D chan->chip->dw->hdata->block_size[chan->id];
 > > +
-> > +maintainers:
-> > +  - Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com
+> > +	mem_width =3D __ffs(data_width | dma_addr | period_len);
+> > +	if (mem_width > DWAXIDMAC_TRANS_WIDTH_32)
+> > +		mem_width =3D DWAXIDMAC_TRANS_WIDTH_32;
 > > +
-> > +description: |
-> > + Synopsys DesignWare AXI DMA Controller DT Binding
+> > +	desc =3D axi_desc_alloc(num_periods);
+> > +	if (unlikely(!desc))
+> > +		goto err_desc_get;
 > > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - snps,axi-dma-1.01a
+> > +	chan->direction =3D direction;
+> > +	desc->chan =3D chan;
+> > +	chan->cyclic =3D true;
 > > +
-> > +  reg:
-> > +    items:
-> > +      - description: Address range of the DMAC registers.
+> > +	switch (direction) {
+> > +	case DMA_MEM_TO_DEV:
+> > +		reg_width =3D __ffs(chan->config.dst_addr_width);
+> > +		reg =3D chan->config.dst_addr;
+> > +		ctllo =3D reg_width << CH_CTL_L_DST_WIDTH_POS |
+> > +			DWAXIDMAC_CH_CTL_L_NOINC <<
+> CH_CTL_L_DST_INC_POS |
+> > +			DWAXIDMAC_CH_CTL_L_INC <<
+> CH_CTL_L_SRC_INC_POS;
+> > +		break;
+> > +	case DMA_DEV_TO_MEM:
+> > +		reg_width =3D __ffs(chan->config.src_addr_width);
+> > +		reg =3D chan->config.src_addr;
+> > +		ctllo =3D reg_width << CH_CTL_L_SRC_WIDTH_POS |
+> > +			DWAXIDMAC_CH_CTL_L_INC <<
+> CH_CTL_L_DST_INC_POS |
+> > +			DWAXIDMAC_CH_CTL_L_NOINC <<
+> CH_CTL_L_SRC_INC_POS;
+> > +		break;
+> > +	default:
+> > +		return NULL;
+> > +	}
 > > +
-> > +  reg-names:
-> > +    items:
-> > +      - const: axidma_ctrl_regs
+> > +	for (i =3D 0; i < num_periods; i++) {
+> > +		hw_desc =3D &desc->hw_desc[i];
 > > +
-> > +  interrupts:
-> > +    maxItems: 1
+> > +		hw_desc->lli =3D axi_desc_get(chan, &hw_desc->llp);
+> > +		if (unlikely(!hw_desc->lli))
+> > +			goto err_desc_get;
 > > +
-> > +  clocks:
-> > +    items:
-> > +      - description: Bus Clock
-> > +      - description: Module Clock
+> > +		if (direction =3D=3D DMA_MEM_TO_DEV)
+> > +			block_ts =3D period_len >> mem_width;
+> > +		else
+> > +			block_ts =3D period_len >> reg_width;
 > > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: core-clk
-> > +      - const: cfgr-clk
+> > +		ctlhi =3D CH_CTL_H_LLI_VALID;
+> > +		if (chan->chip->dw->hdata->restrict_axi_burst_len) {
+> > +			u32 burst_len =3D chan->chip->dw->hdata-
+> >axi_rw_burst_len;
 > > +
-> > +  '#dma-cells':
-> > +    const: 1
+> > +			ctlhi |=3D (CH_CTL_H_ARLEN_EN |
+> > +				burst_len << CH_CTL_H_ARLEN_POS |
+> > +				CH_CTL_H_AWLEN_EN |
+> > +				burst_len << CH_CTL_H_AWLEN_POS);
+> > +		}
 > > +
-> > +  dma-channels:
-> > +    description: |
-> > +      Number of channels supported by hardware.
+> > +		hw_desc->lli->ctl_hi =3D cpu_to_le32(ctlhi);
 > > +
-> > +  snps,dma-masters:
-> > +    description: |
-> > +      Number of AXI masters supported by the hardware.
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > +      - enum: [1, 2]
-> > +        default: 2
+> > +		if (direction =3D=3D DMA_MEM_TO_DEV)
+> > +			ctllo |=3D mem_width << CH_CTL_L_SRC_WIDTH_POS;
+> > +		else
+> > +			ctllo |=3D mem_width << CH_CTL_L_DST_WIDTH_POS;
 > > +
-> > +  snps,data-width:
-> > +    description: |
-> > +      AXI data width supported by hardware.
-> > +      (0 - 8bits, 1 - 16bits, 2 - 32bits, ..., 6 - 512bits)
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > +      - enum: [0, 1, 2, 3, 4, 5, 6]
-> > +        default: 4
+> > +		if (direction =3D=3D DMA_MEM_TO_DEV) {
+> > +			write_desc_sar(hw_desc, src_addr);
+> > +			write_desc_dar(hw_desc, reg);
+> > +		} else {
+> > +			write_desc_sar(hw_desc, reg);
+> > +			write_desc_dar(hw_desc, src_addr);
+> > +		}
 > > +
-> > +  snps,priority:
-> > +    description: |
-> > +      Channel priority specifier associated with the DMA channels.
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +      - minItems: 1
-> > +        maxItems: 8
-> > +        default: [0, 1, 2, 3]
+> > +		hw_desc->lli->block_ts_lo =3D cpu_to_le32(block_ts - 1);
 > > +
-> > +  snps,block-size:
-> > +    description: |
-> > +      Channel block size specifier associated with the DMA channels.
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +      - minItems: 1
-> > +        maxItems: 8
-> > +        default: [4096, 4096, 4096, 4096]
+> > +		ctllo |=3D (DWAXIDMAC_BURST_TRANS_LEN_4 <<
+> CH_CTL_L_DST_MSIZE_POS |
+> > +			  DWAXIDMAC_BURST_TRANS_LEN_4 <<
+> CH_CTL_L_SRC_MSIZE_POS);
+> > +		hw_desc->lli->ctl_lo =3D cpu_to_le32(ctllo);
 > > +
-> > +  snps,axi-max-burst-len:
-> > +    description: |
-> > +      Restrict master AXI burst length by value specified in this prop=
-erty.
-> > +      If this property is missing the maximum AXI burst length support=
-ed by
-> > +      DMAC is used. [1:256]
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > +        default: 16
+> > +		set_desc_src_master(hw_desc);
 > > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - clock-names
-> > +  - interrupts
-> > +  - '#dma-cells'
-> > +  - dma-channels
-> > +  - snps,dma-masters
-> > +  - snps,data-width
-> > +  - snps,priority
-> > +  - snps,block-size
+> > +		/*
+> > +		 * Set end-of-link to the linked descriptor, so that cyclic
+> > +		 * callback function can be triggered during interrupt.
+> > +		 */
+> > +		set_desc_last(hw_desc);
+> > +
+> > +		src_addr +=3D period_len;
+> > +	}
 >=20
-> Pls add  additionalProperties: false and run latest dt schema tool from R=
-ob
-[>>] ok. Will add it in v3
+> apart from this bit and use of periods instead of sg_list this seems very=
+ similar to
+> slave handler, so can you please move common bits to helpers and
+> remove/reduce duplicate code
+[>>] sure, will try to reduce the common code.=20
 >=20
 > --
 > ~Vinod

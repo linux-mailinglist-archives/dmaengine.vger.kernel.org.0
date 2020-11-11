@@ -2,94 +2,126 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 988042AFB7C
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Nov 2020 23:38:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B78FF2AFD2B
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Nov 2020 02:51:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbgKKWid (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 11 Nov 2020 17:38:33 -0500
-Received: from mga02.intel.com ([134.134.136.20]:3574 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgKKWgU (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 11 Nov 2020 17:36:20 -0500
-IronPort-SDR: ZSQY4wFCmfyI+QaRcmYjTnwizoE6R+2FJvQJbICvmRZzJ/qqEeOr+rNiKdl+TURDB5vpl+77V1
- 6Oog8jvyb18Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9802"; a="157243173"
-X-IronPort-AV: E=Sophos;i="5.77,470,1596524400"; 
-   d="scan'208";a="157243173"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 14:23:47 -0800
-IronPort-SDR: WvsEISXJETRPqMuW18luXH/eI5djZ+K5ujxHsw6p7znPHnpbG9sANUSI60yasoNmrAbDirrG3W
- R1avjKVm89Jg==
-X-IronPort-AV: E=Sophos;i="5.77,470,1596524400"; 
-   d="scan'208";a="541980945"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2020 14:23:46 -0800
-Subject: [PATCH] dmaengine: idxd: fix mapping of portal size
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org
-Date:   Wed, 11 Nov 2020 15:23:46 -0700
-Message-ID: <160513342642.510187.16450549281618747065.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/0.23-29-ga622f1
+        id S1728315AbgKLBcN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 11 Nov 2020 20:32:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgKKWqp (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 11 Nov 2020 17:46:45 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50E12C061A04;
+        Wed, 11 Nov 2020 14:27:30 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1605133648;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/AJjHM4RdDlSJrBc4hxI1WObRemgRGA65few9eI9qhY=;
+        b=Yz4kBo6iYpJ8A4VQHynSbh4zW33QX2TNKzEpF1vlJPbmL+ZOD/van513qYoQjUoLfiANkU
+        /UcMuwr8ewQcOHJeACUHCPyaL/pQoU2Ye8qx5txQ5T1oPPOkUX8vJvzXHi6g0kwY67Itxa
+        zGBFaWBV6dWK7StOKa/6l5Nbqbq4uAESoYqm4i6BqxlZlwB+jx6IrPz3+6zW+VvZltQnya
+        H6MVzg9fXch2mIZ35bjtmv0EZ7F+FreuENigEmTzM8YVaGUms1dhyAjDYnVCbB2zUPKVcn
+        mhXkmwtjeC83I8oiQUHByMZkWQELU+8MltibUfrWk7rdaAe3ViEru5/B5/33mA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1605133648;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/AJjHM4RdDlSJrBc4hxI1WObRemgRGA65few9eI9qhY=;
+        b=0e9+v4yPq7Pamk3s9B1ZMn8Y1Q6geVARcMOWJtapXhxL5QALz7ZL4IJuvemVn9hGu0f1QI
+        Xasc43FTcv++sKCQ==
+To:     "Raj\, Ashok" <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Tian\, Kevin" <kevin.tian@intel.com>,
+        "Jiang\, Dave" <dave.jiang@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "vkoul\@kernel.org" <vkoul@kernel.org>,
+        "Dey\, Megha" <megha.dey@intel.com>,
+        "maz\@kernel.org" <maz@kernel.org>,
+        "bhelgaas\@google.com" <bhelgaas@google.com>,
+        "alex.williamson\@redhat.com" <alex.williamson@redhat.com>,
+        "Pan\, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu\, Yi L" <yi.l.liu@intel.com>,
+        "Lu\, Baolu" <baolu.lu@intel.com>,
+        "Kumar\, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck\, Tony" <tony.luck@intel.com>,
+        "jing.lin\@intel.com" <jing.lin@intel.com>,
+        "kwankhede\@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger\@redhat.com" <eric.auger@redhat.com>,
+        "parav\@mellanox.com" <parav@mellanox.com>,
+        "rafael\@kernel.org" <rafael@kernel.org>,
+        "netanelg\@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs\@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao\@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz\, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain\, Mona" <mona.hossain@intel.com>,
+        "dmaengine\@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+In-Reply-To: <20201111160922.GA83266@otc-nc-03>
+References: <20201104135415.GX2620339@nvidia.com> <MWHPR11MB1645524BDEDF8899914F32AE8CED0@MWHPR11MB1645.namprd11.prod.outlook.com> <20201106131415.GT2620339@nvidia.com> <20201106164850.GA85879@otc-nc-03> <20201106175131.GW2620339@nvidia.com> <CAPcyv4iYHA1acfo=+fTk+U_TrLbSWJjA6v4oeTXgVYDTrnCoGw@mail.gmail.com> <20201107001207.GA2620339@nvidia.com> <87pn4nk7nn.fsf@nanos.tec.linutronix.de> <d69953378bd1fdcdda54a2fbe285f6c0b1484e8a.camel@infradead.org> <20201111154159.GA24059@infradead.org> <20201111160922.GA83266@otc-nc-03>
+Date:   Wed, 11 Nov 2020 23:27:28 +0100
+Message-ID: <87k0uro7fz.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Portal size is 4k. Current code is mapping all 4 portals in a single chunk.
-Restrict the mapped portal size to a single portal to ensure that submission
-only goes to the intended portal address.
+On Wed, Nov 11 2020 at 08:09, Ashok Raj wrote:
+> On Wed, Nov 11, 2020 at 03:41:59PM +0000, Christoph Hellwig wrote:
+>> On Sun, Nov 08, 2020 at 07:36:34PM +0000, David Woodhouse wrote:
+>> > So it does look like we're going to need a hypercall interface to
+>> > compose an MSI message on behalf of the guest, for IMS to use. In fact
+>> > PCI devices assigned to a guest could use that too, and then we'd only
+>> > need to trap-and-remap any attempt to write a Compatibility Format MSI
+>> > to the device's MSI table, while letting Remappable Format messages get
+>> > written directly.
+>> > 
+>> > We'd also need a way for an OS running on bare metal to *know* that
+>> > it's on bare metal and can just compose MSI messages for itself. Since
+>> > we do expect bare metal to have an IOMMU, perhaps that is just a
+>> > feature flag on the IOMMU?
+>> 
+>> Have the platform firmware advertise if it needs native or virtualized
+>> IMS handling.  If it advertises neither don't support IMS?
+>
+> The platform hint can be easily accomplished via DMAR table flags. We could
+> have an IMS_OPTOUT(similart to x2apic optout flag) flag, when 0 its native 
+> and IMS is supported.
+>
+> When vIOMMU is presented to guest, virtual DMAR table will have this flag
+> set to 1. Indicates to GuestOS, native IMS isn't supported.
 
-Fixes: c52ca478233c ("dmaengine: idxd: add configuration component of driver")
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/dma/idxd/device.c    |    2 +-
- drivers/dma/idxd/registers.h |    2 +-
- drivers/dma/idxd/submit.c    |    2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+These opt-out bits suck by definition. It comes all back to the fact
+that the whole virt thing didn't have a hardware defined way to tell
+that the OS runs in a VM and not on bare metal. It wouldn't have been
+rocket science to do so.
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 506ac85c4a7f..663344987e3f 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -271,7 +271,7 @@ int idxd_wq_map_portal(struct idxd_wq *wq)
- 	resource_size_t start;
- 
- 	start = pci_resource_start(pdev, IDXD_WQ_BAR);
--	start = start + wq->id * IDXD_PORTAL_SIZE;
-+	start += idxd_get_wq_portal_full_offset(wq->id, IDXD_PORTAL_LIMITED);
- 
- 	wq->dportal = devm_ioremap(dev, start, IDXD_PORTAL_SIZE);
- 	if (!wq->dportal)
-diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
-index aef5a902829e..54390334c243 100644
---- a/drivers/dma/idxd/registers.h
-+++ b/drivers/dma/idxd/registers.h
-@@ -8,7 +8,7 @@
- 
- #define IDXD_MMIO_BAR		0
- #define IDXD_WQ_BAR		2
--#define IDXD_PORTAL_SIZE	0x4000
-+#define IDXD_PORTAL_SIZE	PAGE_SIZE
- 
- /* MMIO Device BAR0 Registers */
- #define IDXD_VER_OFFSET			0x00
-diff --git a/drivers/dma/idxd/submit.c b/drivers/dma/idxd/submit.c
-index 156a1ee233aa..417048e3c42a 100644
---- a/drivers/dma/idxd/submit.c
-+++ b/drivers/dma/idxd/submit.c
-@@ -74,7 +74,7 @@ int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc)
- 	if (idxd->state != IDXD_DEV_ENABLED)
- 		return -EIO;
- 
--	portal = wq->dportal + idxd_get_wq_portal_offset(IDXD_PORTAL_UNLIMITED);
-+	portal = wq->dportal;
- 	/*
- 	 * The wmb() flushes writes to coherent DMA data before possibly
- 	 * triggering a DMA read. The wmb() is necessary even on UP because
+And because that does not exist, we need magic opt-out bits for every
+other piece of functionality which gets added. Can we please stop this
+and provide a well defined way to tell the OS whether it runs on bare
+metal or not?
 
+The point is that you really want opt-in bits so that decisions come
+down to
 
+     if (!virt || virt->supports_X)
+
+which is the obvious sane and safe logic. But sure, why am I asking for
+sane and safe in the context of virtualization?
+
+Thanks,
+
+        tglx

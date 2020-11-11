@@ -2,145 +2,191 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 074EF2AE60F
-	for <lists+dmaengine@lfdr.de>; Wed, 11 Nov 2020 02:53:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7E702AE643
+	for <lists+dmaengine@lfdr.de>; Wed, 11 Nov 2020 03:17:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731713AbgKKBxV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 10 Nov 2020 20:53:21 -0500
-Received: from mga03.intel.com ([134.134.136.65]:52815 "EHLO mga03.intel.com"
+        id S1726861AbgKKCR4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 10 Nov 2020 21:17:56 -0500
+Received: from mga11.intel.com ([192.55.52.93]:26905 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731610AbgKKBxU (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 10 Nov 2020 20:53:20 -0500
-IronPort-SDR: /D9z51vc15mUr6E4DH6aXJbbfW4MwEj0TdqRVy0nVJRbIQwuPikmPLjMPe99FEgr1TMcSU59+L
- XU8MYc9raj7w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9801"; a="170188858"
+        id S1726143AbgKKCR4 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 10 Nov 2020 21:17:56 -0500
+IronPort-SDR: gvJa1vqc+gsVH60QlIsJ3xgucy0EXELrmtV7yohZ631lehLpHwNZfuvm5L2OdqRcjxQ/dbb3Jl
+ czO2lrebquuw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9801"; a="166573332"
 X-IronPort-AV: E=Sophos;i="5.77,468,1596524400"; 
-   d="scan'208";a="170188858"
+   d="scan'208";a="166573332"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2020 17:53:20 -0800
-IronPort-SDR: +m8RZon1JT9McCEGdZ6HxOshGFDUPJ1BYe3am78HmjS7jZJNbcipgz8jFjpAh0Q2Dwfi86ugEk
- rBK8tsZc24Wg==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2020 18:17:54 -0800
+IronPort-SDR: knA9b7EIO06nGNpERojkFkQmBdCZfFO8v09ss5gcb8M6+30Bs3DLzw//tILvREhjDgxSMCsyNG
+ /nzWJIoOzRPA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,468,1596524400"; 
-   d="scan'208";a="360357080"
+   d="scan'208";a="356428338"
 Received: from orsmsx606.amr.corp.intel.com ([10.22.229.19])
-  by fmsmga002.fm.intel.com with ESMTP; 10 Nov 2020 17:53:19 -0800
-Received: from orsmsx609.amr.corp.intel.com (10.22.229.22) by
+  by fmsmga004.fm.intel.com with ESMTP; 10 Nov 2020 18:17:53 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
  ORSMSX606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 10 Nov 2020 17:53:19 -0800
+ 15.1.1713.5; Tue, 10 Nov 2020 18:17:53 -0800
 Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx609.amr.corp.intel.com (10.22.229.22) with Microsoft SMTP Server
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 10 Nov 2020 17:53:19 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.107)
+ via Frontend Transport; Tue, 10 Nov 2020 18:17:53 -0800
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.103)
  by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.1713.5; Tue, 10 Nov 2020 17:53:17 -0800
+ 15.1.1713.5; Tue, 10 Nov 2020 18:17:53 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=diHbdqgOzGIeS4oUV9Cskj1hWmPC20SCLhOCp03GD59rERTXYPygS4VsXhfNMEsJLImr6qzavjjqlJw8RTPBdA0ZRpvq9hcCV7d1jVTy3kisz7gmqmG+88M3sUQYlcfCofRfilt0CCQOh2YqbnbzzjvuFg7KKGoVy2BhT+iK5liHwYItRdYbReSPpnItaYKmOE1pmy9AOPCXLWjMfLmF6vql8KTutzaiQxEKoXbnb394gdyYGGIIVvKDCIYKcMO9f6dbl9ERvwQ6I0lN5H9SEPkdzUQ8wgs5jXYwPLeb6T9vZccwKJoRUWSWa+47O+PhgFCQYhk6jbnrpn8pE7lRtg==
+ b=noM2Qt1sd0oQSQmMl1yZTKrGy4jJB/s1H3hqHwjey/c+a0Mg8IsHGjpy00JMJVpQAEIpnE56mn4yVFaEE946tMGlOk0HyC2adID4oBYEttfzF3ArUykXqNlWofyunfNMmNNJtHFRe8iPN5wMb9kMdroC5CtPV/2QudKwsi5t18F2/wRAgwcOYrRVg+TXS2j1wZtvjQf08IopsdNyJa1qFXRyT2tN/ry4nbR5NXos0e9OFlAlBZPAH5gX42oKsE4hIG0/TG73BTCcAnSl93sYdo3quDSVXzB/0k/6cXqWPq81gOyLMCuhtoC/rvF82oBVqDBQ6pm4dUxiATKDJuSUOA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aJhIBD9is4Zn0a2CkVEmoN/iJN4ZCW0JHWWG9GQvHsc=;
- b=Fxpfgn1YCcQeQ5DUAgr0ktQqQs2rFMaSvTWRDXdvHQqM6rteaXqr84ufKwOAUWRTPC7VWJu1YXyLWore7QHx7kL47LUGRt+3G7zASjjf7XBvcupf6FJX05MHNZJJ+weKEZVE38CNYirOLLS2KcMXf4fm+RQX9V8qEI/yQ4Yk1YKFk5h+nZRm87fKV+p3tkcwN0Pqa/h99eTtvXrTGmB9NqN1xuHOaRxCBEomNItryLRqOxWI1T6+Nh9y2M6vv4UELa2y+agfuNeDgyTs9m8b8Z8EsJRcQB18AMJTrhUSUK3SkwyUtCRIrZIbN1t9ZovEjW2hgRqEgstRL2u2WK8lXw==
+ bh=592p6QdDSo2xgCQtZT+LKKqRbmRDfn7+FD4hXWYI/Lo=;
+ b=V3KMAc5r8rOmRCKzW9a41iiudStOuavYgvy50f5HbpqbSNeRVs+fTegSLv+hy5OUqeZJKLmB9ZhGsXywqylrHMd9LJ0esaIDaPZDFWww3joAocsP2l4yaEVJ3k0NQFf7zsRA5AxU/P2GXEIHv7fWDYFADf7PwDsDyeateR4jkKDuuD60mRpNgwa8K3eIviGdBrmcQfabp/buBjNfu+heZh7Quiu2tqunTzG1WCjaEnfAeOjkFo9tUTpdPY7kFrc0BiIsVwIVaeZfHerklT9ji/AqNHAbt+vRf18P7JGtQX/+09tLzDEGITnfADXzUORmfW2eNJBmDyE9HAJGw4rBHg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
  s=selector2-intel-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aJhIBD9is4Zn0a2CkVEmoN/iJN4ZCW0JHWWG9GQvHsc=;
- b=ODSQN4g5dBVKVX9soX6DqutVYej20JnX2HpIhyCmP6l6Yw/Bs0ZPIHHc3MjL4JC02kSakWKciYNAP6znk1MpXCtkO+anlMJg19Di84bQEw+Ym+ZCwC1IdVNvmRbJclK1/idSeyCfn7xEdcJEwNLXeFUbXhjM5Vrid93Bt2KOe8I=
-Received: from CO1PR11MB5026.namprd11.prod.outlook.com (2603:10b6:303:9c::13)
- by MW3PR11MB4619.namprd11.prod.outlook.com (2603:10b6:303:5b::15) with
+ bh=592p6QdDSo2xgCQtZT+LKKqRbmRDfn7+FD4hXWYI/Lo=;
+ b=Oak9p5vGMOsOspkz6weMXuaIA2NOSlCWpchzetP2x1Ud8gKlCWMeqC+FRVfsOtwyPHWsXP6fiyXqM6eGGNnc4RDxrHBdM5z5W0g1CMjCjbzKuhG/Bp6eeIb9suw5db1WVK3KGm18zHr1OaCN1BKafrnTUw6JxP015c/h5kw74dM=
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com (2603:10b6:301:b::12)
+ by MWHPR1101MB2094.namprd11.prod.outlook.com (2603:10b6:301:4e::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.21; Wed, 11 Nov
- 2020 01:53:16 +0000
-Received: from CO1PR11MB5026.namprd11.prod.outlook.com
- ([fe80::40d9:aa4b:73e7:3d60]) by CO1PR11MB5026.namprd11.prod.outlook.com
- ([fe80::40d9:aa4b:73e7:3d60%3]) with mapi id 15.20.3499.032; Wed, 11 Nov 2020
- 01:53:16 +0000
-From:   "Sia, Jee Heng" <jee.heng.sia@intel.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.19; Wed, 11 Nov
+ 2020 02:17:49 +0000
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::7ccb:c84d:5042:b50e]) by MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::7ccb:c84d:5042:b50e%10]) with mapi id 15.20.3541.025; Wed, 11 Nov
+ 2020 02:17:48 +0000
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "Bjorn Helgaas" <helgaas@kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
         "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 12/15] dmaengine: dw-axi-dmac: Add Intel KeemBay DMA
- register fields
-Thread-Topic: [PATCH v2 12/15] dmaengine: dw-axi-dmac: Add Intel KeemBay DMA
- register fields
-Thread-Index: AQHWtn7A627rVvuT70iz+gYK/SHlmanCLRfQ
-Date:   Wed, 11 Nov 2020 01:53:16 +0000
-Message-ID: <CO1PR11MB50260315873FE1DA91B8E7A0DAE80@CO1PR11MB5026.namprd11.prod.outlook.com>
-References: <20201027063858.4877-1-jee.heng.sia@intel.com>
- <20201027063858.4877-13-jee.heng.sia@intel.com>
- <20201109095710.GF3171@vkoul-mobl>
-In-Reply-To: <20201109095710.GF3171@vkoul-mobl>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: RE: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+Thread-Topic: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+Thread-Index: AQHWru26nCdjGLbk80+ZhPfx8iZ806mwjmaAgAAYm4CAABfkAIAAARAAgAQYdwCAAOAGcIAAp6mAgAD1diCAAJvfgIAADi9AgAAGfICAArW6cIAAY8KAgAA79QCAABGDgIAAY1IAgAAHBYCAAsnwAIAAVwYAgAC+sACAAGcnAIAAVyaAgABtcgCAAFeIgIAAPx2AgAAC4ACAAMRZYA==
+Date:   Wed, 11 Nov 2020 02:17:48 +0000
+Message-ID: <MWHPR11MB16459716A1897F79E860AB4D8CE80@MWHPR11MB1645.namprd11.prod.outlook.com>
+References: <CAPcyv4iYHA1acfo=+fTk+U_TrLbSWJjA6v4oeTXgVYDTrnCoGw@mail.gmail.com>
+ <20201107001207.GA2620339@nvidia.com>
+ <87pn4nk7nn.fsf@nanos.tec.linutronix.de>
+ <20201108235852.GC32074@araj-mobl1.jf.intel.com>
+ <874klykc7h.fsf@nanos.tec.linutronix.de>
+ <20201109173034.GG2620339@nvidia.com>
+ <87pn4mi23u.fsf@nanos.tec.linutronix.de> <20201110051412.GA20147@otc-nc-03>
+ <875z6dik1a.fsf@nanos.tec.linutronix.de> <20201110141323.GB22336@otc-nc-03>
+ <20201110142340.GP2620339@nvidia.com>
+In-Reply-To: <20201110142340.GP2620339@nvidia.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+dlp-version: 11.5.1.3
 dlp-product: dlpe-windows
 dlp-reaction: no-action
-dlp-version: 11.5.1.3
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [175.142.41.19]
+authentication-results: nvidia.com; dkim=none (message not signed)
+ header.d=none;nvidia.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.194]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7583135d-e8ce-4af7-079d-08d885e48e86
-x-ms-traffictypediagnostic: MW3PR11MB4619:
-x-microsoft-antispam-prvs: <MW3PR11MB46190FB1330D1803D34E7BD5DAE80@MW3PR11MB4619.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-ms-office365-filtering-correlation-id: 51fd4889-6bd7-4014-1769-08d885e7fc4c
+x-ms-traffictypediagnostic: MWHPR1101MB2094:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR1101MB2094E0B33804776B3A5707F48CE80@MWHPR1101MB2094.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tfSoqDbmvtmOOoJNpooQmRw/pPYIYBLVwNKS8Ze8PNZUJOHhC8FEthOiHrUcuUk4OWXecgZHlRfxbCaqo+oqWMNk4B5YiqhPdOkcgDwybnZ5csiF6PY4A7yZkn5wc+4gG1fzdXzlorkKPBb+6Q94NjBMrZD6rIXYp8lbY2xRjpAKt5TWI8URs88MsA8hc5LrjKzCrrBvO+G2MR+9hLUwBpnQFmH90UPw8ZoRNTWjGS05TZW6QrAjzUsPSHeRU/GYFr3xqRQF0s3oPUKGSY8Q8h3QYRLR8O/jTKaad4XuvcJcJKfJoTAMUTaSdCyQ/kO4
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5026.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(366004)(39860400002)(346002)(376002)(7696005)(4326008)(53546011)(316002)(9686003)(8676002)(86362001)(64756008)(66446008)(478600001)(33656002)(66946007)(54906003)(186003)(6916009)(76116006)(83380400001)(52536014)(5660300002)(6506007)(4744005)(55016002)(26005)(2906002)(66556008)(8936002)(71200400001)(66476007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: GXXLOPgVGDOHG9aqhiZsEyWPd3B2O9foK/u+mjWuMzg1HR8vMN9ecKsfKzaPbzgXB1QHhtylsh/OMga1riMqlV/tI85qmIL5/rgSWtnUdVf42YvMpMRaLCzmcRnhJ0L9t/0TnZrnGk6WUBAaJL3Ha3udrIU4/q9seh70tr/0NHP7PTusc03A1fzeXtAwdBsSKUEyDHluQ89qs0nJEan1X6MA3Jz+I6y57GqnUxwHz4LBMWZVb371RwqxiCo8HmCVFAQoATT12b0D0XUbc6B1LxGSUuBVOJdMX8kZmZCksGtuE2f6/Uhi4Y+rFbYwSrCsGlRG7sAfNDgKExtuj8nZDe+uODMMLWidQtdqHJ6xRYG0UCXY1SIMc+ko15b+23nY5QY1n0EhtwbYbUtb7VE0IVk4XKqSRy5wFT4Srjwi+5MBrMtBFC7lsVKYZ49HT4FXM8h7tceVIMHUp7Bh/M+2ZWSFNY4RFLs7GzcsWkLDX3XObIwzafhowamPi0PlVtX5ZUeo1lINM1zJJeWw+qVM0AXNtgmArwE2Ew1PwzQwnVHm2LNSohciwQ3T7P9UpliCDhzL4N1Wf/dhNRX4YFqROy8OeI3TCQqjTLLLkmC+dhAhaP5L/woZSGJJlyFislQ9ZDyqXaLs1aBrGf0aEwv75g==
-x-ms-exchange-transport-forked: True
+x-microsoft-antispam-message-info: syV29+0M0ZgcQnm10gZ1NsXla6a98ym34SsZx8Df4Y9uoZy/kJqJRXB/16NzMzPH4LbApg1ymtLv0IDOR+J8esLimF+KMqfwxXURrHT+xDOhqrfRNQTLvbmSAlmoeo2h1vGS73QO+7laVb1xGW/xWOSU9FBTC+5eEBSvuzN2XgzMQza7y0esVIm/J2CEAjcl6UZmupdwcQR3yyH0d1hp5FIhJtxoyPhVillSdspfHVdd17WrYkGB5uTcW6hUprL1EqlwFWQPICLulidfwVlFviSQrJujaDUzMn+pbMMPGXt7riCKb+EKp4iRqWd4Namhi6LgKudY+eHCXBfnQ5U9oA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(366004)(346002)(376002)(396003)(66946007)(52536014)(66446008)(66556008)(71200400001)(76116006)(186003)(6506007)(9686003)(33656002)(55016002)(5660300002)(478600001)(86362001)(7416002)(7696005)(66476007)(316002)(110136005)(83380400001)(26005)(8936002)(2906002)(6636002)(54906003)(4326008)(64756008)(8676002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: POQu/ggoqUHLBKX2tnm6XkhK54g+s/qH2U5oAwWqCkkm7jsPoByjTAHnbqjLGmFFhp6oirRXpz5Y442cqaFpJIzaz+k00WqncjsYcTVtycyJkQxUlJBTgQpcUgsX9fb4nXCC0Dlkwo9fQgjeEN4TBE/5XhADoW/0iUo5SJ8QCmTg04y9spjHCCd7JQgE/Ei+lySvZpbuusfmrVS3MwCXX8VykiR7NyPnI7NhkjuJg+dZuXk36t8qsgvfD8cQt//vPtQQy7d4b+TUtgLBki3L2K+gBNwerylUIVOQUxJkpfN6RUnm1dJemlspNpJq5IwMuE0UoUqX4RmDr+2WqkaWBdZKtWTYoMPds1FXPMKczCr0L04g0QbXe4pnnp6BJdH/jAyWy6wrHpmkdTeONYopBjMbXxswQWrsRK3ok+tHRMixPmaF+tDxPhHXo2I0qYWf27CGFK4vwPNk49S7NWATEWw8CFwkoPX0/lBl8kAJ+nJCukdZlRP/sNvu/iI4jxr1ev3nUagXL/vsBLWIi8a/Yf2d9iSyDLcsm+lkkvVbSrhX0b6dmxhlwEYiA2EvbsXp+3oqrNRsgrXQn5uRvHLCgYp8rhC4vTlHZunnckTbnPSgGUf1bhuAXRh4cB/PCPpMsH20xpXReyuG0BqOEqMUSQ==
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5026.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7583135d-e8ce-4af7-079d-08d885e48e86
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2020 01:53:16.1219
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1645.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51fd4889-6bd7-4014-1769-08d885e7fc4c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Nov 2020 02:17:48.8750
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WjZ5TaltgntDZ6zJjbZDkbuAj4RMaka7eXjWC5AK7sK5/FsGkGQ2K9/5v9USgDNTYiEQbEmHy6844kzcEYnqHg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4619
+X-MS-Exchange-CrossTenant-userprincipalname: k3K5WZAzwWwoPVCF5yn035BDrrwigpNSIsDP/7xQCC8dOyf1hkgTlT/O5t3ZzEbdAQQUyYBcnw7Nvyiijzh50g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1101MB2094
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+> From: Jason Gunthorpe <jgg@nvidia.com>
+> Sent: Tuesday, November 10, 2020 10:24 PM
+>=20
+> On Tue, Nov 10, 2020 at 06:13:23AM -0800, Raj, Ashok wrote:
+>=20
+> > This isn't just for idxd, as I mentioned earlier, there are vendors oth=
+er
+> > than Intel already working on this. In all cases the need for guest dir=
+ect
+> > manipulation of interrupt store hasn't come up. From the discussion, it
+> > seems like there are devices today or in future that will require direc=
+t
+> > manipulation of interrupt store in the guest. This needs additional wor=
+k
+> > in both the device hardware providing the right plumbing and OS work to
+> > comprehend those.
+>=20
+> We'd want to see SRIOV's assigned to guests to be able to use
+> IMS. This allows a SRIOV instance in a guest to spawn SIOV's which is
+> useful.
 
+Does your VF support both MSI/IMS or IMS only? If it is the former can't
+we adopt a phased approach or parallel effort between forcing guest
+to use MSI and adding hypercall to enable IMS on VF? Finding a way
+to disable IMS is anyway required per earlier discussion when hypercall
+is not available, and it could still provide a functional though suboptimal
+model for such VFs.
 
-> -----Original Message-----
-> From: Vinod Koul <vkoul@kernel.org>
-> Sent: 09 November 2020 5:57 PM
-> To: Sia, Jee Heng <jee.heng.sia@intel.com>
-> Cc: Eugeniy.Paltsev@synopsys.com; andriy.shevchenko@linux.intel.com;
-> dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH v2 12/15] dmaengine: dw-axi-dmac: Add Intel KeemBay
-> DMA register fields
 >=20
-> On 27-10-20, 14:38, Sia Jee Heng wrote:
-> > Add support for Intel KeemBay DMA registers. These registers are
-> > required to run data transfer between device to memory and memory to
-> > device on Intel KeemBay SoC.
+> SIOV's assigned to guests could use IMS, but the use cases we see in
+> the short term can be handled by using SRIOV instead.
 >=20
-> Again this should come first, you need to add all the bits required to su=
-pport this
-> soc and then add compatible..
-[>>] Noted. Meaning that this patch should be 11th and the compatible patch=
- is 12th. Will change this order in v3.
+> I would expect in general for SIOV to use MSI-X emulation to expose
+> interrupts - it would be really weird for a SIOV emulator to do
+> something else and we should probably discourage that.
 >=20
-> --
-> ~Vinod
+
+I agree with this point. This leaves hardware gaps in IOMMU and root
+complex less an immediate blocker and to be addressed in the long term.
+
+Thanks
+Kevin

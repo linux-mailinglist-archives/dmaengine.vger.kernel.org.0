@@ -2,38 +2,38 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF25C2B01B2
-	for <lists+dmaengine@lfdr.de>; Thu, 12 Nov 2020 10:08:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DEAA2B01AD
+	for <lists+dmaengine@lfdr.de>; Thu, 12 Nov 2020 10:08:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgKLJIA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 12 Nov 2020 04:08:00 -0500
+        id S1727845AbgKLJHm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 12 Nov 2020 04:07:42 -0500
 Received: from mga11.intel.com ([192.55.52.93]:53006 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727803AbgKLJHC (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 12 Nov 2020 04:07:02 -0500
-IronPort-SDR: 44k0+pHh2C74ZqlYNxbAcrxKjio55UvNTMxXKYx977mII+lI28FWXolwBbCSkZoWqIzWaZREa7
- 1OvI7GJhOq8A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9802"; a="166773083"
+        id S1727811AbgKLJHG (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 12 Nov 2020 04:07:06 -0500
+IronPort-SDR: Vs4DCp9DHQqemVuk52JSlwvgunoUw9UsSX/pxaA0z1a1daigf/nQ56w+9WnSRg+tsZLn9rk31E
+ /rOXOjHzAmXg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9802"; a="166773091"
 X-IronPort-AV: E=Sophos;i="5.77,471,1596524400"; 
-   d="scan'208";a="166773083"
+   d="scan'208";a="166773091"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2020 01:06:47 -0800
-IronPort-SDR: JE9l/j/a7TR+zyTwQaCOOyH72IWxwJ/gEd70z8Y89nNKXeab/KOMKfgPQk+TJrbUOdcZLzJHJQ
- GLRIsQwP5FeQ==
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2020 01:06:50 -0800
+IronPort-SDR: YTie2YsUR/34PBBfu7jwrjyyaDUt75n3gxIYSt2IhqaTtvdREuwZSVCkyskJAI52gRQb19cxnm
+ tYwm20PPaU3g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.77,471,1596524400"; 
-   d="scan'208";a="360911645"
+   d="scan'208";a="360911709"
 Received: from jsia-hp-z620-workstation.png.intel.com ([10.221.118.135])
-  by fmsmga002.fm.intel.com with ESMTP; 12 Nov 2020 01:06:45 -0800
+  by fmsmga002.fm.intel.com with ESMTP; 12 Nov 2020 01:06:48 -0800
 From:   Sia Jee Heng <jee.heng.sia@intel.com>
 To:     vkoul@kernel.org, Eugeniy.Paltsev@synopsys.com, robh+dt@kernel.org
 Cc:     andriy.shevchenko@linux.intel.com, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v3 09/15] dmaengine: dw-axi-dmac: Support burst residue granularity
-Date:   Thu, 12 Nov 2020 16:49:47 +0800
-Message-Id: <20201112084953.21629-10-jee.heng.sia@intel.com>
+Subject: [PATCH v3 10/15] dt-binding: dma: dw-axi-dmac: Add support for Intel KeemBay AxiDMA
+Date:   Thu, 12 Nov 2020 16:49:48 +0800
+Message-Id: <20201112084953.21629-11-jee.heng.sia@intel.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20201112084953.21629-1-jee.heng.sia@intel.com>
 References: <20201112084953.21629-1-jee.heng.sia@intel.com>
@@ -41,157 +41,68 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add support for DMA_RESIDUE_GRANULARITY_BURST so that AxiDMA can report
-DMA residue.
+Add support for Intel KeemBay AxiDMA to the dw-axi-dmac
+Schemas DT binding.
 
-Existing AxiDMA driver only support data transfer between
-memory to memory operation, therefore reporting DMA residue
-to the DMA clients is not supported.
-
-Reporting DMA residue to the DMA clients is important as DMA clients
-shall invoke dmaengine_tx_status() to understand the number of bytes
-been transferred so that the buffer pointer can be updated accordingly.
-
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sia Jee Heng <jee.heng.sia@intel.com>
 ---
- .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 43 ++++++++++++++++---
- drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  2 +
- 2 files changed, 38 insertions(+), 7 deletions(-)
+ .../bindings/dma/snps,dw-axi-dmac.yaml        | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index 19fc6d2dfd5c..d82583e28a99 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -265,14 +265,36 @@ dma_chan_tx_status(struct dma_chan *dchan, dma_cookie_t cookie,
- 		  struct dma_tx_state *txstate)
- {
- 	struct axi_dma_chan *chan = dchan_to_axi_dma_chan(dchan);
--	enum dma_status ret;
-+	struct virt_dma_desc *vdesc;
-+	enum dma_status status;
-+	u32 completed_length;
-+	unsigned long flags;
-+	u32 completed_blocks;
-+	size_t bytes = 0;
-+	u32 length;
-+	u32 len;
+diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+index 481ef0dacf5f..18e9422095bb 100644
+--- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
++++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+@@ -8,6 +8,7 @@ title: Synopsys DesignWare AXI DMA Controller
  
--	ret = dma_cookie_status(dchan, cookie, txstate);
-+	status = dma_cookie_status(dchan, cookie, txstate);
-+	if (status == DMA_COMPLETE || !txstate)
-+		return status;
+ maintainers:
+   - Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com
++  - Jee Heng Sia <jee.heng.sia@intel.com>
  
--	if (chan->is_paused && ret == DMA_IN_PROGRESS)
--		ret = DMA_PAUSED;
-+	spin_lock_irqsave(&chan->vc.lock, flags);
+ description: |
+  Synopsys DesignWare AXI DMA Controller DT Binding
+@@ -16,6 +17,7 @@ properties:
+   compatible:
+     enum:
+       - snps,axi-dma-1.01a
++      - intel,kmb-axi-dma
  
--	return ret;
-+	vdesc = vchan_find_desc(&chan->vc, cookie);
-+	if (vdesc) {
-+		length = vd_to_axi_desc(vdesc)->length;
-+		completed_blocks = vd_to_axi_desc(vdesc)->completed_blocks;
-+		len = vd_to_axi_desc(vdesc)->hw_desc[0].len;
-+		completed_length = completed_blocks * len;
-+		bytes = length - completed_length;
-+	} else {
-+		bytes = vd_to_axi_desc(vdesc)->length;
-+	}
+   reg:
+     items:
+@@ -24,6 +26,7 @@ properties:
+   reg-names:
+     items:
+       - const: axidma_ctrl_regs
++      - const: axidma_apb_regs
+ 
+   interrupts:
+     maxItems: 1
+@@ -124,3 +127,25 @@ examples:
+          snps,priority = <0 1 2 3>;
+          snps,axi-max-burst-len = <16>;
+      };
 +
-+	spin_unlock_irqrestore(&chan->vc.lock, flags);
-+	dma_set_residue(txstate, bytes);
-+
-+	return status;
- }
- 
- static void write_desc_llp(struct axi_dma_hw_desc *desc, dma_addr_t adr)
-@@ -549,6 +571,7 @@ static int dw_axi_dma_set_hw_desc(struct axi_dma_chan *chan,
- 
- 	set_desc_src_master(hw_desc);
- 
-+	hw_desc->len = len;
- 	return 0;
- }
- 
-@@ -575,6 +598,7 @@ dw_axi_dma_chan_prep_cyclic(struct dma_chan *dchan, dma_addr_t dma_addr,
- 	chan->direction = direction;
- 	desc->chan = chan;
- 	chan->cyclic = true;
-+	desc->length = 0;
- 
- 	for (i = 0; i < num_periods; i++) {
- 		hw_desc = &desc->hw_desc[i];
-@@ -584,6 +608,7 @@ dw_axi_dma_chan_prep_cyclic(struct dma_chan *dchan, dma_addr_t dma_addr,
- 		if (status < 0)
- 			goto err_desc_get;
- 
-+		desc->length += hw_desc->len;
- 		/* Set end-of-link to the linked descriptor, so that cyclic
- 		 * callback function can be triggered during interrupt.
- 		 */
-@@ -639,6 +664,7 @@ dw_axi_dma_chan_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
- 		goto err_desc_get;
- 
- 	desc->chan = chan;
-+	desc->length = 0;
- 
- 	for_each_sg(sgl, sg, sg_len, i) {
- 		mem = sg_dma_address(sg);
-@@ -648,6 +674,7 @@ dw_axi_dma_chan_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
- 		status = dw_axi_dma_set_hw_desc(chan, hw_desc, mem, len);
- 		if (status < 0)
- 			goto err_desc_get;
-+		desc->length += hw_desc->len;
- 	}
- 
- 	if (unlikely(!desc))
-@@ -696,6 +723,7 @@ dma_chan_prep_dma_memcpy(struct dma_chan *dchan, dma_addr_t dst_adr,
- 
- 	desc->chan = chan;
- 	num = 0;
-+	desc->length = 0;
- 	while (len) {
- 		xfer_len = len;
- 
-@@ -748,7 +776,8 @@ dma_chan_prep_dma_memcpy(struct dma_chan *dchan, dma_addr_t dst_adr,
- 		set_desc_src_master(hw_desc);
- 		set_desc_dest_master(hw_desc, desc);
- 
--
-+		hw_desc->len = xfer_len;
-+		desc->length += hw_desc->len;
- 		/* update the length and addresses for the next loop cycle */
- 		len -= xfer_len;
- 		dst_adr += xfer_len;
-@@ -1216,7 +1245,7 @@ static int dw_probe(struct platform_device *pdev)
- 	dw->dma.dst_addr_widths = AXI_DMA_BUSWIDTHS;
- 	dw->dma.directions = BIT(DMA_MEM_TO_MEM);
- 	dw->dma.directions |= BIT(DMA_MEM_TO_DEV) | BIT(DMA_DEV_TO_MEM);
--	dw->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
-+	dw->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
- 
- 	dw->dma.dev = chip->dev;
- 	dw->dma.device_tx_status = dma_chan_tx_status;
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-index 651874e5c88f..bdb66d775125 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-@@ -88,6 +88,7 @@ struct __packed axi_dma_lli {
- struct axi_dma_hw_desc {
- 	struct axi_dma_lli	*lli;
- 	dma_addr_t		llp;
-+	u32			len;
- };
- 
- struct axi_dma_desc {
-@@ -96,6 +97,7 @@ struct axi_dma_desc {
- 	struct virt_dma_desc		vd;
- 	struct axi_dma_chan		*chan;
- 	u32				completed_blocks;
-+	u32				length;
- };
- 
- static inline struct device *dchan2dev(struct dma_chan *dchan)
++  - |
++     #include <dt-bindings/interrupt-controller/arm-gic.h>
++     #include <dt-bindings/interrupt-controller/irq.h>
++     /* example with intel,kmb-axi-dma */
++     #define KEEM_BAY_PSS_AXI_DMA
++     #define KEEM_BAY_PSS_APB_AXI_DMA
++     axi_dma: dma@28000000 {
++         compatible = "intel,kmb-axi-dma";
++         reg = <0x28000000 0x1000 0x20250000 0x24>;
++         reg-names = "axidma_ctrl_regs", "axidma_apb_regs";
++         interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
++         clock-names = "core-clk", "cfgr-clk";
++         clocks = <&scmi_clk KEEM_BAY_PSS_AXI_DMA>, <&scmi_clk KEEM_BAY_PSS_APB_AXI_DMA>;
++         #dma-cells = <1>;
++         dma-channels = <8>;
++         snps,dma-masters = <1>;
++         snps,data-width = <4>;
++         snps,priority = <0 0 0 0 0 0 0 0>;
++         snps,block-size = <1024 1024 1024 1024 1024 1024 1024 1024>;
++         snps,axi-max-burst-len = <16>;
++     };
 -- 
 2.18.0
 

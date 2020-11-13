@@ -2,160 +2,119 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 824672B22A6
-	for <lists+dmaengine@lfdr.de>; Fri, 13 Nov 2020 18:38:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 802352B23D2
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Nov 2020 19:34:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbgKMRis (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 13 Nov 2020 12:38:48 -0500
-Received: from mga05.intel.com ([192.55.52.43]:3880 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726070AbgKMRir (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 13 Nov 2020 12:38:47 -0500
-IronPort-SDR: Uj9oh9jS+PtkILYfAkOvBcRkoF8QhkfQtqf7BCFMhLW0klZ1FgXLUoAw2/E1aPRXxOyXreCZ85
- xOMre2FPSftQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9804"; a="255216823"
-X-IronPort-AV: E=Sophos;i="5.77,476,1596524400"; 
-   d="scan'208";a="255216823"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2020 09:38:47 -0800
-IronPort-SDR: 8YZt70b5Kok964sqPXYAd2YuJ8I69VgCBCLM9LupaRtam992OkvRrHqLdrX5WeFkzZ3qtU7ymG
- bCYIE6b55efw==
-X-IronPort-AV: E=Sophos;i="5.77,476,1596524400"; 
-   d="scan'208";a="328941426"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2020 09:38:46 -0800
-Date:   Fri, 13 Nov 2020 09:38:45 -0800
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Wilk, Konrad" <konrad.wilk@oracle.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>, andrew.cooper3@citrix.com
-Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-Message-ID: <20201113173845.GA53733@otc-nc-03>
-References: <87pn4mi23u.fsf@nanos.tec.linutronix.de>
- <20201110051412.GA20147@otc-nc-03>
- <875z6dik1a.fsf@nanos.tec.linutronix.de>
- <20201110141323.GB22336@otc-nc-03>
- <MWHPR11MB16455B594B1B48B6E3C97C108CE80@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20201112193253.GG19638@char.us.oracle.com>
- <877dqqmc2h.fsf@nanos.tec.linutronix.de>
- <MWHPR11MB1645F27808F1F5E79646A3A88CE60@MWHPR11MB1645.namprd11.prod.outlook.com>
- <874kltmlfr.fsf@nanos.tec.linutronix.de>
- <30928722afe64104b5abba09de4f74dd@intel.com>
+        id S1726113AbgKMSd7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 13 Nov 2020 13:33:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgKMSd7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 13 Nov 2020 13:33:59 -0500
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C06F3C0613D1;
+        Fri, 13 Nov 2020 10:33:57 -0800 (PST)
+Received: by mail-qk1-x743.google.com with SMTP id l2so9727803qkf.0;
+        Fri, 13 Nov 2020 10:33:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tTop0L3WKYeLlzcN6n9MVUWYqI+MjrZ5s3ciISRrjWI=;
+        b=rxYBxl6xsCyjd4FwJDuAloDkQzKFN3PNapO7YsvOTsYTOfRewJT0N578wrdbvEGnIl
+         dPtIFJBNT0eWCgO0yd32zHNrR6t/KU44IZbBbMpQ6qdgDSCXLp5gZbqfJdl2AvhdPcxL
+         2zDHHnkdJHPfXKyWUFXBwqYU408nCDD6Pdq9YnyO7D/RYU26LVW//jodotjavOa9S8ee
+         QENFbR/wFm9WZlPz2+ad9bOJNK+tmMsZndWaT1n3JjA8PuekH1ix5kyMM3LNsqDXLGP0
+         e0401NJ5p0FAeU40bxu2r2OvSwb6IfWUP/CEKTr+WywQX5KxnBy7pVctATK189g7s1yP
+         BZpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tTop0L3WKYeLlzcN6n9MVUWYqI+MjrZ5s3ciISRrjWI=;
+        b=coFMs4ob20zjUU25iNNaNLRtFQew77Kh3+WFz+D4i5+gueE2ReAfxGMMNTNsi/9cSN
+         voeHOW+t55IErp36ZID1yttrfwG0Z837e26Kn4wVkLPwi+ociWiEKVXq4uvsUDw1XwdA
+         JnAe8Vi/I68Nud7Uas7i8AbmjQGe4LmC+nNnL59xCka3pdxJHKONDIw9fFFe6+9/XWRP
+         Uul7mN7c7jNYvV3pQnYuH90g66glzdQ2O53PO3v0/Zv6qkhU/+ysEfldRm5wfTxQV2z9
+         7/8icOvqPZpQstxGJYEW86ccyqRzhCuckyrvpaXNPseMHJoPSKzvDedNZjzMAoOOS4DW
+         doOw==
+X-Gm-Message-State: AOAM532msbmjcM9mq7GE6d3TGd/yj8Il2VStzoTBf9GP3ZDy2eRMJbMd
+        y4ZwsbKgB9xcM7j9Z00q5Ig=
+X-Google-Smtp-Source: ABdhPJyINnvGblcrdNoVnqkFbBeH/EHFF6e90JDj+uK0oZQEjVkWvfmVDHDCapd/swUXQ17YOyYAgg==
+X-Received: by 2002:a37:991:: with SMTP id 139mr3306876qkj.185.1605292436793;
+        Fri, 13 Nov 2020 10:33:56 -0800 (PST)
+Received: from ubuntu-m3-large-x86 ([2604:1380:45f1:1d00::1])
+        by smtp.gmail.com with ESMTPSA id q1sm7028411qti.95.2020.11.13.10.33.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Nov 2020 10:33:56 -0800 (PST)
+Date:   Fri, 13 Nov 2020 11:33:54 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Maciej Sosnowski <maciej.sosnowski@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-janitors@vger.kernel.org, linux-safety@lists.elisa.tech,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: ioatdma: remove unused function missed during
+ dma_v2 removal
+Message-ID: <20201113183354.GA1435913@ubuntu-m3-large-x86>
+References: <20201113081248.26416-1-lukas.bulwahn@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <30928722afe64104b5abba09de4f74dd@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20201113081248.26416-1-lukas.bulwahn@gmail.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Nov 13, 2020 at 08:12:39AM -0800, Luck, Tony wrote:
-> > Of course is this not only an x86 problem. Every architecture which
-> > supports virtualization has the same issue. ARM(64) has no way to tell
-> > for sure whether the machine runs bare metal either. No idea about the
-> > other architectures.
+On Fri, Nov 13, 2020 at 09:12:48AM +0100, Lukas Bulwahn wrote:
+> Commit 7f832645d0e5 ("dmaengine: ioatdma: remove ioatdma v2 registration")
+> missed to remove dca2_tag_map_valid() during its removal. Hence, since
+> then, dca2_tag_map_valid() is unused and make CC=clang W=1 warns:
 > 
-> Sounds like a hypervisor problem. If the VMM provides perfect emulation
-> of every weird quirk of h/w, then it is OK to let the guest believe that it is
-> running on bare metal.
-
-That's true, which is why there isn't an immutable bit in cpuid or
-otherwise telling you are running under a hypervisor. Providing something
-like that would make certain features not virtualizable. Apparently before we
-had faulting cpuid, what you had in guest was the real raw cpuid. 
-
-Waiver: I'm not saying this is perfect, I'm just replaying the reason
-behind it. Not trying to defend it... flames > /dev/null
+>   drivers/dma/ioat/dca.c:44:19:
+>     warning: unused function 'dca2_tag_map_valid' [-Wunused-function]
 > 
-> If it isn't perfect, then it should make sure the guest knows *for sure*, so that
-> the guest can take appropriate actions to avoid the sharp edges.
+> So, remove this unused function and get rid of a -Wused-function warning.
 > 
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
-There are indeed 2 problems to solve.
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
-1. How does device driver know if device is IMS capable.
-
-   IMS is a device attribute. Each vendor can provide its own method to
-   provide that indication. One such mechanism is the DVSEC.SIOV.IMS
-   property. Some might believe this is for use only by Intel. For DVSEC I
-   don't believe there is such a connection as in device vendor id in
-   standard header. TBH, there are other device vendors using the exact
-   same method to indicate SIOV and IMS propeties. What a DVSEC vendor ID
-   states is "As defined by Vendor X". 
-
-   Why we choose a config vs something in device specific mmio is because
-   today VFIO being that one common mechanism, it only exposes known
-   standard and some extended headers to guest. When we expose a full PF,
-   the guest doens't see the DVSEC, so drivers know this isn't available.
-
-   This is our mechanism to stop drivers from calling
-   pci_ims_array_create_msi_irq_domain(). It may not be perfect for all
-   devices, it is a device specific mechanism. For devices under
-   consideration following the SIOV spec it meets the sprit of the
-   requirement even without #2 below. When devices have no way to detect
-   this, #2 is required as a second way to block IMS.
-
-2. How does platform component (IOMMU) inform if they can support all forms
-   of IMS. (On device, or in memory). 
-   
-   On device would require some form trap/emulate. Legacy MSIx already has
-   that solved, but for device specific store you need some additional
-   work.
-
-   When its system memory (say IMS is in GPA space), you need some form of
-   hypercall. There is no way around it since we can't intercept. Yes, you
-   can maybe map those as RO and trap, but its not pretty.
-
-   To solve this rather than a generic platform capability, maybe we should
-   flip this to IOMMU instead, because that's the one that offers this
-   capability today.
-
-   iommu_ims_supported() 
-   	When platform has no IOMMU or no hypervisor calls, it returns
-	false. So device driver can tell, even if it supports IMS
-	capability deduction, does the platform support IMS.
-   
-        On platforms where iommu supports capability.
-
-	Either there is a vIOMMU with a Virtual Command Register that can
-	provide a way to get the interrupt handle similar to what you would
-	get from an hypercall for instance. Or there is a real hypercall
-	that supports giving the guest OS the physical IRTE handle. 
-
-
--- 
-Cheers,
-Ashok
-
-[Forgiveness is the attribute of the STRONG - Gandhi]
+> ---
+> applies cleanly on current master and next-20201112
+> 
+> Maciej, please ack.
+> 
+> Vinod, Dan, please pick this minor non-urgent clean-up patch.
+> 
+>  drivers/dma/ioat/dca.c | 10 ----------
+>  1 file changed, 10 deletions(-)
+> 
+> diff --git a/drivers/dma/ioat/dca.c b/drivers/dma/ioat/dca.c
+> index 0be385587c4c..289c59ed74b9 100644
+> --- a/drivers/dma/ioat/dca.c
+> +++ b/drivers/dma/ioat/dca.c
+> @@ -40,16 +40,6 @@
+>  #define DCA2_TAG_MAP_BYTE3 0x82
+>  #define DCA2_TAG_MAP_BYTE4 0x82
+>  
+> -/* verify if tag map matches expected values */
+> -static inline int dca2_tag_map_valid(u8 *tag_map)
+> -{
+> -	return ((tag_map[0] == DCA2_TAG_MAP_BYTE0) &&
+> -		(tag_map[1] == DCA2_TAG_MAP_BYTE1) &&
+> -		(tag_map[2] == DCA2_TAG_MAP_BYTE2) &&
+> -		(tag_map[3] == DCA2_TAG_MAP_BYTE3) &&
+> -		(tag_map[4] == DCA2_TAG_MAP_BYTE4));
+> -}
+> -
+>  /*
+>   * "Legacy" DCA systems do not implement the DCA register set in the
+>   * I/OAT device.  Software needs direct support for their tag mappings.
+> -- 
+> 2.17.1
+> 

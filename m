@@ -2,110 +2,128 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41CBB2B16FF
-	for <lists+dmaengine@lfdr.de>; Fri, 13 Nov 2020 09:13:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6818D2B18DF
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Nov 2020 11:16:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbgKMINZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 13 Nov 2020 03:13:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55676 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgKMINZ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 13 Nov 2020 03:13:25 -0500
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77749C0613D1;
-        Fri, 13 Nov 2020 00:13:06 -0800 (PST)
-Received: by mail-ej1-x642.google.com with SMTP id oq3so12055276ejb.7;
-        Fri, 13 Nov 2020 00:13:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=UjUFjlo+lUVXh8aCv+mLF8td/QwZTXfYmMYnlYnHUQY=;
-        b=a0MVam7prtCppJVUx7x8/S5UjN0gVePh0iKNlHZpI5aYqnWk0lwk34/fQSR55nCvKZ
-         svaJIKfrPmDxNw26TVSO3n/8PZj2dmNHXT7c+pP0Uo0NnVR7pXWlIRhw5q4uRwAh/d8q
-         v3yyoaAq18OfnHt2qdMouaMcSDDQDrY4Rb42f6woKXLLGjcBhZG+XVyx1EA2DpuGeX78
-         JFPTCwcTrUA4YqR8EqDnkHdq93RK9ALQF9cD3pJyRlApSyjpFoB4e5wlzjh0wtv6YsGC
-         fzKpE61vIe6tDyUOoFhbLIQgXFCdMePK1fueDfudymqH50J87CIIvxH7NKeY4WcvBqQU
-         vpxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=UjUFjlo+lUVXh8aCv+mLF8td/QwZTXfYmMYnlYnHUQY=;
-        b=Q281S5BDEmeenmu8snXS51RDqQdfLBKOjPM2qu/HvWQBUhwm4gLWoE/GC23XQzxAEm
-         nmK5l8x6OrNPjbyoY6GgHdwH4mt1vXhWvRp2i+Ig4xsOlrOVaOQsHwyzfUXlhhvukhBu
-         MFAf+zl72ogLQT5gShncdwEDQWLOQYxVE+mYagLx7SVGOpcsoXOuo5HU6p3vZ/ZQ0LAi
-         5+8EDZbMeJ0gP7HFbI0MCjJ3ixkP+vphGPPNX6oasB0NzwWP/TyFr5CKOdTxhxJGKbcV
-         qPyvpcXpsyqyU6Yec7YKnuVqlXb5VDy+LoxUH5iPr4iFLNTYR3F+Cxi7+u9GhorDBrKv
-         Jikg==
-X-Gm-Message-State: AOAM531ReeURtAjwTWJGBnRE9jSKMdFJgeM+vSMRY/no6pGbMSyvRWSe
-        wxqPhIMyy4CCuQAibkV925N7zP36b0rsGQ==
-X-Google-Smtp-Source: ABdhPJzYr0uqqkZpmU5AkBmZGruoS+wNbzoXwSoxwwYoPZUxVaKF/+NbFzed2xC0HWR9bTAVkLD3BQ==
-X-Received: by 2002:a17:906:3d1:: with SMTP id c17mr838007eja.187.1605255185182;
-        Fri, 13 Nov 2020 00:13:05 -0800 (PST)
-Received: from felia.fritz.box ([2001:16b8:2de6:6700:5d16:c2b3:483:ff70])
-        by smtp.gmail.com with ESMTPSA id n25sm3075936ejd.114.2020.11.13.00.13.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2020 00:13:04 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Maciej Sosnowski <maciej.sosnowski@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org
-Cc:     Tom Rix <trix@redhat.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-janitors@vger.kernel.org, linux-safety@lists.elisa.tech,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] dmaengine: ioatdma: remove unused function missed during dma_v2 removal
-Date:   Fri, 13 Nov 2020 09:12:48 +0100
-Message-Id: <20201113081248.26416-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726248AbgKMKQo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 13 Nov 2020 05:16:44 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:33748 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726176AbgKMKQo (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 13 Nov 2020 05:16:44 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ADA9Sjk143006;
+        Fri, 13 Nov 2020 10:16:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=cfFkbwO4n7/hA0Zrtzj7joxsa8P/uEHYLoV2Ks+djZ4=;
+ b=MHO2RcT1PHx3O+4BfGgzYXcNNF7bs5xzA249tJsJ1d58Hl5fEn+J09wc2R0wpfCsFL0Z
+ 39hNxNV0EDgM5Rc26lkHVXmvY8luP+XLqjRQ870Yhd8+TbYd8JJLlhH0/2i50yYpww4m
+ XQNPFZuoK5GC3WKwdPK8RrNYjBX7dMrO+3h4pfv8yR4B8+h8Oyft4m7cu7h6igr+n9Dc
+ wPikhp7K9e6zMvCFOlbtwvkvSKVECkVnmwCwkoD74+lWmSDEjRgKjcnTC1nqkNqC1+Bc
+ vyM1Wo99QFjqzVqB8CSg1D2m/1uk2sUCaZN3RFC6glXzr02gzxbM2XDiquRv2EBzJ+9Z Zw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 34p72f00bf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 13 Nov 2020 10:16:40 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0ADABN89097157;
+        Fri, 13 Nov 2020 10:16:40 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 34p55stj88-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Nov 2020 10:16:39 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0ADAGct5030571;
+        Fri, 13 Nov 2020 10:16:38 GMT
+Received: from mwanda (/10.175.206.108)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 13 Nov 2020 02:16:38 -0800
+Date:   Fri, 13 Nov 2020 13:16:31 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
+        dmaengine@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] dmaengine: fix error codes in channel_register()
+Message-ID: <20201113101631.GE168908@mwanda>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9803 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 phishscore=0
+ mlxlogscore=999 mlxscore=0 malwarescore=0 bulkscore=0 suspectscore=2
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011130061
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9803 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+ malwarescore=0 suspectscore=2 lowpriorityscore=0 adultscore=0 phishscore=0
+ priorityscore=1501 spamscore=0 impostorscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011130061
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Commit 7f832645d0e5 ("dmaengine: ioatdma: remove ioatdma v2 registration")
-missed to remove dca2_tag_map_valid() during its removal. Hence, since
-then, dca2_tag_map_valid() is unused and make CC=clang W=1 warns:
+The error codes were not set on some of these error paths.
 
-  drivers/dma/ioat/dca.c:44:19:
-    warning: unused function 'dca2_tag_map_valid' [-Wunused-function]
+Also the error handling was more confusing than it needed to be so I
+cleaned it up and shuffled it around a bit.
 
-So, remove this unused function and get rid of a -Wused-function warning.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Fixes: d2fb0a043838 ("dmaengine: break out channel registration")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 ---
-applies cleanly on current master and next-20201112
+ drivers/dma/dmaengine.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-Maciej, please ack.
-
-Vinod, Dan, please pick this minor non-urgent clean-up patch.
-
- drivers/dma/ioat/dca.c | 10 ----------
- 1 file changed, 10 deletions(-)
-
-diff --git a/drivers/dma/ioat/dca.c b/drivers/dma/ioat/dca.c
-index 0be385587c4c..289c59ed74b9 100644
---- a/drivers/dma/ioat/dca.c
-+++ b/drivers/dma/ioat/dca.c
-@@ -40,16 +40,6 @@
- #define DCA2_TAG_MAP_BYTE3 0x82
- #define DCA2_TAG_MAP_BYTE4 0x82
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index 7974fa0400d8..962cbb5e5f7f 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -1039,16 +1039,15 @@ static int get_dma_id(struct dma_device *device)
+ static int __dma_async_device_channel_register(struct dma_device *device,
+ 					       struct dma_chan *chan)
+ {
+-	int rc = 0;
++	int rc;
  
--/* verify if tag map matches expected values */
--static inline int dca2_tag_map_valid(u8 *tag_map)
--{
--	return ((tag_map[0] == DCA2_TAG_MAP_BYTE0) &&
--		(tag_map[1] == DCA2_TAG_MAP_BYTE1) &&
--		(tag_map[2] == DCA2_TAG_MAP_BYTE2) &&
--		(tag_map[3] == DCA2_TAG_MAP_BYTE3) &&
--		(tag_map[4] == DCA2_TAG_MAP_BYTE4));
--}
--
- /*
-  * "Legacy" DCA systems do not implement the DCA register set in the
-  * I/OAT device.  Software needs direct support for their tag mappings.
+ 	chan->local = alloc_percpu(typeof(*chan->local));
+ 	if (!chan->local)
+-		goto err_out;
++		return -ENOMEM;
+ 	chan->dev = kzalloc(sizeof(*chan->dev), GFP_KERNEL);
+ 	if (!chan->dev) {
+-		free_percpu(chan->local);
+-		chan->local = NULL;
+-		goto err_out;
++		rc = -ENOMEM;
++		goto err_free_local;
+ 	}
+ 
+ 	/*
+@@ -1061,7 +1060,8 @@ static int __dma_async_device_channel_register(struct dma_device *device,
+ 	if (chan->chan_id < 0) {
+ 		pr_err("%s: unable to alloc ida for chan: %d\n",
+ 		       __func__, chan->chan_id);
+-		goto err_out;
++		rc = chan->chan_id;
++		goto err_free_dev;
+ 	}
+ 
+ 	chan->dev->device.class = &dma_devclass;
+@@ -1082,9 +1082,10 @@ static int __dma_async_device_channel_register(struct dma_device *device,
+ 	mutex_lock(&device->chan_mutex);
+ 	ida_free(&device->chan_ida, chan->chan_id);
+ 	mutex_unlock(&device->chan_mutex);
+- err_out:
+-	free_percpu(chan->local);
++ err_free_dev:
+ 	kfree(chan->dev);
++ err_free_local:
++	free_percpu(chan->local);
+ 	return rc;
+ }
+ 
 -- 
-2.17.1
+2.28.0
 

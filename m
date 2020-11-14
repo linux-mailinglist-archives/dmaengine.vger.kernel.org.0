@@ -2,108 +2,94 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 912792B2B37
-	for <lists+dmaengine@lfdr.de>; Sat, 14 Nov 2020 05:03:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C7372B2CBB
+	for <lists+dmaengine@lfdr.de>; Sat, 14 Nov 2020 11:34:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725981AbgKNEDS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 13 Nov 2020 23:03:18 -0500
-Received: from lucky1.263xmail.com ([211.157.147.134]:46722 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgKNEDR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 13 Nov 2020 23:03:17 -0500
-X-Greylist: delayed 388 seconds by postgrey-1.27 at vger.kernel.org; Fri, 13 Nov 2020 23:02:08 EST
-Received: from localhost (unknown [192.168.167.70])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 0B240C49BF;
-        Sat, 14 Nov 2020 11:55:32 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P27840T140553139496704S1605326130614637_;
-        Sat, 14 Nov 2020 11:55:31 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <6d5c2be54c926e753545094f68123e26>
-X-RL-SENDER: sugar.zhang@rock-chips.com
-X-SENDER: zxg@rock-chips.com
-X-LOGIN-NAME: sugar.zhang@rock-chips.com
-X-FST-TO: vkoul@kernel.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   Sugar Zhang <sugar.zhang@rock-chips.com>
-To:     vkoul@kernel.org
-Cc:     linux-rockchip@lists.infradead.org,
-        Sugar Zhang <sugar.zhang@rock-chips.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: pl330: _prep_dma_memcpy: Fix wrong burst size
-Date:   Sat, 14 Nov 2020 11:55:06 +0800
-Message-Id: <1605326106-55681-1-git-send-email-sugar.zhang@rock-chips.com>
-X-Mailer: git-send-email 2.7.4
+        id S1726625AbgKNKex (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 14 Nov 2020 05:34:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726113AbgKNKex (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 14 Nov 2020 05:34:53 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF967C0613D1;
+        Sat, 14 Nov 2020 02:34:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=0hO+ohxPFig28LmimZnxfVLjXY8uLImJhPLPYl8JZZY=; b=qAPdnN4Bzx0J7JHwtNQo0kHxh7
+        HOdDpzofAB76DNnzWgvY7n/d8g7L5+lKP4FwdEXj7NhLFlvT2SQp5lvemvza+5dUAJKvdYr1QfNv5
+        NEv66wT1SaGmu4/B6RWYHYtlWF6VjQl7nwAyRADph6/UdKsMfXnqsHMwuRNRiLZoezFpvyzRsV3p6
+        mP31cBOoMKlgT+nexv3m6pd9m07av3/4tGXODiXU9f5fr/BOKZWzVE0JDpRr35AQ1oPy3elmqLP1v
+        nnbL3lbrOOLwQgASpraNn5mDxoap10740ElNRuCQknqK0oE2h1m1uMYkcZOfRIc0fmOqVZOUGXBT5
+        n+G0qhjw==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kdst4-0002gd-Di; Sat, 14 Nov 2020 10:34:30 +0000
+Date:   Sat, 14 Nov 2020 10:34:30 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
+Message-ID: <20201114103430.GA9810@infradead.org>
+References: <20201108235852.GC32074@araj-mobl1.jf.intel.com>
+ <874klykc7h.fsf@nanos.tec.linutronix.de>
+ <20201109173034.GG2620339@nvidia.com>
+ <87pn4mi23u.fsf@nanos.tec.linutronix.de>
+ <20201110051412.GA20147@otc-nc-03>
+ <875z6dik1a.fsf@nanos.tec.linutronix.de>
+ <20201110141323.GB22336@otc-nc-03>
+ <MWHPR11MB16455B594B1B48B6E3C97C108CE80@MWHPR11MB1645.namprd11.prod.outlook.com>
+ <20201112193253.GG19638@char.us.oracle.com>
+ <877dqqmc2h.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <877dqqmc2h.fsf@nanos.tec.linutronix.de>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Actually, burst size is equal to '1 << desc->rqcfg.brst_size'.
-we should use burst size, not desc->rqcfg.brst_size.
+On Thu, Nov 12, 2020 at 11:42:46PM +0100, Thomas Gleixner wrote:
+> DMI vendor name is pretty good final check when the bit is 0. The
+> strings I'm aware of are:
+> 
+> QEMU, Bochs, KVM, Xen, VMware, VMW, VMware Inc., innotek GmbH, Oracle
+> Corporation, Parallels, BHYVE, Microsoft Corporation
+> 
+> which is not complete but better than nothing ;)
 
-dma memcpy performance on Rockchip RV1126
-@ 1512MHz A7, 1056MHz LPDDR3, 200MHz DMA:
-
-dmatest:
-
-/# echo dma0chan0 > /sys/module/dmatest/parameters/channel
-/# echo 4194304 > /sys/module/dmatest/parameters/test_buf_size
-/# echo 8 > /sys/module/dmatest/parameters/iterations
-/# echo y > /sys/module/dmatest/parameters/norandom
-/# echo y > /sys/module/dmatest/parameters/verbose
-/# echo 1 > /sys/module/dmatest/parameters/run
-
-dmatest: dma0chan0-copy0: result #1: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
-dmatest: dma0chan0-copy0: result #2: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
-dmatest: dma0chan0-copy0: result #3: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
-dmatest: dma0chan0-copy0: result #4: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
-dmatest: dma0chan0-copy0: result #5: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
-dmatest: dma0chan0-copy0: result #6: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
-dmatest: dma0chan0-copy0: result #7: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
-dmatest: dma0chan0-copy0: result #8: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
-
-Before:
-
-  dmatest: dma0chan0-copy0: summary 8 tests, 0 failures 48 iops 200338 KB/s (0)
-
-After this patch:
-
-  dmatest: dma0chan0-copy0: summary 8 tests, 0 failures 179 iops 734873 KB/s (0)
-
-After this patch and increase dma clk to 400MHz:
-
-  dmatest: dma0chan0-copy0: summary 8 tests, 0 failures 259 iops 1062929 KB/s (0)
-
-Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
----
-
- drivers/dma/pl330.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index e9f0101..0f5c193 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -2799,7 +2799,7 @@ pl330_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dst,
- 	 * If burst size is smaller than bus width then make sure we only
- 	 * transfer one at a time to avoid a burst stradling an MFIFO entry.
- 	 */
--	if (desc->rqcfg.brst_size * 8 < pl330->pcfg.data_bus_width)
-+	if (burst * 8 < pl330->pcfg.data_bus_width)
- 		desc->rqcfg.brst_len = 1;
- 
- 	desc->bytes_requested = len;
--- 
-2.7.4
-
-
-
+Which is why I really think we need explicit opt-ins for "native"
+SIOV handling and for paravirtualized SIOV handling, with the kernel
+not offering support at all without either or a manual override on
+the command line.

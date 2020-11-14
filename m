@@ -2,117 +2,135 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 30BC72B1FC6
-	for <lists+dmaengine@lfdr.de>; Fri, 13 Nov 2020 17:12:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48E7B2B1FA4
+	for <lists+dmaengine@lfdr.de>; Fri, 13 Nov 2020 17:09:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgKMQMl convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Fri, 13 Nov 2020 11:12:41 -0500
-Received: from mga09.intel.com ([134.134.136.24]:9889 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726701AbgKMQMl (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 13 Nov 2020 11:12:41 -0500
-IronPort-SDR: 2JCoDOsGs5Ui6G3G+2dCVYHCJkBW34L6tlE2HLqKIt8tbtLiyYg+QVNQqkf6Und6ltFjiCHhtu
- 65kK4cz9bgYA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9804"; a="170663097"
-X-IronPort-AV: E=Sophos;i="5.77,475,1596524400"; 
-   d="scan'208";a="170663097"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2020 08:12:40 -0800
-IronPort-SDR: /EpiTz+ObiUYe2Tt61ei7Ih9ue4JXLvOFzFoszIGlTLqqqn3EIvramoTCldkoiD6eB957e0ac+
- RaNWbkQmbfHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,475,1596524400"; 
-   d="scan'208";a="309655009"
-Received: from fmsmsx606.amr.corp.intel.com ([10.18.126.86])
-  by fmsmga007.fm.intel.com with ESMTP; 13 Nov 2020 08:12:40 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 13 Nov 2020 08:12:39 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 13 Nov 2020 08:12:39 -0800
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
- Fri, 13 Nov 2020 08:12:39 -0800
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Wilk, Konrad" <konrad.wilk@oracle.com>
-CC:     "Raj, Ashok" <ashok.raj@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>
-Subject: RE: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-Thread-Topic: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-Thread-Index: AQHWru2wVqYDq8zCAUGd/W1dOZWHUKmxA7+AgAAYm4CAABfkAIAAARAAgAQpOgCAAOGcgIAAphOAgAD60ICAAJaGgIAADwsAgAAFn4CAAuAFAIAAOXiAgAA79ACAABGDgIAAY1MAgAAHBICAAsnwAIAAVwYAgAC+sACAAGcnAIAAVyaAgABtcgCAAFeIgIAAPx6AgAEdLoCAAmDAgIAANQ0AgABC2gCAALXJAP//pWBA
-Date:   Fri, 13 Nov 2020 16:12:39 +0000
-Message-ID: <30928722afe64104b5abba09de4f74dd@intel.com>
-References: <20201107001207.GA2620339@nvidia.com>
- <87pn4nk7nn.fsf@nanos.tec.linutronix.de>
- <20201108235852.GC32074@araj-mobl1.jf.intel.com>
- <874klykc7h.fsf@nanos.tec.linutronix.de>
- <20201109173034.GG2620339@nvidia.com>
- <87pn4mi23u.fsf@nanos.tec.linutronix.de> <20201110051412.GA20147@otc-nc-03>
- <875z6dik1a.fsf@nanos.tec.linutronix.de> <20201110141323.GB22336@otc-nc-03>
- <MWHPR11MB16455B594B1B48B6E3C97C108CE80@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20201112193253.GG19638@char.us.oracle.com>
- <877dqqmc2h.fsf@nanos.tec.linutronix.de>
- <MWHPR11MB1645F27808F1F5E79646A3A88CE60@MWHPR11MB1645.namprd11.prod.outlook.com>
- <874kltmlfr.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <874kltmlfr.fsf@nanos.tec.linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1726691AbgKMQJl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 13 Nov 2020 11:09:41 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7238 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgKMQJl (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 13 Nov 2020 11:09:41 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4CXk1b1Mtfzkk74;
+        Sat, 14 Nov 2020 00:09:23 +0800 (CST)
+Received: from huawei.com (10.151.151.249) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Sat, 14 Nov 2020
+ 00:09:34 +0800
+From:   Dongjiu Geng <gengdongjiu@huawei.com>
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>,
+        <dan.j.williams@intel.com>, <p.zabel@pengutronix.de>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/2] dt: bindings: dma: Add DT bindings for HiSilicon Hiedma Controller
+Date:   Sat, 14 Nov 2020 00:34:08 +0000
+Message-ID: <20201114003409.36406-1-gengdongjiu@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.151.151.249]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-> Of course is this not only an x86 problem. Every architecture which
-> supports virtualization has the same issue. ARM(64) has no way to tell
-> for sure whether the machine runs bare metal either. No idea about the
-> other architectures.
+The Hiedma Controller v310 Provides eight DMA channels, each
+channel can be configured for one-way transfer. The data can
+be transferred in 8-bit, 16-bit, 32-bit, or 64-bit mode. This
+documentation describes DT bindings of this controller.
 
-Sounds like a hypervisor problem. If the VMM provides perfect emulation
-of every weird quirk of h/w, then it is OK to let the guest believe that it is
-running on bare metal.
+Signed-off-by: Dongjiu Geng <gengdongjiu@huawei.com>
+---
+ .../bindings/dma/hisilicon,hiedmacv310.yaml   | 80 +++++++++++++++++++
+ 1 file changed, 80 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/hisilicon,hiedmacv310.yaml
 
-If it isn't perfect, then it should make sure the guest knows *for sure*, so that
-the guest can take appropriate actions to avoid the sharp edges.
+diff --git a/Documentation/devicetree/bindings/dma/hisilicon,hiedmacv310.yaml b/Documentation/devicetree/bindings/dma/hisilicon,hiedmacv310.yaml
+new file mode 100644
+index 000000000000..c04603316b40
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/hisilicon,hiedmacv310.yaml
+@@ -0,0 +1,80 @@
++# SPDX-License-Identifier: GPL-2.0-only
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/hisilicon,hiedmacv310.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: HiSilicon Hiedma Controller v310 Device Tree Bindings
++
++description: |
++  These bindings describe the DMA engine included in the HiSilicon Hiedma
++  Controller v310 Device.
++
++maintainers:
++  - Dongjiu Geng <gengdongjiu@huawei.com>
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  "#dma-cells":
++    const: 2
++
++  compatible:
++    const: hisilicon,hiedmacv310_n
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: apb clock
++      - description: axi clock
++
++  clock-names:
++    items:
++      - const: apb_pclk
++      - const: axi_aclk
++
++required:
++  - "#dma-cells"
++  - "#clock-cells"
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++  - dma-requests
++  - dma-channels
++  - devid
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/hi3559av100-clock.h>
++
++    dma: dma-controller@10040000 {
++      compatible = "hisilicon,hiedmacv310_n";
++      reg = <0x10040000 0x1000>;
++      misc_regmap = <&misc_ctrl>;
++      misc_ctrl_base = <0x144>;
++      interrupts = <0 82 4>;
++      clocks = <&clock HI3559AV100_EDMAC1_CLK>, <&clock HI3559AV100_EDMAC1_AXICLK>;
++      clock-names = "apb_pclk", "axi_aclk";
++      #clock-cells = <2>;
++      resets = <&clock 0x16c 7>;
++      reset-names = "dma-reset";
++      dma-requests = <32>;
++      dma-channels = <8>;
++      devid = <1>;
++      #dma-cells = <2>;
++    };
++
++...
+-- 
+2.17.1
 
--Tony

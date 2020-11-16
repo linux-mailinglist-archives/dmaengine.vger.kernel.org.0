@@ -2,105 +2,170 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C0442B3E94
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Nov 2020 09:26:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E07F72B4942
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Nov 2020 16:31:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgKPI0d (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 16 Nov 2020 03:26:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726176AbgKPI0d (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 Nov 2020 03:26:33 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F1A1C0613CF;
-        Mon, 16 Nov 2020 00:26:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=4Df+ryKMLeLM6ZPUIVUI425PW1QFD2JY37ueasWT1tM=; b=tIcF381YzRWlS3vyV5D3+AOOPY
-        UjVFVpU3pJzQGZgL64alCSS5fvb1ZabCxvl14Q67Uqz68kdFo9Dw0DZ7vwV813JqOS2GKzVom4Bdo
-        8aHlR2SryN+v2/PISnP7i7Du4xMO1SS7K2slyKgXyOG+mdfd7rN7TflvQTrzqiX3FQpHW+cSJZp77
-        agRSeSP5NVbfKJGtRiFYMOmIOSNusI5NZ5ktpUmqw2V+NEnk6NKchKVPCiFfB5cFfHQD7PpFHeoIm
-        NAAFkVYo03/y7EckGRrceEBloQ0emPn/iUP2MX5sElP9Vb/nWmzolnZo3bt10tZoIusFIvPM0e7nU
-        nsVERyJg==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1keZpj-0004Nt-Sb; Mon, 16 Nov 2020 08:25:55 +0000
-Date:   Mon, 16 Nov 2020 08:25:55 +0000
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: [PATCH v4 06/17] PCI: add SIOV and IMS capability detection
-Message-ID: <20201116082555.GA16303@infradead.org>
-References: <20201109173034.GG2620339@nvidia.com>
- <87pn4mi23u.fsf@nanos.tec.linutronix.de>
- <20201110051412.GA20147@otc-nc-03>
- <875z6dik1a.fsf@nanos.tec.linutronix.de>
- <20201110141323.GB22336@otc-nc-03>
- <MWHPR11MB16455B594B1B48B6E3C97C108CE80@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20201112193253.GG19638@char.us.oracle.com>
- <877dqqmc2h.fsf@nanos.tec.linutronix.de>
- <20201114103430.GA9810@infradead.org>
- <20201114211837.GB12197@araj-mobl1.jf.intel.com>
+        id S1731429AbgKPP1W (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 16 Nov 2020 10:27:22 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43433 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731340AbgKPP1V (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 16 Nov 2020 10:27:21 -0500
+Received: by mail-oi1-f193.google.com with SMTP id t143so19140215oif.10;
+        Mon, 16 Nov 2020 07:27:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xUXSweo7NzDpGONzH1JHq5i88gmR7wl2dS6zxWyTFhE=;
+        b=eaLZdmhy5fQLuzsuJQ3S7xxCGtxGSSib2FIkCKEZkKwhPdUPIlnlI0W3ZyzBfcocyL
+         1ihEH/H7+offNfnE9ZalORvwSJ2W4zFi84YDr++VpGC0Spzs+iQRkpPWLRRz3bp1p9iV
+         SD+2xI9RoKQxP7QUrbLkO3qzSM9Y4aRMl41CjmWKGKNyX2h8sw0aPtLg6s8EFLYkGfNI
+         gkOF5Hy51BQrDNJr8IUTcmIHYolV/Eyf2rBXLgE1G8AU31zvns56r0qoZYz9bIPS1MVi
+         l1eWv0o/j3yuCgA7ntNWvDZnuceQG7+IPzM+ofBS7upvnA4bWoCkqD4r3cAhf09Y0cIt
+         /81g==
+X-Gm-Message-State: AOAM533ZDq82dJKTK61unQYvTpdVQdeolFDLKn000jqcRX7i7kEBHVHa
+        VxXFoNn113bm69s2e/r29NCGUngAlg==
+X-Google-Smtp-Source: ABdhPJzB2x7at4icGFJD7RlJ7Sq0hMlvfSA5yEvzkDFqQskPpqfw3eKcRmeQ2o2qM5u9D2xSis2A2w==
+X-Received: by 2002:aca:30d2:: with SMTP id w201mr24774oiw.8.1605540440695;
+        Mon, 16 Nov 2020 07:27:20 -0800 (PST)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t6sm4816069ooo.22.2020.11.16.07.27.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Nov 2020 07:27:19 -0800 (PST)
+Received: (nullmailer pid 1678651 invoked by uid 1000);
+        Mon, 16 Nov 2020 15:27:18 -0000
+Date:   Mon, 16 Nov 2020 09:27:18 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dongjiu Geng <gengdongjiu@huawei.com>
+Cc:     vkoul@kernel.org, dan.j.williams@intel.com, p.zabel@pengutronix.de,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt: bindings: dma: Add DT bindings for HiSilicon
+ Hiedma Controller
+Message-ID: <20201116152718.GA1646380@bogus>
+References: <20201114003440.36458-1-gengdongjiu@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201114211837.GB12197@araj-mobl1.jf.intel.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20201114003440.36458-1-gengdongjiu@huawei.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sat, Nov 14, 2020 at 01:18:37PM -0800, Raj, Ashok wrote:
-> On Sat, Nov 14, 2020 at 10:34:30AM +0000, Christoph Hellwig wrote:
-> > On Thu, Nov 12, 2020 at 11:42:46PM +0100, Thomas Gleixner wrote:
-> > > DMI vendor name is pretty good final check when the bit is 0. The
-> > > strings I'm aware of are:
-> > > 
-> > > QEMU, Bochs, KVM, Xen, VMware, VMW, VMware Inc., innotek GmbH, Oracle
-> > > Corporation, Parallels, BHYVE, Microsoft Corporation
-> > > 
-> > > which is not complete but better than nothing ;)
-> > 
-> > Which is why I really think we need explicit opt-ins for "native"
-> > SIOV handling and for paravirtualized SIOV handling, with the kernel
-> > not offering support at all without either or a manual override on
-> > the command line.
+On Sat, Nov 14, 2020 at 12:34:39AM +0000, Dongjiu Geng wrote:
+> The Hiedma Controller v310 Provides eight DMA channels, each
+> channel can be configured for one-way transfer. The data can
+> be transferred in 8-bit, 16-bit, 32-bit, or 64-bit mode. This
+> documentation describes DT bindings of this controller.
 > 
-> opt-in by device or kernel? The way we are planning to support this is:
+> Signed-off-by: Dongjiu Geng <gengdongjiu@huawei.com>
+> ---
+>  .../bindings/dma/hisilicon,hiedmacv310.yaml   | 80 +++++++++++++++++++
+>  1 file changed, 80 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/hisilicon,hiedmacv310.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/hisilicon,hiedmacv310.yaml b/Documentation/devicetree/bindings/dma/hisilicon,hiedmacv310.yaml
+> new file mode 100644
+> index 000000000000..c04603316b40
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/hisilicon,hiedmacv310.yaml
+> @@ -0,0 +1,80 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
 
-opt-in by the platform.  Not sure if an ACPI interface or something else
-would be best.  But basically the kernel needs to be able to query:
+Dual license new bindings. GPL-2.0-only OR BSD-2-Clause
 
-Does this platform claim to support IMS, and if yes how.  If there is no
-answer we need assume the platform doesn't.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/hisilicon,hiedmacv310.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: HiSilicon Hiedma Controller v310 Device Tree Bindings
+> +
+> +description: |
+> +  These bindings describe the DMA engine included in the HiSilicon Hiedma
+> +  Controller v310 Device.
+> +
+> +maintainers:
+> +  - Dongjiu Geng <gengdongjiu@huawei.com>
+> +
+> +allOf:
+> +  - $ref: "dma-controller.yaml#"
+> +
+> +properties:
+> +  "#dma-cells":
+> +    const: 2
+> +
+> +  compatible:
+> +    const: hisilicon,hiedmacv310_n
+
+s/_/-/
+
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: apb clock
+> +      - description: axi clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: apb_pclk
+> +      - const: axi_aclk
+> +
+> +required:
+> +  - "#dma-cells"
+> +  - "#clock-cells"
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+
+> +  - resets
+> +  - reset-names
+
+Not documented.
+
+> +  - dma-requests
+> +  - dma-channels
+> +  - devid
+
+What's this? It's not defined. If a device index, we don't do device 
+indices in DT.
+
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/hi3559av100-clock.h>
+> +
+> +    dma: dma-controller@10040000 {
+> +      compatible = "hisilicon,hiedmacv310_n";
+> +      reg = <0x10040000 0x1000>;
+> +      misc_regmap = <&misc_ctrl>;
+> +      misc_ctrl_base = <0x144>;
+> +      interrupts = <0 82 4>;
+> +      clocks = <&clock HI3559AV100_EDMAC1_CLK>, <&clock HI3559AV100_EDMAC1_AXICLK>;
+> +      clock-names = "apb_pclk", "axi_aclk";
+> +      #clock-cells = <2>;
+> +      resets = <&clock 0x16c 7>;
+> +      reset-names = "dma-reset";
+> +      dma-requests = <32>;
+> +      dma-channels = <8>;
+> +      devid = <1>;
+> +      #dma-cells = <2>;
+> +    };
+> +
+> +...
+> -- 
+> 2.17.1
+> 

@@ -2,59 +2,80 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC1FE2B4C52
-	for <lists+dmaengine@lfdr.de>; Mon, 16 Nov 2020 18:13:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 589142B4C64
+	for <lists+dmaengine@lfdr.de>; Mon, 16 Nov 2020 18:16:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731072AbgKPRMp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 16 Nov 2020 12:12:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40832 "EHLO mail.kernel.org"
+        id S1730775AbgKPROu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 16 Nov 2020 12:14:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731047AbgKPRMo (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 16 Nov 2020 12:12:44 -0500
+        id S1731793AbgKPROt (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 16 Nov 2020 12:14:49 -0500
 Received: from localhost (unknown [122.171.203.152])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 687A120797;
-        Mon, 16 Nov 2020 17:12:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21FF720797;
+        Mon, 16 Nov 2020 17:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605546764;
-        bh=C+QJikeAlLIV6+DknTEUchTCebYLLhgex24/4Sa1/mk=;
+        s=default; t=1605546889;
+        bh=Do6LikazT2GPRsF4PjZgIWIMXnzhA/SSk92JoCfMLG8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Xd92LMg4sb5lNB9U2s8QyLQwfDwvDYKwoj02d6R5nJJG6smh/WbEUZKf5U4gEjh8w
-         u1HCFAw4F7GBBwQegG9gvlLj1kSPVFoqwY2Vp6k3OlxP4gYfUPU3aY57VdVYzTxEzR
-         XVmUKpGbDxbrVGlUJBIx4D/Y4TRvGq0cGO9RQgeU=
-Date:   Mon, 16 Nov 2020 22:42:39 +0530
+        b=V/PPfYy+fVraJmzX0RDzARI4yPpVSeu+Oy83cU0rFyWc1/B/nhWFK+gECtLr1C7qm
+         TVyt6NwFmgV6JALFNsNP7bVzYB5hOBpqbTAVZuRdhYQpzzpgSEOCT8I1l97RSEkOe/
+         sLWhP2Kc80FumzzaasgjvK+D7S16ddfq+oLViDRA=
+Date:   Mon, 16 Nov 2020 22:44:44 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Maciej Sosnowski <maciej.sosnowski@intel.com>,
+To:     Sugar Zhang <sugar.zhang@rock-chips.com>
+Cc:     linux-rockchip@lists.infradead.org,
         Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-janitors@vger.kernel.org, linux-safety@lists.elisa.tech,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: ioatdma: remove unused function missed during
- dma_v2 removal
-Message-ID: <20201116171239.GX7499@vkoul-mobl>
-References: <20201113081248.26416-1-lukas.bulwahn@gmail.com>
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: pl330: _prep_dma_memcpy: Fix wrong burst size
+Message-ID: <20201116171444.GA50232@vkoul-mobl>
+References: <1605326106-55681-1-git-send-email-sugar.zhang@rock-chips.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201113081248.26416-1-lukas.bulwahn@gmail.com>
+In-Reply-To: <1605326106-55681-1-git-send-email-sugar.zhang@rock-chips.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 13-11-20, 09:12, Lukas Bulwahn wrote:
-> Commit 7f832645d0e5 ("dmaengine: ioatdma: remove ioatdma v2 registration")
-> missed to remove dca2_tag_map_valid() during its removal. Hence, since
-> then, dca2_tag_map_valid() is unused and make CC=clang W=1 warns:
+On 14-11-20, 11:55, Sugar Zhang wrote:
+> Actually, burst size is equal to '1 << desc->rqcfg.brst_size'.
+> we should use burst size, not desc->rqcfg.brst_size.
 > 
->   drivers/dma/ioat/dca.c:44:19:
->     warning: unused function 'dca2_tag_map_valid' [-Wunused-function]
+> dma memcpy performance on Rockchip RV1126
+> @ 1512MHz A7, 1056MHz LPDDR3, 200MHz DMA:
 > 
-> So, remove this unused function and get rid of a -Wused-function warning.
+> dmatest:
+> 
+> /# echo dma0chan0 > /sys/module/dmatest/parameters/channel
+> /# echo 4194304 > /sys/module/dmatest/parameters/test_buf_size
+> /# echo 8 > /sys/module/dmatest/parameters/iterations
+> /# echo y > /sys/module/dmatest/parameters/norandom
+> /# echo y > /sys/module/dmatest/parameters/verbose
+> /# echo 1 > /sys/module/dmatest/parameters/run
+> 
+> dmatest: dma0chan0-copy0: result #1: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
+> dmatest: dma0chan0-copy0: result #2: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
+> dmatest: dma0chan0-copy0: result #3: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
+> dmatest: dma0chan0-copy0: result #4: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
+> dmatest: dma0chan0-copy0: result #5: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
+> dmatest: dma0chan0-copy0: result #6: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
+> dmatest: dma0chan0-copy0: result #7: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
+> dmatest: dma0chan0-copy0: result #8: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
+> 
+> Before:
+> 
+>   dmatest: dma0chan0-copy0: summary 8 tests, 0 failures 48 iops 200338 KB/s (0)
+> 
+> After this patch:
+> 
+>   dmatest: dma0chan0-copy0: summary 8 tests, 0 failures 179 iops 734873 KB/s (0)
+> 
+> After this patch and increase dma clk to 400MHz:
+> 
+>   dmatest: dma0chan0-copy0: summary 8 tests, 0 failures 259 iops 1062929 KB/s (0)
 
 Applied, thanks
 

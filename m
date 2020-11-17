@@ -2,40 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F9622B5D99
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Nov 2020 11:59:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F5852B5D87
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Nov 2020 11:57:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgKQK4e (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 17 Nov 2020 05:56:34 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59658 "EHLO
+        id S1728099AbgKQK4g (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 17 Nov 2020 05:56:36 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:59664 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727347AbgKQK4d (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 17 Nov 2020 05:56:33 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0AHAuSLj019551;
-        Tue, 17 Nov 2020 04:56:28 -0600
+        with ESMTP id S1727347AbgKQK4g (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 17 Nov 2020 05:56:36 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0AHAuVI2019558;
+        Tue, 17 Nov 2020 04:56:31 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1605610588;
-        bh=5ridk5920UfMB0nCEIpCyF/07n7stscwVpGaO1rQQhA=;
+        s=ti-com-17Q1; t=1605610591;
+        bh=24q5eD4y4xZgELs8UTDdNZFf1mU01Jty7BUIc3+XGk4=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=W1u7Mx1PwsOuT8GyG/xpAz0KvDnKeigyw/WI0qJ88iN2FyC/B9XEDPNHAhJ1+3RIA
-         lNMyvDdGdDLwMqQdM4wZJy0aIIugdjbvWIjnA7AWEq+UnYE1CT8RpANkX7sdzz0PeG
-         8g0XDO4RWicCvykSk2aSrhrPy4fOsvbLUqrlFoj8=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0AHAuSfI010123
+        b=tYW3hLul0fVpDYy1m/RvZ/5ySeiEBG5wvZC6pVfPZhNc61Qh5LO7lwpWll3i5xobv
+         8b82CYGbqXsOXfg4zhsK2zWBbXhigw9pDfrXkM7oWBjmT5BJphU/KHsvNwW27HwlyB
+         n758PNCY3xzROQtVa/Kv2er32eoYKOi0jTOC28uM=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0AHAuVEA005357
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Nov 2020 04:56:28 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 17 Nov 2020 04:56:31 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 17
- Nov 2020 04:56:27 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2020 04:56:30 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 17 Nov 2020 04:56:27 -0600
+ Frontend Transport; Tue, 17 Nov 2020 04:56:30 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0AHAu6tq087311;
-        Tue, 17 Nov 2020 04:56:25 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0AHAu6tr087311;
+        Tue, 17 Nov 2020 04:56:28 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
         <robh+dt@kernel.org>
@@ -44,9 +44,9 @@ CC:     <dan.j.williams@intel.com>, <t-kristo@ti.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <dmaengine@vger.kernel.org>, <vigneshr@ti.com>,
         <grygorii.strashko@ti.com>
-Subject: [PATCH v2 06/19] dmaengine: of-dma: Add support for optional router configuration callback
-Date:   Tue, 17 Nov 2020 12:56:43 +0200
-Message-ID: <20201117105656.5236-7-peter.ujfalusi@ti.com>
+Subject: [PATCH v2 07/19] dmaengine: Add support for per channel coherency handling
+Date:   Tue, 17 Nov 2020 12:56:44 +0200
+Message-ID: <20201117105656.5236-8-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201117105656.5236-1-peter.ujfalusi@ti.com>
 References: <20201117105656.5236-1-peter.ujfalusi@ti.com>
@@ -58,63 +58,60 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Additional configuration for the DMA event router might be needed for a
-channel which can not be done during device_alloc_chan_resources callback
-since the router information is not yet present for the drivers.
+If the DMA device supports per channel coherency configuration (a channel
+can be configured to have coherent or not coherent view) then a single
+device (the DMA controller's device) can not be used for dma_api for all
+channels as channels can have different coherency.
 
-If there is a need for additional configuration for the channel if DMA
-router is in use, then the driver can implement the device_router_config
-callback.
+Introduce custom_dma_mapping flag for the dma_chan and a new helper to get
+the device pointer to be used for dma_api for the given channel.
+
+Client drivers should be updated to be able to support per channel
+coherency by:
+
+- dma_map_single(chan->device->dev, ptr, size, DMA_TO_DEVICE);
++ struct device *dma_dev = dmaengine_get_dma_device(chan);
++
++ dma_map_single(dma_dev, ptr, size, DMA_TO_DEVICE);
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/dma/of-dma.c      | 10 ++++++++++
- include/linux/dmaengine.h |  2 ++
- 2 files changed, 12 insertions(+)
+ include/linux/dmaengine.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
-index 8a4f608904b9..ec00b20ae8e4 100644
---- a/drivers/dma/of-dma.c
-+++ b/drivers/dma/of-dma.c
-@@ -75,8 +75,18 @@ static struct dma_chan *of_dma_router_xlate(struct of_phandle_args *dma_spec,
- 		ofdma->dma_router->route_free(ofdma->dma_router->dev,
- 					      route_data);
- 	} else {
-+		int ret = 0;
-+
- 		chan->router = ofdma->dma_router;
- 		chan->route_data = route_data;
-+
-+		if (chan->device->device_router_config)
-+			ret = chan->device->device_router_config(chan);
-+
-+		if (ret) {
-+			dma_release_channel(chan);
-+			chan = ERR_PTR(ret);
-+		}
- 	}
- 
- 	/*
 diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index dd357a747780..d6197fe875af 100644
+index d6197fe875af..182a1a2e7793 100644
 --- a/include/linux/dmaengine.h
 +++ b/include/linux/dmaengine.h
-@@ -800,6 +800,7 @@ struct dma_filter {
-  *	by tx_status
-  * @device_alloc_chan_resources: allocate resources and return the
-  *	number of allocated descriptors
-+ * @device_router_config: optional callback for DMA router configuration
-  * @device_free_chan_resources: release DMA channel's resources
-  * @device_prep_dma_memcpy: prepares a memcpy operation
-  * @device_prep_dma_xor: prepares a xor operation
-@@ -874,6 +875,7 @@ struct dma_device {
- 	enum dma_residue_granularity residue_granularity;
+@@ -357,11 +357,14 @@ struct dma_chan {
+  * @chan: driver channel device
+  * @device: sysfs device
+  * @dev_id: parent dma_device dev_id
++ * @chan_dma_dev: The channel is using custom/different dma-mapping
++ * compared to the parent dma_device
+  */
+ struct dma_chan_dev {
+ 	struct dma_chan *chan;
+ 	struct device device;
+ 	int dev_id;
++	bool chan_dma_dev;
+ };
  
- 	int (*device_alloc_chan_resources)(struct dma_chan *chan);
-+	int (*device_router_config)(struct dma_chan *chan);
- 	void (*device_free_chan_resources)(struct dma_chan *chan);
- 
- 	struct dma_async_tx_descriptor *(*device_prep_dma_memcpy)(
+ /**
+@@ -1613,4 +1616,13 @@ dmaengine_get_direction_text(enum dma_transfer_direction dir)
+ 		return "invalid";
+ 	}
+ }
++
++static inline struct device *dmaengine_get_dma_device(struct dma_chan *chan)
++{
++	if (chan->dev->chan_dma_dev)
++		return &chan->dev->device;
++
++	return chan->device->dev;
++}
++
+ #endif /* DMAENGINE_H */
 -- 
 Peter
 

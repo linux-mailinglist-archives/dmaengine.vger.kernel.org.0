@@ -2,40 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED0452B5D64
-	for <lists+dmaengine@lfdr.de>; Tue, 17 Nov 2020 11:56:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DE062B5D95
+	for <lists+dmaengine@lfdr.de>; Tue, 17 Nov 2020 11:59:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728011AbgKQK40 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 17 Nov 2020 05:56:26 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59616 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727993AbgKQK4Z (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 17 Nov 2020 05:56:25 -0500
+        id S1728037AbgKQK4b (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 17 Nov 2020 05:56:31 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:34062 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727993AbgKQK43 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 17 Nov 2020 05:56:29 -0500
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0AHAuJPA019540;
-        Tue, 17 Nov 2020 04:56:19 -0600
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0AHAuM4c117205;
+        Tue, 17 Nov 2020 04:56:22 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1605610579;
-        bh=Qm1lw36/mMXKb0+Q2tfyWktKFazIJEYt1QeJaMROv28=;
+        s=ti-com-17Q1; t=1605610582;
+        bh=clrhNW0HKvD5h4sMDEuhMbOQDZdCfb7rL0FInuqE+2c=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=SMRzKQXpVj5wy9T6BX952pP/fQGcXLhqury0w+shuJC3hcWYHUqRdYVEaBnl0KpdB
-         muYnaNU3PMEcLGQZOlai0V+YwcEGUilVMjgxhrmi5jqsMVYtzAwTgo2saCCUxfUX90
-         FcloXYb8gkaODMhCmOc1JTAkHZu/FQBH332Ruq2c=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0AHAuJKL009963
+        b=KBNUOnx8v9DK79Kzxm70fQyEuREgoG/nHBulAthwoBGfNYnIpf67R1RhD0p/GSpwC
+         GrQzSYp623Zl9nVBLLlLA22ic9v3NqbfYs3TmUoaRgQnde1a44HVXRi8MKlxduZJVQ
+         y35YLiOZoKH9iG35Wtl0wBCtLzH4uBus7xKuPu58=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0AHAuMSg010012
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Nov 2020 04:56:19 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 17 Nov 2020 04:56:22 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 17
- Nov 2020 04:56:18 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2020 04:56:21 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 17 Nov 2020 04:56:18 -0600
+ Frontend Transport; Tue, 17 Nov 2020 04:56:21 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0AHAu6tn087311;
-        Tue, 17 Nov 2020 04:56:16 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0AHAu6to087311;
+        Tue, 17 Nov 2020 04:56:19 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
         <robh+dt@kernel.org>
@@ -44,9 +44,9 @@ CC:     <dan.j.williams@intel.com>, <t-kristo@ti.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <dmaengine@vger.kernel.org>, <vigneshr@ti.com>,
         <grygorii.strashko@ti.com>
-Subject: [PATCH v2 03/19] dmaengine: ti: k3-udma: Add support for second resource range from sysfw
-Date:   Tue, 17 Nov 2020 12:56:40 +0200
-Message-ID: <20201117105656.5236-4-peter.ujfalusi@ti.com>
+Subject: [PATCH v2 04/19] dmaengine: ti: k3-udma-glue: Add function to get device pointer for DMA API
+Date:   Tue, 17 Nov 2020 12:56:41 +0200
+Message-ID: <20201117105656.5236-5-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201117105656.5236-1-peter.ujfalusi@ti.com>
 References: <20201117105656.5236-1-peter.ujfalusi@ti.com>
@@ -58,120 +58,97 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Resource allocation via sysfw can use up to two ranges per resource subtype
-to support more complex resource assignment, mainly for DMA channels.
-
-Take the second range also into consideration when setting up the maps for
-available resources.
+Glue layer users should use the device of the DMA for DMA mapping and
+allocations as it is the DMA which accesses to descriptors and buffers,
+not the clients
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/dma/ti/k3-udma.c | 55 ++++++++++++++++++++++------------------
- 1 file changed, 31 insertions(+), 24 deletions(-)
+ drivers/dma/ti/k3-udma-glue.c    | 14 ++++++++++++++
+ drivers/dma/ti/k3-udma-private.c |  6 ++++++
+ drivers/dma/ti/k3-udma.h         |  1 +
+ include/linux/dma/k3-udma-glue.h |  4 ++++
+ 4 files changed, 25 insertions(+)
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index eee43757e774..b89afa602532 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -3174,12 +3174,22 @@ static int udma_get_mmrs(struct platform_device *pdev, struct udma_dev *ud)
- 	return 0;
+diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
+index dfb65e382ab9..29d1524d1916 100644
+--- a/drivers/dma/ti/k3-udma-glue.c
++++ b/drivers/dma/ti/k3-udma-glue.c
+@@ -493,6 +493,13 @@ int k3_udma_glue_tx_get_irq(struct k3_udma_glue_tx_channel *tx_chn)
  }
+ EXPORT_SYMBOL_GPL(k3_udma_glue_tx_get_irq);
  
-+static void udma_mark_resource_ranges(struct udma_dev *ud, unsigned long *map,
-+				      struct ti_sci_resource_desc *rm_desc,
-+				      char *name)
++struct device *
++	k3_udma_glue_tx_get_dma_device(struct k3_udma_glue_tx_channel *tx_chn)
 +{
-+	bitmap_clear(map, rm_desc->start, rm_desc->num);
-+	bitmap_clear(map, rm_desc->start_sec, rm_desc->num_sec);
-+	dev_dbg(ud->dev, "ti_sci resource range for %s: %d:%d | %d:%d\n", name,
-+		rm_desc->start, rm_desc->num, rm_desc->start_sec,
-+		rm_desc->num_sec);
++	return xudma_get_device(tx_chn->common.udmax);
 +}
++EXPORT_SYMBOL_GPL(k3_udma_glue_tx_get_dma_device);
 +
- static int udma_setup_resources(struct udma_dev *ud)
+ static int k3_udma_glue_cfg_rx_chn(struct k3_udma_glue_rx_channel *rx_chn)
  {
- 	struct device *dev = ud->dev;
- 	int ch_count, ret, i, j;
- 	u32 cap2, cap3;
--	struct ti_sci_resource_desc *rm_desc;
- 	struct ti_sci_resource *rm_res, irq_res;
- 	struct udma_tisci_rm *tisci_rm = &ud->tisci_rm;
- 	static const char * const range_names[] = { "ti,sci-rm-range-tchan",
-@@ -3264,13 +3274,9 @@ static int udma_setup_resources(struct udma_dev *ud)
- 		bitmap_zero(ud->tchan_map, ud->tchan_cnt);
- 	} else {
- 		bitmap_fill(ud->tchan_map, ud->tchan_cnt);
--		for (i = 0; i < rm_res->sets; i++) {
--			rm_desc = &rm_res->desc[i];
--			bitmap_clear(ud->tchan_map, rm_desc->start,
--				     rm_desc->num);
--			dev_dbg(dev, "ti-sci-res: tchan: %d:%d\n",
--				rm_desc->start, rm_desc->num);
--		}
-+		for (i = 0; i < rm_res->sets; i++)
-+			udma_mark_resource_ranges(ud, ud->tchan_map,
-+						  &rm_res->desc[i], "tchan");
- 	}
- 	irq_res.sets = rm_res->sets;
+ 	const struct udma_tisci_rm *tisci_rm = rx_chn->common.tisci_rm;
+@@ -1201,3 +1208,10 @@ int k3_udma_glue_rx_get_irq(struct k3_udma_glue_rx_channel *rx_chn,
+ 	return flow->virq;
+ }
+ EXPORT_SYMBOL_GPL(k3_udma_glue_rx_get_irq);
++
++struct device *
++	k3_udma_glue_rx_get_dma_device(struct k3_udma_glue_rx_channel *rx_chn)
++{
++	return xudma_get_device(rx_chn->common.udmax);
++}
++EXPORT_SYMBOL_GPL(k3_udma_glue_rx_get_dma_device);
+diff --git a/drivers/dma/ti/k3-udma-private.c b/drivers/dma/ti/k3-udma-private.c
+index 8563a392f30b..c9fb1d832581 100644
+--- a/drivers/dma/ti/k3-udma-private.c
++++ b/drivers/dma/ti/k3-udma-private.c
+@@ -50,6 +50,12 @@ struct udma_dev *of_xudma_dev_get(struct device_node *np, const char *property)
+ }
+ EXPORT_SYMBOL(of_xudma_dev_get);
  
-@@ -3280,13 +3286,9 @@ static int udma_setup_resources(struct udma_dev *ud)
- 		bitmap_zero(ud->rchan_map, ud->rchan_cnt);
- 	} else {
- 		bitmap_fill(ud->rchan_map, ud->rchan_cnt);
--		for (i = 0; i < rm_res->sets; i++) {
--			rm_desc = &rm_res->desc[i];
--			bitmap_clear(ud->rchan_map, rm_desc->start,
--				     rm_desc->num);
--			dev_dbg(dev, "ti-sci-res: rchan: %d:%d\n",
--				rm_desc->start, rm_desc->num);
--		}
-+		for (i = 0; i < rm_res->sets; i++)
-+			udma_mark_resource_ranges(ud, ud->rchan_map,
-+						  &rm_res->desc[i], "rchan");
- 	}
++struct device *xudma_get_device(struct udma_dev *ud)
++{
++	return ud->dev;
++}
++EXPORT_SYMBOL(xudma_get_device);
++
+ u32 xudma_dev_get_psil_base(struct udma_dev *ud)
+ {
+ 	return ud->psil_base;
+diff --git a/drivers/dma/ti/k3-udma.h b/drivers/dma/ti/k3-udma.h
+index 09c4529e013d..d1cace0cb43b 100644
+--- a/drivers/dma/ti/k3-udma.h
++++ b/drivers/dma/ti/k3-udma.h
+@@ -112,6 +112,7 @@ int xudma_navss_psil_unpair(struct udma_dev *ud, u32 src_thread,
+ 			    u32 dst_thread);
  
- 	irq_res.sets += rm_res->sets;
-@@ -3295,12 +3297,21 @@ static int udma_setup_resources(struct udma_dev *ud)
- 	for (i = 0; i < rm_res->sets; i++) {
- 		irq_res.desc[i].start = rm_res->desc[i].start;
- 		irq_res.desc[i].num = rm_res->desc[i].num;
-+		irq_res.desc[i].start_sec = rm_res->desc[i].start_sec;
-+		irq_res.desc[i].num_sec = rm_res->desc[i].num_sec;
- 	}
- 	rm_res = tisci_rm->rm_ranges[RM_RANGE_RCHAN];
- 	for (j = 0; j < rm_res->sets; j++, i++) {
--		irq_res.desc[i].start = rm_res->desc[j].start +
-+		if (rm_res->desc[j].num) {
-+			irq_res.desc[i].start = rm_res->desc[j].start +
- 					ud->soc_data->rchan_oes_offset;
--		irq_res.desc[i].num = rm_res->desc[j].num;
-+			irq_res.desc[i].num = rm_res->desc[j].num;
-+		}
-+		if (rm_res->desc[j].num_sec) {
-+			irq_res.desc[i].start_sec = rm_res->desc[j].start_sec +
-+					ud->soc_data->rchan_oes_offset;
-+			irq_res.desc[i].num_sec = rm_res->desc[j].num_sec;
-+		}
- 	}
- 	ret = ti_sci_inta_msi_domain_alloc_irqs(ud->dev, &irq_res);
- 	kfree(irq_res.desc);
-@@ -3316,13 +3327,9 @@ static int udma_setup_resources(struct udma_dev *ud)
- 		bitmap_clear(ud->rflow_gp_map, ud->rchan_cnt,
- 			     ud->rflow_cnt - ud->rchan_cnt);
- 	} else {
--		for (i = 0; i < rm_res->sets; i++) {
--			rm_desc = &rm_res->desc[i];
--			bitmap_clear(ud->rflow_gp_map, rm_desc->start,
--				     rm_desc->num);
--			dev_dbg(dev, "ti-sci-res: rflow: %d:%d\n",
--				rm_desc->start, rm_desc->num);
--		}
-+		for (i = 0; i < rm_res->sets; i++)
-+			udma_mark_resource_ranges(ud, ud->rflow_gp_map,
-+						  &rm_res->desc[i], "gp-rflow");
- 	}
+ struct udma_dev *of_xudma_dev_get(struct device_node *np, const char *property);
++struct device *xudma_get_device(struct udma_dev *ud);
+ void xudma_dev_put(struct udma_dev *ud);
+ u32 xudma_dev_get_psil_base(struct udma_dev *ud);
+ struct udma_tisci_rm *xudma_dev_get_tisci_rm(struct udma_dev *ud);
+diff --git a/include/linux/dma/k3-udma-glue.h b/include/linux/dma/k3-udma-glue.h
+index 5eb34ad973a7..d7c12f31377c 100644
+--- a/include/linux/dma/k3-udma-glue.h
++++ b/include/linux/dma/k3-udma-glue.h
+@@ -41,6 +41,8 @@ void k3_udma_glue_reset_tx_chn(struct k3_udma_glue_tx_channel *tx_chn,
+ u32 k3_udma_glue_tx_get_hdesc_size(struct k3_udma_glue_tx_channel *tx_chn);
+ u32 k3_udma_glue_tx_get_txcq_id(struct k3_udma_glue_tx_channel *tx_chn);
+ int k3_udma_glue_tx_get_irq(struct k3_udma_glue_tx_channel *tx_chn);
++struct device *
++	k3_udma_glue_tx_get_dma_device(struct k3_udma_glue_tx_channel *tx_chn);
  
- 	ch_count -= bitmap_weight(ud->tchan_map, ud->tchan_cnt);
+ enum {
+ 	K3_UDMA_GLUE_SRC_TAG_LO_KEEP = 0,
+@@ -130,5 +132,7 @@ int k3_udma_glue_rx_flow_enable(struct k3_udma_glue_rx_channel *rx_chn,
+ 				u32 flow_idx);
+ int k3_udma_glue_rx_flow_disable(struct k3_udma_glue_rx_channel *rx_chn,
+ 				 u32 flow_idx);
++struct device *
++	k3_udma_glue_rx_get_dma_device(struct k3_udma_glue_rx_channel *rx_chn);
+ 
+ #endif /* K3_UDMA_GLUE_H_ */
 -- 
 Peter
 

@@ -2,56 +2,54 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01E222B7BEA
-	for <lists+dmaengine@lfdr.de>; Wed, 18 Nov 2020 11:59:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DA4B2B7BF5
+	for <lists+dmaengine@lfdr.de>; Wed, 18 Nov 2020 11:59:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgKRK4w (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 18 Nov 2020 05:56:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56130 "EHLO mail.kernel.org"
+        id S1725970AbgKRK7U (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 18 Nov 2020 05:59:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726424AbgKRK4w (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 18 Nov 2020 05:56:52 -0500
+        id S1725446AbgKRK7T (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 18 Nov 2020 05:59:19 -0500
 Received: from localhost (unknown [122.171.203.152])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8007B21D7E;
-        Wed, 18 Nov 2020 10:56:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 318FB221FB;
+        Wed, 18 Nov 2020 10:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605697011;
-        bh=Ur8csfkvHK98xjlK0nH3wljSecIkUkEQFfNFT13p7nA=;
+        s=default; t=1605697159;
+        bh=ZpfavT36F0f47AvlCCvAzoFPIHcMHHWJELItBg0XM4A=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vbMZ55JQg5XPBtaNE4yCoNCEic/GZlUhRbs6Kx0zQSrueSGwKTsseQR9WnXLpW1VV
-         aHuQSJRtA6MKzAAgFrNr6xigWu9Nx32W4kCnpcWE1MpIULxFEPcmz1KABGOw18JNij
-         RH56/EjUyf2HOJjXPxjjFpaNJNS2Xs9GwZ8E+vbA=
-Date:   Wed, 18 Nov 2020 16:26:47 +0530
+        b=le7o9svlhciRZg9yMw/kElDk+Y/oVG9O6IIdDeP9idL8+DPgVc2J+7ImYHeLOjzfT
+         A64viIGANaoJ65x7I0ZazQf6XRo2M2NZi1vkLSbNtf0XpAaywAbv7IQEAXqkIWf0t2
+         ieyAfnrJyQbyQjK0khlFfycCctiRoV6ZVzDT0TiM=
+Date:   Wed, 18 Nov 2020 16:29:14 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     Zubair.Kakakhel@imgtec.com, paul@crapouillou.net,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: Re: [PATCH RESEND 0/2] Add dmaengine bindings for the JZ4775 and the
- X2000 SoCs.
-Message-ID: <20201118105647.GN50232@vkoul-mobl>
-References: <20201107122016.89859-1-zhouyanjie@wanyeetech.com>
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     tiny.windzz@gmail.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [RESEND PATCH 05/19] dmaengine: sun6i: Add support for A100 DMA
+Message-ID: <20201118105914.GO50232@vkoul-mobl>
+References: <cover.1604988979.git.frank@allwinnertech.com>
+ <719852c6a9a597bd2e82d01a268ca02b9dee826c.1604988979.git.frank@allwinnertech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201107122016.89859-1-zhouyanjie@wanyeetech.com>
+In-Reply-To: <719852c6a9a597bd2e82d01a268ca02b9dee826c.1604988979.git.frank@allwinnertech.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 07-11-20, 20:20, 周琰杰 (Zhou Yanjie) wrote:
-> Add the dmaengine bindings for the JZ4775 SoC and the X2000 SoC from Ingenic.
+On 10-11-20, 14:28, Frank Lee wrote:
+> From: Yangtao Li <frank@allwinnertech.com>
 > 
-> 周琰杰 (Zhou Yanjie) (2):
->   dt-bindings: dmaengine: Add JZ4775 bindings.
->   dt-bindings: dmaengine: Add X2000 bindings.
+> The dma of a100 is similar to h6, with some minor changes to
+> support greater addressing capabilities.
+> 
+> Add support for it.
 
 Applied, thanks
 

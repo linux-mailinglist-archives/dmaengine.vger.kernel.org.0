@@ -2,36 +2,35 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB7602C4371
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Nov 2020 16:39:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72BB82C43F8
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Nov 2020 16:44:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731258AbgKYPiA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 25 Nov 2020 10:38:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56156 "EHLO mail.kernel.org"
+        id S1731442AbgKYPjb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 25 Nov 2020 10:39:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731253AbgKYPiA (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 25 Nov 2020 10:38:00 -0500
+        id S1731286AbgKYPiE (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 25 Nov 2020 10:38:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7A2622202;
-        Wed, 25 Nov 2020 15:37:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 828B92220B;
+        Wed, 25 Nov 2020 15:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606318679;
-        bh=2nwNrLmm7W8UeBXq9rKMa2tSjQUwdqpr7Q1XLY3GlPU=;
+        s=default; t=1606318683;
+        bh=tYfM9353ynPnCSgC24c73sUw9VqoNZX7YeATcD4fYK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NUihzZ8JxySU3Q5vWPrRL8dZnkWLm1DMk8dG5Que8RpejV+hikHdWEu44nEV8Tr30
-         C4FqE3Ob7NtAp42lLvir1MXaSEB02DakvoXexVehTvefNZqvOzJgCWW+7780tH25cI
-         e4wEkcxuhpR5UexEzYniiaOFRnLEhPmOLJeETC+4=
+        b=kPei4biwCKpjQSRlAl/gM2pozl894Hq9Vc/6ygne6cSkyj0HojSRvb6Qg5Z3olo4+
+         swKg1RrKhRKfMSesV/s4ndhTVKDtbmxXr+Hy1oOSEhrdOnqDIih8HDusTndV+24PMx
+         4ohAiM67kxs36+uke9BUFFlr202Pmmz2rgiRTVzM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Ferland <ferlandm@amotus.ca>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+Cc:     Sugar Zhang <sugar.zhang@rock-chips.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 04/10] dmaengine: xilinx_dma: use readl_poll_timeout_atomic variant
-Date:   Wed, 25 Nov 2020 10:37:47 -0500
-Message-Id: <20201125153753.810973-4-sashal@kernel.org>
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 07/10] dmaengine: pl330: _prep_dma_memcpy: Fix wrong burst size
+Date:   Wed, 25 Nov 2020 10:37:50 -0500
+Message-Id: <20201125153753.810973-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20201125153753.810973-1-sashal@kernel.org>
 References: <20201125153753.810973-1-sashal@kernel.org>
@@ -43,40 +42,67 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Marc Ferland <ferlandm@amotus.ca>
+From: Sugar Zhang <sugar.zhang@rock-chips.com>
 
-[ Upstream commit 0ba2df09f1500d3f27398a3382b86d39c3e6abe2 ]
+[ Upstream commit e773ca7da8beeca7f17fe4c9d1284a2b66839cc1 ]
 
-The xilinx_dma_poll_timeout macro is sometimes called while holding a
-spinlock (see xilinx_dma_issue_pending() for an example) this means we
-shouldn't sleep when polling the dma channel registers. To address it
-in xilinx poll timeout macro use readl_poll_timeout_atomic instead of
-readl_poll_timeout variant.
+Actually, burst size is equal to '1 << desc->rqcfg.brst_size'.
+we should use burst size, not desc->rqcfg.brst_size.
 
-Signed-off-by: Marc Ferland <ferlandm@amotus.ca>
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Link: https://lore.kernel.org/r/1604473206-32573-2-git-send-email-radhey.shyam.pandey@xilinx.com
+dma memcpy performance on Rockchip RV1126
+@ 1512MHz A7, 1056MHz LPDDR3, 200MHz DMA:
+
+dmatest:
+
+/# echo dma0chan0 > /sys/module/dmatest/parameters/channel
+/# echo 4194304 > /sys/module/dmatest/parameters/test_buf_size
+/# echo 8 > /sys/module/dmatest/parameters/iterations
+/# echo y > /sys/module/dmatest/parameters/norandom
+/# echo y > /sys/module/dmatest/parameters/verbose
+/# echo 1 > /sys/module/dmatest/parameters/run
+
+dmatest: dma0chan0-copy0: result #1: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
+dmatest: dma0chan0-copy0: result #2: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
+dmatest: dma0chan0-copy0: result #3: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
+dmatest: dma0chan0-copy0: result #4: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
+dmatest: dma0chan0-copy0: result #5: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
+dmatest: dma0chan0-copy0: result #6: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
+dmatest: dma0chan0-copy0: result #7: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
+dmatest: dma0chan0-copy0: result #8: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
+
+Before:
+
+  dmatest: dma0chan0-copy0: summary 8 tests, 0 failures 48 iops 200338 KB/s (0)
+
+After this patch:
+
+  dmatest: dma0chan0-copy0: summary 8 tests, 0 failures 179 iops 734873 KB/s (0)
+
+After this patch and increase dma clk to 400MHz:
+
+  dmatest: dma0chan0-copy0: summary 8 tests, 0 failures 259 iops 1062929 KB/s (0)
+
+Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+Link: https://lore.kernel.org/r/1605326106-55681-1-git-send-email-sugar.zhang@rock-chips.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/xilinx/xilinx_dma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/pl330.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index cd271f7826051..ef99ef0bb1ca2 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -420,8 +420,8 @@ struct xilinx_dma_device {
- #define to_dma_tx_descriptor(tx) \
- 	container_of(tx, struct xilinx_dma_tx_descriptor, async_tx)
- #define xilinx_dma_poll_timeout(chan, reg, val, cond, delay_us, timeout_us) \
--	readl_poll_timeout(chan->xdev->regs + chan->ctrl_offset + reg, val, \
--			   cond, delay_us, timeout_us)
-+	readl_poll_timeout_atomic(chan->xdev->regs + chan->ctrl_offset + reg, \
-+				  val, cond, delay_us, timeout_us)
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index 16c08846ea0e1..f5a9bb1231882 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -2682,7 +2682,7 @@ pl330_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dst,
+ 	 * If burst size is smaller than bus width then make sure we only
+ 	 * transfer one at a time to avoid a burst stradling an MFIFO entry.
+ 	 */
+-	if (desc->rqcfg.brst_size * 8 < pl330->pcfg.data_bus_width)
++	if (burst * 8 < pl330->pcfg.data_bus_width)
+ 		desc->rqcfg.brst_len = 1;
  
- /* IO accessors */
- static inline u32 dma_read(struct xilinx_dma_chan *chan, u32 reg)
+ 	desc->bytes_requested = len;
 -- 
 2.27.0
 

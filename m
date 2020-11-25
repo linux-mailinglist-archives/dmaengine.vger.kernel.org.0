@@ -2,107 +2,68 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B82852C4387
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Nov 2020 16:39:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A07C22C48A2
+	for <lists+dmaengine@lfdr.de>; Wed, 25 Nov 2020 20:42:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731392AbgKYPiS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 25 Nov 2020 10:38:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731385AbgKYPiS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 25 Nov 2020 10:38:18 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D6EC221F9;
-        Wed, 25 Nov 2020 15:38:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606318697;
-        bh=7gaxxhkF6cavNJ0bQcNPchk3EjLHyIoWfpNPX2DkjjA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yN87BX4qn3vDWj1cTMJDPFqxfpxOLIXvj3fijqqzJDuLgbW/u+ZICi2JRZnnAuh87
-         9CVffDWRKZUJkLzA7osPIqLT0dy8ubMLA77sWRSerA83WTLGHqO1SA+BctnfkAXXun
-         1lIASfg+ghqkA4fKlo/b3Zvfq0IENLWWAz+bdS44=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sugar Zhang <sugar.zhang@rock-chips.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 6/8] dmaengine: pl330: _prep_dma_memcpy: Fix wrong burst size
-Date:   Wed, 25 Nov 2020 10:38:06 -0500
-Message-Id: <20201125153808.811104-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20201125153808.811104-1-sashal@kernel.org>
-References: <20201125153808.811104-1-sashal@kernel.org>
+        id S1728121AbgKYTmW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 25 Nov 2020 14:42:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60768 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727251AbgKYTmV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 Nov 2020 14:42:21 -0500
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82FDAC0613D4;
+        Wed, 25 Nov 2020 11:42:21 -0800 (PST)
+Received: by mail-wm1-x32c.google.com with SMTP id x22so3006279wmc.5;
+        Wed, 25 Nov 2020 11:42:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:from:mime-version:content-transfer-encoding
+         :content-description:subject:to:date:reply-to;
+        bh=MT4M9SX2NqdNuOObXhIV8Gtkw+yoDX+gRyJnh+feBwM=;
+        b=VH5V0MQ2fScdhVhE9LMw+iU6JqoL+rzrFeYO8D8kov8TnusDRfmr5lDJYL0NRwrUoQ
+         +CRyehMisvsHhfDQ7K0kBQEH9wPUWElZvEuGPDq7JpgdLIP7LizYpVzjLvmv9il32boo
+         ClLv8OUiVOI1FH3t3xA2Yb/19QhLPt9Up5NGNS0W6aUIImDjduSLVGoxo89Y01rE8AZi
+         40F/x4CKH1DzitoarWa9mI6pjbNAT4zAikIMtmAD7W5Ys7YpCrjtlOxGE0WTqZN0yhHf
+         9AoIA2wNaxCbIW6Gz8vEXhhczY82dvBslZHmfDhNIC9M+7n/TqYHGIEv4cfxzBXwnDa+
+         lGdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:from:mime-version
+         :content-transfer-encoding:content-description:subject:to:date
+         :reply-to;
+        bh=MT4M9SX2NqdNuOObXhIV8Gtkw+yoDX+gRyJnh+feBwM=;
+        b=R4i3Q7udjw0qdEsmJqrugvaJfbvS7N1+n/L97b/ckUWhYZUnDjuUvPh5YZ4wIWbpzO
+         kJZVFbmaw2b86L6u5RFcIMnrvIc1T+SLt1q1fE4vEYRJOmd5pyWsxmz9khqcRs7u8QLX
+         FhITE4OOibmXvag2JZnflSuy68ZZX1QmiwAHU9mAzauaGdkzX4t5j4/BbJ4mY8cOh5mz
+         4RtsI/Nt14eZzlVqnBnHVrsfUmU0cZGoJ1/UdUZs2xgPPeEJsaIvK9FuKxkM8HBxL/XB
+         bZHW9sIdjv5sgv3KUGkEtyqM4G78c9ZkXjXmS65tCi/js559nk+Vf/JRkjNIxf1Ni0AE
+         2/oQ==
+X-Gm-Message-State: AOAM531RVLVw1GWD1qBw79Q7TsbAXHxvjGQpNGZM9O3cqEGddvGSn3qC
+        Z49dLHu69fhHuI7RJyTMLvs=
+X-Google-Smtp-Source: ABdhPJxC5R4xUGDLraLPgPTRfuGTQqJQCM5emAOrjuG65jf9ZNXn+lLXPTyqihoz6bedrOj9mebfUQ==
+X-Received: by 2002:a1c:3c8a:: with SMTP id j132mr5620286wma.75.1606333340371;
+        Wed, 25 Nov 2020 11:42:20 -0800 (PST)
+Received: from [192.168.1.152] ([102.64.149.89])
+        by smtp.gmail.com with ESMTPSA id u129sm5090970wme.9.2020.11.25.11.42.15
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Wed, 25 Nov 2020 11:42:19 -0800 (PST)
+Message-ID: <5fbeb39b.1c69fb81.a9b8d.bcc9@mx.google.com>
+From:   "Dailborh R." <ritundailb333@gmail.com>
+X-Google-Original-From: Dailborh R.
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Please reply to me
+To:     Recipients <Dailborh@vger.kernel.org>
+Date:   Wed, 25 Nov 2020 19:42:03 +0000
+Reply-To: dailrrob.83@gmail.com
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Sugar Zhang <sugar.zhang@rock-chips.com>
-
-[ Upstream commit e773ca7da8beeca7f17fe4c9d1284a2b66839cc1 ]
-
-Actually, burst size is equal to '1 << desc->rqcfg.brst_size'.
-we should use burst size, not desc->rqcfg.brst_size.
-
-dma memcpy performance on Rockchip RV1126
-@ 1512MHz A7, 1056MHz LPDDR3, 200MHz DMA:
-
-dmatest:
-
-/# echo dma0chan0 > /sys/module/dmatest/parameters/channel
-/# echo 4194304 > /sys/module/dmatest/parameters/test_buf_size
-/# echo 8 > /sys/module/dmatest/parameters/iterations
-/# echo y > /sys/module/dmatest/parameters/norandom
-/# echo y > /sys/module/dmatest/parameters/verbose
-/# echo 1 > /sys/module/dmatest/parameters/run
-
-dmatest: dma0chan0-copy0: result #1: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
-dmatest: dma0chan0-copy0: result #2: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
-dmatest: dma0chan0-copy0: result #3: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
-dmatest: dma0chan0-copy0: result #4: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
-dmatest: dma0chan0-copy0: result #5: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
-dmatest: dma0chan0-copy0: result #6: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
-dmatest: dma0chan0-copy0: result #7: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
-dmatest: dma0chan0-copy0: result #8: 'test passed' with src_off=0x0 dst_off=0x0 len=0x400000
-
-Before:
-
-  dmatest: dma0chan0-copy0: summary 8 tests, 0 failures 48 iops 200338 KB/s (0)
-
-After this patch:
-
-  dmatest: dma0chan0-copy0: summary 8 tests, 0 failures 179 iops 734873 KB/s (0)
-
-After this patch and increase dma clk to 400MHz:
-
-  dmatest: dma0chan0-copy0: summary 8 tests, 0 failures 259 iops 1062929 KB/s (0)
-
-Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
-Link: https://lore.kernel.org/r/1605326106-55681-1-git-send-email-sugar.zhang@rock-chips.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/dma/pl330.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index 9aa57b37381a9..7f66ae1945b24 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -2634,7 +2634,7 @@ pl330_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dst,
- 	 * If burst size is smaller than bus width then make sure we only
- 	 * transfer one at a time to avoid a burst stradling an MFIFO entry.
- 	 */
--	if (desc->rqcfg.brst_size * 8 < pl330->pcfg.data_bus_width)
-+	if (burst * 8 < pl330->pcfg.data_bus_width)
- 		desc->rqcfg.brst_len = 1;
- 
- 	desc->bytes_requested = len;
--- 
-2.27.0
+I'm Dailborh R. from US. I picked interest in you and I would like to know
+more about you and establish relationship with you. i will wait for
+your response. thank you.
 

@@ -2,68 +2,72 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A07C22C48A2
-	for <lists+dmaengine@lfdr.de>; Wed, 25 Nov 2020 20:42:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E14662C4E19
+	for <lists+dmaengine@lfdr.de>; Thu, 26 Nov 2020 05:52:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgKYTmW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 25 Nov 2020 14:42:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60768 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727251AbgKYTmV (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 25 Nov 2020 14:42:21 -0500
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82FDAC0613D4;
-        Wed, 25 Nov 2020 11:42:21 -0800 (PST)
-Received: by mail-wm1-x32c.google.com with SMTP id x22so3006279wmc.5;
-        Wed, 25 Nov 2020 11:42:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:from:mime-version:content-transfer-encoding
-         :content-description:subject:to:date:reply-to;
-        bh=MT4M9SX2NqdNuOObXhIV8Gtkw+yoDX+gRyJnh+feBwM=;
-        b=VH5V0MQ2fScdhVhE9LMw+iU6JqoL+rzrFeYO8D8kov8TnusDRfmr5lDJYL0NRwrUoQ
-         +CRyehMisvsHhfDQ7K0kBQEH9wPUWElZvEuGPDq7JpgdLIP7LizYpVzjLvmv9il32boo
-         ClLv8OUiVOI1FH3t3xA2Yb/19QhLPt9Up5NGNS0W6aUIImDjduSLVGoxo89Y01rE8AZi
-         40F/x4CKH1DzitoarWa9mI6pjbNAT4zAikIMtmAD7W5Ys7YpCrjtlOxGE0WTqZN0yhHf
-         9AoIA2wNaxCbIW6Gz8vEXhhczY82dvBslZHmfDhNIC9M+7n/TqYHGIEv4cfxzBXwnDa+
-         lGdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:from:mime-version
-         :content-transfer-encoding:content-description:subject:to:date
-         :reply-to;
-        bh=MT4M9SX2NqdNuOObXhIV8Gtkw+yoDX+gRyJnh+feBwM=;
-        b=R4i3Q7udjw0qdEsmJqrugvaJfbvS7N1+n/L97b/ckUWhYZUnDjuUvPh5YZ4wIWbpzO
-         kJZVFbmaw2b86L6u5RFcIMnrvIc1T+SLt1q1fE4vEYRJOmd5pyWsxmz9khqcRs7u8QLX
-         FhITE4OOibmXvag2JZnflSuy68ZZX1QmiwAHU9mAzauaGdkzX4t5j4/BbJ4mY8cOh5mz
-         4RtsI/Nt14eZzlVqnBnHVrsfUmU0cZGoJ1/UdUZs2xgPPeEJsaIvK9FuKxkM8HBxL/XB
-         bZHW9sIdjv5sgv3KUGkEtyqM4G78c9ZkXjXmS65tCi/js559nk+Vf/JRkjNIxf1Ni0AE
-         2/oQ==
-X-Gm-Message-State: AOAM531RVLVw1GWD1qBw79Q7TsbAXHxvjGQpNGZM9O3cqEGddvGSn3qC
-        Z49dLHu69fhHuI7RJyTMLvs=
-X-Google-Smtp-Source: ABdhPJxC5R4xUGDLraLPgPTRfuGTQqJQCM5emAOrjuG65jf9ZNXn+lLXPTyqihoz6bedrOj9mebfUQ==
-X-Received: by 2002:a1c:3c8a:: with SMTP id j132mr5620286wma.75.1606333340371;
-        Wed, 25 Nov 2020 11:42:20 -0800 (PST)
-Received: from [192.168.1.152] ([102.64.149.89])
-        by smtp.gmail.com with ESMTPSA id u129sm5090970wme.9.2020.11.25.11.42.15
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Wed, 25 Nov 2020 11:42:19 -0800 (PST)
-Message-ID: <5fbeb39b.1c69fb81.a9b8d.bcc9@mx.google.com>
-From:   "Dailborh R." <ritundailb333@gmail.com>
-X-Google-Original-From: Dailborh R.
-Content-Type: text/plain; charset="iso-8859-1"
+        id S2387685AbgKZEuk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 25 Nov 2020 23:50:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36890 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387684AbgKZEuk (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 25 Nov 2020 23:50:40 -0500
+Received: from localhost (unknown [122.179.79.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 010B82145D;
+        Thu, 26 Nov 2020 04:50:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1606366240;
+        bh=t8TaVfhJXLJs3qX8q4hwu4FUKcPn1ZUAgVG39jnLMz0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Rg0nz22TB9YyMCDBgxlFqiZLPKGX10kdP0XYWmwet/TPpJtqXhzMhdTgcp27DaVEC
+         0Ji/jqmGLa2v5ojhaN6fRc/NktWSsxjGlzBD2JamDl7MnhUjEgXrq7PDKDD2cPaRLA
+         o1sa+aiWI273/Q5t2Fho8Wb7Vjb1OlAOVXk43Xo4=
+Date:   Thu, 26 Nov 2020 10:20:35 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, chuanhua.lei@linux.intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        malliamireddy009@gmail.com, peter.ujfalusi@ti.com
+Subject: Re: [PATCH v9 2/2] Add Intel LGM SoC DMA support.
+Message-ID: <20201126045035.GI8403@vkoul-mobl>
+References: <cover.1605158930.git.mallikarjunax.reddy@linux.intel.com>
+ <67be905aa3bcb9faac424f2a134e88d076700419.1605158930.git.mallikarjunax.reddy@linux.intel.com>
+ <20201118173840.GW50232@vkoul-mobl>
+ <a4ea240f-b121-5bc9-a046-95bbcff87553@linux.intel.com>
+ <20201121121701.GB8403@vkoul-mobl>
+ <dc8c5f27-bce6-d276-af0b-93c6e63e85a1@linux.intel.com>
+ <20201124172149.GT8403@vkoul-mobl>
+ <ee275d37-5dda-205a-a897-7a61ad13b536@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Please reply to me
-To:     Recipients <Dailborh@vger.kernel.org>
-Date:   Wed, 25 Nov 2020 19:42:03 +0000
-Reply-To: dailrrob.83@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ee275d37-5dda-205a-a897-7a61ad13b536@linux.intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-I'm Dailborh R. from US. I picked interest in you and I would like to know
-more about you and establish relationship with you. i will wait for
-your response. thank you.
+On 25-11-20, 18:39, Reddy, MallikarjunaX wrote:
 
+> > > > > desc needs to be configure for each dma channel and the remapped address of
+> > > > > the IGP & EGP is desc base adress.
+> > > > Why should this address not passed as src_addr/dst_addr?
+> > > src_addr/dst_addr is the data pointer. Data pointer indicates address
+> > > pointer of data buffer.
+> > > 
+> > > ldma_chan_desc_cfg() carries the descriptor address.
+> > > 
+> > > The descriptor list entry contains the data pointer, which points to the
+> > > data section in the memory.
+> > > 
+> > > So we should not use src_addr/dst_addr as desc base address.
+> > Okay sounds reasonable. why is this using in API here?
+> descriptor base address needs to be write into the dma register (DMA_CDBA).
+
+Why cant descriptor be allocated by damenegine driver, passed to client
+as we normally do in prep_* callbacks ? Why do you need a custom API
+
+-- 
+~Vinod

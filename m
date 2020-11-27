@@ -2,29 +2,32 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E2232C6204
-	for <lists+dmaengine@lfdr.de>; Fri, 27 Nov 2020 10:44:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1FD12C61F5
+	for <lists+dmaengine@lfdr.de>; Fri, 27 Nov 2020 10:41:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbgK0Jka (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        id S1727841AbgK0Jka (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
         Fri, 27 Nov 2020 04:40:30 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:8129 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbgK0Jk1 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 27 Nov 2020 04:40:27 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Cj8jr56qTz15QqJ;
-        Fri, 27 Nov 2020 17:40:00 +0800 (CST)
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8600 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbgK0Jk0 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 27 Nov 2020 04:40:26 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Cj8jm3gW5zLtDZ;
+        Fri, 27 Nov 2020 17:39:56 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 27 Nov 2020 17:40:16 +0800
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 27 Nov 2020 17:40:18 +0800
 From:   Qinglang Miao <miaoqinglang@huawei.com>
 To:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Simek <michal.simek@xilinx.com>
+CC:     <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
         Qinglang Miao <miaoqinglang@huawei.com>
-Subject: [PATCH] dmaengine: usb-mac: fix reference leak in usb_dmac_probe
-Date:   Fri, 27 Nov 2020 17:44:32 +0800
-Message-ID: <20201127094432.120816-1-miaoqinglang@huawei.com>
+Subject: [PATCH] dmaengine: zynqmp_dma: fix reference leak in zynqmp_dma_alloc_chan_resources
+Date:   Fri, 27 Nov 2020 17:44:34 +0800
+Message-ID: <20201127094434.120861-1-miaoqinglang@huawei.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -45,26 +48,26 @@ leak by replacing it with new funtion.
 
 [0] dd8088d5a896 ("PM: runtime: Add  pm_runtime_resume_and_get to deal with usage counter")
 
-Fixes: 0c1c8ff32fa2 ("dmaengine: usb-dmac: Add Renesas USB DMA Controller (USB-DMAC) driver")
+Fixes: 64c6f7da8c2c ("dmaengine: zynqmp_dma: Add runtime pm support")
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
 ---
- drivers/dma/sh/usb-dmac.c | 2 +-
+ drivers/dma/xilinx/zynqmp_dma.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/sh/usb-dmac.c b/drivers/dma/sh/usb-dmac.c
-index 8f7ceb698..2a6c8fd88 100644
---- a/drivers/dma/sh/usb-dmac.c
-+++ b/drivers/dma/sh/usb-dmac.c
-@@ -796,7 +796,7 @@ static int usb_dmac_probe(struct platform_device *pdev)
+diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
+index d8419565b..5fecf5aa6 100644
+--- a/drivers/dma/xilinx/zynqmp_dma.c
++++ b/drivers/dma/xilinx/zynqmp_dma.c
+@@ -468,7 +468,7 @@ static int zynqmp_dma_alloc_chan_resources(struct dma_chan *dchan)
+ 	struct zynqmp_dma_desc_sw *desc;
+ 	int i, ret;
  
- 	/* Enable runtime PM and initialize the device. */
- 	pm_runtime_enable(&pdev->dev);
--	ret = pm_runtime_get_sync(&pdev->dev);
-+	ret = pm_runtime_resume_and_get(&pdev->dev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "runtime PM get sync failed (%d)\n", ret);
- 		goto error_pm;
+-	ret = pm_runtime_get_sync(chan->dev);
++	ret = pm_runtime_resume_and_get(chan->dev);
+ 	if (ret < 0)
+ 		return ret;
+ 
 -- 
 2.23.0
 

@@ -2,29 +2,32 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2E9C2C61DA
-	for <lists+dmaengine@lfdr.de>; Fri, 27 Nov 2020 10:41:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A89412C6203
+	for <lists+dmaengine@lfdr.de>; Fri, 27 Nov 2020 10:44:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgK0Jk0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 27 Nov 2020 04:40:26 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:7998 "EHLO
-        szxga06-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbgK0JkY (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 27 Nov 2020 04:40:24 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Cj8jx4FG7zhjCX;
-        Fri, 27 Nov 2020 17:40:05 +0800 (CST)
+        id S1727690AbgK0Jk3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 27 Nov 2020 04:40:29 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7749 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727251AbgK0Jk2 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 27 Nov 2020 04:40:28 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Cj8jk1D7yzkgR2;
+        Fri, 27 Nov 2020 17:39:54 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 27 Nov 2020 17:40:13 +0800
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 27 Nov 2020 17:40:14 +0800
 From:   Qinglang Miao <miaoqinglang@huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
 CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Qinglang Miao <miaoqinglang@huawei.com>
-Subject: [PATCH] dmaengine: rcar-dmac: fix reference leak in rcar_dmac_probe
-Date:   Fri, 27 Nov 2020 17:44:29 +0800
-Message-ID: <20201127094429.120680-1-miaoqinglang@huawei.com>
+Subject: [PATCH] dmaengine: sprd: fix reference leak in sprd_dma_probe and sprd_dma_remove
+Date:   Fri, 27 Nov 2020 17:44:30 +0800
+Message-ID: <20201127094430.120726-1-miaoqinglang@huawei.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -45,26 +48,35 @@ leak by replacing it with new funtion.
 
 [0] dd8088d5a896 ("PM: runtime: Add  pm_runtime_resume_and_get to deal with usage counter")
 
-Fixes: 87244fe5abdf ("dmaengine: rcar-dmac: Add Renesas R-Car Gen2 DMA Controller (DMAC) driver")
+Fixes: 9b3b8171f7f4 ("dmaengine: sprd: Add Spreadtrum DMA driver")
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
 ---
- drivers/dma/sh/rcar-dmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/sprd-dma.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
-index a57705356..991a7b5da 100644
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -1874,7 +1874,7 @@ static int rcar_dmac_probe(struct platform_device *pdev)
- 
- 	/* Enable runtime PM and initialize the device. */
+diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+index 0ef5ca81b..65dde392f 100644
+--- a/drivers/dma/sprd-dma.c
++++ b/drivers/dma/sprd-dma.c
+@@ -1203,7 +1203,7 @@ static int sprd_dma_probe(struct platform_device *pdev)
+ 	pm_runtime_set_active(&pdev->dev);
  	pm_runtime_enable(&pdev->dev);
+ 
 -	ret = pm_runtime_get_sync(&pdev->dev);
 +	ret = pm_runtime_resume_and_get(&pdev->dev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "runtime PM get sync failed (%d)\n", ret);
+ 	if (ret < 0)
+ 		goto err_rpm;
+ 
+@@ -1238,7 +1238,7 @@ static int sprd_dma_remove(struct platform_device *pdev)
+ 	struct sprd_dma_chn *c, *cn;
+ 	int ret;
+ 
+-	ret = pm_runtime_get_sync(&pdev->dev);
++	ret = pm_runtime_resume_and_get(&pdev->dev);
+ 	if (ret < 0)
  		return ret;
+ 
 -- 
 2.23.0
 

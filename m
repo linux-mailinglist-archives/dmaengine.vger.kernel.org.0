@@ -2,32 +2,33 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A89412C6203
-	for <lists+dmaengine@lfdr.de>; Fri, 27 Nov 2020 10:44:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E6BD92C6202
+	for <lists+dmaengine@lfdr.de>; Fri, 27 Nov 2020 10:44:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727690AbgK0Jk3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 27 Nov 2020 04:40:29 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7749 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727251AbgK0Jk2 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 27 Nov 2020 04:40:28 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Cj8jk1D7yzkgR2;
-        Fri, 27 Nov 2020 17:39:54 +0800 (CST)
+        id S1726802AbgK0JkY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 27 Nov 2020 04:40:24 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8048 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725616AbgK0JkX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 27 Nov 2020 04:40:23 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Cj8jr16FBzhjGL;
+        Fri, 27 Nov 2020 17:40:00 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 27 Nov 2020 17:40:14 +0800
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 27 Nov 2020 17:40:15 +0800
 From:   Qinglang Miao <miaoqinglang@huawei.com>
-To:     Vinod Koul <vkoul@kernel.org>,
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
         Qinglang Miao <miaoqinglang@huawei.com>
-Subject: [PATCH] dmaengine: sprd: fix reference leak in sprd_dma_probe and sprd_dma_remove
-Date:   Fri, 27 Nov 2020 17:44:30 +0800
-Message-ID: <20201127094430.120726-1-miaoqinglang@huawei.com>
+Subject: [PATCH] dmaengine: tegra-apb: fix reference leak in tegra_dma_issue_pending and tegra_dma_synchronize
+Date:   Fri, 27 Nov 2020 17:44:31 +0800
+Message-ID: <20201127094431.120771-1-miaoqinglang@huawei.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -48,35 +49,36 @@ leak by replacing it with new funtion.
 
 [0] dd8088d5a896 ("PM: runtime: Add  pm_runtime_resume_and_get to deal with usage counter")
 
-Fixes: 9b3b8171f7f4 ("dmaengine: sprd: Add Spreadtrum DMA driver")
+Fixes: 84a3f375eea9 ("dmaengine: tegra-apb: Keep clock enabled only during of DMA transfer")
+Fixes: 664475cffb8c ("dmaengine: tegra-apb: Ensure that clock is enabled during of DMA synchronization")
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
 ---
- drivers/dma/sprd-dma.c | 4 ++--
+ drivers/dma/tegra20-apb-dma.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index 0ef5ca81b..65dde392f 100644
---- a/drivers/dma/sprd-dma.c
-+++ b/drivers/dma/sprd-dma.c
-@@ -1203,7 +1203,7 @@ static int sprd_dma_probe(struct platform_device *pdev)
- 	pm_runtime_set_active(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index 71827d9b0..b7260749e 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -723,7 +723,7 @@ static void tegra_dma_issue_pending(struct dma_chan *dc)
+ 		goto end;
+ 	}
+ 	if (!tdc->busy) {
+-		err = pm_runtime_get_sync(tdc->tdma->dev);
++		err = pm_runtime_resume_and_get(tdc->tdma->dev);
+ 		if (err < 0) {
+ 			dev_err(tdc2dev(tdc), "Failed to enable DMA\n");
+ 			goto end;
+@@ -818,7 +818,7 @@ static void tegra_dma_synchronize(struct dma_chan *dc)
+ 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+ 	int err;
  
--	ret = pm_runtime_get_sync(&pdev->dev);
-+	ret = pm_runtime_resume_and_get(&pdev->dev);
- 	if (ret < 0)
- 		goto err_rpm;
- 
-@@ -1238,7 +1238,7 @@ static int sprd_dma_remove(struct platform_device *pdev)
- 	struct sprd_dma_chn *c, *cn;
- 	int ret;
- 
--	ret = pm_runtime_get_sync(&pdev->dev);
-+	ret = pm_runtime_resume_and_get(&pdev->dev);
- 	if (ret < 0)
- 		return ret;
- 
+-	err = pm_runtime_get_sync(tdc->tdma->dev);
++	err = pm_runtime_resume_and_get(tdc->tdma->dev);
+ 	if (err < 0) {
+ 		dev_err(tdc2dev(tdc), "Failed to synchronize DMA: %d\n", err);
+ 		return;
 -- 
 2.23.0
 

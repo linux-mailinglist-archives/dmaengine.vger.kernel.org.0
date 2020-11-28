@@ -2,85 +2,86 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 139122C6206
-	for <lists+dmaengine@lfdr.de>; Fri, 27 Nov 2020 10:44:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C157F2C6ECC
+	for <lists+dmaengine@lfdr.de>; Sat, 28 Nov 2020 05:33:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbgK0JlY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 27 Nov 2020 04:41:24 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:8437 "EHLO
-        szxga06-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729174AbgK0JlX (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 27 Nov 2020 04:41:23 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Cj8l41HTzzhjF1;
-        Fri, 27 Nov 2020 17:41:04 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.487.0; Fri, 27 Nov 2020 17:41:11 +0800
-From:   Qinglang Miao <miaoqinglang@huawei.com>
-To:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-CC:     <dmaengine@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Qinglang Miao <miaoqinglang@huawei.com>
-Subject: [PATCH 3/3] dmaengine: stm32-mdma: fix reference leak in stm32-mdma
-Date:   Fri, 27 Nov 2020 17:45:25 +0800
-Message-ID: <20201127094525.121388-4-miaoqinglang@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20201127094525.121388-1-miaoqinglang@huawei.com>
-References: <20201127094525.121388-1-miaoqinglang@huawei.com>
+        id S1732249AbgK1Eb5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 27 Nov 2020 23:31:57 -0500
+Received: from szxga08-in.huawei.com ([45.249.212.255]:2317 "EHLO
+        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731107AbgK1EbZ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 27 Nov 2020 23:31:25 -0500
+Received: from dggeme755-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4CjdHN68zHz13NCK;
+        Sat, 28 Nov 2020 12:07:12 +0800 (CST)
+Received: from [10.140.157.68] (10.140.157.68) by
+ dggeme755-chm.china.huawei.com (10.3.19.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Sat, 28 Nov 2020 12:07:52 +0800
+Subject: Re: [PATCH v5 0/4] Enable Hi3559A SOC clock and HiSilicon Hiedma
+ Controller
+To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <robh+dt@kernel.org>, <vkoul@kernel.org>,
+        <dan.j.williams@intel.com>, <p.zabel@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>
+References: <20201119200129.28532-1-gengdongjiu@huawei.com>
+From:   Dongjiu Geng <gengdongjiu@huawei.com>
+Message-ID: <bac15a2e-b9db-b7b0-6004-ad76fa8c5be5@huawei.com>
+Date:   Sat, 28 Nov 2020 12:07:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
+In-Reply-To: <20201119200129.28532-1-gengdongjiu@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.140.157.68]
+X-ClientProxiedBy: dggeme718-chm.china.huawei.com (10.1.199.114) To
+ dggeme755-chm.china.huawei.com (10.3.19.101)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-pm_runtime_get_sync will increment pm usage counter even it
-failed. Forgetting to putting operation will result in a
-reference leak here.
+ping, sorry for the noise.
 
-A new function pm_runtime_resume_and_get is introduced in
-[0] to keep usage counter balanced. So We fix the reference
-leak by replacing it with new funtion.
 
-[0] dd8088d5a896 ("PM: runtime: Add  pm_runtime_resume_and_get to deal with usage counter")
-
-Fixes: 7cb819c856d9 ("dmaengine: stm32-mdma: add suspend/resume power management support")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
----
- drivers/dma/stm32-mdma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
-index 08cfbfab8..9d4739237 100644
---- a/drivers/dma/stm32-mdma.c
-+++ b/drivers/dma/stm32-mdma.c
-@@ -1448,7 +1448,7 @@ static int stm32_mdma_alloc_chan_resources(struct dma_chan *c)
- 		return -ENOMEM;
- 	}
- 
--	ret = pm_runtime_get_sync(dmadev->ddev.dev);
-+	ret = pm_runtime_resume_and_get(dmadev->ddev.dev);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -1714,7 +1714,7 @@ static int stm32_mdma_pm_suspend(struct device *dev)
- 	u32 ccr, id;
- 	int ret;
- 
--	ret = pm_runtime_get_sync(dev);
-+	ret = pm_runtime_resume_and_get(dev);
- 	if (ret < 0)
- 		return ret;
- 
--- 
-2.23.0
-
+On 2020/11/20 4:01, Dongjiu Geng wrote:
+> v4->v5:
+> 1. change the patch author mail name
+> 
+> v3->v4:
+> 1. fix the 'make dt_binding_check' issues.
+> 2. Combine the 'Enable HiSilicon Hiedma Controller' series patches to this series.
+> 3. fix the 'make dt_binding_check' issues in 'Enable HiSilicon Hiedma Controller' patchset
+> 
+> 
+> v2->v3:
+> 1. change dt-bindings documents from txt to yaml format.
+> 2. Add SHUB clock to access the devices of m7
+> 
+> Dongjiu Geng (4):
+>   dt-bindings: Document the hi3559a clock bindings
+>   clk: hisilicon: Add clock driver for hi3559A SoC
+>   dt: bindings: dma: Add DT bindings for HiSilicon Hiedma Controller
+>   dmaengine: dma: Add Hiedma Controller v310 Device Driver
+> 
+>  .../clock/hisilicon,hi3559av100-clock.yaml    |   66 +
+>  .../bindings/dma/hisilicon,hiedmacv310.yaml   |  103 ++
+>  drivers/clk/hisilicon/Kconfig                 |    7 +
+>  drivers/clk/hisilicon/Makefile                |    1 +
+>  drivers/clk/hisilicon/clk-hi3559a.c           |  865 ++++++++++
+>  drivers/dma/Kconfig                           |   14 +
+>  drivers/dma/Makefile                          |    1 +
+>  drivers/dma/hiedmacv310.c                     | 1441 +++++++++++++++++
+>  drivers/dma/hiedmacv310.h                     |  136 ++
+>  include/dt-bindings/clock/hi3559av100-clock.h |  165 ++
+>  10 files changed, 2799 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/hisilicon,hi3559av100-clock.yaml
+>  create mode 100644 Documentation/devicetree/bindings/dma/hisilicon,hiedmacv310.yaml
+>  create mode 100644 drivers/clk/hisilicon/clk-hi3559a.c
+>  create mode 100644 drivers/dma/hiedmacv310.c
+>  create mode 100644 drivers/dma/hiedmacv310.h
+>  create mode 100644 include/dt-bindings/clock/hi3559av100-clock.h
+> 

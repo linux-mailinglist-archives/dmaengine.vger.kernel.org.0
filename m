@@ -2,111 +2,120 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 033FA2C7A7D
-	for <lists+dmaengine@lfdr.de>; Sun, 29 Nov 2020 19:16:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E6D52C7A91
+	for <lists+dmaengine@lfdr.de>; Sun, 29 Nov 2020 19:25:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbgK2SQN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 29 Nov 2020 13:16:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58888 "EHLO
+        id S1726669AbgK2SZG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 29 Nov 2020 13:25:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbgK2SQM (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 29 Nov 2020 13:16:12 -0500
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D08BC0613CF;
-        Sun, 29 Nov 2020 10:15:32 -0800 (PST)
-Received: by mail-ed1-x544.google.com with SMTP id l5so12140462edq.11;
-        Sun, 29 Nov 2020 10:15:32 -0800 (PST)
+        with ESMTP id S1726309AbgK2SZG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 29 Nov 2020 13:25:06 -0500
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7FCFC0613CF;
+        Sun, 29 Nov 2020 10:24:25 -0800 (PST)
+Received: by mail-ed1-x543.google.com with SMTP id m16so12201827edr.3;
+        Sun, 29 Nov 2020 10:24:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=UROWP8DCGmWhVwQsCC8h2As9ZxZGQSky9i20Gey0Ido=;
-        b=j0KFJ4xVFp4NC4WM62GakLO1fZKpiWbDq91qtHs3es1t3S+hxd81W2POHXZ9q7ejaH
-         0q1XIHjqPvySc7Y7XrEA4QhTBoyQtopzTL5AeurZEms0/Oj9ld6nVWeaklnRir+C3cj2
-         Qh3aRYUtd0KHGimvAjQNt7ITzmEfzqB6hrn5iCPNvbW5uv/28c7Y8ym8eQpBKGlDpkoC
-         Ua0gfQ4FzGjk1HaWIAEUCWY03SzpLCdd/it/QA8vzBFsEQJNMXkM6nYS0CAwlLFwWkKn
-         kNHlxAToZdbfXNNaJ49cBEFLPaiGgljrWdNWTn1lFxVZDZq/vGoU8BBy7jawENEmCmvs
-         NnKg==
+        bh=+TaHdEkXgCN7CkQQ251SzNfRN/Dkm6ksvaE3LxK1LzI=;
+        b=bh0AQJXBSiA1fclqsj04XWp10nlZW3rQzm2mlHEK+u9ZlMBldHI9IV7PXYBkyWVb7h
+         2i8/H4EIcd3GCzU0Xo0NvEOzlGFd5FJWC20SDHDmRDrNenCO0l6RduZ5gOASwPfiVn30
+         29C8bGSIO5XiXfvMRfS2wtXww+KVY4sPRvIOeQW/pfsY+o+6MvQ2XyhF8WhLY9dt6316
+         FCv3yjyNFu7q8iPE5Ax0nDU+3whXo+72UE8c8jlIBbCVz85I9Xvl7r7gNqh0oJ5kCVVJ
+         8TeOuVoZgT3kzDTMOCcUFdjgtTVqjAY1VuvVunwOEj54AdzPzA6ei1EBR1Eu3MDQOjVE
+         htaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=UROWP8DCGmWhVwQsCC8h2As9ZxZGQSky9i20Gey0Ido=;
-        b=szpP4laApo84zyWOGcdcojG9pQItrQqQu0tIfi9urbOnGNmMqd6wp30G1A0IkS2s9i
-         M4ZkvLGobX7QxLll4ItN046oHHhV6uMm8mRrA9OU4CPOXx0xjNw9+9Ub20QX4uCs8gmj
-         u9A7qaW0Lbp99+Vv0pgBc98qxA4UF78UoJQ0Cm3gHpG+6pHd3ATIu8v3N6nfhmn5+GPR
-         /jLgxl//1fvVk+SjCl4MV463Akc5OWYeHmSqL/20U/hixPIrfrKJTs7240eeUNzE6Ajn
-         Y9SOMQ2Yz4ArWTKpUjmWUuSg8vXSacZvAsnuu820gHjtsMLi699otW0E57iEM/FpM8RE
-         TVww==
-X-Gm-Message-State: AOAM533Si1b7JmQ6rXmPmfaLwnpQbmvEDaSFu4Z2g7+55CzgpYM0ha1o
-        3AumNb/lKBTWyFtD3utR9gc=
-X-Google-Smtp-Source: ABdhPJz/uzcYLzKhtpNOcOpAVXt/4u4Hf0bEUq9k0+3ONJkOQZta1Kwsu1fRVLNS8II8ISavlTSNRw==
-X-Received: by 2002:a50:d884:: with SMTP id p4mr952137edj.120.1606673730918;
-        Sun, 29 Nov 2020 10:15:30 -0800 (PST)
+        bh=+TaHdEkXgCN7CkQQ251SzNfRN/Dkm6ksvaE3LxK1LzI=;
+        b=W9VIRB5gnmFhXmvQtMIsUPsV4Q8l8dI1BoKrf4E6ssS6VxDFEbYVa4Ifjn/wGPn/7u
+         tyn6147IFvRUnjs9B/4mE3nxMk9aenv5M2on55E9mXZgEBqcRee2Y99fiLg4wyO7ZIDg
+         1B9w027YdluNp6cI/Z045BMdiio1cKjefMEhc6gCmEcDvQsWeA505GxFnEmmt9D5MjHN
+         4ftgrQTYCUK+yVwg3ShBibO2UaTDXY5duJIydX27SPNnp5hnuR8wSLLYYRjck4EcRbk+
+         ywdck1ZaGA5ye7SJjyUPH4iNKV3ij2vVcnNbThKRrCW4rPE9GQMfqelFneOZVJAiN92l
+         5ToA==
+X-Gm-Message-State: AOAM5334FVeaPGomldRPGSKcvqtLBzGrQM7nrUfj+dycJPjnlEiCnj4c
+        MXvbSoTzd+5aG35ZXbvcuW66FN/Dqvc=
+X-Google-Smtp-Source: ABdhPJzQPimJ/g3YVN+L+ev4PqPO1ywE7NRbKa2WC+6fa6XWlkqPDvydKX8AsN3kFf0HE0y8mTOyJQ==
+X-Received: by 2002:a50:f082:: with SMTP id v2mr12973840edl.276.1606674264456;
+        Sun, 29 Nov 2020 10:24:24 -0800 (PST)
 Received: from BV030612LT ([188.24.159.61])
-        by smtp.gmail.com with ESMTPSA id n14sm8018943edw.38.2020.11.29.10.15.29
+        by smtp.gmail.com with ESMTPSA id s15sm8145744edj.75.2020.11.29.10.24.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Nov 2020 10:15:30 -0800 (PST)
-Date:   Sun, 29 Nov 2020 20:15:27 +0200
+        Sun, 29 Nov 2020 10:24:23 -0800 (PST)
+Date:   Sun, 29 Nov 2020 20:24:21 +0200
 From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
         Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 04/18] dt-bindings: dma: owl: Add compatible string
- for Actions Semi S500 SoC
-Message-ID: <20201129181527.GC696261@BV030612LT>
+Subject: Re: [PATCH v2 05/18] dmaengine: owl: Add compatible for the Actions
+ Semi S500 DMA controller
+Message-ID: <20201129182421.GD696261@BV030612LT>
 References: <cover.1605823502.git.cristian.ciocaltea@gmail.com>
- <0e79dffdf105ded2bb336ab38dc39b4986667683.1605823502.git.cristian.ciocaltea@gmail.com>
- <20201128072945.GT3077@thinkpad>
+ <f2e9f718eb8c7279127086795a4ef5047fc186d5.1605823502.git.cristian.ciocaltea@gmail.com>
+ <20201128073045.GU3077@thinkpad>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201128072945.GT3077@thinkpad>
+In-Reply-To: <20201128073045.GU3077@thinkpad>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sat, Nov 28, 2020 at 12:59:45PM +0530, Manivannan Sadhasivam wrote:
-> On Fri, Nov 20, 2020 at 01:55:58AM +0200, Cristian Ciocaltea wrote:
-> > Add a new compatible string corresponding to the DMA controller found
-> > in the S500 variant of the Actions Semi Owl SoCs family.
+On Sat, Nov 28, 2020 at 01:00:45PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Nov 20, 2020 at 01:55:59AM +0200, Cristian Ciocaltea wrote:
+> > The DMA controller present on the Actions Semi S500 SoC is compatible
+> > with the S900 variant, so add it to the list of devices supported by
+> > the Actions Semi Owl DMA driver.
 > > 
 > > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > ---
-> >  Documentation/devicetree/bindings/dma/owl-dma.yaml | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/dma/owl-dma.yaml b/Documentation/devicetree/bindings/dma/owl-dma.yaml
-> > index 256d62af2c64..f085f0e42d2c 100644
-> > --- a/Documentation/devicetree/bindings/dma/owl-dma.yaml
-> > +++ b/Documentation/devicetree/bindings/dma/owl-dma.yaml
-> > @@ -8,8 +8,8 @@ title: Actions Semi Owl SoCs DMA controller
-> >  
-> >  description: |
-> >    The OWL DMA is a general-purpose direct memory access controller capable of
-> > -  supporting 10 and 12 independent DMA channels for S700 and S900 SoCs
-> > -  respectively.
-> > +  supporting 10 independent DMA channels for the Actions Semi S700 SoC and 12
-> > +  independent DMA channels for the S500 and S900 SoC variants.
-> >  
-> >  maintainers:
-> >    - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > @@ -22,6 +22,7 @@ properties:
-> >      enum:
-> >        - actions,s900-dma
-> >        - actions,s700-dma
-> > +      - actions,s500-dma
 > 
-> I think we should order the entries now...
+> I hope that you have verified both Memcpy and Slave transfers...
 
-Right, I will provide the reordered list in the upcoming revision.
+I have been using 'dmatest' module as documented in:
+https://www.kernel.org/doc/html/latest/driver-api/dmaengine/dmatest.html
 
-> >  
-> >    reg:
-> >      maxItems: 1
+I tested all the available channels and could not find any signs of
+possible issues. Bellow is an excerpt from the kernel ring buffer:
+
+[ 2661.884680] dmatest: dma0chan1-copy0: summary 300 tests, 0 failures 1653.48 iops 13249 KB/s (0)
+[ 2661.886567] dmatest: dma0chan2-copy0: summary 300 tests, 0 failures 1684.40 iops 12846 KB/s (0)
+[ 2661.888448] dmatest: dma0chan3-copy0: summary 300 tests, 0 failures 1730.62 iops 13648 KB/s (0)
+
+Should I perform some additional tests?
+
+Thanks,
+Cristi
+
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> Thanks,
+> Mani
+> 
+> > ---
+> >  drivers/dma/owl-dma.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
+> > index 9fede32641e9..54e509de66e2 100644
+> > --- a/drivers/dma/owl-dma.c
+> > +++ b/drivers/dma/owl-dma.c
+> > @@ -1082,6 +1082,7 @@ static struct dma_chan *owl_dma_of_xlate(struct of_phandle_args *dma_spec,
+> >  static const struct of_device_id owl_dma_match[] = {
+> >  	{ .compatible = "actions,s900-dma", .data = (void *)S900_DMA,},
+> >  	{ .compatible = "actions,s700-dma", .data = (void *)S700_DMA,},
+> > +	{ .compatible = "actions,s500-dma", .data = (void *)S900_DMA,},
+> >  	{ /* sentinel */ },
+> >  };
+> >  MODULE_DEVICE_TABLE(of, owl_dma_match);
 > > -- 
 > > 2.29.2
 > > 

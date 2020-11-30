@@ -2,120 +2,168 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E6D52C7A91
-	for <lists+dmaengine@lfdr.de>; Sun, 29 Nov 2020 19:25:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D2D5B2C7E2C
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Nov 2020 07:25:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgK2SZG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 29 Nov 2020 13:25:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbgK2SZG (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 29 Nov 2020 13:25:06 -0500
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7FCFC0613CF;
-        Sun, 29 Nov 2020 10:24:25 -0800 (PST)
-Received: by mail-ed1-x543.google.com with SMTP id m16so12201827edr.3;
-        Sun, 29 Nov 2020 10:24:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+TaHdEkXgCN7CkQQ251SzNfRN/Dkm6ksvaE3LxK1LzI=;
-        b=bh0AQJXBSiA1fclqsj04XWp10nlZW3rQzm2mlHEK+u9ZlMBldHI9IV7PXYBkyWVb7h
-         2i8/H4EIcd3GCzU0Xo0NvEOzlGFd5FJWC20SDHDmRDrNenCO0l6RduZ5gOASwPfiVn30
-         29C8bGSIO5XiXfvMRfS2wtXww+KVY4sPRvIOeQW/pfsY+o+6MvQ2XyhF8WhLY9dt6316
-         FCv3yjyNFu7q8iPE5Ax0nDU+3whXo+72UE8c8jlIBbCVz85I9Xvl7r7gNqh0oJ5kCVVJ
-         8TeOuVoZgT3kzDTMOCcUFdjgtTVqjAY1VuvVunwOEj54AdzPzA6ei1EBR1Eu3MDQOjVE
-         htaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+TaHdEkXgCN7CkQQ251SzNfRN/Dkm6ksvaE3LxK1LzI=;
-        b=W9VIRB5gnmFhXmvQtMIsUPsV4Q8l8dI1BoKrf4E6ssS6VxDFEbYVa4Ifjn/wGPn/7u
-         tyn6147IFvRUnjs9B/4mE3nxMk9aenv5M2on55E9mXZgEBqcRee2Y99fiLg4wyO7ZIDg
-         1B9w027YdluNp6cI/Z045BMdiio1cKjefMEhc6gCmEcDvQsWeA505GxFnEmmt9D5MjHN
-         4ftgrQTYCUK+yVwg3ShBibO2UaTDXY5duJIydX27SPNnp5hnuR8wSLLYYRjck4EcRbk+
-         ywdck1ZaGA5ye7SJjyUPH4iNKV3ij2vVcnNbThKRrCW4rPE9GQMfqelFneOZVJAiN92l
-         5ToA==
-X-Gm-Message-State: AOAM5334FVeaPGomldRPGSKcvqtLBzGrQM7nrUfj+dycJPjnlEiCnj4c
-        MXvbSoTzd+5aG35ZXbvcuW66FN/Dqvc=
-X-Google-Smtp-Source: ABdhPJzQPimJ/g3YVN+L+ev4PqPO1ywE7NRbKa2WC+6fa6XWlkqPDvydKX8AsN3kFf0HE0y8mTOyJQ==
-X-Received: by 2002:a50:f082:: with SMTP id v2mr12973840edl.276.1606674264456;
-        Sun, 29 Nov 2020 10:24:24 -0800 (PST)
-Received: from BV030612LT ([188.24.159.61])
-        by smtp.gmail.com with ESMTPSA id s15sm8145744edj.75.2020.11.29.10.24.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Nov 2020 10:24:23 -0800 (PST)
-Date:   Sun, 29 Nov 2020 20:24:21 +0200
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 05/18] dmaengine: owl: Add compatible for the Actions
- Semi S500 DMA controller
-Message-ID: <20201129182421.GD696261@BV030612LT>
-References: <cover.1605823502.git.cristian.ciocaltea@gmail.com>
- <f2e9f718eb8c7279127086795a4ef5047fc186d5.1605823502.git.cristian.ciocaltea@gmail.com>
- <20201128073045.GU3077@thinkpad>
+        id S1726671AbgK3GW2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 30 Nov 2020 01:22:28 -0500
+Received: from mga17.intel.com ([192.55.52.151]:54715 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726658AbgK3GW1 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 30 Nov 2020 01:22:27 -0500
+IronPort-SDR: 2VSjGSOs/S2KyzIfmfjFoLpDD9my70Slsi5Rwdu2yX77N5+QbTwrTUpimfuOoSs8S2V8zhjg8k
+ nL8jiyp6T9Rw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9820"; a="152420868"
+X-IronPort-AV: E=Sophos;i="5.78,379,1599548400"; 
+   d="scan'208";a="152420868"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2020 22:20:46 -0800
+IronPort-SDR: Krr3AKvXUs6qVabHOv/HaoRzR7w2qTJsFvdlnWhM04sWM4Jo9AVdwY2UiUjIzukiSF1COyQXA6
+ 1NR05iQ6DQjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,379,1599548400"; 
+   d="scan'208";a="314458633"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 29 Nov 2020 22:20:46 -0800
+Received: from [10.215.249.62] (mreddy3x-MOBL.gar.corp.intel.com [10.215.249.62])
+        by linux.intel.com (Postfix) with ESMTP id 74B8A580515;
+        Sun, 29 Nov 2020 22:20:43 -0800 (PST)
+Subject: Re: [PATCH v9 2/2] Add Intel LGM SoC DMA support.
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, chuanhua.lei@linux.intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        malliamireddy009@gmail.com, peter.ujfalusi@ti.com
+References: <cover.1605158930.git.mallikarjunax.reddy@linux.intel.com>
+ <67be905aa3bcb9faac424f2a134e88d076700419.1605158930.git.mallikarjunax.reddy@linux.intel.com>
+ <20201118173840.GW50232@vkoul-mobl>
+ <a4ea240f-b121-5bc9-a046-95bbcff87553@linux.intel.com>
+ <20201121121701.GB8403@vkoul-mobl>
+ <dc8c5f27-bce6-d276-af0b-93c6e63e85a1@linux.intel.com>
+ <20201124172149.GT8403@vkoul-mobl>
+ <ee275d37-5dda-205a-a897-7a61ad13b536@linux.intel.com>
+ <20201126045035.GI8403@vkoul-mobl>
+From:   "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
+Message-ID: <1900dc8f-acd1-54a2-1666-cd73bdc4888b@linux.intel.com>
+Date:   Mon, 30 Nov 2020 14:20:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201128073045.GU3077@thinkpad>
+In-Reply-To: <20201126045035.GI8403@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sat, Nov 28, 2020 at 01:00:45PM +0530, Manivannan Sadhasivam wrote:
-> On Fri, Nov 20, 2020 at 01:55:59AM +0200, Cristian Ciocaltea wrote:
-> > The DMA controller present on the Actions Semi S500 SoC is compatible
-> > with the S900 variant, so add it to the list of devices supported by
-> > the Actions Semi Owl DMA driver.
-> > 
-> > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> 
-> I hope that you have verified both Memcpy and Slave transfers...
+Hi Vinod,
 
-I have been using 'dmatest' module as documented in:
-https://www.kernel.org/doc/html/latest/driver-api/dmaengine/dmatest.html
+Thanks for your valuable comments. My reply inline.
 
-I tested all the available channels and could not find any signs of
-possible issues. Bellow is an excerpt from the kernel ring buffer:
+On 11/26/2020 12:50 PM, Vinod Koul wrote:
+> On 25-11-20, 18:39, Reddy, MallikarjunaX wrote:
+>
+>>>>>> desc needs to be configure for each dma channel and the remapped address of
+>>>>>> the IGP & EGP is desc base adress.
+>>>>> Why should this address not passed as src_addr/dst_addr?
+>>>> src_addr/dst_addr is the data pointer. Data pointer indicates address
+>>>> pointer of data buffer.
+>>>>
+>>>> ldma_chan_desc_cfg() carries the descriptor address.
+>>>>
+>>>> The descriptor list entry contains the data pointer, which points to the
+>>>> data section in the memory.
+>>>>
+>>>> So we should not use src_addr/dst_addr as desc base address.
+>>> Okay sounds reasonable. why is this using in API here?
+>> descriptor base address needs to be write into the dma register (DMA_CDBA).
+> Why cant descriptor be allocated by damenegine driver, passed to client
+> as we normally do in prep_* callbacks ? Why do you need a custom API
+1)
+client needs to set the descriptor base address and also number of 
+descriptors used in the descriptor list.
+reg DMA_CDBA used to configure descriptor base address and reg DMA_CDLEN 
+used to configure number of descriptors used in the descriptor list.
 
-[ 2661.884680] dmatest: dma0chan1-copy0: summary 300 tests, 0 failures 1653.48 iops 13249 KB/s (0)
-[ 2661.886567] dmatest: dma0chan2-copy0: summary 300 tests, 0 failures 1684.40 iops 12846 KB/s (0)
-[ 2661.888448] dmatest: dma0chan3-copy0: summary 300 tests, 0 failures 1730.62 iops 13648 KB/s (0)
+In case of (ver > DMA_VER22) all descriptor fields and data pointer will 
+be set by client, so we just need to write desc base and num desc length 
+in to corresponding registers from the driver side.
 
-Should I perform some additional tests?
+dma_async_tx_descriptor * data is not really needed from driver to 
+client side , so i am not planned to return 'struct 
+dma_async_tx_descriptor *'.
 
-Thanks,
-Cristi
+because of this reason i used custom API (return -Ve for error and ZERO 
+for success) instead of standard dmaengine_prep_slave_sg() callback 
+(return 'struct dma_async_tx_descriptor *' descriptor)
 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> Thanks,
-> Mani
-> 
-> > ---
-> >  drivers/dma/owl-dma.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
-> > index 9fede32641e9..54e509de66e2 100644
-> > --- a/drivers/dma/owl-dma.c
-> > +++ b/drivers/dma/owl-dma.c
-> > @@ -1082,6 +1082,7 @@ static struct dma_chan *owl_dma_of_xlate(struct of_phandle_args *dma_spec,
-> >  static const struct of_device_id owl_dma_match[] = {
-> >  	{ .compatible = "actions,s900-dma", .data = (void *)S900_DMA,},
-> >  	{ .compatible = "actions,s700-dma", .data = (void *)S700_DMA,},
-> > +	{ .compatible = "actions,s500-dma", .data = (void *)S900_DMA,},
-> >  	{ /* sentinel */ },
-> >  };
-> >  MODULE_DEVICE_TABLE(of, owl_dma_match);
-> > -- 
-> > 2.29.2
-> > 
+2)
+We can also use the dmaengine_prep_slave_sg( ) to pass desc base addr & 
+desc number from client.
+In that case we have to use (sg)->dma_address as desc base address and 
+(sg)->length as desc length.
+
+dmaengine prep_* callback return 'struct dma_async_tx_descriptor *, this 
+can be used on client side as to check  prep_* callback SUCCESS/FAIL.
+
+Example:
+/* code snippet */
+
+static struct dma_async_tx_descriptor *
+ldma_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+                   unsigned int sglen, enum dma_transfer_direction dir,
+                   unsigned long flags, void *context)
+{
+
+.....
+
+     if (d->ver > DMA_VER22)
+         return ldma_chan_desc_cfg(chan, sgl->dma_address, sglen);
+
+.....
+
+}
+
+static struct dma_async_tx_descriptor *
+ldma_chan_desc_cfg(struct dma_chan *chan, dma_addr_t desc_base, int 
+desc_num)
+{
+         struct ldma_chan *c = to_ldma_chan(chan);
+         struct ldma_dev *d = to_ldma_dev(c->vchan.chan.device);
+         struct dma_async_tx_descriptor *tx;
+         struct dw2_desc_sw *ds;
+
+         if (!desc_num) {
+                 dev_err(d->dev, "Channel %d must allocate descriptor 
+first\n",
+                         c->nr);
+                 return NULL;
+         }
+
+         if (desc_num > DMA_MAX_DESC_NUM) {
+                 dev_err(d->dev, "Channel %d descriptor number out of 
+range %d\n",
+                         c->nr, desc_num);
+                 return NULL;
+         }
+
+         ldma_chan_desc_hw_cfg(c, desc_base, desc_num);
+         c->flags |= DMA_HW_DESC;
+         c->desc_cnt = desc_num;
+         c->desc_phys = desc_base;
+
+         ds = kzalloc(sizeof(*ds), GFP_NOWAIT);
+         if (!ds)
+                 return NULL;
+
+         tx = &ds->vdesc.tx;
+         dma_async_tx_descriptor_init(tx, chan);
+
+         return tx;
+}
+Please let me know if this is OK, So that i will include in the next patch.
+>

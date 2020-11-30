@@ -2,265 +2,132 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC7552C9102
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Nov 2020 23:27:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E2F002C9117
+	for <lists+dmaengine@lfdr.de>; Mon, 30 Nov 2020 23:30:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730568AbgK3W0c (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 30 Nov 2020 17:26:32 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33229 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728141AbgK3W0b (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 30 Nov 2020 17:26:31 -0500
-Received: by mail-io1-f67.google.com with SMTP id o8so13566899ioh.0;
-        Mon, 30 Nov 2020 14:26:15 -0800 (PST)
+        id S1730795AbgK3WaA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 30 Nov 2020 17:30:00 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38276 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728255AbgK3WaA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 30 Nov 2020 17:30:00 -0500
+Received: by mail-io1-f66.google.com with SMTP id y5so12473021iow.5;
+        Mon, 30 Nov 2020 14:29:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=LIfWEkt0aVq3m94fOUZkuS/yeYq9FEE9ORbmu+AJJ1w=;
-        b=YvkeMdwpRF5jHJm4yi6GyrRVjsgzHyRRDv3ataEWT/Tmwn/gPOXxMEIYtke6lPjVHV
-         /d35XVN4tfFR5u7eK6+PbIgWBdxNkOOnTcVrcjBbqpil7m1EPufTP2Ckgwf0oaPtIEbw
-         L/ETbtZ9FtUWL+J6X6CGfGAnKAO5dkv3RMFy+T7MHWQi4sp91iITkrcw6KzZmqABnjZ3
-         qYgXZRkIBxvIdnwjvJlJwmkJ5+nkBSM1BT/+uPd3iVdW5nKgKmMBXx06vCGshq57exEc
-         mvIuq6hHrIvCz8tuv0pYQ29AT3SaWP1zVNgNfxQCLjQ5/FnwpFy90hZOdiMoP1eHh2CM
-         +SqQ==
-X-Gm-Message-State: AOAM530jVUPqV7eaH0pcZQsrVzn39BiQuUeMxdoI1jRjMps7S43UciVF
-        ockHh6D6RlD3KTz4OI3S5Y3RVATIbg==
-X-Google-Smtp-Source: ABdhPJyUnpP60gWfxQnWpC5+zZywke78Ty+RZxUOqPwqLvhb37q04WYH9lPqDS9hVdJ3jyAiOf6p1g==
-X-Received: by 2002:a05:6602:388:: with SMTP id f8mr9205661iov.56.1606775150273;
-        Mon, 30 Nov 2020 14:25:50 -0800 (PST)
+        bh=8/EaFjzChv3yuUtw47TiG5tYxU7hn1SO6HPIjLuIIAI=;
+        b=I0dozF/A3S8FdBHjRuRyLa61+NKtTzjBquERqRrxqCgPP61Xi5dmA8/EF0dS1mLQUK
+         5Gt+7Qt3+0p0aHuE2lIIe+2OiiN8gScINUPB7tSeVS+c0BvqyJnJGGBhNOm0Y2ed2o0S
+         UM49+QjXI6jqvj37rwX9Ie1ay+BkxWSK57NePbC6Wcn2vMl0j6beNyIk0X38PgzK3U8m
+         F758MqiivDaGUf+WY7xvErqepHGDDmP3UHzdcONzBapneTXuDL/CFVrSM+Hs3+17S8Fo
+         WeqpGEYjhPCOFtyBR8Q8HFgI2EsP0E/agip+n1BKoZG/QjeJ5xX6diMsPdeUXV4Y6tdx
+         ifTQ==
+X-Gm-Message-State: AOAM533FQN4UCeZssfa7TEnXHRcQk8b9S735RQRkKuTDuhExZGkI/fU4
+        1idV74hggml+GfgBb/2OPg==
+X-Google-Smtp-Source: ABdhPJz4ardhIRNFqAXT1upJpFbz8RfML0C1QTA3Qpn7yesfFDmNiEL36ARSBrxNackgrWiKJHU2XQ==
+X-Received: by 2002:a02:b011:: with SMTP id p17mr16475329jah.55.1606775358790;
+        Mon, 30 Nov 2020 14:29:18 -0800 (PST)
 Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id p7sm2586517iln.11.2020.11.30.14.25.48
+        by smtp.gmail.com with ESMTPSA id y13sm5373842iop.14.2020.11.30.14.29.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Nov 2020 14:25:49 -0800 (PST)
-Received: (nullmailer pid 3146099 invoked by uid 1000);
-        Mon, 30 Nov 2020 22:25:47 -0000
-Date:   Mon, 30 Nov 2020 15:25:47 -0700
+        Mon, 30 Nov 2020 14:29:18 -0800 (PST)
+Received: (nullmailer pid 3151605 invoked by uid 1000);
+        Mon, 30 Nov 2020 22:29:16 -0000
+Date:   Mon, 30 Nov 2020 15:29:16 -0700
 From:   Rob Herring <robh@kernel.org>
 To:     Sia Jee Heng <jee.heng.sia@intel.com>
 Cc:     vkoul@kernel.org, Eugeniy.Paltsev@synopsys.com,
         andriy.shevchenko@linux.intel.com, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 01/16] dt-bindings: dma: Add YAML schemas for
- dw-axi-dmac
-Message-ID: <20201130222547.GA3123716@robh.at.kernel.org>
+Subject: Re: [PATCH v5 10/16] dt-binding: dma: dw-axi-dmac: Add support for
+ Intel KeemBay AxiDMA
+Message-ID: <20201130222916.GA3146362@robh.at.kernel.org>
 References: <20201123023452.7894-1-jee.heng.sia@intel.com>
- <20201123023452.7894-2-jee.heng.sia@intel.com>
+ <20201123023452.7894-11-jee.heng.sia@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201123023452.7894-2-jee.heng.sia@intel.com>
+In-Reply-To: <20201123023452.7894-11-jee.heng.sia@intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Nov 23, 2020 at 10:34:37AM +0800, Sia Jee Heng wrote:
-> YAML schemas Device Tree (DT) binding is the new format for DT to replace
-> the old format. Introduce YAML schemas DT binding for dw-axi-dmac and
-> remove the old version.
+On Mon, Nov 23, 2020 at 10:34:46AM +0800, Sia Jee Heng wrote:
+> Add support for Intel KeemBay AxiDMA to the dw-axi-dmac
+> Schemas DT binding.
 > 
 > Signed-off-by: Sia Jee Heng <jee.heng.sia@intel.com>
 > ---
->  .../bindings/dma/snps,dw-axi-dmac.txt         |  39 ------
->  .../bindings/dma/snps,dw-axi-dmac.yaml        | 126 ++++++++++++++++++
->  2 files changed, 126 insertions(+), 39 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
->  create mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+>  .../bindings/dma/snps,dw-axi-dmac.yaml        | 27 +++++++++++++++++++
+>  1 file changed, 27 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
-> deleted file mode 100644
-> index dbe160400adc..000000000000
-> --- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
-> +++ /dev/null
-> @@ -1,39 +0,0 @@
-> -Synopsys DesignWare AXI DMA Controller
-> -
-> -Required properties:
-> -- compatible: "snps,axi-dma-1.01a"
-> -- reg: Address range of the DMAC registers. This should include
-> -  all of the per-channel registers.
-> -- interrupt: Should contain the DMAC interrupt number.
-> -- dma-channels: Number of channels supported by hardware.
-> -- snps,dma-masters: Number of AXI masters supported by the hardware.
-> -- snps,data-width: Maximum AXI data width supported by hardware.
-> -  (0 - 8bits, 1 - 16bits, 2 - 32bits, ..., 6 - 512bits)
-> -- snps,priority: Priority of channel. Array size is equal to the number of
-> -  dma-channels. Priority value must be programmed within [0:dma-channels-1]
-> -  range. (0 - minimum priority)
-> -- snps,block-size: Maximum block size supported by the controller channel.
-> -  Array size is equal to the number of dma-channels.
-> -
-> -Optional properties:
-> -- snps,axi-max-burst-len: Restrict master AXI burst length by value specified
-> -  in this property. If this property is missing the maximum AXI burst length
-> -  supported by DMAC is used. [1:256]
-> -
-> -Example:
-> -
-> -dmac: dma-controller@80000 {
-> -	compatible = "snps,axi-dma-1.01a";
-> -	reg = <0x80000 0x400>;
-> -	clocks = <&core_clk>, <&cfgr_clk>;
-> -	clock-names = "core-clk", "cfgr-clk";
-> -	interrupt-parent = <&intc>;
-> -	interrupts = <27>;
-> -
-> -	dma-channels = <4>;
-> -	snps,dma-masters = <2>;
-> -	snps,data-width = <3>;
-> -	snps,block-size = <4096 4096 4096 4096>;
-> -	snps,priority = <0 1 2 3>;
-> -	snps,axi-max-burst-len = <16>;
-> -};
 > diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-> new file mode 100644
-> index 000000000000..6c2e8e612af5
-> --- /dev/null
+> index 6c2e8e612af5..9e3ca9083814 100644
+> --- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
 > +++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-> @@ -0,0 +1,126 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/snps,dw-axi-dmac.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Synopsys DesignWare AXI DMA Controller
-> +
-> +maintainers:
-> +  - Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com
-> +
-> +description: |
+> @@ -8,6 +8,7 @@ title: Synopsys DesignWare AXI DMA Controller
+>  
+>  maintainers:
+>    - Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com
 
-Don't need '|' unless there's formatting to preserve.
+Also, for the first patch, missing a '>' on the end.
 
-> + Synopsys DesignWare AXI DMA Controller DT Binding
+> +  - Jee Heng Sia <jee.heng.sia@intel.com>
+>  
+>  description: |
+>   Synopsys DesignWare AXI DMA Controller DT Binding
+> @@ -16,14 +17,18 @@ properties:
+>    compatible:
+>      enum:
+>        - snps,axi-dma-1.01a
+> +      - intel,kmb-axi-dma
+>  
+>    reg:
+> +    minItems: 1
+>      items:
+>        - description: Address range of the DMAC registers
+> +      - description: Address range of the DMAC APB registers
 
-And should be 2 space indent.
+Nevermind for my 'reg' comment on the first patch.
 
+>  
+>    reg-names:
+>      items:
+>        - const: axidma_ctrl_regs
+> +      - const: axidma_apb_regs
+>  
+>    interrupts:
+>      maxItems: 1
+> @@ -124,3 +129,25 @@ examples:
+>           snps,priority = <0 1 2 3>;
+>           snps,axi-max-burst-len = <16>;
+>       };
 > +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - snps,axi-dma-1.01a
-> +
-> +  reg:
-> +    items:
-> +      - description: Address range of the DMAC registers
-
-Just 'maxItems: 1'
-
-> +
-> +  reg-names:
-> +    items:
-> +      - const: axidma_ctrl_regs
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Bus Clock
-> +      - description: Module Clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: core-clk
-> +      - const: cfgr-clk
-> +
-> +  '#dma-cells':
-> +    const: 1
-> +
-> +  dma-channels:
-> +    description: |
-> +      Number of channels supported by hardware.
-
-No need to describe a common property. You do need to provide some 
-constraints. I'd assume there's less than 2^32 channels.
-
-> +
-> +  snps,dma-masters:
-> +    description: |
-> +      Number of AXI masters supported by the hardware.
-> +    allOf:
-
-You don't need to use allOf with a $ref anymore.
-
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [1, 2]
-> +        default: 2
-> +
-> +  snps,data-width:
-> +    description: |
-> +      AXI data width supported by hardware.
-> +      (0 - 8bits, 1 - 16bits, 2 - 32bits, ..., 6 - 512bits)
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [0, 1, 2, 3, 4, 5, 6]
-> +        default: 4
-> +
-> +  snps,priority:
-> +    description: |
-> +      Channel priority specifier associated with the DMA channels.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +      - minItems: 1
-> +        maxItems: 8
-> +        default: [0, 1, 2, 3]
-> +
-> +  snps,block-size:
-> +    description: |
-> +      Channel block size specifier associated with the DMA channels.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +      - minItems: 1
-> +        maxItems: 8
-> +        default: [4096, 4096, 4096, 4096]
-> +
-> +  snps,axi-max-burst-len:
-> +    description: |
-> +      Restrict master AXI burst length by value specified in this property.
-> +      If this property is missing the maximum AXI burst length supported by
-> +      DMAC is used. [1:256]
-
-Looks like some constraints.
-
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +        default: 16
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +  - '#dma-cells'
-> +  - dma-channels
-> +  - snps,dma-masters
-> +  - snps,data-width
-> +  - snps,priority
-> +  - snps,block-size
-> +
-> +additionalProperties: false
-> +
-> +examples:
 > +  - |
+
+For what's just a new compatible and extra reg field, I don't think we 
+need another example.
+
 > +     #include <dt-bindings/interrupt-controller/arm-gic.h>
 > +     #include <dt-bindings/interrupt-controller/irq.h>
-> +     /* example with snps,dw-axi-dmac */
-> +     dmac: dma-controller@80000 {
-> +         compatible = "snps,axi-dma-1.01a";
-> +         reg = <0x80000 0x400>;
-> +         clocks = <&core_clk>, <&cfgr_clk>;
+> +     /* example with intel,kmb-axi-dma */
+> +     #define KEEM_BAY_PSS_AXI_DMA
+> +     #define KEEM_BAY_PSS_APB_AXI_DMA
+> +     axi_dma: dma@28000000 {
+> +         compatible = "intel,kmb-axi-dma";
+> +         reg = <0x28000000 0x1000>, <0x20250000 0x24>;
+> +         reg-names = "axidma_ctrl_regs", "axidma_apb_regs";
+> +         interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
 > +         clock-names = "core-clk", "cfgr-clk";
-> +         interrupt-parent = <&intc>;
-> +         interrupts = <27>;
+> +         clocks = <&scmi_clk KEEM_BAY_PSS_AXI_DMA>, <&scmi_clk KEEM_BAY_PSS_APB_AXI_DMA>;
 > +         #dma-cells = <1>;
-> +         dma-channels = <4>;
-> +         snps,dma-masters = <2>;
-> +         snps,data-width = <3>;
-> +         snps,block-size = <4096 4096 4096 4096>;
-> +         snps,priority = <0 1 2 3>;
+> +         dma-channels = <8>;
+> +         snps,dma-masters = <1>;
+> +         snps,data-width = <4>;
+> +         snps,priority = <0 0 0 0 0 0 0 0>;
+> +         snps,block-size = <1024 1024 1024 1024 1024 1024 1024 1024>;
 > +         snps,axi-max-burst-len = <16>;
 > +     };
 > -- 

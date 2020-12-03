@@ -2,134 +2,161 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2F002C9117
-	for <lists+dmaengine@lfdr.de>; Mon, 30 Nov 2020 23:30:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 992692CCDC4
+	for <lists+dmaengine@lfdr.de>; Thu,  3 Dec 2020 05:12:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730795AbgK3WaA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 30 Nov 2020 17:30:00 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38276 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728255AbgK3WaA (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 30 Nov 2020 17:30:00 -0500
-Received: by mail-io1-f66.google.com with SMTP id y5so12473021iow.5;
-        Mon, 30 Nov 2020 14:29:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8/EaFjzChv3yuUtw47TiG5tYxU7hn1SO6HPIjLuIIAI=;
-        b=I0dozF/A3S8FdBHjRuRyLa61+NKtTzjBquERqRrxqCgPP61Xi5dmA8/EF0dS1mLQUK
-         5Gt+7Qt3+0p0aHuE2lIIe+2OiiN8gScINUPB7tSeVS+c0BvqyJnJGGBhNOm0Y2ed2o0S
-         UM49+QjXI6jqvj37rwX9Ie1ay+BkxWSK57NePbC6Wcn2vMl0j6beNyIk0X38PgzK3U8m
-         F758MqiivDaGUf+WY7xvErqepHGDDmP3UHzdcONzBapneTXuDL/CFVrSM+Hs3+17S8Fo
-         WeqpGEYjhPCOFtyBR8Q8HFgI2EsP0E/agip+n1BKoZG/QjeJ5xX6diMsPdeUXV4Y6tdx
-         ifTQ==
-X-Gm-Message-State: AOAM533FQN4UCeZssfa7TEnXHRcQk8b9S735RQRkKuTDuhExZGkI/fU4
-        1idV74hggml+GfgBb/2OPg==
-X-Google-Smtp-Source: ABdhPJz4ardhIRNFqAXT1upJpFbz8RfML0C1QTA3Qpn7yesfFDmNiEL36ARSBrxNackgrWiKJHU2XQ==
-X-Received: by 2002:a02:b011:: with SMTP id p17mr16475329jah.55.1606775358790;
-        Mon, 30 Nov 2020 14:29:18 -0800 (PST)
-Received: from xps15 ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id y13sm5373842iop.14.2020.11.30.14.29.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Nov 2020 14:29:18 -0800 (PST)
-Received: (nullmailer pid 3151605 invoked by uid 1000);
-        Mon, 30 Nov 2020 22:29:16 -0000
-Date:   Mon, 30 Nov 2020 15:29:16 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     Sia Jee Heng <jee.heng.sia@intel.com>
-Cc:     vkoul@kernel.org, Eugeniy.Paltsev@synopsys.com,
-        andriy.shevchenko@linux.intel.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 10/16] dt-binding: dma: dw-axi-dmac: Add support for
- Intel KeemBay AxiDMA
-Message-ID: <20201130222916.GA3146362@robh.at.kernel.org>
-References: <20201123023452.7894-1-jee.heng.sia@intel.com>
- <20201123023452.7894-11-jee.heng.sia@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201123023452.7894-11-jee.heng.sia@intel.com>
+        id S1726746AbgLCEMb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 2 Dec 2020 23:12:31 -0500
+Received: from mga05.intel.com ([192.55.52.43]:13539 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726071AbgLCEMb (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 2 Dec 2020 23:12:31 -0500
+IronPort-SDR: TrfnyXf/k9wf604YwBWGYxwXUmgAvlO3HgiIlhs/j7plmDhloDARXbU4U136ToyqhBN61aGcF0
+ XRw+H+PMtYDw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9823"; a="257844428"
+X-IronPort-AV: E=Sophos;i="5.78,388,1599548400"; 
+   d="scan'208";a="257844428"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2020 20:10:51 -0800
+IronPort-SDR: SEdTETDoFLpJwifIoxOJO14nDI8vQ7LGwZmz48sqxvA0jLzCvp2iiXXW5UtrDLRMREK0BbUQyP
+ 95xGHBoSl9VA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,388,1599548400"; 
+   d="scan'208";a="316329844"
+Received: from sgsxdev004.isng.phoenix.local (HELO localhost) ([10.226.81.179])
+  by fmsmga007.fm.intel.com with ESMTP; 02 Dec 2020 20:10:48 -0800
+From:   Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>
+To:     dmaengine@vger.kernel.org, vkoul@kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        chuanhua.lei@linux.intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, mallikarjunax.reddy@linux.intel.com,
+        malliamireddy009@gmail.com, peter.ujfalusi@ti.com
+Subject: [PATCH v10 0/2] Add Intel LGM SoC DMA support
+Date:   Thu,  3 Dec 2020 12:10:42 +0800
+Message-Id: <cover.1606905330.git.mallikarjunax.reddy@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Nov 23, 2020 at 10:34:46AM +0800, Sia Jee Heng wrote:
-> Add support for Intel KeemBay AxiDMA to the dw-axi-dmac
-> Schemas DT binding.
-> 
-> Signed-off-by: Sia Jee Heng <jee.heng.sia@intel.com>
-> ---
->  .../bindings/dma/snps,dw-axi-dmac.yaml        | 27 +++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-> index 6c2e8e612af5..9e3ca9083814 100644
-> --- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-> +++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-> @@ -8,6 +8,7 @@ title: Synopsys DesignWare AXI DMA Controller
->  
->  maintainers:
->    - Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com
+Add DMA controller driver for Lightning Mountain (LGM) family of SoCs.
 
-Also, for the first patch, missing a '>' on the end.
+The main function of the DMA controller is the transfer of data from/to any
+peripheral to/from the memory. A memory to memory copy capability can also
+be configured. This ldma driver is used for configure the device and channnels
+for data and control paths.
 
-> +  - Jee Heng Sia <jee.heng.sia@intel.com>
->  
->  description: |
->   Synopsys DesignWare AXI DMA Controller DT Binding
-> @@ -16,14 +17,18 @@ properties:
->    compatible:
->      enum:
->        - snps,axi-dma-1.01a
-> +      - intel,kmb-axi-dma
->  
->    reg:
-> +    minItems: 1
->      items:
->        - description: Address range of the DMAC registers
-> +      - description: Address range of the DMAC APB registers
+These controllers provide DMA capabilities for a variety of on-chip
+devices such as SSC, HSNAND and GSWIP (Gigabit Switch IP).
 
-Nevermind for my 'reg' comment on the first patch.
+-------------
+Future Plans:
+-------------
+LGM SOC also supports Hardware Memory Copy engine.
+The role of the HW Memory copy engine is to offload memory copy operations
+from the CPU.
 
->  
->    reg-names:
->      items:
->        - const: axidma_ctrl_regs
-> +      - const: axidma_apb_regs
->  
->    interrupts:
->      maxItems: 1
-> @@ -124,3 +129,25 @@ examples:
->           snps,priority = <0 1 2 3>;
->           snps,axi-max-burst-len = <16>;
->       };
-> +
-> +  - |
+Amireddy Mallikarjuna reddy (2):
+  dt-bindings: dma: Add bindings for Intel LGM SoC
+  Add Intel LGM SoC DMA support.
 
-For what's just a new compatible and extra reg field, I don't think we 
-need another example.
+ .../devicetree/bindings/dma/intel,ldma.yaml   |  116 ++
+ drivers/dma/Kconfig                           |    2 +
+ drivers/dma/Makefile                          |    1 +
+ drivers/dma/lgm/Kconfig                       |    9 +
+ drivers/dma/lgm/Makefile                      |    2 +
+ drivers/dma/lgm/lgm-dma.c                     | 1739 +++++++++++++++++
+ 6 files changed, 1869 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/intel,ldma.yaml
+ create mode 100644 drivers/dma/lgm/Kconfig
+ create mode 100644 drivers/dma/lgm/Makefile
+ create mode 100644 drivers/dma/lgm/lgm-dma.c
+--
+v1:
+- Initial version.
 
-> +     #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +     #include <dt-bindings/interrupt-controller/irq.h>
-> +     /* example with intel,kmb-axi-dma */
-> +     #define KEEM_BAY_PSS_AXI_DMA
-> +     #define KEEM_BAY_PSS_APB_AXI_DMA
-> +     axi_dma: dma@28000000 {
-> +         compatible = "intel,kmb-axi-dma";
-> +         reg = <0x28000000 0x1000>, <0x20250000 0x24>;
-> +         reg-names = "axidma_ctrl_regs", "axidma_apb_regs";
-> +         interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
-> +         clock-names = "core-clk", "cfgr-clk";
-> +         clocks = <&scmi_clk KEEM_BAY_PSS_AXI_DMA>, <&scmi_clk KEEM_BAY_PSS_APB_AXI_DMA>;
-> +         #dma-cells = <1>;
-> +         dma-channels = <8>;
-> +         snps,dma-masters = <1>;
-> +         snps,data-width = <4>;
-> +         snps,priority = <0 0 0 0 0 0 0 0>;
-> +         snps,block-size = <1024 1024 1024 1024 1024 1024 1024 1024>;
-> +         snps,axi-max-burst-len = <16>;
-> +     };
-> -- 
-> 2.18.0
-> 
+v2:
+- Fix device tree bot issues, correspondign driver changes done.
+- Fix kerntel test robot warnings.
+  --------------------------------------------------------
+  >> drivers/dma/lgm/lgm-dma.c:729:5: warning: no previous prototype for function 'intel_dma_chan_desc_cfg' [-Wmissing-prototypes]
+  int intel_dma_chan_desc_cfg(struct dma_chan *chan, dma_addr_t desc_base,
+  ^
+  drivers/dma/lgm/lgm-dma.c:729:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  int intel_dma_chan_desc_cfg(struct dma_chan *chan, dma_addr_t desc_base,
+  ^
+  static
+  1 warning generated.
+
+  vim +/intel_dma_chan_desc_cfg +729 drivers/dma/lgm/lgm-dma.c
+
+    728
+  > 729 int intel_dma_chan_desc_cfg(struct dma_chan *chan, dma_addr_t desc_base,
+    730                             int desc_num)
+    731 {
+    732         return ldma_chan_desc_cfg(to_ldma_chan(chan), desc_base, desc_num);
+    733 }
+    734 EXPORT_SYMBOL_GPL(intel_dma_chan_desc_cfg);
+    735
+
+   Reported-by: kernel test robot <lkp@intel.com>
+   ---------------------------------------------------------------
+
+v3:
+- Fix smatch warning.
+  ----------------------------------------------------------------
+  smatch warnings:
+  drivers/dma/lgm/lgm-dma.c:1306 ldma_cfg_init() error: uninitialized symbol 'ret'.
+
+  Reported-by: kernel test robot <lkp@intel.com>
+  Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+  ----------------------------------------------------------------
+
+v4:
+- Address Thomas Langer comments in dtbinding and corresponding driver side changes.
+- Driver side changes to corresponding device tree changes.
+
+v5:
+- Add changes to read 'dmas' properties and update the config properties driver side.
+- Add virt_dma_desc utilizes virt-dma API.
+
+v6:
+- Driver changes corresponding to the device tree changes.
+- Restructure things to have less activity with the spinlock.
+- Save the slave config in dma_slave_config() and used in prepare time.
+- Addressed & fixed issues related to desc_free callback _free_ up the memory.
+- Addressed peter review comments.
+
+v7:
+- Change bool to tristate in Kconfig
+- Explained the _initcall()
+- change of_property*() to device_property_*()
+- split the code to functions at version checks
+- Remove the dma caller capability restrictions
+- used for_each_set_bit()
+- Addressed minor comments and fine tune the code.
+
+v7-resend:
+- rebase to 5.10-rc1
+
+v8:
+- rebase to 5.10-rc3
+- Addressed structural things and fine tune the code.
+
+v9:
+- rebase to 5.10-rc3
+- No change.
+
+v10:
+- rebase to 5.10-rc6
+- Used helpers in bitfield.h (FIELD_PREP ()) instead of bit fields to set the descriptor fields.
+- Removed local copy of dmaengine ops.
+- Removed custom API and used dmaengine callback & remove include/linux/dma/lgm_dma.h file
+- Moved dt properties to driver data.
+- Fine tune the code.
+-- 
+2.17.1
+

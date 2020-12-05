@@ -2,54 +2,129 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 876502CF8D8
-	for <lists+dmaengine@lfdr.de>; Sat,  5 Dec 2020 02:55:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 84D6C2CF9F0
+	for <lists+dmaengine@lfdr.de>; Sat,  5 Dec 2020 07:09:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbgLEBzN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 4 Dec 2020 20:55:13 -0500
-Received: from vsm-gw.hyogo-dai.ac.jp ([202.244.76.12]:34774 "EHLO
-        vsm-gw.hyogo-dai.ac.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725300AbgLEBzN (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 4 Dec 2020 20:55:13 -0500
-X-Greylist: delayed 15725 seconds by postgrey-1.27 at vger.kernel.org; Fri, 04 Dec 2020 20:55:12 EST
-Received: from humans-kc.hyogo-dai.ac.jp (humans-kc.hyogo-dai.ac.jp [202.244.77.11])
-        by vsm-gw.hyogo-dai.ac.jp (Postfix) with ESMTP id 94B1C1A29E7;
-        Sat,  5 Dec 2020 05:05:07 +0900 (JST)
-Received: from humans-kc.hyogo-dai.ac.jp (humans-kc.hyogo-dai.ac.jp [127.0.0.1])
-        by postfix.imss71 (Postfix) with ESMTP id 5BCCF682202;
-        Sat,  5 Dec 2020 05:05:07 +0900 (JST)
-Received: from hyogo-dai.ac.jp (unknown [202.244.77.11])
-        by humans-kc.hyogo-dai.ac.jp (Postfix) with SMTP id 3103F682201;
-        Sat,  5 Dec 2020 05:05:07 +0900 (JST)
+        id S1726774AbgLEGJV (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 5 Dec 2020 01:09:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40902 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726735AbgLEGJV (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 5 Dec 2020 01:09:21 -0500
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A462C061A4F
+        for <dmaengine@vger.kernel.org>; Fri,  4 Dec 2020 22:08:41 -0800 (PST)
+Received: by mail-pg1-x541.google.com with SMTP id e23so4876988pgk.12
+        for <dmaengine@vger.kernel.org>; Fri, 04 Dec 2020 22:08:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=KyCltGo5Jh+2iRWxe0Q7oC+kYFctDXgmC6IuBeRcK5k=;
+        b=yRdoGg3CcSs/UppaG2EdVs9NHQeHdSZGv4HNg+4XYZF4vRNG2plcNU9F+BsrBcy2Eg
+         +aCzwKc3D5wc53CoPzn6j9ujqNu5KVvp+fyBDasjyuDn3GcODGbZB8ugXaE/tlZ8/qXh
+         cT8qbYq92aIms6eCIDpp+o+7aQbB6bcy2B12p6BQsOOef8MnptTc01JKCnUqq/ySIOAD
+         UqDfs9PnRHPJMf586NPY0Xf0ixadWdsXjOG5jAdAIxpa8t3QBrD572GiiJvMPZAnovBA
+         jrNglt54qPeS+IXHLgP6NgbieCF/dcIT3WQTaTF7tvNvJ5Nnjamd15nCnyDNCIYOw7IJ
+         lydA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KyCltGo5Jh+2iRWxe0Q7oC+kYFctDXgmC6IuBeRcK5k=;
+        b=Br+to0U3SZMXyyaqmNGyIdyUMfI3tDVM6xWkEO8TdRXhvFh3qoCo0IXQpa+lCJrKxu
+         iqbLN7Pu0RdRQmAnQ9pRuPIzYyopX1TmpNFD1/o2R0MEz06ZQf1//ymyYo2qhEU+pK7R
+         vOozzCPmjeAFQo8kSprudq9HU06TJrqXlYu7oH7NxsEl+bDw4y9VyECYaw+GCx2e0BSU
+         MzfK5KSpVNjufdor2fmixX1SuQRX5ddFQtNN8FvG6sSzpXY7L8brxZo/8UflMhOvM2Cw
+         FRfTbe4Ma8WrQSzn3j0SHvBXQztCUIKmlVTahiJJOw/AE3VDJ+FvVcEOA721kmBeyoBy
+         ocTQ==
+X-Gm-Message-State: AOAM5333Oqq7WmCuleD6O17c21lTOxBfLYNUWHCkw7ajwbX6+Y22TK9t
+        NgzlwusJrWwuIMZpbwKwjrnH
+X-Google-Smtp-Source: ABdhPJwgqYSKX9/t+x42f5dD9qUaRlQ86l6l2+sMNxDOx43O7XkVzMyQhapssOtj1pRzRiXvd/IoOg==
+X-Received: by 2002:a63:1b11:: with SMTP id b17mr10315665pgb.1.1607148520425;
+        Fri, 04 Dec 2020 22:08:40 -0800 (PST)
+Received: from thinkpad ([2409:4072:648e:8bd1:74b2:a4d8:e3fe:225b])
+        by smtp.gmail.com with ESMTPSA id m18sm7119878pff.144.2020.12.04.22.08.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Dec 2020 22:08:39 -0800 (PST)
+Date:   Sat, 5 Dec 2020 11:38:31 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 05/18] dmaengine: owl: Add compatible for the Actions
+ Semi S500 DMA controller
+Message-ID: <20201205060831.GA4068@thinkpad>
+References: <cover.1605823502.git.cristian.ciocaltea@gmail.com>
+ <f2e9f718eb8c7279127086795a4ef5047fc186d5.1605823502.git.cristian.ciocaltea@gmail.com>
+ <20201128073045.GU3077@thinkpad>
+ <20201129182421.GD696261@BV030612LT>
 MIME-Version: 1.0
-Message-ID: <20201204200507.0000964F.0187@hyogo-dai.ac.jp>
-Date:   Sat, 05 Dec 2020 05:05:07 +0900
-From:   "Dr.Raymond" <tabata@hyogo-dai.ac.jp>
-To:     <infocarferr1@aim.com>
-Reply-To: <infocarfer@aim.com>
-Subject: I am Vice Chairman of Hang Seng Bank, Dr. Raymond Chien
-         Kuo Fung I have Important Matter to Discuss with you concerning
-         my late client. Died without a NEXT OF KIN. Send me your private
-         email for full details information. 
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MAILER: Active! mail
-X-TM-AS-MML: disable
-X-TM-AS-Product-Ver: IMSS-7.1.0.1808-8.2.0.1013-25446.007
-X-TM-AS-Result: No--4.326-5.0-31-10
-X-imss-scan-details: No--4.326-5.0-31-10
-X-TM-AS-User-Approved-Sender: No
-X-TMASE-MatchedRID: +T4Z3mpR0x5ITndh1lLRASsOycAMAhSTkCM77ifYafsBLhz6t76Ce/bj
-        Enpjm61/Gf23dqZJjE4Erxo5p8V1/E1+zyfzlN7y/sToY2qzpx7w5nZ/qYg41XEWw1TkKAjcYff
-        qdBtG2ocgOkCKsW/kbuunGEBqPil++coAzulIP8gMTyJMXCOBhj9BWL7GG0LsKrauXd3MZDUZaR
-        NzIP3XI5u3uLPgwbAMH5RdHnhWfwyq9gpuf+A6coDeeVSgzszVDx5n520Z3eZyT7DDRtYlKaWBy
-        ZE9nSaC/rhfyjvqkZu/pNa4BidtZEMMprcbiest
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201129182421.GD696261@BV030612LT>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-infocarfer@aim.com
+On Sun, Nov 29, 2020 at 08:24:21PM +0200, Cristian Ciocaltea wrote:
+> On Sat, Nov 28, 2020 at 01:00:45PM +0530, Manivannan Sadhasivam wrote:
+> > On Fri, Nov 20, 2020 at 01:55:59AM +0200, Cristian Ciocaltea wrote:
+> > > The DMA controller present on the Actions Semi S500 SoC is compatible
+> > > with the S900 variant, so add it to the list of devices supported by
+> > > the Actions Semi Owl DMA driver.
+> > > 
+> > > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > 
+> > I hope that you have verified both Memcpy and Slave transfers...
+> 
+> I have been using 'dmatest' module as documented in:
+> https://www.kernel.org/doc/html/latest/driver-api/dmaengine/dmatest.html
+> 
+> I tested all the available channels and could not find any signs of
+> possible issues. Bellow is an excerpt from the kernel ring buffer:
+> 
+> [ 2661.884680] dmatest: dma0chan1-copy0: summary 300 tests, 0 failures 1653.48 iops 13249 KB/s (0)
+> [ 2661.886567] dmatest: dma0chan2-copy0: summary 300 tests, 0 failures 1684.40 iops 12846 KB/s (0)
+> [ 2661.888448] dmatest: dma0chan3-copy0: summary 300 tests, 0 failures 1730.62 iops 13648 KB/s (0)
+> 
+> Should I perform some additional tests?
+> 
 
+Nope, this is sufficient. Since you have tested slave transfer with MMC driver,
+running dmatest for memcpy is fine.
 
+Thanks,
+Mani
 
+> Thanks,
+> Cristi
+> 
+> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > Thanks,
+> > Mani
+> > 
+> > > ---
+> > >  drivers/dma/owl-dma.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
+> > > index 9fede32641e9..54e509de66e2 100644
+> > > --- a/drivers/dma/owl-dma.c
+> > > +++ b/drivers/dma/owl-dma.c
+> > > @@ -1082,6 +1082,7 @@ static struct dma_chan *owl_dma_of_xlate(struct of_phandle_args *dma_spec,
+> > >  static const struct of_device_id owl_dma_match[] = {
+> > >  	{ .compatible = "actions,s900-dma", .data = (void *)S900_DMA,},
+> > >  	{ .compatible = "actions,s700-dma", .data = (void *)S700_DMA,},
+> > > +	{ .compatible = "actions,s500-dma", .data = (void *)S900_DMA,},
+> > >  	{ /* sentinel */ },
+> > >  };
+> > >  MODULE_DEVICE_TABLE(of, owl_dma_match);
+> > > -- 
+> > > 2.29.2
+> > > 

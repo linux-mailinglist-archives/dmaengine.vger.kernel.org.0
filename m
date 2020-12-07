@@ -2,222 +2,332 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EDE92D0B1F
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Dec 2020 08:31:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 201252D1034
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Dec 2020 13:15:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbgLGHaY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 7 Dec 2020 02:30:24 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58202 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbgLGHaY (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 7 Dec 2020 02:30:24 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0B77Sb7T099914;
-        Mon, 7 Dec 2020 01:28:37 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1607326117;
-        bh=E26GSIN7nbh9QhT/f26Saq/Sje3zJwJEZvIk5wJ8pT0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=GVPB+L2y1FoWMi1d9e7HtfhOpan1SpVGu4CZ0/SOn6kXv30G21bacMJS7UQ2Noo6s
-         UxLSssuMPdV8OxgsZWFGR0fZnAFMFO+1X25VwCaXZm8s/SDmJoEHWXHLrhTQoQC0q+
-         NtHvpyaZXq5leCCK7wroCd7EOhNLFJS1xBLFVFs0=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0B77SbsG000916
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 7 Dec 2020 01:28:37 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 7 Dec
- 2020 01:28:36 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 7 Dec 2020 01:28:36 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0B77SXRT084474;
-        Mon, 7 Dec 2020 01:28:34 -0600
-Subject: Re: [PATCH v2 00/19] dmaengine/soc: k3-udma: Add support for BCDMA
- and PKTDMA
-To:     Vinod Koul <vkoul@kernel.org>, <ssantosh@kernel.org>,
-        <santosh.shilimkar@oracle.com>
-CC:     <nm@ti.com>, <robh+dt@kernel.org>, <dan.j.williams@intel.com>,
-        <t-kristo@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <vigneshr@ti.com>,
-        <grygorii.strashko@ti.com>
-References: <20201117105656.5236-1-peter.ujfalusi@ti.com>
- <20201124170856.GR8403@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <54416232-31b4-e866-82e9-0e9314528a81@ti.com>
-Date:   Mon, 7 Dec 2020 09:29:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        id S1727004AbgLGMOX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 7 Dec 2020 07:14:23 -0500
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2473 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbgLGMOX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 7 Dec 2020 07:14:23 -0500
+Received: from dggeme755-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4CqMdw5z38z4yXs;
+        Mon,  7 Dec 2020 20:13:08 +0800 (CST)
+Received: from [10.140.157.68] (10.140.157.68) by
+ dggeme755-chm.china.huawei.com (10.3.19.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Mon, 7 Dec 2020 20:13:38 +0800
+Subject: Re: [PATCH v5 1/4] dt-bindings: Document the hi3559a clock bindings
+To:     Rob Herring <robh@kernel.org>
+CC:     <mturquette@baylibre.com>, <sboyd@kernel.org>, <vkoul@kernel.org>,
+        <dan.j.williams@intel.com>, <p.zabel@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>
+References: <20201119200129.28532-1-gengdongjiu@huawei.com>
+ <20201119200129.28532-2-gengdongjiu@huawei.com>
+ <20201130220711.GA3112118@robh.at.kernel.org>
+From:   Dongjiu Geng <gengdongjiu@huawei.com>
+Message-ID: <b1253045-12a9-e411-4141-ce49bc1407c9@huawei.com>
+Date:   Mon, 7 Dec 2020 20:13:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-In-Reply-To: <20201124170856.GR8403@vkoul-mobl>
+In-Reply-To: <20201130220711.GA3112118@robh.at.kernel.org>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.140.157.68]
+X-ClientProxiedBy: dggeme705-chm.china.huawei.com (10.1.199.101) To
+ dggeme755-chm.china.huawei.com (10.3.19.101)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Santosh,
-
-On 24/11/2020 19.08, Vinod Koul wrote:
-> On 17-11-20, 12:56, Peter Ujfalusi wrote:
->> Hi,
+On 2020/12/1 6:07, Rob Herring wrote:
+> On Thu, Nov 19, 2020 at 08:01:26PM +0000, Dongjiu Geng wrote:
+>> Add DT bindings documentation for hi3559a SoC clock.
 >>
->> The series have build dependency on ti_sci/soc series (v2):
->> https://lore.kernel.org/lkml/20201008115224.1591-1-peter.ujfalusi@ti.com/
->>
->> Santosh kindly created immutable branch holdinf the series:
->> git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git for_5.11/drivers-soc 
-> 
-> Santosh, Can I have a signed tag for this please?
-
-Can you please provide a tag for Vinod?
-
-I'm ready to send v3 with few small fixes and waiting for Rob to get to
-the binding documents before I do.
-
-Thanks,
-- Péter
-
->>
->> The unmapped event handling in INTA is already mainline.
->>
->> Changes since v1:
->> - Both DT binding document has been updated to address all comments and
->>   suggestions from Rob, all checks are passing on them
->> - included new patch to fix the normal channel start offset when ultra-high
->>   capacity channels are available for the UDMA and updated the BCDMA/PKTDMA
->>   patches along the same line
->> - Re-arranged the patches for Vinod so that the preparational patches and fixes
->>   can be picked up separately (they still have dependency on Santosh's branch):
->>
->>   patch 1-5: Fixes and new features for existing devices using UDMA, but the
->>              the BCDMA/PKTDMA support is building on top of these.
->>              Build dependency on Santosh's branch
->>   patch 6: Optional second stage router configuration callback support in core
->>   patch 7-9: Per channel coherency support in core and use it in dmatest.
->>   patch 10-: Initial AM64 BCDMA and PKTDMA support
->>
->> The DMSS introduced within AM64 as a simplified Data movement engine is built
->> on similar grounds as the K3 NAVSS and UDMAP, but with significant architectural
->> changes.
->>
->> - Rings are built into the DMAs
->> The DMAs no longer use the general purpose ringacc, all rings has been moved
->> inside of the DMAs. The new rings within the DMAs are simplified to be dual
->> directional compared to the uni-directional rings in ringacc.
->> There is no more of a concept of generic purpose rings, all rings are assigned
->> to specific channels or flows.
->>
->> - Per channel coherency support
->> The DMAs use the 'ASEL' bits to select data and configuration fetch path. The
->> ASEL bits are placed at the unused parts of any address field used by the
->> DMAs (pointers to descriptors, addresses in descriptors, ring base addresses).
->> The ASEL is not part of the address (the DMAs can address 48bits).
->> Individual channels can be configured to be coherent (via ACP port) or non
->> coherent individually by configuring the ASEL to appropriate value.
->>
->> - Two different DMAs (well, three actually)
->> PKTDMA
->> Similar to UDMAP channels configured in packet mode.
->> The flow configuration of the channels has changed significantly in a way that
->> each channel have at least one flow assigned at design time and each flow is
->> directly mapped to corresponding ring.
->> When multiple flows are set, the channel can only use the flows within it's
->> assigned range.
->> PKTDMA also introduced multiple tflows which did not existed in UDMAP.
->>
->> BCDMA
->> It has two types of channels:
->> - split channels (tchan/rchan): Similar to UDMAP channels configured in TR mode.
->> - Block copy channels (bchan): Similar to EDMA or traditional DMA channels, they
->>   can be used for mem2mem type of transfers or to service peripherals not
->>   accessible via PSI-L by using external triggers for the TR.
->> BCDMA channels do not have support for multiple flows
->>
->> With the introduction of the new DMAs (especially the BCDMA) we also need to
->> update the resource manager code to support the second range from sysfw for
->> UDMA channels.
->>
->> The two outstanding change in the series in my view is
->> the handling of the DMAs sideband signal of ASEL to select path to provide
->> coherency or non coherency.
->>
->> The smaller one is the device_router_config callback to allow the configuration
->> of the triggers when BCDMA is servicing a triggering peripheral to solve a
->> chicken-egg situation:
->> The router needs to know the event number to send which in turn depends on the
->> channel we got for servicing the peripheral.
->>
->> Regards,
->> Peter
+>> Signed-off-by: Dongjiu Geng <gengdongjiu@huawei.com>
 >> ---
->> Grygorii Strashko (1):
->>   soc: ti: k3-ringacc: add AM64 DMA rings support.
+>>  .../clock/hisilicon,hi3559av100-clock.yaml    |  66 +++++++
+>>  include/dt-bindings/clock/hi3559av100-clock.h | 165 ++++++++++++++++++
+>>  2 files changed, 231 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/hisilicon,hi3559av100-clock.yaml
+>>  create mode 100644 include/dt-bindings/clock/hi3559av100-clock.h
 >>
->> Peter Ujfalusi (17):
->>   dmaengine: ti: k3-udma: Correct normal channel offset when uchan_cnt
->>     is not 0
->>   dmaengine: ti: k3-udma: Wait for peer teardown completion if supported
->>   dmaengine: ti: k3-udma: Add support for second resource range from
->>     sysfw
->>   dmaengine: ti: k3-udma-glue: Add function to get device pointer for
->>     DMA API
->>   dmaengine: ti: k3-udma-glue: Configure the dma_dev for rings
->>   dmaengine: of-dma: Add support for optional router configuration
->>     callback
->>   dmaengine: Add support for per channel coherency handling
->>   dmaengine: doc: client: Update for dmaengine_get_dma_device() usage
->>   dmaengine: dmatest: Use dmaengine_get_dma_device
->>   dt-bindings: dma: ti: Add document for K3 BCDMA
->>   dt-bindings: dma: ti: Add document for K3 PKTDMA
->>   dmaengine: ti: k3-psil: Extend psil_endpoint_config for K3 PKTDMA
->>   dmaengine: ti: k3-psil: Add initial map for AM64
->>   dmaengine: ti: Add support for k3 event routers
->>   dmaengine: ti: k3-udma: Initial support for K3 BCDMA
->>   dmaengine: ti: k3-udma: Add support for BCDMA channel TPL handling
->>   dmaengine: ti: k3-udma: Initial support for K3 PKTDMA
->>
->> Vignesh Raghavendra (1):
->>   dmaengine: ti: k3-udma-glue: Add support for K3 PKTDMA
->>
->>  .../devicetree/bindings/dma/ti/k3-bcdma.yaml  |  175 ++
->>  .../devicetree/bindings/dma/ti/k3-pktdma.yaml |  183 ++
->>  Documentation/driver-api/dmaengine/client.rst |    4 +-
->>  drivers/dma/dmatest.c                         |   13 +-
->>  drivers/dma/of-dma.c                          |   10 +
->>  drivers/dma/ti/Makefile                       |    3 +-
->>  drivers/dma/ti/k3-psil-am64.c                 |   75 +
->>  drivers/dma/ti/k3-psil-priv.h                 |    1 +
->>  drivers/dma/ti/k3-psil.c                      |    1 +
->>  drivers/dma/ti/k3-udma-glue.c                 |  294 ++-
->>  drivers/dma/ti/k3-udma-private.c              |   39 +
->>  drivers/dma/ti/k3-udma.c                      | 1968 +++++++++++++++--
->>  drivers/dma/ti/k3-udma.h                      |   27 +-
->>  drivers/soc/ti/k3-ringacc.c                   |  325 ++-
->>  include/linux/dma/k3-event-router.h           |   16 +
->>  include/linux/dma/k3-psil.h                   |   16 +
->>  include/linux/dma/k3-udma-glue.h              |   12 +
->>  include/linux/dmaengine.h                     |   14 +
->>  include/linux/soc/ti/k3-ringacc.h             |   17 +
->>  19 files changed, 2973 insertions(+), 220 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
->>  create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-pktdma.yaml
->>  create mode 100644 drivers/dma/ti/k3-psil-am64.c
->>  create mode 100644 include/linux/dma/k3-event-router.h
->>
->> -- 
->> Peter
->>
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>> diff --git a/Documentation/devicetree/bindings/clock/hisilicon,hi3559av100-clock.yaml b/Documentation/devicetree/bindings/clock/hisilicon,hi3559av100-clock.yaml
+>> new file mode 100644
+>> index 000000000000..0f531e8186d2
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/hisilicon,hi3559av100-clock.yaml
+>> @@ -0,0 +1,66 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/clock/hisilicon,hi3559av100-clock.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Hisilicon SOC Clock for HI3559AV100
+>> +
+>> +maintainers:
+>> +  - Dongjiu Geng <gengdongjiu@huawei.com>
+>> +
+>> +description: |
+>> +  Hisilicon SOC clock control module which supports the clocks, resets and
+>> +  power domains on HI3559AV100.
+>> +
+>> +  See also:
+>> +    dt-bindings/clock/hi3559av100-clock.h
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - hisilicon,hi3559av100-clock
+>> +      - hisilicon,hi3559av100-shub-clock
+>> +
+>> +  reg:
+>> +    minItems: 1
+>> +    maxItems: 2
+>> +
+>> +  '#clock-cells':
+>> +    const: 1
+>> +
+>> +  '#reset-cells':
+>> +    const: 2
 > 
+> What's in each cell?
 
+I will add description for each cell.
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
+>> +
+>> +  '#address-cells':
+>> +    const: 2
+>> +
+>> +  '#size-cells':
+>> +    const: 2
+> 
+> #address-cells and #size-cells are for child nodes, but you have none so 
+> drop them.
+
+Ok, thanks for the reminder.
+
+> 
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - '#clock-cells'
+>> +  - '#reset-cells'
+>> +  - '#address-cells'
+>> +  - '#size-cells'
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    soc {
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +
+>> +        clock: clock0@12010000 {
+> 
+> clock-controller@...
+
+  ok.
+
+> 
+>> +            compatible = "hisilicon,hi3559av100-clock";
+>> +            #address-cells = <2>;
+>> +            #size-cells = <2>;
+>> +            #clock-cells = <1>;
+>> +            #reset-cells = <2>;
+>> +            reg = <0x0 0x12010000 0x0 0x10000>;
+>> +        };
+>> +    };
+>> +...
+>> diff --git a/include/dt-bindings/clock/hi3559av100-clock.h b/include/dt-bindings/clock/hi3559av100-clock.h
+>> new file mode 100644
+>> index 000000000000..88baa86cff85
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/hi3559av100-clock.h
+>> @@ -0,0 +1,165 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+> 
+> Don't care about non-GPL OS/users?
+will fix it.
+
+I will modify it to "GPL-2.0-only OR BSD-2-Clause"
+
+> 
+>> +/*
+>> + * Copyright (c) 2019-2020, Huawei Tech. Co., Ltd.
+>> + *
+>> + * Author: Dongjiu Geng <gengdongjiu@huawei.com>
+>> + */
+>> +
+>> +#ifndef __DTS_HI3559AV100_CLOCK_H
+>> +#define __DTS_HI3559AV100_CLOCK_H
+>> +
+>> +/*  fixed   rate    */
+>> +#define HI3559AV100_FIXED_1188M     1
+>> +#define HI3559AV100_FIXED_1000M     2
+>> +#define HI3559AV100_FIXED_842M      3
+>> +#define HI3559AV100_FIXED_792M      4
+>> +#define HI3559AV100_FIXED_750M      5
+>> +#define HI3559AV100_FIXED_710M      6
+>> +#define HI3559AV100_FIXED_680M      7
+>> +#define HI3559AV100_FIXED_667M      8
+>> +#define HI3559AV100_FIXED_631M      9
+>> +#define HI3559AV100_FIXED_600M      10
+>> +#define HI3559AV100_FIXED_568M      11
+>> +#define HI3559AV100_FIXED_500M      12
+>> +#define HI3559AV100_FIXED_475M      13
+>> +#define HI3559AV100_FIXED_428M      14
+>> +#define HI3559AV100_FIXED_400M      15
+>> +#define HI3559AV100_FIXED_396M      16
+>> +#define HI3559AV100_FIXED_300M      17
+>> +#define HI3559AV100_FIXED_250M      18
+>> +#define HI3559AV100_FIXED_198M      19
+>> +#define HI3559AV100_FIXED_187p5M    20
+>> +#define HI3559AV100_FIXED_150M      21
+>> +#define HI3559AV100_FIXED_148p5M    22
+>> +#define HI3559AV100_FIXED_125M      23
+>> +#define HI3559AV100_FIXED_107M      24
+>> +#define HI3559AV100_FIXED_100M      25
+>> +#define HI3559AV100_FIXED_99M       26
+>> +#define HI3559AV100_FIXED_74p25M    27
+>> +#define HI3559AV100_FIXED_72M       28
+>> +#define HI3559AV100_FIXED_60M       29
+>> +#define HI3559AV100_FIXED_54M       30
+>> +#define HI3559AV100_FIXED_50M       31
+>> +#define HI3559AV100_FIXED_49p5M     32
+>> +#define HI3559AV100_FIXED_37p125M   33
+>> +#define HI3559AV100_FIXED_36M       34
+>> +#define HI3559AV100_FIXED_32p4M     35
+>> +#define HI3559AV100_FIXED_27M       36
+>> +#define HI3559AV100_FIXED_25M       37
+>> +#define HI3559AV100_FIXED_24M       38
+>> +#define HI3559AV100_FIXED_12M       39
+>> +#define HI3559AV100_FIXED_3M        40
+>> +#define HI3559AV100_FIXED_1p6M      41
+>> +#define HI3559AV100_FIXED_400K      42
+>> +#define HI3559AV100_FIXED_100K      43
+>> +#define HI3559AV100_FIXED_200M      44
+>> +#define HI3559AV100_FIXED_75M       75
+>> +
+>> +#define HI3559AV100_I2C0_CLK    50
+>> +#define HI3559AV100_I2C1_CLK    51
+>> +#define HI3559AV100_I2C2_CLK    52
+>> +#define HI3559AV100_I2C3_CLK    53
+>> +#define HI3559AV100_I2C4_CLK    54
+>> +#define HI3559AV100_I2C5_CLK    55
+>> +#define HI3559AV100_I2C6_CLK    56
+>> +#define HI3559AV100_I2C7_CLK    57
+>> +#define HI3559AV100_I2C8_CLK    58
+>> +#define HI3559AV100_I2C9_CLK    59
+>> +#define HI3559AV100_I2C10_CLK   60
+>> +#define HI3559AV100_I2C11_CLK   61
+>> +
+>> +#define HI3559AV100_SPI0_CLK    62
+>> +#define HI3559AV100_SPI1_CLK    63
+>> +#define HI3559AV100_SPI2_CLK    64
+>> +#define HI3559AV100_SPI3_CLK    65
+>> +#define HI3559AV100_SPI4_CLK    66
+>> +#define HI3559AV100_SPI5_CLK    67
+>> +#define HI3559AV100_SPI6_CLK    68
+>> +
+>> +#define HI3559AV100_EDMAC_CLK     69
+>> +#define HI3559AV100_EDMAC_AXICLK  70
+>> +#define HI3559AV100_EDMAC1_CLK    71
+>> +#define HI3559AV100_EDMAC1_AXICLK 72
+>> +#define HI3559AV100_VDMAC_CLK     73
+>> +
+>> +/*  mux clocks  */
+>> +#define HI3559AV100_FMC_MUX     80
+>> +#define HI3559AV100_SYSAPB_MUX  81
+>> +#define HI3559AV100_UART_MUX    82
+>> +#define HI3559AV100_SYSBUS_MUX  83
+>> +#define HI3559AV100_A73_MUX     84
+>> +#define HI3559AV100_MMC0_MUX    85
+>> +#define HI3559AV100_MMC1_MUX    86
+>> +#define HI3559AV100_MMC2_MUX    87
+>> +#define HI3559AV100_MMC3_MUX    88
+>> +
+>> +/*  gate    clocks  */
+>> +#define HI3559AV100_FMC_CLK     90
+>> +#define HI3559AV100_UART0_CLK   91
+>> +#define HI3559AV100_UART1_CLK   92
+>> +#define HI3559AV100_UART2_CLK   93
+>> +#define HI3559AV100_UART3_CLK   94
+>> +#define HI3559AV100_UART4_CLK   95
+>> +#define HI3559AV100_MMC0_CLK    96
+>> +#define HI3559AV100_MMC1_CLK    97
+>> +#define HI3559AV100_MMC2_CLK    98
+>> +#define HI3559AV100_MMC3_CLK    99
+>> +
+>> +#define HI3559AV100_ETH_CLK         100
+>> +#define HI3559AV100_ETH_MACIF_CLK   101
+>> +#define HI3559AV100_ETH1_CLK        102
+>> +#define HI3559AV100_ETH1_MACIF_CLK  103
+>> +
+>> +/*  complex */
+>> +#define HI3559AV100_MAC0_CLK                110
+>> +#define HI3559AV100_MAC1_CLK                111
+>> +#define HI3559AV100_SATA_CLK                112
+>> +#define HI3559AV100_USB_CLK                 113
+>> +#define HI3559AV100_USB1_CLK                114
+>> +
+>> +/* pll clocks */
+>> +#define HI3559AV100_APLL_CLK                250
+>> +#define HI3559AV100_GPLL_CLK                251
+>> +
+>> +#define HI3559AV100_CRG_NR_CLKS	            256
+>> +
+>> +#define HI3559AV100_SHUB_SOURCE_SOC_24M	    0
+>> +#define HI3559AV100_SHUB_SOURCE_SOC_200M    1
+>> +#define HI3559AV100_SHUB_SOURCE_SOC_300M    2
+>> +#define HI3559AV100_SHUB_SOURCE_PLL         3
+>> +#define HI3559AV100_SHUB_SOURCE_CLK         4
+>> +
+>> +#define HI3559AV100_SHUB_I2C0_CLK           10
+>> +#define HI3559AV100_SHUB_I2C1_CLK           11
+>> +#define HI3559AV100_SHUB_I2C2_CLK           12
+>> +#define HI3559AV100_SHUB_I2C3_CLK           13
+>> +#define HI3559AV100_SHUB_I2C4_CLK           14
+>> +#define HI3559AV100_SHUB_I2C5_CLK           15
+>> +#define HI3559AV100_SHUB_I2C6_CLK           16
+>> +#define HI3559AV100_SHUB_I2C7_CLK           17
+>> +
+>> +#define HI3559AV100_SHUB_SPI_SOURCE_CLK     20
+>> +#define HI3559AV100_SHUB_SPI4_SOURCE_CLK    21
+>> +#define HI3559AV100_SHUB_SPI0_CLK           22
+>> +#define HI3559AV100_SHUB_SPI1_CLK           23
+>> +#define HI3559AV100_SHUB_SPI2_CLK           24
+>> +#define HI3559AV100_SHUB_SPI3_CLK           25
+>> +#define HI3559AV100_SHUB_SPI4_CLK           26
+>> +
+>> +#define HI3559AV100_SHUB_UART_CLK_32K       30
+>> +#define HI3559AV100_SHUB_UART_SOURCE_CLK    31
+>> +#define HI3559AV100_SHUB_UART_DIV_CLK       32
+>> +#define HI3559AV100_SHUB_UART0_CLK          33
+>> +#define HI3559AV100_SHUB_UART1_CLK          34
+>> +#define HI3559AV100_SHUB_UART2_CLK          35
+>> +#define HI3559AV100_SHUB_UART3_CLK          36
+>> +#define HI3559AV100_SHUB_UART4_CLK          37
+>> +#define HI3559AV100_SHUB_UART5_CLK          38
+>> +#define HI3559AV100_SHUB_UART6_CLK          39
+>> +
+>> +#define HI3559AV100_SHUB_EDMAC_CLK          40
+>> +
+>> +#define HI3559AV100_SHUB_NR_CLKS            50
+>> +
+>> +#endif  /* __DTS_HI3559AV100_CLOCK_H */
+>> +
+>> -- 
+>> 2.17.1
+>>
+> .
+> 

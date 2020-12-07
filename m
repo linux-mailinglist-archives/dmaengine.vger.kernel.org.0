@@ -2,100 +2,263 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 704012D1566
-	for <lists+dmaengine@lfdr.de>; Mon,  7 Dec 2020 17:02:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B6EE2D1935
+	for <lists+dmaengine@lfdr.de>; Mon,  7 Dec 2020 20:14:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725822AbgLGQAx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 7 Dec 2020 11:00:53 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:36826 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgLGQAx (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 7 Dec 2020 11:00:53 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B7FxvtU093883;
-        Mon, 7 Dec 2020 15:59:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=QmE5XGfNVDaXSVhroX5djONqdwv6Tyi1JDRvHNNex3w=;
- b=Yia5WQj0S7TbqPriIuRPI0r9m4Vt6szO5adGMLngXA1Ufs3GPEO9R2/7qU1sS7WQ85tB
- c/odCmBOtH0fNTGi6E11SYi6KigSC4JcquTrjVmfVTIF0o5tfQKiESxutGUmjE2DWC/k
- VIK3KjSKvbdd98TOfcm5RTgPi12O/y/Gv3GRQgRJstBCqTLPyIdrpeDPJvnRZAyhLsvT
- l+UOvrh8fdxdkiYFLweqU1l77aUbdRq/Ep+tclp224jdkBme+74yETrRQiiHkSjf2Anl
- eJ4uCwA2PsHUTtHP2kIKFXDV73YoYVyE8BPVDOSuiKmpoX2fcEv0uyBbl3GhQjlx6Qza kw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 3581mqp1b9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 07 Dec 2020 15:59:57 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B7FoaQ6078928;
-        Mon, 7 Dec 2020 15:59:57 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 358kyrdpca-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 07 Dec 2020 15:59:57 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0B7FxtKi020363;
-        Mon, 7 Dec 2020 15:59:55 GMT
-Received: from [10.74.109.38] (/10.74.109.38)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 07 Dec 2020 07:59:55 -0800
-Subject: Re: [PATCH v2 00/19] dmaengine/soc: k3-udma: Add support for BCDMA
- and PKTDMA
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, ssantosh@kernel.org
-Cc:     nm@ti.com, robh+dt@kernel.org, dan.j.williams@intel.com,
-        t-kristo@ti.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        dmaengine@vger.kernel.org, vigneshr@ti.com,
-        grygorii.strashko@ti.com
-References: <20201117105656.5236-1-peter.ujfalusi@ti.com>
- <20201124170856.GR8403@vkoul-mobl>
- <54416232-31b4-e866-82e9-0e9314528a81@ti.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <a1c9189e-0fd1-80b8-8038-cfe556702e60@oracle.com>
-Date:   Mon, 7 Dec 2020 07:59:52 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.12.1
+        id S1726604AbgLGTNG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 7 Dec 2020 14:13:06 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39296 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgLGTNG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 7 Dec 2020 14:13:06 -0500
+Received: by mail-oi1-f195.google.com with SMTP id v85so6045707oia.6;
+        Mon, 07 Dec 2020 11:12:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8SHydtJy4B3UMw3R1X7HeF54ElAdK6mKxbhCrnomd5Q=;
+        b=kf4DjB58l02T7qrDiBCoWVZ3IiINYjISsLT0HOceyJ7ObkuNgINW6BIOMfytlgWYhe
+         a8f+G5SfgqYws2Gqk6yjBJTPeyvpBWfUC/jPMvxI3K+eGUDTVfKvAeQqsTRHYowSlPme
+         kUlT7dXyX8Wy5vdyFS9GyP5R4Qd9QJJwL68erDx8vAeDs9ZnIuJI7ctCCA3C3GRn2iP9
+         xuP/S8tTOUhQbEbyoEqsRrq8hyL1VPVhTHmDFYJtW+ru6PkZPs0ZVBVMt3CGU5m88PEB
+         qXF3S61ZJ1N9OOi7dKEWwp1deCt+lYwo0O/36Pk0k0HtfVJIwot26I/3PEGBmVvDC1GF
+         qiFw==
+X-Gm-Message-State: AOAM532QSK5EI12Dd7hc236KRQa7GvlYPbpbqEdbE+fak/PDbdSwFVp0
+        +JWKCpLfpWeWNMNX05Y1Gw==
+X-Google-Smtp-Source: ABdhPJxgi/17L27QdomEpugFdHxI2nUtjU+HIG03xT2QjHS4m2+jGomkvAidntLme6xWFNc1IL3xow==
+X-Received: by 2002:aca:5291:: with SMTP id g139mr229980oib.63.1607368344472;
+        Mon, 07 Dec 2020 11:12:24 -0800 (PST)
+Received: from xps15 (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id z14sm476443oot.5.2020.12.07.11.12.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Dec 2020 11:12:23 -0800 (PST)
+Received: (nullmailer pid 643080 invoked by uid 1000);
+        Mon, 07 Dec 2020 19:12:22 -0000
+Date:   Mon, 7 Dec 2020 13:12:22 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan McDowell <noodles@earth.li>
+Cc:     Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: dmaengine: Convert Qualcomm ADM bindings to
+ yaml
+Message-ID: <20201207191222.GA629533@robh.at.kernel.org>
+References: <20201115181242.GA30004@earth.li>
 MIME-Version: 1.0
-In-Reply-To: <54416232-31b4-e866-82e9-0e9314528a81@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9827 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 mlxscore=0
- malwarescore=0 suspectscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2012070101
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9827 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
- clxscore=1011 malwarescore=0 priorityscore=1501 adultscore=0
- lowpriorityscore=0 phishscore=0 spamscore=0 impostorscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012070102
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201115181242.GA30004@earth.li>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 12/6/20 11:29 PM, Peter Ujfalusi wrote:
-> Hi Santosh,
+On Sun, Nov 15, 2020 at 06:12:42PM +0000, Jonathan McDowell wrote:
+> Converts the device tree bindings for the Qualcomm Application Data
+> Mover (ADM) DMA controller over to YAML schemas.
 > 
-> On 24/11/2020 19.08, Vinod Koul wrote:
->> On 17-11-20, 12:56, Peter Ujfalusi wrote:
->>> Hi,
->>>
->>> The series have build dependency on ti_sci/soc series (v2):
->>> https://urldefense.com/v3/__https://lore.kernel.org/lkml/20201008115224.1591-1-peter.ujfalusi@ti.com/__;!!GqivPVa7Brio!Pr9DZN6u38NBvBa7_OpAJ8CB00wAw4SW4_hXgqWzeI54kvwXsDfntprA-AK9ItxFmM7BaA$
->>>
->>> Santosh kindly created immutable branch holdinf the series:
->>> git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git for_5.11/drivers-soc
->>
->> Santosh, Can I have a signed tag for this please?
+> Signed-off-by: Jonathan McDowell <noodles@earth.li>
+> ---
+>  .../devicetree/bindings/dma/qcom,adm.yaml     | 102 ++++++++++++++++++
+>  .../devicetree/bindings/dma/qcom_adm.txt      |  61 -----------
+>  2 files changed, 102 insertions(+), 61 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/qcom,adm.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/dma/qcom_adm.txt
 > 
-> Can you please provide a tag for Vinod?
-> 
-I already sent out pull request with tag.
+> diff --git a/Documentation/devicetree/bindings/dma/qcom,adm.yaml b/Documentation/devicetree/bindings/dma/qcom,adm.yaml
+> new file mode 100644
+> index 000000000000..353d85d3326d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/qcom,adm.yaml
+> @@ -0,0 +1,102 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/qcom,adm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: QCOM ADM DMA Controller
+> +
+> +maintainers:
+> +  - Jonathan McDowell <noodles@earth.li>
+> +
+> +description: |
+> +  QCOM Application Data Mover (ADM) DMA controller found in the MSM8x60
+> +  and IPQ/APQ8064 platforms.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: qcom,adm
 
-git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git 
-tags/drivers_soc_for_5.11
+Needs SoC specific compatible(s).
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description:
+> +      Address range for DMA registers
+
+Drop description. Doesn't really add anything specific to this binding.
+
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description:
+> +      Should contain one interrupt shared by all channels
+
+Drop.
+
+> +
+> +  "#dma-cells":
+> +    const: 2
+> +    description:
+> +      First cell denotes the channel number.  Second cell denotes CRCI
+> +      (client rate control interface) flow control assignment. If no
+> +      flow control is required, use 0.
+> +
+> +  clocks:
+> +    maxItems: 2
+> +    description:
+> +      Should contain the core clock and interface clock.
+> +
+> +  clock-names:
+> +    items:
+> +      - const: core
+> +      - const: iface
+> +
+> +  resets:
+> +    maxItems: 4
+> +    description:
+> +      Must contain an entry for each entry in reset names.
+> +
+> +  reset-names:
+> +    items:
+> +      - const: clk
+> +      - const: c0
+> +      - const: c1
+> +      - const: c2
+> +
+> +  qcom,ee:
+> +    maxItems: 1
+
+maxItems is for arrays and this is a scalar.
+
+> +    description:
+> +      Indicates the security domain identifier used in the secure world.
+
+How do I get 'ee' from this? Is this something other QCom blocks need?
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +required:
+> +  - "#dma-cells"
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +  - qcom,ee
+> +  - resets
+> +  - reset-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/reset/qcom,gcc-ipq806x.h>
+> +
+> +    adm_dma: dma@18300000 {
+
+Drop unused labels.
+
+> +             compatible = "qcom,adm";
+> +             reg = <0x18300000 0x100000>;
+> +             interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>;
+> +             #dma-cells = <2>;
+> +
+> +             clocks = <&gcc ADM0_CLK>, <&gcc ADM0_PBUS_CLK>;
+> +             clock-names = "core", "iface";
+> +
+> +             resets = <&gcc ADM0_RESET>,
+> +                      <&gcc ADM0_C0_RESET>,
+> +                      <&gcc ADM0_C1_RESET>,
+> +                      <&gcc ADM0_C2_RESET>;
+> +             reset-names = "clk", "c0", "c1", "c2";
+> +             qcom,ee = <0>;
+> +    };
+> +
+> +...
+> diff --git a/Documentation/devicetree/bindings/dma/qcom_adm.txt b/Documentation/devicetree/bindings/dma/qcom_adm.txt
+> deleted file mode 100644
+> index 9d3b2f917b7b..000000000000
+> --- a/Documentation/devicetree/bindings/dma/qcom_adm.txt
+> +++ /dev/null
+> @@ -1,61 +0,0 @@
+> -QCOM ADM DMA Controller
+> -
+> -Required properties:
+> -- compatible: must contain "qcom,adm" for IPQ/APQ8064 and MSM8960
+> -- reg: Address range for DMA registers
+> -- interrupts: Should contain one interrupt shared by all channels
+> -- #dma-cells: must be <2>.  First cell denotes the channel number.  Second cell
+> -  denotes CRCI (client rate control interface) flow control assignment.
+> -- clocks: Should contain the core clock and interface clock.
+> -- clock-names: Must contain "core" for the core clock and "iface" for the
+> -  interface clock.
+> -- resets: Must contain an entry for each entry in reset names.
+> -- reset-names: Must include the following entries:
+> -  - clk
+> -  - c0
+> -  - c1
+> -  - c2
+> -- qcom,ee: indicates the security domain identifier used in the secure world.
+> -
+> -Example:
+> -		adm_dma: dma@18300000 {
+> -			compatible = "qcom,adm";
+> -			reg = <0x18300000 0x100000>;
+> -			interrupts = <0 170 0>;
+> -			#dma-cells = <2>;
+> -
+> -			clocks = <&gcc ADM0_CLK>, <&gcc ADM0_PBUS_CLK>;
+> -			clock-names = "core", "iface";
+> -
+> -			resets = <&gcc ADM0_RESET>,
+> -				<&gcc ADM0_C0_RESET>,
+> -				<&gcc ADM0_C1_RESET>,
+> -				<&gcc ADM0_C2_RESET>;
+> -			reset-names = "clk", "c0", "c1", "c2";
+> -			qcom,ee = <0>;
+> -		};
+> -
+> -DMA clients must use the format descripted in the dma.txt file, using a three
+> -cell specifier for each channel.
+> -
+> -Each dmas request consists of 3 cells:
+> - 1. phandle pointing to the DMA controller
+> - 2. channel number
+> - 3. CRCI assignment, if applicable.  If no CRCI flow control is required, use 0.
+> -    The CRCI is used for flow control.  It identifies the peripheral device that
+> -    is the source/destination for the transferred data.
+> -
+> -Example:
+> -
+> -	spi4: spi@1a280000 {
+> -		spi-max-frequency = <50000000>;
+> -
+> -		pinctrl-0 = <&spi_pins>;
+> -		pinctrl-names = "default";
+> -
+> -		cs-gpios = <&qcom_pinmux 20 0>;
+> -
+> -		dmas = <&adm_dma 6 9>,
+> -			<&adm_dma 5 10>;
+> -		dma-names = "rx", "tx";
+> -	};
+> -- 
+> 2.29.2
+> 

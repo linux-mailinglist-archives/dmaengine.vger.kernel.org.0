@@ -2,40 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A95B12D26E2
-	for <lists+dmaengine@lfdr.de>; Tue,  8 Dec 2020 10:06:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1858D2D26E5
+	for <lists+dmaengine@lfdr.de>; Tue,  8 Dec 2020 10:06:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728667AbgLHJFA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 8 Dec 2020 04:05:00 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:51726 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728189AbgLHJFA (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 8 Dec 2020 04:05:00 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0B8945rK130313;
-        Tue, 8 Dec 2020 03:04:05 -0600
+        id S1728675AbgLHJFG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 8 Dec 2020 04:05:06 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34420 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728189AbgLHJFF (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 8 Dec 2020 04:05:05 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0B8949ko002798;
+        Tue, 8 Dec 2020 03:04:09 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1607418245;
-        bh=KNHtOiRh0Y2sF99V/npiBOhsYhLCYE7wypMinM3S5uw=;
+        s=ti-com-17Q1; t=1607418249;
+        bh=HSm4+oz7ndB15ND59RBAyXDIbwXFdQb/ZAZiFLJMjns=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=YtGSHgPQE4LbTi+HtLsL5B2DkVplw8Mudd/mttWwVvxK0XYCb0xbD0H+TEHh2rcT+
-         8ays2SIBqTa72Tcy0LE31Q0pxRM08Cfv4J8daSdS3+C0PuhBwhZ/btKsd1/Ep/QZ59
-         tHxD1nTJcl8RIug5hOLQURm1Pve0IeLPnZnmK8qA=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0B8945mg095309
+        b=cJFVI0DCd7pz0AE6g3eWxmqI0OF4OUSm21jmTFuT15eADWvhxglpgzJ819ym/gHjG
+         2YaxynXnqtSwevC5vMHYqTOskeLf2Jbym1UVdJRaZjyG+0VkOa/cJPZBB+J3UODqDa
+         58SBbYoSwBYjjSBG4lSBigDDAsMWOv+wrHB7NISQ=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0B8949jB044070
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 8 Dec 2020 03:04:05 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 8 Dec 2020 03:04:09 -0600
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 8 Dec
- 2020 03:04:05 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 03:04:09 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 8 Dec 2020 03:04:05 -0600
+ Frontend Transport; Tue, 8 Dec 2020 03:04:09 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0B893dcB120112;
-        Tue, 8 Dec 2020 03:04:02 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0B893dcC120112;
+        Tue, 8 Dec 2020 03:04:05 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
         <robh+dt@kernel.org>
@@ -44,9 +44,9 @@ CC:     <dan.j.williams@intel.com>, <t-kristo@ti.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <dmaengine@vger.kernel.org>, <vigneshr@ti.com>,
         <grygorii.strashko@ti.com>
-Subject: [PATCH v3 06/20] dmaengine: ti: k3-udma-glue: Configure the dma_dev for rings
-Date:   Tue, 8 Dec 2020 11:04:26 +0200
-Message-ID: <20201208090440.31792-7-peter.ujfalusi@ti.com>
+Subject: [PATCH v3 07/20] dmaengine: of-dma: Add support for optional router configuration callback
+Date:   Tue, 8 Dec 2020 11:04:27 +0200
+Message-ID: <20201208090440.31792-8-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201208090440.31792-1-peter.ujfalusi@ti.com>
 References: <20201208090440.31792-1-peter.ujfalusi@ti.com>
@@ -58,44 +58,63 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Rings in RING mode should be using the DMA device for DMA API as in this
-mode the ringacc will not access the ring memory in any ways, but the DMA
-is.
+Additional configuration for the DMA event router might be needed for a
+channel which can not be done during device_alloc_chan_resources callback
+since the router information is not yet present for the drivers.
 
-Fix up the ring configuration and set the dma_dev unconditionally and let
-the ringacc driver to select the correct device to use for DMA API.
+If there is a need for additional configuration for the channel if DMA
+router is in use, then the driver can implement the device_router_config
+callback.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/dma/ti/k3-udma-glue.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/dma/of-dma.c      | 10 ++++++++++
+ include/linux/dmaengine.h |  2 ++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
-index 8a8988be4175..e6ebcd98c02a 100644
---- a/drivers/dma/ti/k3-udma-glue.c
-+++ b/drivers/dma/ti/k3-udma-glue.c
-@@ -276,6 +276,10 @@ struct k3_udma_glue_tx_channel *k3_udma_glue_request_tx_chn(struct device *dev,
- 		goto err;
+diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+index 8a4f608904b9..ec00b20ae8e4 100644
+--- a/drivers/dma/of-dma.c
++++ b/drivers/dma/of-dma.c
+@@ -75,8 +75,18 @@ static struct dma_chan *of_dma_router_xlate(struct of_phandle_args *dma_spec,
+ 		ofdma->dma_router->route_free(ofdma->dma_router->dev,
+ 					      route_data);
+ 	} else {
++		int ret = 0;
++
+ 		chan->router = ofdma->dma_router;
+ 		chan->route_data = route_data;
++
++		if (chan->device->device_router_config)
++			ret = chan->device->device_router_config(chan);
++
++		if (ret) {
++			dma_release_channel(chan);
++			chan = ERR_PTR(ret);
++		}
  	}
  
-+	/* Set the dma_dev for the rings to be configured */
-+	cfg->tx_cfg.dma_dev = k3_udma_glue_tx_get_dma_device(tx_chn);
-+	cfg->txcq_cfg.dma_dev = cfg->tx_cfg.dma_dev;
-+
- 	ret = k3_ringacc_ring_cfg(tx_chn->ringtx, &cfg->tx_cfg);
- 	if (ret) {
- 		dev_err(dev, "Failed to cfg ringtx %d\n", ret);
-@@ -591,6 +595,10 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
- 		goto err_rflow_put;
- 	}
+ 	/*
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 493a047ed0a2..aed44888cad3 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -805,6 +805,7 @@ struct dma_filter {
+  *	by tx_status
+  * @device_alloc_chan_resources: allocate resources and return the
+  *	number of allocated descriptors
++ * @device_router_config: optional callback for DMA router configuration
+  * @device_free_chan_resources: release DMA channel's resources
+  * @device_prep_dma_memcpy: prepares a memcpy operation
+  * @device_prep_dma_xor: prepares a xor operation
+@@ -879,6 +880,7 @@ struct dma_device {
+ 	enum dma_residue_granularity residue_granularity;
  
-+	/* Set the dma_dev for the rings to be configured */
-+	flow_cfg->rx_cfg.dma_dev = k3_udma_glue_rx_get_dma_device(rx_chn);
-+	flow_cfg->rxfdq_cfg.dma_dev = flow_cfg->rx_cfg.dma_dev;
-+
- 	ret = k3_ringacc_ring_cfg(flow->ringrx, &flow_cfg->rx_cfg);
- 	if (ret) {
- 		dev_err(dev, "Failed to cfg ringrx %d\n", ret);
+ 	int (*device_alloc_chan_resources)(struct dma_chan *chan);
++	int (*device_router_config)(struct dma_chan *chan);
+ 	void (*device_free_chan_resources)(struct dma_chan *chan);
+ 
+ 	struct dma_async_tx_descriptor *(*device_prep_dma_memcpy)(
 -- 
 Peter
 

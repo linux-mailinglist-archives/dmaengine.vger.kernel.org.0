@@ -2,40 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F71A2D26F7
-	for <lists+dmaengine@lfdr.de>; Tue,  8 Dec 2020 10:06:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A95B12D26E2
+	for <lists+dmaengine@lfdr.de>; Tue,  8 Dec 2020 10:06:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbgLHJFn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 8 Dec 2020 04:05:43 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:34354 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728192AbgLHJFl (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 8 Dec 2020 04:05:41 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0B8941Qa002716;
-        Tue, 8 Dec 2020 03:04:01 -0600
+        id S1728667AbgLHJFA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 8 Dec 2020 04:05:00 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:51726 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728189AbgLHJFA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 8 Dec 2020 04:05:00 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0B8945rK130313;
+        Tue, 8 Dec 2020 03:04:05 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1607418241;
-        bh=+pQy6U0jkrzMEECAhiPKxnJMhuVzQZnB8OzJ2+mEmWk=;
+        s=ti-com-17Q1; t=1607418245;
+        bh=KNHtOiRh0Y2sF99V/npiBOhsYhLCYE7wypMinM3S5uw=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=oz8ug/p50XF1+1ucVzpgJDjbDmFxfN8p2k2MGay2e6sVD9yAfO0t5J2v152OBKw7P
-         1LXW7doRe/ltZUuSv3rubMLd8ndML9hI1Yagvqtmappe7Tx/ow/r9twnfLOMPi08iH
-         KaNKF+TPRBN0p/Pxdm4gYaruWB2Wl5+lmJSD4qyo=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0B8941Zq043746
+        b=YtGSHgPQE4LbTi+HtLsL5B2DkVplw8Mudd/mttWwVvxK0XYCb0xbD0H+TEHh2rcT+
+         8ays2SIBqTa72Tcy0LE31Q0pxRM08Cfv4J8daSdS3+C0PuhBwhZ/btKsd1/Ep/QZ59
+         tHxD1nTJcl8RIug5hOLQURm1Pve0IeLPnZnmK8qA=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0B8945mg095309
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 8 Dec 2020 03:04:01 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 8 Dec 2020 03:04:05 -0600
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 8 Dec
- 2020 03:04:01 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 03:04:05 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 8 Dec 2020 03:04:01 -0600
+ Frontend Transport; Tue, 8 Dec 2020 03:04:05 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0B893dcA120112;
-        Tue, 8 Dec 2020 03:03:57 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0B893dcB120112;
+        Tue, 8 Dec 2020 03:04:02 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
         <robh+dt@kernel.org>
@@ -44,9 +44,9 @@ CC:     <dan.j.williams@intel.com>, <t-kristo@ti.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <dmaengine@vger.kernel.org>, <vigneshr@ti.com>,
         <grygorii.strashko@ti.com>
-Subject: [PATCH v3 05/20] dmaengine: ti: k3-udma-glue: Get the ringacc from udma_dev
-Date:   Tue, 8 Dec 2020 11:04:25 +0200
-Message-ID: <20201208090440.31792-6-peter.ujfalusi@ti.com>
+Subject: [PATCH v3 06/20] dmaengine: ti: k3-udma-glue: Configure the dma_dev for rings
+Date:   Tue, 8 Dec 2020 11:04:26 +0200
+Message-ID: <20201208090440.31792-7-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201208090440.31792-1-peter.ujfalusi@ti.com>
 References: <20201208090440.31792-1-peter.ujfalusi@ti.com>
@@ -58,67 +58,44 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-If of_xudma_dev_get() returns with the valid udma_dev then the driver
-already got the ringacc, there is no need to execute
-of_k3_ringacc_get_by_phandle() for each channel via the glue layer.
+Rings in RING mode should be using the DMA device for DMA API as in this
+mode the ringacc will not access the ring memory in any ways, but the DMA
+is.
+
+Fix up the ring configuration and set the dma_dev unconditionally and let
+the ringacc driver to select the correct device to use for DMA API.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/dma/ti/k3-udma-glue.c    | 6 +-----
- drivers/dma/ti/k3-udma-private.c | 6 ++++++
- drivers/dma/ti/k3-udma.h         | 1 +
- 3 files changed, 8 insertions(+), 5 deletions(-)
+ drivers/dma/ti/k3-udma-glue.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
-index 29d1524d1916..8a8988be4175 100644
+index 8a8988be4175..e6ebcd98c02a 100644
 --- a/drivers/dma/ti/k3-udma-glue.c
 +++ b/drivers/dma/ti/k3-udma-glue.c
-@@ -86,15 +86,11 @@ struct k3_udma_glue_rx_channel {
- static int of_k3_udma_glue_parse(struct device_node *udmax_np,
- 				 struct k3_udma_glue_common *common)
- {
--	common->ringacc = of_k3_ringacc_get_by_phandle(udmax_np,
--						       "ti,ringacc");
--	if (IS_ERR(common->ringacc))
--		return PTR_ERR(common->ringacc);
--
- 	common->udmax = of_xudma_dev_get(udmax_np, NULL);
- 	if (IS_ERR(common->udmax))
- 		return PTR_ERR(common->udmax);
+@@ -276,6 +276,10 @@ struct k3_udma_glue_tx_channel *k3_udma_glue_request_tx_chn(struct device *dev,
+ 		goto err;
+ 	}
  
-+	common->ringacc = xudma_get_ringacc(common->udmax);
- 	common->tisci_rm = xudma_dev_get_tisci_rm(common->udmax);
- 
- 	return 0;
-diff --git a/drivers/dma/ti/k3-udma-private.c b/drivers/dma/ti/k3-udma-private.c
-index c9fb1d832581..0856721d0b04 100644
---- a/drivers/dma/ti/k3-udma-private.c
-+++ b/drivers/dma/ti/k3-udma-private.c
-@@ -56,6 +56,12 @@ struct device *xudma_get_device(struct udma_dev *ud)
- }
- EXPORT_SYMBOL(xudma_get_device);
- 
-+struct k3_ringacc *xudma_get_ringacc(struct udma_dev *ud)
-+{
-+	return ud->ringacc;
-+}
-+EXPORT_SYMBOL(xudma_get_ringacc);
++	/* Set the dma_dev for the rings to be configured */
++	cfg->tx_cfg.dma_dev = k3_udma_glue_tx_get_dma_device(tx_chn);
++	cfg->txcq_cfg.dma_dev = cfg->tx_cfg.dma_dev;
 +
- u32 xudma_dev_get_psil_base(struct udma_dev *ud)
- {
- 	return ud->psil_base;
-diff --git a/drivers/dma/ti/k3-udma.h b/drivers/dma/ti/k3-udma.h
-index d1cace0cb43b..b4334b1b7b14 100644
---- a/drivers/dma/ti/k3-udma.h
-+++ b/drivers/dma/ti/k3-udma.h
-@@ -113,6 +113,7 @@ int xudma_navss_psil_unpair(struct udma_dev *ud, u32 src_thread,
+ 	ret = k3_ringacc_ring_cfg(tx_chn->ringtx, &cfg->tx_cfg);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to cfg ringtx %d\n", ret);
+@@ -591,6 +595,10 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+ 		goto err_rflow_put;
+ 	}
  
- struct udma_dev *of_xudma_dev_get(struct device_node *np, const char *property);
- struct device *xudma_get_device(struct udma_dev *ud);
-+struct k3_ringacc *xudma_get_ringacc(struct udma_dev *ud);
- void xudma_dev_put(struct udma_dev *ud);
- u32 xudma_dev_get_psil_base(struct udma_dev *ud);
- struct udma_tisci_rm *xudma_dev_get_tisci_rm(struct udma_dev *ud);
++	/* Set the dma_dev for the rings to be configured */
++	flow_cfg->rx_cfg.dma_dev = k3_udma_glue_rx_get_dma_device(rx_chn);
++	flow_cfg->rxfdq_cfg.dma_dev = flow_cfg->rx_cfg.dma_dev;
++
+ 	ret = k3_ringacc_ring_cfg(flow->ringrx, &flow_cfg->rx_cfg);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to cfg ringrx %d\n", ret);
 -- 
 Peter
 

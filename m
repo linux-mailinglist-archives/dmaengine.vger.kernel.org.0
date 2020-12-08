@@ -2,40 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69A332D26F5
-	for <lists+dmaengine@lfdr.de>; Tue,  8 Dec 2020 10:06:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F71A2D26F7
+	for <lists+dmaengine@lfdr.de>; Tue,  8 Dec 2020 10:06:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728644AbgLHJFk (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 8 Dec 2020 04:05:40 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:51670 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728689AbgLHJFh (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 8 Dec 2020 04:05:37 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0B893v70130205;
-        Tue, 8 Dec 2020 03:03:57 -0600
+        id S1728738AbgLHJFn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 8 Dec 2020 04:05:43 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34354 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728192AbgLHJFl (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 8 Dec 2020 04:05:41 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0B8941Qa002716;
+        Tue, 8 Dec 2020 03:04:01 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1607418237;
-        bh=clrhNW0HKvD5h4sMDEuhMbOQDZdCfb7rL0FInuqE+2c=;
+        s=ti-com-17Q1; t=1607418241;
+        bh=+pQy6U0jkrzMEECAhiPKxnJMhuVzQZnB8OzJ2+mEmWk=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=vopZJmoGAIFT8ugsSlzyK0Xf56ENHUbeukIRc1x1f0J+HX67qVPxfxJhZxJZTHCJ2
-         iGGNJYSIHR5RTtk261u1JKJ3/F2/QKzNH2UASBBCZlA8xIJ5xqSzLeZPLc1DJDcvF2
-         5a6ZF62cGkTIx5ErUedSZohMcODBA5Sry7rp527I=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0B893vKC055830
+        b=oz8ug/p50XF1+1ucVzpgJDjbDmFxfN8p2k2MGay2e6sVD9yAfO0t5J2v152OBKw7P
+         1LXW7doRe/ltZUuSv3rubMLd8ndML9hI1Yagvqtmappe7Tx/ow/r9twnfLOMPi08iH
+         KaNKF+TPRBN0p/Pxdm4gYaruWB2Wl5+lmJSD4qyo=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0B8941Zq043746
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 8 Dec 2020 03:03:57 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 8 Dec 2020 03:04:01 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 8 Dec
- 2020 03:03:56 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 03:04:01 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 8 Dec 2020 03:03:57 -0600
+ Frontend Transport; Tue, 8 Dec 2020 03:04:01 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0B893dc9120112;
-        Tue, 8 Dec 2020 03:03:54 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0B893dcA120112;
+        Tue, 8 Dec 2020 03:03:57 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
         <robh+dt@kernel.org>
@@ -44,9 +44,9 @@ CC:     <dan.j.williams@intel.com>, <t-kristo@ti.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <dmaengine@vger.kernel.org>, <vigneshr@ti.com>,
         <grygorii.strashko@ti.com>
-Subject: [PATCH v3 04/20] dmaengine: ti: k3-udma-glue: Add function to get device pointer for DMA API
-Date:   Tue, 8 Dec 2020 11:04:24 +0200
-Message-ID: <20201208090440.31792-5-peter.ujfalusi@ti.com>
+Subject: [PATCH v3 05/20] dmaengine: ti: k3-udma-glue: Get the ringacc from udma_dev
+Date:   Tue, 8 Dec 2020 11:04:25 +0200
+Message-ID: <20201208090440.31792-6-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201208090440.31792-1-peter.ujfalusi@ti.com>
 References: <20201208090440.31792-1-peter.ujfalusi@ti.com>
@@ -58,97 +58,67 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Glue layer users should use the device of the DMA for DMA mapping and
-allocations as it is the DMA which accesses to descriptors and buffers,
-not the clients
+If of_xudma_dev_get() returns with the valid udma_dev then the driver
+already got the ringacc, there is no need to execute
+of_k3_ringacc_get_by_phandle() for each channel via the glue layer.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/dma/ti/k3-udma-glue.c    | 14 ++++++++++++++
- drivers/dma/ti/k3-udma-private.c |  6 ++++++
- drivers/dma/ti/k3-udma.h         |  1 +
- include/linux/dma/k3-udma-glue.h |  4 ++++
- 4 files changed, 25 insertions(+)
+ drivers/dma/ti/k3-udma-glue.c    | 6 +-----
+ drivers/dma/ti/k3-udma-private.c | 6 ++++++
+ drivers/dma/ti/k3-udma.h         | 1 +
+ 3 files changed, 8 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
-index dfb65e382ab9..29d1524d1916 100644
+index 29d1524d1916..8a8988be4175 100644
 --- a/drivers/dma/ti/k3-udma-glue.c
 +++ b/drivers/dma/ti/k3-udma-glue.c
-@@ -493,6 +493,13 @@ int k3_udma_glue_tx_get_irq(struct k3_udma_glue_tx_channel *tx_chn)
- }
- EXPORT_SYMBOL_GPL(k3_udma_glue_tx_get_irq);
- 
-+struct device *
-+	k3_udma_glue_tx_get_dma_device(struct k3_udma_glue_tx_channel *tx_chn)
-+{
-+	return xudma_get_device(tx_chn->common.udmax);
-+}
-+EXPORT_SYMBOL_GPL(k3_udma_glue_tx_get_dma_device);
-+
- static int k3_udma_glue_cfg_rx_chn(struct k3_udma_glue_rx_channel *rx_chn)
+@@ -86,15 +86,11 @@ struct k3_udma_glue_rx_channel {
+ static int of_k3_udma_glue_parse(struct device_node *udmax_np,
+ 				 struct k3_udma_glue_common *common)
  {
- 	const struct udma_tisci_rm *tisci_rm = rx_chn->common.tisci_rm;
-@@ -1201,3 +1208,10 @@ int k3_udma_glue_rx_get_irq(struct k3_udma_glue_rx_channel *rx_chn,
- 	return flow->virq;
- }
- EXPORT_SYMBOL_GPL(k3_udma_glue_rx_get_irq);
-+
-+struct device *
-+	k3_udma_glue_rx_get_dma_device(struct k3_udma_glue_rx_channel *rx_chn)
-+{
-+	return xudma_get_device(rx_chn->common.udmax);
-+}
-+EXPORT_SYMBOL_GPL(k3_udma_glue_rx_get_dma_device);
+-	common->ringacc = of_k3_ringacc_get_by_phandle(udmax_np,
+-						       "ti,ringacc");
+-	if (IS_ERR(common->ringacc))
+-		return PTR_ERR(common->ringacc);
+-
+ 	common->udmax = of_xudma_dev_get(udmax_np, NULL);
+ 	if (IS_ERR(common->udmax))
+ 		return PTR_ERR(common->udmax);
+ 
++	common->ringacc = xudma_get_ringacc(common->udmax);
+ 	common->tisci_rm = xudma_dev_get_tisci_rm(common->udmax);
+ 
+ 	return 0;
 diff --git a/drivers/dma/ti/k3-udma-private.c b/drivers/dma/ti/k3-udma-private.c
-index 8563a392f30b..c9fb1d832581 100644
+index c9fb1d832581..0856721d0b04 100644
 --- a/drivers/dma/ti/k3-udma-private.c
 +++ b/drivers/dma/ti/k3-udma-private.c
-@@ -50,6 +50,12 @@ struct udma_dev *of_xudma_dev_get(struct device_node *np, const char *property)
+@@ -56,6 +56,12 @@ struct device *xudma_get_device(struct udma_dev *ud)
  }
- EXPORT_SYMBOL(of_xudma_dev_get);
+ EXPORT_SYMBOL(xudma_get_device);
  
-+struct device *xudma_get_device(struct udma_dev *ud)
++struct k3_ringacc *xudma_get_ringacc(struct udma_dev *ud)
 +{
-+	return ud->dev;
++	return ud->ringacc;
 +}
-+EXPORT_SYMBOL(xudma_get_device);
++EXPORT_SYMBOL(xudma_get_ringacc);
 +
  u32 xudma_dev_get_psil_base(struct udma_dev *ud)
  {
  	return ud->psil_base;
 diff --git a/drivers/dma/ti/k3-udma.h b/drivers/dma/ti/k3-udma.h
-index 09c4529e013d..d1cace0cb43b 100644
+index d1cace0cb43b..b4334b1b7b14 100644
 --- a/drivers/dma/ti/k3-udma.h
 +++ b/drivers/dma/ti/k3-udma.h
-@@ -112,6 +112,7 @@ int xudma_navss_psil_unpair(struct udma_dev *ud, u32 src_thread,
- 			    u32 dst_thread);
+@@ -113,6 +113,7 @@ int xudma_navss_psil_unpair(struct udma_dev *ud, u32 src_thread,
  
  struct udma_dev *of_xudma_dev_get(struct device_node *np, const char *property);
-+struct device *xudma_get_device(struct udma_dev *ud);
+ struct device *xudma_get_device(struct udma_dev *ud);
++struct k3_ringacc *xudma_get_ringacc(struct udma_dev *ud);
  void xudma_dev_put(struct udma_dev *ud);
  u32 xudma_dev_get_psil_base(struct udma_dev *ud);
  struct udma_tisci_rm *xudma_dev_get_tisci_rm(struct udma_dev *ud);
-diff --git a/include/linux/dma/k3-udma-glue.h b/include/linux/dma/k3-udma-glue.h
-index 5eb34ad973a7..d7c12f31377c 100644
---- a/include/linux/dma/k3-udma-glue.h
-+++ b/include/linux/dma/k3-udma-glue.h
-@@ -41,6 +41,8 @@ void k3_udma_glue_reset_tx_chn(struct k3_udma_glue_tx_channel *tx_chn,
- u32 k3_udma_glue_tx_get_hdesc_size(struct k3_udma_glue_tx_channel *tx_chn);
- u32 k3_udma_glue_tx_get_txcq_id(struct k3_udma_glue_tx_channel *tx_chn);
- int k3_udma_glue_tx_get_irq(struct k3_udma_glue_tx_channel *tx_chn);
-+struct device *
-+	k3_udma_glue_tx_get_dma_device(struct k3_udma_glue_tx_channel *tx_chn);
- 
- enum {
- 	K3_UDMA_GLUE_SRC_TAG_LO_KEEP = 0,
-@@ -130,5 +132,7 @@ int k3_udma_glue_rx_flow_enable(struct k3_udma_glue_rx_channel *rx_chn,
- 				u32 flow_idx);
- int k3_udma_glue_rx_flow_disable(struct k3_udma_glue_rx_channel *rx_chn,
- 				 u32 flow_idx);
-+struct device *
-+	k3_udma_glue_rx_get_dma_device(struct k3_udma_glue_rx_channel *rx_chn);
- 
- #endif /* K3_UDMA_GLUE_H_ */
 -- 
 Peter
 

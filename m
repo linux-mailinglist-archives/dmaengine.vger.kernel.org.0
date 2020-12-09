@@ -2,51 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 344C02D414B
-	for <lists+dmaengine@lfdr.de>; Wed,  9 Dec 2020 12:46:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CF2D2D415C
+	for <lists+dmaengine@lfdr.de>; Wed,  9 Dec 2020 12:49:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730792AbgLILpb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 9 Dec 2020 06:45:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39312 "EHLO
+        id S1730886AbgLILse (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 9 Dec 2020 06:48:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730650AbgLILpa (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 9 Dec 2020 06:45:30 -0500
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67D0AC061794
-        for <dmaengine@vger.kernel.org>; Wed,  9 Dec 2020 03:44:50 -0800 (PST)
-Received: by mail-ed1-x542.google.com with SMTP id r5so1185764eda.12
-        for <dmaengine@vger.kernel.org>; Wed, 09 Dec 2020 03:44:50 -0800 (PST)
+        with ESMTP id S1730862AbgLILsW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 9 Dec 2020 06:48:22 -0500
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCA41C061793
+        for <dmaengine@vger.kernel.org>; Wed,  9 Dec 2020 03:47:41 -0800 (PST)
+Received: by mail-ej1-x643.google.com with SMTP id jx16so1662439ejb.10
+        for <dmaengine@vger.kernel.org>; Wed, 09 Dec 2020 03:47:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=p3zBnoEd2BLvViOa+U8szKTE6OyLng93MHF1miQwX9o=;
-        b=Byyh+WzGJwB9hb+hsnXSoHIvv+Tr7CA98iS13mEF37Dm62Y+yT8PAW5ZANj12pQ5sA
-         xvYJQCYfDnP/mmuw0CNmbpbbk8YWu1rSlBZ04EPWvksHnWIRBBi6berkz8TuWyaS8kvV
-         ep3ZCcV26ZEqwMuVeobHq7u/RFQ16VCoAjsvcZBtRakby1zzJCMCskm2VQjt/nx+30GA
-         FKC23QCKr2trZC/BtbKKaJBPacLMroHcsHd8cj2y338s8XiSqWx9IgJV/766AeY/QMto
-         Y5fG7Ls6ljj3PceYbWChqlGyj6fMRbV7NWK6UhJyvGIRlzw0Ttbfk5Go3apzggTfZm2B
-         k1rw==
+        bh=rs3z5HiZz52Q+PqaHhfTF1Q+uRexoKTRYXUuslD9bJA=;
+        b=d3T36ZkNR/AUgVDsWMcv+epjmknEjkr1S4/hA5BmOBbmMp3QPmqbQ5+T5urLbZsaZm
+         yddM22Ca/MjmaZ65L9Ziy8Eis/rNNRh6ZWV33tysfBDK99xgKIFsPiG/pLxOIGV2msux
+         3VZ4X/R76YQSx/b/gtQiCbkElRc8FjmqEJZ9snzxdIWHO32LjhfnKFPVl2brKq/cbdPl
+         zpDqtSxW6OC+2JHBCUwRoKYHHWYHCx4jqiOhBquIjUJ4tNKpJzn/IlzziXa4/3PKi8pE
+         aTb57hm0IUn94GQTHu2NhsmG7apvTb2fEUQ2K5isvTgowQlyZ+eEA7pRISQ75ZxcifFr
+         j0UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=p3zBnoEd2BLvViOa+U8szKTE6OyLng93MHF1miQwX9o=;
-        b=BjM05ZWsEF4W7h031mr621LJrPcNqy0NaaQ3ie8qbx8k9YWpAR37L5EuD+QyMLYsp4
-         zuzmhSvDULRa9WtFUJ9nbIpleSBD1zYh0TLszn1MI5mXYn32wDzycDHZEhy0HoJMmztN
-         WbFVKSpqBobM/qEFAJwzCcfJxVoCJHLSTOPYNo6XHwEa+fR74f1ofEM+Zg+gSopOvK1d
-         ENlzehmzALSExcgitoM6ZB2OBcy5Snk0aySgLnDCzMpdVo5uqoxoBm2Dd0Ks8OEiVMom
-         KtZOSiur/G84qKqSHKYP9KxFBvMYpEuNqJLdEWB0krloIDjvSsLM1v6o7+puP/3N3Ns4
-         bn2w==
-X-Gm-Message-State: AOAM531FOO6/b+O8tYY8973WW8Nb9rU+QUWXzt9aqy6NwPn3D89X50Zj
-        5LedauWtxCdUM+OObQbRxCIVd9JEI1n4kw==
-X-Google-Smtp-Source: ABdhPJzXaWJEsxBqW/suyQOFajp0LZEwwhaXnTCIKtAoFuT+paYDZO6DqYGylmK2TXlZJjMUrzx4qA==
-X-Received: by 2002:a50:cdc8:: with SMTP id h8mr1602775edj.293.1607514289034;
-        Wed, 09 Dec 2020 03:44:49 -0800 (PST)
+        bh=rs3z5HiZz52Q+PqaHhfTF1Q+uRexoKTRYXUuslD9bJA=;
+        b=kkTGTk5M2vwOOP0iypWyEjedi33XDXTfq7Hq+9IXAgb0RTl/yQF7+qfgJo0UWuJqoa
+         /h9SXuiyWDUjlyRgC4ZCQZOIRxSPV8QT/zlX/PQsRxhoNuxTVc9stoiJeMRlXAUw53dL
+         y7GgszE1MtjJTxxwdHADCBwGouISbjDitq21n+XT5EL3l8EZIo+MjEm0l0aU16UqmCei
+         GIQXPJWtNX/XPmYOy1ryLOwW5xVEyx4VgNIgoyAOi2moUyh7SmSGhG6mu5caDD863ohL
+         hjSgBHJWy97mtW9L/xb7fU8h924j0tJ1Z7ZECjQO/U6Tz8Oev/itWsKtattP3BuLCova
+         6RVg==
+X-Gm-Message-State: AOAM530CEuOiZRyntyoRbyvEIjXzAxcYFKp44HXWpoSwvNNTubvfIxo+
+        3mthTxt0iHT4SHJbYNUvX784ig==
+X-Google-Smtp-Source: ABdhPJz4K0kLaWeuPBop0IAkjqejJVnYvx1By/KhxM6pBUYlU2Hn4uST4po7Bl+o5xWrlrVSPgRe1g==
+X-Received: by 2002:a17:906:98d4:: with SMTP id zd20mr1710918ejb.532.1607514460504;
+        Wed, 09 Dec 2020 03:47:40 -0800 (PST)
 Received: from localhost.localdomain ([88.160.162.107])
-        by smtp.gmail.com with ESMTPSA id c25sm1260327ejx.39.2020.12.09.03.44.47
+        by smtp.gmail.com with ESMTPSA id k23sm1244877ejs.100.2020.12.09.03.47.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Dec 2020 03:44:48 -0800 (PST)
+        Wed, 09 Dec 2020 03:47:39 -0800 (PST)
 From:   Fabien Parent <fparent@baylibre.com>
 To:     Sean Wang <sean.wang@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -56,12 +56,11 @@ Cc:     Fabien Parent <fparent@baylibre.com>,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] =?UTF-8?q?=F0=9F=93=A4=20dt-bindings:=20dma:=20mtk?= =?UTF-8?q?-apdma:=20add=20bindings=20for=20MT8516=20SOC?=
-Date:   Wed,  9 Dec 2020 12:44:39 +0100
-Message-Id: <20201209114440.62950-1-fparent@baylibre.com>
+Subject: [PATCH v3 1/2] dt-bindings: dma: mtk-apdma: add bindings for MT8516 SOC
+Date:   Wed,  9 Dec 2020 12:47:35 +0100
+Message-Id: <20201209114736.70625-1-fparent@baylibre.com>
 X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
@@ -74,6 +73,7 @@ Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 Acked-by: Rob Herring <robh@kernel.org>
 ---
 
+V3: remove unicode symbol that slips into patch summary
 V2: no change
 
  Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt | 1 +

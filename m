@@ -2,288 +2,81 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 980A42D6035
-	for <lists+dmaengine@lfdr.de>; Thu, 10 Dec 2020 16:45:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 572F62D65D0
+	for <lists+dmaengine@lfdr.de>; Thu, 10 Dec 2020 20:03:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391323AbgLJPo4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 10 Dec 2020 10:44:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43972 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391342AbgLJPoq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 10 Dec 2020 10:44:46 -0500
-Received: from the.earth.li (the.earth.li [IPv6:2a00:1098:86:4d:c0ff:ee:15:900d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03A1CC0613CF;
-        Thu, 10 Dec 2020 07:44:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=earth.li;
-         s=the; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject
-        :Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=bfquSlu2CVvoyye+gQbL5aUKWqWpkQNRYpSFZssfs2c=; b=O/NZfP5/dEX8MjBp9pB9Igyu4F
-        7kqBaAThDTB0M58EILAI7G8fmVH+aVND9zZFR0k5wunRSKU1eMMBp2bSRnOcnhcIdA+OUSul9mQb9
-        /OS7jLWn3jB+PNlbBUCitI5Vsfy1GTyL/Zq7jBde0OG3BFjQ4wSj1WJWPQ6xq7ZcLz8NDAjzpFoe/
-        /ucbP+4LXe9ACVJQeJ7za4QrnmvNrPCaWjFlJGx8ouMqn6s1le/xEe7SL4nPan1BDFuaGRBK03ciX
-        ugJVn5MFns8ya8CDo544zfCajFJivDrPU9U8Fk8ahc5IL+4mJpymJvR0hRK63iXobQ/XCA4e2nI9/
-        OKRIBhZg==;
-Received: from noodles by the.earth.li with local (Exim 4.92)
-        (envelope-from <noodles@earth.li>)
-        id 1knO6o-0001YY-QI; Thu, 10 Dec 2020 15:43:58 +0000
-Date:   Thu, 10 Dec 2020 15:43:58 +0000
-From:   Jonathan McDowell <noodles@earth.li>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: dmaengine: Convert Qualcomm ADM bindings to
- yaml
-Message-ID: <20201210154358.GX32650@earth.li>
-References: <20201115181242.GA30004@earth.li>
- <20201207191222.GA629533@robh.at.kernel.org>
+        id S2393274AbgLJS6Y (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 10 Dec 2020 13:58:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35000 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393133AbgLJS6V (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 10 Dec 2020 13:58:21 -0500
+Date:   Thu, 10 Dec 2020 12:57:38 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607626660;
+        bh=bY6QyKta2HG7QnuulXpGmzijvxYT716CvFeUnK73lGE=;
+        h=From:To:Cc:Subject:In-Reply-To:From;
+        b=IRfRt9Rbs6p8tsMig0XCBR+5RMuUFTJpQU/itpNPQJss029/xNV2PTcALOb5np5XG
+         zcwl8b5UN0AUTNvZygu3PLrHWaXKFWeOs7GdyJr2xkvsb77dJM4GnzvA0zI10a+7sz
+         YEN8hqBWTGLsO2U/FwvhArfhtHNUeHgAE/uTNYBTmG5kQYSi2cD6IB4rR3dZq9zF2R
+         B+xe6OO9OSACmhBZ3rx37KSKvkrxQ1RXCC32KPiB3NDzHpxF9DUMqA0eI1L3zrB4Xn
+         bi5h/XhwxflLmu1WGNb1+frIySTwiFfSF/+4qiFHfGnATz+gpiUYgxjmUL58Cm+qEv
+         x+c3Er225XIQQ==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     tglx@linutronix.de, ashok.raj@intel.com, kevin.tian@intel.com,
+        dave.jiang@intel.com, megha.dey@intel.com,
+        alex.williamson@redhat.com, bhelgaas@google.com,
+        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        eric.auger@redhat.com, jacob.jun.pan@intel.com, jgg@mellanox.com,
+        jing.lin@intel.com, kvm@vger.kernel.org, kwankhede@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        maz@kernel.org, mona.hossain@intel.com, netanelg@mellanox.com,
+        parav@mellanox.com, pbonzini@redhat.com, rafael@kernel.org,
+        samuel.ortiz@intel.com, sanjay.k.kumar@intel.com,
+        shahafs@mellanox.com, tony.luck@intel.com, vkoul@kernel.org,
+        yan.y.zhao@linux.intel.com, yi.l.liu@intel.com
+Subject: Re: [RFC PATCH 1/1] platform-msi: Add platform check for subdevice
+ irq domain
+Message-ID: <20201210185738.GA49060@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201207191222.GA629533@robh.at.kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20201210004624.345282-1-baolu.lu@linux.intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Dec 07, 2020 at 01:12:22PM -0600, Rob Herring wrote:
-> On Sun, Nov 15, 2020 at 06:12:42PM +0000, Jonathan McDowell wrote:
-> > Converts the device tree bindings for the Qualcomm Application Data
-> > Mover (ADM) DMA controller over to YAML schemas.
-> > 
-> > Signed-off-by: Jonathan McDowell <noodles@earth.li>
-> > ---
-> >  .../devicetree/bindings/dma/qcom,adm.yaml     | 102 ++++++++++++++++++
-> >  .../devicetree/bindings/dma/qcom_adm.txt      |  61 -----------
-> >  2 files changed, 102 insertions(+), 61 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/qcom,adm.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/dma/qcom_adm.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/dma/qcom,adm.yaml b/Documentation/devicetree/bindings/dma/qcom,adm.yaml
-> > new file mode 100644
-> > index 000000000000..353d85d3326d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/qcom,adm.yaml
-> > @@ -0,0 +1,102 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/dma/qcom,adm.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: QCOM ADM DMA Controller
-> > +
-> > +maintainers:
-> > +  - Jonathan McDowell <noodles@earth.li>
-> > +
-> > +description: |
-> > +  QCOM Application Data Mover (ADM) DMA controller found in the MSM8x60
-> > +  and IPQ/APQ8064 platforms.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - const: qcom,adm
+On Thu, Dec 10, 2020 at 08:46:24AM +0800, Lu Baolu wrote:
+> The pci_subdevice_msi_create_irq_domain() should fail if the underlying
+> platform is not able to support IMS (Interrupt Message Storage). Otherwise,
+> the isolation of interrupt is not guaranteed.
 > 
-> Needs SoC specific compatible(s).
+> For x86, IMS is only supported on bare metal for now. We could enable it
+> in the virtualization environments in the future if interrupt HYPERCALL
+> domain is supported or the hardware has the capability of interrupt
+> isolation for subdevices.
 
-It's not clear would actually make sense that's more specific than this;
-adding a version was discussed but it does not appear more recent chips
-use the adm block and so qcom,adm was seen to be sufficient (as well as
-matching what's already in tree).
+> + * We want to figure out which context we are running in. But the hardware
+> + * does not introduce a reliable way (instruction, CPUID leaf, MSR, whatever)
+> + * which can be manipulated by the VMM to let the OS figure out where it runs.
+> + * So we go with the below probably_on_bare_metal() function as a replacement
+> + * for definitely_on_bare_metal() to go forward only for the very simple reason
+> + * that this is the only option we have.
+> + */
+> +static const char * const possible_vmm_vendor_name[] = {
+> +	"QEMU", "Bochs", "KVM", "Xen", "VMware", "VMW", "VMware Inc.",
+> +	"innotek GmbH", "Oracle Corporation", "Parallels", "BHYVE",
+> +	"Microsoft Corporation"
+> +};
+> +
+> +static bool probably_on_bare_metal(void)
 
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +    description:
-> > +      Address range for DMA registers
-> 
-> Drop description. Doesn't really add anything specific to this binding.
+What is the point of a function called probably_on_bare_metal()?
+*Probably*?  The caller can't really do anything with the fact that
+we're not 100% sure this gives the correct answer.  Just call it
+"on_bare_metal()" or something and accept the fact that it might be
+wrong sometimes.
 
-Ok.
-
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +    description:
-> > +      Should contain one interrupt shared by all channels
-> 
-> Drop.
-
-Ok.
-
-> > +
-> > +  "#dma-cells":
-> > +    const: 2
-> > +    description:
-> > +      First cell denotes the channel number.  Second cell denotes CRCI
-> > +      (client rate control interface) flow control assignment. If no
-> > +      flow control is required, use 0.
-> > +
-> > +  clocks:
-> > +    maxItems: 2
-> > +    description:
-> > +      Should contain the core clock and interface clock.
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: core
-> > +      - const: iface
-> > +
-> > +  resets:
-> > +    maxItems: 4
-> > +    description:
-> > +      Must contain an entry for each entry in reset names.
-> > +
-> > +  reset-names:
-> > +    items:
-> > +      - const: clk
-> > +      - const: c0
-> > +      - const: c1
-> > +      - const: c2
-> > +
-> > +  qcom,ee:
-> > +    maxItems: 1
-> 
-> maxItems is for arrays and this is a scalar.
-
-So it should be:
-
-  $ref: /schemas/types.yaml#/definitions/uint32
-
-?
-
-> > +    description:
-> > +      Indicates the security domain identifier used in the secure world.
-> 
-> How do I get 'ee' from this? Is this something other QCom blocks need?
-
-Apparently it stands for "Execution Environment". It's used for other
-QCom blocks as well (I see at least qcom,bam and qcom,spmi-pmic-arb
-already in tree). I'll expand the comment to include the Execution
-Environment string.
-
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +
-> > +required:
-> > +  - "#dma-cells"
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - clock-names
-> > +  - interrupts
-> > +  - qcom,ee
-> > +  - resets
-> > +  - reset-names
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/clock/qcom,gcc-ipq806x.h>
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +    #include <dt-bindings/reset/qcom,gcc-ipq806x.h>
-> > +
-> > +    adm_dma: dma@18300000 {
-> 
-> Drop unused labels.
-
-Ok.
-
-> 
-> > +             compatible = "qcom,adm";
-> > +             reg = <0x18300000 0x100000>;
-> > +             interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>;
-> > +             #dma-cells = <2>;
-> > +
-> > +             clocks = <&gcc ADM0_CLK>, <&gcc ADM0_PBUS_CLK>;
-> > +             clock-names = "core", "iface";
-> > +
-> > +             resets = <&gcc ADM0_RESET>,
-> > +                      <&gcc ADM0_C0_RESET>,
-> > +                      <&gcc ADM0_C1_RESET>,
-> > +                      <&gcc ADM0_C2_RESET>;
-> > +             reset-names = "clk", "c0", "c1", "c2";
-> > +             qcom,ee = <0>;
-> > +    };
-> > +
-> > +...
-> > diff --git a/Documentation/devicetree/bindings/dma/qcom_adm.txt b/Documentation/devicetree/bindings/dma/qcom_adm.txt
-> > deleted file mode 100644
-> > index 9d3b2f917b7b..000000000000
-> > --- a/Documentation/devicetree/bindings/dma/qcom_adm.txt
-> > +++ /dev/null
-> > @@ -1,61 +0,0 @@
-> > -QCOM ADM DMA Controller
-> > -
-> > -Required properties:
-> > -- compatible: must contain "qcom,adm" for IPQ/APQ8064 and MSM8960
-> > -- reg: Address range for DMA registers
-> > -- interrupts: Should contain one interrupt shared by all channels
-> > -- #dma-cells: must be <2>.  First cell denotes the channel number.  Second cell
-> > -  denotes CRCI (client rate control interface) flow control assignment.
-> > -- clocks: Should contain the core clock and interface clock.
-> > -- clock-names: Must contain "core" for the core clock and "iface" for the
-> > -  interface clock.
-> > -- resets: Must contain an entry for each entry in reset names.
-> > -- reset-names: Must include the following entries:
-> > -  - clk
-> > -  - c0
-> > -  - c1
-> > -  - c2
-> > -- qcom,ee: indicates the security domain identifier used in the secure world.
-> > -
-> > -Example:
-> > -		adm_dma: dma@18300000 {
-> > -			compatible = "qcom,adm";
-> > -			reg = <0x18300000 0x100000>;
-> > -			interrupts = <0 170 0>;
-> > -			#dma-cells = <2>;
-> > -
-> > -			clocks = <&gcc ADM0_CLK>, <&gcc ADM0_PBUS_CLK>;
-> > -			clock-names = "core", "iface";
-> > -
-> > -			resets = <&gcc ADM0_RESET>,
-> > -				<&gcc ADM0_C0_RESET>,
-> > -				<&gcc ADM0_C1_RESET>,
-> > -				<&gcc ADM0_C2_RESET>;
-> > -			reset-names = "clk", "c0", "c1", "c2";
-> > -			qcom,ee = <0>;
-> > -		};
-> > -
-> > -DMA clients must use the format descripted in the dma.txt file, using a three
-> > -cell specifier for each channel.
-> > -
-> > -Each dmas request consists of 3 cells:
-> > - 1. phandle pointing to the DMA controller
-> > - 2. channel number
-> > - 3. CRCI assignment, if applicable.  If no CRCI flow control is required, use 0.
-> > -    The CRCI is used for flow control.  It identifies the peripheral device that
-> > -    is the source/destination for the transferred data.
-> > -
-> > -Example:
-> > -
-> > -	spi4: spi@1a280000 {
-> > -		spi-max-frequency = <50000000>;
-> > -
-> > -		pinctrl-0 = <&spi_pins>;
-> > -		pinctrl-names = "default";
-> > -
-> > -		cs-gpios = <&qcom_pinmux 20 0>;
-> > -
-> > -		dmas = <&adm_dma 6 9>,
-> > -			<&adm_dma 5 10>;
-> > -		dma-names = "rx", "tx";
-> > -	};
-> > -- 
-> > 2.29.2
-> > 
-
-J.
-
--- 
-Revd Jonathan McDowell, ULC | Don't just stand there, kill something.
+This patch goes with IMS support, which somebody else is handling, so
+I assume you don't need anything from the PCI side.

@@ -2,51 +2,56 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CB602D79B3
-	for <lists+dmaengine@lfdr.de>; Fri, 11 Dec 2020 16:47:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 879CC2D7ADD
+	for <lists+dmaengine@lfdr.de>; Fri, 11 Dec 2020 17:28:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392807AbgLKPol (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 11 Dec 2020 10:44:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53698 "EHLO mail.kernel.org"
+        id S2394992AbgLKQZN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 11 Dec 2020 11:25:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392647AbgLKPoB (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 11 Dec 2020 10:44:01 -0500
-Date:   Fri, 11 Dec 2020 21:13:16 +0530
+        id S1727045AbgLKQYp (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 11 Dec 2020 11:24:45 -0500
+Date:   Fri, 11 Dec 2020 21:54:00 +0530
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607701401;
-        bh=FRBMjCg3FCwVVASnJpRiHWLuuSl0y2YodCYJbNsoGdU=;
+        s=k20201202; t=1607703844;
+        bh=ZnBvTYYCLxcRIfQCkCwz3NcHFbIH3swkrddHO+mhiiE=;
         h=From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L0DrGVs/u68kbw5sOCkD0vCmo/IVJESNaporahpgBslAFXbA6t2u3Ra+pYUAHqbq2
-         P10xkJrsBev1j4A760lWxp6j96Lfz98k75rIu28Nz7U38MJDeEfOQ0qL8gtdHvtm67
-         chAwtqoNhfYBPmc/JcN++wDybvNy8scRamNAeur1TSOINFn+F74MC3DT1HWeImkYDM
-         1gt7taHHbwszM1bk6pKsmyb/ad03pwugBgXXrCzyd8FrA7mtGiHSwdSUNUhqLnku8n
-         G01np4tE1lEx03JuNQra94FixpWAnoCHd+GDZg4fUKDQysXOI4vhoTUgaAijU7nJBg
-         Dd2ChKc5Q7u4g==
+        b=niZrHuQDlxPXwfXWwpYOPzEDgWfLpBhNworWUE9sBWSIENDehmE2VMR+fQfwkC1/c
+         YjyycwYIyJZTQHdHoo//VkCWYYmNxCdec2DGurHGefox5f1afTiQuW4tndr9yWi9tb
+         F+8y/6vuH9SSnUYSYzgnbtC12pT21yfZKUuuJFMdIWjcWir6f2euGRp6c/puQ0bWIK
+         NyzOPM2N33dzN4A9VENZJFIrA7FiICnIpMR+6R+WNalpId9WyZ9qXWyg9wgsp9wcyE
+         Je3gTXKYhbnITKpvtuc0wUbZ260ovPM/6jouB4u6aC4fvHm8g/Pxj1P8954zsZN9qb
+         O3ncktNgC7vCQ==
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Amelie Delaunay <amelie.delaunay@st.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        dmaengine@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     nm@ti.com, ssantosh@kernel.org, robh+dt@kernel.org,
+        dan.j.williams@intel.com, t-kristo@ti.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: Re: [PATCH 0/4] Bunch of improvements for STM32 DMA controllers
-Message-ID: <20201211154316.GY8403@vkoul-mobl>
-References: <20201120143320.30367-1-amelie.delaunay@st.com>
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        vigneshr@ti.com, grygorii.strashko@ti.com
+Subject: Re: [PATCH v3 00/20] dmaengine/soc: k3-udma: Add support for BCDMA
+ and PKTDMA
+Message-ID: <20201211162400.GZ8403@vkoul-mobl>
+References: <20201208090440.31792-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201120143320.30367-1-amelie.delaunay@st.com>
+In-Reply-To: <20201208090440.31792-1-peter.ujfalusi@ti.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 20-11-20, 15:33, Amelie Delaunay wrote:
-> This series brings 3 patches for STM32 DMA and 1 for STM32 MDMA.
-> They increase the reliability and the efficiency of the transfers.
+On 08-12-20, 11:04, Peter Ujfalusi wrote:
+> Hi,
+> 
+> The series have build dependency on ti_sci/soc series (v2):
+> https://lore.kernel.org/lkml/20201008115224.1591-1-peter.ujfalusi@ti.com/
+> 
+> Santosh kindly provided immutable branch and tag holding the series:
+> git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git tags/drivers_soc_for_5.11 
 
-Applied, thanks
+I have picked this and then merged this and pushed to test branch. If
+everything is okay, it will be next on monday
 
 -- 
 ~Vinod

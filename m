@@ -2,36 +2,36 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 214602D6CE6
-	for <lists+dmaengine@lfdr.de>; Fri, 11 Dec 2020 02:06:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF4082D6D06
+	for <lists+dmaengine@lfdr.de>; Fri, 11 Dec 2020 02:06:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394244AbgLKBFf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 10 Dec 2020 20:05:35 -0500
-Received: from mga14.intel.com ([192.55.52.115]:12012 "EHLO mga14.intel.com"
+        id S2394416AbgLKBGB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 10 Dec 2020 20:06:01 -0500
+Received: from mga14.intel.com ([192.55.52.115]:12002 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394188AbgLKBFS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 10 Dec 2020 20:05:18 -0500
-IronPort-SDR: eXGNDHmNFUvADr6bVnFnouLHoG05MdMPvuHNHruSuwwLnMAkOlHXPYIiw9GaEdVIAeKowVDV/t
- Xs9VXeAsNxzQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9831"; a="173596120"
+        id S2394240AbgLKBFa (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 10 Dec 2020 20:05:30 -0500
+IronPort-SDR: CTT3SEiRKnSBsxUkskq8MASnKA5nnXFSvDkOFV1IhciIEfj6+i0Ywo9ivIZLwAir1cpPRxWK19
+ GfO8fyFudAlg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9831"; a="173596124"
 X-IronPort-AV: E=Sophos;i="5.78,409,1599548400"; 
-   d="scan'208";a="173596120"
+   d="scan'208";a="173596124"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2020 17:04:38 -0800
-IronPort-SDR: 2yNaRCNIhrRPqbBI93sUYKHk9stw3A6x+R4mCttFOWg6v2ofoAb+dZHg5jDufn085TUy5DEWlm
- Vjh+u018DRCg==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2020 17:04:41 -0800
+IronPort-SDR: 27ouyZ4X3PH+3lMy+R8oZeEDLeMFt5digQTGnJGw/MmK0tzwliVgH0xVMOwF+/98Z2Nf4yqeQN
+ 9HdxseXjZnMg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.78,409,1599548400"; 
-   d="scan'208";a="320965836"
+   d="scan'208";a="320965845"
 Received: from jsia-hp-z620-workstation.png.intel.com ([10.221.118.135])
-  by fmsmga007.fm.intel.com with ESMTP; 10 Dec 2020 17:04:36 -0800
+  by fmsmga007.fm.intel.com with ESMTP; 10 Dec 2020 17:04:39 -0800
 From:   Sia Jee Heng <jee.heng.sia@intel.com>
 To:     vkoul@kernel.org, Eugeniy.Paltsev@synopsys.com, robh+dt@kernel.org
 Cc:     andriy.shevchenko@linux.intel.com, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v6 08/16] dmaengine: dw-axi-dmac: Support of_dma_controller_register()
-Date:   Fri, 11 Dec 2020 08:46:34 +0800
-Message-Id: <20201211004642.25393-9-jee.heng.sia@intel.com>
+Subject: [PATCH v6 09/16] dmaengine: dw-axi-dmac: Support burst residue granularity
+Date:   Fri, 11 Dec 2020 08:46:35 +0800
+Message-Id: <20201211004642.25393-10-jee.heng.sia@intel.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20201211004642.25393-1-jee.heng.sia@intel.com>
 References: <20201211004642.25393-1-jee.heng.sia@intel.com>
@@ -39,93 +39,157 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add support for of_dma_controller_register() so that DMA clients
-can pass in device handshake number to the AxiDMA driver.
+Add support for DMA_RESIDUE_GRANULARITY_BURST so that AxiDMA can report
+DMA residue.
 
-DMA clients shall code the device handshake number in the Device tree.
-When DMA activities are needed, DMA clients shall invoke OF helper
-function to pass in the device handshake number to the AxiDMA.
+Existing AxiDMA driver only support data transfer between
+memory to memory operation, therefore reporting DMA residue
+to the DMA clients is not supported.
 
-Without register to the of_dma_controller_register(), data transfer
-between memory to device and device to memory operations would failed.
+Reporting DMA residue to the DMA clients is important as DMA clients
+shall invoke dmaengine_tx_status() to understand the number of bytes
+been transferred so that the buffer pointer can be updated accordingly.
 
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sia Jee Heng <jee.heng.sia@intel.com>
 ---
- .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 26 +++++++++++++++++++
- drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  1 +
- 2 files changed, 27 insertions(+)
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 43 ++++++++++++++++---
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  2 +
+ 2 files changed, 38 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index b5f92f9cb2bc..40c4af0e0421 100644
+index 40c4af0e0421..29323e75bc44 100644
 --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
 +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -20,6 +20,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_dma.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/property.h>
-@@ -1044,6 +1045,22 @@ static int __maybe_unused axi_dma_runtime_resume(struct device *dev)
- 	return axi_dma_resume(chip);
+@@ -265,14 +265,36 @@ dma_chan_tx_status(struct dma_chan *dchan, dma_cookie_t cookie,
+ 		  struct dma_tx_state *txstate)
+ {
+ 	struct axi_dma_chan *chan = dchan_to_axi_dma_chan(dchan);
+-	enum dma_status ret;
++	struct virt_dma_desc *vdesc;
++	enum dma_status status;
++	u32 completed_length;
++	unsigned long flags;
++	u32 completed_blocks;
++	size_t bytes = 0;
++	u32 length;
++	u32 len;
+ 
+-	ret = dma_cookie_status(dchan, cookie, txstate);
++	status = dma_cookie_status(dchan, cookie, txstate);
++	if (status == DMA_COMPLETE || !txstate)
++		return status;
+ 
+-	if (chan->is_paused && ret == DMA_IN_PROGRESS)
+-		ret = DMA_PAUSED;
++	spin_lock_irqsave(&chan->vc.lock, flags);
+ 
+-	return ret;
++	vdesc = vchan_find_desc(&chan->vc, cookie);
++	if (vdesc) {
++		length = vd_to_axi_desc(vdesc)->length;
++		completed_blocks = vd_to_axi_desc(vdesc)->completed_blocks;
++		len = vd_to_axi_desc(vdesc)->hw_desc[0].len;
++		completed_length = completed_blocks * len;
++		bytes = length - completed_length;
++	} else {
++		bytes = vd_to_axi_desc(vdesc)->length;
++	}
++
++	spin_unlock_irqrestore(&chan->vc.lock, flags);
++	dma_set_residue(txstate, bytes);
++
++	return status;
  }
  
-+static struct dma_chan *dw_axi_dma_of_xlate(struct of_phandle_args *dma_spec,
-+					    struct of_dma *ofdma)
-+{
-+	struct dw_axi_dma *dw = ofdma->of_dma_data;
-+	struct axi_dma_chan *chan;
-+	struct dma_chan *dchan;
-+
-+	dchan = dma_get_any_slave_channel(&dw->dma);
-+	if (!dchan)
-+		return NULL;
-+
-+	chan = dchan_to_axi_dma_chan(dchan);
-+	chan->hw_handshake_num = dma_spec->args[0];
-+	return dchan;
-+}
-+
- static int parse_device_properties(struct axi_dma_chip *chip)
- {
- 	struct device *dev = chip->dev;
-@@ -1233,6 +1250,13 @@ static int dw_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_pm_disable;
+ static void write_desc_llp(struct axi_dma_hw_desc *desc, dma_addr_t adr)
+@@ -549,6 +571,7 @@ static int dw_axi_dma_set_hw_desc(struct axi_dma_chan *chan,
  
-+	/* Register with OF helpers for DMA lookups */
-+	ret = of_dma_controller_register(pdev->dev.of_node,
-+					 dw_axi_dma_of_xlate, dw);
-+	if (ret < 0)
-+		dev_warn(&pdev->dev,
-+			 "Failed to register OF DMA controller, fallback to MEM_TO_MEM mode\n");
-+
- 	dev_info(chip->dev, "DesignWare AXI DMA Controller, %d channels\n",
- 		 dw->hdata->nr_channels);
+ 	set_desc_src_master(hw_desc);
  
-@@ -1266,6 +1290,8 @@ static int dw_remove(struct platform_device *pdev)
++	hw_desc->len = len;
+ 	return 0;
+ }
  
- 	devm_free_irq(chip->dev, chip->irq, chip);
+@@ -575,6 +598,7 @@ dw_axi_dma_chan_prep_cyclic(struct dma_chan *dchan, dma_addr_t dma_addr,
+ 	chan->direction = direction;
+ 	desc->chan = chan;
+ 	chan->cyclic = true;
++	desc->length = 0;
  
-+	of_dma_controller_free(chip->dev->of_node);
-+
- 	list_for_each_entry_safe(chan, _chan, &dw->dma.channels,
- 			vc.chan.device_node) {
- 		list_del(&chan->vc.chan.device_node);
+ 	for (i = 0; i < num_periods; i++) {
+ 		hw_desc = &desc->hw_desc[i];
+@@ -584,6 +608,7 @@ dw_axi_dma_chan_prep_cyclic(struct dma_chan *dchan, dma_addr_t dma_addr,
+ 		if (status < 0)
+ 			goto err_desc_get;
+ 
++		desc->length += hw_desc->len;
+ 		/* Set end-of-link to the linked descriptor, so that cyclic
+ 		 * callback function can be triggered during interrupt.
+ 		 */
+@@ -636,6 +661,7 @@ dw_axi_dma_chan_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
+ 		goto err_desc_get;
+ 
+ 	desc->chan = chan;
++	desc->length = 0;
+ 
+ 	for_each_sg(sgl, sg, sg_len, i) {
+ 		mem = sg_dma_address(sg);
+@@ -645,6 +671,7 @@ dw_axi_dma_chan_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
+ 		status = dw_axi_dma_set_hw_desc(chan, hw_desc, mem, len);
+ 		if (status < 0)
+ 			goto err_desc_get;
++		desc->length += hw_desc->len;
+ 	}
+ 
+ 	/* Set end-of-link to the last link descriptor of list */
+@@ -690,6 +717,7 @@ dma_chan_prep_dma_memcpy(struct dma_chan *dchan, dma_addr_t dst_adr,
+ 
+ 	desc->chan = chan;
+ 	num = 0;
++	desc->length = 0;
+ 	while (len) {
+ 		xfer_len = len;
+ 
+@@ -742,7 +770,8 @@ dma_chan_prep_dma_memcpy(struct dma_chan *dchan, dma_addr_t dst_adr,
+ 		set_desc_src_master(hw_desc);
+ 		set_desc_dest_master(hw_desc, desc);
+ 
+-
++		hw_desc->len = xfer_len;
++		desc->length += hw_desc->len;
+ 		/* update the length and addresses for the next loop cycle */
+ 		len -= xfer_len;
+ 		dst_adr += xfer_len;
+@@ -1210,7 +1239,7 @@ static int dw_probe(struct platform_device *pdev)
+ 	dw->dma.dst_addr_widths = AXI_DMA_BUSWIDTHS;
+ 	dw->dma.directions = BIT(DMA_MEM_TO_MEM);
+ 	dw->dma.directions |= BIT(DMA_MEM_TO_DEV) | BIT(DMA_DEV_TO_MEM);
+-	dw->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
++	dw->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+ 
+ 	dw->dma.dev = chip->dev;
+ 	dw->dma.device_tx_status = dma_chan_tx_status;
 diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-index a26b0a242a93..3498bef5453b 100644
+index 3498bef5453b..46baf93de617 100644
 --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
 +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-@@ -37,6 +37,7 @@ struct axi_dma_chan {
- 	struct axi_dma_chip		*chip;
- 	void __iomem			*chan_regs;
- 	u8				id;
-+	u8				hw_handshake_num;
- 	atomic_t			descs_allocated;
+@@ -88,6 +88,7 @@ struct __packed axi_dma_lli {
+ struct axi_dma_hw_desc {
+ 	struct axi_dma_lli	*lli;
+ 	dma_addr_t		llp;
++	u32			len;
+ };
  
- 	struct dma_pool			*desc_pool;
+ struct axi_dma_desc {
+@@ -96,6 +97,7 @@ struct axi_dma_desc {
+ 	struct virt_dma_desc		vd;
+ 	struct axi_dma_chan		*chan;
+ 	u32				completed_blocks;
++	u32				length;
+ };
+ 
+ static inline struct device *dchan2dev(struct dma_chan *dchan)
 -- 
 2.18.0
 

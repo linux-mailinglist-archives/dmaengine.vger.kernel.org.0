@@ -2,88 +2,98 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57C6F2D75B0
-	for <lists+dmaengine@lfdr.de>; Fri, 11 Dec 2020 13:36:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A459F2D76AA
+	for <lists+dmaengine@lfdr.de>; Fri, 11 Dec 2020 14:37:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392329AbgLKMfR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 11 Dec 2020 07:35:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387487AbgLKMfN (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 11 Dec 2020 07:35:13 -0500
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEF45C0613CF
-        for <dmaengine@vger.kernel.org>; Fri, 11 Dec 2020 04:34:32 -0800 (PST)
-Received: by mail-oi1-x243.google.com with SMTP id q25so9609960oij.10
-        for <dmaengine@vger.kernel.org>; Fri, 11 Dec 2020 04:34:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=DcPMMVsrCMnOQadt35QrJ5qdpictWliOZDoC6TNx80E=;
-        b=RyPdvPfTBfoyx2Afwi+lJ/cLFMPRCzgeVyK2qvnXALrPd5fTwWA1cvXHBf/lv7Bexu
-         /c4z+jq4hSYlyWWoJoyMZZhsHFJnapy+Bhk5qg+1PbfuqjVZpfFv3j6o3FefKF7EgCc2
-         fqUGAY2qo802v88utUgwKYs2NdYFeqYKpDH35f1e0onteBsRodeqDUHVuvV7qIujPBrj
-         MPpMP5F/jw217JlqyAmOb/ISYhQbCruATdRmhuLOJB2xkRtH1Atw9t6Icqc8tqWepOeN
-         zoARQFtVwk+DAuV4iqzLmeX5pstDGIPYZOctJ5cqbyto7QRbB3qPtBQjnPwpzPjdf3YV
-         VwUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=DcPMMVsrCMnOQadt35QrJ5qdpictWliOZDoC6TNx80E=;
-        b=hE8aIwnbjQEPMFxtmQFThwyoj36eNsCthIeSful0F0V8yxORBjqe/zKQ+6RUstEHz4
-         qO8hoVCA7c68LBZ75Dps64s7NrzQYL1BTEuN6KEQ9feNyBd1mXCjV7yxOgM80aM1ZmOs
-         o/D3iP7DLJgPDPtvhd2laQvaTo8L54U8v+qnAiauQLA54Y6zFrZqq5p4DNKZy75MzJKC
-         XX386bXRbHDVXmVSMIJjpVn2xn99cKc7+AFOECGz7fuzeYFe49pxeLWCk4s6fQxTZ7Ul
-         PayYj4mOcYNEiKtUig9xmy3hmgAmLv63X0xHuWLueAzxdAQWGVqCW5jbUdDYa0558MLn
-         W+Xw==
-X-Gm-Message-State: AOAM5302X0ko7MoqzOxD/4lHqBhh/O9g0UEBWEVLEVm1spzKQduMSm7z
-        qNORf+aFbBXFHWU2JP5yvIR+BfeHLXL2Lt6v7+E=
-X-Google-Smtp-Source: ABdhPJwDfp68VV07f9zKoJJvSm6kBK25Mmb2hjiOM52fYjR5+sV+wwhpz6bDJDBM5mIJKhCPGKOTXzmlwnoXnX4dglM=
-X-Received: by 2002:aca:568f:: with SMTP id k137mr9069984oib.138.1607690072110;
- Fri, 11 Dec 2020 04:34:32 -0800 (PST)
+        id S1728631AbgLKNgI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 11 Dec 2020 08:36:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59258 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727879AbgLKNf4 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 11 Dec 2020 08:35:56 -0500
+Date:   Fri, 11 Dec 2020 19:05:11 +0530
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607693715;
+        bh=H2HDn/4ODMQ7N3rADQe9snH03Jqg99rVKMRq8H5MqVc=;
+        h=From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jIJs96x2TRHoGyF6ygLdIXuAcL2k9Yio1o4fZsCyAe0SXuQv17vq4Re2znBGyiNFf
+         4M6MFVDcP1IGSPYAvKwc6b2Y1eOSy5VJK2bTgmcpilb79HXJNE+U0aoWdRA4l+ZZ8G
+         10x7shR+H3l6FOnFrdf/okMlSPAkJpx/mqRDwr1Z0YSi+8TKEo+8iiuO+0L4ttSmas
+         PoAOSSNAjWaOIvDWE424vDN1mWIxH/l+1kmXE+BY85IvGeKPUCHdxPtgW36DjMuk4k
+         oKWAJtofIRHoePSOw4mnWvB0bRGOwufcXcrqvAXspYsyTE5ao8Lp+L1o6vksok4TC3
+         xsWQ1gL44CtTg==
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Wang Xiaojun <wangxiaojun11@huawei.com>, dan.j.williams@intel.com,
+        dmaengine@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: ti: edma: Fix reference count leaks due to
+ pm_runtime_get_sync
+Message-ID: <20201211133511.GT8403@vkoul-mobl>
+References: <20201123135928.2702845-1-wangxiaojun11@huawei.com>
+ <20201124172421.GV8403@vkoul-mobl>
+ <a8ccf849-35f3-87c2-96bc-c3e3b6e76a11@ti.com>
 MIME-Version: 1.0
-Sender: stephanieberne22@gmail.com
-Received: by 2002:a4a:e927:0:0:0:0:0 with HTTP; Fri, 11 Dec 2020 04:34:31
- -0800 (PST)
-From:   Mohammed ouedrago <mohammedoudrago15@gmail.com>
-Date:   Fri, 11 Dec 2020 12:34:31 +0000
-X-Google-Sender-Auth: Hew4iTPnXoWfNJVTi3smRwvkfkk
-Message-ID: <CAFanPNJgVHgVm6turJcu2vd4ekONOw1vYWWjaGZfCcvcckPDCw@mail.gmail.com>
-Subject: Greetings
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a8ccf849-35f3-87c2-96bc-c3e3b6e76a11@ti.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-I AM MR.MOHAMMD OUEDRAGO.I WORK WITH THE BILL & EXCHANGE ( Bank of Africa (BOA)
-OUAGADOUGOU ANNEX OFFICE, BURKINA FASO.I HAVE A BUSINESS
-WHICH WILL BE BENEFICIAL TO BOTH OF US. THE AMOUNT OF MONEY INVOLVED IS ($11.2
-MILLION US DOLLARS) WHICH I WANT TO TRANSFER OUT OF THE COUNTRY TO YOUR BANK
-ACCOUNT. THIS MONEY IS OWNED BY A MAN CALLED KURT KAHLE A GERMAN BUSINESS MAN .
- HE DIED ON MONDAY, THE 31 OF
-JULY 2001 IN A PLANE CRASH BUT NO CLAIM HAS BEEN MADE AS HE LEFT NO ONE BEHIND
-TO PLACE A CLAIM ON HIS BANK ACCOUNT BALANCE AS HIS NEXT OF KIN. THESE FUNDS
-CANNOT BE TRANSFERRED WITHOUT A NEXT OF KIN BEEN INTRODUCED OFFICIALLY.
+On 25-11-20, 08:36, Peter Ujfalusi wrote:
+> 
+> 
+> On 24/11/2020 19.24, Vinod Koul wrote:
+> > On 23-11-20, 21:59, Wang Xiaojun wrote:
+> >> On calling pm_runtime_get_sync() the reference count of the device
+> >> is incremented. In case of failure, should decrement the reference
+> >> count before returning the error. So we fixed it by replacing it
+> >> with pm_runtime_resume_and_get.
+> > 
+> > Peter?
+> 
+> Looks good.
+> 
+> fwiw, the pm_runtime_resume_and_get() landed in mainline with v5.10-rc5,
+> so it is fresh, but what it does is legit.
 
-THE PROCESSING STARTS BY PRESENTING YOURSELF AS THE NEXT OF KIN TO LATE [KURT
-KAHLE]. I SHALL SEND TO YOU A TEXT OF APPLICATION FORM WITH WHICH YOU CAN APPLY
-TO THE BANK AS HIS NEXT OF KIN. I WILL MAKE AVAILABLE TO YOU ALL USEFUL
-INFORMATIONS WITH WHICH A SUCCESSFUL CLAIM SHALL BE PLACED ON THESE FUNDS. I
-WILL BE GUIDING YOU THROUGHOUT THE DURATION OF THIS TRANSACTION SO AS TO ENSURE
-A SMOOTH AND RISK FREE TRANSFER OF THESE FUNDS INTO YOUR BANK ACCOUNT, LIKE
-PROVIDING YOU WITH THE ANSWERS TO THE QUESTIONAIRE YOU WILL RECIEVE FROM THE
-BANK WHEN YOUR APPLICATION IS RECIEVED BY THE BANK. YOU SHALL BE ENTITLED TO 40%
-OF THESE FUNDS FOR YOUR CO-OPERATION AND ACCEPTANCE WHILE 10% WILL ACT AS
-COMPENSATION FOR THE SOFT EXPENSES YOU WILL INCURE IN THE PROCESS OF CONSUMATING
-THIS TRANSACTION. SEND ME A REPLY ON RECIEPT OF THIS EMAIL THROUGH
-(mohammedoudrago15@gmail.com)
- URGENCY HAS TO BE IMPLIED AND DO PROMISE ME OF KEEPING
-EVERYTHING CONCERNING THIS TRANSACTION STRICTLY CONFIDENTIAL AND AS A TOP SECRET
-FOR TWO WORKING WEEKS NEEDED TO CONCLUDE WITH EVERYTHING.
+So I cant apply this patch, please rebase and resend after -rc1, with
+Peter's ack
 
-BEST REGARDS,
+> 
+> Wang: thank you for the patch.
+> 
+> Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> 
+> > 
+> >>
+> >> Signed-off-by: Wang Xiaojun <wangxiaojun11@huawei.com>
+> >> ---
+> >>  drivers/dma/ti/edma.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+> >> index 35d81bd857f1..38af8b596e1c 100644
+> >> --- a/drivers/dma/ti/edma.c
+> >> +++ b/drivers/dma/ti/edma.c
+> >> @@ -2399,7 +2399,7 @@ static int edma_probe(struct platform_device *pdev)
+> >>  	platform_set_drvdata(pdev, ecc);
+> >>  
+> >>  	pm_runtime_enable(dev);
+> >> -	ret = pm_runtime_get_sync(dev);
+> >> +	ret = pm_runtime_resume_and_get(dev);
+> >>  	if (ret < 0) {
+> >>  		dev_err(dev, "pm_runtime_get_sync() failed\n");
+> >>  		pm_runtime_disable(dev);
+> >> -- 
+> >> 2.25.1
+> > 
+> 
+> - Péter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-
-MR.MOHAMMD OUEDRAGO
+-- 
+~Vinod

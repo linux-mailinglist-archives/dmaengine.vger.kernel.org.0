@@ -2,52 +2,49 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14D302D797E
-	for <lists+dmaengine@lfdr.de>; Fri, 11 Dec 2020 16:35:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CB602D79B3
+	for <lists+dmaengine@lfdr.de>; Fri, 11 Dec 2020 16:47:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgLKPed (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 11 Dec 2020 10:34:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49622 "EHLO mail.kernel.org"
+        id S2392807AbgLKPol (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 11 Dec 2020 10:44:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730876AbgLKPe2 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 11 Dec 2020 10:34:28 -0500
-Date:   Fri, 11 Dec 2020 19:46:09 +0530
+        id S2392647AbgLKPoB (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 11 Dec 2020 10:44:01 -0500
+Date:   Fri, 11 Dec 2020 21:13:16 +0530
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607696177;
-        bh=DAaBOHLvMsSyw+6neqLESTSqSmL9MuEzW34NMZ1jC80=;
+        s=k20201202; t=1607701401;
+        bh=FRBMjCg3FCwVVASnJpRiHWLuuSl0y2YodCYJbNsoGdU=;
         h=From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SZPbQybCU2On5nHF+ztIHW+5PMZxFAkUaSvSFw1jAuOAfrCJxTV1pIyXvEzXuVWur
-         TtJrWcgSn4IdT5oE0QwDIsYTsBC+OM59YMYQhooKsPNfC21RRI1U9AyAHV6WxSXJbL
-         7+N62l/cIbBly7E25gW1Hqc8JF7iuXgQXvVsAQyuQIKIrylRQjI2/V6XLdeuHK8hlX
-         YVuaCt3h26rKOjRa5ZCDIeE3BPe4fxbPBT0hZrcN0mSF0VdRWqGhZDOzE+h4le17g6
-         BbmxSQJyLskWiYA/D9W56RdEDZogro3D8P84F2YqD1UFLsp4uGiazvzeOPg7zO/lY0
-         G7jJCLNTq12rQ==
+        b=L0DrGVs/u68kbw5sOCkD0vCmo/IVJESNaporahpgBslAFXbA6t2u3Ra+pYUAHqbq2
+         P10xkJrsBev1j4A760lWxp6j96Lfz98k75rIu28Nz7U38MJDeEfOQ0qL8gtdHvtm67
+         chAwtqoNhfYBPmc/JcN++wDybvNy8scRamNAeur1TSOINFn+F74MC3DT1HWeImkYDM
+         1gt7taHHbwszM1bk6pKsmyb/ad03pwugBgXXrCzyd8FrA7mtGiHSwdSUNUhqLnku8n
+         G01np4tE1lEx03JuNQra94FixpWAnoCHd+GDZg4fUKDQysXOI4vhoTUgaAijU7nJBg
+         Dd2ChKc5Q7u4g==
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     dmaengine@vger.kernel.org, tony.luck@intel.com,
-        dan.j.williams@intel.com
-Subject: Re: [PATCH] dmaengine: idxd: add IAX configuration support in the
- IDXD driver
-Message-ID: <20201211141609.GW8403@vkoul-mobl>
-References: <160564555488.1834439.4261958859935360473.stgit@djiang5-desk3.ch.intel.com>
+To:     Amelie Delaunay <amelie.delaunay@st.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: Re: [PATCH 0/4] Bunch of improvements for STM32 DMA controllers
+Message-ID: <20201211154316.GY8403@vkoul-mobl>
+References: <20201120143320.30367-1-amelie.delaunay@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <160564555488.1834439.4261958859935360473.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <20201120143320.30367-1-amelie.delaunay@st.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 17-11-20, 13:39, Dave Jiang wrote:
-> Add support to allow configuration of Intel Analytics Accelerator (IAX) in
-> addition to the Intel Data Streaming Accelerator (DSA). The IAX hardware
-> has the same configuration interface as DSA. The main difference
-> is the type of operations it performs. We can support the DSA and
-> IAX devices on the same driver with some tweaks.
-> 
-> IAX has a 64B completion record that needs to be 64B aligned, as opposed to
-> a 32B completion record that is 32B aligned for DSA. IAX also does not
-> support token management.
+On 20-11-20, 15:33, Amelie Delaunay wrote:
+> This series brings 3 patches for STM32 DMA and 1 for STM32 MDMA.
+> They increase the reliability and the efficiency of the transfers.
 
 Applied, thanks
 

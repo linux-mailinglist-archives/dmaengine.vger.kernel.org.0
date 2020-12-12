@@ -2,289 +2,85 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BDBD2D6D0D
-	for <lists+dmaengine@lfdr.de>; Fri, 11 Dec 2020 02:09:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EA5D2D74F8
+	for <lists+dmaengine@lfdr.de>; Fri, 11 Dec 2020 12:56:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404320AbgLKBGh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 10 Dec 2020 20:06:37 -0500
-Received: from mga14.intel.com ([192.55.52.115]:12004 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2394390AbgLKBGM (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 10 Dec 2020 20:06:12 -0500
-IronPort-SDR: +jLBC9kj+338ThjLFqpWFcDfTC6uB33QhYdyCj8zxznJrnzk0piJ4UV/vRVBey+qGlU9MaserZ
- Mb/PK+bom/PA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9831"; a="173596156"
-X-IronPort-AV: E=Sophos;i="5.78,409,1599548400"; 
-   d="scan'208";a="173596156"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2020 17:05:01 -0800
-IronPort-SDR: usIHpIEp1LFBvZjjlu5X1jO0eqcaDfyFH+i3rrIGknNxiWDqxOSqmIzDl1kzZQzPns5wWIN7j8
- J+DPZxB6F/Pg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,409,1599548400"; 
-   d="scan'208";a="320965878"
-Received: from jsia-hp-z620-workstation.png.intel.com ([10.221.118.135])
-  by fmsmga007.fm.intel.com with ESMTP; 10 Dec 2020 17:04:59 -0800
-From:   Sia Jee Heng <jee.heng.sia@intel.com>
-To:     vkoul@kernel.org, Eugeniy.Paltsev@synopsys.com, robh+dt@kernel.org
-Cc:     andriy.shevchenko@linux.intel.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v6 16/16] dmaengine: dw-axi-dmac: Virtually split the linked-list
-Date:   Fri, 11 Dec 2020 08:46:42 +0800
-Message-Id: <20201211004642.25393-17-jee.heng.sia@intel.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20201211004642.25393-1-jee.heng.sia@intel.com>
-References: <20201211004642.25393-1-jee.heng.sia@intel.com>
+        id S2394940AbgLKLyn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 11 Dec 2020 06:54:43 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9519 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392205AbgLKLyh (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 11 Dec 2020 06:54:37 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Csq1C0Bwdzhq2y;
+        Fri, 11 Dec 2020 19:53:19 +0800 (CST)
+Received: from huawei.com (10.151.151.249) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Fri, 11 Dec 2020
+ 19:53:42 +0800
+From:   Dongjiu Geng <gengdongjiu@huawei.com>
+To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <robh+dt@kernel.org>, <vkoul@kernel.org>,
+        <dan.j.williams@intel.com>, <p.zabel@pengutronix.de>,
+        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <gengdongjiu@huawei.com>
+Subject: [PATCH v6 0/4] Enable Hi3559A SOC clock and HiSilicon Hiedma Controller
+Date:   Sat, 12 Dec 2020 13:05:54 +0000
+Message-ID: <20201212130558.49086-1-gengdongjiu@huawei.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.151.151.249]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-AxiDMA driver exposed the dma_set_max_seg_size() to the DMAENGINE.
-It shall helps the DMA clients to create size-optimized linked-list
-for the controller.
+From: g00384164 <g00384164@huawei.com>
 
-However, there are certain situations where DMA client might not be
-abled to benefit from the dma_get_max_seg_size() if the segment size
-can't meet the nature of the DMA client's operation.
+v5->v6:
+1. Drop #size-cells and #address-cell in the hisilicon,hi3559av100-clock.yaml
+2. Add discription for #reset-cells in the hisilicon,hi3559av100-clock.yaml
+3. Remove #clock-cells in hisilicon,hiedmacv310.yaml 
+4. Merge property misc_ctrl_base and misc_regmap together for hiedmacv310 driver
 
-In the case of ALSA operation, ALSA application and driver expecting
-to run in a period of larger than 10ms regardless of the bit depth.
-With this large period, there is a strong request to split the linked-list
-in the AxiDMA driver.
+v4->v5:
+1. change the patch author mail name
 
-Signed-off-by: Sia Jee Heng <jee.heng.sia@intel.com>
----
- .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 111 ++++++++++++++----
- drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |   1 +
- 2 files changed, 92 insertions(+), 20 deletions(-)
+v3->v4:
+1. fix the 'make dt_binding_check' issues.
+2. Combine the 'Enable HiSilicon Hiedma Controller' series patches to this series.
+3. fix the 'make dt_binding_check' issues in 'Enable HiSilicon Hiedma Controller' patchset
 
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index 1a218fcdbb16..bf83dea947be 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -576,6 +576,11 @@ static int dw_axi_dma_set_hw_desc(struct axi_dma_chan *chan,
- 	if (mem_width > DWAXIDMAC_TRANS_WIDTH_32)
- 		mem_width = DWAXIDMAC_TRANS_WIDTH_32;
- 
-+	if (!IS_ALIGNED(mem_addr, 4)) {
-+		dev_err(chan->chip->dev, "invalid buffer alignment\n");
-+		return -EINVAL;
-+	}
-+
- 	switch (chan->direction) {
- 	case DMA_MEM_TO_DEV:
- 		reg_width = __ffs(chan->config.dst_addr_width);
-@@ -637,6 +642,35 @@ static int dw_axi_dma_set_hw_desc(struct axi_dma_chan *chan,
- 	return 0;
- }
- 
-+static size_t calculate_block_len(struct axi_dma_chan *chan,
-+				  dma_addr_t dma_addr, size_t buf_len,
-+				  enum dma_transfer_direction direction)
-+{
-+	u32 data_width, reg_width, mem_width;
-+	size_t axi_block_ts, block_len;
-+
-+	axi_block_ts = chan->chip->dw->hdata->block_size[chan->id];
-+
-+	switch (direction) {
-+	case DMA_MEM_TO_DEV:
-+		data_width = BIT(chan->chip->dw->hdata->m_data_width);
-+		mem_width = __ffs(data_width | dma_addr | buf_len);
-+		if (mem_width > DWAXIDMAC_TRANS_WIDTH_32)
-+			mem_width = DWAXIDMAC_TRANS_WIDTH_32;
-+
-+		block_len = axi_block_ts << mem_width;
-+		break;
-+	case DMA_DEV_TO_MEM:
-+		reg_width = __ffs(chan->config.src_addr_width);
-+		block_len = axi_block_ts << reg_width;
-+		break;
-+	default:
-+		block_len = 0;
-+	}
-+
-+	return block_len;
-+}
-+
- static struct dma_async_tx_descriptor *
- dw_axi_dma_chan_prep_cyclic(struct dma_chan *dchan, dma_addr_t dma_addr,
- 			    size_t buf_len, size_t period_len,
-@@ -647,13 +681,27 @@ dw_axi_dma_chan_prep_cyclic(struct dma_chan *dchan, dma_addr_t dma_addr,
- 	struct axi_dma_hw_desc *hw_desc = NULL;
- 	struct axi_dma_desc *desc = NULL;
- 	dma_addr_t src_addr = dma_addr;
--	u32 num_periods = buf_len / period_len;
-+	u32 num_periods, num_segments;
-+	size_t axi_block_len;
-+	u32 total_segments;
-+	u32 segment_len;
- 	unsigned int i;
- 	int status;
- 	u64 llp = 0;
- 	u8 lms = 0; /* Select AXI0 master for LLI fetching */
- 
--	desc = axi_desc_alloc(num_periods);
-+	num_periods = buf_len / period_len;
-+
-+	axi_block_len = calculate_block_len(chan, dma_addr, buf_len, direction);
-+	if (axi_block_len == 0)
-+		return NULL;
-+
-+	num_segments = DIV_ROUND_UP(period_len, axi_block_len);
-+	segment_len = DIV_ROUND_UP(period_len, num_segments);
-+
-+	total_segments = num_periods * num_segments;
-+
-+	desc = axi_desc_alloc(total_segments);
- 	if (unlikely(!desc))
- 		goto err_desc_get;
- 
-@@ -661,12 +709,13 @@ dw_axi_dma_chan_prep_cyclic(struct dma_chan *dchan, dma_addr_t dma_addr,
- 	desc->chan = chan;
- 	chan->cyclic = true;
- 	desc->length = 0;
-+	desc->period_len = period_len;
- 
--	for (i = 0; i < num_periods; i++) {
-+	for (i = 0; i < total_segments; i++) {
- 		hw_desc = &desc->hw_desc[i];
- 
- 		status = dw_axi_dma_set_hw_desc(chan, hw_desc, src_addr,
--						period_len);
-+						segment_len);
- 		if (status < 0)
- 			goto err_desc_get;
- 
-@@ -676,17 +725,17 @@ dw_axi_dma_chan_prep_cyclic(struct dma_chan *dchan, dma_addr_t dma_addr,
- 		 */
- 		set_desc_last(hw_desc);
- 
--		src_addr += period_len;
-+		src_addr += segment_len;
- 	}
- 
- 	llp = desc->hw_desc[0].llp;
- 
- 	/* Managed transfer list */
- 	do {
--		hw_desc = &desc->hw_desc[--num_periods];
-+		hw_desc = &desc->hw_desc[--total_segments];
- 		write_desc_llp(hw_desc, llp | lms);
- 		llp = hw_desc->llp;
--	} while (num_periods);
-+	} while (total_segments);
- 
- 	if (dw_axi_dma_set_hw_channel(chan->chip, chan->hw_handshake_num, true))
- 		goto err_desc_get;
-@@ -709,9 +758,13 @@ dw_axi_dma_chan_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
- 	struct axi_dma_chan *chan = dchan_to_axi_dma_chan(dchan);
- 	struct axi_dma_hw_desc *hw_desc = NULL;
- 	struct axi_dma_desc *desc = NULL;
-+	u32 num_segments, segment_len;
-+	unsigned int loop = 0;
- 	struct scatterlist *sg;
-+	size_t axi_block_len;
-+	u32 len, num_sgs = 0;
- 	unsigned int i;
--	u32 mem, len;
-+	dma_addr_t mem;
- 	int status;
- 	u64 llp = 0;
- 	u8 lms = 0; /* Select AXI0 master for LLI fetching */
-@@ -719,35 +772,51 @@ dw_axi_dma_chan_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
- 	if (unlikely(!is_slave_direction(direction) || !sg_len))
- 		return NULL;
- 
--	chan->direction = direction;
-+	mem = sg_dma_address(sgl);
-+	len = sg_dma_len(sgl);
-+
-+	axi_block_len = calculate_block_len(chan, mem, len, direction);
-+	if (axi_block_len == 0)
-+		return NULL;
- 
--	desc = axi_desc_alloc(sg_len);
-+	for_each_sg(sgl, sg, sg_len, i)
-+		num_sgs += DIV_ROUND_UP(sg_dma_len(sg), axi_block_len);
-+
-+	desc = axi_desc_alloc(num_sgs);
- 	if (unlikely(!desc))
- 		goto err_desc_get;
- 
- 	desc->chan = chan;
- 	desc->length = 0;
-+	chan->direction = direction;
- 
- 	for_each_sg(sgl, sg, sg_len, i) {
- 		mem = sg_dma_address(sg);
- 		len = sg_dma_len(sg);
--		hw_desc = &desc->hw_desc[i];
--
--		status = dw_axi_dma_set_hw_desc(chan, hw_desc, mem, len);
--		if (status < 0)
--			goto err_desc_get;
--		desc->length += hw_desc->len;
-+		num_segments = DIV_ROUND_UP(sg_dma_len(sg), axi_block_len);
-+		segment_len = DIV_ROUND_UP(sg_dma_len(sg), num_segments);
-+
-+		do {
-+			hw_desc = &desc->hw_desc[loop++];
-+			status = dw_axi_dma_set_hw_desc(chan, hw_desc, mem, segment_len);
-+			if (status < 0)
-+				goto err_desc_get;
-+
-+			desc->length += hw_desc->len;
-+			len -= segment_len;
-+			mem += segment_len;
-+		} while (len >= segment_len);
- 	}
- 
- 	/* Set end-of-link to the last link descriptor of list */
--	set_desc_last(&desc->hw_desc[sg_len - 1]);
-+	set_desc_last(&desc->hw_desc[num_sgs - 1]);
- 
- 	/* Managed transfer list */
- 	do {
--		hw_desc = &desc->hw_desc[--sg_len];
-+		hw_desc = &desc->hw_desc[--num_sgs];
- 		write_desc_llp(hw_desc, llp | lms);
- 		llp = hw_desc->llp;
--	} while (sg_len);
-+	} while (num_sgs);
- 
- 	if (dw_axi_dma_set_hw_channel(chan->chip, chan->hw_handshake_num, true))
- 		goto err_desc_get;
-@@ -950,7 +1019,6 @@ static void axi_chan_block_xfer_complete(struct axi_dma_chan *chan)
- 	vd = vchan_next_desc(&chan->vc);
- 
- 	if (chan->cyclic) {
--		vchan_cyclic_callback(vd);
- 		desc = vd_to_axi_desc(vd);
- 		if (desc) {
- 			llp = lo_hi_readq(chan->chan_regs + CH_LLP);
-@@ -960,6 +1028,9 @@ static void axi_chan_block_xfer_complete(struct axi_dma_chan *chan)
- 					axi_chan_irq_clear(chan, hw_desc->lli->status_lo);
- 					hw_desc->lli->ctl_hi |= CH_CTL_H_LLI_VALID;
- 					desc->completed_blocks = i;
-+
-+					if (((hw_desc->len * (i + 1)) % desc->period_len) == 0)
-+						vchan_cyclic_callback(vd);
- 					break;
- 				}
- 			}
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-index 1e937ea2a96d..b69897887c76 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-@@ -100,6 +100,7 @@ struct axi_dma_desc {
- 	struct axi_dma_chan		*chan;
- 	u32				completed_blocks;
- 	u32				length;
-+	u32				period_len;
- };
- 
- static inline struct device *dchan2dev(struct dma_chan *dchan)
+
+v2->v3:
+1. change dt-bindings documents from txt to yaml format.
+2. Add SHUB clock to access the devices of m7
+
+Dongjiu Geng (4):
+  dt-bindings: Document the hi3559a clock bindings
+  clk: hisilicon: Add clock driver for hi3559A SoC
+  dt: bindings: dma: Add DT bindings for HiSilicon Hiedma Controller
+  dmaengine: dma: Add Hiedma Controller v310 Device Driver
+
+ .../clock/hisilicon,hi3559av100-clock.yaml    |   59 +
+ .../bindings/dma/hisilicon,hiedmacv310.yaml   |   94 ++
+ drivers/clk/hisilicon/Kconfig                 |    7 +
+ drivers/clk/hisilicon/Makefile                |    1 +
+ drivers/clk/hisilicon/clk-hi3559a.c           |  865 ++++++++++
+ drivers/dma/Kconfig                           |   14 +
+ drivers/dma/Makefile                          |    1 +
+ drivers/dma/hiedmacv310.c                     | 1442 +++++++++++++++++
+ drivers/dma/hiedmacv310.h                     |  136 ++
+ include/dt-bindings/clock/hi3559av100-clock.h |  165 ++
+ 10 files changed, 2784 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/hisilicon,hi3559av100-clock.yaml
+ create mode 100644 Documentation/devicetree/bindings/dma/hisilicon,hiedmacv310.yaml
+ create mode 100644 drivers/clk/hisilicon/clk-hi3559a.c
+ create mode 100644 drivers/dma/hiedmacv310.c
+ create mode 100644 drivers/dma/hiedmacv310.h
+ create mode 100644 include/dt-bindings/clock/hi3559av100-clock.h
+
 -- 
-2.18.0
+2.17.1
 

@@ -2,153 +2,107 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A8262D95CE
-	for <lists+dmaengine@lfdr.de>; Mon, 14 Dec 2020 11:08:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B5FE82D97CC
+	for <lists+dmaengine@lfdr.de>; Mon, 14 Dec 2020 13:00:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729018AbgLNKCj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 14 Dec 2020 05:02:39 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:9440 "EHLO
-        szxga06-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731412AbgLNJ60 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 14 Dec 2020 04:58:26 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4CvcHr4g5Dzhsfw;
-        Mon, 14 Dec 2020 17:57:12 +0800 (CST)
-Received: from huawei.com (10.151.151.249) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.498.0; Mon, 14 Dec 2020
- 17:57:34 +0800
-From:   Dongjiu Geng <gengdongjiu@huawei.com>
-To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <robh+dt@kernel.org>, <vkoul@kernel.org>,
-        <dan.j.williams@intel.com>, <p.zabel@pengutronix.de>,
-        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <gengdongjiu@huawei.com>
-Subject: [PATCH v7 3/4] dt: bindings: dma: Add DT bindings for HiSilicon Hiedma Controller
-Date:   Tue, 15 Dec 2020 11:09:46 +0000
-Message-ID: <20201215110947.41268-4-gengdongjiu@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201215110947.41268-1-gengdongjiu@huawei.com>
-References: <20201215110947.41268-1-gengdongjiu@huawei.com>
+        id S2395543AbgLNL7t (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 14 Dec 2020 06:59:49 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:42080 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731284AbgLNL7t (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 14 Dec 2020 06:59:49 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BEBoSfj141299;
+        Mon, 14 Dec 2020 11:59:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=rq0xzwZ3je7Zay+cGeew2R6YygWdjh66V9tw7L6ZUOQ=;
+ b=G/ZWYuP/Kxpt7/+fFtDl+y/6+w2QUNNDb2gAgG6PaJu3uaeGYjsjfvcFgs1CJYC65kR9
+ PQ0RDiCewxUnDrU85ZdpjUwClIoIf42YB/RPsFJXMeqVHqxzxrL3MrO2PhmxE0Wzuybw
+ jFYu0MsiGFxdlwvnj+BNrr2+mhSyM6t/XT4v841Zk1N24JfFXmLsbkSWMV2jj3Vfxl73
+ Yt8ia6hsCKjLjOCCMFZVXYycZlkmHHNE+1qBYVYzcvtCJSoUrD/9FQrgklk9kThw2Bco
+ 88cSa+4CmiXJzLfT9zxsYtRSqN1PG7ziANkhPw8ZTv2dqllX2nQQXXLk/Gcs8RkUx/aH Hg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 35cntkvre5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 14 Dec 2020 11:59:03 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BEBt8Bd020614;
+        Mon, 14 Dec 2020 11:57:03 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 35d7ekck0x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 14 Dec 2020 11:57:03 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0BEBv1jN013401;
+        Mon, 14 Dec 2020 11:57:01 GMT
+Received: from mwanda (/102.36.221.92)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 14 Dec 2020 03:57:01 -0800
+Date:   Mon, 14 Dec 2020 14:56:52 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] dmaengine: dw-edma: Fix use after free in
+ dw_edma_alloc_chunk()
+Message-ID: <X9dTBFrUPEvvW7qc@mwanda>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.151.151.249]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9834 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 bulkscore=0
+ suspectscore=0 adultscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012140085
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9834 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 mlxscore=0
+ lowpriorityscore=0 spamscore=0 adultscore=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 impostorscore=0 priorityscore=1501 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012140084
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The Hiedma Controller v310 Provides eight DMA channels, each
-channel can be configured for one-way transfer. The data can
-be transferred in 8-bit, 16-bit, 32-bit, or 64-bit mode. This
-documentation describes DT bindings of this controller.
+If the dw_edma_alloc_burst() function fails then we free "chunk" but
+it's still on the "desc->chunk->list" list so it will lead to a use
+after free.  Also the "->chunks_alloc" count is incremented when it
+shouldn't be.
 
-Signed-off-by: Dongjiu Geng <gengdongjiu@huawei.com>
+In current kernels small allocations are guaranteed to succeed and
+dw_edma_alloc_burst() can't fail so this will not actually affect
+runtime.
+
+Fixes: e63d79d1ffcd ("dmaengine: Add Synopsys eDMA IP core driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 ---
- .../bindings/dma/hisilicon,hiedmacv310.yaml   | 94 +++++++++++++++++++
- 1 file changed, 94 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/hisilicon,hiedmacv310.yaml
+Based on static analysis.  Not tested.
 
-diff --git a/Documentation/devicetree/bindings/dma/hisilicon,hiedmacv310.yaml b/Documentation/devicetree/bindings/dma/hisilicon,hiedmacv310.yaml
-new file mode 100644
-index 000000000000..06a1ebe76360
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/hisilicon,hiedmacv310.yaml
-@@ -0,0 +1,94 @@
-+# SPDX-License-Identifier:  GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/hisilicon,hiedmacv310.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: HiSilicon Hiedma Controller v310 Device Tree Bindings
-+
-+description: |
-+  These bindings describe the DMA engine included in the HiSilicon Hiedma
-+  Controller v310 Device.
-+
-+maintainers:
-+  - Dongjiu Geng <gengdongjiu@huawei.com>
-+
-+allOf:
-+  - $ref: "dma-controller.yaml#"
-+
-+properties:
-+  "#dma-cells":
-+    const: 2
-+
-+  compatible:
-+    const: hisilicon,hiedmacv310
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  hisilicon,misc-control:
-+    $ref: /schemas/types.yaml#definitions/phandle-array
-+    description: phandle pointing to the misc controller provider node and base register.
-+
-+  clocks:
-+    items:
-+      - description: apb clock
-+      - description: axi clock
-+
-+  clock-names:
-+    items:
-+      - const: apb_pclk
-+      - const: axi_aclk
-+
-+  resets:
-+    description: phandle pointing to the dma reset controller provider node.
-+
-+  reset-names:
-+    items:
-+      - const: dma-reset
-+
-+  dma-requests:
-+    maximum: 32
-+
-+  dma-channels:
-+    maximum: 8
-+
-+
-+required:
-+  - "#dma-cells"
-+  - compatible
-+  - hisilicon,misc-control
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - dma-requests
-+  - dma-channels
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/hi3559av100-clock.h>
-+
-+    dma: dma-controller@10040000 {
-+      compatible = "hisilicon,hiedmacv310";
-+      reg = <0x10040000 0x1000>;
-+      hisilicon,misc-control = <&misc_ctrl 0x144>;
-+      interrupts = <0 82 4>;
-+      clocks = <&clock HI3559AV100_EDMAC1_CLK>, <&clock HI3559AV100_EDMAC1_AXICLK>;
-+      clock-names = "apb_pclk", "axi_aclk";
-+      resets = <&clock 0x16c 7>;
-+      reset-names = "dma-reset";
-+      dma-requests = <32>;
-+      dma-channels = <8>;
-+      #dma-cells = <2>;
-+    };
-+
-+...
+ drivers/dma/dw-edma/dw-edma-core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+index b971505b8715..08d71dafa001 100644
+--- a/drivers/dma/dw-edma/dw-edma-core.c
++++ b/drivers/dma/dw-edma/dw-edma-core.c
+@@ -86,12 +86,12 @@ static struct dw_edma_chunk *dw_edma_alloc_chunk(struct dw_edma_desc *desc)
+ 
+ 	if (desc->chunk) {
+ 		/* Create and add new element into the linked list */
+-		desc->chunks_alloc++;
+-		list_add_tail(&chunk->list, &desc->chunk->list);
+ 		if (!dw_edma_alloc_burst(chunk)) {
+ 			kfree(chunk);
+ 			return NULL;
+ 		}
++		desc->chunks_alloc++;
++		list_add_tail(&chunk->list, &desc->chunk->list);
+ 	} else {
+ 		/* List head */
+ 		chunk->burst = NULL;
 -- 
-2.17.1
+2.29.2
 

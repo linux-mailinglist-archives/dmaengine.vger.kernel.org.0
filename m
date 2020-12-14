@@ -2,61 +2,91 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16EDD2D882B
-	for <lists+dmaengine@lfdr.de>; Sat, 12 Dec 2020 17:45:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF0412D9360
+	for <lists+dmaengine@lfdr.de>; Mon, 14 Dec 2020 07:54:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407609AbgLLQ1d (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 12 Dec 2020 11:27:33 -0500
-Received: from smtp06.smtpout.orange.fr ([80.12.242.128]:17641 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407605AbgLLQ1Y (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 12 Dec 2020 11:27:24 -0500
-Received: from localhost.localdomain ([93.22.36.60])
-        by mwinf5d29 with ME
-        id 3URb240041HrHD103URbFF; Sat, 12 Dec 2020 17:25:40 +0100
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 12 Dec 2020 17:25:40 +0100
-X-ME-IP: 93.22.36.60
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     vkoul@kernel.org, dan.j.williams@intel.com, afaerber@suse.de,
-        manivannan.sadhasivam@linaro.org
-Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] dmaengine: owl-dma: Fix a resource leak in the remove function
-Date:   Sat, 12 Dec 2020 17:25:35 +0100
-Message-Id: <20201212162535.95727-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.27.0
+        id S2438766AbgLNGyb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 14 Dec 2020 01:54:31 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:41440 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728171AbgLNGyW (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 14 Dec 2020 01:54:22 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0BE6rJLs044767;
+        Mon, 14 Dec 2020 00:53:19 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1607928799;
+        bh=fjMxuww0pI6MgGW3bPWunKl2njfFRpIUYB2BKc1LH+k=;
+        h=From:To:CC:Subject:Date;
+        b=sMP5NYwsVFA0Mgnuq4fje42VbNYMVRZa1xiKSw5AWmy25+W5Fx+8ek+Iz4uIjNrqc
+         JyP2q99M3ACpN95rEzoun/GeSE7XUJ7Bx/AVjPIjMHILN6DgkiAbaCYWjKNTWpNMDP
+         ea7lwgE9YSrQsr4GveWcOclqaq6T3xzuACMEM+Cw=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0BE6rJUa068701
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 14 Dec 2020 00:53:19 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 14
+ Dec 2020 00:53:19 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 14 Dec 2020 00:53:19 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0BE6rGWS050104;
+        Mon, 14 Dec 2020 00:53:17 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <t-kristo@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <vigneshr@ti.com>, <grygorii.strashko@ti.com>
+Subject: [PATCH] soc: ti: k3-ringacc: Use correct error casting in k3_ringacc_dmarings_init
+Date:   Mon, 14 Dec 2020 08:54:21 +0200
+Message-ID: <20201214065421.5138-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-A 'dma_pool_destroy()' call is missing in the remove function.
-Add it.
+Use ERR_CAST() when devm_ioremap_resource() fails.
 
-This call is already made in the error handling path of the probe function.
-
-Fixes: 47e20577c24d ("dmaengine: Add Actions Semi Owl family S900 DMA driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/dma/owl-dma.c | 1 +
- 1 file changed, 1 insertion(+)
+Hi Vinod,
 
-diff --git a/drivers/dma/owl-dma.c b/drivers/dma/owl-dma.c
-index 9fede32641e9..04202d75f4ee 100644
---- a/drivers/dma/owl-dma.c
-+++ b/drivers/dma/owl-dma.c
-@@ -1245,6 +1245,7 @@ static int owl_dma_remove(struct platform_device *pdev)
- 	owl_dma_free(od);
+it came to my attention too late. This patch fixes the sparse warnig introduced
+by the AM64 support in
+https://lore.kernel.org/lkml/20201208090440.31792-1-peter.ujfalusi@ti.com/
+
+Regards,
+Peter
+
+ drivers/soc/ti/k3-ringacc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/soc/ti/k3-ringacc.c b/drivers/soc/ti/k3-ringacc.c
+index c88c305ba367..b495b0d5d0fa 100644
+--- a/drivers/soc/ti/k3-ringacc.c
++++ b/drivers/soc/ti/k3-ringacc.c
+@@ -1476,7 +1476,7 @@ struct k3_ringacc *k3_ringacc_dmarings_init(struct platform_device *pdev,
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ringrt");
+ 	base_rt = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(base_rt))
+-		return base_rt;
++		return ERR_CAST(base_rt);
  
- 	clk_disable_unprepare(od->clk);
-+	dma_pool_destroy(od->lli_pool);
- 
- 	return 0;
- }
+ 	ringacc->rings = devm_kzalloc(dev,
+ 				      sizeof(*ringacc->rings) *
 -- 
-2.27.0
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 

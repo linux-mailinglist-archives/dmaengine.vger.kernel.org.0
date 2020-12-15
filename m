@@ -2,136 +2,108 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D9CD2DADD9
-	for <lists+dmaengine@lfdr.de>; Tue, 15 Dec 2020 14:15:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93B032DB2D0
+	for <lists+dmaengine@lfdr.de>; Tue, 15 Dec 2020 18:42:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgLONNr (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 15 Dec 2020 08:13:47 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:33790 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbgLONNo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 15 Dec 2020 08:13:44 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0BFDCuOB055970;
-        Tue, 15 Dec 2020 07:12:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1608037976;
-        bh=fflVV2euO6GX3p6e7gjWU0e5OJmiwk+o75/SeXICdqY=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Itqw8bJIWMQQvNcKS6etI7VOGKWZXkcVT36/MJAeBJkDYvisTHPvNGEvCV5tlVfMx
-         InFbUsZQPtYEVdPeh7LCwjtugVQhiEkf2d4qQvGcRjjYWIMgu18iDdW3rzfuU91BW+
-         vkETEc7iccaVCTrF3Fu+61UIQ2LXJ0SybBLsU2pI=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0BFDCtFj099693
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 15 Dec 2020 07:12:55 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 15
- Dec 2020 07:12:55 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 15 Dec 2020 07:12:55 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0BFDCjkv037808;
-        Tue, 15 Dec 2020 07:12:52 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>, <robh+dt@kernel.org>,
-        <peter.ujfalusi@gmail.com>
-CC:     <dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <vigneshr@ti.com>,
-        <grygorii.strashko@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <tony@atomide.com>,
-        <linux@armlinux.org.uk>, <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH 2/2] dt-bindings: dma: ti: Update maintainer and author information
-Date:   Tue, 15 Dec 2020 15:13:48 +0200
-Message-ID: <20201215131348.11282-3-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201215131348.11282-1-peter.ujfalusi@ti.com>
-References: <20201215131348.11282-1-peter.ujfalusi@ti.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        id S1731055AbgLORbi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 15 Dec 2020 12:31:38 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:54406 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729683AbgLORbe (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 15 Dec 2020 12:31:34 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id B126F4013F;
+        Tue, 15 Dec 2020 17:30:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1608053433; bh=Rp8f7F2uSWSg/KTfT5SE2X1d3fnriVqX5tGhIffKmcQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GjhXQoyIF/y9+gGU/sZNtHmlndMcQ/lGXwh3VcL7bOhRlqhO9moIUNvXDLDSHS/I8
+         mUNCEyeeLyA/L2hmJLqBKFhygi8RoQ7nN2FFLD9yEaRHCJZmBqMfhfcVAp6I27kbFF
+         TXN4nI57f5a1vPzNMSXPC/bWrcGjS4XAC5E7kH2v35Ja8o/RotFMMOfCDH5OEOHWAB
+         DgfLhua+k9DE2Sbft+1GMYvbwmKtHdRcEFsOT6jAMy/ptiSHMsCRu3WP/UWFdz3DUD
+         x8M6GDLgFX5aLpa5uCiRLRcT4/frTVD/efG042YH44UrBSstbmF71ofMcY6KS6FjXi
+         A4FoNoTbfCMNA==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 6C272A024A;
+        Tue, 15 Dec 2020 17:30:30 +0000 (UTC)
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH 00/15] dmaengine: dw-edma: HDMA support
+Date:   Tue, 15 Dec 2020 18:30:09 +0100
+Message-Id: <cover.1608053262.git.gustavo.pimentel@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-My employment with TI is coming to an end, add the copyright and author comments
-as they due and change the maintainer mail address.
+This patch series adds the HDMA support, as long the IP design has set
+the compatible register map parameter, which allows compatibility at
+some degree for the existing Synopsys DesignWare eDMA driver that is
+already available on the Kernel.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
----
- Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml  | 4 +++-
- Documentation/devicetree/bindings/dma/ti/k3-pktdma.yaml | 4 +++-
- Documentation/devicetree/bindings/dma/ti/k3-udma.yaml   | 4 +++-
- 3 files changed, 9 insertions(+), 3 deletions(-)
+The HDMA "Hyper-DMA" IP is an enhancement of the eDMA "embedded-DMA" IP.
 
-diff --git a/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml b/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
-index b15f68c499cb..df29d59d13a8 100644
---- a/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
-+++ b/Documentation/devicetree/bindings/dma/ti/k3-bcdma.yaml
-@@ -1,4 +1,6 @@
- # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2020 Texas Instruments Incorporated
-+# Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
- %YAML 1.2
- ---
- $id: http://devicetree.org/schemas/dma/ti/k3-bcdma.yaml#
-@@ -7,7 +9,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Texas Instruments K3 DMSS BCDMA Device Tree Bindings
- 
- maintainers:
--  - Peter Ujfalusi <peter.ujfalusi@ti.com>
-+  - Peter Ujfalusi <peter.ujfalusi@gmail.com>
- 
- description: |
-   The Block Copy DMA (BCDMA) is intended to perform similar functions as the TR
-diff --git a/Documentation/devicetree/bindings/dma/ti/k3-pktdma.yaml b/Documentation/devicetree/bindings/dma/ti/k3-pktdma.yaml
-index b13ab60cd740..ea19d12a9337 100644
---- a/Documentation/devicetree/bindings/dma/ti/k3-pktdma.yaml
-+++ b/Documentation/devicetree/bindings/dma/ti/k3-pktdma.yaml
-@@ -1,4 +1,6 @@
- # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2020 Texas Instruments Incorporated
-+# Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
- %YAML 1.2
- ---
- $id: http://devicetree.org/schemas/dma/ti/k3-pktdma.yaml#
-@@ -7,7 +9,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Texas Instruments K3 DMSS PKTDMA Device Tree Bindings
- 
- maintainers:
--  - Peter Ujfalusi <peter.ujfalusi@ti.com>
-+  - Peter Ujfalusi <peter.ujfalusi@gmail.com>
- 
- description: |
-   The Packet DMA (PKTDMA) is intended to perform similar functions as the packet
-diff --git a/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml b/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
-index 9a87fd9041eb..6a09bbf83d46 100644
---- a/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
-+++ b/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
-@@ -1,4 +1,6 @@
- # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2019 Texas Instruments Incorporated
-+# Author: Peter Ujfalusi <peter.ujfalusi@ti.com>
- %YAML 1.2
- ---
- $id: http://devicetree.org/schemas/dma/ti/k3-udma.yaml#
-@@ -7,7 +9,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Texas Instruments K3 NAVSS Unified DMA Device Tree Bindings
- 
- maintainers:
--  - Peter Ujfalusi <peter.ujfalusi@ti.com>
-+  - Peter Ujfalusi <peter.ujfalusi@gmail.com>
- 
- description: |
-   The UDMA-P is intended to perform similar (but significantly upgraded)
+This new improvement comes with a PCI DVSEC that allows to the driver
+recognize and switch behavior if it's an eDMA or an HDMA, becoming
+retrocompatible, in the absence of this DVSEC, the driver will assume
+that is an eDMA IP.
+
+It also adds the interleaved support, since it will be similar to the
+current scatter-gather implementation.
+
+As well fixes/improves some abnormal behaviors not detected before, such as:
+ - crash on loading/unloading driver
+ - memory space definition for the data area and for the linked list space
+ - scatter-gather address calculation on 32 bits platforms
+ - minor comment and variable reordering
+
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: dmaengine@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+
+Gustavo Pimentel (15):
+  dmaengine: dw-edma: Add writeq() and readq() for 64 bits architectures
+  dmaengine: dw-edma: Fix comments offset characters' alignment
+  dmaengine: dw-edma: Add support for the HDMA feature
+  PCI: Add pci_find_vsec_capability() to find a specific VSEC
+  dmaengine: dw-edma: Add PCIe VSEC data retrieval support
+  dmaengine: dw-edma: Add device_prep_interleave_dma() support
+  dmaengine: dw-edma: Improve number of channels check
+  dmaengine: dw-edma: Reorder variables to keep consistency
+  dmaengine: dw-edma: Improve the linked list and data blocks definition
+  dmaengine: dw-edma: Change linked list and data blocks offset and
+    sizes
+  dmaengine: dw-edma: Move struct dentry variable from static definition
+    into dw_edma struct
+  dmaengine: dw-edma: Fix crash on loading/unloading driver
+  dmaengine: dw-edma: Change DMA abreviation from lower into upper case
+  dmaengine: dw-edma: Revert fix scatter-gather address calculation
+  dmaengine: dw-edma: Add pcim_iomap_table return checker
+
+ drivers/dma/dw-edma/dw-edma-core.c       | 178 +++++++++++-------
+ drivers/dma/dw-edma/dw-edma-core.h       |  37 ++--
+ drivers/dma/dw-edma/dw-edma-pcie.c       | 275 +++++++++++++++++++++-------
+ drivers/dma/dw-edma/dw-edma-v0-core.c    | 300 ++++++++++++++++++++++++-------
+ drivers/dma/dw-edma/dw-edma-v0-core.h    |   2 +-
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c |  77 ++++----
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.h |   4 +-
+ drivers/dma/dw-edma/dw-edma-v0-regs.h    | 291 +++++++++++++++++++-----------
+ drivers/pci/pci.c                        |  29 +++
+ include/linux/pci.h                      |   1 +
+ include/uapi/linux/pci_regs.h            |   5 +
+ 11 files changed, 844 insertions(+), 355 deletions(-)
+
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.7.4
 

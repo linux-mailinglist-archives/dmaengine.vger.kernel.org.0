@@ -2,146 +2,227 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6D122DB8ED
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Dec 2020 03:28:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E8642DB8F0
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Dec 2020 03:28:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725385AbgLPC1U (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 15 Dec 2020 21:27:20 -0500
-Received: from mga12.intel.com ([192.55.52.136]:43602 "EHLO mga12.intel.com"
+        id S1725785AbgLPC1X (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 15 Dec 2020 21:27:23 -0500
+Received: from mga12.intel.com ([192.55.52.136]:43605 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725208AbgLPC1T (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 15 Dec 2020 21:27:19 -0500
-IronPort-SDR: Yx2jLnmoOBKD65qia2Lz6vKECB31O/Gav2+IjkvnvPXkZl2SMDrOmRLlGjfzbazsy7v4RghBJc
- gsaB7j81Y36g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9836"; a="154220876"
+        id S1725208AbgLPC1W (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 15 Dec 2020 21:27:22 -0500
+IronPort-SDR: YwEYUr9urhmDnX6WNVi5XENU2V1Bmzv4tcEsbrTLquXQAfnSciAOHsPT7yh/FLovP+EBgtyfGm
+ +fd9nmdGkGYA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9836"; a="154220879"
 X-IronPort-AV: E=Sophos;i="5.78,423,1599548400"; 
-   d="scan'208";a="154220876"
+   d="scan'208";a="154220879"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2020 18:26:39 -0800
-IronPort-SDR: QxXJi+Z8IEJ2WhcxKFmbQSNbruo6wHeV7fCFyJBfIrlhjXl01Bzzc3Ziud8R70gV+dnDXN/yH6
- ebnkqwC08qTA==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2020 18:26:42 -0800
+IronPort-SDR: pjHjZ1uyR+pOrY24RJ0yOnKJvImPrvV0TjSxU3RVFH8xzZh5PNFYawTTqUETthlI1wjGw/Pju+
+ i0+GqEL4ACwA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.78,423,1599548400"; 
-   d="scan'208";a="557080667"
+   d="scan'208";a="557080676"
 Received: from jsia-hp-z620-workstation.png.intel.com ([10.221.118.135])
-  by orsmga005.jf.intel.com with ESMTP; 15 Dec 2020 18:26:37 -0800
+  by orsmga005.jf.intel.com with ESMTP; 15 Dec 2020 18:26:40 -0800
 From:   Sia Jee Heng <jee.heng.sia@intel.com>
 To:     vkoul@kernel.org, Eugeniy.Paltsev@synopsys.com, robh+dt@kernel.org
 Cc:     andriy.shevchenko@linux.intel.com, dmaengine@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v7 00/16] dmaengine: dw-axi-dmac: support Intel KeemBay AxiDMA
-Date:   Wed, 16 Dec 2020 10:09:47 +0800
-Message-Id: <20201216021003.26911-1-jee.heng.sia@intel.com>
+Subject: [PATCH v7 01/16] dt-bindings: dma: Add YAML schemas for dw-axi-dmac
+Date:   Wed, 16 Dec 2020 10:09:48 +0800
+Message-Id: <20201216021003.26911-2-jee.heng.sia@intel.com>
 X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20201216021003.26911-1-jee.heng.sia@intel.com>
+References: <20201216021003.26911-1-jee.heng.sia@intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The below patch series are to support AxiDMA running on Intel KeemBay SoC.
-The base driver is dw-axi-dmac. This driver only support DMA memory copy
-transfers. Code refactoring is needed so that additional features can be
-supported.
-The features added in this patch series are:
-- Replacing Linked List with virtual descriptor management.
-- Remove unrelated hw desc stuff from dma memory pool.
-- Manage dma memory pool alloc/destroy based on channel activity.
-- Support dmaengine device_sync() callback.
-- Support dmaengine device_config().
-- Support dmaengine device_prep_slave_sg().
-- Support dmaengine device_prep_dma_cyclic().
-- Support of_dma_controller_register().
-- Support burst residue granularity.
-- Support Intel KeemBay AxiDMA registers.
-- Support Intel KeemBay AxiDMA device handshake.
-- Support Intel KeemBay AxiDMA BYTE and HALFWORD device operation.
-- Add constraint to Max segment size.
-- Virtually split the linked-list.
+YAML schemas Device Tree (DT) binding is the new format for DT to replace
+the old format. Introduce YAML schemas DT binding for dw-axi-dmac and
+remove the old version.
 
-This patch series are tested on Intel KeemBay platform.
-
-v7:
-- Added 'allOf' and '$ref:dma-controller.yaml#' in DT binding.
-- Removed the dma-channels common description in DT binding.
-- Removed the default fields in DT binding.
-
-v6:
-- Removed 'allOf' cases in DT binding.
-- Added '>' at the end of the email address.
-- Removed additional '|' at the start of description.
-- Fixed space indent.
-- Added proper constraint in DT binding.
-- Removed second example in DT binding.
-
-v5:
-- Added comment to the Apb registers used by Intel KeemBay Soc.
-- Renamed "hs_num" to "handshake_num".
-- Conditional check for the compatible property and return error
-  instead of printing warning.
-- Added patch 16th to virtually split the linked-list as per
-  request from ALSA team.
-
-v4:
-- Fixed bot found errors running make_dt_binding_check.
-- Added minItems: 1 to the YAML schemas DT binding.
-- Updated "reg" field to the YAML schemas DT binding.
-
-v3:
-- Added additionalProperties: false to the YAML schemas DT binding.
-- Reordered patch sequence for patch 10th, 11th and 12th so that
-  DT binding come first, follow by adding Intel KeemBay SoC registers
-  and update .compatible field.
-- Checked txstate NULL condition.
-- Created helper function dw_axi_dma_set_hw_desc() to handle common code.
-
-v2:
-- Rebased to v5.10-rc1 kernel.
-- Added support for dmaengine device_config().
-- Added support for dmaengine device_prep_slave_sg().
-- Added support for dmaengine device_prep_dma_cyclic().
-- Added support for of_dma_controller_register().
-- Added support for burst residue granularity.
-- Added support for Intel KeemBay AxiDMA registers.
-- Added support for Intel KeemBay AxiDMA device handshake.
-- Added support for Intel KeemBay AxiDMA BYTE and HALFWORD device operation.
-- Added constraint to Max segment size.
-
-v1:
-- Initial version. Patch on top of dw-axi-dma driver. This version improve
-  the descriptor management by replacing Linked List Item (LLI) with
-  virtual descriptor management, only allocate hardware LLI memories from
-  DMA memory pool, manage DMA memory pool alloc/destroy based on channel
-  activity and to support device_sync callback.
-
-Sia Jee Heng (16):
-  dt-bindings: dma: Add YAML schemas for dw-axi-dmac
-  dmaengine: dw-axi-dmac: simplify descriptor management
-  dmaengine: dw-axi-dmac: move dma_pool_create() to
-    alloc_chan_resources()
-  dmaengine: dw-axi-dmac: Add device_synchronize() callback
-  dmaengine: dw-axi-dmac: Add device_config operation
-  dmaengine: dw-axi-dmac: Support device_prep_slave_sg
-  dmaegine: dw-axi-dmac: Support device_prep_dma_cyclic()
-  dmaengine: dw-axi-dmac: Support of_dma_controller_register()
-  dmaengine: dw-axi-dmac: Support burst residue granularity
-  dt-binding: dma: dw-axi-dmac: Add support for Intel KeemBay AxiDMA
-  dmaengine: dw-axi-dmac: Add Intel KeemBay DMA register fields
-  dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA support
-  dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA handshake
-  dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA BYTE and HALFWORD
-    registers
-  dmaengine: dw-axi-dmac: Set constraint to the Max segment size
-  dmaengine: dw-axi-dmac: Virtually split the linked-list
-
- .../bindings/dma/snps,dw-axi-dmac.txt         |  39 -
- .../bindings/dma/snps,dw-axi-dmac.yaml        | 126 ++++
- .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 710 +++++++++++++++---
- drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  34 +-
- 4 files changed, 775 insertions(+), 134 deletions(-)
+Signed-off-by: Sia Jee Heng <jee.heng.sia@intel.com>
+---
+ .../bindings/dma/snps,dw-axi-dmac.txt         |  39 ------
+ .../bindings/dma/snps,dw-axi-dmac.yaml        | 121 ++++++++++++++++++
+ 2 files changed, 121 insertions(+), 39 deletions(-)
  delete mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
  create mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
 
-
-base-commit: 148842c98a24e508aecb929718818fbf4c2a6ff3
+diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
+deleted file mode 100644
+index dbe160400adc..000000000000
+--- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
++++ /dev/null
+@@ -1,39 +0,0 @@
+-Synopsys DesignWare AXI DMA Controller
+-
+-Required properties:
+-- compatible: "snps,axi-dma-1.01a"
+-- reg: Address range of the DMAC registers. This should include
+-  all of the per-channel registers.
+-- interrupt: Should contain the DMAC interrupt number.
+-- dma-channels: Number of channels supported by hardware.
+-- snps,dma-masters: Number of AXI masters supported by the hardware.
+-- snps,data-width: Maximum AXI data width supported by hardware.
+-  (0 - 8bits, 1 - 16bits, 2 - 32bits, ..., 6 - 512bits)
+-- snps,priority: Priority of channel. Array size is equal to the number of
+-  dma-channels. Priority value must be programmed within [0:dma-channels-1]
+-  range. (0 - minimum priority)
+-- snps,block-size: Maximum block size supported by the controller channel.
+-  Array size is equal to the number of dma-channels.
+-
+-Optional properties:
+-- snps,axi-max-burst-len: Restrict master AXI burst length by value specified
+-  in this property. If this property is missing the maximum AXI burst length
+-  supported by DMAC is used. [1:256]
+-
+-Example:
+-
+-dmac: dma-controller@80000 {
+-	compatible = "snps,axi-dma-1.01a";
+-	reg = <0x80000 0x400>;
+-	clocks = <&core_clk>, <&cfgr_clk>;
+-	clock-names = "core-clk", "cfgr-clk";
+-	interrupt-parent = <&intc>;
+-	interrupts = <27>;
+-
+-	dma-channels = <4>;
+-	snps,dma-masters = <2>;
+-	snps,data-width = <3>;
+-	snps,block-size = <4096 4096 4096 4096>;
+-	snps,priority = <0 1 2 3>;
+-	snps,axi-max-burst-len = <16>;
+-};
+diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+new file mode 100644
+index 000000000000..3d2515463d56
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+@@ -0,0 +1,121 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/snps,dw-axi-dmac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Synopsys DesignWare AXI DMA Controller
++
++maintainers:
++  - Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
++
++description:
++  Synopsys DesignWare AXI DMA Controller DT Binding
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  compatible:
++    enum:
++      - snps,axi-dma-1.01a
++
++  reg:
++    items:
++      - description: Address range of the DMAC registers
++
++  reg-names:
++    items:
++      - const: axidma_ctrl_regs
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Bus Clock
++      - description: Module Clock
++
++  clock-names:
++    items:
++      - const: core-clk
++      - const: cfgr-clk
++
++  '#dma-cells':
++    const: 1
++
++  dma-channels:
++    minimum: 1
++    maximum: 8
++
++  snps,dma-masters:
++    description: |
++      Number of AXI masters supported by the hardware.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [1, 2]
++
++  snps,data-width:
++    description: |
++      AXI data width supported by hardware.
++      (0 - 8bits, 1 - 16bits, 2 - 32bits, ..., 6 - 512bits)
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [0, 1, 2, 3, 4, 5, 6]
++
++  snps,priority:
++    description: |
++      Channel priority specifier associated with the DMA channels.
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    minItems: 1
++    maxItems: 8
++
++  snps,block-size:
++    description: |
++      Channel block size specifier associated with the DMA channels.
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    minItems: 1
++    maxItems: 8
++
++  snps,axi-max-burst-len:
++    description: |
++      Restrict master AXI burst length by value specified in this property.
++      If this property is missing the maximum AXI burst length supported by
++      DMAC is used.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 1
++    maximum: 256
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++  - '#dma-cells'
++  - dma-channels
++  - snps,dma-masters
++  - snps,data-width
++  - snps,priority
++  - snps,block-size
++
++additionalProperties: false
++
++examples:
++  - |
++     #include <dt-bindings/interrupt-controller/arm-gic.h>
++     #include <dt-bindings/interrupt-controller/irq.h>
++     /* example with snps,dw-axi-dmac */
++     dmac: dma-controller@80000 {
++         compatible = "snps,axi-dma-1.01a";
++         reg = <0x80000 0x400>;
++         clocks = <&core_clk>, <&cfgr_clk>;
++         clock-names = "core-clk", "cfgr-clk";
++         interrupt-parent = <&intc>;
++         interrupts = <27>;
++         #dma-cells = <1>;
++         dma-channels = <4>;
++         snps,dma-masters = <2>;
++         snps,data-width = <3>;
++         snps,block-size = <4096 4096 4096 4096>;
++         snps,priority = <0 1 2 3>;
++         snps,axi-max-burst-len = <16>;
++     };
 -- 
 2.18.0
 

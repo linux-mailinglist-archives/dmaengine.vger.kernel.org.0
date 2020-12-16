@@ -2,102 +2,146 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E35A2DB8AA
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Dec 2020 02:57:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6D122DB8ED
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Dec 2020 03:28:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725768AbgLPB5g (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 15 Dec 2020 20:57:36 -0500
-Received: from mga04.intel.com ([192.55.52.120]:46638 "EHLO mga04.intel.com"
+        id S1725385AbgLPC1U (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 15 Dec 2020 21:27:20 -0500
+Received: from mga12.intel.com ([192.55.52.136]:43602 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725320AbgLPB5f (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 15 Dec 2020 20:57:35 -0500
-IronPort-SDR: tj621VfwVxWq66F8R1TQGLpLx0p7wX8Ucs3yf9zL+F+F9rRGAv8ihiSOvH2yzRClxi+icnkDRw
- 5aB50NXOa9fQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9836"; a="172415834"
+        id S1725208AbgLPC1T (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 15 Dec 2020 21:27:19 -0500
+IronPort-SDR: Yx2jLnmoOBKD65qia2Lz6vKECB31O/Gav2+IjkvnvPXkZl2SMDrOmRLlGjfzbazsy7v4RghBJc
+ gsaB7j81Y36g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9836"; a="154220876"
 X-IronPort-AV: E=Sophos;i="5.78,423,1599548400"; 
-   d="scan'208";a="172415834"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2020 17:55:45 -0800
-IronPort-SDR: Pg1VhJNtwxPPaY6JBu/qH0cJlUEndiFXtRPXSpkyQkH98HZkG9xQXfqVaR4ONNp2qL0sy0mhJx
- X6f+e4d/50wQ==
+   d="scan'208";a="154220876"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2020 18:26:39 -0800
+IronPort-SDR: QxXJi+Z8IEJ2WhcxKFmbQSNbruo6wHeV7fCFyJBfIrlhjXl01Bzzc3Ziud8R70gV+dnDXN/yH6
+ ebnkqwC08qTA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.78,423,1599548400"; 
-   d="scan'208";a="384064484"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.28]) ([10.239.159.28])
-  by fmsmga004.fm.intel.com with ESMTP; 15 Dec 2020 17:55:39 -0800
-Cc:     baolu.lu@linux.intel.com, tglx@linutronix.de, ashok.raj@intel.com,
-        kevin.tian@intel.com, dave.jiang@intel.com, megha.dey@intel.com,
-        alex.williamson@redhat.com, bhelgaas@google.com,
-        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        eric.auger@redhat.com, jacob.jun.pan@intel.com, jgg@mellanox.com,
-        jing.lin@intel.com, kvm@vger.kernel.org, kwankhede@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        maz@kernel.org, mona.hossain@intel.com, netanelg@mellanox.com,
-        parav@mellanox.com, pbonzini@redhat.com, rafael@kernel.org,
-        samuel.ortiz@intel.com, sanjay.k.kumar@intel.com,
-        shahafs@mellanox.com, tony.luck@intel.com, vkoul@kernel.org,
-        yan.y.zhao@linux.intel.com, yi.l.liu@intel.com
-Subject: Re: [RFC PATCH 1/1] platform-msi: Add platform check for subdevice
- irq domain
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <20201210185738.GA49060@bjorn-Precision-5520>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <f473fce5-2751-c103-4195-4d7858ac6b47@linux.intel.com>
-Date:   Wed, 16 Dec 2020 09:48:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20201210185738.GA49060@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+   d="scan'208";a="557080667"
+Received: from jsia-hp-z620-workstation.png.intel.com ([10.221.118.135])
+  by orsmga005.jf.intel.com with ESMTP; 15 Dec 2020 18:26:37 -0800
+From:   Sia Jee Heng <jee.heng.sia@intel.com>
+To:     vkoul@kernel.org, Eugeniy.Paltsev@synopsys.com, robh+dt@kernel.org
+Cc:     andriy.shevchenko@linux.intel.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v7 00/16] dmaengine: dw-axi-dmac: support Intel KeemBay AxiDMA
+Date:   Wed, 16 Dec 2020 10:09:47 +0800
+Message-Id: <20201216021003.26911-1-jee.heng.sia@intel.com>
+X-Mailer: git-send-email 2.18.0
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Bjorn,
+The below patch series are to support AxiDMA running on Intel KeemBay SoC.
+The base driver is dw-axi-dmac. This driver only support DMA memory copy
+transfers. Code refactoring is needed so that additional features can be
+supported.
+The features added in this patch series are:
+- Replacing Linked List with virtual descriptor management.
+- Remove unrelated hw desc stuff from dma memory pool.
+- Manage dma memory pool alloc/destroy based on channel activity.
+- Support dmaengine device_sync() callback.
+- Support dmaengine device_config().
+- Support dmaengine device_prep_slave_sg().
+- Support dmaengine device_prep_dma_cyclic().
+- Support of_dma_controller_register().
+- Support burst residue granularity.
+- Support Intel KeemBay AxiDMA registers.
+- Support Intel KeemBay AxiDMA device handshake.
+- Support Intel KeemBay AxiDMA BYTE and HALFWORD device operation.
+- Add constraint to Max segment size.
+- Virtually split the linked-list.
 
-On 12/11/20 2:57 AM, Bjorn Helgaas wrote:
-> On Thu, Dec 10, 2020 at 08:46:24AM +0800, Lu Baolu wrote:
->> The pci_subdevice_msi_create_irq_domain() should fail if the underlying
->> platform is not able to support IMS (Interrupt Message Storage). Otherwise,
->> the isolation of interrupt is not guaranteed.
->>
->> For x86, IMS is only supported on bare metal for now. We could enable it
->> in the virtualization environments in the future if interrupt HYPERCALL
->> domain is supported or the hardware has the capability of interrupt
->> isolation for subdevices.
-> 
->> + * We want to figure out which context we are running in. But the hardware
->> + * does not introduce a reliable way (instruction, CPUID leaf, MSR, whatever)
->> + * which can be manipulated by the VMM to let the OS figure out where it runs.
->> + * So we go with the below probably_on_bare_metal() function as a replacement
->> + * for definitely_on_bare_metal() to go forward only for the very simple reason
->> + * that this is the only option we have.
->> + */
->> +static const char * const possible_vmm_vendor_name[] = {
->> +	"QEMU", "Bochs", "KVM", "Xen", "VMware", "VMW", "VMware Inc.",
->> +	"innotek GmbH", "Oracle Corporation", "Parallels", "BHYVE",
->> +	"Microsoft Corporation"
->> +};
->> +
->> +static bool probably_on_bare_metal(void)
-> 
-> What is the point of a function called probably_on_bare_metal()?
-> *Probably*?  The caller can't really do anything with the fact that
-> we're not 100% sure this gives the correct answer.  Just call it
-> "on_bare_metal()" or something and accept the fact that it might be
-> wrong sometimes.
+This patch series are tested on Intel KeemBay platform.
 
-Agreed. we can use on_bare_metal() and add comments and kernel messages
-to let users and developers know that we're not 100% sure. People should
-help to make it more accurate by reporting exceptions.
+v7:
+- Added 'allOf' and '$ref:dma-controller.yaml#' in DT binding.
+- Removed the dma-channels common description in DT binding.
+- Removed the default fields in DT binding.
 
-> 
-> This patch goes with IMS support, which somebody else is handling, so
-> I assume you don't need anything from the PCI side.
+v6:
+- Removed 'allOf' cases in DT binding.
+- Added '>' at the end of the email address.
+- Removed additional '|' at the start of description.
+- Fixed space indent.
+- Added proper constraint in DT binding.
+- Removed second example in DT binding.
 
-Yes. This is a followup of previous discussion.
+v5:
+- Added comment to the Apb registers used by Intel KeemBay Soc.
+- Renamed "hs_num" to "handshake_num".
+- Conditional check for the compatible property and return error
+  instead of printing warning.
+- Added patch 16th to virtually split the linked-list as per
+  request from ALSA team.
 
-Best regards,
-baolu
+v4:
+- Fixed bot found errors running make_dt_binding_check.
+- Added minItems: 1 to the YAML schemas DT binding.
+- Updated "reg" field to the YAML schemas DT binding.
+
+v3:
+- Added additionalProperties: false to the YAML schemas DT binding.
+- Reordered patch sequence for patch 10th, 11th and 12th so that
+  DT binding come first, follow by adding Intel KeemBay SoC registers
+  and update .compatible field.
+- Checked txstate NULL condition.
+- Created helper function dw_axi_dma_set_hw_desc() to handle common code.
+
+v2:
+- Rebased to v5.10-rc1 kernel.
+- Added support for dmaengine device_config().
+- Added support for dmaengine device_prep_slave_sg().
+- Added support for dmaengine device_prep_dma_cyclic().
+- Added support for of_dma_controller_register().
+- Added support for burst residue granularity.
+- Added support for Intel KeemBay AxiDMA registers.
+- Added support for Intel KeemBay AxiDMA device handshake.
+- Added support for Intel KeemBay AxiDMA BYTE and HALFWORD device operation.
+- Added constraint to Max segment size.
+
+v1:
+- Initial version. Patch on top of dw-axi-dma driver. This version improve
+  the descriptor management by replacing Linked List Item (LLI) with
+  virtual descriptor management, only allocate hardware LLI memories from
+  DMA memory pool, manage DMA memory pool alloc/destroy based on channel
+  activity and to support device_sync callback.
+
+Sia Jee Heng (16):
+  dt-bindings: dma: Add YAML schemas for dw-axi-dmac
+  dmaengine: dw-axi-dmac: simplify descriptor management
+  dmaengine: dw-axi-dmac: move dma_pool_create() to
+    alloc_chan_resources()
+  dmaengine: dw-axi-dmac: Add device_synchronize() callback
+  dmaengine: dw-axi-dmac: Add device_config operation
+  dmaengine: dw-axi-dmac: Support device_prep_slave_sg
+  dmaegine: dw-axi-dmac: Support device_prep_dma_cyclic()
+  dmaengine: dw-axi-dmac: Support of_dma_controller_register()
+  dmaengine: dw-axi-dmac: Support burst residue granularity
+  dt-binding: dma: dw-axi-dmac: Add support for Intel KeemBay AxiDMA
+  dmaengine: dw-axi-dmac: Add Intel KeemBay DMA register fields
+  dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA support
+  dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA handshake
+  dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA BYTE and HALFWORD
+    registers
+  dmaengine: dw-axi-dmac: Set constraint to the Max segment size
+  dmaengine: dw-axi-dmac: Virtually split the linked-list
+
+ .../bindings/dma/snps,dw-axi-dmac.txt         |  39 -
+ .../bindings/dma/snps,dw-axi-dmac.yaml        | 126 ++++
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 710 +++++++++++++++---
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  34 +-
+ 4 files changed, 775 insertions(+), 134 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+
+
+base-commit: 148842c98a24e508aecb929718818fbf4c2a6ff3
+-- 
+2.18.0
+

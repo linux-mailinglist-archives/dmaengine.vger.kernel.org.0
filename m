@@ -2,110 +2,94 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2655E2DB2A2
-	for <lists+dmaengine@lfdr.de>; Tue, 15 Dec 2020 18:32:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D33B2DB8A5
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Dec 2020 02:53:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731309AbgLORb6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 15 Dec 2020 12:31:58 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:46068 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731297AbgLORbt (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 15 Dec 2020 12:31:49 -0500
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id DE665C04DA;
-        Tue, 15 Dec 2020 17:30:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1608053449; bh=ZCFeUiaOqr6nmVdSrA/yeLCZ+L/gs597171/4LwdJCg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=ZaoDvg8wbB8lCJwqvd7TcwYJEpkV+2//cfQTiz+RHVEC+jMYRlc+izTY8ju7EOoA0
-         Ucu4KqBspALgJaI821QKEyJNXNFci8CobzLMbon9298Yco7m+SocDx7HrN8/stwnF9
-         xDA7cekeWAmWICbA87U5jAqTYKd4TbS65SXnZNgMSdCWKefnN4twArukNMdYzgfH+2
-         +E5h93VzSXxiIg26AarKgzS5hgY3P1xNPQeBTQ8SnIeLnVAub7p+2akL1jOK0BdcvI
-         jrfCyWa+S7jeNAGeMQ2M8AUgCDjDOnzE8O2rcqq5X1lgDjEihfB+RnCXPniIlRpozk
-         p0KIKYv9dCBcg==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 73759A024A;
-        Tue, 15 Dec 2020 17:30:47 +0000 (UTC)
-X-SNPS-Relay: synopsys.com
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 15/15] dmaengine: dw-edma: Add pcim_iomap_table return checker
-Date:   Tue, 15 Dec 2020 18:30:24 +0100
-Message-Id: <6df68db09ac19b2be8559e848497714ee763d5bd.1608053262.git.gustavo.pimentel@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1608053262.git.gustavo.pimentel@synopsys.com>
-References: <cover.1608053262.git.gustavo.pimentel@synopsys.com>
-In-Reply-To: <cover.1608053262.git.gustavo.pimentel@synopsys.com>
-References: <cover.1608053262.git.gustavo.pimentel@synopsys.com>
+        id S1725440AbgLPBwa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 15 Dec 2020 20:52:30 -0500
+Received: from mga04.intel.com ([192.55.52.120]:46392 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725308AbgLPBwa (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 15 Dec 2020 20:52:30 -0500
+IronPort-SDR: Y21oJmEbqOJ70vq64bxOixpSPmPNQ64pEtyh51H2oPrFeQWmYQeIGc3CFkjGLx5PD+c0h6MpbQ
+ 8d2HXbxv/QmQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9836"; a="172415251"
+X-IronPort-AV: E=Sophos;i="5.78,423,1599548400"; 
+   d="scan'208";a="172415251"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2020 17:50:37 -0800
+IronPort-SDR: cFGv00aXiJSneHIaymsNL0HdVpZyc+g3cbTyNfrD6C6N2Sh644XRJhR7zb7s0lqwLZmcoDLNag
+ O2C504HU8Vzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,423,1599548400"; 
+   d="scan'208";a="384063655"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.28]) ([10.239.159.28])
+  by fmsmga004.fm.intel.com with ESMTP; 15 Dec 2020 17:50:30 -0800
+Cc:     baolu.lu@linux.intel.com, alex.williamson@redhat.com,
+        bhelgaas@google.com, dan.j.williams@intel.com,
+        dmaengine@vger.kernel.org, eric.auger@redhat.com,
+        jacob.jun.pan@intel.com, jgg@mellanox.com, jing.lin@intel.com,
+        kvm@vger.kernel.org, kwankhede@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        maz@kernel.org, mona.hossain@intel.com, netanelg@mellanox.com,
+        parav@mellanox.com, pbonzini@redhat.com, rafael@kernel.org,
+        samuel.ortiz@intel.com, sanjay.k.kumar@intel.com,
+        shahafs@mellanox.com, tony.luck@intel.com, vkoul@kernel.org,
+        yan.y.zhao@linux.intel.com, yi.l.liu@intel.com
+Subject: Re: [RFC PATCH 1/1] platform-msi: Add platform check for subdevice
+ irq domain
+To:     David Woodhouse <dwmw2@infradead.org>, tglx@linutronix.de,
+        ashok.raj@intel.com, kevin.tian@intel.com, dave.jiang@intel.com,
+        megha.dey@intel.com
+References: <20201210004624.345282-1-baolu.lu@linux.intel.com>
+ <dad0bf6e271532badd84f2a811449be566f537a9.camel@infradead.org>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <7729a278-1734-5f3e-6183-50670ddb8820@linux.intel.com>
+Date:   Wed, 16 Dec 2020 09:42:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <dad0bf6e271532badd84f2a811449be566f537a9.camel@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Detected by CoverityScan CID 16555 ("Dereference null return")
+Hi David,
 
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
- drivers/dma/dw-edma/dw-edma-pcie.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+On 12/10/20 4:22 PM, David Woodhouse wrote:
+> On Thu, 2020-12-10 at 08:46 +0800, Lu Baolu wrote:
+>> +/*
+>> + * We want to figure out which context we are running in. But the hardware
+>> + * does not introduce a reliable way (instruction, CPUID leaf, MSR, whatever)
+>> + * which can be manipulated by the VMM to let the OS figure out where it runs.
+>> + * So we go with the below probably_on_bare_metal() function as a replacement
+>> + * for definitely_on_bare_metal() to go forward only for the very simple reason
+>> + * that this is the only option we have.
+>> + */
+>> +static const char * const possible_vmm_vendor_name[] = {
+>> +       "QEMU", "Bochs", "KVM", "Xen", "VMware", "VMW", "VMware Inc.",
+>> +       "innotek GmbH", "Oracle Corporation", "Parallels", "BHYVE",
+>> +       "Microsoft Corporation"
+>> +};
+> 
+> People do use SeaBIOS ("Bochs") on bare metal.
 
-diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-index 1fa43e3..b759796 100644
---- a/drivers/dma/dw-edma/dw-edma-pcie.c
-+++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-@@ -238,6 +238,9 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 	dw->rd_ch_cnt = vsec_data.rd_ch_cnt;
- 
- 	dw->rg_region.vaddr = pcim_iomap_table(pdev)[vsec_data.rg.bar];
-+	if (!dw->rg_region.vaddr)
-+		return -ENOMEM;
-+
- 	dw->rg_region.vaddr += vsec_data.rg.off;
- 	dw->rg_region.paddr = pdev->resource[vsec_data.rg.bar].start;
- 	dw->rg_region.paddr += vsec_data.rg.off;
-@@ -250,12 +253,18 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 		struct dw_edma_block *dt_block = &vsec_data.dt_wr[i];
- 
- 		ll_region->vaddr = pcim_iomap_table(pdev)[ll_block->bar];
-+		if (!ll_region->vaddr)
-+			return -ENOMEM;
-+
- 		ll_region->vaddr += ll_block->off;
- 		ll_region->paddr = pdev->resource[ll_block->bar].start;
- 		ll_region->paddr += ll_block->off;
- 		ll_region->sz = ll_block->sz;
- 
- 		dt_region->vaddr = pcim_iomap_table(pdev)[dt_block->bar];
-+		if (!dt_region->vaddr)
-+			return -ENOMEM;
-+
- 		dt_region->vaddr += dt_block->off;
- 		dt_region->paddr = pdev->resource[dt_block->bar].start;
- 		dt_region->paddr += dt_block->off;
-@@ -269,12 +278,18 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 		struct dw_edma_block *dt_block = &vsec_data.dt_rd[i];
- 
- 		ll_region->vaddr = pcim_iomap_table(pdev)[ll_block->bar];
-+		if (!ll_region->vaddr)
-+			return -ENOMEM;
-+
- 		ll_region->vaddr += ll_block->off;
- 		ll_region->paddr = pdev->resource[ll_block->bar].start;
- 		ll_region->paddr += ll_block->off;
- 		ll_region->sz = ll_block->sz;
- 
- 		dt_region->vaddr = pcim_iomap_table(pdev)[dt_block->bar];
-+		if (!dt_region->vaddr)
-+			return -ENOMEM;
-+
- 		dt_region->vaddr += dt_block->off;
- 		dt_region->paddr = pdev->resource[dt_block->bar].start;
- 		dt_region->paddr += dt_block->off;
--- 
-2.7.4
+Is there any unique way to distinguish between running on bare metal and
+VM?
 
+> 
+> You'll also see "Amazon EC2" on virt instances as well as bare metal
+> instances. Although in that case I believe the virt instances do have
+> the 'virtual machine' flag set in bit 4 of the BIOS Characteristics
+> Extension Byte 2, and the bare metal obviously don't.
+> 
+
+So for Amazon EC2 case, we can use this byte to distinguish. Can you
+please point me to the references of this Extension Byte (reference
+code/spec or anything else) ?
+
+Best regards,
+baolu

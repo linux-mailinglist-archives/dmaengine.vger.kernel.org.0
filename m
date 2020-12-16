@@ -2,102 +2,72 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CE5A2DBCB6
-	for <lists+dmaengine@lfdr.de>; Wed, 16 Dec 2020 09:32:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15AFB2DC0C1
+	for <lists+dmaengine@lfdr.de>; Wed, 16 Dec 2020 14:08:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725997AbgLPIcj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 16 Dec 2020 03:32:39 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:44992 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbgLPIcj (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 16 Dec 2020 03:32:39 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BG8TjCj030139;
-        Wed, 16 Dec 2020 08:31:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=/pwmgfT99CRqc8VXFKgknxtER8IjPbFB9frS6oAOPyI=;
- b=uCozIkc+f69BHiaOqyh6SS98aXDAZcxKLOH/0dQg0bbYzdtmYCP8djvZb4xuVCdVPI5e
- 68d4rbthI4kxxgdcC5n5J4BkFf2GZAMwpl8dB6PPfucpEVKddYxpUHlNZAvpe2XlypNP
- dS2KEhfyaSJ26PmAonu2DxfHmkS2sNzdM1jdyKzbk4Bral0qrpL4atjVhhnZYvL+XCzG
- niZxbBiNA5r0RQ4ac+aUcPEsBwwVvYQYrWwFIBH7WPqvHwlZHcFtPCXwHKNKu+Cv1fCU
- dJ2OXP5LDzSYMhXv8yuFPQyvjSxq0Yx1cIK6J2XBzIzj0q1MfC5clM8UwRspbA8uuSXw oA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 35cntm6t59-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 16 Dec 2020 08:31:55 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BG8LAhF076796;
-        Wed, 16 Dec 2020 08:29:55 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 35e6jsdrmj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Dec 2020 08:29:54 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0BG8Tr2X013623;
-        Wed, 16 Dec 2020 08:29:53 GMT
-Received: from mwanda (/10.175.200.55)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 16 Dec 2020 00:29:53 -0800
-Date:   Wed, 16 Dec 2020 11:29:46 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] dmaengine: idxd: off by one in cleanup code
-Message-ID: <X9nFeojulsNqUSnG@mwanda>
+        id S1725958AbgLPNHJ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 16 Dec 2020 08:07:09 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9214 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725274AbgLPNHI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 16 Dec 2020 08:07:08 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4CwwNJ5KvRzkq4d;
+        Wed, 16 Dec 2020 21:05:36 +0800 (CST)
+Received: from ubuntu.network (10.175.138.68) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.498.0; Wed, 16 Dec 2020 21:06:18 +0800
+From:   Zheng Yongjun <zhengyongjun3@huawei.com>
+To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
+        <dan.j.williams@intel.com>, <vkoul@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Zheng Yongjun <zhengyongjun3@huawei.com>
+Subject: [PATCH -next] qcom: bam_dma: Delete useless kfree code
+Date:   Wed, 16 Dec 2020 21:06:49 +0800
+Message-ID: <20201216130649.13979-1-zhengyongjun3@huawei.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9836 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 bulkscore=0
- malwarescore=0 adultscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2012160053
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9836 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 mlxscore=0
- lowpriorityscore=0 spamscore=0 adultscore=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 impostorscore=0 priorityscore=1501 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2012160054
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.138.68]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The clean up is off by one so this will start at "i" and it should start
-with "i - 1" and then it doesn't unregister the zeroeth elements in the
-array.
+The parameter of kfree function is NULL, so kfree code is useless, delete it.
+Therefore, goto expression is no longer needed, so simplify it.
 
-Fixes: c52ca478233c ("dmaengine: idxd: add configuration component of driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
 ---
- drivers/dma/idxd/sysfs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/qcom/bam_dma.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index 266423a2cabc..4dbb03c545e4 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -434,7 +434,7 @@ int idxd_register_driver(void)
- 	return 0;
+diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+index 4eeb8bb27279..78df217b3f6c 100644
+--- a/drivers/dma/qcom/bam_dma.c
++++ b/drivers/dma/qcom/bam_dma.c
+@@ -630,7 +630,7 @@ static struct dma_async_tx_descriptor *bam_prep_slave_sg(struct dma_chan *chan,
+ 			     GFP_NOWAIT);
  
- drv_fail:
--	for (; i > 0; i--)
-+	while (--i >= 0)
- 		driver_unregister(&idxd_drvs[i]->drv);
- 	return rc;
- }
-@@ -1840,7 +1840,7 @@ int idxd_register_bus_type(void)
- 	return 0;
+ 	if (!async_desc)
+-		goto err_out;
++		return NULL;
  
- bus_err:
--	for (; i > 0; i--)
-+	while (--i >= 0)
- 		bus_unregister(idxd_bus_types[i]);
- 	return rc;
+ 	if (flags & DMA_PREP_FENCE)
+ 		async_desc->flags |= DESC_FLAG_NWD;
+@@ -670,10 +670,6 @@ static struct dma_async_tx_descriptor *bam_prep_slave_sg(struct dma_chan *chan,
+ 	}
+ 
+ 	return vchan_tx_prep(&bchan->vc, &async_desc->vd, flags);
+-
+-err_out:
+-	kfree(async_desc);
+-	return NULL;
  }
+ 
+ /**
 -- 
-2.29.2
+2.22.0
 

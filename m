@@ -2,55 +2,90 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18D612DDA70
-	for <lists+dmaengine@lfdr.de>; Thu, 17 Dec 2020 21:59:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 038F82DE13B
+	for <lists+dmaengine@lfdr.de>; Fri, 18 Dec 2020 11:43:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731488AbgLQU6q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 17 Dec 2020 15:58:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731468AbgLQU6q (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 17 Dec 2020 15:58:46 -0500
-Subject: Re: [GIT PULL]: dmaengine update for v5.11-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1608238685;
-        bh=mrBLX+cK6VCW6FcHITR3WVuyKE87cU3HxvbfVPh8g1s=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=lrr+14Po8WY9ICPdR8kNvVHwR6HGxsieW2wZULSBbXmOBTDR4w6N5AzZHtgzFPzVi
-         1gsLSSnRKxPsPue0wepfmsn8wdGDawr62ppTVXjspY7rfAmowuEDHBYygnY/Jk9WUq
-         4aV6fZf3Y/1qyVY7X5s1r7JaH64+9iXOGCb+dBRYjRrn/Ym6/DTkFBE1pbwHwx7cgS
-         hZ7ekGQKLFjJWBTzrjj4MxDqEIk95yE3SL35DihHzohIdNZodDGFnCzHzlMjgkAbl9
-         fbPMWHF+/d0YjU9pE5lEfNbABBX94IAdifpA5URYQhJPt+/kS1oZWnXGnJslni6GYW
-         usZ/kK9mjF3SQ==
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20201217172427.GG8403@vkoul-mobl>
-References: <20201217172427.GG8403@vkoul-mobl>
-X-PR-Tracked-List-Id: <dmaengine.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20201217172427.GG8403@vkoul-mobl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-5.11-rc1
-X-PR-Tracked-Commit-Id: 115ff12aecfd55376d704fa2c0a2d117e5827f9f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6daa90439e91bb9a71864b02f7d0af8587ea889a
-Message-Id: <160823868538.27370.7017031706746627158.pr-tracker-bot@kernel.org>
-Date:   Thu, 17 Dec 2020 20:58:05 +0000
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dma <dmaengine@vger.kernel.org>
+        id S1733172AbgLRKmd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 18 Dec 2020 05:42:33 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9631 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbgLRKmc (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 18 Dec 2020 05:42:32 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Cy54j4mVcz15Zdt;
+        Fri, 18 Dec 2020 18:41:09 +0800 (CST)
+Received: from use12-sp2.huawei.com (10.67.189.174) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.498.0; Fri, 18 Dec 2020 18:41:41 +0800
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+To:     <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <agross@kernel.org>, <bjorn.andersson@linaro.org>
+CC:     <nixiaoming@huawei.com>, <wangle6@huawei.com>
+Subject: [PATCH] dma/qcom/gpi: Fixes a format mismatch
+Date:   Fri, 18 Dec 2020 18:41:37 +0800
+Message-ID: <20201218104137.59200-1-nixiaoming@huawei.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.189.174]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The pull request you sent on Thu, 17 Dec 2020 22:54:27 +0530:
+drivers/dma/qcom/gpi.c:1419:3: warning: format '%lu' expects argument of
+ type 'long unsigned int', but argument 8 has type 'size_t {aka unsigned
+ int}' [-Wformat=]
+drivers/dma/qcom/gpi.c:1427:31: warning: format '%lu' expects argument of
+ type 'long unsigned int', but argument 3 has type 'size_t {aka unsigned
+ int}' [-Wformat=]
+drivers/dma/qcom/gpi.c:1447:3: warning: format '%llx' expects argument of
+ type 'long long unsigned int', but argument 4 has type 'dma_addr_t {aka
+ unsigned int}' [-Wformat=]
+drivers/dma/qcom/gpi.c:1447:3: warning: format '%llx' expects argument of
+ type 'long long unsigned int', but argument 5 has type 'phys_addr_t {aka
+ unsigned int}' [-Wformat=]
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-5.11-rc1
+Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+---
+ drivers/dma/qcom/gpi.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6daa90439e91bb9a71864b02f7d0af8587ea889a
-
-Thank you!
-
+diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
+index d2334f535de2..556c070a514c 100644
+--- a/drivers/dma/qcom/gpi.c
++++ b/drivers/dma/qcom/gpi.c
+@@ -1416,7 +1416,7 @@ static int gpi_alloc_ring(struct gpi_ring *ring, u32 elements,
+ 	len = 1 << bit;
+ 	ring->alloc_size = (len + (len - 1));
+ 	dev_dbg(gpii->gpi_dev->dev,
+-		"#el:%u el_size:%u len:%u actual_len:%llu alloc_size:%lu\n",
++		"#el:%u el_size:%u len:%u actual_len:%llu alloc_size:%zu\n",
+ 		  elements, el_size, (elements * el_size), len,
+ 		  ring->alloc_size);
+ 
+@@ -1424,7 +1424,7 @@ static int gpi_alloc_ring(struct gpi_ring *ring, u32 elements,
+ 					       ring->alloc_size,
+ 					       &ring->dma_handle, GFP_KERNEL);
+ 	if (!ring->pre_aligned) {
+-		dev_err(gpii->gpi_dev->dev, "could not alloc size:%lu mem for ring\n",
++		dev_err(gpii->gpi_dev->dev, "could not alloc size:%zu mem for ring\n",
+ 			ring->alloc_size);
+ 		return -ENOMEM;
+ 	}
+@@ -1444,8 +1444,8 @@ static int gpi_alloc_ring(struct gpi_ring *ring, u32 elements,
+ 	smp_wmb();
+ 
+ 	dev_dbg(gpii->gpi_dev->dev,
+-		"phy_pre:0x%0llx phy_alig:0x%0llx len:%u el_size:%u elements:%u\n",
+-		ring->dma_handle, ring->phys_addr, ring->len,
++		"phy_pre:%pad phy_alig:%pa len:%u el_size:%u elements:%u\n",
++		&ring->dma_handle, &ring->phys_addr, ring->len,
+ 		ring->el_size, ring->elements);
+ 
+ 	return 0;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.27.0
+

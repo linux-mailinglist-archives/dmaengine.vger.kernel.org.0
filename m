@@ -2,71 +2,71 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FDC02E0084
-	for <lists+dmaengine@lfdr.de>; Mon, 21 Dec 2020 19:56:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 343192E00A0
+	for <lists+dmaengine@lfdr.de>; Mon, 21 Dec 2020 20:03:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgLUS4C (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 21 Dec 2020 13:56:02 -0500
-Received: from mail-oi1-f175.google.com ([209.85.167.175]:42988 "EHLO
-        mail-oi1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbgLUS4B (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 21 Dec 2020 13:56:01 -0500
-Received: by mail-oi1-f175.google.com with SMTP id l200so12244984oig.9;
-        Mon, 21 Dec 2020 10:55:45 -0800 (PST)
+        id S1726417AbgLUTDK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 21 Dec 2020 14:03:10 -0500
+Received: from mail-oo1-f49.google.com ([209.85.161.49]:44948 "EHLO
+        mail-oo1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbgLUTDK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 21 Dec 2020 14:03:10 -0500
+Received: by mail-oo1-f49.google.com with SMTP id j21so2434610oou.11;
+        Mon, 21 Dec 2020 11:02:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=IJ7l/a9mmzMt7kum9VbRKMbyay3Fw/ozonrRakViwg8=;
-        b=bAB9pHrAmEe6bBSPAXbZCotHFKFyi1ioanuAxX+SZ5H8BpGof4P0OEVN8GkeLYON90
-         7zM4sSZBcnNrG5kLgM1SMY+sp69QjS3RUYXVfpfVOZ3LooNTPDCDkjoRfbsmeshCyrb7
-         R1f6V6JKi6ycmz5xvkGWvtgtdAyAs3sgfJQd0VOE/lsu4RJaXoQh+5dkQ7xdyezsoHDN
-         OaALjn0vW9w9vqxlOq+QO7iBnaY4Gj+WOfjKbkVIlSAmBa7Pog/2FLqiB+TwLrFPLOts
-         gUPL84IivSsqUdm4bYO/xBX8MEzHvbfbF9zXt8vTVtKYJy+efLWzQJPmFZyxXc++6pZX
-         brhw==
-X-Gm-Message-State: AOAM530SCwXXEc1Px3BJIw4XDy4HAi7tGHjZXVCEfVflMAYgi8tJD5GK
-        sP4hBMTxWFvPd5DQZ7vZLd1QTareZQ==
-X-Google-Smtp-Source: ABdhPJyyfSd9ZNa5xlxTSTlLKiW1koaF4UuSz+lFOcArcppC3IEGPpOvMc6mT5zQXH0+78WFgssBHQ==
-X-Received: by 2002:aca:4d8b:: with SMTP id a133mr12303671oib.79.1608576920495;
-        Mon, 21 Dec 2020 10:55:20 -0800 (PST)
+        bh=2A5Jx5ebri9fUM0pBXdjugZO9tY3imQBK8tvpAAgvQU=;
+        b=gTjHLzUNP3QBvVoZ6vbwQY1lQNMNow3kymXD0w6kgquSY9zytCFrIdDKJzqtfqNZ4w
+         RdPFixe3Z7gdPE/IZoMAr8pH3lss4oke8TpEBWyyOUoT315e8hY2ILkOlYvGv8z3/qoC
+         GjfF7h3XgRVGFepKP90BDnl93oW6/jDFA2OFx66pNTN6jQWsnrsnT8032DWsiAO0U43m
+         DSZ66RFzPPFfo/gUdP93MJ94jaB0VKVyk7gnNLW04GCcsNcUFJSdZRXSOd0yPt1uopNN
+         qkTi1duso0vSHKi0SjQjcqFWw9T06dEcs7CGlvVCYvv14cSe7xVSEAtxf36U+rJVMVGp
+         l+Fg==
+X-Gm-Message-State: AOAM532+U8fxOFpJbKEA72lcY2xc479dYUWI0YwdN78CkGjlpnki7Dtc
+        KSkR/58Iq7H/9GVmFNil4w==
+X-Google-Smtp-Source: ABdhPJxIOUHXL9Zhm7n1ZCZQbPwtYZh4JNeMqAA/H+90t3FAdhgZwpZgAbd9wAX2YvqDelqvYU7/kg==
+X-Received: by 2002:a4a:98e7:: with SMTP id b36mr12461400ooj.3.1608577348973;
+        Mon, 21 Dec 2020 11:02:28 -0800 (PST)
 Received: from robh.at.kernel.org ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id q18sm3850264ood.35.2020.12.21.10.55.18
+        by smtp.gmail.com with ESMTPSA id h93sm3978329otb.29.2020.12.21.11.02.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Dec 2020 10:55:19 -0800 (PST)
-Received: (nullmailer pid 357349 invoked by uid 1000);
-        Mon, 21 Dec 2020 18:55:18 -0000
-Date:   Mon, 21 Dec 2020 11:55:18 -0700
+        Mon, 21 Dec 2020 11:02:27 -0800 (PST)
+Received: (nullmailer pid 368745 invoked by uid 1000);
+        Mon, 21 Dec 2020 19:02:26 -0000
+Date:   Mon, 21 Dec 2020 12:02:26 -0700
 From:   Rob Herring <robh@kernel.org>
-To:     Dongjiu Geng <gengdongjiu@huawei.com>
-Cc:     devicetree@vger.kernel.org, mturquette@baylibre.com,
-        dan.j.williams@intel.com, linux-clk@vger.kernel.org,
-        dmaengine@vger.kernel.org, vkoul@kernel.org,
-        p.zabel@pengutronix.de, robh+dt@kernel.org, sboyd@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 3/4] dt: bindings: dma: Add DT bindings for HiSilicon
- Hiedma Controller
-Message-ID: <20201221185518.GA357293@robh.at.kernel.org>
-References: <20201215110947.41268-1-gengdongjiu@huawei.com>
- <20201215110947.41268-4-gengdongjiu@huawei.com>
+To:     Sia Jee Heng <jee.heng.sia@intel.com>
+Cc:     devicetree@vger.kernel.org, Eugeniy.Paltsev@synopsys.com,
+        linux-kernel@vger.kernel.org, vkoul@kernel.org,
+        andriy.shevchenko@linux.intel.com, dmaengine@vger.kernel.org,
+        robh+dt@kernel.org
+Subject: Re: [PATCH v7 01/16] dt-bindings: dma: Add YAML schemas for
+ dw-axi-dmac
+Message-ID: <20201221190226.GA368699@robh.at.kernel.org>
+References: <20201216021003.26911-1-jee.heng.sia@intel.com>
+ <20201216021003.26911-2-jee.heng.sia@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201215110947.41268-4-gengdongjiu@huawei.com>
+In-Reply-To: <20201216021003.26911-2-jee.heng.sia@intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, 15 Dec 2020 11:09:46 +0000, Dongjiu Geng wrote:
-> The Hiedma Controller v310 Provides eight DMA channels, each
-> channel can be configured for one-way transfer. The data can
-> be transferred in 8-bit, 16-bit, 32-bit, or 64-bit mode. This
-> documentation describes DT bindings of this controller.
+On Wed, 16 Dec 2020 10:09:48 +0800, Sia Jee Heng wrote:
+> YAML schemas Device Tree (DT) binding is the new format for DT to replace
+> the old format. Introduce YAML schemas DT binding for dw-axi-dmac and
+> remove the old version.
 > 
-> Signed-off-by: Dongjiu Geng <gengdongjiu@huawei.com>
+> Signed-off-by: Sia Jee Heng <jee.heng.sia@intel.com>
 > ---
->  .../bindings/dma/hisilicon,hiedmacv310.yaml   | 94 +++++++++++++++++++
->  1 file changed, 94 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/hisilicon,hiedmacv310.yaml
+>  .../bindings/dma/snps,dw-axi-dmac.txt         |  39 ------
+>  .../bindings/dma/snps,dw-axi-dmac.yaml        | 121 ++++++++++++++++++
+>  2 files changed, 121 insertions(+), 39 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
+>  create mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>

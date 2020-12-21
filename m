@@ -2,113 +2,69 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2DD82DFF61
-	for <lists+dmaengine@lfdr.de>; Mon, 21 Dec 2020 19:11:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B511D2E007F
+	for <lists+dmaengine@lfdr.de>; Mon, 21 Dec 2020 19:56:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726000AbgLUSKf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 21 Dec 2020 13:10:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49654 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbgLUSKe (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 21 Dec 2020 13:10:34 -0500
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D913DC0613D3
-        for <dmaengine@vger.kernel.org>; Mon, 21 Dec 2020 10:09:53 -0800 (PST)
-Received: by mail-pj1-x102d.google.com with SMTP id hk16so6895494pjb.4
-        for <dmaengine@vger.kernel.org>; Mon, 21 Dec 2020 10:09:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oKzr3FPkUPe+aYLEEdAws7uUObKGbIl98KSfBYhptN8=;
-        b=soNsn/OEkcxcg3tdMLUK8S9ZfkM2t2yqDVZhgO18mjV+PiB93rs9nVs4/WOxCehg/l
-         Zg1AKon2Kp22DOxk79DHwR6nf3NMY2EigMyBBHYEATgEmmoIAESPB5ryNAeJdcC/ABow
-         gu2QCIJsK3kY5FV0rUzPAZKM+Vu5PA9N1h2mZkoKFe5opMbOQqNy5Nv+ZylxufnFJNgp
-         M9n+UFZYYDVCrgxz1RYf1f7reW9o1Uj/tCIUJeJghbf4yqPqoHRS6HDcSsdLMgXS3j5C
-         il7Nm9zO2lJUTh3QxS6ymYW9gn3wf4DgrEL+jOFyt3bn8Bjnh1bYfSBVesfBWDPaEQ27
-         tqcA==
+        id S1726139AbgLUSzL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 21 Dec 2020 13:55:11 -0500
+Received: from mail-oi1-f179.google.com ([209.85.167.179]:44505 "EHLO
+        mail-oi1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbgLUSzK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 21 Dec 2020 13:55:10 -0500
+Received: by mail-oi1-f179.google.com with SMTP id d189so12243966oig.11;
+        Mon, 21 Dec 2020 10:54:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oKzr3FPkUPe+aYLEEdAws7uUObKGbIl98KSfBYhptN8=;
-        b=PpFBZKOhEcQQ741i36Uu7+kArsNTz2jrc5DGyeGTy31sOy0Gu630F/BhcDULgw9s0+
-         TmxywbaJBbnl5t4udTzMi5zGNMCw/Dizy/0wT3ID0SjfRb0En0eQJAgdhwVavoqOVfxV
-         AGuMoQSGEdVUPwrLwUuDYrEg4hF3FYnmoHo6ftj4CeZh0oJ9M0oBMBywa85xymv5eFW5
-         oA9naZpCagl8Y/zGDVNYEgyo1H6cCykxlbvKuFjLP5ssDiDAKIncKIEbbHEf0WZsLtpP
-         fMry0m6VhWALXoeZ4sYEWr3e5UZ6sKthHHfoyEIQcUuDAc2sBZtqQn+eSfJxU+02A2XG
-         eiWA==
-X-Gm-Message-State: AOAM530IOcIZju8DbCwIUMvV91rGRaOdTKn1w3SIaTZoefS3YnbGLalP
-        tnDW7WxcCckXjeGsjEByBt3MVA==
-X-Google-Smtp-Source: ABdhPJztnTinUeHX3LcXJVPOkssICjBjG1WnlYcFyNRW4VUcZrVDlmsc2+SKAtrnjnsK75mEEiyg7Q==
-X-Received: by 2002:a17:902:5581:b029:da:a817:1753 with SMTP id g1-20020a1709025581b02900daa8171753mr17030542pli.76.1608574193380;
-        Mon, 21 Dec 2020 10:09:53 -0800 (PST)
-Received: from [192.168.1.70] (ip72-195-250-206.ph.ph.cox.net. [72.195.250.206])
-        by smtp.gmail.com with ESMTPSA id w63sm17017843pfc.20.2020.12.21.10.09.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Dec 2020 10:09:52 -0800 (PST)
-Subject: Re: [PATCH] dmaengine: qcom: bam_dma: Add LOCK and UNLOCK flag bit
- support
-To:     mdalam@codeaurora.org
-Cc:     vkoul@kernel.org, corbet@lwn.net, agross@kernel.org,
-        bjorn.andersson@linaro.org, dan.j.williams@intel.com,
-        dmaengine@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        sricharan@codeaurora.org
-References: <1608215842-15381-1-git-send-email-mdalam@codeaurora.org>
- <6c85436d-e064-367e-736b-951af82256c8@linaro.org>
- <9769c54acf54617a17346fea60ee38b6@codeaurora.org>
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <8c86f4db-9956-10d1-b380-a207137b50ef@linaro.org>
-Date:   Mon, 21 Dec 2020 13:09:50 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VxUDcWHEtVg+ff7we8+iFRq064frk9Mq/obRG6B8LUs=;
+        b=NRxukXkLJm/lLIc45Sed9QueFmqqiztTGcwL4uwLyXi75KKIXApkTFAt7oHwNl7QyR
+         +JEtfPLaWxcmsZk7D6lLMKsb/xbOmjGkoZ45t02ljnOPdNNXWwPCzPB6yX2ArnPCA6GY
+         AY6KrqRYetfB+EVIUpuLjEvyQXrwJiUBcxdP+23cpVjO7v1gsoOIOQohVnXi48Q0x950
+         vAC1a1yHkHTlXtzS5XLdImABgkt75wYfOc1TkrteSC9oTQQ6oedezlgfnppod6KHkN5m
+         HW2E5LkAwsJtCBPt9MLDm1AddlnCWS3Zj4zQP4uis3nZ/N+sfMEL/hr+tYYz23UAe0eo
+         fGhA==
+X-Gm-Message-State: AOAM532zXzLB1lqIU1MMzQ/BIalV0GuoFSDNXDxQQrUZ4wmauRMxOiB4
+        1GUJ9/deSkBTiW8cie8DpuNIk6lPVQ==
+X-Google-Smtp-Source: ABdhPJzwNvQJNxTDOqP+ioypfUuKRetmU4VcIdw2HS9cwjxOBbluxuuW7/120JXxAPspilV+Ro6O4A==
+X-Received: by 2002:aca:f58c:: with SMTP id t134mr1725213oih.68.1608576869587;
+        Mon, 21 Dec 2020 10:54:29 -0800 (PST)
+Received: from robh.at.kernel.org ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id w138sm3733401oie.44.2020.12.21.10.54.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Dec 2020 10:54:28 -0800 (PST)
+Received: (nullmailer pid 355917 invoked by uid 1000);
+        Mon, 21 Dec 2020 18:54:25 -0000
+Date:   Mon, 21 Dec 2020 11:54:25 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Dongjiu Geng <gengdongjiu@huawei.com>
+Cc:     sboyd@kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        robh+dt@kernel.org, p.zabel@pengutronix.de, vkoul@kernel.org,
+        linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
+        mturquette@baylibre.com
+Subject: Re: [PATCH v7 1/4] dt-bindings: Document the hi3559a clock bindings
+Message-ID: <20201221185425.GA355861@robh.at.kernel.org>
+References: <20201215110947.41268-1-gengdongjiu@huawei.com>
+ <20201215110947.41268-2-gengdongjiu@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <9769c54acf54617a17346fea60ee38b6@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201215110947.41268-2-gengdongjiu@huawei.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 12/21/20 2:35 AM, mdalam@codeaurora.org wrote:
-> On 2020-12-19 09:05, Thara Gopinath wrote:
->> On 12/17/20 9:37 AM, Md Sadre Alam wrote:
->>> This change will add support for LOCK & UNLOCK flag bit support
->>> on CMD descriptor.
->>>
->>> If DMA_PREP_LOCK flag passed in prep_slave_sg then requester of this
->>> transaction wanted to lock the DMA controller for this transaction so
->>> BAM driver should set LOCK bit for the HW descriptor.
->>>
->>> If DMA_PREP_UNLOCK flag passed in prep_slave_sg then requester of this
->>> transaction wanted to unlock the DMA controller.so BAM driver should set
->>> UNLOCK bit for the HW descriptor.
->> Hi,
->>
->> This is a generic question. What is the point of LOCK/UNLOCK with
->> allocating LOCK groups to the individual dma channels? By default
->> doesn't all channels fall in the same group. This would mean that
->> a lock does not prevent the dma controller from not executing a
->> transaction on the other channels.
->>
+On Tue, 15 Dec 2020 11:09:44 +0000, Dongjiu Geng wrote:
+> Add DT bindings documentation for hi3559a SoC clock.
 > 
-> The Pipe Locking/Unlocking will be only on command-descriptor.
-> Upon encountering a command descriptor with LOCK bit set, the BAM
-> will lock all other pipes not related to the current pipe group, and keep
-> handling the current pipe only until it sees the UNLOCK set then it will
-> release all locked pipes.
+> Signed-off-by: Dongjiu Geng <gengdongjiu@huawei.com>
+> ---
+>  .../clock/hisilicon,hi3559av100-clock.yaml    |  59 +++++++
+>  include/dt-bindings/clock/hi3559av100-clock.h | 165 ++++++++++++++++++
+>  2 files changed, 224 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/hisilicon,hi3559av100-clock.yaml
+>  create mode 100644 include/dt-bindings/clock/hi3559av100-clock.h
+> 
 
-So unless you assign pipe groups, this will not work as intended right? 
-So this patch is only half of the solution. There should also be a patch 
-allowing pipe groups to be assigned. Without that extra bit this patch 
-does nothing , right ?
-
-
--- 
-Warm Regards
-Thara
+Reviewed-by: Rob Herring <robh@kernel.org>

@@ -2,60 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CF632DFC94
-	for <lists+dmaengine@lfdr.de>; Mon, 21 Dec 2020 15:12:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45E512DFCBC
+	for <lists+dmaengine@lfdr.de>; Mon, 21 Dec 2020 15:23:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726746AbgLUOLa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 21 Dec 2020 09:11:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48342 "EHLO mail.kernel.org"
+        id S1727086AbgLUOXP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 21 Dec 2020 09:23:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726612AbgLUOLa (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 21 Dec 2020 09:11:30 -0500
-Date:   Mon, 21 Dec 2020 19:40:45 +0530
+        id S1726848AbgLUOXP (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 21 Dec 2020 09:23:15 -0500
+Date:   Mon, 21 Dec 2020 19:52:30 +0530
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1608559850;
-        bh=brYUIuxVH73MITU87zKgoCQnt6Z9UxnkR01Ev5sawdw=;
+        s=k20201202; t=1608560554;
+        bh=SqtEboAk0qd7ZTX5Jqa9whnweGmlKEOCqrijvdgNhqg=;
         h=From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EPARUF5OrYZojT26t2nFFvX7FwB02+0Kdjh5401mULRCBNO6VlV8vBtN3PuBOHjo2
-         sqD55L3WZ2qMqXtevMvddHgKr6pmsSx94RBBxHzS86iqgMSIwiG/iBIE3Cn5KA+v5h
-         XeXdRqog1H9snO/twxfgBbZu1pFA3MooY8KcMerqcS+GeekZV5OLy4HUMBbdV5qBiK
-         8+3qEEy5Aqh4AvgKSkqHKP6PMq1w3RJ5F0aCrrWRjseagQY0ed8Sd+aZ/7aHeosTBD
-         us28ZvpcBSuKA6WwRbffQl61IAam7MZlJId1l/202mNdH7tEeIdhfGiEG2p72DyiAp
-         wQkAGXOGOYJVA==
+        b=UeSf5XtXJsUe6a0O/9Pc20cEAMFQh/AENbDrRZEt7yhefwRNcHz4B53zaW0Pb1Oho
+         x0mx6d3Tnrw26tM710ugH6Zne6wSANiIEZF467nXzbxw/gn9UvcrmXIUO1t6ttzFjp
+         9TA+v1gWDavb8j4T71V445APgxIGJRPZ5QhExleuk1qIKqXYRAF0OF8FXD0gVAcd/m
+         LR1bsaJ7/Cc6njwaDq7lDvbUf9V3Hr4ttunit0blYL/YQlnle/n6ocJw0UeIAPyMmy
+         9QnJ58xuT9gIQ3qxQjN1jp1zSo6FbUTlICnFw+bE44cG4/3/KzS7DJcRKAyzlfgnDE
+         BIAF9EFuEhX7Q==
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Xiaoming Ni <nixiaoming@huawei.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, wangle6@huawei.com
-Subject: Re: [PATCH] dma/qcom/gpi: Fixes a format mismatch
-Message-ID: <20201221141045.GC3323@vkoul-mobl>
-References: <20201218104137.59200-1-nixiaoming@huawei.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     sean.wang@mediatek.com, dan.j.williams@intel.com,
+        matthias.bgg@gmail.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: mediatek: mtk-hsdma: Fix a resource leak in
+ the error handling path of the probe function
+Message-ID: <20201221142230.GD3323@vkoul-mobl>
+References: <20201219124718.182664-1-christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201218104137.59200-1-nixiaoming@huawei.com>
+In-Reply-To: <20201219124718.182664-1-christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 18-12-20, 18:41, Xiaoming Ni wrote:
-> drivers/dma/qcom/gpi.c:1419:3: warning: format '%lu' expects argument of
->  type 'long unsigned int', but argument 8 has type 'size_t {aka unsigned
->  int}' [-Wformat=]
-> drivers/dma/qcom/gpi.c:1427:31: warning: format '%lu' expects argument of
->  type 'long unsigned int', but argument 3 has type 'size_t {aka unsigned
->  int}' [-Wformat=]
-> drivers/dma/qcom/gpi.c:1447:3: warning: format '%llx' expects argument of
->  type 'long long unsigned int', but argument 4 has type 'dma_addr_t {aka
->  unsigned int}' [-Wformat=]
-> drivers/dma/qcom/gpi.c:1447:3: warning: format '%llx' expects argument of
->  type 'long long unsigned int', but argument 5 has type 'phys_addr_t {aka
->  unsigned int}' [-Wformat=]
+On 19-12-20, 13:47, Christophe JAILLET wrote:
+> 'mtk_hsdma_hw_deinit()' should be called in the error handling path of the
+> probe function to undo a previous 'mtk_hsdma_hw_init()' call, as already
+> done in the remove function.
 
-The subsystem is dmaengine: please use right tags (hint git log will
-tell you so)
-
-I have fixed it up while applying, thanks
+Applied, thanks
 
 -- 
 ~Vinod

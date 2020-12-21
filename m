@@ -2,124 +2,194 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7718F2DF870
-	for <lists+dmaengine@lfdr.de>; Mon, 21 Dec 2020 05:58:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CE7C2DF983
+	for <lists+dmaengine@lfdr.de>; Mon, 21 Dec 2020 08:37:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgLUE43 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 20 Dec 2020 23:56:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726552AbgLUE42 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 20 Dec 2020 23:56:28 -0500
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FEF4C0613D3
-        for <dmaengine@vger.kernel.org>; Sun, 20 Dec 2020 20:55:47 -0800 (PST)
-Received: by mail-yb1-xb31.google.com with SMTP id y128so7766402ybf.10
-        for <dmaengine@vger.kernel.org>; Sun, 20 Dec 2020 20:55:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XBn6ZaN2/e80TT6li1FQJn5DAlS/Vz3aVp5cdanhwx0=;
-        b=eD8gurwuCeouZfOp095joie+CkUfk2Qq8jzl/CxCPCYo1FDAsZDtayDjD2XMxGh7pp
-         Vx2E+zd5zQHvmskowfnDUMSGluzZ9BYqwwySe7dbVtEgeiBDefleuDiea/TLtIoi0OaB
-         Ol1sEMZ4mL4D2varqEMMjBDc1qcPd0u/rw9fFy8IlP7hYUdgTt9HHMaELLE5GxKplYVI
-         y4KLvoLPSxuh2xT7I5ixlF1920p28igJ1Z/goiUNto2PzJxck7VTvUwjdK0CLpHinBAH
-         FfqPKBbPQvlr+NbhdQRCs0N2Ci97vS8EPx62uXqV+tmtU/V/ayXNTU9cbFpsy8GwrIhC
-         R4ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XBn6ZaN2/e80TT6li1FQJn5DAlS/Vz3aVp5cdanhwx0=;
-        b=f8E6iKejkwMRPth5A0tAwfC3Nx1WfSy10kcBY+8BsjlyhmT74zo+5n7YUE0DXaR3/m
-         LRxDdSE2WM/C4/fHy5IA8IzGx069mOK5mOYpFR0PRsBkgMWxp4FTHVjkhfOJ34Wpy3A4
-         D92fOOZFAGXrdsRCAz31haXFPaqzqOTAVshSEfbweSgFHs9XEeOMg8EMntzkS5VjaNkS
-         djy0UoAdLNEdwKIwVqg2qM6dh6vbP5hQPh47wH2VAQr/W9pIOZYXH9igQpX341E/KhNl
-         yojoIlu7D97B3Dhd+APRMJd03LPzJIbsJibPw//P0KYBLB5hiNVZ2Nu8FlyHxmyJ7cyh
-         InfA==
-X-Gm-Message-State: AOAM532btvxHG9bzb1KfNwehxScrBtRrSROgUrX+Na5wU4OyUcOEBmzs
-        GT6GSLYYCHiRsgFoGjxW67w5Fi/g0W7xdA==
-X-Google-Smtp-Source: ABdhPJw+J9b0p/Ufag3WxMIn6M+MA093oET0b4OpVhuLP6+98+UVeWLiJmyyucgkbeZWJ/XgVAltTw==
-X-Received: by 2002:a05:6830:17c7:: with SMTP id p7mr10742164ota.21.1608522636756;
-        Sun, 20 Dec 2020 19:50:36 -0800 (PST)
-Received: from ripper (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id i126sm2408687oif.22.2020.12.20.19.50.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Dec 2020 19:50:35 -0800 (PST)
-Date:   Sun, 20 Dec 2020 19:51:20 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Xiaoming Ni <nixiaoming@huawei.com>
-Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, wangle6@huawei.com
-Subject: Re: [PATCH] dma/qcom/gpi: Fixes a format mismatch
-Message-ID: <X+AbuEhwExGxrkax@ripper>
-References: <20201218104137.59200-1-nixiaoming@huawei.com>
+        id S1726008AbgLUHgj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 21 Dec 2020 02:36:39 -0500
+Received: from m43-15.mailgun.net ([69.72.43.15]:48806 "EHLO
+        m43-15.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726579AbgLUHgj (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 21 Dec 2020 02:36:39 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1608536174; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=cIizDPRICPgg/bSArezwSPToM2+vbpPt0D05PpcHIg4=;
+ b=QQ9PR2yny1v2TWOhaTA5VOO1w+QZ+773+gfuM5gFatHmYnjo5el/Vgg3K7MjI15ePgiyjnNg
+ 0drFYKk4l9TSosxrHYqYsnfHxRIFLqCUlJ8WwHv2orb15iZh+wO3TbnRhNpfIsaCGmMamr4R
+ 2BICIUMamYu5RihhaIy9rp+Q9mk=
+X-Mailgun-Sending-Ip: 69.72.43.15
+X-Mailgun-Sid: WyJiZjYxOCIsICJkbWFlbmdpbmVAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
+ 5fe050520564dfefcd460bbf (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 21 Dec 2020 07:35:46
+ GMT
+Sender: mdalam=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9A31CC43464; Mon, 21 Dec 2020 07:35:45 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: mdalam)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 721FCC433CA;
+        Mon, 21 Dec 2020 07:35:44 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201218104137.59200-1-nixiaoming@huawei.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 21 Dec 2020 13:05:44 +0530
+From:   mdalam@codeaurora.org
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     vkoul@kernel.org, corbet@lwn.net, agross@kernel.org,
+        bjorn.andersson@linaro.org, dan.j.williams@intel.com,
+        dmaengine@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        sricharan@codeaurora.org
+Subject: Re: [PATCH] dmaengine: qcom: bam_dma: Add LOCK and UNLOCK flag bit
+ support
+In-Reply-To: <6c85436d-e064-367e-736b-951af82256c8@linaro.org>
+References: <1608215842-15381-1-git-send-email-mdalam@codeaurora.org>
+ <6c85436d-e064-367e-736b-951af82256c8@linaro.org>
+Message-ID: <9769c54acf54617a17346fea60ee38b6@codeaurora.org>
+X-Sender: mdalam@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri 18 Dec 02:41 PST 2020, Xiaoming Ni wrote:
-
-> drivers/dma/qcom/gpi.c:1419:3: warning: format '%lu' expects argument of
->  type 'long unsigned int', but argument 8 has type 'size_t {aka unsigned
->  int}' [-Wformat=]
-> drivers/dma/qcom/gpi.c:1427:31: warning: format '%lu' expects argument of
->  type 'long unsigned int', but argument 3 has type 'size_t {aka unsigned
->  int}' [-Wformat=]
-> drivers/dma/qcom/gpi.c:1447:3: warning: format '%llx' expects argument of
->  type 'long long unsigned int', but argument 4 has type 'dma_addr_t {aka
->  unsigned int}' [-Wformat=]
-> drivers/dma/qcom/gpi.c:1447:3: warning: format '%llx' expects argument of
->  type 'long long unsigned int', but argument 5 has type 'phys_addr_t {aka
->  unsigned int}' [-Wformat=]
+On 2020-12-19 09:05, Thara Gopinath wrote:
+> On 12/17/20 9:37 AM, Md Sadre Alam wrote:
+>> This change will add support for LOCK & UNLOCK flag bit support
+>> on CMD descriptor.
+>> 
+>> If DMA_PREP_LOCK flag passed in prep_slave_sg then requester of this
+>> transaction wanted to lock the DMA controller for this transaction so
+>> BAM driver should set LOCK bit for the HW descriptor.
+>> 
+>> If DMA_PREP_UNLOCK flag passed in prep_slave_sg then requester of this
+>> transaction wanted to unlock the DMA controller.so BAM driver should 
+>> set
+>> UNLOCK bit for the HW descriptor.
+> Hi,
+> 
+> This is a generic question. What is the point of LOCK/UNLOCK with
+> allocating LOCK groups to the individual dma channels? By default
+> doesn't all channels fall in the same group. This would mean that
+> a lock does not prevent the dma controller from not executing a
+> transaction on the other channels.
 > 
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+The Pipe Locking/Unlocking will be only on command-descriptor.
+Upon encountering a command descriptor with LOCK bit set, the BAM
+will lock all other pipes not related to the current pipe group, and 
+keep
+handling the current pipe only until it sees the UNLOCK set then it will
+release all locked pipes.
 
-> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
-> ---
->  drivers/dma/qcom/gpi.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+The actual locking is done on the new descriptor fetching for 
+publishing,
+i.e. locked pipe will not fetch new descriptors even if it got 
+event/events
+adding more descriptors for this pipe (locked pipe).
+
+The bam LOCKING mechanism is needed where different cores needs to share
+same hardware block which use bam for their transaction. So if both 
+cores
+wanted to access the hardware block in parallel via bam, then locking 
+mechanism
+is needed for bam pipes.
+
+> --
+> Warm Regards
+> Thara
 > 
-> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-> index d2334f535de2..556c070a514c 100644
-> --- a/drivers/dma/qcom/gpi.c
-> +++ b/drivers/dma/qcom/gpi.c
-> @@ -1416,7 +1416,7 @@ static int gpi_alloc_ring(struct gpi_ring *ring, u32 elements,
->  	len = 1 << bit;
->  	ring->alloc_size = (len + (len - 1));
->  	dev_dbg(gpii->gpi_dev->dev,
-> -		"#el:%u el_size:%u len:%u actual_len:%llu alloc_size:%lu\n",
-> +		"#el:%u el_size:%u len:%u actual_len:%llu alloc_size:%zu\n",
->  		  elements, el_size, (elements * el_size), len,
->  		  ring->alloc_size);
->  
-> @@ -1424,7 +1424,7 @@ static int gpi_alloc_ring(struct gpi_ring *ring, u32 elements,
->  					       ring->alloc_size,
->  					       &ring->dma_handle, GFP_KERNEL);
->  	if (!ring->pre_aligned) {
-> -		dev_err(gpii->gpi_dev->dev, "could not alloc size:%lu mem for ring\n",
-> +		dev_err(gpii->gpi_dev->dev, "could not alloc size:%zu mem for ring\n",
->  			ring->alloc_size);
->  		return -ENOMEM;
->  	}
-> @@ -1444,8 +1444,8 @@ static int gpi_alloc_ring(struct gpi_ring *ring, u32 elements,
->  	smp_wmb();
->  
->  	dev_dbg(gpii->gpi_dev->dev,
-> -		"phy_pre:0x%0llx phy_alig:0x%0llx len:%u el_size:%u elements:%u\n",
-> -		ring->dma_handle, ring->phys_addr, ring->len,
-> +		"phy_pre:%pad phy_alig:%pa len:%u el_size:%u elements:%u\n",
-> +		&ring->dma_handle, &ring->phys_addr, ring->len,
->  		ring->el_size, ring->elements);
->  
->  	return 0;
-> -- 
-> 2.27.0
-> 
+>> 
+>> Signed-off-by: Md Sadre Alam <mdalam@codeaurora.org>
+>> ---
+>>   Documentation/driver-api/dmaengine/provider.rst | 9 +++++++++
+>>   drivers/dma/qcom/bam_dma.c                      | 9 +++++++++
+>>   include/linux/dmaengine.h                       | 5 +++++
+>>   3 files changed, 23 insertions(+)
+>> 
+>> diff --git a/Documentation/driver-api/dmaengine/provider.rst 
+>> b/Documentation/driver-api/dmaengine/provider.rst
+>> index ddb0a81..d7516e2 100644
+>> --- a/Documentation/driver-api/dmaengine/provider.rst
+>> +++ b/Documentation/driver-api/dmaengine/provider.rst
+>> @@ -599,6 +599,15 @@ DMA_CTRL_REUSE
+>>     - This flag is only supported if the channel reports the 
+>> DMA_LOAD_EOT
+>>       capability.
+>>   +- DMA_PREP_LOCK
+>> +
+>> +  - If set , the client driver tells DMA controller I am locking you 
+>> for
+>> +    this transcation.
+>> +
+>> +- DMA_PREP_UNLOCK
+>> +
+>> +  - If set, the client driver will tells DMA controller I am 
+>> releasing the lock
+>> +
+>>   General Design Notes
+>>   ====================
+>>   diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+>> index 4eeb8bb..cdbe395 100644
+>> --- a/drivers/dma/qcom/bam_dma.c
+>> +++ b/drivers/dma/qcom/bam_dma.c
+>> @@ -58,6 +58,8 @@ struct bam_desc_hw {
+>>   #define DESC_FLAG_EOB BIT(13)
+>>   #define DESC_FLAG_NWD BIT(12)
+>>   #define DESC_FLAG_CMD BIT(11)
+>> +#define DESC_FLAG_LOCK BIT(10)
+>> +#define DESC_FLAG_UNLOCK BIT(9)
+>>     struct bam_async_desc {
+>>   	struct virt_dma_desc vd;
+>> @@ -644,6 +646,13 @@ static struct dma_async_tx_descriptor 
+>> *bam_prep_slave_sg(struct dma_chan *chan,
+>>     	/* fill in temporary descriptors */
+>>   	desc = async_desc->desc;
+>> +	if (flags & DMA_PREP_CMD) {
+>> +		if (flags & DMA_PREP_LOCK)
+>> +			desc->flags |= cpu_to_le16(DESC_FLAG_LOCK);
+>> +		if (flags & DMA_PREP_UNLOCK)
+>> +			desc->flags |= cpu_to_le16(DESC_FLAG_UNLOCK);
+>> +	}
+>> +
+>>   	for_each_sg(sgl, sg, sg_len, i) {
+>>   		unsigned int remainder = sg_dma_len(sg);
+>>   		unsigned int curr_offset = 0;
+>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+>> index dd357a7..79ccadb4 100644
+>> --- a/include/linux/dmaengine.h
+>> +++ b/include/linux/dmaengine.h
+>> @@ -190,6 +190,9 @@ struct dma_interleaved_template {
+>>    *  transaction is marked with DMA_PREP_REPEAT will cause the new 
+>> transaction
+>>    *  to never be processed and stay in the issued queue forever. The 
+>> flag is
+>>    *  ignored if the previous transaction is not a repeated 
+>> transaction.
+>> + * @DMA_PREP_LOCK: tell the driver that DMA HW engine going to be 
+>> locked for this
+>> + *  transaction , until not seen DMA_PREP_UNLOCK flag set.
+>> + * @DMA_PREP_UNLOCK: tell the driver to unlock the DMA HW engine.
+>>    */
+>>   enum dma_ctrl_flags {
+>>   	DMA_PREP_INTERRUPT = (1 << 0),
+>> @@ -202,6 +205,8 @@ enum dma_ctrl_flags {
+>>   	DMA_PREP_CMD = (1 << 7),
+>>   	DMA_PREP_REPEAT = (1 << 8),
+>>   	DMA_PREP_LOAD_EOT = (1 << 9),
+>> +	DMA_PREP_LOCK = (1 << 10),
+>> +	DMA_PREP_UNLOCK = (1 << 11),
+>>   };
+>>     /**
+>> 

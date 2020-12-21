@@ -2,45 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EFB9B2DFDF5
-	for <lists+dmaengine@lfdr.de>; Mon, 21 Dec 2020 17:22:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C45152DFDF8
+	for <lists+dmaengine@lfdr.de>; Mon, 21 Dec 2020 17:23:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725780AbgLUQWu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 21 Dec 2020 11:22:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49442 "EHLO mail.kernel.org"
+        id S1725841AbgLUQXh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 21 Dec 2020 11:23:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725777AbgLUQWu (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 21 Dec 2020 11:22:50 -0500
-Date:   Mon, 21 Dec 2020 21:52:04 +0530
+        id S1725777AbgLUQXh (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 21 Dec 2020 11:23:37 -0500
+Date:   Mon, 21 Dec 2020 21:52:52 +0530
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1608567729;
-        bh=c5e9kv2CWQ7bd+h1GL/uiMtw0E7B4lFHSg2MPCHNceI=;
+        s=k20201202; t=1608567777;
+        bh=FxafiOgAtDvnr793G7zzB+02/B2yMfXQsmB8jWeRr4o=;
         h=From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UVsah/RoAPbt38ekKKumayJX+d4O7brSnagL4TInafSpFBt/9Bkgvbur1S9CQU3yU
-         WCzzlnzF4dWSgK/nLcVFFvkPvANn20X9v5QNfZKGDFGH5gvyvuhOoBotQd3B8EJfG9
-         TLTyWUVh2Bri0WDlu+ysTVKcaFJNeCWJOaRkXtE0U2H7OvqvKjmy8p/CSA5BezDpQX
-         Jku4owEsBlAxrP8obE4WMrknmL7ONKwouZWb8zbmjV7lG+xvshNtP6gae3i4ehA2k8
-         BR/Mdk4bhbz30OKSXOJpwU77GQrQNuuLFCdoZnR66CEMta2GbmLHWvD4uPq7lDmLV/
-         P/vcfrZWRL1Ww==
+        b=XbIihV1P1tYyeoP5ARa54K+gR7vt4W3B0VWCt62Dlh6E4fsad7OOER84/VifX3mrv
+         3DtDKAIT5DcuYWsPkSGdrMtyMRgylt1DkntxmjhrcUOHm9C+A/q/5j/QhoKGrrmBFS
+         Rdxj+DsQev7pzclTibOBFxWbv38SUSXmZllblvX0DtJZcpANxXi3mg4mOfy6zriaOm
+         vcSTYugkYJSVgFnk51KUlHAAGo4SjILPqweo46d3C92WY6t8Ne7y85vANfwxTbP5x0
+         En8r+EIE5fozX0mob+9SB0qGpKGY8Bx+T+f2yQ+i1Ip1Tx97LNhhqgHBsAvXrNdui8
+         oqdo/oqCU4VPQ==
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dan.j.williams@intel.com, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, vigneshr@ti.com,
-        grygorii.strashko@ti.com
-Subject: Re: [PATCH] dmaengine: ti: k3-udma: Fix pktdma rchan TPL level setup
-Message-ID: <20201221162204.GG3323@vkoul-mobl>
-References: <20201216154833.20821-1-peter.ujfalusi@ti.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: dw-edma: Fix use after free in
+ dw_edma_alloc_chunk()
+Message-ID: <20201221162252.GH3323@vkoul-mobl>
+References: <X9dTBFrUPEvvW7qc@mwanda>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201216154833.20821-1-peter.ujfalusi@ti.com>
+In-Reply-To: <X9dTBFrUPEvvW7qc@mwanda>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 16-12-20, 17:48, Peter Ujfalusi wrote:
-> Instead of initializing the rchan_tpl the initial commit re-initialized
-> the tchan_tpl.
+On 14-12-20, 14:56, Dan Carpenter wrote:
+> If the dw_edma_alloc_burst() function fails then we free "chunk" but
+> it's still on the "desc->chunk->list" list so it will lead to a use
+> after free.  Also the "->chunks_alloc" count is incremented when it
+> shouldn't be.
+> 
+> In current kernels small allocations are guaranteed to succeed and
+> dw_edma_alloc_burst() can't fail so this will not actually affect
+> runtime.
 
 Applied, thanks
 

@@ -2,76 +2,67 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 705F62E0DBB
-	for <lists+dmaengine@lfdr.de>; Tue, 22 Dec 2020 18:14:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 411F12E1A80
+	for <lists+dmaengine@lfdr.de>; Wed, 23 Dec 2020 10:31:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgLVRNo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 22 Dec 2020 12:13:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39170 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727019AbgLVRNo (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 22 Dec 2020 12:13:44 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 55FD023130;
-        Tue, 22 Dec 2020 17:13:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1608657183;
-        bh=QMc+Cnpq+Ddufqm1c2v+CyjZvDCdSht11+jAolorCxc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CS8JHhYJ5YgSDZlA0NjddtfXZTgC1Z3fcs9vuoi16+oLbWh1G5PYb9vwKVtKP5GLr
-         lR1+78rQs7PignJx8koBMFyh8hotAVDad2YdUA7VBpKiojVDS19+wF/eFn2v+edEd1
-         LGqhA/5YmxSoCXmykV9Yc6JaQuZkIpCKexegWD9NNXu/AdFkB5QbrYSK2syTKs4/Hw
-         0oCTvLQQbSCuNzPkPxpwSg0I4HorrI8HV93jqjnBASNPVV0i/e4KRMwM3YnrVhDapW
-         cgDVQLzlfrq5tgSsx/4OXx/TWUiA9rAdZrJsJ+W9cBdPTIgF/tJH1S4EopLxCltqTN
-         aAq7zIHqO7iGw==
-Date:   Tue, 22 Dec 2020 17:12:47 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        dri-devel@lists.freedesktop.org, dmaengine@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Drop redundant maxItems/items
-Message-ID: <20201222171247.GB5269@sirena.org.uk>
-References: <20201222040645.1323611-1-robh@kernel.org>
+        id S1727876AbgLWJbg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 23 Dec 2020 04:31:36 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:48052 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727678AbgLWJbg (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 23 Dec 2020 04:31:36 -0500
+X-UUID: c36759556753491589d5ea0fefff35d2-20201223
+X-UUID: c36759556753491589d5ea0fefff35d2-20201223
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <eastl.lee@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1906518736; Wed, 23 Dec 2020 17:30:51 +0800
+Received: from mtkcas11.mediatek.inc (172.21.101.40) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 23 Dec 2020 17:30:48 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas11.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 23 Dec 2020 17:30:49 +0800
+From:   EastL Lee <EastL.Lee@mediatek.com>
+To:     Sean Wang <sean.wang@mediatek.com>
+CC:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <matthias.bgg@gmail.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>, <cc.hwang@mediatek.com>
+Subject: [PATCH v8] dmaengine: mediatek-cqdma: add dt-bindings and remove redundant queue
+Date:   Wed, 23 Dec 2020 17:30:43 +0800
+Message-ID: <1608715847-28956-1-git-send-email-EastL.Lee@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="uQr8t48UFsdbeI+V"
-Content-Disposition: inline
-In-Reply-To: <20201222040645.1323611-1-robh@kernel.org>
-X-Cookie: Truth can wait
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-MTK:  N
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+This patch set adds document the devicetree bindings for MediaTek Command-Queue DMA controller,
+and remove redundant queue structure.
 
---uQr8t48UFsdbeI+V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+hanges since v6:
+- fix dt binding format
 
-On Mon, Dec 21, 2020 at 09:06:45PM -0700, Rob Herring wrote:
-> 'maxItems' equal to the 'items' list length is redundant. 'maxItems' is
-> preferred for a single entry while greater than 1 should have an 'items'
-> list.
+hanges since v5:
+- fix full name
 
-Acked-by: Mark Brown <broonie@kernel.org>
+hanges since v4:
+- fix yaml & dma-mask code flow
 
---uQr8t48UFsdbeI+V
-Content-Type: application/pgp-signature; name="signature.asc"
+hanges since v3:
+- fix dt_binding_check errors
 
------BEGIN PGP SIGNATURE-----
+Changes since v2:
+- add devicetree bindings for MediaTek Command-Queue DMA controller
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl/iKQ4ACgkQJNaLcl1U
-h9BplAgAgMSrJkYiQbh1znz9wN7xnXMTpux0VVJprS9HHh2tnjwzlKS947zZ0q3u
-8Mt9Y+XyQf0uqpNcqskq47lPHRMP7Ijo8abvyVe09UYQ/abIojhriXFwRJyOnt3A
-U35kRF1wvK7ppmCtZy7uSgLuB3JcEuvJiYHN33BCvxBYYmpNl0fnt2/XHO0tm9q+
-8R7+asRLB41jBvgGzhDXg8Iw4XwNLvpVStuU89rxIJhon2jacFTcDyI51B45kCRh
-CoqhVphzpvpD0ySa4C7I0GAL6tXmBOt+NYpEChvE4OKgldYl9KiYMBsNdZmtmkuG
-c36cabybF2Yn8Y1UN/YJ3NTKvarpKg==
-=7Cxt
------END PGP SIGNATURE-----
+Changes since v1:
+- remove redundant queue structure
+- fix wrong description and tags in the earlier patch
+- add dma-channel-mask for DMA capability
+- fix compatible for common
 
---uQr8t48UFsdbeI+V--

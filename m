@@ -2,207 +2,150 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 012A22E6BA6
-	for <lists+dmaengine@lfdr.de>; Tue, 29 Dec 2020 00:12:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A20FF2E6DD8
+	for <lists+dmaengine@lfdr.de>; Tue, 29 Dec 2020 06:05:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730768AbgL1Wzy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 28 Dec 2020 17:55:54 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:41407 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729423AbgL1UbG (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 28 Dec 2020 15:31:06 -0500
-X-Originating-IP: 86.202.109.140
-Received: from localhost (lfbn-lyo-1-13-140.w86-202.abo.wanadoo.fr [86.202.109.140])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id B82C6E0005;
-        Mon, 28 Dec 2020 20:30:23 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        dmaengine@vger.kernel.org
-Subject: [PATCH] dmaengine: at_hdmac: remove platform data header
-Date:   Mon, 28 Dec 2020 21:30:21 +0100
-Message-Id: <20201228203022.2674133-1-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.29.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1725832AbgL2FEu (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 29 Dec 2020 00:04:50 -0500
+Received: from mga03.intel.com ([134.134.136.65]:37338 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725767AbgL2FEu (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 29 Dec 2020 00:04:50 -0500
+IronPort-SDR: MOeomMJWICtRF4leNCZRK1cbeu0XznJq2RW7geVOjMHOZ+X2H3LFJ9Jt44Cmcq18dVu/+nUiMk
+ PnaphOSivk6A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9848"; a="176554682"
+X-IronPort-AV: E=Sophos;i="5.78,457,1599548400"; 
+   d="scan'208";a="176554682"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2020 21:04:09 -0800
+IronPort-SDR: o0jlk6iAQFAxS2D0gZJB0+KjVfAbV7c96SroTyH4DGqdjhE+NZ72k8jV7Kx41f6LKMwFlzq28s
+ HRPRF1RhUKIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,457,1599548400"; 
+   d="scan'208";a="347249673"
+Received: from jsia-hp-z620-workstation.png.intel.com ([10.221.118.135])
+  by fmsmga008.fm.intel.com with ESMTP; 28 Dec 2020 21:04:07 -0800
+From:   Sia Jee Heng <jee.heng.sia@intel.com>
+To:     vkoul@kernel.org, Eugeniy.Paltsev@synopsys.com, robh+dt@kernel.org
+Cc:     andriy.shevchenko@linux.intel.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v8 00/16] dmaengine: dw-axi-dmac: support Intel KeemBay AxiDMA
+Date:   Tue, 29 Dec 2020 12:46:57 +0800
+Message-Id: <20201229044713.28464-1-jee.heng.sia@intel.com>
+X-Mailer: git-send-email 2.18.0
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-linux/platform_data/dma-atmel.h is only used by the at_hdmac driver. Move
-the CFG bits definitions back in at_hdmac_regs.h and the remaining
-definitions in the driver.
+The below patch series are to support AxiDMA running on Intel KeemBay SoC.
+The base driver is dw-axi-dmac. This driver only support DMA memory copy
+transfers. Code refactoring is needed so that additional features can be
+supported.
+The features added in this patch series are:
+- Replacing Linked List with virtual descriptor management.
+- Remove unrelated hw desc stuff from dma memory pool.
+- Manage dma memory pool alloc/destroy based on channel activity.
+- Support dmaengine device_sync() callback.
+- Support dmaengine device_config().
+- Support dmaengine device_prep_slave_sg().
+- Support dmaengine device_prep_dma_cyclic().
+- Support of_dma_controller_register().
+- Support burst residue granularity.
+- Support Intel KeemBay AxiDMA registers.
+- Support Intel KeemBay AxiDMA device handshake.
+- Support Intel KeemBay AxiDMA BYTE and HALFWORD device operation.
+- Add constraint to Max segment size.
+- Virtually split the linked-list.
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- MAINTAINERS                             |  1 -
- drivers/dma/at_hdmac.c                  | 19 ++++++++
- drivers/dma/at_hdmac_regs.h             | 28 ++++++++++--
- include/linux/platform_data/dma-atmel.h | 61 -------------------------
- 4 files changed, 44 insertions(+), 65 deletions(-)
- delete mode 100644 include/linux/platform_data/dma-atmel.h
+This patch series are tested on Intel KeemBay platform.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 546aa66428c9..0d62310a31f8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11604,7 +11604,6 @@ F:	drivers/dma/at_hdmac.c
- F:	drivers/dma/at_hdmac_regs.h
- F:	drivers/dma/at_xdmac.c
- F:	include/dt-bindings/dma/at91.h
--F:	include/linux/platform_data/dma-atmel.h
- 
- MICROCHIP AT91 SERIAL DRIVER
- M:	Richard Genoud <richard.genoud@gmail.com>
-diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
-index 7eaee5b705b1..30ae36124b1d 100644
---- a/drivers/dma/at_hdmac.c
-+++ b/drivers/dma/at_hdmac.c
-@@ -54,6 +54,25 @@ module_param(init_nr_desc_per_channel, uint, 0644);
- MODULE_PARM_DESC(init_nr_desc_per_channel,
- 		 "initial descriptors per channel (default: 64)");
- 
-+/**
-+ * struct at_dma_platform_data - Controller configuration parameters
-+ * @nr_channels: Number of channels supported by hardware (max 8)
-+ * @cap_mask: dma_capability flags supported by the platform
-+ */
-+struct at_dma_platform_data {
-+	unsigned int	nr_channels;
-+	dma_cap_mask_t  cap_mask;
-+};
-+
-+/**
-+ * struct at_dma_slave - Controller-specific information about a slave
-+ * @dma_dev: required DMA master device
-+ * @cfg: Platform-specific initializer for the CFG register
-+ */
-+struct at_dma_slave {
-+	struct device		*dma_dev;
-+	u32			cfg;
-+};
- 
- /* prototypes */
- static dma_cookie_t atc_tx_submit(struct dma_async_tx_descriptor *tx);
-diff --git a/drivers/dma/at_hdmac_regs.h b/drivers/dma/at_hdmac_regs.h
-index 80fc2fe8c77e..4d1ebc040031 100644
---- a/drivers/dma/at_hdmac_regs.h
-+++ b/drivers/dma/at_hdmac_regs.h
-@@ -7,8 +7,6 @@
- #ifndef AT_HDMAC_REGS_H
- #define	AT_HDMAC_REGS_H
- 
--#include <linux/platform_data/dma-atmel.h>
--
- #define	AT_DMA_MAX_NR_CHANNELS	8
- 
- 
-@@ -148,7 +146,31 @@
- #define	ATC_AUTO		(0x1 << 31)	/* Auto multiple buffer tx enable */
- 
- /* Bitfields in CFG */
--/* are in at_hdmac.h */
-+#define ATC_PER_MSB(h)	((0x30U & (h)) >> 4)	/* Extract most significant bits of a handshaking identifier */
-+
-+#define	ATC_SRC_PER(h)		(0xFU & (h))	/* Channel src rq associated with periph handshaking ifc h */
-+#define	ATC_DST_PER(h)		((0xFU & (h)) <<  4)	/* Channel dst rq associated with periph handshaking ifc h */
-+#define	ATC_SRC_REP		(0x1 <<  8)	/* Source Replay Mod */
-+#define	ATC_SRC_H2SEL		(0x1 <<  9)	/* Source Handshaking Mod */
-+#define		ATC_SRC_H2SEL_SW	(0x0 <<  9)
-+#define		ATC_SRC_H2SEL_HW	(0x1 <<  9)
-+#define	ATC_SRC_PER_MSB(h)	(ATC_PER_MSB(h) << 10)	/* Channel src rq (most significant bits) */
-+#define	ATC_DST_REP		(0x1 << 12)	/* Destination Replay Mod */
-+#define	ATC_DST_H2SEL		(0x1 << 13)	/* Destination Handshaking Mod */
-+#define		ATC_DST_H2SEL_SW	(0x0 << 13)
-+#define		ATC_DST_H2SEL_HW	(0x1 << 13)
-+#define	ATC_DST_PER_MSB(h)	(ATC_PER_MSB(h) << 14)	/* Channel dst rq (most significant bits) */
-+#define	ATC_SOD			(0x1 << 16)	/* Stop On Done */
-+#define	ATC_LOCK_IF		(0x1 << 20)	/* Interface Lock */
-+#define	ATC_LOCK_B		(0x1 << 21)	/* AHB Bus Lock */
-+#define	ATC_LOCK_IF_L		(0x1 << 22)	/* Master Interface Arbiter Lock */
-+#define		ATC_LOCK_IF_L_CHUNK	(0x0 << 22)
-+#define		ATC_LOCK_IF_L_BUFFER	(0x1 << 22)
-+#define	ATC_AHB_PROT_MASK	(0x7 << 24)	/* AHB Protection */
-+#define	ATC_FIFOCFG_MASK	(0x3 << 28)	/* FIFO Request Configuration */
-+#define		ATC_FIFOCFG_LARGESTBURST	(0x0 << 28)
-+#define		ATC_FIFOCFG_HALFFIFO		(0x1 << 28)
-+#define		ATC_FIFOCFG_ENOUGHSPACE		(0x2 << 28)
- 
- /* Bitfields in SPIP */
- #define	ATC_SPIP_HOLE(x)	(0xFFFFU & (x))
-diff --git a/include/linux/platform_data/dma-atmel.h b/include/linux/platform_data/dma-atmel.h
-deleted file mode 100644
-index 069637e6004f..000000000000
---- a/include/linux/platform_data/dma-atmel.h
-+++ /dev/null
-@@ -1,61 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- * Header file for the Atmel AHB DMA Controller driver
-- *
-- * Copyright (C) 2008 Atmel Corporation
-- */
--#ifndef AT_HDMAC_H
--#define AT_HDMAC_H
--
--#include <linux/dmaengine.h>
--
--/**
-- * struct at_dma_platform_data - Controller configuration parameters
-- * @nr_channels: Number of channels supported by hardware (max 8)
-- * @cap_mask: dma_capability flags supported by the platform
-- */
--struct at_dma_platform_data {
--	unsigned int	nr_channels;
--	dma_cap_mask_t  cap_mask;
--};
--
--/**
-- * struct at_dma_slave - Controller-specific information about a slave
-- * @dma_dev: required DMA master device
-- * @cfg: Platform-specific initializer for the CFG register
-- */
--struct at_dma_slave {
--	struct device		*dma_dev;
--	u32			cfg;
--};
--
--
--/* Platform-configurable bits in CFG */
--#define ATC_PER_MSB(h)	((0x30U & (h)) >> 4)	/* Extract most significant bits of a handshaking identifier */
--
--#define	ATC_SRC_PER(h)		(0xFU & (h))	/* Channel src rq associated with periph handshaking ifc h */
--#define	ATC_DST_PER(h)		((0xFU & (h)) <<  4)	/* Channel dst rq associated with periph handshaking ifc h */
--#define	ATC_SRC_REP		(0x1 <<  8)	/* Source Replay Mod */
--#define	ATC_SRC_H2SEL		(0x1 <<  9)	/* Source Handshaking Mod */
--#define		ATC_SRC_H2SEL_SW	(0x0 <<  9)
--#define		ATC_SRC_H2SEL_HW	(0x1 <<  9)
--#define	ATC_SRC_PER_MSB(h)	(ATC_PER_MSB(h) << 10)	/* Channel src rq (most significant bits) */
--#define	ATC_DST_REP		(0x1 << 12)	/* Destination Replay Mod */
--#define	ATC_DST_H2SEL		(0x1 << 13)	/* Destination Handshaking Mod */
--#define		ATC_DST_H2SEL_SW	(0x0 << 13)
--#define		ATC_DST_H2SEL_HW	(0x1 << 13)
--#define	ATC_DST_PER_MSB(h)	(ATC_PER_MSB(h) << 14)	/* Channel dst rq (most significant bits) */
--#define	ATC_SOD			(0x1 << 16)	/* Stop On Done */
--#define	ATC_LOCK_IF		(0x1 << 20)	/* Interface Lock */
--#define	ATC_LOCK_B		(0x1 << 21)	/* AHB Bus Lock */
--#define	ATC_LOCK_IF_L		(0x1 << 22)	/* Master Interface Arbiter Lock */
--#define		ATC_LOCK_IF_L_CHUNK	(0x0 << 22)
--#define		ATC_LOCK_IF_L_BUFFER	(0x1 << 22)
--#define	ATC_AHB_PROT_MASK	(0x7 << 24)	/* AHB Protection */
--#define	ATC_FIFOCFG_MASK	(0x3 << 28)	/* FIFO Request Configuration */
--#define		ATC_FIFOCFG_LARGESTBURST	(0x0 << 28)
--#define		ATC_FIFOCFG_HALFFIFO		(0x1 << 28)
--#define		ATC_FIFOCFG_ENOUGHSPACE		(0x2 << 28)
--
--
--#endif /* AT_HDMAC_H */
+v8:
+- Rebased to kernel v5.11-rc1.
+- Added reviewed-by tag from Rob.
+
+v7:
+- Added 'allOf' and '$ref:dma-controller.yaml#' in DT binding.
+- Removed the dma-channels common description in DT binding.
+- Removed the default fields in DT binding.
+
+v6:
+- Removed 'allOf' cases in DT binding.
+- Added '>' at the end of the email address.
+- Removed additional '|' at the start of description.
+- Fixed space indent.
+- Added proper constraint in DT binding.
+- Removed second example in DT binding.
+
+v5:
+- Added comment to the Apb registers used by Intel KeemBay Soc.
+- Renamed "hs_num" to "handshake_num".
+- Conditional check for the compatible property and return error
+  instead of printing warning.
+- Added patch 16th to virtually split the linked-list as per
+  request from ALSA team.
+
+v4:
+- Fixed bot found errors running make_dt_binding_check.
+- Added minItems: 1 to the YAML schemas DT binding.
+- Updated "reg" field to the YAML schemas DT binding.
+
+v3:
+- Added additionalProperties: false to the YAML schemas DT binding.
+- Reordered patch sequence for patch 10th, 11th and 12th so that
+  DT binding come first, follow by adding Intel KeemBay SoC registers
+  and update .compatible field.
+- Checked txstate NULL condition.
+- Created helper function dw_axi_dma_set_hw_desc() to handle common code.
+
+v2:
+- Rebased to v5.10-rc1 kernel.
+- Added support for dmaengine device_config().
+- Added support for dmaengine device_prep_slave_sg().
+- Added support for dmaengine device_prep_dma_cyclic().
+- Added support for of_dma_controller_register().
+- Added support for burst residue granularity.
+- Added support for Intel KeemBay AxiDMA registers.
+- Added support for Intel KeemBay AxiDMA device handshake.
+- Added support for Intel KeemBay AxiDMA BYTE and HALFWORD device operation.
+- Added constraint to Max segment size.
+
+v1:
+- Initial version. Patch on top of dw-axi-dma driver. This version improve
+  the descriptor management by replacing Linked List Item (LLI) with
+  virtual descriptor management, only allocate hardware LLI memories from
+  DMA memory pool, manage DMA memory pool alloc/destroy based on channel
+  activity and to support device_sync callback.
+
+Sia Jee Heng (16):
+  dt-bindings: dma: Add YAML schemas for dw-axi-dmac
+  dmaengine: dw-axi-dmac: simplify descriptor management
+  dmaengine: dw-axi-dmac: move dma_pool_create() to
+    alloc_chan_resources()
+  dmaengine: dw-axi-dmac: Add device_synchronize() callback
+  dmaengine: dw-axi-dmac: Add device_config operation
+  dmaengine: dw-axi-dmac: Support device_prep_slave_sg
+  dmaegine: dw-axi-dmac: Support device_prep_dma_cyclic()
+  dmaengine: dw-axi-dmac: Support of_dma_controller_register()
+  dmaengine: dw-axi-dmac: Support burst residue granularity
+  dt-binding: dma: dw-axi-dmac: Add support for Intel KeemBay AxiDMA
+  dmaengine: dw-axi-dmac: Add Intel KeemBay DMA register fields
+  dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA support
+  dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA handshake
+  dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA BYTE and HALFWORD
+    registers
+  dmaengine: dw-axi-dmac: Set constraint to the Max segment size
+  dmaengine: dw-axi-dmac: Virtually split the linked-list
+
+ .../bindings/dma/snps,dw-axi-dmac.txt         |  39 -
+ .../bindings/dma/snps,dw-axi-dmac.yaml        | 126 ++++
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 710 +++++++++++++++---
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  34 +-
+ 4 files changed, 775 insertions(+), 134 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
+
+
+base-commit: dea8dcf2a9fa8cc540136a6cd885c3beece16ec3
 -- 
-2.29.2
+2.18.0
 

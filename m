@@ -2,289 +2,132 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 30FCE2E6E08
-	for <lists+dmaengine@lfdr.de>; Tue, 29 Dec 2020 06:10:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 114462E7424
+	for <lists+dmaengine@lfdr.de>; Tue, 29 Dec 2020 22:18:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgL2FGL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 29 Dec 2020 00:06:11 -0500
-Received: from mga03.intel.com ([134.134.136.65]:37340 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726060AbgL2FGL (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 29 Dec 2020 00:06:11 -0500
-IronPort-SDR: JjP6iwtx0qobY7Ona5gD4ZJ/sIRe9q5Ajf9W/fYv+WkYSVO/j+wjkezI5P+3kTwLu0qsjLY4hu
- 7Qr0Si6IbZyQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9848"; a="176554735"
-X-IronPort-AV: E=Sophos;i="5.78,457,1599548400"; 
-   d="scan'208";a="176554735"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2020 21:04:56 -0800
-IronPort-SDR: WiAUN+T2/lQ2wawnj/F4HtfDZd5ZMgaD4WSpeBCfPvnmmU78ifYHl5cQRzRL30t4naHlofNzxZ
- SDYI4z0wu51Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,457,1599548400"; 
-   d="scan'208";a="347249858"
-Received: from jsia-hp-z620-workstation.png.intel.com ([10.221.118.135])
-  by fmsmga008.fm.intel.com with ESMTP; 28 Dec 2020 21:04:54 -0800
-From:   Sia Jee Heng <jee.heng.sia@intel.com>
-To:     vkoul@kernel.org, Eugeniy.Paltsev@synopsys.com, robh+dt@kernel.org
-Cc:     andriy.shevchenko@linux.intel.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v8 16/16] dmaengine: dw-axi-dmac: Virtually split the linked-list
-Date:   Tue, 29 Dec 2020 12:47:13 +0800
-Message-Id: <20201229044713.28464-17-jee.heng.sia@intel.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20201229044713.28464-1-jee.heng.sia@intel.com>
-References: <20201229044713.28464-1-jee.heng.sia@intel.com>
+        id S1726302AbgL2VSN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 29 Dec 2020 16:18:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbgL2VSM (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 29 Dec 2020 16:18:12 -0500
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 498CEC061574;
+        Tue, 29 Dec 2020 13:17:32 -0800 (PST)
+Received: by mail-ed1-x52f.google.com with SMTP id b2so13761513edm.3;
+        Tue, 29 Dec 2020 13:17:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FZ/H9WSOhHVwLs+QGJ7fpSAvZcye4tGBUW7rT83ZTqs=;
+        b=sAEohDXxCNdSD5xC6VTxLT/TaeDso+7HGrFm10sPmuXrBrtpqB8NCseIrdcgUtHM+l
+         SlfmHpW31fxTG4qdN+h1KQGsT1CiqY7zK96LgWVMVI0u4kb89jXqnoNX0dblI7i3bkBp
+         /KMsL6mIyDWUfTALgHftqkJ8EngKKUgFOenfDD8VQSd8dLYw7kiypJHwHWoz5gBgO27f
+         IWp2GhK2b8RwhiEse0Ot1r3XCMbBV5RyPs89at3RgmxHSn6ThjFNNkztj+CibMEiCg7h
+         ROoFVyM724u37xcOV+a+smAffQcM46AyF/YkFibmpqkT9GTwWcOkTXcZhDmWjMUp2NBB
+         30sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FZ/H9WSOhHVwLs+QGJ7fpSAvZcye4tGBUW7rT83ZTqs=;
+        b=eYC4icw9ZS1OlfBzrFUp8BoJvxS4Mp7UhSFnA+5cGMCVlgsabfUMsMW4mf4pc6VKFl
+         H5iR/itALErfQeHr5XuhG5wXkLnmEBmwavArkA2H9wU/vWRlbMjORNqgS641eJGa7t+o
+         tEtStmSVe+0CNHr/L+Zcgxta7iULFCER3RMmCTHOfQIhIAzVMvIhJYNormht/Y6uQGFE
+         55flqvQtwLzV2ahxA30uOr3lEeZ09jdA6+eHFdF8OZZ7EqNmHHPzHHtM9d8aLlc602Go
+         OCO0KP2q83tmjyOSg2mqK0srwb0CUW3zIwhIn58Te+flhY9jrjEipUDJxX90H57mXgf5
+         gTjg==
+X-Gm-Message-State: AOAM5330i8L99N74lk8aRfog8bshg2gjLfHkLdRZY7Ah1kzkNI578jnD
+        xosUBMDXvA6JDEtnid9vtpk=
+X-Google-Smtp-Source: ABdhPJzKxhTpgS/AV3nUiTk7WK0f95zDG2XoswIhZbVPontZj9HQK6yA6qageu0/vszLTMrGHH15ow==
+X-Received: by 2002:aa7:ca03:: with SMTP id y3mr48618048eds.87.1609276651068;
+        Tue, 29 Dec 2020 13:17:31 -0800 (PST)
+Received: from localhost.localdomain ([188.24.159.61])
+        by smtp.gmail.com with ESMTPSA id u9sm37354553edd.54.2020.12.29.13.17.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Dec 2020 13:17:30 -0800 (PST)
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     Wolfram Sang <wsa@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Peter Korsgaard <peter@korsgaard.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+Subject: [PATCH v3 00/13] Add CMU/RMU/DMA/MMC/I2C support for Actions Semi
+Date:   Tue, 29 Dec 2020 23:17:15 +0200
+Message-Id: <cover.1609263738.git.cristian.ciocaltea@gmail.com>
+X-Mailer: git-send-email 2.30.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-AxiDMA driver exposed the dma_set_max_seg_size() to the DMAENGINE.
-It shall helps the DMA clients to create size-optimized linked-list
-for the controller.
+Hi,
 
-However, there are certain situations where DMA client might not be
-abled to benefit from the dma_get_max_seg_size() if the segment size
-can't meet the nature of the DMA client's operation.
+This patchset brings a series of improvements for the Actions Semi S500
+SoCs family, by adding support for Clock & Reset Management Units, DMA,
+MMC, I2C & SIRQ controllers.
 
-In the case of ALSA operation, ALSA application and driver expecting
-to run in a period of larger than 10ms regardless of the bit depth.
-With this large period, there is a strong request to split the linked-list
-in the AxiDMA driver.
+Please note the patches consist mostly of DTS and bindings/compatibles
+changes, since all the work they depend on has been already merged,
+i.e. clock fixes/additions, pinctrl driver, sirq driver.
 
-Signed-off-by: Sia Jee Heng <jee.heng.sia@intel.com>
----
- .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 111 ++++++++++++++----
- drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |   1 +
- 2 files changed, 92 insertions(+), 20 deletions(-)
+For the moment, I have only enabled the features I could test on
+RoseapplePi SBC.
 
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index 58845b058d9d..c17b96245f13 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -576,6 +576,11 @@ static int dw_axi_dma_set_hw_desc(struct axi_dma_chan *chan,
- 	if (mem_width > DWAXIDMAC_TRANS_WIDTH_32)
- 		mem_width = DWAXIDMAC_TRANS_WIDTH_32;
- 
-+	if (!IS_ALIGNED(mem_addr, 4)) {
-+		dev_err(chan->chip->dev, "invalid buffer alignment\n");
-+		return -EINVAL;
-+	}
-+
- 	switch (chan->direction) {
- 	case DMA_MEM_TO_DEV:
- 		reg_width = __ffs(chan->config.dst_addr_width);
-@@ -637,6 +642,35 @@ static int dw_axi_dma_set_hw_desc(struct axi_dma_chan *chan,
- 	return 0;
- }
- 
-+static size_t calculate_block_len(struct axi_dma_chan *chan,
-+				  dma_addr_t dma_addr, size_t buf_len,
-+				  enum dma_transfer_direction direction)
-+{
-+	u32 data_width, reg_width, mem_width;
-+	size_t axi_block_ts, block_len;
-+
-+	axi_block_ts = chan->chip->dw->hdata->block_size[chan->id];
-+
-+	switch (direction) {
-+	case DMA_MEM_TO_DEV:
-+		data_width = BIT(chan->chip->dw->hdata->m_data_width);
-+		mem_width = __ffs(data_width | dma_addr | buf_len);
-+		if (mem_width > DWAXIDMAC_TRANS_WIDTH_32)
-+			mem_width = DWAXIDMAC_TRANS_WIDTH_32;
-+
-+		block_len = axi_block_ts << mem_width;
-+		break;
-+	case DMA_DEV_TO_MEM:
-+		reg_width = __ffs(chan->config.src_addr_width);
-+		block_len = axi_block_ts << reg_width;
-+		break;
-+	default:
-+		block_len = 0;
-+	}
-+
-+	return block_len;
-+}
-+
- static struct dma_async_tx_descriptor *
- dw_axi_dma_chan_prep_cyclic(struct dma_chan *dchan, dma_addr_t dma_addr,
- 			    size_t buf_len, size_t period_len,
-@@ -647,13 +681,27 @@ dw_axi_dma_chan_prep_cyclic(struct dma_chan *dchan, dma_addr_t dma_addr,
- 	struct axi_dma_hw_desc *hw_desc = NULL;
- 	struct axi_dma_desc *desc = NULL;
- 	dma_addr_t src_addr = dma_addr;
--	u32 num_periods = buf_len / period_len;
-+	u32 num_periods, num_segments;
-+	size_t axi_block_len;
-+	u32 total_segments;
-+	u32 segment_len;
- 	unsigned int i;
- 	int status;
- 	u64 llp = 0;
- 	u8 lms = 0; /* Select AXI0 master for LLI fetching */
- 
--	desc = axi_desc_alloc(num_periods);
-+	num_periods = buf_len / period_len;
-+
-+	axi_block_len = calculate_block_len(chan, dma_addr, buf_len, direction);
-+	if (axi_block_len == 0)
-+		return NULL;
-+
-+	num_segments = DIV_ROUND_UP(period_len, axi_block_len);
-+	segment_len = DIV_ROUND_UP(period_len, num_segments);
-+
-+	total_segments = num_periods * num_segments;
-+
-+	desc = axi_desc_alloc(total_segments);
- 	if (unlikely(!desc))
- 		goto err_desc_get;
- 
-@@ -661,12 +709,13 @@ dw_axi_dma_chan_prep_cyclic(struct dma_chan *dchan, dma_addr_t dma_addr,
- 	desc->chan = chan;
- 	chan->cyclic = true;
- 	desc->length = 0;
-+	desc->period_len = period_len;
- 
--	for (i = 0; i < num_periods; i++) {
-+	for (i = 0; i < total_segments; i++) {
- 		hw_desc = &desc->hw_desc[i];
- 
- 		status = dw_axi_dma_set_hw_desc(chan, hw_desc, src_addr,
--						period_len);
-+						segment_len);
- 		if (status < 0)
- 			goto err_desc_get;
- 
-@@ -676,17 +725,17 @@ dw_axi_dma_chan_prep_cyclic(struct dma_chan *dchan, dma_addr_t dma_addr,
- 		 */
- 		set_desc_last(hw_desc);
- 
--		src_addr += period_len;
-+		src_addr += segment_len;
- 	}
- 
- 	llp = desc->hw_desc[0].llp;
- 
- 	/* Managed transfer list */
- 	do {
--		hw_desc = &desc->hw_desc[--num_periods];
-+		hw_desc = &desc->hw_desc[--total_segments];
- 		write_desc_llp(hw_desc, llp | lms);
- 		llp = hw_desc->llp;
--	} while (num_periods);
-+	} while (total_segments);
- 
- 	if (dw_axi_dma_set_hw_channel(chan->chip, chan->hw_handshake_num, true))
- 		goto err_desc_get;
-@@ -709,9 +758,13 @@ dw_axi_dma_chan_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
- 	struct axi_dma_chan *chan = dchan_to_axi_dma_chan(dchan);
- 	struct axi_dma_hw_desc *hw_desc = NULL;
- 	struct axi_dma_desc *desc = NULL;
-+	u32 num_segments, segment_len;
-+	unsigned int loop = 0;
- 	struct scatterlist *sg;
-+	size_t axi_block_len;
-+	u32 len, num_sgs = 0;
- 	unsigned int i;
--	u32 mem, len;
-+	dma_addr_t mem;
- 	int status;
- 	u64 llp = 0;
- 	u8 lms = 0; /* Select AXI0 master for LLI fetching */
-@@ -719,35 +772,51 @@ dw_axi_dma_chan_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
- 	if (unlikely(!is_slave_direction(direction) || !sg_len))
- 		return NULL;
- 
--	chan->direction = direction;
-+	mem = sg_dma_address(sgl);
-+	len = sg_dma_len(sgl);
-+
-+	axi_block_len = calculate_block_len(chan, mem, len, direction);
-+	if (axi_block_len == 0)
-+		return NULL;
- 
--	desc = axi_desc_alloc(sg_len);
-+	for_each_sg(sgl, sg, sg_len, i)
-+		num_sgs += DIV_ROUND_UP(sg_dma_len(sg), axi_block_len);
-+
-+	desc = axi_desc_alloc(num_sgs);
- 	if (unlikely(!desc))
- 		goto err_desc_get;
- 
- 	desc->chan = chan;
- 	desc->length = 0;
-+	chan->direction = direction;
- 
- 	for_each_sg(sgl, sg, sg_len, i) {
- 		mem = sg_dma_address(sg);
- 		len = sg_dma_len(sg);
--		hw_desc = &desc->hw_desc[i];
--
--		status = dw_axi_dma_set_hw_desc(chan, hw_desc, mem, len);
--		if (status < 0)
--			goto err_desc_get;
--		desc->length += hw_desc->len;
-+		num_segments = DIV_ROUND_UP(sg_dma_len(sg), axi_block_len);
-+		segment_len = DIV_ROUND_UP(sg_dma_len(sg), num_segments);
-+
-+		do {
-+			hw_desc = &desc->hw_desc[loop++];
-+			status = dw_axi_dma_set_hw_desc(chan, hw_desc, mem, segment_len);
-+			if (status < 0)
-+				goto err_desc_get;
-+
-+			desc->length += hw_desc->len;
-+			len -= segment_len;
-+			mem += segment_len;
-+		} while (len >= segment_len);
- 	}
- 
- 	/* Set end-of-link to the last link descriptor of list */
--	set_desc_last(&desc->hw_desc[sg_len - 1]);
-+	set_desc_last(&desc->hw_desc[num_sgs - 1]);
- 
- 	/* Managed transfer list */
- 	do {
--		hw_desc = &desc->hw_desc[--sg_len];
-+		hw_desc = &desc->hw_desc[--num_sgs];
- 		write_desc_llp(hw_desc, llp | lms);
- 		llp = hw_desc->llp;
--	} while (sg_len);
-+	} while (num_sgs);
- 
- 	if (dw_axi_dma_set_hw_channel(chan->chip, chan->hw_handshake_num, true))
- 		goto err_desc_get;
-@@ -950,7 +1019,6 @@ static void axi_chan_block_xfer_complete(struct axi_dma_chan *chan)
- 	vd = vchan_next_desc(&chan->vc);
- 
- 	if (chan->cyclic) {
--		vchan_cyclic_callback(vd);
- 		desc = vd_to_axi_desc(vd);
- 		if (desc) {
- 			llp = lo_hi_readq(chan->chan_regs + CH_LLP);
-@@ -960,6 +1028,9 @@ static void axi_chan_block_xfer_complete(struct axi_dma_chan *chan)
- 					axi_chan_irq_clear(chan, hw_desc->lli->status_lo);
- 					hw_desc->lli->ctl_hi |= CH_CTL_H_LLI_VALID;
- 					desc->completed_blocks = i;
-+
-+					if (((hw_desc->len * (i + 1)) % desc->period_len) == 0)
-+						vchan_cyclic_callback(vd);
- 					break;
- 				}
- 			}
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-index 1e937ea2a96d..b69897887c76 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-@@ -100,6 +100,7 @@ struct axi_dma_desc {
- 	struct axi_dma_chan		*chan;
- 	u32				completed_blocks;
- 	u32				length;
-+	u32				period_len;
- };
- 
- static inline struct device *dchan2dev(struct dma_chan *dchan)
+Thanks,
+Cristi
+
+Changes in v3:
+- Squashed 'arm: dts: owl-s500-roseapplepi: Use UART clock from CMU' with
+  'arm: dts: owl-s500: Set CMU clocks for UARTs', according to Mani's review
+- Rebased series on v5.11-rc1 and dropped the already merged patches:
+ * dt-bindings: mmc: owl: Add compatible string for Actions Semi S500 SoC
+ * dt-bindings: i2c: owl: Convert Actions Semi Owl binding to a schema
+ * MAINTAINERS: Update entry for Actions Semi Owl I2C binding
+ * i2c: owl: Add compatible for the Actions Semi S500 I2C controller
+
+Changes in v2:
+- Added new bindings/compatibles for S500 DMA, MMC & I2C controllers
+- Added support for the SIRQ controller
+- Added new entries in MAINTAINERS
+- Updated naming of some patches in v1
+
+Cristian Ciocaltea (13):
+  arm: dts: owl-s500: Add Clock Management Unit
+  arm: dts: owl-s500: Set CMU clocks for UARTs
+  arm: dts: owl-s500: Add Reset controller
+  dt-bindings: dma: owl: Add compatible string for Actions Semi S500 SoC
+  dmaengine: owl: Add compatible for the Actions Semi S500 DMA
+    controller
+  arm: dts: owl-s500: Add DMA controller
+  arm: dts: owl-s500: Add pinctrl & GPIO support
+  arm: dts: owl-s500: Add MMC support
+  arm: dts: owl-s500: Add I2C support
+  arm: dts: owl-s500: Add SIRQ controller
+  arm: dts: owl-s500-roseapplepi: Add uSD support
+  arm: dts: owl-s500-roseapplepi: Add I2C pinctrl configuration
+  MAINTAINERS: Add linux-actions ML for Actions Semi Arch
+
+ .../devicetree/bindings/dma/owl-dma.yaml      |   7 +-
+ MAINTAINERS                                   |   1 +
+ arch/arm/boot/dts/owl-s500-cubieboard6.dts    |   7 -
+ .../arm/boot/dts/owl-s500-guitar-bb-rev-b.dts |   7 -
+ .../arm/boot/dts/owl-s500-labrador-base-m.dts |   7 -
+ arch/arm/boot/dts/owl-s500-roseapplepi.dts    |  97 +++++++++++-
+ arch/arm/boot/dts/owl-s500-sparky.dts         |   7 -
+ arch/arm/boot/dts/owl-s500.dtsi               | 140 ++++++++++++++++++
+ drivers/dma/owl-dma.c                         |   3 +-
+ 9 files changed, 239 insertions(+), 37 deletions(-)
+
 -- 
-2.18.0
+2.30.0
 

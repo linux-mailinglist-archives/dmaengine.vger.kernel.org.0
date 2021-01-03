@@ -2,175 +2,79 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AFE002E815D
-	for <lists+dmaengine@lfdr.de>; Thu, 31 Dec 2020 18:13:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29B602E8C6A
+	for <lists+dmaengine@lfdr.de>; Sun,  3 Jan 2021 14:58:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgLaRNf (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 31 Dec 2020 12:13:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbgLaRNe (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 31 Dec 2020 12:13:34 -0500
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52F27C061573
-        for <dmaengine@vger.kernel.org>; Thu, 31 Dec 2020 09:12:54 -0800 (PST)
-Received: by mail-pf1-x433.google.com with SMTP id 11so11501268pfu.4
-        for <dmaengine@vger.kernel.org>; Thu, 31 Dec 2020 09:12:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=7hwCMHPUw8k2tez5UN8MrGomr410FrSH66vnoa/gs8k=;
-        b=DzVZ6cS/WPYndni2FAhHfs6v8YyCxlPtCjiNHuBzc6ObXYrPpjy65EYNo7mQlXQ7S1
-         KL8jRcXg70EhlUzq8m7xewLdVcoQnFHohAunGv0vLTiWvucY3DMDRSxjFhERXZGg3h8/
-         qNEoDC2CJlIxRJttmjpRm9xBYYSO/7IaGnBcr+16zONVJagMnzK25TDF22diOe/T0AZH
-         oJPIfJKIpTnHG1l2cqEN6iip3kL5XPD45oca5a8jQc2Tj7dvCjbGtHPn+o2wmM3xvobV
-         4/4jWOMHvKXONDKO4A0BeFXMZLeuce6O840geX9mBrNlI2ehUaRfN0dNpeHpsmlb+ljp
-         R9zA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=7hwCMHPUw8k2tez5UN8MrGomr410FrSH66vnoa/gs8k=;
-        b=lZYL6DDSmC/aAXEbiG99prSDd+3vnPMBC51LTjHTJjv8Oi4tIhUGSjY08KdY/JUJms
-         hRFG+6OAlIssne4sxD2xP3+lNEef7r8ybjJN4tc4bRcwPVTRku0J5YXrb/qzUi9xeN8p
-         enJXsi1QQQwXiJHlCnrn0VsVLC88JgRChIjCEJkIg+PmFTaoAgiH4IT7SJjWI2t7+myR
-         yGySklf8vLnyx6diaBzb3azlh9Ea63tn8rVJt0F2JgUNFfEQEfTBUs07SIJ4trm17v7C
-         yj3IgXEf92vepdQD2TjJd7ax/+xzW1I9jDGVPHXkBM2Et/i3k8HNaTMaMYnx88mDpv3W
-         KpVA==
-X-Gm-Message-State: AOAM530m2jVuh0muwbmdxWrhHJKx9wZ8W3z7el9oh31ypn/qzI4nEeoo
-        HKJ9rbaDL/3w1hdHQdlGvQLs
-X-Google-Smtp-Source: ABdhPJybDRQx7oYIX3ts8hYbGDZuPzkEURTCULUexr4yEQUuhgTkltP8lytioXqGHbsfT9rkE1854w==
-X-Received: by 2002:aa7:97b9:0:b029:1ae:2731:a769 with SMTP id d25-20020aa797b90000b02901ae2731a769mr2426901pfq.46.1609434773569;
-        Thu, 31 Dec 2020 09:12:53 -0800 (PST)
-Received: from ?IPv6:2409:4072:6c88:26c1:e5d9:a3a9:ff41:ef69? ([2409:4072:6c88:26c1:e5d9:a3a9:ff41:ef69])
-        by smtp.gmail.com with ESMTPSA id a1sm46382527pfo.56.2020.12.31.09.12.52
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 31 Dec 2020 09:12:52 -0800 (PST)
-Date:   Thu, 31 Dec 2020 22:42:47 +0530
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20201231091202.GB916001@ubuntu2004>
-References: <cover.1609263738.git.cristian.ciocaltea@gmail.com> <20201231075435.GG7345@thinkpad> <20201231091202.GB916001@ubuntu2004>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 00/13] Add CMU/RMU/DMA/MMC/I2C support for Actions Semi
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>,
-        Vinod Koul <vkoul@kernel.org>,
+        id S1727043AbhACN6X (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 3 Jan 2021 08:58:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35262 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726129AbhACN6X (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 3 Jan 2021 08:58:23 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 632DE208C7;
+        Sun,  3 Jan 2021 13:57:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1609682262;
+        bh=w6s5kcebAimhgTVacPtTiUtHsUatLmTZP8NLc4JsnK4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OJjp4WMn408IY0DKvguUQR/l+RzDopHMYgkO326QJjAwxCrvQcSEMEbN5lVDulUqy
+         qqLYkxW6kHrhJbdrkDpQr/VwVH1sdnXBZNXVs+34m2ccbRtVOZa362iV/v+i3FLQUh
+         YTJArNRhdXBW0G4PSHssB1Uk7lRrCiHA/EPSdfK5kWESbtv1eX+o1wQB6aalORtbVx
+         PAyPQtFhCIupKKirFvSW1L4Wpj+x+8zJHzFTlUWhGOmBYOcbY/NZVUQXTDPfxpceQN
+         MSTK8dZz/AkvmX5/mV3KtblrTYnlnM6RxXsgBrV0fxwpIZiYbdL0RgclXxhK+hNLjS
+         VQYGxV8y4LHKg==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
         Dan Williams <dan.j.williams@intel.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Message-ID: <F54F3DEA-C1FD-444F-8C15-C8127D61D6EA@linaro.org>
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: qcom: fix gpi undefined behavior
+Date:   Sun,  3 Jan 2021 14:57:29 +0100
+Message-Id: <20210103135738.3741123-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.29.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+From: Arnd Bergmann <arnd@arndb.de>
 
+gcc points out an incorrect error handling loop:
 
-On 31 December 2020 2:42:02 PM IST, Cristian Ciocaltea <cristian=2Eciocalt=
-ea@gmail=2Ecom> wrote:
->On Thu, Dec 31, 2020 at 01:24:35PM +0530, Manivannan Sadhasivam wrote:
->> On Tue, Dec 29, 2020 at 11:17:15PM +0200, Cristian Ciocaltea wrote:
->> > Hi,
->> >=20
->> > This patchset brings a series of improvements for the Actions Semi
->S500
->> > SoCs family, by adding support for Clock & Reset Management Units,
->DMA,
->> > MMC, I2C & SIRQ controllers=2E
->> >=20
->> > Please note the patches consist mostly of DTS and
->bindings/compatibles
->> > changes, since all the work they depend on has been already merged,
->> > i=2Ee=2E clock fixes/additions, pinctrl driver, sirq driver=2E
->> >=20
->> > For the moment, I have only enabled the features I could test on
->> > RoseapplePi SBC=2E
->> >=20
->>=20
->> Applied all patches except the 2 dmaengine patches for v5=2E12=2E
->Andreas, please
->> let me know if you want to do the PR this time=2E Else I'll proceed=2E
->
->Thank you, Mani!
->The dmaengine patches should be picked up by Vinod, right?
->
+drivers/dma/qcom/gpi.c: In function 'gpi_ch_init':
+drivers/dma/qcom/gpi.c:1254:15: error: iteration 2 invokes undefined behavior [-Werror=aggressive-loop-optimizations]
+ 1254 |  struct gpii *gpii = gchan->gpii;
+      |               ^~~~
+drivers/dma/qcom/gpi.c:1951:2: note: within this loop
+ 1951 |  for (i = i - 1; i >= 0; i++) {
+      |  ^~~
 
-Yes! Vinod is just back from vacation, so he will :)=20
+Change the loop to correctly walk backwards through the
+initialized fields rather than off into the woods.
 
-Thanks,=20
-Mani
+Fixes: 5d0c3533a19f ("dmaengine: qcom: Add GPI dma driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/dma/qcom/gpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->> Thanks,
->> Mani
->>=20
->> > Thanks,
->> > Cristi
->> >=20
->> > Changes in v3:
->> > - Squashed 'arm: dts: owl-s500-roseapplepi: Use UART clock from
->CMU' with
->> >   'arm: dts: owl-s500: Set CMU clocks for UARTs', according to
->Mani's review
->> > - Rebased series on v5=2E11-rc1 and dropped the already merged
->patches:
->> >  * dt-bindings: mmc: owl: Add compatible string for Actions Semi
->S500 SoC
->> >  * dt-bindings: i2c: owl: Convert Actions Semi Owl binding to a
->schema
->> >  * MAINTAINERS: Update entry for Actions Semi Owl I2C binding
->> >  * i2c: owl: Add compatible for the Actions Semi S500 I2C
->controller
->> >=20
->> > Changes in v2:
->> > - Added new bindings/compatibles for S500 DMA, MMC & I2C
->controllers
->> > - Added support for the SIRQ controller
->> > - Added new entries in MAINTAINERS
->> > - Updated naming of some patches in v1
->> >=20
->> > Cristian Ciocaltea (13):
->> >   arm: dts: owl-s500: Add Clock Management Unit
->> >   arm: dts: owl-s500: Set CMU clocks for UARTs
->> >   arm: dts: owl-s500: Add Reset controller
->> >   dt-bindings: dma: owl: Add compatible string for Actions Semi
->S500 SoC
->> >   dmaengine: owl: Add compatible for the Actions Semi S500 DMA
->> >     controller
->> >   arm: dts: owl-s500: Add DMA controller
->> >   arm: dts: owl-s500: Add pinctrl & GPIO support
->> >   arm: dts: owl-s500: Add MMC support
->> >   arm: dts: owl-s500: Add I2C support
->> >   arm: dts: owl-s500: Add SIRQ controller
->> >   arm: dts: owl-s500-roseapplepi: Add uSD support
->> >   arm: dts: owl-s500-roseapplepi: Add I2C pinctrl configuration
->> >   MAINTAINERS: Add linux-actions ML for Actions Semi Arch
->> >=20
->> >  =2E=2E=2E/devicetree/bindings/dma/owl-dma=2Eyaml      |   7 +-
->> >  MAINTAINERS                                   |   1 +
->> >  arch/arm/boot/dts/owl-s500-cubieboard6=2Edts    |   7 -
->> >  =2E=2E=2E/arm/boot/dts/owl-s500-guitar-bb-rev-b=2Edts |   7 -
->> >  =2E=2E=2E/arm/boot/dts/owl-s500-labrador-base-m=2Edts |   7 -
->> >  arch/arm/boot/dts/owl-s500-roseapplepi=2Edts    |  97 +++++++++++-
->> >  arch/arm/boot/dts/owl-s500-sparky=2Edts         |   7 -
->> >  arch/arm/boot/dts/owl-s500=2Edtsi               | 140
->++++++++++++++++++
->> >  drivers/dma/owl-dma=2Ec                         |   3 +-
->> >  9 files changed, 239 insertions(+), 37 deletions(-)
->> >=20
->> > --=20
->> > 2=2E30=2E0
->> >=20
+diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
+index 8d39d3e24686..9c211104ddbf 100644
+--- a/drivers/dma/qcom/gpi.c
++++ b/drivers/dma/qcom/gpi.c
+@@ -1948,7 +1948,7 @@ static int gpi_ch_init(struct gchan *gchan)
+ 	return ret;
+ 
+ error_start_chan:
+-	for (i = i - 1; i >= 0; i++) {
++	for (i = i - 1; i >= 0; i--) {
+ 		gpi_stop_chan(&gpii->gchan[i]);
+ 		gpi_send_cmd(gpii, gchan, GPI_CH_CMD_RESET);
+ 	}
+-- 
+2.29.2
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E

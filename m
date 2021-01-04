@@ -2,86 +2,64 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3986A2E93D4
-	for <lists+dmaengine@lfdr.de>; Mon,  4 Jan 2021 12:02:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AAA12E9505
+	for <lists+dmaengine@lfdr.de>; Mon,  4 Jan 2021 13:39:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbhADLBs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 4 Jan 2021 06:01:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57148 "EHLO mail.kernel.org"
+        id S1726418AbhADMje (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 4 Jan 2021 07:39:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbhADLBr (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 4 Jan 2021 06:01:47 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D185E207BC;
-        Mon,  4 Jan 2021 11:01:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1609758067;
-        bh=FQj1a4rL7iltwr5MqltKp3e514hPbhBndFEkl5LtX3w=;
+        id S1726303AbhADMjd (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 4 Jan 2021 07:39:33 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6173220770;
+        Mon,  4 Jan 2021 12:38:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1609763933;
+        bh=f9vH4s6nGLOCyjCDAv3bQ9hxb7whPAr9ymDwtadt9rk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Cy5n5Pj/MdtkAB+OCBYxr9O9TzdNMSCOoD/SphCZZnso0dbrt6j6KkAIWECtvOpZ3
-         mefMbVXMCQ0Z1o1X17FUcQ2t+wmyXl/i0O+5EbO7c8eAUUbMmwYXQwhWuL2ekE+CsA
-         wghPhcvMtDfBB3n4/W6iOFUQrw3Mu+D7/RxsL458=
-Date:   Mon, 4 Jan 2021 12:02:33 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Tudor.Ambarus@microchip.com
-Cc:     pavel@ucw.cz, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        dan.j.williams@intel.com, vkoul@kernel.org,
-        Ludovic.Desroches@microchip.com, stable@vger.kernel.org
-Subject: Re: [PATCH 4.19] dmaengine: at_hdmac: Fix memory leak
-Message-ID: <X/L1yZgmni6KHsrL@kroah.com>
-References: <20200920082838.GA813@amd>
- <80065eac-7dce-aadf-51ef-9a290973b9ec@microchip.com>
- <d3a6fa19-0852-92d9-c434-40297edc625a@microchip.com>
+        b=LQm8a3HrUId/o2cW49pQ6VhM2Vk4dbE7iycJPorBcaU1uIVWjaXrF9uHz5lIVuOja
+         0tm6U0LY1x/t4uyU7ciw1XYnT/h4/1NKfxysumdHRKPAR+nPUtBg9qShp6bwZakhzs
+         ULwD79jWVD8ogl/HOVnysperkJLaZovi9fslEyd+ODPrNDhqhrOlyFgAPXXL7hRXQk
+         PT2nq6OjJiCU5RyLf5qxMFNCY0Lng/tJ03rl4DuVEWE/cFNSqS2OsizOxtPkrkYx6H
+         fhVkDgmXwAO5EB5b63WOoC7zJRMpenhEYmgnnlIGMzm9bz9UnPzDSffoKvP/z0v079
+         9RdF8b3o5dI3g==
+Date:   Mon, 4 Jan 2021 18:08:48 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: qcom: fix gpi undefined behavior
+Message-ID: <20210104123848.GG120946@vkoul-mobl>
+References: <20210103135738.3741123-1-arnd@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d3a6fa19-0852-92d9-c434-40297edc625a@microchip.com>
+In-Reply-To: <20210103135738.3741123-1-arnd@kernel.org>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Sep 23, 2020 at 08:19:18AM +0000, Tudor.Ambarus@microchip.com wrote:
-> On 9/23/20 11:13 AM, Tudor.Ambarus@microchip.com wrote:
-> > Hi, Pavel,
-> > 
-> > On 9/20/20 11:28 AM, Pavel Machek wrote:
-> >> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> >>
-> >> This fixes memory leak in at_hdmac. Mainline does not have the same
-> >> problem.
-> >>
-> >> Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
-> >>
-> >> diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
-> >> index 86427f6ba78c..0847b2055857 100644
-> >> --- a/drivers/dma/at_hdmac.c
-> >> +++ b/drivers/dma/at_hdmac.c
-> >> @@ -1714,8 +1714,10 @@ static struct dma_chan *at_dma_xlate(struct of_phandle_args *dma_spec,
-> >>         atslave->dma_dev = &dmac_pdev->dev;
-> >>
-> >>         chan = dma_request_channel(mask, at_dma_filter, atslave);
-> >> -       if (!chan)
-> >> +       if (!chan) {
-> >> +               kfree(atslave);
-> >>                 return NULL;
-> >> +       }
-> > 
-> > Thanks for submitting this to stable. While the fix is good, you can instead
-> > cherry-pick the commit that hit upstream. In order to do that cleanly on top
-> > of v4.19.145, you have to pick two other fixes:
-> > 
-> > commit a6e7f19c9100 ("dmaengine: at_hdmac: Substitute kzalloc with kmalloc")
-> > commit 3832b78b3ec2 ("dmaengine: at_hdmac: add missing put_device() call in at_dma_xlate()")
-> > commit a6e7f19c9100 ("dmaengine: at_hdmac: Substitute kzalloc with kmalloc")
+On 03-01-21, 14:57, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> this last commit should have been
-> commit e097eb7473d9 ("dmaengine: at_hdmac: add missing kfree() call in at_dma_xlate()")
+> gcc points out an incorrect error handling loop:
 > 
-> bad copy and paste :)
+> drivers/dma/qcom/gpi.c: In function 'gpi_ch_init':
+> drivers/dma/qcom/gpi.c:1254:15: error: iteration 2 invokes undefined behavior [-Werror=aggressive-loop-optimizations]
+>  1254 |  struct gpii *gpii = gchan->gpii;
+>       |               ^~~~
+> drivers/dma/qcom/gpi.c:1951:2: note: within this loop
+>  1951 |  for (i = i - 1; i >= 0; i++) {
+>       |  ^~~
+> 
+> Change the loop to correctly walk backwards through the
+> initialized fields rather than off into the woods.
 
-So are all 3 of those needed on both 5.4.y and 4.19.y to resolve this
-issue?
+Applied, thanks
 
-thanks,
-
-greg k-h
+-- 
+~Vinod

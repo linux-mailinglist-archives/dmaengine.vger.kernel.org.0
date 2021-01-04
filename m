@@ -2,214 +2,252 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 460F42E8D55
-	for <lists+dmaengine@lfdr.de>; Sun,  3 Jan 2021 17:59:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E22E2E8FB2
+	for <lists+dmaengine@lfdr.de>; Mon,  4 Jan 2021 05:09:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727404AbhACQ71 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 3 Jan 2021 11:59:27 -0500
-Received: from mail-il1-f178.google.com ([209.85.166.178]:37311 "EHLO
-        mail-il1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727340AbhACQ71 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 3 Jan 2021 11:59:27 -0500
-Received: by mail-il1-f178.google.com with SMTP id k8so23191896ilr.4;
-        Sun, 03 Jan 2021 08:59:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=J8WEkyhenkl8kYp/bvB9MXeFoGWEOBF4fz0r9rccQxI=;
-        b=f5repF/1nXZGKbStW/jGAwzO7vMRRUvE6mLLFtstbKchd3cQvP9L+8J3ciAgDCfxcU
-         V54gpe07RWvsjm8fJDWFwdvxnCl+NBTuTCBZq54sKXG9lyepKzF3Z2Qx/wQVb04WmzAs
-         0cYQSz3k+pJZ+uIrtWhU2B6vsVXoUAo1LsjVjNtA7QAdz+oE9Es/HurDh5iT0zdo3jDK
-         SvwA2nPQ8WNsrx48x25LWkRbky4uNfa9n85qSXYxZF9tSqhV2QrOWvxNg8EW3zsgka4h
-         zRC/0ED0SiD+PYvALVj3Yh+liJphBwDW4zYsN93L9UhXbuwSO6yV/rXvNkEhR6RkQe9q
-         o6TQ==
-X-Gm-Message-State: AOAM533GuClUYA+8+gGBWqSEu13pL/yc0j7gPLnaAtCfw1nJ+EF1Zw1U
-        edKM/obPAPss4fTCprbEYg==
-X-Google-Smtp-Source: ABdhPJyS+VI5YSOn0FBVtRBwA0IsJCJFN4Xr13kqCrchuR9n5xvQZZih3qMOLRBS/P13N6oiBbZtLg==
-X-Received: by 2002:a05:6e02:1b8a:: with SMTP id h10mr68652565ili.141.1609693125817;
-        Sun, 03 Jan 2021 08:58:45 -0800 (PST)
-Received: from robh.at.kernel.org ([64.188.179.253])
-        by smtp.gmail.com with ESMTPSA id r10sm39086113ilo.34.2021.01.03.08.58.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Jan 2021 08:58:44 -0800 (PST)
-Received: (nullmailer pid 4046180 invoked by uid 1000);
-        Sun, 03 Jan 2021 16:58:42 -0000
-Date:   Sun, 3 Jan 2021 09:58:42 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     EastL Lee <EastL.Lee@mediatek.com>
-Cc:     Sean Wang <sean.wang@mediatek.com>, vkoul@kernel.org,
-        mark.rutland@arm.com, matthias.bgg@gmail.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        wsd_upstream@mediatek.com, cc.hwang@mediatek.com
-Subject: Re: [PATCH v8 1/4] dt-bindings: dmaengine: Add MediaTek
- Command-Queue DMA controller bindings
-Message-ID: <20210103165842.GA4024251@robh.at.kernel.org>
-References: <1608715847-28956-1-git-send-email-EastL.Lee@mediatek.com>
- <1608715847-28956-2-git-send-email-EastL.Lee@mediatek.com>
+        id S1726555AbhADEJi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 3 Jan 2021 23:09:38 -0500
+Received: from mga11.intel.com ([192.55.52.93]:13736 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726163AbhADEJh (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 3 Jan 2021 23:09:37 -0500
+IronPort-SDR: CpNCf7ERW0s2PV/Zi+6VHPmmly3fAwCBW+mpjm4wplDccbIljCjXWTURnaeOHzwEUUans/vJgB
+ ot92ghsvuzuw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9853"; a="173400326"
+X-IronPort-AV: E=Sophos;i="5.78,473,1599548400"; 
+   d="scan'208";a="173400326"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2021 20:08:56 -0800
+IronPort-SDR: lcCwafBMoupLIWC4weJyDTowi0GMNy7kj+rRNrAyd8gUgpfPLVHJ1UJ7JoX8ZFjNSWD/SVMxRl
+ gEGOLniQlPJQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,473,1599548400"; 
+   d="scan'208";a="421215185"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orsmga001.jf.intel.com with ESMTP; 03 Jan 2021 20:08:56 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sun, 3 Jan 2021 20:08:55 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sun, 3 Jan 2021 20:08:55 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Sun, 3 Jan 2021 20:08:55 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.175)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.1713.5; Sun, 3 Jan 2021 20:08:51 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bIGThTGJoDYI37sh8nEXu5/9sYL7ZyO3HsaMR8IDpiFxtGuJDUUPDRQkreUXHzHA6Odgip9xbAUIYgMvrjPoBqJy9FSXb9Px3HaB2uG2vgOXZHUkStdL4KY5vJ7kjXFRlj51I+8+9Q+3l9Y7GJGQ4iJpqIIqqsCEchKEd6VXDctw/PlG+PKGmXtFK00mbH7jev6eroaa94+6KI8xKPYC2eKnE08w1wSVKWOxMulnfy0E9wxJ5S1qO9J6XBstA9CP8qb4K9eIjDBcYtPwrBrfc0Yco3RWE9D6ph/iH99o5p8gXPWtxGpo0l5mlmbwNbiqfPQd+1QikUjGTDFhb1N/cw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xGj0HgFd/JSmSMqtyHmsq7PXtbdPS2d6iBkpyS1SzCU=;
+ b=Kkrdo7GB/qkk7yDzwlyvCHU8+pJb54Y+XaRq93o4mj3XAGe28cDKnSO8LnRT63c6FAG/MyengGK4OhDkYitJmj+8coilXGWoQjruGivOryaYrSDqxr1a28TFltMw2kDxj6GCviHYbtPmNf4jyKCbVL9gmNlTHjOHYlZUhACiYv4yR9DRiqp0FTUk7gyqmhuK61Uux7VBoTreLbfryLs40a9+dCKP52BErEd3agbFpdEGM9HSzxMHdKVj6yh8sjcnj1ungkznAIvEpj35/GUK3+C25IvKICX0RmqMqYdyGDYT7WqzQo4vhnvsZeEtF56yY5PfTqqTHLK878Mc04gHHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xGj0HgFd/JSmSMqtyHmsq7PXtbdPS2d6iBkpyS1SzCU=;
+ b=W1KhRhmmgEiuj+BZJfG9mV7P0aq7Rl0Y6ZYIVEIsU7IzNxis6g0wbALGXl0skVkGAW3yvCqu4KF1mZWynWN08Jrags7sQb9Y25jnSqOatd2Zaa4WmQZ90uyTr71Z8ZQXduBW3IEXvFQDuj4Qb6TjjHHcK4fEEjJHa8zow93k7NI=
+Received: from CO1PR11MB5026.namprd11.prod.outlook.com (2603:10b6:303:9c::13)
+ by MWHPR11MB1648.namprd11.prod.outlook.com (2603:10b6:301:e::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3721.19; Mon, 4 Jan
+ 2021 04:08:50 +0000
+Received: from CO1PR11MB5026.namprd11.prod.outlook.com
+ ([fe80::4820:6e90:3d0e:3b5f]) by CO1PR11MB5026.namprd11.prod.outlook.com
+ ([fe80::4820:6e90:3d0e:3b5f%4]) with mapi id 15.20.3721.024; Mon, 4 Jan 2021
+ 04:08:50 +0000
+From:   "Sia, Jee Heng" <jee.heng.sia@intel.com>
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>
+CC:     "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: RE: [PATCH v8 13/16] dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA
+ handshake
+Thread-Topic: [PATCH v8 13/16] dmaengine: dw-axi-dmac: Add Intel KeemBay
+ AxiDMA handshake
+Thread-Index: AQHW3aAioccw/TUNekO0DxIVg+IMXqoRJs68gAWp9KA=
+Date:   Mon, 4 Jan 2021 04:08:50 +0000
+Message-ID: <CO1PR11MB5026C99B44D055930A6EB63EDAD20@CO1PR11MB5026.namprd11.prod.outlook.com>
+References: <20201229044713.28464-1-jee.heng.sia@intel.com>,<20201229044713.28464-14-jee.heng.sia@intel.com>
+ <MWHPR1201MB00297BC4BB351FA85FE66A12DED60@MWHPR1201MB0029.namprd12.prod.outlook.com>
+In-Reply-To: <MWHPR1201MB00297BC4BB351FA85FE66A12DED60@MWHPR1201MB0029.namprd12.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.5.1.3
+authentication-results: synopsys.com; dkim=none (message not signed)
+ header.d=none;synopsys.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.215]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a4e23e42-997c-4bd0-a725-08d8b066710e
+x-ms-traffictypediagnostic: MWHPR11MB1648:
+x-microsoft-antispam-prvs: <MWHPR11MB16489D09DA12288EF87A8F36DAD20@MWHPR11MB1648.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: sDsx+jQjpD/QVrp/SxDnFEGwCPQlmxrqKfnD/eQJ//SP3nu362JWbtgJOdOP1eI1ByvuNnjStzPasOgvfuaH688lzNuM8gxPtu/XvdVyDkXS6iGpJkJRfiJUNsfqd5qPeX+0YI4BHgNOCLmcIfEUhrKbhJpLEDd7Q1DoWQtdGKvVO4InsxhOIDtCFw6tZomVan1V+x2fc8b+yxG2Zd+RKqjicoGmbT8k/Twgd7/lYBMpGr2qfzFwcdxvKQY3ZpJP/96SnRjHtHXflRnw8opM3K5/hGaMRjBp+Ssp3EENweymV3zm/8Ja43rX52SeIoqXrz7pALpSwpo9jmeVBLb3LJOWRkB5EfaOvqqAV/dZf6IuNoCJCoS7h5LvfGtG/RvNC7wIa5+vMEKZUOovJTfNMA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5026.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(366004)(346002)(136003)(396003)(376002)(478600001)(4326008)(33656002)(8676002)(55016002)(9686003)(83380400001)(71200400001)(52536014)(316002)(26005)(110136005)(5660300002)(66476007)(64756008)(66556008)(86362001)(186003)(66446008)(54906003)(76116006)(6506007)(53546011)(8936002)(7696005)(2906002)(66946007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?uLo16jwUpp7aIoyxY5Uz1ohymS3ObK9sjwPkEYMU7DD9OnVJ0ABGedUwZoai?=
+ =?us-ascii?Q?Y4xDxlb0BQsxUIo2BjNNYdRBOewfv52T1quSsDiZJGN9G9eLUBI6hiTxahxw?=
+ =?us-ascii?Q?C5LtQIwe/4a1sosP2dS7me7CsYbxsvVnHZ6rAU4eC5hIcydhnqEddC4gGZVO?=
+ =?us-ascii?Q?odnDYE/Sy9UMT/QLRUkkJRQ6PplTQ2ipIoHMJznBAuqXRNkqKyc3QmcJcpFt?=
+ =?us-ascii?Q?WaY1MF/lBTKlujdskW9HQNOeHGOyIlKJGJ23DxyhlHKOndDrr6BP9M5UL9MO?=
+ =?us-ascii?Q?SHyD+226ue2rZ+Z0TnSz3IGcTfg9QHP+Mmx6z7qbZ4x8wkWz8trMWIdw3rcA?=
+ =?us-ascii?Q?2JP2GfrrhIV1/Ozhk88c7QOp3LwokDLdKOvVy+j2LnOXFQzXN8bAjlyFcWcM?=
+ =?us-ascii?Q?u/9Mz0YChcDnJO+EssZo/fSM919NGLp4MyJ11T54UN788EhQ/e9DvUkYIO+N?=
+ =?us-ascii?Q?TMP7Hed+7v8NQOYRWXo8iLXFmhUpbphfElO4MBmbrV7bb3u2q3A/A8IPEB/B?=
+ =?us-ascii?Q?vzcRZT/JlyjrRbUlqGG22JdhUbJ+fxqGOKZGHdhIhjfEdz2B7CgIxLmuOIRq?=
+ =?us-ascii?Q?CmKZt45FkzwzI388IdwsSUnYciSpLk8Jqzy40PL1LHZNdpfiiJu7ySRHaIxL?=
+ =?us-ascii?Q?yi0epKs+uAhrq8PVjS8KmRO91LJORNmcCxgxAO9oWjb9wfkeS/2HZmoyl/3v?=
+ =?us-ascii?Q?FEC0tmkx6lVa7CYwf1PT1qL8vtEp5UosF7CyI4mNDEi3Z0p+Rwf5R8ia0ob/?=
+ =?us-ascii?Q?WcnGqBi0eqI1+dkxEubDg6ItikVkTuAR4L0L+kHCs5G5hPhtpHt+OPcxou0O?=
+ =?us-ascii?Q?fIdRmuuVQMIrcwXXL5NzVtE6hEmEWvcIUIm1wZac7h62VYK6QdGXVhAjSHlA?=
+ =?us-ascii?Q?fXvl3h2eZsTZKE3WlPsOkol70tGv13T6JPi4INO0ZPk+LO7o3m+dhCUetBP6?=
+ =?us-ascii?Q?oIUfRBl4kP2qb0CeXTzVgFtf3eaUCcEk3HhMd5O9bew=3D?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1608715847-28956-2-git-send-email-EastL.Lee@mediatek.com>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5026.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a4e23e42-997c-4bd0-a725-08d8b066710e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jan 2021 04:08:50.1828
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ruurUJkG60g8hy8+VzYmP3SCAbg62e/SjJIB51pbYY+kDszB/DKTYQ1URxfqLpk7/jKA97Ll/nqomyYdQhFvZQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1648
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Dec 23, 2020 at 05:30:44PM +0800, EastL Lee wrote:
-> Document the devicetree bindings for MediaTek Command-Queue DMA controller
-> which could be found on MT6779 SoC or other similar Mediatek SoCs.
-> 
-> Signed-off-by: EastL Lee <EastL.Lee@mediatek.com>
-> ---
->  .../devicetree/bindings/dma/mtk-cqdma.yaml         | 104 +++++++++++++++++++++
 
-Use compatible string for filename:
 
-mediatek,cqdma.yaml
-
->  1 file changed, 104 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml b/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
-> new file mode 100644
-> index 0000000..a76a263
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
-> @@ -0,0 +1,104 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/mtk-cqdma.yaml#
-
-Don't forget to update this.
-
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MediaTek Command-Queue DMA controller Device Tree Binding
-> +
-> +maintainers:
-> +  - EastL Lee <EastL.Lee@mediatek.com>
-> +
-> +description:
-> +  MediaTek Command-Queue DMA controller (CQDMA) on Mediatek SoC
-> +  is dedicated to memory-to-memory transfer through queue based
-> +  descriptor management.
-> +
-> +allOf:
-> +  - $ref: "dma-controller.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - mediatek,mt6765-cqdma
-> +          - mediatek,mt6779-cqdma
-> +      - const: mediatek,cqdma
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 5
-> +    description:
-> +        A base address of MediaTek Command-Queue DMA controller,
-> +        a channel will have a set of base address.
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    maxItems: 5
-> +    description:
-> +        A interrupt number of MediaTek Command-Queue DMA controller,
-> +        one interrupt number per dma-channels.
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: cqdma
-> +
-> +  dma-channel-mask:
-> +    description:
-> +       For DMA capability, We will know the addressing capability of
-> +       MediaTek Command-Queue DMA controller through dma-channel-mask.
-> +      minimum: 1
-> +      maximum: 63
-
-Indentation is wrong here so this has no effect.
-
-A mask of 63 is 6 channels...
-
-> +
-> +  dma-channels:
-> +    description:
-> +      Number of DMA channels supported by MediaTek Command-Queue DMA
-> +      controller, support up to five.
-> +      minimum: 1
-> +      maximum: 5
-
-Same here.
-
-Do you really need both dma-channels and dma-channel-mask? You should be 
-able to get one from the other.
-
-> +
-> +  dma-requests:
-> +    description:
-> +      Number of DMA request (virtual channel) supported by MediaTek
-> +      Command-Queue DMA controller, support up to 32.
-> +      minimum: 1
-> +      maximum: 32
-
-And here.
-
-You are missing '#dma-cells' also.
-
-> +
-> +required:
-> +  - "#dma-cells"
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - dma-channel-mask
-> +  - dma-channels
-> +  - dma-requests
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/mt6779-clk.h>
-> +    cqdma: dma-controller@10212000 {
-> +        compatible = "mediatek,mt6779-cqdma";
-
-This should fail validation because it doesn't match the schema. You ran 
-'make dt_binding_check', right?
-
-> +        reg = <0x10212000 0x80>,
-> +            <0x10212080 0x80>,
-> +            <0x10212100 0x80>;
-> +        interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_LOW>,
-> +            <GIC_SPI 140 IRQ_TYPE_LEVEL_LOW>,
-> +            <GIC_SPI 141 IRQ_TYPE_LEVEL_LOW>;
-> +        clocks = <&infracfg_ao CLK_INFRA_CQ_DMA>;
-> +        clock-names = "cqdma";
-> +        dma-channel-mask = <63>;
-
-6 channels or...
-
-> +        dma-channels = <3>;
-
-3?
-
-> +        dma-requests = <32>;
-> +        #dma-cells = <1>;
-> +    };
-> +
-> +...
-> -- 
-> 1.9.1
-> 
+> -----Original Message-----
+> From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> Sent: 31 December 2020 8:44 PM
+> To: Sia, Jee Heng <jee.heng.sia@intel.com>; Vinod Koul
+> <vkoul@kernel.org>
+> Cc: andriy.shevchenko@linux.intel.com; dmaengine@vger.kernel.org;
+> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org;
+> robh+dt@kernel.org
+> Subject: Re: [PATCH v8 13/16] dmaengine: dw-axi-dmac: Add Intel
+> KeemBay AxiDMA handshake
+>=20
+> Hi Sia Jee Heng,
+>=20
+> see my comments inlined:
+>=20
+> > From: Sia Jee Heng <jee.heng.sia@intel.com>
+> > Sent: Tuesday, December 29, 2020 07:47
+> > To: vkoul@kernel.org; Eugeniy Paltsev; robh+dt@kernel.org
+> > Cc: andriy.shevchenko@linux.intel.com;
+> dmaengine@vger.kernel.org;
+> > linux-kernel@vger.kernel.org; devicetree@vger.kernel.org
+> > Subject: [PATCH v8 13/16] dmaengine: dw-axi-dmac: Add Intel
+> KeemBay
+> > AxiDMA handshake
+> >
+> > Add support for Intel KeemBay AxiDMA device handshake
+> programming.
+> > Device handshake number passed in to the AxiDMA shall be written
+> to
+> > the Intel KeemBay AxiDMA hardware handshake registers before
+> DMA
+> > operations are started.
+> >
+> > Reviewed-by: Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com>
+> > Signed-off-by: Sia Jee Heng <jee.heng.sia@intel.com>
+> > ---
+> >  .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 52
+> +++++++++++++++++++
+> >  1 file changed, 52 insertions(+)
+> >
+> > diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> > b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> > index 062d27c61983..5e77eb3d040f 100644
+> > --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+> > +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+>  [snip]
+> > +
+> > +       return 0;
+> > +}
+> > +
+> >  /*
+> >   * If DW_axi_dmac sees CHx_CTL.ShadowReg_Or_LLI_Last bit of
+> the fetched LLI
+> >   * as 1, it understands that the current block is the final block in
+> > the @@ -626,6 +668,9 @@ dw_axi_dma_chan_prep_cyclic(struct
+> dma_chan *dchan, dma_addr_t dma_addr,
+> >                 llp =3D hw_desc->llp;
+> >         } while (num_periods);
+> >
+> > +       if (dw_axi_dma_set_hw_channel(chan->chip, chan-
+> >hw_handshake_num, true))
+> > +               goto err_desc_get;
+> > +
+>=20
+> In this implementation 'dw_axi_dma_chan_prep_cyclic' callback will
+> fail if we don't have APB registers which are only specific for KeemBay.
+> Looking for the code of 'dw_axi_dma_chan_prep_cyclic' I don't see
+> the reason why it shouldn't work for vanila DW AXI DMAC without this
+> extension. So, could you please change this so we wouldn't reject
+> dw_axi_dma_chan_prep_cyclic in case of APB registers are missed.
+[>>] OK, I can change the code in such a way that dw_axi_dma_set_hw_channel=
+() will be executed only if apb_reg is valid.
+>=20
+> >         return vchan_tx_prep(&chan->vc, &desc->vd, flags);
+> >
+> >  err_desc_get:
+> > @@ -684,6 +729,9 @@ dw_axi_dma_chan_prep_slave_sg(struct
+> dma_chan *dchan, struct scatterlist *sgl,
+> >                 llp =3D hw_desc->llp;
+> >         } while (sg_len);
+> >
+> > +       if (dw_axi_dma_set_hw_channel(chan->chip, chan-
+> >hw_handshake_num, true))
+> > +               goto err_desc_get;
+> > +
+>=20
+> Same here.
+[>>] Sure, same method described above will be used.
+>=20
+>=20
+> >         return vchan_tx_prep(&chan->vc, &desc->vd, flags);
+> >
+> >  err_desc_get:
+> > @@ -959,6 +1007,10 @@ static int dma_chan_terminate_all(struct
+> dma_chan *dchan)
+> >                 dev_warn(dchan2dev(dchan),
+> >                          "%s failed to stop\n", axi_chan_name(chan));
+> >
+> > +       if (chan->direction !=3D DMA_MEM_TO_MEM)
+> > +               dw_axi_dma_set_hw_channel(chan->chip,
+> > +                                         chan->hw_handshake_num,
+> > + false);
+> > +
+> >         spin_lock_irqsave(&chan->vc.lock, flags);
+> >
+> >         vchan_get_all_descriptors(&chan->vc, &head);
+> > --
+> > 2.18.0
+> >

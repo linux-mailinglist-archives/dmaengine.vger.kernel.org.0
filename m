@@ -2,233 +2,86 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C634F2E8FF6
-	for <lists+dmaengine@lfdr.de>; Mon,  4 Jan 2021 06:20:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3986A2E93D4
+	for <lists+dmaengine@lfdr.de>; Mon,  4 Jan 2021 12:02:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbhADFUa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 4 Jan 2021 00:20:30 -0500
-Received: from mail-dm6nam11on2083.outbound.protection.outlook.com ([40.107.223.83]:7520
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725830AbhADFUa (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 4 Jan 2021 00:20:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mqul8Uwg/Ag6ZjO4/LvI0WLZ0U8uHR0v8pXKiFPKGa7pWwKq5dluJQXgQK67vdaTmV2P8lgORuzIZRUOhlA3ncGdkYkmdqH77c+9xhYiPLGRIgO5Z9Wxlmx/Mz8vxfOwSc4SErb9AoN+H1/Hg/jx01z7ytUQnvwVoTR8ZHXrYBaYmO+6oJMuV4H9G4SL013TPgzFAp4c0uia5mJ0bx1MYEYmpzUG7diOiusJGxyvYO41uL3hvGQiFcTjlJsZCG7OJk+18ntIgCulubh7G8tJZRKZllXyrctQ7RTZQIvRoLH4zILZnIL5hcPclJ3g8jKQ1D0X91Z33rsi8/PlWGMjFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+HCZZ+4wMnRLWDJV86h9fNlRxh9E99mm9jHasOM5SZI=;
- b=Ru6yIcyH7vuvD8vAs3wBiqJbGVw+lCG7kN11WDUYpTpv783TaBDm5OyujnzpiA0/IYfWnwW4eEXI6LIDgcMOsCKHHzPp8G7zf9jH2Ub62mZrT9+0XBKt+CoDu9AQBpiv7/7f0ZepDzltqXn8Ao9F+uS46faDvSMJHth+fw9PHdSV1lyXHJAapdfcARG2mr5BmFWr5x/dKfH4XcYm0aj+9ahsz6cNnCnEXVD6tgkwVaF5lcru45c6HIhCUTrmFcTEpfe5Sxsug8szbcmTDhFnLj4KC9hfzf6evxRDwwMbYlJ0n12mhic0fA13T8IbhGLMvcdqSU7BySVrEEu4kzVasA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+HCZZ+4wMnRLWDJV86h9fNlRxh9E99mm9jHasOM5SZI=;
- b=ni1VququP6CtT2fmIqJuxD9aiPcXZvPzfXikgWqxWvpOtAZWRA1EJJaRiTi5pvhwtNLMPi+AT4YTPiTzL6BHOwKjaHzFDOyQeXwzN+yz/HjOH/wSGxe5ddUK8/KC+8ytbue61aWppckfJQCfkimmVVGyKCOb67UvkvQxOcOG1OY=
-Received: from BY5PR02MB6520.namprd02.prod.outlook.com (2603:10b6:a03:1d3::8)
- by BY5PR02MB6241.namprd02.prod.outlook.com (2603:10b6:a03:1b3::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3721.23; Mon, 4 Jan
- 2021 05:19:32 +0000
-Received: from BY5PR02MB6520.namprd02.prod.outlook.com
- ([fe80::f806:48df:2f5d:5a6b]) by BY5PR02MB6520.namprd02.prod.outlook.com
- ([fe80::f806:48df:2f5d:5a6b%8]) with mapi id 15.20.3721.024; Mon, 4 Jan 2021
- 05:19:32 +0000
-From:   Radhey Shyam Pandey <radheys@xilinx.com>
-To:     Paul Thomas <pthomas8589@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Michal Simek <michals@xilinx.com>,
-        Matthew Murrian <matthew.murrian@goctsi.com>,
-        Romain Perier <romain.perier@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marc Ferland <ferlandm@amotus.ca>,
-        Sebastian von Ohr <vonohr@smaract.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Shravya Kumbham <shravyak@xilinx.com>, git <git@xilinx.com>
-Subject: RE: dmaengine : xilinx_dma two issues
-Thread-Topic: dmaengine : xilinx_dma two issues
-Thread-Index: AQHW3NQtLfwqTgK1Wk2I7XZ0XjYsd6oW8tOg
-Date:   Mon, 4 Jan 2021 05:19:32 +0000
-Message-ID: <BY5PR02MB652004976C500CD4EA763047C7D20@BY5PR02MB6520.namprd02.prod.outlook.com>
-References: <CAD56B7dpewwJVttuk4GAcAsx62HP=vPF9jmxTFNG3Z9RP4u9zA@mail.gmail.com>
-In-Reply-To: <CAD56B7dpewwJVttuk4GAcAsx62HP=vPF9jmxTFNG3Z9RP4u9zA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=xilinx.com;
-x-originating-ip: [47.8.3.148]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6fd82fa4-c5fd-4235-3c1e-08d8b07051bf
-x-ms-traffictypediagnostic: BY5PR02MB6241:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR02MB62415E10C158D1AD949BFDB7C7D20@BY5PR02MB6241.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1060;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3804d40PdpGQGGARummeSviPblskvMKAvBUjDUH3KTuL/iju58v6rceSfDS6lKt8vpNp2ijY6vTotLYW+ToY32wkukSR6IcHeNaDeM/aFAWkjnJn3Sn3xdFspA79qeOrmv4IChZTiR2jg2Vnvk7evHliIDiDNOeyEokn+WbuKiMoywg04Lb5976zezrfUFF4VksoU4qOfAwHzzh4aDea3gamMXbVT8273hlEk/bl2HRcLGOrl2aAFnq3/z1DO4/qwM8go77xOo741kHIae6K5a/5EQv10I4QjE4VaS1Qvf5URW990KMtHFU+hVOm1KbTCWTh3BL4ARJwOWfsBYgiPY8+vlqeIMlsCAOtE3R/DQxmt0LUgH3/vMjBYxOGi1vOymXx+Q4C2VBp1C25ax8CRhUuzD6L7yd/7hYZS6ec4Yt4xN/gVHcRXtiaJsbUmz9w
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR02MB6520.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(346002)(39850400004)(376002)(366004)(6506007)(7416002)(33656002)(110136005)(7696005)(55016002)(66446008)(64756008)(66476007)(76116006)(66946007)(66556008)(52536014)(2906002)(6636002)(9686003)(5660300002)(8936002)(26005)(8676002)(921005)(83380400001)(186003)(53546011)(478600001)(71200400001)(316002)(45080400002)(86362001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?MzYzSTlUVVlNbGxGV2JlSUZiUE1JYUU3R3RVdEZTL1pVOHdwSDVNTkxkNGtW?=
- =?utf-8?B?YjhJNUtiMHZ2V1gwVVZad3VnamF5ZllmVmFSRDN5eEVuUlAyQWUyVzdBb2g3?=
- =?utf-8?B?MnpJZ0c0OUdKeDZRWUJYN1R0RHdPaERRczFVR2Rnc05RYUt5TVdJUlNwa3cw?=
- =?utf-8?B?bWVjRE9tSVFXb1dZV1NDeHFsWm80YW5DODAwWnNIQXI5cW03V29SNytISWtT?=
- =?utf-8?B?VXZnQWZ4NFI5ZGtLWTlOdFFMV3kzQjFTcWpSOEJDbFFMQWtJWTNaNlZaYlFo?=
- =?utf-8?B?UXBvZlBFajBtZEVvaWY1Z2I2ZGJPSXJUVGt6UmNDaDBaMTZWdnZZM0VUMmJ6?=
- =?utf-8?B?NmZkRmNITEJncnNvQUdZaUp6dEVoUVRSbFllQWpxTk5jcmJqM1QxQ1dBK05D?=
- =?utf-8?B?N0ZicHFaYjhhZ0Jld0tRd1d5SEZveDNiWUVDZkc2TWFhRjh6Nnd0eFQ0NEJv?=
- =?utf-8?B?YXg5L3FIUXhyNTE5NFl4NndZYXZzWlkwQSszeFc5Q1I2Y0lFVVdRWEswNXlM?=
- =?utf-8?B?ZEs1WGdrSkgxK0pOZG9TbWZIZXpHOEhYRE53RGVqVGJoZU5PVnk4UW80Z1ly?=
- =?utf-8?B?dGZySVRkODlSNlpQbHMvNEpwWkdTa1VkcDU0ZHQzN2x5aFJraWtpcXF6d2FC?=
- =?utf-8?B?bVl2TWxaeDVoYmhaQ0JJaTFpVlE1R1YyVVJlQWVUY3VMek5RNHAxaFZranhq?=
- =?utf-8?B?YnZSL2luUHdNTDYyNllXVFdlNFh0ZkxySHExZFZUOU9NWkNZS3dwYmR0bXJZ?=
- =?utf-8?B?Q0txWEVQb2hneCs0bG5wUTMwVU5rU29TOUJKbUJKUEdJaGVwZC9ZNG1ucXNP?=
- =?utf-8?B?K3d6UEQ0dStJem1tQUtYZ0lId1pkcmt4MTgvRitMaWptRDE0K0hNd1Y4NFcz?=
- =?utf-8?B?a0x0MUhVQXh1ajVCaEVTVkMvRThab0xnYm1RYlJXOTMyUlRPK3YrKy9BWEVn?=
- =?utf-8?B?ZUs5YVNKV2RWb09rZGdxeStvWmhjVnAyUXRyOExhK0FJaTJzeU1xV3RjRmlS?=
- =?utf-8?B?b3pleXRjZndpc0JiMUlaQmZSQXVxV2NwcVBjSXlnNjArN3B4NDI4M3k1UjE2?=
- =?utf-8?B?T0JwQmRaOUtIaGVWdU5xTmRXMmRUamQvWXh3ZGlKTmhnYmd0YjdwdzdNeWUv?=
- =?utf-8?B?d01ja3VlMjJ2T3hzWDdkTm4rdFJTZWMwNHpHTzRBV0srQ1RjYzhyQVdaRHND?=
- =?utf-8?B?YjJiZlRDcmVDdDhmaFVjYkQvZ3plSzh4cUtvQld0dWk4Tk5vNlFBN1FTRUpH?=
- =?utf-8?B?Q1dGdFJ4RFcvamY5ZmVqN0czdmU5ajFmZGRoQlMxNm0xMzM1REdVUkc1eHJ3?=
- =?utf-8?Q?wKTxqi7RQU64E=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726531AbhADLBs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 4 Jan 2021 06:01:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57148 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726303AbhADLBr (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 4 Jan 2021 06:01:47 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D185E207BC;
+        Mon,  4 Jan 2021 11:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1609758067;
+        bh=FQj1a4rL7iltwr5MqltKp3e514hPbhBndFEkl5LtX3w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Cy5n5Pj/MdtkAB+OCBYxr9O9TzdNMSCOoD/SphCZZnso0dbrt6j6KkAIWECtvOpZ3
+         mefMbVXMCQ0Z1o1X17FUcQ2t+wmyXl/i0O+5EbO7c8eAUUbMmwYXQwhWuL2ekE+CsA
+         wghPhcvMtDfBB3n4/W6iOFUQrw3Mu+D7/RxsL458=
+Date:   Mon, 4 Jan 2021 12:02:33 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Tudor.Ambarus@microchip.com
+Cc:     pavel@ucw.cz, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        dan.j.williams@intel.com, vkoul@kernel.org,
+        Ludovic.Desroches@microchip.com, stable@vger.kernel.org
+Subject: Re: [PATCH 4.19] dmaengine: at_hdmac: Fix memory leak
+Message-ID: <X/L1yZgmni6KHsrL@kroah.com>
+References: <20200920082838.GA813@amd>
+ <80065eac-7dce-aadf-51ef-9a290973b9ec@microchip.com>
+ <d3a6fa19-0852-92d9-c434-40297edc625a@microchip.com>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR02MB6520.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6fd82fa4-c5fd-4235-3c1e-08d8b07051bf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jan 2021 05:19:32.6133
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Z480ruGMM2B5UjwTpKm/Tqvme+0cWyFPGzQyUutsQeBUuvh+RfGDubo4LmRF7wdOB/t92RAKpzzodc+okU7ivQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6241
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d3a6fa19-0852-92d9-c434-40297edc625a@microchip.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYXVsIFRob21hcyA8cHRob21h
-czg1ODlAZ21haWwuY29tPg0KPiBTZW50OiBNb25kYXksIERlY2VtYmVyIDI4LCAyMDIwIDEwOjE0
-IEFNDQo+IFRvOiBEYW4gV2lsbGlhbXMgPGRhbi5qLndpbGxpYW1zQGludGVsLmNvbT47IFZpbm9k
-IEtvdWwNCj4gPHZrb3VsQGtlcm5lbC5vcmc+OyBNaWNoYWwgU2ltZWsgPG1pY2hhbHNAeGlsaW54
-LmNvbT47IFJhZGhleSBTaHlhbQ0KPiBQYW5kZXkgPHJhZGhleXNAeGlsaW54LmNvbT47IE1hdHRo
-ZXcgTXVycmlhbg0KPiA8bWF0dGhldy5tdXJyaWFuQGdvY3RzaS5jb20+OyBSb21haW4gUGVyaWVy
-DQo+IDxyb21haW4ucGVyaWVyQGdtYWlsLmNvbT47IEtyenlzenRvZiBLb3psb3dza2kgPGtyemtA
-a2VybmVsLm9yZz47IE1hcmMNCj4gRmVybGFuZCA8ZmVybGFuZG1AYW1vdHVzLmNhPjsgU2ViYXN0
-aWFuIHZvbiBPaHINCj4gPHZvbm9ockBzbWFyYWN0LmNvbT47IGRtYWVuZ2luZUB2Z2VyLmtlcm5l
-bC5vcmc7IExpbnV4IEFSTSA8bGludXgtDQo+IGFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-Zz47IGxpbnV4LWtlcm5lbCA8bGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+DQo+IFN1
-YmplY3Q6IGRtYWVuZ2luZSA6IHhpbGlueF9kbWEgdHdvIGlzc3Vlcw0KPiANCj4gSGVsbG8sDQo+
-IA0KPiBJJ20gdHJ5aW5nIHRvIGdldCB0aGUgNS4xMCBrZXJuZWwgdXAgYW5kIHJ1bm5pbmcgZm9y
-IG91ciBzeXN0ZW0sIGFuZCBJJ20NCj4gcnVubmluZyBpbnRvIGEgY291cGxlIG9mIGlzc3VlcyB3
-aXRoIHhpbGlueF9kbWEuDQorIChYaWxpbnggbWFpbGluZyBsaXN0KQ0KDQpUaGFua3MgZm9yIGJy
-aW5naW5nIHRoZSBpc3N1ZXMgdG8gb3VyIG5vdGljZS4gUmVwbGllcyBpbmxpbmUuDQoNCj4gDQo+
-IEZpcnN0LCBjb21taXQgMTRjY2YwYWFiNDZlICdkbWFlbmdpbmU6IHhpbGlueF9kbWE6IEluIGRt
-YSBjaGFubmVsIHByb2JlDQo+IGZpeCBub2RlIG9yZGVyIGRlcGVuZGVuY3knIGJyZWFrcyBvdXIg
-dXNhZ2UuIEJlZm9yZSB0aGlzIGNvbW1pdCBhIGNhbGwgdG86DQo+IGRtYV9yZXF1ZXN0X2NoYW4o
-JmluZGlvX2Rldi0+ZGV2LCAiYXhpX2RtYV8wIik7IHJldHVybnMgZmluZSwgYnV0IGFmdGVyDQo+
-IHRoYXQgY29tbWl0IGl0IHJldHVybnMgLTE5LiBUaGUgcmVhc29uIGZvciB0aGlzIHNlZW1zIHRv
-IGJlIHRoYXQgdGhlIG9ubHkNCj4gY2hhbm5lbCB0aGF0IGlzIHNldHVwIGlzIGNoYW5uZWwgMSAo
-Y2hhbi0+aWQgaXMgMSBpbiB4aWxpbnhfZG1hX2NoYW5fcHJvYmUoKSkuDQo+IEhvd2V2ZXIgaW4N
-Cj4gb2ZfZG1hX3hpbGlueF94bGF0ZSgpIGNoYW5faWQgaXMgZ2V0cyBzZXQgdG8gMCAoaW50IGNo
-YW5faWQgPSBkbWFfc3BlYy0NCj4gPmFyZ3NbMF07KSwgd2hpY2ggY2F1c2VzIHRoZToNCj4gIXhk
-ZXYtPmNoYW5bY2hhbl9pZF0NCj4gdGVzdCB0byBmYWlsIGluIG9mX2RtYV94aWxpbnhfeGxhdGUo
-KQ0KDQpXaGF0IGlzIHRoZSBjaGFubmVsIG51bWJlciBwYXNzZWQgaW4gDQpkbWFjbGllbnQgRFQ/
-IA0KDQpkbWFzID0gPCYgYXhpX2RtYV8wIDE+CQ0KZG1hLW5hbWVzID0gImF4aV9kbWFfMCINCg0K
-PiANCj4gT3VyIGRldmljZS10cmVlIGVudHJ5IGxvb2tzIGxpa2UgdGhpczoNCj4gICAgIGF4aV9k
-bWFfMDogZG1hQDgwMDAyMDAwIHsNCj4gICAgICAgICBzdGF0dXMgPSAib2theSI7DQo+ICAgICAg
-ICAgI2RtYS1jZWxscyA9IDwxPjsNCj4gICAgICAgICBjb21wYXRpYmxlID0gInhsbngsYXhpLWRt
-YS0xLjAwLmEiOw0KPiAgICAgICAgIGludGVycnVwdC1wYXJlbnQgPSA8JmdpYz47DQo+ICAgICAg
-ICAgaW50ZXJydXB0cyA9IDwwIDg5IDQ+Ow0KPiAgICAgICAgIHJlZyA9IDwweDAgMHg4MDAwMjAw
-MCAweDAgMHgxMDAwPjsNCj4gICAgICAgICB4bG54LGFkZHJ3aWR0aCA9IDwweDIwPjsNCj4gICAg
-ICAgICBjbG9ja3MgPSA8Jnp5bnFtcF9jbGsgTFBEX0xTQlVTPiwgPCZ6eW5xbXBfY2xrIExQRF9M
-U0JVUz4sDQo+IDwmenlucW1wX2NsayBMUERfTFNCVVM+LCA8Jnp5bnFtcF9jbGsgTFBEX0xTQlVT
-PjsNCj4gICAgICAgICBjbG9jay1uYW1lcyA9ICJzX2F4aV9saXRlX2FjbGsiLCAibV9heGlfc2df
-YWNsayIsICJtX2F4aV9tbTJzX2FjbGsiLA0KPiAibV9heGlfczJtbV9hY2xrIjsNCj4gICAgICAg
-ICBkbWEtY2hhbm5lbEA4MDAwMjAzMCB7DQo+ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAieGxu
-eCxheGktZG1hLXMybW0tY2hhbm5lbCI7DQo+ICAgICAgICAgICAgIGRtYS1jaGFubmVscyA9IDww
-eDE+Ow0KPiAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPDAgODkgND47DQo+ICAgICAgICAgICAg
-IHhsbngsZGF0YXdpZHRoID0gPDB4MjA+Ow0KPiAgICAgICAgICAgICB4bG54LGRldmljZS1pZCA9
-IDwweDA+Ow0KPiAgICAgICAgIH07DQo+ICAgICB9Ow0KPiANCj4gVGhpcyBpcyBvbiBhIDUuMTAu
-MSBrZXJuZWwgb24gYXJtNjQgenlucW1wIGhhcmR3YXJlLg0KPiANCj4gVGhlIHNlY29uZCBpc3N1
-ZSBnb2VzIGEgbGl0dGxlIGZ1cnRoZXIgYmFjayB0byBjb21taXQgZTgxMjc0Y2Q2YjUyNg0KPiAn
-ZG1hZW5naW5lOiBhZGQgc3VwcG9ydCB0byBkeW5hbWljIHJlZ2lzdGVyL3VucmVnaXN0ZXIgb2Yg
-Y2hhbm5lbHMnLg0KPiBBZnRlciB0aGlzIGNvbW1pdCBldmVuIGp1c3QgcmVtb3ZpbmcgdGhlIG1v
-ZHVsZSAncm1tb2QgeGlsaW54X2RtYScsDQo+IHdpdGhvdXQgZXZlciB1c2luZyBpdCwgcmVzdWx0
-cyBpbiBhIGtlcm5lbCBvb3BzIGxpa2UgdGhpczoNCj4gWyAgIDM3LjIxNDU2OF0geGlsaW54LXZk
-bWEgODAwMDIwMDAuZG1hOiBjaCAwOiBTRyBkaXNhYmxlZA0KPiBbICAgMzcuMjE5ODA3XSB4aWxp
-bngtdmRtYSA4MDAwMjAwMC5kbWE6IFdBUk46IERldmljZSByZWxlYXNlIGlzIG5vdA0KPiBkZWZp
-bmVkIHNvIGl0IGlzIG5vdCBzYWZlIHRvIHVuYmluZCB0aGlzIGRyaXZlciB3aGlsZSBpbiB1c2UN
-Cj4gWyAgIDM3LjIzMTI5OV0geGlsaW54LXZkbWEgODAwMDIwMDAuZG1hOiBYaWxpbnggQVhJIERN
-QSBFbmdpbmUgRHJpdmVyDQo+IFByb2JlZCEhDQo+IFsgICA0Mi4xMDA2NjBdIFVuYWJsZSB0byBo
-YW5kbGUga2VybmVsIHBhZ2luZyByZXF1ZXN0IGF0IHZpcnR1YWwNCj4gYWRkcmVzcyBkZWFkMDAw
-MDAwMDAwMTA4DQo+IFsgICA0Mi4xMDg1OThdIE1lbSBhYm9ydCBpbmZvOg0KPiBbICAgNDIuMTEx
-MzkzXSAgIEVTUiA9IDB4OTYwMDAwNDQNCj4gWyAgIDQyLjExNDQ0M10gICBFQyA9IDB4MjU6IERB
-QlQgKGN1cnJlbnQgRUwpLCBJTCA9IDMyIGJpdHMNCj4gWyAgIDQyLjExOTc0NF0gICBTRVQgPSAw
-LCBGblYgPSAwDQo+IFsgICA0Mi4xMjI3OTRdICAgRUEgPSAwLCBTMVBUVyA9IDANCj4gWyAgIDQy
-LjEyNTkxOF0gRGF0YSBhYm9ydCBpbmZvOg0KPiBbICAgNDIuMTI4Nzg5XSAgIElTViA9IDAsIElT
-UyA9IDB4MDAwMDAwNDQNCj4gWyAgIDQyLjEzMjYxN10gICBDTSA9IDAsIFduUiA9IDENCj4gWyAg
-IDQyLjEzNTU3N10gW2RlYWQwMDAwMDAwMDAxMDhdIGFkZHJlc3MgYmV0d2VlbiB1c2VyIGFuZCBr
-ZXJuZWwNCj4gYWRkcmVzcyByYW5nZXMNCj4gWyAgIDQyLjE0MjcwNV0gSW50ZXJuYWwgZXJyb3I6
-IE9vcHM6IDk2MDAwMDQ0IFsjMV0gU01QDQo+IFsgICA0Mi4xNDc1NjZdIE1vZHVsZXMgbGlua2Vk
-IGluOiB4aWxpbnhfZG1hKC0pIGNsa194bG54X2Nsb2NrX3dpemFyZA0KPiB1aW9fcGRydl9nZW5p
-cnENCj4gWyAgIDQyLjE1NTEzOV0gQ1BVOiAxIFBJRDogMjA3NSBDb21tOiBybW1vZCBOb3QgdGFp
-bnRlZA0KPiA1LjEwLjEtMDAwMjYtZzNhMmU2ZGQ3YTA1LWRpcnR5ICMxOTINCj4gWyAgIDQyLjE2
-MzMwMl0gSGFyZHdhcmUgbmFtZTogRW5jbHVzdHJhIFhVNSBTT00gKERUKQ0KPiBbICAgNDIuMTY3
-OTkyXSBwc3RhdGU6IDQwMDAwMDA1IChuWmN2IGRhaWYgLVBBTiAtVUFPIC1UQ08gQlRZUEU9LS0p
-DQo+IFsgICA0Mi4xNzM5OTZdIHBjIDogeGlsaW54X2RtYV9jaGFuX3JlbW92ZSsweDc0LzB4YTAg
-W3hpbGlueF9kbWFdDQo+IFsgICA0Mi4xNzk4MTVdIGxyIDogeGlsaW54X2RtYV9jaGFuX3JlbW92
-ZSsweDcwLzB4YTAgW3hpbGlueF9kbWFdDQo+IFsgICA0Mi4xODU2MzZdIHNwIDogZmZmZmZmYzAx
-MTEyYmNhMA0KPiBbICAgNDIuMTg4OTM1XSB4Mjk6IGZmZmZmZmMwMTExMmJjYTAgeDI4OiBmZmZm
-ZmY4MDQwMmVhNjQwDQo+IFsgICA0Mi4xOTQyMzhdIHgyNzogMDAwMDAwMDAwMDAwMDAwMCB4MjY6
-IDAwMDAwMDAwMDAwMDAwMDANCj4gWyAgIDQyLjE5OTU0Ml0geDI1OiAwMDAwMDAwMDAwMDAwMDAw
-IHgyNDogMDAwMDAwMDAwMDAwMDAwMA0KPiBbICAgNDIuMjA0ODQ1XSB4MjM6IDAwMDAwMDAwMDAw
-MDAwMDAgeDIyOiAwMDAwMDAwMDAwMDAwMDAwDQo+IFsgICA0Mi4yMTAxNDldIHgyMTogZmZmZmZm
-YzAwODhhMjAyOCB4MjA6IGZmZmZmZjgwNDBjMDg0MTANCj4gWyAgIDQyLjIxNTQ1Ml0geDE5OiBm
-ZmZmZmY4MDQyM2ZhNDgwIHgxODogZmZmZmZmZmZmZmZmZmZmZg0KPiBbICAgNDIuMjIwNzU2XSB4
-MTc6IDAwMDAwMDAwMDAwMDAwMDAgeDE2OiAwMDAwMDAwMDAwMDAwMDAwDQo+IFsgICA0Mi4yMjYw
-NTldIHgxNTogZmZmZmZmYzAxMGNlODhjOCB4MTQ6IDAwMDAwMDAwMDAwMDAwNDANCj4gWyAgIDQy
-LjIzMTM2M10geDEzOiBmZmZmZmYwMDAwMDAwMDAwIHgxMjogZmZmZmZmZmZmZmZmZmZmZg0KPiBb
-ICAgNDIuMjM2NjY3XSB4MTE6IDAwMDAwMDAwMDAwMDAwMjggeDEwOiBmZmZmZmZmZjdmZmZmZmZm
-DQo+IFsgICA0Mi4yNDE5NzBdIHg5IDogZmZmZmZmZmYwMGYwZGZlMCB4OCA6IDAwMDAwMDAwMDAw
-MDAwMDANCj4gWyAgIDQyLjI0NzI3M10geDcgOiBmZmZmZmZjMDEwZGE0MDAwIHg2IDogMDAwMDAw
-MDAwMDAwMDAwMA0KPiBbICAgNDIuMjUyNTc3XSB4NSA6IDAwMDAwMDAwMDAyMTBkMDAgeDQgOiBm
-ZmZmZmZjMDEwZGE0ZGEwDQo+IFsgICA0Mi4yNTc4ODFdIHgzIDogZmZmZmZmODA0MjNmYTU3OCB4
-MiA6IDAwMDAwMDAwMDAwMDAwMDANCj4gWyAgIDQyLjI2MzE4NF0geDEgOiBkZWFkMDAwMDAwMDAw
-MTAwIHgwIDogZGVhZDAwMDAwMDAwMDEyMg0KPiBbICAgNDIuMjY4NDg4XSBDYWxsIHRyYWNlOg0K
-PiBbICAgNDIuMjcwOTIzXSAgeGlsaW54X2RtYV9jaGFuX3JlbW92ZSsweDc0LzB4YTAgW3hpbGlu
-eF9kbWFdDQo+IFsgICA0Mi4yNzYzOTldICB4aWxpbnhfZG1hX3JlbW92ZSsweDNjLzB4NzAgW3hp
-bGlueF9kbWFdDQo+IFsgICA0Mi4yODE0NDZdICBwbGF0Zm9ybV9kcnZfcmVtb3ZlKzB4MjQvMHgz
-OA0KPiBbICAgNDIuMjg1NTMwXSAgZGV2aWNlX3JlbGVhc2VfZHJpdmVyX2ludGVybmFsKzB4ZWMv
-MHgxYTgNCj4gWyAgIDQyLjI5MDY1OV0gIGRyaXZlcl9kZXRhY2grMHg2NC8weGQ4DQo+IFsgICA0
-Mi4yOTQyMjZdICBidXNfcmVtb3ZlX2RyaXZlcisweDU4LzB4YjgNCj4gWyAgIDQyLjI5ODEzM10g
-IGRyaXZlcl91bnJlZ2lzdGVyKzB4MzAvMHg2MA0KPiBbICAgNDIuMzAyMDQ4XSAgcGxhdGZvcm1f
-ZHJpdmVyX3VucmVnaXN0ZXIrMHgxNC8weDIwDQo+IFsgICA0Mi4zMDY3NDRdICB4aWxpbnhfdmRt
-YV9kcml2ZXJfZXhpdCsweDE4LzB4OTc4IFt4aWxpbnhfZG1hXQ0KPiBbICAgNDIuMzEyMzk2XSAg
-X19hcm02NF9zeXNfZGVsZXRlX21vZHVsZSsweDFlNC8weDI3MA0KPiBbICAgNDIuMzE3MTc4XSAg
-ZWwwX3N2Y19jb21tb24uY29uc3Rwcm9wLjQrMHg2OC8weDE3MA0KPiBbICAgNDIuMzIxOTU5XSAg
-ZG9fZWwwX3N2YysweDcwLzB4OTANCj4gWyAgIDQyLjMyNTI2N10gIGVsMF9zdmMrMHgxNC8weDIw
-DQo+IFsgICA0Mi4zMjgzMTNdICBlbDBfc3luY19oYW5kbGVyKzB4OTAvMHhiOA0KPiBbICAgNDIu
-MzMyMTQxXSAgZWwwX3N5bmMrMHgxNTgvMHgxODANCj4gWyAgIDQyLjMzNTQ0Ml0gQ29kZTogOTVk
-ZmNlMjkgOTEwM2MyNjAgOTVkZTdmZmIgYTk0OTAyNjEgKGY5MDAwNDIwKQ0KPiBbICAgNDIuMzQx
-NTI1XSAtLS1bIGVuZCB0cmFjZSBkYmQ5MGFlYjVjYTcxOTQzIF0tLS0NCj4gDQo+IFNvIGlmIEkg
-dXNlIHRoZSAwNGMyYmMyYmVkZTEgKGNvbW1pdCBiZWZvcmUgMTRjY2YwYWFiNDZlKSB2ZXJzaW9u
-IG9mDQo+IHhpbGlueF9kbWEuYyBhbmQgbmV2ZXIgcmVtb3ZlIHRoZSBtb2R1bGUgdGhlbiBpdCBp
-cyB3b3JraW5nIHdpdGggdGhlDQo+IDUuMTAuMSBrZXJuZWwuDQoNCk9rLCB3ZSB3aWxsIGFuYWx5
-emUgdGhpcyBpc3N1ZSBhbmQgcmVwb3J0IGJhY2sgdGhlIGZpbmRpbmdzLg0KDQo+IA0KPiBIb3Bl
-ZnVsbHksIHRoaXMgd2lsbCBiZSBjbGVhciB0byBzb21lb25lIGhvdyB0aGVzZSBpc3N1ZXMgY2Fu
-IGJlIHJlc29sdmVkLiBJbg0KPiBnZW5lcmFsIHdlJ3ZlIGJlZW4gdmVyeSBoYXBweSB1c2luZyB0
-aGUgeGlsaW54IGRtYS4NCj4gDQo+IEknbSBub3Qgc3Vic2NyaWJlZCB0byB0aGUgbGludXgta2Vy
-bmVsIE1MIHNvIGlmIHlvdSBuZWVkIGFueSBmdXJ0aGVyIGluZm8gb3INCj4gdGVzdGluZyBqdXN0
-IGtlZXAgbWUgaW4gdGhlIHRvOiBsaXN0Lg0KPiANCj4gdGhhbmtzLA0KPiBQYXVsDQo=
+On Wed, Sep 23, 2020 at 08:19:18AM +0000, Tudor.Ambarus@microchip.com wrote:
+> On 9/23/20 11:13 AM, Tudor.Ambarus@microchip.com wrote:
+> > Hi, Pavel,
+> > 
+> > On 9/20/20 11:28 AM, Pavel Machek wrote:
+> >> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> >>
+> >> This fixes memory leak in at_hdmac. Mainline does not have the same
+> >> problem.
+> >>
+> >> Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
+> >>
+> >> diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
+> >> index 86427f6ba78c..0847b2055857 100644
+> >> --- a/drivers/dma/at_hdmac.c
+> >> +++ b/drivers/dma/at_hdmac.c
+> >> @@ -1714,8 +1714,10 @@ static struct dma_chan *at_dma_xlate(struct of_phandle_args *dma_spec,
+> >>         atslave->dma_dev = &dmac_pdev->dev;
+> >>
+> >>         chan = dma_request_channel(mask, at_dma_filter, atslave);
+> >> -       if (!chan)
+> >> +       if (!chan) {
+> >> +               kfree(atslave);
+> >>                 return NULL;
+> >> +       }
+> > 
+> > Thanks for submitting this to stable. While the fix is good, you can instead
+> > cherry-pick the commit that hit upstream. In order to do that cleanly on top
+> > of v4.19.145, you have to pick two other fixes:
+> > 
+> > commit a6e7f19c9100 ("dmaengine: at_hdmac: Substitute kzalloc with kmalloc")
+> > commit 3832b78b3ec2 ("dmaengine: at_hdmac: add missing put_device() call in at_dma_xlate()")
+> > commit a6e7f19c9100 ("dmaengine: at_hdmac: Substitute kzalloc with kmalloc")
+> 
+> this last commit should have been
+> commit e097eb7473d9 ("dmaengine: at_hdmac: add missing kfree() call in at_dma_xlate()")
+> 
+> bad copy and paste :)
+
+So are all 3 of those needed on both 5.4.y and 4.19.y to resolve this
+issue?
+
+thanks,
+
+greg k-h

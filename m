@@ -2,138 +2,178 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05FED2EBB9F
-	for <lists+dmaengine@lfdr.de>; Wed,  6 Jan 2021 10:26:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DDAAD2EBC2A
+	for <lists+dmaengine@lfdr.de>; Wed,  6 Jan 2021 11:12:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725905AbhAFJ0a (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 6 Jan 2021 04:26:30 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:53879 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725868AbhAFJ03 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 6 Jan 2021 04:26:29 -0500
-X-UUID: 1b1acfb439384d78a32acd87f25d5b70-20210106
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=zOuLnq2988VcCoJP2KaUOG1UC0p7HGPhxsgATLl5fuU=;
-        b=q1aDPvqbJEz8uedknKGYXsOPVx3xFNpHppP5FHHAOdz7kfe8Qd3WkTCG/zaIeFlr0HH30f8CgWVBQjb5Rv1LAiTXDbo3IsLQM2pe5E07rgfQ+GGcbojW5S9I2kewCYW56Z5W45Aj9nRfE2TRgCRe9b5v10zlrC9ZCTACIxmBkIA=;
-X-UUID: 1b1acfb439384d78a32acd87f25d5b70-20210106
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <eastl.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 603406478; Wed, 06 Jan 2021 17:25:42 +0800
-Received: from mtkcas11.mediatek.inc (172.21.101.40) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 6 Jan 2021 17:25:40 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas11.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 6 Jan 2021 17:25:40 +0800
-Message-ID: <1609925140.5373.5.camel@mtkswgap22>
-Subject: Re: [PATCH v8 1/4] dt-bindings: dmaengine: Add MediaTek
- Command-Queue DMA controller bindings
-From:   EastL <EastL.Lee@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Sean Wang <sean.wang@mediatek.com>, <vkoul@kernel.org>,
-        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, <cc.hwang@mediatek.com>
-Date:   Wed, 6 Jan 2021 17:25:40 +0800
-In-Reply-To: <20210103165842.GA4024251@robh.at.kernel.org>
-References: <1608715847-28956-1-git-send-email-EastL.Lee@mediatek.com>
-         <1608715847-28956-2-git-send-email-EastL.Lee@mediatek.com>
-         <20210103165842.GA4024251@robh.at.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        id S1726038AbhAFKMG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 6 Jan 2021 05:12:06 -0500
+Received: from mga03.intel.com ([134.134.136.65]:16400 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725941AbhAFKMG (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 6 Jan 2021 05:12:06 -0500
+IronPort-SDR: I7Qt2+AcbC1AMAKHLOSCbx0GAvvvBBybYL/p6OHCRt/xLXxjSnqLLrlNWDz3cYBLbUIedIxWpz
+ F+RZR8/vvuDw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9855"; a="177357367"
+X-IronPort-AV: E=Sophos;i="5.78,479,1599548400"; 
+   d="scan'208";a="177357367"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2021 02:10:19 -0800
+IronPort-SDR: d08z5hl0XnBjFC605NW3Hlw0yXQdq+NUzEy5P5L4DpQIY0tLy8DeV7WHHXWC+t/VS4vT0Em7qx
+ t3sOQngMY85Q==
+X-IronPort-AV: E=Sophos;i="5.78,479,1599548400"; 
+   d="scan'208";a="379231175"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.255.29.66]) ([10.255.29.66])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2021 02:10:12 -0800
+Cc:     baolu.lu@linux.intel.com, tglx@linutronix.de, ashok.raj@intel.com,
+        kevin.tian@intel.com, dave.jiang@intel.com, megha.dey@intel.com,
+        dwmw2@infradead.org, alex.williamson@redhat.com,
+        bhelgaas@google.com, dan.j.williams@intel.com,
+        dmaengine@vger.kernel.org, eric.auger@redhat.com,
+        jacob.jun.pan@intel.com, jgg@mellanox.com, kvm@vger.kernel.org,
+        kwankhede@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, maz@kernel.org, mona.hossain@intel.com,
+        netanelg@mellanox.com, parav@mellanox.com, pbonzini@redhat.com,
+        rafael@kernel.org, samuel.ortiz@intel.com,
+        sanjay.k.kumar@intel.com, shahafs@mellanox.com,
+        tony.luck@intel.com, vkoul@kernel.org, yan.y.zhao@linux.intel.com,
+        yi.l.liu@intel.com
+To:     Leon Romanovsky <leon@kernel.org>
+References: <20210106022749.2769057-1-baolu.lu@linux.intel.com>
+ <20210106060613.GU31158@unreal>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Subject: Re: [RFC PATCH v2 1/1] platform-msi: Add platform check for subdevice
+ irq domain
+Message-ID: <3d2620f9-bbd4-3dd0-8e29-0cfe492a109f@linux.intel.com>
+Date:   Wed, 6 Jan 2021 18:10:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20210106060613.GU31158@unreal>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-T24gU3VuLCAyMDIxLTAxLTAzIGF0IDA5OjU4IC0wNzAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gV2VkLCBEZWMgMjMsIDIwMjAgYXQgMDU6MzA6NDRQTSArMDgwMCwgRWFzdEwgTGVlIHdyb3Rl
-Og0KPiA+IERvY3VtZW50IHRoZSBkZXZpY2V0cmVlIGJpbmRpbmdzIGZvciBNZWRpYVRlayBDb21t
-YW5kLVF1ZXVlIERNQSBjb250cm9sbGVyDQo+ID4gd2hpY2ggY291bGQgYmUgZm91bmQgb24gTVQ2
-Nzc5IFNvQyBvciBvdGhlciBzaW1pbGFyIE1lZGlhdGVrIFNvQ3MuDQo+ID4gDQo+ID4gU2lnbmVk
-LW9mZi1ieTogRWFzdEwgTGVlIDxFYXN0TC5MZWVAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+
-ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvbXRrLWNxZG1hLnlhbWwgICAgICAgICB8IDEw
-NCArKysrKysrKysrKysrKysrKysrKysNCj4gDQo+IFVzZSBjb21wYXRpYmxlIHN0cmluZyBmb3Ig
-ZmlsZW5hbWU6DQpPSw0KPiANCj4gbWVkaWF0ZWssY3FkbWEueWFtbA0KPiANCj4gPiAgMSBmaWxl
-IGNoYW5nZWQsIDEwNCBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL210ay1jcWRtYS55YW1sDQo+ID4gDQo+
-ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvbXRr
-LWNxZG1hLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL210ay1j
-cWRtYS55YW1sDQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi5h
-NzZhMjYzDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kbWEvbXRrLWNxZG1hLnlhbWwNCj4gPiBAQCAtMCwwICsxLDEwNCBAQA0K
-PiA+ICsjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiAoR1BMLTIuMC1vbmx5IE9SIEJTRC0yLUNs
-YXVzZSkNCj4gPiArJVlBTUwgMS4yDQo+ID4gKy0tLQ0KPiA+ICskaWQ6IGh0dHA6Ly9kZXZpY2V0
-cmVlLm9yZy9zY2hlbWFzL2RtYS9tdGstY3FkbWEueWFtbCMNCj4gDQo+IERvbid0IGZvcmdldCB0
-byB1cGRhdGUgdGhpcy4NCk9LDQo+IA0KPiA+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5v
-cmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMNCj4gPiArDQo+ID4gK3RpdGxlOiBNZWRpYVRlayBD
-b21tYW5kLVF1ZXVlIERNQSBjb250cm9sbGVyIERldmljZSBUcmVlIEJpbmRpbmcNCj4gPiArDQo+
-ID4gK21haW50YWluZXJzOg0KPiA+ICsgIC0gRWFzdEwgTGVlIDxFYXN0TC5MZWVAbWVkaWF0ZWsu
-Y29tPg0KPiA+ICsNCj4gPiArZGVzY3JpcHRpb246DQo+ID4gKyAgTWVkaWFUZWsgQ29tbWFuZC1R
-dWV1ZSBETUEgY29udHJvbGxlciAoQ1FETUEpIG9uIE1lZGlhdGVrIFNvQw0KPiA+ICsgIGlzIGRl
-ZGljYXRlZCB0byBtZW1vcnktdG8tbWVtb3J5IHRyYW5zZmVyIHRocm91Z2ggcXVldWUgYmFzZWQN
-Cj4gPiArICBkZXNjcmlwdG9yIG1hbmFnZW1lbnQuDQo+ID4gKw0KPiA+ICthbGxPZjoNCj4gPiAr
-ICAtICRyZWY6ICJkbWEtY29udHJvbGxlci55YW1sIyINCj4gPiArDQo+ID4gK3Byb3BlcnRpZXM6
-DQo+ID4gKyAgY29tcGF0aWJsZToNCj4gPiArICAgIGl0ZW1zOg0KPiA+ICsgICAgICAtIGVudW06
-DQo+ID4gKyAgICAgICAgICAtIG1lZGlhdGVrLG10Njc2NS1jcWRtYQ0KPiA+ICsgICAgICAgICAg
-LSBtZWRpYXRlayxtdDY3NzktY3FkbWENCj4gPiArICAgICAgLSBjb25zdDogbWVkaWF0ZWssY3Fk
-bWENCj4gPiArDQo+ID4gKyAgcmVnOg0KPiA+ICsgICAgbWluSXRlbXM6IDENCj4gPiArICAgIG1h
-eEl0ZW1zOiA1DQo+ID4gKyAgICBkZXNjcmlwdGlvbjoNCj4gPiArICAgICAgICBBIGJhc2UgYWRk
-cmVzcyBvZiBNZWRpYVRlayBDb21tYW5kLVF1ZXVlIERNQSBjb250cm9sbGVyLA0KPiA+ICsgICAg
-ICAgIGEgY2hhbm5lbCB3aWxsIGhhdmUgYSBzZXQgb2YgYmFzZSBhZGRyZXNzLg0KPiA+ICsNCj4g
-PiArICBpbnRlcnJ1cHRzOg0KPiA+ICsgICAgbWluSXRlbXM6IDENCj4gPiArICAgIG1heEl0ZW1z
-OiA1DQo+ID4gKyAgICBkZXNjcmlwdGlvbjoNCj4gPiArICAgICAgICBBIGludGVycnVwdCBudW1i
-ZXIgb2YgTWVkaWFUZWsgQ29tbWFuZC1RdWV1ZSBETUEgY29udHJvbGxlciwNCj4gPiArICAgICAg
-ICBvbmUgaW50ZXJydXB0IG51bWJlciBwZXIgZG1hLWNoYW5uZWxzLg0KPiA+ICsNCj4gPiArICBj
-bG9ja3M6DQo+ID4gKyAgICBtYXhJdGVtczogMQ0KPiA+ICsNCj4gPiArICBjbG9jay1uYW1lczoN
-Cj4gPiArICAgIGNvbnN0OiBjcWRtYQ0KPiA+ICsNCj4gPiArICBkbWEtY2hhbm5lbC1tYXNrOg0K
-PiA+ICsgICAgZGVzY3JpcHRpb246DQo+ID4gKyAgICAgICBGb3IgRE1BIGNhcGFiaWxpdHksIFdl
-IHdpbGwga25vdyB0aGUgYWRkcmVzc2luZyBjYXBhYmlsaXR5IG9mDQo+ID4gKyAgICAgICBNZWRp
-YVRlayBDb21tYW5kLVF1ZXVlIERNQSBjb250cm9sbGVyIHRocm91Z2ggZG1hLWNoYW5uZWwtbWFz
-ay4NCj4gPiArICAgICAgbWluaW11bTogMQ0KPiA+ICsgICAgICBtYXhpbXVtOiA2Mw0KPiANCj4g
-SW5kZW50YXRpb24gaXMgd3JvbmcgaGVyZSBzbyB0aGlzIGhhcyBubyBlZmZlY3QuDQpJJ2xsIGZp
-eCBpdA0KPiANCj4gQSBtYXNrIG9mIDYzIGlzIDYgY2hhbm5lbHMuLi4NCkluIG15IG9waW5pb24s
-IGtlcm5lbCBkbWEgbWFzayBpZiBmb3IgMzIvNjQgYml0IGNhcGFiaWxpdHkuLi4NCklmIEkgZG9u
-J3Qgc2V0IGRtYSBtYXNrIEkgd2lsbCBnZXQgZmFpbCBvbiBETUFURVNULg0KPiANCj4gPiArDQo+
-ID4gKyAgZG1hLWNoYW5uZWxzOg0KPiA+ICsgICAgZGVzY3JpcHRpb246DQo+ID4gKyAgICAgIE51
-bWJlciBvZiBETUEgY2hhbm5lbHMgc3VwcG9ydGVkIGJ5IE1lZGlhVGVrIENvbW1hbmQtUXVldWUg
-RE1BDQo+ID4gKyAgICAgIGNvbnRyb2xsZXIsIHN1cHBvcnQgdXAgdG8gZml2ZS4NCj4gPiArICAg
-ICAgbWluaW11bTogMQ0KPiA+ICsgICAgICBtYXhpbXVtOiA1DQo+IA0KPiBTYW1lIGhlcmUuDQpP
-Sw0KPiANCj4gRG8geW91IHJlYWxseSBuZWVkIGJvdGggZG1hLWNoYW5uZWxzIGFuZCBkbWEtY2hh
-bm5lbC1tYXNrPyBZb3Ugc2hvdWxkIGJlIA0KPiBhYmxlIHRvIGdldCBvbmUgZnJvbSB0aGUgb3Ro
-ZXIuDQo+IA0KPiA+ICsNCj4gPiArICBkbWEtcmVxdWVzdHM6DQo+ID4gKyAgICBkZXNjcmlwdGlv
-bjoNCj4gPiArICAgICAgTnVtYmVyIG9mIERNQSByZXF1ZXN0ICh2aXJ0dWFsIGNoYW5uZWwpIHN1
-cHBvcnRlZCBieSBNZWRpYVRlaw0KPiA+ICsgICAgICBDb21tYW5kLVF1ZXVlIERNQSBjb250cm9s
-bGVyLCBzdXBwb3J0IHVwIHRvIDMyLg0KPiA+ICsgICAgICBtaW5pbXVtOiAxDQo+ID4gKyAgICAg
-IG1heGltdW06IDMyDQo+IA0KPiBBbmQgaGVyZS4NCj4gDQo+IFlvdSBhcmUgbWlzc2luZyAnI2Rt
-YS1jZWxscycgYWxzby4NCk9LIEknbGwgZml4IGl0Lg0KPiANCj4gPiArDQo+ID4gK3JlcXVpcmVk
-Og0KPiA+ICsgIC0gIiNkbWEtY2VsbHMiDQo+ID4gKyAgLSBjb21wYXRpYmxlDQo+ID4gKyAgLSBy
-ZWcNCj4gPiArICAtIGludGVycnVwdHMNCj4gPiArICAtIGNsb2Nrcw0KPiA+ICsgIC0gY2xvY2st
-bmFtZXMNCj4gPiArICAtIGRtYS1jaGFubmVsLW1hc2sNCj4gPiArICAtIGRtYS1jaGFubmVscw0K
-PiA+ICsgIC0gZG1hLXJlcXVlc3RzDQo+ID4gKw0KPiA+ICthZGRpdGlvbmFsUHJvcGVydGllczog
-ZmFsc2UNCj4gPiArDQo+ID4gK2V4YW1wbGVzOg0KPiA+ICsgIC0gfA0KPiA+ICsgICAgI2luY2x1
-ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2lycS5oPg0KPiA+ICsgICAgI2lu
-Y2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2FybS1naWMuaD4NCj4gPiAr
-ICAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9jbG9jay9tdDY3NzktY2xrLmg+DQo+ID4gKyAgICBj
-cWRtYTogZG1hLWNvbnRyb2xsZXJAMTAyMTIwMDAgew0KPiA+ICsgICAgICAgIGNvbXBhdGlibGUg
-PSAibWVkaWF0ZWssbXQ2Nzc5LWNxZG1hIjsNCj4gDQo+IFRoaXMgc2hvdWxkIGZhaWwgdmFsaWRh
-dGlvbiBiZWNhdXNlIGl0IGRvZXNuJ3QgbWF0Y2ggdGhlIHNjaGVtYS4gWW91IHJhbiANCj4gJ21h
-a2UgZHRfYmluZGluZ19jaGVjaycsIHJpZ2h0Pw0KWWVzLCBidXQgSSBnb3Qgb3RoZXIgZmFpbCBv
-biBrZXJuZWwtNS4xMC4uLg0KPiANCj4gPiArICAgICAgICByZWcgPSA8MHgxMDIxMjAwMCAweDgw
-PiwNCj4gPiArICAgICAgICAgICAgPDB4MTAyMTIwODAgMHg4MD4sDQo+ID4gKyAgICAgICAgICAg
-IDwweDEwMjEyMTAwIDB4ODA+Ow0KPiA+ICsgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSAx
-MzkgSVJRX1RZUEVfTEVWRUxfTE9XPiwNCj4gPiArICAgICAgICAgICAgPEdJQ19TUEkgMTQwIElS
-UV9UWVBFX0xFVkVMX0xPVz4sDQo+ID4gKyAgICAgICAgICAgIDxHSUNfU1BJIDE0MSBJUlFfVFlQ
-RV9MRVZFTF9MT1c+Ow0KPiA+ICsgICAgICAgIGNsb2NrcyA9IDwmaW5mcmFjZmdfYW8gQ0xLX0lO
-RlJBX0NRX0RNQT47DQo+ID4gKyAgICAgICAgY2xvY2stbmFtZXMgPSAiY3FkbWEiOw0KPiA+ICsg
-ICAgICAgIGRtYS1jaGFubmVsLW1hc2sgPSA8NjM+Ow0KPiANCj4gNiBjaGFubmVscyBvci4uLg0K
-PiANCj4gPiArICAgICAgICBkbWEtY2hhbm5lbHMgPSA8Mz47DQo+IA0KPiAzPw0KMyBjaGFubmVs
-LCB0aGUgbWFzayBpcyBmb3IgRE1BVEVTVCBQQVNTLg0KPiANCj4gPiArICAgICAgICBkbWEtcmVx
-dWVzdHMgPSA8MzI+Ow0KPiA+ICsgICAgICAgICNkbWEtY2VsbHMgPSA8MT47DQo+ID4gKyAgICB9
-Ow0KPiA+ICsNCj4gPiArLi4uDQo+ID4gLS0gDQo+ID4gMS45LjENCj4gPiANCg0K
+Hi Leon,
 
+On 2021/1/6 14:06, Leon Romanovsky wrote:
+> On Wed, Jan 06, 2021 at 10:27:49AM +0800, Lu Baolu wrote:
+>> The pci_subdevice_msi_create_irq_domain() should fail if the underlying
+>> platform is not able to support IMS (Interrupt Message Storage). Otherwise,
+>> the isolation of interrupt is not guaranteed.
+>>
+>> For x86, IMS is only supported on bare metal for now. We could enable it
+>> in the virtualization environments in the future if interrupt HYPERCALL
+>> domain is supported or the hardware has the capability of interrupt
+>> isolation for subdevices.
+>>
+>> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+>> Link: https://lore.kernel.org/linux-pci/87pn4nk7nn.fsf@nanos.tec.linutronix.de/
+>> Link: https://lore.kernel.org/linux-pci/877dqrnzr3.fsf@nanos.tec.linutronix.de/
+>> Link: https://lore.kernel.org/linux-pci/877dqqmc2h.fsf@nanos.tec.linutronix.de/
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> ---
+>>   arch/x86/pci/common.c       | 47 +++++++++++++++++++++++++++++++++++++
+>>   drivers/base/platform-msi.c |  8 +++++++
+>>   include/linux/msi.h         |  1 +
+>>   3 files changed, 56 insertions(+)
+>>
+>>
+>> Background:
+>> Learnt from the discussions in this thread:
+>>
+>> https://lore.kernel.org/linux-pci/160408357912.912050.17005584526266191420.stgit@djiang5-desk3.ch.intel.com/
+>>
+>> The device IMS (Interrupt Message Storage) should not be enabled in any
+>> virtualization environments unless there is a HYPERCALL domain which
+>> makes the changes in the message store managed by the hypervisor.
+>>
+>> As the initial step, we allow the IMS to be enabled only if we are
+>> running on the bare metal. It's easy to enable IMS in the virtualization
+>> environments if above preconditions are met in the future.
+>>
+>> We ever thought about moving on_bare_metal() to a generic file so that
+>> it could be well maintained and used. But we need some suggestions about
+>> where to put it. Your comments are very appreciated.
+>>
+>> This patch is only for comments purpose. Please don't merge it. We will
+>> include it in the Intel IMS implementation later once we reach a
+>> consensus.
+>>
+>> Change log:
+>> v1->v2:
+>>   - v1:
+>>     https://lore.kernel.org/linux-pci/20201210004624.345282-1-baolu.lu@linux.intel.com/
+>>   - Rename probably_on_bare_metal() with on_bare_metal();
+>>   - Some vendors might use the same name for both bare metal and virtual
+>>     environment. Before we add vendor specific code to distinguish
+>>     between them, let's return false in on_bare_metal(). This won't
+>>     introduce any regression. The only impact is that the coming new
+>>     platform msi feature won't be supported until the vendor specific code
+>>     is provided.
+>>
+>> Best regards,
+>> baolu
+>>
+>> diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
+>> index 3507f456fcd0..963e0401f2b2 100644
+>> --- a/arch/x86/pci/common.c
+>> +++ b/arch/x86/pci/common.c
+>> @@ -724,3 +724,50 @@ struct pci_dev *pci_real_dma_dev(struct pci_dev *dev)
+>>   	return dev;
+>>   }
+>>   #endif
+>> +
+>> +/*
+>> + * We want to figure out which context we are running in. But the hardware
+>> + * does not introduce a reliable way (instruction, CPUID leaf, MSR, whatever)
+>> + * which can be manipulated by the VMM to let the OS figure out where it runs.
+>> + * So we go with the below probably on_bare_metal() function as a replacement
+>> + * for definitely on_bare_metal() to go forward only for the very simple reason
+>> + * that this is the only option we have.
+>> + *
+>> + * People might use the same vendor name for both bare metal and virtual
+>> + * environment. We can remove those names once we have vendor specific code to
+>> + * distinguish between them.
+>> + */
+>> +static const char * const vmm_vendor_name[] = {
+>> +	"QEMU", "Bochs", "KVM", "Xen", "VMware", "VMW", "VMware Inc.",
+>> +	"innotek GmbH", "Oracle Corporation", "Parallels", "BHYVE",
+>> +	"Microsoft Corporation", "Amazon EC2"
+>> +};
+> 
+> Maybe it is not concern at all, but this approach will make
+> forward/backward compatibility without kernel upgrade impossible.
+> 
+> Once QEMU (example) will have needed support, someone will need to remove
+> the QEMU from this array, rewrite on_bare_metal() because it is not bare
+> vs. virtual anymore and require kernel upgrade/downgrade every time QEMU
+> version is switched.
+> 
+> Plus need to update stable@ and distros.
+> 
+> I'm already feeling pain from the fields while they debug such code.
+> 
+> Am I missing it completely?
+
+The basic need here is that we want to disallow a brand new feature
+(device ims) to be enabled in any VMM environment.
+
+The cpuid (X86_FEATURE_HYPERVISOR) is a good choice, but it's optional
+and even not documented. So besides it, we maintain a block list
+(vmm_vendor_name) which lists all possible VMM vendor names. If
+dmi_match(DMI_SYS_VENDOR) hits, the new feature is not allowed to be
+enabled.
+
+This block list is a bit overkill since some vendor names could also be
+used on bare metal. We will delay enabling the new feature for those
+cases until we have a vendor-specific way to distinguish between bare
+metal and VMM environments.
+
+Honestly speaking, I can't see any compatible issue as it's common that
+a new feature is supported in a new kernel but not in an old one.
+
+Best regards,
+baolu

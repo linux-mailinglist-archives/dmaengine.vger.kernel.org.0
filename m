@@ -2,48 +2,107 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8ED4E2EB9FD
-	for <lists+dmaengine@lfdr.de>; Wed,  6 Jan 2021 07:27:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BB132EBB29
+	for <lists+dmaengine@lfdr.de>; Wed,  6 Jan 2021 09:38:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725868AbhAFG1G (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 6 Jan 2021 01:27:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725837AbhAFG1G (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 6 Jan 2021 01:27:06 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F172C207B2;
-        Wed,  6 Jan 2021 06:26:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1609914385;
-        bh=Rl1DPGc6dg7UtTQq81mf5Us0imnQVsR1ec0WshwiXCI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=G0K4caMy6BnHP2xJk/C4lSVGJvSkrTK0qbuu2HrFjz1E8u1+a3d9cQBkNuMs8unG8
-         dU/2lNZSQHQgxlFAcnpzw6w6XKsHpO4UJt/f/pcAsNKPPvRpF3uquaELeEJKMHKMyF
-         YRl8jmFpPKJbfTYPV8p717TJ0I5yVOdLlm+B71AiFDK333N+1HyXrsg0i96Bbb3FXV
-         VXu/+rbd3UofF5/kiI/oEzhKxIn/Wkm8Y7x1bW2afaJWiDxgZvL4LPYbZ8FckaaU8g
-         vAFgOPMv7LXrkuGMIxRRrsyeegV1iEK9svOhnIBfxbcoE8VpK0qgPGNcOtYoWG6T0N
-         8NiNQYL5SbTQA==
-Date:   Wed, 6 Jan 2021 11:56:21 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Zheng Yongjun <zhengyongjun3@huawei.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dave.jiang@intel.com, dan.j.williams@intel.com
-Subject: Re: [PATCH v2 -next] dma: idxd: use DEFINE_MUTEX() for mutex lock
-Message-ID: <20210106062621.GS2771@vkoul-mobl>
-References: <20201224132254.30961-1-zhengyongjun3@huawei.com>
+        id S1726574AbhAFIiE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 6 Jan 2021 03:38:04 -0500
+Received: from mail-oo1-f48.google.com ([209.85.161.48]:42963 "EHLO
+        mail-oo1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbhAFIiE (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 6 Jan 2021 03:38:04 -0500
+Received: by mail-oo1-f48.google.com with SMTP id x203so586896ooa.9;
+        Wed, 06 Jan 2021 00:37:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7OzcDXMwatEtiJomNBi1fhi3zuuxEWhyROAP2OwThNY=;
+        b=EQ71xKWn6jEzk16xLKPw5tpURAioSNiH1WBf7m9kaDOShUYzWqDQ2s2wBGAg4P9H3J
+         Mn4cea36V3yDJZZrvHcNzPWnFPRSJt/NLvTmeFnFgsH0whYPMW6IM5yqwm8jTr01KMl9
+         ZZEi8CE6gy5fRn7AkvD+pvWO05miEnxQilI78QQh7PLj6v+I+0jCuNrUcUv+dhGZEZiv
+         v0c6RD3T94Qw07f4jhO5ADNuzjlIEToYcUiiqj4wivYB6ei9N9PpupqdcyyFF4eRsE0X
+         6gjpUPUB00Jm1SxknefDlc66XhPGX55zcpbDjCYhJR+gAdb4eHo6ri1rjep5ilymjGKm
+         mnxQ==
+X-Gm-Message-State: AOAM530lsAiSTA+Tt8ZbOkvKTVNeR7z6UzFGVNcIKOS+9jJv/Yr6Dj3n
+        xMVsCDhZjaRef2yEGQJb1xW7zzukJ5CfJtulSPc=
+X-Google-Smtp-Source: ABdhPJz+riLQ42T+q9EFB1XsbUqjCK7bS2nCYCFI4IXj5lNnjzpQBlfNrLzEuiXe37snmeLQrap5l7udgxcoLsEDH3o=
+X-Received: by 2002:a4a:8353:: with SMTP id q19mr2071403oog.40.1609922242555;
+ Wed, 06 Jan 2021 00:37:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201224132254.30961-1-zhengyongjun3@huawei.com>
+References: <20210105140305.141401-1-tsbogend@alpha.franken.de>
+In-Reply-To: <20210105140305.141401-1-tsbogend@alpha.franken.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 6 Jan 2021 09:37:11 +0100
+Message-ID: <CAMuHMdX=trGqj8RzV7r1iTneqDjWOc4e1T-X+R_B34rxxhJpbg@mail.gmail.com>
+Subject: Re: [PATCH 00/10] Remove support for TX49xx
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>, linux-ide@vger.kernel.org,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>, linux-rtc@vger.kernel.org,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Atsushi Nemoto <anemo@mba.ocn.ne.jp>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 24-12-20, 21:22, Zheng Yongjun wrote:
-> mutex lock can be initialized automatically with DEFINE_MUTEX()
-> rather than explicitly calling mutex_init().
+Hi Thomas,
 
-Applied, thanks
+CC Nemoto-san (de-facto TX49XX maintainer)
 
--- 
-~Vinod
+On Tue, Jan 5, 2021 at 3:03 PM Thomas Bogendoerfer
+<tsbogend@alpha.franken.de> wrote:
+> I couldn't find any buyable product other than reference boards using
+> TX49xx CPUs. And since nobody showed interest in keeping support for
+> it, it's time to remove it.
+
+I have an RBTX4927 development board in my board farm, boot-test every
+bi-weekly renesas-drivers release on it, and fix kernel issues when they
+appear.
+
+Is that sufficient to keep it?
+
+TX49xx SoCs were used in Sony LocationFree base stations, running
+VxWorks. You can no longer buy them.
+I'm not aware of anyone ever porting Linux to them.
+https://en.wikipedia.org/wiki/LocationFree_Player
+
+>   spi: txx9: Remove driver
+
+I only noticed the planned removal when I saw the SPI patch was applied.
+Doesn't matter for me, as SPI is only present on TX4938, not on TX4927 ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds

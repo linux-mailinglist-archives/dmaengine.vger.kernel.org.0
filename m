@@ -2,107 +2,84 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BB132EBB29
-	for <lists+dmaengine@lfdr.de>; Wed,  6 Jan 2021 09:38:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E5332EBB91
+	for <lists+dmaengine@lfdr.de>; Wed,  6 Jan 2021 10:12:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbhAFIiE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 6 Jan 2021 03:38:04 -0500
-Received: from mail-oo1-f48.google.com ([209.85.161.48]:42963 "EHLO
-        mail-oo1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbhAFIiE (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 6 Jan 2021 03:38:04 -0500
-Received: by mail-oo1-f48.google.com with SMTP id x203so586896ooa.9;
-        Wed, 06 Jan 2021 00:37:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7OzcDXMwatEtiJomNBi1fhi3zuuxEWhyROAP2OwThNY=;
-        b=EQ71xKWn6jEzk16xLKPw5tpURAioSNiH1WBf7m9kaDOShUYzWqDQ2s2wBGAg4P9H3J
-         Mn4cea36V3yDJZZrvHcNzPWnFPRSJt/NLvTmeFnFgsH0whYPMW6IM5yqwm8jTr01KMl9
-         ZZEi8CE6gy5fRn7AkvD+pvWO05miEnxQilI78QQh7PLj6v+I+0jCuNrUcUv+dhGZEZiv
-         v0c6RD3T94Qw07f4jhO5ADNuzjlIEToYcUiiqj4wivYB6ei9N9PpupqdcyyFF4eRsE0X
-         6gjpUPUB00Jm1SxknefDlc66XhPGX55zcpbDjCYhJR+gAdb4eHo6ri1rjep5ilymjGKm
-         mnxQ==
-X-Gm-Message-State: AOAM530lsAiSTA+Tt8ZbOkvKTVNeR7z6UzFGVNcIKOS+9jJv/Yr6Dj3n
-        xMVsCDhZjaRef2yEGQJb1xW7zzukJ5CfJtulSPc=
-X-Google-Smtp-Source: ABdhPJz+riLQ42T+q9EFB1XsbUqjCK7bS2nCYCFI4IXj5lNnjzpQBlfNrLzEuiXe37snmeLQrap5l7udgxcoLsEDH3o=
-X-Received: by 2002:a4a:8353:: with SMTP id q19mr2071403oog.40.1609922242555;
- Wed, 06 Jan 2021 00:37:22 -0800 (PST)
-MIME-Version: 1.0
-References: <20210105140305.141401-1-tsbogend@alpha.franken.de>
-In-Reply-To: <20210105140305.141401-1-tsbogend@alpha.franken.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 6 Jan 2021 09:37:11 +0100
-Message-ID: <CAMuHMdX=trGqj8RzV7r1iTneqDjWOc4e1T-X+R_B34rxxhJpbg@mail.gmail.com>
-Subject: Re: [PATCH 00/10] Remove support for TX49xx
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        id S1725952AbhAFJMR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 6 Jan 2021 04:12:17 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:16177 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbhAFJMP (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 6 Jan 2021 04:12:15 -0500
+X-Originating-IP: 86.202.109.140
+Received: from localhost (lfbn-lyo-1-13-140.w86-202.abo.wanadoo.fr [86.202.109.140])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 49C3E240011;
+        Wed,  6 Jan 2021 09:11:32 +0000 (UTC)
+Date:   Wed, 6 Jan 2021 10:11:31 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>, linux-ide@vger.kernel.org,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        netdev <netdev@vger.kernel.org>, linux-rtc@vger.kernel.org,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Atsushi Nemoto <anemo@mba.ocn.ne.jp>
-Content-Type: text/plain; charset="UTF-8"
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        dmaengine@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: at_hdmac: remove platform data header
+Message-ID: <20210106091131.GL122615@piout.net>
+References: <20201228203022.2674133-1-alexandre.belloni@bootlin.com>
+ <20210106062453.GR2771@vkoul-mobl>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210106062453.GR2771@vkoul-mobl>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Thomas,
+On 06/01/2021 11:54:53+0530, Vinod Koul wrote:
+> On 28-12-20, 21:30, Alexandre Belloni wrote:
+> > linux/platform_data/dma-atmel.h is only used by the at_hdmac driver. Move
+> > the CFG bits definitions back in at_hdmac_regs.h and the remaining
+> > definitions in the driver.
+> 
+> Applied, thanks...
+> 
+> >  /* Bitfields in CFG */
+> > -/* are in at_hdmac.h */
+> > +#define ATC_PER_MSB(h)	((0x30U & (h)) >> 4)	/* Extract most significant bits of a handshaking identifier */
+> > +
+> > +#define	ATC_SRC_PER(h)		(0xFU & (h))	/* Channel src rq associated with periph handshaking ifc h */
+> > +#define	ATC_DST_PER(h)		((0xFU & (h)) <<  4)	/* Channel dst rq associated with periph handshaking ifc h */
+> > +#define	ATC_SRC_REP		(0x1 <<  8)	/* Source Replay Mod */
+> > +#define	ATC_SRC_H2SEL		(0x1 <<  9)	/* Source Handshaking Mod */
+> > +#define		ATC_SRC_H2SEL_SW	(0x0 <<  9)
+> > +#define		ATC_SRC_H2SEL_HW	(0x1 <<  9)
+> > +#define	ATC_SRC_PER_MSB(h)	(ATC_PER_MSB(h) << 10)	/* Channel src rq (most significant bits) */
+> > +#define	ATC_DST_REP		(0x1 << 12)	/* Destination Replay Mod */
+> > +#define	ATC_DST_H2SEL		(0x1 << 13)	/* Destination Handshaking Mod */
+> > +#define		ATC_DST_H2SEL_SW	(0x0 << 13)
+> > +#define		ATC_DST_H2SEL_HW	(0x1 << 13)
+> > +#define	ATC_DST_PER_MSB(h)	(ATC_PER_MSB(h) << 14)	/* Channel dst rq (most significant bits) */
+> > +#define	ATC_SOD			(0x1 << 16)	/* Stop On Done */
+> > +#define	ATC_LOCK_IF		(0x1 << 20)	/* Interface Lock */
+> > +#define	ATC_LOCK_B		(0x1 << 21)	/* AHB Bus Lock */
+> > +#define	ATC_LOCK_IF_L		(0x1 << 22)	/* Master Interface Arbiter Lock */
+> > +#define		ATC_LOCK_IF_L_CHUNK	(0x0 << 22)
+> > +#define		ATC_LOCK_IF_L_BUFFER	(0x1 << 22)
+> > +#define	ATC_AHB_PROT_MASK	(0x7 << 24)	/* AHB Protection */
+> > +#define	ATC_FIFOCFG_MASK	(0x3 << 28)	/* FIFO Request Configuration */
+> > +#define		ATC_FIFOCFG_LARGESTBURST	(0x0 << 28)
+> > +#define		ATC_FIFOCFG_HALFFIFO		(0x1 << 28)
+> > +#define		ATC_FIFOCFG_ENOUGHSPACE		(0x2 << 28)
+> 
+> Make these use BIT() or GENMASK() later..?
+> 
 
-CC Nemoto-san (de-facto TX49XX maintainer)
+Sure but for this patch, I wanted to make it clear that this was just
+moving code around.
 
-On Tue, Jan 5, 2021 at 3:03 PM Thomas Bogendoerfer
-<tsbogend@alpha.franken.de> wrote:
-> I couldn't find any buyable product other than reference boards using
-> TX49xx CPUs. And since nobody showed interest in keeping support for
-> it, it's time to remove it.
-
-I have an RBTX4927 development board in my board farm, boot-test every
-bi-weekly renesas-drivers release on it, and fix kernel issues when they
-appear.
-
-Is that sufficient to keep it?
-
-TX49xx SoCs were used in Sony LocationFree base stations, running
-VxWorks. You can no longer buy them.
-I'm not aware of anyone ever porting Linux to them.
-https://en.wikipedia.org/wiki/LocationFree_Player
-
->   spi: txx9: Remove driver
-
-I only noticed the planned removal when I saw the SPI patch was applied.
-Doesn't matter for me, as SPI is only present on TX4938, not on TX4927 ;-)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com

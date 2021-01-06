@@ -2,142 +2,158 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9675E2EC543
-	for <lists+dmaengine@lfdr.de>; Wed,  6 Jan 2021 21:42:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94CDC2EC718
+	for <lists+dmaengine@lfdr.de>; Thu,  7 Jan 2021 00:54:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbhAFUmR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 6 Jan 2021 15:42:17 -0500
-Received: from mail-ot1-f47.google.com ([209.85.210.47]:39292 "EHLO
-        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726807AbhAFUmR (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 6 Jan 2021 15:42:17 -0500
-Received: by mail-ot1-f47.google.com with SMTP id d8so4281674otq.6;
-        Wed, 06 Jan 2021 12:42:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+nn1mS9duynrGzRRIiFhGe9v+GbfGVRWJu+NZK2hPWU=;
-        b=UDuCsxFJodQ7UtSUWcHcnQKi4acOn3zHTLZODVkQGgcICl8piK2c+ydqsyeyPV4AaM
-         mxCXQxvApj4NHYjswZkKusri1CS+/6E+Ee3Lh7L4gw2lBVVxbRujJWVRSUb//RlKtJig
-         Dh6N7d+x3vclv5zXDmtzv64XLPv7807aoIRs5OjdxJmMjy4bFjklAvBaiXh1DDyj7KoG
-         ibNKXV0CilBaHhan0UQrraOWIQBoxejggaLBlONa8Qp26xD6I69G4UYZkASsCJAG/ZA5
-         p7T769/o0BqRLQi/+SMlQ7q8NZCRkhHcAYANTI/pKdGJ2GDZgARWuftLq2QQ7xS/4hAh
-         y1Mw==
-X-Gm-Message-State: AOAM531MvxeRBdRjaSvpWTDMq2b3idI2cZs6V5V8CIb8K1pipGZtfKZI
-        cxEe/FQlojeigUdOWKj5lulfExQf8dh/JF3rWzs=
-X-Google-Smtp-Source: ABdhPJzU2VNqomItTpW9N5EsZUcSxwbWydRvzmZvuW0h6PN+1EDrO5WVGcImI85plCOq8i6uJPLffPJf+e8BxB/lkhA=
-X-Received: by 2002:a05:6830:1f5a:: with SMTP id u26mr4549619oth.250.1609965695506;
- Wed, 06 Jan 2021 12:41:35 -0800 (PST)
+        id S1726449AbhAFXyl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 6 Jan 2021 18:54:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52794 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbhAFXyl (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 6 Jan 2021 18:54:41 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 438EE2333C;
+        Wed,  6 Jan 2021 23:54:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1609977240;
+        bh=KccsynjnFEJcrmwhf1b16TrZXgLFZesL4NPRSueUY1Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=O2Ctx+s/gNPzfxDa6pUH5emHrwTQaey2rpG/bApQcfaeCZglbryJfn/DohlvW0nUP
+         ks+CvxCNnJRnQfy1QICe+Y/6UfBNdT7Fie4mU6hkxCc/qY6KmEvsjE/egeqs4GV+y1
+         TW4FPA4nNMCMblnS6eOGf3yVexLzvV+1VHE+P/5WESFRYSwOPYyEdD4j3tBfw5xqxA
+         7vQXvaCaynNadGEw+FJn10Dl6UTHcWFFh0UYHsJ4LKoK6EOh3BwO8FAbRzaSr9OFo3
+         q+w0B08DB3B2O57YrN4skC7MHmVbtwCkc0B0Hqwa7sjwiFudRDfmnjHa2/qSUl0KdQ
+         8u/WZFhIkL+DQ==
+Received: by mail-qv1-f50.google.com with SMTP id et9so2051251qvb.10;
+        Wed, 06 Jan 2021 15:54:00 -0800 (PST)
+X-Gm-Message-State: AOAM5338/GZ24IlaWuV3bwXs7xC2q/Ww61cWqD1yqUjQiVA2TahcCtGK
+        iCNIfgQO3xyRoNRoFT2rPD781bqyhkbR0jdRUw==
+X-Google-Smtp-Source: ABdhPJzZl3aU05D6dlvbXZTfnBuEeO/OPJggOMbq92bGAhrV+nuJsZ/bCmxU3BveNk7VWisYeznWdqpE7BUkNfpW7nU=
+X-Received: by 2002:ad4:4a72:: with SMTP id cn18mr6116796qvb.50.1609977239399;
+ Wed, 06 Jan 2021 15:53:59 -0800 (PST)
 MIME-Version: 1.0
-References: <20210105140305.141401-1-tsbogend@alpha.franken.de>
- <CAMuHMdX=trGqj8RzV7r1iTneqDjWOc4e1T-X+R_B34rxxhJpbg@mail.gmail.com> <20210106184839.GA7773@alpha.franken.de>
-In-Reply-To: <20210106184839.GA7773@alpha.franken.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 6 Jan 2021 21:41:24 +0100
-Message-ID: <CAMuHMdV86BES7dmWr-7j1jbtoSy0bH1J0e5W41p8evagi0Nqcw@mail.gmail.com>
-Subject: Re: [PATCH 00/10] Remove support for TX49xx
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>, linux-ide@vger.kernel.org,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        netdev <netdev@vger.kernel.org>, linux-rtc@vger.kernel.org,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Atsushi Nemoto <anemo@mba.ocn.ne.jp>
+References: <1608715847-28956-1-git-send-email-EastL.Lee@mediatek.com>
+ <1608715847-28956-2-git-send-email-EastL.Lee@mediatek.com>
+ <20210103165842.GA4024251@robh.at.kernel.org> <1609925140.5373.5.camel@mtkswgap22>
+In-Reply-To: <1609925140.5373.5.camel@mtkswgap22>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 6 Jan 2021 16:53:46 -0700
+X-Gmail-Original-Message-ID: <CAL_JsqLjgJUNJiE8uri9MKqTdik=7BBGP9bZSkD1mF+Sk3YfmQ@mail.gmail.com>
+Message-ID: <CAL_JsqLjgJUNJiE8uri9MKqTdik=7BBGP9bZSkD1mF+Sk3YfmQ@mail.gmail.com>
+Subject: Re: [PATCH v8 1/4] dt-bindings: dmaengine: Add MediaTek Command-Queue
+ DMA controller bindings
+To:     EastL <EastL.Lee@mediatek.com>
+Cc:     Sean Wang <sean.wang@mediatek.com>, Vinod <vkoul@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>, devicetree@vger.kernel.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Thomas,
-
-On Wed, Jan 6, 2021 at 7:49 PM Thomas Bogendoerfer
-<tsbogend@alpha.franken.de> wrote:
-> On Wed, Jan 06, 2021 at 09:37:11AM +0100, Geert Uytterhoeven wrote:
-> > On Tue, Jan 5, 2021 at 3:03 PM Thomas Bogendoerfer
-> > <tsbogend@alpha.franken.de> wrote:
-> > > I couldn't find any buyable product other than reference boards using
-> > > TX49xx CPUs. And since nobody showed interest in keeping support for
-> > > it, it's time to remove it.
+On Wed, Jan 6, 2021 at 2:25 AM EastL <EastL.Lee@mediatek.com> wrote:
+>
+> On Sun, 2021-01-03 at 09:58 -0700, Rob Herring wrote:
+> > On Wed, Dec 23, 2020 at 05:30:44PM +0800, EastL Lee wrote:
+> > > Document the devicetree bindings for MediaTek Command-Queue DMA controller
+> > > which could be found on MT6779 SoC or other similar Mediatek SoCs.
+> > >
+> > > Signed-off-by: EastL Lee <EastL.Lee@mediatek.com>
+> > > ---
+> > >  .../devicetree/bindings/dma/mtk-cqdma.yaml         | 104 +++++++++++++++++++++
 > >
-> > I have an RBTX4927 development board in my board farm, boot-test every
-> > bi-weekly renesas-drivers release on it, and fix kernel issues when they
-> > appear.
+> > Use compatible string for filename:
+> OK
 > >
-> > Is that sufficient to keep it?
->
-> for me it is. But now we probaly need some reverts then...
+> > mediatek,cqdma.yaml
+> >
+> > >  1 file changed, 104 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml b/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
+> > > new file mode 100644
+> > > index 0000000..a76a263
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/dma/mtk-cqdma.yaml
+> > > @@ -0,0 +1,104 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/dma/mtk-cqdma.yaml#
+> >
+> > Don't forget to update this.
+> OK
+> >
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: MediaTek Command-Queue DMA controller Device Tree Binding
+> > > +
+> > > +maintainers:
+> > > +  - EastL Lee <EastL.Lee@mediatek.com>
+> > > +
+> > > +description:
+> > > +  MediaTek Command-Queue DMA controller (CQDMA) on Mediatek SoC
+> > > +  is dedicated to memory-to-memory transfer through queue based
+> > > +  descriptor management.
+> > > +
+> > > +allOf:
+> > > +  - $ref: "dma-controller.yaml#"
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    items:
+> > > +      - enum:
+> > > +          - mediatek,mt6765-cqdma
+> > > +          - mediatek,mt6779-cqdma
+> > > +      - const: mediatek,cqdma
+> > > +
+> > > +  reg:
+> > > +    minItems: 1
+> > > +    maxItems: 5
+> > > +    description:
+> > > +        A base address of MediaTek Command-Queue DMA controller,
+> > > +        a channel will have a set of base address.
+> > > +
+> > > +  interrupts:
+> > > +    minItems: 1
+> > > +    maxItems: 5
+> > > +    description:
+> > > +        A interrupt number of MediaTek Command-Queue DMA controller,
+> > > +        one interrupt number per dma-channels.
+> > > +
+> > > +  clocks:
+> > > +    maxItems: 1
+> > > +
+> > > +  clock-names:
+> > > +    const: cqdma
+> > > +
+> > > +  dma-channel-mask:
+> > > +    description:
+> > > +       For DMA capability, We will know the addressing capability of
+> > > +       MediaTek Command-Queue DMA controller through dma-channel-mask.
+> > > +      minimum: 1
+> > > +      maximum: 63
+> >
+> > Indentation is wrong here so this has no effect.
+> I'll fix it
+> >
+> > A mask of 63 is 6 channels...
+> In my opinion, kernel dma mask if for 32/64 bit capability...
+> If I don't set dma mask I will get fail on DMATEST.
 
-Indeed. Fortunately not all of it, as some removals were TX4938-only.
+As in the kernel's 'dma_mask'? That's something entirely different.
+The driver should set the mask to the max the device supports.
+Typically this is a 32-bit or 64-bit mask. The default is 32-bit. If
+the SoC has limitations in its buses, then you need to use
+'dma-ranges' in DT which will in turn set the bus_dma_limit.
 
-> I wonder whether you have seen my mail about the removal
->
-> https://lore.kernel.org/linux-mips/20201207105627.GA15866@alpha.franken.de
->
-> and my call for people owning MIPS machines
->
-> https://lore.kernel.org/linux-mips/20200227144910.GA25011@alpha.franken.de/
+For the above, the purpose is if you have sparsely allocated DMA channels.
 
-Sorry, I'm not following the linux-mips list that closely, so I hadn't
-seen them.  It's always a good idea to CC linux-kernel, and perhaps the
-few people who last touched the affected files.
-
-> Still "unclaimed" machines are
->
-> IMG Pistachio SoC based boards (MACH_PISTACHIO(
-> Toshiba TX39 series based machines (MACH_TX39XX)
-> NEC VR4100 series based machines (MACH_VR41XX)
-> Netlogic XLR/XLS based systems (NLM_XLR_BOARD)
-> Netlogic XLP based systems (NLM_XLP_BOARD)
-> Sibyte BCM91120C-CRhine (SIBYTE_CRHINE)
-> Sibyte BCM91120x-Carmel (SIBYTE_CARMEL)
-> Sibyte BCM91125C-CRhone (SIBYTE_CRHONE)
-> Sibyte BCM91125E-Rhone (SIBYTE_RHONE)
-> Sibyte BCM91250C2-LittleSur (SIBYTE_LITTLESUR)
-> Sibyte BCM91250E-Sentosa (SIBYTE_SENTOSA)
->
-> Is there something on this list you also regulary use ?
-
-No, I don't have anything from the list above.
-The RBTX4927 is basically my last MIPS-based system I do boot
-current kernels on.
-
-In active use, not for development:
-  - Ubiquiti EdgeRouter-X (Ralink-based).
-
-Stored in my attic:
-  - NetGear WNDR4300 (AtherOS-based),
-  - MikroTik Routerboard 150 (ADMtek-based, no (longer?) supported upstream),
-  - NEC DDB VRC-5476 (upstream support removed 15 years ago ;-)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Rob

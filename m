@@ -2,72 +2,73 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABF3B2EC214
-	for <lists+dmaengine@lfdr.de>; Wed,  6 Jan 2021 18:25:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D01192EC37D
+	for <lists+dmaengine@lfdr.de>; Wed,  6 Jan 2021 19:50:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbhAFRYz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 6 Jan 2021 12:24:55 -0500
-Received: from mrdf004.ocn.ad.jp ([125.206.160.152]:38233 "EHLO
-        mrdf004.ocn.ad.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbhAFRYy (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 6 Jan 2021 12:24:54 -0500
-X-Greylist: delayed 4742 seconds by postgrey-1.27 at vger.kernel.org; Wed, 06 Jan 2021 12:24:52 EST
-Received: from mogw6101.ocn.ad.jp (mogw6101.ocn.ad.jp [210.163.236.2])
-        by mrdf004.ocn.ad.jp (Postfix) with ESMTP id 639463801B0;
-        Thu,  7 Jan 2021 01:04:34 +0900 (JST)
-Received: from mf-smf-unw009c1.ocn.ad.jp (mf-smf-unw009c1.ocn.ad.jp [153.138.219.105])
-        by mogw6101.ocn.ad.jp (Postfix) with ESMTP id 8CCA81E002A;
-        Thu,  7 Jan 2021 01:03:15 +0900 (JST)
-Received: from ocn-vc-mts-202c1.ocn.ad.jp ([153.138.219.215])
-        by mf-smf-unw009c1.ocn.ad.jp with ESMTP
-        id xBBQkW5DGUrLKxBHHke1vh; Thu, 07 Jan 2021 01:03:15 +0900
-Received: from smtp.ocn.ne.jp ([153.149.227.167])
-        by ocn-vc-mts-202c1.ocn.ad.jp with ESMTP
-        id xBHGk2ikJIfvlxBHGkV6m2; Thu, 07 Jan 2021 01:03:15 +0900
-Received: from localhost (p1601136-ipoe.ipoe.ocn.ne.jp [114.172.254.135])
-        by smtp.ocn.ne.jp (Postfix) with ESMTPA;
-        Thu,  7 Jan 2021 01:03:14 +0900 (JST)
-Date:   Thu, 07 Jan 2021 01:03:14 +0900 (JST)
-Message-Id: <20210107.010314.1817045693815939591.anemo@mba.ocn.ne.jp>
-To:     geert@linux-m68k.org
-Cc:     tsbogend@alpha.franken.de, mpm@selenic.com,
-        herbert@gondor.apana.org.au, dan.j.williams@intel.com,
-        vkoul@kernel.org, davem@davemloft.net, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, kuba@kernel.org,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        broonie@kernel.org, wim@linux-watchdog.org, linux@roeck-us.net,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        alsa-devel@alsa-project.org
+        id S1726474AbhAFStp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 6 Jan 2021 13:49:45 -0500
+Received: from elvis.franken.de ([193.175.24.41]:33363 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726249AbhAFSto (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 6 Jan 2021 13:49:44 -0500
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1kxDra-0005fm-00; Wed, 06 Jan 2021 19:48:54 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 4B798C0808; Wed,  6 Jan 2021 19:48:39 +0100 (CET)
+Date:   Wed, 6 Jan 2021 19:48:39 +0100
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>, linux-ide@vger.kernel.org,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>, linux-rtc@vger.kernel.org,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Atsushi Nemoto <anemo@mba.ocn.ne.jp>
 Subject: Re: [PATCH 00/10] Remove support for TX49xx
-From:   Atsushi Nemoto <anemo@mba.ocn.ne.jp>
-In-Reply-To: <CAMuHMdX=trGqj8RzV7r1iTneqDjWOc4e1T-X+R_B34rxxhJpbg@mail.gmail.com>
+Message-ID: <20210106184839.GA7773@alpha.franken.de>
 References: <20210105140305.141401-1-tsbogend@alpha.franken.de>
-        <CAMuHMdX=trGqj8RzV7r1iTneqDjWOc4e1T-X+R_B34rxxhJpbg@mail.gmail.com>
-X-Mailer: Mew version 6.7 on Emacs 24.5 / Mule 6.0 (HANACHIRUSATO)
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+ <CAMuHMdX=trGqj8RzV7r1iTneqDjWOc4e1T-X+R_B34rxxhJpbg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdX=trGqj8RzV7r1iTneqDjWOc4e1T-X+R_B34rxxhJpbg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Geert!
-
-On Wed, 6 Jan 2021 09:37:11 +0100, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Wed, Jan 06, 2021 at 09:37:11AM +0100, Geert Uytterhoeven wrote:
 > Hi Thomas,
 > 
 > CC Nemoto-san (de-facto TX49XX maintainer)
 > 
 > On Tue, Jan 5, 2021 at 3:03 PM Thomas Bogendoerfer
 > <tsbogend@alpha.franken.de> wrote:
->> I couldn't find any buyable product other than reference boards using
->> TX49xx CPUs. And since nobody showed interest in keeping support for
->> it, it's time to remove it.
+> > I couldn't find any buyable product other than reference boards using
+> > TX49xx CPUs. And since nobody showed interest in keeping support for
+> > it, it's time to remove it.
 > 
 > I have an RBTX4927 development board in my board farm, boot-test every
 > bi-weekly renesas-drivers release on it, and fix kernel issues when they
@@ -75,11 +76,34 @@ On Wed, 6 Jan 2021 09:37:11 +0100, Geert Uytterhoeven <geert@linux-m68k.org> wro
 > 
 > Is that sufficient to keep it?
 
-It have been about 10 years since last time I see any TX49 board :-)
+for me it is. But now we probaly need some reverts then...
 
-AFAIK Geert is the last user of TX49 SoC.
-I'm OK with whole TX49xx (and TX39xx) removal if Geert (or any other
-users) agreed.
+I wonder whether you have seen my mail about the removal
 
----
-Atsushi Nemoto
+https://lore.kernel.org/linux-mips/20201207105627.GA15866@alpha.franken.de
+
+and my call for people owning MIPS machines
+
+https://lore.kernel.org/linux-mips/20200227144910.GA25011@alpha.franken.de/
+
+Still "unclaimed" machines are
+
+IMG Pistachio SoC based boards (MACH_PISTACHIO(
+Toshiba TX39 series based machines (MACH_TX39XX)
+NEC VR4100 series based machines (MACH_VR41XX)
+Netlogic XLR/XLS based systems (NLM_XLR_BOARD)
+Netlogic XLP based systems (NLM_XLP_BOARD)
+Sibyte BCM91120C-CRhine (SIBYTE_CRHINE)
+Sibyte BCM91120x-Carmel (SIBYTE_CARMEL)
+Sibyte BCM91125C-CRhone (SIBYTE_CRHONE)
+Sibyte BCM91125E-Rhone (SIBYTE_RHONE)
+Sibyte BCM91250C2-LittleSur (SIBYTE_LITTLESUR)
+Sibyte BCM91250E-Sentosa (SIBYTE_SENTOSA)
+
+Is there something on this list you also regulary use ?
+
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]

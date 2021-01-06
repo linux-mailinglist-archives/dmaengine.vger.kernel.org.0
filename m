@@ -2,95 +2,101 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BFF12EBFF3
-	for <lists+dmaengine@lfdr.de>; Wed,  6 Jan 2021 16:00:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B8D3B2EC055
+	for <lists+dmaengine@lfdr.de>; Wed,  6 Jan 2021 16:25:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbhAFO7W (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 6 Jan 2021 09:59:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35098 "EHLO mail.kernel.org"
+        id S1726749AbhAFPYd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 6 Jan 2021 10:24:33 -0500
+Received: from nat-hk.nvidia.com ([203.18.50.4]:64379 "EHLO nat-hk.nvidia.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726326AbhAFO7W (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 6 Jan 2021 09:59:22 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E5D8723110;
-        Wed,  6 Jan 2021 14:58:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1609945121;
-        bh=fs4tnAAHZc6P9CcCZmtXnqhshJdz+3INo0fDCULFaD8=;
-        h=From:To:In-Reply-To:References:Subject:Date:From;
-        b=grRap1qACe13qOi+OZcRSFbPBF+dIr/ws3L/0hIw9hJfGzIKvP7l6ogZ4IDw43yGy
-         2LHdh5/KkLIX5OZy0HUphNkwfKucd730v8Tp6LLuzacbNiujVv7S8AcFgKaat4EO7E
-         y+/PvinZw7ISykZaboaWt60Ak3aP6L6FH/2ur96+2LlVa2dRoeg/GHIVTXjbL9m+/N
-         lmUrNwQGiW3vl9pfoybJQC9JwzVTaaO03pya7nRF3kZVYLga8QDzM2brjULMEAV5En
-         tz4bM66daxGgVwHYO/b7ctz5giI8LEijCXhmI8MPhXeH67zs/Q6iAskX79k3QrpAy9
-         gww2PkLy1Faag==
-From:   Mark Brown <broonie@kernel.org>
-To:     Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, Guenter Roeck <linux@roeck-us.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-rtc@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-spi@vger.kernel.org, linux-ide@vger.kernel.org,
-        Jaroslav Kysela <perex@perex.cz>, linux-crypto@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        Richard Weinberger <richard@nod.at>, dmaengine@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        netdev@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
-        Matt Mackall <mpm@selenic.com>, alsa-devel@alsa-project.org,
-        linux-mips@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alessandro Zummo <a.zummo@towertech.it>
-In-Reply-To: <20210105140305.141401-1-tsbogend@alpha.franken.de>
-References: <20210105140305.141401-1-tsbogend@alpha.franken.de>
-Subject: Re: (subset) [PATCH 00/10] Remove support for TX49xx
-Message-Id: <160994509314.52132.9683741232298303961.b4-ty@kernel.org>
-Date:   Wed, 06 Jan 2021 14:58:13 +0000
+        id S1726251AbhAFPYc (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 6 Jan 2021 10:24:32 -0500
+Received: from HKMAIL103.nvidia.com (Not Verified[10.18.92.77]) by nat-hk.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5ff5d6060000>; Wed, 06 Jan 2021 23:23:50 +0800
+Received: from HKMAIL101.nvidia.com (10.18.16.10) by HKMAIL103.nvidia.com
+ (10.18.16.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 6 Jan
+ 2021 15:23:47 +0000
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.47) by
+ HKMAIL101.nvidia.com (10.18.16.10) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Wed, 6 Jan 2021 15:23:47 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Lt4sxGt3CO45GgMfRYvUWwml2cJ43BDEKCptGJRD7QJ01nE5revIRDy/yBiXDTgo77BCO+AwtT87CisCfuX3S0YwgBiY7PN4lz6L8/Sl0U+/9kd3l/2F+Q/pB4Bxif2Em/LjHdesWbB+B5OEL2N8YBy/u6DFM9N8SMFI4dmbgTUKggDW2xfaZjB8cukqM216KuoJM6catvTbjEdrr5QplXkKsA+rNXF6i0uRbRhU2HbFDZWj6wqdkhNEsDYMXmGU2M7GMzWg+mdcll09y4nLu7jXldYwPtc3v+qw6RrXPc9NzP7RM7dRbdfJTFOTl67Lmzek4nWwOqroiJX6PBKwpw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=chutKAOueKzJ42yHzRW86r8VwbDXBIwctf9qcU4AwVI=;
+ b=nsZ9F16ZEwFAsg3529nloaL6sACatgV6FruXKEOfFuNo1fW2c9ySpoWi3NWmB02YOEacbBgDPS/bjN7/xYtr90zD4qreiTHqPh3JjtfB5RLzwOCI3gkG28b1MOw2s9KfYsmY4AXtFM9EEHGODFKhDYpfTxMve2QPp4wcLvFVfw47N1AMTSdKN+Yvo3awbXNqE/9ezyRKigeZOihDwB65+vIOrQlUCiU10VvIF4t1tYyXOznB3W3VqYW8SoVdU3yo5lXEHBvB12C6O9GsRmhfqP/jj4qhfNDojspDaL/6n5dRLDh5hWIbFNby5sJGvUsYatOlZkCPRkaSpaif8kKAkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR12MB2582.namprd12.prod.outlook.com (2603:10b6:4:b5::37) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3721.20; Wed, 6 Jan
+ 2021 15:23:41 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::546d:512c:72fa:4727]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::546d:512c:72fa:4727%7]) with mapi id 15.20.3721.024; Wed, 6 Jan 2021
+ 15:23:41 +0000
+Date:   Wed, 6 Jan 2021 11:23:39 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Leon Romanovsky <leon@kernel.org>
+CC:     Lu Baolu <baolu.lu@linux.intel.com>, <tglx@linutronix.de>,
+        <ashok.raj@intel.com>, <kevin.tian@intel.com>,
+        <dave.jiang@intel.com>, <megha.dey@intel.com>,
+        <dwmw2@infradead.org>, <alex.williamson@redhat.com>,
+        <bhelgaas@google.com>, <dan.j.williams@intel.com>,
+        <dmaengine@vger.kernel.org>, <eric.auger@redhat.com>,
+        <jacob.jun.pan@intel.com>, <kvm@vger.kernel.org>,
+        <kwankhede@nvidia.com>, <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <maz@kernel.org>,
+        <mona.hossain@intel.com>, <netanelg@mellanox.com>,
+        <parav@mellanox.com>, <pbonzini@redhat.com>, <rafael@kernel.org>,
+        <samuel.ortiz@intel.com>, <sanjay.k.kumar@intel.com>,
+        <shahafs@mellanox.com>, <tony.luck@intel.com>, <vkoul@kernel.org>,
+        <yan.y.zhao@linux.intel.com>, <yi.l.liu@intel.com>
+Subject: Re: [RFC PATCH v2 1/1] platform-msi: Add platform check for
+ subdevice irq domain
+Message-ID: <20210106152339.GA552508@nvidia.com>
+References: <20210106022749.2769057-1-baolu.lu@linux.intel.com>
+ <20210106060613.GU31158@unreal>
+ <3d2620f9-bbd4-3dd0-8e29-0cfe492a109f@linux.intel.com>
+ <20210106104017.GV31158@unreal>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20210106104017.GV31158@unreal>
+X-ClientProxiedBy: YTBPR01CA0003.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:14::16) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (206.223.160.26) by YTBPR01CA0003.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:14::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6 via Frontend Transport; Wed, 6 Jan 2021 15:23:41 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kxAex-0031qq-RW; Wed, 06 Jan 2021 11:23:39 -0400
+X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1609946630; bh=chutKAOueKzJ42yHzRW86r8VwbDXBIwctf9qcU4AwVI=;
+        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
+         From:To:CC:Subject:Message-ID:References:Content-Type:
+         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-LD-Processed;
+        b=ekxcvTjtpm+oIk7R79mxZfS1daYa4M/bArofO6AFUxp7RVXywivBSuDah1hEIXKF7
+         bm6zOaM2vaQtduMT4OgfdmLmVAD3FWQOiEO9yEVaVQxghDJT1IjTjOr0uSE9lq5I/w
+         X8WcuQU4PYO6y97OEYFiVNX1+MYSROG0U3Ew6H7zeOFSRLoBVWterStyjKowZXkVUG
+         ACTOAM7nMEN90RlZZp7TnrVMXrvMkoIPRiuVYYOgzJifUP0HeJcJrPiLqyg+MiSqKd
+         JnL53LckrctGi6Jpib9X+0WBMdNjOURleR/jOpReeuiolmT5i5NTPNVR+d43xOwYYb
+         nZ9SE+Omw2/YQ==
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, 5 Jan 2021 15:02:45 +0100, Thomas Bogendoerfer wrote:
-> I couldn't find any buyable product other than reference boards using
-> TX49xx CPUs. And since nobody showed interest in keeping support for
-> it, it's time to remove it.
-> 
-> I've split up the removal into seperate parts for different maintainers.
-> So if the patch fits your needs, please take it via your tree or
-> give me an ack so I can apply them  the mips-next tree.
-> 
-> [...]
+On Wed, Jan 06, 2021 at 12:40:17PM +0200, Leon Romanovsky wrote:
 
-Applied to
+> I asked what will you do when QEMU will gain needed functionality?
+> Will you remove QEMU from this list? If yes, how such "new" kernel will
+> work on old QEMU versions?
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+The needed functionality is some VMM hypercall, so presumably new
+kernels that support calling this hypercall will be able to discover
+if the VMM hypercall exists and if so superceed this entire check.
 
-Thanks!
-
-[10/10] ASoC: txx9: Remove driver
-        commit: a8644292ea46064f990e4a3c4585bdb294c0d89a
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+Jason

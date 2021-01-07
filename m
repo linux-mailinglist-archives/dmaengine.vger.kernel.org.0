@@ -2,93 +2,78 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF5222ED47E
-	for <lists+dmaengine@lfdr.de>; Thu,  7 Jan 2021 17:42:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A92712ED687
+	for <lists+dmaengine@lfdr.de>; Thu,  7 Jan 2021 19:17:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbhAGQld (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 7 Jan 2021 11:41:33 -0500
-Received: from elvis.franken.de ([193.175.24.41]:34782 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727874AbhAGQld (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 7 Jan 2021 11:41:33 -0500
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1kxYL4-0000Tv-00; Thu, 07 Jan 2021 17:40:42 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 98E5BC080E; Thu,  7 Jan 2021 17:40:15 +0100 (CET)
-Date:   Thu, 7 Jan 2021 17:40:15 +0100
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Joe Perches <joe@perches.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH 05/10] dma: tx49 removal
-Message-ID: <20210107164015.GA12533@alpha.franken.de>
-References: <20210105140305.141401-1-tsbogend@alpha.franken.de>
- <20210105140305.141401-6-tsbogend@alpha.franken.de>
- <b84dadc2e98b1986dc800c5f6f202880ed905b38.camel@perches.com>
+        id S1729091AbhAGSQI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 7 Jan 2021 13:16:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729086AbhAGSQI (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 7 Jan 2021 13:16:08 -0500
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E2B4C0612F9
+        for <dmaengine@vger.kernel.org>; Thu,  7 Jan 2021 10:15:28 -0800 (PST)
+Received: from ramsan.of.borg ([84.195.186.194])
+        by xavier.telenet-ops.be with bizsmtp
+        id DuFS2400J4C55Sk01uFSoj; Thu, 07 Jan 2021 19:15:26 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1kxZok-001v2j-0N; Thu, 07 Jan 2021 19:15:26 +0100
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1kxZoj-008AYq-G1; Thu, 07 Jan 2021 19:15:25 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Phong Hoang <phong.hoang.wz@renesas.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 0/4] dmaengine: rcar-dmac: Add support for R-Car V3U
+Date:   Thu,  7 Jan 2021 19:15:20 +0100
+Message-Id: <20210107181524.1947173-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b84dadc2e98b1986dc800c5f6f202880ed905b38.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Jan 06, 2021 at 11:10:38AM -0800, Joe Perches wrote:
-> On Tue, 2021-01-05 at 15:02 +0100, Thomas Bogendoerfer wrote:
-> > Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> []
-> > diff --git a/drivers/dma/txx9dmac.h b/drivers/dma/txx9dmac.h
-> []
-> > @@ -26,11 +26,6 @@
-> >   * DMA channel.
-> >   */
-> >  
-> > 
-> > -#ifdef CONFIG_MACH_TX49XX
-> > -static inline bool txx9_dma_have_SMPCHN(void)
-> > -{
-> > -	return true;
-> > -}
-> >  #define TXX9_DMA_USE_SIMPLE_CHAIN
-> >  #else
-> >  static inline bool txx9_dma_have_SMPCHN(void)
-> 
-> This doesn't look like it compiles as there's now an #else
-> without an #if
+	Hi all,
 
-you are right, no idea what I had in mind while doing that.
+This patch series adds support for the Direct Memory Access Controller
+variant in the Renesas R-Car V3U (R8A779A0) SoC, to both DT bindings and
+driver.
 
-Vinod,
+This has been tested on the Renesas Falcon board, using external SPI
+loopback (spi-loopback-test) on MSIOF1 and MSIOF2.
 
-as this patch series found a still active user of the platform,
-could you drop the patch from your tree, or do you want a revert
-from me ?
+Thanks for your comments!
 
-Thomas.
+Geert Uytterhoeven (4):
+  dt-bindings: renesas,rcar-dmac: Add r8a779a0 support
+  dmaengine: rcar-dmac: Add for_each_rcar_dmac_chan() helper
+  dmaengine: rcar-dmac: Add helpers for clearing DMA channel status
+  dmaengine: rcar-dmac: Add support for R-Car V3U
+
+ .../bindings/dma/renesas,rcar-dmac.yaml       |  76 ++++++++-----
+ drivers/dma/sh/rcar-dmac.c                    | 100 ++++++++++++------
+ 2 files changed, 118 insertions(+), 58 deletions(-)
 
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+2.25.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds

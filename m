@@ -2,58 +2,43 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FD162EF53C
-	for <lists+dmaengine@lfdr.de>; Fri,  8 Jan 2021 16:57:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EA6F2EF782
+	for <lists+dmaengine@lfdr.de>; Fri,  8 Jan 2021 19:37:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbhAHP5u (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 8 Jan 2021 10:57:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727025AbhAHP5u (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 8 Jan 2021 10:57:50 -0500
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB13AC061381;
-        Fri,  8 Jan 2021 07:57:09 -0800 (PST)
-Received: by mail-lf1-x132.google.com with SMTP id m25so23897704lfc.11;
-        Fri, 08 Jan 2021 07:57:09 -0800 (PST)
+        id S1728647AbhAHShT (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 8 Jan 2021 13:37:19 -0500
+Received: from mail-dm6nam12on2069.outbound.protection.outlook.com ([40.107.243.69]:52289
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728614AbhAHShS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 8 Jan 2021 13:37:18 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dombZnJcKvXcA9TULNMOtm97pHGSiET4sx8UIn2M929uyhB6eUJKYZAstvf1Z1XabZHs7PAPJrY3HBxL1YdC2st3PM2Hv+XFHkwv/ASBFi0B3NnDXjPyJMTDKK21vytT+zxeKraAmeXhYXquwI0Ew4CK3SS6ikqpBGxu+O872wVN7kQwzGdgBj1iMmg6uyDLLkLoCn8u34GcUZvH8ypArYWa/I+GXhHl0Y75OLEsiqCje9YvsdLNCMv3M0xpwBDoxpQssqbL3e4dwmp54u1lB2g6FbwN/MMi+dnmdfmk2HcWC8pf1DZCrB2/YLF9ZIqzKN4yGra4bsBFAgEHwJbw5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0pZZVzjzu5olbyCDTO5J/I2ycaCfdYWhVyZsOOiP4F0=;
+ b=E8l8r7ZEeFmGcYoxefHXb2uLtsGdL4DMdLyt9xj0ymJ/Fx0xhWy19qCZiayREoTAjTCE+I+9QaDpVKMtBrod8evYEvI/Lpx4/hpAwn8cShgiKIDV8kT97Ptt5//E7wyJedPHZmXMWLZcwKlcTEUEc42Js00DK8ckQlqOOwO2lhwRAWk/bRaIxKHCWFbfPXUXnYS4HKN40b4aq70yNP5rxh9Fi9YWd6gFzYgi5xyMMun0yZzQvF9WH2Ym7mzxWO0CNyIXQgD/QMLsn2vLK9vzou35hCiObXs/FD8Hala1yHM/f3gDXt/HFNmOVeXO83XnccqBir555zjmjW55jy8Djg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8eX2Ejpfa1tT2Xtq7diXrzD9ncCqtZ61jGO18fdH6Mc=;
-        b=BH4XJpFbCIaggdol9Xkgu4odxGIdIXexUlBB4/lBiD7JEi+KlYSIAcDiDLEmFHWUf3
-         Gp0yd/7TRTOInox4Jx7OnYC1JCbAjcO0Ovxw7eT/c3I0qUs4ZVYEFUkhqUMQ2AHX+FgP
-         r4Rr+BPT6EXSCrZLb+ys++8WILY3exIresiXDB+hyXIUfgtjfAjgQaSzfaBG9jaNrUeq
-         KbsAfbDzp9TA+lYO0FmhDJDEoGr487zPvkBbjswfbW7e90dAm68rYlq4iQX/qj/QiLch
-         dfFHJfh8h6vxCEWkTzaAtJPiqxKfMSXOUqGRqBbUNXRUjk4LivWg4TjaAiRLGyWjxqFW
-         gFPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8eX2Ejpfa1tT2Xtq7diXrzD9ncCqtZ61jGO18fdH6Mc=;
-        b=OGh7rUIQ9giB9YLLSyQ35zs5dPvXNSKSg7jJpfpAlkQlnJbZw0veALnC6EQwlO34tV
-         toF7KPLhb6VfgSk6ydO8eOhe7L5eAUWayI3WCWzBs+48z7RVTn4tzY4FmPSKp+mnQPHu
-         86u5EDZMQRv9qqzIWQ26Fy6i7Adl8EjLPx6kr5Ilfd1WJmSbNHzfTywSK/y9zedo2uxk
-         4f4CPIvFXahatGpaNqlO8rHI8JRB8cLO4DNsuEUII9w72h313ZV6jrQ+PvumjgJR/iwZ
-         IdcMC2BaVLUlcgZQj2WBNR4VRgtcvXK01W6RLZj6FSbls5zQ8bVaoH+yyMwYeJM5tLnN
-         y0FQ==
-X-Gm-Message-State: AOAM531EC95OMwjKR8qlAAElwyJ1tDj6AVC0goTPjzjmM5XU8l/SvXho
-        MuE/BhozBfk1B0FgEw7zk1kg/ZhnKZkY3vAjiuE=
-X-Google-Smtp-Source: ABdhPJyTfxtdXJsKt2oXarUDnGiMoba60XCs8yBC8/KQaA8TJw8RC77iIh9Ytpt8iqQj4JuHtv1omuT/sNlmgCXyuFI=
-X-Received: by 2002:a19:4148:: with SMTP id o69mr1763109lfa.610.1610121428177;
- Fri, 08 Jan 2021 07:57:08 -0800 (PST)
-MIME-Version: 1.0
-References: <CAD56B7dpewwJVttuk4GAcAsx62HP=vPF9jmxTFNG3Z9RP4u9zA@mail.gmail.com>
- <BY5PR02MB652004976C500CD4EA763047C7D20@BY5PR02MB6520.namprd02.prod.outlook.com>
- <BY5PR02MB6520C9083F072E6907534497C7AE0@BY5PR02MB6520.namprd02.prod.outlook.com>
-In-Reply-To: <BY5PR02MB6520C9083F072E6907534497C7AE0@BY5PR02MB6520.namprd02.prod.outlook.com>
-From:   Paul Thomas <pthomas8589@gmail.com>
-Date:   Fri, 8 Jan 2021 10:56:57 -0500
-Message-ID: <CAD56B7f9D5HnN-rx2QRi4z4HA-bM1=oVpUv6XY35HxBQkAaXmQ@mail.gmail.com>
-Subject: Re: dmaengine : xilinx_dma two issues
-To:     Radhey Shyam Pandey <radheys@xilinx.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0pZZVzjzu5olbyCDTO5J/I2ycaCfdYWhVyZsOOiP4F0=;
+ b=r44Ph9Bxkp3qhn/K/vIEaHDqLt/HIPtOo5+aFs9mYac36B6v6iAPuhqlvieOhvVjq/IWr8ldFf4Vn6LVFXv8xBmyFvrsE2wwWtTRaYKrk+Kaq9MkCELe6D2fXEWoNgeUfg3mVt/+YuSulB5jGCYwnaJtX0RNbFoRUuv/1IA02P0=
+Received: from BY5PR02MB6520.namprd02.prod.outlook.com (2603:10b6:a03:1d3::8)
+ by BY5PR02MB6834.namprd02.prod.outlook.com (2603:10b6:a03:211::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6; Fri, 8 Jan
+ 2021 18:36:20 +0000
+Received: from BY5PR02MB6520.namprd02.prod.outlook.com
+ ([fe80::f806:48df:2f5d:5a6b]) by BY5PR02MB6520.namprd02.prod.outlook.com
+ ([fe80::f806:48df:2f5d:5a6b%7]) with mapi id 15.20.3742.009; Fri, 8 Jan 2021
+ 18:36:20 +0000
+From:   Radhey Shyam Pandey <radheys@xilinx.com>
+To:     Paul Thomas <pthomas8589@gmail.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
         Vinod Koul <vkoul@kernel.org>,
         Michal Simek <michals@xilinx.com>,
         Matthew Murrian <matthew.murrian@goctsi.com>,
@@ -66,216 +51,264 @@ Cc:     Dan Williams <dan.j.williams@intel.com>,
         linux-kernel <linux-kernel@vger.kernel.org>,
         "dave.jiang@intel.com" <dave.jiang@intel.com>,
         Shravya Kumbham <shravyak@xilinx.com>, git <git@xilinx.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: RE: dmaengine : xilinx_dma two issues
+Thread-Topic: dmaengine : xilinx_dma two issues
+Thread-Index: AQHW3NQtLfwqTgK1Wk2I7XZ0XjYsd6oW8tOggAZp1GCAAJd5gIAAK8zg
+Date:   Fri, 8 Jan 2021 18:36:20 +0000
+Message-ID: <BY5PR02MB6520112ACAD71BD7339BAE89C7AE0@BY5PR02MB6520.namprd02.prod.outlook.com>
+References: <CAD56B7dpewwJVttuk4GAcAsx62HP=vPF9jmxTFNG3Z9RP4u9zA@mail.gmail.com>
+ <BY5PR02MB652004976C500CD4EA763047C7D20@BY5PR02MB6520.namprd02.prod.outlook.com>
+ <BY5PR02MB6520C9083F072E6907534497C7AE0@BY5PR02MB6520.namprd02.prod.outlook.com>
+ <CAD56B7f9D5HnN-rx2QRi4z4HA-bM1=oVpUv6XY35HxBQkAaXmQ@mail.gmail.com>
+In-Reply-To: <CAD56B7f9D5HnN-rx2QRi4z4HA-bM1=oVpUv6XY35HxBQkAaXmQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=xilinx.com;
+x-originating-ip: [47.8.226.163]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 874765e4-87d1-4d89-bd1f-08d8b4044b0d
+x-ms-traffictypediagnostic: BY5PR02MB6834:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR02MB6834EF28B178FFD6C899EA0BC7AE0@BY5PR02MB6834.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NKmqEfuwwATlBGAKgH5pBb++8rgrMTx/xTtLXqq2hpTOEd09DZPKHFrBx6liW/0j/AqsWGobc80rsyhtE/0u7t2nFQjy2RZRYJvnkCk6t2fBCFCdcU1RR7EGrbXbsQEqra7v57aCCbQHekwknir9LFUELqYdct41lV4LylyVr7WtG2ZGUuAwEt6oOkQhAKpsDIZLo4V5JjtEpfLbbZSnp8EZOU7CN89jRD0fF4nUtI2tKoJa55voDlIZl+bKkMku1ZIqZ41Pr/YDqU+A/XpR7LbUiH0HVOATZUA4IKN3NHklqdrBvjVa/mPtaRZTbR6Uhc/WdipGOxMp4u6J85eqPayRCyUdqElDygqiH5Vi0H12FfPs2qRDeAzJppS/Li0zhE0msOQX3IoAhZFQ7nr/Kw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR02MB6520.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(346002)(376002)(39860400002)(136003)(366004)(478600001)(2906002)(7696005)(66476007)(66946007)(8936002)(76116006)(8676002)(33656002)(71200400001)(45080400002)(7416002)(107886003)(66556008)(86362001)(316002)(54906003)(6506007)(53546011)(52536014)(4326008)(26005)(6916009)(66446008)(186003)(9686003)(5660300002)(55016002)(64756008)(83380400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?cUJxb3lPckdGUTlZN3JMVTVyMkdKd1ZHNHRYM2hlSmNYUW9RcjBLbVpUVmNV?=
+ =?utf-8?B?MFZZa3p1ckhIcmpHc3RncXV2VUs5RWJpNS9VVDRkdmZYVHhVcTdtNEN0RlFa?=
+ =?utf-8?B?c2dNejc0WGFGSGFyN3lNOEZzWDBUd25uVjcvcVpiM1JGaW9welpFUmxqeUNa?=
+ =?utf-8?B?U3ZjN0ZhZlp0dlpwNFI4OEQxK0dITTZWZWg5ODhqM3J0b29ma2l3VTV6R2RF?=
+ =?utf-8?B?RXZzcWFOWHJkWlY5ajZ5OUxOT3VxYUJrVHlMSFF5NDJReUt4RDlISDA4ZTRm?=
+ =?utf-8?B?V2k4dXVUQ0R4NXpUOW84R2pQZmN5aG5meXBTUW8zMTRVTGJnRXZhTkZBNEdn?=
+ =?utf-8?B?cWpFVGYzNTFScm9tcDhIb0k4UW9YY01mLzRZYkZxSlFsR0swcWxKdUJUOTlz?=
+ =?utf-8?B?djNLcFdyNDRTYjdwUEZ5bC9SRGRPMjM5dWNxSkhHUm41WXpGTEZVTXVHMmxL?=
+ =?utf-8?B?SG5oTHdYNVAvRTVwcXNHL0Q5MHVEcFZ6eUplUXhPcTl4Y2xzQ290SG56WllP?=
+ =?utf-8?B?cFZXdk9XZlQ0cDFkcjkxc09IVUI5VWt1YTdtbGhBMzNmTmU4ZG5YT3o1cU9k?=
+ =?utf-8?B?djhMeXdSRlI2RU9CSzNoQ3BSRTExdjBjTUdrcE5iSVRtYUtGaktQQzFMN1di?=
+ =?utf-8?B?SkFwTHYrZ3hncm4yT3RMWFlmT3ZJRzZEMUV5YjJMb0RRM3pkM3BOUUtWSnVS?=
+ =?utf-8?B?eTNyVG5GYy9Mblg3SEh5cURtTHVSWWk3bm1CQnUveWxXbktLTDhFczl4Zkc2?=
+ =?utf-8?B?V2l2NUYwcE45bXNJU214c2h2cWtIeEE1b1kwYXEyS0graS9LQ0ZIT0orZ2Vu?=
+ =?utf-8?B?RklZbHFsczd6eEZ5VkNjYmpQVjNuQ0g4V04wekRSUU91TllqcnpQdzN0ck0v?=
+ =?utf-8?B?em9XQWhFaUZXdFhlMExpczRibWpCUTdGYkpMc2g5NlZzMG91anRMcC9zbmxS?=
+ =?utf-8?B?aG1JdVY0bkNQRllMSElMRko4cHNxODdMQjFyYzhrTjhkQnpqSDRtQ2lmRFVO?=
+ =?utf-8?B?NGZZeFE0azNJWTB6eWN5bVlIY29JSGZLTXpOSFJCSHc2YU1ZaGtSdERVMW5J?=
+ =?utf-8?B?MWRJY0t1RVkrWjJuc3dQZW9WZjYwL2gzZm5qSGVIOVorLzh3YWV3MEFyaDkr?=
+ =?utf-8?B?VVlKa0lIV0J3NGV2TFVKSnB6emNoNzdoQnd2Z0hQSXQ4OSs4eFFxZXNFdjJs?=
+ =?utf-8?B?SEViZUZJNE05MWdtOXMyenBPUlJXaHZ5dlBkMjlIcWlpdlZ2SFdBbHh2OWxs?=
+ =?utf-8?B?L0JhQkt0SElFVDRkU3ZUdzhjWmgxankvaUEwaGg3Z3hwQktXeUY5OXI1SFh3?=
+ =?utf-8?Q?xVTYXsLfK4t+4=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR02MB6520.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 874765e4-87d1-4d89-bd1f-08d8b4044b0d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jan 2021 18:36:20.3342
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ArQyamojm+SUC94vSpXY8R3tqEGfto9Sm1EYURoJh8AKQCk8YCkLEmnI1WrJN/r1rk4MOJgKWr4yVRM9s3eq5w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6834
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi All,
-
-On Fri, Jan 8, 2021 at 2:13 AM Radhey Shyam Pandey <radheys@xilinx.com> wrote:
->
-> > -----Original Message-----
-> > From: Radhey Shyam Pandey
-> > Sent: Monday, January 4, 2021 10:50 AM
-> > To: Paul Thomas <pthomas8589@gmail.com>; Dan Williams
-> > <dan.j.williams@intel.com>; Vinod Koul <vkoul@kernel.org>; Michal Simek
-> > <michals@xilinx.com>; Matthew Murrian <matthew.murrian@goctsi.com>;
-> > Romain Perier <romain.perier@gmail.com>; Krzysztof Kozlowski
-> > <krzk@kernel.org>; Marc Ferland <ferlandm@amotus.ca>; Sebastian von Ohr
-> > <vonohr@smaract.com>; dmaengine@vger.kernel.org; Linux ARM <linux-
-> > arm-kernel@lists.infradead.org>; linux-kernel <linux-
-> > kernel@vger.kernel.org>; Shravya Kumbham <shravyak@xilinx.com>; git
-> > <git@xilinx.com>
-> > Subject: RE: dmaengine : xilinx_dma two issues
-> >
-> > > -----Original Message-----
-> > > From: Paul Thomas <pthomas8589@gmail.com>
-> > > Sent: Monday, December 28, 2020 10:14 AM
-> > > To: Dan Williams <dan.j.williams@intel.com>; Vinod Koul
-> > > <vkoul@kernel.org>; Michal Simek <michals@xilinx.com>; Radhey Shyam
-> > > Pandey <radheys@xilinx.com>; Matthew Murrian
-> > > <matthew.murrian@goctsi.com>; Romain Perier
-> > <romain.perier@gmail.com>;
-> > > Krzysztof Kozlowski <krzk@kernel.org>; Marc Ferland
-> > > <ferlandm@amotus.ca>; Sebastian von Ohr <vonohr@smaract.com>;
-> > > dmaengine@vger.kernel.org; Linux ARM <linux-
-> > > arm-kernel@lists.infradead.org>; linux-kernel <linux-
-> > > kernel@vger.kernel.org>
-> > > Subject: dmaengine : xilinx_dma two issues
-> > >
-> > > Hello,
-> > >
-> > > I'm trying to get the 5.10 kernel up and running for our system, and
-> > > I'm running into a couple of issues with xilinx_dma.
-> > + (Xilinx mailing list)
-> >
-> > Thanks for bringing the issues to our notice. Replies inline.
-> >
-> > >
-> > > First, commit 14ccf0aab46e 'dmaengine: xilinx_dma: In dma channel
-> > > probe fix node order dependency' breaks our usage. Before this commit a
-> > call to:
-> > > dma_request_chan(&indio_dev->dev, "axi_dma_0"); returns fine, but
-> > > after that commit it returns -19. The reason for this seems to be that
-> > > the only channel that is setup is channel 1 (chan->id is 1 in
-> > xilinx_dma_chan_probe()).
-> > > However in
-> > > of_dma_xilinx_xlate() chan_id is gets set to 0 (int chan_id =
-> > > dma_spec-
-> > > >args[0];), which causes the:
-> > > !xdev->chan[chan_id]
-> > > test to fail in of_dma_xilinx_xlate()
-> >
-> > What is the channel number passed in
-> > dmaclient DT?
-Is this a question for me?
-
->
-> Any update on this issue?
-
->
-> >
-> > dmas = <& axi_dma_0 1>
-> > dma-names = "axi_dma_0"
-> >
-> > >
-> > > Our device-tree entry looks like this:
-> > >     axi_dma_0: dma@80002000 {
-> > >         status = "okay";
-> > >         #dma-cells = <1>;
-> > >         compatible = "xlnx,axi-dma-1.00.a";
-> > >         interrupt-parent = <&gic>;
-> > >         interrupts = <0 89 4>;
-> > >         reg = <0x0 0x80002000 0x0 0x1000>;
-> > >         xlnx,addrwidth = <0x20>;
-> > >         clocks = <&zynqmp_clk LPD_LSBUS>, <&zynqmp_clk LPD_LSBUS>,
-> > > <&zynqmp_clk LPD_LSBUS>, <&zynqmp_clk LPD_LSBUS>;
-> > >         clock-names = "s_axi_lite_aclk", "m_axi_sg_aclk",
-> > > "m_axi_mm2s_aclk", "m_axi_s2mm_aclk";
-> > >         dma-channel@80002030 {
-> > >             compatible = "xlnx,axi-dma-s2mm-channel";
-> > >             dma-channels = <0x1>;
-> > >             interrupts = <0 89 4>;
-> > >             xlnx,datawidth = <0x20>;
-> > >             xlnx,device-id = <0x0>;
-> > >         };
-> > >     };
-> > >
-> > > This is on a 5.10.1 kernel on arm64 zynqmp hardware.
-> > >
-> > > The second issue goes a little further back to commit e81274cd6b526
-> > > 'dmaengine: add support to dynamic register/unregister of channels'.
-> > > After this commit even just removing the module 'rmmod xilinx_dma',
-> > > without ever using it, results in a kernel oops like this:
-> > > [   37.214568] xilinx-vdma 80002000.dma: ch 0: SG disabled
-> > > [   37.219807] xilinx-vdma 80002000.dma: WARN: Device release is not
-> > > defined so it is not safe to unbind this driver while in use
-> > > [   37.231299] xilinx-vdma 80002000.dma: Xilinx AXI DMA Engine Driver
-> > > Probed!!
-> > > [   42.100660] Unable to handle kernel paging request at virtual
-> > > address dead000000000108
-> > > [   42.108598] Mem abort info:
-> > > [   42.111393]   ESR = 0x96000044
-> > > [   42.114443]   EC = 0x25: DABT (current EL), IL = 32 bits
-> > > [   42.119744]   SET = 0, FnV = 0
-> > > [   42.122794]   EA = 0, S1PTW = 0
-> > > [   42.125918] Data abort info:
-> > > [   42.128789]   ISV = 0, ISS = 0x00000044
-> > > [   42.132617]   CM = 0, WnR = 1
-> > > [   42.135577] [dead000000000108] address between user and kernel
-> > > address ranges
-> > > [   42.142705] Internal error: Oops: 96000044 [#1] SMP
-> > > [   42.147566] Modules linked in: xilinx_dma(-) clk_xlnx_clock_wizard
-> > > uio_pdrv_genirq
-> > > [   42.155139] CPU: 1 PID: 2075 Comm: rmmod Not tainted
-> > > 5.10.1-00026-g3a2e6dd7a05-dirty #192
-> > > [   42.163302] Hardware name: Enclustra XU5 SOM (DT)
-> > > [   42.167992] pstate: 40000005 (nZcv daif -PAN -UAO -TCO BTYPE=--)
-> > > [   42.173996] pc : xilinx_dma_chan_remove+0x74/0xa0 [xilinx_dma]
-> > > [   42.179815] lr : xilinx_dma_chan_remove+0x70/0xa0 [xilinx_dma]
-> > > [   42.185636] sp : ffffffc01112bca0
-> > > [   42.188935] x29: ffffffc01112bca0 x28: ffffff80402ea640
-> > > [   42.194238] x27: 0000000000000000 x26: 0000000000000000
-> > > [   42.199542] x25: 0000000000000000 x24: 0000000000000000
-> > > [   42.204845] x23: 0000000000000000 x22: 0000000000000000
-> > > [   42.210149] x21: ffffffc0088a2028 x20: ffffff8040c08410
-> > > [   42.215452] x19: ffffff80423fa480 x18: ffffffffffffffff
-> > > [   42.220756] x17: 0000000000000000 x16: 0000000000000000
-> > > [   42.226059] x15: ffffffc010ce88c8 x14: 0000000000000040
-> > > [   42.231363] x13: ffffff0000000000 x12: ffffffffffffffff
-> > > [   42.236667] x11: 0000000000000028 x10: ffffffff7fffffff
-> > > [   42.241970] x9 : ffffffff00f0dfe0 x8 : 0000000000000000
-> > > [   42.247273] x7 : ffffffc010da4000 x6 : 0000000000000000
-> > > [   42.252577] x5 : 0000000000210d00 x4 : ffffffc010da4da0
-> > > [   42.257881] x3 : ffffff80423fa578 x2 : 0000000000000000
-> > > [   42.263184] x1 : dead000000000100 x0 : dead000000000122
-> > > [   42.268488] Call trace:
-> > > [   42.270923]  xilinx_dma_chan_remove+0x74/0xa0 [xilinx_dma]
-> > > [   42.276399]  xilinx_dma_remove+0x3c/0x70 [xilinx_dma]
-> > > [   42.281446]  platform_drv_remove+0x24/0x38
-> > > [   42.285530]  device_release_driver_internal+0xec/0x1a8
-> > > [   42.290659]  driver_detach+0x64/0xd8
-> > > [   42.294226]  bus_remove_driver+0x58/0xb8
-> > > [   42.298133]  driver_unregister+0x30/0x60
-> > > [   42.302048]  platform_driver_unregister+0x14/0x20
-> > > [   42.306744]  xilinx_vdma_driver_exit+0x18/0x978 [xilinx_dma]
-> > > [   42.312396]  __arm64_sys_delete_module+0x1e4/0x270
-> > > [   42.317178]  el0_svc_common.constprop.4+0x68/0x170
-> > > [   42.321959]  do_el0_svc+0x70/0x90
-> > > [   42.325267]  el0_svc+0x14/0x20
-> > > [   42.328313]  el0_sync_handler+0x90/0xb8
-> > > [   42.332141]  el0_sync+0x158/0x180
-> > > [   42.335442] Code: 95dfce29 9103c260 95de7ffb a9490261 (f9000420)
-> > > [   42.341525] ---[ end trace dbd90aeb5ca71943 ]---
-> > >
-> > > So if I use the 04c2bc2bede1 (commit before 14ccf0aab46e) version of
-> > > xilinx_dma.c and never remove the module then it is working with the
-> > > 5.10.1 kernel.
-> >
-> > Ok, we will analyze this issue and report back the findings.
->
-> + Dave
->
-> I was able to reproduce this crash on the unloading xilinx_dma module.
-> This is introduced due to the e81274cd6b526 mainline commit added
-> in the 5.6 kernel version. The crash is coming from -
->
-> xilinx_dma_chan_remove+0x74/0xa0:
-> __list_del at ./include/linux/list.h:112
-> (inlined by) __list_del_entry at./include/linux/list.h:135
-> (inlined by) list_del at ./include/linux/list.h:146
-> (inlined by) xilinx_dma_chan_remove at drivers/dma/xilinx/xilinx_dma.c:2546
->
-> Looking into e81274cd6b526 commit - It deletes channel device_node entry.
-> Same channel device_node entry is also deleted in  xilinx_dma_chan_remove
-> as a result we see this crash.
->
-> @@ -993,12 +1007,22 @@ static
-> void __dma_async_device_channel_unregister(struct dma_device *device,
->                   "%s called while %d clients hold a reference\n",
->                   __func__, chan->client_count);
->         mutex_lock(&dma_list_mutex);
-> +       list_del(&chan->device_node);
-> +       device->chancnt--;
->
-> I will let Dave comment on the background of this change.  In
-> dmaengine driver - we are adding channel device node entry
-> so deleting it in the exit path looks fine to me. Also, I checked
-> other dma drivers are also deleting channel device_node entry
-> in .remove so it likely a common problem.
->
-> >
-> > >
-> > > Hopefully, this will be clear to someone how these issues can be
-> > > resolved. In general we've been very happy using the xilinx dma.
-> > >
-> > > I'm not subscribed to the linux-kernel ML so if you need any further
-> > > info or testing just keep me in the to: list.
-> > >
-> > > thanks,
-> > > Paul
-
-Thanks for looking at this! Let me know if anyone needs more info.
-
--Paul
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQYXVsIFRob21hcyA8cHRob21h
+czg1ODlAZ21haWwuY29tPg0KPiBTZW50OiBGcmlkYXksIEphbnVhcnkgOCwgMjAyMSA5OjI3IFBN
+DQo+IFRvOiBSYWRoZXkgU2h5YW0gUGFuZGV5IDxyYWRoZXlzQHhpbGlueC5jb20+DQo+IENjOiBE
+YW4gV2lsbGlhbXMgPGRhbi5qLndpbGxpYW1zQGludGVsLmNvbT47IFZpbm9kIEtvdWwNCj4gPHZr
+b3VsQGtlcm5lbC5vcmc+OyBNaWNoYWwgU2ltZWsgPG1pY2hhbHNAeGlsaW54LmNvbT47IE1hdHRo
+ZXcgTXVycmlhbg0KPiA8bWF0dGhldy5tdXJyaWFuQGdvY3RzaS5jb20+OyBSb21haW4gUGVyaWVy
+DQo+IDxyb21haW4ucGVyaWVyQGdtYWlsLmNvbT47IEtyenlzenRvZiBLb3psb3dza2kgPGtyemtA
+a2VybmVsLm9yZz47IE1hcmMNCj4gRmVybGFuZCA8ZmVybGFuZG1AYW1vdHVzLmNhPjsgU2ViYXN0
+aWFuIHZvbiBPaHINCj4gPHZvbm9ockBzbWFyYWN0LmNvbT47IGRtYWVuZ2luZUB2Z2VyLmtlcm5l
+bC5vcmc7IExpbnV4IEFSTSA8bGludXgtDQo+IGFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+Zz47IGxpbnV4LWtlcm5lbCA8bGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBkYXZl
+LmppYW5nQGludGVsLmNvbTsgU2hyYXZ5YSBLdW1iaGFtDQo+IDxzaHJhdnlha0B4aWxpbnguY29t
+PjsgZ2l0IDxnaXRAeGlsaW54LmNvbT4NCj4gU3ViamVjdDogUmU6IGRtYWVuZ2luZSA6IHhpbGlu
+eF9kbWEgdHdvIGlzc3Vlcw0KPiANCj4gSGkgQWxsLA0KPiANCj4gT24gRnJpLCBKYW4gOCwgMjAy
+MSBhdCAyOjEzIEFNIFJhZGhleSBTaHlhbSBQYW5kZXkgPHJhZGhleXNAeGlsaW54LmNvbT4NCj4g
+d3JvdGU6DQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9t
+OiBSYWRoZXkgU2h5YW0gUGFuZGV5DQo+ID4gPiBTZW50OiBNb25kYXksIEphbnVhcnkgNCwgMjAy
+MSAxMDo1MCBBTQ0KPiA+ID4gVG86IFBhdWwgVGhvbWFzIDxwdGhvbWFzODU4OUBnbWFpbC5jb20+
+OyBEYW4gV2lsbGlhbXMNCj4gPiA+IDxkYW4uai53aWxsaWFtc0BpbnRlbC5jb20+OyBWaW5vZCBL
+b3VsIDx2a291bEBrZXJuZWwub3JnPjsgTWljaGFsDQo+ID4gPiBTaW1layA8bWljaGFsc0B4aWxp
+bnguY29tPjsgTWF0dGhldyBNdXJyaWFuDQo+ID4gPiA8bWF0dGhldy5tdXJyaWFuQGdvY3RzaS5j
+b20+OyBSb21haW4gUGVyaWVyDQo+ID4gPiA8cm9tYWluLnBlcmllckBnbWFpbC5jb20+OyBLcnp5
+c3p0b2YgS296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+Ow0KPiA+ID4gTWFyYyBGZXJsYW5kIDxm
+ZXJsYW5kbUBhbW90dXMuY2E+OyBTZWJhc3RpYW4gdm9uIE9ocg0KPiA+ID4gPHZvbm9ockBzbWFy
+YWN0LmNvbT47IGRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmc7IExpbnV4IEFSTSA8bGludXgtDQo+
+ID4gPiBhcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBsaW51eC1rZXJuZWwgPGxpbnV4
+LQ0KPiA+ID4ga2VybmVsQHZnZXIua2VybmVsLm9yZz47IFNocmF2eWEgS3VtYmhhbSA8c2hyYXZ5
+YWtAeGlsaW54LmNvbT47IGdpdA0KPiA+ID4gPGdpdEB4aWxpbnguY29tPg0KPiA+ID4gU3ViamVj
+dDogUkU6IGRtYWVuZ2luZSA6IHhpbGlueF9kbWEgdHdvIGlzc3Vlcw0KPiA+ID4NCj4gPiA+ID4g
+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+ID4gRnJvbTogUGF1bCBUaG9tYXMgPHB0
+aG9tYXM4NTg5QGdtYWlsLmNvbT4NCj4gPiA+ID4gU2VudDogTW9uZGF5LCBEZWNlbWJlciAyOCwg
+MjAyMCAxMDoxNCBBTQ0KPiA+ID4gPiBUbzogRGFuIFdpbGxpYW1zIDxkYW4uai53aWxsaWFtc0Bp
+bnRlbC5jb20+OyBWaW5vZCBLb3VsDQo+ID4gPiA+IDx2a291bEBrZXJuZWwub3JnPjsgTWljaGFs
+IFNpbWVrIDxtaWNoYWxzQHhpbGlueC5jb20+OyBSYWRoZXkNCj4gPiA+ID4gU2h5YW0gUGFuZGV5
+IDxyYWRoZXlzQHhpbGlueC5jb20+OyBNYXR0aGV3IE11cnJpYW4NCj4gPiA+ID4gPG1hdHRoZXcu
+bXVycmlhbkBnb2N0c2kuY29tPjsgUm9tYWluIFBlcmllcg0KPiA+ID4gPHJvbWFpbi5wZXJpZXJA
+Z21haWwuY29tPjsNCj4gPiA+ID4gS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6a0BrZXJuZWwub3Jn
+PjsgTWFyYyBGZXJsYW5kDQo+ID4gPiA+IDxmZXJsYW5kbUBhbW90dXMuY2E+OyBTZWJhc3RpYW4g
+dm9uIE9ociA8dm9ub2hyQHNtYXJhY3QuY29tPjsNCj4gPiA+ID4gZG1hZW5naW5lQHZnZXIua2Vy
+bmVsLm9yZzsgTGludXggQVJNIDxsaW51eC0NCj4gPiA+ID4gYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnPjsgbGludXgta2VybmVsIDxsaW51eC0NCj4gPiA+ID4ga2VybmVsQHZnZXIua2Vy
+bmVsLm9yZz4NCj4gPiA+ID4gU3ViamVjdDogZG1hZW5naW5lIDogeGlsaW54X2RtYSB0d28gaXNz
+dWVzDQo+ID4gPiA+DQo+ID4gPiA+IEhlbGxvLA0KPiA+ID4gPg0KPiA+ID4gPiBJJ20gdHJ5aW5n
+IHRvIGdldCB0aGUgNS4xMCBrZXJuZWwgdXAgYW5kIHJ1bm5pbmcgZm9yIG91ciBzeXN0ZW0sDQo+
+ID4gPiA+IGFuZCBJJ20gcnVubmluZyBpbnRvIGEgY291cGxlIG9mIGlzc3VlcyB3aXRoIHhpbGlu
+eF9kbWEuDQo+ID4gPiArIChYaWxpbnggbWFpbGluZyBsaXN0KQ0KPiA+ID4NCj4gPiA+IFRoYW5r
+cyBmb3IgYnJpbmdpbmcgdGhlIGlzc3VlcyB0byBvdXIgbm90aWNlLiBSZXBsaWVzIGlubGluZS4N
+Cj4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+IEZpcnN0LCBjb21taXQgMTRjY2YwYWFiNDZlICdkbWFl
+bmdpbmU6IHhpbGlueF9kbWE6IEluIGRtYSBjaGFubmVsDQo+ID4gPiA+IHByb2JlIGZpeCBub2Rl
+IG9yZGVyIGRlcGVuZGVuY3knIGJyZWFrcyBvdXIgdXNhZ2UuIEJlZm9yZSB0aGlzDQo+ID4gPiA+
+IGNvbW1pdCBhDQo+ID4gPiBjYWxsIHRvOg0KPiA+ID4gPiBkbWFfcmVxdWVzdF9jaGFuKCZpbmRp
+b19kZXYtPmRldiwgImF4aV9kbWFfMCIpOyByZXR1cm5zIGZpbmUsIGJ1dA0KPiA+ID4gPiBhZnRl
+ciB0aGF0IGNvbW1pdCBpdCByZXR1cm5zIC0xOS4gVGhlIHJlYXNvbiBmb3IgdGhpcyBzZWVtcyB0
+byBiZQ0KPiA+ID4gPiB0aGF0IHRoZSBvbmx5IGNoYW5uZWwgdGhhdCBpcyBzZXR1cCBpcyBjaGFu
+bmVsIDEgKGNoYW4tPmlkIGlzIDEgaW4NCj4gPiA+IHhpbGlueF9kbWFfY2hhbl9wcm9iZSgpKS4N
+Cj4gPiA+ID4gSG93ZXZlciBpbg0KPiA+ID4gPiBvZl9kbWFfeGlsaW54X3hsYXRlKCkgY2hhbl9p
+ZCBpcyBnZXRzIHNldCB0byAwIChpbnQgY2hhbl9pZCA9DQo+ID4gPiA+IGRtYV9zcGVjLQ0KPiA+
+ID4gPiA+YXJnc1swXTspLCB3aGljaCBjYXVzZXMgdGhlOg0KPiA+ID4gPiAheGRldi0+Y2hhbltj
+aGFuX2lkXQ0KPiA+ID4gPiB0ZXN0IHRvIGZhaWwgaW4gb2ZfZG1hX3hpbGlueF94bGF0ZSgpDQo+
+ID4gPg0KPiA+ID4gV2hhdCBpcyB0aGUgY2hhbm5lbCBudW1iZXIgcGFzc2VkIGluIGRtYWNsaWVu
+dCBEVD8NCj4gSXMgdGhpcyBhIHF1ZXN0aW9uIGZvciBtZT8NCg0KWWVzLCBwbGVhc2UgYWxzbyBz
+aGFyZSB0aGUgZG1hY2xpZW50IERUIGNsaWVudCBub2RlLiBOZWVkIHRvIHNlZQ0KY2hhbm5lbCBu
+dW1iZXIgcGFzc2VkIHRvIGRtYXMgcHJvcGVydHkuIFNvbWV0aGluZyBsaWtlIGJlbG93LQ0KDQpk
+bWFzID0gPCYgYXhpX2RtYV8wIDE+DQpkbWEtbmFtZXMgPSAiYXhpX2RtYV8wIg0KDQo+IA0KPiA+
+DQo+ID4gQW55IHVwZGF0ZSBvbiB0aGlzIGlzc3VlPw0KPiANCj4gPg0KPiA+ID4NCj4gPiA+IGRt
+YXMgPSA8JiBheGlfZG1hXzAgMT4NCj4gPiA+IGRtYS1uYW1lcyA9ICJheGlfZG1hXzAiDQo+ID4g
+Pg0KPiA+ID4gPg0KPiA+ID4gPiBPdXIgZGV2aWNlLXRyZWUgZW50cnkgbG9va3MgbGlrZSB0aGlz
+Og0KPiA+ID4gPiAgICAgYXhpX2RtYV8wOiBkbWFAODAwMDIwMDAgew0KPiA+ID4gPiAgICAgICAg
+IHN0YXR1cyA9ICJva2F5IjsNCj4gPiA+ID4gICAgICAgICAjZG1hLWNlbGxzID0gPDE+Ow0KPiA+
+ID4gPiAgICAgICAgIGNvbXBhdGlibGUgPSAieGxueCxheGktZG1hLTEuMDAuYSI7DQo+ID4gPiA+
+ICAgICAgICAgaW50ZXJydXB0LXBhcmVudCA9IDwmZ2ljPjsNCj4gPiA+ID4gICAgICAgICBpbnRl
+cnJ1cHRzID0gPDAgODkgND47DQo+ID4gPiA+ICAgICAgICAgcmVnID0gPDB4MCAweDgwMDAyMDAw
+IDB4MCAweDEwMDA+Ow0KPiA+ID4gPiAgICAgICAgIHhsbngsYWRkcndpZHRoID0gPDB4MjA+Ow0K
+PiA+ID4gPiAgICAgICAgIGNsb2NrcyA9IDwmenlucW1wX2NsayBMUERfTFNCVVM+LCA8Jnp5bnFt
+cF9jbGsgTFBEX0xTQlVTPiwNCj4gPiA+ID4gPCZ6eW5xbXBfY2xrIExQRF9MU0JVUz4sIDwmenlu
+cW1wX2NsayBMUERfTFNCVVM+Ow0KPiA+ID4gPiAgICAgICAgIGNsb2NrLW5hbWVzID0gInNfYXhp
+X2xpdGVfYWNsayIsICJtX2F4aV9zZ19hY2xrIiwNCj4gPiA+ID4gIm1fYXhpX21tMnNfYWNsayIs
+ICJtX2F4aV9zMm1tX2FjbGsiOw0KPiA+ID4gPiAgICAgICAgIGRtYS1jaGFubmVsQDgwMDAyMDMw
+IHsNCj4gPiA+ID4gICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJ4bG54LGF4aS1kbWEtczJtbS1j
+aGFubmVsIjsNCj4gPiA+ID4gICAgICAgICAgICAgZG1hLWNoYW5uZWxzID0gPDB4MT47DQo+ID4g
+PiA+ICAgICAgICAgICAgIGludGVycnVwdHMgPSA8MCA4OSA0PjsNCj4gPiA+ID4gICAgICAgICAg
+ICAgeGxueCxkYXRhd2lkdGggPSA8MHgyMD47DQo+ID4gPiA+ICAgICAgICAgICAgIHhsbngsZGV2
+aWNlLWlkID0gPDB4MD47DQo+ID4gPiA+ICAgICAgICAgfTsNCj4gPiA+ID4gICAgIH07DQo+ID4g
+PiA+DQo+ID4gPiA+IFRoaXMgaXMgb24gYSA1LjEwLjEga2VybmVsIG9uIGFybTY0IHp5bnFtcCBo
+YXJkd2FyZS4NCj4gPiA+ID4NCj4gPiA+ID4gVGhlIHNlY29uZCBpc3N1ZSBnb2VzIGEgbGl0dGxl
+IGZ1cnRoZXIgYmFjayB0byBjb21taXQNCj4gPiA+ID4gZTgxMjc0Y2Q2YjUyNg0KPiA+ID4gPiAn
+ZG1hZW5naW5lOiBhZGQgc3VwcG9ydCB0byBkeW5hbWljIHJlZ2lzdGVyL3VucmVnaXN0ZXIgb2Yg
+Y2hhbm5lbHMnLg0KPiA+ID4gPiBBZnRlciB0aGlzIGNvbW1pdCBldmVuIGp1c3QgcmVtb3Zpbmcg
+dGhlIG1vZHVsZSAncm1tb2QNCj4gPiA+ID4geGlsaW54X2RtYScsIHdpdGhvdXQgZXZlciB1c2lu
+ZyBpdCwgcmVzdWx0cyBpbiBhIGtlcm5lbCBvb3BzIGxpa2UgdGhpczoNCj4gPiA+ID4gWyAgIDM3
+LjIxNDU2OF0geGlsaW54LXZkbWEgODAwMDIwMDAuZG1hOiBjaCAwOiBTRyBkaXNhYmxlZA0KPiA+
+ID4gPiBbICAgMzcuMjE5ODA3XSB4aWxpbngtdmRtYSA4MDAwMjAwMC5kbWE6IFdBUk46IERldmlj
+ZSByZWxlYXNlIGlzIG5vdA0KPiA+ID4gPiBkZWZpbmVkIHNvIGl0IGlzIG5vdCBzYWZlIHRvIHVu
+YmluZCB0aGlzIGRyaXZlciB3aGlsZSBpbiB1c2UNCj4gPiA+ID4gWyAgIDM3LjIzMTI5OV0geGls
+aW54LXZkbWEgODAwMDIwMDAuZG1hOiBYaWxpbnggQVhJIERNQSBFbmdpbmUgRHJpdmVyDQo+ID4g
+PiA+IFByb2JlZCEhDQo+ID4gPiA+IFsgICA0Mi4xMDA2NjBdIFVuYWJsZSB0byBoYW5kbGUga2Vy
+bmVsIHBhZ2luZyByZXF1ZXN0IGF0IHZpcnR1YWwNCj4gPiA+ID4gYWRkcmVzcyBkZWFkMDAwMDAw
+MDAwMTA4DQo+ID4gPiA+IFsgICA0Mi4xMDg1OThdIE1lbSBhYm9ydCBpbmZvOg0KPiA+ID4gPiBb
+ICAgNDIuMTExMzkzXSAgIEVTUiA9IDB4OTYwMDAwNDQNCj4gPiA+ID4gWyAgIDQyLjExNDQ0M10g
+ICBFQyA9IDB4MjU6IERBQlQgKGN1cnJlbnQgRUwpLCBJTCA9IDMyIGJpdHMNCj4gPiA+ID4gWyAg
+IDQyLjExOTc0NF0gICBTRVQgPSAwLCBGblYgPSAwDQo+ID4gPiA+IFsgICA0Mi4xMjI3OTRdICAg
+RUEgPSAwLCBTMVBUVyA9IDANCj4gPiA+ID4gWyAgIDQyLjEyNTkxOF0gRGF0YSBhYm9ydCBpbmZv
+Og0KPiA+ID4gPiBbICAgNDIuMTI4Nzg5XSAgIElTViA9IDAsIElTUyA9IDB4MDAwMDAwNDQNCj4g
+PiA+ID4gWyAgIDQyLjEzMjYxN10gICBDTSA9IDAsIFduUiA9IDENCj4gPiA+ID4gWyAgIDQyLjEz
+NTU3N10gW2RlYWQwMDAwMDAwMDAxMDhdIGFkZHJlc3MgYmV0d2VlbiB1c2VyIGFuZCBrZXJuZWwN
+Cj4gPiA+ID4gYWRkcmVzcyByYW5nZXMNCj4gPiA+ID4gWyAgIDQyLjE0MjcwNV0gSW50ZXJuYWwg
+ZXJyb3I6IE9vcHM6IDk2MDAwMDQ0IFsjMV0gU01QDQo+ID4gPiA+IFsgICA0Mi4xNDc1NjZdIE1v
+ZHVsZXMgbGlua2VkIGluOiB4aWxpbnhfZG1hKC0pIGNsa194bG54X2Nsb2NrX3dpemFyZA0KPiA+
+ID4gPiB1aW9fcGRydl9nZW5pcnENCj4gPiA+ID4gWyAgIDQyLjE1NTEzOV0gQ1BVOiAxIFBJRDog
+MjA3NSBDb21tOiBybW1vZCBOb3QgdGFpbnRlZA0KPiA+ID4gPiA1LjEwLjEtMDAwMjYtZzNhMmU2
+ZGQ3YTA1LWRpcnR5ICMxOTINCj4gPiA+ID4gWyAgIDQyLjE2MzMwMl0gSGFyZHdhcmUgbmFtZTog
+RW5jbHVzdHJhIFhVNSBTT00gKERUKQ0KPiA+ID4gPiBbICAgNDIuMTY3OTkyXSBwc3RhdGU6IDQw
+MDAwMDA1IChuWmN2IGRhaWYgLVBBTiAtVUFPIC1UQ08gQlRZUEU9LS0pDQo+ID4gPiA+IFsgICA0
+Mi4xNzM5OTZdIHBjIDogeGlsaW54X2RtYV9jaGFuX3JlbW92ZSsweDc0LzB4YTAgW3hpbGlueF9k
+bWFdDQo+ID4gPiA+IFsgICA0Mi4xNzk4MTVdIGxyIDogeGlsaW54X2RtYV9jaGFuX3JlbW92ZSsw
+eDcwLzB4YTAgW3hpbGlueF9kbWFdDQo+ID4gPiA+IFsgICA0Mi4xODU2MzZdIHNwIDogZmZmZmZm
+YzAxMTEyYmNhMA0KPiA+ID4gPiBbICAgNDIuMTg4OTM1XSB4Mjk6IGZmZmZmZmMwMTExMmJjYTAg
+eDI4OiBmZmZmZmY4MDQwMmVhNjQwDQo+ID4gPiA+IFsgICA0Mi4xOTQyMzhdIHgyNzogMDAwMDAw
+MDAwMDAwMDAwMCB4MjY6IDAwMDAwMDAwMDAwMDAwMDANCj4gPiA+ID4gWyAgIDQyLjE5OTU0Ml0g
+eDI1OiAwMDAwMDAwMDAwMDAwMDAwIHgyNDogMDAwMDAwMDAwMDAwMDAwMA0KPiA+ID4gPiBbICAg
+NDIuMjA0ODQ1XSB4MjM6IDAwMDAwMDAwMDAwMDAwMDAgeDIyOiAwMDAwMDAwMDAwMDAwMDAwDQo+
+ID4gPiA+IFsgICA0Mi4yMTAxNDldIHgyMTogZmZmZmZmYzAwODhhMjAyOCB4MjA6IGZmZmZmZjgw
+NDBjMDg0MTANCj4gPiA+ID4gWyAgIDQyLjIxNTQ1Ml0geDE5OiBmZmZmZmY4MDQyM2ZhNDgwIHgx
+ODogZmZmZmZmZmZmZmZmZmZmZg0KPiA+ID4gPiBbICAgNDIuMjIwNzU2XSB4MTc6IDAwMDAwMDAw
+MDAwMDAwMDAgeDE2OiAwMDAwMDAwMDAwMDAwMDAwDQo+ID4gPiA+IFsgICA0Mi4yMjYwNTldIHgx
+NTogZmZmZmZmYzAxMGNlODhjOCB4MTQ6IDAwMDAwMDAwMDAwMDAwNDANCj4gPiA+ID4gWyAgIDQy
+LjIzMTM2M10geDEzOiBmZmZmZmYwMDAwMDAwMDAwIHgxMjogZmZmZmZmZmZmZmZmZmZmZg0KPiA+
+ID4gPiBbICAgNDIuMjM2NjY3XSB4MTE6IDAwMDAwMDAwMDAwMDAwMjggeDEwOiBmZmZmZmZmZjdm
+ZmZmZmZmDQo+ID4gPiA+IFsgICA0Mi4yNDE5NzBdIHg5IDogZmZmZmZmZmYwMGYwZGZlMCB4OCA6
+IDAwMDAwMDAwMDAwMDAwMDANCj4gPiA+ID4gWyAgIDQyLjI0NzI3M10geDcgOiBmZmZmZmZjMDEw
+ZGE0MDAwIHg2IDogMDAwMDAwMDAwMDAwMDAwMA0KPiA+ID4gPiBbICAgNDIuMjUyNTc3XSB4NSA6
+IDAwMDAwMDAwMDAyMTBkMDAgeDQgOiBmZmZmZmZjMDEwZGE0ZGEwDQo+ID4gPiA+IFsgICA0Mi4y
+NTc4ODFdIHgzIDogZmZmZmZmODA0MjNmYTU3OCB4MiA6IDAwMDAwMDAwMDAwMDAwMDANCj4gPiA+
+ID4gWyAgIDQyLjI2MzE4NF0geDEgOiBkZWFkMDAwMDAwMDAwMTAwIHgwIDogZGVhZDAwMDAwMDAw
+MDEyMg0KPiA+ID4gPiBbICAgNDIuMjY4NDg4XSBDYWxsIHRyYWNlOg0KPiA+ID4gPiBbICAgNDIu
+MjcwOTIzXSAgeGlsaW54X2RtYV9jaGFuX3JlbW92ZSsweDc0LzB4YTAgW3hpbGlueF9kbWFdDQo+
+ID4gPiA+IFsgICA0Mi4yNzYzOTldICB4aWxpbnhfZG1hX3JlbW92ZSsweDNjLzB4NzAgW3hpbGlu
+eF9kbWFdDQo+ID4gPiA+IFsgICA0Mi4yODE0NDZdICBwbGF0Zm9ybV9kcnZfcmVtb3ZlKzB4MjQv
+MHgzOA0KPiA+ID4gPiBbICAgNDIuMjg1NTMwXSAgZGV2aWNlX3JlbGVhc2VfZHJpdmVyX2ludGVy
+bmFsKzB4ZWMvMHgxYTgNCj4gPiA+ID4gWyAgIDQyLjI5MDY1OV0gIGRyaXZlcl9kZXRhY2grMHg2
+NC8weGQ4DQo+ID4gPiA+IFsgICA0Mi4yOTQyMjZdICBidXNfcmVtb3ZlX2RyaXZlcisweDU4LzB4
+YjgNCj4gPiA+ID4gWyAgIDQyLjI5ODEzM10gIGRyaXZlcl91bnJlZ2lzdGVyKzB4MzAvMHg2MA0K
+PiA+ID4gPiBbICAgNDIuMzAyMDQ4XSAgcGxhdGZvcm1fZHJpdmVyX3VucmVnaXN0ZXIrMHgxNC8w
+eDIwDQo+ID4gPiA+IFsgICA0Mi4zMDY3NDRdICB4aWxpbnhfdmRtYV9kcml2ZXJfZXhpdCsweDE4
+LzB4OTc4IFt4aWxpbnhfZG1hXQ0KPiA+ID4gPiBbICAgNDIuMzEyMzk2XSAgX19hcm02NF9zeXNf
+ZGVsZXRlX21vZHVsZSsweDFlNC8weDI3MA0KPiA+ID4gPiBbICAgNDIuMzE3MTc4XSAgZWwwX3N2
+Y19jb21tb24uY29uc3Rwcm9wLjQrMHg2OC8weDE3MA0KPiA+ID4gPiBbICAgNDIuMzIxOTU5XSAg
+ZG9fZWwwX3N2YysweDcwLzB4OTANCj4gPiA+ID4gWyAgIDQyLjMyNTI2N10gIGVsMF9zdmMrMHgx
+NC8weDIwDQo+ID4gPiA+IFsgICA0Mi4zMjgzMTNdICBlbDBfc3luY19oYW5kbGVyKzB4OTAvMHhi
+OA0KPiA+ID4gPiBbICAgNDIuMzMyMTQxXSAgZWwwX3N5bmMrMHgxNTgvMHgxODANCj4gPiA+ID4g
+WyAgIDQyLjMzNTQ0Ml0gQ29kZTogOTVkZmNlMjkgOTEwM2MyNjAgOTVkZTdmZmIgYTk0OTAyNjEg
+KGY5MDAwNDIwKQ0KPiA+ID4gPiBbICAgNDIuMzQxNTI1XSAtLS1bIGVuZCB0cmFjZSBkYmQ5MGFl
+YjVjYTcxOTQzIF0tLS0NCj4gPiA+ID4NCj4gPiA+ID4gU28gaWYgSSB1c2UgdGhlIDA0YzJiYzJi
+ZWRlMSAoY29tbWl0IGJlZm9yZSAxNGNjZjBhYWI0NmUpIHZlcnNpb24NCj4gPiA+ID4gb2YgeGls
+aW54X2RtYS5jIGFuZCBuZXZlciByZW1vdmUgdGhlIG1vZHVsZSB0aGVuIGl0IGlzIHdvcmtpbmcN
+Cj4gPiA+ID4gd2l0aCB0aGUNCj4gPiA+ID4gNS4xMC4xIGtlcm5lbC4NCj4gPiA+DQo+ID4gPiBP
+aywgd2Ugd2lsbCBhbmFseXplIHRoaXMgaXNzdWUgYW5kIHJlcG9ydCBiYWNrIHRoZSBmaW5kaW5n
+cy4NCj4gPg0KPiA+ICsgRGF2ZQ0KPiA+DQo+ID4gSSB3YXMgYWJsZSB0byByZXByb2R1Y2UgdGhp
+cyBjcmFzaCBvbiB0aGUgdW5sb2FkaW5nIHhpbGlueF9kbWEgbW9kdWxlLg0KPiA+IFRoaXMgaXMg
+aW50cm9kdWNlZCBkdWUgdG8gdGhlIGU4MTI3NGNkNmI1MjYgbWFpbmxpbmUgY29tbWl0IGFkZGVk
+IGluDQo+ID4gdGhlIDUuNiBrZXJuZWwgdmVyc2lvbi4gVGhlIGNyYXNoIGlzIGNvbWluZyBmcm9t
+IC0NCj4gPg0KPiA+IHhpbGlueF9kbWFfY2hhbl9yZW1vdmUrMHg3NC8weGEwOg0KPiA+IF9fbGlz
+dF9kZWwgYXQgLi9pbmNsdWRlL2xpbnV4L2xpc3QuaDoxMTIgKGlubGluZWQgYnkpIF9fbGlzdF9k
+ZWxfZW50cnkNCj4gPiBhdC4vaW5jbHVkZS9saW51eC9saXN0Lmg6MTM1IChpbmxpbmVkIGJ5KSBs
+aXN0X2RlbCBhdA0KPiA+IC4vaW5jbHVkZS9saW51eC9saXN0Lmg6MTQ2IChpbmxpbmVkIGJ5KSB4
+aWxpbnhfZG1hX2NoYW5fcmVtb3ZlIGF0DQo+ID4gZHJpdmVycy9kbWEveGlsaW54L3hpbGlueF9k
+bWEuYzoyNTQ2DQo+ID4NCj4gPiBMb29raW5nIGludG8gZTgxMjc0Y2Q2YjUyNiBjb21taXQgLSBJ
+dCBkZWxldGVzIGNoYW5uZWwgZGV2aWNlX25vZGUNCj4gZW50cnkuDQo+ID4gU2FtZSBjaGFubmVs
+IGRldmljZV9ub2RlIGVudHJ5IGlzIGFsc28gZGVsZXRlZCBpbg0KPiA+IHhpbGlueF9kbWFfY2hh
+bl9yZW1vdmUgYXMgYSByZXN1bHQgd2Ugc2VlIHRoaXMgY3Jhc2guDQo+ID4NCj4gPiBAQCAtOTkz
+LDEyICsxMDA3LDIyIEBAIHN0YXRpYw0KPiA+IHZvaWQgX19kbWFfYXN5bmNfZGV2aWNlX2NoYW5u
+ZWxfdW5yZWdpc3RlcihzdHJ1Y3QgZG1hX2RldmljZSAqZGV2aWNlLA0KPiA+ICAgICAgICAgICAg
+ICAgICAgICIlcyBjYWxsZWQgd2hpbGUgJWQgY2xpZW50cyBob2xkIGEgcmVmZXJlbmNlXG4iLA0K
+PiA+ICAgICAgICAgICAgICAgICAgIF9fZnVuY19fLCBjaGFuLT5jbGllbnRfY291bnQpOw0KPiA+
+ICAgICAgICAgbXV0ZXhfbG9jaygmZG1hX2xpc3RfbXV0ZXgpOw0KPiA+ICsgICAgICAgbGlzdF9k
+ZWwoJmNoYW4tPmRldmljZV9ub2RlKTsNCj4gPiArICAgICAgIGRldmljZS0+Y2hhbmNudC0tOw0K
+PiA+DQo+ID4gSSB3aWxsIGxldCBEYXZlIGNvbW1lbnQgb24gdGhlIGJhY2tncm91bmQgb2YgdGhp
+cyBjaGFuZ2UuICBJbg0KPiA+IGRtYWVuZ2luZSBkcml2ZXIgLSB3ZSBhcmUgYWRkaW5nIGNoYW5u
+ZWwgZGV2aWNlIG5vZGUgZW50cnkgc28gZGVsZXRpbmcNCj4gPiBpdCBpbiB0aGUgZXhpdCBwYXRo
+IGxvb2tzIGZpbmUgdG8gbWUuIEFsc28sIEkgY2hlY2tlZCBvdGhlciBkbWENCj4gPiBkcml2ZXJz
+IGFyZSBhbHNvIGRlbGV0aW5nIGNoYW5uZWwgZGV2aWNlX25vZGUgZW50cnkgaW4gLnJlbW92ZSBz
+byBpdA0KPiA+IGxpa2VseSBhIGNvbW1vbiBwcm9ibGVtLg0KPiA+DQo+ID4gPg0KPiA+ID4gPg0K
+PiA+ID4gPiBIb3BlZnVsbHksIHRoaXMgd2lsbCBiZSBjbGVhciB0byBzb21lb25lIGhvdyB0aGVz
+ZSBpc3N1ZXMgY2FuIGJlDQo+ID4gPiA+IHJlc29sdmVkLiBJbiBnZW5lcmFsIHdlJ3ZlIGJlZW4g
+dmVyeSBoYXBweSB1c2luZyB0aGUgeGlsaW54IGRtYS4NCj4gPiA+ID4NCj4gPiA+ID4gSSdtIG5v
+dCBzdWJzY3JpYmVkIHRvIHRoZSBsaW51eC1rZXJuZWwgTUwgc28gaWYgeW91IG5lZWQgYW55DQo+
+ID4gPiA+IGZ1cnRoZXIgaW5mbyBvciB0ZXN0aW5nIGp1c3Qga2VlcCBtZSBpbiB0aGUgdG86IGxp
+c3QuDQo+ID4gPiA+DQo+ID4gPiA+IHRoYW5rcywNCj4gPiA+ID4gUGF1bA0KPiANCj4gVGhhbmtz
+IGZvciBsb29raW5nIGF0IHRoaXMhIExldCBtZSBrbm93IGlmIGFueW9uZSBuZWVkcyBtb3JlIGlu
+Zm8uDQo+IA0KPiAtUGF1bA0K

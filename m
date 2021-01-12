@@ -2,111 +2,73 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3D362F3F9A
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Jan 2021 01:46:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BDCB2F4059
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Jan 2021 01:47:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394907AbhALW4B (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 12 Jan 2021 17:56:01 -0500
-Received: from mailfilter03-out40.webhostingserver.nl ([195.211.72.99]:55106
-        "EHLO mailfilter03-out40.webhostingserver.nl" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2394903AbhALW4B (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 12 Jan 2021 17:56:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=exalondelft.nl; s=whs1;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
-         from;
-        bh=/iLZF5+MWd8vc9Sg3Pst1Rp9cFBVj8ZZ9VL2up/kMKs=;
-        b=ZK0eN8yJwV5QnmjWRSYbhQ6LQ7c22ilEnMsNsHqsJY2FRyRjwC7Ud+WWIdVoUj22o0BDEQdDdD9Cq
-         3ABIVt+0QlzGtCl4TgQAKHVhy9vwNsIA5bIcTZmgqB5XFlWEy+OWPljkfafUkQPp8quG4+sQKu6SXF
-         cR7Xle6Wx9U/jzRLN7HHVd6vt2SKnSzDJLRPJKEvUQny0QKBaQaXn3nUTc1SjPNFGy6OE6RP8F/zFQ
-         lOe4iXm+/qRTOPZiomiSmiv5rKUrz10yE5rtR4Xe7P3mztFQ0ZQBwPyQ5vck/W2LvkzWXwN1EQpKpc
-         Z4Krh/P/lJgJSASAwq+ZYPF83KMuXXA==
-X-Halon-ID: cfb8d4a0-5526-11eb-bfeb-001a4a4cb9a5
-Received: from s198.webhostingserver.nl (s198.webhostingserver.nl [141.138.168.154])
-        by mailfilter03.webhostingserver.nl (Halon) with ESMTPSA
-        id cfb8d4a0-5526-11eb-bfeb-001a4a4cb9a5;
-        Tue, 12 Jan 2021 23:37:54 +0100 (CET)
-Received: from [2001:981:6fec:1:228:9916:35b6:34c4] (helo=delfion.fritz.box)
-        by s198.webhostingserver.nl with esmtpa (Exim 4.93.0.4)
-        (envelope-from <ftoth@exalondelft.nl>)
-        id 1kzSIU-000WqI-Dy; Tue, 12 Jan 2021 23:37:54 +0100
-From:   Ferry Toth <ftoth@exalondelft.nl>
-To:     Ferry Toth <ftoth@exalondelft.nl>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] hsu_dma_pci: disable spurious interrupt
-Date:   Tue, 12 Jan 2021 23:37:49 +0100
-Message-Id: <20210112223749.97036-1-ftoth@exalondelft.nl>
-X-Mailer: git-send-email 2.27.0
+        id S1733233AbhALXe3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 12 Jan 2021 18:34:29 -0500
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:36775 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733047AbhALXe2 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 12 Jan 2021 18:34:28 -0500
+X-Originating-IP: 86.202.109.140
+Received: from localhost (lfbn-lyo-1-13-140.w86-202.abo.wanadoo.fr [86.202.109.140])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id A8AE81BF20B;
+        Tue, 12 Jan 2021 23:33:41 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Jaroslav Kysela <perex@perex.cz>, Matt Mackall <mpm@selenic.com>,
+        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Richard Weinberger <richard@nod.at>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Brown <broonie@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-crypto@vger.kernel.org,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-ide@vger.kernel.org, linux-spi@vger.kernel.org
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: (subset) [PATCH 00/10] Remove support for TX49xx
+Date:   Wed, 13 Jan 2021 00:33:30 +0100
+Message-Id: <161049432258.352381.2804715824942772218.b4-ty@bootlin.com>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <20210105140305.141401-1-tsbogend@alpha.franken.de>
+References: <20210105140305.141401-1-tsbogend@alpha.franken.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Antivirus-Scanner: Clean mail though you should still use an Antivirus
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Intel Tangier B0 and Anniedale the interrupt line, disregarding
-to have different numbers, is shared between HSU DMA and UART IPs.
-Thus on such SoCs we are expecting that IRQ handler is called in
-UART driver only. hsu_pci_irq was handling the spurious interrupt
-from HSU DMA by returning immediately. This wastes CPU time and
-since HSU DMA and HSU UART interrupt occur simultaneously they race
-to be handled causing delay to the HSU UART interrupt handling.
-Fix this by disabling the interrupt entirely.
+On Tue, 5 Jan 2021 15:02:45 +0100, Thomas Bogendoerfer wrote:
+> I couldn't find any buyable product other than reference boards using
+> TX49xx CPUs. And since nobody showed interest in keeping support for
+> it, it's time to remove it.
+> 
+> I've split up the removal into seperate parts for different maintainers.
+> So if the patch fits your needs, please take it via your tree or
+> give me an ack so I can apply them  the mips-next tree.
+> 
+> [...]
 
-Fixes: 4831e0d9054c ("serial: 8250_mid: handle interrupt correctly in DMA case")
-Signed-off-by: Ferry Toth <ftoth@exalondelft.nl>
----
- drivers/dma/hsu/pci.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+Applied, thanks!
 
-diff --git a/drivers/dma/hsu/pci.c b/drivers/dma/hsu/pci.c
-index 07cc7320a614..9045a6f7f589 100644
---- a/drivers/dma/hsu/pci.c
-+++ b/drivers/dma/hsu/pci.c
-@@ -26,22 +26,12 @@
- static irqreturn_t hsu_pci_irq(int irq, void *dev)
- {
- 	struct hsu_dma_chip *chip = dev;
--	struct pci_dev *pdev = to_pci_dev(chip->dev);
- 	u32 dmaisr;
- 	u32 status;
- 	unsigned short i;
- 	int ret = 0;
- 	int err;
- 
--	/*
--	 * On Intel Tangier B0 and Anniedale the interrupt line, disregarding
--	 * to have different numbers, is shared between HSU DMA and UART IPs.
--	 * Thus on such SoCs we are expecting that IRQ handler is called in
--	 * UART driver only.
--	 */
--	if (pdev->device == PCI_DEVICE_ID_INTEL_MRFLD_HSU_DMA)
--		return IRQ_HANDLED;
--
- 	dmaisr = readl(chip->regs + HSU_PCI_DMAISR);
- 	for (i = 0; i < chip->hsu->nr_channels; i++) {
- 		if (dmaisr & 0x1) {
-@@ -105,6 +95,17 @@ static int hsu_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (ret)
- 		goto err_register_irq;
- 
-+	/*
-+	 * On Intel Tangier B0 and Anniedale the interrupt line, disregarding
-+	 * to have different numbers, is shared between HSU DMA and UART IPs.
-+	 * Thus on such SoCs we are expecting that IRQ handler is called in
-+	 * UART driver only. Instead of handling the spurious interrupt
-+	 * from HSU DMA here and waste CPU time and delay HSU UART interrupt
-+	 * handling, disable the interrupt entirely.
-+	 */
-+	if (pdev->device == PCI_DEVICE_ID_INTEL_MRFLD_HSU_DMA)
-+		disable_irq_nosync(chip->irq);
-+
- 	pci_set_drvdata(pdev, chip);
- 
- 	return 0;
+[08/10] rtc: tx4939: Remove driver
+        commit: 446667df283002fdda0530523347ffd1cf053373
+
+Best regards,
 -- 
-2.27.0
-
+Alexandre Belloni <alexandre.belloni@bootlin.com>

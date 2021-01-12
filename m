@@ -2,75 +2,82 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F7B62F3092
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Jan 2021 14:15:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B36572F32BC
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Jan 2021 15:15:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbhALNHl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 12 Jan 2021 08:07:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53818 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388997AbhALM6T (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 12 Jan 2021 07:58:19 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3ECDC23333;
-        Tue, 12 Jan 2021 12:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610456257;
-        bh=hYeILsnaxK+KNOA/EPB5IzZ+PmRqMc6c+QsaY+EWZpI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VBsiv3Cv8BQa+K6hvFMnWjjWFGpVkAiwTWJRTi7mmvJdpRi7sjjE6af3KhfIQZUcR
-         Ohd9E7ur4XSndpAbngM2mKV1J0kVnBxeP+5kovC3gAd31FyojHx8KLn0KrofV9osF3
-         FrrJt18PLjST6VQuuXO9C7lSjvAWh0GXRdjRKA6YPF7/f/GeDzmnVzW50rAjSE+/tI
-         CG84Vs2HWxWstKkbcOp7HHFtlvcbVcplCyuoeu1uMGlkK5GBPfmke+tedgxHNm5a5q
-         nNp7KmKItp2PXrns2NVsbMjMn+4b90zn8dfWZyw+y/jt4KZEJOgHICUQuUpY6WLKbM
-         BZ2hqGrLO2xhQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amelie Delaunay <amelie.delaunay@foss.st.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 08/16] dmaengine: stm32-mdma: fix STM32_MDMA_VERY_HIGH_PRIORITY value
-Date:   Tue, 12 Jan 2021 07:57:17 -0500
-Message-Id: <20210112125725.71014-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210112125725.71014-1-sashal@kernel.org>
-References: <20210112125725.71014-1-sashal@kernel.org>
+        id S1727262AbhALOPG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 12 Jan 2021 09:15:06 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34820 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725613AbhALOPG (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 12 Jan 2021 09:15:06 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 10CEEM61083911;
+        Tue, 12 Jan 2021 08:14:22 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1610460862;
+        bh=esTShs76yvdLhD/D3aKWd2PmXrVE3wDszC9rVv+VngA=;
+        h=From:To:CC:Subject:Date;
+        b=wY3yeKCLVpMFnix6k6e7c98qQ+uKeLEm+/io0WkUl871wCmeScOE7D4y2fTyrh+00
+         o4A3A36A4RzjLc2SrQawy4uCGJcvILfkt3/xB65V4eBweluF7PHg1JuRBCnHOU0EIa
+         OwKUjtu0sX2A9b9T/r0lVDVJDsZfbR8BuaPPvbHg=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 10CEEMMO038587
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 Jan 2021 08:14:22 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 12
+ Jan 2021 08:14:22 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 12 Jan 2021 08:14:22 -0600
+Received: from ula0132425.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 10CEEJml009102;
+        Tue, 12 Jan 2021 08:14:20 -0600
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Subject: [PATCH] dmaengine: ti: k3-udma: Set rflow count for BCDMA split channels
+Date:   Tue, 12 Jan 2021 19:44:03 +0530
+Message-ID: <20210112141403.30286-1-vigneshr@ti.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Amelie Delaunay <amelie.delaunay@foss.st.com>
+BCDMA RX channels have one flow per channel, therefore set the rflow_cnt
+to rchan_cnt.
 
-[ Upstream commit e1263f9277bad198c2acc8092a41aea1edbea0e4 ]
+Without this patch, request for BCDMA RX channel allocation fails as
+rflow_cnt is 0 thus fails to reserve a rflow for the channel.
 
-STM32_MDMA_VERY_HIGH_PRIORITY is b11 not 0x11, so fix it with 0x3.
-
-Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
-Link: https://lore.kernel.org/r/20210104142045.25583-1-amelie.delaunay@foss.st.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 8844898028d4 ("dmaengine: ti: k3-udma: Add support for BCDMA channel TPL handling")
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 ---
- drivers/dma/stm32-mdma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/ti/k3-udma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
-index 9c6867916e890..0681c0fa44cfb 100644
---- a/drivers/dma/stm32-mdma.c
-+++ b/drivers/dma/stm32-mdma.c
-@@ -209,7 +209,7 @@
- #define STM32_MDMA_MAX_CHANNELS		63
- #define STM32_MDMA_MAX_REQUESTS		256
- #define STM32_MDMA_MAX_BURST		128
--#define STM32_MDMA_VERY_HIGH_PRIORITY	0x11
-+#define STM32_MDMA_VERY_HIGH_PRIORITY	0x3
- 
- enum stm32_mdma_trigger_mode {
- 	STM32_MDMA_BUFFER,
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index 298460438bb4..a1af59d901be 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -4305,6 +4305,7 @@ static int udma_get_mmrs(struct platform_device *pdev, struct udma_dev *ud)
+ 		ud->bchan_cnt = BCDMA_CAP2_BCHAN_CNT(cap2);
+ 		ud->tchan_cnt = BCDMA_CAP2_TCHAN_CNT(cap2);
+ 		ud->rchan_cnt = BCDMA_CAP2_RCHAN_CNT(cap2);
++		ud->rflow_cnt = ud->rchan_cnt;
+ 		break;
+ 	case DMA_TYPE_PKTDMA:
+ 		cap4 = udma_read(ud->mmrs[MMR_GCFG], 0x30);
 -- 
-2.27.0
+2.30.0
 

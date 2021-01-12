@@ -2,106 +2,107 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6D5C2F38E1
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Jan 2021 19:29:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EDA12F39BF
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Jan 2021 20:14:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406210AbhALS3N (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 12 Jan 2021 13:29:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60594 "EHLO
+        id S1727622AbhALTNS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 12 Jan 2021 14:13:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406163AbhALS3M (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 12 Jan 2021 13:29:12 -0500
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EB79C061795;
-        Tue, 12 Jan 2021 10:28:32 -0800 (PST)
-Received: by mail-lj1-x22c.google.com with SMTP id y22so3930840ljn.9;
-        Tue, 12 Jan 2021 10:28:32 -0800 (PST)
+        with ESMTP id S1726664AbhALTNS (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 12 Jan 2021 14:13:18 -0500
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB024C061575;
+        Tue, 12 Jan 2021 11:12:37 -0800 (PST)
+Received: by mail-qk1-x72e.google.com with SMTP id 22so2895199qkf.9;
+        Tue, 12 Jan 2021 11:12:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2YD7WmNM8qnNwZubIsxZz9m/eBN1TOpp41xnsGgqsBA=;
-        b=byTKUlRzRnCEQMTcxu3/A7PtaLo3WmmNVgyQTKBV42/o8XdmBnxbv4hHcVkB4ikhfH
-         IIELx4zkK0upHMkYKk9r5cVRr3i0w0T6f7W9w0I1cVwKwg1GQBilWO11Kdw+kiO9AZBh
-         i/HI4AV9k9idzvQXjIeuJP2qleVf2FbyDKsekzLy8kmCfh6TqlyKavOmgotI5Q6jZUxn
-         B028k19ORfE4Tkr7FoqwUjAYlN0PYPOplIbF5IJTdSFLZDKZIbdnQ2KR9ieRIXDJLaLa
-         1XqHRfKy/2c/2A5mRvhOEBSEc72WGOmBdHjJ7hKumGXZAWIPMJL3HuWGt1loWFluXEKK
-         r6wg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q26h93gSS0y9iR+Qm0MkHYb24X55fLtSwxVQagnZbx8=;
+        b=cpxV9/KULU/QTHufkILmQ5sNOh25AE7CPuNpwLyyEONMdKty6a6etdY25354NNYe9Y
+         fMnwt0fXnXouOqMn8LhEwmbSg2K5ccTi7+tLRZH2bkzApX+2coDyIgWyLm7s/uAVG7kr
+         BRsTt5tFdUv4f198LQxZ8KvqLn62KVGfkhOTLGXZesf/kyEbnr7lUkB5vnAGjD6cOoBv
+         OkP4DshKIUhtJx4dI1W3724iqSoMAyNtiU9wil+YMxqSloNo5iLUSA52w9YSpv5Bf6gz
+         c/dvsMkB2992CAVkuH5ak0GFGxeag2KmMWCht6DBiIhS8WhO87e2WpuTCv/OEEb/+axK
+         aYZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=2YD7WmNM8qnNwZubIsxZz9m/eBN1TOpp41xnsGgqsBA=;
-        b=f68WI2e2XZhGLkb/UR3ObHR9nx+gZBR9YjjRR2aZbMV/iEWvBU7JdvRqdqWpACqHhv
-         XIipAk9Hmc4EeBD9BQ7Q81jXgojwl2n9/hPxdFSA8Gdzni12YcLyhlEo74GUSZIcre3l
-         ubnbkXQEqqjwUXXOSAfXt/sM60MZxnuhEJd0HdYiAc/7Cz1vu1pq6TSjvnRjsYiNj2Qx
-         BtZ8Lkghusd8xJyoQZJ/FcLLbZl8MNKrYs8xXdx2X0AYqWf2nf2JxsfVIvhTDFKKNHfL
-         cceFggLeeBeKmgKtNSZJz6m3ebbhO3jiiYkau7vVgJKeQc3RRSuZZf0IxS6mAvG9dD4L
-         MyaA==
-X-Gm-Message-State: AOAM530Nh3OW0zkGlojZ35TppQnEAsjzzyscdzCtE3n/1zt19IRP60Xn
-        cf5MCsBBGk36UCjpyvTTm8DQ2BZyDwbdew==
-X-Google-Smtp-Source: ABdhPJx3ml1Qc0rHyDgLf7XM2B6Waq12EH9xvzTE1a8E1Tc0QSWg8Kptf1dFz8Ka/LP4cDf7mSOMHA==
-X-Received: by 2002:a05:651c:cb:: with SMTP id 11mr206216ljr.509.1610476110465;
-        Tue, 12 Jan 2021 10:28:30 -0800 (PST)
-Received: from [10.0.0.127] (91-157-87-152.elisa-laajakaista.fi. [91.157.87.152])
-        by smtp.gmail.com with ESMTPSA id t28sm444828ljo.45.2021.01.12.10.28.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Jan 2021 10:28:29 -0800 (PST)
-Subject: Re: [PATCH] dmaengine: ti: k3-udma: Set rflow count for BCDMA split
- channels
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
+        bh=Q26h93gSS0y9iR+Qm0MkHYb24X55fLtSwxVQagnZbx8=;
+        b=M+vUKnGhqhWA4L9ZDQ8coyLVplWI58eXvb3dFgbr9fhcBvSMMuFedpVureYklLfXN1
+         MXGps8l5eSg7kagqtg1bQnGgj4yf9IOHXHWyeyBqr3pv0+Y4PPVeaUAdTKZ7NM1OKg9r
+         cU5teAMjYYBswF0EmVXUBTT+NmKLh0GBLAOHnEUiB2p41XA3jhR6w2GX7QfmhCKA6lK6
+         j50hAPnn7ZdpHWZuIPrJJvrcI0BnJVAlkwUNyRCGkv1EevU4iZXdQGNHfkiMGd9z7sT7
+         LG8QM7TNBfYVNmkeuq911Ca6/g6E2WlhM1eGTTD1Nv8wcG3wEFE4/VUyLocAkipf2meJ
+         zF9g==
+X-Gm-Message-State: AOAM532chSHoGTcsMWsM5zo9m/PiFO7GTgavSgnhSMe4hfRgu9Btydg7
+        RUh90AwIAaZr4IhlLV/Sspg=
+X-Google-Smtp-Source: ABdhPJzltk2bVl0P/Jw4bElA4gsCXcb3W8L4e7Evd9K3CYkp7UT8AjEXsDMdfDM370Ssk8naPBZYVw==
+X-Received: by 2002:ae9:de45:: with SMTP id s66mr866170qkf.197.1610478756993;
+        Tue, 12 Jan 2021 11:12:36 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:45f1:1d00::1])
+        by smtp.gmail.com with ESMTPSA id u5sm1861674qka.86.2021.01.12.11.12.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Jan 2021 11:12:36 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Vinod Koul <vkoul@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20210112141403.30286-1-vigneshr@ti.com>
-From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-Message-ID: <dc598197-6aa0-f9f9-dadc-54d1e6fb7361@gmail.com>
-Date:   Tue, 12 Jan 2021 20:29:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] dmaengine: qcom: Always inline gpi_update_reg
+Date:   Tue, 12 Jan 2021 12:12:14 -0700
+Message-Id: <20210112191214.1264793-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-In-Reply-To: <20210112141403.30286-1-vigneshr@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vignesh,
+When building with CONFIG_UBSAN_UNSIGNED_OVERFLOW, clang decides not to
+inline gpi_update_reg, which causes a linkage failure around __bad_mask:
 
-On 1/12/21 4:14 PM, Vignesh Raghavendra wrote:
-> BCDMA RX channels have one flow per channel, therefore set the rflow_cnt
-> to rchan_cnt.
-> 
-> Without this patch, request for BCDMA RX channel allocation fails as
-> rflow_cnt is 0 thus fails to reserve a rflow for the channel.
+ld.lld: error: undefined symbol: __bad_mask
+>>> referenced by bitfield.h:119 (include/linux/bitfield.h:119)
+>>>               dma/qcom/gpi.o:(gpi_update_reg) in archive drivers/built-in.a
+>>> referenced by bitfield.h:119 (include/linux/bitfield.h:119)
+>>>               dma/qcom/gpi.o:(gpi_update_reg) in archive drivers/built-in.a
 
-Good catch, thank you!
+If gpi_update_reg is not inlined, the mask value will not be known at
+compile time so the check in field_multiplier stays in the final
+object file, causing the above linkage failure. Always inline
+gpi_update_reg so that this check can never fail.
 
-Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Fixes: 5d0c3533a19f ("dmaengine: qcom: Add GPI dma driver")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1243
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/dma/qcom/gpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Fixes: 8844898028d4 ("dmaengine: ti: k3-udma: Add support for BCDMA channel TPL handling")
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> ---
->   drivers/dma/ti/k3-udma.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-> index 298460438bb4..a1af59d901be 100644
-> --- a/drivers/dma/ti/k3-udma.c
-> +++ b/drivers/dma/ti/k3-udma.c
-> @@ -4305,6 +4305,7 @@ static int udma_get_mmrs(struct platform_device *pdev, struct udma_dev *ud)
->   		ud->bchan_cnt = BCDMA_CAP2_BCHAN_CNT(cap2);
->   		ud->tchan_cnt = BCDMA_CAP2_TCHAN_CNT(cap2);
->   		ud->rchan_cnt = BCDMA_CAP2_RCHAN_CNT(cap2);
-> +		ud->rflow_cnt = ud->rchan_cnt;
->   		break;
->   	case DMA_TYPE_PKTDMA:
->   		cap4 = udma_read(ud->mmrs[MMR_GCFG], 0x30);
-> 
+diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
+index 1a0bf6b0567a..e48eb397f433 100644
+--- a/drivers/dma/qcom/gpi.c
++++ b/drivers/dma/qcom/gpi.c
+@@ -584,7 +584,7 @@ static inline void gpi_write_reg_field(struct gpii *gpii, void __iomem *addr,
+ 	gpi_write_reg(gpii, addr, val);
+ }
+ 
+-static inline void
++static __always_inline void
+ gpi_update_reg(struct gpii *gpii, u32 offset, u32 mask, u32 val)
+ {
+ 	void __iomem *addr = gpii->regs + offset;
 
+base-commit: 7c53f6b671f4aba70ff15e1b05148b10d58c2837
 -- 
-Péter
+2.30.0
+

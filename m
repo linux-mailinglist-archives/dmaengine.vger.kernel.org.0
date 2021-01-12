@@ -2,104 +2,198 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C1B22F26C1
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Jan 2021 04:37:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 279812F27DA
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Jan 2021 06:27:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbhALDhw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 11 Jan 2021 22:37:52 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48914 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbhALDhw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Jan 2021 22:37:52 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 10C3b779060475;
-        Mon, 11 Jan 2021 21:37:07 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1610422627;
-        bh=/IgXpErguzlqPvqFvQDPoebiEgcjnHX6EGr0XrDgkcY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=RXcFuT/hxYJZPcfUKQ5uvNZOk/VkrHrRXVlakd7PpqnIJhuhBVtNKhBjfjKlvwKGG
-         WMXjfU0bTu0ZH8TI786KQuNKO+wUBdBKCAIn7q5AhcM9U/2S9Hraoi1H1ulSxkvRcb
-         P1Zzo8/TVTj6/7nTkcHyEfcWLQaP6R09gcUBPER4=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 10C3b7Wj067138
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 Jan 2021 21:37:07 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 11
- Jan 2021 21:37:06 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 11 Jan 2021 21:37:07 -0600
-Received: from [10.250.235.36] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 10C3b3Hc123612;
-        Mon, 11 Jan 2021 21:37:04 -0600
-Subject: Re: [PATCH 0/2] dmaengine: ti: k3-udma: memcpy throughput improvement
-To:     <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <vigneshr@ti.com>,
-        <grygorii.strashko@ti.com>, <peter.ujfalusi@gmail.com>
-References: <20201214081310.10746-1-peter.ujfalusi@ti.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <b3aa1dc4-170c-36f5-6095-d9861ecc9a8e@ti.com>
-Date:   Tue, 12 Jan 2021 09:07:03 +0530
+        id S2388269AbhALF1I (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 12 Jan 2021 00:27:08 -0500
+Received: from mga18.intel.com ([134.134.136.126]:57448 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732090AbhALF1I (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 12 Jan 2021 00:27:08 -0500
+IronPort-SDR: 800DPH8MeGXzTE3pDEhYgCM63lWAVqUBLigHxaxnf8OBj3nwTJ+mDPZxSnNvrJ7Dy+RR7Cv0fl
+ mE2/zX8+wmbQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9861"; a="165665509"
+X-IronPort-AV: E=Sophos;i="5.79,340,1602572400"; 
+   d="scan'208";a="165665509"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2021 21:25:22 -0800
+IronPort-SDR: K+Po9YhVEEvS3vIMEnPHNo6eOJJ0eHQkpCK/TheO9bgoFzo1w6F7RQ/G+viZ1QtF5egjChfGup
+ rnYl4bjJ+bdg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.79,340,1602572400"; 
+   d="scan'208";a="464398320"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.28]) ([10.239.159.28])
+  by fmsmga001.fm.intel.com with ESMTP; 11 Jan 2021 21:25:15 -0800
+Cc:     baolu.lu@linux.intel.com, Jason Gunthorpe <jgg@nvidia.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "Hossain, Mona" <mona.hossain@intel.com>,
+        "netanelg@mellanox.com" <netanelg@mellanox.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "shahafs@mellanox.com" <shahafs@mellanox.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>
+Subject: Re: [RFC PATCH v2 1/1] platform-msi: Add platform check for subdevice
+ irq domain
+To:     Leon Romanovsky <leon@kernel.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>
+References: <20210106022749.2769057-1-baolu.lu@linux.intel.com>
+ <20210106060613.GU31158@unreal>
+ <3d2620f9-bbd4-3dd0-8e29-0cfe492a109f@linux.intel.com>
+ <20210106104017.GV31158@unreal> <20210106152339.GA552508@nvidia.com>
+ <20210106160158.GX31158@unreal>
+ <MWHPR11MB18867EE2F4FA0382DCFEEE2B8CAF0@MWHPR11MB1886.namprd11.prod.outlook.com>
+ <20210107060916.GY31158@unreal>
+ <MWHPR11MB188629E36439F80AD60900788CAF0@MWHPR11MB1886.namprd11.prod.outlook.com>
+ <20210107071616.GA31158@unreal>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <dfda8933-566c-1ec7-4ed4-427f094cb7c9@linux.intel.com>
+Date:   Tue, 12 Jan 2021 13:17:11 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20201214081310.10746-1-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20210107071616.GA31158@unreal>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 Hi,
 
-On 14/12/20 1:43 pm, Peter Ujfalusi wrote:
-> Hi,
+On 1/7/21 3:16 PM, Leon Romanovsky wrote:
+> On Thu, Jan 07, 2021 at 06:55:16AM +0000, Tian, Kevin wrote:
+>>> From: Leon Romanovsky <leon@kernel.org>
+>>> Sent: Thursday, January 7, 2021 2:09 PM
+>>>
+>>> On Thu, Jan 07, 2021 at 02:04:29AM +0000, Tian, Kevin wrote:
+>>>>> From: Leon Romanovsky <leon@kernel.org>
+>>>>> Sent: Thursday, January 7, 2021 12:02 AM
+>>>>>
+>>>>> On Wed, Jan 06, 2021 at 11:23:39AM -0400, Jason Gunthorpe wrote:
+>>>>>> On Wed, Jan 06, 2021 at 12:40:17PM +0200, Leon Romanovsky wrote:
+>>>>>>
+>>>>>>> I asked what will you do when QEMU will gain needed functionality?
+>>>>>>> Will you remove QEMU from this list? If yes, how such "new" kernel
+>>> will
+>>>>>>> work on old QEMU versions?
+>>>>>>
+>>>>>> The needed functionality is some VMM hypercall, so presumably new
+>>>>>> kernels that support calling this hypercall will be able to discover
+>>>>>> if the VMM hypercall exists and if so superceed this entire check.
+>>>>>
+>>>>> Let's not speculate, do we have well-known path?
+>>>>> Will such patch be taken to stable@/distros?
+>>>>>
+>>>>
+>>>> There are two functions introduced in this patch. One is to detect whether
+>>>> running on bare metal or in a virtual machine. The other is for deciding
+>>>> whether the platform supports ims. Currently the two are identical because
+>>>> ims is supported only on bare metal at current stage. In the future it will
+>>> look
+>>>> like below when ims can be enabled in a VM:
+>>>>
+>>>> bool arch_support_pci_device_ims(struct pci_dev *pdev)
+>>>> {
+>>>> 	return on_bare_metal() || hypercall_irq_domain_supported();
+>>>> }
+>>>>
+>>>> The VMM vendor list is for on_bare_metal, and suppose a vendor will
+>>>> never be removed once being added to the list since the fact of running
+>>>> in a VM never changes, regardless of whether this hypervisor supports
+>>>> extra VMM hypercalls.
+>>>
+>>> This is what I imagined, this list will be forever, and this worries me.
+>>>
+>>> I don't know if it is true or not, but guess that at least Oracle and
+>>> Microsoft bare metal devices and VMs will have same DMI_SYS_VENDOR.
+>>
+>> It's true. David Woodhouse also said it's the case for Amazon EC2 instances.
+>>
+>>>
+>>> It means that this on_bare_metal() function won't work reliably in many
+>>> cases. Also being part of include/linux/msi.h, at some point of time,
+>>> this function will be picked by the users outside for the non-IMS cases.
+>>>
+>>> I didn't even mention custom forks of QEMU which are prohibited to change
+>>> DMI_SYS_VENDOR and private clouds with custom solutions.
+>>
+>> In this case the private QEMU forks are encouraged to set CPUID (X86_
+>> FEATURE_HYPERVISOR) if they do plan to adopt a different vendor name.
 > 
-> Newer members of the KS3 family (after AM654) have support for burst_size
-> configuration for each DMA channel.
+> Does QEMU set this bit when it runs in host-passthrough CPU model?
 > 
-> The HW default value is 64 bytes but on higher throughput channels it can be
-> increased to 256 bytes (UCHANs) or 128 byes (HCHANs).
+>>
+>>>
+>>> The current array makes DMI_SYS_VENDOR interface as some sort of ABI. If
+>>> in the future,
+>>> the QEMU will decide to use more hipster name, for example "qEmU", this
+>>> function
+>>> won't work.
+>>>
+>>> I'm aware that DMI_SYS_VENDOR is used heavily in the kernel code and
+>>> various names for the same company are good example how not reliable it.
+>>>
+>>> The most hilarious example is "Dell/Dell Inc./Dell Inc/Dell Computer
+>>> Corporation/Dell Computer",
+>>> but other companies are not far from them.
+>>>
+>>> Luckily enough, this identification is used for hardware product that
+>>> was released to the market and their name will be stable for that
+>>> specific model. It is not the case here where we need to ensure future
+>>> compatibility too (old kernel on new VM emulator).
+>>>
+>>> I'm not in position to say yes or no to this patch and don't have plans to do it.
+>>> Just expressing my feeling that this solution is too hacky for my taste.
+>>>
+>>
+>> I agree with your worries and solely relying on DMI_SYS_VENDOR is
+>> definitely too hacky. In previous discussions with Thomas there is no
+>> elegant way to handle this situation. It has to be a heuristic approach.
+>> First we hope the CPUID bit is set properly in most cases thus is checked
+>> first. Then other heuristics can be made for the remaining cases. DMI_
+>> SYS_VENDOR is the first hint and more can be added later. For example,
+>> when IOMMU is present there is vendor specific way to detect whether
+>> it's real or virtual. Dave also mentioned some BIOS flag to indicate a
+>> virtual machine. Now probably the real question here is whether people
+>> are OK with CPUID+DMI_SYS_VENDOR combo check for now (and grow
+>> it later) or prefer to having all identified heuristics so far in-place together...
 > 
-> Aligning the buffers and length of the transfer to the burst size also increases
-> the throughput.
-> 
-> Numbers gathered on j721e (UCHAN pair):
-> echo 8000000 > /sys/module/dmatest/parameters/test_buf_size
-> echo 2000 > /sys/module/dmatest/parameters/timeout
-> echo 50 > /sys/module/dmatest/parameters/iterations
-> echo 1 > /sys/module/dmatest/parameters/max_channels
-> 
-> Prior to  this patch:   ~1.3 GB/s
-> After this patch:       ~1.8 GB/s
->  with 1 byte alignment: ~1.7 GB/s
-> 
-> The patches are on top of the AM64 support series:
-> https://lore.kernel.org/lkml/20201208090440.31792-1-peter.ujfalusi@ti.com/
+> IMHO, it should be as much as possible close to the end result.
 
-FWIW, tested this series with PCIe RC<->EP (using pcitest utility)
-Without this series
-READ => Size: 67108864 bytes      DMA: YES        Time: 0.137854270
-seconds      Rate: 475400 KB/s
+Okay! This seems to be a right way to go.
 
-WRITE => Size: 67108864 bytes     DMA: YES        Time: 0.049701495
-seconds      Rate: 1318592 KB/s
+The SMBIOS defines a 'virtual machine' bit in the BIOS characteristics
+extension byte. It could be used as a possible way.
 
-With this series
-READ => Size: 67108864 bytes      DMA: YES        Time: 0.045611175
-seconds      Rate: 1436840 KB/s
+In order to support emulated IOMMU for fully virtualized guest, the
+iommu vendors defined methods to distinguish between bare metal and VMM
+(caching mode in VT-d for example).
 
-WRITE => Size: 67108864 bytes     DMA: YES        Time: 0.042737440
-seconds      Rate: 1533456 KB/s
+I will go ahead with adding above two methods before checking the block
+list.
 
-Tested-by: Kishon Vijay Abraham I <kishon@ti.com>
-
-Thanks
-Kishon
+Best regards,
+baolu

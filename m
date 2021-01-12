@@ -2,81 +2,104 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 10C492F2500
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Jan 2021 02:18:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C1B22F26C1
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Jan 2021 04:37:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbhALAiG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 11 Jan 2021 19:38:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726011AbhALAiA (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Jan 2021 19:38:00 -0500
-Received: from mail-vk1-xa35.google.com (mail-vk1-xa35.google.com [IPv6:2607:f8b0:4864:20::a35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5361C061794
-        for <dmaengine@vger.kernel.org>; Mon, 11 Jan 2021 16:37:19 -0800 (PST)
-Received: by mail-vk1-xa35.google.com with SMTP id a6so219007vkb.8
-        for <dmaengine@vger.kernel.org>; Mon, 11 Jan 2021 16:37:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=p2tEoRxSR0ND4Q5W04SeKoQNOCFAovy/UQrDlk01CLk=;
-        b=o3YCPAQrZpwTzpgor+7r/PDEUtHc4JoZzu5+oL/riF+V4v00cNhRI8LY3za9tqxqhT
-         GGyUHw6GJeuWALL1egzL+Mql3s4xNcwXVjMkI/5rFrQAcukBwJtb634ojA8nIzqG5hXl
-         66qw8sCBnBAPE87b1wDmBbd4X0g1OXGxEGe8iRTirnO3bd8/q1W3/mNPexJdL52Owd3h
-         OvNv/NmbE9j1jjeWRfCOxI/9B3WqM15nYjSzAVAtjLgsTjpeRohkkmMXxbOE1i3fAEYj
-         7jIe0ctQXSKM0T7/75f0taXVSYECIpK0DxMLYWO6W5D2CccLzWwF4QyXTl8wAO13J/mk
-         vjnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=p2tEoRxSR0ND4Q5W04SeKoQNOCFAovy/UQrDlk01CLk=;
-        b=ALNaS83nNjHHGdC02EtssZFhgSfzNaxVUcUjTSEQ24cnn/x7HlVVk2L2gOtFIz4IQU
-         4AN8jTOF8GtQ3u5KmGRfFwpXo8EGRyrRMSRBvtv6om/x73tRRuIXDfSeFHqfBjNeEbtT
-         vAOR0UzpG95CqwUo0fzeUHMXn/sJONeGwXqkUT5FpN/ly6J4sy6uyaFKPfX69m5qWd04
-         4NiAawzrGZsSBjow2s7EPjCfIx6/PoZJuj1lKSzYWxBNdmFhwwjD/+lysdcCQtA87rcm
-         9Q1ytlK7shfUn/4UhmFhaKbw/hudbESESd9b4u9aUz2hIn3X4TtiBEGoKRTNnuUFu3u7
-         2psQ==
-X-Gm-Message-State: AOAM531u5lhJQ9r9fbcOUGWTtLTX1DyQfI/z9AUOWlMJF2KU4Py/sZpU
-        YBKBi70AS6GAVBEaY5OzYIovE+Zv8gWhsS/BT2Q=
-X-Google-Smtp-Source: ABdhPJyCqyXIFlTdS42WtvUGnUZx48m6ETwXUrd9mtGronoJvO8jIfXMidPgXmlLA0Lvc5ydI2bRHDuiZ8/6nXSoc6A=
-X-Received: by 2002:ac5:c92e:: with SMTP id u14mr2158962vkl.15.1610411838431;
- Mon, 11 Jan 2021 16:37:18 -0800 (PST)
+        id S1727005AbhALDhw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 11 Jan 2021 22:37:52 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48914 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbhALDhw (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 11 Jan 2021 22:37:52 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 10C3b779060475;
+        Mon, 11 Jan 2021 21:37:07 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1610422627;
+        bh=/IgXpErguzlqPvqFvQDPoebiEgcjnHX6EGr0XrDgkcY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=RXcFuT/hxYJZPcfUKQ5uvNZOk/VkrHrRXVlakd7PpqnIJhuhBVtNKhBjfjKlvwKGG
+         WMXjfU0bTu0ZH8TI786KQuNKO+wUBdBKCAIn7q5AhcM9U/2S9Hraoi1H1ulSxkvRcb
+         P1Zzo8/TVTj6/7nTkcHyEfcWLQaP6R09gcUBPER4=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 10C3b7Wj067138
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 11 Jan 2021 21:37:07 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 11
+ Jan 2021 21:37:06 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 11 Jan 2021 21:37:07 -0600
+Received: from [10.250.235.36] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 10C3b3Hc123612;
+        Mon, 11 Jan 2021 21:37:04 -0600
+Subject: Re: [PATCH 0/2] dmaengine: ti: k3-udma: memcpy throughput improvement
+To:     <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, <vigneshr@ti.com>,
+        <grygorii.strashko@ti.com>, <peter.ujfalusi@gmail.com>
+References: <20201214081310.10746-1-peter.ujfalusi@ti.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <b3aa1dc4-170c-36f5-6095-d9861ecc9a8e@ti.com>
+Date:   Tue, 12 Jan 2021 09:07:03 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Received: by 2002:a05:6102:676:0:0:0:0 with HTTP; Mon, 11 Jan 2021 16:37:18
- -0800 (PST)
-Reply-To: stefanopessina34@gmail.com
-From:   STEFANO PESSINA <emmanuelomologo@gmail.com>
-Date:   Mon, 11 Jan 2021 16:37:18 -0800
-Message-ID: <CAPFMup+hDyniWd_Rmj4V1VcySCcNVQy7FCoTZQVupU8MiM9MHw@mail.gmail.com>
-Subject: =?UTF-8?B?SGVyemxpY2hlIEdsw7xja3fDvG5zY2hl?=
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20201214081310.10746-1-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hallo,
+Hi,
 
-Ich bin Stefano Pessina, ein italienischer Wirtschaftsmagnat, Investor
-und Philanthrop. Der stellvertretende Vorsitzende, Chief Executive
-Officer (CEO) und der gr=C3=B6=C3=9Fte Einzelaktion=C3=A4r der Walgreens Bo=
-ots
-Alliance. Ich habe 25 Prozent meines pers=C3=B6nlichen Verm=C3=B6gens f=C3=
-=BCr
-wohlt=C3=A4tige Zwecke verschenkt. Und ich habe auch zugesagt, den Rest von
-25% in diesem Jahr 2021 an Einzelpersonen zu verschenken. Ich habe
-beschlossen, Ihnen 2.200.000,00 =E2=82=AC (zwei Millionen zweihunderttausen=
-d
-Euro) zu spenden. Wenn Sie an meiner Spende interessiert sind,
-kontaktieren Sie mich f=C3=BCr weitere Informationen. Sie k=C3=B6nnen auch =
-mehr
-=C3=BCber mich =C3=BCber den unten stehenden Link lesen
+On 14/12/20 1:43 pm, Peter Ujfalusi wrote:
+> Hi,
+> 
+> Newer members of the KS3 family (after AM654) have support for burst_size
+> configuration for each DMA channel.
+> 
+> The HW default value is 64 bytes but on higher throughput channels it can be
+> increased to 256 bytes (UCHANs) or 128 byes (HCHANs).
+> 
+> Aligning the buffers and length of the transfer to the burst size also increases
+> the throughput.
+> 
+> Numbers gathered on j721e (UCHAN pair):
+> echo 8000000 > /sys/module/dmatest/parameters/test_buf_size
+> echo 2000 > /sys/module/dmatest/parameters/timeout
+> echo 50 > /sys/module/dmatest/parameters/iterations
+> echo 1 > /sys/module/dmatest/parameters/max_channels
+> 
+> Prior to  this patch:   ~1.3 GB/s
+> After this patch:       ~1.8 GB/s
+>  with 1 byte alignment: ~1.7 GB/s
+> 
+> The patches are on top of the AM64 support series:
+> https://lore.kernel.org/lkml/20201208090440.31792-1-peter.ujfalusi@ti.com/
 
-https://en.wikipedia.org/wiki/Stefano_Pessina
+FWIW, tested this series with PCIe RC<->EP (using pcitest utility)
+Without this series
+READ => Size: 67108864 bytes      DMA: YES        Time: 0.137854270
+seconds      Rate: 475400 KB/s
 
-Herzlicher Gruss
-CEO Walgreens Boots Alliance
-Stefano Pessina
+WRITE => Size: 67108864 bytes     DMA: YES        Time: 0.049701495
+seconds      Rate: 1318592 KB/s
+
+With this series
+READ => Size: 67108864 bytes      DMA: YES        Time: 0.045611175
+seconds      Rate: 1436840 KB/s
+
+WRITE => Size: 67108864 bytes     DMA: YES        Time: 0.042737440
+seconds      Rate: 1533456 KB/s
+
+Tested-by: Kishon Vijay Abraham I <kishon@ti.com>
+
+Thanks
+Kishon

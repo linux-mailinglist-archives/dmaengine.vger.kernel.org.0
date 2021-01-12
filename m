@@ -2,232 +2,118 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE9182F28FA
-	for <lists+dmaengine@lfdr.de>; Tue, 12 Jan 2021 08:35:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31D3A2F2B45
+	for <lists+dmaengine@lfdr.de>; Tue, 12 Jan 2021 10:31:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391894AbhALHfM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 12 Jan 2021 02:35:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727959AbhALHfM (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 12 Jan 2021 02:35:12 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2AB6522795;
-        Tue, 12 Jan 2021 07:34:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610436870;
-        bh=727P1FZsT+bk8lBL7nX6mSRtF/ZIqumUMC7MWxkp2iE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oN9eLCwjv9/hexb3ui5TaMZb5bvYg4qi2Vxvk2cukovpl6ESE+RvLalBEADkD8MFQ
-         1W9eSeUvWod/wmKkCi/0q68iwR0LaKrOwQQ4zgsPhtXlR+nd9Bpwzd06wPp8dxpQYf
-         64YuOidn+/ZdGeMVy9qaSG4/3g2t0bI/oOAmiYb88dAr27u8S98nGQWO4fpz2bSZ44
-         b7z17pqfeYsmy1iS3ElSP/JKHzPsTp5mnqlrmrJACoE/bqh9fugN+vSRm5h1enc/Sq
-         QoFEp5EmlI0+ksce5bNV+4xjPqr9GvOfDYm9UeHD1iS0h/x84wFWPY7oaDU3SN1otu
-         yUXsMA742eDCg==
-Date:   Tue, 12 Jan 2021 09:34:27 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>
-Subject: Re: [RFC PATCH v2 1/1] platform-msi: Add platform check for
- subdevice irq domain
-Message-ID: <20210112073427.GE4678@unreal>
-References: <20210106104017.GV31158@unreal>
- <20210106152339.GA552508@nvidia.com>
- <20210106160158.GX31158@unreal>
- <MWHPR11MB18867EE2F4FA0382DCFEEE2B8CAF0@MWHPR11MB1886.namprd11.prod.outlook.com>
- <20210107060916.GY31158@unreal>
- <MWHPR11MB188629E36439F80AD60900788CAF0@MWHPR11MB1886.namprd11.prod.outlook.com>
- <20210107071616.GA31158@unreal>
- <dfda8933-566c-1ec7-4ed4-427f094cb7c9@linux.intel.com>
- <20210112055322.GA4678@unreal>
- <MWHPR11MB188672D9BB76B2C5E04934138CAA0@MWHPR11MB1886.namprd11.prod.outlook.com>
+        id S2387783AbhALJbB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 12 Jan 2021 04:31:01 -0500
+Received: from so254-31.mailgun.net ([198.61.254.31]:63028 "EHLO
+        so254-31.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387691AbhALJbB (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 12 Jan 2021 04:31:01 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1610443837; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=074WLx/sNBYbNlq20eslBXSyFVzU/VE2fXP/4Hp+4Bw=;
+ b=uRxNwLrdWCCApD30yFn6mz31IHuF60NUuObK0Mt4BXd8CXFNg+Caa7zVuozAVVb5yr0goqDI
+ PUwm/x1/7AWV7ObWh1LA12R21Hej6fGW/d33ptB9tYTBwyee3eTxFFQg3KUy3WybcOq/vffL
+ i6kjsjO1V4rLzAB1pPSfjcgRirA=
+X-Mailgun-Sending-Ip: 198.61.254.31
+X-Mailgun-Sid: WyJiZjYxOCIsICJkbWFlbmdpbmVAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
+ 5ffd6c1c8fb3cda82fd38cbf (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 12 Jan 2021 09:30:04
+ GMT
+Sender: mdalam=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3EAD2C433ED; Tue, 12 Jan 2021 09:30:03 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: mdalam)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 78B9AC433CA;
+        Tue, 12 Jan 2021 09:30:02 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MWHPR11MB188672D9BB76B2C5E04934138CAA0@MWHPR11MB1886.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 12 Jan 2021 15:00:02 +0530
+From:   mdalam@codeaurora.org
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     vkoul@kernel.org, corbet@lwn.net, agross@kernel.org,
+        bjorn.andersson@linaro.org, dan.j.williams@intel.com,
+        dmaengine@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        sricharan@codeaurora.org, mdalam=codeaurora.org@codeaurora.org
+Subject: Re: [PATCH] dmaengine: qcom: bam_dma: Add LOCK and UNLOCK flag bit
+ support
+In-Reply-To: <11f538a697de934551bcec5036d7fb17@codeaurora.org>
+References: <1608215842-15381-1-git-send-email-mdalam@codeaurora.org>
+ <6c85436d-e064-367e-736b-951af82256c8@linaro.org>
+ <9769c54acf54617a17346fea60ee38b6@codeaurora.org>
+ <8c86f4db-9956-10d1-b380-a207137b50ef@linaro.org>
+ <11f538a697de934551bcec5036d7fb17@codeaurora.org>
+Message-ID: <ec3f90470eca80256d3c335c7fb23e4e@codeaurora.org>
+X-Sender: mdalam@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Jan 12, 2021 at 06:59:35AM +0000, Tian, Kevin wrote:
-> > From: Leon Romanovsky <leon@kernel.org>
-> > Sent: Tuesday, January 12, 2021 1:53 PM
-> >
-> > On Tue, Jan 12, 2021 at 01:17:11PM +0800, Lu Baolu wrote:
-> > > Hi,
-> > >
-> > > On 1/7/21 3:16 PM, Leon Romanovsky wrote:
-> > > > On Thu, Jan 07, 2021 at 06:55:16AM +0000, Tian, Kevin wrote:
-> > > > > > From: Leon Romanovsky <leon@kernel.org>
-> > > > > > Sent: Thursday, January 7, 2021 2:09 PM
-> > > > > >
-> > > > > > On Thu, Jan 07, 2021 at 02:04:29AM +0000, Tian, Kevin wrote:
-> > > > > > > > From: Leon Romanovsky <leon@kernel.org>
-> > > > > > > > Sent: Thursday, January 7, 2021 12:02 AM
-> > > > > > > >
-> > > > > > > > On Wed, Jan 06, 2021 at 11:23:39AM -0400, Jason Gunthorpe
-> > wrote:
-> > > > > > > > > On Wed, Jan 06, 2021 at 12:40:17PM +0200, Leon Romanovsky
-> > wrote:
-> > > > > > > > >
-> > > > > > > > > > I asked what will you do when QEMU will gain needed
-> > functionality?
-> > > > > > > > > > Will you remove QEMU from this list? If yes, how such "new"
-> > kernel
-> > > > > > will
-> > > > > > > > > > work on old QEMU versions?
-> > > > > > > > >
-> > > > > > > > > The needed functionality is some VMM hypercall, so presumably
-> > new
-> > > > > > > > > kernels that support calling this hypercall will be able to discover
-> > > > > > > > > if the VMM hypercall exists and if so superceed this entire check.
-> > > > > > > >
-> > > > > > > > Let's not speculate, do we have well-known path?
-> > > > > > > > Will such patch be taken to stable@/distros?
-> > > > > > > >
-> > > > > > >
-> > > > > > > There are two functions introduced in this patch. One is to detect
-> > whether
-> > > > > > > running on bare metal or in a virtual machine. The other is for
-> > deciding
-> > > > > > > whether the platform supports ims. Currently the two are identical
-> > because
-> > > > > > > ims is supported only on bare metal at current stage. In the future it
-> > will
-> > > > > > look
-> > > > > > > like below when ims can be enabled in a VM:
-> > > > > > >
-> > > > > > > bool arch_support_pci_device_ims(struct pci_dev *pdev)
-> > > > > > > {
-> > > > > > > 	return on_bare_metal() ||
-> > hypercall_irq_domain_supported();
-> > > > > > > }
-> > > > > > >
-> > > > > > > The VMM vendor list is for on_bare_metal, and suppose a vendor
-> > will
-> > > > > > > never be removed once being added to the list since the fact of
-> > running
-> > > > > > > in a VM never changes, regardless of whether this hypervisor
-> > supports
-> > > > > > > extra VMM hypercalls.
-> > > > > >
-> > > > > > This is what I imagined, this list will be forever, and this worries me.
-> > > > > >
-> > > > > > I don't know if it is true or not, but guess that at least Oracle and
-> > > > > > Microsoft bare metal devices and VMs will have same
-> > DMI_SYS_VENDOR.
-> > > > >
-> > > > > It's true. David Woodhouse also said it's the case for Amazon EC2
-> > instances.
-> > > > >
-> > > > > >
-> > > > > > It means that this on_bare_metal() function won't work reliably in
-> > many
-> > > > > > cases. Also being part of include/linux/msi.h, at some point of time,
-> > > > > > this function will be picked by the users outside for the non-IMS cases.
-> > > > > >
-> > > > > > I didn't even mention custom forks of QEMU which are prohibited to
-> > change
-> > > > > > DMI_SYS_VENDOR and private clouds with custom solutions.
-> > > > >
-> > > > > In this case the private QEMU forks are encouraged to set CPUID (X86_
-> > > > > FEATURE_HYPERVISOR) if they do plan to adopt a different vendor
-> > name.
-> > > >
-> > > > Does QEMU set this bit when it runs in host-passthrough CPU model?
-> > > >
-> > > > >
-> > > > > >
-> > > > > > The current array makes DMI_SYS_VENDOR interface as some sort of
-> > ABI. If
-> > > > > > in the future,
-> > > > > > the QEMU will decide to use more hipster name, for example "qEmU",
-> > this
-> > > > > > function
-> > > > > > won't work.
-> > > > > >
-> > > > > > I'm aware that DMI_SYS_VENDOR is used heavily in the kernel code
-> > and
-> > > > > > various names for the same company are good example how not
-> > reliable it.
-> > > > > >
-> > > > > > The most hilarious example is "Dell/Dell Inc./Dell Inc/Dell Computer
-> > > > > > Corporation/Dell Computer",
-> > > > > > but other companies are not far from them.
-> > > > > >
-> > > > > > Luckily enough, this identification is used for hardware product that
-> > > > > > was released to the market and their name will be stable for that
-> > > > > > specific model. It is not the case here where we need to ensure future
-> > > > > > compatibility too (old kernel on new VM emulator).
-> > > > > >
-> > > > > > I'm not in position to say yes or no to this patch and don't have plans
-> > to do it.
-> > > > > > Just expressing my feeling that this solution is too hacky for my taste.
-> > > > > >
-> > > > >
-> > > > > I agree with your worries and solely relying on DMI_SYS_VENDOR is
-> > > > > definitely too hacky. In previous discussions with Thomas there is no
-> > > > > elegant way to handle this situation. It has to be a heuristic approach.
-> > > > > First we hope the CPUID bit is set properly in most cases thus is checked
-> > > > > first. Then other heuristics can be made for the remaining cases. DMI_
-> > > > > SYS_VENDOR is the first hint and more can be added later. For example,
-> > > > > when IOMMU is present there is vendor specific way to detect whether
-> > > > > it's real or virtual. Dave also mentioned some BIOS flag to indicate a
-> > > > > virtual machine. Now probably the real question here is whether people
-> > > > > are OK with CPUID+DMI_SYS_VENDOR combo check for now (and grow
-> > > > > it later) or prefer to having all identified heuristics so far in-place
-> > together...
-> > > >
-> > > > IMHO, it should be as much as possible close to the end result.
-> > >
-> > > Okay! This seems to be a right way to go.
-> > >
-> > > The SMBIOS defines a 'virtual machine' bit in the BIOS characteristics
-> > > extension byte. It could be used as a possible way.
-> > >
-> > > In order to support emulated IOMMU for fully virtualized guest, the
-> > > iommu vendors defined methods to distinguish between bare metal and
-> > VMM
-> > > (caching mode in VT-d for example).
-> > >
-> > > I will go ahead with adding above two methods before checking the block
-> > > list.
-> >
-> > I still curious to hear an answer on my question above:
-> > "Does QEMU set this bit when it runs in host-passthrough CPU model?"
->
-> Yes, the bit is also set in this model.
+On 2020-12-22 17:48, mdalam@codeaurora.org wrote:
+> On 2020-12-21 23:39, Thara Gopinath wrote:
+>> On 12/21/20 2:35 AM, mdalam@codeaurora.org wrote:
+>>> On 2020-12-19 09:05, Thara Gopinath wrote:
+>>>> On 12/17/20 9:37 AM, Md Sadre Alam wrote:
+>>>>> This change will add support for LOCK & UNLOCK flag bit support
+>>>>> on CMD descriptor.
+>>>>> 
+>>>>> If DMA_PREP_LOCK flag passed in prep_slave_sg then requester of 
+>>>>> this
+>>>>> transaction wanted to lock the DMA controller for this transaction 
+>>>>> so
+>>>>> BAM driver should set LOCK bit for the HW descriptor.
+>>>>> 
+>>>>> If DMA_PREP_UNLOCK flag passed in prep_slave_sg then requester of 
+>>>>> this
+>>>>> transaction wanted to unlock the DMA controller.so BAM driver 
+>>>>> should set
+>>>>> UNLOCK bit for the HW descriptor.
+>>>> Hi,
+>>>> 
+>>>> This is a generic question. What is the point of LOCK/UNLOCK with
+>>>> allocating LOCK groups to the individual dma channels? By default
+>>>> doesn't all channels fall in the same group. This would mean that
+>>>> a lock does not prevent the dma controller from not executing a
+>>>> transaction on the other channels.
+>>>> 
+>>> 
+>>> The Pipe Locking/Unlocking will be only on command-descriptor.
+>>> Upon encountering a command descriptor with LOCK bit set, the BAM
+>>> will lock all other pipes not related to the current pipe group, and 
+>>> keep
+>>> handling the current pipe only until it sees the UNLOCK set then it 
+>>> will
+>>> release all locked pipes.
+>> 
+>> So unless you assign pipe groups, this will not work as intended
+>> right? So this patch is only half of the solution. There should also
+>> be a patch allowing pipe groups to be assigned. Without that extra bit
+>> this patch does nothing , right ?
+> 
+> Yes you are right.
+> We are having some register which will configure the pipe lock group.
+> But these registers are not exposed to non-secure world. These 
+> registers
+> only accessible through secure world. Currently in IPQ5018 SoC we are
+> configuring
+> these register in secure world to configure pipe lock group.
 
-Great, thanks.
-
->
-> Thanks
-> Kevin
+ping! Is there any update on this ? Do you need any further info ?

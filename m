@@ -2,73 +2,70 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BDCB2F4059
-	for <lists+dmaengine@lfdr.de>; Wed, 13 Jan 2021 01:47:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC47E2F426B
+	for <lists+dmaengine@lfdr.de>; Wed, 13 Jan 2021 04:24:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733233AbhALXe3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 12 Jan 2021 18:34:29 -0500
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:36775 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733047AbhALXe2 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 12 Jan 2021 18:34:28 -0500
-X-Originating-IP: 86.202.109.140
-Received: from localhost (lfbn-lyo-1-13-140.w86-202.abo.wanadoo.fr [86.202.109.140])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id A8AE81BF20B;
-        Tue, 12 Jan 2021 23:33:41 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Jaroslav Kysela <perex@perex.cz>, Matt Mackall <mpm@selenic.com>,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Richard Weinberger <richard@nod.at>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mark Brown <broonie@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-crypto@vger.kernel.org,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-ide@vger.kernel.org, linux-spi@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: (subset) [PATCH 00/10] Remove support for TX49xx
-Date:   Wed, 13 Jan 2021 00:33:30 +0100
-Message-Id: <161049432258.352381.2804715824942772218.b4-ty@bootlin.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210105140305.141401-1-tsbogend@alpha.franken.de>
-References: <20210105140305.141401-1-tsbogend@alpha.franken.de>
+        id S1729068AbhAMDYK (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 12 Jan 2021 22:24:10 -0500
+Received: from mail-ot1-f45.google.com ([209.85.210.45]:37462 "EHLO
+        mail-ot1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729063AbhAMDYK (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 12 Jan 2021 22:24:10 -0500
+Received: by mail-ot1-f45.google.com with SMTP id o11so641901ote.4;
+        Tue, 12 Jan 2021 19:23:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wOZ1zcAtpG+j2m3YIJ5O/vEoXcdkINU14/EXzgqPb/s=;
+        b=aI+aPUM1+rIIpYw5zhWy8U1DrOGTu+T3okBxIzCXBu7ZJfMkRbWOv+re870o30GmYL
+         QlRHNl9hJqd9LmA/CZLj5cXSooifyvFxX0oAdjEJvR0RQAm1qMIheKykW4PJhZwyP+bv
+         jdOYVi7a966cp9ddd+y7qbojf9Ri2wpHAtjV24Jq2x0/ZN7dYhgJ55aQncxZXKsB6iK+
+         edG4t2sWbOkxrswkslL2hg91Qurd/+OwkutVJOpzGyYHQpEkv6g5y6zE8eGJCpUm8rJ0
+         nUXPQpW0kGiFxUtIJcTXb4/+FBBjB+LvQtpL9VphS+D1Kl2N2byamEFbPEECraSjRq7+
+         +n6g==
+X-Gm-Message-State: AOAM532apd1eqw0K58wYABvn4SFgNTcFHcYJHxkaRdOBP0UtcPCMuBME
+        SCSR1rcVz2b0cn5XuI4N8A==
+X-Google-Smtp-Source: ABdhPJywvsHp4TphcyeyZc84gPrga7TSNEfIrt+MLVAbbAYg5iPu6n+xMjpsbkkWU1c6iAkLnF1eQg==
+X-Received: by 2002:a05:6830:30b8:: with SMTP id g24mr16815ots.16.1610508209205;
+        Tue, 12 Jan 2021 19:23:29 -0800 (PST)
+Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j22sm171059otp.45.2021.01.12.19.23.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Jan 2021 19:23:28 -0800 (PST)
+Received: (nullmailer pid 1469094 invoked by uid 1000);
+        Wed, 13 Jan 2021 03:23:27 -0000
+Date:   Tue, 12 Jan 2021 21:23:27 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Phong Hoang <phong.hoang.wz@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        devicetree@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH 1/4] dt-bindings: renesas,rcar-dmac: Add r8a779a0 support
+Message-ID: <20210113032327.GA1469053@robh.at.kernel.org>
+References: <20210107181524.1947173-1-geert+renesas@glider.be>
+ <20210107181524.1947173-2-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210107181524.1947173-2-geert+renesas@glider.be>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, 5 Jan 2021 15:02:45 +0100, Thomas Bogendoerfer wrote:
-> I couldn't find any buyable product other than reference boards using
-> TX49xx CPUs. And since nobody showed interest in keeping support for
-> it, it's time to remove it.
+On Thu, 07 Jan 2021 19:15:21 +0100, Geert Uytterhoeven wrote:
+> Document the compatible value for the Direct Memory Access Controller
+> blocks in the Renesas R-Car V3U (R8A779A0) SoC.
 > 
-> I've split up the removal into seperate parts for different maintainers.
-> So if the patch fits your needs, please take it via your tree or
-> give me an ack so I can apply them  the mips-next tree.
+> The most visible difference with DMAC blocks on other R-Car SoCs is the
+> move of the per-channel registers to a separate register block.
 > 
-> [...]
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  .../bindings/dma/renesas,rcar-dmac.yaml       | 76 ++++++++++++-------
+>  1 file changed, 48 insertions(+), 28 deletions(-)
+> 
 
-Applied, thanks!
-
-[08/10] rtc: tx4939: Remove driver
-        commit: 446667df283002fdda0530523347ffd1cf053373
-
-Best regards,
--- 
-Alexandre Belloni <alexandre.belloni@bootlin.com>
+Reviewed-by: Rob Herring <robh@kernel.org>

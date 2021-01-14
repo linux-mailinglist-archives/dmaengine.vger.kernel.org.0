@@ -2,204 +2,162 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B71FA2F6C05
-	for <lists+dmaengine@lfdr.de>; Thu, 14 Jan 2021 21:28:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6283B2F6F32
+	for <lists+dmaengine@lfdr.de>; Fri, 15 Jan 2021 01:00:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725995AbhANU0n (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 14 Jan 2021 15:26:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39684 "EHLO mail.kernel.org"
+        id S1731131AbhANX7r (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 14 Jan 2021 18:59:47 -0500
+Received: from mga11.intel.com ([192.55.52.93]:35389 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbhANU0m (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 14 Jan 2021 15:26:42 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7D9A323406;
-        Thu, 14 Jan 2021 20:26:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610655961;
-        bh=24IcesIZAJJ9vh00NnenYmnWgbIvDJFLhYvq4Zl0XaE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qUkH+iUvTBTCB8mCHO7OLoxT5V/mrMaUCQ43o710mTStOfo+VUVVKabvCaej52FJR
-         B4A5y+5YsW6/glqSU+U/+09LrHY38ZumOUrr2d7gO5UDAMufE/HIDdvH/6DxnmJYSN
-         0OcDhLOrkUiHcogdyetkVX5vL8SXHiJ5Fa6rC1xQRj/Y1hpVUYOIxfXHh8SWU/ifdV
-         tRinwHiu8eS8FqMH7kxRnRdLRBtSq4TGxH4SpCKtZHusL2+l+HxTn+p+9THDV9i1QV
-         Yn44gkYWdDK7onMvjLKLM3B79SyuUqXl+n7oS5MNeweFZnskUUZ17RfqdDU55RMUYQ
-         gOE7a+a/sftdA==
-Received: by mail-ed1-f52.google.com with SMTP id b2so7141681edm.3;
-        Thu, 14 Jan 2021 12:26:01 -0800 (PST)
-X-Gm-Message-State: AOAM5311Vbcdm64dXE3LOzFht7wwveoT3s8P503xLmckEKyLJPP9WQgV
-        G14HdBjAMwZTe2kD9OoIFsOqJlCYhHLx6l91hA==
-X-Google-Smtp-Source: ABdhPJzcwbGcnTL917yh9ibb7k4vvsd76xGrOhcvG0k6RiQqszTsitz37X3r0bUyKLdQXXHRa+UlvyNESjSeKi07Ojg=
-X-Received: by 2002:a05:6402:352:: with SMTP id r18mr6888792edw.373.1610655960013;
- Thu, 14 Jan 2021 12:26:00 -0800 (PST)
+        id S1731069AbhANX7r (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 14 Jan 2021 18:59:47 -0500
+IronPort-SDR: 7CE5V6nFMHdAiEzLlJ6xkGWDtXqqwEhA/qAL5HNUEzG2IzsNkYYMbBjtXVENOnL32XUqBCBo0q
+ H9erDq/z0IWA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9864"; a="174958757"
+X-IronPort-AV: E=Sophos;i="5.79,347,1602572400"; 
+   d="scan'208";a="174958757"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2021 15:58:01 -0800
+IronPort-SDR: JgwNpI72iKplEgLvvRFozPpdeFZ7FrlSQzR4sXrAWlVyCIIfcrp4T/FvOv4QU4UmX2WutfAakz
+ 6Ngk+uiv0xsg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.79,347,1602572400"; 
+   d="scan'208";a="465409009"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.28]) ([10.239.159.28])
+  by fmsmga001.fm.intel.com with ESMTP; 14 Jan 2021 15:57:53 -0800
+Cc:     baolu.lu@linux.intel.com, tglx@linutronix.de, ashok.raj@intel.com,
+        kevin.tian@intel.com, dave.jiang@intel.com, megha.dey@intel.com,
+        dwmw2@infradead.org, alex.williamson@redhat.com,
+        bhelgaas@google.com, dan.j.williams@intel.com, will@kernel.org,
+        joro@8bytes.org, dmaengine@vger.kernel.org, eric.auger@redhat.com,
+        jacob.jun.pan@intel.com, jgg@mellanox.com, kvm@vger.kernel.org,
+        kwankhede@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        maz@kernel.org, mona.hossain@intel.com, netanelg@mellanox.com,
+        parav@mellanox.com, pbonzini@redhat.com, rafael@kernel.org,
+        samuel.ortiz@intel.com, sanjay.k.kumar@intel.com,
+        shahafs@mellanox.com, tony.luck@intel.com, vkoul@kernel.org,
+        yan.y.zhao@linux.intel.com, yi.l.liu@intel.com
+Subject: Re: [RFC PATCH v3 1/2] iommu: Add capability IOMMU_CAP_VIOMMU
+To:     Leon Romanovsky <leon@kernel.org>
+References: <20210114013003.297050-1-baolu.lu@linux.intel.com>
+ <20210114013003.297050-2-baolu.lu@linux.intel.com>
+ <20210114132627.GA944463@unreal>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <b0c8b260-8e23-a5bd-d2da-ca1d67cdfa8a@linux.intel.com>
+Date:   Fri, 15 Jan 2021 07:49:47 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <cover.1608090736.git.mallikarjunax.reddy@linux.intel.com> <dee2d43dff26f7d5b6eaa0006659da254f1093d3.1608090736.git.mallikarjunax.reddy@linux.intel.com>
-In-Reply-To: <dee2d43dff26f7d5b6eaa0006659da254f1093d3.1608090736.git.mallikarjunax.reddy@linux.intel.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 14 Jan 2021 14:25:48 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJE59nA_Bvt1rL95WfeXjQkOSPiTZk8zAbdHSkujmS3gQ@mail.gmail.com>
-Message-ID: <CAL_JsqJE59nA_Bvt1rL95WfeXjQkOSPiTZk8zAbdHSkujmS3gQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH v10 1/2] dt-bindings: dma: Add bindings for Intel
- LGM SoC
-To:     Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>
-Cc:     "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>, Vinod <vkoul@kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        chuanhua.lei@linux.intel.com,
-        "Kim, Cheol Yong" <cheol.yong.kim@intel.com>,
-        "Wu, Qiming" <qi-ming.wu@intel.com>, malliamireddy009@gmail.com,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210114132627.GA944463@unreal>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Dec 15, 2020 at 10:08 PM Amireddy Mallikarjuna reddy
-<mallikarjunax.reddy@linux.intel.com> wrote:
->
-> Add DT bindings YAML schema for DMA controller driver
-> of Lightning Mountain (LGM) SoC.
->
-> Signed-off-by: Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> v1:
-> - Initial version.
->
-> v2:
-> - Fix bot errors.
->
-> v3:
-> - No change.
->
-> v4:
-> - Address Thomas langer comments
->   - use node name pattern as dma-controller as in common binding.
->   - Remove "_" (underscore) in instance name.
->   - Remove "port-" and "chan-" in attribute name for both 'dma-ports' & 'dma-channels' child nodes.
->
-> v5:
-> - Moved some of the attributes in 'dma-ports' & 'dma-channels' child nodes to dma client/consumer side as cells in 'dmas' properties.
->
-> v6:
-> - Add additionalProperties: false
-> - completely removed 'dma-ports' and 'dma-channels' child nodes.
-> - Moved channel dt properties to client side dmas.
-> - Use standard dma-channels and dma-channel-mask properties.
-> - Documented reset-names
-> - Add description for dma-cells
->
-> v7:
-> - modified compatible to oneof
-> - Reduced number of dma-cells to 3
-> - Fine tune the description of some properties.
->
-> v7-resend:
-> - rebase to 5.10-rc1
-> - No change.
->
-> v8:
-> - rebased to 5.10-rc3
-> - Fixing the bot issues (wrong indentation)
->
-> v9:
-> - Use 'enum' instead of oneOf+const
-> - Drop '#dma-cells' in required:, already covered in dma-common.yaml
-> - Drop nodename Already covered by dma-controller.yaml
->
-> v10:
-> - rebased to 5.10-rc6
-> - Add Reviewed-by: Rob Herring <robh@kernel.org>
-> - Fixed typo.
-> - moved property dma-desc-in-sram to driver side.
-> - Moved property dma-orrc to driver side.
->
-> v10-resend:
-> - rebased to 5.10
-> - No change
-> ---
->  .../devicetree/bindings/dma/intel,ldma.yaml   | 116 ++++++++++++++++++
->  1 file changed, 116 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/intel,ldma.yaml
->
-> diff --git a/Documentation/devicetree/bindings/dma/intel,ldma.yaml b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
-> new file mode 100644
-> index 000000000000..866d4c758a7a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
-> @@ -0,0 +1,116 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/intel,ldma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Lightning Mountain centralized DMA controllers.
-> +
-> +maintainers:
-> +  - chuanhua.lei@intel.com
-> +  - mallikarjunax.reddy@intel.com
-> +
-> +allOf:
-> +  - $ref: "dma-controller.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - intel,lgm-cdma
-> +      - intel,lgm-dma2tx
-> +      - intel,lgm-dma1rx
-> +      - intel,lgm-dma1tx
-> +      - intel,lgm-dma0tx
-> +      - intel,lgm-dma3
-> +      - intel,lgm-toe-dma30
-> +      - intel,lgm-toe-dma31
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#dma-cells":
-> +    const: 3
-> +    description:
-> +      The first cell is the peripheral's DMA request line.
-> +      The second cell is the peripheral's (port) number corresponding to the channel.
-> +      The third cell is the burst length of the channel.
-> +
-> +  dma-channels:
-> +    minimum: 1
-> +    maximum: 16
-> +
-> +  dma-channel-mask:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  reset-names:
-> +    items:
-> +      - const: ctrl
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  intel,dma-poll-cnt:
-> +    $ref: /schemas/types.yaml#definitions/uint32
+Hi Leon,
 
-Since this was sent, there have been some fixes for JSON pointers and
-this is missing a '/'. The tools now check:
+On 1/14/21 9:26 PM, Leon Romanovsky wrote:
+> On Thu, Jan 14, 2021 at 09:30:02AM +0800, Lu Baolu wrote:
+>> Some vendor IOMMU drivers are able to declare that it is running in a VM
+>> context. This is very valuable for the features that only want to be
+>> supported on bare metal. Add a capability bit so that it could be used.
+> 
+> And how is it used? Who and how will set it?
 
-/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/dma/intel,ldma.yaml:
-properties:intel,dma-poll-cnt: 'oneOf' conditional failed, one must be
-fixed:
- 'enum' is a required property
- 'const' is a required property
- '/schemas/types.yaml#definitions/uint32' does not match
-'types.yaml#/definitions/'
+Use the existing iommu_capable(). I should add more descriptions about
+who and how to use it.
 
-Please send a fix for this.
+> 
+>>
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> ---
+>>   drivers/iommu/intel/iommu.c  | 20 ++++++++++++++++++++
+>>   drivers/iommu/virtio-iommu.c |  9 +++++++++
+>>   include/linux/iommu.h        |  1 +
+>>   3 files changed, 30 insertions(+)
+>>
+>> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+>> index cb205a04fe4c..8eb022d0e8aa 100644
+>> --- a/drivers/iommu/intel/iommu.c
+>> +++ b/drivers/iommu/intel/iommu.c
+>> @@ -5738,12 +5738,32 @@ static inline bool nested_mode_support(void)
+>>   	return ret;
+>>   }
+>>
+>> +static inline bool caching_mode_enabled(void)
+>> +{
+> 
+> Kernel coding style is not in favour of inline functions in *.c files.
 
-Thanks,
-Rob
+Yes, agreed.
+
+Best regards,
+baolu
+
+> 
+>> +	struct dmar_drhd_unit *drhd;
+>> +	struct intel_iommu *iommu;
+>> +	bool ret = false;
+>> +
+>> +	rcu_read_lock();
+>> +	for_each_active_iommu(iommu, drhd) {
+>> +		if (cap_caching_mode(iommu->cap)) {
+>> +			ret = true;
+>> +			break;
+>> +		}
+>> +	}
+>> +	rcu_read_unlock();
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>   static bool intel_iommu_capable(enum iommu_cap cap)
+>>   {
+>>   	if (cap == IOMMU_CAP_CACHE_COHERENCY)
+>>   		return domain_update_iommu_snooping(NULL) == 1;
+>>   	if (cap == IOMMU_CAP_INTR_REMAP)
+>>   		return irq_remapping_enabled == 1;
+>> +	if (cap == IOMMU_CAP_VIOMMU)
+>> +		return caching_mode_enabled();
+>>
+>>   	return false;
+>>   }
+>> diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
+>> index 2bfdd5734844..719793e103db 100644
+>> --- a/drivers/iommu/virtio-iommu.c
+>> +++ b/drivers/iommu/virtio-iommu.c
+>> @@ -931,7 +931,16 @@ static int viommu_of_xlate(struct device *dev, struct of_phandle_args *args)
+>>   	return iommu_fwspec_add_ids(dev, args->args, 1);
+>>   }
+>>
+>> +static bool viommu_capable(enum iommu_cap cap)
+>> +{
+>> +	if (cap == IOMMU_CAP_VIOMMU)
+>> +		return true;
+>> +
+>> +	return false;
+>> +}
+>> +
+>>   static struct iommu_ops viommu_ops = {
+>> +	.capable		= viommu_capable,
+>>   	.domain_alloc		= viommu_domain_alloc,
+>>   	.domain_free		= viommu_domain_free,
+>>   	.attach_dev		= viommu_attach_dev,
+>> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+>> index b95a6f8db6ff..1d24be667a03 100644
+>> --- a/include/linux/iommu.h
+>> +++ b/include/linux/iommu.h
+>> @@ -94,6 +94,7 @@ enum iommu_cap {
+>>   					   transactions */
+>>   	IOMMU_CAP_INTR_REMAP,		/* IOMMU supports interrupt isolation */
+>>   	IOMMU_CAP_NOEXEC,		/* IOMMU_NOEXEC flag */
+>> +	IOMMU_CAP_VIOMMU,		/* IOMMU can declar running in a VM */
+>>   };
+>>
+>>   /*
+>> --
+>> 2.25.1
+>>

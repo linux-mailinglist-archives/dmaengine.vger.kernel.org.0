@@ -2,70 +2,77 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB7502F7629
-	for <lists+dmaengine@lfdr.de>; Fri, 15 Jan 2021 11:03:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B2062F7C6B
+	for <lists+dmaengine@lfdr.de>; Fri, 15 Jan 2021 14:22:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731428AbhAOKBh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 15 Jan 2021 05:01:37 -0500
-Received: from smtp25.cstnet.cn ([159.226.251.25]:53784 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731351AbhAOKBg (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 15 Jan 2021 05:01:36 -0500
-Received: from localhost.localdomain (unknown [124.16.141.241])
-        by APP-05 (Coremail) with SMTP id zQCowACHUuPLZwFgY8pSAA--.13705S2;
-        Fri, 15 Jan 2021 18:00:43 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, vkoul@kernel.org,
-        dan.j.williams@intel.com
-Cc:     linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: qcom: gpi: Remove unneeded semicolon
-Date:   Fri, 15 Jan 2021 10:00:40 +0000
-Message-Id: <20210115100040.33364-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: zQCowACHUuPLZwFgY8pSAA--.13705S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Gw4fXw1DKF1xuw4rCw1fXrb_yoW3GFbEkF
-        4UZryxXr4YkF1q9rnxCrZrAryqv3WUur1ruF4vqrZxtws8Xr90q39rXr1vyw18urZrGFnI
-        kryUXr48JF4SkjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb2xYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4
-        A2jsIEc7CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWxJVW8Jr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8twCF04k2
-        0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
-        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
-        IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIx
-        AIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
-        87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU75l1DUUUU
-X-Originating-IP: [124.16.141.241]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCQcCA102Z3uUPQAAsR
+        id S1729498AbhAONVj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 15 Jan 2021 08:21:39 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5606 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727716AbhAONVj (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 15 Jan 2021 08:21:39 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B600196cc0000>; Fri, 15 Jan 2021 05:21:16 -0800
+Received: from [10.26.73.78] (172.20.145.6) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 15 Jan
+ 2021 13:21:10 +0000
+Subject: Re: [Patch v2 0/4] Add Nvidia Tegra GPC-DMA driver
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     Rajesh Gumasta <rgumasta@nvidia.com>, <ldewangan@nvidia.com>,
+        <dan.j.williams@intel.com>, <thierry.reding@gmail.com>,
+        <p.zabel@pengutronix.de>, <dmaengine@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kyarlagadda@nvidia.com>
+References: <1596699006-9934-1-git-send-email-rgumasta@nvidia.com>
+ <2a99ca73-a6e8-bf7d-a5c1-fa64eee62e23@nvidia.com>
+ <20210115055658.GD2771@vkoul-mobl>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <87869e8d-43a3-b8dc-69b0-3c8a488eea4a@nvidia.com>
+Date:   Fri, 15 Jan 2021 13:21:08 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20210115055658.GD2771@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.20.145.6]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1610716876; bh=hDBUDa/GAyOa7dsscGkoZ3S3ljUyZcRcn5vrkxGu2IA=;
+        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
+         MIME-Version:In-Reply-To:Content-Type:Content-Language:
+         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
+        b=hJ1W6KK+WMf47MDNwqCl2xAbCBJ52DELsEJMpAfOWUWNMf1cpa5tFVRXz3QBbjRw8
+         WxacQlf24Zh1hC4xzYIw2gDhkYrqnDzJvNWz+9WATWKLNc/dAcm62aNIsNKsvHvHju
+         Ps1kRPeEdeZNQ+DQyGcSf/HT+hDrYT7G2Q9/u1DQ5lJCz6WDi7Y1o3kVTOzXN0U09P
+         1Nn0GXOwMfa6HSSo/2pULZL9TfJ7CN4GyRHz6ZoZD78fu7wry4ScMbuvan7gUocYzZ
+         RfvIzFiirXk9EIMCj79GHdxwEPgZCaHpjaCbA/cApa+IaxnZlZio25D+ptft5wyZQj
+         kh/umvh9RhBHw==
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-fix semicolon.cocci warning:
-drivers/dma/qcom/gpi.c:1703:2-3: Unneeded semicolon
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- drivers/dma/qcom/gpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 15/01/2021 05:56, Vinod Koul wrote:
+> On 14-01-21, 10:11, Jon Hunter wrote:
+>>
+>> On 06/08/2020 08:30, Rajesh Gumasta wrote:
+>>> Changes in patch v2:
+>>> Addressed review comments in patch v1
+>>
+>>
+>> Is there any update on this series? Would be good to get this upstream.
+> 
+> Not sure why, this is is not in my queue, can someone please resend this
+> to me
 
-diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
-index 1a0bf6b0567a..f20b5573fc67 100644
---- a/drivers/dma/qcom/gpi.c
-+++ b/drivers/dma/qcom/gpi.c
-@@ -1700,7 +1700,7 @@ static int gpi_create_i2c_tre(struct gchan *chan, struct gpi_desc *desc,
- 
- 		tre->dword[3] = u32_encode_bits(TRE_TYPE_DMA, TRE_FLAGS_TYPE);
- 		tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_IEOT);
--	};
-+	}
- 
- 	for (i = 0; i < tre_idx; i++)
- 		dev_dbg(dev, "TRE:%d %x:%x:%x:%x\n", i, desc->tre[i].dword[0],
+Sorry, this question was meant for Rajesh. This series is not ready yet.
+There are still some items that need to be addressed.
+
+Thanks
+Jon
+
 -- 
-2.17.1
-
+nvpublic

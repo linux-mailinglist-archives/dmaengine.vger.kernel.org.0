@@ -2,158 +2,59 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20F1A2F71B4
-	for <lists+dmaengine@lfdr.de>; Fri, 15 Jan 2021 05:48:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90FD62F729E
+	for <lists+dmaengine@lfdr.de>; Fri, 15 Jan 2021 06:57:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbhAOEsY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 14 Jan 2021 23:48:24 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:45523 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726032AbhAOEsX (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 14 Jan 2021 23:48:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1610686017;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5qlVp+V62hJFOmojeKBtO6bnSDZxjgJebYHvIlsbcQM=;
-        b=WH9GI7mWt6WZ5oRoFYgPE0II2yhxE8tcjUkgtXUAkMD7l8f5fG3YUzYMvxi0ejAjLfE8/b
-        6X+D4Kujxbo3ZADSJ7LjOVH1vln4lr0UAZBkWt1iQGygqZYq7bE9jBB5AGUbmqwXdgXH/x
-        WXCdrksZDVZrHIWkek7vm0lkNQIUvRw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-438-WfDJ3MOTPVeX0K0c1Yjy4Q-1; Thu, 14 Jan 2021 23:46:55 -0500
-X-MC-Unique: WfDJ3MOTPVeX0K0c1Yjy4Q-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6E30802B45;
-        Fri, 15 Jan 2021 04:46:51 +0000 (UTC)
-Received: from [10.72.13.19] (ovpn-13-19.pek2.redhat.com [10.72.13.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A958771D52;
-        Fri, 15 Jan 2021 04:46:29 +0000 (UTC)
-Subject: Re: [RFC PATCH v3 1/2] iommu: Add capability IOMMU_CAP_VIOMMU
-To:     Lu Baolu <baolu.lu@linux.intel.com>, tglx@linutronix.de,
-        ashok.raj@intel.com, kevin.tian@intel.com, dave.jiang@intel.com,
-        megha.dey@intel.com, dwmw2@infradead.org
-Cc:     alex.williamson@redhat.com, bhelgaas@google.com,
-        dan.j.williams@intel.com, will@kernel.org, joro@8bytes.org,
-        dmaengine@vger.kernel.org, eric.auger@redhat.com,
-        jacob.jun.pan@intel.com, jgg@mellanox.com, kvm@vger.kernel.org,
-        kwankhede@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
-        maz@kernel.org, mona.hossain@intel.com, netanelg@mellanox.com,
-        parav@mellanox.com, pbonzini@redhat.com, rafael@kernel.org,
-        samuel.ortiz@intel.com, sanjay.k.kumar@intel.com,
-        shahafs@mellanox.com, tony.luck@intel.com, vkoul@kernel.org,
-        yan.y.zhao@linux.intel.com, yi.l.liu@intel.com, leon@kernel.org
-References: <20210114013003.297050-1-baolu.lu@linux.intel.com>
- <20210114013003.297050-2-baolu.lu@linux.intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <f2a50326-58de-919a-5992-130224c5725a@redhat.com>
-Date:   Fri, 15 Jan 2021 12:46:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726417AbhAOF5o (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 15 Jan 2021 00:57:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726019AbhAOF5o (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 15 Jan 2021 00:57:44 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 71192239EF;
+        Fri, 15 Jan 2021 05:57:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610690223;
+        bh=1nmZ8i/8wKH8oPQ6+f5znp4ICppZYRDs4o+6s2h3Rkk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NkedOrMRk3+x5MdhLl0BdjJjI00H3c81J1AdjoLI9T0/htTxpXmPsnN2dUHJ0MIEj
+         4wHCxCxwz+F8M7GzrY2XYeURGOSQAGs1/0Y81b/sQY2jyy+NjyVD3yIjL+CJPVwgZL
+         rsBcT3LA0kDKFd7n3xrtoNSwOFvCKUqtztFnIDxq3mLw+p0jyXA9qtNQEdun98+Xwq
+         A6caIjQmAOPVIEmsHszxl08o3cbJt/8FzRWzGbMvsFOKL48S2pp2EOckZR9qLjb1mg
+         Krs3XUrVvKSUlz72FhyPgobsRjfgrKz+NloQ9V4jelbdejG3nGYcmyxxMfPKAMWREl
+         kwx9c3/ezRunA==
+Date:   Fri, 15 Jan 2021 11:26:58 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Rajesh Gumasta <rgumasta@nvidia.com>, ldewangan@nvidia.com,
+        dan.j.williams@intel.com, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, dmaengine@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kyarlagadda@nvidia.com
+Subject: Re: [Patch v2 0/4] Add Nvidia Tegra GPC-DMA driver
+Message-ID: <20210115055658.GD2771@vkoul-mobl>
+References: <1596699006-9934-1-git-send-email-rgumasta@nvidia.com>
+ <2a99ca73-a6e8-bf7d-a5c1-fa64eee62e23@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20210114013003.297050-2-baolu.lu@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2a99ca73-a6e8-bf7d-a5c1-fa64eee62e23@nvidia.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On 14-01-21, 10:11, Jon Hunter wrote:
+> 
+> On 06/08/2020 08:30, Rajesh Gumasta wrote:
+> > Changes in patch v2:
+> > Addressed review comments in patch v1
+> 
+> 
+> Is there any update on this series? Would be good to get this upstream.
 
-On 2021/1/14 上午9:30, Lu Baolu wrote:
-> Some vendor IOMMU drivers are able to declare that it is running in a VM
-> context. This is very valuable for the features that only want to be
-> supported on bare metal. Add a capability bit so that it could be used.
->
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->   drivers/iommu/intel/iommu.c  | 20 ++++++++++++++++++++
->   drivers/iommu/virtio-iommu.c |  9 +++++++++
->   include/linux/iommu.h        |  1 +
->   3 files changed, 30 insertions(+)
->
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index cb205a04fe4c..8eb022d0e8aa 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -5738,12 +5738,32 @@ static inline bool nested_mode_support(void)
->   	return ret;
->   }
->   
-> +static inline bool caching_mode_enabled(void)
-> +{
-> +	struct dmar_drhd_unit *drhd;
-> +	struct intel_iommu *iommu;
-> +	bool ret = false;
-> +
-> +	rcu_read_lock();
-> +	for_each_active_iommu(iommu, drhd) {
-> +		if (cap_caching_mode(iommu->cap)) {
-> +			ret = true;
-> +			break;
-> +		}
-> +	}
-> +	rcu_read_unlock();
-> +
-> +	return ret;
-> +}
-> +
->   static bool intel_iommu_capable(enum iommu_cap cap)
->   {
->   	if (cap == IOMMU_CAP_CACHE_COHERENCY)
->   		return domain_update_iommu_snooping(NULL) == 1;
->   	if (cap == IOMMU_CAP_INTR_REMAP)
->   		return irq_remapping_enabled == 1;
-> +	if (cap == IOMMU_CAP_VIOMMU)
-> +		return caching_mode_enabled();
-
-
-This part I don't understand. Does it mean Intel IOMMU can't be used in 
-VM without caching mode?
+Not sure why, this is is not in my queue, can someone please resend this
+to me
 
 Thanks
-
-
->   
->   	return false;
->   }
-> diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
-> index 2bfdd5734844..719793e103db 100644
-> --- a/drivers/iommu/virtio-iommu.c
-> +++ b/drivers/iommu/virtio-iommu.c
-> @@ -931,7 +931,16 @@ static int viommu_of_xlate(struct device *dev, struct of_phandle_args *args)
->   	return iommu_fwspec_add_ids(dev, args->args, 1);
->   }
->   
-> +static bool viommu_capable(enum iommu_cap cap)
-> +{
-> +	if (cap == IOMMU_CAP_VIOMMU)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
->   static struct iommu_ops viommu_ops = {
-> +	.capable		= viommu_capable,
->   	.domain_alloc		= viommu_domain_alloc,
->   	.domain_free		= viommu_domain_free,
->   	.attach_dev		= viommu_attach_dev,
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index b95a6f8db6ff..1d24be667a03 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -94,6 +94,7 @@ enum iommu_cap {
->   					   transactions */
->   	IOMMU_CAP_INTR_REMAP,		/* IOMMU supports interrupt isolation */
->   	IOMMU_CAP_NOEXEC,		/* IOMMU_NOEXEC flag */
-> +	IOMMU_CAP_VIOMMU,		/* IOMMU can declar running in a VM */
->   };
->   
->   /*
-
+-- 
+~Vinod

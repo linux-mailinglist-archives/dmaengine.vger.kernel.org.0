@@ -2,51 +2,48 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C08C2F9128
-	for <lists+dmaengine@lfdr.de>; Sun, 17 Jan 2021 07:52:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 152F62F9129
+	for <lists+dmaengine@lfdr.de>; Sun, 17 Jan 2021 07:52:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbhAQGwi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 17 Jan 2021 01:52:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37688 "EHLO mail.kernel.org"
+        id S1726214AbhAQGww (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 17 Jan 2021 01:52:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726214AbhAQGwb (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sun, 17 Jan 2021 01:52:31 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6ED3422795;
-        Sun, 17 Jan 2021 06:51:49 +0000 (UTC)
+        id S1726203AbhAQGws (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 17 Jan 2021 01:52:48 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9F015225AB;
+        Sun, 17 Jan 2021 06:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610866310;
-        bh=mcI/n+3OEFnPMmwWzQS5bOhUzaTZik0BdBJRDaXdIVQ=;
+        s=k20201202; t=1610866327;
+        bh=SaG1+NxYeVj8PNT7jqzAPByoMosUBcfmP9G9jGJYYn4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Rv4g/hOXJUdmXY3m2LpidvUWxv9QlK7nXR4+J9P11SiTBVjy/nsWKAZ5eLQFm4kID
-         sbW97aikDOSeSEW5jUVLz64Jbio1SKius6ECscN4hWf7FwioXSTelmog49V34T+/mi
-         3ZxB3idb+pkS8QAnIwUVOJ//XgelXqAtxjcxjoXseejsMbZnGNm1SGkznTgOwkLn3p
-         RRAgBPVdDi6HGkTZLD/04gp6fQrN4Pf37VtuSQZWdT564Mcu02aN0PtNOmi9tQ9R5w
-         Weqym36IcdHqLGWER1KWbWtWdhTqwisWdBxVYsJrcDIosfvOi9ePXd5xAleE0zL2jk
-         RL6Q+12MFrG8g==
-Date:   Sun, 17 Jan 2021 12:21:45 +0530
+        b=f092Wvp9gxHyKmMitaYxOe4NAs4x3nBhUbINd+reGrIOqZQBDGStfy0AG0p09zg6g
+         UcDdQG1iynFRJvWgPcxM/9DRnU7AJgl2iqEw9knTClrEXVPvdpYhSpT+l+rPlzta2q
+         Od/VQXj5W45Buh0WZLImnkV4wAKPLJke/2rUrBXxHBtQpCqdES64rGR1OCwek9Pkni
+         KJj6tuMfN/+RQRyurM8N3Me8D0TJWmRp5dkYB1b2hN6gF6tcq1U/f6b1ZTmVaU13qG
+         B9KFgXpOnMIw0yU4onpcYD1chxfHPiq24+m5fx+YTYFlPbIqkkgzrwElXGA0IdrKC+
+         UPI5oAxQkcjYw==
+Date:   Sun, 17 Jan 2021 12:22:02 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     Sanjay Kumar <sanjay.k.kumar@intel.com>, dmaengine@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: idxd: Fix list corruption in description
- completion
-Message-ID: <20210117065145.GN2771@vkoul-mobl>
-References: <161074757267.2183951.17912830858060607266.stgit@djiang5-desk3.ch.intel.com>
+Cc:     Srinijia Kambham <srinija.kambham@intel.com>,
+        dmaengine@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: idxd: set DMA channel to be private
+Message-ID: <20210117065202.GO2771@vkoul-mobl>
+References: <161074758743.2184057.3388557138816350980.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <161074757267.2183951.17912830858060607266.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <161074758743.2184057.3388557138816350980.stgit@djiang5-desk3.ch.intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 15-01-21, 14:52, Dave Jiang wrote:
-> Sanjay reported the following kernel splat after running dmatest for stress
-> testing. The current code is giving up the spinlock in the middle of
-> a completion list walk, and that opens up opportunity for list corruption
-> if another thread touches the list at the same time. In order to make sure
-> the list is always protected, the hardware completed descriptors will be
-> put on a local list to be completed with callbacks from the outside of
-> the list lock.
+On 15-01-21, 14:53, Dave Jiang wrote:
+> Add DMA_PRIVATE attribute flag to idxd DMA channels. The dedicated WQs are
+> expected to be used by a single client and not shared. While doing NTB
+> testing this mistake was discovered, which prevented ntb_transport from
+> requesting DSA wqs as DMA channels via dma_request_channel().
 
 Applied, thanks
 

@@ -2,50 +2,64 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 152F62F9129
-	for <lists+dmaengine@lfdr.de>; Sun, 17 Jan 2021 07:52:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BCDDB2F912E
+	for <lists+dmaengine@lfdr.de>; Sun, 17 Jan 2021 08:03:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbhAQGww (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 17 Jan 2021 01:52:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37722 "EHLO mail.kernel.org"
+        id S1726209AbhAQHDd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 17 Jan 2021 02:03:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbhAQGws (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sun, 17 Jan 2021 01:52:48 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9F015225AB;
-        Sun, 17 Jan 2021 06:52:06 +0000 (UTC)
+        id S1726298AbhAQHD0 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 17 Jan 2021 02:03:26 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 95A7322D5B;
+        Sun, 17 Jan 2021 07:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610866327;
-        bh=SaG1+NxYeVj8PNT7jqzAPByoMosUBcfmP9G9jGJYYn4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f092Wvp9gxHyKmMitaYxOe4NAs4x3nBhUbINd+reGrIOqZQBDGStfy0AG0p09zg6g
-         UcDdQG1iynFRJvWgPcxM/9DRnU7AJgl2iqEw9knTClrEXVPvdpYhSpT+l+rPlzta2q
-         Od/VQXj5W45Buh0WZLImnkV4wAKPLJke/2rUrBXxHBtQpCqdES64rGR1OCwek9Pkni
-         KJj6tuMfN/+RQRyurM8N3Me8D0TJWmRp5dkYB1b2hN6gF6tcq1U/f6b1ZTmVaU13qG
-         B9KFgXpOnMIw0yU4onpcYD1chxfHPiq24+m5fx+YTYFlPbIqkkgzrwElXGA0IdrKC+
-         UPI5oAxQkcjYw==
-Date:   Sun, 17 Jan 2021 12:22:02 +0530
+        s=k20201202; t=1610866963;
+        bh=mkNqT9MGlZstPmc/uEs1cKwlHj4CQwTVy+Ce7GwyAws=;
+        h=From:To:Cc:Subject:Date:From;
+        b=rQrT1Fnxjl6KibILMrjX4Y6/yJq1XGgQQigfhBdbjx15VeuVWNFGjfldZ8TON9mBx
+         oY2L8prno2or8oWFGh/yjBmL4ivi4lA/K/gplKw0pdkkqEZ7wUyryX7K1NMlmQzwNe
+         P/OWZ36bzdILO5mJ2GFxo/23N9PB5py0relvQMCOf2wqoJKPnXIhQj5eqsBL6S9LKw
+         W3aKCGd0Z1U7iAoh929FGqhndET/1l+VD5ECgki0gNfyjwq6fk18MydfJLekltBDLZ
+         7/RoMlHF4FRN60pWWN638sHlnN7NLJvFFg6kFUa5uSVZZJ7Ti9tFgMxddzSe4FLfN8
+         d+5rGT1HDb1ZQ==
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     Srinijia Kambham <srinija.kambham@intel.com>,
-        dmaengine@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: idxd: set DMA channel to be private
-Message-ID: <20210117065202.GO2771@vkoul-mobl>
-References: <161074758743.2184057.3388557138816350980.stgit@djiang5-desk3.ch.intel.com>
+To:     dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: ioat: remove dmaengine susbstem files
+Date:   Sun, 17 Jan 2021 12:32:29 +0530
+Message-Id: <20210117070229.2537866-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <161074758743.2184057.3388557138816350980.stgit@djiang5-desk3.ch.intel.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 15-01-21, 14:53, Dave Jiang wrote:
-> Add DMA_PRIVATE attribute flag to idxd DMA channels. The dedicated WQs are
-> expected to be used by a single client and not shared. While doing NTB
-> testing this mistake was discovered, which prevented ntb_transport from
-> requesting DSA wqs as DMA channels via dma_request_channel().
+[1] mentions the IOAT entry contains dmaengine subsystem file. So update
+the entry and remove the dmaengine files
 
-Applied, thanks
+1: https://lwn.net/Articles/842415/
 
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ MAINTAINERS | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0d62310a31f8..49647c6a03fd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2872,9 +2872,7 @@ S:	Odd fixes
+ W:	http://sourceforge.net/projects/xscaleiop
+ F:	Documentation/crypto/async-tx-api.rst
+ F:	crypto/async_tx/
+-F:	drivers/dma/
+ F:	include/linux/async_tx.h
+-F:	include/linux/dmaengine.h
+ 
+ AT24 EEPROM DRIVER
+ M:	Bartosz Golaszewski <bgolaszewski@baylibre.com>
 -- 
-~Vinod
+2.26.2
+

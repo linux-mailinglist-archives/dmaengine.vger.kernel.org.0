@@ -2,69 +2,49 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 854902F9102
-	for <lists+dmaengine@lfdr.de>; Sun, 17 Jan 2021 06:58:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E6D62F9110
+	for <lists+dmaengine@lfdr.de>; Sun, 17 Jan 2021 07:26:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbhAQF6b (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 17 Jan 2021 00:58:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50676 "EHLO mail.kernel.org"
+        id S1726279AbhAQGZ6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 17 Jan 2021 01:25:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbhAQF6A (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sun, 17 Jan 2021 00:58:00 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 94ABD23119;
-        Sun, 17 Jan 2021 05:57:18 +0000 (UTC)
+        id S1726209AbhAQGZz (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 17 Jan 2021 01:25:55 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5C5DD2311F;
+        Sun, 17 Jan 2021 06:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610863039;
-        bh=KhFAlgYWV81mqF0LQgovtUnRvAnJ5XcvzlxsYz88gBs=;
+        s=k20201202; t=1610864714;
+        bh=uWAJLOJaN7q3tn+DvzuqtKlIS0CE8YiVdmBQkmjkmdg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LsPPSvSJ5M33pVXNm+ssIGtBxJjtc5n/S9gXbtD3H8JQ7vOrIz+JOKJ9NglOa08Cw
-         vuTP57JvWHtdKMcBOzLr0BZICj5t93Rp+k7Vm5MMHKE3TmQw9hA4FoXNPP84RAIlMB
-         4VdxPB0Ar8F8dCLtG2ieVzO1PcSLom+JIqSIGxvfiMdtQOKcZqiBbY2neTF/qxKTTe
-         kYkS1YgL8uDSBzdvXy/2JkYk8Ji9tm9GN2Y8VSTnfC+2A4HPZ/JZN6aSGKN0dHZgX4
-         mCbxz17sawjvxRzcAD1AO/2an3VWiA+yIVJemmRYvFH8Wd+E8r+gnrOeNX0mlsDSAb
-         znRfIGgsToYyg==
-Date:   Sun, 17 Jan 2021 11:27:14 +0530
+        b=jDH/l0adRgYMZF+r2rQg2RAKUXm7kfwDFv4Ut7svwebBZwellolapiG1/C/2tqZBY
+         jW88ebB8DoOBg+wSmVUDSuOQLU7ZzbZ9zglYY1Wjkg+r1zrS9GmTxaScMbdPM0jAuv
+         4MU2EzWzQJyjFyfI+kwGEO1P3X+KIlE8/9+vghE6t0qJ4Te6V4w2XDKQioskkhayBg
+         eDS9OK2ckEA0+6SrYcn3fmsUV2en1TfJJIJh1SZaRvM0GF4iG/BMsI/8FNWm2mPwUo
+         rPSxTrxrH7qngzcCRtqAsiRc988if7xHAfwchGUE2E9vl7NGxSfglSNGt02GTpAE8C
+         CIVzdICuyMQsg==
+Date:   Sun, 17 Jan 2021 11:55:09 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>
-Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, chuanhua.lei@linux.intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        malliamireddy009@gmail.com, rtanwar@maxlinear.com,
-        lchuanhua@maxlinear.com
-Subject: Re: [PATCH v11 0/2]  Add Intel LGM SoC DMA support
-Message-ID: <20210117055714.GJ2771@vkoul-mobl>
-References: <cover.1610703653.git.mallikarjunax.reddy@linux.intel.com>
+To:     Xu Wang <vulab@iscas.ac.cn>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        dan.j.williams@intel.com, linux-arm-msm@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: qcom: gpi: Remove unneeded semicolon
+Message-ID: <20210117062509.GK2771@vkoul-mobl>
+References: <20210115100040.33364-1-vulab@iscas.ac.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1610703653.git.mallikarjunax.reddy@linux.intel.com>
+In-Reply-To: <20210115100040.33364-1-vulab@iscas.ac.cn>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 15-01-21, 17:56, Amireddy Mallikarjuna reddy wrote:
-> Add DMA controller driver for Lightning Mountain (LGM) family of SoCs.
-> 
-> The main function of the DMA controller is the transfer of data from/to any
-> peripheral to/from the memory. A memory to memory copy capability can also
-> be configured. This ldma driver is used for configure the device and channnels
-> for data and control paths.
-> 
-> These controllers provide DMA capabilities for a variety of on-chip
-> devices such as SSC, HSNAND and GSWIP (Gigabit Switch IP).
-> 
-> -------------
-> Future Plans:
-> -------------
-> LGM SOC also supports Hardware Memory Copy engine.
-> The role of the HW Memory copy engine is to offload memory copy operations
-> from the CPU.
+On 15-01-21, 10:00, Xu Wang wrote:
+> fix semicolon.cocci warning:
+> drivers/dma/qcom/gpi.c:1703:2-3: Unneeded semicolon
 
-??
-
-Please send updates against already applied patches and not an updated
-series!
+Applied, thanks
 
 -- 
 ~Vinod

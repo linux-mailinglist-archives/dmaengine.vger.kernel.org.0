@@ -2,85 +2,67 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD9D52FC048
-	for <lists+dmaengine@lfdr.de>; Tue, 19 Jan 2021 20:48:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 143FC2FC215
+	for <lists+dmaengine@lfdr.de>; Tue, 19 Jan 2021 22:19:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729434AbhASTpE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 19 Jan 2021 14:45:04 -0500
-Received: from mga01.intel.com ([192.55.52.88]:50059 "EHLO mga01.intel.com"
+        id S1729436AbhASSsH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 19 Jan 2021 13:48:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730183AbhASTo6 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 19 Jan 2021 14:44:58 -0500
-IronPort-SDR: uMptGRmJsDifPK7HrEBn18xInBKa7Q4rng+0VDxbtHhkWw0L7u3U/tL7cqortXvrLn1FxjTQy+
- FBx4p6MHLdOQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9869"; a="197700914"
-X-IronPort-AV: E=Sophos;i="5.79,359,1602572400"; 
-   d="scan'208";a="197700914"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2021 11:44:10 -0800
-IronPort-SDR: tS99ZRoMcKD2HEn4uThzUqMw4f2RfoqhFCxR1WHmX3I6gjaflS1DNPyAlJue+tpwtM3nvLHSQ8
- Th8up8lRIbFg==
-X-IronPort-AV: E=Sophos;i="5.79,359,1602572400"; 
-   d="scan'208";a="350648746"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.213.191.188]) ([10.213.191.188])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2021 11:44:09 -0800
-Subject: Re: [PATCH] dmaengine: idxd: add module parameter to force disable of
- SVA
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org
-References: <161074811013.2184257.13335125853932003159.stgit@djiang5-desk3.ch.intel.com>
- <20210117065115.GL2771@vkoul-mobl>
- <a7b50b40-ee4a-24c3-d4ba-40c770c970f1@intel.com>
- <20210119163822.GC2771@vkoul-mobl>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <425267d2-dd13-5710-65b9-d98beff2b328@intel.com>
-Date:   Tue, 19 Jan 2021 12:44:09 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        id S1730714AbhASS22 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 19 Jan 2021 13:28:28 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 59E1423384;
+        Tue, 19 Jan 2021 16:40:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611074421;
+        bh=jfIXpXqVZhOWlbrRVnWU9607dhob6RCOtt5MPQ41Jqk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S69byIznlukx2mZyChxm9kGqehi2cgTg/eqWONerhv+GVXCOoYMtR24epo9b8jIjI
+         FbVYlnAuHyMrqg+Ln54U8zyvyY6rzo7n0zAF3tkaB3gpYERAqhb72BidxXLL0OLIno
+         ReO2XZ6wFwMh1YoDhMyPcm/sMpHq8dAE1bhz7y9Dty6rFJp7JrbyvtFJjO9/ruMjhz
+         rolwG0fbXQuPn/SeD0bAceZvy9KZku9Ay5SyPz/DLSZ3yGKfbpQd/pRrfF+peBBM/W
+         pzo5lmIHGEZxaJ2udYpejlyTgW5YI4uVmNXngH4grlTuuowtsVFu4IyuDmYY1JhLf+
+         uZd8ns1Fac9Kg==
+Date:   Tue, 19 Jan 2021 22:10:14 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     dmaengine@vger.kernel.org, radheys@xilinx.com,
+        pthomas8589@gmail.com
+Subject: Re: [PATCH] dmaengine: move channel device_node deletion to driver
+Message-ID: <20210119164014.GD2771@vkoul-mobl>
+References: <161099092469.2495902.5064826526660062342.stgit@djiang5-desk3.ch.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20210119163822.GC2771@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <161099092469.2495902.5064826526660062342.stgit@djiang5-desk3.ch.intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On 18-01-21, 10:28, Dave Jiang wrote:
+> Channel device_node deletion is managed by the device driver rather than
+> the dmaengine core. The deletion was accidentally introduced when making
+> channel unregister dynamic. It causes xilinx_dma module to crash on unload
+> as reported by Radhey. Remove chan->device_node delete in dmaengine and
+> also fix up idxd driver.
+> 
+> [   42.142705] Internal error: Oops: 96000044 [#1] SMP
+> [   42.147566] Modules linked in: xilinx_dma(-) clk_xlnx_clock_wizard uio_pdrv_genirq
+> [   42.155139] CPU: 1 PID: 2075 Comm: rmmod Not tainted 5.10.1-00026-g3a2e6dd7a05-dirty #192
+> [   42.163302] Hardware name: Enclustra XU5 SOM (DT)
+> [   42.167992] pstate: 40000005 (nZcv daif -PAN -UAO -TCO BTYPE=--)
+> [   42.173996] pc : xilinx_dma_chan_remove+0x74/0xa0 [xilinx_dma]
+> [   42.179815] lr : xilinx_dma_chan_remove+0x70/0xa0 [xilinx_dma]
+> [   42.185636] sp : ffffffc01112bca0
+> [   42.188935] x29: ffffffc01112bca0 x28: ffffff80402ea640
+> 
+> xilinx_dma_chan_remove+0x74/0xa0:
+> __list_del at ./include/linux/list.h:112 (inlined by)
+> __list_del_entry at./include/linux/list.h:135 (inlined by)
+> list_del at ./include/linux/list.h:146 (inlined by)
+> xilinx_dma_chan_remove at drivers/dma/xilinx/xilinx_dma.c:2546
 
-On 1/19/2021 9:38 AM, Vinod Koul wrote:
-> On 18-01-21, 10:06, Dave Jiang wrote:
->> On 1/16/2021 11:51 PM, Vinod Koul wrote:
->>> On 15-01-21, 15:01, Dave Jiang wrote:
->>>> Add a module parameter that overrides the SVA feature enabling. This keeps
->>>> the driver in legacy mode even when intel_iommu=sm_on is set. In this mode,
->>>> the descriptor fields must be programmed with dma_addr_t from the Linux DMA
->>>> API for source, destination, and completion descriptors.
->>>>
->>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>>> ---
->>>>    drivers/dma/idxd/init.c |    8 +++++++-
->>>>    1 file changed, 7 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
->>>> index 25cc947c6179..9687a24ff982 100644
->>>> --- a/drivers/dma/idxd/init.c
->>>> +++ b/drivers/dma/idxd/init.c
->>>> @@ -26,6 +26,10 @@ MODULE_VERSION(IDXD_DRIVER_VERSION);
->>>>    MODULE_LICENSE("GPL v2");
->>>>    MODULE_AUTHOR("Intel Corporation");
->>>> +static bool sva = true;
->>>> +module_param(sva, bool, 0644);
->>>> +MODULE_PARM_DESC(sva, "Toggle SVA support on/off");
->>> Documentation for this please..
->> Just comments or is there somewhere specific for driver module parameter
->> documentations?
-> All the parameters are supposed to be documented in Documentation/admin-guide/kernel-parameters.txt
+Applied, thanks
 
-It seems to be for core kernel components and subsystems, and not 
-specific device drivers. I'm not seeing any of the dmaengine driver 
-module params being in this doc after grepping in drivers/dma.
-
-
->
-> Thanks
->
+-- 
+~Vinod

@@ -2,67 +2,161 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 143FC2FC215
-	for <lists+dmaengine@lfdr.de>; Tue, 19 Jan 2021 22:19:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA07D2FC218
+	for <lists+dmaengine@lfdr.de>; Tue, 19 Jan 2021 22:20:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729436AbhASSsH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 19 Jan 2021 13:48:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49902 "EHLO mail.kernel.org"
+        id S1730564AbhASSsQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 19 Jan 2021 13:48:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730714AbhASS22 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 19 Jan 2021 13:28:28 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 59E1423384;
-        Tue, 19 Jan 2021 16:40:20 +0000 (UTC)
+        id S1730161AbhASS23 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 19 Jan 2021 13:28:29 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A584A2339E;
+        Tue, 19 Jan 2021 16:45:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611074421;
-        bh=jfIXpXqVZhOWlbrRVnWU9607dhob6RCOtt5MPQ41Jqk=;
+        s=k20201202; t=1611074720;
+        bh=hsbY9jVVjxPkTDo+83FR143J+Trhf5rfoVu0rt8eaRU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=S69byIznlukx2mZyChxm9kGqehi2cgTg/eqWONerhv+GVXCOoYMtR24epo9b8jIjI
-         FbVYlnAuHyMrqg+Ln54U8zyvyY6rzo7n0zAF3tkaB3gpYERAqhb72BidxXLL0OLIno
-         ReO2XZ6wFwMh1YoDhMyPcm/sMpHq8dAE1bhz7y9Dty6rFJp7JrbyvtFJjO9/ruMjhz
-         rolwG0fbXQuPn/SeD0bAceZvy9KZku9Ay5SyPz/DLSZ3yGKfbpQd/pRrfF+peBBM/W
-         pzo5lmIHGEZxaJ2udYpejlyTgW5YI4uVmNXngH4grlTuuowtsVFu4IyuDmYY1JhLf+
-         uZd8ns1Fac9Kg==
-Date:   Tue, 19 Jan 2021 22:10:14 +0530
+        b=Hm2fl8vSTHyel68vvy54BFEYGnKKKObPD/GYX2P3MobIpRoPpKvqSzY1QvCiSboxN
+         Atbr+nOgyM5E6Ak1Tn2YDiYEwZQ1elcqJ3vKfj87oTm5IWkPVZHivOHUyi0op2Ui3+
+         rFv882mtsvqOkDXby9VRaoxXU+TPenjGAGlc+jwnQMbZ9nDbAfaAfIdBVXXiXgA8dm
+         sEePE7usRv/pyhTYuqzHx8zbAPl3d0MNbnzq+l6MhwwjtK9C1DcZmf07jLgG/EOfbn
+         IkNUlVH7H0QQrjmUZKLGXaB5LDyJXd3Fju03xRLM+dpaS4uxVMKMkNj5cqyqOrsRcy
+         z/j89Bn7TZGxg==
+Date:   Tue, 19 Jan 2021 22:15:11 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     dmaengine@vger.kernel.org, radheys@xilinx.com,
-        pthomas8589@gmail.com
-Subject: Re: [PATCH] dmaengine: move channel device_node deletion to driver
-Message-ID: <20210119164014.GD2771@vkoul-mobl>
-References: <161099092469.2495902.5064826526660062342.stgit@djiang5-desk3.ch.intel.com>
+To:     mdalam@codeaurora.org
+Cc:     corbet@lwn.net, agross@kernel.org, bjorn.andersson@linaro.org,
+        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, sricharan@codeaurora.org,
+        mdalam=codeaurora.org@codeaurora.org
+Subject: Re: [PATCH] dmaengine: qcom: bam_dma: Add LOCK and UNLOCK flag bit
+ support
+Message-ID: <20210119164511.GE2771@vkoul-mobl>
+References: <1608215842-15381-1-git-send-email-mdalam@codeaurora.org>
+ <20201221092355.GA3323@vkoul-mobl>
+ <efcc74bbdf36b4ddbf764eb6b4ed99f2@codeaurora.org>
+ <f7de0117c8ff2e61c09f58acdea0e5b0@codeaurora.org>
+ <20210112101056.GI2771@vkoul-mobl>
+ <e3cf7c4fc02c54d17fd2fd213f39005b@codeaurora.org>
+ <20210115055806.GE2771@vkoul-mobl>
+ <97ce29b230164a5848a38f6448d1be60@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <161099092469.2495902.5064826526660062342.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <97ce29b230164a5848a38f6448d1be60@codeaurora.org>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 18-01-21, 10:28, Dave Jiang wrote:
-> Channel device_node deletion is managed by the device driver rather than
-> the dmaengine core. The deletion was accidentally introduced when making
-> channel unregister dynamic. It causes xilinx_dma module to crash on unload
-> as reported by Radhey. Remove chan->device_node delete in dmaengine and
-> also fix up idxd driver.
+On 18-01-21, 09:21, mdalam@codeaurora.org wrote:
+> On 2021-01-15 11:28, Vinod Koul wrote:
+> > On 14-01-21, 01:20, mdalam@codeaurora.org wrote:
+> > > On 2021-01-12 15:40, Vinod Koul wrote:
+> > > > On 12-01-21, 15:01, mdalam@codeaurora.org wrote:
+> > > > > On 2020-12-21 23:03, mdalam@codeaurora.org wrote:
+> > > > > > On 2020-12-21 14:53, Vinod Koul wrote:
+> > > > > > > Hello,
+> > > > > > >
+> > > > > > > On 17-12-20, 20:07, Md Sadre Alam wrote:
+> > > > > > > > This change will add support for LOCK & UNLOCK flag bit support
+> > > > > > > > on CMD descriptor.
+> > > > > > > >
+> > > > > > > > If DMA_PREP_LOCK flag passed in prep_slave_sg then requester of this
+> > > > > > > > transaction wanted to lock the DMA controller for this transaction so
+> > > > > > > > BAM driver should set LOCK bit for the HW descriptor.
+> > > > > > > >
+> > > > > > > > If DMA_PREP_UNLOCK flag passed in prep_slave_sg then requester
+> > > > > > > > of this
+> > > > > > > > transaction wanted to unlock the DMA controller.so BAM driver
+> > > > > > > > should set
+> > > > > > > > UNLOCK bit for the HW descriptor.
+> > > > > > >
+> > > > > > > Can you explain why would we need to first lock and then unlock..? How
+> > > > > > > would this be used in real world.
+> > > > > > >
+> > > > > > > I have read a bit of documentation but is unclear to me. Also should
+> > > > > > > this be exposed as an API to users, sounds like internal to driver..?
+> > > > > > >
+> > > > > >
+> > > > > > IPQ5018 SoC having only one Crypto Hardware Engine. This Crypto Hardware
+> > > > > > Engine
+> > > > > > will be shared between A53 core & ubi32 core. There is two separate
+> > > > > > driver dedicated
+> > > > > > to A53 core and ubi32 core. So to use Crypto Hardware Engine
+> > > > > > parallelly for encryption/description
+> > > > > > we need bam locking mechanism. if one driver will submit the request
+> > > > > > for encryption/description
+> > > > > > to Crypto then first it has to set LOCK flag bit on command descriptor
+> > > > > > so that other pipes will
+> > > > > > get locked.
+> > > > > >
+> > > > > > The Pipe Locking/Unlocking will be only on command-descriptor. Upon
+> > > > > > encountering a command descriptor
+> > > >
+> > > > Can you explain what is a cmd descriptor?
+> > > 
+> > >   In BAM pipe descriptor structure there is a field called CMD
+> > > (Command
+> > > descriptor).
+> > >   CMD allows the SW to create descriptors of type Command which does
+> > > not
+> > > generate any data transmissions
+> > >   but configures registers in the Peripheral (write operations, and
+> > > read
+> > > registers operations ).
+> > >   Using command descriptor enables the SW to queue new configurations
+> > > between data transfers in advance.
+> > 
+> > What and when is the CMD descriptor used for..?
 > 
-> [   42.142705] Internal error: Oops: 96000044 [#1] SMP
-> [   42.147566] Modules linked in: xilinx_dma(-) clk_xlnx_clock_wizard uio_pdrv_genirq
-> [   42.155139] CPU: 1 PID: 2075 Comm: rmmod Not tainted 5.10.1-00026-g3a2e6dd7a05-dirty #192
-> [   42.163302] Hardware name: Enclustra XU5 SOM (DT)
-> [   42.167992] pstate: 40000005 (nZcv daif -PAN -UAO -TCO BTYPE=--)
-> [   42.173996] pc : xilinx_dma_chan_remove+0x74/0xa0 [xilinx_dma]
-> [   42.179815] lr : xilinx_dma_chan_remove+0x70/0xa0 [xilinx_dma]
-> [   42.185636] sp : ffffffc01112bca0
-> [   42.188935] x29: ffffffc01112bca0 x28: ffffff80402ea640
+>   CMD descriptor is mainly used for configuring controller register.
+>   We can read/write controller register via BAM using CMD descriptor only.
+>   CMD descriptor use command pipe for the transaction.
+
+In which use cases would you need to issue cmd descriptors..?
+
+> > 
+> > > >
+> > > > > > with LOCK bit set, The BAM will lock all other pipes not related to
+> > > > > > the current pipe group, and keep
+> > > > > > handling the current pipe only until it sees the UNLOCK set then it
+> > > > > > will release all locked pipes.
+> > > > > > locked pipe will not fetch new descriptors even if it got event/events
+> > > > > > adding more descriptors for
+> > > > > > this pipe (locked pipe).
+> > > > > >
+> > > > > > No need to expose as an API to user because its internal to driver, so
+> > > > > > while preparing command descriptor
+> > > > > > just we have to update the LOCK/UNLOCK flag.
+> > > >
+> > > > So IIUC, no api right? it would be internal to driver..?
+> > > 
+> > >   Yes its totally internal to deriver.
+> > 
+> > So no need for this patch then, right?
 > 
-> xilinx_dma_chan_remove+0x74/0xa0:
-> __list_del at ./include/linux/list.h:112 (inlined by)
-> __list_del_entry at./include/linux/list.h:135 (inlined by)
-> list_del at ./include/linux/list.h:146 (inlined by)
-> xilinx_dma_chan_remove at drivers/dma/xilinx/xilinx_dma.c:2546
+>   This patch is needed , because if some hardware will shared between
+>   multiple core like A53 and ubi32 for example. In IPQ5018 there is
+>   only one crypto engine and this will be shared between A53 core and
+>   ubi32 core and in A53 core & ubi32 core there are different drivers
+>   is getting used. So if encryption/decryption request come at same
+>   time from both the driver then things will get messed up. So here we
+>   need LOCKING mechanism.  If first request is from A53 core driver
+>   then this driver should lock all the pipes other than pipe dedicated
+>   to A53 core. So while preparing CMD descriptor driver should used
+>   this flag "DMA_PREP_LOCK", Since LOCK and UNLOCK flag bit we can set
+>   only on CMD descriptor. Once request processed then driver will set
+>   UNLOCK flag on CMD descriptor. Driver should use this flag
+>   "DMA_PREP_UNLOCK" while preparing CMD descriptor. Same logic will be
+>   apply for ubi32 core driver as well.
 
-Applied, thanks
+Why cant this be applied at driver level, based on txn being issued it
+can lock issue the txn and then unlock when done. I am not convinced yet
+that this needs to be exported to users and can be managed by dmaengine
+driver.
 
+Thanks
 -- 
 ~Vinod

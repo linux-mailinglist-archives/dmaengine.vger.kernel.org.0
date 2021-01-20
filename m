@@ -2,35 +2,35 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E92AF2FD1B1
-	for <lists+dmaengine@lfdr.de>; Wed, 20 Jan 2021 14:55:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 856CB2FD1B2
+	for <lists+dmaengine@lfdr.de>; Wed, 20 Jan 2021 14:55:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbhATNXm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 20 Jan 2021 08:23:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54606 "EHLO mail.kernel.org"
+        id S1731903AbhATNXp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 20 Jan 2021 08:23:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732374AbhATNTy (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 20 Jan 2021 08:19:54 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 18F3423357;
-        Wed, 20 Jan 2021 13:19:05 +0000 (UTC)
+        id S1732904AbhATNT7 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 20 Jan 2021 08:19:59 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 362DD23380;
+        Wed, 20 Jan 2021 13:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611148747;
-        bh=AC2xGGZvDq0vwAAJmwQBc1G0o10BNHPjB3RN+cb1xrw=;
+        s=k20201202; t=1611148749;
+        bh=hyNbrj4f/4vby/Yv3Y2INFlLenXyOHSwsCa1+qpmSUE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BDwq2zFD5wrtXuGfOjlVtzQgwNjXTjbQ7BzsRJu9B3aHTJlVGA73fBx10yUAmrOEO
-         pN0s4RBK9VxcHsj7w+12tWmgshSdywWaVAI+bOS8F5MmNlw5IuIm1ul9418+MbgzLw
-         AvodI2xCnSLgTzuLkJTjtCVKfCveewnR+kSEPTqPYUgfMsE9055Nc/zbuOK+f6aTgc
-         yyP0z3OTDSvxCgmtS9HQZDPWChUhy/eledokzxWzqoMRV5ON+lamsmHytgYDI7QOwu
-         suWTv+mnafpu+bYcCEWGVTv58OEYMeTLBVUFWFr/jCAy8YXJwalr61L/gEvmxz91WS
-         6qQljTYeaOFNg==
+        b=rAHysHXedIAcUU0m8u7SGr5rcligSYhxtGulDiPp6jci3HSpTKNiFchD0adu9AVEG
+         S5adXoTuHYhRCjeucZlpeYueDF3Mv97uYCn2N8Eeh2kbePJxV/YkIOYwMOYm9A2VWo
+         UsgHNyjorWSBoXA7CJ00tXNgqKfdOTM3XY8EJfOTTkJaZ43sq6ZMOrZ9nmNtmHgGuc
+         OhvCaHU25oNZnat3Vx5Pi4VIWs2pjzFDRUR8zYLt1OcxthVzZJXRC5MrPYUd+lkYMQ
+         5KX1EPYIrvMFwWcCQBlSPYA/heLtwfCGwmg9D5d25e60NTkDwEfmQ/28wmORHFPprO
+         wsgeMDN4IlYiw==
 From:   Arnd Bergmann <arnd@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jun Nie <jun.nie@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 2/3] dmaengine: remove zte zx driver
-Date:   Wed, 20 Jan 2021 14:18:58 +0100
-Message-Id: <20210120131859.2056308-3-arnd@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 3/3] dmaengine: remove coh901318 driver
+Date:   Wed, 20 Jan 2021 14:18:59 +0100
+Message-Id: <20210120131859.2056308-4-arnd@kernel.org>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210120131859.2056308-1-arnd@kernel.org>
 References: <20210120131859.2056308-1-arnd@kernel.org>
@@ -42,1044 +42,3452 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-The zte zx platform is getting removed, so this driver is no
+The ST-Ericsson U300 platform is getting removed, so this driver is no
 longer needed.
 
-Cc: Jun Nie <jun.nie@linaro.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- .../devicetree/bindings/dma/zxdma.txt         |  38 -
- drivers/dma/Kconfig                           |   9 -
- drivers/dma/Makefile                          |   1 -
- drivers/dma/zx_dma.c                          | 941 ------------------
- 4 files changed, 989 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/dma/zxdma.txt
- delete mode 100644 drivers/dma/zx_dma.c
+ .../devicetree/bindings/dma/ste-coh901318.txt |   32 -
+ drivers/dma/Kconfig                           |    7 -
+ drivers/dma/Makefile                          |    1 -
+ drivers/dma/coh901318.c                       | 2808 -----------------
+ drivers/dma/coh901318.h                       |  141 -
+ drivers/dma/coh901318_lli.c                   |  313 --
+ include/linux/platform_data/dma-coh901318.h   |   72 -
+ 7 files changed, 3374 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/ste-coh901318.txt
+ delete mode 100644 drivers/dma/coh901318.c
+ delete mode 100644 drivers/dma/coh901318.h
+ delete mode 100644 drivers/dma/coh901318_lli.c
+ delete mode 100644 include/linux/platform_data/dma-coh901318.h
 
-diff --git a/Documentation/devicetree/bindings/dma/zxdma.txt b/Documentation/devicetree/bindings/dma/zxdma.txt
+diff --git a/Documentation/devicetree/bindings/dma/ste-coh901318.txt b/Documentation/devicetree/bindings/dma/ste-coh901318.txt
 deleted file mode 100644
-index 0ab80f69e566..000000000000
---- a/Documentation/devicetree/bindings/dma/zxdma.txt
+index 091ad057e9cf..000000000000
+--- a/Documentation/devicetree/bindings/dma/ste-coh901318.txt
 +++ /dev/null
-@@ -1,38 +0,0 @@
--* ZTE ZX296702 DMA controller
+@@ -1,32 +0,0 @@
+-ST-Ericsson COH 901 318 DMA Controller
+-
+-This is a DMA controller which has begun as a fork of the
+-ARM PL08x PrimeCell VHDL code.
 -
 -Required properties:
--- compatible: Should be "zte,zx296702-dma"
--- reg: Should contain DMA registers location and length.
--- interrupts: Should contain one interrupt shared by all channel
--- #dma-cells: see dma.txt, should be 1, para number
--- dma-channels: physical channels supported
--- dma-requests: virtual channels supported, each virtual channel
--		have specific request line
--- clocks: clock required
+-- compatible: should be "stericsson,coh901318"
+-- reg: register locations and length
+-- interrupts: the single DMA IRQ
+-- #dma-cells: must be set to <1>, as the channels on the
+-  COH 901 318 are simple and identified by a single number
+-- dma-channels: the number of DMA channels handled
 -
 -Example:
 -
--Controller:
--	dma: dma-controller@09c00000{
--		compatible = "zte,zx296702-dma";
--		reg = <0x09c00000 0x1000>;
--		clocks = <&topclk ZX296702_DMA_ACLK>;
--		interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
--		#dma-cells = <1>;
--		dma-channels = <24>;
--		dma-requests = <24>;
--	};
+-dmac: dma-controller@c00020000 {
+-	compatible = "stericsson,coh901318";
+-	reg = <0xc0020000 0x1000>;
+-	interrupt-parent = <&vica>;
+-	interrupts = <2>;
+-	#dma-cells = <1>;
+-	dma-channels = <40>;
+-};
 -
--Client:
--Use specific request line passing from dmax
--For example, spdif0 tx channel request line is 4
--	spdif0: spdif0@b004000 {
--		#sound-dai-cells = <0>;
--		compatible = "zte,zx296702-spdif";
--		reg = <0x0b004000 0x1000>;
--		clocks = <&lsp0clk ZX296702_SPDIF0_DIV>;
--		clock-names = "tx";
--		interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
--		dmas = <&dma 4>;
--		dma-names = "tx";
--	}
+-Consumers example:
+-
+-uart0: serial@c0013000 {
+-	compatible = "...";
+-	(...)
+-	dmas = <&dmac 17 &dmac 18>;
+-	dma-names = "tx", "rx";
+-};
 diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 1935cf39f753..36a49cc143d2 100644
+index 36a49cc143d2..35589c75d35a 100644
 --- a/drivers/dma/Kconfig
 +++ b/drivers/dma/Kconfig
-@@ -703,15 +703,6 @@ config XILINX_ZYNQMP_DPDMA
- 	  driver provides the dmaengine required by the DisplayPort subsystem
- 	  display driver.
+@@ -124,13 +124,6 @@ config BCM_SBA_RAID
+ 	  has the capability to offload memcpy, xor and pq computation
+ 	  for raid5/6.
  
--config ZX_DMA
--	tristate "ZTE ZX DMA support"
--	depends on ARCH_ZX || COMPILE_TEST
+-config COH901318
+-	bool "ST-Ericsson COH901318 DMA support"
 -	select DMA_ENGINE
--	select DMA_VIRTUAL_CHANNELS
+-	depends on ARCH_U300 || COMPILE_TEST
 -	help
--	  Support the DMA engine for ZTE ZX family platform devices.
+-	  Enable support for ST-Ericsson COH 901 318 DMA.
 -
--
- # driver files
- source "drivers/dma/bestcomm/Kconfig"
- 
+ config DMA_BCM2835
+ 	tristate "BCM2835 DMA engine support"
+ 	depends on ARCH_BCM2835
 diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index 93327554560e..9713d382ba55 100644
+index 9713d382ba55..5520003a77da 100644
 --- a/drivers/dma/Makefile
 +++ b/drivers/dma/Makefile
-@@ -78,7 +78,6 @@ obj-$(CONFIG_TIMB_DMA) += timb_dma.o
- obj-$(CONFIG_UNIPHIER_MDMAC) += uniphier-mdmac.o
- obj-$(CONFIG_UNIPHIER_XDMAC) += uniphier-xdmac.o
- obj-$(CONFIG_XGENE_DMA) += xgene-dma.o
--obj-$(CONFIG_ZX_DMA) += zx_dma.o
- obj-$(CONFIG_ST_FDMA) += st_fdma.o
- obj-$(CONFIG_FSL_DPAA2_QDMA) += fsl-dpaa2-qdma/
- 
-diff --git a/drivers/dma/zx_dma.c b/drivers/dma/zx_dma.c
+@@ -20,7 +20,6 @@ obj-$(CONFIG_AT_HDMAC) += at_hdmac.o
+ obj-$(CONFIG_AT_XDMAC) += at_xdmac.o
+ obj-$(CONFIG_AXI_DMAC) += dma-axi-dmac.o
+ obj-$(CONFIG_BCM_SBA_RAID) += bcm-sba-raid.o
+-obj-$(CONFIG_COH901318) += coh901318.o coh901318_lli.o
+ obj-$(CONFIG_DMA_BCM2835) += bcm2835-dma.o
+ obj-$(CONFIG_DMA_JZ4780) += dma-jz4780.o
+ obj-$(CONFIG_DMA_SA11X0) += sa11x0-dma.o
+diff --git a/drivers/dma/coh901318.c b/drivers/dma/coh901318.c
 deleted file mode 100644
-index b057582b2fac..000000000000
---- a/drivers/dma/zx_dma.c
+index 95b9b2f5358e..000000000000
+--- a/drivers/dma/coh901318.c
 +++ /dev/null
-@@ -1,941 +0,0 @@
+@@ -1,2808 +0,0 @@
 -// SPDX-License-Identifier: GPL-2.0-only
 -/*
-- * Copyright 2015 Linaro.
+- * driver/dma/coh901318.c
+- *
+- * Copyright (C) 2007-2009 ST-Ericsson
+- * DMA driver for COH 901 318
+- * Author: Per Friden <per.friden@stericsson.com>
 - */
--#include <linux/sched.h>
--#include <linux/device.h>
--#include <linux/dmaengine.h>
--#include <linux/dma-mapping.h>
--#include <linux/dmapool.h>
+-
 -#include <linux/init.h>
--#include <linux/interrupt.h>
--#include <linux/kernel.h>
 -#include <linux/module.h>
+-#include <linux/kernel.h> /* printk() */
+-#include <linux/fs.h> /* everything... */
+-#include <linux/scatterlist.h>
+-#include <linux/slab.h> /* kmalloc() */
+-#include <linux/dmaengine.h>
 -#include <linux/platform_device.h>
--#include <linux/slab.h>
--#include <linux/spinlock.h>
--#include <linux/of_device.h>
--#include <linux/of.h>
--#include <linux/clk.h>
+-#include <linux/device.h>
+-#include <linux/irqreturn.h>
+-#include <linux/interrupt.h>
+-#include <linux/io.h>
+-#include <linux/uaccess.h>
+-#include <linux/debugfs.h>
+-#include <linux/platform_data/dma-coh901318.h>
 -#include <linux/of_dma.h>
 -
--#include "virt-dma.h"
+-#include "coh901318.h"
+-#include "dmaengine.h"
 -
--#define DRIVER_NAME		"zx-dma"
--#define DMA_ALIGN		4
--#define DMA_MAX_SIZE		(0x10000 - 512)
--#define LLI_BLOCK_SIZE		(4 * PAGE_SIZE)
+-#define COH901318_MOD32_MASK					(0x1F)
+-#define COH901318_WORD_MASK					(0xFFFFFFFF)
+-/* INT_STATUS - Interrupt Status Registers 32bit (R/-) */
+-#define COH901318_INT_STATUS1					(0x0000)
+-#define COH901318_INT_STATUS2					(0x0004)
+-/* TC_INT_STATUS - Terminal Count Interrupt Status Registers 32bit (R/-) */
+-#define COH901318_TC_INT_STATUS1				(0x0008)
+-#define COH901318_TC_INT_STATUS2				(0x000C)
+-/* TC_INT_CLEAR - Terminal Count Interrupt Clear Registers 32bit (-/W) */
+-#define COH901318_TC_INT_CLEAR1					(0x0010)
+-#define COH901318_TC_INT_CLEAR2					(0x0014)
+-/* RAW_TC_INT_STATUS - Raw Term Count Interrupt Status Registers 32bit (R/-) */
+-#define COH901318_RAW_TC_INT_STATUS1				(0x0018)
+-#define COH901318_RAW_TC_INT_STATUS2				(0x001C)
+-/* BE_INT_STATUS - Bus Error Interrupt Status Registers 32bit (R/-) */
+-#define COH901318_BE_INT_STATUS1				(0x0020)
+-#define COH901318_BE_INT_STATUS2				(0x0024)
+-/* BE_INT_CLEAR - Bus Error Interrupt Clear Registers 32bit (-/W) */
+-#define COH901318_BE_INT_CLEAR1					(0x0028)
+-#define COH901318_BE_INT_CLEAR2					(0x002C)
+-/* RAW_BE_INT_STATUS - Raw Term Count Interrupt Status Registers 32bit (R/-) */
+-#define COH901318_RAW_BE_INT_STATUS1				(0x0030)
+-#define COH901318_RAW_BE_INT_STATUS2				(0x0034)
 -
--#define REG_ZX_SRC_ADDR			0x00
--#define REG_ZX_DST_ADDR			0x04
--#define REG_ZX_TX_X_COUNT		0x08
--#define REG_ZX_TX_ZY_COUNT		0x0c
--#define REG_ZX_SRC_ZY_STEP		0x10
--#define REG_ZX_DST_ZY_STEP		0x14
--#define REG_ZX_LLI_ADDR			0x1c
--#define REG_ZX_CTRL			0x20
--#define REG_ZX_TC_IRQ			0x800
--#define REG_ZX_SRC_ERR_IRQ		0x804
--#define REG_ZX_DST_ERR_IRQ		0x808
--#define REG_ZX_CFG_ERR_IRQ		0x80c
--#define REG_ZX_TC_IRQ_RAW		0x810
--#define REG_ZX_SRC_ERR_IRQ_RAW		0x814
--#define REG_ZX_DST_ERR_IRQ_RAW		0x818
--#define REG_ZX_CFG_ERR_IRQ_RAW		0x81c
--#define REG_ZX_STATUS			0x820
--#define REG_ZX_DMA_GRP_PRIO		0x824
--#define REG_ZX_DMA_ARB			0x828
+-/*
+- * CX_CFG - Channel Configuration Registers 32bit (R/W)
+- */
+-#define COH901318_CX_CFG					(0x0100)
+-#define COH901318_CX_CFG_SPACING				(0x04)
+-/* Channel enable activates tha dma job */
+-#define COH901318_CX_CFG_CH_ENABLE				(0x00000001)
+-#define COH901318_CX_CFG_CH_DISABLE				(0x00000000)
+-/* Request Mode */
+-#define COH901318_CX_CFG_RM_MASK				(0x00000006)
+-#define COH901318_CX_CFG_RM_MEMORY_TO_MEMORY			(0x0 << 1)
+-#define COH901318_CX_CFG_RM_PRIMARY_TO_MEMORY			(0x1 << 1)
+-#define COH901318_CX_CFG_RM_MEMORY_TO_PRIMARY			(0x1 << 1)
+-#define COH901318_CX_CFG_RM_PRIMARY_TO_SECONDARY		(0x3 << 1)
+-#define COH901318_CX_CFG_RM_SECONDARY_TO_PRIMARY		(0x3 << 1)
+-/* Linked channel request field. RM must == 11 */
+-#define COH901318_CX_CFG_LCRF_SHIFT				3
+-#define COH901318_CX_CFG_LCRF_MASK				(0x000001F8)
+-#define COH901318_CX_CFG_LCR_DISABLE				(0x00000000)
+-/* Terminal Counter Interrupt Request Mask */
+-#define COH901318_CX_CFG_TC_IRQ_ENABLE				(0x00000200)
+-#define COH901318_CX_CFG_TC_IRQ_DISABLE				(0x00000000)
+-/* Bus Error interrupt Mask */
+-#define COH901318_CX_CFG_BE_IRQ_ENABLE				(0x00000400)
+-#define COH901318_CX_CFG_BE_IRQ_DISABLE				(0x00000000)
 -
--#define ZX_FORCE_CLOSE			BIT(31)
--#define ZX_DST_BURST_WIDTH(x)		(((x) & 0x7) << 13)
--#define ZX_MAX_BURST_LEN		16
--#define ZX_SRC_BURST_LEN(x)		(((x) & 0xf) << 9)
--#define ZX_SRC_BURST_WIDTH(x)		(((x) & 0x7) << 6)
--#define ZX_IRQ_ENABLE_ALL		(3 << 4)
--#define ZX_DST_FIFO_MODE		BIT(3)
--#define ZX_SRC_FIFO_MODE		BIT(2)
--#define ZX_SOFT_REQ			BIT(1)
--#define ZX_CH_ENABLE			BIT(0)
+-/*
+- * CX_STAT - Channel Status Registers 32bit (R/-)
+- */
+-#define COH901318_CX_STAT					(0x0200)
+-#define COH901318_CX_STAT_SPACING				(0x04)
+-#define COH901318_CX_STAT_RBE_IRQ_IND				(0x00000008)
+-#define COH901318_CX_STAT_RTC_IRQ_IND				(0x00000004)
+-#define COH901318_CX_STAT_ACTIVE				(0x00000002)
+-#define COH901318_CX_STAT_ENABLED				(0x00000001)
 -
--#define ZX_DMA_BUSWIDTHS \
--	(BIT(DMA_SLAVE_BUSWIDTH_UNDEFINED) | \
--	BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) | \
--	BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | \
--	BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) | \
--	BIT(DMA_SLAVE_BUSWIDTH_8_BYTES))
+-/*
+- * CX_CTRL - Channel Control Registers 32bit (R/W)
+- */
+-#define COH901318_CX_CTRL					(0x0400)
+-#define COH901318_CX_CTRL_SPACING				(0x10)
+-/* Transfer Count Enable */
+-#define COH901318_CX_CTRL_TC_ENABLE				(0x00001000)
+-#define COH901318_CX_CTRL_TC_DISABLE				(0x00000000)
+-/* Transfer Count Value 0 - 4095 */
+-#define COH901318_CX_CTRL_TC_VALUE_MASK				(0x00000FFF)
+-/* Burst count */
+-#define COH901318_CX_CTRL_BURST_COUNT_MASK			(0x0000E000)
+-#define COH901318_CX_CTRL_BURST_COUNT_64_BYTES			(0x7 << 13)
+-#define COH901318_CX_CTRL_BURST_COUNT_48_BYTES			(0x6 << 13)
+-#define COH901318_CX_CTRL_BURST_COUNT_32_BYTES			(0x5 << 13)
+-#define COH901318_CX_CTRL_BURST_COUNT_16_BYTES			(0x4 << 13)
+-#define COH901318_CX_CTRL_BURST_COUNT_8_BYTES			(0x3 << 13)
+-#define COH901318_CX_CTRL_BURST_COUNT_4_BYTES			(0x2 << 13)
+-#define COH901318_CX_CTRL_BURST_COUNT_2_BYTES			(0x1 << 13)
+-#define COH901318_CX_CTRL_BURST_COUNT_1_BYTE			(0x0 << 13)
+-/* Source bus size  */
+-#define COH901318_CX_CTRL_SRC_BUS_SIZE_MASK			(0x00030000)
+-#define COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS			(0x2 << 16)
+-#define COH901318_CX_CTRL_SRC_BUS_SIZE_16_BITS			(0x1 << 16)
+-#define COH901318_CX_CTRL_SRC_BUS_SIZE_8_BITS			(0x0 << 16)
+-/* Source address increment */
+-#define COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE			(0x00040000)
+-#define COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE			(0x00000000)
+-/* Destination Bus Size */
+-#define COH901318_CX_CTRL_DST_BUS_SIZE_MASK			(0x00180000)
+-#define COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS			(0x2 << 19)
+-#define COH901318_CX_CTRL_DST_BUS_SIZE_16_BITS			(0x1 << 19)
+-#define COH901318_CX_CTRL_DST_BUS_SIZE_8_BITS			(0x0 << 19)
+-/* Destination address increment */
+-#define COH901318_CX_CTRL_DST_ADDR_INC_ENABLE			(0x00200000)
+-#define COH901318_CX_CTRL_DST_ADDR_INC_DISABLE			(0x00000000)
+-/* Master Mode (Master2 is only connected to MSL) */
+-#define COH901318_CX_CTRL_MASTER_MODE_MASK			(0x00C00000)
+-#define COH901318_CX_CTRL_MASTER_MODE_M2R_M1W			(0x3 << 22)
+-#define COH901318_CX_CTRL_MASTER_MODE_M1R_M2W			(0x2 << 22)
+-#define COH901318_CX_CTRL_MASTER_MODE_M2RW			(0x1 << 22)
+-#define COH901318_CX_CTRL_MASTER_MODE_M1RW			(0x0 << 22)
+-/* Terminal Count flag to PER enable */
+-#define COH901318_CX_CTRL_TCP_ENABLE				(0x01000000)
+-#define COH901318_CX_CTRL_TCP_DISABLE				(0x00000000)
+-/* Terminal Count flags to CPU enable */
+-#define COH901318_CX_CTRL_TC_IRQ_ENABLE				(0x02000000)
+-#define COH901318_CX_CTRL_TC_IRQ_DISABLE			(0x00000000)
+-/* Hand shake to peripheral */
+-#define COH901318_CX_CTRL_HSP_ENABLE				(0x04000000)
+-#define COH901318_CX_CTRL_HSP_DISABLE				(0x00000000)
+-#define COH901318_CX_CTRL_HSS_ENABLE				(0x08000000)
+-#define COH901318_CX_CTRL_HSS_DISABLE				(0x00000000)
+-/* DMA mode */
+-#define COH901318_CX_CTRL_DDMA_MASK				(0x30000000)
+-#define COH901318_CX_CTRL_DDMA_LEGACY				(0x0 << 28)
+-#define COH901318_CX_CTRL_DDMA_DEMAND_DMA1			(0x1 << 28)
+-#define COH901318_CX_CTRL_DDMA_DEMAND_DMA2			(0x2 << 28)
+-/* Primary Request Data Destination */
+-#define COH901318_CX_CTRL_PRDD_MASK				(0x40000000)
+-#define COH901318_CX_CTRL_PRDD_DEST				(0x1 << 30)
+-#define COH901318_CX_CTRL_PRDD_SOURCE				(0x0 << 30)
 -
--enum zx_dma_burst_width {
--	ZX_DMA_WIDTH_8BIT	= 0,
--	ZX_DMA_WIDTH_16BIT	= 1,
--	ZX_DMA_WIDTH_32BIT	= 2,
--	ZX_DMA_WIDTH_64BIT	= 3,
+-/*
+- * CX_SRC_ADDR - Channel Source Address Registers 32bit (R/W)
+- */
+-#define COH901318_CX_SRC_ADDR					(0x0404)
+-#define COH901318_CX_SRC_ADDR_SPACING				(0x10)
+-
+-/*
+- * CX_DST_ADDR - Channel Destination Address Registers 32bit R/W
+- */
+-#define COH901318_CX_DST_ADDR					(0x0408)
+-#define COH901318_CX_DST_ADDR_SPACING				(0x10)
+-
+-/*
+- * CX_LNK_ADDR - Channel Link Address Registers 32bit (R/W)
+- */
+-#define COH901318_CX_LNK_ADDR					(0x040C)
+-#define COH901318_CX_LNK_ADDR_SPACING				(0x10)
+-#define COH901318_CX_LNK_LINK_IMMEDIATE				(0x00000001)
+-
+-/**
+- * struct coh901318_params - parameters for DMAC configuration
+- * @config: DMA config register
+- * @ctrl_lli_last: DMA control register for the last lli in the list
+- * @ctrl_lli: DMA control register for an lli
+- * @ctrl_lli_chained: DMA control register for a chained lli
+- */
+-struct coh901318_params {
+-	u32 config;
+-	u32 ctrl_lli_last;
+-	u32 ctrl_lli;
+-	u32 ctrl_lli_chained;
 -};
 -
--struct zx_desc_hw {
--	u32 saddr;
--	u32 daddr;
--	u32 src_x;
--	u32 src_zy;
--	u32 src_zy_step;
--	u32 dst_zy_step;
--	u32 reserved1;
--	u32 lli;
--	u32 ctr;
--	u32 reserved[7]; /* pack as hardware registers region size */
--} __aligned(32);
--
--struct zx_dma_desc_sw {
--	struct virt_dma_desc	vd;
--	dma_addr_t		desc_hw_lli;
--	size_t			desc_num;
--	size_t			size;
--	struct zx_desc_hw	*desc_hw;
+-/**
+- * struct coh_dma_channel - dma channel base
+- * @name: ascii name of dma channel
+- * @number: channel id number
+- * @desc_nbr_max: number of preallocated descriptors
+- * @priority_high: prio of channel, 0 low otherwise high.
+- * @param: configuration parameters
+- */
+-struct coh_dma_channel {
+-	const char name[32];
+-	const int number;
+-	const int desc_nbr_max;
+-	const int priority_high;
+-	const struct coh901318_params param;
 -};
 -
--struct zx_dma_phy;
--
--struct zx_dma_chan {
--	struct dma_slave_config slave_cfg;
--	int			id; /* Request phy chan id */
--	u32			ccfg;
--	u32			cyclic;
--	struct virt_dma_chan	vc;
--	struct zx_dma_phy	*phy;
--	struct list_head	node;
--	dma_addr_t		dev_addr;
--	enum dma_status		status;
+-/**
+- * struct powersave - DMA power save structure
+- * @lock: lock protecting data in this struct
+- * @started_channels: bit mask indicating active dma channels
+- */
+-struct powersave {
+-	spinlock_t lock;
+-	u64 started_channels;
 -};
 -
--struct zx_dma_phy {
--	u32			idx;
--	void __iomem		*base;
--	struct zx_dma_chan	*vchan;
--	struct zx_dma_desc_sw	*ds_run;
--	struct zx_dma_desc_sw	*ds_done;
--};
+-/* points out all dma slave channels.
+- * Syntax is [A1, B1, A2, B2, .... ,-1,-1]
+- * Select all channels from A to B, end of list is marked with -1,-1
+- */
+-static int dma_slave_channels[] = {
+-	U300_DMA_MSL_TX_0, U300_DMA_SPI_RX,
+-	U300_DMA_UART1_TX, U300_DMA_UART1_RX, -1, -1};
 -
--struct zx_dma_dev {
--	struct dma_device	slave;
--	void __iomem		*base;
--	spinlock_t		lock; /* lock for ch and phy */
--	struct list_head	chan_pending;
--	struct zx_dma_phy	*phy;
--	struct zx_dma_chan	*chans;
--	struct clk		*clk;
--	struct dma_pool		*pool;
--	u32			dma_channels;
--	u32			dma_requests;
--	int 			irq;
--};
+-/* points out all dma memcpy channels. */
+-static int dma_memcpy_channels[] = {
+-	U300_DMA_GENERAL_PURPOSE_0, U300_DMA_GENERAL_PURPOSE_8, -1, -1};
 -
--#define to_zx_dma(dmadev) container_of(dmadev, struct zx_dma_dev, slave)
+-#define flags_memcpy_config (COH901318_CX_CFG_CH_DISABLE | \
+-			COH901318_CX_CFG_RM_MEMORY_TO_MEMORY | \
+-			COH901318_CX_CFG_LCR_DISABLE | \
+-			COH901318_CX_CFG_TC_IRQ_ENABLE | \
+-			COH901318_CX_CFG_BE_IRQ_ENABLE)
+-#define flags_memcpy_lli_chained (COH901318_CX_CTRL_TC_ENABLE | \
+-			COH901318_CX_CTRL_BURST_COUNT_32_BYTES | \
+-			COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS | \
+-			COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE | \
+-			COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS | \
+-			COH901318_CX_CTRL_DST_ADDR_INC_ENABLE | \
+-			COH901318_CX_CTRL_MASTER_MODE_M1RW | \
+-			COH901318_CX_CTRL_TCP_DISABLE | \
+-			COH901318_CX_CTRL_TC_IRQ_DISABLE | \
+-			COH901318_CX_CTRL_HSP_DISABLE | \
+-			COH901318_CX_CTRL_HSS_DISABLE | \
+-			COH901318_CX_CTRL_DDMA_LEGACY | \
+-			COH901318_CX_CTRL_PRDD_SOURCE)
+-#define flags_memcpy_lli (COH901318_CX_CTRL_TC_ENABLE | \
+-			COH901318_CX_CTRL_BURST_COUNT_32_BYTES | \
+-			COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS | \
+-			COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE | \
+-			COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS | \
+-			COH901318_CX_CTRL_DST_ADDR_INC_ENABLE | \
+-			COH901318_CX_CTRL_MASTER_MODE_M1RW | \
+-			COH901318_CX_CTRL_TCP_DISABLE | \
+-			COH901318_CX_CTRL_TC_IRQ_DISABLE | \
+-			COH901318_CX_CTRL_HSP_DISABLE | \
+-			COH901318_CX_CTRL_HSS_DISABLE | \
+-			COH901318_CX_CTRL_DDMA_LEGACY | \
+-			COH901318_CX_CTRL_PRDD_SOURCE)
+-#define flags_memcpy_lli_last (COH901318_CX_CTRL_TC_ENABLE | \
+-			COH901318_CX_CTRL_BURST_COUNT_32_BYTES | \
+-			COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS | \
+-			COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE | \
+-			COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS | \
+-			COH901318_CX_CTRL_DST_ADDR_INC_ENABLE | \
+-			COH901318_CX_CTRL_MASTER_MODE_M1RW | \
+-			COH901318_CX_CTRL_TCP_DISABLE | \
+-			COH901318_CX_CTRL_TC_IRQ_ENABLE | \
+-			COH901318_CX_CTRL_HSP_DISABLE | \
+-			COH901318_CX_CTRL_HSS_DISABLE | \
+-			COH901318_CX_CTRL_DDMA_LEGACY | \
+-			COH901318_CX_CTRL_PRDD_SOURCE)
 -
--static struct zx_dma_chan *to_zx_chan(struct dma_chan *chan)
--{
--	return container_of(chan, struct zx_dma_chan, vc.chan);
--}
+-static const struct coh_dma_channel chan_config[U300_DMA_CHANNELS] = {
+-	{
+-		.number = U300_DMA_MSL_TX_0,
+-		.name = "MSL TX 0",
+-		.priority_high = 0,
+-	},
+-	{
+-		.number = U300_DMA_MSL_TX_1,
+-		.name = "MSL TX 1",
+-		.priority_high = 0,
+-		.param.config = COH901318_CX_CFG_CH_DISABLE |
+-				COH901318_CX_CFG_LCR_DISABLE |
+-				COH901318_CX_CFG_TC_IRQ_ENABLE |
+-				COH901318_CX_CFG_BE_IRQ_ENABLE,
+-		.param.ctrl_lli_chained = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1R_M2W |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_SOURCE,
+-		.param.ctrl_lli = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1R_M2W |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_SOURCE,
+-		.param.ctrl_lli_last = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1R_M2W |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_SOURCE,
+-	},
+-	{
+-		.number = U300_DMA_MSL_TX_2,
+-		.name = "MSL TX 2",
+-		.priority_high = 0,
+-		.param.config = COH901318_CX_CFG_CH_DISABLE |
+-				COH901318_CX_CFG_LCR_DISABLE |
+-				COH901318_CX_CFG_TC_IRQ_ENABLE |
+-				COH901318_CX_CFG_BE_IRQ_ENABLE,
+-		.param.ctrl_lli_chained = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1R_M2W |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_SOURCE,
+-		.param.ctrl_lli = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1R_M2W |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_SOURCE,
+-		.param.ctrl_lli_last = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1R_M2W |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_SOURCE,
+-		.desc_nbr_max = 10,
+-	},
+-	{
+-		.number = U300_DMA_MSL_TX_3,
+-		.name = "MSL TX 3",
+-		.priority_high = 0,
+-		.param.config = COH901318_CX_CFG_CH_DISABLE |
+-				COH901318_CX_CFG_LCR_DISABLE |
+-				COH901318_CX_CFG_TC_IRQ_ENABLE |
+-				COH901318_CX_CFG_BE_IRQ_ENABLE,
+-		.param.ctrl_lli_chained = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1R_M2W |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_SOURCE,
+-		.param.ctrl_lli = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1R_M2W |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_SOURCE,
+-		.param.ctrl_lli_last = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1R_M2W |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_SOURCE,
+-	},
+-	{
+-		.number = U300_DMA_MSL_TX_4,
+-		.name = "MSL TX 4",
+-		.priority_high = 0,
+-		.param.config = COH901318_CX_CFG_CH_DISABLE |
+-				COH901318_CX_CFG_LCR_DISABLE |
+-				COH901318_CX_CFG_TC_IRQ_ENABLE |
+-				COH901318_CX_CFG_BE_IRQ_ENABLE,
+-		.param.ctrl_lli_chained = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1R_M2W |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_SOURCE,
+-		.param.ctrl_lli = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1R_M2W |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_SOURCE,
+-		.param.ctrl_lli_last = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1R_M2W |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_SOURCE,
+-	},
+-	{
+-		.number = U300_DMA_MSL_TX_5,
+-		.name = "MSL TX 5",
+-		.priority_high = 0,
+-	},
+-	{
+-		.number = U300_DMA_MSL_TX_6,
+-		.name = "MSL TX 6",
+-		.priority_high = 0,
+-	},
+-	{
+-		.number = U300_DMA_MSL_RX_0,
+-		.name = "MSL RX 0",
+-		.priority_high = 0,
+-	},
+-	{
+-		.number = U300_DMA_MSL_RX_1,
+-		.name = "MSL RX 1",
+-		.priority_high = 0,
+-		.param.config = COH901318_CX_CFG_CH_DISABLE |
+-				COH901318_CX_CFG_LCR_DISABLE |
+-				COH901318_CX_CFG_TC_IRQ_ENABLE |
+-				COH901318_CX_CFG_BE_IRQ_ENABLE,
+-		.param.ctrl_lli_chained = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M2R_M1W |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_DEMAND_DMA1 |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-		.param.ctrl_lli = 0,
+-		.param.ctrl_lli_last = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M2R_M1W |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_DEMAND_DMA1 |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-	},
+-	{
+-		.number = U300_DMA_MSL_RX_2,
+-		.name = "MSL RX 2",
+-		.priority_high = 0,
+-		.param.config = COH901318_CX_CFG_CH_DISABLE |
+-				COH901318_CX_CFG_LCR_DISABLE |
+-				COH901318_CX_CFG_TC_IRQ_ENABLE |
+-				COH901318_CX_CFG_BE_IRQ_ENABLE,
+-		.param.ctrl_lli_chained = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M2R_M1W |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_DEMAND_DMA1 |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-		.param.ctrl_lli = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M2R_M1W |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_DEMAND_DMA1 |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-		.param.ctrl_lli_last = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M2R_M1W |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_DEMAND_DMA1 |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-	},
+-	{
+-		.number = U300_DMA_MSL_RX_3,
+-		.name = "MSL RX 3",
+-		.priority_high = 0,
+-		.param.config = COH901318_CX_CFG_CH_DISABLE |
+-				COH901318_CX_CFG_LCR_DISABLE |
+-				COH901318_CX_CFG_TC_IRQ_ENABLE |
+-				COH901318_CX_CFG_BE_IRQ_ENABLE,
+-		.param.ctrl_lli_chained = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M2R_M1W |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_DEMAND_DMA1 |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-		.param.ctrl_lli = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M2R_M1W |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_DEMAND_DMA1 |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-		.param.ctrl_lli_last = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M2R_M1W |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_DEMAND_DMA1 |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-	},
+-	{
+-		.number = U300_DMA_MSL_RX_4,
+-		.name = "MSL RX 4",
+-		.priority_high = 0,
+-		.param.config = COH901318_CX_CFG_CH_DISABLE |
+-				COH901318_CX_CFG_LCR_DISABLE |
+-				COH901318_CX_CFG_TC_IRQ_ENABLE |
+-				COH901318_CX_CFG_BE_IRQ_ENABLE,
+-		.param.ctrl_lli_chained = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M2R_M1W |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_DEMAND_DMA1 |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-		.param.ctrl_lli = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M2R_M1W |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_DEMAND_DMA1 |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-		.param.ctrl_lli_last = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M2R_M1W |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_DEMAND_DMA1 |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-	},
+-	{
+-		.number = U300_DMA_MSL_RX_5,
+-		.name = "MSL RX 5",
+-		.priority_high = 0,
+-		.param.config = COH901318_CX_CFG_CH_DISABLE |
+-				COH901318_CX_CFG_LCR_DISABLE |
+-				COH901318_CX_CFG_TC_IRQ_ENABLE |
+-				COH901318_CX_CFG_BE_IRQ_ENABLE,
+-		.param.ctrl_lli_chained = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M2R_M1W |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_DEMAND_DMA1 |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-		.param.ctrl_lli = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M2R_M1W |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_DEMAND_DMA1 |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-		.param.ctrl_lli_last = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_32_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M2R_M1W |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_DEMAND_DMA1 |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-	},
+-	{
+-		.number = U300_DMA_MSL_RX_6,
+-		.name = "MSL RX 6",
+-		.priority_high = 0,
+-	},
+-	/*
+-	 * Don't set up device address, burst count or size of src
+-	 * or dst bus for this peripheral - handled by PrimeCell
+-	 * DMA extension.
+-	 */
+-	{
+-		.number = U300_DMA_MMCSD_RX_TX,
+-		.name = "MMCSD RX TX",
+-		.priority_high = 0,
+-		.param.config = COH901318_CX_CFG_CH_DISABLE |
+-				COH901318_CX_CFG_LCR_DISABLE |
+-				COH901318_CX_CFG_TC_IRQ_ENABLE |
+-				COH901318_CX_CFG_BE_IRQ_ENABLE,
+-		.param.ctrl_lli_chained = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY,
+-		.param.ctrl_lli = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY,
+-		.param.ctrl_lli_last = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY,
 -
--static void zx_dma_terminate_chan(struct zx_dma_phy *phy, struct zx_dma_dev *d)
--{
--	u32 val = 0;
+-	},
+-	{
+-		.number = U300_DMA_MSPRO_TX,
+-		.name = "MSPRO TX",
+-		.priority_high = 0,
+-	},
+-	{
+-		.number = U300_DMA_MSPRO_RX,
+-		.name = "MSPRO RX",
+-		.priority_high = 0,
+-	},
+-	/*
+-	 * Don't set up device address, burst count or size of src
+-	 * or dst bus for this peripheral - handled by PrimeCell
+-	 * DMA extension.
+-	 */
+-	{
+-		.number = U300_DMA_UART0_TX,
+-		.name = "UART0 TX",
+-		.priority_high = 0,
+-		.param.config = COH901318_CX_CFG_CH_DISABLE |
+-				COH901318_CX_CFG_LCR_DISABLE |
+-				COH901318_CX_CFG_TC_IRQ_ENABLE |
+-				COH901318_CX_CFG_BE_IRQ_ENABLE,
+-		.param.ctrl_lli_chained = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY,
+-		.param.ctrl_lli = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY,
+-		.param.ctrl_lli_last = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY,
+-	},
+-	{
+-		.number = U300_DMA_UART0_RX,
+-		.name = "UART0 RX",
+-		.priority_high = 0,
+-		.param.config = COH901318_CX_CFG_CH_DISABLE |
+-				COH901318_CX_CFG_LCR_DISABLE |
+-				COH901318_CX_CFG_TC_IRQ_ENABLE |
+-				COH901318_CX_CFG_BE_IRQ_ENABLE,
+-		.param.ctrl_lli_chained = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY,
+-		.param.ctrl_lli = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY,
+-		.param.ctrl_lli_last = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY,
+-	},
+-	{
+-		.number = U300_DMA_APEX_TX,
+-		.name = "APEX TX",
+-		.priority_high = 0,
+-	},
+-	{
+-		.number = U300_DMA_APEX_RX,
+-		.name = "APEX RX",
+-		.priority_high = 0,
+-	},
+-	{
+-		.number = U300_DMA_PCM_I2S0_TX,
+-		.name = "PCM I2S0 TX",
+-		.priority_high = 1,
+-		.param.config = COH901318_CX_CFG_CH_DISABLE |
+-				COH901318_CX_CFG_LCR_DISABLE |
+-				COH901318_CX_CFG_TC_IRQ_ENABLE |
+-				COH901318_CX_CFG_BE_IRQ_ENABLE,
+-		.param.ctrl_lli_chained = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_16_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_SOURCE,
+-		.param.ctrl_lli = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_16_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_SOURCE,
+-		.param.ctrl_lli_last = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_16_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_SOURCE,
+-	},
+-	{
+-		.number = U300_DMA_PCM_I2S0_RX,
+-		.name = "PCM I2S0 RX",
+-		.priority_high = 1,
+-		.param.config = COH901318_CX_CFG_CH_DISABLE |
+-				COH901318_CX_CFG_LCR_DISABLE |
+-				COH901318_CX_CFG_TC_IRQ_ENABLE |
+-				COH901318_CX_CFG_BE_IRQ_ENABLE,
+-		.param.ctrl_lli_chained = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_16_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-		.param.ctrl_lli = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_16_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-		.param.ctrl_lli_last = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_16_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-	},
+-	{
+-		.number = U300_DMA_PCM_I2S1_TX,
+-		.name = "PCM I2S1 TX",
+-		.priority_high = 1,
+-		.param.config = COH901318_CX_CFG_CH_DISABLE |
+-				COH901318_CX_CFG_LCR_DISABLE |
+-				COH901318_CX_CFG_TC_IRQ_ENABLE |
+-				COH901318_CX_CFG_BE_IRQ_ENABLE,
+-		.param.ctrl_lli_chained = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_16_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_SOURCE,
+-		.param.ctrl_lli = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_16_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_SOURCE,
+-		.param.ctrl_lli_last = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_16_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_SOURCE,
+-	},
+-	{
+-		.number = U300_DMA_PCM_I2S1_RX,
+-		.name = "PCM I2S1 RX",
+-		.priority_high = 1,
+-		.param.config = COH901318_CX_CFG_CH_DISABLE |
+-				COH901318_CX_CFG_LCR_DISABLE |
+-				COH901318_CX_CFG_TC_IRQ_ENABLE |
+-				COH901318_CX_CFG_BE_IRQ_ENABLE,
+-		.param.ctrl_lli_chained = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_16_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-		.param.ctrl_lli = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_16_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-		.param.ctrl_lli_last = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_BURST_COUNT_16_BYTES |
+-				COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_SRC_ADDR_INC_DISABLE |
+-				COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS |
+-				COH901318_CX_CTRL_DST_ADDR_INC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_ENABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY |
+-				COH901318_CX_CTRL_PRDD_DEST,
+-	},
+-	{
+-		.number = U300_DMA_XGAM_CDI,
+-		.name = "XGAM CDI",
+-		.priority_high = 0,
+-	},
+-	{
+-		.number = U300_DMA_XGAM_PDI,
+-		.name = "XGAM PDI",
+-		.priority_high = 0,
+-	},
+-	/*
+-	 * Don't set up device address, burst count or size of src
+-	 * or dst bus for this peripheral - handled by PrimeCell
+-	 * DMA extension.
+-	 */
+-	{
+-		.number = U300_DMA_SPI_TX,
+-		.name = "SPI TX",
+-		.priority_high = 0,
+-		.param.config = COH901318_CX_CFG_CH_DISABLE |
+-				COH901318_CX_CFG_LCR_DISABLE |
+-				COH901318_CX_CFG_TC_IRQ_ENABLE |
+-				COH901318_CX_CFG_BE_IRQ_ENABLE,
+-		.param.ctrl_lli_chained = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY,
+-		.param.ctrl_lli = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY,
+-		.param.ctrl_lli_last = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY,
+-	},
+-	{
+-		.number = U300_DMA_SPI_RX,
+-		.name = "SPI RX",
+-		.priority_high = 0,
+-		.param.config = COH901318_CX_CFG_CH_DISABLE |
+-				COH901318_CX_CFG_LCR_DISABLE |
+-				COH901318_CX_CFG_TC_IRQ_ENABLE |
+-				COH901318_CX_CFG_BE_IRQ_ENABLE,
+-		.param.ctrl_lli_chained = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_DISABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY,
+-		.param.ctrl_lli = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY,
+-		.param.ctrl_lli_last = 0 |
+-				COH901318_CX_CTRL_TC_ENABLE |
+-				COH901318_CX_CTRL_MASTER_MODE_M1RW |
+-				COH901318_CX_CTRL_TCP_DISABLE |
+-				COH901318_CX_CTRL_TC_IRQ_ENABLE |
+-				COH901318_CX_CTRL_HSP_ENABLE |
+-				COH901318_CX_CTRL_HSS_DISABLE |
+-				COH901318_CX_CTRL_DDMA_LEGACY,
 -
--	val = readl_relaxed(phy->base + REG_ZX_CTRL);
--	val &= ~ZX_CH_ENABLE;
--	val |= ZX_FORCE_CLOSE;
--	writel_relaxed(val, phy->base + REG_ZX_CTRL);
+-	},
+-	{
+-		.number = U300_DMA_GENERAL_PURPOSE_0,
+-		.name = "GENERAL 00",
+-		.priority_high = 0,
 -
--	val = 0x1 << phy->idx;
--	writel_relaxed(val, d->base + REG_ZX_TC_IRQ_RAW);
--	writel_relaxed(val, d->base + REG_ZX_SRC_ERR_IRQ_RAW);
--	writel_relaxed(val, d->base + REG_ZX_DST_ERR_IRQ_RAW);
--	writel_relaxed(val, d->base + REG_ZX_CFG_ERR_IRQ_RAW);
--}
+-		.param.config = flags_memcpy_config,
+-		.param.ctrl_lli_chained = flags_memcpy_lli_chained,
+-		.param.ctrl_lli = flags_memcpy_lli,
+-		.param.ctrl_lli_last = flags_memcpy_lli_last,
+-	},
+-	{
+-		.number = U300_DMA_GENERAL_PURPOSE_1,
+-		.name = "GENERAL 01",
+-		.priority_high = 0,
 -
--static void zx_dma_set_desc(struct zx_dma_phy *phy, struct zx_desc_hw *hw)
--{
--	writel_relaxed(hw->saddr, phy->base + REG_ZX_SRC_ADDR);
--	writel_relaxed(hw->daddr, phy->base + REG_ZX_DST_ADDR);
--	writel_relaxed(hw->src_x, phy->base + REG_ZX_TX_X_COUNT);
--	writel_relaxed(0, phy->base + REG_ZX_TX_ZY_COUNT);
--	writel_relaxed(0, phy->base + REG_ZX_SRC_ZY_STEP);
--	writel_relaxed(0, phy->base + REG_ZX_DST_ZY_STEP);
--	writel_relaxed(hw->lli, phy->base + REG_ZX_LLI_ADDR);
--	writel_relaxed(hw->ctr, phy->base + REG_ZX_CTRL);
--}
+-		.param.config = flags_memcpy_config,
+-		.param.ctrl_lli_chained = flags_memcpy_lli_chained,
+-		.param.ctrl_lli = flags_memcpy_lli,
+-		.param.ctrl_lli_last = flags_memcpy_lli_last,
+-	},
+-	{
+-		.number = U300_DMA_GENERAL_PURPOSE_2,
+-		.name = "GENERAL 02",
+-		.priority_high = 0,
 -
--static u32 zx_dma_get_curr_lli(struct zx_dma_phy *phy)
--{
--	return readl_relaxed(phy->base + REG_ZX_LLI_ADDR);
--}
+-		.param.config = flags_memcpy_config,
+-		.param.ctrl_lli_chained = flags_memcpy_lli_chained,
+-		.param.ctrl_lli = flags_memcpy_lli,
+-		.param.ctrl_lli_last = flags_memcpy_lli_last,
+-	},
+-	{
+-		.number = U300_DMA_GENERAL_PURPOSE_3,
+-		.name = "GENERAL 03",
+-		.priority_high = 0,
 -
--static u32 zx_dma_get_chan_stat(struct zx_dma_dev *d)
--{
--	return readl_relaxed(d->base + REG_ZX_STATUS);
--}
+-		.param.config = flags_memcpy_config,
+-		.param.ctrl_lli_chained = flags_memcpy_lli_chained,
+-		.param.ctrl_lli = flags_memcpy_lli,
+-		.param.ctrl_lli_last = flags_memcpy_lli_last,
+-	},
+-	{
+-		.number = U300_DMA_GENERAL_PURPOSE_4,
+-		.name = "GENERAL 04",
+-		.priority_high = 0,
 -
--static void zx_dma_init_state(struct zx_dma_dev *d)
--{
--	/* set same priority */
--	writel_relaxed(0x0, d->base + REG_ZX_DMA_ARB);
--	/* clear all irq */
--	writel_relaxed(0xffffffff, d->base + REG_ZX_TC_IRQ_RAW);
--	writel_relaxed(0xffffffff, d->base + REG_ZX_SRC_ERR_IRQ_RAW);
--	writel_relaxed(0xffffffff, d->base + REG_ZX_DST_ERR_IRQ_RAW);
--	writel_relaxed(0xffffffff, d->base + REG_ZX_CFG_ERR_IRQ_RAW);
--}
+-		.param.config = flags_memcpy_config,
+-		.param.ctrl_lli_chained = flags_memcpy_lli_chained,
+-		.param.ctrl_lli = flags_memcpy_lli,
+-		.param.ctrl_lli_last = flags_memcpy_lli_last,
+-	},
+-	{
+-		.number = U300_DMA_GENERAL_PURPOSE_5,
+-		.name = "GENERAL 05",
+-		.priority_high = 0,
 -
--static int zx_dma_start_txd(struct zx_dma_chan *c)
--{
--	struct zx_dma_dev *d = to_zx_dma(c->vc.chan.device);
--	struct virt_dma_desc *vd = vchan_next_desc(&c->vc);
+-		.param.config = flags_memcpy_config,
+-		.param.ctrl_lli_chained = flags_memcpy_lli_chained,
+-		.param.ctrl_lli = flags_memcpy_lli,
+-		.param.ctrl_lli_last = flags_memcpy_lli_last,
+-	},
+-	{
+-		.number = U300_DMA_GENERAL_PURPOSE_6,
+-		.name = "GENERAL 06",
+-		.priority_high = 0,
 -
--	if (!c->phy)
--		return -EAGAIN;
+-		.param.config = flags_memcpy_config,
+-		.param.ctrl_lli_chained = flags_memcpy_lli_chained,
+-		.param.ctrl_lli = flags_memcpy_lli,
+-		.param.ctrl_lli_last = flags_memcpy_lli_last,
+-	},
+-	{
+-		.number = U300_DMA_GENERAL_PURPOSE_7,
+-		.name = "GENERAL 07",
+-		.priority_high = 0,
 -
--	if (BIT(c->phy->idx) & zx_dma_get_chan_stat(d))
--		return -EAGAIN;
+-		.param.config = flags_memcpy_config,
+-		.param.ctrl_lli_chained = flags_memcpy_lli_chained,
+-		.param.ctrl_lli = flags_memcpy_lli,
+-		.param.ctrl_lli_last = flags_memcpy_lli_last,
+-	},
+-	{
+-		.number = U300_DMA_GENERAL_PURPOSE_8,
+-		.name = "GENERAL 08",
+-		.priority_high = 0,
 -
--	if (vd) {
--		struct zx_dma_desc_sw *ds =
--			container_of(vd, struct zx_dma_desc_sw, vd);
--		/*
--		 * fetch and remove request from vc->desc_issued
--		 * so vc->desc_issued only contains desc pending
--		 */
--		list_del(&ds->vd.node);
--		c->phy->ds_run = ds;
--		c->phy->ds_done = NULL;
--		/* start dma */
--		zx_dma_set_desc(c->phy, ds->desc_hw);
--		return 0;
+-		.param.config = flags_memcpy_config,
+-		.param.ctrl_lli_chained = flags_memcpy_lli_chained,
+-		.param.ctrl_lli = flags_memcpy_lli,
+-		.param.ctrl_lli_last = flags_memcpy_lli_last,
+-	},
+-	{
+-		.number = U300_DMA_UART1_TX,
+-		.name = "UART1 TX",
+-		.priority_high = 0,
+-	},
+-	{
+-		.number = U300_DMA_UART1_RX,
+-		.name = "UART1 RX",
+-		.priority_high = 0,
 -	}
--	c->phy->ds_done = NULL;
--	c->phy->ds_run = NULL;
--	return -EAGAIN;
--}
+-};
 -
--static void zx_dma_task(struct zx_dma_dev *d)
--{
--	struct zx_dma_phy *p;
--	struct zx_dma_chan *c, *cn;
--	unsigned pch, pch_alloc = 0;
+-#define COHC_2_DEV(cohc) (&cohc->chan.dev->device)
+-
+-#ifdef VERBOSE_DEBUG
+-#define COH_DBG(x) ({ if (1) x; 0; })
+-#else
+-#define COH_DBG(x) ({ if (0) x; 0; })
+-#endif
+-
+-struct coh901318_desc {
+-	struct dma_async_tx_descriptor desc;
+-	struct list_head node;
+-	struct scatterlist *sg;
+-	unsigned int sg_len;
+-	struct coh901318_lli *lli;
+-	enum dma_transfer_direction dir;
 -	unsigned long flags;
+-	u32 head_config;
+-	u32 head_ctrl;
+-};
 -
--	/* check new dma request of running channel in vc->desc_issued */
--	list_for_each_entry_safe(c, cn, &d->slave.channels,
--				 vc.chan.device_node) {
--		spin_lock_irqsave(&c->vc.lock, flags);
--		p = c->phy;
--		if (p && p->ds_done && zx_dma_start_txd(c)) {
--			/* No current txd associated with this channel */
--			dev_dbg(d->slave.dev, "pchan %u: free\n", p->idx);
--			/* Mark this channel free */
--			c->phy = NULL;
--			p->vchan = NULL;
--		}
--		spin_unlock_irqrestore(&c->vc.lock, flags);
--	}
+-struct coh901318_base {
+-	struct device *dev;
+-	void __iomem *virtbase;
+-	unsigned int irq;
+-	struct coh901318_pool pool;
+-	struct powersave pm;
+-	struct dma_device dma_slave;
+-	struct dma_device dma_memcpy;
+-	struct coh901318_chan *chans;
+-};
 -
--	/* check new channel request in d->chan_pending */
--	spin_lock_irqsave(&d->lock, flags);
--	while (!list_empty(&d->chan_pending)) {
--		c = list_first_entry(&d->chan_pending,
--				     struct zx_dma_chan, node);
--		p = &d->phy[c->id];
--		if (!p->vchan) {
--			/* remove from d->chan_pending */
--			list_del_init(&c->node);
--			pch_alloc |= 1 << c->id;
--			/* Mark this channel allocated */
--			p->vchan = c;
--			c->phy = p;
--		} else {
--			dev_dbg(d->slave.dev, "pchan %u: busy!\n", c->id);
--		}
--	}
--	spin_unlock_irqrestore(&d->lock, flags);
+-struct coh901318_chan {
+-	spinlock_t lock;
+-	int allocated;
+-	int id;
+-	int stopped;
 -
--	for (pch = 0; pch < d->dma_channels; pch++) {
--		if (pch_alloc & (1 << pch)) {
--			p = &d->phy[pch];
--			c = p->vchan;
--			if (c) {
--				spin_lock_irqsave(&c->vc.lock, flags);
--				zx_dma_start_txd(c);
--				spin_unlock_irqrestore(&c->vc.lock, flags);
--			}
--		}
+-	struct work_struct free_work;
+-	struct dma_chan chan;
+-
+-	struct tasklet_struct tasklet;
+-
+-	struct list_head active;
+-	struct list_head queue;
+-	struct list_head free;
+-
+-	unsigned long nbr_active_done;
+-	unsigned long busy;
+-
+-	struct dma_slave_config config;
+-	u32 addr;
+-	u32 ctrl;
+-
+-	struct coh901318_base *base;
+-};
+-
+-static void coh901318_list_print(struct coh901318_chan *cohc,
+-				 struct coh901318_lli *lli)
+-{
+-	struct coh901318_lli *l = lli;
+-	int i = 0;
+-
+-	while (l) {
+-		dev_vdbg(COHC_2_DEV(cohc), "i %d, lli %p, ctrl 0x%x, src %pad"
+-			 ", dst %pad, link %pad virt_link_addr 0x%p\n",
+-			 i, l, l->control, &l->src_addr, &l->dst_addr,
+-			 &l->link_addr, l->virt_link_addr);
+-		i++;
+-		l = l->virt_link_addr;
 -	}
 -}
 -
--static irqreturn_t zx_dma_int_handler(int irq, void *dev_id)
--{
--	struct zx_dma_dev *d = (struct zx_dma_dev *)dev_id;
--	struct zx_dma_phy *p;
--	struct zx_dma_chan *c;
--	u32 tc = readl_relaxed(d->base + REG_ZX_TC_IRQ);
--	u32 serr = readl_relaxed(d->base + REG_ZX_SRC_ERR_IRQ);
--	u32 derr = readl_relaxed(d->base + REG_ZX_DST_ERR_IRQ);
--	u32 cfg = readl_relaxed(d->base + REG_ZX_CFG_ERR_IRQ);
--	u32 i, irq_chan = 0, task = 0;
+-#ifdef CONFIG_DEBUG_FS
 -
--	while (tc) {
--		i = __ffs(tc);
--		tc &= ~BIT(i);
--		p = &d->phy[i];
--		c = p->vchan;
--		if (c) {
--			spin_lock(&c->vc.lock);
--			if (c->cyclic) {
--				vchan_cyclic_callback(&p->ds_run->vd);
--			} else {
--				vchan_cookie_complete(&p->ds_run->vd);
--				p->ds_done = p->ds_run;
--				task = 1;
--			}
--			spin_unlock(&c->vc.lock);
--			irq_chan |= BIT(i);
--		}
+-#define COH901318_DEBUGFS_ASSIGN(x, y) (x = y)
+-
+-static struct coh901318_base *debugfs_dma_base;
+-static struct dentry *dma_dentry;
+-
+-static ssize_t coh901318_debugfs_read(struct file *file, char __user *buf,
+-				  size_t count, loff_t *f_pos)
+-{
+-	u64 started_channels = debugfs_dma_base->pm.started_channels;
+-	int pool_count = debugfs_dma_base->pool.debugfs_pool_counter;
+-	char *dev_buf;
+-	char *tmp;
+-	int ret;
+-	int i;
+-
+-	dev_buf = kmalloc(4*1024, GFP_KERNEL);
+-	if (dev_buf == NULL)
+-		return -ENOMEM;
+-	tmp = dev_buf;
+-
+-	tmp += sprintf(tmp, "DMA -- enabled dma channels\n");
+-
+-	for (i = 0; i < U300_DMA_CHANNELS; i++) {
+-		if (started_channels & (1ULL << i))
+-			tmp += sprintf(tmp, "channel %d\n", i);
 -	}
 -
--	if (serr || derr || cfg)
--		dev_warn(d->slave.dev, "DMA ERR src 0x%x, dst 0x%x, cfg 0x%x\n",
--			 serr, derr, cfg);
+-	tmp += sprintf(tmp, "Pool alloc nbr %d\n", pool_count);
 -
--	writel_relaxed(irq_chan, d->base + REG_ZX_TC_IRQ_RAW);
--	writel_relaxed(serr, d->base + REG_ZX_SRC_ERR_IRQ_RAW);
--	writel_relaxed(derr, d->base + REG_ZX_DST_ERR_IRQ_RAW);
--	writel_relaxed(cfg, d->base + REG_ZX_CFG_ERR_IRQ_RAW);
+-	ret = simple_read_from_buffer(buf, count, f_pos, dev_buf, 
+-					tmp - dev_buf);
+-	kfree(dev_buf);
+-	return ret;
+-}
 -
--	if (task)
--		zx_dma_task(d);
+-static const struct file_operations coh901318_debugfs_status_operations = {
+-	.open		= simple_open,
+-	.read		= coh901318_debugfs_read,
+-	.llseek		= default_llseek,
+-};
+-
+-
+-static int __init init_coh901318_debugfs(void)
+-{
+-
+-	dma_dentry = debugfs_create_dir("dma", NULL);
+-
+-	debugfs_create_file("status", S_IFREG | S_IRUGO, dma_dentry, NULL,
+-			    &coh901318_debugfs_status_operations);
+-	return 0;
+-}
+-
+-static void __exit exit_coh901318_debugfs(void)
+-{
+-	debugfs_remove_recursive(dma_dentry);
+-}
+-
+-module_init(init_coh901318_debugfs);
+-module_exit(exit_coh901318_debugfs);
+-#else
+-
+-#define COH901318_DEBUGFS_ASSIGN(x, y)
+-
+-#endif /* CONFIG_DEBUG_FS */
+-
+-static inline struct coh901318_chan *to_coh901318_chan(struct dma_chan *chan)
+-{
+-	return container_of(chan, struct coh901318_chan, chan);
+-}
+-
+-static int coh901318_dma_set_runtimeconfig(struct dma_chan *chan,
+-					   struct dma_slave_config *config,
+-					   enum dma_transfer_direction direction);
+-
+-static inline const struct coh901318_params *
+-cohc_chan_param(struct coh901318_chan *cohc)
+-{
+-	return &chan_config[cohc->id].param;
+-}
+-
+-static inline const struct coh_dma_channel *
+-cohc_chan_conf(struct coh901318_chan *cohc)
+-{
+-	return &chan_config[cohc->id];
+-}
+-
+-static void enable_powersave(struct coh901318_chan *cohc)
+-{
+-	unsigned long flags;
+-	struct powersave *pm = &cohc->base->pm;
+-
+-	spin_lock_irqsave(&pm->lock, flags);
+-
+-	pm->started_channels &= ~(1ULL << cohc->id);
+-
+-	spin_unlock_irqrestore(&pm->lock, flags);
+-}
+-static void disable_powersave(struct coh901318_chan *cohc)
+-{
+-	unsigned long flags;
+-	struct powersave *pm = &cohc->base->pm;
+-
+-	spin_lock_irqsave(&pm->lock, flags);
+-
+-	pm->started_channels |= (1ULL << cohc->id);
+-
+-	spin_unlock_irqrestore(&pm->lock, flags);
+-}
+-
+-static inline int coh901318_set_ctrl(struct coh901318_chan *cohc, u32 control)
+-{
+-	int channel = cohc->id;
+-	void __iomem *virtbase = cohc->base->virtbase;
+-
+-	writel(control,
+-	       virtbase + COH901318_CX_CTRL +
+-	       COH901318_CX_CTRL_SPACING * channel);
+-	return 0;
+-}
+-
+-static inline int coh901318_set_conf(struct coh901318_chan *cohc, u32 conf)
+-{
+-	int channel = cohc->id;
+-	void __iomem *virtbase = cohc->base->virtbase;
+-
+-	writel(conf,
+-	       virtbase + COH901318_CX_CFG +
+-	       COH901318_CX_CFG_SPACING*channel);
+-	return 0;
+-}
+-
+-
+-static int coh901318_start(struct coh901318_chan *cohc)
+-{
+-	u32 val;
+-	int channel = cohc->id;
+-	void __iomem *virtbase = cohc->base->virtbase;
+-
+-	disable_powersave(cohc);
+-
+-	val = readl(virtbase + COH901318_CX_CFG +
+-		    COH901318_CX_CFG_SPACING * channel);
+-
+-	/* Enable channel */
+-	val |= COH901318_CX_CFG_CH_ENABLE;
+-	writel(val, virtbase + COH901318_CX_CFG +
+-	       COH901318_CX_CFG_SPACING * channel);
+-
+-	return 0;
+-}
+-
+-static int coh901318_prep_linked_list(struct coh901318_chan *cohc,
+-				      struct coh901318_lli *lli)
+-{
+-	int channel = cohc->id;
+-	void __iomem *virtbase = cohc->base->virtbase;
+-
+-	BUG_ON(readl(virtbase + COH901318_CX_STAT +
+-		     COH901318_CX_STAT_SPACING*channel) &
+-	       COH901318_CX_STAT_ACTIVE);
+-
+-	writel(lli->src_addr,
+-	       virtbase + COH901318_CX_SRC_ADDR +
+-	       COH901318_CX_SRC_ADDR_SPACING * channel);
+-
+-	writel(lli->dst_addr, virtbase +
+-	       COH901318_CX_DST_ADDR +
+-	       COH901318_CX_DST_ADDR_SPACING * channel);
+-
+-	writel(lli->link_addr, virtbase + COH901318_CX_LNK_ADDR +
+-	       COH901318_CX_LNK_ADDR_SPACING * channel);
+-
+-	writel(lli->control, virtbase + COH901318_CX_CTRL +
+-	       COH901318_CX_CTRL_SPACING * channel);
+-
+-	return 0;
+-}
+-
+-static struct coh901318_desc *
+-coh901318_desc_get(struct coh901318_chan *cohc)
+-{
+-	struct coh901318_desc *desc;
+-
+-	if (list_empty(&cohc->free)) {
+-		/* alloc new desc because we're out of used ones
+-		 * TODO: alloc a pile of descs instead of just one,
+-		 * avoid many small allocations.
+-		 */
+-		desc = kzalloc(sizeof(struct coh901318_desc), GFP_NOWAIT);
+-		if (desc == NULL)
+-			goto out;
+-		INIT_LIST_HEAD(&desc->node);
+-		dma_async_tx_descriptor_init(&desc->desc, &cohc->chan);
+-	} else {
+-		/* Reuse an old desc. */
+-		desc = list_first_entry(&cohc->free,
+-					struct coh901318_desc,
+-					node);
+-		list_del(&desc->node);
+-		/* Initialize it a bit so it's not insane */
+-		desc->sg = NULL;
+-		desc->sg_len = 0;
+-		desc->desc.callback = NULL;
+-		desc->desc.callback_param = NULL;
+-	}
+-
+- out:
+-	return desc;
+-}
+-
+-static void
+-coh901318_desc_free(struct coh901318_chan *cohc, struct coh901318_desc *cohd)
+-{
+-	list_add_tail(&cohd->node, &cohc->free);
+-}
+-
+-/* call with irq lock held */
+-static void
+-coh901318_desc_submit(struct coh901318_chan *cohc, struct coh901318_desc *desc)
+-{
+-	list_add_tail(&desc->node, &cohc->active);
+-}
+-
+-static struct coh901318_desc *
+-coh901318_first_active_get(struct coh901318_chan *cohc)
+-{
+-	return list_first_entry_or_null(&cohc->active, struct coh901318_desc,
+-					node);
+-}
+-
+-static void
+-coh901318_desc_remove(struct coh901318_desc *cohd)
+-{
+-	list_del(&cohd->node);
+-}
+-
+-static void
+-coh901318_desc_queue(struct coh901318_chan *cohc, struct coh901318_desc *desc)
+-{
+-	list_add_tail(&desc->node, &cohc->queue);
+-}
+-
+-static struct coh901318_desc *
+-coh901318_first_queued(struct coh901318_chan *cohc)
+-{
+-	return list_first_entry_or_null(&cohc->queue, struct coh901318_desc,
+-					node);
+-}
+-
+-static inline u32 coh901318_get_bytes_in_lli(struct coh901318_lli *in_lli)
+-{
+-	struct coh901318_lli *lli = in_lli;
+-	u32 bytes = 0;
+-
+-	while (lli) {
+-		bytes += lli->control & COH901318_CX_CTRL_TC_VALUE_MASK;
+-		lli = lli->virt_link_addr;
+-	}
+-	return bytes;
+-}
+-
+-/*
+- * Get the number of bytes left to transfer on this channel,
+- * it is unwise to call this before stopping the channel for
+- * absolute measures, but for a rough guess you can still call
+- * it.
+- */
+-static u32 coh901318_get_bytes_left(struct dma_chan *chan)
+-{
+-	struct coh901318_chan *cohc = to_coh901318_chan(chan);
+-	struct coh901318_desc *cohd;
+-	struct list_head *pos;
+-	unsigned long flags;
+-	u32 left = 0;
+-	int i = 0;
+-
+-	spin_lock_irqsave(&cohc->lock, flags);
+-
+-	/*
+-	 * If there are many queued jobs, we iterate and add the
+-	 * size of them all. We take a special look on the first
+-	 * job though, since it is probably active.
+-	 */
+-	list_for_each(pos, &cohc->active) {
+-		/*
+-		 * The first job in the list will be working on the
+-		 * hardware. The job can be stopped but still active,
+-		 * so that the transfer counter is somewhere inside
+-		 * the buffer.
+-		 */
+-		cohd = list_entry(pos, struct coh901318_desc, node);
+-
+-		if (i == 0) {
+-			struct coh901318_lli *lli;
+-			dma_addr_t ladd;
+-
+-			/* Read current transfer count value */
+-			left = readl(cohc->base->virtbase +
+-				     COH901318_CX_CTRL +
+-				     COH901318_CX_CTRL_SPACING * cohc->id) &
+-				COH901318_CX_CTRL_TC_VALUE_MASK;
+-
+-			/* See if the transfer is linked... */
+-			ladd = readl(cohc->base->virtbase +
+-				     COH901318_CX_LNK_ADDR +
+-				     COH901318_CX_LNK_ADDR_SPACING *
+-				     cohc->id) &
+-				~COH901318_CX_LNK_LINK_IMMEDIATE;
+-			/* Single transaction */
+-			if (!ladd)
+-				continue;
+-
+-			/*
+-			 * Linked transaction, follow the lli, find the
+-			 * currently processing lli, and proceed to the next
+-			 */
+-			lli = cohd->lli;
+-			while (lli && lli->link_addr != ladd)
+-				lli = lli->virt_link_addr;
+-
+-			if (lli)
+-				lli = lli->virt_link_addr;
+-
+-			/*
+-			 * Follow remaining lli links around to count the total
+-			 * number of bytes left
+-			 */
+-			left += coh901318_get_bytes_in_lli(lli);
+-		} else {
+-			left += coh901318_get_bytes_in_lli(cohd->lli);
+-		}
+-		i++;
+-	}
+-
+-	/* Also count bytes in the queued jobs */
+-	list_for_each(pos, &cohc->queue) {
+-		cohd = list_entry(pos, struct coh901318_desc, node);
+-		left += coh901318_get_bytes_in_lli(cohd->lli);
+-	}
+-
+-	spin_unlock_irqrestore(&cohc->lock, flags);
+-
+-	return left;
+-}
+-
+-/*
+- * Pauses a transfer without losing data. Enables power save.
+- * Use this function in conjunction with coh901318_resume.
+- */
+-static int coh901318_pause(struct dma_chan *chan)
+-{
+-	u32 val;
+-	unsigned long flags;
+-	struct coh901318_chan *cohc = to_coh901318_chan(chan);
+-	int channel = cohc->id;
+-	void __iomem *virtbase = cohc->base->virtbase;
+-
+-	spin_lock_irqsave(&cohc->lock, flags);
+-
+-	/* Disable channel in HW */
+-	val = readl(virtbase + COH901318_CX_CFG +
+-		    COH901318_CX_CFG_SPACING * channel);
+-
+-	/* Stopping infinite transfer */
+-	if ((val & COH901318_CX_CTRL_TC_ENABLE) == 0 &&
+-	    (val & COH901318_CX_CFG_CH_ENABLE))
+-		cohc->stopped = 1;
+-
+-
+-	val &= ~COH901318_CX_CFG_CH_ENABLE;
+-	/* Enable twice, HW bug work around */
+-	writel(val, virtbase + COH901318_CX_CFG +
+-	       COH901318_CX_CFG_SPACING * channel);
+-	writel(val, virtbase + COH901318_CX_CFG +
+-	       COH901318_CX_CFG_SPACING * channel);
+-
+-	/* Spin-wait for it to actually go inactive */
+-	while (readl(virtbase + COH901318_CX_STAT+COH901318_CX_STAT_SPACING *
+-		     channel) & COH901318_CX_STAT_ACTIVE)
+-		cpu_relax();
+-
+-	/* Check if we stopped an active job */
+-	if ((readl(virtbase + COH901318_CX_CTRL+COH901318_CX_CTRL_SPACING *
+-		   channel) & COH901318_CX_CTRL_TC_VALUE_MASK) > 0)
+-		cohc->stopped = 1;
+-
+-	enable_powersave(cohc);
+-
+-	spin_unlock_irqrestore(&cohc->lock, flags);
+-	return 0;
+-}
+-
+-/* Resumes a transfer that has been stopped via 300_dma_stop(..).
+-   Power save is handled.
+-*/
+-static int coh901318_resume(struct dma_chan *chan)
+-{
+-	u32 val;
+-	unsigned long flags;
+-	struct coh901318_chan *cohc = to_coh901318_chan(chan);
+-	int channel = cohc->id;
+-
+-	spin_lock_irqsave(&cohc->lock, flags);
+-
+-	disable_powersave(cohc);
+-
+-	if (cohc->stopped) {
+-		/* Enable channel in HW */
+-		val = readl(cohc->base->virtbase + COH901318_CX_CFG +
+-			    COH901318_CX_CFG_SPACING * channel);
+-
+-		val |= COH901318_CX_CFG_CH_ENABLE;
+-
+-		writel(val, cohc->base->virtbase + COH901318_CX_CFG +
+-		       COH901318_CX_CFG_SPACING*channel);
+-
+-		cohc->stopped = 0;
+-	}
+-
+-	spin_unlock_irqrestore(&cohc->lock, flags);
+-	return 0;
+-}
+-
+-bool coh901318_filter_id(struct dma_chan *chan, void *chan_id)
+-{
+-	unsigned long ch_nr = (unsigned long) chan_id;
+-
+-	if (ch_nr == to_coh901318_chan(chan)->id)
+-		return true;
+-
+-	return false;
+-}
+-EXPORT_SYMBOL(coh901318_filter_id);
+-
+-struct coh901318_filter_args {
+-	struct coh901318_base *base;
+-	unsigned int ch_nr;
+-};
+-
+-static bool coh901318_filter_base_and_id(struct dma_chan *chan, void *data)
+-{
+-	struct coh901318_filter_args *args = data;
+-
+-	if (&args->base->dma_slave == chan->device &&
+-	    args->ch_nr == to_coh901318_chan(chan)->id)
+-		return true;
+-
+-	return false;
+-}
+-
+-static struct dma_chan *coh901318_xlate(struct of_phandle_args *dma_spec,
+-					struct of_dma *ofdma)
+-{
+-	struct coh901318_filter_args args = {
+-		.base = ofdma->of_dma_data,
+-		.ch_nr = dma_spec->args[0],
+-	};
+-	dma_cap_mask_t cap;
+-	dma_cap_zero(cap);
+-	dma_cap_set(DMA_SLAVE, cap);
+-
+-	return dma_request_channel(cap, coh901318_filter_base_and_id, &args);
+-}
+-/*
+- * DMA channel allocation
+- */
+-static int coh901318_config(struct coh901318_chan *cohc,
+-			    struct coh901318_params *param)
+-{
+-	const struct coh901318_params *p;
+-	int channel = cohc->id;
+-	void __iomem *virtbase = cohc->base->virtbase;
+-
+-	if (param)
+-		p = param;
+-	else
+-		p = cohc_chan_param(cohc);
+-
+-	/* Clear any pending BE or TC interrupt */
+-	if (channel < 32) {
+-		writel(1 << channel, virtbase + COH901318_BE_INT_CLEAR1);
+-		writel(1 << channel, virtbase + COH901318_TC_INT_CLEAR1);
+-	} else {
+-		writel(1 << (channel - 32), virtbase +
+-		       COH901318_BE_INT_CLEAR2);
+-		writel(1 << (channel - 32), virtbase +
+-		       COH901318_TC_INT_CLEAR2);
+-	}
+-
+-	coh901318_set_conf(cohc, p->config);
+-	coh901318_set_ctrl(cohc, p->ctrl_lli_last);
+-
+-	return 0;
+-}
+-
+-/* must lock when calling this function
+- * start queued jobs, if any
+- * TODO: start all queued jobs in one go
+- *
+- * Returns descriptor if queued job is started otherwise NULL.
+- * If the queue is empty NULL is returned.
+- */
+-static struct coh901318_desc *coh901318_queue_start(struct coh901318_chan *cohc)
+-{
+-	struct coh901318_desc *cohd;
+-
+-	/*
+-	 * start queued jobs, if any
+-	 * TODO: transmit all queued jobs in one go
+-	 */
+-	cohd = coh901318_first_queued(cohc);
+-
+-	if (cohd != NULL) {
+-		/* Remove from queue */
+-		coh901318_desc_remove(cohd);
+-		/* initiate DMA job */
+-		cohc->busy = 1;
+-
+-		coh901318_desc_submit(cohc, cohd);
+-
+-		/* Program the transaction head */
+-		coh901318_set_conf(cohc, cohd->head_config);
+-		coh901318_set_ctrl(cohc, cohd->head_ctrl);
+-		coh901318_prep_linked_list(cohc, cohd->lli);
+-
+-		/* start dma job on this channel */
+-		coh901318_start(cohc);
+-
+-	}
+-
+-	return cohd;
+-}
+-
+-/*
+- * This tasklet is called from the interrupt handler to
+- * handle each descriptor (DMA job) that is sent to a channel.
+- */
+-static void dma_tasklet(struct tasklet_struct *t)
+-{
+-	struct coh901318_chan *cohc = from_tasklet(cohc, t, tasklet);
+-	struct coh901318_desc *cohd_fin;
+-	unsigned long flags;
+-	struct dmaengine_desc_callback cb;
+-
+-	dev_vdbg(COHC_2_DEV(cohc), "[%s] chan_id %d"
+-		 " nbr_active_done %ld\n", __func__,
+-		 cohc->id, cohc->nbr_active_done);
+-
+-	spin_lock_irqsave(&cohc->lock, flags);
+-
+-	/* get first active descriptor entry from list */
+-	cohd_fin = coh901318_first_active_get(cohc);
+-
+-	if (cohd_fin == NULL)
+-		goto err;
+-
+-	/* locate callback to client */
+-	dmaengine_desc_get_callback(&cohd_fin->desc, &cb);
+-
+-	/* sign this job as completed on the channel */
+-	dma_cookie_complete(&cohd_fin->desc);
+-
+-	/* release the lli allocation and remove the descriptor */
+-	coh901318_lli_free(&cohc->base->pool, &cohd_fin->lli);
+-
+-	/* return desc to free-list */
+-	coh901318_desc_remove(cohd_fin);
+-	coh901318_desc_free(cohc, cohd_fin);
+-
+-	spin_unlock_irqrestore(&cohc->lock, flags);
+-
+-	/* Call the callback when we're done */
+-	dmaengine_desc_callback_invoke(&cb, NULL);
+-
+-	spin_lock_irqsave(&cohc->lock, flags);
+-
+-	/*
+-	 * If another interrupt fired while the tasklet was scheduling,
+-	 * we don't get called twice, so we have this number of active
+-	 * counter that keep track of the number of IRQs expected to
+-	 * be handled for this channel. If there happen to be more than
+-	 * one IRQ to be ack:ed, we simply schedule this tasklet again.
+-	 */
+-	cohc->nbr_active_done--;
+-	if (cohc->nbr_active_done) {
+-		dev_dbg(COHC_2_DEV(cohc), "scheduling tasklet again, new IRQs "
+-			"came in while we were scheduling this tasklet\n");
+-		if (cohc_chan_conf(cohc)->priority_high)
+-			tasklet_hi_schedule(&cohc->tasklet);
+-		else
+-			tasklet_schedule(&cohc->tasklet);
+-	}
+-
+-	spin_unlock_irqrestore(&cohc->lock, flags);
+-
+-	return;
+-
+- err:
+-	spin_unlock_irqrestore(&cohc->lock, flags);
+-	dev_err(COHC_2_DEV(cohc), "[%s] No active dma desc\n", __func__);
+-}
+-
+-
+-/* called from interrupt context */
+-static void dma_tc_handle(struct coh901318_chan *cohc)
+-{
+-	/*
+-	 * If the channel is not allocated, then we shouldn't have
+-	 * any TC interrupts on it.
+-	 */
+-	if (!cohc->allocated) {
+-		dev_err(COHC_2_DEV(cohc), "spurious interrupt from "
+-			"unallocated channel\n");
+-		return;
+-	}
+-
+-	/*
+-	 * When we reach this point, at least one queue item
+-	 * should have been moved over from cohc->queue to
+-	 * cohc->active and run to completion, that is why we're
+-	 * getting a terminal count interrupt is it not?
+-	 * If you get this BUG() the most probable cause is that
+-	 * the individual nodes in the lli chain have IRQ enabled,
+-	 * so check your platform config for lli chain ctrl.
+-	 */
+-	BUG_ON(list_empty(&cohc->active));
+-
+-	cohc->nbr_active_done++;
+-
+-	/*
+-	 * This attempt to take a job from cohc->queue, put it
+-	 * into cohc->active and start it.
+-	 */
+-	if (coh901318_queue_start(cohc) == NULL)
+-		cohc->busy = 0;
+-
+-	/*
+-	 * This tasklet will remove items from cohc->active
+-	 * and thus terminates them.
+-	 */
+-	if (cohc_chan_conf(cohc)->priority_high)
+-		tasklet_hi_schedule(&cohc->tasklet);
+-	else
+-		tasklet_schedule(&cohc->tasklet);
+-}
+-
+-
+-static irqreturn_t dma_irq_handler(int irq, void *dev_id)
+-{
+-	u32 status1;
+-	u32 status2;
+-	int i;
+-	int ch;
+-	struct coh901318_base *base  = dev_id;
+-	struct coh901318_chan *cohc;
+-	void __iomem *virtbase = base->virtbase;
+-
+-	status1 = readl(virtbase + COH901318_INT_STATUS1);
+-	status2 = readl(virtbase + COH901318_INT_STATUS2);
+-
+-	if (unlikely(status1 == 0 && status2 == 0)) {
+-		dev_warn(base->dev, "spurious DMA IRQ from no channel!\n");
+-		return IRQ_HANDLED;
+-	}
+-
+-	/* TODO: consider handle IRQ in tasklet here to
+-	 *       minimize interrupt latency */
+-
+-	/* Check the first 32 DMA channels for IRQ */
+-	while (status1) {
+-		/* Find first bit set, return as a number. */
+-		i = ffs(status1) - 1;
+-		ch = i;
+-
+-		cohc = &base->chans[ch];
+-		spin_lock(&cohc->lock);
+-
+-		/* Mask off this bit */
+-		status1 &= ~(1 << i);
+-		/* Check the individual channel bits */
+-		if (test_bit(i, virtbase + COH901318_BE_INT_STATUS1)) {
+-			dev_crit(COHC_2_DEV(cohc),
+-				 "DMA bus error on channel %d!\n", ch);
+-			BUG_ON(1);
+-			/* Clear BE interrupt */
+-			__set_bit(i, virtbase + COH901318_BE_INT_CLEAR1);
+-		} else {
+-			/* Caused by TC, really? */
+-			if (unlikely(!test_bit(i, virtbase +
+-					       COH901318_TC_INT_STATUS1))) {
+-				dev_warn(COHC_2_DEV(cohc),
+-					 "ignoring interrupt not caused by terminal count on channel %d\n", ch);
+-				/* Clear TC interrupt */
+-				BUG_ON(1);
+-				__set_bit(i, virtbase + COH901318_TC_INT_CLEAR1);
+-			} else {
+-				/* Enable powersave if transfer has finished */
+-				if (!(readl(virtbase + COH901318_CX_STAT +
+-					    COH901318_CX_STAT_SPACING*ch) &
+-				      COH901318_CX_STAT_ENABLED)) {
+-					enable_powersave(cohc);
+-				}
+-
+-				/* Must clear TC interrupt before calling
+-				 * dma_tc_handle
+-				 * in case tc_handle initiate a new dma job
+-				 */
+-				__set_bit(i, virtbase + COH901318_TC_INT_CLEAR1);
+-
+-				dma_tc_handle(cohc);
+-			}
+-		}
+-		spin_unlock(&cohc->lock);
+-	}
+-
+-	/* Check the remaining 32 DMA channels for IRQ */
+-	while (status2) {
+-		/* Find first bit set, return as a number. */
+-		i = ffs(status2) - 1;
+-		ch = i + 32;
+-		cohc = &base->chans[ch];
+-		spin_lock(&cohc->lock);
+-
+-		/* Mask off this bit */
+-		status2 &= ~(1 << i);
+-		/* Check the individual channel bits */
+-		if (test_bit(i, virtbase + COH901318_BE_INT_STATUS2)) {
+-			dev_crit(COHC_2_DEV(cohc),
+-				 "DMA bus error on channel %d!\n", ch);
+-			/* Clear BE interrupt */
+-			BUG_ON(1);
+-			__set_bit(i, virtbase + COH901318_BE_INT_CLEAR2);
+-		} else {
+-			/* Caused by TC, really? */
+-			if (unlikely(!test_bit(i, virtbase +
+-					       COH901318_TC_INT_STATUS2))) {
+-				dev_warn(COHC_2_DEV(cohc),
+-					 "ignoring interrupt not caused by terminal count on channel %d\n", ch);
+-				/* Clear TC interrupt */
+-				__set_bit(i, virtbase + COH901318_TC_INT_CLEAR2);
+-				BUG_ON(1);
+-			} else {
+-				/* Enable powersave if transfer has finished */
+-				if (!(readl(virtbase + COH901318_CX_STAT +
+-					    COH901318_CX_STAT_SPACING*ch) &
+-				      COH901318_CX_STAT_ENABLED)) {
+-					enable_powersave(cohc);
+-				}
+-				/* Must clear TC interrupt before calling
+-				 * dma_tc_handle
+-				 * in case tc_handle initiate a new dma job
+-				 */
+-				__set_bit(i, virtbase + COH901318_TC_INT_CLEAR2);
+-
+-				dma_tc_handle(cohc);
+-			}
+-		}
+-		spin_unlock(&cohc->lock);
+-	}
+-
 -	return IRQ_HANDLED;
 -}
 -
--static void zx_dma_free_chan_resources(struct dma_chan *chan)
+-static int coh901318_terminate_all(struct dma_chan *chan)
 -{
--	struct zx_dma_chan *c = to_zx_chan(chan);
--	struct zx_dma_dev *d = to_zx_dma(chan->device);
 -	unsigned long flags;
+-	struct coh901318_chan *cohc = to_coh901318_chan(chan);
+-	struct coh901318_desc *cohd;
+-	void __iomem *virtbase = cohc->base->virtbase;
 -
--	spin_lock_irqsave(&d->lock, flags);
--	list_del_init(&c->node);
--	spin_unlock_irqrestore(&d->lock, flags);
+-	/* The remainder of this function terminates the transfer */
+-	coh901318_pause(chan);
+-	spin_lock_irqsave(&cohc->lock, flags);
 -
--	vchan_free_chan_resources(&c->vc);
--	c->ccfg = 0;
--}
--
--static enum dma_status zx_dma_tx_status(struct dma_chan *chan,
--					dma_cookie_t cookie,
--					struct dma_tx_state *state)
--{
--	struct zx_dma_chan *c = to_zx_chan(chan);
--	struct zx_dma_phy *p;
--	struct virt_dma_desc *vd;
--	unsigned long flags;
--	enum dma_status ret;
--	size_t bytes = 0;
--
--	ret = dma_cookie_status(&c->vc.chan, cookie, state);
--	if (ret == DMA_COMPLETE || !state)
--		return ret;
--
--	spin_lock_irqsave(&c->vc.lock, flags);
--	p = c->phy;
--	ret = c->status;
--
--	/*
--	 * If the cookie is on our issue queue, then the residue is
--	 * its total size.
--	 */
--	vd = vchan_find_desc(&c->vc, cookie);
--	if (vd) {
--		bytes = container_of(vd, struct zx_dma_desc_sw, vd)->size;
--	} else if ((!p) || (!p->ds_run)) {
--		bytes = 0;
+-	/* Clear any pending BE or TC interrupt */
+-	if (cohc->id < 32) {
+-		writel(1 << cohc->id, virtbase + COH901318_BE_INT_CLEAR1);
+-		writel(1 << cohc->id, virtbase + COH901318_TC_INT_CLEAR1);
 -	} else {
--		struct zx_dma_desc_sw *ds = p->ds_run;
--		u32 clli = 0, index = 0;
--
--		bytes = 0;
--		clli = zx_dma_get_curr_lli(p);
--		index = (clli - ds->desc_hw_lli) /
--				sizeof(struct zx_desc_hw) + 1;
--		for (; index < ds->desc_num; index++) {
--			bytes += ds->desc_hw[index].src_x;
--			/* end of lli */
--			if (!ds->desc_hw[index].lli)
--				break;
--		}
--	}
--	spin_unlock_irqrestore(&c->vc.lock, flags);
--	dma_set_residue(state, bytes);
--	return ret;
--}
--
--static void zx_dma_issue_pending(struct dma_chan *chan)
--{
--	struct zx_dma_chan *c = to_zx_chan(chan);
--	struct zx_dma_dev *d = to_zx_dma(chan->device);
--	unsigned long flags;
--	int issue = 0;
--
--	spin_lock_irqsave(&c->vc.lock, flags);
--	/* add request to vc->desc_issued */
--	if (vchan_issue_pending(&c->vc)) {
--		spin_lock(&d->lock);
--		if (!c->phy && list_empty(&c->node)) {
--			/* if new channel, add chan_pending */
--			list_add_tail(&c->node, &d->chan_pending);
--			issue = 1;
--			dev_dbg(d->slave.dev, "vchan %p: issued\n", &c->vc);
--		}
--		spin_unlock(&d->lock);
--	} else {
--		dev_dbg(d->slave.dev, "vchan %p: nothing to issue\n", &c->vc);
--	}
--	spin_unlock_irqrestore(&c->vc.lock, flags);
--
--	if (issue)
--		zx_dma_task(d);
--}
--
--static void zx_dma_fill_desc(struct zx_dma_desc_sw *ds, dma_addr_t dst,
--			     dma_addr_t src, size_t len, u32 num, u32 ccfg)
--{
--	if ((num + 1) < ds->desc_num)
--		ds->desc_hw[num].lli = ds->desc_hw_lli + (num + 1) *
--			sizeof(struct zx_desc_hw);
--	ds->desc_hw[num].saddr = src;
--	ds->desc_hw[num].daddr = dst;
--	ds->desc_hw[num].src_x = len;
--	ds->desc_hw[num].ctr = ccfg;
--}
--
--static struct zx_dma_desc_sw *zx_alloc_desc_resource(int num,
--						     struct dma_chan *chan)
--{
--	struct zx_dma_chan *c = to_zx_chan(chan);
--	struct zx_dma_desc_sw *ds;
--	struct zx_dma_dev *d = to_zx_dma(chan->device);
--	int lli_limit = LLI_BLOCK_SIZE / sizeof(struct zx_desc_hw);
--
--	if (num > lli_limit) {
--		dev_dbg(chan->device->dev, "vch %p: sg num %d exceed max %d\n",
--			&c->vc, num, lli_limit);
--		return NULL;
+-		writel(1 << (cohc->id - 32), virtbase +
+-		       COH901318_BE_INT_CLEAR2);
+-		writel(1 << (cohc->id - 32), virtbase +
+-		       COH901318_TC_INT_CLEAR2);
 -	}
 -
--	ds = kzalloc(sizeof(*ds), GFP_ATOMIC);
--	if (!ds)
--		return NULL;
+-	enable_powersave(cohc);
 -
--	ds->desc_hw = dma_pool_zalloc(d->pool, GFP_NOWAIT, &ds->desc_hw_lli);
--	if (!ds->desc_hw) {
--		dev_dbg(chan->device->dev, "vch %p: dma alloc fail\n", &c->vc);
--		kfree(ds);
--		return NULL;
+-	while ((cohd = coh901318_first_active_get(cohc))) {
+-		/* release the lli allocation*/
+-		coh901318_lli_free(&cohc->base->pool, &cohd->lli);
+-
+-		/* return desc to free-list */
+-		coh901318_desc_remove(cohd);
+-		coh901318_desc_free(cohc, cohd);
 -	}
--	ds->desc_num = num;
--	return ds;
--}
 -
--static enum zx_dma_burst_width zx_dma_burst_width(enum dma_slave_buswidth width)
--{
--	switch (width) {
--	case DMA_SLAVE_BUSWIDTH_1_BYTE:
--	case DMA_SLAVE_BUSWIDTH_2_BYTES:
--	case DMA_SLAVE_BUSWIDTH_4_BYTES:
--	case DMA_SLAVE_BUSWIDTH_8_BYTES:
--		return ffs(width) - 1;
--	default:
--		return ZX_DMA_WIDTH_32BIT;
+-	while ((cohd = coh901318_first_queued(cohc))) {
+-		/* release the lli allocation*/
+-		coh901318_lli_free(&cohc->base->pool, &cohd->lli);
+-
+-		/* return desc to free-list */
+-		coh901318_desc_remove(cohd);
+-		coh901318_desc_free(cohc, cohd);
 -	}
--}
 -
--static int zx_pre_config(struct zx_dma_chan *c, enum dma_transfer_direction dir)
--{
--	struct dma_slave_config *cfg = &c->slave_cfg;
--	enum zx_dma_burst_width src_width;
--	enum zx_dma_burst_width dst_width;
--	u32 maxburst = 0;
 -
--	switch (dir) {
--	case DMA_MEM_TO_MEM:
--		c->ccfg = ZX_CH_ENABLE | ZX_SOFT_REQ
--			| ZX_SRC_BURST_LEN(ZX_MAX_BURST_LEN - 1)
--			| ZX_SRC_BURST_WIDTH(ZX_DMA_WIDTH_32BIT)
--			| ZX_DST_BURST_WIDTH(ZX_DMA_WIDTH_32BIT);
--		break;
--	case DMA_MEM_TO_DEV:
--		c->dev_addr = cfg->dst_addr;
--		/* dst len is calculated from src width, len and dst width.
--		 * We need make sure dst len not exceed MAX LEN.
--		 * Trailing single transaction that does not fill a full
--		 * burst also require identical src/dst data width.
--		 */
--		dst_width = zx_dma_burst_width(cfg->dst_addr_width);
--		maxburst = cfg->dst_maxburst;
--		maxburst = maxburst < ZX_MAX_BURST_LEN ?
--				maxburst : ZX_MAX_BURST_LEN;
--		c->ccfg = ZX_DST_FIFO_MODE | ZX_CH_ENABLE
--			| ZX_SRC_BURST_LEN(maxburst - 1)
--			| ZX_SRC_BURST_WIDTH(dst_width)
--			| ZX_DST_BURST_WIDTH(dst_width);
--		break;
--	case DMA_DEV_TO_MEM:
--		c->dev_addr = cfg->src_addr;
--		src_width = zx_dma_burst_width(cfg->src_addr_width);
--		maxburst = cfg->src_maxburst;
--		maxburst = maxburst < ZX_MAX_BURST_LEN ?
--				maxburst : ZX_MAX_BURST_LEN;
--		c->ccfg = ZX_SRC_FIFO_MODE | ZX_CH_ENABLE
--			| ZX_SRC_BURST_LEN(maxburst - 1)
--			| ZX_SRC_BURST_WIDTH(src_width)
--			| ZX_DST_BURST_WIDTH(src_width);
--		break;
--	default:
--		return -EINVAL;
--	}
+-	cohc->nbr_active_done = 0;
+-	cohc->busy = 0;
+-
+-	spin_unlock_irqrestore(&cohc->lock, flags);
+-
 -	return 0;
 -}
 -
--static struct dma_async_tx_descriptor *zx_dma_prep_memcpy(
--	struct dma_chan *chan,	dma_addr_t dst, dma_addr_t src,
--	size_t len, unsigned long flags)
+-static int coh901318_alloc_chan_resources(struct dma_chan *chan)
 -{
--	struct zx_dma_chan *c = to_zx_chan(chan);
--	struct zx_dma_desc_sw *ds;
--	size_t copy = 0;
--	int num = 0;
+-	struct coh901318_chan	*cohc = to_coh901318_chan(chan);
+-	unsigned long flags;
 -
--	if (!len)
--		return NULL;
+-	dev_vdbg(COHC_2_DEV(cohc), "[%s] DMA channel %d\n",
+-		 __func__, cohc->id);
 -
--	if (zx_pre_config(c, DMA_MEM_TO_MEM))
--		return NULL;
+-	if (chan->client_count > 1)
+-		return -EBUSY;
 -
--	num = DIV_ROUND_UP(len, DMA_MAX_SIZE);
+-	spin_lock_irqsave(&cohc->lock, flags);
 -
--	ds = zx_alloc_desc_resource(num, chan);
--	if (!ds)
--		return NULL;
+-	coh901318_config(cohc, NULL);
 -
--	ds->size = len;
--	num = 0;
+-	cohc->allocated = 1;
+-	dma_cookie_init(chan);
 -
--	do {
--		copy = min_t(size_t, len, DMA_MAX_SIZE);
--		zx_dma_fill_desc(ds, dst, src, copy, num++, c->ccfg);
+-	spin_unlock_irqrestore(&cohc->lock, flags);
 -
--		src += copy;
--		dst += copy;
--		len -= copy;
--	} while (len);
--
--	c->cyclic = 0;
--	ds->desc_hw[num - 1].lli = 0;	/* end of link */
--	ds->desc_hw[num - 1].ctr |= ZX_IRQ_ENABLE_ALL;
--	return vchan_tx_prep(&c->vc, &ds->vd, flags);
+-	return 1;
 -}
 -
--static struct dma_async_tx_descriptor *zx_dma_prep_slave_sg(
--	struct dma_chan *chan, struct scatterlist *sgl, unsigned int sglen,
--	enum dma_transfer_direction dir, unsigned long flags, void *context)
+-static void
+-coh901318_free_chan_resources(struct dma_chan *chan)
 -{
--	struct zx_dma_chan *c = to_zx_chan(chan);
--	struct zx_dma_desc_sw *ds;
--	size_t len, avail, total = 0;
+-	struct coh901318_chan	*cohc = to_coh901318_chan(chan);
+-	int channel = cohc->id;
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&cohc->lock, flags);
+-
+-	/* Disable HW */
+-	writel(0x00000000U, cohc->base->virtbase + COH901318_CX_CFG +
+-	       COH901318_CX_CFG_SPACING*channel);
+-	writel(0x00000000U, cohc->base->virtbase + COH901318_CX_CTRL +
+-	       COH901318_CX_CTRL_SPACING*channel);
+-
+-	cohc->allocated = 0;
+-
+-	spin_unlock_irqrestore(&cohc->lock, flags);
+-
+-	coh901318_terminate_all(chan);
+-}
+-
+-
+-static dma_cookie_t
+-coh901318_tx_submit(struct dma_async_tx_descriptor *tx)
+-{
+-	struct coh901318_desc *cohd = container_of(tx, struct coh901318_desc,
+-						   desc);
+-	struct coh901318_chan *cohc = to_coh901318_chan(tx->chan);
+-	unsigned long flags;
+-	dma_cookie_t cookie;
+-
+-	spin_lock_irqsave(&cohc->lock, flags);
+-	cookie = dma_cookie_assign(tx);
+-
+-	coh901318_desc_queue(cohc, cohd);
+-
+-	spin_unlock_irqrestore(&cohc->lock, flags);
+-
+-	return cookie;
+-}
+-
+-static struct dma_async_tx_descriptor *
+-coh901318_prep_memcpy(struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
+-		      size_t size, unsigned long flags)
+-{
+-	struct coh901318_lli *lli;
+-	struct coh901318_desc *cohd;
+-	unsigned long flg;
+-	struct coh901318_chan *cohc = to_coh901318_chan(chan);
+-	int lli_len;
+-	u32 ctrl_last = cohc_chan_param(cohc)->ctrl_lli_last;
+-	int ret;
+-
+-	spin_lock_irqsave(&cohc->lock, flg);
+-
+-	dev_vdbg(COHC_2_DEV(cohc),
+-		 "[%s] channel %d src %pad dest %pad size %zu\n",
+-		 __func__, cohc->id, &src, &dest, size);
+-
+-	if (flags & DMA_PREP_INTERRUPT)
+-		/* Trigger interrupt after last lli */
+-		ctrl_last |= COH901318_CX_CTRL_TC_IRQ_ENABLE;
+-
+-	lli_len = size >> MAX_DMA_PACKET_SIZE_SHIFT;
+-	if ((lli_len << MAX_DMA_PACKET_SIZE_SHIFT) < size)
+-		lli_len++;
+-
+-	lli = coh901318_lli_alloc(&cohc->base->pool, lli_len);
+-
+-	if (lli == NULL)
+-		goto err;
+-
+-	ret = coh901318_lli_fill_memcpy(
+-		&cohc->base->pool, lli, src, size, dest,
+-		cohc_chan_param(cohc)->ctrl_lli_chained,
+-		ctrl_last);
+-	if (ret)
+-		goto err;
+-
+-	COH_DBG(coh901318_list_print(cohc, lli));
+-
+-	/* Pick a descriptor to handle this transfer */
+-	cohd = coh901318_desc_get(cohc);
+-	cohd->lli = lli;
+-	cohd->flags = flags;
+-	cohd->desc.tx_submit = coh901318_tx_submit;
+-
+-	spin_unlock_irqrestore(&cohc->lock, flg);
+-
+-	return &cohd->desc;
+- err:
+-	spin_unlock_irqrestore(&cohc->lock, flg);
+-	return NULL;
+-}
+-
+-static struct dma_async_tx_descriptor *
+-coh901318_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
+-			unsigned int sg_len, enum dma_transfer_direction direction,
+-			unsigned long flags, void *context)
+-{
+-	struct coh901318_chan *cohc = to_coh901318_chan(chan);
+-	struct coh901318_lli *lli;
+-	struct coh901318_desc *cohd;
+-	const struct coh901318_params *params;
 -	struct scatterlist *sg;
--	dma_addr_t addr, src = 0, dst = 0;
--	int num = sglen, i;
+-	int len = 0;
+-	int size;
+-	int i;
+-	u32 ctrl_chained = cohc_chan_param(cohc)->ctrl_lli_chained;
+-	u32 ctrl = cohc_chan_param(cohc)->ctrl_lli;
+-	u32 ctrl_last = cohc_chan_param(cohc)->ctrl_lli_last;
+-	u32 config;
+-	unsigned long flg;
+-	int ret;
 -
 -	if (!sgl)
--		return NULL;
+-		goto out;
+-	if (sg_dma_len(sgl) == 0)
+-		goto out;
 -
--	if (zx_pre_config(c, dir))
--		return NULL;
+-	spin_lock_irqsave(&cohc->lock, flg);
 -
--	for_each_sg(sgl, sg, sglen, i) {
--		avail = sg_dma_len(sg);
--		if (avail > DMA_MAX_SIZE)
--			num += DIV_ROUND_UP(avail, DMA_MAX_SIZE) - 1;
--	}
+-	dev_vdbg(COHC_2_DEV(cohc), "[%s] sg_len %d dir %d\n",
+-		 __func__, sg_len, direction);
 -
--	ds = zx_alloc_desc_resource(num, chan);
--	if (!ds)
--		return NULL;
+-	if (flags & DMA_PREP_INTERRUPT)
+-		/* Trigger interrupt after last lli */
+-		ctrl_last |= COH901318_CX_CTRL_TC_IRQ_ENABLE;
 -
--	c->cyclic = 0;
--	num = 0;
--	for_each_sg(sgl, sg, sglen, i) {
--		addr = sg_dma_address(sg);
--		avail = sg_dma_len(sg);
--		total += avail;
+-	params = cohc_chan_param(cohc);
+-	config = params->config;
+-	/*
+-	 * Add runtime-specific control on top, make
+-	 * sure the bits you set per peripheral channel are
+-	 * cleared in the default config from the platform.
+-	 */
+-	ctrl_chained |= cohc->ctrl;
+-	ctrl_last |= cohc->ctrl;
+-	ctrl |= cohc->ctrl;
 -
--		do {
--			len = min_t(size_t, avail, DMA_MAX_SIZE);
+-	if (direction == DMA_MEM_TO_DEV) {
+-		u32 tx_flags = COH901318_CX_CTRL_PRDD_SOURCE |
+-			COH901318_CX_CTRL_SRC_ADDR_INC_ENABLE;
 -
--			if (dir == DMA_MEM_TO_DEV) {
--				src = addr;
--				dst = c->dev_addr;
--			} else if (dir == DMA_DEV_TO_MEM) {
--				src = c->dev_addr;
--				dst = addr;
--			}
+-		config |= COH901318_CX_CFG_RM_MEMORY_TO_PRIMARY;
+-		ctrl_chained |= tx_flags;
+-		ctrl_last |= tx_flags;
+-		ctrl |= tx_flags;
+-	} else if (direction == DMA_DEV_TO_MEM) {
+-		u32 rx_flags = COH901318_CX_CTRL_PRDD_DEST |
+-			COH901318_CX_CTRL_DST_ADDR_INC_ENABLE;
 -
--			zx_dma_fill_desc(ds, dst, src, len, num++, c->ccfg);
+-		config |= COH901318_CX_CFG_RM_PRIMARY_TO_MEMORY;
+-		ctrl_chained |= rx_flags;
+-		ctrl_last |= rx_flags;
+-		ctrl |= rx_flags;
+-	} else
+-		goto err_direction;
 -
--			addr += len;
--			avail -= len;
--		} while (avail);
--	}
+-	/* The dma only supports transmitting packages up to
+-	 * MAX_DMA_PACKET_SIZE. Calculate to total number of
+-	 * dma elemts required to send the entire sg list
+-	 */
+-	for_each_sg(sgl, sg, sg_len, i) {
+-		unsigned int factor;
+-		size = sg_dma_len(sg);
 -
--	ds->desc_hw[num - 1].lli = 0;	/* end of link */
--	ds->desc_hw[num - 1].ctr |= ZX_IRQ_ENABLE_ALL;
--	ds->size = total;
--	return vchan_tx_prep(&c->vc, &ds->vd, flags);
--}
--
--static struct dma_async_tx_descriptor *zx_dma_prep_dma_cyclic(
--		struct dma_chan *chan, dma_addr_t dma_addr, size_t buf_len,
--		size_t period_len, enum dma_transfer_direction dir,
--		unsigned long flags)
--{
--	struct zx_dma_chan *c = to_zx_chan(chan);
--	struct zx_dma_desc_sw *ds;
--	dma_addr_t src = 0, dst = 0;
--	int num_periods = buf_len / period_len;
--	int buf = 0, num = 0;
--
--	if (period_len > DMA_MAX_SIZE) {
--		dev_err(chan->device->dev, "maximum period size exceeded\n");
--		return NULL;
--	}
--
--	if (zx_pre_config(c, dir))
--		return NULL;
--
--	ds = zx_alloc_desc_resource(num_periods, chan);
--	if (!ds)
--		return NULL;
--	c->cyclic = 1;
--
--	while (buf < buf_len) {
--		if (dir == DMA_MEM_TO_DEV) {
--			src = dma_addr;
--			dst = c->dev_addr;
--		} else if (dir == DMA_DEV_TO_MEM) {
--			src = c->dev_addr;
--			dst = dma_addr;
+-		if (size <= MAX_DMA_PACKET_SIZE) {
+-			len++;
+-			continue;
 -		}
--		zx_dma_fill_desc(ds, dst, src, period_len, num++,
--				 c->ccfg | ZX_IRQ_ENABLE_ALL);
--		dma_addr += period_len;
--		buf += period_len;
+-
+-		factor = size >> MAX_DMA_PACKET_SIZE_SHIFT;
+-		if ((factor << MAX_DMA_PACKET_SIZE_SHIFT) < size)
+-			factor++;
+-
+-		len += factor;
 -	}
 -
--	ds->desc_hw[num - 1].lli = ds->desc_hw_lli;
--	ds->size = buf_len;
--	return vchan_tx_prep(&c->vc, &ds->vd, flags);
--}
+-	pr_debug("Allocate %d lli:s for this transfer\n", len);
+-	lli = coh901318_lli_alloc(&cohc->base->pool, len);
 -
--static int zx_dma_config(struct dma_chan *chan,
--			 struct dma_slave_config *cfg)
--{
--	struct zx_dma_chan *c = to_zx_chan(chan);
+-	if (lli == NULL)
+-		goto err_dma_alloc;
 -
--	if (!cfg)
--		return -EINVAL;
+-	coh901318_dma_set_runtimeconfig(chan, &cohc->config, direction);
 -
--	memcpy(&c->slave_cfg, cfg, sizeof(*cfg));
--
--	return 0;
--}
--
--static int zx_dma_terminate_all(struct dma_chan *chan)
--{
--	struct zx_dma_chan *c = to_zx_chan(chan);
--	struct zx_dma_dev *d = to_zx_dma(chan->device);
--	struct zx_dma_phy *p = c->phy;
--	unsigned long flags;
--	LIST_HEAD(head);
--
--	dev_dbg(d->slave.dev, "vchan %p: terminate all\n", &c->vc);
--
--	/* Prevent this channel being scheduled */
--	spin_lock(&d->lock);
--	list_del_init(&c->node);
--	spin_unlock(&d->lock);
--
--	/* Clear the tx descriptor lists */
--	spin_lock_irqsave(&c->vc.lock, flags);
--	vchan_get_all_descriptors(&c->vc, &head);
--	if (p) {
--		/* vchan is assigned to a pchan - stop the channel */
--		zx_dma_terminate_chan(p, d);
--		c->phy = NULL;
--		p->vchan = NULL;
--		p->ds_run = NULL;
--		p->ds_done = NULL;
--	}
--	spin_unlock_irqrestore(&c->vc.lock, flags);
--	vchan_dma_desc_free_list(&c->vc, &head);
--
--	return 0;
--}
--
--static int zx_dma_transfer_pause(struct dma_chan *chan)
--{
--	struct zx_dma_chan *c = to_zx_chan(chan);
--	u32 val = 0;
--
--	val = readl_relaxed(c->phy->base + REG_ZX_CTRL);
--	val &= ~ZX_CH_ENABLE;
--	writel_relaxed(val, c->phy->base + REG_ZX_CTRL);
--
--	return 0;
--}
--
--static int zx_dma_transfer_resume(struct dma_chan *chan)
--{
--	struct zx_dma_chan *c = to_zx_chan(chan);
--	u32 val = 0;
--
--	val = readl_relaxed(c->phy->base + REG_ZX_CTRL);
--	val |= ZX_CH_ENABLE;
--	writel_relaxed(val, c->phy->base + REG_ZX_CTRL);
--
--	return 0;
--}
--
--static void zx_dma_free_desc(struct virt_dma_desc *vd)
--{
--	struct zx_dma_desc_sw *ds =
--		container_of(vd, struct zx_dma_desc_sw, vd);
--	struct zx_dma_dev *d = to_zx_dma(vd->tx.chan->device);
--
--	dma_pool_free(d->pool, ds->desc_hw, ds->desc_hw_lli);
--	kfree(ds);
--}
--
--static const struct of_device_id zx6702_dma_dt_ids[] = {
--	{ .compatible = "zte,zx296702-dma", },
--	{}
--};
--MODULE_DEVICE_TABLE(of, zx6702_dma_dt_ids);
--
--static struct dma_chan *zx_of_dma_simple_xlate(struct of_phandle_args *dma_spec,
--					       struct of_dma *ofdma)
--{
--	struct zx_dma_dev *d = ofdma->of_dma_data;
--	unsigned int request = dma_spec->args[0];
--	struct dma_chan *chan;
--	struct zx_dma_chan *c;
--
--	if (request >= d->dma_requests)
--		return NULL;
--
--	chan = dma_get_any_slave_channel(&d->slave);
--	if (!chan) {
--		dev_err(d->slave.dev, "get channel fail in %s.\n", __func__);
--		return NULL;
--	}
--	c = to_zx_chan(chan);
--	c->id = request;
--	dev_info(d->slave.dev, "zx_dma: pchan %u: alloc vchan %p\n",
--		 c->id, &c->vc);
--	return chan;
--}
--
--static int zx_dma_probe(struct platform_device *op)
--{
--	struct zx_dma_dev *d;
--	int i, ret = 0;
--
--	d = devm_kzalloc(&op->dev, sizeof(*d), GFP_KERNEL);
--	if (!d)
--		return -ENOMEM;
--
--	d->base = devm_platform_ioremap_resource(op, 0);
--	if (IS_ERR(d->base))
--		return PTR_ERR(d->base);
--
--	of_property_read_u32((&op->dev)->of_node,
--			     "dma-channels", &d->dma_channels);
--	of_property_read_u32((&op->dev)->of_node,
--			     "dma-requests", &d->dma_requests);
--	if (!d->dma_requests || !d->dma_channels)
--		return -EINVAL;
--
--	d->clk = devm_clk_get(&op->dev, NULL);
--	if (IS_ERR(d->clk)) {
--		dev_err(&op->dev, "no dma clk\n");
--		return PTR_ERR(d->clk);
--	}
--
--	d->irq = platform_get_irq(op, 0);
--	ret = devm_request_irq(&op->dev, d->irq, zx_dma_int_handler,
--			       0, DRIVER_NAME, d);
+-	/* initiate allocated lli list */
+-	ret = coh901318_lli_fill_sg(&cohc->base->pool, lli, sgl, sg_len,
+-				    cohc->addr,
+-				    ctrl_chained,
+-				    ctrl,
+-				    ctrl_last,
+-				    direction, COH901318_CX_CTRL_TC_IRQ_ENABLE);
 -	if (ret)
+-		goto err_lli_fill;
+-
+-
+-	COH_DBG(coh901318_list_print(cohc, lli));
+-
+-	/* Pick a descriptor to handle this transfer */
+-	cohd = coh901318_desc_get(cohc);
+-	cohd->head_config = config;
+-	/*
+-	 * Set the default head ctrl for the channel to the one from the
+-	 * lli, things may have changed due to odd buffer alignment
+-	 * etc.
+-	 */
+-	cohd->head_ctrl = lli->control;
+-	cohd->dir = direction;
+-	cohd->flags = flags;
+-	cohd->desc.tx_submit = coh901318_tx_submit;
+-	cohd->lli = lli;
+-
+-	spin_unlock_irqrestore(&cohc->lock, flg);
+-
+-	return &cohd->desc;
+- err_lli_fill:
+- err_dma_alloc:
+- err_direction:
+-	spin_unlock_irqrestore(&cohc->lock, flg);
+- out:
+-	return NULL;
+-}
+-
+-static enum dma_status
+-coh901318_tx_status(struct dma_chan *chan, dma_cookie_t cookie,
+-		 struct dma_tx_state *txstate)
+-{
+-	struct coh901318_chan *cohc = to_coh901318_chan(chan);
+-	enum dma_status ret;
+-
+-	ret = dma_cookie_status(chan, cookie, txstate);
+-	if (ret == DMA_COMPLETE || !txstate)
 -		return ret;
 -
--	/* A DMA memory pool for LLIs, align on 32-byte boundary */
--	d->pool = dmam_pool_create(DRIVER_NAME, &op->dev,
--			LLI_BLOCK_SIZE, 32, 0);
--	if (!d->pool)
--		return -ENOMEM;
+-	dma_set_residue(txstate, coh901318_get_bytes_left(chan));
 -
--	/* init phy channel */
--	d->phy = devm_kcalloc(&op->dev,
--		d->dma_channels, sizeof(struct zx_dma_phy), GFP_KERNEL);
--	if (!d->phy)
--		return -ENOMEM;
+-	if (ret == DMA_IN_PROGRESS && cohc->stopped)
+-		ret = DMA_PAUSED;
 -
--	for (i = 0; i < d->dma_channels; i++) {
--		struct zx_dma_phy *p = &d->phy[i];
--
--		p->idx = i;
--		p->base = d->base + i * 0x40;
--	}
--
--	INIT_LIST_HEAD(&d->slave.channels);
--	dma_cap_set(DMA_SLAVE, d->slave.cap_mask);
--	dma_cap_set(DMA_MEMCPY, d->slave.cap_mask);
--	dma_cap_set(DMA_CYCLIC, d->slave.cap_mask);
--	dma_cap_set(DMA_PRIVATE, d->slave.cap_mask);
--	d->slave.dev = &op->dev;
--	d->slave.device_free_chan_resources = zx_dma_free_chan_resources;
--	d->slave.device_tx_status = zx_dma_tx_status;
--	d->slave.device_prep_dma_memcpy = zx_dma_prep_memcpy;
--	d->slave.device_prep_slave_sg = zx_dma_prep_slave_sg;
--	d->slave.device_prep_dma_cyclic = zx_dma_prep_dma_cyclic;
--	d->slave.device_issue_pending = zx_dma_issue_pending;
--	d->slave.device_config = zx_dma_config;
--	d->slave.device_terminate_all = zx_dma_terminate_all;
--	d->slave.device_pause = zx_dma_transfer_pause;
--	d->slave.device_resume = zx_dma_transfer_resume;
--	d->slave.copy_align = DMA_ALIGN;
--	d->slave.src_addr_widths = ZX_DMA_BUSWIDTHS;
--	d->slave.dst_addr_widths = ZX_DMA_BUSWIDTHS;
--	d->slave.directions = BIT(DMA_MEM_TO_MEM) | BIT(DMA_MEM_TO_DEV)
--			| BIT(DMA_DEV_TO_MEM);
--	d->slave.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
--
--	/* init virtual channel */
--	d->chans = devm_kcalloc(&op->dev,
--		d->dma_requests, sizeof(struct zx_dma_chan), GFP_KERNEL);
--	if (!d->chans)
--		return -ENOMEM;
--
--	for (i = 0; i < d->dma_requests; i++) {
--		struct zx_dma_chan *c = &d->chans[i];
--
--		c->status = DMA_IN_PROGRESS;
--		INIT_LIST_HEAD(&c->node);
--		c->vc.desc_free = zx_dma_free_desc;
--		vchan_init(&c->vc, &d->slave);
--	}
--
--	/* Enable clock before accessing registers */
--	ret = clk_prepare_enable(d->clk);
--	if (ret < 0) {
--		dev_err(&op->dev, "clk_prepare_enable failed: %d\n", ret);
--		goto zx_dma_out;
--	}
--
--	zx_dma_init_state(d);
--
--	spin_lock_init(&d->lock);
--	INIT_LIST_HEAD(&d->chan_pending);
--	platform_set_drvdata(op, d);
--
--	ret = dma_async_device_register(&d->slave);
--	if (ret)
--		goto clk_dis;
--
--	ret = of_dma_controller_register((&op->dev)->of_node,
--					 zx_of_dma_simple_xlate, d);
--	if (ret)
--		goto of_dma_register_fail;
--
--	dev_info(&op->dev, "initialized\n");
--	return 0;
--
--of_dma_register_fail:
--	dma_async_device_unregister(&d->slave);
--clk_dis:
--	clk_disable_unprepare(d->clk);
--zx_dma_out:
 -	return ret;
 -}
 -
--static int zx_dma_remove(struct platform_device *op)
+-static void
+-coh901318_issue_pending(struct dma_chan *chan)
 -{
--	struct zx_dma_chan *c, *cn;
--	struct zx_dma_dev *d = platform_get_drvdata(op);
+-	struct coh901318_chan *cohc = to_coh901318_chan(chan);
+-	unsigned long flags;
 -
--	/* explictly free the irq */
--	devm_free_irq(&op->dev, d->irq, d);
+-	spin_lock_irqsave(&cohc->lock, flags);
 -
--	dma_async_device_unregister(&d->slave);
--	of_dma_controller_free((&op->dev)->of_node);
+-	/*
+-	 * Busy means that pending jobs are already being processed,
+-	 * and then there is no point in starting the queue: the
+-	 * terminal count interrupt on the channel will take the next
+-	 * job on the queue and execute it anyway.
+-	 */
+-	if (!cohc->busy)
+-		coh901318_queue_start(cohc);
 -
--	list_for_each_entry_safe(c, cn, &d->slave.channels,
--				 vc.chan.device_node) {
--		list_del(&c->vc.chan.device_node);
+-	spin_unlock_irqrestore(&cohc->lock, flags);
+-}
+-
+-/*
+- * Here we wrap in the runtime dma control interface
+- */
+-struct burst_table {
+-	int burst_8bit;
+-	int burst_16bit;
+-	int burst_32bit;
+-	u32 reg;
+-};
+-
+-static const struct burst_table burst_sizes[] = {
+-	{
+-		.burst_8bit = 64,
+-		.burst_16bit = 32,
+-		.burst_32bit = 16,
+-		.reg = COH901318_CX_CTRL_BURST_COUNT_64_BYTES,
+-	},
+-	{
+-		.burst_8bit = 48,
+-		.burst_16bit = 24,
+-		.burst_32bit = 12,
+-		.reg = COH901318_CX_CTRL_BURST_COUNT_48_BYTES,
+-	},
+-	{
+-		.burst_8bit = 32,
+-		.burst_16bit = 16,
+-		.burst_32bit = 8,
+-		.reg = COH901318_CX_CTRL_BURST_COUNT_32_BYTES,
+-	},
+-	{
+-		.burst_8bit = 16,
+-		.burst_16bit = 8,
+-		.burst_32bit = 4,
+-		.reg = COH901318_CX_CTRL_BURST_COUNT_16_BYTES,
+-	},
+-	{
+-		.burst_8bit = 8,
+-		.burst_16bit = 4,
+-		.burst_32bit = 2,
+-		.reg = COH901318_CX_CTRL_BURST_COUNT_8_BYTES,
+-	},
+-	{
+-		.burst_8bit = 4,
+-		.burst_16bit = 2,
+-		.burst_32bit = 1,
+-		.reg = COH901318_CX_CTRL_BURST_COUNT_4_BYTES,
+-	},
+-	{
+-		.burst_8bit = 2,
+-		.burst_16bit = 1,
+-		.burst_32bit = 0,
+-		.reg = COH901318_CX_CTRL_BURST_COUNT_2_BYTES,
+-	},
+-	{
+-		.burst_8bit = 1,
+-		.burst_16bit = 0,
+-		.burst_32bit = 0,
+-		.reg = COH901318_CX_CTRL_BURST_COUNT_1_BYTE,
+-	},
+-};
+-
+-static int coh901318_dma_set_runtimeconfig(struct dma_chan *chan,
+-					   struct dma_slave_config *config,
+-					   enum dma_transfer_direction direction)
+-{
+-	struct coh901318_chan *cohc = to_coh901318_chan(chan);
+-	dma_addr_t addr;
+-	enum dma_slave_buswidth addr_width;
+-	u32 maxburst;
+-	u32 ctrl = 0;
+-	int i = 0;
+-
+-	/* We only support mem to per or per to mem transfers */
+-	if (direction == DMA_DEV_TO_MEM) {
+-		addr = config->src_addr;
+-		addr_width = config->src_addr_width;
+-		maxburst = config->src_maxburst;
+-	} else if (direction == DMA_MEM_TO_DEV) {
+-		addr = config->dst_addr;
+-		addr_width = config->dst_addr_width;
+-		maxburst = config->dst_maxburst;
+-	} else {
+-		dev_err(COHC_2_DEV(cohc), "illegal channel mode\n");
+-		return -EINVAL;
 -	}
--	clk_disable_unprepare(d->clk);
+-
+-	dev_dbg(COHC_2_DEV(cohc), "configure channel for %d byte transfers\n",
+-		addr_width);
+-	switch (addr_width)  {
+-	case DMA_SLAVE_BUSWIDTH_1_BYTE:
+-		ctrl |=
+-			COH901318_CX_CTRL_SRC_BUS_SIZE_8_BITS |
+-			COH901318_CX_CTRL_DST_BUS_SIZE_8_BITS;
+-
+-		while (i < ARRAY_SIZE(burst_sizes)) {
+-			if (burst_sizes[i].burst_8bit <= maxburst)
+-				break;
+-			i++;
+-		}
+-
+-		break;
+-	case DMA_SLAVE_BUSWIDTH_2_BYTES:
+-		ctrl |=
+-			COH901318_CX_CTRL_SRC_BUS_SIZE_16_BITS |
+-			COH901318_CX_CTRL_DST_BUS_SIZE_16_BITS;
+-
+-		while (i < ARRAY_SIZE(burst_sizes)) {
+-			if (burst_sizes[i].burst_16bit <= maxburst)
+-				break;
+-			i++;
+-		}
+-
+-		break;
+-	case DMA_SLAVE_BUSWIDTH_4_BYTES:
+-		/* Direction doesn't matter here, it's 32/32 bits */
+-		ctrl |=
+-			COH901318_CX_CTRL_SRC_BUS_SIZE_32_BITS |
+-			COH901318_CX_CTRL_DST_BUS_SIZE_32_BITS;
+-
+-		while (i < ARRAY_SIZE(burst_sizes)) {
+-			if (burst_sizes[i].burst_32bit <= maxburst)
+-				break;
+-			i++;
+-		}
+-
+-		break;
+-	default:
+-		dev_err(COHC_2_DEV(cohc),
+-			"bad runtimeconfig: alien address width\n");
+-		return -EINVAL;
+-	}
+-
+-	ctrl |= burst_sizes[i].reg;
+-	dev_dbg(COHC_2_DEV(cohc),
+-		"selected burst size %d bytes for address width %d bytes, maxburst %d\n",
+-		burst_sizes[i].burst_8bit, addr_width, maxburst);
+-
+-	cohc->addr = addr;
+-	cohc->ctrl = ctrl;
 -
 -	return 0;
 -}
 -
--#ifdef CONFIG_PM_SLEEP
--static int zx_dma_suspend_dev(struct device *dev)
+-static int coh901318_dma_slave_config(struct dma_chan *chan,
+-					   struct dma_slave_config *config)
 -{
--	struct zx_dma_dev *d = dev_get_drvdata(dev);
--	u32 stat = 0;
+-	struct coh901318_chan *cohc = to_coh901318_chan(chan);
 -
--	stat = zx_dma_get_chan_stat(d);
--	if (stat) {
--		dev_warn(d->slave.dev,
--			 "chan %d is running fail to suspend\n", stat);
--		return -1;
--	}
--	clk_disable_unprepare(d->clk);
+-	memcpy(&cohc->config, config, sizeof(*config));
+-
 -	return 0;
 -}
 -
--static int zx_dma_resume_dev(struct device *dev)
+-static void coh901318_base_init(struct dma_device *dma, const int *pick_chans,
+-				struct coh901318_base *base)
 -{
--	struct zx_dma_dev *d = dev_get_drvdata(dev);
--	int ret = 0;
+-	int chans_i;
+-	int i = 0;
+-	struct coh901318_chan *cohc;
 -
--	ret = clk_prepare_enable(d->clk);
--	if (ret < 0) {
--		dev_err(d->slave.dev, "clk_prepare_enable failed: %d\n", ret);
--		return ret;
+-	INIT_LIST_HEAD(&dma->channels);
+-
+-	for (chans_i = 0; pick_chans[chans_i] != -1; chans_i += 2) {
+-		for (i = pick_chans[chans_i]; i <= pick_chans[chans_i+1]; i++) {
+-			cohc = &base->chans[i];
+-
+-			cohc->base = base;
+-			cohc->chan.device = dma;
+-			cohc->id = i;
+-
+-			/* TODO: do we really need this lock if only one
+-			 * client is connected to each channel?
+-			 */
+-
+-			spin_lock_init(&cohc->lock);
+-
+-			cohc->nbr_active_done = 0;
+-			cohc->busy = 0;
+-			INIT_LIST_HEAD(&cohc->free);
+-			INIT_LIST_HEAD(&cohc->active);
+-			INIT_LIST_HEAD(&cohc->queue);
+-
+-			tasklet_setup(&cohc->tasklet, dma_tasklet);
+-
+-			list_add_tail(&cohc->chan.device_node,
+-				      &dma->channels);
+-		}
 -	}
--	zx_dma_init_state(d);
+-}
+-
+-static int __init coh901318_probe(struct platform_device *pdev)
+-{
+-	int err = 0;
+-	struct coh901318_base *base;
+-	int irq;
+-	struct resource *io;
+-
+-	io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!io)
+-		return -ENODEV;
+-
+-	/* Map DMA controller registers to virtual memory */
+-	if (devm_request_mem_region(&pdev->dev,
+-				    io->start,
+-				    resource_size(io),
+-				    pdev->dev.driver->name) == NULL)
+-		return -ENOMEM;
+-
+-	base = devm_kzalloc(&pdev->dev,
+-			    ALIGN(sizeof(struct coh901318_base), 4) +
+-			    U300_DMA_CHANNELS *
+-			    sizeof(struct coh901318_chan),
+-			    GFP_KERNEL);
+-	if (!base)
+-		return -ENOMEM;
+-
+-	base->chans = ((void *)base) + ALIGN(sizeof(struct coh901318_base), 4);
+-
+-	base->virtbase = devm_ioremap(&pdev->dev, io->start, resource_size(io));
+-	if (!base->virtbase)
+-		return -ENOMEM;
+-
+-	base->dev = &pdev->dev;
+-	spin_lock_init(&base->pm.lock);
+-	base->pm.started_channels = 0;
+-
+-	COH901318_DEBUGFS_ASSIGN(debugfs_dma_base, base);
+-
+-	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0)
+-		return irq;
+-
+-	err = devm_request_irq(&pdev->dev, irq, dma_irq_handler, 0,
+-			       "coh901318", base);
+-	if (err)
+-		return err;
+-
+-	base->irq = irq;
+-
+-	err = coh901318_pool_create(&base->pool, &pdev->dev,
+-				    sizeof(struct coh901318_lli),
+-				    32);
+-	if (err)
+-		return err;
+-
+-	/* init channels for device transfers */
+-	coh901318_base_init(&base->dma_slave, dma_slave_channels,
+-			    base);
+-
+-	dma_cap_zero(base->dma_slave.cap_mask);
+-	dma_cap_set(DMA_SLAVE, base->dma_slave.cap_mask);
+-
+-	base->dma_slave.device_alloc_chan_resources = coh901318_alloc_chan_resources;
+-	base->dma_slave.device_free_chan_resources = coh901318_free_chan_resources;
+-	base->dma_slave.device_prep_slave_sg = coh901318_prep_slave_sg;
+-	base->dma_slave.device_tx_status = coh901318_tx_status;
+-	base->dma_slave.device_issue_pending = coh901318_issue_pending;
+-	base->dma_slave.device_config = coh901318_dma_slave_config;
+-	base->dma_slave.device_pause = coh901318_pause;
+-	base->dma_slave.device_resume = coh901318_resume;
+-	base->dma_slave.device_terminate_all = coh901318_terminate_all;
+-	base->dma_slave.dev = &pdev->dev;
+-
+-	err = dma_async_device_register(&base->dma_slave);
+-
+-	if (err)
+-		goto err_register_slave;
+-
+-	/* init channels for memcpy */
+-	coh901318_base_init(&base->dma_memcpy, dma_memcpy_channels,
+-			    base);
+-
+-	dma_cap_zero(base->dma_memcpy.cap_mask);
+-	dma_cap_set(DMA_MEMCPY, base->dma_memcpy.cap_mask);
+-
+-	base->dma_memcpy.device_alloc_chan_resources = coh901318_alloc_chan_resources;
+-	base->dma_memcpy.device_free_chan_resources = coh901318_free_chan_resources;
+-	base->dma_memcpy.device_prep_dma_memcpy = coh901318_prep_memcpy;
+-	base->dma_memcpy.device_tx_status = coh901318_tx_status;
+-	base->dma_memcpy.device_issue_pending = coh901318_issue_pending;
+-	base->dma_memcpy.device_config = coh901318_dma_slave_config;
+-	base->dma_memcpy.device_pause = coh901318_pause;
+-	base->dma_memcpy.device_resume = coh901318_resume;
+-	base->dma_memcpy.device_terminate_all = coh901318_terminate_all;
+-	base->dma_memcpy.dev = &pdev->dev;
+-	/*
+-	 * This controller can only access address at even 32bit boundaries,
+-	 * i.e. 2^2
+-	 */
+-	base->dma_memcpy.copy_align = DMAENGINE_ALIGN_4_BYTES;
+-	err = dma_async_device_register(&base->dma_memcpy);
+-
+-	if (err)
+-		goto err_register_memcpy;
+-
+-	err = of_dma_controller_register(pdev->dev.of_node, coh901318_xlate,
+-					 base);
+-	if (err)
+-		goto err_register_of_dma;
+-
+-	platform_set_drvdata(pdev, base);
+-	dev_info(&pdev->dev, "Initialized COH901318 DMA on virtual base 0x%p\n",
+-		base->virtbase);
+-
+-	return err;
+-
+- err_register_of_dma:
+-	dma_async_device_unregister(&base->dma_memcpy);
+- err_register_memcpy:
+-	dma_async_device_unregister(&base->dma_slave);
+- err_register_slave:
+-	coh901318_pool_destroy(&base->pool);
+-	return err;
+-}
+-static void coh901318_base_remove(struct coh901318_base *base, const int *pick_chans)
+-{
+-	int chans_i;
+-	int i = 0;
+-	struct coh901318_chan *cohc;
+-
+-	for (chans_i = 0; pick_chans[chans_i] != -1; chans_i += 2) {
+-		for (i = pick_chans[chans_i]; i <= pick_chans[chans_i+1]; i++) {
+-			cohc = &base->chans[i];
+-
+-			tasklet_kill(&cohc->tasklet);
+-		}
+-	}
+-
+-}
+-
+-static int coh901318_remove(struct platform_device *pdev)
+-{
+-	struct coh901318_base *base = platform_get_drvdata(pdev);
+-
+-	devm_free_irq(&pdev->dev, base->irq, base);
+-
+-	coh901318_base_remove(base, dma_slave_channels);
+-	coh901318_base_remove(base, dma_memcpy_channels);
+-
+-	of_dma_controller_free(pdev->dev.of_node);
+-	dma_async_device_unregister(&base->dma_memcpy);
+-	dma_async_device_unregister(&base->dma_slave);
+-	coh901318_pool_destroy(&base->pool);
 -	return 0;
+-}
+-
+-static const struct of_device_id coh901318_dt_match[] = {
+-	{ .compatible = "stericsson,coh901318" },
+-	{},
+-};
+-
+-static struct platform_driver coh901318_driver = {
+-	.remove = coh901318_remove,
+-	.driver = {
+-		.name	= "coh901318",
+-		.of_match_table = coh901318_dt_match,
+-	},
+-};
+-
+-static int __init coh901318_init(void)
+-{
+-	return platform_driver_probe(&coh901318_driver, coh901318_probe);
+-}
+-subsys_initcall(coh901318_init);
+-
+-static void __exit coh901318_exit(void)
+-{
+-	platform_driver_unregister(&coh901318_driver);
+-}
+-module_exit(coh901318_exit);
+-
+-MODULE_LICENSE("GPL");
+-MODULE_AUTHOR("Per Friden");
+diff --git a/drivers/dma/coh901318.h b/drivers/dma/coh901318.h
+deleted file mode 100644
+index bbf533600558..000000000000
+--- a/drivers/dma/coh901318.h
++++ /dev/null
+@@ -1,141 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Copyright (C) 2007-2013 ST-Ericsson
+- * DMA driver for COH 901 318
+- * Author: Per Friden <per.friden@stericsson.com>
+- */
+-
+-#ifndef COH901318_H
+-#define COH901318_H
+-
+-#define MAX_DMA_PACKET_SIZE_SHIFT 11
+-#define MAX_DMA_PACKET_SIZE (1 << MAX_DMA_PACKET_SIZE_SHIFT)
+-
+-struct device;
+-
+-struct coh901318_pool {
+-	spinlock_t lock;
+-	struct dma_pool *dmapool;
+-	struct device *dev;
+-
+-#ifdef CONFIG_DEBUG_FS
+-	int debugfs_pool_counter;
+-#endif
+-};
+-
+-/**
+- * struct coh901318_lli - linked list item for DMAC
+- * @control: control settings for DMAC
+- * @src_addr: transfer source address
+- * @dst_addr: transfer destination address
+- * @link_addr:  physical address to next lli
+- * @virt_link_addr: virtual address of next lli (only used by pool_free)
+- * @phy_this: physical address of current lli (only used by pool_free)
+- */
+-struct coh901318_lli {
+-	u32 control;
+-	dma_addr_t src_addr;
+-	dma_addr_t dst_addr;
+-	dma_addr_t link_addr;
+-
+-	void *virt_link_addr;
+-	dma_addr_t phy_this;
+-};
+-
+-/**
+- * coh901318_pool_create() - Creates an dma pool for lli:s
+- * @pool: pool handle
+- * @dev: dma device
+- * @lli_nbr: number of lli:s in the pool
+- * @algin: address alignemtn of lli:s
+- * returns 0 on success otherwise none zero
+- */
+-int coh901318_pool_create(struct coh901318_pool *pool,
+-			  struct device *dev,
+-			  size_t lli_nbr, size_t align);
+-
+-/**
+- * coh901318_pool_destroy() - Destroys the dma pool
+- * @pool: pool handle
+- * returns 0 on success otherwise none zero
+- */
+-int coh901318_pool_destroy(struct coh901318_pool *pool);
+-
+-/**
+- * coh901318_lli_alloc() - Allocates a linked list
+- *
+- * @pool: pool handle
+- * @len: length to list
+- * return: none NULL if success otherwise NULL
+- */
+-struct coh901318_lli *
+-coh901318_lli_alloc(struct coh901318_pool *pool,
+-		    unsigned int len);
+-
+-/**
+- * coh901318_lli_free() - Returns the linked list items to the pool
+- * @pool: pool handle
+- * @lli: reference to lli pointer to be freed
+- */
+-void coh901318_lli_free(struct coh901318_pool *pool,
+-			struct coh901318_lli **lli);
+-
+-/**
+- * coh901318_lli_fill_memcpy() - Prepares the lli:s for dma memcpy
+- * @pool: pool handle
+- * @lli: allocated lli
+- * @src: src address
+- * @size: transfer size
+- * @dst: destination address
+- * @ctrl_chained: ctrl for chained lli
+- * @ctrl_last: ctrl for the last lli
+- * returns number of CPU interrupts for the lli, negative on error.
+- */
+-int
+-coh901318_lli_fill_memcpy(struct coh901318_pool *pool,
+-			  struct coh901318_lli *lli,
+-			  dma_addr_t src, unsigned int size,
+-			  dma_addr_t dst, u32 ctrl_chained, u32 ctrl_last);
+-
+-/**
+- * coh901318_lli_fill_single() - Prepares the lli:s for dma single transfer
+- * @pool: pool handle
+- * @lli: allocated lli
+- * @buf: transfer buffer
+- * @size: transfer size
+- * @dev_addr: address of periphal
+- * @ctrl_chained: ctrl for chained lli
+- * @ctrl_last: ctrl for the last lli
+- * @dir: direction of transfer (to or from device)
+- * returns number of CPU interrupts for the lli, negative on error.
+- */
+-int
+-coh901318_lli_fill_single(struct coh901318_pool *pool,
+-			  struct coh901318_lli *lli,
+-			  dma_addr_t buf, unsigned int size,
+-			  dma_addr_t dev_addr, u32 ctrl_chained, u32 ctrl_last,
+-			  enum dma_transfer_direction dir);
+-
+-/**
+- * coh901318_lli_fill_single() - Prepares the lli:s for dma scatter list transfer
+- * @pool: pool handle
+- * @lli: allocated lli
+- * @sg: scatter gather list
+- * @nents: number of entries in sg
+- * @dev_addr: address of periphal
+- * @ctrl_chained: ctrl for chained lli
+- * @ctrl: ctrl of middle lli
+- * @ctrl_last: ctrl for the last lli
+- * @dir: direction of transfer (to or from device)
+- * @ctrl_irq_mask: ctrl mask for CPU interrupt
+- * returns number of CPU interrupts for the lli, negative on error.
+- */
+-int
+-coh901318_lli_fill_sg(struct coh901318_pool *pool,
+-		      struct coh901318_lli *lli,
+-		      struct scatterlist *sg, unsigned int nents,
+-		      dma_addr_t dev_addr, u32 ctrl_chained,
+-		      u32 ctrl, u32 ctrl_last,
+-		      enum dma_transfer_direction dir, u32 ctrl_irq_mask);
+-
+-#endif /* COH901318_H */
+diff --git a/drivers/dma/coh901318_lli.c b/drivers/dma/coh901318_lli.c
+deleted file mode 100644
+index 6b6c2fd0865a..000000000000
+--- a/drivers/dma/coh901318_lli.c
++++ /dev/null
+@@ -1,313 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * driver/dma/coh901318_lli.c
+- *
+- * Copyright (C) 2007-2009 ST-Ericsson
+- * Support functions for handling lli for dma
+- * Author: Per Friden <per.friden@stericsson.com>
+- */
+-
+-#include <linux/spinlock.h>
+-#include <linux/memory.h>
+-#include <linux/gfp.h>
+-#include <linux/dmapool.h>
+-#include <linux/dmaengine.h>
+-
+-#include "coh901318.h"
+-
+-#if (defined(CONFIG_DEBUG_FS) && defined(CONFIG_U300_DEBUG))
+-#define DEBUGFS_POOL_COUNTER_RESET(pool) (pool->debugfs_pool_counter = 0)
+-#define DEBUGFS_POOL_COUNTER_ADD(pool, add) (pool->debugfs_pool_counter += add)
+-#else
+-#define DEBUGFS_POOL_COUNTER_RESET(pool)
+-#define DEBUGFS_POOL_COUNTER_ADD(pool, add)
+-#endif
+-
+-static struct coh901318_lli *
+-coh901318_lli_next(struct coh901318_lli *data)
+-{
+-	if (data == NULL || data->link_addr == 0)
+-		return NULL;
+-
+-	return (struct coh901318_lli *) data->virt_link_addr;
+-}
+-
+-int coh901318_pool_create(struct coh901318_pool *pool,
+-			  struct device *dev,
+-			  size_t size, size_t align)
+-{
+-	spin_lock_init(&pool->lock);
+-	pool->dev = dev;
+-	pool->dmapool = dma_pool_create("lli_pool", dev, size, align, 0);
+-
+-	DEBUGFS_POOL_COUNTER_RESET(pool);
+-	return 0;
+-}
+-
+-int coh901318_pool_destroy(struct coh901318_pool *pool)
+-{
+-
+-	dma_pool_destroy(pool->dmapool);
+-	return 0;
+-}
+-
+-struct coh901318_lli *
+-coh901318_lli_alloc(struct coh901318_pool *pool, unsigned int len)
+-{
+-	int i;
+-	struct coh901318_lli *head;
+-	struct coh901318_lli *lli;
+-	struct coh901318_lli *lli_prev;
+-	dma_addr_t phy;
+-
+-	if (len == 0)
+-		return NULL;
+-
+-	spin_lock(&pool->lock);
+-
+-	head = dma_pool_alloc(pool->dmapool, GFP_NOWAIT, &phy);
+-
+-	if (head == NULL)
+-		goto err;
+-
+-	DEBUGFS_POOL_COUNTER_ADD(pool, 1);
+-
+-	lli = head;
+-	lli->phy_this = phy;
+-	lli->link_addr = 0x00000000;
+-	lli->virt_link_addr = NULL;
+-
+-	for (i = 1; i < len; i++) {
+-		lli_prev = lli;
+-
+-		lli = dma_pool_alloc(pool->dmapool, GFP_NOWAIT, &phy);
+-
+-		if (lli == NULL)
+-			goto err_clean_up;
+-
+-		DEBUGFS_POOL_COUNTER_ADD(pool, 1);
+-		lli->phy_this = phy;
+-		lli->link_addr = 0x00000000;
+-		lli->virt_link_addr = NULL;
+-
+-		lli_prev->link_addr = phy;
+-		lli_prev->virt_link_addr = lli;
+-	}
+-
+-	spin_unlock(&pool->lock);
+-
+-	return head;
+-
+- err:
+-	spin_unlock(&pool->lock);
+-	return NULL;
+-
+- err_clean_up:
+-	lli_prev->link_addr = 0x00000000U;
+-	spin_unlock(&pool->lock);
+-	coh901318_lli_free(pool, &head);
+-	return NULL;
+-}
+-
+-void coh901318_lli_free(struct coh901318_pool *pool,
+-			struct coh901318_lli **lli)
+-{
+-	struct coh901318_lli *l;
+-	struct coh901318_lli *next;
+-
+-	if (lli == NULL)
+-		return;
+-
+-	l = *lli;
+-
+-	if (l == NULL)
+-		return;
+-
+-	spin_lock(&pool->lock);
+-
+-	while (l->link_addr) {
+-		next = l->virt_link_addr;
+-		dma_pool_free(pool->dmapool, l, l->phy_this);
+-		DEBUGFS_POOL_COUNTER_ADD(pool, -1);
+-		l = next;
+-	}
+-	dma_pool_free(pool->dmapool, l, l->phy_this);
+-	DEBUGFS_POOL_COUNTER_ADD(pool, -1);
+-
+-	spin_unlock(&pool->lock);
+-	*lli = NULL;
+-}
+-
+-int
+-coh901318_lli_fill_memcpy(struct coh901318_pool *pool,
+-			  struct coh901318_lli *lli,
+-			  dma_addr_t source, unsigned int size,
+-			  dma_addr_t destination, u32 ctrl_chained,
+-			  u32 ctrl_eom)
+-{
+-	int s = size;
+-	dma_addr_t src = source;
+-	dma_addr_t dst = destination;
+-
+-	lli->src_addr = src;
+-	lli->dst_addr = dst;
+-
+-	while (lli->link_addr) {
+-		lli->control = ctrl_chained | MAX_DMA_PACKET_SIZE;
+-		lli->src_addr = src;
+-		lli->dst_addr = dst;
+-
+-		s -= MAX_DMA_PACKET_SIZE;
+-		lli = coh901318_lli_next(lli);
+-
+-		src += MAX_DMA_PACKET_SIZE;
+-		dst += MAX_DMA_PACKET_SIZE;
+-	}
+-
+-	lli->control = ctrl_eom | s;
+-	lli->src_addr = src;
+-	lli->dst_addr = dst;
+-
+-	return 0;
+-}
+-
+-int
+-coh901318_lli_fill_single(struct coh901318_pool *pool,
+-			  struct coh901318_lli *lli,
+-			  dma_addr_t buf, unsigned int size,
+-			  dma_addr_t dev_addr, u32 ctrl_chained, u32 ctrl_eom,
+-			  enum dma_transfer_direction dir)
+-{
+-	int s = size;
+-	dma_addr_t src;
+-	dma_addr_t dst;
+-
+-
+-	if (dir == DMA_MEM_TO_DEV) {
+-		src = buf;
+-		dst = dev_addr;
+-
+-	} else if (dir == DMA_DEV_TO_MEM) {
+-
+-		src = dev_addr;
+-		dst = buf;
+-	} else {
+-		return -EINVAL;
+-	}
+-
+-	while (lli->link_addr) {
+-		size_t block_size = MAX_DMA_PACKET_SIZE;
+-		lli->control = ctrl_chained | MAX_DMA_PACKET_SIZE;
+-
+-		/* If we are on the next-to-final block and there will
+-		 * be less than half a DMA packet left for the last
+-		 * block, then we want to make this block a little
+-		 * smaller to balance the sizes. This is meant to
+-		 * avoid too small transfers if the buffer size is
+-		 * (MAX_DMA_PACKET_SIZE*N + 1) */
+-		if (s < (MAX_DMA_PACKET_SIZE + MAX_DMA_PACKET_SIZE/2))
+-			block_size = MAX_DMA_PACKET_SIZE/2;
+-
+-		s -= block_size;
+-		lli->src_addr = src;
+-		lli->dst_addr = dst;
+-
+-		lli = coh901318_lli_next(lli);
+-
+-		if (dir == DMA_MEM_TO_DEV)
+-			src += block_size;
+-		else if (dir == DMA_DEV_TO_MEM)
+-			dst += block_size;
+-	}
+-
+-	lli->control = ctrl_eom | s;
+-	lli->src_addr = src;
+-	lli->dst_addr = dst;
+-
+-	return 0;
+-}
+-
+-int
+-coh901318_lli_fill_sg(struct coh901318_pool *pool,
+-		      struct coh901318_lli *lli,
+-		      struct scatterlist *sgl, unsigned int nents,
+-		      dma_addr_t dev_addr, u32 ctrl_chained, u32 ctrl,
+-		      u32 ctrl_last,
+-		      enum dma_transfer_direction dir, u32 ctrl_irq_mask)
+-{
+-	int i;
+-	struct scatterlist *sg;
+-	u32 ctrl_sg;
+-	dma_addr_t src = 0;
+-	dma_addr_t dst = 0;
+-	u32 bytes_to_transfer;
+-	u32 elem_size;
+-
+-	if (lli == NULL)
+-		goto err;
+-
+-	spin_lock(&pool->lock);
+-
+-	if (dir == DMA_MEM_TO_DEV)
+-		dst = dev_addr;
+-	else if (dir == DMA_DEV_TO_MEM)
+-		src = dev_addr;
+-	else
+-		goto err;
+-
+-	for_each_sg(sgl, sg, nents, i) {
+-		if (sg_is_chain(sg)) {
+-			/* sg continues to the next sg-element don't
+-			 * send ctrl_finish until the last
+-			 * sg-element in the chain
+-			 */
+-			ctrl_sg = ctrl_chained;
+-		} else if (i == nents - 1)
+-			ctrl_sg = ctrl_last;
+-		else
+-			ctrl_sg = ctrl ? ctrl : ctrl_last;
+-
+-
+-		if (dir == DMA_MEM_TO_DEV)
+-			/* increment source address */
+-			src = sg_dma_address(sg);
+-		else
+-			/* increment destination address */
+-			dst = sg_dma_address(sg);
+-
+-		bytes_to_transfer = sg_dma_len(sg);
+-
+-		while (bytes_to_transfer) {
+-			u32 val;
+-
+-			if (bytes_to_transfer > MAX_DMA_PACKET_SIZE) {
+-				elem_size = MAX_DMA_PACKET_SIZE;
+-				val = ctrl_chained;
+-			} else {
+-				elem_size = bytes_to_transfer;
+-				val = ctrl_sg;
+-			}
+-
+-			lli->control = val | elem_size;
+-			lli->src_addr = src;
+-			lli->dst_addr = dst;
+-
+-			if (dir == DMA_DEV_TO_MEM)
+-				dst += elem_size;
+-			else
+-				src += elem_size;
+-
+-			BUG_ON(lli->link_addr & 3);
+-
+-			bytes_to_transfer -= elem_size;
+-			lli = coh901318_lli_next(lli);
+-		}
+-
+-	}
+-	spin_unlock(&pool->lock);
+-
+-	return 0;
+- err:
+-	spin_unlock(&pool->lock);
+-	return -EINVAL;
+-}
+diff --git a/include/linux/platform_data/dma-coh901318.h b/include/linux/platform_data/dma-coh901318.h
+deleted file mode 100644
+index 4cca529f8d56..000000000000
+--- a/include/linux/platform_data/dma-coh901318.h
++++ /dev/null
+@@ -1,72 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * Platform data for the COH901318 DMA controller
+- * Copyright (C) 2007-2013 ST-Ericsson
+- */
+-
+-#ifndef PLAT_COH901318_H
+-#define PLAT_COH901318_H
+-
+-#ifdef CONFIG_COH901318
+-
+-/* We only support the U300 DMA channels */
+-#define U300_DMA_MSL_TX_0		0
+-#define U300_DMA_MSL_TX_1		1
+-#define U300_DMA_MSL_TX_2		2
+-#define U300_DMA_MSL_TX_3		3
+-#define U300_DMA_MSL_TX_4		4
+-#define U300_DMA_MSL_TX_5		5
+-#define U300_DMA_MSL_TX_6		6
+-#define U300_DMA_MSL_RX_0		7
+-#define U300_DMA_MSL_RX_1		8
+-#define U300_DMA_MSL_RX_2		9
+-#define U300_DMA_MSL_RX_3		10
+-#define U300_DMA_MSL_RX_4		11
+-#define U300_DMA_MSL_RX_5		12
+-#define U300_DMA_MSL_RX_6		13
+-#define U300_DMA_MMCSD_RX_TX		14
+-#define U300_DMA_MSPRO_TX		15
+-#define U300_DMA_MSPRO_RX		16
+-#define U300_DMA_UART0_TX		17
+-#define U300_DMA_UART0_RX		18
+-#define U300_DMA_APEX_TX		19
+-#define U300_DMA_APEX_RX		20
+-#define U300_DMA_PCM_I2S0_TX		21
+-#define U300_DMA_PCM_I2S0_RX		22
+-#define U300_DMA_PCM_I2S1_TX		23
+-#define U300_DMA_PCM_I2S1_RX		24
+-#define U300_DMA_XGAM_CDI		25
+-#define U300_DMA_XGAM_PDI		26
+-#define U300_DMA_SPI_TX			27
+-#define U300_DMA_SPI_RX			28
+-#define U300_DMA_GENERAL_PURPOSE_0	29
+-#define U300_DMA_GENERAL_PURPOSE_1	30
+-#define U300_DMA_GENERAL_PURPOSE_2	31
+-#define U300_DMA_GENERAL_PURPOSE_3	32
+-#define U300_DMA_GENERAL_PURPOSE_4	33
+-#define U300_DMA_GENERAL_PURPOSE_5	34
+-#define U300_DMA_GENERAL_PURPOSE_6	35
+-#define U300_DMA_GENERAL_PURPOSE_7	36
+-#define U300_DMA_GENERAL_PURPOSE_8	37
+-#define U300_DMA_UART1_TX		38
+-#define U300_DMA_UART1_RX		39
+-
+-#define U300_DMA_DEVICE_CHANNELS	32
+-#define U300_DMA_CHANNELS		40
+-
+-/**
+- * coh901318_filter_id() - DMA channel filter function
+- * @chan: dma channel handle
+- * @chan_id: id of dma channel to be filter out
+- *
+- * In dma_request_channel() it specifies what channel id to be requested
+- */
+-bool coh901318_filter_id(struct dma_chan *chan, void *chan_id);
+-#else
+-static inline bool coh901318_filter_id(struct dma_chan *chan, void *chan_id)
+-{
+-	return false;
 -}
 -#endif
 -
--static SIMPLE_DEV_PM_OPS(zx_dma_pmops, zx_dma_suspend_dev, zx_dma_resume_dev);
--
--static struct platform_driver zx_pdma_driver = {
--	.driver		= {
--		.name	= DRIVER_NAME,
--		.pm	= &zx_dma_pmops,
--		.of_match_table = zx6702_dma_dt_ids,
--	},
--	.probe		= zx_dma_probe,
--	.remove		= zx_dma_remove,
--};
--
--module_platform_driver(zx_pdma_driver);
--
--MODULE_DESCRIPTION("ZTE ZX296702 DMA Driver");
--MODULE_AUTHOR("Jun Nie jun.nie@linaro.org");
--MODULE_LICENSE("GPL v2");
+-#endif /* PLAT_COH901318_H */
 -- 
 2.29.2
 

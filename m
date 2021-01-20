@@ -2,161 +2,81 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA07D2FC218
-	for <lists+dmaengine@lfdr.de>; Tue, 19 Jan 2021 22:20:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B69DF2FC81F
+	for <lists+dmaengine@lfdr.de>; Wed, 20 Jan 2021 03:41:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730564AbhASSsQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 19 Jan 2021 13:48:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49914 "EHLO mail.kernel.org"
+        id S1726840AbhATCkA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 19 Jan 2021 21:40:00 -0500
+Received: from mga06.intel.com ([134.134.136.31]:3913 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730161AbhASS23 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 19 Jan 2021 13:28:29 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A584A2339E;
-        Tue, 19 Jan 2021 16:45:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611074720;
-        bh=hsbY9jVVjxPkTDo+83FR143J+Trhf5rfoVu0rt8eaRU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Hm2fl8vSTHyel68vvy54BFEYGnKKKObPD/GYX2P3MobIpRoPpKvqSzY1QvCiSboxN
-         Atbr+nOgyM5E6Ak1Tn2YDiYEwZQ1elcqJ3vKfj87oTm5IWkPVZHivOHUyi0op2Ui3+
-         rFv882mtsvqOkDXby9VRaoxXU+TPenjGAGlc+jwnQMbZ9nDbAfaAfIdBVXXiXgA8dm
-         sEePE7usRv/pyhTYuqzHx8zbAPl3d0MNbnzq+l6MhwwjtK9C1DcZmf07jLgG/EOfbn
-         IkNUlVH7H0QQrjmUZKLGXaB5LDyJXd3Fju03xRLM+dpaS4uxVMKMkNj5cqyqOrsRcy
-         z/j89Bn7TZGxg==
-Date:   Tue, 19 Jan 2021 22:15:11 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     mdalam@codeaurora.org
-Cc:     corbet@lwn.net, agross@kernel.org, bjorn.andersson@linaro.org,
-        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, sricharan@codeaurora.org,
-        mdalam=codeaurora.org@codeaurora.org
-Subject: Re: [PATCH] dmaengine: qcom: bam_dma: Add LOCK and UNLOCK flag bit
- support
-Message-ID: <20210119164511.GE2771@vkoul-mobl>
-References: <1608215842-15381-1-git-send-email-mdalam@codeaurora.org>
- <20201221092355.GA3323@vkoul-mobl>
- <efcc74bbdf36b4ddbf764eb6b4ed99f2@codeaurora.org>
- <f7de0117c8ff2e61c09f58acdea0e5b0@codeaurora.org>
- <20210112101056.GI2771@vkoul-mobl>
- <e3cf7c4fc02c54d17fd2fd213f39005b@codeaurora.org>
- <20210115055806.GE2771@vkoul-mobl>
- <97ce29b230164a5848a38f6448d1be60@codeaurora.org>
+        id S2387494AbhATCjR (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 19 Jan 2021 21:39:17 -0500
+IronPort-SDR: mxgiDw+tuMDeHbQB/72JgGLpHagRZOB5POz7dtVacr+C7Txl6hbpBy5CkTnFsF4APipp4u1g/a
+ NCrvlJiigNPA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9869"; a="240572463"
+X-IronPort-AV: E=Sophos;i="5.79,359,1602572400"; 
+   d="scan'208";a="240572463"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2021 18:37:28 -0800
+IronPort-SDR: Zf119pcf4SzdD8zILodBx/X8amBPPZOTguiV0ZLpdjZZQ36bGoKJg+iArkIY9cx15zg5SnzjF1
+ vEapR4FdF4Wg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.79,359,1602572400"; 
+   d="scan'208";a="466923220"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 19 Jan 2021 18:37:28 -0800
+Received: from [10.214.172.191] (unknown [10.214.172.191])
+        by linux.intel.com (Postfix) with ESMTP id 25C1F5807EA;
+        Tue, 19 Jan 2021 18:37:24 -0800 (PST)
+Subject: Re: [PATCH v11 0/2] Add Intel LGM SoC DMA support
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, chuanhua.lei@linux.intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        malliamireddy009@gmail.com, rtanwar@maxlinear.com,
+        lchuanhua@maxlinear.com
+References: <cover.1610703653.git.mallikarjunax.reddy@linux.intel.com>
+ <20210117055714.GJ2771@vkoul-mobl>
+From:   "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
+Message-ID: <f624ed42-f1e8-6309-2439-09f1e496015d@linux.intel.com>
+Date:   Wed, 20 Jan 2021 10:37:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <97ce29b230164a5848a38f6448d1be60@codeaurora.org>
+In-Reply-To: <20210117055714.GJ2771@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 18-01-21, 09:21, mdalam@codeaurora.org wrote:
-> On 2021-01-15 11:28, Vinod Koul wrote:
-> > On 14-01-21, 01:20, mdalam@codeaurora.org wrote:
-> > > On 2021-01-12 15:40, Vinod Koul wrote:
-> > > > On 12-01-21, 15:01, mdalam@codeaurora.org wrote:
-> > > > > On 2020-12-21 23:03, mdalam@codeaurora.org wrote:
-> > > > > > On 2020-12-21 14:53, Vinod Koul wrote:
-> > > > > > > Hello,
-> > > > > > >
-> > > > > > > On 17-12-20, 20:07, Md Sadre Alam wrote:
-> > > > > > > > This change will add support for LOCK & UNLOCK flag bit support
-> > > > > > > > on CMD descriptor.
-> > > > > > > >
-> > > > > > > > If DMA_PREP_LOCK flag passed in prep_slave_sg then requester of this
-> > > > > > > > transaction wanted to lock the DMA controller for this transaction so
-> > > > > > > > BAM driver should set LOCK bit for the HW descriptor.
-> > > > > > > >
-> > > > > > > > If DMA_PREP_UNLOCK flag passed in prep_slave_sg then requester
-> > > > > > > > of this
-> > > > > > > > transaction wanted to unlock the DMA controller.so BAM driver
-> > > > > > > > should set
-> > > > > > > > UNLOCK bit for the HW descriptor.
-> > > > > > >
-> > > > > > > Can you explain why would we need to first lock and then unlock..? How
-> > > > > > > would this be used in real world.
-> > > > > > >
-> > > > > > > I have read a bit of documentation but is unclear to me. Also should
-> > > > > > > this be exposed as an API to users, sounds like internal to driver..?
-> > > > > > >
-> > > > > >
-> > > > > > IPQ5018 SoC having only one Crypto Hardware Engine. This Crypto Hardware
-> > > > > > Engine
-> > > > > > will be shared between A53 core & ubi32 core. There is two separate
-> > > > > > driver dedicated
-> > > > > > to A53 core and ubi32 core. So to use Crypto Hardware Engine
-> > > > > > parallelly for encryption/description
-> > > > > > we need bam locking mechanism. if one driver will submit the request
-> > > > > > for encryption/description
-> > > > > > to Crypto then first it has to set LOCK flag bit on command descriptor
-> > > > > > so that other pipes will
-> > > > > > get locked.
-> > > > > >
-> > > > > > The Pipe Locking/Unlocking will be only on command-descriptor. Upon
-> > > > > > encountering a command descriptor
-> > > >
-> > > > Can you explain what is a cmd descriptor?
-> > > 
-> > >   In BAM pipe descriptor structure there is a field called CMD
-> > > (Command
-> > > descriptor).
-> > >   CMD allows the SW to create descriptors of type Command which does
-> > > not
-> > > generate any data transmissions
-> > >   but configures registers in the Peripheral (write operations, and
-> > > read
-> > > registers operations ).
-> > >   Using command descriptor enables the SW to queue new configurations
-> > > between data transfers in advance.
-> > 
-> > What and when is the CMD descriptor used for..?
-> 
->   CMD descriptor is mainly used for configuring controller register.
->   We can read/write controller register via BAM using CMD descriptor only.
->   CMD descriptor use command pipe for the transaction.
+Ok Vinod.
 
-In which use cases would you need to issue cmd descriptors..?
+Thanks,
+Mallikarjuna reddy A
 
-> > 
-> > > >
-> > > > > > with LOCK bit set, The BAM will lock all other pipes not related to
-> > > > > > the current pipe group, and keep
-> > > > > > handling the current pipe only until it sees the UNLOCK set then it
-> > > > > > will release all locked pipes.
-> > > > > > locked pipe will not fetch new descriptors even if it got event/events
-> > > > > > adding more descriptors for
-> > > > > > this pipe (locked pipe).
-> > > > > >
-> > > > > > No need to expose as an API to user because its internal to driver, so
-> > > > > > while preparing command descriptor
-> > > > > > just we have to update the LOCK/UNLOCK flag.
-> > > >
-> > > > So IIUC, no api right? it would be internal to driver..?
-> > > 
-> > >   Yes its totally internal to deriver.
-> > 
-> > So no need for this patch then, right?
-> 
->   This patch is needed , because if some hardware will shared between
->   multiple core like A53 and ubi32 for example. In IPQ5018 there is
->   only one crypto engine and this will be shared between A53 core and
->   ubi32 core and in A53 core & ubi32 core there are different drivers
->   is getting used. So if encryption/decryption request come at same
->   time from both the driver then things will get messed up. So here we
->   need LOCKING mechanism.  If first request is from A53 core driver
->   then this driver should lock all the pipes other than pipe dedicated
->   to A53 core. So while preparing CMD descriptor driver should used
->   this flag "DMA_PREP_LOCK", Since LOCK and UNLOCK flag bit we can set
->   only on CMD descriptor. Once request processed then driver will set
->   UNLOCK flag on CMD descriptor. Driver should use this flag
->   "DMA_PREP_UNLOCK" while preparing CMD descriptor. Same logic will be
->   apply for ubi32 core driver as well.
-
-Why cant this be applied at driver level, based on txn being issued it
-can lock issue the txn and then unlock when done. I am not convinced yet
-that this needs to be exported to users and can be managed by dmaengine
-driver.
-
-Thanks
--- 
-~Vinod
+On 1/17/2021 1:57 PM, Vinod Koul wrote:
+> On 15-01-21, 17:56, Amireddy Mallikarjuna reddy wrote:
+>> Add DMA controller driver for Lightning Mountain (LGM) family of SoCs.
+>>
+>> The main function of the DMA controller is the transfer of data from/to any
+>> peripheral to/from the memory. A memory to memory copy capability can also
+>> be configured. This ldma driver is used for configure the device and channnels
+>> for data and control paths.
+>>
+>> These controllers provide DMA capabilities for a variety of on-chip
+>> devices such as SSC, HSNAND and GSWIP (Gigabit Switch IP).
+>>
+>> -------------
+>> Future Plans:
+>> -------------
+>> LGM SOC also supports Hardware Memory Copy engine.
+>> The role of the HW Memory copy engine is to offload memory copy operations
+>> from the CPU.
+> ??
+>
+> Please send updates against already applied patches and not an updated
+> series!
+>

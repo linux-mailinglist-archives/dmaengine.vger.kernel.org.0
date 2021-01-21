@@ -2,37 +2,37 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD44B2FE807
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Jan 2021 11:51:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 81C292FE804
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Jan 2021 11:51:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbhAUKtO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 21 Jan 2021 05:49:14 -0500
-Received: from mga06.intel.com ([134.134.136.31]:36491 "EHLO mga06.intel.com"
+        id S1729394AbhAUKsy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 21 Jan 2021 05:48:54 -0500
+Received: from mga06.intel.com ([134.134.136.31]:36494 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729738AbhAUKrn (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 21 Jan 2021 05:47:43 -0500
-IronPort-SDR: dJlYdkoviniQfZG0vOXKPe2TeA6abCWWLjtIJ+xwq2x97saI9EFMEQYe0Y/Rqr3otydmuHnVvg
- D9M1OtuYEpcQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9870"; a="240790306"
+        id S1729549AbhAUKsC (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 21 Jan 2021 05:48:02 -0500
+IronPort-SDR: +rHKiSyVZBObLbq324vIlJyKlaAENt35zvvc+XLV9TE1vowIjcjkEbFe+avknnoKsrCQhzUV2T
+ 28Uo9cn30c3w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9870"; a="240790313"
 X-IronPort-AV: E=Sophos;i="5.79,363,1602572400"; 
-   d="scan'208";a="240790306"
+   d="scan'208";a="240790313"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2021 02:45:27 -0800
-IronPort-SDR: uJw03nBVjMFQeal3VZt23f6J58s7ZV3WCtl4M7s4+cJuHFjRf9Kc2J1apcA71DUs2mMTAizAal
- iqUgcyb9e8zA==
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2021 02:45:30 -0800
+IronPort-SDR: 7cQScfLmupPtJURhvd89FTXyH5ZHsxXyYwAmkDZ8G5NKs1ClUaaJkoT/sn/y8DKVB1ygHV41+x
+ yAIHzSyhLOgg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.79,363,1602572400"; 
-   d="scan'208";a="356417737"
+   d="scan'208";a="356417764"
 Received: from jsia-hp-z620-workstation.png.intel.com ([10.221.118.135])
-  by fmsmga008.fm.intel.com with ESMTP; 21 Jan 2021 02:45:24 -0800
+  by fmsmga008.fm.intel.com with ESMTP; 21 Jan 2021 02:45:28 -0800
 From:   Sia Jee Heng <jee.heng.sia@intel.com>
 To:     vkoul@kernel.org, Eugeniy.Paltsev@synopsys.com, robh+dt@kernel.org
 Cc:     andriy.shevchenko@linux.intel.com, jee.heng.sia@intel.com,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v11 12/16] dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA support
-Date:   Thu, 21 Jan 2021 18:27:22 +0800
-Message-Id: <20210121102726.22805-13-jee.heng.sia@intel.com>
+Subject: [PATCH v11 13/16] dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA handshake
+Date:   Thu, 21 Jan 2021 18:27:23 +0800
+Message-Id: <20210121102726.22805-14-jee.heng.sia@intel.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20210121102726.22805-1-jee.heng.sia@intel.com>
 References: <20210121102726.22805-1-jee.heng.sia@intel.com>
@@ -40,51 +40,101 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add support for Intel KeemBay AxiDMA to the .compatible field.
-The AxiDMA Apb region will be accessible if the compatible string
-matches the "intel,kmb-axi-dma".
+Add support for Intel KeemBay AxiDMA device handshake programming.
+Device handshake number passed in to the AxiDMA shall be written to
+the Intel KeemBay AxiDMA hardware handshake registers before DMA
+operations are started.
 
 Signed-off-by: Sia Jee Heng <jee.heng.sia@intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Reviewed-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 Tested-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 ---
- drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 50 +++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
 diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-index 830d3de76abd..062d27c61983 100644
+index 062d27c61983..e19369f9365a 100644
 --- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
 +++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
-@@ -1160,6 +1160,7 @@ static int parse_device_properties(struct axi_dma_chip *chip)
+@@ -445,6 +445,48 @@ static void dma_chan_free_chan_resources(struct dma_chan *dchan)
+ 	pm_runtime_put(chan->chip->dev);
+ }
  
- static int dw_probe(struct platform_device *pdev)
- {
-+	struct device_node *node = pdev->dev.of_node;
- 	struct axi_dma_chip *chip;
- 	struct resource *mem;
- 	struct dw_axi_dma *dw;
-@@ -1192,6 +1193,12 @@ static int dw_probe(struct platform_device *pdev)
- 	if (IS_ERR(chip->regs))
- 		return PTR_ERR(chip->regs);
- 
-+	if (of_device_is_compatible(node, "intel,kmb-axi-dma")) {
-+		chip->apb_regs = devm_platform_ioremap_resource(pdev, 1);
-+		if (IS_ERR(chip->apb_regs))
-+			return PTR_ERR(chip->apb_regs);
++static void dw_axi_dma_set_hw_channel(struct axi_dma_chip *chip,
++				      u32 handshake_num, bool set)
++{
++	unsigned long start = 0;
++	unsigned long reg_value;
++	unsigned long reg_mask;
++	unsigned long reg_set;
++	unsigned long mask;
++	unsigned long val;
++
++	if (!chip->apb_regs) {
++		dev_dbg(chip->dev, "apb_regs not initialized\n");
++		return;
 +	}
 +
- 	chip->core_clk = devm_clk_get(chip->dev, "core-clk");
- 	if (IS_ERR(chip->core_clk))
- 		return PTR_ERR(chip->core_clk);
-@@ -1336,6 +1343,7 @@ static const struct dev_pm_ops dw_axi_dma_pm_ops = {
++	/*
++	 * An unused DMA channel has a default value of 0x3F.
++	 * Lock the DMA channel by assign a handshake number to the channel.
++	 * Unlock the DMA channel by assign 0x3F to the channel.
++	 */
++	if (set) {
++		reg_set = UNUSED_CHANNEL;
++		val = handshake_num;
++	} else {
++		reg_set = handshake_num;
++		val = UNUSED_CHANNEL;
++	}
++
++	reg_value = lo_hi_readq(chip->apb_regs + DMAC_APB_HW_HS_SEL_0);
++
++	for_each_set_clump8(start, reg_mask, &reg_value, 64) {
++		if (reg_mask == reg_set) {
++			mask = GENMASK_ULL(start + 7, start);
++			reg_value &= ~mask;
++			reg_value |= rol64(val, start);
++			lo_hi_writeq(reg_value,
++				     chip->apb_regs + DMAC_APB_HW_HS_SEL_0);
++			break;
++		}
++	}
++}
++
+ /*
+  * If DW_axi_dmac sees CHx_CTL.ShadowReg_Or_LLI_Last bit of the fetched LLI
+  * as 1, it understands that the current block is the final block in the
+@@ -626,6 +668,8 @@ dw_axi_dma_chan_prep_cyclic(struct dma_chan *dchan, dma_addr_t dma_addr,
+ 		llp = hw_desc->llp;
+ 	} while (num_periods);
  
- static const struct of_device_id dw_dma_of_id_table[] = {
- 	{ .compatible = "snps,axi-dma-1.01a" },
-+	{ .compatible = "intel,kmb-axi-dma" },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, dw_dma_of_id_table);
++	dw_axi_dma_set_hw_channel(chan->chip, chan->hw_handshake_num, true);
++
+ 	return vchan_tx_prep(&chan->vc, &desc->vd, flags);
+ 
+ err_desc_get:
+@@ -684,6 +728,8 @@ dw_axi_dma_chan_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
+ 		llp = hw_desc->llp;
+ 	} while (sg_len);
+ 
++	dw_axi_dma_set_hw_channel(chan->chip, chan->hw_handshake_num, true);
++
+ 	return vchan_tx_prep(&chan->vc, &desc->vd, flags);
+ 
+ err_desc_get:
+@@ -959,6 +1005,10 @@ static int dma_chan_terminate_all(struct dma_chan *dchan)
+ 		dev_warn(dchan2dev(dchan),
+ 			 "%s failed to stop\n", axi_chan_name(chan));
+ 
++	if (chan->direction != DMA_MEM_TO_MEM)
++		dw_axi_dma_set_hw_channel(chan->chip,
++					  chan->hw_handshake_num, false);
++
+ 	spin_lock_irqsave(&chan->vc.lock, flags);
+ 
+ 	vchan_get_all_descriptors(&chan->vc, &head);
 -- 
 2.18.0
 

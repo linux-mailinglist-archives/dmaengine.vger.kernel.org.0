@@ -2,37 +2,37 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55D632FE28C
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Jan 2021 07:18:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4605A2FE28E
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Jan 2021 07:18:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbhAUGRx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 21 Jan 2021 01:17:53 -0500
-Received: from mga11.intel.com ([192.55.52.93]:10404 "EHLO mga11.intel.com"
+        id S1726837AbhAUGR4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 21 Jan 2021 01:17:56 -0500
+Received: from mga11.intel.com ([192.55.52.93]:10408 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726703AbhAUGP5 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        id S1726702AbhAUGP5 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
         Thu, 21 Jan 2021 01:15:57 -0500
-IronPort-SDR: NPuQ3UJllaFzUzDcv20sAJ0C4nIzSlMjob77RX2VCb6gRpFax0NQ5FgqYxDE9Z+fuyZKQHLt9E
- OVWfRF9/KXdA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9870"; a="175716801"
+IronPort-SDR: UdnsZct8SYfs7z3WSSBj8ImVEBosefgj+n59CikSl8IU/NblL8Ra7xx3C+sDxkYB0KosHtGDXP
+ 4TohsSEOL6lA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9870"; a="175716802"
 X-IronPort-AV: E=Sophos;i="5.79,363,1602572400"; 
-   d="scan'208";a="175716801"
+   d="scan'208";a="175716802"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2021 22:14:41 -0800
-IronPort-SDR: vfpoBzzVGKgNa8rtuFcVWKjZRHvpcDCTQvso6Zq0ubGvpN4bBoIDcix6O5sXJpv7WunXWt1H1J
- Ja6VLqvZJWhA==
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2021 22:14:44 -0800
+IronPort-SDR: yToBH0dYuW7YCxSpLiY76uHw32QDLVjrIN9SyS8jciIiQ6Pdkt4X2J4iCMvbeaCUKY1txg1Akq
+ YiEBoJSo5JhA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.79,363,1602572400"; 
-   d="scan'208";a="427201421"
+   d="scan'208";a="427201433"
 Received: from jsia-hp-z620-workstation.png.intel.com ([10.221.118.135])
-  by orsmga001.jf.intel.com with ESMTP; 20 Jan 2021 22:14:39 -0800
+  by orsmga001.jf.intel.com with ESMTP; 20 Jan 2021 22:14:42 -0800
 From:   Sia Jee Heng <jee.heng.sia@intel.com>
 To:     vkoul@kernel.org, Eugeniy.Paltsev@synopsys.com, robh+dt@kernel.org
 Cc:     andriy.shevchenko@linux.intel.com, jee.heng.sia@intel.com,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v10 11/16] dmaengine: dw-axi-dmac: Add Intel KeemBay DMA register fields
-Date:   Thu, 21 Jan 2021 13:56:36 +0800
-Message-Id: <20210121055641.6307-12-jee.heng.sia@intel.com>
+Subject: [PATCH v10 12/16] dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA support
+Date:   Thu, 21 Jan 2021 13:56:37 +0800
+Message-Id: <20210121055641.6307-13-jee.heng.sia@intel.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20210121055641.6307-1-jee.heng.sia@intel.com>
 References: <20210121055641.6307-1-jee.heng.sia@intel.com>
@@ -40,50 +40,51 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add support for Intel KeemBay DMA registers. These registers are required
-to run data transfer between device to memory and memory to device on Intel
-KeemBay SoC.
+Add support for Intel KeemBay AxiDMA to the .compatible field.
+The AxiDMA Apb region will be accessible if the compatible string
+matches the "intel,kmb-axi-dma".
 
 Signed-off-by: Sia Jee Heng <jee.heng.sia@intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Reviewed-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 Tested-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 ---
- drivers/dma/dw-axi-dmac/dw-axi-dmac.h | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-index 46baf93de617..3a357f7fda02 100644
---- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-+++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
-@@ -63,6 +63,7 @@ struct axi_dma_chip {
- 	struct device		*dev;
- 	int			irq;
- 	void __iomem		*regs;
-+	void __iomem		*apb_regs;
- 	struct clk		*core_clk;
- 	struct clk		*cfgr_clk;
- 	struct dw_axi_dma	*dw;
-@@ -169,6 +170,19 @@ static inline struct axi_dma_chan *dchan_to_axi_dma_chan(struct dma_chan *dchan)
- #define CH_INTSIGNAL_ENA	0x090 /* R/W Chan Interrupt Signal Enable */
- #define CH_INTCLEAR		0x098 /* W Chan Interrupt Clear */
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+index 830d3de76abd..062d27c61983 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+@@ -1160,6 +1160,7 @@ static int parse_device_properties(struct axi_dma_chip *chip)
  
-+/* These Apb registers are used by Intel KeemBay SoC */
-+#define DMAC_APB_CFG		0x000 /* DMAC Apb Configuration Register */
-+#define DMAC_APB_STAT		0x004 /* DMAC Apb Status Register */
-+#define DMAC_APB_DEBUG_STAT_0	0x008 /* DMAC Apb Debug Status Register 0 */
-+#define DMAC_APB_DEBUG_STAT_1	0x00C /* DMAC Apb Debug Status Register 1 */
-+#define DMAC_APB_HW_HS_SEL_0	0x010 /* DMAC Apb HW HS register 0 */
-+#define DMAC_APB_HW_HS_SEL_1	0x014 /* DMAC Apb HW HS register 1 */
-+#define DMAC_APB_LPI		0x018 /* DMAC Apb Low Power Interface Reg */
-+#define DMAC_APB_BYTE_WR_CH_EN	0x01C /* DMAC Apb Byte Write Enable */
-+#define DMAC_APB_HALFWORD_WR_CH_EN	0x020 /* DMAC Halfword write enables */
+ static int dw_probe(struct platform_device *pdev)
+ {
++	struct device_node *node = pdev->dev.of_node;
+ 	struct axi_dma_chip *chip;
+ 	struct resource *mem;
+ 	struct dw_axi_dma *dw;
+@@ -1192,6 +1193,12 @@ static int dw_probe(struct platform_device *pdev)
+ 	if (IS_ERR(chip->regs))
+ 		return PTR_ERR(chip->regs);
+ 
++	if (of_device_is_compatible(node, "intel,kmb-axi-dma")) {
++		chip->apb_regs = devm_platform_ioremap_resource(pdev, 1);
++		if (IS_ERR(chip->apb_regs))
++			return PTR_ERR(chip->apb_regs);
++	}
 +
-+#define UNUSED_CHANNEL		0x3F /* Set unused DMA channel to 0x3F */
-+#define MAX_BLOCK_SIZE		0x1000 /* 1024 blocks * 4 bytes data width */
+ 	chip->core_clk = devm_clk_get(chip->dev, "core-clk");
+ 	if (IS_ERR(chip->core_clk))
+ 		return PTR_ERR(chip->core_clk);
+@@ -1336,6 +1343,7 @@ static const struct dev_pm_ops dw_axi_dma_pm_ops = {
  
- /* DMAC_CFG */
- #define DMAC_EN_POS			0
+ static const struct of_device_id dw_dma_of_id_table[] = {
+ 	{ .compatible = "snps,axi-dma-1.01a" },
++	{ .compatible = "intel,kmb-axi-dma" },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, dw_dma_of_id_table);
 -- 
 2.18.0
 

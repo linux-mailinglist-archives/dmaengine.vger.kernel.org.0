@@ -2,37 +2,37 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FE782FE276
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Jan 2021 07:17:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 55D632FE28C
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Jan 2021 07:18:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbhAUGP6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 21 Jan 2021 01:15:58 -0500
-Received: from mga11.intel.com ([192.55.52.93]:10401 "EHLO mga11.intel.com"
+        id S1726809AbhAUGRx (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 21 Jan 2021 01:17:53 -0500
+Received: from mga11.intel.com ([192.55.52.93]:10404 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726689AbhAUGPz (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 21 Jan 2021 01:15:55 -0500
-IronPort-SDR: G4f1YPEWu/5dujgZBmh5i1vbnu6ycBd0+mDdvD5/uln6tB50XHpWkb+5LtOCEg2YepIanPvrYW
- mvTH/Wn1MErQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9870"; a="175716799"
+        id S1726703AbhAUGP5 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 21 Jan 2021 01:15:57 -0500
+IronPort-SDR: NPuQ3UJllaFzUzDcv20sAJ0C4nIzSlMjob77RX2VCb6gRpFax0NQ5FgqYxDE9Z+fuyZKQHLt9E
+ OVWfRF9/KXdA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9870"; a="175716801"
 X-IronPort-AV: E=Sophos;i="5.79,363,1602572400"; 
-   d="scan'208";a="175716799"
+   d="scan'208";a="175716801"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2021 22:14:38 -0800
-IronPort-SDR: 4HwYLppXxwum7tsxjAzI/JS223bOy9SDt2B218QeXUi+TIpVjH+JXtWWpAtA1GhBLKcca0IxnG
- zJXvmOXvO5Mg==
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2021 22:14:41 -0800
+IronPort-SDR: vfpoBzzVGKgNa8rtuFcVWKjZRHvpcDCTQvso6Zq0ubGvpN4bBoIDcix6O5sXJpv7WunXWt1H1J
+ Ja6VLqvZJWhA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.79,363,1602572400"; 
-   d="scan'208";a="427201408"
+   d="scan'208";a="427201421"
 Received: from jsia-hp-z620-workstation.png.intel.com ([10.221.118.135])
-  by orsmga001.jf.intel.com with ESMTP; 20 Jan 2021 22:14:36 -0800
+  by orsmga001.jf.intel.com with ESMTP; 20 Jan 2021 22:14:39 -0800
 From:   Sia Jee Heng <jee.heng.sia@intel.com>
 To:     vkoul@kernel.org, Eugeniy.Paltsev@synopsys.com, robh+dt@kernel.org
 Cc:     andriy.shevchenko@linux.intel.com, jee.heng.sia@intel.com,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v10 10/16] dt-binding: dma: dw-axi-dmac: Add support for Intel KeemBay AxiDMA
-Date:   Thu, 21 Jan 2021 13:56:35 +0800
-Message-Id: <20210121055641.6307-11-jee.heng.sia@intel.com>
+Subject: [PATCH v10 11/16] dmaengine: dw-axi-dmac: Add Intel KeemBay DMA register fields
+Date:   Thu, 21 Jan 2021 13:56:36 +0800
+Message-Id: <20210121055641.6307-12-jee.heng.sia@intel.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20210121055641.6307-1-jee.heng.sia@intel.com>
 References: <20210121055641.6307-1-jee.heng.sia@intel.com>
@@ -40,47 +40,50 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add support for Intel KeemBay AxiDMA to the dw-axi-dmac
-Schemas DT binding.
+Add support for Intel KeemBay DMA registers. These registers are required
+to run data transfer between device to memory and memory to device on Intel
+KeemBay SoC.
 
 Signed-off-by: Sia Jee Heng <jee.heng.sia@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Reviewed-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Tested-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 ---
- Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-index 3d2515463d56..79e241498e25 100644
---- a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-+++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-@@ -8,6 +8,7 @@ title: Synopsys DesignWare AXI DMA Controller
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+index 46baf93de617..3a357f7fda02 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+@@ -63,6 +63,7 @@ struct axi_dma_chip {
+ 	struct device		*dev;
+ 	int			irq;
+ 	void __iomem		*regs;
++	void __iomem		*apb_regs;
+ 	struct clk		*core_clk;
+ 	struct clk		*cfgr_clk;
+ 	struct dw_axi_dma	*dw;
+@@ -169,6 +170,19 @@ static inline struct axi_dma_chan *dchan_to_axi_dma_chan(struct dma_chan *dchan)
+ #define CH_INTSIGNAL_ENA	0x090 /* R/W Chan Interrupt Signal Enable */
+ #define CH_INTCLEAR		0x098 /* W Chan Interrupt Clear */
  
- maintainers:
-   - Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-+  - Jee Heng Sia <jee.heng.sia@intel.com>
++/* These Apb registers are used by Intel KeemBay SoC */
++#define DMAC_APB_CFG		0x000 /* DMAC Apb Configuration Register */
++#define DMAC_APB_STAT		0x004 /* DMAC Apb Status Register */
++#define DMAC_APB_DEBUG_STAT_0	0x008 /* DMAC Apb Debug Status Register 0 */
++#define DMAC_APB_DEBUG_STAT_1	0x00C /* DMAC Apb Debug Status Register 1 */
++#define DMAC_APB_HW_HS_SEL_0	0x010 /* DMAC Apb HW HS register 0 */
++#define DMAC_APB_HW_HS_SEL_1	0x014 /* DMAC Apb HW HS register 1 */
++#define DMAC_APB_LPI		0x018 /* DMAC Apb Low Power Interface Reg */
++#define DMAC_APB_BYTE_WR_CH_EN	0x01C /* DMAC Apb Byte Write Enable */
++#define DMAC_APB_HALFWORD_WR_CH_EN	0x020 /* DMAC Halfword write enables */
++
++#define UNUSED_CHANNEL		0x3F /* Set unused DMA channel to 0x3F */
++#define MAX_BLOCK_SIZE		0x1000 /* 1024 blocks * 4 bytes data width */
  
- description:
-   Synopsys DesignWare AXI DMA Controller DT Binding
-@@ -19,14 +20,18 @@ properties:
-   compatible:
-     enum:
-       - snps,axi-dma-1.01a
-+      - intel,kmb-axi-dma
- 
-   reg:
-+    minItems: 1
-     items:
-       - description: Address range of the DMAC registers
-+      - description: Address range of the DMAC APB registers
- 
-   reg-names:
-     items:
-       - const: axidma_ctrl_regs
-+      - const: axidma_apb_regs
- 
-   interrupts:
-     maxItems: 1
+ /* DMAC_CFG */
+ #define DMAC_EN_POS			0
 -- 
 2.18.0
 

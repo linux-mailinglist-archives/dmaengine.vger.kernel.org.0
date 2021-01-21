@@ -2,163 +2,422 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A362C2FE9EA
-	for <lists+dmaengine@lfdr.de>; Thu, 21 Jan 2021 13:24:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E0F62FE9E5
+	for <lists+dmaengine@lfdr.de>; Thu, 21 Jan 2021 13:23:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730421AbhAUMXi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 21 Jan 2021 07:23:38 -0500
-Received: from mga05.intel.com ([192.55.52.43]:1666 "EHLO mga05.intel.com"
+        id S1729920AbhAUKw1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 21 Jan 2021 05:52:27 -0500
+Received: from mga06.intel.com ([134.134.136.31]:36491 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727900AbhAUKpc (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 21 Jan 2021 05:45:32 -0500
-IronPort-SDR: iK5J0kb9pZGcqoCW7frbpLwcVx4x4tEv/SnXNx2dCvHDirUIS2V3dnozK1sMGpwdaZOhK+0SYa
- yYc0AuVXF9cg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9870"; a="264064898"
+        id S1729026AbhAUKpn (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 21 Jan 2021 05:45:43 -0500
+IronPort-SDR: I/f2SpFEelZbg8324sPBTj/J8ccjgVSEfiOUP6LkzdnwYLbHWIXmlIidA/VHEwv8L/SY5DhsSZ
+ lxq6d/AGzGPQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9870"; a="240790255"
 X-IronPort-AV: E=Sophos;i="5.79,363,1602572400"; 
-   d="scan'208";a="264064898"
+   d="scan'208";a="240790255"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2021 02:44:46 -0800
-IronPort-SDR: U/BYs4TmlOYrAtGVLsA7+bIfaTy9EHPUgEBoKcsPjK8LMAhldQtUt8//yq1Uy7y/n0191HJrTS
- jG5m0DHJu6Ow==
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2021 02:44:55 -0800
+IronPort-SDR: PttNrkN1SYG9Z2G0zslcle36DqwN/mtEu1ckuTTUWZsvjeuW14Zzd8ObXcZHVjyUcGSh7/+EuE
+ O3O45WowKOQg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.79,363,1602572400"; 
-   d="scan'208";a="356417382"
+   d="scan'208";a="356417446"
 Received: from jsia-hp-z620-workstation.png.intel.com ([10.221.118.135])
-  by fmsmga008.fm.intel.com with ESMTP; 21 Jan 2021 02:44:43 -0800
+  by fmsmga008.fm.intel.com with ESMTP; 21 Jan 2021 02:44:53 -0800
 From:   Sia Jee Heng <jee.heng.sia@intel.com>
 To:     vkoul@kernel.org, Eugeniy.Paltsev@synopsys.com, robh+dt@kernel.org
 Cc:     andriy.shevchenko@linux.intel.com, jee.heng.sia@intel.com,
         dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH v11 00/16] dmaengine: dw-axi-dmac: support Intel KeemBay AxiDMA
-Date:   Thu, 21 Jan 2021 18:27:10 +0800
-Message-Id: <20210121102726.22805-1-jee.heng.sia@intel.com>
+Subject: [PATCH v11 02/16] dmaengine: dw-axi-dmac: simplify descriptor management
+Date:   Thu, 21 Jan 2021 18:27:12 +0800
+Message-Id: <20210121102726.22805-3-jee.heng.sia@intel.com>
 X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20210121102726.22805-1-jee.heng.sia@intel.com>
+References: <20210121102726.22805-1-jee.heng.sia@intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The below patch series are to support AxiDMA running on Intel KeemBay SoC.
-The base driver is dw-axi-dmac. This driver only support DMA memory copy transfers.
-Code refactoring is needed so that additional features can be supported.
-The features added in this patch series are:
-- Replacing Linked List with virtual descriptor management.
-- Remove unrelated hw desc stuff from dma memory pool.
-- Manage dma memory pool alloc/destroy based on channel activity.
-- Support dmaengine device_sync() callback.
-- Support dmaengine device_config().
-- Support dmaengine device_prep_slave_sg().
-- Support dmaengine device_prep_dma_cyclic().
-- Support of_dma_controller_register().
-- Support burst residue granularity.
-- Support Intel KeemBay AxiDMA registers.
-- Support Intel KeemBay AxiDMA device handshake.
-- Support Intel KeemBay AxiDMA BYTE and HALFWORD device operation.
-- Add constraint to Max segment size.
-- Virtually split the linked-list.
+Simplify and refactor the descriptor management by removing the redundant
+Linked List Item (LLI) queue control logic from the AxiDMA driver.
+The descriptor is split into virtual descriptor and hardware LLI so that
+only hardware LLI memories are allocated from the DMA memory pool.
 
-This patch series are tested on Intel KeemBay platform.
-Eugeniy Paltsev has runtime tested this patch series on HSDK SoC/board.
+Up to 64 descriptors can be allocated within a PAGE_SIZE compare to 16
+descriptors in previous version. This solves the problem where an
+ALSA driver expects more than 16 DMA descriptors to run.
 
-v11:
-- Fixed bot build warning.
+Signed-off-by: Sia Jee Heng <jee.heng.sia@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Tested-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+ .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 164 ++++++++++--------
+ drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |   9 +-
+ 2 files changed, 102 insertions(+), 71 deletions(-)
 
-v10:
-- Rebased to kernel v5.11-rc4
-- Added Reviewed-by and Tested-by tag from Eugeniy Paltsev.
-
-v9:
-- Logic checked on apb_regs inside the function.
-- Improved code scalability so that missing of apb_regs wouldn't failed
-  the common callback functions.
-
-v8:
-- Rebased to kernel v5.11-rc1.
-- Added reviewed-by tag from Rob.
-
-v7:
-- Added 'allOf' and '$ref:dma-controller.yaml#' in DT binding.
-- Removed the dma-channels common description in DT binding.
-- Removed the default fields in DT binding.
-
-v6:
-- Removed 'allOf' cases in DT binding.
-- Added '>' at the end of the email address.
-- Removed additional '|' at the start of description.
-- Fixed space indent.
-- Added proper constraint in DT binding.
-- Removed second example in DT binding.
-
-v5:
-- Added comment to the Apb registers used by Intel KeemBay Soc.
-- Renamed "hs_num" to "handshake_num".
-- Conditional check for the compatible property and return error
-  instead of printing warning.
-- Added patch 16th to virtually split the linked-list as per
-  request from ALSA team.
-
-v4:
-- Fixed bot found errors running make_dt_binding_check.
-- Added minItems: 1 to the YAML schemas DT binding.
-- Updated "reg" field to the YAML schemas DT binding.
-
-v3:
-- Added additionalProperties: false to the YAML schemas DT binding.
-- Reordered patch sequence for patch 10th, 11th and 12th so that
-  DT binding come first, follow by adding Intel KeemBay SoC registers
-  and update .compatible field.
-- Checked txstate NULL condition.
-- Created helper function dw_axi_dma_set_hw_desc() to handle common code.
-
-v2:
-- Rebased to v5.10-rc1 kernel.
-- Added support for dmaengine device_config().
-- Added support for dmaengine device_prep_slave_sg().
-- Added support for dmaengine device_prep_dma_cyclic().
-- Added support for of_dma_controller_register().
-- Added support for burst residue granularity.
-- Added support for Intel KeemBay AxiDMA registers.
-- Added support for Intel KeemBay AxiDMA device handshake.
-- Added support for Intel KeemBay AxiDMA BYTE and HALFWORD device operation.
-- Added constraint to Max segment size.
-
-v1:
-- Initial version. Patch on top of dw-axi-dma driver. This version improve
-  the descriptor management by replacing Linked List Item (LLI) with
-  virtual descriptor management, only allocate hardware LLI memories from
-  DMA memory pool, manage DMA memory pool alloc/destroy based on channel
-  activity and to support device_sync callback.
-
-Sia Jee Heng (16):
-  dt-bindings: dma: Add YAML schemas for dw-axi-dmac
-  dmaengine: dw-axi-dmac: simplify descriptor management
-  dmaengine: dw-axi-dmac: move dma_pool_create() to
-    alloc_chan_resources()
-  dmaengine: dw-axi-dmac: Add device_synchronize() callback
-  dmaengine: dw-axi-dmac: Add device_config operation
-  dmaengine: dw-axi-dmac: Support device_prep_slave_sg
-  dmaegine: dw-axi-dmac: Support device_prep_dma_cyclic()
-  dmaengine: dw-axi-dmac: Support of_dma_controller_register()
-  dmaengine: dw-axi-dmac: Support burst residue granularity
-  dt-binding: dma: dw-axi-dmac: Add support for Intel KeemBay AxiDMA
-  dmaengine: dw-axi-dmac: Add Intel KeemBay DMA register fields
-  dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA support
-  dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA handshake
-  dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA BYTE and HALFWORD
-    registers
-  dmaengine: dw-axi-dmac: Set constraint to the Max segment size
-  dmaengine: dw-axi-dmac: Virtually split the linked-list
-
- .../bindings/dma/snps,dw-axi-dmac.txt         |  39 -
- .../bindings/dma/snps,dw-axi-dmac.yaml        | 126 ++++
- .../dma/dw-axi-dmac/dw-axi-dmac-platform.c    | 696 +++++++++++++++---
- drivers/dma/dw-axi-dmac/dw-axi-dmac.h         |  34 +-
- 4 files changed, 763 insertions(+), 132 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
- create mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.yaml
-
-
-base-commit: 9791581c049c10929e97098374dd1716a81fefcc
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+index e164f3295f5d..350968baaf88 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+@@ -21,6 +21,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/property.h>
++#include <linux/slab.h>
+ #include <linux/types.h>
+ 
+ #include "dw-axi-dmac.h"
+@@ -195,43 +196,58 @@ static inline const char *axi_chan_name(struct axi_dma_chan *chan)
+ 	return dma_chan_name(&chan->vc.chan);
+ }
+ 
+-static struct axi_dma_desc *axi_desc_get(struct axi_dma_chan *chan)
++static struct axi_dma_desc *axi_desc_alloc(u32 num)
+ {
+-	struct dw_axi_dma *dw = chan->chip->dw;
+ 	struct axi_dma_desc *desc;
++
++	desc = kzalloc(sizeof(*desc), GFP_NOWAIT);
++	if (!desc)
++		return NULL;
++
++	desc->hw_desc = kcalloc(num, sizeof(*desc->hw_desc), GFP_NOWAIT);
++	if (!desc->hw_desc) {
++		kfree(desc);
++		return NULL;
++	}
++
++	return desc;
++}
++
++static struct axi_dma_lli *axi_desc_get(struct axi_dma_chan *chan,
++					dma_addr_t *addr)
++{
++	struct dw_axi_dma *dw = chan->chip->dw;
++	struct axi_dma_lli *lli;
+ 	dma_addr_t phys;
+ 
+-	desc = dma_pool_zalloc(dw->desc_pool, GFP_NOWAIT, &phys);
+-	if (unlikely(!desc)) {
++	lli = dma_pool_zalloc(dw->desc_pool, GFP_NOWAIT, &phys);
++	if (unlikely(!lli)) {
+ 		dev_err(chan2dev(chan), "%s: not enough descriptors available\n",
+ 			axi_chan_name(chan));
+ 		return NULL;
+ 	}
+ 
+ 	atomic_inc(&chan->descs_allocated);
+-	INIT_LIST_HEAD(&desc->xfer_list);
+-	desc->vd.tx.phys = phys;
+-	desc->chan = chan;
++	*addr = phys;
+ 
+-	return desc;
++	return lli;
+ }
+ 
+ static void axi_desc_put(struct axi_dma_desc *desc)
+ {
+ 	struct axi_dma_chan *chan = desc->chan;
+ 	struct dw_axi_dma *dw = chan->chip->dw;
+-	struct axi_dma_desc *child, *_next;
+-	unsigned int descs_put = 0;
++	int count = atomic_read(&chan->descs_allocated);
++	struct axi_dma_hw_desc *hw_desc;
++	int descs_put;
+ 
+-	list_for_each_entry_safe(child, _next, &desc->xfer_list, xfer_list) {
+-		list_del(&child->xfer_list);
+-		dma_pool_free(dw->desc_pool, child, child->vd.tx.phys);
+-		descs_put++;
++	for (descs_put = 0; descs_put < count; descs_put++) {
++		hw_desc = &desc->hw_desc[descs_put];
++		dma_pool_free(dw->desc_pool, hw_desc->lli, hw_desc->llp);
+ 	}
+ 
+-	dma_pool_free(dw->desc_pool, desc, desc->vd.tx.phys);
+-	descs_put++;
+-
++	kfree(desc->hw_desc);
++	kfree(desc);
+ 	atomic_sub(descs_put, &chan->descs_allocated);
+ 	dev_vdbg(chan2dev(chan), "%s: %d descs put, %d still allocated\n",
+ 		axi_chan_name(chan), descs_put,
+@@ -258,9 +274,9 @@ dma_chan_tx_status(struct dma_chan *dchan, dma_cookie_t cookie,
+ 	return ret;
+ }
+ 
+-static void write_desc_llp(struct axi_dma_desc *desc, dma_addr_t adr)
++static void write_desc_llp(struct axi_dma_hw_desc *desc, dma_addr_t adr)
+ {
+-	desc->lli.llp = cpu_to_le64(adr);
++	desc->lli->llp = cpu_to_le64(adr);
+ }
+ 
+ static void write_chan_llp(struct axi_dma_chan *chan, dma_addr_t adr)
+@@ -295,7 +311,7 @@ static void axi_chan_block_xfer_start(struct axi_dma_chan *chan,
+ 	       DWAXIDMAC_HS_SEL_HW << CH_CFG_H_HS_SEL_SRC_POS);
+ 	axi_chan_iowrite32(chan, CH_CFG_H, reg);
+ 
+-	write_chan_llp(chan, first->vd.tx.phys | lms);
++	write_chan_llp(chan, first->hw_desc[0].llp | lms);
+ 
+ 	irq_mask = DWAXIDMAC_IRQ_DMA_TRF | DWAXIDMAC_IRQ_ALL_ERR;
+ 	axi_chan_irq_sig_set(chan, irq_mask);
+@@ -378,67 +394,78 @@ static void dma_chan_free_chan_resources(struct dma_chan *dchan)
+  * transfer and completes the DMA transfer operation at the end of current
+  * block transfer.
+  */
+-static void set_desc_last(struct axi_dma_desc *desc)
++static void set_desc_last(struct axi_dma_hw_desc *desc)
+ {
+ 	u32 val;
+ 
+-	val = le32_to_cpu(desc->lli.ctl_hi);
++	val = le32_to_cpu(desc->lli->ctl_hi);
+ 	val |= CH_CTL_H_LLI_LAST;
+-	desc->lli.ctl_hi = cpu_to_le32(val);
++	desc->lli->ctl_hi = cpu_to_le32(val);
+ }
+ 
+-static void write_desc_sar(struct axi_dma_desc *desc, dma_addr_t adr)
++static void write_desc_sar(struct axi_dma_hw_desc *desc, dma_addr_t adr)
+ {
+-	desc->lli.sar = cpu_to_le64(adr);
++	desc->lli->sar = cpu_to_le64(adr);
+ }
+ 
+-static void write_desc_dar(struct axi_dma_desc *desc, dma_addr_t adr)
++static void write_desc_dar(struct axi_dma_hw_desc *desc, dma_addr_t adr)
+ {
+-	desc->lli.dar = cpu_to_le64(adr);
++	desc->lli->dar = cpu_to_le64(adr);
+ }
+ 
+-static void set_desc_src_master(struct axi_dma_desc *desc)
++static void set_desc_src_master(struct axi_dma_hw_desc *desc)
+ {
+ 	u32 val;
+ 
+ 	/* Select AXI0 for source master */
+-	val = le32_to_cpu(desc->lli.ctl_lo);
++	val = le32_to_cpu(desc->lli->ctl_lo);
+ 	val &= ~CH_CTL_L_SRC_MAST;
+-	desc->lli.ctl_lo = cpu_to_le32(val);
++	desc->lli->ctl_lo = cpu_to_le32(val);
+ }
+ 
+-static void set_desc_dest_master(struct axi_dma_desc *desc)
++static void set_desc_dest_master(struct axi_dma_hw_desc *hw_desc,
++				 struct axi_dma_desc *desc)
+ {
+ 	u32 val;
+ 
+ 	/* Select AXI1 for source master if available */
+-	val = le32_to_cpu(desc->lli.ctl_lo);
++	val = le32_to_cpu(hw_desc->lli->ctl_lo);
+ 	if (desc->chan->chip->dw->hdata->nr_masters > 1)
+ 		val |= CH_CTL_L_DST_MAST;
+ 	else
+ 		val &= ~CH_CTL_L_DST_MAST;
+ 
+-	desc->lli.ctl_lo = cpu_to_le32(val);
++	hw_desc->lli->ctl_lo = cpu_to_le32(val);
+ }
+ 
+ static struct dma_async_tx_descriptor *
+ dma_chan_prep_dma_memcpy(struct dma_chan *dchan, dma_addr_t dst_adr,
+ 			 dma_addr_t src_adr, size_t len, unsigned long flags)
+ {
+-	struct axi_dma_desc *first = NULL, *desc = NULL, *prev = NULL;
+ 	struct axi_dma_chan *chan = dchan_to_axi_dma_chan(dchan);
+ 	size_t block_ts, max_block_ts, xfer_len;
+-	u32 xfer_width, reg;
++	struct axi_dma_hw_desc *hw_desc = NULL;
++	struct axi_dma_desc *desc = NULL;
++	u32 xfer_width, reg, num;
++	u64 llp = 0;
+ 	u8 lms = 0; /* Select AXI0 master for LLI fetching */
+ 
+ 	dev_dbg(chan2dev(chan), "%s: memcpy: src: %pad dst: %pad length: %zd flags: %#lx",
+ 		axi_chan_name(chan), &src_adr, &dst_adr, len, flags);
+ 
+ 	max_block_ts = chan->chip->dw->hdata->block_size[chan->id];
++	xfer_width = axi_chan_get_xfer_width(chan, src_adr, dst_adr, len);
++	num = DIV_ROUND_UP(len, max_block_ts << xfer_width);
++	desc = axi_desc_alloc(num);
++	if (unlikely(!desc))
++		goto err_desc_get;
+ 
++	desc->chan = chan;
++	num = 0;
+ 	while (len) {
+ 		xfer_len = len;
+ 
++		hw_desc = &desc->hw_desc[num];
+ 		/*
+ 		 * Take care for the alignment.
+ 		 * Actually source and destination widths can be different, but
+@@ -457,13 +484,13 @@ dma_chan_prep_dma_memcpy(struct dma_chan *dchan, dma_addr_t dst_adr,
+ 			xfer_len = max_block_ts << xfer_width;
+ 		}
+ 
+-		desc = axi_desc_get(chan);
+-		if (unlikely(!desc))
++		hw_desc->lli = axi_desc_get(chan, &hw_desc->llp);
++		if (unlikely(!hw_desc->lli))
+ 			goto err_desc_get;
+ 
+-		write_desc_sar(desc, src_adr);
+-		write_desc_dar(desc, dst_adr);
+-		desc->lli.block_ts_lo = cpu_to_le32(block_ts - 1);
++		write_desc_sar(hw_desc, src_adr);
++		write_desc_dar(hw_desc, dst_adr);
++		hw_desc->lli->block_ts_lo = cpu_to_le32(block_ts - 1);
+ 
+ 		reg = CH_CTL_H_LLI_VALID;
+ 		if (chan->chip->dw->hdata->restrict_axi_burst_len) {
+@@ -474,7 +501,7 @@ dma_chan_prep_dma_memcpy(struct dma_chan *dchan, dma_addr_t dst_adr,
+ 				CH_CTL_H_AWLEN_EN |
+ 				burst_len << CH_CTL_H_AWLEN_POS);
+ 		}
+-		desc->lli.ctl_hi = cpu_to_le32(reg);
++		hw_desc->lli->ctl_hi = cpu_to_le32(reg);
+ 
+ 		reg = (DWAXIDMAC_BURST_TRANS_LEN_4 << CH_CTL_L_DST_MSIZE_POS |
+ 		       DWAXIDMAC_BURST_TRANS_LEN_4 << CH_CTL_L_SRC_MSIZE_POS |
+@@ -482,62 +509,61 @@ dma_chan_prep_dma_memcpy(struct dma_chan *dchan, dma_addr_t dst_adr,
+ 		       xfer_width << CH_CTL_L_SRC_WIDTH_POS |
+ 		       DWAXIDMAC_CH_CTL_L_INC << CH_CTL_L_DST_INC_POS |
+ 		       DWAXIDMAC_CH_CTL_L_INC << CH_CTL_L_SRC_INC_POS);
+-		desc->lli.ctl_lo = cpu_to_le32(reg);
++		hw_desc->lli->ctl_lo = cpu_to_le32(reg);
+ 
+-		set_desc_src_master(desc);
+-		set_desc_dest_master(desc);
++		set_desc_src_master(hw_desc);
++		set_desc_dest_master(hw_desc, desc);
+ 
+-		/* Manage transfer list (xfer_list) */
+-		if (!first) {
+-			first = desc;
+-		} else {
+-			list_add_tail(&desc->xfer_list, &first->xfer_list);
+-			write_desc_llp(prev, desc->vd.tx.phys | lms);
+-		}
+-		prev = desc;
+ 
+ 		/* update the length and addresses for the next loop cycle */
+ 		len -= xfer_len;
+ 		dst_adr += xfer_len;
+ 		src_adr += xfer_len;
++		num++;
+ 	}
+ 
+ 	/* Total len of src/dest sg == 0, so no descriptor were allocated */
+-	if (unlikely(!first))
++	if (unlikely(!desc))
+ 		return NULL;
+ 
+ 	/* Set end-of-link to the last link descriptor of list */
+-	set_desc_last(desc);
++	set_desc_last(&desc->hw_desc[num - 1]);
++	/* Managed transfer list */
++	do {
++		hw_desc = &desc->hw_desc[--num];
++		write_desc_llp(hw_desc, llp | lms);
++		llp = hw_desc->llp;
++	} while (num);
+ 
+-	return vchan_tx_prep(&chan->vc, &first->vd, flags);
++	return vchan_tx_prep(&chan->vc, &desc->vd, flags);
+ 
+ err_desc_get:
+-	if (first)
+-		axi_desc_put(first);
++	if (desc)
++		axi_desc_put(desc);
+ 	return NULL;
+ }
+ 
+ static void axi_chan_dump_lli(struct axi_dma_chan *chan,
+-			      struct axi_dma_desc *desc)
++			      struct axi_dma_hw_desc *desc)
+ {
+ 	dev_err(dchan2dev(&chan->vc.chan),
+ 		"SAR: 0x%llx DAR: 0x%llx LLP: 0x%llx BTS 0x%x CTL: 0x%x:%08x",
+-		le64_to_cpu(desc->lli.sar),
+-		le64_to_cpu(desc->lli.dar),
+-		le64_to_cpu(desc->lli.llp),
+-		le32_to_cpu(desc->lli.block_ts_lo),
+-		le32_to_cpu(desc->lli.ctl_hi),
+-		le32_to_cpu(desc->lli.ctl_lo));
++		le64_to_cpu(desc->lli->sar),
++		le64_to_cpu(desc->lli->dar),
++		le64_to_cpu(desc->lli->llp),
++		le32_to_cpu(desc->lli->block_ts_lo),
++		le32_to_cpu(desc->lli->ctl_hi),
++		le32_to_cpu(desc->lli->ctl_lo));
+ }
+ 
+ static void axi_chan_list_dump_lli(struct axi_dma_chan *chan,
+ 				   struct axi_dma_desc *desc_head)
+ {
+-	struct axi_dma_desc *desc;
++	int count = atomic_read(&chan->descs_allocated);
++	int i;
+ 
+-	axi_chan_dump_lli(chan, desc_head);
+-	list_for_each_entry(desc, &desc_head->xfer_list, xfer_list)
+-		axi_chan_dump_lli(chan, desc);
++	for (i = 0; i < count; i++)
++		axi_chan_dump_lli(chan, &desc_head->hw_desc[i]);
+ }
+ 
+ static noinline void axi_chan_handle_err(struct axi_dma_chan *chan, u32 status)
+@@ -872,7 +898,7 @@ static int dw_probe(struct platform_device *pdev)
+ 
+ 	/* Lli address must be aligned to a 64-byte boundary */
+ 	dw->desc_pool = dmam_pool_create(KBUILD_MODNAME, chip->dev,
+-					 sizeof(struct axi_dma_desc), 64, 0);
++					 sizeof(struct axi_dma_lli), 64, 0);
+ 	if (!dw->desc_pool) {
+ 		dev_err(chip->dev, "No memory for descriptors dma pool\n");
+ 		return -ENOMEM;
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+index 18b6014cf9b4..41e775e6e593 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac.h
+@@ -41,6 +41,7 @@ struct axi_dma_chan {
+ 
+ 	struct virt_dma_chan		vc;
+ 
++	struct axi_dma_desc		*desc;
+ 	/* these other elements are all protected by vc.lock */
+ 	bool				is_paused;
+ };
+@@ -80,12 +81,16 @@ struct __packed axi_dma_lli {
+ 	__le32		reserved_hi;
+ };
+ 
++struct axi_dma_hw_desc {
++	struct axi_dma_lli	*lli;
++	dma_addr_t		llp;
++};
++
+ struct axi_dma_desc {
+-	struct axi_dma_lli		lli;
++	struct axi_dma_hw_desc	*hw_desc;
+ 
+ 	struct virt_dma_desc		vd;
+ 	struct axi_dma_chan		*chan;
+-	struct list_head		xfer_list;
+ };
+ 
+ static inline struct device *dchan2dev(struct dma_chan *dchan)
 -- 
 2.18.0
 

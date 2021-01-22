@@ -2,288 +2,179 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 960CD300104
-	for <lists+dmaengine@lfdr.de>; Fri, 22 Jan 2021 12:03:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 59435300B0D
+	for <lists+dmaengine@lfdr.de>; Fri, 22 Jan 2021 19:25:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbhAVK5s (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 22 Jan 2021 05:57:48 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:48962 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726791AbhAVKwi (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 22 Jan 2021 05:52:38 -0500
-Received: from mailhost.synopsys.com (sv2-mailhost1.synopsys.com [10.205.2.133])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id A37B9408DA;
-        Fri, 22 Jan 2021 10:51:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1611312696; bh=xnKIG4GKC4LZLmEFSjgkQBR4DBI7Lm4nXqLVG20i+AY=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=fX8smfuYAfxk32Onupd8sUk60QxqCjLfHa1q8cGMv/mSPXsMtTdtDVbCcRTrjCODi
-         kTjszYVC9ZrZD4Qhr2SgyTSDThgJkKShJE6GJIm1av39fbEoUWollPk6s9/11QbdAT
-         11EzcyuR0l4ccNarBHkW0y94VfIclSKO7lJISPJJbFJARQKyKSIkzEODOk5MXpBWjj
-         djq4UGZC35QmI8vP5A8qIDevJ1EE9sDa0yTytgd6M7/1j4hOcbWDMLOm5AW61SKTjE
-         68B2wK2PIO/aerKsKmYNjj3u5vSyfxNEKjWwNG2kfRKTNB1VXdwB9OfbxPs9Wh/BJc
-         HnbkikkX+Ss5Q==
-Received: from o365relay-in.synopsys.com (us03-o365relay1.synopsys.com [10.4.161.137])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 197B4A007C;
-        Fri, 22 Jan 2021 10:51:36 +0000 (UTC)
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2041.outbound.protection.outlook.com [104.47.66.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
-        by o365relay-in.synopsys.com (Postfix) with ESMTPS id D8F7280218;
-        Fri, 22 Jan 2021 10:51:34 +0000 (UTC)
-Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
-Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=paltsev@synopsys.com
-Authentication-Results: o365relay-in.synopsys.com;
-        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="gqywDI8m";
-        dkim-atps=neutral
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Jju9qNz4vGlIMFPDArLFjc8BDrFqbVuP97tFQlH1T5pVSIp4Lg/Ehk3FbZdNQ1XANg9VmaeZ0Tq0WqwT/M9Z97JpfGkGK1sOHcPDhdwijEpppxrPHyH//TFv26iN1zHcw25wI4sCLBIm9D1zMyOSG5HHDIsFG/BgSP+Tp0rogAx7tFpx0LbgHh1mA2a8fO1UaLmtz3wGxt0d/ydpmN5Fg5uxnbOtmOTI/IjPEWPMKNPIx7h/8yZ0F1kUSeUoz0Ib4Qm3FWHenhZWxDHJyGU/BS7VWl5B0GfvOgGHhUl3BjYAcVBC0BmFUplPSkhXGmKOQrAqNNG85NQ05yFhex9iNA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xnKIG4GKC4LZLmEFSjgkQBR4DBI7Lm4nXqLVG20i+AY=;
- b=nJac0jipwqMzr5TAgX9do3dI78pI/txQRni2g2CKiH+SXBqUBGf3PNkyyGnV3I4xvlNje6yDgEQ3kpKH0O7fnwHBtSqerYtSIeyBp+FxnW6i4WftBJ1o0kk6HBEp6CRAttlU3ImSzloDYsZ/yxERBAaakYtMbpe+4IpLU5028MR1UFNITnkHpk9bSVBx60SnTxvXfn53adsGrqcZNdMzH2Pzc3r5JOZv6BUaE3Cssd/rCpUDc/rZRhVwefzzDPFGYrLsS91wxnyjU0ulAuK+NR1qjMh3UxQ8CSDeRm9YHck7hSAVg1V0aBrJfJe7rkOXXyU4xJP758c8H1jQh32ZTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xnKIG4GKC4LZLmEFSjgkQBR4DBI7Lm4nXqLVG20i+AY=;
- b=gqywDI8mjf6xaB/6PSY7UIo2ENXZT1bjKVYXm464ZAzvPFQ6yHUYpGSPV8RceIdzVXMEAyzq+J7DG1+Rdhboke5RuTk2Rs1gv4zuJklwW31YDVB8Ye4OgPUEemKsGnXKIBgph666GtLBVv/INeeJA6GrHO1CPwj4KuXBT4aZqFo=
-Received: from MWHPR1201MB0029.namprd12.prod.outlook.com
- (2603:10b6:301:4d::15) by MWHPR12MB1440.namprd12.prod.outlook.com
- (2603:10b6:300:13::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3784.13; Fri, 22 Jan
- 2021 10:51:33 +0000
-Received: from MWHPR1201MB0029.namprd12.prod.outlook.com
- ([fe80::b1a3:e6e8:721a:bbbb]) by MWHPR1201MB0029.namprd12.prod.outlook.com
- ([fe80::b1a3:e6e8:721a:bbbb%9]) with mapi id 15.20.3763.014; Fri, 22 Jan 2021
- 10:51:33 +0000
-X-SNPS-Relay: synopsys.com
-From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-To:     Sia Jee Heng <jee.heng.sia@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>
-CC:     "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v9 00/16] dmaengine: dw-axi-dmac: support Intel KeemBay
- AxiDMA
-Thread-Topic: [PATCH v9 00/16] dmaengine: dw-axi-dmac: support Intel KeemBay
- AxiDMA
-Thread-Index: AQHW4v4iYc1B5Wm1T0SeNEm9pWgBF6ozkojp
-Date:   Fri, 22 Jan 2021 10:51:33 +0000
-Message-ID: <MWHPR1201MB002999C6B459650FE0FBF990DEA00@MWHPR1201MB0029.namprd12.prod.outlook.com>
-References: <20210105004306.13588-1-jee.heng.sia@intel.com>
-In-Reply-To: <20210105004306.13588-1-jee.heng.sia@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=synopsys.com;
-x-originating-ip: [198.182.37.200]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: db2917a2-5cf2-4f0b-052d-08d8bec3aee4
-x-ms-traffictypediagnostic: MWHPR12MB1440:
-x-microsoft-antispam-prvs: <MWHPR12MB144079E2543AA32B30515C5BDEA09@MWHPR12MB1440.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:883;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: QUlsU0Zdd7y651KuOO7coHazrpXiDIHiwiSaBUoTuLnR295q6afRIFu1sI0D02iiZK5ZJrPjegF6vp4eTwQwo2AH8diIE7pHiSdRqiRVjw7OLqqHTeia1+f9bY0uLFMdUouyMtQD2Zb0cl0yOQJV9zm5yxbY3zHoj2jeIbSW3E4IvtYFcy1pXwHjTOSKwjuGoD9SZSthCB5PLSrFoAn0UQQkJFmNxjLSiwBNYmO0+PQsZJwwzAY+YZg1yhcDnWC61nonFQb0fkv28O8y5b9XiMv8MTxjYew/uP2xLcj7KjoD1HzeceGcWimjmrximTn/V5aGq0MPAL14e0pPjCiVkrTcB5SknByKFpaIvYmij3bwM8oxWFAxktkT9AWlGO4GGQabtSpacCxPGy0c0vFYSA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1201MB0029.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(366004)(376002)(39860400002)(396003)(346002)(71200400001)(186003)(5660300002)(4326008)(8936002)(8676002)(53546011)(33656002)(6506007)(26005)(54906003)(2906002)(55016002)(86362001)(52536014)(83380400001)(110136005)(478600001)(66556008)(66476007)(91956017)(64756008)(76116006)(9686003)(316002)(66946007)(7696005)(66446008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?iso-8859-1?Q?VTdUz2Yjs6MraaTSQ3RlfBaTaH2FJdyL/dMhaxncBKb6ZCY6N7tpafgVa+?=
- =?iso-8859-1?Q?cemnYpPflWuaxpOVG+AIJ/y43l0se1FCmDezVugw94DP+2W3GaJGNzrSCF?=
- =?iso-8859-1?Q?MkkdIyhn54lJdvmxwRcKtsoB55RFjjitR3TIvWw33mVnU+4jdz2p8gfLny?=
- =?iso-8859-1?Q?4D79ozrkXFOEOVWAHNQqHUgf+EabZWg/um8ZkaNQMIlpetf9K/fNek+1ei?=
- =?iso-8859-1?Q?HVA1EBRBtUYTQPIXEqHpxSMjPEEbGdwhrkBtmTuQmh0V/R274PHMUMyb92?=
- =?iso-8859-1?Q?CocOGrlJ71JTCen6TsZWPGpMjGYJxPkZ3kF3cV3FH8w/M8NIIg4H3Ay0si?=
- =?iso-8859-1?Q?PmAFWcD5VBBm5obbFjnJLTTLaEe3uVp9qGjJNA7Lk9Scfs97IAwOxVNBRh?=
- =?iso-8859-1?Q?UxBqMZUkSXGgQ9NC/qvyKWJZiakwANFlEhHlbYoL12SetumcUlqkW4vjdZ?=
- =?iso-8859-1?Q?jLsexQ+WXbWly/1D9mKX1Fj8sntF59z6EgKHyfNGV9rR59knIoWbOmK/2z?=
- =?iso-8859-1?Q?KKtKno1QI//ilKAPPPufnqWMJm5R0aSTmbnSmJmfZtEY4rn5Y3IJSJuGFS?=
- =?iso-8859-1?Q?egwYyzrsXONHBcYcMP90E05FtVzweTfQ61RJgxoRf/MMAicg722KMmIO0z?=
- =?iso-8859-1?Q?yRzeEPVYStLqTI2tD9zGXeLbvhGlRQ6+bUqJv8uaO0zF60FbIhyWJaAVvN?=
- =?iso-8859-1?Q?GSYjYM1MCpnA01gWy53q0Uu+8nUgO4a9D4K0iBZha6mHqJMNbW4ckAdi6v?=
- =?iso-8859-1?Q?6Id7gj2SNHM9OKXTIuxIzbN21Cse7dkpc91W1cKikkIsNDRYHE2xyECntJ?=
- =?iso-8859-1?Q?lvPm5k0rf3WPaTihbugAnKea6/nhsfr36Ly8exz0kt/l4cAJkTctsNp1eJ?=
- =?iso-8859-1?Q?+CrOXQrXVbN/k4xQNa9tm4CaFz4fm/dS93pAfgMoa84LFLqX3NvxvJ3eL6?=
- =?iso-8859-1?Q?dIzzwyKK0XKFmNnXPI0X/22PWffQW2ZbecKq/MBmXwA824HwOLpXMpUFKP?=
- =?iso-8859-1?Q?nxzXGEA+vauJUZA3A=3D?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        id S1729708AbhAVSUG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 22 Jan 2021 13:20:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728700AbhAVPow (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 22 Jan 2021 10:44:52 -0500
+Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DBE9C0613D6
+        for <dmaengine@vger.kernel.org>; Fri, 22 Jan 2021 07:44:11 -0800 (PST)
+Received: by mail-qt1-x835.google.com with SMTP id e17so4394388qto.3
+        for <dmaengine@vger.kernel.org>; Fri, 22 Jan 2021 07:44:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nJ5Mm7jDvt8rYYjqfuGcAKVlF1C7OcwWb/rDTKJ5d/Q=;
+        b=wcWMa2FpEYwa9IT1fn9c6WjOp7s8r0ejmanTOS4UW7OvflsrFUpCD6F4pcKzYPFC81
+         17nnqVC3NCknrcdEJcqD4nSWJOb+uY33GwliYT+O8wKc/5qi4Jc1FjAEwoeNzn1exNHs
+         qIw/6/Z+T8FGuv24jzsa+eRU6XI4fCK8I1qUe7CfR1QNNxegep2k6Yc/DFJ+sga+gJwJ
+         7w87e3YSYF48VPfreqMzKl/dTsEI5IV5x5K8M2LHTHdRAa7D67JMah8uKz1k8Pj3Kwvr
+         G9gue26Ip4oMikjTsZf541S5wI+4/icsGylvKMYDB9Zf5kfJLOy79t6PG43MtcxlV+dH
+         Yddw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nJ5Mm7jDvt8rYYjqfuGcAKVlF1C7OcwWb/rDTKJ5d/Q=;
+        b=pHhCwKdPu5Afm7kiXD1ANxm2hyvLK64MgvI+vUMZnwFacb2LBgLbqKxUVypvKStgSe
+         YFGtJyMbB8gOzZF5ovcekUwmbMOo2z662M/khKygBR4Q41nR+2cyTnNy+c7a02RFWcky
+         1uY2sg6dDz3fcg96ecVdv6O3jmB0aDuwzOl+c7j8YjTRmVoODPAy4HbcazEXBZxhW20M
+         O3RPsd6WdwrU7F2GtFJYsTqQXNdTkZTLrUSYZPDYy8sE+FQbhqegvyopAuho4FdKWVcZ
+         h+vVaqLf9VB84YKQxd0/ngQn6VTBoikWyLBu4EKZL7datpxKTtjmfMeNzi+oLmtmrgKP
+         bKKg==
+X-Gm-Message-State: AOAM531eb6GyZ6I/FVJnuruiNxA+KOfodjv37Vxl2dZuYPbl9xDHacfe
+        OuVGCrIsmJMBmDJslM1dN+df3A==
+X-Google-Smtp-Source: ABdhPJwRZyDqa9tInh1QS8BuhgaOJCcFWxaygOKtTTGW608RraEiVWrtKYW+ODZ0VLA+FLfMgCDVzA==
+X-Received: by 2002:aed:2be7:: with SMTP id e94mr4817414qtd.110.1611330250814;
+        Fri, 22 Jan 2021 07:44:10 -0800 (PST)
+Received: from [192.168.1.93] (pool-71-163-245-5.washdc.fios.verizon.net. [71.163.245.5])
+        by smtp.gmail.com with ESMTPSA id p75sm6616661qka.72.2021.01.22.07.44.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Jan 2021 07:44:10 -0800 (PST)
+Subject: Re: [PATCH] drivers: dma: qcom: bam_dma: Manage clocks when
+ controlled_remotely is set
+To:     Shawn Guo <shawn.guo@linaro.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        dan.j.williams@intel.com, vkoul@kernel.org,
+        srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210122025251.3501362-1-thara.gopinath@linaro.org>
+ <20210122051013.GE2479@dragon>
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <d1f1724c-39f1-7b6e-8cd4-638a44608d9c@linaro.org>
+Date:   Fri, 22 Jan 2021 10:44:09 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-OriginatorOrg: synopsys.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1201MB0029.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: db2917a2-5cf2-4f0b-052d-08d8bec3aee4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2021 10:51:33.3485
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pw+2FahLym28Efv4fjr7KPcnRbXkODBXQpNxTl9snX47DmCOHvfqWrIG5c0u6B67niJ2GenIlrC5Zo4U8EpS/Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1440
+In-Reply-To: <20210122051013.GE2479@dragon>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Sia Jee Heng,=0A=
-=0A=
-resending tags as they weren't delivered to 'dmaengine@vger.kernel.org' lis=
-t:=0A=
- =0A=
-Reviewed-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>=0A=
-I've runtime tested this series on HSDK SoC/board, so=0A=
-Tested-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>=0A=
-=0A=
----=0A=
-=A0Eugeniy Paltsev=0A=
-=0A=
-=0A=
-From: Sia Jee Heng <jee.heng.sia@intel.com>=0A=
-Sent: Tuesday, January 5, 2021 03:42=0A=
-To: vkoul@kernel.org <vkoul@kernel.org>; Eugeniy Paltsev <paltsev@synopsys.=
-com>; robh+dt@kernel.org <robh+dt@kernel.org>=0A=
-Cc: andriy.shevchenko@linux.intel.com <andriy.shevchenko@linux.intel.com>; =
-dmaengine@vger.kernel.org <dmaengine@vger.kernel.org>; linux-kernel@vger.ke=
-rnel.org <linux-kernel@vger.kernel.org>; devicetree@vger.kernel.org <device=
-tree@vger.kernel.org>=0A=
-Subject: [PATCH v9 00/16] dmaengine: dw-axi-dmac: support Intel KeemBay Axi=
-DMA =0A=
-=A0=0A=
-The below patch series are to support AxiDMA running on Intel KeemBay SoC.=
-=0A=
-The base driver is dw-axi-dmac. This driver only support DMA memory copy=0A=
-transfers. Code refactoring is needed so that additional features can be=0A=
-supported.=0A=
-The features added in this patch series are:=0A=
-- Replacing Linked List with virtual descriptor management.=0A=
-- Remove unrelated hw desc stuff from dma memory pool.=0A=
-- Manage dma memory pool alloc/destroy based on channel activity.=0A=
-- Support dmaengine device_sync() callback.=0A=
-- Support dmaengine device_config().=0A=
-- Support dmaengine device_prep_slave_sg().=0A=
-- Support dmaengine device_prep_dma_cyclic().=0A=
-- Support of_dma_controller_register().=0A=
-- Support burst residue granularity.=0A=
-- Support Intel KeemBay AxiDMA registers.=0A=
-- Support Intel KeemBay AxiDMA device handshake.=0A=
-- Support Intel KeemBay AxiDMA BYTE and HALFWORD device operation.=0A=
-- Add constraint to Max segment size.=0A=
-- Virtually split the linked-list.=0A=
-=0A=
-This patch series are tested on Intel KeemBay platform.=0A=
-=0A=
-v9:=0A=
-- Logic checked on apb_regs inside the function.=0A=
-- Improved code scalability so that missing of apb_regs wouldn't failed=0A=
-=A0 the common callback functions.=0A=
-=0A=
-v8:=0A=
-- Rebased to kernel v5.11-rc1.=0A=
-- Added reviewed-by tag from Rob.=0A=
-=0A=
-v7:=0A=
-- Added 'allOf' and '$ref:dma-controller.yaml#' in DT binding.=0A=
-- Removed the dma-channels common description in DT binding.=0A=
-- Removed the default fields in DT binding.=0A=
-=0A=
-v6:=0A=
-- Removed 'allOf' cases in DT binding.=0A=
-- Added '>' at the end of the email address.=0A=
-- Removed additional '|' at the start of description.=0A=
-- Fixed space indent.=0A=
-- Added proper constraint in DT binding.=0A=
-- Removed second example in DT binding.=0A=
-=0A=
-v5:=0A=
-- Added comment to the Apb registers used by Intel KeemBay Soc.=0A=
-- Renamed "hs_num" to "handshake_num".=0A=
-- Conditional check for the compatible property and return error=0A=
-=A0 instead of printing warning.=0A=
-- Added patch 16th to virtually split the linked-list as per=0A=
-=A0 request from ALSA team.=0A=
-=0A=
-v4:=0A=
-- Fixed bot found errors running make_dt_binding_check.=0A=
-- Added minItems: 1 to the YAML schemas DT binding.=0A=
-- Updated "reg" field to the YAML schemas DT binding.=0A=
-=0A=
-v3:=0A=
-- Added additionalProperties: false to the YAML schemas DT binding.=0A=
-- Reordered patch sequence for patch 10th, 11th and 12th so that=0A=
-=A0 DT binding come first, follow by adding Intel KeemBay SoC registers=0A=
-=A0 and update .compatible field.=0A=
-- Checked txstate NULL condition.=0A=
-- Created helper function dw_axi_dma_set_hw_desc() to handle common code.=
-=0A=
-=0A=
-v2:=0A=
-- Rebased to v5.10-rc1 kernel.=0A=
-- Added support for dmaengine device_config().=0A=
-- Added support for dmaengine device_prep_slave_sg().=0A=
-- Added support for dmaengine device_prep_dma_cyclic().=0A=
-- Added support for of_dma_controller_register().=0A=
-- Added support for burst residue granularity.=0A=
-- Added support for Intel KeemBay AxiDMA registers.=0A=
-- Added support for Intel KeemBay AxiDMA device handshake.=0A=
-- Added support for Intel KeemBay AxiDMA BYTE and HALFWORD device operation=
-.=0A=
-- Added constraint to Max segment size.=0A=
-=0A=
-v1:=0A=
-- Initial version. Patch on top of dw-axi-dma driver. This version improve=
-=0A=
-=A0 the descriptor management by replacing Linked List Item (LLI) with=0A=
-=A0 virtual descriptor management, only allocate hardware LLI memories from=
-=0A=
-=A0 DMA memory pool, manage DMA memory pool alloc/destroy based on channel=
-=0A=
-=A0 activity and to support device_sync callback.=0A=
-=0A=
-Sia Jee Heng (16):=0A=
-=A0 dt-bindings: dma: Add YAML schemas for dw-axi-dmac=0A=
-=A0 dmaengine: dw-axi-dmac: simplify descriptor management=0A=
-=A0 dmaengine: dw-axi-dmac: move dma_pool_create() to=0A=
-=A0=A0=A0 alloc_chan_resources()=0A=
-=A0 dmaengine: dw-axi-dmac: Add device_synchronize() callback=0A=
-=A0 dmaengine: dw-axi-dmac: Add device_config operation=0A=
-=A0 dmaengine: dw-axi-dmac: Support device_prep_slave_sg=0A=
-=A0 dmaegine: dw-axi-dmac: Support device_prep_dma_cyclic()=0A=
-=A0 dmaengine: dw-axi-dmac: Support of_dma_controller_register()=0A=
-=A0 dmaengine: dw-axi-dmac: Support burst residue granularity=0A=
-=A0 dt-binding: dma: dw-axi-dmac: Add support for Intel KeemBay AxiDMA=0A=
-=A0 dmaengine: dw-axi-dmac: Add Intel KeemBay DMA register fields=0A=
-=A0 dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA support=0A=
-=A0 dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA handshake=0A=
-=A0 dmaengine: dw-axi-dmac: Add Intel KeemBay AxiDMA BYTE and HALFWORD=0A=
-=A0=A0=A0 registers=0A=
-=A0 dmaengine: dw-axi-dmac: Set constraint to the Max segment size=0A=
-=A0 dmaengine: dw-axi-dmac: Virtually split the linked-list=0A=
-=0A=
-=A0.../bindings/dma/snps,dw-axi-dmac.txt=A0=A0=A0=A0=A0=A0=A0=A0 |=A0 39 -=
-=0A=
-=A0.../bindings/dma/snps,dw-axi-dmac.yaml=A0=A0=A0=A0=A0=A0=A0 | 126 ++++=
-=0A=
-=A0.../dma/dw-axi-dmac/dw-axi-dmac-platform.c=A0=A0=A0 | 697 ++++++++++++++=
-+---=0A=
-=A0drivers/dma/dw-axi-dmac/dw-axi-dmac.h=A0=A0=A0=A0=A0=A0=A0=A0 |=A0 34 +-=
-=0A=
-=A04 files changed, 764 insertions(+), 132 deletions(-)=0A=
-=A0delete mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dma=
-c.txt=0A=
-=A0create mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dma=
-c.yaml=0A=
-=0A=
-=0A=
-base-commit: e71ba9452f0b5b2e8dc8aa5445198cd9214a6a62=0A=
--- =0A=
-2.18.0=0A=
+Hi Shawn,
+
+Thanks for the review
+
+On 1/22/21 12:10 AM, Shawn Guo wrote:
+> On Thu, Jan 21, 2021 at 09:52:51PM -0500, Thara Gopinath wrote:
+>> When bam dma is "controlled remotely", thus far clocks were not controlled
+>> from the Linux. In this scenario, Linux was disabling runtime pm in bam dma
+>> driver and not doing any clock management in suspend/resume hooks.
+>>
+>> With introduction of crypto engine bam dma, the clock is a rpmh resource
+>> that can be controlled from both Linux and TZ/remote side.  Now bam dma
+>> clock is getting enabled during probe even though the bam dma can be
+>> "controlled remotely". But due to clocks not being handled properly,
+>> bam_suspend generates a unbalanced clk_unprepare warning during system
+>> suspend.
+>>
+>> To fix the above issue and to enable proper clock-management, this patch
+>> enables runtim-pm and handles bam dma clocks in suspend/resume hooks if
+>> the clock node is present irrespective of controlled_remotely property.
+> 
+> Shouldn't the following probe code need some update?  Now we have both
+> controlled_remotely and clocks handle for cryptobam node.  For example,
+> if devm_clk_get() returns -EPROBE_DEFER, we do not want to continue with
+> bamclk forcing to be NULL, right?
+
+We still will have to set bdev->bamclk to NULL in certain scenarios. For 
+eg slimbus bam dma is controlled-remotely and the clocks are handled by 
+the remote s/w. Linux does not handle the clocks at all and  there is no 
+clock specified in the dt node.This is the norm for the devices that are 
+also controlled by remote s/w. Crypto bam dma is a special case where 
+the clock is actually a rpmh resource and hence can be independently 
+handled from both remote side and Linux by voting. In this case, the dma 
+is controlled remotely but clock can be turned off and on in Linux. 
+Hence the need for this patch.
+
+Yes, the probe code needs updating to handle -EPROBE_DEFER (esp if the 
+clock driver is built in as a module) I am not sure if the clock 
+framework handles -EPROBE_DEFER properly either. So that
+might need updating too. This is a separate activity and not part of 
+this patch.
+
+> 
+>          bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
+>          if (IS_ERR(bdev->bamclk)) {
+>                  if (!bdev->controlled_remotely)
+>                          return PTR_ERR(bdev->bamclk);
+> 
+>                  bdev->bamclk = NULL;
+>          }
+> 
+>>
+>> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+>> ---
+>>   drivers/dma/qcom/bam_dma.c | 20 +++++++++++---------
+>>   1 file changed, 11 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+>> index 88579857ca1d..b3a34be63e99 100644
+>> --- a/drivers/dma/qcom/bam_dma.c
+>> +++ b/drivers/dma/qcom/bam_dma.c
+>> @@ -1350,7 +1350,7 @@ static int bam_dma_probe(struct platform_device *pdev)
+>>   	if (ret)
+>>   		goto err_unregister_dma;
+>>   
+>> -	if (bdev->controlled_remotely) {
+>> +	if (!bdev->bamclk) {
+>>   		pm_runtime_disable(&pdev->dev);
+>>   		return 0;
+>>   	}
+>> @@ -1438,10 +1438,10 @@ static int __maybe_unused bam_dma_suspend(struct device *dev)
+>>   {
+>>   	struct bam_device *bdev = dev_get_drvdata(dev);
+>>   
+>> -	if (!bdev->controlled_remotely)
+>> +	if (bdev->bamclk) {
+>>   		pm_runtime_force_suspend(dev);
+>> -
+>> -	clk_unprepare(bdev->bamclk);
+>> +		clk_unprepare(bdev->bamclk);
+>> +	}
+>>   
+>>   	return 0;
+>>   }
+>> @@ -1451,12 +1451,14 @@ static int __maybe_unused bam_dma_resume(struct device *dev)
+>>   	struct bam_device *bdev = dev_get_drvdata(dev);
+>>   	int ret;
+>>   
+>> -	ret = clk_prepare(bdev->bamclk);
+>> -	if (ret)
+>> -		return ret;
+>> +	if (bdev->bamclk) {
+>> +		ret = clk_prepare(bdev->bamclk);
+>> +		if (ret)
+>> +			return ret;
+>>   
+>> -	if (!bdev->controlled_remotely)
+>> -		pm_runtime_force_resume(dev);
+>> +		if (!bdev->controlled_remotely)
+> 
+> Why do we still need controlled_remotely check here?
+
+Yes you are right. This should be removed.I will send v2.
+
+-- 
+Warm Regards
+Thara

@@ -2,26 +2,29 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 12F8A305099
+	by mail.lfdr.de (Postfix) with ESMTP id 8E88C30509A
 	for <lists+dmaengine@lfdr.de>; Wed, 27 Jan 2021 05:20:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232459AbhA0ERo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 26 Jan 2021 23:17:44 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:57542 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727414AbhAZV4N (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 26 Jan 2021 16:56:13 -0500
+        id S238423AbhA0ERt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 26 Jan 2021 23:17:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727034AbhAZV4a (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 26 Jan 2021 16:56:30 -0500
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 617F9C061756;
+        Tue, 26 Jan 2021 13:55:50 -0800 (PST)
 Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 04FC22C1;
-        Tue, 26 Jan 2021 22:54:59 +0100 (CET)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E61EC2E0;
+        Tue, 26 Jan 2021 22:55:48 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1611698100;
-        bh=6BWbUKR91ADGnZ02nuVVFTAFGyDAa2wt/lrzHx3tIdw=;
+        s=mail; t=1611698149;
+        bh=SMDoBPaHZPP3ApaQVHa76WRBiwdWB84rlo2LUhpd7TM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VX55vkH6fSA893DrzRnA355OHv0k8PpqWr4WrrHJorDWxUS+HNG5O86NlOAcD7KWK
-         dmofmJpOWOZKP7v0OLc1PtSSBxe09WqAL5UeAPXFK9Xgdi/WT8uBVuQSEMDRRwXy2v
-         3By4Z2J4x6qxAAiob+1NVzoYyvp4bAVu+oauFghk=
-Date:   Tue, 26 Jan 2021 23:54:40 +0200
+        b=jJYbmAfPeZAHaajRkyl/x4hwkTWg78Pl4ptDbG3UV7q+iLA2znt32qHJ8OLBBjZ+S
+         AcvFmlrmCTK019WdLWetY/fepre4sSnsMzqX62PjnB1CHkxlF05LFJOhgLyHe/Qzu+
+         +3zVNiy64UFdmYZdxg6JNkLFGkhrmwxdXneyoIVk=
+Date:   Tue, 26 Jan 2021 23:55:29 +0200
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>
 Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
@@ -30,15 +33,15 @@ Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Wolfram Sang <wsa+renesas@sang-engineering.com>,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] dmaengine: rcar-dmac: Add
- for_each_rcar_dmac_chan() helper
-Message-ID: <YBCPoOKGRZYkdfPn@pendragon.ideasonboard.com>
+Subject: Re: [PATCH v2 3/4] dmaengine: rcar-dmac: Add helpers for clearing
+ DMA channel status
+Message-ID: <YBCP0cXXu5Sd+nUL@pendragon.ideasonboard.com>
 References: <20210125142431.1049668-1-geert+renesas@glider.be>
- <20210125142431.1049668-3-geert+renesas@glider.be>
+ <20210125142431.1049668-4-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210125142431.1049668-3-geert+renesas@glider.be>
+In-Reply-To: <20210125142431.1049668-4-geert+renesas@glider.be>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -47,91 +50,61 @@ Hi Geert,
 
 Thank you for the patch.
 
-On Mon, Jan 25, 2021 at 03:24:29PM +0100, Geert Uytterhoeven wrote:
-> Add and helper macro for iterating over all DMAC channels, taking into
-
-s/and helper/a helper/
-
-> account the channel mask.  Use it where appropriate, to simplify code.
-> 
-> Restore "reverse Christmas tree" order of local variables while adding a
-> new variable.
+On Mon, Jan 25, 2021 at 03:24:30PM +0100, Geert Uytterhoeven wrote:
+> Extract the code to clear the status of one or all channels into their
+> own helpers, to prepare for the different handling of the R-Car V3U SoC.
 > 
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v2:
->   - Put the full loop control of for_each_rcar_dmac_chan() on a single
->     line, to improve readability.
-> ---
->  drivers/dma/sh/rcar-dmac.c | 22 ++++++++++------------
->  1 file changed, 10 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
-> index a57705356e8bb796..537550b4121bbc22 100644
-> --- a/drivers/dma/sh/rcar-dmac.c
-> +++ b/drivers/dma/sh/rcar-dmac.c
-> @@ -209,6 +209,10 @@ struct rcar_dmac {
->  
->  #define to_rcar_dmac(d)		container_of(d, struct rcar_dmac, engine)
->  
-> +#define for_each_rcar_dmac_chan(i, chan, dmac)						\
-
-I would have placed the iterator (chan) after the container being
-iterated (dmac), but it seems there are some for_each_* macros doing it
-the other way around (they may be older though).
 
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-> +	for (i = 0, chan = &(dmac)->channels[0]; i < (dmac)->n_channels; i++, chan++)	\
-> +		if (!((dmac)->channels_mask & BIT(i))) continue; else
+> ---
+> v2:
+>   - No changes.
+> ---
+>  drivers/dma/sh/rcar-dmac.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
+> index 537550b4121bbc22..7a0f802c61e5152d 100644
+> --- a/drivers/dma/sh/rcar-dmac.c
+> +++ b/drivers/dma/sh/rcar-dmac.c
+> @@ -336,6 +336,17 @@ static void rcar_dmac_chan_write(struct rcar_dmac_chan *chan, u32 reg, u32 data)
+>  		writel(data, chan->iomem + reg);
+>  }
+>  
+> +static void rcar_dmac_chan_clear(struct rcar_dmac *dmac,
+> +				 struct rcar_dmac_chan *chan)
+> +{
+> +	rcar_dmac_write(dmac, RCAR_DMACHCLR, BIT(chan->index));
+> +}
 > +
->  /*
->   * struct rcar_dmac_of_data - This driver's OF data
->   * @chan_offset_base: DMAC channels base offset
-> @@ -817,15 +821,11 @@ static void rcar_dmac_chan_reinit(struct rcar_dmac_chan *chan)
+> +static void rcar_dmac_chan_clear_all(struct rcar_dmac *dmac)
+> +{
+> +	rcar_dmac_write(dmac, RCAR_DMACHCLR, dmac->channels_mask);
+> +}
+> +
+>  /* -----------------------------------------------------------------------------
+>   * Initialization and configuration
+>   */
+> @@ -451,7 +462,7 @@ static int rcar_dmac_init(struct rcar_dmac *dmac)
+>  	u16 dmaor;
 >  
->  static void rcar_dmac_stop_all_chan(struct rcar_dmac *dmac)
->  {
-> +	struct rcar_dmac_chan *chan;
->  	unsigned int i;
+>  	/* Clear all channels and enable the DMAC globally. */
+> -	rcar_dmac_write(dmac, RCAR_DMACHCLR, dmac->channels_mask);
+> +	rcar_dmac_chan_clear_all(dmac);
+>  	rcar_dmac_write(dmac, RCAR_DMAOR,
+>  			RCAR_DMAOR_PRI_FIXED | RCAR_DMAOR_DME);
 >  
->  	/* Stop all channels. */
-> -	for (i = 0; i < dmac->n_channels; ++i) {
-> -		struct rcar_dmac_chan *chan = &dmac->channels[i];
-> -
-> -		if (!(dmac->channels_mask & BIT(i)))
-> -			continue;
-> -
-> +	for_each_rcar_dmac_chan(i, chan, dmac) {
->  		/* Stop and reinitialize the channel. */
->  		spin_lock_irq(&chan->lock);
->  		rcar_dmac_chan_halt(chan);
-> @@ -1828,9 +1828,10 @@ static int rcar_dmac_probe(struct platform_device *pdev)
->  		DMA_SLAVE_BUSWIDTH_2_BYTES | DMA_SLAVE_BUSWIDTH_4_BYTES |
->  		DMA_SLAVE_BUSWIDTH_8_BYTES | DMA_SLAVE_BUSWIDTH_16_BYTES |
->  		DMA_SLAVE_BUSWIDTH_32_BYTES | DMA_SLAVE_BUSWIDTH_64_BYTES;
-> +	const struct rcar_dmac_of_data *data;
-> +	struct rcar_dmac_chan *chan;
->  	struct dma_device *engine;
->  	struct rcar_dmac *dmac;
-> -	const struct rcar_dmac_of_data *data;
->  	unsigned int i;
->  	int ret;
->  
-> @@ -1916,11 +1917,8 @@ static int rcar_dmac_probe(struct platform_device *pdev)
->  
->  	INIT_LIST_HEAD(&engine->channels);
->  
-> -	for (i = 0; i < dmac->n_channels; ++i) {
-> -		if (!(dmac->channels_mask & BIT(i)))
-> -			continue;
-> -
-> -		ret = rcar_dmac_chan_probe(dmac, &dmac->channels[i], data, i);
-> +	for_each_rcar_dmac_chan(i, chan, dmac) {
-> +		ret = rcar_dmac_chan_probe(dmac, chan, data, i);
->  		if (ret < 0)
->  			goto error;
->  	}
+> @@ -1566,7 +1577,7 @@ static irqreturn_t rcar_dmac_isr_channel(int irq, void *dev)
+>  		 * because channel is already stopped in error case.
+>  		 * We need to clear register and check DE bit as recovery.
+>  		 */
+> -		rcar_dmac_write(dmac, RCAR_DMACHCLR, 1 << chan->index);
+> +		rcar_dmac_chan_clear(dmac, chan);
+>  		rcar_dmac_chcr_de_barrier(chan);
+>  		reinit = true;
+>  		goto spin_lock_end;
 
 -- 
 Regards,

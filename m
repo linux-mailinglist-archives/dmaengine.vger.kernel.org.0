@@ -2,29 +2,26 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1EC5304BFC
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Jan 2021 23:27:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12F8A305099
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Jan 2021 05:20:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbhAZVy0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 26 Jan 2021 16:54:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55888 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726280AbhAZVtt (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 26 Jan 2021 16:49:49 -0500
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABDC5C06174A;
-        Tue, 26 Jan 2021 13:49:08 -0800 (PST)
+        id S232459AbhA0ERo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 26 Jan 2021 23:17:44 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:57542 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727414AbhAZV4N (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 26 Jan 2021 16:56:13 -0500
 Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E62C42C1;
-        Tue, 26 Jan 2021 22:49:04 +0100 (CET)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 04FC22C1;
+        Tue, 26 Jan 2021 22:54:59 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1611697745;
-        bh=LplyXulbPXrXuvaecCE9pwLK5CV2NpJXldimMYOoU6E=;
+        s=mail; t=1611698100;
+        bh=6BWbUKR91ADGnZ02nuVVFTAFGyDAa2wt/lrzHx3tIdw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W5/JirBumHHDqY8/gvtF3HYkNqVMRlR2q/gwb6T+0GKqE+Hlwe0nKg+FmiSr08ciu
-         raxqEasMbRLTDaeUYnn8GtEQF9vC3jDgNdAsynIjWFZIGAmh7x+VZ4DC/Sr8JfvFL4
-         v+CvCAq4bMDsWtr8s49i7m/hTQQ2OWWkzqAqlrG4=
-Date:   Tue, 26 Jan 2021 23:48:45 +0200
+        b=VX55vkH6fSA893DrzRnA355OHv0k8PpqWr4WrrHJorDWxUS+HNG5O86NlOAcD7KWK
+         dmofmJpOWOZKP7v0OLc1PtSSBxe09WqAL5UeAPXFK9Xgdi/WT8uBVuQSEMDRRwXy2v
+         3By4Z2J4x6qxAAiob+1NVzoYyvp4bAVu+oauFghk=
+Date:   Tue, 26 Jan 2021 23:54:40 +0200
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>
 Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
@@ -32,17 +29,16 @@ Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Wolfram Sang <wsa+renesas@sang-engineering.com>,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: renesas,rcar-dmac: Add r8a779a0
- support
-Message-ID: <YBCOPXTh8n4Tk0+y@pendragon.ideasonboard.com>
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] dmaengine: rcar-dmac: Add
+ for_each_rcar_dmac_chan() helper
+Message-ID: <YBCPoOKGRZYkdfPn@pendragon.ideasonboard.com>
 References: <20210125142431.1049668-1-geert+renesas@glider.be>
- <20210125142431.1049668-2-geert+renesas@glider.be>
+ <20210125142431.1049668-3-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210125142431.1049668-2-geert+renesas@glider.be>
+In-Reply-To: <20210125142431.1049668-3-geert+renesas@glider.be>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
@@ -51,119 +47,91 @@ Hi Geert,
 
 Thank you for the patch.
 
-On Mon, Jan 25, 2021 at 03:24:28PM +0100, Geert Uytterhoeven wrote:
-> Document the compatible value for the Direct Memory Access Controller
-> blocks in the Renesas R-Car V3U (R8A779A0) SoC.
+On Mon, Jan 25, 2021 at 03:24:29PM +0100, Geert Uytterhoeven wrote:
+> Add and helper macro for iterating over all DMAC channels, taking into
+
+s/and helper/a helper/
+
+> account the channel mask.  Use it where appropriate, to simplify code.
 > 
-> The most visible difference with DMAC blocks on other R-Car SoCs is the
-> move of the per-channel registers to a separate register block.
+> Restore "reverse Christmas tree" order of local variables while adding a
+> new variable.
 > 
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> v2:
+>   - Put the full loop control of for_each_rcar_dmac_chan() on a single
+>     line, to improve readability.
+> ---
+>  drivers/dma/sh/rcar-dmac.c | 22 ++++++++++------------
+>  1 file changed, 10 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
+> index a57705356e8bb796..537550b4121bbc22 100644
+> --- a/drivers/dma/sh/rcar-dmac.c
+> +++ b/drivers/dma/sh/rcar-dmac.c
+> @@ -209,6 +209,10 @@ struct rcar_dmac {
+>  
+>  #define to_rcar_dmac(d)		container_of(d, struct rcar_dmac, engine)
+>  
+> +#define for_each_rcar_dmac_chan(i, chan, dmac)						\
+
+I would have placed the iterator (chan) after the container being
+iterated (dmac), but it seems there are some for_each_* macros doing it
+the other way around (they may be older though).
 
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-> ---
-> v2:
->   - Add Reviewed-by.
-> ---
->  .../bindings/dma/renesas,rcar-dmac.yaml       | 76 ++++++++++++-------
->  1 file changed, 48 insertions(+), 28 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.yaml b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.yaml
-> index c07eb6f2fc8d2f12..7f2a54bc732d3a19 100644
-> --- a/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.yaml
-> +++ b/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.yaml
-> @@ -14,34 +14,37 @@ allOf:
+> +	for (i = 0, chan = &(dmac)->channels[0]; i < (dmac)->n_channels; i++, chan++)	\
+> +		if (!((dmac)->channels_mask & BIT(i))) continue; else
+> +
+>  /*
+>   * struct rcar_dmac_of_data - This driver's OF data
+>   * @chan_offset_base: DMAC channels base offset
+> @@ -817,15 +821,11 @@ static void rcar_dmac_chan_reinit(struct rcar_dmac_chan *chan)
 >  
->  properties:
->    compatible:
-> -    items:
-> -      - enum:
-> -          - renesas,dmac-r8a7742  # RZ/G1H
-> -          - renesas,dmac-r8a7743  # RZ/G1M
-> -          - renesas,dmac-r8a7744  # RZ/G1N
-> -          - renesas,dmac-r8a7745  # RZ/G1E
-> -          - renesas,dmac-r8a77470 # RZ/G1C
-> -          - renesas,dmac-r8a774a1 # RZ/G2M
-> -          - renesas,dmac-r8a774b1 # RZ/G2N
-> -          - renesas,dmac-r8a774c0 # RZ/G2E
-> -          - renesas,dmac-r8a774e1 # RZ/G2H
-> -          - renesas,dmac-r8a7790  # R-Car H2
-> -          - renesas,dmac-r8a7791  # R-Car M2-W
-> -          - renesas,dmac-r8a7792  # R-Car V2H
-> -          - renesas,dmac-r8a7793  # R-Car M2-N
-> -          - renesas,dmac-r8a7794  # R-Car E2
-> -          - renesas,dmac-r8a7795  # R-Car H3
-> -          - renesas,dmac-r8a7796  # R-Car M3-W
-> -          - renesas,dmac-r8a77961 # R-Car M3-W+
-> -          - renesas,dmac-r8a77965 # R-Car M3-N
-> -          - renesas,dmac-r8a77970 # R-Car V3M
-> -          - renesas,dmac-r8a77980 # R-Car V3H
-> -          - renesas,dmac-r8a77990 # R-Car E3
-> -          - renesas,dmac-r8a77995 # R-Car D3
-> -      - const: renesas,rcar-dmac
+>  static void rcar_dmac_stop_all_chan(struct rcar_dmac *dmac)
+>  {
+> +	struct rcar_dmac_chan *chan;
+>  	unsigned int i;
+>  
+>  	/* Stop all channels. */
+> -	for (i = 0; i < dmac->n_channels; ++i) {
+> -		struct rcar_dmac_chan *chan = &dmac->channels[i];
 > -
-> -  reg:
-> -    maxItems: 1
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - renesas,dmac-r8a7742  # RZ/G1H
-> +              - renesas,dmac-r8a7743  # RZ/G1M
-> +              - renesas,dmac-r8a7744  # RZ/G1N
-> +              - renesas,dmac-r8a7745  # RZ/G1E
-> +              - renesas,dmac-r8a77470 # RZ/G1C
-> +              - renesas,dmac-r8a774a1 # RZ/G2M
-> +              - renesas,dmac-r8a774b1 # RZ/G2N
-> +              - renesas,dmac-r8a774c0 # RZ/G2E
-> +              - renesas,dmac-r8a774e1 # RZ/G2H
-> +              - renesas,dmac-r8a7790  # R-Car H2
-> +              - renesas,dmac-r8a7791  # R-Car M2-W
-> +              - renesas,dmac-r8a7792  # R-Car V2H
-> +              - renesas,dmac-r8a7793  # R-Car M2-N
-> +              - renesas,dmac-r8a7794  # R-Car E2
-> +              - renesas,dmac-r8a7795  # R-Car H3
-> +              - renesas,dmac-r8a7796  # R-Car M3-W
-> +              - renesas,dmac-r8a77961 # R-Car M3-W+
-> +              - renesas,dmac-r8a77965 # R-Car M3-N
-> +              - renesas,dmac-r8a77970 # R-Car V3M
-> +              - renesas,dmac-r8a77980 # R-Car V3H
-> +              - renesas,dmac-r8a77990 # R-Car E3
-> +              - renesas,dmac-r8a77995 # R-Car D3
-> +          - const: renesas,rcar-dmac
-> +
-> +      - items:
-> +          - const: renesas,dmac-r8a779a0 # R-Car V3U
-> +
-> +  reg: true
+> -		if (!(dmac->channels_mask & BIT(i)))
+> -			continue;
+> -
+> +	for_each_rcar_dmac_chan(i, chan, dmac) {
+>  		/* Stop and reinitialize the channel. */
+>  		spin_lock_irq(&chan->lock);
+>  		rcar_dmac_chan_halt(chan);
+> @@ -1828,9 +1828,10 @@ static int rcar_dmac_probe(struct platform_device *pdev)
+>  		DMA_SLAVE_BUSWIDTH_2_BYTES | DMA_SLAVE_BUSWIDTH_4_BYTES |
+>  		DMA_SLAVE_BUSWIDTH_8_BYTES | DMA_SLAVE_BUSWIDTH_16_BYTES |
+>  		DMA_SLAVE_BUSWIDTH_32_BYTES | DMA_SLAVE_BUSWIDTH_64_BYTES;
+> +	const struct rcar_dmac_of_data *data;
+> +	struct rcar_dmac_chan *chan;
+>  	struct dma_device *engine;
+>  	struct rcar_dmac *dmac;
+> -	const struct rcar_dmac_of_data *data;
+>  	unsigned int i;
+>  	int ret;
 >  
->    interrupts:
->      minItems: 9
-> @@ -110,6 +113,23 @@ required:
->    - power-domains
->    - resets
+> @@ -1916,11 +1917,8 @@ static int rcar_dmac_probe(struct platform_device *pdev)
 >  
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - renesas,dmac-r8a779a0
-> +then:
-> +  properties:
-> +    reg:
-> +      items:
-> +        - description: Base register block
-> +        - description: Channel register block
-> +else:
-> +  properties:
-> +    reg:
-> +      maxItems: 1
-> +
->  additionalProperties: false
+>  	INIT_LIST_HEAD(&engine->channels);
 >  
->  examples:
+> -	for (i = 0; i < dmac->n_channels; ++i) {
+> -		if (!(dmac->channels_mask & BIT(i)))
+> -			continue;
+> -
+> -		ret = rcar_dmac_chan_probe(dmac, &dmac->channels[i], data, i);
+> +	for_each_rcar_dmac_chan(i, chan, dmac) {
+> +		ret = rcar_dmac_chan_probe(dmac, chan, data, i);
+>  		if (ret < 0)
+>  			goto error;
+>  	}
 
 -- 
 Regards,

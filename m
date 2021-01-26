@@ -2,256 +2,154 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EE4630446F
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Jan 2021 18:02:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 55CCA304BBC
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Jan 2021 22:51:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729470AbhAZGBX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 26 Jan 2021 01:01:23 -0500
-Received: from newton.telenet-ops.be ([195.130.132.45]:54850 "EHLO
-        newton.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729566AbhAYOfo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 25 Jan 2021 09:35:44 -0500
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-        by newton.telenet-ops.be (Postfix) with ESMTPS id 4DPXG701LjzMsLHg
-        for <dmaengine@vger.kernel.org>; Mon, 25 Jan 2021 15:25:35 +0100 (CET)
-Received: from ramsan.of.borg ([84.195.186.194])
-        by xavier.telenet-ops.be with bizsmtp
-        id M2QZ2400R4C55Sk012QZRB; Mon, 25 Jan 2021 15:24:34 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1l42nB-000eiX-8K; Mon, 25 Jan 2021 15:24:33 +0100
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1l42nA-004P5J-8z; Mon, 25 Jan 2021 15:24:32 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        id S1726682AbhAZVus (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 26 Jan 2021 16:50:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731336AbhAZRFX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 26 Jan 2021 12:05:23 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87937C061353
+        for <dmaengine@vger.kernel.org>; Tue, 26 Jan 2021 09:01:21 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1l4RgD-00045p-EA; Tue, 26 Jan 2021 17:59:01 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1l4Rg3-0003hY-Ft; Tue, 26 Jan 2021 17:58:51 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Russell King <linux@armlinux.org.uk>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 4/4] dmaengine: rcar-dmac: Add support for R-Car V3U
-Date:   Mon, 25 Jan 2021 15:24:31 +0100
-Message-Id: <20210125142431.1049668-5-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210125142431.1049668-1-geert+renesas@glider.be>
-References: <20210125142431.1049668-1-geert+renesas@glider.be>
+        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig.org@pengutronix.de>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+        kvm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: [PATCH v3 0/5] amba: minor fix and various cleanups
+Date:   Tue, 26 Jan 2021 17:58:30 +0100
+Message-Id: <20210126165835.687514-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The DMACs (both SYS-DMAC and RT-DMAC) on R-Car V3U differ slightly from
-the DMACs on R-Car Gen2 and other R-Car Gen3 SoCs:
-  1. The per-channel registers are located in a second register block.
-     Add support for mapping the second block, using the appropriate
-     offsets and stride.
-  2. The common Channel Clear Register (DMACHCLR) was replaced by a
-     per-channel register.
-     Update rcar_dmac_chan_clear{,_all}() to handle this.
-     As rcar_dmac_init() needs to clear the status before the individual
-     channels are probed, channel index and base address initialization
-     are moved forward.
+From: Uwe Kleine-König <u.kleine-koenig.org@pengutronix.de
 
-Inspired by a patch in the BSP by Phong Hoang
-<phong.hoang.wz@renesas.com>.
+Hello,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - Use two separate named regions instead of an iomem[] array,
-  - Drop rcar_dmac_of_data.chan_reg_block, check for
-    !rcar_dmac_of_data.chan_offset_base instead,
-  - Precalculate chan_base in rcar_dmac_probe().
----
- drivers/dma/sh/rcar-dmac.c | 74 ++++++++++++++++++++++++++++----------
- 1 file changed, 55 insertions(+), 19 deletions(-)
+Changes since v2 sent with Message-Id:
+20201124133139.3072124-1-uwe@kleine-koenig.org:
 
-diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
-index 7a0f802c61e5152d..d9589eea98083215 100644
---- a/drivers/dma/sh/rcar-dmac.c
-+++ b/drivers/dma/sh/rcar-dmac.c
-@@ -189,7 +189,8 @@ struct rcar_dmac_chan {
-  * struct rcar_dmac - R-Car Gen2 DMA Controller
-  * @engine: base DMA engine object
-  * @dev: the hardware device
-- * @iomem: remapped I/O memory base
-+ * @dmac_base: remapped base register block
-+ * @chan_base: remapped channel register block (optional)
-  * @n_channels: number of available channels
-  * @channels: array of DMAC channels
-  * @channels_mask: bitfield of which DMA channels are managed by this driver
-@@ -198,7 +199,8 @@ struct rcar_dmac_chan {
- struct rcar_dmac {
- 	struct dma_device engine;
- 	struct device *dev;
--	void __iomem *iomem;
-+	void __iomem *dmac_base;
-+	void __iomem *chan_base;
- 
- 	unsigned int n_channels;
- 	struct rcar_dmac_chan *channels;
-@@ -234,7 +236,7 @@ struct rcar_dmac_of_data {
- #define RCAR_DMAOR_PRI_ROUND_ROBIN	(3 << 8)
- #define RCAR_DMAOR_AE			(1 << 2)
- #define RCAR_DMAOR_DME			(1 << 0)
--#define RCAR_DMACHCLR			0x0080
-+#define RCAR_DMACHCLR			0x0080	/* Not on R-Car V3U */
- #define RCAR_DMADPSEC			0x00a0
- 
- #define RCAR_DMASAR			0x0000
-@@ -297,6 +299,9 @@ struct rcar_dmac_of_data {
- #define RCAR_DMAFIXDAR			0x0014
- #define RCAR_DMAFIXDPBASE		0x0060
- 
-+/* For R-Car V3U */
-+#define RCAR_V3U_DMACHCLR		0x0100
-+
- /* Hardcode the MEMCPY transfer size to 4 bytes. */
- #define RCAR_DMAC_MEMCPY_XFER_SIZE	4
- 
-@@ -307,17 +312,17 @@ struct rcar_dmac_of_data {
- static void rcar_dmac_write(struct rcar_dmac *dmac, u32 reg, u32 data)
- {
- 	if (reg == RCAR_DMAOR)
--		writew(data, dmac->iomem + reg);
-+		writew(data, dmac->dmac_base + reg);
- 	else
--		writel(data, dmac->iomem + reg);
-+		writel(data, dmac->dmac_base + reg);
- }
- 
- static u32 rcar_dmac_read(struct rcar_dmac *dmac, u32 reg)
- {
- 	if (reg == RCAR_DMAOR)
--		return readw(dmac->iomem + reg);
-+		return readw(dmac->dmac_base + reg);
- 	else
--		return readl(dmac->iomem + reg);
-+		return readl(dmac->dmac_base + reg);
- }
- 
- static u32 rcar_dmac_chan_read(struct rcar_dmac_chan *chan, u32 reg)
-@@ -339,12 +344,23 @@ static void rcar_dmac_chan_write(struct rcar_dmac_chan *chan, u32 reg, u32 data)
- static void rcar_dmac_chan_clear(struct rcar_dmac *dmac,
- 				 struct rcar_dmac_chan *chan)
- {
--	rcar_dmac_write(dmac, RCAR_DMACHCLR, BIT(chan->index));
-+	if (dmac->chan_base)
-+		rcar_dmac_chan_write(chan, RCAR_V3U_DMACHCLR, 1);
-+	else
-+		rcar_dmac_write(dmac, RCAR_DMACHCLR, BIT(chan->index));
- }
- 
- static void rcar_dmac_chan_clear_all(struct rcar_dmac *dmac)
- {
--	rcar_dmac_write(dmac, RCAR_DMACHCLR, dmac->channels_mask);
-+	struct rcar_dmac_chan *chan;
-+	unsigned int i;
-+
-+	if (dmac->chan_base) {
-+		for_each_rcar_dmac_chan(i, chan, dmac)
-+			rcar_dmac_chan_write(chan, RCAR_V3U_DMACHCLR, 1);
-+	} else {
-+		rcar_dmac_write(dmac, RCAR_DMACHCLR, dmac->channels_mask);
-+	}
- }
- 
- /* -----------------------------------------------------------------------------
-@@ -1744,7 +1760,6 @@ static const struct dev_pm_ops rcar_dmac_pm = {
- 
- static int rcar_dmac_chan_probe(struct rcar_dmac *dmac,
- 				struct rcar_dmac_chan *rchan,
--				const struct rcar_dmac_of_data *data,
- 				unsigned int index)
- {
- 	struct platform_device *pdev = to_platform_device(dmac->dev);
-@@ -1753,9 +1768,6 @@ static int rcar_dmac_chan_probe(struct rcar_dmac *dmac,
- 	char *irqname;
- 	int ret;
- 
--	rchan->index = index;
--	rchan->iomem = dmac->iomem + data->chan_offset_base +
--		       data->chan_offset_stride * index;
- 	rchan->mid_rid = -EINVAL;
- 
- 	spin_lock_init(&rchan->lock);
-@@ -1842,6 +1854,7 @@ static int rcar_dmac_probe(struct platform_device *pdev)
- 	const struct rcar_dmac_of_data *data;
- 	struct rcar_dmac_chan *chan;
- 	struct dma_device *engine;
-+	void __iomem *chan_base;
- 	struct rcar_dmac *dmac;
- 	unsigned int i;
- 	int ret;
-@@ -1880,9 +1893,24 @@ static int rcar_dmac_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	/* Request resources. */
--	dmac->iomem = devm_platform_ioremap_resource(pdev, 0);
--	if (IS_ERR(dmac->iomem))
--		return PTR_ERR(dmac->iomem);
-+	dmac->dmac_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(dmac->dmac_base))
-+		return PTR_ERR(dmac->dmac_base);
-+
-+	if (!data->chan_offset_base) {
-+		dmac->chan_base = devm_platform_ioremap_resource(pdev, 1);
-+		if (IS_ERR(dmac->chan_base))
-+			return PTR_ERR(dmac->chan_base);
-+
-+		chan_base = dmac->chan_base;
-+	} else {
-+		chan_base = dmac->dmac_base + data->chan_offset_base;
-+	}
-+
-+	for_each_rcar_dmac_chan(i, chan, dmac) {
-+		chan->index = i;
-+		chan->iomem = chan_base + i * data->chan_offset_stride;
-+	}
- 
- 	/* Enable runtime PM and initialize the device. */
- 	pm_runtime_enable(&pdev->dev);
-@@ -1929,7 +1957,7 @@ static int rcar_dmac_probe(struct platform_device *pdev)
- 	INIT_LIST_HEAD(&engine->channels);
- 
- 	for_each_rcar_dmac_chan(i, chan, dmac) {
--		ret = rcar_dmac_chan_probe(dmac, chan, data, i);
-+		ret = rcar_dmac_chan_probe(dmac, chan, i);
- 		if (ret < 0)
- 			goto error;
- 	}
-@@ -1977,14 +2005,22 @@ static void rcar_dmac_shutdown(struct platform_device *pdev)
- }
- 
- static const struct rcar_dmac_of_data rcar_dmac_data = {
--	.chan_offset_base = 0x8000,
--	.chan_offset_stride = 0x80,
-+	.chan_offset_base	= 0x8000,
-+	.chan_offset_stride	= 0x80,
-+};
-+
-+static const struct rcar_dmac_of_data rcar_v3u_dmac_data = {
-+	.chan_offset_base	= 0x0,
-+	.chan_offset_stride	= 0x1000,
- };
- 
- static const struct of_device_id rcar_dmac_of_ids[] = {
- 	{
- 		.compatible = "renesas,rcar-dmac",
- 		.data = &rcar_dmac_data,
-+	}, {
-+		.compatible = "renesas,dmac-r8a779a0",
-+		.data = &rcar_v3u_dmac_data,
- 	},
- 	{ /* Sentinel */ }
- };
+ - Rebase to v5.11-rc1 (which resulted in a few conflicts in
+   drivers/hwtracing).
+ - Add various Acks.
+ - Send to more maintainers directly (which I think is one of the
+   reasons why there are so few Acks).
+
+For my taste patch 4 needs some more acks (drivers/char/hw_random,
+drivers/dma, drivers/gpu/drm/pl111, drivers/i2c, drivers/mmc,
+drivers/vfio, drivers/watchdog and sound/arm have no maintainer feedback
+yet).
+
+My suggestion is to let this series go in via Russell King (who cares
+for amba). Once enough Acks are there I can also provide a tag for
+merging into different trees. Just tell me if you prefer this solution.
+
+Would be great if this could make it for v5.12, but I'm aware it's
+already late in the v5.11 cycle so it might have to wait for v5.13.
+
+Best regards
+Uwe
+
+Uwe Kleine-König (5):
+  amba: Fix resource leak for drivers without .remove
+  amba: reorder functions
+  vfio: platform: simplify device removal
+  amba: Make the remove callback return void
+  amba: Make use of bus_type functions
+
+ drivers/amba/bus.c                            | 234 +++++++++---------
+ drivers/char/hw_random/nomadik-rng.c          |   3 +-
+ drivers/dma/pl330.c                           |   3 +-
+ drivers/gpu/drm/pl111/pl111_drv.c             |   4 +-
+ drivers/hwtracing/coresight/coresight-catu.c  |   3 +-
+ .../hwtracing/coresight/coresight-cpu-debug.c |   4 +-
+ .../hwtracing/coresight/coresight-cti-core.c  |   4 +-
+ drivers/hwtracing/coresight/coresight-etb10.c |   4 +-
+ .../coresight/coresight-etm3x-core.c          |   4 +-
+ .../coresight/coresight-etm4x-core.c          |   4 +-
+ .../hwtracing/coresight/coresight-funnel.c    |   4 +-
+ .../coresight/coresight-replicator.c          |   4 +-
+ drivers/hwtracing/coresight/coresight-stm.c   |   4 +-
+ .../hwtracing/coresight/coresight-tmc-core.c  |   4 +-
+ drivers/hwtracing/coresight/coresight-tpiu.c  |   4 +-
+ drivers/i2c/busses/i2c-nomadik.c              |   4 +-
+ drivers/input/serio/ambakmi.c                 |   3 +-
+ drivers/memory/pl172.c                        |   4 +-
+ drivers/memory/pl353-smc.c                    |   4 +-
+ drivers/mmc/host/mmci.c                       |   4 +-
+ drivers/rtc/rtc-pl030.c                       |   4 +-
+ drivers/rtc/rtc-pl031.c                       |   4 +-
+ drivers/spi/spi-pl022.c                       |   5 +-
+ drivers/tty/serial/amba-pl010.c               |   4 +-
+ drivers/tty/serial/amba-pl011.c               |   3 +-
+ drivers/vfio/platform/vfio_amba.c             |  15 +-
+ drivers/video/fbdev/amba-clcd.c               |   4 +-
+ drivers/watchdog/sp805_wdt.c                  |   4 +-
+ include/linux/amba/bus.h                      |   2 +-
+ sound/arm/aaci.c                              |   4 +-
+ 30 files changed, 157 insertions(+), 198 deletions(-)
+
+
+base-commit: 5c8fe583cce542aa0b84adc939ce85293de36e5e
 -- 
-2.25.1
+2.29.2
 

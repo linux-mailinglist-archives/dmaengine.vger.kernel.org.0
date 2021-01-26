@@ -2,72 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 276F8304BC0
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Jan 2021 22:51:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 770C5304BC1
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Jan 2021 22:51:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbhAZVvY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 26 Jan 2021 16:51:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34316 "EHLO mail.kernel.org"
+        id S1726793AbhAZVva (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 26 Jan 2021 16:51:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390065AbhAZRQV (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 26 Jan 2021 12:16:21 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A7B6420829;
-        Tue, 26 Jan 2021 17:15:39 +0000 (UTC)
+        id S1729419AbhAZRQv (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 26 Jan 2021 12:16:51 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 115A8230FD;
+        Tue, 26 Jan 2021 17:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611681340;
-        bh=CNUsfkSJIRFb1fE4bIdw+xuP6VYc/2fRsDn+vBfaKrY=;
+        s=k20201202; t=1611681368;
+        bh=ZlMjWTDue1boFQPXRJs+qaamE0yY7UzDgg4PLAB1LAs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N26+U4iQTOHQVlPVSltiH0hTBsB7Gtl5RYJf58GdThDounY/UXHWx+GvEW0EUqwcx
-         7gGOeTubf7/L7EmyjAznggYB5r1LFGvCGebNQVGV0yIbcGw6PGLlqY3IH7lWzCmGId
-         e9F2JmSef+GandQvMhNhbGUqQZEZa7kMTSkJLvxbcS0b7d7mUhwNRuGa9h9C7iCEr2
-         AFuZmBg8BPVQxuTxv5LLSAaDGrzQyR04Ki6uXk5wFKqI5BGnkivMI8IzEUfrGyXKQ4
-         YsguA+PMY1EhYJX+rq52E00pJk6I/uBWS8QvVMiF2MfElXnpNbvcVbBuCIerpAEaHv
-         qsm3C+VFx6PmQ==
-Date:   Tue, 26 Jan 2021 22:45:36 +0530
+        b=qC1CerS4hbhJLOPVLo7DQADgwFjYNmxnwM3yop9BM3tj0quYYv/joaUvrZVyRKHSZ
+         LKBqSRTSgl/2nUeXiVcGjQBIN+LYoyeN/gVYE6dy3meYywpUf1kQTwPQTpTuU7TH8t
+         r6sIdWD95qo8u7lPvc3uY9yzUgXlLJlrlQ8sorIec+Nm8WGBWTxMI9Jw15upzQBQG2
+         p0Mixp307Px8FPwgppi5bOw1pwr/Y5c4Z+OSlwnHR2foVoAvfcdf/9B1JuXDYJdJ7A
+         4MlnNmVuDZpGwzb5sv5IcC4IugZMhS9yrL9GFYGFWuTp4YM65ghOnUwePRld/1tpRj
+         5NrgKQY+PAgvA==
+Date:   Tue, 26 Jan 2021 22:46:01 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Paul Cercueil <paul@crapouillou.net>
 Cc:     Rob Herring <robh+dt@kernel.org>, od@zcrc.me,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: dma: ingenic: Add compatible strings
- for JZ4760(B) SoCs
-Message-ID: <20210126171536.GR2771@vkoul-mobl>
+Subject: Re: [PATCH 2/2] dma: jz4780: Add support for the JZ4760(B)
+Message-ID: <20210126171601.GS2771@vkoul-mobl>
 References: <20210120105322.16116-1-paul@crapouillou.net>
+ <20210120105322.16116-2-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210120105322.16116-1-paul@crapouillou.net>
+In-Reply-To: <20210120105322.16116-2-paul@crapouillou.net>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 On 20-01-21, 10:53, Paul Cercueil wrote:
-> Add ingenic,jz4760-dma and ingenic,jz4760b-dma compatible strings to
-> support the DMA engines present in the JZ4760 and JZ4760B SoCs.
-
-Applied, thanks
-
+> Add support for the JZ4760 and JZ4760B SoCs.
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  Documentation/devicetree/bindings/dma/ingenic,dma.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/ingenic,dma.yaml b/Documentation/devicetree/bindings/dma/ingenic,dma.yaml
-> index 6a2043721b95..ac4d59494fc8 100644
-> --- a/Documentation/devicetree/bindings/dma/ingenic,dma.yaml
-> +++ b/Documentation/devicetree/bindings/dma/ingenic,dma.yaml
-> @@ -17,6 +17,8 @@ properties:
->      enum:
->        - ingenic,jz4740-dma
->        - ingenic,jz4725b-dma
-> +      - ingenic,jz4760-dma
-> +      - ingenic,jz4760b-dma
->        - ingenic,jz4770-dma
->        - ingenic,jz4780-dma
->        - ingenic,x1000-dma
-> -- 
-> 2.29.2
+> Both SoCs have only 5 DMA channels per chip. The JZ4760B introduced the
+> DCKES/DCKEC registers.
+
+Applied after fixing subsystem name, thanks
 
 -- 
 ~Vinod

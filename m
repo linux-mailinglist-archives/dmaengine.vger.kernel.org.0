@@ -2,83 +2,105 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8018C304BBB
-	for <lists+dmaengine@lfdr.de>; Tue, 26 Jan 2021 22:51:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7E1D304BBE
+	for <lists+dmaengine@lfdr.de>; Tue, 26 Jan 2021 22:51:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbhAZVuZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 26 Jan 2021 16:50:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60210 "EHLO mail.kernel.org"
+        id S1726737AbhAZVu6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 26 Jan 2021 16:50:58 -0500
+Received: from foss.arm.com ([217.140.110.172]:48778 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727650AbhAZRDk (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 26 Jan 2021 12:03:40 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C416022EBD;
-        Tue, 26 Jan 2021 17:02:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611680579;
-        bh=bUosObEPj6sBUrbn1Vw5C/9VJJ2eDmdALlTgxMH/ih0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r1Ctjdc16APYIO80/vAyDnXkJOPATRq8vAQ4XGokaXNNwlEHPGjoJjmD5Z5L5pj0A
-         ytk+fyGbUcmuE8VQUk8L3c2h52CB/0x7Z+dHM1/KdDduuFgEUMs19WhzW0b/lSkqAr
-         agj3UnYnx1UzPzAKEjC54N8y8UDWRWg1Dw9p7bMVymhAzidJGd4DV64pDhG7sjoTS3
-         p+Ql5w6ytQtgIWI0TWmQ5rATEKEzcpO4rlAeAvMmCn1RtcuvjyjgHf7hKsHmTX2PQL
-         Q2/alOOKGNQVTbQzdFAqscmYUSxO0FZPJSeqItIBh+GPAMDJCdczAFpTP2hsYgUvm0
-         0ULRhvJ/sQKeA==
-Date:   Tue, 26 Jan 2021 22:32:55 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     dmaengine@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: idxd: add module parameter to force disable
- of SVA
-Message-ID: <20210126170255.GP2771@vkoul-mobl>
-References: <161074811013.2184257.13335125853932003159.stgit@djiang5-desk3.ch.intel.com>
- <20210117065115.GL2771@vkoul-mobl>
- <a7b50b40-ee4a-24c3-d4ba-40c770c970f1@intel.com>
- <20210119163822.GC2771@vkoul-mobl>
- <425267d2-dd13-5710-65b9-d98beff2b328@intel.com>
+        id S1729902AbhAZRL2 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 26 Jan 2021 12:11:28 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 843DFD6E;
+        Tue, 26 Jan 2021 09:08:55 -0800 (PST)
+Received: from [10.57.40.145] (unknown [10.57.40.145])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 099A63F66E;
+        Tue, 26 Jan 2021 09:08:45 -0800 (PST)
+Subject: Re: [PATCH v3 4/5] amba: Make the remove callback return void
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+        kvm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, alsa-devel@alsa-project.org
+References: <20210126165835.687514-1-u.kleine-koenig@pengutronix.de>
+ <20210126165835.687514-5-u.kleine-koenig@pengutronix.de>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <3e42b2ea-c713-31b2-9c86-c49a70d8e1f4@arm.com>
+Date:   Tue, 26 Jan 2021 17:08:40 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <425267d2-dd13-5710-65b9-d98beff2b328@intel.com>
+In-Reply-To: <20210126165835.687514-5-u.kleine-koenig@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 19-01-21, 12:44, Dave Jiang wrote:
-> 
-> On 1/19/2021 9:38 AM, Vinod Koul wrote:
-> > On 18-01-21, 10:06, Dave Jiang wrote:
-> > > On 1/16/2021 11:51 PM, Vinod Koul wrote:
-> > > > On 15-01-21, 15:01, Dave Jiang wrote:
-> > > > > Add a module parameter that overrides the SVA feature enabling. This keeps
-> > > > > the driver in legacy mode even when intel_iommu=sm_on is set. In this mode,
-> > > > > the descriptor fields must be programmed with dma_addr_t from the Linux DMA
-> > > > > API for source, destination, and completion descriptors.
-> > > > > 
-> > > > > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> > > > > ---
-> > > > >    drivers/dma/idxd/init.c |    8 +++++++-
-> > > > >    1 file changed, 7 insertions(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-> > > > > index 25cc947c6179..9687a24ff982 100644
-> > > > > --- a/drivers/dma/idxd/init.c
-> > > > > +++ b/drivers/dma/idxd/init.c
-> > > > > @@ -26,6 +26,10 @@ MODULE_VERSION(IDXD_DRIVER_VERSION);
-> > > > >    MODULE_LICENSE("GPL v2");
-> > > > >    MODULE_AUTHOR("Intel Corporation");
-> > > > > +static bool sva = true;
-> > > > > +module_param(sva, bool, 0644);
-> > > > > +MODULE_PARM_DESC(sva, "Toggle SVA support on/off");
-> > > > Documentation for this please..
-> > > Just comments or is there somewhere specific for driver module parameter
-> > > documentations?
-> > All the parameters are supposed to be documented in Documentation/admin-guide/kernel-parameters.txt
-> 
-> It seems to be for core kernel components and subsystems, and not specific
-> device drivers. I'm not seeing any of the dmaengine driver module params
-> being in this doc after grepping in drivers/dma.
+Hi
 
-Yeah we should fix that as well :)
+On 1/26/21 4:58 PM, Uwe Kleine-König wrote:
+> All amba drivers return 0 in their remove callback. Together with the
+> driver core ignoring the return value anyhow, it doesn't make sense to
+> return a value here.
+> 
+> Change the remove prototype to return void, which makes it explicit that
+> returning an error value doesn't work as expected. This simplifies changing
+> the core remove callback to return void, too.
+> 
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org> # for drivers/memory
+> Acked-by: Mark Brown <broonie@kernel.org>
+  > Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
--- 
-~Vinod
+
+>   drivers/hwtracing/coresight/coresight-etm4x-core.c | 4 +---
+
+You are most likely to have a conflict for the above file, with what is
+in coresight/next. It should be easy to resolve.
+
+Otherwise, the changes look good for the drivers/hwtracing/coresight/*
+
+Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>

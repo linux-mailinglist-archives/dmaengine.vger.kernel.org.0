@@ -2,179 +2,171 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52AD23052CD
-	for <lists+dmaengine@lfdr.de>; Wed, 27 Jan 2021 07:06:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3CA7305380
+	for <lists+dmaengine@lfdr.de>; Wed, 27 Jan 2021 07:52:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231386AbhA0GFQ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 27 Jan 2021 01:05:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231556AbhA0Fe1 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 27 Jan 2021 00:34:27 -0500
-Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 279B7C061573
-        for <dmaengine@vger.kernel.org>; Tue, 26 Jan 2021 21:33:42 -0800 (PST)
-Received: by mail-ot1-x335.google.com with SMTP id f6so590605ots.9
-        for <dmaengine@vger.kernel.org>; Tue, 26 Jan 2021 21:33:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UXTjp2O+kLbB9CTCJxJt0SD+zZK5wsiYg7svDRD619A=;
-        b=dOn1TON+07GhKGJIoyayMjmuy9BWh8V5ii5n4VTX82icYwL/TZwbySdeoTGe3zAzC7
-         oSuVT+QQQ33v+XleMivKtoG2pI8n2OuZ9WN0bVODaUZ1UVzMKaFDoNYW6SEGK0pCKGKQ
-         oWxYyv3zdNrU3Ep7X6AREUC29Rlo8lcyt4qvfUGVJ+VMNTx5UuJgcjV0rAxgRI/6Bk/K
-         0i+FrH5GAbdXLc9mePC17FZ9ip41xi53D0APB/iDZlFNapeDRcpz5BD2WXJpdKPZBOIJ
-         MnfwfXayWeimpxJ4hLheuNTqOC1Bq0ahgp4WJngILzzvK0tC/Jj3ClVY+bA4mPvdkw79
-         6Z2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UXTjp2O+kLbB9CTCJxJt0SD+zZK5wsiYg7svDRD619A=;
-        b=Xxwk2Go8a2iMzqWEeUsb60BCVz57BHn4yGLJdc1XiRYv7mk1v1CQdSgwDEPfQwiDjl
-         4L00/grQuGUkbbbKI5qgN35YDgO+ia26FM+GHs52XbclR8MqkcSVmLP36Fk4ipE9NQut
-         d3xOpuqpc6thEM7rGbjHeJTUdSO2WK80N2nzrm/c3POerTjnOl2DSEa2QFzr3Tm4FgG5
-         d3dU4DNnfKBRQICDl3UBzOvMOrIjD1ylkkBoW5y1SwvpW3X/mUExR9iyI/n7hYHuB+hT
-         AMc1Hm+sXaEzxrEz8E5ywsEQh9AMHgaXF6Zn1OSfYKX2M13grVKdITvmXSyMAM2xZbnG
-         fLHQ==
-X-Gm-Message-State: AOAM532dOeUzJW891AsKZcD3I5/8qX5xP9LTRdttPglyPvcMEFt03p0Z
-        xMwGcNDQljBsZBUcGQaVwkysEA==
-X-Google-Smtp-Source: ABdhPJw+Yk3fYOO7ud+1dReFka/e+p0BzGgE33P9Oxdtl8BwVzczBeoJnHajCPDXBfylS3T2qXrRLA==
-X-Received: by 2002:a9d:37a6:: with SMTP id x35mr6665900otb.275.1611725621367;
-        Tue, 26 Jan 2021 21:33:41 -0800 (PST)
-Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id y66sm260747oia.20.2021.01.26.21.33.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Jan 2021 21:33:40 -0800 (PST)
-Date:   Tue, 26 Jan 2021 23:33:38 -0600
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     agross@kernel.org, dan.j.williams@intel.com, vkoul@kernel.org,
-        shawn.guo@linaro.org, srinivas.kandagatla@linaro.org,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dma: qcom: bam_dma: Manage clocks when
- controlled_remotely is set
-Message-ID: <YBD7Mhh1MowRDMBF@builder.lan>
-References: <20210126211859.790892-1-thara.gopinath@linaro.org>
+        id S231134AbhA0Gu6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 27 Jan 2021 01:50:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231916AbhA0GsF (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 27 Jan 2021 01:48:05 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6EB692072C;
+        Wed, 27 Jan 2021 06:47:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611730042;
+        bh=SMf/sTVmFizoaTCRhZKOzJIDd9pG2drSndbHjehSYHI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eIxDYowELLXJdzjiGwaNPG2hkaUmupGzw2zEemwVvQomvLqzMvseCF/SkUiqZIduO
+         Gvf8oKij0ja051ihFnNxn1vEEmr2V7Rezxly/hz1a2DfgLLDiHYVnu7ywJbmKoZ/1n
+         jTjUvD1r6r/xOuNkE/io5HVCc6JZfMxpD46Zw0pDJW3S6qcXerAxfVIO9YzZfcx8BZ
+         7abmVKMgGR50oOPfV4GFaWENi4Ss/oJanPtz4wNs5YcT6fz7mNssNUbap4x9DqDp7k
+         94/V6xmo4VOiVFFF3CTluEAGGxMwLkYC3YD81tj+qqyC0M53/29Mjt0KM9D41YabCf
+         I2bnFL90rxHIw==
+Date:   Wed, 27 Jan 2021 07:47:15 +0100
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
+        kvm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH v3 4/5] amba: Make the remove callback return void
+Message-ID: <20210127064715.GA981@kunai>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-crypto@vger.kernel.org,
+        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-serial@vger.kernel.org, kvm@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        alsa-devel@alsa-project.org
+References: <20210126165835.687514-1-u.kleine-koenig@pengutronix.de>
+ <20210126165835.687514-5-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="huq684BweRXVnRxX"
 Content-Disposition: inline
-In-Reply-To: <20210126211859.790892-1-thara.gopinath@linaro.org>
+In-Reply-To: <20210126165835.687514-5-u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue 26 Jan 15:18 CST 2021, Thara Gopinath wrote:
 
-> When bam dma is "controlled remotely", thus far clocks were not controlled
-> from the Linux. In this scenario, Linux was disabling runtime pm in bam dma
-> driver and not doing any clock management in suspend/resume hooks.
-> 
-> With introduction of crypto engine bam dma, the clock is a rpmh resource
-> that can be controlled from both Linux and TZ/remote side.  Now bam dma
-> clock is getting enabled during probe even though the bam dma can be
-> "controlled remotely". But due to clocks not being handled properly,
-> bam_suspend generates a unbalanced clk_unprepare warning during system
-> suspend.
-> 
-> To fix the above issue and to enable proper clock-management, this patch
-> enables runtim-pm and handles bam dma clocks in suspend/resume hooks if
-> the clock node is present irrespective of controlled_remotely property.
-> 
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+--huq684BweRXVnRxX
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On Tue, Jan 26, 2021 at 05:58:34PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> All amba drivers return 0 in their remove callback. Together with the
+> driver core ignoring the return value anyhow, it doesn't make sense to
+> return a value here.
+>=20
+> Change the remove prototype to return void, which makes it explicit that
+> returning an error value doesn't work as expected. This simplifies changi=
+ng
+> the core remove callback to return void, too.
+>=20
+> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org> # for drivers/memory
+> Acked-by: Mark Brown <broonie@kernel.org>
+> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+
+Acked-by: Wolfram Sang <wsa@kernel.org> # for I2C
 
 
-And from John on IRC:
+--huq684BweRXVnRxX
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Tested-by: John Stultz <john.stultz@linaro.org>
+-----BEGIN PGP SIGNATURE-----
 
-Regards,
-Bjorn
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmARDG8ACgkQFA3kzBSg
+KbZUgg/+MkBwxjwkME0XbCPEYMUsJ9F6QLP4gXXTqGleAgxMVqSLG5XG/rJgCfPv
+BB3X116hBgVOZZBTz+uWxpOSy90WrhLh3HrOb/SGB6hmKn/a0fYdB2/YXhVOXKyN
+OlhKbYBl0Ev0PM+m8xV4sr0sQYOn1wOs0NMHoMvmK+TlnCX1GDxHBVuElpNWo8Wj
+/nFLnpq9eUGt+i4eAsKoTj/1l8Ak4cOihHe2cRWxVUC3NDRTJBL9HgZwD38wVl5v
+u/iwGQG5Zram49KLbGoBFpd60hrifA1X3Cwx2qhwZ+cm/ks3n+NwIQPvpoRyJ8Ny
+gK5+QKowfQvOtSP8PFC1QE/u+oLVpYJ4rVT3DmXddPj89l3Peo17VAS08AoPk3hO
+McIAFelbN1FmcjCpZ0ELpjCo/G6S1pKx9uAtFLbbMf80CoREU5ucCPzzWbf9unQv
+5xhIdK1xkszSC1kGjHABw1zBy/ZAEoy+x3yktPjX2nU1L8Ni/vKjR6+w27G7pspU
+WZwk2lkCFEnt8gFnRI4MFhjGagpiyiEfq0QeD1O452zgZimiPvfKjMLnWArfWzF0
+25EngNXoizDEZMYZX46drnzfUfIDKBVkCbj1CWcQLFivpp4pj7+7n4D5lJlgwNvE
+kqhQNlLLFbibwI0LNt/LqCbC/SggaYOUfYQ8XefoTe0Z6dH/+J0=
+=FyXm
+-----END PGP SIGNATURE-----
 
-> ---
-> 
-> v1->v2:
-> 	- As per Shawn's suggestion, use devm_clk_get_optional to get the
-> 	  bam clock if the "controlled_remotely" property is set so that
-> 	  the clock code takes care of setting the bam clock to NULL if
-> 	  not specified by dt. 
-> 	- Remove the check for "controlled_remotely" property in
-> 	  bam_dma_resume now that clock enable / disable is based on
-> 	  whether bamclk is NULL or not.
-> 	- Rebased to v5.11-rc5
-> 
->  drivers/dma/qcom/bam_dma.c | 29 +++++++++++++++--------------
->  1 file changed, 15 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-> index 88579857ca1d..c8a77b428b52 100644
-> --- a/drivers/dma/qcom/bam_dma.c
-> +++ b/drivers/dma/qcom/bam_dma.c
-> @@ -1270,13 +1270,13 @@ static int bam_dma_probe(struct platform_device *pdev)
->  			dev_err(bdev->dev, "num-ees unspecified in dt\n");
->  	}
->  
-> -	bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
-> -	if (IS_ERR(bdev->bamclk)) {
-> -		if (!bdev->controlled_remotely)
-> -			return PTR_ERR(bdev->bamclk);
-> +	if (bdev->controlled_remotely)
-> +		bdev->bamclk = devm_clk_get_optional(bdev->dev, "bam_clk");
-> +	else
-> +		bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
->  
-> -		bdev->bamclk = NULL;
-> -	}
-> +	if (IS_ERR(bdev->bamclk))
-> +		return PTR_ERR(bdev->bamclk);
->  
->  	ret = clk_prepare_enable(bdev->bamclk);
->  	if (ret) {
-> @@ -1350,7 +1350,7 @@ static int bam_dma_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto err_unregister_dma;
->  
-> -	if (bdev->controlled_remotely) {
-> +	if (!bdev->bamclk) {
->  		pm_runtime_disable(&pdev->dev);
->  		return 0;
->  	}
-> @@ -1438,10 +1438,10 @@ static int __maybe_unused bam_dma_suspend(struct device *dev)
->  {
->  	struct bam_device *bdev = dev_get_drvdata(dev);
->  
-> -	if (!bdev->controlled_remotely)
-> +	if (bdev->bamclk) {
->  		pm_runtime_force_suspend(dev);
-> -
-> -	clk_unprepare(bdev->bamclk);
-> +		clk_unprepare(bdev->bamclk);
-> +	}
->  
->  	return 0;
->  }
-> @@ -1451,12 +1451,13 @@ static int __maybe_unused bam_dma_resume(struct device *dev)
->  	struct bam_device *bdev = dev_get_drvdata(dev);
->  	int ret;
->  
-> -	ret = clk_prepare(bdev->bamclk);
-> -	if (ret)
-> -		return ret;
-> +	if (bdev->bamclk) {
-> +		ret = clk_prepare(bdev->bamclk);
-> +		if (ret)
-> +			return ret;
->  
-> -	if (!bdev->controlled_remotely)
->  		pm_runtime_force_resume(dev);
-> +	}
->  
->  	return 0;
->  }
-> -- 
-> 2.25.1
-> 
+--huq684BweRXVnRxX--

@@ -2,86 +2,127 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 889C3308B05
-	for <lists+dmaengine@lfdr.de>; Fri, 29 Jan 2021 18:18:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E394F308D75
+	for <lists+dmaengine@lfdr.de>; Fri, 29 Jan 2021 20:36:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231694AbhA2RJW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 29 Jan 2021 12:09:22 -0500
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:65302 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231871AbhA2RIz (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 29 Jan 2021 12:08:55 -0500
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 10TH6Vvd007638;
-        Fri, 29 Jan 2021 11:08:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=PODMain02222019;
- bh=InbfmcNQ3u+eutYnwP8FnOSnY1mQqECHGcLKmEZ24/s=;
- b=Owh4aZEcpAxX8wm82rBfYBZHF6g7aI8uUnO8ADYgIlcTIvTrKMkIJGfj1IgZSC95/tbA
- gZsqcYnKSpf7q1kyiHGLkVPB94vNru9NNwuat5oPhL9MxuvmCdYgOwYYSZUQJj3VTll7
- KQTXdSeQII6Yu3u5zGktAHKakl6ymaUe2zzPn8ENZG/z1RCNicPN/GZNZn7JINySSpc/
- qJkZUybb4Py/ZyRVRz3AzGNeklbSnCH+5ZOpEZukLkTgSRvSJMfNT/+u5++Ehd24EACY
- Tv4f1dCtFHwWwR3fQ+pfFICNeHXDImakoISiixyuysLad7/2hEhwKkDdRMFeJAAi6wgQ Kw== 
-Received: from ediex01.ad.cirrus.com ([87.246.76.36])
-        by mx0b-001ae601.pphosted.com with ESMTP id 368h3u7nxh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 29 Jan 2021 11:08:04 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 29 Jan
- 2021 17:08:02 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
- Transport; Fri, 29 Jan 2021 17:08:02 +0000
-Received: from AUSNPC0LSNW1-debian.cirrus.com (AUSNPC0LSNW1.ad.cirrus.com [198.61.64.253])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 240B345;
-        Fri, 29 Jan 2021 17:08:02 +0000 (UTC)
-From:   Richard Fitzgerald <rf@opensource.cirrus.com>
-To:     <vkoul@kernel.org>, <michal.simek@xilinx.com>
-CC:     <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>
-Subject: [PATCH] dmaengine: xilinx_dma: Alloc tx descriptors GFP_NOWAIT
-Date:   Fri, 29 Jan 2021 17:08:00 +0000
-Message-ID: <20210129170800.31857-1-rf@opensource.cirrus.com>
-X-Mailer: git-send-email 2.20.1
+        id S232805AbhA2TcU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 29 Jan 2021 14:32:20 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:33754 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232727AbhA2TcT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 29 Jan 2021 14:32:19 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 10TJVQRG050654;
+        Fri, 29 Jan 2021 13:31:26 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1611948686;
+        bh=6+jM4+HbnMQcRZuB7Fd33N+uADhJPDXM58VLVeKPsxQ=;
+        h=From:To:CC:Subject:Date;
+        b=lsf9UgQhAnDLo2wWOINSCAjdASwFLcqq5NQfHedRZXsvVY3XodQzJXF7zwUt7ACVy
+         YdqPIzI57Laml/YtxZ1TMF73+XUWHAKPvr1bxWQ1i3+FfoetsjIqIf/MN8q9xo/qK0
+         6xEHSTron6cYyuwKNC1++l4mup7lzXm6j3OpNmXw=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 10TJVQLm003222
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 29 Jan 2021 13:31:26 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 29
+ Jan 2021 13:31:26 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 29 Jan 2021 13:31:26 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 10TJVOBQ064916;
+        Fri, 29 Jan 2021 13:31:25 -0600
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        <dmaengine@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH] dmaengine: ti: k3-psil: optimize struct psil_endpoint_config for size
+Date:   Fri, 29 Jan 2021 21:31:17 +0200
+Message-ID: <20210129193117.28833-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 priorityscore=1501
- adultscore=0 suspectscore=0 lowpriorityscore=0 spamscore=0 phishscore=0
- clxscore=1011 mlxlogscore=725 mlxscore=0 malwarescore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2101290084
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Use GFP_NOWAIT allocation in xilinx_dma_alloc_tx_descriptor().
+Optimize struct psil_endpoint_config for size by
+- reordering fields
+- grouping bitfields
+- change mapped_channel_id type to s16 (32K channel is enough)
+- default_flow_id type to s16 as it's assigned to -1
 
-This is necessary for compatibility with ALSA, which calls
-dmaengine_prep_dma_cyclic() from an atomic context.
+before:
+text            data     bss    dec	        hex	filename
+12654100	5211472	 666904	18532476	11ac87c	vmlinux
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+after:
+12654100	5208528	 666904	18529532	11abcfc	vmlinux
+
+diff: 2944 bytes
+
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- drivers/dma/xilinx/xilinx_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/dma/k3-psil.h | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 22faea653ea8..fb046af9ac53 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -800,7 +800,7 @@ xilinx_dma_alloc_tx_descriptor(struct xilinx_dma_chan *chan)
- {
- 	struct xilinx_dma_tx_descriptor *desc;
+diff --git a/include/linux/dma/k3-psil.h b/include/linux/dma/k3-psil.h
+index 36e22c5a0f29..5f106d852f1c 100644
+--- a/include/linux/dma/k3-psil.h
++++ b/include/linux/dma/k3-psil.h
+@@ -42,14 +42,14 @@ enum psil_endpoint_type {
+ /**
+  * struct psil_endpoint_config - PSI-L Endpoint configuration
+  * @ep_type:		PSI-L endpoint type
++ * @channel_tpl:	Desired throughput level for the channel
+  * @pkt_mode:		If set, the channel must be in Packet mode, otherwise in
+  *			TR mode
+  * @notdpkt:		TDCM must be suppressed on the TX channel
+  * @needs_epib:		Endpoint needs EPIB
+- * @psd_size:		If set, PSdata is used by the endpoint
+- * @channel_tpl:	Desired throughput level for the channel
+  * @pdma_acc32:		ACC32 must be enabled on the PDMA side
+  * @pdma_burst:		BURST must be enabled on the PDMA side
++ * @psd_size:		If set, PSdata is used by the endpoint
+  * @mapped_channel_id:	PKTDMA thread to channel mapping for mapped channels.
+  *			The thread must be serviced by the specified channel if
+  *			mapped_channel_id is >= 0 in case of PKTDMA
+@@ -62,23 +62,22 @@ enum psil_endpoint_type {
+  */
+ struct psil_endpoint_config {
+ 	enum psil_endpoint_type ep_type;
++	enum udma_tp_level channel_tpl;
  
--	desc = kzalloc(sizeof(*desc), GFP_KERNEL);
-+	desc = kzalloc(sizeof(*desc), GFP_NOWAIT);
- 	if (!desc)
- 		return NULL;
+ 	unsigned pkt_mode:1;
+ 	unsigned notdpkt:1;
+ 	unsigned needs_epib:1;
+-	u32 psd_size;
+-	enum udma_tp_level channel_tpl;
+-
+ 	/* PDMA properties, valid for PSIL_EP_PDMA_* */
+ 	unsigned pdma_acc32:1;
+ 	unsigned pdma_burst:1;
  
++	u32 psd_size;
+ 	/* PKDMA mapped channel */
+-	int mapped_channel_id;
++	s16 mapped_channel_id;
+ 	/* PKTDMA tflow and rflow ranges for mapped channel */
+ 	u16 flow_start;
+ 	u16 flow_num;
+-	u16 default_flow_id;
++	s16 default_flow_id;
+ };
+ 
+ int psil_set_new_ep_config(struct device *dev, const char *name,
 -- 
-2.20.1
+2.17.1
 

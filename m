@@ -2,154 +2,93 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC9D130C14E
-	for <lists+dmaengine@lfdr.de>; Tue,  2 Feb 2021 15:21:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45F9530C6E9
+	for <lists+dmaengine@lfdr.de>; Tue,  2 Feb 2021 18:06:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233862AbhBBOUA (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 2 Feb 2021 09:20:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51458 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231624AbhBBORv (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 2 Feb 2021 09:17:51 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2821F64DD5;
-        Tue,  2 Feb 2021 14:06:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1612274769;
-        bh=ucOE/Mmv9i2CWEnQ7wz77HidV63/GBxg2zd12rEmpdc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mtk8Q3WRW8e4rAGIMqVSBpBvOYwFo0HFhgAeLGXuNjXjEG35zPmakj7dmP3Hp3Xxb
-         nLQvz66M8T/SeJkpoklGcHv/kplvfAQlGnleUXc+nPaJbcAYzR2bE146XmrkoL8bC8
-         WACPjj7XeQXWdVU5Y4Gh/La16odwgfVrinCkNWdA=
-Date:   Tue, 2 Feb 2021 15:06:05 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Russell King <linux+pull@armlinux.org.uk>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-fbdev@vger.kernel.org, kvm@vger.kernel.org,
-        alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig.org@pengutronix.de>, linux-i2c@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-input@vger.kernel.org, Mike Leach <mike.leach@linaro.org>,
-        linux-watchdog@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-crypto@vger.kernel.org,
-        kernel@pengutronix.de, Leo Yan <leo.yan@linaro.org>,
-        dmaengine@vger.kernel.org, Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Subject: Re: [GIT PULL] immutable branch for amba changes targeting v5.12-rc1
-Message-ID: <YBlcTXlxemmC2lgr@kroah.com>
-References: <20210126165835.687514-1-u.kleine-koenig@pengutronix.de>
- <20210202135350.36nj3dmcoq3t7gcf@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210202135350.36nj3dmcoq3t7gcf@pengutronix.de>
+        id S237168AbhBBRE1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 2 Feb 2021 12:04:27 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:53092 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236984AbhBBQ5v (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 2 Feb 2021 11:57:51 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 767654017D;
+        Tue,  2 Feb 2021 16:56:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1612285007; bh=+auZmpcKoLtjzoJGo6Msp1yOj0Ox3iggz0BY5h+429o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=j2WhAPuU8d8+zdfAE9/5G2SGrCQQFWXX9L7vPxQo5yvUQUdbIlcD99tH+Ebai3dOc
+         6ZxCQ33Woc85T9pM26Lag5A+B3ZzkOZ4PLV022psLNMXQFnIguYrbI+l44jhoC4Wuf
+         xuaOdKa3dXEZl24qSGusXrB5I4e7H0j81uKtaTJ5Su/0r02+bC3ykzAcPFNwler7p3
+         Bt70Z9qoNGhQTax8yV/hOQOFlPD62YB1w0eeCREGjHs3Xves/AM/8ZridsBqgAaKCB
+         2SJKGY8FPJcyu5lJQtnb32jVfyIOPCOem6/rSoeTmSYP69aNaNaF1Z5bmBWzLRISUq
+         uwpodwkUIn+Uw==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 69380A005E;
+        Tue,  2 Feb 2021 16:56:43 +0000 (UTC)
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        linux-doc@vger.kernel.org
+Subject: [RESEND PATCH v3 0/5] misc: Add Add Synopsys DesignWare xData IP driver
+Date:   Tue,  2 Feb 2021 17:56:33 +0100
+Message-Id: <cover.1612284945.git.gustavo.pimentel@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Feb 02, 2021 at 02:53:50PM +0100, Uwe Kleine-König wrote:
-> Hello,
-> 
-> the following changes since commit 5c8fe583cce542aa0b84adc939ce85293de36e5e:
-> 
->   Linux 5.11-rc1 (2020-12-27 15:30:22 -0800)
-> 
-> are available in the Git repository at:
-> 
->   https://git.pengutronix.de/git/ukl/linux tags/amba-make-remove-return-void
-> 
-> for you to fetch changes up to f170b59fedd733b92f58c4d7c8357fbf7601d623:
-> 
->   amba: Make use of bus_type functions (2021-02-02 14:26:02 +0100)
-> 
-> I expect this tag to be merged by Russell King as amba maintainer and by
-> Mathieu Poirier (or Greg Kroah-Hartman?) for coresight as there are some
-> pending conflicting changes. These are not hard to resolve but also
-> non-trivial. Tell me if you need assistance for resolving, also if it's only a
-> second pair of eyes to judge your resolution.
-> 
-> Best regards,
-> Uwe
-> 
-> ----------------------------------------------------------------
-> Tag for adaptions to struct amba_driver::remove changing prototype
-> 
-> ----------------------------------------------------------------
-> Uwe Kleine-König (5):
->       amba: Fix resource leak for drivers without .remove
->       amba: reorder functions
->       vfio: platform: simplify device removal
->       amba: Make the remove callback return void
->       amba: Make use of bus_type functions
-> 
->  drivers/amba/bus.c                                 | 234 +++++++++++++++++++++++++++++++++------------------------------
->  drivers/char/hw_random/nomadik-rng.c               |   3 +-
->  drivers/dma/pl330.c                                |   3 +-
->  drivers/gpu/drm/pl111/pl111_drv.c                  |   4 +-
->  drivers/hwtracing/coresight/coresight-catu.c       |   3 +-
->  drivers/hwtracing/coresight/coresight-cpu-debug.c  |   4 +-
->  drivers/hwtracing/coresight/coresight-cti-core.c   |   4 +-
->  drivers/hwtracing/coresight/coresight-etb10.c      |   4 +-
->  drivers/hwtracing/coresight/coresight-etm3x-core.c |   4 +-
->  drivers/hwtracing/coresight/coresight-etm4x-core.c |   4 +-
->  drivers/hwtracing/coresight/coresight-funnel.c     |   4 +-
->  drivers/hwtracing/coresight/coresight-replicator.c |   4 +-
->  drivers/hwtracing/coresight/coresight-stm.c        |   4 +-
->  drivers/hwtracing/coresight/coresight-tmc-core.c   |   4 +-
->  drivers/hwtracing/coresight/coresight-tpiu.c       |   4 +-
->  drivers/i2c/busses/i2c-nomadik.c                   |   4 +-
->  drivers/input/serio/ambakmi.c                      |   3 +-
->  drivers/memory/pl172.c                             |   4 +-
->  drivers/memory/pl353-smc.c                         |   4 +-
->  drivers/mmc/host/mmci.c                            |   4 +-
->  drivers/rtc/rtc-pl030.c                            |   4 +-
->  drivers/rtc/rtc-pl031.c                            |   4 +-
->  drivers/spi/spi-pl022.c                            |   5 +-
->  drivers/tty/serial/amba-pl010.c                    |   4 +-
->  drivers/tty/serial/amba-pl011.c                    |   3 +-
->  drivers/vfio/platform/vfio_amba.c                  |  15 ++--
->  drivers/video/fbdev/amba-clcd.c                    |   4 +-
->  drivers/watchdog/sp805_wdt.c                       |   4 +-
->  include/linux/amba/bus.h                           |   2 +-
->  sound/arm/aaci.c                                   |   4 +-
->  30 files changed, 157 insertions(+), 198 deletions(-)
-> 
-> 
+This patch series adds a new driver called xData-pcie for the Synopsys
+DesignWare PCIe prototype.
 
+The driver configures and enables the Synopsys DesignWare PCIe traffic
+generator IP inside of prototype Endpoint which will generate upstream
+and downstream PCIe traffic. This allows to quickly test the PCIe link
+throughput speed and check is the prototype solution has some limitation
+or not.
 
-I'm glad to take this through my char/misc tree, as that's where the
-other coresight changes flow through.  So if no one else objects, I will
-do so...
+Changes:
+ V2: Rework driver according to Greg Kroah-Hartman feedback
+ V3: Fixed issues detected while running on 64 bits platforms
+     Rebased patches on top of v5.11-rc1 version
 
-thanks,
+Cc: Derek Kiernan <derek.kiernan@xilinx.com>
+Cc: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-greg k-h
+Gustavo Pimentel (5):
+  misc: Add Synopsys DesignWare xData IP driver
+  misc: Add Synopsys DesignWare xData IP driver to Makefile
+  misc: Add Synopsys DesignWare xData IP driver to Kconfig
+  Documentation: misc-devices: Add Documentation for dw-xdata-pcie
+    driver
+  MAINTAINERS: Add Synopsys xData IP driver maintainer
+
+ Documentation/misc-devices/dw-xdata-pcie.rst |  40 +++
+ MAINTAINERS                                  |   7 +
+ drivers/misc/Kconfig                         |  11 +
+ drivers/misc/Makefile                        |   1 +
+ drivers/misc/dw-xdata-pcie.c                 | 379 +++++++++++++++++++++++++++
+ 5 files changed, 438 insertions(+)
+ create mode 100644 Documentation/misc-devices/dw-xdata-pcie.rst
+ create mode 100644 drivers/misc/dw-xdata-pcie.c
+
+-- 
+2.7.4
+

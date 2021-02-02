@@ -2,191 +2,458 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6359A30CE16
-	for <lists+dmaengine@lfdr.de>; Tue,  2 Feb 2021 22:41:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CAEE630CFB9
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Feb 2021 00:11:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230168AbhBBVkZ (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 2 Feb 2021 16:40:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233157AbhBBVkF (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 2 Feb 2021 16:40:05 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D75B4C0617AA
-        for <dmaengine@vger.kernel.org>; Tue,  2 Feb 2021 13:38:32 -0800 (PST)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1l73KK-0005G0-0Y; Tue, 02 Feb 2021 22:35:12 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1l73KD-000359-6W; Tue, 02 Feb 2021 22:35:05 +0100
-Date:   Tue, 2 Feb 2021 22:35:02 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Russell King <linux+pull@armlinux.org.uk>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-fbdev@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-        kvm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org,
-        Jaroslav Kysela <perex@perex.cz>,
-        Eric Anholt <eric@anholt.net>, linux-i2c@vger.kernel.org,
-        Jiri Slaby <jirislaby@kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-rtc@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Takashi Iwai <tiwai@suse.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-serial@vger.kernel.org, linux-input@vger.kernel.org,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-watchdog@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        coresight@lists.linaro.org, Vladimir Zapolskiy <vz@mleia.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mark Brown <broonie@kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
-        Leo Yan <leo.yan@linaro.org>, dmaengine@vger.kernel.org
-Subject: Re: [GIT PULL] immutable branch for amba changes targeting v5.12-rc1
-Message-ID: <20210202213502.ya4luwvklbte72sz@pengutronix.de>
-References: <20210126165835.687514-1-u.kleine-koenig@pengutronix.de>
- <20210202135350.36nj3dmcoq3t7gcf@pengutronix.de>
+        id S236087AbhBBXLe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 2 Feb 2021 18:11:34 -0500
+Received: from mga03.intel.com ([134.134.136.65]:16715 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236083AbhBBXLe (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 2 Feb 2021 18:11:34 -0500
+IronPort-SDR: 09sVmZPXiI1VAIbLZ/OBj1NJI8W3TLJ8+yNI+y00AhhRUchAdRCjEPN5/C/atspn3H5re4uUe7
+ yIPRJ39bbktQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9883"; a="181025351"
+X-IronPort-AV: E=Sophos;i="5.79,396,1602572400"; 
+   d="scan'208";a="181025351"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2021 15:10:52 -0800
+IronPort-SDR: NxV/y4ja0Bm5+2zt20lBJnJxX1/UmVNiH2GsG6kIJc3s1pQk41u3F9u1pe080qhg/Rbn8zouJZ
+ Mx/O+W9DM/ug==
+X-IronPort-AV: E=Sophos;i="5.79,396,1602572400"; 
+   d="scan'208";a="413440639"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2021 15:10:52 -0800
+Subject: [PATCH] dmaengine: idxd: add percpu_ref to descriptor submission path
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org
+Date:   Tue, 02 Feb 2021 16:10:51 -0700
+Message-ID: <161230745094.3446217.12069381681972312918.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="iy6nspqtdtxt6xyd"
-Content-Disposition: inline
-In-Reply-To: <20210202135350.36nj3dmcoq3t7gcf@pengutronix.de>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: dmaengine@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Current submission path has no way to restrict the submitter from
+stop submiting on shutdown path or wq disable path. This provides a way to
+quiesce the submission path.
 
---iy6nspqtdtxt6xyd
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Modeling after 'struct reqeust_queue' usage of percpu_ref. One of the
+abilities of per_cpu reference counting is the ability to stop new
+references from being taken while awaiting outstanding references to be
+dropped. On wq shutdown, we want to block any new submissions to the kernel
+workqueue and quiesce before disabling. The percpu_ref allows us to block
+any new submissions and wait for any current submission calls to finish
+submitting to the workqueue.
 
-Hello,
+A percpu_ref is embedded in each idxd_wq context to allow control for
+individual wq. The wq->wq_active counter is elevated before calling
+movdir64b() or enqcmds() to submit a descriptor to the wq and dropped once
+the submission call completes. The function is gated by
+percpu_ref_tryget_live(). On shutdown with percpu_ref_kill() called, any
+new submission would be blocked from acquiring a ref and failed. Once all
+references are dropped for the wq, shutdown can continue.
 
-On Tue, Feb 02, 2021 at 02:53:50PM +0100, Uwe Kleine-K=F6nig wrote:
-> the following changes since commit 5c8fe583cce542aa0b84adc939ce85293de36e=
-5e:
->=20
->   Linux 5.11-rc1 (2020-12-27 15:30:22 -0800)
->=20
-> are available in the Git repository at:
->=20
->   https://git.pengutronix.de/git/ukl/linux tags/amba-make-remove-return-v=
-oid
->=20
-> for you to fetch changes up to f170b59fedd733b92f58c4d7c8357fbf7601d623:
->=20
->   amba: Make use of bus_type functions (2021-02-02 14:26:02 +0100)
->=20
-> I expect this tag to be merged by Russell King as amba maintainer and by
-> Mathieu Poirier (or Greg Kroah-Hartman?) for coresight as there are some
-> pending conflicting changes. These are not hard to resolve but also
-> non-trivial. Tell me if you need assistance for resolving, also if it's o=
-nly a
-> second pair of eyes to judge your resolution.
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/dma/idxd/device.c |   26 +++++
+ drivers/dma/idxd/idxd.h   |    4 +
+ drivers/dma/idxd/init.c   |   15 +++
+ drivers/dma/idxd/submit.c |    5 +
+ drivers/dma/idxd/sysfs.c  |  233 ++++++++++++++++++++++++---------------------
+ 5 files changed, 175 insertions(+), 108 deletions(-)
 
-Alternatively to my additional patch sent earlier today I prepared a v2
-tag at
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index 95f94a3ed6be..b7227f2abe78 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -386,6 +386,32 @@ void idxd_wq_disable_cleanup(struct idxd_wq *wq)
+ 	}
+ }
+ 
++static void idxd_wq_ref_release(struct percpu_ref *ref)
++{
++	struct idxd_wq *wq = container_of(ref, struct idxd_wq, wq_active);
++
++	complete(&wq->wq_dead);
++}
++
++int idxd_wq_init_percpu_ref(struct idxd_wq *wq)
++{
++	int rc;
++
++	memset(&wq->wq_active, 0, sizeof(wq->wq_active));
++	rc = percpu_ref_init(&wq->wq_active, idxd_wq_ref_release, 0, GFP_KERNEL);
++	if (rc < 0)
++		return rc;
++	reinit_completion(&wq->wq_dead);
++	return 0;
++}
++
++void idxd_wq_quiesce(struct idxd_wq *wq)
++{
++	percpu_ref_kill(&wq->wq_active);
++	wait_for_completion(&wq->wq_dead);
++	percpu_ref_exit(&wq->wq_active);
++}
++
+ /* Device control bits */
+ static inline bool idxd_is_enabled(struct idxd_device *idxd)
+ {
+diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+index 5a50e91c71bf..d1d56b1fae37 100644
+--- a/drivers/dma/idxd/idxd.h
++++ b/drivers/dma/idxd/idxd.h
+@@ -98,6 +98,8 @@ enum idxd_complete_type {
+ 
+ struct idxd_wq {
+ 	void __iomem *portal;
++	struct percpu_ref wq_active;
++	struct completion wq_dead;
+ 	struct device conf_dev;
+ 	struct idxd_cdev idxd_cdev;
+ 	struct idxd_device *idxd;
+@@ -346,6 +348,8 @@ void idxd_wq_unmap_portal(struct idxd_wq *wq);
+ void idxd_wq_disable_cleanup(struct idxd_wq *wq);
+ int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid);
+ int idxd_wq_disable_pasid(struct idxd_wq *wq);
++void idxd_wq_quiesce(struct idxd_wq *wq);
++int idxd_wq_init_percpu_ref(struct idxd_wq *wq);
+ 
+ /* submission */
+ int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc);
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index 9687a24ff982..ee203fdebac3 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -192,6 +192,7 @@ static int idxd_setup_internals(struct idxd_device *idxd)
+ 
+ 	for (i = 0; i < idxd->max_wqs; i++) {
+ 		struct idxd_wq *wq = &idxd->wqs[i];
++		int rc;
+ 
+ 		wq->id = i;
+ 		wq->idxd = idxd;
+@@ -202,6 +203,7 @@ static int idxd_setup_internals(struct idxd_device *idxd)
+ 		wq->wqcfg = devm_kzalloc(dev, idxd->wqcfg_size, GFP_KERNEL);
+ 		if (!wq->wqcfg)
+ 			return -ENOMEM;
++		init_completion(&wq->wq_dead);
+ 	}
+ 
+ 	for (i = 0; i < idxd->max_engines; i++) {
+@@ -483,6 +485,18 @@ static void idxd_flush_work_list(struct idxd_irq_entry *ie)
+ 	}
+ }
+ 
++static void idxd_wqs_quiesce(struct idxd_device *idxd)
++{
++	struct idxd_wq *wq;
++	int i;
++
++	for (i = 0; i < idxd->max_wqs; i++) {
++		wq = &idxd->wqs[i];
++		if (wq->state == IDXD_WQ_ENABLED && wq->type == IDXD_WQT_KERNEL)
++			idxd_wq_quiesce(wq);
++	}
++}
++
+ static void idxd_shutdown(struct pci_dev *pdev)
+ {
+ 	struct idxd_device *idxd = pci_get_drvdata(pdev);
+@@ -490,6 +504,7 @@ static void idxd_shutdown(struct pci_dev *pdev)
+ 	struct idxd_irq_entry *irq_entry;
+ 	int msixcnt = pci_msix_vec_count(pdev);
+ 
++	idxd_wqs_quiesce(idxd);
+ 	rc = idxd_device_disable(idxd);
+ 	if (rc)
+ 		dev_err(&pdev->dev, "Disabling device failed\n");
+diff --git a/drivers/dma/idxd/submit.c b/drivers/dma/idxd/submit.c
+index a7a61bcc17d5..eaacac36979a 100644
+--- a/drivers/dma/idxd/submit.c
++++ b/drivers/dma/idxd/submit.c
+@@ -86,6 +86,9 @@ int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc)
+ 	if (idxd->state != IDXD_DEV_ENABLED)
+ 		return -EIO;
+ 
++	if (!percpu_ref_tryget_live(&wq->wq_active))
++		return -ENXIO;
++
+ 	portal = wq->portal;
+ 
+ 	/*
+@@ -108,6 +111,8 @@ int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc)
+ 			return rc;
+ 	}
+ 
++	percpu_ref_put(&wq->wq_active);
++
+ 	/*
+ 	 * Pending the descriptor to the lockless list for the irq_entry
+ 	 * that we designated the descriptor to.
+diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+index 266423a2cabc..f4e93db8e26e 100644
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@ -110,6 +110,127 @@ static int idxd_config_bus_match(struct device *dev,
+ 	return matched;
+ }
+ 
++static int enable_wq(struct idxd_wq *wq)
++{
++	struct idxd_device *idxd = wq->idxd;
++	struct device *dev = &idxd->pdev->dev;
++	unsigned long flags;
++	int rc;
++
++	mutex_lock(&wq->wq_lock);
++
++	if (idxd->state != IDXD_DEV_ENABLED) {
++		mutex_unlock(&wq->wq_lock);
++		dev_warn(dev, "Enabling while device not enabled.\n");
++		return -EPERM;
++	}
++
++	if (wq->state != IDXD_WQ_DISABLED) {
++		mutex_unlock(&wq->wq_lock);
++		dev_warn(dev, "WQ %d already enabled.\n", wq->id);
++		return -EBUSY;
++	}
++
++	if (!wq->group) {
++		mutex_unlock(&wq->wq_lock);
++		dev_warn(dev, "WQ not attached to group.\n");
++		return -EINVAL;
++	}
++
++	if (strlen(wq->name) == 0) {
++		mutex_unlock(&wq->wq_lock);
++		dev_warn(dev, "WQ name not set.\n");
++		return -EINVAL;
++	}
++
++	/* Shared WQ checks */
++	if (wq_shared(wq)) {
++		if (!device_swq_supported(idxd)) {
++			dev_warn(dev, "PASID not enabled and shared WQ.\n");
++			mutex_unlock(&wq->wq_lock);
++			return -ENXIO;
++		}
++		/*
++		 * Shared wq with the threshold set to 0 means the user
++		 * did not set the threshold or transitioned from a
++		 * dedicated wq but did not set threshold. A value
++		 * of 0 would effectively disable the shared wq. The
++		 * driver does not allow a value of 0 to be set for
++		 * threshold via sysfs.
++		 */
++		if (wq->threshold == 0) {
++			dev_warn(dev, "Shared WQ and threshold 0.\n");
++			mutex_unlock(&wq->wq_lock);
++			return -EINVAL;
++		}
++	}
++
++	rc = idxd_wq_alloc_resources(wq);
++	if (rc < 0) {
++		mutex_unlock(&wq->wq_lock);
++		dev_warn(dev, "WQ resource alloc failed\n");
++		return rc;
++	}
++
++	spin_lock_irqsave(&idxd->dev_lock, flags);
++	rc = idxd_device_config(idxd);
++	spin_unlock_irqrestore(&idxd->dev_lock, flags);
++	if (rc < 0) {
++		mutex_unlock(&wq->wq_lock);
++		dev_warn(dev, "Writing WQ %d config failed: %d\n", wq->id, rc);
++		return rc;
++	}
++
++	rc = idxd_wq_enable(wq);
++	if (rc < 0) {
++		mutex_unlock(&wq->wq_lock);
++		dev_warn(dev, "WQ %d enabling failed: %d\n", wq->id, rc);
++		return rc;
++	}
++
++	rc = idxd_wq_map_portal(wq);
++	if (rc < 0) {
++		dev_warn(dev, "wq portal mapping failed: %d\n", rc);
++		rc = idxd_wq_disable(wq);
++		if (rc < 0)
++			dev_warn(dev, "IDXD wq disable failed\n");
++		mutex_unlock(&wq->wq_lock);
++		return rc;
++	}
++
++	wq->client_count = 0;
++
++	if (wq->type == IDXD_WQT_KERNEL) {
++		rc = idxd_wq_init_percpu_ref(wq);
++		if (rc < 0) {
++			dev_dbg(dev, "percpu_ref setup failed\n");
++			mutex_unlock(&wq->wq_lock);
++			return rc;
++		}
++	}
++
++	if (is_idxd_wq_dmaengine(wq)) {
++		rc = idxd_register_dma_channel(wq);
++		if (rc < 0) {
++			dev_dbg(dev, "DMA channel register failed\n");
++			mutex_unlock(&wq->wq_lock);
++			return rc;
++		}
++	} else if (is_idxd_wq_cdev(wq)) {
++		rc = idxd_wq_add_cdev(wq);
++		if (rc < 0) {
++			dev_dbg(dev, "Cdev creation failed\n");
++			mutex_unlock(&wq->wq_lock);
++			return rc;
++		}
++	}
++
++	mutex_unlock(&wq->wq_lock);
++	dev_info(dev, "wq %s enabled\n", dev_name(&wq->conf_dev));
++
++	return 0;
++}
++
+ static int idxd_config_bus_probe(struct device *dev)
+ {
+ 	int rc;
+@@ -157,115 +278,8 @@ static int idxd_config_bus_probe(struct device *dev)
+ 		return 0;
+ 	} else if (is_idxd_wq_dev(dev)) {
+ 		struct idxd_wq *wq = confdev_to_wq(dev);
+-		struct idxd_device *idxd = wq->idxd;
+-
+-		mutex_lock(&wq->wq_lock);
+-
+-		if (idxd->state != IDXD_DEV_ENABLED) {
+-			mutex_unlock(&wq->wq_lock);
+-			dev_warn(dev, "Enabling while device not enabled.\n");
+-			return -EPERM;
+-		}
+-
+-		if (wq->state != IDXD_WQ_DISABLED) {
+-			mutex_unlock(&wq->wq_lock);
+-			dev_warn(dev, "WQ %d already enabled.\n", wq->id);
+-			return -EBUSY;
+-		}
+-
+-		if (!wq->group) {
+-			mutex_unlock(&wq->wq_lock);
+-			dev_warn(dev, "WQ not attached to group.\n");
+-			return -EINVAL;
+-		}
+-
+-		if (strlen(wq->name) == 0) {
+-			mutex_unlock(&wq->wq_lock);
+-			dev_warn(dev, "WQ name not set.\n");
+-			return -EINVAL;
+-		}
+-
+-		/* Shared WQ checks */
+-		if (wq_shared(wq)) {
+-			if (!device_swq_supported(idxd)) {
+-				dev_warn(dev,
+-					 "PASID not enabled and shared WQ.\n");
+-				mutex_unlock(&wq->wq_lock);
+-				return -ENXIO;
+-			}
+-			/*
+-			 * Shared wq with the threshold set to 0 means the user
+-			 * did not set the threshold or transitioned from a
+-			 * dedicated wq but did not set threshold. A value
+-			 * of 0 would effectively disable the shared wq. The
+-			 * driver does not allow a value of 0 to be set for
+-			 * threshold via sysfs.
+-			 */
+-			if (wq->threshold == 0) {
+-				dev_warn(dev,
+-					 "Shared WQ and threshold 0.\n");
+-				mutex_unlock(&wq->wq_lock);
+-				return -EINVAL;
+-			}
+-		}
+-
+-		rc = idxd_wq_alloc_resources(wq);
+-		if (rc < 0) {
+-			mutex_unlock(&wq->wq_lock);
+-			dev_warn(dev, "WQ resource alloc failed\n");
+-			return rc;
+-		}
+-
+-		spin_lock_irqsave(&idxd->dev_lock, flags);
+-		rc = idxd_device_config(idxd);
+-		spin_unlock_irqrestore(&idxd->dev_lock, flags);
+-		if (rc < 0) {
+-			mutex_unlock(&wq->wq_lock);
+-			dev_warn(dev, "Writing WQ %d config failed: %d\n",
+-				 wq->id, rc);
+-			return rc;
+-		}
+ 
+-		rc = idxd_wq_enable(wq);
+-		if (rc < 0) {
+-			mutex_unlock(&wq->wq_lock);
+-			dev_warn(dev, "WQ %d enabling failed: %d\n",
+-				 wq->id, rc);
+-			return rc;
+-		}
+-
+-		rc = idxd_wq_map_portal(wq);
+-		if (rc < 0) {
+-			dev_warn(dev, "wq portal mapping failed: %d\n", rc);
+-			rc = idxd_wq_disable(wq);
+-			if (rc < 0)
+-				dev_warn(dev, "IDXD wq disable failed\n");
+-			mutex_unlock(&wq->wq_lock);
+-			return rc;
+-		}
+-
+-		wq->client_count = 0;
+-
+-		dev_info(dev, "wq %s enabled\n", dev_name(&wq->conf_dev));
+-
+-		if (is_idxd_wq_dmaengine(wq)) {
+-			rc = idxd_register_dma_channel(wq);
+-			if (rc < 0) {
+-				dev_dbg(dev, "DMA channel register failed\n");
+-				mutex_unlock(&wq->wq_lock);
+-				return rc;
+-			}
+-		} else if (is_idxd_wq_cdev(wq)) {
+-			rc = idxd_wq_add_cdev(wq);
+-			if (rc < 0) {
+-				dev_dbg(dev, "Cdev creation failed\n");
+-				mutex_unlock(&wq->wq_lock);
+-				return rc;
+-			}
+-		}
+-
+-		mutex_unlock(&wq->wq_lock);
+-		return 0;
++		return enable_wq(wq);
+ 	}
+ 
+ 	return -ENODEV;
+@@ -284,6 +298,9 @@ static void disable_wq(struct idxd_wq *wq)
+ 		return;
+ 	}
+ 
++	if (wq->type == IDXD_WQT_KERNEL)
++		idxd_wq_quiesce(wq);
++
+ 	if (is_idxd_wq_dmaengine(wq))
+ 		idxd_unregister_dma_channel(wq);
+ 	else if (is_idxd_wq_cdev(wq))
 
-  https://git.pengutronix.de/git/ukl/linux tags/amba-make-remove-return-voi=
-d-v2
 
-with the build fix squashed in. Iff you prefer and both Russell and Greg
-agree to pull this one instead of the (implicit) v1 we can maybe prevent
-introducing this build regression in mainline. Please coordinate among
-you two. And sorry again for breaking the build.
-
-Best regards
-Uwe
-
-PS: The range-diff between the original
-tags/amba-make-remove-return-void and
-tags/amba-make-remove-return-void-v2 is:
-
-1:  3fd269e74f2f ! 1:  481963c91284 amba: Make the remove callback return v=
-oid
-    @@ Commit message
-         Acked-by: Vladimir Zapolskiy <vz@mleia.com> # for memory/pl172
-         Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-         Link: https://lore.kernel.org/r/20210126165835.687514-5-u.kleine-k=
-oenig@pengutronix.de
-    +    [ukleinek: squashed in a build fix for drivers/mailbox/arm_mhuv2.c]
-         Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-    =20
-      ## drivers/amba/bus.c ##
-    @@ drivers/input/serio/ambakmi.c: static int amba_kmi_remove(struct amb=
-a_device *de
-     =20
-      static int __maybe_unused amba_kmi_resume(struct device *dev)
-    =20
-    + ## drivers/mailbox/arm_mhuv2.c ##
-    +@@ drivers/mailbox/arm_mhuv2.c: static int mhuv2_probe(struct amba_dev=
-ice *adev, const struct amba_id *id)
-    +   return ret;
-    + }
-    +=20
-    +-static int mhuv2_remove(struct amba_device *adev)
-    ++static void mhuv2_remove(struct amba_device *adev)
-    + {
-    +   struct mhuv2 *mhu =3D amba_get_drvdata(adev);
-    +=20
-    +   if (mhu->frame =3D=3D SENDER_FRAME)
-    +           writel_relaxed(0x0, &mhu->send->access_request);
-    +-
-    +-  return 0;
-    + }
-    +=20
-    + static struct amba_id mhuv2_ids[] =3D {
-    +
-      ## drivers/memory/pl172.c ##
-     @@ drivers/memory/pl172.c: static int pl172_probe(struct amba_device *=
-adev, const struct amba_id *id)
-        return ret;
-2:  f170b59fedd7 =3D 2:  f30d22a7bfab amba: Make use of bus_type functions
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---iy6nspqtdtxt6xyd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmAZxYMACgkQwfwUeK3K
-7AnuCggAjiQbE+eiwx7Lq2dUAxw0U6bgjFY/EXIcLCMbTPjdEffSVExAzMT3cTCy
-zISJDI3QF315/RleMFcnEXrXJl7Ft8SkoEvZfheNfz5JmPu8jPIEUp5giooDmpBi
-TV/LqBdE+wmy+J7byBdoH8Chvg9RR52u6aJFyj8nzwAoqj/+YiSYcB2nsMtr962B
-GLNq7i0h7Lj0cZxGVTsh75QuVSyK7yedx7gS4F5wUURJpSa5LzeeWAboWgARpg+M
-/BIWHX1CAs2JGZQqzJF2hffd/HZhQCWJlgTa1x92sg2Ic62K+ufwdsHlo87Wuo42
-N6jvYIoY/t/LHHL+3zxpfxM1yFao+A==
-=lf3x
------END PGP SIGNATURE-----
-
---iy6nspqtdtxt6xyd--

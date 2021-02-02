@@ -2,111 +2,173 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C71DD30BE85
-	for <lists+dmaengine@lfdr.de>; Tue,  2 Feb 2021 13:45:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 00C3930C948
+	for <lists+dmaengine@lfdr.de>; Tue,  2 Feb 2021 19:16:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230193AbhBBMo0 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 2 Feb 2021 07:44:26 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:56160 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231748AbhBBMmD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 2 Feb 2021 07:42:03 -0500
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3F5EFC00C6;
-        Tue,  2 Feb 2021 12:41:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1612269662; bh=RPtJq9pnB6c2RL81eMcBv6mkc0ffZocP1N1iwYCqspQ=;
-        h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=IwwkVyyMQapxBBoJWq4RUzHd09/VboaJubAcNZPn7g1k6jZVeByBQfmtARAxhjUpL
-         vaZ5BJ+LPVmN/aWQ4CptBZMZ+f/jU9SEw5WAgqYLsukZByGBjs5zGC3hA43ydC5gIt
-         bg2LoNKtQWjV/DZA5DSDHCa81FINubG1+ZpOKVIpPamucxtPx/KHhXhEzzdUXaSGex
-         zdmhNPQFeRlM82f8phxAzjulc3bTyfE4DsVhXK9a/mxEtFcBtB+aLuHn40lLJGfNQp
-         +SM7/t2/qYueh34UBh/3V+7VlaEnLr7rOXFcstJtE4fYRqaGeBkbNeu5XVAKcy2o6L
-         jg8QFCLCQLuxw==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 0527AA0249;
-        Tue,  2 Feb 2021 12:41:01 +0000 (UTC)
-X-SNPS-Relay: synopsys.com
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        id S237978AbhBBSO4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 2 Feb 2021 13:14:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233838AbhBBOGw (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 2 Feb 2021 09:06:52 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E33DC0613ED
+        for <dmaengine@vger.kernel.org>; Tue,  2 Feb 2021 06:06:11 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1l6w82-0000fW-TE; Tue, 02 Feb 2021 14:54:02 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1l6w7u-0006bW-5D; Tue, 02 Feb 2021 14:53:54 +0100
+Date:   Tue, 2 Feb 2021 14:53:50 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Russell King <linux+pull@armlinux.org.uk>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-fbdev@vger.kernel.org, kvm@vger.kernel.org,
+        alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig.org@pengutronix.de>, linux-i2c@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-input@vger.kernel.org, Mike Leach <mike.leach@linaro.org>,
+        linux-watchdog@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-crypto@vger.kernel.org,
+        kernel@pengutronix.de, Leo Yan <leo.yan@linaro.org>,
+        dmaengine@vger.kernel.org, Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH v2 15/15] dmaengine: dw-edma: Add pcim_iomap_table return checker
-Date:   Tue,  2 Feb 2021 13:40:29 +0100
-Message-Id: <0516469618b38b74f997c36bfc9ca3bad9836832.1612269537.git.gustavo.pimentel@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1612269536.git.gustavo.pimentel@synopsys.com>
-References: <cover.1612269536.git.gustavo.pimentel@synopsys.com>
-In-Reply-To: <cover.1612269536.git.gustavo.pimentel@synopsys.com>
-References: <cover.1612269536.git.gustavo.pimentel@synopsys.com>
+        Dan Williams <dan.j.williams@intel.com>,
+        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Subject: [GIT PULL] immutable branch for amba changes targeting v5.12-rc1
+Message-ID: <20210202135350.36nj3dmcoq3t7gcf@pengutronix.de>
+References: <20210126165835.687514-1-u.kleine-koenig@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ofqcafd7fzy3m7fk"
+Content-Disposition: inline
+In-Reply-To: <20210126165835.687514-1-u.kleine-koenig@pengutronix.de>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: dmaengine@vger.kernel.org
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Detected by CoverityScan CID 16555 ("Dereference null return")
 
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
- drivers/dma/dw-edma/dw-edma-pcie.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+--ofqcafd7fzy3m7fk
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-index 686b4ff..7445033 100644
---- a/drivers/dma/dw-edma/dw-edma-pcie.c
-+++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-@@ -238,6 +238,9 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 	dw->rd_ch_cnt = vsec_data.rd_ch_cnt;
- 
- 	dw->rg_region.vaddr = pcim_iomap_table(pdev)[vsec_data.rg.bar];
-+	if (!dw->rg_region.vaddr)
-+		return -ENOMEM;
-+
- 	dw->rg_region.vaddr += vsec_data.rg.off;
- 	dw->rg_region.paddr = pdev->resource[vsec_data.rg.bar].start;
- 	dw->rg_region.paddr += vsec_data.rg.off;
-@@ -250,12 +253,18 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 		struct dw_edma_block *dt_block = &vsec_data.dt_wr[i];
- 
- 		ll_region->vaddr = pcim_iomap_table(pdev)[ll_block->bar];
-+		if (!ll_region->vaddr)
-+			return -ENOMEM;
-+
- 		ll_region->vaddr += ll_block->off;
- 		ll_region->paddr = pdev->resource[ll_block->bar].start;
- 		ll_region->paddr += ll_block->off;
- 		ll_region->sz = ll_block->sz;
- 
- 		dt_region->vaddr = pcim_iomap_table(pdev)[dt_block->bar];
-+		if (!dt_region->vaddr)
-+			return -ENOMEM;
-+
- 		dt_region->vaddr += dt_block->off;
- 		dt_region->paddr = pdev->resource[dt_block->bar].start;
- 		dt_region->paddr += dt_block->off;
-@@ -269,12 +278,18 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 		struct dw_edma_block *dt_block = &vsec_data.dt_rd[i];
- 
- 		ll_region->vaddr = pcim_iomap_table(pdev)[ll_block->bar];
-+		if (!ll_region->vaddr)
-+			return -ENOMEM;
-+
- 		ll_region->vaddr += ll_block->off;
- 		ll_region->paddr = pdev->resource[ll_block->bar].start;
- 		ll_region->paddr += ll_block->off;
- 		ll_region->sz = ll_block->sz;
- 
- 		dt_region->vaddr = pcim_iomap_table(pdev)[dt_block->bar];
-+		if (!dt_region->vaddr)
-+			return -ENOMEM;
-+
- 		dt_region->vaddr += dt_block->off;
- 		dt_region->paddr = pdev->resource[dt_block->bar].start;
- 		dt_region->paddr += dt_block->off;
--- 
-2.7.4
+Hello,
 
+the following changes since commit 5c8fe583cce542aa0b84adc939ce85293de36e5e:
+
+  Linux 5.11-rc1 (2020-12-27 15:30:22 -0800)
+
+are available in the Git repository at:
+
+  https://git.pengutronix.de/git/ukl/linux tags/amba-make-remove-return-void
+
+for you to fetch changes up to f170b59fedd733b92f58c4d7c8357fbf7601d623:
+
+  amba: Make use of bus_type functions (2021-02-02 14:26:02 +0100)
+
+I expect this tag to be merged by Russell King as amba maintainer and by
+Mathieu Poirier (or Greg Kroah-Hartman?) for coresight as there are some
+pending conflicting changes. These are not hard to resolve but also
+non-trivial. Tell me if you need assistance for resolving, also if it's onl=
+y a
+second pair of eyes to judge your resolution.
+
+Best regards,
+Uwe
+
+----------------------------------------------------------------
+Tag for adaptions to struct amba_driver::remove changing prototype
+
+----------------------------------------------------------------
+Uwe Kleine-K=F6nig (5):
+      amba: Fix resource leak for drivers without .remove
+      amba: reorder functions
+      vfio: platform: simplify device removal
+      amba: Make the remove callback return void
+      amba: Make use of bus_type functions
+
+ drivers/amba/bus.c                                 | 234 +++++++++++++++++=
+++++++++++++++++------------------------------
+ drivers/char/hw_random/nomadik-rng.c               |   3 +-
+ drivers/dma/pl330.c                                |   3 +-
+ drivers/gpu/drm/pl111/pl111_drv.c                  |   4 +-
+ drivers/hwtracing/coresight/coresight-catu.c       |   3 +-
+ drivers/hwtracing/coresight/coresight-cpu-debug.c  |   4 +-
+ drivers/hwtracing/coresight/coresight-cti-core.c   |   4 +-
+ drivers/hwtracing/coresight/coresight-etb10.c      |   4 +-
+ drivers/hwtracing/coresight/coresight-etm3x-core.c |   4 +-
+ drivers/hwtracing/coresight/coresight-etm4x-core.c |   4 +-
+ drivers/hwtracing/coresight/coresight-funnel.c     |   4 +-
+ drivers/hwtracing/coresight/coresight-replicator.c |   4 +-
+ drivers/hwtracing/coresight/coresight-stm.c        |   4 +-
+ drivers/hwtracing/coresight/coresight-tmc-core.c   |   4 +-
+ drivers/hwtracing/coresight/coresight-tpiu.c       |   4 +-
+ drivers/i2c/busses/i2c-nomadik.c                   |   4 +-
+ drivers/input/serio/ambakmi.c                      |   3 +-
+ drivers/memory/pl172.c                             |   4 +-
+ drivers/memory/pl353-smc.c                         |   4 +-
+ drivers/mmc/host/mmci.c                            |   4 +-
+ drivers/rtc/rtc-pl030.c                            |   4 +-
+ drivers/rtc/rtc-pl031.c                            |   4 +-
+ drivers/spi/spi-pl022.c                            |   5 +-
+ drivers/tty/serial/amba-pl010.c                    |   4 +-
+ drivers/tty/serial/amba-pl011.c                    |   3 +-
+ drivers/vfio/platform/vfio_amba.c                  |  15 ++--
+ drivers/video/fbdev/amba-clcd.c                    |   4 +-
+ drivers/watchdog/sp805_wdt.c                       |   4 +-
+ include/linux/amba/bus.h                           |   2 +-
+ sound/arm/aaci.c                                   |   4 +-
+ 30 files changed, 157 insertions(+), 198 deletions(-)
+
+
+
+--ofqcafd7fzy3m7fk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmAZWWsACgkQwfwUeK3K
+7AnMhQgAhyeAx45pa3ebR9ymvzFG1Knp32GwFPlyLYw03yZzLsNR5n+d0kvDNZ1l
+vNIrU0g5WSS1SUWhs+m3WDRIcTlCHcgc3yoCKltLSNWiPXie9G9BZ0815b0gomXY
+eBSKiHZg/Ie8WhIspQcl0IA0P/2nOmTXF8qJx3CFow5WowriUutdf7n1ycTDq86a
+18Xpf2lW+esLut8MHM/98aHJUl6Jkj5PYfQfjgORIXKwNmNDltuK6lwvUU+pw+Vr
+0bDYXdXlaKLkNtSYYHSbDrKALiQccxhXYPg404KZV3FIHpOxKlq6im8hsFHWOOlu
+n9j2wq/tpGso23vYKdErmsE3GDncuQ==
+=P/zp
+-----END PGP SIGNATURE-----
+
+--ofqcafd7fzy3m7fk--

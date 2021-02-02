@@ -2,189 +2,67 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AE9E30B392
-	for <lists+dmaengine@lfdr.de>; Tue,  2 Feb 2021 00:30:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A5EB30B673
+	for <lists+dmaengine@lfdr.de>; Tue,  2 Feb 2021 05:26:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231137AbhBAXaM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 1 Feb 2021 18:30:12 -0500
-Received: from mga18.intel.com ([134.134.136.126]:27047 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229842AbhBAXaK (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 1 Feb 2021 18:30:10 -0500
-IronPort-SDR: SnG8cqesWA9e3q9UloBuHkmtFjnx8C9JVY8u4U1l21RzKxQWaLOyEbG68yjhUNZBUEyg/38zmE
- 5V+u5NH7MVTg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9882"; a="168448755"
-X-IronPort-AV: E=Sophos;i="5.79,393,1602572400"; 
-   d="scan'208";a="168448755"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 15:29:27 -0800
-IronPort-SDR: qBytakmKEKpI8nAMNhTPVTVxKjgzS2PA+dA+qXmn5yuRiF90xlGYJ2qdQ2NT/JpWZFmoNTrTGr
- m7uAP+cCvkEw==
-X-IronPort-AV: E=Sophos;i="5.79,393,1602572400"; 
-   d="scan'208";a="412944429"
-Received: from jambrizm-mobl1.amr.corp.intel.com (HELO intel.com) ([10.252.133.15])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2021 15:29:26 -0800
-Date:   Mon, 1 Feb 2021 15:29:24 -0800
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-Subject: Re: [PATCH 04/15] PCI: Add pci_find_vsec_capability() to find a
- specific VSEC
-Message-ID: <20210201232924.kklgi7u37iyrm2lq@intel.com>
-References: <cc4b62f333342df8e029b175079203cfe2bd095c.1608053262.git.gustavo.pimentel@synopsys.com>
- <20210201223920.GA46282@bjorn-Precision-5520>
- <CAPcyv4ia_0Sn8paGi7y7JGNXQrbCoFhT7st2VOD=L_LKNEMOEg@mail.gmail.com>
+        id S231597AbhBBEZj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 1 Feb 2021 23:25:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38984 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231569AbhBBEZi (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 1 Feb 2021 23:25:38 -0500
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CC57C06174A
+        for <dmaengine@vger.kernel.org>; Mon,  1 Feb 2021 20:24:58 -0800 (PST)
+Received: by mail-wm1-x330.google.com with SMTP id j11so330349wmi.3
+        for <dmaengine@vger.kernel.org>; Mon, 01 Feb 2021 20:24:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:sender:from:mime-version:content-transfer-encoding
+         :content-description:subject:to:date:reply-to;
+        bh=PrILWatQiBB/YexVPvDZsH566iBzGTKnf23zrhwD0wk=;
+        b=XlZuq/HTZ6O804yKGQU3dA+4ZUdB5yP9W4Zu3pmwpkeCn0XWtAfec0vGnUf2/XzQIS
+         3zBx5xFuxBfW/qBsJ98K5apgLwbpIYnnp4GCWaC4AP9OCW60rwKqGEDsSxlUORMQpaWU
+         4dwPXe2NegnY/WJtG5GwWJbQn8opeS4oSJol7ab2lSgpc0TJzyPAT6a7WO1W3xtYBvmv
+         PDEhAwD5xBSlgMR4zWl5HPD4mBCX47yLom/KQjwodojAxaLOPIpzJDHLGvuG1534YKlo
+         3PXpdZVOYfbRGrHoIFpWMGjLJOlulyT6Lwks0kXkgVzrgHaM72Qo2n7w5n3hGMZQdZ3h
+         a5RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:sender:from:mime-version
+         :content-transfer-encoding:content-description:subject:to:date
+         :reply-to;
+        bh=PrILWatQiBB/YexVPvDZsH566iBzGTKnf23zrhwD0wk=;
+        b=YIljg5uP4IG+jVSixwrL+Q4ghPl/3HRB7Clz3P+825cX9NUmu0JQj/kxTCBiiVMNNj
+         C4I+lrKPSpKj/TQ0l8JoK+sywejyU+bELcbmqr2Pt9VF/W0MoVD9WdOmu56f5Su0AfHO
+         3efhb36+TW/uQdaGCu5Jf3udi2rdqUF+CaEDbyo7yB+q1xLDuhgyt/AsG87JuZsH82To
+         H+n595ITsTg9I6yei2W+FNrh4Cm7sKG1Hid7ic4a2NrZMmdKhCd45NsbciOkfPuRRCUw
+         rlTXxuXi9L9oZ2jwib92y0xjLcPNH7sb/ATW8JPYVIc8Sn2C+rMqkAaXQy4OJJlUTAzA
+         tDzw==
+X-Gm-Message-State: AOAM5315QjqTyvaw2RgFaLFPJii15gJWcDU0xN+n8HAfOQdgJE2J/UI6
+        InldOtTKxeHUSKCK6Ba4Yt1aT+DwtCd6uw==
+X-Google-Smtp-Source: ABdhPJw3VKWWLbu6Ya9CrpRxtsE/FJna48kL1Q8TqJaW2fQwpO0yDWMD5kpt3totWZgNzhIlUZqBIQ==
+X-Received: by 2002:a1c:7211:: with SMTP id n17mr1729365wmc.102.1612239897094;
+        Mon, 01 Feb 2021 20:24:57 -0800 (PST)
+Received: from [192.168.1.8] ([41.83.208.55])
+        by smtp.gmail.com with ESMTPSA id u14sm1237173wmq.45.2021.02.01.20.24.52
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Mon, 01 Feb 2021 20:24:56 -0800 (PST)
+Message-ID: <6018d418.1c69fb81.e8a3b.4d93@mx.google.com>
+Sender: skylar anderson <sarr43022@gmail.com>
+From:   Skylar Anderson <sgt.skylaranderson200@gmail.com>
+X-Google-Original-From: Skylar Anderson
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4ia_0Sn8paGi7y7JGNXQrbCoFhT7st2VOD=L_LKNEMOEg@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: si
+To:     Recipients <Skylar@vger.kernel.org>
+Date:   Tue, 02 Feb 2021 04:24:48 +0000
+Reply-To: sgt.skylaranderson200@gmail.com
+X-Mailer: cdcaafe51be8cdb99a1c85906066cad3d0e60e273541515a58395093a7c4e1f0eefb01d7fc4e6278706e9fb8c4dad093c3263345202970888b6b4d817f9e998c032e7d59
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 21-02-01 15:24:45, Dan Williams wrote:
-> [ add Ben ]
-> 
-> On Mon, Feb 1, 2021 at 2:39 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > [+cc Vinod, Dan, dmaengine]
-> >
-> > On Tue, Dec 15, 2020 at 06:30:13PM +0100, Gustavo Pimentel wrote:
-> > > Add pci_find_vsec_capability() that crawls through the device config
-> > > space searching in all Vendor-Specific Extended Capabilities for a
-> > > particular capability ID.
-> > >
-> > > Vendor-Specific Extended Capability (VSEC) is a PCIe capability (acts
-> > > like a wrapper) specified by PCI-SIG that allows the vendor to create
-> > > their own and specific capability in the device config space.
-> > >
-> > > Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> >
-> > If you fix the below, feel free to add my
-> >
-> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> >
-> > Otherwise, I can take it myself.  But that will be an ordering issue
-> > in the merge window if you merge the rest of the series via another
-> > tree.
-> 
-> I wonder if this warrants and if you'd be willing to stand up a stable
-> branch for just this commit for concerned parties to integrate,
-> because CXL development should adopt it as well.
-> 
-
-Yeah, can we add DVSEC too please?
-
-> >
-> > > ---
-> > >  drivers/pci/pci.c             | 29 +++++++++++++++++++++++++++++
-> > >  include/linux/pci.h           |  1 +
-> > >  include/uapi/linux/pci_regs.h |  5 +++++
-> > >  3 files changed, 35 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > index 6d4d5a2..235d0b2 100644
-> > > --- a/drivers/pci/pci.c
-> > > +++ b/drivers/pci/pci.c
-> > > @@ -623,6 +623,35 @@ u64 pci_get_dsn(struct pci_dev *dev)
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(pci_get_dsn);
-> > >
-> > > +/**
-> > > + * pci_find_vsec_capability - Find a vendor-specific extended capability
-> > > + * @dev: PCI device to query
-> > > + * @cap: vendor-specific capability id code
-> >
-> > s/id/ID/
-> >
-> > > + *
-> > > + * Returns the address of the vendor-specific structure that matches the
-> > > + * requested capability id code within the device's PCI configuration space
-> >
-> > s/id/ID/
-> >
-> > > + * or 0 if it does not find a match.
-> > > + */
-> > > +int pci_find_vsec_capability(struct pci_dev *dev, int vsec_cap_id)
-> > > +{
-> > > +     u32 header;
-> > > +     int vsec;
-> >
-> >   int vsec;
-> >   u32 header;
-> >
-> > since that's the order they're used.
-> >
-> > > +
-> > > +     vsec = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_VNDR);
-> > > +     while (vsec) {
-> > > +             if (pci_read_config_dword(dev, vsec + 0x4,
-> >
-> > s/0x4/PCI_VSEC_HDR/
-> >
-> > > +                                       &header) == PCIBIOS_SUCCESSFUL &&
-> > > +                 PCI_VSEC_CAP_ID(header) == vsec_cap_id)
-> > > +                     break;
-> >
-> >   return vsec;
-> >
-> > > +
-> > > +             vsec = pci_find_next_ext_capability(dev, vsec,
-> > > +                                                 PCI_EXT_CAP_ID_VNDR);
-> > > +     }
-> > > +
-> > > +     return vsec;
-> >
-> >   return 0;
-> >
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(pci_find_vsec_capability);
-> > > +
-> > >  static int __pci_find_next_ht_cap(struct pci_dev *dev, int pos, int ht_cap)
-> > >  {
-> > >       int rc, ttl = PCI_FIND_CAP_TTL;
-> > > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > > index 22207a7..effecb0 100644
-> > > --- a/include/linux/pci.h
-> > > +++ b/include/linux/pci.h
-> > > @@ -1067,6 +1067,7 @@ int pci_find_capability(struct pci_dev *dev, int cap);
-> > >  int pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap);
-> > >  int pci_find_ext_capability(struct pci_dev *dev, int cap);
-> > >  int pci_find_next_ext_capability(struct pci_dev *dev, int pos, int cap);
-> > > +int pci_find_vsec_capability(struct pci_dev *dev, int vsec_cap_id);
-> > >  int pci_find_ht_capability(struct pci_dev *dev, int ht_cap);
-> > >  int pci_find_next_ht_capability(struct pci_dev *dev, int pos, int ht_cap);
-> > >  struct pci_bus *pci_find_next_bus(const struct pci_bus *from);
-> > > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> > > index a95d55f..f5d17be 100644
-> > > --- a/include/uapi/linux/pci_regs.h
-> > > +++ b/include/uapi/linux/pci_regs.h
-> > > @@ -730,6 +730,11 @@
-> > >  #define PCI_EXT_CAP_DSN_SIZEOF       12
-> > >  #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
-> > >
-> > > +/* Vendor-Specific Extended Capabilities */
-> > > +#define PCI_VSEC_CAP_ID(header)              (header & 0x0000ffff)
-> > > +#define PCI_VSEC_CAP_REV(header)     ((header >> 16) & 0xf)
-> > > +#define PCI_VSEC_CAP_LEN(header)     ((header >> 20) & 0xffc)
-> >
-> > Please put these next to the existing PCI_VSEC_HDR.
-> >
-> > Why does PCI_VSEC_CAP_LEN mask with 0xffc instead of 0xfff?  I don't
-> > see anything in the spec about VSEC Length having to be a multiple of
-> > 4 (PCIe r5.0, sec 7.9.5.2).
-> >
-> > But you don't use this anyway, so I'd just drop it (and
-> > PCI_VSEC_CAP_REV) altogether.
-> >
-> > >  /* Advanced Error Reporting */
-> > >  #define PCI_ERR_UNCOR_STATUS 4       /* Uncorrectable Error Status */
-> > >  #define  PCI_ERR_UNC_UND     0x00000001      /* Undefined */
-> > > --
-> > > 2.7.4
-> > >
+esto es urgente / can we talk this

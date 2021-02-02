@@ -2,33 +2,33 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8ECF30C6EE
-	for <lists+dmaengine@lfdr.de>; Tue,  2 Feb 2021 18:06:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C063330C6F0
+	for <lists+dmaengine@lfdr.de>; Tue,  2 Feb 2021 18:06:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237169AbhBBREd (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 2 Feb 2021 12:04:33 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:37826 "EHLO
+        id S237173AbhBBREe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 2 Feb 2021 12:04:34 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:53126 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237029AbhBBQ5u (ORCPT
+        by vger.kernel.org with ESMTP id S237027AbhBBQ5u (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Tue, 2 Feb 2021 11:57:50 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 65E7FC00BA;
-        Tue,  2 Feb 2021 16:56:47 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 9F82340216;
+        Tue,  2 Feb 2021 16:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1612285008; bh=jSQ7gPD0eg5i7tdOXR7I0dbZcd3MOQ43M0ZUh6bw2F0=;
+        t=1612285008; bh=wTDtZw8zXSiDJYCQgfDlx/77INQB9/ASV35kYlcbdFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=ltFaExBi5SoZXkLuhjrd8/KIg2kkE5HZJpX7w0nLSFSPjZw8Z8EmMrjsPW2gMyEYt
-         hmQTwrrqnpeSh8gQ0QZkqsV+4fjMXIzGqy9ARUgr5aLFZU6zLoUV5mdWS4R3t9VfyA
-         C6L8t0+ibXqKrOD8SlyBi7jRVFzw1jsqTfiulmhG4QNMbDGRWpm/uz2s/06sIRiKeG
-         z2XOaKW/eTH01vNFN8+IrZz/l+1m8oFv9/j+IgTvioQkfBJr92ea/G4yBESISs23Pq
-         BKmrSBjsx+pfDqTYbvbceD/zK6B1rD2PJxu+y7KjIPb03ZCJLy0LuoUXi8AnXeeBP1
-         j7ZmKhI7ROCxA==
+        b=V5WH+bzztxQJxHdLdtlLf4L2ovtrK4RaTrE5A1xTMDC0C5vmtGPdREGDmiV63Z4LC
+         4Qy2XnZ1JaWZszr2F70uopp5drUWFqXmNMgI3humqQeZhj996CAITZiC06a8d1qZle
+         V/cCHvmdIDPVz4fN3YmEaWJ+TcMOsPvbBMIcg1PLAkTpe266z6dNUuhDfzXaxK7p+A
+         4VPM5Vbnq4P1D0UsA+KEuFxmXfKjhI2P/Erz56lWnmnocJXapl0CWg5/UHyuGpq2p/
+         s69mcuZu3rmtu6Dy18P7ZuF8o3NHit4zeFeZaKAFT8+X0E1zj28Zg1P0r4EY3ICyOB
+         GjShPELxBUBdA==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 824D3A005F;
-        Tue,  2 Feb 2021 16:56:46 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 6DD3CA005E;
+        Tue,  2 Feb 2021 16:56:47 +0000 (UTC)
 X-SNPS-Relay: synopsys.com
 From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
 To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -40,9 +40,9 @@ To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jonathan Corbet <corbet@lwn.net>
 Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: [RESEND PATCH v3 2/5] misc: Add Synopsys DesignWare xData IP driver to Makefile
-Date:   Tue,  2 Feb 2021 17:56:35 +0100
-Message-Id: <978462554997e50683e78a69493c0e169de6ef18.1612284945.git.gustavo.pimentel@synopsys.com>
+Subject: [RESEND PATCH v3 3/5] misc: Add Synopsys DesignWare xData IP driver to Kconfig
+Date:   Tue,  2 Feb 2021 17:56:36 +0100
+Message-Id: <850ba8b075a65f753bbb802b9af23839624908bd.1612284945.git.gustavo.pimentel@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1612284945.git.gustavo.pimentel@synopsys.com>
 References: <cover.1612284945.git.gustavo.pimentel@synopsys.com>
@@ -52,28 +52,38 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add Synopsys DesignWare xData IP driver to Makefile.
+Add Synopsys DesignWare xData IP driver to Kconfig.
 
 This driver enables/disables the PCIe traffic generator module
 pertain to the Synopsys DesignWare prototype.
 
 Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 ---
- drivers/misc/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/misc/Kconfig | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index d23231e..bf22021 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -49,6 +49,7 @@ obj-$(CONFIG_SRAM_EXEC)		+= sram-exec.o
- obj-$(CONFIG_GENWQE)		+= genwqe/
- obj-$(CONFIG_ECHO)		+= echo/
- obj-$(CONFIG_CXL_BASE)		+= cxl/
-+obj-$(CONFIG_DW_XDATA_PCIE)	+= dw-xdata-pcie.o
- obj-$(CONFIG_PCI_ENDPOINT_TEST)	+= pci_endpoint_test.o
- obj-$(CONFIG_OCXL)		+= ocxl/
- obj-y				+= cardreader/
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index fafa8b0..6d5783f 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -423,6 +423,17 @@ config SRAM
+ config SRAM_EXEC
+ 	bool
+ 
++config DW_XDATA_PCIE
++	depends on PCI
++	tristate "Synopsys DesignWare xData PCIe driver"
++	default	n
++	help
++	  This driver allows controlling Synopsys DesignWare PCIe traffic
++	  generator IP also known as xData, present in Synopsys Designware
++	  PCIe Endpoint prototype.
++
++	  If unsure, say N.
++
+ config PCI_ENDPOINT_TEST
+ 	depends on PCI
+ 	select CRC32
 -- 
 2.7.4
 

@@ -2,391 +2,276 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8437030CFBC
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Feb 2021 00:11:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 351E630D11B
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Feb 2021 02:56:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236089AbhBBXLq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 2 Feb 2021 18:11:46 -0500
-Received: from mga02.intel.com ([134.134.136.20]:46724 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236083AbhBBXLp (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 2 Feb 2021 18:11:45 -0500
-IronPort-SDR: oXRWa6b5upMfHUhWGkoevYFAjvXDdzAGDqUBO0NbKc14l/7l1zPLVx/uIM+23BaiVnldIkFH7K
- hFjxuxf754kw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9883"; a="168058103"
-X-IronPort-AV: E=Sophos;i="5.79,396,1602572400"; 
-   d="scan'208";a="168058103"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2021 15:11:04 -0800
-IronPort-SDR: aYRARral+3BpKop7TJ080NEmbLz1l5F+n/JH3L+JGdg1QUbRej2e4sJa7p+dpAPCyLcukvHPsL
- 0uGP30P6nIaA==
-X-IronPort-AV: E=Sophos;i="5.79,396,1602572400"; 
-   d="scan'208";a="575693814"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2021 15:11:04 -0800
-Subject: [PATCH] dmaengine: idxd: add interrupt handle request and release
- support
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org
-Date:   Tue, 02 Feb 2021 16:11:03 -0700
-Message-ID: <161230746391.3446217.14483392323169156299.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/0.23-29-ga622f1
+        id S230083AbhBCBz5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 2 Feb 2021 20:55:57 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:44636 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229696AbhBCBz4 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 2 Feb 2021 20:55:56 -0500
+Received: from mailhost.synopsys.com (badc-mailhost4.synopsys.com [10.192.0.82])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C3FC6400E6;
+        Wed,  3 Feb 2021 01:54:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1612317295; bh=tIS4xwqj2Ua+iS73M+HCWfU6zZlhKz7aA0KcQ66Ip6E=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=iI+hBgV9fC7yBlmhNTEOhF4mxbLs9l/Qr9xhm6tBEV5IUImggYyNYCZX7dGlMrAYs
+         9W688y+3SBbAgV5BaeFzarB8l37aP0rKC4/MJ21jBhPl7PEV4FnNVTjnlHYA2uxcqs
+         plY7CFi8sasB+8ffxDqriTrpElKLdevhRjpzLC9xheaPUEAiTWm1CEL5Rrxq9eoKsF
+         x0WqD82gtWMa9tvn99AfhtBM5TzhEMK3pyI/ZUL0gt7gmPuiVQjiI3fkiqe+yHaQV/
+         WInjDbeX2AP8JoT10KKhhePQH6omLLcW0KSvpz7GTZCCTFu7qRpdVGXoplQ48jSAnZ
+         b4JMJTyu3CEVg==
+Received: from o365relay-in.synopsys.com (sv2-o365relay1.synopsys.com [10.202.1.137])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id AD751A005E;
+        Wed,  3 Feb 2021 01:54:53 +0000 (UTC)
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2042.outbound.protection.outlook.com [104.47.66.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
+        by o365relay-in.synopsys.com (Postfix) with ESMTPS id 1A578400E7;
+        Wed,  3 Feb 2021 01:54:52 +0000 (UTC)
+Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
+Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=gustavo@synopsys.com
+Authentication-Results: o365relay-in.synopsys.com;
+        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="dC7vxXyI";
+        dkim-atps=neutral
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BaSdKF1JCJEUxUy+WF6oON+KYNi6U81sg9PIYIGBvch6VQUx2PVv/GZw34PuYLQw5uSZlwHciI5dAWf3QTSS3AiTF/RJqH+7zvz8hGU5B2y3NYhhtO7pdndq9V9BxXx9oXenQcI4RoL5yssvm+dUexkVSNjOG68kQYeNT64dtbZSfTw9YD00gYXWUmfvHLglSZsl7EHKrjw4pnaCQZvDLcWfQ4+v0zxvnMcN4+ybalgpspo2egOIkvDt7FHLz+HptZl17Ot3Ec9seDi9VEYJMPWhyeiwfg7Mowwkw64RfzZ1fNCy1UbJO++e2XNOQR6cRncTMZLnQM10wbJqJPgAMQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U0lWd9ozdJuPnR0iysZaXTi+x5wfPm7sESs1IcwfT4Y=;
+ b=Mq13fawROoz01N6gpXtJ6GWz2fpBDj0BXB69ANWx7MdW5AlqqMf6In+1laPj350yEINfYT/QWeBNjCRYYXOeDDemi+M6MrTXvpbXcE1KqyY/L2P2Ehf7D/WAG4m0xP8fVx7Ax5RWE6lFiJeyCkWg46ztmzFE0rj5tMJhMwOlmwYj1hHB8tr1JHu6fdQAxnioemd5bTJxG/xUm7Y+OU5m7glh+5xu4i+rqBVlvdEb/woS2yhvQtbcCKS7tCOWm3GUXymOUIoNHFLL3LIyjGA8v1AL5qNbZnCGFBysEQKfisFJQe9ZHl64B+lJyaKqb1MxCcO6y6Nvd53ZV1L1G5uQ2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U0lWd9ozdJuPnR0iysZaXTi+x5wfPm7sESs1IcwfT4Y=;
+ b=dC7vxXyIuJmoxPzByNsARYJYRpl7Cccma2azpRQbqS8W/sZYZHYSXJDl2MQlUkHv83OoJ5WENIKUuO4VeL9/thbKbQCWgpFlCrQyhAoowLkWk8SE67cLwh3BVSRve6kI6oiZGWJRx89OWzX+d7+TEmX8jsNMLbdhS161PGQlVVU=
+Received: from DM5PR12MB1835.namprd12.prod.outlook.com (2603:10b6:3:10c::9) by
+ DM6PR12MB4958.namprd12.prod.outlook.com (2603:10b6:5:20a::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3784.12; Wed, 3 Feb 2021 01:54:49 +0000
+Received: from DM5PR12MB1835.namprd12.prod.outlook.com
+ ([fe80::508b:bdb3:d353:9052]) by DM5PR12MB1835.namprd12.prod.outlook.com
+ ([fe80::508b:bdb3:d353:9052%10]) with mapi id 15.20.3805.028; Wed, 3 Feb 2021
+ 01:54:49 +0000
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Lukas Wunner <lukas@wunner.de>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: RE: [PATCH v2 04/15] PCI: Add pci_find_vsec_capability() to find a
+ specific VSEC
+Thread-Topic: [PATCH v2 04/15] PCI: Add pci_find_vsec_capability() to find a
+ specific VSEC
+Thread-Index: AQHW+WCk8KFoXO5U70eM77z8tv2kyapFKi6AgAB9hHA=
+Date:   Wed, 3 Feb 2021 01:54:49 +0000
+Message-ID: <DM5PR12MB18351689BA7312BF9DFDD6FEDAB49@DM5PR12MB1835.namprd12.prod.outlook.com>
+References: <cover.1612269536.git.gustavo.pimentel@synopsys.com>
+ <2ecb33dfee5dc05efc05de0731b0cb77bc246f54.1612269537.git.gustavo.pimentel@synopsys.com>
+ <20210202180855.GA3571@wunner.de>
+In-Reply-To: <20210202180855.GA3571@wunner.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
+ =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLWNhMDRhZTUwLTY1YzItMTFlYi05OGU2LWY4OTRj?=
+ =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFxjYTA0YWU1MS02NWMyLTExZWItOThlNi1mODk0?=
+ =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjIxNzUiIHQ9IjEzMjU2NzkwODg2NTY3?=
+ =?us-ascii?Q?MzUxNyIgaD0iUElUS1dxMXRmWDVQd0RaS1RpTnZzMGJDUktVPSIgaWQ9IiIg?=
+ =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFB?=
+ =?us-ascii?Q?dENZNk16L25XQWF5RHFNSVhsS01vcklPb3doZVVveWdPQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQVFBQkFBQUFOclNWM2dBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
+ =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
+ =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
+ =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
+ =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
+ =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
+ =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
+ =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
+ =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
+ =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
+ =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
+ =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
+ =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
+ =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
+ =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
+ =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
+ =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
+ =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
+ =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
+ =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
+ =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
+ =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
+ =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
+ =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
+ =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: wunner.de; dkim=none (message not signed)
+ header.d=none;wunner.de; dmarc=none action=none header.from=synopsys.com;
+x-originating-ip: [198.182.37.200]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: be918cc4-0f41-44e9-ae27-08d8c7e6b0b3
+x-ms-traffictypediagnostic: DM6PR12MB4958:
+x-microsoft-antispam-prvs: <DM6PR12MB495881D77F9A4B2E6BD2F044DAB49@DM6PR12MB4958.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1elaiNJZtjSpcAb4s+Qc49dAHeDdp5iBDUyw0hminuBWgdRWvomg/W9vqgmMxIInQV67P26pY/T0DRAape+jHkN0M5vNAMmy8j6xqFmZveA2KDoRO17Sx731BKLW+sTyWF/G9jdD84xwGTgx6SoIIZJ28SaZEp3iqgLDNBAvcUx55q3rv48a5LOi3Mj4lJORa8euP/zu9IMo8cbtGgpSfzHJdeuvgW3ATg+fk/ABTb+LGfHb++OfCrHOcmLtNfIzDD5LHbBlDaxgTQALqMq/Eab5Ka5kooKpdVq3t4tv/xGKwCJEIKO29Yi6HnYIcRe3LdtTahMkWqWy1rAEyRJjAEe/1WgZz5Cl5hqf+1oeqhNM+9qK5wB2aLnS+Gg02cygU+dR+zdnpRYtnbMyJ8vaHUoPh4LJgZpx85upwl5FqXVpRcRxIbky9DrRehcTFPZ9/R/+S4gGnLyQg3i4TEjfy481L5+gfzoa6Z7Iz2gNu520ELhOZ1MqqPzq9xrUatiWP2X2oIB6GCJ1iDUKNWJHrflG5zFpSMXYrdLiaAEu8ngvrcZnxskU1ukZaEkxzXv3
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1835.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(39860400002)(396003)(136003)(376002)(346002)(366004)(55016002)(6916009)(7696005)(9686003)(71200400001)(86362001)(186003)(8936002)(76116006)(54906003)(316002)(33656002)(66476007)(8676002)(83380400001)(6506007)(66446008)(64756008)(66946007)(66556008)(4326008)(5660300002)(53546011)(26005)(52536014)(478600001)(2906002)(37363001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?fek66dbql69clGOoZ2Z1FWqBIH+998Qvch+JCZgLI+qgY+e+pz8YsIaaBqWy?=
+ =?us-ascii?Q?IBIKIG3uZLnG0QUu/X2e0bjZ5yUbEOhmRjPtYqehX5B6dHsx8P+Wb63UfXT5?=
+ =?us-ascii?Q?nDz9Asxck1m+pBMdVkLCywbYepJ64jdulUgqrGkFk3fwe+0FoHh4gL4GOujg?=
+ =?us-ascii?Q?O9mWOEaJpsfosldH1iQsjV0lAPvv8/Fx5fjQVV9vUnA4CoDFrs/CNG4Hwe+p?=
+ =?us-ascii?Q?TNSWfV45WGowv2h1HoWFw71pVzTSqK6SDG3sLL1StyFZvaqhUd4KWhuR1VSo?=
+ =?us-ascii?Q?1Shv+xZjNr61dIgNkM9vayIMMMmB4NZWfxhBajv20mDacpXfLYl3dsFqjs3X?=
+ =?us-ascii?Q?VfCZwonaA0XzOqIzFkhqSQTIT6CFblUgAX0nKW9RMp/D7UIKrualVtFkPjQD?=
+ =?us-ascii?Q?V3xGy4MdZnVfrHxDuIzRO+c4cc9YtPESWQe9LDYqOoOIVAbK4JJDYjCv6Xb7?=
+ =?us-ascii?Q?nT1LT8LcNU1P4QUob5rpJnhmRzCGifGXWLtCdFu5ZC6xWSUDKjJuh4VwMidZ?=
+ =?us-ascii?Q?Fzala6PhBFLDTVfJhwijqjY1QoAZe1/UAuYqDzhJGkGC12I3P26KWG4eCDib?=
+ =?us-ascii?Q?i45cUcaiLCQqEeLIOsuTu9w7q9rnHrSe5kF7m54JmmtPYXGzpaKLTGrZP9Vm?=
+ =?us-ascii?Q?jKPwBAxTYC30pCTGNSD8jWBe0lmCvySZf2Z3OjoEOmPZP6Bq5AePDILSNFMB?=
+ =?us-ascii?Q?1LSb1r7jmnsOrQyNh3HDLZ+XaoIA9ZMYPpIwUtO0HARTredPPd02MWEg+q/O?=
+ =?us-ascii?Q?KOpty4z8qLp5DYZPJ2GENlIEpPgvZwMjdsdZKT9JpqlTZYh2flzxgsD+ZrGI?=
+ =?us-ascii?Q?y/Xc4uqr8UpnOMbRLJS/ToGlGnnLCytF4kmWwZDHq4+bmK5IQtiDOIkTw7Q4?=
+ =?us-ascii?Q?4f2PJ/xkokalPVETqgQShPs2mdOc01Gh2dhmsc5qJPPglziMkYQjb0to9+ks?=
+ =?us-ascii?Q?QL/KfKvjwLJJyd2xI/MQ98Az5knzkKj6xBFyuzWHybaJwp/YmasKAEG7L+gD?=
+ =?us-ascii?Q?9VNLOTzro9cULL5GKgWkQX1hXwE1Itzq8qSUgMA4zuQb58LBcHEH297EBIuh?=
+ =?us-ascii?Q?ZRnj/uRu?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB1835.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: be918cc4-0f41-44e9-ae27-08d8c7e6b0b3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Feb 2021 01:54:49.2976
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: m23ntKw5siVxsDRdlK2DI8uzmQ/lIBImMmSHJl0rI7yGNBqZx8tYF1knU8b3eYShVWzNdoxvaBEjcjikFYc09A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4958
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-DSA spec states that when Request Interrupt Handle and Release Interrupt
-Handle command bits are set in the CMDCAP register, these device commands
-must be supported by the driver.
+Hi Lukas,
 
-The interrupt handle is programmed in a descriptor. When Request Interrupt
-Handle is not supported, the interrupt handle is the index of the desired
-entry in the MSI-X table. When the command is supported, driver must use
-the command to obtain a handle to be programmed in the submitted
-descriptor.
+On Tue, Feb 2, 2021 at 18:8:55, Lukas Wunner <lukas@wunner.de> wrote:
 
-A requested handle may be revoked. After the handle is revoked, any use of
-the handle will result in Invalid Interrupt Handle error.
+> On Tue, Feb 02, 2021 at 01:40:18PM +0100, Gustavo Pimentel wrote:
+> >  /**
+> > + * pci_find_vsec_capability - Find a vendor-specific extended capabili=
+ty
+> > + * @dev: PCI device to query
+> > + * @cap: vendor-specific capability ID code
+> > + *
+> > + * Returns the address of the vendor-specific structure that matches t=
+he
+> > + * requested capability ID code within the device's PCI configuration =
+space
+> > + * or 0 if it does not find a match.
+> > + */
+> > +u16 pci_find_vsec_capability(struct pci_dev *dev, int vsec_cap_id)
+> > +{
+>=20
+> As the name implies, the capability is "vendor-specific", so it is perfec=
+tly
+> possible that two vendors use the same VSEC ID for different things.
+>=20
+> To make sure you're looking for the right capability, you need to pass
+> a u16 vendor into this function and bail out if dev->vendor is different.
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/dma/idxd/device.c    |   71 ++++++++++++++++++++++++++++++++++++++++++
- drivers/dma/idxd/idxd.h      |   13 ++++++++
- drivers/dma/idxd/init.c      |   48 ++++++++++++++++++++++++++++
- drivers/dma/idxd/registers.h |    9 +++++
- drivers/dma/idxd/submit.c    |   35 +++++++++++++++++----
- 5 files changed, 168 insertions(+), 8 deletions(-)
+This function will be called by the driver that will pass the correct=20
+device which will be already pointing to the config space associated with=20
+the endpoint for instance. Because the driver is already attached to the=20
+endpoint through the vendor ID and device ID specified, there is no need=20
+to do that validation, it will be redundant.
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index b0873222e05f..d15207e6121e 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -578,6 +578,77 @@ void idxd_device_drain_pasid(struct idxd_device *idxd, int pasid)
- 	dev_dbg(dev, "pasid %d drained\n", pasid);
- }
- 
-+int idxd_device_request_int_handle(struct idxd_device *idxd, int idx, int *handle,
-+				   enum idxd_interrupt_type irq_type)
-+{
-+	struct device *dev = &idxd->pdev->dev;
-+	u32 operand, status;
-+
-+	if (!(idxd->hw.cmd_cap & BIT(IDXD_CMD_REQUEST_INT_HANDLE)))
-+		return -EOPNOTSUPP;
-+
-+	dev_dbg(dev, "get int handle, idx %d\n", idx);
-+
-+	operand = idx & GENMASK(15, 0);
-+	if (irq_type == IDXD_IRQ_IMS)
-+		operand |= CMD_INT_HANDLE_IMS;
-+
-+	dev_dbg(dev, "cmd: %u operand: %#x\n", IDXD_CMD_REQUEST_INT_HANDLE, operand);
-+
-+	idxd_cmd_exec(idxd, IDXD_CMD_REQUEST_INT_HANDLE, operand, &status);
-+
-+	if ((status & IDXD_CMDSTS_ERR_MASK) != IDXD_CMDSTS_SUCCESS) {
-+		dev_dbg(dev, "request int handle failed: %#x\n", status);
-+		return -ENXIO;
-+	}
-+
-+	*handle = (status >> IDXD_CMDSTS_RES_SHIFT) & GENMASK(15, 0);
-+
-+	dev_dbg(dev, "int handle acquired: %u\n", *handle);
-+	return 0;
-+}
-+
-+int idxd_device_release_int_handle(struct idxd_device *idxd, int handle,
-+				   enum idxd_interrupt_type irq_type)
-+{
-+	struct device *dev = &idxd->pdev->dev;
-+	u32 operand, status;
-+	union idxd_command_reg cmd;
-+	unsigned long flags;
-+
-+	if (!(idxd->hw.cmd_cap & BIT(IDXD_CMD_RELEASE_INT_HANDLE)))
-+		return -EOPNOTSUPP;
-+
-+	dev_dbg(dev, "release int handle, handle %d\n", handle);
-+
-+	memset(&cmd, 0, sizeof(cmd));
-+	operand = handle & GENMASK(15, 0);
-+
-+	if (irq_type == IDXD_IRQ_IMS)
-+		operand |= CMD_INT_HANDLE_IMS;
-+
-+	cmd.cmd = IDXD_CMD_RELEASE_INT_HANDLE;
-+	cmd.operand = operand;
-+
-+	dev_dbg(dev, "cmd: %u operand: %#x\n", IDXD_CMD_RELEASE_INT_HANDLE, operand);
-+
-+	spin_lock_irqsave(&idxd->dev_lock, flags);
-+	iowrite32(cmd.bits, idxd->reg_base + IDXD_CMD_OFFSET);
-+
-+	while (ioread32(idxd->reg_base + IDXD_CMDSTS_OFFSET) & IDXD_CMDSTS_ACTIVE)
-+		cpu_relax();
-+	status = ioread32(idxd->reg_base + IDXD_CMDSTS_OFFSET);
-+	spin_unlock_irqrestore(&idxd->dev_lock, flags);
-+
-+	if ((status & IDXD_CMDSTS_ERR_MASK) != IDXD_CMDSTS_SUCCESS) {
-+		dev_dbg(dev, "release int handle failed: %#x\n", status);
-+		return -ENXIO;
-+	}
-+
-+	dev_dbg(dev, "int handle released.\n");
-+	return 0;
-+}
-+
- /* Device configuration bits */
- static void idxd_group_config_write(struct idxd_group *group)
- {
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 67d476a7002f..62280e1f8af0 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -149,6 +149,7 @@ struct idxd_hw {
- 	union group_cap_reg group_cap;
- 	union engine_cap_reg engine_cap;
- 	struct opcap opcap;
-+	u32 cmd_cap;
- };
- 
- enum idxd_device_state {
-@@ -215,6 +216,8 @@ struct idxd_device {
- 	struct dma_device dma_dev;
- 	struct workqueue_struct *wq;
- 	struct work_struct work;
-+
-+	int *int_handles;
- };
- 
- /* IDXD software descriptor */
-@@ -234,6 +237,7 @@ struct idxd_desc {
- 	struct list_head list;
- 	int id;
- 	int cpu;
-+	unsigned int vector;
- 	struct idxd_wq *wq;
- };
- 
-@@ -270,6 +274,11 @@ enum idxd_portal_prot {
- 	IDXD_PORTAL_LIMITED,
- };
- 
-+enum idxd_interrupt_type {
-+	IDXD_IRQ_MSIX = 0,
-+	IDXD_IRQ_IMS,
-+};
-+
- static inline int idxd_get_wq_portal_offset(enum idxd_portal_prot prot)
- {
- 	return prot * 0x1000;
-@@ -337,6 +346,10 @@ int idxd_device_config(struct idxd_device *idxd);
- void idxd_device_wqs_clear_state(struct idxd_device *idxd);
- void idxd_device_drain_pasid(struct idxd_device *idxd, int pasid);
- int idxd_device_load_config(struct idxd_device *idxd);
-+int idxd_device_request_int_handle(struct idxd_device *idxd, int idx, int *handle,
-+				   enum idxd_interrupt_type irq_type);
-+int idxd_device_release_int_handle(struct idxd_device *idxd, int handle,
-+				   enum idxd_interrupt_type irq_type);
- 
- /* work queue control */
- int idxd_wq_alloc_resources(struct idxd_wq *wq);
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index a3ed31056869..169c918b53d3 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -141,6 +141,22 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
- 		}
- 		dev_dbg(dev, "Allocated idxd-msix %d for vector %d\n",
- 			i, msix->vector);
-+
-+		if (idxd->hw.cmd_cap & BIT(IDXD_CMD_REQUEST_INT_HANDLE)) {
-+			/*
-+			 * The MSIX vector enumeration starts at 1 with vector 0 being the
-+			 * misc interrupt that handles non I/O completion events. The
-+			 * interrupt handles are for IMS enumeration on guest. The misc
-+			 * interrupt vector does not require a handle and therefore we start
-+			 * the int_handles at index 0. Since 'i' starts at 1, the first
-+			 * int_handles index will be 0.
-+			 */
-+			rc = idxd_device_request_int_handle(idxd, i, &idxd->int_handles[i - 1],
-+							    IDXD_IRQ_MSIX);
-+			if (rc < 0)
-+				goto err_no_irq;
-+			dev_dbg(dev, "int handle requested: %u\n", idxd->int_handles[i - 1]);
-+		}
- 	}
- 
- 	idxd_unmask_error_interrupts(idxd);
-@@ -168,6 +184,13 @@ static int idxd_setup_internals(struct idxd_device *idxd)
- 	int i;
- 
- 	init_waitqueue_head(&idxd->cmd_waitq);
-+
-+	if (idxd->hw.cmd_cap & BIT(IDXD_CMD_REQUEST_INT_HANDLE)) {
-+		idxd->int_handles = devm_kcalloc(dev, idxd->max_wqs, sizeof(int), GFP_KERNEL);
-+		if (!idxd->int_handles)
-+			return -ENOMEM;
-+	}
-+
- 	idxd->groups = devm_kcalloc(dev, idxd->max_groups,
- 				    sizeof(struct idxd_group), GFP_KERNEL);
- 	if (!idxd->groups)
-@@ -243,6 +266,12 @@ static void idxd_read_caps(struct idxd_device *idxd)
- 	/* reading generic capabilities */
- 	idxd->hw.gen_cap.bits = ioread64(idxd->reg_base + IDXD_GENCAP_OFFSET);
- 	dev_dbg(dev, "gen_cap: %#llx\n", idxd->hw.gen_cap.bits);
-+
-+	if (idxd->hw.gen_cap.cmd_cap) {
-+		idxd->hw.cmd_cap = ioread32(idxd->reg_base + IDXD_CMDCAP_OFFSET);
-+		dev_dbg(dev, "cmd_cap: %#x\n", idxd->hw.cmd_cap);
-+	}
-+
- 	idxd->max_xfer_bytes = 1ULL << idxd->hw.gen_cap.max_xfer_shift;
- 	dev_dbg(dev, "max xfer size: %llu bytes\n", idxd->max_xfer_bytes);
- 	idxd->max_batch_size = 1U << idxd->hw.gen_cap.max_batch_shift;
-@@ -505,6 +534,24 @@ static void idxd_wqs_quiesce(struct idxd_device *idxd)
- 	}
- }
- 
-+static void idxd_release_int_handles(struct idxd_device *idxd)
-+{
-+	struct device *dev = &idxd->pdev->dev;
-+	int i, rc;
-+
-+	for (i = 0; i < idxd->num_wq_irqs; i++) {
-+		if (idxd->hw.cmd_cap & BIT(IDXD_CMD_RELEASE_INT_HANDLE)) {
-+			rc = idxd_device_release_int_handle(idxd, idxd->int_handles[i],
-+							    IDXD_IRQ_MSIX);
-+			if (rc < 0)
-+				dev_warn(dev, "irq handle %d release failed\n",
-+					 idxd->int_handles[i]);
-+			else
-+				dev_dbg(dev, "int handle requested: %u\n", idxd->int_handles[i]);
-+		}
-+	}
-+}
-+
- static void idxd_shutdown(struct pci_dev *pdev)
- {
- 	struct idxd_device *idxd = pci_get_drvdata(pdev);
-@@ -530,6 +577,7 @@ static void idxd_shutdown(struct pci_dev *pdev)
- 		idxd_flush_work_list(irq_entry);
- 	}
- 
-+	idxd_release_int_handles(idxd);
- 	destroy_workqueue(idxd->wq);
- }
- 
-diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
-index 751ecb4f9f81..5cbf368c7367 100644
---- a/drivers/dma/idxd/registers.h
-+++ b/drivers/dma/idxd/registers.h
-@@ -24,8 +24,8 @@ union gen_cap_reg {
- 		u64 overlap_copy:1;
- 		u64 cache_control_mem:1;
- 		u64 cache_control_cache:1;
-+		u64 cmd_cap:1;
- 		u64 rsvd:3;
--		u64 int_handle_req:1;
- 		u64 dest_readback:1;
- 		u64 drain_readback:1;
- 		u64 rsvd2:6;
-@@ -180,8 +180,11 @@ enum idxd_cmd {
- 	IDXD_CMD_DRAIN_PASID,
- 	IDXD_CMD_ABORT_PASID,
- 	IDXD_CMD_REQUEST_INT_HANDLE,
-+	IDXD_CMD_RELEASE_INT_HANDLE,
- };
- 
-+#define CMD_INT_HANDLE_IMS		0x10000
-+
- #define IDXD_CMDSTS_OFFSET		0xa8
- union cmdsts_reg {
- 	struct {
-@@ -193,6 +196,8 @@ union cmdsts_reg {
- 	u32 bits;
- } __packed;
- #define IDXD_CMDSTS_ACTIVE		0x80000000
-+#define IDXD_CMDSTS_ERR_MASK		0xff
-+#define IDXD_CMDSTS_RES_SHIFT		8
- 
- enum idxd_cmdsts_err {
- 	IDXD_CMDSTS_SUCCESS = 0,
-@@ -228,6 +233,8 @@ enum idxd_cmdsts_err {
- 	IDXD_CMDSTS_ERR_NO_HANDLE,
- };
- 
-+#define IDXD_CMDCAP_OFFSET		0xb0
-+
- #define IDXD_SWERR_OFFSET		0xc0
- #define IDXD_SWERR_VALID		0x00000001
- #define IDXD_SWERR_OVERFLOW		0x00000002
-diff --git a/drivers/dma/idxd/submit.c b/drivers/dma/idxd/submit.c
-index eaacac36979a..b9b4af4a4b6b 100644
---- a/drivers/dma/idxd/submit.c
-+++ b/drivers/dma/idxd/submit.c
-@@ -22,11 +22,23 @@ static struct idxd_desc *__get_desc(struct idxd_wq *wq, int idx, int cpu)
- 		desc->hw->pasid = idxd->pasid;
- 
- 	/*
--	 * Descriptor completion vectors are 1-8 for MSIX. We will round
--	 * robin through the 8 vectors.
-+	 * Descriptor completion vectors are 1...N for MSIX. We will round
-+	 * robin through the N vectors.
- 	 */
- 	wq->vec_ptr = (wq->vec_ptr % idxd->num_wq_irqs) + 1;
--	desc->hw->int_handle = wq->vec_ptr;
-+	if (!idxd->int_handles) {
-+		desc->hw->int_handle = wq->vec_ptr;
-+	} else {
-+		desc->vector = wq->vec_ptr;
-+		/*
-+		 * int_handles are only for descriptor completion. However for device
-+		 * MSIX enumeration, vec 0 is used for misc interrupts. Therefore even
-+		 * though we are rotating through 1...N for descriptor interrupts, we
-+		 * need to acqurie the int_handles from 0..N-1.
-+		 */
-+		desc->hw->int_handle = idxd->int_handles[desc->vector - 1];
-+	}
-+
- 	return desc;
- }
- 
-@@ -79,7 +91,6 @@ void idxd_free_desc(struct idxd_wq *wq, struct idxd_desc *desc)
- int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc)
- {
- 	struct idxd_device *idxd = wq->idxd;
--	int vec = desc->hw->int_handle;
- 	void __iomem *portal;
- 	int rc;
- 
-@@ -117,9 +128,19 @@ int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc)
- 	 * Pending the descriptor to the lockless list for the irq_entry
- 	 * that we designated the descriptor to.
- 	 */
--	if (desc->hw->flags & IDXD_OP_FLAG_RCI)
--		llist_add(&desc->llnode,
--			  &idxd->irq_entries[vec].pending_llist);
-+	if (desc->hw->flags & IDXD_OP_FLAG_RCI) {
-+		int vec;
-+
-+		/*
-+		 * If the driver is on host kernel, it would be the value
-+		 * assigned to interrupt handle, which is index for MSIX
-+		 * vector. If it's guest then can't use the int_handle since
-+		 * that is the index to IMS for the entire device. The guest
-+		 * device local index will be used.
-+		 */
-+		vec = !idxd->int_handles ? desc->hw->int_handle : desc->vector;
-+		llist_add(&desc->llnode, &idxd->irq_entries[vec].pending_llist);
-+	}
- 
- 	return 0;
- }
+>=20
+>=20
+> > +	u16 vsec;
+> > +	u32 header;
+> > +
+> > +	vsec =3D pci_find_ext_capability(dev, PCI_EXT_CAP_ID_VNDR);
+> > +	while (vsec) {
+> > +		if (pci_read_config_dword(dev, vsec + PCI_VSEC_HDR,
+> > +					  &header) =3D=3D PCIBIOS_SUCCESSFUL &&
+> > +		    PCI_VSEC_CAP_ID(header) =3D=3D vsec_cap_id)
+> > +			return vsec;
+> > +
+> > +		vsec =3D pci_find_next_ext_capability(dev, vsec,
+> > +						    PCI_EXT_CAP_ID_VNDR);
+> > +	}
+>=20
+> FWIW, a more succinct implementation would be:
+>=20
+> 	while ((vsec =3D pci_find_next_ext_capability(...))) { ... }
+>=20
+> See set_pcie_thunderbolt() in drivers/pci/probe.c for an example.
+> Please consider refactoring that function to use your new helper.
+
+That looks more clean. I will do it. Thanks!
+
+>=20
+> Thanks,
+>=20
+> Lukas
 
 

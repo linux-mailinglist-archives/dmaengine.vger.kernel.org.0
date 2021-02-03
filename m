@@ -2,91 +2,112 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33CF630E08E
-	for <lists+dmaengine@lfdr.de>; Wed,  3 Feb 2021 18:11:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31E0E30E196
+	for <lists+dmaengine@lfdr.de>; Wed,  3 Feb 2021 18:59:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229931AbhBCRJt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 3 Feb 2021 12:09:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33442 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231404AbhBCRJp (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 3 Feb 2021 12:09:45 -0500
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83844C061573;
-        Wed,  3 Feb 2021 09:09:05 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id l18so52956pji.3;
-        Wed, 03 Feb 2021 09:09:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xk2EwKQ1eHpmkOxJJbFec7Fsbi451sNnu9yFO3pOpow=;
-        b=o6FkmBZZ55VlbVJtzpjqacQSCpePFCRO4MUyRhKyGBWHN4gN/+yiC63+b4UY4oeBmC
-         jbLycpyLm8RRrv1SfzhIypcbuzNEmxjnGs6w9CblYztV7roGW/0Ax5tevK1oShkqB8ti
-         uEmXP0+HUzIePali5/RjP+vHcoDDqaCSfQQTaODxZeES6wGQFRB8J4vlG3oSODpm2/hC
-         7jWRbJGFLRcnCxaM5VsXVvSog+7ohfLPVIwdem7rG+n6Ip/ThbQ6EutxhhGb7kx8fnEq
-         QXqcPOnp2hPNzuW81yYaRkZpLjR/sTKyLKkDaVhPSrG/kCaLXIPWzcRk+ceu9kIzkZXE
-         PkEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xk2EwKQ1eHpmkOxJJbFec7Fsbi451sNnu9yFO3pOpow=;
-        b=f5Lv/YA3Ux99bcwR1bS3vVsPbMAMygu9ZUnhvIirGL2twvzCBQduoICsck3OvUnAdq
-         YArRwbGV90lIRYeRmmKtXWbKlyWEa7xS0Lx1e4QALo971aEjOEa8E/2XXLwZfBa4w9FK
-         vbFjOEAWjH62lfiyjHL3V0dK9ntPB5uMWV0qfULcJufqHQGphD3NyZwriIvi7ejXRNgv
-         qYcHjFgrrTdUZnzi/2ueRMEbvxYXRh6AtTGSl5/8l+jG2o7b/olkB6mdfldhWkCctswT
-         JXPHGn2Jgi2xtyW4Bcdwx1lwKUDvsuM0cVV/pT9KF6IdV/xcJlRY8gM9GzdPVZQlUXTK
-         3OBg==
-X-Gm-Message-State: AOAM531FZTahUpeGyNV8y5IJsAFHtPwdHa6Xa3l13r1EjkVQh5bMJLbi
-        KmP8aX01T0eLFZwXxi+3WACyyL+S41N/nFClGA7Ygnqz2KBqlA==
-X-Google-Smtp-Source: ABdhPJyhhLCFZs45Lh41E648LIXAWVDNk6suG6+t6Bdb9WCk87cQQsQbiQrSd0JW0BqjxJLstc1Q5gDdnpN6tb/J2mw=
-X-Received: by 2002:a17:90a:c84:: with SMTP id v4mr4061074pja.228.1612372145098;
- Wed, 03 Feb 2021 09:09:05 -0800 (PST)
-MIME-Version: 1.0
-References: <20210203155100.15034-1-cezary.rojewski@intel.com> <CAHp75VeuL0d48JBBQrb=twQvtwh4E_oB8Aszy+GtszhNWKqAmg@mail.gmail.com>
-In-Reply-To: <CAHp75VeuL0d48JBBQrb=twQvtwh4E_oB8Aszy+GtszhNWKqAmg@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 3 Feb 2021 19:08:49 +0200
-Message-ID: <CAHp75Vc-By8mNzBoMqVSNac_yjX3J_Tv24pSxAw1FEFHTAwFLA@mail.gmail.com>
-Subject: Re: [PATCH] Revert "dmaengine: dw: Enable runtime PM"
-To:     Cezary Rojewski <cezary.rojewski@intel.com>
-Cc:     dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        id S232396AbhBCR60 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 3 Feb 2021 12:58:26 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:49746 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231828AbhBCR6P (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 3 Feb 2021 12:58:15 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id ECC3F400E1;
+        Wed,  3 Feb 2021 17:57:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1612375035; bh=N4SrLHDAvSJ3dnKgcShP+vt6i+VMc5c8hvmAqZM7EKc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=O/4sm2k6j/dARNK3I1ZETfYiYAHhq1RW+k+fYP93sEM9UKkTNbdgJd0Sd0ydEfEng
+         uKg4fl+wgLvQc2G8y7WWbwWe7zpwStRlJMPazTWuc/NDFnjKADFoB+dTPvqqXA5ncD
+         Hlj9dcpJru/+B2IHxclGeejBVD0AnuQDH84yebKD00mq9nOnNTicRuquZTstlKUEML
+         qioIN3yLVl01FXyXQ8HSwl0hseU/Fpbp6PPp7M2R4KSee/6DgFKjc9lngT9lrHXksB
+         wG7R7tL4ebpXyPdgiXeW63+xvYEhFsoOW6vkNpgqE2jSiTPmbvZB1TGfHsyweshvs7
+         8S9BFImvgV9Gg==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 3B411A005E;
+        Wed,  3 Feb 2021 17:57:11 +0000 (UTC)
+X-SNPS-Relay: synopsys.com
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        viresh kumar <vireshk@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Subject: [PATCH v3 00/15] dmaengine: dw-edma: HDMA support
+Date:   Wed,  3 Feb 2021 18:56:52 +0100
+Message-Id: <cover.1612374941.git.gustavo.pimentel@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Feb 3, 2021 at 7:06 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Wed, Feb 3, 2021 at 5:53 PM Cezary Rojewski
-> <cezary.rojewski@intel.com> wrote:
-> >
-> > This reverts commit 842067940a3e3fc008a60fee388e000219b32632.
-> > For some solutions e.g. sound/soc/intel/catpt, DW DMA is part of a
-> > compound device (in that very example, domains: ADSP, SSP0, SSP1, DMA0
-> > and DMA1 are part of a single entity) rather than being a standalone
-> > one. Driver for said device may enlist DMA to transfer data during
-> > suspend or resume sequences.
-> >
-> > Manipulating RPM explicitly in dw's DMA request and release channel
-> > functions causes suspend() to also invoke resume() for the exact same
-> > device. Similar situation occurs for resume() sequence. Effectively
-> > renders device dysfunctional after first suspend() attempt. Revert the
-> > change to address the problem.
->
-> I kinda had the mixed feelings about this, thanks for the report.
+This patch series adds the HDMA support, as long the IP design has set
+the compatible register map parameter, which allows compatibility at
+some degree for the existing Synopsys DesignWare eDMA driver that is
+already available on the Kernel.
 
-Side note: the better solution in general seems to have a specific
-power domain for the ASoC multi-function devices (if ever you move to
-use auxiliary bus, it may be done easier I think).
+The HDMA "Hyper-DMA" IP is an enhancement of the eDMA "embedded-DMA" IP.
+
+This new improvement comes with a PCI DVSEC that allows to the driver
+recognize and switch behavior if it's an eDMA or an HDMA, becoming
+retrocompatible, in the absence of this DVSEC, the driver will assume
+that is an eDMA IP.
+
+It also adds the interleaved support, since it will be similar to the
+current scatter-gather implementation.
+
+As well fixes/improves some abnormal behaviors not detected before, such as:
+ - crash on loading/unloading driver
+ - memory space definition for the data area and for the linked list space
+ - scatter-gather address calculation on 32 bits platforms
+ - minor comment and variable reordering
+
+Changes:
+ V2: Applied changes based on Bjorn Helgaas' review
+     Rebased patches on top of v5.11-rc1 version
+ V3: Applied changes based on Lukas Wunner' review
+
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: dmaengine@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+
+Gustavo Pimentel (15):
+  dmaengine: dw-edma: Add writeq() and readq() for 64 bits architectures
+  dmaengine: dw-edma: Fix comments offset characters' alignment
+  dmaengine: dw-edma: Add support for the HDMA feature
+  PCI: Add pci_find_vsec_capability() to find a specific VSEC
+  dmaengine: dw-edma: Add PCIe VSEC data retrieval support
+  dmaengine: dw-edma: Add device_prep_interleave_dma() support
+  dmaengine: dw-edma: Improve number of channels check
+  dmaengine: dw-edma: Reorder variables to keep consistency
+  dmaengine: dw-edma: Improve the linked list and data blocks definition
+  dmaengine: dw-edma: Change linked list and data blocks offset and
+    sizes
+  dmaengine: dw-edma: Move struct dentry variable from static definition
+    into dw_edma struct
+  dmaengine: dw-edma: Fix crash on loading/unloading driver
+  dmaengine: dw-edma: Change DMA abreviation from lower into upper case
+  dmaengine: dw-edma: Revert fix scatter-gather address calculation
+  dmaengine: dw-edma: Add pcim_iomap_table return checker
+
+ drivers/dma/dw-edma/dw-edma-core.c       | 178 +++++++++++-------
+ drivers/dma/dw-edma/dw-edma-core.h       |  37 ++--
+ drivers/dma/dw-edma/dw-edma-pcie.c       | 275 +++++++++++++++++++++-------
+ drivers/dma/dw-edma/dw-edma-v0-core.c    | 300 ++++++++++++++++++++++++-------
+ drivers/dma/dw-edma/dw-edma-v0-core.h    |   2 +-
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c |  77 ++++----
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.h |   4 +-
+ drivers/dma/dw-edma/dw-edma-v0-regs.h    | 291 +++++++++++++++++++-----------
+ drivers/pci/pci.c                        |  34 ++++
+ include/linux/pci.h                      |   2 +
+ include/uapi/linux/pci_regs.h            |   6 +
+ 11 files changed, 851 insertions(+), 355 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
+

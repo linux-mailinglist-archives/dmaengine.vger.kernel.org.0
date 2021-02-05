@@ -2,65 +2,89 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8465B311439
-	for <lists+dmaengine@lfdr.de>; Fri,  5 Feb 2021 23:06:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C673311590
+	for <lists+dmaengine@lfdr.de>; Fri,  5 Feb 2021 23:43:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232920AbhBEWCC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 5 Feb 2021 17:02:02 -0500
-Received: from smtp-18d.idc2.mandic.com.br ([177.70.124.135]:29897 "EHLO
-        smtp-18.idc2.mandic.com.br" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S232957AbhBEO5g (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 5 Feb 2021 09:57:36 -0500
-Received: by smtp-18.smtp.mandic.prv (Postfix, from userid 491)
-        id 8A09B605961A; Fri,  5 Feb 2021 13:26:56 -0300 (-03)
-Received: from smtp-18.idc2.mandic.com.br (ifsmtp2 [192.168.1.38])
-        by smtp-18.smtp.mandic.prv (Postfix) with ESMTPS id 0FD0C60572E4;
-        Fri,  5 Feb 2021 13:26:49 -0300 (-03)
-Received: from User (unknown [52.235.38.23])
-        by smtp-18.smtp.mandic.prv (Postfix) with ESMTPA id 43B59469B1D6;
-        Fri,  5 Feb 2021 13:24:19 -0300 (-03)
-Reply-To: <ms.reem@yandex.com>
-From:   "Ms. Reem" <stefy@macrometrica.com.br>
-Subject: Re:reply
-Date:   Fri, 5 Feb 2021 16:26:48 -0000
+        id S231925AbhBEWex (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 5 Feb 2021 17:34:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53650 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231969AbhBEOEy (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 5 Feb 2021 09:04:54 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 36E5C64FC9;
+        Fri,  5 Feb 2021 14:04:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1612533851;
+        bh=T1jLO24sF0pYkT3lQr2onlwV1fj0AbfnrcXXdUAochg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BZOBBDws+/yhmPTxNLP4zonarclKLQMtK4MPPXtDYExmUzHRLjxXcJnfGq14VQa4L
+         yZhVB9oNHiU0DzaVx6si8j0aXHMHTj1MM3VS8xDsEeLmU5/b+5mHQBkgW7cT1CQKhX
+         bLMDr8tZSM1SipNLwaZFpx+i2Ki4uOTJ99+ziw0o=
+Date:   Fri, 5 Feb 2021 15:04:08 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        kvm@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Jaroslav Kysela <perex@perex.cz>,
+        Eric Anholt <eric@anholt.net>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig.org@pengutronix.de>, linux-i2c@vger.kernel.org,
+        Jiri Slaby <jirislaby@kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-watchdog@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Takashi Iwai <tiwai@suse.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-serial@vger.kernel.org, linux-input@vger.kernel.org,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Mike Leach <mike.leach@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        alsa-devel@alsa-project.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        coresight@lists.linaro.org, Vladimir Zapolskiy <vz@mleia.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mark Brown <broonie@kernel.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        linux-crypto@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+        Leo Yan <leo.yan@linaro.org>, dmaengine@vger.kernel.org
+Subject: Re: [PATCH] coresight: etm4x: Fix merge resolution for amba rework
+Message-ID: <YB1QWFWPennQZmjw@kroah.com>
+References: <20210205130848.20009-1-uwe@kleine-koenig.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-X-Mandic-Auth: DYB6x5JcyVot9snxiAasWC73cfc93V+pC3vUrorm87+eXbqAUeEHL0ZNPgpM50IYQeUbiYx0PkMIK2oavHcOOA==
-X-Mandic-Sender: stefy@macrometrica.com.br
-Message-Id: <20210205162650.0FD0C60572E4@smtp-18.smtp.mandic.prv>
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210205130848.20009-1-uwe@kleine-koenig.org>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello,
+On Fri, Feb 05, 2021 at 02:08:47PM +0100, Uwe Kleine-König wrote:
+> This was non-trivial to get right because commits
+> c23bc382ef0e ("coresight: etm4x: Refactor probing routine") and
+> 5214b563588e ("coresight: etm4x: Add support for sysreg only devices")
+> changed the code flow considerably. With this change the driver can be
+> built again.
+> 
+> Fixes: 0573d3fa4864 ("Merge branch 'devel-stable' of git://git.armlinux.org.uk/~rmk/linux-arm into char-misc-next")
+> Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
 
-My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
-and Petroleum" also "Minister of State for International Cooperation"
-in UAE. I write to you on behalf of my other "three (3) colleagues"
-who has approved me to solicit for your "partnership in claiming of
-{us$47=Million}" from a Financial Home in Cambodia on their behalf and
-for our "Mutual Benefits".
+Now queued up, thanks!
 
-The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
-deal with Cambodian/Vietnam Government within 2013/2014, however, we
-don't want our government to know about the fund. If this proposal
-interests you, let me know, by sending me an email and I will send to
-you detailed information on how this business would be successfully
-transacted. Be informed that nobody knows about the secret of this
-fund except us, and we know how to carry out the entire transaction.
-So I am compelled to ask, that you will stand on our behalf and
-receive this fund into any account that is solely controlled by you.
-
-We will compensate you with 15% of the total amount involved as
-gratification for being our partner in this transaction. Reply to:
-ms.reem@yandex.com
-
-Regards,
-Ms. Reem.
+greg k-h

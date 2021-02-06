@@ -2,89 +2,69 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C673311590
-	for <lists+dmaengine@lfdr.de>; Fri,  5 Feb 2021 23:43:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68696311E23
+	for <lists+dmaengine@lfdr.de>; Sat,  6 Feb 2021 15:57:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231925AbhBEWex (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 5 Feb 2021 17:34:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53650 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231969AbhBEOEy (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 5 Feb 2021 09:04:54 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 36E5C64FC9;
-        Fri,  5 Feb 2021 14:04:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1612533851;
-        bh=T1jLO24sF0pYkT3lQr2onlwV1fj0AbfnrcXXdUAochg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BZOBBDws+/yhmPTxNLP4zonarclKLQMtK4MPPXtDYExmUzHRLjxXcJnfGq14VQa4L
-         yZhVB9oNHiU0DzaVx6si8j0aXHMHTj1MM3VS8xDsEeLmU5/b+5mHQBkgW7cT1CQKhX
-         bLMDr8tZSM1SipNLwaZFpx+i2Ki4uOTJ99+ziw0o=
-Date:   Fri, 5 Feb 2021 15:04:08 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        kvm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Jaroslav Kysela <perex@perex.cz>,
-        Eric Anholt <eric@anholt.net>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig.org@pengutronix.de>, linux-i2c@vger.kernel.org,
-        Jiri Slaby <jirislaby@kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-watchdog@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Takashi Iwai <tiwai@suse.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-serial@vger.kernel.org, linux-input@vger.kernel.org,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Mike Leach <mike.leach@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        alsa-devel@alsa-project.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        coresight@lists.linaro.org, Vladimir Zapolskiy <vz@mleia.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mark Brown <broonie@kernel.org>,
-        Matt Mackall <mpm@selenic.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        linux-crypto@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
-        Leo Yan <leo.yan@linaro.org>, dmaengine@vger.kernel.org
-Subject: Re: [PATCH] coresight: etm4x: Fix merge resolution for amba rework
-Message-ID: <YB1QWFWPennQZmjw@kroah.com>
-References: <20210205130848.20009-1-uwe@kleine-koenig.org>
+        id S230020AbhBFO4u (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 6 Feb 2021 09:56:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55588 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230104AbhBFO4q (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 6 Feb 2021 09:56:46 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FFD0C0611C2
+        for <dmaengine@vger.kernel.org>; Sat,  6 Feb 2021 06:56:08 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id s3so12898291edi.7
+        for <dmaengine@vger.kernel.org>; Sat, 06 Feb 2021 06:56:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=sY4fgq/DSyThalwU7QX+pWYKs/8sGH7ZznMUn5qQ1EY=;
+        b=be9tjb+OWNHJndy1m5EocOdwIhBfISHHXuo03iHvkf99IBeAS2ZIP4zO+CffKoAXli
+         wFT/YxtIr4WF2n1YSMwug96AX6h42NKZrdX6hvIP0FW987zbVxsareo/sU3roaLny3Pm
+         1I0EAvIv2c3c8gMqzIhJboZgHRcl5wu2OT/70suQQY9rPZh+owVr7rQ4YbzNpmhfKrYI
+         /WFKqkkmd6SPcZoTOVzYWmghpUGccg0Q45HGIh3V4O6JvUm92greLImmIug/U0fb2r4r
+         q9VWwZUaDL82BSMDI5DQFGoKkEfp6hQ2o0DuZZGA9TKrtSyCuxJgVwhKlVG9/j3xxq6N
+         +ONA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=sY4fgq/DSyThalwU7QX+pWYKs/8sGH7ZznMUn5qQ1EY=;
+        b=bFQBKYW6sm/AlZv+9Qmiy5NubsyA447HJC9LmKj9EKMV0SrQDSaOAMAYi+EFK/cTJV
+         PWF2kOzxQ8kFy4gCbLuijtoLqxpmZ8esv6cPCxPVTsARC98GawV2f4zROQyNWJ6ET3/C
+         0dM7SJEwQvPJSgeZ+c4BEasAPdFyDo9FBk+1PG4b1BiNPAU2w4nA+0CJ41/3nz7owIs5
+         4/9G2k7kTK7sV5Ig46+dvx2zWTUqXfYaAhcKYqDbnpYbPTsRAsHFiAdGU24fI6SQCASw
+         lkmGJXawFOZjspQXg4K8bzmsx8L6/YUx9ZASGcEhYjRfOSKaI2TRB0/bgr5NqYK8Yzkf
+         jSog==
+X-Gm-Message-State: AOAM530EjGoMg8W2THvoUIqKSzrUdbHg/4XMqGD2isqrwN/trVF7hsN/
+        n22Gj5VMJB6IV3ZLlA6KdIc0euD8QB9C9fOMVx7/f5Ofrr8=
+X-Google-Smtp-Source: ABdhPJwg+95ztD5QblcuO+8CjjIKmoEQ6sWNyKmWrA0wQ2pVp+Zgel1cyodQV1zvNjOO8ObzDtcisUsYne5SMT74xW8=
+X-Received: by 2002:a05:6402:13cd:: with SMTP id a13mr8813735edx.87.1612623366928;
+ Sat, 06 Feb 2021 06:56:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210205130848.20009-1-uwe@kleine-koenig.org>
+Received: by 2002:a17:906:25d0:0:0:0:0 with HTTP; Sat, 6 Feb 2021 06:56:06
+ -0800 (PST)
+Reply-To: lawyer.nba@gmail.com
+From:   Barrister Daven Bango <stephennbada9@gmail.com>
+Date:   Sat, 6 Feb 2021 15:56:06 +0100
+Message-ID: <CAGSHw-DxGPGtoG1+UQ6TB+LhiET-F_GxGO0MtswtFbtkGe4W1Q@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Fri, Feb 05, 2021 at 02:08:47PM +0100, Uwe Kleine-König wrote:
-> This was non-trivial to get right because commits
-> c23bc382ef0e ("coresight: etm4x: Refactor probing routine") and
-> 5214b563588e ("coresight: etm4x: Add support for sysreg only devices")
-> changed the code flow considerably. With this change the driver can be
-> built again.
-> 
-> Fixes: 0573d3fa4864 ("Merge branch 'devel-stable' of git://git.armlinux.org.uk/~rmk/linux-arm into char-misc-next")
-> Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
+--=20
+Korisnik fonda =C4=8Destitanja, Va=C5=A1a sredstva za naknadu od 850.000,00
+ameri=C4=8Dkih dolara odobrila je Me=C4=91unarodna monetarna organizacija (=
+MMF)
+u suradnji s (FBI) nakon mnogo istraga. =C4=8Cekamo da se obratimo za
+dodatne informacije
 
-Now queued up, thanks!
-
-greg k-h
+Advokat: Daven Bango
+Telefon: +22891667276
+(URED MMF-a LOME TOGO)

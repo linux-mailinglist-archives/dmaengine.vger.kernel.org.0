@@ -2,69 +2,75 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68696311E23
-	for <lists+dmaengine@lfdr.de>; Sat,  6 Feb 2021 15:57:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 682BD312B21
+	for <lists+dmaengine@lfdr.de>; Mon,  8 Feb 2021 08:34:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230020AbhBFO4u (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 6 Feb 2021 09:56:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230104AbhBFO4q (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 6 Feb 2021 09:56:46 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FFD0C0611C2
-        for <dmaengine@vger.kernel.org>; Sat,  6 Feb 2021 06:56:08 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id s3so12898291edi.7
-        for <dmaengine@vger.kernel.org>; Sat, 06 Feb 2021 06:56:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=sY4fgq/DSyThalwU7QX+pWYKs/8sGH7ZznMUn5qQ1EY=;
-        b=be9tjb+OWNHJndy1m5EocOdwIhBfISHHXuo03iHvkf99IBeAS2ZIP4zO+CffKoAXli
-         wFT/YxtIr4WF2n1YSMwug96AX6h42NKZrdX6hvIP0FW987zbVxsareo/sU3roaLny3Pm
-         1I0EAvIv2c3c8gMqzIhJboZgHRcl5wu2OT/70suQQY9rPZh+owVr7rQ4YbzNpmhfKrYI
-         /WFKqkkmd6SPcZoTOVzYWmghpUGccg0Q45HGIh3V4O6JvUm92greLImmIug/U0fb2r4r
-         q9VWwZUaDL82BSMDI5DQFGoKkEfp6hQ2o0DuZZGA9TKrtSyCuxJgVwhKlVG9/j3xxq6N
-         +ONA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=sY4fgq/DSyThalwU7QX+pWYKs/8sGH7ZznMUn5qQ1EY=;
-        b=bFQBKYW6sm/AlZv+9Qmiy5NubsyA447HJC9LmKj9EKMV0SrQDSaOAMAYi+EFK/cTJV
-         PWF2kOzxQ8kFy4gCbLuijtoLqxpmZ8esv6cPCxPVTsARC98GawV2f4zROQyNWJ6ET3/C
-         0dM7SJEwQvPJSgeZ+c4BEasAPdFyDo9FBk+1PG4b1BiNPAU2w4nA+0CJ41/3nz7owIs5
-         4/9G2k7kTK7sV5Ig46+dvx2zWTUqXfYaAhcKYqDbnpYbPTsRAsHFiAdGU24fI6SQCASw
-         lkmGJXawFOZjspQXg4K8bzmsx8L6/YUx9ZASGcEhYjRfOSKaI2TRB0/bgr5NqYK8Yzkf
-         jSog==
-X-Gm-Message-State: AOAM530EjGoMg8W2THvoUIqKSzrUdbHg/4XMqGD2isqrwN/trVF7hsN/
-        n22Gj5VMJB6IV3ZLlA6KdIc0euD8QB9C9fOMVx7/f5Ofrr8=
-X-Google-Smtp-Source: ABdhPJwg+95ztD5QblcuO+8CjjIKmoEQ6sWNyKmWrA0wQ2pVp+Zgel1cyodQV1zvNjOO8ObzDtcisUsYne5SMT74xW8=
-X-Received: by 2002:a05:6402:13cd:: with SMTP id a13mr8813735edx.87.1612623366928;
- Sat, 06 Feb 2021 06:56:06 -0800 (PST)
+        id S229848AbhBHHe5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 8 Feb 2021 02:34:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33632 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229751AbhBHHez (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 8 Feb 2021 02:34:55 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7A22F64DDD;
+        Mon,  8 Feb 2021 07:34:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612769653;
+        bh=7TyKKVr8AyUm1jsKCCtx7TX3UogGf1VLNtMdZYu55qE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=G7Az6K0blie4qbk6W+OmSAiRBXBb8s7jK2ZlbGUgcxaOOYHekFQSTz4Nc+kDQDyuO
+         nYA3EpuafmQgO0KeOfVCJqxEqbXbLaZTV9T+GkcOgjgKZJBZU6hdpKpPTBsY3iDP77
+         f+7IC5MVo827j341lOJ4noltUFLzjvqnmMTymdmMWDUXFALU80TQYtU/wm3rD9B4kZ
+         7nB81Wt1nVraPRFkzsXQzfF+iBsB3Dnsm58LcymzfT01DBpp8mQOth49kuge3GL9Tz
+         YheMG1xMXpA31Et5OftgIVV9o6FlZaa7PxngODydq+KBsKQHx3Eg0VMn3Kjb5P0tfH
+         X1Z30lWzamknw==
+Date:   Mon, 8 Feb 2021 09:34:08 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [RESEND PATCH v3 3/5] misc: Add Synopsys DesignWare xData IP
+ driver to Kconfig
+Message-ID: <20210208073408.GC4656@unreal>
+References: <cover.1612284945.git.gustavo.pimentel@synopsys.com>
+ <850ba8b075a65f753bbb802b9af23839624908bd.1612284945.git.gustavo.pimentel@synopsys.com>
 MIME-Version: 1.0
-Received: by 2002:a17:906:25d0:0:0:0:0 with HTTP; Sat, 6 Feb 2021 06:56:06
- -0800 (PST)
-Reply-To: lawyer.nba@gmail.com
-From:   Barrister Daven Bango <stephennbada9@gmail.com>
-Date:   Sat, 6 Feb 2021 15:56:06 +0100
-Message-ID: <CAGSHw-DxGPGtoG1+UQ6TB+LhiET-F_GxGO0MtswtFbtkGe4W1Q@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <850ba8b075a65f753bbb802b9af23839624908bd.1612284945.git.gustavo.pimentel@synopsys.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
---=20
-Korisnik fonda =C4=8Destitanja, Va=C5=A1a sredstva za naknadu od 850.000,00
-ameri=C4=8Dkih dolara odobrila je Me=C4=91unarodna monetarna organizacija (=
-MMF)
-u suradnji s (FBI) nakon mnogo istraga. =C4=8Cekamo da se obratimo za
-dodatne informacije
+On Tue, Feb 02, 2021 at 05:56:36PM +0100, Gustavo Pimentel wrote:
+> Add Synopsys DesignWare xData IP driver to Kconfig.
+>
+> This driver enables/disables the PCIe traffic generator module
+> pertain to the Synopsys DesignWare prototype.
+>
+> Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> ---
+>  drivers/misc/Kconfig | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index fafa8b0..6d5783f 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -423,6 +423,17 @@ config SRAM
+>  config SRAM_EXEC
+>  	bool
+>
+> +config DW_XDATA_PCIE
+> +	depends on PCI
+> +	tristate "Synopsys DesignWare xData PCIe driver"
+> +	default	n
 
-Advokat: Daven Bango
-Telefon: +22891667276
-(URED MMF-a LOME TOGO)
+"N" is a default option and not needed to be stated explicitly.
+
+Thanks

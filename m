@@ -2,40 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 527EC314B2C
-	for <lists+dmaengine@lfdr.de>; Tue,  9 Feb 2021 10:12:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 051E4314EA4
+	for <lists+dmaengine@lfdr.de>; Tue,  9 Feb 2021 13:06:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230169AbhBIJLa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 9 Feb 2021 04:11:30 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:54140 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230124AbhBIJBq (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 9 Feb 2021 04:01:46 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 11990fgo029830;
-        Tue, 9 Feb 2021 03:00:41 -0600
+        id S229854AbhBIMF7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 9 Feb 2021 07:05:59 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:35016 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230137AbhBIMEd (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 9 Feb 2021 07:04:33 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 119C2jbm110314;
+        Tue, 9 Feb 2021 06:02:45 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1612861241;
+        s=ti-com-17Q1; t=1612872165;
         bh=CcqJPRpOCkiN0eB5gI+aMq6cKCTA5yx6UGev6u0FgxA=;
         h=From:To:CC:Subject:Date;
-        b=owzNnILoWuTgKI3iFff9+APoqNifr93p+nJHnQoFzivgCrHOKnsSUeXv0p7shDV1G
-         C/Obyqre6wK+c3UiqD/6cCoZCL9YGkNuCabBVeyeYOufnQPNfLw6ofQH2aObTaLyxO
-         0tToZ3iCgT+8TaqKroL72EXj9l74NhDCclBuQLZg=
+        b=p0HPfuCkv2B0SH8TFIyZFL129D1cgS4MOd6Ln+vvkb6ZssXFeWHZveDH93JAr6zyH
+         IMIffaU/BWSjcrs1zkdUtbhbEWQEykyHYIVS63LXdyi7FHOWwSOh9Rf0nAeFx/W4kH
+         2Y89CUbXZ42XQgaBL8tQ/waSqjzdaaFP7SZkjsYM=
 Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 11990fOh035192
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 119C2j3X002858
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 9 Feb 2021 03:00:41 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE115.ent.ti.com
+        Tue, 9 Feb 2021 06:02:45 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE115.ent.ti.com
  (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 9 Feb
- 2021 03:00:41 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ 2021 06:02:45 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 9 Feb 2021 03:00:41 -0600
+ Frontend Transport; Tue, 9 Feb 2021 06:02:45 -0600
 Received: from a0393678-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 11990bB5104664;
-        Tue, 9 Feb 2021 03:00:38 -0600
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 119C2dpm110405;
+        Tue, 9 Feb 2021 06:02:41 -0600
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Peter Ujfalusi <peter.ujfalusi@gmail.com>,
         Dan Williams <dan.j.williams@intel.com>,
@@ -44,8 +44,8 @@ To:     Peter Ujfalusi <peter.ujfalusi@gmail.com>,
         Vignesh Raghavendra <vigneshr@ti.com>
 CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 Subject: [PATCH] dmaengine: ti: k3-udma: Fix NULL pointer dereference error
-Date:   Tue, 9 Feb 2021 14:30:36 +0530
-Message-ID: <20210209090036.30832-1-kishon@ti.com>
+Date:   Tue, 9 Feb 2021 17:32:38 +0530
+Message-ID: <20210209120238.9476-1-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain

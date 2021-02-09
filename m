@@ -2,89 +2,78 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF119316553
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Feb 2021 12:38:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B538316DA5
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Feb 2021 19:03:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229650AbhBJLh2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 10 Feb 2021 06:37:28 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44928 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229944AbhBJLgI (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 10 Feb 2021 06:36:08 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 11ABYhsG084287;
-        Wed, 10 Feb 2021 05:34:43 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1612956883;
-        bh=ZTT5yWAttLg1aAPI3ziGR5Ht0gucArUIncPh/zW+Slo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fLrc9Bga7XGx1ykAbm/5P1m4+6987rvctjneHqEbVsSS0IGPFeeyMtWRWjsgS3Ls6
-         AxM85HnMtnEe6AiDd3muA4ZbuxiL8V2HLYJ7ZbGDxV4Vq2/hEpKSPsrQqphOtYEAru
-         xcHHs76MZ4TP3c0PBNA+GbXKqkSTRW5Kf+LVx0Zo=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 11ABYhdl120259
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 10 Feb 2021 05:34:43 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 10
- Feb 2021 05:34:43 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 10 Feb 2021 05:34:43 -0600
-Received: from [10.250.232.207] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 11ABYdg2126128;
-        Wed, 10 Feb 2021 05:34:40 -0600
-Subject: Re: [PATCH] dmaengine: ti: k3-udma: Fix NULL pointer dereference
- error
-To:     =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20210209120238.9476-1-kishon@ti.com>
- <8e9954cd-53fa-2c7e-2019-9821e5f9d45a@gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <30bfe6ef-de01-e019-d2d3-a999d6261fd8@ti.com>
-Date:   Wed, 10 Feb 2021 17:04:39 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S233684AbhBJSCG convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+dmaengine@lfdr.de>); Wed, 10 Feb 2021 13:02:06 -0500
+Received: from spam.auroraoh.com ([24.56.89.101]:46914 "EHLO
+        barracuda.auroraoh.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S233683AbhBJR7R (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 10 Feb 2021 12:59:17 -0500
+X-ASG-Debug-ID: 1612979891-112c0d6a799e8b0003-v0qrrX
+Received: from COASRV-MAIL2.auroraoh.loc (coasrv-mail2.auroraoh.loc [10.3.1.15]) by barracuda.auroraoh.com with ESMTP id RGytFTEIEFolFEj5; Wed, 10 Feb 2021 12:58:12 -0500 (EST)
+X-Barracuda-Envelope-From: JanuskaD@auroraoh.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.3.1.15
+Received: from [172.20.10.5] (197.210.29.8) by COASRV-MAIL2.auroraoh.loc
+ (10.3.1.15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 9 Feb 2021
+ 02:43:16 -0500
+Content-Type: text/plain; charset="iso-8859-1"
+X-Barracuda-RBL-Trusted-Forwarder: 172.20.10.5
 MIME-Version: 1.0
-In-Reply-To: <8e9954cd-53fa-2c7e-2019-9821e5f9d45a@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: We are a registered Private Loan Investment Company in the United Kingdom,
+ we also registered with the Turkish British Chamber of Commerce and Industry
+ (TBCCI) we have operations in Europe and Asia.
+To:     Recipients <januskad@auroraoh.com>
+X-ASG-Orig-Subj: We are a registered Private Loan Investment Company in the United Kingdom,
+ we also registered with the Turkish British Chamber of Commerce and Industry
+ (TBCCI) we have operations in Europe and Asia.
+From:   <januskad@auroraoh.com>
+Date:   Tue, 9 Feb 2021 15:43:15 +0800
+Reply-To: <cfolimiited@gmail.com>
+X-Priority: 1 (High)
+X-Antivirus: Avast (VPS 210207-2, 02/07/2021), Outbound message
+X-Antivirus-Status: Clean
+Message-ID: <8a74435f-3c35-4b52-8955-3a1b291858bc@COASRV-MAIL2.auroraoh.loc>
+X-Originating-IP: [197.210.29.8]
+X-ClientProxiedBy: COASRV-MAIL3.auroraoh.loc (10.3.1.13) To
+ COASRV-MAIL2.auroraoh.loc (10.3.1.15)
+X-Barracuda-Connect: coasrv-mail2.auroraoh.loc[10.3.1.15]
+X-Barracuda-Start-Time: 1612979891
+X-Barracuda-URL: https://10.3.1.12:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at auroraoh.com
+X-Barracuda-Scan-Msg-Size: 755
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Spam-Score: 1.61
+X-Barracuda-Spam-Status: No, SCORE=1.61 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=5.0 tests=BSF_SC0_SA609_NRN, BSF_SC0_SA912_RP_FR, BSF_SC0_SA_TO_FROM_ADDR_MATCH, NO_REAL_NAME
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.87890
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
+        0.00 NO_REAL_NAME           From: does not include a real name
+        0.01 BSF_SC0_SA912_RP_FR    Custom Rule BSF_SC0_SA912_RP_FR
+        0.50 BSF_SC0_SA_TO_FROM_ADDR_MATCH Sender Address Matches Recipient
+                                   Address
+        1.10 BSF_SC0_SA609_NRN      Custom Rule SA609_NRN
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Peter,
+We are seeking for beneficiaries who source for fund to expand/relocating their business interest abroad. We are ready to fund projects outside Turkey and United Kingdom in the form of Soft Loan. We grant loans to both corporate and private entities at a low interest rate of 2% R.O.I per annul.
 
-On 10/02/21 3:33 pm, Péter Ujfalusi wrote:
-> Hi Kishon,
-> 
-> On 2/9/21 2:02 PM, Kishon Vijay Abraham I wrote:
->> bcdma_get_*() and udma_get_*() checks if bchan/rchan/tchan/rflow is
->> already allocated by checking if it has a NON NULL value. For the
->> error cases, bchan/rchan/tchan/rflow will have error value
->> and bcdma_get_*() and udma_get_*() considers this as already allocated
->> (PASS) since the error values are NON NULL. This results in
->> NULL pointer dereference error while de-referencing
->> bchan/rchan/tchan/rflow.
->>
->> Reset the value of bchan/rchan/tchan/rflow to NULL if the allocation
->> actually fails.
->>
->> Fixes: 017794739702 ("dmaengine: ti: k3-udma: Initial support for K3 BCDMA")
->> Fixes: 25dcb5dd7b7c ("dmaengine: ti: New driver for K3 UDMA")
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> Is this the same patch as the other with the similar subject?
+We like to grant loan in the following sectors: oil/Gas, banking, real estate, stock speculation and mining, transportation, health sector and tobacco, Communication Services, Agriculture Forestry & Fishing, thus any sector. The terms are very flexible and interesting.
 
-Right, sorry for the duplicate patch (thought it didn't go out initially).
+Please contact us for more details;
 
-Regards
-Kishon
+
+Kind regards,
+
+Paul McCann
+
+-- 
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
+

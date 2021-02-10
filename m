@@ -2,78 +2,60 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B538316DA5
-	for <lists+dmaengine@lfdr.de>; Wed, 10 Feb 2021 19:03:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 098CF31712E
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Feb 2021 21:21:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233684AbhBJSCG convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+dmaengine@lfdr.de>); Wed, 10 Feb 2021 13:02:06 -0500
-Received: from spam.auroraoh.com ([24.56.89.101]:46914 "EHLO
-        barracuda.auroraoh.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S233683AbhBJR7R (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 10 Feb 2021 12:59:17 -0500
-X-ASG-Debug-ID: 1612979891-112c0d6a799e8b0003-v0qrrX
-Received: from COASRV-MAIL2.auroraoh.loc (coasrv-mail2.auroraoh.loc [10.3.1.15]) by barracuda.auroraoh.com with ESMTP id RGytFTEIEFolFEj5; Wed, 10 Feb 2021 12:58:12 -0500 (EST)
-X-Barracuda-Envelope-From: JanuskaD@auroraoh.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.3.1.15
-Received: from [172.20.10.5] (197.210.29.8) by COASRV-MAIL2.auroraoh.loc
- (10.3.1.15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 9 Feb 2021
- 02:43:16 -0500
-Content-Type: text/plain; charset="iso-8859-1"
-X-Barracuda-RBL-Trusted-Forwarder: 172.20.10.5
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: We are a registered Private Loan Investment Company in the United Kingdom,
- we also registered with the Turkish British Chamber of Commerce and Industry
- (TBCCI) we have operations in Europe and Asia.
-To:     Recipients <januskad@auroraoh.com>
-X-ASG-Orig-Subj: We are a registered Private Loan Investment Company in the United Kingdom,
- we also registered with the Turkish British Chamber of Commerce and Industry
- (TBCCI) we have operations in Europe and Asia.
-From:   <januskad@auroraoh.com>
-Date:   Tue, 9 Feb 2021 15:43:15 +0800
-Reply-To: <cfolimiited@gmail.com>
-X-Priority: 1 (High)
-X-Antivirus: Avast (VPS 210207-2, 02/07/2021), Outbound message
-X-Antivirus-Status: Clean
-Message-ID: <8a74435f-3c35-4b52-8955-3a1b291858bc@COASRV-MAIL2.auroraoh.loc>
-X-Originating-IP: [197.210.29.8]
-X-ClientProxiedBy: COASRV-MAIL3.auroraoh.loc (10.3.1.13) To
- COASRV-MAIL2.auroraoh.loc (10.3.1.15)
-X-Barracuda-Connect: coasrv-mail2.auroraoh.loc[10.3.1.15]
-X-Barracuda-Start-Time: 1612979891
-X-Barracuda-URL: https://10.3.1.12:443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at auroraoh.com
-X-Barracuda-Scan-Msg-Size: 755
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Spam-Score: 1.61
-X-Barracuda-Spam-Status: No, SCORE=1.61 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=5.0 tests=BSF_SC0_SA609_NRN, BSF_SC0_SA912_RP_FR, BSF_SC0_SA_TO_FROM_ADDR_MATCH, NO_REAL_NAME
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.87890
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
-        0.00 NO_REAL_NAME           From: does not include a real name
-        0.01 BSF_SC0_SA912_RP_FR    Custom Rule BSF_SC0_SA912_RP_FR
-        0.50 BSF_SC0_SA_TO_FROM_ADDR_MATCH Sender Address Matches Recipient
-                                   Address
-        1.10 BSF_SC0_SA609_NRN      Custom Rule SA609_NRN
+        id S232439AbhBJUUW (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 10 Feb 2021 15:20:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44864 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232802AbhBJUUF (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 10 Feb 2021 15:20:05 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id 8DE0464EE7;
+        Wed, 10 Feb 2021 20:19:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612988364;
+        bh=A52N/E4Jr5ACqoxP7TM9+8AxbrFnGYdYr5TGb6wlYVI=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=CyUpSLBrVOfcZLfcx+0jj4vmle238VV1t6dmjCYKcJyssUddn1ggwtIZAFBvkNGOg
+         GYcGUqWiF0b+u/5qlQ53hjNx1Et+fu/0TGN2nKWxAkaHyBa8Si4zB7fL7wSDpvSzl0
+         FFxN1bQbI+bz3jHBgfEaNMuof15yG175h4dre2noGdoebNDC7EJaGoNaio69x+M+wF
+         MuFIeldwG9YeRSQviZWyurCsCaM1ySf5wiHVQROUVJ/vj4L3RHyBRiYcNzzQv+mpgc
+         d8/yFrdN3ggyIepD90WfPSMOXc2langhIfVVi207CQDr0AXA+UNFomMBHxGZGKmYWF
+         ZisRR2MhVDqDQ==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 88DD2609E2;
+        Wed, 10 Feb 2021 20:19:24 +0000 (UTC)
+Subject: Re: [GIT PULL] dmaengine fixes for v5.11
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20210210100036.GD2774@vkoul-mobl.Dlink>
+References: <20210210100036.GD2774@vkoul-mobl.Dlink>
+X-PR-Tracked-List-Id: <dmaengine.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20210210100036.GD2774@vkoul-mobl.Dlink>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-fix2-5.11
+X-PR-Tracked-Commit-Id: b6c14d7a83802046f7098e9bae78fbde23affa74
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 708c2e41814209e5dde27c61ad032f4c1ed3624b
+Message-Id: <161298836455.25163.2339646608440759813.pr-tracker-bot@kernel.org>
+Date:   Wed, 10 Feb 2021 20:19:24 +0000
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-We are seeking for beneficiaries who source for fund to expand/relocating their business interest abroad. We are ready to fund projects outside Turkey and United Kingdom in the form of Soft Loan. We grant loans to both corporate and private entities at a low interest rate of 2% R.O.I per annul.
+The pull request you sent on Wed, 10 Feb 2021 15:30:36 +0530:
 
-We like to grant loan in the following sectors: oil/Gas, banking, real estate, stock speculation and mining, transportation, health sector and tobacco, Communication Services, Agriculture Forestry & Fishing, thus any sector. The terms are very flexible and interesting.
+> git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dmaengine-fix2-5.11
 
-Please contact us for more details;
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/708c2e41814209e5dde27c61ad032f4c1ed3624b
 
-
-Kind regards,
-
-Paul McCann
+Thank you!
 
 -- 
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html

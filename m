@@ -2,107 +2,129 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CFEFA315718
-	for <lists+dmaengine@lfdr.de>; Tue,  9 Feb 2021 20:48:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DCCC2316057
+	for <lists+dmaengine@lfdr.de>; Wed, 10 Feb 2021 08:51:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233495AbhBITps (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 9 Feb 2021 14:45:48 -0500
-Received: from mail-wm1-f48.google.com ([209.85.128.48]:37483 "EHLO
-        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233463AbhBITkr (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 9 Feb 2021 14:40:47 -0500
-Received: by mail-wm1-f48.google.com with SMTP id m1so4649799wml.2;
-        Tue, 09 Feb 2021 11:40:31 -0800 (PST)
+        id S232836AbhBJHux (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 10 Feb 2021 02:50:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40464 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233048AbhBJHuf (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 10 Feb 2021 02:50:35 -0500
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4614C061574;
+        Tue,  9 Feb 2021 23:49:54 -0800 (PST)
+Received: by mail-lf1-x135.google.com with SMTP id h26so1469054lfm.1;
+        Tue, 09 Feb 2021 23:49:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:references:from:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KrGrH6t05k64IsQs/ldEY9uBloIfB5vP9tb8tT8h4Nc=;
+        b=LRZZvqXQcv/nTOvQQGhlBHu2Kl0aWpXy2RHPKcDBX9BNhceLrc6mpbI2YNbVOWWoXE
+         kZg/S6j2nj1Gnl/Gw7fdql5Oz0cmhNF2496DRXPdDrFXGY/nTLis+S+PlEka5s3nHWTP
+         nGXybpttlcdgyUsuwtfV7V7TPvjQRSbC3BJ98z9riQoNdSDWPxBUplE8xB7Wyphc9/D4
+         3dALD0HLFM4zc6LyvF6RiWE+NKjchh6jikOUnAxGi4uQnRHBdgUvsMn/S2MoujgIRUJM
+         wJ2D2oDPvmRJ/a70CTeqkxtgwtjOQhzQ5G65ZjlLkwlOEugyn3g3qwVfGK2lbNnz+O4T
+         Fw2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=c6vCaI1Ot4rIOLJkm4PsY67pG5cYnNtElevzVRC/8jc=;
-        b=HEZWULPJ+zz9Zw7W3W/pwWRa85Feels4tRl3vzTw9uUorgAhvnmwLkj1EJIKmJ+5du
-         97HyEp6ZmNBr4cknN6LcKiXjMUFS/c3VURmBlbvSdHTZGUb4xasUdMeP/jj7MIfeZTR3
-         stIQ1SHkDEq94qRdaFE6CCAHYA/NJtKtmEZJuX258NLQWB6bPjTsqBpOWl1GBZgc//kD
-         iKp8EZ58l3pdnbgu2C/tFyt1drgf5gRvdQCdD9f2Dg4pa9Oy7ReE0Ht3NDFfIqRG11Eq
-         Rmqcdz/J7DUC7frhl2id8lPzYUc3jc27Jl9zd2vImb8Dv+niOaBIi/0bzXn02vj+avAe
-         clBw==
-X-Gm-Message-State: AOAM5314CXwB3RD5Xe11dG7KecZxyU2aNrreBg50CG3dVGNyc5LbNPV9
-        BCOj60zV4NBmz9C1+IBtWho=
-X-Google-Smtp-Source: ABdhPJw7FD2tJaT20PTfXYsdZ/lAuCGttMIMQRbkmPz7RXBi0JFHhR8pII9knECGQDnDCrCFoWqmrg==
-X-Received: by 2002:a1c:b087:: with SMTP id z129mr5003988wme.147.1612899605420;
-        Tue, 09 Feb 2021 11:40:05 -0800 (PST)
-Received: from rocinante ([95.155.85.46])
-        by smtp.gmail.com with ESMTPSA id r16sm36117272wrt.68.2021.02.09.11.40.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Feb 2021 11:40:04 -0800 (PST)
-Date:   Tue, 9 Feb 2021 20:40:03 +0100
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
+        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KrGrH6t05k64IsQs/ldEY9uBloIfB5vP9tb8tT8h4Nc=;
+        b=QjzmoqF2yVadvwOeOHmCL7z6stSfGqrrYq9J38jO7bkFBXgw0tGkMXp41OL0E+vV6a
+         +ByKkn8ILFpUcbo6mG0n9Pu9CVkzjEaXig3NRlSIN8S4GhzyyBVF4dddL9np3/Wy7+7v
+         seNTq/lTmH9ILFWE+rJgf8mqbNBV1pEejiEN0jUna9RvfPKqAhHYrUSx5T7FVV32LkKF
+         YqOVycIGW0DurvLefm4wVCzzMA9FrUTh9KWoEkGpui3VLowFsXe6hYdi4bgKInppwAh/
+         78jQxjz1e2YPXSFMvYlHJxbjlTNOLUT/nOI9NVFVETqmnAXJEGLewiSaMOLaVUp8UNbW
+         esAA==
+X-Gm-Message-State: AOAM533DMTv8QNP1llxyWQiFaBEYubRPii+cTHNPSor/UqEOv9CqKGk0
+        IvpgMslMUQLuo7g772fbjDs5aKWNgwubyQiS
+X-Google-Smtp-Source: ABdhPJxjB1qUPzrLvy3VOy7tYDacE8uTzFaZg6oWEQGQzgFvz/yAM9nrnICPlA3cvDhQ6CGY7SBeFw==
+X-Received: by 2002:a19:38e:: with SMTP id 136mr1051183lfd.170.1612943393053;
+        Tue, 09 Feb 2021 23:49:53 -0800 (PST)
+Received: from [10.0.0.113] (91-157-86-155.elisa-laajakaista.fi. [91.157.86.155])
+        by smtp.gmail.com with ESMTPSA id v23sm182573lfo.43.2021.02.09.23.49.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Feb 2021 23:49:52 -0800 (PST)
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v4 15/15] dmaengine: dw-edma: Add pcim_iomap_table return
- checker
-Message-ID: <YCLlE+StUVWjfxqf@rocinante>
-References: <ceb5eb396e417f9e45d39fd5ef565ba77aae6a63.1612389406.git.gustavo.pimentel@synopsys.com>
- <20210208193516.GA406304@bjorn-Precision-5520>
- <DM5PR12MB1835A960892E401D50DEBB9DDA8E9@DM5PR12MB1835.namprd12.prod.outlook.com>
- <YCLR3uB5+GELTXSk@rocinante>
+        Vinod Koul <vkoul@kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210209090036.30832-1-kishon@ti.com>
+ <19488154-22d5-33b4-06a1-17e9a896ae04@gmail.com>
+ <7e06c63d-606b-be78-84ff-d5a5c72f7ad7@ti.com>
+From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+Subject: Re: [PATCH] dmaengine: ti: k3-udma: Fix NULL pointer dereference
+ error
+Message-ID: <35a0a9a0-e938-da54-a500-624b2b6fcdeb@gmail.com>
+Date:   Wed, 10 Feb 2021 09:50:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
+In-Reply-To: <7e06c63d-606b-be78-84ff-d5a5c72f7ad7@ti.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <YCLR3uB5+GELTXSk@rocinante>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Gustavo,
+Hi Kishon,
 
-[...]
-> > That's true, there are a lot of drivers that don't verify that pointer. 
-> > What do you suggest?
-> > 1) To remove the verification so that is aligned with the other drivers
-> > 2) Leave it as is. Or even to add this verification to the other drivers?
-> > 
-> > Either way, I will add the pcim_iomap_table(pdev) before this 
-> > instruction.
-> [...]
+On 2/9/21 2:45 PM, Kishon Vijay Abraham I wrote:
+> Hi Peter,
 > 
-> A lot of the drivers consume the value from pcim_iomap_table() at
-> a given BAR index directly as-is, some check if the pointer they got
-> back is not NULL, a very few also check if the address at a given index
-> is not NULL.
+> On 09/02/21 5:53 pm, Péter Ujfalusi wrote:
+>> Hi Kishon,
+>>
+>> On 2/9/21 11:00 AM, Kishon Vijay Abraham I wrote:
+>>> bcdma_get_*() and udma_get_*() checks if bchan/rchan/tchan/rflow is
+>>> already allocated by checking if it has a NON NULL value. For the
+>>> error cases, bchan/rchan/tchan/rflow will have error value
+>>> and bcdma_get_*() and udma_get_*() considers this as already allocated
+>>> (PASS) since the error values are NON NULL. This results in
+>>> NULL pointer dereference error while de-referencing
+>>> bchan/rchan/tchan/rflow.
+>>
+>> I think this can happen when a channel request fails and we get a second
+>> request coming and faces with the not cleanup up tchan/rchan/bchan/rflow
+>> from the previous failure.
+>> Interesting that I have not faced with this, but it is a valid oversight
+>> from me.
 > 
-> Given that the memory allocation for the table can fail, we ought to
-> check for a NULL pointer.  It's a bit worrying that people decided to
-> consume the value it returns directly without any verification.
+> Thank you for reviewing.
 > 
-> I only found two drivers that perform this additional verification of
-> checking whether the address at a given index is valid, as per:
+> Got into this issue when all the PCIe endpoint functions were requesting
+> for a MEMCOPY channel (total 22 endpoint functions) specifically in
+> bcdma_get_bchan() where the scenario you mentioned above happened.
+
+I see, do we even have 22 bchan allocated for Linux out from the 40? ;)
+
+> Vignesh asked me to fix it for all udma_get_*().
+
+Yes, that is the right thing to do, thank you!
+
+>>
+>>> Reset the value of bchan/rchan/tchan/rflow to NULL if the allocation
+>>> actually fails.
+>>>
+>>> Fixes: 017794739702 ("dmaengine: ti: k3-udma: Initial support for K3 BCDMA")
+>>> Fixes: 25dcb5dd7b7c ("dmaengine: ti: New driver for K3 UDMA")
+>>
+>> Will this patch apply at any of these?
+>> 25dcb5dd7b7c does not have BCDMA (bchan)
+>> 017794739702 does not contain PKTDMA (tflow)
 > 
->   https://lore.kernel.org/linux-pci/YCLFTjZQ2bCfGC+J@rocinante/
-> 
-> Personally, I would opt for (2), and then like you suggested send
-> a separate series to update other drivers so that they also include the
-> this NULL pointer check.
-> 
-> But let's wait for Bjorn's take on this, though.
+> I can probably split this patch
+> 017794739702 for bchan and 25dcb5dd7b7c for bchan/rchan/tchan/rflow
 
-As per Bjorn's reply:
+the tflow support for PKTDMA makes the tchan fix a bit problematic for
+backporting, but it might worth a try to split to bcdma and
+rchan/tchan/rflow patch.
 
-  https://lore.kernel.org/linux-pci/20210209185246.GA494880@bjorn-Precision-5520/
-
-These extra checks I proposed would be definitely too much, especially
-since almost everyone who uses pcim_iomap_table() also calls either
-pcim_iomap_regions() or pcim_iomap_regions_request_all() before
-accessing the table.
-
-There probably is also an opportunity to simplify some of the other
-drivers in the future, especially if do some API changes as per what
-Bjorn suggested.
-
-Sorry for taking your time, and thank you again!
-
-Krzysztof
+-- 
+Péter

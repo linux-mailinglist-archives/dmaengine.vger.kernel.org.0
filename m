@@ -2,33 +2,33 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 850F431A3C2
-	for <lists+dmaengine@lfdr.de>; Fri, 12 Feb 2021 18:41:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F28331A3C3
+	for <lists+dmaengine@lfdr.de>; Fri, 12 Feb 2021 18:41:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231633AbhBLRjG (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 12 Feb 2021 12:39:06 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:42810 "EHLO
+        id S230405AbhBLRjH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 12 Feb 2021 12:39:07 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:42818 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231578AbhBLRi6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 Feb 2021 12:38:58 -0500
+        by vger.kernel.org with ESMTP id S231583AbhBLRi7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 Feb 2021 12:38:59 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3381240C6C;
-        Fri, 12 Feb 2021 17:37:58 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 9222740C63;
+        Fri, 12 Feb 2021 17:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1613151478; bh=oNfEKarVynQpWQYDjVDdd5U8tWSCEBgnT+5HnoYP8SI=;
+        t=1613151479; bh=gCI3nNoPy8dCurab6Uc+GVpEmLeCzjb3I1ubHtDkaBI=;
         h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=TmntaGTv9P/lXSTN2lIe4Ycjb7WRY7f1u1qRieqSYN9EQ0g3FDGthCqLFTIGA/fzF
-         y6v5oi9biK23YgVFgoa34VemwG49uFVIFD4CU942YlpANGrBqqyFBoZrGgniee5VDm
-         thRa2D2gh0PlaoAxPB1U1fPzb9tUzWsaTgE2x3J2qNLr+tp/UACLwEIINa2KBrsHf/
-         8eofWgo/5KlD1JunvSM7DIikoUJ7Q8KpLI3BXc62qLaKXSgEStkSQldjAmQwKpHxoS
-         0DNBIgQhse5zLPpPgZjb/iuluEgXup+L1Wzy5VMBPG9U6vy6ksrmAe3Ccwf+hJOCkW
-         V2AynGDfRhnQQ==
+        b=LnZTP2i+TRNSC4xzHCxJypas+Hg1kQN+ly2qVvVdxgCumE7GBtDnSq0QcSj8nQ0Vk
+         Mf4A/M2WBzxYT+oetbH7p/xUDfdSAZNmTnI3B7IYimbtpbq3zY14BbpgDcwkQJnx4x
+         VmKo/qFmQzsJVe0fcwFcmll2Z7SK0yQe2XwVPEDK4v3A5uWtjHP8yxiCBRF8h5uWrx
+         TZ0dP5p1alaGoh7cIQwfeJn1v8kDjsaEVIxFLu4ESe3z3AegmeRDaJPDHKImtEsjbZ
+         3AUo6yKpgYW5OhoxaT1dGX2PiU5Qnq5FQMwoZt/0jkRFzTyFFW5XrmRB/KHie8DA9l
+         JWX9Xm353J+Lg==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id F0E0CA005C;
-        Fri, 12 Feb 2021 17:37:56 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 5E0E6A005D;
+        Fri, 12 Feb 2021 17:37:58 +0000 (UTC)
 X-SNPS-Relay: synopsys.com
 From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
 To:     dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -36,9 +36,9 @@ To:     dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
         Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: [PATCH v6 02/15] dmaengine: dw-edma: Fix comments offset characters' alignment
-Date:   Fri, 12 Feb 2021 18:37:37 +0100
-Message-Id: <5c0b1ae6eee48c0b72dc807610eb0bc73b13a587.1613151392.git.gustavo.pimentel@synopsys.com>
+Subject: [PATCH v6 03/15] dmaengine: dw-edma: Add support for the HDMA feature
+Date:   Fri, 12 Feb 2021 18:37:38 +0100
+Message-Id: <7d871631910ce66cb310b16c98632f41114576a3.1613151392.git.gustavo.pimentel@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1613151392.git.gustavo.pimentel@synopsys.com>
 References: <cover.1613151392.git.gustavo.pimentel@synopsys.com>
@@ -48,302 +48,223 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Fix comments offset characters' alignment to follow the same structure
-of similar comments.
+Add support for the HDMA feature.
+
+This new feature enables the current eDMA IP to use a deeper prefetch
+of the linked list, which reduces the algorithm execution latency
+observed when loading the elements of the list, causing more stable
+and higher data transfer.
 
 Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 ---
- drivers/dma/dw-edma/dw-edma-v0-regs.h | 214 +++++++++++++++++-----------------
- 1 file changed, 107 insertions(+), 107 deletions(-)
+ drivers/dma/dw-edma/dw-edma-core.h       | 10 ++++----
+ drivers/dma/dw-edma/dw-edma-pcie.c       | 23 ++++++++---------
+ drivers/dma/dw-edma/dw-edma-v0-core.c    | 42 +++++++++++++++++++++++++++++---
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c |  9 +++----
+ 4 files changed, 60 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/dma/dw-edma/dw-edma-v0-regs.h b/drivers/dma/dw-edma/dw-edma-v0-regs.h
-index d07151d..e175f7b 100644
---- a/drivers/dma/dw-edma/dw-edma-v0-regs.h
-+++ b/drivers/dma/dw-edma/dw-edma-v0-regs.h
-@@ -25,177 +25,177 @@
- #define EDMA_V0_CH_EVEN_MSI_DATA_MASK			GENMASK(15, 0)
+diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
+index 31fc50d..3f9593e 100644
+--- a/drivers/dma/dw-edma/dw-edma-core.h
++++ b/drivers/dma/dw-edma/dw-edma-core.h
+@@ -21,9 +21,10 @@ enum dw_edma_dir {
+ 	EDMA_DIR_READ
+ };
  
- struct dw_edma_v0_ch_regs {
--	u32 ch_control1;				/* 0x000 */
--	u32 ch_control2;				/* 0x004 */
--	u32 transfer_size;				/* 0x008 */
-+	u32 ch_control1;				/* 0x0000 */
-+	u32 ch_control2;				/* 0x0004 */
-+	u32 transfer_size;				/* 0x0008 */
- 	union {
--		u64 reg;				/* 0x00c..0x010 */
-+		u64 reg;				/* 0x000c..0x0010 */
- 		struct {
--			u32 lsb;			/* 0x00c */
--			u32 msb;			/* 0x010 */
-+			u32 lsb;			/* 0x000c */
-+			u32 msb;			/* 0x0010 */
- 		};
- 	} sar;
- 	union {
--		u64 reg;				/* 0x014..0x018 */
-+		u64 reg;				/* 0x0014..0x0018 */
- 		struct {
--			u32 lsb;			/* 0x014 */
--			u32 msb;			/* 0x018 */
-+			u32 lsb;			/* 0x0014 */
-+			u32 msb;			/* 0x0018 */
- 		};
- 	} dar;
- 	union {
--		u64 reg;				/* 0x01c..0x020 */
-+		u64 reg;				/* 0x001c..0x0020 */
- 		struct {
--			u32 lsb;			/* 0x01c */
--			u32 msb;			/* 0x020 */
-+			u32 lsb;			/* 0x001c */
-+			u32 msb;			/* 0x0020 */
- 		};
- 	} llp;
- } __packed;
+-enum dw_edma_mode {
+-	EDMA_MODE_LEGACY = 0,
+-	EDMA_MODE_UNROLL
++enum dw_edma_map_format {
++	EDMA_MF_EDMA_LEGACY = 0x0,
++	EDMA_MF_EDMA_UNROLL = 0x1,
++	EDMA_MF_HDMA_COMPAT = 0x5
+ };
  
- struct dw_edma_v0_ch {
--	struct dw_edma_v0_ch_regs wr;			/* 0x200 */
--	u32 padding_1[55];				/* [0x224..0x2fc] */
--	struct dw_edma_v0_ch_regs rd;			/* 0x300 */
--	u32 padding_2[55];				/* [0x324..0x3fc] */
-+	struct dw_edma_v0_ch_regs wr;			/* 0x0200 */
-+	u32 padding_1[55];				/* 0x0224..0x02fc */
-+	struct dw_edma_v0_ch_regs rd;			/* 0x0300 */
-+	u32 padding_2[55];				/* 0x0324..0x03fc */
- } __packed;
+ enum dw_edma_request {
+@@ -123,8 +124,7 @@ struct dw_edma {
+ 	struct dw_edma_irq		*irq;
+ 	int				nr_irqs;
  
- struct dw_edma_v0_unroll {
--	u32 padding_1;					/* 0x0f8 */
--	u32 wr_engine_chgroup;				/* 0x100 */
--	u32 rd_engine_chgroup;				/* 0x104 */
-+	u32 padding_1;					/* 0x00f8 */
-+	u32 wr_engine_chgroup;				/* 0x0100 */
-+	u32 rd_engine_chgroup;				/* 0x0104 */
- 	union {
--		u64 reg;				/* 0x108..0x10c */
-+		u64 reg;				/* 0x0108..0x010c */
- 		struct {
--			u32 lsb;			/* 0x108 */
--			u32 msb;			/* 0x10c */
-+			u32 lsb;			/* 0x0108 */
-+			u32 msb;			/* 0x010c */
- 		};
- 	} wr_engine_hshake_cnt;
--	u32 padding_2[2];				/* [0x110..0x114] */
-+	u32 padding_2[2];				/* 0x0110..0x0114 */
- 	union {
--		u64 reg;				/* 0x120..0x124 */
-+		u64 reg;				/* 0x0120..0x0124 */
- 		struct {
--			u32 lsb;			/* 0x120 */
--			u32 msb;			/* 0x124 */
-+			u32 lsb;			/* 0x0120 */
-+			u32 msb;			/* 0x0124 */
- 		};
- 	} rd_engine_hshake_cnt;
--	u32 padding_3[2];				/* [0x120..0x124] */
--	u32 wr_ch0_pwr_en;				/* 0x128 */
--	u32 wr_ch1_pwr_en;				/* 0x12c */
--	u32 wr_ch2_pwr_en;				/* 0x130 */
--	u32 wr_ch3_pwr_en;				/* 0x134 */
--	u32 wr_ch4_pwr_en;				/* 0x138 */
--	u32 wr_ch5_pwr_en;				/* 0x13c */
--	u32 wr_ch6_pwr_en;				/* 0x140 */
--	u32 wr_ch7_pwr_en;				/* 0x144 */
--	u32 padding_4[8];				/* [0x148..0x164] */
--	u32 rd_ch0_pwr_en;				/* 0x168 */
--	u32 rd_ch1_pwr_en;				/* 0x16c */
--	u32 rd_ch2_pwr_en;				/* 0x170 */
--	u32 rd_ch3_pwr_en;				/* 0x174 */
--	u32 rd_ch4_pwr_en;				/* 0x178 */
--	u32 rd_ch5_pwr_en;				/* 0x18c */
--	u32 rd_ch6_pwr_en;				/* 0x180 */
--	u32 rd_ch7_pwr_en;				/* 0x184 */
--	u32 padding_5[30];				/* [0x188..0x1fc] */
--	struct dw_edma_v0_ch ch[EDMA_V0_MAX_NR_CH];	/* [0x200..0x1120] */
-+	u32 padding_3[2];				/* 0x0120..0x0124 */
-+	u32 wr_ch0_pwr_en;				/* 0x0128 */
-+	u32 wr_ch1_pwr_en;				/* 0x012c */
-+	u32 wr_ch2_pwr_en;				/* 0x0130 */
-+	u32 wr_ch3_pwr_en;				/* 0x0134 */
-+	u32 wr_ch4_pwr_en;				/* 0x0138 */
-+	u32 wr_ch5_pwr_en;				/* 0x013c */
-+	u32 wr_ch6_pwr_en;				/* 0x0140 */
-+	u32 wr_ch7_pwr_en;				/* 0x0144 */
-+	u32 padding_4[8];				/* 0x0148..0x0164 */
-+	u32 rd_ch0_pwr_en;				/* 0x0168 */
-+	u32 rd_ch1_pwr_en;				/* 0x016c */
-+	u32 rd_ch2_pwr_en;				/* 0x0170 */
-+	u32 rd_ch3_pwr_en;				/* 0x0174 */
-+	u32 rd_ch4_pwr_en;				/* 0x0178 */
-+	u32 rd_ch5_pwr_en;				/* 0x018c */
-+	u32 rd_ch6_pwr_en;				/* 0x0180 */
-+	u32 rd_ch7_pwr_en;				/* 0x0184 */
-+	u32 padding_5[30];				/* 0x0188..0x01fc */
-+	struct dw_edma_v0_ch ch[EDMA_V0_MAX_NR_CH];	/* 0x0200..0x1120 */
- } __packed;
+-	u32				version;
+-	enum dw_edma_mode		mode;
++	enum dw_edma_map_format		mf;
  
- struct dw_edma_v0_legacy {
--	u32 viewport_sel;				/* 0x0f8 */
--	struct dw_edma_v0_ch_regs ch;			/* [0x100..0x120] */
-+	u32 viewport_sel;				/* 0x00f8 */
-+	struct dw_edma_v0_ch_regs ch;			/* 0x0100..0x0120 */
- } __packed;
+ 	struct dw_edma_chan		*chan;
+ 	const struct dw_edma_core_ops	*ops;
+diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+index 1eafc60..c130549 100644
+--- a/drivers/dma/dw-edma/dw-edma-pcie.c
++++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+@@ -30,8 +30,7 @@ struct dw_edma_pcie_data {
+ 	off_t				dt_off;
+ 	size_t				dt_sz;
+ 	/* Other */
+-	u32				version;
+-	enum dw_edma_mode		mode;
++	enum dw_edma_map_format		mf;
+ 	u8				irqs;
+ };
  
- struct dw_edma_v0_regs {
- 	/* eDMA global registers */
--	u32 ctrl_data_arb_prior;			/* 0x000 */
--	u32 padding_1;					/* 0x004 */
--	u32 ctrl;					/* 0x008 */
--	u32 wr_engine_en;				/* 0x00c */
--	u32 wr_doorbell;				/* 0x010 */
--	u32 padding_2;					/* 0x014 */
-+	u32 ctrl_data_arb_prior;			/* 0x0000 */
-+	u32 padding_1;					/* 0x0004 */
-+	u32 ctrl;					/* 0x0008 */
-+	u32 wr_engine_en;				/* 0x000c */
-+	u32 wr_doorbell;				/* 0x0010 */
-+	u32 padding_2;					/* 0x0014 */
- 	union {
--		u64 reg;				/* 0x018..0x01c */
-+		u64 reg;				/* 0x0018..0x001c */
- 		struct {
--			u32 lsb;			/* 0x018 */
--			u32 msb;			/* 0x01c */
-+			u32 lsb;			/* 0x0018 */
-+			u32 msb;			/* 0x001c */
- 		};
- 	} wr_ch_arb_weight;
--	u32 padding_3[3];				/* [0x020..0x028] */
--	u32 rd_engine_en;				/* 0x02c */
--	u32 rd_doorbell;				/* 0x030 */
--	u32 padding_4;					/* 0x034 */
-+	u32 padding_3[3];				/* 0x0020..0x0028 */
-+	u32 rd_engine_en;				/* 0x002c */
-+	u32 rd_doorbell;				/* 0x0030 */
-+	u32 padding_4;					/* 0x0034 */
- 	union {
--		u64 reg;				/* 0x038..0x03c */
-+		u64 reg;				/* 0x0038..0x003c */
- 		struct {
--			u32 lsb;			/* 0x038 */
--			u32 msb;			/* 0x03c */
-+			u32 lsb;			/* 0x0038 */
-+			u32 msb;			/* 0x003c */
- 		};
- 	} rd_ch_arb_weight;
--	u32 padding_5[3];				/* [0x040..0x048] */
-+	u32 padding_5[3];				/* 0x0040..0x0048 */
- 	/* eDMA interrupts registers */
--	u32 wr_int_status;				/* 0x04c */
--	u32 padding_6;					/* 0x050 */
--	u32 wr_int_mask;				/* 0x054 */
--	u32 wr_int_clear;				/* 0x058 */
--	u32 wr_err_status;				/* 0x05c */
-+	u32 wr_int_status;				/* 0x004c */
-+	u32 padding_6;					/* 0x0050 */
-+	u32 wr_int_mask;				/* 0x0054 */
-+	u32 wr_int_clear;				/* 0x0058 */
-+	u32 wr_err_status;				/* 0x005c */
- 	union {
--		u64 reg;				/* 0x060..0x064 */
-+		u64 reg;				/* 0x0060..0x0064 */
- 		struct {
--			u32 lsb;			/* 0x060 */
--			u32 msb;			/* 0x064 */
-+			u32 lsb;			/* 0x0060 */
-+			u32 msb;			/* 0x0064 */
- 		};
- 	} wr_done_imwr;
- 	union {
--		u64 reg;				/* 0x068..0x06c */
-+		u64 reg;				/* 0x0068..0x006c */
- 		struct {
--			u32 lsb;			/* 0x068 */
--			u32 msb;			/* 0x06c */
-+			u32 lsb;			/* 0x0068 */
-+			u32 msb;			/* 0x006c */
- 		};
- 	} wr_abort_imwr;
--	u32 wr_ch01_imwr_data;				/* 0x070 */
--	u32 wr_ch23_imwr_data;				/* 0x074 */
--	u32 wr_ch45_imwr_data;				/* 0x078 */
--	u32 wr_ch67_imwr_data;				/* 0x07c */
--	u32 padding_7[4];				/* [0x080..0x08c] */
--	u32 wr_linked_list_err_en;			/* 0x090 */
--	u32 padding_8[3];				/* [0x094..0x09c] */
--	u32 rd_int_status;				/* 0x0a0 */
--	u32 padding_9;					/* 0x0a4 */
--	u32 rd_int_mask;				/* 0x0a8 */
--	u32 rd_int_clear;				/* 0x0ac */
--	u32 padding_10;					/* 0x0b0 */
-+	u32 wr_ch01_imwr_data;				/* 0x0070 */
-+	u32 wr_ch23_imwr_data;				/* 0x0074 */
-+	u32 wr_ch45_imwr_data;				/* 0x0078 */
-+	u32 wr_ch67_imwr_data;				/* 0x007c */
-+	u32 padding_7[4];				/* 0x0080..0x008c */
-+	u32 wr_linked_list_err_en;			/* 0x0090 */
-+	u32 padding_8[3];				/* 0x0094..0x009c */
-+	u32 rd_int_status;				/* 0x00a0 */
-+	u32 padding_9;					/* 0x00a4 */
-+	u32 rd_int_mask;				/* 0x00a8 */
-+	u32 rd_int_clear;				/* 0x00ac */
-+	u32 padding_10;					/* 0x00b0 */
- 	union {
--		u64 reg;				/* 0x0b4..0x0b8 */
-+		u64 reg;				/* 0x00b4..0x00b8 */
- 		struct {
--			u32 lsb;			/* 0x0b4 */
--			u32 msb;			/* 0x0b8 */
-+			u32 lsb;			/* 0x00b4 */
-+			u32 msb;			/* 0x00b8 */
- 		};
- 	} rd_err_status;
--	u32 padding_11[2];				/* [0x0bc..0x0c0] */
--	u32 rd_linked_list_err_en;			/* 0x0c4 */
--	u32 padding_12;					/* 0x0c8 */
-+	u32 padding_11[2];				/* 0x00bc..0x00c0 */
-+	u32 rd_linked_list_err_en;			/* 0x00c4 */
-+	u32 padding_12;					/* 0x00c8 */
- 	union {
--		u64 reg;				/* 0x0cc..0x0d0 */
-+		u64 reg;				/* 0x00cc..0x00d0 */
- 		struct {
--			u32 lsb;			/* 0x0cc */
--			u32 msb;			/* 0x0d0 */
-+			u32 lsb;			/* 0x00cc */
-+			u32 msb;			/* 0x00d0 */
- 		};
- 	} rd_done_imwr;
- 	union {
--		u64 reg;				/* 0x0d4..0x0d8 */
-+		u64 reg;				/* 0x00d4..0x00d8 */
- 		struct {
--			u32 lsb;			/* 0x0d4 */
--			u32 msb;			/* 0x0d8 */
-+			u32 lsb;			/* 0x00d4 */
-+			u32 msb;			/* 0x00d8 */
- 		};
- 	} rd_abort_imwr;
--	u32 rd_ch01_imwr_data;				/* 0x0dc */
--	u32 rd_ch23_imwr_data;				/* 0x0e0 */
--	u32 rd_ch45_imwr_data;				/* 0x0e4 */
--	u32 rd_ch67_imwr_data;				/* 0x0e8 */
--	u32 padding_13[4];				/* [0x0ec..0x0f8] */
-+	u32 rd_ch01_imwr_data;				/* 0x00dc */
-+	u32 rd_ch23_imwr_data;				/* 0x00e0 */
-+	u32 rd_ch45_imwr_data;				/* 0x00e4 */
-+	u32 rd_ch67_imwr_data;				/* 0x00e8 */
-+	u32 padding_13[4];				/* 0x00ec..0x00f8 */
- 	/* eDMA channel context grouping */
- 	union dw_edma_v0_type {
--		struct dw_edma_v0_legacy legacy;	/* [0x0f8..0x120] */
--		struct dw_edma_v0_unroll unroll;	/* [0x0f8..0x1120] */
-+		struct dw_edma_v0_legacy legacy;	/* 0x00f8..0x0120 */
-+		struct dw_edma_v0_unroll unroll;	/* 0x00f8..0x1120 */
- 	} type;
- } __packed;
+@@ -49,8 +48,7 @@ static const struct dw_edma_pcie_data snps_edda_data = {
+ 	.dt_off				= 0x00800000,	/*  8 Mbytes */
+ 	.dt_sz				= 0x03800000,	/* 56 Mbytes */
+ 	/* Other */
+-	.version			= 0,
+-	.mode				= EDMA_MODE_UNROLL,
++	.mf				= EDMA_MF_EDMA_UNROLL,
+ 	.irqs				= 1,
+ };
+ 
+@@ -69,8 +67,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 	const struct dw_edma_pcie_data *pdata = (void *)pid->driver_data;
+ 	struct device *dev = &pdev->dev;
+ 	struct dw_edma_chip *chip;
+-	int err, nr_irqs;
+ 	struct dw_edma *dw;
++	int err, nr_irqs;
+ 
+ 	/* Enable PCI device */
+ 	err = pcim_enable_device(pdev);
+@@ -157,16 +155,19 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 	dw->dt_region.paddr += pdata->dt_off;
+ 	dw->dt_region.sz = pdata->dt_sz;
+ 
+-	dw->version = pdata->version;
+-	dw->mode = pdata->mode;
++	dw->mf = pdata->mf;
+ 	dw->nr_irqs = nr_irqs;
+ 	dw->ops = &dw_edma_pcie_core_ops;
+ 
+ 	/* Debug info */
+-	pci_dbg(pdev, "Version:\t%u\n", dw->version);
+-
+-	pci_dbg(pdev, "Mode:\t%s\n",
+-		dw->mode == EDMA_MODE_LEGACY ? "Legacy" : "Unroll");
++	if (dw->mf == EDMA_MF_EDMA_LEGACY)
++		pci_dbg(pdev, "Version:\teDMA Port Logic (0x%x)\n", dw->mf);
++	else if (dw->mf == EDMA_MF_EDMA_UNROLL)
++		pci_dbg(pdev, "Version:\teDMA Unroll (0x%x)\n", dw->mf);
++	else if (dw->mf == EDMA_MF_HDMA_COMPAT)
++		pci_dbg(pdev, "Version:\tHDMA Compatible (0x%x)\n", dw->mf);
++	else
++		pci_dbg(pdev, "Version:\tUnknown (0x%x)\n", dw->mf);
+ 
+ 	pci_dbg(pdev, "Registers:\tBAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
+ 		pdata->rg_bar, pdata->rg_off, pdata->rg_sz,
+diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
+index 7888eda..5b0541a 100644
+--- a/drivers/dma/dw-edma/dw-edma-v0-core.c
++++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
+@@ -96,7 +96,7 @@ static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
+ static inline struct dw_edma_v0_ch_regs __iomem *
+ __dw_ch_regs(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch)
+ {
+-	if (dw->mode == EDMA_MODE_LEGACY)
++	if (dw->mf == EDMA_MF_EDMA_LEGACY)
+ 		return &(__dw_regs(dw)->type.legacy.ch);
+ 
+ 	if (dir == EDMA_DIR_WRITE)
+@@ -108,7 +108,7 @@ __dw_ch_regs(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch)
+ static inline void writel_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+ 			     u32 value, void __iomem *addr)
+ {
+-	if (dw->mode == EDMA_MODE_LEGACY) {
++	if (dw->mf == EDMA_MF_EDMA_LEGACY) {
+ 		u32 viewport_sel;
+ 		unsigned long flags;
+ 
+@@ -133,7 +133,7 @@ static inline u32 readl_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
+ {
+ 	u32 value;
+ 
+-	if (dw->mode == EDMA_MODE_LEGACY) {
++	if (dw->mf == EDMA_MF_EDMA_LEGACY) {
+ 		u32 viewport_sel;
+ 		unsigned long flags;
+ 
+@@ -365,6 +365,42 @@ void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+ 	if (first) {
+ 		/* Enable engine */
+ 		SET_RW_32(dw, chan->dir, engine_en, BIT(0));
++		if (dw->mf == EDMA_MF_HDMA_COMPAT) {
++			switch (chan->id) {
++			case 0:
++				SET_RW_COMPAT(dw, chan->dir, ch0_pwr_en,
++					      BIT(0));
++				break;
++			case 1:
++				SET_RW_COMPAT(dw, chan->dir, ch1_pwr_en,
++					      BIT(0));
++				break;
++			case 2:
++				SET_RW_COMPAT(dw, chan->dir, ch2_pwr_en,
++					      BIT(0));
++				break;
++			case 3:
++				SET_RW_COMPAT(dw, chan->dir, ch3_pwr_en,
++					      BIT(0));
++				break;
++			case 4:
++				SET_RW_COMPAT(dw, chan->dir, ch4_pwr_en,
++					      BIT(0));
++				break;
++			case 5:
++				SET_RW_COMPAT(dw, chan->dir, ch5_pwr_en,
++					      BIT(0));
++				break;
++			case 6:
++				SET_RW_COMPAT(dw, chan->dir, ch6_pwr_en,
++					      BIT(0));
++				break;
++			case 7:
++				SET_RW_COMPAT(dw, chan->dir, ch7_pwr_en,
++					      BIT(0));
++				break;
++			}
++		}
+ 		/* Interrupt unmask - done, abort */
+ 		tmp = GET_RW_32(dw, chan->dir, int_mask);
+ 		tmp &= ~FIELD_PREP(EDMA_V0_DONE_INT_MASK, BIT(chan->id));
+diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+index a5e2783..157dfc2 100644
+--- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
++++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
+@@ -55,7 +55,7 @@ struct debugfs_entries {
+ static int dw_edma_debugfs_u32_get(void *data, u64 *val)
+ {
+ 	void __iomem *reg = (void __force __iomem *)data;
+-	if (dw->mode == EDMA_MODE_LEGACY &&
++	if (dw->mf == EDMA_MF_EDMA_LEGACY &&
+ 	    reg >= (void __iomem *)&regs->type.legacy.ch) {
+ 		void __iomem *ptr = &regs->type.legacy.ch;
+ 		u32 viewport_sel = 0;
+@@ -174,7 +174,7 @@ static void dw_edma_debugfs_regs_wr(struct dentry *dir)
+ 	nr_entries = ARRAY_SIZE(debugfs_regs);
+ 	dw_edma_debugfs_create_x32(debugfs_regs, nr_entries, regs_dir);
+ 
+-	if (dw->mode == EDMA_MODE_UNROLL) {
++	if (dw->mf == EDMA_MF_HDMA_COMPAT) {
+ 		nr_entries = ARRAY_SIZE(debugfs_unroll_regs);
+ 		dw_edma_debugfs_create_x32(debugfs_unroll_regs, nr_entries,
+ 					   regs_dir);
+@@ -243,7 +243,7 @@ static void dw_edma_debugfs_regs_rd(struct dentry *dir)
+ 	nr_entries = ARRAY_SIZE(debugfs_regs);
+ 	dw_edma_debugfs_create_x32(debugfs_regs, nr_entries, regs_dir);
+ 
+-	if (dw->mode == EDMA_MODE_UNROLL) {
++	if (dw->mf == EDMA_MF_HDMA_COMPAT) {
+ 		nr_entries = ARRAY_SIZE(debugfs_unroll_regs);
+ 		dw_edma_debugfs_create_x32(debugfs_unroll_regs, nr_entries,
+ 					   regs_dir);
+@@ -297,8 +297,7 @@ void dw_edma_v0_debugfs_on(struct dw_edma_chip *chip)
+ 	if (!base_dir)
+ 		return;
+ 
+-	debugfs_create_u32("version", 0444, base_dir, &dw->version);
+-	debugfs_create_u32("mode", 0444, base_dir, &dw->mode);
++	debugfs_create_u32("mf", 0444, base_dir, &dw->mf);
+ 	debugfs_create_u16("wr_ch_cnt", 0444, base_dir, &dw->wr_ch_cnt);
+ 	debugfs_create_u16("rd_ch_cnt", 0444, base_dir, &dw->rd_ch_cnt);
  
 -- 
 2.7.4

@@ -2,33 +2,33 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0006731A3C9
-	for <lists+dmaengine@lfdr.de>; Fri, 12 Feb 2021 18:41:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 06AA031A3CB
+	for <lists+dmaengine@lfdr.de>; Fri, 12 Feb 2021 18:41:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231304AbhBLRjP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 12 Feb 2021 12:39:15 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:43124 "EHLO
+        id S231708AbhBLRjU (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 12 Feb 2021 12:39:20 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:42832 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229558AbhBLRjC (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 Feb 2021 12:39:02 -0500
+        by vger.kernel.org with ESMTP id S231590AbhBLRjD (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 12 Feb 2021 12:39:03 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 0A104C0449;
-        Fri, 12 Feb 2021 17:38:02 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1192640C71;
+        Fri, 12 Feb 2021 17:38:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1613151482; bh=mqpxtqFpeCxOcaURM+et9i8Cdo/5Z1SDrTDiihayjD4=;
+        t=1613151483; bh=ZwuAEc7PYGYf65aM+oFkF22mTyotdTO38xdBbdz9Hvs=;
         h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=QGY5xJULgCjUDXGECNpXifKFH/PIamMMH918EW0xoOc//GJ3e+vtFhXly9KndF4pN
-         213Bqb6Iqtn9PhEuizRHG1dzHAiFm/bTUp8c+0zJdgYpELkLPd6t4jpNrurmphLqfX
-         UJqxB17LDeXuPRFwpYcfR5q8VLcsswAdOxNZAsudZCIr4DteellN0e9s1dJp7fIHgD
-         fMao/G88vX1ai8EZNC/L8yug9XBKh2KZPEvhys4BeP2rwYQdFI76NMeMQxHq3yhfJ6
-         pg//hPyCAAHfXh6oiIhCOsGHr0PRlDEPoMTTXxE5wgVlxjNCMHnJKvIbM68JDCQ09B
-         2LQYYrWhpeOSw==
+        b=Ec8T1vxvkhUAXZxLhsGol+sz0pzDn8o55dKo76oaB9/DW6bB1Jze++bQgn8vy4j/j
+         FKFEV9K553T5z8h5krOXTh4M7X589+iuVJn9TYaacw/MtFHbrTOw2XUicRDTja+JUu
+         RY/S3sNw9QtIU9/s10glAk6+Bs81gBjhEe+PzCxpPFuQA097r3pdDynTMn7yHbSEp+
+         rkmJkdCdxhSYAijc/iRDhNyoiPESJ4Rpjz8bBep13ngHWzlBrCEO+a9iQBXygR5voB
+         OeMnIDxhy151xP0L/JEXm2KoiyFtSEHoIRpOvfrV9Gcu4or2H0pwvuwqJy0jGZpoO0
+         52lzsIhhts4Qw==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id BAB83A005D;
-        Fri, 12 Feb 2021 17:38:00 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id D8506A005C;
+        Fri, 12 Feb 2021 17:38:01 +0000 (UTC)
 X-SNPS-Relay: synopsys.com
 From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
 To:     dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -36,9 +36,9 @@ To:     dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
         Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: [PATCH v6 05/15] dmaengine: dw-edma: Add PCIe VSEC data retrieval support
-Date:   Fri, 12 Feb 2021 18:37:40 +0100
-Message-Id: <3b010e264513883c232a946406fdc4fc83ebd2f6.1613151392.git.gustavo.pimentel@synopsys.com>
+Subject: [PATCH v6 06/15] dmaengine: dw-edma: Add device_prep_interleave_dma() support
+Date:   Fri, 12 Feb 2021 18:37:41 +0100
+Message-Id: <6198741830ade5d7e177de3726ea3b0736be22be.1613151392.git.gustavo.pimentel@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1613151392.git.gustavo.pimentel@synopsys.com>
 References: <cover.1613151392.git.gustavo.pimentel@synopsys.com>
@@ -48,237 +48,234 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The latest eDMA IP development implements a Vendor-Specific Extended
-Capability that contains the eDMA BAR, offset, map format, and the
-number of read/write channels available.
+Add device_prep_interleave_dma() support to Synopsys DMA driver.
+
+This feature implements a similar data transfer mechanism to the
+scatter-gather implementation.
 
 Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 ---
- drivers/dma/dw-edma/dw-edma-core.c |  20 ++++---
- drivers/dma/dw-edma/dw-edma-pcie.c | 114 ++++++++++++++++++++++++++++---------
- 2 files changed, 99 insertions(+), 35 deletions(-)
+ drivers/dma/dw-edma/dw-edma-core.c | 85 ++++++++++++++++++++++++++++++--------
+ drivers/dma/dw-edma/dw-edma-core.h | 13 ++++--
+ 2 files changed, 78 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index b971505..b65c32e1 100644
+index b65c32e1..0fe3835 100644
 --- a/drivers/dma/dw-edma/dw-edma-core.c
 +++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -863,15 +863,19 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+@@ -329,7 +329,7 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+ 	struct dw_edma_chunk *chunk;
+ 	struct dw_edma_burst *burst;
+ 	struct dw_edma_desc *desc;
+-	u32 cnt;
++	u32 cnt = 0;
+ 	int i;
  
- 	raw_spin_lock_init(&dw->lock);
- 
--	/* Find out how many write channels are supported by hardware */
--	dw->wr_ch_cnt = dw_edma_v0_core_ch_count(dw, EDMA_DIR_WRITE);
--	if (!dw->wr_ch_cnt)
--		return -EINVAL;
-+	if (!dw->wr_ch_cnt) {
-+		/* Find out how many write channels are supported by hardware */
-+		dw->wr_ch_cnt = dw_edma_v0_core_ch_count(dw, EDMA_DIR_WRITE);
-+		if (!dw->wr_ch_cnt)
-+			return -EINVAL;
-+	}
- 
--	/* Find out how many read channels are supported by hardware */
--	dw->rd_ch_cnt = dw_edma_v0_core_ch_count(dw, EDMA_DIR_READ);
--	if (!dw->rd_ch_cnt)
--		return -EINVAL;
-+	if (!dw->rd_ch_cnt) {
-+		/* Find out how many read channels are supported by hardware */
-+		dw->rd_ch_cnt = dw_edma_v0_core_ch_count(dw, EDMA_DIR_READ);
-+		if (!dw->rd_ch_cnt)
-+			return -EINVAL;
-+	}
- 
- 	dev_vdbg(dev, "Channels:\twrite=%d, read=%d\n",
- 		 dw->wr_ch_cnt, dw->rd_ch_cnt);
-diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-index c130549..1ddea34 100644
---- a/drivers/dma/dw-edma/dw-edma-pcie.c
-+++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-@@ -13,9 +13,16 @@
- #include <linux/dma/edma.h>
- #include <linux/pci-epf.h>
- #include <linux/msi.h>
-+#include <linux/bitfield.h>
- 
- #include "dw-edma-core.h"
- 
-+#define DW_PCIE_VSEC_DMA_ID			0x6
-+#define DW_PCIE_VSEC_DMA_BAR			GENMASK(10, 8)
-+#define DW_PCIE_VSEC_DMA_MAP			GENMASK(2, 0)
-+#define DW_PCIE_VSEC_DMA_RD_CH			GENMASK(25, 16)
-+#define DW_PCIE_VSEC_DMA_WR_CH			GENMASK(9, 0)
-+
- struct dw_edma_pcie_data {
- 	/* eDMA registers location */
- 	enum pci_barno			rg_bar;
-@@ -32,6 +39,8 @@ struct dw_edma_pcie_data {
- 	/* Other */
- 	enum dw_edma_map_format		mf;
- 	u8				irqs;
-+	u16				rd_ch_cnt;
-+	u16				wr_ch_cnt;
- };
- 
- static const struct dw_edma_pcie_data snps_edda_data = {
-@@ -50,6 +59,8 @@ static const struct dw_edma_pcie_data snps_edda_data = {
- 	/* Other */
- 	.mf				= EDMA_MF_EDMA_UNROLL,
- 	.irqs				= 1,
-+	.rd_ch_cnt			= 0,
-+	.wr_ch_cnt			= 0,
- };
- 
- static int dw_edma_pcie_irq_vector(struct device *dev, unsigned int nr)
-@@ -61,10 +72,49 @@ static const struct dw_edma_core_ops dw_edma_pcie_core_ops = {
- 	.irq_vector = dw_edma_pcie_irq_vector,
- };
- 
-+static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
-+					   struct dw_edma_pcie_data *pdata)
-+{
-+	u32 val, map;
-+	u16 vsec;
-+	u64 off;
-+
-+	vsec = pci_find_vsec_capability(pdev, DW_PCIE_VSEC_DMA_ID);
-+	if (!vsec)
-+		return;
-+
-+	pci_read_config_dword(pdev, vsec + PCI_VSEC_HEADER, &val);
-+	if (PCI_VSEC_CAP_REV(val) != 0x00 || PCI_VSEC_CAP_LEN(val) != 0x18)
-+		return;
-+
-+	pci_dbg(pdev, "Detected PCIe Vendor-Specific Extended Capability DMA\n");
-+	pci_read_config_dword(pdev, vsec + 0x8, &val);
-+	map = FIELD_GET(DW_PCIE_VSEC_DMA_MAP, val);
-+	if (map != EDMA_MF_EDMA_LEGACY &&
-+	    map != EDMA_MF_EDMA_UNROLL &&
-+	    map != EDMA_MF_HDMA_COMPAT)
-+		return;
-+
-+	pdata->mf = map;
-+	pdata->rg_bar = FIELD_GET(DW_PCIE_VSEC_DMA_BAR, val);
-+
-+	pci_read_config_dword(pdev, vsec + 0xc, &val);
-+	pdata->rd_ch_cnt = FIELD_GET(DW_PCIE_VSEC_DMA_RD_CH, val);
-+	pdata->wr_ch_cnt = FIELD_GET(DW_PCIE_VSEC_DMA_WR_CH, val);
-+
-+	pci_read_config_dword(pdev, vsec + 0x14, &val);
-+	off = val;
-+	pci_read_config_dword(pdev, vsec + 0x10, &val);
-+	off <<= 32;
-+	off |= val;
-+	pdata->rg_off = off;
-+}
-+
- static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 			      const struct pci_device_id *pid)
- {
--	const struct dw_edma_pcie_data *pdata = (void *)pid->driver_data;
-+	struct dw_edma_pcie_data *pdata = (void *)pid->driver_data;
-+	struct dw_edma_pcie_data vsec_data;
- 	struct device *dev = &pdev->dev;
- 	struct dw_edma_chip *chip;
- 	struct dw_edma *dw;
-@@ -77,10 +127,18 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 		return err;
+ 	if (!chan->configured)
+@@ -352,12 +352,19 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+ 		return NULL;
  	}
  
-+	memcpy(&vsec_data, pdata, sizeof(struct dw_edma_pcie_data));
+-	if (xfer->cyclic) {
++	if (xfer->type == EDMA_XFER_CYCLIC) {
+ 		if (!xfer->xfer.cyclic.len || !xfer->xfer.cyclic.cnt)
+ 			return NULL;
+-	} else {
++	} else if (xfer->type == EDMA_XFER_SCATTER_GATHER) {
+ 		if (xfer->xfer.sg.len < 1)
+ 			return NULL;
++	} else if (xfer->type == EDMA_XFER_INTERLEAVED) {
++		if (!xfer->xfer.il->numf)
++			return NULL;
++		if (xfer->xfer.il->numf > 0 && xfer->xfer.il->frame_size > 0)
++			return NULL;
++	} else {
++		return NULL;
+ 	}
+ 
+ 	desc = dw_edma_alloc_desc(chan);
+@@ -368,18 +375,28 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+ 	if (unlikely(!chunk))
+ 		goto err_alloc;
+ 
+-	src_addr = chan->config.src_addr;
+-	dst_addr = chan->config.dst_addr;
++	if (xfer->type == EDMA_XFER_INTERLEAVED) {
++		src_addr = xfer->xfer.il->src_start;
++		dst_addr = xfer->xfer.il->dst_start;
++	} else {
++		src_addr = chan->config.src_addr;
++		dst_addr = chan->config.dst_addr;
++	}
+ 
+-	if (xfer->cyclic) {
++	if (xfer->type == EDMA_XFER_CYCLIC) {
+ 		cnt = xfer->xfer.cyclic.cnt;
+-	} else {
++	} else if (xfer->type == EDMA_XFER_SCATTER_GATHER) {
+ 		cnt = xfer->xfer.sg.len;
+ 		sg = xfer->xfer.sg.sgl;
++	} else if (xfer->type == EDMA_XFER_INTERLEAVED) {
++		if (xfer->xfer.il->numf > 0)
++			cnt = xfer->xfer.il->numf;
++		else
++			cnt = xfer->xfer.il->frame_size;
+ 	}
+ 
+ 	for (i = 0; i < cnt; i++) {
+-		if (!xfer->cyclic && !sg)
++		if (xfer->type == EDMA_XFER_SCATTER_GATHER && !sg)
+ 			break;
+ 
+ 		if (chunk->bursts_alloc == chan->ll_max) {
+@@ -392,19 +409,21 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+ 		if (unlikely(!burst))
+ 			goto err_alloc;
+ 
+-		if (xfer->cyclic)
++		if (xfer->type == EDMA_XFER_CYCLIC)
+ 			burst->sz = xfer->xfer.cyclic.len;
+-		else
++		else if (xfer->type == EDMA_XFER_SCATTER_GATHER)
+ 			burst->sz = sg_dma_len(sg);
++		else if (xfer->type == EDMA_XFER_INTERLEAVED)
++			burst->sz = xfer->xfer.il->sgl[i].size;
+ 
+ 		chunk->ll_region.sz += burst->sz;
+ 		desc->alloc_sz += burst->sz;
+ 
+ 		if (chan->dir == EDMA_DIR_WRITE) {
+ 			burst->sar = src_addr;
+-			if (xfer->cyclic) {
++			if (xfer->type == EDMA_XFER_CYCLIC) {
+ 				burst->dar = xfer->xfer.cyclic.paddr;
+-			} else {
++			} else if (xfer->type == EDMA_XFER_SCATTER_GATHER) {
+ 				burst->dar = dst_addr;
+ 				/* Unlike the typical assumption by other
+ 				 * drivers/IPs the peripheral memory isn't
+@@ -416,9 +435,9 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+ 			}
+ 		} else {
+ 			burst->dar = dst_addr;
+-			if (xfer->cyclic) {
++			if (xfer->type == EDMA_XFER_CYCLIC) {
+ 				burst->sar = xfer->xfer.cyclic.paddr;
+-			} else {
++			} else if (xfer->type == EDMA_XFER_SCATTER_GATHER) {
+ 				burst->sar = src_addr;
+ 				/* Unlike the typical assumption by other
+ 				 * drivers/IPs the peripheral memory isn't
+@@ -430,10 +449,24 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
+ 			}
+ 		}
+ 
+-		if (!xfer->cyclic) {
++		if (xfer->type == EDMA_XFER_SCATTER_GATHER) {
+ 			src_addr += sg_dma_len(sg);
+ 			dst_addr += sg_dma_len(sg);
+ 			sg = sg_next(sg);
++		} else if (xfer->type == EDMA_XFER_INTERLEAVED &&
++			   xfer->xfer.il->frame_size > 0) {
++			struct dma_interleaved_template *il = xfer->xfer.il;
++			struct data_chunk *dc = &il->sgl[i];
 +
-+	/*
-+	 * Tries to find if exists a PCIe Vendor-Specific Extended Capability
-+	 * for the DMA, if one exists, then reconfigures it.
-+	 */
-+	dw_edma_pcie_get_vsec_dma_data(pdev, &vsec_data);
++			if (il->src_sgl) {
++				src_addr += burst->sz;
++				src_addr += dmaengine_get_src_icg(il, dc);
++			}
 +
- 	/* Mapping PCI BAR regions */
--	err = pcim_iomap_regions(pdev, BIT(pdata->rg_bar) |
--				       BIT(pdata->ll_bar) |
--				       BIT(pdata->dt_bar),
-+	err = pcim_iomap_regions(pdev, BIT(vsec_data.rg_bar) |
-+				       BIT(vsec_data.ll_bar) |
-+				       BIT(vsec_data.dt_bar),
- 				 pci_name(pdev));
- 	if (err) {
- 		pci_err(pdev, "eDMA BAR I/O remapping failed\n");
-@@ -123,7 +181,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 		return -ENOMEM;
++			if (il->dst_sgl) {
++				dst_addr += burst->sz;
++				dst_addr += dmaengine_get_dst_icg(il, dc);
++			}
+ 		}
+ 	}
  
- 	/* IRQs allocation */
--	nr_irqs = pci_alloc_irq_vectors(pdev, 1, pdata->irqs,
-+	nr_irqs = pci_alloc_irq_vectors(pdev, 1, vsec_data.irqs,
- 					PCI_IRQ_MSI | PCI_IRQ_MSIX);
- 	if (nr_irqs < 1) {
- 		pci_err(pdev, "fail to alloc IRQ vector (number of IRQs=%u)\n",
-@@ -137,27 +195,29 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 	chip->id = pdev->devfn;
- 	chip->irq = pdev->irq;
+@@ -459,7 +492,7 @@ dw_edma_device_prep_slave_sg(struct dma_chan *dchan, struct scatterlist *sgl,
+ 	xfer.xfer.sg.sgl = sgl;
+ 	xfer.xfer.sg.len = len;
+ 	xfer.flags = flags;
+-	xfer.cyclic = false;
++	xfer.type = EDMA_XFER_SCATTER_GATHER;
  
--	dw->rg_region.vaddr = pcim_iomap_table(pdev)[pdata->rg_bar];
--	dw->rg_region.vaddr += pdata->rg_off;
--	dw->rg_region.paddr = pdev->resource[pdata->rg_bar].start;
--	dw->rg_region.paddr += pdata->rg_off;
--	dw->rg_region.sz = pdata->rg_sz;
--
--	dw->ll_region.vaddr = pcim_iomap_table(pdev)[pdata->ll_bar];
--	dw->ll_region.vaddr += pdata->ll_off;
--	dw->ll_region.paddr = pdev->resource[pdata->ll_bar].start;
--	dw->ll_region.paddr += pdata->ll_off;
--	dw->ll_region.sz = pdata->ll_sz;
--
--	dw->dt_region.vaddr = pcim_iomap_table(pdev)[pdata->dt_bar];
--	dw->dt_region.vaddr += pdata->dt_off;
--	dw->dt_region.paddr = pdev->resource[pdata->dt_bar].start;
--	dw->dt_region.paddr += pdata->dt_off;
--	dw->dt_region.sz = pdata->dt_sz;
--
--	dw->mf = pdata->mf;
-+	dw->rg_region.vaddr = pcim_iomap_table(pdev)[vsec_data.rg_bar];
-+	dw->rg_region.vaddr += vsec_data.rg_off;
-+	dw->rg_region.paddr = pdev->resource[vsec_data.rg_bar].start;
-+	dw->rg_region.paddr += vsec_data.rg_off;
-+	dw->rg_region.sz = vsec_data.rg_sz;
+ 	return dw_edma_device_transfer(&xfer);
+ }
+@@ -478,7 +511,23 @@ dw_edma_device_prep_dma_cyclic(struct dma_chan *dchan, dma_addr_t paddr,
+ 	xfer.xfer.cyclic.len = len;
+ 	xfer.xfer.cyclic.cnt = count;
+ 	xfer.flags = flags;
+-	xfer.cyclic = true;
++	xfer.type = EDMA_XFER_CYCLIC;
 +
-+	dw->ll_region.vaddr = pcim_iomap_table(pdev)[vsec_data.ll_bar];
-+	dw->ll_region.vaddr += vsec_data.ll_off;
-+	dw->ll_region.paddr = pdev->resource[vsec_data.ll_bar].start;
-+	dw->ll_region.paddr += vsec_data.ll_off;
-+	dw->ll_region.sz = vsec_data.ll_sz;
++	return dw_edma_device_transfer(&xfer);
++}
 +
-+	dw->dt_region.vaddr = pcim_iomap_table(pdev)[vsec_data.dt_bar];
-+	dw->dt_region.vaddr += vsec_data.dt_off;
-+	dw->dt_region.paddr = pdev->resource[vsec_data.dt_bar].start;
-+	dw->dt_region.paddr += vsec_data.dt_off;
-+	dw->dt_region.sz = vsec_data.dt_sz;
++static struct dma_async_tx_descriptor *
++dw_edma_device_prep_interleaved_dma(struct dma_chan *dchan,
++				    struct dma_interleaved_template *ilt,
++				    unsigned long flags)
++{
++	struct dw_edma_transfer xfer;
 +
-+	dw->mf = vsec_data.mf;
- 	dw->nr_irqs = nr_irqs;
- 	dw->ops = &dw_edma_pcie_core_ops;
-+	dw->rd_ch_cnt = vsec_data.rd_ch_cnt;
-+	dw->wr_ch_cnt = vsec_data.wr_ch_cnt;
++	xfer.dchan = dchan;
++	xfer.direction = ilt->dir;
++	xfer.xfer.il = ilt;
++	xfer.flags = flags;
++	xfer.type = EDMA_XFER_INTERLEAVED;
  
- 	/* Debug info */
- 	if (dw->mf == EDMA_MF_EDMA_LEGACY)
-@@ -170,15 +230,15 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 		pci_dbg(pdev, "Version:\tUnknown (0x%x)\n", dw->mf);
+ 	return dw_edma_device_transfer(&xfer);
+ }
+@@ -738,6 +787,7 @@ static int dw_edma_channel_setup(struct dw_edma_chip *chip, bool write,
+ 	dma_cap_set(DMA_SLAVE, dma->cap_mask);
+ 	dma_cap_set(DMA_CYCLIC, dma->cap_mask);
+ 	dma_cap_set(DMA_PRIVATE, dma->cap_mask);
++	dma_cap_set(DMA_INTERLEAVE, dma->cap_mask);
+ 	dma->directions = BIT(write ? DMA_DEV_TO_MEM : DMA_MEM_TO_DEV);
+ 	dma->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+ 	dma->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
+@@ -756,6 +806,7 @@ static int dw_edma_channel_setup(struct dw_edma_chip *chip, bool write,
+ 	dma->device_tx_status = dw_edma_device_tx_status;
+ 	dma->device_prep_slave_sg = dw_edma_device_prep_slave_sg;
+ 	dma->device_prep_dma_cyclic = dw_edma_device_prep_dma_cyclic;
++	dma->device_prep_interleaved_dma = dw_edma_device_prep_interleaved_dma;
  
- 	pci_dbg(pdev, "Registers:\tBAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
--		pdata->rg_bar, pdata->rg_off, pdata->rg_sz,
-+		vsec_data.rg_bar, vsec_data.rg_off, vsec_data.rg_sz,
- 		dw->rg_region.vaddr, &dw->rg_region.paddr);
+ 	dma_set_max_seg_size(dma->dev, U32_MAX);
  
- 	pci_dbg(pdev, "L. List:\tBAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
--		pdata->ll_bar, pdata->ll_off, pdata->ll_sz,
-+		vsec_data.ll_bar, vsec_data.ll_off, vsec_data.ll_sz,
- 		dw->ll_region.vaddr, &dw->ll_region.paddr);
+diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
+index 3f9593e..f72ebaa 100644
+--- a/drivers/dma/dw-edma/dw-edma-core.h
++++ b/drivers/dma/dw-edma/dw-edma-core.h
+@@ -39,6 +39,12 @@ enum dw_edma_status {
+ 	EDMA_ST_BUSY
+ };
  
- 	pci_dbg(pdev, "Data:\tBAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
--		pdata->dt_bar, pdata->dt_off, pdata->dt_sz,
-+		vsec_data.dt_bar, vsec_data.dt_off, vsec_data.dt_sz,
- 		dw->dt_region.vaddr, &dw->dt_region.paddr);
++enum dw_edma_xfer_type {
++	EDMA_XFER_SCATTER_GATHER = 0,
++	EDMA_XFER_CYCLIC,
++	EDMA_XFER_INTERLEAVED
++};
++
+ struct dw_edma_chan;
+ struct dw_edma_chunk;
  
- 	pci_dbg(pdev, "Nr. IRQs:\t%u\n", dw->nr_irqs);
+@@ -146,12 +152,13 @@ struct dw_edma_cyclic {
+ struct dw_edma_transfer {
+ 	struct dma_chan			*dchan;
+ 	union dw_edma_xfer {
+-		struct dw_edma_sg	sg;
+-		struct dw_edma_cyclic	cyclic;
++		struct dw_edma_sg		sg;
++		struct dw_edma_cyclic		cyclic;
++		struct dma_interleaved_template *il;
+ 	} xfer;
+ 	enum dma_transfer_direction	direction;
+ 	unsigned long			flags;
+-	bool				cyclic;
++	enum dw_edma_xfer_type		type;
+ };
+ 
+ static inline
 -- 
 2.7.4
 

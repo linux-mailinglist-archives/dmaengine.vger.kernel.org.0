@@ -2,72 +2,83 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6E5031AED5
-	for <lists+dmaengine@lfdr.de>; Sun, 14 Feb 2021 04:44:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 21FE831B07F
+	for <lists+dmaengine@lfdr.de>; Sun, 14 Feb 2021 14:24:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229713AbhBNDon (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 13 Feb 2021 22:44:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33912 "EHLO
+        id S229793AbhBNNWl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 14 Feb 2021 08:22:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229615AbhBNDon (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 13 Feb 2021 22:44:43 -0500
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60AA4C061574
-        for <dmaengine@vger.kernel.org>; Sat, 13 Feb 2021 19:44:03 -0800 (PST)
-Received: from pendragon.lan (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 772C52FE;
-        Sun, 14 Feb 2021 04:43:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1613274239;
-        bh=Aiu8utsA/R0EL/bSR1XIAxocUingsu+BsqrWoP+MP+g=;
-        h=From:To:Cc:Subject:Date:From;
-        b=BACJdj49byDU91sa8417p7wiT77lN/lxfc6rzbdtYvc1nstGIAz82/XXFNpkRV5Cy
-         4TKxuPC2nv8x/wXXBslxboR7wPGwS7kLcRLkOJF5VRo8dPFq7eRLB0rJbRlMny7+8h
-         GDyip0oCMINeM3Jp2kqx6uKboqkJRCTf0Y/xVtAM=
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     dmaengine@vger.kernel.org
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH] dmaengine: xilinx: dpdma: Fix compilation when !HAS_IOMEM
-Date:   Sun, 14 Feb 2021 05:43:19 +0200
-Message-Id: <20210214034319.11569-1-laurent.pinchart@ideasonboard.com>
-X-Mailer: git-send-email 2.28.0
+        with ESMTP id S229789AbhBNNWk (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 14 Feb 2021 08:22:40 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1CD1C061574;
+        Sun, 14 Feb 2021 05:21:58 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id cv23so2178559pjb.5;
+        Sun, 14 Feb 2021 05:21:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c7vnThlFNmoIJdJgKrHEtOilK3UWuZ4n3yCmFNBMnKk=;
+        b=pniJVmeckDTgoxSo/kcK9iz1YxQfGFVJj/Q7JdnIvMGBJOgS/S1hgsoYO3WSrEzmid
+         3K0HG8+5ckzIrS9OYeW7/37yFSt3rScpNuivGUqzACgEaKNYJ7woa3ad419qGl72WHak
+         mUHAQinVl2ZvhtVj5EaTTvmBkrfihwgjY+szVmXWh2EfqL8z6RUtdOoE+TvEJLb3N4Oe
+         dOiyR+acZJF3edXFHgYjshCq7catwI+2dbJMFbxpOHnG1LVgFoBbPKazL1I1B5vzua1S
+         qCBdy3lOsVvRaSsE6p2spkQwfsHM1DvmYpB/yg4U+SV8tDPgSAGKt4SJZoo0c8v5ZTiR
+         j5FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c7vnThlFNmoIJdJgKrHEtOilK3UWuZ4n3yCmFNBMnKk=;
+        b=Jpk5uf8fWtce8DIhkHPROJNQv4gonxiSZqT0/ETUx/J7/VuPe/LuflFuNdniyYVSWY
+         e31OQcA0M6hX148Khrm9DRXAWhuoJoNDSXaWfSrIYaJrVyX5MAXVPPTru7uSv23Y2Wrp
+         pdGdxnhJNrkogTInwKk+WgEpL2Pqh14FMeGrmQjt0pwcxulTWRFe6pQCac0riaHk2fIr
+         U0O6lDRUEBgz5ny5xl/zZP0Pl7DlbJosAiIz0PIyT/xd8Fd2L3nIMUy0+wrDigb6mtYB
+         8w5+gzBC2rF2lOv+GUnVYE/efluEC6z1awhNZbXShhsw+fXOEswiIHqmrTebQVVQy2O/
+         T1SQ==
+X-Gm-Message-State: AOAM530FKkDEUwswNtUTYOHwViovm+6hk0dDM+EwRP4/eGhH5FT4/KQt
+        TQ47yXD1oGiKGBI1UUvxUq7dXX6W9HGpSw==
+X-Google-Smtp-Source: ABdhPJzQEoflPmTYpJtHzNqnRdejfz3IpOYp5sbqkR04MlRuUQkMVlbho4AbEkAppKpPQQlOEKGLhA==
+X-Received: by 2002:a17:902:cecc:b029:e1:268e:2286 with SMTP id d12-20020a170902ceccb02900e1268e2286mr11325308plg.62.1613308918536;
+        Sun, 14 Feb 2021 05:21:58 -0800 (PST)
+Received: from localhost (185.212.56.4.16clouds.com. [185.212.56.4])
+        by smtp.gmail.com with ESMTPSA id u142sm13784497pfc.37.2021.02.14.05.21.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Feb 2021 05:21:58 -0800 (PST)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     gustavo.pimentel@synopsys.com, vkoul@kernel.org,
+        wangzhou1@hisilicon.com, ftoth@exalondelft.nl,
+        andy.shevchenko@gmail.com, qiuzhenfa@hisilicon.com,
+        dmaengine@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH 0/3] Add missing call to 'pci_free_irq_vectors()'
+Date:   Sun, 14 Feb 2021 21:21:50 +0800
+Message-Id: <20210214132153.575350-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The xilinx-dpdma driver uses the devm_platform_ioremap_resource() API,
-which is only available when HAS_IOMEM is selected. Depend on the
-Kconfig symbol to fix the error.
+This patchset just for add missing call to 'pci_free_irq_vectors()' in
+the error handling path of the probe function, or in the remove function.
 
-While at it, also depend on ARCH_ZYNQ to avoid cluttering the
-configuration on other platforms, unless COMPILE_TEST is selected. The
-former would be enough to guarantee HAS_IOMEM, but with COMPILE_TEST we
-still need to explicit dependendy on HAS_IOMEM.
+Dejin Zheng (3):
+  dmaengine: hsu: Add missing call to 'pci_free_irq_vectors()' in probe
+    and remove functions
+  dmaengine: dw-edma: Add missing call to 'pci_free_irq_vectors()' in
+    probe function
+  dmaengine: hisilicon: Add missing call to 'pci_free_irq_vectors()' in
+    probe function
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- drivers/dma/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/dma/dw-edma/dw-edma-pcie.c | 15 +++++++++++----
+ drivers/dma/hisi_dma.c             | 14 ++++++++++----
+ drivers/dma/hsu/pci.c              |  5 ++++-
+ 3 files changed, 25 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index d242c7632621..205bc888d49f 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -702,6 +702,8 @@ config XILINX_ZYNQMP_DMA
- 
- config XILINX_ZYNQMP_DPDMA
- 	tristate "Xilinx DPDMA Engine"
-+	depends on ARCH_ZYNQ || COMPILE_TEST
-+	depends on HAS_IOMEM
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
 -- 
-Regards,
-
-Laurent Pinchart
+2.25.0
 

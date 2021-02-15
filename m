@@ -2,134 +2,81 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 12CCE31B99D
-	for <lists+dmaengine@lfdr.de>; Mon, 15 Feb 2021 13:47:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 438C831BA4D
+	for <lists+dmaengine@lfdr.de>; Mon, 15 Feb 2021 14:27:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230407AbhBOMrH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 15 Feb 2021 07:47:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59930 "EHLO
+        id S230183AbhBON07 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 15 Feb 2021 08:26:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230162AbhBOMqv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 15 Feb 2021 07:46:51 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E73DAC061574;
-        Mon, 15 Feb 2021 04:46:09 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id d2so3861212pjs.4;
-        Mon, 15 Feb 2021 04:46:09 -0800 (PST)
+        with ESMTP id S230090AbhBON0n (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 15 Feb 2021 08:26:43 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B25A5C0613D6;
+        Mon, 15 Feb 2021 05:26:02 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id my11so2670872pjb.1;
+        Mon, 15 Feb 2021 05:26:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tpKOjECKpOtHme7hTyZ6AoF7zfRzL7XWvnsYJ50h+DQ=;
-        b=PcuhtkMmvknOCma1yUD3fy4Z7ELVzKFqe3kH4V3qJKZgXprT2zQ4kVw2/EVzofsQsR
-         E6rZSZqbPM0GYsU4nYcmxe3cSiYl7nosd8Bsi89EJV9CGqDQqLV2nXi3KLHhMh3EXaBr
-         T35bmtHK/1u59qohsnfvAdoslE5ZbiG4uEGzdX6iaEGg77ndEt1jdZhoBqdiRErkStwu
-         fu0WLZnLNkTTwKP2nxtdA5iEkXAPpxcFMId0e5AC1M3Lw/AjMw1TPwQXR3abLAPKOlx9
-         vB181nL6DhfkFf0CcqMMdNXYs+8M8HfBZLPFPEv9aLLJDuaZx3C91uDYbpba2jC/XCbY
-         Go/Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RBnx1kDe3EFDlt7rxj/CXQzznsDJFWB2/f3gowikweg=;
+        b=GVucbqKADNBuLhtE40/tqMhIIHvmsEBrHZX2JPzZG3Jva06rMgLHKNEPR7PeIEW0X+
+         cm0XZrj9RzGC/+ORdxO+d/5rXvJPqwdj37BFYO/037M0z3WvfIIU/ufEpZcwc+oIqZAP
+         cBqd9mJNn3D6BXTHNQR/U/noEt1S1jj/54JKGmAv6KkCx5U6gYcK13xJptBT471ZzIC1
+         4eoouDRxIVj74SzqcodSAx55dXr1okNdrljajoTaf2HkV2O1dpLHthVzBZkgMLbNJMGD
+         +5RQh8C3rv49B0RdDVakZuZBuWkj/nSd/1cTIkKcWYZQ7AEhZYXd8n8dl2/ljOFVrx0R
+         qtwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tpKOjECKpOtHme7hTyZ6AoF7zfRzL7XWvnsYJ50h+DQ=;
-        b=dx50QO5NFdsGwenyU4LyDfpC6BC97EjqAztk8Aor09S4r9oIKDaNzfmoCrBKnEVaIa
-         aDrc++hi9sDrEhgBj0xBP48qXhB7aWyvaIfYv9jElNymfB/cBSmghNKHvvgGC6Sbbx2a
-         iHFk3RPJdn1NpbAleom5S5TaUCxNLcn4WMy7tfTkGQOloQVZ3de4p9lcSaixWursGGsy
-         wf0lPzAPekZqSczkiW4l5Yt1PcVx1u/+JGvAYX9ex33vHWjbFszMAUxmQRLSG5QnDGBd
-         bt9tVH7hwMxgwIxxl4oSpCyQ1UudwxDsGJBRNYbYi4hldzET9gi6UnFb9QwYfF274qop
-         DF9w==
-X-Gm-Message-State: AOAM533khG0BJVmy/5Db9uwbDtmNW1x3WTocYOKygZaOmFnFOufnLegV
-        BGHmagEN9EywOseWJNzw6kA=
-X-Google-Smtp-Source: ABdhPJwtDvV64bvx/ndy1IPs3xAFXlf5VvxXLYQOQcgv8A4YMVndF4nFZAtTjLpxU1MnRJODDd4hFg==
-X-Received: by 2002:a17:903:230f:b029:dc:9b7f:bd0e with SMTP id d15-20020a170903230fb02900dc9b7fbd0emr15132847plh.47.1613393169564;
-        Mon, 15 Feb 2021 04:46:09 -0800 (PST)
-Received: from localhost (89.208.244.53.16clouds.com. [89.208.244.53])
-        by smtp.gmail.com with ESMTPSA id q196sm19863561pfc.162.2021.02.15.04.46.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Feb 2021 04:46:09 -0800 (PST)
-Date:   Mon, 15 Feb 2021 20:46:06 +0800
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        "wangzhou1@hisilicon.com" <wangzhou1@hisilicon.com>,
-        "ftoth@exalondelft.nl" <ftoth@exalondelft.nl>,
-        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "qiuzhenfa@hisilicon.com" <qiuzhenfa@hisilicon.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] dmaengine: dw-edma: Add missing call to
- 'pci_free_irq_vectors()' in probe function
-Message-ID: <20210215124606.GC618076@nuc8i5>
-References: <20210214132153.575350-1-zhengdejin5@gmail.com>
- <20210214132153.575350-3-zhengdejin5@gmail.com>
- <DM5PR12MB18357590D1A8C22A1E7287BCDA889@DM5PR12MB1835.namprd12.prod.outlook.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RBnx1kDe3EFDlt7rxj/CXQzznsDJFWB2/f3gowikweg=;
+        b=Im1OX0c1gDDLdQgef+oKnOD8kZlVj3Fpp23FNslJLd2uqMwwcYl4wmSqPydx6sA4kS
+         fc7MiyEudYbMjbrbDna9+ujjgzngLp9Lc+QzCnmsELGMvpYyqYwNh7XuAQ1jRAHl2Ca8
+         TBBDBdwOX0uIiUEXqPgVd8Jzc3F7S9wJA+bJHCz67zmfX85eFvLTnSPWkoqsyoOImClz
+         o9zStgR5bkmWgWg6DxTDPZ+D6IFFgRgQm9/VNJOGF1EA4hx0gVuaJBZAIIiyBH+jaNAv
+         b0RcdSi/9BQlFJy6JZ5JtfIq4sYRm0OEFrz3Qn9TEe+M8S/XBl8fSgl3yTsB+9K9aS9n
+         pNPg==
+X-Gm-Message-State: AOAM530yvW/UAztdf/s5ZSithqXo8u3iVxGZH/vROiXA9rn9DPGuZ1HE
+        aP3Pammp6D4xespQEoCbQx3tgBchLD0qstMfkss=
+X-Google-Smtp-Source: ABdhPJy1RDwe7j+gv7jN67oYyFmTUCAxioZCw3OsTgN2Lrh1exKfRImpKnnvEJrdbGDG75+GXgQtebfUTBpUs/SEQ2s=
+X-Received: by 2002:a17:902:eac1:b029:e3:4940:541d with SMTP id
+ p1-20020a170902eac1b02900e34940541dmr8159981pld.21.1613395562273; Mon, 15 Feb
+ 2021 05:26:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM5PR12MB18357590D1A8C22A1E7287BCDA889@DM5PR12MB1835.namprd12.prod.outlook.com>
+References: <20210214132153.575350-1-zhengdejin5@gmail.com> <20210214132153.575350-2-zhengdejin5@gmail.com>
+In-Reply-To: <20210214132153.575350-2-zhengdejin5@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 15 Feb 2021 15:25:46 +0200
+Message-ID: <CAHp75Vdt3j=gXepTfpSimazQZz63F1qwGwooh8jsbYKa6=mntg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dmaengine: hsu: Add missing call to
+ 'pci_free_irq_vectors()' in probe and remove functions
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Ferry Toth <ftoth@exalondelft.nl>, qiuzhenfa@hisilicon.com,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Mon, Feb 15, 2021 at 09:45:07AM +0000, Gustavo Pimentel wrote:
-> On Sun, Feb 14, 2021 at 13:21:52, Dejin Zheng <zhengdejin5@gmail.com> 
-> wrote:
-> 
-> > Call to 'pci_free_irq_vectors()' is missing in the error handling path
-> > of the probe function, So add it.
-> > 
-> > Fixes: 41aaff2a2ac01c5 ("dmaengine: Add Synopsys eDMA IP PCIe glue-logic")
-> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> > ---
-> >  drivers/dma/dw-edma/dw-edma-pcie.c | 15 +++++++++++----
-> >  1 file changed, 11 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> > index 1eafc602e17e..c1e796bd3ee9 100644
-> > --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> > +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> > @@ -185,24 +185,31 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
-> >  	/* Validating if PCI interrupts were enabled */
-> >  	if (!pci_dev_msi_enabled(pdev)) {
-> >  		pci_err(pdev, "enable interrupt failed\n");
-> > -		return -EPERM;
-> > +		err = -EPERM;
-> > +		goto err_free_irq;
-> >  	}
-> >  
-> >  	dw->irq = devm_kcalloc(dev, nr_irqs, sizeof(*dw->irq), GFP_KERNEL);
-> > -	if (!dw->irq)
-> > -		return -ENOMEM;
-> > +	if (!dw->irq) {
-> > +		err = -ENOMEM;
-> > +		goto err_free_irq;
-> > +	}
-> >  
-> >  	/* Starting eDMA driver */
-> >  	err = dw_edma_probe(chip);
-> >  	if (err) {
-> >  		pci_err(pdev, "eDMA probe failed\n");
-> > -		return err;
-> > +		goto err_free_irq;
-> >  	}
-> >  
-> >  	/* Saving data structure reference */
-> >  	pci_set_drvdata(pdev, chip);
-> >  
-> >  	return 0;
-> > +
-> > +err_free_irq:
-> > +	pci_free_irq_vectors(pdev);
-> > +	return err;
-> >  }
-> >  
-> >  static void dw_edma_pcie_remove(struct pci_dev *pdev)
-> > -- 
-> > 2.25.0
-> 
-> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> 
+On Sun, Feb 14, 2021 at 3:22 PM Dejin Zheng <zhengdejin5@gmail.com> wrote:
 >
-Gustavo, Thanks!
+> Call to 'pci_free_irq_vectors()' are missing both in the error handling
+> path of the probe function, and in the remove function.
+> Add them.
 
-Dejin
+> Fixes: e9bb8a9df316a2 ("dmaengine: hsu: pci: switch to new API for IRQ allocation")
+
+Same as per others. This does not fix anything, because there is no issue.
+If you want to have it better, introduce a pcim_alloc_irq_vectors() to
+show that it's managed.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko

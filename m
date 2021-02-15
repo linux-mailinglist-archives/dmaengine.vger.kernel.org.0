@@ -2,119 +2,140 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 078B931B083
-	for <lists+dmaengine@lfdr.de>; Sun, 14 Feb 2021 14:24:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6ED0C31B5B0
+	for <lists+dmaengine@lfdr.de>; Mon, 15 Feb 2021 08:41:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229929AbhBNNW5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 14 Feb 2021 08:22:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229899AbhBNNWu (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 14 Feb 2021 08:22:50 -0500
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC4B3C061786;
-        Sun, 14 Feb 2021 05:22:05 -0800 (PST)
-Received: by mail-pf1-x431.google.com with SMTP id t29so2556477pfg.11;
-        Sun, 14 Feb 2021 05:22:05 -0800 (PST)
+        id S229597AbhBOHlE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 15 Feb 2021 02:41:04 -0500
+Received: from mail-dm6nam11on2063.outbound.protection.outlook.com ([40.107.223.63]:9409
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229595AbhBOHlD (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 15 Feb 2021 02:41:03 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B6NSMq6zVhAUjORCyHXZtXmo+31Ze0w/JUry9RAenV1k4qhdMIgvG2/io0BfGdpI8wdC1ls/riF+YOXNzBKB9vJj8at/pp2S09HPHXyTqsamC97a8Epwq2DbmKZT0CN6SbiGX22PU7Zvef6TqbpWsnovat98EAa++KF/fvqiQuxdi+1EyMyx8dprX5V5MhHJJWz5/qp2DGoSy5+8sXjHjS8W/gKveyQ8OGeQxsBs49V2NfDx4IPivYxSq2WnCDiH2rscjzaVHhfymmug1BXbthaWg1LucmC1EGm39HOdm7DAkuqS2vK5nhkh6RHc0LRPMzmPbxZNlV3Nck3OIbN2WA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iy1ma/CSQCNGjGBNkIrJ5mN3/i2iYqTNM5dM1SzrWb8=;
+ b=MMqjrEg9KsF6OIru5ezzAwYA4/I7TlROoRikPCpFV/VLnV873ukjokAim8aDzfwPzKBdt3KjQ06DyP0Fx0kXDcDCqTtHUwoua0Iu4TSNeYuPJTS87mfTmS73BmOhW94PU0NvKgaZBi7nrkgRpag6OHq3iGsrMFdWoHc4c6c1YwNs7owiWlvlfDJx238Mr1TYSIbuaGalKo3FaR5r42DBs2gQeO3IqNsbUtc25MlKcA6thzbWlO2s6999h3J8KLccP++CJsJlawWi4crLFfpK3xkXp60P8u8k7ZdhsDzOaBYAp1xPVaUGXozn3d1av4AjVgQV+AHAa3AEhH/oCfEo9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.62.198) smtp.rcpttodomain=kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=io4iHnTgZXeBAwyR0M009LpKoVlt5BXlMqJVpP1ulmA=;
-        b=T4D76JviFgcDdC1bPeB7r7a4KED2uBSQA8dJUwywsE9rPWykdFumtXczk6M8Ye7lZV
-         JgKFfzMGyWSJhHtTvRdhp6u/jYSnzx0BnGs7wpJA5onQo3HmU0Qk7HnHjZJp3vX0rFy1
-         3XV3KSzAkxRNm8hwvB13+QGTYeulqh9KGVaenGyJrOIeuBRyON2aj/mKr/sbeGHoJZzw
-         sAIIcdBVPED2xQd7Br5HXa8Bhj39KJ1Zu+TI0KLyVVVQzQNa+yZ4CqPXajWjpA+D3ZuA
-         wqdoKTDTC1mKsJgt4eJJPoV7X6QjUrQMpj0T9bzQpkrXxKUx9Mrl6nNQtWTf16CrP8eM
-         fBsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=io4iHnTgZXeBAwyR0M009LpKoVlt5BXlMqJVpP1ulmA=;
-        b=SCVuY3M1TPz96sprz21xggKwzmAo86oyeQseF3BPHRaZFIjeBBo8oPagjeHD8OxC9P
-         zJE+P9uOihC6dhoDZnWnfcbwcma5RYqdhwVfuDg/BPY9WERHoupq22bNNCl0YaMarSei
-         VwobQSISwgU0dYcb5W+Fw8TcnUxdb9j7r74uZrBS8bGsx1PVvwCF65aqHuq1AT68gMOi
-         xagVRL0kUoQQ26lr/XEZnm6PKmzxSgPpOUd0naC5yx57HpvQyhiO8XcqFqXIlBawqoCk
-         dyjR70LCZp/RecubVf+cT8L/ViEdxmhveHPbRAH7tXIMzVLN5/qUtqEZYkN9OovHkPwx
-         uwMA==
-X-Gm-Message-State: AOAM530n27uktMbkr2YMMS5HTT8fFtAFrVLgntHx5znvTGtimLE2vkVy
-        8ljH40SM4ZNl4+TQufv4pyc=
-X-Google-Smtp-Source: ABdhPJy6LD3yc9tbWRqjFBiyGa61nK4R34eWEwezVk7WGzvXb/8BLxv6Lv2321icP6HNhR6XoHuduw==
-X-Received: by 2002:aa7:88c7:0:b029:1d1:4f1f:5fb6 with SMTP id k7-20020aa788c70000b02901d14f1f5fb6mr11281851pff.14.1613308925401;
-        Sun, 14 Feb 2021 05:22:05 -0800 (PST)
-Received: from localhost (185.212.56.4.16clouds.com. [185.212.56.4])
-        by smtp.gmail.com with ESMTPSA id ck10sm13847368pjb.5.2021.02.14.05.22.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Feb 2021 05:22:05 -0800 (PST)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     gustavo.pimentel@synopsys.com, vkoul@kernel.org,
-        wangzhou1@hisilicon.com, ftoth@exalondelft.nl,
-        andy.shevchenko@gmail.com, qiuzhenfa@hisilicon.com,
-        dmaengine@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH 3/3] dmaengine: hisilicon: Add missing call to 'pci_free_irq_vectors()' in probe function
-Date:   Sun, 14 Feb 2021 21:21:53 +0800
-Message-Id: <20210214132153.575350-4-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20210214132153.575350-1-zhengdejin5@gmail.com>
-References: <20210214132153.575350-1-zhengdejin5@gmail.com>
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iy1ma/CSQCNGjGBNkIrJ5mN3/i2iYqTNM5dM1SzrWb8=;
+ b=R12B/2hWPhe+f1EQmbdMzHRMp57DCJksbXnV0hHULugbobkJMZ2uyZtm8MUILiDl9+gH857LFwhxRCPXzXlsweV1wt6k+qvZTi4JIuA9A+96AOIbrcHlAvVip+gJ+GEBzpsSdf2v1nG4uq/eKntIrkzos83XMgOjOtfXjVaX494=
+Received: from MN2PR19CA0033.namprd19.prod.outlook.com (2603:10b6:208:178::46)
+ by SN6PR02MB4445.namprd02.prod.outlook.com (2603:10b6:805:aa::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.26; Mon, 15 Feb
+ 2021 07:40:10 +0000
+Received: from BL2NAM02FT062.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:208:178:cafe::7) by MN2PR19CA0033.outlook.office365.com
+ (2603:10b6:208:178::46) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.27 via Frontend
+ Transport; Mon, 15 Feb 2021 07:40:10 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
+ smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.62.198; helo=xsj-pvapexch01.xlnx.xilinx.com;
+Received: from xsj-pvapexch01.xlnx.xilinx.com (149.199.62.198) by
+ BL2NAM02FT062.mail.protection.outlook.com (10.152.77.57) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.3846.25 via Frontend Transport; Mon, 15 Feb 2021 07:40:10 +0000
+Received: from xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) by
+ xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Sun, 14 Feb 2021 23:40:08 -0800
+Received: from smtp.xilinx.com (172.19.127.96) by
+ xsj-pvapexch01.xlnx.xilinx.com (172.19.86.40) with Microsoft SMTP Server id
+ 15.1.1913.5 via Frontend Transport; Sun, 14 Feb 2021 23:40:08 -0800
+Envelope-to: michal.simek@xilinx.com,
+ vkoul@kernel.org,
+ dmaengine@vger.kernel.org,
+ laurent.pinchart@ideasonboard.com
+Received: from [172.30.17.109] (port=50402)
+        by smtp.xilinx.com with esmtp (Exim 4.90)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1lBYUK-0006b6-Je; Sun, 14 Feb 2021 23:40:08 -0800
+Subject: Re: [PATCH] dmaengine: xilinx: dpdma: Fix compilation when !HAS_IOMEM
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        <dmaengine@vger.kernel.org>
+CC:     Vinod Koul <vkoul@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>
+References: <20210214034319.11569-1-laurent.pinchart@ideasonboard.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <a72ad176-991c-0884-b99d-86aa9ef948a8@xilinx.com>
+Date:   Mon, 15 Feb 2021 08:40:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210214034319.11569-1-laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: da37190b-4567-46d8-486d-08d8d184ec89
+X-MS-TrafficTypeDiagnostic: SN6PR02MB4445:
+X-Microsoft-Antispam-PRVS: <SN6PR02MB4445DAFD24E691F304BB84C4C6889@SN6PR02MB4445.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: yNsvHysQKAoHYafMJ2jV+U+bMi8kCEDZtqICY1RlajCfNzM1eGzx1y8y0k92ZTFoMaJAM+D+Cbdox3506a9EriGGEcDq8MuGUt0dplgMcXh0RpBJy8qlRuTo+PC5IQk+duzCEmS2lgk3kOu18RlvIoPZ0hLAYV3i1dgIQgUwfPChyvFy0lrBC3QwuIIB69Q0B60IGK5GBtIe3nNDH4sKF0yg2HEwt7ELhAR0xrK3VQhajmaPg2H/2WM+wW+Klr9wv/04DaJrUhTzYDDWIUxSFSuDWB6MXsd/uDQVfBc9cb7/X4nzwgB+GhIhlCofOQk9SKs92I8a4PTOHWEOMJ053cgqo/VILsA0Aav9YmVFiLRutZQYfqJ3uKSs0q/mEZrwQ8ak+OqxVT5goy2HyIOsQE3yb9/92XYCFGywoul71t4k/HfgZkwPvzMW7KbifVCYW7cj+yxq4u7wdF4Q3HKYSKXCjldTu7XmL4B2kGDoo34UJROH/mCsTuzTA9tHtsfczUNWKHi6DxvMUPUmEVoN2HH45azeZnigYvOgLc4w6zbtlIdbGktPRrMhuEAnQ8QdrfBvInO7pak0PJbQ5aQ1Zv7e+6VTFR9XmREBnlirmWZzyYGszFvoFC8YDYa6dcZALtNhnHzOjlO2ICUOVfE/5sk2X6JWV0kf7lVqfqeaFmM1i+YonXj7B4qSFD0mZsekwtqxi9C2NWGMbuZAL28jrA==
+X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch01.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(4636009)(376002)(39850400004)(346002)(136003)(396003)(36840700001)(46966006)(107886003)(7636003)(478600001)(36906005)(82310400003)(316002)(82740400003)(4326008)(9786002)(356005)(70206006)(70586007)(47076005)(110136005)(54906003)(336012)(44832011)(36756003)(26005)(2616005)(426003)(53546011)(31686004)(186003)(8676002)(8936002)(31696002)(5660300002)(36860700001)(2906002)(50156003)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2021 07:40:10.5824
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: da37190b-4567-46d8-486d-08d8d184ec89
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch01.xlnx.xilinx.com]
+X-MS-Exchange-CrossTenant-AuthSource: BL2NAM02FT062.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4445
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Call to 'pci_free_irq_vectors()' is missing in the error handling path
-of the probe function, So add it.
 
-Fixes: e9f08b65250d73ab ("dmaengine: hisilicon: Add Kunpeng DMA engine support")
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
- drivers/dma/hisi_dma.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/hisi_dma.c b/drivers/dma/hisi_dma.c
-index a259ee010e9b..9e894d7f5dab 100644
---- a/drivers/dma/hisi_dma.c
-+++ b/drivers/dma/hisi_dma.c
-@@ -553,7 +553,7 @@ static int hisi_dma_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 
- 	ret = devm_add_action_or_reset(dev, hisi_dma_free_irq_vectors, pdev);
- 	if (ret)
--		return ret;
-+		goto err_free_irq;
- 
- 	dma_dev = &hdma_dev->dma_dev;
- 	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
-@@ -572,18 +572,24 @@ static int hisi_dma_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	ret = hisi_dma_enable_hw_channels(hdma_dev);
- 	if (ret < 0) {
- 		dev_err(dev, "failed to enable hw channel!\n");
--		return ret;
-+		goto err_free_irq;
- 	}
- 
- 	ret = devm_add_action_or_reset(dev, hisi_dma_disable_hw_channels,
- 				       hdma_dev);
- 	if (ret)
--		return ret;
-+		goto err_free_irq;
- 
- 	ret = dmaenginem_async_device_register(dma_dev);
--	if (ret < 0)
-+	if (ret < 0) {
- 		dev_err(dev, "failed to register device!\n");
-+		goto err_free_irq;
-+	}
-+
-+	return ret;
- 
-+err_free_irq:
-+	pci_free_irq_vectors(pdev);
- 	return ret;
- }
- 
--- 
-2.25.0
+On 2/14/21 4:43 AM, Laurent Pinchart wrote:
+> The xilinx-dpdma driver uses the devm_platform_ioremap_resource() API,
+> which is only available when HAS_IOMEM is selected. Depend on the
+> Kconfig symbol to fix the error.
+> 
+> While at it, also depend on ARCH_ZYNQ to avoid cluttering the
+> configuration on other platforms, unless COMPILE_TEST is selected. The
+> former would be enough to guarantee HAS_IOMEM, but with COMPILE_TEST we
+> still need to explicit dependendy on HAS_IOMEM.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+>  drivers/dma/Kconfig | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index d242c7632621..205bc888d49f 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -702,6 +702,8 @@ config XILINX_ZYNQMP_DMA
+>  
+>  config XILINX_ZYNQMP_DPDMA
+>  	tristate "Xilinx DPDMA Engine"
+> +	depends on ARCH_ZYNQ || COMPILE_TEST
 
+Zynq doesn't have DP.
+
+ARCH_ZYNQMP here?
+
+M

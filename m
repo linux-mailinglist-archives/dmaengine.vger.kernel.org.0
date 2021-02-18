@@ -2,32 +2,32 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 845EC31F012
-	for <lists+dmaengine@lfdr.de>; Thu, 18 Feb 2021 20:40:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6572C31F00C
+	for <lists+dmaengine@lfdr.de>; Thu, 18 Feb 2021 20:40:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232629AbhBRTkE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 18 Feb 2021 14:40:04 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:33110 "EHLO
+        id S232587AbhBRTjv (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 18 Feb 2021 14:39:51 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:33124 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233658AbhBRTFl (ORCPT
+        by vger.kernel.org with ESMTP id S233663AbhBRTFl (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Thu, 18 Feb 2021 14:05:41 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6803340162;
-        Thu, 18 Feb 2021 19:04:19 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1F05A4016C;
+        Thu, 18 Feb 2021 19:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1613675059; bh=gCI3nNoPy8dCurab6Uc+GVpEmLeCzjb3I1ubHtDkaBI=;
-        h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
+        t=1613675060; bh=/zIPChNzuqaHnxdUF1blTbcWoP7Tz+WvyFHNVF5OU5I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=X0et8RRDLXcy9/UHkzClYr9QwRhpEAkccV4/fPVeYWuMt3rb6O+awfUnRqv8ukUJj
-         VjRtAzr/J+3k7lc2UXqqdqV/1H7pqytHNyc7IQTuoDyjNi7wdoEQ6+YVtX2iekAeaQ
-         lCySLya1t/IutUVkUjJYQFtCaVd4e/tJpGl9AYUgBzIw7g7q3N+f0Fnx53b1lDD2Lw
-         17TTOllUo5TIL5k0YRJkluMQCgAot9lq4GIC4EhA/5i0pvMV2S5zen5JjF3oG/Kcc4
-         X/p0KIGS22ppxuXZQ6pZ73ofTrVDO+tO5BAY1YntO+ILF5FxhOjYJMLGQ9oIJeTXzk
-         Fvp9KSA5yKHZw==
+        b=DDX5e2dU57diajDD3+HJLOMSNuNBWg55W1p8A+TJJV5ZUMXzVMrCNW8USqBqmtOHX
+         U0G9nppNbceQlic/0LRSF9cPaGPZKgQACqC2pZ83XZYqadFL13n9Lnjynq4G8N6ZM2
+         EaYlR0Fx2vO+v2GS+rebsaJCT/wvDCA3Vw97o0W5Gi0I9gKdFEbNBIyldtzvIDJt3q
+         oguAmJGzns7wL23RiTcPsf2liQepNs84QEC66BXXgxxCk/EuGzapp6acEoc6OWmgkW
+         5ENKwT3Sl7vL9ayq8jxAAXf3IRYczNTaWdOKnmr8TP6YP1pol3wyTNViR1NeURZ9WO
+         uSRslalXdwVmg==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 11843A005D;
+        by mailhost.synopsys.com (Postfix) with ESMTP id EECB7A0061;
         Thu, 18 Feb 2021 19:04:18 +0000 (UTC)
 X-SNPS-Relay: synopsys.com
 From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
@@ -36,11 +36,11 @@ To:     dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
         Dan Williams <dan.j.williams@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: [PATCH v7 03/15] dmaengine: dw-edma: Add support for the HDMA feature
-Date:   Thu, 18 Feb 2021 20:03:57 +0100
-Message-Id: <5f40f89ef7d6255a12d5b23f34e6e59dcd28861e.1613674948.git.gustavo.pimentel@synopsys.com>
+        Lukas Wunner <lukas@wunner.de>
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+Subject: [PATCH v7 04/15] PCI: Add pci_find_vsec_capability() to find a specific VSEC
+Date:   Thu, 18 Feb 2021 20:03:58 +0100
+Message-Id: <d89506834fb11c6fa0bd5d515c0dd55b13ac6958.1613674948.git.gustavo.pimentel@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1613674948.git.gustavo.pimentel@synopsys.com>
 References: <cover.1613674948.git.gustavo.pimentel@synopsys.com>
@@ -50,223 +50,71 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add support for the HDMA feature.
+Add pci_find_vsec_capability() to locate a Vendor-Specific Extended
+Capability with the specified VSEC ID.
 
-This new feature enables the current eDMA IP to use a deeper prefetch
-of the linked list, which reduces the algorithm execution latency
-observed when loading the elements of the list, causing more stable
-and higher data transfer.
+The Vendor-Specific Extended Capability (VSEC) allows one or more
+proprietary capabilities defined by the vendor which aren't standard
+or shared between vendors.
 
 Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 ---
- drivers/dma/dw-edma/dw-edma-core.h       | 10 ++++----
- drivers/dma/dw-edma/dw-edma-pcie.c       | 23 ++++++++---------
- drivers/dma/dw-edma/dw-edma-v0-core.c    | 42 +++++++++++++++++++++++++++++---
- drivers/dma/dw-edma/dw-edma-v0-debugfs.c |  9 +++----
- 4 files changed, 60 insertions(+), 24 deletions(-)
+ drivers/pci/pci.c   | 30 ++++++++++++++++++++++++++++++
+ include/linux/pci.h |  1 +
+ 2 files changed, 31 insertions(+)
 
-diff --git a/drivers/dma/dw-edma/dw-edma-core.h b/drivers/dma/dw-edma/dw-edma-core.h
-index 31fc50d..3f9593e 100644
---- a/drivers/dma/dw-edma/dw-edma-core.h
-+++ b/drivers/dma/dw-edma/dw-edma-core.h
-@@ -21,9 +21,10 @@ enum dw_edma_dir {
- 	EDMA_DIR_READ
- };
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index b9fecc2..aef217c 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -693,6 +693,36 @@ u8 pci_find_ht_capability(struct pci_dev *dev, int ht_cap)
+ EXPORT_SYMBOL_GPL(pci_find_ht_capability);
  
--enum dw_edma_mode {
--	EDMA_MODE_LEGACY = 0,
--	EDMA_MODE_UNROLL
-+enum dw_edma_map_format {
-+	EDMA_MF_EDMA_LEGACY = 0x0,
-+	EDMA_MF_EDMA_UNROLL = 0x1,
-+	EDMA_MF_HDMA_COMPAT = 0x5
- };
+ /**
++ * pci_find_vsec_capability - Find a vendor-specific extended capability
++ * @dev: PCI device to query
++ * @vendor: Vendor ID for which capability is defined
++ * @cap: Vendor-specific capability ID
++ *
++ * If @dev has Vendor ID @vendor, search for a VSEC capability with
++ * VSEC ID @cap. If found, return the capability offset in
++ * config space; otherwise return 0.
++ */
++u16 pci_find_vsec_capability(struct pci_dev *dev, u16 vendor, int cap)
++{
++	u16 vsec = 0;
++	u32 header;
++
++	if (vendor != dev->vendor)
++		return 0;
++
++	while ((vsec = pci_find_next_ext_capability(dev, vsec,
++						     PCI_EXT_CAP_ID_VNDR))) {
++		if (pci_read_config_dword(dev, vsec + PCI_VNDR_HEADER,
++					  &header) == PCIBIOS_SUCCESSFUL &&
++		    PCI_VNDR_HEADER_ID(header) == cap)
++			return vsec;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(pci_find_vsec_capability);
++
++/**
+  * pci_find_parent_resource - return resource region of parent bus of given
+  *			      region
+  * @dev: PCI device structure contains resources to be searched
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index b32126d..814f814 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1077,6 +1077,7 @@ u8 pci_find_next_ht_capability(struct pci_dev *dev, u8 pos, int ht_cap);
+ u16 pci_find_ext_capability(struct pci_dev *dev, int cap);
+ u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 pos, int cap);
+ struct pci_bus *pci_find_next_bus(const struct pci_bus *from);
++u16 pci_find_vsec_capability(struct pci_dev *dev, u16 vendor, int cap);
  
- enum dw_edma_request {
-@@ -123,8 +124,7 @@ struct dw_edma {
- 	struct dw_edma_irq		*irq;
- 	int				nr_irqs;
- 
--	u32				version;
--	enum dw_edma_mode		mode;
-+	enum dw_edma_map_format		mf;
- 
- 	struct dw_edma_chan		*chan;
- 	const struct dw_edma_core_ops	*ops;
-diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-index 1eafc60..c130549 100644
---- a/drivers/dma/dw-edma/dw-edma-pcie.c
-+++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-@@ -30,8 +30,7 @@ struct dw_edma_pcie_data {
- 	off_t				dt_off;
- 	size_t				dt_sz;
- 	/* Other */
--	u32				version;
--	enum dw_edma_mode		mode;
-+	enum dw_edma_map_format		mf;
- 	u8				irqs;
- };
- 
-@@ -49,8 +48,7 @@ static const struct dw_edma_pcie_data snps_edda_data = {
- 	.dt_off				= 0x00800000,	/*  8 Mbytes */
- 	.dt_sz				= 0x03800000,	/* 56 Mbytes */
- 	/* Other */
--	.version			= 0,
--	.mode				= EDMA_MODE_UNROLL,
-+	.mf				= EDMA_MF_EDMA_UNROLL,
- 	.irqs				= 1,
- };
- 
-@@ -69,8 +67,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 	const struct dw_edma_pcie_data *pdata = (void *)pid->driver_data;
- 	struct device *dev = &pdev->dev;
- 	struct dw_edma_chip *chip;
--	int err, nr_irqs;
- 	struct dw_edma *dw;
-+	int err, nr_irqs;
- 
- 	/* Enable PCI device */
- 	err = pcim_enable_device(pdev);
-@@ -157,16 +155,19 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 	dw->dt_region.paddr += pdata->dt_off;
- 	dw->dt_region.sz = pdata->dt_sz;
- 
--	dw->version = pdata->version;
--	dw->mode = pdata->mode;
-+	dw->mf = pdata->mf;
- 	dw->nr_irqs = nr_irqs;
- 	dw->ops = &dw_edma_pcie_core_ops;
- 
- 	/* Debug info */
--	pci_dbg(pdev, "Version:\t%u\n", dw->version);
--
--	pci_dbg(pdev, "Mode:\t%s\n",
--		dw->mode == EDMA_MODE_LEGACY ? "Legacy" : "Unroll");
-+	if (dw->mf == EDMA_MF_EDMA_LEGACY)
-+		pci_dbg(pdev, "Version:\teDMA Port Logic (0x%x)\n", dw->mf);
-+	else if (dw->mf == EDMA_MF_EDMA_UNROLL)
-+		pci_dbg(pdev, "Version:\teDMA Unroll (0x%x)\n", dw->mf);
-+	else if (dw->mf == EDMA_MF_HDMA_COMPAT)
-+		pci_dbg(pdev, "Version:\tHDMA Compatible (0x%x)\n", dw->mf);
-+	else
-+		pci_dbg(pdev, "Version:\tUnknown (0x%x)\n", dw->mf);
- 
- 	pci_dbg(pdev, "Registers:\tBAR=%u, off=0x%.8lx, sz=0x%zx bytes, addr(v=%p, p=%pa)\n",
- 		pdata->rg_bar, pdata->rg_off, pdata->rg_sz,
-diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
-index 7888eda..5b0541a 100644
---- a/drivers/dma/dw-edma/dw-edma-v0-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
-@@ -96,7 +96,7 @@ static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
- static inline struct dw_edma_v0_ch_regs __iomem *
- __dw_ch_regs(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch)
- {
--	if (dw->mode == EDMA_MODE_LEGACY)
-+	if (dw->mf == EDMA_MF_EDMA_LEGACY)
- 		return &(__dw_regs(dw)->type.legacy.ch);
- 
- 	if (dir == EDMA_DIR_WRITE)
-@@ -108,7 +108,7 @@ __dw_ch_regs(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch)
- static inline void writel_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
- 			     u32 value, void __iomem *addr)
- {
--	if (dw->mode == EDMA_MODE_LEGACY) {
-+	if (dw->mf == EDMA_MF_EDMA_LEGACY) {
- 		u32 viewport_sel;
- 		unsigned long flags;
- 
-@@ -133,7 +133,7 @@ static inline u32 readl_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
- {
- 	u32 value;
- 
--	if (dw->mode == EDMA_MODE_LEGACY) {
-+	if (dw->mf == EDMA_MF_EDMA_LEGACY) {
- 		u32 viewport_sel;
- 		unsigned long flags;
- 
-@@ -365,6 +365,42 @@ void dw_edma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
- 	if (first) {
- 		/* Enable engine */
- 		SET_RW_32(dw, chan->dir, engine_en, BIT(0));
-+		if (dw->mf == EDMA_MF_HDMA_COMPAT) {
-+			switch (chan->id) {
-+			case 0:
-+				SET_RW_COMPAT(dw, chan->dir, ch0_pwr_en,
-+					      BIT(0));
-+				break;
-+			case 1:
-+				SET_RW_COMPAT(dw, chan->dir, ch1_pwr_en,
-+					      BIT(0));
-+				break;
-+			case 2:
-+				SET_RW_COMPAT(dw, chan->dir, ch2_pwr_en,
-+					      BIT(0));
-+				break;
-+			case 3:
-+				SET_RW_COMPAT(dw, chan->dir, ch3_pwr_en,
-+					      BIT(0));
-+				break;
-+			case 4:
-+				SET_RW_COMPAT(dw, chan->dir, ch4_pwr_en,
-+					      BIT(0));
-+				break;
-+			case 5:
-+				SET_RW_COMPAT(dw, chan->dir, ch5_pwr_en,
-+					      BIT(0));
-+				break;
-+			case 6:
-+				SET_RW_COMPAT(dw, chan->dir, ch6_pwr_en,
-+					      BIT(0));
-+				break;
-+			case 7:
-+				SET_RW_COMPAT(dw, chan->dir, ch7_pwr_en,
-+					      BIT(0));
-+				break;
-+			}
-+		}
- 		/* Interrupt unmask - done, abort */
- 		tmp = GET_RW_32(dw, chan->dir, int_mask);
- 		tmp &= ~FIELD_PREP(EDMA_V0_DONE_INT_MASK, BIT(chan->id));
-diff --git a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-index a5e2783..157dfc2 100644
---- a/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-+++ b/drivers/dma/dw-edma/dw-edma-v0-debugfs.c
-@@ -55,7 +55,7 @@ struct debugfs_entries {
- static int dw_edma_debugfs_u32_get(void *data, u64 *val)
- {
- 	void __iomem *reg = (void __force __iomem *)data;
--	if (dw->mode == EDMA_MODE_LEGACY &&
-+	if (dw->mf == EDMA_MF_EDMA_LEGACY &&
- 	    reg >= (void __iomem *)&regs->type.legacy.ch) {
- 		void __iomem *ptr = &regs->type.legacy.ch;
- 		u32 viewport_sel = 0;
-@@ -174,7 +174,7 @@ static void dw_edma_debugfs_regs_wr(struct dentry *dir)
- 	nr_entries = ARRAY_SIZE(debugfs_regs);
- 	dw_edma_debugfs_create_x32(debugfs_regs, nr_entries, regs_dir);
- 
--	if (dw->mode == EDMA_MODE_UNROLL) {
-+	if (dw->mf == EDMA_MF_HDMA_COMPAT) {
- 		nr_entries = ARRAY_SIZE(debugfs_unroll_regs);
- 		dw_edma_debugfs_create_x32(debugfs_unroll_regs, nr_entries,
- 					   regs_dir);
-@@ -243,7 +243,7 @@ static void dw_edma_debugfs_regs_rd(struct dentry *dir)
- 	nr_entries = ARRAY_SIZE(debugfs_regs);
- 	dw_edma_debugfs_create_x32(debugfs_regs, nr_entries, regs_dir);
- 
--	if (dw->mode == EDMA_MODE_UNROLL) {
-+	if (dw->mf == EDMA_MF_HDMA_COMPAT) {
- 		nr_entries = ARRAY_SIZE(debugfs_unroll_regs);
- 		dw_edma_debugfs_create_x32(debugfs_unroll_regs, nr_entries,
- 					   regs_dir);
-@@ -297,8 +297,7 @@ void dw_edma_v0_debugfs_on(struct dw_edma_chip *chip)
- 	if (!base_dir)
- 		return;
- 
--	debugfs_create_u32("version", 0444, base_dir, &dw->version);
--	debugfs_create_u32("mode", 0444, base_dir, &dw->mode);
-+	debugfs_create_u32("mf", 0444, base_dir, &dw->mf);
- 	debugfs_create_u16("wr_ch_cnt", 0444, base_dir, &dw->wr_ch_cnt);
- 	debugfs_create_u16("rd_ch_cnt", 0444, base_dir, &dw->rd_ch_cnt);
+ u64 pci_get_dsn(struct pci_dev *dev);
  
 -- 
 2.7.4

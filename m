@@ -2,33 +2,33 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 98E7431F004
-	for <lists+dmaengine@lfdr.de>; Thu, 18 Feb 2021 20:40:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12D1F31F006
+	for <lists+dmaengine@lfdr.de>; Thu, 18 Feb 2021 20:40:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232416AbhBRTjj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 18 Feb 2021 14:39:39 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:33188 "EHLO
+        id S232550AbhBRTjn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 18 Feb 2021 14:39:43 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:33198 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233724AbhBRTFk (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 18 Feb 2021 14:05:40 -0500
+        by vger.kernel.org with ESMTP id S233725AbhBRTFl (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 18 Feb 2021 14:05:41 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 91B9240341;
-        Thu, 18 Feb 2021 19:04:29 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6DC3F40395;
+        Thu, 18 Feb 2021 19:04:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1613675070; bh=w9iK+I/EoC4W0BDyuaOzXjQJW+o0ZoU+YLQQVJ9KZaM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+        t=1613675070; bh=/Xl/Guy98nT3w8bs5KM0QdtNcEIYddJXuLiFe2rxNYk=;
+        h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=XtZDWhEV1y09wEP0fcIAH4cs40qrrFRqi77N+oeVABU+wzRw6j33eNWjCLWtQ0Q9n
-         U1VrOSZbCbfa+CqzfZ+q1MK/Gu/JXB7FmPtqNcUOO3WzXzUFCFv1CrJ2BlL1a7RXA1
-         FKCvmSoddQrZV+EgdBVNyoubG/HjG2/nEsdmSOQlRFX+3G/gK9KJx14xmnh2w9qTM0
-         gMDiw7YbjOwnd0JvwYFWkZRTSrhOT2E7AARTPA6gdFS+b/tiY05tyWdHyQ7pMbAnGq
-         kvsjclqpSq06yHGOKer54ktA6/EVz+987SKbvaTZgNvs/+lMgbzfg36u884DyLrFaz
-         Sv7G+c+NZYUQw==
+        b=R4Vmyim224h5/XMz45qfXznrj1ZyFf2pM4ItdetN/LiHRZMGit4XTYX75PQCG4jHj
+         8ddXuoCdBWpBIwzfB6gXwaw2Y9P/wSFle2OJ+Ur6Ed1MZjwloSQiWmyi24v8059+Nq
+         WWvNia9ifPVvxeFpdYxviBGpZKUeXeRF+mpawjxfBd9OaSNYgRe0D0U2tQpvZb9827
+         irqjd5HzrDJRq7MMk5x8p8QwW0K1Rt62r14fjwOxRSgIafVpruMEdz7IobcTIOPuN1
+         vPDGnjJMPJLGn6A7oXF40mjIz5hQDn0orYAFMIfSjdtmE+UxQrbTmmbgsLyXAFt+Ko
+         AO0bfYSOw+xZg==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 6DB42A005D;
-        Thu, 18 Feb 2021 19:04:28 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 40830A0063;
+        Thu, 18 Feb 2021 19:04:29 +0000 (UTC)
 X-SNPS-Relay: synopsys.com
 From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
 To:     dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -38,10 +38,9 @@ To:     dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Lukas Wunner <lukas@wunner.de>,
         Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: [PATCH v7 14/15] dmaengine: dw-edma: Revert fix scatter-gather address calculation
-Date:   Thu, 18 Feb 2021 20:04:08 +0100
-Message-Id: <1778422e389fe40032e216b59b1b992c61ec9887.1613674948.git.gustavo.pimentel@synopsys.com>
+Subject: [PATCH v7 15/15] dmaengine: dw-edma: Add pcim_iomap_table return check
+Date:   Thu, 18 Feb 2021 20:04:09 +0100
+Message-Id: <bc5e6b8632c84660bb6dae454980e9419992ed14.1613674948.git.gustavo.pimentel@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1613674948.git.gustavo.pimentel@synopsys.com>
 References: <cover.1613674948.git.gustavo.pimentel@synopsys.com>
@@ -51,48 +50,69 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Reverting the applied patch because it caused a regression on
-ARC700 platform (32 bits).
+Currently, is missing a null check on a pcim_iomap_table() return value
+and this can lead to a null pointer dereference if the desired BAR
+wasn't mapped previously.
+Fix this by adding a null check and returning -ENOMEM.
 
-Fixes: 05655541c950 ("dmaengine: dw-edma: Fix scatter-gather address calculation")
+Addresses-Coverity: ("Dereference null return")
 Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 ---
- drivers/dma/dw-edma/dw-edma-core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/dma/dw-edma/dw-edma-pcie.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index 0793df1..5328992 100644
---- a/drivers/dma/dw-edma/dw-edma-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -429,7 +429,8 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
- 			if (xfer->type == EDMA_XFER_CYCLIC) {
- 				burst->dar = xfer->xfer.cyclic.paddr;
- 			} else if (xfer->type == EDMA_XFER_SCATTER_GATHER) {
--				burst->dar = dst_addr;
-+				src_addr += sg_dma_len(sg);
-+				burst->dar = sg_dma_address(sg);
- 				/* Unlike the typical assumption by other
- 				 * drivers/IPs the peripheral memory isn't
- 				 * a FIFO memory, in this case, it's a
-@@ -443,7 +444,8 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
- 			if (xfer->type == EDMA_XFER_CYCLIC) {
- 				burst->sar = xfer->xfer.cyclic.paddr;
- 			} else if (xfer->type == EDMA_XFER_SCATTER_GATHER) {
--				burst->sar = src_addr;
-+				dst_addr += sg_dma_len(sg);
-+				burst->sar = sg_dma_address(sg);
- 				/* Unlike the typical assumption by other
- 				 * drivers/IPs the peripheral memory isn't
- 				 * a FIFO memory, in this case, it's a
-@@ -455,8 +457,6 @@ dw_edma_device_transfer(struct dw_edma_transfer *xfer)
- 		}
+diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+index fa66e03..44f6e09 100644
+--- a/drivers/dma/dw-edma/dw-edma-pcie.c
++++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+@@ -240,6 +240,9 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 	dw->rd_ch_cnt = vsec_data.rd_ch_cnt;
  
- 		if (xfer->type == EDMA_XFER_SCATTER_GATHER) {
--			src_addr += sg_dma_len(sg);
--			dst_addr += sg_dma_len(sg);
- 			sg = sg_next(sg);
- 		} else if (xfer->type == EDMA_XFER_INTERLEAVED &&
- 			   xfer->xfer.il->frame_size > 0) {
+ 	dw->rg_region.vaddr = pcim_iomap_table(pdev)[vsec_data.rg.bar];
++	if (!dw->rg_region.vaddr)
++		return -ENOMEM;
++
+ 	dw->rg_region.vaddr += vsec_data.rg.off;
+ 	dw->rg_region.paddr = pdev->resource[vsec_data.rg.bar].start;
+ 	dw->rg_region.paddr += vsec_data.rg.off;
+@@ -252,12 +255,18 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 		struct dw_edma_block *dt_block = &vsec_data.dt_wr[i];
+ 
+ 		ll_region->vaddr = pcim_iomap_table(pdev)[ll_block->bar];
++		if (!ll_region->vaddr)
++			return -ENOMEM;
++
+ 		ll_region->vaddr += ll_block->off;
+ 		ll_region->paddr = pdev->resource[ll_block->bar].start;
+ 		ll_region->paddr += ll_block->off;
+ 		ll_region->sz = ll_block->sz;
+ 
+ 		dt_region->vaddr = pcim_iomap_table(pdev)[dt_block->bar];
++		if (!dt_region->vaddr)
++			return -ENOMEM;
++
+ 		dt_region->vaddr += dt_block->off;
+ 		dt_region->paddr = pdev->resource[dt_block->bar].start;
+ 		dt_region->paddr += dt_block->off;
+@@ -271,12 +280,18 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+ 		struct dw_edma_block *dt_block = &vsec_data.dt_rd[i];
+ 
+ 		ll_region->vaddr = pcim_iomap_table(pdev)[ll_block->bar];
++		if (!ll_region->vaddr)
++			return -ENOMEM;
++
+ 		ll_region->vaddr += ll_block->off;
+ 		ll_region->paddr = pdev->resource[ll_block->bar].start;
+ 		ll_region->paddr += ll_block->off;
+ 		ll_region->sz = ll_block->sz;
+ 
+ 		dt_region->vaddr = pcim_iomap_table(pdev)[dt_block->bar];
++		if (!dt_region->vaddr)
++			return -ENOMEM;
++
+ 		dt_region->vaddr += dt_block->off;
+ 		dt_region->paddr = pdev->resource[dt_block->bar].start;
+ 		dt_region->paddr += dt_block->off;
 -- 
 2.7.4
 

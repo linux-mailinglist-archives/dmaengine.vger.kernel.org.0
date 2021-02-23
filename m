@@ -2,33 +2,49 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D56C3230E8
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Feb 2021 19:43:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 746AB3230F0
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Feb 2021 19:48:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232180AbhBWSm6 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 23 Feb 2021 13:42:58 -0500
-Received: from mga14.intel.com ([192.55.52.115]:21270 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230114AbhBWSm6 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 23 Feb 2021 13:42:58 -0500
-IronPort-SDR: fkxo1KjMTKKMoVuxz9/IqlP8dZ5wUz5LMRGoWFiMFv3dyNcWRLsMq/bNXYoWUA8FJ/T4FhwOUn
- wwsbYLO5IFlg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9904"; a="184204934"
-X-IronPort-AV: E=Sophos;i="5.81,200,1610438400"; 
-   d="scan'208";a="184204934"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2021 10:42:17 -0800
-IronPort-SDR: i5GwP3eRvEE/n5X2iAqoVscjGF+DseN4GzuN7YSSxWaZAeR/nT78AO0hWZD9yrR2H8LhuEMvMd
- 83WTW2x5yK4g==
-X-IronPort-AV: E=Sophos;i="5.81,200,1610438400"; 
-   d="scan'208";a="431050287"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.209.140.167]) ([10.209.140.167])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2021 10:42:17 -0800
+        id S232180AbhBWSsm (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 23 Feb 2021 13:48:42 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17508 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230114AbhBWSsl (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 23 Feb 2021 13:48:41 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B60354de10001>; Tue, 23 Feb 2021 10:48:01 -0800
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 23 Feb
+ 2021 18:47:58 +0000
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.175)
+ by HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Tue, 23 Feb 2021 18:47:58 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e7z8Jt1FNP1wN7FtEY3EVsaJv9Ed3Lai7a9D5rdGpJf7VZd1F9Ib3fRRLiwCIs/mYfeAsjf7jzWHUvdGNekC0aG4x6pIBmOlbICIDVHRwp9kzow78z3NtT2Vht8mTIx7yXQrgePqUSmlz/FSXsMd5NgNIQm2GYXI8yl5Jgno3INuB7NK8cvPeDDrexE2cqsNRXNshM9hnjk5fd5EOF0j3KExAvJj3Hg72IYhghwcXUp48BpI08Jn4rUGsvIkGF0sP1QKW2QwgFb8lEAgGHehgDkELD0Ej2QRzVobqEG11kaHjV8YUmuY+7xRnduyi9rCxPM4NlWZmgBd/fgF/6PW7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7TJkyFTpBDwqsp+XOzpw/B9QhWpkF54OjsW5ZV8QvrE=;
+ b=DLSUj9c5L7SCkKdW4Wlwe4VpKCBHfmLHg1Y3kLkHizv4SvbxSYq5UWM94ee03E5UMnVETBPrGkxXV8PcJLDZVG1fnD2o3xriK9iQcoUHu4TO6bPnDjG2Z+dHC5R5nzltN/Z847TaMTyQoC0L+9zyZ8NH81PqZpdtQtFmd+nWv7OVHWYYKII3gwWlvGx+piTQ19JEBvJzBWNLl3dG9yvpMiCmtPAKIGQRTaahcvF7yaBXFmiGO1W7SjoVVpNRAWHveQ6MxqPTfg/Nl838GsVhCC+oQh6JaMw3u5AH3lb1H/EQMbPvpihFgMIpqjQUIKnsHppvtrfFuv5+5D5mlr0s3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR12MB1548.namprd12.prod.outlook.com (2603:10b6:4:a::23) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3868.32; Tue, 23 Feb 2021 18:47:57 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1c62:7fa3:617b:ab87]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1c62:7fa3:617b:ab87%6]) with mapi id 15.20.3868.033; Tue, 23 Feb 2021
+ 18:47:57 +0000
+Date:   Tue, 23 Feb 2021 14:47:56 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
 Subject: Re: [PATCH] dmaengine: idxd: Do not use devm for 'struct device'
  object allocation
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Message-ID: <20210223184756.GH4247@nvidia.com>
 References: <161368391486.325538.12829531932377771231.stgit@djiang5-desk3.ch.intel.com>
  <20210223125956.GY4247@nvidia.com>
  <397867c3-0b0d-82aa-37c1-deccd24d8f6c@intel.com>
@@ -36,73 +52,41 @@ References: <161368391486.325538.12829531932377771231.stgit@djiang5-desk3.ch.int
  <CAPcyv4j3RTBqVmAKSRVOzdQ8yZVMU0_yunSGSiV93rYwHBEx9Q@mail.gmail.com>
  <20210223181015.GC4247@nvidia.com>
  <CAPcyv4gA8E9ehFQCnUkz72w-Z1qHV=f_Y8XK7O9w-P3_aap65g@mail.gmail.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <592ad3c7-1fc8-537d-a491-5013759109e1@intel.com>
-Date:   Tue, 23 Feb 2021 11:42:16 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+ <592ad3c7-1fc8-537d-a491-5013759109e1@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <592ad3c7-1fc8-537d-a491-5013759109e1@intel.com>
+X-ClientProxiedBy: BLAPR03CA0013.namprd03.prod.outlook.com
+ (2603:10b6:208:32b::18) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4gA8E9ehFQCnUkz72w-Z1qHV=f_Y8XK7O9w-P3_aap65g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.162.115.133) by BLAPR03CA0013.namprd03.prod.outlook.com (2603:10b6:208:32b::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.27 via Frontend Transport; Tue, 23 Feb 2021 18:47:57 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1lEciy-00FTLp-3V; Tue, 23 Feb 2021 14:47:56 -0400
+X-Header: ProcessedBy-CMR-outbound
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1614106081; bh=7TJkyFTpBDwqsp+XOzpw/B9QhWpkF54OjsW5ZV8QvrE=;
+        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
+         From:To:CC:Subject:Message-ID:References:Content-Type:
+         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Header;
+        b=r+B+U+6poRm3+JK4sVvPNBoZuiezlD2mNks8fpvIxPh0srvaniDy5bkkzf0dWPvDE
+         f0kNJI8weBKuCmWyDxQTZWFILYQjb4H+c1LDZPwVDx0H/kbUpDg8atpfQquF2/OVh2
+         nYX05V9I1ehK2AaVV9Zz/pV+1z0P7bdokelHiHlK/GHPRl6YdWxTKdGr7N+ul4oSDZ
+         o+v8MwhKIS+G7Bu0g5MWDqC72BPxWNLBpBDtuD2afkKcU9prYDSPnm4QAynMTLTGF0
+         jIbSEt6rsgtR2ktof61dpmA+tnaQJC33y3aTvkMNQpie5RSZAAAmsShlIBXUzfR2Y7
+         t13sdbHZWEjJg==
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On Tue, Feb 23, 2021 at 11:42:16AM -0700, Dave Jiang wrote:
 
-On 2/23/2021 11:30 AM, Dan Williams wrote:
-> On Tue, Feb 23, 2021 at 10:11 AM Jason Gunthorpe <jgg@nvidia.com> wrote:
->> On Tue, Feb 23, 2021 at 10:05:58AM -0800, Dan Williams wrote:
->>> On Tue, Feb 23, 2021 at 9:09 AM Jason Gunthorpe <jgg@nvidia.com> wrote:
->>>> On Tue, Feb 23, 2021 at 08:27:46AM -0700, Dave Jiang wrote:
->>>>> On 2/23/2021 5:59 AM, Jason Gunthorpe wrote:
->>>>>> On Thu, Feb 18, 2021 at 02:31:54PM -0700, Dave Jiang wrote:
->>>>>>> Remove devm_* allocation of memory of 'struct device' objects.
->>>>>>> The devm_* lifetime is incompatible with device->release() lifetime.
->>>>>>> Address issues flagged by CONFIG_DEBUG_KOBJECT_RELEASE. Add release
->>>>>>> functions for each component in order to free the allocated memory at
->>>>>>> the appropriate time. Each component such as wq, engine, and group now
->>>>>>> needs to be allocated individually in order to setup the lifetime properly.
->>>>>> I really don't understand why idxd has so many struct device objects.
->>>>>>
->>>>>> Typically I expect a simple driver to have exactly one, usually
->>>>>> provided by its subsystem.
->>>>>>
->>>>>> What is the purpose?
->>>>> When we initially designed this, Dan suggested to tie the device and
->>>>> workqueue enabling to the Linux device model so that the enabling/disabling
->>>>> can be done via bind/unbind of the sub drivers. So that's how we ended up
->>>>> with all the 'struct device' under idxd and one for each configurable
->>>>> component of the hardware device.
->>>> IDXD created its own little bus just for that?? :\
->>> Yes, for the dynamic configurability of the queues and engines it was
->>> either a pile of ioctls, configfs, or a dynamic sysfs organization. I
->>> did dynamic sysfs for libnvdimm and suggested idxd could use the same
->>> model.
->>>
->>>> It is really weird that something called a workqueue would show up in
->>>> the driver model at all.
->>> It's a partition of the hardware functionality.
->> But to what end? What else are you going to do with a slice of the
->> IDXD device other than assign it to the IDXD driver?
-> idxd, unlike other dmaengines, has a dynamic relationship between
-> backend hardware engines and frontend submission queues. The
-> assignment of resources to queues is managed via sysfs. I think this
-> would be clearer if there were some more upstream usage examples
-> beyond dmaengine. However, consider one exploratory usage of
-> offloading memory copies in the pmem driver. Each pmem device could be
-> given a submission queue even if all pmem devices shared an engine on
-> the backend.
->
->> Is it for vfio? If so then why doesn't the vfio just bind to the WQ -
->> why does it have an aux device??
-> Hmm, Dave? Couldn't there be an alternate queue driver that attached
-> vfio? At least that's how libnvdimm and dax devices change
-> personality, they just load a different driver for the same device.
+> Would that work for a queue that's shared between multiple mdevs? And wasn't
+> the main reason of pushing an aux dev under VFIO is so putting the code
+> under the right maintainer for code review?
 
-Would that work for a queue that's shared between multiple mdevs? And 
-wasn't the main reason of pushing an aux dev under VFIO is so putting 
-the code under the right maintainer for code review?
+Huh? No matter what device_driver type you use, the VFIO part would
+still live under drivers/vfio
 
-
+Jason

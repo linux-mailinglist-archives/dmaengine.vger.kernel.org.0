@@ -2,707 +2,121 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B0B8324356
-	for <lists+dmaengine@lfdr.de>; Wed, 24 Feb 2021 18:51:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B1EC32437B
+	for <lists+dmaengine@lfdr.de>; Wed, 24 Feb 2021 19:05:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230001AbhBXRuY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 24 Feb 2021 12:50:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229644AbhBXRuX (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 Feb 2021 12:50:23 -0500
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25156C06174A
-        for <dmaengine@vger.kernel.org>; Wed, 24 Feb 2021 09:49:43 -0800 (PST)
-Received: by mail-ed1-x533.google.com with SMTP id n1so3662795edv.2
-        for <dmaengine@vger.kernel.org>; Wed, 24 Feb 2021 09:49:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9xd2XivApT5/Tw3ODFELlK+jbJMANtlsiHZlefTb+wA=;
-        b=gsuN+9XJzeZpSyxIIsp4t2eIMRKZ748S1HQbZoo5sW8KzfKa+JM1EC/ABfkK48lyOC
-         PIVhHEQI7eABR9BLzH49IemHF20Z7IZJ82Inxmxy0666Cw1hFXLAlfW8qeKJKmlzXMBP
-         y3Yz0t/ycdN86VWXZFiP+lBFZQE0hNYqvIdopp1tFG4yJgkcZ+BrvQTaLu+aUenE0Yzl
-         iy/2u+k7h5sZUo3wj+yfgQOaHIrFkxkUX00M0YkObIWMxiK1Ye6PyemUKKiirAMbjy9w
-         Iz5i4s4kzSFKWY2vMsANHFixYt+TiO9nFGMKFMnBR5I9Eh9r0B5XOdqM4024i1uBQDoS
-         H9FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9xd2XivApT5/Tw3ODFELlK+jbJMANtlsiHZlefTb+wA=;
-        b=KylpIjaZDBRx3oaN+1y8FkRwwMi7tIZ3ekfpc9u39rLp/5+5751sYCB0e/CCNJM/v3
-         hxKKZ8Ol1qVnNDvYZmWrfwfw8tLIXEjXXhbi55yLOgP503IAlGf1567dYpO9VqcN+437
-         djhYrw69KuFE2i1ZaFr/Ny9O5hISRixm/kDpd1HNBgMTq3DzdxOKY04T9GjdQmWaPwhG
-         SV7ht4yf9znrzuLG1Gw/a74sHOEvw6AKYwui1tTTjIUuC/UWirI3N6Oq8wiWm88r2W6H
-         FsZw/w/hrg8bJjum6mqPJNt6qiuJR40M6YQaTbsjDavtbildHNMkOdPQbRJGgZooKJHk
-         5eLg==
-X-Gm-Message-State: AOAM531poj35ZvOoKGmAVtLnaj5HaVq5kR69qvOEBIybgZuufRtSlPZ5
-        mvrfepO6wodX8nVmHaEKI8Fmx3LamBlQurUZ01zOD2WpgTw=
-X-Google-Smtp-Source: ABdhPJwKEYOwRvCSasq9aYBbdtOkk3DQLW2lfvVW9rWLJgcZ5f1KE11erGU5YDLAntOlu/9JTuMvn2fgCfTIQLYOB9M=
-X-Received: by 2002:a05:6402:10ce:: with SMTP id p14mr21654469edu.348.1614188981657;
- Wed, 24 Feb 2021 09:49:41 -0800 (PST)
-MIME-Version: 1.0
-References: <161418136625.1883632.9123020856542653686.stgit@djiang5-desk3.ch.intel.com>
- <CAPcyv4igM0O2U2+vqJRPL+Rh_pLydwdYpTorxhPa2MaDz-naJQ@mail.gmail.com> <ed5dd7c1-76be-468c-6453-3a3dc645d2a4@intel.com>
-In-Reply-To: <ed5dd7c1-76be-468c-6453-3a3dc645d2a4@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 24 Feb 2021 09:49:39 -0800
-Message-ID: <CAPcyv4huU8qTjdB6X+cNcgr-zX6XHoVT7nE6q2Sr6Y0UoiUkCw@mail.gmail.com>
+        id S229622AbhBXSFB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 24 Feb 2021 13:05:01 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9423 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229498AbhBXSFA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 Feb 2021 13:05:00 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B603695240000>; Wed, 24 Feb 2021 10:04:20 -0800
+Received: from HKMAIL101.nvidia.com (10.18.16.10) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 24 Feb
+ 2021 18:04:18 +0000
+Received: from HKMAIL101.nvidia.com (10.18.16.10) by HKMAIL101.nvidia.com
+ (10.18.16.10) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 24 Feb
+ 2021 18:00:12 +0000
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
+ by HKMAIL101.nvidia.com (10.18.16.10) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Wed, 24 Feb 2021 18:00:12 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JJ/uG+XIQBez0J72Wg3GRrpzJPlv7tPrvignU5gCmrtKxHaMbxfYwUQIsLlzFvrlF6ZDP841sfjQJN6IxWOl4vzBhOz1ThK/uXQfjgtnUWoUw45/T/Nf+iwTUFB4xLe0jedkhtXDpi1dLMkJCSC5j6oBdh5E4gdt3oazo/7aK0eRMWDRYYfWvVJlXmCV2f31Cs3KpxSJaklVX0VzCfTg7WnuER23AK7iOKvGELmVVczy3v2uauCXqrzHOgatYDlViJ0fUC1zeGvJ4VCQgtnO+9DGK2jG/Rlkip4mCYAPOaCj8dxcu4IVEzi5YP+wkiZ82NzEyAP/jwsOxq91QmSqqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TAqIuTxcCcy6DQRg1Fyre98IBrM09DbRi1CRafzyy4E=;
+ b=LvpPRTm8gV9dTEUjS1t5HyhD2On6Xs7ndyw+SOtWpDzG9FQlSS+0+B1tuYcfeppIwUaoCR9chRl92E5xavXTH47H7jxrGzaOVvTwM0QT3OsqGY5f6ZHG6jaLz2vUlSVwPfgOsx16r3w/uFL/jcdTE7GvsTAXrZftHjz/i9xjAy1y7TQl63ffQmJhAPUgBnFyOSfI0+ayw3AwKnV5D4cddC55fsuuWJN/3INVdTnHPnkesaP07GdHg3QcG9ElsB+wHG1kp2BnpFtohl9Pqhe5O+ieLYvUM03xaxarrYIktffDmqvgw+Ol7H8lmKyRJgV1b7hS5BIhGKWBNCKwep7Suw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR12MB1545.namprd12.prod.outlook.com (2603:10b6:4:7::23) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3890.19; Wed, 24 Feb 2021 18:00:10 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1c62:7fa3:617b:ab87]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1c62:7fa3:617b:ab87%6]) with mapi id 15.20.3868.033; Wed, 24 Feb 2021
+ 18:00:10 +0000
+Date:   Wed, 24 Feb 2021 14:00:08 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
+        <dmaengine@vger.kernel.org>
 Subject: Re: [PATCH v2] dmaengine: idxd: Do not use devm for 'struct device'
  object allocation
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
-        dmaengine@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <20210224180008.GL4247@nvidia.com>
+References: <161418136625.1883632.9123020856542653686.stgit@djiang5-desk3.ch.intel.com>
+ <CAPcyv4igM0O2U2+vqJRPL+Rh_pLydwdYpTorxhPa2MaDz-naJQ@mail.gmail.com>
+ <ed5dd7c1-76be-468c-6453-3a3dc645d2a4@intel.com>
+ <CAPcyv4huU8qTjdB6X+cNcgr-zX6XHoVT7nE6q2Sr6Y0UoiUkCw@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4huU8qTjdB6X+cNcgr-zX6XHoVT7nE6q2Sr6Y0UoiUkCw@mail.gmail.com>
+X-ClientProxiedBy: MN2PR22CA0023.namprd22.prod.outlook.com
+ (2603:10b6:208:238::28) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.162.115.133) by MN2PR22CA0023.namprd22.prod.outlook.com (2603:10b6:208:238::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.27 via Frontend Transport; Wed, 24 Feb 2021 18:00:09 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1lEySG-00GlQM-KG; Wed, 24 Feb 2021 14:00:08 -0400
+X-Header: ProcessedBy-CMR-outbound
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1614189860; bh=TAqIuTxcCcy6DQRg1Fyre98IBrM09DbRi1CRafzyy4E=;
+        h=ARC-Seal:ARC-Message-Signature:ARC-Authentication-Results:Date:
+         From:To:CC:Subject:Message-ID:References:Content-Type:
+         Content-Disposition:In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Header;
+        b=SAkzgBjLEYE4ardqWAdjRrPoIlZQAjiHhFSZRLlo2317sDycPGyOKH38XaIk1EBZN
+         FZPrZfSArmZLiJkxdFfyIxV66Eu5Aj/pydUeJhh8HKBRhryaIigmy45yWNFKflEP7J
+         UNt++kaQajO1IBQ6ofeKVVFTQmJc6eyT78PNXoaYQUhCpp7PkDvk8Xcl6/dU/fnuz7
+         3GeyTWlUNjeKZVRwBoDJnUai4HmQ+XsDPS8YF5L/4nOo7KR1ue/vmeEQFMxFnUwtqn
+         JkW8rCndJTAdKOXjZaxDOEHgNBprofKE0GNUCGkJfaDJnUxkPaJEzErW1dU/uyM/6P
+         g+yuBwsf3lbmg==
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Feb 24, 2021 at 9:32 AM Dave Jiang <dave.jiang@intel.com> wrote:
->
->
-> On 2/24/2021 10:07 AM, Dan Williams wrote:
-> > On Wed, Feb 24, 2021 at 7:44 AM Dave Jiang <dave.jiang@intel.com> wrote:
-> >> Remove devm_* allocation of memory of 'struct device' objects.
-> >> The devm_* lifetime is incompatible with device->release() lifetime.
-> >> Address issues flagged by CONFIG_DEBUG_KOBJECT_RELEASE. Add release
-> >> functions for each component in order to free the allocated memory at
-> >> the appropriate time. Each component such as wq, engine, and group now
-> >> needs to be allocated individually in order to setup the lifetime properly.
-> >>
-> >> Reported-by: Jason Gunthorpe <jgg@nvidia.com>
-> >> Fixes: bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data accelerators")
-> >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> >> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> >> ---
-> >>
-> >> v2:
-> >> - Remove all devm_* alloc for idxd_device (Jason)
-> >> - Add kref dep for dma_dev (Jason)
-> >>
-> >>   drivers/dma/idxd/device.c |   24 +++--
-> >>   drivers/dma/idxd/dma.c    |   13 +++
-> >>   drivers/dma/idxd/idxd.h   |    6 +
-> >>   drivers/dma/idxd/init.c   |  212 +++++++++++++++++++++++++++++++++++++--------
-> >>   drivers/dma/idxd/irq.c    |    6 +
-> >>   drivers/dma/idxd/sysfs.c  |   79 ++++++++++++-----
-> >>   6 files changed, 260 insertions(+), 80 deletions(-)
-> >>
-> >> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-> >> index 205156afeb54..39cb311ad333 100644
-> >> --- a/drivers/dma/idxd/device.c
-> >> +++ b/drivers/dma/idxd/device.c
-> >> @@ -541,7 +541,7 @@ void idxd_device_wqs_clear_state(struct idxd_device *idxd)
-> >>          lockdep_assert_held(&idxd->dev_lock);
-> >>
-> >>          for (i = 0; i < idxd->max_wqs; i++) {
-> >> -               struct idxd_wq *wq = &idxd->wqs[i];
-> >> +               struct idxd_wq *wq = idxd->wqs[i];
-> >>
-> >>                  if (wq->state == IDXD_WQ_ENABLED) {
-> >>                          idxd_wq_disable_cleanup(wq);
-> >> @@ -721,7 +721,7 @@ static int idxd_groups_config_write(struct idxd_device *idxd)
-> >>                  ioread32(idxd->reg_base + IDXD_GENCFG_OFFSET));
-> >>
-> >>          for (i = 0; i < idxd->max_groups; i++) {
-> >> -               struct idxd_group *group = &idxd->groups[i];
-> >> +               struct idxd_group *group = idxd->groups[i];
-> >>
-> >>                  idxd_group_config_write(group);
-> >>          }
-> >> @@ -793,7 +793,7 @@ static int idxd_wqs_config_write(struct idxd_device *idxd)
-> >>          int i, rc;
-> >>
-> >>          for (i = 0; i < idxd->max_wqs; i++) {
-> >> -               struct idxd_wq *wq = &idxd->wqs[i];
-> >> +               struct idxd_wq *wq = idxd->wqs[i];
-> >>
-> >>                  rc = idxd_wq_config_write(wq);
-> >>                  if (rc < 0)
-> >> @@ -809,7 +809,7 @@ static void idxd_group_flags_setup(struct idxd_device *idxd)
-> >>
-> >>          /* TC-A 0 and TC-B 1 should be defaults */
-> >>          for (i = 0; i < idxd->max_groups; i++) {
-> >> -               struct idxd_group *group = &idxd->groups[i];
-> >> +               struct idxd_group *group = idxd->groups[i];
-> >>
-> >>                  if (group->tc_a == -1)
-> >>                          group->tc_a = group->grpcfg.flags.tc_a = 0;
-> >> @@ -836,12 +836,12 @@ static int idxd_engines_setup(struct idxd_device *idxd)
-> >>          struct idxd_group *group;
-> >>
-> >>          for (i = 0; i < idxd->max_groups; i++) {
-> >> -               group = &idxd->groups[i];
-> >> +               group = idxd->groups[i];
-> >>                  group->grpcfg.engines = 0;
-> >>          }
-> >>
-> >>          for (i = 0; i < idxd->max_engines; i++) {
-> >> -               eng = &idxd->engines[i];
-> >> +               eng = idxd->engines[i];
-> >>                  group = eng->group;
-> >>
-> >>                  if (!group)
-> >> @@ -865,13 +865,13 @@ static int idxd_wqs_setup(struct idxd_device *idxd)
-> >>          struct device *dev = &idxd->pdev->dev;
-> >>
-> >>          for (i = 0; i < idxd->max_groups; i++) {
-> >> -               group = &idxd->groups[i];
-> >> +               group = idxd->groups[i];
-> >>                  for (j = 0; j < 4; j++)
-> >>                          group->grpcfg.wqs[j] = 0;
-> >>          }
-> >>
-> >>          for (i = 0; i < idxd->max_wqs; i++) {
-> >> -               wq = &idxd->wqs[i];
-> >> +               wq = idxd->wqs[i];
-> >>                  group = wq->group;
-> >>
-> >>                  if (!wq->group)
-> >> @@ -982,7 +982,7 @@ static void idxd_group_load_config(struct idxd_group *group)
-> >>
-> >>                          /* Set group assignment for wq if wq bit is set */
-> >>                          if (group->grpcfg.wqs[i] & BIT(j)) {
-> >> -                               wq = &idxd->wqs[id];
-> >> +                               wq = idxd->wqs[id];
-> >>                                  wq->group = group;
-> >>                          }
-> >>                  }
-> >> @@ -999,7 +999,7 @@ static void idxd_group_load_config(struct idxd_group *group)
-> >>                          break;
-> >>
-> >>                  if (group->grpcfg.engines & BIT(i)) {
-> >> -                       struct idxd_engine *engine = &idxd->engines[i];
-> >> +                       struct idxd_engine *engine = idxd->engines[i];
-> >>
-> >>                          engine->group = group;
-> >>                  }
-> >> @@ -1020,13 +1020,13 @@ int idxd_device_load_config(struct idxd_device *idxd)
-> >>          idxd->token_limit = reg.token_limit;
-> >>
-> >>          for (i = 0; i < idxd->max_groups; i++) {
-> >> -               struct idxd_group *group = &idxd->groups[i];
-> >> +               struct idxd_group *group = idxd->groups[i];
-> >>
-> >>                  idxd_group_load_config(group);
-> >>          }
-> >>
-> >>          for (i = 0; i < idxd->max_wqs; i++) {
-> >> -               struct idxd_wq *wq = &idxd->wqs[i];
-> >> +               struct idxd_wq *wq = idxd->wqs[i];
-> >>
-> >>                  rc = idxd_wq_load_config(wq);
-> >>                  if (rc < 0)
-> >> diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
-> >> index a15e50126434..dd834764852c 100644
-> >> --- a/drivers/dma/idxd/dma.c
-> >> +++ b/drivers/dma/idxd/dma.c
-> >> @@ -156,11 +156,15 @@ dma_cookie_t idxd_dma_tx_submit(struct dma_async_tx_descriptor *tx)
-> >>
-> >>   static void idxd_dma_release(struct dma_device *device)
-> >>   {
-> >> +       struct idxd_device *idxd = container_of(device, struct idxd_device, dma_dev);
-> >> +
-> >> +       put_device(&idxd->conf_dev);
-> >>   }
-> >>
-> >>   int idxd_register_dma_device(struct idxd_device *idxd)
-> >>   {
-> >>          struct dma_device *dma = &idxd->dma_dev;
-> >> +       int rc;
-> >>
-> >>          INIT_LIST_HEAD(&dma->channels);
-> >>          dma->dev = &idxd->pdev->dev;
-> >> @@ -178,8 +182,15 @@ int idxd_register_dma_device(struct idxd_device *idxd)
-> >>          dma->device_issue_pending = idxd_dma_issue_pending;
-> >>          dma->device_alloc_chan_resources = idxd_dma_alloc_chan_resources;
-> >>          dma->device_free_chan_resources = idxd_dma_free_chan_resources;
-> >> +       get_device(&idxd->conf_dev);
-> >>
-> >> -       return dma_async_device_register(&idxd->dma_dev);
-> >> +       rc = dma_async_device_register(&idxd->dma_dev);
-> >> +       if (rc < 0) {
-> >> +               put_device(&idxd->conf_dev);
-> >> +               return rc;
-> >> +       }
-> >> +
-> >> +       return 0;
-> >>   }
-> >>
-> >>   void idxd_unregister_dma_device(struct idxd_device *idxd)
-> >> diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-> >> index a9386a66ab72..c2e89b3e3828 100644
-> >> --- a/drivers/dma/idxd/idxd.h
-> >> +++ b/drivers/dma/idxd/idxd.h
-> >> @@ -181,9 +181,9 @@ struct idxd_device {
-> >>
-> >>          spinlock_t dev_lock;    /* spinlock for device */
-> >>          struct completion *cmd_done;
-> >> -       struct idxd_group *groups;
-> >> -       struct idxd_wq *wqs;
-> >> -       struct idxd_engine *engines;
-> >> +       struct idxd_group **groups;
-> >> +       struct idxd_wq **wqs;
-> >> +       struct idxd_engine **engines;
-> >>
-> >>          struct iommu_sva *sva;
-> >>          unsigned int pasid;
-> >> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-> >> index 0bd7b33b436a..e87112a6617e 100644
-> >> --- a/drivers/dma/idxd/init.c
-> >> +++ b/drivers/dma/idxd/init.c
-> >> @@ -73,8 +73,8 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
-> >>                  goto err_no_irq;
-> >>          }
-> >>
-> >> -       idxd->msix_entries = devm_kzalloc(dev, sizeof(struct msix_entry) *
-> >> -                       msixcnt, GFP_KERNEL);
-> >> +       idxd->msix_entries = kzalloc_node(sizeof(struct msix_entry) * msixcnt, GFP_KERNEL,
-> >> +                                         dev_to_node(dev));
-> >>          if (!idxd->msix_entries) {
-> >>                  rc = -ENOMEM;
-> >>                  goto err_no_irq;
-> >> @@ -94,9 +94,8 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
-> >>           * We implement 1 completion list per MSI-X entry except for
-> >>           * entry 0, which is for errors and others.
-> >>           */
-> >> -       idxd->irq_entries = devm_kcalloc(dev, msixcnt,
-> >> -                                        sizeof(struct idxd_irq_entry),
-> >> -                                        GFP_KERNEL);
-> >> +       idxd->irq_entries = kcalloc_node(msixcnt, sizeof(struct idxd_irq_entry),
-> >> +                                        GFP_KERNEL, dev_to_node(dev));
-> >>          if (!idxd->irq_entries) {
-> >>                  rc = -ENOMEM;
-> >>                  goto err_no_irq;
-> >> @@ -178,43 +177,132 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
-> >>          return rc;
-> >>   }
-> >>
-> >> +static int idxd_allocate_wqs(struct idxd_device *idxd)
-> >> +{
-> >> +       struct device *dev = &idxd->pdev->dev;
-> >> +       struct idxd_wq *wq;
-> >> +       int i, rc;
-> >> +
-> >> +       idxd->wqs = kcalloc_node(idxd->max_wqs, sizeof(struct idxd_wq *),
-> >> +                                GFP_KERNEL, dev_to_node(dev));
-> >> +       if (!idxd->wqs)
-> >> +               return -ENOMEM;
-> >> +
-> >> +       for (i = 0; i < idxd->max_wqs; i++) {
-> >> +               wq = kzalloc_node(sizeof(*wq), GFP_KERNEL, dev_to_node(dev));
-> >> +               if (!wq) {
-> >> +                       rc = -ENOMEM;
-> >> +                       goto err;
-> >> +               }
-> >> +
-> >> +               idxd->wqs[i] = wq;
-> >> +       }
-> >> +
-> >> +       return 0;
-> >> +
-> >> + err:
-> >> +       while (--i)
-> >> +               kfree(idxd->wqs[i]);
-> >> +       kfree(idxd->wqs);
-> >> +       idxd->wqs = NULL;
-> >> +       return rc;
-> >> +}
-> >> +
-> >> +static int idxd_allocate_engines(struct idxd_device *idxd)
-> >> +{
-> >> +       struct idxd_engine *engine;
-> >> +       struct device *dev = &idxd->pdev->dev;
-> >> +       int i, rc;
-> >> +
-> >> +       idxd->engines = kcalloc_node(idxd->max_engines, sizeof(struct idxd_engine *),
-> >> +                                    GFP_KERNEL, dev_to_node(dev));
-> >> +       if (!idxd->engines)
-> >> +               return -ENOMEM;
-> >> +
-> >> +       for (i = 0; i < idxd->max_engines; i++) {
-> >> +               engine = kzalloc_node(sizeof(*engine), GFP_KERNEL, dev_to_node(dev));
-> >> +               if (!engine) {
-> >> +                       rc = -ENOMEM;
-> >> +                       goto err;
-> >> +               }
-> >> +
-> >> +               idxd->engines[i] = engine;
-> >> +       }
-> >> +
-> >> +       return 0;
-> >> +
-> >> + err:
-> >> +       while (--i)
-> >> +               kfree(idxd->engines[i]);
-> >> +       kfree(idxd->engines);
-> >> +       idxd->engines = NULL;
-> >> +       return rc;
-> >> +}
-> >> +
-> >> +static int idxd_allocate_groups(struct idxd_device *idxd)
-> >> +{
-> >> +       struct device *dev = &idxd->pdev->dev;
-> >> +       struct idxd_group *group;
-> >> +       int i, rc;
-> >> +
-> >> +       idxd->groups = kcalloc_node(idxd->max_groups, sizeof(struct idxd_group *),
-> >> +                                   GFP_KERNEL, dev_to_node(dev));
-> >> +       if (!idxd->groups)
-> >> +               return -ENOMEM;
-> >> +
-> >> +       for (i = 0; i < idxd->max_groups; i++) {
-> >> +               group = kzalloc_node(sizeof(*group), GFP_KERNEL, dev_to_node(dev));
-> >> +               if (!group) {
-> >> +                       rc = -ENOMEM;
-> >> +                       goto err;
-> >> +               }
-> >> +
-> >> +               idxd->groups[i] = group;
-> >> +       }
-> >> +
-> >> +       return 0;
-> >> +
-> >> + err:
-> >> +       while (--i)
-> >> +               kfree(idxd->groups[i]);
-> >> +       kfree(idxd->groups);
-> >> +       idxd->groups = NULL;
-> >> +       return rc;
-> >> +}
-> >> +
-> >>   static int idxd_setup_internals(struct idxd_device *idxd)
-> >>   {
-> >>          struct device *dev = &idxd->pdev->dev;
-> >> -       int i;
-> >> +       int i, rc;
-> >>
-> >>          init_waitqueue_head(&idxd->cmd_waitq);
-> >>
-> >>          if (idxd->hw.cmd_cap & BIT(IDXD_CMD_REQUEST_INT_HANDLE)) {
-> >> -               idxd->int_handles = devm_kcalloc(dev, idxd->max_wqs, sizeof(int), GFP_KERNEL);
-> >> +               idxd->int_handles = kcalloc_node(idxd->max_wqs, sizeof(int), GFP_KERNEL,
-> >> +                                                dev_to_node(dev));
-> >>                  if (!idxd->int_handles)
-> >>                          return -ENOMEM;
-> >>          }
-> >>
-> >> -       idxd->groups = devm_kcalloc(dev, idxd->max_groups,
-> >> -                                   sizeof(struct idxd_group), GFP_KERNEL);
-> >> -       if (!idxd->groups)
-> >> -               return -ENOMEM;
-> >> +       rc = idxd_allocate_groups(idxd);
-> >> +       if (rc < 0)
-> >> +               return rc;
-> >>
-> >>          for (i = 0; i < idxd->max_groups; i++) {
-> >> -               idxd->groups[i].idxd = idxd;
-> >> -               idxd->groups[i].id = i;
-> >> -               idxd->groups[i].tc_a = -1;
-> >> -               idxd->groups[i].tc_b = -1;
-> >> -       }
-> >> +               struct idxd_group *group = idxd->groups[i];
-> >>
-> >> -       idxd->wqs = devm_kcalloc(dev, idxd->max_wqs, sizeof(struct idxd_wq),
-> >> -                                GFP_KERNEL);
-> >> -       if (!idxd->wqs)
-> >> -               return -ENOMEM;
-> >> +               group->idxd = idxd;
-> >> +               group->id = i;
-> >> +               group->tc_a = -1;
-> >> +               group->tc_b = -1;
-> >> +       }
-> >>
-> >> -       idxd->engines = devm_kcalloc(dev, idxd->max_engines,
-> >> -                                    sizeof(struct idxd_engine), GFP_KERNEL);
-> >> -       if (!idxd->engines)
-> >> -               return -ENOMEM;
-> >> +       rc = idxd_allocate_wqs(idxd);
-> >> +       if (rc < 0)
-> >> +               return rc;
-> >>
-> >>          for (i = 0; i < idxd->max_wqs; i++) {
-> >> -               struct idxd_wq *wq = &idxd->wqs[i];
-> >> +               struct idxd_wq *wq = idxd->wqs[i];
-> >>
-> >>                  wq->id = i;
-> >>                  wq->idxd = idxd;
-> >> @@ -222,15 +310,21 @@ static int idxd_setup_internals(struct idxd_device *idxd)
-> >>                  wq->idxd_cdev.minor = -1;
-> >>                  wq->max_xfer_bytes = idxd->max_xfer_bytes;
-> >>                  wq->max_batch_size = idxd->max_batch_size;
-> >> -               wq->wqcfg = devm_kzalloc(dev, idxd->wqcfg_size, GFP_KERNEL);
-> >> +               wq->wqcfg = kzalloc_node(idxd->wqcfg_size, GFP_KERNEL, dev_to_node(dev));
-> >>                  if (!wq->wqcfg)
-> >>                          return -ENOMEM;
-> >>                  init_completion(&wq->wq_dead);
-> >>          }
-> >>
-> >> +       rc = idxd_allocate_engines(idxd);
-> >> +       if (rc < 0)
-> >> +               return rc;
-> >> +
-> >>          for (i = 0; i < idxd->max_engines; i++) {
-> >> -               idxd->engines[i].idxd = idxd;
-> >> -               idxd->engines[i].id = i;
-> >> +               struct idxd_engine *engine = idxd->engines[i];
-> >> +
-> >> +               engine->idxd = idxd;
-> >> +               engine->id = i;
-> >>          }
-> >>
-> >>          idxd->wq = create_workqueue(dev_name(dev));
-> >> @@ -318,7 +412,7 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev)
-> >>          struct device *dev = &pdev->dev;
-> >>          struct idxd_device *idxd;
-> >>
-> >> -       idxd = devm_kzalloc(dev, sizeof(struct idxd_device), GFP_KERNEL);
-> >> +       idxd = kzalloc_node(sizeof(*idxd), GFP_KERNEL, dev_to_node(dev));
-> >>          if (!idxd)
-> >>                  return NULL;
-> >>
-> >> @@ -436,6 +530,36 @@ static void idxd_type_init(struct idxd_device *idxd)
-> >>                  idxd->compl_size = sizeof(struct iax_completion_record);
-> >>   }
-> >>
-> >> +static void idxd_free(struct idxd_device *idxd)
-> >> +{
-> >> +       int i;
-> >> +
-> >> +       if (idxd->wqs) {
-> >> +               for (i = 0; i < idxd->max_wqs; i++) {
-> >> +                       kfree(idxd->wqs[i]->wqcfg);
-> >> +                       kfree(idxd->wqs[i]);
-> >> +               }
-> >> +               kfree(idxd->wqs);
-> >> +       }
-> >> +
-> >> +       if (idxd->engines) {
-> >> +               for (i = 0; i < idxd->max_engines; i++)
-> >> +                       kfree(idxd->engines[i]);
-> >> +               kfree(idxd->engines);
-> >> +       }
-> >> +
-> >> +       if (idxd->groups) {
-> >> +               for (i = 0; i < idxd->max_groups; i++)
-> >> +                       kfree(idxd->groups[i]);
-> >> +               kfree(idxd->groups);
-> >> +       }
-> >> +
-> >> +       kfree(idxd->int_handles);
-> >> +       kfree(idxd->msix_entries);
-> >> +       kfree(idxd->irq_entries);
-> >> +       kfree(idxd);
-> >> +}
-> >> +
-> >>   static int idxd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >>   {
-> >>          struct device *dev = &pdev->dev;
-> >> @@ -453,21 +577,23 @@ static int idxd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >>
-> >>          dev_dbg(dev, "Mapping BARs\n");
-> >>          idxd->reg_base = pcim_iomap(pdev, IDXD_MMIO_BAR, 0);
-> >> -       if (!idxd->reg_base)
-> >> -               return -ENOMEM;
-> >> +       if (!idxd->reg_base) {
-> >> +               rc = -ENOMEM;
-> >> +               goto err;
-> >> +       }
-> >>
-> >>          dev_dbg(dev, "Set DMA masks\n");
-> >>          rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(64));
-> >>          if (rc)
-> >>                  rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
-> >>          if (rc)
-> >> -               return rc;
-> >> +               goto err;
-> >>
-> >>          rc = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(64));
-> >>          if (rc)
-> >>                  rc = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32));
-> >>          if (rc)
-> >> -               return rc;
-> >> +               goto err;
-> >>
-> >>          idxd_set_type(idxd);
-> >>
-> >> @@ -481,13 +607,15 @@ static int idxd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >>          rc = idxd_probe(idxd);
-> >>          if (rc) {
-> >>                  dev_err(dev, "Intel(R) IDXD DMA Engine init failed\n");
-> >> -               return -ENODEV;
-> >> +               rc = -ENODEV;
-> >> +               goto err;
-> >>          }
-> >>
-> >>          rc = idxd_setup_sysfs(idxd);
-> >>          if (rc) {
-> >>                  dev_err(dev, "IDXD sysfs setup failed\n");
-> >> -               return -ENODEV;
-> >> +               rc = -ENODEV;
-> >> +               goto err;
-> >>          }
-> >>
-> >>          idxd->state = IDXD_DEV_CONF_READY;
-> >> @@ -496,6 +624,10 @@ static int idxd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >>                   idxd->hw.version);
-> >>
-> >>          return 0;
-> >> +
-> >> + err:
-> >> +       idxd_free(idxd);
-> >> +       return rc;
-> >>   }
-> >>
-> >>   static void idxd_flush_pending_llist(struct idxd_irq_entry *ie)
-> >> @@ -530,7 +662,7 @@ static void idxd_wqs_quiesce(struct idxd_device *idxd)
-> >>          int i;
-> >>
-> >>          for (i = 0; i < idxd->max_wqs; i++) {
-> >> -               wq = &idxd->wqs[i];
-> >> +               wq = idxd->wqs[i];
-> >>                  if (wq->state == IDXD_WQ_ENABLED && wq->type == IDXD_WQT_KERNEL)
-> >>                          idxd_wq_quiesce(wq);
-> >>          }
-> >> @@ -586,15 +718,19 @@ static void idxd_shutdown(struct pci_dev *pdev)
-> >>   static void idxd_remove(struct pci_dev *pdev)
-> >>   {
-> >>          struct idxd_device *idxd = pci_get_drvdata(pdev);
-> >> +       int id = idxd->id;
-> >> +       enum idxd_type type = idxd->type;
-> >>
-> >>          dev_dbg(&pdev->dev, "%s called\n", __func__);
-> >> -       idxd_cleanup_sysfs(idxd);
-> >>          idxd_shutdown(pdev);
-> >>          if (device_pasid_enabled(idxd))
-> >>                  idxd_disable_system_pasid(idxd);
-> >> +       idxd_cleanup_sysfs(idxd);
-> >>          mutex_lock(&idxd_idr_lock);
-> >> -       idr_remove(&idxd_idrs[idxd->type], idxd->id);
-> >> +       idr_remove(&idxd_idrs[type], id);
-> >>          mutex_unlock(&idxd_idr_lock);
-> >> +       /* Release to free everything */
-> >> +       put_device(&idxd->conf_dev);
-> >>   }
-> >>
-> >>   static struct pci_driver idxd_pci_driver = {
-> >> diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
-> >> index f1463fc58112..7b0181532f77 100644
-> >> --- a/drivers/dma/idxd/irq.c
-> >> +++ b/drivers/dma/idxd/irq.c
-> >> @@ -45,7 +45,7 @@ static void idxd_device_reinit(struct work_struct *work)
-> >>                  goto out;
-> >>
-> >>          for (i = 0; i < idxd->max_wqs; i++) {
-> >> -               struct idxd_wq *wq = &idxd->wqs[i];
-> >> +               struct idxd_wq *wq = idxd->wqs[i];
-> >>
-> >>                  if (wq->state == IDXD_WQ_ENABLED) {
-> >>                          rc = idxd_wq_enable(wq);
-> >> @@ -130,7 +130,7 @@ static int process_misc_interrupts(struct idxd_device *idxd, u32 cause)
-> >>
-> >>                  if (idxd->sw_err.valid && idxd->sw_err.wq_idx_valid) {
-> >>                          int id = idxd->sw_err.wq_idx;
-> >> -                       struct idxd_wq *wq = &idxd->wqs[id];
-> >> +                       struct idxd_wq *wq = idxd->wqs[id];
-> >>
-> >>                          if (wq->type == IDXD_WQT_USER)
-> >>                                  wake_up_interruptible(&wq->idxd_cdev.err_queue);
-> >> @@ -138,7 +138,7 @@ static int process_misc_interrupts(struct idxd_device *idxd, u32 cause)
-> >>                          int i;
-> >>
-> >>                          for (i = 0; i < idxd->max_wqs; i++) {
-> >> -                               struct idxd_wq *wq = &idxd->wqs[i];
-> >> +                               struct idxd_wq *wq = idxd->wqs[i];
-> >>
-> >>                                  if (wq->type == IDXD_WQT_USER)
-> >>                                          wake_up_interruptible(&wq->idxd_cdev.err_queue);
-> >> diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-> >> index 6bf27529464c..c9546e5ef16c 100644
-> >> --- a/drivers/dma/idxd/sysfs.c
-> >> +++ b/drivers/dma/idxd/sysfs.c
-> >> @@ -16,26 +16,56 @@ static char *idxd_wq_type_names[] = {
-> >>          [IDXD_WQT_USER]         = "user",
-> >>   };
-> >>
-> >> -static void idxd_conf_device_release(struct device *dev)
-> >> +static void idxd_conf_group_release(struct device *dev)
-> >>   {
-> >> -       dev_dbg(dev, "%s for %s\n", __func__, dev_name(dev));
-> >> +       struct idxd_group *group = container_of(dev, struct idxd_group, conf_dev);
-> >> +
-> >> +       kfree(group);
-> >>   }
-> >>
-> >>   static struct device_type idxd_group_device_type = {
-> >>          .name = "group",
-> >> -       .release = idxd_conf_device_release,
-> >> +       .release = idxd_conf_group_release,
-> >>   };
-> >>
-> >> +static void idxd_conf_wq_release(struct device *dev)
-> >> +{
-> >> +       struct idxd_wq *wq = container_of(dev, struct idxd_wq, conf_dev);
-> >> +
-> >> +       kfree(wq->wqcfg);
-> >> +       kfree(wq);
-> >> +}
-> >> +
-> >>   static struct device_type idxd_wq_device_type = {
-> >>          .name = "wq",
-> >> -       .release = idxd_conf_device_release,
-> >> +       .release = idxd_conf_wq_release,
-> >>   };
-> >>
-> >> +static void idxd_conf_engine_release(struct device *dev)
-> >> +{
-> >> +       struct idxd_engine *engine = container_of(dev, struct idxd_engine, conf_dev);
-> >> +
-> >> +       kfree(engine);
-> >> +}
-> >> +
-> >>   static struct device_type idxd_engine_device_type = {
-> >>          .name = "engine",
-> >> -       .release = idxd_conf_device_release,
-> >> +       .release = idxd_conf_engine_release,
-> >>   };
-> >>
-> >> +static void idxd_conf_device_release(struct device *dev)
-> >> +{
-> >> +       struct idxd_device *idxd = container_of(dev, struct idxd_device, conf_dev);
-> >> +
-> >> +       kfree(idxd->groups);
-> >> +       kfree(idxd->wqs);
-> >> +       kfree(idxd->engines);
-> > Why do you need arrays of groups, wqs, and engines? Can't this be
-> > handled by iterating the children of idxd? In other words, child
-> > devices are already tracked on a list underneath their parent, do you
-> > need these arrays?
-> >
-> > I.e. use device_for_each_child() or device_find_child() for these
-> > lookups. Then it's also fully dynamic.
->
-> Given that the max number of those sub-components are known and small,
-> we can access specific component directly and quickly rather than all
-> the overhead of device_find_child(). I can take a look follow on and see
-> if the code really need the direct indexing for any critical paths.
+On Wed, Feb 24, 2021 at 09:49:39AM -0800, Dan Williams wrote:
 
-
->
->
+> > > I'd say this is follow-on work post bug-fix for the current lifetime violation.
+> > >
+> > >> +       kfree(idxd->msix_entries);
+> > >> +       kfree(idxd->irq_entries);
+> > >> +       kfree(idxd->int_handles);
+> > > These seem tied to the lifetime of the driver bind to the pci_device
+> > > not the conf_dev, or are those lines blurred here?
 > >
-> > I'd say this is follow-on work post bug-fix for the current lifetime violation.
-> >
-> >> +       kfree(idxd->msix_entries);
-> >> +       kfree(idxd->irq_entries);
-> >> +       kfree(idxd->int_handles);
-> > These seem tied to the lifetime of the driver bind to the pci_device
-> > not the conf_dev, or are those lines blurred here?
->
-> Jason asked those to be not allocated by devm_* so there wouldn't be any
-> inter-mixing of allocation methods and causing a mess.
+> > Jason asked those to be not allocated by devm_* so there wouldn't be any
+> > inter-mixing of allocation methods and causing a mess.
+> 
+> Ok, it wasn't clear to me where the lines were drawn, so moving all to
+> the lowest common denominator lifetime makes sense.
 
-Ok, it wasn't clear to me where the lines were drawn, so moving all to
-the lowest common denominator lifetime makes sense.
+Usualy when I see things like this I ask why those are dedicated
+allocations too?
+
+It looks like msix_entries is usless, this could be a temp allocation
+during probe and the vector # stored in the irq_entries.
+
+int_handles might like to be a flex array, not sure
+
+The other devm stuff looks questionable:
+
+        rc = devm_request_threaded_irq(dev, msix->vector, idxd_irq_handler,
+                                       idxd_misc_thread, 0, "idxd-misc",
+                                       irq_entry);
+
+So we pass irq_entry which is not devm managed memory to the irq, but
+we don't remove the irq during the driver remove() function, so this
+could use-after free.
+
+However this is counter-acted by masking and synchronize_irq extra
+code.
+
+Looks to be a lot simpler/clearer to just skip devm and call release
+irq instead of the other stuff.
+
+Jason

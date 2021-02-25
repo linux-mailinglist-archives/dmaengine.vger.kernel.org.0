@@ -2,992 +2,150 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA4673246F0
-	for <lists+dmaengine@lfdr.de>; Wed, 24 Feb 2021 23:36:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B64B5324BBF
+	for <lists+dmaengine@lfdr.de>; Thu, 25 Feb 2021 09:09:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235104AbhBXWgF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 24 Feb 2021 17:36:05 -0500
-Received: from mga06.intel.com ([134.134.136.31]:57330 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235409AbhBXWgD (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 24 Feb 2021 17:36:03 -0500
-IronPort-SDR: ecWIrtAM/vryAwsgfmCB5OOOlMVBei5WzkOZEJc2o/L1OzuNEZM6awrOSiXGKbINvf9LMJ8SUT
- mANbP835nmfw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9905"; a="246744280"
-X-IronPort-AV: E=Sophos;i="5.81,203,1610438400"; 
-   d="scan'208";a="246744280"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2021 14:35:20 -0800
-IronPort-SDR: xAGeV3eQgftIyrHgtEZDMq5LZoV0ghEnNE7eoOaWT9n0CW0iW/ka5tDN6jy/9mbKFfOWuW00K5
- +ZjUp27Qubhg==
-X-IronPort-AV: E=Sophos;i="5.81,203,1610438400"; 
-   d="scan'208";a="365177387"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2021 14:35:19 -0800
-Subject: [PATCH v3] dmaengine: idxd: Do not use devm for 'struct device'
- object allocation
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     Jason Gunthorpe <jgg@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org
-Date:   Wed, 24 Feb 2021 15:35:19 -0700
-Message-ID: <161420602220.1987219.16867019403434743794.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/0.23-29-ga622f1
+        id S235597AbhBYIIH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 25 Feb 2021 03:08:07 -0500
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:25366 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S235586AbhBYIIA (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 25 Feb 2021 03:08:00 -0500
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 11P80KuY005157
+        for <dmaengine@vger.kernel.org>; Thu, 25 Feb 2021 00:07:19 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : subject
+ : date : message-id : content-type : content-transfer-encoding :
+ mime-version; s=pfpt0220; bh=Rv41hvwE4px6ZDWZOi85FQl6m3J2b/prOjfZaQ7b3BM=;
+ b=dGRIOs5tnPj2URefoP2zZInmie+4e3IbrEGNa03DNmaJpLKDKl2emMXSBt7Iy1vk4xxl
+ J2M1EkGeQce+iKRA5enKTk/3HwMx1mRJQUXADppbxdgWbGpmsMdzbZyplSBHHmxBDS6G
+ JnKZRqx/kjzAze5y/ogSH0F0wXzcSWYERv68J+neCafT0Zje+2Vx8ex/atmg4jS39yKy
+ LDiTaQR/ji1fC4c4MQDBCOmdZPtayDEPO9ADZukDQnSRsWaBPF+6OBWXXh3aGtj+xUQs
+ /YsTerzKmo7X1a2a4zX9zO9MD2okGvbJVco1u0yPrPXxNfINVcccSEJuw6OgBdTk4u7U ow== 
+Received: from dc5-exch02.marvell.com ([199.233.59.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 36wxbv1dkf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <dmaengine@vger.kernel.org>; Thu, 25 Feb 2021 00:07:19 -0800
+Received: from SC-EXCH01.marvell.com (10.93.176.81) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 25 Feb
+ 2021 00:07:18 -0800
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 25 Feb
+ 2021 00:07:17 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.175)
+ by DC5-EXCH02.marvell.com (10.69.176.39) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Thu, 25 Feb 2021 00:07:17 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OUOwDmEmUlyQ4un/TEyyw932aU9bkyi+bV689vmRbwFVb84UcmLC0LL2Avlpr37Ib51Om7aQNcAbNPvN/dlzc/JkKbPT5Upb5c7eqQR/F0pjfJ6icVPYNKJci2QTfczG/fnk0QF0442eej87bLeMwbdAIbBnGFizchfZKHIL5gokniONIpXHM6DkDRqWcBEwh34lMbjDJa3h1meKmxwwYrT3raJHA93tLfMMBRzUYhvjCEwecieCIjMwInoe9i6MgLgnJ0SVepNskZpJFrC6TmpmRfPaglHy80Qw9FL7qfeb5odLoRpD71vg6xOKi0RIQbBoS+EsmYWsLHh+apAO7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Rv41hvwE4px6ZDWZOi85FQl6m3J2b/prOjfZaQ7b3BM=;
+ b=kaNCFIWOzONvO8Xhq8hHROZHiXW0dmmELqy32wL2DkUIWGILToHGWqsMj3GYKGnMuPkMLim4SK/J70IW6C9Ng+KxIHrbCwzya/utL7m3fOzrRFpCc7095uPDOssKxl62eYfKrweq5p4aBBcatnbOXk5uphQeKgj2trv//xT7uAaUgWA9aB3eZrc+H426QjbWRXY0hAQ3iPyNaLRTbKsDsrFQCJ3cHecEWxBVWNJVdj2GE5D5lZM9DzGkI5sB994mU6BqXpD9zB/dXfMv6sp4dSVZE5FY1V9vvAqmJwwN5KFAJGKVx23Q3KiyXf+e0VPCaRUqAclmxVoNTUhvu5rEmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Rv41hvwE4px6ZDWZOi85FQl6m3J2b/prOjfZaQ7b3BM=;
+ b=BOFYgvqEGHFCzG6Bd0RFE74tOpWwIVf67EjPLNImOf8J8Jm8j2C8BuQQkpNrKeZ/kEwVPIIa/JsBYb8rqf3D/21Rm+uAHOrKULehxA3DqhDLD6C4a5xCuUWdQvTAfxDTU0u6f7vzVzpTD3rgGbf7xv0ik6Mz4REwRqa1PsKUyLQ=
+Received: from BYAPR18MB2741.namprd18.prod.outlook.com (2603:10b6:a03:104::31)
+ by BYAPR18MB2869.namprd18.prod.outlook.com (2603:10b6:a03:110::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.27; Thu, 25 Feb
+ 2021 08:07:17 +0000
+Received: from BYAPR18MB2741.namprd18.prod.outlook.com
+ ([fe80::3175:fa63:b9bb:f3ab]) by BYAPR18MB2741.namprd18.prod.outlook.com
+ ([fe80::3175:fa63:b9bb:f3ab%6]) with mapi id 15.20.3890.019; Thu, 25 Feb 2021
+ 08:07:17 +0000
+From:   Noam Liron <lnoam@marvell.com>
+To:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+Subject: Question on allocating to USB devices
+Thread-Topic: Question on allocating to USB devices
+Thread-Index: AdcLTRmfD95zawQQTFKsWbvSa4tSSg==
+Date:   Thu, 25 Feb 2021 08:07:16 +0000
+Message-ID: <BYAPR18MB2741C046E509A896FC4EEE17B99E9@BYAPR18MB2741.namprd18.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=marvell.com;
+x-originating-ip: [93.173.245.165]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 31e5c04d-6589-4ec3-52b1-08d8d9645e0b
+x-ms-traffictypediagnostic: BYAPR18MB2869:
+x-microsoft-antispam-prvs: <BYAPR18MB2869F2D51C1E05B9CB1062DFB99E9@BYAPR18MB2869.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2cbgfn7ElpN7XYxCl/0GE7WFZamsHd2VwJLVl9YmPo2AuAlc38W8I87ttY8Di1vvtwdXbfIAqpOTAhINg4I86Euhcbxi/654fPfPt2ZlTU4cv8fnjyhw178My76GOVZV9M6xVWIIDzDHSJ8v3WVK3fp2D4XIWLxaL92X+iQkl8CNsxcxU6P2g6a7zVzmp6EiADL7FPcIYTK7xqZnzTpA2xz4qeUoFgjKeEWPZgmyYksudvGaufxeLdQqwjolaYGCSVEERuaokPmZtZkWTqj85h2eFfnoDwtK9477ryBn3w6zJ3MMpZGwojRjGe4ZfOiKmgt7SjtMaROPDkd6O1pZf2jcsKeO6u3ZuDDziNP+DRpazKctlv7/Sw3taDFxTnZt4sfYaMS8VeuCF1Po/QZ5hJc5EkIb65Zuc2lRsU8gJPkc2bIGl1mxuUhmiMoKamtOzJFslFpi3nxmgvymE9Te0nROcmEB7v3uYNWN1s5eZU8u7zUUNDvIITb1bMxFrR8U0k8cneCh3QbFzrVrw3ZjUw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR18MB2741.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(346002)(39860400002)(396003)(376002)(316002)(4744005)(2906002)(6916009)(5660300002)(76116006)(478600001)(71200400001)(64756008)(8936002)(26005)(66946007)(186003)(66476007)(8676002)(66446008)(55016002)(33656002)(6506007)(86362001)(9686003)(52536014)(83380400001)(7696005)(66556008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?iso-8859-1?Q?hdZxojDK8+ZImujZWRkLRUiVRLGm7QE2H7eaCdGRT2xgD1hNoq1gu3UudM?=
+ =?iso-8859-1?Q?STXtpxKrXDewbfsnd1N1DMPxvjXdPFxeu39foJTI72U1SipCfO2bPx+mm/?=
+ =?iso-8859-1?Q?zgdAqxmd8Gs+d5LTjzraIwKIYpViG64RxHxXSKSW1Eg9GEH619zX64ilTJ?=
+ =?iso-8859-1?Q?6BkBtauam59pWWAoSJXaU0Xe+rasmhmIIYih0LCMk42DeU/defg0HZ6Sfa?=
+ =?iso-8859-1?Q?f6QNPlFtVGyWe1ZZfoOpar3RSHAjvfDc+MeQAA1ZOf6d5NMVqzx4aObxTi?=
+ =?iso-8859-1?Q?O/ndyMNszWB98/sMt2f55K7hkuxiDLob296guahuHLUQcouFFCEUYD/qSu?=
+ =?iso-8859-1?Q?hexMegQKbg9Ehp2GV3SUDWKpAacFplE5My8HoU1wYTy9oFjONYsyEnN/F2?=
+ =?iso-8859-1?Q?dzSrsPZD8M4bDUUlGH0WcEuT67aXAPDx30eFa2bvwFfslhzVpmkG3HxfIa?=
+ =?iso-8859-1?Q?LzsfL9u3t24f69qA2zjQY2+j2gY5bUd/f0FKFxWRLH3a95xzXd23dgJhY0?=
+ =?iso-8859-1?Q?MtSXo5IL0AlMHhZX4MA4vSWg52moegDefjgpira/VAQ9W9ExZQRpb8ldz7?=
+ =?iso-8859-1?Q?2lgPEdgW//AE3nkEdYgsOR1cqsSrPV3yYA/vwSj4IcdwMgBtnV/TqGsYrd?=
+ =?iso-8859-1?Q?/KCf83VfgpRIDK15MGG/PMVm1GHnBD3NlDa5VF9nE8bIWE2yvLwhihv6ra?=
+ =?iso-8859-1?Q?aFjJ/MkhfZtjPyxkLge1cpmeJOuXV+CBV+egQH0dtizjQ6bqMvDEsb/liI?=
+ =?iso-8859-1?Q?UsRWDlx0qS9Y5Nm4ZUwRY6w3vZ8gSF9CC7PT/9SiGQhprtXMYteUEubojm?=
+ =?iso-8859-1?Q?xERH04pYxqKfkp6xvKm0xG33r7ywNLr8+wmW6m6ZrWHENpT3mY36KUubZA?=
+ =?iso-8859-1?Q?K5qeMxmjnOZAAXsrlWuP60lYYDTQRXAY3IlkAwN38mVPNcC/N8ifGVUn/h?=
+ =?iso-8859-1?Q?whE3Zx633aqJnMog3qhVXjJPKJ+dMWXAk55CmxgLQQGNwgSXezNp+QKqn6?=
+ =?iso-8859-1?Q?HQPS1AZTnOibM7oynx7soQWx/Hz0JRhGa9+DEKzaplR9Of3n74GM6CBoiH?=
+ =?iso-8859-1?Q?4poHa/iyppdnJt0Nd1JTDabvT/pQYSqPLJPuuD+4PFRL4SbH/UEtTtiVRr?=
+ =?iso-8859-1?Q?mo8ffVtsDOqCmg4AWS091I7VVgWEqrDdrKGsz3DwLHt5Sn0uQXOtH10BrJ?=
+ =?iso-8859-1?Q?gOPI8K66scAwJlrOsvk//25aVt5ndjauie+15CMn7HD5JQ0BSPqMLG6DZw?=
+ =?iso-8859-1?Q?lnLvvU/i64tSmR6F7MjsxvsU1bVCvIHAn2meZyWmx88jbezIvJVOLrVFLW?=
+ =?iso-8859-1?Q?kNevFy4zsmjMKQSMD5HhRcK4QU3aKLPNoe4p67j1f6QDQiRv6pxYfz4JXI?=
+ =?iso-8859-1?Q?A2isv4Am4O?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR18MB2741.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31e5c04d-6589-4ec3-52b1-08d8d9645e0b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2021 08:07:16.9503
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: EOf3cO9VINxQBCvyrpXMUdSlVgWSi/+bAyB7bY5DRfbLjRmoBfTDtXz+yAu8ZjqTwCk2WT7to9rMBR9ctDOoQA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2869
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
+ definitions=2021-02-25_04:2021-02-24,2021-02-25 signatures=0
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Remove devm_* allocation of memory of 'struct device' objects.
-The devm_* lifetime is incompatible with device->release() lifetime.
-Address issues flagged by CONFIG_DEBUG_KOBJECT_RELEASE. Add release
-functions for each component in order to free the allocated memory at
-the appropriate time. Each component such as wq, engine, and group now
-needs to be allocated individually in order to setup the lifetime properly.
+I am working on a SOC which it's RAM starts at 0x200M. For some reason I ne=
+ed to limit the DMA allocations up to 0x220M, and I've done it by creating =
+a shared DMA pool in the DTS:
+reserved-memory {
+    #address-cells =3D <2>;
+    #size-cells =3D <2>;
+    ranges;
 
-Reported-by: Jason Gunthorpe <jgg@nvidia.com>
-Fixes: bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data accelerators")
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
----
-v3:
-- Remove devm_* for irq request and cleanup related bits (Jason)
-v2:
-- Remove all devm_* alloc for idxd_device (Jason)
-- Add kref dep for dma_dev (Jason)
+    reserved: buffer@0 {
+        compatible =3D "shared-dma-pool";=20
+        no-map;
+    reg =3D <0x2 0x0 0x0 0x1000000>;
+}
+which each platform driver in the DTS uses, by referencing the pool:
 
- drivers/dma/idxd/device.c |   28 ++---
- drivers/dma/idxd/dma.c    |   13 ++
- drivers/dma/idxd/idxd.h   |    8 +
- drivers/dma/idxd/init.c   |  276 +++++++++++++++++++++++++++++++++------------
- drivers/dma/idxd/irq.c    |    6 -
- drivers/dma/idxd/sysfs.c  |   78 +++++++++----
- 6 files changed, 290 insertions(+), 119 deletions(-)
+memory-region =3D <&reserved>;
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 205156afeb54..292418d69b2d 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -19,7 +19,7 @@ static void idxd_cmd_exec(struct idxd_device *idxd, int cmd_code, u32 operand,
- /* Interrupt control bits */
- void idxd_mask_msix_vector(struct idxd_device *idxd, int vec_id)
- {
--	struct irq_data *data = irq_get_irq_data(idxd->msix_entries[vec_id].vector);
-+	struct irq_data *data = irq_get_irq_data(idxd->irq_entries[vec_id].vector);
- 
- 	pci_msi_mask_irq(data);
- }
-@@ -36,7 +36,7 @@ void idxd_mask_msix_vectors(struct idxd_device *idxd)
- 
- void idxd_unmask_msix_vector(struct idxd_device *idxd, int vec_id)
- {
--	struct irq_data *data = irq_get_irq_data(idxd->msix_entries[vec_id].vector);
-+	struct irq_data *data = irq_get_irq_data(idxd->irq_entries[vec_id].vector);
- 
- 	pci_msi_unmask_irq(data);
- }
-@@ -541,7 +541,7 @@ void idxd_device_wqs_clear_state(struct idxd_device *idxd)
- 	lockdep_assert_held(&idxd->dev_lock);
- 
- 	for (i = 0; i < idxd->max_wqs; i++) {
--		struct idxd_wq *wq = &idxd->wqs[i];
-+		struct idxd_wq *wq = idxd->wqs[i];
- 
- 		if (wq->state == IDXD_WQ_ENABLED) {
- 			idxd_wq_disable_cleanup(wq);
-@@ -721,7 +721,7 @@ static int idxd_groups_config_write(struct idxd_device *idxd)
- 		ioread32(idxd->reg_base + IDXD_GENCFG_OFFSET));
- 
- 	for (i = 0; i < idxd->max_groups; i++) {
--		struct idxd_group *group = &idxd->groups[i];
-+		struct idxd_group *group = idxd->groups[i];
- 
- 		idxd_group_config_write(group);
- 	}
-@@ -793,7 +793,7 @@ static int idxd_wqs_config_write(struct idxd_device *idxd)
- 	int i, rc;
- 
- 	for (i = 0; i < idxd->max_wqs; i++) {
--		struct idxd_wq *wq = &idxd->wqs[i];
-+		struct idxd_wq *wq = idxd->wqs[i];
- 
- 		rc = idxd_wq_config_write(wq);
- 		if (rc < 0)
-@@ -809,7 +809,7 @@ static void idxd_group_flags_setup(struct idxd_device *idxd)
- 
- 	/* TC-A 0 and TC-B 1 should be defaults */
- 	for (i = 0; i < idxd->max_groups; i++) {
--		struct idxd_group *group = &idxd->groups[i];
-+		struct idxd_group *group = idxd->groups[i];
- 
- 		if (group->tc_a == -1)
- 			group->tc_a = group->grpcfg.flags.tc_a = 0;
-@@ -836,12 +836,12 @@ static int idxd_engines_setup(struct idxd_device *idxd)
- 	struct idxd_group *group;
- 
- 	for (i = 0; i < idxd->max_groups; i++) {
--		group = &idxd->groups[i];
-+		group = idxd->groups[i];
- 		group->grpcfg.engines = 0;
- 	}
- 
- 	for (i = 0; i < idxd->max_engines; i++) {
--		eng = &idxd->engines[i];
-+		eng = idxd->engines[i];
- 		group = eng->group;
- 
- 		if (!group)
-@@ -865,13 +865,13 @@ static int idxd_wqs_setup(struct idxd_device *idxd)
- 	struct device *dev = &idxd->pdev->dev;
- 
- 	for (i = 0; i < idxd->max_groups; i++) {
--		group = &idxd->groups[i];
-+		group = idxd->groups[i];
- 		for (j = 0; j < 4; j++)
- 			group->grpcfg.wqs[j] = 0;
- 	}
- 
- 	for (i = 0; i < idxd->max_wqs; i++) {
--		wq = &idxd->wqs[i];
-+		wq = idxd->wqs[i];
- 		group = wq->group;
- 
- 		if (!wq->group)
-@@ -982,7 +982,7 @@ static void idxd_group_load_config(struct idxd_group *group)
- 
- 			/* Set group assignment for wq if wq bit is set */
- 			if (group->grpcfg.wqs[i] & BIT(j)) {
--				wq = &idxd->wqs[id];
-+				wq = idxd->wqs[id];
- 				wq->group = group;
- 			}
- 		}
-@@ -999,7 +999,7 @@ static void idxd_group_load_config(struct idxd_group *group)
- 			break;
- 
- 		if (group->grpcfg.engines & BIT(i)) {
--			struct idxd_engine *engine = &idxd->engines[i];
-+			struct idxd_engine *engine = idxd->engines[i];
- 
- 			engine->group = group;
- 		}
-@@ -1020,13 +1020,13 @@ int idxd_device_load_config(struct idxd_device *idxd)
- 	idxd->token_limit = reg.token_limit;
- 
- 	for (i = 0; i < idxd->max_groups; i++) {
--		struct idxd_group *group = &idxd->groups[i];
-+		struct idxd_group *group = idxd->groups[i];
- 
- 		idxd_group_load_config(group);
- 	}
- 
- 	for (i = 0; i < idxd->max_wqs; i++) {
--		struct idxd_wq *wq = &idxd->wqs[i];
-+		struct idxd_wq *wq = idxd->wqs[i];
- 
- 		rc = idxd_wq_load_config(wq);
- 		if (rc < 0)
-diff --git a/drivers/dma/idxd/dma.c b/drivers/dma/idxd/dma.c
-index a15e50126434..dd834764852c 100644
---- a/drivers/dma/idxd/dma.c
-+++ b/drivers/dma/idxd/dma.c
-@@ -156,11 +156,15 @@ dma_cookie_t idxd_dma_tx_submit(struct dma_async_tx_descriptor *tx)
- 
- static void idxd_dma_release(struct dma_device *device)
- {
-+	struct idxd_device *idxd = container_of(device, struct idxd_device, dma_dev);
-+
-+	put_device(&idxd->conf_dev);
- }
- 
- int idxd_register_dma_device(struct idxd_device *idxd)
- {
- 	struct dma_device *dma = &idxd->dma_dev;
-+	int rc;
- 
- 	INIT_LIST_HEAD(&dma->channels);
- 	dma->dev = &idxd->pdev->dev;
-@@ -178,8 +182,15 @@ int idxd_register_dma_device(struct idxd_device *idxd)
- 	dma->device_issue_pending = idxd_dma_issue_pending;
- 	dma->device_alloc_chan_resources = idxd_dma_alloc_chan_resources;
- 	dma->device_free_chan_resources = idxd_dma_free_chan_resources;
-+	get_device(&idxd->conf_dev);
- 
--	return dma_async_device_register(&idxd->dma_dev);
-+	rc = dma_async_device_register(&idxd->dma_dev);
-+	if (rc < 0) {
-+		put_device(&idxd->conf_dev);
-+		return rc;
-+	}
-+
-+	return 0;
- }
- 
- void idxd_unregister_dma_device(struct idxd_device *idxd)
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index a9386a66ab72..e90dbd664ec9 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -33,6 +33,7 @@ struct idxd_device_driver {
- struct idxd_irq_entry {
- 	struct idxd_device *idxd;
- 	int id;
-+	int vector;
- 	struct llist_head pending_llist;
- 	struct list_head work_list;
- 	/*
-@@ -181,9 +182,9 @@ struct idxd_device {
- 
- 	spinlock_t dev_lock;	/* spinlock for device */
- 	struct completion *cmd_done;
--	struct idxd_group *groups;
--	struct idxd_wq *wqs;
--	struct idxd_engine *engines;
-+	struct idxd_group **groups;
-+	struct idxd_wq **wqs;
-+	struct idxd_engine **engines;
- 
- 	struct iommu_sva *sva;
- 	unsigned int pasid;
-@@ -209,7 +210,6 @@ struct idxd_device {
- 
- 	union sw_err_reg sw_err;
- 	wait_queue_head_t cmd_waitq;
--	struct msix_entry *msix_entries;
- 	int num_wq_irqs;
- 	struct idxd_irq_entry *irq_entries;
- 
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 0bd7b33b436a..fc1db42873b4 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -61,32 +61,21 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
- {
- 	struct pci_dev *pdev = idxd->pdev;
- 	struct device *dev = &pdev->dev;
--	struct msix_entry *msix;
- 	struct idxd_irq_entry *irq_entry;
--	int i, msixcnt;
-+	int i, j, msixcnt;
- 	int rc = 0;
- 	union msix_perm mperm;
- 
- 	msixcnt = pci_msix_vec_count(pdev);
- 	if (msixcnt < 0) {
- 		dev_err(dev, "Not MSI-X interrupt capable.\n");
--		goto err_no_irq;
-+		return -ENXIO;
- 	}
- 
--	idxd->msix_entries = devm_kzalloc(dev, sizeof(struct msix_entry) *
--			msixcnt, GFP_KERNEL);
--	if (!idxd->msix_entries) {
--		rc = -ENOMEM;
--		goto err_no_irq;
--	}
--
--	for (i = 0; i < msixcnt; i++)
--		idxd->msix_entries[i].entry = i;
--
--	rc = pci_enable_msix_exact(pdev, idxd->msix_entries, msixcnt);
--	if (rc) {
--		dev_err(dev, "Failed enabling %d MSIX entries.\n", msixcnt);
--		goto err_no_irq;
-+	rc = pci_alloc_irq_vectors(pdev, msixcnt, msixcnt, PCI_IRQ_MSIX);
-+	if (rc != msixcnt) {
-+		dev_err(dev, "Failed enabling %d MSIX entries: %d\n", msixcnt, rc);
-+		return -ENOSPC;
- 	}
- 	dev_dbg(dev, "Enabled %d msix vectors\n", msixcnt);
- 
-@@ -94,53 +83,48 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
- 	 * We implement 1 completion list per MSI-X entry except for
- 	 * entry 0, which is for errors and others.
- 	 */
--	idxd->irq_entries = devm_kcalloc(dev, msixcnt,
--					 sizeof(struct idxd_irq_entry),
--					 GFP_KERNEL);
-+	idxd->irq_entries = kcalloc_node(msixcnt, sizeof(struct idxd_irq_entry),
-+					 GFP_KERNEL, dev_to_node(dev));
- 	if (!idxd->irq_entries) {
- 		rc = -ENOMEM;
--		goto err_no_irq;
-+		goto err_ie_alloc;
- 	}
- 
- 	for (i = 0; i < msixcnt; i++) {
- 		idxd->irq_entries[i].id = i;
- 		idxd->irq_entries[i].idxd = idxd;
-+		idxd->irq_entries[i].vector = pci_irq_vector(pdev, i);
- 		spin_lock_init(&idxd->irq_entries[i].list_lock);
- 	}
- 
--	msix = &idxd->msix_entries[0];
- 	irq_entry = &idxd->irq_entries[0];
--	rc = devm_request_threaded_irq(dev, msix->vector, idxd_irq_handler,
--				       idxd_misc_thread, 0, "idxd-misc",
--				       irq_entry);
-+	rc = request_threaded_irq(irq_entry->vector, idxd_irq_handler, idxd_misc_thread,
-+				  0, "idxd-misc", irq_entry);
- 	if (rc < 0) {
- 		dev_err(dev, "Failed to allocate misc interrupt.\n");
--		goto err_no_irq;
-+		goto err_misc_irq;
- 	}
- 
- 	dev_dbg(dev, "Allocated idxd-misc handler on msix vector %d\n",
--		msix->vector);
-+		irq_entry->vector);
- 
- 	/* first MSI-X entry is not for wq interrupts */
- 	idxd->num_wq_irqs = msixcnt - 1;
- 
- 	for (i = 1; i < msixcnt; i++) {
--		msix = &idxd->msix_entries[i];
- 		irq_entry = &idxd->irq_entries[i];
- 
- 		init_llist_head(&idxd->irq_entries[i].pending_llist);
- 		INIT_LIST_HEAD(&idxd->irq_entries[i].work_list);
--		rc = devm_request_threaded_irq(dev, msix->vector,
--					       idxd_irq_handler,
--					       idxd_wq_thread, 0,
--					       "idxd-portal", irq_entry);
-+		rc = request_threaded_irq(irq_entry->vector, idxd_irq_handler,
-+					  idxd_wq_thread, 0, "idxd-portal", irq_entry);
- 		if (rc < 0) {
- 			dev_err(dev, "Failed to allocate irq %d.\n",
--				msix->vector);
--			goto err_no_irq;
-+				irq_entry->vector);
-+			goto err_wq_irqs;
- 		}
- 		dev_dbg(dev, "Allocated idxd-msix %d for vector %d\n",
--			i, msix->vector);
-+			i, irq_entry->vector);
- 
- 		if (idxd->hw.cmd_cap & BIT(IDXD_CMD_REQUEST_INT_HANDLE)) {
- 			/*
-@@ -154,7 +138,7 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
- 			rc = idxd_device_request_int_handle(idxd, i, &idxd->int_handles[i - 1],
- 							    IDXD_IRQ_MSIX);
- 			if (rc < 0)
--				goto err_no_irq;
-+				goto err_irq_handle;
- 			dev_dbg(dev, "int handle requested: %u\n", idxd->int_handles[i - 1]);
- 		}
- 	}
-@@ -170,51 +154,148 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
- 
- 	return 0;
- 
-- err_no_irq:
--	/* Disable error interrupt generation */
--	idxd_mask_error_interrupts(idxd);
--	pci_disable_msix(pdev);
-+ err_irq_handle:
-+	for (j = 1; j < i - 1; j++)
-+		idxd_device_release_int_handle(idxd, idxd->int_handles[j - 1], IDXD_IRQ_MSIX);
-+ err_wq_irqs:
-+	while (--i) {
-+		irq_entry = &idxd->irq_entries[i];
-+		free_irq(irq_entry->vector, irq_entry);
-+	}
-+ err_misc_irq:
-+	kfree(idxd->irq_entries);
-+ err_ie_alloc:
-+	pci_free_irq_vectors(pdev);
- 	dev_err(dev, "No usable interrupts\n");
- 	return rc;
- }
- 
-+static int idxd_allocate_wqs(struct idxd_device *idxd)
-+{
-+	struct device *dev = &idxd->pdev->dev;
-+	struct idxd_wq *wq;
-+	int i, rc;
-+
-+	idxd->wqs = kcalloc_node(idxd->max_wqs, sizeof(struct idxd_wq *),
-+				 GFP_KERNEL, dev_to_node(dev));
-+	if (!idxd->wqs)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < idxd->max_wqs; i++) {
-+		wq = kzalloc_node(sizeof(*wq), GFP_KERNEL, dev_to_node(dev));
-+		if (!wq) {
-+			rc = -ENOMEM;
-+			goto err;
-+		}
-+
-+		idxd->wqs[i] = wq;
-+	}
-+
-+	return 0;
-+
-+ err:
-+	while (--i)
-+		kfree(idxd->wqs[i]);
-+	kfree(idxd->wqs);
-+	idxd->wqs = NULL;
-+	return rc;
-+}
-+
-+static int idxd_allocate_engines(struct idxd_device *idxd)
-+{
-+	struct idxd_engine *engine;
-+	struct device *dev = &idxd->pdev->dev;
-+	int i, rc;
-+
-+	idxd->engines = kcalloc_node(idxd->max_engines, sizeof(struct idxd_engine *),
-+				     GFP_KERNEL, dev_to_node(dev));
-+	if (!idxd->engines)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < idxd->max_engines; i++) {
-+		engine = kzalloc_node(sizeof(*engine), GFP_KERNEL, dev_to_node(dev));
-+		if (!engine) {
-+			rc = -ENOMEM;
-+			goto err;
-+		}
-+
-+		idxd->engines[i] = engine;
-+	}
-+
-+	return 0;
-+
-+ err:
-+	while (--i)
-+		kfree(idxd->engines[i]);
-+	kfree(idxd->engines);
-+	idxd->engines = NULL;
-+	return rc;
-+}
-+
-+static int idxd_allocate_groups(struct idxd_device *idxd)
-+{
-+	struct device *dev = &idxd->pdev->dev;
-+	struct idxd_group *group;
-+	int i, rc;
-+
-+	idxd->groups = kcalloc_node(idxd->max_groups, sizeof(struct idxd_group *),
-+				    GFP_KERNEL, dev_to_node(dev));
-+	if (!idxd->groups)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < idxd->max_groups; i++) {
-+		group = kzalloc_node(sizeof(*group), GFP_KERNEL, dev_to_node(dev));
-+		if (!group) {
-+			rc = -ENOMEM;
-+			goto err;
-+		}
-+
-+		idxd->groups[i] = group;
-+	}
-+
-+	return 0;
-+
-+ err:
-+	while (--i)
-+		kfree(idxd->groups[i]);
-+	kfree(idxd->groups);
-+	idxd->groups = NULL;
-+	return rc;
-+}
-+
- static int idxd_setup_internals(struct idxd_device *idxd)
- {
- 	struct device *dev = &idxd->pdev->dev;
--	int i;
-+	int i, rc;
- 
- 	init_waitqueue_head(&idxd->cmd_waitq);
- 
- 	if (idxd->hw.cmd_cap & BIT(IDXD_CMD_REQUEST_INT_HANDLE)) {
--		idxd->int_handles = devm_kcalloc(dev, idxd->max_wqs, sizeof(int), GFP_KERNEL);
-+		idxd->int_handles = kcalloc_node(idxd->max_wqs, sizeof(int), GFP_KERNEL,
-+						 dev_to_node(dev));
- 		if (!idxd->int_handles)
- 			return -ENOMEM;
- 	}
- 
--	idxd->groups = devm_kcalloc(dev, idxd->max_groups,
--				    sizeof(struct idxd_group), GFP_KERNEL);
--	if (!idxd->groups)
--		return -ENOMEM;
-+	rc = idxd_allocate_groups(idxd);
-+	if (rc < 0)
-+		return rc;
- 
- 	for (i = 0; i < idxd->max_groups; i++) {
--		idxd->groups[i].idxd = idxd;
--		idxd->groups[i].id = i;
--		idxd->groups[i].tc_a = -1;
--		idxd->groups[i].tc_b = -1;
--	}
-+		struct idxd_group *group = idxd->groups[i];
- 
--	idxd->wqs = devm_kcalloc(dev, idxd->max_wqs, sizeof(struct idxd_wq),
--				 GFP_KERNEL);
--	if (!idxd->wqs)
--		return -ENOMEM;
-+		group->idxd = idxd;
-+		group->id = i;
-+		group->tc_a = -1;
-+		group->tc_b = -1;
-+	}
- 
--	idxd->engines = devm_kcalloc(dev, idxd->max_engines,
--				     sizeof(struct idxd_engine), GFP_KERNEL);
--	if (!idxd->engines)
--		return -ENOMEM;
-+	rc = idxd_allocate_wqs(idxd);
-+	if (rc < 0)
-+		return rc;
- 
- 	for (i = 0; i < idxd->max_wqs; i++) {
--		struct idxd_wq *wq = &idxd->wqs[i];
-+		struct idxd_wq *wq = idxd->wqs[i];
- 
- 		wq->id = i;
- 		wq->idxd = idxd;
-@@ -222,15 +303,21 @@ static int idxd_setup_internals(struct idxd_device *idxd)
- 		wq->idxd_cdev.minor = -1;
- 		wq->max_xfer_bytes = idxd->max_xfer_bytes;
- 		wq->max_batch_size = idxd->max_batch_size;
--		wq->wqcfg = devm_kzalloc(dev, idxd->wqcfg_size, GFP_KERNEL);
-+		wq->wqcfg = kzalloc_node(idxd->wqcfg_size, GFP_KERNEL, dev_to_node(dev));
- 		if (!wq->wqcfg)
- 			return -ENOMEM;
- 		init_completion(&wq->wq_dead);
- 	}
- 
-+	rc = idxd_allocate_engines(idxd);
-+	if (rc < 0)
-+		return rc;
-+
- 	for (i = 0; i < idxd->max_engines; i++) {
--		idxd->engines[i].idxd = idxd;
--		idxd->engines[i].id = i;
-+		struct idxd_engine *engine = idxd->engines[i];
-+
-+		engine->idxd = idxd;
-+		engine->id = i;
- 	}
- 
- 	idxd->wq = create_workqueue(dev_name(dev));
-@@ -318,7 +405,7 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct idxd_device *idxd;
- 
--	idxd = devm_kzalloc(dev, sizeof(struct idxd_device), GFP_KERNEL);
-+	idxd = kzalloc_node(sizeof(*idxd), GFP_KERNEL, dev_to_node(dev));
- 	if (!idxd)
- 		return NULL;
- 
-@@ -436,6 +523,34 @@ static void idxd_type_init(struct idxd_device *idxd)
- 		idxd->compl_size = sizeof(struct iax_completion_record);
- }
- 
-+static void idxd_free(struct idxd_device *idxd)
-+{
-+	int i;
-+
-+	if (idxd->wqs) {
-+		for (i = 0; i < idxd->max_wqs; i++) {
-+			kfree(idxd->wqs[i]->wqcfg);
-+			kfree(idxd->wqs[i]);
-+		}
-+		kfree(idxd->wqs);
-+	}
-+
-+	if (idxd->engines) {
-+		for (i = 0; i < idxd->max_engines; i++)
-+			kfree(idxd->engines[i]);
-+		kfree(idxd->engines);
-+	}
-+
-+	if (idxd->groups) {
-+		for (i = 0; i < idxd->max_groups; i++)
-+			kfree(idxd->groups[i]);
-+		kfree(idxd->groups);
-+	}
-+
-+	kfree(idxd->int_handles);
-+	kfree(idxd);
-+}
-+
- static int idxd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	struct device *dev = &pdev->dev;
-@@ -453,21 +568,23 @@ static int idxd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 
- 	dev_dbg(dev, "Mapping BARs\n");
- 	idxd->reg_base = pcim_iomap(pdev, IDXD_MMIO_BAR, 0);
--	if (!idxd->reg_base)
--		return -ENOMEM;
-+	if (!idxd->reg_base) {
-+		rc = -ENOMEM;
-+		goto err;
-+	}
- 
- 	dev_dbg(dev, "Set DMA masks\n");
- 	rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(64));
- 	if (rc)
- 		rc = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
- 	if (rc)
--		return rc;
-+		goto err;
- 
- 	rc = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(64));
- 	if (rc)
- 		rc = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32));
- 	if (rc)
--		return rc;
-+		goto err;
- 
- 	idxd_set_type(idxd);
- 
-@@ -481,13 +598,15 @@ static int idxd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	rc = idxd_probe(idxd);
- 	if (rc) {
- 		dev_err(dev, "Intel(R) IDXD DMA Engine init failed\n");
--		return -ENODEV;
-+		rc = -ENODEV;
-+		goto err;
- 	}
- 
- 	rc = idxd_setup_sysfs(idxd);
- 	if (rc) {
- 		dev_err(dev, "IDXD sysfs setup failed\n");
--		return -ENODEV;
-+		rc = -ENODEV;
-+		goto err;
- 	}
- 
- 	idxd->state = IDXD_DEV_CONF_READY;
-@@ -496,6 +615,10 @@ static int idxd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 		 idxd->hw.version);
- 
- 	return 0;
-+
-+ err:
-+	idxd_free(idxd);
-+	return rc;
- }
- 
- static void idxd_flush_pending_llist(struct idxd_irq_entry *ie)
-@@ -530,7 +653,7 @@ static void idxd_wqs_quiesce(struct idxd_device *idxd)
- 	int i;
- 
- 	for (i = 0; i < idxd->max_wqs; i++) {
--		wq = &idxd->wqs[i];
-+		wq = idxd->wqs[i];
- 		if (wq->state == IDXD_WQ_ENABLED && wq->type == IDXD_WQT_KERNEL)
- 			idxd_wq_quiesce(wq);
- 	}
-@@ -572,13 +695,14 @@ static void idxd_shutdown(struct pci_dev *pdev)
- 
- 	for (i = 0; i < msixcnt; i++) {
- 		irq_entry = &idxd->irq_entries[i];
--		synchronize_irq(idxd->msix_entries[i].vector);
-+		free_irq(irq_entry->vector, irq_entry);
- 		if (i == 0)
- 			continue;
- 		idxd_flush_pending_llist(irq_entry);
- 		idxd_flush_work_list(irq_entry);
- 	}
- 
-+	pci_free_irq_vectors(pdev);
- 	idxd_release_int_handles(idxd);
- 	destroy_workqueue(idxd->wq);
- }
-@@ -586,15 +710,19 @@ static void idxd_shutdown(struct pci_dev *pdev)
- static void idxd_remove(struct pci_dev *pdev)
- {
- 	struct idxd_device *idxd = pci_get_drvdata(pdev);
-+	int id = idxd->id;
-+	enum idxd_type type = idxd->type;
- 
- 	dev_dbg(&pdev->dev, "%s called\n", __func__);
--	idxd_cleanup_sysfs(idxd);
- 	idxd_shutdown(pdev);
- 	if (device_pasid_enabled(idxd))
- 		idxd_disable_system_pasid(idxd);
-+	idxd_cleanup_sysfs(idxd);
- 	mutex_lock(&idxd_idr_lock);
--	idr_remove(&idxd_idrs[idxd->type], idxd->id);
-+	idr_remove(&idxd_idrs[type], id);
- 	mutex_unlock(&idxd_idr_lock);
-+	/* Release to free everything */
-+	put_device(&idxd->conf_dev);
- }
- 
- static struct pci_driver idxd_pci_driver = {
-diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
-index f1463fc58112..7b0181532f77 100644
---- a/drivers/dma/idxd/irq.c
-+++ b/drivers/dma/idxd/irq.c
-@@ -45,7 +45,7 @@ static void idxd_device_reinit(struct work_struct *work)
- 		goto out;
- 
- 	for (i = 0; i < idxd->max_wqs; i++) {
--		struct idxd_wq *wq = &idxd->wqs[i];
-+		struct idxd_wq *wq = idxd->wqs[i];
- 
- 		if (wq->state == IDXD_WQ_ENABLED) {
- 			rc = idxd_wq_enable(wq);
-@@ -130,7 +130,7 @@ static int process_misc_interrupts(struct idxd_device *idxd, u32 cause)
- 
- 		if (idxd->sw_err.valid && idxd->sw_err.wq_idx_valid) {
- 			int id = idxd->sw_err.wq_idx;
--			struct idxd_wq *wq = &idxd->wqs[id];
-+			struct idxd_wq *wq = idxd->wqs[id];
- 
- 			if (wq->type == IDXD_WQT_USER)
- 				wake_up_interruptible(&wq->idxd_cdev.err_queue);
-@@ -138,7 +138,7 @@ static int process_misc_interrupts(struct idxd_device *idxd, u32 cause)
- 			int i;
- 
- 			for (i = 0; i < idxd->max_wqs; i++) {
--				struct idxd_wq *wq = &idxd->wqs[i];
-+				struct idxd_wq *wq = idxd->wqs[i];
- 
- 				if (wq->type == IDXD_WQT_USER)
- 					wake_up_interruptible(&wq->idxd_cdev.err_queue);
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index 6bf27529464c..d99a78e74447 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -16,26 +16,55 @@ static char *idxd_wq_type_names[] = {
- 	[IDXD_WQT_USER]		= "user",
- };
- 
--static void idxd_conf_device_release(struct device *dev)
-+static void idxd_conf_group_release(struct device *dev)
- {
--	dev_dbg(dev, "%s for %s\n", __func__, dev_name(dev));
-+	struct idxd_group *group = container_of(dev, struct idxd_group, conf_dev);
-+
-+	kfree(group);
- }
- 
- static struct device_type idxd_group_device_type = {
- 	.name = "group",
--	.release = idxd_conf_device_release,
-+	.release = idxd_conf_group_release,
- };
- 
-+static void idxd_conf_wq_release(struct device *dev)
-+{
-+	struct idxd_wq *wq = container_of(dev, struct idxd_wq, conf_dev);
-+
-+	kfree(wq->wqcfg);
-+	kfree(wq);
-+}
-+
- static struct device_type idxd_wq_device_type = {
- 	.name = "wq",
--	.release = idxd_conf_device_release,
-+	.release = idxd_conf_wq_release,
- };
- 
-+static void idxd_conf_engine_release(struct device *dev)
-+{
-+	struct idxd_engine *engine = container_of(dev, struct idxd_engine, conf_dev);
-+
-+	kfree(engine);
-+}
-+
- static struct device_type idxd_engine_device_type = {
- 	.name = "engine",
--	.release = idxd_conf_device_release,
-+	.release = idxd_conf_engine_release,
- };
- 
-+static void idxd_conf_device_release(struct device *dev)
-+{
-+	struct idxd_device *idxd = container_of(dev, struct idxd_device, conf_dev);
-+
-+	kfree(idxd->groups);
-+	kfree(idxd->wqs);
-+	kfree(idxd->engines);
-+	kfree(idxd->irq_entries);
-+	kfree(idxd->int_handles);
-+	kfree(idxd);
-+}
-+
- static struct device_type dsa_device_type = {
- 	.name = "dsa",
- 	.release = idxd_conf_device_release,
-@@ -346,7 +375,7 @@ static int idxd_config_bus_remove(struct device *dev)
- 		dev_dbg(dev, "%s removing dev %s\n", __func__,
- 			dev_name(&idxd->conf_dev));
- 		for (i = 0; i < idxd->max_wqs; i++) {
--			struct idxd_wq *wq = &idxd->wqs[i];
-+			struct idxd_wq *wq = idxd->wqs[i];
- 
- 			if (wq->state == IDXD_WQ_DISABLED)
- 				continue;
-@@ -359,7 +388,7 @@ static int idxd_config_bus_remove(struct device *dev)
- 		rc = idxd_device_disable(idxd);
- 		if (test_bit(IDXD_FLAG_CONFIGURABLE, &idxd->flags)) {
- 			for (i = 0; i < idxd->max_wqs; i++) {
--				struct idxd_wq *wq = &idxd->wqs[i];
-+				struct idxd_wq *wq = idxd->wqs[i];
- 
- 				mutex_lock(&wq->wq_lock);
- 				idxd_wq_disable_cleanup(wq);
-@@ -514,7 +543,7 @@ static ssize_t engine_group_id_store(struct device *dev,
- 
- 	if (prevg)
- 		prevg->num_engines--;
--	engine->group = &idxd->groups[id];
-+	engine->group = idxd->groups[id];
- 	engine->group->num_engines++;
- 
- 	return count;
-@@ -545,7 +574,7 @@ static void idxd_set_free_tokens(struct idxd_device *idxd)
- 	int i, tokens;
- 
- 	for (i = 0, tokens = 0; i < idxd->max_groups; i++) {
--		struct idxd_group *g = &idxd->groups[i];
-+		struct idxd_group *g = idxd->groups[i];
- 
- 		tokens += g->tokens_reserved;
- 	}
-@@ -699,7 +728,7 @@ static ssize_t group_engines_show(struct device *dev,
- 	struct idxd_device *idxd = group->idxd;
- 
- 	for (i = 0; i < idxd->max_engines; i++) {
--		struct idxd_engine *engine = &idxd->engines[i];
-+		struct idxd_engine *engine = idxd->engines[i];
- 
- 		if (!engine->group)
- 			continue;
-@@ -726,7 +755,7 @@ static ssize_t group_work_queues_show(struct device *dev,
- 	struct idxd_device *idxd = group->idxd;
- 
- 	for (i = 0; i < idxd->max_wqs; i++) {
--		struct idxd_wq *wq = &idxd->wqs[i];
-+		struct idxd_wq *wq = idxd->wqs[i];
- 
- 		if (!wq->group)
- 			continue;
-@@ -918,7 +947,7 @@ static ssize_t wq_group_id_store(struct device *dev,
- 		return count;
- 	}
- 
--	group = &idxd->groups[id];
-+	group = idxd->groups[id];
- 	prevg = wq->group;
- 
- 	if (prevg)
-@@ -981,7 +1010,7 @@ static int total_claimed_wq_size(struct idxd_device *idxd)
- 	int wq_size = 0;
- 
- 	for (i = 0; i < idxd->max_wqs; i++) {
--		struct idxd_wq *wq = &idxd->wqs[i];
-+		struct idxd_wq *wq = idxd->wqs[i];
- 
- 		wq_size += wq->size;
- 	}
-@@ -1496,7 +1525,7 @@ static ssize_t clients_show(struct device *dev,
- 
- 	spin_lock_irqsave(&idxd->dev_lock, flags);
- 	for (i = 0; i < idxd->max_wqs; i++) {
--		struct idxd_wq *wq = &idxd->wqs[i];
-+		struct idxd_wq *wq = idxd->wqs[i];
- 
- 		count += wq->client_count;
- 	}
-@@ -1660,7 +1689,7 @@ static int idxd_setup_engine_sysfs(struct idxd_device *idxd)
- 	int i, rc;
- 
- 	for (i = 0; i < idxd->max_engines; i++) {
--		struct idxd_engine *engine = &idxd->engines[i];
-+		struct idxd_engine *engine = idxd->engines[i];
- 
- 		engine->conf_dev.parent = &idxd->conf_dev;
- 		dev_set_name(&engine->conf_dev, "engine%d.%d",
-@@ -1681,7 +1710,7 @@ static int idxd_setup_engine_sysfs(struct idxd_device *idxd)
- 
- cleanup:
- 	while (i--) {
--		struct idxd_engine *engine = &idxd->engines[i];
-+		struct idxd_engine *engine = idxd->engines[i];
- 
- 		device_unregister(&engine->conf_dev);
- 	}
-@@ -1694,7 +1723,7 @@ static int idxd_setup_group_sysfs(struct idxd_device *idxd)
- 	int i, rc;
- 
- 	for (i = 0; i < idxd->max_groups; i++) {
--		struct idxd_group *group = &idxd->groups[i];
-+		struct idxd_group *group = idxd->groups[i];
- 
- 		group->conf_dev.parent = &idxd->conf_dev;
- 		dev_set_name(&group->conf_dev, "group%d.%d",
-@@ -1715,7 +1744,7 @@ static int idxd_setup_group_sysfs(struct idxd_device *idxd)
- 
- cleanup:
- 	while (i--) {
--		struct idxd_group *group = &idxd->groups[i];
-+		struct idxd_group *group = idxd->groups[i];
- 
- 		device_unregister(&group->conf_dev);
- 	}
-@@ -1728,7 +1757,7 @@ static int idxd_setup_wq_sysfs(struct idxd_device *idxd)
- 	int i, rc;
- 
- 	for (i = 0; i < idxd->max_wqs; i++) {
--		struct idxd_wq *wq = &idxd->wqs[i];
-+		struct idxd_wq *wq = idxd->wqs[i];
- 
- 		wq->conf_dev.parent = &idxd->conf_dev;
- 		dev_set_name(&wq->conf_dev, "wq%d.%d", idxd->id, wq->id);
-@@ -1748,7 +1777,7 @@ static int idxd_setup_wq_sysfs(struct idxd_device *idxd)
- 
- cleanup:
- 	while (i--) {
--		struct idxd_wq *wq = &idxd->wqs[i];
-+		struct idxd_wq *wq = idxd->wqs[i];
- 
- 		device_unregister(&wq->conf_dev);
- 	}
-@@ -1775,6 +1804,9 @@ static int idxd_setup_device_sysfs(struct idxd_device *idxd)
- 		return rc;
- 	}
- 
-+	/* Hold a kref for cleanup */
-+	get_device(&idxd->conf_dev);
-+
- 	return 0;
- }
- 
-@@ -1818,19 +1850,19 @@ void idxd_cleanup_sysfs(struct idxd_device *idxd)
- 	int i;
- 
- 	for (i = 0; i < idxd->max_wqs; i++) {
--		struct idxd_wq *wq = &idxd->wqs[i];
-+		struct idxd_wq *wq = idxd->wqs[i];
- 
- 		device_unregister(&wq->conf_dev);
- 	}
- 
- 	for (i = 0; i < idxd->max_engines; i++) {
--		struct idxd_engine *engine = &idxd->engines[i];
-+		struct idxd_engine *engine = idxd->engines[i];
- 
- 		device_unregister(&engine->conf_dev);
- 	}
- 
- 	for (i = 0; i < idxd->max_groups; i++) {
--		struct idxd_group *group = &idxd->groups[i];
-+		struct idxd_group *group = idxd->groups[i];
- 
- 		device_unregister(&group->conf_dev);
- 	}
-
+But how can I enforce allocation from this pool (or other reserved area) of=
+ usb devices such as usb2eth dongle? After all they are also devices (probe=
+d at=A0usbnet_probe) that allocate DMA, but are not represented at the DTS.
 

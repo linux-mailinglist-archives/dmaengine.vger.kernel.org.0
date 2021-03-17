@@ -2,90 +2,66 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7418B33EEF2
-	for <lists+dmaengine@lfdr.de>; Wed, 17 Mar 2021 11:58:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0645D33F6D7
+	for <lists+dmaengine@lfdr.de>; Wed, 17 Mar 2021 18:29:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230411AbhCQK60 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 17 Mar 2021 06:58:26 -0400
-Received: from mx07-00178001.pphosted.com ([185.132.182.106]:7736 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230308AbhCQK6H (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 17 Mar 2021 06:58:07 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 12HApwTB027743;
-        Wed, 17 Mar 2021 11:57:41 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=date : from : to :
- cc : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=selector1; bh=ywy0JW8wYUOY2VcO+XEXq2HaVDdPgp6t1+DV/zS0bVI=;
- b=K3P5kFh0vPO8qD0+W7Ip0SxREySWHhHchyu7R+h94GNyb0WlCUadf/fRAybvdHWzcwqH
- Pnus+1LkWIobyUoM20+sEOdNRY0aHrz3lnkk7Dp5pFd+mro3V0xI9C2dO5rzGcai8hR8
- YH5DQeJ6Jw1z6vibs55WWQCoNnZHtYIAeDBLdE8riZmEq8P/sSsuYuWKsirr33mw1R85
- o7Pk+9/Lt2hkNSVKnaNcBTDCceRNHw6qHIEuE/6YzGKC4zh5jJFlBlNbAM81JUe8Yd/J
- 1TSJvaIuW80W7C0QiXlPQGu2Md/cn1AfnPpg+fdaSA0VeyFnzV0ShTPOI9vvCZgyQKzx yA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 378pr5xppd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Mar 2021 11:57:41 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B6542100034;
-        Wed, 17 Mar 2021 11:57:39 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag2node2.st.com [10.75.127.5])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7004D226D05;
-        Wed, 17 Mar 2021 11:57:39 +0100 (CET)
-Received: from gnbcxd0016.gnb.st.com (10.75.127.51) by SFHDAG2NODE2.st.com
- (10.75.127.5) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 17 Mar
- 2021 11:57:38 +0100
-Date:   Wed, 17 Mar 2021 11:57:31 +0100
-From:   Alain Volmat <alain.volmat@foss.st.com>
+        id S231332AbhCQR2s (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 17 Mar 2021 13:28:48 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2709 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230308AbhCQR2P (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 17 Mar 2021 13:28:15 -0400
+Received: from fraeml706-chm.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4F0xjZ7591z67ykJ;
+        Thu, 18 Mar 2021 01:19:46 +0800 (CST)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2106.2; Wed, 17 Mar 2021 18:28:12 +0100
+Received: from localhost (10.47.25.62) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Wed, 17 Mar
+ 2021 17:28:11 +0000
+Date:   Wed, 17 Mar 2021 17:26:55 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Rob Herring <robh@kernel.org>
 CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
+        "Stephen Boyd" <sboyd@kernel.org>,
         Maxime Ripard <mripard@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
+        "Thierry Reding" <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "Vinod Koul" <vkoul@kernel.org>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Jonathan Cameron <jic23@kernel.org>,
         Pavel Machek <pavel@ucw.cz>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        "Kishon Vijay Abraham I" <kishon@ti.com>,
         Sebastian Reichel <sre@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
+        "Mark Brown" <broonie@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-clk@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <linux-i3c@lists.infradead.org>, <linux-iio@vger.kernel.org>,
         <linux-leds@vger.kernel.org>, <linux-pm@vger.kernel.org>,
         <linux-serial@vger.kernel.org>, <linux-spi@vger.kernel.org>
 Subject: Re: [PATCH] dt-bindings: Clean-up undocumented compatible strings
-Message-ID: <20210317105731.GA21081@gnbcxd0016.gnb.st.com>
-Mail-Followup-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Vinod Koul <vkoul@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jonathan Cameron <jic23@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sebastian Reichel <sre@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-clk@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-i3c@lists.infradead.org, linux-iio@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org
-References: <20210316194918.3528417-1-robh@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
+Message-ID: <20210317172655.000070e9@Huawei.com>
 In-Reply-To: <20210316194918.3528417-1-robh@kernel.org>
-X-Disclaimer: ce message est personnel / this message is private
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG2NODE2.st.com
- (10.75.127.5)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-17_05:2021-03-17,2021-03-17 signatures=0
+References: <20210316194918.3528417-1-robh@kernel.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.25.62]
+X-ClientProxiedBy: lhreml732-chm.china.huawei.com (10.201.108.83) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, Mar 16, 2021 at 01:49:18PM -0600, Rob Herring wrote:
+On Tue, 16 Mar 2021 13:49:18 -0600
+Rob Herring <robh@kernel.org> wrote:
+
 > Adding checks for undocumented compatible strings reveals a bunch of
 > warnings in the DT binding examples. Fix the cases which are typos, just
 > a mismatch between the schema and the example, or aren't documented at all.
@@ -116,6 +92,10 @@ On Tue, Mar 16, 2021 at 01:49:18PM -0600, Rob Herring wrote:
 > Cc: linux-serial@vger.kernel.org
 > Cc: linux-spi@vger.kernel.org
 > Signed-off-by: Rob Herring <robh@kernel.org>
+For iio one
+
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
 > ---
 >  .../clock/allwinner,sun4i-a10-pll1-clk.yaml   |  2 +-
 >  .../bindings/clock/milbeaut-clock.yaml        | 12 +++++----
@@ -136,9 +116,6 @@ On Tue, Mar 16, 2021 at 01:49:18PM -0600, Rob Herring wrote:
 >  .../bindings/spi/spi-controller.yaml          | 21 ++++++++-------
 >  .../devicetree/bindings/spi/spi-mux.yaml      |  8 ++----
 >  .../devicetree/bindings/spi/st,stm32-spi.yaml |  6 -----
-
-Acked-by: Alain Volmat <alain.volmat@foss.st.com>
-
 >  19 files changed, 58 insertions(+), 79 deletions(-)
 > 
 > diff --git a/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll1-clk.yaml b/Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll1-clk.yaml
@@ -527,6 +504,4 @@ Acked-by: Alain Volmat <alain.volmat@foss.st.com>
 >      };
 >  
 >  ...
-> -- 
-> 2.27.0
-> 
+

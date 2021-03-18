@@ -2,180 +2,165 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54A4633FDAF
-	for <lists+dmaengine@lfdr.de>; Thu, 18 Mar 2021 04:20:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B11F03403C6
+	for <lists+dmaengine@lfdr.de>; Thu, 18 Mar 2021 11:47:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229949AbhCRDTy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 17 Mar 2021 23:19:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51496 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230476AbhCRDTh (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 17 Mar 2021 23:19:37 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1234::107])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9630DC06174A;
-        Wed, 17 Mar 2021 20:19:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Cc:Subject:From:To:Sender:Reply-To:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=pKHYq1hC0taBlkjCvHKcp3eR8zexcs9SDXnvZOh+BtM=; b=JbClyA67QHU0fDZAxAEByRwKY3
-        Kjdxim4mw14IYawYSOtQRHag+7WrFWDQQNeZOkmEf7VvlUwV3bw5qMIMTMga6zGdbjC0HOczNqU7f
-        GLx/6Natu/Pl4p1tGrVLrcUamZCCrjjRhQmdgtCqGf37v1q79IWEsZQelCruis0KsHOpkLixqIzqe
-        bOx2ZidngIAJyOndMCa3113fziBPrSWW7cSADJ6+9qWbSU0uhe9yaxiJ+A9dItdWoENDDbyfqEd5f
-        N4LJhHG8jxHeusWX026tEPY+kInbicq5A6Ru0dLl3SqbCXdVavKRdnwSBdeTPNZyqRd9eEd4WMyBX
-        bWchQpBA==;
-Received: from [2601:1c0:6280:3f0::9757]
-        by merlin.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lMjBz-001i9Q-0r; Thu, 18 Mar 2021 03:19:32 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        kbuild test robot <lkp@intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: S390: all HAS_IOMEM build failures in one fell swoop
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Message-ID: <5a0172d7-36b1-f18a-ec0f-eb9ee8964a1b@infradead.org>
-Date:   Wed, 17 Mar 2021 20:19:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+        id S229914AbhCRKr2 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 18 Mar 2021 06:47:28 -0400
+Received: from mail-bn8nam11on2042.outbound.protection.outlook.com ([40.107.236.42]:42802
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230079AbhCRKrD (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 18 Mar 2021 06:47:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lmt7a2V1OFydIqfALFRxU1Du8Jrgx4uFGXKbEdxfR5d2JcS0T4a5VeuML+wrbQV5SSIeoAa3MUHdj4NicqWuYoIE3Zr+oBxlOu2Om9zm42hHsJgl0BHN5Y4aLs3SYr1XzcJUxPV2Nx7yrgUVNJ77e6bLTHmcqJ/ReqWtOzIMCbrgF6nUJp+xe9v76vkB30IlvWT5f6KqJm7g4VgVJ3ZyF995y3pSupYFib/MZ/pHI7nbdQDA/Bew/t3tkW9BFui5SfnFQZ8ZlnGVKXg3s2XnT7ZclLr0d1doAh5JDeCgISY43/D+/+KxAYHlK55maqXeSmlMbw3oUT6LeK5jRZ7RyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z1ZMW2sdvo8GmGSfcyOKlSiRZYR9Pm67Hu4OG6/42oM=;
+ b=OREwh7PxU36Q2y8CIrsoAGZw/1iRg6KAWCydeLGgzlwuE/GJELhRTkbFWNZAlQafZCFhfts/WgDVjXQb6oCVzmiFka2Klt+n6JDJaRn7u/Bv1ZSM38OA5f3cZURiYHZ+Ua/DLMlW/k9BeMTBIn7C+RO6sK1t3mgoJaQd3fs9Jkcvmx2J53UkXp3O+ebCmIVJdqoLw6a4WUege1oaJOII0yxJ2mzjyDkaxzJjWB1XDTNkhEI3f1Zh2mWfMWuJYEfdJh+kW7YnA1poBKgHEeGC3vfQqMamaoQVQb+C4JbPEuBRaYs2fzDV5RO0Iwy9bm8QIL8IhctUCmWN71nf0Jkbgg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z1ZMW2sdvo8GmGSfcyOKlSiRZYR9Pm67Hu4OG6/42oM=;
+ b=F5fcJNXfnLjp2DBxJRBx09paeE7pL9HXPIZcxLjzuF/4f/cvVXySVWcERxYawH+Rc1hmK8zpDfOuIAih1wCjCoshPwE/72hAd81uJvBdzdB6MzcF4Y7EhQa9mCOWgM3MF4mkHgGIeIKNBZyH1lhNMcbarZWlhPpcaNJn+KJYstg=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from CY4PR1201MB2549.namprd12.prod.outlook.com
+ (2603:10b6:903:da::10) by CY4PR1201MB2549.namprd12.prod.outlook.com
+ (2603:10b6:903:da::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18; Thu, 18 Mar
+ 2021 10:47:01 +0000
+Received: from CY4PR1201MB2549.namprd12.prod.outlook.com
+ ([fe80::e974:eaaf:2994:ccb6]) by CY4PR1201MB2549.namprd12.prod.outlook.com
+ ([fe80::e974:eaaf:2994:ccb6%4]) with mapi id 15.20.3955.018; Thu, 18 Mar 2021
+ 10:47:01 +0000
+Subject: Re: [PATCH v7 1/3] dmaengine: ptdma: Initial driver for the AMD PTDMA
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
+        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
+        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+References: <1602833947-82021-1-git-send-email-Sanju.Mehta@amd.com>
+ <1602833947-82021-2-git-send-email-Sanju.Mehta@amd.com>
+ <20201118115545.GQ50232@vkoul-mobl>
+From:   Sanjay R Mehta <sanmehta@amd.com>
+Message-ID: <5605dae6-3dde-17f9-35c8-7973106b9bea@amd.com>
+Date:   Thu, 18 Mar 2021 16:16:37 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.0
-MIME-Version: 1.0
+In-Reply-To: <20201118115545.GQ50232@vkoul-mobl>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [165.204.159.242]
+X-ClientProxiedBy: BMXPR01CA0025.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:c::11) To CY4PR1201MB2549.namprd12.prod.outlook.com
+ (2603:10b6:903:da::10)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [172.31.32.35] (165.204.159.242) by BMXPR01CA0025.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:c::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18 via Frontend Transport; Thu, 18 Mar 2021 10:46:56 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 5deae115-472e-4e53-9120-08d8e9fb28f9
+X-MS-TrafficTypeDiagnostic: CY4PR1201MB2549:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR1201MB2549839258BB3954C9274221E5699@CY4PR1201MB2549.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: eHTRobCjVwFaF5Y9lOtpsFL1tnyBtuVIolyV43uPwoyRmpC+kpVMZF0NEX+2+QUix5ZwW2t+uM/Y5ncjt1XK/FThM3LbnGodHqMRrG55gL3leHZvOA6FjjLim2RXl4C7RNQpMG0eB0TtX/UF9r4/EQvefvDaCOtVlylVRQfxfKFtFggisp6V6ZVD7W0JQ1IpWLExrGQgUJUqk4KCJCXY4pR0sQ+Ph4Hy1RLvxLn1zEiFTVBf6ssg+wNSCTSBDs5m+Eag3CYu4RJblaiAvBUa/V8BoVlPtb0j05qmggd7NzGcJkhmHu2Rb4Krvw/jorvbXiaRU3Lic7/NM+grctOk5aPAcoxjfoPk0T32ygYaMJS+Hz8bwfVynBK8hEMZWhcTuojuWvoQTVYrdH0O0q+0jrNYx1tH+NgW0R5nJVnvR2WCiHzl/QAiW4pZWsAGhRDhiWIBoZu5wUa16djBbHoEug0M1782dci7o/5fC1WyIzv+5sYySJlUZf5ptWGaVYZWSplCobqTQNj/zEBAWT4Sy/LbjLNTfLEQYYb12c8ACIq9G+8ZX2QY+8cZ3S8OfW3Q1ub/9PZZLERfQNtHKN77H0+8bwNEILmi+4O7S6FIg1AnIZh4PIKhtPEIE9SGqNl44X1qNoJTqQqO1FbMqNcX6BsxEg0Dl/Q5eU3kUZ7ibuQ=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR1201MB2549.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(376002)(136003)(346002)(396003)(39860400002)(31686004)(36756003)(16526019)(316002)(8936002)(6666004)(6486002)(478600001)(38100700001)(83380400001)(186003)(26005)(52116002)(66946007)(16576012)(2616005)(956004)(6916009)(4326008)(8676002)(5660300002)(66556008)(66476007)(2906002)(31696002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?OUtzblFZRm9MQ2krbkQxQUl1REFIL1lEeE5ybTc0MU12RGFTbHVsMUhBSHE0?=
+ =?utf-8?B?MXBSZW43aHpSTCt2SFpXTEJGSFBIa1dLR2pncElXWWVicjdKZnVpRzEvc3Rz?=
+ =?utf-8?B?NnFIZ1dFRFRPZ1IvajZTNkRPalpua2x5QmRoMk5DNzRPM2RueS9ocGtkaEFn?=
+ =?utf-8?B?bEpXUW1rQ2pWWkZtOHdMMTJqNkR2Z2NQRytpb1BJclU4ZW0rT0N2L3hWZnQ4?=
+ =?utf-8?B?bU4vbDBjNklYcmt3RXBBZTNtQ2NXUG42Q0U4d2cwZ0hJYzJBQ2h5QVJWNzNW?=
+ =?utf-8?B?R0RCenNGOWxmMEZCMC9WRThtRzRBcjRKWWZDVzFOd0ZvWis4cnh3MXdpL1No?=
+ =?utf-8?B?eEtpK2N2M0FZMnBaRTFQR3Jxb2pteFdxbkt0b2svU1pOc2VMUUZaWnEvbXp6?=
+ =?utf-8?B?MmhZajBqR2RtSWU1YWllajNuUU1DM0hsdFdIQklrYktFbzI0M1BLdkl0ay9G?=
+ =?utf-8?B?OXYyOVlFc1doMjlHWk9zenBvMDdHMnYxWkJ3R2dPMVcyK1ZubkhZbjA1aXpF?=
+ =?utf-8?B?eDFNT1FOdk1MbDRGY0ZSOWJ3THJGNWRSdnd6T1cwYmdOeGc0eG1EL042L0RW?=
+ =?utf-8?B?ZDFIbXVLeTlJaktIR2hWZzlwdXVHRnJXZlJ6SXFuRXVEeThCWHJjbmxsdUM0?=
+ =?utf-8?B?K3d2QStLVDE5Y0kxUlBaeTYvZHdnT2NWMWJ1ZzlLMWhmbnZVK0tXekEzZE92?=
+ =?utf-8?B?ZmJoNU5tRWd2VWlIM2JQNGs0eGlUOFJNMlVWOWNxL0ZuMVRQN2ZnSmE3THkr?=
+ =?utf-8?B?YVJHd2l3OHlQNDd0MnY0S0wyVFpoaFZ2cU81ZDJrb3BZRUFGTXJxY3lud0JY?=
+ =?utf-8?B?enB5d3FDVXFNWjh2WCtyUzUvbk16ZXRWWnV2TjVoaWVDMVpsOUVKdHRGdFc4?=
+ =?utf-8?B?L1dnZ1hoeDRKdjlHY0tacFdSL1hsc1VxSEFPZXlneTl5ZUx6aFdUem0rdUx2?=
+ =?utf-8?B?NU85TDVHR05XcFIvRjhBcnBGNlh1cTBVb2liZHJUYU4rK001TTlxc2hqbHhq?=
+ =?utf-8?B?T1NEQXFsVTQ2cmNmT29URlhRandmL1RaMzZVZEkzeiszbkVna2lXaHMyQldo?=
+ =?utf-8?B?MkVEZVZ2Zjk3OXpCN0RVOTVoRFZoWGo5QjVXdUs1TzRBN2NBWmdNK21sTll2?=
+ =?utf-8?B?b01GRkR3aCtvSmNGUFVHeXVwR05XSS9MZ3NXeTgxdXJQL0t6RHIzRkduREE3?=
+ =?utf-8?B?T1hjTHFuM1ZRRko5ZWVwaitwem9iTlNtWjFnYnBZbVRuU3g0UE04R3VTNzRR?=
+ =?utf-8?B?cGNsRFdLYVdGUjNiYjlhUFJBOHRZcmMwR01PWVYvdUdlUjB1a2JHRHdHeGdk?=
+ =?utf-8?B?NjJKOFJDaWJrczRsOWY0RVZXazRaSFVuU0RQSTd3QUVYZ3lqYWVBM01wT1lH?=
+ =?utf-8?B?YW1RaHo2RlVtK2MwclVEVnJTNlh4ZUIwdmoyTVpnb0xKajVLMnI2cWc3dEVy?=
+ =?utf-8?B?TGQ3WUIyVGNIbGZmWkM2am0yaGJRQVdidWtqakhPWXJRbWlsTjlBdkQyaytm?=
+ =?utf-8?B?Z2JyOW5vS1k5MmMvUjl6NTRySTRoQTdlci93NWJGYWpPQUR6OE9QREhMYnRz?=
+ =?utf-8?B?Mk1sUndVOTZjdEwvL2tDQVU2MkFCUXlLZEtkKzlHRkppZHVDL1kreGdMTVVG?=
+ =?utf-8?B?Y1daRFRxRVJSUU9MWUJEWTJSOFcxWnR6WjVUazBSMERJN2dCdy9sSllmT0Vm?=
+ =?utf-8?B?OWIyZnh5U3Y2NGoxdFo2ZmlxdnUvcGV2cEUwWkk3OElsT25ycVVneFZGcmdn?=
+ =?utf-8?Q?WbR2QoWHEeo6OoDTai8Wkyi2hsf2jfLbPl8Hx/l?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5deae115-472e-4e53-9120-08d8e9fb28f9
+X-MS-Exchange-CrossTenant-AuthSource: CY4PR1201MB2549.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2021 10:47:01.1840
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AkSLRnEmwpAAmJY+7n6/JCv4d1ICQ7pPLES6yi29yx4DW9FicSvnZfldpr5ZVSD9ijjFC/7P2AmHvnEJExJVcw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB2549
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+>> +#include <linux/delay.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/kthread.h>
+>> +#include <linux/module.h>
+>> +#include <linux/pci_ids.h>
+>> +#include <linux/pci.h>
+>> +#include <linux/spinlock.h>
+>> +#include <linux/sched.h>
+> 
+> why do you need sched.h here?
+> 
+>> +
+>> +#include "ptdma.h"
+>> +
+>> +/* Ever-increasing value to produce unique unit numbers */
+>> +static atomic_t pt_ordinal;
+> 
+> What is the need of that?
+> 
 
-On ARCH=s390:
+The "pt_ordinal" is incremented for each DMA instances and its number is used only to assign device name for each instances.
+This same device name is passed as a string parameter in many places in code like while using request_irq(), dma_pool_create() and in debugfs.
 
-By disabling CONFIG_PCI and hence also disabling CONFIG_HAS_IOMEM
-(after having done 'make ARCH=s390 allmodconfig'),
-we can see all of the drivers that use IOMEM-related interfaces
-without mentioning that they do so (in their respective Kconfig files).
-
-This should catch all of them, instead of various randconfig builds
-catching a few of them at a time.
-(I'm not trying to pick on arch/s390/ here -- more on the piecemeal
-randconfig approach of some 'bot'. :)
+Also, I have implemented all of the comments for this patch except this. if this is fine, will send the next version for review.
 
 
-I have grouped them by subsystem (more or less).
-(This was done on linux-next of 2021-03-15.)
+Thanks,
+Sanjay Mehta
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-make[1]: Entering directory 'linux-next-20210315/S390'
+>> +static int pt_get_irqs(struct pt_device *pt)
+>> +{
+>> +     struct device *dev = pt->dev;
+>> +     int ret;
+>> +
+>> +     ret = pt_get_msix_irqs(pt);
+>> +     if (!ret)
+>> +             return 0;
+>> +
+>> +     /* Couldn't get MSI-X vectors, try MSI */
+>> +     dev_dbg(dev, "could not enable MSI-X (%d), trying MSI\n", ret);
+>> +     ret = pt_get_msi_irq(pt);
 
-kernel/dma:
-
-gcc-9.3.0-nolibc/s390-linux/bin/s390-linux-ld: kernel/dma/coherent.o: in function `dma_init_coherent_memory':
-coherent.c:(.text+0x39c): undefined reference to `memremap'
-gcc-9.3.0-nolibc/s390-linux/bin/s390-linux-ld: coherent.c:(.text+0x4e0): undefined reference to `memunmap'
-gcc-9.3.0-nolibc/s390-linux/bin/s390-linux-ld: kernel/dma/coherent.o: in function `dma_declare_coherent_memory':
-coherent.c:(.text+0xac6): undefined reference to `memunmap'
-
-irqchip:
-
-gcc-9.3.0-nolibc/s390-linux/bin/s390-linux-ld: drivers/irqchip/irq-al-fic.o: in function `al_fic_init_dt':
-irq-al-fic.c:(.init.text+0x6c): undefined reference to `of_iomap'
-gcc-9.3.0-nolibc/s390-linux/bin/s390-linux-ld: irq-al-fic.c:(.init.text+0x49c): undefined reference to `iounmap'
-
-clk / clocksource:
-
-gcc-9.3.0-nolibc/s390-linux/bin/s390-linux-ld: drivers/clk/clk-fixed-mmio.o: in function `fixed_mmio_clk_setup':
-clk-fixed-mmio.c:(.text+0x9a): undefined reference to `of_iomap'
-gcc-9.3.0-nolibc/s390-linux/bin/s390-linux-ld: clk-fixed-mmio.c:(.text+0xe6): undefined reference to `iounmap'
-gcc-9.3.0-nolibc/s390-linux/bin/s390-linux-ld: drivers/clocksource/timer-of.o: in function `timer_of_init':
-timer-of.c:(.init.text+0x8e): undefined reference to `of_iomap'
-gcc-9.3.0-nolibc/s390-linux/bin/s390-linux-ld: timer-of.c:(.init.text+0x6ec): undefined reference to `iounmap'
-gcc-9.3.0-nolibc/s390-linux/bin/s390-linux-ld: drivers/clocksource/timer-of.o: in function `timer_of_cleanup':
-timer-of.c:(.init.text+0x8f2): undefined reference to `iounmap'
-gcc-9.3.0-nolibc/s390-linux/bin/s390-linux-ld: drivers/clocksource/timer-microchip-pit64b.o: in function `mchp_pit64b_dt_init_timer':
-timer-microchip-pit64b.c:(.init.text+0xf2): undefined reference to `of_iomap'
-gcc-9.3.0-nolibc/s390-linux/bin/s390-linux-ld: timer-microchip-pit64b.c:(.init.text+0xa18): undefined reference to `iounmap'
-
-iio:
-
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/iio/adc/adi-axi-adc.ko] undefined!
-
-pcmcia:
-
-ERROR: modpost: "ioremap" [drivers/pcmcia/pcmcia.ko] undefined!
-ERROR: modpost: "iounmap" [drivers/pcmcia/pcmcia.ko] undefined!
-
-mtd:
-
-ERROR: modpost: "devm_ioremap_resource" [drivers/mtd/nand/raw/denali_dt.ko] undefined!
-
-nvmem:
-
-ERROR: modpost: "memunmap" [drivers/nvmem/nvmem-rmem.ko] undefined!
-ERROR: modpost: "memremap" [drivers/nvmem/nvmem-rmem.ko] undefined!
-
-crypto:
-
-ERROR: modpost: "devm_ioremap_resource" [drivers/crypto/ccree/ccree.ko] undefined!
-ERROR: modpost: "debugfs_create_regset32" [drivers/crypto/ccree/ccree.ko] undefined!
-
-media:
-
-ERROR: modpost: "devm_ioremap_resource" [drivers/media/rc/ir-hix5hd2.ko] undefined!
-
-input:
-
-ERROR: modpost: "devm_ioremap" [drivers/input/keyboard/samsung-keypad.ko] undefined!
-
-net:
-
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/net/can/grcan.ko] undefined!
-ERROR: modpost: "iounmap" [drivers/net/arcnet/arc-rimi.ko] undefined!
-ERROR: modpost: "ioremap" [drivers/net/arcnet/arc-rimi.ko] undefined!
-ERROR: modpost: "iounmap" [drivers/net/arcnet/com90xx.ko] undefined!
-ERROR: modpost: "ioremap" [drivers/net/arcnet/com90xx.ko] undefined!
-ERROR: modpost: "devm_ioremap" [drivers/net/ethernet/altera/altera_tse.ko] undefined!
-ERROR: modpost: "ioremap" [drivers/net/ethernet/xircom/xirc2ps_cs.ko] undefined!
-ERROR: modpost: "iounmap" [drivers/net/ethernet/xircom/xirc2ps_cs.ko] undefined!
-ERROR: modpost: "devm_ioremap_resource" [drivers/net/ethernet/xilinx/xilinx_emac.ko] undefined!
-ERROR: modpost: "of_address_to_resource" [drivers/net/ethernet/xilinx/xilinx_emac.ko] undefined!
-ERROR: modpost: "of_address_to_resource" [drivers/net/ethernet/xilinx/xilinx_emaclite.ko] undefined!
-ERROR: modpost: "devm_ioremap_resource" [drivers/net/ethernet/xilinx/xilinx_emaclite.ko] undefined!
-ERROR: modpost: "devm_platform_ioremap_resource_byname" [drivers/net/ethernet/xilinx/ll_temac.ko] undefined!
-ERROR: modpost: "of_address_to_resource" [drivers/net/ethernet/xilinx/ll_temac.ko] undefined!
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/net/ethernet/xilinx/ll_temac.ko] undefined!
-ERROR: modpost: "devm_of_iomap" [drivers/net/ethernet/xilinx/ll_temac.ko] undefined!
-ERROR: modpost: "ioremap" [drivers/net/ethernet/smsc/smc91c92_cs.ko] undefined!
-ERROR: modpost: "iounmap" [drivers/net/ethernet/smsc/smc91c92_cs.ko] undefined!
-ERROR: modpost: "ioremap" [drivers/net/ethernet/fujitsu/fmvj18x_cs.ko] undefined!
-ERROR: modpost: "iounmap" [drivers/net/ethernet/fujitsu/fmvj18x_cs.ko] undefined!
-ERROR: modpost: "ioremap" [drivers/net/ethernet/8390/pcnet_cs.ko] undefined!
-ERROR: modpost: "iounmap" [drivers/net/ethernet/8390/pcnet_cs.ko] undefined!
-
-char:
-
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/char/xillybus/xillybus_of.ko] undefined!
-
-tty:
-
-ERROR: modpost: "ioremap" [drivers/tty/ipwireless/ipwireless.ko] undefined!
-ERROR: modpost: "iounmap" [drivers/tty/ipwireless/ipwireless.ko] undefined!
-
-dma:
-
-ERROR: modpost: "devm_ioremap_resource" [drivers/dma/sf-pdma/sf-pdma.ko] undefined!
-ERROR: modpost: "devm_ioremap_resource" [drivers/dma/idma64.ko] undefined!
-ERROR: modpost: "devm_ioremap_resource" [drivers/dma/fsl-edma.ko] undefined!
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/dw/dw_dmac.ko] undefined!
-ERROR: modpost: "devm_ioremap" [drivers/dma/altera-msgdma.ko] undefined!
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/xilinx/xilinx_dpdma.ko] undefined!
-ERROR: modpost: "devm_ioremap_resource" [drivers/dma/qcom/hdma.ko] undefined!
-ERROR: modpost: "devm_ioremap_resource" [drivers/dma/qcom/hdma_mgmt.ko] undefined!
-ERROR: modpost: "of_address_to_resource" [drivers/dma/qcom/hdma_mgmt.ko] undefined!
-
-make[1]: Leaving directory 'linux-next-20210315/S390'
-
--- 
-~Randy
 

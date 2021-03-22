@@ -2,98 +2,98 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA326344CC9
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Mar 2021 18:07:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07C7E345306
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Mar 2021 00:32:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230439AbhCVRHR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 22 Mar 2021 13:07:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231854AbhCVRGv (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 22 Mar 2021 13:06:51 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 725E0C061574;
-        Mon, 22 Mar 2021 10:06:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=ZSM3dI/CckcxUOL4ke1D9dDxhlhi+GbY+VaBTYOuHtk=; b=Ng69Y6C9sxOQbarSJYTyurvkdJ
-        HN19yAakV7WBKbUqmy5Pnx/A7J9ykloIwQI3na+M4xWiy+pYmd+VxGcG/hruO5qDt7kWPskwUPubv
-        f50vCBWToTpYR18RaY6/SPcUWZLlgYGQ3fAYT42prumMZTEEXJG3vxqXUYDsyTEzQQeGbra3Ld6xK
-        gZCvDldUxGxWxvuA+sVh4174qeVCMMsldkBM4F/YotEviK+xCMQNhNbYThVuP1xMOzqP/X27Qie6E
-        8nTzPfli2hyg39x1/v3uAR+z8UV06M96sdZ+NYganVq6T6X45N53rpFTGXe57XBTXfXA11YXljw1M
-        Px0VXOXA==;
-Received: from [2601:1c0:6280:3f0::3ba4]
-        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lOO0B-008p1B-Tu; Mon, 22 Mar 2021 17:06:15 +0000
-Subject: Re: [PATCH v8 1/3] dmaengine: ptdma: Initial driver for the AMD PTDMA
-To:     Sanjay R Mehta <Sanju.Mehta@amd.com>, vkoul@kernel.org
-Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
-        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
-        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-References: <1616389172-6825-1-git-send-email-Sanju.Mehta@amd.com>
- <1616389172-6825-2-git-send-email-Sanju.Mehta@amd.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e33e0979-6688-0da8-c5a6-6b76073dbafc@infradead.org>
-Date:   Mon, 22 Mar 2021 10:06:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        id S230284AbhCVXbi (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 22 Mar 2021 19:31:38 -0400
+Received: from mga01.intel.com ([192.55.52.88]:15003 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230465AbhCVXbR (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 22 Mar 2021 19:31:17 -0400
+IronPort-SDR: QREYydKZs69GtfsmGM6XVLujkZZgv9tN6A7+9Zb5NqgJIJNFcMbZUJlmF4wqna54WaMhzK9Cc9
+ he6mgxYoxTGQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9931"; a="210442855"
+X-IronPort-AV: E=Sophos;i="5.81,269,1610438400"; 
+   d="scan'208";a="210442855"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2021 16:31:16 -0700
+IronPort-SDR: PennFzePV6WKFFHdi8RMYFwwgldDwhWpB7h4iwmMSG0zFfaPqKPjt+6OWHtzfAEMlrgVmTZdtz
+ 06/mW6yWSKxQ==
+X-IronPort-AV: E=Sophos;i="5.81,269,1610438400"; 
+   d="scan'208";a="442314197"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2021 16:31:15 -0700
+Subject: [PATCH v7 0/8] idxd 'struct device' lifetime handling fixes
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org, jgg@nvidia.com, dan.j.williams@intel.com
+Date:   Mon, 22 Mar 2021 16:31:14 -0700
+Message-ID: <161645534083.2002542.11583610276394664799.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
-In-Reply-To: <1616389172-6825-2-git-send-email-Sanju.Mehta@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 3/21/21 9:59 PM, Sanjay R Mehta wrote:
-> From: Sanjay R Mehta <sanju.mehta@amd.com>
-> 
-> Add support for AMD PTDMA controller. It performs high-bandwidth
-> memory to memory and IO copy operation. Device commands are managed
-> via a circular queue of 'descriptors', each of which specifies source
-> and destination addresses for copying a single buffer of data.
-> 
-> Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
-> ---
+v7:
+- Fix up the 'struct device' setup in char device code (Jason)
+- Split out the char dev fixes (Jason)
+- Split out the DMA dev fixes (Dan)
+- Split out the each of the conf_dev fixes
+- Split out removal of the pcim_* calls
+- Split out removal of the devm_* calls
+- Split out the fixes for interrupt config calls
+- Reviewed by Dan.
 
-> diff --git a/drivers/dma/ptdma/Kconfig b/drivers/dma/ptdma/Kconfig
-> new file mode 100644
-> index 0000000..c4f8c6f
-> --- /dev/null
-> +++ b/drivers/dma/ptdma/Kconfig
-> @@ -0,0 +1,11 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +config AMD_PTDMA
-> +	tristate  "AMD PassThru DMA Engine"
-> +	depends on X86_64 && PCI
-> +	help
-> +	  Enable support for the AMD PTDMA controller. This controller
-> +	  provides DMA capabilities to performs high bandwidth memory to
+v6:
+- Fix char dev initialization issues (Jason)
+- Fix other 'struct device' initialization issues.
 
-	                            to perform
+v5:
+- Rebased against 5.12-rc dmaengine/fixes
+v4:
+- fix up the life time of cdev creation/destruction (Jason)
+- Tested with KASAN and other memory allocation leak detections. (Jason)
 
-> +	  memory and IO copy operation. It performs DMA transfer through
+v3:
+- Remove devm_* for irq request and cleanup related bits (Jason)
+v2:
+- Remove all devm_* alloc for idxd_device (Jason)
+- Add kref dep for dma_dev (Jason)
 
-better:	                     operations.
+Vinod,
+The series fixes the various 'struct device' lifetime handling in the
+idxd driver. The devm managed lifetime is incompatible with 'struct device'
+objects that resides in the idxd context. Tested with
+CONFIG_DEBUG_KOBJECT_RELEASE and address all issues from that.
 
-> +	  queue based descriptor management. This DMA controller is intended
+Please consider for damengine/fixes for the 5.12-rc.
 
-	  queue-based
+---
 
-> +	  to use with AMD Non-Transparent Bridge devices and not for general
+Dave Jiang (8):
+      dmaengine: idxd: fix dma device lifetime
+      dmaengine: idxd: cleanup pci interrupt vector allocation management
+      dmaengine: idxd: removal of pcim managed mmio mapping
+      dmaengine: idxd: fix idxd conf_dev 'struct device' lifetime
+      dmaengine: idxd: fix wq conf_dev 'struct device' lifetime
+      dmaengine: idxd: fix engine conf_dev lifetime
+      dmaengine: idxd: fix group conf_dev lifetime
+      dmaengine: idxd: fix cdev setup and free device lifetime issues
 
-	  to be used with
-or
-	  for use with
 
-> +	  purpose peripheral DMA.
+ drivers/dma/idxd/cdev.c   | 131 +++++++-----------
+ drivers/dma/idxd/device.c |  20 +--
+ drivers/dma/idxd/idxd.h   |  54 ++++++--
+ drivers/dma/idxd/init.c   | 284 +++++++++++++++++++++++++++-----------
+ drivers/dma/idxd/irq.c    |  10 +-
+ drivers/dma/idxd/sysfs.c  | 239 ++++++++++++++++----------------
+ 6 files changed, 437 insertions(+), 301 deletions(-)
 
-
--- 
-~Randy
+--
 

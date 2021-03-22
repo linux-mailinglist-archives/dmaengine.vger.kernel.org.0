@@ -2,35 +2,34 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97C6F345316
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Mar 2021 00:36:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DC3334531A
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Mar 2021 00:38:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230095AbhCVXg1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 22 Mar 2021 19:36:27 -0400
-Received: from mga02.intel.com ([134.134.136.20]:27774 "EHLO mga02.intel.com"
+        id S230353AbhCVXhe (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 22 Mar 2021 19:37:34 -0400
+Received: from mga04.intel.com ([192.55.52.120]:57865 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230009AbhCVXg0 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 22 Mar 2021 19:36:26 -0400
-IronPort-SDR: 8QspxDtedv+i+rAi84JpIe6qVbA/MqZs+SQYL4QSxm9mc/LvwXcG9SS/1h8cKcM7ODgdQXP6AL
- BjbqLI7RItMQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9931"; a="177497527"
+        id S230327AbhCVXha (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 22 Mar 2021 19:37:30 -0400
+IronPort-SDR: 7fenzAiQq03QtdjOGwl5W73vn5WZLlxcUrkvYsYwM95Qoc8HarxY1qozGIbWDIr00ZM41X6nSM
+ 9yflkVKivpyA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9931"; a="188050320"
 X-IronPort-AV: E=Sophos;i="5.81,269,1610438400"; 
-   d="scan'208";a="177497527"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2021 16:36:26 -0700
-IronPort-SDR: 9r81qIaAsXNx1yxQD5RgCHRYneEOwAZVJPKGbAveoDhSlTs4drHj18fE6aYHIio+P/nCfxa8K0
- BjtUqtxUVPFg==
+   d="scan'208";a="188050320"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2021 16:37:30 -0700
+IronPort-SDR: hVHmb7fba/meFZsc1V0Qftp4fA2vaE6ikyfXVWgzQL0gnr+ahn4s6mEmbStrUWklzYuwgPvWEU
+ d0SnyKTYiv9Q==
 X-IronPort-AV: E=Sophos;i="5.81,269,1610438400"; 
-   d="scan'208";a="524619864"
+   d="scan'208";a="442316295"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2021 16:36:26 -0700
-Subject: [PATCH] dmaengine: idxd: fix delta_rec and crc size field for
- completion record
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2021 16:37:29 -0700
+Subject: [PATCH] dmaengine: idxd: fix opcap sysfs attribute output
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     vkoul@kernel.org
-Cc:     Nikhil Rao <nikhil.rao@intel.com>, dmaengine@vger.kernel.org
-Date:   Mon, 22 Mar 2021 16:36:25 -0700
-Message-ID: <161645618572.2003490.14466173451736323035.stgit@djiang5-desk3.ch.intel.com>
+Cc:     Lucas Van <lucas.van@intel.com>, dmaengine@vger.kernel.org
+Date:   Mon, 22 Mar 2021 16:37:29 -0700
+Message-ID: <161645624963.2003736.829798666998490151.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -39,30 +38,36 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The delta_rec_size and crc_val in the completion record should
-be 32bits and not 16bits.
+The operation capability register is 256bits. The current output only
+prints out the first 64bits. Fix to output the entire 256bits. The current
+code omits operation caps from IAX devices.
 
-Fixes: bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data accelerators")
-Reported-by: Nikhil Rao <nikhil.rao@intel.com>
+Fixes: c52ca478233c ("dmaengine: idxd: add configuration component of driver")
+Reported-by: Lucas Van <lucas.van@intel.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- include/uapi/linux/idxd.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/idxd/sysfs.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/idxd.h b/include/uapi/linux/idxd.h
-index 236d437947bc..e33997b4d750 100644
---- a/include/uapi/linux/idxd.h
-+++ b/include/uapi/linux/idxd.h
-@@ -247,8 +247,8 @@ struct dsa_completion_record {
- 			uint32_t	rsvd2:8;
- 		};
+diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+index e018d2339ccd..9cc7ad939307 100644
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@ -1427,8 +1427,14 @@ static ssize_t op_cap_show(struct device *dev,
+ {
+ 	struct idxd_device *idxd =
+ 		container_of(dev, struct idxd_device, conf_dev);
++	int i, rc = 0;
++
++	for (i = 0; i < 4; i++)
++		rc += sysfs_emit_at(buf, rc, "%#llx ", idxd->hw.opcap.bits[i]);
  
--		uint16_t	delta_rec_size;
--		uint16_t	crc_val;
-+		uint32_t	delta_rec_size;
-+		uint32_t	crc_val;
+-	return sprintf(buf, "%#llx\n", idxd->hw.opcap.bits[0]);
++	rc--;
++	rc += sysfs_emit_at(buf, rc, "\n");
++	return rc;
+ }
+ static DEVICE_ATTR_RO(op_cap);
  
- 		/* DIF check & strip */
- 		struct {
 
 

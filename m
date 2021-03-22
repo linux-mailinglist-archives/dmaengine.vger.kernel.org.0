@@ -2,87 +2,113 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A09B3444F7
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Mar 2021 14:10:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7ADA03448DD
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Mar 2021 16:11:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232745AbhCVNJn (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 22 Mar 2021 09:09:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59930 "EHLO
+        id S230100AbhCVPLD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 22 Mar 2021 11:11:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233758AbhCVNIw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 22 Mar 2021 09:08:52 -0400
-Received: from ustc.edu.cn (email6.ustc.edu.cn [IPv6:2001:da8:d800::8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 94B29C061756;
-        Mon, 22 Mar 2021 06:08:49 -0700 (PDT)
+        with ESMTP id S230384AbhCVPK6 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 22 Mar 2021 11:10:58 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA219C0613D9
+        for <dmaengine@vger.kernel.org>; Mon, 22 Mar 2021 08:10:57 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id w18so19835081edc.0
+        for <dmaengine@vger.kernel.org>; Mon, 22 Mar 2021 08:10:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mail.ustc.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-        Message-Id:MIME-Version:Content-Transfer-Encoding; bh=sHJzoveTSv
-        t6lzJJYtkZFvsbbLRnHZNaMV5XbRZgAUY=; b=W+TzCSRvr8HjcAyW2azP4SuREb
-        o7JF5Db2NBPgLbnBKg+d6kRkFvP66Q9vU9P5z2EiAeWLodKKvRpw4wEgozCTeWyp
-        K36xMLMdyfSsS1sYYrPotMRm45GJBMK4L3XlSv72pPhJ8Kbu1qXEDL1rqfkTaOZj
-        vTLIvNKfJCTQIDEWQ=
-Received: from ubuntu.localdomain (unknown [202.38.69.14])
-        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygDn7U3XllhgLsoNAA--.4684S4;
-        Mon, 22 Mar 2021 21:08:39 +0800 (CST)
-From:   Lv Yunlong <lyl2019@mail.ustc.edu.cn>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lv Yunlong <lyl2019@mail.ustc.edu.cn>
-Subject: [PATCH] dma: Fix a double free in dma_async_device_register
-Date:   Mon, 22 Mar 2021 06:08:36 -0700
-Message-Id: <20210322130836.4252-1-lyl2019@mail.ustc.edu.cn>
-X-Mailer: git-send-email 2.25.1
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=BblDdmrktMK5tFFD4LOpFP77ijBklviaU26xu4C63tQ=;
+        b=IT2iGJQyBA7Y1+dCJvTIJziErQmWcbn0+kMr4Y273pDNqodHvB6Ww7nGeAozLlDj16
+         AaZFlWmlmAzS7zUACjHtiaCrXpOhiRROiQFyU4auZ+13hpjjdqVYNePQ5Cyp/9DkkrQC
+         b91OFvMWYHKs9MAA7wM3CC0WQRuzxtVRw66hiamNYNrYJOlJE43oIsVGuMZ9kLPAqUbQ
+         nynbvcEhIJeX2PlbMuKhnlTT65dd9GDFO83TYP0QzGcN6dLgdO2DDjR1KDBGvGzAifvT
+         3iM6ErE3HQUX/Nd9uR6OnpKDyBISmiXqsi9ileg7sykq6tbAiP06wPIgKKPW7GTaZvHL
+         iZmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=BblDdmrktMK5tFFD4LOpFP77ijBklviaU26xu4C63tQ=;
+        b=qHqVhUHGh8vhWzqOS0R7FHYLWAOTeFZuuYM3t8rydI1UPSylKPmlUgtAsbOeblXcRW
+         qm1aMegKsA0kZe5T16xU1ZwVjrrpR98sCjNE+wBvxvIyC1j1CWbLH/HlrkQtsdB8U1au
+         EyPvfeQeLFUULILism2s5QsszWCd2+Hi51r9R41IOOO62vHO3APzbRYyYPQtIr9be7qP
+         GWJyzmxTkekvxy4b2moogveUqSawqGCZpZNX2SRFMkidnyehEeont9FGEI2Kt5zDRAH8
+         VhfYRJ/Ppjs0llfB+YQw5yoQD8AhKWmKlr6Q77eNIEW0FpVJr23ib9nX2JFoGHeQziwz
+         lfUg==
+X-Gm-Message-State: AOAM533ul2CYEjB+nlS7YVRfTA2z/9Q5mvHNYs9nrie18W0VBeEBdFNk
+        pqliRGJtWyVCIXUiPg0qxBivGQ==
+X-Google-Smtp-Source: ABdhPJwxMVa4A4qij3tXD3Epc4EsEgsbfdMWBHLOdKIarJBUoxpk8xvIYdSjs+oVvVNjC/1HEN64aQ==
+X-Received: by 2002:a05:6402:22b5:: with SMTP id cx21mr26421224edb.27.1616425856228;
+        Mon, 22 Mar 2021 08:10:56 -0700 (PDT)
+Received: from dell ([91.110.221.180])
+        by smtp.gmail.com with ESMTPSA id e4sm9768413ejz.4.2021.03.22.08.10.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Mar 2021 08:10:55 -0700 (PDT)
+Date:   Mon, 22 Mar 2021 15:10:53 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        soc@kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Moritz Fischer <mdf@kernel.org>, Tom Rix <trix@redhat.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-i2c@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v3 03/15] mfd: altera: merge ARCH_SOCFPGA and
+ ARCH_STRATIX10
+Message-ID: <20210322151053.GB2916463@dell>
+References: <20210311152545.1317581-1-krzysztof.kozlowski@canonical.com>
+ <20210311152545.1317581-4-krzysztof.kozlowski@canonical.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: LkAmygDn7U3XllhgLsoNAA--.4684S4
-X-Coremail-Antispam: 1UD129KBjvdXoW7JFW8tw4UCFWfXFykKF45Jrb_yoWfCFb_CF
-        10vryxur1qkryfCa43Jr9xZr1Fy34qgFZagw1xtF1xWa47Xa9Fgr4qkrnayw17KFyUCFWv
-        934jqFWfAF4xCjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbskFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-        6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
-        rcIFxwCY02Avz4vE14v_Xr4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-        1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-        14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-        IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2
-        z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73Uj
-        IFyTuYvjfUnsqWUUUUU
-X-CM-SenderInfo: ho1ojiyrz6zt1loo32lwfovvfxof0/
+In-Reply-To: <20210311152545.1317581-4-krzysztof.kozlowski@canonical.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-In dma_async_device_register, in the loop
-list_for_each_entry(chan, &device->channels, device_node).
-If __dma_async_device_channel_register(device, chan) failed
-and it colud free chan->local and return err.
+On Thu, 11 Mar 2021, Krzysztof Kozlowski wrote:
 
-But in the err_out branch, it will free chan->local again.
-My patch sets chan->local to NULL after it is freed in
-__dma_async_device_channel_register().
+> Simplify 32-bit and 64-bit Intel SoCFPGA Kconfig options by having only
+> one for both of them.  This the common practice for other platforms.
+> Additionally, the ARCH_SOCFPGA is too generic as SoCFPGA designs come
+> from multiple vendors.
+> 
+> The side effect is that the MFD_ALTERA_A10SR will now be available for
+> both 32-bit and 64-bit Intel SoCFPGA, even though it is used only for
+> 32-bit.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> ---
+>  drivers/mfd/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Signed-off-by: Lv Yunlong <lyl2019@mail.ustc.edu.cn>
----
- drivers/dma/dmaengine.c | 1 +
- 1 file changed, 1 insertion(+)
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index fe6a460c4373..af3ee288bc11 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -1086,6 +1086,7 @@ static int __dma_async_device_channel_register(struct dma_device *device,
- 	kfree(chan->dev);
-  err_free_local:
- 	free_percpu(chan->local);
-+	chan->local = NULL;
- 	return rc;
- }
- 
 -- 
-2.25.1
-
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog

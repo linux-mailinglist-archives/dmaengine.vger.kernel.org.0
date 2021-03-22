@@ -2,113 +2,98 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ADA03448DD
-	for <lists+dmaengine@lfdr.de>; Mon, 22 Mar 2021 16:11:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA326344CC9
+	for <lists+dmaengine@lfdr.de>; Mon, 22 Mar 2021 18:07:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230100AbhCVPLD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 22 Mar 2021 11:11:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58560 "EHLO
+        id S230439AbhCVRHR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 22 Mar 2021 13:07:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230384AbhCVPK6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 22 Mar 2021 11:10:58 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA219C0613D9
-        for <dmaengine@vger.kernel.org>; Mon, 22 Mar 2021 08:10:57 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id w18so19835081edc.0
-        for <dmaengine@vger.kernel.org>; Mon, 22 Mar 2021 08:10:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=BblDdmrktMK5tFFD4LOpFP77ijBklviaU26xu4C63tQ=;
-        b=IT2iGJQyBA7Y1+dCJvTIJziErQmWcbn0+kMr4Y273pDNqodHvB6Ww7nGeAozLlDj16
-         AaZFlWmlmAzS7zUACjHtiaCrXpOhiRROiQFyU4auZ+13hpjjdqVYNePQ5Cyp/9DkkrQC
-         b91OFvMWYHKs9MAA7wM3CC0WQRuzxtVRw66hiamNYNrYJOlJE43oIsVGuMZ9kLPAqUbQ
-         nynbvcEhIJeX2PlbMuKhnlTT65dd9GDFO83TYP0QzGcN6dLgdO2DDjR1KDBGvGzAifvT
-         3iM6ErE3HQUX/Nd9uR6OnpKDyBISmiXqsi9ileg7sykq6tbAiP06wPIgKKPW7GTaZvHL
-         iZmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=BblDdmrktMK5tFFD4LOpFP77ijBklviaU26xu4C63tQ=;
-        b=qHqVhUHGh8vhWzqOS0R7FHYLWAOTeFZuuYM3t8rydI1UPSylKPmlUgtAsbOeblXcRW
-         qm1aMegKsA0kZe5T16xU1ZwVjrrpR98sCjNE+wBvxvIyC1j1CWbLH/HlrkQtsdB8U1au
-         EyPvfeQeLFUULILism2s5QsszWCd2+Hi51r9R41IOOO62vHO3APzbRYyYPQtIr9be7qP
-         GWJyzmxTkekvxy4b2moogveUqSawqGCZpZNX2SRFMkidnyehEeont9FGEI2Kt5zDRAH8
-         VhfYRJ/Ppjs0llfB+YQw5yoQD8AhKWmKlr6Q77eNIEW0FpVJr23ib9nX2JFoGHeQziwz
-         lfUg==
-X-Gm-Message-State: AOAM533ul2CYEjB+nlS7YVRfTA2z/9Q5mvHNYs9nrie18W0VBeEBdFNk
-        pqliRGJtWyVCIXUiPg0qxBivGQ==
-X-Google-Smtp-Source: ABdhPJwxMVa4A4qij3tXD3Epc4EsEgsbfdMWBHLOdKIarJBUoxpk8xvIYdSjs+oVvVNjC/1HEN64aQ==
-X-Received: by 2002:a05:6402:22b5:: with SMTP id cx21mr26421224edb.27.1616425856228;
-        Mon, 22 Mar 2021 08:10:56 -0700 (PDT)
-Received: from dell ([91.110.221.180])
-        by smtp.gmail.com with ESMTPSA id e4sm9768413ejz.4.2021.03.22.08.10.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Mar 2021 08:10:55 -0700 (PDT)
-Date:   Mon, 22 Mar 2021 15:10:53 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        soc@kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Moritz Fischer <mdf@kernel.org>, Tom Rix <trix@redhat.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-fpga@vger.kernel.org, linux-i2c@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v3 03/15] mfd: altera: merge ARCH_SOCFPGA and
- ARCH_STRATIX10
-Message-ID: <20210322151053.GB2916463@dell>
-References: <20210311152545.1317581-1-krzysztof.kozlowski@canonical.com>
- <20210311152545.1317581-4-krzysztof.kozlowski@canonical.com>
+        with ESMTP id S231854AbhCVRGv (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 22 Mar 2021 13:06:51 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 725E0C061574;
+        Mon, 22 Mar 2021 10:06:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=ZSM3dI/CckcxUOL4ke1D9dDxhlhi+GbY+VaBTYOuHtk=; b=Ng69Y6C9sxOQbarSJYTyurvkdJ
+        HN19yAakV7WBKbUqmy5Pnx/A7J9ykloIwQI3na+M4xWiy+pYmd+VxGcG/hruO5qDt7kWPskwUPubv
+        f50vCBWToTpYR18RaY6/SPcUWZLlgYGQ3fAYT42prumMZTEEXJG3vxqXUYDsyTEzQQeGbra3Ld6xK
+        gZCvDldUxGxWxvuA+sVh4174qeVCMMsldkBM4F/YotEviK+xCMQNhNbYThVuP1xMOzqP/X27Qie6E
+        8nTzPfli2hyg39x1/v3uAR+z8UV06M96sdZ+NYganVq6T6X45N53rpFTGXe57XBTXfXA11YXljw1M
+        Px0VXOXA==;
+Received: from [2601:1c0:6280:3f0::3ba4]
+        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
+        id 1lOO0B-008p1B-Tu; Mon, 22 Mar 2021 17:06:15 +0000
+Subject: Re: [PATCH v8 1/3] dmaengine: ptdma: Initial driver for the AMD PTDMA
+To:     Sanjay R Mehta <Sanju.Mehta@amd.com>, vkoul@kernel.org
+Cc:     gregkh@linuxfoundation.org, dan.j.williams@intel.com,
+        Thomas.Lendacky@amd.com, Shyam-sundar.S-k@amd.com,
+        Nehal-bakulchandra.Shah@amd.com, robh@kernel.org,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+References: <1616389172-6825-1-git-send-email-Sanju.Mehta@amd.com>
+ <1616389172-6825-2-git-send-email-Sanju.Mehta@amd.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <e33e0979-6688-0da8-c5a6-6b76073dbafc@infradead.org>
+Date:   Mon, 22 Mar 2021 10:06:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
+In-Reply-To: <1616389172-6825-2-git-send-email-Sanju.Mehta@amd.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210311152545.1317581-4-krzysztof.kozlowski@canonical.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, 11 Mar 2021, Krzysztof Kozlowski wrote:
-
-> Simplify 32-bit and 64-bit Intel SoCFPGA Kconfig options by having only
-> one for both of them.  This the common practice for other platforms.
-> Additionally, the ARCH_SOCFPGA is too generic as SoCFPGA designs come
-> from multiple vendors.
+On 3/21/21 9:59 PM, Sanjay R Mehta wrote:
+> From: Sanjay R Mehta <sanju.mehta@amd.com>
 > 
-> The side effect is that the MFD_ALTERA_A10SR will now be available for
-> both 32-bit and 64-bit Intel SoCFPGA, even though it is used only for
-> 32-bit.
+> Add support for AMD PTDMA controller. It performs high-bandwidth
+> memory to memory and IO copy operation. Device commands are managed
+> via a circular queue of 'descriptors', each of which specifies source
+> and destination addresses for copying a single buffer of data.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
 > ---
->  drivers/mfd/Kconfig | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+> diff --git a/drivers/dma/ptdma/Kconfig b/drivers/dma/ptdma/Kconfig
+> new file mode 100644
+> index 0000000..c4f8c6f
+> --- /dev/null
+> +++ b/drivers/dma/ptdma/Kconfig
+> @@ -0,0 +1,11 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +config AMD_PTDMA
+> +	tristate  "AMD PassThru DMA Engine"
+> +	depends on X86_64 && PCI
+> +	help
+> +	  Enable support for the AMD PTDMA controller. This controller
+> +	  provides DMA capabilities to performs high bandwidth memory to
+
+	                            to perform
+
+> +	  memory and IO copy operation. It performs DMA transfer through
+
+better:	                     operations.
+
+> +	  queue based descriptor management. This DMA controller is intended
+
+	  queue-based
+
+> +	  to use with AMD Non-Transparent Bridge devices and not for general
+
+	  to be used with
+or
+	  for use with
+
+> +	  purpose peripheral DMA.
+
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+~Randy
+

@@ -2,122 +2,70 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03094346338
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Mar 2021 16:45:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 453443465A5
+	for <lists+dmaengine@lfdr.de>; Tue, 23 Mar 2021 17:49:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233002AbhCWPpB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 23 Mar 2021 11:45:01 -0400
-Received: from mga06.intel.com ([134.134.136.31]:27804 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232968AbhCWPob (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 23 Mar 2021 11:44:31 -0400
-IronPort-SDR: xGf6kKs3UQDL/FzysqJ+fplSet2z8fZTvedzXG0FZkJUqoGJHDeGI+Zx87cjjDIKv9i7ILmmj7
- YDXi/MGKU+qA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9932"; a="251861112"
-X-IronPort-AV: E=Sophos;i="5.81,272,1610438400"; 
-   d="scan'208";a="251861112"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2021 08:44:31 -0700
-IronPort-SDR: luX9SPVTJ7fBc1gfpl/TuCm6iQ7c2jQqTzVXUpUIA4JTeV/BtKNv5vPGvGxabJJkpw060SdJqn
- 57QxrvnxqvyQ==
-X-IronPort-AV: E=Sophos;i="5.81,272,1610438400"; 
-   d="scan'208";a="513791705"
-Received: from mkobayas-mobl1.gar.corp.intel.com (HELO [10.212.157.78]) ([10.212.157.78])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2021 08:44:30 -0700
-Subject: Re: [PATCH v7 0/8] idxd 'struct device' lifetime handling fixes
-To:     Jason Gunthorpe <jgg@nvidia.com>, Vinod Koul <vkoul@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org
-References: <161645534083.2002542.11583610276394664799.stgit@djiang5-desk3.ch.intel.com>
- <YFnU2oqNavQEsmNZ@vkoul-mobl.Dlink> <20210323115600.GA2356281@nvidia.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <3e68045f-8901-c81e-a1d8-506c591060bf@intel.com>
-Date:   Tue, 23 Mar 2021 08:44:29 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        id S233268AbhCWQsq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 23 Mar 2021 12:48:46 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:35984 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233276AbhCWQsa (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 23 Mar 2021 12:48:30 -0400
+X-Greylist: delayed 1607 seconds by postgrey-1.27 at vger.kernel.org; Tue, 23 Mar 2021 12:48:30 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:MIME-Version:Date:
+        Message-ID:From:References:Cc:To:content-disposition;
+        bh=uvFq+Kc5ZBHy3S9lipYlZNBR57AfmiflcCRMDFpDWAw=; b=KL1e3lBgC4m9cW7SgdHDBgaqVI
+        WhQyyoiX8DB8RF50zbxPc1W3GoBOkrF3Og5waUB9spSRTigwH1VE72RO8Z7nqybyc2TeNht9wcmcf
+        c2CAIl0dEVF9dRZpVNTR0hHEbjwZ7dvyuUv9Gx6MzzfeMK7nMYaHoUls2B1FZeAYt3L8yZnLMwM5U
+        bvk3zYfTW03exmO/l8WXys4Cno2XVWuAXXTM/0Dua2xOXbVn/ObETyXcNOm9D9AHrZxctuJBcZvaE
+        GSMx3g+7AxW+bC5AbRTonGKg+gtKf+mFEXzDAQcTz4xmaonJJDo5btZBS8PcZua61RlA2EZum8eIU
+        8WlkBVPw==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1lOjmk-0005cx-BB; Tue, 23 Mar 2021 10:21:39 -0600
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <YFnq/0IQzixtAbC1@mwanda>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <603f6cf3-ed7b-ae5c-6689-f13390385037@deltatee.com>
+Date:   Tue, 23 Mar 2021 10:21:37 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <20210323115600.GA2356281@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <YFnq/0IQzixtAbC1@mwanda>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, vkoul@kernel.org, dan.carpenter@oracle.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,NICE_REPLY_A autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: Re: [PATCH] dmaengine: plx_dma: add a missing put_device() on error
+ path
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
 
-On 3/23/2021 4:56 AM, Jason Gunthorpe wrote:
-> On Tue, Mar 23, 2021 at 05:15:30PM +0530, Vinod Koul wrote:
->> Hi Dave,
->>
->> On 22-03-21, 16:31, Dave Jiang wrote:
->>> v7:
->>> - Fix up the 'struct device' setup in char device code (Jason)
->>> - Split out the char dev fixes (Jason)
->>> - Split out the DMA dev fixes (Dan)
->>> - Split out the each of the conf_dev fixes
->>> - Split out removal of the pcim_* calls
->>> - Split out removal of the devm_* calls
->>> - Split out the fixes for interrupt config calls
->>> - Reviewed by Dan.
->>>
->>> v6:
->>> - Fix char dev initialization issues (Jason)
->>> - Fix other 'struct device' initialization issues.
->>>
->>> v5:
->>> - Rebased against 5.12-rc dmaengine/fixes
->>> v4:
->>> - fix up the life time of cdev creation/destruction (Jason)
->>> - Tested with KASAN and other memory allocation leak detections. (Jason)
->>>
->>> v3:
->>> - Remove devm_* for irq request and cleanup related bits (Jason)
->>> v2:
->>> - Remove all devm_* alloc for idxd_device (Jason)
->>> - Add kref dep for dma_dev (Jason)
->>>
->>> Vinod,
->>> The series fixes the various 'struct device' lifetime handling in the
->>> idxd driver. The devm managed lifetime is incompatible with 'struct device'
->>> objects that resides in the idxd context. Tested with
->>> CONFIG_DEBUG_KOBJECT_RELEASE and address all issues from that.
->> Sorry for not looking into this earlier.. But I would like to check on
->> the direction idxd is taking. Somehow I get the feel the dmaengine is
->> not the right place for this. Considering that now we have auxdev merged
->> in, should the idxd be spilt into smaller function and no dmaengine
->> parts moved away from dmaengine... I think we do lack a subsystem for
->> all things accelerator in kernel atm...
-> auxdev shouldn't be over-used IMHO.
->
-> If the main purpose of the driver is dma engine then it is OK if the
-> "core" part lives there too.
 
-Hi Vinod,
+On 2021-03-23 7:19 a.m., Dan Carpenter wrote:
+> Add a missing put_device(&pdev->dev) if the call to
+> dma_async_device_register(dma); fails.
+> 
+> Fixes: 905ca51e63be ("dmaengine: plx-dma: Introduce PLX DMA engine PCI driver skeleton")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-So this patch series serves as the basis of getting the idxd 
-dsa_bus_type related bits fixed up so that auxdev is not necessary. When 
-Jason reviewed previous iterations of the mdev series, he noted that the 
-mdev driver needs to go under VFIO. After the auxdev conversion of the 
-mdev series, Jason and Dan after further review suggested that given 
-there's an internal bus in idxd driver already (dsa_bus_type), that can 
-be used to load drivers rather than needing to rely on auxiliary bus. 
-But the implementation of the dsa_bus_type needs some fixes. After this 
-series, I have another series that's going through internal review right 
-now that will fixup the driver setup and initialization of dsa_bus_type 
-and allow us to load external drivers for the wq. The in kernel use 
-cases for DSA is still valid under dmaengine so the core parts remains 
-valid for dmaengine. The plan going forward is after getting all the 
-fixups in we are planning to:
+Good catch. Thanks Dan!
 
-1. Introduce UACCE framework support for idxd and have a wq driver 
-resides under drivers/misc/uacce/idxd to support the char device 
-operations and deprecate the current custom char dev in idxd. This 
-should remove the burden on you to deal with the char device.
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 
-2. Resubmit the mdev driver under drivers/vfio/mdev/idxd after Jason's 
-latest VFIO refactoring is done.
-
-3. Introduce new kernel use cases with dmanegine API support for SVA 
-operations.
-
-Let me know if this sounds ok to you. Thanks!
-
+Logan

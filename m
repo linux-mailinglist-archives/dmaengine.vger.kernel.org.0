@@ -2,154 +2,128 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 936B1346808
-	for <lists+dmaengine@lfdr.de>; Tue, 23 Mar 2021 19:47:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72F943470A4
+	for <lists+dmaengine@lfdr.de>; Wed, 24 Mar 2021 06:08:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231553AbhCWSqo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 23 Mar 2021 14:46:44 -0400
-Received: from mga01.intel.com ([192.55.52.88]:37124 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231455AbhCWSqU (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 23 Mar 2021 14:46:20 -0400
-IronPort-SDR: aqh8fsKA4pFPlm/OLZjws8H5Td1cXfJ4J/rtBsgkxvSqdXhl2KIl9i6pBY0A/0rUjuEOk7fPxA
- +Ghld/3Pz6qw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9932"; a="210632019"
-X-IronPort-AV: E=Sophos;i="5.81,272,1610438400"; 
-   d="scan'208";a="210632019"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2021 11:46:19 -0700
-IronPort-SDR: LYYcsRvCI7axhTjD1dJG+kxAvC0zU48IX0LyJQlP8lEHiC7qGmXDjHpkLMpTmVI13x2CE1kM3g
- wTZq/giH9krQ==
-X-IronPort-AV: E=Sophos;i="5.81,272,1610438400"; 
-   d="scan'208";a="408453737"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2021 11:46:17 -0700
-Subject: [PATCH] dmaengine: idxd: support reporting of halt interrupt
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org
-Date:   Tue, 23 Mar 2021 11:46:17 -0700
-Message-ID: <161652517756.2028441.16745666668367749220.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/0.23-29-ga622f1
+        id S232840AbhCXFHz (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 24 Mar 2021 01:07:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232747AbhCXFHz (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 Mar 2021 01:07:55 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39D6BC061763
+        for <dmaengine@vger.kernel.org>; Tue, 23 Mar 2021 22:07:55 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id e7so26054312edu.10
+        for <dmaengine@vger.kernel.org>; Tue, 23 Mar 2021 22:07:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KkOm8TzBvXHvaBrJ3ZltRm9dFaZn4nsynemj35eRm2U=;
+        b=F0xzCy+tdMMaJ05EFx6iI4K6L5cNG1noW5ELut/UJnl+utVZMOF9+YqqfBUzF7v6wK
+         eJDS+91gUKbt9PHh5pSQIZImovVE7kVUekMi8zkD2Q+FJkRV8MHQWFAJdpIwDrQsX464
+         kXqjBlAC9WBflr9M6fJqRuFUxWpxQAmCfZeEcP66p8v/7OVhfcKT+fhnx4dnqJ2nCF0r
+         Hg7tbMMyMSrMFtLXhNT73XP9bXOk2sSPzgKbCHTu60c2wqukPOMBsFMVhO84gRWxrplx
+         BjDJCGHZsnW9zjb2kSavOxdfXrzPllqB/MotM69nqrP54DOL9AjmBwvfU6ZO3NslBdoe
+         TLxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KkOm8TzBvXHvaBrJ3ZltRm9dFaZn4nsynemj35eRm2U=;
+        b=A8yDfRut7ECAA/DvTlEdbmNC9JMES7ppI7AFeT+Sd4zM+63pAgSpMk8/vlXts1e7Sj
+         XTkbYTgxBtEqbmGDbCea5sk8ltEIDsY8xndwmUCxSNR5TQMflNrNuUK4bZc8PcCq8t6J
+         anGpTzGfolmRwr+ixBNdk/WQqxc//Q6W7WpfD4Dl/rf40i31XGKK7df6eAmqqhyztvE4
+         e/XnjWwmZRGIsXHjUTtf5t5q1KuxNfx56sEb+OOK0KoGwjcw1f3vTtHicWiv0A0IFQfz
+         GA/sEw5TJcOpZQqVwsyivQ0ZwUXkbMhfW0wlaR9vi7Jxh9K7m3YEoR5zG+MwzaobE3UA
+         3gqg==
+X-Gm-Message-State: AOAM531Qd9m5+/saqTIdES4ywXlmNKyy5QTLbaTqxf0kWv9ECE8emhxJ
+        nSZfeE2XFYqzH9wwvzSfPyoMKbYSf+T4tSsyB8i5Hg==
+X-Google-Smtp-Source: ABdhPJzehiwdjpWTCXJqIv71SIl6uAVI1EkMVzVHXrImBdrqQ9NDHqqlY1ImBs8QRdfO6XEHWnhQB33SCSUnZwjXtxA=
+X-Received: by 2002:a50:e607:: with SMTP id y7mr1472719edm.18.1616562474014;
+ Tue, 23 Mar 2021 22:07:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <161478326635.3900104.2067961356060195664.stgit@djiang5-desk3.ch.intel.com>
+ <20210304180308.GH4247@nvidia.com>
+In-Reply-To: <20210304180308.GH4247@nvidia.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 23 Mar 2021 22:07:46 -0700
+Message-ID: <CAPcyv4ibhLP=sGf3iNwoE8Qtr_5nXqcRr7NTsx648bPFWaJjrg@mail.gmail.com>
+Subject: Re: [PATCH v5] dmaengine: idxd: Do not use devm for 'struct device'
+ object allocation
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
+        dmaengine@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Unmask the halt error interrupt so it gets reported to the interrupt
-handler. When halt state interrupt is received, quiesce the kernel
-WQs and unmap the portals to stop submission.
+On Thu, Mar 4, 2021 at 10:04 AM Jason Gunthorpe <jgg@nvidia.com> wrote:
+>
+> On Wed, Mar 03, 2021 at 07:56:30AM -0700, Dave Jiang wrote:
+> > Remove devm_* allocation of memory of 'struct device' objects.
+> > The devm_* lifetime is incompatible with device->release() lifetime.
+> > Address issues flagged by CONFIG_DEBUG_KOBJECT_RELEASE. Add release
+> > functions for each component in order to free the allocated memory at
+> > the appropriate time. Each component such as wq, engine, and group now
+> > needs to be allocated individually in order to setup the lifetime properly.
+> > In the process also fix up issues from the fallout of the changes.
+> >
+> > Reported-by: Jason Gunthorpe <jgg@nvidia.com>
+> > Fixes: bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data accelerators")
+> > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> > v5:
+> > - Rebased against 5.12-rc dmaengine/fixes
+> > v4:
+> > - fix up the life time of cdev creation/destruction (Jason)
+> > - Tested with KASAN and other memory allocation leak detections. (Jason)
+> >
+> > v3:
+> > - Remove devm_* for irq request and cleanup related bits (Jason)
+> > v2:
+> > - Remove all devm_* alloc for idxd_device (Jason)
+> > - Add kref dep for dma_dev (Jason)
+> >
+> >  drivers/dma/idxd/cdev.c   |   32 +++---
+> >  drivers/dma/idxd/device.c |   20 ++-
+> >  drivers/dma/idxd/dma.c    |   13 ++
+> >  drivers/dma/idxd/idxd.h   |    8 +
+> >  drivers/dma/idxd/init.c   |  261 +++++++++++++++++++++++++++++++++------------
+> >  drivers/dma/idxd/irq.c    |    6 +
+> >  drivers/dma/idxd/sysfs.c  |   77 +++++++++----
+> >  7 files changed, 290 insertions(+), 127 deletions(-)
+> >
+> > diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+> > index 0db9b82ed8cf..1b98e06fa228 100644
+> > +++ b/drivers/dma/idxd/cdev.c
+> > @@ -259,6 +259,7 @@ static int idxd_wq_cdev_dev_setup(struct idxd_wq *wq)
+> >               return -ENOMEM;
+> >
+> >       dev = idxd_cdev->dev;
+> > +     device_initialize(dev);
+> >       dev->parent = &idxd->pdev->dev;
+> >       dev_set_name(dev, "%s/wq%u.%u", idxd_get_dev_name(idxd),
+> >                    idxd->id, wq->id);
+>
+> dev_set_name() can fail
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/dma/idxd/device.c    |   15 +++++++++++++++
- drivers/dma/idxd/idxd.h      |    2 ++
- drivers/dma/idxd/init.c      |    2 +-
- drivers/dma/idxd/irq.c       |    2 ++
- drivers/dma/idxd/registers.h |    3 ++-
- 5 files changed, 22 insertions(+), 2 deletions(-)
+Something bubbled up in my mind several hours after the fact looking
+at Dave's lifetime reworks...
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 205156afeb54..0f9159dec47c 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -47,6 +47,7 @@ void idxd_unmask_error_interrupts(struct idxd_device *idxd)
- 
- 	genctrl.bits = ioread32(idxd->reg_base + IDXD_GENCTRL_OFFSET);
- 	genctrl.softerr_int_en = 1;
-+	genctrl.halt_int_en = 1;
- 	iowrite32(genctrl.bits, idxd->reg_base + IDXD_GENCTRL_OFFSET);
- }
- 
-@@ -56,6 +57,7 @@ void idxd_mask_error_interrupts(struct idxd_device *idxd)
- 
- 	genctrl.bits = ioread32(idxd->reg_base + IDXD_GENCTRL_OFFSET);
- 	genctrl.softerr_int_en = 0;
-+	genctrl.halt_int_en = 0;
- 	iowrite32(genctrl.bits, idxd->reg_base + IDXD_GENCTRL_OFFSET);
- }
- 
-@@ -304,6 +306,19 @@ void idxd_wq_unmap_portal(struct idxd_wq *wq)
- 	struct device *dev = &wq->idxd->pdev->dev;
- 
- 	devm_iounmap(dev, wq->portal);
-+	wq->portal = NULL;
-+}
-+
-+void idxd_wqs_unmap_portal(struct idxd_device *idxd)
-+{
-+	int i;
-+
-+	for (i = 0; i < idxd->max_wqs; i++) {
-+		struct idxd_wq *wq = &idxd->wqs[i];
-+
-+		if (wq->portal)
-+			idxd_wq_unmap_portal(wq);
-+	}
- }
- 
- int idxd_wq_set_pasid(struct idxd_wq *wq, int pasid)
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index a9386a66ab72..18ddad0ec454 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -325,6 +325,7 @@ void idxd_cleanup_sysfs(struct idxd_device *idxd);
- int idxd_register_driver(void);
- void idxd_unregister_driver(void);
- struct bus_type *idxd_get_bus_type(struct idxd_device *idxd);
-+void idxd_wqs_quiesce(struct idxd_device *idxd);
- 
- /* device interrupt control */
- irqreturn_t idxd_irq_handler(int vec, void *data);
-@@ -352,6 +353,7 @@ int idxd_device_release_int_handle(struct idxd_device *idxd, int handle,
- 				   enum idxd_interrupt_type irq_type);
- 
- /* work queue control */
-+void idxd_wqs_unmap_portal(struct idxd_device *idxd);
- int idxd_wq_alloc_resources(struct idxd_wq *wq);
- void idxd_wq_free_resources(struct idxd_wq *wq);
- int idxd_wq_enable(struct idxd_wq *wq);
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 083facb301b8..eb884c9a3c6a 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -532,7 +532,7 @@ static void idxd_flush_work_list(struct idxd_irq_entry *ie)
- 	}
- }
- 
--static void idxd_wqs_quiesce(struct idxd_device *idxd)
-+void idxd_wqs_quiesce(struct idxd_device *idxd)
- {
- 	struct idxd_wq *wq;
- 	int i;
-diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
-index a60ca11a5784..5347dc4714dd 100644
---- a/drivers/dma/idxd/irq.c
-+++ b/drivers/dma/idxd/irq.c
-@@ -200,6 +200,8 @@ static int process_misc_interrupts(struct idxd_device *idxd, u32 cause)
- 			queue_work(idxd->wq, &idxd->work);
- 		} else {
- 			spin_lock_bh(&idxd->dev_lock);
-+			idxd_wqs_quiesce(idxd);
-+			idxd_wqs_unmap_portal(idxd);
- 			idxd_device_wqs_clear_state(idxd);
- 			dev_err(&idxd->pdev->dev,
- 				"idxd halted, need %s.\n",
-diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
-index 5cbf368c7367..6c11375cc56a 100644
---- a/drivers/dma/idxd/registers.h
-+++ b/drivers/dma/idxd/registers.h
-@@ -120,7 +120,8 @@ union gencfg_reg {
- union genctrl_reg {
- 	struct {
- 		u32 softerr_int_en:1;
--		u32 rsvd:31;
-+		u32 halt_int_en:1;
-+		u32 rsvd:30;
- 	};
- 	u32 bits;
- } __packed;
+As long as there are no error returns between dev_set_name() and
+device_{add,register}() then those will abort with a "name_error:"
+exit and require put_device() to clean up the name. I'd much rather
+drivers depend on proper dev_set_name() ordering relative to
+device_add() than pollute drivers with pedantic dev_set_name() error
+handling. Unhandled dev_set_name() followed by device_{add,register}()
+is the predominant registration pattern and it isn't broken afaics.
 
+Only buses that expressly want to avoid fallback to a bus provided
+dev_name() would need to make sure that dev_set_name() is successful.
 
+I don't think Dave needs to respin for this, but as I went to
+investigate why those changes rubbed me the wrong way it led me back
+here.

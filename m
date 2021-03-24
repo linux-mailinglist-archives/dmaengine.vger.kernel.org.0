@@ -2,175 +2,131 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5E95347D66
-	for <lists+dmaengine@lfdr.de>; Wed, 24 Mar 2021 17:14:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A029D347E3D
+	for <lists+dmaengine@lfdr.de>; Wed, 24 Mar 2021 17:53:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233655AbhCXQOB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 24 Mar 2021 12:14:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44456 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232800AbhCXQNt (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 24 Mar 2021 12:13:49 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 210D2C061763
-        for <dmaengine@vger.kernel.org>; Wed, 24 Mar 2021 09:13:48 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id k10so33849817ejg.0
-        for <dmaengine@vger.kernel.org>; Wed, 24 Mar 2021 09:13:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4w08T4uvz2D0xbYLh/HvXVZ/CqqaSfQ0cR8uid27WHY=;
-        b=Vmv/RjNb0rDsh0rrYMfsRJ4XjeG8dLthIue9j8vi6iuJUYPP3aSLpJFCLwAYLpiGHR
-         lXfnDH7nlV06mQ4DCflgTKkGkQ9hfLJZubV6iSdLK0stQ8xxKCdYmt2oq0qf8oN2L5Hs
-         eHC2aIac5Zm6byAE0WWe8t1Hqd/RerDG7X9bederPRdHGvJkgdoBk/HC95HhM4PyFV72
-         lu316wKEl8ZMLr0Y0kmPJLd9gqy808uK+iNYbdgR9P9Oe9DHzMuVesyWRENcMxvml1kZ
-         KhAp2mG8y4P1ayxohVepchWCtg5UAlikl4G/Sf4zP3nvmxP/NFe+vMXxretYqLszpAST
-         xZVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4w08T4uvz2D0xbYLh/HvXVZ/CqqaSfQ0cR8uid27WHY=;
-        b=RXspJ/aGvT6uaiBertyK3DaAWGhLAUyPMDt2x8G1w1mJYmu2H4jwis24xZ7FM5y+Yu
-         GpkWqUh1vyfWQ6WUx4IwYDy6Sus2rvpTDUKZRacYjA3jCf9Tdytxi8ZINKH1vsDXRWZi
-         h3RUzbPJ3O3K54AFqji0Fhy9WoH/EzlKMxYW5Lo5nXrCHKiChGQRhwNSV2b4fQV3VEnH
-         m7tllkr/xdZ/5xyFLjxJB//jQW48sSpzvyZ7qX0oHGKzjlfigp6ItfugmygULrPOoCHu
-         0O4WxsRLqxzQX7hoMdPZLucX3rhwz348MZ09EaBF4+1BUUR3iP0aEd4/sbqHqtoWMICu
-         JWVA==
-X-Gm-Message-State: AOAM532eTGF5hOJ5E/cUDJPiaViHH2JxNuRFTW2cT6Ri0zJcCrFNhs+9
-        Jn1sppp8p+x0Pjb9SqWFt9jTTzzkhyp2cZcDysWWkA==
-X-Google-Smtp-Source: ABdhPJx9KNWdIWjfBSSsawY00yaac7hp35ER8AtH/UV6nvlxXkIF3HrMnENgfcp+GVxWz25Y7Q3gk1B10If4VHrIRZY=
-X-Received: by 2002:a17:906:2bc3:: with SMTP id n3mr4575130ejg.418.1616602426768;
- Wed, 24 Mar 2021 09:13:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <161478326635.3900104.2067961356060195664.stgit@djiang5-desk3.ch.intel.com>
- <20210304180308.GH4247@nvidia.com> <CAPcyv4ibhLP=sGf3iNwoE8Qtr_5nXqcRr7NTsx648bPFWaJjrg@mail.gmail.com>
- <20210324115645.GS2356281@nvidia.com>
-In-Reply-To: <20210324115645.GS2356281@nvidia.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 24 Mar 2021 09:13:35 -0700
-Message-ID: <CAPcyv4jUJa9V1TrcVsEjf3NR6p10x8=0jZ1iCATLNiJ9Tz_YWA@mail.gmail.com>
+        id S236630AbhCXQw5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 24 Mar 2021 12:52:57 -0400
+Received: from mail-bn7nam10on2066.outbound.protection.outlook.com ([40.107.92.66]:22113
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S237012AbhCXQwu (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 24 Mar 2021 12:52:50 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BoPVwKaScP7jfXelfncLViCPQuUxU06zHWN1QI1st4xz/eLAMlEy12Ww6UEr304C33YGw+KzCwzp0gqn5K6bS5phdZ1XYKdf/K0BfTi3G+s23S1oNbFwd38upk013CaOdL7/VCOwY5ItIPjQ+xOgKMAleCLL5uS2Og1Aoqlilnw2tZll0EfOqOJTkrS5CGfyLqztGzwhmiLsHzHPo59TfpHeQypoQymmphcNDWvB4I/cCyh2st5H+857ObbFovciUznXhEiJ4MD/deB5wOdtDlEcoWRaWxcN+596EXYAf+AFwFKoxRSbdeJlFSweysTjwe70sn0BnaIGwPhgm4C3Xw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3GzIlbn0Rnbmq/omTSKyfwXckUY2X2SS2qIpYpe9nSo=;
+ b=fGtd/T1hwlmvqKIqYGpZR2arqxnNzqU51bzZ2O+9Q1C1+MPe5PvCuoqw80ivdWkGR6aIsnnSv2KS3erW74/xpvAaMfKZ6clShDvGro01CmFDju4IfyfVG9alw9IYOLv6xv++jxsozvfPj5zkz9/zcVTeLbNseNJ/1HgvzS4V7tiMtEZPgNVMsHYTZnwfeHMiYxNZLGjeYrC4UliGly6oyXpQuVGl8sod+63k3Z37eaET69ZsXNjVkkTj/VcuvONX4y6jZIEbXG8eEEMFKZ/RmCL6MmDKP9quko8VRnNh7fhfyvBcRY549jJ3xVEG6RCY3+jtejkYvZTdTKaORQitiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3GzIlbn0Rnbmq/omTSKyfwXckUY2X2SS2qIpYpe9nSo=;
+ b=JzjH1tKtWy9d50p8RVKr3C2qaLiNK1Zqc6E5foV1DxjPkfrrpqG9IihkP0XUfuOm1x5fk4dVgRyoyXMeyi5DfEh03LkLgPonIkSdDmiiwgYgyLn0io+uQlCxwvKAm9qb8dmoYwKjAxO6aTCbxf1NnLXUuCyLm1FF+gb06qwLBJTZLIuO0xZTaer42awsbhAN9koZwOGaLpiia61hAGhn7MKVrNnRZZJ/N1gpfDhlqZyDfqzpj9ZRXv5LsK+3tJY96fYGL5PI6lIZLDOYvnCdfOCoUT8VqoG8SyAJ0WlWCmnj6tsBQa6jEWmsvKPUFPaOHvnpUb1XX7oXHZBmTENO9w==
+Authentication-Results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM6PR12MB4012.namprd12.prod.outlook.com (2603:10b6:5:1cc::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18; Wed, 24 Mar
+ 2021 16:52:48 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1c62:7fa3:617b:ab87]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::1c62:7fa3:617b:ab87%6]) with mapi id 15.20.3955.027; Wed, 24 Mar 2021
+ 16:52:48 +0000
+Date:   Wed, 24 Mar 2021 13:52:46 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
+        dmaengine@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
 Subject: Re: [PATCH v5] dmaengine: idxd: Do not use devm for 'struct device'
  object allocation
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
-        dmaengine@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <20210324165246.GK2356281@nvidia.com>
+References: <161478326635.3900104.2067961356060195664.stgit@djiang5-desk3.ch.intel.com>
+ <20210304180308.GH4247@nvidia.com>
+ <CAPcyv4ibhLP=sGf3iNwoE8Qtr_5nXqcRr7NTsx648bPFWaJjrg@mail.gmail.com>
+ <20210324115645.GS2356281@nvidia.com>
+ <CAPcyv4jUJa9V1TrcVsEjf3NR6p10x8=0jZ1iCATLNiJ9Tz_YWA@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jUJa9V1TrcVsEjf3NR6p10x8=0jZ1iCATLNiJ9Tz_YWA@mail.gmail.com>
+X-Originating-IP: [206.223.160.26]
+X-ClientProxiedBy: YT2PR01CA0019.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:38::24) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (206.223.160.26) by YT2PR01CA0019.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:38::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.24 via Frontend Transport; Wed, 24 Mar 2021 16:52:47 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1lP6kQ-0024tT-Ht; Wed, 24 Mar 2021 13:52:46 -0300
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b15ea9c4-3d69-4d73-6f95-08d8eee540fb
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4012:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB40124B148E33F092E23DFC8BC2639@DM6PR12MB4012.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 6yhBLw0BhuL3Yidicv258pmyxjsvv7fpzb1O4vQAOdJPMz2sD8y3hb22cbyPATebxOOfJbgF2boLp1ZtVIAFTuhOZyYP8lddBhPmApeUajwZc/24CRnxUuA1Rrb9nAKSxTnuLPEKK+2z/F8z+yLkoCyYO6MTPpeSAFlbKwrMsMEWG7cSh/VAAZ/ZHapSGrOdkH19zP/VUwgKpfDzGkM7Mx0M9kHhcn/zzSsC3KciUobUmGEuyMNpxILiRNOQxiCk30mZeZW7XDLynsSWoAqcNh0CRh/qtL160WfwO76DM6jySTEMHDOFS7Mu2E8n1310HQzGR11CP6eLj0EO1HfHyb+DMvUVHu6hDLEMQHbHy1RmRnfhFIIPGO0rtU3D2FzvAjzgNO1Blpx2DQaotRlf92zwaZD5C9mZcAT/W7+/Q34a3+oJlezmdPAd638tEkm5aeRO8psnPePSz7WCz3r06NVP93roU0+L7JSGwqrph92CQDR51TBcq8bD/oN9fcVxGv2yAoHUkb2xEiEZEewqz2L7UsYqryhrJinFpjI1aFDJZfkvrSjyxFaq/t0kc3fwqD7czfmjJuRo3kNX+jOuMG8Xsv05P6osISLeRvAtsUcUOStyPZd7YXzambRQUemEwLxm642gqM5QSd8irpHQeKczx19W3HJuKS5dJXtrNuM=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(376002)(39860400002)(396003)(346002)(426003)(66556008)(66946007)(38100700001)(1076003)(6916009)(8936002)(186003)(8676002)(66476007)(316002)(4326008)(5660300002)(54906003)(26005)(9786002)(36756003)(86362001)(478600001)(9746002)(2616005)(83380400001)(4744005)(2906002)(33656002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?vagno71qNp4Mk/pUxVcHGB08DOw1nSxtSYAWdrMc2huHkDRl/sdXocKPbAtS?=
+ =?us-ascii?Q?2xGmrL2bGCADBByfntrKArP3E3vGDfrgG3LHqhgw5NxxwW8VTKTIte+i66vW?=
+ =?us-ascii?Q?Cpk2oGII4+SE4Xo5Lo6X0zwjGtG8n0he2TRZvoUG+dFG1RgMNIvAjfIOgfwT?=
+ =?us-ascii?Q?WDxfRAXtR1m3r2b7n2/zyxz+k13rZjtJYsjnMxOQopNL2p5uoAlO80bVgmcA?=
+ =?us-ascii?Q?uurUMv6Y8H2cOmin3X2XILkuhpmnknE2GMPLNpuS6rsPOkV+crXgTyDeNQeU?=
+ =?us-ascii?Q?juYG/Kf3R3Bcltkon0uu8qAmxBVTB2LoWJ4xV0Jea8SRRs5NsFgl6eIpZHQq?=
+ =?us-ascii?Q?4L9LZTjgTLmgK+JPLtekADx69JHOmQx9f4AcltLx+hw8ZbJ1TivZXfN1GGRY?=
+ =?us-ascii?Q?qE4WSCGZc9CWoFzlr7dUFBiFR9GE10qK6MCIXbBhchGmwD23Iu2W6z9FTqyD?=
+ =?us-ascii?Q?zkGS4y/QDNT2l8uWkQ17ds6Indf5InhIAS45IzleT9kDqUGz63jvCVwCeeqn?=
+ =?us-ascii?Q?jBPYGTaPF9Yqi3vSJKfxWU6qSbn3Pxkxp/ID+UPoQHMzSlNSc6ds5O2EEQbg?=
+ =?us-ascii?Q?IJMTl4WTLeTOTtgQxsCgbhAPStJJMxTmA5XxpyHCHJTsNWZX9qdJPCCl62qM?=
+ =?us-ascii?Q?CMLhjig+gOuaEwEPeUWbJgHxF6GxbIni8vqd6MLm5exTrjWQW+AfXvHcPSpc?=
+ =?us-ascii?Q?EDDInjGOivEKJTVErEcSxhEaVW/mizxJ1aEd/O8TQvyY0pc+j9ibJWOza3fH?=
+ =?us-ascii?Q?RRjqqEipizxeE1rEAS0E7/wXLjJ9wYxNIlXy6ltsRtg06gINVQP9gELO8hmW?=
+ =?us-ascii?Q?hkXu2rohP5ZriR/meulvYhfNXjUo7Vs5kjjQjojSgv+FfYGTO3+9ZQGardlC?=
+ =?us-ascii?Q?b2bfJ+CXoU3XQ+Vej4tC4MRp/Lw5vT0A+SfBD4itO34Rzl1nDgZzi/5kc5Pn?=
+ =?us-ascii?Q?KB3qjDxqoczdso0nBj2I63mTnkhwIU0KakKiK+MmWxAxaBTyrlNop8xWOC8z?=
+ =?us-ascii?Q?N+ndGtt1RFamQoVl2ztBy5bEzczbVnL9S1YhOKjOK/N3N6CQH95npfP8rY9b?=
+ =?us-ascii?Q?EBDAHhHKQz8y64LSZouGasmbQNLfEZMbUHz0NnrtzXcqYftclq6RnfXDXMv2?=
+ =?us-ascii?Q?jtnQfEsqBzSjPdpLQihjeTt46YIhugjw7TdDzqey6bKybf581EHahebmOsKU?=
+ =?us-ascii?Q?zOWlWzIYrpkXXouxOtlw2bjAHQbF/blSKBrr89012Q5vmk6oEmgLlDb6YHHl?=
+ =?us-ascii?Q?YgHC3MgcALCAbIBAedlvtRReQHTmasf8cLB6nuXe+3d0MpqBFbwkoE72AgdK?=
+ =?us-ascii?Q?WELDrO1JRdvrmpNAE0wo7LHB?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b15ea9c4-3d69-4d73-6f95-08d8eee540fb
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2021 16:52:47.9345
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KiwiW5QKcjVS2aHlfxPsHLMcZP+wqXlsumk2vCDxLi9x7yZShf9krqR4upNWhsHD
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4012
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, Mar 24, 2021 at 5:33 AM Jason Gunthorpe <jgg@nvidia.com> wrote:
->
-> On Tue, Mar 23, 2021 at 10:07:46PM -0700, Dan Williams wrote:
-> > On Thu, Mar 4, 2021 at 10:04 AM Jason Gunthorpe <jgg@nvidia.com> wrote:
-> > >
-> > > On Wed, Mar 03, 2021 at 07:56:30AM -0700, Dave Jiang wrote:
-> > > > Remove devm_* allocation of memory of 'struct device' objects.
-> > > > The devm_* lifetime is incompatible with device->release() lifetime.
-> > > > Address issues flagged by CONFIG_DEBUG_KOBJECT_RELEASE. Add release
-> > > > functions for each component in order to free the allocated memory at
-> > > > the appropriate time. Each component such as wq, engine, and group now
-> > > > needs to be allocated individually in order to setup the lifetime properly.
-> > > > In the process also fix up issues from the fallout of the changes.
-> > > >
-> > > > Reported-by: Jason Gunthorpe <jgg@nvidia.com>
-> > > > Fixes: bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data accelerators")
-> > > > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> > > > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> > > > v5:
-> > > > - Rebased against 5.12-rc dmaengine/fixes
-> > > > v4:
-> > > > - fix up the life time of cdev creation/destruction (Jason)
-> > > > - Tested with KASAN and other memory allocation leak detections. (Jason)
-> > > >
-> > > > v3:
-> > > > - Remove devm_* for irq request and cleanup related bits (Jason)
-> > > > v2:
-> > > > - Remove all devm_* alloc for idxd_device (Jason)
-> > > > - Add kref dep for dma_dev (Jason)
-> > > >
-> > > >  drivers/dma/idxd/cdev.c   |   32 +++---
-> > > >  drivers/dma/idxd/device.c |   20 ++-
-> > > >  drivers/dma/idxd/dma.c    |   13 ++
-> > > >  drivers/dma/idxd/idxd.h   |    8 +
-> > > >  drivers/dma/idxd/init.c   |  261 +++++++++++++++++++++++++++++++++------------
-> > > >  drivers/dma/idxd/irq.c    |    6 +
-> > > >  drivers/dma/idxd/sysfs.c  |   77 +++++++++----
-> > > >  7 files changed, 290 insertions(+), 127 deletions(-)
-> > > >
-> > > > diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-> > > > index 0db9b82ed8cf..1b98e06fa228 100644
-> > > > +++ b/drivers/dma/idxd/cdev.c
-> > > > @@ -259,6 +259,7 @@ static int idxd_wq_cdev_dev_setup(struct idxd_wq *wq)
-> > > >               return -ENOMEM;
-> > > >
-> > > >       dev = idxd_cdev->dev;
-> > > > +     device_initialize(dev);
-> > > >       dev->parent = &idxd->pdev->dev;
-> > > >       dev_set_name(dev, "%s/wq%u.%u", idxd_get_dev_name(idxd),
-> > > >                    idxd->id, wq->id);
-> > >
-> > > dev_set_name() can fail
-> >
-> > Something bubbled up in my mind several hours after the fact looking
-> > at Dave's lifetime reworks...
-> >
-> > As long as there are no error returns between dev_set_name() and
-> > device_{add,register}() then those will abort with a "name_error:"
-> > exit and require put_device() to clean up the name.
->
-> IMHO, that is gross. We should not rely on implicit error handling like
-> this, it is too easy to make later change and not realize that
-> dev_set_name() can't be moved.
->
-> > I'd much rather drivers depend on proper dev_set_name() ordering
-> > relative to device_add() than pollute drivers with pedantic
-> > dev_set_name() error
->
-> I want to go the other direction and add a WARN_ON to dev_set_name()
-> if device_initialize() hasn't been called yet.
->
-> IMHO the initialize and add pattern is a bad idea just to save 1 line
-> of code. Look at how many mistakes are in IDXD alone. Lots of places
-> get the very tricky switch to put not kfree after register fails wrong
-> as well.
->
-> > handling. Unhandled dev_set_name() followed by device_{add,register}()
-> > is the predominant registration pattern and it isn't broken afaics.
->
-> It is very fragile, and IMHO, wrong. As a general pattern drivers
-> should be setting the name very early so they can start using things
-> like dev_dbg().
->
-> > Only buses that expressly want to avoid fallback to a bus provided
-> > dev_name() would need to make sure that dev_set_name() is successful.
->
-> Yuk, now it is bus dependent if the shortcut works?
->
-> People need to code this stuff robustly! Call device_initialize()
-> early, check the error from dev_set_name(), do not call
-> device_register()
->
-> I *constantly* see drivers using these APIs wrong. Look at how many
-> bugs are in IDXD around this area alone.
->
-> Making it more subtle to save LOC is the wrong direction.
+On Wed, Mar 24, 2021 at 09:13:35AM -0700, Dan Williams wrote:
 
-I came to that conclusion after the prospect of going to fix all the
-other call sites that got this wrong made me balk.
+> Which is just:
+> 
+> device_initialize()
+> dev_set_name()
+> 
+> ...then the name is set as early as the device is ready to filled in
+> with other details. Just checking for dev_set_name() failures does not
+> move the api forward in my opinion.
 
-The other option I was considering was moving the name into some
-initialization helper, something like:
+This doesn't work either as the release function must be set after
+initialize but before dev_set_name(), otherwise we both can't and must
+call put_device() after something like this fails.
 
-device_setup(struct device *dev, const char *fmt, ...)
+I can't see an option other than bite the bullet and fix things.
 
-Which is just:
+A static tool to look for these special lifetime rules around the
+driver core would be nice.
 
-device_initialize()
-dev_set_name()
-
-...then the name is set as early as the device is ready to filled in
-with other details. Just checking for dev_set_name() failures does not
-move the api forward in my opinion.
+Jason

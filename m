@@ -2,148 +2,133 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D30A34BE9F
-	for <lists+dmaengine@lfdr.de>; Sun, 28 Mar 2021 21:59:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6546134BFE7
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Mar 2021 01:56:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231176AbhC1T7Q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 28 Mar 2021 15:59:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55570 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229595AbhC1T6y (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sun, 28 Mar 2021 15:58:54 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 459A261477;
-        Sun, 28 Mar 2021 19:58:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616961533;
-        bh=4NUAVBaMypj7d1A+DL+VHh2KO4VM/TobWc73V8gAcSg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=pEjHvaLYV61mFlV5diapBBYlnnZ1YxWskcYw2tYybAhxDeeCATqyeZfCURSvAd+gy
-         UY0gAwrh/ceGYWYOd4NzBVAiHVGkFcfrNaih0xurxpMchH1AkM4QR+vr1tdB8gb/xq
-         6z0r6oLNxL9PjNXRXnJH8TjdrGsNy7bXlmm0N/tzpK2dLxPpz229SBOwfku8oox1kZ
-         C+gMpNFdbb8+XpW6MkeiwNOTisDHaHjARTLiF3+OCugesT/JETxukfUxbM7uXNTFX5
-         wkpSBIb4EqOsjSZ7Km0SCkUg9ZtLuFr4N16AEXxczc7vUY2qazphpTOc9iX1Kl5ndH
-         CDnEfywdSJR0A==
-Date:   Sun, 28 Mar 2021 14:58:52 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ion Badulescu <ionut@badula.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Lino Sanfilippo <LinoSanfilippo@gmx.de>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Adam Radford <aradford@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        Nilesh Javali <njavali@marvell.com>,
-        GR-QLogic-Storage-Upstream@marvell.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-ide@vger.kernel.org, dmaengine@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        linux-parisc@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        linux-serial@vger.kernel.org,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] PCI: Remove pci_try_set_mwi
-Message-ID: <20210328195852.GA1088869@bjorn-Precision-5520>
+        id S230130AbhC1X4K (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 28 Mar 2021 19:56:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229656AbhC1Xz7 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 28 Mar 2021 19:55:59 -0400
+Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CEFDC061756;
+        Sun, 28 Mar 2021 16:55:59 -0700 (PDT)
+Received: by mail-qk1-x730.google.com with SMTP id i9so10933468qka.2;
+        Sun, 28 Mar 2021 16:55:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NUiuzRmCI317NNPwOQd3D4rWQdmGZHrpIjp/qwsCZIQ=;
+        b=uXWQRahp3gbzRLIyyNL0YRXhVCZtEuZiHzn/PIsuzG8877k5bJgwYQURdeOdvHz4vf
+         UtOWDRp8hFHb4tkPHczneiCk1Dp3BAPe8nPUJPWphJIe8eEQsUMHA9EhMcfHmCfBv63h
+         Cc6qgUFx9EvyH/PxY7kVGPUt16C7C6GHqSlgWmk/W3Nlz01gtqMgxdPyzK93UMSj/j8K
+         RPiLrdcZHQGN/UMvJlD5XTJKRT5dQdkBl2Ur7I1OR5KPUc6a7GsZQevDW3l5YxrmCI0z
+         r1yTXrRR5jXQtJQZlSGfd5Ol7iXIub51CMMgWplOjMM8chkK0lsTJMIbROp7cwk4m0P1
+         +qgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NUiuzRmCI317NNPwOQd3D4rWQdmGZHrpIjp/qwsCZIQ=;
+        b=EE2Fyaio5GzpTkqIT5AfWXA8m0IVikDDTCIVdIti/DaoNlgvAJLi5yKdX7ZZmB/5BX
+         ksjHIrfsvkKWf6iP87At4mVjJHaXUtkFFnkoWtMFHCjP1FEBP9u1BGTjtFRww9CKfT/N
+         ew09OG26EY3PIYsynzadEJCTXuLv4Yoy9RQbp27ytBixizjcIzenMrSn8mBnLZyG2Ewj
+         WyN7+aHEUSNeSSMzXmkMDs1mma5PVvqmW7lUaAMQXQC+HGDxA0NXRx6JM7n9KVz1uUiF
+         ARsJ8IMkxT9dwYiKw8ixVZdx28iPmw4W1MNFGwPZnLfyklsnxhUW5Zamt6zSwdNOnp0e
+         mc9Q==
+X-Gm-Message-State: AOAM532st9vEkCfGVFL/kOBSnHuZlgzPU89aij0iBb5hqR+Fc2KXVs1R
+        YebtjHSCPeOtjA4YLOkdlxYtvf4qhzSCFSaU
+X-Google-Smtp-Source: ABdhPJyKaE6xu37zVH3z/CjmV3TkU5t17RBcANW7BpVJXHO+pgWwNEwtWueIieluVNk3R4I3c1/mYg==
+X-Received: by 2002:a05:620a:cf4:: with SMTP id c20mr22554064qkj.134.1616975757870;
+        Sun, 28 Mar 2021 16:55:57 -0700 (PDT)
+Received: from localhost.localdomain ([156.146.58.24])
+        by smtp.gmail.com with ESMTPSA id y19sm12153061qky.111.2021.03.28.16.55.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Mar 2021 16:55:57 -0700 (PDT)
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        hch@lst.de, iommu@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, dave.jiang@intel.com,
+        dan.j.williams@intel.com
+Cc:     Bhaskar Chowdhury <unixbhaskar@gmail.com>, rdunlap@infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 00/30] DMA: Mundane typo fixes
+Date:   Mon, 29 Mar 2021 05:22:56 +0530
+Message-Id: <cover.1616971780.git.unixbhaskar@gmail.com>
+X-Mailer: git-send-email 2.26.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5b59c7b3-6e41-b7cf-b77d-274a88f2c5e1@gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Sun, Mar 28, 2021 at 12:04:35AM +0100, Heiner Kallweit wrote:
-> On 26.03.2021 22:26, Bjorn Helgaas wrote:
-> > [+cc Randy, Andrew (though I'm sure you have zero interest in this
-> > ancient question :))]
-> > 
-> > On Wed, Dec 09, 2020 at 09:31:21AM +0100, Heiner Kallweit wrote:
-> >> pci_set_mwi() and pci_try_set_mwi() do exactly the same, just that the
-> >> former one is declared as __must_check. However also some callers of
-> >> pci_set_mwi() have a comment that it's an optional feature. I don't
-> >> think there's much sense in this separation and the use of
-> >> __must_check. Therefore remove pci_try_set_mwi() and remove the
-> >> __must_check attribute from pci_set_mwi().
-> >> I don't expect either function to be used in new code anyway.
-> > 
-> > There's not much I like better than removing things.  But some
-> > significant thought went into adding pci_try_set_mwi() in the first
-> > place, so I need a little more convincing about why it's safe to
-> > remove it.
-> > 
-> 
-> Thanks for the link to the 13 yrs old discussion. Unfortunately it
-> doesn't mention any real argument for the __must_check, just:
-> 
-> "And one of the reasons for adding the __must_check annotation is to
-> weed out design errors."
-> And the very next response in the discussion calls this a "non-argument".
-> Plus not mentioning what the other reasons could be.
+This patch series fixes some trivial and rudimentary spellings in the COMMENT
+sections.
 
-I think you're referring to Alan's response [1]:
+Bhaskar Chowdhury (30):
+  acpi-dma.c: Fix couple of typos
+  altera-msgdma.c: Couple of typos fixed
+  amba-pl08x.c: Fixed couple of typos
+  bcm-sba-raid.c: Few typos fixed
+  bcm2835-dma.c: Fix a typo
+  idma64.c: Fix couple of typos
+  iop-adma.c: Few typos fixed
+  mv_xor.c: Fix a typo
+  mv_xor.h: Fixed a typo
+  mv_xor_v2.c: Fix a typo
+  nbpfaxi.c: Fixed a typo
+  of-dma.c: Fixed a typo
+  s3c24xx-dma.c: Fix a typo
+  Revert "s3c24xx-dma.c: Fix a typo"
+  s3c24xx-dma.c: Few typos fixed
+  st_fdma.h: Fix couple of typos
+  ste_dma40_ll.h: Fix a typo
+  tegra20-apb-dma.c: Fixed a typo
+  xgene-dma.c: Few spello fixes
+  at_hdmac.c: Quite a few spello fixes
+  owl-dma.c: Fix a typo
+  at_hdmac_regs.h: Couple of typo fixes
+  dma-jz4780.c: Fix a typo
+  Kconfig: Change Synopsys to Synopsis
+  ste_dma40.c: Few spello fixes
+  dw-axi-dmac-platform.c: Few typos fixed
+  dpaa2-qdma.c: Fix a typo
+  usb-dmac.c: Fix a typo
+  edma.c: Fix a typo
+  xilinx_dma.c: Fix a typo
 
-  akpm> And we *need* to be excessively anal in the PCI setup code.
-  akpm> We have metric shitloads of bugs due to problems in that area,
-  akpm> and the more formality and error handling and error reporting
-  akpm> we can get in there the better off we will be.
+ drivers/dma/Kconfig                            |  8 ++++----
+ drivers/dma/acpi-dma.c                         |  4 ++--
+ drivers/dma/altera-msgdma.c                    |  4 ++--
+ drivers/dma/amba-pl08x.c                       |  4 ++--
+ drivers/dma/at_hdmac.c                         | 14 +++++++-------
+ drivers/dma/at_hdmac_regs.h                    |  4 ++--
+ drivers/dma/bcm-sba-raid.c                     |  8 ++++----
+ drivers/dma/bcm2835-dma.c                      |  2 +-
+ drivers/dma/dma-jz4780.c                       |  2 +-
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c |  8 ++++----
+ drivers/dma/idma64.c                           |  4 ++--
+ drivers/dma/iop-adma.c                         |  6 +++---
+ drivers/dma/mv_xor.c                           |  2 +-
+ drivers/dma/mv_xor.h                           |  2 +-
+ drivers/dma/mv_xor_v2.c                        |  2 +-
+ drivers/dma/nbpfaxi.c                          |  2 +-
+ drivers/dma/of-dma.c                           |  2 +-
+ drivers/dma/owl-dma.c                          |  2 +-
+ drivers/dma/s3c24xx-dma.c                      |  6 +++---
+ drivers/dma/sh/shdmac.c                        |  2 +-
+ drivers/dma/sh/usb-dmac.c                      |  2 +-
+ drivers/dma/st_fdma.h                          |  4 ++--
+ drivers/dma/ste_dma40.c                        | 10 +++++-----
+ drivers/dma/ste_dma40_ll.h                     |  2 +-
+ drivers/dma/tegra20-apb-dma.c                  |  2 +-
+ drivers/dma/ti/edma.c                          |  2 +-
+ drivers/dma/xgene-dma.c                        |  6 +++---
+ drivers/dma/xilinx/xilinx_dma.c                |  2 +-
+ 28 files changed, 59 insertions(+), 59 deletions(-)
 
-  ac> No argument there
+--
+2.26.3
 
-So Alan is actually *agreeing* that "we need to be excessively anal in
-the PCI setup code,"  not saying that "weeding out design errors is
-not an argument for __must_check."
-
-> Currently we have three ancient drivers that bail out if the call fails.
-> Most callers of pci_set_mwi() use the return code only to emit an
-> error message, but they proceed normally. Majority of users calls
-> pci_try_set_mwi(). And as stated in the commit message I don't expect
-> any new usage of pci_set_mwi().
-
-I would love to merge this patch.  We just need to clarify the commit
-log.  Right now the only justification is "I don't think there's much
-sense in the __must_check annotation," which may well be true but
-could use some support.
-
-If MWI is purely an optimization and there's never a functional
-problem if pci_set_mwi() fails, we should say that (and maybe
-update any drivers that bail out on failure).
-
-Andrew and Alan both seem to agree that MSI *is* purely advisory:
-
-  akpm> pci_set_mwi() is an advisory thing, and on certain platforms
-  akpm> it might fail to set the cacheline size to the desired number.
-  akpm> This is not a fatal error and the driver can successfully run
-  akpm> at a lesser performance level.
-
-  ac> Correct.
-
-But even after that, Andrew proposed adding pci_try_set_mwi().  So it
-makes sense to really understand what was going on there so we don't
-break something in the name of cleaning it up.
-
-[1] https://lore.kernel.org/linux-ide/20070405211609.5263d627@the-village.bc.nu/
-
-> > The argument should cite the discussion about adding it.  I think one
-> > of the earliest conversations is here:
-> > https://lore.kernel.org/linux-ide/20070404213704.224128ec.randy.dunlap@oracle.com/

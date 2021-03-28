@@ -2,51 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7230B34C033
+	by mail.lfdr.de (Postfix) with ESMTP id 6F4FF34C031
 	for <lists+dmaengine@lfdr.de>; Mon, 29 Mar 2021 01:58:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231916AbhC1X6R (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 28 Mar 2021 19:58:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53338 "EHLO
+        id S231830AbhC1X6S (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 28 Mar 2021 19:58:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231774AbhC1X5r (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 28 Mar 2021 19:57:47 -0400
-Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 882E3C061756;
-        Sun, 28 Mar 2021 16:57:47 -0700 (PDT)
-Received: by mail-qk1-x736.google.com with SMTP id g20so10957137qkk.1;
-        Sun, 28 Mar 2021 16:57:47 -0700 (PDT)
+        with ESMTP id S231838AbhC1X5x (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 28 Mar 2021 19:57:53 -0400
+Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA540C061756;
+        Sun, 28 Mar 2021 16:57:52 -0700 (PDT)
+Received: by mail-qk1-x733.google.com with SMTP id 7so10924664qka.7;
+        Sun, 28 Mar 2021 16:57:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=I1EIk4YVKhOnAZImQsN2ZKDY/BZ5VFtnbICpb2ytuZw=;
-        b=dYzr6KWh4SK2C8ze1rrsjBDcu+hcBxWGkb1HkW+qd+/dV31vd3A3Ee2Vxu4ZavXqnU
-         o8NDQ+MysLv2Em5XbQ1laoO0P8vfDo77vfaElmp1/5MVQKkCU4xkYBZR1Y8MPoqMfo6V
-         0ko2b1t/YU/AM1SxeZ+mvKZbA/x6XJ6/kteEuByX/qo+qxxZ6LTZgy9ICZUMbPMGWoNd
-         UclUSFoR61rQ9kcGDjvMWAIuCwmuY+iSBQs/83RVR6BF2KMyUhMQ4juCkRyTGV1Haspm
-         asUV/RoPmdZFZFpoRySHsNo2MW5LLW2WQLM3f1CKrl3Ao9QZR9avs1tE9a+FJ+MwI3Vx
-         lRIQ==
+        bh=OMl5ABdwT5DW251I71t3DGinXKhKaq9NsZyTNddHa8Y=;
+        b=Rfss4m+DyBLiE2rmvTbB3bLpSu6ljCMgZGJOXL83UY6K7+BOdjg+SSTq8kZaDOEWv6
+         rx5iy/w5SOioRKCzTUe3BxyBWYWNrSBKtsFvhFu4XL0OlvsW9PoKO+DxXiWW6St0mTR9
+         lTFd+lCy7V8ZkBLrnBlXt3hupR2eaF94TvrXIfIoOxKabz+84KeSvhAaYQ/pLT5rJS9T
+         zXOMfY/jZWDHi6IcDT8yRNlR1FPQ+kTzxyWI7467K+gS18rtBl3iSz8m8HbJFMcf4hvI
+         qKjsig+kI9u18vColYKr0q6VTUM4wM5tQPrC3qFE9KxeKgm5rGQt7CVWSbQ9fEJeDkEW
+         Pyrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=I1EIk4YVKhOnAZImQsN2ZKDY/BZ5VFtnbICpb2ytuZw=;
-        b=XnmJGzEhUPHBCvt6hI3fYgQePiIBy9mbxraxr0go6SqlJmS1X7L1ifFo6EIRjUeVJJ
-         XnQm4n2UevLZ/b4r9rFlM+CSw0HrtnNEd3/PH0SGLm+0RSmVIOhEMMxg5LvkJwujoOUz
-         Uwrwi+8tvoXGbkoijGJJq5+ibD/StKdx0pJGxb4BsR6XEF/q/UmjYCI2NgTqFmuiRYlV
-         /ZvPwO0JbaP+eNiBm4UATGyJ0pD6Gc/ijB8BGwqFNnFMKPAfUcW3qlKJlAa7yYCEeRqg
-         gaQVOG/kB55CVzrbhK5FTIDIv1C8dreTqilyO8pCLyc57fLIfskZOijdDGCYgMJyVh7B
-         yoAw==
-X-Gm-Message-State: AOAM530aVIXEg9mXTFE+jMLcvt6HAIAJzCOdSRyLNUqzaLLui5rr6W8f
-        P+l3D7+oeDmKpQRMcbqGnUTHD6XZ/2M12K1R
-X-Google-Smtp-Source: ABdhPJw/RMK7vmZ45zLUGVxo30c6mvRq7joodocZ04PQOyJJPRklWL/yJc/aDwzeJa2I3aVqupZvhQ==
-X-Received: by 2002:a05:620a:2116:: with SMTP id l22mr22838891qkl.377.1616975866552;
-        Sun, 28 Mar 2021 16:57:46 -0700 (PDT)
+        bh=OMl5ABdwT5DW251I71t3DGinXKhKaq9NsZyTNddHa8Y=;
+        b=uCEOdO0Av44gyeKOowZSA0w1ZpfMd+31DoXEii39BLE+rXD6Q4iFvDKhwhpnpem5rZ
+         Qj0bBxywfqRQVDARn/jJLnCmpLwIlnAP+o9YCyjNsIIfx9llA0itLNOfu5TPhdcvCUpS
+         TWvxWfp+ZeV170dmBrNvTGR9rNKmOogCHo72cKBRSXsVSxfNwzrg5lThp1saSxmLXxca
+         gpZv3OtfLOriCuwRSS5xOO9CZ1P9HvjBMw93PyyH0bK5o9lnvK6F12iY5VdzqWK2QSv1
+         7WdahBk5uF146Dhj/agRtiGMl6/WbJWcNf2UAgQLIdceuq+1485diUWr3FT+YXGLf3Mi
+         1hXg==
+X-Gm-Message-State: AOAM530fmNmb7891aETWkeoMHRwYR4VFQTJgppTsQCZveuaoQnmv2TRo
+        4xjYXYaRYbdejsg+DIQTMTKfZg6fN4y1oMoI
+X-Google-Smtp-Source: ABdhPJxStwmIthIUA++khUWtx+qx1BVfAS/jMvDgsTU1bqiz3K++ChYbHlJMBeZAq5/maT4/buJuaQ==
+X-Received: by 2002:a37:a147:: with SMTP id k68mr23143111qke.66.1616975871664;
+        Sun, 28 Mar 2021 16:57:51 -0700 (PDT)
 Received: from localhost.localdomain ([156.146.58.24])
-        by smtp.gmail.com with ESMTPSA id y19sm12153061qky.111.2021.03.28.16.57.41
+        by smtp.gmail.com with ESMTPSA id y19sm12153061qky.111.2021.03.28.16.57.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Mar 2021 16:57:46 -0700 (PDT)
+        Sun, 28 Mar 2021 16:57:51 -0700 (PDT)
 From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
 To:     dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
         hch@lst.de, iommu@lists.linux-foundation.org,
@@ -54,9 +54,9 @@ To:     dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
         dan.j.williams@intel.com
 Cc:     Bhaskar Chowdhury <unixbhaskar@gmail.com>, rdunlap@infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 22/30] at_hdmac_regs.h: Couple of typo fixes
-Date:   Mon, 29 Mar 2021 05:23:18 +0530
-Message-Id: <a588f9e9c32c5af24570ea04c4cd460fb3958147.1616971780.git.unixbhaskar@gmail.com>
+Subject: [PATCH 23/30] dma-jz4780.c: Fix a typo
+Date:   Mon, 29 Mar 2021 05:23:19 +0530
+Message-Id: <ecd961a789c07f2c6a05330688e084547e78c191.1616971780.git.unixbhaskar@gmail.com>
 X-Mailer: git-send-email 2.26.3
 In-Reply-To: <cover.1616971780.git.unixbhaskar@gmail.com>
 References: <cover.1616971780.git.unixbhaskar@gmail.com>
@@ -66,36 +66,26 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-s/availlable/available/
-s/signle/single/
+s/proceeed/proceed/
 
 Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
 ---
- drivers/dma/at_hdmac_regs.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/dma-jz4780.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/at_hdmac_regs.h b/drivers/dma/at_hdmac_regs.h
-index 4d1ebc040031..46ecc40edaa8 100644
---- a/drivers/dma/at_hdmac_regs.h
-+++ b/drivers/dma/at_hdmac_regs.h
-@@ -338,7 +338,7 @@ static inline u8 convert_buswidth(enum dma_slave_buswidth addr_width)
-  * @ch_regs: memory mapped register base
-  * @clk: dma controller clock
-  * @save_imr: interrupt mask register that is saved on suspend/resume cycle
-- * @all_chan_mask: all channels availlable in a mask
-+ * @all_chan_mask: all channels available in a mask
-  * @dma_desc_pool: base of DMA descriptor region (DMA address)
-  * @chan: channels table to store at_dma_chan structures
-  */
-@@ -462,7 +462,7 @@ static inline int atc_chan_is_cyclic(struct at_dma_chan *atchan)
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index ebee94dbd630..451bc754b609 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -379,7 +379,7 @@ static struct dma_async_tx_descriptor *jz4780_dma_prep_slave_sg(
 
- /**
-  * set_desc_eol - set end-of-link to descriptor so it will end transfer
-- * @desc: descriptor, signle or at the end of a chain, to end chain on
-+ * @desc: descriptor, single or at the end of a chain, to end chain on
-  */
- static void set_desc_eol(struct at_desc *desc)
- {
+ 		if (i != (sg_len - 1) &&
+ 		    !(jzdma->soc_data->flags & JZ_SOC_DATA_BREAK_LINKS)) {
+-			/* Automatically proceeed to the next descriptor. */
++			/* Automatically proceed to the next descriptor. */
+ 			desc->desc[i].dcm |= JZ_DMA_DCM_LINK;
+
+ 			/*
 --
 2.26.3
 

@@ -2,51 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F4FF34C031
+	by mail.lfdr.de (Postfix) with ESMTP id 6FA1D34C032
 	for <lists+dmaengine@lfdr.de>; Mon, 29 Mar 2021 01:58:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231830AbhC1X6S (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 28 Mar 2021 19:58:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53358 "EHLO
+        id S231767AbhC1X6U (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 28 Mar 2021 19:58:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231838AbhC1X5x (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 28 Mar 2021 19:57:53 -0400
-Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA540C061756;
-        Sun, 28 Mar 2021 16:57:52 -0700 (PDT)
-Received: by mail-qk1-x733.google.com with SMTP id 7so10924664qka.7;
-        Sun, 28 Mar 2021 16:57:52 -0700 (PDT)
+        with ESMTP id S231867AbhC1X56 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 28 Mar 2021 19:57:58 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAC91C061756;
+        Sun, 28 Mar 2021 16:57:57 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id i19so8219834qtv.7;
+        Sun, 28 Mar 2021 16:57:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OMl5ABdwT5DW251I71t3DGinXKhKaq9NsZyTNddHa8Y=;
-        b=Rfss4m+DyBLiE2rmvTbB3bLpSu6ljCMgZGJOXL83UY6K7+BOdjg+SSTq8kZaDOEWv6
-         rx5iy/w5SOioRKCzTUe3BxyBWYWNrSBKtsFvhFu4XL0OlvsW9PoKO+DxXiWW6St0mTR9
-         lTFd+lCy7V8ZkBLrnBlXt3hupR2eaF94TvrXIfIoOxKabz+84KeSvhAaYQ/pLT5rJS9T
-         zXOMfY/jZWDHi6IcDT8yRNlR1FPQ+kTzxyWI7467K+gS18rtBl3iSz8m8HbJFMcf4hvI
-         qKjsig+kI9u18vColYKr0q6VTUM4wM5tQPrC3qFE9KxeKgm5rGQt7CVWSbQ9fEJeDkEW
-         Pyrw==
+        bh=Rk0U560xdi7ATXezYweBgD2EUyZ4bnHBlHOPTcEoREY=;
+        b=ZLnI2Hw3GmiFb+BW4FldFixdVOm0/gTAYYcPGeNweT29zSncqaCxQl2ULX/m3x6yjk
+         FlPvPCq6g1oh13jD6EQyG1JSSdz9G8bm3HGZ2akxZG2GJMQ9BC7QedLKEm34PtSwYA9Q
+         9GLpxWPlLC/j45fuB1CB2u0k+GONoOh9eOlRvew+eCtM4IXd3/dem3muwmJ2LGUvv9pZ
+         rKataNLRCg25wm/swBsArGMvPBDO2BXQknOCELLoUmLYNgIAwbOCOSxAGx2PbdugPEc1
+         E84l/Bt6cNoKU6NHkm/vCejz/HyOc3AwND0Z16aeHxg7CDZpOR9OV5YCqN3yJaJzc09z
+         OoNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OMl5ABdwT5DW251I71t3DGinXKhKaq9NsZyTNddHa8Y=;
-        b=uCEOdO0Av44gyeKOowZSA0w1ZpfMd+31DoXEii39BLE+rXD6Q4iFvDKhwhpnpem5rZ
-         Qj0bBxywfqRQVDARn/jJLnCmpLwIlnAP+o9YCyjNsIIfx9llA0itLNOfu5TPhdcvCUpS
-         TWvxWfp+ZeV170dmBrNvTGR9rNKmOogCHo72cKBRSXsVSxfNwzrg5lThp1saSxmLXxca
-         gpZv3OtfLOriCuwRSS5xOO9CZ1P9HvjBMw93PyyH0bK5o9lnvK6F12iY5VdzqWK2QSv1
-         7WdahBk5uF146Dhj/agRtiGMl6/WbJWcNf2UAgQLIdceuq+1485diUWr3FT+YXGLf3Mi
-         1hXg==
-X-Gm-Message-State: AOAM530fmNmb7891aETWkeoMHRwYR4VFQTJgppTsQCZveuaoQnmv2TRo
-        4xjYXYaRYbdejsg+DIQTMTKfZg6fN4y1oMoI
-X-Google-Smtp-Source: ABdhPJxStwmIthIUA++khUWtx+qx1BVfAS/jMvDgsTU1bqiz3K++ChYbHlJMBeZAq5/maT4/buJuaQ==
-X-Received: by 2002:a37:a147:: with SMTP id k68mr23143111qke.66.1616975871664;
-        Sun, 28 Mar 2021 16:57:51 -0700 (PDT)
+        bh=Rk0U560xdi7ATXezYweBgD2EUyZ4bnHBlHOPTcEoREY=;
+        b=FhwKoDrx1R0gEA3GNYPZ9H0WG6hU8ukCnyN9MU5Z03/G/+GAcG2jvSElVCX7zsGFty
+         zoriabAIIDP5/GiMuQ9CbonPZ6DvmNoAxVJoSIb7pD5pITX7Z0Dqd/ziW1uTJTG6sfoO
+         c06aIOd4MXzDvuWLJJYfQeJfulp++mCQt6925ImwhxQxaauU1iuzZ3gauYVQWKINp/jz
+         65ZGAZM6VRaX7Q24gKUcpPRq+StY0zrRrcKpQg9ey5OWQFPplYcpz+tXnVl48hKvxwtz
+         5ZqPUEVkRi3Vu7OGclwxPo5uTqG7GpmKXgKks1uS6mCobjZsrdJlm0KzS27ps/EVIeOc
+         IDjQ==
+X-Gm-Message-State: AOAM532Cbj1J7PddJjrbaRVlkpCD4upaM8l+d/PErTP/tiN0RzGueIvH
+        JUnUGWpLJ7iG/SEPTxlZhhu+xhLmNJCsK+or
+X-Google-Smtp-Source: ABdhPJzfb/lAvD1VavVqudcTSNWwFXh9v8R3VckD2GeZAMNUEqCjOYPLz+1Z1e0dwqaRcAS+cSxIlw==
+X-Received: by 2002:ac8:7e95:: with SMTP id w21mr19593417qtj.244.1616975876781;
+        Sun, 28 Mar 2021 16:57:56 -0700 (PDT)
 Received: from localhost.localdomain ([156.146.58.24])
-        by smtp.gmail.com with ESMTPSA id y19sm12153061qky.111.2021.03.28.16.57.46
+        by smtp.gmail.com with ESMTPSA id y19sm12153061qky.111.2021.03.28.16.57.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Mar 2021 16:57:51 -0700 (PDT)
+        Sun, 28 Mar 2021 16:57:56 -0700 (PDT)
 From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
 To:     dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
         hch@lst.de, iommu@lists.linux-foundation.org,
@@ -54,9 +54,9 @@ To:     dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
         dan.j.williams@intel.com
 Cc:     Bhaskar Chowdhury <unixbhaskar@gmail.com>, rdunlap@infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 23/30] dma-jz4780.c: Fix a typo
-Date:   Mon, 29 Mar 2021 05:23:19 +0530
-Message-Id: <ecd961a789c07f2c6a05330688e084547e78c191.1616971780.git.unixbhaskar@gmail.com>
+Subject: [PATCH 24/30] Kconfig: Change Synopsys to Synopsis
+Date:   Mon, 29 Mar 2021 05:23:20 +0530
+Message-Id: <1262e9e62498f961e5172205e66a9ef7c6f0f69d.1616971780.git.unixbhaskar@gmail.com>
 X-Mailer: git-send-email 2.26.3
 In-Reply-To: <cover.1616971780.git.unixbhaskar@gmail.com>
 References: <cover.1616971780.git.unixbhaskar@gmail.com>
@@ -66,26 +66,48 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-s/proceeed/proceed/
+s/Synopsys/Synopsis/  .....two different places.
+
+..and for some unknown reason it introduce a empty line deleted and added
+back.
 
 Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
 ---
- drivers/dma/dma-jz4780.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/Kconfig | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index ebee94dbd630..451bc754b609 100644
---- a/drivers/dma/dma-jz4780.c
-+++ b/drivers/dma/dma-jz4780.c
-@@ -379,7 +379,7 @@ static struct dma_async_tx_descriptor *jz4780_dma_prep_slave_sg(
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 0c2827fd8c19..30e8cc26f43b 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -170,15 +170,15 @@ config DMA_SUN6I
+ 	  Support for the DMA engine first found in Allwinner A31 SoCs.
 
- 		if (i != (sg_len - 1) &&
- 		    !(jzdma->soc_data->flags & JZ_SOC_DATA_BREAK_LINKS)) {
--			/* Automatically proceeed to the next descriptor. */
-+			/* Automatically proceed to the next descriptor. */
- 			desc->desc[i].dcm |= JZ_DMA_DCM_LINK;
+ config DW_AXI_DMAC
+-	tristate "Synopsys DesignWare AXI DMA support"
++	tristate "Synopsis DesignWare AXI DMA support"
+ 	depends on OF || COMPILE_TEST
+ 	depends on HAS_IOMEM
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
+ 	help
+-	  Enable support for Synopsys DesignWare AXI DMA controller.
++	  Enable support for Synopsis DesignWare AXI DMA controller.
+ 	  NOTE: This driver wasn't tested on 64 bit platform because
+-	  of lack 64 bit platform with Synopsys DW AXI DMAC.
++	  of lack 64 bit platform with Synopsis DW AXI DMAC.
 
- 			/*
+ config EP93XX_DMA
+ 	bool "Cirrus Logic EP93xx DMA support"
+@@ -394,7 +394,7 @@ config MOXART_DMA
+ 	select DMA_VIRTUAL_CHANNELS
+ 	help
+ 	  Enable support for the MOXA ART SoC DMA controller.
+-
++
+ 	  Say Y here if you enabled MMP ADMA, otherwise say N.
+
+ config MPC512X_DMA
 --
 2.26.3
 

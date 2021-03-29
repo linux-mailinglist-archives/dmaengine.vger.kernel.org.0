@@ -2,90 +2,108 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3F6234C040
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Mar 2021 01:59:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17C2B34C302
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Mar 2021 07:29:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231950AbhC1X6u (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 28 Mar 2021 19:58:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231856AbhC1X62 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 28 Mar 2021 19:58:28 -0400
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7621C061762;
-        Sun, 28 Mar 2021 16:58:27 -0700 (PDT)
-Received: by mail-qt1-x830.google.com with SMTP id h7so8244300qtx.3;
-        Sun, 28 Mar 2021 16:58:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pZY3iifrv8ClFucjg75wWqbWgmlD1U3QmF4uzbWxtyk=;
-        b=PIw7C1Bk/eGWQKsGvWCr0S8TPn8QvRWOhl6hvWK4VjoMFupeY5/g8s7kzwhMScA5Yu
-         3e7Rj/bjvS2b85U9+k88WGtsKgUTPvzzvdFJYC0k/RqLPZFS/3GhHjMqD5kK+e7jKM/6
-         53Fvs6gxrbJFiC1u/dgFp8bxTyuVzLD/Tpou7SHHqSFadmyNPt3U4CU58tt95gASNQQ7
-         xYX4ULcW05MCOpvlLfFnzFEUNX3Yp7+RhdNBet8s+BvsIMTWUkgy4Nq5pTpS8LNP/fAV
-         /fA+htsmtHzgRatr0oZ5k5rLTOnxU0BoqA8YYmMtTbokFKvFZL0GLX13Zdgx+VbiqJTc
-         ioTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pZY3iifrv8ClFucjg75wWqbWgmlD1U3QmF4uzbWxtyk=;
-        b=BPQI1ldFc17wxokIZ9C8LnmECtkOPTVbuuygd5D1VOmkUnY+CG+X62Aw0HoyYly8eY
-         eLF4p7wfu3+EXCSVH8oqIcvdqN4SXAawwIVLejan9B4J/CgKbkCd0c7Ds7+TEkIOy4+Z
-         sgnHZaZvZKnTU3z9/+rmAiIQsJx+U0m7OFRJAnT/q0mevozte1dptuXKtWPHW7fG1JV+
-         FoESd+RvRcN6e9OKNHo9M4ZDCcuAaC9C9rfWl/K3HNRxYF14+vjyHqnVE+7oD7EV9RPH
-         EfX6ZC0togBin1VaDQylyR++CpVGCv+Q0KsbNwxLrXxh8Fc4ZdgxqkEtN9iM83b/P/Ui
-         8cFQ==
-X-Gm-Message-State: AOAM531lBU3q5Qqe/k1hBdOA7WgEFu7k/BpuQcrDaw4wV/dTWQMwGPPq
-        1XyNqt+LNdJm7AuC1U0mAhWMYn4r0kIFi2w8
-X-Google-Smtp-Source: ABdhPJzrXaJ3NFEfLw/ORFLnH6cpcNnBby0kvFM8FYj18PlBci3BiuYNuENXsp4hnCZmTj7qcXXSOw==
-X-Received: by 2002:ac8:dcc:: with SMTP id t12mr13998503qti.219.1616975906780;
-        Sun, 28 Mar 2021 16:58:26 -0700 (PDT)
-Received: from localhost.localdomain ([156.146.58.24])
-        by smtp.gmail.com with ESMTPSA id y19sm12153061qky.111.2021.03.28.16.58.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Mar 2021 16:58:26 -0700 (PDT)
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        id S230305AbhC2F3P (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 29 Mar 2021 01:29:15 -0400
+Received: from verein.lst.de ([213.95.11.211]:52014 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230266AbhC2F3N (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 29 Mar 2021 01:29:13 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id F142568BEB; Mon, 29 Mar 2021 07:29:10 +0200 (CEST)
+Date:   Mon, 29 Mar 2021 07:29:10 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
         hch@lst.de, iommu@lists.linux-foundation.org,
         linuxppc-dev@lists.ozlabs.org, dave.jiang@intel.com,
-        dan.j.williams@intel.com
-Cc:     Bhaskar Chowdhury <unixbhaskar@gmail.com>, rdunlap@infradead.org,
+        dan.j.williams@intel.com, rdunlap@infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 30/30] xilinx_dma.c: Fix a typo
-Date:   Mon, 29 Mar 2021 05:23:26 +0530
-Message-Id: <4613951fd51572e8c152d07c402d30a13f19a917.1616971780.git.unixbhaskar@gmail.com>
-X-Mailer: git-send-email 2.26.3
-In-Reply-To: <cover.1616971780.git.unixbhaskar@gmail.com>
+Subject: Re: [PATCH 00/30] DMA: Mundane typo fixes
+Message-ID: <20210329052910.GB26495@lst.de>
 References: <cover.1616971780.git.unixbhaskar@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1616971780.git.unixbhaskar@gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-s/interace/interface/
+I really don't think these typo patchbomb are that useful.  I'm all
+for fixing typos when working with a subsystem, but I'm not sure these
+patchbombs help anything.
 
-Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
----
- drivers/dma/xilinx/xilinx_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 3aded7861fef..63d2f447ad79 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -483,7 +483,7 @@ struct xilinx_dma_config {
-  * @ext_addr: Indicates 64 bit addressing is supported by dma device
-  * @pdev: Platform device structure pointer
-  * @dma_config: DMA config structure
-- * @axi_clk: DMA Axi4-lite interace clock
-+ * @axi_clk: DMA Axi4-lite interface clock
-  * @tx_clk: DMA mm2s clock
-  * @txs_clk: DMA mm2s stream clock
-  * @rx_clk: DMA s2mm clock
---
-2.26.3
-
+On Mon, Mar 29, 2021 at 05:22:56AM +0530, Bhaskar Chowdhury wrote:
+> This patch series fixes some trivial and rudimentary spellings in the COMMENT
+> sections.
+> 
+> Bhaskar Chowdhury (30):
+>   acpi-dma.c: Fix couple of typos
+>   altera-msgdma.c: Couple of typos fixed
+>   amba-pl08x.c: Fixed couple of typos
+>   bcm-sba-raid.c: Few typos fixed
+>   bcm2835-dma.c: Fix a typo
+>   idma64.c: Fix couple of typos
+>   iop-adma.c: Few typos fixed
+>   mv_xor.c: Fix a typo
+>   mv_xor.h: Fixed a typo
+>   mv_xor_v2.c: Fix a typo
+>   nbpfaxi.c: Fixed a typo
+>   of-dma.c: Fixed a typo
+>   s3c24xx-dma.c: Fix a typo
+>   Revert "s3c24xx-dma.c: Fix a typo"
+>   s3c24xx-dma.c: Few typos fixed
+>   st_fdma.h: Fix couple of typos
+>   ste_dma40_ll.h: Fix a typo
+>   tegra20-apb-dma.c: Fixed a typo
+>   xgene-dma.c: Few spello fixes
+>   at_hdmac.c: Quite a few spello fixes
+>   owl-dma.c: Fix a typo
+>   at_hdmac_regs.h: Couple of typo fixes
+>   dma-jz4780.c: Fix a typo
+>   Kconfig: Change Synopsys to Synopsis
+>   ste_dma40.c: Few spello fixes
+>   dw-axi-dmac-platform.c: Few typos fixed
+>   dpaa2-qdma.c: Fix a typo
+>   usb-dmac.c: Fix a typo
+>   edma.c: Fix a typo
+>   xilinx_dma.c: Fix a typo
+> 
+>  drivers/dma/Kconfig                            |  8 ++++----
+>  drivers/dma/acpi-dma.c                         |  4 ++--
+>  drivers/dma/altera-msgdma.c                    |  4 ++--
+>  drivers/dma/amba-pl08x.c                       |  4 ++--
+>  drivers/dma/at_hdmac.c                         | 14 +++++++-------
+>  drivers/dma/at_hdmac_regs.h                    |  4 ++--
+>  drivers/dma/bcm-sba-raid.c                     |  8 ++++----
+>  drivers/dma/bcm2835-dma.c                      |  2 +-
+>  drivers/dma/dma-jz4780.c                       |  2 +-
+>  drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c |  8 ++++----
+>  drivers/dma/idma64.c                           |  4 ++--
+>  drivers/dma/iop-adma.c                         |  6 +++---
+>  drivers/dma/mv_xor.c                           |  2 +-
+>  drivers/dma/mv_xor.h                           |  2 +-
+>  drivers/dma/mv_xor_v2.c                        |  2 +-
+>  drivers/dma/nbpfaxi.c                          |  2 +-
+>  drivers/dma/of-dma.c                           |  2 +-
+>  drivers/dma/owl-dma.c                          |  2 +-
+>  drivers/dma/s3c24xx-dma.c                      |  6 +++---
+>  drivers/dma/sh/shdmac.c                        |  2 +-
+>  drivers/dma/sh/usb-dmac.c                      |  2 +-
+>  drivers/dma/st_fdma.h                          |  4 ++--
+>  drivers/dma/ste_dma40.c                        | 10 +++++-----
+>  drivers/dma/ste_dma40_ll.h                     |  2 +-
+>  drivers/dma/tegra20-apb-dma.c                  |  2 +-
+>  drivers/dma/ti/edma.c                          |  2 +-
+>  drivers/dma/xgene-dma.c                        |  6 +++---
+>  drivers/dma/xilinx/xilinx_dma.c                |  2 +-
+>  28 files changed, 59 insertions(+), 59 deletions(-)
+> 
+> --
+> 2.26.3
+---end quoted text---

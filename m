@@ -2,138 +2,147 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 478FF34D0AB
-	for <lists+dmaengine@lfdr.de>; Mon, 29 Mar 2021 14:59:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5B9934D98C
+	for <lists+dmaengine@lfdr.de>; Mon, 29 Mar 2021 23:31:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230247AbhC2M61 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 29 Mar 2021 08:58:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230344AbhC2M6C (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 29 Mar 2021 08:58:02 -0400
-Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED9BAC061574;
-        Mon, 29 Mar 2021 05:58:01 -0700 (PDT)
-Received: by mail-qt1-x834.google.com with SMTP id x9so9151967qto.8;
-        Mon, 29 Mar 2021 05:58:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pXwScAbp9Oc9UUM+Y5MFv/NyYb1m2Ax9bkESJHn7OoM=;
-        b=jIMlPhrnPxBkc1eIt0loxmUFn7wXXfPXYhzlXGaYPnegO6aUyr7PCPcsU1Q/nPx2fP
-         z9dSO77ODJpoGbIqBdLPzf7Hmx+na9zXd2cZJ4qd9BBfUIDW2OzJWYE465wjBIWAuRrr
-         NWCMehNEk3cJZY3zjwb6ZOQi1NkbEq5fCcB0n+UlGn7E/x8I9ZccVrQAOLQEjvvAhPgW
-         gyvGu7fxdumQ9rlYgMvh+Gznzjnn6Qsqul2TwzNQVb6EA6ue+DdlAwS1sDkE02lS2xyR
-         3n4LD+Mz6IiTzqnrhisHrhIHhSDc4vM/80A7UAKxL/KmVUJHzyawP00LVXC3wRmxEBMs
-         lnow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=pXwScAbp9Oc9UUM+Y5MFv/NyYb1m2Ax9bkESJHn7OoM=;
-        b=QEuoIUsZpsTBFxciE3WVD7tIQzZMceKREJizxRwtrwV3w6izR2JLWmopCHXPjebdOB
-         eNrptRbACCqBv7ZYKkNPzcXKSsIuoGA2J25t6kqMsWIctAsN5Evr9aHfC5LdTreVHa0c
-         g7J8m0pxAIF6KvF/xVwJYCoSEKVvNhmsa3+mn5EmcwzgzEYfXii8aVwPTiytViVCi2F4
-         PfWforJFj+pK2pTKgtbsluF0EbUlW9cBuRHrdZoDFsBRD+v8lCfXEp/9Kluv1hHGEshc
-         7fNNfJ2EtJeWxUJgm6ev4XR6tLMBUhzJKauiw8mHAPZqkj4g3Bhv9SHp8YAbeEQt7rxj
-         ZNYA==
-X-Gm-Message-State: AOAM530cLEpU5+fgtleHQ6xrbAOE+dOmdXvgB+WFk6pP8yckBYBXyG23
-        ZTrqBdJp68UkgKhv4IdsG6eo2bPEWVlbpJG9
-X-Google-Smtp-Source: ABdhPJzGuB5bAHBNMyTzE3y0baxdhpY1BDoada/eHGqWehXn5kNmFoyZ95oSsGX4Gf6P46twv8R/cA==
-X-Received: by 2002:aed:2ea4:: with SMTP id k33mr22317560qtd.169.1617022681256;
-        Mon, 29 Mar 2021 05:58:01 -0700 (PDT)
-Received: from Gentoo ([37.19.198.130])
-        by smtp.gmail.com with ESMTPSA id y1sm13368206qki.9.2021.03.29.05.57.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Mar 2021 05:58:00 -0700 (PDT)
-Date:   Mon, 29 Mar 2021 18:27:43 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
-        dave.jiang@intel.com, dan.j.williams@intel.com,
-        rdunlap@infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/30] DMA: Mundane typo fixes
-Message-ID: <YGHOxwiqwhGAs819@Gentoo>
-Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
-        dave.jiang@intel.com, dan.j.williams@intel.com,
-        rdunlap@infradead.org, linux-kernel@vger.kernel.org
-References: <cover.1616971780.git.unixbhaskar@gmail.com>
- <20210329052910.GB26495@lst.de>
- <YGFrvwX8QngvwPbA@Gentoo>
- <YGG+l1EfRuWp0J3A@kroah.com>
+        id S231144AbhC2Vaq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 29 Mar 2021 17:30:46 -0400
+Received: from mga18.intel.com ([134.134.136.126]:25042 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230100AbhC2VaQ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 29 Mar 2021 17:30:16 -0400
+IronPort-SDR: X7UV94nT8CGQDgt8Lgl88rBrLLgplZjy7de8hA0ch8jv2AWQIQ1I9bYGJEr5f9w5Mny//+Ga/p
+ OsoHnj5RLMAw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9938"; a="179171066"
+X-IronPort-AV: E=Sophos;i="5.81,288,1610438400"; 
+   d="scan'208";a="179171066"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 14:30:13 -0700
+IronPort-SDR: eoFklP2b0ei9HdkYavX9Q9gLfVst4fXbpwtDyYWLDHGwvWTuk2Ke3YG7zThwtNySNHU7DKnu4A
+ BVtCgb/E8n3g==
+X-IronPort-AV: E=Sophos;i="5.81,288,1610438400"; 
+   d="scan'208";a="516180812"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 14:30:13 -0700
+Subject: [PATCH v2] dmaengine: idxd: fix wq cleanup of WQCFG registers
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     Shreenivaas Devarajan <shreenivaas.devarajan@intel.com>,
+        dmaengine@vger.kernel.org
+Date:   Mon, 29 Mar 2021 14:30:12 -0700
+Message-ID: <161705337030.3586083.1667630398626509842.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5zclouQno4veQbB1"
-Content-Disposition: inline
-In-Reply-To: <YGG+l1EfRuWp0J3A@kroah.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+A pre-release silicon erratum workaround where wq reset does not clear
+WQCFG registers was leaked into upstream code. Use wq reset command
+instead of blasting the MMIO region. This also address an issue where
+we clobber registers in future devices.
 
---5zclouQno4veQbB1
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+Fixes: da32b28c95a7 ("dmaengine: idxd: cleanup workqueue config after disabling")
+Reported-by: Shreenivaas Devarajan <shreenivaas.devarajan@intel.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
 
-On 13:48 Mon 29 Mar 2021, Greg KH wrote:
->On Mon, Mar 29, 2021 at 11:25:11AM +0530, Bhaskar Chowdhury wrote:
->> On 07:29 Mon 29 Mar 2021, Christoph Hellwig wrote:
->> > I really don't think these typo patchbomb are that useful.  I'm all
->> > for fixing typos when working with a subsystem, but I'm not sure these
->> > patchbombs help anything.
->> >
->> I am sure you are holding the wrong end of the wand and grossly failing to
->> understand.
->
->Please stop statements like this, it is not helpful and is doing nothing
->but ensure that your patches will not be looked at in the future.
->
-Greg, don't you think you are bit harsh and have an one sided view? People can
-say in better way if they don't like some work. I Have always try to get
-along.
->> Anyway, I hope I give a heads up ...find "your way" to fix those damn
->> thing...it's glaring....
->
->There is no requirement that anyone accept patches that are sent to
->them.  When you complain when receiving comments on them, that
->shows you do not wish to work with others.
->
-Unfortunate you are only seeing my complains...I don't know why you are so
-blindfolded.
->Sorry, but you are now on my local blacklist for a while, and I
->encourage other maintainers to just ignore these patches as well.
->
-I can not overrule that ...I know my pathes are trivial ..but it seems some
-other problems are looming large.
+v2:
+- Set IDXD_WQ_DISABLED for internal state after reset.
 
-NOT good Greg....not good seriously.
->thanks,
->
->greg k-h
+ drivers/dma/idxd/device.c |   25 +++++++++++++++++--------
+ drivers/dma/idxd/idxd.h   |    1 +
+ drivers/dma/idxd/sysfs.c  |    9 ++-------
+ 3 files changed, 20 insertions(+), 15 deletions(-)
 
---5zclouQno4veQbB1
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index 1e5380b2a88c..d1c78baf4f20 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -282,6 +282,23 @@ void idxd_wq_drain(struct idxd_wq *wq)
+ 	idxd_cmd_exec(idxd, IDXD_CMD_DRAIN_WQ, operand, NULL);
+ }
+ 
++void idxd_wq_reset(struct idxd_wq *wq)
++{
++	struct idxd_device *idxd = wq->idxd;
++	struct device *dev = &idxd->pdev->dev;
++	u32 operand;
++
++	if (wq->state != IDXD_WQ_ENABLED) {
++		dev_dbg(dev, "WQ %d in wrong state: %d\n", wq->id, wq->state);
++		return;
++	}
++
++	dev_dbg(dev, "Resetting WQ %d\n", wq->id);
++	operand = BIT(wq->id % 16) | ((wq->id / 16) << 16);
++	idxd_cmd_exec(idxd, IDXD_CMD_RESET_WQ, operand, NULL);
++	wq->state = IDXD_WQ_DISABLED;
++}
++
+ int idxd_wq_map_portal(struct idxd_wq *wq)
+ {
+ 	struct idxd_device *idxd = wq->idxd;
+@@ -376,14 +393,6 @@ void idxd_wq_disable_cleanup(struct idxd_wq *wq)
+ 	wq->ats_dis = 0;
+ 	clear_bit(WQ_FLAG_DEDICATED, &wq->flags);
+ 	memset(wq->name, 0, WQ_NAME_SIZE);
+-
+-	for (i = 0; i < WQCFG_STRIDES(idxd); i++) {
+-		wq_offset = WQCFG_OFFSET(idxd, wq->id, i);
+-		iowrite32(0, idxd->reg_base + wq_offset);
+-		dev_dbg(dev, "WQ[%d][%d][%#x]: %#x\n",
+-			wq->id, i, wq_offset,
+-			ioread32(idxd->reg_base + wq_offset));
+-	}
+ }
+ 
+ /* Device control bits */
+diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+index acb70c3b7e36..d2c0ea7349ed 100644
+--- a/drivers/dma/idxd/idxd.h
++++ b/drivers/dma/idxd/idxd.h
+@@ -390,6 +390,7 @@ void idxd_wq_free_resources(struct idxd_wq *wq);
+ int idxd_wq_enable(struct idxd_wq *wq);
+ int idxd_wq_disable(struct idxd_wq *wq);
+ void idxd_wq_drain(struct idxd_wq *wq);
++void idxd_wq_reset(struct idxd_wq *wq);
+ int idxd_wq_map_portal(struct idxd_wq *wq);
+ void idxd_wq_unmap_portal(struct idxd_wq *wq);
+ void idxd_wq_disable_cleanup(struct idxd_wq *wq);
+diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+index 87b434e7733c..c5fa82761791 100644
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@ -212,7 +212,6 @@ static void disable_wq(struct idxd_wq *wq)
+ {
+ 	struct idxd_device *idxd = wq->idxd;
+ 	struct device *dev = &idxd->pdev->dev;
+-	int rc;
+ 
+ 	mutex_lock(&wq->wq_lock);
+ 	dev_dbg(dev, "%s removing WQ %s\n", __func__, dev_name(&wq->conf_dev));
+@@ -233,17 +232,13 @@ static void disable_wq(struct idxd_wq *wq)
+ 	idxd_wq_unmap_portal(wq);
+ 
+ 	idxd_wq_drain(wq);
+-	rc = idxd_wq_disable(wq);
++	idxd_wq_reset(wq);
+ 
+ 	idxd_wq_free_resources(wq);
+ 	wq->client_count = 0;
+ 	mutex_unlock(&wq->wq_lock);
+ 
+-	if (rc < 0)
+-		dev_warn(dev, "Failed to disable %s: %d\n",
+-			 dev_name(&wq->conf_dev), rc);
+-	else
+-		dev_info(dev, "wq %s disabled\n", dev_name(&wq->conf_dev));
++	dev_info(dev, "wq %s disabled\n", dev_name(&wq->conf_dev));
+ }
+ 
+ static int idxd_config_bus_remove(struct device *dev)
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAmBhzsAACgkQsjqdtxFL
-KRW2qwf+LpIRIiK3vSyhfOkc5KEs6+JY1kuwY5zK8zNexJI+BFNVlKy2fiJDI5OJ
-ohAkhZ7u6VPXdYX4JVipyUMEVaBJRI36ebb2fl5JhhjKdp+xaw+1pP+AMIXET/SS
-mxlbUWkBiwZvlebkm26R/LDfJ6BMh8uOTth09mP9SEzfLvL41TJotFlJnCZ7+Akq
-RtQfuF4c4a6g4rkBMbKz9GFP35UIl8xrQB9roiynNg8abT7mP0mfBYEa+yofDdA5
-dmOmw22RwwuXueZhidrSifQYP4F0h/3zrUTetKYa4MZYUVnIR/Lvpa9K6U6xjuIb
-rHZf1I6RXTsmUcErV7E2MR4mZEjStg==
-=YLCg
------END PGP SIGNATURE-----
-
---5zclouQno4veQbB1--

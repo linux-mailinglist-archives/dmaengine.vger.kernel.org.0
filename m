@@ -2,104 +2,87 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6AE134E675
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Mar 2021 13:44:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88FDE34ED1D
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Mar 2021 18:06:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230303AbhC3Lnj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 30 Mar 2021 07:43:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:58452 "EHLO foss.arm.com"
+        id S231875AbhC3QFc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 30 Mar 2021 12:05:32 -0400
+Received: from mga18.intel.com ([134.134.136.126]:2604 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231829AbhC3Lni (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 30 Mar 2021 07:43:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F0231FB;
-        Tue, 30 Mar 2021 04:43:38 -0700 (PDT)
-Received: from [10.57.27.121] (unknown [10.57.27.121])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6DF003F694;
-        Tue, 30 Mar 2021 04:43:36 -0700 (PDT)
-Subject: Re: [PATCH 24/30] Kconfig: Change Synopsys to Synopsis
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        hch@lst.de, iommu@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, dave.jiang@intel.com,
-        dan.j.williams@intel.com
-Cc:     rdunlap@infradead.org, linux-kernel@vger.kernel.org
-References: <cover.1616971780.git.unixbhaskar@gmail.com>
- <1262e9e62498f961e5172205e66a9ef7c6f0f69d.1616971780.git.unixbhaskar@gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <8f80fb1b-b2d0-b66a-24b0-bd92dc6cd4b6@arm.com>
-Date:   Tue, 30 Mar 2021 12:43:31 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        id S231928AbhC3QFV (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 30 Mar 2021 12:05:21 -0400
+IronPort-SDR: 4ZtCD2rwaNCVA0YoOClamqIaZ9y6spldNQcvaTuCFMKYcwGogW/XNw06zRYA6qtOvJafyX01w1
+ /RXUMXcxYNqw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9939"; a="179338252"
+X-IronPort-AV: E=Sophos;i="5.81,291,1610438400"; 
+   d="scan'208";a="179338252"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2021 09:05:18 -0700
+IronPort-SDR: DVGtRPaN9ETArW4C0/T/tA9GKqtY6BSo1LWZBFiECcgEkGp7Ca0qR5hI5F/Up0gI7CD2HHhFpf
+ 5TSE4MIORYlA==
+X-IronPort-AV: E=Sophos;i="5.81,291,1610438400"; 
+   d="scan'208";a="376886416"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.209.140.11]) ([10.209.140.11])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2021 09:05:16 -0700
+Subject: Re: [PATCH] dma: Fix a double free in dma_async_device_register
+To:     Lv Yunlong <lyl2019@mail.ustc.edu.cn>, vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210330090149.13476-1-lyl2019@mail.ustc.edu.cn>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <f4ce9e2a-6bb9-d3ae-3583-2d29e09aa3a3@intel.com>
+Date:   Tue, 30 Mar 2021 09:05:15 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.0
 MIME-Version: 1.0
-In-Reply-To: <1262e9e62498f961e5172205e66a9ef7c6f0f69d.1616971780.git.unixbhaskar@gmail.com>
+In-Reply-To: <20210330090149.13476-1-lyl2019@mail.ustc.edu.cn>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 2021-03-29 00:53, Bhaskar Chowdhury wrote:
-> s/Synopsys/Synopsis/  .....two different places.
 
-Erm, that is definitely not a typo... :/
+On 3/30/2021 2:01 AM, Lv Yunlong wrote:
+> In the first list_for_each_entry() macro of dma_async_device_register,
+> it gets the chan from list and calls __dma_async_device_channel_register
+> (..,chan). We can see that chan->local is allocated by alloc_percpu() and
+> it is freed chan->local by free_percpu(chan->local) when
+> __dma_async_device_channel_register() failed.
+>
+> But after __dma_async_device_channel_register() failed, the caller will
+> goto err_out and freed the chan->local in the second time by free_percpu().
+>
+> The cause of this problem is forget to set chan->local to NULL when
+> chan->local was freed in __dma_async_device_channel_register(). My
+> patch sets chan->local to NULL when the callee failed to avoid double free.
 
-> ..and for some unknown reason it introduce a empty line deleted and added
-> back.
+Thanks for the fix. I think it would make sense to set it to NULL in 
+__dma_async_device_channel_register() cleanup path after it calls 
+free_percpu(chan->local) right? That would address any other instances 
+of this issue happening else where.
 
-Presumably your editor is configured to trim trailing whitespace on save.
 
-Furthermore, there are several instances in the other patches where your 
-"corrections" are grammatically incorrect, I'm not sure what the deal is 
-with patch #14, and you've also used the wrong subsystem name (it should 
-be "dmaengine"). It's great to want to clean things up, but please pay a 
-bit of care and attention to what you're actually doing.
-
-Robin.
-
-> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+>
+> Fixes: d2fb0a0438384 ("dmaengine: break out channel registration")
+> Signed-off-by: Lv Yunlong <lyl2019@mail.ustc.edu.cn>
 > ---
->   drivers/dma/Kconfig | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> index 0c2827fd8c19..30e8cc26f43b 100644
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -170,15 +170,15 @@ config DMA_SUN6I
->   	  Support for the DMA engine first found in Allwinner A31 SoCs.
-> 
->   config DW_AXI_DMAC
-> -	tristate "Synopsys DesignWare AXI DMA support"
-> +	tristate "Synopsis DesignWare AXI DMA support"
->   	depends on OF || COMPILE_TEST
->   	depends on HAS_IOMEM
->   	select DMA_ENGINE
->   	select DMA_VIRTUAL_CHANNELS
->   	help
-> -	  Enable support for Synopsys DesignWare AXI DMA controller.
-> +	  Enable support for Synopsis DesignWare AXI DMA controller.
->   	  NOTE: This driver wasn't tested on 64 bit platform because
-> -	  of lack 64 bit platform with Synopsys DW AXI DMAC.
-> +	  of lack 64 bit platform with Synopsis DW AXI DMAC.
-> 
->   config EP93XX_DMA
->   	bool "Cirrus Logic EP93xx DMA support"
-> @@ -394,7 +394,7 @@ config MOXART_DMA
->   	select DMA_VIRTUAL_CHANNELS
->   	help
->   	  Enable support for the MOXA ART SoC DMA controller.
-> -
-> +
->   	  Say Y here if you enabled MMP ADMA, otherwise say N.
-> 
->   config MPC512X_DMA
-> --
-> 2.26.3
-> 
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
-> 
+>   drivers/dma/dmaengine.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index fe6a460c4373..fef64b198c95 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -1249,8 +1249,10 @@ int dma_async_device_register(struct dma_device *device)
+>   	/* represent channels in sysfs. Probably want devs too */
+>   	list_for_each_entry(chan, &device->channels, device_node) {
+>   		rc = __dma_async_device_channel_register(device, chan);
+> -		if (rc < 0)
+> +		if (rc < 0) {
+> +			chan->local = NULL;
+>   			goto err_out;
+> +		}
+>   	}
+>   
+>   	mutex_lock(&dma_list_mutex);

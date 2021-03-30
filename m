@@ -2,40 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A27A434EFAD
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Mar 2021 19:35:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62BF734EFB3
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Mar 2021 19:35:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232536AbhC3RfP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 30 Mar 2021 13:35:15 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59702 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231979AbhC3RfD (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 Mar 2021 13:35:03 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 12UHYeRx057154;
-        Tue, 30 Mar 2021 12:34:40 -0500
+        id S232557AbhC3RfR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 30 Mar 2021 13:35:17 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:53224 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232532AbhC3RfE (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 Mar 2021 13:35:04 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 12UHYkW8080852;
+        Tue, 30 Mar 2021 12:34:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1617125680;
-        bh=WJ3Cx3ofV6De0Wuahc0WcN8cdQ6M4oqLHfm471L5vg8=;
+        s=ti-com-17Q1; t=1617125686;
+        bh=nFwFKwKkm2Tg7mXODMtl1Qe24xGGc90Y5vckjfrUM3U=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=RPzxkrpZM0foWXsT7PzPKgRAhl4nlfh0vdvQm8oMZvXc3Ieh5UnmdphsDAQBOl9hE
-         983P4xPjXFgcaR+cFoZZur5yzfRmRFkHGwmSzxW+v8aS4Kpb4+SA6FsMU8ajiRWeEX
-         41HGmgHgohQ29BHSk1NbiSGOkLsk68+kL0Z8jDu8=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 12UHYe23032597
+        b=KhFXzFRXlc9hm2zgNKhDPSATD6M36w3Tw5uKUDqwCEwen3r5TN25+K0Wfg+unFRHt
+         nJHKE2+HCRYvD6MvL8hy8kE6fnPdFXGFHH6YT0ahOaNEGMSGTZDXy+G46y/iHNIcyz
+         okUWWe5uNkl0WNMsHr+GJnAaGdcJLnwow0CUckM8=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 12UHYkjW026148
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Mar 2021 12:34:40 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 30 Mar 2021 12:34:46 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Tue, 30
- Mar 2021 12:34:39 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2021 12:34:46 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Tue, 30 Mar 2021 12:34:39 -0500
+ Frontend Transport; Tue, 30 Mar 2021 12:34:46 -0500
 Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 12UHXmgo125244;
-        Tue, 30 Mar 2021 12:34:34 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 12UHXmgp125244;
+        Tue, 30 Mar 2021 12:34:40 -0500
 From:   Pratyush Yadav <p.yadav@ti.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -58,9 +58,9 @@ To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
 CC:     Pratyush Yadav <p.yadav@ti.com>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Subject: [PATCH 07/16] media: cadence: csi2rx: Set the STOP bit when stopping a stream
-Date:   Tue, 30 Mar 2021 23:03:39 +0530
-Message-ID: <20210330173348.30135-8-p.yadav@ti.com>
+Subject: [PATCH 08/16] media: cadence: csi2rx: Fix stream data configuration
+Date:   Tue, 30 Mar 2021 23:03:40 +0530
+Message-ID: <20210330173348.30135-9-p.yadav@ti.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20210330173348.30135-1-p.yadav@ti.com>
 References: <20210330173348.30135-1-p.yadav@ti.com>
@@ -72,65 +72,48 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The stream stop procedure says that the STOP bit should be set when the
-stream is to be stopped, and then the ready bit in stream status
-register polled to make sure the STOP operation is finished.
+Firstly, there is no VC_EN bit present in the STREAM_DATA_CFG register.
+Bit 31 is part of the VL_SELECT field. Remove it completely.
+
+Secondly, it makes little sense to enable ith virtual channel for ith
+stream. Sure, there might be a use-case that demands it. But there might
+also be a use case that demands all streams to use the 0th virtual
+channel. Prefer this case over the former because it is less arbitrary
+and also makes it very clear what the limitations of the current driver
+is instead of giving a false impression that multiple virtual channels
+are supported.
 
 Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 ---
- drivers/media/platform/cadence/cdns-csi2rx.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ drivers/media/platform/cadence/cdns-csi2rx.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c b/drivers/media/platform/cadence/cdns-csi2rx.c
-index b03d2d2e6762..eca65b157f59 100644
+index eca65b157f59..7d1ac51e0698 100644
 --- a/drivers/media/platform/cadence/cdns-csi2rx.c
 +++ b/drivers/media/platform/cadence/cdns-csi2rx.c
-@@ -8,6 +8,7 @@
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/io.h>
-+#include <linux/iopoll.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_graph.h>
-@@ -40,8 +41,12 @@
+@@ -48,7 +48,6 @@
+ #define CSI2RX_STREAM_STATUS_RDY			BIT(31)
  
- #define CSI2RX_STREAM_CTRL_REG(n)		(CSI2RX_STREAM_BASE(n) + 0x000)
- #define CSI2RX_STREAM_CTRL_SOFT_RST			BIT(4)
-+#define CSI2RX_STREAM_CTRL_STOP				BIT(1)
- #define CSI2RX_STREAM_CTRL_START			BIT(0)
- 
-+#define CSI2RX_STREAM_STATUS_REG(n)		(CSI2RX_STREAM_BASE(n) + 0x004)
-+#define CSI2RX_STREAM_STATUS_RDY			BIT(31)
-+
  #define CSI2RX_STREAM_DATA_CFG_REG(n)		(CSI2RX_STREAM_BASE(n) + 0x008)
- #define CSI2RX_STREAM_DATA_CFG_EN_VC_SELECT		BIT(31)
+-#define CSI2RX_STREAM_DATA_CFG_EN_VC_SELECT		BIT(31)
  #define CSI2RX_STREAM_DATA_CFG_VC_SELECT(n)		BIT((n) + 16)
-@@ -325,12 +330,23 @@ static int csi2rx_start(struct csi2rx_priv *csi2rx)
- static void csi2rx_stop(struct csi2rx_priv *csi2rx)
- {
- 	unsigned int i;
-+	u32 val;
-+	int ret;
  
- 	clk_prepare_enable(csi2rx->p_clk);
- 	clk_disable_unprepare(csi2rx->sys_clk);
+ #define CSI2RX_STREAM_CFG_REG(n)		(CSI2RX_STREAM_BASE(n) + 0x00c)
+@@ -290,8 +289,11 @@ static int csi2rx_start(struct csi2rx_priv *csi2rx)
+ 		writel(CSI2RX_STREAM_CFG_FIFO_MODE_LARGE_BUF,
+ 		       csi2rx->base + CSI2RX_STREAM_CFG_REG(i));
  
- 	for (i = 0; i < csi2rx->max_streams; i++) {
--		writel(0, csi2rx->base + CSI2RX_STREAM_CTRL_REG(i));
-+		writel(CSI2RX_STREAM_CTRL_STOP,
-+		       csi2rx->base + CSI2RX_STREAM_CTRL_REG(i));
-+
-+		ret = readl_relaxed_poll_timeout(csi2rx->base +
-+						 CSI2RX_STREAM_STATUS_REG(i),
-+						 val,
-+						 (val & CSI2RX_STREAM_STATUS_RDY),
-+						 10, 10000);
-+		if (ret)
-+			dev_warn(csi2rx->dev, "Failed to stop stream%d\n", i);
+-		writel(CSI2RX_STREAM_DATA_CFG_EN_VC_SELECT |
+-		       CSI2RX_STREAM_DATA_CFG_VC_SELECT(i),
++		/*
++		 * Enable one virtual channel. When multiple virtual channels
++		 * are supported this will have to be changed.
++		 */
++		writel(CSI2RX_STREAM_DATA_CFG_VC_SELECT(0),
+ 		       csi2rx->base + CSI2RX_STREAM_DATA_CFG_REG(i));
  
- 		clk_disable_unprepare(csi2rx->pixel_clk[i]);
- 	}
+ 		writel(CSI2RX_STREAM_CTRL_START,
 -- 
 2.30.0
 

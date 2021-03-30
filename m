@@ -2,40 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B5E3B34EFC1
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Mar 2021 19:36:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FFE634EFC2
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Mar 2021 19:36:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232565AbhC3Rfp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 30 Mar 2021 13:35:45 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59908 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232596AbhC3RfW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 Mar 2021 13:35:22 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 12UHZ5OJ057284;
-        Tue, 30 Mar 2021 12:35:05 -0500
+        id S232673AbhC3Rfq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 30 Mar 2021 13:35:46 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:53404 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232533AbhC3Rf3 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 Mar 2021 13:35:29 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 12UHZBR8081000;
+        Tue, 30 Mar 2021 12:35:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1617125705;
-        bh=exPtfFP357uEoI265sBSxQidNZbHwCy+lm1TSU/QwUI=;
+        s=ti-com-17Q1; t=1617125712;
+        bh=MPpPVeVWYZ+8y7/Bl7MCutZCIVpIdePmkSU7nZnIfkY=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=klAWR/g0XSp2ekS+fjDS4+DVOXI4pDzmUIoimtLc7c0L+6GJkGkI4W5QVV4YyAdYq
-         nXuwWpMbVPfG4qZHoQi0QnX2MW9BGKQxHI2xvhdwrPA+r5w7CguUyusI6IMQA+BZGC
-         ISZjLeYLrwKpIce8XWLipZvfufACHZndR2k3KpLw=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 12UHZ5CD041024
+        b=hDfIqO94uEz7SMUG0tdB1Mz+3+bjUhiL02eEMBnsV2XOg09ENAqu4e7ounaQ6Is5j
+         2fKpVpWDaxAKiKurEpuICFUpBgIPvFmHcWr0yucnff62RvLXnTU3amPoFZV4Pa/Toc
+         8GEoEf8R/NbRzzMA7yDcLmm/re0R+1vHyFOFqq3g=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 12UHZB1C034207
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Mar 2021 12:35:05 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 30 Mar 2021 12:35:11 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Tue, 30
- Mar 2021 12:35:05 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2021 12:35:11 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Tue, 30 Mar 2021 12:35:05 -0500
+ Frontend Transport; Tue, 30 Mar 2021 12:35:11 -0500
 Received: from pratyush-OptiPlex-790.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 12UHXmgs125244;
-        Tue, 30 Mar 2021 12:34:59 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 12UHXmgt125244;
+        Tue, 30 Mar 2021 12:35:05 -0500
 From:   Pratyush Yadav <p.yadav@ti.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -58,9 +58,9 @@ To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
 CC:     Pratyush Yadav <p.yadav@ti.com>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Subject: [PATCH 11/16] dmaengine: ti: k3-psil-j721e: Add entry for CSI2RX
-Date:   Tue, 30 Mar 2021 23:03:43 +0530
-Message-ID: <20210330173348.30135-12-p.yadav@ti.com>
+Subject: [PATCH 12/16] dt-bindings: media: Add DT bindings for TI CSI2RX driver
+Date:   Tue, 30 Mar 2021 23:03:44 +0530
+Message-ID: <20210330173348.30135-13-p.yadav@ti.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20210330173348.30135-1-p.yadav@ti.com>
 References: <20210330173348.30135-1-p.yadav@ti.com>
@@ -72,43 +72,92 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The CSI2RX subsystem uses PSI-L DMA to transfer frames to memory. It can
-have up to 32 threads but the current driver only supports using one. So
-add an entry for that one thread.
+TI's J721E uses the Cadence CSI2RX and DPHY peripherals to facilitate
+capture over a CSI-2 bus. The TI CSI2RX platform driver glues all the
+parts together.
 
 Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 ---
- drivers/dma/ti/k3-psil-j721e.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ .../devicetree/bindings/media/ti,csi2rx.yaml  | 70 +++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/ti,csi2rx.yaml
 
-diff --git a/drivers/dma/ti/k3-psil-j721e.c b/drivers/dma/ti/k3-psil-j721e.c
-index 7580870ed746..19ffa31e6dc6 100644
---- a/drivers/dma/ti/k3-psil-j721e.c
-+++ b/drivers/dma/ti/k3-psil-j721e.c
-@@ -58,6 +58,14 @@
- 		},					\
- 	}
- 
-+#define PSIL_CSI2RX(x)					\
-+	{						\
-+		.thread_id = x,				\
-+		.ep_config = {				\
-+			.ep_type = PSIL_EP_NATIVE,	\
-+		},					\
-+	}
+diff --git a/Documentation/devicetree/bindings/media/ti,csi2rx.yaml b/Documentation/devicetree/bindings/media/ti,csi2rx.yaml
+new file mode 100644
+index 000000000000..ebd894364391
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/ti,csi2rx.yaml
+@@ -0,0 +1,70 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/ti,csi2rx.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- /* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
- static struct psil_ep j721e_src_ep_map[] = {
- 	/* SA2UL */
-@@ -138,6 +146,8 @@ static struct psil_ep j721e_src_ep_map[] = {
- 	PSIL_PDMA_XY_PKT(0x4707),
- 	PSIL_PDMA_XY_PKT(0x4708),
- 	PSIL_PDMA_XY_PKT(0x4709),
-+	/* CSI2RX */
-+	PSIL_CSI2RX(0x4940),
- 	/* CPSW9 */
- 	PSIL_ETHERNET(0x4a00),
- 	/* CPSW0 */
++title: TI CSI2RX Wrapper Device Tree Bindings
++
++maintainers:
++  - Pratyush Yadav <p.yadav@ti.com>
++
++properties:
++  compatible:
++    items:
++      - const: ti,csi2rx
++
++  dmas:
++    description: RX DMA Channel 0
++
++  dma-names:
++    items:
++      - const: rx0
++
++  reg:
++    maxItems: 1
++    description: Base address and size of the TI wrapper registers.
++
++  power-domains:
++    maxItems: 1
++    description:
++      PM domain provider node and an args specifier containing
++      the device id value.
++
++  ranges: true
++
++  "#address-cells":
++    const: 2
++
++  "#size-cells":
++    const: 2
++
++patternProperties:
++  "csi-bridge@":
++    type: object
++    description: CSI2 bridge node.
++
++required:
++  - compatible
++  - reg
++  - dmas
++  - dma-names
++  - power-domains
++  - "#address-cells"
++  - "#size-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/soc/ti,sci_pm_domain.h>
++
++    ti_csi2rx0: ticsi2rx {
++        compatible = "ti,csi2rx";
++        dmas = <&main_udmap 0x4940>;
++        dma-names = "rx0";
++        reg = <0x0 0x4500000 0x0 0x1000>;
++        power-domains = <&k3_pds 26 TI_SCI_PD_EXCLUSIVE>;
++        #address-cells = <2>;
++        #size-cells = <2>;
++    };
 -- 
 2.30.0
 

@@ -2,87 +2,58 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 88FDE34ED1D
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Mar 2021 18:06:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E03334EF84
+	for <lists+dmaengine@lfdr.de>; Tue, 30 Mar 2021 19:30:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231875AbhC3QFc (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 30 Mar 2021 12:05:32 -0400
-Received: from mga18.intel.com ([134.134.136.126]:2604 "EHLO mga18.intel.com"
+        id S232330AbhC3RaY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 30 Mar 2021 13:30:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231928AbhC3QFV (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 30 Mar 2021 12:05:21 -0400
-IronPort-SDR: 4ZtCD2rwaNCVA0YoOClamqIaZ9y6spldNQcvaTuCFMKYcwGogW/XNw06zRYA6qtOvJafyX01w1
- /RXUMXcxYNqw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9939"; a="179338252"
-X-IronPort-AV: E=Sophos;i="5.81,291,1610438400"; 
-   d="scan'208";a="179338252"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2021 09:05:18 -0700
-IronPort-SDR: DVGtRPaN9ETArW4C0/T/tA9GKqtY6BSo1LWZBFiECcgEkGp7Ca0qR5hI5F/Up0gI7CD2HHhFpf
- 5TSE4MIORYlA==
-X-IronPort-AV: E=Sophos;i="5.81,291,1610438400"; 
-   d="scan'208";a="376886416"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.209.140.11]) ([10.209.140.11])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2021 09:05:16 -0700
-Subject: Re: [PATCH] dma: Fix a double free in dma_async_device_register
-To:     Lv Yunlong <lyl2019@mail.ustc.edu.cn>, vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210330090149.13476-1-lyl2019@mail.ustc.edu.cn>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <f4ce9e2a-6bb9-d3ae-3583-2d29e09aa3a3@intel.com>
-Date:   Tue, 30 Mar 2021 09:05:15 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+        id S231627AbhC3RaC (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 30 Mar 2021 13:30:02 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9F5D4619C7;
+        Tue, 30 Mar 2021 17:30:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617125402;
+        bh=C8O0alZVc/4m1eevRMOdvFYGpb/wNNuDuufNDrLUuQQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YlhQsQQWUsLXlFqsj68qjAmIgwrUB402VoS+aB1erd03q1KOtJUCQb4U3Wqqgs3SB
+         iTOrSWjppww4kGCLWZZI91Y2m/j+eP9OmPXhydxgZgfbLsrqJIkmQNtk8bP0v+jzSx
+         TzeQjHeg5mqpcqD0e+KpcPYJMMteIb4Av6YuXlE+5P7dyrr1LCOjlf1f5O6Lgajas+
+         zNgTDQXLJzHb/6M8m8Mo8XsHxB2fsNF6A4XX0rnAgxxGk8JSqW0GkayeK8I2df+7X1
+         TZxQLOAh6IZUxUJ6H6x7ULZIO+4bNvxITYEnjczyVgn7ZP3pZjCMaZVOqwYTXT0P0y
+         bhWPgaKY+z35Q==
+Date:   Tue, 30 Mar 2021 22:59:58 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Cc:     dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        hch@lst.de, iommu@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, dave.jiang@intel.com,
+        dan.j.williams@intel.com, rdunlap@infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 14/30] Revert "s3c24xx-dma.c: Fix a typo"
+Message-ID: <YGNgFuLWc91aGoQj@vkoul-mobl.Dlink>
+References: <cover.1616971780.git.unixbhaskar@gmail.com>
+ <1d989f71fbebd15de633c187d88cb3be3a0f2723.1616971780.git.unixbhaskar@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20210330090149.13476-1-lyl2019@mail.ustc.edu.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1d989f71fbebd15de633c187d88cb3be3a0f2723.1616971780.git.unixbhaskar@gmail.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On 29-03-21, 05:23, Bhaskar Chowdhury wrote:
+> s/transferred/transfered/
+> 
+> This reverts commit a2ddb8aea8106bd5552f8516ad7a8a26b9282a8f.
 
-On 3/30/2021 2:01 AM, Lv Yunlong wrote:
-> In the first list_for_each_entry() macro of dma_async_device_register,
-> it gets the chan from list and calls __dma_async_device_channel_register
-> (..,chan). We can see that chan->local is allocated by alloc_percpu() and
-> it is freed chan->local by free_percpu(chan->local) when
-> __dma_async_device_channel_register() failed.
->
-> But after __dma_async_device_channel_register() failed, the caller will
-> goto err_out and freed the chan->local in the second time by free_percpu().
->
-> The cause of this problem is forget to set chan->local to NULL when
-> chan->local was freed in __dma_async_device_channel_register(). My
-> patch sets chan->local to NULL when the callee failed to avoid double free.
+This is not upstream, why not squash in. Also would make sense to write
+sensible changelog and not phrases and use the right subsystem
+conventions!
 
-Thanks for the fix. I think it would make sense to set it to NULL in 
-__dma_async_device_channel_register() cleanup path after it calls 
-free_percpu(chan->local) right? That would address any other instances 
-of this issue happening else where.
+Droped the series now
 
 
->
-> Fixes: d2fb0a0438384 ("dmaengine: break out channel registration")
-> Signed-off-by: Lv Yunlong <lyl2019@mail.ustc.edu.cn>
-> ---
->   drivers/dma/dmaengine.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-> index fe6a460c4373..fef64b198c95 100644
-> --- a/drivers/dma/dmaengine.c
-> +++ b/drivers/dma/dmaengine.c
-> @@ -1249,8 +1249,10 @@ int dma_async_device_register(struct dma_device *device)
->   	/* represent channels in sysfs. Probably want devs too */
->   	list_for_each_entry(chan, &device->channels, device_node) {
->   		rc = __dma_async_device_channel_register(device, chan);
-> -		if (rc < 0)
-> +		if (rc < 0) {
-> +			chan->local = NULL;
->   			goto err_out;
-> +		}
->   	}
->   
->   	mutex_lock(&dma_list_mutex);
+-- 
+~Vinod

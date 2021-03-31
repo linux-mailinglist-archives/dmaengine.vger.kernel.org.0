@@ -2,40 +2,35 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CDDF34FCA0
-	for <lists+dmaengine@lfdr.de>; Wed, 31 Mar 2021 11:25:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4196434FCF8
+	for <lists+dmaengine@lfdr.de>; Wed, 31 Mar 2021 11:34:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234680AbhCaJYq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 31 Mar 2021 05:24:46 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:31795 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S230385AbhCaJYW (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 31 Mar 2021 05:24:22 -0400
-X-UUID: 2100cf8565374bb3a42718d88be49673-20210331
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=u+Ijg4lsy4bGx46vUJvZGwFd68l93EFamC79EAYl9EA=;
-        b=RqpmjbANKVbkrl1gOdY/J3PVy31o3/yaDm3j15IGGjh7MmecffsM7LVE6T9bphNe/8XZYK/VA2XZcUtaYNXVSP9J0oWyChZssvqqY3xqHQi/PacDbYhwLfnSccUzq9hmiKWYIP6JfIIvBBwUyQi4WTin8L7WuUgYTc4Sg4bFVWU=;
-X-UUID: 2100cf8565374bb3a42718d88be49673-20210331
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1879917599; Wed, 31 Mar 2021 17:24:17 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N2.mediatek.inc
- (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 31 Mar
- 2021 17:24:14 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 31 Mar 2021 17:24:13 +0800
-Message-ID: <1617182653.2752.9.camel@mhfsdcap03>
-Subject: Re: [PATCH 05/16] media: cadence: csi2rx: Add external DPHY support
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+        id S234836AbhCaJeX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 31 Mar 2021 05:34:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49082 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234707AbhCaJd4 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 31 Mar 2021 05:33:56 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8C1C7619F0;
+        Wed, 31 Mar 2021 09:33:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617183235;
+        bh=nO6ttpQXe+OeRL88ACEvx2io7aYwd7vnwQG1o0nC6Gw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=h/JuXQ8QMS62JOS9+ByXnOqyzOo1u3p8/2y0FqKbbBkFG6wtSSRN6I1ayMSxygk3j
+         qldKxHUcR0scfwhsSdITKQ7+94rabU11oLcDAa1BiNj+WKDU6v94KuqL/+hOp43z3q
+         gQFfkJSlxy9axVYovQHURUYVgGQ91TetD/7hoDBWL3651g2Ipd0r0N5eqyDblVv5jt
+         QKCzfa6PyBL78BiutkrA8CljFwSwXHv1OCDCjsOFYera4llrAZ/r++C8x7oLnie10+
+         M5/ucomuSVbT3yqgBpg6NrNhKbc6VLYxhZMXzzifGCYvRuXL5JN8CanH/SizY8lZi0
+         MCw/bOOFpQPWQ==
+Date:   Wed, 31 Mar 2021 15:03:51 +0530
+From:   Vinod Koul <vkoul@kernel.org>
 To:     Pratyush Yadav <p.yadav@ti.com>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
         Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        "Maxime Ripard" <mripard@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
         Benoit Parrot <bparrot@ti.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Alexandre Courbot <acourbot@chromium.org>,
@@ -43,150 +38,78 @@ CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Stanimir Varbanov <stanimir.varbanov@linaro.org>,
         Helen Koike <helen.koike@collabora.com>,
         Michael Tretter <m.tretter@pengutronix.de>,
-        Peter Chen <peter.chen@nxp.com>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <dmaengine@vger.kernel.org>,
-        "Vignesh Raghavendra" <vigneshr@ti.com>,
+        Peter Chen <peter.chen@nxp.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+        dmaengine@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>,
         Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Date:   Wed, 31 Mar 2021 17:24:13 +0800
-In-Reply-To: <20210330173348.30135-6-p.yadav@ti.com>
+Subject: Re: [PATCH 00/16] CSI2RX support on J721E
+Message-ID: <YGRB/42Q6aVBLoAq@vkoul-mobl.Dlink>
 References: <20210330173348.30135-1-p.yadav@ti.com>
-         <20210330173348.30135-6-p.yadav@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: B7647F850F179C64680EA36BB89EC8C5CE0165C255A9B1A1D3112A96B7C994732000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210330173348.30135-1-p.yadav@ti.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-T24gVHVlLCAyMDIxLTAzLTMwIGF0IDIzOjAzICswNTMwLCBQcmF0eXVzaCBZYWRhdiB3cm90ZToN
-Cj4gU29tZSBwbGF0Zm9ybXMgbGlrZSBUSSdzIEo3MjFFIGNhbiBoYXZlIHRoZSBDU0kyUlggcGFp
-cmVkIHdpdGggYW4NCj4gZXh0ZXJuYWwgRFBIWS4gQWRkIHN1cHBvcnQgdG8gZW5hYmxlIGFuZCBj
-b25maWd1cmUgdGhlIERQSFkgdXNpbmcgdGhlDQo+IGdlbmVyaWMgUEhZIGZyYW1ld29yay4NCj4g
-DQo+IEdldCB0aGUgcGl4ZWwgcmF0ZSBhbmQgYnBwIGZyb20gdGhlIHN1YmRldiBhbmQgcGFzcyB0
-aGVtIG9uIHRvIHRoZSBEUEhZDQo+IGFsb25nIHdpdGggdGhlIG51bWJlciBvZiBsYW5lcy4gQWxs
-IG90aGVyIHNldHRpbmdzIGFyZSBsZWZ0IHRvIHRoZWlyDQo+IGRlZmF1bHQgdmFsdWVzLg0KPiAN
-Cj4gU2lnbmVkLW9mZi1ieTogUHJhdHl1c2ggWWFkYXYgPHAueWFkYXZAdGkuY29tPg0KPiAtLS0N
-Cj4gIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vY2FkZW5jZS9jZG5zLWNzaTJyeC5jIHwgMTQ3ICsr
-KysrKysrKysrKysrKysrLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxMzcgaW5zZXJ0aW9ucygrKSwg
-MTAgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9y
-bS9jYWRlbmNlL2NkbnMtY3NpMnJ4LmMgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL2NhZGVuY2Uv
-Y2Rucy1jc2kycnguYw0KPiBpbmRleCBjNjhhM2VhYzYyY2QuLjMxYmQ4MGUzZjc4MCAxMDA2NDQN
-Cj4gLS0tIGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9jYWRlbmNlL2NkbnMtY3NpMnJ4LmMNCj4g
-KysrIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9jYWRlbmNlL2NkbnMtY3NpMnJ4LmMNCj4gQEAg
-LTMwLDYgKzMwLDEyIEBADQo+ICAjZGVmaW5lIENTSTJSWF9TVEFUSUNfQ0ZHX0RMQU5FX01BUChs
-bGFuZSwgcGxhbmUpCSgocGxhbmUpIDw8ICgxNiArIChsbGFuZSkgKiA0KSkNCj4gICNkZWZpbmUg
-Q1NJMlJYX1NUQVRJQ19DRkdfTEFORVNfTUFTSwkJCUdFTk1BU0soMTEsIDgpDQo+ICANCj4gKyNk
-ZWZpbmUgQ1NJMlJYX0RQSFlfTEFORV9DVFJMX1JFRwkJMHg0MA0KPiArI2RlZmluZSBDU0kyUlhf
-RFBIWV9DTF9SU1QJCQlCSVQoMTYpDQo+ICsjZGVmaW5lIENTSTJSWF9EUEhZX0RMX1JTVChpKQkJ
-CUJJVCgoaSkgKyAxMikNCj4gKyNkZWZpbmUgQ1NJMlJYX0RQSFlfQ0xfRU4JCQlCSVQoNCkNCj4g
-KyNkZWZpbmUgQ1NJMlJYX0RQSFlfRExfRU4oaSkJCQlCSVQoaSkNCj4gKw0KPiAgI2RlZmluZSBD
-U0kyUlhfU1RSRUFNX0JBU0UobikJCSgoKG4pICsgMSkgKiAweDEwMCkNCj4gIA0KPiAgI2RlZmlu
-ZSBDU0kyUlhfU1RSRUFNX0NUUkxfUkVHKG4pCQkoQ1NJMlJYX1NUUkVBTV9CQVNFKG4pICsgMHgw
-MDApDQo+IEBAIC01NCw2ICs2MCwxMSBAQCBlbnVtIGNzaTJyeF9wYWRzIHsNCj4gIAlDU0kyUlhf
-UEFEX01BWCwNCj4gIH07DQo+ICANCj4gK3N0cnVjdCBjc2kycnhfZm10IHsNCj4gKwl1MzIJCQkJ
-Y29kZTsNCj4gKwl1OAkJCQlicHA7DQo+ICt9Ow0KPiArDQo+ICBzdHJ1Y3QgY3NpMnJ4X3ByaXYg
-ew0KPiAgCXN0cnVjdCBkZXZpY2UJCQkqZGV2Ow0KPiAgCXVuc2lnbmVkIGludAkJCWNvdW50Ow0K
-PiBAQCAtODUsNiArOTYsNTIgQEAgc3RydWN0IGNzaTJyeF9wcml2IHsNCj4gIAlpbnQJCQkJc291
-cmNlX3BhZDsNCj4gIH07DQo+ICANCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgY3NpMnJ4X2ZtdCBm
-b3JtYXRzW10gPSB7DQo+ICsJew0KPiArCQkuY29kZQk9IE1FRElBX0JVU19GTVRfWVVZVjhfMlg4
-LA0KPiArCQkuYnBwCT0gMTYsDQo+ICsJfSwNCj4gKwl7DQo+ICsJCS5jb2RlCT0gTUVESUFfQlVT
-X0ZNVF9VWVZZOF8yWDgsDQo+ICsJCS5icHAJPSAxNiwNCj4gKwl9LA0KPiArCXsNCj4gKwkJLmNv
-ZGUJPSBNRURJQV9CVVNfRk1UX1lWWVU4XzJYOCwNCj4gKwkJLmJwcAk9IDE2LA0KPiArCX0sDQo+
-ICsJew0KPiArCQkuY29kZQk9IE1FRElBX0JVU19GTVRfVllVWThfMlg4LA0KPiArCQkuYnBwCT0g
-MTYsDQo+ICsJfSwNCj4gK307DQo+ICsNCj4gK3N0YXRpYyB1OCBjc2kycnhfZ2V0X2JwcCh1MzIg
-Y29kZSkNCj4gK3sNCj4gKwlpbnQgaTsNCj4gKw0KPiArCWZvciAoaSA9IDA7IGkgPCBBUlJBWV9T
-SVpFKGZvcm1hdHMpOyBpKyspIHsNCj4gKwkJaWYgKGZvcm1hdHNbaV0uY29kZSA9PSBjb2RlKQ0K
-PiArCQkJcmV0dXJuIGZvcm1hdHNbaV0uYnBwOw0KPiArCX0NCj4gKw0KPiArCXJldHVybiAwOw0K
-PiArfQ0KPiArDQo+ICtzdGF0aWMgczY0IGNzaTJyeF9nZXRfcGl4ZWxfcmF0ZShzdHJ1Y3QgY3Np
-MnJ4X3ByaXYgKmNzaTJyeCkNCj4gK3sNCj4gKwlzdHJ1Y3QgdjRsMl9jdHJsICpjdHJsOw0KPiAr
-DQo+ICsJY3RybCA9IHY0bDJfY3RybF9maW5kKGNzaTJyeC0+c291cmNlX3N1YmRldi0+Y3RybF9o
-YW5kbGVyLA0KPiArCQkJICAgICAgVjRMMl9DSURfUElYRUxfUkFURSk7DQo+ICsJaWYgKCFjdHJs
-KSB7DQo+ICsJCWRldl9lcnIoY3NpMnJ4LT5kZXYsICJubyBwaXhlbCByYXRlIGNvbnRyb2wgaW4g
-c3ViZGV2OiAlc1xuIiwNCj4gKwkJCWNzaTJyeC0+c291cmNlX3N1YmRldi0+bmFtZSk7DQo+ICsJ
-CXJldHVybiAtRUlOVkFMOw0KPiArCX0NCj4gKw0KPiArCXJldHVybiB2NGwyX2N0cmxfZ19jdHJs
-X2ludDY0KGN0cmwpOw0KPiArfQ0KPiArDQo+ICBzdGF0aWMgaW5saW5lDQo+ICBzdHJ1Y3QgY3Np
-MnJ4X3ByaXYgKnY0bDJfc3ViZGV2X3RvX2NzaTJyeChzdHJ1Y3QgdjRsMl9zdWJkZXYgKnN1YmRl
-dikNCj4gIHsNCj4gQEAgLTEwMSw2ICsxNTgsNTUgQEAgc3RhdGljIHZvaWQgY3NpMnJ4X3Jlc2V0
-KHN0cnVjdCBjc2kycnhfcHJpdiAqY3NpMnJ4KQ0KPiAgCXdyaXRlbCgwLCBjc2kycngtPmJhc2Ug
-KyBDU0kyUlhfU09GVF9SRVNFVF9SRUcpOw0KPiAgfQ0KPiAgDQo+ICtzdGF0aWMgaW50IGNzaTJy
-eF9jb25maWd1cmVfZXh0ZXJuYWxfZHBoeShzdHJ1Y3QgY3NpMnJ4X3ByaXYgKmNzaTJyeCkNCj4g
-K3sNCj4gKwl1bmlvbiBwaHlfY29uZmlndXJlX29wdHMgb3B0cyA9IHsgfTsNCj4gKwlzdHJ1Y3Qg
-cGh5X2NvbmZpZ3VyZV9vcHRzX21pcGlfZHBoeSAqY2ZnID0gJm9wdHMubWlwaV9kcGh5Ow0KPiAr
-CXN0cnVjdCB2NGwyX3N1YmRldl9mb3JtYXQgc2RfZm10Ow0KPiArCXM2NCBwaXhlbF9yYXRlOw0K
-PiArCWludCByZXQ7DQo+ICsJdTggYnBwOw0KPiArDQo+ICsJc2RfZm10LndoaWNoID0gVjRMMl9T
-VUJERVZfRk9STUFUX0FDVElWRTsNCj4gKwlzZF9mbXQucGFkID0gMDsNCj4gKw0KPiArCXJldCA9
-IHY0bDJfc3ViZGV2X2NhbGwoY3NpMnJ4LT5zb3VyY2Vfc3ViZGV2LCBwYWQsIGdldF9mbXQsIE5V
-TEwsDQo+ICsJCQkgICAgICAgJnNkX2ZtdCk7DQo+ICsJaWYgKHJldCkNCj4gKwkJcmV0dXJuIHJl
-dDsNCj4gKw0KPiArCWJwcCA9IGNzaTJyeF9nZXRfYnBwKHNkX2ZtdC5mb3JtYXQuY29kZSk7DQo+
-ICsJaWYgKCFicHApDQo+ICsJCXJldHVybiAtRUlOVkFMOw0KPiArDQo+ICsJcGl4ZWxfcmF0ZSA9
-IGNzaTJyeF9nZXRfcGl4ZWxfcmF0ZShjc2kycngpOw0KPiArCWlmIChwaXhlbF9yYXRlIDwgMCkN
-Cj4gKwkJcmV0dXJuIHBpeGVsX3JhdGU7DQo+ICsNCj4gKwlyZXQgPSBwaHlfbWlwaV9kcGh5X2dl
-dF9kZWZhdWx0X2NvbmZpZyhwaXhlbF9yYXRlLCBicHAsDQo+ICsJCQkJCSAgICAgICBjc2kycngt
-Pm51bV9sYW5lcywgY2ZnKTsNCj4gKwlpZiAocmV0KQ0KPiArCQlyZXR1cm4gcmV0Ow0KPiArDQo+
-ICsJcmV0ID0gcGh5X3NldF9tb2RlX2V4dChjc2kycngtPmRwaHksIFBIWV9NT0RFX01JUElfRFBI
-WSwNCj4gKwkJCSAgICAgICBQSFlfTUlQSV9EUEhZX1NVQk1PREVfUlgpOw0KPiArCWlmIChyZXQp
-DQo+ICsJCXJldHVybiByZXQ7DQo+ICsNCj4gKwlyZXQgPSBwaHlfcG93ZXJfb24oY3NpMnJ4LT5k
-cGh5KTsNCj4gKwlpZiAocmV0KQ0KPiArCQlyZXR1cm4gcmV0Ow0KU2VlbXMgcGh5X3Bvd2VyX29u
-LCB0aGVuIHBoeV9zZXRfbW9kZV9leHQ/DQoNCj4gKw0KPiArCXJldCA9IHBoeV9jb25maWd1cmUo
-Y3NpMnJ4LT5kcGh5LCAmb3B0cyk7DQo+ICsJaWYgKHJldCkgew0KPiArCQkvKiBDYW4ndCBkbyBh
-bnl0aGluZyBpZiBpdCBmYWlscy4gSWdub3JlIHRoZSByZXR1cm4gdmFsdWUuICovDQo+ICsJCXBo
-eV9wb3dlcl9vZmYoY3NpMnJ4LT5kcGh5KTsNCj4gKwkJcmV0dXJuIHJldDsNCj4gKwl9DQo+ICsN
-Cj4gKwlyZXR1cm4gMDsNCj4gK30NCj4gKw0KPiAgc3RhdGljIGludCBjc2kycnhfc3RhcnQoc3Ry
-dWN0IGNzaTJyeF9wcml2ICpjc2kycngpDQo+ICB7DQo+ICAJdW5zaWduZWQgaW50IGk7DQo+IEBA
-IC0xMzksNiArMjQ1LDE3IEBAIHN0YXRpYyBpbnQgY3NpMnJ4X3N0YXJ0KHN0cnVjdCBjc2kycnhf
-cHJpdiAqY3NpMnJ4KQ0KPiAgCWlmIChyZXQpDQo+ICAJCWdvdG8gZXJyX2Rpc2FibGVfcGNsazsN
-Cj4gIA0KPiArCS8qIEVuYWJsZSBEUEhZIGNsayBhbmQgZGF0YSBsYW5lcy4gKi8NCj4gKwlpZiAo
-Y3NpMnJ4LT5kcGh5KSB7DQo+ICsJCXJlZyA9IENTSTJSWF9EUEhZX0NMX0VOIHwgQ1NJMlJYX0RQ
-SFlfQ0xfUlNUOw0KPiArCQlmb3IgKGkgPSAwOyBpIDwgY3NpMnJ4LT5udW1fbGFuZXM7IGkrKykg
-ew0KPiArCQkJcmVnIHw9IENTSTJSWF9EUEhZX0RMX0VOKGNzaTJyeC0+bGFuZXNbaV0gLSAxKTsN
-Cj4gKwkJCXJlZyB8PSBDU0kyUlhfRFBIWV9ETF9SU1QoY3NpMnJ4LT5sYW5lc1tpXSAtIDEpOw0K
-PiArCQl9DQo+ICsNCj4gKwkJd3JpdGVsKHJlZywgY3NpMnJ4LT5iYXNlICsgQ1NJMlJYX0RQSFlf
-TEFORV9DVFJMX1JFRyk7DQo+ICsJfQ0KPiArDQo+ICAJLyoNCj4gIAkgKiBDcmVhdGUgYSBzdGF0
-aWMgbWFwcGluZyBiZXR3ZWVuIHRoZSBDU0kgdmlydHVhbCBjaGFubmVscw0KPiAgCSAqIGFuZCB0
-aGUgb3V0cHV0IHN0cmVhbS4NCj4gQEAgLTE2OSwxMCArMjg2LDIxIEBAIHN0YXRpYyBpbnQgY3Np
-MnJ4X3N0YXJ0KHN0cnVjdCBjc2kycnhfcHJpdiAqY3NpMnJ4KQ0KPiAgCWlmIChyZXQpDQo+ICAJ
-CWdvdG8gZXJyX2Rpc2FibGVfcGl4Y2xrOw0KPiAgDQo+ICsJaWYgKGNzaTJyeC0+ZHBoeSkgew0K
-PiArCQlyZXQgPSBjc2kycnhfY29uZmlndXJlX2V4dGVybmFsX2RwaHkoY3NpMnJ4KTsNCj4gKwkJ
-aWYgKHJldCkgew0KPiArCQkJZGV2X2Vycihjc2kycngtPmRldiwNCj4gKwkJCQkiRmFpbGVkIHRv
-IGNvbmZpZ3VyZSBleHRlcm5hbCBEUEhZOiAlZFxuIiwgcmV0KTsNCj4gKwkJCWdvdG8gZXJyX2Rp
-c2FibGVfc3lzY2xrOw0KPiArCQl9DQo+ICsJfQ0KPiArDQo+ICAJY2xrX2Rpc2FibGVfdW5wcmVw
-YXJlKGNzaTJyeC0+cF9jbGspOw0KPiAgDQo+ICAJcmV0dXJuIDA7DQo+ICANCj4gK2Vycl9kaXNh
-YmxlX3N5c2NsazoNCj4gKwljbGtfZGlzYWJsZV91bnByZXBhcmUoY3NpMnJ4LT5zeXNfY2xrKTsN
-Cj4gIGVycl9kaXNhYmxlX3BpeGNsazoNCj4gIAlmb3IgKDsgaSA+IDA7IGktLSkNCj4gIAkJY2xr
-X2Rpc2FibGVfdW5wcmVwYXJlKGNzaTJyeC0+cGl4ZWxfY2xrW2kgLSAxXSk7DQo+IEBAIC0yMDAs
-NiArMzI4LDEzIEBAIHN0YXRpYyB2b2lkIGNzaTJyeF9zdG9wKHN0cnVjdCBjc2kycnhfcHJpdiAq
-Y3NpMnJ4KQ0KPiAgDQo+ICAJaWYgKHY0bDJfc3ViZGV2X2NhbGwoY3NpMnJ4LT5zb3VyY2Vfc3Vi
-ZGV2LCB2aWRlbywgc19zdHJlYW0sIGZhbHNlKSkNCj4gIAkJZGV2X3dhcm4oY3NpMnJ4LT5kZXYs
-ICJDb3VsZG4ndCBkaXNhYmxlIG91ciBzdWJkZXZcbiIpOw0KPiArDQo+ICsJaWYgKGNzaTJyeC0+
-ZHBoeSkgew0KPiArCQl3cml0ZWwoMCwgY3NpMnJ4LT5iYXNlICsgQ1NJMlJYX0RQSFlfTEFORV9D
-VFJMX1JFRyk7DQo+ICsNCj4gKwkJaWYgKHBoeV9wb3dlcl9vZmYoY3NpMnJ4LT5kcGh5KSkNCj4g
-KwkJCWRldl93YXJuKGNzaTJyeC0+ZGV2LCAiQ291bGRuJ3QgcG93ZXIgb2ZmIERQSFlcbiIpOw0K
-PiArCX0NCj4gIH0NCj4gIA0KPiAgc3RhdGljIGludCBjc2kycnhfc19zdHJlYW0oc3RydWN0IHY0
-bDJfc3ViZGV2ICpzdWJkZXYsIGludCBlbmFibGUpDQo+IEBAIC0zMDYsMTUgKzQ0MSw2IEBAIHN0
-YXRpYyBpbnQgY3NpMnJ4X2dldF9yZXNvdXJjZXMoc3RydWN0IGNzaTJyeF9wcml2ICpjc2kycngs
-DQo+ICAJCXJldHVybiBQVFJfRVJSKGNzaTJyeC0+ZHBoeSk7DQo+ICAJfQ0KPiAgDQo+IC0JLyoN
-Cj4gLQkgKiBGSVhNRTogT25jZSB3ZSdsbCBoYXZlIGV4dGVybmFsIEQtUEhZIHN1cHBvcnQsIHRo
-ZSBjaGVjaw0KPiAtCSAqIHdpbGwgbmVlZCB0byBiZSByZW1vdmVkLg0KPiAtCSAqLw0KPiAtCWlm
-IChjc2kycngtPmRwaHkpIHsNCj4gLQkJZGV2X2VycigmcGRldi0+ZGV2LCAiRXh0ZXJuYWwgRC1Q
-SFkgbm90IHN1cHBvcnRlZCB5ZXRcbiIpOw0KPiAtCQlyZXR1cm4gLUVJTlZBTDsNCj4gLQl9DQo+
-IC0NCj4gIAljbGtfcHJlcGFyZV9lbmFibGUoY3NpMnJ4LT5wX2Nsayk7DQo+ICAJZGV2X2NmZyA9
-IHJlYWRsKGNzaTJyeC0+YmFzZSArIENTSTJSWF9ERVZJQ0VfQ0ZHX1JFRyk7DQo+ICAJY2xrX2Rp
-c2FibGVfdW5wcmVwYXJlKGNzaTJyeC0+cF9jbGspOw0KPiBAQCAtMzM5LDcgKzQ2NSw3IEBAIHN0
-YXRpYyBpbnQgY3NpMnJ4X2dldF9yZXNvdXJjZXMoc3RydWN0IGNzaTJyeF9wcml2ICpjc2kycngs
-DQo+ICAJICogRklYTUU6IE9uY2Ugd2UnbGwgaGF2ZSBpbnRlcm5hbCBELVBIWSBzdXBwb3J0LCB0
-aGUgY2hlY2sNCj4gIAkgKiB3aWxsIG5lZWQgdG8gYmUgcmVtb3ZlZC4NCj4gIAkgKi8NCj4gLQlp
-ZiAoY3NpMnJ4LT5oYXNfaW50ZXJuYWxfZHBoeSkgew0KPiArCWlmICghY3NpMnJ4LT5kcGh5ICYm
-IGNzaTJyeC0+aGFzX2ludGVybmFsX2RwaHkpIHsNCj4gIAkJZGV2X2VycigmcGRldi0+ZGV2LCAi
-SW50ZXJuYWwgRC1QSFkgbm90IHN1cHBvcnRlZCB5ZXRcbiIpOw0KPiAgCQlyZXR1cm4gLUVJTlZB
-TDsNCj4gIAl9DQo+IEBAIC00NjAsNiArNTg2LDcgQEAgc3RhdGljIGludCBjc2kycnhfcHJvYmUo
-c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gIAlkZXZfaW5mbygmcGRldi0+ZGV2LA0K
-PiAgCQkgIlByb2JlZCBDU0kyUlggd2l0aCAldS8ldSBsYW5lcywgJXUgc3RyZWFtcywgJXMgRC1Q
-SFlcbiIsDQo+ICAJCSBjc2kycngtPm51bV9sYW5lcywgY3NpMnJ4LT5tYXhfbGFuZXMsIGNzaTJy
-eC0+bWF4X3N0cmVhbXMsDQo+ICsJCSBjc2kycngtPmRwaHkgPyAiZXh0ZXJuYWwiIDoNCj4gIAkJ
-IGNzaTJyeC0+aGFzX2ludGVybmFsX2RwaHkgPyAiaW50ZXJuYWwiIDogIm5vIik7DQo+ICANCj4g
-IAlyZXR1cm4gMDsNCg0K
+On 30-03-21, 23:03, Pratyush Yadav wrote:
+> Hi,
+> 
+> This series adds support for CSI2 capture on J721E. It includes some
+> fixes to the Cadence CSI2RX driver, adds Rx support to Cadence DPHY
+> driver, and finally adds the TI CSI2RX wrapper driver.
+> 
+> Tested on TI's J721E with OV5640 sensor.
+> 
+> Paul Kocialkowski (1):
+>   phy: Distinguish between Rx and Tx for MIPI D-PHY with submodes
+> 
+> Pratyush Yadav (15):
+>   phy: cdns-dphy: Prepare for Rx support
+>   phy: cdns-dphy: Allow setting mode
+>   phy: cdns-dphy: Add Rx support
+>   media: cadence: csi2rx: Add external DPHY support
+>   media: cadence: csi2rx: Soft reset the streams before starting capture
+>   media: cadence: csi2rx: Set the STOP bit when stopping a stream
+>   media: cadence: csi2rx: Fix stream data configuration
+>   media: cadence: csi2rx: Turn subdev power on before starting stream
+>   media: cadence: csi2rx: Add wrappers for subdev calls
+>   dmaengine: ti: k3-psil-j721e: Add entry for CSI2RX
+>   dt-bindings: media: Add DT bindings for TI CSI2RX driver
+>   media: ti-vpe: csi2rx: Add CSI2RX support
+>   dt-bindings: phy: Convert Cadence DPHY binding to YAML
+>   dt-bindings: phy: cdns,dphy: make clocks optional
+>   dt-bindings: phy: cdns,dphy: add power-domains property
 
+Is there any dependency between patches to various subsystems, if not
+please do consider sending a series per subsystem...
+
+Thanks
+
+
+> 
+>  .../devicetree/bindings/media/ti,csi2rx.yaml  |  70 ++
+>  .../devicetree/bindings/phy/cdns,dphy.txt     |  20 -
+>  .../devicetree/bindings/phy/cdns,dphy.yaml    |  52 +
+>  MAINTAINERS                                   |   7 +
+>  drivers/dma/ti/k3-psil-j721e.c                |  10 +
+>  drivers/media/platform/Kconfig                |  11 +
+>  drivers/media/platform/cadence/cdns-csi2rx.c  | 269 ++++-
+>  drivers/media/platform/ti-vpe/Makefile        |   1 +
+>  drivers/media/platform/ti-vpe/ti-csi2rx.c     | 964 ++++++++++++++++++
+>  drivers/phy/cadence/cdns-dphy.c               | 407 +++++++-
+>  include/linux/phy/phy-mipi-dphy.h             |  13 +
+>  11 files changed, 1754 insertions(+), 70 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/ti,csi2rx.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/phy/cdns,dphy.txt
+>  create mode 100644 Documentation/devicetree/bindings/phy/cdns,dphy.yaml
+>  create mode 100644 drivers/media/platform/ti-vpe/ti-csi2rx.c
+> 
+> --
+> 2.30.0
+
+-- 
+~Vinod

@@ -2,49 +2,50 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 692DC3501B1
-	for <lists+dmaengine@lfdr.de>; Wed, 31 Mar 2021 15:52:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CB153503BD
+	for <lists+dmaengine@lfdr.de>; Wed, 31 Mar 2021 17:46:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235639AbhCaNvt (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 31 Mar 2021 09:51:49 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:39568 "EHLO
+        id S235470AbhCaPpa (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 31 Mar 2021 11:45:30 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:40310 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235758AbhCaNvo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 31 Mar 2021 09:51:44 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 12VDpPqq005310;
-        Wed, 31 Mar 2021 08:51:25 -0500
+        with ESMTP id S235268AbhCaPpX (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 31 Mar 2021 11:45:23 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 12VFiwYj052629;
+        Wed, 31 Mar 2021 10:44:58 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1617198685;
-        bh=se4kokRgl6S4irb4URqKn533vejtAJPSsq4RTXSyHrw=;
+        s=ti-com-17Q1; t=1617205498;
+        bh=MhCSFR7cZfsCaZa45RWsaqWYPkhv33SEgDDOOJ91lLE=;
         h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=IShYWirWC6sj4KLKL2avRDilOY72Em5+dYvCt3jkzEbhfNLOOd+nKUGpluGm66vdt
-         BTrKRPBtBW4S4YGksiq8VRdFzUnEK0QyYkXMOF32oyh+QsgfOt5o/RhO5gd7FAMVV8
-         Ee+1N+QSwOOcdVi0Aokil/5pH0cx9Nj7aEbx4348=
+        b=rCii+ek16dqFYC7RIOwZrAZRX4S0lfpgxK/vxS3azev+ixae2aGgjJhnD6VjaE73z
+         AzSsQjujLu0f/TN8+EomY4kwybg7V/i8QttZlWyqZm3RLWJNm+ivWOnnaQ7m19slG5
+         1uy9Moz0+2q3LHUtXylAk2tOfVAPkl4JeRT2zcoc=
 Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 12VDpPCp021318
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 12VFiwnE001265
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 31 Mar 2021 08:51:25 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE103.ent.ti.com
+        Wed, 31 Mar 2021 10:44:58 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE103.ent.ti.com
  (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Wed, 31
- Mar 2021 08:51:24 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2021 10:44:57 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Wed, 31 Mar 2021 08:51:24 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 12VDpOXx129128;
-        Wed, 31 Mar 2021 08:51:24 -0500
-Date:   Wed, 31 Mar 2021 19:21:23 +0530
-From:   Pratyush Yadav <p.yadav@ti.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Frontend Transport; Wed, 31 Mar 2021 10:44:57 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with SMTP id 12VFivVx084350;
+        Wed, 31 Mar 2021 10:44:57 -0500
+Date:   Wed, 31 Mar 2021 10:44:57 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+CC:     Pratyush Yadav <p.yadav@ti.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
         Peter Ujfalusi <peter.ujfalusi@gmail.com>,
         Maxime Ripard <mripard@kernel.org>,
-        Benoit Parrot <bparrot@ti.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Alexandre Courbot <acourbot@chromium.org>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
@@ -55,71 +56,81 @@ CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Chunfeng Yun <chunfeng.yun@mediatek.com>,
         <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <dmaengine@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Subject: Re: [PATCH 00/16] CSI2RX support on J721E
-Message-ID: <20210331135121.77qxxcpkyy6zm7kl@ti.com>
+        <dmaengine@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH 13/16] media: ti-vpe: csi2rx: Add CSI2RX support
+Message-ID: <20210331154456.t6edvpw6mfwlf2zg@ti.com>
 References: <20210330173348.30135-1-p.yadav@ti.com>
- <YGRB/42Q6aVBLoAq@vkoul-mobl.Dlink>
- <20210331114019.g4dnuhs2hno5fjdn@ti.com>
- <YGRzwboQ0sL/bAWU@vkoul-mobl.Dlink>
+ <20210330173348.30135-14-p.yadav@ti.com>
+ <91bbf2a9-9d27-7f9b-1c17-ad6544a828f1@ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <YGRzwboQ0sL/bAWU@vkoul-mobl.Dlink>
+In-Reply-To: <91bbf2a9-9d27-7f9b-1c17-ad6544a828f1@ideasonboard.com>
 User-Agent: NeoMutt/20171215
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 31/03/21 06:36PM, Vinod Koul wrote:
-> On 31-03-21, 17:10, Pratyush Yadav wrote:
-> > On 31/03/21 03:03PM, Vinod Koul wrote:
-> > > On 30-03-21, 23:03, Pratyush Yadav wrote:
-> > > > Hi,
-> > > > 
-> > > > This series adds support for CSI2 capture on J721E. It includes some
-> > > > fixes to the Cadence CSI2RX driver, adds Rx support to Cadence DPHY
-> > > > driver, and finally adds the TI CSI2RX wrapper driver.
-> > > > 
-> > > > Tested on TI's J721E with OV5640 sensor.
-> > > > 
-> > > > Paul Kocialkowski (1):
-> > > >   phy: Distinguish between Rx and Tx for MIPI D-PHY with submodes
-> > > > 
-> > > > Pratyush Yadav (15):
-> > > >   phy: cdns-dphy: Prepare for Rx support
-> > > >   phy: cdns-dphy: Allow setting mode
-> > > >   phy: cdns-dphy: Add Rx support
-> > > >   media: cadence: csi2rx: Add external DPHY support
-> > > >   media: cadence: csi2rx: Soft reset the streams before starting capture
-> > > >   media: cadence: csi2rx: Set the STOP bit when stopping a stream
-> > > >   media: cadence: csi2rx: Fix stream data configuration
-> > > >   media: cadence: csi2rx: Turn subdev power on before starting stream
-> > > >   media: cadence: csi2rx: Add wrappers for subdev calls
-> > > >   dmaengine: ti: k3-psil-j721e: Add entry for CSI2RX
-> > > >   dt-bindings: media: Add DT bindings for TI CSI2RX driver
-> > > >   media: ti-vpe: csi2rx: Add CSI2RX support
-> > > >   dt-bindings: phy: Convert Cadence DPHY binding to YAML
-> > > >   dt-bindings: phy: cdns,dphy: make clocks optional
-> > > >   dt-bindings: phy: cdns,dphy: add power-domains property
-> > > 
-> > > Is there any dependency between patches to various subsystems, if not
-> > > please do consider sending a series per subsystem...
-> > 
-> > Without patch 1, patch 5 and later won't build. Without patch 11, patch 
-> > 13 will not work.
+Pratyush,
+
+Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote on Wed [2021-Mar-31 09:06:35 +0300]:
+> Hi,
 > 
-> Cover letter is a good place to mention this! And what do you mean by
-> not working, do we have compile time dependencies? I agree that for
-> everything to work all the pieces need to land
+> On 30/03/2021 20:33, Pratyush Yadav wrote:
+> > TI's J721E uses the Cadence CSI2RX and DPHY peripherals to facilitate
+> > capture over a CSI-2 bus.
+> > 
+> > The Cadence CSI2RX IP acts as a bridge between the TI specific parts and
+> > the CSI-2 protocol parts. TI then has a wrapper on top of this bridge
+> > called the SHIM layer. It takes in data from stream 0, repacks it, and
+> > sends it to memory over PSI-L DMA.
+> > 
+> > This driver acts as the "front end" to V4L2 client applications. It
+> > implements the required ioctls and buffer operations, passes the
+> > necessary calls on to the bridge, programs the SHIM layer, and performs
+> > DMA via the dmaengine API to finally return the data to a buffer
+> > supplied by the application.
+> > 
+> > Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+> > ---
+> >   MAINTAINERS                               |   7 +
+> >   drivers/media/platform/Kconfig            |  11 +
+> >   drivers/media/platform/ti-vpe/Makefile    |   1 +
+> >   drivers/media/platform/ti-vpe/ti-csi2rx.c | 964 ++++++++++++++++++++++
+> >   4 files changed, 983 insertions(+)
+> >   create mode 100644 drivers/media/platform/ti-vpe/ti-csi2rx.c
+> 
+> Some quick comments:
+> 
+> "ti-vpe" directory is not correct, this has nothing to do with VPE. That
+> said, the directory has already been abused by having CAL driver there,
+> perhaps we should rename the directory just to "ti". But if we do that,
+> I think we should have subdirs for cal, vpe and this new one.
 
-I have not tried it but patch 11 is not a compile time dependency. It 
-should be a run time dependency. Without it the driver will probably 
-fail to acquire the DMA channels and its probe will fail.
+I agree with Tomi here. This should create a ti directory under
+media/platform and then add a directory under that specifically for this
+driver/IP as a first step. Not sure what the correct name for that
+directory should be but it should meaningful. As a follow on step then the
+other drivers can be relocated to a proper directory structure.
+> 
+> "ti-csi2rx" is rather generic name. TI has had CSI-2 RX IPs before (CAL)
+> and probably will also have new ones in the future. If there's no clear
+> model name for the IP, as I think is the case here, it's probably best
+> to just use the SoC model in the name. E.g. the DSS on J7 is
+> "ti,j721e-dss".
+> 
+> This driver implements the legacy video API. I think it would be better
+> (and easier to maintain) to only implement the media-controller API,
+> unless you specifically need to support the legacy API for existing
+> userspace.
 
--- 
-Regards,
-Pratyush Yadav
-Texas Instruments Inc.
+We just went through a major rework with CAL to make it media controller
+compatible in order to be able to handle CSI2 virtual channels.
+I think as this is a new driver/IP which perform the same type of service
+it makes sense to make use the more current API instead of the legacy one.
+
+> 
+>  Tomi
+
+Benoit

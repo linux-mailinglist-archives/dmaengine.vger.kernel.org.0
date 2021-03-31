@@ -2,167 +2,92 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 389E334F2E5
-	for <lists+dmaengine@lfdr.de>; Tue, 30 Mar 2021 23:15:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 292CC34F659
+	for <lists+dmaengine@lfdr.de>; Wed, 31 Mar 2021 03:46:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232495AbhC3VOq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 30 Mar 2021 17:14:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48814 "EHLO
+        id S232518AbhCaBpg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 30 Mar 2021 21:45:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232057AbhC3VOm (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 Mar 2021 17:14:42 -0400
-Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2E9BC061574;
-        Tue, 30 Mar 2021 14:14:41 -0700 (PDT)
-Received: by mail-qk1-x732.google.com with SMTP id i9so17353968qka.2;
-        Tue, 30 Mar 2021 14:14:41 -0700 (PDT)
+        with ESMTP id S232859AbhCaBpL (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 30 Mar 2021 21:45:11 -0400
+Received: from ustc.edu.cn (email6.ustc.edu.cn [IPv6:2001:da8:d800::8])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 77C53C061574;
+        Tue, 30 Mar 2021 18:45:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+ggozfWBPW8IuLIjloW6WSrwVHoKc5x/0lF7TLz027Y=;
-        b=vOri9Y+PBjDsorPl7YPFn8uYnFAt2bbwsF1irc/UoeCWg2FuGAdfhAmAryiWLbwGfP
-         8M58Ydu/8nmNIQZaelGmUC+1PwKtGx/U3S58yFNQYQR8+S7fxKOL6j43RFKSz6szPcxf
-         XgnGXQjJRLLXz8x4Vx8ThJpjB37S3//llCWahX/nc81rmmrDQjKFL2/ldUdWYSaz5FoL
-         MJhdcD4a26Z5pT0WThRfN9bssZv2xJE2A0KuyNzfd8N+51UI/iF4q9Ldplkya1yqsnA4
-         CFdt8s9V9XYeXKr5b1pbWKRcq19TLStc9Rew6TF2GLruCKfKBuIdCvEHPM1SzUxfks1f
-         uajg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=+ggozfWBPW8IuLIjloW6WSrwVHoKc5x/0lF7TLz027Y=;
-        b=d4k/90huA6z5Qwul4sIRE7yurcjZUKBA7HgCFWpxehrI58QJjbF9qBwXLGdbkO6TVu
-         lK2QMANuH+DqPHhWJNKHzf3cDZ34pcFgDEXm7vsmh7gMmLl2kxMc8Sq7dlxQB0VCoMmr
-         fVh4cdxaDFwJeJT1ouPsNuH5esh5Zh9Veae15DehbHY/TRDeSqktfX1y/0hPzQdxzIOl
-         36hQk8QmJSYja7T+WKbh1PyGLOehIRzRDjkaoFL8s+vret9zAL0c70k5PX15ql/5Og8h
-         B1rpR8tL057uunqPEmCWTESIh9+nZ/ReF0TP1DRq/GtCWO54M3l1mEzOGEbgOVEbSRZg
-         4xRQ==
-X-Gm-Message-State: AOAM530nblRGvCAW6a760RrthtQpULWQFx3SUgF4AJNKh0uCsYvvxKjA
-        iWscjrU5kQE6B9xQg4WFwM98WU0sOQdNiFqc
-X-Google-Smtp-Source: ABdhPJwbD+N/GjB0AlKqJVMu0SfsvPdMs9oaHoiPjFBTbDnbbPd1HJfEWQMejjZPYQPo+ef3Vr0RGw==
-X-Received: by 2002:a05:620a:2158:: with SMTP id m24mr231264qkm.306.1617138881199;
-        Tue, 30 Mar 2021 14:14:41 -0700 (PDT)
-Received: from Gentoo ([143.244.44.215])
-        by smtp.gmail.com with ESMTPSA id x21sm16567967qkj.25.2021.03.30.14.14.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Mar 2021 14:14:40 -0700 (PDT)
-Date:   Wed, 31 Mar 2021 02:44:22 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        hch@lst.de, iommu@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, dave.jiang@intel.com,
-        dan.j.williams@intel.com, rdunlap@infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 24/30] Kconfig: Change Synopsys to Synopsis
-Message-ID: <YGOUrpsQzrIPEHIU@Gentoo>
-Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>, dmaengine@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, hch@lst.de,
-        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
-        dave.jiang@intel.com, dan.j.williams@intel.com,
-        rdunlap@infradead.org, linux-kernel@vger.kernel.org
-References: <cover.1616971780.git.unixbhaskar@gmail.com>
- <1262e9e62498f961e5172205e66a9ef7c6f0f69d.1616971780.git.unixbhaskar@gmail.com>
- <8f80fb1b-b2d0-b66a-24b0-bd92dc6cd4b6@arm.com>
+        d=mail.ustc.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id:MIME-Version:Content-Transfer-Encoding; bh=R+YO8TACOX
+        GNoVNl3MxR9+6Lq0q8OS7rvRzgBfzXiNc=; b=TqqwmyGc3guTwopvJmg61IIeO1
+        uESz4QtlRonocY06qNOe13nuHEfPd/HE0KDXFvr1qyHaus99TXz//zeBXKu8Lzkv
+        hWVwDvCoSrjAPOrgrNkL+TYcKFWqXzp3AJupiVfd5Fo6jOwPlliIeGWTtdpOswzm
+        MwG/g3fmHm5OaOvfU=
+Received: from ubuntu.localdomain (unknown [202.38.69.14])
+        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygCnrU0e1GNg5J90AA--.440S4;
+        Wed, 31 Mar 2021 09:45:02 +0800 (CST)
+From:   Lv Yunlong <lyl2019@mail.ustc.edu.cn>
+To:     vkoul@kernel.org, dave.jiang@intel.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lv Yunlong <lyl2019@mail.ustc.edu.cn>
+Subject: [PATCH v2] dma: Fix a double free in dma_async_device_register
+Date:   Tue, 30 Mar 2021 18:44:58 -0700
+Message-Id: <20210331014458.3944-1-lyl2019@mail.ustc.edu.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ZkHisyvIHxtmch2f"
-Content-Disposition: inline
-In-Reply-To: <8f80fb1b-b2d0-b66a-24b0-bd92dc6cd4b6@arm.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: LkAmygCnrU0e1GNg5J90AA--.440S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZF4kKw4kGr4kXF17GF17ZFb_yoW8Jw1kpr
+        sxGa45KFW2qa15ZFsxXr1FvFyUu3Z8J34F93yqyw1akrZxZr92yw48ta1j9a4DJws3JF4f
+        Kas5J34fuF47Cr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+        1j6rxdM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
+        Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJV
+        W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI2
+        0VAGYxC7MxkIecxEwVAFwVWkMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+        67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+        x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY
+        6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvj
+        DU0xZFpf9x0JUmNtcUUUUU=
+X-CM-SenderInfo: ho1ojiyrz6zt1loo32lwfovvfxof0/
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+In the first list_for_each_entry() macro of dma_async_device_register,
+it gets the chan from list and calls __dma_async_device_channel_register
+(..,chan). We can see that chan->local is allocated by alloc_percpu() and
+it is freed chan->local by free_percpu(chan->local) when
+__dma_async_device_channel_register() failed.
 
---ZkHisyvIHxtmch2f
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+But after __dma_async_device_channel_register() failed, the caller will
+goto err_out and freed the chan->local in the second time by free_percpu().
 
-On 12:43 Tue 30 Mar 2021, Robin Murphy wrote:
->On 2021-03-29 00:53, Bhaskar Chowdhury wrote:
->> s/Synopsys/Synopsis/  .....two different places.
->
->Erm, that is definitely not a typo... :/
->
+The cause of this problem is forget to set chan->local to NULL when
+chan->local was freed in __dma_async_device_channel_register(). My
+patch sets chan->local to NULL when the callee failed to avoid double free.
 
->> ..and for some unknown reason it introduce a empty line deleted and added
->> back.
->
->Presumably your editor is configured to trim trailing whitespace on save.
->
->Furthermore, there are several instances in the other patches where your
->"corrections" are grammatically incorrect, I'm not sure what the deal is
->with patch #14, and you've also used the wrong subsystem name (it should
->be "dmaengine"). It's great to want to clean things up, but please pay a
->bit of care and attention to what you're actually doing.
+Fixes: d2fb0a0438384 ("dmaengine: break out channel registration")
+Signed-off-by: Lv Yunlong <lyl2019@mail.ustc.edu.cn>
+---
+ drivers/dma/dmaengine.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index fe6a460c4373..af3ee288bc11 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -1086,6 +1086,7 @@ static int __dma_async_device_channel_register(struct dma_device *device,
+ 	kfree(chan->dev);
+  err_free_local:
+ 	free_percpu(chan->local);
++	chan->local = NULL;
+ 	return rc;
+ }
+ 
+-- 
+2.25.1
 
 
-Thank you so much, I shall be more careful.
->
->Robin.
->
->> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
->> ---
->>   drivers/dma/Kconfig | 8 ++++----
->>   1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
->> index 0c2827fd8c19..30e8cc26f43b 100644
->> --- a/drivers/dma/Kconfig
->> +++ b/drivers/dma/Kconfig
->> @@ -170,15 +170,15 @@ config DMA_SUN6I
->>   	  Support for the DMA engine first found in Allwinner A31 SoCs.
->>
->>   config DW_AXI_DMAC
->> -	tristate "Synopsys DesignWare AXI DMA support"
->> +	tristate "Synopsis DesignWare AXI DMA support"
->>   	depends on OF || COMPILE_TEST
->>   	depends on HAS_IOMEM
->>   	select DMA_ENGINE
->>   	select DMA_VIRTUAL_CHANNELS
->>   	help
->> -	  Enable support for Synopsys DesignWare AXI DMA controller.
->> +	  Enable support for Synopsis DesignWare AXI DMA controller.
->>   	  NOTE: This driver wasn't tested on 64 bit platform because
->> -	  of lack 64 bit platform with Synopsys DW AXI DMAC.
->> +	  of lack 64 bit platform with Synopsis DW AXI DMAC.
->>
->>   config EP93XX_DMA
->>   	bool "Cirrus Logic EP93xx DMA support"
->> @@ -394,7 +394,7 @@ config MOXART_DMA
->>   	select DMA_VIRTUAL_CHANNELS
->>   	help
->>   	  Enable support for the MOXA ART SoC DMA controller.
->> -
->> +
->>   	  Say Y here if you enabled MMP ADMA, otherwise say N.
->>
->>   config MPC512X_DMA
->> --
->> 2.26.3
->>
->> _______________________________________________
->> iommu mailing list
->> iommu@lists.linux-foundation.org
->> https://lists.linuxfoundation.org/mailman/listinfo/iommu
->>
-
---ZkHisyvIHxtmch2f
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAmBjlK0ACgkQsjqdtxFL
-KRV/Awf/WgJ4kZNXg13Lymj81qWKh0xQChcPR1byavkwRKFeyk4mIQDv4/V33f03
-x8lKJRgdvwchbQrJXtz1HkobUN2Yx2wQ8aprpF+kOiv0brN8c7TE92xf7dxnjL7T
-3SSjbN44aYkmCCyV/Em37qXQi4/WrhZbP70K2P89e++Xsjb/rElNBwlmQzyjx0Jt
-KIiXNgr5vFaqJOtwrMFOwDqparI5v70FJjHSTjZMHPPJTiIuYwMSl4r57ABV2s+7
-jXyj1J6ePWL0sfX8h4eo2sBFtcuirP8NZMJbHw4lA0JG8FE6nBDAiFohWucgPBdo
-8vzWlWSOOWJTt5N84XfYEPiJB1caGg==
-=WK+C
------END PGP SIGNATURE-----
-
---ZkHisyvIHxtmch2f--

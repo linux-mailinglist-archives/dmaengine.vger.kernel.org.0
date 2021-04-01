@@ -2,43 +2,43 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0256E35185E
-	for <lists+dmaengine@lfdr.de>; Thu,  1 Apr 2021 19:48:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9FEE351859
+	for <lists+dmaengine@lfdr.de>; Thu,  1 Apr 2021 19:48:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234560AbhDARpp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 1 Apr 2021 13:45:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57160 "EHLO
+        id S234352AbhDARpo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 1 Apr 2021 13:45:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234764AbhDARjr (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 1 Apr 2021 13:39:47 -0400
-Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2334FC02D568;
-        Thu,  1 Apr 2021 08:52:08 -0700 (PDT)
-Received: by mail-oi1-x236.google.com with SMTP id c16so2234767oib.3;
-        Thu, 01 Apr 2021 08:52:08 -0700 (PDT)
+        with ESMTP id S234565AbhDARiD (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 1 Apr 2021 13:38:03 -0400
+Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ABE3C02D569;
+        Thu,  1 Apr 2021 08:53:04 -0700 (PDT)
+Received: by mail-ot1-x332.google.com with SMTP id c24-20020a9d6c980000b02902662e210895so2020039otr.9;
+        Thu, 01 Apr 2021 08:53:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=VCJBZCXzAN+MxhllMnbhP5O5FvIPxJsE/5NIO5Ghwkc=;
-        b=KDPuG1BeodZ8SthOC7zoM+8VONfwwJlEXqETMz7NETaJ/pJZxRQcr4PRNnEd2slwJc
-         g1quqAt6W+V69ME6XW7lf40Nzu4NXC2t0Wo+EuiwkxvNmf+9WrdJwi/wuPU9tspBjn17
-         lWSerHrsLqTML0jIQIvV4hDnIMxP3tsPlchDRETS7yruDmcWrbgP18GlQNELti/K4p+t
-         ewHVSwCZnGMsQW29DumXY1JOFaFS2SpFYlF+xZyVpthpx46sQRLUza4KtJc40fcY4K9Z
-         J+4XYCwOOUe8BzTrBTmLEeZ+BKc7kncCMpVUdJOp//FSDzEgORUtDYTcr0wa8xl69C8N
-         UsQg==
-X-Gm-Message-State: AOAM532wPoC1Hso9vad2yBGVcG/us4i3Gql3nKdzHzuIc1kbzoOH9NVM
-        VBLSkYVorzcuuOKoBEVbZQ==
-X-Google-Smtp-Source: ABdhPJxO9AoojIw/ebyZy4l8CETZvf8HZLdBQLapN1YEqr92AAk3qapozPuPsyUw7Xyz7HD7HnFZEw==
-X-Received: by 2002:aca:4e55:: with SMTP id c82mr6392280oib.43.1617292325284;
-        Thu, 01 Apr 2021 08:52:05 -0700 (PDT)
+        bh=vkQJQ0O5X0ESy+J810FdCD0SpVEINsP0ZlnS7rJtykA=;
+        b=t7Dfd7aJiKBH3JXEyyEPFaogHg3o0Z0Arf+OEq24zx6z9Hb0+Fm0M403EmPBOXpd6D
+         /LWgM6PFhazklnzoCjeGaw+8qWFrfNc5c5ZW+80q2ZaLaQOfu6+uTSYHcEel7mfzjCD4
+         6xpywc8Degy7g+h5htBTBFhj98zy0cWqhXvGRiOhiPdUv3Pjz/1R/KBUn0NyC8giL2KT
+         x20UI0tx2XNS4qiMPM2FUBf2sa4/kdWagpfwO9sFvBe71Ntbhpcf/Xf7AwgN04eODwV5
+         5HZtEdny/D6EiKYLJjWwr4Pg4dSe3h/eiNJOp/PKTIbziIkdSRGPl6E7dOCsTOL076Og
+         dg9A==
+X-Gm-Message-State: AOAM530hq7XzTAxMZx5PS2a1GT+5o8sUigH/VT1f2n6FgkXYEsQmtdxr
+        oxljLbGw0/u/YwAskEmFIw==
+X-Google-Smtp-Source: ABdhPJxTYMWgRjWTTEUoN54xBzLN6y375nT/Dx7htqlExcUIh3M3GXE6xcxxoCnomOvmTM8L0T/+ZQ==
+X-Received: by 2002:a9d:7e8d:: with SMTP id m13mr7362910otp.54.1617292383853;
+        Thu, 01 Apr 2021 08:53:03 -0700 (PDT)
 Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s21sm1178599oos.5.2021.04.01.08.52.01
+        by smtp.gmail.com with ESMTPSA id d2sm1271592otl.48.2021.04.01.08.53.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Apr 2021 08:52:03 -0700 (PDT)
-Received: (nullmailer pid 496890 invoked by uid 1000);
-        Thu, 01 Apr 2021 15:52:01 -0000
-Date:   Thu, 1 Apr 2021 10:52:01 -0500
+        Thu, 01 Apr 2021 08:53:02 -0700 (PDT)
+Received: (nullmailer pid 498399 invoked by uid 1000);
+        Thu, 01 Apr 2021 15:52:59 -0000
+Date:   Thu, 1 Apr 2021 10:52:59 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Pratyush Yadav <p.yadav@ti.com>
 Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -61,7 +61,7 @@ Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 Subject: Re: [PATCH 12/16] dt-bindings: media: Add DT bindings for TI CSI2RX
  driver
-Message-ID: <20210401155201.GA488101@robh.at.kernel.org>
+Message-ID: <20210401155259.GB488101@robh.at.kernel.org>
 References: <20210330173348.30135-1-p.yadav@ti.com>
  <20210330173348.30135-13-p.yadav@ti.com>
 MIME-Version: 1.0
@@ -104,79 +104,7 @@ On Tue, Mar 30, 2021 at 11:03:44PM +0530, Pratyush Yadav wrote:
 > +  compatible:
 > +    items:
 > +      - const: ti,csi2rx
-> +
-> +  dmas:
-> +    description: RX DMA Channel 0
 
-items:
-  - description: RX DMA Channel 0
+Also, needs an SoC specific compatible.
 
-Or just 'maxItems: 1'
-
-> +
-> +  dma-names:
-> +    items:
-> +      - const: rx0
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: Base address and size of the TI wrapper registers.
-
-That's all 'reg' properties, drop 'description'.
-
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +    description:
-> +      PM domain provider node and an args specifier containing
-> +      the device id value.
-
-Drop.
-
-> +
-> +  ranges: true
-> +
-> +  "#address-cells":
-> +    const: 2
-> +
-> +  "#size-cells":
-> +    const: 2
-> +
-> +patternProperties:
-> +  "csi-bridge@":
-
-"^csi-bridge@"
-
-> +    type: object
-> +    description: CSI2 bridge node.
-
-Just an empty node?
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - dmas
-> +  - dma-names
-> +  - power-domains
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-> +
-> +    ti_csi2rx0: ticsi2rx {
-> +        compatible = "ti,csi2rx";
-> +        dmas = <&main_udmap 0x4940>;
-> +        dma-names = "rx0";
-> +        reg = <0x0 0x4500000 0x0 0x1000>;
-> +        power-domains = <&k3_pds 26 TI_SCI_PD_EXCLUSIVE>;
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +    };
-> -- 
-> 2.30.0
-> 
+Rob

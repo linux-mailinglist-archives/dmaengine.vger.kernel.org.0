@@ -2,33 +2,30 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE36035293E
-	for <lists+dmaengine@lfdr.de>; Fri,  2 Apr 2021 12:02:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CD5F3529AE
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Apr 2021 12:24:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234984AbhDBKCO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 2 Apr 2021 06:02:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234926AbhDBKCJ (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 2 Apr 2021 06:02:09 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 239B2C0613E6;
-        Fri,  2 Apr 2021 03:02:07 -0700 (PDT)
+        id S229553AbhDBKYM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 2 Apr 2021 06:24:12 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:44926 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229605AbhDBKYM (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 2 Apr 2021 06:24:12 -0400
 Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CAEF72C1;
-        Fri,  2 Apr 2021 12:02:04 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5FD252C1;
+        Fri,  2 Apr 2021 12:24:09 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1617357725;
-        bh=BwK8ADmyN5yPbUxid040ws2OoDNAKB3jwfGdu8fQZu4=;
+        s=mail; t=1617359049;
+        bh=tkld6UVERd3oCk44uMV+QIoIlJrSO79ZF4RjmGPJcxw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q6U9n5vdWLQqcMaG+9TqXJIFsIVakimELdS5Z4Q0CD1sqXzXU/wZzECK/T3glx4Qb
-         RYFYe4xlxpBoHt9Em4McABWRJBPpzbetZ5xp3Qc9rIs63dc1STbbKAKWC2Mo+5BRmu
-         1DLv5hDerBLDJY2N3NBSy04VBkudO9QtsHBZMong=
-Date:   Fri, 2 Apr 2021 13:01:20 +0300
+        b=iDm4EHpTx7uiNiABVNQbYuQZYE51oww2XBlvvVgvfvaZpgNm3HVdyjit3iSTvQVu7
+         to/Cdzu8WZ4K1g4PbxinpFsto/U5AAWvYnkXOaQcSwOdJ3fklD7txo7uIUUs5UXaXH
+         wdytP3eBHRN9xwptHjLnvmAmOaY0oixWKC4RGY5I=
+Date:   Fri, 2 Apr 2021 13:23:25 +0300
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To:     Pratyush Yadav <p.yadav@ti.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
         Vinod Koul <vkoul@kernel.org>,
         Peter Ujfalusi <peter.ujfalusi@gmail.com>,
@@ -45,138 +42,139 @@ Cc:     Rob Herring <robh@kernel.org>,
         linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
         dmaengine@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>,
         Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Subject: Re: [PATCH 12/16] dt-bindings: media: Add DT bindings for TI CSI2RX
- driver
-Message-ID: <YGbrcKPA9K8Ws0lv@pendragon.ideasonboard.com>
+Subject: Re: [PATCH 14/16] dt-bindings: phy: Convert Cadence DPHY binding to
+ YAML
+Message-ID: <YGbwnTNiL6WYoxPF@pendragon.ideasonboard.com>
 References: <20210330173348.30135-1-p.yadav@ti.com>
- <20210330173348.30135-13-p.yadav@ti.com>
- <20210401155201.GA488101@robh.at.kernel.org>
+ <20210330173348.30135-15-p.yadav@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210401155201.GA488101@robh.at.kernel.org>
+In-Reply-To: <20210330173348.30135-15-p.yadav@ti.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Apr 01, 2021 at 10:52:01AM -0500, Rob Herring wrote:
-> On Tue, Mar 30, 2021 at 11:03:44PM +0530, Pratyush Yadav wrote:
-> > TI's J721E uses the Cadence CSI2RX and DPHY peripherals to facilitate
-> > capture over a CSI-2 bus. The TI CSI2RX platform driver glues all the
-> > parts together.
-> > 
-> > Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
-> > ---
-> >  .../devicetree/bindings/media/ti,csi2rx.yaml  | 70 +++++++++++++++++++
-> >  1 file changed, 70 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/ti,csi2rx.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/ti,csi2rx.yaml b/Documentation/devicetree/bindings/media/ti,csi2rx.yaml
-> > new file mode 100644
-> > index 000000000000..ebd894364391
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/ti,csi2rx.yaml
-> > @@ -0,0 +1,70 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/media/ti,csi2rx.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: TI CSI2RX Wrapper Device Tree Bindings
-> > +
+Hi Pratyush,
 
-A description would be useful, especially given that the TRM doesn't
-mention "CSI2RX".
+Thank you for the patch.
 
-> > +maintainers:
-> > +  - Pratyush Yadav <p.yadav@ti.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - const: ti,csi2rx
-> > +
-> > +  dmas:
-> > +    description: RX DMA Channel 0
+On Tue, Mar 30, 2021 at 11:03:46PM +0530, Pratyush Yadav wrote:
+> Convert Cadence DPHY binding to YAML.
 > 
-> items:
->   - description: RX DMA Channel 0
+> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+> ---
+>  .../devicetree/bindings/phy/cdns,dphy.txt     | 20 --------
+>  .../devicetree/bindings/phy/cdns,dphy.yaml    | 51 +++++++++++++++++++
+>  2 files changed, 51 insertions(+), 20 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/phy/cdns,dphy.txt
+>  create mode 100644 Documentation/devicetree/bindings/phy/cdns,dphy.yaml
 > 
-> Or just 'maxItems: 1'
-> 
-> > +
-> > +  dma-names:
-> > +    items:
-> > +      - const: rx0
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +    description: Base address and size of the TI wrapper registers.
-> 
-> That's all 'reg' properties, drop 'description'.
+> diff --git a/Documentation/devicetree/bindings/phy/cdns,dphy.txt b/Documentation/devicetree/bindings/phy/cdns,dphy.txt
+> deleted file mode 100644
+> index 1095bc4e72d9..000000000000
+> --- a/Documentation/devicetree/bindings/phy/cdns,dphy.txt
+> +++ /dev/null
+> @@ -1,20 +0,0 @@
+> -Cadence DPHY
+> -============
+> -
+> -Cadence DPHY block.
+> -
+> -Required properties:
+> -- compatible: should be set to "cdns,dphy".
+> -- reg: physical base address and length of the DPHY registers.
+> -- clocks: DPHY reference clocks.
+> -- clock-names: must contain "psm" and "pll_ref".
+> -- #phy-cells: must be set to 0.
+> -
+> -Example:
+> -	dphy0: dphy@fd0e0000{
+> -		compatible = "cdns,dphy";
+> -		reg = <0x0 0xfd0e0000 0x0 0x1000>;
+> -		clocks = <&psm_clk>, <&pll_ref_clk>;
+> -		clock-names = "psm", "pll_ref";
+> -		#phy-cells = <0>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/phy/cdns,dphy.yaml b/Documentation/devicetree/bindings/phy/cdns,dphy.yaml
+> new file mode 100644
+> index 000000000000..d1bbf96a8250
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/cdns,dphy.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/cdns,dphy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Cadence DPHY Device Tree Bindings
+> +
+> +maintainers:
+> +  - Pratyush Yadav <p.yadav@ti.com>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: cdns,dphy
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: Physical base address and length of the DPHY registers.
 
-According to SPRUIL1B, there are four register banks for the CSI_RX_IF,
-and two register banks for the DPHY_RX. What's your plan to support
-these ? Not everything need to be implemented at once, but backward
-compatibility need to be taken into account in the design.
+You can drop the description.
 
-> > +
-> > +  power-domains:
-> > +    maxItems: 1
-> > +    description:
-> > +      PM domain provider node and an args specifier containing
-> > +      the device id value.
-> 
-> Drop.
-> 
-> > +
-> > +  ranges: true
-> > +
-> > +  "#address-cells":
-> > +    const: 2
-> > +
-> > +  "#size-cells":
-> > +    const: 2
-> > +
-> > +patternProperties:
-> > +  "csi-bridge@":
-> 
-> "^csi-bridge@"
-> 
-> > +    type: object
-> > +    description: CSI2 bridge node.
-> 
-> Just an empty node?
+> +
+> +  clocks:
+> +    maxItems: 2
+> +    description: DPHY reference clocks.
 
-Even if the node is optional, it would be useful to include it in the
-example below, to show how it's supposed to be used.
+It's best to describe individual items, which will then allow dropping
+the maxItems property:
 
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - dmas
-> > +  - dma-names
-> > +  - power-domains
-> > +  - "#address-cells"
-> > +  - "#size-cells"
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
-> > +
-> > +    ti_csi2rx0: ticsi2rx {
-> > +        compatible = "ti,csi2rx";
-> > +        dmas = <&main_udmap 0x4940>;
-> > +        dma-names = "rx0";
-> > +        reg = <0x0 0x4500000 0x0 0x1000>;
-> > +        power-domains = <&k3_pds 26 TI_SCI_PD_EXCLUSIVE>;
-> > +        #address-cells = <2>;
-> > +        #size-cells = <2>;
-> > +    };
+  clocks:
+    items:
+      - description: Description of the psm clock
+      - description: Description of the pll_ref clock
+
+> +
+> +  clock-names:
+> +    items:
+> +      - const: psm
+> +      - const: pll_ref
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - "#phy-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +
+> +    dphy0: dphy@fd0e0000{
+
+This is copied verbatim from the existing description, but while at it,
+I'd rename the node from dphy@... to phy@..., as DT node are supposed to
+be named according to the class of devices, not the specific device
+type.
+
+With these small issues addressed,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +        compatible = "cdns,dphy";
+> +        reg = <0xfd0e0000 0x1000>;
+> +        clocks = <&psm_clk>, <&pll_ref_clk>;
+> +        clock-names = "psm", "pll_ref";
+> +        #phy-cells = <0>;
+> +    };
 
 -- 
 Regards,

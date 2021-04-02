@@ -2,108 +2,183 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C26E6351D32
-	for <lists+dmaengine@lfdr.de>; Thu,  1 Apr 2021 20:48:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE36035293E
+	for <lists+dmaengine@lfdr.de>; Fri,  2 Apr 2021 12:02:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236514AbhDAS13 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 1 Apr 2021 14:27:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36948 "EHLO
+        id S234984AbhDBKCO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 2 Apr 2021 06:02:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238697AbhDASO4 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 1 Apr 2021 14:14:56 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AB11C0613BA
-        for <dmaengine@vger.kernel.org>; Thu,  1 Apr 2021 05:18:43 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id c17so1351302pfn.6
-        for <dmaengine@vger.kernel.org>; Thu, 01 Apr 2021 05:18:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=P569iaTbs6O5c4QvqrT8hmFqAirjxm+5X5n/nLel8Hk=;
-        b=SdIzob6Rg9lJgd20DviDj66kT6JWmI8l4nn81KpJ8eJKbOQf+fMz0mfbQBEglYad8f
-         fq3HjSdtdzSWIN/p0S0HS9WjsO+GP+vRSFNpbm0EgHYOaThKtaXgvbwUTismZa4jJmO4
-         OA9p5NKzddeSnnSaadxllyht67NmLCYi7x6ftUNvwU1gdwwPkt2Q0Oa7lQDT0GzLWUIm
-         fAlGhXcWinDInv8lB6TeuVoZQwxnVbV/VyQ45oMgv7VcDShjxBXA/QDRyX7igOYD+0I3
-         Dq1LcTaVEbC1fuzOBZjTYCKB5jd3SR+8cmazJ/+qigcVNEo3ZZqZeOLaxHhKobsLMApJ
-         npTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=P569iaTbs6O5c4QvqrT8hmFqAirjxm+5X5n/nLel8Hk=;
-        b=TbDPqPh3+vCxLXK/Oo8Lxqme/xEvGL4QJkq2ImetlaoS53uAEJuUfzmls+ntztXwQd
-         Lc+5uUuL0veLZsDF8F5OnVv/qYY9oCdYtm4UjeQZf/NQB7MwsmpQ8SgJV245tTSf3UNm
-         iD1eEQNU10iK4KXSaL6wHM8WlUoEsuv3e9v/2TLoasyvzVsKMo1VYVj/UKhypRJ5IWKW
-         OizwP4co7QEWJuUqb5enEYTBn2kNzy728irw+YBlH8gRZkXg/D7CfUzhNs/lCnEBSyl7
-         dN3HCim0ctXeeN4NtkuG8KXUKje4q44nbu7AkhjinCZaRvHDxcesP1Kn+OMhHzBZU0Tx
-         CTWg==
-X-Gm-Message-State: AOAM531nnoM4faI4jqBYLm05m/wyJRyug1hWDt7ifl1QOjWS/MQGmaIT
-        VnZBp6Yg+41TkRe3u31glkXVcg==
-X-Google-Smtp-Source: ABdhPJz8KUHW7fvncKxqlaOv7HvQQN55BF4qVQIjaxSsBq1uiESyP2+Jik4zX8CZhRuMK5Ox7skF+g==
-X-Received: by 2002:a65:4887:: with SMTP id n7mr7267201pgs.14.1617279522544;
-        Thu, 01 Apr 2021 05:18:42 -0700 (PDT)
-Received: from [192.168.11.133] (li1566-229.members.linode.com. [139.162.86.229])
-        by smtp.gmail.com with ESMTPSA id i22sm5413134pgj.90.2021.04.01.05.18.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Apr 2021 05:18:41 -0700 (PDT)
-Subject: Re: [PATCH v2] dmaengine: k3dma: use the correct HiSilicon copyright
-To:     Hao Fang <fanghao11@huawei.com>, vkoul@kernel.org,
-        mchehab@kernel.org, dmaengine@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, prime.zeng@hisilicon.com
-References: <1617277820-26971-1-git-send-email-fanghao11@huawei.com>
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-Message-ID: <8091f42c-755d-c412-bb1d-b723d887bf43@linaro.org>
-Date:   Thu, 1 Apr 2021 20:18:32 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        with ESMTP id S234926AbhDBKCJ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 2 Apr 2021 06:02:09 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 239B2C0613E6;
+        Fri,  2 Apr 2021 03:02:07 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CAEF72C1;
+        Fri,  2 Apr 2021 12:02:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1617357725;
+        bh=BwK8ADmyN5yPbUxid040ws2OoDNAKB3jwfGdu8fQZu4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Q6U9n5vdWLQqcMaG+9TqXJIFsIVakimELdS5Z4Q0CD1sqXzXU/wZzECK/T3glx4Qb
+         RYFYe4xlxpBoHt9Em4McABWRJBPpzbetZ5xp3Qc9rIs63dc1STbbKAKWC2Mo+5BRmu
+         1DLv5hDerBLDJY2N3NBSy04VBkudO9QtsHBZMong=
+Date:   Fri, 2 Apr 2021 13:01:20 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Pratyush Yadav <p.yadav@ti.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Benoit Parrot <bparrot@ti.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Helen Koike <helen.koike@collabora.com>,
+        Michael Tretter <m.tretter@pengutronix.de>,
+        Peter Chen <peter.chen@nxp.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+        dmaengine@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Subject: Re: [PATCH 12/16] dt-bindings: media: Add DT bindings for TI CSI2RX
+ driver
+Message-ID: <YGbrcKPA9K8Ws0lv@pendragon.ideasonboard.com>
+References: <20210330173348.30135-1-p.yadav@ti.com>
+ <20210330173348.30135-13-p.yadav@ti.com>
+ <20210401155201.GA488101@robh.at.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1617277820-26971-1-git-send-email-fanghao11@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210401155201.GA488101@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+On Thu, Apr 01, 2021 at 10:52:01AM -0500, Rob Herring wrote:
+> On Tue, Mar 30, 2021 at 11:03:44PM +0530, Pratyush Yadav wrote:
+> > TI's J721E uses the Cadence CSI2RX and DPHY peripherals to facilitate
+> > capture over a CSI-2 bus. The TI CSI2RX platform driver glues all the
+> > parts together.
+> > 
+> > Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+> > ---
+> >  .../devicetree/bindings/media/ti,csi2rx.yaml  | 70 +++++++++++++++++++
+> >  1 file changed, 70 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/ti,csi2rx.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/ti,csi2rx.yaml b/Documentation/devicetree/bindings/media/ti,csi2rx.yaml
+> > new file mode 100644
+> > index 000000000000..ebd894364391
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/ti,csi2rx.yaml
+> > @@ -0,0 +1,70 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/media/ti,csi2rx.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: TI CSI2RX Wrapper Device Tree Bindings
+> > +
 
+A description would be useful, especially given that the TRM doesn't
+mention "CSI2RX".
 
-On 2021/4/1 下午7:50, Hao Fang wrote:
-> s/Hisilicon/HiSilicon/g.
-> It should use capital S, according to the official website.
->
-> Signed-off-by: Hao Fang <fanghao11@huawei.com>
+> > +maintainers:
+> > +  - Pratyush Yadav <p.yadav@ti.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - const: ti,csi2rx
+> > +
+> > +  dmas:
+> > +    description: RX DMA Channel 0
+> 
+> items:
+>   - description: RX DMA Channel 0
+> 
+> Or just 'maxItems: 1'
+> 
+> > +
+> > +  dma-names:
+> > +    items:
+> > +      - const: rx0
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +    description: Base address and size of the TI wrapper registers.
+> 
+> That's all 'reg' properties, drop 'description'.
 
-Thanks for the patch.
+According to SPRUIL1B, there are four register banks for the CSI_RX_IF,
+and two register banks for the DPHY_RX. What's your plan to support
+these ? Not everything need to be implemented at once, but backward
+compatibility need to be taken into account in the design.
 
-Acked-by:  Zhangfei Gao <zhangfei.gao@linaro.org>
-> ---
-> V2:
->   -remove the terms of use link.
-> ---
->   drivers/dma/k3dma.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/dma/k3dma.c b/drivers/dma/k3dma.c
-> index d0b2e60..ecdaada9 100644
-> --- a/drivers/dma/k3dma.c
-> +++ b/drivers/dma/k3dma.c
-> @@ -1,7 +1,7 @@
->   // SPDX-License-Identifier: GPL-2.0-only
->   /*
->    * Copyright (c) 2013 - 2015 Linaro Ltd.
-> - * Copyright (c) 2013 Hisilicon Limited.
-> + * Copyright (c) 2013 HiSilicon Limited.
->    */
->   #include <linux/sched.h>
->   #include <linux/device.h>
-> @@ -1039,6 +1039,6 @@ static struct platform_driver k3_pdma_driver = {
->   
->   module_platform_driver(k3_pdma_driver);
->   
-> -MODULE_DESCRIPTION("Hisilicon k3 DMA Driver");
-> +MODULE_DESCRIPTION("HiSilicon k3 DMA Driver");
->   MODULE_ALIAS("platform:k3dma");
->   MODULE_LICENSE("GPL v2");
+> > +
+> > +  power-domains:
+> > +    maxItems: 1
+> > +    description:
+> > +      PM domain provider node and an args specifier containing
+> > +      the device id value.
+> 
+> Drop.
+> 
+> > +
+> > +  ranges: true
+> > +
+> > +  "#address-cells":
+> > +    const: 2
+> > +
+> > +  "#size-cells":
+> > +    const: 2
+> > +
+> > +patternProperties:
+> > +  "csi-bridge@":
+> 
+> "^csi-bridge@"
+> 
+> > +    type: object
+> > +    description: CSI2 bridge node.
+> 
+> Just an empty node?
 
+Even if the node is optional, it would be useful to include it in the
+example below, to show how it's supposed to be used.
+
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - dmas
+> > +  - dma-names
+> > +  - power-domains
+> > +  - "#address-cells"
+> > +  - "#size-cells"
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/soc/ti,sci_pm_domain.h>
+> > +
+> > +    ti_csi2rx0: ticsi2rx {
+> > +        compatible = "ti,csi2rx";
+> > +        dmas = <&main_udmap 0x4940>;
+> > +        dma-names = "rx0";
+> > +        reg = <0x0 0x4500000 0x0 0x1000>;
+> > +        power-domains = <&k3_pds 26 TI_SCI_PD_EXCLUSIVE>;
+> > +        #address-cells = <2>;
+> > +        #size-cells = <2>;
+> > +    };
+
+-- 
+Regards,
+
+Laurent Pinchart

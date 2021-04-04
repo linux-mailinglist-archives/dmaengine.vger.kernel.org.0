@@ -2,53 +2,52 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97FC335383D
-	for <lists+dmaengine@lfdr.de>; Sun,  4 Apr 2021 15:25:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04C90353843
+	for <lists+dmaengine@lfdr.de>; Sun,  4 Apr 2021 15:37:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229788AbhDDNZC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 4 Apr 2021 09:25:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55858 "EHLO
+        id S229827AbhDDNhj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 4 Apr 2021 09:37:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230494AbhDDNX5 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sun, 4 Apr 2021 09:23:57 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB548C061756;
-        Sun,  4 Apr 2021 06:23:51 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id w28so13862780lfn.2;
-        Sun, 04 Apr 2021 06:23:51 -0700 (PDT)
+        with ESMTP id S229665AbhDDNhi (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sun, 4 Apr 2021 09:37:38 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DD96C061756;
+        Sun,  4 Apr 2021 06:37:34 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id m12so13889221lfq.10;
+        Sun, 04 Apr 2021 06:37:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
+        h=to:cc:references:from:subject:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Nzpd4Vuf3kote7U8VoWNZRV+1cO2k+CwPl3bjJUX7L4=;
-        b=jTGiv/ltH6tXMRh1sa9l53S3rlQ36ZEyoAOJ0OFYDQD4lcg1DYLAt4HMH2OfaFb3Ks
-         7WfrNF6HtYqm80fkl2TWUk8vMxTKf3Ar7OO2WTIkf6XTIX6NdezwR+8/Os8zSc1DN2EV
-         bYcOlHYmIxM1LcR2Ea36+G8e4oscGJLSsCMsqrxki62wsaz2fGRAbdmtdeMjcn2TRzUQ
-         4cnNPvo+xch76Yu/9jPc7rRBVEj8ZWJUUYnmEyvVPr1MPtuwSSIwpCodv2MSpoIM+ut0
-         yoC5XaNHHYwZ2+W963Jq4TgMSvAyN3dEYO/S0jydgxJrGnMBw6fe28dpCLbnhPPkqE2o
-         nZ9g==
+        bh=+HyYmPnuWFFMIB7SpjIfrjeRJ9UQQxny2FWb69wvVv0=;
+        b=FJXzDuwGBEUuCTztCBPIrjJlZA/CX7RI25lUHFo/GsEUXKQFlfYchi//lxsK0mr8Rb
+         XDAo+BY11DGZU3N5MT+lEhXwApPQtYWQKztQRj/m1NfZmIMjvV8Bd6wdm4NCPs4uHnZ6
+         8GHsJw55eUWb4w34EymYDs2FqPzLUQ73BqOWyS2RUGS3jfhRL0TBrEEeEtVNqqHrNb6l
+         he+5GH5gA8bElV5/eeCRnZMyDpojqwFWYdsMsh4Urw6/RUsZGmzdjzJhZRD3LHug1owe
+         XPmRMFS6K1Nx3CbbYI4gjVY7jz6a8g7PW6aRmBiIqGC8Wsp3fDg9uyCO38+uUhHFv3Kq
+         wn1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Nzpd4Vuf3kote7U8VoWNZRV+1cO2k+CwPl3bjJUX7L4=;
-        b=SyuakGJZ1QkzekchGXIym+eNPaXgZaFy3ZkX9VdoI4X1AW6e1i3+FZPGoQWBTFQNes
-         /W9Sbg9ckgp0R2/LA+n3vFnD1a5BxcONPdWtJmkDGGyrudFFTVFVCpnqyVUuUrFz1QTw
-         vaBfPP2QtkHz2HrA0wIiCnbq4dpfuqp8p5TaDGFto0coVHE3XdKk1ZIyzMgDj1PXPwmA
-         6iC9q6b/OvJsIekzi2C6b9AFmA9LUQHj4N6r37wGcqpRzrcWMf7e3ZknCl6YzL/tABY2
-         C64KngVWqyaVvjMn2/iwarSan8XqHeXaoTN7zwHVLyTGTCD8ZdH47/h6J9jHLEIpBZW+
-         ikyg==
-X-Gm-Message-State: AOAM530JQXnVpW+NDj943iJyEfkKfI31ly0q52AHtUT258s1SSnvAiFE
-        2Rf5sviHdTFi4ekLTqOvNzk=
-X-Google-Smtp-Source: ABdhPJwHUBVB8eEUjrJWD4onehy9Mey9+WSE1xcAdji3JR12pymm1dFCr3aamwRwRGniVZLgXGLsOQ==
-X-Received: by 2002:ac2:4471:: with SMTP id y17mr14574843lfl.307.1617542630157;
-        Sun, 04 Apr 2021 06:23:50 -0700 (PDT)
+        bh=+HyYmPnuWFFMIB7SpjIfrjeRJ9UQQxny2FWb69wvVv0=;
+        b=eED5AcfRsoGaseg4fUFH/u5bAFAQJjth4YnLrTbk8JgiFhKN6oXc0u7kYtUm6PWaa1
+         5YqRjtkVRP8fA08dOzl3MXGjB6EqRuh3kV4tJz2VNZz6AuO/gVmLCZgOQPOPJEewbnm3
+         yaF209wYSAIuganG65kF4EC2lmiEjKxOaufPT0KCasXPjF8GSSAP8jh3EXZ/oGJ7EULZ
+         XuP9umX2m+A3FB9sBjtXdBicrYMjLlnTqV5S1wWxyMYlHkOqI9U4y+4x63Ppr/TdCPn8
+         RYp8BIj1eekXJ/noYjCenk8k/dp/cFosXyWL7vp4KdDTH4OluwJN9KBNEB03btYHllBQ
+         SxOA==
+X-Gm-Message-State: AOAM530Yhf/WwdEvqCcs0hn3v4Lz9R9q1i7595dkIfvYfvoo9qyqemi+
+        Kw2cxKt1WRhUupof3sfChRs=
+X-Google-Smtp-Source: ABdhPJy30HYImZBK03kv3X4L6uVNJSkQ/Jz4VRA2vHp4FEqO8UBKLgdvEBu1k3f9zBhXIHxmDW0p9g==
+X-Received: by 2002:a05:6512:ac9:: with SMTP id n9mr15012614lfu.186.1617543452694;
+        Sun, 04 Apr 2021 06:37:32 -0700 (PDT)
 Received: from [10.0.0.42] (91-157-86-200.elisa-laajakaista.fi. [91.157.86.200])
-        by smtp.gmail.com with ESMTPSA id y22sm1441965lfg.133.2021.04.04.06.23.48
+        by smtp.gmail.com with ESMTPSA id t10sm1451535lfk.58.2021.04.04.06.37.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 Apr 2021 06:23:49 -0700 (PDT)
-Subject: Re: [PATCH 11/16] dmaengine: ti: k3-psil-j721e: Add entry for CSI2RX
+        Sun, 04 Apr 2021 06:37:32 -0700 (PDT)
 To:     Pratyush Yadav <p.yadav@ti.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -70,14 +69,15 @@ To:     Pratyush Yadav <p.yadav@ti.com>,
 Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
         Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 References: <20210330173348.30135-1-p.yadav@ti.com>
- <20210330173348.30135-12-p.yadav@ti.com>
+ <20210330173348.30135-14-p.yadav@ti.com>
 From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-Message-ID: <78a5983c-04c8-4a4c-04fe-bb1f31e87375@gmail.com>
-Date:   Sun, 4 Apr 2021 16:24:47 +0300
+Subject: Re: [PATCH 13/16] media: ti-vpe: csi2rx: Add CSI2RX support
+Message-ID: <1983f3dd-d157-900f-b72f-c8e6987f7ec6@gmail.com>
+Date:   Sun, 4 Apr 2021 16:38:30 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.9.0
 MIME-Version: 1.0
-In-Reply-To: <20210330173348.30135-12-p.yadav@ti.com>
+In-Reply-To: <20210330173348.30135-14-p.yadav@ti.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -87,52 +87,102 @@ X-Mailing-List: dmaengine@vger.kernel.org
 
 Hi Pratyush,
 
++1 from me also to the points Tomi raised.
+
+few minor comments on the DMAengie side.
+
 On 3/30/21 8:33 PM, Pratyush Yadav wrote:
-> The CSI2RX subsystem uses PSI-L DMA to transfer frames to memory. It can
-> have up to 32 threads but the current driver only supports using one. So
-> add an entry for that one thread.
-
-If you are absolutely sure that the other threads are not going to be
-used, then:
-Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
-
-but I would consider adding the other threads if there is a chance that
-the cs2rx will need to support it in the future.
-
+> TI's J721E uses the Cadence CSI2RX and DPHY peripherals to facilitate
+> capture over a CSI-2 bus.
+> 
+> The Cadence CSI2RX IP acts as a bridge between the TI specific parts and
+> the CSI-2 protocol parts. TI then has a wrapper on top of this bridge
+> called the SHIM layer. It takes in data from stream 0, repacks it, and
+> sends it to memory over PSI-L DMA.
+> 
+> This driver acts as the "front end" to V4L2 client applications. It
+> implements the required ioctls and buffer operations, passes the
+> necessary calls on to the bridge, programs the SHIM layer, and performs
+> DMA via the dmaengine API to finally return the data to a buffer
+> supplied by the application.
+> 
 > Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
 > ---
->  drivers/dma/ti/k3-psil-j721e.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/dma/ti/k3-psil-j721e.c b/drivers/dma/ti/k3-psil-j721e.c
-> index 7580870ed746..19ffa31e6dc6 100644
-> --- a/drivers/dma/ti/k3-psil-j721e.c
-> +++ b/drivers/dma/ti/k3-psil-j721e.c
-> @@ -58,6 +58,14 @@
->  		},					\
->  	}
->  
-> +#define PSIL_CSI2RX(x)					\
-> +	{						\
-> +		.thread_id = x,				\
-> +		.ep_config = {				\
-> +			.ep_type = PSIL_EP_NATIVE,	\
-> +		},					\
-> +	}
+>  MAINTAINERS                               |   7 +
+>  drivers/media/platform/Kconfig            |  11 +
+>  drivers/media/platform/ti-vpe/Makefile    |   1 +
+>  drivers/media/platform/ti-vpe/ti-csi2rx.c | 964 ++++++++++++++++++++++
+>  4 files changed, 983 insertions(+)
+>  create mode 100644 drivers/media/platform/ti-vpe/ti-csi2rx.c
+
+...
+
+> diff --git a/drivers/media/platform/ti-vpe/ti-csi2rx.c b/drivers/media/platform/ti-vpe/ti-csi2rx.c
+> new file mode 100644
+> index 000000000000..355204ae473b
+> --- /dev/null
+> +++ b/drivers/media/platform/ti-vpe/ti-csi2rx.c
+
+...
+
+> +static int ti_csi2rx_init_vb2q(struct ti_csi2rx_dev *csi)
+> +{
+> +	struct vb2_queue *q = &csi->vidq;
+> +	int ret;
 > +
->  /* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
->  static struct psil_ep j721e_src_ep_map[] = {
->  	/* SA2UL */
-> @@ -138,6 +146,8 @@ static struct psil_ep j721e_src_ep_map[] = {
->  	PSIL_PDMA_XY_PKT(0x4707),
->  	PSIL_PDMA_XY_PKT(0x4708),
->  	PSIL_PDMA_XY_PKT(0x4709),
-> +	/* CSI2RX */
-> +	PSIL_CSI2RX(0x4940),
->  	/* CPSW9 */
->  	PSIL_ETHERNET(0x4a00),
->  	/* CPSW0 */
-> 
+> +	q->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+> +	q->io_modes = VB2_MMAP | VB2_USERPTR | VB2_DMABUF | VB2_READ;
+> +	q->drv_priv = csi;
+> +	q->buf_struct_size = sizeof(struct ti_csi2rx_buffer);
+> +	q->ops = &csi_vb2_qops;
+> +	q->mem_ops = &vb2_dma_contig_memops;
+> +	q->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
+> +	q->dev = csi->dma->device->dev;
+
+q->dev = dmaengine_get_dma_device(csi->dma);
+
+> +	q->lock = &csi->mutex;
+> +
+> +	ret = vb2_queue_init(q);
+> +	if (ret)
+> +		return ret;
+> +
+> +	csi->vdev.queue = q;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ti_csi2rx_init_dma(struct ti_csi2rx_dev *csi)
+> +{
+> +	struct dma_slave_config cfg;
+> +	int ret;
+> +
+> +	INIT_LIST_HEAD(&csi->dmaq.list);
+> +
+> +	csi->dma = NULL;
+> +
+> +	csi->dma = dma_request_chan(csi->dev, "rx0");
+> +	if (IS_ERR(csi->dma))
+> +		return PTR_ERR(csi->dma);
+> +
+> +	memset(&cfg, 0, sizeof(cfg));
+> +
+> +	cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_16_BYTES;
+> +	cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_16_BYTES;
+
+No need to set the dst_addr_width as you only support RX.
+
+Another note: UDMA with PSI-L native peripherals ignores this
+cofniguration, only used for PDMAs, but I can remain to future proof the
+driver and to keep it generic.
+
+> +
+> +	ret = dmaengine_slave_config(csi->dma, &cfg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
 
 -- 
 Péter

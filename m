@@ -2,110 +2,161 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64C4E355902
-	for <lists+dmaengine@lfdr.de>; Tue,  6 Apr 2021 18:15:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 227433559C0
+	for <lists+dmaengine@lfdr.de>; Tue,  6 Apr 2021 18:56:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346327AbhDFQPp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 6 Apr 2021 12:15:45 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39031 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346353AbhDFQPn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 6 Apr 2021 12:15:43 -0400
-Received: from mail-ej1-f69.google.com ([209.85.218.69])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <krzysztof.kozlowski@canonical.com>)
-        id 1lToMY-0005mo-RG
-        for dmaengine@vger.kernel.org; Tue, 06 Apr 2021 16:15:34 +0000
-Received: by mail-ej1-f69.google.com with SMTP id d6so5669584ejd.15
-        for <dmaengine@vger.kernel.org>; Tue, 06 Apr 2021 09:15:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Pc7Mc2iBHF1g8Xf3WZmYYKPrF2SwmZQ5FMyrEN7WVwU=;
-        b=QWZQwFe+K6111N6zb3KuyeFRFW9IMI3hgrNuC1tVanG/YWtHKEktJRq9mBGd/xm6ju
-         lBTCpvTvW8+A5iXeA94MenFhIBiC+tCYeLGqUTI7VBVdIcdfni0R2T2XTA/Aw3ZQVEKY
-         RCBPiVTZWYP2oyfDrjArg7duUD8TI63FzzePuXLv9Cu+Kan2ISbQKNZTMxlNRK2xO1Ly
-         FvPr0OZPpcmkxvcktRztFHd3GR4tBgScWHJcEMlCkP7kkKj5ekhVkcF8PNXC/5ioRwLa
-         rDm54KX5J0IG8UtmGhzHh+WLMtMRBrMBg+o1SMZ4LLA6RqEoUEBSADGE98V4AvA7bK8j
-         tzhw==
-X-Gm-Message-State: AOAM533luvPhR/t+GoOxWL4CViPZISxp9m1XYTPRXu9JAaSDZesImw29
-        EjtqUnm0Akaw0i/mVyofj57cjxeyOimlDNbS2oT6w6hMvLnFhcxT8H3oizkcC46Po8+/rT9usu2
-        MyhwYRok8Z3NVWaj2/KkbSHQqAGyeLmiRBw1DCQ5KZhlm7kjRXUmcTQ==
-X-Received: by 2002:a17:906:ff15:: with SMTP id zn21mr20674067ejb.296.1617725724099;
-        Tue, 06 Apr 2021 09:15:24 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw804Texr+Avxb2Xtww4+jktrq8ZbSClHDrPU8KBZum7liZCTe94GVIXgCnwrVcGVlgqfayCTK8SXCiOhy7+HI=
-X-Received: by 2002:a17:906:ff15:: with SMTP id zn21mr20674031ejb.296.1617725723902;
- Tue, 06 Apr 2021 09:15:23 -0700 (PDT)
+        id S238733AbhDFQ4b (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 6 Apr 2021 12:56:31 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:46230 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232598AbhDFQ40 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 6 Apr 2021 12:56:26 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 136Gtw5h047850;
+        Tue, 6 Apr 2021 11:55:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1617728158;
+        bh=+9XjRgYfCOrNjdj1kkEqP/Q3v02FwLNYKDPldfbcuiI=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=tjAN7lxASQ7GQgzBSfvPUAJVbed53QtBUL9oOxt1+Px6vCgCJYXJKr17FC9lKR7rS
+         oJwnUGUbf3qZ1to0kpE4KZPESWsmElTk4g34/qqHqGNT6PTMWOW6qTbBOTu8lbineW
+         KkEhEZ7bcZx3Sq/y1NYfjS6Iepw1ZCwLjlrx9lrU=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 136Gtwrb021543
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 6 Apr 2021 11:55:58 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Tue, 6 Apr
+ 2021 11:55:58 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
+ Frontend Transport; Tue, 6 Apr 2021 11:55:58 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 136Gtvuo052410;
+        Tue, 6 Apr 2021 11:55:57 -0500
+Date:   Tue, 6 Apr 2021 22:25:56 +0530
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     =?iso-8859-1?Q?P=E9ter?= Ujfalusi <peter.ujfalusi@gmail.com>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Benoit Parrot <bparrot@ti.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Helen Koike <helen.koike@collabora.com>,
+        Michael Tretter <m.tretter@pengutronix.de>,
+        Peter Chen <peter.chen@nxp.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <dmaengine@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Subject: Re: [PATCH 11/16] dmaengine: ti: k3-psil-j721e: Add entry for CSI2RX
+Message-ID: <20210406165554.5mhn4u5enbf2tvaz@ti.com>
+References: <20210330173348.30135-1-p.yadav@ti.com>
+ <20210330173348.30135-12-p.yadav@ti.com>
+ <78a5983c-04c8-4a4c-04fe-bb1f31e87375@gmail.com>
+ <20210406150942.4kyjh2ehsvklupjr@ti.com>
+ <54b0846e-d633-2a03-2c64-f1f0a85c2410@gmail.com>
 MIME-Version: 1.0
-References: <20210311152545.1317581-1-krzysztof.kozlowski@canonical.com>
- <20210311152545.1317581-9-krzysztof.kozlowski@canonical.com> <20210406160959.GA208060@roeck-us.net>
-In-Reply-To: <20210406160959.GA208060@roeck-us.net>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Date:   Tue, 6 Apr 2021 18:15:13 +0200
-Message-ID: <CA+Eumj6C60r4DF24W2GobwB1GrQADLpm5YXLAzHjcjWmrrsE3g@mail.gmail.com>
-Subject: Re: [PATCH v3 08/15] arm64: socfpga: merge Agilex and N5X into ARCH_INTEL_SOCFPGA
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        soc@kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Moritz Fischer <mdf@kernel.org>, Tom Rix <trix@redhat.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-fpga@vger.kernel.org, linux-i2c@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <54b0846e-d633-2a03-2c64-f1f0a85c2410@gmail.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Tue, 6 Apr 2021 at 18:10, Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On Thu, Mar 11, 2021 at 04:25:38PM +0100, Krzysztof Kozlowski wrote:
-> > Agilex, N5X and Stratix 10 share all quite similar arm64 hard cores and
-> > SoC-part.  Up to a point that N5X uses the same DTSI as Agilex.  From
-> > the Linux kernel point of view these are flavors of the same
-> > architecture so there is no need for three top-level arm64
-> > architectures.  Simplify this by merging all three architectures into
-> > ARCH_INTEL_SOCFPGA and dropping the other ARCH* arm64 Kconfig entries.
-> >
-> > The side effect is that the INTEL_STRATIX10_SERVICE will now be
-> > available for both 32-bit and 64-bit Intel SoCFPGA, even though it is
-> > used only for 64-bit.
->
-> Did you try to compile, say, arm:allmodconfig with this patch applied ?
-> Because for me that results in:
->
-> In file included from <command-line>:
-> drivers/firmware/stratix10-rsu.c: In function 'rsu_status_callback':
-> include/linux/compiler_types.h:320:38: error:
->         call to '__compiletime_assert_177' declared with attribute error:
->         FIELD_GET: type of reg too small for mask
->
-> and lots of similar errors.
+On 06/04/21 06:33PM, Péter Ujfalusi wrote:
+> 
+> 
+> On 4/6/21 6:09 PM, Pratyush Yadav wrote:
+> > On 04/04/21 04:24PM, Péter Ujfalusi wrote:
+> >> Hi Pratyush,
+> >>
+> >> On 3/30/21 8:33 PM, Pratyush Yadav wrote:
+> >>> The CSI2RX subsystem uses PSI-L DMA to transfer frames to memory. It can
+> >>> have up to 32 threads but the current driver only supports using one. So
+> >>> add an entry for that one thread.
+> >>
+> >> If you are absolutely sure that the other threads are not going to be
+> >> used, then:
+> > 
+> > The opposite in fact. I do expect other threads to be used in the 
+> > future. But the current driver can only use one so I figured it is 
+> > better to add just the thread that is currently needed and then I can 
+> > always add the rest later.
+> > 
+> > Why does this have to be a one-and-done deal? Is there anything wrong 
+> > with adding the other threads when the driver can actually use them?
+> 
+> You can skip CCing DMAengine (and me ;) ). Less subsystems is the better
+> when sending patches...
 
-Thanks for the report. I fixed that already with:
-https://lore.kernel.org/lkml/20210321184650.10926-1-krzysztof.kozlowski@canonical.com/
-(and https://lore.kernel.org/lkml/20210404124609.122377-1-dinguyen@kernel.org/ )
-but for some reason it did not go to the same tree.
+I'm a bit confused here. If you are no longer interested in maintaining 
+the TI DMA drivers then that's fine, I can skip CCing you. But the patch 
+is still relevant to the dmaengine list so why should I skip CCing it? 
+And if I don't CC the dmaengine list then on which list would I get 
+comments/reviews for the patch?
 
-Best regards,
-Krzysztof
+> 
+> > 
+> >> Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+> >>
+> >> but I would consider adding the other threads if there is a chance that
+> >> the cs2rx will need to support it in the future.
+> >>
+> >>> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+> >>> ---
+> >>>  drivers/dma/ti/k3-psil-j721e.c | 10 ++++++++++
+> >>>  1 file changed, 10 insertions(+)
+> >>>
+> >>> diff --git a/drivers/dma/ti/k3-psil-j721e.c b/drivers/dma/ti/k3-psil-j721e.c
+> >>> index 7580870ed746..19ffa31e6dc6 100644
+> >>> --- a/drivers/dma/ti/k3-psil-j721e.c
+> >>> +++ b/drivers/dma/ti/k3-psil-j721e.c
+> >>> @@ -58,6 +58,14 @@
+> >>>  		},					\
+> >>>  	}
+> >>>  
+> >>> +#define PSIL_CSI2RX(x)					\
+> >>> +	{						\
+> >>> +		.thread_id = x,				\
+> >>> +		.ep_config = {				\
+> >>> +			.ep_type = PSIL_EP_NATIVE,	\
+> >>> +		},					\
+> >>> +	}
+> >>> +
+> >>>  /* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
+> >>>  static struct psil_ep j721e_src_ep_map[] = {
+> >>>  	/* SA2UL */
+> >>> @@ -138,6 +146,8 @@ static struct psil_ep j721e_src_ep_map[] = {
+> >>>  	PSIL_PDMA_XY_PKT(0x4707),
+> >>>  	PSIL_PDMA_XY_PKT(0x4708),
+> >>>  	PSIL_PDMA_XY_PKT(0x4709),
+> >>> +	/* CSI2RX */
+> >>> +	PSIL_CSI2RX(0x4940),
+> >>>  	/* CPSW9 */
+> >>>  	PSIL_ETHERNET(0x4a00),
+> >>>  	/* CPSW0 */
+> >>>
+> >>
+> >> -- 
+> >> Péter
+> > 
+> 
+> -- 
+> Péter
+
+-- 
+Regards,
+Pratyush Yadav
+Texas Instruments Inc.

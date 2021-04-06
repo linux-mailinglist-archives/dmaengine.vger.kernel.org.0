@@ -2,209 +2,159 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6C2135576E
-	for <lists+dmaengine@lfdr.de>; Tue,  6 Apr 2021 17:11:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F70F35580D
+	for <lists+dmaengine@lfdr.de>; Tue,  6 Apr 2021 17:35:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242317AbhDFPL7 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 6 Apr 2021 11:11:59 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:42958 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242532AbhDFPL6 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 6 Apr 2021 11:11:58 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 136FBWKK052191;
-        Tue, 6 Apr 2021 10:11:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1617721892;
-        bh=6UVsODFZg64LIzShPR6hP24Brbg1HkYTCLhHx1zXPE4=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=MwVV8hp2kbqkcb5f9SL7LeJIDoqcPxxLzislu1O6PA8Y5M/9KsRrAZKDg/iuZ/+ZX
-         8SJJDTrnAZrKBbDhv8qHpH2W+Lm7v54f2pgb0f7zHjFTd09lP5/+O81+BEloFgFj+x
-         rpyorFSC2FjT4PE+S8g7xHzwNblXrd1+HD5Hl+u8=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 136FBWVW086856
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 6 Apr 2021 10:11:32 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Tue, 6 Apr
- 2021 10:11:31 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2 via
- Frontend Transport; Tue, 6 Apr 2021 10:11:31 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 136FBVbg120763;
-        Tue, 6 Apr 2021 10:11:31 -0500
-Date:   Tue, 6 Apr 2021 20:41:30 +0530
-From:   Pratyush Yadav <p.yadav@ti.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        id S243787AbhDFPfI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 6 Apr 2021 11:35:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345791AbhDFPdT (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 6 Apr 2021 11:33:19 -0400
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EC2BC0613DF;
+        Tue,  6 Apr 2021 08:32:56 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id a1so17006815ljp.2;
+        Tue, 06 Apr 2021 08:32:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ezZNk4sv/EZWbQ+FrDDVFe1cGPk81iOpvFjH5bRIvIE=;
+        b=Q/fJsnOqdM/Luj+magEcEmdw1nOnRxNLtMR2wRRPmtFZmCufD35Qwr7VPofLH5GLNl
+         SinibKnUJJQ5SBShGafaQx1pejB1wTZYNnQiN09XeAbGfBR/rzRHcXW3koJip580045T
+         kYD5LjfwG687Hy1bPxNQ/R5QxGjBcfKmrM3Lvp8uI77ZPoHZYNHp3U1o6Vw8qbnY9bwf
+         c4tqwUfvaXwLQYC7x1+XdG6JVhpcsE5YAQw78xx8lYE9VyDU7dJgXYf+j708F42/hBcG
+         05dGvqvhTBPhdhF1VH3TWeFPNC1WsaqqK9ZUCeNpp4B40UQ33w0Ms6QMwlunMXH6Au8a
+         9d3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ezZNk4sv/EZWbQ+FrDDVFe1cGPk81iOpvFjH5bRIvIE=;
+        b=Bb7zUQKSJinDwQLVYAXMfmmzsPpb3DDbv1dK2htY4j7y8rwM/QV36Io6ppFwLeKVRb
+         ffCjKQqIfU/CpcBo7fMJXLEs9CR/9p391+f7VA2vtD5PK29QPONLOqJb+qqDcebWAl/y
+         pHWzLBg9hQBP3E+K9DqYDTfuC/Gao8nF9rrrj2tVG5o0OvNChX9kPlVajg2XH3ECsY1i
+         IEoteh9+rDLo4HQMlRQVeTeJdygxs2WF5IANfzthnltzFnVlXIOBNXhaKrwLetEosulW
+         b64CkQi47SAq5U5hX5g8dXgiiGM95ACnyoDcjgqycqX/rhBCoU4W3AqcEu4oPDd/O1L5
+         I7Tg==
+X-Gm-Message-State: AOAM5333YFEcBHJ4iTT085FYZks16pebZpOQ/lRbi50GMNCn6LsOk6bK
+        kBQdpubKVjwy8qgwVIn54gw=
+X-Google-Smtp-Source: ABdhPJyFQnVLW01zqbivc9dqKMhXgYuxnkRmqSE5gT0eKQlOu9jOiBT2GBXa6Cu06NOk/lEW8XAefQ==
+X-Received: by 2002:a2e:9143:: with SMTP id q3mr19804523ljg.378.1617723175021;
+        Tue, 06 Apr 2021 08:32:55 -0700 (PDT)
+Received: from [10.0.0.42] (91-157-86-200.elisa-laajakaista.fi. [91.157.86.200])
+        by smtp.gmail.com with ESMTPSA id f11sm2251868lfm.230.2021.04.06.08.32.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Apr 2021 08:32:54 -0700 (PDT)
+Subject: Re: [PATCH 11/16] dmaengine: ti: k3-psil-j721e: Add entry for CSI2RX
+To:     Pratyush Yadav <p.yadav@ti.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Kishon Vijay Abraham I <kishon@ti.com>,
         Vinod Koul <vkoul@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
         Maxime Ripard <mripard@kernel.org>,
         Benoit Parrot <bparrot@ti.com>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Alexandre Courbot <acourbot@chromium.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Stanimir Varbanov <stanimir.varbanov@linaro.org>,
         Helen Koike <helen.koike@collabora.com>,
         Michael Tretter <m.tretter@pengutronix.de>,
         Peter Chen <peter.chen@nxp.com>,
         Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <dmaengine@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+        dmaengine@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>,
         Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Subject: Re: [PATCH 10/16] media: cadence: csi2rx: Add wrappers for subdev
- calls
-Message-ID: <20210406151128.etqmcanchvkgspgg@ti.com>
 References: <20210330173348.30135-1-p.yadav@ti.com>
- <20210330173348.30135-11-p.yadav@ti.com>
- <YGb2L7dq0fBma1or@pendragon.ideasonboard.com>
+ <20210330173348.30135-12-p.yadav@ti.com>
+ <78a5983c-04c8-4a4c-04fe-bb1f31e87375@gmail.com>
+ <20210406150942.4kyjh2ehsvklupjr@ti.com>
+From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+Message-ID: <54b0846e-d633-2a03-2c64-f1f0a85c2410@gmail.com>
+Date:   Tue, 6 Apr 2021 18:33:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <YGb2L7dq0fBma1or@pendragon.ideasonboard.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20210406150942.4kyjh2ehsvklupjr@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 02/04/21 01:47PM, Laurent Pinchart wrote:
-> Hi Pratyush,
-> 
-> Thank you for the patch.
 
-Thank you for the review :-)
+
+On 4/6/21 6:09 PM, Pratyush Yadav wrote:
+> On 04/04/21 04:24PM, Péter Ujfalusi wrote:
+>> Hi Pratyush,
+>>
+>> On 3/30/21 8:33 PM, Pratyush Yadav wrote:
+>>> The CSI2RX subsystem uses PSI-L DMA to transfer frames to memory. It can
+>>> have up to 32 threads but the current driver only supports using one. So
+>>> add an entry for that one thread.
+>>
+>> If you are absolutely sure that the other threads are not going to be
+>> used, then:
+> 
+> The opposite in fact. I do expect other threads to be used in the 
+> future. But the current driver can only use one so I figured it is 
+> better to add just the thread that is currently needed and then I can 
+> always add the rest later.
+> 
+> Why does this have to be a one-and-done deal? Is there anything wrong 
+> with adding the other threads when the driver can actually use them?
+
+You can skip CCing DMAengine (and me ;) ). Less subsystems is the better
+when sending patches...
 
 > 
-> On Tue, Mar 30, 2021 at 11:03:42PM +0530, Pratyush Yadav wrote:
-> > When this bridge driver is being user by another platform driver, it
-> > might want to call subdev operations like getting format, setting
-> > format, enumerating format codes, etc. Add wrapper functions that pass
-> > that call through to the sensor.
-> > 
-> > Currently wrappers are added only for the ops used by TI's platform
-> > driver. More can be added later as needed.
+>> Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+>>
+>> but I would consider adding the other threads if there is a chance that
+>> the cs2rx will need to support it in the future.
+>>
+>>> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+>>> ---
+>>>  drivers/dma/ti/k3-psil-j721e.c | 10 ++++++++++
+>>>  1 file changed, 10 insertions(+)
+>>>
+>>> diff --git a/drivers/dma/ti/k3-psil-j721e.c b/drivers/dma/ti/k3-psil-j721e.c
+>>> index 7580870ed746..19ffa31e6dc6 100644
+>>> --- a/drivers/dma/ti/k3-psil-j721e.c
+>>> +++ b/drivers/dma/ti/k3-psil-j721e.c
+>>> @@ -58,6 +58,14 @@
+>>>  		},					\
+>>>  	}
+>>>  
+>>> +#define PSIL_CSI2RX(x)					\
+>>> +	{						\
+>>> +		.thread_id = x,				\
+>>> +		.ep_config = {				\
+>>> +			.ep_type = PSIL_EP_NATIVE,	\
+>>> +		},					\
+>>> +	}
+>>> +
+>>>  /* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
+>>>  static struct psil_ep j721e_src_ep_map[] = {
+>>>  	/* SA2UL */
+>>> @@ -138,6 +146,8 @@ static struct psil_ep j721e_src_ep_map[] = {
+>>>  	PSIL_PDMA_XY_PKT(0x4707),
+>>>  	PSIL_PDMA_XY_PKT(0x4708),
+>>>  	PSIL_PDMA_XY_PKT(0x4709),
+>>> +	/* CSI2RX */
+>>> +	PSIL_CSI2RX(0x4940),
+>>>  	/* CPSW9 */
+>>>  	PSIL_ETHERNET(0x4a00),
+>>>  	/* CPSW0 */
+>>>
+>>
+>> -- 
+>> Péter
 > 
-> This isn't the direction we want to take. For new platforms, propagation
-> of subdev configuration should be handled by userspace, using the V4L2
-> userspace subdev API. This subdev should not call any subdev operation
-> from its source other than .s_stream().
-
-Right. I have replied to Tomi's message about this too. Will move the 
-driver to use the media controller API.
-
-> 
-> > Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
-> > ---
-> >  drivers/media/platform/cadence/cdns-csi2rx.c | 77 ++++++++++++++++++++
-> >  1 file changed, 77 insertions(+)
-> > 
-> > diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c b/drivers/media/platform/cadence/cdns-csi2rx.c
-> > index 3385e1bc213e..2e8bbc53cb8b 100644
-> > --- a/drivers/media/platform/cadence/cdns-csi2rx.c
-> > +++ b/drivers/media/platform/cadence/cdns-csi2rx.c
-> > @@ -408,12 +408,89 @@ static int csi2rx_s_stream(struct v4l2_subdev *subdev, int enable)
-> >  	return ret;
-> >  }
-> >  
-> > +static int csi2rx_g_frame_interval(struct v4l2_subdev *subdev,
-> > +				   struct v4l2_subdev_frame_interval *fi)
-> > +{
-> > +	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(subdev);
-> > +
-> > +	return v4l2_subdev_call(csi2rx->source_subdev, video, g_frame_interval,
-> > +				fi);
-> > +}
-> > +
-> > +static int csi2rx_s_frame_interval(struct v4l2_subdev *subdev,
-> > +				   struct v4l2_subdev_frame_interval *fi)
-> > +{
-> > +	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(subdev);
-> > +
-> > +	return v4l2_subdev_call(csi2rx->source_subdev, video, s_frame_interval,
-> > +				fi);
-> > +}
-> > +
-> > +static int csi2rx_enum_mbus_code(struct v4l2_subdev *subdev,
-> > +				 struct v4l2_subdev_pad_config *cfg,
-> > +				 struct v4l2_subdev_mbus_code_enum *code)
-> > +{
-> > +	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(subdev);
-> > +
-> > +	return v4l2_subdev_call(csi2rx->source_subdev, pad, enum_mbus_code,
-> > +				cfg, code);
-> > +}
-> > +
-> > +static int csi2rx_get_fmt(struct v4l2_subdev *subdev,
-> > +			  struct v4l2_subdev_pad_config *cfg,
-> > +			  struct v4l2_subdev_format *fmt)
-> > +{
-> > +	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(subdev);
-> > +
-> > +	return v4l2_subdev_call(csi2rx->source_subdev, pad, get_fmt, cfg, fmt);
-> > +}
-> > +
-> > +static int csi2rx_set_fmt(struct v4l2_subdev *subdev,
-> > +			  struct v4l2_subdev_pad_config *cfg,
-> > +			  struct v4l2_subdev_format *fmt)
-> > +{
-> > +	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(subdev);
-> > +
-> > +	return v4l2_subdev_call(csi2rx->source_subdev, pad, set_fmt, cfg, fmt);
-> > +}
-> > +
-> > +static int csi2rx_enum_frame_size(struct v4l2_subdev *subdev,
-> > +				  struct v4l2_subdev_pad_config *cfg,
-> > +				  struct v4l2_subdev_frame_size_enum *fse)
-> > +{
-> > +	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(subdev);
-> > +
-> > +	return v4l2_subdev_call(csi2rx->source_subdev, pad, enum_frame_size,
-> > +				cfg, fse);
-> > +}
-> > +
-> > +static int csi2rx_enum_frame_interval(struct v4l2_subdev *subdev,
-> > +				      struct v4l2_subdev_pad_config *cfg,
-> > +				      struct v4l2_subdev_frame_interval_enum *fie)
-> > +{
-> > +	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(subdev);
-> > +
-> > +	return v4l2_subdev_call(csi2rx->source_subdev, pad, enum_frame_interval,
-> > +				cfg, fie);
-> > +}
-> > +
-> >  static const struct v4l2_subdev_video_ops csi2rx_video_ops = {
-> >  	.s_stream	= csi2rx_s_stream,
-> > +	.g_frame_interval = csi2rx_g_frame_interval,
-> > +	.s_frame_interval = csi2rx_s_frame_interval,
-> > +};
-> > +
-> > +static const struct v4l2_subdev_pad_ops csi2rx_pad_ops = {
-> > +	.enum_mbus_code = csi2rx_enum_mbus_code,
-> > +	.get_fmt	= csi2rx_get_fmt,
-> > +	.set_fmt	= csi2rx_set_fmt,
-> > +	.enum_frame_size = csi2rx_enum_frame_size,
-> > +	.enum_frame_interval = csi2rx_enum_frame_interval,
-> >  };
-> >  
-> >  static const struct v4l2_subdev_ops csi2rx_subdev_ops = {
-> >  	.video		= &csi2rx_video_ops,
-> > +	.pad		= &csi2rx_pad_ops,
-> >  };
-> >  
-> >  static int csi2rx_async_bound(struct v4l2_async_notifier *notifier,
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
 
 -- 
-Regards,
-Pratyush Yadav
-Texas Instruments Inc.
+Péter

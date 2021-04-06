@@ -2,159 +2,270 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F70F35580D
-	for <lists+dmaengine@lfdr.de>; Tue,  6 Apr 2021 17:35:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 521093558E0
+	for <lists+dmaengine@lfdr.de>; Tue,  6 Apr 2021 18:10:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243787AbhDFPfI (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 6 Apr 2021 11:35:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57198 "EHLO
+        id S238920AbhDFQKM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 6 Apr 2021 12:10:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345791AbhDFPdT (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 6 Apr 2021 11:33:19 -0400
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EC2BC0613DF;
-        Tue,  6 Apr 2021 08:32:56 -0700 (PDT)
-Received: by mail-lj1-x22d.google.com with SMTP id a1so17006815ljp.2;
-        Tue, 06 Apr 2021 08:32:56 -0700 (PDT)
+        with ESMTP id S233506AbhDFQKJ (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 6 Apr 2021 12:10:09 -0400
+Received: from mail-oi1-x234.google.com (mail-oi1-x234.google.com [IPv6:2607:f8b0:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A254FC06174A;
+        Tue,  6 Apr 2021 09:10:01 -0700 (PDT)
+Received: by mail-oi1-x234.google.com with SMTP id x2so15660594oiv.2;
+        Tue, 06 Apr 2021 09:10:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ezZNk4sv/EZWbQ+FrDDVFe1cGPk81iOpvFjH5bRIvIE=;
-        b=Q/fJsnOqdM/Luj+magEcEmdw1nOnRxNLtMR2wRRPmtFZmCufD35Qwr7VPofLH5GLNl
-         SinibKnUJJQ5SBShGafaQx1pejB1wTZYNnQiN09XeAbGfBR/rzRHcXW3koJip580045T
-         kYD5LjfwG687Hy1bPxNQ/R5QxGjBcfKmrM3Lvp8uI77ZPoHZYNHp3U1o6Vw8qbnY9bwf
-         c4tqwUfvaXwLQYC7x1+XdG6JVhpcsE5YAQw78xx8lYE9VyDU7dJgXYf+j708F42/hBcG
-         05dGvqvhTBPhdhF1VH3TWeFPNC1WsaqqK9ZUCeNpp4B40UQ33w0Ms6QMwlunMXH6Au8a
-         9d3Q==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=70/WXuRSOVM+Cc9ViyI6lDUSxH+eDXC41IovFsWbeYs=;
+        b=mZHPqUim93e/5u+URkvc/Ye1e5GK97PBlzfwKox4sOBT0lN+SkMyIKlSxqOOXncrAK
+         6vC4G+ZyvQX97b1+02ESEbKpWxy6wpdVgcvS3TML68NHexPqdOTJYcS2owuFsU4G/IQw
+         2m6PgS4O+foYkxYMBeufP2rbxsFCpYuGbB+YZgt6f42vITYALda/lf2H3CFixXYuqAVN
+         Qot5vsNWbluJqtZuxX7JwGE2pWMkl7cmc3V4dMSdVzMMp07mI8uZbBp0dyzbOk4mRjfO
+         NMLENOqxmZvhSEPNuzYgXh1CIdskUDOAzniyiTPpp+6SJZhlzYwHIn0rsE4GObpAQKPP
+         CJsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ezZNk4sv/EZWbQ+FrDDVFe1cGPk81iOpvFjH5bRIvIE=;
-        b=Bb7zUQKSJinDwQLVYAXMfmmzsPpb3DDbv1dK2htY4j7y8rwM/QV36Io6ppFwLeKVRb
-         ffCjKQqIfU/CpcBo7fMJXLEs9CR/9p391+f7VA2vtD5PK29QPONLOqJb+qqDcebWAl/y
-         pHWzLBg9hQBP3E+K9DqYDTfuC/Gao8nF9rrrj2tVG5o0OvNChX9kPlVajg2XH3ECsY1i
-         IEoteh9+rDLo4HQMlRQVeTeJdygxs2WF5IANfzthnltzFnVlXIOBNXhaKrwLetEosulW
-         b64CkQi47SAq5U5hX5g8dXgiiGM95ACnyoDcjgqycqX/rhBCoU4W3AqcEu4oPDd/O1L5
-         I7Tg==
-X-Gm-Message-State: AOAM5333YFEcBHJ4iTT085FYZks16pebZpOQ/lRbi50GMNCn6LsOk6bK
-        kBQdpubKVjwy8qgwVIn54gw=
-X-Google-Smtp-Source: ABdhPJyFQnVLW01zqbivc9dqKMhXgYuxnkRmqSE5gT0eKQlOu9jOiBT2GBXa6Cu06NOk/lEW8XAefQ==
-X-Received: by 2002:a2e:9143:: with SMTP id q3mr19804523ljg.378.1617723175021;
-        Tue, 06 Apr 2021 08:32:55 -0700 (PDT)
-Received: from [10.0.0.42] (91-157-86-200.elisa-laajakaista.fi. [91.157.86.200])
-        by smtp.gmail.com with ESMTPSA id f11sm2251868lfm.230.2021.04.06.08.32.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Apr 2021 08:32:54 -0700 (PDT)
-Subject: Re: [PATCH 11/16] dmaengine: ti: k3-psil-j721e: Add entry for CSI2RX
-To:     Pratyush Yadav <p.yadav@ti.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Benoit Parrot <bparrot@ti.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Helen Koike <helen.koike@collabora.com>,
-        Michael Tretter <m.tretter@pengutronix.de>,
-        Peter Chen <peter.chen@nxp.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-        dmaengine@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-References: <20210330173348.30135-1-p.yadav@ti.com>
- <20210330173348.30135-12-p.yadav@ti.com>
- <78a5983c-04c8-4a4c-04fe-bb1f31e87375@gmail.com>
- <20210406150942.4kyjh2ehsvklupjr@ti.com>
-From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
-Message-ID: <54b0846e-d633-2a03-2c64-f1f0a85c2410@gmail.com>
-Date:   Tue, 6 Apr 2021 18:33:54 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=70/WXuRSOVM+Cc9ViyI6lDUSxH+eDXC41IovFsWbeYs=;
+        b=AkA7rHEAi0e2dGCbv3tk0Wcbf7jyO6RkDB8d8ODgi371c9rFYrDEHlQ6ngY6FdHVCX
+         VhlIsCWGeq6rDZERGFfK2zZC3fxKYUV7O1JhGlGd3qhQ0enCoiA7L0GoNrgGSMxsTvPV
+         AXiMVerjHndyMTdxnmX5snLEMAig6y+sDlTLU5xpQAuQAbBsF/rDt97wKciOul6cWqa+
+         HEyxE2mvJW28J/R4wNX+7vG6h/91TlRXrxAewB9qUGaH3meXEeBE3tCu9JWvm4U7p/xA
+         g8tQtoPZtDB5E/zW3l02ZEb4OSM0zRTyEmdlChpwUM63QUCbwBzVTtj2w7X+S5HgIBhH
+         QhIQ==
+X-Gm-Message-State: AOAM531uEE1igVyMS5icD3EqClKlGxN6s8TNkjzDgB+D0lQWoWLtBPYT
+        QSuCQPHgUw+sqfAo91h9las=
+X-Google-Smtp-Source: ABdhPJw+oRcabyeXlR7veCmXYel+3+bxwvoQzsVviymeaR2MbFVB6NWM8xsX1yZHtzLpbix2jLBDXA==
+X-Received: by 2002:aca:4187:: with SMTP id o129mr3872937oia.10.1617725401042;
+        Tue, 06 Apr 2021 09:10:01 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r22sm4644989otg.4.2021.04.06.09.10.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 06 Apr 2021 09:10:00 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Tue, 6 Apr 2021 09:09:59 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        soc@kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Moritz Fischer <mdf@kernel.org>, Tom Rix <trix@redhat.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-i2c@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v3 08/15] arm64: socfpga: merge Agilex and N5X into
+ ARCH_INTEL_SOCFPGA
+Message-ID: <20210406160959.GA208060@roeck-us.net>
+References: <20210311152545.1317581-1-krzysztof.kozlowski@canonical.com>
+ <20210311152545.1317581-9-krzysztof.kozlowski@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20210406150942.4kyjh2ehsvklupjr@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210311152545.1317581-9-krzysztof.kozlowski@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-
-On 4/6/21 6:09 PM, Pratyush Yadav wrote:
-> On 04/04/21 04:24PM, Péter Ujfalusi wrote:
->> Hi Pratyush,
->>
->> On 3/30/21 8:33 PM, Pratyush Yadav wrote:
->>> The CSI2RX subsystem uses PSI-L DMA to transfer frames to memory. It can
->>> have up to 32 threads but the current driver only supports using one. So
->>> add an entry for that one thread.
->>
->> If you are absolutely sure that the other threads are not going to be
->> used, then:
+On Thu, Mar 11, 2021 at 04:25:38PM +0100, Krzysztof Kozlowski wrote:
+> Agilex, N5X and Stratix 10 share all quite similar arm64 hard cores and
+> SoC-part.  Up to a point that N5X uses the same DTSI as Agilex.  From
+> the Linux kernel point of view these are flavors of the same
+> architecture so there is no need for three top-level arm64
+> architectures.  Simplify this by merging all three architectures into
+> ARCH_INTEL_SOCFPGA and dropping the other ARCH* arm64 Kconfig entries.
 > 
-> The opposite in fact. I do expect other threads to be used in the 
-> future. But the current driver can only use one so I figured it is 
-> better to add just the thread that is currently needed and then I can 
-> always add the rest later.
-> 
-> Why does this have to be a one-and-done deal? Is there anything wrong 
-> with adding the other threads when the driver can actually use them?
+> The side effect is that the INTEL_STRATIX10_SERVICE will now be
+> available for both 32-bit and 64-bit Intel SoCFPGA, even though it is
+> used only for 64-bit.
 
-You can skip CCing DMAengine (and me ;) ). Less subsystems is the better
-when sending patches...
+Did you try to compile, say, arm:allmodconfig with this patch applied ?
+Because for me that results in:
+
+In file included from <command-line>:
+drivers/firmware/stratix10-rsu.c: In function 'rsu_status_callback':
+include/linux/compiler_types.h:320:38: error:
+	call to '__compiletime_assert_177' declared with attribute error:
+	FIELD_GET: type of reg too small for mask
+
+and lots of similar errors.
+
+Guenter
 
 > 
->> Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
->>
->> but I would consider adding the other threads if there is a chance that
->> the cs2rx will need to support it in the future.
->>
->>> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
->>> ---
->>>  drivers/dma/ti/k3-psil-j721e.c | 10 ++++++++++
->>>  1 file changed, 10 insertions(+)
->>>
->>> diff --git a/drivers/dma/ti/k3-psil-j721e.c b/drivers/dma/ti/k3-psil-j721e.c
->>> index 7580870ed746..19ffa31e6dc6 100644
->>> --- a/drivers/dma/ti/k3-psil-j721e.c
->>> +++ b/drivers/dma/ti/k3-psil-j721e.c
->>> @@ -58,6 +58,14 @@
->>>  		},					\
->>>  	}
->>>  
->>> +#define PSIL_CSI2RX(x)					\
->>> +	{						\
->>> +		.thread_id = x,				\
->>> +		.ep_config = {				\
->>> +			.ep_type = PSIL_EP_NATIVE,	\
->>> +		},					\
->>> +	}
->>> +
->>>  /* PSI-L source thread IDs, used for RX (DMA_DEV_TO_MEM) */
->>>  static struct psil_ep j721e_src_ep_map[] = {
->>>  	/* SA2UL */
->>> @@ -138,6 +146,8 @@ static struct psil_ep j721e_src_ep_map[] = {
->>>  	PSIL_PDMA_XY_PKT(0x4707),
->>>  	PSIL_PDMA_XY_PKT(0x4708),
->>>  	PSIL_PDMA_XY_PKT(0x4709),
->>> +	/* CSI2RX */
->>> +	PSIL_CSI2RX(0x4940),
->>>  	/* CPSW9 */
->>>  	PSIL_ETHERNET(0x4a00),
->>>  	/* CPSW0 */
->>>
->>
->> -- 
->> Péter
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> ---
+>  arch/arm64/Kconfig.platforms       | 21 ++++-----------------
+>  arch/arm64/boot/dts/intel/Makefile |  6 +++---
+>  arch/arm64/configs/defconfig       |  3 +--
+>  drivers/clk/Makefile               |  2 --
+>  drivers/clk/socfpga/Kconfig        |  4 ++--
+>  drivers/firmware/Kconfig           |  2 +-
+>  drivers/fpga/Kconfig               |  2 +-
+>  drivers/reset/Kconfig              |  2 +-
+>  8 files changed, 13 insertions(+), 29 deletions(-)
 > 
-
--- 
-Péter
+> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> index ecab67a1afb8..ce50dd129eec 100644
+> --- a/arch/arm64/Kconfig.platforms
+> +++ b/arch/arm64/Kconfig.platforms
+> @@ -8,16 +8,6 @@ config ARCH_ACTIONS
+>  	help
+>  	  This enables support for the Actions Semiconductor S900 SoC family.
+>  
+> -config ARCH_AGILEX
+> -	bool "Intel's Agilex SoCFPGA Family"
+> -	help
+> -	  This enables support for Intel's Agilex SoCFPGA Family.
+> -
+> -config ARCH_N5X
+> -	bool "Intel's eASIC N5X SoCFPGA Family"
+> -	help
+> -	  This enables support for Intel's eASIC N5X SoCFPGA Family.
+> -
+>  config ARCH_SUNXI
+>  	bool "Allwinner sunxi 64-bit SoC Family"
+>  	select ARCH_HAS_RESET_CONTROLLER
+> @@ -254,14 +244,11 @@ config ARCH_SEATTLE
+>  	help
+>  	  This enables support for AMD Seattle SOC Family
+>  
+> -config ARCH_STRATIX10
+> -	bool "Altera's Stratix 10 SoCFPGA Family"
+> -	select ARCH_INTEL_SOCFPGA
+> -	help
+> -	  This enables support for Altera's Stratix 10 SoCFPGA Family.
+> -
+>  config ARCH_INTEL_SOCFPGA
+> -	bool
+> +	bool "Intel's SoCFPGA ARMv8 Families"
+> +	help
+> +	  This enables support for Intel's SoCFPGA ARMv8 families:
+> +	  Stratix 10 (ex. Altera), Agilex and eASIC N5X.
+>  
+>  config ARCH_SYNQUACER
+>  	bool "Socionext SynQuacer SoC Family"
+> diff --git a/arch/arm64/boot/dts/intel/Makefile b/arch/arm64/boot/dts/intel/Makefile
+> index 3a052540605b..0b5477442263 100644
+> --- a/arch/arm64/boot/dts/intel/Makefile
+> +++ b/arch/arm64/boot/dts/intel/Makefile
+> @@ -1,5 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> -dtb-$(CONFIG_ARCH_AGILEX) += socfpga_agilex_socdk.dtb \
+> -			     socfpga_agilex_socdk_nand.dtb
+> +dtb-$(CONFIG_ARCH_INTEL_SOCFPGA) += socfpga_agilex_socdk.dtb \
+> +				socfpga_agilex_socdk_nand.dtb \
+> +				socfpga_n5x_socdk.dtb
+>  dtb-$(CONFIG_ARCH_KEEMBAY) += keembay-evm.dtb
+> -dtb-$(CONFIG_ARCH_N5X) += socfpga_n5x_socdk.dtb
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index d612f633b771..cf8a3009b858 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -28,7 +28,6 @@ CONFIG_KALLSYMS_ALL=y
+>  # CONFIG_COMPAT_BRK is not set
+>  CONFIG_PROFILING=y
+>  CONFIG_ARCH_ACTIONS=y
+> -CONFIG_ARCH_AGILEX=y
+>  CONFIG_ARCH_SUNXI=y
+>  CONFIG_ARCH_ALPINE=y
+>  CONFIG_ARCH_BCM2835=y
+> @@ -50,7 +49,7 @@ CONFIG_ARCH_RENESAS=y
+>  CONFIG_ARCH_ROCKCHIP=y
+>  CONFIG_ARCH_S32=y
+>  CONFIG_ARCH_SEATTLE=y
+> -CONFIG_ARCH_STRATIX10=y
+> +CONFIG_ARCH_INTEL_SOCFPGA=y
+>  CONFIG_ARCH_SYNQUACER=y
+>  CONFIG_ARCH_TEGRA=y
+>  CONFIG_ARCH_SPRD=y
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index 1e29e5ad107a..96802294d35a 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -105,8 +105,6 @@ obj-$(CONFIG_ARCH_ROCKCHIP)		+= rockchip/
+>  obj-$(CONFIG_COMMON_CLK_SAMSUNG)	+= samsung/
+>  obj-$(CONFIG_CLK_SIFIVE)		+= sifive/
+>  obj-$(CONFIG_ARCH_INTEL_SOCFPGA)	+= socfpga/
+> -obj-$(CONFIG_ARCH_AGILEX)		+= socfpga/
+> -obj-$(CONFIG_ARCH_N5X)			+= socfpga/
+>  obj-$(CONFIG_PLAT_SPEAR)		+= spear/
+>  obj-y					+= sprd/
+>  obj-$(CONFIG_ARCH_STI)			+= st/
+> diff --git a/drivers/clk/socfpga/Kconfig b/drivers/clk/socfpga/Kconfig
+> index bc102e0f0be0..b6c5b9737174 100644
+> --- a/drivers/clk/socfpga/Kconfig
+> +++ b/drivers/clk/socfpga/Kconfig
+> @@ -2,5 +2,5 @@
+>  config CLK_INTEL_SOCFPGA64
+>  	bool
+>  	# Intel Stratix / Agilex / N5X clock controller support
+> -	default (ARCH_AGILEX || ARCH_N5X || ARCH_STRATIX10)
+> -	depends on ARCH_AGILEX || ARCH_N5X || ARCH_STRATIX10
+> +	default ARM64 && ARCH_INTEL_SOCFPGA
+> +	depends on ARM64 && ARCH_INTEL_SOCFPGA
+> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+> index 3f14dffb9669..6a4e882e448d 100644
+> --- a/drivers/firmware/Kconfig
+> +++ b/drivers/firmware/Kconfig
+> @@ -206,7 +206,7 @@ config FW_CFG_SYSFS_CMDLINE
+>  
+>  config INTEL_STRATIX10_SERVICE
+>  	tristate "Intel Stratix10 Service Layer"
+> -	depends on (ARCH_STRATIX10 || ARCH_AGILEX) && HAVE_ARM_SMCCC
+> +	depends on ARCH_INTEL_SOCFPGA && HAVE_ARM_SMCCC
+>  	default n
+>  	help
+>  	  Intel Stratix10 service layer runs at privileged exception level,
+> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+> index 5ff9438b7b46..fd325e9c5ce6 100644
+> --- a/drivers/fpga/Kconfig
+> +++ b/drivers/fpga/Kconfig
+> @@ -60,7 +60,7 @@ config FPGA_MGR_ZYNQ_FPGA
+>  
+>  config FPGA_MGR_STRATIX10_SOC
+>  	tristate "Intel Stratix10 SoC FPGA Manager"
+> -	depends on (ARCH_STRATIX10 && INTEL_STRATIX10_SERVICE)
+> +	depends on (ARCH_INTEL_SOCFPGA && INTEL_STRATIX10_SERVICE)
+>  	help
+>  	  FPGA manager driver support for the Intel Stratix10 SoC.
+>  
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index 4171c6f76385..b1e8efa16166 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -183,7 +183,7 @@ config RESET_SCMI
+>  
+>  config RESET_SIMPLE
+>  	bool "Simple Reset Controller Driver" if COMPILE_TEST
+> -	default ARCH_AGILEX || ARCH_ASPEED || ARCH_BCM4908 || ARCH_BITMAIN || ARCH_REALTEK || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARC
+> +	default ARCH_ASPEED || ARCH_BCM4908 || ARCH_BITMAIN || ARCH_REALTEK || ARCH_STM32 || (ARCH_INTEL_SOCFPGA && ARM64) || ARCH_SUNXI || ARC
+>  	help
+>  	  This enables a simple reset controller driver for reset lines that
+>  	  that can be asserted and deasserted by toggling bits in a contiguous,
+> -- 
+> 2.25.1
+> 

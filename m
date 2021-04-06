@@ -2,74 +2,69 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6949F35493A
-	for <lists+dmaengine@lfdr.de>; Tue,  6 Apr 2021 01:31:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71B73354F04
+	for <lists+dmaengine@lfdr.de>; Tue,  6 Apr 2021 10:50:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241536AbhDEXbR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 5 Apr 2021 19:31:17 -0400
-Received: from mga09.intel.com ([134.134.136.24]:2946 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237964AbhDEXbQ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 5 Apr 2021 19:31:16 -0400
-IronPort-SDR: BWprA6bsk+sinE3KzrGI8pG/cbPQKEJ6r3cFx8zC/y0Ogk0OB+dYawz92h6rSplfGEcs87ZMZ3
- 3fiVEdsdQLcg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9945"; a="193056498"
-X-IronPort-AV: E=Sophos;i="5.81,307,1610438400"; 
-   d="scan'208";a="193056498"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2021 16:31:09 -0700
-IronPort-SDR: 34fJnRXCX11uOz9Fy+2XL/B3aG5x89X4cL2o48cYTPpI9z89I/R6xiyuNS3VnAjxHG4kLjGV9F
- kj5QOu4e3Tfg==
-X-IronPort-AV: E=Sophos;i="5.81,307,1610438400"; 
-   d="scan'208";a="447604995"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.254.114.157]) ([10.254.114.157])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2021 16:31:08 -0700
-Subject: Re: [PATCH] dmaengine: idxd: make idxd_name constant
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org
-References: <161314339610.2231590.18332704779939143434.stgit@djiang5-desk3.ch.intel.com>
-Message-ID: <7888116b-4d77-17ee-c79a-73a3b602d099@intel.com>
-Date:   Mon, 5 Apr 2021 16:31:06 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+        id S244591AbhDFIvE (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 6 Apr 2021 04:51:04 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:15553 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232593AbhDFIvE (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 6 Apr 2021 04:51:04 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4FF1Q21CjHzPnc2;
+        Tue,  6 Apr 2021 16:48:10 +0800 (CST)
+Received: from localhost (10.174.179.96) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.498.0; Tue, 6 Apr 2021
+ 16:50:47 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <ludovic.desroches@microchip.com>, <tudor.ambarus@microchip.com>,
+        <vkoul@kernel.org>, <eugen.hristev@microchip.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] dmaengine: at_xdmac: Remove unused inline function at_xdmac_csize()
+Date:   Tue, 6 Apr 2021 16:50:43 +0800
+Message-ID: <20210406085043.32544-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <161314339610.2231590.18332704779939143434.stgit@djiang5-desk3.ch.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.96]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+765c37d87669 ("dmaengine: at_xdmac: rework slave configuration part")
+left behind this, so can remove it.
 
-On 2/12/2021 8:23 AM, Dave Jiang wrote:
-> idxd_name is a string table and should be constant.
->
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/dma/at_xdmac.c | 11 -----------
+ 1 file changed, 11 deletions(-)
 
-This patch can be dropped. It's no longer relevant with this patch.
+diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+index fe45ad5d06c4..64a52bf4d737 100644
+--- a/drivers/dma/at_xdmac.c
++++ b/drivers/dma/at_xdmac.c
+@@ -344,17 +344,6 @@ static inline int at_xdmac_chan_is_paused(struct at_xdmac_chan *atchan)
+ 	return test_bit(AT_XDMAC_CHAN_IS_PAUSED, &atchan->status);
+ }
+ 
+-static inline int at_xdmac_csize(u32 maxburst)
+-{
+-	int csize;
+-
+-	csize = ffs(maxburst) - 1;
+-	if (csize > 4)
+-		csize = -EINVAL;
+-
+-	return csize;
+-};
+-
+ static inline bool at_xdmac_chan_is_peripheral_xfer(u32 cfg)
+ {
+ 	return cfg & AT_XDMAC_CC_TYPE_PER_TRAN;
+-- 
+2.17.1
 
-https://lore.kernel.org/dmaengine/161739347672.2945060.13854255339674044108.stgit@djiang5-desk3.ch.intel.com/T/#u
-
-
-
-> ---
->   drivers/dma/idxd/init.c |    2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-> index 1df624eee6db..7fa147b1d29e 100644
-> --- a/drivers/dma/idxd/init.c
-> +++ b/drivers/dma/idxd/init.c
-> @@ -47,7 +47,7 @@ static struct pci_device_id idxd_pci_tbl[] = {
->   };
->   MODULE_DEVICE_TABLE(pci, idxd_pci_tbl);
->   
-> -static char *idxd_name[] = {
-> +static const char * const idxd_name[] = {
->   	"dsa",
->   	"iax"
->   };
->
->

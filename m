@@ -2,72 +2,184 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B0AF356D3F
-	for <lists+dmaengine@lfdr.de>; Wed,  7 Apr 2021 15:25:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0EDF357539
+	for <lists+dmaengine@lfdr.de>; Wed,  7 Apr 2021 21:54:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232981AbhDGN0H (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 7 Apr 2021 09:26:07 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:15948 "EHLO
-        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232301AbhDGN0G (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 7 Apr 2021 09:26:06 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4FFlTX34kSzyNB3;
-        Wed,  7 Apr 2021 21:23:44 +0800 (CST)
-Received: from localhost (10.174.179.96) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.498.0; Wed, 7 Apr 2021
- 21:25:47 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <ludovic.desroches@microchip.com>, <tudor.ambarus@microchip.com>,
-        <vkoul@kernel.org>, <eugen.hristev@microchip.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2 -next] dmaengine: at_xdmac: Remove unused inline function at_xdmac_csize()
-Date:   Wed, 7 Apr 2021 21:25:43 +0800
-Message-ID: <20210407132543.23652-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S235904AbhDGTy5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 7 Apr 2021 15:54:57 -0400
+Received: from mga03.intel.com ([134.134.136.65]:56888 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233205AbhDGTyz (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 7 Apr 2021 15:54:55 -0400
+IronPort-SDR: XlANkbp2f4utYePHEJTRoDz/nc7NqiJUG8OB8EvNEJQH+pSKEXEDKQTww+/cnVxJ1rKwHjGwbA
+ hL76TZmlbitg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9947"; a="193430192"
+X-IronPort-AV: E=Sophos;i="5.82,203,1613462400"; 
+   d="scan'208";a="193430192"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2021 12:54:45 -0700
+IronPort-SDR: 1qCa0UrwSTE7L9h/7wUZIMUb0Kmlfjlt3/wHDBEgpRt1sOaenx7/SPaL/PSvguLrwez9NElcKK
+ 2TBiSSoq50vw==
+X-IronPort-AV: E=Sophos;i="5.82,203,1613462400"; 
+   d="scan'208";a="448375741"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.254.185.156]) ([10.254.185.156])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2021 12:54:44 -0700
+Subject: Re: [PATCH v3] dmaengine: idxd: fix wq cleanup of WQCFG registers
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     vkoul@kernel.org
+Cc:     Shreenivaas Devarajan <shreenivaas.devarajan@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+References: <161782510285.106717.15904886797025412090.stgit@djiang5-desk3.ch.intel.com>
+Message-ID: <cb946c24-5e69-e237-d62f-8fbdc3852463@intel.com>
+Date:   Wed, 7 Apr 2021 12:54:43 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.179.96]
-X-CFilter-Loop: Reflected
+In-Reply-To: <161782510285.106717.15904886797025412090.stgit@djiang5-desk3.ch.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-commit 765c37d87669 ("dmaengine: at_xdmac: rework slave configuration part")
-left behind this, so can remove it.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
----
-v2: Fix commit log
----
- drivers/dma/at_xdmac.c | 11 -----------
- 1 file changed, 11 deletions(-)
+On 4/7/2021 12:52 PM, Dave Jiang wrote:
+> A pre-release silicon erratum workaround where wq reset does not clear
+> WQCFG registers was leaked into upstream code. Use wq reset command
+> instead of blasting the MMIO region. This also address an issue where
+> we clobber registers in future devices.
+>
+> Fixes: da32b28c95a7 ("dmaengine: idxd: cleanup workqueue config after disabling")
+> Reported-by: Shreenivaas Devarajan <shreenivaas.devarajan@intel.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+> v3:
+> - Remove unused vars
+> v2:
+> - Set IDXD_WQ_DISABLED for internal state after reset.
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index fe45ad5d06c4..64a52bf4d737 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -344,17 +344,6 @@ static inline int at_xdmac_chan_is_paused(struct at_xdmac_chan *atchan)
- 	return test_bit(AT_XDMAC_CHAN_IS_PAUSED, &atchan->status);
- }
- 
--static inline int at_xdmac_csize(u32 maxburst)
--{
--	int csize;
--
--	csize = ffs(maxburst) - 1;
--	if (csize > 4)
--		csize = -EINVAL;
--
--	return csize;
--};
--
- static inline bool at_xdmac_chan_is_peripheral_xfer(u32 cfg)
- {
- 	return cfg & AT_XDMAC_CC_TYPE_PER_TRAN;
--- 
-2.17.1
+Forgot to set cc to dmaengine@vger
 
+
+
+>
+>   drivers/dma/idxd/device.c |   36 +++++++++++++++++++++++++-----------
+>   drivers/dma/idxd/idxd.h   |    1 +
+>   drivers/dma/idxd/sysfs.c  |    9 ++-------
+>   3 files changed, 28 insertions(+), 18 deletions(-)
+>
+> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+> index b8939e7eccfb..eb313e0e0e9b 100644
+> --- a/drivers/dma/idxd/device.c
+> +++ b/drivers/dma/idxd/device.c
+> @@ -276,6 +276,23 @@ void idxd_wq_drain(struct idxd_wq *wq)
+>   	idxd_cmd_exec(idxd, IDXD_CMD_DRAIN_WQ, operand, NULL);
+>   }
+>   
+> +void idxd_wq_reset(struct idxd_wq *wq)
+> +{
+> +	struct idxd_device *idxd = wq->idxd;
+> +	struct device *dev = &idxd->pdev->dev;
+> +	u32 operand;
+> +
+> +	if (wq->state != IDXD_WQ_ENABLED) {
+> +		dev_dbg(dev, "WQ %d in wrong state: %d\n", wq->id, wq->state);
+> +		return;
+> +	}
+> +
+> +	dev_dbg(dev, "Resetting WQ %d\n", wq->id);
+> +	operand = BIT(wq->id % 16) | ((wq->id / 16) << 16);
+> +	idxd_cmd_exec(idxd, IDXD_CMD_RESET_WQ, operand, NULL);
+> +	wq->state = IDXD_WQ_DISABLED;
+> +}
+> +
+>   int idxd_wq_map_portal(struct idxd_wq *wq)
+>   {
+>   	struct idxd_device *idxd = wq->idxd;
+> @@ -357,8 +374,6 @@ int idxd_wq_disable_pasid(struct idxd_wq *wq)
+>   void idxd_wq_disable_cleanup(struct idxd_wq *wq)
+>   {
+>   	struct idxd_device *idxd = wq->idxd;
+> -	struct device *dev = &idxd->pdev->dev;
+> -	int i, wq_offset;
+>   
+>   	lockdep_assert_held(&idxd->dev_lock);
+>   	memset(wq->wqcfg, 0, idxd->wqcfg_size);
+> @@ -370,14 +385,6 @@ void idxd_wq_disable_cleanup(struct idxd_wq *wq)
+>   	wq->ats_dis = 0;
+>   	clear_bit(WQ_FLAG_DEDICATED, &wq->flags);
+>   	memset(wq->name, 0, WQ_NAME_SIZE);
+> -
+> -	for (i = 0; i < WQCFG_STRIDES(idxd); i++) {
+> -		wq_offset = WQCFG_OFFSET(idxd, wq->id, i);
+> -		iowrite32(0, idxd->reg_base + wq_offset);
+> -		dev_dbg(dev, "WQ[%d][%d][%#x]: %#x\n",
+> -			wq->id, i, wq_offset,
+> -			ioread32(idxd->reg_base + wq_offset));
+> -	}
+>   }
+>   
+>   /* Device control bits */
+> @@ -636,7 +643,14 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
+>   	if (!wq->group)
+>   		return 0;
+>   
+> -	memset(wq->wqcfg, 0, idxd->wqcfg_size);
+> +	/*
+> +	 * Instead of memset the entire shadow copy of WQCFG, copy from the hardware after
+> +	 * wq reset. This will copy back the sticky values that are present on some devices.
+> +	 */
+> +	for (i = 0; i < WQCFG_STRIDES(idxd); i++) {
+> +		wq_offset = WQCFG_OFFSET(idxd, wq->id, i);
+> +		wq->wqcfg->bits[i] = ioread32(idxd->reg_base + wq_offset);
+> +	}
+>   
+>   	/* byte 0-3 */
+>   	wq->wqcfg->wq_size = wq->size;
+> diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+> index eee94121991e..21aa6e2017c8 100644
+> --- a/drivers/dma/idxd/idxd.h
+> +++ b/drivers/dma/idxd/idxd.h
+> @@ -387,6 +387,7 @@ void idxd_wq_free_resources(struct idxd_wq *wq);
+>   int idxd_wq_enable(struct idxd_wq *wq);
+>   int idxd_wq_disable(struct idxd_wq *wq);
+>   void idxd_wq_drain(struct idxd_wq *wq);
+> +void idxd_wq_reset(struct idxd_wq *wq);
+>   int idxd_wq_map_portal(struct idxd_wq *wq);
+>   void idxd_wq_unmap_portal(struct idxd_wq *wq);
+>   void idxd_wq_disable_cleanup(struct idxd_wq *wq);
+> diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+> index 6d38bf9034e6..0155c1b4f2ef 100644
+> --- a/drivers/dma/idxd/sysfs.c
+> +++ b/drivers/dma/idxd/sysfs.c
+> @@ -212,7 +212,6 @@ static void disable_wq(struct idxd_wq *wq)
+>   {
+>   	struct idxd_device *idxd = wq->idxd;
+>   	struct device *dev = &idxd->pdev->dev;
+> -	int rc;
+>   
+>   	mutex_lock(&wq->wq_lock);
+>   	dev_dbg(dev, "%s removing WQ %s\n", __func__, dev_name(&wq->conf_dev));
+> @@ -233,17 +232,13 @@ static void disable_wq(struct idxd_wq *wq)
+>   	idxd_wq_unmap_portal(wq);
+>   
+>   	idxd_wq_drain(wq);
+> -	rc = idxd_wq_disable(wq);
+> +	idxd_wq_reset(wq);
+>   
+>   	idxd_wq_free_resources(wq);
+>   	wq->client_count = 0;
+>   	mutex_unlock(&wq->wq_lock);
+>   
+> -	if (rc < 0)
+> -		dev_warn(dev, "Failed to disable %s: %d\n",
+> -			 dev_name(&wq->conf_dev), rc);
+> -	else
+> -		dev_info(dev, "wq %s disabled\n", dev_name(&wq->conf_dev));
+> +	dev_info(dev, "wq %s disabled\n", dev_name(&wq->conf_dev));
+>   }
+>   
+>   static int idxd_config_bus_remove(struct device *dev)
+>
+>

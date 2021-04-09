@@ -2,90 +2,117 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA7403597D1
-	for <lists+dmaengine@lfdr.de>; Fri,  9 Apr 2021 10:28:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B5B7359D80
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Apr 2021 13:33:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230181AbhDII2b (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 9 Apr 2021 04:28:31 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:6228 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229846AbhDII2b (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 9 Apr 2021 04:28:31 -0400
-Received: from localhost.localdomain (unknown [222.205.72.8])
-        by mail-app3 (Coremail) with SMTP id cC_KCgBXj9QVEHBgnofxAA--.43349S4;
-        Fri, 09 Apr 2021 16:28:09 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        id S231402AbhDILd1 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 9 Apr 2021 07:33:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46150 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231127AbhDILd1 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 9 Apr 2021 07:33:27 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D290C061760;
+        Fri,  9 Apr 2021 04:33:14 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id p19so2758631wmq.1;
+        Fri, 09 Apr 2021 04:33:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=goQdzeJjJr8DcKUAFQmgInMOHFDCEBHvhVv3cGUH6c0=;
+        b=jsR3HZJ7EnnfRnTXfuKFcQ/leSS/4ZBmClTEZYviDj8+V4AX1awRQs3A4EvL9rrtcm
+         dkihyje7nFcm0Ei6xigNFmL9XvFAQtyPWhnVX6cDbf7LU2nrl3GzK6zM9cN8nR1+aCIV
+         LzFyTcbTexhBTs5lJKsDDlqvAsHPYQCozaIGyRL878zwMn5Ktd19JSvM62b/bdj2dq1U
+         kiEzHXt5tC09jbBR+wCmI//UA9g3qYuUJsBukR5L/HhSTVlLBgzkH5gqX8iT8NkyMZSU
+         Lx6gUMpQgLn7FupvGDVtUAUkKIueIUeQcoFtriUwLE1qv/NBjTrtBEZPlKWRHa8MyyNt
+         +L4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=goQdzeJjJr8DcKUAFQmgInMOHFDCEBHvhVv3cGUH6c0=;
+        b=WJOTVPtqr4N4fe9sQU6i7RK+VfJpKUxrv2VoOVf4et71BIeakLLl2Lew9rGFHIWU4S
+         Gp4vVVuHvMfqZlCw5bKZfH9zpq3GY48qDjOALoS2OBPTyl7xca1NCss0PINp29aso/W6
+         hijBr9Z2ZIZZeL/glbDC1bW+bk2LI0ZhBCA47rHmw5LzXl60CoencX532+qZps59WS5a
+         LbWBaMc5nfPZXZozNMxWuCJewnbE73DRxahnFEqhQMDQNuhKZt2dPzda+DFD95Z8h8e9
+         qlTWm3Zrtg8ztGg8krXNOMDzV2/Df16qIFrbrsjF22rdg9I51HIancA6jXykFQGM2d3o
+         qi2g==
+X-Gm-Message-State: AOAM532hBDj3Qhi20nxm0pjwxXkWF/MMt9gSmScAZq5O6/+ZVH4iNE0I
+        C/Dbx0bnX9beAKkg+8Xo9ByyMcaAlFg=
+X-Google-Smtp-Source: ABdhPJwV26fPfpaHepLj3aAzlxUkj/SKn+tRcvBR42PcRXQWMGlewwtMEPHHWMC2UlLi64bQ+lCCzA==
+X-Received: by 2002:a1c:2587:: with SMTP id l129mr13277135wml.135.1617967993264;
+        Fri, 09 Apr 2021 04:33:13 -0700 (PDT)
+Received: from localhost (pd9e51abe.dip0.t-ipconnect.de. [217.229.26.190])
+        by smtp.gmail.com with ESMTPSA id c8sm4635949wrd.55.2021.04.09.04.33.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Apr 2021 04:33:11 -0700 (PDT)
+Date:   Fri, 9 Apr 2021 13:33:47 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     kjlu@umn.edu, Laxman Dewangan <ldewangan@nvidia.com>,
         Jon Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] dmaengine: tegra20: Fix runtime PM imbalance on error
-Date:   Fri,  9 Apr 2021 16:28:05 +0800
-Message-Id: <20210409082805.23643-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgBXj9QVEHBgnofxAA--.43349S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7KFWUXF1ktFW5KF4DKFyUZFb_yoW8Gryfpa
-        1UXFyj93yvq3y3Ja1DCr47Zr98WFW3J3y7WrWrGasFvrsrXFyjvr18GFWIgF48ZF97Aa17
-        tan0q343AF1IgrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvF1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_
-        JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48J
-        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
-        GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-        CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AK
-        xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
-        fU538nUUUUU
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgkKBlZdtTUlDwAFsj
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [v2] dmaengine: tegra20: Fix runtime PM imbalance on
+ error
+Message-ID: <YHA7m3U1LsU3iKFZ@orome.fritz.box>
+References: <20210409082805.23643-1-dinghao.liu@zju.edu.cn>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="VC5y8KNu2JhZfYaC"
+Content-Disposition: inline
+In-Reply-To: <20210409082805.23643-1-dinghao.liu@zju.edu.cn>
+User-Agent: Mutt/2.0.6 (98f8cb83) (2021-03-06)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-pm_runtime_get_sync() will increase the runtime PM counter
-even it returns an error. Thus a pairing decrement is needed
-to prevent refcount leak. Fix this by replacing this API with
-pm_runtime_resume_and_get(), which will not change the runtime
-PM counter on error.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
+--VC5y8KNu2JhZfYaC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changelog:
+On Fri, Apr 09, 2021 at 04:28:05PM +0800, Dinghao Liu wrote:
+> pm_runtime_get_sync() will increase the runtime PM counter
+> even it returns an error. Thus a pairing decrement is needed
+> to prevent refcount leak. Fix this by replacing this API with
+> pm_runtime_resume_and_get(), which will not change the runtime
+> PM counter on error.
+>=20
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+>=20
+> Changelog:
+>=20
+> v2: - Fix another similar case in tegra_dma_synchronize().
+> ---
+>  drivers/dma/tegra20-apb-dma.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-v2: - Fix another similar case in tegra_dma_synchronize().
----
- drivers/dma/tegra20-apb-dma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Looks good:
 
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index 71827d9b0aa1..b7260749e8ee 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -723,7 +723,7 @@ static void tegra_dma_issue_pending(struct dma_chan *dc)
- 		goto end;
- 	}
- 	if (!tdc->busy) {
--		err = pm_runtime_get_sync(tdc->tdma->dev);
-+		err = pm_runtime_resume_and_get(tdc->tdma->dev);
- 		if (err < 0) {
- 			dev_err(tdc2dev(tdc), "Failed to enable DMA\n");
- 			goto end;
-@@ -818,7 +818,7 @@ static void tegra_dma_synchronize(struct dma_chan *dc)
- 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
- 	int err;
- 
--	err = pm_runtime_get_sync(tdc->tdma->dev);
-+	err = pm_runtime_resume_and_get(tdc->tdma->dev);
- 	if (err < 0) {
- 		dev_err(tdc2dev(tdc), "Failed to synchronize DMA: %d\n", err);
- 		return;
--- 
-2.17.1
+Acked-by: Thierry Reding <treding@nvidia.com>
 
+--VC5y8KNu2JhZfYaC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmBwO5sACgkQ3SOs138+
+s6Esrg/+JE/EsuV4zBy5yvjs9DvWN14VjfsR1vMV5/yCwXPuXhP3qh1sgT+2TpKh
+TGkSo8wl2QRZprRFsk1nx+fp453dXYqZZnrBCLJysCr+yWuFGMrTf6vHFsSeVC02
+ODwFpOlDsbQLygpL4OzYESaecRh8uKfiqlVq8RTFhh+eSUW8pYcGn7cDRvSCgRf/
+06NI+LfpI61JOICaMn9FD5AYEN8lhlMPUB0VxgP6H3FSw2kjJTwAD6UHTlWjDNdY
+daMskGXzPyL1Ids3KK14oRgVSkB22qwBxBEBrEqayv9XrZ6yewuBfvRb+0VeArD2
+B/gmrNXoOMxdZXQ8ZQWfjB58zxkMF9b3UeXjneSwqwfMqtz7YUHPvMBnVWqM30B4
+BVQTYuVoekiz1LEFxwXVmJxizsrJWhyOG7oyrfAwzewWdi6Hbf/B4h2p0bOJMAps
+nMgn4RoIS0W9fuVI0B8ZjXDLpQ3RhA0eO7Tvg8qljaYOek/dFyMyv9gnAW1twv9r
+rUNeEqUBA9nTz/ZA/fFaLcwt9evaRgqqCL2OaGU+Fyu2+Mm9pBRzp084Zb5uBfpO
+7pNH5pIcaYb2rbox+5TsxLAjRdAQ5fjZMq5Ke6SPl4GmzAT+mRYcGSJN+HnXvt3j
+bAD1EflM/CMQTGVQcmwLcDqj7RQKVCGARwpoq0r0XC5CYsUa4gw=
+=j5Y6
+-----END PGP SIGNATURE-----
+
+--VC5y8KNu2JhZfYaC--

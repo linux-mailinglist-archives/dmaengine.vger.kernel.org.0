@@ -2,74 +2,68 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EB303587C0
-	for <lists+dmaengine@lfdr.de>; Thu,  8 Apr 2021 17:03:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14F7D3597C5
+	for <lists+dmaengine@lfdr.de>; Fri,  9 Apr 2021 10:25:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231953AbhDHPD4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 8 Apr 2021 11:03:56 -0400
-Received: from mga03.intel.com ([134.134.136.65]:57042 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231923AbhDHPD4 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 8 Apr 2021 11:03:56 -0400
-IronPort-SDR: wBdldclUCNPVxx7SFMakjTEjxNmzBD104BcJ/MjB3NUSjuRbYj2o1taI7y1aybWDOZ23m+8LqJ
- rzjsCRYth6nQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9948"; a="193600541"
-X-IronPort-AV: E=Sophos;i="5.82,206,1613462400"; 
-   d="scan'208";a="193600541"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2021 08:03:44 -0700
-IronPort-SDR: 3GSuFWXWjC8GoQP+4KJLHfxxDFhBDuPOq2gxz8EgHHEMTqza0CHSHDA7EvFRAEtMI7KULlt2Fc
- oXd3ydkz+8ig==
-X-IronPort-AV: E=Sophos;i="5.82,206,1613462400"; 
-   d="scan'208";a="397115709"
-Received: from kilau-mobl.amr.corp.intel.com (HELO [10.209.162.225]) ([10.209.162.225])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2021 08:03:43 -0700
-Subject: Re: [PATCH v9 00/11] idxd 'struct device' lifetime handling fixes
-To:     Jason Gunthorpe <jgg@nvidia.com>, Vinod Koul <vkoul@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org
-References: <161739324574.2945060.13103097793006713734.stgit@djiang5-desk3.ch.intel.com>
- <8ba1ad4c-c6da-a511-91ae-b02a374965db@intel.com>
- <20210408120020.GP7405@nvidia.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <e2716f65-1042-e611-bfd6-0dac73ab8def@intel.com>
-Date:   Thu, 8 Apr 2021 08:03:42 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+        id S231526AbhDIIZM (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 9 Apr 2021 04:25:12 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:5652 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S231370AbhDIIZL (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 9 Apr 2021 04:25:11 -0400
+Received: by ajax-webmail-mail-app3 (Coremail) ; Fri, 9 Apr 2021 16:24:52
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.72.8]
+Date:   Fri, 9 Apr 2021 16:24:52 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Jon Hunter" <jonathanh@nvidia.com>
+Cc:     kjlu@umn.edu, "Laxman Dewangan" <ldewangan@nvidia.com>,
+        "Vinod Koul" <vkoul@kernel.org>,
+        "Thierry Reding" <thierry.reding@gmail.com>,
+        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] dmaengine: tegra20: Fix runtime PM imbalance in
+ tegra_dma_issue_pending
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.13 build 20210104(ab8c30b6)
+ Copyright (c) 2002-2021 www.mailtech.cn zju.edu.cn
+In-Reply-To: <5699d0e9-968c-c8b0-3b0b-0416b5b48aa0@nvidia.com>
+References: <20210408071158.12565-1-dinghao.liu@zju.edu.cn>
+ <5699d0e9-968c-c8b0-3b0b-0416b5b48aa0@nvidia.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-In-Reply-To: <20210408120020.GP7405@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Message-ID: <7c55cf68.45570.178b5bbe111.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cC_KCgC3nyJUD3BgqX_xAA--.30209W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgkKBlZdtTUlDwAEsi
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+        CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+        daVFxhVjvjDU=
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-
-On 4/8/2021 5:00 AM, Jason Gunthorpe wrote:
-> On Wed, Apr 07, 2021 at 05:00:21PM -0700, Dave Jiang wrote:
->> On 4/2/2021 12:56 PM, Dave Jiang wrote:
->>> v9:
->>> - Fill in details for commit messages (Jason)
->>> - Fix wrong indentation (Jason)
->>> - Move stray change to the right patch (Jason)
->>> - Remove idxd_free() and refactor 'struct device' setup so we can use
->>>     ->release() calls to clean up. (Jason)
->>> - Change idr to ida. (Jason)
->>> - Remove static type detection for each device type (Dan)
->> Hi Jason, thanks for all your reviews. Do you have any additional comments
->> with this series? I'd like this series to be accepted by Vinod for 5.12-rc
->> if possible. Thanks!
-> It is probably way to big for a -rc6 kernel.
->
-> Nothing stands out as making this worse, so I have no objection to
-> Vinod taking it, but I didn't look to see if there are more things
-> that need attention.
-
-Thanks for the reviews! There is another series coming after that that 
-cleans up the driver setup side of things.
-
-
-Vinod, please let me know how you want this handled. Thanks!
-
-
-> Jason
+PiBPbiAwOC8wNC8yMDIxIDA4OjExLCBEaW5naGFvIExpdSB3cm90ZToKPiA+IHBtX3J1bnRpbWVf
+Z2V0X3N5bmMoKSB3aWxsIGluY3JlYXNlIHRoZSBydW10aW1lIFBNIGNvdW50ZXIKPiA+IGV2ZW4g
+aXQgcmV0dXJucyBhbiBlcnJvci4gVGh1cyBhIHBhaXJpbmcgZGVjcmVtZW50IGlzIG5lZWRlZAo+
+ID4gdG8gcHJldmVudCByZWZjb3VudCBsZWFrLiBGaXggdGhpcyBieSByZXBsYWNpbmcgdGhpcyBB
+UEkgd2l0aAo+ID4gcG1fcnVudGltZV9yZXN1bWVfYW5kX2dldCgpLCB3aGljaCB3aWxsIG5vdCBj
+aGFuZ2UgdGhlIHJ1bnRpbWUKPiA+IFBNIGNvdW50ZXIgb24gZXJyb3IuCj4gPiAKPiA+IFNpZ25l
+ZC1vZmYtYnk6IERpbmdoYW8gTGl1IDxkaW5naGFvLmxpdUB6anUuZWR1LmNuPgo+ID4gLS0tCj4g
+PiAgZHJpdmVycy9kbWEvdGVncmEyMC1hcGItZG1hLmMgfCAyICstCj4gPiAgMSBmaWxlIGNoYW5n
+ZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL2RtYS90ZWdyYTIwLWFwYi1kbWEuYyBiL2RyaXZlcnMvZG1hL3RlZ3JhMjAtYXBiLWRt
+YS5jCj4gPiBpbmRleCA3MTgyN2Q5YjBhYTEuLjczMTc4YWZhZjRjMiAxMDA2NDQKPiA+IC0tLSBh
+L2RyaXZlcnMvZG1hL3RlZ3JhMjAtYXBiLWRtYS5jCj4gPiArKysgYi9kcml2ZXJzL2RtYS90ZWdy
+YTIwLWFwYi1kbWEuYwo+ID4gQEAgLTcyMyw3ICs3MjMsNyBAQCBzdGF0aWMgdm9pZCB0ZWdyYV9k
+bWFfaXNzdWVfcGVuZGluZyhzdHJ1Y3QgZG1hX2NoYW4gKmRjKQo+ID4gIAkJZ290byBlbmQ7Cj4g
+PiAgCX0KPiA+ICAJaWYgKCF0ZGMtPmJ1c3kpIHsKPiA+IC0JCWVyciA9IHBtX3J1bnRpbWVfZ2V0
+X3N5bmModGRjLT50ZG1hLT5kZXYpOwo+ID4gKwkJZXJyID0gcG1fcnVudGltZV9yZXN1bWVfYW5k
+X2dldCh0ZGMtPnRkbWEtPmRldik7Cj4gPiAgCQlpZiAoZXJyIDwgMCkgewo+ID4gIAkJCWRldl9l
+cnIodGRjMmRldih0ZGMpLCAiRmFpbGVkIHRvIGVuYWJsZSBETUFcbiIpOwo+ID4gIAkJCWdvdG8g
+ZW5kOwo+ID4gCj4gCj4gCj4gVGhhbmtzISBMb29rcyBsaWtlIHRoZXJlIGFyZSB0d28gaW5zdGFu
+Y2VzIG9mIHRoaXMgdGhhdCBuZWVkIGZpeGluZy4KPiAKClRoYW5rcyBmb3IgcG9pbnRpbmcgb3V0
+IHRoaXMhIEkgd2lsbCBmaXggdGhpcyBhbmQgc2VuZCBhIG5ldyBwYXRjaCBzb29uLgoKUmVnYXJk
+cywKRGluZ2hhbw==

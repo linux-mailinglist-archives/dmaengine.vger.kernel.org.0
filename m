@@ -2,35 +2,34 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 622D035CAA8
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Apr 2021 18:02:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF14F35CB40
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Apr 2021 18:24:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241471AbhDLQC5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 12 Apr 2021 12:02:57 -0400
-Received: from mga09.intel.com ([134.134.136.24]:37590 "EHLO mga09.intel.com"
+        id S243580AbhDLQYB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 12 Apr 2021 12:24:01 -0400
+Received: from mga06.intel.com ([134.134.136.31]:35393 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238937AbhDLQC4 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 12 Apr 2021 12:02:56 -0400
-IronPort-SDR: lqYmsTJaibwa1mowBBvSGhS6WwSh1sJjR/C6VQij1WSMsHamEh264ROZ8ET2YXPXjpbiVoj5ca
- 6c1ioH3jZuZg==
-X-IronPort-AV: E=McAfee;i="6200,9189,9952"; a="194340440"
+        id S243483AbhDLQXr (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 12 Apr 2021 12:23:47 -0400
+IronPort-SDR: HDG26slXhDUSD6Z/0vlTlSwPqEckr1YaB/u2kevZ5KsiMQUPmz7g0+JTbYbaMDqv+ZZOf0eUFE
+ cFE7Y7X2gi3w==
+X-IronPort-AV: E=McAfee;i="6200,9189,9952"; a="255553596"
 X-IronPort-AV: E=Sophos;i="5.82,216,1613462400"; 
-   d="scan'208";a="194340440"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2021 09:02:37 -0700
-IronPort-SDR: EkA1pvtIm3huhK6IxEjedKBh8QdJuTY5BL7MVsT/63YKF7jPeJrWs4Iv08JcaSCd6o8hoXDJJ7
- q/Q8j2JaqY4A==
+   d="scan'208";a="255553596"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2021 09:23:28 -0700
+IronPort-SDR: Y7R/Kc2l0X1WdTXkzeM4NxxgqwIjqMisquMRle9f66kmggsjeMJcT6MGPgXSRZpC/TqSV+uJNH
+ lokRUdXTC8Iw==
 X-IronPort-AV: E=Sophos;i="5.82,216,1613462400"; 
-   d="scan'208";a="521245623"
+   d="scan'208";a="460226548"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2021 09:02:37 -0700
-Subject: [PATCH v4] dmaengine: idxd: fix wq cleanup of WQCFG registers
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2021 09:23:27 -0700
+Subject: [PATCH v2] dmaengine: idxd: clear MSIX permission entry on shutdown
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     vkoul@kernel.org
-Cc:     Shreenivaas Devarajan <shreenivaas.devarajan@intel.com>,
-        dmaengine@vger.kernel.org
-Date:   Mon, 12 Apr 2021 09:02:36 -0700
-Message-ID: <161824330020.881560.16375921906426627033.stgit@djiang5-desk3.ch.intel.com>
+Cc:     dmaengine@vger.kernel.org
+Date:   Mon, 12 Apr 2021 09:23:27 -0700
+Message-ID: <161824457969.882533.6020239898682672311.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -39,137 +38,111 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-A pre-release silicon erratum workaround where wq reset does not clear
-WQCFG registers was leaked into upstream code. Use wq reset command
-instead of blasting the MMIO region. This also address an issue where
-we clobber registers in future devices.
+Add disabling/clearing of MSIX permission entries on device shutdown to
+mirror the enabling of the MSIX entries on probe. Current code left the
+MSIX enabled and the pasid entries still programmed at device shutdown.
 
-Fixes: da32b28c95a7 ("dmaengine: idxd: cleanup workqueue config after disabling")
-Reported-by: Shreenivaas Devarajan <shreenivaas.devarajan@intel.com>
+Fixes: 8e50d392652f ("dmaengine: idxd: Add shared workqueue support")
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
-v4:
-- Remove noisy debug output (Vinod)
-v3:
-- Remove unused vars
-v2:
-- Set IDXD_WQ_DISABLED for internal state after reset.
 
- drivers/dma/idxd/device.c |   35 ++++++++++++++++++++++++-----------
- drivers/dma/idxd/idxd.h   |    1 +
- drivers/dma/idxd/sysfs.c  |    9 ++-------
- 3 files changed, 27 insertions(+), 18 deletions(-)
+v2:
+- Rebased against latest dmaegine/fixes
+
+ drivers/dma/idxd/device.c |   30 ++++++++++++++++++++++++++++++
+ drivers/dma/idxd/idxd.h   |    2 ++
+ drivers/dma/idxd/init.c   |   11 ++---------
+ 3 files changed, 34 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 84a6ea60ecf0..0375d9459e74 100644
+index 0375d9459e74..31c819544a22 100644
 --- a/drivers/dma/idxd/device.c
 +++ b/drivers/dma/idxd/device.c
-@@ -282,6 +282,22 @@ void idxd_wq_drain(struct idxd_wq *wq)
- 	idxd_cmd_exec(idxd, IDXD_CMD_DRAIN_WQ, operand, NULL);
+@@ -580,6 +580,36 @@ void idxd_device_drain_pasid(struct idxd_device *idxd, int pasid)
  }
  
-+void idxd_wq_reset(struct idxd_wq *wq)
+ /* Device configuration bits */
++void idxd_msix_perm_setup(struct idxd_device *idxd)
 +{
-+	struct idxd_device *idxd = wq->idxd;
-+	struct device *dev = &idxd->pdev->dev;
-+	u32 operand;
++	union msix_perm mperm;
++	int i, msixcnt;
 +
-+	if (wq->state != IDXD_WQ_ENABLED) {
-+		dev_dbg(dev, "WQ %d in wrong state: %d\n", wq->id, wq->state);
++	msixcnt = pci_msix_vec_count(idxd->pdev);
++	if (msixcnt < 0)
 +		return;
-+	}
 +
-+	operand = BIT(wq->id % 16) | ((wq->id / 16) << 16);
-+	idxd_cmd_exec(idxd, IDXD_CMD_RESET_WQ, operand, NULL);
-+	wq->state = IDXD_WQ_DISABLED;
++	mperm.bits = 0;
++	mperm.pasid = idxd->pasid;
++	mperm.pasid_en = device_pasid_enabled(idxd);
++	for (i = 1; i < msixcnt; i++)
++		iowrite32(mperm.bits, idxd->reg_base + idxd->msix_perm_offset + i * 8);
 +}
 +
- int idxd_wq_map_portal(struct idxd_wq *wq)
++void idxd_msix_perm_clear(struct idxd_device *idxd)
++{
++	union msix_perm mperm;
++	int i, msixcnt;
++
++	msixcnt = pci_msix_vec_count(idxd->pdev);
++	if (msixcnt < 0)
++		return;
++
++	mperm.bits = 0;
++	for (i = 1; i < msixcnt; i++)
++		iowrite32(mperm.bits, idxd->reg_base + idxd->msix_perm_offset + i * 8);
++}
++
+ static void idxd_group_config_write(struct idxd_group *group)
  {
- 	struct idxd_device *idxd = wq->idxd;
-@@ -363,8 +379,6 @@ int idxd_wq_disable_pasid(struct idxd_wq *wq)
- void idxd_wq_disable_cleanup(struct idxd_wq *wq)
- {
- 	struct idxd_device *idxd = wq->idxd;
--	struct device *dev = &idxd->pdev->dev;
--	int i, wq_offset;
- 
- 	lockdep_assert_held(&idxd->dev_lock);
- 	memset(wq->wqcfg, 0, idxd->wqcfg_size);
-@@ -376,14 +390,6 @@ void idxd_wq_disable_cleanup(struct idxd_wq *wq)
- 	wq->ats_dis = 0;
- 	clear_bit(WQ_FLAG_DEDICATED, &wq->flags);
- 	memset(wq->name, 0, WQ_NAME_SIZE);
--
--	for (i = 0; i < WQCFG_STRIDES(idxd); i++) {
--		wq_offset = WQCFG_OFFSET(idxd, wq->id, i);
--		iowrite32(0, idxd->reg_base + wq_offset);
--		dev_dbg(dev, "WQ[%d][%d][%#x]: %#x\n",
--			wq->id, i, wq_offset,
--			ioread32(idxd->reg_base + wq_offset));
--	}
- }
- 
- /* Device control bits */
-@@ -642,7 +648,14 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
- 	if (!wq->group)
- 		return 0;
- 
--	memset(wq->wqcfg, 0, idxd->wqcfg_size);
-+	/*
-+	 * Instead of memset the entire shadow copy of WQCFG, copy from the hardware after
-+	 * wq reset. This will copy back the sticky values that are present on some devices.
-+	 */
-+	for (i = 0; i < WQCFG_STRIDES(idxd); i++) {
-+		wq_offset = WQCFG_OFFSET(idxd, wq->id, i);
-+		wq->wqcfg->bits[i] = ioread32(idxd->reg_base + wq_offset);
-+	}
- 
- 	/* byte 0-3 */
- 	wq->wqcfg->wq_size = wq->size;
+ 	struct idxd_device *idxd = group->idxd;
 diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 81a0e65fd316..730745d331e3 100644
+index 730745d331e3..76014c14f473 100644
 --- a/drivers/dma/idxd/idxd.h
 +++ b/drivers/dma/idxd/idxd.h
-@@ -341,6 +341,7 @@ void idxd_wq_free_resources(struct idxd_wq *wq);
- int idxd_wq_enable(struct idxd_wq *wq);
- int idxd_wq_disable(struct idxd_wq *wq);
- void idxd_wq_drain(struct idxd_wq *wq);
-+void idxd_wq_reset(struct idxd_wq *wq);
- int idxd_wq_map_portal(struct idxd_wq *wq);
- void idxd_wq_unmap_portal(struct idxd_wq *wq);
- void idxd_wq_disable_cleanup(struct idxd_wq *wq);
-diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
-index 5f7bc4b1621a..18bf4d148989 100644
---- a/drivers/dma/idxd/sysfs.c
-+++ b/drivers/dma/idxd/sysfs.c
-@@ -275,7 +275,6 @@ static void disable_wq(struct idxd_wq *wq)
- {
- 	struct idxd_device *idxd = wq->idxd;
- 	struct device *dev = &idxd->pdev->dev;
--	int rc;
+@@ -316,6 +316,8 @@ void idxd_unregister_driver(void);
+ struct bus_type *idxd_get_bus_type(struct idxd_device *idxd);
  
- 	mutex_lock(&wq->wq_lock);
- 	dev_dbg(dev, "%s removing WQ %s\n", __func__, dev_name(&wq->conf_dev));
-@@ -296,17 +295,13 @@ static void disable_wq(struct idxd_wq *wq)
- 	idxd_wq_unmap_portal(wq);
+ /* device interrupt control */
++void idxd_msix_perm_setup(struct idxd_device *idxd);
++void idxd_msix_perm_clear(struct idxd_device *idxd);
+ irqreturn_t idxd_irq_handler(int vec, void *data);
+ irqreturn_t idxd_misc_thread(int vec, void *data);
+ irqreturn_t idxd_wq_thread(int irq, void *data);
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index 085a0c3b62c6..6584b0ec07d5 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -65,7 +65,6 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
+ 	struct idxd_irq_entry *irq_entry;
+ 	int i, msixcnt;
+ 	int rc = 0;
+-	union msix_perm mperm;
  
- 	idxd_wq_drain(wq);
--	rc = idxd_wq_disable(wq);
-+	idxd_wq_reset(wq);
+ 	msixcnt = pci_msix_vec_count(pdev);
+ 	if (msixcnt < 0) {
+@@ -144,14 +143,7 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
+ 	}
  
- 	idxd_wq_free_resources(wq);
- 	wq->client_count = 0;
- 	mutex_unlock(&wq->wq_lock);
+ 	idxd_unmask_error_interrupts(idxd);
+-
+-	/* Setup MSIX permission table */
+-	mperm.bits = 0;
+-	mperm.pasid = idxd->pasid;
+-	mperm.pasid_en = device_pasid_enabled(idxd);
+-	for (i = 1; i < msixcnt; i++)
+-		iowrite32(mperm.bits, idxd->reg_base + idxd->msix_perm_offset + i * 8);
+-
++	idxd_msix_perm_setup(idxd);
+ 	return 0;
  
--	if (rc < 0)
--		dev_warn(dev, "Failed to disable %s: %d\n",
--			 dev_name(&wq->conf_dev), rc);
--	else
--		dev_info(dev, "wq %s disabled\n", dev_name(&wq->conf_dev));
-+	dev_info(dev, "wq %s disabled\n", dev_name(&wq->conf_dev));
+  err_no_irq:
+@@ -510,6 +502,7 @@ static void idxd_shutdown(struct pci_dev *pdev)
+ 		idxd_flush_work_list(irq_entry);
+ 	}
+ 
++	idxd_msix_perm_clear(idxd);
+ 	destroy_workqueue(idxd->wq);
  }
  
- static int idxd_config_bus_remove(struct device *dev)
 
 

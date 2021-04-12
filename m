@@ -2,47 +2,50 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C5BEA35C284
-	for <lists+dmaengine@lfdr.de>; Mon, 12 Apr 2021 12:03:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F309735C57F
+	for <lists+dmaengine@lfdr.de>; Mon, 12 Apr 2021 13:44:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238732AbhDLJpX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 12 Apr 2021 05:45:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59404 "EHLO mail.kernel.org"
+        id S235076AbhDLLoj (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 12 Apr 2021 07:44:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239702AbhDLJo0 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Mon, 12 Apr 2021 05:44:26 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 047A16120B;
-        Mon, 12 Apr 2021 09:44:07 +0000 (UTC)
+        id S237792AbhDLLoj (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Mon, 12 Apr 2021 07:44:39 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 75E2B6102A;
+        Mon, 12 Apr 2021 11:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618220648;
-        bh=dUn3RpHAGg64ypL7+r7XbIHX+Y/jL4UbUArvirEgV+c=;
+        s=k20201202; t=1618227861;
+        bh=C0Zz1X5LRso6hZ9yckSPSWmRyIpm21I8AUMnjr62TjE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lRtnxc5C9AyLKZxt/EGWzKOG0W48kqL8Z/yJEHKwNZ1onNLJvv1x6YZ2loVXy8Oll
-         E5lkLtH+MiT2Nx3f72XPbQhRBTRWo342TKckP2ZD5UkY8SVg9hzIT5LSxxX31fxHMC
-         ci0KHcp6pmST2AhynRUj7BVpj/kGTB7xjR7oxRLsBRHqRLn3cDZnNz4ddyUIjMyX7E
-         VyOppe8O7x9juCytP/ypuPTSmhIcoIjTftsKmmyhtpCzbYyH73QjC7gkfHWCqqx+fT
-         0CBPM5PFbNM9mjpXmhtASmmx4jZlm5f44VFhgmCyYcx6jEk0lcXI77tMJ/tRi5oVSS
-         SMJKUwPoR7jWw==
-Date:   Mon, 12 Apr 2021 15:14:04 +0530
+        b=pOqPFDhbRnC0vH6vKc/t3yks+PdGJ3pij8OTRJerAGDHQUtx0FZKOtzPqrdrNb8U8
+         D1Pt3vs5xZmSzoeh3pU2VHWjs1C8NlHGSSoPjP8ZdcwxilLiy34V+0jbIoH1JgTjaF
+         1cMiAQ3mjMWT8m2i6ttwr1eYnSLz5p1PGG2BcUZnZZwYpxY1xHhxo0spfMp7D/vb5G
+         qxADghAIOve14LtiCplWehBo0MlbjJ0WWdFoA1+i6JVaX0Ro7CAncld1Dgi3caj5lM
+         rZ1+GBVNNtQVfN9OpY7iKEaHacTQBICo1gqHh7ssJo24gGEyvkL5jY2UhgUmQFtAgu
+         TEW9IyLGOsZPg==
+Date:   Mon, 12 Apr 2021 17:14:17 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: plx_dma: add a missing put_device() on error
- path
-Message-ID: <YHQWZKTTjum45ucy@vkoul-mobl.Dlink>
-References: <YFnq/0IQzixtAbC1@mwanda>
+To:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc:     okaya@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: qcom_hidma: remove unused code
+Message-ID: <YHQykQa1fyxcpGJl@vkoul-mobl.Dlink>
+References: <1617270816-36400-1-git-send-email-jiapeng.chong@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YFnq/0IQzixtAbC1@mwanda>
+In-Reply-To: <1617270816-36400-1-git-send-email-jiapeng.chong@linux.alibaba.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 23-03-21, 16:19, Dan Carpenter wrote:
-> Add a missing put_device(&pdev->dev) if the call to
-> dma_async_device_register(dma); fails.
+On 01-04-21, 17:53, Jiapeng Chong wrote:
+> Fix the following clang warning:
+> 
+> drivers/dma/qcom/hidma.c:94:20: warning: unused function 'to_hidma_desc'
+> [-Wunused-function].
 
 Applied, thanks
 

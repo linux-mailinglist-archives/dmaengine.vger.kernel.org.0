@@ -2,148 +2,139 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF85B35DCED
-	for <lists+dmaengine@lfdr.de>; Tue, 13 Apr 2021 12:56:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AAEB35F90C
+	for <lists+dmaengine@lfdr.de>; Wed, 14 Apr 2021 18:40:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245411AbhDMK4i (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 13 Apr 2021 06:56:38 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:51460 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231210AbhDMK4h (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 13 Apr 2021 06:56:37 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13DAtOiI068871;
-        Tue, 13 Apr 2021 10:56:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=9FK21CzWg0WZpbBLLTCNb5AamAJs4+xmyM9gkb5hr5I=;
- b=qX0Jt/PzNzNqxB+v42+mXBvQt40GVgOPjgLy1ia1Y6qudnlH1Qk9A9EmWVKUm3qLkFyG
- 1JSbHs1a2gZtDDDqKBvoDsetgu73jv3BHFnnaw4URKuHXtXvyzcqGu2SNqrsoEj+3JCa
- vE+hE7vrnoudxMAjHSFGB3hp97qncJRYD6A52Tok2uOVzT9jA66xbFtCULrN9tzbDYzk
- LgOuVqoZIKJmq73j9VhVT181Jgw6OWsS1cO3jBLhNlgbpatYhmR1zs0/go6nghQi7WEq
- syB8T7R5DYeWFgk16dpkQ7dR+dX/GtPj5Tbqbz0vn61blMoJ71bx4aQPHflmyKcTuMa5 hw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2130.oracle.com with ESMTP id 37u1hbes1n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Apr 2021 10:56:17 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13DApdRc076724;
-        Tue, 13 Apr 2021 10:56:15 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 37unwymcv8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Apr 2021 10:56:15 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 13DAuEEw009667;
-        Tue, 13 Apr 2021 10:56:14 GMT
-Received: from mwanda (/102.36.221.92)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 13 Apr 2021 03:56:14 -0700
-Date:   Tue, 13 Apr 2021 13:56:08 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     dan.j.williams@intel.com
-Cc:     dmaengine@vger.kernel.org
-Subject: [bug report] dmaengine: driver for the iop32x, iop33x, and iop13xx
- raid engines
-Message-ID: <YHV4yPcJVyRgphn6@mwanda>
+        id S233638AbhDNQgD (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 14 Apr 2021 12:36:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42086 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231599AbhDNQgC (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 14 Apr 2021 12:36:02 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B619F6113B;
+        Wed, 14 Apr 2021 16:35:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618418140;
+        bh=Yk43lQt3xONHQ5mcQacuvBpjQEzfRMYBnN12EuEhqzk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HVAjvvZPZg1FGeF0GyMhjlgweFtOfb7q9guzW769W2QEn6562VmynrgyKIkSlkWT2
+         0QxzL+A0ZFGMg2vcx6k2eBODIkvh9b6l8cDykhOkTyWDIr43MgGAAh7DkYQahJpgdn
+         9yH6/IHvm6h/okRtZz9z88k+ejIWibnqiY6sL7tGx3tMzqALg8ciU8Oj3fZhRgV/vq
+         EGBN8H9EIsZFqN38TSGpoipZ9N0pX7z1mui1wolFO30Df+MdWWKYg9/TygQ+1vm8CF
+         LJjPloH45rh40HbM/TWcmgP16tNFKYvmgON8yyW1YpxB+at2wnz/SyxXtdn5eEOWgA
+         dWVzCsFWR5T1Q==
+Date:   Wed, 14 Apr 2021 22:05:36 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL]: dmaengine fixes for 5.12
+Message-ID: <YHcZ2Kylq+RuDzPg@vkoul-mobl.Dlink>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="RpyAts/MSfBWytVk"
 Content-Disposition: inline
-X-Proofpoint-IMR: 1
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9952 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=905 suspectscore=0
- mlxscore=0 malwarescore=0 adultscore=0 bulkscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104060000 definitions=main-2104130075
-X-Proofpoint-GUID: EttomDNdGKfW9kHgO1iLeB6Ws2wMAuNg
-X-Proofpoint-ORIG-GUID: EttomDNdGKfW9kHgO1iLeB6Ws2wMAuNg
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9952 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 priorityscore=1501
- clxscore=1015 adultscore=0 mlxlogscore=881 impostorscore=0 malwarescore=0
- lowpriorityscore=0 spamscore=0 phishscore=0 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104060000
- definitions=main-2104130075
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello Dan Williams,
 
-The patch c211092313b9: "dmaengine: driver for the iop32x, iop33x,
-and iop13xx raid engines" from Jan 2, 2007, leads to the following
-static checker warning:
+--RpyAts/MSfBWytVk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	drivers/dma/iop-adma.c:1425 iop_adma_probe()
-	warn: '&iop_chan->common.device_node' not removed from list
+Hi Linus,
 
-drivers/dma/iop-adma.c
-  1377          spin_lock_init(&iop_chan->lock);
-  1378          INIT_LIST_HEAD(&iop_chan->chain);
-  1379          INIT_LIST_HEAD(&iop_chan->all_slots);
-  1380          iop_chan->common.device = dma_dev;
-  1381          dma_cookie_init(&iop_chan->common);
-  1382          list_add_tail(&iop_chan->common.device_node, &dma_dev->channels);
-                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-We add this to the dma_dev channels list but
+Please pull to receive the fixes for dmaengine for v5.12. Mostly bunch
+of driver fixes.
 
-  1383  
-  1384          if (dma_has_cap(DMA_MEMCPY, dma_dev->cap_mask)) {
-  1385                  ret = iop_adma_memcpy_self_test(adev);
-  1386                  dev_dbg(&pdev->dev, "memcpy self test returned %d\n", ret);
-  1387                  if (ret)
-  1388                          goto err_free_iop_chan;
+The following changes since commit a38fd8748464831584a19438cbb3082b5a2dab15:
 
-if there is an error
+  Linux 5.12-rc2 (2021-03-05 17:33:41 -0800)
 
-  1389          }
-  1390  
-  1391          if (dma_has_cap(DMA_XOR, dma_dev->cap_mask)) {
-  1392                  ret = iop_adma_xor_val_self_test(adev);
-  1393                  dev_dbg(&pdev->dev, "xor self test returned %d\n", ret);
-  1394                  if (ret)
-  1395                          goto err_free_iop_chan;
-  1396          }
-  1397  
-  1398          if (dma_has_cap(DMA_PQ, dma_dev->cap_mask) &&
-  1399              dma_has_cap(DMA_PQ_VAL, dma_dev->cap_mask)) {
-  1400                  #ifdef CONFIG_RAID6_PQ
-  1401                  ret = iop_adma_pq_zero_sum_self_test(adev);
-  1402                  dev_dbg(&pdev->dev, "pq self test returned %d\n", ret);
-  1403                  #else
-  1404                  /* can not test raid6, so do not publish capability */
-  1405                  dma_cap_clear(DMA_PQ, dma_dev->cap_mask);
-  1406                  dma_cap_clear(DMA_PQ_VAL, dma_dev->cap_mask);
-  1407                  ret = 0;
-  1408                  #endif
-  1409                  if (ret)
-  1410                          goto err_free_iop_chan;
-  1411          }
-  1412  
-  1413          dev_info(&pdev->dev, "Intel(R) IOP: ( %s%s%s%s%s%s)\n",
-  1414                   dma_has_cap(DMA_PQ, dma_dev->cap_mask) ? "pq " : "",
-  1415                   dma_has_cap(DMA_PQ_VAL, dma_dev->cap_mask) ? "pq_val " : "",
-  1416                   dma_has_cap(DMA_XOR, dma_dev->cap_mask) ? "xor " : "",
-  1417                   dma_has_cap(DMA_XOR_VAL, dma_dev->cap_mask) ? "xor_val " : "",
-  1418                   dma_has_cap(DMA_MEMCPY, dma_dev->cap_mask) ? "cpy " : "",
-  1419                   dma_has_cap(DMA_INTERRUPT, dma_dev->cap_mask) ? "intr " : "");
-  1420  
-  1421          dma_async_device_register(dma_dev);
-  1422          goto out;
-  1423  
-  1424   err_free_iop_chan:
-  1425          kfree(iop_chan);
+are available in the Git repository at:
 
-Then there is a freed pointer still on the list leading to a use after
-free.
+  git://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git tags/dm=
+aengine-fix-5.12
 
-  1426   err_free_dma:
-  1427          dma_free_coherent(&adev->pdev->dev, plat_data->pool_size,
-  1428                          adev->dma_desc_pool_virt, adev->dma_desc_pool);
-  1429   err_free_adev:
-  1430          kfree(adev);
-  1431   out:
-  1432          return ret;
-  1433  }
+for you to fetch changes up to ea9aadc06a9f10ad20a90edc0a484f1147d88a7a:
 
-regards,
-dan carpenter
+  dmaengine: idxd: fix wq cleanup of WQCFG registers (2021-04-12 22:08:39 +=
+0530)
+
+----------------------------------------------------------------
+dmaengine fixes for v5.12
+
+Couple of dmaengine driver fixes for:
+- race and descriptor issue for xilinx driver
+- fix interrupt handling, wq state & cleanup, field sizes for
+  completion, msix permissions for idxd driver
+- rumtim pm fix for tegra driver
+- double free fix in dma_async_device_register
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      dmaengine: dw: Make it dependent to HAS_IOMEM
+
+Dan Carpenter (1):
+      dmaengine: plx_dma: add a missing put_device() on error path
+
+Dave Jiang (6):
+      dmaengine: idxd: Fix clobbering of SWERR overflow bit on writeback
+      dmaengine: idxd: fix delta_rec and crc size field for completion reco=
+rd
+      dmaengine: idxd: fix opcap sysfs attribute output
+      dmaengine: idxd: fix wq size store permission state
+      dmaengine: idxd: clear MSIX permission entry on shutdown
+      dmaengine: idxd: fix wq cleanup of WQCFG registers
+
+Dinghao Liu (1):
+      dmaengine: tegra20: Fix runtime PM imbalance on error
+
+Laurent Pinchart (2):
+      dmaengine: xilinx: dpdma: Fix descriptor issuing on video group
+      dmaengine: xilinx: dpdma: Fix race condition in done IRQ
+
+Lv Yunlong (1):
+      dmaengine: Fix a double free in dma_async_device_register
+
+ drivers/dma/dmaengine.c           |  1 +
+ drivers/dma/dw/Kconfig            |  2 ++
+ drivers/dma/idxd/device.c         | 65 ++++++++++++++++++++++++++++++++---=
+----
+ drivers/dma/idxd/idxd.h           |  3 ++
+ drivers/dma/idxd/init.c           | 11 ++-----
+ drivers/dma/idxd/irq.c            |  4 ++-
+ drivers/dma/idxd/sysfs.c          | 19 ++++++------
+ drivers/dma/plx_dma.c             | 18 ++++++-----
+ drivers/dma/tegra20-apb-dma.c     |  4 +--
+ drivers/dma/xilinx/xilinx_dpdma.c | 31 +++++++++++--------
+ include/uapi/linux/idxd.h         |  4 +--
+ 11 files changed, 109 insertions(+), 53 deletions(-)
+
+Thanks
+--=20
+~Vinod
+
+--RpyAts/MSfBWytVk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAmB3GdcACgkQfBQHDyUj
+g0e73xAAh92P0bnd2ehiDqCIgDzQdh/A7neBQIFoJZyW9wT+YabAWpmqQmLdOAPq
+d7t5s5yUUW6uKyyRu7pQumCnVrD+dIM+FheXN3QDqqfp4cwxJeEavCTUkL/AhNgE
+aclWQozwFdtbzjWqrpTM2+bS7Ef8tFHeOzeXhtfjdsFZztAavtCnAUAhfgNZmB9I
+cafm8HWUeUiylsEU1mV3E6cSFLMIlsAImyisS2DYroZbvXqmMOnmnxO/p0524t3F
+9BGvTHg8QdEJ73D/PS1s9q4M+9V4E2ZK9yth8RB0n8PUmWARgRr3lNEjDgFLqupS
+eppisRYmRruaDscG4mex2javW2hqyJaCF1zXS1fyo3bNR3vdE6Oh8niLEVimozJ6
+0+U/z/5jMulWpTkml/eOLIhAOO5gj5u9zwIkoax2jjIYaZH9nF5zEEZbi2WwKkzi
+RgA5iSmcLlWWp6DdxCgK6sNsaFL6odr3VF9J/iLOscb7I4MhMMMFKyQr0b3JemVV
+fnp+iOX+jjc9nArcfi/8mwB1iJbFSaPzn2I8ZsDEjsWJS1MkYye2b0ZswXOCHALh
+6IJLtH6ZmIih+wdBvZRfBMk9lMvuHPq42K+5KctxE93camWM7HLDhIANh7UuANbl
+0nWtgbJZeF2DD7goHvp8VqH8PDwKqwjn83wVfKcSosMrIG7W6MU=
+=Ka6t
+-----END PGP SIGNATURE-----
+
+--RpyAts/MSfBWytVk--

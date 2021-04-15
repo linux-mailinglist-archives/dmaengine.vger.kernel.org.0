@@ -2,82 +2,121 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0D67360B7B
-	for <lists+dmaengine@lfdr.de>; Thu, 15 Apr 2021 16:09:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5F4436165A
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Apr 2021 01:37:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233312AbhDOOKR (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 15 Apr 2021 10:10:17 -0400
-Received: from mga03.intel.com ([134.134.136.65]:62047 "EHLO mga03.intel.com"
+        id S235340AbhDOXha (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 15 Apr 2021 19:37:30 -0400
+Received: from mga18.intel.com ([134.134.136.126]:30972 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230056AbhDOOKQ (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 15 Apr 2021 10:10:16 -0400
-IronPort-SDR: tjWuhqocqVlRaGKm8UG+L0A35L8TSR9RZ0LNgX+gR3OX27Yhh/uncvYoOshBFuuwsiTE1KQbwr
- RpuHrtPVG8Sg==
-X-IronPort-AV: E=McAfee;i="6200,9189,9955"; a="194885666"
-X-IronPort-AV: E=Sophos;i="5.82,225,1613462400"; 
-   d="scan'208";a="194885666"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2021 07:09:41 -0700
-IronPort-SDR: 31qFUbJplDmJcJwbCE3slOYca0ZnN/+3E7vaX73S8oZ8hG759bsYGZty0n8AJ9jl8jJYrGaPv3
- 7pDU1oWPxbQw==
-X-IronPort-AV: E=Sophos;i="5.82,225,1613462400"; 
-   d="scan'208";a="461627273"
-Received: from ckgurumu-mobl3.amr.corp.intel.com (HELO [10.212.35.10]) ([10.212.35.10])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2021 07:09:41 -0700
-Subject: Re: [PATCH] dmaengine: idxd: Fix potential null dereference on
- pointer status
-To:     Colin King <colin.king@canonical.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210415110654.1941580-1-colin.king@canonical.com>
+        id S237906AbhDOXh3 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 15 Apr 2021 19:37:29 -0400
+IronPort-SDR: yDR898r4+d79VaGaKLKCO4zBC2klj1ugVUi6Z8nR+DgLYPCm/ArtWfJnCHSFz4c7Pl6zU2IkXb
+ 7ac8BGJm8+Kg==
+X-IronPort-AV: E=McAfee;i="6200,9189,9955"; a="182458451"
+X-IronPort-AV: E=Sophos;i="5.82,226,1613462400"; 
+   d="scan'208";a="182458451"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2021 16:37:05 -0700
+IronPort-SDR: luMCNY/9mx5qSes/Cbj3zJol+eRBshI6sCrgJmSl6mO6iIJXGtL11vW2rWUi4dNntjZuNTt3FV
+ 8BfnF6sCsKyg==
+X-IronPort-AV: E=Sophos;i="5.82,226,1613462400"; 
+   d="scan'208";a="399737569"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2021 16:37:04 -0700
+Subject: [PATCH v10 00/11] idxd 'struct device' lifetime handling fixes
 From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <4e545597-8fe5-411d-6bb7-0c5e8eea5b23@intel.com>
-Date:   Thu, 15 Apr 2021 07:09:40 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+To:     vkoul@kernel.org
+Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        dmaengine@vger.kernel.org
+Date:   Thu, 15 Apr 2021 16:37:04 -0700
+Message-ID: <161852959148.2203940.7484827367948091199.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
-In-Reply-To: <20210415110654.1941580-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+v10:
+- Fix txd initialization location due to dma_chan being dynamically allocated.
 
-On 4/15/2021 4:06 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->
-> There are calls to idxd_cmd_exec that pass a null status pointer however
-> a recent commit has added an assignment to *status that can end up
-> with a null pointer dereference.  The function expects a null status
-> pointer sometimes as there is a later assignment to *status where
-> status is first null checked.  Fix the issue by null checking status
-> before making the assignment.
->
-> Addresses-Coverity: ("Explicit null dereferenced")
-> Fixes: 89e3becd8f82 ("dmaengine: idxd: check device state before issue command")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+v9:
+- Fill in details for commit messages (Jason)
+- Fix wrong indentation (Jason)
+- Move stray change to the right patch (Jason)
+- Remove idxd_free() and refactor 'struct device' setup so we can use
+  ->release() calls to clean up. (Jason)
+- Change idr to ida. (Jason)
+- Remove static type detection for each device type (Dan)
 
-Acked-by: Dave Jiang <dave.jiang@intel.com>
+v8:
+- Do not emit negative value for sysfs 'minor' attrib (Dan)
+- Use sysfs_emit() to emit sysfs 'minor' attrib (Jason)
+- Fix interation of unwind cleanup of various allocation. (DanC)
 
-Thanks!
+v7:
+- Fix up the 'struct device' setup in char device code (Jason)
+- Split out the char dev fixes (Jason)
+- Split out the DMA dev fixes (Dan)
+- Split out the each of the conf_dev fixes
+- Split out removal of the pcim_* calls
+- Split out removal of the devm_* calls
+- Split out the fixes for interrupt config calls
+- Reviewed by Dan.
 
-> ---
->   drivers/dma/idxd/device.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-> index 31c819544a22..78d2dc5e9bd8 100644
-> --- a/drivers/dma/idxd/device.c
-> +++ b/drivers/dma/idxd/device.c
-> @@ -451,7 +451,8 @@ static void idxd_cmd_exec(struct idxd_device *idxd, int cmd_code, u32 operand,
->   
->   	if (idxd_device_is_halted(idxd)) {
->   		dev_warn(&idxd->pdev->dev, "Device is HALTED!\n");
-> -		*status = IDXD_CMDSTS_HW_ERR;
-> +		if (status)
-> +			*status = IDXD_CMDSTS_HW_ERR;
->   		return;
->   	}
->   
+v6:
+- Fix char dev initialization issues (Jason)
+- Fix other 'struct device' initialization issues.
+
+v5:
+- Rebased against 5.12-rc dmaengine/fixes
+
+v4:
+- fix up the life time of cdev creation/destruction (Jason)
+- Tested with KASAN and other memory allocation leak detections. (Jason)
+
+v3:
+- Remove devm_* for irq request and cleanup related bits (Jason)
+
+v2:
+- Remove all devm_* alloc for idxd_device (Jason)
+- Add kref dep for dma_dev (Jason)
+
+Vinod,
+The series fixes the various 'struct device' lifetime handling in the
+idxd driver. The devm managed lifetime is incompatible with 'struct
+device' objects that resides in the idxd context. Tested with
+CONFIG_DEBUG_KOBJECT_RELEASE and address all issues from that.
+
+Please consider for damengine/fixes for the 5.13-rc.
+
+---
+
+Dave Jiang (11):
+      dmaengine: idxd: fix dma device lifetime
+      dmaengine: idxd: cleanup pci interrupt vector allocation management
+      dmaengine: idxd: removal of pcim managed mmio mapping
+      dmaengine: idxd: use ida for device instance enumeration
+      dmaengine: idxd: fix idxd conf_dev 'struct device' lifetime
+      dmaengine: idxd: fix wq conf_dev 'struct device' lifetime
+      dmaengine: idxd: fix engine conf_dev lifetime
+      dmaengine: idxd: fix group conf_dev lifetime
+      dmaengine: idxd: fix cdev setup and free device lifetime issues
+      dmaengine: idxd: iax bus removal
+      dmaengine: idxd: remove detection of device type
+
+
+ drivers/dma/idxd/cdev.c   | 132 +++++-------
+ drivers/dma/idxd/device.c |  36 ++--
+ drivers/dma/idxd/idxd.h   |  83 +++++---
+ drivers/dma/idxd/init.c   | 383 ++++++++++++++++++++++-------------
+ drivers/dma/idxd/irq.c    |  10 +-
+ drivers/dma/idxd/submit.c |   2 +-
+ drivers/dma/idxd/sysfs.c  | 410 ++++++++++++++------------------------
+ 7 files changed, 525 insertions(+), 531 deletions(-)
+
+--
+

@@ -2,46 +2,64 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7440F361904
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Apr 2021 06:52:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 754BF3620F4
+	for <lists+dmaengine@lfdr.de>; Fri, 16 Apr 2021 15:31:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236927AbhDPEw4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 16 Apr 2021 00:52:56 -0400
-Received: from [134.122.66.85] ([134.122.66.85]:57896 "EHLO mail.wlkn.io"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229555AbhDPEw4 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 16 Apr 2021 00:52:56 -0400
-X-Greylist: delayed 7642 seconds by postgrey-1.27 at vger.kernel.org; Fri, 16 Apr 2021 00:52:55 EDT
-Received: from User (unknown [10.42.0.3])
-        by mail.wlkn.io (Postfix) with SMTP id D74792A4FAD;
-        Wed, 14 Apr 2021 12:43:56 +0000 (UTC)
-Authentication-Results: wlkn.io; dmarc=none (p=none dis=none) header.from=go.org
-Reply-To: <mr.greg_rhodes_0712@meta.ua>
-From:   "Greg Rhodes" <info@go.org>
-Subject: Your prompt response would be highly appreciated !
-Date:   Wed, 14 Apr 2021 05:44:06 -0700
+        id S241568AbhDPNcF (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 16 Apr 2021 09:32:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235011AbhDPNcE (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 16 Apr 2021 09:32:04 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C6A34610EA;
+        Fri, 16 Apr 2021 13:31:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618579899;
+        bh=DiL8azXw7EQ88wcrJFGSG3mIfSvPLDRKS0/YVCn5MBk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=s97M0mZJ4BCa/vv5ZGM1QGct0qC94FS1x7O9+R+e2ZPgBoAqzrYDDNoBfMrFPc3Fs
+         TitjYxG5ipWu+ggNbxFPlIX+JTqpejNgbi/T4UhmHT+W53hQb1NdxjoBVijtnbH3oE
+         SZTJ2IE2M+wLzCid31BmRk8ivoxVGvP5FryY0sgTX9s5jpxE6FYEg8RnfUPUKLxwFJ
+         uhoWs57jShmw1C8HksFanFzHVpFIbBi2xlCmsFLsKvEJegKA1xk9mWmoldHaurfJAB
+         UkBmyAvakruCdHPrV7khVs0HZEKA8P0tKe9s0crUAxlzi8KBUm3AbkEUiGWEqB6JNn
+         iQt4ng5DVA9ng==
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        Felipe Balbi <felipe.balbi@microsoft.com>
+Subject: [PATCH 0/2] arm64: sm8150: Add minimal DMA support
+Date:   Fri, 16 Apr 2021 16:31:31 +0300
+Message-Id: <20210416133133.2067467-1-balbi@kernel.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-Id: <20210414161029.889812AB2D5@mail.wlkn.io>
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-I am Mr Greg Rhodes a supervisor at a gold mining site in Sierra Leone.
+From: Felipe Balbi <felipe.balbi@microsoft.com>
 
-Due to Covid-19 some of our customers are not picking up their orders, thus, there is a glut of gold bars in our safe.
+Hi,
 
-In view of this, we are seriously looking for buyers. Our prices are favourable and the business is profitable.
+With these two patches, GPI DMA probes fine on sm8150 (well, after
+setting gpi_dma[012] status to okay). Future commits should come to add
+relevant DMA channel mapping for the various IPs.
 
-For a kilogram of gold purchased from us, you are sure to make at between $10,000 - $12,000.
+DTS patch a dependency on I2C patches by Caleb Connolly and SPI patch by
+yours truly.
 
-We thank you and look forward to a good business relationship.
+Felipe Balbi (2):
+  DMA: qcom: gpi: add compatible for sm8150
+  arm64: boot: dts: qcom: sm8150: Add DMA nodes
 
-Best regards,
-Greg Rhodes
+ .../devicetree/bindings/dma/qcom,gpi.yaml     |  1 +
+ arch/arm64/boot/dts/qcom/sm8150.dtsi          | 72 +++++++++++++++++++
+ drivers/dma/qcom/gpi.c                        |  1 +
+ 3 files changed, 74 insertions(+)
+
+-- 
+2.31.1
+

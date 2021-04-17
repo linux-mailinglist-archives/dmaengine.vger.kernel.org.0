@@ -2,60 +2,65 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9405F362838
-	for <lists+dmaengine@lfdr.de>; Fri, 16 Apr 2021 21:04:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0482362DF6
+	for <lists+dmaengine@lfdr.de>; Sat, 17 Apr 2021 08:19:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236141AbhDPTFB (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 16 Apr 2021 15:05:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235998AbhDPTFB (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 16 Apr 2021 15:05:01 -0400
-X-Greylist: delayed 509 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 16 Apr 2021 12:04:36 PDT
-Received: from m-r2.th.seeweb.it (m-r2.th.seeweb.it [IPv6:2001:4b7a:2000:18::171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B365C061574
-        for <dmaengine@vger.kernel.org>; Fri, 16 Apr 2021 12:04:36 -0700 (PDT)
-Received: from [192.168.1.101] (abae68.neoplus.adsl.tpnet.pl [83.6.168.68])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by m-r2.th.seeweb.it (Postfix) with ESMTPSA id C079C3E984;
-        Fri, 16 Apr 2021 20:56:03 +0200 (CEST)
-Subject: Re: [PATCH 2/2] arm64: boot: dts: qcom: sm8150: Add DMA nodes
-To:     Felipe Balbi <balbi@kernel.org>, Andy Gross <agross@kernel.org>,
+        id S229631AbhDQGUX (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 17 Apr 2021 02:20:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229614AbhDQGUX (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sat, 17 Apr 2021 02:20:23 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4BAF7610FC;
+        Sat, 17 Apr 2021 06:19:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618640397;
+        bh=XzacGwZkbkzEsDYL6tQRR4fmj0U6QvXDRhCs/UdP9nI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=b33i2tNnvDRnPZSjwBWGD0VSuTsJrwRLlq3MJMCQBVjk/fziUQBPY/6BjvOr6JHdf
+         +KHBxYCtX03VuhxBeIi8HNIHRfvP/LuPpNYPy+Rm4Zv+67KUBUi3DDz53RmYxBV38x
+         ZZQbn5+ziSzwH4fmZyfX7X6l2o8Z9JSrFyswpdnHYL3SnH6P8q8Egh5nmEdM35dNLW
+         t7Jv7D4xVBoAPye0/DOyGXmJX/DW3CwNDfcrP0nQ00Ox/46KjcLhXXomUmSrtl/Q/W
+         ajitBY9R4G1zWZqMAbZl6ZyrWy1B1OpMmiX54tNfNXZo6z48aEow4ZhmmeJPPrFSDz
+         BC8qGHnkoA1cg==
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Vinod Koul <vkoul@kernel.org>
 Cc:     Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
         Felipe Balbi <felipe.balbi@microsoft.com>
-References: <20210416133133.2067467-1-balbi@kernel.org>
- <20210416133133.2067467-3-balbi@kernel.org>
-From:   Konrad Dybcio <konrad.dybcio@somainline.org>
-Message-ID: <0bb8e50d-9ea1-f616-6493-20fcb4e09e31@somainline.org>
-Date:   Fri, 16 Apr 2021 20:56:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+Subject: [PATCH v2 0/2] arm64: sm8150: Add minimal DMA support
+Date:   Sat, 17 Apr 2021 09:19:49 +0300
+Message-Id: <20210417061951.2105530-1-balbi@kernel.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-In-Reply-To: <20210416133133.2067467-3-balbi@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
->one little note. This was for a quick test. I can either remove, keep it
->or complete with the rest of the SPIs in this same patch. Let me know
+From: Felipe Balbi <felipe.balbi@microsoft.com>
 
->what y'all prefer :-)
+Hi,
 
+With these two patches, GPI DMA probes fine on sm8150 (well, after
+setting gpi_dma[012] status to okay). Future commits should come to add
+relevant DMA channel mapping for the various IPs.
 
-Yeah, please remove it from this one and send in a separate patch, preferably adding dmas to all the QUPs :)
+DTS patch a dependency on I2C patches by Caleb Connolly and SPI patch by
+yours truly.
 
+Felipe Balbi (2):
+  DMA: qcom: gpi: add compatible for sm8150
+  arm64: boot: dts: qcom: sm8150: Add DMA nodes
 
-Aaand since I already asked you to re-send, you might as well fix up the properties order under the nodes (compatible first, then reg, with #dma-cells somewhere at the bottom) and the unit name (should be "dma-controller@...").
+ .../devicetree/bindings/dma/qcom,gpi.yaml     |  1 +
+ arch/arm64/boot/dts/qcom/sm8150.dtsi          | 70 +++++++++++++++++++
+ drivers/dma/qcom/gpi.c                        |  1 +
+ 3 files changed, 72 insertions(+)
 
-
-Konrad
-
+-- 
+2.31.1
 

@@ -2,43 +2,44 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABD58363D5E
-	for <lists+dmaengine@lfdr.de>; Mon, 19 Apr 2021 10:20:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94BCF363E25
+	for <lists+dmaengine@lfdr.de>; Mon, 19 Apr 2021 11:03:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236521AbhDSIU5 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Mon, 19 Apr 2021 04:20:57 -0400
-Received: from mail-vs1-f51.google.com ([209.85.217.51]:38652 "EHLO
-        mail-vs1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229635AbhDSIU4 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 19 Apr 2021 04:20:56 -0400
-Received: by mail-vs1-f51.google.com with SMTP id s184so6761409vss.5;
-        Mon, 19 Apr 2021 01:20:25 -0700 (PDT)
+        id S232943AbhDSJEH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Mon, 19 Apr 2021 05:04:07 -0400
+Received: from mail-vs1-f42.google.com ([209.85.217.42]:45817 "EHLO
+        mail-vs1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232023AbhDSJEH (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 19 Apr 2021 05:04:07 -0400
+Received: by mail-vs1-f42.google.com with SMTP id r18so11290945vso.12;
+        Mon, 19 Apr 2021 02:03:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ltv54OOOgcKhPoH7oRaigoXMRi+Z2QqH7bQ4dTNkEvU=;
-        b=Ms0SsPF9J+tPj990DTLxJSvXO3Pmul5WCyeOMIDCVJ6fXcWAb6uJsC52eqzmbxUtMJ
-         Ul7GxKCbZ7tvkEEqDB5miyVfuIPIZ6Wf2fLEOnYrnyzAq9BFRVgE5tawuQnZZ1KvmiLL
-         EF/Qi81vkqZN75KRE3I2Ub033NMXNbhyaWlBPnaDUI/smGHJ8UPy9vAoTfFqPZVmpcjG
-         u+1xfNjeAWaCtnBNzLs677wnayVF3agzAGavKRFiZLiJM0DQwfElLwqOkGkNXKPR+lsq
-         TJLnDZHeX994hG8+Gw6qi4xtQrZg2dB0UisZo4zpBSW648ZZkTOPfDD7+avHhtZh59RH
-         iISg==
-X-Gm-Message-State: AOAM531bR0AI7GyosdsIXdtavR8bqUCmY3mDWUO7awITMHICVomqNNgB
-        TnOox77RR3JpNHchfmmIyY7YFvqX5Aujc9OIMxU=
-X-Google-Smtp-Source: ABdhPJw0QI7XOFx1TPnFrXWAlR/QW1v6zaWS/KnYbAtB/CEX2DsVVO2yNBv9r1VAA3kWmuOXuQwF2fQGH/J1go6B4oc=
-X-Received: by 2002:a67:f503:: with SMTP id u3mr12373252vsn.3.1618820424835;
- Mon, 19 Apr 2021 01:20:24 -0700 (PDT)
+        bh=YToQwZXN38nw8LU8icFLB58IB4Z2bfPdJB1gmWWtNj8=;
+        b=A1Gpw+KFRJ5RhzhK+MGm++v8ObABj3dTeD508KFrtbc7QA6wHjlVZ2wNnWA24Wm9qH
+         ZKWLhV244NO6o89Q6GspL4KaDDCWQc/Rr0lI8uQM9BsphAET/ujIJWTHUA1h7jBEwzzW
+         gv/iCoYzQS4SvHHOcATnexFXSRoVMjraHKTV+/t85IwQkFQaED92dtBjnuALNFqwThKN
+         z8L5EyISOQt0QtbWAEW05YxhRnGFqVcyi1gd0L1BXkCfBRVhGOdz52vO39RafdkWMRmK
+         kzyLacR5FJFpb72oawG1qLHU0bX4NRH6I6iQwZyC7mGmdOg6y4SDXDXw5wjp8+K6il+R
+         G38A==
+X-Gm-Message-State: AOAM530na+Q6FqX6tSAED3u+1sIRzHBwXKGnEtFn2I1lwzoVJ8frs1J3
+        NlCcjGhqMeS3WvdliarIHFqAUxE0pVenbDkJUPc=
+X-Google-Smtp-Source: ABdhPJxHtnj/DXie9H0wxpzVZlSTyniokdUb/gsNNsMkANVtAtzr2mFBhczBYEoBurfSWsjRkBkPBhRAOOMrjVGBWsw=
+X-Received: by 2002:a67:7c8c:: with SMTP id x134mr13821818vsc.40.1618823016409;
+ Mon, 19 Apr 2021 02:03:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210419042722.27554-1-alice.guo@oss.nxp.com> <20210419042722.27554-2-alice.guo@oss.nxp.com>
-In-Reply-To: <20210419042722.27554-2-alice.guo@oss.nxp.com>
+References: <20210419042722.27554-1-alice.guo@oss.nxp.com> <20210419042722.27554-4-alice.guo@oss.nxp.com>
+ <YH0O907dfGY9jQRZ@atmark-techno.com>
+In-Reply-To: <YH0O907dfGY9jQRZ@atmark-techno.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 19 Apr 2021 10:20:13 +0200
-Message-ID: <CAMuHMdUbrPxtJ9DCP0_nFrReuuO4vFY2J79LrKY82D7bCOfzRw@mail.gmail.com>
-Subject: Re: [RFC v1 PATCH 1/3] drivers: soc: add support for soc_device_match
- returning -EPROBE_DEFER
-To:     "Alice Guo (OSS)" <alice.guo@oss.nxp.com>
-Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
+Date:   Mon, 19 Apr 2021 11:03:24 +0200
+Message-ID: <CAMuHMdVY1SLZ0K30T2pimyrR6Mm=VoSTO=L-xxCy2Bj7_kostw@mail.gmail.com>
+Subject: Re: [RFC v1 PATCH 3/3] driver: update all the code that use soc_device_match
+To:     Dominique MARTINET <dominique.martinet@atmark-techno.com>
+Cc:     "Alice Guo (OSS)" <alice.guo@oss.nxp.com>,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
         horia.geanta@nxp.com, aymen.sghaier@nxp.com,
         herbert@gondor.apana.org.au, davem@davemloft.net, tony@atomide.com,
         geert+renesas@glider.be, mturquette@baylibre.com, sboyd@kernel.org,
@@ -70,61 +71,124 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Alice,
+Hi Dominique,
 
 CC Arnd (soc_device_match() author)
 
-On Mon, Apr 19, 2021 at 6:28 AM Alice Guo (OSS) <alice.guo@oss.nxp.com> wrote:
-> From: Alice Guo <alice.guo@nxp.com>
+On Mon, Apr 19, 2021 at 7:03 AM Dominique MARTINET
+<dominique.martinet@atmark-techno.com> wrote:
+> Alice Guo (OSS) wrote on Mon, Apr 19, 2021 at 12:27:22PM +0800:
+> > From: Alice Guo <alice.guo@nxp.com>
+> > Update all the code that use soc_device_match
 >
-> In i.MX8M boards, the registration of SoC device is later than caam
-> driver which needs it. Caam driver needs soc_device_match to provide
-> -EPROBE_DEFER when no SoC device is registered and no
-> early_soc_dev_attr.
+> A single patch might be difficult to accept for all components, a each
+> maintainer will probably want to have a say on their subsystem?
+>
+> I would suggest to split these for a non-RFC version; a this will really
+> need to be case-by-case handling.
+>
+> > because add support for soc_device_match returning -EPROBE_DEFER.
+>
+> (English does not parse here for me)
+>
+> I've only commented a couple of places in the code itself, but this
+> doesn't seem to add much support for errors, just sweep the problem
+> under the rug.
+>
+> > Signed-off-by: Alice Guo <alice.guo@nxp.com>
+> > ---
+> >
+> > diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+> > index 5fae60f8c135..00c59aa217c1 100644
+> > --- a/drivers/bus/ti-sysc.c
+> > +++ b/drivers/bus/ti-sysc.c
+> > @@ -2909,7 +2909,7 @@ static int sysc_init_soc(struct sysc *ddata)
+> >       }
+> >
+> >       match = soc_device_match(sysc_soc_feat_match);
+> > -     if (!match)
+> > +     if (!match || IS_ERR(match))
+> >               return 0;
+>
+> This function handles errors, I would recommend returning the error as
+> is if soc_device_match returned one so the probe can be retried later.
 
-I'm wondering if this is really a good idea: soc_device_match() is a
-last-resort low-level check, and IMHO should be made available early on,
-so there is no need for -EPROBE_DEFER.
+Depends...
+
+> > --- a/drivers/clk/renesas/r8a7795-cpg-mssr.c
+> > +++ b/drivers/clk/renesas/r8a7795-cpg-mssr.c
+> > @@ -439,6 +439,7 @@ static const unsigned int r8a7795es2_mod_nullify[] __initconst = {
+> >
+> >  static int __init r8a7795_cpg_mssr_init(struct device *dev)
+> >  {
+> > +     const struct soc_device_attribute *match;
+> >       const struct rcar_gen3_cpg_pll_config *cpg_pll_config;
+> >       u32 cpg_mode;
+> >       int error;
+> > @@ -453,7 +454,8 @@ static int __init r8a7795_cpg_mssr_init(struct device *dev)
+> >               return -EINVAL;
+> >       }
+> >
+> > -     if (soc_device_match(r8a7795es1)) {
+> > +     match = soc_device_match(r8a7795es1);
+> > +     if (!IS_ERR(match) && match) {
+>
+> Same, return the error.
+> Assuming an error means no match will just lead to hard to debug
+> problems because the driver potentially assumed the wrong device when
+> it's just not ready yet.
+
+When running on R-Car H3, there will always be a match device, as
+the SoC device is registered early.
 
 >
-> Signed-off-by: Alice Guo <alice.guo@nxp.com>
-
-Thanks for your patch!
-
-> --- a/drivers/base/soc.c
-> +++ b/drivers/base/soc.c
-> @@ -110,6 +110,7 @@ static void soc_release(struct device *dev)
->  }
+> >               cpg_core_nullify_range(r8a7795_core_clks,
+> >                                      ARRAY_SIZE(r8a7795_core_clks),
+> >                                      R8A7795_CLK_S0D2, R8A7795_CLK_S0D12);
+> > [...]
+> > diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
+> > index eaaec0a55cc6..13a06b613379 100644
+> > --- a/drivers/iommu/ipmmu-vmsa.c
+> > +++ b/drivers/iommu/ipmmu-vmsa.c
+> > @@ -757,17 +757,20 @@ static const char * const devices_allowlist[] = {
+> >
+> >  static bool ipmmu_device_is_allowed(struct device *dev)
+> >  {
+> > +     const struct soc_device_attribute *match1, *match2;
+> >       unsigned int i;
+> >
+> >       /*
+> >        * R-Car Gen3 and RZ/G2 use the allow list to opt-in devices.
+> >        * For Other SoCs, this returns true anyway.
+> >        */
+> > -     if (!soc_device_match(soc_needs_opt_in))
+> > +     match1 = soc_device_match(soc_needs_opt_in);
+> > +     if (!IS_ERR(match1) && !match1)
 >
->  static struct soc_device_attribute *early_soc_dev_attr;
-> +static bool soc_dev_attr_init_done = false;
-
-Do you need this variable?
-
+> I'm not sure what you intended to do, but !match1 already means there is
+> no error so the original code is identical.
 >
->  struct soc_device *soc_device_register(struct soc_device_attribute *soc_dev_attr)
->  {
-> @@ -157,6 +158,7 @@ struct soc_device *soc_device_register(struct soc_device_attribute *soc_dev_attr
->                 return ERR_PTR(ret);
->         }
+> In this case ipmmu_device_is_allowed does not allow errors so this is
+> one of the "difficult" drivers that require slightly more thinking.
+> It is only called in ipmmu_of_xlate which does return errors properly,
+> so in this case the most straightforward approach would be to make
+> ipmmu_device_is_allowed return an int and forward errors as well.
 >
-> +       soc_dev_attr_init_done = true;
->         return soc_dev;
->
->  out3:
-> @@ -246,6 +248,9 @@ const struct soc_device_attribute *soc_device_match(
->         if (!matches)
->                 return NULL;
->
-> +       if (!soc_dev_attr_init_done && !early_soc_dev_attr)
+> ...
+> This is going to need quite some more work to be acceptable, in my
+> opinion, but I think it should be possible.
 
-if (!soc_bus_type.p && !early_soc_dev_attr)
+In general, this is very hard to do, IMHO. Some drivers may be used on
+multiple platforms, some of them registering an SoC device, some of
+them not registering an SoC device.  So there is no way to know the
+difference between "SoC device not registered, intentionally", and
+"SoC device not yet registered".
 
-> +               return ERR_PTR(-EPROBE_DEFER);
-> +
->         while (!ret) {
->                 if (!(matches->machine || matches->family ||
->                       matches->revision || matches->soc_id))
+soc_device_match() should only be used as a last resort, to identify
+systems that cannot be identified otherwise.  Typically this is used for
+quirks, which should only be enabled on a very specific subset of
+systems.  IMHO such systems should make sure soc_device_match()
+is available early, by registering their SoC device early.
 
 Gr{oetje,eeting}s,
 

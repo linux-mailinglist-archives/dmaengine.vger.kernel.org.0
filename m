@@ -2,36 +2,34 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE815365FF1
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Apr 2021 21:00:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68818365FF4
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Apr 2021 21:01:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233632AbhDTTBY (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 20 Apr 2021 15:01:24 -0400
-Received: from mga02.intel.com ([134.134.136.20]:12161 "EHLO mga02.intel.com"
+        id S233694AbhDTTBb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 20 Apr 2021 15:01:31 -0400
+Received: from mga07.intel.com ([134.134.136.100]:15326 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233498AbhDTTBX (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 20 Apr 2021 15:01:23 -0400
-IronPort-SDR: dd8LqYho14Mba34Cl7zJ1GjcoWHN3W3m+ceT2sS2oI1rklC3Hi1ey6WoKVSQMto7eHVtWP+e+a
- 8uhYrpByBe3Q==
-X-IronPort-AV: E=McAfee;i="6200,9189,9960"; a="182701622"
+        id S233717AbhDTTBb (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 20 Apr 2021 15:01:31 -0400
+IronPort-SDR: naA/+4NeCK5onSnnCBJ6HMd1D+GYWmkPIFecJLdescEih4JZuImrX8XwlUnqGktRNALnvfzzdB
+ obSBx6J2/5Vw==
+X-IronPort-AV: E=McAfee;i="6200,9189,9960"; a="259525470"
 X-IronPort-AV: E=Sophos;i="5.82,237,1613462400"; 
-   d="scan'208";a="182701622"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2021 12:00:36 -0700
-IronPort-SDR: mul3YQHkpRQRhVWWoanA/HREB8oxZVeXgST84DWtG3vEaAvM4vR8ak+l4HYKJ1a8DixhgXLrto
- PRIm+U+40J8Q==
+   d="scan'208";a="259525470"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2021 12:00:57 -0700
+IronPort-SDR: IvXjH/O9inuc2aLSRyzGXB5roQHvJ9Fc2zcrEL/CsxwTLCzQCXXDrIX3M0rmj3wB2yOyIyXc5h
+ KVVkQV+MObrw==
 X-IronPort-AV: E=Sophos;i="5.82,237,1613462400"; 
-   d="scan'208";a="427108456"
+   d="scan'208";a="401167645"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2021 12:00:36 -0700
-Subject: [PATCH] dmaengine: idxd: remove MSIX masking for interrupt handlers
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2021 12:00:57 -0700
+Subject: [PATCH] dmaengine: idxd: device cmd should use dedicated lock
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     vkoul@kernel.org
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org
-Date:   Tue, 20 Apr 2021 12:00:34 -0700
-Message-ID: <161894523436.3210025.1834640110556139277.stgit@djiang5-desk3.ch.intel.com>
+Cc:     Sanjay Kumar <sanjay.k.kumar@intel.com>, dmaengine@vger.kernel.org
+Date:   Tue, 20 Apr 2021 12:00:56 -0700
+Message-ID: <161894525685.3210132.16160045731436382560.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -40,92 +38,111 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Remove interrupt masking and just let the hard irq handler keep
-firing for new events. This is less of a performance impact vs
-the MMIO readback inside the pci_msi_{mask,unmas}_irq(). Especially
-with a loaded system those flushes can be stuck behind large amounts
-of MMIO writes to flush. When guest kernel is running on top of VFIO
-mdev, mask/unmask causes a vmexit each time and is not desirable.
+Create a dedicated lock for device command operations. Put the device
+command operation under finer grained locking instead of using the
+idxd->dev_lock.
 
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Suggested-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/dma/idxd/idxd.h |    1 -
- drivers/dma/idxd/init.c |    4 ++--
- drivers/dma/idxd/irq.c  |   12 ------------
- 3 files changed, 2 insertions(+), 15 deletions(-)
+ drivers/dma/idxd/device.c |   18 +++++++++---------
+ drivers/dma/idxd/idxd.h   |    1 +
+ drivers/dma/idxd/init.c   |    1 +
+ 3 files changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index d7185c6bfade..7237f3e15a5e 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -376,7 +376,6 @@ void idxd_wqs_quiesce(struct idxd_device *idxd);
- /* device interrupt control */
- void idxd_msix_perm_setup(struct idxd_device *idxd);
- void idxd_msix_perm_clear(struct idxd_device *idxd);
--irqreturn_t idxd_irq_handler(int vec, void *data);
- irqreturn_t idxd_misc_thread(int vec, void *data);
- irqreturn_t idxd_wq_thread(int irq, void *data);
- void idxd_mask_error_interrupts(struct idxd_device *idxd);
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index e6bfd55e421b..36b33eef5aa2 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -102,7 +102,7 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
- 	}
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index 3934e660d951..420b93fe5feb 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -465,13 +465,13 @@ int idxd_device_init_reset(struct idxd_device *idxd)
+ 	memset(&cmd, 0, sizeof(cmd));
+ 	cmd.cmd = IDXD_CMD_RESET_DEVICE;
+ 	dev_dbg(dev, "%s: sending reset for init.\n", __func__);
+-	spin_lock_irqsave(&idxd->dev_lock, flags);
++	spin_lock_irqsave(&idxd->cmd_lock, flags);
+ 	iowrite32(cmd.bits, idxd->reg_base + IDXD_CMD_OFFSET);
  
- 	irq_entry = &idxd->irq_entries[0];
--	rc = request_threaded_irq(irq_entry->vector, idxd_irq_handler, idxd_misc_thread,
-+	rc = request_threaded_irq(irq_entry->vector, NULL, idxd_misc_thread,
- 				  0, "idxd-misc", irq_entry);
- 	if (rc < 0) {
- 		dev_err(dev, "Failed to allocate misc interrupt.\n");
-@@ -119,7 +119,7 @@ static int idxd_setup_interrupts(struct idxd_device *idxd)
- 
- 		init_llist_head(&idxd->irq_entries[i].pending_llist);
- 		INIT_LIST_HEAD(&idxd->irq_entries[i].work_list);
--		rc = request_threaded_irq(irq_entry->vector, idxd_irq_handler,
-+		rc = request_threaded_irq(irq_entry->vector, NULL,
- 					  idxd_wq_thread, 0, "idxd-portal", irq_entry);
- 		if (rc < 0) {
- 			dev_err(dev, "Failed to allocate irq %d.\n", irq_entry->vector);
-diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
-index 43eea5c9cbd4..afee571e0194 100644
---- a/drivers/dma/idxd/irq.c
-+++ b/drivers/dma/idxd/irq.c
-@@ -102,15 +102,6 @@ static int idxd_device_schedule_fault_process(struct idxd_device *idxd,
+ 	while (ioread32(idxd->reg_base + IDXD_CMDSTS_OFFSET) &
+ 	       IDXD_CMDSTS_ACTIVE)
+ 		cpu_relax();
+-	spin_unlock_irqrestore(&idxd->dev_lock, flags);
++	spin_unlock_irqrestore(&idxd->cmd_lock, flags);
  	return 0;
  }
  
--irqreturn_t idxd_irq_handler(int vec, void *data)
--{
--	struct idxd_irq_entry *irq_entry = data;
--	struct idxd_device *idxd = irq_entry->idxd;
--
--	idxd_mask_msix_vector(idxd, irq_entry->id);
--	return IRQ_WAKE_THREAD;
--}
--
- static int process_misc_interrupts(struct idxd_device *idxd, u32 cause)
- {
- 	struct device *dev = &idxd->pdev->dev;
-@@ -237,7 +228,6 @@ irqreturn_t idxd_misc_thread(int vec, void *data)
- 			iowrite32(cause, idxd->reg_base + IDXD_INTCAUSE_OFFSET);
- 	}
+@@ -494,10 +494,10 @@ static void idxd_cmd_exec(struct idxd_device *idxd, int cmd_code, u32 operand,
+ 	cmd.operand = operand;
+ 	cmd.int_req = 1;
  
--	idxd_unmask_msix_vector(idxd, irq_entry->id);
- 	return IRQ_HANDLED;
+-	spin_lock_irqsave(&idxd->dev_lock, flags);
++	spin_lock_irqsave(&idxd->cmd_lock, flags);
+ 	wait_event_lock_irq(idxd->cmd_waitq,
+ 			    !test_bit(IDXD_FLAG_CMD_RUNNING, &idxd->flags),
+-			    idxd->dev_lock);
++			    idxd->cmd_lock);
+ 
+ 	dev_dbg(&idxd->pdev->dev, "%s: sending cmd: %#x op: %#x\n",
+ 		__func__, cmd_code, operand);
+@@ -511,9 +511,9 @@ static void idxd_cmd_exec(struct idxd_device *idxd, int cmd_code, u32 operand,
+ 	 * After command submitted, release lock and go to sleep until
+ 	 * the command completes via interrupt.
+ 	 */
+-	spin_unlock_irqrestore(&idxd->dev_lock, flags);
++	spin_unlock_irqrestore(&idxd->cmd_lock, flags);
+ 	wait_for_completion(&done);
+-	spin_lock_irqsave(&idxd->dev_lock, flags);
++	spin_lock_irqsave(&idxd->cmd_lock, flags);
+ 	if (status) {
+ 		*status = ioread32(idxd->reg_base + IDXD_CMDSTS_OFFSET);
+ 		idxd->cmd_status = *status & GENMASK(7, 0);
+@@ -522,7 +522,7 @@ static void idxd_cmd_exec(struct idxd_device *idxd, int cmd_code, u32 operand,
+ 	__clear_bit(IDXD_FLAG_CMD_RUNNING, &idxd->flags);
+ 	/* Wake up other pending commands */
+ 	wake_up(&idxd->cmd_waitq);
+-	spin_unlock_irqrestore(&idxd->dev_lock, flags);
++	spin_unlock_irqrestore(&idxd->cmd_lock, flags);
  }
  
-@@ -394,8 +384,6 @@ irqreturn_t idxd_wq_thread(int irq, void *data)
- 	int processed;
+ int idxd_device_enable(struct idxd_device *idxd)
+@@ -667,13 +667,13 @@ int idxd_device_release_int_handle(struct idxd_device *idxd, int handle,
  
- 	processed = idxd_desc_process(irq_entry);
--	idxd_unmask_msix_vector(irq_entry->idxd, irq_entry->id);
--
- 	if (processed == 0)
- 		return IRQ_NONE;
+ 	dev_dbg(dev, "cmd: %u operand: %#x\n", IDXD_CMD_RELEASE_INT_HANDLE, operand);
  
+-	spin_lock_irqsave(&idxd->dev_lock, flags);
++	spin_lock_irqsave(&idxd->cmd_lock, flags);
+ 	iowrite32(cmd.bits, idxd->reg_base + IDXD_CMD_OFFSET);
+ 
+ 	while (ioread32(idxd->reg_base + IDXD_CMDSTS_OFFSET) & IDXD_CMDSTS_ACTIVE)
+ 		cpu_relax();
+ 	status = ioread32(idxd->reg_base + IDXD_CMDSTS_OFFSET);
+-	spin_unlock_irqrestore(&idxd->dev_lock, flags);
++	spin_unlock_irqrestore(&idxd->cmd_lock, flags);
+ 
+ 	if ((status & IDXD_CMDSTS_ERR_MASK) != IDXD_CMDSTS_SUCCESS) {
+ 		dev_dbg(dev, "release int handle failed: %#x\n", status);
+diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+index 7237f3e15a5e..97c96ca6ab70 100644
+--- a/drivers/dma/idxd/idxd.h
++++ b/drivers/dma/idxd/idxd.h
+@@ -204,6 +204,7 @@ struct idxd_device {
+ 	void __iomem *reg_base;
+ 
+ 	spinlock_t dev_lock;	/* spinlock for device */
++	spinlock_t cmd_lock;	/* spinlock for device commands */
+ 	struct completion *cmd_done;
+ 	struct idxd_group **groups;
+ 	struct idxd_wq **wqs;
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index 36b33eef5aa2..8003f8a25fff 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -449,6 +449,7 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_d
+ 	}
+ 
+ 	spin_lock_init(&idxd->dev_lock);
++	spin_lock_init(&idxd->cmd_lock);
+ 
+ 	return idxd;
+ }
 
 

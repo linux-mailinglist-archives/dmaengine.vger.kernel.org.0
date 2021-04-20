@@ -2,35 +2,44 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F2F33654C7
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Apr 2021 11:07:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1CE03654F2
+	for <lists+dmaengine@lfdr.de>; Tue, 20 Apr 2021 11:11:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231253AbhDTJIS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 20 Apr 2021 05:08:18 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:42069 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231250AbhDTJIS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 20 Apr 2021 05:08:18 -0400
-Received: from mail-wr1-f47.google.com ([209.85.221.47]) by
- mrelayeu.kundenserver.de (mreue106 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1M3lLh-1lYVNL03GN-000snS; Tue, 20 Apr 2021 11:07:44 +0200
-Received: by mail-wr1-f47.google.com with SMTP id e7so27820771wrs.11;
-        Tue, 20 Apr 2021 02:07:43 -0700 (PDT)
-X-Gm-Message-State: AOAM530bK2/Zhpk5hISNbBeQuJc8bwXLZL3Op5+Z3jB4wVxrjl+Sao6S
-        C+gjr8AN0THF/N2eQjocMKwjVco4O5LSgtigO90=
-X-Google-Smtp-Source: ABdhPJwSiNwlZ27l6d0oeVOJMjBIBpaEf6fV+Kr02yQOCGa6DdHdokE+eIs4+TiyDD+ybgS8jO4hGYikHl0QAhmuRDs=
-X-Received: by 2002:adf:db4f:: with SMTP id f15mr19571156wrj.99.1618909652608;
- Tue, 20 Apr 2021 02:07:32 -0700 (PDT)
+        id S231317AbhDTJLl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 20 Apr 2021 05:11:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230168AbhDTJLk (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Tue, 20 Apr 2021 05:11:40 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C2578611F2;
+        Tue, 20 Apr 2021 09:11:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618909868;
+        bh=DeGQ9vUDRCVhA8t5Ph+0N53DtPOXi7alQM8lRrwQwKo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EXaUejfPaaye7JWUCmF8GSi/RlYZhQsdmX+kLcrBeX0F1eFgr44krM1ixkRCmXqkg
+         FBkMtZZGYAFq9xBKq5dcb2BOQt+ZCJKFph809k2UHYXQ05bfNbCW2UMcbcmTQ+BSp+
+         d4wYwcs4Xh3CFODUAnQ6T/3q0QUsxZsoXx5nhwd/fpBWvKp8/59bRQmO/3zgbXcwmK
+         5ZxGXiVuroDwkEdd0DsqBUmQGVuvW3ND1+dRkLPV1j+YSFx6n/pEQ0ehheOXLBySbA
+         UArXFDspN2qbdaPSjruyfPlBf3HVvFuXT3t/kqjY8MxeeKRO9TZhjCji8FQIgiY4FO
+         xIB/CJ63eyrXQ==
+Received: by mail-lj1-f178.google.com with SMTP id z8so42658767ljm.12;
+        Tue, 20 Apr 2021 02:11:08 -0700 (PDT)
+X-Gm-Message-State: AOAM533SDLFv+8U2cQAkLeNYA2TzKm+lQzaAn+kjLb27vIbPMbniOYla
+        gWp78iF/GVMwBz/LYp5LtDI82tXsLCuw6Bud0xA=
+X-Google-Smtp-Source: ABdhPJyHjUN6C0/sUkUlP+4nedtBBPWCDMG4VnGKqPhVa1uJB5nLQGViYOHp7TNdMb76BpIs8GkQPbFl+yNnVewK4NU=
+X-Received: by 2002:a5d:6dc4:: with SMTP id d4mr20219548wrz.105.1618909856639;
+ Tue, 20 Apr 2021 02:10:56 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210419042722.27554-1-alice.guo@oss.nxp.com> <20210419042722.27554-4-alice.guo@oss.nxp.com>
  <YH0O907dfGY9jQRZ@atmark-techno.com> <CAMuHMdVY1SLZ0K30T2pimyrR6Mm=VoSTO=L-xxCy2Bj7_kostw@mail.gmail.com>
  <YH1OeFy+SepIYYG0@atmark-techno.com> <CAK8P3a1Mu2F0irDDCL-50HiHth29iYFL5b7WHZ=UX6W7zzoxAg@mail.gmail.com>
  <YH4VdPNO9cdzc5MD@atmark-techno.com>
 In-Reply-To: <YH4VdPNO9cdzc5MD@atmark-techno.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 20 Apr 2021 11:07:16 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1GjeHyMCworQYVtp5U0uu2B9VBHmf9y0hGn-o8aKSJZw@mail.gmail.com>
-Message-ID: <CAK8P3a1GjeHyMCworQYVtp5U0uu2B9VBHmf9y0hGn-o8aKSJZw@mail.gmail.com>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Tue, 20 Apr 2021 11:10:40 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1tPQm1Qj2KZu2jOM=TUP0dJgP4G9eKkWfv-PZEAWEhyA@mail.gmail.com>
+Message-ID: <CAK8P3a1tPQm1Qj2KZu2jOM=TUP0dJgP4G9eKkWfv-PZEAWEhyA@mail.gmail.com>
 Subject: Re: [RFC v1 PATCH 3/3] driver: update all the code that use soc_device_match
 To:     Dominique MARTINET <dominique.martinet@atmark-techno.com>
 Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
@@ -90,22 +99,6 @@ Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
         USB list <linux-usb@vger.kernel.org>,
         LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:ltcVWPzbOzdUu0wQVBbKGnNxKoc98HAW0duSMZcYgv925OTLSOo
- ZELSDbcdcLSNH6jcDj67BsKk30EPrQcQ8Efw82x799k6bMj9s2S+m69ZiBVlhuvUlnJi1KE
- D7RnoNvLskVAUP5tUpp+AzAQkOM4ikGI/bBCnIU1DkH5GwBwAgWr5giBTyb98Y4I7MSVa9V
- glR/dmIR70ry9QtHaxTJQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:m62Jwkt4Q9A=:KANWiBROdRHMBQ5xLHe3U2
- hzC4pqyCkSOIDCpwHHpdfePw/DSVMWP11cjA9UAjvJaYaBXCZ5ZviOUZuds+WAtiQuHxsqgvG
- nZi4yzXKiBDbdqpDmqSnJSLdXBr5QaacWl8ByR2QA/IPJEKeZxqlFpXmUIRvvw9yILmSAgAwm
- kTxiSk1xsoLYt4eUP9X1BKjgUadX4/EsohQRwshD6awFocrh/vn5To8p+UeSEy9M6vG6ayoc3
- KzloVi0GVUYRFc1NPbKUAVnYQJMIhG77x+Cm3slvPquhclTau9xa2jEDlsYf9AmTY1xTPSiJr
- /g5TniSnhP8grlfVciwqdoi923h7Wd+xuUOomDfXdzWsGmOnj0YXIDpS+jnskS4OcxhO+FRMn
- FzZZ9kkBvKQlYDBBlVJSIXMDuM+k11tV7v8z5yaqgg7dlymVRjd+HCL64OR8G/W0vIDw4rPr2
- pp7HSGeYD00x82SkyzleiGe82V3CUweY4dnSbInIp/X4AIhFXsZWIlACLNsg0WEDBBic9FOVB
- pe4HnvYTumVgpgOpu+WBCL4nBvUWvDUeLp2H0ZtwDqDlJhW2cPSYgGYmEkc9JgZOSAjBhucWB
- ySMJnPpH3XQziDvSrylbWsiz0S5V3jaD6fnbfN05zGkdzDFwrWIH2hlbOI7PqXh7Y+r9HScxY
- jsF4=
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org

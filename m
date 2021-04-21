@@ -2,147 +2,124 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68818365FF4
-	for <lists+dmaengine@lfdr.de>; Tue, 20 Apr 2021 21:01:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E789836651A
+	for <lists+dmaengine@lfdr.de>; Wed, 21 Apr 2021 08:01:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233694AbhDTTBb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 20 Apr 2021 15:01:31 -0400
-Received: from mga07.intel.com ([134.134.136.100]:15326 "EHLO mga07.intel.com"
+        id S231354AbhDUGBw (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 21 Apr 2021 02:01:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233717AbhDTTBb (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 20 Apr 2021 15:01:31 -0400
-IronPort-SDR: naA/+4NeCK5onSnnCBJ6HMd1D+GYWmkPIFecJLdescEih4JZuImrX8XwlUnqGktRNALnvfzzdB
- obSBx6J2/5Vw==
-X-IronPort-AV: E=McAfee;i="6200,9189,9960"; a="259525470"
-X-IronPort-AV: E=Sophos;i="5.82,237,1613462400"; 
-   d="scan'208";a="259525470"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2021 12:00:57 -0700
-IronPort-SDR: IvXjH/O9inuc2aLSRyzGXB5roQHvJ9Fc2zcrEL/CsxwTLCzQCXXDrIX3M0rmj3wB2yOyIyXc5h
- KVVkQV+MObrw==
-X-IronPort-AV: E=Sophos;i="5.82,237,1613462400"; 
-   d="scan'208";a="401167645"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2021 12:00:57 -0700
-Subject: [PATCH] dmaengine: idxd: device cmd should use dedicated lock
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     vkoul@kernel.org
-Cc:     Sanjay Kumar <sanjay.k.kumar@intel.com>, dmaengine@vger.kernel.org
-Date:   Tue, 20 Apr 2021 12:00:56 -0700
-Message-ID: <161894525685.3210132.16160045731436382560.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/0.23-29-ga622f1
+        id S230343AbhDUGBw (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 21 Apr 2021 02:01:52 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D5E916100A;
+        Wed, 21 Apr 2021 06:01:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618984879;
+        bh=6FjsOQSh7Hi/oGJ9pXqxW8e7eha1gtbPY7bBsDkVCYE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pbrOLZIwBEowdvqZNySt54+d/jA6eBoYMoWezzqYMJQeB7gUeGy98SzJjQxHHiOKy
+         8A1BNVxll3Al3+/QHMnNhRTl6u2OVTbgsPHbfdkxR/K2MG+5kYvK2e0bERtpqApe+2
+         u9YNrwBaz64LyWyh0pMI5sdA8Yyqgz9JEMvolKRVv44fCngtdjmuIRR8vTCPCggE+6
+         GxUkYfd3BFEBj/6I8Ti/oz7jlZLCfz00LqwwF8NZWYuVp1I777QtnT+5BsYcLuXcni
+         W2Cba//Tn0BgfzdOA3kxdSEvGEAEJL3MNGw867p9e44mGNrIDqPrFgK1tA9iDlTN/+
+         x1iDRilqReDvA==
+Date:   Wed, 21 Apr 2021 11:31:15 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     "Zanussi, Tom" <tom.zanussi@linux.intel.com>
+Cc:     peterz@infradead.org, acme@kernel.org, mingo@kernel.org,
+        kan.liang@linux.intel.com, dave.jiang@intel.com,
+        tony.luck@intel.com, dan.j.williams@intel.com,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] dmaengine: idxd: Add IDXD performance monitor
+ support
+Message-ID: <YH+/qyUVtlHwWQJ/@vkoul-mobl.Dlink>
+References: <cover.1617467772.git.zanussi@kernel.org>
+ <d38a8b3a5d087f1df918fa98627938ef0c898208.1617467772.git.zanussi@kernel.org>
+ <YH623ULPRbdi1ker@vkoul-mobl.Dlink>
+ <34f61cc9-a6d6-e5a3-5f8c-6ffae8858cce@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <34f61cc9-a6d6-e5a3-5f8c-6ffae8858cce@linux.intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Create a dedicated lock for device command operations. Put the device
-command operation under finer grained locking instead of using the
-idxd->dev_lock.
+On 20-04-21, 09:13, Zanussi, Tom wrote:
+> Hi Vinod,
+> 
+> On 4/20/2021 6:11 AM, Vinod Koul wrote:
+> > On 03-04-21, 11:45, Tom Zanussi wrote:
+> > 
+> > > +config INTEL_IDXD_PERFMON
+> > > +	bool "Intel Data Accelerators performance monitor support"
+> > > +	depends on INTEL_IDXD
+> > > +	default y
+> > 
+> > default y..?
+> 
+> Will change to n.
 
-Suggested-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/dma/idxd/device.c |   18 +++++++++---------
- drivers/dma/idxd/idxd.h   |    1 +
- drivers/dma/idxd/init.c   |    1 +
- 3 files changed, 11 insertions(+), 9 deletions(-)
+That is the default, you may drop this line
 
-diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
-index 3934e660d951..420b93fe5feb 100644
---- a/drivers/dma/idxd/device.c
-+++ b/drivers/dma/idxd/device.c
-@@ -465,13 +465,13 @@ int idxd_device_init_reset(struct idxd_device *idxd)
- 	memset(&cmd, 0, sizeof(cmd));
- 	cmd.cmd = IDXD_CMD_RESET_DEVICE;
- 	dev_dbg(dev, "%s: sending reset for init.\n", __func__);
--	spin_lock_irqsave(&idxd->dev_lock, flags);
-+	spin_lock_irqsave(&idxd->cmd_lock, flags);
- 	iowrite32(cmd.bits, idxd->reg_base + IDXD_CMD_OFFSET);
- 
- 	while (ioread32(idxd->reg_base + IDXD_CMDSTS_OFFSET) &
- 	       IDXD_CMDSTS_ACTIVE)
- 		cpu_relax();
--	spin_unlock_irqrestore(&idxd->dev_lock, flags);
-+	spin_unlock_irqrestore(&idxd->cmd_lock, flags);
- 	return 0;
- }
- 
-@@ -494,10 +494,10 @@ static void idxd_cmd_exec(struct idxd_device *idxd, int cmd_code, u32 operand,
- 	cmd.operand = operand;
- 	cmd.int_req = 1;
- 
--	spin_lock_irqsave(&idxd->dev_lock, flags);
-+	spin_lock_irqsave(&idxd->cmd_lock, flags);
- 	wait_event_lock_irq(idxd->cmd_waitq,
- 			    !test_bit(IDXD_FLAG_CMD_RUNNING, &idxd->flags),
--			    idxd->dev_lock);
-+			    idxd->cmd_lock);
- 
- 	dev_dbg(&idxd->pdev->dev, "%s: sending cmd: %#x op: %#x\n",
- 		__func__, cmd_code, operand);
-@@ -511,9 +511,9 @@ static void idxd_cmd_exec(struct idxd_device *idxd, int cmd_code, u32 operand,
- 	 * After command submitted, release lock and go to sleep until
- 	 * the command completes via interrupt.
- 	 */
--	spin_unlock_irqrestore(&idxd->dev_lock, flags);
-+	spin_unlock_irqrestore(&idxd->cmd_lock, flags);
- 	wait_for_completion(&done);
--	spin_lock_irqsave(&idxd->dev_lock, flags);
-+	spin_lock_irqsave(&idxd->cmd_lock, flags);
- 	if (status) {
- 		*status = ioread32(idxd->reg_base + IDXD_CMDSTS_OFFSET);
- 		idxd->cmd_status = *status & GENMASK(7, 0);
-@@ -522,7 +522,7 @@ static void idxd_cmd_exec(struct idxd_device *idxd, int cmd_code, u32 operand,
- 	__clear_bit(IDXD_FLAG_CMD_RUNNING, &idxd->flags);
- 	/* Wake up other pending commands */
- 	wake_up(&idxd->cmd_waitq);
--	spin_unlock_irqrestore(&idxd->dev_lock, flags);
-+	spin_unlock_irqrestore(&idxd->cmd_lock, flags);
- }
- 
- int idxd_device_enable(struct idxd_device *idxd)
-@@ -667,13 +667,13 @@ int idxd_device_release_int_handle(struct idxd_device *idxd, int handle,
- 
- 	dev_dbg(dev, "cmd: %u operand: %#x\n", IDXD_CMD_RELEASE_INT_HANDLE, operand);
- 
--	spin_lock_irqsave(&idxd->dev_lock, flags);
-+	spin_lock_irqsave(&idxd->cmd_lock, flags);
- 	iowrite32(cmd.bits, idxd->reg_base + IDXD_CMD_OFFSET);
- 
- 	while (ioread32(idxd->reg_base + IDXD_CMDSTS_OFFSET) & IDXD_CMDSTS_ACTIVE)
- 		cpu_relax();
- 	status = ioread32(idxd->reg_base + IDXD_CMDSTS_OFFSET);
--	spin_unlock_irqrestore(&idxd->dev_lock, flags);
-+	spin_unlock_irqrestore(&idxd->cmd_lock, flags);
- 
- 	if ((status & IDXD_CMDSTS_ERR_MASK) != IDXD_CMDSTS_SUCCESS) {
- 		dev_dbg(dev, "release int handle failed: %#x\n", status);
-diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
-index 7237f3e15a5e..97c96ca6ab70 100644
---- a/drivers/dma/idxd/idxd.h
-+++ b/drivers/dma/idxd/idxd.h
-@@ -204,6 +204,7 @@ struct idxd_device {
- 	void __iomem *reg_base;
- 
- 	spinlock_t dev_lock;	/* spinlock for device */
-+	spinlock_t cmd_lock;	/* spinlock for device commands */
- 	struct completion *cmd_done;
- 	struct idxd_group **groups;
- 	struct idxd_wq **wqs;
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index 36b33eef5aa2..8003f8a25fff 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -449,6 +449,7 @@ static struct idxd_device *idxd_alloc(struct pci_dev *pdev, struct idxd_driver_d
- 	}
- 
- 	spin_lock_init(&idxd->dev_lock);
-+	spin_lock_init(&idxd->cmd_lock);
- 
- 	return idxd;
- }
+> 
+> > 
+> > >   /* IDXD software descriptor */
+> > > @@ -369,4 +399,19 @@ int idxd_cdev_get_major(struct idxd_device *idxd);
+> > >   int idxd_wq_add_cdev(struct idxd_wq *wq);
+> > >   void idxd_wq_del_cdev(struct idxd_wq *wq);
+> > > +/* perfmon */
+> > > +#ifdef CONFIG_INTEL_IDXD_PERFMON
+> > 
+> > maybe use IS_ENABLED()
 
+?
 
+> > 
+> > > @@ -556,6 +562,8 @@ static int __init idxd_init_module(void)
+> > >   	for (i = 0; i < IDXD_TYPE_MAX; i++)
+> > >   		idr_init(&idxd_idrs[i]);
+> > > +	perfmon_init();
+> > > +
+> > >   	err = idxd_register_bus_type();
+> > >   	if (err < 0)
+> > >   		return err;
+> > > @@ -589,5 +597,6 @@ static void __exit idxd_exit_module(void)
+> > >   	pci_unregister_driver(&idxd_pci_driver);
+> > >   	idxd_cdev_remove();
+> > >   	idxd_unregister_bus_type();
+> > > +	perfmon_exit();
+> > 
+> > Ideally would make sense to add perfmon module first and then add use in
+> > idxd..
+> > 
+> 
+> OK, I'll separate this out into a separate patch.
+> 
+> > > +static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
+> > > +			    char *buf);
+> > > +
+> > > +static cpumask_t		perfmon_dsa_cpu_mask;
+> > > +static bool			cpuhp_set_up;
+> > > +static enum cpuhp_state		cpuhp_slot;
+> > > +
+> > > +static DEVICE_ATTR_RO(cpumask);
+> > 
+> > Pls document these new attributes added
+
+?
+
+> > 
+> > > +static int perfmon_collect_events(struct idxd_pmu *idxd_pmu,
+> > > +				  struct perf_event *leader,
+> > > +				  bool dogrp)
+> > 
+> > dogrp..?
+> > 
+> 
+> Yeah, bad name, first thought on seeing it is always 'dog'. ;-)
+
+Yep, that was my first read as well... i guess it would be better as
+do_grp
+-- 
+~Vinod

@@ -2,112 +2,97 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA90D367493
-	for <lists+dmaengine@lfdr.de>; Wed, 21 Apr 2021 23:05:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3152367CA6
+	for <lists+dmaengine@lfdr.de>; Thu, 22 Apr 2021 10:38:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245719AbhDUVFh (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 21 Apr 2021 17:05:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43644 "EHLO mail.kernel.org"
+        id S235481AbhDVIjH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 22 Apr 2021 04:39:07 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:34362 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S245716AbhDUVFh (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 21 Apr 2021 17:05:37 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9841E613B7;
-        Wed, 21 Apr 2021 21:05:02 +0000 (UTC)
-From:   Tom Zanussi <tom.zanussi@linux.intel.com>
-To:     vkoul@kernel.org
-Cc:     peterz@infradead.org, acme@kernel.org, mingo@kernel.org,
-        kan.liang@linux.intel.com, dave.jiang@intel.com,
-        tony.luck@intel.com, dan.j.williams@intel.com,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: [PATCH v3 2/2] dmaengine: idxd: Enable IDXD performance monitor support
-Date:   Wed, 21 Apr 2021 16:04:55 -0500
-Message-Id: <cfa98a44dd90a40a1bb776bcb9b76c2cfb1ad232.1619033785.git.zanussi@kernel.org>
+        id S235469AbhDVIjG (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 22 Apr 2021 04:39:06 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 907F61A0A22;
+        Thu, 22 Apr 2021 10:38:31 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 456D91A1A53;
+        Thu, 22 Apr 2021 10:38:29 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3BD5F40366;
+        Thu, 22 Apr 2021 10:38:02 +0200 (CEST)
+From:   Guanhua Gao <guanhua.gao@nxp.com>
+To:     Vinod Koul <vkoul@kernel.org>, Yi Zhao <yi.zhao@nxp.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guanhua Gao <guanhua.gao@nxp.com>
+Subject: [PATCH v2 1/3] dmaengine: fsl-dpaa2-qdma: Fix the size of dma pools
+Date:   Thu, 22 Apr 2021 16:44:12 +0800
+Message-Id: <20210422084412.796-1-guanhua.gao@nxp.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1619033785.git.zanussi@kernel.org>
-References: <cover.1619033785.git.zanussi@kernel.org>
-In-Reply-To: <cover.1619033785.git.zanussi@kernel.org>
-References: <cover.1619033785.git.zanussi@kernel.org>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Add the code needed in the main IDXD driver to interface with the IDXD
-perfmon implementation.
+In case of long format of qDMA command descriptor, there are one frame
+descriptor, three entries in the frame list and two data entries. So the
+size of dma_pool_create for these three fields should be the same with
+the total size of entries respectively, or the contents may be overwritten
+by the next allocated descriptor.
 
-[ Based on work originally by Jing Lin. ]
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+Signed-off-by: Guanhua Gao <guanhua.gao@nxp.com>
 ---
- drivers/dma/idxd/init.c | 9 +++++++++
- drivers/dma/idxd/irq.c  | 5 +----
- 2 files changed, 10 insertions(+), 4 deletions(-)
+Change in v2:
+ - Add comments for changes.
+ - Update copyright year.
 
-diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
-index e8f64324bb3a..4c6ea15cb641 100644
---- a/drivers/dma/idxd/init.c
-+++ b/drivers/dma/idxd/init.c
-@@ -21,6 +21,7 @@
- #include "../dmaengine.h"
- #include "registers.h"
- #include "idxd.h"
-+#include "perfmon.h"
+ drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c b/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
+index 4ec909e0b810..de3eff3f3de3 100644
+--- a/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
++++ b/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+-// Copyright 2019 NXP
++// Copyright 2019-2021 NXP
  
- MODULE_VERSION(IDXD_DRIVER_VERSION);
- MODULE_LICENSE("GPL v2");
-@@ -489,6 +490,10 @@ static int idxd_probe(struct idxd_device *idxd)
+ #include <linux/init.h>
+ #include <linux/module.h>
+@@ -32,21 +32,29 @@ static int dpaa2_qdma_alloc_chan_resources(struct dma_chan *chan)
+ 	struct dpaa2_qdma_engine *dpaa2_qdma = dpaa2_chan->qdma;
+ 	struct device *dev = &dpaa2_qdma->priv->dpdmai_dev->dev;
  
- 	idxd->major = idxd_cdev_get_major(idxd);
++	/* dma pool for compound command descriptor */
+ 	dpaa2_chan->fd_pool = dma_pool_create("fd_pool", dev,
+ 					      sizeof(struct dpaa2_fd),
+ 					      sizeof(struct dpaa2_fd), 0);
+ 	if (!dpaa2_chan->fd_pool)
+ 		goto err;
  
-+	rc = perfmon_pmu_init(idxd);
-+	if (rc < 0)
-+		dev_warn(dev, "Failed to initialize perfmon. No PMU support: %d\n", rc);
+-	dpaa2_chan->fl_pool = dma_pool_create("fl_pool", dev,
+-					      sizeof(struct dpaa2_fl_entry),
+-					      sizeof(struct dpaa2_fl_entry), 0);
++	/*
++	 * dma pool for descriptor entry, source data entry, and
++	 * destination data entry.
++	 */
++	dpaa2_chan->fl_pool =
++		dma_pool_create("fl_pool", dev,
++				 sizeof(struct dpaa2_fl_entry) * 3,
++				 sizeof(struct dpaa2_fl_entry), 0);
 +
- 	dev_dbg(dev, "IDXD device %d probed successfully\n", idxd->id);
- 	return 0;
+ 	if (!dpaa2_chan->fl_pool)
+ 		goto err_fd;
  
-@@ -636,6 +641,7 @@ static void idxd_remove(struct pci_dev *pdev)
- 	if (device_pasid_enabled(idxd))
- 		idxd_disable_system_pasid(idxd);
- 	idxd_unregister_devices(idxd);
-+	perfmon_pmu_remove(idxd);
- }
- 
- static struct pci_driver idxd_pci_driver = {
-@@ -664,6 +670,8 @@ static int __init idxd_init_module(void)
- 	else
- 		support_enqcmd = true;
- 
-+	perfmon_init();
-+
- 	err = idxd_register_bus_type();
- 	if (err < 0)
- 		return err;
-@@ -697,5 +705,6 @@ static void __exit idxd_exit_module(void)
- 	pci_unregister_driver(&idxd_pci_driver);
- 	idxd_cdev_remove();
- 	idxd_unregister_bus_type();
-+	perfmon_exit();
- }
- module_exit(idxd_exit_module);
-diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
-index fc0781e3f36d..ae6738470fab 100644
---- a/drivers/dma/idxd/irq.c
-+++ b/drivers/dma/idxd/irq.c
-@@ -165,11 +165,8 @@ static int process_misc_interrupts(struct idxd_device *idxd, u32 cause)
- 	}
- 
- 	if (cause & IDXD_INTC_PERFMON_OVFL) {
--		/*
--		 * Driver does not utilize perfmon counter overflow interrupt
--		 * yet.
--		 */
- 		val |= IDXD_INTC_PERFMON_OVFL;
-+		perfmon_counter_overflow(idxd);
- 	}
- 
- 	val ^= cause;
++	/* dma pool for source descriptor and destination descriptor */
+ 	dpaa2_chan->sdd_pool =
+ 		dma_pool_create("sdd_pool", dev,
+-				sizeof(struct dpaa2_qdma_sd_d),
++				sizeof(struct dpaa2_qdma_sd_d) * 2,
+ 				sizeof(struct dpaa2_qdma_sd_d), 0);
+ 	if (!dpaa2_chan->sdd_pool)
+ 		goto err_fl;
 -- 
-2.17.1
+2.25.1
 

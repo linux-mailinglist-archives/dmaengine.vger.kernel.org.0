@@ -2,101 +2,64 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6155C369904
-	for <lists+dmaengine@lfdr.de>; Fri, 23 Apr 2021 20:15:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2A1836994F
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Apr 2021 20:23:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243688AbhDWSQL (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 23 Apr 2021 14:16:11 -0400
-Received: from mga05.intel.com ([192.55.52.43]:9349 "EHLO mga05.intel.com"
+        id S232238AbhDWSXo (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 23 Apr 2021 14:23:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243743AbhDWSPo (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Fri, 23 Apr 2021 14:15:44 -0400
-IronPort-SDR: PamKz+ZdjvVq4eTqhAJkhwQb9B7JfbVubhizrNlRbATUutYaX+m2P5ZoGNeffDtnHgy0CwRX9E
- eRd6ESN/DIAA==
-X-IronPort-AV: E=McAfee;i="6200,9189,9963"; a="281440628"
-X-IronPort-AV: E=Sophos;i="5.82,246,1613462400"; 
-   d="scan'208";a="281440628"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2021 11:15:04 -0700
-IronPort-SDR: DYEa+ZiFmx7GrvC+NvoTuIHB5o4Su+UVywa5GYtk99dVWzgeQTCBepazR40pTf3O84wpEQsvix
- AyHTEPk0dFbg==
-X-IronPort-AV: E=Sophos;i="5.82,246,1613462400"; 
-   d="scan'208";a="453647439"
-Received: from tzanussi-mobl4.amr.corp.intel.com (HELO [10.209.163.164]) ([10.209.163.164])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2021 11:15:03 -0700
-Subject: Re: [PATCH v3 0/2] dmaengine: idxd: IDXD pmu support
-To:     Vinod Koul <vkoul@kernel.org>
+        id S231400AbhDWSXo (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Fri, 23 Apr 2021 14:23:44 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 838A0613C9;
+        Fri, 23 Apr 2021 18:23:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1619202187;
+        bh=fLCjhlIuPWn7MAEV2Muf/CrOpU3o8rqRl01jZfFAHoA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lzblvx4rchzW63W2sAv9wqPCf85bbR37YSE6BY5v7pcbTmpfumrqXiwA0JfCZC3IT
+         7oYy8scg+m2MAryZOMfdXKOIdcQ9MyZgxDkscSHJRSpmCv3ArgU4L9AdNQM5bYLVos
+         hXBiKc0HKVGzhwU+yruVB5UWrTAeeH0H4oHSRT5ozYNBtXItO3ard2X/Wxr8HO5hoT
+         4G3rxreK8IqQH1aof5DrT8sQI1ioCebt75eVsaHZ8nnpwbmWIA1pS4b+0/wdJ0pHl1
+         +MXm+ZKvjhWPk/+CdkSoxurZxzSFywlWYHAGb+IKSF4S8fNRRbo/ht95yHer3yGBJn
+         7DH7YkMBic64Q==
+Date:   Fri, 23 Apr 2021 23:53:03 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     "Zanussi, Tom" <tom.zanussi@linux.intel.com>
 Cc:     peterz@infradead.org, acme@kernel.org, mingo@kernel.org,
         kan.liang@linux.intel.com, dave.jiang@intel.com,
         tony.luck@intel.com, dan.j.williams@intel.com,
         linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] dmaengine: idxd: IDXD pmu support
+Message-ID: <YIMQh0oTpJaRQrxj@vkoul-mobl.Dlink>
 References: <cover.1619033785.git.zanussi@kernel.org>
  <YIMHzx6gerPEzbKJ@vkoul-mobl.Dlink>
-From:   "Zanussi, Tom" <tom.zanussi@linux.intel.com>
-Message-ID: <d46d7b54-7d2f-4bdc-74f2-2077409f1996@linux.intel.com>
-Date:   Fri, 23 Apr 2021 13:15:02 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+ <d46d7b54-7d2f-4bdc-74f2-2077409f1996@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <YIMHzx6gerPEzbKJ@vkoul-mobl.Dlink>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d46d7b54-7d2f-4bdc-74f2-2077409f1996@linux.intel.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Vinod,
-
-On 4/23/2021 12:45 PM, Vinod Koul wrote:
-> On 21-04-21, 16:04, Tom Zanussi wrote:
->> Hi,
->>
->> This is v3 of the IDXD pmu support patch, which addresses the comments
->> from Vinod:
->>
->>   - Removed the default line for INTEL_IDXD_PERFMON making it default 'n'
->>
->>   - Replaced #ifdef CONFIG_INTEL_IDXD_PERFMON with IS_ENABLED()
->>
->>   - Split the patch into two separate patches, the perfmon
->>     implementation and the code that uses it in the IDXD driver.
->>
->>   - Added a new file,
->>     Documentation/ABI/testing/sysfs-bus-event_source-devices-dsa that
->>     documents the new format and cpumask attributes, and added better
->>     comments for those in the code.
->>
->>   - Changed 'dogrp' to 'do_group' in perfmon_collect_events()
->>
->>   - Moved 'int idx' inside the loop in perfmon_validate_group() to the
->>     top of function.
->>
->>   - In perfmon_pmu_read_counter(), return ioread64() directly and get
->>     rid of cntrdata.
->>
->> I also fixed some erroneous code in perfmon_counter_overflow() that
->> because of my misreading of the spec caused unintended clearing of
->> wrong bits.  According to the spec you need to write 1 rather than 0
->> to an OVFSTATUS bit to clear it.
+On 23-04-21, 13:15, Zanussi, Tom wrote:
+ 
+> > Applied, thanks
+> > 
+> > This conflicted with Daves patches, I managed to resolve, pls check the
+> > end result
+> > 
 > 
-> Applied, thanks
+> Thanks!
 > 
-> This conflicted with Daves patches, I managed to resolve, pls check the
-> end result
-> 
+> However, it looks like the new files in '[PATCH v3 1/2] dmaengine: idxd: Add
+> IDXD performance monitor support' didn't make it in, maybe didn't get 'added'
+> after resolving the conflicts...
 
-Thanks!
+Right, i have added and updated the commit and pushed again
 
-However, it looks like the new files in '[PATCH v3 1/2] dmaengine: idxd: Add
-IDXD performance monitor support' didn't make it in, maybe didn't get 'added'
-after resolving the conflicts...
+Thanks for letting me know
 
-+ create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices-dsa
-+ create mode 100644 drivers/dma/idxd/perfmon.c
-+ create mode 100644 drivers/dma/idxd/perfmon.h
-
-Tom
-
-
-
+-- 
+~Vinod

@@ -2,78 +2,84 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DB3A36940D
-	for <lists+dmaengine@lfdr.de>; Fri, 23 Apr 2021 15:51:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 857D2369572
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Apr 2021 17:01:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229890AbhDWNvl (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 23 Apr 2021 09:51:41 -0400
-Received: from www381.your-server.de ([78.46.137.84]:55574 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbhDWNvk (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 23 Apr 2021 09:51:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID;
-        bh=4AIAwecX2RapGXS7Rv2jJCw2iNl4rN/QPj81c/yd3XI=; b=Lt3HWQdThg1ZPhA64Z3fju/GpD
-        C5bRECQ/x7KI0b+Ixr2ZxUQbZenqRuYA/VowIf5o9+53fMF7Y7nXohOLRq8gVDoPfKa0RleYlZlPE
-        3LgiNvb2xOXRjXCo9VojB5dg/QIP5XngvrcYwrI8Zq/x4xf8i5fucRr+VG24fP9T46cY4RqIooPuM
-        6iI4/JBpwudYQpVNgK115h2fhnNeg3pe9AO4zzx6WGBIcQtDAAOVQts+DygHn5Zrp9nTkRaQoJp4V
-        41q9VTWg5G3S4cRh+W5bf6OFGdnAmp+z9Wrkj7PfVq0gkXHWAi8lak5uVYKbQiurVia9GiGsjTsA4
-        q9njxzoQ==;
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-        by www381.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <lars@metafoo.de>)
-        id 1lZwCz-000ENm-Nb; Fri, 23 Apr 2021 15:51:01 +0200
-Received: from [2001:a61:2a42:9501:9e5c:8eff:fe01:8578]
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1lZwCz-0005PG-K3; Fri, 23 Apr 2021 15:51:01 +0200
-Subject: Re: [PATCH 0/4] Expand Xilinx CDMA functions
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Adrian Larumbe <adrian.martinezlarumbe@imgtec.com>,
-        dmaengine@vger.kernel.org, michal.simek@xilinx.com,
-        linux-arm-kernel@lists.infradead.org
+        id S242768AbhDWPBs (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 23 Apr 2021 11:01:48 -0400
+Received: from mx08-00376f01.pphosted.com ([91.207.212.86]:54641 "EHLO
+        mx08-00376f01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S243410AbhDWPBO (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 23 Apr 2021 11:01:14 -0400
+X-Greylist: delayed 1412 seconds by postgrey-1.27 at vger.kernel.org; Fri, 23 Apr 2021 11:01:13 EDT
+Received: from pps.filterd (m0168888.ppops.net [127.0.0.1])
+        by mx08-00376f01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 13N6cPTb013057;
+        Fri, 23 Apr 2021 15:36:44 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=dk201812; bh=uySPgWu7hrrY3FeuQ0Qsd4QHgTnPEVFoyovBam6su/U=;
+ b=X+6naz8A6H8qn/xNnT9rSFVZvQpLLGdpFACjY1TweeqO1ft2hC8cHZX5rioEUjXRxmZO
+ ttoTG4Gk8WKOyi5nODxuG0kLKF9CJJcTRqr32d+VhA950+KrbuqMkfSNGLRjVf8bEq1+
+ S1TGW3NroEL9tV//IAoI4fzFV/KUcbTvEie5Rhnl+mHwk7top3cuclu362lolFOd0gJv
+ yi0m0tAfgGrq48WIjjfL+F616udMuMwUQWYKHzs0jVOH9n4M4aFmCxSy0vzhnbCPRof7
+ FnByTEotzbhZ1I6HaLbqI1DsiE2QNbVinx9b5VMKrphx6jiGPwt4SYhXQNLS7idjlY+3 jA== 
+Received: from hhmail05.hh.imgtec.org ([217.156.249.195])
+        by mx08-00376f01.pphosted.com with ESMTP id 383rmc09t1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 23 Apr 2021 15:36:44 +0100
+Received: from localhost (10.100.70.86) by HHMAIL05.hh.imgtec.org
+ (10.100.10.120) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Fri, 23 Apr
+ 2021 15:36:43 +0100
+Date:   Fri, 23 Apr 2021 15:36:43 +0100
+From:   Adrian Larumbe <adrian.martinezlarumbe@imgtec.com>
+To:     Lars-Peter Clausen <lars@metafoo.de>
+CC:     Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+        <michal.simek@xilinx.com>, <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [EXTERNAL] Re: [PATCH 0/4] Expand Xilinx CDMA functions
+Message-ID: <20210423143643.3y6opm6j4ry4wmao@adrianlarumbe-HP-Elite-7500-Series-MT>
 References: <20210423011913.13122-1-adrian.martinezlarumbe@imgtec.com>
  <c2876f2c-beb2-f159-9b61-d69ae6b8275a@metafoo.de>
  <YILKq+jNZZSs37xa@vkoul-mobl.Dlink>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <bed31611-a084-2a05-f3a3-25585a47be9a@metafoo.de>
-Date:   Fri, 23 Apr 2021 15:51:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+ <bed31611-a084-2a05-f3a3-25585a47be9a@metafoo.de>
 MIME-Version: 1.0
-In-Reply-To: <YILKq+jNZZSs37xa@vkoul-mobl.Dlink>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.4/26149/Fri Apr 23 13:08:44 2021)
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <bed31611-a084-2a05-f3a3-25585a47be9a@metafoo.de>
+User-Agent: NeoMutt/20171215
+X-Originating-IP: [10.100.70.86]
+X-ClientProxiedBy: HHMAIL05.hh.imgtec.org (10.100.10.120) To
+ HHMAIL05.hh.imgtec.org (10.100.10.120)
+X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
+X-Proofpoint-GUID: oNtr8xRpN7TZLbmZbUyFaxtAEOkAkeFa
+X-Proofpoint-ORIG-GUID: oNtr8xRpN7TZLbmZbUyFaxtAEOkAkeFa
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 4/23/21 3:24 PM, Vinod Koul wrote:
-> On 23-04-21, 11:17, Lars-Peter Clausen wrote:
->> It seems to me what we are missing from the DMAengine API is the equivalent
->> of device_prep_dma_memcpy() that is able to take SG lists. There is already
->> a memset_sg, it should be possible to add something similar for memcpy.
-> You mean something like dmaengine_prep_dma_sg() which was removed?
->
-Ah, that's why I could have sworn we already had this!
+On 23.04.2021 15:51, Lars-Peter Clausen wrote:
 
-> static inline struct dma_async_tx_descriptor *dmaengine_prep_dma_sg(
->                 struct dma_chan *chan,
->                 struct scatterlist *dst_sg, unsigned int dst_nents,
->                 struct scatterlist *src_sg, unsigned int src_nents,
->                 unsigned long flags)
->
-> The problem with this API is that it would work only when src_sg and
-> dst_sg is of similar nature, if not then how should one go about
-> copying...should we fill without a care for dst_sg being different than
-> src_sg as long as total data to be copied has enough space in dst...
-At least for the CDMA the only requirement is that both buffers have the 
-same total size.
+> > On 23-04-21, 11:17, Lars-Peter Clausen wrote:
+> > > It seems to me what we are missing from the DMAengine API is the equivalent
+> > > of device_prep_dma_memcpy() that is able to take SG lists. There is already
+> > > a memset_sg, it should be possible to add something similar for memcpy.
+> > You mean something like dmaengine_prep_dma_sg() which was removed?
+> > 
+> Ah, that's why I could have sworn we already had this!
+
+Yes, after that API function was removed, the Xilinx DMA driver effectively
+ceased to support memory-to-memory SG transfers. My assumption was if it wasn't
+ever reimplemented through the callback you mentioned before, is because there
+isn't truly much interest in this device.
+
+However we do need this functionality in our system. At the moment, and for our
+particular use of it, we can always guarantee that either the source or
+destination will be one contiguous chunk of memory, so just one scatterlist
+pointer array was enough to fully program an operation. I think this would fit
+alright into memset_sg.  What do you think?
+
+Also, at the moment we're using it for transfers between main memory and
+CPU-mapped PCI memory, which cannot be allocated with kmalloc. Wouldn't this
+fall into the use case for device_prep_slave_sg?
+
+Adrian

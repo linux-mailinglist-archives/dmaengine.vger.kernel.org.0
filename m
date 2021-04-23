@@ -2,28 +2,28 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EFE1D368A66
-	for <lists+dmaengine@lfdr.de>; Fri, 23 Apr 2021 03:30:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9127368A63
+	for <lists+dmaengine@lfdr.de>; Fri, 23 Apr 2021 03:30:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236068AbhDWBbP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 22 Apr 2021 21:31:15 -0400
-Received: from mx07-00376f01.pphosted.com ([185.132.180.163]:62202 "EHLO
+        id S236126AbhDWBbO (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 22 Apr 2021 21:31:14 -0400
+Received: from mx07-00376f01.pphosted.com ([185.132.180.163]:24280 "EHLO
         mx07-00376f01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S240012AbhDWBbN (ORCPT
+        by vger.kernel.org with ESMTP id S239964AbhDWBbN (ORCPT
         <rfc822;dmaengine@vger.kernel.org>); Thu, 22 Apr 2021 21:31:13 -0400
 Received: from pps.filterd (m0168889.ppops.net [127.0.0.1])
-        by mx07-00376f01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 13N0xc89008391;
+        by mx07-00376f01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 13N0xc8A008391;
         Fri, 23 Apr 2021 02:19:27 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=dk201812; bh=/aerMdswcBdXUdPtyIELlqG/XmiUKmqfOxvU96nk1H8=;
- b=Xg0NeUxNesgXoivcZSVFA/4wE0w9kntiYSsfA57d65A5cT6uJ/W/wB61eRXAFzwTwHsV
- sheHtDwsf7MYHT/YjW6/bjg/nhh4bf74wQoO6UTw5xiwp9fGAHV/nI/xsGgITnFx3Nfz
- Opmawvqj5kFIjqfdFkyj4sHYYWqreCnoRwl1uzsAhzwQdsXiOWpBHBamruWIETgobFhn
- +EkbCnJzgvqZ042z7G+LRe4EIvb6XT63YIOwaDeWL/w1WYg6/M/bnRWpoFqiRsKaxqL9
- QSGlYvPwZyIKl+mysGWauFNW66zUOfe8WzeegJ7lWDyFW9EF7wDmGLIEyh6EzW+Nm0tr jA== 
+ content-type; s=dk201812; bh=awzIVRW0kyxiBcPd5wocecT8nM+8mcnAfpBf9ybxBdg=;
+ b=bxaItgavqMXaxTyTOTB35Iv7B3OEyDPvESTXNTxpFbSNceEsqQ8kKADHR/bTIa4N9AY1
+ AN0fZZfIFkMgBPyaQ8j2SWNRUok++0y3Ab8q2O9lWmDaFqbbRgfMIVx2jfZQ9di2M9CQ
+ a/mhOWeo4F7fjGBn3GF+AXR3KrLjeFz/TfJhSWRgREJlxKIufr8ZIBi3IwQ0B4WqPTx1
+ 5rfl5GmX2lTnyyW2Lu+61JkUq03e962v3pnjo3BhP9Ba5FC6vuJ0YZWTpo0Q0FMKsmeW
+ mvLBGTj5SxU4PPp4uHACJ8+X7+d2N0ht+XONdfw+fX9UH4kgLKe8692ulFoGDtry2ES+ rg== 
 Received: from hhmail05.hh.imgtec.org ([217.156.249.195])
-        by mx07-00376f01.pphosted.com with ESMTP id 382p9395yh-2
+        by mx07-00376f01.pphosted.com with ESMTP id 382p9395yh-3
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
         Fri, 23 Apr 2021 02:19:27 +0100
 Received: from adrianlarumbe-HP-Elite-7500-Series-MT.hh.imgtec.org
@@ -34,9 +34,9 @@ From:   Adrian Larumbe <adrian.martinezlarumbe@imgtec.com>
 To:     <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
 CC:     <michal.simek@xilinx.com>, <linux-arm-kernel@lists.infradead.org>,
         <adrian.martinezlarumbe@imgtec.com>
-Subject: [PATCH 1/4] dmaengine: xilinx_dma: Add extended address support in CDMA
-Date:   Fri, 23 Apr 2021 02:19:10 +0100
-Message-ID: <20210423011913.13122-2-adrian.martinezlarumbe@imgtec.com>
+Subject: [PATCH 2/4] dmaengine: xilinx_dma: Add channel configuration setting callback
+Date:   Fri, 23 Apr 2021 02:19:11 +0100
+Message-ID: <20210423011913.13122-3-adrian.martinezlarumbe@imgtec.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210423011913.13122-1-adrian.martinezlarumbe@imgtec.com>
 References: <20210423011913.13122-1-adrian.martinezlarumbe@imgtec.com>
@@ -46,88 +46,76 @@ X-Originating-IP: [10.100.70.86]
 X-ClientProxiedBy: HHMAIL05.hh.imgtec.org (10.100.10.120) To
  HHMAIL05.hh.imgtec.org (10.100.10.120)
 X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
-X-Proofpoint-GUID: 96Hukd_AhqfmLXC6B3tQfskW8E-p_rno
-X-Proofpoint-ORIG-GUID: 96Hukd_AhqfmLXC6B3tQfskW8E-p_rno
+X-Proofpoint-GUID: a834GjnaYGV2bEHFbYpeLkGpU18nVCid
+X-Proofpoint-ORIG-GUID: a834GjnaYGV2bEHFbYpeLkGpU18nVCid
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Not accounting for this means DMA HW descriptors can only be sourced from
-the lower 32 bits of the address space. CDMA MSB descriptor registers were
-also missing in the driver file, so this change also adds their register
-offset definitions, which were taken from Xilpinx 'AXI Central Direct
-Memory Access v4.1' LogiCORE IP Product Guide.
+This callback allows the DMA Engine API user to set a per-channel
+configuration structure before calling dmaengine_prep_slave_sg.
+This is a prerequisite for being able to do CDMA SG transfers, because
+one of the transfer ends is meant to be a preconfigured contiguous
+block of memory.
+
+A later implementation of CDMA SG transfers will access this configuration
+structure, and is therefore dependent on this change.
 
 Signed-off-by: Adrian Larumbe <adrian.martinezlarumbe@imgtec.com>
 ---
- drivers/dma/xilinx/xilinx_dma.c | 29 ++++++++++++++++++++++++-----
- 1 file changed, 24 insertions(+), 5 deletions(-)
+ drivers/dma/xilinx/xilinx_dma.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
 diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 3aded7861fef..3f859de593dc 100644
+index 3f859de593dc..49c7093e2487 100644
 --- a/drivers/dma/xilinx/xilinx_dma.c
 +++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -98,7 +98,9 @@
- #define XILINX_DMA_DMASR_FRAME_COUNT_MASK	GENMASK(23, 16)
+@@ -392,6 +392,7 @@ struct xilinx_dma_tx_descriptor {
+  * @irq: Channel IRQ
+  * @id: Channel ID
+  * @direction: Transfer direction
++ * @cfg: DMA slave channel configuration
+  * @num_frms: Number of frames
+  * @has_sg: Support scatter transfers
+  * @cyclic: Check for cyclic transfers.
+@@ -429,6 +430,7 @@ struct xilinx_dma_chan {
+ 	int irq;
+ 	int id;
+ 	enum dma_transfer_direction direction;
++	struct dma_slave_config cfg;
+ 	int num_frms;
+ 	bool has_sg;
+ 	bool cyclic;
+@@ -2565,6 +2567,21 @@ static void xilinx_dma_chan_remove(struct xilinx_dma_chan *chan)
+ 	list_del(&chan->common.device_node);
+ }
  
- #define XILINX_DMA_REG_CURDESC			0x0008
-+#define XILINX_DMA_REG_CURDESC_MSB		0x000C
- #define XILINX_DMA_REG_TAILDESC		0x0010
-+#define XILINX_DMA_REG_TAILDESC_MSB	0x0014
- #define XILINX_DMA_REG_REG_INDEX		0x0014
- #define XILINX_DMA_REG_FRMSTORE		0x0018
- #define XILINX_DMA_REG_THRESHOLD		0x001c
-@@ -184,6 +186,8 @@
- /* AXI CDMA Specific Registers/Offsets */
- #define XILINX_CDMA_REG_SRCADDR		0x18
- #define XILINX_CDMA_REG_DSTADDR		0x20
-+#define XILINX_CDMA_REG_MSB_DSTADR	0x0024
-+#define XILINX_CDMA_REG_MSB_SRCADDR	0x001C
- 
- /* AXI CDMA Specific Masks */
- #define XILINX_CDMA_CR_SGMODE          BIT(3)
-@@ -1459,9 +1463,19 @@ static void xilinx_cdma_start_transfer(struct xilinx_dma_chan *chan)
- 		dma_ctrl_set(chan, XILINX_DMA_REG_DMACR,
- 			     XILINX_CDMA_CR_SGMODE);
- 
-+		if (chan->ext_addr) {
-+			xilinx_write(chan, XILINX_DMA_REG_CURDESC_MSB,
-+				     upper_32_bits(head_desc->async_tx.phys));
-+		}
++/**
++ * xilinx_dma_slave_config - Set the channel config
++ * @dchan: DMA channel
++ * @cfg: DMA slave channel configuration
++ */
++static int xilinx_dma_slave_config(struct dma_chan *dchan,
++				   struct dma_slave_config *cfg)
++{
++	struct xilinx_dma_chan *chan = to_xilinx_chan(dchan);
 +
- 		xilinx_write(chan, XILINX_DMA_REG_CURDESC,
- 			     head_desc->async_tx.phys);
- 
-+		if (chan->ext_addr) {
-+			xilinx_write(chan, XILINX_DMA_REG_TAILDESC_MSB,
-+				     upper_32_bits(tail_segment->phys));
-+		}
++	chan->cfg = *cfg;
 +
- 		/* Update tail ptr register which will start the transfer */
- 		xilinx_write(chan, XILINX_DMA_REG_TAILDESC,
- 			     tail_segment->phys);
-@@ -1476,11 +1490,16 @@ static void xilinx_cdma_start_transfer(struct xilinx_dma_chan *chan)
- 
- 		hw = &segment->hw;
- 
--		xilinx_write(chan, XILINX_CDMA_REG_SRCADDR,
--			     xilinx_prep_dma_addr_t(hw->src_addr));
--		xilinx_write(chan, XILINX_CDMA_REG_DSTADDR,
--			     xilinx_prep_dma_addr_t(hw->dest_addr));
--
-+		xilinx_write(chan, XILINX_CDMA_REG_SRCADDR, hw->src_addr);
-+		xilinx_write(chan, XILINX_CDMA_REG_DSTADDR, hw->dest_addr);
-+		if (chan->ext_addr) {
-+			xilinx_write(chan,
-+				     XILINX_CDMA_REG_MSB_SRCADDR,
-+				     hw->src_addr_msb);
-+			xilinx_write(chan,
-+				     XILINX_CDMA_REG_MSB_DSTADR,
-+				     hw->dest_addr_msb);
-+		}
- 		/* Start the transfer */
- 		dma_ctrl_write(chan, XILINX_DMA_REG_BTT,
- 				hw->control & chan->xdev->max_buffer_len);
++	return 0;
++}
++
+ static int axidma_clk_init(struct platform_device *pdev, struct clk **axi_clk,
+ 			    struct clk **tx_clk, struct clk **rx_clk,
+ 			    struct clk **sg_clk, struct clk **tmp_clk)
+@@ -3095,6 +3112,7 @@ static int xilinx_dma_probe(struct platform_device *pdev)
+ 	xdev->common.device_terminate_all = xilinx_dma_terminate_all;
+ 	xdev->common.device_tx_status = xilinx_dma_tx_status;
+ 	xdev->common.device_issue_pending = xilinx_dma_issue_pending;
++	xdev->common.device_config = xilinx_dma_slave_config;
+ 	if (xdev->dma_config->dmatype == XDMA_TYPE_AXIDMA) {
+ 		dma_cap_set(DMA_CYCLIC, xdev->common.cap_mask);
+ 		xdev->common.device_prep_slave_sg = xilinx_dma_prep_slave_sg;
 -- 
 2.17.1
 

@@ -2,129 +2,275 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 903F636CA3B
-	for <lists+dmaengine@lfdr.de>; Tue, 27 Apr 2021 19:19:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52BE636D1DE
+	for <lists+dmaengine@lfdr.de>; Wed, 28 Apr 2021 07:58:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235777AbhD0RUg (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 27 Apr 2021 13:20:36 -0400
-Received: from mail-eopbgr00088.outbound.protection.outlook.com ([40.107.0.88]:50440
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S235647AbhD0RUf (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 27 Apr 2021 13:20:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oOlFrDOdLK55ulAUi7HjVhxnyTQEx5Cz6JBQclpsPOFpCqWd/W/9O5lvNu/qBaJ0jWXYI7E6zcHI/90+cwZoHOq89tNJOjYae7zqY0kooglCluY4vpj9EEImzbKbc8bZF39YMd2JzyltNj0jZiIPxL/9vkJSXpVPPy7EVDTbMT82i8viZSnYavT1ro/Q6Jsyp2OIs+W3bPVVPOwMQ8Z7NMfdP7xjwuTTfg7r1cZtQfmbK94CbPoub5IBGBNYKpeUVyvDVxNKECYyoVNMx4hKhJjxwhIiY7X3xmuUmHq/6TcVpu89JdA+ktzuN+DZ4bV/9gmNAjBt/LYMtCIRZBm09Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=87rIduHLBiJE9O76NqrkLlmnIVl+YnRdmWSe+hyLp9Q=;
- b=eFYkosLgytbu+/BdL3hxpSD7K1jEaPkd3vBhjKMdoxEEItu2w+b9Wcw8btFoXVYzwyISepUiP6jD1aIhXmPVqTWScL5tdFZO5QzSSmAtcadsol2sFhh3lbWs6sGV2KxPwjUMEzn+0tV6kE+XmfjmrL8WyrFBQ7dNxDCOJI/YI6BxklTe4YRxfEHQf3NU1oD6jIuEA6JtBf7Xa/hJmoCtJ3bBlaQh6fCDV8HXo2Y3+tKNw6HihKVOiy/2uP2CzNDMQftNUQG0Hv0Atvw4Gcj+FhWN2hwJE9rtTXpdRNv0pKF8v7kK9F3GxnaAlcQA40HPTd7pQrca52SO6Hs5V6f2UQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=orolia.com; dmarc=pass action=none header.from=orolia.com;
- dkim=pass header.d=orolia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=orolia.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=87rIduHLBiJE9O76NqrkLlmnIVl+YnRdmWSe+hyLp9Q=;
- b=Wd5Hpw0HeXBS1JilIpekEnxDyj1Z7T6tbdl929ll7b4iIw1qVUJb4qESKhSzWtFzugDSAQFnA4nuenoy0Dl1Iclhbj5Lb4U9nVk/daLhxNZ6mohjcl+jOgDjEz+DYG/H2t0mMSnAn7J3Se+OlCKYjf4Ep2+n/6aNo5cPrWsCSsw=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=orolia.com;
-Received: from PR1PR06MB4746.eurprd06.prod.outlook.com (2603:10a6:102:11::28)
- by PR3PR06MB6764.eurprd06.prod.outlook.com (2603:10a6:102:63::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.21; Tue, 27 Apr
- 2021 17:19:49 +0000
-Received: from PR1PR06MB4746.eurprd06.prod.outlook.com
- ([fe80::246f:58b2:79d6:6aba]) by PR1PR06MB4746.eurprd06.prod.outlook.com
- ([fe80::246f:58b2:79d6:6aba%5]) with mapi id 15.20.4065.027; Tue, 27 Apr 2021
- 17:19:49 +0000
-Date:   Tue, 27 Apr 2021 19:19:35 +0200
-From:   Olivier Dautricourt <olivier.dautricourt@orolia.com>
-To:     vkoul@kernel.org, sr@denx.de, robh+dt@kernel.org
-Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org
-Subject: altera msgdma driver has no dt support
-Message-ID: <YIhHp4MfgnrkM1if@orolia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-X-Originating-IP: [2a01:e34:ec42:fd70:167:681b:bc47:e8b1]
-X-ClientProxiedBy: PR3P191CA0006.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:102:54::11) To PR1PR06MB4746.eurprd06.prod.outlook.com
- (2603:10a6:102:11::28)
+        id S235809AbhD1F6m (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 28 Apr 2021 01:58:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229464AbhD1F6m (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 28 Apr 2021 01:58:42 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08FB0C061574
+        for <dmaengine@vger.kernel.org>; Tue, 27 Apr 2021 22:57:58 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id z6so366500wrm.4
+        for <dmaengine@vger.kernel.org>; Tue, 27 Apr 2021 22:57:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gyqVcvI+/S8KEaKfrGlCQPbNV8YgveGyOziG0j9Xalc=;
+        b=SGQ4kNE+wZUsoYqh8k5m0T0WDqas74ArlJMbbFm5N57Icfvaf/y53AnUwvaDjpYM2u
+         x2Yl1ngFMcQTy94YmvSDfm4sD1LJdflRH73AblAeyFP08akL6velv886aVIFdjL0SLqd
+         r1STg9FqrhD6l9G73x5fRzVUJSoq5wN9bAmyHCqpa6VdGb/ZsGtwpjXgwaKYWhK/6KUf
+         CvJO/xoaQ7iM69ADtZDM/3Iy0oTNKRnHNA/CZopzztiwBrU649mQU0JkfJagcOy67xjt
+         okOWQldfu2QOwd+KJwPtLwxwQ/tBGhACXEx90lPk7iAlB84EaOzZXQgNyXKx33USEB3M
+         yJFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gyqVcvI+/S8KEaKfrGlCQPbNV8YgveGyOziG0j9Xalc=;
+        b=CeUNuyNeBWmaxCSuqA0uQ/KzupG//frKOe0M4vsrljW28/xmYbt1v2nwkJ0ACdtf0c
+         7VdrW+9wM9kk6XtH9Dwy6fc/wLIjsiGZo6tyw75QvLDegO7WBoCj4AwxagaXzfo9EaDT
+         soDfaJp9OtuK8e8XoqFIojm51+DzOH/mL2rpMzmhA7CPyJzuZm3+nGFlwJgYi0WnC6sa
+         3nlteQJef1SIgpljXl+Uq5y2gmEfAaIr+8wJbz7ZIclAS4yOIZctiZvGkW9KbSWpDxzq
+         /UsgSeieezCEIRnbuvp621XpXAnJkabyD6SfWDWQSXReTJDLF6jjNsSAIoV0BXqu0WkR
+         NWuQ==
+X-Gm-Message-State: AOAM533uHX8o6W4Sbz3rTEvlL/pqbWsCa53HMOEh9Y9KPUPjXr+MkDUc
+        zlPDPqI9cm8gIun6A1+Oo+mW0Q==
+X-Google-Smtp-Source: ABdhPJxDo2A83JSDicnAQ2q4BMDOgMNbuDV45FoTYSmU5fUHJTe5Y6k4Jwcv2xdlQhAXh+qTPRUrJA==
+X-Received: by 2002:a5d:570e:: with SMTP id a14mr20472819wrv.254.1619589476731;
+        Tue, 27 Apr 2021 22:57:56 -0700 (PDT)
+Received: from localhost.localdomain (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id f8sm116417wmg.43.2021.04.27.22.57.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Apr 2021 22:57:56 -0700 (PDT)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     robh+dt@kernel.org, vkoul@kernel.org
+Cc:     linus.walleij@linaro.org, devicetree@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH RFC] dt-bindings: dma: convert arm-pl08x to yaml
+Date:   Wed, 28 Apr 2021 05:57:50 +0000
+Message-Id: <20210428055750.683963-1-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from orolia.com (2a01:e34:ec42:fd70:167:681b:bc47:e8b1) by PR3P191CA0006.EURP191.PROD.OUTLOOK.COM (2603:10a6:102:54::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.21 via Frontend Transport; Tue, 27 Apr 2021 17:19:49 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1899a2e6-23ab-4cf3-980a-08d909a0a9a3
-X-MS-TrafficTypeDiagnostic: PR3PR06MB6764:
-X-Microsoft-Antispam-PRVS: <PR3PR06MB6764A7990874D111BA114ABA8F419@PR3PR06MB6764.eurprd06.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: OzfURr09g5kkrTj3yXOszD+euR9tEevM32eX0pCaUfVjnVlBYwtfAP4Hy9OVMfNPxfIzN6ye1yXo2sHfUhjLutWk3yjJBkgSolCr9UCWnSjWlau0TAfCBhounIGlcRYIHCFeCBwwPieti6m6kly2x+xYUKhermNfoIBs8daW/YY8nuejhAim9TVnNmyV03l1fKP+JTg1aVQaUCVMYdpqsfNqQqqVmHlT3mWPehyH5WBwXS9FvpTQdUgKpewG00dTBxz1TESQN1GzXNk2jTVInqrEjQrYVbzU/GSVi71m8PNL4f/YqfqKQa6MwIzp/AGvSdA16xe3lGW4bqnITKpSn4RZHR/yfHvOfmiePsHJqPvz0E29Xl2o1xp9vsbZpvceUNs4N1PFfiSlus/B4a+XFwpmPWaFf/I6pM7xvXZs2eY9SUu63NDPIV05zWsvHKLCQzucVPPda4Mk46RdKXOvDhdDBwZgYmBAbRlQUWeY/TQ+PgiJldTrZyZBGsbxUzE1+3WpOPSn08+cao5zY5ezUbBNwo3ixIszHXZgtXM6/dAC5HEUtf+ZEu8KS9BoYEMc5/jmHMXBM0bMMjEnCA366iq1UzHEKtD65miLZyKDJo0=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PR1PR06MB4746.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39840400004)(396003)(376002)(136003)(366004)(346002)(8936002)(44832011)(316002)(7696005)(16526019)(6666004)(86362001)(66946007)(8676002)(4744005)(38100700002)(55016002)(36756003)(2616005)(478600001)(8886007)(66556008)(186003)(2906002)(66476007)(5660300002)(4326008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?UUxUYVZyN09ZVjMremFnOGJtbWJDbWt1aWtJak04S3QxeHN2cmRPOVdCQ2dF?=
- =?utf-8?B?NERLQlc2RmwxcStucUlxMVhXV1pGc1FubXlmcWwvdlZJZkFNZkExTXk5TjZJ?=
- =?utf-8?B?WkRmekhidU5vNzVPdjd2bEdjWXY2YThCUytCTlpwNlhyQSsvM2QrN0ZWWkpw?=
- =?utf-8?B?eVlCT0ZtRm8zQ3lxa0lVQXBSVFJ3aWZXTkRqZ1pOMmE4NFRjMm5zSno1WG9C?=
- =?utf-8?B?cElPaVlNY2JvdUZKUVlSaVhNcnd6SEorTHJjL0ZTUHp4TmxxMlQvTjd1SkM1?=
- =?utf-8?B?dVJWd2FJelpBZFozZ0JNUzJFcFJaK1lqaWllc01NcXRTZzMwV3c1bUZCaXlD?=
- =?utf-8?B?K1VsRmZENktldHQyVDE1V3czZjdpK2xNUCtBQ21rWHQ0c1M1aTRkeVJmTjQv?=
- =?utf-8?B?RFpuekdYclJ5MENUWGljKzRFWnV3ckxSVVE2Um14TjFUZElFVXNzOVpMZmpr?=
- =?utf-8?B?bEFvR3NIcWplYUxLSUpoTDRRMlE2UkZjdjVNNXNZS2xMaTdMTStOVFVBUUFz?=
- =?utf-8?B?eGx5RTB5T2NkYVNwMGkxUVdsZjBUZjdaUFVqQ25xRFEzZ0pZVWZhUEZNSHJB?=
- =?utf-8?B?Y3MvMSt2bUcrTU9CaWlhWWYrYTVaSWdiZk4wZEgxTGVvR2tWRHBrTVgzV3JY?=
- =?utf-8?B?eWNIRk5mWWZmQ1cvRlM1Y01TVnpVOEJseVN5d2hYQTRTZ1UxL20wVVRmeHJD?=
- =?utf-8?B?TDExUHhncFlrb01XbGE0TjN3aVkwTytOVU5XeTJmRTdtK0d0bjNJWDZ1eWIx?=
- =?utf-8?B?NTJSbjF6SENNNjIrZmh3Zmw5YVpDRWpvMjZsck9uQ3c5RWFNZDYwNlpHMllo?=
- =?utf-8?B?T24yaDFvWmYxaXhOWklubXpvRld5MzV5Sy9uSlNQdXZHaENhaTZwaGp4T3hY?=
- =?utf-8?B?Z0tXY2VJalVnVm5XQUdBTStuZ044ejAyVURsZUx4ajlqWFJrN3dDb3ZjUlQ3?=
- =?utf-8?B?VGs1Nmt2UmI1MUZ4T2VuZWoxVDY1dm9NMnNlRTEwRXQ1d2lYOFFLR2FPOEdh?=
- =?utf-8?B?L2thVEpKWmRmeW5XK1ZWQ2hZaUxWNXQ2cCtyTzU3MGhuN3RWM2x3bnAvMlhk?=
- =?utf-8?B?YlJVMzdTbjhQbWNsYzZtUFVVSzRHdldtcmozYTNxZldlUXB0bG9vbUdyZ1hS?=
- =?utf-8?B?NDhlK3VqRHRSOGE3cmZxVGk1VURubzRZQTVRTUM1REFtcVNCd1N2Z2xKVEdY?=
- =?utf-8?B?RTEyQ21ZRTVxVndsMzQ4OGM5bzV1elo2WlJndlVxSEZFQ1AwY25EUnNlWlhT?=
- =?utf-8?B?V244ZmtDcDFzRDI2Ry9EKzJYUW0wS3NtRXczWElQb2ZFZEtCY2dyOERqYWNN?=
- =?utf-8?B?K0dRdHpMSkhEUExrOTA2UTQxT0FOQWt4aEdMTjduKy9HVkFLVzgzQW95YnFk?=
- =?utf-8?B?M2dBMTNYRlF0dVpXY2pWNFUvRnphNm1HQ0l5NVNOU1RjTllGZ3ZtNlhZK3Zq?=
- =?utf-8?B?S3RUaWhlekpHaThwWDl3MmxsU2tTNE1LTEI4Ly9HK0RJaWMxSE9iY0lQL0dx?=
- =?utf-8?B?amdINzdEajhtRzhrSU1VT3o5bnpMcnFlbkdZck5iYXE5TjQwSTlBU0NDOXV2?=
- =?utf-8?B?VUxKTHJQRXdXek9Pb1Bjd3dVZUlMY0xIOCtvQ1ZIb2hRNlRlajNaWS9JRzN5?=
- =?utf-8?B?Sk1zODZ3ZTVsNndneUE3MzNDbk9pNytEd3ZrVklJdkRrU0hYVHMwTGtzS1hW?=
- =?utf-8?B?QTBMQy8zRzc2dW1TM0ZsbzRiYXB4UjlFQkdWRzBOMUxGbmlheFVMbGJNcTBT?=
- =?utf-8?B?NkhVcDdzVVNNb250WW9hNGNQY3ZrTVNZSkhvQkNrZ09rb25BQkVVZkxsMlBh?=
- =?utf-8?B?ekxEQVpkdEtYWmwvRWxmQXJuSUQrUlZ3aW1vODlnaTJ2a0laNzZ5anB6ZHNp?=
- =?utf-8?Q?SX4go42KHnjop?=
-X-OriginatorOrg: orolia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1899a2e6-23ab-4cf3-980a-08d909a0a9a3
-X-MS-Exchange-CrossTenant-AuthSource: PR1PR06MB4746.eurprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2021 17:19:49.6013
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a263030c-9c1b-421f-9471-1dec0b29c664
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0VGNtKAqNKQfRu5k6cJpnQBa1eTHFQeNahT2qi8dNCkWjUESMroeoX3GlDk/jw1SnV0cwggy0U/ljo1dAeHvL8S4cp/3hAnnX0OAGPUXrn8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR06MB6764
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hello all.
+Converts dma/arm-pl08x.txt to yaml.
+In the process, I add an example for the faraday variant.
 
-The altera msgdma driver located in drivers/dma/altera-msgdma.c
-has no support in the devicetree.
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+---
+ .../devicetree/bindings/dma/arm-pl08x.txt     |  59 --------
+ .../devicetree/bindings/dma/arm-pl08x.yaml    | 127 ++++++++++++++++++
+ 2 files changed, 127 insertions(+), 59 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/dma/arm-pl08x.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/arm-pl08x.yaml
 
-How this driver is supposed to work without any dt bindings,
-am i missing something here ?
-
-I added basic support in the dt and was able to use the controller
-on my platform. I am willing to send a patch if that is required.
-Who should I add as mainteners in the dt yaml schema and in the
-MAINTENERS file ?
-
-
-Thank you.
-
---
-Olivier Dautricourt
+diff --git a/Documentation/devicetree/bindings/dma/arm-pl08x.txt b/Documentation/devicetree/bindings/dma/arm-pl08x.txt
+deleted file mode 100644
+index 0ba81f79266f..000000000000
+--- a/Documentation/devicetree/bindings/dma/arm-pl08x.txt
++++ /dev/null
+@@ -1,59 +0,0 @@
+-* ARM PrimeCells PL080 and PL081 and derivatives DMA controller
+-
+-Required properties:
+-- compatible: "arm,pl080", "arm,primecell";
+-	      "arm,pl081", "arm,primecell";
+-	      "faraday,ftdmac020", "arm,primecell"
+-- arm,primecell-periphid: on the FTDMAC020 the primecell ID is not hard-coded
+-  in the hardware and must be specified here as <0x0003b080>. This number
+-  follows the PrimeCell standard numbering using the JEP106 vendor code 0x38
+-  for Faraday Technology.
+-- reg: Address range of the PL08x registers
+-- interrupt: The PL08x interrupt number
+-- clocks: The clock running the IP core clock
+-- clock-names: Must contain "apb_pclk"
+-- lli-bus-interface-ahb1: if AHB master 1 is eligible for fetching LLIs
+-- lli-bus-interface-ahb2: if AHB master 2 is eligible for fetching LLIs
+-- mem-bus-interface-ahb1: if AHB master 1 is eligible for fetching memory contents
+-- mem-bus-interface-ahb2: if AHB master 2 is eligible for fetching memory contents
+-- #dma-cells: must be <2>. First cell should contain the DMA request,
+-              second cell should contain either 1 or 2 depending on
+-              which AHB master that is used.
+-
+-Optional properties:
+-- dma-channels: contains the total number of DMA channels supported by the DMAC
+-- dma-requests: contains the total number of DMA requests supported by the DMAC
+-- memcpy-burst-size: the size of the bursts for memcpy: 1, 4, 8, 16, 32
+-  64, 128 or 256 bytes are legal values
+-- memcpy-bus-width: the bus width used for memcpy in bits: 8, 16 or 32 are legal
+-  values, the Faraday FTDMAC020 can also accept 64 bits
+-
+-Clients
+-Required properties:
+-- dmas: List of DMA controller phandle, request channel and AHB master id
+-- dma-names: Names of the aforementioned requested channels
+-
+-Example:
+-
+-dmac0: dma-controller@10130000 {
+-	compatible = "arm,pl080", "arm,primecell";
+-	reg = <0x10130000 0x1000>;
+-	interrupt-parent = <&vica>;
+-	interrupts = <15>;
+-	clocks = <&hclkdma0>;
+-	clock-names = "apb_pclk";
+-	lli-bus-interface-ahb1;
+-	lli-bus-interface-ahb2;
+-	mem-bus-interface-ahb2;
+-	memcpy-burst-size = <256>;
+-	memcpy-bus-width = <32>;
+-	#dma-cells = <2>;
+-};
+-
+-device@40008000 {
+-	...
+-	dmas = <&dmac0 0 2
+-		&dmac0 1 2>;
+-	dma-names = "tx", "rx";
+-	...
+-};
+diff --git a/Documentation/devicetree/bindings/dma/arm-pl08x.yaml b/Documentation/devicetree/bindings/dma/arm-pl08x.yaml
+new file mode 100644
+index 000000000000..ec2324d881f3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/arm-pl08x.yaml
+@@ -0,0 +1,127 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/arm-pl08x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ARM PrimeCells PL080 and PL081 and derivatives DMA controller
++
++maintainers:
++  - Vinod Koul <vkoul@kernel.org>
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++        - const: "arm,pl080"
++        - const: "arm,primecell"
++      - items:
++        - const: "arm,pl081"
++        - const: "arm,primecell"
++      - items:
++        - const: faraday,ftdma020
++        - const: arm,pl080
++        - const: arm,primecell
++  arm,primecell-periphid:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: on the FTDMAC020 the primecell ID is not hard-coded
++                 in the hardware and must be specified here as <0x0003b080>. This number
++                 follows the PrimeCell standard numbering using the JEP106 vendor code 0x38
++                 for Faraday Technology.
++  reg:
++    minItems: 1
++    description: Address range of the PL08x registers
++  interrupts:
++    minItems: 1
++    description: The PL08x interrupt number
++  clocks:
++    minItems: 1
++    description: The clock running the IP core clock
++  clock-names:
++    const: "apb_pclk"
++  lli-bus-interface-ahb1:
++    type: boolean
++    description: if AHB master 1 is eligible for fetching LLIs
++  lli-bus-interface-ahb2:
++    type: boolean
++    description: if AHB master 2 is eligible for fetching LLIs
++  mem-bus-interface-ahb1:
++    type: boolean
++    description: if AHB master 1 is eligible for fetching memory contents
++  mem-bus-interface-ahb2:
++    type: boolean
++    description: if AHB master 2 is eligible for fetching memory contents
++  "#dma-cells":
++    const: 2
++    description: must be <2>. First cell should contain the DMA request,
++                 second cell should contain either 1 or 2 depending on
++                 which AHB master that is used.
++
++  memcpy-burst-size:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum:
++        - 1
++        - 4
++        - 8
++        - 16
++        - 32
++        - 64
++        - 128
++        - 256
++    description: the size of the bursts for memcpy
++  memcpy-bus-width:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum:
++        - 8
++        - 16
++        - 32
++        - 64
++    description: |
++                 the bus width used for memcpy in bits: 8, 16 or 32 are legal
++                 values, the Faraday FTDMAC020 can also accept 64 bits
++
++required:
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - "#dma-cells"
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    dmac0: dma-controller@10130000 {
++      compatible = "arm,pl080", "arm,primecell";
++      reg = <0x10130000 0x1000>;
++      interrupt-parent = <&vica>;
++      interrupts = <15>;
++      clocks = <&hclkdma0>;
++      clock-names = "apb_pclk";
++      lli-bus-interface-ahb1;
++      lli-bus-interface-ahb2;
++      mem-bus-interface-ahb2;
++      memcpy-burst-size = <256>;
++      memcpy-bus-width = <32>;
++      #dma-cells = <2>;
++    };
++  - |
++    dma-controller@67000000 {
++      compatible = "faraday,ftdma020", "arm,pl080", "arm,primecell";
++      /* Faraday Technology FTDMAC020 variant */
++      arm,primecell-periphid = <0x0003b080>;
++      reg = <0x67000000 0x1000>;
++      interrupts = <9 IRQ_TYPE_EDGE_RISING>;
++      resets = <&syscon GEMINI_RESET_DMAC>;
++      clocks = <&syscon GEMINI_CLK_AHB>;
++      clock-names = "apb_pclk";
++      /* Bus interface AHB1 (AHB0) is totally tilted */
++      lli-bus-interface-ahb2;
++      mem-bus-interface-ahb2;
++      memcpy-burst-size = <256>;
++      memcpy-bus-width = <32>;
++      #dma-cells = <2>;
++    };
+-- 
+2.26.3
 

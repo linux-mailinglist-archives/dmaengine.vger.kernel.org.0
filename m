@@ -2,222 +2,199 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1702736E5E6
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Apr 2021 09:28:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39F1E36E5FE
+	for <lists+dmaengine@lfdr.de>; Thu, 29 Apr 2021 09:30:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239352AbhD2H2t (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 29 Apr 2021 03:28:49 -0400
-Received: from mail-db8eur05on2050.outbound.protection.outlook.com ([40.107.20.50]:60609
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        id S239733AbhD2Han (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 29 Apr 2021 03:30:43 -0400
+Received: from mail-eopbgr40067.outbound.protection.outlook.com ([40.107.4.67]:30751
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231528AbhD2H2t (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 29 Apr 2021 03:28:49 -0400
+        id S239259AbhD2Had (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Thu, 29 Apr 2021 03:30:33 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kFKjeEbE8HpjpjamHPiXbNWax1NY5UTjjvmh97CTj4z/kp0RFC+3UA+U091bgq3tee0sme13i3tiKfvS+R6/Athh+dyGStgFZL2ABQi8/MJZBJBsgiu1Oo0JcqOUuXRq4gUcDz+FJ3v3NJcrEEi2OotdxM3VSJGs9X6OiphCnuhv/1CqJPnp+V5X7Ftx1gYy8vF9zzuTPnABILXg/xZvv8snpKwQWiYIyJXEwzRsjGGakcRJRXmZmDulbUmJQAuKXCuUJTVsrZPzEk0c3uavoE0SgkogoeRpXx+lDpsa/ZLZUTLHYpxnaxXMldr/n55rLzNVp3gQKjLbp8XdKp2A3Q==
+ b=SfYd58N3RzuB9IMVMl5sYomgV4r9jZPFTSGAMo3G0tFQLvQ8FykWTUTE0UBuR8YtM4ws254t6XBF6aUFJEVZHfZVrVE9nJYJ0/jjHWYOBg2ChxIAXqWZPXNfborOnHZCJUEZljv7NApRW87bqIPBmd0pMAEOI23uUADgkOzQoVu85Xza2s9hPoOqE2lQ8t4aBgE4mD5kQ2sB4c5rXXok/ZFYx179Seqbqar4ggAhGupfajEapI51sCToi5Y3dkukCMWKurd1d7nJ2R6Q0u+AzSo6I3vYUqdGJfj//pe4pczEFojQMZIhhk4YvBNUkOuE3/J1r1Iw4HSCBqW736K9iA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f7M5BwGtc+TGxk1+g6Ru77Bm1u2VBpxv+oxxYW/INUw=;
- b=TIM6l3ChT7OupZrFdU/h73UNVHrkgK2cQgy6mlXQZQia0n/Mahc78awJq5kSog+QafJ+0XeuNEuHbXWbZHJov6DphwIrF0ng/H/S04tIj6vi788NWa1hpcnOcXub8fF1o4PATJdO2cyR7Xz+6zypb3Lb5cQRRqDXr3bew5eJagKifWiJgVyJEkCNeCAQj/RHujFI2x8lRIIxX1Rui+85X4/DvZThe93D8tcNWTOerSFmx/mhuu5M1AmnH+oCdV9gcJdNHwEoIk0hK+O1/gaCENGQ0USSc2eOoJrsD4kyMfWkzDTL9SvvsTNoFNKsvsGBIShrLD3C7aX5FBRWwFCOtw==
+ bh=cXenXv0aE0GXZlpKqm2uUhHw6PMu1jnT6YkVOjrAvUc=;
+ b=YxR4Xnnihde3mcclUWTfo3aPiQJLbgBKajubGaSOWoMXMHHMNIlcVdtvu2V7oN3nKGic2TlTTSjmoEllkEZ11AnfVtSYVCDHLlBOUh8LloN0fE0SuhKhvl09VIB5LV3eBA1pZTjMNP7ucvRz19XkdRY08V3EY54gqfkZ896U/+z/auVuDunzDn0ruZFGRy4AB6xDnwKV6r0x0tS0a8FTJA1lgKCRHluV+xgBv09Zr+x2tmsB95o+Sui/QZBDfE94pFmj/POqK+vzNdEq+qOY/8Jfb6scCjqJGKu5AAHzz5jut/gtEmxSsJZ+f67m9moaBQ3CQP3zAFvLckCFbfyLqg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=orolia.com; dmarc=pass action=none header.from=orolia.com;
  dkim=pass header.d=orolia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=orolia.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f7M5BwGtc+TGxk1+g6Ru77Bm1u2VBpxv+oxxYW/INUw=;
- b=HvedZG3Z7G8HLNiwXMgfNXxOCElIJntYYuYC3SKAIq3UBo6ItCm9cLA+JwwqO4L/50y1uigPU1uxq6v/S/8lx1/vMDq3T+5vL6Hiznt3DNuLuecOvGCd/ZFTcxwdJ0Px5vOMmaxwikAD/gyti1tVeWAeuBoA7AnoW006E7/314o=
+ bh=cXenXv0aE0GXZlpKqm2uUhHw6PMu1jnT6YkVOjrAvUc=;
+ b=GS7+t/wX/2wjRHzKptVXOn6hi9XVz/IUALjOEYxhrieqi5NX6/+Dzq4VYOtlrlGp6uLI9MEs1AaCQ+X9y1n503b8i3KE2BxU5mXLws7MkYyw8MV3nv7lLpcdWF/i8ob1K961h86Fe7TRadAxdD9yWn/sUajgmnXh0SFkuy8x4d0=
 Authentication-Results: kernel.org; dkim=none (message not signed)
  header.d=none;kernel.org; dmarc=none action=none header.from=orolia.com;
 Received: from PR1PR06MB4746.eurprd06.prod.outlook.com (2603:10a6:102:11::28)
- by PAXPR06MB7552.eurprd06.prod.outlook.com (2603:10a6:102:157::17) with
+ by PAXPR06MB7423.eurprd06.prod.outlook.com (2603:10a6:102:154::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.25; Thu, 29 Apr
- 2021 07:28:00 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.23; Thu, 29 Apr
+ 2021 07:29:33 +0000
 Received: from PR1PR06MB4746.eurprd06.prod.outlook.com
  ([fe80::246f:58b2:79d6:6aba]) by PR1PR06MB4746.eurprd06.prod.outlook.com
  ([fe80::246f:58b2:79d6:6aba%5]) with mapi id 15.20.4065.027; Thu, 29 Apr 2021
- 07:28:00 +0000
-Date:   Thu, 29 Apr 2021 09:27:46 +0200
+ 07:29:33 +0000
+Date:   Thu, 29 Apr 2021 09:29:20 +0200
 From:   Olivier Dautricourt <olivier.dautricourt@orolia.com>
 To:     Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
         Stefan Roese <sr@denx.de>
 Cc:     Olivier Dautricourt <olivier.dautricourt@orolia.com>,
         dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/2] dt-bindings: dma: add schema for altr,msgdma
-Message-ID: <YIpf8p45giN3+yQ5@orolia.com>
+Subject: [PATCH v3 2/2] drivers: dma: altera-msgdma: add OF support
+Message-ID: <YIpgUJ1427/ZFpUD@orolia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 X-Originating-IP: [2a01:e34:ec42:fd70:167:681b:bc47:e8b1]
-X-ClientProxiedBy: PR0P264CA0241.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100::13)
- To PR1PR06MB4746.eurprd06.prod.outlook.com (2603:10a6:102:11::28)
+X-ClientProxiedBy: PR3PR09CA0008.eurprd09.prod.outlook.com
+ (2603:10a6:102:b7::13) To PR1PR06MB4746.eurprd06.prod.outlook.com
+ (2603:10a6:102:11::28)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from orolia.com (2a01:e34:ec42:fd70:167:681b:bc47:e8b1) by PR0P264CA0241.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.25 via Frontend Transport; Thu, 29 Apr 2021 07:28:00 +0000
+Received: from orolia.com (2a01:e34:ec42:fd70:167:681b:bc47:e8b1) by PR3PR09CA0008.eurprd09.prod.outlook.com (2603:10a6:102:b7::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.27 via Frontend Transport; Thu, 29 Apr 2021 07:29:33 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: de7c6af0-8f84-4ccf-6c0b-08d90ae05162
-X-MS-TrafficTypeDiagnostic: PAXPR06MB7552:
+X-MS-Office365-Filtering-Correlation-Id: c9edc8e9-9a6b-4876-98e8-08d90ae088d3
+X-MS-TrafficTypeDiagnostic: PAXPR06MB7423:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <PAXPR06MB755260454014FDB856863D4E8F5F9@PAXPR06MB7552.eurprd06.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Microsoft-Antispam-PRVS: <PAXPR06MB7423AA4A16DF4ED5956A0E208F5F9@PAXPR06MB7423.eurprd06.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FVqHJJphg8ZwvqMrO/tzSGBGu0rskwdj4DYRYEfm9gWqvZ/vExbtuacf4M4/t+XhHS6eR7ffDWL/YGktQE58s67+0jk07jSOD521AXuEKy/+KWZ3RzcMJ5sbJk415AkyUj/jas5oUMu3mA5nxYjE4Qa3Jd+eVa/qLEsQanHxKNeZsSGFggo90YjcktazNzUSU+GTQlnLZlhETVKgB4zQ2beNk1qBXwX/pnQfddNJqo+W2QBXh/RsKE6DzQXWDPTngpGPN4bAp217wh01RN14KnugW42AYixYGE4NCAVctvC8/ct2W3+NRexHZwx6rYvH4oWFr7Z9tTFn2wr/nLlhttbV/6dq98emGMXrwi/ID6CJo9AwhwIz107K2Wfj3zrvvpZg0JofpVAz711XxJsLCPyr7yzK81U5D128KLHIAbtxC8wCj9lWBRAeuH0N+N2Q2LV7HI9DT30CNdup9DVXHMGXdFq2IzYJb4ef39MsajFD1seiiIs2qUrH18Vwlwhd0VYNRs2Dl4Hsm1cG1T3aJsIokaAiNTnbav6Eg8LgfJJB7BIIs8REFajmQJBorIVVu5bABRAGBS4tw4jc7OsV7OU2q4A+d3AiD0M19pLYExOACblk80PYpZU2qSogEIqNGTTwRJAT1meGnumHLL176kmjUnuv+Jk9+mr2sH0V3Zzu1nhT7ZTzg6puIG8Ns9BeDuliKz4mnKojIlFnM7UzwTF2MQlfpch++KQswtioXUo=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PR1PR06MB4746.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(39840400004)(136003)(366004)(376002)(396003)(38100700002)(7696005)(186003)(316002)(966005)(5660300002)(66556008)(66946007)(16526019)(478600001)(44832011)(8676002)(55016002)(110136005)(66476007)(86362001)(8936002)(2616005)(8886007)(83380400001)(6666004)(2906002)(36756003)(4326008)(67856001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?WWNEeVd1ZnNsYzN1c1VUZEpQT051cU55VW1JdWJYOG1QcnZPazYxQThBRk03?=
- =?utf-8?B?Rm8wNGlRZ0lIVVY2dkl6VHB1WXc0cjJzcHcyM1BmcmYxSDgremo1R2xOZEdR?=
- =?utf-8?B?WEJOQW9iYzhEbVY4Wk5LQU1vUVgwUVRmaGR4U3Zta3M1QVpMTTFhbkR4MFdn?=
- =?utf-8?B?ajhJWWtRaHZXdzlXVU1FeS80UjhjYjRSa2Q4ZzlvcEM3Y0ZkeCtIakNKMGhX?=
- =?utf-8?B?N3ZiZ2N0V05QWmhMd0tJeThQOElXZVkyajVwdGZNUjFaN21FM1lsWVBqOFcw?=
- =?utf-8?B?cVJMNExhTGtmK0JscEZlYStLRFZhK2xrUjhIK2hKWnYzdyt5cERHSGd1citZ?=
- =?utf-8?B?bk5uZFc3VWNkVHZPWUw2Y0ZEVE9FTkpvOHdNdFhJa2JoSDFLTU5CcUYrckpu?=
- =?utf-8?B?MHJrZEg3MDZ1LzVXYVNUejV2M1Nzdm9YUDJjT0JabFo1NDNzU3JKWVZEeGZj?=
- =?utf-8?B?dTF0M0FKYUxFamtPQ0hYVFh5VEVJVS9BTU9OM3ovRW5KaUpKZmF2S2RhRTdx?=
- =?utf-8?B?RURuTlNIbGNTaTdEanh6cSt4L0hySDlVSFF2cElORmdvemJ1ZStrbkZNdUVw?=
- =?utf-8?B?cFBEZ2s0Ymh1eW5SR09nRW5qanlwMEJnTmxUTEdNZkNHYW9CcGhmUERwTVBR?=
- =?utf-8?B?UzdIYU9Xbi9iUFltdDdKbG82Q3lJa0RpU28rWFRYam1wa2JucmRnbHZPZHV6?=
- =?utf-8?B?Q3pvUEZBdUQ2WWE1Y3lRcFBYblRYeGxMU29Va1piNktmU1JVU2kwdi92bzM4?=
- =?utf-8?B?RUtGTXltRmZ3L2xZcWxsUFJYY1F3dVFVZTBjMlNhcnBLa0hXVHk1S2NtNWpl?=
- =?utf-8?B?NHNrbXo1UlBid1lyVXVpcGl2aW1BYlNTbkcwUWtCS1Fpd3M1a25mV3FUd2hi?=
- =?utf-8?B?d1hpYnhTNEhTZ29OWGkvbGRGb0pucWhpYStHZWZpQm4vR2tHY1dXUjUwQzk2?=
- =?utf-8?B?Zk45SzBXZWp1MEhOMHVUNHMxZHRwcWFKOGcwQllpVHhFSjRBVVY1eFZQcHFp?=
- =?utf-8?B?djNDQlpMQkNyOFo2SDBjM2pRTG43RCtmWWJPbWZYYTg5M3orYlQycnpDbno3?=
- =?utf-8?B?WDArL3R3eG9hVng1UWxsWVhpenh6R01XdjRCVkY4ZVVkN0tzU0xybXVjNWw0?=
- =?utf-8?B?aXY2bTNoNWc5eEwva3h1YmpQdXgvNXZFVUZmRzh5NDA2WVltc1UyZC9DTUxq?=
- =?utf-8?B?emdqZURxeitEcWJyTHN1QkUxUlF4dWRRd0dZdkhjMXN4eVpwdk56TzhzZ2tw?=
- =?utf-8?B?NVl5bkJoMmJCb1FJbElYMzJ0WG5KSEQzN2pMY1NCemNSak1hVXhsTEtXVGsx?=
- =?utf-8?B?aVJkM3Y0R0tXVmRLVCtxWm5GQXdxM1VvUjRDUG8xZENHR0ZDTXdtbm5rOFo4?=
- =?utf-8?B?Mk5LcVdQWHZjL2tXSHpMVlJGamFxbVV5SlloYjgvdWZCb3drZ1RYeHlHQXJY?=
- =?utf-8?B?YnkweWd1citPS2MrdlZxN0lHeENLK2RqMXF2bnRyMzZ0QzdlU1hKY0F2TXBm?=
- =?utf-8?B?SXpUWDdLWFdubFRmYm5rcTNSMHYyenpUREE3S0VQalI4VG1KNjQrUTV0azd5?=
- =?utf-8?B?NGt1WEpGREFxOW5rMmlKUlV3aWpva1dlSUtmU1FSbHFNSk9vbXVSc2FHaFV5?=
- =?utf-8?B?MmZwQzZ4bWQxbVArS1RxWlN3NnRwamVqK2JVMEN0NHBPL040bDVqTjBKUTVk?=
- =?utf-8?B?QkJpcGcrdkorQUVTYnFYNG9PRGxpMVl3ZEJaWlUyWEJPMWVESnNzUy9Pc3Qr?=
- =?utf-8?B?ck9qL1lUYWxyTmxrYlpuQVBEbVJ5QU5PVU4xWVNGZUtvOTU0WmVyRFBuVzRQ?=
- =?utf-8?B?UzRXWFBPZGZ1SDdzU2kzekVjNEZGMFlnN0YySTJ6bCtFYVk1QWdFbjR3d1Ru?=
- =?utf-8?Q?bgS4gYk+t3W/p?=
+X-Microsoft-Antispam-Message-Info: f7u0N1SliL0V9B70mXXQFPidWeYNNHVmyKwncegpCmr5vNI0NsjnKk3Xx8Vz6fpVogIWkpf8Aj9Qn10oHDbB5/4adRao1ccudKMQYOAvLIruYSx3FGZEp0pBGYuTZlg+iJ89F1ChupxsP8drZYAi/M3nWcWsMi/oiCECv6NtDluiBm6AplUSgAu8gTPftsEP/BmRE+GG/JICMZ419pyPSRVAx07H934GQcf8hHqmrDvjqGpNCZNEcC60Rxx8EV2zGKxklKQAOjqeVAQpk525GdGKPsWYS+YKHmqAIfTVslGtXSXWJQVPvZ1q7EodqgkZjv+ST5Yn6y3xcAoFuwB6JXJzLEnUz9U/B3US60kWphFV3zXbC6sk4YHW1vRh4z8VzfS8NuIIKaRJNrMzXhCxxm5j47c0IaBjFZjTMDcr/f1t5XkHfZUD2hL/+g0wMWZugp2UD7LBwuYokw/Eas7JZbL8VB7E6H3ttyYeR9Axiy6akhsaFhXkANh56EUQX5La1PSe+wiXxMS+w67t1sGo11SWCN+C9etZcOr9XpeBnMaATTZBUYXq/R6riq8NwpOo0sCcEnFeYuBdigkucTaGJ8KovKpkNgT10Bww1fEhyB4=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PR1PR06MB4746.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(366004)(376002)(396003)(39840400004)(186003)(16526019)(4326008)(8886007)(5660300002)(36756003)(7696005)(8676002)(38100700002)(478600001)(2616005)(55016002)(86362001)(6666004)(44832011)(8936002)(2906002)(66556008)(316002)(66946007)(66476007)(110136005)(83380400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?aUJGQVpSNFBoY1FSYXhnUVVvUTFrK3JycXlIK2ZoT2YweFA5c2o0Qlh6Qmdu?=
+ =?utf-8?B?WjhmdFV0MUIvVWxGSVViQURoOVpXUUZKbFBSeURaK3orR2RRVkdISmlSREF2?=
+ =?utf-8?B?clc0aEtWSEtOZ0d6WnlTM1ZmdlRaQkZVMkpOVVBuUVJsK05hSnFCeUIxbkVi?=
+ =?utf-8?B?WEw3VVE5cjhQcjd0K3dad0hYVWNDZzdtOXlLOXI5UDhLTDZVQkdQTW1zbUlZ?=
+ =?utf-8?B?bWdQajRmNVVKS2trLzRRUC90eDFySVRRejZKemlmZU9rMlpuYW5wUGlwaDJo?=
+ =?utf-8?B?L2ZNQklKV2x0ZUdhVjc3OWdLQVp0YVpLWEpleWx0QTFhdU9kSyttcFpGdElI?=
+ =?utf-8?B?bU1pZi9LQktNaVZJTmdBUWhnWEJPZEpaSERlOXZ1d1BPcERuYTBTL0ZOMU85?=
+ =?utf-8?B?QnBpb3ZWNjhLRmRPTzU1MlNEL1ZkQ1dwUnJ3WEU1TWF2QkVUOVRrRHpORVFs?=
+ =?utf-8?B?RExmZjM3R3RHV0pBZ1B5UGMwNkk4MkFPQXF3VUlSZncrMS9IK1REdlE3aXRI?=
+ =?utf-8?B?cE02TzBLYmwvQ2JBN05Kc1JXZU1pVUlwViszUnFxb3J6cHhpNW9mWEc0REtu?=
+ =?utf-8?B?ZEN3L05Gei9PQTdQYUpOWGoybHZvdXZmUERTWkZ6ODkzZ1NDZHNYdzdkbUVu?=
+ =?utf-8?B?Zy9vKzlqalNJUTEyRFhZZVhEVzVGS01TVEE1WmFoMG9XRStYNGFGMnhvbHJ0?=
+ =?utf-8?B?YXJpU0N1cXpmNUc5QjRRclUxdnVqeVhSaUhVb2ppYU1MNHJsS1pOOEcyOW13?=
+ =?utf-8?B?ejcvQmNzY1VXQWYvL0ZFSU93VUthdmdPNW4rMUwzcmRQQklDTjRWc2tqdEhq?=
+ =?utf-8?B?bmVvQURtOWNYYUdZeU85MHBhMllJdUUvcHdZUGJqQ2xKcDg0N0l6NlpnS2ho?=
+ =?utf-8?B?ajMyWUpPcTdvOGxKK09Jb1NmTTR6TU9pSzhlWU1kdmJtTmJoa2w4NjlOZVpW?=
+ =?utf-8?B?NGRHNVQ3RFcreGtaVmxmSGdReDdLNysvVWlWQXVUVStoUFcyMTJYN3JGQ2ky?=
+ =?utf-8?B?WHI3OXBqa0dSMjFEekIxdXVJd2k1MjhDM3pvZVMrT090QURkbEJyYVRzSFov?=
+ =?utf-8?B?cmpmUHQ5RjNRNDI3cHBRLzhFUUUrbTlwRTFTVWw2dFZIVk4yZTA4VGM1RkpF?=
+ =?utf-8?B?R3d6dGk1dm9VMjZ3dTZIdG8wYmQvSTUra2NEdXRNOHBGNGNtdTlvS3NSbnB0?=
+ =?utf-8?B?dEl2RzR1SkR0T0dIbFFSZ3o2S0pzWlg1Nmplb1JZTTJqbHRtaDJDKzhXdDZu?=
+ =?utf-8?B?dElZSURqUVpmZHpoQUlSYUVuM0VnZkp2d2hvYlpQdTZuVFFiWVFLS2xBNTVM?=
+ =?utf-8?B?Y1JUektyVGovbmlkSHFDYUNoVCs0dEQvOHFlRzJ5b1dKd0xQbmxyRVpTRG5L?=
+ =?utf-8?B?ckZBK2MvU1llUnNieWRQMHFqQ054VnlWR1E0b3NJTUxaZXdYb012aXlaTjlG?=
+ =?utf-8?B?ZUl5VzkrZFpoc2lUUWZGWTBRNlY5aHF2cUdvd0VORFdPSjIwVUhneFRZUmF1?=
+ =?utf-8?B?bzhSUVhwVW15WGlFQWVUTjVDWWtmL2hQaEpKZjZrSVNxL3FFdkd5bG54YTBB?=
+ =?utf-8?B?Q0lFNVBiUEREMTlwUTBnNkdqb3cybGtsVUoyMkxmYStXRXpJenlFOFJrZUFP?=
+ =?utf-8?B?YnJZSS83b082KytLaVh3NEVWUExldUl2TmcyRkkzMmVqOVpvMUxvSUpCS0tj?=
+ =?utf-8?B?KzVjK3FvbXlZZ0VDVzZBSVVXUi9pTFVtZ0RWZVlTT0poZ2tqa0hBb2UyRmlJ?=
+ =?utf-8?B?TktOSDc2UDRWNkRCcldHNXRaTVNlS040Zyt3V2JTaER0QzFob0tzWDlndk0y?=
+ =?utf-8?B?ZjZ3bFhhNVpPdzJhSHh1bFJTR3NId0pDT2k4VXZiQnJtNjNmRitUeGtpZkpD?=
+ =?utf-8?Q?XesgRoSlTr+/X?=
 X-OriginatorOrg: orolia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: de7c6af0-8f84-4ccf-6c0b-08d90ae05162
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9edc8e9-9a6b-4876-98e8-08d90ae088d3
 X-MS-Exchange-CrossTenant-AuthSource: PR1PR06MB4746.eurprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2021 07:28:00.5012
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Apr 2021 07:29:33.4976
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: a263030c-9c1b-421f-9471-1dec0b29c664
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: n5lOou+6rSS/OqsFm2qgfpikW1yyLwGVNDqSkXlT4cvDRAINm5SR5jnSrKY11irsiOiYlALLeDGlWN0gN49X2HqqdHHNQsfSBZQlbBBOqWM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR06MB7552
+X-MS-Exchange-CrossTenant-UserPrincipalName: Mk8JJQBVu810cxyBJ0T2I1HM8SEA8Ixa0mrgXYiTmDlaWSFEe40aH63NNpyLBsJjtJZBHGI0Ghb8JibZhF3V++ERAFVqQpS93J4QsPDmGOU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR06MB7423
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-- add schema for Altera mSGDMA bindings in devicetree.
-- add myself as 'Odd fixes' maintainer for this driver
+This driver had no device tree support.
+
+- add compatible field "altr,msgdma"
+- define msgdma_of_xlate, with no argument
+- register dma controller with of_dma_controller_register
 
 Signed-off-by: Olivier Dautricourt <olivier.dautricourt@orolia.com>
 ---
 
 Notes:
     Changes in v2:
-     - fix reg size in dt example
-     - fix dt_binding check warning
-     - add list in MAINTAINERS entry
+    	none
 
     Changes from v2 to v3:
-     none
+    	Removed CONFIG_OF #ifdef's and use if (IS_ENABLED(CONFIG_OF))
+    	only once.
 
- .../devicetree/bindings/dma/altr,msgdma.yaml  | 62 +++++++++++++++++++
- MAINTAINERS                                   |  7 +++
- 2 files changed, 69 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/altr,msgdma.yaml
+ drivers/dma/altera-msgdma.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/altr,msgdma.yaml b/Documentation/devicetree/bindings/dma/altr,msgdma.yaml
-new file mode 100644
-index 000000000000..295e46c84bf9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/altr,msgdma.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/altr,msgdma.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Altera mSGDMA IP core
-+
-+maintainers:
-+  - Olivier Dautricourt <olivier.dautricourt@orolia.com>
-+
-+description: |
-+  Altera / Intel modular Scatter-Gather Direct Memory Access (mSGDMA)
-+  intellectual property (IP)
-+
-+allOf:
-+  - $ref: "dma-controller.yaml#"
-+
-+properties:
-+  compatible:
-+    const: altr,msgdma
-+
-+  reg:
-+    description:
-+      csr, desc, resp resgisters
-+    maxItems: 3
-+    minItems: 3
-+
-+  reg-names:
-+    items:
-+      - const: csr
-+      - const: desc
-+      - const: resp
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  "#dma-cells":
-+    description: |
-+      The dma controller discards the argument but one must be specified
-+      to keep compatibility with dma-controller schema.
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    msgdma_controller: dma-controller@ff200b00 {
-+        compatible = "altr,msgdma";
-+        reg = <0xff200b00 0x100>, <0xff200c00 0x100>, <0xff200d00 0x100>;
-+        reg-names = "csr", "desc", "resp";
-+        interrupts = <0 67 IRQ_TYPE_LEVEL_HIGH>;
-+        #dma-cells = <1>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5c90148f0369..359ab4877024 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -782,6 +782,13 @@ M:	Ley Foon Tan <ley.foon.tan@intel.com>
- S:	Maintained
- F:	drivers/mailbox/mailbox-altera.c
+diff --git a/drivers/dma/altera-msgdma.c b/drivers/dma/altera-msgdma.c
+index 9a841ce5f0c5..5a6eb5b501ad 100644
+--- a/drivers/dma/altera-msgdma.c
++++ b/drivers/dma/altera-msgdma.c
+@@ -19,6 +19,7 @@
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
++#include <linux/of_dma.h>
 
-+ALTERA MSGDMA IP CORE DRIVER
-+M:	Olivier Dautricourt <olivier.dautricourt@orolia.com>
-+L:	dmaengine@vger.kernel.org
-+S:	Odd Fixes
-+F:	Documentation/devicetree/bindings/dma/altr,msgdma.yaml
-+F:	drivers/dma/altera-msgdma.c
+ #include "dmaengine.h"
+
+@@ -784,6 +785,14 @@ static int request_and_map(struct platform_device *pdev, const char *name,
+ 	return 0;
+ }
+
++static struct dma_chan *msgdma_of_xlate(struct of_phandle_args *dma_spec,
++					struct of_dma *ofdma)
++{
++	struct msgdma_device *d = ofdma->of_dma_data;
 +
- ALTERA PIO DRIVER
- M:	Joyce Ooi <joyce.ooi@intel.com>
- L:	linux-gpio@vger.kernel.org
++	return dma_get_any_slave_channel(&d->dmadev);
++}
++
+ /**
+  * msgdma_probe - Driver probe function
+  * @pdev: Pointer to the platform_device structure
+@@ -888,6 +897,16 @@ static int msgdma_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto fail;
+
++	if (IS_ENABLED(CONFIG_OF)) {
++		ret = of_dma_controller_register(pdev->dev.of_node,
++						 msgdma_of_xlate, mdev);
++		if (ret) {
++			dev_err(&pdev->dev,
++				"failed to register dma controller");
++			goto fail;
++		}
++	}
++
+ 	dev_notice(&pdev->dev, "Altera mSGDMA driver probe success\n");
+
+ 	return 0;
+@@ -916,9 +935,17 @@ static int msgdma_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+
++static const struct of_device_id msgdma_match[] = {
++	{ .compatible = "altr,msgdma",},
++	{ }
++};
++
++MODULE_DEVICE_TABLE(of, msgdma_match);
++
+ static struct platform_driver msgdma_driver = {
+ 	.driver = {
+ 		.name = "altera-msgdma",
++		.of_match_table = of_match_ptr(msgdma_match),
+ 	},
+ 	.probe = msgdma_probe,
+ 	.remove = msgdma_remove,
 --
 2.31.0.rc2
 

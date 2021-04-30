@@ -2,54 +2,56 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A5A636F769
-	for <lists+dmaengine@lfdr.de>; Fri, 30 Apr 2021 10:56:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A30B36F76D
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Apr 2021 10:56:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229669AbhD3I4t (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 30 Apr 2021 04:56:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57852 "EHLO
+        id S229842AbhD3I46 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 30 Apr 2021 04:56:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229601AbhD3I4t (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 30 Apr 2021 04:56:49 -0400
-X-Greylist: delayed 100386 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 30 Apr 2021 01:56:01 PDT
-Received: from mout-u-107.mailbox.org (mout-u-107.mailbox.org [IPv6:2001:67c:2050:1::465:107])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C777C06174A;
-        Fri, 30 Apr 2021 01:56:01 -0700 (PDT)
+        with ESMTP id S229567AbhD3I45 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 30 Apr 2021 04:56:57 -0400
+Received: from mout-u-204.mailbox.org (mout-u-204.mailbox.org [IPv6:2001:67c:2050:1::465:204])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68A80C06174A;
+        Fri, 30 Apr 2021 01:56:09 -0700 (PDT)
 Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mout-u-107.mailbox.org (Postfix) with ESMTPS id 4FWmRx73FvzQjp3;
-        Fri, 30 Apr 2021 10:55:57 +0200 (CEST)
+        by mout-u-204.mailbox.org (Postfix) with ESMTPS id 4FWmS75rt0zQjwd;
+        Fri, 30 Apr 2021 10:56:07 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at heinlein-support.de
 Received: from smtp1.mailbox.org ([80.241.60.240])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id Tl5rxeJGiWZH; Fri, 30 Apr 2021 10:55:53 +0200 (CEST)
-Subject: Re: [PATCH v4 1/2] dt-bindings: dma: add schema for altr,msgdma
+        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
+        with ESMTP id 9F8beDW6lYQs; Fri, 30 Apr 2021 10:56:04 +0200 (CEST)
+Subject: Re: [PATCH v4 2/2] drivers: dma: altera-msgdma: add OF support
 To:     Olivier Dautricourt <olivier.dautricourt@orolia.com>,
         Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>
 Cc:     dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <YIq/qObuYw+8ikxg@orolia.com>
+References: <YIrAJce3Ej8hNbkA@orolia.com>
 From:   Stefan Roese <sr@denx.de>
-Message-ID: <1c112356-ebfd-bcf0-6cee-60903c171b9b@denx.de>
-Date:   Fri, 30 Apr 2021 10:55:52 +0200
+Message-ID: <5377361b-5602-1c03-04be-384f06150240@denx.de>
+Date:   Fri, 30 Apr 2021 10:56:04 +0200
 MIME-Version: 1.0
-In-Reply-To: <YIq/qObuYw+8ikxg@orolia.com>
+In-Reply-To: <YIrAJce3Ej8hNbkA@orolia.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: de-DE
 Content-Transfer-Encoding: 8bit
 X-MBO-SPAM-Probability: 
-X-Rspamd-Score: -7.83 / 15.00 / 15.00
-X-Rspamd-Queue-Id: 761031882
-X-Rspamd-UID: a3f292
+X-Rspamd-Score: -5.03 / 15.00 / 15.00
+X-Rspamd-Queue-Id: CAD9E1857
+X-Rspamd-UID: f04d74
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 29.04.21 16:16, Olivier Dautricourt wrote:
-> - add schema for Altera mSGDMA bindings in devicetree.
-> - add myself as 'Odd fixes' maintainer for this driver
+On 29.04.21 16:18, Olivier Dautricourt wrote:
+> This driver had no device tree support.
+> 
+> - add compatible field "altr,msgdma"
+> - define msgdma_of_xlate, with no argument
+> - register dma controller with of_dma_controller_register
 > 
 > Signed-off-by: Olivier Dautricourt <olivier.dautricourt@orolia.com>
 
@@ -62,107 +64,83 @@ Stefan
 > 
 > Notes:
 >      Changes in v2:
->       - fix reg size in dt example
->       - fix dt_binding check warning
->       - add list in MAINTAINERS entry
+>      	none
 > 
 >      Changes from v2 to v3:
->       none
+>      	Removed CONFIG_OF #ifdef's and use if (IS_ENABLED(CONFIG_OF))
+>      	only once.
 > 
->      Changes from v3 to v4:
->       none
+>      Changes from v3 to v4
+>      	Reintroduce #ifdef CONFIG_OF for msgdma_match
+>      	as it produces a unused variable warning
 > 
->   .../devicetree/bindings/dma/altr,msgdma.yaml  | 62 +++++++++++++++++++
->   MAINTAINERS                                   |  7 +++
->   2 files changed, 69 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/dma/altr,msgdma.yaml
+>   drivers/dma/altera-msgdma.c | 29 +++++++++++++++++++++++++++++
+>   1 file changed, 29 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/altr,msgdma.yaml b/Documentation/devicetree/bindings/dma/altr,msgdma.yaml
-> new file mode 100644
-> index 000000000000..295e46c84bf9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/altr,msgdma.yaml
-> @@ -0,0 +1,62 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/altr,msgdma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Altera mSGDMA IP core
-> +
-> +maintainers:
-> +  - Olivier Dautricourt <olivier.dautricourt@orolia.com>
-> +
-> +description: |
-> +  Altera / Intel modular Scatter-Gather Direct Memory Access (mSGDMA)
-> +  intellectual property (IP)
-> +
-> +allOf:
-> +  - $ref: "dma-controller.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    const: altr,msgdma
-> +
-> +  reg:
-> +    description:
-> +      csr, desc, resp resgisters
-> +    maxItems: 3
-> +    minItems: 3
-> +
-> +  reg-names:
-> +    items:
-> +      - const: csr
-> +      - const: desc
-> +      - const: resp
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  "#dma-cells":
-> +    description: |
-> +      The dma controller discards the argument but one must be specified
-> +      to keep compatibility with dma-controller schema.
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - interrupts
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    msgdma_controller: dma-controller@ff200b00 {
-> +        compatible = "altr,msgdma";
-> +        reg = <0xff200b00 0x100>, <0xff200c00 0x100>, <0xff200d00 0x100>;
-> +        reg-names = "csr", "desc", "resp";
-> +        interrupts = <0 67 IRQ_TYPE_LEVEL_HIGH>;
-> +        #dma-cells = <1>;
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5c90148f0369..359ab4877024 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -782,6 +782,13 @@ M:	Ley Foon Tan <ley.foon.tan@intel.com>
->   S:	Maintained
->   F:	drivers/mailbox/mailbox-altera.c
+> diff --git a/drivers/dma/altera-msgdma.c b/drivers/dma/altera-msgdma.c
+> index 9a841ce5f0c5..7e58385facef 100644
+> --- a/drivers/dma/altera-msgdma.c
+> +++ b/drivers/dma/altera-msgdma.c
+> @@ -19,6 +19,7 @@
+>   #include <linux/module.h>
+>   #include <linux/platform_device.h>
+>   #include <linux/slab.h>
+> +#include <linux/of_dma.h>
 > 
-> +ALTERA MSGDMA IP CORE DRIVER
-> +M:	Olivier Dautricourt <olivier.dautricourt@orolia.com>
-> +L:	dmaengine@vger.kernel.org
-> +S:	Odd Fixes
-> +F:	Documentation/devicetree/bindings/dma/altr,msgdma.yaml
-> +F:	drivers/dma/altera-msgdma.c
+>   #include "dmaengine.h"
+> 
+> @@ -784,6 +785,14 @@ static int request_and_map(struct platform_device *pdev, const char *name,
+>   	return 0;
+>   }
+> 
+> +static struct dma_chan *msgdma_of_xlate(struct of_phandle_args *dma_spec,
+> +					struct of_dma *ofdma)
+> +{
+> +	struct msgdma_device *d = ofdma->of_dma_data;
 > +
->   ALTERA PIO DRIVER
->   M:	Joyce Ooi <joyce.ooi@intel.com>
->   L:	linux-gpio@vger.kernel.org
+> +	return dma_get_any_slave_channel(&d->dmadev);
+> +}
+> +
+>   /**
+>    * msgdma_probe - Driver probe function
+>    * @pdev: Pointer to the platform_device structure
+> @@ -888,6 +897,16 @@ static int msgdma_probe(struct platform_device *pdev)
+>   	if (ret)
+>   		goto fail;
+> 
+> +	if (IS_ENABLED(CONFIG_OF)) {
+> +		ret = of_dma_controller_register(pdev->dev.of_node,
+> +						 msgdma_of_xlate, mdev);
+> +		if (ret) {
+> +			dev_err(&pdev->dev,
+> +				"failed to register dma controller");
+> +			goto fail;
+> +		}
+> +	}
+> +
+>   	dev_notice(&pdev->dev, "Altera mSGDMA driver probe success\n");
+> 
+>   	return 0;
+> @@ -916,9 +935,19 @@ static int msgdma_remove(struct platform_device *pdev)
+>   	return 0;
+>   }
+> 
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id msgdma_match[] = {
+> +	{ .compatible = "altr,msgdma",},
+> +	{ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, msgdma_match);
+> +#endif
+> +
+>   static struct platform_driver msgdma_driver = {
+>   	.driver = {
+>   		.name = "altera-msgdma",
+> +		.of_match_table = of_match_ptr(msgdma_match),
+>   	},
+>   	.probe = msgdma_probe,
+>   	.remove = msgdma_remove,
 > --
 > 2.31.0.rc2
 > 

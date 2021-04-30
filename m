@@ -2,240 +2,202 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2905936F136
-	for <lists+dmaengine@lfdr.de>; Thu, 29 Apr 2021 22:39:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C84636F32E
+	for <lists+dmaengine@lfdr.de>; Fri, 30 Apr 2021 02:36:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236678AbhD2Ujq (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 29 Apr 2021 16:39:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236675AbhD2Ujp (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Thu, 29 Apr 2021 16:39:45 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8BA9B61424;
-        Thu, 29 Apr 2021 20:38:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619728738;
-        bh=7fpzpOV4zd0vGWk7Nig3KUb6uMJJYVewdGFJlgXV4LY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cNpYsunI00J2o1O4QCg8osIK8v04uOc/PbHjS4Y4zu2D5I/+eqeyDYZrSDU5FmVbj
-         0G2UtVVjmkkt7WxU0uOMKAIfa9rCWwxpSk2y+3dzNPILqIfhtjNwcx6KHa8n0yrs4j
-         EIy/9Z/KXE1a9BkIase6egfGDf4n2W1Unuq/blldVABxfty4wFUyic5bpwpV/CWX9Z
-         qXc3yWEVsuARaZlVG2rSZ0iaEREf2ZQXxLwGMF0lVmcd/iM+G6oJvWCjFuCCHTFv3o
-         dWTNZVh6/wys/RkO3Nh53WIzySBYPLGlkIkXRXOa47KiGmzKj58HAMX75D7xGcALL0
-         uZglbRslGJl/g==
-Received: by mail-ej1-f51.google.com with SMTP id n2so101854491ejy.7;
-        Thu, 29 Apr 2021 13:38:58 -0700 (PDT)
-X-Gm-Message-State: AOAM531M9hk9YIVsbscfLwQET38f16VfFIHjBkTmSFCSxs/1K3OFQmOJ
-        jxoqjAtLaR7z+w+QA1+aO4IlzorpKMbSHjhyPA==
-X-Google-Smtp-Source: ABdhPJys+AHIA7g0Hb9LngctVWlxApTbTRNaemN0NP5iP2Mprf+bpox8GRotpdVwoHfbA6KYjOGY7O7u2wDHKbJNX7I=
-X-Received: by 2002:a17:906:7806:: with SMTP id u6mr393550ejm.130.1619728737129;
- Thu, 29 Apr 2021 13:38:57 -0700 (PDT)
+        id S229519AbhD3AhP (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 29 Apr 2021 20:37:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33752 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229799AbhD3AhO (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 29 Apr 2021 20:37:14 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB623C06138B;
+        Thu, 29 Apr 2021 17:36:26 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6D89EB8B;
+        Fri, 30 Apr 2021 02:36:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1619742984;
+        bh=Hp8mtrcjCCtlKZbePuUwuModbgTwBktIt0Cn/vGVBjc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RopSS5Qr4kDBHzXGmcEjkLXYs2KNu7eHkj9d6BZeHjMcbPrkHF9wkrCjXghcyLVXp
+         rYIwxQqZdIJXRxwOLmG8gHL5xRfku8mpA8nO67wXtA7kiKxVSWJq39LUazhBrAq9ER
+         Mimo2oQxL9WSUrwTU1QaTOYDmFFmG3IJJlRa0YHw=
+Date:   Fri, 30 Apr 2021 03:36:23 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     quanyang.wang@windriver.com
+Cc:     Vinod Koul <vkoul@kernel.org>, Hyun Kwon <hyun.kwon@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Tejas Upadhyay <tejasu@xilinx.com>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: xilinx: dpdma: request_irq after initializing
+ dma channels
+Message-ID: <YItRB7SBhiilzDLk@pendragon.ideasonboard.com>
+References: <20210429065821.3495234-1-quanyang.wang@windriver.com>
 MIME-Version: 1.0
-References: <20210429192504.1148842-1-clabbe@baylibre.com>
-In-Reply-To: <20210429192504.1148842-1-clabbe@baylibre.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 29 Apr 2021 15:38:45 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJqFGU5EG+7GuRKFBaYZkB+Af41ZvqZH=54PH7qCQoMEg@mail.gmail.com>
-Message-ID: <CAL_JsqJqFGU5EG+7GuRKFBaYZkB+Af41ZvqZH=54PH7qCQoMEg@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: dma: convert arm-pl08x to yaml
-To:     Corentin Labbe <clabbe@baylibre.com>
-Cc:     Vinod <vkoul@kernel.org>, devicetree@vger.kernel.org,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210429065821.3495234-1-quanyang.wang@windriver.com>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Thu, Apr 29, 2021 at 2:25 PM Corentin Labbe <clabbe@baylibre.com> wrote:
->
-> Converts dma/arm-pl08x.txt to yaml.
-> In the process, I add an example for the faraday variant.
->
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+Hi Quanyang,
+
+Thank you for the patch.
+
+On Thu, Apr 29, 2021 at 02:58:21PM +0800, quanyang.wang@windriver.com wrote:
+> From: Quanyang Wang <quanyang.wang@windriver.com>
+> 
+> In some scenarios (kdump), dpdma hardware irqs has been enabled when
+> calling request_irq in probe function, and then the dpdma irq handler
+> xilinx_dpdma_irq_handler is invoked to access xdev->chan[i]. But at
+> this moment xdev->chan[i] hasn't been initialized. So let's call the
+> request_irq after initializing dma channels to avoid kdump kernel
+> crash as below:
+> 
+> [    3.696128] Unable to handle kernel NULL pointer dereference at virtual address 000000000000012c
+> [    3.696710] xilinx-zynqmp-dpdma fd4c0000.dma-controller: Xilinx DPDMA engine is probed
+> [    3.704900] Mem abort info:
+> [    3.704902]   ESR = 0x96000005
+> [    3.704905]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [    3.704907]   SET = 0, FnV = 0
+> [    3.704912]   EA = 0, S1PTW = 0
+> [    3.713800] ahci-ceva fd0c0000.ahci: supply ahci not found, using dummy regulator
+> [    3.715585] Data abort info:
+> [    3.715587]   ISV = 0, ISS = 0x00000005
+> [    3.715589]   CM = 0, WnR = 0
+> [    3.715592] [000000000000012c] user address but active_mm is swapper
+> [    3.715596] Internal error: Oops: 96000005 [#1] SMP
+> [    3.715599] Modules linked in:
+> [    3.715608] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.10.0-12170-g60894882155f-dirty #77
+> [    3.723937] Hardware name: ZynqMP ZCU102 Rev1.0 (DT)
+> [    3.723942] pstate: 80000085 (Nzcv daIf -PAN -UAO -TCO BTYPE=--)
+> [    3.723956] pc : xilinx_dpdma_irq_handler+0x418/0x560
+> [    3.793049] lr : xilinx_dpdma_irq_handler+0x3d8/0x560
+> [    3.798089] sp : ffffffc01186bdf0
+> [    3.801388] x29: ffffffc01186bdf0 x28: ffffffc011836f28
+> [    3.806692] x27: ffffff8023e0ac80 x26: 0000000000000080
+> [    3.811996] x25: 0000000008000408 x24: 0000000000000003
+> [    3.817300] x23: ffffffc01186be70 x22: ffffffc011291740
+> [    3.822604] x21: 0000000000000000 x20: 0000000008000408
+> [    3.827908] x19: 0000000000000000 x18: 0000000000000010
+> [    3.833212] x17: 0000000000000000 x16: 0000000000000000
+> [    3.838516] x15: 0000000000000000 x14: ffffffc011291740
+> [    3.843820] x13: ffffffc02eb4d000 x12: 0000000034d4d91d
+> [    3.849124] x11: 0000000000000040 x10: ffffffc0112d2d48
+> [    3.854428] x9 : ffffffc0112d2d40 x8 : ffffff8021c00268
+> [    3.859732] x7 : 0000000000000000 x6 : ffffffc011836000
+> [    3.865036] x5 : 0000000000000003 x4 : 0000000000000000
+> [    3.870340] x3 : 0000000000000001 x2 : 0000000000000000
+> [    3.875644] x1 : 0000000000000000 x0 : 000000000000012c
+> [    3.880948] Call trace:
+> [    3.883382]  xilinx_dpdma_irq_handler+0x418/0x560
+> [    3.888079]  __handle_irq_event_percpu+0x5c/0x178
+> [    3.892774]  handle_irq_event_percpu+0x34/0x98
+> [    3.897210]  handle_irq_event+0x44/0xb8
+> [    3.901030]  handle_fasteoi_irq+0xd0/0x190
+> [    3.905117]  generic_handle_irq+0x30/0x48
+> [    3.909111]  __handle_domain_irq+0x64/0xc0
+> [    3.913192]  gic_handle_irq+0x78/0xa0
+> [    3.916846]  el1_irq+0xc4/0x180
+> [    3.919982]  cpuidle_enter_state+0x134/0x2f8
+> [    3.924243]  cpuidle_enter+0x38/0x50
+> [    3.927810]  call_cpuidle+0x1c/0x40
+> [    3.931290]  do_idle+0x20c/0x270
+> [    3.934502]  cpu_startup_entry+0x28/0x58
+> [    3.938410]  rest_init+0xbc/0xcc
+> [    3.941631]  arch_call_rest_init+0x10/0x1c
+> [    3.945718]  start_kernel+0x51c/0x558
+> 
+> Fixes: 7cbb0c63de3f ("dmaengine: xilinx: dpdma: Add the Xilinx DisplayPort DMA engine driver")
+> Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
 > ---
-> Changes since v1:
-> - fixes yamllint warning about indent
-> - added select
-> - fixed example (needed includes)
->
->  .../devicetree/bindings/dma/arm-pl08x.txt     |  59 --------
->  .../devicetree/bindings/dma/arm-pl08x.yaml    | 141 ++++++++++++++++++
->  2 files changed, 141 insertions(+), 59 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/dma/arm-pl08x.txt
->  create mode 100644 Documentation/devicetree/bindings/dma/arm-pl08x.yaml
+>  drivers/dma/xilinx/xilinx_dpdma.c | 30 +++++++++++++++---------------
+>  1 file changed, 15 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/dma/xilinx/xilinx_dpdma.c b/drivers/dma/xilinx/xilinx_dpdma.c
+> index 70b29bd079c9..0b599402c53f 100644
+> --- a/drivers/dma/xilinx/xilinx_dpdma.c
+> +++ b/drivers/dma/xilinx/xilinx_dpdma.c
+> @@ -1622,19 +1622,6 @@ static int xilinx_dpdma_probe(struct platform_device *pdev)
+>  	if (IS_ERR(xdev->reg))
+>  		return PTR_ERR(xdev->reg);
+>  
+> -	xdev->irq = platform_get_irq(pdev, 0);
+> -	if (xdev->irq < 0) {
+> -		dev_err(xdev->dev, "failed to get platform irq\n");
+> -		return xdev->irq;
+> -	}
+> -
+> -	ret = request_irq(xdev->irq, xilinx_dpdma_irq_handler, IRQF_SHARED,
+> -			  dev_name(xdev->dev), xdev);
+> -	if (ret) {
+> -		dev_err(xdev->dev, "failed to request IRQ\n");
+> -		return ret;
+> -	}
+> -
+>  	ddev = &xdev->common;
+>  	ddev->dev = &pdev->dev;
+>  
+> @@ -1688,6 +1675,19 @@ static int xilinx_dpdma_probe(struct platform_device *pdev)
+>  		goto error_of_dma;
+>  	}
+>  
+> +	xdev->irq = platform_get_irq(pdev, 0);
+> +	if (xdev->irq < 0) {
+> +		dev_err(xdev->dev, "failed to get platform irq\n");
 
-> diff --git a/Documentation/devicetree/bindings/dma/arm-pl08x.yaml b/Documentation/devicetree/bindings/dma/arm-pl08x.yaml
-> new file mode 100644
-> index 000000000000..06dec6f3e9a8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/arm-pl08x.yaml
-> @@ -0,0 +1,141 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/arm-pl08x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+As reported by the kbuild bot, ret isn't initialized here.
+
+> +		goto error_irq;
+> +	}
+
+This part could stay where it was, just after
+devm_platform_ioremap_resource().
+
 > +
-> +title: ARM PrimeCells PL080 and PL081 and derivatives DMA controller
+> +	ret = request_irq(xdev->irq, xilinx_dpdma_irq_handler, IRQF_SHARED,
+> +			  dev_name(xdev->dev), xdev);
+> +	if (ret) {
+> +		dev_err(xdev->dev, "failed to request IRQ\n");
+> +		goto error_irq;
+> +	}
+
+Ideally we should reset the device before requesting the IRQ, to ensure
+we start in a consistent state. There doesn't seem to be any global
+reset unfortunately. Shouldn't we at least disable interrupts ? It may
+be a bit pointless though as we reenable them right below, so I suppose
+this would be OK.
+
 > +
-> +maintainers:
-> +  - Vinod Koul <vkoul@kernel.org>
-> +
-> +allOf:
-> +  - $ref: "dma-controller.yaml#"
-> +
-> +# We need a select here so we don't match all nodes with 'arm,primecell'
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        enum:
-> +          - arm,pl080
-> +          - arm,pl081
-> +  required:
-> +    - compatible
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - const: "arm,pl080"
-> +          - const: "arm,primecell"
-> +      - items:
-> +          - const: "arm,pl081"
-> +          - const: "arm,primecell"
+>  	xilinx_dpdma_enable_irq(xdev);
+>  
+>  	xilinx_dpdma_debugfs_init(xdev);
+> @@ -1696,6 +1696,8 @@ static int xilinx_dpdma_probe(struct platform_device *pdev)
+>  
+>  	return 0;
+>  
+> +error_irq:
+> +	of_dma_controller_free(pdev->dev.of_node);
 
-The first 2 oneOf entries can be combined into one.
+Why not free_irq() ? This change isn't described in the commit message.
 
-And you don't need quotes.
+>  error_of_dma:
+>  	dma_async_device_unregister(ddev);
+>  error_dma_async:
+> @@ -1704,8 +1706,6 @@ static int xilinx_dpdma_probe(struct platform_device *pdev)
+>  	for (i = 0; i < ARRAY_SIZE(xdev->chan); i++)
+>  		xilinx_dpdma_chan_remove(xdev->chan[i]);
+>  
+> -	free_irq(xdev->irq, xdev);
+> -
+>  	return ret;
+>  }
+>  
 
-> +      - items:
-> +          - const: faraday,ftdma020
-> +          - const: arm,pl080
-> +          - const: arm,primecell
+-- 
+Regards,
 
-blank line between each DT property
-
-> +  arm,primecell-periphid:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-This already has a type in the common definition, so drop.
-
-> +    description: on the FTDMAC020 the primecell ID is not hard-coded
-> +                 in the hardware and must be specified here as <0x0003b080>. This number
-> +                 follows the PrimeCell standard numbering using the JEP106 vendor code 0x38
-> +                 for Faraday Technology.
-> +  reg:
-> +    minItems: 1
-
-Convention is 'maxItems: 1'.
-
-> +    description: Address range of the PL08x registers
-> +  interrupts:
-> +    minItems: 1
-> +    description: The PL08x interrupt number
-> +  clocks:
-> +    minItems: 1
-> +    description: The clock running the IP core clock
-> +  clock-names:
-> +    const: "apb_pclk"
-
-primecell.yaml already covers this IIRC. Just 'maxItems: 1' is fine here.
-
-> +  lli-bus-interface-ahb1:
-> +    type: boolean
-> +    description: if AHB master 1 is eligible for fetching LLIs
-> +  lli-bus-interface-ahb2:
-> +    type: boolean
-> +    description: if AHB master 2 is eligible for fetching LLIs
-> +  mem-bus-interface-ahb1:
-> +    type: boolean
-> +    description: if AHB master 1 is eligible for fetching memory contents
-> +  mem-bus-interface-ahb2:
-> +    type: boolean
-> +    description: if AHB master 2 is eligible for fetching memory contents
-> +  "#dma-cells":
-> +    const: 2
-> +    description: must be <2>. First cell should contain the DMA request,
-
-'must be <2>' is already stated by the schema.
-
-> +                 second cell should contain either 1 or 2 depending on
-> +                 which AHB master that is used.
-> +
-> +  memcpy-burst-size:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    enum:
-> +      - 1
-> +      - 4
-> +      - 8
-> +      - 16
-> +      - 32
-> +      - 64
-> +      - 128
-> +      - 256
-> +    description: the size of the bursts for memcpy
-> +  memcpy-bus-width:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    enum:
-> +      - 8
-> +      - 16
-> +      - 32
-> +      - 64
-> +    description: |
-
-Don't need '|' unless you need to preserve formatting.
-
-> +                 the bus width used for memcpy in bits: 8, 16 or 32 are legal
-> +                 values, the Faraday FTDMAC020 can also accept 64 bits
-> +
-> +required:
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - "#dma-cells"
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    dmac0: dma-controller@10130000 {
-> +      compatible = "arm,pl080", "arm,primecell";
-> +      reg = <0x10130000 0x1000>;
-> +      interrupt-parent = <&vica>;
-> +      interrupts = <15>;
-> +      clocks = <&hclkdma0>;
-> +      clock-names = "apb_pclk";
-> +      lli-bus-interface-ahb1;
-> +      lli-bus-interface-ahb2;
-> +      mem-bus-interface-ahb2;
-> +      memcpy-burst-size = <256>;
-> +      memcpy-bus-width = <32>;
-> +      #dma-cells = <2>;
-> +    };
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/reset/cortina,gemini-reset.h>
-> +    #include <dt-bindings/clock/cortina,gemini-clock.h>
-> +    dma-controller@67000000 {
-> +      compatible = "faraday,ftdma020", "arm,pl080", "arm,primecell";
-> +      /* Faraday Technology FTDMAC020 variant */
-> +      arm,primecell-periphid = <0x0003b080>;
-> +      reg = <0x67000000 0x1000>;
-> +      interrupts = <9 IRQ_TYPE_EDGE_RISING>;
-> +      resets = <&syscon GEMINI_RESET_DMAC>;
-> +      clocks = <&syscon GEMINI_CLK_AHB>;
-> +      clock-names = "apb_pclk";
-> +      /* Bus interface AHB1 (AHB0) is totally tilted */
-> +      lli-bus-interface-ahb2;
-> +      mem-bus-interface-ahb2;
-> +      memcpy-burst-size = <256>;
-> +      memcpy-bus-width = <32>;
-> +      #dma-cells = <2>;
-> +    };
-> --
-> 2.26.3
->
+Laurent Pinchart

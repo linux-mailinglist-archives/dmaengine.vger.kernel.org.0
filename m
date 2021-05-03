@@ -2,52 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FBD23717F0
-	for <lists+dmaengine@lfdr.de>; Mon,  3 May 2021 17:26:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 540D83717F2
+	for <lists+dmaengine@lfdr.de>; Mon,  3 May 2021 17:26:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230366AbhECP13 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        id S230419AbhECP13 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
         Mon, 3 May 2021 11:27:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34184 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230423AbhECP10 (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Mon, 3 May 2021 11:27:26 -0400
-Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86013C06138E
-        for <dmaengine@vger.kernel.org>; Mon,  3 May 2021 08:26:32 -0700 (PDT)
-Received: by mail-ot1-x32b.google.com with SMTP id 92-20020a9d02e50000b029028fcc3d2c9eso5437718otl.0
-        for <dmaengine@vger.kernel.org>; Mon, 03 May 2021 08:26:32 -0700 (PDT)
+        with ESMTP id S230424AbhECP11 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Mon, 3 May 2021 11:27:27 -0400
+Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65346C061763
+        for <dmaengine@vger.kernel.org>; Mon,  3 May 2021 08:26:34 -0700 (PDT)
+Received: by mail-ot1-x332.google.com with SMTP id d3-20020a9d29030000b029027e8019067fso5362663otb.13
+        for <dmaengine@vger.kernel.org>; Mon, 03 May 2021 08:26:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:from:date:message-id:subject:cc;
-        bh=EI6bZyecXV+D4mAvyW1zNE2tx9yP9EY1VWyGEKOhGs4=;
-        b=qeuOlliDGX/UXrFBQRGA+wZpGmrZ3HwhDOaBcLLbNorJFBQ4hQ9Q/6PhUtBuNeS8Aj
-         au6pVFpGyoJApuOoR9hMvcsM3O/ekucc0pvsmba0X3h/ETYu8raP259toJ+B9EQmVv3U
-         noQ0uvWbA3AQWM/Qk9dBt9TfYB86MQgd8kz3agg/3D5fZKr6N1NOHdVpSHKhVHkpQlbO
-         GeOcTWWtTFUZMM+V3A3Em2sAhxFybQCvJI/ak4a4jeiX+fIB3AtFhVdTWrFtg63tw3xd
-         QOgP2+GbpbYXfLlNvbH5jOyPPPAz8hsNULBRqJWfisA+Pml5+1NmzEMm7R5HvdDBlBGU
-         Wc/Q==
+        bh=KYXKPtE2VZh6dALBmahX3Lb0HQq8HVq0AUpkoo7GpCQ=;
+        b=xmbEQhxke5pWHBfmJSrThVbWD6yNloeA2luzWWZqnzEUacHlBE9+p5BdJi3ay7KHeM
+         EuMcX5IaisYJBmG+magxxmg5YuD04Gmwg7zkDBgqouHeuxxIcMUOnP8AYfGwVW3DMeNz
+         RsXqNHfeYCEYU4hJolnlkGJ72xZ+yP8N1Kv5W96RED8BM5BQucoNaDhHjUMwLQZC24wl
+         ZVBvPEqsjSvYY4Ic+mnHQs4tgU0zinx9OPGvC9YH2wQzKGCs+fkp7h5Mh2BpLTxXdXBu
+         RYgOmbb+6IJE9/Eyo2w/veS83rXtUE5tF3PnuxfyHB+uJGQkLVMfY+DoCXkit+rXY+mH
+         tPAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:from:date:message-id:subject:cc;
-        bh=EI6bZyecXV+D4mAvyW1zNE2tx9yP9EY1VWyGEKOhGs4=;
-        b=gbL73jATvqNXQhqiYwwkbE9cuiQsLKmhETIKT7Bwh3gAG/GRqIiD2mLZuG3EsEg7Oy
-         momWDWxX61CJkCCtjZUs+UMStiD+sDiJ69vHwYO9HCSLE4ZdVPEerX1hAUleaWOHN4MC
-         shlRzlFAiqQfTbC1IomAwU/Uz3gCPU9fzZpLOpT6jGDJN3xd8sOOyqsWxCKB6knB8Tj/
-         rgwinQ+Y+4NdEme6GTQ6MLc6umTZlO3j+1UFIo1JUrHNr7rsB2BBK+b63zewgWwR7h+D
-         c1N/uiTAI+tQC72ejGqJOnDBlbMOXkbERt1+jS8Zs5VGj0haM1CXZ7i7V7+s/iU11L6V
-         rcaA==
-X-Gm-Message-State: AOAM5323gt4ziwR+r4elkzPFeRY/3nqTsxW46iLKA/Bosgo+lWnd+WO7
-        aaRE7HGtUXRbJrAnETl7y97BjV8l3a8NaE31nB49Ww==
+        bh=KYXKPtE2VZh6dALBmahX3Lb0HQq8HVq0AUpkoo7GpCQ=;
+        b=PG9FLejrSCDn2Z2IgnrDlcMx2cmqfyJ97xCz2DpPc/WClnYcu/ZZJL9EWldGW90RiM
+         Tj0E8cG1I5veHz2vnLMkRDrdBO3dZiZFLRveWif59pwLFDKwyHmTCrFQtlkjvQLpVaCZ
+         iweOXY7OOen0wYlNFMUZOgobWd/P4GsGscT3q39881e6BG/z8aMY5Kt8/jbIQDAJv+ag
+         obaadqC9ug9LL9lsASMkgvyky5XBOLBRD6ZUlaKQU/VrEVeNH65BS+sTmqClO32S2hi7
+         2n6RB8xk+DrhIgJX8hKQkgrQxrTXoGoJCQSxIzEvoMk7kDEqf1i38ejPwF1+16KBKs7+
+         bWXg==
+X-Gm-Message-State: AOAM530NQzPYMs7NzMwx9SS+Aiqea+j+/KQlcAomv8+d5IcaXUM+R4vk
+        plJvUrlocZqC6yY298YxroWHdeXEnm0Nwww1QySauw==
 MIME-Version: 1.0
-X-Received: by 2002:a9d:2f24:: with SMTP id h33mt13304199otb.128.1620055591994;
- Mon, 03 May 2021 08:26:31 -0700 (PDT)
+X-Received: by 2002:a9d:4703:: with SMTP id a3mt12624905otf.136.1620055593857;
+ Mon, 03 May 2021 08:26:33 -0700 (PDT)
 Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Mon, 3 May 2021 08:26:31 -0700
+ HTTPREST; Mon, 3 May 2021 08:26:33 -0700
 From:   Guillaume Ranquet <granquet@baylibre.com>
-Date:   Mon, 3 May 2021 08:26:31 -0700
-Message-ID: <CABnWg9scYTkZ242STBop4yXNKsEzgd1gsGoZQzvrurL5nYhUQw@mail.gmail.com>
-Subject: [PATCH 3/4] dmaengine: mediatek: use GFP_NOWAIT instead of GFP_ATOMIC
- in prep_dma
+Date:   Mon, 3 May 2021 08:26:33 -0700
+Message-ID: <CABnWg9s9nbqm3bMv7oWgDw2zvaB3tcHttk9n9Jia4aZ_tdvK=g@mail.gmail.com>
+Subject: [PATCH 4/4] dmaengine: mediatek: do not hold the spinlock for vchan_dma_desc_free_list
 Cc:     Sean Wang <sean.wang@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -59,27 +58,26 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-As recommended by the doc in:
-Documentation/drivers-api/dmaengine/provider.rst
-
-Use GFP_NOWAIT to not deplete the emergency pool.
+As there is no need to hold the spinlock for dma_desc_free_list,
+Move it oustide the spinlock section.
 
 Signed-off-by: Guillaume Ranquet <granquet@baylibre.com>
 
 diff --git a/drivers/dma/mediatek/mtk-uart-apdma.c
 b/drivers/dma/mediatek/mtk-uart-apdma.c
-index 249cabddb7ee..4711bec04b98 100644
+index 4711bec04b98..ba43708f2a93 100644
 --- a/drivers/dma/mediatek/mtk-uart-apdma.c
 +++ b/drivers/dma/mediatek/mtk-uart-apdma.c
-@@ -349,7 +349,7 @@ static struct dma_async_tx_descriptor
-*mtk_uart_apdma_prep_slave_sg
- 		return NULL;
+@@ -431,8 +431,8 @@ static int mtk_uart_apdma_terminate_all(struct
+dma_chan *chan)
 
- 	/* Now allocate and setup the descriptor */
--	d = kzalloc(sizeof(*d), GFP_ATOMIC);
-+	d = kzalloc(sizeof(*d), GFP_NOWAIT);
- 	if (!d)
- 		return NULL;
+ 	spin_lock_irqsave(&c->vc.lock, flags);
+ 	vchan_get_all_descriptors(&c->vc, &head);
+-	vchan_dma_desc_free_list(&c->vc, &head);
+ 	spin_unlock_irqrestore(&c->vc.lock, flags);
++	vchan_dma_desc_free_list(&c->vc, &head);
 
+ 	return 0;
+ }
 -- 
 2.26.3

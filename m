@@ -2,51 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F1516374A6A
-	for <lists+dmaengine@lfdr.de>; Wed,  5 May 2021 23:38:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 253DF374A73
+	for <lists+dmaengine@lfdr.de>; Wed,  5 May 2021 23:39:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234140AbhEEVjp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 5 May 2021 17:39:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49730 "EHLO
+        id S234123AbhEEVju (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 5 May 2021 17:39:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234014AbhEEVjl (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 May 2021 17:39:41 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2482EC06138B
-        for <dmaengine@vger.kernel.org>; Wed,  5 May 2021 14:38:44 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id t21so1935334plo.2
-        for <dmaengine@vger.kernel.org>; Wed, 05 May 2021 14:38:44 -0700 (PDT)
+        with ESMTP id S234247AbhEEVjr (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 5 May 2021 17:39:47 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 736D2C06138E
+        for <dmaengine@vger.kernel.org>; Wed,  5 May 2021 14:38:50 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id i13so3200934pfu.2
+        for <dmaengine@vger.kernel.org>; Wed, 05 May 2021 14:38:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=E5tl04v9finFgI5dTLUvXSF6+C6BwGNEbEHhfHuvsdY=;
-        b=ACKDEi3d8y/Es5bvtxn0l07L22kbFP+Tg3bHthNBDjeNhLT0RD0b30luapq6h1jr+k
-         ihA0lPDekyGXGNtEsizSa93QkooYXi0yYZ/Hbhgssk+gGhl8Tnpf0bq+Vh+Mh5exkjBd
-         L/xDggHHQz56PSkFhqnOEn+NeB+a0Hzp4BjOAVaPK3GhI7G1jIYpFOMnzJyNNJT8Hp8d
-         0WuYvDLSLn7AzU5isvMdBRcgavBQQCabPXAsJyTA6Pa3VhV1OvUBxmVdQbr7TOONLK7y
-         W944jvb43h9iBU4Sq+rKDsnM81Kq6DcFxOfRsgXcwnqaNUY7LOXwewEsdrmgQZKmjP5T
-         P0cw==
+        bh=166D0K4ZGZhubJGZmHB+5zYKTmFkS5cEFQyCpyijewQ=;
+        b=ZDZZb7CwsOszsg37MZTiSSdrLdZVbKQb4tAf8nK0Rhm53S9sbMUh9dBWurPWpKzPYh
+         8jUcoB637ubZFVaLitqeezh6LBG+qmq9ce3Dnj6MwXpHl6RpCS1xATvsUXVqYIUHsynD
+         8OnBfpBmd2KKUYxy5a/U1q7MN0k74eWYhIUkhL0zXx1GvLOk8+Rnj5EjZcpyKGc38rf6
+         PrqBDZzzTck6yA08ZWNUPXpIkUxMjpk859R1N5eYaS5GVmNYIV0Q9mO6/3uRQPd6gMQh
+         LE2weq0rtayBlTQcaui9qmOlSDlHO3Rv4FhgKuqRxuVUUON1tXYJnT/0aFplkns9RrYH
+         GA7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=E5tl04v9finFgI5dTLUvXSF6+C6BwGNEbEHhfHuvsdY=;
-        b=RGOvxDFsEfEbJkiDhNwu7FhI3n94mjZnpupTNQnAeYlQcF0gSCPqaVa7jzbHLepK2k
-         a/ngnetfsmCjU2VU/1evxN08Ju0ovQxrXffS6fWkX6wniGb4HQaucEdh3f7Bsddtwr7t
-         dZaZeHTqeerzHMpLRqF5l+XLcZ9zl7JonLpskGx/zODgXAyzNoJv7MMsbxmG/94KDtFW
-         HfPxuMJc4dALaw4i3C33NrpJ12xpsP5HbZmeJScNcncKugnvBAXuM+qJCFe7ClpPtSpD
-         kzBfVMD7I0LzH+saSL/Mj+bePHmBSDkOGIVOiSwuM2vdplprLRTW4SB+qxaYLK4cKVw7
-         TLcQ==
-X-Gm-Message-State: AOAM530twF92clE/ZiccqimQX14Y0OLAZnNKJyLZw4cc4Q4QEU6tCzLk
-        cxVCnEpXoG0BW3NIThnvDZRSR+nWmtg7Bg==
-X-Google-Smtp-Source: ABdhPJxokI0TPxCQxyWx3qoUxcst1Tw4Diqii8RFo16frzYUDUMAAjgoOQ4pxTkscIz5IfuV9xAs2A==
-X-Received: by 2002:a17:90b:8d5:: with SMTP id ds21mr13382570pjb.65.1620250723426;
-        Wed, 05 May 2021 14:38:43 -0700 (PDT)
+        bh=166D0K4ZGZhubJGZmHB+5zYKTmFkS5cEFQyCpyijewQ=;
+        b=Cawunxv0xcO0etLZuSkOsw7Xpsbcv9JKIUp359tHlRpHUtlfS36R1FX13UEGvdDl0l
+         dPwtt6uUEuZrCAbfhI4I3lyDBpa5zqeulhobgPr9vybmD+WOR9lATnfsIYHJ//umPDDE
+         eIXEGes4yxJSQ2bD9TLvEu+WmxBJ1FzRqBkic4azRavU01zp7y9vbjyPiTLmtTtag4ZN
+         3wKRORcMo9Pu7OcORd6ohzgrWGJvgWWxEF6sPshE0+tk2bqSvO9KYIir/9OwPqSfcolI
+         Ke8Dtb0DY7Hjv+NmPK+C7jCrP2U0wr9m94OBzoMjeGw/87J5i7UNNTBzbIWKU0sbhcFC
+         zYhA==
+X-Gm-Message-State: AOAM530LrrXTYkx7VSKgLiNg/4/FDJ89A4DfW1+wF4TMeioHL+fZUC6i
+        EnslhThcFRHD5vuKGHGR7cAYsw==
+X-Google-Smtp-Source: ABdhPJyGei5TrvmMOke8f8voBrVKY9dNR10/1iXFDT1bFSPXkh/P+tv55wdsZVb3MWMb6MSxASBrfA==
+X-Received: by 2002:aa7:87d5:0:b029:25a:b5f8:15ab with SMTP id i21-20020aa787d50000b029025ab5f815abmr1017494pfo.22.1620250730014;
+        Wed, 05 May 2021 14:38:50 -0700 (PDT)
 Received: from localhost.localdomain.name ([223.235.141.68])
-        by smtp.gmail.com with ESMTPSA id z26sm167031pfq.86.2021.05.05.14.38.37
+        by smtp.gmail.com with ESMTPSA id z26sm167031pfq.86.2021.05.05.14.38.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 May 2021 14:38:42 -0700 (PDT)
+        Wed, 05 May 2021 14:38:49 -0700 (PDT)
 From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     bhupesh.sharma@linaro.org,
@@ -62,9 +62,9 @@ Cc:     bhupesh.sharma@linaro.org,
         linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         bhupesh.linux@gmail.com
-Subject: [PATCH v2 07/17] arm64/dts: qcom: Use new compatibles for crypto nodes
-Date:   Thu,  6 May 2021 03:07:21 +0530
-Message-Id: <20210505213731.538612-8-bhupesh.sharma@linaro.org>
+Subject: [PATCH v2 08/17] dma: qcom: bam_dma: Add support to initialize interconnect path
+Date:   Thu,  6 May 2021 03:07:22 +0530
+Message-Id: <20210505213731.538612-9-bhupesh.sharma@linaro.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210505213731.538612-1-bhupesh.sharma@linaro.org>
 References: <20210505213731.538612-1-bhupesh.sharma@linaro.org>
@@ -74,11 +74,15 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Since we are using soc specific qce crypto IP compatibles
-in the bindings now, use the same in the device tree files
-which include the crypto nodes.
+From: Thara Gopinath <thara.gopinath@linaro.org>
 
-Cc: Thara Gopinath <thara.gopinath@linaro.org>
+BAM dma engine associated with certain hardware blocks could require
+relevant interconnect pieces be initialized prior to the dma engine
+initialization. For e.g. crypto bam dma engine on sm8250. Such requirement
+is passed on to the bam dma driver from dt via the "interconnects"
+property.  Add support in bam_dma driver to check whether the interconnect
+path is accessible/enabled prior to attempting driver intializations.
+
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Andy Gross <agross@kernel.org>
@@ -94,37 +98,69 @@ Cc: devicetree@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Cc: bhupesh.linux@gmail.com
 Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
+[Make header file inclusion alphabetical]
+Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/ipq6018.dtsi | 2 +-
- arch/arm64/boot/dts/qcom/sdm845.dtsi  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/dma/qcom/bam_dma.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-index 9fa5b028e4f3..978c34f176de 100644
---- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-@@ -205,7 +205,7 @@ cryptobam: dma-controller@704000 {
- 		};
+diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+index c8a77b428b52..fc84ef42507d 100644
+--- a/drivers/dma/qcom/bam_dma.c
++++ b/drivers/dma/qcom/bam_dma.c
+@@ -26,6 +26,7 @@
+ #include <linux/kernel.h>
+ #include <linux/io.h>
+ #include <linux/init.h>
++#include <linux/interconnect.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
+ #include <linux/interrupt.h>
+@@ -392,6 +393,7 @@ struct bam_device {
+ 	const struct reg_offset_data *layout;
  
- 		crypto: crypto@73a000 {
--			compatible = "qcom,crypto-v5.1";
-+			compatible = "qcom,ipq6018-qce";
- 			reg = <0x0 0x0073a000 0x0 0x6000>;
- 			clocks = <&gcc GCC_CRYPTO_AHB_CLK>,
- 				<&gcc GCC_CRYPTO_AXI_CLK>,
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 2ec4be930fd6..6423991fa303 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -2328,7 +2328,7 @@ cryptobam: dma@1dc4000 {
- 		};
+ 	struct clk *bamclk;
++	struct icc_path *mem_path;
+ 	int irq;
  
- 		crypto: crypto@1dfa000 {
--			compatible = "qcom,crypto-v5.4";
-+			compatible = "qcom,sdm845-qce";
- 			reg = <0 0x01dfa000 0 0x6000>;
- 			clocks = <&gcc GCC_CE1_AHB_CLK>,
- 				 <&gcc GCC_CE1_AHB_CLK>,
+ 	/* dma start transaction tasklet */
+@@ -1284,9 +1286,18 @@ static int bam_dma_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	/* Ensure that interconnects are initialized */
++	bdev->mem_path = of_icc_get(bdev->dev, "memory");
++
++	if (IS_ERR(bdev->mem_path)) {
++		ret = PTR_ERR(bdev->mem_path);
++		dev_err(bdev->dev, "failed to acquire icc path %d\n", ret);
++		goto err_disable_clk;
++	}
++
+ 	ret = bam_init(bdev);
+ 	if (ret)
+-		goto err_disable_clk;
++		goto err_icc_path_put;
+ 
+ 	tasklet_setup(&bdev->task, dma_tasklet);
+ 
+@@ -1371,6 +1382,8 @@ static int bam_dma_probe(struct platform_device *pdev)
+ 		tasklet_kill(&bdev->channels[i].vc.task);
+ err_tasklet_kill:
+ 	tasklet_kill(&bdev->task);
++err_icc_path_put:
++	icc_put(bdev->mem_path);
+ err_disable_clk:
+ 	clk_disable_unprepare(bdev->bamclk);
+ 
+@@ -1406,6 +1419,7 @@ static int bam_dma_remove(struct platform_device *pdev)
+ 
+ 	tasklet_kill(&bdev->task);
+ 
++	icc_put(bdev->mem_path);
+ 	clk_disable_unprepare(bdev->bamclk);
+ 
+ 	return 0;
 -- 
 2.30.2
 

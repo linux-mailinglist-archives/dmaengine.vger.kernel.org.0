@@ -2,81 +2,78 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24CD9376C82
-	for <lists+dmaengine@lfdr.de>; Sat,  8 May 2021 00:24:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76192376F08
+	for <lists+dmaengine@lfdr.de>; Sat,  8 May 2021 05:01:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229869AbhEGWZp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 7 May 2021 18:25:45 -0400
-Received: from bosmailout03.eigbox.net ([66.96.186.3]:45669 "EHLO
-        bosmailout03.eigbox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbhEGWZo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 7 May 2021 18:25:44 -0400
-X-Greylist: delayed 1816 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 May 2021 18:25:34 EDT
-Received: from bosmailscan08.eigbox.net ([10.20.15.8])
-        by bosmailout03.eigbox.net with esmtp (Exim)
-        id 1lf8QM-0003Fa-7M; Fri, 07 May 2021 17:54:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=godsofu4.com; s=dkim; h=Sender:Content-Transfer-Encoding:Content-Type:
-        Message-ID:Reply-To:Subject:To:From:Date:MIME-Version:Cc:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=aM9bUFGSTpfnep8zAVAJMnojqhcwpuHDFPgQnPqW4M4=; b=I+6Bb1DJY/YYTRas0wZTN+AC1D
-        vtIg40M7SDAM/b29+/wY3GjGjzug9/OzX2aPoevJgNlEKSTs0SrEPfP3WhSQM0PCLHlkQfkyX8QT9
-        UZ7TTwAz03WtyNGtE+DdqqC0pYUcPkHvqE4MDSKlo5Vm1z1vJqGpkJRtWe2MFWIr6++JBuHOfV7Fd
-        34Die1lJ1lpPfDh70Zq++IiTaMjdlcGGo7pbn4hVn1WweIC9h772TR5+6npXCISSeeyCgPsBbikdE
-        ZWIrJkpukBwvBgblKKCxDugovauKoCEDbS56mNadJP+sg7ztteNlHrnEQFJYYsCNrcdD1v8ilxnSi
-        f8nqykSw==;
-Received: from [10.115.3.32] (helo=bosimpout12)
-        by bosmailscan08.eigbox.net with esmtp (Exim)
-        id 1lf8QK-0002fP-Rn; Fri, 07 May 2021 17:54:16 -0400
-Received: from boswebmail06.eigbox.net ([10.20.16.6])
-        by bosimpout12 with 
-        id 1xuC2500D07qujN01xuFUj; Fri, 07 May 2021 17:54:16 -0400
-X-EN-SP-DIR: OUT
-X-EN-SP-SQ: 1
-Received: from [127.0.0.1] (helo=homestead)
-        by boswebmail06.eigbox.net with esmtp (Exim)
-        id 1lf8PX-0006IT-Ae; Fri, 07 May 2021 17:53:27 -0400
-Received: from [197.239.81.229]
- by emailmg.homestead.com
- with HTTP (HTTP/1.1 POST); Fri, 07 May 2021 17:53:27 -0400
+        id S230267AbhEHDC3 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 7 May 2021 23:02:29 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:17479 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229775AbhEHDC3 (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 7 May 2021 23:02:29 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4FcX884xLHzkX9N;
+        Sat,  8 May 2021 10:58:48 +0800 (CST)
+Received: from thunder-town.china.huawei.com (10.174.177.72) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.498.0; Sat, 8 May 2021 11:01:16 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Vinod Koul <vkoul@kernel.org>, Peng Ma <peng.ma@nxp.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH 1/1] dmaengine: fsl-dpaa2-qdma: Fix error return code in two functions
+Date:   Sat, 8 May 2021 11:00:56 +0800
+Message-ID: <20210508030056.2027-1-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
 MIME-Version: 1.0
-Date:   Fri, 07 May 2021 21:53:27 +0000
-From:   Mrs Suzara Maling Wan <fast65@godsofu4.com>
-To:     undisclosed-recipients:;
-Subject: URGENT REPLY NEEDED
-Reply-To: suzara2017malingwan@gmail.com
-Mail-Reply-To: suzara2017malingwan@gmail.com
-Message-ID: <4c6a48748f6731dac9b66cce1916443b@godsofu4.com>
-X-Sender: fast65@godsofu4.com
-User-Agent: Roundcube Webmail/1.3.14
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-EN-AuthUser: fast65@godsofu4.com
-Sender:  Mrs Suzara Maling Wan <fast65@godsofu4.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.177.72]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Fix to return a negative error code from the error handling case instead
+of 0, as done elsewhere in the function where it is.
+
+Fixes: 7fdf9b05c73b ("dmaengine: fsl-dpaa2-qdma: Add NXP dpaa2 qDMA controller driver for Layerscape SoCs")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+---
+ drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c b/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
+index 4ec909e0b810..4ae057922ef1 100644
+--- a/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
++++ b/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
+@@ -332,6 +332,7 @@ static int __cold dpaa2_qdma_setup(struct fsl_mc_device *ls_dev)
+ 	}
+ 
+ 	if (priv->dpdmai_attr.version.major > DPDMAI_VER_MAJOR) {
++		err = -EINVAL;
+ 		dev_err(dev, "DPDMAI major version mismatch\n"
+ 			     "Found %u.%u, supported version is %u.%u\n",
+ 				priv->dpdmai_attr.version.major,
+@@ -341,6 +342,7 @@ static int __cold dpaa2_qdma_setup(struct fsl_mc_device *ls_dev)
+ 	}
+ 
+ 	if (priv->dpdmai_attr.version.minor > DPDMAI_VER_MINOR) {
++		err = -EINVAL;
+ 		dev_err(dev, "DPDMAI minor version mismatch\n"
+ 			     "Found %u.%u, supported version is %u.%u\n",
+ 				priv->dpdmai_attr.version.major,
+@@ -475,6 +477,7 @@ static int __cold dpaa2_qdma_dpio_setup(struct dpaa2_qdma_priv *priv)
+ 		ppriv->store =
+ 			dpaa2_io_store_create(DPAA2_QDMA_STORE_SIZE, dev);
+ 		if (!ppriv->store) {
++			err = -ENOMEM;
+ 			dev_err(dev, "dpaa2_io_store_create() failed\n");
+ 			goto err_store;
+ 		}
+-- 
+2.25.1
 
 
-My names are Mrs Suzara Maling Wan, I am a Nationality of the Republic
-of the Philippine presently base in West Africa B/F, dealing with
-exportation of Gold, I was diagnose of blood Causal decease, and my
-doctor have announce to me that I have few days to leave due to the
-condition of my sickness.
-
-I have a desire to build an orphanage home in your country of which i
-cannot execute the project myself due to my present health condition,
-I am willing to hand over the project under your care for you to help
-me fulfill my dreams and desire of building an orphanage home in your
-country.
-
-Reply in you are will to help so that I can direct you to my bank for
-the urgent transfer of the fund/money require for the project to your
-account as I have already made the fund/money available.
-
-With kind regards
-Mrs Suzara Maling Wan

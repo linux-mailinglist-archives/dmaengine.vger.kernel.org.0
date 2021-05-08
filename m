@@ -2,71 +2,104 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6611737701A
-	for <lists+dmaengine@lfdr.de>; Sat,  8 May 2021 08:30:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC9EA3770A4
+	for <lists+dmaengine@lfdr.de>; Sat,  8 May 2021 10:20:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229925AbhEHGbp (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sat, 8 May 2021 02:31:45 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:17158 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229583AbhEHGbo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Sat, 8 May 2021 02:31:44 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Fccmp67kBzncHv;
-        Sat,  8 May 2021 14:27:22 +0800 (CST)
-Received: from thunder-town.china.huawei.com (10.174.177.72) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.498.0; Sat, 8 May 2021 14:30:33 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH 1/1] dmaengine: idxd: remove unused variable 'cdev_ctx'
-Date:   Sat, 8 May 2021 14:30:12 +0800
-Message-ID: <20210508063012.2624-1-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
+        id S229752AbhEHIVy (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sat, 8 May 2021 04:21:54 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:42358 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229583AbhEHIVy (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Sat, 8 May 2021 04:21:54 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1488K6DW162922;
+        Sat, 8 May 2021 08:20:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=SmqUNYMF18v5K/seR3tr0Jr4Y3EvbY6KMtwd/ZlcZIk=;
+ b=UV1xDWZbcTfVvvYqOcKQ8PcFLztPH1HPOzZUWYAaAk6ia+BHBdkZJsdHXQD+9TFPUze2
+ UQUT+tiOOoDvg80wk7+B7kbjYkbGZaOfYdh+cVPlHr76kGA0AoEaq6QFqTiPfHYiMZuQ
+ MZNi4KKasPXRHqbCwyRynugtiDL2XW4/x/RnVz86S3FHlGWSBSobYtntp7Ok+n0tIGXV
+ GBkcH8fH1DS+uATavPyp0QeXv63Pb8sM+G2wf1XtkH3Pva4Qwg7B+i/SR91LBNkU6XYB
+ 6Yp9Ew8KYVMQ7Gyk4cWIxKwF0FDs0ZHlmOOt5SVKNFfvEygPIin5q9rFAnqzp7L4jXia qA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 38dk9n84s0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 08 May 2021 08:20:50 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1488KTg9183191;
+        Sat, 8 May 2021 08:20:49 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3020.oracle.com with ESMTP id 38djf0m9c0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 08 May 2021 08:20:49 +0000
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 1488Kmcd183669;
+        Sat, 8 May 2021 08:20:48 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 38djf0m9b5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 08 May 2021 08:20:48 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 1488Kl2e011056;
+        Sat, 8 May 2021 08:20:47 GMT
+Received: from mwanda (/102.36.221.92)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 08 May 2021 01:20:47 -0700
+Date:   Sat, 8 May 2021 11:20:41 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] dmaengine: idxd: double free of devm_ memory on probe error
+Message-ID: <YJZJ2Z5CEqQC5s+1@mwanda>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.177.72]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-ORIG-GUID: CDHINgAlMDYNf3x3Oa2koifqWwmlCqGE
+X-Proofpoint-GUID: CDHINgAlMDYNf3x3Oa2koifqWwmlCqGE
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9977 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0
+ adultscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 lowpriorityscore=0
+ malwarescore=0 priorityscore=1501 clxscore=1011 bulkscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104190000
+ definitions=main-2105080062
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-GCC reports the following warning with W=1:
+The "idxd->int_handles" pointer is allocated with devm_kcalloc() so
+freeing it here leads to a double free.  Delete the kfree().
 
-drivers/dma/idxd/cdev.c:298:28: warning:
- variable 'cdev_ctx' set but not used [-Wunused-but-set-variable]
-  298 |  struct idxd_cdev_context *cdev_ctx;
-      |                            ^~~~~~~~
-
-The variable 'cdev_ctx' is not used, remove it to fix the warning.
-
-Fixes: 04922b7445a1 ("dmaengine: idxd: fix cdev setup and free device lifetime issues")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Fixes: eb15e7154fbf ("dmaengine: idxd: add interrupt handle request and release support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 ---
- drivers/dma/idxd/cdev.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/dma/idxd/init.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-index 302cba5ff779..6c72089ca31a 100644
---- a/drivers/dma/idxd/cdev.c
-+++ b/drivers/dma/idxd/cdev.c
-@@ -295,9 +295,7 @@ int idxd_wq_add_cdev(struct idxd_wq *wq)
- void idxd_wq_del_cdev(struct idxd_wq *wq)
- {
- 	struct idxd_cdev *idxd_cdev;
--	struct idxd_cdev_context *cdev_ctx;
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index 2a926bef87f2..b65d28895955 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -318,7 +318,7 @@ static int idxd_setup_internals(struct idxd_device *idxd)
  
--	cdev_ctx = &ictx[wq->idxd->data->type];
- 	idxd_cdev = wq->idxd_cdev;
- 	wq->idxd_cdev = NULL;
- 	cdev_device_del(&idxd_cdev->cdev, &idxd_cdev->dev);
+ 	rc = idxd_setup_wqs(idxd);
+ 	if (rc < 0)
+-		goto err_wqs;
++		return rc;
+ 
+ 	rc = idxd_setup_engines(idxd);
+ 	if (rc < 0)
+@@ -345,8 +345,6 @@ static int idxd_setup_internals(struct idxd_device *idxd)
+  err_engine:
+ 	for (i = 0; i < idxd->max_wqs; i++)
+ 		put_device(&idxd->wqs[i]->conf_dev);
+- err_wqs:
+-	kfree(idxd->int_handles);
+ 	return rc;
+ }
+ 
 -- 
-2.25.1
-
+2.30.2
 

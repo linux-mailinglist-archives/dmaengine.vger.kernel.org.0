@@ -2,85 +2,69 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BB92377982
-	for <lists+dmaengine@lfdr.de>; Mon, 10 May 2021 02:26:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 244B2377988
+	for <lists+dmaengine@lfdr.de>; Mon, 10 May 2021 02:38:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230018AbhEJA12 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Sun, 9 May 2021 20:27:28 -0400
-Received: from mga17.intel.com ([192.55.52.151]:40054 "EHLO mga17.intel.com"
+        id S230035AbhEJAja (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Sun, 9 May 2021 20:39:30 -0400
+Received: from mga07.intel.com ([134.134.136.100]:36661 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229853AbhEJA12 (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Sun, 9 May 2021 20:27:28 -0400
-IronPort-SDR: Ymok5Zpx1FIS3j91FJtW4PyRdqNwawCOJzjS+qbWx8vhrF02ligM6EnlF22xPYz80xpfJ4450W
- abzTCjwP/THQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,9979"; a="179347107"
+        id S229853AbhEJAja (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Sun, 9 May 2021 20:39:30 -0400
+IronPort-SDR: cZ8RMWtyEW6bZX+U3VTy8qkhWqNNvOElGCzDp1YjM62ltA31hCshQHGhiRRKGSXFkYPlTpfvCJ
+ Y5VJrVf0KsWA==
+X-IronPort-AV: E=McAfee;i="6200,9189,9979"; a="263014919"
 X-IronPort-AV: E=Sophos;i="5.82,286,1613462400"; 
-   d="scan'208";a="179347107"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2021 17:26:23 -0700
-IronPort-SDR: auz3ZelrNtgXEXorSRtI4PIBt5E5vqH+dZM6V67lTDG0Iz9Shbpb9zsIEUuI9xg8Fc1gLlM4H7
- Aa/2Xv4MYFDA==
+   d="scan'208";a="263014919"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2021 17:38:26 -0700
+IronPort-SDR: YEHWQ26AuzAekwnrQmYLh/EheY8CUQaowgvQ5DXQAQ52rhZqNCMBKLglrPfrmGyV26tq0XyPqb
+ rhKkuOEZMU5g==
 X-IronPort-AV: E=Sophos;i="5.82,286,1613462400"; 
-   d="scan'208";a="433480864"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.212.97.165]) ([10.212.97.165])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2021 17:26:23 -0700
-Subject: Re: [PATCH 1/1] dmaengine: idxd: remove unused variable 'cdev_ctx'
-To:     Zhen Lei <thunder.leizhen@huawei.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20210508063012.2624-1-thunder.leizhen@huawei.com>
+   d="scan'208";a="467854890"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2021 17:38:25 -0700
+Subject: [PATCH] dmaengine: idxd: remove devm allocation for idxd->int_handles
 From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <3181e59b-727b-50fd-2c14-78d68a5e09e9@intel.com>
-Date:   Sun, 9 May 2021 17:26:22 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+To:     vkoul@kernel.org
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        dmaengine@vger.kernel.org, kernel-janitors@vger.kernel.org
+Date:   Sun, 09 May 2021 17:38:25 -0700
+Message-ID: <162060710518.130816.11349798049329202863.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <YJZJ2Z5CEqQC5s+1@mwanda>
+References: <YJZJ2Z5CEqQC5s+1@mwanda>
+User-Agent: StGit/0.23-29-ga622f1
 MIME-Version: 1.0
-In-Reply-To: <20210508063012.2624-1-thunder.leizhen@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
+Allocation of idxd->int_handles was merged incorrectly for the 5.13 merge
+window. The devm_kcalloc should've been regular kcalloc due to devm_*
+removal series for the driver.
 
-On 5/7/2021 11:30 PM, Zhen Lei wrote:
-> GCC reports the following warning with W=1:
->
-> drivers/dma/idxd/cdev.c:298:28: warning:
->   variable 'cdev_ctx' set but not used [-Wunused-but-set-variable]
->    298 |  struct idxd_cdev_context *cdev_ctx;
->        |                            ^~~~~~~~
->
-> The variable 'cdev_ctx' is not used, remove it to fix the warning.
->
-> Fixes: 04922b7445a1 ("dmaengine: idxd: fix cdev setup and free device lifetime issues")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Fixes: eb15e7154fbf ("dmaengine: idxd: add interrupt handle request and release support")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/dma/idxd/init.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index 2a926bef87f2..21d3dcb1c0e3 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -311,7 +311,8 @@ static int idxd_setup_internals(struct idxd_device *idxd)
+ 	init_waitqueue_head(&idxd->cmd_waitq);
+ 
+ 	if (idxd->hw.cmd_cap & BIT(IDXD_CMD_REQUEST_INT_HANDLE)) {
+-		idxd->int_handles = devm_kcalloc(dev, idxd->max_wqs, sizeof(int), GFP_KERNEL);
++		idxd->int_handles = kcalloc_node(idxd->max_wqs, sizeof(int), GFP_KERNEL,
++						 dev_to_node(dev));
+ 		if (!idxd->int_handles)
+ 			return -ENOMEM;
+ 	}
 
 
-Thank you. Issue already reported and fix posted here.
-
-https://lore.kernel.org/dmaengine/324261b0-1fa6-29f7-071a-a3c0ac09b506@intel.com/T/#t
-
-
-> ---
->   drivers/dma/idxd/cdev.c | 2 --
->   1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
-> index 302cba5ff779..6c72089ca31a 100644
-> --- a/drivers/dma/idxd/cdev.c
-> +++ b/drivers/dma/idxd/cdev.c
-> @@ -295,9 +295,7 @@ int idxd_wq_add_cdev(struct idxd_wq *wq)
->   void idxd_wq_del_cdev(struct idxd_wq *wq)
->   {
->   	struct idxd_cdev *idxd_cdev;
-> -	struct idxd_cdev_context *cdev_ctx;
->   
-> -	cdev_ctx = &ictx[wq->idxd->data->type];
->   	idxd_cdev = wq->idxd_cdev;
->   	wq->idxd_cdev = NULL;
->   	cdev_device_del(&idxd_cdev->cdev, &idxd_cdev->dev);

@@ -2,83 +2,96 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A53137BC07
-	for <lists+dmaengine@lfdr.de>; Wed, 12 May 2021 13:47:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC09237EC5B
+	for <lists+dmaengine@lfdr.de>; Thu, 13 May 2021 00:28:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230178AbhELLsS (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 12 May 2021 07:48:18 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:55327 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230139AbhELLsS (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 12 May 2021 07:48:18 -0400
-Received: from mail-vk1-f197.google.com ([209.85.221.197])
-        by youngberry.canonical.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <krzysztof.kozlowski@canonical.com>)
-        id 1lgnKX-0007OQ-86
-        for dmaengine@vger.kernel.org; Wed, 12 May 2021 11:47:09 +0000
-Received: by mail-vk1-f197.google.com with SMTP id u186-20020a1fddc30000b02901eb1ea824ddso2973310vkg.12
-        for <dmaengine@vger.kernel.org>; Wed, 12 May 2021 04:47:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yBitZcNhIM9z4KET6YAuzNPYaMvvVUiEAXXH4qj8xVM=;
-        b=mcFI/xuFPlR27702izBNk9Nt1Yy4mzqqU2p+KqSEHhlu0iA7TtY2M6XH626CZfjzvC
-         S9Ex2xp5KdwYGZoDQRdQxSQfuglTrLU/yaS8TIog2Nll/xKL/hdu1GLvTzics3uoluif
-         d7HXxKW3gEFWPKFfw/B0DI1A9S7ILH95X6cH6MExBL2wTJFOE9yDhmBGuaQXcC1b+mzy
-         8HYt4H7JIzvP/wvngFFTM7k7Bk2l3aW4QDujdaZmZuX5GxR9TaT+fMcWGbZ/dmRP7G43
-         RrYc7CSv1nICUTFUBNNEL/eMmqyaN44hL7b1ctt1XeKybupLp3EdJJE3TbA8sIIh5pue
-         OaWw==
-X-Gm-Message-State: AOAM532TkdpdvUtNqQbavl1v2qyU90IehFeynrOaaiHI5m2f95NU/HCu
-        awtTqZvaoptk40vVSHfIYQGKFaCyrU+gV9NXAVnpAGscJzTDU3DGxnoIb6MK8+JFxpgH0T5zlD6
-        QFUqXS4jWbRVixLGcVD4zvOQIxMQU+XjdkLjJMQ==
-X-Received: by 2002:a67:e915:: with SMTP id c21mr32088439vso.32.1620820028096;
-        Wed, 12 May 2021 04:47:08 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxYslrlexrDVfJAQWZv27Gx/WKb27rynSQ4drYxmvnOGuiXWdUXlFKZ/Vt3FdWmjVrKIrO69Q==
-X-Received: by 2002:a67:e915:: with SMTP id c21mr32088437vso.32.1620820027940;
-        Wed, 12 May 2021 04:47:07 -0700 (PDT)
-Received: from [192.168.1.4] ([45.237.48.6])
-        by smtp.gmail.com with ESMTPSA id s200sm2594366vks.34.2021.05.12.04.47.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 May 2021 04:47:07 -0700 (PDT)
-Subject: Re: [PATCH -next] dmaengine: s3c24xx: add missing MODULE_DEVICE_TABLE
-To:     Zou Wei <zou_wei@huawei.com>, vkoul@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1620801555-18805-1-git-send-email-zou_wei@huawei.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Message-ID: <ee04c671-1194-402f-c82f-36c139dd5ca7@canonical.com>
-Date:   Wed, 12 May 2021 07:47:05 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        id S1380717AbhELTyH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 12 May 2021 15:54:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50046 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1352018AbhELSCS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 12 May 2021 14:02:18 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F39FF61421;
+        Wed, 12 May 2021 18:01:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620842469;
+        bh=gRKsVhSCPTfSxlwv8gu5v/+2IY0c3SXd+j+s4H623ME=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DixhcXwEJSy3eh/WTmJuCSTE25X2ZMIgNc1BlLwcVVzA61WkrXUnthPZVPCPl86XP
+         kJ7r2JlI6a2ighy0C8vsgY2yHygSm7rQvLHgtauYWSaT+gUe76d1eVEYv3CbEjZImQ
+         Qi0DOKsNBCrMeObmuzE3WfrlWKyhgDGuTurMkJBcLfVn/S6JcllNIAeaa7bXba3QG2
+         wY42+wtQGVNHCt7/qXdfl7Z9619r9GvIZ1KniI7F1em6I24jOb74FjKuBregbgVm+n
+         84z827kIkfr0gscPTnBYS/p3V8JvaUXxKsX9O520Wd/yZUukIKCnBcjtKjrVl0ea0a
+         UyiDIojwBNMQg==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.12 03/37] dmaengine: dw-edma: Fix crash on loading/unloading driver
+Date:   Wed, 12 May 2021 14:00:30 -0400
+Message-Id: <20210512180104.664121-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210512180104.664121-1-sashal@kernel.org>
+References: <20210512180104.664121-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1620801555-18805-1-git-send-email-zou_wei@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On 12/05/2021 02:39, Zou Wei wrote:
-> This patch adds missing MODULE_DEVICE_TABLE definition which generates
-> correct modalias for automatic loading of this driver when it is built
-> as an external module.
+From: Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
 
+[ Upstream commit e970dcc4bd8e0a1376e794fc81d41d0fc98262dd ]
 
-Hi,
+When the driver is compiled as a module and loaded if we try to unload
+it, the Kernel shows a crash log. This Kernel crash is due to the
+dma_async_device_unregister() call done after deleting the channels,
+this patch fixes this issue.
 
-Thanks for the patch. It cannot be built as a module.
+Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Link: https://lore.kernel.org/r/4aa850c035cf7ee488f1d3fb6dee0e37be0dce0a.1613674948.git.gustavo.pimentel@synopsys.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/dma/dw-edma/dw-edma-core.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-
-Please make the reports public. This is open source work and public
-collaboration.
-
-Best regards,
-Krzysztof
+diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+index 08d71dafa001..58c8cc8fe0e1 100644
+--- a/drivers/dma/dw-edma/dw-edma-core.c
++++ b/drivers/dma/dw-edma/dw-edma-core.c
+@@ -937,22 +937,21 @@ int dw_edma_remove(struct dw_edma_chip *chip)
+ 	/* Power management */
+ 	pm_runtime_disable(dev);
+ 
++	/* Deregister eDMA device */
++	dma_async_device_unregister(&dw->wr_edma);
+ 	list_for_each_entry_safe(chan, _chan, &dw->wr_edma.channels,
+ 				 vc.chan.device_node) {
+-		list_del(&chan->vc.chan.device_node);
+ 		tasklet_kill(&chan->vc.task);
++		list_del(&chan->vc.chan.device_node);
+ 	}
+ 
++	dma_async_device_unregister(&dw->rd_edma);
+ 	list_for_each_entry_safe(chan, _chan, &dw->rd_edma.channels,
+ 				 vc.chan.device_node) {
+-		list_del(&chan->vc.chan.device_node);
+ 		tasklet_kill(&chan->vc.task);
++		list_del(&chan->vc.chan.device_node);
+ 	}
+ 
+-	/* Deregister eDMA device */
+-	dma_async_device_unregister(&dw->wr_edma);
+-	dma_async_device_unregister(&dw->rd_edma);
+-
+ 	/* Turn debugfs off */
+ 	dw_edma_v0_core_debugfs_off();
+ 
+-- 
+2.30.2
 

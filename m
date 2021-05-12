@@ -2,39 +2,39 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC09237EC5B
-	for <lists+dmaengine@lfdr.de>; Thu, 13 May 2021 00:28:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 109D937ECA6
+	for <lists+dmaengine@lfdr.de>; Thu, 13 May 2021 00:36:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380717AbhELTyH (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 12 May 2021 15:54:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50046 "EHLO mail.kernel.org"
+        id S1352018AbhELT6p (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 12 May 2021 15:58:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1352018AbhELSCS (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 12 May 2021 14:02:18 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F39FF61421;
-        Wed, 12 May 2021 18:01:08 +0000 (UTC)
+        id S1352451AbhELSDU (ORCPT <rfc822;dmaengine@vger.kernel.org>);
+        Wed, 12 May 2021 14:03:20 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D4CDA61434;
+        Wed, 12 May 2021 18:02:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620842469;
+        s=k20201202; t=1620842531;
         bh=gRKsVhSCPTfSxlwv8gu5v/+2IY0c3SXd+j+s4H623ME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DixhcXwEJSy3eh/WTmJuCSTE25X2ZMIgNc1BlLwcVVzA61WkrXUnthPZVPCPl86XP
-         kJ7r2JlI6a2ighy0C8vsgY2yHygSm7rQvLHgtauYWSaT+gUe76d1eVEYv3CbEjZImQ
-         Qi0DOKsNBCrMeObmuzE3WfrlWKyhgDGuTurMkJBcLfVn/S6JcllNIAeaa7bXba3QG2
-         wY42+wtQGVNHCt7/qXdfl7Z9619r9GvIZ1KniI7F1em6I24jOb74FjKuBregbgVm+n
-         84z827kIkfr0gscPTnBYS/p3V8JvaUXxKsX9O520Wd/yZUukIKCnBcjtKjrVl0ea0a
-         UyiDIojwBNMQg==
+        b=u71U8zL+y5C8W/sq1nYq9+yo6kXtMeQI3R0ddIiaIJPqoffxAE92/JVDgFP7E2RDs
+         WLmVNgDEdsfOGR0qm3pIB8+5l0cjSYpElwPeOT9lzz0K56zUqSDXYaWDK5gHJPYYqI
+         B5HsmUPb7xIiEyafXmM8c0M10TMIZLqMTX80Gdgb6XSV5YdBgc7/rZK/ST07bxN8z2
+         Rxb9MSH1uK9uRZE63bsAUUtnw9rPdm8IqkpxI7mWdYlBVuRb5RvgAGosZgspxeTF7M
+         GVeoxYcVkd513p7agBertzzOWeboVl6Y3TgPnTrgBGtQd/sv9MLmQlJTBqKVishdO/
+         UwkgV5nsqeISg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
         Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
         dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.12 03/37] dmaengine: dw-edma: Fix crash on loading/unloading driver
-Date:   Wed, 12 May 2021 14:00:30 -0400
-Message-Id: <20210512180104.664121-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.11 03/35] dmaengine: dw-edma: Fix crash on loading/unloading driver
+Date:   Wed, 12 May 2021 14:01:33 -0400
+Message-Id: <20210512180206.664536-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210512180104.664121-1-sashal@kernel.org>
-References: <20210512180104.664121-1-sashal@kernel.org>
+In-Reply-To: <20210512180206.664536-1-sashal@kernel.org>
+References: <20210512180206.664536-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore

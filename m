@@ -2,96 +2,84 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1DB037ECA8
-	for <lists+dmaengine@lfdr.de>; Thu, 13 May 2021 00:36:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC76237FE0D
+	for <lists+dmaengine@lfdr.de>; Thu, 13 May 2021 21:27:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1384528AbhELT6r (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 12 May 2021 15:58:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55128 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1352978AbhELSGd (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Wed, 12 May 2021 14:06:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 991306143E;
-        Wed, 12 May 2021 18:04:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620842654;
-        bh=7Ch6g9m0pDQtJfE1thoMDqdVhwlP7VdPts0zlyKQIf0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pE2xPnpSUTRymcHd0CTbIUo/+gnW0NlbuDoKmiCPezsHbKo3QuIr4JUqH5oV2YnAA
-         W3goKZwLmzVQENFO8DT7TxrudSwYlhI1lDYY/Ixxzme6rMIJTmlsA8mQDA5KozLfxU
-         9dqmGlt4qp7bUy7Ez+7rsbZbENyh93Yr7TKZhp0gbqpRYz1UQUV07u34xf4/x4f/Sp
-         Oc2/CZjaR5fk9Y6J3j3RyIQFxta212UsqUCIQ5hnZbv7ko4ukQZL/F6U+WhMiwR4Uq
-         RUc3Bn6pssWmkiCsoN96H9hAMxEdMnY0ea7mVNMkV3sjmzTFyyJlKS+VmIg5c7V4Wt
-         WcdG3LjemkN7A==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 03/23] dmaengine: dw-edma: Fix crash on loading/unloading driver
-Date:   Wed, 12 May 2021 14:03:47 -0400
-Message-Id: <20210512180408.665338-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210512180408.665338-1-sashal@kernel.org>
-References: <20210512180408.665338-1-sashal@kernel.org>
+        id S232314AbhEMT2Q (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 13 May 2021 15:28:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53268 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232307AbhEMT2P (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 13 May 2021 15:28:15 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A424C061574
+        for <dmaengine@vger.kernel.org>; Thu, 13 May 2021 12:27:04 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id o6-20020a05600c4fc6b029015ec06d5269so397865wmq.0
+        for <dmaengine@vger.kernel.org>; Thu, 13 May 2021 12:27:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PqbwR4L945w2uSfsL/kb8dhVuFB8CH0RH4aZW5kJJIk=;
+        b=qheDlMFs9657HZlMSTPtCq60kx8JJ9r33kg5wCbbtaI+SqpJ6ABKQZPil5sA7vFvi1
+         uKNhcbNdm/w5QlXLie5rnaol59/E5eehkpLGde/QLp+Ap8osnZ57CYSQSl8WY1/AohTz
+         q11NE/A9P7jYwrSfaspW8G2np4r1bOcq1wVoUzdi/f8V3MQUCsc1dZd5ZkGcwII4auvD
+         zaOSKwokGQwTC4MmweTKn8vzWxbRS8xk1HGOG3NYR3id4/qDwvv4ouuR9v0NIKkkRVj6
+         DjuzfXhlFNU48YeC3dUAbOaxAt+I+iUh/CAhEc2s7cPqTf34k2vyuyRou9sgqy7t0oWg
+         QOVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PqbwR4L945w2uSfsL/kb8dhVuFB8CH0RH4aZW5kJJIk=;
+        b=c1ZAbSp8oNzUav3PgCsfAupuOBHA54JaWj6ij6Dl2SoiXZJejwFAJEyoC0DFVw5nQZ
+         185WwtCzosImgHFOmVqgZCFb85MrLwbjvyWcvdp6DjhJLJuqeWzHEGUhJwmAnrrkNBVZ
+         M7A8caQwKDetUlCY3xslfAs1M79sWOu4mhFBJYjqBPNrB/H0pJMJ7Hwfgk6GYAYjWOab
+         8/e5Fjgw/ARs6Z763NGxIWNrVJMu/e79gc9CwXlnwEmGAfgl41E/CD+AllpheQQsM1RW
+         kS7F7xxA0FH2PWU4CJCc2er7u+YpB2wCIKYouJrI6RuzR+NqitShmGyTmDCFH+2xxp0X
+         gExQ==
+X-Gm-Message-State: AOAM533YCI4TW5C3tGuxVqbCZfXXuWf7yjXstpJUuz/wWFovBBbvGlQM
+        jDoaF9HstL8GFXS77Axo1lddIQ==
+X-Google-Smtp-Source: ABdhPJzCQlePs8w6v253FGGV68DYI4RKl5BD7B4i7n53vRV8poZuELeUjHXg5qpISOprpoYFeSUkSg==
+X-Received: by 2002:a1c:1d55:: with SMTP id d82mr5162172wmd.12.1620934022866;
+        Thu, 13 May 2021 12:27:02 -0700 (PDT)
+Received: from localhost.localdomain (2a02-8440-6341-d842-3074-96af-9642-0002.rev.sfr.net. [2a02:8440:6341:d842:3074:96af:9642:2])
+        by smtp.gmail.com with ESMTPSA id h9sm3053621wmb.35.2021.05.13.12.27.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 May 2021 12:27:02 -0700 (PDT)
+From:   Guillaume Ranquet <granquet@baylibre.com>
+Cc:     Sean Wang <sean.wang@mediatek.com>, Vinod Koul <vkoul@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] fix mediatek UART APDMA desc logic
+Date:   Thu, 13 May 2021 21:26:39 +0200
+Message-Id: <20210513192642.29446-1-granquet@baylibre.com>
+X-Mailer: git-send-email 2.26.3
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-From: Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+The logic used in the apdma driver to handle the virt_dma_desc caused
+panics and various memory corruption.
+This is an attempt at sanitizing the logic a bit.
 
-[ Upstream commit e970dcc4bd8e0a1376e794fc81d41d0fc98262dd ]
+Sending a v2 as the previous mails were ill formatted and not threaded
+properly.
+I'm also removing the last patch from the series as the fix is
+alread on mainline.
 
-When the driver is compiled as a module and loaded if we try to unload
-it, the Kernel shows a crash log. This Kernel crash is due to the
-dma_async_device_unregister() call done after deleting the channels,
-this patch fixes this issue.
+Guillaume Ranquet (3):
+  dmaengine: mediatek: free the proper desc in desc_free handler
+  dmaengine: mediatek: do not issue a new desc if one is still current
+  dmaengine: mediatek: use GFP_NOWAIT instead of GFP_ATOMIC in prep_dma
 
-Signed-off-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Link: https://lore.kernel.org/r/4aa850c035cf7ee488f1d3fb6dee0e37be0dce0a.1613674948.git.gustavo.pimentel@synopsys.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/dma/dw-edma/dw-edma-core.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/dma/mediatek/mtk-uart-apdma.c | 27 ++++++++++++++-------------
+ 1 file changed, 14 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
-index 31577316f80b..afbd1a459019 100644
---- a/drivers/dma/dw-edma/dw-edma-core.c
-+++ b/drivers/dma/dw-edma/dw-edma-core.c
-@@ -910,22 +910,21 @@ int dw_edma_remove(struct dw_edma_chip *chip)
- 	/* Power management */
- 	pm_runtime_disable(dev);
- 
-+	/* Deregister eDMA device */
-+	dma_async_device_unregister(&dw->wr_edma);
- 	list_for_each_entry_safe(chan, _chan, &dw->wr_edma.channels,
- 				 vc.chan.device_node) {
--		list_del(&chan->vc.chan.device_node);
- 		tasklet_kill(&chan->vc.task);
-+		list_del(&chan->vc.chan.device_node);
- 	}
- 
-+	dma_async_device_unregister(&dw->rd_edma);
- 	list_for_each_entry_safe(chan, _chan, &dw->rd_edma.channels,
- 				 vc.chan.device_node) {
--		list_del(&chan->vc.chan.device_node);
- 		tasklet_kill(&chan->vc.task);
-+		list_del(&chan->vc.chan.device_node);
- 	}
- 
--	/* Deregister eDMA device */
--	dma_async_device_unregister(&dw->wr_edma);
--	dma_async_device_unregister(&dw->rd_edma);
--
- 	/* Turn debugfs off */
- 	dw_edma_v0_core_debugfs_off();
- 
 -- 
-2.30.2
+2.26.3
 

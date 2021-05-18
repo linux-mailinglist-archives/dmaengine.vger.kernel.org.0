@@ -2,82 +2,117 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5645D3876D0
-	for <lists+dmaengine@lfdr.de>; Tue, 18 May 2021 12:43:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB0C63877CF
+	for <lists+dmaengine@lfdr.de>; Tue, 18 May 2021 13:36:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239741AbhERKok (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 18 May 2021 06:44:40 -0400
-Received: from mga04.intel.com ([192.55.52.120]:20176 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1348610AbhERKoe (ORCPT <rfc822;dmaengine@vger.kernel.org>);
-        Tue, 18 May 2021 06:44:34 -0400
-IronPort-SDR: hAUtomZS8GmQvoAIRxHAkAuiYgYUrU3tafJ6Or0rjV/+U8buHOqIXTPqh0fwbIyFvRWCRADVqQ
- 2XhgUsGfcOkQ==
-X-IronPort-AV: E=McAfee;i="6200,9189,9987"; a="198728246"
-X-IronPort-AV: E=Sophos;i="5.82,309,1613462400"; 
-   d="scan'208";a="198728246"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2021 03:43:14 -0700
-IronPort-SDR: h3hK1kA0zIXpcLNi2j/uTS5NozyN6ehTj/fX7souad6EYmGjv/R+5VQ9NPXQ9W69fL8j/4VOnn
- 0246U9awDQWw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.82,309,1613462400"; 
-   d="scan'208";a="439376607"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga008.jf.intel.com with ESMTP; 18 May 2021 03:43:12 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 0DF7E12F; Tue, 18 May 2021 13:43:32 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] dmaengine: hsu: Account transferred bytes
-Date:   Tue, 18 May 2021 13:43:23 +0300
-Message-Id: <20210518104323.37632-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210518104323.37632-1-andriy.shevchenko@linux.intel.com>
-References: <20210518104323.37632-1-andriy.shevchenko@linux.intel.com>
+        id S244930AbhERLh4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Tue, 18 May 2021 07:37:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244645AbhERLhv (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 May 2021 07:37:51 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8860EC061573;
+        Tue, 18 May 2021 04:36:32 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id p20so11137801ljj.8;
+        Tue, 18 May 2021 04:36:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GeYpDH8KIiHyvyOgBJyYU9dAvZ03Qo4M8bY5+5RVXJw=;
+        b=UawL9dedq7VBzwYF7D1fxtxy4gg4nrtXKL9VkYc0iqy7HDlGW4bjZ6EaDL19SjOIAn
+         BDBaVIWJ78iNNN4+DLriWPHmb2jxkKMhMklxRo9RBy0kjfvM+GIT85v7PlS2pc261zDU
+         VJLTb9uTvxpztq6rUIh8BWwxTEyHRG56l4CLdlN3q5W2loNfQE+FRRTyojxXj3yy0zUy
+         R5ra2nRbECF+AsxYAyt+2eh+EA05kIbp1pAdidraZ+w5aGbGj5mxaxUAuwEDpl8mHtjU
+         v7r0qAbe9qFRxYM3cgT8CLcZUiAvglz40WnnRzQsdZ1CtY5xvPCB8GoSl7K/ErLi2hWp
+         RM7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GeYpDH8KIiHyvyOgBJyYU9dAvZ03Qo4M8bY5+5RVXJw=;
+        b=OkimuvgNfML+xz2ChvYyUe77UMO1Hlu7jraVL9igyz0/cuFk0of9qmMov9nCDYO4lM
+         HuIgsSnGT9oMTGNCp4ckjeXkbwWBT96WGv0FWS56IhcyTzqYPvKUjhmmWYQNyY4Z9lP+
+         Rar/zH15+Y7CUZSCDDHtK7do00Es7YrafoF6WyqKsbeexZD8KJOkxYAiknC8eBWp5FUZ
+         LtQGOSHrkYf+sMOHNsfL510ZwTnCbgUk1U1ClLk2+gaNvJh7WlAzbda9c4cisZIcyczv
+         iJ+/r5iAcKIflP7YF6k4ypW35b7Cm5YRylDUjd8454dUMj102aYKAAfDhzhWRgwxiOKE
+         wklA==
+X-Gm-Message-State: AOAM531wHq+2eAreAJMqy+0jSodFlTy0wUHxdh/WgJfMaOjIMQo5VFy7
+        sL7ag+FExwld7LFRDGwHkdY=
+X-Google-Smtp-Source: ABdhPJwvEsmP2hHazRAMnqONB8o4upGBKKJ7eDG5O2qPWf2IE0dcLRjpbH/WzyqqMALp2lnK7YMCFg==
+X-Received: by 2002:a2e:b60c:: with SMTP id r12mr3708824ljn.460.1621337791133;
+        Tue, 18 May 2021 04:36:31 -0700 (PDT)
+Received: from [10.0.0.40] (91-155-111-71.elisa-laajakaista.fi. [91.155.111.71])
+        by smtp.gmail.com with ESMTPSA id a25sm2254255lfl.38.2021.05.18.04.36.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 May 2021 04:36:30 -0700 (PDT)
+Subject: Re: [PATCH] dmaengine: ti: omap-dma: Skip pointless cpu_pm context
+ restore on errors
+To:     Tony Lindgren <tony@atomide.com>, Vinod Koul <vkoul@kernel.org>
+Cc:     dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-omap@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        Andreas Kemnade <andreas@kemnade.info>
+References: <20210518074347.16908-1-tony@atomide.com>
+From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
+Message-ID: <fa4e06c9-4296-1fb2-278e-23b493d220cc@gmail.com>
+Date:   Tue, 18 May 2021 14:36:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
+In-Reply-To: <20210518074347.16908-1-tony@atomide.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Bump statistics for transferred bytes at the event of the successful transfer.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/dma/hsu/hsu.c | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/dma/hsu/hsu.c b/drivers/dma/hsu/hsu.c
-index 025d8ad5a63c..92caae55aece 100644
---- a/drivers/dma/hsu/hsu.c
-+++ b/drivers/dma/hsu/hsu.c
-@@ -201,6 +201,7 @@ EXPORT_SYMBOL_GPL(hsu_dma_get_status);
-  */
- int hsu_dma_do_irq(struct hsu_dma_chip *chip, unsigned short nr, u32 status)
- {
-+	struct dma_chan_percpu *stat;
- 	struct hsu_dma_chan *hsuc;
- 	struct hsu_dma_desc *desc;
- 	unsigned long flags;
-@@ -210,6 +211,7 @@ int hsu_dma_do_irq(struct hsu_dma_chip *chip, unsigned short nr, u32 status)
- 		return 0;
- 
- 	hsuc = &chip->hsu->chan[nr];
-+	stat = this_cpu_ptr(hsuc->vchan.chan.local);
- 
- 	spin_lock_irqsave(&hsuc->vchan.lock, flags);
- 	desc = hsuc->desc;
-@@ -221,6 +223,7 @@ int hsu_dma_do_irq(struct hsu_dma_chip *chip, unsigned short nr, u32 status)
- 		} else {
- 			vchan_cookie_complete(&desc->vdesc);
- 			desc->status = DMA_COMPLETE;
-+			stat->bytes_transferred += desc->length;
- 			hsu_dma_start_transfer(hsuc);
- 		}
- 	}
+On 18/05/2021 10:43, Tony Lindgren wrote:
+> There's no need to restore DMA context on CPU_CLUSTER_PM_ENTER_FAILED as
+> the DMA context won't be lost on errors.
+> 
+> Note that this does not cause invalid context restore as we already check
+> for busy DMA with omap_dma_busy() in CPU_CLUSTER_PM_ENTER, and block any
+> deeper idle states for the SoC by returning NOTIFY_BAD if busy.
+> 
+> If other drivers block deeper idle states with cpu_pm, we now just do a
+> pointless restore, but only if dma was not busy on CPU_CLUSTER_PM_ENTER.
+> 
+> Let's update the CPU_CLUSTER_PM_ENTER_FAILED handling for correctness,
+> and add a comment.
+
+Make sense,
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+
+> Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+> Cc: Adam Ford <aford173@gmail.com>
+> Cc: Andreas Kemnade <andreas@kemnade.info>
+> Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  drivers/dma/ti/omap-dma.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+> --- a/drivers/dma/ti/omap-dma.c
+> +++ b/drivers/dma/ti/omap-dma.c
+> @@ -1608,7 +1608,8 @@ static int omap_dma_context_notifier(struct notifier_block *nb,
+>  			return NOTIFY_BAD;
+>  		omap_dma_context_save(od);
+>  		break;
+> -	case CPU_CLUSTER_PM_ENTER_FAILED:
+> +	case CPU_CLUSTER_PM_ENTER_FAILED:	/* No need to restore context */
+> +		break;
+>  	case CPU_CLUSTER_PM_EXIT:
+>  		omap_dma_context_restore(od);
+>  		break;
+> 
+
 -- 
-2.30.2
-
+Péter

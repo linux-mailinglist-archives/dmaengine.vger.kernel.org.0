@@ -2,59 +2,56 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C874F387C9D
-	for <lists+dmaengine@lfdr.de>; Tue, 18 May 2021 17:39:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 452D3389125
+	for <lists+dmaengine@lfdr.de>; Wed, 19 May 2021 16:37:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350250AbhERPko (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Tue, 18 May 2021 11:40:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43086 "EHLO
+        id S1348231AbhESOip (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 19 May 2021 10:38:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350260AbhERPkn (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Tue, 18 May 2021 11:40:43 -0400
-Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 508D0C061763
-        for <dmaengine@vger.kernel.org>; Tue, 18 May 2021 08:39:24 -0700 (PDT)
-Received: by mail-ot1-x330.google.com with SMTP id g7-20020a9d12870000b0290328b1342b73so1164919otg.9
-        for <dmaengine@vger.kernel.org>; Tue, 18 May 2021 08:39:24 -0700 (PDT)
+        with ESMTP id S1348095AbhESOio (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 19 May 2021 10:38:44 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D819C0613CE
+        for <dmaengine@vger.kernel.org>; Wed, 19 May 2021 07:37:24 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id t21so7156647plo.2
+        for <dmaengine@vger.kernel.org>; Wed, 19 May 2021 07:37:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2hSwqPBR8xk5peOjp8r36zshPTihxbD5KyZ7/NEBH24=;
-        b=mvj1ormvns6c8e+ic/PsSJNg9DLr9kf/17VvtRI2XtMI//1llYzD/QpQuvPakUJYQQ
-         DS+Xo/uoPIJyjHoavYY7zuWK4qVVV83WVk5nAn7MDmEsl2vw0uz1xsLweQYC/9dTzzRV
-         ghr128tExjqZBppdRqp8xWwxJxE68i7ZTjFXGbfJPFUT9aWJyvLRdh3QWPkRkYnXtm3T
-         zrCwTYgf17p8ER1Pg5Xx1kYVK5BPy71uz1Lto2qzL+gIYXWfHrE0RCY/SPzUIGJYMqlV
-         +BRUesvZx2dingYSETXNoJPVsjGINfdPZ7JjYsY39BlCrS8AMVaG+GwJF7MJ4hKWkcDX
-         W6lQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nZMq8xWSXZHjYFFX9U2EDQv78qoTWHbTqwBMbdQQv0s=;
+        b=lVsbFM6aeHV9QO0yMWIoUEsFvuZICTWzjhH06XiLX53vIJd5fOltlBQU1AsHgkhC7b
+         GU7k6gSGN0lQBG7GaWR3AXAnUcQMwsq433ErObGTb6pDseELCOfit4GmF45i6IK022NF
+         M+m7ctX0SDRhPS+HjsgbUljOhedYqSDTR0Pi7DN1iY821hWBTzJRccUOL7JfRceTEhVm
+         WiUIbNY+lmeBWXgJiDm5Bwzu0VW1qgp0cDMdjjim4TeuzJzCwjGTtf4WhgkqrvH6NwRG
+         gT/bcRL0+NO+q5WxqSE5QH4O5aVBTDe0mV1ytUVtiFZLkjVcha+EmZ/cETYMz3SYJzbG
+         gh5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2hSwqPBR8xk5peOjp8r36zshPTihxbD5KyZ7/NEBH24=;
-        b=d2v7+LDq2r3fjxm6Es4cfSq/tQ74y58mupUVCbTEt6hDqbQd6dHtkZzz191GQAkyfp
-         DhcEObnI0djxE64CMEYke6RfdNRJxTQkVSGYfkjSjpu2v4pkArE4ow2ShoiWw9kxy91h
-         /8DLMS4CZOTW2WoVRsZOS9+ftYyQOVyGSvb0oqFHl58k7Y9i4nRJxvtCtCRB4Fss5N8w
-         YzMEgOo4yIV5VN4doyN+6sFCehK8T0fUsVcc0OvfZQwSGmYLZOx9BAWPqI37xCGv4I4K
-         Mp1AWKWq8akOyalSI45qBVcXpjqYM+DwzoLtdEt90BftHnSVMPIxgN5cGrryH009D367
-         9++w==
-X-Gm-Message-State: AOAM531AsYiEm0GyWheZLQkh5KhOeG9+rEnLE4wWexG+yyyg/UTNrqoZ
-        XYVX/B4Q0jz5N1RpBi5zLYCGt4gOQ/CYfI8XhLaEYg==
-X-Google-Smtp-Source: ABdhPJxs5EkaQ8cVqMmDDyuAeI4LeAKT2u8OFSqwXjSjLKhqFVkkYjQ9FPfi1Tdv13wngOPWcvaW1DPF7TKLro0KyJ0=
-X-Received: by 2002:a9d:4f15:: with SMTP id d21mr4807826otl.155.1621352363686;
- Tue, 18 May 2021 08:39:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210505213731.538612-1-bhupesh.sharma@linaro.org>
- <20210505213731.538612-10-bhupesh.sharma@linaro.org> <20210518150702.GW2484@yoga>
-In-Reply-To: <20210518150702.GW2484@yoga>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nZMq8xWSXZHjYFFX9U2EDQv78qoTWHbTqwBMbdQQv0s=;
+        b=tq9Fnj+8yNwsQ8pYs5Sfgn8/AfSELHrTnIm7SOqLExV/eWaoD38dibeF30siPB/swM
+         d731nQVODCjqcqEGkpPhlh+l6bxZvZWsZnlBM7vO3P1fOoTLkbF1HtArfTnAIwD8ycse
+         9vXiLfQaaekn++0g1wRocYvYC0+DzKkIsQJJMX2rv2K6opu4o5wPCLZ+7pYfK1t+AOUv
+         8S55EsPoV6Lw/wTTXz++zcmlQh6yiZqGEJJ8NRPXTXJdmxuXqGj2htpyK1TqOJhzFqKl
+         BhVoW2BVlidThcdKyMMp/PYZzMj6PrAUMcqELj1wNbHPWYyPUtU8Hm7MGZKKb/hYoRyA
+         vIhw==
+X-Gm-Message-State: AOAM532bkgunO4wCaE82DMUD1zsPxsIsvofWi8AGPyBoshsr4RuXQYve
+        /Jdmq8UfIFN07+00+tYjpvfhSg==
+X-Google-Smtp-Source: ABdhPJx1AAoohm3tZC2APaKhDLsi3QklihlNmlo84V+Pzp/Q+nnZSaKyM1DsUUTiJWfa4t751iNqNg==
+X-Received: by 2002:a17:90a:f87:: with SMTP id 7mr12090307pjz.38.1621435043946;
+        Wed, 19 May 2021 07:37:23 -0700 (PDT)
+Received: from localhost.localdomain.name ([122.177.135.250])
+        by smtp.gmail.com with ESMTPSA id o24sm9239515pgl.55.2021.05.19.07.37.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 May 2021 07:37:23 -0700 (PDT)
 From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Date:   Tue, 18 May 2021 21:09:12 +0530
-Message-ID: <CAH=2NtxMR5zCBJ7_u3kT9Koewv3Ay4baH8YQ9frX2uhO2gDM=Q@mail.gmail.com>
-Subject: Re: [PATCH v2 09/17] crypto: qce: core: Add support to initialize
- interconnect path
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org,
+To:     linux-arm-msm@vger.kernel.org
+Cc:     bhupesh.sharma@linaro.org,
         Thara Gopinath <thara.gopinath@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Andy Gross <agross@kernel.org>,
         Herbert Xu <herbert@gondor.apana.org.au>,
@@ -65,175 +62,117 @@ Cc:     linux-arm-msm@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         bhupesh.linux@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH v3 00/17] Enable Qualcomm Crypto Engine on sm8250
+Date:   Wed, 19 May 2021 20:06:43 +0530
+Message-Id: <20210519143700.27392-1-bhupesh.sharma@linaro.org>
+X-Mailer: git-send-email 2.31.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi Bjorn,
+Changes since v2:
+=================
+- v2 can be seen here: https://lore.kernel.org/dmaengine/20210505213731.538612-1-bhupesh.sharma@linaro.org/
+- Drop a couple of patches from v1, which tried to address the defered
+  probing of qce driver in case bam dma driver is not yet probed.
+  Replace it instead with a single (simpler) patch [PATCH 16/17].
+- Convert bam dma and qce crypto dt-bindings to YAML.
+- Addressed review comments from Thara, Bjorn, Vinod and Rob.
 
-Thanks for the review.
+Changes since v1:
+=================
+- v1 can be seen here: https://lore.kernel.org/linux-arm-msm/20210310052503.3618486-1-bhupesh.sharma@linaro.org/ 
+- v1 did not work well as reported earlier by Dmitry, so v2 contains the following
+  changes/fixes:
+  ~ Enable the interconnect path b/w BAM DMA and main memory first
+    before trying to access the BAM DMA registers.
+  ~ Enable the interconnect path b/w qce crytpo and main memory first
+    before trying to access the qce crypto registers.
+  ~ Make sure to document the required and optional properties for both
+    BAM DMA and qce crypto drivers.
+  ~ Add a few debug related print messages in case the qce crypto driver
+    passes or fails to probe.
+  ~ Convert the qce crypto driver probe to a defered one in case the BAM DMA
+    or the interconnect driver(s) (needed on specific Qualcomm parts) are not
+    yet probed.
 
-On Tue, 18 May 2021 at 20:37, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Wed 05 May 16:37 CDT 2021, Bhupesh Sharma wrote:
->
-> > From: Thara Gopinath <thara.gopinath@linaro.org>
-> >
-> > Crypto engine on certain Snapdragon processors like sm8150, sm8250, sm8350
-> > etc. requires interconnect path between the engine and memory to be
-> > explicitly enabled and bandwidth set prior to any operations. Add support
-> > in the qce core to enable the interconnect path appropriately.
-> >
-> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Andy Gross <agross@kernel.org>
-> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> > Cc: David S. Miller <davem@davemloft.net>
-> > Cc: Stephen Boyd <sboyd@kernel.org>
-> > Cc: Michael Turquette <mturquette@baylibre.com>
-> > Cc: Vinod Koul <vkoul@kernel.org>
-> > Cc: dmaengine@vger.kernel.org
-> > Cc: linux-clk@vger.kernel.org
-> > Cc: linux-crypto@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: bhupesh.linux@gmail.com
-> > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
-> > [Make header file inclusion alphabetical]
-> > Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
->
-> This says that you prepared the patch, then Thara picked up the patch
-> and sorted the includes. But somehow you then sent the patch.
->
-> I.e. you name should be the last - unless you jointly wrote the path, in
-> which case you should also add a "Co-developed-by: Thara".
+Qualcomm crypto engine is also available on sm8250 SoC.
+It supports hardware accelerated algorithms for encryption
+and authentication. It also provides support for aes, des, 3des
+encryption algorithms and sha1, sha256, hmac(sha1), hmac(sha256)
+authentication algorithms.
 
-No, it's the other way around. Thara prepared the patch (as the
-'From:' field suggests) and I just changed the inclusion order of the
-header files and made it in alphabetical order.
+Tested the enabled crypto algorithms with cryptsetup test utilities
+on sm8250-mtp and RB5 board (see [1]) and also with crypto self-tests,
+including the fuzz tests (CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y).
 
-I will move my S-o-b later in the order.
+While at it, also make a minor fix in 'sdm845.dtsi', to make
+sure it confirms with the other .dtsi files which expose
+crypto nodes on qcom SoCs.
 
-> > ---
-> >  drivers/crypto/qce/core.c | 35 ++++++++++++++++++++++++++++-------
-> >  drivers/crypto/qce/core.h |  1 +
-> >  2 files changed, 29 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/crypto/qce/core.c b/drivers/crypto/qce/core.c
-> > index 80b75085c265..92a0ff1d357e 100644
-> > --- a/drivers/crypto/qce/core.c
-> > +++ b/drivers/crypto/qce/core.c
-> > @@ -5,6 +5,7 @@
-> >
-> >  #include <linux/clk.h>
-> >  #include <linux/dma-mapping.h>
-> > +#include <linux/interconnect.h>
-> >  #include <linux/interrupt.h>
-> >  #include <linux/module.h>
-> >  #include <linux/mod_devicetable.h>
-> > @@ -21,6 +22,8 @@
-> >  #define QCE_MAJOR_VERSION5   0x05
-> >  #define QCE_QUEUE_LENGTH     1
-> >
-> > +#define QCE_DEFAULT_MEM_BANDWIDTH    393600
->
-> Do we know what this rate is?
+Note that this series is rebased on AEAD fixes from Thara (see [2]).
+This is required for all of the fuzz tests to work.
 
-I think this corresponds to the arbitrated bandwidth / instantaneous
-bandwidth (in KBps)
-for the qce crypto part [I think 'average/peak bandwidth' would be a
-better terminology :) ].
+[1]. https://linux.die.net/man/8/cryptsetup
+[2]. https://lore.kernel.org/linux-crypto/20210429150707.3168383-5-thara.gopinath@linaro.org/T/
 
-Maybe Thara can add more comments here.
+Cc: Thara Gopinath <thara.gopinath@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org
+Cc: linux-clk@vger.kernel.org
+Cc: linux-crypto@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: bhupesh.linux@gmail.com
+ 
+Bhupesh Sharma (14):
+  dt-bindings: qcom-bam: Convert binding to YAML
+  dt-bindings: qcom-bam: Add 'interconnects' & 'interconnect-names' to
+    optional properties
+  dt-bindings: qcom-bam: Add 'iommus' to required properties
+  dt-bindings: qcom-qce: Convert bindings to yaml
+  dt-bindings: qcom-qce: Add 'interconnects' and move 'clocks' to
+    optional properties
+  dt-bindings: qcom-qce: Add 'iommus' to required properties
+  arm64/dts: qcom: sdm845: Use RPMH_CE_CLK macro directly
+  dt-bindings: crypto : Add new compatible strings for qcom-qce
+  arm64/dts: qcom: Use new compatibles for crypto nodes
+  crypto: qce: Add new compatibles for qce crypto driver
+  crypto: qce: Print a failure msg in case probe() fails
+  crypto: qce: Convert the device found dev_dbg() to dev_info()
+  crypto: qce: Defer probing if BAM dma channel is not yet initialized
+  arm64/dts: qcom: sm8250: Add dt entries to support crypto engine.
 
-> > +
-> >  static const struct qce_algo_ops *qce_ops[] = {
-> >  #ifdef CONFIG_CRYPTO_DEV_QCE_SKCIPHER
-> >       &skcipher_ops,
-> > @@ -202,21 +205,35 @@ static int qce_crypto_probe(struct platform_device *pdev)
-> >       if (ret < 0)
-> >               return ret;
-> >
-> > +     qce->mem_path = of_icc_get(qce->dev, "memory");
->
-> Using devm_of_icc_get() would save you some changes to the error path.
+Thara Gopinath (3):
+  dma: qcom: bam_dma: Add support to initialize interconnect path
+  crypto: qce: core: Add support to initialize interconnect path
+  crypto: qce: core: Make clocks optional
 
-Ok, I can address this in v3.
+ .../devicetree/bindings/crypto/qcom-qce.txt   |  25 ----
+ .../devicetree/bindings/crypto/qcom-qce.yaml  |  92 +++++++++++++++
+ .../devicetree/bindings/dma/qcom_bam_dma.txt  |  50 --------
+ .../devicetree/bindings/dma/qcom_bam_dma.yaml | 110 ++++++++++++++++++
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi         |   2 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |   6 +-
+ arch/arm64/boot/dts/qcom/sm8250.dtsi          |  28 +++++
+ drivers/crypto/qce/core.c                     | 110 ++++++++++++------
+ drivers/crypto/qce/core.h                     |   3 +
+ drivers/dma/qcom/bam_dma.c                    |  10 ++
+ 10 files changed, 322 insertions(+), 114 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/crypto/qcom-qce.txt
+ create mode 100644 Documentation/devicetree/bindings/crypto/qcom-qce.yaml
+ delete mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+ create mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml
 
-> > +     if (IS_ERR(qce->mem_path))
-> > +             return PTR_ERR(qce->mem_path);
-> > +
-> >       qce->core = devm_clk_get(qce->dev, "core");
-> > -     if (IS_ERR(qce->core))
-> > -             return PTR_ERR(qce->core);
-> > +     if (IS_ERR(qce->core)) {
-> > +             ret = PTR_ERR(qce->core);
-> > +             goto err_mem_path_put;
-> > +     }
-> >
-> >       qce->iface = devm_clk_get(qce->dev, "iface");
-> > -     if (IS_ERR(qce->iface))
-> > -             return PTR_ERR(qce->iface);
-> > +     if (IS_ERR(qce->iface)) {
-> > +             ret = PTR_ERR(qce->iface);
-> > +             goto err_mem_path_put;
-> > +     }
-> >
-> >       qce->bus = devm_clk_get(qce->dev, "bus");
-> > -     if (IS_ERR(qce->bus))
-> > -             return PTR_ERR(qce->bus);
-> > +     if (IS_ERR(qce->bus)) {
-> > +             ret = PTR_ERR(qce->bus);
-> > +             goto err_mem_path_put;
-> > +     }
-> > +
-> > +     ret = icc_set_bw(qce->mem_path, QCE_DEFAULT_MEM_BANDWIDTH, QCE_DEFAULT_MEM_BANDWIDTH);
-> > +     if (ret)
-> > +             goto err_mem_path_put;
-> >
-> >       ret = clk_prepare_enable(qce->core);
-> >       if (ret)
-> > -             return ret;
-> > +             goto err_mem_path_disable;
-> >
-> >       ret = clk_prepare_enable(qce->iface);
-> >       if (ret)
-> > @@ -256,6 +273,10 @@ static int qce_crypto_probe(struct platform_device *pdev)
-> >       clk_disable_unprepare(qce->iface);
-> >  err_clks_core:
-> >       clk_disable_unprepare(qce->core);
-> > +err_mem_path_disable:
-> > +     icc_set_bw(qce->mem_path, 0, 0);
->
-> When you icc_put() (or devm_of_icc_get() does it for you) the path's
-> votes are implicitly set to 0, so you don't need to do this.
->
-> And as such, you don't need to change the error path at all.
+-- 
+2.31.1
 
-Ok, got it. Will change v3 accordingly.
-
-Thanks,
-Bhupesh
-
-> > +err_mem_path_put:
-> > +     icc_put(qce->mem_path);
-> >       return ret;
-> >  }
-> >
-> > diff --git a/drivers/crypto/qce/core.h b/drivers/crypto/qce/core.h
-> > index 085774cdf641..228fcd69ec51 100644
-> > --- a/drivers/crypto/qce/core.h
-> > +++ b/drivers/crypto/qce/core.h
-> > @@ -35,6 +35,7 @@ struct qce_device {
-> >       void __iomem *base;
-> >       struct device *dev;
-> >       struct clk *core, *iface, *bus;
-> > +     struct icc_path *mem_path;
-> >       struct qce_dma_data dma;
-> >       int burst_size;
-> >       unsigned int pipe_pair_id;
-> > --
-> > 2.30.2
-> >

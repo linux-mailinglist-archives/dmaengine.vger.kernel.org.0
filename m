@@ -2,51 +2,51 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 452D3389125
-	for <lists+dmaengine@lfdr.de>; Wed, 19 May 2021 16:37:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E196438912C
+	for <lists+dmaengine@lfdr.de>; Wed, 19 May 2021 16:37:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348231AbhESOip (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Wed, 19 May 2021 10:38:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43170 "EHLO
+        id S1354176AbhESOi4 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Wed, 19 May 2021 10:38:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348095AbhESOio (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Wed, 19 May 2021 10:38:44 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D819C0613CE
-        for <dmaengine@vger.kernel.org>; Wed, 19 May 2021 07:37:24 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id t21so7156647plo.2
-        for <dmaengine@vger.kernel.org>; Wed, 19 May 2021 07:37:24 -0700 (PDT)
+        with ESMTP id S1354195AbhESOiy (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Wed, 19 May 2021 10:38:54 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2DA3C06138C
+        for <dmaengine@vger.kernel.org>; Wed, 19 May 2021 07:37:31 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id q6so7430131pjj.2
+        for <dmaengine@vger.kernel.org>; Wed, 19 May 2021 07:37:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nZMq8xWSXZHjYFFX9U2EDQv78qoTWHbTqwBMbdQQv0s=;
-        b=lVsbFM6aeHV9QO0yMWIoUEsFvuZICTWzjhH06XiLX53vIJd5fOltlBQU1AsHgkhC7b
-         GU7k6gSGN0lQBG7GaWR3AXAnUcQMwsq433ErObGTb6pDseELCOfit4GmF45i6IK022NF
-         M+m7ctX0SDRhPS+HjsgbUljOhedYqSDTR0Pi7DN1iY821hWBTzJRccUOL7JfRceTEhVm
-         WiUIbNY+lmeBWXgJiDm5Bwzu0VW1qgp0cDMdjjim4TeuzJzCwjGTtf4WhgkqrvH6NwRG
-         gT/bcRL0+NO+q5WxqSE5QH4O5aVBTDe0mV1ytUVtiFZLkjVcha+EmZ/cETYMz3SYJzbG
-         gh5w==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=zG635xOID1k2/MXq+MKZASd8MAgolK42+7VgFHWsBrE=;
+        b=BDOAaFFyisX6ZcapOca80pchy7MV6pvuLTVoq7tL9hVe78g3mtHX1u4KcxR+KS/l1F
+         s0ICui7AisYvcrgn5Fq3pNlSOVTcwayGp0yzPvx0bsooNlS0I0qdQGX2pQ2m002mOxUd
+         o7UY7FPxwVR20ym/34ykY6NYLAa4OBA1wmd56MPNLXZftzIajJSaJMz6Azog5/bb8gwW
+         KFDGK2isep+R1PyWKl46dxch6UL+j2psBGeth0GeUAr0A/zN3owFojNwIGoQNaOLwBNc
+         1yOlz+3iK/JtsVFBzNxTavo49bCr6crtZe0p8oGda7GXKp/m23Tt/FyHNsmfawzBrkY5
+         XDAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nZMq8xWSXZHjYFFX9U2EDQv78qoTWHbTqwBMbdQQv0s=;
-        b=tq9Fnj+8yNwsQ8pYs5Sfgn8/AfSELHrTnIm7SOqLExV/eWaoD38dibeF30siPB/swM
-         d731nQVODCjqcqEGkpPhlh+l6bxZvZWsZnlBM7vO3P1fOoTLkbF1HtArfTnAIwD8ycse
-         9vXiLfQaaekn++0g1wRocYvYC0+DzKkIsQJJMX2rv2K6opu4o5wPCLZ+7pYfK1t+AOUv
-         8S55EsPoV6Lw/wTTXz++zcmlQh6yiZqGEJJ8NRPXTXJdmxuXqGj2htpyK1TqOJhzFqKl
-         BhVoW2BVlidThcdKyMMp/PYZzMj6PrAUMcqELj1wNbHPWYyPUtU8Hm7MGZKKb/hYoRyA
-         vIhw==
-X-Gm-Message-State: AOAM532bkgunO4wCaE82DMUD1zsPxsIsvofWi8AGPyBoshsr4RuXQYve
-        /Jdmq8UfIFN07+00+tYjpvfhSg==
-X-Google-Smtp-Source: ABdhPJx1AAoohm3tZC2APaKhDLsi3QklihlNmlo84V+Pzp/Q+nnZSaKyM1DsUUTiJWfa4t751iNqNg==
-X-Received: by 2002:a17:90a:f87:: with SMTP id 7mr12090307pjz.38.1621435043946;
-        Wed, 19 May 2021 07:37:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=zG635xOID1k2/MXq+MKZASd8MAgolK42+7VgFHWsBrE=;
+        b=Rs0eEEWS2+JY9RRniNe7YaT+1lHbAUdTP4735qKa2PzBolS6jXJeDkmp0ZsBjscB+P
+         TpDGEW3PSnZev24rWpwcUdsD4s6DFskH9UojkOhxgZk3RVbpk75vYaXMgkHvE3ZoZmDM
+         b433DX3uzSVgJjeZuf8bYWLJQMjd/IpRAFzBvJe3QmUzg+B43JVo6iyUpg7G701TfUFx
+         s4b5fyKUQrC4ocy6k/0JhjeFt6R+hvexPQk5Ph0sWrcgWQW0iFDf4GKkM7LyzPNCKoTD
+         fxSMZc+yetBc+GGz6HpuOfd9X0sOVvUTAcEpqmyAGGp0JYVfEsyZvk4hN3QO3u/t9dUq
+         yRNA==
+X-Gm-Message-State: AOAM530HqwGcIwHALEKQicHuCOmIBK4PtzlMv1tUGVB895kOAgy2K0/F
+        cMmGl1KDnQyDarx7bxVAhnHiWA==
+X-Google-Smtp-Source: ABdhPJzKbyM7GTDb3zd9dvjsR3+jQaQxL8QNti/wAyXdfzHXFw2mJreTEzc9H5+2zWBW1uYNWJ4mpA==
+X-Received: by 2002:a17:902:8505:b029:ec:b451:71cd with SMTP id bj5-20020a1709028505b02900ecb45171cdmr11390479plb.23.1621435051224;
+        Wed, 19 May 2021 07:37:31 -0700 (PDT)
 Received: from localhost.localdomain.name ([122.177.135.250])
-        by smtp.gmail.com with ESMTPSA id o24sm9239515pgl.55.2021.05.19.07.37.17
+        by smtp.gmail.com with ESMTPSA id o24sm9239515pgl.55.2021.05.19.07.37.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 May 2021 07:37:23 -0700 (PDT)
+        Wed, 19 May 2021 07:37:30 -0700 (PDT)
 From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     bhupesh.sharma@linaro.org,
@@ -62,61 +62,19 @@ Cc:     bhupesh.sharma@linaro.org,
         linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         bhupesh.linux@gmail.com
-Subject: [PATCH v3 00/17] Enable Qualcomm Crypto Engine on sm8250
-Date:   Wed, 19 May 2021 20:06:43 +0530
-Message-Id: <20210519143700.27392-1-bhupesh.sharma@linaro.org>
+Subject: [PATCH v3 01/17] dt-bindings: qcom-bam: Convert binding to YAML
+Date:   Wed, 19 May 2021 20:06:44 +0530
+Message-Id: <20210519143700.27392-2-bhupesh.sharma@linaro.org>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210519143700.27392-1-bhupesh.sharma@linaro.org>
+References: <20210519143700.27392-1-bhupesh.sharma@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Changes since v2:
-=================
-- v2 can be seen here: https://lore.kernel.org/dmaengine/20210505213731.538612-1-bhupesh.sharma@linaro.org/
-- Drop a couple of patches from v1, which tried to address the defered
-  probing of qce driver in case bam dma driver is not yet probed.
-  Replace it instead with a single (simpler) patch [PATCH 16/17].
-- Convert bam dma and qce crypto dt-bindings to YAML.
-- Addressed review comments from Thara, Bjorn, Vinod and Rob.
-
-Changes since v1:
-=================
-- v1 can be seen here: https://lore.kernel.org/linux-arm-msm/20210310052503.3618486-1-bhupesh.sharma@linaro.org/ 
-- v1 did not work well as reported earlier by Dmitry, so v2 contains the following
-  changes/fixes:
-  ~ Enable the interconnect path b/w BAM DMA and main memory first
-    before trying to access the BAM DMA registers.
-  ~ Enable the interconnect path b/w qce crytpo and main memory first
-    before trying to access the qce crypto registers.
-  ~ Make sure to document the required and optional properties for both
-    BAM DMA and qce crypto drivers.
-  ~ Add a few debug related print messages in case the qce crypto driver
-    passes or fails to probe.
-  ~ Convert the qce crypto driver probe to a defered one in case the BAM DMA
-    or the interconnect driver(s) (needed on specific Qualcomm parts) are not
-    yet probed.
-
-Qualcomm crypto engine is also available on sm8250 SoC.
-It supports hardware accelerated algorithms for encryption
-and authentication. It also provides support for aes, des, 3des
-encryption algorithms and sha1, sha256, hmac(sha1), hmac(sha256)
-authentication algorithms.
-
-Tested the enabled crypto algorithms with cryptsetup test utilities
-on sm8250-mtp and RB5 board (see [1]) and also with crypto self-tests,
-including the fuzz tests (CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y).
-
-While at it, also make a minor fix in 'sdm845.dtsi', to make
-sure it confirms with the other .dtsi files which expose
-crypto nodes on qcom SoCs.
-
-Note that this series is rebased on AEAD fixes from Thara (see [2]).
-This is required for all of the fuzz tests to work.
-
-[1]. https://linux.die.net/man/8/cryptsetup
-[2]. https://lore.kernel.org/linux-crypto/20210429150707.3168383-5-thara.gopinath@linaro.org/T/
+Convert Qualcomm BAM DMA devicetree binding to YAML.
 
 Cc: Thara Gopinath <thara.gopinath@linaro.org>
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
@@ -133,46 +91,167 @@ Cc: linux-crypto@vger.kernel.org
 Cc: devicetree@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Cc: bhupesh.linux@gmail.com
- 
-Bhupesh Sharma (14):
-  dt-bindings: qcom-bam: Convert binding to YAML
-  dt-bindings: qcom-bam: Add 'interconnects' & 'interconnect-names' to
-    optional properties
-  dt-bindings: qcom-bam: Add 'iommus' to required properties
-  dt-bindings: qcom-qce: Convert bindings to yaml
-  dt-bindings: qcom-qce: Add 'interconnects' and move 'clocks' to
-    optional properties
-  dt-bindings: qcom-qce: Add 'iommus' to required properties
-  arm64/dts: qcom: sdm845: Use RPMH_CE_CLK macro directly
-  dt-bindings: crypto : Add new compatible strings for qcom-qce
-  arm64/dts: qcom: Use new compatibles for crypto nodes
-  crypto: qce: Add new compatibles for qce crypto driver
-  crypto: qce: Print a failure msg in case probe() fails
-  crypto: qce: Convert the device found dev_dbg() to dev_info()
-  crypto: qce: Defer probing if BAM dma channel is not yet initialized
-  arm64/dts: qcom: sm8250: Add dt entries to support crypto engine.
-
-Thara Gopinath (3):
-  dma: qcom: bam_dma: Add support to initialize interconnect path
-  crypto: qce: core: Add support to initialize interconnect path
-  crypto: qce: core: Make clocks optional
-
- .../devicetree/bindings/crypto/qcom-qce.txt   |  25 ----
- .../devicetree/bindings/crypto/qcom-qce.yaml  |  92 +++++++++++++++
- .../devicetree/bindings/dma/qcom_bam_dma.txt  |  50 --------
- .../devicetree/bindings/dma/qcom_bam_dma.yaml | 110 ++++++++++++++++++
- arch/arm64/boot/dts/qcom/ipq6018.dtsi         |   2 +-
- arch/arm64/boot/dts/qcom/sdm845.dtsi          |   6 +-
- arch/arm64/boot/dts/qcom/sm8250.dtsi          |  28 +++++
- drivers/crypto/qce/core.c                     | 110 ++++++++++++------
- drivers/crypto/qce/core.h                     |   3 +
- drivers/dma/qcom/bam_dma.c                    |  10 ++
- 10 files changed, 322 insertions(+), 114 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/crypto/qcom-qce.txt
- create mode 100644 Documentation/devicetree/bindings/crypto/qcom-qce.yaml
+Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
+---
+ .../devicetree/bindings/dma/qcom_bam_dma.txt  | 50 ----------
+ .../devicetree/bindings/dma/qcom_bam_dma.yaml | 91 +++++++++++++++++++
+ 2 files changed, 91 insertions(+), 50 deletions(-)
  delete mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
  create mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml
 
+diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+deleted file mode 100644
+index cf5b9e44432c..000000000000
+--- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
++++ /dev/null
+@@ -1,50 +0,0 @@
+-QCOM BAM DMA controller
+-
+-Required properties:
+-- compatible: must be one of the following:
+- * "qcom,bam-v1.4.0" for MSM8974, APQ8074 and APQ8084
+- * "qcom,bam-v1.3.0" for APQ8064, IPQ8064 and MSM8960
+- * "qcom,bam-v1.7.0" for MSM8916
+-- reg: Address range for DMA registers
+-- interrupts: Should contain the one interrupt shared by all channels
+-- #dma-cells: must be <1>, the cell in the dmas property of the client device
+-  represents the channel number
+-- clocks: required clock
+-- clock-names: must contain "bam_clk" entry
+-- qcom,ee : indicates the active Execution Environment identifier (0-7) used in
+-  the secure world.
+-- qcom,controlled-remotely : optional, indicates that the bam is controlled by
+-  remote proccessor i.e. execution environment.
+-- num-channels : optional, indicates supported number of DMA channels in a
+-  remotely controlled bam.
+-- qcom,num-ees : optional, indicates supported number of Execution Environments
+-  in a remotely controlled bam.
+-
+-Example:
+-
+-	uart-bam: dma@f9984000 = {
+-		compatible = "qcom,bam-v1.4.0";
+-		reg = <0xf9984000 0x15000>;
+-		interrupts = <0 94 0>;
+-		clocks = <&gcc GCC_BAM_DMA_AHB_CLK>;
+-		clock-names = "bam_clk";
+-		#dma-cells = <1>;
+-		qcom,ee = <0>;
+-	};
+-
+-DMA clients must use the format described in the dma.txt file, using a two cell
+-specifier for each channel.
+-
+-Example:
+-	serial@f991e000 {
+-		compatible = "qcom,msm-uart";
+-		reg = <0xf991e000 0x1000>
+-			<0xf9944000 0x19000>;
+-		interrupts = <0 108 0>;
+-		clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>,
+-			<&gcc GCC_BLSP1_AHB_CLK>;
+-		clock-names = "core", "iface";
+-
+-		dmas = <&uart-bam 0>, <&uart-bam 1>;
+-		dma-names = "rx", "tx";
+-	};
+diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml b/Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml
+new file mode 100644
+index 000000000000..173e4d7508a6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml
+@@ -0,0 +1,91 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/qcom_bam_dma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: QCOM BAM DMA controller binding
++
++maintainers:
++  - Bhupesh Sharma <bhupesh.sharma@linaro.org>
++
++description: |
++  This document defines the binding for the BAM DMA controller
++  found on Qualcomm parts.
++
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  compatible:
++    enum:
++      - qcom,bam-v1.4.0
++      - qcom,bam-v1.3.0
++      - qcom,bam-v1.7.0
++
++  reg:
++    maxItems: 1
++    description: Address range of the DMA registers.
++
++  clocks:
++    minItems: 1
++    maxItems: 8
++
++  clock-names:
++    const: bam_clk
++
++  interrupts:
++    maxItems: 1
++    description: Single interrupt line shared by all channels.
++
++  num-channels:
++    maxItems: 31
++    description: |
++      Indicates supported number of DMA channels in a remotely controlled bam.
++
++  "#dma-cells":
++    const: 1
++    description: The single cell represents the channel index.
++
++  qcom,ee:
++    $ref: /schemas/types.yaml#/definitions/uint8
++    description:
++      Indicates the active Execution Environment identifier (0-7)
++      used in the secure world.
++    enum: [0, 1, 2, 3, 4, 5, 6, 7]
++
++  qcom,controlled-remotely:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Indicates that the bam is controlled by remote proccessor i.e.
++      execution environment.
++
++  qcom,num-ees:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Indicates supported number of Execution Environments in a
++      remotely controlled bam.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - "#dma-cells"
++  - qcom,ee
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-msm8974.h>
++    dma-controller@f9984000 {
++        compatible = "qcom,bam-v1.4.0";
++        reg = <0xf9984000 0x15000>;
++        interrupts = <0 94 0>;
++        clocks = <&gcc GCC_BAM_DMA_AHB_CLK>;
++        clock-names = "bam_clk";
++        #dma-cells = <1>;
++        qcom,ee = /bits/ 8 <0>;
++    };
 -- 
 2.31.1
 

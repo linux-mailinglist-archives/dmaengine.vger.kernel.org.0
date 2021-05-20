@@ -2,37 +2,34 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA27B38B326
-	for <lists+dmaengine@lfdr.de>; Thu, 20 May 2021 17:25:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 291FD38B328
+	for <lists+dmaengine@lfdr.de>; Thu, 20 May 2021 17:25:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233005AbhETP03 (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 20 May 2021 11:26:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40144 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232036AbhETPZw (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 May 2021 11:25:52 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6007AC06138F
-        for <dmaengine@vger.kernel.org>; Thu, 20 May 2021 08:24:30 -0700 (PDT)
+        id S238170AbhETP0b (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 20 May 2021 11:26:31 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:55452 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232131AbhETPZx (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 May 2021 11:25:53 -0400
 Received: from pendragon.lan (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 553A2E0C;
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D8790E2B;
         Thu, 20 May 2021 17:24:27 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1621524267;
-        bh=MPyQ+vVZp1sQ3qtNieVc8s7/Xsyl8i4v0/UXQm+IvIA=;
+        s=mail; t=1621524268;
+        bh=WJt9uLnd9ahdsuddT0v6yu32+aM2ZZNh5lobu5CEs8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wGOUGGA21/1rv5wxW6yBhBppnaVa6KmxExVQ4kEV99ghDgvbyADmETmRitlEx+HQ6
-         A0+JyMEGGHC+qTaFXJn453jpeqAjHFhZGIfKg8c/prDEb6sJVqU4k5Jnvf2P0qCRpj
-         LMZ/XF2q8uNg+lUSrUPvsR04rFHpiud03+PdLrIw=
+        b=NqpqAHl7iBqh9PT5igEKqx9bjuaHuLgu2pM5aEcGK8KqheE7VphQYVwgiKXwKnDa+
+         JRQn2wDZ9gkeyV+WH6Zriz+hCyFKdg72OoBfRfd64Mv0nnhjqOjTZ2in/LVXe7HtrX
+         l9EcYfsMDnYfXoZpY4TAZCpGWV5H5rDXmHjop1gE=
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To:     dmaengine@vger.kernel.org
 Cc:     Vinod Koul <vkoul@kernel.org>,
         Michal Simek <michal.simek@xilinx.com>,
         Jianqiang Chen <jianqian@xilinx.com>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 3/4] dmaengine: xilinx: dpdma: Print debug message when losing vsync race
-Date:   Thu, 20 May 2021 18:24:19 +0300
-Message-Id: <20210520152420.23986-4-laurent.pinchart@ideasonboard.com>
+Subject: [PATCH 4/4] dmaengine: xilinx: dpdma: Limit descriptor IDs to 16 bits
+Date:   Thu, 20 May 2021 18:24:20 +0300
+Message-Id: <20210520152420.23986-5-laurent.pinchart@ideasonboard.com>
 X-Mailer: git-send-email 2.28.1
 In-Reply-To: <20210520152420.23986-1-laurent.pinchart@ideasonboard.com>
 References: <20210520152420.23986-1-laurent.pinchart@ideasonboard.com>
@@ -42,34 +39,49 @@ Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-The hardware retrigger is inherently racy with the vsync interrupt. This
-isn't an issue as the hardware provides a way to detect a race loss and
-handle it correctly. When debugging issues related to this, it's useful
-to get a notification of the race loss. Add a debug message to do so.
+While the descriptor ID is stored in a 32-bit field in the hardware
+descriptor, only 16 bits are used by the hardware and are reported
+through the XILINX_DPDMA_CH_DESC_ID register. Failure to handle the
+wrap-around results in a descriptor ID mismatch after 65536 frames. Fix
+it.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 ---
- drivers/dma/xilinx/xilinx_dpdma.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/dma/xilinx/xilinx_dpdma.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/dma/xilinx/xilinx_dpdma.c b/drivers/dma/xilinx/xilinx_dpdma.c
-index ea56c3b35782..5834f8614a58 100644
+index 5834f8614a58..6a8bb977fc7a 100644
 --- a/drivers/dma/xilinx/xilinx_dpdma.c
 +++ b/drivers/dma/xilinx/xilinx_dpdma.c
-@@ -1095,8 +1095,12 @@ static void xilinx_dpdma_chan_vsync_irq(struct  xilinx_dpdma_chan *chan)
+@@ -113,6 +113,7 @@
+ #define XILINX_DPDMA_CH_VDO				0x020
+ #define XILINX_DPDMA_CH_PYLD_SZ				0x024
+ #define XILINX_DPDMA_CH_DESC_ID				0x028
++#define XILINX_DPDMA_CH_DESC_ID_MASK			GENMASK(15, 0)
+ 
+ /* DPDMA descriptor fields */
+ #define XILINX_DPDMA_DESC_CONTROL_PREEMBLE		0xa5
+@@ -867,7 +868,8 @@ static void xilinx_dpdma_chan_queue_transfer(struct xilinx_dpdma_chan *chan)
+ 	 * will be used, but it should be enough.
+ 	 */
+ 	list_for_each_entry(sw_desc, &desc->descriptors, node)
+-		sw_desc->hw.desc_id = desc->vdesc.tx.cookie;
++		sw_desc->hw.desc_id = desc->vdesc.tx.cookie
++				    & XILINX_DPDMA_CH_DESC_ID_MASK;
+ 
+ 	sw_desc = list_first_entry(&desc->descriptors,
+ 				   struct xilinx_dpdma_sw_desc, node);
+@@ -1090,7 +1092,8 @@ static void xilinx_dpdma_chan_vsync_irq(struct  xilinx_dpdma_chan *chan)
+ 	if (!chan->running || !pending)
+ 		goto out;
+ 
+-	desc_id = dpdma_read(chan->reg, XILINX_DPDMA_CH_DESC_ID);
++	desc_id = dpdma_read(chan->reg, XILINX_DPDMA_CH_DESC_ID)
++		& XILINX_DPDMA_CH_DESC_ID_MASK;
+ 
  	/* If the retrigger raced with vsync, retry at the next frame. */
  	sw_desc = list_first_entry(&pending->descriptors,
- 				   struct xilinx_dpdma_sw_desc, node);
--	if (sw_desc->hw.desc_id != desc_id)
-+	if (sw_desc->hw.desc_id != desc_id) {
-+		dev_dbg(chan->xdev->dev,
-+			"chan%u: vsync race lost (%u != %u), retrying\n",
-+			chan->id, sw_desc->hw.desc_id, desc_id);
- 		goto out;
-+	}
- 
- 	/*
- 	 * Complete the active descriptor, if any, promote the pending
 -- 
 Regards,
 

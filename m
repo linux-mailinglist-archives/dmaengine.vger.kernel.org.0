@@ -2,142 +2,150 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 063DE38C18A
-	for <lists+dmaengine@lfdr.de>; Fri, 21 May 2021 10:18:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B77238C6AA
+	for <lists+dmaengine@lfdr.de>; Fri, 21 May 2021 14:39:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230353AbhEUIUN (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Fri, 21 May 2021 04:20:13 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:19236 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230366AbhEUIUG (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Fri, 21 May 2021 04:20:06 -0400
-X-Greylist: delayed 479 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 May 2021 04:20:04 EDT
-ARC-Seal: i=1; a=rsa-sha256; t=1621584692; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=px0a8MPK74qUXfzV5oznTizuZ6wSYWw1PnTyWPCWdSDm/VNlPpcX9mJnG6EcNy9+al
-    IrLqSd+SHTUy+MUh4/hS/NujOZyXCwe5HSxvwd14I4cIgw7AXjiqrNMEjfoNtHxIys+M
-    a14YcQqlLi/YEf8/g4X4ZGU/AalgcmEhdVB1NzRcUZHOqu2GPZZa5cXxBMD4g12p5vTr
-    1ZuiaGzrocf8qKnkp/grY2j8Mk/T8asPYHcGr9U72ssFsDrf0PwyrMIcLvz2THFrDc1E
-    Q0RN+6nMx63661R9AByJ0js93R8df2y6lfNya9k+aTx+RhVCKBFHq6sggs8ml9fW/Mm+
-    GM3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1621584692;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=P7QD5eRHBuT1lh8i7wzUly3dzKODxjJ0OhwZcPAUEZs=;
-    b=qOvPJEGTxcu4ftC0OhXI8oXRU/fO3ZYD1+OJWQuXaRw0/0pVx5jb5rJU6Tdvzny/1t
-    q9kdVB/kSfoQheuv6mQ2ldYRUjTTQWfloUKYv3uVD0uaGqjs/fn7oRNK+GbfNjfg7Xvc
-    oUwGQB8uW6oqv/0EjOr4ISA5eEP8c1nv/XkFEjtEDjcj6fHN0WqmL1pno8Ifjy2Nd4K3
-    NdgKAgA3gzct4XSyv4PdgbwS4wJseRljsozSAgx2sM2h8w9XhYASEBzMbh0TPkqJ1at7
-    r35/EciNY0gCLtIMeKlIFzHsRjCNrgxe50OG6ghPv/pdNOM+7tuATln42+LmxkY73GCk
-    MHaA==
-ARC-Authentication-Results: i=1; strato.com;
-    dkim=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1621584692;
-    s=strato-dkim-0002; d=gerhold.net;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=P7QD5eRHBuT1lh8i7wzUly3dzKODxjJ0OhwZcPAUEZs=;
-    b=DqIzGoyybqPjiuFKLTxGZ6dWr/44ExmlF0FdJwNkGyMj6i0q4h4RS5yv5ONtvUEhMS
-    UB0osp8RELueRhSHyAG5nZgDxXvuGtfICJE1uWislHsnMqjyaoixsw9e0L2IB7+Z3uIW
-    RQtga13/EQTxsVG5KS78sR+Kfez1hbP5UGPbr7omd2Z31kDFcdrTBCDtWtX2TPhwj/eh
-    0XHq1pF8QHpkCFwA9SryKT0kGu9MW/fI/sqNvv1N+EVOA2jnEP92M667faGDxbN8Y4Pz
-    PyaZDAzCgW4Hd4v8hXWa0dly72EjDd9Fi45Fze1iyvh4hrfANIvuems9VscDkHxCxDia
-    JaFQ==
-Authentication-Results: strato.com;
-    dkim=none
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j8IcvEBg=="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-    by smtp.strato.de (RZmta 47.26.1 DYNA|AUTH)
-    with ESMTPSA id 2037acx4L8BW0Pp
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-    Fri, 21 May 2021 10:11:32 +0200 (CEST)
-Date:   Fri, 21 May 2021 10:11:30 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhupesh.linux@gmail.com
-Subject: Re: [PATCH v3 03/17] dt-bindings: qcom-bam: Add 'iommus' to required
- properties
-Message-ID: <YKdrMoSFAh1bR3xT@gerhold.net>
-References: <20210519143700.27392-1-bhupesh.sharma@linaro.org>
- <20210519143700.27392-4-bhupesh.sharma@linaro.org>
+        id S230257AbhEUMlC (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Fri, 21 May 2021 08:41:02 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5722 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231584AbhEUMlC (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Fri, 21 May 2021 08:41:02 -0400
+Received: from dggems705-chm.china.huawei.com (unknown [172.30.72.60])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4FmmLC1LX3zqV2T;
+        Fri, 21 May 2021 20:36:03 +0800 (CST)
+Received: from dggemi762-chm.china.huawei.com (10.1.198.148) by
+ dggems705-chm.china.huawei.com (10.3.19.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2176.2; Fri, 21 May 2021 20:39:35 +0800
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ dggemi762-chm.china.huawei.com (10.1.198.148) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Fri, 21 May 2021 20:39:34 +0800
+From:   Zou Wei <zou_wei@huawei.com>
+To:     <vkoul@kernel.org>, <orsonzhai@gmail.com>,
+        <baolin.wang7@gmail.com>, <zhang.lyra@gmail.com>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Zou Wei <zou_wei@huawei.com>
+Subject: [PATCH -next] dmaengine: fix PM reference leak
+Date:   Fri, 21 May 2021 20:58:22 +0800
+Message-ID: <1621601902-33697-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210519143700.27392-4-bhupesh.sharma@linaro.org>
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggemi762-chm.china.huawei.com (10.1.198.148)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-Hi,
+pm_runtime_get_sync will increment pm usage counter even it failed.
+Forgetting to putting operation will result in reference leak here.
+Fix it by replacing it with pm_runtime_resume_and_get to keep usage
+counter balanced.
 
-On Wed, May 19, 2021 at 08:06:46PM +0530, Bhupesh Sharma wrote:
-> Add the missing required property - 'iommus' to the
-> device-tree binding documentation for qcom-bam DMA IP.
-> 
-> This property describes the phandle(s) to apps_smmu node with sid mask.
-> 
-> Cc: Thara Gopinath <thara.gopinath@linaro.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: dmaengine@vger.kernel.org
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-crypto@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: bhupesh.linux@gmail.com
-> Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
-> ---
->  .../devicetree/bindings/dma/qcom_bam_dma.yaml         | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml b/Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml
-> index d2900616006c..2479862a3654 100644
-> --- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml
-> +++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml
-> @@ -55,6 +55,12 @@ properties:
->    interconnect-names:
->      const: memory
->  
-> +  iommus:
-> +    minItems: 1
-> +    maxItems: 8
-> +    description: |
-> +      phandle to apps_smmu node with sid mask.
-> +
->    qcom,ee:
->      $ref: /schemas/types.yaml#/definitions/uint8
->      description:
-> @@ -81,6 +87,7 @@ required:
->    - clocks
->    - clock-names
->    - "#dma-cells"
-> +  - iommus
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
+---
+ drivers/dma/sh/rcar-dmac.c | 2 +-
+ drivers/dma/sprd-dma.c     | 4 ++--
+ drivers/dma/stm32-dma.c    | 4 ++--
+ drivers/dma/stm32-dmamux.c | 6 +++---
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-I don't think we can make this required, older SoCs don't use "iommus"
-for bam_dma.
+diff --git a/drivers/dma/sh/rcar-dmac.c b/drivers/dma/sh/rcar-dmac.c
+index d530c1b..6885b3d 100644
+--- a/drivers/dma/sh/rcar-dmac.c
++++ b/drivers/dma/sh/rcar-dmac.c
+@@ -1913,7 +1913,7 @@ static int rcar_dmac_probe(struct platform_device *pdev)
+ 
+ 	/* Enable runtime PM and initialize the device. */
+ 	pm_runtime_enable(&pdev->dev);
+-	ret = pm_runtime_get_sync(&pdev->dev);
++	ret = pm_runtime_resume_and_get(&pdev->dev);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "runtime PM get sync failed (%d)\n", ret);
+ 		return ret;
+diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+index 0ef5ca8..65dde39 100644
+--- a/drivers/dma/sprd-dma.c
++++ b/drivers/dma/sprd-dma.c
+@@ -1203,7 +1203,7 @@ static int sprd_dma_probe(struct platform_device *pdev)
+ 	pm_runtime_set_active(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
+ 
+-	ret = pm_runtime_get_sync(&pdev->dev);
++	ret = pm_runtime_resume_and_get(&pdev->dev);
+ 	if (ret < 0)
+ 		goto err_rpm;
+ 
+@@ -1238,7 +1238,7 @@ static int sprd_dma_remove(struct platform_device *pdev)
+ 	struct sprd_dma_chn *c, *cn;
+ 	int ret;
+ 
+-	ret = pm_runtime_get_sync(&pdev->dev);
++	ret = pm_runtime_resume_and_get(&pdev->dev);
+ 	if (ret < 0)
+ 		return ret;
+ 
+diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
+index f54ecb1..7dd1d3d 100644
+--- a/drivers/dma/stm32-dma.c
++++ b/drivers/dma/stm32-dma.c
+@@ -1200,7 +1200,7 @@ static int stm32_dma_alloc_chan_resources(struct dma_chan *c)
+ 
+ 	chan->config_init = false;
+ 
+-	ret = pm_runtime_get_sync(dmadev->ddev.dev);
++	ret = pm_runtime_resume_and_get(dmadev->ddev.dev);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -1470,7 +1470,7 @@ static int stm32_dma_suspend(struct device *dev)
+ 	struct stm32_dma_device *dmadev = dev_get_drvdata(dev);
+ 	int id, ret, scr;
+ 
+-	ret = pm_runtime_get_sync(dev);
++	ret = pm_runtime_resume_and_get(dev);
+ 	if (ret < 0)
+ 		return ret;
+ 
+diff --git a/drivers/dma/stm32-dmamux.c b/drivers/dma/stm32-dmamux.c
+index ef0d055..a421643 100644
+--- a/drivers/dma/stm32-dmamux.c
++++ b/drivers/dma/stm32-dmamux.c
+@@ -137,7 +137,7 @@ static void *stm32_dmamux_route_allocate(struct of_phandle_args *dma_spec,
+ 
+ 	/* Set dma request */
+ 	spin_lock_irqsave(&dmamux->lock, flags);
+-	ret = pm_runtime_get_sync(&pdev->dev);
++	ret = pm_runtime_resume_and_get(&pdev->dev);
+ 	if (ret < 0) {
+ 		spin_unlock_irqrestore(&dmamux->lock, flags);
+ 		goto error;
+@@ -336,7 +336,7 @@ static int stm32_dmamux_suspend(struct device *dev)
+ 	struct stm32_dmamux_data *stm32_dmamux = platform_get_drvdata(pdev);
+ 	int i, ret;
+ 
+-	ret = pm_runtime_get_sync(dev);
++	ret = pm_runtime_resume_and_get(dev);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -361,7 +361,7 @@ static int stm32_dmamux_resume(struct device *dev)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = pm_runtime_get_sync(dev);
++	ret = pm_runtime_resume_and_get(dev);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-- 
+2.6.2
 
-arch/arm64/boot/dts/qcom/apq8016-sbc.dt.yaml: dma-controller@7884000: 'iommus' is a required property
-        From schema: Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml
-
-Stephan

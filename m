@@ -2,40 +2,40 @@ Return-Path: <dmaengine-owner@vger.kernel.org>
 X-Original-To: lists+dmaengine@lfdr.de
 Delivered-To: lists+dmaengine@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1542E38BBCD
-	for <lists+dmaengine@lfdr.de>; Fri, 21 May 2021 03:43:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3194038BBD2
+	for <lists+dmaengine@lfdr.de>; Fri, 21 May 2021 03:44:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237564AbhEUBop (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
-        Thu, 20 May 2021 21:44:45 -0400
-Received: from mail-ot1-f44.google.com ([209.85.210.44]:44824 "EHLO
-        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237548AbhEUBoo (ORCPT
-        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 May 2021 21:44:44 -0400
-Received: by mail-ot1-f44.google.com with SMTP id r26-20020a056830121ab02902a5ff1c9b81so16636342otp.11;
-        Thu, 20 May 2021 18:43:18 -0700 (PDT)
+        id S237550AbhEUBpb (ORCPT <rfc822;lists+dmaengine@lfdr.de>);
+        Thu, 20 May 2021 21:45:31 -0400
+Received: from mail-oi1-f179.google.com ([209.85.167.179]:33700 "EHLO
+        mail-oi1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237548AbhEUBpa (ORCPT
+        <rfc822;dmaengine@vger.kernel.org>); Thu, 20 May 2021 21:45:30 -0400
+Received: by mail-oi1-f179.google.com with SMTP id b25so18320533oic.0;
+        Thu, 20 May 2021 18:44:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=9S9XS3Yg9GWaFqOj2PYCXeBhYEX4PcdUFzpuE9sqB4g=;
-        b=GjOKCVe3XUpMHF7f59Q8JC2KCyNmACD3u614tR1/qgY7b9rAVRl1fEO/HzAyepKJiN
-         YXvZ4MnLiu4WS3DyZ2KGaKbGC+s4wFLxgMV9XXt5Zf8t2gfXfZpyD3W1uAJNq1kZGj29
-         7XPGIof4v0xDYcULx051rIG8vQVzIotrTvYiI1QtZYWAr5jKXwQE/60nNj0jI9o8d/Tu
-         imVNd6oJ4lsuGzYQXunGfSs97vZzsLAZYoOZSsmMPxlscQgY16bn+T186t9xju1gf7Jf
-         rDGO1gxCOdSLNgGGHW9a4l95oDpB57jQYYyE9p4uofTRUhMUERMWXVCTMN7X+OFlaBzU
-         Y3GA==
-X-Gm-Message-State: AOAM5336UlGxQAp70TnHE6rQZkl0IlDOuiC2J1nXPuVxBqMHl4OdgVTD
-        fwpOPJrOeB3Br62VE9wwqQ==
-X-Google-Smtp-Source: ABdhPJzEANfqFxE4Om5iMLjsSLwh6xktkUCyClwjVw7r/DNw3lOe3BzOKAJKqe6s95hkV2bCtuDbDQ==
-X-Received: by 2002:a05:6830:1bed:: with SMTP id k13mr3959289otb.194.1621561398402;
-        Thu, 20 May 2021 18:43:18 -0700 (PDT)
+        bh=uWv/y/6B46LorCNYV0hE5LMinY0ygx1XUs5LDxlnAQk=;
+        b=tEXJedJIWeU2OwWg+Ip0vzY8EPiMPczxthcFlnXAEfK+ZZyuteSML0SBL+itPLGunA
+         vVJDucPD3xklPu7K4iSi5+zdR+m2rHjYSJdv5fKBMM+XpWml2A/4DGDw4KNdKM8O9ksF
+         SylKOVppLkOsx8SOAv9DCJW+41epnO/NopU7uYcbnwY0BGgZZR9yFDkgcqNNYXzzsmaB
+         66minbXlpByzhGPdg5A9YXlasKWvgd2Ur/DcR99q4Ds8kv39zQuXtZlOdgTmvFuRPNSV
+         XH1IUWPig69uqcZJaZwoKMCR5v/A/q+h2cDZTE6saNWUSctdizLjNfS5hPlcIPhtDXDF
+         KRhQ==
+X-Gm-Message-State: AOAM531apfan8fqhwXL/Cfj18mFhQzooXQTe759NIXP0WLJxaBIrb6Uv
+        JMQgzu2rrEshZ8+zwbaZeQ==
+X-Google-Smtp-Source: ABdhPJz4ctRS5Awbs1IUTuXU9ol00Ggpwo/0gRoUsrLFvrbnGmgip2ndmKTlc2B1u6EdlZgyQnvAZA==
+X-Received: by 2002:aca:7501:: with SMTP id q1mr277202oic.9.1621561447833;
+        Thu, 20 May 2021 18:44:07 -0700 (PDT)
 Received: from robh.at.kernel.org (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y7sm999499oto.60.2021.05.20.18.43.17
+        by smtp.gmail.com with ESMTPSA id k7sm950086ood.36.2021.05.20.18.44.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 May 2021 18:43:17 -0700 (PDT)
-Received: (nullmailer pid 2467209 invoked by uid 1000);
-        Fri, 21 May 2021 01:43:16 -0000
-Date:   Thu, 20 May 2021 20:43:16 -0500
+        Thu, 20 May 2021 18:44:06 -0700 (PDT)
+Received: (nullmailer pid 2468680 invoked by uid 1000);
+        Fri, 21 May 2021 01:44:05 -0000
+Date:   Thu, 20 May 2021 20:44:05 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>
 Cc:     linux-arm-msm@vger.kernel.org,
@@ -50,20 +50,24 @@ Cc:     linux-arm-msm@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         bhupesh.linux@gmail.com
-Subject: Re: [PATCH v3 01/17] dt-bindings: qcom-bam: Convert binding to YAML
-Message-ID: <20210521014316.GA2462277@robh.at.kernel.org>
+Subject: Re: [PATCH v3 03/17] dt-bindings: qcom-bam: Add 'iommus' to required
+ properties
+Message-ID: <20210521014405.GB2462277@robh.at.kernel.org>
 References: <20210519143700.27392-1-bhupesh.sharma@linaro.org>
- <20210519143700.27392-2-bhupesh.sharma@linaro.org>
+ <20210519143700.27392-4-bhupesh.sharma@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210519143700.27392-2-bhupesh.sharma@linaro.org>
+In-Reply-To: <20210519143700.27392-4-bhupesh.sharma@linaro.org>
 Precedence: bulk
 List-ID: <dmaengine.vger.kernel.org>
 X-Mailing-List: dmaengine@vger.kernel.org
 
-On Wed, May 19, 2021 at 08:06:44PM +0530, Bhupesh Sharma wrote:
-> Convert Qualcomm BAM DMA devicetree binding to YAML.
+On Wed, May 19, 2021 at 08:06:46PM +0530, Bhupesh Sharma wrote:
+> Add the missing required property - 'iommus' to the
+> device-tree binding documentation for qcom-bam DMA IP.
+> 
+> This property describes the phandle(s) to apps_smmu node with sid mask.
 > 
 > Cc: Thara Gopinath <thara.gopinath@linaro.org>
 > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
@@ -82,180 +86,46 @@ On Wed, May 19, 2021 at 08:06:44PM +0530, Bhupesh Sharma wrote:
 > Cc: bhupesh.linux@gmail.com
 > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
 > ---
->  .../devicetree/bindings/dma/qcom_bam_dma.txt  | 50 ----------
->  .../devicetree/bindings/dma/qcom_bam_dma.yaml | 91 +++++++++++++++++++
->  2 files changed, 91 insertions(+), 50 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
->  create mode 100644 Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml
+>  .../devicetree/bindings/dma/qcom_bam_dma.yaml         | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> deleted file mode 100644
-> index cf5b9e44432c..000000000000
-> --- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> +++ /dev/null
-> @@ -1,50 +0,0 @@
-> -QCOM BAM DMA controller
-> -
-> -Required properties:
-> -- compatible: must be one of the following:
-> - * "qcom,bam-v1.4.0" for MSM8974, APQ8074 and APQ8084
-> - * "qcom,bam-v1.3.0" for APQ8064, IPQ8064 and MSM8960
-> - * "qcom,bam-v1.7.0" for MSM8916
-> -- reg: Address range for DMA registers
-> -- interrupts: Should contain the one interrupt shared by all channels
-> -- #dma-cells: must be <1>, the cell in the dmas property of the client device
-> -  represents the channel number
-> -- clocks: required clock
-> -- clock-names: must contain "bam_clk" entry
-> -- qcom,ee : indicates the active Execution Environment identifier (0-7) used in
-> -  the secure world.
-> -- qcom,controlled-remotely : optional, indicates that the bam is controlled by
-> -  remote proccessor i.e. execution environment.
-> -- num-channels : optional, indicates supported number of DMA channels in a
-> -  remotely controlled bam.
-> -- qcom,num-ees : optional, indicates supported number of Execution Environments
-> -  in a remotely controlled bam.
-> -
-> -Example:
-> -
-> -	uart-bam: dma@f9984000 = {
-> -		compatible = "qcom,bam-v1.4.0";
-> -		reg = <0xf9984000 0x15000>;
-> -		interrupts = <0 94 0>;
-> -		clocks = <&gcc GCC_BAM_DMA_AHB_CLK>;
-> -		clock-names = "bam_clk";
-> -		#dma-cells = <1>;
-> -		qcom,ee = <0>;
-> -	};
-> -
-> -DMA clients must use the format described in the dma.txt file, using a two cell
-> -specifier for each channel.
-> -
-> -Example:
-> -	serial@f991e000 {
-> -		compatible = "qcom,msm-uart";
-> -		reg = <0xf991e000 0x1000>
-> -			<0xf9944000 0x19000>;
-> -		interrupts = <0 108 0>;
-> -		clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>,
-> -			<&gcc GCC_BLSP1_AHB_CLK>;
-> -		clock-names = "core", "iface";
-> -
-> -		dmas = <&uart-bam 0>, <&uart-bam 1>;
-> -		dma-names = "rx", "tx";
-> -	};
 > diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml b/Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml
-> new file mode 100644
-> index 000000000000..173e4d7508a6
-> --- /dev/null
+> index d2900616006c..2479862a3654 100644
+> --- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml
 > +++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.yaml
-> @@ -0,0 +1,91 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/qcom_bam_dma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: QCOM BAM DMA controller binding
-> +
-> +maintainers:
-> +  - Bhupesh Sharma <bhupesh.sharma@linaro.org>
-> +
-> +description: |
-> +  This document defines the binding for the BAM DMA controller
-> +  found on Qualcomm parts.
-> +
-> +allOf:
-> +  - $ref: "dma-controller.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,bam-v1.4.0
-> +      - qcom,bam-v1.3.0
-> +      - qcom,bam-v1.7.0
-
-Can we keep the SoC association please.
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: Address range of the DMA registers.
-
-Drop description.
-
-> +
-> +  clocks:
+> @@ -55,6 +55,12 @@ properties:
+>    interconnect-names:
+>      const: memory
+>  
+> +  iommus:
 > +    minItems: 1
 > +    maxItems: 8
-> +
-> +  clock-names:
-> +    const: bam_clk
-
-This is going to fail if you try more than 1 clock.
-
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: Single interrupt line shared by all channels.
-
-Drop description
-
-> +
-> +  num-channels:
-> +    maxItems: 31
 > +    description: |
-> +      Indicates supported number of DMA channels in a remotely controlled bam.
-> +
-> +  "#dma-cells":
-> +    const: 1
-> +    description: The single cell represents the channel index.
-> +
-> +  qcom,ee:
-> +    $ref: /schemas/types.yaml#/definitions/uint8
-> +    description:
-> +      Indicates the active Execution Environment identifier (0-7)
-> +      used in the secure world.
-> +    enum: [0, 1, 2, 3, 4, 5, 6, 7]
-> +
-> +  qcom,controlled-remotely:
-> +    $ref: /schemas/types.yaml#/definitions/flag
-> +    description:
-> +      Indicates that the bam is controlled by remote proccessor i.e.
-> +      execution environment.
-> +
-> +  qcom,num-ees:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Indicates supported number of Execution Environments in a
-> +      remotely controlled bam.
+> +      phandle to apps_smmu node with sid mask.
 
-0-2^32 is valid?
+And what are the other 7 entries?
 
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - "#dma-cells"
-> +  - qcom,ee
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-msm8974.h>
-> +    dma-controller@f9984000 {
-> +        compatible = "qcom,bam-v1.4.0";
-> +        reg = <0xf9984000 0x15000>;
-> +        interrupts = <0 94 0>;
-> +        clocks = <&gcc GCC_BAM_DMA_AHB_CLK>;
-> +        clock-names = "bam_clk";
-> +        #dma-cells = <1>;
-> +        qcom,ee = /bits/ 8 <0>;
-> +    };
+>    qcom,ee:
+>      $ref: /schemas/types.yaml#/definitions/uint8
+>      description:
+> @@ -81,6 +87,7 @@ required:
+>    - clocks
+>    - clock-names
+>    - "#dma-cells"
+> +  - iommus
+>    - qcom,ee
+>  
+>  additionalProperties: false
+> @@ -96,4 +103,8 @@ examples:
+>          clock-names = "bam_clk";
+>          #dma-cells = <1>;
+>          qcom,ee = /bits/ 8 <0>;
+> +        iommus = <&apps_smmu 0x584 0x0011>,
+> +                 <&apps_smmu 0x586 0x0011>,
+> +                 <&apps_smmu 0x594 0x0011>,
+> +                 <&apps_smmu 0x596 0x0011>;
+>      };
 > -- 
 > 2.31.1
 > 
